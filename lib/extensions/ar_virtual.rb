@@ -690,6 +690,45 @@ module ActiveRecord
     end
 
     include Module.new {
+      def calculate(operation, column_name)
+        if column_name.is_a?(Symbol) && attribute_alias?(column_name)
+          column_name = attribute_alias(column_name)
+        end
+
+        if has_include?(column_name)
+          relation = construct_relation_for_association_calculations
+          relation = relation.distinct if operation.to_s.downcase == "count"
+
+          relation.calculate(operation, column_name)
+        else
+          perform_calculation(operation, column_name)
+        end
+      end
+
+      private
+
+      def perform_calculation(operation, column_name)
+        operation = operation.to_s.downcase
+
+        # If #count is used with #distinct (i.e. `relation.distinct.count`) it is
+        # considered distinct.
+        distinct = self.distinct_value
+
+        if operation == "count"
+          column_name ||= select_for_count
+          column_name = primary_key if column_name == :all && distinct
+          distinct = nil if column_name =~ /\s*DISTINCT[\s(]+/i
+        end
+
+        if group_values.any?
+          execute_grouped_calculation(operation, column_name, distinct)
+        else
+          execute_simple_calculation(operation, column_name, distinct)
+        end
+      end
+    }
+
+    include Module.new {
       # From ActiveRecord::FinderMethods
       def find_with_associations
         real = without_virtual_includes
