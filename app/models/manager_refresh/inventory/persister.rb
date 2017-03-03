@@ -14,11 +14,16 @@ class ManagerRefresh::Inventory::Persister
 
   # creates method on class that lazy initializes an InventoryCollection
   def self.has_inventory(options)
-    name = options[:association]
+    name = options[:association] || options[:model_class].name.pluralize.underscore
+
     define_method(name) do
       collections[name] ||= begin
         collection_options = options.dup
-        collection_options[:parent] ||= manager
+
+        unless collection_options[:strategy] == :local_db_find_references
+          collection_options[:parent] ||= manager
+        end
+
         if collection_options[:builder_params]
           collection_options[:builder_params] = collection_options[:builder_params].transform_values do |value|
             if value.respond_to? :call
@@ -67,7 +72,7 @@ class ManagerRefresh::Inventory::Persister
   protected
 
   def initialize_inventory_collections
-    raise NotImplementedError, _("must be implemented in a subclass")
+    # can be implemented in a subclass
   end
 
   # Adds 1 ManagerRefresh::InventoryCollection under a target.collections using :association key as index

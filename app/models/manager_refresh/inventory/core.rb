@@ -52,5 +52,13 @@ module ManagerRefresh::Inventory::Core
         :inventory_object_attributes => %i(name),
       }.merge(options))
     end
+
+    def has_vms(options = {})
+      has_inventory({
+        :model_class                 => ::Vm,
+        :manager_ref                 => [:uid_ems],
+        :inventory_object_attributes => %i(),
+      }.merge(options))
+    end
   end
 end
