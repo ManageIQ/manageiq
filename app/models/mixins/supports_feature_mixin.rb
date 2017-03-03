@@ -108,7 +108,6 @@ module SupportsFeatureMixin
     :refresh_network_interfaces => 'Refresh Network Interfaces for a Host',
     :ems_network_new            => 'New EMS Network Provider',
     :update_security_group      => 'Security Group Update',
-    :terminate                => 'Terminate a VM'
   }.freeze
 
   # Whenever this mixin is included we define all features as unsupported by default.
