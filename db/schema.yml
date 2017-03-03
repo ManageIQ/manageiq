@@ -1558,7 +1558,6 @@ jobs:
 - state
 - status
 - message
-- code
 - name
 - userid
 - created_on
