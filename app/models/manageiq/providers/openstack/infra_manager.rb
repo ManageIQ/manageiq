@@ -30,11 +30,22 @@ class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
   end
 
   def cloud_tenants
+  end
+
+  def used_cloud_tenants_ids
     CloudTenant.where(:ems_id => provider.try(:cloud_ems).try(:collect, &:id).try(:uniq))
   end
 
-  def availability_zones_ids
+  def used_cloud_tenants
+    CloudTenant.where(:id => used_cloud_tenants_ids)
+  end
+
+  def used_availability_zones_ids
     AvailabilityZone.where(:ems_id => provider.try(:cloud_ems).try(:collect, &:id).try(:uniq))
+  end
+
+  def used_availability_zones
+    AvailabilityZone.where(:id => used_availability_zones_ids)
   end
 
   def host_aggregates
