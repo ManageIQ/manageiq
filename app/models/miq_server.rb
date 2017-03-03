@@ -1,3 +1,5 @@
+require 'resolv'
+
 class MiqServer < ApplicationRecord
   include_concern 'WorkerManagement'
   include_concern 'ServerMonitor'
