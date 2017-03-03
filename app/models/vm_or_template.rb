@@ -78,7 +78,7 @@ class VmOrTemplate < ApplicationRecord
 
   has_many                  :guest_applications, :dependent => :destroy
   has_many                  :patches, :dependent => :destroy
-  has_many                  :provider_tags, :foreign_key => :resource_id, :primary_key => :guid
+  has_many                  :provider_tags, :foreign_key => :resource_id, :primary_key => :ems_ref
 
   # Accounts - Users and Groups
   has_many                  :accounts, :dependent => :destroy
