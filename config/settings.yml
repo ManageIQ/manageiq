@@ -1166,6 +1166,7 @@
       :poll_method: :normal
       :restart_interval: 0.hours
       :starting_timeout: 10.minutes
+      :stopping_timeout: 10.minutes
     :ems_refresh_core_worker:
       :poll: 1.seconds
       :nice_delta: 1

@@ -403,6 +403,14 @@ class MiqWorker < ApplicationRecord
     !is_stopped? || actually_running?
   end
 
+  def stopping_for_too_long?
+    # Note, a 'stopping' worker heartbeats in DRb but NOT to
+    # the database, so we can see how long it's been
+    # 'stopping' by checking the last_heartbeat.
+    stopping_timeout = self.class.worker_settings[:stopping_timeout] || 10.minutes
+    status == MiqWorker::STATUS_STOPPING && last_heartbeat < stopping_timeout.seconds.ago
+  end
+
   def validate_active_messages
     active_messages.each { |msg| msg.check_for_timeout(_log.prefix) }
   end

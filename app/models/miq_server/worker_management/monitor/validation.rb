@@ -14,7 +14,7 @@ module MiqServer::WorkerManagement::Monitor::Validation
       msg = "#{w.format_full_log_msg} has not responded in #{Time.now.utc - w.last_heartbeat} seconds, restarting worker"
       _log.error(msg)
       MiqEvent.raise_evm_event_queue(w.miq_server, "evm_worker_not_responding", :event_details => msg, :type => w.class.name)
-      restart_worker(w, :not_responding)
+      restart_worker(w, MiqServer::NOT_RESPONDING)
       return false
     end
 
