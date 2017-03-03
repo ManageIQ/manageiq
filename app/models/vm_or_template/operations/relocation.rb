@@ -47,6 +47,10 @@ module VmOrTemplate::Operations::Relocation
       end
     end
 
+    if host_id == host.id
+      raise _("The VM '#{name}' can not be migrated to the same host it is already running on.")
+    end
+
     host_mor = host.ems_ref_obj
     pool_mor = pool.ems_ref_obj
     run_command_via_parent(:vm_migrate, :host => host_mor, :pool => pool_mor, :priority => priority, :state => state)
