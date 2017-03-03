@@ -36,4 +36,27 @@ class MiqExpression::Target
   def numeric?
     [:fixnum, :integer, :float].include?(column_type)
   end
+
+  def plural?
+    return false if reflections.empty?
+    [:has_many, :has_and_belongs_to_many].include?(reflections.last.macro)
+  end
+
+  def reflections
+    klass = model
+    associations.collect do |association|
+      klass.reflection_with_virtual(association).tap do |reflection|
+        raise ArgumentError, "One or more associations are invalid: #{associations.join(", ")}" unless reflection
+        klass = reflection.klass
+      end
+    end
+  end
+
+  def target
+    if associations.none?
+      model
+    else
+      reflections.last.klass
+    end
+  end
 end
