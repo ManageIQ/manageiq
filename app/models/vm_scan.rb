@@ -101,8 +101,7 @@ class VmScan < Job
          vm.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm)
         return unless create_snapshot(vm)
       elsif vm.require_snapshot_for_scan?
-        host  = Object.const_get(agent_class).find(agent_id)
-        proxy = host.respond_to?("miq_proxy") ? host.miq_proxy : nil
+        proxy = MiqServer.find(agent_id)
 
         # Check if the broker is available
         if MiqServer.use_broker_for_embedded_proxy? && !MiqVimBrokerWorker.available?
