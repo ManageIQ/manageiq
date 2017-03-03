@@ -112,6 +112,10 @@ module Api
                        end
         end
 
+        def group_by_success
+          json_body['group_by_success'] == 'true'
+        end
+
         private
 
         def expand_requested

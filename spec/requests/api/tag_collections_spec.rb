@@ -1041,6 +1041,42 @@ describe "Tag Collections API" do
       expect(response.parsed_body).to include(expected)
     end
 
+    it 'will sort by successes and failures' do
+      api_basic_authorize collection_action_identifier(:vms, :unassign_tags)
+      request_body = {
+        'action'           => 'unassign_tags',
+        'group_by_success' => 'true',
+        'resources'        => [
+          { 'id' => 999_999, 'tags' => [{'category' => 'department', 'name' => 'finance'}] },
+          { 'id' => vm2.id, 'tags' => [
+            {'category' => bad_tag[:category], 'name' => bad_tag[:name]},
+            {'category' => tag1[:category], 'name' => tag1[:name]}
+          ]}
+        ]
+      }
+
+      run_post(vms_url, request_body)
+
+      expected = {
+        'results' => {
+          'successes' => a_collection_including(
+            a_hash_including('success'      => true,
+                             'message'      => a_string_including("Not tagged with Tag: category:'cc' name:'002'"),
+                             'tag_category' => bad_tag[:category],
+                             'tag_name'     => bad_tag[:name]),
+            a_hash_including('success'      => true,
+                             'tag_category' => tag1[:category],
+                             'tag_name'     => tag1[:name])
+          ),
+          'failures'  => a_collection_including(
+            a_hash_including('success' => false, 'message' => a_string_including("Couldn't find Vm"))
+          )
+        }
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
     it 'fails without an appropriate role' do
       api_basic_authorize
 

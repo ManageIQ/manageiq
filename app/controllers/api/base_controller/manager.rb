@@ -104,7 +104,7 @@ module Api
         else
           resources << json_body_resource
         end
-        update_multiple_collections(is_subcollection, target, type, resources)
+        update_multiple_collections(is_subcollection, target, type, resources, @req.group_by_success)
       end
 
       def json_body_resource
@@ -121,7 +121,7 @@ module Api
         end
       end
 
-      def update_multiple_collections(is_subcollection, target, type, resources)
+      def update_multiple_collections(is_subcollection, target, type, resources, group_by_success)
         action = @req.action
 
         processed = 0
@@ -140,7 +140,16 @@ module Api
           update_one_collection(is_subcollection, target, type, rid, r)
         end.flatten
         raise BadRequestError, "No #{type} resources were specified for the #{action} action" if processed == 0
+        results = group_by_success(results) if group_by_success
         {"results" => results}
+      end
+
+      def group_by_success(results)
+        success, failure = results.partition { |result| result[:success] }
+        {
+          :successes => success,
+          :failures  => failure
+        }
       end
     end
   end
