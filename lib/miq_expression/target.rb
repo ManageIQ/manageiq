@@ -8,7 +8,8 @@ class MiqExpression::Target
   def self.parse(field)
     match = self::REGEX.match(field) || return
     model = match[:model_name].classify.safe_constantize || return
-    args = [model, match[:associations].to_s.split("."), match[:column]]
+    args = [model, match[:associations].to_s.split(".")]
+    args.push(match[:column]) if match.names.include?('column')
     args.push(match[:namespace] == self::MANAGED_NAMESPACE) if match.names.include?('namespace')
     new(*args)
   end
