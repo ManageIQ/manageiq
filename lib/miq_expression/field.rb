@@ -8,10 +8,6 @@ class MiqExpression::Field < MiqExpression::Target
 
   delegate :eq, :not_eq, :lteq, :gteq, :lt, :gt, :between, :to => :arel_attribute
 
-  def date?
-    column_type == :date
-  end
-
   def self.is_field?(field)
     return false unless field.kind_of?(String)
     match = REGEX.match(field)
@@ -19,18 +15,6 @@ class MiqExpression::Field < MiqExpression::Target
     model = match[:model_name].safe_constantize
     return false unless model
     !!(model < ApplicationRecord)
-  end
-
-  def datetime?
-    column_type == :datetime
-  end
-
-  def string?
-    column_type == :string
-  end
-
-  def numeric?
-    [:fixnum, :integer, :float].include?(column_type)
   end
 
   def attribute_supported_by_sql?

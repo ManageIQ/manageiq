@@ -20,4 +20,20 @@ class MiqExpression::Target
     @associations = associations
     @column = column
   end
+
+  def date?
+    column_type == :date
+  end
+
+  def datetime?
+    column_type == :datetime
+  end
+
+  def string?
+    column_type == :string
+  end
+
+  def numeric?
+    [:fixnum, :integer, :float].include?(column_type)
+  end
 end
