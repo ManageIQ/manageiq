@@ -15,8 +15,7 @@ describe ChargebackContainerProject do
 
   let(:detail_params) do
     {
-      :chargeback_rate_detail_fixed_compute_cost => {:tiers  => [hourly_variable_tier_rate],
-                                                     :detail => { :source => 'compute_1'} },
+      :chargeback_rate_detail_fixed_compute_cost => {:tiers => [hourly_variable_tier_rate]},
       :chargeback_rate_detail_cpu_cores_used     => {:tiers => [hourly_variable_tier_rate]},
       :chargeback_rate_detail_net_io_used        => {:tiers => [hourly_variable_tier_rate]},
       :chargeback_rate_detail_memory_used        => {:tiers => [hourly_variable_tier_rate]}
