@@ -187,7 +187,7 @@ class ServiceTemplate < ApplicationRecord
     # convert template class name to service class name by naming convention
     nh[:type] = self.class.name.sub('Template', '')
 
-    nh[:initiator] = service_task.options[:initiator] if service_task.options[:initiator] 
+    nh[:initiator] = service_task.options[:initiator] if service_task.options[:initiator]
 
     # Determine service name
     # target_name = self.get_option(:target_name)
