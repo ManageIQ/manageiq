@@ -1,4 +1,4 @@
-class MiqExpression::Field
+class MiqExpression::Field < MiqExpression::Target
   FIELD_REGEX = /
 (?<model_name>([[:upper:]][[:alnum:]]*(::)?)+)
 (?!.*\b(managed|user_tag)\b)
@@ -6,26 +6,13 @@ class MiqExpression::Field
 -(?<column>[a-z]+(_[[:alnum:]]+)*)
 /x
 
-  ParseError = Class.new(StandardError)
-
   def self.parse(field)
     match = FIELD_REGEX.match(field) or return
     model = match[:model_name].safe_constantize or return
     new(model, match[:associations].to_s.split("."), match[:column])
   end
 
-  def self.parse!(field)
-    parse(field) or raise ParseError, field
-  end
-
-  attr_reader :model, :associations, :column
   delegate :eq, :not_eq, :lteq, :gteq, :lt, :gt, :between, :to => :arel_attribute
-
-  def initialize(model, associations, column)
-    @model = model
-    @associations = associations
-    @column = column
-  end
 
   def date?
     column_type == :date
