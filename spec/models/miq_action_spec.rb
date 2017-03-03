@@ -420,7 +420,7 @@ describe MiqAction do
         { :service_template_id => stap.id,
           :use_event_target    => true }
       end
-      let(:options) { {:dialog_hosts => ip1 } }
+      let(:options) { {:dialog_hosts => ip1, :initiator => 'control' } }
 
       it_behaves_like "#workflow check"
     end
@@ -430,7 +430,7 @@ describe MiqAction do
         { :service_template_id => stap.id,
           :use_localhost       => true }
       end
-      let(:options) { {:dialog_hosts => 'localhost' } }
+      let(:options) { {:dialog_hosts => 'localhost', :initiator => 'control' } }
 
       it_behaves_like "#workflow check"
     end
@@ -440,7 +440,7 @@ describe MiqAction do
         { :service_template_id => stap.id,
           :hosts               => "ip1, ip2" }
       end
-      let(:options) { {:dialog_hosts => 'ip1, ip2' } }
+      let(:options) { {:dialog_hosts => 'ip1, ip2', :initiator => 'control' } }
 
       it_behaves_like "#workflow check"
     end
