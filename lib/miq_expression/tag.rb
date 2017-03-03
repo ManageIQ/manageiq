@@ -1,4 +1,4 @@
-class MiqExpression::Tag < MiqExpression::Field
+class MiqExpression::Tag < MiqExpression::Target
   REGEX = /
 (?<model_name>([[:alnum:]]*(::)?)+)
 \.(?<associations>([a-z_]+\.)*)
