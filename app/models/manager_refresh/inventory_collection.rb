@@ -5,14 +5,16 @@ module ManagerRefresh
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
                 :internal_attributes, :delete_method, :data, :data_index, :dependency_attributes, :manager_ref,
                 :association, :complete, :update_only, :transitive_dependency_attributes, :custom_manager_uuid,
-                :custom_db_finder, :check_changed, :arel, :builder_params, :loaded_references, :db_data_index
+                :custom_db_finder, :check_changed, :arel, :builder_params, :loaded_references, :db_data_index,
+                :inventory_object_attributes
 
     delegate :each, :size, :to => :to_a
 
     def initialize(model_class: nil, manager_ref: nil, association: nil, parent: nil, strategy: nil, saved: nil,
                    custom_save_block: nil, delete_method: nil, data_index: nil, data: nil, dependency_attributes: nil,
                    attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil,
-                   check_changed: nil, custom_manager_uuid: nil, custom_db_finder: nil, arel: nil, builder_params: {})
+                   check_changed: nil, custom_manager_uuid: nil, custom_db_finder: nil, arel: nil, builder_params: {},
+                   inventory_object_attributes: nil)
       @model_class           = model_class
       @manager_ref           = manager_ref || [:ems_ref]
       @custom_manager_uuid   = custom_manager_uuid
@@ -32,6 +34,7 @@ module ManagerRefresh
       @complete              = complete.nil? ? true : complete
       @update_only           = update_only.nil? ? false : update_only
       @builder_params        = builder_params
+      @inventory_object_attributes = inventory_object_attributes
 
       @attributes_blacklist             = Set.new
       @attributes_whitelist             = Set.new
@@ -184,7 +187,11 @@ module ManagerRefresh
     end
 
     def inventory_object_class
-      @inventory_object_class ||= Class.new(::ManagerRefresh::InventoryObject)
+      @inventory_object_class ||= begin
+        klass = Class.new(::ManagerRefresh::InventoryObject)
+        klass.add_attributes(inventory_object_attributes) if inventory_object_attributes
+        klass
+      end
     end
 
     def new_inventory_object(hash)

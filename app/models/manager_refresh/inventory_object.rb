@@ -81,45 +81,15 @@ module ManagerRefresh
       true
     end
 
-    def allowed_writers
-      return [] unless model_class
+    def self.add_attributes(inventory_object_attributes)
+      inventory_object_attributes.each do |attr|
+        define_method("#{attr}=") do |value|
+          data[attr] = value
+        end
 
-      # Get all writers of a model
-      @allowed_writers ||= (model_class.new.methods - Object.methods).grep(/^[\w]+?\=$/)
-    end
-
-    def allowed_readers
-      return [] unless model_class
-
-      # Get all readers inferred from writers of a model
-      @allowed_readers ||= allowed_writers.map { |x| x.to_s.delete("=").to_sym }
-    end
-
-    def method_missing(method_name, *arguments, &block)
-      if allowed_writers.include?(method_name)
-        self.class.define_data_writer(method_name)
-        send(method_name, arguments[0])
-      elsif allowed_readers.include?(method_name)
-        self.class.define_data_reader(method_name)
-        send(method_name)
-      else
-        super
-      end
-    end
-
-    def respond_to_missing?(method_name, _include_private = false)
-      allowed_writers.include?(method_name) || allowed_readers.include?(method_name) || super
-    end
-
-    def self.define_data_writer(data_key)
-      define_method(data_key) do |value|
-        send(:[]=, data_key.to_s.delete("=").to_sym, value)
-      end
-    end
-
-    def self.define_data_reader(data_key)
-      define_method(data_key) do
-        send(:[], data_key)
+        define_method(attr) do
+          data[attr]
+        end
       end
     end
 
