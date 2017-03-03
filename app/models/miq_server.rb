@@ -1,3 +1,5 @@
+require 'resolv'
+
 class MiqServer < ApplicationRecord
   include_concern 'WorkerManagement'
   include_concern 'ServerMonitor'
@@ -189,7 +191,7 @@ class MiqServer < ApplicationRecord
 
     ipaddr, hostname, mac_address = get_network_information
 
-    if ipaddr =~ /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/
+    if ipaddr =~ Regexp.union(Resolv::IPv4::Regex, Resolv::IPv6::Regex).freeze
       server_hash[:ipaddress] = config_hash[:host] = ipaddr
     end
 
