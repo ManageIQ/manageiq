@@ -5,6 +5,8 @@
 require File.expand_path('../config/application', __FILE__)
 require File.expand_path('../lib/tasks/evm_rake_helper', __FILE__)
 
+require 'ci/reporter/rake/rspec'
+
 include Rake::DSL
 Vmdb::Application.load_tasks
 
@@ -12,3 +14,5 @@ Vmdb::Application.load_tasks
 if defined?(RSpec)
   Rake::Task.tasks.select { |t| t.name =~ /^spec(:)?/ }.each(&:clear)
 end
+
+task :rspec => 'ci:setup:rspec'

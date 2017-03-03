@@ -5669,6 +5669,7 @@
         :description: Request to Provision Instances from Images
         :feature_type: admin
         :identifier: image_miq_request_new
+
   # Virtual Machines access rules
   - :name: VM Access Rules
     :description: Access Rules for Virtual Machines
@@ -6316,6 +6317,12 @@
       :feature_type: admin
       :identifier: ems_physical_infra_new
 
+# Firmwares
+- :name: Firmware
+  :description: Everything under Firmware
+  :feature_type: node
+  :identifier: firmware
+
 # Physical Servers
 - :name: Physical Servers
   :description: Everything under Physical Infra Servers
@@ -6330,11 +6337,40 @@
     - :name: List
       :description: Display Lists of Physical Servers
       :feature_type: view
-      :identifier: shosical_server_show_list
+      :identifier: physical_server_show_list
     - :name: Show
       :description: Display Individual Physical Server
       :feature_type: view
       :identifier: physical_server_show
+  - :name: Operate
+    :description: Perform Operations on Physical Servers
+    :feature_type: control
+    :identifier: physical_server_control
+    :children:
+    - :name: Blink LED
+      :description: Blink Loc LED
+      :feature_type: control
+      :identifier: physical_server_blink_loc_led
+    - :name: Turn On LED
+      :description: Turn On Loc LED
+      :feature_type: control
+      :identifier: physical_server_turn_on_loc_led
+    - :name: Turn Off LED
+      :description: Turn Off Loc LED
+      :feature_type: control
+      :identifier: physical_server_turn_off_loc_led
+    - :name: Turn off server
+      :description: Turn off server
+      :feature_type: control
+      :identifier: physical_server_power_off
+    - :name: Turn On Server
+      :description: Turn On Server
+      :feature_type: control
+      :identifier: physical_server_power_on
+    - :name: Restart server
+      :description: Restart Server
+      :feature_type: control
+      :identifier: physical_server_restart
 
 # Monitor
 - :name: Monitor

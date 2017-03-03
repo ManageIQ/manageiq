@@ -1332,6 +1332,15 @@ firewall_rules:
 - source_ip_range
 - ems_ref
 - network_protocol
+firmwares:
+- id
+- name
+- build
+- version
+- ph_server_uuid
+- release_date
+- created_at
+- updated_at
 flavors:
 - id
 - ems_id
@@ -6135,6 +6144,18 @@ physical_servers:
 - ems_ref
 - created_at
 - updated_at
+- hostname
+- ipv4Addresses
+- ipv6Addresses
+- macAddresses
+- productName
+- manufacturer
+- machineType
+- model
+- serialNumber
+- uuid
+- FRU
+- firmware_id
 pictures:
 - id
 - resource_id

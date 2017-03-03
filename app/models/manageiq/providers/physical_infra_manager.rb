@@ -1,5 +1,7 @@
 module ManageIQ::Providers
   class PhysicalInfraManager < BaseManager
+    has_many :physical_servers, :foreign_key => "ems_id", :class_name => "PhysicalServer"
+
     class << model_name
       define_method(:route_key) { "ems_physical_infras" }
       define_method(:singular_route_key) { "ems_physical_infra" }
@@ -15,6 +17,10 @@ module ManageIQ::Providers
 
     def validate_authentication_status
       {:available => true, :message => nil}
+    end
+
+    def validate_import_vm
+      false
     end
   end
 end
