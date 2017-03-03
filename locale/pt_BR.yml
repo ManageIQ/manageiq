@@ -1,0 +1,11 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+pt-BR:
+  product:
+    name: ManageIQ
+    name_full: ManageIQ
+    copyright: "Copyright (c) 2016 ManageIQ. Sponsored by Red Hat Inc."
+    support_website: "http://www.manageiq.org"
+    support_website_text: "ManageIQ.org"
+
