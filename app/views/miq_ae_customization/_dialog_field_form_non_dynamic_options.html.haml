@@ -10,7 +10,7 @@
   .col-md-8
     = check_box_tag('field_visible', '1',
                     @edit[:field_visible],
-                    'data-miq_observe_checkbox' => {:url => url}.to_json)                    
+                    'data-miq_observe_checkbox' => {:url => url}.to_json)
 
 - if @edit[:field_typ] =~ /Text|Check/
   .form-group

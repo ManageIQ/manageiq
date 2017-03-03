@@ -1,5 +1,131 @@
 describe MiqAeCustomizationController do
   context "::Dialogs" do
+    context "#dialog_get_form_vars_field" do
+      it "when initial tree load multi default is false" do
+        controller.x_node = "root_942-0_1053-0"
+        edit_new = {:new => { :tabs => [{:groups => [{:fields =>[{}]}]}]}}
+        controller.instance_variable_set(:@edit, edit_new)
+        controller.instance_variable_set(:@_params, :field_typ => "DialogFieldDropDownList")
+
+        controller.send(:dialog_get_form_vars_field)
+
+        edit_hash = controller.instance_variable_get(:@edit)
+        expect(edit_hash[:field_multi_value]).to be false
+        expect(edit_hash.fetch_path(:new, :tabs, 0, :groups, 0, :fields, 0, :multi_value)).to be false
+      end
+
+      it "when not initial tree load multi default still false" do
+        controller.x_node = "root_942-0_1053-0"
+        field = {
+          :id          => 9463,
+          :label       => "first_text_box",
+          :description => "first_text_box",
+          :typ         => "DialogFieldTextBox",
+          :tab_id      => 942,
+          :group_id    => 1053,
+          :order       => 0,
+          :multi_value => false
+        }
+        edit_new = {:new => { :tabs => [{:groups => [{:fields =>[field]}]}]}}
+        controller.instance_variable_set(:@edit, edit_new)
+        controller.instance_variable_set(:@_params, :field_typ => "DialogFieldDropDownList")
+
+        controller.send(:dialog_get_form_vars_field)
+
+        edit_hash = controller.instance_variable_get(:@edit)
+        expect(edit_hash[:field_multi_value]).to be false
+        expect(edit_hash.fetch_path(:new, :tabs, 0, :groups, 0, :fields, 0, :multi_value)).to be false
+      end
+
+      it "gets correct value on load of edit" do
+        controller.x_node = "root_942-0_1053-0"
+        edit_new = {:field_typ => "DialogFieldDropDownList", :new => { :tabs => [{:groups => [{:fields =>[{}]}]}]}}
+        controller.instance_variable_set(:@edit, edit_new)
+        controller.instance_variable_set(:@_params, :field_multi_value => "true")
+
+        controller.send(:dialog_get_form_vars_field)
+
+        edit_hash = controller.instance_variable_get(:@edit)
+        expect(edit_hash[:field_multi_value]).to be true
+        expect(edit_hash.fetch_path(:new, :tabs, 0, :groups, 0, :fields, 0, :multi_value)).to be true
+      end
+    end
+
+    context "#dialog_edit_set_form_vars" do
+      it "reset multiselect on edit from session" do
+        controller.x_node = "root_942-0_1053-0_-0"
+        field = {
+          :id          => 9463,
+          :label       => "first_drop_down",
+          :description => "first_drop_down",
+          :typ         => "DialogFieldDropDownList",
+          :tab_id      => 942,
+          :group_id    => 1053,
+          :multi_value => true
+        }
+        edit_new = {:new => { :tabs => [{:groups => [{:fields =>[field]}]}]}}
+        session[:edit] = edit_new
+
+        controller.send(:dialog_edit_set_form_vars)
+
+        edit_hash = controller.instance_variable_get(:@edit)
+        expect(edit_hash.fetch_path(:new, :tabs, 0, :groups, 0, :fields, 0, :multi_value)).to be true
+      end
+    end
+
+    context "#dialog_set_record_vars" do
+      let(:dialog) do
+        FactoryGirl.create(
+          :dialog,
+          :label       => "Test Label",
+          :description => "Test Description",
+          :buttons     => "submit,reset,cancel"
+        )
+      end
+      it "loads record from not the session" do
+        field = {
+          :id                => 9463,
+          :name              => "foo",
+          :label             => "first_drop_down",
+          :description       => "first_drop_down",
+          :typ               => "DialogFieldDropDownList",
+          :tab_id            => 942,
+          :group_id          => 1053,
+          :order             => 0,
+          :required          => false,
+          :sort_by           => :value,
+          :sort_order        => "ascending",
+          :data_type         => Integer,
+          :values            => [1, 2, 3],
+          :default_value     => 1,
+          :force_multi_value => nil
+        }
+        new_hash = {
+          :label       => "Dialog 1",
+          :description => "Dialog 1",
+          :buttons     => ["submit"],
+          :tabs        => [
+            {
+              :label       => "Tab 1",
+              :description => "Tab 1",
+              :groups      => [
+                {
+                  :label       => "Box 1",
+                  :description => "Box 1",
+                  :fields      => [field]
+                }
+              ]
+            }
+          ]
+        }
+        controller.instance_variable_set(:@edit, :new => new_hash, :dialog_buttons => [])
+
+        controller.send(:dialog_set_record_vars, dialog, "foo")
+
+        expect(dialog.dialog_tabs.first.dialog_groups.first.dialog_fields.first.options[:force_multi_value]).to be nil
+      end
+    end
+
     context "#dialog_delete" do
       before do
         EvmSpecHelper.local_miq_server
@@ -38,7 +164,7 @@ describe MiqAeCustomizationController do
     context "#prepare_move_field_value" do
       it "Find ID of a button" do
         controller.instance_variable_set(:@_params, :entry_id => 1)
-        controller.instance_variable_set(:@edit, {:field_values => [['test', 100], ['test1', 101], ['test2', 102]]})
+        controller.instance_variable_set(:@edit, :field_values => [['test', 100], ['test1', 101], ['test2', 102]])
         controller.send(:prepare_move_field_value)
         expect(controller.instance_variable_get(:@idx)).to eq(1)
       end
@@ -167,6 +293,7 @@ describe MiqAeCustomizationController do
         :field_name   => 'Dropdown1'
       }
       controller.send(:dialog_validate)
+
       expect(assigns(:flash_array).first[:message]).to include("Dropdown elements require some entries")
     end
 

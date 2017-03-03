@@ -73,8 +73,19 @@
                           @edit[:field_trigger_auto_refresh],
                           'data-miq_observe_checkbox' => {:url => url}.to_json)
 
-  - if @edit[:field_typ] =~ /Drop|Radio/ && !@edit[:field_dynamic]
+  - if @edit[:field_typ] =~ /Radio/ && !@edit[:field_dynamic]
     = render :partial => 'field_values', :locals => {:entry => nil}
+  - if @edit[:field_typ] =~ /Drop/
+    .form-horizontal
+      .form-group
+        %label.col-md-2.control-label
+          = _('Multiselect')
+        .col-md-8
+          = check_box_tag('field_multi_value', true,
+                          @edit[:field_multi_value],
+                          "data-miq_observe_checkbox" => {:url => url}.to_json)
+    - unless @edit[:field_dynamic]
+      = render :partial => 'field_values', :locals => {:entry => nil}   
   - elsif @edit[:field_typ] && @edit[:field_typ].include?("TagControl") && @edit[:field_category].present?
     = render :partial => 'tag_field_values', :locals => {:entry => nil}
 

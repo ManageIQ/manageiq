@@ -90,8 +90,14 @@
 
                               - else
                                 -# NOT REQUIRED
-                                = select_tag('field.id',
-                                              options_for_select(val.collect(&:reverse), field.default_value))
+                                = select_tag(field.id.to_s,
+                                             options_for_select(val.collect(&:reverse), field.default_value),
+                                             drop_down_options(field, "someURL"))
+                                :javascript
+                                  dialogFieldRefresh.initializeDialogSelectPicker('#{field.name}',
+                                                                                  '#{field.id}',
+                                                                                  undefined,
+                                                                                  '#{field.trigger_auto_refresh}');
 
                             - else
                               - val.each_with_index do |rb, i|
