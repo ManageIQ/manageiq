@@ -4,28 +4,44 @@ describe ShowbackConfiguration do
   end
 
   context "validations" do
+    let(:showback) { FactoryGirl.build(:showback_configuration) }
+
+    it "has a valid factory" do
+      expect(showback).to be_valid
+    end
     it "should ensure presence of name" do
-      expect(FactoryGirl.build(:showback_configuration, :name => nil)).not_to be_valid
+      showback.name = nil
+      showback.valid?
+      expect(showback.errors[:name]).to include "can't be blank"
     end
 
     it "should ensure presence of description" do
-      expect(FactoryGirl.build(:showback_configuration, :description => nil)).not_to be_valid
+      showback.description = nil
+      showback.valid?
+      expect(showback.errors[:description]).to include "can't be blank"
     end
 
     it "should ensure presence of measure type" do
-      expect(FactoryGirl.build(:showback_configuration, :measure => nil)).not_to be_valid
+      showback.measure = nil
+      showback.valid?
+      expect(showback.errors[:measure]).to include "is not included in the list"
     end
 
     it "should invalidate incorrect measure type" do
-      expect(FactoryGirl.build(:showback_configuration, :measure => "AA")).not_to be_valid
+      showback.measure = "AA"
+      showback.valid?
+      expect(showback.errors[:measure]).to include "is not included in the list"
     end
 
     it "should validate correct measure type" do
-      expect(FactoryGirl.build(:showback_configuration, :measure => "Integer")).to be_valid
+      showback.measure = "Integer"
+      expect(showback).to be_valid
     end
 
     it "should ensure presence of types" do
-      expect(FactoryGirl.build(:showback_configuration, :types => [])).not_to be_valid
+      showback.types = []
+      showback.valid?
+      expect(showback.errors[:types]).to include "can't be blank"
     end
   end
 
