@@ -1,16 +1,10 @@
 class MiqExpression::Field < MiqExpression::Target
-  FIELD_REGEX = /
+  REGEX = /
 (?<model_name>([[:upper:]][[:alnum:]]*(::)?)+)
 (?!.*\b(managed|user_tag)\b)
 \.?(?<associations>[a-z_\.]+)?
 -(?<column>[a-z]+(_[[:alnum:]]+)*)
 /x
-
-  def self.parse(field)
-    match = FIELD_REGEX.match(field) or return
-    model = match[:model_name].safe_constantize or return
-    new(model, match[:associations].to_s.split("."), match[:column])
-  end
 
   delegate :eq, :not_eq, :lteq, :gteq, :lt, :gt, :between, :to => :arel_attribute
 
@@ -20,7 +14,7 @@ class MiqExpression::Field < MiqExpression::Target
 
   def self.is_field?(field)
     return false unless field.kind_of?(String)
-    match = FIELD_REGEX.match(field)
+    match = REGEX.match(field)
     return false unless match
     model = match[:model_name].safe_constantize
     return false unless model

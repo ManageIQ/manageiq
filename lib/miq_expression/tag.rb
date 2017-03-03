@@ -1,5 +1,5 @@
 class MiqExpression::Tag < MiqExpression::Field
-  TAG_REGEX = /
+  REGEX = /
 (?<model_name>([[:alnum:]]*(::)?)+)
 \.(?<associations>([a-z_]+\.)*)
 (?<namespace>\bmanaged|user_tag\b)
@@ -10,14 +10,6 @@ class MiqExpression::Tag < MiqExpression::Field
   USER_NAMESPACE         = 'user'.freeze
 
   attr_reader :namespace
-
-  def self.parse(field)
-    match = TAG_REGEX.match(field) || return
-
-    associations = match[:associations].split(".")
-    model = match[:model_name].classify.safe_constantize
-    new(model, associations, match[:column], match[:namespace] == MANAGED_NAMESPACE)
-  end
 
   def initialize(model, associations, column, managed = true)
     super(model, associations, column)
