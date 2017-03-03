@@ -176,7 +176,7 @@ describe JobProxyDispatcher do
     context "with container and vms jobs" do
       before(:each) do
         @jobs = (@vms + @repo_vms).collect(&:scan)
-        @jobs += @container_images.map { |img| img.ext_management_system.raw_scan_job_create(img) }
+        @jobs += @container_images.map { |img| img.ext_management_system.raw_scan_job_create(img.class, img.id) }
         @dispatcher = JobProxyDispatcher.new
       end
 

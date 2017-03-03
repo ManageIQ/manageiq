@@ -153,12 +153,13 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
     check_policy_prevent(:request_containerimage_scan, entity, :raw_scan_job_create)
   end
 
-  def raw_scan_job_create(entity)
+  def raw_scan_job_create(target_class, target_id = nil)
+    target_class, target_id = target_class.class.name, target_class.id if target_class.kind_of?(ContainerImage)
     Job.create_job(
       "ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job",
       :name            => "Container image analysis",
-      :target_class    => entity.class.name,
-      :target_id       => entity.id,
+      :target_class    => target_class,
+      :target_id       => target_id,
       :zone            => my_zone,
       :miq_server_host => MiqServer.my_server.hostname,
       :miq_server_guid => MiqServer.my_server.guid,
@@ -174,7 +175,7 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
       :class_name  => self.class.to_s,
       :instance_id => id,
       :method_name => :check_policy_prevent_callback,
-      :args        => [cb_method, event_target],
+      :args        => [cb_method, event_target.class.name, event_target.id],
       :server_guid => MiqServer.my_guid
     }
     enforce_policy(event_target, policy_event, {}, { :miq_callback => cb }) unless policy_event.nil?

@@ -92,7 +92,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager do
 
     it ".scan_job_create" do
       image = FactoryGirl.create(:container_image, :ext_management_system => @ems)
-      job = @ems.raw_scan_job_create(image)
+      job = @ems.raw_scan_job_create(image.class, image.id)
 
       expect(job.state).to eq("waiting_to_start")
       expect(job.status).to eq("ok")
