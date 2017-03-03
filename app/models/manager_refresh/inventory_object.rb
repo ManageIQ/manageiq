@@ -83,20 +83,13 @@ module ManagerRefresh
 
     def self.add_attributes(inventory_object_attributes)
       inventory_object_attributes.each do |attr|
-        define_data_writer(attr)
-        define_data_reader(attr)
-      end
-    end
+        define_method("#{attr}=") do |value|
+          data[attr] = value
+        end
 
-    def self.define_data_writer(data_key)
-      define_method("#{data_key}=") do |value|
-        public_send(:[]=, data_key, value)
-      end
-    end
-
-    def self.define_data_reader(data_key)
-      define_method(data_key) do
-        public_send(:[], data_key)
+        define_method(attr) do
+          data[attr]
+        end
       end
     end
 
