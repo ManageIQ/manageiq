@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2017-03-03 13:00+0200\n"
 "Last-Translator: Marcos Souza Junior <msouza@redhat.com>\n"
-"Language-Team: Portugues\n"
+"Language-Team: PortuguesBR\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17,265 +17,265 @@ msgstr ""
 "\n"
 
 msgid "  Unable to add the following tags to %{class_name} %{id}: %{names}."
-msgstr ""
+msgstr "  Não foi possivel adicionar as seguintes tags para %{class_name} %{id}: %{names}."
 
 msgid "  Unable to remove the following tags from %{class_name} %{id}: %{names}."
-msgstr ""
+msgstr "  Não foi possivel remover as seguintes tags de %{class_name} %{id}: %{names}."
 
 msgid " # of Days"
-msgstr ""
+msgstr " Número de Dias"
 
 msgid " %{host_uid_ems} is not a compute node "
-msgstr ""
+msgstr " %{host_uid_ems} não é um compute node "
 
 msgid " %{host_uid_ems} needs to be evacuated before it can be removed "
-msgstr ""
+msgstr " %{host_uid_ems} precisa ser evacuado antes de ser removido "
 
 msgid " %{host_uid_ems} needs to be in maintenance mode before it can be removed "
-msgstr ""
+msgstr " %{host_uid_ems} precisa estar em modo de manutenção antes de ser removido "
 
 msgid " %{model} Assignments"
-msgstr ""
+msgstr " %{model} Atribuições"
 
 msgid " %{name} from %{value} to %{parameters} "
-msgstr ""
+msgstr " %{name} de %{value} para %{parameters} "
 
 msgid " (%{priority}active, PID=%{number})"
-msgstr ""
+msgstr " (%{priority}ativo, PID=%{number})"
 
 msgid " (%{priority}available, PID=%{number})"
-msgstr ""
+msgstr " (%{priority}disponível, PID=%{number})"
 
 msgid " (%{priority}unavailable)"
-msgstr ""
+msgstr " (%{priority}indisponível)"
 
 msgid " (Active)"
-msgstr ""
+msgstr " (Ativo)"
 
 msgid " (All %{file_shares})"
-msgstr ""
+msgstr " (Todos %{file_shares})"
 
 msgid " (All %{storage_volumes})"
-msgstr ""
+msgstr " (Todos %{storage_volumes})"
 
 msgid " (All %{storages})"
-msgstr ""
+msgstr " (Todos %{storages})"
 
 msgid " (All %{tables})"
-msgstr ""
+msgstr " (Todos %{tables})"
 
 msgid " (All %{title})"
-msgstr ""
+msgstr " (Todos %{title})"
 
 msgid " (All Descendant %{table}(s))"
-msgstr ""
+msgstr " (Todos os Decencentes %{table}(s))"
 
 msgid " (All Resource Pools)"
-msgstr ""
+msgstr " (Todos os Pools de Recursos)"
 
 msgid " (All VMs - Tree View)"
-msgstr ""
+msgstr " (Todas as Máquinas Virtuais - Tree)"
 
 msgid " (All VMs)"
-msgstr ""
+msgstr " (Todas as Máquinas Virtuais)"
 
 msgid " (Analysis History)"
-msgstr ""
+msgstr " (Analise Histórica)"
 
 msgid " (Click to view)"
-msgstr ""
+msgstr " (Clique para visualizar)"
 
 msgid " (Compliance History - Last %{number} Checks)"
-msgstr ""
+msgstr " (Histórico de Compliance - Ultimas %{number} Checagens)"
 
 msgid " (Container)"
-msgstr ""
+msgstr " (Container)"
 
 msgid " (Dashboard)"
-msgstr ""
+msgstr " (Dashboard)"
 
 msgid " (Devices)"
-msgstr ""
+msgstr " (Dispositivos)"
 
 msgid " (Direct %{title})"
-msgstr ""
+msgstr " (%{title} Direto)"
 
 msgid " (Genealogy)"
-msgstr ""
+msgstr " (Genealogia)"
 
 msgid " (Hosts & Clusters)"
-msgstr ""
+msgstr " (Hosts e Clusters)"
 
 msgid " (Inactive)"
-msgstr ""
+msgstr " (Inativo)"
 
 msgid " (Latest Compliance Check)"
-msgstr ""
+msgstr " (Ultima Checagem de Compliance)"
 
 msgid " (Names with \"%{search_text}\")"
-msgstr ""
+msgstr " (Nomes com \"%{search_text}\")"
 
 msgid " (Names with \"%{text}\")"
-msgstr ""
+msgstr " (Nomes com \"%{text}\")"
 
 msgid " (Networks)"
-msgstr ""
+msgstr " (Rede)"
 
 msgid " (OS Information)"
-msgstr ""
+msgstr " (Informação do SO)"
 
 msgid " (Properties)"
-msgstr ""
+msgstr " (Propriedades)"
 
 msgid " (Resources)"
-msgstr ""
+msgstr " (Recursos)"
 
 msgid " (Selected)"
-msgstr ""
+msgstr " (Selecionado)"
 
 msgid " (Snapshots)"
 msgstr ""
 
 msgid " (Summary)"
-msgstr ""
+msgstr " (Sumário)"
 
 msgid " (Topology)"
-msgstr ""
+msgstr " (Topologia)"
 
 msgid " (VMs & Templates)"
-msgstr ""
+msgstr " (Máquinas Virtuais e Templates)"
 
 msgid " (current)"
-msgstr ""
+msgstr " (atual)"
 
 msgid " (filtered)"
-msgstr ""
+msgstr " (filtrado)"
 
 msgid " * Multiple UI workers can not be configured with session store as memory"
 msgstr ""
 
 msgid " - %{last_refresh_date} Ago"
-msgstr ""
+msgstr " - %{last_refresh_date} Atrás"
 
 msgid " - Filtered by \"%{text}\""
-msgstr ""
+msgstr " - Filtrado por \"%{text}\""
 
 msgid " - Filtered by \"%{text}\" report"
-msgstr ""
+msgstr " - Filtrado por \"%{text}\" report"
 
 msgid " - Filtered by %{filter}"
-msgstr ""
+msgstr " - Filtrado por %{filter}"
 
 msgid " - Filtered by custom search"
-msgstr ""
+msgstr " - Filtrado por uma pesquisa customizada"
 
 msgid " Add "
-msgstr ""
+msgstr " Adicionar "
 
 msgid " Address"
-msgstr ""
+msgstr " Endereço"
 
 msgid " Build %{number}"
 msgstr ""
 
 msgid " Day"
-msgstr ""
+msgstr " Dia"
 
 msgid " Days"
-msgstr ""
+msgstr " Dias"
 
 msgid " Download PDF"
-msgstr ""
+msgstr " Baixar PDF"
 
 msgid " Full Screen"
-msgstr ""
+msgstr " Tela Cheia"
 
 msgid " Hour"
-msgstr ""
+msgstr " Hora"
 
 msgid " Hours"
-msgstr ""
+msgstr " Horas"
 
 msgid " Maximize"
-msgstr ""
+msgstr " Maximizar"
 
 msgid " Memory value not in range or not a multiple of 4"
-msgstr ""
+msgstr " Valor da Memória não está no range ou não é múltiplo de 4"
 
 msgid " Minimize"
-msgstr ""
+msgstr " Minimizar"
 
 msgid " Nothing"
-msgstr ""
+msgstr " Nada"
 
 msgid " Processor Options"
-msgstr ""
+msgstr " Opções do Processador"
 
 msgid " Remove Widget"
-msgstr ""
+msgstr " Remover o Widget"
 
 msgid " Scaling down to %{a} compute nodes"
-msgstr ""
+msgstr " Reduzir para %{a} dos compute nodes"
 
 msgid " Selected Actions:"
-msgstr ""
+msgstr " Selecionar Ações"
 
 msgid " Selected Alerts:"
-msgstr ""
+msgstr " Selecionar Alertas:"
 
 msgid " Total processors value larger than the maximum allowed"
-msgstr ""
+msgstr " Quantidade de processadores é maior que o maximo permitido"
 
 msgid " Use the snapshot that is active at time of provisioning"
-msgstr ""
+msgstr " Utilize o snapshot que estava ativo no momento do provisionamento"
 
 msgid " Valid memory value required"
-msgstr ""
+msgstr " Quantidade de memória válida necessaria"
 
 msgid " Valid numeric disk size required "
-msgstr ""
+msgstr " Tamanho de disco numérico necessário "
 
 msgid " Valid numeric quota value required "
-msgstr ""
+msgstr " Valor de Cota numérica necessária "
 
 msgid " Week"
-msgstr ""
+msgstr " Semana"
 
 msgid " Weeks"
-msgstr ""
+msgstr " Semanas"
 
 msgid " Zoom in"
-msgstr ""
+msgstr " Mais Zoom"
 
 msgid " [%{text} Information]"
-msgstr ""
+msgstr " [Informação de(a) %{text}]"
 
 msgid " by %{user}"
-msgstr ""
+msgstr " de %{user}"
 
 msgid "\"#{db}Performance.#{c}\""
 msgstr ""
 
 msgid "\"#{message_prefix} cannot be performed on orphaned VM.\""
-msgstr ""
+msgstr "\"#{message_prefix} não pode ser executada em uma Máquina Virtual orfã.\""
 
 msgid "\"#{operation_info.fetch(:msg)} initiated for selected server(s)\""
-msgstr ""
+msgstr "\"#{operation_info.fetch(:msg)} iniciada para o(s) servidor(es) selecionado(s)\""
 
 msgid "\"%{action}\" for %{switch} \"%{name}\""
-msgstr ""
+msgstr "\"%{action}\" para %{switch} \"%{name}\""
 
 msgid "\"%{action}\" for %{vm_or_template} \"%{name}\""
-msgstr ""
+msgstr "\"%{action}\" para %{vm_or_template} \"%{name}\""
 
 msgid "\"%{datastore_name}\": cannot be removed, has vms or hosts"
-msgstr ""
+msgstr "\"%{datastore_name}\": não pode ser removido, possui Máquinas Virtuais ou hosts"
 
 msgid "\"%{field}\" %{model} cannot be deleted"
-msgstr ""
+msgstr "\"%{field}\" %{model} não pode ser deletado"
 
 msgid "\"%{name}\": Global %{model} cannot be deleted"
-msgstr ""
+msgstr "\"%{name}\": Global %{model} não pode ser deletado"
 
 msgid "\"%{name}\": In use by %{rep_count} Report, cannot be deleted"
 msgid_plural "\"%{name}\": In use by %{rep_count} Reports, cannot be deleted"
@@ -283,61 +283,61 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "\"%{record}\": %{task} invalid"
-msgstr ""
+msgstr "\"%{record}\": %{task} inválida(o)"
 
 msgid "\"%{record}\": %{task} successfully initiated"
-msgstr ""
+msgstr "\"%{record}\": %{task} iniciado com sucesso"
 
 msgid "\"%{record}\": Analysis successfully initiated"
-msgstr ""
+msgstr "\"%{record}\": Análise iniciada com sucesso"
 
 msgid "\"%{record}\": Compliance check successfully initiated"
-msgstr ""
+msgstr "\"%{record}\": Verificação de Compliance iniciada com sucesso"
 
 msgid "\"%{record}\": Refresh successfully initiated"
-msgstr ""
+msgstr "\"%{record}\": Atualização iniciada com sucesso"
 
 msgid "\"%{record}\": Scheduling is %{status} now."
-msgstr ""
+msgstr "\"%{record}\": Agendamento está %{status}."
 
 msgid "\"%{task_description}\" was executed"
-msgstr ""
+msgstr "\"%{task_description}\" foi executado(a)"
 
 msgid "\"%{task}\": not available for %{hostname}"
-msgstr ""
+msgstr "\"%{task}\": não está disponível para %{hostname}"
 
 msgid "\"%{task}\": not available for %{hostname}. %{hostname}'s provision state must be in \"available\", \"adoptfail\", \"cleanfail\", or \"inspectfail\""
-msgstr ""
+msgstr "\"%{task}\": não está disponivel para %{hostname}. O provisionamento de %{hostname} deve estar \"available\", \"adoptfail\", \"cleanfail\", or \"inspectfail\""
 
 msgid "\"%{task}\": not available for %{hostname}. %{hostname}'s provision state needs to be in \"manageable\""
-msgstr ""
+msgstr "\"%{task}\": não está disponivel para %{hostname}. O provisionamento de %{hostname} precisa estar com o estado de \"manageable\""
 
 msgid "\"%{task}\": not supported for %{hostname}"
-msgstr ""
+msgstr "\"%{task}\": não é suportado para %{hostname}"
 
 msgid "\"%{type}\" is not a valid Orchestration Template type"
-msgstr ""
+msgstr "\"%{type}\" não é um tipo de Template de Orquestração válido"
 
 msgid "\"A specific #{ui_lookup(:model => @edit[:new][:cb_model])} or all must be selected\""
 msgstr ""
 
 msgid "\"Archived #{model_name}\""
-msgstr ""
+msgstr "\"Arquivado #{model_name}\""
 
 msgid "\"Could not find #{params[:model]}[id=#{params[:id]}]\""
-msgstr ""
+msgstr "\"Não foi possivel encontrar #{params[:model]}[id=#{params[:id]}]\""
 
 msgid "\"Error during repository fetch: #{err.message}\""
-msgstr ""
+msgstr "\"Erro na busca do repositorio: #{err.message}\""
 
 msgid "\"Incorrect credentials - #{err.message}\""
-msgstr ""
+msgstr "\"Credenciais Incorretas - #{err.message}\""
 
 msgid "\"Name: #{h(item.name)} | #{ui_lookup(:table => \"storages\")} Type: #{h(item.store_type)}\""
-msgstr ""
+msgstr "\"Nome: #{h(item.name)} | #{ui_lookup(:table => \"storages\")} Tipo: #{h(item.store_type)}\""
 
 msgid "\"No #{controller_name.pluralize} selected\""
-msgstr ""
+msgstr "\"Nenhum(a) #{controller_name.pluralize} selecionado(a)\""
 
 msgid "\"Not #{operation_info.fetch(:hawk)} the domain server\""
 msgstr ""
@@ -346,74 +346,74 @@ msgid "\"Not #{operation_info.fetch(:hawk)} the provider\""
 msgstr ""
 
 msgid "\"Orphaned #{model_name}\""
-msgstr ""
+msgstr "\"#{model_name} orfão\""
 
 msgid "\"Parent #{label}\""
-msgstr ""
+msgstr "\"#{label} pais\""
 
 msgid "\"Show policy details for #{h(item.name)}\""
-msgstr ""
+msgstr "\"Mostrar detalhes da policy para #{h(item.name)}\""
 
 msgid "\"Unexpected response returned from system: #{err.message}\""
-msgstr ""
+msgstr "\"Resposta inesperada do sistema: #{err.message}\""
 
 msgid "# CPUS"
 msgstr ""
 
 msgid "% Complete"
-msgstr ""
+msgstr "% Finalizada"
 
 #. TRANSLATORS: file: product/views/Storage.yaml
 #. TRANSLATORS: file: product/views/StorageCluster.yaml
 msgid "% Free Space"
-msgstr ""
+msgstr "% Espaço Livre"
 
 msgid "% Matched"
-msgstr ""
+msgstr "% Coincidente"
 
 msgid "% Matched:"
-msgstr ""
+msgstr "% Coincidente:"
 
 msgid "% Savings"
-msgstr ""
+msgstr "% de Economia"
 
 msgid "%d Months Ago"
-msgstr ""
+msgstr "%d Meses Atrás"
 
 msgid "%d Weeks Ago"
-msgstr ""
+msgstr "%d Semanas Atrás"
 
 msgid "%d%% in use of %d total"
-msgstr ""
+msgstr "%d%% em uso de %d total"
 
 msgid "%{action} \"%{item_name}\" for %{switch} \"%{name}\""
-msgstr ""
+msgstr "%{action} \"%{item_name}\" para %{switch} \"%{name}\""
 
 msgid "%{action} \"%{item_name}\" for %{vm_or_template} \"%{name}\""
-msgstr ""
+msgstr "%{action} \"%{item_name}\" para %{vm_or_template} \"%{name}\""
 
 msgid "%{agent} record no longer exists"
-msgstr ""
+msgstr "O registro %{agent} não existe mais"
 
 msgid "%{alert_profiles} with %{type} Tags"
-msgstr ""
+msgstr "%{alert_profiles} com Tags do tipo %{type}"
 
 msgid "%{amount} %{object} Being Tagged"
 msgid_plural "%{amount} %{objects} Being Tagged"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%{amount} %{object} Sendo Etiquetado (Tagged)"
+msgstr[1] "%{amount} %{object} Sendo Etiquetado (Tagged)"
 
 msgid "%{approval_states} requests cannot be deleted"
-msgstr ""
+msgstr "Solicitações de %{approval_states} não podem ser deletadas"
 
 msgid "%{button_group_name} (Group)"
-msgstr ""
+msgstr "(Grupo) %{button_group_name}"
 
 msgid "%{button_name} Button not yet implemented"
-msgstr ""
+msgstr "Botão %{button_name} ainda não foi implementado"
 
 msgid "%{chargeback_interval} Ending with"
-msgstr ""
+msgstr "%{chargeback_interval} Terminando com"
 
 msgid "%{children} (%{count})"
 msgstr ""
@@ -422,43 +422,43 @@ msgid "%{children} (0)"
 msgstr ""
 
 msgid "%{class_name} [%{name}] is attached to <%{ems_class_name}: %{ems_name}> that does not support Provisioning"
-msgstr ""
+msgstr "%{class_name} [%{name}] está anexado a <%{ems_class_name}: %{ems_name}> que não suporta Provisionamento"
 
 msgid "%{class_name} [%{name}] is attached to <%{ems_class_name}: %{ems_name}> with missing credentials"
-msgstr ""
+msgstr "%{class_name} [%{name}] está aenxado a <%{ems_class_name}: %{ems_name}> sem credenciais"
 
 msgid "%{class_name} [%{name}] is not attached to a Management System"
-msgstr ""
+msgstr "%{class_name} [%{name}] não está anexada ao Sistema de Gerenciamento"
 
 msgid "%{class_name} expected to respond to event_logs and doesn't!"
-msgstr ""
+msgstr "%{class_name} deveria responder ao event_logs e não responde!"
 
 msgid "%{class_name} is not a subclass of %{name}"
-msgstr ""
+msgstr "%{class_name} não é uma subclasse de %{name}"
 
 msgid "%{class_name}.counter_desc: counter %{counter_name} not found"
-msgstr ""
+msgstr "%{class_name}.counter_desc: Contador %{counter_name} não encontrado"
 
 msgid "%{class_name}.counter_desc: counter _{counter_name} not found"
-msgstr ""
+msgstr "%{class_name}.counter_desc: Contador _{counter_name} não encontrado"
 
 msgid "%{class_name}.counter_unit: counter %{counter_name} not found"
-msgstr ""
+msgstr "%{class_name}.counter_unit: Contador %{counter_name} não encontrado"
 
 msgid "%{count} unread notifications"
-msgstr ""
+msgstr "%{count} notificações não lidas"
 
 msgid "%{date_from} to %{date_to}"
-msgstr ""
+msgstr "%{date_from} a %{date_to}"
 
 msgid "%{description} Reservation is larger than VM Memory"
-msgstr ""
+msgstr "A Reserva de %{description} é maior que a memória da Máquina Virtual"
 
 msgid "%{description} category Scan"
 msgstr ""
 
 msgid "%{description} is required"
-msgstr ""
+msgstr "%{description} é requerido"
 
 msgid "%{description} registry Scan"
 msgstr ""
@@ -467,40 +467,40 @@ msgid "%{entry_point} Entry Point (NameSpace/Class/Instance)"
 msgstr ""
 
 msgid "%{field_required} for Non-DRS enabled cluster"
-msgstr ""
+msgstr "%{field_required} para Non-DRS cluster habilitado"
 
 msgid "%{field} '%{value}' is already in use"
-msgstr ""
+msgstr "%{field} '%{value}' já está em uso"
 
 msgid "%{hosts} & %{clusters}"
-msgstr ""
+msgstr "%{hosts} e %{clusters}"
 
 msgid "%{host} to validate against, Username and matching password fields are needed to perform verification of credentials"
-msgstr ""
+msgstr "Para validar o host %{host} são necessarios os campos: Usuário e senha para que sejam verificadas as credenciais"
 
 msgid "%{instance_model} \"%{instance_name}\" has no attached %{volumes}"
-msgstr ""
+msgstr "%{instance_model} \"%{instance_name}\" não possui %{volumes} anexados"
 
 msgid "%{item} has been initiated for the selected Servers"
-msgstr ""
+msgstr "%{item} foi iniciado para os Servidores escolhidos"
 
 msgid "%{key} changed to %{value}"
-msgstr ""
+msgstr "%{key} foi alterado(a) para %{value}"
 
 msgid "%{labels} are not in the current region and will be skipped"
-msgstr ""
+msgstr "%{labels} não estão na região atual e serão ignorados"
 
 msgid "%{label} Authentication"
-msgstr ""
+msgstr "Autenticação de %{label}"
 
 msgid "%{label} Credentials"
-msgstr ""
+msgstr "Credenciais de %{label}"
 
 msgid "%{label} is not in the current region and will be skipped"
-msgstr ""
+msgstr "%{label} não está na região atual e será ignorado"
 
 msgid "%{log_description} log downloaded"
-msgstr ""
+msgstr "Log de %{log_description} baixado"
 
 msgid "%{log_message} \"%{error}\" attempting merge next message"
 msgstr ""
@@ -512,161 +512,161 @@ msgid "%{log} \"%{error}\" attempting to get next message"
 msgstr ""
 
 msgid "%{log} Blank DRb_URI for MiqServer with ID=[%{number}], NAME=[%{name}], PID=[%{pid_number}], GUID=[%{guid_number}]"
-msgstr ""
+msgstr "%{log} DRb_URI em branco para MiqServer com o ID=[%{number}], NOME=[%{name}], PID=[%{pid_number}], GUID=[%{guid_number}]"
 
 msgid "%{log} Message <%{message}> is of unknown type <%{type}>"
-msgstr ""
+msgstr "%{log} A messagem <%{message}> é de um tipo desconhecido <%{type}>"
 
 msgid "%{log} No MiqServer found to establishing DRb Connection to"
-msgstr ""
+msgstr "%{log} Nenhum MiqServer encontrado para DRb se conectar"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 msgid "%{message}"
 msgstr ""
 
 msgid "%{message} %{key}:[%{old_value}] to [new_value]"
-msgstr ""
+msgstr "%{message} %{key}:[%{old_value}] para [new_value]"
 
 msgid "%{message} %{key}:[*] to [*]"
-msgstr ""
+msgstr "%{message} %{key}:[*] para [*]"
 
 msgid "%{message} is not available for %{name}."
-msgstr ""
+msgstr "%{message} não está disponível para %{name}."
 
 msgid "%{message} is not available for Images/Templates."
-msgstr ""
+msgstr "%{message} não está disponivel para Imagens/Templates."
 
 msgid "%{model_name} Group Reorder cancelled"
-msgstr ""
+msgstr "Reordenação do Grupo %{model_name} cancelada"
 
 msgid "%{model_name} Group Reorder saved"
-msgstr ""
+msgstr "Reordenação do Grupo %{model_name} salva"
 
 msgid "%{models} Group Reorder"
-msgstr ""
+msgstr "Reordenação do Grupo %{models}"
 
 msgid "%{models} can not be deleted"
-msgstr ""
+msgstr "%{models} não pode ser deletado"
 
 msgid "%{models} no longer exists"
-msgstr ""
+msgstr "%{models} não existe mais"
 
 msgid "%{model} \"%{name}\""
 msgstr ""
 
 msgid "%{model} \"%{name}\" (Summary)"
-msgstr ""
+msgstr "%{model} \"%{name}\" (Sumário)"
 
 msgid "%{model} \"%{name}\" Bottlenecks Summary"
-msgstr ""
+msgstr "%{model} \"%{name}\" Sumário de Gargalos"
 
 msgid "%{model} \"%{name}\" Utilization Trend Summary"
-msgstr ""
+msgstr "%{model} \"%{name}\" Sumário de Tendências de Utilização"
 
 msgid "%{model} \"%{name}\" already exists"
-msgstr ""
+msgstr "%{model} \"%{name}\" já existe"
 
 msgid "%{model} \"%{name}\" cannot be removed because it is attached to one or more %{instances}"
-msgstr ""
+msgstr "%{model} \"%{name}\" não pode ser removido(a) porque está anexado a um ou mais %{instances}"
 
 msgid "%{model} \"%{name}\" created"
-msgstr ""
+msgstr "%{model} \"%{name}\" criado"
 
 msgid "%{model} \"%{name}\" has no attached %{volumes}"
-msgstr ""
+msgstr "%{model} \"%{name}\" não possui %{volumes} anexados"
 
 msgid "%{model} \"%{name}\" is not attached to any %{instances}"
-msgstr ""
+msgstr "%{model} \"%{name}\" não está anexado a nunhum(a) %{instances}"
 
 msgid "%{model} \"%{name}\" successfully added to Service \"%{to_name}\""
-msgstr ""
+msgstr "%{model} \"%{name}\" adicionado com sucesso ao Serviço \"%{to_name}\""
 
 msgid "%{model} \"%{name}\" updated"
-msgstr ""
+msgstr "%{model} \"%{name}\" atualizado"
 
 msgid "%{model} \"%{name}\" was added"
-msgstr ""
+msgstr "%{model} \"%{name}\" foi adicionado"
 
 msgid "%{model} \"%{name}\" was saved"
-msgstr ""
+msgstr "%{model} \"%{name}\" foi salvo"
 
 msgid "%{model} \"%{name}\" was updated"
-msgstr ""
+msgstr "%{model} \"%{name}\" foi atualizado"
 
 msgid "%{model} \"%{name}\": %{task} successfully initiated"
-msgstr ""
+msgstr "%{model} \"%{name}\": %{task} iniciado com sucesso"
 
 msgid "%{model} \"%{name}\": Create Logical Disk successfully initiated"
-msgstr ""
+msgstr "%{model} \"%{name}\": Criação de Disco Lógico iniciada com sucesso"
 
 msgid "%{model} \"%{name}\": Delete successful"
-msgstr ""
+msgstr "%{model} \"%{name}\": Deletado com sucesso"
 
 msgid "%{model} \"%{name}\": Error during '%{task}': "
-msgstr ""
+msgstr "%{model} \"%{name}\": Erro durante '%{task}': "
 
 msgid "%{model} \"%{name}\": Error during '%{task}': %{error_message}"
-msgstr ""
+msgstr "%{model} \"%{name}\": Erro durante '%{task}': %{error_message}"
 
 msgid "%{model} \"%{name}\": Error during '%{task}': %{error_msg}"
-msgstr ""
+msgstr "%{model} \"%{name}\": Erro durante '%{task}': %{error_msg}"
 
 msgid "%{model} \"%{name}\": Error during '%{task}': %{message}"
-msgstr ""
+msgstr "%{model} \"%{name}\": Erro durante '%{task}': %{message}"
 
 msgid "%{model} \"%{name}\": Error during 'Analysis': %{message}"
-msgstr ""
+msgstr "%{model} \"%{name}\": Erro durante 'Analysis': %{message}"
 
 msgid "%{model} \"%{name}\": Error during 'Check Compliance': "
-msgstr ""
+msgstr "%{model} \"%{name}\": Erro durante 'Check Compliance':"
 
 msgid "%{model} \"%{name}\": Error during 'delete': %{error_message}"
-msgstr ""
+msgstr "%{model} \"%{name}\": Erro durante 'delete': %{error_message}"
 
 msgid "%{model} \"%{name}\": Error during 'miq_report_delete': %{message}"
-msgstr ""
+msgstr "%{model} \"%{name}\": Erro durante 'miq_report_delete': %{message}"
 
 msgid "%{model} \"%{name}\": Error during delete: %{error_msg}"
-msgstr ""
+msgstr "%{model} \"%{name}\": Erro durante deleção: %{error_msg}"
 
 msgid "%{model} (%{tag} running %{time})"
-msgstr ""
+msgstr "%{model} (%{tag} executando %{time})"
 
 msgid "%{model} Alert Profiles"
-msgstr ""
+msgstr "%{model} Perfis de Alerta"
 
 msgid "%{model} Analysis"
-msgstr ""
+msgstr "%{model} Analise"
 
 msgid "%{model} Condition \"%{name}\""
-msgstr ""
+msgstr "%{model} Condição \"%{name}\""
 
 msgid "%{model} Order was cancelled by the user"
-msgstr ""
+msgstr "O Pedido %{model} foi cancelado pelo usuário"
 
 msgid "%{model} [%{name} - Updated %{time}%{update}]"
-msgstr ""
+msgstr "%{model} [%{name} - Atualizado %{time}%{update}]"
 
 msgid "%{model} for %{group} \"%{name}\""
-msgstr ""
+msgstr "%{model} para %{group} \"%{name}\""
 
 msgid "%{model} must contain at least one %{field}"
-msgstr ""
+msgstr "%{model} deve conter pelo menos um %{field}"
 
 msgid "%{model} no longer exists"
-msgstr ""
+msgstr "%{model} não existe mais"
 
 msgid "%{model} no longer exists."
-msgstr ""
+msgstr "%{model} não existe mais."
 
 msgid "%{model} search \"%{name}\" was saved"
-msgstr ""
+msgstr "%{model} busca \"%{name}\" foi salva"
 
 msgid "%{model} search \"%{name}\" was successfully loaded"
-msgstr ""
+msgstr "%{model} busca \"%{name}\" foi carregada com sucesso"
 
 msgid "%{model} search \"%{name}\": Delete successful"
-msgstr ""
+msgstr "%{model} busca \"%{name}\": Deletada com sucesso"
 
 msgid "%{model} under %{record_model} \"%{name}\""
 msgstr ""
@@ -681,13 +681,13 @@ msgid "%{model}: %{name}"
 msgstr ""
 
 msgid "%{model}: %{task} successfully initiated"
-msgstr ""
+msgstr "%{model}: %{task} iniciado com sucesso"
 
 msgid "%{model}: Discovery successfully initiated"
-msgstr ""
+msgstr "%{model}: Descoberta iniciada com sucesso"
 
 msgid "%{name} %{text} (Summary)"
-msgstr ""
+msgstr "%{name} %{text} (Sumário)"
 
 msgid "%{name} '%{vm_name}' Drift Report"
 msgstr ""
@@ -708,85 +708,85 @@ msgid "%{name} (%{table}(s))"
 msgstr ""
 
 msgid "%{name} (All %{children})"
-msgstr ""
+msgstr "%{name} (Todos(as) %{children})"
 
 msgid "%{name} (All %{tables})"
-msgstr ""
+msgstr "%{name} (Todos(as) %{tables})"
 
 msgid "%{name} (All %{titles})"
-msgstr ""
+msgstr "%{name} (Todos(as) %{titles})"
 
 msgid "%{name} (All %{title})"
-msgstr ""
+msgstr "%{name} (Todos(as) %{title})"
 
 msgid "%{name} (All Registered %{title})"
-msgstr ""
+msgstr "%{name} (Todos(as) %{title} Registrados)"
 
 msgid "%{name} (All Registered Hosts)"
-msgstr ""
+msgstr "%{name} (Todos Hosts Registrados)"
 
 msgid "%{name} (All Resource Pools)"
-msgstr ""
+msgstr "%{name} (Todos os Pools de Recursos)"
 
 msgid "%{name} (All VMs - Tree View)"
-msgstr ""
+msgstr "%{name} (Todas as Máquinas Virtuais - Tree View)"
 
 msgid "%{name} (All cloud tenants present on this host)"
-msgstr ""
+msgstr "%{name} (Todos os cloud tenants presentes neste host)"
 
 msgid "%{name} (Applications)"
-msgstr ""
+msgstr "%{name} (Aplicações)"
 
 msgid "%{name} (Arbitration Profiles)"
-msgstr ""
+msgstr "%{name} (Perfis de Arbitragem)"
 
 msgid "%{name} (Compliance History - Last %{number} Checks)"
-msgstr ""
+msgstr "%{name} (Histórico Compliance - Últimas %{number} Checagens)"
 
 msgid "%{name} (Devices)"
-msgstr ""
+msgstr "%{name} (Dispositivos)"
 
 msgid "%{name} (Direct VMs)"
-msgstr ""
+msgstr "%{name} (Máquinas Virtuais Diretas)"
 
 msgid "%{name} (Disks)"
-msgstr ""
+msgstr "%{name} (Discos)"
 
 msgid "%{name} (Groups)"
-msgstr ""
+msgstr "%{name} (Grupos)"
 
 msgid "%{name} (Hosts)"
-msgstr ""
+msgstr "%{name} (Hosts)"
 
 msgid "%{name} (Latest Compliance Check)"
-msgstr ""
+msgstr "%{name} (Última Checagem de Compliance)"
 
 msgid "%{name} (Network)"
-msgstr ""
+msgstr "%{name} (Rede)"
 
 msgid "%{name} (OS Information)"
-msgstr ""
+msgstr "%{name} (Informação do SO)"
 
 msgid "%{name} (Packages)"
-msgstr ""
+msgstr "%{name} (Pacotes)"
 
 msgid "%{name} (Patches)"
-msgstr ""
+msgstr "%{name} (Patches)"
 
 msgid "%{name} (Storage Adapters)"
-msgstr ""
+msgstr "%{name} (Storage Adapters)"
 
 msgid "%{name} (Summary)"
-msgstr ""
+msgstr "%{name} (Sumário)"
 
 msgid "%{name} (Users)"
-msgstr ""
+msgstr "%{name} (Usuários)"
 
 msgid "%{name} (VM Monitor Information)"
-msgstr ""
+msgstr "%{name} (Monitor de Informação da Máquina Virtual)"
 
 msgid "%{name} (no longer exists)"
-msgstr ""
+msgstr "%{name} (não existe mais)"
 
 msgid "%{name} Capacity & Utilization"
 msgstr ""
@@ -798,13 +798,13 @@ msgid "%{name} Compare Report (* = Value does not match base)"
 msgstr ""
 
 msgid "%{name} Configuration Manager"
-msgstr ""
+msgstr "%{name} Gerenciador de Configuração"
 
 msgid "%{name} Configured Systems"
-msgstr ""
+msgstr "%{name} Sistemas Configurados"
 
 msgid "%{name} Providers"
-msgstr ""
+msgstr "%{name} Provedores"
 
 msgid "%{name} RSS Feeds"
 msgstr ""
@@ -813,37 +813,37 @@ msgid "%{name} Tags"
 msgstr ""
 
 msgid "%{name} already retired"
-msgstr ""
+msgstr "%{name} já aposentado"
 
 msgid "%{name} dashboard for user %{id} in group id %{current_group_id}"
-msgstr ""
+msgstr "%{name} dashboard para o usuário %{id} no grupo id %{current_group_id}"
 
 msgid "%{name} does not exist on %{management}"
-msgstr ""
+msgstr "%{name} não existe em %{management}"
 
 msgid "%{name} domain: Current version - %{version}, Available version - %{available_version}"
-msgstr ""
+msgstr "%{name} dominio: Versão Atual - %{version}, Versão Disponível - %{available_version}"
 
 msgid "%{name} is currently being used in the Display Filter"
-msgstr ""
+msgstr "%{name} está sendo utilizado no filtro de exibição"
 
 msgid "%{name} is required"
-msgstr ""
+msgstr "%{name} é necessário"
 
 msgid "%{name} is the base"
-msgstr ""
+msgstr "%{name} é a base"
 
 msgid "%{name} must be at least %{length} characters"
-msgstr ""
+msgstr "%{name} deve possuir pelo menos %{length} caracteres"
 
 msgid "%{name} must be correctly formatted"
-msgstr ""
+msgstr "%{name} deve ser corretamente formatado"
 
 msgid "%{name} must not be greater than %{length} characters"
-msgstr ""
+msgstr "%{name} não deve ter mais que %{length} caracteres"
 
 msgid "%{name} not supported for upload!"
-msgstr ""
+msgstr "%{name} não é supportado para upload!"
 
 msgid "%{name}.request_smis_update: no active SmisRefreshWorker found for zone %{zone}"
 msgstr ""
@@ -852,153 +852,153 @@ msgid "%{name}.request_status_update: no active SmisRefreshWorker found for zone
 msgstr ""
 
 msgid "%{name}: '%{task}' successfully initiated"
-msgstr ""
+msgstr "%{name}: '%{task}' iniciado com sucesso"
 
 msgid "%{name}: Delete successful"
-msgstr ""
+msgstr "%{name}: Deletado com sucesso"
 
 msgid "%{name}: Error during '%{task}': %{message}"
-msgstr ""
+msgstr "%{name}: Erro durante '%{task}': %{message}"
 
 msgid "%{name}:[%{key}] to [%{new_key}]"
-msgstr ""
+msgstr "%{name}:[%{key}] para [%{new_key}]"
 
 msgid "%{number} (%{percentage} of Used Space, %{amount} file)"
 msgid_plural "%{number} (%{percentage} of Used Space, %{amount} files)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%{number} (%{percentage} de espaço utilizado, %{amount} arquivo)"
+msgstr[1] "%{number} (%{percentage} de espaço utilizado, %{amount} arquivos)"
 
 msgid "%{number} (Virtual to Real Ratio: %{ratio})"
-msgstr ""
+msgstr "%{number} (Relação Virtual para Real: %{ratio})"
 
 msgid "%{number} Day"
 msgid_plural "%{number} Days"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%{number} Dia"
+msgstr[1] "%{number} Dias"
 
 msgid "%{number} Days Ago"
-msgstr ""
+msgstr "%{number} Dias Atrás"
 
 msgid "%{number} Hour"
 msgid_plural "%{number} Hours"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%{number} Hora"
+msgstr[1] "%{number} Horas"
 
 msgid "%{number} Month"
 msgid_plural "%{number} Months"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%{number} Mês"
+msgstr[1] "%{number} Meses"
 
 msgid "%{number} Week"
 msgid_plural "%{number} Weeks"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%{number} Semana"
+msgstr[1] "%{number} Semanas"
 
 msgid "%{number} bytes"
 msgstr ""
 
 msgid "%{object} Conditions"
-msgstr ""
+msgstr "Condição %{object}"
 
 msgid "%{product} Appliance restart initiated successfully"
-msgstr ""
+msgstr "%{product} Reinicialização do Appliance iniciada com sucesso"
 
 msgid "%{product} Log"
 msgstr ""
 
 msgid "%{product} Region: %{region_description} [%{region}]"
-msgstr ""
+msgstr "%{product} Região: %{region_description} [%{region}]"
 
 msgid "%{product} Server \"%{name}\" set as %{priority} for Role \"%{role_description}\""
-msgstr ""
+msgstr "%{product} Servidor \"%{name}\" definido como %{priority} para o Role \"%{role_description}\""
 
 msgid "%{product} Version"
-msgstr ""
+msgstr "Versão %{product}"
 
 msgid "%{protocol} port %{port} to pods on target port:'%{target_port}'"
-msgstr ""
+msgstr "%{protocol} porta %{port} no pods na porta destino:'%{target_port}'"
 
 msgid "%{record_name} has no snapshots"
-msgstr ""
+msgstr "%{record_name} não possui snapshots"
 
 msgid "%{record_name} no longer exists in the database"
-msgstr ""
+msgstr "%{record_name} não existe mais no banco de dados"
 
 msgid "%{record} - \"%{button_text}\""
 msgstr ""
 
 msgid "%{record} no longer exists"
-msgstr ""
+msgstr "%{record} não existe mais"
 
 msgid "%{role} on %{model}: %{name} [%{id}]"
-msgstr ""
+msgstr "%{role} no %{model}: %{name} [%{id}]"
 
 msgid "%{schedule} %{name} was deleted"
-msgstr ""
+msgstr "%{schedule} %{name} foi deletado"
 
 msgid "%{server}: %{server_name} [%{server_id}] (current)"
-msgstr ""
+msgstr "%{server}: %{server_name} [%{server_id}] (atual)"
 
 msgid "%{signal} is not permitted at state %{state}"
-msgstr ""
+msgstr "%{signal} não é permitido no estado %{state}"
 
 msgid "%{status} - %{time}"
 msgstr ""
 
 msgid "%{storage} Type"
-msgstr ""
+msgstr "%{storage} Tipo"
 
 msgid "%{tables} (Click to open)"
-msgstr ""
+msgstr "%{tables} (Clique para abrir)"
 
 msgid "%{table} (%{count})"
 msgstr ""
 
 msgid "%{table} failed last authentication check"
-msgstr ""
+msgstr "%{table} falhou na última chacagem de autenticação"
 
 msgid "%{table} install on [%{name}]"
-msgstr ""
+msgstr "%{table} instalar no [%{name}]"
 
 msgid "%{table} no longer exists"
-msgstr ""
+msgstr "%{table} não mais existe"
 
 msgid "%{table}: %{name}"
 msgstr ""
 
 msgid "%{task} does not apply to at least one of the selected %{model}"
-msgstr ""
+msgstr "%{task} não se aplica para pelo menos um dos selecionados %{model}"
 
 msgid "%{task} initiated for %{count} %{model} from the %{product} Database"
 msgid_plural "%{task} initiated for %{count} %{models} from the %{product} Database"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%{task} iniciada para %{count} %{model} do Banco de dados %{product}"
+msgstr[1] "%{task} iniciada para %{count} %{model} do Banco de dados %{product}"
 
 msgid "%{task} initiated for %{count} Host from the %{product} Database"
 msgid_plural "%{task} initiated for %{count} Hosts from the %{product} Database"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%{task} iniciada para %{count} Host do Banco de Dados %{product}"
+msgstr[1] "%{task} iniciada para %{count} Hosts do Banco de Dados %{product}"
 
 msgid "%{task} initiated for %{count} Storage Manager from the %{product} Database"
 msgid_plural "%{task} initiated for %{count} Storage Managers from the %{product} Database"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%{task} iniciada para %{count} Gerenciador do Storage do Banco de Dados %{product}"
+msgstr[1] "%{task} iniciada para %{count} Gerenciadores do Storage do Banco de Dados %{product}"
 
 msgid "%{task} initiated for %{count} provider (%{controller})"
 msgid_plural "%{task} initiated for %{count} providers (%{controller})"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%{task} iniciada para %{count} provedor (%{controller})"
+msgstr[1] "%{task} iniciada para %{count} provedores (%{controller})"
 
 msgid "%{task} initiated for %{number} %{model} from the %{product} Database"
 msgid_plural "%{task} initiated for %{number} %{models} from the %{product} Database"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%{task} iniciado para %{number} %{model} do Banco de Dados %{product}"
+msgstr[1] "%{task} iniciado para %{number} %{model} do Banco de Dados %{product}"
 
 msgid "%{task} request has already been processed"
-msgstr ""
+msgstr "%{task} solicitação já foi processada"
 
 msgid "%{task} request is already being processed"
-msgstr ""
+msgstr "%{task} solicitação já está sendo processada"
 
 msgid "%{tenant_name} (%{group}): %{group_description}"
 msgstr ""
