@@ -32,14 +32,14 @@ module ApplicationController::DialogRunner
         result = @edit[:wf].submit_request
       rescue StandardError => bang
         add_flash(_("Error during 'Provisioning': %{error_message}") % {:error_message => bang.message}, :error)
-        javascript_flash
+        javascript_flash(:spinner_off => true)
       else
         unless result[:errors].blank?
           # show validation errors
           result[:errors].each do |err|
             add_flash(err, :error)
           end
-          javascript_flash
+          javascript_flash(:spinner_off => true)
         else
           flash = _("Order Request was Submitted")
           if role_allows?(:feature => "miq_request_show_list", :any => true)
@@ -74,7 +74,7 @@ module ApplicationController::DialogRunner
     else
       return unless load_edit("dialog_edit__#{params[:id]}", "replace_cell__explorer")
       add_flash(_("%{button_name} Button not yet implemented") % {:button_name => params[:button].capitalize}, :error)
-      javascript_flash
+      javascript_flash(:spinner_off => true)
     end
   end
 
@@ -83,11 +83,7 @@ module ApplicationController::DialogRunner
     return unless load_edit("dialog_edit__#{params[:id]}", "replace_cell__explorer")
     dialog_get_form_vars
 
-    # Use JS to update the display
-    render :update do |page|
-      page << javascript_prologue
-      page << "miqSparkle(false);"
-    end
+    head :ok
   end
 
   # for non-explorer screen

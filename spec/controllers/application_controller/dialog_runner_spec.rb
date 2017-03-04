@@ -22,9 +22,9 @@ describe CatalogController do
       allow(wf).to receive(:set_value)
     end
 
-    it "includes disabling the sparkle in the response" do
+    it "doesn't include disabling the sparkle in the response" do
       post :dialog_field_changed, :params => params, :session => session, :xhr => true
-      expect(response.body).to include("miqSparkle(false);")
+      expect(response.body).not_to include("miqSparkle")
     end
 
     it "stores the incoming value in the edit variable" do
