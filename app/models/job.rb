@@ -50,7 +50,6 @@ class Job < ApplicationRecord
     self.context ||= {}
     self.options ||= {}
     self.status   = "ok"
-    self.code     = 0
     self.message  = "process initiated"
   end
 
@@ -105,10 +104,9 @@ class Job < ApplicationRecord
     end
   end
 
-  def set_status(message, status = "ok", code = 0)
+  def set_status(message, status = "ok")
     self.message = message
     self.status  = status
-    self.code    = code
 
     save
   end
@@ -139,13 +137,13 @@ class Job < ApplicationRecord
   def process_error(*args)
     message, status = args
     _log.error message.to_s
-    set_status(message, status, 1)
+    set_status(message, status)
   end
 
   def process_abort(*args)
     message, status = args
     _log.error "job aborting, #{message}"
-    set_status(message, status, 1)
+    set_status(message, status)
     signal(:finish, message, status)
   end
 
