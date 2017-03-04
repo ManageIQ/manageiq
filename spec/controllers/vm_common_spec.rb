@@ -251,6 +251,18 @@ describe VmOrTemplateController do
       expect(controller.parent_folder_id(template_infra)).to eq(TreeBuilder.build_node_cid(template_infra.ext_management_system))
     end
 
+    it 'returns id of Datacenter folder for infra VM/Template without blue folder but with Datacenter parent' do
+      datacenter = FactoryGirl.create(:datacenter, :hidden => true)
+      vm_infra_datacenter = FactoryGirl.create(:vm_infra, :ext_management_system => FactoryGirl.create(:ems_infra))
+      template_infra_datacenter = FactoryGirl.create(:template_infra, :ext_management_system => FactoryGirl.create(:ems_infra))
+      vm_infra_datacenter.with_relationship_type("ems_metadata") { vm_infra_datacenter.parent = datacenter }
+      allow(vm_infra_datacenter).to receive(:parent_datacenter).and_return(datacenter)
+      template_infra_datacenter.with_relationship_type("ems_metadata") { template_infra_datacenter.parent = datacenter }
+      allow(template_infra_datacenter).to receive(:parent_datacenter).and_return(datacenter)
+      expect(controller.parent_folder_id(vm_infra_datacenter)).to eq(TreeBuilder.build_node_cid(datacenter.id, 'Datacenter'))
+      expect(controller.parent_folder_id(template_infra_datacenter)).to eq(TreeBuilder.build_node_cid(datacenter.id, 'Datacenter'))
+    end
+
     it 'returns id of blue folder for VM/Template with one' do
       folder = FactoryGirl.create(:ems_folder)
       vm_infra_folder = FactoryGirl.create(:vm_infra, :ext_management_system => FactoryGirl.create(:ems_infra))
