@@ -1,3 +1,5 @@
+require 'resolv'
+
 module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
   extend ActiveSupport::Concern
 
@@ -26,6 +28,18 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     username = options[:user] || authentication_userid(options[:auth_type])
     password = options[:pass] || authentication_password(options[:auth_type])
     service  = options[:service] || "Service"
+
+    # Starting with version 4 of oVirt authentication doesn't work when using directly the IP address, it requires
+    # the fully qualified host name, so if we received an IP address we try to convert it into the corresponding
+    # host name:
+    if resolve_ip_addresses?
+      resolved = resolve_ip_address(server)
+      if resolved != server
+        _log.info("IP address '#{server}' has been resolved to host name '#{resolved}'.")
+        default_endpoint.hostname = resolved
+        server = resolved
+      end
+    end
 
     # Create the underlying connection according to the version of the oVirt API requested by
     # the caller:
@@ -334,6 +348,42 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
       current_val = Rails.cache.read(key)
       return true unless current_val && current_val[:created_at] && last_refresh_time
       last_refresh_time > current_val[:created_at]
+    end
+  end
+
+  private
+
+  #
+  # Checks if IP address to host name resolving is enabled.
+  #
+  # @return [Boolean] `true` if host name resolving is enabled in the configuration, `false` otherwise.
+  #
+  def resolve_ip_addresses?
+    ::Settings.ems.ems_redhat.resolve_ip_addresses
+  end
+
+  #
+  # Tries to convert the given IP address into a host name, doing a reverse DNS lookup if needed. If it
+  # isn't possible to find the host name the original IP address will be returned, and a warning will be
+  # written to the log.
+  #
+  # @param address [String] The IP address.
+  # @return [String] The host name.
+  #
+  def resolve_ip_address(address)
+    # Don't try to resolve unless the string is really an IP address and not a host name:
+    return address unless address =~ Resolv::IPv4::Regex || address =~ Resolv::IPv6::Regex
+
+    # Try to do a reverse resolve of the address to find the host name, using the default resolver, which
+    # means first using the local hosts file and then DNS:
+    begin
+      Resolv.getname(address)
+    rescue Resolv::ResolvError
+      _log.warn(
+        "Can't find fully qualified host name for IP address '#{address}', will use the IP address " \
+        "directly."
+      )
+      address
     end
   end
 end
