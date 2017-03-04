@@ -92,7 +92,7 @@ class Host < ApplicationRecord
   has_many                  :host_aggregates, :through => :host_aggregate_hosts
   
   # Physical infra reference
-  has_one :physical_server, :foreign_key => "serial_number", :primary_key => "service_tag", :class_name => "PhysicalServer"
+  has_one :physical_server, :inverse_of => :host
   
   serialize :settings, Hash
 
