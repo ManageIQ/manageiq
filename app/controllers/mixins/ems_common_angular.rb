@@ -308,7 +308,7 @@ module Mixins
 
     def metrics_default_database_name
       if @ems.class.name == 'ManageIQ::Providers::Redhat::InfraManager'
-        ManageIQ::Providers::Redhat::InfraManager.history_database_name_for('4.0')
+        ManageIQ::Providers::Redhat::InfraManager.default_history_database_name
       end
     end
 
