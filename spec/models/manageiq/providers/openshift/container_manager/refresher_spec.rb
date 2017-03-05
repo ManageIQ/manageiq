@@ -95,7 +95,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     expect(ContainerBuild.count).to eq(3)
     expect(ContainerBuildPod.count).to eq(3)
     expect(ContainerTemplate.count).to eq(26)
-    expect(ContainerImage.count).to eq(44)
+    expect(ContainerImage.count).to eq(40)
   end
 
   def assert_ems
