@@ -3,7 +3,7 @@ module MiqAeMethodService
     # Alias model names do not create deprecation warnings
     ALIAS_MODEL_NAMES = {
       'ems' => 'ExtManagementSystem'
-    }
+    }.freeze
 
     # Legacy model names create deprecation warnings
     LEGACY_MODEL_NAMES = {
@@ -82,7 +82,7 @@ module MiqAeMethodService
       # Others
       'configuration_manager'                        => 'ManageIQ_Providers_ConfigurationManager',
       'provisioning_manager'                         => 'ManageIQ_Providers_ProvisioningManager'
-    }
+    }.freeze
 
     def service_model_lookup(model_name)
       converted_name = model_name.to_s.underscore

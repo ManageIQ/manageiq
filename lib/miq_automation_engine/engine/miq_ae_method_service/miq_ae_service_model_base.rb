@@ -2,9 +2,9 @@ require_relative 'miq_ae_service_object_common'
 require_relative 'miq_ae_service_rbac'
 module MiqAeMethodService
   class MiqAeServiceModelBase
-    SERVICE_MODEL_PATH = Rails.root.join("lib/miq_automation_engine/service_models")
+    SERVICE_MODEL_PATH = Rails.root.join("lib", "miq_automation_engine", "service_models")
     SERVICE_MODEL_GLOB = SERVICE_MODEL_PATH.join("miq_ae_service_*.rb")
-    EXPOSED_ATTR_BLACK_LIST = [/password/, /^auth_key$/]
+    EXPOSED_ATTR_BLACK_LIST = [/password/, /^auth_key$/].freeze
     class << self
       include DRbUndumped  # Ensure that Automate Method can get at the class itself over DRb
     end
@@ -150,8 +150,8 @@ module MiqAeMethodService
     #   delims      = "<" | ">" | "#" | "%" | <">
     #   unwise      = "{" | "}" | "|" | "\" | "^" | "[" | "]" | "`"
     #
-    DELIMS = ['<', '>', '#', '%', "\""]
-    UNWISE = ['{', '}', '|', "\\", '^', '[', ']', "\`"]
+    DELIMS = ['<', '>', '#', '%', "\""].freeze
+    UNWISE = ['{', '}', '|', "\\", '^', '[', ']', "\`"].freeze
     def self.normalize(str)
       return str unless str.kind_of?(String)
 
@@ -194,7 +194,7 @@ module MiqAeMethodService
       if obj.kind_of?(ActiveRecord::Base) && !obj.kind_of?(ar_klass)
         raise ArgumentError.new("#{ar_klass.name} Object expected, but received #{obj.class.name}")
       end
-      @object = obj.kind_of?(ar_klass) ? obj : ar_method { self.class.find_ar_object_by_id(obj.to_i) }
+      @object = obj.kind_of?(ar_klass) ? obj : ar_method { ar_klass.find_by(:id => obj) }
       raise MiqAeException::ServiceNotFound, "#{ar_klass.name} Object [#{obj}] not found" if @object.nil?
     end
 
@@ -264,7 +264,7 @@ module MiqAeMethodService
       ar_method do
         begin
           @object.public_send(name, *params)
-        rescue Exception => err
+        rescue Exception
           $miq_ae_logger.error("The following error occurred during instance method <#{name}> for AR object <#{@object.inspect}>")
           raise
         end
