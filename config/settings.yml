@@ -1275,6 +1275,8 @@
         :poll: 15.seconds
       :event_catcher_hawkular:
         :poll: 10.seconds
+      :event_catcher_hawkular_datawarehouse:
+        :poll: 30.seconds
       :event_catcher_google:
         :poll: 15.seconds
       :event_catcher_kubernetes:
