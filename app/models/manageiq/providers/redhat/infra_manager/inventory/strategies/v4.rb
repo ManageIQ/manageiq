@@ -91,8 +91,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
 
     def get_vm_proxy(vm, con = nil)
       con ||= connection
-      service = con.system_service.vms_service.vm_service(vm.uid_ems)
-      VmProxy(service, service.get)
+      VmProxyDecorator.new(con.system_service.vms_service.vm_service(vm.uid_ems))
     end
 
     def get_host_proxy(host, con = nil)
@@ -234,18 +233,6 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
       end
     end
 
-    class VmProxy
-      def initialize(service, vm)
-        @service = service
-        @vm = vm
-      end
-      def method_missing(method_name, *args)
-        @obj1.send(method_name, *args)
-      rescue
-        @obj2.send(method_name, *args)
-      end
-    end
-
     class HostPreloadedAttributesDecorator < SimpleDelegator
       attr_reader :nics, :statistics
       def initialize(host, connection)
@@ -253,6 +240,38 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
         @nics = connection.follow_link(host.nics)
         @statistics = connection.follow_link(host.statistics)
         super(host)
+      end
+    end
+
+    class VmProxyDecorator < SimpleDelegator
+      def initialize(vm)
+        @obj = vm
+        super(vm)
+      end
+
+      def upate_memory_reserve!(memory_reserve_size)
+        vm = get
+        vm.memory_policy.guaranteed = memory_reserve_size
+        update(vm)
+      end
+
+      def udpate_description!(description)
+        vm = get
+        vm.description = description
+        update(vm)
+      end
+
+      def update_memory!(memory)
+        vm = get
+        vm.memory = memory
+        update(vm)
+      end
+
+      def udpate_host_affinity!(dest_host_ems_ref)
+        vm = get
+        host = collect_host(dest_host_ems_ref)
+        vm.placement_policy.hosts = [host]
+        update(vm)
       end
     end
 

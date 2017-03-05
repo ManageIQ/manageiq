@@ -6,6 +6,10 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
       @ext_management_system = args[:ems]
     end
 
+    def get
+      self
+    end
+
     def collect_username_by_href(href)
       username = nil
       ext_management_system.with_provider_connection do |rhevm|
@@ -76,6 +80,15 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
     def cluster_find_network_by_name(href, network_name)
       ext_management_system.with_provider_connection do |rhevm|
         Ovirt::Cluster.find_by_href(rhevm, href).try(:find_network_by_name, network_name)
+      end
+    end
+
+    def method_missing(method_name, *args)
+      if method_name.starts_with?("update_")
+        attribute_to_update = method_name.split("update_")[1].gsub('!','')
+        send("#{attribute_to_update}=", args)
+      else
+        super
       end
     end
   end
