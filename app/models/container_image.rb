@@ -36,6 +36,7 @@ class ContainerImage < ApplicationRecord
   after_create :raise_creation_event
 
   def full_name
+    return docker_id if image_ref && image_ref.start_with?(DOCKER_PULLABLE_PREFIX)
     result = ""
     result << "#{container_image_registry.full_name}/" unless container_image_registry.nil?
     result << name

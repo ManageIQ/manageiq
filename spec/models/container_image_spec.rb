@@ -9,6 +9,9 @@ describe ContainerImage do
     reg = ContainerImageRegistry.new(:name => "docker.io", :host => "docker.io", :port => "1234")
     image.container_image_registry = reg
     expect(image.full_name).to eq("docker.io:1234/fedora:v1")
+
+    image.image_ref = "docker-pullable://registry/repo/name@id"
+    expect(image.full_name).to eq("registry/repo/name@id")
   end
 
   it "#display_registry" do

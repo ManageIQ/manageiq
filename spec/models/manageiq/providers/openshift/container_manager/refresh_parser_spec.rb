@@ -154,8 +154,8 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
       },]
       parser.instance_variable_get('@data_index').store_path(
         :container_image,
-        :by_ref_and_registry_host_port,
-        "#{image_registry}:#{image_registry_port}:#{image_ref}",
+        :by_digest,
+        image_digest,
         parser.instance_variable_get('@data')[:container_images][0])
 
       inventory = {"image" => [image_from_openshift,]}
@@ -163,8 +163,37 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
       parser.get_openshift_images(inventory)
       expect(parser.instance_variable_get('@data')[:container_images].size).to eq(1)
       expect(parser.instance_variable_get('@data')[:container_images][0]).to eq(
-        parser.instance_variable_get('@data_index')[:container_image][:by_ref_and_registry_host_port].values[0])
+        parser.instance_variable_get('@data_index')[:container_image][:by_digest].values[0])
       expect(parser.instance_variable_get('@data')[:container_images][0][:architecture]).to eq('amd64')
+    end
+
+    it "matches images by digest" do
+      FIRST_NAME = "first_name".freeze
+      FIRST_TAG = "first_tag".freeze
+      FIRST_REF = "first_ref".freeze
+      parser.instance_variable_get('@data')[:container_images] = [{
+        :name          => FIRST_NAME,
+        :tag           => FIRST_TAG,
+        :digest        => image_digest,
+        :image_ref     => FIRST_REF,
+        :registered_on => Time.now.utc - 2.minutes
+      },]
+      parser.instance_variable_get('@data_index').store_path(
+        :container_image,
+        :by_digest,
+        image_digest,
+        parser.instance_variable_get('@data')[:container_images][0]
+      )
+
+      inventory = {"image" => [image_from_openshift,]}
+
+      parser.get_openshift_images(inventory)
+      expect(parser.instance_variable_get('@data')[:container_images].size).to eq(1)
+      expect(parser.instance_variable_get('@data')[:container_images][0]).to eq(
+        parser.instance_variable_get('@data_index')[:container_image][:by_digest].values[0]
+      )
+      expect(parser.instance_variable_get('@data')[:container_images][0][:architecture]).to eq('amd64')
+      expect(parser.instance_variable_get('@data')[:container_images][0][:name]).to eq(FIRST_NAME)
     end
 
     context "image registries from openshift images" do
