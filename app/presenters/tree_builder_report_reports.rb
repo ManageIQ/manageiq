@@ -42,7 +42,7 @@ class TreeBuilderReportReports < TreeBuilderReportReportsClass
   def x_get_tree_custom_kids(object, count_only, _options)
     objects = []
     nodes = object[:full_id] ? object[:full_id].split('-') : object[:id].to_s.split('-')
-    if nodes.length == 1 # && nodes.last.split('-').length <= 2 #|| nodes.length == 2
+    if nodes.length == 1 && @rpt_menu[nodes.last.to_i][1].kind_of?(Array)
       @rpt_menu[nodes.last.to_i][1].each_with_index do |r, i|
         objects.push(
           :id    => "#{nodes.last.split('-').last}-#{i}",
