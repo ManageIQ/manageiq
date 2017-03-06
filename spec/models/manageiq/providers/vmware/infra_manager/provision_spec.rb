@@ -73,6 +73,23 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
         expect { @vm_prov.build_config_network_adapters(vmcs) }.not_to raise_error
       end
 
+      it "should change the device type of existing network cards" do
+        requested_networks = [{:network => "Enterprise", :devicetype => "VirtualVmxnet3"}]
+        template_networks  = [
+          VimHash.new("VirtualE1000")  do |vnic|
+            vnic.backing = VimHash.new("VirtualEthernetCardNetworkBackingInfo")
+          end
+        ]
+
+        allow(@vm_prov).to receive(:normalize_network_adapter_settings).and_return(requested_networks)
+        allow(@vm_prov).to receive(:get_network_adapters).and_return(template_networks)
+
+        vmcs = VimHash.new("VirtualMachineConfigSpec")
+        @vm_prov.build_config_network_adapters(vmcs)
+
+        expect(vmcs.deviceChange[0].device.xsiType).to eq("VirtualVmxnet3")
+      end
+
       it "eligible_hosts" do
         host = FactoryGirl.create(:host, :ext_management_system => @ems)
         host_struct = [MiqHashStruct.new(:id => host.id, :evm_object_class => host.class.base_class.name.to_sym)]

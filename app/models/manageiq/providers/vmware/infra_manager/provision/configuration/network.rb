@@ -50,7 +50,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Configuration::Netw
   def build_config_spec_vlan(network, vnicDev, vmcs)
     operation = vnicDev.nil? ? VirtualDeviceConfigSpecOperation::Add : VirtualDeviceConfigSpecOperation::Edit
     add_device_config_spec(vmcs, operation) do |vdcs|
-      vdcs.device = vnicDev || create_vlan_device(network)
+      vdcs.device = edit_vlan_device(network, vnicDev) || create_vlan_device(network)
       _log.info "Setting target network device to Device Name:<#{network[:network]}>  Device:<#{vdcs.device.inspect}>"
       vdcs.device.backing.deviceName = network[:network]
       #
@@ -75,7 +75,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Configuration::Netw
 
     operation = vnicDev.nil? ? VirtualDeviceConfigSpecOperation::Add : VirtualDeviceConfigSpecOperation::Edit
     add_device_config_spec(vmcs, operation) do |vdcs|
-      vdcs.device = vnicDev || create_vlan_device(network)
+      vdcs.device = edit_vlan_device(network, vnicDev) || create_vlan_device(network)
       _log.info "Setting target network device to Device Name:<#{network[:network]}>  Device:<#{vdcs.device.inspect}>"
 
       #
@@ -113,6 +113,16 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Configuration::Netw
         bck.deviceName = network[:network]
       end
     end
+  end
+
+  def edit_vlan_device(network, vnic)
+    # If a device type was provided override the type of the existing vnic
+    device_type = get_config_spec_value(network, nil, nil, [:devicetype])
+    if device_type && vnic.xsiType != device_type
+      vnic.xsiType = device_type
+    end
+
+    vnic
   end
 
   def find_dvs_by_name(vim, dvs_name)
