@@ -58,6 +58,7 @@
   "resolutions": {
     "patternfly-bootstrap-treeview": "~2.1.1",
     "moment": ">=2.10.5",
-    "d3": "~3.5.0"
+    "d3": "~3.5.0",
+    "jquery": "~2.1.4"
   }
 }
