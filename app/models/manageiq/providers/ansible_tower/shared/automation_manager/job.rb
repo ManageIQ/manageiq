@@ -56,18 +56,25 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Job
   end
 
   def update_with_provider_object(raw_job)
-    self.ems_ref     ||= raw_job.id
-    self.status        = raw_job.status
-    self.start_time  ||= raw_job.started
-    self.finish_time ||= raw_job.finished
-    self.verbosity   ||= raw_job.verbosity
+    update_attributes(
+      :ems_ref     => raw_job.id,
+      :status      => raw_job.status,
+      :start_time  => raw_job.started,
+      :finish_time => raw_job.finished,
+      :verbosity   => raw_job.verbosity
+    )
 
     if parameters.empty?
       self.parameters = raw_job.extra_vars_hash.collect do |para_key, para_val|
         OrchestrationStackParameter.new(:name => para_key, :value => para_val, :ems_ref => "#{raw_job.id}_#{para_key}")
       end
     end
-    save!
+
+    if authentications.empty?
+      credential_types = %w(credential_id cloud_credential_id network_credential_id)
+      credential_refs = credential_types.collect { |attr| raw_job.try(attr) }.delete_blanks
+      self.authentications = ext_management_system.credentials.where(:manager_ref => credential_refs)
+    end
   end
   private :update_with_provider_object
 
