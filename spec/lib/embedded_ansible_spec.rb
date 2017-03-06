@@ -89,8 +89,8 @@ describe EmbeddedAnsible do
     let(:extra_vars) do
       {
         :minimum_var_space => 0,
-        :nginx_http_port   => described_class::NGINX_HTTP_PORT,
-        :nginx_https_port  => described_class::NGINX_HTTPS_PORT
+        :http_port         => described_class::HTTP_PORT,
+        :https_port        => described_class::HTTPS_PORT
       }.to_json
     end
 
