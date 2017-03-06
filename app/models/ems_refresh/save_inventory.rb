@@ -47,26 +47,26 @@ module EmsRefresh::SaveInventory
     array.each do |hash|
       object = klass.find_by(:ems_ref => hash[:ems_ref])
 
-      unless object
-        _log.warn("Unable to find object to tag for ems_ref: #{hash[:ems_ref]} using class #{klass}. Skipping.")
+      if object.blank? || hash[:tags].blank?
+        if object.blank?
+          _log.warn("Unable to find object to tag for ems_ref: #{hash[:ems_ref]} using class #{klass}. Skipping.")
+        end
         next
       end
 
-      unless hash[:tags].blank?
-        hash[:tags].each do |tags|
-          tags.each do |key, value|
-            name = File.join(category_tag.name, "#{key.downcase}:#{value.downcase}")
-            tag  = Tag.find_or_create_by(:name => name)
+      hash[:tags].each do |tags|
+        tags.each do |key, value|
+          name = File.join(category_tag.name, "#{key.downcase}:#{value.downcase}")
+          tag  = Tag.find_or_create_by(:name => name)
 
-            Category.find_or_create_by(:description => "#{key.downcase}: #{value.downcase}") do |cat|
-              cat.parent = parent_category
-              cat.tag    = tag
-            end
+          Category.find_or_create_by(:description => "#{key.downcase}: #{value.downcase}") do |cat|
+            cat.parent = parent_category
+            cat.tag    = tag
+          end
 
-            Tagging.find_or_create_by(:tag => tag) do |tagging|
-              tagging.taggable_type = klass
-              tagging.taggable = object
-            end
+          Tagging.find_or_create_by(:tag => tag) do |tagging|
+            tagging.taggable_type = klass
+            tagging.taggable = object
           end
         end
       end
