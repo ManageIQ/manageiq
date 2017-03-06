@@ -38,6 +38,7 @@ module EmsRefresh::SaveInventory
     vendor = array.first[:vendor].to_s.downcase
     category_tag = Tag.find_or_create_by_classification_name(vendor.to_s)
 
+    # Use the lowercase vendor name as the category
     parent_category = Category.find_or_create_by(:description => vendor.capitalize) do |cat|
       cat.tag          = category_tag
       cat.example_text = "Tags for #{vendor.capitalize} resources"
@@ -54,10 +55,10 @@ module EmsRefresh::SaveInventory
       unless hash[:tags].blank?
         hash[:tags].each do |tags|
           tags.each do |key, value|
-            name = "/managed/#{vendor}/#{key.downcase}:#{value.downcase}"
+            name = File.join(category_tag.name, "#{key.downcase}:#{value.downcase}")
             tag  = Tag.find_or_create_by(:name => name)
 
-            Category.find_or_create_by(:description => "#{key.downcase}/#{value.downcase}") do |cat|
+            Category.find_or_create_by(:description => "#{key.downcase}: #{value.downcase}") do |cat|
               cat.parent = parent_category
               cat.tag    = tag
             end
