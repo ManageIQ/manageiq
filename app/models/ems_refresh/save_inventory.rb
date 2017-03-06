@@ -45,12 +45,16 @@ module EmsRefresh::SaveInventory
 
     array.each do |hash|
       object = klass.find_by(:ems_ref => hash[:ems_ref])
-      next unless object
+
+      unless object
+        _log.warn("Unable to find object to tag for ems_ref: #{hash[:ems_ref]} using class #{klass}. Skipping.")
+        next
+      end
 
       unless hash[:tags].blank?
         hash[:tags].each do |tags|
           tags.each do |key, value|
-            name = "/managed/#{@category_name}/#{key.downcase}:#{value.downcase}"
+            name = "/managed/#{vendor}/#{key.downcase}:#{value.downcase}"
             tag  = Tag.find_or_create_by(:name => name)
 
             Category.find_or_create_by(:description => "#{key.downcase}/#{value.downcase}") do |cat|
