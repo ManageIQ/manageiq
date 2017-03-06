@@ -150,7 +150,7 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
   end
 
   def scan_job_create(entity)
-    check_policy_prevent(:request_containerimage_scan, entity, :raw_scan_job_create, entity)
+    check_policy_prevent(:request_containerimage_scan, entity, :raw_scan_job_create)
   end
 
   def raw_scan_job_create(entity)
@@ -169,12 +169,12 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
   # policy_event: the event sent to automate for policy resolution
   # cb_method:    the MiqQueue callback method along with the parameters that is called
   #               when automate process is done and the event is not prevented to proceed by policy
-  def check_policy_prevent(policy_event, event_target, *cb_method)
+  def check_policy_prevent(policy_event, event_target, cb_method)
     cb = {
       :class_name  => self.class.to_s,
       :instance_id => id,
       :method_name => :check_policy_prevent_callback,
-      :args        => [*cb_method],
+      :args        => [cb_method, event_target],
       :server_guid => MiqServer.my_guid
     }
     enforce_policy(event_target, policy_event, {}, { :miq_callback => cb }) unless policy_event.nil?
