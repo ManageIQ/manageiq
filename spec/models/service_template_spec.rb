@@ -113,6 +113,28 @@ describe ServiceTemplate do
     end
   end
 
+  context "initiator" do
+    shared_examples_for 'initiator example' do |initiator, match|
+      it 'test initiator' do
+        svc_template = FactoryGirl.create(:service_template, :name => 'Svc A')
+        options = {:dialog => {}}
+        options[:initiator] = initiator if initiator
+        svc_task = instance_double("service_task", :options => options)
+        svc = svc_template.create_service(svc_task, nil)
+
+        expect(svc.initiator).to eq(match)
+      end
+    end
+
+    context "initiator specified" do
+      it_behaves_like 'initiator example', 'fred', 'fred'
+    end
+
+    context "initiator not specified" do
+      it_behaves_like 'initiator example', nil, 'user'
+    end
+  end
+
   context "with multiple services" do
     before(:each) do
       @svc_a = FactoryGirl.create(:service_template, :name => 'Svc A')
@@ -606,13 +628,15 @@ describe ServiceTemplate do
       resource_action = FactoryGirl.create(:resource_action, :action => "Provision")
       service_template = FactoryGirl.create(:service_template,
                                             :resource_actions => [resource_action])
+      hash = {:target => service_template, :initiator => 'control'}
       workflow = instance_double(ResourceActionWorkflow)
       expect(ResourceActionWorkflow).to(receive(:new)
-        .with({}, user, resource_action, :target => service_template).and_return(workflow))
+        .with({}, user, resource_action, hash).and_return(workflow))
       expect(workflow).to receive(:submit_request)
       expect(workflow).to receive(:set_value).with('ordered_by', 'fred')
+      expect(workflow).to receive(:set_value).with(:initiator, 'control')
 
-      service_template.provision_request(user, 'ordered_by' => 'fred')
+      service_template.provision_request(user, 'ordered_by' => 'fred', :initiator => 'control')
     end
   end
 end

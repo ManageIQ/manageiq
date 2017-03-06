@@ -224,7 +224,8 @@ class MiqAction < ApplicationRecord
 
   def action_run_ansible_playbook(action, rec, _inputs)
     service_template = ServiceTemplate.find(action.options[:service_template_id])
-    options = { :dialog_hosts => target_hosts(action, rec) }
+    options = { :dialog_hosts => target_hosts(action, rec),
+                :initiator    => 'control' }
     service_template.provision_request(target_user(rec), options)
   end
 
