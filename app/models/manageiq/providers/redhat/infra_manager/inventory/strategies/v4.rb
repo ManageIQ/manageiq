@@ -57,9 +57,14 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
       connection.system_service.clusters_service.list
     end
 
-    def collect_cluster_name_href(href)
-      cluster = connection.system_service.clusters_service_cluster_service(get_uuid_from_href(href)).get
-      cluster.name
+    def collect_cluster_from_href(href, con = nil)
+      con ||= connection
+      con.system_service.clusters_service.cluster_service(get_uuid_from_href(href)).get
+    end
+
+    def collect_cluster_name_href(href, con = nil)
+      con ||= connection
+      collect_cluster_from_href(href, con).name
     end
 
     def collect_storages
@@ -101,7 +106,12 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
 
     def get_template_proxy(template, con = nil)
       con ||= connection
-      con.system_service.templates_service.template_service(template.uid_ems)
+      byebug_term
+      TemplateProxyDecorator.new(
+        con.system_service.templates_service.template_service(template.uid_ems),
+        con,
+        self
+      )
     end
 
     def collect_vm_by_uuid(uuid)
@@ -215,7 +225,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
 
     def cluster_find_network_by_name(href, network_name)
       @ems.with_provider_connection(:version => 4) do |connection|
-        cluster_service = connection.system_service.clusters_service_cluster_service(get_uuid_from_href(href))
+        cluster_service = connection.system_service.clusters_service.cluster_service(get_uuid_from_href(href))
         networks = cluster_service.networks_service.list
         networks.detect { |n| n[:name] == network_name }
       end
@@ -243,12 +253,33 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
       end
     end
 
-    class VmProxyDecorator < SimpleDelegator
-      def initialize(vm)
-        @obj = vm
-        super(vm)
+    class TemplateProxyDecorator < SimpleDelegator
+      attr_reader :connection, :inventory
+      def initialize(template_service, connection, inventory)
+        @obj = template_service
+        @connection = connection
+        @inventory = inventory
+        super(template_service)
       end
 
+      def create_vm(options)
+        vms_service = connection.system_service.vms_service
+        cluster = inventory.collect_cluster_from_href(options[:cluster], connection)
+        template = get
+        vm = build_vm_from_hash(:name     => options[:name],
+                                :template => template,
+                                :cluster  => cluster)
+        vms_service.add(vm)
+      end
+
+      def build_vm_from_hash(args)
+        OvirtSDK4::Vm.new(:name => args[:name],
+                          :template => args[:template],
+                          :cluster => args[:cluster])
+      end
+    end
+
+    class VmProxyDecorator < SimpleDelegator
       def upate_memory_reserve!(memory_reserve_size)
         vm = get
         vm.memory_policy.guaranteed = memory_reserve_size

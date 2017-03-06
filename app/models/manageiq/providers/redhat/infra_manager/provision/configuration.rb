@@ -12,7 +12,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration
 
   def configure_cloud_init
     return unless content = customization_template_content
-    get_provider_destination.cloud_init = content
+    get_provider_destination.update_cloud_init!(content)
 
     if Gem::Version.new(source.ext_management_system.api_version) >= Gem::Version.new("3.5.5.0")
       phase_context[:boot_with_cloud_init] = true

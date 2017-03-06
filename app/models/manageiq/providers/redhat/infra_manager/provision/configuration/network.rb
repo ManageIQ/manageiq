@@ -38,7 +38,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Netw
   end
 
   def find_network_in_cluster(network_name)
-    network = source.inventory.cluster_find_network_by_name(dest_cluster.ems_ref, network_name)
+    network = source.ext_management_system.inventory.cluster_find_network_by_name(dest_cluster.ems_ref, network_name)
 
     _log.warn "Cannot find network name=#{network_name}" if network.nil?
     network

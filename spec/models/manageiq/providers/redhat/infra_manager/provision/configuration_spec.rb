@@ -5,12 +5,13 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration do
   let(:ems)           { FactoryGirl.create(:ems_redhat_with_authentication) }
   let(:host)          { FactoryGirl.create(:host_redhat) }
   let(:rhevm_vm)      { instance_double("Ovirt::Vm") }
+  let(:provider_object) { ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V3::GeneralUpdateMethodNamesDecorator.new(rhevm_vm) }
   let(:task)          { FactoryGirl.create(:miq_provision_redhat, :state => 'pending', :status => 'Ok', :options => {:src_vm_id => template.id}) }
   let(:template)      { FactoryGirl.create(:template_redhat, :ext_management_system => ems) }
   let(:vm)            { FactoryGirl.create(:vm_redhat) }
 
-  before { allow_any_instance_of(ManageIQ::Providers::Redhat::InfraManager::Provision).to receive(:get_provider_destination).and_return(rhevm_vm) }
-
+  before { allow_any_instance_of(ManageIQ::Providers::Redhat::InfraManager::Provision).to receive(:get_provider_destination).and_return(provider_object) }
+  before(:each){ allow_any_instance_of(ManageIQ::Providers::Redhat::InfraManager).to receive(:supported_api_versions).and_return([3])}
   context "#attach_floppy_payload" do
     it "should attach floppy if customization template provided" do
       task.options[:customization_template_id] = cust_template.id

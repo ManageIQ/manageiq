@@ -26,7 +26,20 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
 
     def get_vm_proxy(vm, connection)
       connection ||= ext_management_system.connect
-      connection.get_resource_by_ems_ref(vm.ems_ref)
+      vm_proxy = connection.get_resource_by_ems_ref(vm.ems_ref)
+      GeneralUpdateMethodNamesDecorator.new(vm_proxy)
+    end
+
+    def get_template_proxy(template, connection)
+      connection ||= ext_management_system.connect
+      template_proxy = connection.get_resource_by_ems_ref(template.ems_ref)
+      GeneralUpdateMethodNamesDecorator.new(template_proxy)
+    end
+
+    def get_host_proxy(host, connection)
+      connection ||= ext_management_system.connect
+      host_proxy = connection.get_resource_by_ems_ref(host.ems_ref)
+      GeneralUpdateMethodNamesDecorator.new(host_proxy)
     end
 
     def collect_disks_by_hrefs(disks)
@@ -83,12 +96,15 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
       end
     end
 
-    def method_missing(method_name, *args)
-      if method_name.starts_with?("update_")
-        attribute_to_update = method_name.split("update_")[1].gsub('!','')
-        send("#{attribute_to_update}=", args)
-      else
-        super
+    class GeneralUpdateMethodNamesDecorator < SimpleDelegator
+      def method_missing(method_name, *args)
+        str_method_name = method_name.to_s
+        if str_method_name.starts_with?("update_")
+          attribute_to_update = str_method_name.split("update_")[1].gsub('!','')
+          send("#{attribute_to_update}=", *args)
+        else
+          super
+        end
       end
     end
   end

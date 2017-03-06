@@ -33,6 +33,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
         end
         storages.compact!
         storages.uniq!
+        byebug
         storage = storages.first
 
         # Determine the cluster
@@ -188,7 +189,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
       inv.each do |interface, devices|
         devices.each_with_index do |device, index|
           device_type = 'disk'
-          storage_domain = device.storage_domains.first
+          storage_domain = device.storage_domains && device.storage_domains.first
           storage_mor = storage_domain && storage_domain.id
 
           new_result = {
@@ -198,8 +199,8 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
             :present         => true,
             :filename        => device.id,
             :location        => index.to_s,
-            :size            => (device.provisioned_size || device.size).to_i,
-            :size_on_disk    => device.actual_size ? device.actual_size.to_i : 0,
+            :size            => device.provisioned_size.to_i,
+            :size_on_disk    => device.actual_size.to_i,
             :disk_type       => device.sparse == true ? 'thin' : 'thick',
             :mode            => 'persistent',
             :bootable        => device.try(:bootable)

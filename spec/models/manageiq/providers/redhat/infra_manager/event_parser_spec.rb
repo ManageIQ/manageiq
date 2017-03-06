@@ -28,7 +28,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::EventParser  do
                :code=>35,
                :time=>"2017-02-27 15:44:20 +0100",
                :name=>"USER_UPDATE_VM"}
-      allow(ManageIQ::Providers::Redhat::InfraManager).to receive(:find_by_id).and_return(@ems)
+      allow(ManageIQ::Providers::Redhat::InfraManager).to receive(:find_by).with(:id => @ems.id).and_return(@ems)
 
       VCR.use_cassette("#{described_class.name.underscore}_parse_event", :allow_unused_http_interactions => true, :allow_playback_repeats => true, :record => :new_episodes) do
         parsed = ManageIQ::Providers::Redhat::InfraManager::EventParser.event_to_hash(event, @ems.id)
@@ -91,7 +91,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::EventParser  do
                :code=>35,
                :time=>"2017-02-27 15:44:20 +0100",
                :name=>"USER_UPDATE_VM"}
-      allow(ManageIQ::Providers::Redhat::InfraManager).to receive(:find_by_id).and_return(@ems)
+      allow(ManageIQ::Providers::Redhat::InfraManager).to receive(:find_by).with(:id => @ems.id).and_return(@ems)
 
       parsed = ManageIQ::Providers::Redhat::InfraManager::EventParser.event_to_hash(event, @ems.id)
 
