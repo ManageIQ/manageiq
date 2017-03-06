@@ -15,7 +15,7 @@ title: Credentials
 name: Credentials
 
 # Main DB table report is based on
-db: ManageIQ::Providers::AutomationManager::Authentication
+db: ManageIQ::Providers::EmbeddedAutomationManager::Authentication
 
 # Columns to fetch from the main table
 cols:

@@ -15,7 +15,7 @@ title: Repository
 name: Repository
 
 # Main DB table report is based on
-db: ConfigurationScriptSource
+db: ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource
 
 # Columns to fetch from the main table
 cols:
