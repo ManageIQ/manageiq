@@ -71,7 +71,7 @@ gem "omniauth",                       "~>1.3.1",       :require => false
 gem "omniauth-google-oauth2",         "~>0.2.6"
 gem "open4",                          "~>1.3.0",       :require => false
 gem "ovirt-engine-sdk",               "~>4.0.10",      :require => false # Required by the oVirt provider
-gem "ovirt_metrics",                  "~>1.4.0",       :require => false
+gem "ovirt_metrics",                  "~>1.4.1",       :require => false
 gem "pg-pglogical",                   "~>1.1.0",       :require => false
 gem "puma",                           "~>3.3.0"
 gem "query_relation",                 "~>0.1.0",       :require => false
