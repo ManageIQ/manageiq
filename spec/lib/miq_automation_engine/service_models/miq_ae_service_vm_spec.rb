@@ -175,23 +175,23 @@ module MiqAeServiceVmSpec
     end
 
     it "#extend_retires_on - no retirement date set" do
-      Timecop.freeze(Time.zone.today) do
+      Timecop.freeze(Time.zone.now) do
         extend_days = 7
         service_vm.extend_retires_on(extend_days)
         vm.reload
-        new_retires_on = Time.zone.today + extend_days
+        new_retires_on = Time.zone.now + extend_days.days
         expect(vm.retires_on.day).to eq(new_retires_on.day)
       end
     end
 
     it "#extend_retires_on - future retirement date set" do
-      Timecop.freeze(Time.zone.today) do
+      Timecop.freeze(Time.zone.now) do
         vm.update_attributes(
           :retired              => true,
-          :retirement_last_warn => Time.zone.today,
+          :retirement_last_warn => Time.zone.now,
           :retirement_state     => "retiring"
         )
-        future_retires_on = Time.zone.today + 30
+        future_retires_on = Time.zone.now + 30
         service_vm.retires_on = future_retires_on
         extend_days = 7
         service_vm.extend_retires_on(extend_days, future_retires_on)
@@ -201,7 +201,7 @@ module MiqAeServiceVmSpec
           :retirement_last_warn => nil,
           :retired              => false,
           :retirement_state     => nil,
-          :retires_on           => future_retires_on + extend_days
+          :retires_on           => future_retires_on + extend_days.days
         )
       end
     end
