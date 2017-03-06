@@ -87,4 +87,10 @@ describe ServiceAnsibleTower do
       expect { service_mix_dialog_setter.launch_job }.to raise_error(provision_error)
     end
   end
+
+  describe '#configuration_manager' do
+    it 'has a valid configuration manager' do
+      expect(service_mix_dialog_setter.configuration_manager.name).not_to be_nil
+    end
+  end
 end
