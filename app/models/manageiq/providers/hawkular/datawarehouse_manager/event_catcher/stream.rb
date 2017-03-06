@@ -14,11 +14,11 @@ class ManageIQ::Providers::Hawkular::DatawarehouseManager::EventCatcher::Stream
 
   def hawkular_alert_criteria
     # Use "tagQuery" => "type==node AND not seen_by" when that becomes available in HAWKULAR API
-    {}
+    {"tags" => "type|*", "thin" => true}
   end
 
   def alert_tenants
-    []
+    ::Settings.ems.ems_datawarehouse.alertable_tenants
   end
 
   def post_fetch(alerts)
