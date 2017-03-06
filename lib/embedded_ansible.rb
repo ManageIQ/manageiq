@@ -10,8 +10,8 @@ class EmbeddedAnsible
   SECRET_KEY_FILE             = "/etc/tower/SECRET_KEY".freeze
   CONFIGURE_EXCLUDE_TAGS      = "packages,migrations,firewall,supervisor".freeze
   START_EXCLUDE_TAGS          = "packages,migrations,firewall".freeze
-  NGINX_HTTP_PORT             = 54_321
-  NGINX_HTTPS_PORT            = 54_322
+  HTTP_PORT                   = 54_321
+  HTTPS_PORT                  = 54_322
 
   def self.available?
     path = ENV["APPLIANCE_ANSIBLE_DIRECTORY"] || APPLIANCE_ANSIBLE_DIRECTORY
@@ -67,8 +67,8 @@ class EmbeddedAnsible
   def self.playbook_extra_variables
     json_value = {
       :minimum_var_space => 0,
-      :nginx_http_port   => NGINX_HTTP_PORT,
-      :nginx_https_port  => NGINX_HTTPS_PORT
+      :http_port         => HTTP_PORT,
+      :https_port        => HTTPS_PORT
     }.to_json
     {:e => json_value}
   end
@@ -173,7 +173,7 @@ class EmbeddedAnsible
   def self.api_connection
     admin_auth = miq_database.ansible_admin_authentication
     AnsibleTowerClient::Connection.new(
-      :base_url => URI::HTTP.build(:host => "localhost", :path => "/api/v1", :port => NGINX_HTTP_PORT).to_s,
+      :base_url => URI::HTTP.build(:host => "localhost", :path => "/api/v1", :port => HTTP_PORT).to_s,
       :username => admin_auth.userid,
       :password => admin_auth.password
     )
