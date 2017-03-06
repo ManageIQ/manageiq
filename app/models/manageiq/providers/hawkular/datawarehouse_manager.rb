@@ -2,6 +2,7 @@ module ManageIQ::Providers
   class Hawkular::DatawarehouseManager < ManageIQ::Providers::DatawarehouseManager
     require 'hawkular/hawkular_client'
 
+    require_nested :EventCatcher
     require_nested :RefreshParser
     require_nested :RefreshWorker
     require_nested :Refresher
@@ -102,6 +103,10 @@ module ManageIQ::Providers
 
     def self.description
       @description ||= "Hawkular Datawarehouse".freeze
+    end
+
+    def self.event_monitor_class
+      ManageIQ::Providers::Hawkular::DatawarehouseManager::EventCatcher
     end
   end
 end
