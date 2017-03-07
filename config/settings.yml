@@ -107,6 +107,8 @@
   :ems_azure:
     :disabled_regions: []
     :additional_regions: {}
+  :ems_datawarehouse:
+    :alertable_tenants: ['_system', '_ops']
 :event_streams:
   :history:
     :keep_events: 6.months

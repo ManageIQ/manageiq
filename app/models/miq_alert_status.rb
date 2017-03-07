@@ -1,9 +1,7 @@
-require 'ancestry'
 
 class MiqAlertStatus < ApplicationRecord
   SEVERITY_LEVELS = %w(error warning info).freeze
 
-  has_ancestry
   belongs_to :miq_alert
   belongs_to :resource, :polymorphic => true
   belongs_to :ext_management_system
