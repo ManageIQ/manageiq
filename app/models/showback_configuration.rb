@@ -1,8 +1,5 @@
 class ShowbackConfiguration < ApplicationRecord
-  validates :name,        :presence   => true
-  validates :description, :presence   => true
-  validates :name,        :uniqueness => true
-  validates :types,       :presence   => true
+  validates :name, :description, :name, :types, :presence => true
 
   serialize :types, Array # Implement types column as an array
   default_value_for(:types) { [] }
