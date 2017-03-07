@@ -147,8 +147,6 @@ module EmsRefresh
   end
 
   def self.queue_merge(targets, ems, create_task = false)
-    task = create_refresh_task(ems, targets) if create_task
-
     queue_options = {
       :queue_name  => MiqEmsRefreshWorker.queue_name_for_ems(ems),
       :class_name  => name,
@@ -164,7 +162,15 @@ module EmsRefresh
     # Items will be naturally serialized since there is a dedicated worker.
     MiqQueue.put_or_update(queue_options) do |msg, item|
       targets = msg.nil? ? targets : (msg.args[0] | targets)
-      task_id = msg && msg.task_id ? msg.task_id.to_i : task.try(:id)
+
+      # If we are merging with an existing queue item we don't need a new
+      # task, just use the original one
+      task_id = if msg && msg.task_id
+                  msg.task_id.to_i
+                elsif create_task
+                  task = create_refresh_task(ems, targets)
+                  task.id
+                end
 
       item.merge(
         :args         => [targets],
@@ -178,10 +184,6 @@ module EmsRefresh
         }
       )
     end
-
-    # If we merged with an existing queue item we don't need a new
-    # task, just use the original one
-    task.delete if task && task_id != task.id
 
     task_id
   end
