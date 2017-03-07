@@ -48,6 +48,13 @@ module ManageIQ::Providers::AnsibleTower::Shared::Inventory::Parser::AutomationM
       inventory_object = persister.configuration_script_sources.find_or_build(project.id.to_s)
       inventory_object.description = project.description
       inventory_object.name = project.name
+      inventory_object.authentication = persister.credentials.lazy_find(project.credential_id.to_s)
+      inventory_object.scm_type = project.scm_type
+      inventory_object.scm_url = project.scm_url
+      inventory_object.scm_branch = project.scm_branch
+      inventory_object.scm_clean = project.scm_clean
+      inventory_object.scm_delete_on_update = project.scm_delete_on_update
+      inventory_object.scm_update_on_launch = project.scm_update_on_launch
 
       project.playbooks.each do |playbook_name|
         inventory_object_playbook = persister.configuration_script_payloads.find_or_build_by(
