@@ -116,4 +116,36 @@ describe ResourceActionWorkflow do
       end
     end
   end
+
+  describe "#initialize #load_dialog" do
+    let(:resource_action) { instance_double("ResourceAction", :id => 123, :dialog => dialog) }
+    let(:dialog) { instance_double("Dialog", :id => 321) }
+    let(:values) { "the values" }
+    let(:options) { {:request_view => request_view} }
+
+    before do
+      allow(ResourceAction).to receive(:find).and_return(resource_action)
+      allow(dialog).to receive(:init_fields_with_values).with(values)
+      allow(dialog).to receive(:init_fields_with_values_for_request).with(values)
+      allow(dialog).to receive(:target_resource=)
+    end
+
+    context "when the options set request_view to true" do
+      let(:request_view) { true }
+
+      it "calls init_fields_with_values_for_request" do
+        expect(dialog).to receive(:init_fields_with_values_for_request).with(values)
+        ResourceActionWorkflow.new(values, nil, resource_action, options)
+      end
+    end
+
+    context "when the options set request_view to false" do
+      let(:request_view) { false }
+
+      it "calls init_fields_with_values" do
+        expect(dialog).to receive(:init_fields_with_values).with(values)
+        ResourceActionWorkflow.new(values, nil, resource_action, options)
+      end
+    end
+  end
 end
