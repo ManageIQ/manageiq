@@ -12,6 +12,7 @@ module ManageIQ::Providers
     require_nested :Provision
     require_nested :ProvisionViaPxe
     require_nested :ProvisionWorkflow
+    require_nested :SelectorSpec
     require_nested :Template
     require_nested :Vm
 
