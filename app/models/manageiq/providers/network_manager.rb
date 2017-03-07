@@ -47,6 +47,10 @@ module ManageIQ::Providers
              :to        => :parent_manager,
              :allow_nil => true
 
+    def validate_timeline
+      {:available => true, :message => nil}
+    end
+
     def self.supported_types_and_descriptions_hash
       supported_subclasses.select(&:supports_ems_network_new?).each_with_object({}) do |klass, hash|
         if Vmdb::PermissionStores.instance.supported_ems_type?(klass.ems_type)
