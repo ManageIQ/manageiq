@@ -56,10 +56,10 @@ class ServiceTemplateAnsibleTower < ServiceTemplate
 
   def update_service_resources(config_info, _auth_user = nil)
     if config_info[:configuration_script_id] && config_info[:configuration_script_id] != job_template.try(:id)
-      service_resources.find_by(:resource_type => 'ConfigurationScript').destroy
-      self.job_template = ConfigurationScript.find(config_info[:configuration_script_id])
+      service_resources.find_by(:resource_type => 'ConfigurationScriptBase').destroy
+      self.job_template = ConfigurationScriptBase.find(config_info[:configuration_script_id])
     elsif config_info[:configuration] && config_info[:configuration] != job_template.try(:id)
-      service_resources.find_by(:resource_type => 'ConfigurationScript').destroy
+      service_resources.find_by(:resource_type => 'ConfigurationScriptBase').destroy
       self.job_template = config_info[:configuration]
     end
   end
