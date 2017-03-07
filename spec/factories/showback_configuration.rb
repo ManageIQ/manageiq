@@ -6,6 +6,5 @@ FactoryGirl.define do
     measure                  'Integer'
     types                    ["cpu_usage_rate_average", "cpu_usagemhz_rate_average"]
 
-
   end
 end
