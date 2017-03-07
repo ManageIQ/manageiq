@@ -15,4 +15,5 @@ class CloudObjectStoreContainer < ApplicationRecord
   alias_attribute :name, :key
 
   supports_not :delete, :reason => N_("Delete operation is not supported.")
+  supports_not :cloud_object_store_container_clear
 end

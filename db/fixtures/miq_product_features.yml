@@ -616,6 +616,10 @@
       :description: Delete Object Store Containers
       :feature_type: admin
       :identifier: cloud_object_store_container_delete
+    - :name: Clear
+      :description: Clear Object Store Containers
+      :feature_type: admin
+      :identifier: cloud_object_store_container_clear
 
 # CloudObjectStoreObject
 - :name: Cloud Objects
