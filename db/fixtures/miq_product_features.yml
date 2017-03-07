@@ -2720,6 +2720,23 @@
           :feature_type: admin
           :hidden: true
           :identifier: zone_delete
+    - :name: Regions
+      :description: Regions
+      :feature_type: node
+      :hidden: true
+      :identifier: region
+      :children:
+      - :name: Modify
+        :description: Modify Regions
+        :feature_type: admin
+        :identifier: region_admin
+        :hidden: true
+        :children:
+        - :name: Edit
+          :description: Edit a Region
+          :feature_type: admin
+          :hidden: true
+          :identifier: region_edit
   - :name: Access Control
     :description: Access Control Accordion
     :feature_type: node

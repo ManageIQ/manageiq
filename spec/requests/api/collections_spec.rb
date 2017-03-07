@@ -168,6 +168,11 @@ describe "Rest API Collections" do
       test_collection_query(:rates, rates_url, ChargebackRateDetail)
     end
 
+    it "query Regions" do
+      FactoryGirl.create(:miq_region)
+      test_collection_query(:regions, regions_url, MiqRegion)
+    end
+
     it "query Reports" do
       FactoryGirl.create(:miq_report)
       test_collection_query(:reports, reports_url, MiqReport)
@@ -431,6 +436,11 @@ describe "Rest API Collections" do
     it "bulk query Rates" do
       FactoryGirl.create(:chargeback_rate_detail, :chargeable_field => FactoryGirl.build(:chargeable_field))
       test_collection_bulk_query(:rates, rates_url, ChargebackRateDetail)
+    end
+
+    it "bulk query Regions" do
+      FactoryGirl.create(:miq_region)
+      test_collection_bulk_query(:regions, regions_url, MiqRegion)
     end
 
     it "bulk query Report Results" do
