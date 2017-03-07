@@ -2,6 +2,7 @@ module ManageIQ::Providers
   class Hawkular::DatawarehouseManager < ManageIQ::Providers::DatawarehouseManager
     require 'hawkular/hawkular_client'
 
+    require_nested :EventCatcher
     require_nested :RefreshParser
     require_nested :RefreshWorker
     require_nested :Refresher
@@ -38,38 +39,42 @@ module ManageIQ::Providers
     end
 
     # Hawkular Client
-    def self.raw_connect(hostname, port, token, type = :alerts)
+    def self.raw_connect(options)
+      type = options[:type] || :alerts
+      tenant = options[:tenant] || '_system'
       klass = case type
               when :metrics
                 ::Hawkular::Metrics::Client
               when :alerts
                 ::Hawkular::Alerts::AlertsClient
               else
-                raise ArgumentError, "Client not found for #{type}"
+                raise ArgumentError, "Client not found for [#{type}]"
               end
       klass.new(
-        URI::HTTPS.build(:host => hostname, :port => port.to_i).to_s,
-        { :token => token },
-        { :tenant => '_system', :verify_ssl => verify_ssl_mode }
+        URI::HTTPS.build(:host => options[:hostname], :port => options[:port].to_i).to_s,
+        { :token => options[:token] },
+        { :tenant => tenant, :verify_ssl => verify_ssl_mode }
       )
     end
 
     def connect(options = {})
       @clients ||= {}
-      @clients[options[:type]] ||= self.class.raw_connect(
-        hostname,
-        port,
-        authentication_token('default'),
-        options[:type]
+      memo_options = options.slice(:type, :tenant)
+      @clients[memo_options.freeze] ||= self.class.raw_connect(
+        memo_options.merge(
+          :hostname => hostname,
+          :port     => port,
+          :token    => authentication_token('default'),
+        )
       )
     end
 
-    def alerts_client
-      connect(:type => :alerts)
+    def alerts_client(options = {})
+      connect(options.merge(:type => :alerts))
     end
 
-    def metrics_client
-      connect(:type => :metrics)
+    def metrics_client(options = {})
+      connect(options.merge(:type => :metrics))
     end
 
     def supports_port?
@@ -98,6 +103,10 @@ module ManageIQ::Providers
 
     def self.description
       @description ||= "Hawkular Datawarehouse".freeze
+    end
+
+    def self.event_monitor_class
+      ManageIQ::Providers::Hawkular::DatawarehouseManager::EventCatcher
     end
   end
 end
