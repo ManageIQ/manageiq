@@ -176,6 +176,21 @@ RSpec.describe 'Authentications API' do
 
       expect(response).to have_http_status(:forbidden)
     end
+
+    it 'can create an authentication' do
+      api_basic_authorize collection_action_identifier(:authentications, :create, :post)
+
+      expected = {
+        'results' => [
+          a_hash_including('name' => 'foo')
+        ]
+      }
+      expect do
+        run_post(authentications_url, :action => 'create', :name => 'foo')
+      end.to change(Authentication, :count).by(1)
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
   end
 
   describe 'PUT /api/authentications/:id' do
