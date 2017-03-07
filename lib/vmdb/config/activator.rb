@@ -32,10 +32,6 @@ module VMDB
         Vmdb::Loggers.apply_config(data)
       end
 
-      def ntp(_data)
-        MiqServer.my_server.ntp_reload_queue unless MiqServer.my_server.nil? rescue nil
-      end
-
       def session(data)
         Session.timeout data.timeout
         Session.interval data.interval
