@@ -15,7 +15,7 @@ module ManageIQ::Providers
         def provider.use_vim_broker?; @__use_vim_broker; end
         klass = use_vim_broker ? MiqVimBroker : MiqVimInventory
         klass.cacheScope = :cache_scope_ems_refresh
-        klass.setSelector(EmsRefresh::VcUpdates::VIM_SELECTOR_SPEC)
+        klass.setSelector(ManageIQ::Providers::Vmware::InfraManager::SelectorSpec::VIM_SELECTOR_SPEC)
         @initialized_console = true
       end
 
