@@ -18,7 +18,7 @@ class ManageIQ::Providers::Hawkular::DatawarehouseManager::EventCatcher::Stream
   end
 
   def alert_tenants
-    ::Settings.ems.ems_datawarehouse.alertable_tenants
+    ManageIQ::Providers::Hawkular::DatawarehouseManager::EventCatcher.worker_settings[:alertable_tenants]
   end
 
   def post_fetch(alerts)
