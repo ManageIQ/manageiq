@@ -120,6 +120,10 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudVolume < ::CloudVolume
       .create_snapshot_queue(userid, self, options)
   end
 
+  def available_vms
+    cloud_tenant.vms
+  end
+
   def provider_object(connection)
     connection.volumes.get(ems_ref)
   end
