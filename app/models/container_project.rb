@@ -32,7 +32,8 @@ class ContainerProject < ApplicationRecord
   virtual_total :replicators_count, :container_replicators
   virtual_total :containers_count,  :container_definitions
   virtual_total :images_count,      :container_images
-
+  virtual_column :first_quota_name, :type => :string
+  virtual_column :first_limit_name, :type => :string
   include EventMixin
   include Metric::CiMixin
 
@@ -43,6 +44,18 @@ class ContainerProject < ApplicationRecord
   end
 
   acts_as_miq_taggable
+
+  def first_quota_name
+    unless container_quotas.empty?
+      container_quotas.first.name
+    end
+  end
+
+  def first_limit_name
+    unless container_limits.empty?
+      container_limits.first.name
+    end
+  end
 
   def event_where_clause(assoc = :ems_events)
     case assoc.to_sym
