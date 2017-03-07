@@ -18,10 +18,30 @@ module Api
       action_result(false, err.to_s)
     end
 
+    def create_resource(_type, _id, data)
+      attrs = validate_attrs(data)
+      type = ConfigurationScriptSource.class_from_request_data(attrs)
+      task_id = type.create_in_provider_queue(attrs['manager_resource'], attrs.except('manager_resource'))
+      action_result(true, 'Creating Configuration Script Source', :task_id => task_id)
+    rescue => err
+      raise BadRequestError, "Could not create Configuration Script Source - #{err}"
+    end
+
     private
 
     def config_script_src_ident(config_script_src)
       "ConfigurationScriptSource id:#{config_script_src.id} name: '#{config_script_src.name}'"
+    end
+
+    def validate_attrs(data)
+      raise 'must supply a manager resource' unless data['manager_resource']
+      attrs = data.dup
+      attrs['manager_resource'] = if data['manager_resource'].key?('href')
+                                    parse_href(data['manager_resource']['href']).last
+                                  elsif data['manager_resource'].key?('id')
+                                    data['manager_resource']['id']
+                                  end
+      attrs
     end
   end
 end

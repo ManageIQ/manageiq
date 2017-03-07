@@ -226,17 +226,97 @@ RSpec.describe 'Configuration Script Sources API' do
   end
 
   describe 'POST /api/configuration_script_sources' do
-    it 'will create a new configuration script source' do
+    let(:provider)      { FactoryGirl.create(:provider_ansible_tower, :with_authentication) }
+    let(:manager)       { provider.managers.first }
+    let(:params) do
+      {
+        :manager_resource => { :href => providers_url(manager.id) },
+        :description      => 'Description',
+        :name             => 'My Project',
+        :related          => {}
+      }
+    end
+
+    it 'creates a configuration script source with appropriate role' do
       api_basic_authorize collection_action_identifier(:configuration_script_sources, :create, :post)
 
       expected = {
-        'results' => [a_hash_including('name' => 'foo')]
+        'results' => [
+          a_hash_including(
+            'success' => true,
+            'message' => 'Creating Configuration Script Source',
+            'task_id' => a_kind_of(Numeric)
+          )
+        ]
       }
-      expect do
-        run_post(configuration_script_sources_url, :name => 'foo')
-      end.to change(ConfigurationScriptSource, :count).by(1)
+      run_post(configuration_script_sources_url, params)
+
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)
+    end
+
+    it 'create a new configuration script source with manager_resource id' do
+      api_basic_authorize collection_action_identifier(:configuration_script_sources, :create, :post)
+      params[:manager_resource] = { :id => manager.id }
+
+      expected = {
+        'results' => [
+          a_hash_including(
+            'success' => true,
+            'message' => 'Creating Configuration Script Source',
+            'task_id' => a_kind_of(Numeric)
+          )
+        ]
+      }
+      run_post(configuration_script_sources_url, params)
+
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'can create new configuration script sources in bulk' do
+      api_basic_authorize collection_action_identifier(:configuration_script_sources, :create, :post)
+
+      expected = {
+        'results' => [
+          a_hash_including(
+            'success' => true,
+            'message' => 'Creating Configuration Script Source',
+            'task_id' => a_kind_of(Numeric)
+          ),
+          a_hash_including(
+            'success' => true,
+            'message' => 'Creating Configuration Script Source',
+            'task_id' => a_kind_of(Numeric)
+          )
+        ]
+      }
+      run_post(configuration_script_sources_url, :resources => [params, params])
+
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'requires a manager_resource to be specified' do
+      api_basic_authorize collection_action_identifier(:configuration_script_sources, :create, :post)
+
+      run_post(configuration_script_sources_url, :resources => [params.except(:manager_resource)])
+
+      expected = {
+        'error' => a_hash_including(
+          'message' => 'Could not create Configuration Script Source - must supply a manager resource'
+        )
+      }
+      expect(response).to have_http_status(:bad_request)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'forbids creation of new configuration script source without an appropriate role' do
+      api_basic_authorize
+
+      run_post(configuration_script_sources_url, params)
+
+      expect(response).to have_http_status(:forbidden)
     end
   end
 end
