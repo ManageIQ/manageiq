@@ -20,9 +20,7 @@ class ManagerRefresh::Inventory::Persister
       collections[name] ||= begin
         collection_options = options.dup
 
-        unless collection_options[:strategy] == :local_db_find_references
-          collection_options[:parent] ||= manager
-        end
+        collection_options[:parent] = manager unless collection_options.key?(:parent)
 
         if collection_options[:builder_params]
           collection_options[:builder_params] = collection_options[:builder_params].transform_values do |value|
