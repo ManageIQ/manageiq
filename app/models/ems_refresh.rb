@@ -18,8 +18,7 @@ module EmsRefresh
   extend EmsRefresh::VcUpdates
 
   def self.debug_trace
-    # TODO: Replace with configuration option
-    false
+    Settings.ems_refresh[:debug_trace]
   end
 
   # If true, Refreshers will raise any exceptions encountered, instead

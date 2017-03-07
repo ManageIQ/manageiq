@@ -112,6 +112,7 @@
     :keep_events: 6.months
     :purge_window_size: 1000
 :ems_refresh:
+  :debug_trace: false
   :capture_vm_created_on_date: false
   :ansible_tower_automation:
     :refresh_interval: 15.minutes
