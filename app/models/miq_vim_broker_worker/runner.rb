@@ -167,8 +167,8 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
 
     type, = EmsRefresh::VcUpdates::OBJ_TYPE_TO_TYPE_AND_CLASS[obj_type]
 
-    changed_props.reject! { |p| !EmsRefresh::VcUpdates.selected_property?(type, p) }
-    change_set.reject!    { |c| !EmsRefresh::VcUpdates.selected_property?(type, c["name"]) }
+    changed_props.reject! { |p| !ManageIQ::Providers::Vmware::InfraManager::SelectorSpec.selected_property?(type, p) }
+    change_set.reject!    { |c| !ManageIQ::Providers::Vmware::InfraManager::SelectorSpec.selected_property?(type, c["name"]) }
 
     exclude_props = @exclude_props[obj_type]
     if exclude_props
@@ -227,7 +227,7 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
     MiqVimBroker.updateDelay  = nil
     MiqVimBroker.notifyMethod = nil
     MiqVimBroker.cacheScope   = expected_broker_cache_scope
-    MiqVimBroker.setSelector(EmsRefresh::VcUpdates::VIM_SELECTOR_SPEC)
+    MiqVimBroker.setSelector(ManageIQ::Providers::Vmware::InfraManager::SelectorSpec::VIM_SELECTOR_SPEC)
     MiqVimBroker.maxWait      = worker_settings[:vim_broker_max_wait]
     MiqVimBroker.maxObjects   = worker_settings[:vim_broker_max_objects]
 
