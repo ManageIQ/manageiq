@@ -612,6 +612,10 @@
     :feature_type: admin
     :identifier: cloud_object_store_container_admin
     :children:
+    - :name: Create
+      :description: Create Cloud Object Store Container
+      :feature_type: admin
+      :identifier: cloud_object_store_container_new
     - :name: Delete
       :description: Delete Object Store Containers
       :feature_type: admin

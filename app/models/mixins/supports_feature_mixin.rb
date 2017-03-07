@@ -65,7 +65,8 @@ module SupportsFeatureMixin
     # FIXME: this is just a internal helper and should be refactored
     :control                    => 'Basic control operations',
     :cloud_tenant_mapping       => 'CloudTenant mapping',
-    :cloud_object_store_container_clear => 'Clear Object Store Container',
+    :cloud_object_store_container_create => 'Create Object Store Container',
+    :cloud_object_store_container_clear  => 'Clear Object Store Container',
     :create                     => 'Creation',
     :backup_create              => 'CloudVolume backup creation',
     :backup_restore             => 'CloudVolume backup restore',
