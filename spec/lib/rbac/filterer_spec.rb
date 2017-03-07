@@ -156,6 +156,22 @@ describe Rbac::Filterer do
         let(:child_tenant)   { FactoryGirl.create(:tenant, :divisible => false, :parent => owner_tenant) }
         let(:child_group)    { FactoryGirl.create(:miq_group, :tenant => child_tenant) }
 
+        context 'with Vm as resource of VmPerformance model' do
+          let!(:root_tenant_vm)              { FactoryGirl.create(:vm_vmware, :tenant => Tenant.root_tenant) }
+          let!(:vm_performance_root_tenant)  { FactoryGirl.create(:vm_performance, :resource => root_tenant_vm) }
+          let!(:vm_performance_other_tenant) { FactoryGirl.create(:vm_performance, :resource => other_vm) }
+
+          it 'list only other_user\'s VmPerformances' do
+            results = described_class.search(:class => VmPerformance, :user => other_user).first
+            expect(results).to match_array [vm_performance_other_tenant]
+          end
+
+          it 'list all VmPerformances' do
+            results = described_class.search(:class => VmPerformance, :user => admin_user).first
+            expect(results).to match_array [vm_performance_other_tenant, vm_performance_root_tenant]
+          end
+        end
+
         context "searching MiqTemplate" do
           it "can't see descendant tenant's templates" do
             owned_template.update_attributes!(:tenant_id => child_tenant.id, :miq_group_id => child_group.id)

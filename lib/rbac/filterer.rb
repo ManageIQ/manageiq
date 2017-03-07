@@ -332,7 +332,7 @@ module Rbac
       klass.user_or_group_owned(user, miq_group).except(:order)
     end
 
-    def calc_filtered_ids(scope, user_filters, user, miq_group)
+    def calc_filtered_ids(scope, user_filters, user, miq_group, scope_tenant_filter)
       klass = scope.respond_to?(:klass) ? scope.klass : scope
       u_filtered_ids = pluck_ids(get_self_service_objects(user, miq_group, klass))
       b_filtered_ids = get_belongsto_filter_object_ids(klass, user_filters['belongsto'])
@@ -340,13 +340,11 @@ module Rbac
       d_filtered_ids = pluck_ids(matches_via_descendants(rbac_class(klass), user_filters['match_via_descendants'],
                                                          :user => user, :miq_group => miq_group))
 
-      combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids)
+      combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids, scope_tenant_filter.try(:ids))
     end
-
     #
     # Algorithm: filter = u_filtered_ids UNION (b_filtered_ids INTERSECTION m_filtered_ids)
-    #            filter = filter UNION d_filtered_ids if filter is not nil
-    #
+    #            filter = (filter UNION d_filtered_ids if filter is not nil) UNION tenant_filter_ids
     # a nil as input for any field means it does not apply
     # a nil as output means there is not filter
     #
@@ -354,9 +352,11 @@ module Rbac
     # @param b_filtered_ids [nil|Array<Integer>] objects that belong to parent
     # @param m_filtered_ids [nil|Array<Integer>] managed filter object ids
     # @param d_filtered_ids [nil|Array<Integer>] ids from descendants
+    # @param tenant_filter_ids [nil|Array<Integer>] ids
     # @return nil if filters do not aply
     # @return [Array<Integer>] target ids for filter
-    def combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids)
+
+    def combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids, tenant_filter_ids)
       filtered_ids =
         if b_filtered_ids.nil?
           m_filtered_ids
@@ -376,7 +376,11 @@ module Rbac
         filtered_ids.uniq!
       end
 
-      filtered_ids
+      if filtered_ids.kind_of?(Array)
+        filtered_ids | tenant_filter_ids.to_a
+      elsif filtered_ids.nil? && tenant_filter_ids.kind_of?(Array) && tenant_filter_ids.present?
+        tenant_filter_ids
+      end
     end
 
     # @param parent_class [Class] Class of parent (e.g. Host)
@@ -435,14 +439,18 @@ module Rbac
       end
 
       if apply_rbac_directly?(klass)
-        filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group)
+        filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group, nil)
         scope_by_ids(scope, filtered_ids)
       elsif apply_rbac_through_association?(klass)
         # if subclasses of MetricRollup or Metric, use the associated
         # model to derive permissions from
         associated_class = rbac_class(scope)
-        filtered_ids = calc_filtered_ids(associated_class, rbac_filters, user, miq_group)
 
+        if associated_class.try(:scope_by_tenant?)
+          scope_tenant_filter = scope_to_tenant(associated_class, user, miq_group)
+        end
+
+        filtered_ids = calc_filtered_ids(associated_class, rbac_filters, user, miq_group, scope_tenant_filter)
         scope_by_parent_ids(associated_class, scope, filtered_ids)
       elsif klass == User && user.try!(:self_service?)
         # Self service users searching for users only see themselves
