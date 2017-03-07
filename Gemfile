@@ -51,7 +51,7 @@ gem "ovirt_metrics",                  "~>1.4.1",       :require => false
 gem "paperclip",                      "~>4.3.0"
 gem "puma",                           "~>3.3.0"
 gem "query_relation",                 "~>0.1.0",       :require => false
-gem "rails",                          "~>5.0.1"
+gem "rails",                          "~>5.0.2"
 gem "rails-controller-testing",                        :require => false
 gem "rails-i18n",                     "~>5.x"
 gem "recursive-open-struct",          "~>1.0.0"
