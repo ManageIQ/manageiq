@@ -1044,6 +1044,20 @@ database_backups:
 - name
 - created_at
 - updated_at
+datawarehouse_nodes:
+- id
+- ems_ref
+- name
+- host
+- ip
+- port
+- master
+- load
+- mem
+- heap
+- disk
+- cpu
+- ems_id
 dialog_fields:
 - id
 - name

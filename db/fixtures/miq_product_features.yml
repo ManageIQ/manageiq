@@ -4213,6 +4213,35 @@
       :feature_type: admin
       :identifier: ems_datawarehouse_new
 
+# DatawarehouseNode
+- :name: Nodes
+  :description: Everything under Datawarehouse Node
+  :feature_type: node
+  :identifier: datawarehouse_node
+  :children:
+  - :name: View
+    :description: View Datawarehouse Node
+    :feature_type: node
+    :identifier: datawarehouse_node_view
+    :children:
+    - :name: List
+      :description: Display Lists of Datawarehouse Node
+      :feature_type: view
+      :identifier: datawarehouse_node_show_list
+    - :name: Show
+      :description: Display Individual Datawarehouse Node
+      :feature_type: view
+      :identifier: datawarehouse_node_show
+  - :name: Operate
+    :description: Perform Operations on Datawarehouse Node
+    :feature_type: control
+    :identifier: datawarehouse_node_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Datawarehouse Node
+      :feature_type: control
+      :identifier: datawarehouse_node_tag
+
 # EmsNetwork
 - :name: Network Providers
   :description: Everything under Network Providers
