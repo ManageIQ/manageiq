@@ -26,7 +26,7 @@ module Api
     private
 
     def shared_vms
-      Vm.joins(:shares).where(:shares => {:id => Rbac.resources_shared_with(User.current_user)})
+      Vm.shared_with(User.current_user)
     end
   end
 end

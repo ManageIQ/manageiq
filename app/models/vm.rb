@@ -25,6 +25,10 @@ class Vm < VmOrTemplate
   end
   class << self; alias_method :corresponding_template_model, :corresponding_model; end
 
+  def self.shared_with(user)
+    joins(:shares).where(:shares => {:id => Rbac.resources_shared_with(user)})
+  end
+
   delegate :corresponding_model, :to => :class
   alias_method :corresponding_template_model, :corresponding_model
 
