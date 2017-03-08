@@ -69,10 +69,7 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
   after_save :save_on_other_managers
 
   def save_on_other_managers
-    storage_managers.each do |manager|
-      manager.tenant_mapping_enabled = tenant_mapping_enabled
-      manager.save!
-    end
+    storage_managers.update_all(:tenant_mapping_enabled => tenant_mapping_enabled)
   end
 
   def supports_cloud_tenants?
