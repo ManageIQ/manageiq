@@ -1,9 +1,7 @@
 module Api
   class SharedVmsController < BaseController
     def index
-      resources = Rbac.resources_shared_with(User.current_user)
-      # TODO: if this is a relation, we need to filter in SQL
-      shared_vms = resources.select { |resource| resource.kind_of?(Vm) }
+      shared_vms = Vm.joins(:shares).where(:shares => {:id => Rbac.resources_shared_with(User.current_user)})
 
       # # Roughly what we do elsewhere:
       # miq_expression = filter_param(Vm)
@@ -24,10 +22,10 @@ module Api
     end
 
     def show
-      resources = Rbac.resources_shared_with(User.current_user)
-      shared_vm = resources.select { |resource| resource.kind_of?(Vm) }
-                           .detect { |resource| resource.id == @req.c_id }
-      raise NotFoundError unless shared_vm
+      shared_vm = Vm
+                  .joins(:shares)
+                  .where(:shares => {:id => Rbac.resources_shared_with(User.current_user)})
+                  .find(@req.c_id)
       render_resource(:shared_vms, shared_vm)
     end
   end
