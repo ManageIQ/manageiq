@@ -121,7 +121,7 @@ describe ResourceActionWorkflow do
     let(:resource_action) { instance_double("ResourceAction", :id => 123, :dialog => dialog) }
     let(:dialog) { instance_double("Dialog", :id => 321) }
     let(:values) { "the values" }
-    let(:options) { {:request_view => request_view} }
+    let(:options) { {:display_view_only => display_view_only} }
 
     before do
       allow(ResourceAction).to receive(:find).and_return(resource_action)
@@ -130,8 +130,8 @@ describe ResourceActionWorkflow do
       allow(dialog).to receive(:target_resource=)
     end
 
-    context "when the options set request_view to true" do
-      let(:request_view) { true }
+    context "when the options set display_view_only to true" do
+      let(:display_view_only) { true }
 
       it "calls init_fields_with_values_for_request" do
         expect(dialog).to receive(:init_fields_with_values_for_request).with(values)
@@ -139,8 +139,8 @@ describe ResourceActionWorkflow do
       end
     end
 
-    context "when the options set request_view to false" do
-      let(:request_view) { false }
+    context "when the options set display_view_only to false" do
+      let(:display_view_only) { false }
 
       it "calls init_fields_with_values" do
         expect(dialog).to receive(:init_fields_with_values).with(values)

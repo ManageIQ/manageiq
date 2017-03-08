@@ -95,7 +95,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
     dialog = resource_action.dialog unless resource_action.nil?
     unless dialog.nil?
       dialog.target_resource = @target
-      if options[:request_view]
+      if options[:display_view_only]
         dialog.init_fields_with_values_for_request(values)
       else
         dialog.init_fields_with_values(values)
