@@ -32,13 +32,10 @@ module MiqAeMethodService
       @@current.delete(obj)
     end
 
-    def initialize(ws, inputs = {}, body = nil, logger = $miq_ae_logger)
+    def initialize(ws, inputs = {}, _body = nil, logger = $miq_ae_logger)
       @drb_server_references = []
       @inputs                = inputs
       @workspace             = ws
-      @preamble_lines        = 0
-      @body                  = []
-      self.body              = body if body
       @persist_state_hash    = ws.persist_state_hash
       @logger                = logger
       self.class.add(self)
@@ -57,60 +54,6 @@ module MiqAeMethodService
 
     def destroy
       self.class.destroy(self)
-    end
-
-    def body=(data)
-      @body_raw = data
-      @body     = begin
-        lines = []
-        @body_raw.each_line { |l| lines << l.rstrip }
-        lines
-      end
-    end
-
-    def body
-      @body_raw
-    end
-
-    def preamble
-      @preamble_raw
-    end
-
-    def preamble=(data)
-      @preamble_raw = data
-      @preamble = begin
-        lines = []
-        @preamble_raw.each_line { |l| lines << l.rstrip }
-        lines
-      end
-      @preamble_lines = @preamble.length
-    end
-
-    def method_body(options = {})
-      if options[:line_numbers]
-        line_number = 0
-        @body.collect do |line|
-          line_number += 1
-          "#{format "%03d" % line_number}: #{line}"
-        end
-      else
-        @body
-      end
-    end
-
-    def backtrace(callers)
-      return callers unless callers.respond_to?(:collect)
-
-      callers.collect do |c|
-        file, line, context = c.split(':')
-        if file == "-"
-          line_adjusted_for_preamble = line.to_i - @preamble_lines
-          file = @body[line_adjusted_for_preamble - 1].to_s.strip
-          "<code: #{file}>:#{line_adjusted_for_preamble}:#{context}"
-        else
-          c
-        end
-      end
     end
 
     def disconnect_sql
