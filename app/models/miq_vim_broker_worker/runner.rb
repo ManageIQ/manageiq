@@ -153,13 +153,13 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
     return if ems_id.nil?
 
     method = "on_#{event[:op].to_s.underscore}_event"
-    send(method, ems_id, event) if self.respond_to?(method)
+    send(method, ems_id, event) if respond_to?(method)
   end
 
   OBJ_TYPE_TO_TYPE_AND_CLASS = {
     'VirtualMachine' => [:vm,   VmOrTemplate],
     'HostSystem'     => [:host, Host]
-  }
+  }.freeze
 
   def on_create_event(ems_id, event)
     # TODO: Implement
