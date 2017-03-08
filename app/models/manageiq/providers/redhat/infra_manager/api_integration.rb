@@ -29,6 +29,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     connect_options = {
       :server     => options[:ip] || address,
       :port       => options[:port] || self.port,
+      :path       => path,
       :username   => options[:user] || authentication_userid(options[:auth_type]),
       :password   => options[:pass] || authentication_password(options[:auth_type]),
       :service    => options[:service] || "Service",
