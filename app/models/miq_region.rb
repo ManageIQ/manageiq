@@ -17,6 +17,8 @@ class MiqRegion < ApplicationRecord
   virtual_has_many :miq_templates
   virtual_has_many :vms
 
+  virtual_has_one  :resource_settings, :class_name => "Hash"
+
   after_save :clear_my_region_cache
 
   acts_as_miq_taggable
