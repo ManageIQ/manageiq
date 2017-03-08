@@ -18,4 +18,15 @@ class Share < ApplicationRecord
           :allow_tenant_inheritance => true)
       .or(where(:tenant => tenant))
   end
+
+  def self.sweeper_timer
+    all.each do |share|
+      # It would be better and necessary to do a soft delete here. Perhaps we add a boolean col called "enabled"
+      # so that we can flip it either way depending on whether it's valid or not.
+      unless ResourceSharer.valid_share?(share)
+        _log.info("Deleting share: [#{share.id}] owner: [#{share.user.name}] resource: [#{share.resource.name}] tenant [#{share.tenant.name}], due to invalid RBAC")
+        share.destroy
+      end
+    end
+  end
 end
