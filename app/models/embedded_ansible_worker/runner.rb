@@ -72,6 +72,7 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
     admin_auth = MiqDatabase.first.ansible_admin_authentication
 
     provider.update_authentication(:default => {:userid => admin_auth.userid, :password => admin_auth.password})
+    provider.authentication_check
   end
 
   # Base class methods we override since we don't have a separate process.  We might want to make these opt-in features in the base class that this subclass can choose to opt-out.
