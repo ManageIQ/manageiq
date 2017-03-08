@@ -8,7 +8,7 @@ module DrbRemoteInvokerSpec
 
       timer_thread = nil
 
-      invoker.with_server([], "") do
+      invoker.with_server([], "", "") do
         timer_thread = Thread.list.each do |t|
           first = t.backtrace_locations.first
           if first && first.path.include?("timeridconv.rb")

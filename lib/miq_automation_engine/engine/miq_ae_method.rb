@@ -113,7 +113,7 @@ module MiqAeEngine
     end
     private_class_method :verbose_rc
 
-    def self.run_ruby_method(*code)
+    def self.run_ruby_method(code)
       ActiveRecord::Base.connection_pool.release_connection
       Bundler.with_clean_env do
         ActiveSupport::Dependencies.interlock.permit_concurrent_loads do
@@ -154,7 +154,7 @@ module MiqAeEngine
     def self.invoke_inline_ruby(aem, obj, inputs)
       if ruby_method_runnable?(aem)
         obj.workspace.invoker ||= MiqAeEngine::DrbRemoteInvoker.new(obj.workspace)
-        obj.workspace.invoker.with_server(inputs, aem.data) do |code|
+        obj.workspace.invoker.with_server(inputs, aem.data, aem.fqname) do |code|
           $miq_ae_logger.info("<AEMethod [#{aem.fqname}]> Starting ")
           rc, msg = run_ruby_method(code)
           $miq_ae_logger.info("<AEMethod [#{aem.fqname}]> Ending")
