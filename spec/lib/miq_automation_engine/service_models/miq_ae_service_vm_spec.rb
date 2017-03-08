@@ -149,8 +149,8 @@ module MiqAeServiceVmSpec
     end
 
     it "#retires_on - today" do
-      vm.update_attributes(:retirement_last_warn => Date.today)
-      service_vm.retires_on = Time.zone.today
+      vm.update_attributes(:retirement_last_warn => Time.zone.now)
+      service_vm.retires_on = Time.zone.now
 
       vm.reload
       expect(vm.retirement_last_warn).to be_nil
@@ -160,10 +160,10 @@ module MiqAeServiceVmSpec
     it "#retires_on - tomorrow" do
       vm.update_attributes(
         :retired              => true,
-        :retirement_last_warn => Time.zone.today,
+        :retirement_last_warn => Time.zone.now,
         :retirement_state     => "retiring"
       )
-      service_vm.retires_on = Time.zone.today + 1
+      service_vm.retires_on = Time.zone.now + 1.day
       vm.reload
 
       expect(vm).to have_attributes(
@@ -191,7 +191,7 @@ module MiqAeServiceVmSpec
           :retirement_last_warn => Time.zone.now,
           :retirement_state     => "retiring"
         )
-        future_retires_on = Time.zone.now + 30
+        future_retires_on = Time.zone.now + 30.days
         service_vm.retires_on = future_retires_on
         extend_days = 7
         service_vm.extend_retires_on(extend_days, future_retires_on)
@@ -208,7 +208,7 @@ module MiqAeServiceVmSpec
 
     it "#retirement_warn" do
       expect(service_vm.retirement_warn).to be_nil
-      vm.retirement_last_warn = Date.today
+      vm.retirement_last_warn = Time.zone.now
       service_vm.retirement_warn = 60
 
       vm.reload

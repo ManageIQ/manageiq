@@ -186,8 +186,8 @@ EOF
     end
 
     it "#retires_on - today" do
-      service.update_attributes(:retirement_last_warn => Date.today)
-      service_service.retires_on = Time.zone.today
+      service.update_attributes(:retirement_last_warn => Time.zone.now)
+      service_service.retires_on = Time.zone.now
       service.reload
       expect(service.retirement_last_warn).to be_nil
       expect(service.retirement_due?).to be_truthy
@@ -199,7 +199,7 @@ EOF
         :retirement_last_warn => Time.zone.today,
         :retirement_state     => "retiring"
       )
-      service_service.retires_on = Time.zone.today + 1
+      service_service.retires_on = Time.zone.today + 1.day
       service.reload
 
       expect(service).to have_attributes(
@@ -227,7 +227,7 @@ EOF
           :retirement_last_warn => Time.zone.today,
           :retirement_state     => "retiring"
         )
-        future_retires_on = Time.zone.now + 30
+        future_retires_on = Time.zone.now + 30.days
         service_service.retires_on = future_retires_on
         extend_days = 7
         service_service.extend_retires_on(extend_days, future_retires_on)
@@ -244,7 +244,7 @@ EOF
 
     it "#retirement_warn" do
       expect(service_service.retirement_warn).to be_nil
-      service.retirement_last_warn = Date.today
+      service.retirement_last_warn = Time.zone.today
       service_service.retirement_warn = 60
       service.reload
 
