@@ -118,6 +118,14 @@ class Authentication < ApplicationRecord
     end
   end
 
+  def self.class_from_request_data(data)
+    return self unless data.key?('type')
+    data['type'].constantize.tap do |klass|
+      return self if klass == self
+      raise _('Must be an Authentication type') unless descendants.include?(klass)
+    end
+  end
+
   private
 
   def set_credentials_changed_on

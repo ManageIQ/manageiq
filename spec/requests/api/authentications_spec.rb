@@ -177,17 +177,56 @@ RSpec.describe 'Authentications API' do
       expect(response).to have_http_status(:forbidden)
     end
 
+    it 'requires a type to create an authentication' do
+      api_basic_authorize collection_action_identifier(:authentications, :create, :post)
+
+      run_post(authentications_url, :action => 'create', :name => 'foo')
+
+      expected = {
+        'error' => a_hash_including(
+          'message' => 'Cannot create Authentication - must supply type'
+        )
+      }
+      expect(response).to have_http_status(:bad_request)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'requires a manager when creating an authentication' do
+      api_basic_authorize collection_action_identifier(:authentications, :create, :post)
+
+      run_post(authentications_url, :action => 'create', :type => 'Authentication')
+
+      expected = {
+        'error' => a_hash_including(
+          'message' => 'Cannot create Authentication - must supply a manager'
+        )
+      }
+      expect(response).to have_http_status(:bad_request)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'requires that the type support create_in_provider_queue' do
+      api_basic_authorize collection_action_identifier(:authentications, :create, :post)
+
+      run_post(authentications_url, :action => 'create', :type => 'Authentication', :manager => 'blah')
+
+      expected = {
+        'error' => a_hash_including(
+          'message' => 'Cannot create Authentication - type not currently supported'
+        )
+      }
+      expect(response).to have_http_status(:bad_request)
+      expect(response.parsed_body).to include(expected)
+    end
+
     it 'can create an authentication' do
       api_basic_authorize collection_action_identifier(:authentications, :create, :post)
 
       expected = {
         'results' => [
-          a_hash_including('name' => 'foo')
+          a_hash_including('id' => auth.id)
         ]
       }
-      expect do
-        run_post(authentications_url, :action => 'create', :name => 'foo')
-      end.to change(Authentication, :count).by(1)
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)
     end
