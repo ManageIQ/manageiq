@@ -128,6 +128,7 @@ class VmOrTemplate < ApplicationRecord
   has_many                  :direct_services, :through => :service_resources, :source => :service
   belongs_to                :tenant
   has_many                  :connected_shares, -> { where(:resource_type => "VmOrTemplate") }, :foreign_key => :resource_id, :class_name => "Share"
+  has_many                  :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
 
   acts_as_miq_taggable
 
