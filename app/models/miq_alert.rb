@@ -193,8 +193,7 @@ class MiqAlert < ApplicationRecord
     # If we are alerting, invoke the alert actions, then add a status so we can limit how often to alert
     # Otherwise, destroy this alert's statuses for our target
     invoke_actions(target, inputs) if result
-    add_status_post_evaluate(target, result, inputs[:description])
-
+    add_status_post_evaluate(target, result, inputs[:ems_event])
     result
   end
 
