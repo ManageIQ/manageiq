@@ -8,6 +8,11 @@ class MiqExpression::Field < MiqExpression::Target
 
   delegate :eq, :not_eq, :lteq, :gteq, :lt, :gt, :between, :to => :arel_attribute
 
+  def self.parse(field)
+    parsed_params = parse_params(field) || return
+    new(parsed_params[:model_name], parsed_params[:associations], parsed_params[:column])
+  end
+
   def self.is_field?(field)
     return false unless field.kind_of?(String)
     match = REGEX.match(field)

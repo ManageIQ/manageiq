@@ -11,6 +11,12 @@ class MiqExpression::Tag < MiqExpression::Target
 
   attr_reader :namespace
 
+  def self.parse(field)
+    parsed_params = parse_params(field) || return
+    managed = parsed_params[:namespace] == self::MANAGED_NAMESPACE
+    new(parsed_params[:model_name], parsed_params[:associations], parsed_params[:column], managed)
+  end
+
   def initialize(model, associations, column, managed = true)
     super(model, associations, column)
     @namespace = "/#{managed ? MANAGED_NAMESPACE : USER_NAMESPACE}/#{column}"

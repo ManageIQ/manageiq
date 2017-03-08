@@ -5,13 +5,17 @@ class MiqExpression::Target
     parse(field) || raise(ParseError, field)
   end
 
-  def self.parse(field)
+  # example .parse('Host.vms-host_name')
+  # returns hash:
+  # {:model_name => Host<ApplicationRecord> , :associations => ['vms']<Array>, :column_name => 'host_name' <String>}
+  def self.parse_params(field)
     match = self::REGEX.match(field) || return
-    model = match[:model_name].classify.safe_constantize || return
-    args = [model, match[:associations].to_s.split(".")]
-    args.push(match[:column]) if match.names.include?('column')
-    args.push(match[:namespace] == self::MANAGED_NAMESPACE) if match.names.include?('namespace')
-    new(*args)
+    # convert matches to hash to format
+    # {:model_name => 'User', :associations => ...}
+    parsed_params = Hash[match.names.map(&:to_sym).zip(match.to_a[1..-1])]
+    parsed_params[:model_name] = parsed_params[:model_name].classify.safe_constantize || return
+    parsed_params[:associations] = parsed_params[:associations].to_s.split(".")
+    parsed_params
   end
 
   attr_reader :model, :associations, :column

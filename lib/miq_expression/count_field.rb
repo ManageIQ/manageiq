@@ -5,7 +5,9 @@ class MiqExpression::CountField < MiqExpression::Target
 /x
 
   def self.parse(field)
-    count_field = super(field)
+    parsed_params = parse_params(field) || return
+    count_field = new(parsed_params[:model_name], parsed_params[:associations])
+
     is_plural = suppress(Exception) { count_field.plural? }
     return unless is_plural
 
