@@ -22,7 +22,6 @@ module Api
 
       # options = {}
       # options[:offset], options[:limit] = expand_paginate_params if paginate_params?
-      # options[:filter] = miq_expression if miq_expression
 
       # shared_vms = Rbac.filtered(shared_vms, options)
 
