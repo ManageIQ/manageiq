@@ -44,6 +44,7 @@ class Service < ApplicationRecord
   virtual_has_one    :provision_dialog
   virtual_has_one    :user
   virtual_has_one    :chargeback_report
+  virtual_has_one    :configuration_script
 
   before_validation :set_tenant_from_group
 
