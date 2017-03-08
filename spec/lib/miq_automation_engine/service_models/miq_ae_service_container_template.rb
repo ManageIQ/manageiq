@@ -1,7 +1,5 @@
 module MiqAeServiceContainerSpec
   describe MiqAeMethodService::MiqAeServiceContainerTemplate do
-module MiqAeServiceContainerSpec
-  describe MiqAeMethodService::MiqAeServiceContainerTemplate do
     it "#ext_management_system" do
       expect(described_class.instance_methods).to include(:ext_management_system)
     end
