@@ -270,9 +270,7 @@ module MiqAeEngine
       options[:class] ||= "Process"
     end
     options[:instance_name] = name
-
     options[:attrs] = create_ae_attrs(attrs, name, options[:vmdb_object])
-    options[:message] = options[:attrs][:message]
 
     # uri
     path = MiqAePath.new(:ae_namespace => options[:namespace],
