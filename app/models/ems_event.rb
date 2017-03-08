@@ -164,6 +164,14 @@ class EmsEvent < EventStream
     EmsEvent.where(:ems_id => ems_id, :chain_id => chain_id).order(:id).first
   end
 
+  def parse_event_metadata
+    [
+      event_type == "datawarehouse_alert" ? message : nil,
+      full_data.try(:[], :severity),
+      full_data.try(:[], :url),
+    ]
+  end
+
   def first_chained_event
     @first_chained_event ||= EmsEvent.first_chained_event(ems_id, chain_id) || self
   end
