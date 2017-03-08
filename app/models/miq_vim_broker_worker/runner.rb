@@ -174,7 +174,7 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
   end
 
   def on_update_event(ems_id, event)
-    obj_type, mor, changed_props, change_set = event.values_at(:objType, :mor, :changedProps, :changeSet)
+    obj_type, mor, changed_props = event.values_at(:objType, :mor, :changedProps)
 
     type, klass = OBJ_TYPE_TO_TYPE_AND_CLASS[obj_type]
     return if type.nil?
@@ -183,12 +183,10 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
     return if obj.nil?
 
     changed_props.reject! { |p| !ManageIQ::Providers::Vmware::InfraManager::SelectorSpec.selected_property?(type, p) }
-    change_set.reject!    { |c| !ManageIQ::Providers::Vmware::InfraManager::SelectorSpec.selected_property?(type, c["name"]) }
 
     exclude_props = @exclude_props[obj_type]
     if exclude_props
       changed_props.reject! { |p| exclude_props.include?(p) }
-      change_set.reject!    { |c| exclude_props.include?(c["name"]) }
     end
 
     return if changed_props.empty?
