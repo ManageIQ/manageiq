@@ -18,9 +18,10 @@ describe MiqGenericMountSession do
   end
 
   it ".runcmd will retry with sudo if needed" do
-    cmd = "abc"
-    expect(described_class).to receive(:`).once.with("#{cmd} 2>&1").and_return("mount: only root can do that\n")
-    expect(described_class).to receive(:`).with("sudo #{cmd} 2>&1").and_return("works with sudo")
+    cmd = "mount X Y"
+    expect(described_class).to receive(:`).once.with("#{cmd} 2>&1")
+    expect(described_class).to receive(:`).with("sudo #{cmd} 2>&1")
+    expect($CHILD_STATUS).to receive(:exitstatus).once.and_return(1)
 
     described_class.runcmd(cmd)
   end
