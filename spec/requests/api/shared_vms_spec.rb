@@ -32,6 +32,28 @@ RSpec.describe "Shared VMs API" do
       expect(response.parsed_body).to include("resources" => [])
       expect(response).to have_http_status(:ok)
     end
+
+    it "can filter" do
+      sharee = create_sharee
+      sharer = create_sharer
+      alice_vm = FactoryGirl.create(:vm_vmware, :name => "Alice's VM", :miq_group => sharer.miq_groups.last)
+      bob_vm = FactoryGirl.create(:vm_vmware, :name => "Bob's VM", :miq_group => sharer.miq_groups.last)
+      create_share(sharer, sharee, alice_vm)
+      create_share(sharer, sharee, bob_vm)
+      api_basic_authorize
+
+      run_get(shared_vms_url, :filter => [%q(name="Alice's VM")])
+
+      expected = {
+        "resources" => [
+          {
+            "href" => a_string_matching(shared_vms_url(alice_vm.id)),
+          }
+        ]
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
   end
 
   describe "GET /api/shared_vms/:c_id" do
