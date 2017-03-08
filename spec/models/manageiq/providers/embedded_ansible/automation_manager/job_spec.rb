@@ -27,7 +27,17 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
       'credential_id'         => machine_credential.manager_ref,
       'cloud_credential_id'   => cloud_credential.manager_ref,
       'network_credential_id' => network_credential.manager_ref
-    ).tap { |rjob| allow(rjob).to receive(:stdout).and_return('job stdout') }
+    ).tap do |rjob|
+      allow(rjob).to receive(:stdout).and_return('job stdout')
+      allow(rjob).to receive(:job_plays).and_return(the_raw_plays)
+    end
+  end
+
+  let(:the_raw_plays) do
+    [
+      double('play1', :play => 'play1', :started => Time.current,     :failed => false, :id => 1),
+      double('play2', :play => 'play2', :started => Time.current + 1, :failed => true,  :id => 2)
+    ]
   end
 
   let(:template) { FactoryGirl.create(:configuration_script, :manager => manager) }
@@ -74,6 +84,21 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
         expect(subject.status).to  eq(the_raw_job.status)
         expect(subject.parameters.first).to have_attributes(:name => 'param1', :value => 'val1')
         expect(subject.authentications).to match_array([machine_credential, cloud_credential, network_credential])
+
+        expect(subject.job_plays.first).to have_attributes(
+          :start_time        => the_raw_plays.first.started,
+          :finish_time       => the_raw_plays.last.started,
+          :resource_status   => 'successful',
+          :resource_category => 'job_play',
+          :name              => 'play1'
+        )
+        expect(subject.job_plays.last).to have_attributes(
+          :start_time        => the_raw_plays.last.started,
+          :finish_time       => the_raw_job.finished,
+          :resource_status   => 'failed',
+          :resource_category => 'job_play',
+          :name              => 'play2'
+        )
       end
 
       it 'catches errors from provider' do
