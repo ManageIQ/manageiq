@@ -91,13 +91,18 @@ class DialogFieldSortedItem < DialogField
   end
 
   def raw_values
-    @raw_values ||= dynamic ? values_from_automate : self[:values].to_miq_a
+    @raw_values ||= dynamic ? values_from_automate : static_raw_values
     unless @raw_values.collect { |value_pair| value_pair[0] }.include?(default_value)
       self.default_value = sort_data(@raw_values).first.try(:first)
     end
     self.value ||= default_value
 
     @raw_values
+  end
+
+  def static_raw_values
+    first_values = required? ? [[nil, "<Choose>"]] : initial_values
+    first_values + self[:values].to_miq_a.reject { |value| value[0].nil? }
   end
 
   def initial_values

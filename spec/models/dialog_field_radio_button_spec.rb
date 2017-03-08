@@ -49,7 +49,9 @@ describe DialogFieldRadioButton do
           end
 
           it "sets raw values from values attribute" do
-            expect(dialog_field_radio_button.instance_variable_get(:@raw_values)).to eq([["testing", 123]])
+            expect(dialog_field_radio_button.instance_variable_get(:@raw_values)).to eq(
+              [["", "<None>"], ["testing", 123]]
+            )
           end
         end
       end
@@ -95,7 +97,9 @@ describe DialogFieldRadioButton do
         end
 
         it "gets values from values attribute" do
-          expect(dialog_field_radio_button.instance_variable_get(:@raw_values)).to eq([["testing", 123]])
+          expect(dialog_field_radio_button.instance_variable_get(:@raw_values)).to eq(
+            [["", "<None>"], ["testing", 123]]
+          )
         end
       end
     end
