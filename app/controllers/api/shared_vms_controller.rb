@@ -1,8 +1,6 @@
 module Api
   class SharedVmsController < BaseController
     def index
-      shared_vms = Vm.joins(:shares).where(:shares => {:id => Rbac.resources_shared_with(User.current_user)})
-
       # # Roughly what we do elsewhere:
       # miq_expression = filter_param(Vm)
 
@@ -22,11 +20,13 @@ module Api
     end
 
     def show
-      shared_vm = Vm
-                  .joins(:shares)
-                  .where(:shares => {:id => Rbac.resources_shared_with(User.current_user)})
-                  .find(@req.c_id)
-      render_resource(:shared_vms, shared_vm)
+      render_resource(:shared_vms, shared_vms.find(@req.c_id))
+    end
+
+    private
+
+    def shared_vms
+      Vm.joins(:shares).where(:shares => {:id => Rbac.resources_shared_with(User.current_user)})
     end
   end
 end
