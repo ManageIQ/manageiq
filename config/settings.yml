@@ -115,6 +115,8 @@
   :capture_vm_created_on_date: false
   :ansible_tower_automation:
     :refresh_interval: 15.minutes
+  :embedded_ansible_automation:
+    :refresh_interval: 15.minutes
   :foreman_configuration:
     :refresh_interval: 15.minutes
   :foreman_provisioning:
@@ -1219,6 +1221,8 @@
         :poll: 1.seconds
       :event_catcher_ansible_tower:
         :poll: 20.seconds
+      :event_catcher_embedded_ansible:
+        :poll: 20.seconds
       :event_catcher_redhat:
         :poll: 15.seconds
       :event_catcher_vmware:
@@ -1333,6 +1337,7 @@
           :queue_timeout: 120.minutes
           :restart_interval: 2.hours
         :ems_refresh_worker_ansible_tower_automation: {}
+        :ems_refresh_worker_embedded_ansible_automation: {}
         :ems_refresh_worker_azure: {}
         :ems_refresh_worker_azure_network: {}
         :ems_refresh_worker_foreman_configuration: {}
