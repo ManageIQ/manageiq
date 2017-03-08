@@ -9,7 +9,7 @@ module CloudTenancyMixin
     end
 
     def tenant_joins_clause(scope)
-      scope.joins(:cloud_tenant => "source_tenant").joins(:ext_management_system)
+      scope.includes(:cloud_tenant => "source_tenant").includes(:ext_management_system)
     end
   end
 
