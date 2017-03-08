@@ -27,6 +27,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
 
     # Prepare the options to call the method that creates the actual connection:
     connect_options = {
+      :scheme     => options[:scheme] || 'https',
       :server     => options[:ip] || address,
       :port       => options[:port] || self.port,
       :path       => path,
