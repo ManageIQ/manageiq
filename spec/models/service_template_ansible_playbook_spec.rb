@@ -3,7 +3,6 @@ describe ServiceTemplateAnsiblePlaybook do
   let(:auth_one) { FactoryGirl.create(:authentication, :manager_ref => 6) }
   let(:auth_two) { FactoryGirl.create(:authentication, :manager_ref => 10) }
 
-  let(:config_script) { FactoryGirl.create(:configuration_script) }
   let(:script_source) { FactoryGirl.create(:configuration_script_source, :manager => ems) }
 
   let(:inventory_root_group) { FactoryGirl.create(:inventory_root_group, :name => 'Demo Inventory') }
@@ -13,11 +12,10 @@ describe ServiceTemplateAnsiblePlaybook do
   end
 
   let(:playbook) do
-    FactoryGirl.create(:configuration_script_payload,
+    FactoryGirl.create(:embedded_playbook,
                        :configuration_script_source => script_source,
                        :manager                     => ems,
-                       :inventory_root_group        => inventory_root_group,
-                       :type                        => 'ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook')
+                       :inventory_root_group        => inventory_root_group)
   end
 
   let(:job_template) do
@@ -74,7 +72,7 @@ describe ServiceTemplateAnsiblePlaybook do
 
     it '#create_job_template' do
       expect(described_class).to receive(:build_parameter_list).and_return([ems, {}])
-      expect(ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript)
+      expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript)
         .to receive(:create_in_provider_queue).once.with(ems.id, {}, 'system')
       expect(MiqTask).to receive(:wait_for_taskid).with(any_args).once.and_return(
         instance_double('MiqTask', :task_results => {}, :status => 'Ok')
@@ -89,7 +87,7 @@ describe ServiceTemplateAnsiblePlaybook do
 
     it 'create_job_template exception' do
       expect(described_class).to receive(:build_parameter_list).and_return([ems, {}])
-      expect(ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript)
+      expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript)
         .to receive(:create_in_provider_queue).once.with(ems.id, {}, 'system')
       expect(MiqTask).to receive(:wait_for_taskid).with(any_args).once.and_raise(Exception, 'bad job template')
 
