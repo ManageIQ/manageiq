@@ -4,6 +4,10 @@ module Api
       resources = shared_vms
 
       # # Roughly what we do elsewhere:
+
+      sort_options = sort_params(Vm)
+      resources = resources.reorder(sort_options) if sort_options
+
       miq_expression = filter_param(Vm)
 
       if miq_expression
@@ -16,13 +20,7 @@ module Api
         resources = resources.select { |resource| Condition.subst_matches?(ruby, resource) }
       end
 
-      # # can't sort - it's an array
-      # sort_options = sort_params(klass) if shared_vms.respond_to?(:reorder)
-
-      # shared_vms = shared_vms.reorder(sort_options) if sort_options.present?
-
       # options = {}
-      # options[:order] = sort_options if sort_options.present?
       # options[:offset], options[:limit] = expand_paginate_params if paginate_params?
       # options[:filter] = miq_expression if miq_expression
 
