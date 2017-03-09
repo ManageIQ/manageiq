@@ -227,6 +227,26 @@ describe EmsRefresh do
         end
       end
     end
+
+    context 'targeting an existing vm' do
+      let(:vm) { FactoryGirl.create(:vm_with_ref, :ext_management_system => ems) }
+
+      it "doesn't try to create a new record" do
+        vm_hash = {
+          :ems_ref => vm.ems_ref,
+          :uid_ems => vm.uid_ems,
+          :type    => vm.class.name
+        }
+        target_hash  = {:vms => [vm_hash]}
+        target_klass = vm_hash[:type].constantize
+        target_find  = {:uid_ems => vm_hash[:uid_ems]}
+
+        expect(ems.vms_and_templates.klass).not_to receive(:new)
+        expect(ems.refresher).to receive(:refresh)
+
+        described_class.refresh_new_target(ems.id, target_hash, target_klass, target_find)
+      end
+    end
   end
 
   context '.queue_merge' do
