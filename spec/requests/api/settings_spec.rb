@@ -1,6 +1,11 @@
 #
 # REST API Request Tests - /api/settings
 #
+# Also as resource settings
+#   GET /api/servers/:id?attribute=resource_settings
+#   GET /api/zones/:id?attribute=resource_settings
+#   GET /api/regions/:id?attribute=resource_settings
+#
 describe "Settings API" do
   let(:api_settings) { Api::ApiConfig.collections[:settings][:categories] }
 
@@ -143,6 +148,47 @@ describe "Settings API" do
           "worker_monitor" => sample_settings["server"]["worker_monitor"],
         },
         "authentication" => sample_settings["authentication"]
+      )
+    end
+  end
+
+  context "Resource Settings Queries" do
+    it "allows GETs of a server's resource_settings" do
+      api_basic_authorize
+
+      run_get(servers_url(@server.id), :attributes => "resource_settings")
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(
+        "href"              => a_string_matching(servers_url(@server.id)),
+        "id"                => @server.id,
+        "resource_settings" => a_hash_including(anything)
+      )
+    end
+
+    it "allows GETs of a zone's resource_settings" do
+      api_basic_authorize action_identifier(:zones, :read, :resource_actions, :get)
+
+      run_get(zones_url(@zone.id), :attributes => "resource_settings")
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(
+        "href"              => a_string_matching(zones_url(@zone.id)),
+        "id"                => @zone.id,
+        "resource_settings" => a_hash_including(anything)
+      )
+    end
+
+    it "allows GETs of a region's resource_settings" do
+      api_basic_authorize action_identifier(:regions, :read, :resource_actions, :get)
+
+      run_get(regions_url(@region.id), :attributes => "resource_settings")
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(
+        "href"              => a_string_matching(regions_url(@region.id)),
+        "id"                => @region.id,
+        "resource_settings" => a_hash_including(anything)
       )
     end
   end
