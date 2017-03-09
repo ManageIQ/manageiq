@@ -1204,6 +1204,7 @@
       :starting_timeout: 10.minutes
       :stopping_timeout: 10.minutes
     :embedded_ansible_worker:
+      :starting_timeout: 20.minutes
       :poll: 10.seconds
       :memory_threshold: 0.megabytes
     :ems_refresh_core_worker:
