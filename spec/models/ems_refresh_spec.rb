@@ -200,6 +200,31 @@ describe EmsRefresh do
 
         expect(ems.refresher).to receive(:refresh)
         described_class.refresh_new_target(ems.id, target_hash, target_klass, target_find)
+
+        new_vm = target_klass.find_by(target_find)
+        expect(new_vm).to have_attributes(vm_hash)
+      end
+
+      context 'on an existing host' do
+        let(:host) { FactoryGirl.create(:host_with_ref, :ext_management_system => ems) }
+
+        it 'links the new vm to the existing host' do
+          target_hash = {
+            :hosts => [{:ems_ref => host.ems_ref}]
+          }
+
+          vm_hash[:host] = target_hash[:hosts].first
+          target_hash[:vms] = [vm_hash]
+
+          target_find  = {:uid_ems => vm_hash[:uid_ems]}
+          target_klass = vm_hash[:type].constantize
+
+          expect(ems.refresher).to receive(:refresh)
+          described_class.refresh_new_target(ems.id, target_hash, target_klass, target_find)
+
+          new_vm = target_klass.find_by(target_find)
+          expect(new_vm.host).to eq(host)
+        end
       end
     end
   end
