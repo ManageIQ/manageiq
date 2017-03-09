@@ -285,7 +285,7 @@ describe DialogFieldSortedItem do
       it_behaves_like "DialogFieldSortedItem#normalize_automate_values"
 
       it "returns the initial values of the dialog field" do
-        expect(dialog_field.normalize_automate_values(automate_hash)).to eq([["", "<None>"]])
+        expect(dialog_field.normalize_automate_values(automate_hash)).to eq([[nil, "<None>"]])
       end
     end
 

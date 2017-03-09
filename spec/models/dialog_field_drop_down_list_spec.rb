@@ -24,44 +24,44 @@ describe DialogFieldDropDownList do
 
     it "return sorted values array as strings" do
       @df.data_type = "string"
-      @df.values = [["2", "Y"], ["1", "Z"], ["3", "X"]]
-      expect(@df.values).to eq([[nil, "<None>"], ["3", "X"], ["2", "Y"], ["1", "Z"]])
+      @df.values = [%w(2 Y), %w(1 Z), %w(3 X)]
+      expect(@df.values).to eq([[nil, "<None>"], %w(3 X), %w(2 Y), %w(1 Z)])
       @df.sort_order = :descending
-      expect(@df.values).to eq([["1", "Z"], ["2", "Y"], ["3", "X"], [nil, "<None>"]])
+      expect(@df.values).to eq([%w(1 Z), %w(2 Y), %w(3 X), [nil, "<None>"]])
 
       @df.sort_by = :value
       @df.sort_order = :ascending
-      expect(@df.values).to eq([[nil, "<None>"], ["1", "Z"], ["2", "Y"], ["3", "X"]])
+      expect(@df.values).to eq([[nil, "<None>"], %w(1 Z), %w(2 Y), %w(3 X)])
       @df.sort_order = :descending
-      expect(@df.values).to eq([["3", "X"], ["2", "Y"], ["1", "Z"], [nil, "<None>"]])
+      expect(@df.values).to eq([%w(3 X), %w(2 Y), %w(1 Z), [nil, "<None>"]])
 
       @df.sort_by = :none
       @df.sort_order = :ascending
-      expect(@df.values).to eq([[nil, "<None>"], ["2", "Y"], ["1", "Z"], ["3", "X"]])
+      expect(@df.values).to eq([[nil, "<None>"], %w(2 Y), %w(1 Z), %w(3 X)])
       @df.sort_order = :descending
-      expect(@df.values).to eq([[nil, "<None>"], ["2", "Y"], ["1", "Z"], ["3", "X"]])
+      expect(@df.values).to eq([[nil, "<None>"], %w(2 Y), %w(1 Z), %w(3 X)])
     end
 
     it "return sorted values array as integers" do
       @df.data_type = "integer"
-      @df.values = [["2", "Y"], ["10", "Z"], ["3", "X"]]
+      @df.values = [%w(2 Y), %w(10 Z), %w(3 X)]
 
       @df.sort_by = :value
       @df.sort_order = :ascending
-      expect(@df.values).to eq([[nil, "<None>"], ["2", "Y"], ["3", "X"], ["10", "Z"]])
+      expect(@df.values).to eq([[nil, "<None>"], %w(2 Y), %w(3 X), %w(10 Z)])
       @df.sort_order = :descending
-      expect(@df.values).to eq([["10", "Z"], ["3", "X"], ["2", "Y"], [nil, "<None>"]])
+      expect(@df.values).to eq([%w(10 Z), %w(3 X), %w(2 Y), [nil, "<None>"]])
 
       @df.sort_by = :none
       @df.sort_order = :ascending
-      expect(@df.values).to eq([[nil, "<None>"], ["2", "Y"], ["10", "Z"], ["3", "X"]])
+      expect(@df.values).to eq([[nil, "<None>"], %w(2 Y), %w(10 Z), %w(3 X)])
       @df.sort_order = :descending
-      expect(@df.values).to eq([[nil, "<None>"], ["2", "Y"], ["10", "Z"], ["3", "X"]])
+      expect(@df.values).to eq([[nil, "<None>"], %w(2 Y), %w(10 Z), %w(3 X)])
     end
 
     context "#initialize_with_values" do
       before(:each) do
-        @df.values = [["3", "X"], ["2", "Y"], ["1", "Z"]]
+        @df.values = [%w(3 X), %w(2 Y), %w(1 Z)]
         @df.load_values_on_init = true
       end
 
