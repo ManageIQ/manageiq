@@ -247,6 +247,28 @@ describe EmsRefresh do
         described_class.refresh_new_target(ems.id, target_hash, target_klass, target_find)
       end
     end
+
+    context 'targeting an archived vm' do
+      let(:vm) { FactoryGirl.create(:vm_with_ref, :ems_id => nil) }
+
+      it 'adopts the existing vm' do
+        vm_hash = {
+          :ems_ref => vm.ems_ref,
+          :uid_ems => vm.uid_ems,
+          :type    => vm.class.name
+        }
+        target_hash  = {:vms => [vm_hash]}
+        target_klass = vm_hash[:type].constantize
+        target_find  = {:uid_ems => vm_hash[:uid_ems]}
+
+        expect(ems.refresher).to receive(:refresh)
+
+        described_class.refresh_new_target(ems.id, target_hash, target_klass, target_find)
+
+        vm.reload
+        expect(vm.ext_management_system).to eq(ems)
+      end
+    end
   end
 
   context '.queue_merge' do
