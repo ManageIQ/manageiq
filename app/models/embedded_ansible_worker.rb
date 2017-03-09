@@ -4,8 +4,18 @@ class EmbeddedAnsibleWorker < MiqWorker
   self.required_roles = ['embedded_ansible']
 
   def start_runner
-    self.class::Runner.start_worker(worker_options)
-    # TODO: return supervisord pid
+    Thread.new do
+      begin
+        self.class::Runner.start_worker(worker_options)
+        # TODO: return supervisord pid
+      rescue SystemExit
+        # Because we're running in a thread on the Server
+        # we need to intercept SystemExit and exit our thread,
+        # not the main server thread!
+        log.info("#{log_prefix} SystemExit received, exiting monitoring Thread")
+        Thread.exit
+      end
+    end
   end
 
   def kill

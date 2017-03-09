@@ -2,29 +2,30 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
   self.wait_for_worker_monitor = false
 
   def prepare
-    # Override prepare so we don't get set as started
+    ObjectSpace.garbage_collect
+    # Overriding prepare so we can set started when we're ready
+    do_before_work_loop
+    started_worker_record
     self
   end
 
-  # This thread runs forever until a stop request is received, which with send us to do_exit to exit our thread
   def do_work_loop
-    Thread.new do
-      begin
-        setup_ansible
-        started_worker_record
-
-        update_embedded_ansible_provider
-
-        _log.info("entering ansible monitor loop")
-        loop do
-          do_work
-          send(poll_method)
-        end
-      rescue => err
-        _log.log_backtrace(err)
-        do_exit
-      end
+    _log.info("entering ansible monitor loop")
+    loop do
+      do_work
+      send(poll_method)
     end
+  rescue => err
+    _log.log_backtrace(err)
+    do_exit
+  end
+
+  def do_before_work_loop
+    setup_ansible
+    update_embedded_ansible_provider
+  rescue => err
+    _log.log_backtrace(err)
+    do_exit
   end
 
   def setup_ansible
@@ -44,16 +45,10 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
     end
   end
 
-  # Because we're running in a thread on the Server
-  # we need to intercept SystemExit and exit our thread,
-  # not the main server thread!
   def do_exit(*args)
     # ensure this doesn't fail or that we can still get to the super call
     EmbeddedAnsible.disable
     super
-  rescue SystemExit
-    _log.info("#{log_prefix} SystemExit received, exiting monitoring Thread")
-    Thread.exit
   end
 
   def update_embedded_ansible_provider
