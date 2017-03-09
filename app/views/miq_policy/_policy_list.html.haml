@@ -1,6 +1,7 @@
 #policy_list_div
   - if x_active_tree == :policy_tree && @view
     - if @view.table.data.empty?
+      = render :partial => "layouts/flash_msg"
       - mode, model = @sb[:folder].split('-')
       - mode = _(mode.titleize)
       - model = ui_lookup(:model => model.camelize)
