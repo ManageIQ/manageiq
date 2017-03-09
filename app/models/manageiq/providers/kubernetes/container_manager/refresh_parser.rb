@@ -3,6 +3,8 @@ require 'shellwords'
 module ManageIQ::Providers::Kubernetes
   class ContainerManager::RefreshParser
     include Vmdb::Logging
+    include CollectionsParserMixin
+
     def self.ems_inv_to_hashes(inventory)
       new.ems_inv_to_hashes(inventory)
     end
@@ -132,8 +134,6 @@ module ManageIQ::Providers::Kubernetes
         @data_index.store_path(:additional_attributes, :by_node, aa[:node], ats)
       end
     end
-
-    include CollectionsParserMixin
 
     def map_labels(model_name, labels)
       ContainerLabelTagMapping.map_labels(@label_tag_mapping, model_name, labels)

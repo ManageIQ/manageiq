@@ -3,7 +3,7 @@ module ManageIQ::Providers
   class StorageManager::CinderManager::RefreshParser < ManageIQ::Providers::CloudManager::RefreshParser
     require_nested "CrossLinkers"
 
-    include ManageIQ::Providers::StorageManager::CinderManager::RefreshHelperMethods
+    include CollectionsParserMixin
     include Vmdb::Logging
 
     attr_accessor :data
