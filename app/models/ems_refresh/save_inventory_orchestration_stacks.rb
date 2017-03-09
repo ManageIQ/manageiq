@@ -29,7 +29,7 @@ module EmsRefresh
     end
 
     def save_orchestration_stacks_inventory(ems, hashes, target = nil, mode = :refresh)
-      target = ems if target.nil?
+      target = ems if target.nil? && mode == :refresh
 
       deletes = target == ems ? :use_association : []
 

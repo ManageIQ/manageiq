@@ -24,7 +24,7 @@ module EmsRefresh::SaveInventory
 
   def save_vms_inventory(ems, hashes, target = nil, mode = :refresh)
     return if hashes.nil?
-    target = ems if target.nil?
+    target = ems if target.nil? && mode == :refresh
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
     disconnects = if target.kind_of?(ExtManagementSystem) || target.kind_of?(Host)

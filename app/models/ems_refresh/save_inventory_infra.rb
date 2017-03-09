@@ -35,7 +35,7 @@
 
 module EmsRefresh::SaveInventoryInfra
   def save_ems_infra_inventory(ems, hashes, target = nil, mode = :refresh)
-    target = ems if target.nil?
+    target = ems if target.nil? && mode == :refresh
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
     # Check if the data coming in reflects a complete removal from the ems
@@ -84,7 +84,7 @@ module EmsRefresh::SaveInventoryInfra
   end
 
   def save_storages_inventory(ems, hashes, target = nil, mode = :refresh)
-    target = ems if target.nil?
+    target = ems if target.nil? && mode == :refresh
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
     # Query for all of the storages ahead of time
@@ -114,7 +114,7 @@ module EmsRefresh::SaveInventoryInfra
   end
 
   def save_hosts_inventory(ems, hashes, target = nil, mode = :refresh)
-    target = ems if target.nil?
+    target = ems if target.nil? && mode == :refresh
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
     disconnects = if (target == ems)
@@ -220,7 +220,7 @@ module EmsRefresh::SaveInventoryInfra
   end
 
   def save_host_storages_inventory(host, hashes, target = nil, mode = :refresh)
-    target = host if target.nil?
+    target = host if target.nil? && mode == :refresh
 
     # Update the associated ids
     hashes.each do |h|
@@ -240,7 +240,7 @@ module EmsRefresh::SaveInventoryInfra
   end
 
   def save_folders_inventory(ems, hashes, target = nil, mode = :refresh)
-    target = ems if target.nil?
+    target = ems if target.nil? && mode == :refresh
 
     ems.ems_folders.reset
     deletes = if (target == ems)
@@ -255,7 +255,7 @@ module EmsRefresh::SaveInventoryInfra
   alias_method :save_ems_folders_inventory, :save_folders_inventory
 
   def save_clusters_inventory(ems, hashes, target = nil, mode = :refresh)
-    target = ems if target.nil?
+    target = ems if target.nil? && mode == :refresh
 
     ems.ems_clusters.reset
     deletes = if (target == ems)
@@ -270,7 +270,7 @@ module EmsRefresh::SaveInventoryInfra
   alias_method :save_ems_clusters_inventory, :save_clusters_inventory
 
   def save_resource_pools_inventory(ems, hashes, target = nil, mode = :refresh)
-    target = ems if target.nil?
+    target = ems if target.nil? && mode == :refresh
 
     ems.resource_pools.reset
     deletes = if (target == ems)
@@ -286,7 +286,7 @@ module EmsRefresh::SaveInventoryInfra
   end
 
   def save_storage_profiles_inventory(ems, hashes, target = nil, mode = :refresh)
-    target = ems if target.nil?
+    target = ems if target.nil? && mode == :refresh
 
     ems.storage_profiles.reset
     deletes =
