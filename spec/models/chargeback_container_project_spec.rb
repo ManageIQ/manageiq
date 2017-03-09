@@ -356,20 +356,47 @@ describe ChargebackContainerProject do
     let(:miq_enterprise) { FactoryGirl.create(:miq_enterprise) }
 
     before do
-      add_metric_rollups_for(@project, month_beginning...month_end, 24.hours, metric_rollup_params)
-
-      metric_rollup_params[:cpu_usage_rate_average] = 0.0
-      metric_rollup_params[:derived_memory_used] = 0.0
-
-      add_metric_rollups_for(@project, (month_beginning + 12.hours)...month_end, 24.hours, metric_rollup_params, nil)
+      Range.new(month_beginning, month_end, true).step_value(24.hours).each do |time|
+        @project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
+                                                      :timestamp                => time,
+                                                      :cpu_usage_rate_average   => cpu_usage_rate,
+                                                      :derived_vm_numvcpus      => cpu_count,
+                                                      :derived_memory_available => memory_available,
+                                                      :derived_memory_used      => memory_used,
+                                                      :net_usage_rate_average   => net_usage_rate,
+                                                      :parent_ems_id            => ems.id,
+                                                      :tag_names                => "",
+                                                      :resource_name            => @project.name)
+        # Empty metric for fixed compute
+        @project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
+                                                      :timestamp                => time + 12.hours,
+                                                      :cpu_usage_rate_average   => 0.0,
+                                                      :derived_memory_used      => 0.0,
+                                                      :parent_ems_id            => ems.id,
+                                                      :tag_names                => "",
+                                                      :resource_name            => @project.name)
+      end
 
       @metric_size = @project.metric_rollups.size
 
-      temp = {:cb_rate => chargeback_rate, :object => miq_enterprise}
+      temp = {:cb_rate => @cbr, :object => miq_enterprise}
       ChargebackRate.set_assignments(:compute, [temp])
     end
 
     subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(options).first.first }
+
+    let(:cbt) { FactoryGirl.create(:chargeback_tier,
+                                   :start                     => 0,
+                                   :finish                    => Float::INFINITY,
+                                   :fixed_rate                => 0.0,
+                                   :variable_rate             => hourly_rate.to_s) }
+    let!(:cbrd) do
+      FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
+                         :chargeback_rate_id => @cbr.id,
+                         :per_time           => "hourly",
+                         :chargeback_tiers   => [cbt],
+                         :source             => "compute_1")
+    end
 
     it "fixed_compute" do
       # .to be_within(0.01) is used since theres a float error here
