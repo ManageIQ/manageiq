@@ -110,17 +110,24 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
 
   def assert_playbooks
     expect(expected_configuration_script_source.configuration_script_payloads.first).to be_an_instance_of(ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook)
-    expect(expected_configuration_script_source.configuration_script_payloads.count).to eq(1)
-    expect(expected_configuration_script_source.configuration_script_payloads.map(&:name)).to include('hello_world.yml')
+    expect(expected_configuration_script_source.configuration_script_payloads.count).to eq(8)
+    expect(expected_configuration_script_source.configuration_script_payloads.map(&:name)).to include('start_ec2.yml')
   end
 
   def assert_configuration_script_sources
     expect(automation_manager.configuration_script_sources.count).to eq(6)
     expect(expected_configuration_script_source).to be_an_instance_of(ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScriptSource)
     expect(expected_configuration_script_source).to have_attributes(
-      :name        => 'Demo Project',
-      :description => 'A great demo',
+      :name                 => 'DB_Github',
+      :description          => 'DB Playbooks',
+      :scm_type             => 'git',
+      :scm_url              => 'https://github.com/syncrou/playbooks',
+      :scm_branch           => 'master',
+      :scm_clean            => false,
+      :scm_delete_on_update => false,
+      :scm_update_on_launch => true
     )
+    expect(expected_configuration_script_source.authentication.name).to eq('db-github')
   end
 
   def assert_configured_system
@@ -181,6 +188,6 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
   end
 
   def expected_configuration_script_source
-    @expected_configuration_script_source ||= automation_manager.configuration_script_sources.find_by(:name => 'Demo Project')
+    @expected_configuration_script_source ||= automation_manager.configuration_script_sources.find_by(:name => 'DB_Github')
   end
 end
