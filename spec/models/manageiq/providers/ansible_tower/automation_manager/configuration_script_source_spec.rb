@@ -2,6 +2,7 @@ require 'ansible_tower_client'
 
 describe ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScriptSource do
   context "create through API" do
+    let(:finished_task) { FactoryGirl.create(:miq_task, :state => "Finished") }
     let(:provider)      { FactoryGirl.create(:provider_ansible_tower, :with_authentication) }
     let(:manager)       { provider.managers.first }
     let(:atc)           { double("AnsibleTowerClient::Connection", :api => api) }
@@ -27,7 +28,8 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScri
 
     it ".create_in_provider" do
       expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
-      expect(EmsRefresh).to receive(:queue_refresh).and_return(store_new_project(project, manager))
+      store_new_project(project, manager)
+      expect(EmsRefresh).to receive(:queue_refresh_task).and_return([finished_task])
       expect(ExtManagementSystem).to receive(:find).with(manager.id).and_return(manager)
 
       expect(described_class.create_in_provider(manager.id, params)).to be_a(described_class)
@@ -35,7 +37,7 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScri
 
     it "not found during refresh" do
       expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
-      expect(EmsRefresh).to receive(:queue_refresh)
+      expect(EmsRefresh).to receive(:queue_refresh_task).and_return([finished_task])
       expect(ExtManagementSystem).to receive(:find).with(manager.id).and_return(manager)
 
       expect { described_class.create_in_provider(manager.id, params) }.to raise_error(ActiveRecord::RecordNotFound)
