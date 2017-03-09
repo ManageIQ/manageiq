@@ -324,4 +324,8 @@ class EmsEvent < EventStream
   def ems_refresh_target
     ext_management_system
   end
+
+  def manager_refresh_targets
+    ext_management_system.class::EventTargetParser.new(self).parse
+  end
 end
