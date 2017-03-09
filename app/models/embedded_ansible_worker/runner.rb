@@ -14,7 +14,7 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
     update_embedded_ansible_provider
   rescue => err
     _log.log_backtrace(err)
-    do_exit
+    do_exit(err.message, 1)
   end
 
   def do_work_loop
@@ -25,7 +25,7 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
     end
   rescue => err
     _log.log_backtrace(err)
-    do_exit
+    do_exit(err.message, 1)
   end
 
   def setup_ansible
