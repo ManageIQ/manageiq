@@ -177,22 +177,4 @@ module EmsRefresh::SaveInventoryHelper
 
     top_level && (target == true || target.nil? || parent == target) ? :use_association : []
   end
-
-  def get_cluster(ems, cluster_hash, rp_hash, dc_hash)
-    cluster = EmsCluster.find_by(:ems_ref => cluster_hash[:ems_ref], :ems_id => ems.id)
-    if cluster.nil?
-      rp = ems.resource_pools.create!(rp_hash)
-
-      cluster = ems.clusters.create!(cluster_hash)
-
-      cluster.add_resource_pool(rp)
-      cluster.save!
-
-      dc = Datacenter.find_by(:ems_ref => dc_hash[:ems_ref], :ems_id => ems.id)
-      dc.add_cluster(cluster)
-      dc.save!
-    end
-
-    cluster
-  end
 end
