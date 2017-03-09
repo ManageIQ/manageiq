@@ -9,20 +9,20 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
     self
   end
 
+  def do_before_work_loop
+    setup_ansible
+    update_embedded_ansible_provider
+  rescue => err
+    _log.log_backtrace(err)
+    do_exit
+  end
+
   def do_work_loop
     _log.info("entering ansible monitor loop")
     loop do
       do_work
       send(poll_method)
     end
-  rescue => err
-    _log.log_backtrace(err)
-    do_exit
-  end
-
-  def do_before_work_loop
-    setup_ansible
-    update_embedded_ansible_provider
   rescue => err
     _log.log_backtrace(err)
     do_exit
