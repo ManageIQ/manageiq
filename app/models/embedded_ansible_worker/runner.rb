@@ -46,8 +46,8 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
   end
 
   def do_exit(*args)
-    # ensure this doesn't fail or that we can still get to the super call
     EmbeddedAnsible.disable
+  ensure
     super
   end
 
