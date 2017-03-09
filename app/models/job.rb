@@ -88,22 +88,6 @@ class Job < ApplicationRecord
     MiqQueue.get_worker(guid).try(:update_heartbeat)
   end
 
-  def self.signal_by_taskid(guid, signal, *args)
-    # send a signal to job by guid
-    return if guid.nil?
-
-    _log.info("Guid: [#{guid}], Signal: [#{signal}]")
-
-    job = find_by(:guid => guid)
-    return if job.nil?
-
-    begin
-      job.signal(signal, *args)
-    rescue => err
-      _log.info("Guid: [#{guid}], Signal: [#{signal}], unable to deliver signal, #{err}")
-    end
-  end
-
   def set_status(message, status = "ok")
     self.message = message
     self.status  = status
