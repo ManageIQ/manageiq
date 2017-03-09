@@ -22,6 +22,15 @@ cols:
 - name
 - state
 
+# Included tables (joined, has_one, has_many) and columns
+include:
+  container_group:
+    columns:
+    - name
+  container_image:
+    columns:
+    - name
+
 # Order of columns (from all tables)
 col_order: 
 - name

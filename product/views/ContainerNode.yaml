@@ -25,6 +25,12 @@ cols:
 - kernel_version
 - container_runtime_version
 
+# Included tables (joined, has_one, has_many) and columns
+include:
+  ext_management_system:
+    columns:
+    - name
+
 # Order of columns (from all tables)
 col_order:
 - name

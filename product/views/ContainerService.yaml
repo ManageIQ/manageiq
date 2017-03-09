@@ -25,6 +25,15 @@ cols:
 - session_affinity
 - container_groups_count
 
+# Included tables (joined, has_one, has_many) and columns
+include:
+  container_project:
+    columns:
+    - name
+  ext_management_system:
+    columns:
+    - name
+
 # Order of columns (from all tables)
 col_order: 
 - name
