@@ -17,17 +17,6 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
     do_exit(err.message, 1)
   end
 
-  def do_work_loop
-    _log.info("entering ansible monitor loop")
-    loop do
-      do_work
-      send(poll_method)
-    end
-  rescue => err
-    _log.log_backtrace(err)
-    do_exit(err.message, 1)
-  end
-
   def setup_ansible
     _log.info("calling EmbeddedAnsible.configure")
     EmbeddedAnsible.configure unless EmbeddedAnsible.configured?
@@ -37,12 +26,12 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
     _log.info("calling EmbeddedAnsible.start finished")
   end
 
+  def heartbeat
+    super if EmbeddedAnsible.alive?
+  end
+
   def do_work
-    if EmbeddedAnsible.alive?
-      heartbeat
-    else
-      EmbeddedAnsible.start unless EmbeddedAnsible.running?
-    end
+    EmbeddedAnsible.start if !EmbeddedAnsible.alive? && !EmbeddedAnsible.running?
   end
 
   def before_exit(*_)
