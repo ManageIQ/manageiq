@@ -50,6 +50,7 @@ module RetirementMixin
   end
 
   def extend_retires_on(days, date = Time.zone.now)
+    raise _("Invalid Date specified: %{date}") % {:date => date} unless date.kind_of?(ActiveSupport::TimeWithZone)
     _log.info "Extending Retirement Date on #{self.class.name} id:<#{self.id}>, name:<#{self.name}> "
     new_retires_date = date.in_time_zone + days.to_i.days
     _log.info "Original Date: #{date} Extend days: #{days} New Retirement Date: #{new_retires_date}"

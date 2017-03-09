@@ -199,7 +199,7 @@ EOF
         :retirement_last_warn => Time.zone.today,
         :retirement_state     => "retiring"
       )
-      service_service.retires_on = Time.zone.today + 1.day
+      service_service.retires_on = Time.zone.now + 1.day
       service.reload
 
       expect(service).to have_attributes(
@@ -224,7 +224,7 @@ EOF
       Timecop.freeze(Time.zone.now) do
         service.update_attributes(
           :retired              => true,
-          :retirement_last_warn => Time.zone.today,
+          :retirement_last_warn => Time.zone.now,
           :retirement_state     => "retiring"
         )
         future_retires_on = Time.zone.now + 30.days
@@ -240,6 +240,11 @@ EOF
           :retires_on           => future_retires_on + extend_days.days
         )
       end
+    end
+
+    it "#extend_retires_on - invalid date" do
+      error_msg = "Invalid Date specified: #{Time.zone.today}"
+      expect { service_service.extend_retires_on(7, Time.zone.today) }.to raise_error(RuntimeError, error_msg)
     end
 
     it "#retirement_warn" do

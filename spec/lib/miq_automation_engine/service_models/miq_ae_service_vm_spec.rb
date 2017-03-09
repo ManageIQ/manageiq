@@ -206,6 +206,11 @@ module MiqAeServiceVmSpec
       end
     end
 
+    it "#extend_retires_on - invalid date" do
+      error_msg = "Invalid Date specified: #{Time.zone.today}"
+      expect { service_vm.extend_retires_on(7, Time.zone.today) }.to raise_error(RuntimeError, error_msg)
+    end
+
     it "#retirement_warn" do
       expect(service_vm.retirement_warn).to be_nil
       vm.retirement_last_warn = Time.zone.now
