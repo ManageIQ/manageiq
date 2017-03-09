@@ -178,6 +178,32 @@ describe EmsRefresh do
     end
   end
 
+  context '.refresh_new_target' do
+    let(:ems) { FactoryGirl.create(:ems_vmware) }
+
+    context 'targeting a new vm' do
+      let(:vm_hash) do
+        {
+          :type        => ManageIQ::Providers::InfraManager::Vm.name,
+          :ems_ref     => 'vm-123',
+          :ems_ref_obj => 'vm-123',
+          :uid_ems     => 'vm-123',
+          :name        => 'new-vm',
+          :vendor      => 'unknown'
+        }
+      end
+
+      it 'creates the new record' do
+        target_hash  = {:vms => [vm_hash]}
+        target_klass = vm_hash[:type].constantize
+        target_find  = {:uid_ems => vm_hash[:uid_ems]}
+
+        expect(ems.refresher).to receive(:refresh)
+        described_class.refresh_new_target(ems.id, target_hash, target_klass, target_find)
+      end
+    end
+  end
+
   context '.queue_merge' do
     let(:ems) { FactoryGirl.create(:ems_vmware, :name => "ems_vmware1") }
     let(:vm)  { FactoryGirl.create(:vm_vmware, :name => "vm_vmware1", :ext_management_system => ems) }
