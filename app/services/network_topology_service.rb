@@ -13,26 +13,32 @@ class NetworkTopologyService < TopologyService
 
   def build_topology
     topo_items = {}
-    links = []
+    links      = []
 
     included_relations = [
       :tags,
-      :cloud_subnets => [
-        :parent_cloud_subnet,
-        :tags,
-        :cloud_network  => :tags,
-        :vms            => [
+      :availability_zones => [
+        :vms => [
           :tags,
           :load_balancers  => :tags,
           :floating_ips    => :tags,
           :cloud_tenant    => :tags,
-          :security_groups => :tags],
+          :security_groups => :tags
+        ]
+      ],
+      :cloud_subnets      => [
+        :parent_cloud_subnet,
+        :tags,
+        :vms,
+        :cloud_network  => :tags,
         :network_router => [
           :tags,
           :cloud_network => [
             :floating_ips => :tags
           ]
-        ]]]
+        ]
+      ]
+    ]
 
     entity_relationships = {:NetworkManager => build_entity_relationships(included_relations)}
 
@@ -89,7 +95,7 @@ class NetworkTopologyService < TopologyService
 
   def build_kinds
     kinds = [:NetworkRouter, :CloudSubnet, :Vm, :NetworkManager, :FloatingIp, :CloudNetwork, :NetworkPort, :CloudTenant,
-             :SecurityGroup, :LoadBalancer, :Tag]
+             :SecurityGroup, :LoadBalancer, :Tag, :AvailabilityZone]
     build_legend_kinds(kinds)
   end
 end

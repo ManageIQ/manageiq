@@ -6,6 +6,14 @@
   .legend
     %label#selected
     %div{'ng-if' => "kinds"}
+      %kubernetes-topology-icon{tooltipOptions, :kind => "AvailabilityZone"}
+        %svg.kube-topology
+          %g.EntityLegend.Cloud.AvailabilityZone
+            %circle{:r => "17"}
+            -# pficon-network
+            %text{:y => "8"} &#xE911;
+        %label
+          = _("Availability Zones")
       %kubernetes-topology-icon{tooltipOptions, :kind => "CloudSubnet"}
         %svg.kube-topology
           %g.EntityLegend.Network.CloudSubnet
