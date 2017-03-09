@@ -2,6 +2,18 @@ class ProviderLabelTagMapping < ApplicationRecord
   belongs_to :tag
   belongs_to :mappable_entity
 
+  # Shortcut for self.mappable_entity.name. Provided for backwards compatibility.
+  #
+  def labeled_resource_type
+    mappable_entity.name
+  end
+
+  # Shortcut for self.mappable_entity.name=. Provided for backwards compatibility.
+  #
+  def labeled_resource_type=(value)
+    mappable_entity.name = value
+  end
+
   # Return a flat list of mappable entity names. The nil is required by the
   # user interface drop down menu for "all".
   #
