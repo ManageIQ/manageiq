@@ -110,7 +110,7 @@ describe(ServiceAnsiblePlaybook) do
 
   describe '#execute' do
     it 'creates an Ansible Tower job' do
-      expect(ManageIQ::Providers::AnsibleTower::AutomationManager::Job)
+      expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job)
         .to receive(:create_job).with(tower_job_temp, provision_options[:provision_job_options]).and_return(tower_job)
       loaded_service.execute(action)
       expected_job_attributes = {

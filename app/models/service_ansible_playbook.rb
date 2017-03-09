@@ -12,7 +12,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     opts = get_job_options(action)
 
     _log.info("Launching Ansible Tower job with options: #{opts}")
-    new_job = ManageIQ::Providers::AnsibleTower::AutomationManager::Job.create_job(jt, opts)
+    new_job = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job.create_job(jt, opts)
     update_job_for_playbook(action, new_job, opts[:hosts])
 
     _log.info("Ansible Tower job with ref #{new_job.ems_ref} was created.")
