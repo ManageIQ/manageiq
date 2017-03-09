@@ -17,6 +17,22 @@ describe MiqAeEngine::MiqAeMethod do
 
     subject { described_class.send(:invoke_inline_ruby, aem, obj, inputs) }
 
+    context "with a script that ends normally" do
+      let(:script) do
+        <<-RUBY
+          puts 'Hi from puts'
+        RUBY
+      end
+
+      it "logs and returns the correct exit status" do
+        allow($miq_ae_logger).to receive(:info).and_call_original
+        expect($miq_ae_logger).to receive(:info).with("Method exited with rc=MIQ_OK").at_least(:once)
+        expect($miq_ae_logger).to_not receive(:error)
+
+        expect(subject).to eq(0)
+      end
+    end
+
     context "with a script that raises" do
       let(:script) do
         <<-RUBY
@@ -51,6 +67,102 @@ describe MiqAeEngine::MiqAeMethod do
         expect($miq_ae_logger).to receive(:error).with("Method STDERR: \tfrom /my/automate/method:6:in `<main>'").at_least(:once)
 
         expect { subject }.to raise_error(MiqAeException::UnknownMethodRc)
+      end
+    end
+
+    context "with a script that exits" do
+      let(:script) do
+        <<-RUBY
+          puts 'Hi from puts'
+          exit
+        RUBY
+      end
+
+      it "logs and returns the correct exit status" do
+        allow($miq_ae_logger).to receive(:info).and_call_original
+        expect($miq_ae_logger).to receive(:info).with("Method exited with rc=MIQ_OK").at_least(:once)
+        expect($miq_ae_logger).to_not receive(:error)
+
+        expect(subject).to eq(0)
+      end
+    end
+
+    context "with a script that exits with an unknown return code" do
+      let(:script) do
+        <<-RUBY
+          puts 'Hi from puts'
+          exit 1234
+        RUBY
+      end
+
+      it "does not log but raises an exception" do
+        expect($miq_ae_logger).to_not receive(:error)
+
+        expect { subject }.to raise_error(MiqAeException::UnknownMethodRc)
+      end
+    end
+
+    context "with a script that exits MIQ_OK" do
+      let(:script) do
+        <<-RUBY
+          puts 'Hi from puts'
+          exit MIQ_OK
+        RUBY
+      end
+
+      it "logs and returns the correct exit status" do
+        allow($miq_ae_logger).to receive(:info).and_call_original
+        expect($miq_ae_logger).to receive(:info).with("Method exited with rc=MIQ_OK").at_least(:once)
+        expect($miq_ae_logger).to_not receive(:error)
+
+        expect(subject).to eq(0)
+      end
+    end
+
+    context "with a script that exits MIQ_WARN" do
+      let(:script) do
+        <<-RUBY
+          puts 'Hi from puts'
+          exit MIQ_WARN
+        RUBY
+      end
+
+      it "logs and returns the correct exit status" do
+        allow($miq_ae_logger).to receive(:warn).and_call_original
+        expect($miq_ae_logger).to receive(:warn).with("Method exited with rc=MIQ_WARN").at_least(:once)
+        expect($miq_ae_logger).to_not receive(:error)
+
+        expect(subject).to eq(4)
+      end
+    end
+
+    context "with a script that exits MIQ_STOP" do
+      let(:script) do
+        <<-RUBY
+          puts 'Hi from puts'
+          exit MIQ_STOP
+        RUBY
+      end
+
+      it "does not log but raises an exception" do
+        expect($miq_ae_logger).to_not receive(:error)
+
+        expect { subject }.to raise_error(MiqAeException::StopInstantiation)
+      end
+    end
+
+    context "with a script that exits MIQ_ABORT" do
+      let(:script) do
+        <<-RUBY
+          puts 'Hi from puts'
+          exit MIQ_ABORT
+        RUBY
+      end
+
+      it "does not log but raises an exception" do
+        expect($miq_ae_logger).to_not receive(:error)
+
+        expect { subject }.to raise_error(MiqAeException::AbortInstantiation)
       end
     end
 
