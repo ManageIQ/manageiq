@@ -315,6 +315,7 @@ cloud_object_store_containers:
 - cloud_tenant_id
 - name
 - type
+- provider_region
 cloud_object_store_objects:
 - id
 - ems_ref
