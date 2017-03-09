@@ -34,7 +34,7 @@
 #
 
 module EmsRefresh::SaveInventoryInfra
-  def save_ems_infra_inventory(ems, hashes, target = nil)
+  def save_ems_infra_inventory(ems, hashes, target = nil, mode = :refresh)
     target = ems if target.nil?
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
@@ -66,7 +66,7 @@ module EmsRefresh::SaveInventoryInfra
     ]
 
     # Save and link other subsections
-    save_child_inventory(ems, hashes, child_keys, target)
+    save_child_inventory(ems, hashes, child_keys, target, mode)
 
     link_floating_ips_to_network_ports(hashes[:floating_ips]) if hashes.key?(:floating_ips)
     link_cloud_subnets_to_network_routers(hashes[:cloud_subnets]) if hashes.key?(:cloud_subnets)
@@ -83,7 +83,7 @@ module EmsRefresh::SaveInventoryInfra
     ems
   end
 
-  def save_storages_inventory(ems, hashes, target = nil)
+  def save_storages_inventory(ems, hashes, target = nil, mode = :refresh)
     target = ems if target.nil?
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
@@ -113,7 +113,7 @@ module EmsRefresh::SaveInventoryInfra
     end
   end
 
-  def save_hosts_inventory(ems, hashes, target = nil)
+  def save_hosts_inventory(ems, hashes, target = nil, mode = :refresh)
     target = ems if target.nil?
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
@@ -219,7 +219,7 @@ module EmsRefresh::SaveInventoryInfra
     end
   end
 
-  def save_host_storages_inventory(host, hashes, target = nil)
+  def save_host_storages_inventory(host, hashes, target = nil, mode = :refresh)
     target = host if target.nil?
 
     # Update the associated ids
@@ -239,7 +239,7 @@ module EmsRefresh::SaveInventoryInfra
     save_inventory_multi(host.host_storages, hashes, deletes, [:host_id, :storage_id], nil, [:storage])
   end
 
-  def save_folders_inventory(ems, hashes, target = nil)
+  def save_folders_inventory(ems, hashes, target = nil, mode = :refresh)
     target = ems if target.nil?
 
     ems.ems_folders.reset
@@ -254,7 +254,7 @@ module EmsRefresh::SaveInventoryInfra
   end
   alias_method :save_ems_folders_inventory, :save_folders_inventory
 
-  def save_clusters_inventory(ems, hashes, target = nil)
+  def save_clusters_inventory(ems, hashes, target = nil, mode = :refresh)
     target = ems if target.nil?
 
     ems.ems_clusters.reset
@@ -269,7 +269,7 @@ module EmsRefresh::SaveInventoryInfra
   end
   alias_method :save_ems_clusters_inventory, :save_clusters_inventory
 
-  def save_resource_pools_inventory(ems, hashes, target = nil)
+  def save_resource_pools_inventory(ems, hashes, target = nil, mode = :refresh)
     target = ems if target.nil?
 
     ems.resource_pools.reset
@@ -285,7 +285,7 @@ module EmsRefresh::SaveInventoryInfra
     store_ids_for_new_records(ems.resource_pools, hashes, :uid_ems)
   end
 
-  def save_storage_profiles_inventory(ems, hashes, target = nil)
+  def save_storage_profiles_inventory(ems, hashes, target = nil, mode = :refresh)
     target = ems if target.nil?
 
     ems.storage_profiles.reset
@@ -312,7 +312,7 @@ module EmsRefresh::SaveInventoryInfra
                          [], [:storage_profile_id, :storage_id])
   end
 
-  def save_customization_specs_inventory(ems, hashes, _target = nil)
+  def save_customization_specs_inventory(ems, hashes, _target = nil, _mode = :refresh)
     save_inventory_multi(ems.customization_specs, hashes, :use_association, [:name])
   end
 

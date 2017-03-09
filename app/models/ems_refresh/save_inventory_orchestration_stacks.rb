@@ -8,7 +8,7 @@
 
 module EmsRefresh
   module SaveInventoryOrchestrationStacks
-    def save_orchestration_templates_inventory(_ems, hashes, _target = nil)
+    def save_orchestration_templates_inventory(_ems, hashes, _target = nil, _mode = :refresh)
       # cloud_stack_template does not belong to an ems;
       # only to create new if necessary, but not to update existing template
       templates = OrchestrationTemplate.find_or_create_by_contents(hashes)
@@ -28,7 +28,7 @@ module EmsRefresh
       store_ids_for_new_records(ems.orchestration_templates, hashes, :ems_ref)
     end
 
-    def save_orchestration_stacks_inventory(ems, hashes, target = nil)
+    def save_orchestration_stacks_inventory(ems, hashes, target = nil, mode = :refresh)
       target = ems if target.nil?
 
       deletes = target == ems ? :use_association : []
