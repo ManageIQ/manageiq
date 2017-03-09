@@ -83,22 +83,6 @@ class MiqWorker::Runner
   # Worker Monitor Methods
   ###############################
 
-  def self.wait_for_worker_monitor?
-    @wait_for_worker_monitor = true if @wait_for_worker_monitor.nil?
-    @wait_for_worker_monitor
-  end
-
-  class << self
-    attr_writer :wait_for_worker_monitor
-  end
-
-  def my_monitor_started?
-    return @monitor_started unless @monitor_started.nil?
-    return false if     server.nil?
-    return false unless server.reload.started?
-    @monitor_started = true
-  end
-
   def worker_monitor_drb
     @worker_monitor_drb ||= begin
       raise _("%{log} No MiqServer found to establishing DRb Connection to") % {:log => log_prefix} if server.nil?
@@ -152,7 +136,6 @@ class MiqWorker::Runner
     set_database_application_name
     ObjectSpace.garbage_collect
     started_worker_record
-    do_wait_for_worker_monitor if self.class.wait_for_worker_monitor?
     do_before_work_loop
     self
   end
@@ -322,16 +305,6 @@ class MiqWorker::Runner
 
   def do_work
     raise NotImplementedError, _("must be implemented in a subclass")
-  end
-
-  def do_wait_for_worker_monitor
-    _log.info("#{log_prefix} Checking that worker monitor has started before doing work")
-    loop do
-      break if self.my_monitor_started?
-      heartbeat
-      sleep 3
-    end
-    _log.info("#{log_prefix} Starting work since worker monitor has started")
   end
 
   def do_work_loop
