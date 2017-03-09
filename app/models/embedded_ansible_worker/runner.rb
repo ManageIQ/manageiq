@@ -45,10 +45,8 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
     end
   end
 
-  def do_exit(*args)
+  def before_exit(*_)
     EmbeddedAnsible.disable
-  ensure
-    super
   end
 
   def update_embedded_ansible_provider
