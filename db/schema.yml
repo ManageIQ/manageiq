@@ -1576,7 +1576,6 @@ jobs:
 - miq_server_id
 - zone
 - agent_name
-- archive
 - options
 - context
 - miq_task_id
