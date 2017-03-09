@@ -664,6 +664,7 @@ module OpsController::OpsRbac
   end
 
   def rbac_edit_reset(operation, what, klass)
+    @sb[:active_rbac_group_tab] ||= "rbac_customer_tags"
     key = what.to_sym
     obj = find_checked_items
     obj[0] = params[:id] if obj.blank? && params[:id]
@@ -930,20 +931,22 @@ module OpsController::OpsRbac
 
   def rbac_group_get_details(id)
     @record = @group = MiqGroup.find_by_id(from_cid(id))
-    get_tagdata(@group)
     # Build the belongsto filters hash
     @belongsto = {}
-    @group.get_belongsto_filters.each do |b|            # Go thru the belongsto tags
-      bobj = MiqFilter.belongsto2object(b)            # Convert to an object
-      next unless bobj
-      @belongsto[bobj.class.to_s + "_" + bobj.id.to_s] = b # Store in hash as <class>_<id> string
-    end
     @filters = {}
-    # Build the managed filters hash
-    [@group.get_managed_filters].flatten.each do |f|
-      @filters[f.split("/")[-2] + "-" + f.split("/")[-1]] = f
-    end
+    if @record.present?
+      get_tagdata(@group)
+      @group.get_belongsto_filters.each do |b|            # Go thru the belongsto tags
+        bobj = MiqFilter.belongsto2object(b)            # Convert to an object
+        next unless bobj
+        @belongsto[bobj.class.to_s + "_" + bobj.id.to_s] = b # Store in hash as <class>_<id> string
+      end
 
+      # Build the managed filters hash
+      [@group.get_managed_filters].flatten.each do |f|
+        @filters[f.split("/")[-2] + "-" + f.split("/")[-1]] = f
+      end
+    end
     rbac_group_right_tree(@belongsto.keys)
   end
 
