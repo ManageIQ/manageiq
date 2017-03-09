@@ -1490,8 +1490,13 @@ class MiqVimInventory < MiqVimClientBase
   end
 
   def hostSystemsStorageDevice(hostMors, selSpec = nil)
-    sd = getMoPropMulti(hostMors, "config.storageDevice")
-    sd = applySelector(sd, selSpec) if selSpec
+    if selSpec.nil?
+      sd = getMoPropMulti(hostMors, "config.storageDevice")
+    else
+      pp = selSpecToPropPath(selSpec)
+      sd = getMoPropMulti(hostMors, pp)
+      sd = applySelector(sd, selSpec)
+    end
 
     sd
   end
@@ -2497,7 +2502,9 @@ class MiqVimInventory < MiqVimClientBase
   end
 
   def ss2pp(ss)
-    getSelSpec(ss).collect { |s| s.split("[")[0] }.uniq
+    # We add "MOR" it isn't from VMware so always strip it out of
+    # the propPath even if it is in the selSpec
+    getSelSpec(ss).collect { |s| s.split("[")[0] }.uniq - ["MOR"]
   end
   private :ss2pp
 
