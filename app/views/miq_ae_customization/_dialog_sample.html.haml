@@ -86,22 +86,15 @@
                                     options_for_select(val.collect(&:reverse), field.default_value))
                                 - else
                                   = select_tag('field.id',
-                                              options_for_select([["<#{_('Choose')}>", nil]] + val.collect(&:reverse),
-                                                                  field.default_value))
+                                              options_for_select(val.collect(&:reverse), field.default_value))
 
                               - else
                                 -# NOT REQUIRED
                                 = select_tag('field.id',
-                                              options_for_select([["#{_('None')}", nil]] + val.collect(&:reverse),
-                                                                  field.default_value))
+                                              options_for_select(val.collect(&:reverse), field.default_value))
 
                             - else
                               - val.each_with_index do |rb, i|
-                                - unless field.required || i != 0
-                                  %input{:type => "radio", :disabled => true, :checked => field.default_value.nil?,
-                                    :id => "None", :value => "nil", :name => "None"}
-                                  &nbsp; None &nbsp;
-
                                 %input{:type => "radio", :disabled => true, :checked => (field.default_value == rb[0]),
                                   :id => rb[0], :value => rb[1], :name => rb[0]}
                                 &nbsp;

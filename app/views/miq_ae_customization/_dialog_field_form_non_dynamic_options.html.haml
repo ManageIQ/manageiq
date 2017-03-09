@@ -114,12 +114,9 @@
     %label.col-md-2.control-label
       = _('Default Value')
     .col-md-8
-      - none = [["<#{_('None')}>", nil]]
-      - values = @edit[:field_values].empty? ? none : none + @edit[:field_values].collect(&:reverse)
-      - selected = @edit[:field_default_value] || nil
       = select_tag("field_default_value",
-                    options_for_select(values, selected),
-                    :class    => "selectpicker")
+                   default_value_form_options(@edit[:field_typ], @edit[:field_values], @edit[:field_default_value]),
+                   :class    => "selectpicker")
       :javascript
         miqSelectPickerEvent("field_default_value", "#{url}")
   .form-group

@@ -1,9 +1,7 @@
 - if edit
   - if field.values.length > 1
     %span{:id => "dynamic-radio-#{field.id}"}
-      - values = field.values
-      - values = [['', "<#{_('None')}>"]] + values if !field.required && !field.dynamic
-      - values.each do |rb|
+      - field.values.each do |rb|
 
         %input{radio_options(field, url, rb[0], wf.value(field.name))}
         %label.dynamic-radio-label= rb[1]
