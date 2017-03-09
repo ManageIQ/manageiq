@@ -249,4 +249,12 @@ RSpec.describe MiqExpression::Field do
       expect(described_class.is_field?("ManageIQ-name")).to be(false)
     end
   end
+
+  describe "#tag?" do
+    it { expect(described_class.new(Vm, [], "name")).not_to be_tag }
+  end
+
+  describe "#field?" do
+    it { expect(described_class.new(Vm, [], "name")).to be_field }
+  end
 end

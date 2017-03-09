@@ -27,6 +27,14 @@ class MiqExpression::Field
     @column = column
   end
 
+  def tag?
+    false
+  end
+
+  def field?
+    true
+  end
+
   def date?
     column_type == :date
   end

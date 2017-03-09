@@ -24,6 +24,14 @@ class MiqExpression::Tag < MiqExpression::Field
     @namespace = "/#{managed ? MANAGED_NAMESPACE : USER_NAMESPACE}/#{column}"
   end
 
+  def tag?
+    true
+  end
+
+  def field?
+    false
+  end
+
   def contains(value)
     ids = model.find_tagged_with(:any => value, :ns => namespace).pluck(:id)
     model.arel_attribute(:id).in(ids)
