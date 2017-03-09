@@ -122,7 +122,7 @@ module EmsRefresh
     targets_by_type = target.each_with_object(Hash.new { |h, k| h[k] = [] }) do |(c, id), h|
       # Take care of both String or Class type being passed in
       c = c.to_s.constantize unless c.kind_of?(Class)
-      if [VmOrTemplate, Host, ExtManagementSystem].none? { |k| c <= k }
+      if [VmOrTemplate, Host, ExtManagementSystem, ManagerRefresh::Target].none? { |k| c <= k }
         _log.warn "Unknown target type: [#{c}]."
         next
       end
@@ -130,12 +130,24 @@ module EmsRefresh
       h[c] << id
     end
 
-    # Do lookups to get ActiveRecord objects
+    # Do lookups to get ActiveRecord objects or initialize ManagerRefresh::Target for ids that are Hash
     targets_by_type.each_with_object([]) do |(c, ids), a|
       ids.uniq!
 
-      recs = c.where(:id => ids)
-      recs = recs.includes(:ext_management_system) unless c <= ExtManagementSystem
+      manager_refresh_target_ids, active_record_ids = ids.partition { |x| x.kind_of?(Hash) }
+
+      active_record_recs = []
+      if active_record_ids.present?
+        active_record_recs = c.where(:id => active_record_ids)
+        active_record_recs = active_record_recs.includes(:ext_management_system) unless c <= ExtManagementSystem
+      end
+
+      manager_refresh_target_recs = []
+      if manager_refresh_target_ids.present?
+        manager_refresh_target_recs = manager_refresh_target_ids.map { |x| ManagerRefresh::Target.new(x)}
+      end
+
+      recs = active_record_recs + manager_refresh_target_recs
 
       if recs.length != ids.length
         missing = ids - recs.collect(&:id)
