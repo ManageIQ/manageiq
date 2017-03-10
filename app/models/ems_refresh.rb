@@ -122,7 +122,7 @@ module EmsRefresh
     targets_by_type = target.each_with_object(Hash.new { |h, k| h[k] = [] }) do |(c, id), h|
       # Take care of both String or Class type being passed in
       c = c.to_s.constantize unless c.kind_of?(Class)
-      if [VmOrTemplate, Host, ExtManagementSystem].none? { |k| c <= k }
+      if [VmOrTemplate, Host, ExtManagementSystem, EmsEvent].none? { |k| c <= k }
         _log.warn "Unknown target type: [#{c}]."
         next
       end
