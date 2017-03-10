@@ -135,7 +135,7 @@ module EmsRefresh
       ids.uniq!
 
       recs = if target_class <= ManagerRefresh::Target
-               ids.map { |x| ManagerRefresh::Target.new(x) }
+               ids.map { |x| ManagerRefresh::Target.load(x) }
              else
                active_record_recs = target_class.where(:id => ids)
                active_record_recs = active_record_recs.includes(:ext_management_system) unless target_class <= ExtManagementSystem
