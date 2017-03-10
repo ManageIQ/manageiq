@@ -21,9 +21,13 @@ module ManagerRefresh
       @options     = options
     end
 
+    def self.load(*args)
+      self.new(*args)
+    end
+
     # Returns a serialized ManagerRefresh::Target object. This can be used to initialize a new object, then the object
     # target acts the same as the object ManagerRefresh::Target.new(target.serialize)
-    def serialize
+    def dump
       {
         :manager_id  => manager_id,
         :association => association,
@@ -33,7 +37,7 @@ module ManagerRefresh
       }
     end
 
-    alias id serialize
+    alias id dump
     alias name association
 
     # @return [ManageIQ::Providers::BaseManager] The Manager owning the Target
