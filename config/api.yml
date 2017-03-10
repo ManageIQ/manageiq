@@ -473,6 +473,29 @@
       :get:
       - :name: read
         :identifier: miq_cloud_networks_view
+  :cloud_volumes:
+    :description: Cloud Volumes
+    :identifier: cloud_volume
+    :options:
+    - :collection
+    - :subcollection
+    :verbs: *gp
+    :klass: CloudVolume
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: cloud_volume_show_list
+      :post:
+      - :name: query
+        :identifier: cloud_volume_show_list
+    :subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: cloud_volume_show
+    :subresource_actions:
+      :get:
+      - :name: read
+        :identifier: cloud_volume_show
   :clusters:
     :description: Clusters
     :identifier: ems_cluster
