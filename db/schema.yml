@@ -6133,6 +6133,8 @@ physical_servers:
 - ems_ref
 - created_at
 - updated_at
+- health_state
+- power_state
 pictures:
 - id
 - resource_id
