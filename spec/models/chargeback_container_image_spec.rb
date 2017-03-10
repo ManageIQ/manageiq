@@ -29,7 +29,7 @@ describe ChargebackContainerImage do
     EvmSpecHelper.create_guid_miq_server_zone
     @node = FactoryGirl.create(:container_node, :name => "node")
     @image = FactoryGirl.create(:container_image, :ext_management_system => ems)
-    @label = FactoryGirl.build(:custom_attribute, :name => "version_label-1", :value => "1.0.0-rc_2", :section => 'docker_labels')
+    @label = FactoryGirl.build(:custom_attribute, :name => "version/1.2/_label-1", :value => "test/1.0.0  rc_2", :section => 'docker_labels')
     @project = FactoryGirl.create(:container_project, :name => "my project", :ext_management_system => ems)
     @group = FactoryGirl.create(:container_group, :ext_management_system => ems, :container_project => @project,
                                 :container_node => @node)
