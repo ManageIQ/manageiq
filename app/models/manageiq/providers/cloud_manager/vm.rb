@@ -3,6 +3,7 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   belongs_to :flavor
   belongs_to :orchestration_stack
   belongs_to :cloud_tenant
+  belongs_to :resource_group
 
   has_many :network_ports, :as => :device
   has_many :cloud_subnets, -> { distinct }, :through => :network_ports

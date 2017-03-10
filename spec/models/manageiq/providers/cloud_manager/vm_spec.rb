@@ -1,6 +1,16 @@
 describe VmCloud do
   subject { FactoryGirl.create(:vm_cloud) }
 
+  context "relationships" do
+    let(:resource_group) { FactoryGirl.create(:resource_group) }
+    before { subject.resource_group = resource_group }
+
+    it "has one resource group" do
+      expect(subject).to respond_to(:resource_group)
+      expect(subject.resource_group).to eql(resource_group)
+    end
+  end
+
   it "#post_create_actions" do
     expect(subject).to receive(:reconnect_events)
     expect(subject).to receive(:classify_with_parent_folder_path)
