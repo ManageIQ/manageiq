@@ -290,7 +290,6 @@ module MiqProvisionMixin
   end
 
   def resource_display_name(rsc)
-    return rsc.address if rsc.respond_to?(:address)
     return rsc.name    if rsc.respond_to?(:name)
     ''
   end
