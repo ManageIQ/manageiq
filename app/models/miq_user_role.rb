@@ -5,7 +5,8 @@ class MiqUserRole < ApplicationRecord
 
   has_many                :entitlements, :dependent => :restrict_with_exception
   has_many                :miq_groups, :through => :entitlements
-  has_and_belongs_to_many :miq_product_features, :join_table => :miq_roles_features
+  has_and_belongs_to_many :miq_product_features, :join_table => :miq_roles_features,
+                                                 :after_remove => :revalidate_shares
 
   virtual_column :vm_restriction,                   :type => :string
 
@@ -115,5 +116,13 @@ class MiqUserRole < ApplicationRecord
 
   def self.default_tenant_role
     find_by(:name => DEFAULT_TENANT_ROLE_NAME)
+  end
+
+  private
+
+  def revalidate_shares(_feature)
+    Share.joins(:user => :miq_groups).where(:miq_groups => {:id => miq_groups}).each do |share|
+      ResourceSharer.valid_share?(share) or share.destroy
+    end
   end
 end
