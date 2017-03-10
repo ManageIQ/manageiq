@@ -9,6 +9,9 @@ class RenameContainerLabelTagMapping < ActiveRecord::Migration[5.0]
       t.string :manager_type,  :comment => "The full class name of the resource type."
     end
 
+    # Create nil name entry Kubernetes to signify ALL entities.
+    MappableEntity.create!(:provider => 'kubernetes')
+
     # Add the current default list of mappable entities currently defined by
     # the ContainerLabelTagMapping::MAPPABLE_ENTITIES array.
     %w[
@@ -38,7 +41,7 @@ class RenameContainerLabelTagMapping < ActiveRecord::Migration[5.0]
 
     ProviderLabelTagMapping.find_each do |mapping|
       name = mapping.labeled_resource_type
-      mapping.mappable_entity_id = MappableEntity.find_by_name(name).id if name
+      mapping.mappable_entity_id = MappableEntity.find(:name => name).id
       mapping.save!
     end
 
