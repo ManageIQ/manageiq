@@ -105,6 +105,14 @@ module MiqAeEngine
       ["host", "storage"].each { |k| obj[k] = result[k] } unless result.empty?
     end
 
+    def self.miq_refresh(obj, _inputs)
+      event_object_from_workspace(obj).graph_refresh(:sync => false)
+    end
+
+    def self.miq_refresh_sync(obj, _inputs)
+      event_object_from_workspace(obj).graph_refresh(:sync => true)
+    end
+
     def self.miq_event_action_refresh(obj, inputs)
       event_object_from_workspace(obj).refresh(inputs['target'], false)
     end
