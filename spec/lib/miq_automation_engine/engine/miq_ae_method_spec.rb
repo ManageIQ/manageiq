@@ -207,7 +207,7 @@ describe MiqAeEngine::MiqAeMethod do
           alias_method :info,  :verify_next_message
         end.new
 
-        svc = MiqAeMethodService::MiqAeService.new(workspace, [], nil, logger_stub)
+        svc = MiqAeMethodService::MiqAeService.new(workspace, [], logger_stub)
         expect(MiqAeMethodService::MiqAeService).to receive(:new).with(workspace, []).and_return(svc)
 
         expect($miq_ae_logger).to receive(:info).with("<AEMethod [/my/automate/method]> Starting ").ordered
