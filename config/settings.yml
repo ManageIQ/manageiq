@@ -94,6 +94,8 @@
 :ems:
   :ems_redhat:
     :resolve_ip_addresses: true
+    :inventory:
+      :read_timeout: 1.hour
     :service:
       :read_timeout: 1.hour
   :ems_kubernetes:
