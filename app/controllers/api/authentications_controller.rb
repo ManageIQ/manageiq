@@ -10,7 +10,7 @@ module Api
     end
 
     def options
-      render_options(:authentications, build_additional_fields)
+      render_options(:authentications, :credential_types => build_additional_fields)
     end
 
     private

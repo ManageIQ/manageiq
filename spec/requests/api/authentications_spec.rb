@@ -181,7 +181,7 @@ RSpec.describe 'Authentications API' do
           fields[klass.name] = options
         end
       end.deep_stringify_keys
-      expect_options_results(:authentications, additional_options)
+      expect_options_results(:authentications, 'credential_types' => additional_options)
     end
   end
 end

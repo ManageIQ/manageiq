@@ -26,7 +26,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::AmazonCrede
 
   API_OPTIONS = {
     :type       => 'cloud',
-    :label      => 'Amazon',
+    :label      => N_('Amazon'),
     :attributes => API_ATTRIBUTES
   }.freeze
 end

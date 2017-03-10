@@ -25,7 +25,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::VmwareCrede
   API_ATTRIBUTES = COMMON_ATTRIBUTES.merge(EXTRA_ATTRIBUTES).freeze
 
   API_OPTIONS = {
-    :label      => 'VMware',
+    :label      => N_('VMware'),
     :type       => 'cloud',
     :attributes => API_ATTRIBUTES
   }.freeze
