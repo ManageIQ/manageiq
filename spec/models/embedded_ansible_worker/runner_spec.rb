@@ -13,6 +13,13 @@ describe EmbeddedAnsibleWorker::Runner do
       described_class.new(:guid => worker_guid)
     }
 
+    it "#do_before_work_loop exits on exceptions" do
+      expect(runner).to receive(:setup_ansible)
+      expect(runner).to receive(:update_embedded_ansible_provider).and_raise(StandardError)
+      expect(runner).to receive(:do_exit)
+      runner.do_before_work_loop
+    end
+
     context "#update_embedded_ansible_provider" do
       before do
         EvmSpecHelper.local_guid_miq_server_zone
