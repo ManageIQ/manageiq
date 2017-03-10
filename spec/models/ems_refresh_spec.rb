@@ -10,6 +10,17 @@ describe EmsRefresh do
       queue_refresh_and_assert_queue_item(target, [target])
     end
 
+    it "with ManagerRefresh::Target" do
+      target = ManagerRefresh::Target.load(
+        :manager_id  => @ems.id,
+        :association => :vms,
+        :manager_ref => {:ems_ref => "vm_1"},
+        :options     => {:opt1 => "opt1", :opt2 => "opt2"}
+      )
+
+      queue_refresh_and_assert_queue_item(target, [target])
+    end
+
     it "with Host" do
       target = FactoryGirl.create(:host_vmware, :ext_management_system => @ems)
       queue_refresh_and_assert_queue_item(target, [target])
