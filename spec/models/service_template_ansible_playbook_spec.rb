@@ -142,6 +142,9 @@ describe ServiceTemplateAnsiblePlaybook do
         :fqname                 => described_class.default_provisioning_entry_point('atomic'),
         :configuration_template => job_template
       )
+
+      saved_options = catalog_item_options_two[:config_info].deep_merge(:provision => {:dialog_id => service_template.dialogs.first.id})
+      expect(service_template.options[:config_info]).to include(saved_options)
     end
   end
 end

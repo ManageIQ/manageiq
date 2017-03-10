@@ -44,8 +44,9 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
           next unless dialog_name
 
           job_template = enhanced_config.fetch_path(action, :configuration_template)
-          enhanced_config[action][:dialog] =
-            Dialog::AnsiblePlaybookServiceDialog.create_dialog(dialog_name, job_template)
+          new_dialog = Dialog::AnsiblePlaybookServiceDialog.create_dialog(dialog_name, job_template)
+          enhanced_config[action][:dialog] = new_dialog
+          service_template.options[:config_info][action][:dialog_id] = new_dialog.id
         end
         service_template.create_resource_actions(enhanced_config)
       end
