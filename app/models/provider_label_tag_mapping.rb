@@ -21,9 +21,25 @@ class ProviderLabelTagMapping < ApplicationRecord
     MappableEntity.where(:provider => provider).pluck(:name).sort.unshift(nil)
   end
 
-  # Pass the data this returns to map_* methods.
+  # Returns a hash of mappings, with the mapping object (in array form) as the
+  # key, and its tag_id as the value. This hash should be passed to the various
+  # map_xxx methods.
+  #
+  # Example Output:
+  #
+  # {
+  #   ["kubernetes", "foo label", nil, nil]=>[128],
+  #   ["kubernetes", "other label", "ContainerNode", nil]=>[129]
+  # }
+  #
+  # The first array key has no model type, so it applies to everything. The
+  # second array key applies only to the ContainerNode type. Both apply only
+  # to the Kubernetes provider. Neither value has a label_value set.
+  #
+  # The value for each array key is the underlying record's tag_id.
+  #
   def self.cache
-    # {[name, type, value] => [tag_id, ...]}
+    # {[name, type, value] => [tag_id, ...]} - see lib/extensions/ar_region.rb
     in_my_region.find_each
                 .group_by { |m| [m.label_name, m.labeled_resource_type, m.label_value].freeze }
                 .transform_values { |mappings| mappings.collect(&:tag_id) }
