@@ -30,10 +30,7 @@ module Api
     end
 
     def settings_entry_to_hash(path, value)
-      path_elements = path.split("/")
-      result_hash = {path_elements.last => value}
-      path_elements[0..-2].reverse.each { |entry| result_hash = { entry => result_hash } } if path_elements.length > 1
-      result_hash
+      {}.tap { |h| h.store_path(path.split("/"), value) }
     end
   end
 end
