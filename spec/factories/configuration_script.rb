@@ -18,4 +18,8 @@ FactoryGirl.define do
   factory :embedded_playbook,
           :class  => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook",
           :parent => :configuration_script_payload
+
+  factory :embedded_configuration_script,
+          :class  => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript",
+          :parent => :configuration_script
 end
