@@ -1,6 +1,7 @@
 class ManageIQ::Providers::AnsibleTower::AutomationManager < ManageIQ::Providers::ExternalAutomationManager
   include ManageIQ::Providers::AnsibleTower::Shared::AutomationManager
 
+  require_nested :Credential
   require_nested :AmazonCredential
   require_nested :AzureCredential
   require_nested :CloudCredential
@@ -9,6 +10,7 @@ class ManageIQ::Providers::AnsibleTower::AutomationManager < ManageIQ::Providers
   require_nested :NetworkCredential
   require_nested :OpenstackCredential
   require_nested :RackspaceCredential
+  require_nested :ScmCredential
   require_nested :Satellite6Credential
   require_nested :VmwareCredential
 
@@ -17,6 +19,7 @@ class ManageIQ::Providers::AnsibleTower::AutomationManager < ManageIQ::Providers
   require_nested :ConfiguredSystem
   require_nested :EventCatcher
   require_nested :EventParser
+  require_nested :Inventory
   require_nested :Job
   require_nested :Playbook
   require_nested :Refresher
