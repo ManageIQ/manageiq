@@ -27,13 +27,11 @@ describe ManagerRefresh::Target do
 
       expect(target_1).to(
         have_attributes(
-          {
-            :manager     => @ems,
-            :manager_id  => @ems.id,
-            :association => :vms,
-            :manager_ref => {:ems_ref => @vm_1.ems_ref},
-            :options     => {:opt1 => "opt1", :opt2 => "opt2"}
-          }
+          :manager     => @ems,
+          :manager_id  => @ems.id,
+          :association => :vms,
+          :manager_ref => {:ems_ref => @vm_1.ems_ref},
+          :options     => {:opt1 => "opt1", :opt2 => "opt2"}
         )
       )
     end
@@ -48,13 +46,11 @@ describe ManagerRefresh::Target do
 
       expect(target_1).to(
         have_attributes(
-          {
-            :manager     => @ems,
-            :manager_id  => @ems.id,
-            :association => :vms,
-            :manager_ref => {:ems_ref => @vm_1.ems_ref},
-            :options     => {:opt1 => "opt1", :opt2 => "opt2"}
-          }
+          :manager     => @ems,
+          :manager_id  => @ems.id,
+          :association => :vms,
+          :manager_ref => {:ems_ref => @vm_1.ems_ref},
+          :options     => {:opt1 => "opt1", :opt2 => "opt2"}
         )
       )
     end
@@ -80,13 +76,11 @@ describe ManagerRefresh::Target do
 
         expect(target_1.dump).to(
           eq(
-            {
-              :manager_id  => @ems.id,
-              :event_id    => nil,
-              :association => :vms,
-              :manager_ref => {:ems_ref => @vm_1.ems_ref},
-              :options     => {:opt1 => "opt1", :opt2 => "opt2"}
-            }
+            :manager_id  => @ems.id,
+            :event_id    => nil,
+            :association => :vms,
+            :manager_ref => {:ems_ref => @vm_1.ems_ref},
+            :options     => {:opt1 => "opt1", :opt2 => "opt2"}
           )
         )
       end
@@ -101,13 +95,11 @@ describe ManagerRefresh::Target do
 
         expect(target_1.dump).to(
           eq(
-            {
-              :manager_id  => @ems.id,
-              :event_id    => nil,
-              :association => :vms,
-              :manager_ref => {:ems_ref => @vm_1.ems_ref},
-              :options     => {:opt1 => "opt1", :opt2 => "opt2"}
-            }
+            :manager_id  => @ems.id,
+            :event_id    => nil,
+            :association => :vms,
+            :manager_ref => {:ems_ref => @vm_1.ems_ref},
+            :options     => {:opt1 => "opt1", :opt2 => "opt2"}
           )
         )
       end
