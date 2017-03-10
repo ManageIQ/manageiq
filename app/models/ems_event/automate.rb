@@ -2,7 +2,7 @@ class EmsEvent
   module Automate
     extend ActiveSupport::Concern
 
-    def graph_refresh(sync: false)
+    def manager_refresh(sync: false)
       refresh_targets = manager_refresh_targets
 
       return if refresh_targets.empty?
