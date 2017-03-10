@@ -22,7 +22,7 @@ module ManagerRefresh
     # @param manager_id [Integer] A primary key of the Manager owning the Target
     # @param event_id [Integer] A primary key of the EmsEvent associated with the Target
     # @param options [Hash] A free form options hash
-    def add_target!(association:, manager_ref:, manager: nil, manager_id: nil, event_id: nil, options: {})
+    def add_target(association:, manager_ref:, manager: nil, manager_id: nil, event_id: nil, options: {})
       self << ManagerRefresh::Target.new(:association => association,
                                          :manager_ref => manager_ref,
                                          :manager     => manager || @manager,
