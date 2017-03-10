@@ -21,8 +21,14 @@ module ManagerRefresh
       @options     = options
     end
 
+    # A Rails recommended interface for deserializing an object
     def self.load(*args)
-      self.new(*args)
+      new(*args)
+    end
+
+    # A Rails recommended interface for serializing an object
+    def self.dump(obj)
+      obj.dump
     end
 
     # Returns a serialized ManagerRefresh::Target object. This can be used to initialize a new object, then the object
