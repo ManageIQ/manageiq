@@ -1541,6 +1541,7 @@ hosts:
 - availability_zone_id
 - maintenance
 - maintenance_reason
+- physical_server_id
 import_file_uploads:
 - id
 iso_datastores:
@@ -6135,6 +6136,13 @@ physical_servers:
 - updated_at
 - health_state
 - power_state
+- hostname
+- product_name
+- manufacturer
+- machine_type
+- model
+- serial_number
+- field_replaceable_unit
 pictures:
 - id
 - resource_id
