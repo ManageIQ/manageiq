@@ -91,7 +91,7 @@ describe EmsRefresh do
     expect(q_all[0].role).to eq("ems_inventory")
   end
 
-  context ".get_ar_objects" do
+  context ".get_target_objects" do
     it "array of class/ids pairs" do
       ems1 = FactoryGirl.create(:ems_vmware,     :name => "ems_vmware1")
       ems2 = FactoryGirl.create(:ems_redhat, :name => "ems_redhat1")
@@ -100,7 +100,7 @@ describe EmsRefresh do
         [ems2.class, ems2.id]
       ]
 
-      expect(described_class.get_ar_objects(pairs)).to match_array([ems1, ems2])
+      expect(described_class.get_target_objects(pairs)).to match_array([ems1, ems2])
     end
   end
 

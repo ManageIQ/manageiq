@@ -39,7 +39,7 @@ module EmsRefresh
 
   def self.queue_refresh(target, id = nil, opts = {})
     # Handle targets passed as a single class/id pair, an array of class/id pairs, or an array of references
-    targets = get_ar_objects(target, id)
+    targets = get_target_objects(target, id)
 
     # Group the target refs by zone and role
     targets_by_ems = targets.each_with_object(Hash.new { |h, k| h[k] = [] }) do |t, h|
@@ -82,7 +82,7 @@ module EmsRefresh
     EmsRefresh.init_console if defined?(Rails::Console)
 
     # Handle targets passed as a single class/id pair, an array of class/id pairs, or an array of references
-    targets = get_ar_objects(target, id)
+    targets = get_target_objects(target, id)
 
     # Split the targets into refresher groups
     groups = targets.group_by do |t|
@@ -109,10 +109,10 @@ module EmsRefresh
       return
     end
 
-    ems.refresher.refresh(get_ar_objects(target))
+    ems.refresher.refresh(get_target_objects(target))
   end
 
-  def self.get_ar_objects(target, single_id = nil)
+  def self.get_target_objects(target, single_id = nil)
     # Handle targets passed as a single class/id pair, an array of class/id pairs, an array of references
     target = [[target, single_id]] unless single_id.nil?
     return [target] unless target.kind_of?(Array)
