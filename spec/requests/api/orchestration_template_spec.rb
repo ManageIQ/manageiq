@@ -63,6 +63,8 @@ RSpec.describe 'Orchestration Template API' do
     it 'supports single VNFd orchestration_template creation' do
       api_basic_authorize collection_action_identifier(:orchestration_templates, :create)
 
+      expect_any_instance_of(OrchestrationTemplateVnfd).to receive(:raw_create)
+
       expect do
         run_post(orchestration_templates_url, request_body_vnfd)
       end.to change(OrchestrationTemplateVnfd, :count).by(1)
