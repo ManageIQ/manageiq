@@ -134,8 +134,7 @@ module EmsRefresh
     targets_by_type.each_with_object([]) do |(target_class, ids), target_objects|
       ids.uniq!
 
-      recs = case target_class
-             when ManagerRefresh::Target
+      recs = if target_class <= ManagerRefresh::Target
                ids.map { |x| ManagerRefresh::Target.new(x) }
              else
                active_record_recs = target_class.where(:id => ids)
