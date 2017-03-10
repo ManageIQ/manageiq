@@ -224,8 +224,8 @@ module MiqServer::RoleManagement
       if r.unlimited?
         current[role_name][:inactive].each { |s, _p| s.activate_roles(role_name) }
       else
-        active   = current[role_name][:active].sort   { |a, b| b.last <=> a.last }
-        inactive = current[role_name][:inactive].sort { |a, b| a.last <=> b.last }
+        active   = current[role_name][:active].sort_by(&:last).reverse
+        inactive = current[role_name][:inactive].sort_by(&:last)
         delta    = r.max_concurrent - active.length
         if delta < 0
           delta.abs.times do
@@ -235,7 +235,7 @@ module MiqServer::RoleManagement
               inactive << [s, p]
             end
           end
-          inactive = inactive.sort { |a, b| a.last <=> b.last } # Sort again, since we may have added to array
+          inactive = inactive.sort_by(&:last) # Sort again, since we may have added to array
         elsif delta > 0
           delta.times do
             if inactive.length > 0
@@ -244,7 +244,7 @@ module MiqServer::RoleManagement
               active << [s, p]
             end
           end
-          active = active.sort { |a, b| b.last <=> a.last } # Sort again, since we may have added to array
+          active = active.sort_by(&:last).reverse # Sort again, since we may have added to array
         end
 
         active.each do |s, p|

@@ -140,8 +140,8 @@ module Api
 
       def parse_ownership(data)
         {
-          :owner => collection_class(:users).find_by_id(parse_owner(data["owner"])),
-          :group => collection_class(:groups).find_by_id(parse_group(data["group"]))
+          :owner => collection_class(:users).find_by(:id => parse_owner(data["owner"])),
+          :group => collection_class(:groups).find_by(:id => parse_group(data["group"]))
         }.compact if data.present?
       end
 
@@ -291,7 +291,7 @@ module Api
         return if cname == @req.collection
         return if collection_config.subcollection_denied?(@req.collection, cname)
 
-        aspec = collection_config.typed_subcollection_actions(@req.collection, cname)
+        aspec = collection_config.typed_subcollection_actions(@req.collection, cname, @req.s_id ? :subresource : :subcollection)
         return unless aspec
 
         action_hash = fetch_action_hash(aspec, mname, aname)

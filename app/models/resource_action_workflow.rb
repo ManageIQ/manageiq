@@ -9,6 +9,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
     @settings        = {}
     @requester       = requester
     @target          = options[:target]
+    @initiator       = options[:initiator]
     @dialog          = load_dialog(resource_action, values)
 
     @settings[:resource_action_id] = resource_action.id unless resource_action.nil?
@@ -71,16 +72,17 @@ class ResourceActionWorkflow < MiqRequestWorkflow
 
   def load_resource_action(values = nil)
     if values.nil?
-      ResourceAction.find_by_id(@settings[:resource_action_id])
+      ResourceAction.find_by(:id => @settings[:resource_action_id])
     else
-      ResourceAction.find_by_id(values.fetch_path(:workflow_settings, :resource_action_id))
+      ResourceAction.find_by(:id => values.fetch_path(:workflow_settings, :resource_action_id))
     end
   end
 
   def create_values_hash
     {
       :dialog            => @dialog.automate_values_hash,
-      :workflow_settings => @settings
+      :workflow_settings => @settings,
+      :initiator         => @initiator
     }
   end
 

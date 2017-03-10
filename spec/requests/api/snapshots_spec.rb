@@ -133,6 +133,52 @@ RSpec.describe "Snapshots API" do
       end
     end
 
+    describe "POST /api/vms/:c_id/snapshots/:s_id with revert action" do
+      it "can queue a VM for reverting to a snapshot" do
+        api_basic_authorize(action_identifier(:vms, :revert, :snapshots_subresource_actions))
+        ems = FactoryGirl.create(:ext_management_system)
+        host = FactoryGirl.create(:host, :ext_management_system => ems)
+        vm = FactoryGirl.create(:vm_vmware, :name => "Alice's VM", :host => host, :ext_management_system => ems)
+        snapshot = FactoryGirl.create(:snapshot, :name => "Alice's snapshot", :vm_or_template => vm)
+
+        run_post("#{vms_url(vm.id)}/snapshots/#{snapshot.id}", :action => "revert")
+
+        expected = {
+          "message"   => "Reverting to snapshot Alice's snapshot for Virtual Machine id:#{vm.id} name:'Alice's VM'",
+          "success"   => true,
+          "task_href" => a_string_matching(tasks_url),
+          "task_id"   => anything
+        }
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "renders a failed action response if reverting is not supported" do
+        api_basic_authorize(action_identifier(:vms, :revert, :snapshots_subresource_actions))
+        vm = FactoryGirl.create(:vm_vmware)
+        snapshot = FactoryGirl.create(:snapshot, :vm_or_template => vm)
+
+        run_post("#{vms_url(vm.id)}/snapshots/#{snapshot.id}", :action => "revert")
+
+        expected = {
+          "success" => false,
+          "message" => "The VM is not connected to a Host"
+        }
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "will not revert to a snapshot unless authorized" do
+        api_basic_authorize
+        vm = FactoryGirl.create(:vm_vmware)
+        snapshot = FactoryGirl.create(:snapshot, :vm_or_template => vm)
+
+        run_post("#{vms_url(vm.id)}/snapshots/#{snapshot.id}", :action => "revert")
+
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
     describe "POST /api/vms/:c_id/snapshots/:s_id with delete action" do
       it "can queue a snapshot for deletion" do
         api_basic_authorize(action_identifier(:vms, :delete, :snapshots_subresource_actions, :delete))

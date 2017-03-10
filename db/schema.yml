@@ -140,6 +140,7 @@ authentications:
 - rhsm_pool_id
 - rhsm_server
 - manager_ref
+- options
 availability_zones:
 - id
 - ems_id
@@ -312,6 +313,8 @@ cloud_object_store_containers:
 - bytes
 - ems_id
 - cloud_tenant_id
+- name
+- type
 cloud_object_store_objects:
 - id
 - ems_ref
@@ -323,6 +326,8 @@ cloud_object_store_objects:
 - ems_id
 - cloud_tenant_id
 - cloud_object_store_container_id
+- name
+- type
 cloud_resource_quotas:
 - id
 - ems_ref
@@ -1554,7 +1559,6 @@ jobs:
 - state
 - status
 - message
-- code
 - name
 - userid
 - created_on
@@ -1573,9 +1577,9 @@ jobs:
 - miq_server_id
 - zone
 - agent_name
-- archive
 - options
 - context
+- miq_task_id
 key_pairs_vms:
 - authentication_id
 - vm_id
@@ -5320,6 +5324,8 @@ miq_tasks:
 - results
 - miq_server_id
 - identifier
+- started_on
+- zone
 miq_user_roles:
 - id
 - name
@@ -6045,6 +6051,11 @@ orchestration_stacks:
 - status_reason
 - cloud_tenant_id
 - resource_group
+- start_time
+- finish_time
+- configuration_script_base_id
+- verbosity
+- hosts
 orchestration_templates:
 - id
 - name
@@ -6123,6 +6134,8 @@ physical_servers:
 - ems_ref
 - created_at
 - updated_at
+- health_state
+- power_state
 - hostname
 - product_name
 - manufacturer
@@ -6430,6 +6443,7 @@ services:
 - retirement_requester
 - tenant_id
 - ancestry
+- initiator
 sessions:
 - id
 - session_id

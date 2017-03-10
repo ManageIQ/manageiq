@@ -48,7 +48,7 @@ module MiqServer::EnvironmentManagement
         if MiqEnvironment::Command.is_appliance?
           eth0 = LinuxAdmin::NetworkInterface.new("eth0")
 
-          ipaddr      = eth0.address
+          ipaddr      = eth0.address || eth0.address6
           hostname    = LinuxAdmin::Hosts.new.hostname
           mac_address = eth0.mac_address
         else

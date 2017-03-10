@@ -61,7 +61,7 @@ module ManageIQ::Providers
 
       def parse_project(project_item)
         project = @data_index.fetch_path(:container_projects, :by_name, project_item.metadata.name)
-        project.merge!(:display_name => project_item.metadata.annotations['openshift.io/display-name']) unless
+        project[:display_name] = project_item.metadata.annotations['openshift.io/display-name'] unless
             project_item.metadata.annotations.nil?
       end
 

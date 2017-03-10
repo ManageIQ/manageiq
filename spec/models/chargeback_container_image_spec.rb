@@ -13,10 +13,7 @@ describe ChargebackContainerImage do
 
   let(:hourly_variable_tier_rate) { {:variable_rate => hourly_rate.to_s} }
 
-  let(:detail_params) do
-    {:chargeback_rate_detail_fixed_compute_cost => { :tiers  => [hourly_variable_tier_rate],
-                                                     :detail => { :source => "compute_1"} } }
-  end
+  let(:detail_params) { {:chargeback_rate_detail_fixed_compute_cost => { :tiers => [hourly_variable_tier_rate] } } }
 
   let!(:chargeback_rate) do
     FactoryGirl.create(:chargeback_rate, :detail_params => detail_params)

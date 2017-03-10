@@ -98,7 +98,7 @@ describe "Groups API" do
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       result = response.parsed_body["results"].first
-      created_group = MiqGroup.find_by_id(result["id"])
+      created_group = MiqGroup.find_by(:id => result["id"])
 
       expect(created_group).to be_present
       expect(created_group.entitlement.miq_user_role).to eq(role3)

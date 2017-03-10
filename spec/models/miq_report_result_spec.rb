@@ -86,7 +86,7 @@ describe MiqReportResult do
       @show_title   = true
       @options = MiqReport.graph_options(600, 400)
 
-      allow(Charting).to receive(:detect_available_plugin).and_return(JqplotCharting)
+      allow(Charting).to receive(:detect_available_plugin).and_return(C3Charting)
     end
 
     it "should save the original report metadata and the generated table as a binary blob" do

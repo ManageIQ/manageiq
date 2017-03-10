@@ -62,6 +62,8 @@ describe Authenticator::Ldap do
       'rootdn' => {:password => 'verysecret'},
       'alice'  => alice_data,
       'bob'    => bob_data,
+      'betty'  => betty_data,
+      'sam'    => sam_data,
     }
   end
   let(:alice_data) do
@@ -83,6 +85,28 @@ describe Authenticator::Ldap do
       :givenname         => 'Bob',
       :sn                => 'Builderson',
       :mail              => 'bob@example.com',
+      :groups            => %w(wibble bubble),
+    }
+  end
+  let(:betty_data) do
+    {
+      :userprincipalname => 'betty',
+      :password          => 'secret',
+      :displayname       => nil,
+      :givenname         => 'Betty',
+      :sn                => 'Builderson',
+      :mail              => 'betty@example.com',
+      :groups            => %w(wibble bubble),
+    }
+  end
+  let(:sam_data) do
+    {
+      :userprincipalname => 'sam',
+      :password          => 'secret',
+      :displayname       => nil,
+      :givenname         => nil,
+      :sn                => nil,
+      :mail              => 'sam@example.com',
       :groups            => %w(wibble bubble),
     }
   end
@@ -460,6 +484,22 @@ describe Authenticator::Ldap do
             task = MiqTask.find(task_id)
             expect(task.status).to eq('Error')
             expect(MiqTask.status_error?(task.status)).to be_truthy
+          end
+        end
+
+        context "when display name is blank" do
+          let(:username) { 'betty' }
+
+          it "creates a new User with name set to givenname + sn" do
+            expect(-> { authenticate }).to change { User.where(:name => 'Betty Builderson').count }.from(0).to(1)
+          end
+        end
+
+        context "when display name, givenname and sn are blank" do
+          let(:username) { 'sam' }
+
+          it "creates a new User with name set to the userid" do
+            expect(-> { authenticate }).to change { User.where(:name => 'sam').count }.from(0).to(1)
           end
         end
       end

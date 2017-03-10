@@ -242,7 +242,7 @@ module Authenticator
     end
 
     def run_task(taskid, status)
-      task = MiqTask.find_by_id(taskid)
+      task = MiqTask.find_by(:id => taskid)
       if task.nil?
         message = _("Unable to find task with id: [%{task_id}]") % {:task_id => taskid}
         _log.error(message)

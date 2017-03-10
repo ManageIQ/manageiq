@@ -1,0 +1,5 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_ExternalAutomationManager_ConfigurationScriptSource <
+    MiqAeServiceManageIQ_Providers_AutomationManager_ConfigurationScriptSource
+  end
+end

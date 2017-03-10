@@ -93,7 +93,7 @@ module MiqAeEngine
         nvms = h.vms.collect { |v| v if v.power_state == "on" }.compact.length
         if min_running_vms.nil? || nvms < min_running_vms
           storages = h.writable_storages.find_all { |s| s.free_space > vm.provisioned_storage } # Filter out storages that do not have enough free space for the Vm
-          s = storages.sort { |a, b| a.free_space <=> b.free_space }.last
+          s = storages.max_by(&:free_space)
           unless s.nil?
             result["host"]    = h
             result["storage"] = s
@@ -103,6 +103,14 @@ module MiqAeEngine
       end
 
       ["host", "storage"].each { |k| obj[k] = result[k] } unless result.empty?
+    end
+
+    def self.miq_refresh(obj, _inputs)
+      event_object_from_workspace(obj).manager_refresh(:sync => false)
+    end
+
+    def self.miq_refresh_sync(obj, _inputs)
+      event_object_from_workspace(obj).manager_refresh(:sync => true)
     end
 
     def self.miq_event_action_refresh(obj, inputs)

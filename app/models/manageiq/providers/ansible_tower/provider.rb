@@ -1,5 +1,5 @@
 class ManageIQ::Providers::AnsibleTower::Provider < ::Provider
-  include ManageIQ::Providers::AnsibleTower::ProviderMixin
+  include ManageIQ::Providers::AnsibleTower::Shared::Provider
 
   has_one :automation_manager,
           :foreign_key => "provider_id",

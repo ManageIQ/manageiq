@@ -36,10 +36,8 @@ engines:
       concurrency: 1
       languages:
       - ruby
-      - javascript
   eslint:
-    enabled: true
-    channel: "eslint-3"
+    enabled: false
   fixme:
     # let's enable later
     enabled: false
@@ -58,14 +56,5 @@ prepare:
 ratings:
   paths:
   - Gemfile.lock
-  - "**.erb"
-  - "**.haml"
   - "**.rake"
   - "**.rb"
-  - "**.rhtml"
-  - "**.slim"
-  - "**.css"
-  - "**.inc"
-  - "**.js"
-  - "**.jsx"
-  - "**.module"

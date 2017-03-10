@@ -1,86 +1,33 @@
-class MiqExpression::Field
-  FIELD_REGEX = /
+class MiqExpression::Field < MiqExpression::Target
+  REGEX = /
 (?<model_name>([[:upper:]][[:alnum:]]*(::)?)+)
 (?!.*\b(managed|user_tag)\b)
-\.?(?<associations>[a-z_\.]+)?
+\.?(?<associations>[a-z][0-9a-z_\.]+)?
 -(?<column>[a-z]+(_[[:alnum:]]+)*)
 /x
 
-  ParseError = Class.new(StandardError)
-
-  def self.parse(field)
-    match = FIELD_REGEX.match(field) or return
-    model = match[:model_name].safe_constantize or return
-    new(model, match[:associations].to_s.split("."), match[:column])
-  end
-
-  def self.parse!(field)
-    parse(field) or raise ParseError, field
-  end
-
-  attr_reader :model, :associations, :column
   delegate :eq, :not_eq, :lteq, :gteq, :lt, :gt, :between, :to => :arel_attribute
 
-  def initialize(model, associations, column)
-    @model = model
-    @associations = associations
-    @column = column
-  end
-
-  def date?
-    column_type == :date
+  def self.parse(field)
+    parsed_params = parse_params(field) || return
+    new(parsed_params[:model_name], parsed_params[:associations], parsed_params[:column])
   end
 
   def self.is_field?(field)
     return false unless field.kind_of?(String)
-    match = FIELD_REGEX.match(field)
+    match = REGEX.match(field)
     return false unless match
     model = match[:model_name].safe_constantize
     return false unless model
     !!(model < ApplicationRecord)
   end
 
-  def datetime?
-    column_type == :datetime
-  end
-
-  def string?
-    column_type == :string
-  end
-
-  def numeric?
-    [:fixnum, :integer, :float].include?(column_type)
-  end
-
   def attribute_supported_by_sql?
     !custom_attribute_column? && target.attribute_supported_by_sql?(column)
   end
 
-  def plural?
-    return false if reflections.empty?
-    [:has_many, :has_and_belongs_to_many].include?(reflections.last.macro)
-  end
-
   def custom_attribute_column?
     column.include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
-  end
-
-  def reflections
-    klass = model
-    associations.collect do |association|
-      klass.reflection_with_virtual(association).tap do |reflection|
-        raise ArgumentError, "One or more associations are invalid: #{associations.join(", ")}" unless reflection
-        klass = reflection.klass
-      end
-    end
-  end
-
-  def target
-    if associations.none?
-      model
-    else
-      reflections.last.klass
-    end
   end
 
   def matches(other)

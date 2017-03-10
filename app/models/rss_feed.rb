@@ -1,13 +1,14 @@
 require 'resource_feeder/common'
 class RssFeed < ApplicationRecord
   include ResourceFeeder
+  include_concern 'ImportExport'
+
   validates_presence_of     :name
   validates_uniqueness_of   :name
 
   attr_accessor :options
 
   acts_as_miq_taggable
-  include_concern 'ImportExport'
 
   YML_DIR = File.join(File.expand_path(Rails.root), "product", "alerts", "rss")
 
@@ -17,7 +18,7 @@ class RssFeed < ApplicationRecord
     "#{host_url}#{link}"
   end
 
-  def generate(host = nil, local = false, proto = nil)
+  def generate(host = nil, local = false, proto = nil, user_or_group = nil)
     proto ||= ::Settings.webservices.consume_protocol
     host_url = host.nil? ? "#{proto}://localhost:3000" : "#{proto}://" + host
 
@@ -35,7 +36,14 @@ class RssFeed < ApplicationRecord
       }
     }
 
-    feed = Rss.rss_feed_for(find_items, options)
+    rbac_options = {}
+    if user_or_group
+      user_or_group_key = user_or_group.kind_of?(User) ? :user : :miq_group
+      rbac_options[user_or_group_key] = user_or_group
+    end
+
+    filtered_items = Rbac::Filterer.filtered(find_items, rbac_options)
+    feed = Rss.rss_feed_for(filtered_items, options)
     local ? feed : {:text => feed, :content_type => Mime[:rss]}
   end
 

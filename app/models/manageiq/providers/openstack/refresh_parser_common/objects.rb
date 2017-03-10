@@ -37,7 +37,7 @@ module ManageIQ::Providers
             :tenant         => @data_index.fetch_path(:cloud_tenants, tenant.id)
           }
           content = get_object_content(obj)
-          new_result.merge!(:content => content) if content
+          new_result[:content] = content if content
 
           return uid, new_result
         end

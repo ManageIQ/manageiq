@@ -3,6 +3,8 @@ require 'yaml'
 module MiqServer::ServerSmartProxy
   extend ActiveSupport::Concern
 
+  SMART_ROLES = %w(smartproxy smartstate).freeze
+
   included do
     serialize :capabilities
   end

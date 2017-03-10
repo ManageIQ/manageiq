@@ -10,7 +10,7 @@ class Host < ApplicationRecord
   include SupportsFeatureMixin
   include NewWithTypeStiMixin
   include TenantIdentityMixin
-  include SupportsFeatureMixin
+  include DeprecationMixin
 
   VENDOR_TYPES = {
     # DB            Displayed
@@ -93,10 +93,9 @@ class Host < ApplicationRecord
 
   serialize :settings, Hash
 
-  # TODO: Remove all callers of address
-  alias_attribute :address, :hostname
-  alias_attribute :state,   :power_state
-  alias_attribute :to_s,    :name
+  deprecate_attribute :address, :hostname
+  alias_attribute     :state,   :power_state
+  alias_attribute     :to_s,    :name
 
   include SerializedEmsRefObjMixin
   include ProviderObjectMixin

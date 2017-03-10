@@ -63,6 +63,7 @@ module Spec
 
       def init_api_spec_env
         @guid, @server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+        @region = FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
 
         define_user
       end

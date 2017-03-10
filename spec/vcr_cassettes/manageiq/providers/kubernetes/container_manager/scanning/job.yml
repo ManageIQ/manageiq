@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://test.com/healthz
+    uri: https://test.com/healthz
     body:
       encoding: US-ASCII
       string: ''

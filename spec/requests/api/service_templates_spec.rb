@@ -154,6 +154,34 @@ describe "Service Templates API" do
       expect { st.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
+    it "can delete a service template via POST with an appropriate role" do
+      api_basic_authorize(action_identifier(:service_templates, :delete))
+      service_template = FactoryGirl.create(:service_template)
+
+      expect do
+        run_post(service_templates_url(service_template.id), :action => "delete")
+      end.to change(ServiceTemplate, :count).by(-1)
+
+      expected = {
+        "href"    => a_string_matching(service_templates_url(service_template.id)),
+        "message" => "service_templates id: #{service_template.id} deleting",
+        "success" => true
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "will not delete a service template via POST without an appropriate role" do
+      api_basic_authorize
+      service_template = FactoryGirl.create(:service_template)
+
+      expect do
+        run_post(service_templates_url(service_template.id), :action => "delete")
+      end.not_to change(ServiceTemplate, :count)
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
     it "supports multiple resource deletes" do
       api_basic_authorize collection_action_identifier(:service_templates, :delete)
 
@@ -331,6 +359,33 @@ describe "Service Templates API" do
         run_post(service_templates_url, template_parameters)
       end.to change(ServiceTemplateOrchestration, :count).by(1)
       expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'returns a bad request error for an invalid request' do
+      api_basic_authorize collection_action_identifier(:service_templates, :create)
+      template = FactoryGirl.create(:orchestration_template)
+      template_parameters = {
+        :name         => 'Orchestration Template',
+        :service_type => 'atomic',
+        :prov_type    => 'generic_orchestration',
+        :display      => 'false',
+        :description  => 'a description',
+        :config_info  => {
+          :template_id => template.id
+        }
+      }
+
+      expected = {
+        'error' => a_hash_including(
+          'kind'    => 'bad_request',
+          'message' => a_string_including('Could not create Service Template')
+        )
+      }
+      expect do
+        run_post(service_templates_url, template_parameters)
+      end.to change(ServiceTemplateOrchestration, :count).by(0)
+      expect(response).to have_http_status(:bad_request)
       expect(response.parsed_body).to include(expected)
     end
   end

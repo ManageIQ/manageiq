@@ -99,6 +99,7 @@ class WebsocketServer
   # Primitive same-origin policy checking in production
   def same_origin_as_host?(env)
     proto = Rack::Request.new(env).ssl? ? 'https' : 'http'
-    Rails.env.development? || env['HTTP_ORIGIN'] == "#{proto}://#{env['HTTP_HOST']}"
+    host = env['HTTP_X_FORWARDED_HOST'] ? env['HTTP_X_FORWARDED_HOST'].split(/,\s*/).first : env['HTTP_HOST']
+    Rails.env.development? || env['HTTP_ORIGIN'] == "#{proto}://#{host}"
   end
 end

@@ -2,7 +2,7 @@ module ServiceConfigurationMixin
   extend ActiveSupport::Concern
 
   included do
-    has_many :configuration_scripts, :through => :service_resources, :source => :resource, :source_type => 'ConfigurationScript'
+    has_many :configuration_scripts, :through => :service_resources, :source => :resource, :source_type => 'ConfigurationScriptBase'
     private :configuration_scripts, :configuration_scripts=
   end
 

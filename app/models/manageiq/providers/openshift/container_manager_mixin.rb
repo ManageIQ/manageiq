@@ -4,6 +4,7 @@ module ManageIQ::Providers::Openshift::ContainerManagerMixin
   include ManageIQ::Providers::Kubernetes::ContainerManagerMixin
 
   DEFAULT_PORT = 8443
+  DEFAULT_EXTERNAL_LOGGING_ROUTE_NAME = "logging-kibana-ops".freeze
 
   included do
     has_many :container_routes, :foreign_key => :ems_id, :dependent => :destroy
@@ -36,7 +37,7 @@ module ManageIQ::Providers::Openshift::ContainerManagerMixin
       Kubeclient::Client.new(
         raw_api_endpoint(hostname, port, '/oapi'),
         options[:version] || api_version,
-        :ssl_options    => { :verify_ssl => verify_ssl_mode },
+        :ssl_options    => Kubeclient::Client::DEFAULT_SSL_OPTIONS.merge(options[:ssl_options] || {}),
         :auth_options   => kubernetes_auth_options(options),
         :http_proxy_uri => VMDB::Util.http_proxy_uri
       )
@@ -55,5 +56,17 @@ module ManageIQ::Providers::Openshift::ContainerManagerMixin
       @clients[kubernetes] ||= connect(:service => 'kubernetes', :version => api_version)
       @clients[openshift].respond_to?(method_name) ? @clients[openshift] : @clients[kubernetes]
     end
+  end
+
+  def external_logging_route_name
+    DEFAULT_EXTERNAL_LOGGING_ROUTE_NAME
+  end
+
+  def external_logging_query
+    nil # should be empty to return all
+  end
+
+  def external_logging_path
+    '/'
   end
 end

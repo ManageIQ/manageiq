@@ -14,7 +14,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     if initial_pass == true
       src_vm_id = get_value(@values[:src_vm_id])
       unless src_vm_id.blank?
-        vm = VmOrTemplate.find_by_id(src_vm_id)
+        vm = VmOrTemplate.find_by(:id => src_vm_id)
         @values[:src_vm_id] = [vm.id, vm.name] unless vm.blank?
       end
     end
@@ -278,7 +278,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   def allowed_templates(options = {})
     # Return pre-selected VM if we are called for cloning
     if [:clone_to_vm, :clone_to_template].include?(request_type)
-      vm_or_template = VmOrTemplate.find_by_id(get_value(@values[:src_vm_id]))
+      vm_or_template = VmOrTemplate.find_by(:id => get_value(@values[:src_vm_id]))
       return [create_hash_struct_from_vm_or_template(vm_or_template, options)].compact
     end
 
@@ -326,7 +326,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       end
     end
 
-    MiqPreloader.preload(allowed_templates_list, [:operating_system, :ext_management_system, {:hardware => :disks}])
+    MiqPreloader.preload(allowed_templates_list, [:snapshots, :operating_system, :ext_management_system, {:hardware => :disks}])
     @allowed_templates_cache = allowed_templates_list.collect do |template|
       create_hash_struct_from_vm_or_template(template, options)
     end
@@ -428,7 +428,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     case src[:vm].platform
     when 'windows' then result.merge!("fields" => "Specification", "file"  => "Sysprep Answer File")
-    when 'linux'   then result.merge!("fields" => "Specification")
+    when 'linux'   then result["fields"] = "Specification"
     end
 
     result

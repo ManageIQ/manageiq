@@ -8,8 +8,40 @@ module ManageIQ::Providers::Openstack::InfraManager::Host::Operations
     end
   end
 
+  def set_node_maintenance_queue(userid)
+    task_opts = {
+      :action => "setting node maintenance on Host for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'set_node_maintenance',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => []
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
   def set_node_maintenance
     ironic_fog_node.set_node_maintenance(:reason=>"CFscaledown")
+  end
+
+  def unset_node_maintenance_queue(userid)
+    task_opts = {
+      :action => "unsetting node maintenance on Host for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'unset_node_maintenance',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => []
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
   def unset_node_maintenance

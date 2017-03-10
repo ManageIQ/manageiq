@@ -1,13 +1,39 @@
 describe MiqExpression do
   context "virtual custom attributes" do
-    let(:virtual_custom_attribute) { "virtual_custom_attribute_attribute" }
-    let(:klass)                    { Vm }
-    let(:vm)                       { FactoryGirl.create(:vm) }
+    let(:virtual_custom_attribute)   { "virtual_custom_attribute_attribute" }
+    let(:virtual_custom_attribute_1) { "virtual_custom_attribute_attribute_1" }
+    let(:virtual_custom_attribute_2) { "virtual_custom_attribute_attribute_2" }
+    let(:virtual_custom_attribute_3) { "virtual_custom_attribute_attribute_3" }
+    let(:virtual_custom_attribute_4) { "virtual_custom_attribute_attribute_4" }
+    let(:klass)                      { Vm }
+    let(:vm)                         { FactoryGirl.create(:vm) }
 
     it "automatically loads virtual custom attributes from MiqExpression on class" do
       expect do
         MiqExpression.new("EQUAL" => {"field" => "#{klass}-#{virtual_custom_attribute}", "value" => "foo"})
       end.to change { vm.respond_to?(virtual_custom_attribute) }.from(false).to(true)
+    end
+
+    it "automatically loads virtual custom attributes from right side in expression" do
+      expect do
+        MiqExpression.new("EQUAL" => {"field" => "#{klass}-name", "value" => "#{klass}-#{virtual_custom_attribute_1}"})
+      end.to change { vm.respond_to?(virtual_custom_attribute_1) }.from(false).to(true)
+    end
+
+    it "automatically loads virtual custom attributes from right side in nested expression" do
+      exp1 = {"STARTS WITH" => {"field" => "#{klass}-name", "value" => "#{klass}-#{virtual_custom_attribute_2}"}}
+      exp2 = {"ENDS WITH" => {"field" => "#{klass}-name", "value" => "#{klass}-#{virtual_custom_attribute_3}"}}
+      exp3 = {"ENDS WITH" => {"field" => "#{klass}-#{virtual_custom_attribute_4}", "value" => "any_value"}}
+
+      expect do
+        MiqExpression.new("AND" => [exp1, {"AND" => [exp2, exp3]}])
+      end.to change {
+        [
+          vm.respond_to?(virtual_custom_attribute_2),
+          vm.respond_to?(virtual_custom_attribute_3),
+          vm.respond_to?(virtual_custom_attribute_4)
+        ]
+      }.from([false, false, false]).to([true, true, true])
     end
   end
 
@@ -405,11 +431,12 @@ describe MiqExpression do
         end
 
         it "finds the correct instances for an gt expression with a custom attribute dynamic integer field" do
-          custom_attribute =  FactoryGirl.create(:custom_attribute, :name => "example", :value => 1)
+          custom_attribute =  FactoryGirl.create(:custom_attribute, :name => "example", :value => 10)
           vm1 = FactoryGirl.create(:vm, :memory_reserve => 2)
           vm1.custom_attributes << custom_attribute
           _vm2 = FactoryGirl.create(:vm, :memory_reserve => 0)
-          filter = MiqExpression.new(">" => {"field" => "VmOrTemplate-memory_reserve", "value" => "VmOrTemplate-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}example"})
+          name_of_attribute = "VmOrTemplate-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}example"
+          filter = MiqExpression.new("<" => {"field" => "VmOrTemplate-memory_reserve", "value" => name_of_attribute})
           result = Rbac.search(:targets => Vm, :filter => filter).first.first
           expect(filter.to_sql.last).to eq(:supported_by_sql => false)
           expect(result).to eq(vm1)
@@ -1418,25 +1445,25 @@ describe MiqExpression do
     it "generates the ruby for a FIND expression with checkall" do
       actual = described_class.new(
         "FIND" => {"search"   => {"=" => {"field" => "Vm-name", "value" => "foo"}},
-                   "checkall" => {">" => {"field" => "Vm.hardware.cpu_sockets", "value" => "2"}}}
+                   "checkall" => {">" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}}}
       ).to_ruby
-      expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=all><value ref=vm, type=string>/virtual/hardware/cpu_sockets</value> > \"2\"</check></find>"
+      expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=all><value ref=vm, type=integer>/virtual/hardware/cpu_sockets</value> > 2</check></find>"
       expect(actual).to eq(expected)
     end
 
     it "generates the ruby for a FIND expression with checkany" do
       actual = described_class.new(
         "FIND" => {"search"   => {"=" => {"field" => "Vm-name", "value" => "foo"}},
-                   "checkany" => {">" => {"field" => "Vm.hardware.cpu_sockets", "value" => "2"}}}
+                   "checkany" => {">" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}}}
       ).to_ruby
-      expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=any><value ref=vm, type=string>/virtual/hardware/cpu_sockets</value> > \"2\"</check></find>"
+      expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=any><value ref=vm, type=integer>/virtual/hardware/cpu_sockets</value> > 2</check></find>"
       expect(actual).to eq(expected)
     end
 
     it "generates the ruby for a FIND expression with checkcount and =" do
       actual = described_class.new(
         "FIND" => {"search"     => {"=" => {"field" => "Vm-name", "value" => "foo"}},
-                   "checkcount" => {"=" => {"field" => "Vm.hardware.cpu_sockets", "value" => "2"}}}
+                   "checkcount" => {"=" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}}}
       ).to_ruby
       expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=count><count> == 2</check></find>"
       expect(actual).to eq(expected)
@@ -1445,7 +1472,7 @@ describe MiqExpression do
     it "generates the ruby for a FIND expression with checkcount and !=" do
       actual = described_class.new(
         "FIND" => {"search"     => {"=" => {"field" => "Vm-name", "value" => "foo"}},
-                   "checkcount" => {"!=" => {"field" => "Vm.hardware.cpu_sockets", "value" => "2"}}}
+                   "checkcount" => {"!=" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}}}
       ).to_ruby
       expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=count><count> != 2</check></find>"
       expect(actual).to eq(expected)
@@ -1454,7 +1481,7 @@ describe MiqExpression do
     it "generates the ruby for a FIND expression with checkcount and <" do
       actual = described_class.new(
         "FIND" => {"search"     => {"=" => {"field" => "Vm-name", "value" => "foo"}},
-                   "checkcount" => {"<" => {"field" => "Vm.hardware.cpu_sockets", "value" => "2"}}}
+                   "checkcount" => {"<" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}}}
       ).to_ruby
       expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=count><count> < 2</check></find>"
       expect(actual).to eq(expected)
@@ -1463,7 +1490,7 @@ describe MiqExpression do
     it "generates the ruby for a FIND expression with checkcount and >" do
       actual = described_class.new(
         "FIND" => {"search"     => {"=" => {"field" => "Vm-name", "value" => "foo"}},
-                   "checkcount" => {">" => {"field" => "Vm.hardware.cpu_sockets", "value" => "2"}}}
+                   "checkcount" => {">" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}}}
       ).to_ruby
       expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=count><count> > 2</check></find>"
       expect(actual).to eq(expected)
@@ -1472,7 +1499,7 @@ describe MiqExpression do
     it "generates the ruby for a FIND expression with checkcount and <=" do
       actual = described_class.new(
         "FIND" => {"search"     => {"=" => {"field" => "Vm-name", "value" => "foo"}},
-                   "checkcount" => {"<=" => {"field" => "Vm.hardware.cpu_sockets", "value" => "2"}}}
+                   "checkcount" => {"<=" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}}}
       ).to_ruby
       expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=count><count> <= 2</check></find>"
       expect(actual).to eq(expected)
@@ -1481,7 +1508,7 @@ describe MiqExpression do
     it "generates the ruby for a FIND expression with checkcount and >=" do
       actual = described_class.new(
         "FIND" => {"search"     => {"=" => {"field" => "Vm-name", "value" => "foo"}},
-                   "checkcount" => {">=" => {"field" => "Vm.hardware.cpu_sockets", "value" => "2"}}}
+                   "checkcount" => {">=" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}}}
       ).to_ruby
       expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=count><count> >= 2</check></find>"
       expect(actual).to eq(expected)
@@ -1918,6 +1945,20 @@ describe MiqExpression do
                                          :include_my_tags => false,
                                          :userid          => 'admin')
       expect(tags.uniq.length).to eq(tags.length)
+    end
+  end
+
+  context "._custom_details_for" do
+    let(:klass)        { Vm }
+    let(:vm)           { FactoryGirl.create(:vm) }
+    let(:custom_attr1) { FactoryGirl.create(:custom_attribute, :resource => vm, :name => "CATTR_1", :value => "Value 1") }
+    let(:custom_attr2) { FactoryGirl.create(:custom_attribute, :resource => vm, :name => nil,       :value => "Value 2") }
+
+    it "ignores custom_attibutes with a nil name" do
+      custom_attr1
+      custom_attr2
+
+      expect(MiqExpression._custom_details_for("Vm", {})).to eq([["CATTR_1", "Vm-virtual_custom_attribute_CATTR_1"]])
     end
   end
 

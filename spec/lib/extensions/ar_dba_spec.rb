@@ -1,6 +1,18 @@
 describe "ar_dba extension" do
   let(:connection) { ApplicationRecord.connection }
 
+  describe "#xlog_location" do
+    it "returns a valid lsn" do
+      expect(connection.xlog_location).to match(%r{\h+/\h+})
+    end
+  end
+
+  describe "#xlog_location_diff" do
+    it "returns the correct xlog difference" do
+      expect(connection.xlog_location_diff("18/72F84A48", "18/72F615B8")). to eq(144_528)
+    end
+  end
+
   describe "#primary_key_index" do
     it "returns nil when there is no primary key" do
       table_name = "no_pk_test"

@@ -28,8 +28,9 @@ class TokenManager
     return {} if token_data.nil?
 
     token_ttl = token_data[:token_ttl]
+    token_data[:expires_on] = Time.now.utc + token_ttl
     token_store.write(token,
-                      token_data.merge!(:expires_on => Time.now.utc + token_ttl),
+                      token_data,
                       :expires_in => token_ttl)
   end
 

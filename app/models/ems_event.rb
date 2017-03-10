@@ -25,7 +25,16 @@ class EmsEvent < EventStream
   end
 
   def self.event_groups
-    ::Settings.event_handling.event_groups.to_hash
+    core_event_groups = ::Settings.event_handling.event_groups.to_hash
+    Settings.ems.each_with_object(core_event_groups) do |(_provider_type, provider_settings), event_groups|
+      provider_event_groups = provider_settings.fetch_path(:event_handling, :event_groups)
+      next unless provider_event_groups
+      DeepMerge.deep_merge!(
+        provider_event_groups.to_hash, event_groups,
+        :preserve_unmergeables => false,
+        :overwrite_arrays      => false
+      )
+    end
   end
 
   def self.bottleneck_event_groups
@@ -164,6 +173,14 @@ class EmsEvent < EventStream
     EmsEvent.where(:ems_id => ems_id, :chain_id => chain_id).order(:id).first
   end
 
+  def parse_event_metadata
+    [
+      event_type == "datawarehouse_alert" ? message : nil,
+      full_data.try(:[], :severity),
+      full_data.try(:[], :url),
+    ]
+  end
+
   def first_chained_event
     @first_chained_event ||= EmsEvent.first_chained_event(ems_id, chain_id) || self
   end
@@ -203,6 +220,10 @@ class EmsEvent < EventStream
 
   def tenant_identity
     (vm_or_template || ext_management_system).tenant_identity
+  end
+
+  def manager_refresh_targets
+    ext_management_system.class::EventTargetParser.new(self).parse
   end
 
   private

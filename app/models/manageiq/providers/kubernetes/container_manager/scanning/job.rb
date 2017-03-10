@@ -87,7 +87,8 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     health_url   = pod_proxy_url(client, INSPECTOR_HEALTH_PATH)
     http_options = {
       :use_ssl     => health_url.scheme == 'https',
-      :verify_mode => ext_management_system.verify_ssl_mode
+      :verify_mode => ext_management_system.verify_ssl_mode,
+      :cert_store  => ext_management_system.ssl_cert_store,
     }
 
     # TODO: move this to a more appropriate place (lib)
@@ -281,7 +282,10 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     ImageInspectorClient::Client.new(
       pod_proxy_url(kubeclient, ''),
       'v1',
-      :ssl_options    => kubeclient.ssl_options,
+      :ssl_options    => {
+        :verify_ssl => ext_management_system.verify_ssl_mode,
+        :cert_store => ext_management_system.ssl_cert_store
+      },
       :auth_options   => kubeclient.auth_options,
       :http_proxy_uri => kubeclient.http_proxy_uri
     )
@@ -361,7 +365,8 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
           'manageiq.org' => "true"
         },
         :annotations => {
-          'manageiq.org/hostname' => options[:miq_server_host],
+          # in case hostname is not set and options[:miq_server_host] is nil, change ""
+          'manageiq.org/hostname' => options[:miq_server_host] || "unknown",
           'manageiq.org/guid'     => options[:miq_server_guid],
           'manageiq.org/image'    => options[:image_full_name],
           'manageiq.org/jobid'    => jobid,

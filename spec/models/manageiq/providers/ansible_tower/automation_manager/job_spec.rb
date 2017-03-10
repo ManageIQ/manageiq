@@ -9,14 +9,35 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Job do
 
   let(:manager)  { FactoryGirl.create(:automation_manager_ansible_tower, :provider) }
   let(:mock_api) { AnsibleTowerClient::Api.new(faraday_connection) }
+
+  let(:machine_credential) { FactoryGirl.create(:ansible_machine_credential, :manager_ref => '1', :resource => manager) }
+  let(:cloud_credential)   { FactoryGirl.create(:ansible_cloud_credential,   :manager_ref => '2', :resource => manager) }
+  let(:network_credential) { FactoryGirl.create(:ansible_network_credential, :manager_ref => '3', :resource => manager) }
+
   let(:the_raw_job) do
     AnsibleTowerClient::Job.new(
       mock_api,
-      'id'         => '1',
-      'name'       => template.name,
-      'status'     => 'Successful',
-      'extra_vars' => {'param1' => 'val1'}.to_json
-    ).tap { |rjob| allow(rjob).to receive(:stdout).and_return('job stdout') }
+      'id'                    => '1',
+      'name'                  => template.name,
+      'status'                => 'Successful',
+      'extra_vars'            => {'param1' => 'val1'}.to_json,
+      'verbosity'             => 3,
+      'started'               => Time.current,
+      'finished'              => Time.current,
+      'credential_id'         => machine_credential.manager_ref,
+      'cloud_credential_id'   => cloud_credential.manager_ref,
+      'network_credential_id' => network_credential.manager_ref
+    ).tap do |rjob|
+      allow(rjob).to receive(:stdout).and_return('job stdout')
+      allow(rjob).to receive(:job_plays).and_return(the_raw_plays)
+    end
+  end
+
+  let(:the_raw_plays) do
+    [
+      double('play1', :play => 'play1', :started => Time.current,     :failed => false, :id => 1),
+      double('play2', :play => 'play2', :started => Time.current + 1, :failed => true,  :id => 2)
+    ]
   end
 
   let(:template) { FactoryGirl.create(:configuration_script, :manager => manager) }
@@ -52,9 +73,33 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Job do
 
       it 'syncs the job with the provider' do
         subject.refresh_ems
+        expect(subject).to have_attributes(
+          :ems_ref     => the_raw_job.id,
+          :status      => the_raw_job.status,
+          :start_time  => the_raw_job.started,
+          :finish_time => the_raw_job.finished,
+          :verbosity   => the_raw_job.verbosity
+        )
+        subject.reload
         expect(subject.ems_ref).to eq(the_raw_job.id)
         expect(subject.status).to  eq(the_raw_job.status)
         expect(subject.parameters.first).to have_attributes(:name => 'param1', :value => 'val1')
+        expect(subject.authentications).to match_array([machine_credential, cloud_credential, network_credential])
+
+        expect(subject.job_plays.first).to have_attributes(
+          :start_time        => the_raw_plays.first.started,
+          :finish_time       => the_raw_plays.last.started,
+          :resource_status   => 'successful',
+          :resource_category => 'job_play',
+          :name              => 'play1'
+        )
+        expect(subject.job_plays.last).to have_attributes(
+          :start_time        => the_raw_plays.last.started,
+          :finish_time       => the_raw_job.finished,
+          :resource_status   => 'failed',
+          :resource_category => 'job_play',
+          :name              => 'play2'
+        )
       end
 
       it 'catches errors from provider' do

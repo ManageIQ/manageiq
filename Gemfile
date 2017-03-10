@@ -38,14 +38,13 @@ gem "activerecord-session_store",     "~>1.0.0"
 gem "acts_as_list",                   "~>0.7.2"
 gem "acts_as_tree",                   "~>2.1.0" # acts_as_tree needs to be required so that it loads before ancestry
 gem "ancestry",                       "~>2.2.1",       :require => false
-gem "ansible_tower_client",           "~>0.7.0",       :require => false
+gem "ansible_tower_client",           "~>0.9.0",       :require => false
 gem "aws-sdk",                        "~>2",           :require => false
 gem "bundler",                        ">=1.11.1",      :require => false
 gem "color",                          "~>1.8"
 gem "config",                         "~>1.3.0",       :require => false
 gem "dalli",                          "~>2.7.4",       :require => false
 gem "default_value_for",              "~>3.0.2"
-gem "draper",                         "~>3.0.0.pre1"
 gem "elif",                           "=0.1.0",        :require => false
 gem "fast_gettext",                   "~>1.2.0"
 gem "fog-google",                     ">=0.5.2",       :require => false
@@ -61,7 +60,7 @@ gem "inifile",                        "~>3.0",         :require => false
 gem "jbuilder",                       "~>2.5.0" # For the REST API
 gem "manageiq-api-client",            "~>0.1.0",       :require => false
 gem "mime-types",                     "~>2.6.1",       :require => "mime/types/columnar"
-gem "more_core_extensions",           "~>3.1"
+gem "more_core_extensions",           "~>3.2"
 gem "nakayoshi_fork",                 "~>0.0.3"  # provides a more CoW friendly fork (GC a few times before fork)
 gem "net-ldap",                       "~>0.14.0",      :require => false
 gem "net-ping",                       "~>1.7.4",       :require => false
@@ -71,13 +70,12 @@ gem "novnc-rails",                    "~>0.2"
 gem "omniauth",                       "~>1.3.1",       :require => false
 gem "omniauth-google-oauth2",         "~>0.2.6"
 gem "open4",                          "~>1.3.0",       :require => false
-gem "outfielding-jqplot-rails",       "= 1.0.8"
-gem "ovirt-engine-sdk",               "~>4.0.6",       :require => false # Required by the oVirt provider
-gem "ovirt_metrics",                  "~>1.4.0",       :require => false
-gem "pg-pglogical",                   "~>1.0.0",       :require => false
+gem "ovirt-engine-sdk",               "~>4.0.10",      :require => false # Required by the oVirt provider
+gem "ovirt_metrics",                  "~>1.4.1",       :require => false
+gem "pg-pglogical",                   "~>1.1.0",       :require => false
 gem "puma",                           "~>3.3.0"
 gem "query_relation",                 "~>0.1.0",       :require => false
-gem "rails",                          "~>5.0.1"
+gem "rails",                          "~>5.0.2"
 gem "rails-controller-testing",                        :require => false
 gem "rails-i18n",                     "~>5.x"
 gem "recursive-open-struct",          "~>1.0.0"

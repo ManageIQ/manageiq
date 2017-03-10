@@ -387,4 +387,62 @@ describe MiqAction do
       action.action_email(action, nil, inputs)
     end
   end
+
+  context 'run_ansible_playbook' do
+    let(:tenant) { FactoryGirl.create(:tenant) }
+    let(:group)  { FactoryGirl.create(:miq_group, :tenant => tenant) }
+    let(:user) { FactoryGirl.create(:user, :userid => "test", :miq_groups => [group]) }
+    let(:vm)   { FactoryGirl.create(:vm_vmware, :evm_owner => user, :miq_group => group, :hardware => hardware) }
+    let(:action) { FactoryGirl.create(:miq_action, :name => "run_ansible_playbook", :options => action_options) }
+    let(:stap) { FactoryGirl.create(:service_template_ansible_playbook) }
+    let(:ip1) { "1.1.1.94" }
+    let(:ip2) { "1.1.1.96" }
+    let(:hardware) do
+      FactoryGirl.create(:hardware).tap do |h|
+        h.ipaddresses << ip1
+        h.ipaddresses << ip2
+      end
+    end
+
+    shared_examples_for "#workflow check" do
+      it "run playbook" do
+        miq_request = instance_double(MiqRequest)
+        allow(vm).to receive(:tenant_identity).and_return(user)
+        expect(ServiceTemplate).to receive(:find).with(stap.id).and_return(stap)
+        expect(stap).to receive(:provision_request).with(user, options).and_return(miq_request)
+
+        action.action_run_ansible_playbook(action, vm, {})
+      end
+    end
+
+    context "use event target" do
+      let(:action_options) do
+        { :service_template_id => stap.id,
+          :use_event_target    => true }
+      end
+      let(:options) { {:dialog_hosts => ip1, :initiator => 'control' } }
+
+      it_behaves_like "#workflow check"
+    end
+
+    context "use localhost" do
+      let(:action_options) do
+        { :service_template_id => stap.id,
+          :use_localhost       => true }
+      end
+      let(:options) { {:dialog_hosts => 'localhost', :initiator => 'control' } }
+
+      it_behaves_like "#workflow check"
+    end
+
+    context "use hosts" do
+      let(:action_options) do
+        { :service_template_id => stap.id,
+          :hosts               => "ip1, ip2" }
+      end
+      let(:options) { {:dialog_hosts => 'ip1, ip2', :initiator => 'control' } }
+
+      it_behaves_like "#workflow check"
+    end
+  end
 end

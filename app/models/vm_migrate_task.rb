@@ -14,7 +14,7 @@ class VmMigrateTask < MiqRequestTask
     if req_obj.source.nil?
       # Single source has not been selected yet
       if req_obj.options[:src_ids].length == 1
-        v = Vm.find_by_id(req_obj.options[:src_ids].first)
+        v = Vm.find_by(:id => req_obj.options[:src_ids].first)
         name = v.nil? ? "" : v.name
       else
         name = "Multiple VMs"
@@ -39,13 +39,13 @@ class VmMigrateTask < MiqRequestTask
 
   def do_request
     host_id = get_option(:placement_host_name)
-    host = Host.find_by_id(host_id)
+    host = Host.find_by(:id => host_id)
 
     respool_id = get_option(:placement_rp_name)
-    respool = ResourcePool.find_by_id(respool_id)
+    respool = ResourcePool.find_by(:id => respool_id)
 
     datastore_id = get_option(:placement_ds_name)
-    datastore = Storage.find_by_id(datastore_id)
+    datastore = Storage.find_by(:id => datastore_id)
 
     disk_transform = case get_option(:disk_format)
                      when 'thin'  then VimString.new('sparse', "VirtualMachineRelocateTransformation")

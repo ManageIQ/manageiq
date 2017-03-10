@@ -16,11 +16,11 @@ module VmOrTemplate::Snapshotting
   end
 
   def newest_snapshot
-    snapshots.sort { |a, b| a.create_time <=> b.create_time }.last
+    snapshots.max_by(&:create_time)
   end
 
   def oldest_snapshot
-    snapshots.sort { |a, b| a.create_time <=> b.create_time }.first
+    snapshots.min_by(&:create_time)
   end
 
   def v_snapshot_oldest_name

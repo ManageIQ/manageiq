@@ -1,3 +1,4 @@
+require 'openssl'
 require 'resolv'
 
 module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
@@ -19,32 +20,40 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     unless options[:skip_supported_api_validation] || supports_the_api_version?(version)
       raise "version #{version} of the api is not supported by the provider"
     end
-    # If there is API path stored in the endpoints table and use it:
+
+    # If the API path is stored in the endpoints table then use it:
     path = options[:path] || default_endpoint.path
     _log.info("Using stored API path '#{path}'.") unless path.blank?
 
-    server   = options[:ip] || address
-    port     = options[:port] || self.port
-    username = options[:user] || authentication_userid(options[:auth_type])
-    password = options[:pass] || authentication_password(options[:auth_type])
-    service  = options[:service] || "Service"
+    # Prepare the options to call the method that creates the actual connection:
+    connect_options = {
+      :scheme     => options[:scheme] || 'https',
+      :server     => options[:ip] || address,
+      :port       => options[:port] || self.port,
+      :path       => path,
+      :username   => options[:user] || authentication_userid(options[:auth_type]),
+      :password   => options[:pass] || authentication_password(options[:auth_type]),
+      :service    => options[:service] || "Service",
+      :verify_ssl => default_endpoint.verify_ssl,
+      :ca_certs   => default_endpoint.certificate_authority
+    }
 
     # Starting with version 4 of oVirt authentication doesn't work when using directly the IP address, it requires
     # the fully qualified host name, so if we received an IP address we try to convert it into the corresponding
     # host name:
     if resolve_ip_addresses?
-      resolved = resolve_ip_address(server)
-      if resolved != server
-        _log.info("IP address '#{server}' has been resolved to host name '#{resolved}'.")
+      resolved = resolve_ip_address(connect_options[:server])
+      if resolved != connect_options[:server]
+        _log.info("IP address '#{connect_options[:server]}' has been resolved to host name '#{resolved}'.")
         default_endpoint.hostname = resolved
-        server = resolved
+        connect_options[:server] = resolved
       end
     end
 
     # Create the underlying connection according to the version of the oVirt API requested by
     # the caller:
     connect_method = "raw_connect_v#{version}".to_sym
-    connection = self.class.public_send(connect_method, server, port, path, username, password, service)
+    connection = self.class.public_send(connect_method, connect_options)
 
     # Copy the API path to the endpoints table:
     default_endpoint.path = version == 4 ? '/ovirt-engine/api' : connection.api_path
@@ -64,14 +73,14 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     cacher = Cacher.new(cache_key)
     current_cache_val = cacher.read
     force = current_cache_val.blank?
-    cacher.fetch_fresh(last_refresh_date, :force => force) { supported_api_verions_from_sdk }
+    cacher.fetch_fresh(last_refresh_date, :force => force) { supported_api_versions_from_sdk }
   end
 
   def cache_key
     "REDHAT_EMS_CACHE_KEY_#{id}"
   end
 
-  def supported_api_verions_from_sdk
+  def supported_api_versions_from_sdk
     username = authentication_userid(:basic)
     password = authentication_password(:basic)
     probe_args = { :host => hostname, :port => port, :username => username, :password => password, :insecure => true }
@@ -148,7 +157,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     server   = options[:hostname] || metrics_hostname || hostname
     username = options[:user] || authentication_userid(:metrics)
     password = options[:pass] || authentication_password(:metrics)
-    database = options[:database]
+    database = options[:database] || history_database_name
 
     {
       :host     => server,
@@ -198,24 +207,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
   end
 
   def history_database_name
-    @history_database_name = connection_configurations.try(:metrics).try(:endpoint).try(:path)
-    @history_database_name ||= begin
-                                 version = version_3_0? ? '3_0' : '>3_0'
-                                 self.class.history_database_name_for(version)
-                               end
-  end
-
-  def version_3_0?
-    if @version_3_0.nil?
-      @version_3_0 =
-        if api_version.nil?
-          with_provider_connection(&:version_3_0?)
-        else
-          api_version.starts_with?("3.0")
-        end
-    end
-
-    @version_3_0
+    connection_configurations.try(:metrics).try(:endpoint).try(:path) || self.class.default_history_database_name
   end
 
   # Adding disks is supported only by API version 4.0
@@ -268,59 +260,56 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     end
 
     # Connect to the engine using version 4 of the API and the `ovirt-engine-sdk` gem.
-    def raw_connect_v4(server, port, path, username, password, service, scheme = 'https')
+    def raw_connect_v4(options = {})
       require 'ovirtsdk4'
 
       # Get the timeout from the configuration:
-      timeout, = ems_timeouts(:ems_redhat, service)
+      timeout, = ems_timeouts(:ems_redhat, options[:service])
 
       url = URI::Generic.build(
-        :scheme => scheme,
-        :host   => server,
-        :port   => port,
-        :path   => path
+        :scheme => options[:scheme],
+        :host   => options[:server],
+        :port   => options[:port],
+        :path   => options[:path]
       )
 
       OvirtSDK4::Connection.new(
         :url      => url.to_s,
-        :username => username,
-        :password => password,
+        :username => options[:username],
+        :password => options[:password],
         :timeout  => timeout,
-        :insecure => true,
+        :insecure => options[:verify_ssl] == OpenSSL::SSL::VERIFY_NONE,
+        :ca_certs => [options[:ca_certs]],
         :log      => $rhevm_log,
       )
     end
 
     # Connect to the engine using version 3 of the API and the `ovirt` gem.
-    def raw_connect_v3(server, port, path, username, password, service)
+    def raw_connect_v3(options = {})
       require 'ovirt'
       require 'ovirt_provider/inventory/ovirt_inventory'
       Ovirt.logger = $rhevm_log
 
       params = {
-        :server     => server,
-        :port       => port.presence && port.to_i,
-        :path       => path,
-        :username   => username,
-        :password   => password,
-        :verify_ssl => false
+        :server     => options[:server],
+        :port       => options[:port].presence && options[:port].to_i,
+        :path       => options[:path],
+        :username   => options[:username],
+        :password   => options[:password],
+        :verify_ssl => options[:verify_ssl],
+        :ca_certs   => options[:ca_certs]
       }
 
-      read_timeout, open_timeout = ems_timeouts(:ems_redhat, service)
+      read_timeout, open_timeout = ems_timeouts(:ems_redhat, options[:service])
       params[:timeout]      = read_timeout if read_timeout
       params[:open_timeout] = open_timeout if open_timeout
-      const = service == "Inventory" ? OvirtInventory : Ovirt.const_get(service)
+      const = options[:service] == "Inventory" ? OvirtInventory : Ovirt.const_get(options[:service])
       const.new(params)
     end
 
-    def history_database_name_for(api_version)
+    def default_history_database_name
       require 'ovirt_metrics'
-      case api_version
-      when '3_0'
-        OvirtMetrics::DEFAULT_HISTORY_DATABASE_NAME_3_0
-      else
-        OvirtMetrics::DEFAULT_HISTORY_DATABASE_NAME
-      end
+      OvirtMetrics::DEFAULT_HISTORY_DATABASE_NAME
     end
 
     # Calculates an "ems_ref" from the "href" attribute provided by the oVirt REST API, removing the

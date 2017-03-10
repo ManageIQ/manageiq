@@ -399,10 +399,12 @@
     - :name: Arbitration Profiles List
       :description: Display Lists of Arbitration Profiles
       :feature_type: view
+      :hidden: true
       :identifier: arbitration_profile_show_list
     - :name: Arbitration Profile Show
       :description: Display Individual Arbitration Profiles
       :feature_type: view
+      :hidden: true
       :identifier: arbitration_profile_show
     - :name: Timeline
       :description: Display Timelines for Cloud Providers
@@ -605,6 +607,19 @@
       :description: Edit Tags of Object Store Containers
       :feature_type: control
       :identifier: cloud_object_store_container_tag
+  - :name: Modify
+    :description: Modify Object Store Containers
+    :feature_type: admin
+    :identifier: cloud_object_store_container_admin
+    :children:
+    - :name: Delete
+      :description: Delete Object Store Containers
+      :feature_type: admin
+      :identifier: cloud_object_store_container_delete
+    - :name: Clear
+      :description: Clear Object Store Containers
+      :feature_type: admin
+      :identifier: cloud_object_store_container_clear
 
 # CloudObjectStoreObject
 - :name: Cloud Objects
@@ -634,6 +649,15 @@
       :description: Edit Tags of Objects
       :feature_type: control
       :identifier: cloud_object_store_object_tag
+  - :name: Modify
+    :description: Modify Object Store Object
+    :feature_type: admin
+    :identifier: cloud_object_store_object_admin
+    :children:
+    - :name: Delete
+      :description: Delete Object Store Object
+      :feature_type: admin
+      :identifier: cloud_object_store_object_delete
 
 # CloudTenant
 - :name: Cloud Tenants
@@ -1967,6 +1991,47 @@
       :description: Display Individual Alert Status
       :feature_type: admin
       :identifier: alert_status_action_new
+  - :name: Alert Definitions
+    :description: Everything under Alert Definitions
+    :feature_type: node
+    :hidden: true
+    :identifier: alert_definition
+    :children:
+    - :name: View
+      :description: View Alert Definitions
+      :feature_type: view
+      :identifier: alert_definition_view
+      :children:
+      - :name: List
+        :description: Display List of Alert Definitions
+        :feature_type: view
+        :identifier: alert_definitions_show_list
+      - :name: Show
+        :description: Display Individual Alert Definition
+        :feature_type: view
+        :identifier: alert_definition_show
+    - :name: Modify
+      :description: Modify Alert Definitions
+      :feature_type: admin
+      :hidden: true
+      :identifier: alert_definition_admin
+      :children:
+      - :name: Add
+        :description: Add an Alert Definition
+        :feature_type: admin
+        :hidden: true
+        :identifier: alert_definition_new
+      - :name: Edit
+        :description: Edit an Alert Definition
+        :feature_type: admin
+        :hidden: true
+        :identifier: alert_definition_edit
+      - :name: Delete
+        :description: Delete an Alert Definition
+        :feature_type: admin
+        :hidden: true
+        :identifier: alert_definition_delete
+
 # Policy Simulation
 - :name: Simulation
   :description: Policy Simulation
@@ -2655,6 +2720,23 @@
           :feature_type: admin
           :hidden: true
           :identifier: zone_delete
+    - :name: Regions
+      :description: Regions
+      :feature_type: node
+      :hidden: true
+      :identifier: region
+      :children:
+      - :name: Modify
+        :description: Modify Regions
+        :feature_type: admin
+        :identifier: region_admin
+        :hidden: true
+        :children:
+        - :name: Edit
+          :description: Edit a Region
+          :feature_type: admin
+          :hidden: true
+          :identifier: region_edit
   - :name: Access Control
     :description: Access Control Accordion
     :feature_type: node
@@ -3696,6 +3778,10 @@
       :description: Check Compliance of Last Known Configuration
       :feature_type: control
       :identifier: ems_container_check_compliance
+    - :name: Launch External Logging
+      :description: Open External Logging from Container Provider
+      :feature_type: control
+      :identifier: ems_container_launch_external_logging_support
     - :name: Container Deployments
       :description: Container Deployments
       :feature_type: node
@@ -5172,6 +5258,14 @@
           :description: Add a Repository
           :feature_type: admin
           :identifier: embedded_configuration_script_source_add
+        - :name: Edit Repository
+          :description: Edit a Repository
+          :feature_type: admin
+          :identifier: embedded_configuration_script_source_edit
+        - :name: Remove Repository
+          :description: Remove a Repository
+          :feature_type: admin
+          :identifier: embedded_configuration_script_source_delete
   - :name: Playbooks
     :description: Everything under Playbooks
     :feature_type: node

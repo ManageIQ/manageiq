@@ -45,7 +45,7 @@ class CustomButton < ApplicationRecord
 
   def applies_to
     klass = applies_to_class.constantize
-    applies_to_id.nil? ? klass : klass.find_by_id(applies_to_id)
+    applies_to_id.nil? ? klass : klass.find_by(:id => applies_to_id)
   end
 
   def applies_to=(other)

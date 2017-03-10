@@ -44,8 +44,9 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
           next unless dialog_name
 
           job_template = enhanced_config.fetch_path(action, :configuration_template)
-          enhanced_config[action][:dialog] =
-            Dialog::AnsiblePlaybookServiceDialog.create_dialog(dialog_name, job_template)
+          new_dialog = Dialog::AnsiblePlaybookServiceDialog.create_dialog(dialog_name, job_template)
+          enhanced_config[action][:dialog] = new_dialog
+          service_template.options[:config_info][action][:dialog_id] = new_dialog.id
         end
         service_template.create_resource_actions(enhanced_config)
       end
@@ -74,7 +75,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   def self.create_job_template(name, description, info, auth_user)
     tower, params = build_parameter_list(name, description, info)
 
-    task_id = ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript.create_in_provider_queue(tower.id, params, auth_user)
+    task_id = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript.create_in_provider_queue(tower.id, params, auth_user)
     task = MiqTask.wait_for_taskid(task_id)
     raise task.message unless task.status == "Ok"
     task.task_results
@@ -82,14 +83,14 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   private_class_method :create_job_template
 
   def self.build_parameter_list(name, description, info)
-    playbook = ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook.find(info[:playbook_id])
+    playbook = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook.find(info[:playbook_id])
     tower = playbook.manager
     params = {
       :name                     => name,
       :description              => description || '',
       :project                  => playbook.configuration_script_source.manager_ref,
       :playbook                 => playbook.name,
-      :inventory                => tower.inventory_root_groups.first.ems_ref,
+      :inventory                => tower.inventory_root_groups.find_by!(:name => 'Demo Inventory').ems_ref,
       :ask_variables_on_launch  => true,
       :ask_limit_on_launch      => true,
       :ask_inventory_on_launch  => true,

@@ -1,40 +1,49 @@
 module ManagerRefresh
   class InventoryCollection
-    attr_accessor :saved
+    attr_accessor :saved, :references, :attribute_references, :data_collection_finalized
 
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
                 :internal_attributes, :delete_method, :data, :data_index, :dependency_attributes, :manager_ref,
                 :association, :complete, :update_only, :transitive_dependency_attributes, :custom_manager_uuid,
-                :custom_db_finder, :check_changed, :arel, :builder_params
+                :custom_db_finder, :check_changed, :arel, :builder_params, :loaded_references, :db_data_index,
+                :inventory_object_attributes
 
     delegate :each, :size, :to => :to_a
 
     def initialize(model_class: nil, manager_ref: nil, association: nil, parent: nil, strategy: nil, saved: nil,
                    custom_save_block: nil, delete_method: nil, data_index: nil, data: nil, dependency_attributes: nil,
                    attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil,
-                   check_changed: nil, custom_manager_uuid: nil, custom_db_finder: nil, arel: nil, builder_params: {})
-      @model_class                      = model_class
-      @manager_ref                      = manager_ref || [:ems_ref]
-      @custom_manager_uuid              = custom_manager_uuid
-      @custom_db_finder                 = custom_db_finder
-      @association                      = association || []
-      @parent                           = parent || nil
-      @arel                             = arel
-      @dependency_attributes            = dependency_attributes || {}
-      @transitive_dependency_attributes = Set.new
-      @data                             = data || []
-      @data_index                       = data_index || {}
-      @saved                            = saved || false
-      @strategy                         = process_strategy(strategy)
-      @delete_method                    = delete_method || :destroy
+                   check_changed: nil, custom_manager_uuid: nil, custom_db_finder: nil, arel: nil, builder_params: {},
+                   inventory_object_attributes: nil)
+      @model_class           = model_class
+      @manager_ref           = manager_ref || [:ems_ref]
+      @custom_manager_uuid   = custom_manager_uuid
+      @custom_db_finder      = custom_db_finder
+      @association           = association || []
+      @parent                = parent || nil
+      @arel                  = arel
+      @dependency_attributes = dependency_attributes || {}
+      @data                  = data || []
+      @data_index            = data_index || {}
+      @saved                 = saved || false
+      @strategy              = process_strategy(strategy)
+      @delete_method         = delete_method || :destroy
+      @custom_save_block     = custom_save_block
+      @check_changed         = check_changed.nil? ? true : check_changed
+      @internal_attributes   = [:__feedback_edge_set_parent]
+      @complete              = complete.nil? ? true : complete
+      @update_only           = update_only.nil? ? false : update_only
+      @builder_params        = builder_params
+      @inventory_object_attributes = inventory_object_attributes
+
       @attributes_blacklist             = Set.new
       @attributes_whitelist             = Set.new
-      @custom_save_block                = custom_save_block
-      @check_changed                    = check_changed.nil? ? true : check_changed
-      @internal_attributes              = [:__feedback_edge_set_parent]
-      @complete                         = complete.nil? ? true : complete
-      @update_only                      = update_only.nil? ? false : update_only
-      @builder_params                   = builder_params
+      @transitive_dependency_attributes = Set.new
+      @references                       = Set.new
+      @attribute_references             = Set.new
+      @loaded_references                = Set.new
+      @db_data_index                    = nil
+      @data_collection_finalized        = false
 
       blacklist_attributes!(attributes_blacklist) if attributes_blacklist.present?
       whitelist_attributes!(attributes_whitelist) if attributes_whitelist.present?
@@ -51,39 +60,20 @@ module ManagerRefresh
     end
 
     def process_strategy(strategy_name)
+      return unless strategy_name
+
       case strategy_name
-      when :local_db_cache_all, :local_db_find_one
-        send("process_strategy_#{strategy_name}")
-      when :find_missing_in_local_db
+      when :local_db_cache_all
+        self.data_collection_finalized = true
+        self.saved = true
+      when :local_db_find_references
+        self.saved = true
+      when :local_db_find_missing_references
+      else
+        raise "Unknown InventoryCollection strategy: :#{strategy_name}, allowed strategies are :local_db_cache_all, "\
+              ":local_db_find_references and :local_db_find_missing_references."
       end
       strategy_name
-    end
-
-    def load_from_db
-      return arel unless arel.nil?
-      parent.send(association)
-    end
-
-    def process_strategy_local_db_cache_all
-      self.saved = true
-      # TODO(lsmola) selected need to contain also :keys used in other InventoryCollections pointing to this one, once
-      # we get list of all keys for each InventoryCollection ,we can uncomnent
-      # selected   = [:id] + manager_ref.map { |x| model_class.reflect_on_association(x).try(:foreign_key) || x }
-      # selected << :type if model_class.new.respond_to? :type
-      # load_from_db.select(selected).find_each do |record|
-      load_from_db.find_each do |record|
-        index = if custom_manager_uuid.nil?
-                  object_index(record)
-                else
-                  stringify_reference(custom_manager_uuid.call(record))
-                end
-        data_index[index]    = new_inventory_object(record.attributes.symbolize_keys)
-        data_index[index].id = record.id
-      end
-    end
-
-    def process_strategy_local_db_find_one
-      self.saved = true
     end
 
     def check_changed?
@@ -114,12 +104,14 @@ module ManagerRefresh
       dependencies.all?(&:saved?)
     end
 
+    def data_collection_finalized?
+      data_collection_finalized
+    end
+
     def <<(inventory_object)
       unless data_index[inventory_object.manager_uuid]
         data_index[inventory_object.manager_uuid] = inventory_object
         data << inventory_object
-
-        actualize_dependencies(inventory_object)
       end
       self
     end
@@ -174,9 +166,9 @@ module ManagerRefresh
     def find(manager_uuid)
       return if manager_uuid.nil?
       case strategy
-      when :local_db_find_one
+      when :local_db_find_references, :local_db_cache_all
         find_in_db(manager_uuid)
-      when :find_missing_in_local_db
+      when :local_db_find_missing_references
         data_index[manager_uuid] || find_in_db(manager_uuid)
       else
         data_index[manager_uuid]
@@ -190,30 +182,24 @@ module ManagerRefresh
       find(object_index(manager_uuid_hash))
     end
 
-    def find_in_db(manager_uuid)
-      manager_uuids    = manager_uuid.split(stringify_joiner)
-      hash_uuid_by_ref = manager_ref.zip(manager_uuids).to_h
-      record           = if custom_db_finder.nil?
-                           parent.send(association).where(hash_uuid_by_ref).first
-                         else
-                           custom_db_finder.call(self, hash_uuid_by_ref)
-                         end
-      return unless record
-
-      inventory_object    = new_inventory_object(record.attributes.symbolize_keys)
-      inventory_object.id = record.id
-      inventory_object
-    end
-
     def lazy_find(manager_uuid, key: nil, default: nil)
       ::ManagerRefresh::InventoryObjectLazy.new(self, manager_uuid, :key => key, :default => default)
     end
 
     def inventory_object_class
-      @inventory_object_class ||= Class.new(::ManagerRefresh::InventoryObject)
+      @inventory_object_class ||= begin
+        klass = Class.new(::ManagerRefresh::InventoryObject)
+        klass.add_attributes(inventory_object_attributes) if inventory_object_attributes
+        klass
+      end
     end
 
     def new_inventory_object(hash)
+      manager_ref.each do |x|
+        # TODO(lsmola) with some effort, we can do this, but it's complex
+        raise "A lazy_find with a :key can't be a part of the manager_uuid" if inventory_object_lazy?(hash[x]) && hash[x].key
+      end
+
       inventory_object_class.new(self, hash)
     end
 
@@ -249,17 +235,18 @@ module ManagerRefresh
       fixed_attributes
     end
 
+    # Returns all unique non saved fixed dependencies
     def fixed_dependencies
-      fixed_attrs        = fixed_attributes
-      fixed_dependencies = Set.new
-      filtered_dependency_attributes.each do |key, value|
-        fixed_dependencies += value if fixed_attrs.include?(key)
-      end
-      fixed_dependencies
+      fixed_attrs = fixed_attributes
+
+      filtered_dependency_attributes.each_with_object(Set.new) do |(key, value), fixed_deps|
+        fixed_deps.merge(value) if fixed_attrs.include?(key)
+      end.reject(&:saved?)
     end
 
+    # Returns all unique non saved dependencies
     def dependencies
-      filtered_dependency_attributes.values.map(&:to_a).flatten.uniq
+      filtered_dependency_attributes.values.map(&:to_a).flatten.uniq.reject(&:saved?)
     end
 
     def dependency_attributes_for(inventory_collections)
@@ -301,10 +288,14 @@ module ManagerRefresh
                      :dependency_attributes => dependency_attributes.clone)
     end
 
+    def belongs_to_associations
+      model_class.reflect_on_all_associations.select { |x| x.kind_of? ActiveRecord::Reflection::BelongsToReflection }
+    end
+
     def association_to_foreign_key_mapping
       return {} unless model_class
 
-      @association_to_foreign_key_mapping ||= model_class.reflect_on_all_associations.each_with_object({}) do |x, obj|
+      @association_to_foreign_key_mapping ||= belongs_to_associations.each_with_object({}) do |x, obj|
         obj[x.name] = x.foreign_key
       end
     end
@@ -312,7 +303,7 @@ module ManagerRefresh
     def foreign_key_to_association_mapping
       return {} unless model_class
 
-      @foreign_key_to_association_mapping ||= model_class.reflect_on_all_associations.each_with_object({}) do |x, obj|
+      @foreign_key_to_association_mapping ||= belongs_to_associations.each_with_object({}) do |x, obj|
         obj[x.foreign_key] = x.name
       end
     end
@@ -330,6 +321,14 @@ module ManagerRefresh
 
       @foreign_type_to_association_mapping ||= model_class.reflect_on_all_associations.each_with_object({}) do |x, obj|
         obj[x.foreign_type] = x.name if x.polymorphic?
+      end
+    end
+
+    def association_to_base_class_mapping
+      return {} unless model_class
+
+      @association_to_base_class_mapping ||= model_class.reflect_on_all_associations.each_with_object({}) do |x, obj|
+        obj[x.name] = x.klass.base_class.name unless x.polymorphic?
       end
     end
 
@@ -354,36 +353,178 @@ module ManagerRefresh
       to_s
     end
 
-    def actualize_dependency(key, value)
-      if dependency?(value)
-        (dependency_attributes[key] ||= Set.new) << value.inventory_collection
-        transitive_dependency_attributes << key if transitive_dependency?(value)
-      elsif value.kind_of?(Array) && value.any? { |x| dependency?(x) }
-        (dependency_attributes[key] ||= Set.new) << value.detect { |x| dependency?(x) }.inventory_collection
-        transitive_dependency_attributes << key if value.any? { |x| transitive_dependency?(x) }
+    def scan!
+      data.each do |inventory_object|
+        scan_inventory_object!(inventory_object)
       end
+    end
+
+    def db_collection_for_comparison
+      return arel unless arel.nil?
+      parent.send(association)
     end
 
     private
 
-    attr_writer :attributes_blacklist, :attributes_whitelist
+    attr_writer :attributes_blacklist, :attributes_whitelist, :db_data_index
 
-    def actualize_dependencies(inventory_object)
-      inventory_object.data.each do |key, value|
-        actualize_dependency(key, value)
+    # Finds manager_uuid in the DB. Using a configured strategy we cache obtained data in the db_data_index, so the
+    # same find will not hit database twice. Also if we use lazy_links and this is called when
+    # data_collection_finalized?, we load all data from the DB, referenced by lazy_links, in one query.
+    #
+    # @param manager_uuid [String] a manager_uuid of the InventoryObject we search in the local DB
+    def find_in_db(manager_uuid)
+      # Use the cached db_data_index only data_collection_finalized?, meaning no new reference can occur
+      if data_collection_finalized? && db_data_index
+        return db_data_index[manager_uuid]
+      else
+        return db_data_index[manager_uuid] if db_data_index && db_data_index[manager_uuid]
+        # We haven't found the reference, lets add it to the list of references and load it
+        references << manager_uuid unless references.include?(manager_uuid) # O(1) since references is Set
+      end
+
+      populate_db_data_index!
+
+      db_data_index[manager_uuid]
+    end
+
+    # Fills db_data_index with InventoryObjects obtained from the DB
+    def populate_db_data_index!
+      # Load only new references from the DB
+      new_references = references - loaded_references
+      # And store which references we've already loaded
+      loaded_references.merge(new_references)
+
+      # Initialize db_data_index in nil
+      self.db_data_index ||= {}
+
+      # TODO(lsmola) selected need to contain also :keys used in other InventoryCollections pointing to this one, once
+      # we get list of all keys for each InventoryCollection ,we can uncomnent
+      # selected   = [:id] + manager_ref.map { |x| model_class.reflect_on_association(x).try(:foreign_key) || x }
+      # selected << :type if model_class.new.respond_to? :type
+      # load_from_db.select(selected).find_each do |record|
+
+      # Return the the correct relation based on strategy and selection&projection
+      case strategy
+      when :local_db_cache_all
+        selection  = nil
+        projection = nil
+      else
+        selection  = extract_references(new_references)
+        projection = nil
+      end
+
+      db_relation(selection, projection).find_each do |record|
+        process_db_record!(record)
       end
     end
 
-    def dependency?(value)
-      (value.kind_of?(::ManagerRefresh::InventoryObjectLazy) || value.kind_of?(::ManagerRefresh::InventoryObject)) &&
-        value.dependency?
+    # Return a Rails relation or array that will be used to obtain the records we need to load from the DB
+    #
+    # @param selection [Hash] A selection hash resulting in Select operation (in Relation algebra terms)
+    # @param projection [Array] A projection array resulting in Project operation (in Relation algebra terms)
+    def db_relation(selection = nil, projection = nil)
+      relation = if !custom_db_finder.blank?
+                   custom_db_finder.call(self, selection, projection)
+                 else
+                   rel = if !parent.nil? && !association.nil?
+                           parent.send(association)
+                         elsif !arel.nil?
+                           arel
+                         end
+                   rel = rel.where(selection) if rel && selection
+                   rel = rel.select(projection) if rel && projection
+                   rel
+                 end
+
+      relation || []
     end
 
-    def transitive_dependency?(value)
-      # If the dependency is inventory_collection.lazy_find(:ems_ref, :key => :stack)
-      # and a :stack is a relation to another object, in the InventoryObject object,
-      # then this dependency is considered transitive.
-      (value.kind_of?(::ManagerRefresh::InventoryObjectLazy) && value.transitive_dependency?)
+    # Extracting references to a relation friendly format, or a format processable by a custom_db_finder
+    #
+    # @param new_references [Array] array of manager_uuids of the InventoryObjects
+    def extract_references(new_references = [])
+      # We collect what manager_uuids of this IC were referenced and we load only those
+      # TODO(lsmola) maybe in can be obj[x] = Set.new, since rails will do a query "col1 IN [a,b,b] AND col2 IN [e,f,e]"
+      # which is equivalent to "col1 IN [a,b] AND col2 IN [e,f]". The best would be to forcing rails to query
+      # "(col1, col2) IN [(a,e), (b,f), (b,e)]" which would load exactly what we need. Postgree supports this, but rails
+      # doesn't seem to. So for now, we can load a bit more from the DB than we need, in case of manager_ref.count > 1
+      hash_uuids_by_ref = manager_ref.each_with_object({}) { |x, obj| obj[x] = [] }
+
+      # TODO(lsmola) hm, if we call find in the parser code, not all references will be here, so this will really work
+      # only for lazy_find. So if we want to call find, I suppose we can cache all, possibly we could optimize this to
+      # set references upfront?
+      new_references.each do |reference|
+        refs = reference.split(stringify_joiner)
+
+        refs.each_with_index do |ref, index|
+          hash_uuids_by_ref[manager_ref[index]] << ref
+        end
+      end
+      hash_uuids_by_ref
+    end
+
+    # Takes ApplicationRecord record, converts it to the InventoryObject and places it to db_data_index
+    #
+    # @param record [ApplicationRecord] ApplicationRecord record we want to place to the db_data_index
+    def process_db_record!(record)
+      index = if custom_manager_uuid.nil?
+                object_index(record)
+              else
+                stringify_reference(custom_manager_uuid.call(record))
+              end
+
+      attributes = record.attributes.symbolize_keys
+      attribute_references.each do |ref|
+        # We need to fill all references that are relations, we will use a ManagerRefresh::ApplicationRecordReference which
+        # can be used for filling a relation and we don't need to do any query here
+        # TODO(lsmola) maybe loading all, not just referenced here? Otherwise this will have issue for db_cache_all
+        # and find used in parser
+        next unless (foreign_key = association_to_foreign_key_mapping[ref])
+        base_class_name = attributes[association_to_foreign_type_mapping[ref].try(:to_sym)] || association_to_base_class_mapping[ref]
+        id              = attributes[foreign_key.to_sym]
+        attributes[ref] = ManagerRefresh::ApplicationRecordReference.new(base_class_name, id)
+      end
+
+      db_data_index[index]    = new_inventory_object(attributes)
+      db_data_index[index].id = record.id
+    end
+
+    def scan_inventory_object!(inventory_object)
+      inventory_object.data.each do |key, value|
+        if value.kind_of?(Array)
+          value.each { |val| scan_inventory_object_attribute!(key, val) }
+        else
+          scan_inventory_object_attribute!(key, value)
+        end
+      end
+    end
+
+    def scan_inventory_object_attribute!(key, value)
+      return if !inventory_object_lazy?(value) && !inventory_object?(value)
+
+      # Storing attributes and their dependencies
+      (dependency_attributes[key] ||= Set.new) << value.inventory_collection if value.dependency?
+
+      # Storing a reference in the target inventory_collection, then each IC knows about all the references and can
+      # e.g. load all the referenced uuids from a DB
+      value.inventory_collection.references << value.to_s
+
+      if inventory_object_lazy?(value)
+        # Storing if attribute is a transitive dependency, so a lazy_find :key results in dependency
+        transitive_dependency_attributes << key if value.transitive_dependency?
+
+        # If we access an attribute of the value, using a :key, we want to keep a track of that
+        value.inventory_collection.attribute_references << value.key if value.key
+      end
+    end
+
+    def inventory_object?(value)
+      value.kind_of?(::ManagerRefresh::InventoryObject)
+    end
+
+    def inventory_object_lazy?(value)
+      value.kind_of?(::ManagerRefresh::InventoryObjectLazy)
     end
 
     def validate_inventory_collection!

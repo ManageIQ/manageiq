@@ -33,9 +33,13 @@ module EmsRefresh
 
   cache_with_timeout(:queue_timeout) { MiqEmsRefreshWorker.worker_settings[:queue_timeout] || 60.minutes }
 
-  def self.queue_refresh(target, id = nil, sync = false)
+  def self.queue_refresh_task(target, id = nil)
+    queue_refresh(target, id, :create_task => true)
+  end
+
+  def self.queue_refresh(target, id = nil, opts = {})
     # Handle targets passed as a single class/id pair, an array of class/id pairs, or an array of references
-    targets = get_ar_objects(target, id)
+    targets = get_target_objects(target, id)
 
     # Group the target refs by zone and role
     targets_by_ems = targets.each_with_object(Hash.new { |h, k| h[k] = [] }) do |t, h|
@@ -53,10 +57,12 @@ module EmsRefresh
     end
 
     # Queue the refreshes
-    targets_by_ems.each do |ems, ts|
+    task_ids = targets_by_ems.collect do |ems, ts|
       ts = ts.collect { |t| [t.class.to_s, t.id] }.uniq
-      queue_merge(ts, ems, sync)
+      queue_merge(ts, ems, opts[:create_task])
     end
+
+    return task_ids if opts[:create_task]
   end
 
   def self.queue_refresh_new_target(target_hash, ems)
@@ -76,7 +82,7 @@ module EmsRefresh
     EmsRefresh.init_console if defined?(Rails::Console)
 
     # Handle targets passed as a single class/id pair, an array of class/id pairs, or an array of references
-    targets = get_ar_objects(target, id)
+    targets = get_target_objects(target, id)
 
     # Split the targets into refresher groups
     groups = targets.group_by do |t|
@@ -103,68 +109,105 @@ module EmsRefresh
       return
     end
 
-    ems.refresher.refresh(get_ar_objects(target))
+    ems.refresher.refresh(get_target_objects(target))
   end
 
-  def self.get_ar_objects(target, single_id = nil)
+  def self.get_target_objects(target, single_id = nil)
     # Handle targets passed as a single class/id pair, an array of class/id pairs, an array of references
     target = [[target, single_id]] unless single_id.nil?
     return [target] unless target.kind_of?(Array)
     return target unless target[0].kind_of?(Array)
 
     # Group by type for a more optimized search
-    targets_by_type = target.each_with_object(Hash.new { |h, k| h[k] = [] }) do |(c, id), h|
+    targets_by_type = target.each_with_object(Hash.new { |h, k| h[k] = [] }) do |(target_class, id), hash|
       # Take care of both String or Class type being passed in
-      c = c.to_s.constantize unless c.kind_of?(Class)
-      if [VmOrTemplate, Host, ExtManagementSystem].none? { |k| c <= k }
-        _log.warn "Unknown target type: [#{c}]."
+      target_class = target_class.to_s.constantize unless target_class.kind_of?(Class)
+      if [VmOrTemplate, Host, ExtManagementSystem, ManagerRefresh::Target].none? { |k| target_class <= k }
+        _log.warn "Unknown target type: [#{target_class}]."
         next
       end
 
-      h[c] << id
+      hash[target_class] << id
     end
 
-    # Do lookups to get ActiveRecord objects
-    targets_by_type.each_with_object([]) do |(c, ids), a|
+    # Do lookups to get ActiveRecord objects or initialize ManagerRefresh::Target for ids that are Hash
+    targets_by_type.each_with_object([]) do |(target_class, ids), target_objects|
       ids.uniq!
 
-      recs = c.where(:id => ids)
-      recs = recs.includes(:ext_management_system) unless c <= ExtManagementSystem
+      recs = if target_class <= ManagerRefresh::Target
+               ids.map { |x| ManagerRefresh::Target.load(x) }
+             else
+               active_record_recs = target_class.where(:id => ids)
+               active_record_recs = active_record_recs.includes(:ext_management_system) unless target_class <= ExtManagementSystem
+               active_record_recs
+             end
 
       if recs.length != ids.length
         missing = ids - recs.collect(&:id)
-        _log.warn "Unable to find a record for [#{c}] ids: #{missing.inspect}."
+        _log.warn "Unable to find a record for [#{target_class}] ids: #{missing.inspect}."
       end
 
-      a.concat(recs)
+      target_objects.concat(recs)
     end
   end
 
-  def self.queue_merge(targets, ems, sync = false)
-    sync ? queue_merge_sync(targets, ems) : queue_merge_async(targets, ems)
-  end
-
-  def self.queue_merge_async(targets, ems)
-    # Items will be naturally serialized since there is a dedicated worker.
-    MiqQueue.put_or_update(
+  def self.queue_merge(targets, ems, create_task = false)
+    queue_options = {
       :queue_name  => MiqEmsRefreshWorker.queue_name_for_ems(ems),
       :class_name  => name,
       :method_name => 'refresh',
       :role        => "ems_inventory",
-      :zone        => ems.my_zone
-    ) do |msg, item|
+      :zone        => ems.my_zone,
+    }
+
+    # If this is the only refresh then we will use the task we just created,
+    # if we merge with another queue item then we will return its task_id
+    task_id = nil
+
+    # Items will be naturally serialized since there is a dedicated worker.
+    MiqQueue.put_or_update(queue_options) do |msg, item|
       targets = msg.nil? ? targets : (msg.args[0] | targets)
+
+      # If we are merging with an existing queue item we don't need a new
+      # task, just use the original one
+      task_id = if msg && msg.task_id
+                  msg.task_id.to_i
+                elsif create_task
+                  task = create_refresh_task(ems, targets)
+                  task.id
+                end
+
       item.merge(
-        :args        => [targets],
-        :msg_timeout => queue_timeout,
-        :task_id     => nil)
+        :args         => [targets],
+        :task_id      => task_id,
+        :msg_timeout  => queue_timeout,
+        :miq_callback => {
+          :class_name  => task.class.name,
+          :method_name => :queue_callback,
+          :instance_id => task_id,
+          :args        => ['Finished']
+        }
+      )
     end
+
+    task_id
   end
 
-  def self.queue_merge_sync(targets, ems)
-    msg = queue_merge_async(targets, ems)
-    sleep 1 while MiqQueue.find_by(:id => msg.id)
+  def self.create_refresh_task(ems, targets)
+    task_options = {
+      :action => "EmsRefresh(#{ems.name}) [#{targets}]",
+      :userid => "system"
+    }
+
+    MiqTask.create(
+      :name    => task_options[:action],
+      :userid  => task_options[:userid],
+      :state   => MiqTask::STATE_QUEUED,
+      :status  => MiqTask::STATUS_OK,
+      :message => "Queued the action: [#{task_options[:action]}] being run for user: [#{task_options[:userid]}]"
+    )
   end
+  private_class_method :create_refresh_task
 
   #
   # Helper methods for advanced debugging

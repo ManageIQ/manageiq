@@ -131,7 +131,7 @@ module MiqReport::Generator::Trend
       @extras ||= {}
       @extras[:trend] ||= {}
 
-      limit = recs.sort { |a, b| a.timestamp <=> b.timestamp }.last.send(c) unless recs.empty?
+      limit = recs.max_by(&:timestamp).send(c) unless recs.empty?
 
       attributes.each do |attribute|
         trend_data_key = CHART_TREND_COLUMN_PREFIX + attribute.to_s

@@ -88,6 +88,34 @@
        :post:
        - :name: create
          :identifier: alert_status_action_new
+  :alert_definitions:
+    :description: Alert Definitions
+    :identifier: alert_definition
+    :options:
+    - :collection
+    :verbs: *gpd
+    :klass: MiqAlert
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: alert_definitions_show_list
+      :post:
+      - :name: create
+        :identifier: alert_definition_new
+      - :name: delete
+        :identifier: alert_definition_delete
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: alert_definition_show
+      :post:
+      - :name: edit
+        :identifier: alert_definition_edit
+      - :name: delete
+        :identifier: alert_definition_delete
+      :delete:
+      - :name: delete
+        :identifier: alert_definition_delete
   :alerts:
     :description: Alerts
     :identifier: alert
@@ -204,6 +232,7 @@
     :description: Authentications
     :options:
     - :collection
+    - :subcollection
     :verbs: *gpd
     :klass: Authentication
     :collection_actions:
@@ -223,6 +252,10 @@
       :delete:
       - :name: delete
         :identifier: embedded_automation_manager_credentials_delete
+    :subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: embedded_automation_manager_credentials_view
   :automate:
     :description: Automate
     :options:
@@ -525,6 +558,8 @@
     - :collection
     :verbs: *g
     :klass: ConfigurationScriptPayload
+    :subcollections:
+      - :authentications
     :collection_actions:
       :get:
       - :name: read
@@ -1272,6 +1307,24 @@
       :delete:
       - :name: delete
         :identifier: chargeback_rates_delete
+  :regions:
+    :description: Regions
+    :identifier: region
+    :options:
+    - :collection
+    :verbs: *gp
+    :klass: MiqRegion
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: region
+      :post:
+      - :name: query
+        :identifier: region
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: region
   :reports:
     :description: Reports
     :identifier: miq_report
@@ -1737,6 +1790,8 @@
       :post:
       - :name: edit
         :identifier: catalogitem_edit
+      - :name: delete
+        :identifier: catalogitem_delete
       :delete:
       - :name: delete
         :identifier: catalogitem_delete
@@ -1823,6 +1878,8 @@
         :identifier: service_admin
       - :name: suspend
         :identifier: service_admin
+      - :name: delete
+        :identifier: service_delete
       :delete:
       - :name: delete
         :identifier: service_delete
@@ -1967,6 +2024,8 @@
         :disabled: true
       - :name: set_ownership
         :identifier: miq_template_ownership
+      - :name: delete
+        :identifier: miq_template_delete
       :delete:
       - :name: delete
         :identifier: miq_template_delete
@@ -2262,6 +2321,8 @@
       - :name: read
         :identifier: vm_snapshot_view
       :post:
+      - :name: revert
+        :identifier: vm_snapshot_revert
       - :name: delete
         :identifier: vm_snapshot_delete
       :delete:

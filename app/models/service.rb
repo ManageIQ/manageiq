@@ -37,6 +37,7 @@ class Service < ApplicationRecord
   virtual_has_many   :vms
   virtual_has_many   :all_vms
   virtual_has_many   :power_states, :uses => :all_vms
+  virtual_has_many   :orchestration_stacks
   virtual_total      :v_total_vms, :vms
 
   virtual_has_one    :custom_actions
@@ -70,6 +71,7 @@ class Service < ApplicationRecord
 
   default_value_for :display, false
   default_value_for :retired, false
+  default_value_for :initiator, 'user'
 
   validates :display, :inclusion => { :in => [true, false] }
   validates :retired, :inclusion => { :in => [true, false] }
@@ -221,6 +223,10 @@ class Service < ApplicationRecord
 
   def atomic?
     service_template ? service_template.atomic? : children.empty?
+  end
+
+  def orchestration_stacks
+    service_resources.where(:resource_type => 'OrchestrationStack').collect(&:resource)
   end
 
   def map_composite_power_states(action)

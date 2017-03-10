@@ -54,7 +54,7 @@ module ScanningOperationsMixin
     _log.info "task_id: [#{task_id}] starting"
     begin
       Timeout.timeout(WS_TIMEOUT) do
-        task = MiqTask.find_by_id(task_id)
+        task = MiqTask.find_by(:id => task_id)
         if !task.nil?
           task.update_status(state, status, message)
         else

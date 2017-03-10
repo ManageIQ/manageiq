@@ -3,6 +3,7 @@ class ManageIQ::Providers::Microsoft::InfraManager::Vm < ManageIQ::Providers::In
 
   supports_not :migrate, :reason => _("Migrate operation is not supported.")
   supports_not :publish
+  supports     :reset
 
   POWER_STATES = {
     "Running"  => "on",

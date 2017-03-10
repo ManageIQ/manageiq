@@ -410,7 +410,8 @@ class MiqRequest < ApplicationRecord
     return if automate_event_failed?("request_starting")
 
     # Create a MiqRequestTask object for each requested item
-    update_attribute(:options, options.merge!(:delivered_on => Time.now.utc))
+    options[:delivered_on] = Time.now.utc
+    update_attribute(:options, options)
 
     begin
       requested_tasks = requested_task_idx

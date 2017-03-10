@@ -39,7 +39,7 @@ module EmsRefresh::SaveInventory
                     []
                   end
 
-    child_keys = [:operating_system, :hardware, :custom_attributes, :snapshots, :advanced_settings]
+    child_keys = [:operating_system, :hardware, :custom_attributes, :snapshots, :advanced_settings, :labels]
     extra_infra_keys = [:host, :ems_cluster, :storage, :storages, :storage_profile, :raw_power_state, :parent_vm]
     extra_cloud_keys = [
       :flavor,
@@ -331,7 +331,7 @@ module EmsRefresh::SaveInventory
         return existing_vm
       end
 
-      ems = ExtManagementSystem.find_by_id(target_hash[:ems_id])
+      ems = ExtManagementSystem.find_by(:id => target_hash[:ems_id])
       old_cluster = get_cluster(ems, target_hash[:cluster], target_hash[:resource_pools], target_hash[:folders])
 
       vm_hash[:ems_cluster_id] = old_cluster[:id]

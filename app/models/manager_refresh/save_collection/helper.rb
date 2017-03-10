@@ -14,85 +14,92 @@ module ManagerRefresh::SaveCollection
       inventory_collection.saved = true
     end
 
-    def log_format_deletes(deletes)
-      ret = deletes.collect do |d|
-        s = "id: [#{d.id}]"
-
-        [:name, :product_name, :device_name].each do |k|
-          next unless d.respond_to?(k)
-          v = d.send(k)
-          next if v.nil?
-          s << " #{k}: [#{v}]"
-          break
-        end
-
-        s
-      end
-
-      ret.join(", ")
-    end
-
     private
 
     def save_inventory(inventory_collection)
       inventory_collection.parent.reload if inventory_collection.parent
-      association  = inventory_collection.load_from_db
-      record_index = {}
+      association = inventory_collection.db_collection_for_comparison
 
-      create_or_update_inventory!(inventory_collection, record_index, association)
-
-      # Delete only if InventoryCollection is complete. If it's not complete, we are sending only subset of the records,
-      # so we cannot invoke deleting of the missing records.
-      delete_inventory!(inventory_collection, record_index, association) if inventory_collection.delete_allowed?
+      save_inventory_collection!(inventory_collection, association)
     end
 
-    def create_or_update_inventory!(inventory_collection, record_index, association)
-      unique_index_keys = inventory_collection.manager_ref_to_cols
+    def save_inventory_collection!(inventory_collection, association)
+      attributes_index        = {}
+      inventory_objects_index = {}
+      inventory_collection.each do |inventory_object|
+        attributes = inventory_object.attributes(inventory_collection)
+        index      = inventory_object.manager_uuid
 
-      association.find_each do |record|
-        # TODO(lsmola) the old code was able to deal with duplicate records, should we do that? The old data still can
-        # have duplicate methods, so we should clean them up. It will slow up the indexing though.
-        record_index[inventory_collection.object_index_with_keys(unique_index_keys, record)] = record
+        attributes_index[index]        = attributes
+        inventory_objects_index[index] = inventory_object
       end
 
+      unique_index_keys = inventory_collection.manager_ref_to_cols
+      unique_db_indexes = Set.new
+
       inventory_collection_size = inventory_collection.size
+      deleted_counter           = 0
       created_counter           = 0
-      _log.info("*************** PROCESSING #{inventory_collection} of size #{inventory_collection_size} ***************")
+      _log.info("*************** PROCESSING #{inventory_collection} of size #{inventory_collection_size} *************")
+      # Records that are in the DB, we will be updating or deleting them.
       ActiveRecord::Base.transaction do
-        inventory_collection.each do |inventory_object|
-          hash   = inventory_object.attributes(inventory_collection)
-          record = record_index.delete(inventory_object.manager_uuid)
-          if record.nil?
-            next unless inventory_collection.create_allowed?
-            record = inventory_collection.model_class.create!(hash.except(:id))
-            created_counter += 1
+        association.find_each do |record|
+          index = inventory_collection.object_index_with_keys(unique_index_keys, record)
+          if unique_db_indexes.include?(index) # Include on Set is O(1)
+            # We have a duplicate in the DB, destroy it. A find_each method does automatically .order(:id => :asc)
+            # so we always keep the oldest record in the case of duplicates.
+            _log.warn("A duplicate record was detected and destroyed, inventory_collection: '#{inventory_collection}', "\
+                      "record: '#{record}', duplicate_index: '#{index}'")
+            record.destroy
           else
-            record.assign_attributes(hash.except(:id, :type))
-            if inventory_collection.check_changed?
-              record.save! if record.changed?
-            else
-              record.save!
-            end
+            unique_db_indexes << index
           end
-          inventory_object.id = record.try(:id)
+
+          inventory_object = inventory_objects_index.delete(index)
+          hash             = attributes_index.delete(index)
+
+          if inventory_object.nil?
+            # Record was found in the DB but not sent for saving, that means it doesn't exist anymore and we should
+            # delete it from the DB.
+            deleted_counter += 1 if delete_record!(inventory_collection, record)
+          else
+            # Record was found in the DB and sent for saving, we will be updating the DB.
+            update_record!(inventory_collection, record, hash, inventory_object)
+          end
+        end
+      end
+
+      # Records that were not found in the DB but sent for saving, we will be creating these in the DB.
+      if inventory_collection.create_allowed?
+        ActiveRecord::Base.transaction do
+          inventory_objects_index.each do |index, inventory_object|
+            hash = attributes_index.delete(index)
+            create_record!(inventory_collection, hash, inventory_object)
+            created_counter += 1
+          end
         end
       end
       _log.info("*************** PROCESSED #{inventory_collection}, created=#{created_counter}, "\
-                "updated=#{inventory_collection_size - created_counter} ***************")
+                "updated=#{inventory_collection_size - created_counter}, deleted=#{deleted_counter} *************")
     end
 
-    def delete_inventory!(inventory_collection, record_index, association)
-      # Delete the items no longer found
-      unless record_index.blank?
-        deletes = record_index.values
-        _log.info("*************** DELETING #{inventory_collection} of size #{deletes.size} ***************")
-        type = association.proxy_association.reflection.name
-        _log.info("[#{type}] Deleting with method '#{inventory_collection.delete_method}' #{log_format_deletes(deletes)}")
-        ActiveRecord::Base.transaction do
-          deletes.map(&inventory_collection.delete_method)
-        end
-        _log.info("*************** DELETED #{inventory_collection} ***************")
-      end
+    def delete_record!(inventory_collection, record)
+      return false unless inventory_collection.delete_allowed?
+      record.public_send(inventory_collection.delete_method)
+      true
+    end
+
+    def update_record!(inventory_collection, record, hash, inventory_object)
+      record.assign_attributes(hash.except(:id, :type))
+      record.save if !inventory_collection.check_changed? || record.changed?
+
+      inventory_object.id = record.id
+    end
+
+    def create_record!(inventory_collection, hash, inventory_object)
+      record = inventory_collection.model_class.create!(hash.except(:id))
+
+      inventory_object.id = record.id
     end
   end
 end

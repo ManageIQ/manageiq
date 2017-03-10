@@ -26,6 +26,9 @@ describe "Services API" do
   let(:svc)  { FactoryGirl.create(:service, :name => "svc",  :description => "svc description")  }
   let(:svc1) { FactoryGirl.create(:service, :name => "svc1", :description => "svc1 description") }
   let(:svc2) { FactoryGirl.create(:service, :name => "svc2", :description => "svc2 description") }
+  let(:svc_orchestration) { FactoryGirl.create(:service_orchestration) }
+  let(:orchestration_template) { FactoryGirl.create(:orchestration_template) }
+  let(:ems) { FactoryGirl.create(:ext_management_system) }
 
   describe "Services create" do
     it "rejects requests without appropriate role" do
@@ -61,6 +64,46 @@ describe "Services API" do
                                    [{"name" => "svc_new_1"},
                                     {"name" => "svc_new_2"}])
     end
+
+    it 'supports creation of a single resource with href references' do
+      api_basic_authorize collection_action_identifier(:services, :create)
+
+      request = {
+        'action'   => 'create',
+        'resource' => {
+          'type'                   => 'ServiceOrchestration',
+          'name'                   => 'svc_new',
+          'parent_service'         => { 'href' => services_url(svc1.id)},
+          'orchestration_template' => { 'href' => orchestration_templates_url(orchestration_template.id) },
+          'orchestration_manager'  => { 'href' => providers_url(ems.id) }
+        }
+      }
+      expect do
+        run_post(services_url, request)
+      end.to change(Service, :count).by(1)
+      expect(response).to have_http_status(:ok)
+      expect_results_to_match_hash("results", [{"name" => "svc_new"}])
+    end
+
+    it 'supports creation of a single resource with id references' do
+      api_basic_authorize collection_action_identifier(:services, :create)
+
+      request = {
+        'action'   => 'create',
+        'resource' => {
+          'type'                   => 'ServiceOrchestration',
+          'name'                   => 'svc_new',
+          'parent_service'         => { 'id' => svc1.id},
+          'orchestration_template' => { 'id' => orchestration_template.id },
+          'orchestration_manager'  => { 'id' => ems.id }
+        }
+      }
+      expect do
+        run_post(services_url, request)
+      end.to change(Service, :count).by(1)
+      expect(response).to have_http_status(:ok)
+      expect_results_to_match_hash("results", [{"name" => "svc_new"}])
+    end
   end
 
   describe "Services edit" do
@@ -79,6 +122,54 @@ describe "Services API" do
 
       expect_single_resource_query("id" => svc.id, "href" => services_url(svc.id), "name" => "updated svc1")
       expect(svc.reload.name).to eq("updated svc1")
+    end
+
+    it 'accepts reference signature hrefs' do
+      api_basic_authorize collection_action_identifier(:services, :edit)
+
+      resource = {
+        'action'   => 'edit',
+        'resource' => {
+          'parent_service'         => { 'href' => services_url(svc1.id) },
+          'orchestration_template' => { 'href' => orchestration_templates_url(orchestration_template.id) },
+          'orchestration_manager'  => { 'href' => providers_url(ems.id) }
+        }
+      }
+      run_post(services_url(svc_orchestration.id), resource)
+
+      expected = {
+        'id'       => svc_orchestration.id,
+        'ancestry' => svc1.id.to_s
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+      expect(svc_orchestration.reload.parent).to eq(svc1)
+      expect(svc_orchestration.orchestration_template).to eq(orchestration_template)
+      expect(svc_orchestration.orchestration_manager).to eq(ems)
+    end
+
+    it 'accepts reference signature ids' do
+      api_basic_authorize collection_action_identifier(:services, :edit)
+
+      resource = {
+        'action'   => 'edit',
+        'resource' => {
+          'parent_service'         => { 'id' => svc1.id },
+          'orchestration_template' => { 'id' => orchestration_template.id },
+          'orchestration_manager'  => { 'id' => ems.id }
+        }
+      }
+      run_post(services_url(svc_orchestration.id), resource)
+
+      expected = {
+        'id'       => svc_orchestration.id,
+        'ancestry' => svc1.id.to_s
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+      expect(svc_orchestration.reload.parent).to eq(svc1)
+      expect(svc_orchestration.orchestration_template).to eq(orchestration_template)
+      expect(svc_orchestration.orchestration_manager).to eq(ems)
     end
 
     it "supports edits of single resource via PUT" do
@@ -151,6 +242,34 @@ describe "Services API" do
 
       expect(response).to have_http_status(:no_content)
       expect { svc.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "can be deleted via POST with an appropriate role" do
+      service = FactoryGirl.create(:service)
+      api_basic_authorize(action_identifier(:services, :delete))
+
+      expect do
+        run_post(services_url(service.id), :action => "delete")
+      end.to change(Service, :count).by(-1)
+
+      expected = {
+        "success" => true,
+        "message" => "services id: #{service.id} deleting",
+        "href"    => a_string_matching(services_url(service.id))
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "won't delete a service via POST without an appropriate role" do
+      service = FactoryGirl.create(:service)
+      api_basic_authorize
+
+      expect do
+        run_post(services_url(service.id), :action => "delete")
+      end.not_to change(Service, :count)
+
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "supports multiple resource deletes" do

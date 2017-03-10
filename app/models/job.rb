@@ -3,11 +3,14 @@ class Job < ApplicationRecord
   include UuidMixin
   include FilterableMixin
 
+  belongs_to :miq_task, :dependent => :delete
+
   serialize :options
   serialize :context
   alias_attribute :jobid, :guid
 
   before_destroy :check_active_on_destroy
+  after_update_commit :update_linked_task
 
   DEFAULT_TIMEOUT = 300
   DEFAULT_USERID  = 'system'.freeze
@@ -25,6 +28,7 @@ class Job < ApplicationRecord
     job.options = options
     job.initialize_attributes
     job.save
+    job.create_miq_task(job.attributes_for_task)
     $log.info "Job created: guid: [#{job.guid}], userid: [#{job.userid}], name: [#{job.name}], target class: [#{job.target_class}], target id: [#{job.target_id}], process type: [#{job.type}], agent class: [#{job.agent_class}], agent id: [#{job.agent_id}], zone: [#{job.zone}]"
     job.signal(:initializing)
     job
@@ -36,13 +40,16 @@ class Job < ApplicationRecord
 
   delegate :current_job_timeout, :to => :class
 
+  def update_linked_task
+    miq_task.update_attributes!(attributes_for_task) unless miq_task.nil?
+  end
+
   def initialize_attributes
     self.name ||= "#{type} created on #{Time.now.utc}"
     self.userid ||= DEFAULT_USERID
     self.context ||= {}
     self.options ||= {}
     self.status   = "ok"
-    self.code     = 0
     self.message  = "process initiated"
   end
 
@@ -81,26 +88,9 @@ class Job < ApplicationRecord
     MiqQueue.get_worker(guid).try(:update_heartbeat)
   end
 
-  def self.signal_by_taskid(guid, signal, *args)
-    # send a signal to job by guid
-    return if guid.nil?
-
-    _log.info("Guid: [#{guid}], Signal: [#{signal}]")
-
-    job = find_by(:guid => guid)
-    return if job.nil?
-
-    begin
-      job.signal(signal, *args)
-    rescue => err
-      _log.info("Guid: [#{guid}], Signal: [#{signal}], unable to deliver signal, #{err}")
-    end
-  end
-
-  def set_status(message, status = "ok", code = 0)
+  def set_status(message, status = "ok")
     self.message = message
     self.status  = status
-    self.code    = code
 
     save
   end
@@ -131,13 +121,13 @@ class Job < ApplicationRecord
   def process_error(*args)
     message, status = args
     _log.error message.to_s
-    set_status(message, status, 1)
+    set_status(message, status)
   end
 
   def process_abort(*args)
     message, status = args
     _log.error "job aborting, #{message}"
-    set_status(message, status, 1)
+    set_status(message, status)
     signal(:finish, message, status)
   end
 
@@ -163,7 +153,7 @@ class Job < ApplicationRecord
   end
 
   def target_entity
-    target_class.constantize.find_by_id(target_id)
+    target_class.constantize.find_by(:id => target_id)
   end
 
   def self.check_jobs_for_timeout
@@ -248,5 +238,17 @@ class Job < ApplicationRecord
       :args        => [ids],
       :zone        => MiqServer.my_zone
     )
+  end
+
+  def attributes_for_task
+    {:status        => status.try(:capitalize),
+     :state         => state.try(:capitalize),
+     :name          => name,
+     :message       => message,
+     :userid        => userid,
+     :miq_server_id => miq_server_id,
+     :context_data  => context,
+     :zone          => zone,
+     :started_on    => started_on}
   end
 end # class Job

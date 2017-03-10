@@ -82,7 +82,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
   end
 
   def allowed_clusters(_options = {})
-    ems = ExtManagementSystem.find_by_id(get_value(@values[:placement_ems_name]))
+    ems = ExtManagementSystem.find_by(:id => get_value(@values[:placement_ems_name]))
     result = {}
     return result if ems.nil?
     ems.ems_clusters.each { |c| result[c.id] = "#{c.v_parent_datacenter} / #{c.name}" }
@@ -91,7 +91,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
 
   def allowed_storages(_options = {})
     result = []
-    ems = ExtManagementSystem.find_by_id(get_value(@values[:placement_ems_name]))
+    ems = ExtManagementSystem.find_by(:id => get_value(@values[:placement_ems_name]))
     return result if ems.nil?
     ems.storages.each do |s|
       next unless s.store_type == "NFS"
@@ -197,7 +197,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     match_str = match_str.to_s.downcase
 
     send(allowed_method).detect do |item|
-      ci = item.kind_of?(Array) ? klass.find_by_id(item[0]) : item
+      ci = item.kind_of?(Array) ? klass.find_by(:id => item[0]) : item
       keys.any? do |key|
         value = ci.send(key).to_s.downcase
         # _log.warn "<#{allowed_method}> - comparing <#{value}> to <#{match_str}>"

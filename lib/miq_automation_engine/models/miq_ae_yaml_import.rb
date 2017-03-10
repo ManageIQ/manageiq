@@ -70,7 +70,7 @@ class MiqAeYamlImport
       domain_yaml = read_domain_yaml(directory, domain_name)
       domains[file] = domain_yaml.fetch_path('object', 'attributes', 'priority')
     end
-    domains.keys.sort { |a, b| domains[a] <=> domains[b] }
+    domains.keys.sort_by { |k| domains[k] }
   end
 
   def import_domain(domain_folder, domain_name)

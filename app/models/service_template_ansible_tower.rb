@@ -33,7 +33,7 @@ class ServiceTemplateAnsibleTower < ServiceTemplate
   end
 
   def self.default_provisioning_entry_point(_service_type)
-    '/AutomationManagement/AnsibleTower/Service/Provisioning/StateMachines/Provision/provision_from_bundle'
+    '/AutomationManagement/AnsibleTower/Service/Provisioning/StateMachines/Provision/CatalogItemInitialization'
   end
 
   def self.default_reconfiguration_entry_point
@@ -51,9 +51,23 @@ class ServiceTemplateAnsibleTower < ServiceTemplate
     end
     config_info
   end
-  private_class_method :validate_config_info
 
   private
+
+  def update_service_resources(config_info, _auth_user = nil)
+    if config_info[:configuration_script_id] && config_info[:configuration_script_id] != job_template.try(:id)
+      service_resources.find_by(:resource_type => 'ConfigurationScriptBase').destroy
+      self.job_template = ConfigurationScriptBase.find(config_info[:configuration_script_id])
+    elsif config_info[:configuration] && config_info[:configuration] != job_template.try(:id)
+      service_resources.find_by(:resource_type => 'ConfigurationScriptBase').destroy
+      self.job_template = config_info[:configuration]
+    end
+  end
+
+  def validate_update_config_info(options)
+    super
+    self.class.validate_config_info(options)
+  end
 
   def construct_config_info
     config_info = {}
