@@ -132,7 +132,7 @@ describe DialogFieldDropDownList do
 
       it "returns the values" do
         expect(dialog_field.refresh_json_value("789")).to eq(
-          :refreshed_values => [["789", 101], ["123", 456]],
+          :refreshed_values => [["789", 101], ["123", 456], [nil, "<None>"]],
           :checked_value    => "789",
           :read_only        => true,
           :visible          => true

@@ -76,7 +76,7 @@ describe OrchestrationTemplateDialogService do
     expect(fields[0].resource_action.fqname).to eq("/Cloud/Orchestration/Operations/Methods/Available_Tenants")
     assert_field(fields[0], DialogFieldDropDownList, :name => "tenant_name",     :dynamic => true)
     assert_field(fields[1], DialogFieldTextBox,      :name => "stack_name",      :validator_rule => '^[A-Za-z][A-Za-z0-9\-]*$')
-    assert_field(fields[2], DialogFieldDropDownList, :name => "stack_onfailure", :values => [%w(DO_NOTHING Do\ nothing), %w(ROLLBACK Rollback)])
+    assert_field(fields[2], DialogFieldDropDownList, :name => "stack_onfailure", :values => [[nil, "<Choose>"], %w(DO_NOTHING Do\ nothing), %w(ROLLBACK Rollback)])
     assert_field(fields[3], DialogFieldTextBox,      :name => "stack_timeout",   :data_type => 'integer')
   end
 
@@ -95,7 +95,8 @@ describe OrchestrationTemplateDialogService do
     assert_field(fields[2], DialogFieldDropDownList, :name => "resource_group",     :dynamic => true)
     assert_field(fields[3], DialogFieldTextBox,      :name => "new_resource_group", :validator_rule => '^[A-Za-z][A-Za-z0-9\-_]*$')
 
-    mode_values = [["Complete",    "Complete (Delete other resources in the group)"],
+    mode_values = [[nil,           "<Choose>"],
+                   ["Complete",    "Complete (Delete other resources in the group)"],
                    ["Incremental", "Incremental (Default)"]]
     assert_field(fields[4], DialogFieldDropDownList, :name => "deploy_mode", :values => mode_values)
     expect(fields[4].default_value).to eq("Incremental")
@@ -145,7 +146,7 @@ describe OrchestrationTemplateDialogService do
     expect(fields.size).to eq(3)
 
     assert_field(fields[0], DialogFieldTextBox,      :name => "param_flavor",     :default_value => "m1.small")
-    assert_field(fields[1], DialogFieldDropDownList, :name => "param_image_id",   :default_value => "F18-x86_64-cfntools", :values => [%w(F18-i386-cfntools F18-i386-cfntools), %w(F18-x86_64-cfntools F18-x86_64-cfntools)])
+    assert_field(fields[1], DialogFieldDropDownList, :name => "param_image_id",   :default_value => "F18-x86_64-cfntools", :values => [[nil, "<Choose>"], %w(F18-i386-cfntools F18-i386-cfntools), %w(F18-x86_64-cfntools F18-x86_64-cfntools)])
     assert_field(fields[2], DialogFieldTextBox,      :name => "param_cartridges", :default_value => "cron,diy,haproxy,mysql,nodejs,perl,php,postgresql,python,ruby")
   end
 

@@ -10,25 +10,23 @@ describe ApplicationHelper::Dialogs do
   let(:trigger_auto_refresh) { nil }
 
   describe "#dialog_dropdown_select_values" do
-    before do
-      val_array = [["cat", "Cat"], ["dog", "Dog"]]
-      @val_array_reversed = val_array.collect(&:reverse)
-      @field = DialogFieldDropDownList.new(:values => val_array)
+    let(:dialog_field) { instance_double("DialogFieldDropDownList", :values => values, :type => type) }
+    let(:values) { [%w(cat Cat), %w(dog Dog)] }
+
+    context "when the field type includes drop down" do
+      let(:type) { "BananaDropDown" }
+
+      it "returns the values collected and reversed" do
+        expect(helper.dialog_dropdown_select_values(dialog_field, nil)).to eq(values.collect(&:reverse))
+      end
     end
 
-    it "not required" do
-      @field.required = false
-      expect(helper.dialog_dropdown_select_values(@field, nil)).to eq([["<None>", nil]] + @val_array_reversed)
-    end
+    context "when the field type includes tag control" do
+      let(:type) { "BananaTagControl" }
 
-    it "required, nil selected" do
-      @field.required = true
-      expect(helper.dialog_dropdown_select_values(@field, nil)).to eq([["<Choose>", nil]] + @val_array_reversed)
-    end
-
-    it "required, non-nil selected" do
-      @field.required = true
-      expect(helper.dialog_dropdown_select_values(@field, "cat")).to eq(@val_array_reversed)
+      it "returns the values with the passed in category tags" do
+        expect(helper.dialog_dropdown_select_values(dialog_field, nil, %w(category tags))).to eq(%w(category tags))
+      end
     end
   end
 
