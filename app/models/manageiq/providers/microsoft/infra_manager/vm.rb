@@ -2,7 +2,6 @@ class ManageIQ::Providers::Microsoft::InfraManager::Vm < ManageIQ::Providers::In
   include_concern 'ManageIQ::Providers::Microsoft::InfraManager::VmOrTemplateShared'
 
   supports_not :migrate, :reason => _("Migrate operation is not supported.")
-  supports     :reset
 
   POWER_STATES = {
     "Running"  => "on",
@@ -32,5 +31,9 @@ class ManageIQ::Providers::Microsoft::InfraManager::Vm < ManageIQ::Providers::In
 
   def validate_publish
     validate_unsupported("Publish VM")
+  end
+
+  def validate_reset
+    validate_vm_control_powered_on
   end
 end
