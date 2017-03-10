@@ -210,13 +210,6 @@ describe ServiceTemplateOrchestration do
       end.to raise_error(StandardError, 'Must provide both template_id and manager_id or manager and template')
     end
 
-    it 'cannot change service_type or prov_type' do
-      updated_catalog_item_options[:prov_type] = 'new type'
-      expect do
-        @catalog_item.update_catalog_item(updated_catalog_item_options)
-      end.to raise_error(StandardError, 'service_type and prov_type cannot be changed')
-    end
-
     it 'can accept manager and template objects on update' do
       updated_catalog_item_options[:config_info].delete(:manager_id)
       updated_catalog_item_options[:config_info].delete(:manager_id)
@@ -225,6 +218,13 @@ describe ServiceTemplateOrchestration do
 
       expect(updated.orchestration_template).to eq(new_template)
       expect(updated.orchestration_manager).to eq(new_manager)
+    end
+
+    it 'allows for update without the presence of config_info' do
+      expect do
+        @catalog_item.update_catalog_item(:name => 'new_name')
+      end.to change(@catalog_item, :name)
+      expect(@catalog_item.reload.name).to eq('new_name')
     end
   end
 

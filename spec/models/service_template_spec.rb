@@ -615,10 +615,32 @@ describe ServiceTemplate do
       expect(updated.config_info).to eq(updated_catalog_item_options[:config_info])
     end
 
-    it 'does not allow service_type and prov_type to be changed' do
+    it 'does not allow service_type to be changed' do
       expect do
         @catalog_item.update_catalog_item({:service_type => 'new'}, user)
-      end.to raise_error(StandardError, /service_type and prov_type cannot be changed/)
+      end.to raise_error(StandardError, /service_type cannot be changed/)
+    end
+
+    it 'does not allow prov_type to be changed' do
+      expect do
+        @catalog_item.update_catalog_item({:prov_type => 'new'}, user)
+      end.to raise_error(StandardError, /prov_type cannot be changed/)
+    end
+
+    it 'accepts prov_type and service_type if they are not changed' do
+      expect do
+        @catalog_item.update_catalog_item({:name         => 'new_name',
+                                           :service_type => @catalog_item.service_type,
+                                           :prov_type    => @catalog_item.prov_type}, user)
+      end.to change(@catalog_item, :name)
+      expect(@catalog_item.reload.name).to eq('new_name')
+    end
+
+    it 'allows for update without the presence of config_info' do
+      expect do
+        @catalog_item.update_catalog_item(:name => 'new_name')
+      end.to change(@catalog_item, :name)
+      expect(@catalog_item.reload.name).to eq('new_name')
     end
   end
 

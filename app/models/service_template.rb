@@ -93,6 +93,7 @@ class ServiceTemplate < ApplicationRecord
 
   def update_catalog_item(options, auth_user = nil)
     config_info = validate_update_config_info(options)
+    return update_attributes!(options) unless config_info
     transaction do
       update_from_options(options)
 
@@ -428,7 +429,12 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def validate_update_config_info(options)
-    raise _('service_type and prov_type cannot be changed') if options[:service_type] || options[:prov_type]
+    if options[:service_type] && options[:service_type] != service_type
+      raise _('service_type cannot be changed')
+    end
+    if options[:prov_type] && options[:prov_type] != prov_type
+      raise _('prov_type cannot be changed')
+    end
     options[:config_info]
   end
 
