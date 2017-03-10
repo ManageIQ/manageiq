@@ -4,7 +4,6 @@ module MiqAeMethodService
 
     def self.create(options = {})
       attributes = options.symbolize_keys.slice(*CREATE_ATTRIBUTES)
-      attributes[:remote_proxy] = true
 
       ar_method { MiqAeServiceOrchestrationTemplateVnfd.wrap_results(OrchestrationTemplateVnfd.create!(attributes)) }
     end

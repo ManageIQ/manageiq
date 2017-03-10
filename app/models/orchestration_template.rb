@@ -19,8 +19,6 @@ class OrchestrationTemplate < ApplicationRecord
 
   before_destroy :check_not_in_use
 
-  attr_accessor :remote_proxy
-  alias remote_proxy? remote_proxy
   attr_accessor :block_raw_action
   alias block_raw_action? block_raw_action
 
