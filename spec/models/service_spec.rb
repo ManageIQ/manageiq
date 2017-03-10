@@ -681,6 +681,17 @@ describe Service do
     end
   end
 
+  describe '#orchestration_stacks' do
+    let(:service) { FactoryGirl.create(:service) }
+    let(:tower_job) { FactoryGirl.create(:embedded_ansible_job) }
+
+    before { service.add_resource!(tower_job, :name => ResourceAction::PROVISION) }
+
+    it 'returns the orchestration stacks' do
+      expect(service.orchestration_stacks).to eq([tower_job])
+    end
+  end
+
   def create_deep_tree
     @service      = FactoryGirl.create(:service)
     @service_c1   = FactoryGirl.create(:service, :service => @service)
