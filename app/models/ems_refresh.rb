@@ -119,42 +119,36 @@ module EmsRefresh
     return target unless target[0].kind_of?(Array)
 
     # Group by type for a more optimized search
-    targets_by_type = target.each_with_object(Hash.new { |h, k| h[k] = [] }) do |(c, id), h|
+    targets_by_type = target.each_with_object(Hash.new { |h, k| h[k] = [] }) do |(target_class, id), hash|
       # Take care of both String or Class type being passed in
-      c = c.to_s.constantize unless c.kind_of?(Class)
-      if [VmOrTemplate, Host, ExtManagementSystem, ManagerRefresh::Target].none? { |k| c <= k }
-        _log.warn "Unknown target type: [#{c}]."
+      target_class = target_class.to_s.constantize unless target_class.kind_of?(Class)
+      if [VmOrTemplate, Host, ExtManagementSystem, ManagerRefresh::Target].none? { |k| target_class <= k }
+        _log.warn "Unknown target type: [#{target_class}]."
         next
       end
 
-      h[c] << id
+      hash[target_class] << id
     end
 
     # Do lookups to get ActiveRecord objects or initialize ManagerRefresh::Target for ids that are Hash
-    targets_by_type.each_with_object([]) do |(c, ids), a|
+    targets_by_type.each_with_object([]) do |(target_class, ids), target_objects|
       ids.uniq!
 
-      manager_refresh_target_ids, active_record_ids = ids.partition { |x| x.kind_of?(Hash) }
-
-      active_record_recs = []
-      if active_record_ids.present?
-        active_record_recs = c.where(:id => active_record_ids)
-        active_record_recs = active_record_recs.includes(:ext_management_system) unless c <= ExtManagementSystem
-      end
-
-      manager_refresh_target_recs = []
-      if manager_refresh_target_ids.present?
-        manager_refresh_target_recs = manager_refresh_target_ids.map { |x| ManagerRefresh::Target.new(x)}
-      end
-
-      recs = active_record_recs + manager_refresh_target_recs
+      recs = case target_class
+             when ManagerRefresh::Target
+               ids.map { |x| ManagerRefresh::Target.new(x) }
+             else
+               active_record_recs = target_class.where(:id => ids)
+               active_record_recs = active_record_recs.includes(:ext_management_system) unless target_class <= ExtManagementSystem
+               active_record_recs
+             end
 
       if recs.length != ids.length
         missing = ids - recs.collect(&:id)
-        _log.warn "Unable to find a record for [#{c}] ids: #{missing.inspect}."
+        _log.warn "Unable to find a record for [#{target_class}] ids: #{missing.inspect}."
       end
 
-      a.concat(recs)
+      target_objects.concat(recs)
     end
   end
 
