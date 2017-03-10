@@ -1,6 +1,7 @@
 class ManageIQ::Providers::EmbeddedAnsible::AutomationManager < ManageIQ::Providers::EmbeddedAutomationManager
   include ManageIQ::Providers::AnsibleTower::Shared::AutomationManager
 
+  require_nested :Credential
   require_nested :AmazonCredential
   require_nested :AzureCredential
   require_nested :CloudCredential
@@ -9,6 +10,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager < ManageIQ::Provid
   require_nested :NetworkCredential
   require_nested :OpenstackCredential
   require_nested :RackspaceCredential
+  require_nested :ScmCredential
   require_nested :Satellite6Credential
   require_nested :VmwareCredential
 
