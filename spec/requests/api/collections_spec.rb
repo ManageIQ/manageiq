@@ -84,6 +84,11 @@ describe "Rest API Collections" do
       test_collection_query(:clusters, clusters_url, EmsCluster)
     end
 
+    it "query CloudVolumes" do
+      FactoryGirl.create(:cloud_volume)
+      test_collection_query(:cloud_volumes, cloud_volumes_url, CloudVolume)
+    end
+
     it "query Conditions" do
       FactoryGirl.create(:condition)
       test_collection_query(:conditions, conditions_url, Condition)
