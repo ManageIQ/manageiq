@@ -19,6 +19,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager < ManageIQ::Provid
   require_nested :ConfiguredSystem
   require_nested :EventCatcher
   require_nested :EventParser
+  require_nested :Inventory
   require_nested :Job
   require_nested :Playbook
   require_nested :Refresher

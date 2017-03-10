@@ -1,4 +1,4 @@
 module MiqAeMethodService
-  class MiqAeServiceManageIQ_Providers_AnsibleTower_AutomationManager_Inventory < MiqAeServiceManageIQ_Providers_AutomationManager_InventoryGroup
+  class MiqAeServiceManageIQ_Providers_AnsibleTower_AutomationManager_Inventory < MiqAeServiceManageIQ_Providers_ExternalAutomationManager_InventoryGroup
   end
 end
