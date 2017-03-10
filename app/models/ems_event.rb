@@ -222,6 +222,10 @@ class EmsEvent < EventStream
     (vm_or_template || ext_management_system).tenant_identity
   end
 
+  def manager_refresh_targets
+    ext_management_system.class::EventTargetParser.new(self).parse
+  end
+
   private
 
   def self.create_event(event)
@@ -323,9 +327,5 @@ class EmsEvent < EventStream
 
   def ems_refresh_target
     ext_management_system
-  end
-
-  def manager_refresh_targets
-    ext_management_system.class::EventTargetParser.new(self).parse
   end
 end
