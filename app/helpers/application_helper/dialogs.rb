@@ -1,11 +1,6 @@
 module ApplicationHelper::Dialogs
-  def dialog_dropdown_select_values(field, selected_value, category_tags = nil)
+  def dialog_dropdown_select_values(field, _selected_value, category_tags = nil)
     values = []
-    if !field.required
-      values.push(["<None>", nil])
-    elsif selected_value.blank?
-      values.push(["<Choose>", nil])
-    end
     if field.type.include?("DropDown")
       values += field.values.collect(&:reverse)
     elsif field.type.include?("TagControl")
@@ -108,6 +103,19 @@ module ApplicationHelper::Dialogs
     }
 
     add_options_unless_read_only({}, tag_options, field)
+  end
+
+  def default_value_form_options(field_type, field_values, field_default_value)
+    no_default_value = [["<#{_('None')}>", nil]]
+    if field_values.empty?
+      values = no_default_value
+    else
+      values = field_values.collect(&:reverse)
+      values = no_default_value + values if field_type == "DialogFieldRadioButton"
+    end
+
+    selected = field_default_value || nil
+    options_for_select(values, selected)
   end
 
   def build_auto_refreshable_field_indicies(workflow)

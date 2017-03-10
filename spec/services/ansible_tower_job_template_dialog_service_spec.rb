@@ -73,8 +73,8 @@ describe AnsibleTowerJobTemplateDialogService do
     assert_field(fields[1], DialogFieldTextBox,      :name => 'param_param2', :data_type => 'string',    :default_value => "as")
     assert_field(fields[2], DialogFieldTextAreaBox,  :name => 'param_param3', :data_type => 'string',    :default_value => "no\nhello")
     assert_field(fields[3], DialogFieldTextBox,      :name => 'param_param4', :data_type => 'string',    :default_value => "mypassword", :options => {:protected => true})
-    assert_field(fields[4], DialogFieldDropDownList, :name => "param_param5", :default_value => "Peach", :values => [%w(Apple Apple), %w(Banana Banana), %w(Peach Peach)])
-    assert_field(fields[5], DialogFieldDropDownList, :name => "param_param6", :default_value => "opt1",  :values => [%w(222 222), %w(opt1 opt1), %w(opt3 opt3)])
+    assert_field(fields[4], DialogFieldDropDownList, :name => "param_param5", :default_value => "Peach", :values => [[nil, "<Choose>"], %w(Apple Apple), %w(Banana Banana), %w(Peach Peach)])
+    assert_field(fields[5], DialogFieldDropDownList, :name => "param_param6", :default_value => "opt1",  :values => [%w(222 222), [nil, "<Choose>"], %w(opt1 opt1), %w(opt3 opt3)])
     assert_field(fields[6], DialogFieldTextBox,      :name => 'param_param7', :data_type => 'string',    :default_value => "14.5")
   end
 

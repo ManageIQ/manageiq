@@ -17,7 +17,8 @@
         - else
           = render :partial => "field_value_entry", :locals => {:entry => "new", :edit => false}
         - @edit[:field_values].each_with_index do |e, i|
-          - if !entry.nil? && entry != "new" && entry.to_i == i
-            = render :partial => "field_value_entry", :locals => {:entry => e, :idx => i, :edit => true}
-          - else
-            = render :partial => "field_value_entry", :locals => {:entry => e, :idx => i, :edit => false}
+          - unless e[0].nil?
+            - if !entry.nil? && entry != "new" && entry.to_i == i
+              = render :partial => "field_value_entry", :locals => {:entry => e, :idx => i, :edit => true}
+            - else
+              = render :partial => "field_value_entry", :locals => {:entry => e, :idx => i, :edit => false}
