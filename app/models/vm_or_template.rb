@@ -1847,6 +1847,10 @@ class VmOrTemplate < ApplicationRecord
      template_tenant_ids, vm_tenant_ids]
   end
 
+  def self.with_ownership
+    includes(:ext_management_system).where(:ext_management_systems => {:tenant_mapping_enabled => [false, nil]})
+  end
+
   def tenant_identity
     user = evm_owner
     user = User.super_admin.tap { |u| u.current_group = miq_group } if user.nil? || !user.miq_group_ids.include?(miq_group_id)
