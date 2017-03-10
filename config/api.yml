@@ -962,6 +962,20 @@
       :post:
       - :name: mark_as_seen
       - :name: delete
+  :orchestration_stacks:
+    :description: Orchestration Stacks
+    :options:
+    - :subcollection
+    :verbs: *g
+    :klass: OrchestrationStack
+    :subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: orchestration_stack_view
+    :subresource_actions:
+      :get:
+      - :name: read
+        :identifier: orchestration_stack_view
   :orchestration_templates:
     :description: Orchestration Template
     :identifier: orchestration_templates_accord
@@ -1830,6 +1844,7 @@
     - :tags
     - :service_dialogs
     - :vms
+    - :orchestration_stacks
     :collection_actions:
       :get:
       - :name: read
