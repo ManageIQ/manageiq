@@ -7,7 +7,7 @@ class EmsEvent
 
       return if refresh_targets.empty?
 
-      EmsRefresh.queue_refresh(refresh_targets, nil, sync)
+      EmsRefresh.queue_refresh(refresh_targets, nil, :create_task => sync)
     end
 
     def refresh(*targets, sync)
