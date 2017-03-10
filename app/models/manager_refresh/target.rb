@@ -44,7 +44,7 @@ module ManagerRefresh
     end
 
     alias id dump
-    alias name association
+    alias name manager_ref
 
     # @return [ManageIQ::Providers::BaseManager] The Manager owning the Target
     def manager
@@ -59,7 +59,7 @@ module ManagerRefresh
     # Loads ManagerRefresh::Target ApplicationRecord representation from our DB, this requires that ManagerRefresh::Target
     # has been refreshed, otherwise the AR object can be missing.
     # @return [ApplicationRecord] A ManagerRefresh::Target loaded from the database as AR object
-    def load
+    def load_from_db
       manager.public_send(association).find_by(manager_ref)
     end
   end
