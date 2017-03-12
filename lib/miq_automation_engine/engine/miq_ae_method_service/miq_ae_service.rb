@@ -32,7 +32,7 @@ module MiqAeMethodService
       @@current.delete(obj)
     end
 
-    def initialize(ws, inputs = {}, _body = nil, logger = $miq_ae_logger)
+    def initialize(ws, inputs = {}, logger = $miq_ae_logger)
       @drb_server_references = []
       @inputs                = inputs
       @workspace             = ws
