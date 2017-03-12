@@ -89,9 +89,9 @@ class ContainerNode < ApplicationRecord
     true
   end
 
-  supports :external_logging_support do
+  supports :external_logging do
     unless ext_management_system.respond_to?(:external_logging_route_name)
-      unsupported_reason_add(:external_logging_support, _('This provider type does not support External Logging'))
+      unsupported_reason_add(:external_logging, _('This provider type does not support External Logging'))
     end
   end
 
