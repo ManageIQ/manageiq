@@ -117,8 +117,8 @@ describe "Alerts Definitions API" do
     sample_alert_definition = {
       :description => "Test Alert Definition",
       :db          => "ContainerNode",
-      :expression  => { :eval_method => "dwh_generic", :mode => "internal", :options => {} },
-      :options     => { :notifications => {:delay_next_evaluation => 600, :evm_event => {} } },
+      :expression  => { :eval_method => "mw_heap_used", :mode => "internal", :options => {} },
+      :options     => { :notifications => {:delay_next_evaluation => 0, :evm_event => {} } },
       :enabled     => true
     }
     updated_options = { :notifications => {:delay_next_evaluation => 60, :evm_event => {} } }
