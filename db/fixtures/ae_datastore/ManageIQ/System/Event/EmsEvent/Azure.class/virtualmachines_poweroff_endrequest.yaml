@@ -4,7 +4,7 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: virtualMachines_deallocate_EndRequest
+    name: virtualMachines_powerOff_EndRequest
     inherits: 
     description: 
   fields:
