@@ -3785,7 +3785,7 @@
     - :name: Launch External Logging
       :description: Open External Logging from Container Provider
       :feature_type: control
-      :identifier: ems_container_launch_external_logging_support
+      :identifier: ems_container_launch_external_logging
     - :name: Container Deployments
       :description: Container Deployments
       :feature_type: node
