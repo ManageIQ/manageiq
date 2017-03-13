@@ -10,7 +10,7 @@ describe Share do
 
     replace_user_features(user, "host")
 
-    expect { Share.find(share.id) }.to raise_error(/Couldn't find Share/)
+    expect { share.reload }.to raise_error(ActiveRecord::RecordNotFound)
   end
 
   def create_share(user, resource, features)
