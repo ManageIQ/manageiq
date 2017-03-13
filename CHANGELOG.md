@@ -2,6 +2,134 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased - as of Sprint 55 end 2017-02-27
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+55+Ending+Feb+27%2C+2017%22+label%3Aenhancement)
+
+- Automate
+  - Ansible
+    - Add Run Ansible Playbook control action type [(#13943)](https://github.com/ManageIQ/manageiq/pull/13943)
+    - Create service template with Ansible Tower after first creating a new job template [(#13896)](https://github.com/ManageIQ/manageiq/pull/13896)
+    - Added "Ansible Playbook" to the list of catalog item types [(#13936)](https://github.com/ManageIQ/manageiq/pull/13936)
+    - Expose job_template from a service template [(#13895)](https://github.com/ManageIQ/manageiq/pull/13895)
+    - Create catalog item after job templates are created [(#13893)](https://github.com/ManageIQ/manageiq/pull/13893)
+    - Create temporary inventory when execute a playbook [(#14008)](https://github.com/ManageIQ/manageiq/pull/14008)
+    - Run a control action to order Ansible Playbook Service [(#13874)](https://github.com/ManageIQ/manageiq/pull/13874)
+  - Orchestration: Use task queue for update stack operation [(#13897)](https://github.com/ManageIQ/manageiq/pull/13897)
+  - Services
+    - Add service object to deliver to automate. [(#13956)](https://github.com/ManageIQ/manageiq/pull/13956)
+    - Create a provision request for a service template [(#13972)](https://github.com/ManageIQ/manageiq/pull/13972)
+    - ServiceTemplate update_catalog_item [(#13811)](https://github.com/ManageIQ/manageiq/pull/13811)
+  - See also [Manageiq/manageiq-content](https://github.com/ManageIQ/manageiq-content)
+
+- Platform
+  - Chargeback
+    - Chargeback without C & U [(#13884)](https://github.com/ManageIQ/manageiq/pull/13884)
+    - Containers: Enterprise rate parent for chargeback [(#14079)](https://github.com/ManageIQ/manageiq/pull/14079)
+  - Add a #backlog method to PglogicalSubscription objects [(#14010)](https://github.com/ManageIQ/manageiq/pull/14010)
+  - See also [Manageiq/manageiq-appliance](https://github.com/ManageIQ/manageiq-appliance)
+
+- Providers
+  - Enhanced inventory collector target and parser classes [(#13907)](https://github.com/ManageIQ/manageiq/pull/13907)
+  - Ansible
+    - Enhanced dependency and references scanning [(#13995)](https://github.com/ManageIQ/manageiq/pull/13995)
+    - Introducing find by and find or build by methods [(#13926)](https://github.com/ManageIQ/manageiq/pull/13926)
+    - Model change for Ansible Tower Credential [(#13773)](https://github.com/ManageIQ/manageiq/pull/13773)
+    - Add missing `ConfigurationScriptSource` hierarchy and Automate models [(#14069)](https://github.com/ManageIQ/manageiq/pull/14069)
+    - Models for EmbeddedAnsible provider [(#13879)](https://github.com/ManageIQ/manageiq/pull/13879)
+  - Console: Add product feature for VMware WebMKS HTML consoles [(#13945)](https://github.com/ManageIQ/manageiq/pull/13945)
+  - Containers
+    - Support alerts on container nodes [(#13812)](https://github.com/ManageIQ/manageiq/pull/13812)
+    - Add External Logging Support SupportFeature [(#13319)](https://github.com/ManageIQ/manageiq/pull/13319)
+  - Hawkular
+    - Send data source properties when adding data source operation is performed [(#13937)](https://github.com/ManageIQ/manageiq/pull/13937)
+    - Middleware server group power ops [(#13741)](https://github.com/ManageIQ/manageiq/pull/13741)
+  - OpenStack Cloud
+    - Use task queue for set/unset node maintenance [(#13657)](https://github.com/ManageIQ/manageiq/pull/13657)
+    - Use task queue for CRUD operations on auth key pair [(#13464)](https://github.com/ManageIQ/manageiq/pull/13464)
+  - Pluggable: Add registered_provider_plugins to Vmdb::Plugins [(#13983)](https://github.com/ManageIQ/manageiq/pull/13983)
+  - See also [Manageiq/manageiq-providers-amazon](https://github.com/ManageIQ/manageiq-providers-amazon)
+  - See also [Manageiq/manageiq-providers-azure](https://github.com/ManageIQ/manageiq-providers-azure)
+
+
+- REST API
+  - Differentiate Vms/Instances in messages [(#13971)](https://github.com/ManageIQ/manageiq/pull/13971)
+  - Authentications Read and Delete api [(#13780)](https://github.com/ManageIQ/manageiq/pull/13780)
+  - Create service template REST api [(#12594)](https://github.com/ManageIQ/manageiq/pull/12594)
+  - Snapshots revert API [(#13829)](https://github.com/ManageIQ/manageiq/pull/13829)
+
+- Service UI
+  - See [Manageiq/manageiq-ui-service](https://github.com/ManageIQ/manageiq-ui-service)
+
+- SmartState
+  - SmartState: Make docker registry & repo configurable for 'image-inspector' [(#8439)](https://github.com/ManageIQ/manageiq/pull/8439)
+  - Warn if OpenSCAP binary not available [(#13878)](https://github.com/ManageIQ/manageiq/pull/13878)
+
+- User Interface (Classic)
+  - Add multiselect option to dropdowns [(#10270)](https://github.com/ManageIQ/manageiq/pull/10270)
+  - Core changes for Ansible Tower Playbooks & Repositories UI [(#13731)](https://github.com/ManageIQ/manageiq/pull/13731)
+  - Core changes for Ansible Credentials UI [(#14020)](https://github.com/ManageIQ/manageiq/pull/14020)
+  - See also [Manageiq/manageiq-ui-classic changelog] (https://github.com/ManageIQ/manageiq-ui-classic/pull/461)
+
+
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+55+Ending+Feb+27%2C+2017%22+label%3Aenhancement)
+
+- Automate
+  - Update the service dialog to use the correct automate entry point [(#13955)](https://github.com/ManageIQ/manageiq/pull/13955)
+  - Change default provisioning entry point for AutomationManagement. [(#13762)](https://github.com/ManageIQ/manageiq/pull/13762)
+
+- Performance
+  - Use eager_load for extra_resources [(#13904)](https://github.com/ManageIQ/manageiq/pull/13904)
+  - Perfomance fix for Object Storage Manager deletion [(#14009)](https://github.com/ManageIQ/manageiq/pull/14009)
+  - Avoid N+1 queries by including snapshots [(#13833)](https://github.com/ManageIQ/manageiq/pull/13833)
+  - Load created Vms in batches so they don't load all in memory [(#14067)](https://github.com/ManageIQ/manageiq/pull/14067)
+  - Do not keep all association records in the memory [(#14066)](https://github.com/ManageIQ/manageiq/pull/14066)
+  - Scanning for used attributes for query optimizations [(#14023)](https://github.com/ManageIQ/manageiq/pull/14023)
+
+- Platform
+  - Remove admin role for tenant admin [(#14081)](https://github.com/ManageIQ/manageiq/pull/14081)
+  - Ansible: Properly monitor the embedded ansible service [(#13978)](https://github.com/ManageIQ/manageiq/pull/13978)
+  - Remove the mechanisms around "configuring" central admin [(#13966)](https://github.com/ManageIQ/manageiq/pull/13966)
+  - Allow users to input ipv6 where it makes sense [(#70)](https://github.com/ManageIQ/manageiq-gems-pending/pull/70)
+
+- Providers
+  - RHV: Resolve oVirt IP addresses [(#13767)](https://github.com/ManageIQ/manageiq/pull/13767)
+  - Use task queue for VM actions [(#13782)](https://github.com/ManageIQ/manageiq/pull/13782)
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+55+Ending+Feb+27%2C+2017%22+label%3Abug)
+
+- Automate
+  - Fix Automate domain reset for legacy directory. [(#13933)](https://github.com/ManageIQ/manageiq/pull/13933)
+
+- Platform
+  - Chargeback: Fix tier selection when using different units. [(#13593)](https://github.com/ManageIQ/manageiq/pull/13593)
+  - Core
+    - Fix missing reason constants [(#13919)](https://github.com/ManageIQ/manageiq/pull/13919)
+    - Rescue worker class sync_workers exceptions and move on [(#13976)](https://github.com/ManageIQ/manageiq/pull/13976)
+  - Reporting: Ignore custom attributes that have a nil name [(#14055)](https://github.com/ManageIQ/manageiq/pull/14055)
+
+- Providers
+  - Containers: Fix creating Kubernetes or OSE with `credentials.auth_key` [(#13317)](https://github.com/ManageIQ/manageiq/pull/13317)
+  - Red Hat Enterprise Virtualization
+    - Disks should be added as 'active' in RHV [(#13913)](https://github.com/ManageIQ/manageiq/pull/13913)
+    - Use the provided database name during metric collection [(#13909)](https://github.com/ManageIQ/manageiq/pull/13909)
+    - Fix authentication of metrics credentials in RHV [(#13981)](https://github.com/ManageIQ/manageiq/pull/13981)
+  - Pluggable: Changing ordering of checks to see if snapshot operations are supported [(#14014)](https://github.com/ManageIQ/manageiq/pull/14014)
+  - Ansible
+    - Add missing authentication require_nested [(#14018)](https://github.com/ManageIQ/manageiq/pull/14018)
+    - Disable SSL verification for embedded Ansible. [(#14078)](https://github.com/ManageIQ/manageiq/pull/14078)
+    - Allow create_in_provider to fail [(#14049)](https://github.com/ManageIQ/manageiq/pull/14049)
+  - Containers
+    - Create a hawkular client for partial endpoints [(#13814)](https://github.com/ManageIQ/manageiq/pull/13814)
+    - Container managers #connect: don't mutate argument [(#13719)](https://github.com/ManageIQ/manageiq/pull/13719)
+
+- User Interface (Classic)
+  - Update spice-html5-bower to 1.6.3 fixing an extra GET .../null request [(#13889)](https://github.com/ManageIQ/manageiq/pull/13889)
+  - Add the Automation Manager submenu key to the permission yaml file [(#13931)](https://github.com/ManageIQ/manageiq/pull/13931)
+  - See also [Manageiq/manageiq-ui-classic changelog](https://github.com/ManageIQ/manageiq-ui-classic/pull/461)
+
+
 ## Unreleased - as of Sprint 54 end 2017-02-13
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+54+Ending+Feb+13%2C+2017%22+label%3Aenhancement)
@@ -22,6 +150,7 @@ All notable changes to this project will be documented in this file.
 - Platform
   - Add View and Modify/Add RBAC features for the Embedded Automation Provider [(#13716)](https://github.com/ManageIQ/manageiq/pull/13716)
   - Reporting: Adding new report and widgets for Containers [(#13055)](https://github.com/ManageIQ/manageiq/pull/13055)
+  - Metrics: Collect metrics for archived containers [(#13686)](https://github.com/ManageIQ/manageiq/pull/13686)
   - See also [Manageiq/manageiq-appliance](https://github.com/ManageIQ/manageiq-appliance)
 
 - Providers
