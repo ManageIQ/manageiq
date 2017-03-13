@@ -377,8 +377,8 @@ module MiqReport::Generator
       self.col_order = (col_order + res_cols).uniq
     end
 
-    only_cols = options[:only] || ((cols || []) + build_cols_from_include(include)).uniq + ['id']
-    self.col_order = ((cols || []) + build_cols_from_include(include)).uniq if col_order.blank?
+    only_cols = options[:only] || cols_for_report(['id'])
+    self.col_order = cols_for_report if col_order.blank?
 
     build_trend_data(objs)
     build_trend_limits(objs)
@@ -427,7 +427,7 @@ module MiqReport::Generator
     result = generate_rows_from_data(get_data_from_report(db_options[:report]))
 
     self.cols ||= []
-    only_cols = options[:only] || (self.cols + generate_cols + build_cols_from_include(include)).uniq
+    only_cols = options[:only] || cols_for_report(generate_cols)
     column_names = result.empty? ? self.cols : result.first.keys
     @table = Ruport::Data::Table.new(:data => result, :column_names => column_names)
     @table.reorder(only_cols) unless @table.data.empty?
@@ -619,6 +619,13 @@ module MiqReport::Generator
       end
       a << row
     end
+  end
+
+  # the columns that are needed for this report.
+  # there may be some columns that are used to derive columns,
+  # so we currently include '*'
+  def cols_for_report(extra_cols = [])
+    ((cols || []) + (extra_cols || []) + build_cols_from_include(include)).uniq
   end
 
   def build_cols_from_include(hash, parent_association = nil)

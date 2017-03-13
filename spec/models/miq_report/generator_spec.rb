@@ -77,4 +77,21 @@ describe MiqReport::Generator do
       end
     end
   end
+
+  describe "#cols_for_report" do
+    it "uses cols" do
+      rpt = MiqReport.new(:db => "VmOrTemplate", :cols => %w(vendor version name))
+      expect(rpt.cols_for_report).to eq(%w(vendor version name))
+    end
+
+    it "uses include" do
+      rpt = MiqReport.new(:db => "VmOrTemplate", :include => {"host" => { "columns" => %w(name hostname guid)}})
+      expect(rpt.cols_for_report).to eq(%w(host.name host.hostname host.guid))
+    end
+
+    it "uses extra_cols" do
+      rpt = MiqReport.new(:db => "VmOrTemplate")
+      expect(rpt.cols_for_report(%w(vendor))).to eq(%w(vendor))
+    end
+  end
 end
