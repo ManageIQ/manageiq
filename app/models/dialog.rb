@@ -88,6 +88,12 @@ class Dialog < ApplicationRecord
     dialog_field_hash.each { |_key, field| field.update_values(values) }
   end
 
+  def init_fields_with_values_for_request(values)
+    dialog_field_hash.each do |_key, field|
+      field.value = values[field.automate_key_name] || values[field.name]
+    end
+  end
+
   def field(name)
     dialog_field_hash[name.to_s]
   end

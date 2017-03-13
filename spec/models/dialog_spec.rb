@@ -355,4 +355,27 @@ describe Dialog do
       expect(ResourceAction.count).to eq(num_actions * 2)
     end
   end
+
+  describe "#init_fields_with_values_for_request" do
+    let(:dialog) { described_class.new(:dialog_tabs => [dialog_tab]) }
+    let(:dialog_tab) { DialogTab.new(:dialog_groups => [dialog_group]) }
+    let(:dialog_group) { DialogGroup.new(:dialog_fields => [dialog_field1]) }
+    let(:dialog_field1) { DialogField.new(:value => "123", :name => "field1") }
+
+    context "when the values use the automate key name" do
+      it "initializes the fields with the given values" do
+        values = {"dialog_field1" => "field 1 new value"}
+        dialog.init_fields_with_values_for_request(values)
+        expect(dialog_field1.value).to eq("field 1 new value")
+      end
+    end
+
+    context "when the values use the regular name" do
+      it "initializes the fields with the given values" do
+        values = {"field1" => "field 1 new value"}
+        dialog.init_fields_with_values_for_request(values)
+        expect(dialog_field1.value).to eq("field 1 new value")
+      end
+    end
+  end
 end
