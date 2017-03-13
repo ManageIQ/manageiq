@@ -14,6 +14,13 @@ module Api
       raise BadRequestError, "Could not create Service Template - #{err}"
     end
 
+    def edit_resource(type, id, data)
+      catalog_item = resource_search(id, type, collection_class(:service_templates))
+      catalog_item.update_catalog_item(data.deep_symbolize_keys, @auth_user)
+    rescue => err
+      raise BadRequestError, "Could not update Service Template - #{err}"
+    end
+
     private
 
     def set_additional_attributes
