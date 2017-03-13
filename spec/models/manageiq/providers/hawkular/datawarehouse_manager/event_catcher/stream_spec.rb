@@ -19,14 +19,14 @@ describe ManageIQ::Providers::Hawkular::DatawarehouseManager::EventCatcher::Stre
         # :record                   => :new_episodes,
       ) do
         result = subject.instance_eval('fetch')
-        expect(result.count).to be == 1
-        expect(result.first[:text]).to eq "This text shows up on the alert"
-        expect(result.first[:tags]).to include(
+        expect(result.count).to be == 2
+        expect(result.last[:text]).to eq "This text shows up on the alerts screen"
+        expect(result.last[:tags]).to include(
           "nodename" => "vm-48-124.eng.lab.tlv.redhat.com",
           "type"     => "node",
           "url"      => "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
         )
-        expect(result.first[:severity]).to eq "HIGH"
+        expect(result.last[:severity]).to eq "HIGH"
       end
     end
   end

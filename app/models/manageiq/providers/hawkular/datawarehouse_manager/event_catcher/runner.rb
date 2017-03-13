@@ -45,12 +45,15 @@ class ManageIQ::Providers::Hawkular::DatawarehouseManager::EventCatcher::Runner 
     event = event.dup
     event.severity = map_severity(event.severity) # gets into event.full_data
     event.url = event.tags[TAG_URL]
+    event.ems_ref = event.id
+    event.resolved = event.status == "RESOLVED"
+    timestamp = event.resolved ? event.lifecycle.last['stime'] : event.ctime
     target = self.class.find_target(event.tags)
     {
       :ems_id              => target.try(:ext_management_system).try(:id),
       :generating_ems_id   => current_ems_id,
       :source              => 'DATAWAREHOUSE',
-      :timestamp           => Time.zone.at(event.ctime / 1000),
+      :timestamp           => Time.zone.at(timestamp / 1000),
       :event_type          => 'datawarehouse_alert',
       :target_type         => target.class.name.underscore,
       :target_id           => target.id,
