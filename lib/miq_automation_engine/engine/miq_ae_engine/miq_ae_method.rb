@@ -221,7 +221,7 @@ module MiqAeEngine
         cls = ::MiqAeClass.find_by_fqname("#{match_ns}/#{klass}")
         aem = ::MiqAeMethod.find_by_class_id_and_name(cls.id, method_name) if cls
         raise  MiqAeException::MethodNotFound, "Embedded method #{inputs[key]} not found" unless aem
-        $miq_ae_logger.info("Loading embedded method #{ns}/#{klass}/#{method_name}")
+        $miq_ae_logger.info("Loading embedded method #{match_ns}/#{klass}/#{method_name}")
         aem.data
       end
     end
