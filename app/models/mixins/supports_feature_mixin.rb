@@ -106,7 +106,7 @@ module SupportsFeatureMixin
     :resize                     => 'Resizing',
     :retire                     => 'Retirement',
     :revert_to_snapshot         => 'Revert Snapshot Operation',
-    :smartstate_analysis        => 'Smartstate Analaysis',
+    :smartstate_analysis        => 'Smartstate Analysis',
     :snapshot_create            => 'Create Snapshot',
     :snapshots                  => 'Snapshots',
     :shutdown_guest             => 'Shutdown Guest Operation',
