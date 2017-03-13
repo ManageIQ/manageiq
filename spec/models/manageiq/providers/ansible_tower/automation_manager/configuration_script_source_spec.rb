@@ -46,7 +46,9 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScri
     it ".create_in_provider_queue" do
       EvmSpecHelper.local_miq_server
       task_id = described_class.create_in_provider_queue(manager.id, params)
-      expect(MiqTask.find(task_id)).to have_attributes(:name => "Creating Ansible Tower Project")
+      expect(MiqTask.find(task_id)).to have_attributes(
+        :name => "Creating ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScriptSource"
+      )
       expect(MiqQueue.first).to have_attributes(
         :args        => [manager.id, params],
         :class_name  => "ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScriptSource",

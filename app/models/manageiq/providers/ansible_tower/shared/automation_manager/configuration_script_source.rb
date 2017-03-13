@@ -8,36 +8,69 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Configurati
         connection.api.projects.create!(params)
       end
 
-      # Get the record in our database
-      # TODO: This needs to be targeted refresh so it doesn't take too long
-      task_ids = EmsRefresh.queue_refresh_task(manager)
-      task_ids.each { |tid| MiqTask.wait_for_taskid(tid) }
-
+      refresh(manager)
       find_by!(:manager_id => manager.id, :manager_ref => project.id)
     end
 
     def create_in_provider_queue(manager_id, params)
-      task_opts = {
-        :action => "Creating Ansible Tower Project",
-        :userid => "system"
-      }
-
       manager = ExtManagementSystem.find(manager_id)
-
-      queue_opts = {
-        :args        => [manager_id, params],
-        :class_name  => "ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScriptSource",
-        :method_name => "create_in_provider",
-        :priority    => MiqQueue::HIGH_PRIORITY,
-        :role        => "ems_operations",
-        :zone        => manager.my_zone
-      }
-
-      MiqTask.generic_action_with_callback(task_opts, queue_opts)
+      queue(manager.my_zone, nil, "create_in_provider", [manager_id, params], "Creating #{name}")
     end
 
     def provider_object(connection = nil)
       (connection || connection_source.connect).api.projects.find(manager_ref)
     end
+
+    private
+
+    def refresh(manager)
+      # Get the record in our database
+      # TODO: This needs to be targeted refresh so it doesn't take too long
+      task_ids = EmsRefresh.queue_refresh_task(manager)
+      task_ids.each { |tid| MiqTask.wait_for_taskid(tid) }
+    end
+
+    def queue(zone, instance_id, method_name, args, action)
+      task_opts = {
+        :action => action,
+        :userid => "system"
+      }
+
+      queue_opts = {
+        :args        => args,
+        :class_name  => name,
+        :method_name => method_name,
+        :priority    => MiqQueue::HIGH_PRIORITY,
+        :role        => "ems_operations",
+        :zone        => zone
+      }
+      queue_opts[:instance_id] = instance_id if instance_id
+      MiqTask.generic_action_with_callback(task_opts, queue_opts)
+    end
+  end
+
+  def update_in_provider(params)
+    params.delete(:task_id) # in case this is being called through update_in_provider_queue which will stick in a :task_id
+    manager.with_provider_connection do |connection|
+      connection.api.projects.find(manager_ref).update_attributes!(params)
+    end
+    self.class.send('refresh', manager)
+    reload!
+  end
+
+  def update_in_provider_queue(params)
+    self.class.send('queue', manager.my_zone, id, "update_in_provider", [params], "Updating #{self.class.name}")
+  end
+
+  def delete_in_provider
+    params.delete(:task_id) # in case this is being called through update_in_provider_queue which will stick in a :task_id
+    manager.with_provider_connection do |connection|
+      connection.api.projects.find(manager_ref).destroy!
+    end
+    self.class.send('refresh', manager)
+  end
+
+  def delete_in_provider_queue
+    self.class.send('queue', manager.my_zone, id, "delete_in_provider", [], "Deleting #{self.class.name}")
   end
 end
