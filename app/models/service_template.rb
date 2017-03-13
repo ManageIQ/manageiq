@@ -458,8 +458,9 @@ class ServiceTemplate < ApplicationRecord
     ]
   end
 
-  def update_from_options(options)
-    update_attributes!(options.except(:config_info).merge(:options => { :config_info => options[:config_info] }))
+  def update_from_options(params)
+    options[:config_info] = params[:config_info]
+    update_attributes!(params.except(:config_info))
   end
 
   def provision_workflow(user, options = nil)
