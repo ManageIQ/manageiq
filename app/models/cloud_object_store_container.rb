@@ -16,4 +16,34 @@ class CloudObjectStoreContainer < ApplicationRecord
 
   supports_not :delete, :reason => N_("Delete operation is not supported.")
   supports_not :cloud_object_store_container_clear
+
+  def self.cloud_object_store_container_create_queue(userid, ext_management_system, options = {})
+    task_opts = {
+      :action => "creating Cloud Object Store Container for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => "CloudObjectStoreContainer",
+      :method_name => 'cloud_object_store_container_create',
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => [ext_management_system.id, options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def self.cloud_object_store_container_create(ems_id, options)
+    raise ArgumentError, _("ems_id cannot be nil") if ems_id.nil?
+    ext_management_system = ExtManagementSystem.find(ems_id)
+    raise ArgumentError, _("ext_management_system cannot be found") if ext_management_system.nil?
+
+    klass = ext_management_system.class::CloudObjectStoreContainer
+    created_container = klass.raw_cloud_object_store_container_create(ext_management_system, options)
+
+    klass.create(created_container)
+  end
+
+  def self.raw_cloud_object_store_container_create(_ext_management_system, _options)
+    raise NotImplementedError, _("must be implemented in subclass")
+  end
 end
