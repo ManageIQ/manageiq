@@ -4,18 +4,15 @@ class MiqAlertStatus < ApplicationRecord
   belongs_to :miq_alert
   belongs_to :resource, :polymorphic => true
   belongs_to :ext_management_system
+  belongs_to :assignee, :class_name => 'User'
   has_many :miq_alert_status_actions, -> { order "created_at" }, :dependent => :destroy
   virtual_column :assignee, :type => :string
   virtual_column :hidden, :type => :boolean
 
   validates :severity, :acceptance => { :accept => SEVERITY_LEVELS }
 
-  def assignee
-    miq_alert_status_actions.where(:action_type => %w(assign unassign)).last.try(:assignee)
-  end
-
   def assigned?
-    assignee.present?
+    assignee_id.present?
   end
 
   def hidden?
