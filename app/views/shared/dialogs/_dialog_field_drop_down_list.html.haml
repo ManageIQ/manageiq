@@ -35,4 +35,4 @@
       });
 
 - else
-  = h(field.values.detect { |k, _v| [k, k.to_s].include?(wf.value(field.name)) }.try(:last) || wf.value(field.name))
+  = h(field.value.nil? ? "<None>" : field.value)

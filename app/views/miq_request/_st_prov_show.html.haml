@@ -3,7 +3,7 @@
   - ra = st.resource_actions.find_by_action('Provision') if st
   - if ra && ra.dialog
     - values = @miq_request.options[:dialog]
-    - opts = {}
+    - opts = {:display_view_only => true}
     %fieldset
       %h3
         = _("Dialog Options")
