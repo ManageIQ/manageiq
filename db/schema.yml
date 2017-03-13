@@ -4858,7 +4858,6 @@ miq_alert_statuses:
 - result
 - url
 - severity
-- ancestry
 - acknowledged
 - ems_id
 - description
