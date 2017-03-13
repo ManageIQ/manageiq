@@ -93,5 +93,19 @@ describe MiqReport::Generator do
       rpt = MiqReport.new(:db => "VmOrTemplate")
       expect(rpt.cols_for_report(%w(vendor))).to eq(%w(vendor))
     end
+
+    it "derives include" do
+      rpt = MiqReport.new(:db => "VmOrTemplate", :cols => %w(vendor), :col_order =>%w(host.name vendor))
+      expect(rpt.cols_for_report).to match_array(%w(vendor host.name))
+    end
+
+    it "works with col, col_order and include together" do
+      rpt = MiqReport.new(:db        => "VmOrTemplate",
+                          :cols      => %w(vendor),
+                          :col_order => %w(host.name host.hostname vendor),
+                          :include   => {"host" => { "columns" => %w(name hostname)}}
+                         )
+      expect(rpt.cols_for_report).to match_array(%w(vendor host.name host.hostname))
+    end
   end
 end

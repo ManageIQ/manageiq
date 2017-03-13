@@ -625,7 +625,7 @@ module MiqReport::Generator
   # there may be some columns that are used to derive columns,
   # so we currently include '*'
   def cols_for_report(extra_cols = [])
-    ((cols || []) + (extra_cols || []) + build_cols_from_include(include)).uniq
+    ((cols || []) + (col_order || []) + (extra_cols || []) + build_cols_from_include(include)).uniq
   end
 
   def build_cols_from_include(hash, parent_association = nil)
