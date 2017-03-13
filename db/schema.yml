@@ -4863,6 +4863,7 @@ miq_alert_statuses:
 - ems_id
 - description
 - resolved
+- event_ems_ref
 miq_alerts:
 - id
 - guid
