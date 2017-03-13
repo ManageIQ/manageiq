@@ -68,52 +68,79 @@ RSpec.describe 'Configuration Script Payloads API' do
   end
 
   describe 'POST /api/configuration_script_payloads/:id/authentications' do
-    it 'requires a type when creating a new authentication' do
-      ems = FactoryGirl.create(:ext_management_system)
-      playbook = FactoryGirl.create(:configuration_script_payload, :manager => ems)
-      api_basic_authorize subcollection_action_identifier(:configuration_script_payloads, :authentications, :create)
-
-      run_post("#{configuration_script_payloads_url(playbook.id)}/authentications", :name => 'foo')
-
-      expected = {
-        'error' => a_hash_including(
-          'message' => a_string_including('must supply a type')
-        )
+    let(:provider) { FactoryGirl.create(:provider_ansible_tower, :with_authentication) }
+    let(:manager) { provider.managers.first }
+    let(:playbook) { FactoryGirl.create(:configuration_script_payload, :manager => manager) }
+    let(:params) do
+      {
+        :action           => 'create',
+        :description      => "Description",
+        :name             => "A Credential",
+        :related          => {},
+        :type             => 'ManageIQ::Providers::AnsibleTower::AutomationManager::Credential',
+        :manager_resource => { :href => providers_url(manager.id) }
       }
-      expect(response).to have_http_status(:bad_request)
-      expect(response.parsed_body).to include(expected)
     end
 
     it 'requires that the type support create_in_provider_queue' do
-      ems = FactoryGirl.create(:ext_management_system)
-      playbook = FactoryGirl.create(:configuration_script_payload, :manager => ems)
       api_basic_authorize subcollection_action_identifier(:configuration_script_payloads, :authentications, :create)
 
       run_post("#{configuration_script_payloads_url(playbook.id)}/authentications", :type => 'Authentication')
 
       expected = {
-        'error' => a_hash_including(
-          'message' => a_string_including('type not currently supported')
-        )
-      }
-      expect(response).to have_http_status(:bad_request)
-      expect(response.parsed_body).to include(expected)
-    end
-
-    it 'creates a new authentication' do
-      ems = FactoryGirl.create(:ext_management_system)
-      playbook = FactoryGirl.create(:configuration_script_payload, :manager => ems)
-      auth = FactoryGirl.create(:authentication)
-      expect(Authentication).to receive(:create_in_provider_queue).with(ems.id, 'name' => auth.name).and_return(auth)
-      api_basic_authorize subcollection_action_identifier(:configuration_script_payloads, :authentications, :create)
-
-      run_post("#{configuration_script_payloads_url(playbook.id)}/authentications", :type => 'Authentication', :name => auth.name)
-
-      expected = {
-        'results' => [a_hash_including('id' => auth.id)]
+        'results' => [
+          { 'success' => false, 'message' => 'type not currently supported' }
+        ]
       }
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)
+    end
+
+    it 'creates a new authentication with an appropriate role' do
+      api_basic_authorize subcollection_action_identifier(:configuration_script_payloads, :authentications, :create)
+
+      run_post("#{configuration_script_payloads_url(playbook.id)}/authentications", params)
+
+      expected = {
+        'results' => [a_hash_including(
+          'success' => true,
+          'message' => 'Creating Authentication',
+          'task_id' => a_kind_of(Numeric)
+        )]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'can create multiple authentications with an appropriate role' do
+      api_basic_authorize subcollection_action_identifier(:configuration_script_payloads, :authentications, :create)
+
+      run_post("#{configuration_script_payloads_url(playbook.id)}/authentications", :resources => [params, params])
+
+      expected = {
+        'results' => [
+          a_hash_including(
+            'success' => true,
+            'message' => 'Creating Authentication',
+            'task_id' => a_kind_of(Numeric)
+          ),
+          a_hash_including(
+            'success' => true,
+            'message' => 'Creating Authentication',
+            'task_id' => a_kind_of(Numeric)
+          )
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'cannot create an authentication without appropriate role' do
+      api_basic_authorize
+
+      run_post("#{configuration_script_payloads_url(playbook.id)}/authentications", :resources => [params])
+
+      expect(response).to have_http_status(:forbidden)
     end
   end
 

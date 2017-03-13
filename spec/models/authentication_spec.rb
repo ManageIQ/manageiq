@@ -57,6 +57,10 @@ describe Authentication do
       expect(described_class.class_from_request_data({})).to eq(described_class)
     end
 
+    it 'returns self if Authentication is specified' do
+      expect(described_class.class_from_request_data('type' => 'Authentication')).to eq(described_class)
+    end
+
     it 'returns the specified type' do
       data = {
         'type' => 'ManageIQ::Providers::EmbeddedAnsible::AutomationManager::MachineCredential'

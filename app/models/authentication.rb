@@ -119,11 +119,12 @@ class Authentication < ApplicationRecord
   end
 
   def self.class_from_request_data(data)
-    return self unless data.key?('type')
-    data['type'].constantize.tap do |klass|
-      return self if klass == self
-      raise _('Must be an Authentication type') unless descendants.include?(klass)
+    if !data.key?('type') || data['type'] == to_s
+      return self
     end
+    type = descendants.find { |klass| klass.name == data['type'] }
+    raise _('Must be an Authentication type') unless type
+    type
   end
 
   private

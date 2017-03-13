@@ -10,13 +10,14 @@ module Api
     end
 
     def create_resource(_type, _id, data)
-      validate_auth_attrs(data)
-      klass = ::Authentication.class_from_request_data(data)
+      attrs = validate_auth_attrs(data)
+      klass = ::Authentication.class_from_request_data(attrs)
       # TODO: Temporary validation - remove
       raise 'type not currently supported' unless klass.respond_to?(:create_in_provider_queue)
-      klass.create_in_provider_queue(parse_id(data['manager'], :providers), data.except('type', 'manager'))
+      task_id = klass.create_in_provider_queue(attrs['manager_resource'], attrs.except('type', 'manager_resource'))
+      action_result(true, 'Creating Authentication', :task_id => task_id)
     rescue => err
-      raise BadRequestError, "Cannot create Authentication - #{err}"
+      action_result(false, err.to_s)
     end
 
     def delete_resource(type, id, _data = {})
@@ -45,8 +46,14 @@ module Api
     end
 
     def validate_auth_attrs(data)
-      raise 'must supply type' unless data['type']
-      raise 'must supply a manager' unless data['manager']
+      raise 'must supply a manager resource' unless data['manager_resource']
+      attrs = data.dup
+      attrs['manager_resource'] = if data['manager_resource'].key?('href')
+                                    parse_href(data['manager_resource']['href']).last
+                                  elsif data['manager_resource'].key?('id')
+                                    data['manager_resource']['id']
+                                  end
+      attrs
     end
   end
 end

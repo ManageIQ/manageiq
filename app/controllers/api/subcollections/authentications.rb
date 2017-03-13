@@ -8,9 +8,10 @@ module Api
       def authentications_create_resource(parent, _type, _id, data)
         klass = ::Authentication.class_from_request_data(data)
         raise 'type not currently supported' unless klass.respond_to?(:create_in_provider_queue)
-        klass.create_in_provider_queue(parent.manager_id, data.except('type'))
+        task_id = klass.create_in_provider_queue(parent.manager_id, data.except('type'))
+        action_result(true, 'Creating Authentication', :task_id => task_id)
       rescue => err
-        raise BadRequestError, "Cannot create Authentication - #{err}"
+        action_result(false, err.to_s)
       end
     end
   end
