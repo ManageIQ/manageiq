@@ -6143,6 +6143,7 @@ physical_servers:
 - model
 - serial_number
 - field_replaceable_unit
+- raw_power_state
 pictures:
 - id
 - resource_id
