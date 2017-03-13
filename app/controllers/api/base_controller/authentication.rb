@@ -56,7 +56,8 @@ module Api
 
       def user_settings
         {
-          :locale => I18n.locale.to_s.sub('-', '_'),
+          :locale                     => I18n.locale.to_s.sub('-', '_'),
+          :asynchronous_notifications => ::Settings.server.asynchronous_notifications,
         }.merge(User.current_user.settings)
       end
 
