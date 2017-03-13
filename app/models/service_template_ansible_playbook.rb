@@ -53,6 +53,13 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     end
   end
 
+  def self.manager_valid?(manager)
+    machine_credential = 'ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential'
+    manager.configuration_script_sources.any? &&
+      manager.configuration_script_payloads.any? &&
+      manager.credentials.where(:type => machine_credential).any?
+  end
+
   def self.prepare_job_template_and_dialog(action, service_name, description, config_info)
     job_template = create_job_template("#{service_name}_#{action}", description, config_info[action])
     config_info[action][:configuration_template] = job_template
