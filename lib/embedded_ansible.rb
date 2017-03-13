@@ -43,13 +43,13 @@ class EmbeddedAnsible
 
   def self.configure
     configure_secret_key
-    run_setup_script(playbook_extra_variables.merge(:k => CONFIGURE_EXCLUDE_TAGS))
+    run_setup_script(CONFIGURE_EXCLUDE_TAGS)
     stop
   end
 
   def self.start
     configure_secret_key
-    run_setup_script(playbook_extra_variables.merge(:k => START_EXCLUDE_TAGS))
+    run_setup_script(START_EXCLUDE_TAGS)
   end
 
   def self.stop
@@ -64,19 +64,21 @@ class EmbeddedAnsible
     AwesomeSpawn.run!("source /etc/sysconfig/ansible-tower; echo $TOWER_SERVICES").output.split
   end
 
-  def self.playbook_extra_variables
-    json_value = {
+  def self.run_setup_script(exclude_tags)
+    json_extra_vars = {
       :minimum_var_space => 0,
       :http_port         => HTTP_PORT,
       :https_port        => HTTPS_PORT
     }.to_json
-    {:e => json_value}
-  end
-  private_class_method :playbook_extra_variables
 
-  def self.run_setup_script(params)
     with_inventory_file do |inventory_file_path|
-      AwesomeSpawn.run!(SETUP_SCRIPT, :params => params.merge(:i => inventory_file_path))
+      params = {
+        "--"         => nil,
+        :extra_vars= => json_extra_vars,
+        :inventory=  => inventory_file_path,
+        :skip_tags=  => exclude_tags
+      }
+      AwesomeSpawn.run!(SETUP_SCRIPT, :params => params)
     end
   end
   private_class_method :run_setup_script
