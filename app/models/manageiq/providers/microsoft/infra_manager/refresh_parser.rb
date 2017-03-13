@@ -215,7 +215,7 @@ module ManageIQ::Providers::Microsoft
         :storages         => process_vm_storages(vm)
       }
 
-      new_result[:location] = vm['VMCPath'].empty? ? 'unknown' : vm['VMCPath'].sub(DRIVE_LETTER, "").strip
+      new_result[:location] = vm['VMCPath'].blank? ? 'unknown' : vm['VMCPath'].sub(DRIVE_LETTER, "").strip
       return uid, new_result
     end
 
