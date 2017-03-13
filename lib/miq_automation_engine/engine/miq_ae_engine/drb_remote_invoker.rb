@@ -8,11 +8,11 @@ module MiqAeEngine
       @num_methods = 0
     end
 
-    def with_server(inputs, body, method_name)
+    def with_server(inputs, bodies, method_name)
       setup if num_methods == 0
       self.num_methods += 1
       svc = MiqAeMethodService::MiqAeService.new(@workspace, inputs)
-      yield build_method_content(body, method_name, svc.object_id)
+      yield build_method_content(bodies, method_name, svc.object_id)
     ensure
       svc.destroy # Reset inputs to empty to avoid storing object references
       self.num_methods -= 1
@@ -67,11 +67,11 @@ module MiqAeEngine
 
     # code building
 
-    def build_method_content(body, method_name, miq_ae_service_token)
+    def build_method_content(bodies, method_name, miq_ae_service_token)
       [
         dynamic_preamble(method_name, miq_ae_service_token),
         RUBY_METHOD_PREAMBLE,
-        body,
+        bodies.flatten,
         RUBY_METHOD_POSTSCRIPT
       ].join("\n")
     end

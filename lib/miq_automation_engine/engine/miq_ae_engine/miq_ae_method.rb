@@ -154,7 +154,8 @@ module MiqAeEngine
     def self.invoke_inline_ruby(aem, obj, inputs)
       if ruby_method_runnable?(aem)
         obj.workspace.invoker ||= MiqAeEngine::DrbRemoteInvoker.new(obj.workspace)
-        obj.workspace.invoker.with_server(inputs, aem.data, aem.fqname) do |code|
+        bodies = get_embeds(obj.workspace, inputs) << aem.data
+        obj.workspace.invoker.with_server(inputs, bodies, aem.fqname) do |code|
           $miq_ae_logger.info("<AEMethod [#{aem.fqname}]> Starting ")
           rc, msg = run_ruby_method(code)
           $miq_ae_logger.info("<AEMethod [#{aem.fqname}]> Ending")
@@ -211,5 +212,27 @@ module MiqAeEngine
       threads.each(&:exit)
     end
     private_class_method :cleanup
+
+    def self.get_embeds(workspace, inputs)
+      keys = inputs.keys.select { |key| key.to_s.match(/^embed\d+/i) }.sort
+      keys.collect do |key|
+        method_name, klass, ns = get_embed_method_name(inputs[key])
+        match_ns = workspace.overlay_method(ns, klass, method_name)
+        cls = ::MiqAeClass.find_by_fqname("#{match_ns}/#{klass}")
+        aem = ::MiqAeMethod.find_by_class_id_and_name(cls.id, method_name) if cls
+        raise  MiqAeException::MethodNotFound, "Embedded method #{inputs[key]} not found" unless aem
+        $miq_ae_logger.info("Loading embedded method #{ns}/#{klass}/#{method_name}")
+        aem.data
+      end
+    end
+    private_class_method :get_embeds
+
+    def self.get_embed_method_name(fqname)
+      path =  MiqAeUri.path(fqname)
+      parts = path.split('/')
+      parts.shift # Remove the leading blank piece
+      return parts.pop, parts.pop, parts.join('/')
+    end
+    private_class_method :get_embed_method_name
   end
 end
