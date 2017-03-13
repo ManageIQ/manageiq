@@ -89,9 +89,10 @@ gem "secure_headers",                 "~>3.0.0"
 gem "simple-rss",                     "~>1.3.1",       :require => false
 gem "snmp",                           "~>1.2.0",       :require => false
 gem "sshkey",                         "~>1.8.0",       :require => false
+gem "surro-gate",                     "~>0.2.2"
 gem "thin",                           "~>1.7.0",       :require => false
 gem "uglifier",                       "~>3.0.0"
-gem "websocket-driver",               "~>0.6.3"
+gem "websocket",                      "~>1.2.4"
 
 # Modified gems (forked on Github)
 gem "foreman_api_client",             ">=0.1.0",   :require => false, :git => "https://github.com/ManageIQ/foreman_api_client.git", :branch => "master"

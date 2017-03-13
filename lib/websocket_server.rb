@@ -1,95 +1,84 @@
 class WebsocketServer
-  attr_accessor :logger
-
-  Pairing = Struct.new(:is_ws, :proxy)
+  attr_reader :logger
 
   def initialize(options = {})
     @logger = options.fetch(:logger, $websocket_log)
-    logger.info('Initializing websocket worker!')
-    @pairing = {}
-    @sockets = Concurrent::Array.new
-
-    @transmitter = Thread.new do
-      loop do
-        begin
-          reads, writes, errors = IO.select(@sockets, @sockets, @sockets, 1)
-        rescue IOError
-          @sockets.select(&:closed?).each { |err| cleanup(err) }
-        else
-          Array(errors).each { |err| cleanup(err) }
-        end
-
-        # Skip this loop if we can't do anything
-        if Array(reads).empty? || writes.empty? || errors.any?
-          sleep(1) if @sockets.empty?
-          next
-        end
-
-        # Do the data transfers
-        reads.each do |socket|
-          begin
-            @pairing[socket].proxy.transmit(writes, @pairing[socket].is_ws)
-          rescue => error
-            cleanup(socket, error)
-          end
-        end
-      end
-    end
+    @logger.info('Initializing websocket worker!')
+    @proxy = SurroGate.new(@logger)
   end
 
   def call(env)
-    if WebSocket::Driver.websocket?(env) && same_origin_as_host?(env)
+    driver = WebSocket::Handshake::Server.new(:protocols => %w(binary))
+    driver.from_rack(env)
+    task = parse_request(env, driver)
 
-      # ActionCable causes live reload crashes
-      if env['REQUEST_URI'] =~ %r{^/ws/notifications}
-        ActionCable.server.call(env)
-      else
-        exp = %r{^/ws/console/([a-zA-Z0-9]+)/?$}.match(env['REQUEST_URI'])
-        return not_found if exp.nil?
-        init_proxy(env, exp[1])
-      end
-
-      [-1, {}, []]
+    case task
+    when :error
+      @logger.info("Invalid WebSocket request from: #{env['REMOTE_ADDR']}")
+      return not_found
+    when :cable
+      @logger.info("Forwarding request to ActionCable from: #{env['REMOTE_ADDR']}")
+      return ActionCable.server.call(env)
     else
-      logger.info("Invalid websocket request from: #{env['REMOTE_ADDR']}")
-      not_found
+      @logger.info("Remote console request from: #{env['REMOTE_ADDR']}")
+      return init_proxy(env, task, driver)
     end
-  end
-
-  def healthy?
-    %w(run sleep).include?(@transmitter.status)
   end
 
   private
 
-  def init_proxy(env, url)
-    console = SystemConsole.find_by!(:url_secret => url)
-    proxy = WebsocketProxy.new(env, console)
-    return proxy.cleanup if proxy.error
-    logger.info("Starting websocket proxy for VM #{console.vm_id}")
-    proxy.start
-
-    # Release the connection because one SPICE console can open multiple TCP connections
+  def init_proxy(env, url_secret, handshake)
+    # Retrieve the parameters of the console
+    console = SystemConsole.find_by!(:url_secret => url_secret)
+    # Release the DB connection
     ActiveRecord::Base.connection_pool.release_connection
 
-    # Get the descriptors and pass them to the worker thread
-    ws, sock = proxy.descriptors
-    @pairing.merge!(ws => Pairing.new(true, proxy), sock => Pairing.new(false, proxy))
-    @sockets.push(ws, sock)
-  end
+    # Hijack the socket from the Rack middleware
+    ws = env['rack.hijack'].call
+    # Send back the handshake response
+    ws.write_nonblock(handshake.to_s)
+    # Decorate the socket for seamless WebSocket en/decapsulation
+    ws = WebsocketDecorator.decorate(ws, handshake.version)
+    # Set up the socket client for the proxy
+    sock = TCPSocket.open(console.host_name, console.port)
+    # Optionally swap the socket with an SSL-enabled one
+    sock = init_ssl(sock) if console.ssl
 
-  def cleanup(socket, error = nil)
-    return unless @pairing.include?(socket)
-
-    if error
-      "#{error.class} for #{@pairing[socket].proxy.vm_id}: #{error.message}\n#{error.backtrace.join("\n")}"
-    else
-      logger.info("Closing websocket proxy for VM #{@pairing[socket].proxy.vm_id}")
+    # Pass the sockets to SurroGate
+    @proxy.push(sock, ws) do
+      @logger.info("Closing connection between: #{ws} <-> #{sock}")
+      console.destroy_or_mark unless console.destroyed?
     end
 
-    @pairing[socket].proxy.cleanup
-    @sockets.delete(socket)
-    @pairing.delete(socket)
+    # Return with an empty structure for Rack
+    [-1, {}, []]
+  rescue => ex
+    # Log the error message
+    @logger.error(ex.message)
+    # Close both connections
+    ws.close unless ws.nil?
+    sock.close unless sock.nil?
+    # Remove the DB record
+    console.destroy_or_mark unless console.nil? || console.destroyed?
+    return not_found
+  end
+
+  def init_ssl(socket)
+    context = OpenSSL::SSL::SSLContext.new
+    context.cert = OpenSSL::X509::Certificate.new(File.open('certs/server.cer'))
+    context.key = OpenSSL::PKey::RSA.new(File.open('certs/server.cer.key'))
+    context.ssl_version = :SSLv23
+    context.verify_depth = OpenSSL::SSL::VERIFY_NONE
+    sslsock = OpenSSL::SSL::SSLSocket.new(socket, context)
+    sslsock.sync_close = true
+    sslsock
+  end
+
+  def parse_request(env, driver)
+    return :error unless driver.valid? && driver.finished? && same_origin_as_host?(env)
+    return :cable if env['REQUEST_URI'] =~ %r{^/ws/notifications}
+    exp = %r{^/ws/console/([a-zA-Z0-9]+)/?$}.match(env['REQUEST_URI'])
+    exp.nil? ? :error : exp[1]
   end
 
   def not_found
