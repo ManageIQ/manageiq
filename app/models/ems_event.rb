@@ -181,6 +181,10 @@ class EmsEvent < EventStream
     ]
   end
 
+  def always_evaluate_alerts?
+    event_type == "datawarehouse_alert"
+  end
+
   def first_chained_event
     @first_chained_event ||= EmsEvent.first_chained_event(ems_id, chain_id) || self
   end
