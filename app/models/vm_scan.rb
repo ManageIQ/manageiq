@@ -101,8 +101,7 @@ class VmScan < Job
          vm.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm)
         return unless create_snapshot(vm)
       elsif vm.require_snapshot_for_scan?
-        host  = Object.const_get(agent_class).find(agent_id)
-        proxy = host.respond_to?("miq_proxy") ? host.miq_proxy : nil
+        proxy = MiqServer.find(agent_id)
 
         # Check if the broker is available
         if MiqServer.use_broker_for_embedded_proxy? && !MiqVimBrokerWorker.available?
@@ -156,7 +155,7 @@ class VmScan < Job
     _log.info "Enter"
 
     begin
-      host = Object.const_get(agent_class).find(agent_id)
+      host = MiqServer.find(agent_id)
       vm = VmOrTemplate.find(target_id)
       # Send down metadata to allow the host to make decisions.
       scan_args = create_scan_args(vm)
@@ -173,7 +172,7 @@ class VmScan < Job
         end
       end
 
-      _log.info "[#{host.name}] communicates with [#{scan_ci_type}:#{ems_list[scan_ci_type][:hostname]}(#{ems_list[scan_ci_type][:address]})] to scan vm [#{vm.name}]" if agent_class == "MiqServer" && !ems_list[scan_ci_type].nil?
+      _log.info "[#{host.name}] communicates with [#{scan_ci_type}:#{ems_list[scan_ci_type][:hostname]}(#{ems_list[scan_ci_type][:address]})] to scan vm [#{vm.name}]" unless ems_list[scan_ci_type].nil?
       vm.scan_metadata(options[:categories], "taskid" => jobid, "host" => host, "args" => [YAML.dump(scan_args)])
     rescue Timeout::Error
       message = "timed out attempting to scan, aborting"
@@ -272,7 +271,7 @@ class VmScan < Job
     _log.info "Enter"
 
     begin
-      host = Object.const_get(agent_class).find(agent_id)
+      host = MiqServer.find(agent_id)
       vm = VmOrTemplate.find(target_id)
       vm.sync_metadata(options[:categories],
                        "taskid" => jobid,

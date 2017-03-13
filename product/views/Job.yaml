@@ -27,7 +27,6 @@ cols:
 - message
 - name
 - userid
-- agent_name
 - agent_message
 - target_class
 - target_id
@@ -44,7 +43,6 @@ col_order:
 - message
 - name
 - userid
-- agent_name
 - agent_message
 
 # Column titles, in order
@@ -56,7 +54,6 @@ headers:
 - Message
 - Task Name
 - User
-- Owner
 - Owner Message
 
 # Condition(s) string for the SQL query
