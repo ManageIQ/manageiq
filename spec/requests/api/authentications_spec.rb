@@ -172,16 +172,37 @@ RSpec.describe 'Authentications API' do
 
       run_options(authentications_url)
 
-      additional_options = Authentication.descendants.each_with_object({}) do |klass, fields|
-        next unless defined? klass::API_OPTIONS
-        klass::API_OPTIONS.tap do |options|
-          options[:attributes].each do |_k, v|
-            v[:type] = v[:type].to_s if v[:type]
-          end
-          fields[klass.name] = options
-        end
-      end.deep_stringify_keys
-      expect_options_results(:authentications, 'credential_types' => additional_options)
+      additional_options = {
+        'credential_types' => {
+          'ansible_tower_credentials'    => build_ansible_tower_creds,
+          'embedded_ansible_credentials' => build_embedded_ansible_creds
+        }
+      }
+      expect_options_results(:authentications, additional_options)
     end
+  end
+
+  def build_ansible_tower_creds
+    ManageIQ::Providers::AnsibleTower::AutomationManager::Credential.descendants.each_with_object({}) do |klass, fields|
+      next unless defined? klass::API_OPTIONS
+      klass::API_OPTIONS.tap do |options|
+        options[:attributes].each do |_k, v|
+          v[:type] = v[:type].to_s if v[:type]
+        end
+        fields[klass.name] = options
+      end
+    end.deep_stringify_keys
+  end
+
+  def build_embedded_ansible_creds
+    ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential.descendants.each_with_object({}) do |klass, fields|
+      next unless defined? klass::API_OPTIONS
+      klass::API_OPTIONS.tap do |options|
+        options[:attributes].each do |_k, v|
+          v[:type] = v[:type].to_s if v[:type]
+        end
+        fields[klass.name] = options
+      end
+    end.deep_stringify_keys
   end
 end
