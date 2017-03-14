@@ -16,9 +16,9 @@ describe Share do
   def create_share(user, resource, features)
     tenant = FactoryGirl.create(:tenant)
     ResourceSharer.new(
-      :user => user,
+      :user     => user,
       :resource => resource,
-      :tenants => [tenant],
+      :tenants  => [tenant],
       :features => features
     ).share
     tenant.shares.first
