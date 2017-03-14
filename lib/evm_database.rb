@@ -44,16 +44,18 @@ class EvmDatabase
   end
 
   def self.seed_primordial
-    if ENV['SKIP_PRIMORDIAL_SEED'] && MiqDatabase.count > 0
-      puts "** Primordial seedings is skipped."
-      puts "** Unset SKIP_PRIMORDIAL_SEED to re-enable"
+    if ENV['SKIP_SEEDING'] && MiqDatabase.count > 0
+      puts "** seedings is skipped on startup."
+      puts "** Unset SKIP_SEEDING to re-enable"
     else
       seed(PRIMORDIAL_CLASSES)
     end
   end
 
   def self.seed_last
-    seed(seedable_model_class_names - PRIMORDIAL_CLASSES)
+    if ENV['SKIP_SEEDING'] && MiqDatabase.count > 0
+      seed(seedable_model_class_names - PRIMORDIAL_CLASSES)
+    end
   end
 
   def self.seed(classes = nil, exclude_list = [])
