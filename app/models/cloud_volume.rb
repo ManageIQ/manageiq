@@ -23,10 +23,20 @@ class CloudVolume < ApplicationRecord
     left_outer_joins(:attachments).where("disks.backing_id" => nil)
   end
 
-  def self.class_by_ems(ext_management_system)
+  def self.class_by_ems(ems)
     # TODO(lsmola) taken from OrchesTration stacks, correct approach should be to have a factory on ExtManagementSystem
     # side, that would return correct class for each provider
-    ext_management_system && ext_management_system.class::CloudVolume
+
+    # If no EMS was given, fallback to nil
+    return nil unless ems
+
+    klass = ems.class::CloudVolume
+    # Return it if this is the actuall class (different from base CloudVolume)
+    return klass unless klass.name == 'CloudVolume'
+    # Look for the parent manager if it provides CloudVolume
+    return class_by_ems(ems.parent_manager) if ems.respond_to?(:parent_manager) && !ems.parent_manager.nil?
+    # Fallback to base class
+    CloudVolume
   end
 
   def self.create_volume_queue(userid, ext_management_system, options = {})
