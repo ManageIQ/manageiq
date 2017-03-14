@@ -1,12 +1,12 @@
 require 'ansible_tower_client'
 
 describe ManageIQ::Providers::AnsibleTower::AutomationManager::Credential do
+  let(:finished_task) { FactoryGirl.create(:miq_task, :state => "Finished") }
+  let(:manager)       { FactoryGirl.create(:provider_ansible_tower, :with_authentication).managers.first }
+  let(:atc)           { double("AnsibleTowerClient::Connection", :api => api) }
+  let(:api)           { double("AnsibleTowerClient::Api", :credentials => credentials) }
+
   context "Create through API" do
-    let(:finished_task) { FactoryGirl.create(:miq_task, :state => "Finished") }
-    let(:provider)      { FactoryGirl.create(:provider_ansible_tower, :with_authentication) }
-    let(:manager)       { provider.managers.first }
-    let(:atc)           { double("AnsibleTowerClient::Connection", :api => api) }
-    let(:api)           { double("AnsibleTowerClient::Api", :credentials => credentials) }
     let(:credentials)   { double("AnsibleTowerClient::Collection", :create! => credential) }
     let(:credential)    { AnsibleTowerClient::Credential.new(nil, credential_json) }
 
@@ -42,7 +42,6 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Credential do
     end
 
     it ".create_in_provider_queue" do
-      EvmSpecHelper.local_miq_server
       task_id = described_class.create_in_provider_queue(manager.id, params)
       expect(MiqTask.find(task_id)).to have_attributes(:name => "Creating ManageIQ::Providers::AnsibleTower::AutomationManager::Credential")
       expect(MiqQueue.first).to have_attributes(
@@ -60,6 +59,58 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Credential do
         :resource    => manager,
         :manager_ref => credential.id.to_s,
         :name        => credential.name,
+      )
+    end
+  end
+
+  context "Delete through API" do
+    let(:credentials)   { double("AnsibleTowerClient::Collection", :find => credential) }
+    let(:credential)    { double("AnsibleTowerClient::Credential", :destroy! => nil, :id => 1) }
+    let(:ansible_cred)  { described_class.create!(:resource => manager, :manager_ref => credential.id) }
+
+    it "#delete_in_provider" do
+      expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
+      expect(EmsRefresh).to receive(:queue_refresh_task).and_return([finished_task])
+      ansible_cred.delete_in_provider
+    end
+
+    it "#delete_in_provider_queue" do
+      task_id = ansible_cred.delete_in_provider_queue()
+      expect(MiqTask.find(task_id)).to have_attributes(:name => "Deleting ManageIQ::Providers::AnsibleTower::AutomationManager::Credential")
+      expect(MiqQueue.first).to have_attributes(
+        :instance_id => ansible_cred.id,
+        :args        => [],
+        :class_name  => "ManageIQ::Providers::AnsibleTower::AutomationManager::Credential",
+        :method_name => "delete_in_provider",
+        :priority    => MiqQueue::HIGH_PRIORITY,
+        :role        => "ems_operations",
+        :zone        => manager.my_zone
+      )
+    end
+  end
+
+  context "Update through API" do
+    let(:credentials)   { double("AnsibleTowerClient::Collection", :find => credential) }
+    let(:credential)    { double("AnsibleTowerClient::Credential", :update_attributes! => {}, :id => 1) }
+    let(:ansible_cred)  { described_class.create!(:resource => manager, :manager_ref => credential.id) }
+
+    it "#update_in_provider" do
+      expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
+      expect(EmsRefresh).to receive(:queue_refresh_task).and_return([finished_task])
+      expect(ansible_cred.update_in_provider({})).to be_a(described_class)
+    end
+
+    it "#update_in_provider_queue" do
+      task_id = ansible_cred.update_in_provider_queue({})
+      expect(MiqTask.find(task_id)).to have_attributes(:name => "Updating ManageIQ::Providers::AnsibleTower::AutomationManager::Credential")
+      expect(MiqQueue.first).to have_attributes(
+        :instance_id => ansible_cred.id,
+        :args        => [{:task_id => task_id}],
+        :class_name  => "ManageIQ::Providers::AnsibleTower::AutomationManager::Credential",
+        :method_name => "update_in_provider",
+        :priority    => MiqQueue::HIGH_PRIORITY,
+        :role        => "ems_operations",
+        :zone        => manager.my_zone
       )
     end
   end
