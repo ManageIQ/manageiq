@@ -6,7 +6,7 @@ module VmShowMixin
     @lastaction = "explorer"
     @timeline = @timeline_filter = true    # need to set these to load timelines on vm show screen
     if params[:menu_click]              # Came in from a chart context menu click
-      @_params[:id] = parse_nodetype_and_id(x_node).last
+      @_params[:id] = parse_nodetype_and_id(x_node_right_cell).last
       @explorer = true
       perf_menu_click                    # Handle the menu action
       return
