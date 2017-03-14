@@ -29,15 +29,15 @@ module ScanningOperationsMixin
     true
   end
 
-  def agent_job_message_op(jobid, state, message = nil)
+  def agent_job_message_op(jobid, message)
     _log.info "jobid: [#{jobid}] starting"
     begin
       Timeout.timeout(WS_TIMEOUT) do
         MiqQueue.put(
           :class_name  => "Job",
           :method_name => "agent_message_update_queue",
-          :args        => [jobid, state, message],
-          :task_id     => "agent_job_state_#{Time.now.to_i}",
+          :args        => [jobid, message],
+          :task_id     => "agent_job_message_#{Time.now.to_i}",
           :zone        => MiqServer.my_zone,
           :role        => "smartstate"
         )
