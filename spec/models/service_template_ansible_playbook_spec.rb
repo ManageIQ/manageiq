@@ -127,7 +127,7 @@ describe ServiceTemplateAnsiblePlaybook do
     end
   end
 
-  describe '#create_catalog_item' do
+  describe '.create_catalog_item' do
     it 'creates and returns a catalog item' do
       expect(described_class)
         .to receive(:create_job_templates).and_return(:provision => {:configuration_template => job_template})
@@ -145,6 +145,45 @@ describe ServiceTemplateAnsiblePlaybook do
 
       saved_options = catalog_item_options_two[:config_info].deep_merge(:provision => {:dialog_id => service_template.dialogs.first.id})
       expect(service_template.options[:config_info]).to include(saved_options)
+    end
+  end
+
+  describe '.validate_config_info' do
+    context 'provisioning entry point is given' do
+      it 'keeps the given entry point' do
+        opts = described_class.send(:validate_config_info, :provision => {:fqname => 'a/b/c'})
+        expect(opts[:provision][:fqname]).to eq('a/b/c')
+      end
+    end
+
+    context 'provisioning entry point is not given' do
+      it 'sets the default entry point' do
+        opts = described_class.send(:validate_config_info, :provision => {})
+        expect(opts[:provision][:fqname]).to eq(described_class.default_provisioning_entry_point('atomic'))
+      end
+    end
+
+    context 'retirement entry point is given' do
+      it 'keeps the given entry point' do
+        opts = described_class.send(:validate_config_info, :retirement => {:fqname => 'a/b/c'})
+        expect(opts[:retirement][:fqname]).to eq('a/b/c')
+      end
+    end
+
+    context 'retirement entry point is not given' do
+      it 'sets the default entry point' do
+        opts = described_class.send(:validate_config_info, {})
+        expect(opts[:retirement][:fqname]).to eq(described_class.default_retirement_entry_point)
+      end
+    end
+
+    context 'with remove_resources in retirement option' do
+      it 'sets the corresponding entry point' do
+        %w(yes_without_playbook no_without_playbook no_with_playbook pre_with_playbook post_with_playbook).each do |opt|
+          opts = described_class.send(:validate_config_info, :retirement => {:remove_resources => opt})
+          expect(opts[:retirement][:fqname]).to eq(described_class.const_get(:RETIREMENT_ENTRY_POINTS)[opt])
+        end
+      end
     end
   end
 end
