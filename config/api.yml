@@ -572,16 +572,29 @@
     :description: Configuration Script Source
     :options:
     - :collection
-    :verbs: *g
+    :verbs: *gpppd
     :klass: ConfigurationScriptSource
     :collection_actions:
       :get:
       - :name: read
         :identifier: embedded_configuration_script_source_view
+      :post:
+      - :name: edit
+        :identifier: embedded_configuration_script_source_edit
+      - :name: delete
+        :identifier: embedded_configuration_script_source_delete
     :resource_actions:
       :get:
       - :name: read
         :identifier: embedded_configuration_script_source_view
+      :post:
+      - :name: edit
+        :identifier: embedded_configuration_script_source_edit
+      - :name: delete
+        :identifier: embedded_configuration_script_source_delete
+      :delete:
+      - :name: delete
+        :identifier: embedded_configuration_script_source_delete
   :container_deployments:
     :description: Container Provider Deployment
     :identifier: container_deployment
