@@ -37,6 +37,8 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Job
     belongs_to :job_template, :foreign_key => :orchestration_template_id, :class_name => "ConfigurationScript"
     belongs_to :playbook, :foreign_key => :configuration_script_base_id
 
+    virtual_has_many :job_plays
+
     class << self
       alias create_job create_stack
       alias raw_create_job raw_create_stack
