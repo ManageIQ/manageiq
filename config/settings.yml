@@ -1031,6 +1031,10 @@
   :history:
     :keep_policy_events: 6.months
     :purge_window_size: 1000
+:container_entities:
+  :history:
+    :keep_archived_entities: 6.months
+    :purge_window_size: 1000
 :product:
   :maindb: ExtManagementSystem
   :container_deployment_wizard: false
@@ -1363,6 +1367,7 @@
         :poll_method: :normal
         :queue_timeout: 120.minutes
     :schedule_worker:
+      :container_entities_purge_interval: 1.day
       :authentication_check_interval: 1.hour
       :chargeback_generation_interval: 1.day
       :chargeback_generation_time_utc: 01:00:00
