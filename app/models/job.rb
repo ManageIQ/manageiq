@@ -63,10 +63,10 @@ class Job < ApplicationRecord
     true
   end
 
-  def self.agent_state_update_queue(jobid, state, message = nil)
+  def self.agent_message_update_queue(jobid, state, message = nil)
     job = Job.where("guid = ?", jobid).select("id, state, guid").first
     unless job.nil?
-      job.agent_state_update(state, message)
+      job.agent_message_update(state, message)
     else
       _log.warn "jobid: [#{jobid}] not found"
     end
@@ -75,7 +75,7 @@ class Job < ApplicationRecord
     _log.log_backtrace(err)
   end
 
-  def agent_state_update(agent_state, agent_message = nil)
+  def agent_message_update(agent_state, agent_message = nil)
     # Handle a single array parm coming from the queue
     agent_state, agent_message = agent_state if agent_state.kind_of?(Array)
 
