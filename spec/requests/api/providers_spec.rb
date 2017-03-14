@@ -65,7 +65,6 @@ describe "Providers API" do
 
   CONTAINERS_CLASSES = {
     "Kubernetes"          => "ManageIQ::Providers::Kubernetes::ContainerManager",
-    "OpenshiftEnterprise" => "ManageIQ::Providers::OpenshiftEnterprise::ContainerManager",
     "Openshift"           => "ManageIQ::Providers::Openshift::ContainerManager",
   }.freeze
   let(:sample_containers) do
