@@ -36,6 +36,16 @@ describe Metric::CiMixin::Capture do
     parse_datetime('2013-08-28T12:41:40Z')
   end
 
+  context "#perf_capture_queue" do
+    it "splits up long perf_capture durations for old last_perf_capture_on" do
+      # there should be 10 days + a partial day, or 11 queue items
+      original_queue_count = MiqQueue.count
+      @vm.last_perf_capture_on = 10.days.ago - 5.hours - 23.minutes
+      @vm.perf_capture_queue("realtime")
+      expect(MiqQueue.count - original_queue_count).to eq 11
+    end
+  end
+
   context "2 collection periods total, end of 1. period has incomplete stat" do
     ###################################################################################################################
     # DESCRIPTION FOR: net_usage_rate_average
