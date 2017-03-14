@@ -43,10 +43,10 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Credential do
 
     it ".create_in_provider_queue" do
       task_id = described_class.create_in_provider_queue(manager.id, params)
-      expect(MiqTask.find(task_id)).to have_attributes(:name => "Creating ManageIQ::Providers::AnsibleTower::AutomationManager::Credential")
+      expect(MiqTask.find(task_id)).to have_attributes(:name => "Creating #{described_class.name} with name=#{params[:name]}")
       expect(MiqQueue.first).to have_attributes(
         :args        => [manager.id, params],
-        :class_name  => "ManageIQ::Providers::AnsibleTower::AutomationManager::Credential",
+        :class_name  => described_class.name,
         :method_name => "create_in_provider",
         :priority    => MiqQueue::HIGH_PRIORITY,
         :role        => "ems_operations",
@@ -76,11 +76,11 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Credential do
 
     it "#delete_in_provider_queue" do
       task_id = ansible_cred.delete_in_provider_queue
-      expect(MiqTask.find(task_id)).to have_attributes(:name => "Deleting ManageIQ::Providers::AnsibleTower::AutomationManager::Credential")
+      expect(MiqTask.find(task_id)).to have_attributes(:name => "Deleting #{described_class.name} with manager_ref=#{ansible_cred.manager_ref}")
       expect(MiqQueue.first).to have_attributes(
         :instance_id => ansible_cred.id,
         :args        => [],
-        :class_name  => "ManageIQ::Providers::AnsibleTower::AutomationManager::Credential",
+        :class_name  => described_class.name,
         :method_name => "delete_in_provider",
         :priority    => MiqQueue::HIGH_PRIORITY,
         :role        => "ems_operations",
@@ -102,11 +102,11 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Credential do
 
     it "#update_in_provider_queue" do
       task_id = ansible_cred.update_in_provider_queue({})
-      expect(MiqTask.find(task_id)).to have_attributes(:name => "Updating ManageIQ::Providers::AnsibleTower::AutomationManager::Credential")
+      expect(MiqTask.find(task_id)).to have_attributes(:name => "Updating #{described_class.name} with manager_ref=#{ansible_cred.manager_ref}")
       expect(MiqQueue.first).to have_attributes(
         :instance_id => ansible_cred.id,
         :args        => [{:task_id => task_id}],
-        :class_name  => "ManageIQ::Providers::AnsibleTower::AutomationManager::Credential",
+        :class_name  => described_class.name,
         :method_name => "update_in_provider",
         :priority    => MiqQueue::HIGH_PRIORITY,
         :role        => "ems_operations",

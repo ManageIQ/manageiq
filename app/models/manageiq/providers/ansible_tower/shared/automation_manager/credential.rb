@@ -14,7 +14,8 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Credential
 
     def create_in_provider_queue(manager_id, params)
       manager = ExtManagementSystem.find(manager_id)
-      queue(manager.my_zone, nil, "create_in_provider", [manager_id, params], "Creating #{name}")
+      action = "Creating #{name} with name=#{params[:name]}"
+      queue(manager.my_zone, nil, "create_in_provider", [manager_id, params], action)
     end
 
     private
@@ -55,7 +56,8 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Credential
   end
 
   def update_in_provider_queue(params)
-    self.class.send('queue', resource.my_zone, id, "update_in_provider", [params], "Updating #{self.class.name}")
+    action = "Updating #{self.class.name} with manager_ref=#{manager_ref}"
+    self.class.send('queue', resource.my_zone, id, "update_in_provider", [params], action)
   end
 
   def delete_in_provider
@@ -66,6 +68,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Credential
   end
 
   def delete_in_provider_queue
-    self.class.send('queue', resource.my_zone, id, "delete_in_provider", [], "Deleting #{self.class.name}")
+    action = "Deleting #{self.class.name} with manager_ref=#{manager_ref}"
+    self.class.send('queue', resource.my_zone, id, "delete_in_provider", [], action)
   end
 end

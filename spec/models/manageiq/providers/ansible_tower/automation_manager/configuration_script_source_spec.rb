@@ -46,12 +46,10 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScri
     it ".create_in_provider_queue" do
       EvmSpecHelper.local_miq_server
       task_id = described_class.create_in_provider_queue(manager.id, params)
-      expect(MiqTask.find(task_id)).to have_attributes(
-        :name => "Creating ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScriptSource"
-      )
+      expect(MiqTask.find(task_id)).to have_attributes(:name => "Creating #{described_class.name} with name=#{params[:name]}")
       expect(MiqQueue.first).to have_attributes(
         :args        => [manager.id, params],
-        :class_name  => "ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScriptSource",
+        :class_name  => described_class.name,
         :method_name => "create_in_provider",
         :priority    => MiqQueue::HIGH_PRIORITY,
         :role        => "ems_operations",
@@ -81,11 +79,11 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScri
 
     it "#delete_in_provider_queue" do
       task_id = project.delete_in_provider_queue
-      expect(MiqTask.find(task_id)).to have_attributes(:name => "Deleting ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScriptSource")
+      expect(MiqTask.find(task_id)).to have_attributes(:name => "Deleting #{described_class.name} with manager_ref=#{project.manager_ref}")
       expect(MiqQueue.first).to have_attributes(
         :instance_id => project.id,
         :args        => [],
-        :class_name  => "ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScriptSource",
+        :class_name  => described_class.name,
         :method_name => "delete_in_provider",
         :priority    => MiqQueue::HIGH_PRIORITY,
         :role        => "ems_operations",
@@ -107,11 +105,11 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScri
 
     it "#update_in_provider_queue" do
       task_id = project.update_in_provider_queue({})
-      expect(MiqTask.find(task_id)).to have_attributes(:name => "Updating ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScriptSource")
+      expect(MiqTask.find(task_id)).to have_attributes(:name => "Updating #{described_class.name} with manager_ref=#{project.manager_ref}")
       expect(MiqQueue.first).to have_attributes(
         :instance_id => project.id,
         :args        => [{:task_id => task_id}],
-        :class_name  => "ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScriptSource",
+        :class_name  => described_class.name,
         :method_name => "update_in_provider",
         :priority    => MiqQueue::HIGH_PRIORITY,
         :role        => "ems_operations",
