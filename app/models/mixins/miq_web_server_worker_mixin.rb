@@ -112,7 +112,6 @@ module MiqWebServerWorkerMixin
 
       _log.info("[#{options.inspect}")
       MiqApache::Conf.install_default_config(options)
-      add_apache_balancer_members
     end
 
     def port_range
