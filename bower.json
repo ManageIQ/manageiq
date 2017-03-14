@@ -26,6 +26,7 @@
     "bootstrap-hover-dropdown": "~2.0.11",
     "jquery.observe_field": "himdel/jquery.observe_field#~0.1.0",
     "jasmine-jquery": "~2.1.1",
+    "jquery": "~2.1.4",
     "jquery-1.8": "~1.8.3",
     "jquery-ujs": "~1.1.0",
     "jquery-ui": "jqueryui#~1.9.2",
@@ -43,5 +44,8 @@
     "phantomjs-polyfill": "~0.0.2",
     "fetch": "~1.0.0",
     "codemirror": "~5.19.0"
+  },
+  "resolutions": {
+    "jquery": "~2.1.4"
   }
 }
