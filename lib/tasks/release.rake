@@ -1,8 +1,6 @@
 desc "Release a new project version"
 task :release do
   require 'pathname'
-  require 'yaml'
-  require 'more_core_extensions/all'
 
   version = ENV["RELEASE_VERSION"]
   if version.nil? || version.empty?
@@ -22,14 +20,8 @@ task :release do
   version_file = root.join("VERSION")
   File.write(version_file, version)
 
-  # Modify the automate domain version
-  ae_file = root.join("db/fixtures/ae_datastore/ManageIQ/System/About.class/__class__.yaml")
-  content = YAML.load_file(ae_file)
-  content.store_path("object", "schema", 0, "field", "default_value", version)
-  File.write(ae_file, content.to_yaml)
-
   # Create the commit and tag
-  exit $?.exitstatus unless system("git add #{version_file} #{ae_file}")
+  exit $?.exitstatus unless system("git add #{version_file}")
   exit $?.exitstatus unless system("git commit -m 'Release #{version}'")
   exit $?.exitstatus unless system("git tag #{version}")
 
