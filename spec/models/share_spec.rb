@@ -1,7 +1,7 @@
 describe Share do
   before { allow(User).to receive(:server_timezone).and_return("UTC") }
 
-  it "is invalidated when the sharer loses features" do
+  it "is invalidated when the sharer is no longer authorized to share the resource" do
     EvmSpecHelper.seed_specific_product_features(%w(host service))
     user = FactoryGirl.create(:user, :role => "user", :features => "service")
     resource_to_be_shared = FactoryGirl.create(:miq_template)
