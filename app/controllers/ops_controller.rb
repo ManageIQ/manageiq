@@ -358,8 +358,8 @@ class OpsController < ApplicationController
     when :rbac_tree
       @sb[:active_tab] = "rbac_details"
 
-      # default to the first tab in group detail
-      @sb[:active_rbac_group_tab] ||= "rbac_customer_tags" if node[0] == 'g'
+      # default to the first tab in group detail or creating new group
+      @sb[:active_rbac_group_tab] ||= "rbac_customer_tags" if node.last == 'g' || node.first == 'g'
     when :diagnostics_tree
       case node[0]
       when "root"

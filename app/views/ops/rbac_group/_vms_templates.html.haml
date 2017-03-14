@@ -11,5 +11,5 @@
                         :onmouseout     => "miqOnMouseOutHostNet",
                         :oncheck        => @edit.nil? ? nil : "miqOnCheckUserFilters",
                         :disable_checks => @edit.nil?,
-                        :check_url      => "/ops/rbac_group_field_changed/#{@group.id || "new"}___",
+                        :check_url      => "/ops/rbac_group_field_changed/#{@group.present? ? @group.id : "new"}___",
                         :checkboxes     => true})
