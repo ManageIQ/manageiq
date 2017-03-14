@@ -128,8 +128,8 @@ module MiqApache
       ###################################################################
       begin
         res = MiqUtil.runcmd('apachectl configtest')
-      rescue
-        $log.warn("MIQ(MiqApache::Control.config_ok?) Configuration syntax failed with error: #{res}") if $log
+      rescue => err
+        $log.warn("MIQ(MiqApache::Control.config_ok?) Configuration syntax failed with error: #{err} for result: #{res}") if $log
         return false
       end
       return true if res =~ /Syntax OK/
