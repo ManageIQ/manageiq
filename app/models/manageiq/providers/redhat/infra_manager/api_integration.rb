@@ -266,6 +266,12 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
       # Get the timeout from the configuration:
       timeout, = ems_timeouts(:ems_redhat, options[:service])
 
+      # The constructor of the SDK expects a list of certificates, but that list can't be empty, or contain only 'nil'
+      # values, so we need to check the value passed and make a list only if it won't be empty. If it will be empty then
+      # we should just pass 'nil'.
+      ca_certs = options[:ca_certs]
+      ca_certs = [ca_certs] if ca_certs
+
       url = URI::Generic.build(
         :scheme => options[:scheme],
         :host   => options[:server],
@@ -279,7 +285,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
         :password => options[:password],
         :timeout  => timeout,
         :insecure => options[:verify_ssl] == OpenSSL::SSL::VERIFY_NONE,
-        :ca_certs => [options[:ca_certs]],
+        :ca_certs => ca_certs,
         :log      => $rhevm_log,
       )
     end
