@@ -71,4 +71,8 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Credential
     action = "Deleting #{self.class.name} with manager_ref=#{manager_ref}"
     self.class.send('queue', resource.my_zone, id, "delete_in_provider", [], action)
   end
+
+  COMMON_ATTRIBUTES = {}.freeze
+  EXTRA_ATTRIBUTES = {}.freeze
+  API_ATTRIBUTES = COMMON_ATTRIBUTES.merge(EXTRA_ATTRIBUTES).freeze
 end
