@@ -75,7 +75,7 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Credential do
     end
 
     it "#delete_in_provider_queue" do
-      task_id = ansible_cred.delete_in_provider_queue()
+      task_id = ansible_cred.delete_in_provider_queue
       expect(MiqTask.find(task_id)).to have_attributes(:name => "Deleting ManageIQ::Providers::AnsibleTower::AutomationManager::Credential")
       expect(MiqQueue.first).to have_attributes(
         :instance_id => ansible_cred.id,

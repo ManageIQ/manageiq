@@ -55,7 +55,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Configurati
       connection.api.projects.find(manager_ref).update_attributes!(params)
     end
     self.class.send('refresh', manager)
-    reload!
+    reload
   end
 
   def update_in_provider_queue(params)
@@ -63,7 +63,6 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Configurati
   end
 
   def delete_in_provider
-    params.delete(:task_id) # in case this is being called through update_in_provider_queue which will stick in a :task_id
     manager.with_provider_connection do |connection|
       connection.api.projects.find(manager_ref).destroy!
     end
