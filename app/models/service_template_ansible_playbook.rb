@@ -51,7 +51,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
 
           job_template = enhanced_config.fetch_path(action, :configuration_template)
 
-          new_dialog = Dialog::AnsiblePlaybookServiceDialog.create_dialog(dialog_name, job_template)
+          new_dialog = service_template.send(:create_new_dialog, dialog_name, job_template)
           enhanced_config[action][:dialog] = new_dialog
           service_template.options[:config_info][action][:dialog_id] = new_dialog.id
         end
@@ -60,10 +60,10 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     end
   end
 
-  def self.create_new_dialog(dialog_name, job_template)
+  def create_new_dialog(dialog_name, job_template)
     Dialog::AnsiblePlaybookServiceDialog.create_dialog(dialog_name, job_template)
   end
-  private_class_method :create_new_dialog
+  private :create_new_dialog
 
   def self.create_job_templates(service_name, description, config_info, auth_user)
     [:provision, :retirement, :reconfigure].each_with_object({}) do |action, hash|
@@ -125,6 +125,11 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   end
   private_class_method :validate_config_info
 
+  def validate_update_config_info(options)
+    opts = super
+    self.class.send(:validate_config_info, opts)
+  end
+
   def job_template(action)
     resource_actions.find_by!(:action => action.to_s.capitalize).configuration_template
   end
@@ -136,14 +141,13 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     [:provision, :retirement, :reconfigure].each do |action|
       next unless config_info[action]
       info = config_info[action]
+      new_dialog = create_new_dialog(info[:new_dialog_name], job_template(action)) if info[:new_dialog_name]
+      config_info[action][:dialog_id] = new_dialog.id if new_dialog
 
-      tower, params = self.class.send(:build_parameter_list, name, description, info)
-
+      next unless info.key?(:playbook_id)
+      tower, params = self.class.send(:build_parameter_list, "miq_#{name}_#{action}", description, info)
       params[:manager_ref] = job_template(action).manager_ref
-
       ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript.update_in_provider_queue(tower.id, params, auth_user)
-
-      self.class.send(:create_new_dialog, info[:new_dialog_name], job_template(action)) if info[:new_dialog_name]
     end
     super
   end

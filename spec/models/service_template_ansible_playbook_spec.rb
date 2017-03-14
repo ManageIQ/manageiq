@@ -63,7 +63,8 @@ describe ServiceTemplateAnsiblePlaybook do
                       :description => 'test updated ansible item',
                       :config_info => {
                         :provision => {
-                          :extra_vars => {
+                          :new_dialog_name => 'test_dialog_updated',
+                          :extra_vars      => {
                             'key1' => 'updated_val1',
                             'key2' => 'updated_val2'
                           }
@@ -204,7 +205,9 @@ describe ServiceTemplateAnsiblePlaybook do
   describe '#update_catalog_item' do
     it 'updates and returns the modified catalog item' do
       service_template = prebuild_service_template
-      expect(described_class).to receive(:create_new_dialog)
+      new_dialog_label = catalog_item_options_three
+                         .fetch_path(:config_info, :provision, :new_dialog_name)
+      expect(Dialog.where(:label => new_dialog_label)).to be_empty
       expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript).to receive(:update_in_provider_queue).once
       service_template.update_catalog_item(catalog_item_options_three, user)
 
@@ -214,8 +217,9 @@ describe ServiceTemplateAnsiblePlaybook do
         'key1' => 'updated_val1',
         'key2' => 'updated_val2'
       )
-      expect(service_template.dialogs.first.name).to eq catalog_item_options_three
-        .fetch_path(:config_info, :provision, :new_dialog_name)
+      new_dialog_record = Dialog.where(:label => new_dialog_label).first
+      expect(new_dialog_record).to be_truthy
+      expect(service_template.resource_actions.first.dialog.id).to eq new_dialog_record.id
     end
 
     it 'uses the existing dialog if :service_dialog_id is passed in' do
