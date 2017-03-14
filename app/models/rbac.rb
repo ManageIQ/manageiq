@@ -134,7 +134,7 @@ module Rbac
     klass.user_or_group_owned(user, miq_group).except(:order)
   end
 
-  def self.calc_filtered_ids(scope, user_filters, user, miq_group)
+  def self.calc_filtered_ids(scope, user_filters, user, miq_group, scope_tenant_filter)
     klass = scope.respond_to?(:klass) ? scope.klass : scope
     u_filtered_ids = pluck_ids(get_self_service_objects(user, miq_group, klass))
     b_filtered_ids = get_belongsto_filter_object_ids(klass, user_filters['belongsto'])
@@ -142,13 +142,14 @@ module Rbac
     d_filtered_ids = pluck_ids(matches_via_descendants(rbac_class(klass), user_filters['match_via_descendants'],
                                                        :user => user, :miq_group => miq_group))
 
-    filtered_ids = combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids)
+    filtered_ids = combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids,
+                                        scope_tenant_filter.try(:ids))
     [filtered_ids, u_filtered_ids]
   end
 
   #
   # Algorithm: filter = u_filtered_ids UNION (b_filtered_ids INTERSECTION m_filtered_ids)
-  #            filter = filter UNION d_filtered_ids if filter is not nil
+  #            filter = (filter UNION d_filtered_ids if filter is not nil) UNION tenant_filter_ids
   #
   # a nil as input for any field means it does not apply
   # a nil as output means there is not filter
@@ -159,7 +160,7 @@ module Rbac
   # @param d_filtered_ids [nil|Array<Integer>] ids from descendants
   # @return nil if filters do not aply
   # @return [Array<Integer>] target ids for filter
-  def self.combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids)
+  def self.combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids, tenant_filter_ids)
     filtered_ids =
       if b_filtered_ids.nil?
         m_filtered_ids
@@ -179,12 +180,27 @@ module Rbac
       filtered_ids.uniq!
     end
 
-    filtered_ids
+    if filtered_ids.kind_of?(Array)
+      filtered_ids | tenant_filter_ids.to_a
+    elsif filtered_ids.nil? && tenant_filter_ids.kind_of?(Array) && tenant_filter_ids.present?
+      tenant_filter_ids
+    end
+  end
+
+  def self.scope_to_tenant(scope, user, miq_group)
+    klass = scope.respond_to?(:klass) ? scope.klass : scope
+    user_or_group = user || miq_group
+    tenant_id_clause = klass.tenant_id_clause(user_or_group)
+
+    tenant_id_clause ? scope.where(tenant_id_clause) : scope
   end
 
   def self.find_targets_with_indirect_rbac(scope, rbac_filters, find_options, user, miq_group)
     parent_class = rbac_class(scope)
-    filtered_ids, _ = calc_filtered_ids(parent_class, rbac_filters, user, miq_group)
+    if parent_class.try(:scope_by_tenant?)
+      scope_tenant_filter = scope_to_tenant(parent_class, user, miq_group)
+    end
+    filtered_ids, _ = calc_filtered_ids(parent_class, rbac_filters, user, miq_group, scope_tenant_filter)
 
     find_targets_filtered_by_parent_ids(parent_class, scope, find_options, filtered_ids)
   end
@@ -252,7 +268,7 @@ module Rbac
   end
 
   def self.find_targets_with_direct_rbac(scope, rbac_filters, find_options, user, miq_group)
-    filtered_ids, u_filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group)
+    filtered_ids, u_filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group, nil)
     find_targets_filtered_by_ids(scope, find_options, u_filtered_ids, filtered_ids)
   end
 
