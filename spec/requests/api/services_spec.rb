@@ -625,4 +625,46 @@ describe "Services API" do
       end
     end
   end
+
+  describe 'Orchestration Stack subcollection' do
+    let(:os) { FactoryGirl.create(:orchestration_stack) }
+
+    before do
+      svc.add_resource!(os, :name => ResourceAction::PROVISION)
+    end
+
+    it 'can query orchestration stacks as a subcollection' do
+      api_basic_authorize subcollection_action_identifier(:services, :orchestration_stacks, :read, :get)
+
+      run_get("#{services_url(svc.id)}/orchestration_stacks", :expand => 'resources')
+
+      expected = {
+        'resources' => [
+          a_hash_including('id' => os.id)
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'can query a specific orchestration stack' do
+      api_basic_authorize subcollection_action_identifier(:services, :orchestration_stacks, :read, :get)
+
+      run_get("#{services_url(svc.id)}/orchestration_stacks/#{os.id}")
+
+      expected = {
+        'id' => os.id
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'will not return orchestration stacks without an appropriate role' do
+      api_basic_authorize
+
+      run_get("#{services_url(svc.id)}/orchestration_stacks")
+
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
 end
