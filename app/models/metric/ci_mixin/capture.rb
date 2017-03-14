@@ -17,17 +17,15 @@ module Metric::CiMixin::Capture
     ems.metrics_collector_queue_name
   end
 
-  def split_capture_intervals(start_time, end_time)
-    intervals = []
-    start_hour = start_time
-    while start_hour != end_time
-      #TODO: replace 1.day with a configurable threshold defined by provider type
-      end_hour = start_hour + 1.day
-      end_hour = end_time if end_hour > end_time
-      intervals << [start_hour, end_hour]
-      start_hour = end_hour
-    end
-    intervals
+  def split_capture_intervals(start_time, end_time, threshold=1.day)
+    raise _("Start time must be earlier than End time") if start_time > end_time
+    # Create an array of ordered pairs from start_time and end_time so that each ordered pair is contained
+    # within the threshold.  Then, reverse it so the newest ordered pair is first:
+    # start_time = 2017/01/01 12:00:00, end_time = 2017/01/04 12:00:00
+    # [[2017-01-03 12:00:00 UTC, 2017-01-04 12:00:00 UTC],
+    #  [2017-01-02 12:00:00 UTC, 2017-01-03 12:00:00 UTC],
+    #  [2017-01-01 12:00:00 UTC, 2017-01-02 12:00:00 UTC]]
+    (start_time..end_time).step_value(threshold).each_cons(2).collect { |s_time, e_time| [s_time, e_time] }.reverse
   end
   private :split_capture_intervals
 
