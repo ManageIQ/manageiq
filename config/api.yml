@@ -478,7 +478,6 @@
     :identifier: cloud_volume
     :options:
     - :collection
-    - :subcollection
     :verbs: *gp
     :klass: CloudVolume
     :collection_actions:
@@ -488,14 +487,10 @@
       :post:
       - :name: query
         :identifier: cloud_volume_show_list
-    :subcollection_actions:
+    :resource_actions:
       :get:
       - :name: read
-        :identifier: cloud_volume_show
-    :subresource_actions:
-      :get:
-      - :name: read
-        :identifier: cloud_volume_show
+        :identifier: cloud_volume
   :clusters:
     :description: Clusters
     :identifier: ems_cluster
