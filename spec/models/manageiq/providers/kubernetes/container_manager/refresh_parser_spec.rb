@@ -1116,7 +1116,6 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
           :iscsi_lun               => nil,
           :iscsi_target_portal     => nil,
           :nfs_server              => nil,
-          :parent_type             => 'ManageIQ::Providers::ContainerManager',
           :persistent_volume_claim => nil,
           :rbd_ceph_monitors       => '',
           :rbd_image               => nil,

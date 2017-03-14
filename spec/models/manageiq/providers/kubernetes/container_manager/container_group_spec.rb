@@ -54,7 +54,9 @@ describe ContainerGroup do
     expect(ems.persistent_volumes.first.name).to eq("persistent_volume")
     expect(container_volume.parent.class).to eq(ContainerGroup)
     expect(container_volume.parent.name).to eq("group")
+    expect(container_volume.parent_type).to eq("ContainerGroup")
     expect(persistent_volume.parent.class).to eq(ManageIQ::Providers::Kubernetes::ContainerManager)
     expect(persistent_volume.parent.name).to eq("ems")
+    expect(persistent_volume.parent_type).to eq("ExtManagementSystem")
   end
 end
