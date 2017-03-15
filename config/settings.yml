@@ -110,9 +110,6 @@
     :miq_namespace: management-infra
     :image_inspector_registry: docker.io
     :image_inspector_repository: openshift/image-inspector
-  :ems_azure:
-    :disabled_regions: []
-    :additional_regions: {}
 :event_streams:
   :history:
     :keep_events: 6.months
@@ -185,7 +182,6 @@
       - USER_ADD_VM_TEMPLATE_FINISHED_SUCCESS
       - USER_FAILED_ADD_HOST
       - USER_FAILED_ADD_VM_TEMPLATE
-      - virtualMachines_write_EndRequest
       - GceOperationDone_compute.instances.insert
       - VmConnectedEvent
       - VmCreatedEvent
@@ -329,7 +325,6 @@
       - USER_REMOVE_VM_FINISHED
       - USER_REMOVE_VM_TEMPLATE
       - USER_REMOVE_VM_TEMPLATE_FINISHED
-      - virtualMachines_delete_EndRequest
       - GceOperationDone_compute.instances.delete
       - VmDisconnectedEvent
       - VmRemovedEvent
@@ -680,9 +675,6 @@
       - USER_SUSPEND_VM_FINISH_FAILURE
       - USER_SUSPEND_VM_FINISH_SUCCESS
       - USER_SUSPEND_VM_OK
-      - virtualMachines_deallocate_EndRequest
-      - virtualMachines_start_EndRequest
-      - virtualMachines_restart_EndRequest
       - GceOperationDone_compute.instances.start
       - GceOperationDone_compute.instances.stop
       - VM_DOWN
@@ -959,11 +951,6 @@
     :password:
     :port:
     :user:
-  :azure:
-    :host:
-    :password:
-    :port:
-    :user:
   :gce:
     :host:
     :password:
@@ -995,8 +982,6 @@
   :level_rails: info
   :level_lenovo: info
   :level_lenovo_in_evm: error
-  :level_azure: warn
-  :level_azure_in_evm: error
   :level_mw: info
   :level_mw_in_evm: error
   :level_datawarehouse: info
@@ -1282,8 +1267,6 @@
         :amqp_recovery_attempts: 4
         :ceilometer:
           :event_types_regex: '\A(firewall|floatingip|gateway|net|port|router|subnet|security_group|vpn)'
-      :event_catcher_azure:
-        :poll: 15.seconds
       :event_catcher_hawkular:
         :poll: 10.seconds
       :event_catcher_hawkular_datawarehouse:
@@ -1313,7 +1296,6 @@
           :memory_threshold: 400.megabytes
           :nice_delta: 3
           :poll_method: :escalate
-        :ems_metrics_collector_worker_azure: {}
         :ems_metrics_collector_worker_google: {}
         :ems_metrics_collector_worker_kubernetes:
           :metrics_port: 5000
@@ -1340,8 +1322,6 @@
           :restart_interval: 2.hours
         :ems_refresh_worker_ansible_tower_automation: {}
         :ems_refresh_worker_embedded_ansible_automation: {}
-        :ems_refresh_worker_azure: {}
-        :ems_refresh_worker_azure_network: {}
         :ems_refresh_worker_foreman_configuration: {}
         :ems_refresh_worker_foreman_provisioning: {}
         :ems_refresh_worker_google: {}
