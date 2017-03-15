@@ -63,10 +63,6 @@ class Job < ApplicationRecord
     true
   end
 
-  def self.agent_state_update_queue(jobid, _state, message = nil)
-    agent_message_update_queue(jobid, message)
-  end
-
   def self.agent_message_update_queue(jobid, message)
     job = Job.where("guid = ?", jobid).select("id, state, guid").first
     unless job.nil?
