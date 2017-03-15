@@ -165,7 +165,7 @@ class JobProxyDispatcher
 
   def start_job_on_proxy(job, proxy)
     assign_proxy_to_job(proxy, job)
-    _log.info "Job [#{job.guid}] update: userid: [#{job.userid}], name: [#{job.name}], target class: [#{job.target_class}], target id: [#{job.target_id}], process type: [#{job.type}], agent class: [#{job.agent_class}], agent id: [#{job.agent_id}]"
+    _log.info "Job #{job.attributes_log}"
     job_options = {:args => ["start"], :zone => MiqServer.my_zone}
     job_options.merge!(:server_guid => proxy.guid, :role => "smartproxy") if proxy.kind_of?(MiqServer)
     @active_vm_scans_by_zone[MiqServer.my_zone] += 1

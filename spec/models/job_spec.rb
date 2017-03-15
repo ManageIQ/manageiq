@@ -293,6 +293,13 @@ describe Job do
     end
   end
 
+  describe "#attributes_log" do
+    it "returns attributes for logging" do
+      job = Job.create_job("VmScan", :name => "Hello, World!")
+      expect(job.attributes_log).to include("VmScan", "Hello, World!", job.guid)
+    end
+  end
+
   context "belongs_to task" do
     before(:each) do
       @job = Job.create_job("VmScan", :name => "Hello, World!")
@@ -320,6 +327,7 @@ describe Job do
         )
       end
     end
+
     context "after_update_commit callback calls" do
       describe "#update_linked_task" do
         it "executes when 'after_update_commit' callbacke triggered" do

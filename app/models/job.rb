@@ -29,7 +29,7 @@ class Job < ApplicationRecord
     job.initialize_attributes
     job.save
     job.create_miq_task(job.attributes_for_task)
-    $log.info "Job created: guid: [#{job.guid}], userid: [#{job.userid}], name: [#{job.name}], target class: [#{job.target_class}], target id: [#{job.target_id}], process type: [#{job.type}], agent class: [#{job.agent_class}], agent id: [#{job.agent_id}], zone: [#{job.zone}]"
+    $log.info "Job created: #{job.attributes_log}"
     job.signal(:initializing)
     job
   end
@@ -55,11 +55,11 @@ class Job < ApplicationRecord
 
   def check_active_on_destroy
     if self.is_active?
-      _log.warn "Job is active, delete not allowed - guid: [#{guid}], userid: [#{self.userid}], name: [#{self.name}], target class: [#{target_class}], target id: [#{target_id}], process type: [#{type}], agent class: [#{agent_class}], agent id: [#{agent_id}], zone: [#{zone}]"
+      _log.warn "Job is active, delete not allowed - #{attributes_log}"
       throw :abort
     end
 
-    _log.info "Job deleted: guid: [#{guid}], userid: [#{self.userid}], name: [#{self.name}], target class: [#{target_class}], target id: [#{target_id}], process type: [#{type}], agent class: [#{agent_class}], agent id: [#{agent_id}], zone: [#{zone}]"
+    _log.info "Job deleted: #{attributes_log}"
     true
   end
 
@@ -250,5 +250,9 @@ class Job < ApplicationRecord
      :context_data  => context,
      :zone          => zone,
      :started_on    => started_on}
+  end
+
+  def attributes_log
+    "guid: [#{guid}], userid: [#{self.userid}], name: [#{self.name}], target class: [#{target_class}], target id: [#{target_id}], process type: [#{type}], agent class: [#{agent_class}], agent id: [#{agent_id}], zone: [#{zone}]"
   end
 end # class Job
