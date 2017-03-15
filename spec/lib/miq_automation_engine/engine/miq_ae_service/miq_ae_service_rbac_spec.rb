@@ -32,7 +32,7 @@ module MiqAeServiceModelSpec
     let(:vm23) { FactoryGirl.create(:vm_vmware, :tenant => tenant2, :host => host2, :miq_group => group2) }
 
     context "automate methods - enable rbac" do
-      def collect_ids_with_rbac
+      def collect_names_with_rbac
         <<-'RUBY'
           $evm.enable_rbac
           $evm.root['vm_names'] = $evm.vmdb('vm').all.collect(&:name)
@@ -46,7 +46,7 @@ module MiqAeServiceModelSpec
         create_ae_model_with_method(:name => 'FLINTSTONE', :ae_namespace => 'FRED',
                                     :ae_class => 'WILMA', :instance_name => 'DOGMATIX',
                                     :method_name => 'OBELIX',
-                                    :method_script => collect_ids_with_rbac)
+                                    :method_script => collect_names_with_rbac)
         ws = MiqAeEngine.instantiate("/FRED/WILMA/DOGMATIX", user2)
         names = [vm21.name, vm22.name]
         expect(ws.root("vm_names")).to match_array(names)
