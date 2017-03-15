@@ -14,7 +14,7 @@ describe MiqReport do
 
     @report_theme = 'miq'
     @show_title   = true
-    @options = MiqReport.graph_options(600, 400)
+    @options = MiqReport.graph_options({ :title => "CPU (Mhz)", :type => "Line", :columns => ["col"] })
 
     allow(Charting).to receive(:backend).and_return(:c3)
     allow(Charting).to receive(:format).and_return(:c3)
@@ -22,9 +22,9 @@ describe MiqReport do
 
   context 'graph_options' do
     it 'returns a hash with options' do
-      expect(MiqReport.graph_options(400, 600)).to include(
-        :totalwidth  => 400,
-        :totalheight => 600
+      expect(MiqReport.graph_options({ :title => "CPU (Mhz)", :type => "Line", :columns => ["col"] })).to include(
+        :type => "Line",
+        :title => "CPU (Mhz)"
       )
     end
   end

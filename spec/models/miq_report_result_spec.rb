@@ -84,7 +84,7 @@ describe MiqReportResult do
 
       @report_theme = 'miq'
       @show_title   = true
-      @options = MiqReport.graph_options(600, 400)
+      @options = MiqReport.graph_options({ :title => "CPU (Mhz)", :type => "Line", :columns => ["col"] })
 
       allow(Charting).to receive(:detect_available_plugin).and_return(C3Charting)
     end
