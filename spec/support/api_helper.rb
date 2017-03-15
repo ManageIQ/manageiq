@@ -112,12 +112,6 @@ module Spec
         allow(Api::ApiConfig.collections[collection][action_type]).to receive(method) { updated_method }
       end
 
-      def stub_api_collection_config(collection, attr, value)
-        collection_config = Api::ApiConfig.collections[collection].dup
-        collection_config[attr] = value
-        allow(Api::ApiConfig.collections).to receive(collection) { collection_config }
-      end
-
       def action_identifier(type, action, selection = :resource_actions, method = :post)
         Api::ApiConfig.collections[type][selection][method]
           .detect { |spec| spec[:name] == action.to_s }[:identifier]

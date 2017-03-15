@@ -75,12 +75,23 @@ describe "Settings API" do
       }')
     end
 
+    # TODO: as the api.yml settings/categories expand in the future to include
+    # different types of categories, full, partial and single entries, we would no
+    # longer need this stubbing logic or the above sample_settings as we can
+    # test the different cases with the default api.yml categories provided.
+    #
+    def stub_api_settings_categories(value)
+      settings_config = Api::ApiConfig.collections["settings"].dup
+      settings_config["categories"] = value
+      allow(Api::ApiConfig.collections).to receive("settings") { settings_config }
+    end
+
     before do
       stub_settings_merge(sample_settings)
     end
 
     it "supports multiple categories" do
-      stub_api_collection_config("settings", "categories", %w(product authentication server))
+      stub_api_settings_categories(%w(product authentication server))
       api_basic_authorize action_identifier(:settings, :read, :resource_actions, :get)
 
       run_get settings_url
@@ -93,7 +104,7 @@ describe "Settings API" do
     end
 
     it "supports partial categories" do
-      stub_api_collection_config("settings", "categories", %w(product server/role))
+      stub_api_settings_categories(%w(product server/role))
       api_basic_authorize action_identifier(:settings, :read, :resource_actions, :get)
 
       run_get settings_url
@@ -105,7 +116,7 @@ describe "Settings API" do
     end
 
     it "supports second level partial categories" do
-      stub_api_collection_config("settings", "categories", %w(product server/role server/worker_monitor/sync_interval))
+      stub_api_settings_categories(%w(product server/role server/worker_monitor/sync_interval))
       api_basic_authorize action_identifier(:settings, :read, :resource_actions, :get)
 
       run_get settings_url
@@ -120,7 +131,7 @@ describe "Settings API" do
     end
 
     it "supports multiple and partial categories" do
-      stub_api_collection_config("settings", "categories", %w(product server/role server/worker_monitor authentication))
+      stub_api_settings_categories(%w(product server/role server/worker_monitor authentication))
       api_basic_authorize action_identifier(:settings, :read, :resource_actions, :get)
 
       run_get settings_url
