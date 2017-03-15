@@ -34,16 +34,31 @@ describe ContainerGroup do
     persistent_volume = FactoryGirl.create(
       :persistent_volume,
       :name   => "persistent_volume",
+      :parent_type => "ManageIQ::Providers::ContainerManager",
       :parent => ems
     )
 
     assert_volumes_relations(group, ems, container_volume, persistent_volume)
 
+    persistent_volume.destroy
+    persistent_volume = FactoryGirl.create(
+      :persistent_volume,
+      :name        => "persistent_volume",
+      :parent_type => "ExtManagementSystem",
+      :parent      => ems
+    )
+    assert_volumes_relations(group, ems, container_volume, persistent_volume)
+
     group.container_volumes.destroy_all
     ems.persistent_volumes.destroy_all
     container_volume = group.container_volumes.create(:name => "container_volume")
-    persistent_volume = ems.persistent_volumes.create(:name => "persistent_volume")
+    persistent_volume = ems.persistent_volumes.create(:name        => "persistent_volume",
+                                                      :parent_type => "ManageIQ::Providers::ContainerManager")
+    assert_volumes_relations(group, ems, container_volume, persistent_volume)
 
+    persistent_volume.destroy
+    persistent_volume = ems.persistent_volumes.create(:name        => "persistent_volume",
+                                                      :parent_type => "ExtManagementSystem")
     assert_volumes_relations(group, ems, container_volume, persistent_volume)
   end
 
