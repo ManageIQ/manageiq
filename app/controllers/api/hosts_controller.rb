@@ -17,7 +17,7 @@ module Api
                                               else host.physical_server.id
                                               end
 
-        render json => response_payload
+        render :json => response_payload
 
       else
 
