@@ -100,10 +100,6 @@ module Spec
         role.update_attributes!(:miq_product_features => product_features)
       end
 
-      def miq_server_guid
-        @miq_server_guid ||= MiqUUID.new_guid
-      end
-
       def stub_api_action_role(collection, action_type, method, action, identifier)
         new_action_role = Config::Options.new.merge!("name" => action.to_s, "identifier" => identifier)
         updated_method = Api::ApiConfig.collections[collection][action_type][method].collect do |method_action|
