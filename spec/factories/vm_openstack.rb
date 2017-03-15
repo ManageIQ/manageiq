@@ -9,4 +9,10 @@ FactoryGirl.define do
   factory :vm_perf_openstack, :parent => :vm_openstack do
     ems_ref         "openstack-perf-vm"
   end
+
+  trait :with_provider do
+    after(:create) do |x|
+      FactoryGirl.create(:ems_openstack, :vms => [x])
+    end
+  end
 end
