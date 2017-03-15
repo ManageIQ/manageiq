@@ -3,6 +3,7 @@ module EmsRefresh
   extend EmsRefresh::SaveInventoryBlockStorage
   extend EmsRefresh::SaveInventoryCloud
   extend EmsRefresh::SaveInventoryInfra
+  extend EmsRefresh::SaveInventoryPhysicalInfra
   extend EmsRefresh::SaveInventoryContainer
   extend EmsRefresh::SaveInventoryMiddleware
   extend EmsRefresh::SaveInventoryDatawarehouse
