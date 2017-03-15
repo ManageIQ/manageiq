@@ -575,5 +575,10 @@ describe "Rest API Collections" do
       FactoryGirl.create(:load_balancer)
       test_collection_bulk_query(:load_balancers, load_balancers_url, LoadBalancer)
     end
+
+    it 'bulk query CloudVolumes' do
+      FactoryGirl.create(:cloud_volume)
+      test_collection_bulk_query(:cloud_volumes, cloud_volumes_url, CloudVolume)
+    end
   end
 end
