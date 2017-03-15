@@ -44,8 +44,10 @@ module ManageIQ::Providers::Openstack::ManagerMixin
         :ssl_ca_path    => vmdb_config.fetch_path(:ssl, :ssl_ca_path),
         :ssl_cert_store => OpenSSL::X509::Store.new
       }
-      extra_options[:domain_id] = keystone_v3_domain_id
-      extra_options[:region]    = provider_region if provider_region.present?
+      extra_options[:domain_id]         = keystone_v3_domain_id
+      extra_options[:region]            = provider_region if provider_region.present?
+      extra_options[:omit_default_port] = ::Settings.ems.ems_openstack.excon.omit_default_port
+      extra_options[:read_timeout]      = ::Settings.ems.ems_openstack.excon.read_timeout
 
       osh = OpenstackHandle::Handle.new(username, password, address, port, api_version, security_protocol, extra_options)
       osh.connection_options = {:instrumentor => $fog_log}

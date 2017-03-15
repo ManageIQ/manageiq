@@ -92,6 +92,10 @@
     :keep_drift_states: 6.months
     :purge_window_size: 10000
 :ems:
+  :ems_openstack:
+    :excon:
+      :omit_default_port: true
+      :read_timeout: 60
   :ems_redhat:
     :resolve_ip_addresses: true
     :inventory:
