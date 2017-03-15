@@ -72,12 +72,12 @@ RSpec.describe 'Configuration Script Sources API' do
         'results' => [
           a_hash_including(
             'success' => true,
-            'message' => "Updating Configuration Script Source with id #{config_script_src.id}",
+            'message' => a_string_including('Updating ConfigurationScriptSource'),
             'task_id' => a_kind_of(Numeric)
           ),
           a_hash_including(
             'success' => true,
-            'message' => "Updating Configuration Script Source with id #{config_script_src_2.id}",
+            'message' => a_string_including('Updating ConfigurationScriptSource'),
             'task_id' => a_kind_of(Numeric)
           )
         ]
@@ -103,12 +103,12 @@ RSpec.describe 'Configuration Script Sources API' do
         'results' => [
           a_hash_including(
             'success' => true,
-            'message' => "Deleting Configuration Script Source with id #{config_script_src.id}",
+            'message' => a_string_including('Deleting ConfigurationScriptSource'),
             'task_id' => a_kind_of(Numeric)
           ),
           a_hash_including(
             'success' => true,
-            'message' => "Deleting Configuration Script Source with id #{config_script_src_2.id}",
+            'message' => a_string_including('Deleting ConfigurationScriptSource'),
             'task_id' => a_kind_of(Numeric)
           )
         ]
@@ -141,8 +141,22 @@ RSpec.describe 'Configuration Script Sources API' do
 
       expected = {
         'success' => true,
-        'message' => "Updating Configuration Script Source with id #{config_script_src.id}",
+        'message' => a_string_including('Updating ConfigurationScriptSource'),
         'task_id' => a_kind_of(Numeric)
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'requires that the type support update_in_provider_queue' do
+      config_script_src = FactoryGirl.create(:configuration_script_source)
+      api_basic_authorize action_identifier(:configuration_script_sources, :edit)
+
+      run_post(configuration_script_sources_url(config_script_src.id), :action => 'edit', :resource => params)
+
+      expected = {
+        'success' => false,
+        'message' => "Update not supported for ConfigurationScriptSource id:#{config_script_src.id} name: '#{config_script_src.name}'"
       }
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)
@@ -163,8 +177,22 @@ RSpec.describe 'Configuration Script Sources API' do
 
       expected = {
         'success' => true,
-        'message' => "Deleting Configuration Script Source with id #{config_script_src.id}",
+        'message' => a_string_including('Deleting ConfigurationScriptSource'),
         'task_id' => a_kind_of(Numeric)
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'requires that the type support delete_in_provider_queue' do
+      config_script_src = FactoryGirl.create(:configuration_script_source)
+      api_basic_authorize collection_action_identifier(:configuration_script_sources, :delete, :post)
+
+      run_post(configuration_script_sources_url(config_script_src.id), :action => 'delete', :resource => params)
+
+      expected = {
+        'success' => false,
+        'message' => "Delete not supported for ConfigurationScriptSource id:#{config_script_src.id} name: '#{config_script_src.name}'"
       }
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)

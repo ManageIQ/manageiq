@@ -572,7 +572,7 @@
     :description: Configuration Script Source
     :options:
     - :collection
-    :verbs: *gpppd
+    :verbs: *gpd
     :klass: ConfigurationScriptSource
     :collection_actions:
       :get:
