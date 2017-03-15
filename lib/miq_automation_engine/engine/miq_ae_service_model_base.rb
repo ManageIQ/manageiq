@@ -122,7 +122,7 @@ module MiqAeMethodService
           method = options[:method] || method_name
           ret = object_send(method, *params)
           return options[:override_return] if options.key?(:override_return)
-          options[:association] ? wrap_results(self.class.filter_objects(ret)) : wrap_results(ret) 
+          options[:association] ? wrap_results(self.class.filter_objects(ret)) : wrap_results(ret)
         end
       end
     end
