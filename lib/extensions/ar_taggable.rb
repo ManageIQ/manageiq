@@ -189,7 +189,8 @@ module ActsAsTaggable
   def vtag_list(options = {})
     ns = Tag.get_namespace(options)
 
-    predicate = ns.split("/")[2..-1] # throw away /virtual
+    ns.gsub!('/virtual/','')  # throw away /virtual
+    predicate = ns.split('/')
 
     # p "ns: [#{ns}]"
     # p "predicate: [#{predicate.inspect}]"
