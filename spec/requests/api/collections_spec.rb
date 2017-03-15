@@ -84,6 +84,11 @@ describe "Rest API Collections" do
       test_collection_query(:clusters, clusters_url, EmsCluster)
     end
 
+    it "query CloudVolumes" do
+      FactoryGirl.create(:cloud_volume)
+      test_collection_query(:cloud_volumes, cloud_volumes_url, CloudVolume)
+    end
+
     it "query Conditions" do
       FactoryGirl.create(:condition)
       test_collection_query(:conditions, conditions_url, Condition)
@@ -569,6 +574,11 @@ describe "Rest API Collections" do
     it 'bulk query LoadBalancers' do
       FactoryGirl.create(:load_balancer)
       test_collection_bulk_query(:load_balancers, load_balancers_url, LoadBalancer)
+    end
+
+    it 'bulk query CloudVolumes' do
+      FactoryGirl.create(:cloud_volume)
+      test_collection_bulk_query(:cloud_volumes, cloud_volumes_url, CloudVolume)
     end
   end
 end
