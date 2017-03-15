@@ -35,7 +35,7 @@ module MiqAeServiceModelSpec
       def collect_ids_with_rbac
         <<-'RUBY'
           $evm.enable_rbac
-          $evm.root['vm_ids'] = $evm.vmdb('vm').all.collect(&:id)
+          $evm.root['vm_names'] = $evm.vmdb('vm').all.collect(&:name)
         RUBY
       end
 
@@ -48,8 +48,8 @@ module MiqAeServiceModelSpec
                                     :method_name => 'OBELIX',
                                     :method_script => collect_ids_with_rbac)
         ws = MiqAeEngine.instantiate("/FRED/WILMA/DOGMATIX", user2)
-        ids = [vm21.id, vm22.id]
-        expect(ws.root("vm_ids")).to match_array(ids)
+        names = [vm21.name, vm22.name]
+        expect(ws.root("vm_names")).to match_array(names)
       end
 
       after do
