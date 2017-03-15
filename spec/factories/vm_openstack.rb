@@ -13,4 +13,10 @@ FactoryGirl.define do
   factory :vm_target_openstack, :parent => :vm_openstack do
     after(:create) { |x| x.raw_power_state = (toggle_on_name_seq(x) ? "ACTIVE" : "SHUTOFF") }
   end
+
+  trait :with_provider do
+    after(:create) do |x|
+      FactoryGirl.create(:ems_openstack, :vms => [x])
+    end
+  end
 end
