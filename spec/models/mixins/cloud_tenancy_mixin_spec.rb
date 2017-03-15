@@ -19,7 +19,7 @@ describe CloudTenancyMixin do
     end
 
     it "finds correct tenant id clause for cloud tenants" do
-      expect(CloudVolume.tenant_id_clause(user)).to eql ["(tenants.id IN (?) AND ext_management_systems.tenant_mapping_enabled IS TRUE) OR ext_management_systems.tenant_mapping_enabled IS FALSE", [tenant.id]]
+      expect(CloudVolume.tenant_id_clause(user)).to eql ["(tenants.id IN (?) AND ext_management_systems.tenant_mapping_enabled IS TRUE) OR ext_management_systems.tenant_mapping_enabled IS FALSE OR ext_management_systems.tenant_mapping_enabled IS NULL", [tenant.id]]
     end
   end
 end

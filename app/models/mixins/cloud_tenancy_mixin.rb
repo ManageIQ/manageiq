@@ -5,7 +5,7 @@ module CloudTenancyMixin
     include TenancyCommonMixin
 
     def tenant_id_clause_format(tenant_ids)
-      ["(tenants.id IN (?) AND ext_management_systems.tenant_mapping_enabled IS TRUE) OR ext_management_systems.tenant_mapping_enabled IS FALSE", tenant_ids]
+      ["(tenants.id IN (?) AND ext_management_systems.tenant_mapping_enabled IS TRUE) OR ext_management_systems.tenant_mapping_enabled IS FALSE OR ext_management_systems.tenant_mapping_enabled IS NULL", tenant_ids]
     end
 
     def tenant_joins_clause(scope)
