@@ -229,11 +229,12 @@ describe EmbeddedAnsible do
         expect(described_class).to receive(:generate_database_authentication).and_return(double(:userid => "awx", :password => "databasepassword"))
         expect(AwesomeSpawn).to receive(:run!) do |script_path, options|
           params                  = options[:params]
-          inventory_file_contents = File.read(params[:i])
+          inventory_file_contents = File.read(params[:inventory=])
 
           expect(script_path).to eq("/opt/ansible-installer/setup.sh")
-          expect(params[:e]).to eq(extra_vars)
-          expect(params[:k]).to eq("packages,migrations,firewall,supervisor")
+          expect(params["--"]).to be_nil
+          expect(params[:extra_vars=]).to eq(extra_vars)
+          expect(params[:skip_tags=]).to eq("packages,migrations,firewall,supervisor")
 
           new_admin_auth  = miq_database.ansible_admin_authentication
           new_rabbit_auth = miq_database.ansible_rabbitmq_authentication
@@ -255,11 +256,12 @@ describe EmbeddedAnsible do
 
         expect(AwesomeSpawn).to receive(:run!) do |script_path, options|
           params                  = options[:params]
-          inventory_file_contents = File.read(params[:i])
+          inventory_file_contents = File.read(params[:inventory=])
 
           expect(script_path).to eq("/opt/ansible-installer/setup.sh")
-          expect(params[:e]).to eq(extra_vars)
-          expect(params[:k]).to eq("packages,migrations,firewall,supervisor")
+          expect(params["--"]).to be_nil
+          expect(params[:extra_vars=]).to eq(extra_vars)
+          expect(params[:skip_tags=]).to eq("packages,migrations,firewall,supervisor")
 
           expect(inventory_file_contents).to include("admin_password='adminpassword'")
           expect(inventory_file_contents).to include("rabbitmq_username='rabbituser'")
@@ -281,11 +283,12 @@ describe EmbeddedAnsible do
         expect(described_class).to receive(:configure_secret_key)
         expect(AwesomeSpawn).to receive(:run!) do |script_path, options|
           params                  = options[:params]
-          inventory_file_contents = File.read(params[:i])
+          inventory_file_contents = File.read(params[:inventory=])
 
           expect(script_path).to eq("/opt/ansible-installer/setup.sh")
-          expect(params[:e]).to eq(extra_vars)
-          expect(params[:k]).to eq("packages,migrations,firewall")
+          expect(params["--"]).to be_nil
+          expect(params[:extra_vars=]).to eq(extra_vars)
+          expect(params[:skip_tags=]).to eq("packages,migrations,firewall")
 
           expect(inventory_file_contents).to include("admin_password='adminpassword'")
           expect(inventory_file_contents).to include("rabbitmq_username='rabbituser'")
