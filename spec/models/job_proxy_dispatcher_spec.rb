@@ -16,10 +16,12 @@ describe JobProxyDispatcher do
     NUM_STORAGES = 3
   end
 
+  before(:each) do
+    @server = EvmSpecHelper.local_miq_server(:name => "test_server_main_server")
+  end
+
   context "With a default zone, server, with hosts with a miq_proxy, vmware vms on storages" do
     before(:each) do
-      @server = EvmSpecHelper.local_miq_server(:name => "test_server_main_server")
-
       (NUM_SERVERS - 1).times do |i|
         FactoryGirl.create(:miq_server, :zone => @server.zone, :name => "test_server_#{i}")
       end
@@ -269,6 +271,35 @@ describe JobProxyDispatcher do
         dispatcher.instance_variable_set(:@zone, MiqServer.my_zone) # memoized during pending_jobs call
         job.update(:dispatch_status => "active")
         expect(dispatcher.active_vm_scans_by_zone['defult']).to eq(0)
+      end
+    end
+  end
+
+  context "limiting number of smart state analysis running on one server" do
+    before(:each) do
+      Job.create_job("VmScan", :agent_id => @server.id, :name => "Hello - 1")
+         .update_attributes(:dispatch_status => "any")
+      Job.create_job("VmScan", :agent_id => @server.id, :name => "Hello - 2")
+         .update_attributes(:dispatch_status => "active")
+      Job.create_job("VmScan", :agent_id => @server.id, :name => "Hello - 3")
+         .update_attributes(:dispatch_status => "active")
+      @proxy_dispatcher = JobProxyDispatcher.new
+    end
+
+    describe "#busy_proxies" do
+      it "it returns hash with number of not finished jobs with dispatch status 'active' for each MiqServer" do
+        expect(@proxy_dispatcher.busy_proxies).to eq "MiqServer_#{@server.id}" => 2
+      end
+    end
+
+    describe "#assign_proxy_to_job" do
+      it "increses by 1 number of jobs (how busy server is) for server" do
+        job = Job.create_job("VmScan", :agent_id => @server.id, :name => "Hello - 4")
+        expect(@proxy_dispatcher.busy_proxies).to eq "MiqServer_#{@server.id}" => 2
+
+        allow(@proxy_dispatcher).to receive(:embedded_scan_resource).and_return(nil)
+        @proxy_dispatcher.assign_proxy_to_job(@server, job)
+        expect(@proxy_dispatcher.busy_proxies).to eq "MiqServer_#{@server.id}" => 3
       end
     end
   end
