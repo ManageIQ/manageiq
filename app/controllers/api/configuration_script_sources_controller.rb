@@ -21,10 +21,11 @@ module Api
     def create_resource(_type, _id, data)
       attrs = validate_attrs(data)
       type = ConfigurationScriptSource.class_from_request_data(attrs)
+      raise 'type not currently supported' unless type.respond_to?(:create_in_provider_queue)
       task_id = type.create_in_provider_queue(attrs['manager_resource'], attrs.except('manager_resource'))
-      action_result(true, 'Creating Configuration Script Source', :task_id => task_id)
+      action_result(true, 'Creating ConfigurationScriptSource', :task_id => task_id)
     rescue => err
-      raise BadRequestError, "Could not create Configuration Script Source - #{err}"
+      action_result(false, err.to_s)
     end
 
     private

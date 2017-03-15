@@ -244,7 +244,7 @@ RSpec.describe 'Configuration Script Sources API' do
         'results' => [
           a_hash_including(
             'success' => true,
-            'message' => 'Creating Configuration Script Source',
+            'message' => 'Creating ConfigurationScriptSource',
             'task_id' => a_kind_of(Numeric)
           )
         ]
@@ -263,7 +263,7 @@ RSpec.describe 'Configuration Script Sources API' do
         'results' => [
           a_hash_including(
             'success' => true,
-            'message' => 'Creating Configuration Script Source',
+            'message' => 'Creating ConfigurationScriptSource',
             'task_id' => a_kind_of(Numeric)
           )
         ]
@@ -281,12 +281,12 @@ RSpec.describe 'Configuration Script Sources API' do
         'results' => [
           a_hash_including(
             'success' => true,
-            'message' => 'Creating Configuration Script Source',
+            'message' => 'Creating ConfigurationScriptSource',
             'task_id' => a_kind_of(Numeric)
           ),
           a_hash_including(
             'success' => true,
-            'message' => 'Creating Configuration Script Source',
+            'message' => 'Creating ConfigurationScriptSource',
             'task_id' => a_kind_of(Numeric)
           )
         ]
@@ -303,11 +303,12 @@ RSpec.describe 'Configuration Script Sources API' do
       run_post(configuration_script_sources_url, :resources => [params.except(:manager_resource)])
 
       expected = {
-        'error' => a_hash_including(
-          'message' => 'Could not create Configuration Script Source - must supply a manager resource'
-        )
+        'results' => [{
+          'success' => false,
+          'message' => 'must supply a manager resource'
+        }]
       }
-      expect(response).to have_http_status(:bad_request)
+      expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)
     end
 
