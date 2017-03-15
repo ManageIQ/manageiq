@@ -233,7 +233,7 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *gpppd
+    :verbs: *gpd
     :klass: Authentication
     :collection_actions:
       :get:
