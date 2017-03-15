@@ -1,7 +1,7 @@
 module MiqServer::RoleManagement
   extend ActiveSupport::Concern
 
-  ROLES_NEEDING_APACHE = %w(user_interface web_services websocket).freeze
+  ROLES_NEEDING_APACHE = %w(user_interface web_services websocket embedded_ansible).freeze
 
   included do
     has_many :assigned_server_roles, :dependent => :destroy
