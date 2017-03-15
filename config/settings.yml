@@ -1263,6 +1263,7 @@
         :poll: 10.seconds
       :event_catcher_swift:
         :poll: 10.seconds
+      :event_catcher_openstack_service: "auto"
     :queue_worker_base:
       :defaults:
         :cpu_usage_threshold: 100.percent
