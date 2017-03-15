@@ -601,6 +601,7 @@ describe ServiceTemplate do
 
     before do
       @catalog_item = ServiceTemplate.create_catalog_item(catalog_item_options, user)
+      @catalog_item.update_attributes!(:options => @catalog_item.options.merge(:foo => 'bar'))
     end
 
     it 'updates the catalog item' do
@@ -613,6 +614,7 @@ describe ServiceTemplate do
       expect(updated.name).to eq('Updated Template Name')
       expect(updated.service_resources.first.resource.source_id).to eq(new_vm.id) # Validate request update
       expect(updated.config_info).to eq(updated_catalog_item_options[:config_info])
+      expect(updated.options.key?(:foo)).to be_truthy # Test that the options were merged
     end
 
     it 'does not allow service_type to be changed' do
