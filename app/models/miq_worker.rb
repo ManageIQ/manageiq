@@ -237,12 +237,8 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.clean_workers
-    time_threshold = 1.hour
     server_scope.each do |w|
       Process.kill(9, w.pid) if w.pid && w.is_alive? rescue nil
-      # if w.last_heartbeat && (time_threshold.ago.utc < w.last_heartbeat)
-      #   ActiveRecord::Base.connection.kill(w.sql_spid)
-      # end
       w.destroy
     end
   end
