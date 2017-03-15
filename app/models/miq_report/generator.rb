@@ -97,7 +97,11 @@ module MiqReport::Generator
     if klass.nil?
       klass = db_class
       result = {}
-      cols.each { |c| result[c.to_sym] = {} if klass.virtual_attribute?(c) } if cols
+      if cols && klass.respond_to?(:virtual_attribute?)
+        cols.each do |c|
+          result[c.to_sym] = {} if klass.virtual_attribute?(c) && !klass.attribute_supported_by_sql?(c)
+        end
+      end
     end
 
     if includes.kind_of?(Hash)
@@ -118,7 +122,7 @@ module MiqReport::Generator
 
           if assoc_klass && assoc_klass.respond_to?(:virtual_attribute?) && v["columns"]
             v["columns"].each do |c|
-              result[k][c.to_sym] = {} if assoc_klass.virtual_attribute?(c)
+              result[k][c.to_sym] = {} if assoc_klass.virtual_attribute?(c) && !assoc_klass.attribute_supported_by_sql?(c)
             end
           end
         end
@@ -283,6 +287,7 @@ module MiqReport::Generator
       # TODO: add once only_cols is fixed
       # targets = targets.select(only_cols)
       where_clause = MiqExpression.merge_where_clauses(self.where_clause, options[:where_clause])
+      ## add in virtual attributes that can be calculated from sql
       va_sql_cols = cols.select do |col|
         db_class.virtual_attribute?(col) && db_class.attribute_supported_by_sql?(col)
       end
