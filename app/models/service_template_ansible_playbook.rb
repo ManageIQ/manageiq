@@ -1,10 +1,19 @@
 class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
+  RETIREMENT_ENTRY_POINTS = {
+    'yes_without_playbook' => '/Service/Generic/StateMachines/GenericLifecycle/Retire_Basic_Resource',
+    'no_without_playbook'  => '/Service/Generic/StateMachines/GenericLifecycle/Retire_Basic_Resource_None',
+    'no_with_playbook'     => '/Service/Generic/StateMachines/GenericLifecycle/Retire_Advanced_Resource_None',
+    'pre_with_playbook'    => '/Service/Generic/StateMachines/GenericLifecycle/Retire_Advanced_Resource_Pre',
+    'post_with_playbook'   => '/Service/Generic/StateMachines/GenericLifecycle/Retire_Advanced_Resource_Post'
+  }.freeze
+  private_constant :RETIREMENT_ENTRY_POINTS
+
   def self.default_provisioning_entry_point(_service_type)
     '/Service/Generic/StateMachines/GenericLifecycle/provision'
   end
 
   def self.default_retirement_entry_point
-    '/Service/Generic/StateMachines/GenericLifecycle/retire'
+    RETIREMENT_ENTRY_POINTS['yes_without_playbook']
   end
 
   def job_template(action)
@@ -66,7 +75,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
 
   def self.create_job_templates(service_name, description, config_info, auth_user)
     [:provision, :retirement, :reconfigure].each_with_object({}) do |action, hash|
-      next unless config_info[action]
+      next unless config_info[action] && config_info[action].key?(:playbook_id)
       hash[action] = { :configuration_template => create_job_template("miq_#{service_name}_#{action}", description, config_info[action], auth_user) }
     end
   end
@@ -108,9 +117,15 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   private_class_method :build_parameter_list
 
   def self.validate_config_info(info)
-    info[:provision][:fqname] ||= default_provisioning_entry_point('atomic') if info.key?(:provision)
-    info[:retirement][:fqname] ||= default_retirement_entry_point if info.key?(:retirement)
+    info[:provision][:fqname]   ||= default_provisioning_entry_point('atomic') if info.key?(:provision)
     info[:reconfigure][:fqname] ||= default_reconfiguration_entry_point if info.key?(:reconfigure)
+
+    if info.key?(:retirement)
+      info[:retirement][:fqname] ||= RETIREMENT_ENTRY_POINTS[info[:retirement][:remove_resources]]
+      info[:retirement][:fqname] ||= default_retirement_entry_point
+    else
+      info[:retirement] = {:fqname => default_retirement_entry_point}
+    end
 
     # TODO: Add more validation for required fields
 
