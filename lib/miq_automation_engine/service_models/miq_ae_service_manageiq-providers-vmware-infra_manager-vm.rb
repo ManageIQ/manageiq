@@ -9,7 +9,7 @@ module MiqAeMethodService
     end
 
     def add_disk(disk_name, disk_size_mb, options = {})
-      sync_or_async_ems_operation(options[:sync], "add_disk", [disk_name, disk_size_mb])
+      sync_or_async_ems_operation(options[:sync], "add_disk", [disk_name, disk_size_mb, options])
     end
   end
 end
