@@ -136,7 +136,7 @@ RUN source /etc/default/evm && \
     rm -rvf ${RUBY_GEMS_ROOT}/cache/* && \
     rm -rvf /root/.bundle/cache && \
     rm -rvf ${APP_ROOT}/tmp/cache/assets && \
-    rm -rf ${APP_ROOT}/log/*
+    rm -vf ${APP_ROOT}/log/*.log
 
 ## Build SUI
 RUN source /etc/default/evm && \
