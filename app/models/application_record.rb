@@ -13,4 +13,12 @@ class ApplicationRecord < ActiveRecord::Base
   # FIXME: UI code - decorator support
   extend MiqDecorator::Klass
   include MiqDecorator::Instance
+
+  # API Support
+  virtual_column :slug, :type => :string
+
+  def slug
+    collection = Api::CollectionConfig.new.name_for_subklass(self.class)
+    "#{collection}/#{id}" if collection && id
+  end
 end

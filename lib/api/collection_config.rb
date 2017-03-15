@@ -73,6 +73,13 @@ module Api
       @cfg.detect { |_, spec| spec[:klass] == resource_klass.name }.try(:first)
     end
 
+    def name_for_subklass(resource_klass)
+      @cfg.detect do |collection, _|
+        collection_class = klass(collection)
+        collection_class && (collection_class == resource_klass || collection_class.descendants.include?(resource_klass))
+      end.try(:first)
+    end
+
     def what_refers_to_feature(product_feature_name)
       referenced_identifiers[product_feature_name]
     end
