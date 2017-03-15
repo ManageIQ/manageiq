@@ -34,7 +34,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Netw
 
   def destination_vnics
     # Nics are not always ordered in the XML response
-    @destination_vnics ||= get_provider_destination.nics.sort_by { |n| n[:name] }
+    @destination_vnics ||= get_nics.sort_by { |n| n.name }
   end
 
   def find_network_in_cluster(network_name)
@@ -44,8 +44,12 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Netw
     network
   end
 
+  def get_nics
+    destination.ext_management_system.inventory.get_nics(destination)
+  end
+
   def find_nic_on_network(network)
-    nic = get_provider_destination.nics.detect { |n| n[:network][:id] == network[:id] }
+    nic = get_nics.detect { |n| n.network.try(:id) == network[:id] }
 
     _log.warn "Cannot find NIC with network id=#{network[:id].inspect}" if nic.nil?
     nic
@@ -66,15 +70,14 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Netw
     network   = find_network_in_cluster(network_hash[:network])
     raise MiqException::MiqProvisionError, "Unable to find specified network: <#{network_hash[:network]}>" if network.nil?
 
-    options = {
-      :name        => name,
-      :interface   => network_hash[:interface],
-      :network_id  => network[:id],
-      :mac_address => mac_addr,
-    }.delete_blanks
-
-    _log.info("with options: <#{options.inspect}>")
-
-    vnic.nil? ? get_provider_destination.create_nic(options) : vnic.apply_options!(options)
+    get_ems.inventory.configure_vnic(
+      :vm        => destination,
+      :mac_addr  => mac_addr,
+      :network   => network,
+      :nic_name  => name,
+      :interface => network_hash[:interface],
+      :vnic      => vnic,
+      :logger    => _log
+    )
   end
 end

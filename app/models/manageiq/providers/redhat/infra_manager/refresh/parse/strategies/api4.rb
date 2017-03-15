@@ -52,7 +52,8 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
                    else
                      # TODO this is taking only one location for some reason. Need to investigate
                      # how this is used
-                     logical_unit = storage_inv.dig(:storage, :volume_group, :logical_units).first
+                     logical_units = storage_inv.dig(:storage, :volume_group, :logical_units)
+                     logical_unit =  logical_units && logical_units.first
                      logical_unit && logical_unit.id
                    end
 

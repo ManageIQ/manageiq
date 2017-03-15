@@ -60,8 +60,7 @@ module ManageIQ::Providers::Redhat::InfraManager::EventParser
   def self.parse_new_target(full_data, message, ems, event_type)
     cluster = full_data[:cluster]
     cluster_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(cluster[:href])
-
-    cluster_name = ems.inventory.collect_cluster_name_href(ems, cluster_ref)
+    cluster_name = ems.inventory.get_cluster_name_href(cluster_ref)
 
     {
       :ems_id         => ems.id,

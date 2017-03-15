@@ -33,7 +33,6 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
         end
         storages.compact!
         storages.uniq!
-        byebug
         storage = storages.first
 
         # Determine the cluster
@@ -86,7 +85,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
       return result, result_uids, added_hosts
     end
 
-    def self.partial_host_hash(partial_host_inv)
+    def partial_host_hash(partial_host_inv)
       ems_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(partial_host_inv.href)
       { :ems_ref => ems_ref, :uid_ems => partial_host_inv.id }
     end

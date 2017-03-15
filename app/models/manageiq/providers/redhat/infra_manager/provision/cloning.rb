@@ -1,23 +1,15 @@
 module ManageIQ::Providers::Redhat::InfraManager::Provision::Cloning
   def clone_complete?
-    # TODO: shouldn't this error out the provision???
-    return true if phase_context[:clone_task_ref].nil?
-
-    # TODO check whether this works with the SDK
+    ems = get_ems
     source.with_provider_connection do |rhevm|
-      status = rhevm.status(phase_context[:clone_task_ref])
-      _log.info("Clone is #{status}")
-
-      status == 'complete'
+      ems.inventory.clone_completed?(:phase_context => phase_context,
+                                     :connection    => rhevm,
+                                     :logger        => _log)
     end
   end
 
   def destination_image_locked?
-    rhevm_vm = get_provider_destination
-
-    return false if rhevm_vm.nil?
-    # TODO check whether this works with the SDK
-    rhevm_vm.attributes.fetch_path(:status, :state) == "image_locked"
+    get_ems.inventory.destination_image_locked?(vm)
   end
 
   def find_destination_in_vmdb(ems_ref)
@@ -60,10 +52,13 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Cloning
 
   def start_clone(clone_options)
     source.with_provider_object do |rhevm_template|
-      byebug_term
       vm = rhevm_template.create_vm(clone_options)
-      phase_context[:new_vm_ems_ref] = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(vm[:href])
-      phase_context[:clone_task_ref] = vm.creation_status_link
+      get_ems.inventory.populate_phase_context(phase_context, vm)
     end
+  end
+
+  def get_ems
+    ems_id = options[:src_ems_id][0]
+    ExtManagementSystem.find ems_id
   end
 end

@@ -18,7 +18,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
       username
     end
 
-    def collect_cluster_name_href(href)
+    def get_cluster_name_href(href)
       ext_management_system.with_provider_connection do |rhevm|
         Ovirt::Cluster.find_by_href(rhevm, href).try(:[], :name)
       end
@@ -64,6 +64,50 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
       rescue Ovirt::VmAlreadyRunning
     end
 
+    def configure_vnic(args)
+      vm = args[:vm]
+      mac_addr = args[:mac_addr]
+      network = args[:network]
+      nic_name = args[:nic_name]
+      interface = args[:interface]
+      vnic = args[:vnic]
+      logger = args[:logger]
+
+      options = {
+        :name        => nic_name,
+        :interface   => interface,
+        :network_id  => network[:id],
+        :mac_address => mac_addr,
+      }.delete_blanks
+
+      logger.info("with options: <#{options.inspect}>")
+
+      if vnic.nil?
+        vm.with_provider_object do |rhevm_vm|
+          rhevm_vm.create_nic(options)
+        end
+      else
+        vnic.apply_options!(options)
+      end
+    end
+
+    def get_nics(vm)
+      vm.with_provider_object do |rhevm_vm|
+        rhevm_vm.nics.collect { |n| NicsDecorator.new(n) }
+      end
+    end
+
+    class NicsDecorator < SimpleDelegator
+      def name
+        self[:name]
+      end
+
+      def network
+        id = self[:network][:id]
+        OpenStruct.new(:id => id)
+      end
+    end
+
     def vm_stop(operation)
       operation.with_provider_object(&:stop)
       rescue Ovirt::VmIsNotRunning
@@ -94,6 +138,37 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
       ext_management_system.with_provider_connection do |rhevm|
         Ovirt::Cluster.find_by_href(rhevm, href).try(:find_network_by_name, network_name)
       end
+    end
+
+    def destination_image_locked?(vm)
+      vm.with_provider_object do |rhevm_vm|
+        return false if rhevm_vm.nil?
+        rhevm_vm.attributes.fetch_path(:status, :state) == "image_locked"
+      end
+    end
+
+    def clone_completed?(args)
+      phase_context = args[:phase_context]
+      logger = args[:logger]
+      rhevm = args[:connection]
+      # TODO: shouldn't this error out the provision???
+      return true if phase_context[:clone_task_ref].nil?
+      status = rhevm.status(phase_context[:clone_task_ref])
+      logger.info("Clone is #{status}")
+      status == 'complete'
+    end
+
+    def populate_phase_context(phase_context, vm)
+      phase_context[:new_vm_ems_ref] = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(vm[:href])
+      phase_context[:clone_task_ref] = vm.creation_status_link
+    end
+
+    def powered_off_in_provider?(vm)
+      vm.with_provider_object(&:status)[:state] == "down"
+    end
+
+    def powered_on_in_provider?(vm)
+      vm.with_provider_object(&:status)[:state] == "up"
     end
 
     class GeneralUpdateMethodNamesDecorator < SimpleDelegator

@@ -62,9 +62,10 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
       con.system_service.clusters_service.cluster_service(get_uuid_from_href(href)).get
     end
 
-    def collect_cluster_name_href(href, con = nil)
-      con ||= connection
-      collect_cluster_from_href(href, con).name
+    def get_cluster_name_href(href)
+      ems.with_provider_connection do |connection|
+        collect_cluster_from_href(href, connection).name
+      end
     end
 
     def collect_storages
@@ -106,7 +107,6 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
 
     def get_template_proxy(template, con = nil)
       con ||= connection
-      byebug_term
       TemplateProxyDecorator.new(
         con.system_service.templates_service.template_service(template.uid_ems),
         con,
@@ -227,7 +227,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
       @ems.with_provider_connection(:version => 4) do |connection|
         cluster_service = connection.system_service.clusters_service.cluster_service(get_uuid_from_href(href))
         networks = cluster_service.networks_service.list
-        networks.detect { |n| n[:name] == network_name }
+        networks.detect { |n| n.name == network_name }
       end
     end
 
@@ -241,6 +241,81 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
       @ems.with_provider_connection(:version => 4) do |connection|
         OpenStruct.new(:version_string => connection.system_service.get.product_info.version.full_version)
       end
+    end
+
+    def destination_image_locked?(vm)
+      vm.with_provider_object do |vm_proxy|
+        vm_proxy.get.status == OvirtSDK4::VmStatus::IMAGE_LOCKED
+      end
+    end
+
+    def get_nics(vm)
+      vm.with_provider_connection do |connection|
+        vm_proxy = connection.system_service.vms_service.vm_service(vm.uid_ems).get
+        connection.follow_link(vm_proxy.nics)
+      end
+    end
+
+    def get_network_profile_id(connection, network_id)
+      profiles_service = connection.system_service.vnic_profiles_service
+      profile = profiles_service.list.detect{ |profile| profile.network.id == network_id }
+      profile && profile.id
+    end
+
+    def configure_vnic(args)
+      vm = args[:vm]
+      mac_addr = args[:mac_addr]
+      network = args[:network]
+      nic_name = args[:nic_name]
+      interface = args[:interface]
+      vnic = args[:vnic]
+      logger = args[:logger]
+
+      vm.with_provider_connection do |connection|
+        uuid = get_uuid_from_href vm.ems_ref
+        profile_id = get_network_profile_id(connection, network.id)
+        nics_service = connection.system_service.vms_service.vm_service(uuid).nics_service
+        options = {
+                    :name         => nic_name || vnic.name,
+                    :interface    => interface || vnic.interface,
+                    :mac          => mac_addr ? OvirtSDK4::Mac.new({:address => mac_addr}) : vnic.mac,
+                    :vnic_profile => profile_id ? { id: profile_id } : vnic.vnic_profile
+                  }
+        logger.info("with options: <#{options.inspect}>")
+        if vnic
+          nics_service.nic_service(vnic.id).update(options)
+        else
+          nics_service.add(OvirtSDK4::Nic.new(options))
+        end
+      end
+    end
+
+    def clone_completed?(args)
+      phase_context = args[:phase_context]
+      logger = args[:logger]
+      connection = args[:connection]
+      vm = get_vm_service_by_href(phase_context[:new_vm_ems_ref], connection).get
+      status = vm.status
+      logger.info("The Vm being cloned is #{status}")
+      status == OvirtSDK4::VmStatus::DOWN
+    end
+
+    def get_vm_service_by_href(href, con)
+      con ||= connection
+      vm_uuid = get_uuid_from_href(href)
+      con.system_service.vms_service.vm_service(vm_uuid)
+    end
+
+    def populate_phase_context(phase_context, vm)
+      phase_context[:new_vm_ems_ref] = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(vm.href)
+    end
+
+    def powered_off_in_provider?(vm)
+      vm.with_provider_object { |vm_service| vm_service.get.status } == OvirtSDK4::VmStatus::DOWN
+    end
+
+    def powered_on_in_provider?(vm)
+      vm.with_provider_object { |vm_service| vm_service.get.status } == OvirtSDK4::VmStatus::UP
     end
 
     class HostPreloadedAttributesDecorator < SimpleDelegator
@@ -280,13 +355,13 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
     end
 
     class VmProxyDecorator < SimpleDelegator
-      def upate_memory_reserve!(memory_reserve_size)
+      def update_memory_reserve!(memory_reserve_size)
         vm = get
         vm.memory_policy.guaranteed = memory_reserve_size
         update(vm)
       end
 
-      def udpate_description!(description)
+      def update_description!(description)
         vm = get
         vm.description = description
         update(vm)
@@ -298,10 +373,16 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
         update(vm)
       end
 
-      def udpate_host_affinity!(dest_host_ems_ref)
+      def update_host_affinity!(dest_host_ems_ref)
         vm = get
         host = collect_host(dest_host_ems_ref)
         vm.placement_policy.hosts = [host]
+        update(vm)
+      end
+
+      def update_cpu_topology!(cpu_hash)
+        vm = get
+        vm.cpu.topology = OvirtSDK4::CpuTopology.new(cpu_hash)
         update(vm)
       end
     end

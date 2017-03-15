@@ -20,16 +20,16 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration
   end
 
   def configure_container
-    rhevm_vm = get_provider_destination
-
-    # TODO some of the attributes are not listed in OvirtSDK4::Vm
-    configure_container_description(rhevm_vm)
-    configure_memory(rhevm_vm)
-    configure_memory_reserve(rhevm_vm)
-    configure_cpu(rhevm_vm)
-    configure_host_affinity(rhevm_vm)
-    configure_network_adapters
-    configure_cloud_init
+    #rhevm_vm = get_provider_destination
+    vm.with_provider_object do |rhevm_vm|
+      configure_container_description(rhevm_vm)
+      configure_memory(rhevm_vm)
+      configure_memory_reserve(rhevm_vm)
+      configure_cpu(rhevm_vm)
+      configure_host_affinity(rhevm_vm)
+      configure_network_adapters
+      configure_cloud_init
+    end
   end
 
   private
