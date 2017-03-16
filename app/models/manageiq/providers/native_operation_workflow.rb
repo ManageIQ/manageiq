@@ -3,6 +3,21 @@ class ManageIQ::Providers::NativeOperationWorkflow < Job
     super(name, options)
   end
 
+  #
+  # State-transition diagram:
+  #
+  #    *                          /------\
+  #    | :initialize              |      |  :poll_native_task
+  #    v               :start     v      |
+  # waiting_to_start  -------> running ----------> refreshing <-\
+  #                               |     :refresh        |       | :poll_refresh
+  #                               v                     |-------/
+  #                             error <-----------------|
+  #                               |                     |
+  #                               v                     |
+  #       finished <---------- notifying --------------/
+  #                   :finish              :notify
+  #
   def load_transitions
     self.state ||= 'initialize'
 
