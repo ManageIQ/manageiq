@@ -12,7 +12,7 @@
         %tbody
           - @profiles.each do |profile|
             %tr{:title => _("View this Profile"),
-              :onclick => "miqTreeActivateNode('policy_profile_tree', 'profile-#{to_cid(profile.id)}');"}
+              :onclick => "miqTreeActivateNode('policy_profile_tree', 'pp-#{to_cid(profile.id)}');"}
               %td.narrow
                 %img{:src => image_path("100/policy_profile#{profile.active? ? '' : '_inactive'}.png")}
               %td
