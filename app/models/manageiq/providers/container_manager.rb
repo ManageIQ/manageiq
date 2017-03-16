@@ -22,6 +22,11 @@ module ManageIQ::Providers
     has_one :container_deployment, :foreign_key => :deployed_ems_id, :inverse_of => :deployed_ems
     has_many :computer_systems, :through => :container_nodes
 
+    # Archived entities to destroy when the container manager is deleted
+    has_many :old_container_groups, :foreign_key => :old_ems_id, :dependent => :destroy, :class_name => "ContainerGroup"
+    has_many :old_container_projects, :foreign_key => :old_ems_id, :dependent => :destroy, :class_name => "ContainerProject"
+    has_many :old_container_images, :foreign_key => :old_ems_id, :dependent => :destroy, :class_name => "ContainerImage"
+
     virtual_column :port_show, :type => :string
 
     supports :external_logging do
