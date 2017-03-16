@@ -106,12 +106,8 @@
                       - when "DialogFieldButton"
                         = button_tag(_('Save'), :disabled => true)
                       - when "DialogFieldTagControl"
-                        - category_tags = DialogFieldTagControl.category_tags(field.category).map do |cat|
-                          - [cat[:description], cat[:id]]
-                        - if field.single_value?
-                          = select_tag('field.id', options_for_select(category_tags),
-                            :prompt => field.required? ? "<#{_('Choose')}>" : "<#{_('None')}>")
-                        - else
-                          = select_tag('field.id', options_for_select(category_tags), :multiple => true)
+                        - multiple = field.single_value? ? {} : {:multiple => true}
+                        = select_tag('field.id', options_for_select(dialog_dropdown_select_values(field)), multiple)
+
 :javascript
   miq_tabs_init("#dialog_tabs");

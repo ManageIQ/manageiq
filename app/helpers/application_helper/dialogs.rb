@@ -1,12 +1,22 @@
 module ApplicationHelper::Dialogs
-  def dialog_dropdown_select_values(field, _selected_value, category_tags = nil)
-    values = []
+  def dialog_dropdown_select_values(field)
+    values = field.values
     if field.type.include?("DropDown")
-      values += field.values.collect(&:reverse)
+      values.collect!(&:reverse)
     elsif field.type.include?("TagControl")
-      values += category_tags
+      values.map! { |category| [category[:description], category[:id]] }
     end
     values
+  end
+
+  def category_tags(category_id)
+    classification = Classification.find_by(:id => category_id)
+    return [] if classification.nil?
+
+    available_tags = classification.entries.collect do |category|
+      {:name => category.name, :description => category.description}
+    end
+    available_tags
   end
 
   def disable_check_box?

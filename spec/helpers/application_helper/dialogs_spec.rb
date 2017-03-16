@@ -11,21 +11,50 @@ describe ApplicationHelper::Dialogs do
 
   describe "#dialog_dropdown_select_values" do
     let(:dialog_field) { instance_double("DialogFieldDropDownList", :values => values, :type => type) }
-    let(:values) { [%w(cat Cat), %w(dog Dog)] }
 
     context "when the field type includes drop down" do
       let(:type) { "BananaDropDown" }
+      let(:values) { [%w(cat Cat), %w(dog Dog)] }
 
       it "returns the values collected and reversed" do
-        expect(helper.dialog_dropdown_select_values(dialog_field, nil)).to eq(values.collect(&:reverse))
+        reversed_values = values.collect(&:reverse)
+        expect(helper.dialog_dropdown_select_values(dialog_field)).to eq(reversed_values)
       end
     end
 
     context "when the field type includes tag control" do
       let(:type) { "BananaTagControl" }
+      let(:values) { [{:description => "Cat", :id => 123}, {:description => "Dog", :id => 321}] }
 
-      it "returns the values with the passed in category tags" do
-        expect(helper.dialog_dropdown_select_values(dialog_field, nil, %w(category tags))).to eq(%w(category tags))
+      it "returns the values mapped to a description and id" do
+        expect(helper.dialog_dropdown_select_values(dialog_field)).to eq([["Cat", 123], ["Dog", 321]])
+      end
+    end
+  end
+
+  describe "#category_tags" do
+    before do
+      allow(Classification).to receive(:find_by).with(:id => 123).and_return(classification)
+    end
+
+    context "when the category exists with the given id" do
+      let(:classification) { instance_double("Classification", :entries => [entry1, entry2]) }
+      let(:entry1) { instance_double("Classification", :name => "cat", :description => "Cat") }
+      let(:entry2) { instance_double("Classification", :name => "dog", :description => "Dog") }
+
+      it "returns a list of entries by name and description" do
+        expect(helper.category_tags(123)).to eq([
+          {:name => "cat", :description => "Cat"},
+          {:name => "dog", :description => "Dog"}
+        ])
+      end
+    end
+
+    context "when the category does not exist by the given id" do
+      let(:classification) { nil }
+
+      it "returns an empty array" do
+        expect(helper.category_tags(123)).to eq([])
       end
     end
   end

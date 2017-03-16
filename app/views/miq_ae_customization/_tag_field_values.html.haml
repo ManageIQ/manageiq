@@ -6,7 +6,7 @@
         %th= _('Value')
         %th= _('Description')
     %tbody
-      - DialogFieldTagControl.category_tags(@edit[:field_category]).each do |cat|
+      - category_tags(@edit[:field_category]).each do |cat|
         %tr
           %td= cat[:name]
           %td= cat[:description]
