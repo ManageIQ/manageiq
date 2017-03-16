@@ -29,7 +29,8 @@ class ApplicationHelper::Toolbar::OpenstackVmCloudCenter < ApplicationHelper::To
           :instance_ownership,
           'pficon pficon-user fa-lg',
           N_('Set Ownership for this Instance'),
-          N_('Set Ownership')),
+          N_('Set Ownership'),
+          :klass => ApplicationHelper::Button::SetOwnership),
         button(
           :instance_delete,
           'pficon pficon-delete fa-lg',

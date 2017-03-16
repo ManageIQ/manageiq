@@ -33,7 +33,7 @@ describe VmCloudController do
       %w(vm_amazon Amazon)
     ].each do |instance, name|
       it "renders Instance details for #{name} node" do
-        instance = FactoryGirl.create(instance.to_sym)
+        instance = FactoryGirl.create(instance.to_sym, :with_provider)
 
         session[:settings] = {}
         seed_session_trees('vm_cloud', 'instances_tree')

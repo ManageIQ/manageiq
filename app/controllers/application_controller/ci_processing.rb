@@ -44,6 +44,13 @@ module ApplicationController::CiProcessing
     if @explorer
       @sb[:explorer] = true
       ownership(ownership_items)
+      if @ownershipitems.empty?
+        add_flash(_('None of the selected items allow ownership changes'), :error)
+
+        @refresh_div = "flash_msg_div"
+        @refresh_partial = "layouts/flash_msg"
+        return
+      end
     else
       if role_allows?(:feature => "vm_ownership")
         drop_breadcrumb(:name => _("Set Ownership"), :url => "/vm_common/ownership")
@@ -53,6 +60,7 @@ module ApplicationController::CiProcessing
       end
     end
   end
+
   alias_method :image_ownership, :set_ownership
   alias_method :instance_ownership, :set_ownership
   alias_method :vm_ownership, :set_ownership
@@ -77,6 +85,7 @@ module ApplicationController::CiProcessing
     drop_breadcrumb(:name => _("Set Ownership"), :url => "/vm_common/ownership")
     ownership_items = params[:rec_ids] if params[:rec_ids]
     build_ownership_info(ownership_items)
+    return if @ownershipitems.empty?
     build_targets_hash(@ownershipitems)
     if @sb[:explorer]
       @refresh_partial = "shared/views/ownership"
@@ -102,8 +111,10 @@ module ApplicationController::CiProcessing
     Rbac.filtered(MiqGroup.non_tenant_groups).each { |g| @groups[g.description] = g.id.to_s }
 
     @user = @group = DONT_CHANGE_OWNER if ownership_items.length > 1
-
-    @ownershipitems = klass.find(ownership_items).sort_by(&:name)
+    ownership_scope = klass.where(:id => ownership_items)
+    ownership_scope = ownership_scope.with_ownership if klass.respond_to?(:with_ownership)
+    @origin_ownership_items = ownership_items
+    @ownershipitems = ownership_scope.order(:name)
     @view = get_db_view(klass == VmOrTemplate ? Vm : klass) # Instantiate the MIQ Report view object
     @view.table = MiqFilter.records2table(@ownershipitems, @view.cols + ['id'])
   end
@@ -121,9 +132,16 @@ module ApplicationController::CiProcessing
     @group = group ? group.id.to_s : nil
     Rbac.filtered(MiqGroup).each { |g| @groups[g.description] = g.id.to_s }
     @user = @group = DONT_CHANGE_OWNER if ownership_items.length > 1
-    @ownershipitems = klass.find(ownership_items).sort_by(&:name)
+    @ownershipitems = Rbac.filtered(klass.where(:id => ownership_items).order(:name), :class => klass)
+    raise _('Invalid items passed') unless @ownershipitems.pluck(:id).to_set == ownership_items.map(&:to_i).to_set
     {:user  => @user,
      :group => @group}
+  end
+
+  def valid_items_for(klass, param_ids)
+    scope = klass.respond_to?(:with_ownership) ? klass.with_ownership : klass
+    checked_ids = Rbac.filtered(scope.where(:id => param_ids)).pluck(:id)
+    checked_ids.to_set == param_ids.to_set
   end
 
   def ownership_update
@@ -156,7 +174,10 @@ module ApplicationController::CiProcessing
       end
 
       klass = get_class_from_controller_param(request.parameters[:controller])
-      result = klass.set_ownership(params[:objectIds].map(&:to_i), opts)
+      param_ids = params[:objectIds].map(&:to_i)
+      raise _('Invalid items selected.') unless valid_items_for(klass, param_ids)
+
+      result = klass.set_ownership(param_ids, opts)
       unless result == true
         result["missing_ids"].each { |msg| add_flash(msg, :error) } if result["missing_ids"]
         result["error_updating"].each { |msg| add_flash(msg, :error) } if result["error_updating"]

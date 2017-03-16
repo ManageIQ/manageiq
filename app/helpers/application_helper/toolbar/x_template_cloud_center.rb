@@ -28,7 +28,9 @@ class ApplicationHelper::Toolbar::XTemplateCloudCenter < ApplicationHelper::Tool
                        :image_ownership,
                        'pficon pficon-user fa-lg',
                        N_('Set Ownership for this Image'),
-                       N_('Set Ownership')),
+                       N_('Set Ownership'),
+                       :klass => ApplicationHelper::Button::SetOwnership
+                     ),
                      button(
                        :image_delete,
                        'pficon pficon-delete fa-lg',

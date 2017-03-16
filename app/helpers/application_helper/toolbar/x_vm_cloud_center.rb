@@ -29,7 +29,9 @@ class ApplicationHelper::Toolbar::XVmCloudCenter < ApplicationHelper::Toolbar::B
           :instance_ownership,
           'pficon pficon-user fa-lg',
           N_('Set Ownership for this Instance'),
-          N_('Set Ownership')),
+          N_('Set Ownership'),
+          :klass => ApplicationHelper::Button::SetOwnership
+        ),
         separator,
         button(
           :instance_delete,
