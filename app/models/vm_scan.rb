@@ -171,7 +171,7 @@ class VmScan < Job
                                                                    :name => ems_list[scan_ci_type][:hostname]}
         end
       end
-      unless ems_list[scan_ci_type].nil?
+      if ems_list[scan_ci_type]
         _log.info "[#{host.name}] communicates with [#{scan_ci_type}:#{ems_list[scan_ci_type][:hostname]}"\
                   "(#{ems_list[scan_ci_type][:address]})] to scan vm [#{vm.name}]"
       end
