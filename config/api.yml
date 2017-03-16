@@ -600,6 +600,16 @@
       :get:
       - :name: read
         :identifier: embedded_configuration_script_source_view
+  :configuration_scripts:
+    :description: Configuration Scripts
+    :options:
+    - :collection
+    :verbs: *g
+    :klass: ConfigurationScript
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: configuration_script_view
   :container_deployments:
     :description: Container Provider Deployment
     :identifier: container_deployment
