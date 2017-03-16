@@ -233,7 +233,7 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *gp
+    :verbs: *gpd
     :klass: Authentication
     :collection_actions:
       :get:
@@ -247,6 +247,9 @@
       - :name: read
         :identifier: embedded_automation_manager_credentials_view
       :post:
+      - :name: delete
+        :identifier: embedded_automation_manager_credentials_delete
+      :delete:
       - :name: delete
         :identifier: embedded_automation_manager_credentials_delete
     :subcollection_actions:

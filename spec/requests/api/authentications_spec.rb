@@ -80,7 +80,10 @@ RSpec.describe 'Authentications API' do
 
       expected = {
         'results' => [
-          { 'success' => false, 'message' => 'type not currently supported' }
+          {
+            'success' => false,
+            'message' => "Delete not supported for Authentication id:#{auth.id} name: '#{auth.name}'"
+          }
         ]
       }
       expect(response).to have_http_status(:ok)
@@ -138,6 +141,26 @@ RSpec.describe 'Authentications API' do
       api_basic_authorize
 
       run_post(authentications_url(auth.id), :action => 'delete')
+
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
+
+  describe 'DELETE /api/authentications/:id' do
+    it 'will delete an authentication' do
+      auth = FactoryGirl.create(:authentication)
+      api_basic_authorize action_identifier(:authentications, :delete, :resource_actions, :delete)
+
+      run_delete(authentications_url(auth.id))
+
+      expect(response).to have_http_status(:no_content)
+    end
+
+    it 'will not delete an authentication without an appropriate role' do
+      auth = FactoryGirl.create(:authentication)
+      api_basic_authorize
+
+      run_delete(authentications_url(auth.id))
 
       expect(response).to have_http_status(:forbidden)
     end
