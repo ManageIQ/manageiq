@@ -27,13 +27,25 @@ class ContainerLabelTagMapping < ApplicationRecord
     "Kubernetes::ContainerBuild"
   ].freeze
 
+  # TODO: migrate all `labeled_resource_type` to have a Provider:: prefix (or separate column).
+  PROVIDER_IF_OMITTED = "Kubernetes".freeze
+
   belongs_to :tag
+
+  def self.split_provider_entity(resource_type)
+    return nil if resource_type.nil?
+    if resource_type.include?('::')
+      resource_type.split('::')
+    else
+      [PROVIDER_IF_OMITTED, resource_type]
+    end
+  end
 
   # Pass the data this returns to map_* methods.
   def self.cache
     # {[name, type, value] => [tag_id, ...]}
     in_my_region.find_each
-                .group_by { |m| [m.label_name, m.labeled_resource_type, m.label_value].freeze }
+                .group_by { |m| [m.label_name, split_provider_entity(m.labeled_resource_type), m.label_value].freeze }
                 .transform_values { |mappings| mappings.collect(&:tag_id) }
   end
 
@@ -46,8 +58,9 @@ class ContainerLabelTagMapping < ApplicationRecord
 
   def self.map_label(cache, type, label)
     # Apply both specific-type and any-type, independently.
-    (map_name_type_value(cache, label[:name], type, label[:value]) +
-     map_name_type_value(cache, label[:name], nil,  label[:value]))
+    # TODO: separate provider/type better to support "Kubernetes Any" vs "Amazon Any".
+    (map_name_type_value(cache, label[:name], split_provider_entity(type), label[:value]) +
+     map_name_type_value(cache, label[:name], nil,                         label[:value]))
   end
 
   def self.map_name_type_value(cache, name, type, value)

@@ -46,7 +46,9 @@ describe ContainerLabelTagMapping do
   context "with 2 mappings for same label" do
     before(:each) do
       FactoryGirl.create(:container_label_tag_mapping, :only_nodes, :label_value => 'value-1', :tag => tag1)
-      FactoryGirl.create(:container_label_tag_mapping, :only_nodes, :label_value => 'value-1', :tag => tag2)
+      # check that type without 'ContainerNode' works too.
+      FactoryGirl.create(:container_label_tag_mapping, :labeled_resource_type => 'ContainerNode',
+                         :label_value => 'value-1', :tag => tag2)
     end
 
     it "map_labels returns 2 tags" do
@@ -55,6 +57,7 @@ describe ContainerLabelTagMapping do
         {:tag_id => tag2.id}
       )
       expect(map_to_tags('ContainerNode', 'name' => 'value-1')).to contain_exactly(tag1, tag2)
+      expect(map_to_tags('Kubernetes::ContainerNode', 'name' => 'value-1')).to contain_exactly(tag1, tag2)
     end
   end
 
@@ -254,6 +257,18 @@ describe ContainerLabelTagMapping do
       node.tags = [tag1, user_tag, tag2]
       ContainerLabelTagMapping.retag_entity(node, [{:tag_id => tag1.id}, {:tag_id => tag3.id}])
       expect(node.tags).to contain_exactly(user_tag, tag1, tag3)
+    end
+  end
+
+  describe ".split_provider_entity" do
+    it "handles nil" do
+      expect(ContainerLabelTagMapping.split_provider_entity(nil)).to eq(nil)
+    end
+
+    it "works with and without Provider:: prefix" do
+      expect(ContainerLabelTagMapping.split_provider_entity('Foo')).to             eq(['Kubernetes', 'Foo'])
+      expect(ContainerLabelTagMapping.split_provider_entity('Kubernetes::Foo')).to eq(['Kubernetes', 'Foo'])
+      expect(ContainerLabelTagMapping.split_provider_entity('Amazon::Bar')).to     eq(['Amazon', 'Bar'])
     end
   end
 end
