@@ -14,13 +14,7 @@ module ManageIQ::Providers
       end
 
       def get_openshift_images(inventory)
-        process_collection(inventory["image"], :container_images) { |n| parse_openshift_image(n) }
-        @data[:container_images].uniq! { |n| n[:image_ref] }
-
-        @data[:container_images].each do |ns|
-          @data_index.store_path(:container_images, :by_name, ns[:name], ns)
-          @data_index.store_path(:container_images, :by_image_ref, ns[:image_ref], ns)
-        end
+        inventory["image"].each { |img| parse_openshift_image(img) }
       end
 
       def get_builds(inventory)
