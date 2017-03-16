@@ -7,7 +7,6 @@
 #
 describe "Provision Requests API" do
   let(:zone)       { FactoryGirl.create(:zone, :name => "api_zone") }
-  let(:miq_server) { FactoryGirl.create(:miq_server, :zone => zone) }
   let(:ems)        { FactoryGirl.create(:ems_vmware, :zone => zone) }
   let(:host)       { FactoryGirl.create(:host, :ext_management_system => ems) }
   let(:dialog)     { FactoryGirl.create(:miq_dialog_provision) }
