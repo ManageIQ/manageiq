@@ -10,7 +10,7 @@ module Api
     end
 
     def options
-      render_options(:authentications, :credential_types => build_additional_fields)
+      render_options(:authentications, build_additional_fields)
     end
 
     private
@@ -21,21 +21,8 @@ module Api
 
     def build_additional_fields
       {
-        :ansible_tower_credentials    => build_ansible_tower_creds,
-        :embedded_ansible_credentials => build_embedded_ansible_creds
+        :credential_types => ::Authentication.build_credential_options
       }
-    end
-
-    def build_ansible_tower_creds
-      ManageIQ::Providers::AnsibleTower::AutomationManager::Credential.descendants.each_with_object({}) do |klass, fields|
-        fields[klass.name] = klass::API_OPTIONS if defined? klass::API_OPTIONS
-      end
-    end
-
-    def build_embedded_ansible_creds
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential.descendants.each_with_object({}) do |klass, fields|
-        fields[klass.name] = klass::API_OPTIONS if defined? klass::API_OPTIONS
-      end
     end
   end
 end

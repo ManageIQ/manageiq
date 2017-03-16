@@ -50,6 +50,11 @@ class Authentication < ApplicationRecord
 
   RETRYABLE_STATUS = %w(error unreachable).freeze
 
+  CREDENTIAL_TYPES = {
+    :external_credential_types         => 'ManageIQ::Providers::ExternalAutomationManager::Authentication',
+    :embedded_ansible_credential_types => 'ManageIQ::Providers::EmbeddedAutomationManager::Authentication'
+  }.freeze
+
   # FIXME: To address problem with url resolution when displayed as a quadicon,
   # but it's not *really* the db_name. Might be more proper to override `to_partial_path`
   def self.db_name
@@ -103,6 +108,14 @@ class Authentication < ApplicationRecord
 
   def assign_values(options)
     self.attributes = options
+  end
+
+  def self.build_credential_options
+    CREDENTIAL_TYPES.each_with_object({}) do |(k, v), hash|
+      hash[k] = v.constantize.descendants.each_with_object({}) do |klass, fields|
+        fields[klass.name] = klass::API_OPTIONS if defined? klass::API_OPTIONS
+      end
+    end
   end
 
   private
