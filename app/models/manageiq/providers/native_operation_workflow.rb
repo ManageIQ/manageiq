@@ -1,20 +1,49 @@
 class ManageIQ::Providers::NativeOperationWorkflow < Job
+  def self.create_job(options)
+    super(name, options)
+  end
+
   def load_transitions
     self.state ||= 'initialize'
 
     {
-      :initializing => {'initialize'       => 'waiting_to_start'},
-      :start        => {'waiting_to_start' => 'running'},
-      :finish       => {'*'                => 'finished'},
-      :abort_job    => {'*'                => 'aborting'},
-      :cancel       => {'*'                => 'canceling'},
-      :error        => {'*'                => '*'}
+      :initializing     => {'initialize'       => 'waiting_to_start'},
+      :start            => {'waiting_to_start' => 'running'},
+      :poll_native_task => {'running'          => 'running'},
+      :refresh          => {'running'          => 'refreshing'},
+      :poll_refresh     => {'refreshing'       => 'refreshing'},
+      :notify           => {'*'                => 'notifying'},
+      :finish           => {'*'                => 'finished'},
+      :abort_job        => {'*'                => 'aborting'},
+      :cancel           => {'*'                => 'canceling'},
+      :error            => {'*'                => '*'}
     }
   end
 
-  alias_method :initializing, :dispatch_start
+  def run_native_op
+    signal(:poll_native_task)
+  end
 
-  def start
+  def poll_native_task
+    signal(:refresh)
+  end
+
+  def refresh
+    signal(:poll_refresh)
+  end
+
+  def poll_refresh
+    signal(:notify)
+  end
+
+  def notify
     signal(:finish)
   end
+
+  alias initializing dispatch_start
+  alias start        run_native_op
+  alias finish       process_finished
+  alias abort_job    process_abort
+  alias cancel       process_cancel
+  alias error        process_error
 end
