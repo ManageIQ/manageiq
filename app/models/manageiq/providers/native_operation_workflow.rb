@@ -21,11 +21,11 @@ class ManageIQ::Providers::NativeOperationWorkflow < Job
   end
 
   def run_native_op
-    signal(:poll_native_task)
+    raise NotImplementedError, _("run_native_op must be implemented by a subclass")
   end
 
   def poll_native_task
-    signal(:refresh)
+    raise NotImplementedError, _("poll_native_task must be implemented by a subclass")
   end
 
   def refresh
