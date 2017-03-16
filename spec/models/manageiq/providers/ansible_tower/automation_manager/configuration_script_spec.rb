@@ -146,6 +146,21 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScri
       )
     end
 
+    it ".update_in_provider_queue" do
+      EvmSpecHelper.local_miq_server
+      params[:manager_ref] = 10
+      task_id = described_class.update_in_provider_queue(manager.id, params)
+      expect(MiqTask.find(task_id)).to have_attributes(:name => "Updating Ansible Tower Job Template")
+      expect(MiqQueue.first).to have_attributes(
+        :args        => [manager.id, params],
+        :class_name  => "ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript",
+        :method_name => "update_in_provider",
+        :priority    => MiqQueue::HIGH_PRIORITY,
+        :role        => "ems_operations",
+        :zone        => manager.zone.name
+      )
+    end
+
     def store_new_job_template(job_template, manager)
       described_class.create!(
         :manager     => manager,

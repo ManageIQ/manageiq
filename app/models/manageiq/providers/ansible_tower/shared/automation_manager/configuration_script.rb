@@ -17,16 +17,38 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Configurati
       find_by!(:manager_id => manager.id, :manager_ref => job_template.id)
     end
 
-    def create_in_provider_queue(manager_id, params, auth_user = nil)
+    def update_in_provider(manager_id, params)
       manager = ExtManagementSystem.find(manager_id)
+      manager.with_provider_connection do |connection|
+        connection.api.job_templates.find(params.delete(:manager_ref)).update_attributes!(params)
+      end
+
+      # Get the record in our database
+      # TODO: This needs to be targeted refresh so it doesn't take too long
+      EmsRefresh.queue_refresh(manager, nil, true)
+    end
+
+    def update_in_provider_queue(manager_id, params, auth_user = nil)
+      create_or_update_in_provider_queue('update', manager_id, params, auth_user)
+    end
+
+    def create_in_provider_queue(manager_id, params, auth_user = nil)
+      create_or_update_in_provider_queue('create', manager_id, params, auth_user)
+    end
+
+    private
+
+    def create_or_update_in_provider_queue(action, manager_id, params, auth_user)
+      manager = ExtManagementSystem.find(manager_id)
+
       task_opts = {
-        :action => "Creating Ansible Tower Job Template",
+        :action => "#{(action == "create" ? "Creating" : "Updating")} Ansible Tower Job Template",
         :userid => auth_user || "system"
       }
       queue_opts = {
         :args        => [manager_id, params],
         :class_name  => self.name,
-        :method_name => "create_in_provider",
+        :method_name => "#{action}_in_provider",
         :priority    => MiqQueue::HIGH_PRIORITY,
         :role        => "ems_operations",
         :zone        => manager.my_zone

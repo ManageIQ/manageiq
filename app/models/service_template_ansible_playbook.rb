@@ -16,9 +16,6 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     RETIREMENT_ENTRY_POINTS['yes_without_playbook']
   end
 
-  def job_template(action)
-    resource_actions.find_by!(:action => action).configuration_template
-  end
 
   # create ServiceTemplate and supporting ServiceResources and ResourceActions
   # options
@@ -53,7 +50,8 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
           next unless dialog_name
 
           job_template = enhanced_config.fetch_path(action, :configuration_template)
-          new_dialog = Dialog::AnsiblePlaybookServiceDialog.create_dialog(dialog_name, job_template)
+
+          new_dialog = service_template.send(:create_new_dialog, dialog_name, job_template)
           enhanced_config[action][:dialog] = new_dialog
           service_template.options[:config_info][action][:dialog_id] = new_dialog.id
         end
@@ -62,16 +60,10 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     end
   end
 
-  def self.prepare_job_template_and_dialog(action, service_name, description, config_info)
-    job_template = create_job_template("#{service_name}_#{action}", description, config_info[action])
-    config_info[action][:configuration_template] = job_template
-
-    if config_info[:new_dialog_name]
-      config_info[action][:dialog] =
-        Dialog::AnsiblePlaybookService.new.create_dialog(config_info[:new_dialog_name], job_template)
-    end
+  def create_new_dialog(dialog_name, job_template)
+    Dialog::AnsiblePlaybookServiceDialog.create_dialog(dialog_name, job_template)
   end
-  private_class_method :prepare_job_template_and_dialog
+  private :create_new_dialog
 
   def self.create_job_templates(service_name, description, config_info, auth_user)
     [:provision, :retirement, :reconfigure].each_with_object({}) do |action, hash|
@@ -132,4 +124,31 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     info
   end
   private_class_method :validate_config_info
+
+  def validate_update_config_info(options)
+    opts = super
+    self.class.send(:validate_config_info, opts)
+  end
+
+  def job_template(action)
+    resource_actions.find_by!(:action => action.to_s.capitalize).configuration_template
+  end
+
+  def update_catalog_item(options, auth_user = nil)
+    config_info = validate_update_config_info(options)
+    name = options[:name]
+    description = options[:description]
+    [:provision, :retirement, :reconfigure].each do |action|
+      next unless config_info[action]
+      info = config_info[action]
+      new_dialog = create_new_dialog(info[:new_dialog_name], job_template(action)) if info[:new_dialog_name]
+      config_info[action][:dialog_id] = new_dialog.id if new_dialog
+
+      next unless info.key?(:playbook_id)
+      tower, params = self.class.send(:build_parameter_list, "miq_#{name}_#{action}", description, info)
+      params[:manager_ref] = job_template(action).manager_ref
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript.update_in_provider_queue(tower.id, params, auth_user)
+    end
+    super
+  end
 end
