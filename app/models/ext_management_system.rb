@@ -400,14 +400,15 @@ class ExtManagementSystem < ApplicationRecord
     end
   end
 
-  def refresh_ems
+  def refresh_ems(opts = nil)
+    opts ||= {}
     if missing_credentials?
       raise _("no %{table} credentials defined") % {:table => ui_lookup(:table => "ext_management_systems")}
     end
     unless authentication_status_ok?
       raise _("%{table} failed last authentication check") % {:table => ui_lookup(:table => "ext_management_systems")}
     end
-    EmsRefresh.queue_refresh(self)
+    EmsRefresh.queue_refresh(self, nil, opts)
   end
 
   def self.ems_infra_discovery_types

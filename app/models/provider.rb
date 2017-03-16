@@ -54,13 +54,14 @@ class Provider < ApplicationRecord
   end
   alias_method :zone_name, :my_zone
 
-  def refresh_ems
+  def refresh_ems(opts = nil)
+    opts ||= {}
     if missing_credentials?
       raise _("no %{table} credentials defined") % {:table => ui_lookup(:table => "provider")}
     end
     unless authentication_status_ok?
       raise _("%{table} failed last authentication check") % {:table => ui_lookup(:table => "provider")}
     end
-    managers.each { |manager| EmsRefresh.queue_refresh(manager) }
+    managers.collect { |manager| EmsRefresh.queue_refresh(manager, nil, opts) }.flatten
   end
 end
