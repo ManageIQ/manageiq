@@ -47,9 +47,7 @@ class MiqWidget < ApplicationRecord
     row_count_param.try(:to_i) || options.try(:[], :row_count) || DEFAULT_ROW_COUNT
   end
 
-  def name
-    description
-  end
+  alias_attribute :name, :description
 
   def last_run_on
     last_generated_content_on || (miq_schedule && miq_schedule.last_run_on)
