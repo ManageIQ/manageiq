@@ -1,6 +1,7 @@
 shared_examples_for "common rhev state machine methods" do
   it "#customize_destination" do
     allow(@task).to receive(:get_provider_destination).and_return(nil)
+    allow(@task).to receive(:destination_image_locked?).and_return(false)
     allow(@task).to receive(:update_and_notify_parent)
 
     expect(@task).to receive(:configure_container)

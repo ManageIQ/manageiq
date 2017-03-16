@@ -1,6 +1,6 @@
 module ManageIQ::Providers::Redhat::InfraManager::Provision::Cloning
   def clone_complete?
-    ems = get_ems
+    ems = ems
     source.with_provider_connection do |rhevm|
       ems.inventory.clone_completed?(:phase_context => phase_context,
                                      :connection    => rhevm,
@@ -9,7 +9,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Cloning
   end
 
   def destination_image_locked?
-    get_ems.inventory.destination_image_locked?(vm)
+    ems.inventory.destination_image_locked?(vm)
   end
 
   def find_destination_in_vmdb(ems_ref)
@@ -53,12 +53,13 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Cloning
   def start_clone(clone_options)
     source.with_provider_object do |rhevm_template|
       vm = rhevm_template.create_vm(clone_options)
-      get_ems.inventory.populate_phase_context(phase_context, vm)
+      ems.inventory.populate_phase_context(phase_context, vm)
     end
   end
 
-  def get_ems
-    ems_id = options[:src_ems_id][0]
-    ExtManagementSystem.find ems_id
+  def ems
+    ref_to_ems = destination || source
+    return nil if ref_to_ems
+    ref_to_ems.ext_management_system
   end
 end

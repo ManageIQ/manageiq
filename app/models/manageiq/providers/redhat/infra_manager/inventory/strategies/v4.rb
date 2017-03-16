@@ -249,7 +249,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
       end
     end
 
-    def get_nics(vm)
+    def nics_for_(vm)
       vm.with_provider_connection do |connection|
         vm_proxy = connection.system_service.vms_service.vm_service(vm.uid_ems).get
         connection.follow_link(vm_proxy.nics)

@@ -20,7 +20,6 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration
   end
 
   def configure_container
-    #rhevm_vm = get_provider_destination
     vm.with_provider_object do |rhevm_vm|
       configure_container_description(rhevm_vm)
       configure_memory(rhevm_vm)

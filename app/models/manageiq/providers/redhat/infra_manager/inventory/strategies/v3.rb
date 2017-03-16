@@ -91,7 +91,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
       end
     end
 
-    def get_nics(vm)
+    def nics_for_(vm)
       vm.with_provider_object do |rhevm_vm|
         rhevm_vm.nics.collect { |n| NicsDecorator.new(n) }
       end
@@ -172,6 +172,10 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
     end
 
     class GeneralUpdateMethodNamesDecorator < SimpleDelegator
+      def nics
+        __getobj__.nics
+      end
+
       def method_missing(method_name, *args)
         str_method_name = method_name.to_s
         if str_method_name.starts_with?("update_")

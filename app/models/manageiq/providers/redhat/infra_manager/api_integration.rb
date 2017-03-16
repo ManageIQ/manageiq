@@ -37,7 +37,6 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
       :verify_ssl => default_endpoint.verify_ssl,
       :ca_certs   => default_endpoint.certificate_authority
     }
-
     # Starting with version 4 of oVirt authentication doesn't work when using directly the IP address, it requires
     # the fully qualified host name, so if we received an IP address we try to convert it into the corresponding
     # host name:
