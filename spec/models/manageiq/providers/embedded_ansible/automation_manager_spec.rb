@@ -1,11 +1,5 @@
-describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager do
-  let(:provider) { FactoryGirl.build(:provider) }
-  let(:ansible_automation_manager) { FactoryGirl.build(:embedded_automation_manager_ansible, :provider => provider) }
+require 'support/ansible_shared/automation_manager'
 
-  describe "#connect" do
-    it "delegates to the provider" do
-      expect(provider).to receive(:connect)
-      ansible_automation_manager.connect
-    end
-  end
+describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager do
+  it_behaves_like 'ansible automation_manager'
 end
