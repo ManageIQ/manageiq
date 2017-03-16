@@ -4868,10 +4868,11 @@ miq_alert_statuses:
 - result
 - url
 - severity
-- ancestry
 - acknowledged
 - ems_id
 - description
+- resolved
+- event_ems_ref
 miq_alerts:
 - id
 - guid
