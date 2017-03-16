@@ -21,6 +21,7 @@ module Api
     def create_resource(_type, _id, data)
       validate_attrs(data)
       manager_id = parse_id(data['manager_resource'], :providers)
+      raise 'Must specify a valid manager_resource href or id' unless manager_id
       manager = resource_search(manager_id, :providers, collection_class(:providers))
       type = ConfigurationScriptSource.class_for_manager(manager)
       raise "ConfigurationScriptSource cannot be added to #{manager_ident(manager)}" unless type.respond_to?(:create_in_provider_queue)
@@ -37,7 +38,7 @@ module Api
     end
 
     def validate_attrs(data)
-      raise 'must supply a manager resource' unless data['manager_resource']
+      raise 'Must supply a manager resource' unless data['manager_resource']
     end
 
     def manager_ident(manager)

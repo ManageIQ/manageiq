@@ -285,7 +285,23 @@ RSpec.describe 'Configuration Script Sources API' do
       expected = {
         'results' => [{
           'success' => false,
-          'message' => 'must supply a manager resource'
+          'message' => 'Must supply a manager resource'
+        }]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'requires a valid manager' do
+      api_basic_authorize collection_action_identifier(:configuration_script_sources, :create, :post)
+      create_params[:manager_resource] = { :href => users_url(10) }
+
+      run_post(configuration_script_sources_url, :resources => [create_params])
+
+      expected = {
+        'results' => [{
+          'success' => false,
+          'message' => 'Must specify a valid manager_resource href or id'
         }]
       }
       expect(response).to have_http_status(:ok)
