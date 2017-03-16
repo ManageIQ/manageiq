@@ -18,10 +18,31 @@ module Api
       action_result(false, err.to_s)
     end
 
+    def create_resource(_type, _id, data)
+      validate_attrs(data)
+      manager_id = parse_id(data['manager_resource'], :providers)
+      raise 'Must specify a valid manager_resource href or id' unless manager_id
+      manager = resource_search(manager_id, :providers, collection_class(:providers))
+      type = ConfigurationScriptSource.class_for_manager(manager)
+      raise "ConfigurationScriptSource cannot be added to #{manager_ident(manager)}" unless type.respond_to?(:create_in_provider_queue)
+      task_id = type.create_in_provider_queue(manager.id, data.except('manager_resource'))
+      action_result(true, "Creating ConfigurationScriptSource for #{manager_ident(manager)}", :task_id => task_id)
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
     private
 
     def config_script_src_ident(config_script_src)
       "ConfigurationScriptSource id:#{config_script_src.id} name: '#{config_script_src.name}'"
+    end
+
+    def validate_attrs(data)
+      raise 'Must supply a manager resource' unless data['manager_resource']
+    end
+
+    def manager_ident(manager)
+      "Manager id:#{manager.id} name: '#{manager.name}'"
     end
   end
 end
