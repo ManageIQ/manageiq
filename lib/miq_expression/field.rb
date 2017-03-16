@@ -3,14 +3,19 @@ class MiqExpression::Field < MiqExpression::Target
 (?<model_name>([[:upper:]][[:alnum:]]*(::)?)+)
 (?!.*\b(managed|user_tag)\b)
 \.?(?<associations>[a-z][0-9a-z_\.]+)?
--(?<column>[a-z]+(_[[:alnum:]]+)*)
+-
+(?:
+  (?<virtual_custom_column>#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}[a-z]+[_\-.\/[:alnum:]]*)|
+  (?<column>[a-z]+(_[[:alnum:]]+)*)
+)
 /x
 
   delegate :eq, :not_eq, :lteq, :gteq, :lt, :gt, :between, :to => :arel_attribute
 
   def self.parse(field)
     parsed_params = parse_params(field) || return
-    new(parsed_params[:model_name], parsed_params[:associations], parsed_params[:column])
+    new(parsed_params[:model_name], parsed_params[:associations], parsed_params[:column] ||
+        parsed_params[:virtual_custom_column])
   end
 
   def self.is_field?(field)
