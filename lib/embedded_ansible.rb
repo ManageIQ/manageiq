@@ -64,6 +64,15 @@ class EmbeddedAnsible
     AwesomeSpawn.run!("source /etc/sysconfig/ansible-tower; echo $TOWER_SERVICES").output.split
   end
 
+  def self.api_connection
+    admin_auth = miq_database.ansible_admin_authentication
+    AnsibleTowerClient::Connection.new(
+      :base_url => URI::HTTP.build(:host => "localhost", :path => "/api/v1", :port => HTTP_PORT).to_s,
+      :username => admin_auth.userid,
+      :password => admin_auth.password
+    )
+  end
+
   def self.run_setup_script(exclude_tags)
     json_extra_vars = {
       :minimum_var_space => 0,
@@ -171,14 +180,4 @@ class EmbeddedAnsible
     ActiveRecord::Base.connection
   end
   private_class_method :database_connection
-
-  def self.api_connection
-    admin_auth = miq_database.ansible_admin_authentication
-    AnsibleTowerClient::Connection.new(
-      :base_url => URI::HTTP.build(:host => "localhost", :path => "/api/v1", :port => HTTP_PORT).to_s,
-      :username => admin_auth.userid,
-      :password => admin_auth.password
-    )
-  end
-  private_class_method :api_connection
 end
