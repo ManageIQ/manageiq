@@ -147,15 +147,32 @@ module ManageIQ::Providers
 
       def fetch_availability
         resources_by_metric_id = {}
+        metric_id_by_resource_path = {}
+        @ems.feeds.each do |feed|
+          deployment_status_mt_path = ::Hawkular::Inventory::CanonicalPath.new(
+            :metric_type_id => 'Deployment%20Status~Deployment%20Status', :feed_id => feed
+          )
+          deployment_status_metrics = @ems.inventory_client.list_metrics_for_metric_type(deployment_status_mt_path)
+          deployment_status_metrics.each do |deployment_status_metric|
+            deployment_status_metric_path = ::Hawkular::Inventory::CanonicalPath.parse(deployment_status_metric.path)
+            path = ::Hawkular::Inventory::CanonicalPath.new(:tenant_id    => deployment_status_metric_path.tenant_id,
+                                                            :feed_id      => deployment_status_metric_path.feed_id,
+                                                            :resource_ids => deployment_status_metric_path.resource_ids)
+            metric_id_by_resource_path[path.to_s] = deployment_status_metric.hawkular_metric_id
+          end
+        end
         @data[:middleware_deployments].each do |deployment|
+          # Mark default status for all deployments
+          deployment[:status] = process_availability
           path = ::Hawkular::Inventory::CanonicalPath.parse(deployment[:ems_ref])
           # for subdeployments use it's parent deployment availability.
           path = path.up if path.resource_ids.last.include? CGI.escape('/subdeployment=')
-          metric_id = @ems.build_availability_metric_id(
-            URI.unescape(path.feed_id),
-            URI.unescape(path.resource_ids.last),
-            'Deployment Status~Deployment Status'
-          )
+          path = ::Hawkular::Inventory::CanonicalPath.new(:tenant_id    => path.tenant_id,
+                                                          :feed_id      => path.feed_id,
+                                                          :resource_ids => path.resource_ids)
+          path = path.to_s
+          next unless metric_id_by_resource_path.key? path
+          metric_id = metric_id_by_resource_path[path]
           resources_by_metric_id[metric_id] = [] unless resources_by_metric_id.key? metric_id
           resources_by_metric_id[metric_id] << deployment
         end
@@ -200,16 +217,9 @@ module ManageIQ::Providers
       end
 
       def parse_availability(availabilities, resources_by_metric_id)
-        processed_availabilities_ids = availabilities.map do |availability|
+        availabilities.each do |availability|
           availability_status = process_availability(availability['data'].first)
           resources_by_metric_id[availability['id']].each do |resource|
-            resource[:status] = availability_status
-          end
-          availability['id']
-        end
-        (resources_by_metric_id.keys - processed_availabilities_ids).each do |metric_id|
-          availability_status = process_availability
-          resources_by_metric_id[metric_id].each do |resource|
             resource[:status] = availability_status
           end
         end

@@ -504,10 +504,6 @@ module ManageIQ::Providers
       )
     end
 
-    def build_availability_metric_id(feed_id, resource_id, metric_id)
-      "AI~R~[#{feed_id}/#{resource_id}]~AT~#{metric_id}"
-    end
-
     def self.update_alert(*args)
       operation = args[0][:operation]
       alert = args[0][:alert]
