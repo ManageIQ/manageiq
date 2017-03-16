@@ -53,7 +53,7 @@ class EvmDatabase
   end
 
   def self.seed_last
-    if ENV['SKIP_SEEDING'] && MiqDatabase.count > 0
+    unless ENV['SKIP_SEEDING'] && MiqDatabase.count > 0
       seed(seedable_model_class_names - PRIMORDIAL_CLASSES)
     end
   end
