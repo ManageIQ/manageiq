@@ -7,6 +7,10 @@ module TenancyMixin
 
   module ClassMethods
     include TenancyCommonMixin
+
+    def scope_by_tenant?
+      true
+    end
   end
 
   def set_tenant
