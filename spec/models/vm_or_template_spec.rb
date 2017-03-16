@@ -620,6 +620,119 @@ describe VmOrTemplate do
     end
   end
 
+  describe ".ram_size", ".mem_cpu" do
+    let(:vm) { FactoryGirl.create(:vm_vmware, :hardware => hardware) }
+    let(:hardware) { FactoryGirl.create(:hardware, :memory_mb => 10) }
+
+    it "supports null hardware" do
+      vm = FactoryGirl.create(:vm_vmware)
+      expect(vm.ram_size).to eq(0)
+      expect(vm.mem_cpu).to eq(0)
+    end
+
+    it "calculates in ruby" do
+      expect(vm.ram_size).to eq(10)
+      expect(vm.mem_cpu).to eq(10)
+    end
+
+    it "calculates in the database" do
+      vm.save
+      expect(virtual_column_sql_value(VmOrTemplate, "ram_size")).to eq(10)
+      expect(virtual_column_sql_value(VmOrTemplate, "mem_cpu")).to eq(10)
+    end
+  end
+
+  describe ".ram_size_in_bytes" do
+    let(:vm) { FactoryGirl.create(:vm_vmware, :hardware => hardware) }
+    let(:hardware) { FactoryGirl.create(:hardware, :memory_mb => 10) }
+
+    it "supports null hardware" do
+      vm = FactoryGirl.create(:vm_vmware)
+      expect(vm.ram_size_in_bytes).to eq(0)
+    end
+
+    it "calculates in ruby" do
+      expect(vm.ram_size_in_bytes).to eq(10.megabytes)
+    end
+
+    it "calculates in the database" do
+      vm.save
+      expect(virtual_column_sql_value(VmOrTemplate, "ram_size_in_bytes")).to eq(10.megabytes)
+    end
+  end
+
+  describe ".cpu_usagemhz_rate_average_max_over_time_period (virtual_attribute)" do
+    let(:vm) { FactoryGirl.create :vm_vmware }
+
+    before do
+      EvmSpecHelper.local_miq_server
+      tp_id = TimeProfile.seed.id
+      FactoryGirl.create :metric_rollup_vm_daily,
+                         :with_data,
+                         :time_profile_id => tp_id,
+                         :resource_id     => vm.id
+      FactoryGirl.create :metric_rollup_vm_daily,
+                         :with_data,
+                         :cpu_usagemhz_rate_average => 10.0,
+                         :time_profile_id           => tp_id,
+                         :resource_id               => vm.id
+      FactoryGirl.create :metric_rollup_vm_daily,
+                         :with_data,
+                         :cpu_usagemhz_rate_average => 100.0,
+                         :time_profile_id           => tp_id,
+                         :resource_id               => vm.id
+    end
+
+    it "calculates in ruby" do
+      expect(vm.cpu_usagemhz_rate_average_max_over_time_period).to eq(100.0)
+    end
+
+    it "calculates in the database" do
+      expect(
+        virtual_column_sql_value(
+          VmOrTemplate,
+          "cpu_usagemhz_rate_average_max_over_time_period"
+        )
+      ).to eq(100.0)
+    end
+  end
+
+  describe ".derived_memory_used_max_over_time_period (virtual_attribute)" do
+    let(:vm) { FactoryGirl.create :vm_vmware }
+
+    before do
+      EvmSpecHelper.local_miq_server
+      tp_id = TimeProfile.seed.id
+      FactoryGirl.create :metric_rollup_vm_daily,
+                         :with_data,
+                         :time_profile_id => tp_id,
+                         :resource_id     => vm.id
+      FactoryGirl.create :metric_rollup_vm_daily,
+                         :with_data,
+                         :derived_memory_used => 10.0,
+                         :time_profile_id     => tp_id,
+                         :resource_id         => vm.id
+      FactoryGirl.create :metric_rollup_vm_daily,
+                         :with_data,
+                         :derived_memory_used => 1000.0,
+                         :time_profile_id     => tp_id,
+                         :resource_id         => vm.id
+    end
+
+    it "calculates in ruby" do
+      expect(vm.derived_memory_used_max_over_time_period).to eq(1000.0)
+    end
+
+    it "calculates in the database" do
+      expect(
+        virtual_column_sql_value(
+          VmOrTemplate,
+          "derived_memory_used_max_over_time_period"
+        )
+      ).to eq(1000.0)
+    end
+  end
+
   describe ".host_name" do
     let(:vm) { FactoryGirl.create(:vm_vmware, :host => host) }
     let(:host) { FactoryGirl.create(:host_vmware, :name => "our host") }

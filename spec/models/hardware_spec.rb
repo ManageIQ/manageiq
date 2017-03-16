@@ -179,4 +179,24 @@ describe Hardware do
       end
     end
   end
+
+  describe ".ram_size_in_bytes" do
+    it "handles nil" do
+      hardware = FactoryGirl.build(:hardware)
+
+      expect(hardware.ram_size_in_bytes).to eq(0)
+    end
+
+    it "works in ruby" do
+      hardware = FactoryGirl.build(:hardware, :memory_mb => 5)
+
+      expect(hardware.ram_size_in_bytes).to eq(5.megabytes)
+    end
+
+    it "works in sql" do
+      hardware = FactoryGirl.create(:hardware, :memory_mb => 5)
+
+      expect(virtual_column_sql_value(Hardware, "ram_size_in_bytes")).to eq(5.megabytes)
+    end
+  end
 end

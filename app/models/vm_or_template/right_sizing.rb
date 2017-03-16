@@ -31,19 +31,45 @@ module VmOrTemplate::RightSizing
 
     virtual_column :max_cpu_usage_rate_average_max_over_time_period,     :type => :float
     virtual_column :max_mem_usage_absolute_average_max_over_time_period, :type => :float
-    virtual_column :cpu_usagemhz_rate_average_max_over_time_period,      :type => :float
-    virtual_column :derived_memory_used_max_over_time_period,            :type => :float
+
+    virtual_attribute :cpu_usagemhz_rate_average_max_over_time_period,
+                      :float, :arel => metric_rollup_vattr_arel(:cpu_usagemhz_rate_average)
+    virtual_attribute :derived_memory_used_max_over_time_period,
+                      :float, :arel => metric_rollup_vattr_arel(:derived_memory_used)
   end
 
   module ClassMethods
-    DEFAULT_CPU_RECOMMENDATION_MINIMUM = 1
-    def cpu_recommendation_minimum
-      VMDB::Config.new("vmdb").config.fetch_path(:recommendations, :cpu_minimum) || DEFAULT_CPU_RECOMMENDATION_MINIMUM
+    def metric_rollup_vattr_arel(col)
+      lambda do |t|
+        metric_rollup_table = MetricRollup.arel_table
+        select_clause = metric_rollup_table[col].maximum
+
+        now       = Time.now.utc
+        timestamp = (now - 30.days).utc..now
+        tp_ids    = TimeProfile.default_time_profile(nil)
+                               .profile_for_each_region
+                               .pluck(:id)
+
+        where_clause =
+          metric_rollup_table[:time_profile_id].in(tp_ids)
+            .and(metric_rollup_table[:capture_interval_name].eq("daily"))
+            .and(metric_rollup_table[:timestamp].between(timestamp))
+            .and(metric_rollup_table[:resource_type].eq("VmOrTemplate"))
+            .and(metric_rollup_table[:resource_id].eq(t[:id]))
+
+        t.grouping(
+          metric_rollup_table.project(select_clause)
+                             .where(where_clause)
+        )
+      end
     end
 
-    DEFAULT_MEM_RECOMMENDATION_MINIMUM = 32.megabytes
+    def cpu_recommendation_minimum
+      ::Settings.recommendations.cpu_minimum
+    end
+
     def mem_recommendation_minimum
-      min = (VMDB::Config.new("vmdb").config.fetch_path(:recommendations, :mem_minimum) || DEFAULT_MEM_RECOMMENDATION_MINIMUM).to_i_with_method
+      min = ::Settings.recommendations.mem_minimum.to_i_with_method
       min / 1.megabyte
     end
   end
@@ -137,13 +163,29 @@ module VmOrTemplate::RightSizing
   end
 
   def cpu_usagemhz_rate_average_max_over_time_period
-    perfs = VimPerformanceAnalysis.find_perf_for_time_period(self, "daily", :end_date => Time.now.utc, :days => Metric::LongTermAverages::AVG_DAYS)
-    perfs.collect(&:cpu_usagemhz_rate_average).compact.max
+    if has_attribute?("cpu_usagemhz_rate_average_max_over_time_period")
+      self["cpu_usagemhz_rate_average_max_over_time_period"]
+    else
+      opts = {
+        :end_date => Time.now.utc,
+        :days     => Metric::LongTermAverages::AVG_DAYS
+      }
+      VimPerformanceAnalysis.find_perf_for_time_period(self, "daily", opts)
+                            .maximum(:cpu_usagemhz_rate_average)
+    end
   end
 
   def derived_memory_used_max_over_time_period
-    perfs = VimPerformanceAnalysis.find_perf_for_time_period(self, "daily", :end_date => Time.now.utc, :days => Metric::LongTermAverages::AVG_DAYS)
-    perfs.collect(&:derived_memory_used).compact.max
+    if has_attribute?("derived_memory_used_max_over_time_period")
+      self["derived_memory_used_max_over_time_period"]
+    else
+      opts = {
+        :end_date => Time.now.utc,
+        :days     => Metric::LongTermAverages::AVG_DAYS
+      }
+      VimPerformanceAnalysis.find_perf_for_time_period(self, "daily", opts)
+                            .maximum(:derived_memory_used)
+    end
   end
 
   private

@@ -39,9 +39,14 @@ module VirtualArel
       end
     end
 
+    # supported by sql if
+    # - it is an attribute alias
+    # - it is an attribute that is non virtual
+    # - it is an attribute that is virtual and has arel defined
     def attribute_supported_by_sql?(name)
       load_schema
-      !virtual_attribute?(name) || !!_virtual_arel[name.to_s]
+      try(:attribute_alias?, name) ||
+        (has_attribute?(name) && (!virtual_attribute?(name) || !!_virtual_arel[name.to_s]))
     end
     private
 
@@ -584,6 +589,94 @@ module ActiveRecord
         end
       }
     end
+
+    # FIXME: Hopefully we can get this into Rails core so this is no longer
+    # required in our codebase, but the rule that are broken here are mostly
+    # due to the style of the Rails codebase conflicting with our own.
+    # Ignoring them to avoid noise in RuboCop, but allow us to keep the same
+    # syntax from the original codebase.
+    #
+    # rubocop:disable Style/BlockDelimiters, Style/SpaceAfterComma, Style/HashSyntax
+    # rubocop:disable Style/AlignHash, Metrics/AbcSize, Metrics/MethodLength
+    class JoinDependency
+      def instantiate(result_set, aliases)
+        primary_key = aliases.column_alias(join_root, join_root.primary_key)
+
+        seen = Hash.new { |i, object_id|
+          i[object_id] = Hash.new { |j, child_class|
+            j[child_class] = {}
+          }
+        }
+
+        model_cache = Hash.new { |h,klass| h[klass] = {} }
+        parents = model_cache[join_root]
+        column_aliases = aliases.column_aliases join_root
+
+        # New Code
+        #
+        # This monkey patches the ActiveRecord::Associations::JoinDependency to
+        # include columns into the main record that might have been added
+        # through a `select` clause.
+        #
+        # This can be seen with the following:
+        #
+        #   Vm.select(Vm.arel_table[Arel.star]).select(:some_vm_virtual_col)
+        #     .includes(:tags => {}).references(:tags => {})
+        #
+        # Which will produce a SQL SELECT statement kind of like this:
+        #
+        #   SELECT "vms".*,
+        #          (<virtual_attribute_arel>) AS some_vm_virtual_col,
+        #          "vms"."id"      AS t0_r0
+        #          "vms"."vendor"  AS t0_r1
+        #          "vms"."format"  AS t0_r1
+        #          "vms"."version" AS t0_r1
+        #          ...
+        #          "tags"."id"     AS t1_r0
+        #          "tags"."name"   AS t1_r1
+        #
+        # This is because rails is trying to reduce the number of queries
+        # needed to fetch all of the records in the include, so it grabs the
+        # columns for both of the tables together to do it.  Unfortuantely (or
+        # fortunately... depending on how you look at it), it does not remove
+        # any `.select` columns from the query that is run in the process, so
+        # that is brought along for the ride, but never used when this method
+        # instanciates the objects.
+        #
+        # The "New Code" here simply also instanciates any extra rows that
+        # might have been included in the select (virtual_columns) as well and
+        # brought back with the result set.
+        unless result_set.empty?
+          join_dep_keys         = aliases.columns.map(&:right)
+          join_root_aliases     = column_aliases.map(&:first)
+          additional_attributes = result_set.first.keys
+                                            .reject { |k| join_dep_keys.include?(k) }
+                                            .reject { |k| join_root_aliases.include?(k) }
+                                            .map    { |k| [k, k] }
+          column_aliases += additional_attributes
+        end
+        # End of New Code
+
+        message_bus = ActiveSupport::Notifications.instrumenter
+
+        payload = {
+          record_count: result_set.length,
+          class_name: join_root.base_klass.name
+        }
+
+        message_bus.instrument('instantiation.active_record', payload) do
+          result_set.each { |row_hash|
+            parent_key = primary_key ? row_hash[primary_key] : row_hash
+            parent = parents[parent_key] ||= join_root.instantiate(row_hash, column_aliases)
+            construct(parent, join_root, row_hash, result_set, seen, model_cache, aliases)
+          }
+        end
+
+        parents.values
+      end
+      # rubocop:enable Style/BlockDelimiters, Style/SpaceAfterComma, Style/HashSyntax
+      # rubocop:enable Style/AlignHash, Metrics/AbcSize, Metrics/MethodLength
+    end
   end
 
   class Relation
@@ -597,6 +690,45 @@ module ActiveRecord
     end
 
     include Module.new {
+      def calculate(operation, column_name)
+        if column_name.is_a?(Symbol) && attribute_alias?(column_name)
+          column_name = attribute_alias(column_name)
+        end
+
+        if has_include?(column_name)
+          relation = construct_relation_for_association_calculations
+          relation = relation.distinct if operation.to_s.downcase == "count"
+
+          relation.calculate(operation, column_name)
+        else
+          perform_calculation(operation, column_name)
+        end
+      end
+
+      private
+
+      def perform_calculation(operation, column_name)
+        operation = operation.to_s.downcase
+
+        # If #count is used with #distinct (i.e. `relation.distinct.count`) it is
+        # considered distinct.
+        distinct = self.distinct_value
+
+        if operation == "count"
+          column_name ||= select_for_count
+          column_name = primary_key if column_name == :all && distinct
+          distinct = nil if column_name =~ /\s*DISTINCT[\s(]+/i
+        end
+
+        if group_values.any?
+          execute_grouped_calculation(operation, column_name, distinct)
+        else
+          execute_simple_calculation(operation, column_name, distinct)
+        end
+      end
+    }
+
+    include Module.new {
       # From ActiveRecord::FinderMethods
       def find_with_associations
         real = without_virtual_includes
@@ -608,8 +740,34 @@ module ActiveRecord
         recs
       end
 
+      # From ActiveRecord::QueryMethods
+      def select(*fields)
+        return super if block_given? || fields.empty?
+        # support virtual attributes by adding an alias to the sql phrase for the column
+        # it does not add an as() if the column already has an as
+        # this code is based upon _select()
+        fields.flatten!
+        fields.map! do |field|
+          if virtual_attribute?(field) && (arel = klass.arel_attribute(field)) && arel.respond_to?(:as)
+            arel.as(field.to_s)
+          else
+            field
+          end
+        end
+        # end support virtual attributes
+        super
+      end
+
       # From ActiveRecord::Calculations
       def calculate(operation, attribute_name)
+        # work around 1 until https://github.com/rails/rails/pull/25304 gets merged
+        # This allows attribute_name to be a virtual_attribute
+        if (arel = klass.arel_attribute(attribute_name)) && virtual_attribute?(attribute_name)
+          attribute_name = arel
+        end
+        # end work around 1
+
+        # allow calculate to work when including a virtual attribute
         real = without_virtual_includes
         return super if real.equal?(self)
 

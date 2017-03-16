@@ -6,7 +6,7 @@ describe VirtualTotalMixin do
       ems2 = model_with_children(2)
       ems1 = model_with_children(1)
 
-      expect(base_model.order(base_model.arel_attribute(:total_vms)).pluck(:id))
+      expect(base_model.order(:total_vms).pluck(:id))
         .to eq([ems0, ems1, ems2].map(&:id))
     end
 
@@ -44,7 +44,7 @@ describe VirtualTotalMixin do
     end
 
     it "is not defined in sql" do
-      expect(base_model.attribute_supported_by_sql?(:total_vms)).to be(true)
+      expect(base_model.attribute_supported_by_sql?(:total_vms)).to be(false)
     end
 
     def model_with_children(count)
