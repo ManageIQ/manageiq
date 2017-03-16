@@ -190,19 +190,12 @@ class MiqProductFeature < ApplicationRecord
 
   def self.obj_feature_ancestors(identifier)
     feature = obj_features[identifier.to_s]
-    ancestors = []
+    return [] unless feature
 
-    if feature
-      parent = obj_features[feature[:parent]][:feature]
+    parent_feature = obj_features[feature[:parent]].try(:[], :feature)
+    return [] unless parent_feature
 
-      until parent.nil?
-        feature = obj_features[parent.identifier]
-        ancestors << parent
-        parent = obj_features[feature[:parent]].try(:[], :feature)
-      end
-    end
-
-    ancestors
+    obj_feature_ancestors(parent_feature.identifier).unshift(parent_feature)
   end
 
   ### Instance methods
