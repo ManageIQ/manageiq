@@ -186,8 +186,8 @@ EOF
     end
 
     it "#retires_on - today" do
-      service.update_attributes(:retirement_last_warn => Date.today)
-      service_service.retires_on = Time.zone.today
+      service.update_attributes(:retirement_last_warn => Time.zone.now)
+      service_service.retires_on = Time.zone.now
       service.reload
       expect(service.retirement_last_warn).to be_nil
       expect(service.retirement_due?).to be_truthy
@@ -199,7 +199,7 @@ EOF
         :retirement_last_warn => Time.zone.today,
         :retirement_state     => "retiring"
       )
-      service_service.retires_on = Time.zone.today + 1
+      service_service.retires_on = Time.zone.now + 1.day
       service.reload
 
       expect(service).to have_attributes(
@@ -212,22 +212,22 @@ EOF
 
     it "#extend_retires_on - no retirement date set" do
       extend_days = 7
-      Timecop.freeze(Time.zone.today) do
+      Timecop.freeze(Time.zone.now) do
         service_service.extend_retires_on(extend_days)
         service.reload
-        new_retires_on = Time.zone.today + extend_days
+        new_retires_on = Time.zone.now + extend_days.days
         expect(service.retires_on.day).to eq(new_retires_on.day)
       end
     end
 
     it "#extend_retires_on - future retirement date set" do
-      Timecop.freeze(Time.zone.today) do
+      Timecop.freeze(Time.zone.now) do
         service.update_attributes(
           :retired              => true,
-          :retirement_last_warn => Time.zone.today,
+          :retirement_last_warn => Time.zone.now,
           :retirement_state     => "retiring"
         )
-        future_retires_on = Time.zone.today + 30
+        future_retires_on = Time.zone.now + 30.days
         service_service.retires_on = future_retires_on
         extend_days = 7
         service_service.extend_retires_on(extend_days, future_retires_on)
@@ -237,14 +237,19 @@ EOF
           :retirement_last_warn => nil,
           :retired              => false,
           :retirement_state     => nil,
-          :retires_on           => future_retires_on + extend_days
+          :retires_on           => future_retires_on + extend_days.days
         )
       end
     end
 
+    it "#extend_retires_on - invalid date" do
+      error_msg = "Invalid Date specified: #{Time.zone.today}"
+      expect { service_service.extend_retires_on(7, Time.zone.today) }.to raise_error(RuntimeError, error_msg)
+    end
+
     it "#retirement_warn" do
       expect(service_service.retirement_warn).to be_nil
-      service.retirement_last_warn = Date.today
+      service.retirement_last_warn = Time.zone.today
       service_service.retirement_warn = 60
       service.reload
 
