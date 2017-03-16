@@ -29,7 +29,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
   end
 
   it "will perform a full refresh on k8s" do
-    2.times do # Run twice to verify that a second run with existing data does not change anything
+    3.times do # Run three times to verify that second & third runs with existing data do not change anything
       VCR.use_cassette(described_class.name.underscore) do # , :record => :new_episodes) do
         EmsRefresh.refresh(@ems)
       end
@@ -51,6 +51,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       assert_specific_container_limit
       assert_specific_container_image_and_registry
       assert_specific_container_component_status
+      assert_specific_persistent_volume
     end
   end
 
@@ -69,6 +70,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     expect(ContainerImage.count).to eq(3)
     expect(ContainerImageRegistry.count).to eq(1)
     expect(ContainerComponentStatus.count).to eq(3)
+    expect(PersistentVolume.count).to eq(1)
   end
 
   def assert_ems
@@ -371,6 +373,17 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       :condition => "Healthy",
       :status    => "True"
     )
+  end
+
+  def assert_specific_persistent_volume
+    @persistent_volume = PersistentVolume.find_by(:name => "pv0001")
+    expect(@persistent_volume).to have_attributes(
+      :type         => "PersistentVolume",
+      :common_path  => "/tmp/data01",
+      :status_phase => "Available"
+    )
+    expect(@ems.persistent_volumes.count).to eq(1)
+    expect(@persistent_volume.parent.class).to eq(ManageIQ::Providers::Kubernetes::ContainerManager)
   end
 
   def label_with_name_value(name, value)
