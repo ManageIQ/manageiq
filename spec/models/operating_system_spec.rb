@@ -9,6 +9,8 @@ describe OperatingSystem do
       "rhel-7"                     => "linux_redhat",
       "ubuntu-15-10"               => "linux_ubuntu",
       "windows-2012-r2"            => "windows_generic",
+      "vmnix-x86"                  => "linux_esx",
+      "vista"                      => "windows_generic",
       "coreos-cloud"               => "linux_coreos",
     }.each do |image, expected|
       it "normalizes #{image}" do
