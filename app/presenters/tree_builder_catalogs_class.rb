@@ -41,7 +41,7 @@ class TreeBuilderCatalogsClass < TreeBuilder
     else
       button_order = button_order?(object) ? object[:set_data][:button_order] : nil
       Array(button_order).each_with_object([]) do |bidx, arr|
-        object.members.each { |b| arr.push(b) if bidx == b.id && !objects.include?(b) }
+        object.members.each { |b| arr.push(b) if bidx == b.id && !arr.include?(b) }
       end
     end
   end
