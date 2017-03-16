@@ -242,6 +242,8 @@
       :post:
       - :name: delete
         :identifier: embedded_automation_manager_credentials_delete
+      - :name: edit
+        :identifier: embedded_automation_manager_credentials_edit
     :resource_actions:
       :get:
       - :name: read
@@ -249,6 +251,8 @@
       :post:
       - :name: delete
         :identifier: embedded_automation_manager_credentials_delete
+      - :name: edit
+        :identifier: embedded_automation_manager_credentials_edit
       :delete:
       - :name: delete
         :identifier: embedded_automation_manager_credentials_delete
