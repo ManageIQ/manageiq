@@ -136,7 +136,7 @@ RSpec.describe 'Authentications API' do
         'results' => [
           a_hash_including(
             'success' => true,
-            'message' => "Updating Authentication with id #{auth.id}",
+            'message' => a_string_including('Updating Authentication'),
             'task_id' => a_kind_of(Numeric)
           )
         ]
@@ -155,12 +155,12 @@ RSpec.describe 'Authentications API' do
         'results' => [
           a_hash_including(
             'success' => true,
-            'message' => "Updating Authentication with id #{auth.id}",
+            'message' => a_string_including('Updating Authentication'),
             'task_id' => a_kind_of(Numeric)
           ),
           a_hash_including(
             'success' => true,
-            'message' => "Updating Authentication with id #{auth_2.id}",
+            'message' => a_string_including('Updating Authentication'),
             'task_id' => a_kind_of(Numeric)
           )
         ]
@@ -215,7 +215,7 @@ RSpec.describe 'Authentications API' do
 
       expected = {
         'success' => true,
-        'message' => "Updating Authentication with id #{auth.id}",
+        'message' => a_string_including('Updating Authentication'),
         'task_id' => a_kind_of(Numeric)
       }
       expect(response).to have_http_status(:ok)
@@ -230,7 +230,7 @@ RSpec.describe 'Authentications API' do
 
       expected = {
         'success' => false,
-        'message' => 'type not currently supported'
+        'message' => "Update not supported for Authentication id:#{auth.id} name: '#{auth.name}'"
       }
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)
