@@ -14,7 +14,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::EventCatche
           loop do
             ansible.api.activity_stream.all(filter).each do |activity|
               throw :stop_polling if @stop_polling
-              yield activity
+              yield activity.to_h
               @last_activity = activity
             end
             sleep @poll_sleep
