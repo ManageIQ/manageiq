@@ -303,4 +303,18 @@ describe JobProxyDispatcher do
       end
     end
   end
+
+  describe "#start_job_on_proxy" do
+    it "creates job options and passing it to `queue_signal'" do
+      job = Job.create_job("VmScan", :agent_id => @server.id, :name => "Hello, World")
+      proxy_dispatcher = JobProxyDispatcher.new
+      proxy_dispatcher.instance_variable_set(:@active_vm_scans_by_zone, @server.my_zone => 0)
+
+      job_options = {:args => ["start"], :zone => @server.my_zone, :server_guid => @server.guid, :role => "smartproxy"}
+      expect(proxy_dispatcher).to receive(:assign_proxy_to_job)
+      expect(proxy_dispatcher).to receive(:queue_signal).with(job, job_options)
+
+      proxy_dispatcher.start_job_on_proxy(job, @server)
+    end
+  end
 end
