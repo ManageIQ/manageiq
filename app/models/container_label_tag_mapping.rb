@@ -59,8 +59,10 @@ class ContainerLabelTagMapping < ApplicationRecord
   def self.map_label(cache, type, label)
     # Apply both specific-type and any-type, independently.
     # TODO: separate provider/type better to support "Kubernetes Any" vs "Amazon Any".
-    (map_name_type_value(cache, label[:name], split_provider_entity(type), label[:value]) +
-     map_name_type_value(cache, label[:name], nil,                         label[:value]))
+    provider_entity = type.split('::')
+    raise ArgumentError, "Not in Provider::Entity format: '#{type}'" unless provider_entity.size == 2
+    (map_name_type_value(cache, label[:name], provider_entity, label[:value]) +
+     map_name_type_value(cache, label[:name], nil,             label[:value]))
   end
 
   def self.map_name_type_value(cache, name, type, value)

@@ -56,7 +56,6 @@ describe ContainerLabelTagMapping do
         {:tag_id => tag1.id},
         {:tag_id => tag2.id}
       )
-      expect(map_to_tags('ContainerNode', 'name' => 'value-1')).to contain_exactly(tag1, tag2)
       expect(map_to_tags('Kubernetes::ContainerNode', 'name' => 'value-1')).to contain_exactly(tag1, tag2)
     end
   end
