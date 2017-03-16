@@ -2,6 +2,8 @@ RSpec.describe 'Configuration Script Sources API' do
   let(:provider) { FactoryGirl.create(:ext_management_system) }
   let(:config_script_src) { FactoryGirl.create(:ansible_configuration_script_source, :manager => provider) }
   let(:config_script_src_2) { FactoryGirl.create(:ansible_configuration_script_source, :manager => provider) }
+  let(:ansible_provider)      { FactoryGirl.create(:provider_ansible_tower, :with_authentication) }
+  let(:manager) { ansible_provider.managers.first }
 
   describe 'GET /api/configuration_script_sources' do
     it 'lists all the configuration script sources with an appropriate role' do
@@ -205,30 +207,8 @@ RSpec.describe 'Configuration Script Sources API' do
 
       expect(response).to have_http_status(:forbidden)
     end
-  end
 
-  describe 'DELETE /api/configuration_script_sources/:id' do
-    it 'can delete a configuration_script_source with an appropriate role' do
-      api_basic_authorize action_identifier(:configuration_script_sources, :delete, :resource_actions, :delete)
-
-      run_delete(configuration_script_sources_url(config_script_src.id))
-
-      expect(response).to have_http_status(:no_content)
-    end
-
-    it 'forbids configuration_script_source delete without an appropriate role' do
-      api_basic_authorize
-
-      run_delete(configuration_script_sources_url(config_script_src.id))
-
-      expect(response).to have_http_status(:forbidden)
-    end
-  end
-
-  describe 'POST /api/configuration_script_sources' do
-    let(:provider)      { FactoryGirl.create(:provider_ansible_tower, :with_authentication) }
-    let(:manager)       { provider.managers.first }
-    let(:params) do
+    let(:create_params) do
       {
         :manager_resource => { :href => providers_url(manager.id) },
         :description      => 'Description',
@@ -244,12 +224,12 @@ RSpec.describe 'Configuration Script Sources API' do
         'results' => [
           a_hash_including(
             'success' => true,
-            'message' => 'Creating ConfigurationScriptSource',
+            'message' => a_string_including('Creating ConfigurationScriptSource'),
             'task_id' => a_kind_of(Numeric)
           )
         ]
       }
-      run_post(configuration_script_sources_url, params)
+      run_post(configuration_script_sources_url, create_params)
 
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)
@@ -257,18 +237,18 @@ RSpec.describe 'Configuration Script Sources API' do
 
     it 'create a new configuration script source with manager_resource id' do
       api_basic_authorize collection_action_identifier(:configuration_script_sources, :create, :post)
-      params[:manager_resource] = { :id => manager.id }
+      create_params[:manager_resource] = { :id => manager.id }
 
       expected = {
         'results' => [
           a_hash_including(
             'success' => true,
-            'message' => 'Creating ConfigurationScriptSource',
+            'message' => "Creating ConfigurationScriptSource for Manager id:#{manager.id} name: '#{manager.name}'",
             'task_id' => a_kind_of(Numeric)
           )
         ]
       }
-      run_post(configuration_script_sources_url, params)
+      run_post(configuration_script_sources_url, create_params)
 
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)
@@ -281,17 +261,17 @@ RSpec.describe 'Configuration Script Sources API' do
         'results' => [
           a_hash_including(
             'success' => true,
-            'message' => 'Creating ConfigurationScriptSource',
+            'message' => a_string_including('Creating ConfigurationScriptSource'),
             'task_id' => a_kind_of(Numeric)
           ),
           a_hash_including(
             'success' => true,
-            'message' => 'Creating ConfigurationScriptSource',
+            'message' => a_string_including('Creating ConfigurationScriptSource'),
             'task_id' => a_kind_of(Numeric)
           )
         ]
       }
-      run_post(configuration_script_sources_url, :resources => [params, params])
+      run_post(configuration_script_sources_url, :resources => [create_params, create_params])
 
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)
@@ -300,7 +280,7 @@ RSpec.describe 'Configuration Script Sources API' do
     it 'requires a manager_resource to be specified' do
       api_basic_authorize collection_action_identifier(:configuration_script_sources, :create, :post)
 
-      run_post(configuration_script_sources_url, :resources => [params.except(:manager_resource)])
+      run_post(configuration_script_sources_url, :resources => [create_params.except(:manager_resource)])
 
       expected = {
         'results' => [{
@@ -315,7 +295,25 @@ RSpec.describe 'Configuration Script Sources API' do
     it 'forbids creation of new configuration script source without an appropriate role' do
       api_basic_authorize
 
-      run_post(configuration_script_sources_url, params)
+      run_post(configuration_script_sources_url, create_params)
+
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
+
+  describe 'DELETE /api/configuration_script_sources/:id' do
+    it 'can delete a configuration_script_source with an appropriate role' do
+      api_basic_authorize action_identifier(:configuration_script_sources, :delete, :resource_actions, :delete)
+
+      run_delete(configuration_script_sources_url(config_script_src.id))
+
+      expect(response).to have_http_status(:no_content)
+    end
+
+    it 'forbids configuration_script_source delete without an appropriate role' do
+      api_basic_authorize
+
+      run_delete(configuration_script_sources_url(config_script_src.id))
 
       expect(response).to have_http_status(:forbidden)
     end

@@ -595,7 +595,6 @@
     :options:
     - :collection
     :verbs: *gpd
-    :verbs: *gp
     :klass: ConfigurationScriptSource
     :collection_actions:
       :get:

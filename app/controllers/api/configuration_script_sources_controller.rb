@@ -19,11 +19,13 @@ module Api
     end
 
     def create_resource(_type, _id, data)
-      attrs = validate_attrs(data)
-      type = ConfigurationScriptSource.class_from_request_data(attrs)
-      raise 'type not currently supported' unless type.respond_to?(:create_in_provider_queue)
-      task_id = type.create_in_provider_queue(attrs['manager_resource'], attrs.except('manager_resource'))
-      action_result(true, 'Creating ConfigurationScriptSource', :task_id => task_id)
+      validate_attrs(data)
+      manager_id = parse_id(data['manager_resource'], :providers)
+      manager = resource_search(manager_id, :providers, collection_class(:providers))
+      type = ConfigurationScriptSource.class_for_manager(manager)
+      raise "ConfigurationScriptSource cannot be added to #{manager_ident(manager)}" unless type.respond_to?(:create_in_provider_queue)
+      task_id = type.create_in_provider_queue(manager.id, data.except('manager_resource'))
+      action_result(true, "Creating ConfigurationScriptSource for #{manager_ident(manager)}", :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
     end
@@ -36,13 +38,10 @@ module Api
 
     def validate_attrs(data)
       raise 'must supply a manager resource' unless data['manager_resource']
-      attrs = data.dup
-      attrs['manager_resource'] = if data['manager_resource'].key?('href')
-                                    parse_href(data['manager_resource']['href']).last
-                                  elsif data['manager_resource'].key?('id')
-                                    data['manager_resource']['id']
-                                  end
-      attrs
+    end
+
+    def manager_ident(manager)
+      "Manager id:#{manager.id} name: '#{manager.name}'"
     end
   end
 end

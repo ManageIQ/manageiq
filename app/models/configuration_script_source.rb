@@ -5,8 +5,7 @@ class ConfigurationScriptSource < ApplicationRecord
 
   virtual_total :total_payloads, :configuration_script_payloads
 
-  def self.class_from_request_data(data)
-    manager = ExtManagementSystem.find(data['manager_resource'])
+  def self.class_for_manager(manager)
     type = "#{manager.type}::ConfigurationScriptSource"
     descendants.find { |klass| klass.name == type }
   end
