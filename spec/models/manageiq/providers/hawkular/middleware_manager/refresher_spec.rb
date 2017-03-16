@@ -11,7 +11,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
                                         :port            => 8080,
                                         :authentications => [auth])
     @vm = FactoryGirl.create(:vm_redhat,
-                             :uid_ems => '20f0b6ee064748ed9b91d9dd1283396a')
+                             :uid_ems => '94f76aa25a3a')
   end
 
   it "will perform a full refresh on localhost" do
@@ -38,7 +38,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
     expect(@ems_hawkular.middleware_deployments.first).to have_attributes(:status => 'Enabled')
     assert_specific_datasource(@ems_hawkular, 'Local~/subsystem=datasources/data-source=ExampleDS')
     assert_specific_datasource(@ems_hawkular,
-                               'Local~/host=master/server=server-one/subsystem=datasources/data-source=ExampleDS')
+                               'Local~/host=master/server=s/subsystem=datasources/data-source=ExampleDS')
     assert_specific_server_group(domain)
     assert_specific_domain_server
     assert_specific_domain
@@ -73,11 +73,11 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
   end
 
   def assert_specific_server_group(domain)
-    server_group = domain.middleware_server_groups.find_by(:name => 'main-server-group')
+    server_group = domain.middleware_server_groups.find_by(:name => 'my-group')
     expect(server_group).to have_attributes(
-      :name     => 'main-server-group',
-      :nativeid => 'Local~/server-group=main-server-group',
-      :profile  => 'full',
+      :name     => 'my-group',
+      :nativeid => 'Local~/server-group=my-group',
+      :profile  => 'default',
     )
     expect(server_group.properties).not_to be_nil
     expect(server_group.middleware_deployments).to be_empty
@@ -85,12 +85,12 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
   end
 
   def assert_specific_domain_server
-    server = @ems_hawkular.middleware_servers.find_by(:name => 'server-three')
+    server = @ems_hawkular.middleware_servers.find_by(:name => 's')
     expect(server).to have_attributes(
-      :name     => 'server-three',
-      :nativeid => 'Local~/host=master/server=server-three',
-      :product  => 'not yet available',
-      :hostname => 'not yet available',
+      :name     => 's',
+      :nativeid => 'Local~/host=master/server=s',
+      :product  => 'WildFly Full',
+      :hostname => '58ef2cf13071',
     )
     expect(server.properties).not_to be_nil
   end
