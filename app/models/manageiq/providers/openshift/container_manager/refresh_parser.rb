@@ -77,7 +77,7 @@ module ManageIQ::Providers
           # TODO: persist tls
           :host_name => route.spec.try(:host),
           :labels    => labels,
-          :tags      => map_labels('ContainerRoute', labels),
+          :tags      => map_labels('Kubernetes::ContainerRoute', labels),
           :path      => route.path
         )
 
@@ -105,7 +105,7 @@ module ManageIQ::Providers
         labels = parse_labels(build)
         new_result.merge!(
           :labels                      => labels,
-          :tags                        => map_labels('ContainerBuild', labels),
+          :tags                        => map_labels('Kubernetes::ContainerBuild', labels),
           :service_account             => build.spec.serviceAccount,
           :completion_deadline_seconds => build.spec.try(:completionDeadlineSeconds),
           :output_name                 => build.spec.try(:output).try(:to).try(:name)

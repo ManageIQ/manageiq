@@ -217,7 +217,7 @@ module ManageIQ::Providers::Kubernetes
         :type           => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode',
         :identity_infra => node.spec.providerID,
         :labels         => labels,
-        :tags           => map_labels('ContainerNode', labels),
+        :tags           => map_labels('Kubernetes::ContainerNode', labels),
         :lives_on_id    => nil,
         :lives_on_type  => nil
       )
@@ -286,7 +286,7 @@ module ManageIQ::Providers::Kubernetes
         :session_affinity => service.spec.sessionAffinity,
         :service_type     => service.spec.type,
         :labels           => labels,
-        :tags             => map_labels('ContainerService', labels),
+        :tags             => map_labels('Kubernetes::ContainerService', labels),
         :selector_parts   => parse_selector_parts(service),
         :container_groups => container_groups
       )
@@ -364,7 +364,7 @@ module ManageIQ::Providers::Kubernetes
       new_result[:container_conditions] = parse_conditions(pod)
 
       new_result[:labels] = parse_labels(pod)
-      new_result[:tags] = map_labels('ContainerGroup', new_result[:labels])
+      new_result[:tags] = map_labels('Kubernetes::ContainerGroup', new_result[:labels])
       new_result[:node_selector_parts] = parse_node_selector_parts(pod)
       new_result[:container_volumes] = parse_volumes(pod)
       new_result
@@ -392,7 +392,7 @@ module ManageIQ::Providers::Kubernetes
     def parse_namespace(namespace)
       new_result = parse_base_item(namespace).except(:namespace)
       new_result[:labels] = parse_labels(namespace)
-      new_result[:tags] = map_labels('ContainerProject', new_result[:labels])
+      new_result[:tags] = map_labels('Kubernetes::ContainerProject', new_result[:labels])
       new_result
     end
 
@@ -549,7 +549,7 @@ module ManageIQ::Providers::Kubernetes
         :replicas         => container_replicator.spec.replicas,
         :current_replicas => container_replicator.status.replicas,
         :labels           => labels,
-        :tags             => map_labels('ContainerReplicator', labels),
+        :tags             => map_labels('Kubernetes::ContainerReplicator', labels),
         :selector_parts   => parse_selector_parts(container_replicator)
       )
 
