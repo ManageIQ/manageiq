@@ -35,16 +35,6 @@ module Api
         search_options.map(&:downcase).include?(what.to_s)
       end
 
-      def decorator_selection
-        params['decorators'].to_s.split(",")
-      end
-
-      def decorator_selection_for(collection)
-        decorator_selection.collect do |attr|
-          /\A#{collection}\.(?<name>.*)\z/.match(attr) { |m| m[:name] }
-        end.compact
-      end
-
       def attribute_selection
         if !@req.attributes.empty? || @additional_attributes
           @req.attributes | Array(@additional_attributes) | ID_ATTRS

@@ -1835,6 +1835,12 @@ class VmOrTemplate < ApplicationRecord
     user
   end
 
+  supports :console do
+    unless console_supported?('spice') || console_supported?('vnc')
+      unsupported_reason_add(:console, N_("Console not supported"))
+    end
+  end
+
   private
 
   def set_tenant_from_group
