@@ -139,6 +139,26 @@ describe OpsController do
       expect(set_vars[:parameters]).to include(:request => filter_params[:object_request], "key1" => "value1", "VmOrTemplate::vm" => vm.id)
       expect(set_vars[:uri_parts]).to include(:namespace => filter_params[:starting_object])
     end
+
+    it "sets proper filter values for 'container_image_check_compliance' action type" do
+      params[:action_typ] = "container_image_check_compliance"
+
+      allow(controller).to receive(:params).and_return(params)
+      controller.send(:schedule_set_record_vars, schedule)
+      key = schedule.filter.exp.keys.first
+      expect(schedule.filter.exp[key]["field"]).to eq("ContainerImage-name")
+      expect(schedule.sched_action).to eq(:method=>"check_compliance")
+    end
+
+    it "sets proper filter values for 'vm_check_compliance' action type" do
+      params[:action_typ] = "vm_check_compliance"
+
+      allow(controller).to receive(:params).and_return(params)
+      controller.send(:schedule_set_record_vars, schedule)
+      key = schedule.filter.exp.keys.first
+      expect(schedule.filter.exp[key]["field"]).to eq("Vm-name")
+      expect(schedule.sched_action).to eq(:method=>"check_compliance")
+    end
   end
 
   context "#build_attrs_from_params" do

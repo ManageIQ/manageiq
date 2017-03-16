@@ -120,7 +120,7 @@ module OpsController::Settings::Schedules
     schedule = MiqSchedule.find_by_id(params[:id])
 
     if schedule_check_compliance?(schedule)
-      action_type = schedule.towhat.downcase + "_" + schedule.sched_action[:method]
+      action_type = schedule.towhat.underscore + "_" + schedule.sched_action[:method]
     elsif schedule_db_backup?(schedule)
       action_type     = schedule.sched_action[:method]
       depot           = schedule.file_depot
@@ -309,7 +309,8 @@ module OpsController::Settings::Schedules
   def schedule_towhat_from_params_action
     case params[:action_typ]
     when "db_backup"          then "DatabaseBackup"
-    when /check_compliance\z/ then params[:action_typ].split("_").first.capitalize
+    when /check_compliance\z/ then (params[:action_typ].split("_") - params[:action_typ].split("_").last(2)).join("_")
+                                                                                                            .classify
     when "emscluster"         then "EmsCluster"
     when "automation_request" then "AutomationRequest"
     else                           params[:action_typ].camelcase
@@ -559,7 +560,7 @@ module OpsController::Settings::Schedules
       when "host" then {"=" => {"field" => "Host-name", "value" => params[:filter_value]}}
       else             {"IS NOT NULL" => {"field" => "Host-name"}}
       end
-    when "container_image"
+    when "container_image", "container_image_check_compliance"
       case params[:filter_typ]
       when "ems" then {"=" => {"field" => "ContainerImage.ext_management_system-name", "value" => params[:filter_value]}}
       when "container_image" then {"=" => {"field" => "ContainerImage-name", "value" => params[:filter_value]}}
