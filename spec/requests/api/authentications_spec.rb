@@ -165,4 +165,31 @@ RSpec.describe 'Authentications API' do
       expect(response).to have_http_status(:forbidden)
     end
   end
+
+  describe 'OPTIONS /api/authentications' do
+    it 'returns expected and additional attributes' do
+      api_basic_authorize
+
+      run_options(authentications_url)
+
+      additional_options = {
+        'credential_types' => build_credential_options
+      }
+      expect_options_results(:authentications, additional_options)
+    end
+  end
+
+  def build_credential_options
+    Authentication::CREDENTIAL_TYPES.each_with_object({}) do |(description, klass), hash|
+      hash[description] = klass.constantize.descendants.each_with_object({}) do |subklass, fields|
+        next unless defined? subklass::API_OPTIONS
+        subklass::API_OPTIONS.tap do |options|
+          options[:attributes].each do |_k, val|
+            val[:type] = val[:type].to_s if val[:type]
+          end
+          fields[subklass.name] = options
+        end
+      end
+    end.deep_stringify_keys
+  end
 end
