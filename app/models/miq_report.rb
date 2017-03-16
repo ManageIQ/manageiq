@@ -124,8 +124,12 @@ class MiqReport < ApplicationRecord
     return [] if cols.nil?
     cols.inject([]) do |r, c|
       # eg. c = ["Host.Hardware.Disks : File Name", "Host.hardware.disks-filename"]
-      parts = c.last.split(".")
+      field = c.last
+      field, virtual_custom_attribute = MiqExpression.escape_virtual_custom_attribute(field)
+      parts = field.split(".")
       parts[-1] = parts.last.split("-").first # Strip off field name from last element
+
+      parts.map!{ |x| URI::RFC2396_Parser.new.unescape(x) } if virtual_custom_attribute
 
       if parts.last == "managed"
         next(r) unless mode == :tag
