@@ -12,8 +12,4 @@ module CloudTenancyMixin
       scope.includes(:cloud_tenant => "source_tenant").includes(:ext_management_system)
     end
   end
-
-  def tenant
-    cloud_tenant
-  end
 end
