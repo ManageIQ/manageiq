@@ -1,4 +1,8 @@
 RSpec.describe 'Authentications API' do
+  let(:provider) { FactoryGirl.create(:provider_ansible_tower) }
+  let(:auth) { FactoryGirl.create(:ansible_cloud_credential, :resource => provider) }
+  let(:auth_2) { FactoryGirl.create(:ansible_cloud_credential, :resource => provider) }
+
   describe 'GET/api/authentications' do
     it 'lists all the authentication configuration script bases with an appropriate role' do
       auth = FactoryGirl.create(:authentication)
@@ -51,15 +55,60 @@ RSpec.describe 'Authentications API' do
 
   describe 'POST /api/authentications' do
     it 'will delete an authentication' do
-      auth = FactoryGirl.create(:authentication)
       api_basic_authorize collection_action_identifier(:authentications, :delete, :post)
 
       expected = {
-        'results' => [a_hash_including('success' => true)]
+        'results' => [
+          a_hash_including(
+            'success' => true,
+            'message' => a_string_including('Deleting Authentication'),
+            'task_id' => a_kind_of(Numeric)
+          )
+        ]
       }
-      expect do
-        run_post(authentications_url, :action => 'delete', :resources => [{ 'id' => auth.id }])
-      end.to change(Authentication, :count).by(-1)
+      run_post(authentications_url, :action => 'delete', :resources => [{ 'id' => auth.id }])
+
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'verifies that the type is supported' do
+      api_basic_authorize collection_action_identifier(:authentications, :delete, :post)
+      auth = FactoryGirl.create(:authentication)
+
+      run_post(authentications_url, :action => 'delete', :resources => [{ 'id' => auth.id }])
+
+      expected = {
+        'results' => [
+          {
+            'success' => false,
+            'message' => "Delete not supported for Authentication id:#{auth.id} name: '#{auth.name}'"
+          }
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'will delete multiple authentications' do
+      api_basic_authorize collection_action_identifier(:authentications, :delete, :post)
+
+      expected = {
+        'results' => [
+          a_hash_including(
+            'success' => true,
+            'message' => a_string_including('Deleting Authentication'),
+            'task_id' => a_kind_of(Numeric)
+          ),
+          a_hash_including(
+            'success' => true,
+            'message' => a_string_including('Deleting Authentication'),
+            'task_id' => a_kind_of(Numeric)
+          )
+        ]
+      }
+      run_post(authentications_url, :action => 'delete', :resources => [{ 'id' => auth.id }, { 'id' => auth_2.id }])
+
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)
     end
@@ -75,18 +124,20 @@ RSpec.describe 'Authentications API' do
 
   describe 'POST /api/authentications/:id' do
     it 'will delete an authentication' do
-      auth = FactoryGirl.create(:authentication)
       api_basic_authorize action_identifier(:authentications, :delete, :resource_actions, :post)
 
-      expect do
-        run_post(authentications_url(auth.id), :action => 'delete')
-      end.to change(Authentication, :count).by(-1)
-      expect(response.parsed_body).to include('success' => true)
+      run_post(authentications_url(auth.id), :action => 'delete')
+
+      expected = {
+        'success' => true,
+        'message' => a_string_including('Deleting Authentication'),
+        'task_id' => a_kind_of(Numeric)
+      }
+      expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)
     end
 
     it 'will not delete an authentication without an appropriate role' do
-      auth = FactoryGirl.create(:authentication)
       api_basic_authorize
 
       run_post(authentications_url(auth.id), :action => 'delete')
@@ -100,9 +151,8 @@ RSpec.describe 'Authentications API' do
       auth = FactoryGirl.create(:authentication)
       api_basic_authorize action_identifier(:authentications, :delete, :resource_actions, :delete)
 
-      expect do
-        run_delete(authentications_url(auth.id))
-      end.to change(Authentication, :count).by(-1)
+      run_delete(authentications_url(auth.id))
+
       expect(response).to have_http_status(:no_content)
     end
 
