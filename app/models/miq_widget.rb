@@ -85,7 +85,7 @@ class MiqWidget < ApplicationRecord
   end
 
   def generate_content_options(group, users)
-    content_option_generator.generate(group, users)
+    content_option_generator.generate(group, users, timezone_matters?)
   end
 
   def timeout_stalled_task
@@ -318,6 +318,7 @@ class MiqWidget < ApplicationRecord
   end
 
   def find_or_build_contents_for_user(group, user, timezone = nil)
+    timezone = "UTC" if timezone && !timezone_matters?
     settings_for_build = {:miq_group_id => group.id}
     settings_for_build[:user_id]  = user.id  if user
     settings_for_build[:timezone] = timezone if timezone
@@ -351,6 +352,7 @@ class MiqWidget < ApplicationRecord
 
   def contents_for_owner(group, user, timezone = nil)
     return unless group
+    timezone = "UTC" if timezone && !timezone_matters?
     conditions = {:miq_group_id => group.id}
     conditions[:user_id]   = user.id if user
     conditions[:timezone] = timezone if timezone
@@ -359,8 +361,9 @@ class MiqWidget < ApplicationRecord
 
   def contents_for_user(user)
     user = self.class.get_user(user)
-    contents = contents_for_owner(user.current_group, user, user.get_timezone)
-    contents ||= contents_for_owner(user.current_group, nil, user.get_timezone)
+    timezone = timezone_matters? ? user.get_timezone : "UTC"
+    contents = contents_for_owner(user.current_group, user, timezone)
+    contents ||= contents_for_owner(user.current_group, nil, timezone)
     contents
   end
 
@@ -563,6 +566,14 @@ class MiqWidget < ApplicationRecord
 
   def delete_legacy_contents_for_group(group)
     MiqWidgetContent.where(:miq_widget_id => id, :miq_group_id => group.id, :user_id => nil).destroy_all
+  end
+
+  # default: timezone does matter
+  # options[:timezone_matters] == false will skip it
+  # TODO: detect date field in the report?
+  def timezone_matters?
+    return true unless options
+    options.fetch(:timezone_matters, true)
   end
 
   private

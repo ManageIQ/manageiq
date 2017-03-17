@@ -487,7 +487,7 @@ describe MiqWidget do
 
     before do
       allow(MiqWidget::ContentOptionGenerator).to receive(:new).and_return(content_option_generator)
-      allow(content_option_generator).to receive(:generate).with(group, users).and_return("content options")
+      allow(content_option_generator).to receive(:generate).with(group, users, true).and_return("content options")
     end
 
     it "returns the content options" do
