@@ -12,6 +12,7 @@ class EmbeddedAnsible
   START_EXCLUDE_TAGS          = "packages,migrations,firewall".freeze
   HTTP_PORT                   = 54_321
   HTTPS_PORT                  = 54_322
+  WAIT_FOR_ANSIBLE_SLEEP      = 1.second
 
   def self.available?
     path = ENV["APPLIANCE_ANSIBLE_DIRECTORY"] || APPLIANCE_ANSIBLE_DIRECTORY
@@ -50,6 +51,15 @@ class EmbeddedAnsible
   def self.start
     configure_secret_key
     run_setup_script(START_EXCLUDE_TAGS)
+
+    5.times do
+      return if alive?
+
+      _log.info("Waiting for EmbeddedAnsible to respond")
+      sleep WAIT_FOR_ANSIBLE_SLEEP
+    end
+
+    raise "EmbeddedAnsible service is not responding after setup"
   end
 
   def self.stop

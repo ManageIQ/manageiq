@@ -275,12 +275,16 @@ describe EmbeddedAnsible do
     end
 
     describe ".start" do
-      it "runs the setup script with the correct args" do
+      before do
         miq_database.set_ansible_admin_authentication(:password => "adminpassword")
         miq_database.set_ansible_rabbitmq_authentication(:userid => "rabbituser", :password => "rabbitpassword")
         miq_database.set_ansible_database_authentication(:userid => "databaseuser", :password => "databasepassword")
 
         expect(described_class).to receive(:configure_secret_key)
+        stub_const("EmbeddedAnsible::WAIT_FOR_ANSIBLE_SLEEP", 0)
+      end
+
+      it "runs the setup script with the correct args" do
         expect(AwesomeSpawn).to receive(:run!) do |script_path, options|
           params                  = options[:params]
           inventory_file_contents = File.read(params[:inventory=])
@@ -296,8 +300,25 @@ describe EmbeddedAnsible do
           expect(inventory_file_contents).to include("pg_username='databaseuser'")
           expect(inventory_file_contents).to include("pg_password='databasepassword'")
         end
+        expect(described_class).to receive(:alive?).and_return(true)
 
         described_class.start
+      end
+
+      it "waits for Ansible to respond" do
+        expect(AwesomeSpawn).to receive(:run!)
+
+        expect(described_class).to receive(:alive?).exactly(3).times.and_return(false, false, true)
+
+        described_class.start
+      end
+
+      it "raises if Ansible doesn't respond" do
+        expect(AwesomeSpawn).to receive(:run!)
+
+        expect(described_class).to receive(:alive?).exactly(5).times.and_return(false)
+
+        expect { described_class.start }.to raise_error(RuntimeError)
       end
     end
 

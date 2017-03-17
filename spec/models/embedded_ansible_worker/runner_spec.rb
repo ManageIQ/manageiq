@@ -64,6 +64,25 @@ describe EmbeddedAnsibleWorker::Runner do
         expect(provider.default_endpoint.url).to eq("https://boringserver/ansibleapi/v1")
       end
     end
+
+    context "#setup_ansible" do
+      it "configures EmbeddedAnsible if it is not configured" do
+        expect(EmbeddedAnsible).to receive(:start)
+
+        expect(EmbeddedAnsible).to receive(:configured?).and_return(false)
+        expect(EmbeddedAnsible).to receive(:configure)
+
+        runner.setup_ansible
+      end
+
+      it "doesn't call configure if EmbeddedAnsible is already configured" do
+        expect(EmbeddedAnsible).to receive(:start)
+
+        expect(EmbeddedAnsible).to receive(:configured?).and_return(true)
+        expect(EmbeddedAnsible).not_to receive(:configure)
+
+        runner.setup_ansible
+      end
+    end
   end
 end
-
