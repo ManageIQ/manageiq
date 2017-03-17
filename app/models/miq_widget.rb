@@ -387,10 +387,6 @@ class MiqWidget < ApplicationRecord
     end
   end
 
-  def timezones_for_users(users)
-    users.to_miq_a.collect(&:get_timezone).uniq.sort
-  end
-
   def available_for_group?(group)
     return false unless group
     has_visibility?(:roles, group.miq_user_role_name) || has_visibility?(:groups, group.description)
