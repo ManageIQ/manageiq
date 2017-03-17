@@ -19,7 +19,27 @@ ENV['CUT_OFF'] ||= "0.3"
 # method
 module Kernel
   alias original_require require
-  MEMORY_MB_PROC = proc { (Sys::ProcTable.ps($PID).rss / ::BigDecimal.new(1_048_576)).to_f }
+
+  MB_BYTES = ::BigDecimal.new(1_048_576)
+  if ENV["CI"] && ENV["TRAVIS"]
+    # Travis doesn't seem to like Sys::ProcTable very much... this is the work
+    # around for now until we can get that worked out.
+    CONVERSION       = {"kb" => 1024, "mb" => 1_048_576, "gb" => 1_073_741_824}.freeze
+    PROC_STATUS_FILE = Pathname.new("/proc/#{$PID}/status").freeze
+    VMRSS_GREP_EXP   = /^VmRSS/
+    MEMORY_MB_PROC = proc do
+      begin
+        rss_line = PROC_STATUS_FILE.each_line.grep(VMRSS_GREP_EXP).first
+        return unless rss_line
+        return unless (_name, value, unit = rss_line.split(nil)).length == 3
+        (CONVERSION[unit.downcase!] * ::BigDecimal.new(value)) / MB_BYTES
+      rescue Errno::EACCES, Errno::ENOENT
+        0
+      end
+    end
+  else
+    MEMORY_MB_PROC = proc { (Sys::ProcTable.ps($PID).rss / MB_BYTES).to_f }
+  end
 
   def require(file)
     Kernel.require(file)
