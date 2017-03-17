@@ -146,6 +146,6 @@ shared_examples_for "ansible refresher_v2" do |ansible_provider, manager_class, 
   end
 
   def expected_configuration_script_source
-    @expected_configuration_script_source ||= automation_manager.configuration_script_sources.find_by(:name => 'db-projects')
+    @expected_configuration_script_source ||= automation_manager.projects.find_by(:name => 'db-projects')
   end
 end

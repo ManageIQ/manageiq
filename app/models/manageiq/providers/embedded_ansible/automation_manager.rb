@@ -15,7 +15,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager < ManageIQ::Provid
   require_nested :VmwareCredential
 
   require_nested :ConfigurationScript
-  require_nested :ConfigurationScriptSource
+  require_nested :Project
   require_nested :ConfiguredSystem
   require_nested :EventCatcher
   require_nested :EventParser
@@ -24,6 +24,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager < ManageIQ::Provid
   require_nested :Playbook
   require_nested :Refresher
   require_nested :RefreshWorker
+  has_many :projects, :foreign_key => "manager_id"
 
   def self.ems_type
     @ems_type ||= "embedded_ansible_automation".freeze

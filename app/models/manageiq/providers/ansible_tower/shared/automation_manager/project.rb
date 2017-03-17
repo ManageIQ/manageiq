@@ -1,4 +1,4 @@
-module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::ConfigurationScriptSource
+module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Project
   extend ActiveSupport::Concern
 
   module ClassMethods

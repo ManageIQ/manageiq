@@ -3,7 +3,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::Inventory::Parser::AutomationM
     inventory_root_groups
     configured_systems
     configuration_scripts
-    configuration_script_sources
+    projects
     credentials
   end
 
@@ -43,9 +43,9 @@ module ManageIQ::Providers::AnsibleTower::Shared::Inventory::Parser::AutomationM
     end
   end
 
-  def configuration_script_sources
+  def projects
     collector.projects.each do |project|
-      inventory_object = persister.configuration_script_sources.find_or_build(project.id.to_s)
+      inventory_object = persister.projects.find_or_build(project.id.to_s)
       inventory_object.description = project.description
       inventory_object.name = project.name
       # checking project.credential due to https://github.com/ansible/ansible_tower_client_ruby/issues/68
@@ -59,8 +59,8 @@ module ManageIQ::Providers::AnsibleTower::Shared::Inventory::Parser::AutomationM
 
       project.playbooks.each do |playbook_name|
         inventory_object_playbook = persister.configuration_script_payloads.find_or_build_by(
-          :configuration_script_source => inventory_object,
-          :manager_ref                 => playbook_name
+          :project     => inventory_object,
+          :manager_ref => playbook_name
         )
         inventory_object_playbook.name = playbook_name
       end
