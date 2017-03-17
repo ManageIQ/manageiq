@@ -32,7 +32,7 @@ unless vm.retires_on.nil?
   $evm.log("info", "Extending retirement <#{vm_retire_extend_days}> days for VM: <#{vm_name}>")
 
   # Set new retirement date here
-  vm.retires_on += vm_retire_extend_days.to_i
+  vm.extend_retires_on(vm_retire_extend_days, vm.retires_on)
 
   $evm.log("info", "VM: <#{vm_name}> new retirement date is #{vm.retires_on}")
 
