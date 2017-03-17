@@ -22,7 +22,6 @@ cols:
 - name
 - description
 - created_at
-- retired
 - v_total_vms
 - aggregate_all_vm_cpus
 - aggregate_all_vm_memory
@@ -44,7 +43,6 @@ col_order:
 - name
 - description
 - created_at
-- retired
 - v_total_vms
 - aggregate_all_vm_cpus
 - aggregate_all_vm_memory
@@ -59,7 +57,6 @@ headers:
 - Name
 - Description
 - Created On
-- Retired
 - Total VMs
 - Total CPUs
 - Total Memory
@@ -67,12 +64,6 @@ headers:
 - Total VM Disk Space Allocated
 - Total VM Disk Space Used
 - Total VM Memory on Disk
-
-col_formats:
--
--
--
-- :boolean_yes_no
 
 # Condition(s) string for the SQL query
 conditions: 
