@@ -506,7 +506,7 @@ describe "Querying" do
       api_basic_authorize collection_action_identifier(:vms, :read, :get)
       vm = create_vms_by_name(%w(aa)).first
 
-      run_get vms_url, :expand => "resources", :attributes => "slug,name,vendor"
+      run_get vms_url, :expand => "resources", :attributes => "href_slug,name,vendor"
 
       expected = {
         "name"      => "vms",
@@ -514,11 +514,11 @@ describe "Querying" do
         "subcount"  => 1,
         "resources" => [
           {
-            "id"     => vm.id,
-            "href"   => a_string_matching(vms_url(vm.id)),
-            "slug"   => "vms/#{vm.id}",
-            "name"   => "aa",
-            "vendor" => anything
+            "id"        => vm.id,
+            "href"      => a_string_matching(vms_url(vm.id)),
+            "href_slug" => "vms/#{vm.id}",
+            "name"      => "aa",
+            "vendor"    => anything
           }
         ]
       }
