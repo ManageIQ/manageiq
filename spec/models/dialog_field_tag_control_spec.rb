@@ -36,6 +36,13 @@ describe DialogFieldTagControl do
       expect(@df.single_value?).to be_truthy
     end
 
+    it "#force_multi_value" do
+      expect(@df.force_multi_value).to be_truthy
+
+      @df.force_single_value = true
+      expect(@df.force_multi_value).to be_falsey
+    end
+
     it "#automate_key_name" do
       expect(@df.automate_key_name).to eq("Array::dialog_#{@df.name}")
     end
