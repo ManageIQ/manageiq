@@ -285,9 +285,8 @@ module MiqAeEngine
           MiqAeObject.convert_value_based_on_datatype(str_value.strip, klass.strip)
         else
           element.presence
-        end.compact
-      end
-
+        end
+      end.compact
     end
 
     def get_key_name_and_klass_from_key(attribute_key)
