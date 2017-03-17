@@ -155,6 +155,12 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
         :variables   => job_template.extra_vars_hash,
       )
     end
+  end
 
+  it '#jobs' do
+    job_template = FactoryGirl.create(:embedded_configuration_script)
+    job = FactoryGirl.create(:embedded_ansible_job, :job_template => job_template)
+
+    expect(job_template.jobs).to eq([job])
   end
 end
