@@ -190,6 +190,41 @@ describe Vm do
     end
   end
 
+  context "#scan" do
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+      @host = FactoryGirl.create(:host_vmware)
+      @vm = FactoryGirl.create(
+        :vm_vmware,
+        :host      => @host,
+        :miq_group => FactoryGirl.create(:miq_group)
+      )
+      FactoryGirl.create(:miq_event_definition, :name => :request_vm_scan)
+      # admin user is needed to process Events
+      User.super_admin || FactoryGirl.create(:user_with_group, :userid => "admin")
+    end
+
+    it "policy passes" do
+      expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:raw_scan)
+
+      allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'sucess', MiqAeEngine::MiqAeWorkspaceRuntime.new])
+      @vm.scan
+      status, message, result = MiqQueue.first.deliver
+      MiqQueue.first.delivered(status, message, result)
+    end
+
+    it "policy prevented" do
+      expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm).to_not receive(:raw_scan)
+
+      event = {:attributes => {"full_data" => {:policy => {:prevented => true}}}}
+      allow_any_instance_of(MiqAeEngine::MiqAeWorkspaceRuntime).to receive(:get_obj_from_path).with("/").and_return(:event_stream => event)
+      allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'sucess', MiqAeEngine::MiqAeWorkspaceRuntime.new])
+      @vm.scan
+      status, message, _result = MiqQueue.first.deliver
+      MiqQueue.first.delivered(status, message, MiqAeEngine::MiqAeWorkspaceRuntime.new)
+    end
+  end
+
   it "#save_drift_state" do
     # TODO: Beef up with more data
     vm = FactoryGirl.create(:vm_vmware)
