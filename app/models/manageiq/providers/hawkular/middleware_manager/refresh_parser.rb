@@ -155,10 +155,13 @@ module ManageIQ::Providers
           deployment_status_metrics = @ems.inventory_client.list_metrics_for_metric_type(deployment_status_mt_path)
           deployment_status_metrics.each do |deployment_status_metric|
             deployment_status_metric_path = ::Hawkular::Inventory::CanonicalPath.parse(deployment_status_metric.path)
-            path = ::Hawkular::Inventory::CanonicalPath.new(:tenant_id    => deployment_status_metric_path.tenant_id,
-                                                            :feed_id      => deployment_status_metric_path.feed_id,
-                                                            :resource_ids => deployment_status_metric_path.resource_ids)
-            metric_id_by_resource_path[path.to_s] = deployment_status_metric.hawkular_metric_id
+            # By dropping metric_id from the canonical path we end up with the resource path
+            resource_path = ::Hawkular::Inventory::CanonicalPath.new(
+              :tenant_id    => deployment_status_metric_path.tenant_id,
+              :feed_id      => deployment_status_metric_path.feed_id,
+              :resource_ids => deployment_status_metric_path.resource_ids
+            )
+            metric_id_by_resource_path[resource_path.to_s] = deployment_status_metric.hawkular_metric_id
           end
         end
         @data[:middleware_deployments].each do |deployment|
@@ -167,6 +170,7 @@ module ManageIQ::Providers
           path = ::Hawkular::Inventory::CanonicalPath.parse(deployment[:ems_ref])
           # for subdeployments use it's parent deployment availability.
           path = path.up if path.resource_ids.last.include? CGI.escape('/subdeployment=')
+          # Ensure consistency on keys (resource_path) used on metric_id_by_resource_path
           path = ::Hawkular::Inventory::CanonicalPath.new(:tenant_id    => path.tenant_id,
                                                           :feed_id      => path.feed_id,
                                                           :resource_ids => path.resource_ids)
