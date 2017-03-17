@@ -2,6 +2,7 @@ require 'yaml'
 
 require_relative 'kernel_require_patch'
 
+ENV['CUT_OFF']                = "0.0"
 ENV['LOG_LEVEL']              = "FATAL"
 ENV["RAILS_ENV"]              = "production"
 ENV['RACK_ENV']               = ENV["RAILS_ENV"]
@@ -29,4 +30,5 @@ TOP_REQUIRE.set_top_require_cost
 
 # puts TOP_REQUIRE.flattened_full_hash_output.to_yaml
 TOP_REQUIRE.print_sorted_children
+ENV['CUT_OFF'] = "0.3"
 TOP_REQUIRE.print_summary
