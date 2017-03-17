@@ -233,7 +233,7 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *gpd
+    :verbs: *gpppd
     :klass: Authentication
     :collection_actions:
       :get:
@@ -594,7 +594,7 @@
     :description: Configuration Script Source
     :options:
     - :collection
-    :verbs: *gpd
+    :verbs: *gpppd
     :klass: ConfigurationScriptSource
     :collection_actions:
       :get:

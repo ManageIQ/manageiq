@@ -178,6 +178,53 @@ RSpec.describe 'Authentications API' do
     end
   end
 
+  describe 'PUT /api/authentications/:id' do
+    let(:params) do
+      {
+        :description => 'Description',
+        :name        => 'Updated Credential'
+      }
+    end
+
+    it 'can update an authentication with an appropriate role' do
+      api_basic_authorize collection_action_identifier(:authentications, :edit)
+
+      run_put(authentications_url(auth.id), :resource => params)
+
+      expected = {
+        'success' => true,
+        'message' => a_string_including('Updating Authentication'),
+        'task_id' => a_kind_of(Numeric)
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+  end
+
+  describe 'PATCH /api/authentications/:id' do
+    let(:params) do
+      {
+        :action      => 'edit',
+        :description => 'Description',
+        :name        => 'Updated Credential'
+      }
+    end
+
+    it 'can update an authentication with an appropriate role' do
+      api_basic_authorize collection_action_identifier(:authentications, :edit)
+
+      run_patch(authentications_url(auth.id), [params])
+
+      expected = {
+        'success' => true,
+        'message' => a_string_including('Updating Authentication'),
+        'task_id' => a_kind_of(Numeric)
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+  end
+
   describe 'POST /api/authentications/:id' do
     let(:params) do
       {

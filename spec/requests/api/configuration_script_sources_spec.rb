@@ -128,6 +128,53 @@ RSpec.describe 'Configuration Script Sources API' do
     end
   end
 
+  describe 'PUT /api/configuration_script_sources/:id' do
+    let(:params) do
+      {
+        :name        => 'foo',
+        :description => 'bar'
+      }
+    end
+
+    it 'updates a configuration_script_source with an appropriate role' do
+      api_basic_authorize action_identifier(:configuration_script_sources, :edit)
+
+      run_put(configuration_script_sources_url(config_script_src.id), :resource => params)
+
+      expected = {
+        'success' => true,
+        'message' => a_string_including('Updating ConfigurationScriptSource'),
+        'task_id' => a_kind_of(Numeric)
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+  end
+
+  describe 'PATCH /api/configuration_script_sources/:id' do
+    let(:params) do
+      {
+        :action      => 'edit',
+        :name        => 'foo',
+        :description => 'bar'
+      }
+    end
+
+    it 'updates a configuration_script_source with an appropriate role' do
+      api_basic_authorize action_identifier(:configuration_script_sources, :edit)
+
+      run_patch(configuration_script_sources_url(config_script_src.id), [params])
+
+      expected = {
+        'success' => true,
+        'message' => a_string_including('Updating ConfigurationScriptSource'),
+        'task_id' => a_kind_of(Numeric)
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+  end
+
   describe 'POST /api/configuration_script_sources/:id' do
     let(:params) do
       {
