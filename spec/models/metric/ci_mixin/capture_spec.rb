@@ -39,10 +39,29 @@ describe Metric::CiMixin::Capture do
   context "#perf_capture_queue" do
     it "splits up long perf_capture durations for old last_perf_capture_on" do
       # there should be 10 days + a partial day, or 11 queue items
+      Timecop.freeze
       original_queue_count = MiqQueue.count
-      @vm.last_perf_capture_on = 10.days.ago - 5.hours - 23.minutes
+      start_time = 10.days.ago - 5.hours - 23.minutes
+      @vm.last_perf_capture_on = start_time
       @vm.perf_capture_queue("realtime")
       expect(MiqQueue.count - original_queue_count).to eq 11
+
+      # make sure the queue items are in the correct order
+      queue_items = MiqQueue.peek(:conditions => {:zone       => @vm.my_zone,
+                                                  :queue_name => @vm.queue_name_for_metrics_collection,
+                                                  :role       => "ems_metrics_collector"},
+                                  :limit      => 3)
+      start_time = (start_time + 10.days).utc
+      end_time = (start_time + 5.hours + 23.minutes).utc
+      queue_items.each do |q_item|
+        q_start_time, q_end_time = q_item.args
+        expect(q_start_time).to eq start_time
+        expect(q_end_time).to eq end_time
+        end_time = start_time
+        start_time = start_time - 1.day
+      end
+
+      Timecop.return
     end
   end
 

@@ -17,15 +17,19 @@ module Metric::CiMixin::Capture
     ems.metrics_collector_queue_name
   end
 
-  def split_capture_intervals(start_time, end_time, threshold=1.day)
+  def split_capture_intervals(interval_name, start_time, end_time, threshold=1.day)
     raise _("Start time must be earlier than End time") if start_time > end_time
     # Create an array of ordered pairs from start_time and end_time so that each ordered pair is contained
     # within the threshold.  Then, reverse it so the newest ordered pair is first:
     # start_time = 2017/01/01 12:00:00, end_time = 2017/01/04 12:00:00
-    # [[2017-01-03 12:00:00 UTC, 2017-01-04 12:00:00 UTC],
-    #  [2017-01-02 12:00:00 UTC, 2017-01-03 12:00:00 UTC],
-    #  [2017-01-01 12:00:00 UTC, 2017-01-02 12:00:00 UTC]]
-    (start_time..end_time).step_value(threshold).each_cons(2).collect { |s_time, e_time| [s_time, e_time] }.reverse
+    # [[interval_name, 2017-01-03 12:00:00 UTC, 2017-01-04 12:00:00 UTC],
+    #  [interval_name, 2017-01-02 12:00:00 UTC, 2017-01-03 12:00:00 UTC],
+    #  [interval_name, 2017-01-01 12:00:00 UTC, 2017-01-02 12:00:00 UTC]]
+    start_time = start_time.utc
+    end_time = end_time.utc
+    (start_time..end_time).step_value(threshold).each_cons(2).collect do |s_time, e_time|
+      [interval_name, s_time, e_time]
+    end.reverse
   end
   private :split_capture_intervals
 
@@ -56,9 +60,7 @@ module Metric::CiMixin::Capture
 
     # Determine what items we should be queuing up
     items = [interval_name]
-    items = split_capture_intervals(start_time, end_time).map do |start_and_end_time|
-      [interval_name, *start_and_end_time]
-    end if start_time
+    items = split_capture_intervals(interval_name, start_time, end_time) if start_time
 
     # Queue up the actual items
     queue_item = {
