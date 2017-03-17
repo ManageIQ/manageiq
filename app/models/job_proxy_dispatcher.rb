@@ -173,6 +173,7 @@ class JobProxyDispatcher
 
   def assign_proxy_to_job(proxy, job)
     job.agent_id        = proxy.id
+    job.miq_server_id   = proxy.id
     job.agent_name      = proxy.name
     job.started_on      = Time.now.utc
     job.dispatch_status = "active"

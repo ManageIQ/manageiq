@@ -4,6 +4,7 @@ class Job < ApplicationRecord
   include FilterableMixin
 
   belongs_to :miq_task, :dependent => :delete
+  belongs_to :miq_server
 
   serialize :options
   serialize :context
