@@ -5,11 +5,11 @@ module Api
         physical_server = PhysicalServer.find(params[:c_id])
         response_payload = physical_server.as_json
         firmwares = physical_server.firmwares.map(&:as_json)
-        response_payload['firmwares'] = firmwares      
+        response_payload['firmwares'] = firmwares 
         response_payload['host'] = case physical_server.host
                                    when nil then nil
                                    else physical_server.host.id
-        end
+                                   end
 
         render :json => response_payload
       else
