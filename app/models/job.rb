@@ -163,10 +163,8 @@ class Job < ApplicationRecord
           next unless job.updated_on < job.current_job_timeout(job.timeout_adjustment).seconds.ago
 
           # Allow jobs to run longer if the MiqQueue task is still active.  (Limited to MiqServer for now.)
-          if job.agent_class == "MiqServer"
-            # TODO: can we add method_name, queue_name, role, instance_id to the exists?
-            next if MiqQueue.exists?(:state => %w(dequeue ready), :task_id => job.guid, :class_name => job.agent_class)
-          end
+          # TODO: can we add method_name, queue_name, role, instance_id to the exists?
+          next if MiqQueue.exists?(:state => %w(dequeue ready), :task_id => job.guid)
           job.timeout!
         end
     rescue Exception
@@ -250,6 +248,6 @@ class Job < ApplicationRecord
   end
 
   def attributes_log
-    "guid: [#{guid}], userid: [#{self.userid}], name: [#{self.name}], target class: [#{target_class}], target id: [#{target_id}], process type: [#{type}], agent class: [#{agent_class}], agent id: [#{agent_id}], zone: [#{zone}]"
+    "guid: [#{guid}], userid: [#{self.userid}], name: [#{self.name}], target class: [#{target_class}], target id: [#{target_id}], process type: [#{type}], agent id: [#{agent_id}], zone: [#{zone}]"
   end
 end # class Job
