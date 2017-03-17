@@ -1,7 +1,6 @@
 require "ansible_tower_client"
 
 shared_examples_for "ansible provider" do
-
   subject { FactoryGirl.build(:provider_ansible_tower) }
 
   describe "#connect" do
@@ -30,9 +29,7 @@ shared_examples_for "ansible provider" do
         FactoryGirl.create(:configured_system, :computer_system =>
           FactoryGirl.create(:computer_system,
                              :operating_system => FactoryGirl.create(:operating_system),
-                             :hardware         => FactoryGirl.create(:hardware),
-                            )
-                          )
+                             :hardware         => FactoryGirl.create(:hardware)))
       ]
 
       provider.destroy

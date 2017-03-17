@@ -171,6 +171,5 @@ shared_examples_for "ansible configuration_script" do
         :variables   => job_template.extra_vars_hash,
       )
     end
-
   end
 end

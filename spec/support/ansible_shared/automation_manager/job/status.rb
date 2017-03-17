@@ -1,5 +1,4 @@
 shared_examples_for "ansible job status" do
-
   it 'parses Succeeded' do
     status = described_class.new('Successful', '')
     expect(status.completed?).to   be_truthy
