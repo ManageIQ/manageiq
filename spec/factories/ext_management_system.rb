@@ -92,6 +92,13 @@ FactoryGirl.define do
     end
   end
 
+  factory :ems_redhat_with_metrics_authentication,
+          :parent => :ems_redhat do
+    after(:create) do |x|
+      x.authentications << FactoryGirl.create(:authentication_redhat_metric)
+    end
+  end
+
   factory :ems_openstack_infra,
           :aliases => ["manageiq/providers/openstack/infra_manager"],
           :class   => "ManageIQ::Providers::Openstack::InfraManager",

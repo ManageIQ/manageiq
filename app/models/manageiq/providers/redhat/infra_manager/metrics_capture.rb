@@ -33,7 +33,7 @@ class ManageIQ::Providers::Redhat::InfraManager::MetricsCapture < ManageIQ::Prov
   def perf_collect_metrics(interval_name, start_time = nil, end_time = nil)
     log_header = "[#{interval_name}] for: [#{target.class.name}], [#{target.id}], [#{target.name}]"
 
-    start_time ||= 1.week.ago
+    start_time ||= Metric::Capture.historical_start_time
 
     begin
       Benchmark.realtime_block(:rhevm_connect) { perf_init_rhevm }
