@@ -39,6 +39,8 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Job
 
     virtual_has_many :job_plays
 
+    virtual_column :stdout_raw, :type => :string
+
     class << self
       alias create_job create_stack
       alias raw_create_job raw_create_stack
@@ -132,6 +134,10 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Job
   rescue => err
     _log.error "AnsibleTower Job #{name} with id(#{id}) status error: #{err}"
     raise MiqException::MiqOrchestrationStatusError, err.to_s, err.backtrace
+  end
+
+  def stdout_raw
+    raw_stdout
   end
 
   def raw_stdout
