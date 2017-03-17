@@ -23,8 +23,13 @@ describe VmScan do
       @ems_auth  = FactoryGirl.create(:authentication, :resource => @ems)
 
       allow(MiqEventDefinition).to receive_messages(:find_by_name => true)
-      @job = @vm.scan
-      MiqQueue.delete_all # clear the queue items that are not related to Vm scan testing
+      allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'sucess', MiqAeEngine::MiqAeWorkspaceRuntime.new])
+
+      @vm.scan
+      job_item = MiqQueue.find_by(:class_name => "MiqAeEngine", :method_name => "deliver")
+      job_item.delivered(*job_item.deliver)
+
+      @job = Job.first
     end
 
     it "should start in a state of waiting_to_start" do
@@ -207,7 +212,13 @@ describe VmScan do
           :evm_owner             => @user,
           :storage               => @storage
         )
-        job = template.scan
+
+        Job.destroy_all # clear the first job from before section
+        template.scan
+        job_item = MiqQueue.find_by(:class_name => "MiqAeEngine", :method_name => "deliver")
+        job_item.delivered(*job_item.deliver)
+
+        job = Job.first
 
         expect(MiqAeEvent).to receive(:raise_evm_event).with(
           "vm_scan_start",

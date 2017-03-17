@@ -13,7 +13,7 @@ describe Job do
       @schedule_worker_settings = MiqScheduleWorker.worker_settings
 
       @vm       = FactoryGirl.create(:vm_vmware, :ems_id => @ems.id, :host_id => @host.id)
-      @job      = @vm.scan
+      @job      = @vm.raw_scan
     end
 
     context "where job is dispatched but never started" do
@@ -126,7 +126,7 @@ describe Job do
         @zone2     = FactoryGirl.create(:zone, :name => "Zone 2")
         @ems2      = FactoryGirl.create(:ems_vmware, :zone => @zone2, :name => "Test EMS 2")
         @vm2       = FactoryGirl.create(:vm_vmware, :ems_id => @ems2.id)
-        @job2      = @vm2.scan
+        @job2      = @vm2.raw_scan
         @job2.zone = @zone2.name
         description = "Snapshot for scan job: #{@job2.guid}, EVM Server build: #{build} #{scan_type} Server Time: #{Time.now.utc.iso8601}"
         @snapshot2 = FactoryGirl.create(:snapshot, :vm_or_template_id => @vm2.id, :name => 'EvmSnapshot', :description => description)

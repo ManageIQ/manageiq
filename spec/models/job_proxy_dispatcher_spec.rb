@@ -64,7 +64,7 @@ describe JobProxyDispatcher do
             @vm = @vms.first
             @vm.storage = nil
             @vm.save
-            @vm.scan
+            @vm.raw_scan
           end
 
           it "should expect queue_signal and dispatch without errors" do
@@ -82,7 +82,7 @@ describe JobProxyDispatcher do
             @vm.storage = nil
             @vm.vendor = "microsoft"
             @vm.save
-            @vm.scan
+            @vm.raw_scan
           end
 
           it "should run dispatch without calling queue_signal" do
@@ -99,7 +99,7 @@ describe JobProxyDispatcher do
             @vm.storage.store_type = "CSVFS"
             @vm.vendor = "microsoft"
             @vm.save
-            @vm.scan
+            @vm.raw_scan
           end
 
           it "should run dispatch without calling queue_signal" do
@@ -116,7 +116,7 @@ describe JobProxyDispatcher do
             @vm.storage.store_type = "XFS"
             @vm.vendor = "microsoft"
             @vm.save
-            @vm.scan
+            @vm.raw_scan
           end
 
           it "should expect queue_signal and dispatch without errors" do
@@ -142,7 +142,7 @@ describe JobProxyDispatcher do
             cfg.config.store_path(:repository_scanning, :defaultsmartproxy, @repo_proxy.id)
             allow(VMDB::Config).to receive(:new).and_return(cfg)
           end
-          @jobs = (@vms + @repo_vms).collect(&:scan)
+          @jobs = (@vms + @repo_vms).collect(&:raw_scan)
         end
 
         # Don't run these tests if we only want to run dispatch for load testing
@@ -177,7 +177,7 @@ describe JobProxyDispatcher do
 
     context "with container and vms jobs" do
       before(:each) do
-        @jobs = (@vms + @repo_vms).collect(&:scan)
+        @jobs = (@vms + @repo_vms).collect(&:raw_scan)
         @jobs += @container_images.map { |img| img.ext_management_system.raw_scan_job_create(img) }
         @dispatcher = JobProxyDispatcher.new
       end
@@ -258,7 +258,7 @@ describe JobProxyDispatcher do
 
     describe "#active_vm_scans_by_zone" do
       it "returns active vm scans for this zone" do
-        job = @vms.first.scan
+        job = @vms.first.raw_scan
         dispatcher = JobProxyDispatcher.new
         dispatcher.instance_variable_set(:@zone, MiqServer.my_zone) # memoized during pending_jobs call
         job.update(:dispatch_status => "active")
@@ -266,7 +266,7 @@ describe JobProxyDispatcher do
       end
 
       it "returns 0 for active vm scan for other zones" do
-        job = @vms.first.scan
+        job = @vms.first.raw_scan
         dispatcher = JobProxyDispatcher.new
         dispatcher.instance_variable_set(:@zone, MiqServer.my_zone) # memoized during pending_jobs call
         job.update(:dispatch_status => "active")

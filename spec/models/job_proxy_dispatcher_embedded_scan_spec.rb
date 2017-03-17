@@ -63,7 +63,7 @@ describe "JobProxyDispatcherEmbeddedScanSpec" do
         before(:each) do
           allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
 
-          @jobs = @vms.collect(&:scan)
+          @jobs = @vms.collect(&:raw_scan)
         end
 
         context "and embedded scans on ems" do
