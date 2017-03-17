@@ -30,7 +30,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::EventCatche
   private
 
   def filter
-    timestamp = @last_activity ? Time.zone.parse(@last_activity.timestamp) : 1.minute.ago
+    timestamp = @last_activity ? Time.zone.parse(@last_activity.timestamp.to_s) : 1.minute.ago
     {
       :order_by      => 'timestamp',
       :timestamp__gt => timestamp.to_s(:db)
