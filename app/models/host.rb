@@ -90,10 +90,10 @@ class Host < ApplicationRecord
                             :inverse_of => :host
   has_many                  :host_aggregate_hosts, :dependent => :destroy
   has_many                  :host_aggregates, :through => :host_aggregate_hosts
-  
+
   # Physical infra reference
   has_one :physical_server, :inverse_of => :host
-  
+
   serialize :settings, Hash
 
   deprecate_attribute :address, :hostname
