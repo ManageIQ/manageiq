@@ -110,9 +110,9 @@ shared_examples_for "ansible refresher" do |ansible_provider, manager_class, ems
   end
 
   def assert_playbooks
-    expect(expected_project.configuration_script_payloads.first).to be_an_instance_of(manager_class::Playbook)
-    expect(expected_project.configuration_script_payloads.count).to eq(8)
-    expect(expected_project.configuration_script_payloads.map(&:name)).to include('start_ec2.yml')
+    expect(expected_project.playbooks.first).to be_an_instance_of(manager_class::Playbook)
+    expect(expected_project.playbooks.count).to eq(8)
+    expect(expected_project.playbooks.map(&:name)).to include('start_ec2.yml')
   end
 
   def assert_configuration_script_sources

@@ -24,7 +24,6 @@ class ManageIQ::Providers::AnsibleTower::AutomationManager < ManageIQ::Providers
   require_nested :Playbook
   require_nested :Refresher
   require_nested :RefreshWorker
-  has_many :projects, :foreign_key => "manager_id"
 
   def self.ems_type
     @ems_type ||= "ansible_tower_automation".freeze

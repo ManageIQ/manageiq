@@ -1,5 +1,5 @@
 module MiqAeMethodService
-  class MiqAeServiceManageIQ_Providers_EmbeddedAnsible_AutomationManager_ConfigurationScriptSource <
+  class MiqAeServiceManageIQ_Providers_EmbeddedAnsible_AutomationManager_Project <
     MiqAeServiceManageIQ_Providers_EmbeddedAutomationManager_ConfigurationScriptSource
   end
 end

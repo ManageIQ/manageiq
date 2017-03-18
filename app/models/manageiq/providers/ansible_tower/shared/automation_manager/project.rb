@@ -50,6 +50,8 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Project
     end
   end
 
+  alias_attribute :playbooks, :configuration_script_payloads
+
   def update_in_provider(params)
     params.delete(:task_id) # in case this is being called through update_in_provider_queue which will stick in a :task_id
     manager.with_provider_connection do |connection|

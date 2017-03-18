@@ -19,6 +19,9 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager
     end
   end
 
+  alias_attribute :playbooks, :configuration_script_payloads
+  alias_attribute :projects, :configuration_script_sources
+
   def image_name
     "ansible"
   end
