@@ -230,6 +230,15 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     supported_api_versions.sort.last
   end
 
+  def highest_allowed_api_version
+    return 3 unless use_ovirt_sdk?
+    highest_supported_api_version
+  end
+
+  def use_ovirt_sdk?
+    ::Settings.ems.ems_redhat.use_ovirt_engine_sdk
+  end
+
   class_methods do
     def api3_supported_features
       []

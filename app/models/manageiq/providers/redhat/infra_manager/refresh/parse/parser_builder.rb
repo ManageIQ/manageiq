@@ -9,7 +9,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse
 
     def build
       parse_model = ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
-      api_version = force_version || ext_management_system.highest_supported_api_version
+      api_version = force_version || ext_management_system.highest_allowed_api_version
       "#{parse_model}::Api#{api_version}".constantize
     end
   end
