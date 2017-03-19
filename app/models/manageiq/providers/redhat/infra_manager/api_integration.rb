@@ -56,7 +56,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     connection = self.class.public_send(connect_method, connect_options)
 
     # Copy the API path to the endpoints table:
-    default_endpoint.path = version == 4 ? '/ovirt-engine/api' : connection.api_path
+    default_endpoint.path = version.to_i == 4 ? '/ovirt-engine/api' : connection.api_path
 
     connection
   end
@@ -137,7 +137,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
 
   def verify_credentials_for_rhevm(options = {})
     require 'ovirt'
-    with_provider_connection(options, &:api)
+    with_provider_connection(options) { |connection| connection.test(true) }
   rescue SocketError, Errno::EHOSTUNREACH, Errno::ENETUNREACH
     _log.warn($ERROR_INFO)
     raise MiqException::MiqUnreachableError, $ERROR_INFO
@@ -276,7 +276,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
         :scheme => options[:scheme],
         :host   => options[:server],
         :port   => options[:port],
-        :path   => options[:path]
+        :path   => options[:path] || '/ovirt-engine/api'
       )
 
       OvirtSDK4::Connection.new(
@@ -310,7 +310,14 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
       params[:timeout]      = read_timeout if read_timeout
       params[:open_timeout] = open_timeout if open_timeout
       const = options[:service] == "Inventory" ? OvirtInventory : Ovirt.const_get(options[:service])
-      const.new(params)
+      conn = const.new(params)
+      OvirtConnectionDecorator.new(conn)
+    end
+
+    class OvirtConnectionDecorator < SimpleDelegator
+      def test(_raise_exceptions)
+        api
+      end
     end
 
     def default_history_database_name

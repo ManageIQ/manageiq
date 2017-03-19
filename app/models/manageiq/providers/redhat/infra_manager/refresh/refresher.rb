@@ -14,37 +14,9 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh
 
         case target
         when Host
-          methods = {
-            :primary => {
-              :host        => target.ems_ref,
-            },
-            :secondary => {
-              :host        => [:statistics, :host_nics],
-            }
-          }
-          data,  = Benchmark.realtime_block(:fetch_host_data) { data = inventory.targeted_refresh(methods) }
-
+          data,  = Benchmark.realtime_block(:fetch_host_data) { host_targeted_refresh(inventory, target) }
         when VmOrTemplate
-          require 'uri'
-
-          vm = target.ems_ref
-          vm_id = URI(vm).path.split('/').last
-
-          methods = {
-            :primary => {
-              :cluster    => {:clusters => "cluster"},
-              :datacenter => {:datacenters => "data_center"},
-              :vm         => vm,
-              :template   => "/api/templates?search=vm.id=#{vm_id}",
-              :storage    => target.storages.empty? ? {:storagedomains => "storage_domain"} : target.storages.map(&:ems_ref)
-            },
-            :secondary => {
-              :vm         => [:disks, :snapshots, :nics],
-              :template   => [:disks]
-            }
-          }
-          data,  = Benchmark.realtime_block(:fetch_vm_data) { inventory.targeted_refresh(methods) }
-
+          data,  = Benchmark.realtime_block(:fetch_vm_data) { vm_targeted_refresh(inventory, target)  }
         else
           data,  = Benchmark.realtime_block(:fetch_all) { inventory.refresh }
 

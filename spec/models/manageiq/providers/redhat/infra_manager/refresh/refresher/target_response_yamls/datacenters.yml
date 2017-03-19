@@ -1,0 +1,173 @@
+---
+- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4::DatacenterPreloadedAttributesDecorator
+  :__v2__:
+  - :@obj
+  - :@storage_domains
+  ? - &1 !ruby/object:OvirtSDK4::DataCenter
+      href: "/ovirt-engine/api/datacenters/00000001-0001-0001-0001-000000000311"
+      comment: 
+      description: The default Data Center
+      id: 00000001-0001-0001-0001-000000000311
+      name: Default
+      clusters: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/datacenters/00000001-0001-0001-0001-000000000311/clusters"
+      iscsi_bonds: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/datacenters/00000001-0001-0001-0001-000000000311/iscsibonds"
+      local: false
+      mac_pool: 
+      networks: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/datacenters/00000001-0001-0001-0001-000000000311/networks"
+      permissions: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/datacenters/00000001-0001-0001-0001-000000000311/permissions"
+      qoss: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/datacenters/00000001-0001-0001-0001-000000000311/qoss"
+      quota_mode: disabled
+      quotas: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/datacenters/00000001-0001-0001-0001-000000000311/quotas"
+      status: up
+      storage_domains: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/datacenters/00000001-0001-0001-0001-000000000311/storagedomains"
+      storage_format: v4
+      supported_versions: !ruby/array:OvirtSDK4::List
+        internal:
+        - !ruby/object:OvirtSDK4::Version
+          href: 
+          comment: 
+          description: 
+          id: 
+          name: 
+          build: 
+          full_version: 
+          major: 4
+          minor: 1
+          revision: 
+        ivars:
+          :@href: 
+      version: !ruby/object:OvirtSDK4::Version
+        href: 
+        comment: 
+        description: 
+        id: 
+        name: 
+        build: 
+        full_version: 
+        major: 4
+        minor: 1
+        revision: 
+    - !ruby/array:OvirtSDK4::List
+      internal:
+      - !ruby/object:OvirtSDK4::StorageDomain
+        href: "/ovirt-engine/api/datacenters/00000001-0001-0001-0001-000000000311/storagedomains/6cc26c9d-e1a7-43ba-95d3-c744442c7500"
+        comment: 
+        description: 
+        id: 6cc26c9d-e1a7-43ba-95d3-c744442c7500
+        name: data
+        available: 9663676416
+        committed: 1073741824
+        critical_space_action_blocker: 5
+        data_center: !ruby/object:OvirtSDK4::DataCenter
+          href: "/ovirt-engine/api/datacenters/00000001-0001-0001-0001-000000000311"
+          comment: 
+          description: 
+          id: 00000001-0001-0001-0001-000000000311
+          name: 
+          clusters: 
+          iscsi_bonds: 
+          local: 
+          mac_pool: 
+          networks: 
+          permissions: 
+          qoss: 
+          quota_mode: 
+          quotas: 
+          status: 
+          storage_domains: 
+          storage_format: 
+          supported_versions: 
+          version: 
+        data_centers: !ruby/array:OvirtSDK4::List
+          internal:
+          - !ruby/object:OvirtSDK4::DataCenter
+            href: 
+            comment: 
+            description: 
+            id: 00000001-0001-0001-0001-000000000311
+            name: 
+            clusters: 
+            iscsi_bonds: 
+            local: 
+            mac_pool: 
+            networks: 
+            permissions: 
+            qoss: 
+            quota_mode: 
+            quotas: 
+            status: 
+            storage_domains: 
+            storage_format: 
+            supported_versions: 
+            version: 
+          ivars:
+            :@href: 
+        disk_profiles: 
+        disk_snapshots: 
+        disks: !ruby/array:OvirtSDK4::List
+          internal: []
+          ivars:
+            :@href: "/ovirt-engine/api/datacenters/00000001-0001-0001-0001-000000000311/storagedomains/6cc26c9d-e1a7-43ba-95d3-c744442c7500/disks"
+        external_status: ok
+        files: 
+        host: 
+        images: 
+        import: 
+        master: true
+        permissions: 
+        status: active
+        storage: !ruby/object:OvirtSDK4::HostStorage
+          href: 
+          comment: 
+          description: 
+          id: 
+          name: 
+          address: 192.168.1.107
+          host: 
+          logical_units: 
+          mount_options: 
+          nfs_retrans: 
+          nfs_timeo: 
+          nfs_version: auto
+          override_luns: 
+          password: 
+          path: "/export/data"
+          port: 
+          portal: 
+          target: 
+          type: nfs
+          username: 
+          vfs_type: 
+          volume_group: 
+        storage_connections: 
+        storage_format: v4
+        templates: 
+        type: data
+        used: 42949672960
+        vms: 
+        warning_low_space_indicator: 10
+        wipe_after_delete: false
+      ivars:
+        :@href: 
+  : *1

@@ -1,0 +1,857 @@
+--- !ruby/object:ManageIQ::Providers::Redhat::InfraManager
+raw_attributes:
+  id: 20
+  name: ems_0000000000001
+  created_on: '2017-02-22 08:19:27.011036'
+  updated_on: '2017-02-22 08:19:31.419674'
+  guid: 95ca03ac-f8d7-11e6-ad47-507b9def3b4a
+  zone_id: 20
+  type: ManageIQ::Providers::Redhat::InfraManager
+  api_version: 3.6.8.0
+  uid_ems: 
+  host_default_vnc_port_start: 
+  host_default_vnc_port_end: 
+  provider_region: 
+  last_refresh_error: 
+  last_refresh_date: '2017-02-22 08:19:31.414354'
+  provider_id: 
+  realm: 
+  tenant_id: 20
+  project: 
+  parent_ems_id: 
+  subscription: 
+  last_metrics_error: 
+  last_metrics_update_date: 
+  last_metrics_success_date: 
+  tenant_mapping_enabled: 
+  region_number: 
+  region_description: 
+  custom_1: 
+  custom_2: 
+  custom_3: 
+  custom_4: 
+  custom_5: 
+  custom_6: 
+  custom_7: 
+  custom_8: 
+  custom_9: 
+  last_compliance_status: 
+  last_compliance_timestamp: 
+  aggregate_cpu_speed: 
+  aggregate_cpu_total_cores: 
+  aggregate_physical_cpus: 
+  aggregate_memory: 
+  aggregate_vm_cpus: 
+  aggregate_vm_memory: 
+  aggregate_disk_capacity: 
+  authentication_status: 
+  cpu_usagemhz_rate_average_avg_over_time_period: 
+  cpu_usagemhz_rate_average_low_over_time_period: 
+  cpu_usagemhz_rate_average_high_over_time_period: 
+  derived_memory_used_avg_over_time_period: 
+  derived_memory_used_low_over_time_period: 
+  derived_memory_used_high_over_time_period: 
+  max_cpu_usage_rate_average_avg_over_time_period: 
+  max_cpu_usage_rate_average_low_over_time_period: 
+  max_cpu_usage_rate_average_high_over_time_period: 
+  max_mem_usage_absolute_average_avg_over_time_period: 
+  max_mem_usage_absolute_average_low_over_time_period: 
+  max_mem_usage_absolute_average_high_over_time_period: 
+  max_cpu_usage_rate_average_avg_over_time_period_without_overhead: 
+  max_cpu_usage_rate_average_low_over_time_period_without_overhead: 
+  max_cpu_usage_rate_average_high_over_time_period_without_overhead: 
+  max_mem_usage_absolute_average_avg_over_time_period_without_overhead: 
+  max_mem_usage_absolute_average_low_over_time_period_without_overhead: 
+  max_mem_usage_absolute_average_high_over_time_period_without_overhead: 
+  ipaddress: 
+  hostname: 
+  port: 
+  security_protocol: 
+  emstype: 
+  emstype_description: 
+  last_refresh_status: 
+  total_vms_and_templates: 
+  total_vms: 
+  total_miq_templates: 
+  total_hosts: 
+  total_storages: 
+  total_clusters: 
+  zone_name: 
+  total_vms_on: 
+  total_vms_off: 
+  total_vms_unknown: 
+  total_vms_never: 
+  total_vms_suspended: 
+  total_subnets: 
+  total_vcpus: 
+  total_memory: 
+  total_cloud_vcpus: 
+  total_cloud_memory: 
+attributes: !ruby/object:ActiveRecord::AttributeSet
+  attributes: !ruby/object:ActiveRecord::LazyAttributeHash
+    delegate_hash:
+      id: !ruby/object:ActiveRecord::Attribute::FromDatabase
+        name: id
+        value_before_type_cast: 20
+        type: &2 !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 8
+          range: !ruby/range
+            begin: -9223372036854775808
+            end: 9223372036854775808
+            excl: true
+        original_attribute: 
+      name: !ruby/object:ActiveRecord::Attribute::FromDatabase
+        name: name
+        value_before_type_cast: ems_0000000000001
+        type: &3 !ruby/object:ActiveModel::Type::String
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      created_on: !ruby/object:ActiveRecord::Attribute::FromDatabase
+        name: created_on
+        value_before_type_cast: '2017-02-22 08:19:27.011036'
+        type: !ruby/marshalable:ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter
+          :__v2__: []
+          []: &1 !ruby/object:ActiveRecord::ConnectionAdapters::PostgreSQL::OID::DateTime
+            precision: 
+            scale: 
+            limit: 
+        original_attribute: 
+      updated_on: !ruby/object:ActiveRecord::Attribute::FromDatabase
+        name: updated_on
+        value_before_type_cast: '2017-02-22 08:19:31.419674'
+        type: !ruby/marshalable:ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter
+          :__v2__: []
+          []: *1
+        original_attribute: 
+      guid: !ruby/object:ActiveRecord::Attribute::FromDatabase
+        name: guid
+        value_before_type_cast: 95ca03ac-f8d7-11e6-ad47-507b9def3b4a
+        type: !ruby/object:ActiveModel::Type::String
+          precision: 
+          scale: 
+          limit: 36
+        original_attribute: 
+      zone_id: !ruby/object:ActiveRecord::Attribute::FromDatabase
+        name: zone_id
+        value_before_type_cast: 20
+        type: *2
+        original_attribute: 
+      type: !ruby/object:ActiveRecord::Attribute::FromDatabase
+        name: type
+        value_before_type_cast: ManageIQ::Providers::Redhat::InfraManager
+        type: *3
+        original_attribute: 
+      api_version: !ruby/object:ActiveRecord::Attribute::FromDatabase
+        name: api_version
+        value_before_type_cast: 3.6.8.0
+        type: *3
+        original_attribute: 
+      uid_ems: !ruby/object:ActiveRecord::Attribute::FromDatabase
+        name: uid_ems
+        value_before_type_cast: 
+        type: *3
+        original_attribute: 
+      host_default_vnc_port_start: !ruby/object:ActiveRecord::Attribute::FromDatabase
+        name: host_default_vnc_port_start
+        value_before_type_cast: 
+        type: &4 !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      host_default_vnc_port_end: !ruby/object:ActiveRecord::Attribute::FromDatabase
+        name: host_default_vnc_port_end
+        value_before_type_cast: 
+        type: *4
+        original_attribute: 
+      provider_region: !ruby/object:ActiveRecord::Attribute::FromDatabase
+        name: provider_region
+        value_before_type_cast: 
+        type: *3
+        original_attribute: 
+      last_refresh_error: !ruby/object:ActiveRecord::Attribute::FromDatabase
+        name: last_refresh_error
+        value_before_type_cast: 
+        type: &5 !ruby/object:ActiveModel::Type::Text
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      last_refresh_date: !ruby/object:ActiveRecord::Attribute::FromDatabase
+        name: last_refresh_date
+        value_before_type_cast: '2017-02-22 08:19:31.414354'
+        type: !ruby/marshalable:ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter
+          :__v2__: []
+          []: *1
+        original_attribute: 
+      provider_id: !ruby/object:ActiveRecord::Attribute::FromDatabase
+        name: provider_id
+        value_before_type_cast: 
+        type: *2
+        original_attribute: 
+      realm: !ruby/object:ActiveRecord::Attribute::FromDatabase
+        name: realm
+        value_before_type_cast: 
+        type: *3
+        original_attribute: 
+      tenant_id: !ruby/object:ActiveRecord::Attribute::FromDatabase
+        name: tenant_id
+        value_before_type_cast: 20
+        type: *2
+        original_attribute: 
+      project: !ruby/object:ActiveRecord::Attribute::FromDatabase
+        name: project
+        value_before_type_cast: 
+        type: *3
+        original_attribute: 
+      parent_ems_id: !ruby/object:ActiveRecord::Attribute::FromDatabase
+        name: parent_ems_id
+        value_before_type_cast: 
+        type: *2
+        original_attribute: 
+      subscription: !ruby/object:ActiveRecord::Attribute::FromDatabase
+        name: subscription
+        value_before_type_cast: 
+        type: *3
+        original_attribute: 
+      last_metrics_error: !ruby/object:ActiveRecord::Attribute::FromDatabase
+        name: last_metrics_error
+        value_before_type_cast: 
+        type: *5
+        original_attribute: 
+      last_metrics_update_date: !ruby/object:ActiveRecord::Attribute::FromDatabase
+        name: last_metrics_update_date
+        value_before_type_cast: 
+        type: !ruby/marshalable:ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter
+          :__v2__: []
+          []: *1
+        original_attribute: 
+      last_metrics_success_date: !ruby/object:ActiveRecord::Attribute::FromDatabase
+        name: last_metrics_success_date
+        value_before_type_cast: 
+        type: !ruby/marshalable:ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter
+          :__v2__: []
+          []: *1
+        original_attribute: 
+      tenant_mapping_enabled: !ruby/object:ActiveRecord::Attribute::FromDatabase
+        name: tenant_mapping_enabled
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Boolean
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      region_number: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: region_number
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      region_description: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: region_description
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::String
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      custom_1: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: custom_1
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::String
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      custom_2: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: custom_2
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::String
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      custom_3: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: custom_3
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::String
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      custom_4: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: custom_4
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::String
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      custom_5: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: custom_5
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::String
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      custom_6: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: custom_6
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::String
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      custom_7: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: custom_7
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::String
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      custom_8: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: custom_8
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::String
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      custom_9: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: custom_9
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::String
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      last_compliance_status: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: last_compliance_status
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Boolean
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      last_compliance_timestamp: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: last_compliance_timestamp
+        value_before_type_cast: 
+        type: !ruby/object:ActiveRecord::ConnectionAdapters::PostgreSQL::OID::DateTime
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      aggregate_cpu_speed: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: aggregate_cpu_speed
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      aggregate_cpu_total_cores: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: aggregate_cpu_total_cores
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      aggregate_physical_cpus: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: aggregate_physical_cpus
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      aggregate_memory: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: aggregate_memory
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      aggregate_vm_cpus: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: aggregate_vm_cpus
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      aggregate_vm_memory: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: aggregate_vm_memory
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      aggregate_disk_capacity: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: aggregate_disk_capacity
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      authentication_status: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: authentication_status
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::String
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      cpu_usagemhz_rate_average_avg_over_time_period: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: cpu_usagemhz_rate_average_avg_over_time_period
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Float
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      cpu_usagemhz_rate_average_low_over_time_period: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: cpu_usagemhz_rate_average_low_over_time_period
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Float
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      cpu_usagemhz_rate_average_high_over_time_period: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: cpu_usagemhz_rate_average_high_over_time_period
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Float
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      derived_memory_used_avg_over_time_period: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: derived_memory_used_avg_over_time_period
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Float
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      derived_memory_used_low_over_time_period: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: derived_memory_used_low_over_time_period
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Float
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      derived_memory_used_high_over_time_period: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: derived_memory_used_high_over_time_period
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Float
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      max_cpu_usage_rate_average_avg_over_time_period: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: max_cpu_usage_rate_average_avg_over_time_period
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Float
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      max_cpu_usage_rate_average_low_over_time_period: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: max_cpu_usage_rate_average_low_over_time_period
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Float
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      max_cpu_usage_rate_average_high_over_time_period: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: max_cpu_usage_rate_average_high_over_time_period
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Float
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      max_mem_usage_absolute_average_avg_over_time_period: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: max_mem_usage_absolute_average_avg_over_time_period
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Float
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      max_mem_usage_absolute_average_low_over_time_period: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: max_mem_usage_absolute_average_low_over_time_period
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Float
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      max_mem_usage_absolute_average_high_over_time_period: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: max_mem_usage_absolute_average_high_over_time_period
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Float
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      max_cpu_usage_rate_average_avg_over_time_period_without_overhead: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: max_cpu_usage_rate_average_avg_over_time_period_without_overhead
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Float
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      max_cpu_usage_rate_average_low_over_time_period_without_overhead: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: max_cpu_usage_rate_average_low_over_time_period_without_overhead
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Float
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      max_cpu_usage_rate_average_high_over_time_period_without_overhead: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: max_cpu_usage_rate_average_high_over_time_period_without_overhead
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Float
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      max_mem_usage_absolute_average_avg_over_time_period_without_overhead: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: max_mem_usage_absolute_average_avg_over_time_period_without_overhead
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Float
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      max_mem_usage_absolute_average_low_over_time_period_without_overhead: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: max_mem_usage_absolute_average_low_over_time_period_without_overhead
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Float
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      max_mem_usage_absolute_average_high_over_time_period_without_overhead: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: max_mem_usage_absolute_average_high_over_time_period_without_overhead
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Float
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      ipaddress: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: ipaddress
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::String
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      hostname: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: hostname
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::String
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      port: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: port
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      security_protocol: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: security_protocol
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::String
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      emstype: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: emstype
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::String
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      emstype_description: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: emstype_description
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::String
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      last_refresh_status: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: last_refresh_status
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::String
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      total_vms_and_templates: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: total_vms_and_templates
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      total_vms: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: total_vms
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      total_miq_templates: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: total_miq_templates
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      total_hosts: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: total_hosts
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      total_storages: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: total_storages
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      total_clusters: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: total_clusters
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      zone_name: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: zone_name
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::String
+          precision: 
+          scale: 
+          limit: 
+        original_attribute: 
+      total_vms_on: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: total_vms_on
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      total_vms_off: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: total_vms_off
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      total_vms_unknown: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: total_vms_unknown
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      total_vms_never: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: total_vms_never
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      total_vms_suspended: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: total_vms_suspended
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      total_subnets: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: total_subnets
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      total_vcpus: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: total_vcpus
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      total_memory: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: total_memory
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      total_cloud_vcpus: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: total_cloud_vcpus
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+      total_cloud_memory: !ruby/object:ActiveRecord::Attribute::Uninitialized
+        name: total_cloud_memory
+        value_before_type_cast: 
+        type: !ruby/object:ActiveModel::Type::Integer
+          precision: 
+          scale: 
+          limit: 
+          range: !ruby/range
+            begin: -2147483648
+            end: 2147483648
+            excl: true
+        original_attribute: 
+new_record: false
+active_record_yaml_version: 1
