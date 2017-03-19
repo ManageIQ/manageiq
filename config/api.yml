@@ -102,6 +102,8 @@
       :post:
       - :name: create
         :identifier: alert_definition_new
+      - :name: edit
+        :identifier: alert_definition_edit
       - :name: delete
         :identifier: alert_definition_delete
     :resource_actions:

@@ -128,4 +128,18 @@ describe "Alerts Definitions API" do
     expect(response).to have_http_status(:ok)
     expect(response.parsed_body["options"]).to eq(updated_options.deep_stringify_keys)
   end
+
+  it "edits alert definitions" do
+    api_basic_authorize collection_action_identifier(:alert_definitions, :edit)
+    alert_definitions = FactoryGirl.create_list(:miq_alert, 2)
+    run_post(alert_definitions_url, gen_request(:edit, [{"id"          => alert_definitions.first.id,
+                                                         "description" => "Updated Test Alert 1"},
+                                                        {"id"          => alert_definitions.second.id,
+                                                         "description" => "Updated Test Alert 2"}]))
+
+    expect(response).to have_http_status(:ok)
+    expect(response.parsed_body["results"].count).to eq(2)
+    expect(alert_definitions.first.reload.description).to eq("Updated Test Alert 1")
+    expect(alert_definitions.second.reload.description).to eq("Updated Test Alert 2")
+  end
 end
