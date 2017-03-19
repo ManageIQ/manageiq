@@ -12,7 +12,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration
 
   def configure_cloud_init
     return unless content = customization_template_content
-    get_provider_destination.cloud_init = content
+    get_provider_destination.update_cloud_init!(content)
 
     if Gem::Version.new(source.ext_management_system.api_version) >= Gem::Version.new("3.5.5.0")
       phase_context[:boot_with_cloud_init] = true
@@ -20,15 +20,15 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration
   end
 
   def configure_container
-    rhevm_vm = get_provider_destination
-
-    configure_container_description(rhevm_vm)
-    configure_memory(rhevm_vm)
-    configure_memory_reserve(rhevm_vm)
-    configure_cpu(rhevm_vm)
-    configure_host_affinity(rhevm_vm)
-    configure_network_adapters
-    configure_cloud_init
+    vm.with_provider_object(:version => vm.ext_management_system.highest_allowed_api_version) do |rhevm_vm|
+      configure_container_description(rhevm_vm)
+      configure_memory(rhevm_vm)
+      configure_memory_reserve(rhevm_vm)
+      configure_cpu(rhevm_vm)
+      configure_host_affinity(rhevm_vm)
+      configure_network_adapters
+      configure_cloud_init
+    end
   end
 
   private

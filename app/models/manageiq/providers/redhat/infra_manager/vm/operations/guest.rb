@@ -9,7 +9,6 @@ module ManageIQ::Providers::Redhat::InfraManager::Vm::Operations::Guest
   end
 
   def raw_shutdown_guest
-    with_provider_object(&:shutdown)
-  rescue Ovirt::VmIsNotRunning
+    ext_management_system.ovirt_services.shutdown_guest(self)
   end
 end

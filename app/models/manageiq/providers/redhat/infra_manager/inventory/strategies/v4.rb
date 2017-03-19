@@ -8,7 +8,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
     end
 
     def host_targeted_refresh(target)
-      ems.with_provider_connection(:version => 4) do |connection|
+      @ems.with_provider_connection(:version => 4) do |connection|
         @connection = connection
         res = {}
         res[:host] = collect_host(get_uuid_from_target(target))
@@ -17,7 +17,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
     end
 
     def vm_targeted_refresh(target)
-      ems.with_provider_connection(:version => 4) do |connection|
+      @ems.with_provider_connection(:version => 4) do |connection|
         @connection = connection
         vm_id = get_uuid_from_target(target)
         res = {}
@@ -39,7 +39,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
     end
 
     def refresh
-      ems.with_provider_connection(:version => 4) do |connection|
+      @ems.with_provider_connection(:version => 4) do |connection|
         @connection = connection
         res = {}
         res[:cluster] = collect_clusters
@@ -87,6 +87,8 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
     def collect_vm_by_uuid(uuid)
       vm = connection.system_service.vms_service.vm_service(uuid).get
       [VmPreloadedAttributesDecorator.new(vm, connection)]
+    rescue OvirtSDK4::Error
+      []
     end
 
     def collect_templates
@@ -112,13 +114,13 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
     end
 
     def api
-      ems.with_provider_connection(:version => 4) do |connection|
+      @ems.with_provider_connection(:version => 4) do |connection|
         connection.system_service.get.product_info.version.full_version
       end
     end
 
     def service
-      ems.with_provider_connection(:version => 4) do |connection|
+      @ems.with_provider_connection(:version => 4) do |connection|
         OpenStruct.new(:version_string => connection.system_service.get.product_info.version.full_version)
       end
     end
@@ -128,7 +130,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
       def initialize(host, connection)
         @obj = host
         @nics = connection.follow_link(host.nics)
-        @statistics = connection.follow_link(host.statistics)
+        @statistics = connection.link?(host.statistics) ? connection.follow_link(host.statistics) : host.statistics
         super(host)
       end
     end

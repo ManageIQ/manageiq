@@ -182,7 +182,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
 
         # Value provided by VC is in bytes, need to convert to MB
         memory_total_attr = inv.statistics.to_miq_a.detect { |stat| stat.name == 'memory.total' }
-        memory_total = memory_total_attr.dig(:values, :first, :datum)
+        memory_total = memory_total_attr && memory_total_attr.dig(:values, :first, :datum)
         result[:memory_mb] = memory_total.nil? ? 0 : memory_total.to_i / 1.megabyte
 
         result[:cpu_cores_per_socket] = hdw.dig(:topology, :cores) || 1
