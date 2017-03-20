@@ -14,7 +14,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Vm::Operations::Snapshot
 
     supports :revert_to_snapshot do
       unless allowed_to_revert?
-        unsupported_reason_add(:revert_to_snapshot, _("Revert is allowed only when vm is down. Current state is %{state}") % {:state => current_state})
+        unsupported_reason_add(:revert_to_snapshot, revert_unsupported_message)
       end
     end
 
@@ -55,11 +55,20 @@ module ManageIQ::Providers::Redhat::InfraManager::Vm::Operations::Snapshot
     current_state == 'off'
   end
 
+  def revert_to_snapshot_denied_message(active = false)
+    return revert_unsupported_message unless allowed_to_revert?
+    return _("Revert is not allowed for a snapshot that is the active one") if active
+  end
+
   def snapshotting_memory_allowed?
     current_state == 'on'
   end
 
   private
+
+  def revert_unsupported_message
+    _("Revert is allowed only when vm is down. Current state is %{state}") % {:state => current_state}
+  end
 
   def with_snapshots_service(vm_uid_ems)
     closeable_service = closeable_snapshots_service(ext_management_system, vm_uid_ems)

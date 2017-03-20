@@ -47,4 +47,39 @@ describe ManageIQ::Providers::Redhat::InfraManager::Vm::Operations::Snapshot do
       it { is_expected.to be_falsey }
     end
   end
+
+  describe "#revert_to_snapshot_denied_message" do
+    let(:ems) { FactoryGirl.create(:ems_redhat_with_authentication) }
+    let(:vm)  { FactoryGirl.create(:vm_redhat, :ext_management_system => ems) }
+    let(:allowed_to_revert) { true }
+    let(:supported_api_versions) { [] }
+    let(:active) { true }
+    subject { vm.revert_to_snapshot_denied_message(active) }
+    before do
+      allow(vm).to receive(:allowed_to_revert?).and_return(allowed_to_revert)
+    end
+
+    context "allowed to revert" do
+      context "active snapshot" do
+        it { is_expected.to eq("Revert is not allowed for a snapshot that is the active one") }
+      end
+
+      context "inactive snapshot" do
+        let(:active) { false }
+        it { is_expected.to eq(nil) }
+      end
+    end
+
+    context "not allowed to revert" do
+      let(:allowed_to_revert) { false }
+      context "active snapshot" do
+        it { is_expected.to eq("Revert is allowed only when vm is down. Current state is on") }
+      end
+
+      context "inactive snapshot" do
+        let(:active) { false }
+        it { is_expected.to eq("Revert is allowed only when vm is down. Current state is on") }
+      end
+    end
+  end
 end
