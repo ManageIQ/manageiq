@@ -223,8 +223,8 @@ describe MiqVimBrokerWorker::Runner do
           expect(MiqQueue.count).to eq(1)
           q = MiqQueue.first
           expect(q.class_name).to eq("EmsRefresh")
-          expect(q.method_name).to eq("vc_update")
-          expect(q.args).to eq([@ems.id, event])
+          expect(q.method_name).to eq("refresh")
+          expect(q.args).to eq([[[vm.class.name, vm.id]]])
         end
 
         it "will handle queued Host updates properly" do
@@ -245,8 +245,8 @@ describe MiqVimBrokerWorker::Runner do
           expect(MiqQueue.count).to eq(1)
           q = MiqQueue.first
           expect(q.class_name).to eq("EmsRefresh")
-          expect(q.method_name).to eq("vc_update")
-          expect(q.args).to eq([@ems.id, event])
+          expect(q.method_name).to eq("refresh")
+          expect(q.args).to eq([[[host.class.name, host.id]]])
         end
 
         it "will ignore updates to unknown properties" do
@@ -316,8 +316,8 @@ describe MiqVimBrokerWorker::Runner do
           expect(MiqQueue.count).to eq(1)
           q = MiqQueue.first
           expect(q.class_name).to eq("EmsRefresh")
-          expect(q.method_name).to eq("vc_update")
-          expect(q.args).to eq([ems2.id, event])
+          expect(q.method_name).to eq("refresh")
+          expect(q.args).to eq([[[vm2.class.name, vm2.id]]])
         end
 
         it "will reconnect to an EMS" do

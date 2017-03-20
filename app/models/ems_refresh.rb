@@ -11,7 +11,6 @@ module EmsRefresh
   extend EmsRefresh::SaveInventoryOrchestrationStacks
   extend EmsRefresh::LinkInventory
   extend EmsRefresh::MetadataRelats
-  extend EmsRefresh::VcUpdates
 
   def self.debug_trace
     # TODO: Replace with configuration option
