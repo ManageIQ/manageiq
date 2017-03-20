@@ -5,9 +5,7 @@ module ArSlug
     virtual_column :href_slug, :type => :string
 
     def href_slug
-      return unless id
-      collection = Api::CollectionConfig.new.name_for_subklass(self.class)
-      "#{collection}/#{id}" if collection
+      Api::Utils.build_href_slug(self.class, id)
     end
   end
 end
