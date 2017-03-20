@@ -156,6 +156,11 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
     send(method, ems_id, event) if respond_to?(method)
   end
 
+  OBJ_TYPE_TO_TYPE_AND_CLASS = {
+    'VirtualMachine' => [:vm,   VmOrTemplate],
+    'HostSystem'     => [:host, Host]
+  }.freeze
+
   def on_create_event(ems_id, event)
     target_hash = ManageIQ::Providers::Vmware::InfraManager::EventParser.obj_update_to_hash(event)
     if target_hash.nil?
@@ -173,23 +178,25 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
   end
 
   def on_update_event(ems_id, event)
-    obj_type, changed_props, change_set = event.values_at(:objType, :changedProps, :changeSet)
+    obj_type, mor, changed_props = event.values_at(:objType, :mor, :changedProps)
 
-    type, = EmsRefresh::VcUpdates::OBJ_TYPE_TO_TYPE_AND_CLASS[obj_type]
+    type, klass = OBJ_TYPE_TO_TYPE_AND_CLASS[obj_type]
+    return if type.nil?
+
+    obj = klass.find_by(:ems_ref => mor, :ems_id => ems_id)
+    return if obj.nil?
 
     changed_props.reject! { |p| !ManageIQ::Providers::Vmware::InfraManager::SelectorSpec.selected_property?(type, p) }
-    change_set.reject!    { |c| !ManageIQ::Providers::Vmware::InfraManager::SelectorSpec.selected_property?(type, c["name"]) }
 
     exclude_props = @exclude_props[obj_type]
     if exclude_props
       changed_props.reject! { |p| exclude_props.include?(p) }
-      change_set.reject!    { |c| exclude_props.include?(c["name"]) }
     end
 
     return if changed_props.empty?
 
-    _log.info("Queueing update for EMS id: [#{ems_id}] on event [#{event[:objType]}-#{event[:op]}]#{" for properties: #{event[:changedProps].inspect}" if event.key?(:changedProps)}")
-    EmsRefresh.queue_vc_update(ems_id, event)
+    _log.info("Queueing refresh for #{obj.class} id: [#{obj.id}], EMS id: [#{ems_id}] on event [#{obj_type}-update] for properties #{changed_props.inspect}")
+    EmsRefresh.queue_refresh(obj)
   end
 
   def on_miq_vim_removed_event(ems_id, event)
