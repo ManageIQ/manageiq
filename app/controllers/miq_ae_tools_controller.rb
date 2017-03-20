@@ -439,7 +439,7 @@ Methods updated/added: %{method_stats}") % stat_options)
     #   @resolve[:new][:target_attr_name] = params[:target_attr_name] if params.has_key?(:target_attr_name)
     if params.key?(:target_class)
       @resolve[:new][:target_class] = params[:target_class]
-      targets = Rbac.filtered(params[:target_class]).select(:id, :name)
+      targets = Rbac.filtered(params[:target_class]).select(:id, :name) unless params[:target_class].blank?
       unless targets.nil?
         @resolve[:targets] = targets.sort_by { |t| t.name.downcase }.collect { |t| [t.name, t.id.to_s] }
         @resolve[:new][:target_id] = nil

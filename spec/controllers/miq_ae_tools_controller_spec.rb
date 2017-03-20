@@ -11,6 +11,19 @@ describe MiqAeToolsController do
       }
       controller.instance_variable_set(:@resolve, :throw_ready => true, :new => new)
       expect(controller).to receive(:render)
+      controller.instance_variable_set(:@_params, :target_class => '', :id => 'new')
+      controller.send(:form_field_changed)
+      expect(assigns(:resolve)[:new][:target_class]).to eq('')
+      expect(assigns(:resolve)[:new][:target_id]).to eq(nil)
+    end
+
+    it "resets target id to nil, when target class is Vm" do
+      new = {
+        :target_class => "EmsCluster",
+        :target_id    => 1
+      }
+      controller.instance_variable_set(:@resolve, :throw_ready => true, :new => new)
+      expect(controller).to receive(:render)
       controller.instance_variable_set(:@_params, :target_class => 'Vm', :id => 'new')
       controller.send(:form_field_changed)
       expect(assigns(:resolve)[:new][:target_class]).to eq('Vm')
