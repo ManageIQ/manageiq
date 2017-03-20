@@ -51,7 +51,7 @@ class ManageIQ::Providers::NativeOperationWorkflow < Job
     context[:refresh_task_ids] = task_ids
     update_attributes!(:context => context)
 
-    signal(:poll_refresh)
+    queue_signal(:poll_refresh)
   end
 
   def poll_refresh
@@ -66,12 +66,9 @@ class ManageIQ::Providers::NativeOperationWorkflow < Job
     end
 
     if refresh_finished
-      signal(:notify)
+      queue_signal(:notify)
     else
-      # TODO use queue_signal and deliver_on
-      sleep(10)
-
-      signal(:poll_refresh)
+      queue_signal(:poll_refresh, :deliver_on => Time.now.utc + 1.minute)
     end
   end
 
@@ -90,7 +87,20 @@ class ManageIQ::Providers::NativeOperationWorkflow < Job
 
     Notification.create(:type => type, :options => notification_options)
 
-    signal(:finish)
+    queue_signal(:finish)
+  end
+
+  def queue_signal(*args, deliver_on: nil)
+    queue_options = {
+      :class_name  => self.class.name,
+      :method_name => "signal",
+      :instance_id => id,
+      :role        => "ems_operations",
+      :args        => args,
+      :deliver_on  => deliver_on
+    }
+
+    MiqQueue.put(queue_options)
   end
 
   alias initializing dispatch_start
