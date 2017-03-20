@@ -30,7 +30,10 @@ describe "Rest API Collections" do
     attr_list = String(Api::ApiConfig.collections[collection].identifying_attrs).split(",")
     attr_list |= %w(guid) if klass.attribute_method?(:guid)
     resources = [{"id" => obj.id}, {"href" => url}]
-    attr_list.each { |attr| resources << {attr => obj.public_send(attr)} }
+    attr_list.each do |attr|
+      value = obj.public_send(attr)
+      resources << {attr => value} unless value.nil?
+    end
 
     run_post(collection_url, gen_request(:query, resources))
 
@@ -564,6 +567,21 @@ describe "Rest API Collections" do
 
       expect(response.parsed_body).to include_error_with_message("Invalid vms resource specified - guid=B999999D")
       expect(response).to have_http_status(:not_found)
+    end
+
+    it "bulk query Vms by ems_ref" do
+      vm1 = FactoryGirl.create(:vm_vmware, :ems_ref => "vm_1")
+      vm2 = FactoryGirl.create(:vm_vmware, :ems_ref => "vm_2")
+      FactoryGirl.create(:vm_vmware, :ems_ref => "vm_3")
+      api_basic_authorize collection_action_identifier(:vms, :query)
+
+      run_post(vms_url, gen_request(:query, [{"ems_ref" => "vm_1"}, {"ems_ref" => "vm_2"}]))
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["results"]).to match_array(
+        [a_hash_including("id" => vm1.id, "href" => a_string_matching(vms_url(vm1.id)), "ems_ref" => "vm_1"),
+         a_hash_including("id" => vm2.id, "href" => a_string_matching(vms_url(vm2.id)), "ems_ref" => "vm_2")]
+      )
     end
 
     it "bulk query Zones" do
