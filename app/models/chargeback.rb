@@ -55,7 +55,7 @@ class Chargeback < ActsAsArModel
     self.start_date, self.end_date, self.display_range = options.report_step_range(consumption.timestamp)
     self.interval_name = options.interval
     self.chargeback_rates = ''
-    self.entity = consumption.resource
+    self.entity ||= consumption.resource
   end
 
   def calculate_costs(consumption, rates)
