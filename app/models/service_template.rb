@@ -183,15 +183,15 @@ class ServiceTemplate < ApplicationRecord
     (nh.keys - Service.column_names + %w(created_at guid service_template_id updated_at id type prov_type)).each { |key| nh.delete(key) }
 
     # Hide child services by default
-    nh[:display] = false if parent_svc
+    nh['display'] = false if parent_svc
 
     # If display is nil, set it to false
-    nh[:display] = false if nh[:display].nil?
+    nh['display'] ||= false
 
     # convert template class name to service class name by naming convention
-    nh[:type] = self.class.name.sub('Template', '')
+    nh['type'] = self.class.name.sub('Template', '')
 
-    nh[:initiator] = service_task.options[:initiator] if service_task.options[:initiator]
+    nh['initiator'] = service_task.options[:initiator] if service_task.options[:initiator]
 
     # Determine service name
     # target_name = self.get_option(:target_name)
