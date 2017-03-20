@@ -27,13 +27,15 @@ cols:
 - message
 - name
 - userid
-- agent_name
 - agent_message
 - target_class
 - target_id
 
 # Included tables (joined, has_one, has_many) and columns
 include:
+  miq_server:
+    columns:
+    - name
 
 # Order of columns (from all tables)
 col_order:
@@ -44,7 +46,7 @@ col_order:
 - message
 - name
 - userid
-- agent_name
+- miq_server.name
 - agent_message
 
 # Column titles, in order
