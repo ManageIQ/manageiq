@@ -667,4 +667,71 @@ describe "Services API" do
       expect(response).to have_http_status(:forbidden)
     end
   end
+
+  describe 'add_resource' do
+    let(:vm1) { FactoryGirl.create(:vm_vmware) }
+    let(:vm2) { FactoryGirl.create(:vm_vmware) }
+    let(:vm3) { FactoryGirl.create(:vm_vmware) }
+
+    it 'can add multiple vms by href with an appropriate role' do
+      api_basic_authorize(action_identifier(:services, :add_resource))
+      request = {
+        'action'    => 'add_resource',
+        'resources' => [
+          { 'href' => vms_url(vm1.id) },
+          { 'href' => vms_url(vm2.id) }
+        ]
+      }
+
+      run_post(services_url(svc.id), request)
+
+      expected = {
+        'success' => true,
+        'message' => "Assigned resources to Service id:#{svc.id} name:'#{svc.name}'"
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to eq(expected)
+      expect(svc.reload.vms).to eq([vm1, vm2])
+    end
+
+    it 'cannot add multiple vms by href without an appropriate role' do
+      api_basic_authorize
+
+      run_post(services_url(svc.id), 'action' => 'add_resource')
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'can add multiple vms to multiple services by href with an appropriate role' do
+      api_basic_authorize(action_identifier(:services, :add_resource))
+      request = {
+        'action'    => 'add_resource',
+        'resources' => [
+          { 'href' => services_url(svc.id), 'resources' => [{'href' => vms_url(vm1.id)}, {'href' => vms_url(vm2.id)}] },
+          { 'href' => services_url(svc1.id), 'resources' => [{'href' => vms_url(vm3.id)}] }
+        ]
+      }
+
+      run_post(services_url, request)
+
+      expected = {
+        'results' => [
+          { 'success' => true, 'message' => "Assigned resources to Service id:#{svc.id} name:'#{svc.name}'"},
+          { 'success' => true, 'message' => "Assigned resources to Service id:#{svc1.id} name:'#{svc1.name}'"}
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to eq(expected)
+      expect(svc.reload.vms).to eq([vm1, vm2])
+      expect(svc1.reload.vms).to eq([vm3])
+    end
+
+    it 'cannot add multiple vms to multiple services by href without an appropriate role' do
+      api_basic_authorize
+
+      run_post(services_url, 'action' => 'add_resource')
+
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
 end

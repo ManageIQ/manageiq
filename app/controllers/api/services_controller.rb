@@ -18,6 +18,19 @@ module Api
       super(type, id, attributes)
     end
 
+    def add_resource_resource(type, id, data)
+      svc = resource_search(id, type, collection_class(type))
+      data['resources'].each do |resource_ref|
+        resource_type, resource_id = parse_href(resource_ref['href'])
+        resource = resource_search(resource_id, resource_type, collection_class(resource_type))
+        svc.add_resource(resource)
+      end
+      svc.save!
+      action_result(true, "Assigned resources to #{service_ident(svc)}")
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
     def reconfigure_resource(type, id = nil, data = nil)
       raise BadRequestError, "Must specify an id for Reconfiguring a #{type} resource" unless id
 
