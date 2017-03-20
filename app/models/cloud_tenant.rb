@@ -1,4 +1,5 @@
 class CloudTenant < ApplicationRecord
+  include CloudTenancyMixin
   TENANT_MAPPING_ASSOCIATIONS = %i(vms_and_templates).freeze
 
   include NewWithTypeStiMixin
@@ -157,5 +158,9 @@ class CloudTenant < ApplicationRecord
       :method_name => 'sync_cloud_tenants_with_tenants',
       :zone        => ems.my_zone
     ) if ems.supports_cloud_tenant_mapping?
+  end
+
+  def self.tenant_joins_clause(scope)
+    scope.includes(:source_tenant).includes(:ext_management_system)
   end
 end

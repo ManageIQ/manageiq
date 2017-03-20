@@ -4,6 +4,7 @@ class LoadBalancer < ApplicationRecord
   include ProcessTasksMixin
   include_concern 'RetirementManagement'
   include TenantIdentityMixin
+  include CloudTenancyMixin
 
   acts_as_miq_taggable
 

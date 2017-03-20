@@ -1,4 +1,5 @@
 class CloudObjectStoreObject < ApplicationRecord
+  include CloudTenancyMixin
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ExtManagementSystem"
   belongs_to :cloud_tenant
   belongs_to :cloud_object_store_container
