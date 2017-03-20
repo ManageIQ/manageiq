@@ -7,11 +7,9 @@ describe TreeBuilderServices do
     expect(root_nodes.size).to eq(2)
     active_nodes = kid_nodes(root_nodes[0])
     retired_nodes = kid_nodes(root_nodes[1])
-    expect(active_nodes).to match(
-                                @service => {},
-                                @service_c1 => {},
-                                @service_c2 => {}
-                            )
+    expect(active_nodes).to match(@service    => {},
+                                  @service_c1 => {},
+                                  @service_c2 => {})
     expect(retired_nodes).to match(@service_c3 => {})
   end
 
