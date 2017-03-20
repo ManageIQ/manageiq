@@ -34,8 +34,9 @@ module ManagerRefresh::SaveCollection
         inventory_objects_index[index] = inventory_object
       end
 
-      unique_index_keys = inventory_collection.manager_ref_to_cols
-      unique_db_indexes = Set.new
+      unique_index_keys      = inventory_collection.manager_ref_to_cols
+      unique_db_indexes      = Set.new
+      unique_db_primary_keys = Set.new
 
       inventory_collection_size = inventory_collection.size
       deleted_counter           = 0
@@ -45,7 +46,14 @@ module ManagerRefresh::SaveCollection
       ActiveRecord::Base.transaction do
         association.find_each do |record|
           index = inventory_collection.object_index_with_keys(unique_index_keys, record)
-          if unique_db_indexes.include?(index) # Include on Set is O(1)
+          if unique_db_primary_keys.include?(record.id) # Include on Set is O(1)
+            # Change the InventoryCollection's :association or :arel parameter to return distinct results. The :through
+            # relations can return the same record multiple times. We don't want to do SELECT DISTINCT by default, since
+            # it can be very slow.
+            _log.warn("Please update :association or :arel for #{inventory_collection} to returns a DISTINCT result. "\
+                      " The duplicate value is being ignored.")
+            next
+          elsif unique_db_indexes.include?(index) # Include on Set is O(1)
             # We have a duplicate in the DB, destroy it. A find_each method does automatically .order(:id => :asc)
             # so we always keep the oldest record in the case of duplicates.
             _log.warn("A duplicate record was detected and destroyed, inventory_collection: '#{inventory_collection}', "\
@@ -53,6 +61,7 @@ module ManagerRefresh::SaveCollection
             record.destroy
           else
             unique_db_indexes << index
+            unique_db_primary_keys << record.id
           end
 
           inventory_object = inventory_objects_index.delete(index)
