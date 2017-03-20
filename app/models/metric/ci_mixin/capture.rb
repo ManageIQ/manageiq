@@ -17,7 +17,7 @@ module Metric::CiMixin::Capture
     ems.metrics_collector_queue_name
   end
 
-  def split_capture_intervals(interval_name, start_time, end_time, threshold=1.day)
+  def split_capture_intervals(interval_name, start_time, end_time, threshold = 1.day)
     raise _("Start time must be earlier than End time") if start_time > end_time
     # Create an array of ordered pairs from start_time and end_time so that each ordered pair is contained
     # within the threshold.  Then, reverse it so the newest ordered pair is first:

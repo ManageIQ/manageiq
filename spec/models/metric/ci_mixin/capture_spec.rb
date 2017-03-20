@@ -58,7 +58,7 @@ describe Metric::CiMixin::Capture do
           expect(q_end_time).to be_same_time_as interval_end_time
           interval_end_time = interval_start_time
           # if the collection threshold is ever parameterized, then this 1.day will have to change
-          interval_start_time = interval_start_time - 1.day
+          interval_start_time -= 1.day
         end
       end
     end
