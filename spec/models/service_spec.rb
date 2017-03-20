@@ -97,8 +97,6 @@ describe Service do
     it "#update_progress" do
       @service.update_progress(:power_status => "stopping")
       expect(@service.power_status).to eq "stopping"
-      expect { |b| @service.update_progress(:power_state => "timeout", &b) }.to yield_with_args(:reset => true)
-      expect { |b| @service.update_progress(:increment => true, &b) }.to yield_with_args(:increment => 1)
     end
 
     context "#power_states_match?" do

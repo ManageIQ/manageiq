@@ -227,16 +227,9 @@ class Service < ApplicationRecord
   end
 
   def update_progress(hash = {})
-    increment = hash.keys.include?(:increment) ? hash.delete(:increment) : nil
     hash.keys.each do |attribute|
       options[attribute] = hash[attribute]
       update_attributes(:options => options)
-    end
-    if block_given?
-      complete = hash[:power_status] && hash[:power_status].match("_complete")
-      timed_out = hash[:power_state] && hash[:power_state].match("timeout")
-      yield(:reset => true) if complete || timed_out
-      yield(:increment => 1) if increment
     end
   end
 
