@@ -189,7 +189,10 @@ module ActsAsTaggable
   def vtag_list(options = {})
     ns = Tag.get_namespace(options)
 
-    predicate = ns.split("/")[2..-1] # throw away /virtual
+    ns.gsub!('/virtual/','')  # throw away /virtual
+    ns, virtual_custom_attribute = MiqExpression.escape_virtual_custom_attribute(ns)
+    predicate = ns.split('/')
+    predicate.map!{ |x| URI::RFC2396_Parser.new.unescape(x) } if virtual_custom_attribute
 
     # p "ns: [#{ns}]"
     # p "predicate: [#{predicate.inspect}]"

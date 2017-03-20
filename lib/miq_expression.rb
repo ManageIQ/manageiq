@@ -1047,8 +1047,19 @@ class MiqExpression
     tag
   end
 
+  def self.escape_virtual_custom_attribute(attribute)
+    if attribute.include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
+      uri_parser = URI::RFC2396_Parser.new
+      [uri_parser.escape(attribute, /[^A-Za-z0-9:\-_]/), true]
+    else
+      [attribute, false]
+    end
+  end
+
   def self.value2tag(tag, val = nil)
+    tag, virtual_custom_attribute = escape_virtual_custom_attribute(tag)
     model, *values = tag.to_s.gsub(/[\.-]/, "/").split("/") # replace model path ".", column name "-" with "/"
+    values.map!{ |x|  URI::RFC2396_Parser.new.unescape(x) } if virtual_custom_attribute
 
     case values.first
     when "user_tag"
