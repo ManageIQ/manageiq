@@ -10,5 +10,7 @@ module MiqAeMethodService
     expose :cloud_volume_backups,   :association => true
     expose :cloud_volume_snapshots, :association => true
     expose :attachments,            :association => true
+    expose :attach_volume,          :override_return => nil
+    expose :detach_volume,          :override_return => nil
   end
 end
