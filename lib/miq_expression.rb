@@ -1170,10 +1170,10 @@ class MiqExpression
 
     klass.custom_keys.each do |custom_key|
       custom_detail_column = [model, CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX + custom_key].join("-")
-      custom_detail_name = custom_key
+      custom_detail_name = _("Labels: %{custom_key}") % { :custom_key => custom_key }
       if options[:include_model]
         model_name = Dictionary.gettext(model, :type => :model, :notfound => :titleize)
-        custom_detail_name = [model_name, custom_key].join(" : ")
+        custom_detail_name = [model_name, custom_detail_name].join(" : ")
       end
       custom_attributes_details.push([custom_detail_name, custom_detail_column])
     end

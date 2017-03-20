@@ -1467,7 +1467,7 @@ describe MiqExpression do
       custom_attr1
       custom_attr2
 
-      expect(MiqExpression._custom_details_for("Vm", {})).to eq([["CATTR_1", "Vm-virtual_custom_attribute_CATTR_1"]])
+      expect(MiqExpression._custom_details_for("Vm", {})).to eq([["Labels: CATTR_1", "Vm-virtual_custom_attribute_CATTR_1"]])
     end
   end
 
