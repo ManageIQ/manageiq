@@ -101,10 +101,6 @@ li.brand-white-label.whitelabeled {
 
 /* Dashboard overrides */
 
-body#dashboard .container-cards-pf {
-  margin-top: 0;
-}
-
 body#dashboard table {
   border: 0;
 }
@@ -120,16 +116,6 @@ body#dashboard table thead th {
 
 body#dashboard table td {
   border: none;
-}
-
-body#dashboard .dropdown-kebab-pf .dropdown-menu {
-  left: -136px;
-  margin-top: 11px;
-}
-
-body#dashboard .dropdown-kebab-pf .dropdown-menu:after,
-body#dashboard .dropdown-kebab-pf .dropdown-menu:before {
-  left: 127px;
 }
 
 /* Login overrides */
