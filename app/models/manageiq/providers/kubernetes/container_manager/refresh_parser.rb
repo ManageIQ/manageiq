@@ -25,14 +25,8 @@ module ManageIQ::Providers::Kubernetes
       get_endpoints(inventory)
       get_services(inventory)
       get_component_statuses(inventory)
-      get_images
       EmsRefresh.log_inv_debug_trace(@data, "data:")
       @data
-    end
-
-    def get_images
-      images = @data_index.fetch_path(:container_image, :by_ref_and_registry_host_port).try(:values) || []
-      process_collection(images, :container_images) { |n| n }
     end
 
     def get_nodes(inventory)
@@ -663,13 +657,17 @@ module ManageIQ::Providers::Kubernetes
         end
       end
 
+      # old docker references won't yield a digest and will always be distinct
+      container_image_identity = container_image[:digest] || container_image[:image_ref]
       stored_container_image = @data_index.fetch_path(
-        :container_image, :by_ref_and_registry_host_port,  "#{host_port}:#{container_image[:image_ref]}")
+        :container_image, :by_digest, container_image_identity)
 
       if stored_container_image.nil?
         @data_index.store_path(
-          :container_image, :by_ref_and_registry_host_port,
-          "#{host_port}:#{container_image[:image_ref]}", container_image)
+          :container_image, :by_digest,
+          container_image_identity, container_image
+        )
+        process_collection_item(container_image, :container_images) { |img| img }
         stored_container_image = container_image
       end
 
@@ -740,6 +738,15 @@ module ManageIQ::Providers::Kubernetes
       image_ref_parts = image_definition_re.match(image_ref)
 
       hostname = image_parts[:host] || image_parts[:host2] || image_parts[:localhost]
+      if image_ref.start_with?(ContainerImage::DOCKER_IMAGE_PREFIX) && image_parts[:digest]
+        image_ref = "%{prefix}%{registry}%{name}@%{digest}" % {
+          :prefix   => ContainerImage::DOCKER_PULLABLE_PREFIX,
+          :registry => ("#{hostname}:#{image_parts[:port]}/" if hostname && image_parts[:port]),
+          :name     => image_parts[:name],
+          :digest   => image_parts[:digest],
+        }
+      end
+
       [
         {
           :name          => image_parts[:name],
