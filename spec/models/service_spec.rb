@@ -66,11 +66,6 @@ describe Service do
 
       @service.process_group_action(:start, 0, 1)
     end
-
-    it "places a calculate_power_state job on the queue" do
-      expect(MiqQueue).to receive(:put).once
-      @service.queue_power_calculation(30, :start)
-    end
   end
 
   context "VM associations" do
@@ -102,35 +97,6 @@ describe Service do
     it "#update_progress" do
       @service.update_progress(:power_status => "stopping")
       expect(@service.power_status).to eq "stopping"
-      expect { |b| @service.update_progress(:power_state => "timeout", &b) }.to yield_with_args(:reset => true)
-      expect { |b| @service.update_progress(:increment => true, &b) }.to yield_with_args(:increment => 1)
-    end
-
-    it "#timed_out?" do
-      @service.options[:delayed] = 3
-      expect(@service.timed_out?).to be_truthy
-      @service.options[:delayed] = 2
-      expect(@service.timed_out?).to be_falsey
-    end
-
-    context "#calculate_power_state" do
-      let(:service_template) { instance_double('ServiceTemplate', :service_type => 'compositie') }
-
-      it "delays if power states don't match" do
-        expect(@service).to receive(:composite?).once.and_return(true)
-        expect(@service).to receive(:atomic?).once.and_return(false)
-        @vm.send(:power_state=, 'off')
-        @vm.save
-        @service.calculate_power_state(:start)
-        expect(@service.options[:delayed]).to eq 1
-      end
-
-      it "returns a power_state of 'on' and a power_status of 'start_complete' if power_states_match" do
-        expect(@service).to receive(:power_states_match?).twice.and_return(true)
-        @service.calculate_power_state(:start)
-        expect(@service.power_state).to eq "on"
-        expect(@service.power_status).to eq "start_complete"
-      end
     end
 
     context "#power_states_match?" do
@@ -189,24 +155,6 @@ describe Service do
         expect(@service_c2.service_resources.first.stop_action).to be_nil
         expect(@service_c2.service_resources.last.stop_action).to be_nil
         expect(@service_c2.map_composite_power_states(:stop)).to eq ["off"]
-      end
-    end
-
-    context "#modify_power_state_delay" do
-      it "sets delayed to nil on a reset request" do
-        options = {:reset => true}
-        @service.options[:delayed] = 3
-        @service.save
-        expect(@service.options[:delayed]).to eq 3
-        @service.modify_power_state_delay(options)
-        expect(@service.options[:delayed]).to be_nil
-      end
-
-      it "increments delayed by one when increment is passed in" do
-        options = {:increment => 1}
-        expect(@service.options[:delayed]).to be_nil
-        @service.modify_power_state_delay(options)
-        expect(@service.options[:delayed]).to eq 1
       end
     end
 
