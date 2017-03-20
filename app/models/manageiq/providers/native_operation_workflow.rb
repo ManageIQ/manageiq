@@ -47,11 +47,14 @@ class ManageIQ::Providers::NativeOperationWorkflow < Job
     target = target_entity
 
     task_ids = EmsRefresh.queue_refresh_task(target)
+    if task_ids.blank?
+      queue_signal(:error, "Failed to queue refresh", "error")
+    else
+      context[:refresh_task_ids] = task_ids
+      update_attributes!(:context => context)
 
-    context[:refresh_task_ids] = task_ids
-    update_attributes!(:context => context)
-
-    queue_signal(:poll_refresh)
+      queue_signal(:poll_refresh)
+    end
   end
 
   def poll_refresh
@@ -59,6 +62,10 @@ class ManageIQ::Providers::NativeOperationWorkflow < Job
 
     context[:refresh_task_ids].each do |task_id|
       task = MiqTask.find(task_id)
+      if task.status != MiqTask::STATUS_OK
+        return queue_signal(:error, "Refresh failed", "error")
+      end
+
       if task.state != MiqTask::STATE_FINISHED
         refresh_finished = false
         break
@@ -70,6 +77,11 @@ class ManageIQ::Providers::NativeOperationWorkflow < Job
     else
       queue_signal(:poll_refresh, :deliver_on => Time.now.utc + 1.minute)
     end
+  end
+
+  def error(*args)
+    process_error(*args)
+    queue_signal(:notify)
   end
 
   def notify
@@ -91,11 +103,17 @@ class ManageIQ::Providers::NativeOperationWorkflow < Job
   end
 
   def queue_signal(*args, deliver_on: nil)
+    role     = options[:role] || "ems_operations"
+    priority = options[:priority] || MiqQueue::NORMAL_PRIORITY
+
     queue_options = {
       :class_name  => self.class.name,
       :method_name => "signal",
       :instance_id => id,
-      :role        => "ems_operations",
+      :priority    => priority,
+      :role        => role,
+      :zone        => zone,
+      :task_id     => guid,
       :args        => args,
       :deliver_on  => deliver_on
     }
