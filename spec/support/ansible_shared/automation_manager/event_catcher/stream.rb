@@ -66,4 +66,19 @@ shared_examples_for "ansible event_catcher stream" do |cassette_file|
       end
     end
   end
+
+  context ".filter" do
+    it "converts timestamp to correct timeformat" do
+      # It must be in YYYY-MM-DD HH:MM[:ss[.uuuuuu]][TZ]
+      timestamps = {
+        '2016-01-01 01:00:00'                  => '2016-01-01 01:00:00',
+        '2017-03-10 19%3A31%3A26'              => '2017-03-10 00:00:00',
+        Time.zone.parse('1975-12-31 01:01:01') => '1975-12-31 01:01:01',
+      }
+      timestamps.each do |input, converted|
+        subject.instance_variable_set(:@last_activity, OpenStruct.new(:timestamp => input))
+        expect(subject.send(:filter)[:timestamp__gt]).to eq(converted)
+      end
+    end
+  end
 end
