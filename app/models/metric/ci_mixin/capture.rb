@@ -25,9 +25,7 @@ module Metric::CiMixin::Capture
     # [[interval_name, 2017-01-03 12:00:00 UTC, 2017-01-04 12:00:00 UTC],
     #  [interval_name, 2017-01-02 12:00:00 UTC, 2017-01-03 12:00:00 UTC],
     #  [interval_name, 2017-01-01 12:00:00 UTC, 2017-01-02 12:00:00 UTC]]
-    start_time = start_time.utc
-    end_time = end_time.utc
-    (start_time..end_time).step_value(threshold).each_cons(2).collect do |s_time, e_time|
+    (start_time.utc..end_time.utc).step_value(threshold).each_cons(2).collect do |s_time, e_time|
       [interval_name, s_time, e_time]
     end.reverse
   end
