@@ -1,15 +1,11 @@
 require 'support/ansible_shared/provider'
 
 describe ManageIQ::Providers::EmbeddedAnsible::Provider do
+  subject { FactoryGirl.create(:provider_embedded_ansible) }
+
   it_behaves_like 'ansible provider'
 
-  subject { FactoryGirl.build(:provider_embedded_ansible) }
-
   context "DefaultAnsibleObjects concern" do
-    before do
-      subject.save
-    end
-
     context "with no attributes" do
       %w(organization credential inventory host).each do |obj_name|
         it "#default_#{obj_name} returns nil" do

@@ -1,8 +1,6 @@
 require "ansible_tower_client"
 
 shared_examples_for "ansible provider" do
-  subject { FactoryGirl.build(:provider_ansible_tower) }
-
   describe "#connect" do
     let(:attrs) { {:username => "admin", :password => "smartvm", :verify_ssl => OpenSSL::SSL::VERIFY_PEER} }
 
@@ -23,16 +21,14 @@ shared_examples_for "ansible provider" do
 
   describe "#destroy" do
     it "will remove all child objects" do
-      provider = FactoryGirl.create(:provider_ansible_tower, :zone => FactoryGirl.create(:zone))
-
-      provider.automation_manager.configured_systems = [
+      subject.automation_manager.configured_systems = [
         FactoryGirl.create(:configured_system, :computer_system =>
           FactoryGirl.create(:computer_system,
                              :operating_system => FactoryGirl.create(:operating_system),
                              :hardware         => FactoryGirl.create(:hardware)))
       ]
 
-      provider.destroy
+      subject.destroy
 
       expect(Provider.count).to              eq(0)
       expect(ConfiguredSystem.count).to      eq(0)
