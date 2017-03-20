@@ -472,7 +472,7 @@ describe MiqWidget do
 
     before do
       allow(MiqWidget::ContentOptionGenerator).to receive(:new).and_return(content_option_generator)
-      allow(content_option_generator).to receive(:generate).with(group, users).and_return("content options")
+      allow(content_option_generator).to receive(:generate).with(group, users, true).and_return("content options")
     end
 
     it "returns the content options" do
@@ -551,6 +551,8 @@ describe MiqWidget do
       MiqReport.seed_report("Vendor and Guest OS")
       MiqWidget.seed_widget("chart_vendor_and_guest_os")
 
+      # tests are written for timezone_matters = true
+      widget.options[:timezone_matters] = true if widget.options
       @role   = FactoryGirl.create(:miq_user_role)
       @group  = FactoryGirl.create(:miq_group, :miq_user_role => @role)
       @user1  = FactoryGirl.create(:user,
@@ -576,14 +578,15 @@ describe MiqWidget do
       before do
         widget.make_memberof(@ws1)
         widget.make_memberof(@ws2)
-        widget.queue_generate_content
       end
 
       it "queued based on group/TZs of User's in the group" do
+        widget.queue_generate_content
         expect(MiqQueue.count).to eq(1)
       end
 
       it "contents created for each timezone of the group" do
+        widget.queue_generate_content
         MiqQueue.first.deliver
         expect(MiqWidgetContent.count).to eq(2)
         MiqWidgetContent.all.each do |content|
@@ -593,7 +596,20 @@ describe MiqWidget do
         end
       end
 
+      it "contents created for one timezone per group with timezone_matters = false" do
+        widget.options = {:timezone_matters => false }
+        widget.queue_generate_content
+        MiqQueue.first.deliver
+        expect(MiqWidgetContent.count).to eq(1)
+        MiqWidgetContent.all.each do |content|
+          expect(content.user_id).to be_nil
+          expect(content.miq_group_id).to eq(@group.id)
+          expect(content.timezone).to eq("UTC")
+        end
+      end
+
       it "when changing to self service group" do
+        widget.queue_generate_content
         MiqQueue.first.deliver
         MiqWidgetContent.all.each do |content|
           expect(content.user_id).to be_nil
