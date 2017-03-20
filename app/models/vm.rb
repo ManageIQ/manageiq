@@ -32,6 +32,10 @@ class Vm < VmOrTemplate
           _("VMRC remote console is not supported on %{vendor}.") % {:vendor => vendor})
   end
 
+  def add_to_service(service)
+    service.add_resource!(self)
+  end
+
   def self.find_all_by_mac_address_and_hostname_and_ipaddress(mac_address, hostname, ipaddress)
     return [] if mac_address.blank? && hostname.blank? && ipaddress.blank?
 
