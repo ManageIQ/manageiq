@@ -23,7 +23,8 @@ module Api
       data['resources'].each do |resource_ref|
         resource_type, resource_id = parse_href(resource_ref['href'])
         resource = resource_search(resource_id, resource_type, collection_class(resource_type))
-        svc.add_resource(resource)
+        raise "Cannot assign #{resource_type} to #{service_ident(svc)}" unless resource.respond_to? :add_to_service
+        resource.add_to_service(svc)
       end
       svc.save!
       action_result(true, "Assigned resources to #{service_ident(svc)}")

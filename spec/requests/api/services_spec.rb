@@ -733,5 +733,25 @@ describe "Services API" do
 
       expect(response).to have_http_status(:forbidden)
     end
+
+    it 'raises an error if the service cannot be added' do
+      user = FactoryGirl.create(:user)
+      api_basic_authorize(action_identifier(:services, :add_resource))
+      request = {
+        'action'    => 'add_resource',
+        'resources' => [
+          { 'href' => users_url(user.id) }
+        ]
+      }
+
+      run_post(services_url(svc.id), request)
+
+      expected = {
+        'success' => false,
+        'message' => "Cannot assign users to Service id:#{svc.id} name:'#{svc.name}'"
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to eq(expected)
+    end
   end
 end
