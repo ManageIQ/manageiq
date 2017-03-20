@@ -835,7 +835,7 @@ module ReportController::Reports::Editor
         if params[:available_fields].include?(af[1])        # See if this column was selected to move
           unless @edit[:new][:fields].include?(af)          # Only move if it's not there already
             @edit[:new][:fields].push(af)                     # Add it to the new fields list
-            if af[0].include?(":")                            # Not a base column
+            if af[0].include?(":") && !af[1].include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX) # Not a base column
               table = af[0].split(" : ")[0].split(".")[-1]    # Get the table name
               table = table.singularize unless table == "OS"  # Singularize, except "OS"
               temp = af[0].split(" : ")[1]
@@ -1464,7 +1464,7 @@ module ReportController::Reports::Editor
     rpt.col_order.each_with_index do |col, idx|
       if col.starts_with?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
         field_key = rpt.db + "-" + col
-        field_value = col.gsub(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX, "")
+        field_value =_("Labels: %{name}") % { :name => col.gsub(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX, "") }
       elsif !col.include?(".")  # Main table field
         field_key = rpt.db + "-" + col
         field_value = friendly_model_name(rpt.db) +
