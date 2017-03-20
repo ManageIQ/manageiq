@@ -262,4 +262,13 @@ describe Vm do
     expect(console.url).to eq(url)
     expect(console.url_secret).to be
   end
+
+  it '#add_to_service' do
+    vm = FactoryGirl.create(:vm_vmware)
+    service = FactoryGirl.create(:service)
+
+    vm.add_to_service(service)
+    service.reload
+    expect(service.vms.count).to eq(1)
+  end
 end
