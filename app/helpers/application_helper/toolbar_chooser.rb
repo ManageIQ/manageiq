@@ -211,6 +211,8 @@ class ApplicationHelper::ToolbarChooser
     elsif x_active_tree == :svcs_tree
       if TreeBuilder.get_model_for_prefix(@nodetype) == "Service"
         return "service_center_tb"
+      elsif x_node == 'xx-rsrv'
+        return "retired_services_center_tb"
       else
         return "services_center_tb"
       end
