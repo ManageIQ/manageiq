@@ -180,34 +180,6 @@ class Service < ApplicationRecord
     queue_group_action(:shutdown_guest, last_index, -1, delay_for_action(last_index, :stop))
   end
 
-  def calculate_power_state(action)
-    if power_states_match?(action)
-      status = { :power_state  => POWER_STATE_MAP[action],
-                 :power_status => action.to_s + '_complete' }
-      update_progress(status) { |x| modify_power_state_delay(x) }
-    else
-      update_progress(:increment => true) { |x| modify_power_state_delay(x) } unless timed_out?
-      delay = combined_group_delay(action) + DEFAULT_POWER_STATE_DELAY
-      queue_power_calculation(delay, action) unless timed_out?
-      update_progress(:power_state => "timeout") { |x| modify_power_state_delay(x) } if timed_out?
-    end
-  end
-
-  def timed_out?
-    options[:delayed].to_i >= DEFAULT_POWER_STATE_RETRIES
-  end
-
-  def modify_power_state_delay(opts)
-    cloned_options = options.dup
-    case opts.keys.first
-    when :reset
-      cloned_options[:delayed] = nil
-    when :increment
-      cloned_options[:delayed] = (cloned_options[:delayed].to_i + opts[:increment])
-    end
-    update_attributes(:options => cloned_options)
-  end
-
   def power_states_match?(action)
     if composite? && (power_states.uniq == map_composite_power_states(action))
       return update_power_status(action)
@@ -307,21 +279,6 @@ class Service < ApplicationRecord
     nh[:zone] = my_zone if my_zone
     MiqQueue.put(nh)
     true
-  end
-
-  def queue_power_calculation(delay, action)
-    return if parent_service
-    calculate_power = {
-      :class_name  => self.class.name,
-      :instance_id => id,
-      :method_name => "calculate_power_state",
-      :role        => "ems_operations",
-      :task_id     => "#{self.class.name.underscore}_#{id}",
-      :deliver_on  => delay.seconds.from_now.utc,
-      :args        => [action]
-    }
-
-    MiqQueue.put(calculate_power)
   end
 
   def my_zone
