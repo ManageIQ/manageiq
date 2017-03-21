@@ -40,7 +40,7 @@ module EmsRefresh::SaveInventory
                     []
                   end
 
-    child_keys = [:operating_system, :hardware, :custom_attributes, :snapshots, :advanced_settings, :labels]
+    child_keys = [:operating_system, :hardware, :custom_attributes, :snapshots, :advanced_settings, :labels, :tags]
     extra_infra_keys = [:host, :ems_cluster, :storage, :storages, :storage_profile, :raw_power_state, :parent_vm]
     extra_cloud_keys = [
       :flavor,
@@ -179,6 +179,26 @@ module EmsRefresh::SaveInventory
         disconnects.each(&:disconnect_inv)
       end
     end
+  end
+
+  # Convert all mapped hashes into actual tags and associate them with the object.
+  # The hash[:tags] object should be an array of hashes, probably created by
+  # the ContainerLabelTagMapping.map_labels method. Each hash in the array should
+  # have the following basic structure:
+  #
+  # {:category_tag_id=>139, :entry_name=>"foo", :entry_description=>"bar"}
+  #
+  # For now, the object must be a VmOrTemplate object.
+  #
+  def save_tags_inventory(object, hash)
+    return if hash.blank?
+    return unless object.kind_of?(VmOrTemplate)
+
+    ContainerLabelTagMapping.retag_entity(object, hash[:tags])
+  rescue => err
+    raise if EmsRefresh.debug_failures
+    _log.error("Auto-tagging failed on #{object.class} [#{object.name}] with error [#{err}].")
+    _log.log_backtrace(err)
   end
 
   def save_operating_system_inventory(parent, hash)
