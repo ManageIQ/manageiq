@@ -153,10 +153,7 @@
       :critical:
       - CloneTaskEvent
       - ClusterCreatedEvent
-      - CreateFolder
       - DatacenterCreatedEvent
-      - DatastoreDiscoveredEvent
-      - HostConnectedEvent
       - HOST_DETECTED
       - HOST_REGISTER_AUTO_APPROVE_PATTERN
       - HOST_REGISTER_ERROR_UPDATING_HOST
@@ -184,7 +181,6 @@
       - USER_FAILED_ADD_VM_TEMPLATE
       - GceOperationDone_compute.instances.insert
       - VmConnectedEvent
-      - VmCreatedEvent
       - VmDeployedEvent
       - VmRegisteredEvent
       - aggregate.addhost.end
@@ -288,8 +284,6 @@
       - EnterMaintenanceMode_Task
       - ExitMaintenanceMode_Task
       - MarkAsTemplate
-      - MoveIntoFolder_Task
-      - MoveInto_Task
       - MoveIntoResourcePool
       - MoveIntoResourcePool_Complete
       - ReconfigVM_Task
@@ -305,16 +299,11 @@
       - UserLoginSessionEvent
       - UserLogoutSessionEvent
       - VmAcquiredMksTicketEvent
-      - VmRemoteConsoleConnectedEvent
       :detail: []
       :name: Console Activity
     :deletion:
       :critical:
       - ClusterDestroyedEvent
-      - DestroyDatacenter_Task
-      - DestroyFolder_Task
-      - HostConnectionLostEvent
-      - HostDisconnectedEvent
       - ResourcePoolDestroyedEvent
       - UnregisterVM_Complete
       - USER_FAILED_REMOVE_HOST
@@ -334,7 +323,6 @@
       - orchestration.stack.delete.error
       - servergroup.delete
       :detail:
-      - Destroy_Task
       - Destroy_Task_Complete
       - DestroyCluster_Task_Complete
       - DestroyCluster_Task
@@ -517,7 +505,6 @@
       - DrsMigrateVM_Task
       - DrsVmMigratedEvent
       - MigrateTaskEvent
-      - MigrateVM_Task
       - RelocateVM_Task
       - USER_FAILED_MOVE_TEMPLATE
       - USER_FAILED_MOVE_VM
@@ -538,7 +525,6 @@
       - VM_MIGRATION_START
       - VM_MIGRATION_TRYING_RERUN
       - VmMigratedEvent
-      - VmRelocatedEvent
       :detail:
       - DrsMigrateVM_Task_Complete
       - MigrateVM_Task_Complete
@@ -630,7 +616,6 @@
       - AUTO_SUSPEND_VM
       - AUTO_SUSPEND_VM_FINISH_FAILURE
       - AUTO_SUSPEND_VM_FINISH_SUCCESS
-      - DrsVmPoweredOnEvent
       - HOST_FAILED_TO_RUN_VMS
       - HOST_INITIATED_RUN_VM
       - HOST_INITIATED_RUN_VM_FAILED
@@ -684,12 +669,9 @@
       - VM_SHUTDOWN_FAILED
       - VmGuestRebootEvent
       - VmGuestShutdownEvent
-      - VmPoweredOffEvent
-      - VmPoweredOnEvent
       - VmResumingEvent
       - VmStartedOnEvent
       - VmStoppedEvent
-      - VmSuspendedEvent
       - compute.instance.create.end
       - compute.instance.create.error
       - compute.instance.shutdown.end
@@ -727,10 +709,6 @@
       :name: Power Activity
     :snapshot:
       :critical:
-      - CreateSnapshot_Task
-      - RemoveAllSnapshots_Task
-      - RemoveSnapshot_Task
-      - RevertToSnapshot_Task
       - USER_CREATE_SNAPSHOT
       - USER_CREATE_SNAPSHOT_FINISHED_FAILURE
       - USER_CREATE_SNAPSHOT_FINISHED_SUCCESS
@@ -803,16 +781,11 @@
       - DatacenterRenamedEvent
       - GeneralUserEvent
       - LicenseServerUnavailableEvent
-      - Rename_Task
       - Rename_Task_Complete
-      - RenameCluster_Task
       - RenameDatacenter_Task
       - RenameDatacenter_Task_Complete
-      - RenameFolder_Task
-      - RenameResourcePool_Task
       - RenameVM_Task
       - RenameVM_Task_Complete
-      - VmRenamedEvent
       :name: Alarm/Status Change/Errors
     :storage:
       :critical:
