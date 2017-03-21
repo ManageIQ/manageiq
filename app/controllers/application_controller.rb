@@ -1399,6 +1399,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def find_checked_items_with_rbac(klass, prefix = nil)
+    items = find_checked_items(prefix)
+    assert_rbac(current_user, klass, items)
+    items
+  end
+
   # Common Saved Reports button handler routines
   def process_saved_reports(saved_reports, task)
     success_count = 0
