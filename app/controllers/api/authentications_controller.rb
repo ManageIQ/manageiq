@@ -48,11 +48,9 @@ module Api
     def validate_auth_attrs(data)
       raise 'must supply a manager resource' unless data['manager_resource']
       attrs = data.dup
-      attrs['manager_resource'] = if data['manager_resource'].key?('href')
-                                    parse_href(data['manager_resource']['href']).last
-                                  elsif data['manager_resource'].key?('id')
-                                    data['manager_resource']['id']
-                                  end
+      collection, id = parse_href(data['manager_resource']['href'])
+      raise "#{collection} is not a valid manager resource" unless ::Authentication::MANAGER_TYPES.include?(collection)
+      attrs['manager_resource'] = id
       attrs
     end
   end

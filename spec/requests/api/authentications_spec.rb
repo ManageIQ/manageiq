@@ -206,7 +206,7 @@ RSpec.describe 'Authentications API' do
     it 'requires that the type support create_in_provider_queue' do
       api_basic_authorize collection_action_identifier(:authentications, :create, :post)
 
-      run_post(authentications_url, :action => 'create', :type => 'Authentication', :manager_resource => { })
+      run_post(authentications_url, :action => 'create', :type => 'Authentication', :manager_resource => { :href => providers_url(manager.id) })
 
       expected = {
         'results' => [
@@ -233,15 +233,14 @@ RSpec.describe 'Authentications API' do
       expect(response.parsed_body).to include(expected)
     end
 
-    it 'can create an authentication with a resource_manager id' do
+    it 'requires a valid manager resource' do
       api_basic_authorize collection_action_identifier(:authentications, :create, :post)
-      create_params[:manager_resource] = { :id => manager.id }
+      create_params[:manager_resource] = { :href => users_url(10) }
 
       expected = {
         'results' => [a_hash_including(
-          'success' => true,
-          'message' => 'Creating Authentication',
-          'task_id' => a_kind_of(Numeric)
+          'success' => false,
+          'message' => 'users is not a valid manager resource'
         )]
       }
       run_post(authentications_url, create_params)
