@@ -4,11 +4,11 @@ module EmsRefresh::SaveInventoryContainer
 
     graph_keys = [:container_projects, :container_quotas, :container_nodes,
                  ]
-    child_keys = [:container_builds, :container_build_pods, :persistent_volume_claims, :persistent_volumes,
-                  :container_image_registries, :container_images, :container_replicators, :container_groups,
+    child_keys = [:container_image_registries, :container_images, :container_replicators, :container_groups,
                   :container_services, :container_routes, :container_component_statuses, :container_templates,
                   # things moved to end - if they work here, nothing depended on their ids
-                  :container_limits,
+                  :container_limits, :container_builds, :container_build_pods,
+                  :persistent_volume_claims, :persistent_volumes,
                  ]
 
     initialize_inventory_collections(ems)
