@@ -11,7 +11,6 @@
           options_for_select([["<#{_('Choose')}>", nil]] + @subnet_choices.sort),
                       "ng-model"                    => "networkRouterModel.cloud_subnet_id",
                       "required"                    => "",
-                      :miqrequired                  => true,
                       :checkchange                  => true,
                       "selectpicker-for-select-tag" => "")
   = render :partial => "layouts/angular/x_custom_form_buttons_angular",

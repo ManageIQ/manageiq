@@ -153,7 +153,7 @@ describe NetworkRouterController do
           :priority    => MiqQueue::HIGH_PRIORITY,
           :role        => 'ems_operations',
           :zone        => @ems.my_zone,
-          :args        => [{:name => "foo2"}]
+          :args        => [{:name => "foo2", :external_gateway_info => {}}]
         }
       end
 
