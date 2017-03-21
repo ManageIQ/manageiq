@@ -1,5 +1,5 @@
 describe OpsController::RbacTree do
-  before(:all) do
+  before do
     MiqProductFeature.seed_features
   end
 
