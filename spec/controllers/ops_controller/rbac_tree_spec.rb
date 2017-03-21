@@ -1,8 +1,4 @@
 describe OpsController::RbacTree do
-  before do
-    MiqProductFeature.seed_features
-  end
-
   let(:role) do
     roles = YAML.load_file(MiqUserRole::FIXTURE_YAML)
     role = roles.detect { |r| r[:name] == "EvmRole-approver" }
@@ -13,6 +9,10 @@ describe OpsController::RbacTree do
   let(:features) { role.miq_product_features.order(:identifier).pluck(:identifier) }
 
   subject { described_class.new(role, features, false).build }
+
+  before do
+    EvmSpecHelper.seed_specific_product_features(%w(control_explorer))
+  end
 
   it 'builds a hash tree' do
     expect(subject[:children].first[:title]).to eq "Cloud Intel"
