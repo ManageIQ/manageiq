@@ -17,6 +17,20 @@ module Metric::CiMixin::Capture
     ems.metrics_collector_queue_name
   end
 
+  def split_capture_intervals(interval_name, start_time, end_time, threshold = 1.day)
+    raise _("Start time must be earlier than End time") if start_time > end_time
+    # Create an array of ordered pairs from start_time and end_time so that each ordered pair is contained
+    # within the threshold.  Then, reverse it so the newest ordered pair is first:
+    # start_time = 2017/01/01 12:00:00, end_time = 2017/01/04 12:00:00
+    # [[interval_name, 2017-01-03 12:00:00 UTC, 2017-01-04 12:00:00 UTC],
+    #  [interval_name, 2017-01-02 12:00:00 UTC, 2017-01-03 12:00:00 UTC],
+    #  [interval_name, 2017-01-01 12:00:00 UTC, 2017-01-02 12:00:00 UTC]]
+    (start_time.utc..end_time.utc).step_value(threshold).each_cons(2).collect do |s_time, e_time|
+      [interval_name, s_time, e_time]
+    end.reverse
+  end
+  private :split_capture_intervals
+
   def perf_capture_queue(interval_name, options = {})
     start_time = options[:start_time]
     end_time   = options[:end_time]
@@ -32,26 +46,19 @@ module Metric::CiMixin::Capture
 
     log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
 
-    # Determine what items we should be queuing up
-    items = []
     cb = nil
     if interval_name == 'historical'
       start_time = Metric::Capture.historical_start_time if start_time.nil?
       end_time = Time.now.utc if end_time.nil?
-
-      start_hour = start_time
-      while start_hour != end_time
-        end_hour = start_hour + 1.day
-        end_hour = end_time if end_hour > end_time
-        items.unshift([interval_name, start_hour, end_hour])
-        start_hour = end_hour
-      end
     else
-      items << [interval_name]
-      items[0] << start_time << end_time unless start_time.nil?
-
+      start_time = last_perf_capture_on unless start_time
+      end_time   = Time.now.utc unless end_time
       cb = {:class_name => self.class.name, :instance_id => id, :method_name => :perf_capture_callback, :args => [[task_id]]} if task_id
     end
+
+    # Determine what items we should be queuing up
+    items = [interval_name]
+    items = split_capture_intervals(interval_name, start_time, end_time) if start_time
 
     # Queue up the actual items
     queue_item = {
