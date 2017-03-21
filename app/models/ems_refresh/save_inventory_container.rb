@@ -56,10 +56,9 @@ module EmsRefresh::SaveInventoryContainer
   end
 
   def graph_container_projects_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
     target = ems if target.nil?  # TODO deletes - partial vs full ?
 
-    hashes.each do |h|
+    hashes.to_a.each do |h|
       @inv_collections[:container_projects].build(h)
     end
 
@@ -103,9 +102,7 @@ module EmsRefresh::SaveInventoryContainer
   end
 
   def graph_container_quotas_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-
-    hashes.each do |h|
+    hashes.to_a.each do |h|
       h = h.merge(
         :container_project =>  @inv_collections[:container_projects].lazy_find(h.delete(:project)[:ems_ref])
       )
@@ -116,8 +113,7 @@ module EmsRefresh::SaveInventoryContainer
   end
 
   def graph_container_quota_items_inventory(container_quota, hashes, target = nil)
-    return if hashes.nil?
-    hashes.each do |h|
+    hashes.to_a.each do |h|
       h = h.merge(
         :container_quota => @inv_collections[:container_quotas].lazy_find(container_quota[:ems_ref]),
       )
