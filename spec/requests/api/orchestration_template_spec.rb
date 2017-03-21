@@ -112,6 +112,18 @@ RSpec.describe 'Orchestration Template API' do
       expect(OrchestrationTemplate.exists?(cfn.id)).to be_falsey
     end
 
+    it 'runs callback before_destroy on the model' do
+      api_basic_authorize collection_action_identifier(:orchestration_templates, :delete)
+
+      cfn = FactoryGirl.create(:orchestration_template_vnfd_with_content)
+      api_basic_authorize collection_action_identifier(:orchestration_templates, :delete)
+      expect_any_instance_of(OrchestrationTemplateVnfd).to receive(:raw_destroy).with(no_args) # callback on the model
+      run_delete(orchestration_templates_url(cfn.id))
+
+      expect(response).to have_http_status(:no_content)
+      expect(OrchestrationTemplate.exists?(cfn.id)).to be_falsey
+    end
+
     it 'supports multiple orchestration_template delete' do
       api_basic_authorize collection_action_identifier(:orchestration_templates, :delete)
 
