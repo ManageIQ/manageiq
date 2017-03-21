@@ -43,14 +43,12 @@ module EmsRefresh::SaveInventoryContainer
       :model_class => ContainerQuota,
       :parent => ems,
       :builder_params => {:ems_id => ems.id},
-      :arel => ContainerQuota.joins(:container_project).where('container_projects.ems_id' => ems.id),
-      #:manager_ref => [:ems_ref]
+      :arel => ContainerQuota.joins(:container_project).where(:container_projects => {:ems_id => ems.id}),
     )
     @inv_collections[:container_quota_items] = ::ManagerRefresh::InventoryCollection.new(
       :model_class => ContainerQuotaItem,
       :parent => ems,
-      #:builder_params => {:ems_id => ems.id},
-      :arel => ContainerQuotaItem.joins(:container_quota => :container_project).where('container_projects.ems_id' => ems.id),
+      :arel => ContainerQuotaItem.joins(:container_quota => :container_project).where(:container_projects => {:ems_id => ems.id}),
       # TODO: this builds uuids like "97__cpu", i.e. uses quota id, ideally would use quota ems_ref.
       #   Can't(?) pass an extra attribute like quota_ems_ref because can't exclude it from saving, manager_ref attributes can't be in attributes_blacklist.
       :manager_ref => [:container_quota, :resource],
@@ -64,13 +62,12 @@ module EmsRefresh::SaveInventoryContainer
     @inv_collections[:container_conditions] = ::ManagerRefresh::InventoryCollection.new(
       :model_class => ContainerCondition,
       :parent => ems,
-      #:builder_params => {:ems_id => ems.id},
       # TODO polymorphic child of ContainerNode & ContainerGroup
       # TODO define 2 has_many through on EMS
       :arel => ContainerCondition.joins(
         'INNER JOIN "container_nodes" ON "container_conditions"."container_entity_id" = "container_nodes"."id"'
       ).where(:container_entity_type => 'ContainerNode',
-              'container_nodes.ems_id' => ems.id),
+              :container_nodes => {:ems_id => ems.id}),
       :manager_ref => [:container_entity, :name],
     )
   end
