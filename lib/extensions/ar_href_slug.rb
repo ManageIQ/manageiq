@@ -1,4 +1,4 @@
-module ArSlug
+module ArHrefSlug
   extend ActiveSupport::Concern
 
   included do
