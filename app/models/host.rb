@@ -90,7 +90,7 @@ class Host < ApplicationRecord
                             :inverse_of => :host
   has_many                  :host_aggregate_hosts, :dependent => :destroy
   has_many                  :host_aggregates, :through => :host_aggregate_hosts
-  
+ 
   serialize :settings, Hash
 
   deprecate_attribute :address, :hostname
