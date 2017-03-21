@@ -13,8 +13,13 @@ describe MiqAeMethodService::MiqAeServiceEmsEvent do
 
   context "#refresh" do
     it "when queued" do
-      expect(EmsRefresh).to receive(:queue_refresh).once.with([@ems], nil, false)
+      expect(EmsRefresh).to receive(:queue_refresh).once.with([@ems], nil, :create_task => false)
       @service_event.refresh("src_vm", false)
+    end
+
+    it "when sync" do
+      expect(EmsRefresh).to receive(:queue_refresh).once.with([@ems], nil, :create_task => true).and_return([FactoryGirl.create(:miq_task, :state => "Finished")])
+      @service_event.refresh("src_vm", true)
     end
 
     it "when with multiple targets" do
@@ -50,7 +55,7 @@ describe MiqAeMethodService::MiqAeServiceEmsEvent do
     end
 
     it "when target is an array" do
-      expect(EmsRefresh).to receive(:queue_refresh).once.with([@ems], nil, false)
+      expect(EmsRefresh).to receive(:queue_refresh).once.with([@ems], nil, :create_task => false)
       @service_event.refresh(%w(src_vm dest_vm), false)
     end
   end

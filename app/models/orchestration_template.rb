@@ -7,6 +7,7 @@ class OrchestrationTemplate < ApplicationRecord
   acts_as_miq_taggable
 
   has_many :stacks, :class_name => "OrchestrationStack"
+  has_one :picture, :dependent => :destroy, :as => :resource, :autosave => true
 
   default_value_for :draft, false
   default_value_for :orderable, true

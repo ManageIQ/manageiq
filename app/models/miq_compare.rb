@@ -551,7 +551,7 @@ class MiqCompare
   # Retrieve the record from the source (compare mode)
   def get_compare_record(id)
     return unless @mode == :compare
-    new_rec = @model.find_by_id(id)
+    new_rec = @model.find_by(:id => id)
     _log.error "No record was found for compare object #{@model}, id: [#{id}]" if new_rec.nil?
     new_rec
   end
@@ -574,7 +574,7 @@ class MiqCompare
 
   def drift_model_record
     return unless @mode == :drift
-    @model_record ||= @model.find_by_id(@model_record_id)
+    @model_record ||= @model.find_by(:id => @model_record_id)
   end
 
   ### Special marshaling methods

@@ -34,6 +34,11 @@ headers:
 - Messaging Type
 - Server
 
+include:
+  middleware_server:
+    columns:
+      - name
+
 # Condition(s) string for the SQL query
 conditions:
 

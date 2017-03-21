@@ -8,13 +8,11 @@ module MiqAeEngine
       @num_methods = 0
     end
 
-    def with_server(inputs, body)
+    def with_server(inputs, body, method_name)
       setup if num_methods == 0
       self.num_methods += 1
-      svc = MiqAeMethodService::MiqAeService.new(@workspace, inputs, body)
-      svc.preamble = method_preamble(drb_uri, svc.object_id)
-
-      yield [svc.preamble, svc.body, RUBY_METHOD_POSTSCRIPT]
+      svc = MiqAeMethodService::MiqAeService.new(@workspace, inputs)
+      yield build_method_content(body, method_name, svc.object_id)
     ensure
       svc.destroy # Reset inputs to empty to avoid storing object references
       self.num_methods -= 1
@@ -35,10 +33,6 @@ module MiqAeEngine
     private
 
     # invocation
-
-    def drb_uri
-      drb_server.uri
-    end
 
     def setup
       require 'drb/timeridconv'
@@ -73,11 +67,25 @@ module MiqAeEngine
 
     # code building
 
-    def method_preamble(miq_uri, miq_id)
-      "MIQ_URI = '#{miq_uri}'\nMIQ_ID = #{miq_id}\n" << RUBY_METHOD_PREAMBLE
+    def build_method_content(body, method_name, miq_ae_service_token)
+      [
+        dynamic_preamble(method_name, miq_ae_service_token),
+        RUBY_METHOD_PREAMBLE,
+        body,
+        RUBY_METHOD_POSTSCRIPT
+      ].join("\n")
     end
 
-    RUBY_METHOD_PREAMBLE = <<-RUBY.freeze
+    def dynamic_preamble(method_name, miq_ae_service_token)
+      <<-RUBY.chomp
+MIQ_URI = '#{drb_server.uri}'
+MIQ_ID = #{miq_ae_service_token}
+RUBY_METHOD_NAME = '#{method_name}'
+RUBY_METHOD_PREAMBLE_LINES = #{RUBY_METHOD_PREAMBLE_LINES + 4}
+RUBY
+    end
+
+    RUBY_METHOD_PREAMBLE = <<-RUBY.chomp.freeze
 class AutomateMethodException < StandardError
 end
 
@@ -122,9 +130,22 @@ rescue Exception => err
 end
 
 class Exception
+  def filter_backtrace(callers)
+    return callers unless callers.respond_to?(:collect)
+
+    callers.collect do |c|
+      file, line, context = c.split(':')
+      if file == "-"
+        [RUBY_METHOD_NAME, line.to_i - RUBY_METHOD_PREAMBLE_LINES, context].join(':')
+      else
+        c
+      end
+    end
+  end
+
   def backtrace_with_evm
     value = backtrace_without_evm
-    value ? $evm.backtrace(value) : value
+    value ? filter_backtrace(value) : value
   end
 
   alias backtrace_without_evm backtrace
@@ -133,6 +154,8 @@ end
 
 begin
 RUBY
+
+    RUBY_METHOD_PREAMBLE_LINES = RUBY_METHOD_PREAMBLE.lines.count
 
     RUBY_METHOD_POSTSCRIPT = <<-RUBY.freeze
 rescue Exception => err

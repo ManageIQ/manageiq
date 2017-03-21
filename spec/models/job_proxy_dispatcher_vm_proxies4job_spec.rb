@@ -66,7 +66,7 @@ describe "JobProxyDispatcherVmProxies4Job" do
 
       context "with a vm scan job, with no eligible proxies, " do
         before(:each) do
-          @job = @vm.scan
+          @job = @vm.raw_scan
           allow(@vm).to receive_messages(:storage2proxies => [])
           allow(@vm).to receive_messages(:storage2activeproxies => [])
         end

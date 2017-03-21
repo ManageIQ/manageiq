@@ -183,4 +183,29 @@ describe Metric::CiMixin::Capture do
     datetime << "Z" if datetime.size == 19
     Time.parse(datetime).utc
   end
+
+  context "handles archived container entities" do
+    it "get the correct queue name and zone from archived container entities" do
+      ems = FactoryGirl.create(:ems_openshift, :name => 'OpenShiftProvider')
+      group = FactoryGirl.create(:container_group, :name => "group", :ext_management_system => ems)
+      container = FactoryGirl.create(:container,
+                                     :name                  => "container",
+                                     :container_group       => group,
+                                     :ext_management_system => ems)
+      project = FactoryGirl.create(:container_project,
+                                   :name                  => "project",
+                                   :ext_management_system => ems)
+      container.disconnect_inv
+      group.disconnect_inv
+      project.disconnect_inv
+
+      expect(container.queue_name_for_metrics_collection).to eq ems.metrics_collector_queue_name
+      expect(group.queue_name_for_metrics_collection).to eq ems.metrics_collector_queue_name
+      expect(project.queue_name_for_metrics_collection).to eq ems.metrics_collector_queue_name
+
+      expect(container.my_zone).to eq ems.my_zone
+      expect(group.my_zone).to eq ems.my_zone
+      expect(project.my_zone).to eq ems.my_zone
+    end
+  end
 end

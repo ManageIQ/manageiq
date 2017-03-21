@@ -14,17 +14,17 @@ describe MiqReport do
 
     @report_theme = 'miq'
     @show_title   = true
-    @options = MiqReport.graph_options(600, 400)
+    @options = MiqReport.graph_options({ :title => "CPU (Mhz)", :type => "Line", :columns => ["col"] })
 
-    allow(Charting).to receive(:backend).and_return(:jqplot)
-    allow(Charting).to receive(:format).and_return(:jqplot)
+    allow(Charting).to receive(:backend).and_return(:c3)
+    allow(Charting).to receive(:format).and_return(:c3)
   end
 
   context 'graph_options' do
     it 'returns a hash with options' do
-      expect(MiqReport.graph_options(400, 600)).to include(
-        :totalwidth  => 400,
-        :totalheight => 600
+      expect(MiqReport.graph_options({ :title => "CPU (Mhz)", :type => "Line", :columns => ["col"] })).to include(
+        :type => "Line",
+        :title => "CPU (Mhz)"
       )
     end
   end
@@ -48,9 +48,7 @@ describe MiqReport do
       rpt.to_chart(@report_theme, @show_title, @options)
       chart = rpt.chart
 
-      # {:data=>[[nil]], :options=>{:title=>"No records found for this chart"}}
-      expect(chart[:data][0][0]).to be_nil
-      expect(chart[:options][:title]).to eq('No records found for this chart')
+      expect(chart[:data][:columns][0]).to be_nil
     end
 
     it "returns a valid chart for a report with data" do
@@ -62,8 +60,7 @@ describe MiqReport do
       rpt.to_chart(@report_theme, @show_title, @options)
       chart = rpt.chart
 
-      expect(chart[:data][0][0]).to eq(5)
-      expect(chart[:options][:title]).to eq(name)
+      expect(chart[:data][:columns][0][1]).to eq(5)
     end
   end
 end

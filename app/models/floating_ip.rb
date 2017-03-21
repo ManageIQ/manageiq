@@ -12,13 +12,10 @@ class FloatingIp < ApplicationRecord
   belongs_to :cloud_network
   belongs_to :network_port
   belongs_to :network_router
+  alias_attribute :name, :address
 
   def self.available
     where(:vm_id => nil, :network_port_id => nil)
-  end
-
-  def name
-    address
   end
 
   def self.class_by_ems(ext_management_system)

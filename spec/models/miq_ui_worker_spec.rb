@@ -26,4 +26,25 @@ describe MiqUiWorker do
       expect(MiqUiWorker.all_ports_in_use).to eq([3000])
     end
   end
+
+  it ".port_range" do
+    expect(described_class.port_range.to_a).to eq((3000..3009).to_a)
+  end
+
+  describe ".reserve_port" do
+    it "returns next free port" do
+      ports = (3000..3001).to_a
+      expect(described_class.reserve_port(ports)).to eq(3002)
+    end
+
+    it "raises if no ports available" do
+      ports = (3000..3009).to_a
+      expect { described_class.reserve_port(ports) }.to raise_error(NoFreePortError)
+    end
+
+    it "returns free port between used ports" do
+      ports = [3000, 3002]
+      expect(described_class.reserve_port(ports)).to eq(3001)
+    end
+  end
 end

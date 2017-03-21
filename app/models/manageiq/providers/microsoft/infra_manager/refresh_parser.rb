@@ -19,7 +19,9 @@ module ManageIQ::Providers::Microsoft
     def ems_inv_to_hashes
       log_header = "MIQ(#{self.class.name}.#{__method__}) Collecting data for EMS name: [#{@ems.name}] id: [#{@ems.id}]"
       $scvmm_log.info("#{log_header}...")
-      @inventory = ManageIQ::Providers::Microsoft::InfraManager.execute_powershell(@connection, INVENTORY_SCRIPT).first
+
+      @inventory = ManageIQ::Providers::Microsoft::InfraManager.execute_powershell_json(@connection, INVENTORY_SCRIPT)
+
       if @inventory.empty?
         $scvmm_log.warn("#{log_header}...Empty inventory set returned from SCVMM.")
         return
@@ -39,47 +41,53 @@ module ManageIQ::Providers::Microsoft
     private
 
     def get_ems
-      return if @inventory[:ems].nil?
-
-      @ems.api_version = normalize_blank_property(@inventory[:ems][:Props][:ServerInterfaceVersion])
-      @ems.uid_ems     = normalize_blank_property(@inventory[:ems][:Props][:ManagedComputer][0][:Props][:ID])
+      @ems.api_version = @inventory['ems']['Version']
+      @ems.uid_ems = @inventory['ems']['Guid']
     end
 
     def get_datastores
-      datastores = @inventory[:datastores]
+      datastores = @inventory['hosts'].collect{ |host| host['DiskVolumes'] }.flatten
+      datastores.reject! { |e| e['VolumeLabel'] == 'System Reserved' }
       process_collection(datastores, :storages) { |ds| parse_datastore(ds) }
     end
 
     def get_hosts
-      hosts = @inventory[:hosts]
+      hosts = @inventory['hosts']
+
+      # Set VirtualSwitch as a path to LogicalNetworks, VMHostNetworkAdapters, etc.
+      hosts.each do |host|
+        host['VirtualSwitch'] = @inventory['vnets'].select do |v|
+          v['VMHostName'] == host['Name']
+        end
+      end
+
       process_collection(hosts, :hosts) { |host| parse_host(host) }
     end
 
     def get_clusters
-      clusters = @inventory[:clusters]
+      clusters = @inventory['clusters']
       process_collection(clusters, :clusters) { |cluster| parse_cluster(cluster) }
     end
 
     def get_vms
-      vms = @inventory[:vms]
+      vms = @inventory['vms']
       process_collection(vms, :vms) { |vm| parse_vm(vm) }
     end
 
     def get_images
-      images = @inventory[:images]
+      images = @inventory['images']
       process_collection(images, :vms) { |image| parse_image(image) }
     end
 
-    def parse_datastore(datastore)
-      volume = datastore[:Props]
-      uid = volume[:ID]
+    def parse_datastore(volume)
+      uid = volume['ID']
 
       new_result = {
         :ems_ref                     => uid,
-        :name                        => File.path_to_uri(volume[:Name], volume[:VMHost][:ToString]),
-        :store_type                  => volume[:FileSystem],
-        :total_space                 => volume[:Capacity],
-        :free_space                  => volume[:FreeSpace],
+        :name                        => File.path_to_uri(volume['Name'], volume['VMHost']),
+        :store_type                  => volume['FileSystem'],
+        :total_space                 => volume['Capacity'],
+        :free_space                  => volume['FreeSpace'],
         :multiplehostaccess          => true,
         :thin_provisioning_supported => true,
         :location                    => uid,   # HACK: get around save_inventory issues by reusing uid.
@@ -89,16 +97,16 @@ module ManageIQ::Providers::Microsoft
     end
 
     def parse_cluster(cluster)
-      p     = cluster[:Properties][:Props]
-      uid   = p[:ID]
-      nodes = p[:Nodes]
-      name  = p[:ClusterName]
+      uid   = cluster['ID']
+      nodes = cluster['Nodes']
+      name  = cluster['ClusterName']
 
       new_result = {
         :ems_ref => uid,
         :uid_ems => uid,
         :name    => name,
       }
+
       set_relationship_on_hosts(new_result, nodes)
 
       # ignore clusters that are left without any hosts after hosts were filtered for UNSUPPORTED_HOST_PLATFORMS
@@ -106,11 +114,11 @@ module ManageIQ::Providers::Microsoft
     end
 
     def parse_host(host)
-      p          = host[:Properties][:Props]
-      uid        = p[:ID]
-      host_name  = p[:Name]
+      uid       = host['ID']
+      host_name = host['Name']
 
-      host_platform = p[:VirtualizationPlatform][:ToString].downcase
+      host_platform = host['VirtualizationPlatformString']
+
       if UNSUPPORTED_HOST_PLATFORMS.include? host_platform
         $scvmm_log.warn("#{host_platform} servers are not supported, skipping #{host_name}")
         return
@@ -122,21 +130,20 @@ module ManageIQ::Providers::Microsoft
         :uid_ems          => uid,
         :ems_ref          => uid,
         :hostname         => host_name,
-        :ipaddress        => identify_primary_ip(host[:NetworkAdapters], host_name),
+        :ipaddress        => identify_primary_ip(host),
         :vmm_vendor       => 'microsoft',
-        :vmm_version      => p[:HyperVVersion],
-        :vmm_product      => p[:VirtualizationPlatform][:ToString],
-        :power_state      => lookup_power_state(p[:HyperVState][:ToString]),
-        :connection_state => lookup_connected_state(p[:CommunicationState][:ToString]),
-
-        :operating_system => process_os(p),
+        :vmm_version      => host['HyperVVersionString'],
+        :vmm_product      => host_platform,
+        :power_state      => lookup_power_state(host['HyperVStateString']),
+        :connection_state => lookup_connected_state(host['CommunicationStateString']),
+        :operating_system => process_os(host),
         :hardware         => process_host_hardware(host),
-        :storages         => process_host_storages(p),
+        :storages         => process_host_storages(host),
         :switches         => process_virtual_switches(host)
       }
 
       @data_index.store_path(:hosts_by_host_name, host_name, new_result)
-      @data_index.store_path(:host_uid_to_datastore_mount_point_mapping, uid, map_mount_point_to_datastore(p))
+      @data_index.store_path(:host_uid_to_datastore_mount_point_mapping, uid, map_mount_point_to_datastore(host))
 
       return uid, new_result
     end
@@ -144,91 +151,95 @@ module ManageIQ::Providers::Microsoft
     def process_virtual_switches(host)
       result = []
 
-      virtual_switches = host[:VirtualSwitch]
-      return result if virtual_switches.nil?
+      virtual_switches = host['VirtualSwitch']
+      return result if virtual_switches.blank?
 
-      virtual_switches.each do |vs_hash|
-        v_switch = vs_hash[:Props]
-
+      virtual_switches.each do |v_switch|
         switch = {
-          :uid_ems => v_switch[:ID],
-          :name    => v_switch[:Name],
-          :lans    => process_logical_networks(v_switch[:LogicalNetworks])
+          :uid_ems => v_switch['ID'],
+          :name    => v_switch['Name'],
+          :lans    => process_logical_networks(v_switch['LogicalNetworks'])
         }
         result << switch
-        v_switch[:VMHostNetworkAdapters].collect { |adapter| set_switch_on_pnic(adapter[:Props], switch) }
+        v_switch['VMHostNetworkAdapters'].collect { |adapter| set_switch_on_pnic(adapter, switch) }
       end
+
       result
     end
 
     def process_logical_networks(logical_networks)
-      result = []
-
-      logical_networks.each do |ln|
-        next if ln.nil?
-
-        result << {
-          :name    => ln[:Props][:Name],
-          :uid_ems => ln[:Props][:ID],
+      logical_networks.collect do |ln|
+        {
+          :name    => ln['Name'],
+          :uid_ems => ln['ID'],
         }
       end
-      result
     end
 
     def set_switch_on_pnic(pnic, switch)
-      pnic_obj = @data_index.fetch_path(:physical_nic, pnic[:ID])
+      pnic_obj = @data_index.fetch_path(:physical_nic, pnic['ID'])
       pnic_obj[:switch] = switch
     end
 
     def parse_vm(vm)
-      p                = vm[:Properties][:Props]
-      uid              = p[:ID]
-      connection_state = p[:ServerConnection][:Props][:IsConnected].to_s
-      host             = @data_index.fetch_path(:hosts_by_host_name, p[:HostName])
+      uid      = vm['ID']
+      vmname   = vm['Name']
+      hostname = vm['HostName']
+      status   = vm['StatusString']
+
+      host = @data_index.fetch_path(:hosts_by_host_name, hostname)
+
+      if host.nil? || status == 'Missing'
+        msg = "Could not fetch host for #{vmname} on #{hostname}. Status is: #{status}."
+        $scvmm_log.warn(msg)
+        return
+      end
+
+      connection_state = vm['ServerConnection']['IsConnected'].to_s
 
       new_result = {
-        :name             => p[:Name],
+        :name             => vmname,
         :ems_ref          => uid,
         :uid_ems          => uid,
         :type             => 'ManageIQ::Providers::Microsoft::InfraManager::Vm',
-        :vendor           => "microsoft",
-        :raw_power_state  => p[:VirtualMachineState][:ToString],
-        :operating_system => process_vm_os(p[:OperatingSystem]),
+        :vendor           => 'microsoft',
+        :raw_power_state  => vm['VirtualMachineStateString'],
+        :operating_system => {:product_name => vm['OperatingSystem']['Name']},
         :connection_state => lookup_connected_state(connection_state),
-        :tools_status     => process_tools_status(p),
+        :tools_status     => process_tools_status(vm),
         :host             => host,
-        :ems_cluster      => host && normalize_blank_property(host[:ems_cluster]),
+        :ems_cluster      => host[:ems_cluster],
         :hardware         => process_vm_hardware(vm),
-        :snapshots        => process_snapshots(p),
-        :storage          => process_vm_storage(p[:VMCPath], host),
-        :storages         => process_vm_storages(p),
+        :snapshots        => process_snapshots(vm),
+        :storage          => process_vm_storage(vm['VMCPath'], host),
+        :storages         => process_vm_storages(vm)
       }
-      new_result[:location] = p[:VMCPath].nil? ? "unknown" : p[:VMCPath].sub(DRIVE_LETTER, "").strip
+
+      new_result[:location] = vm['VMCPath'].blank? ? 'unknown' : vm['VMCPath'].sub(DRIVE_LETTER, "").strip
       return uid, new_result
     end
 
     def parse_image(image)
-      p               = image[:Properties][:Props]
-      uid             = p[:ID]
+      uid = image['ID']
 
       new_result = {
-        :type             => "ManageIQ::Providers::Microsoft::InfraManager::Template",
+        :type             => 'ManageIQ::Providers::Microsoft::InfraManager::Template',
         :uid_ems          => uid,
         :ems_ref          => uid,
-        :vendor           => "microsoft",
-        :operating_system => process_vm_os(p[:OperatingSystem]),
-        :name             => p[:Name],
-        :raw_power_state  => "never",
+        :vendor           => 'microsoft',
+        :operating_system => {:product_name => image['OperatingSystemString']},
+        :name             => image['Name'],
+        :raw_power_state  => 'never',
         :template         => true,
-        :storages         => process_vm_storages(p),
+        :storages         => process_vm_storages(image),
         :hardware         => {
-          :cpu_total_cores    => p[:CPUCount],
-          :memory_mb          => normalize_blank_property_num(p[:Memory]),
-          :cpu_type           => p[:CPUType].blank? ? nil : p[:CPUType][:ToString],
-          :disks              => process_disks(p),
+          :cpu_total_cores    => image['CPUCount'],
+          :memory_mb          => image['Memory'],
+          :cpu_type           => image['CPUTypeString'],
+          :disks              => process_disks(image),
           :guest_devices      => process_vm_guest_devices(image),
-          :guest_os           => p[:OperatingSystem][:Props][:Name],
-          :guest_os_full_name => p[:OperatingSystem][:Props][:Name],
+          :guest_os           => image['OperatingSystemString'],
+          :guest_os_full_name => image['OperatingSystemString'],
         },
       }
 
@@ -236,71 +247,72 @@ module ManageIQ::Providers::Microsoft
     end
 
     def process_host_hardware(host)
-      p                = host[:Properties][:Props]
-      cpu_family       = normalize_blank_property(p[:ProcessorFamily])
-      cpu_manufacturer = normalize_blank_property(p[:ProcessorManufacturer])
-      cpu_model        = normalize_blank_property(p[:ProcessorModel])
+      cpu_family       = host['ProcessorFamily']
+      cpu_manufacturer = host['ProcessorManufacturer']
+      cpu_model        = host['ProcessorModel']
 
       {
         :cpu_type             => "#{cpu_manufacturer} #{cpu_model} #{cpu_family}",
         :manufacturer         => cpu_manufacturer,
         :model                => cpu_model,
-        :cpu_speed            => normalize_blank_property_num(p[:ProcessorSpeed]),
-        :memory_mb            => normalize_blank_property(p[:TotalMemory]) / 1.megabyte,
-        :cpu_sockets          => normalize_blank_property_num(p[:PhysicalCPUCount]),
-        :cpu_total_cores      => normalize_blank_property_num(p[:LogicalProcessorCount]),
-        :cpu_cores_per_socket => normalize_blank_property_num(p[:CoresPerCPU]),
+        :cpu_speed            => host['ProcessorSpeed'],
+        :memory_mb            => host['TotalMemory'] / 1.megabyte,
+        :cpu_sockets          => host['PhysicalCPUCount'],
+        :cpu_total_cores      => host['LogicalProcessorCount'],
+        :cpu_cores_per_socket => host['CoresPerCPU'],
         :guest_devices        => process_host_guest_devices(host),
       }
     end
 
     def process_host_storages(properties)
-      properties[:DiskVolumes].collect do |dv|
-        @data_index.fetch_path(:storages, dv[:Props][:ID])
+      properties['DiskVolumes'].collect do |dv|
+        @data_index.fetch_path(:storages, dv['ID'])
       end.compact
     end
 
     def map_mount_point_to_datastore(properties)
       log_header = "MIQ(#{self.class.name}.#{__method__})"
-      properties[:DiskVolumes].each.with_object({}) do |dv, h|
-        mount_point    = dv[:Props][:Name].match(DRIVE_LETTER).to_s
-        $scvmm_log.debug("#{log_header} Drive #{dv[:Props][:Name]} missing drive letter") if mount_point.blank?
+
+      properties['DiskVolumes'].each.with_object({}) do |dv, h|
+        mount_point = dv['Name'].match(DRIVE_LETTER).to_s
         next if mount_point.blank?
-        storage        = @data_index.fetch_path(:storages, dv[:Props][:ID])
+        storage = @data_index.fetch_path(:storages, dv['ID'])
         h[mount_point] = storage
       end
     end
 
     def process_host_guest_devices(host)
-      result           = []
-      network_adapters = host[:NetworkAdapters]
-      network_adapters.each do |pnic|
-        pnic_p = pnic[:Props]
-        new_result = build_network_adapter_hash(pnic_p)
+      switches = host['VirtualSwitch']
+      adapters = switches.collect{ |s| s['VMHostNetworkAdapters'] }.flatten
+
+      result = []
+
+      adapters.each do |adapter|
+        new_result = build_network_adapter_hash(adapter)
         result << new_result
       end
 
-      dvds = host[:Properties][:Props][:DVDDriveList]
-      dvds.each do |dvd|
+      host['DVDDriveList'].each do |dvd|
         result << build_dvd_hash(dvd)
       end
 
       result
     end
 
-    def build_network_adapter_hash(pnic_p)
-      p_nic_obj = {
-        :uid_ems         => pnic_p[:ID],
-        :device_name     => pnic_p[:ConnectionName],
+    def build_network_adapter_hash(adapter)
+      nic = {
+        :uid_ems         => adapter['ID'],
+        :device_name     => adapter['ConnectionName'],
         :device_type     => 'ethernet',
-        :model           => pnic_p[:Name],
-        :location        => pnic_p[:BDFLocationInformation],
+        :model           => adapter['Name'],
+        :location        => adapter['BDFLocationInformation'],
         :present         => 'true',
         :start_connected => 'true',
         :controller_type => 'ethernet',
-        :address         => pnic_p[:MacAddress],
+        :address         => adapter['MacAddress'],
       }
-      @data_index.store_path(:physical_nic, pnic_p[:ID], p_nic_obj)
+
+      @data_index.store_path(:physical_nic, adapter['ID'], nic)
     end
 
     def build_dvd_hash(dvd)
@@ -314,55 +326,48 @@ module ManageIQ::Providers::Microsoft
     end
 
     def process_vm_hardware(vm)
-      p    = vm[:Properties][:Props]
-      cpus = p[:CPUCount]
-
       {
-        :cpu_sockets          => cpus,
+        :cpu_sockets          => vm['CPUCount'],
         :cpu_cores_per_socket => 1,
-        :cpu_total_cores      => cpus,
-        :guest_os             => p[:OperatingSystem][:Props][:Name],
-        :guest_os_full_name   => p[:OperatingSystem][:Props][:Name],
-        :memory_mb            => normalize_blank_property_num(p[:Memory]),
-        :cpu_type             => normalize_blank_property_str(p[:CPUType]),
-        :disks                => process_disks(p),
+        :cpu_total_cores      => vm['CPUCount'],
+        :guest_os             => vm['OperatingSystem']['Name'],
+        :guest_os_full_name   => process_vm_os_description(vm),
+        :memory_mb            => vm['Memory'],
+        :cpu_type             => vm['CPUType']['Name'],
+        :disks                => process_disks(vm),
         :networks             => process_hostname_and_ip(vm),
         :guest_devices        => process_vm_guest_devices(vm),
-        :bios                 => p[:BiosGuid]
+        :bios                 => vm['BiosGuid']
       }
     end
 
-    def process_snapshots(p)
+    def process_snapshots(vm)
       result = []
 
-      if p[:VMCheckpoints].nil?
-        $scvmm_log.info("No snapshot information available for #{p[:Name]}")
+      if vm['VMCheckpoints'].blank?
+        $scvmm_log.info("No snapshot information available for #{vm['Name']}")
         return result
       end
 
-      p[:VMCheckpoints].each do |snapshot_hash|
-        s = snapshot_hash[:Props]
-        new_result = {
-          :uid_ems     => s[:CheckpointID],
-          :uid         => s[:CheckpointID],
-          :ems_ref     => s[:CheckpointID],
-          :parent_uid  => s[:ParentCheckpointID],
-          :name        => s[:Name],
-          :description => s[:description],
-          :create_time => s[:AddedTime],
-          :current     => s[:CheckpointID] == p[:LastRestoredCheckpointID]
+      vm['VMCheckpoints'].collect do |cp|
+        {
+          :uid_ems     => cp['CheckpointID'],
+          :uid         => cp['CheckpointID'],
+          :ems_ref     => cp['CheckpointID'],
+          :parent_uid  => cp['ParentCheckpointID'],
+          :name        => cp['Name'],
+          :description => cp['Description'].blank? ? nil : cp['Description'],
+          :create_time => convert_windows_date_string_to_ruby_time(cp['AddedTime']),
+          :current     => cp['CheckpointID'] == vm['LastRestoredCheckpointID']
         }
-        result << new_result
       end
-
-      result
     end
 
     def process_hostname_and_ip(vm)
       [
         {
-          :hostname  => process_computer_name(vm[:Properties][:Props][:ComputerName]),
-          :ipaddress => vm[:Networks]
+          :hostname  => process_computer_name(vm['ComputerName']),
+          :ipaddress => vm['VirtualNetworkAdapters'].map{ |nic| nic['IPv4Addresses'] }.first
         }
       ]
     end
@@ -380,19 +385,18 @@ module ManageIQ::Providers::Microsoft
     end
 
     def process_disks(vm)
-      return if vm[:VirtualHardDisks].nil?
+      return if vm['VirtualHardDisks'].blank?
 
-      vm[:VirtualHardDisks].collect do |disk_hash|
-        disk = disk_hash[:Props]
+      vm['VirtualHardDisks'].collect do |disk|
         {
-          :device_name     => disk[:Name],
-          :size            => disk[:MaximumSize],
-          :size_on_disk    => disk[:Size],
+          :device_name     => disk['Name'],
+          :size            => disk['MaximumSize'],
+          :size_on_disk    => disk['Size'],
           :disk_type       => lookup_disk_type(disk),
-          :device_type     => "disk",
+          :device_type     => 'disk',
           :present         => true,
-          :filename        => disk[:SharePath],
-          :location        => disk[:Location],
+          :filename        => disk['SharePath'],
+          :location        => disk['Location'],
           :mode            => 'persistent',
           :controller_type => 'IDE',
         }
@@ -400,58 +404,49 @@ module ManageIQ::Providers::Microsoft
     end
 
     def process_vm_guest_devices(vm)
-      dvds = vm[:Properties][:Props][:VirtualDVDDrives]
-      return [] if dvds.blank?
+      devices = []
+      return devices if vm['VirtualDVDDrives'].blank?
 
-      dvdprops   = dvds[0][:Props]
-      connection = dvdprops[:Connection]
-      devices    = []
+      vm['VirtualDVDDrives'].each do |dvd|
+        devices.concat(process_vm_physical_dvd_drive(dvd)) unless dvd['HostDrive'].blank?
+      end
 
-      devices << case connection
-                 when "HostDrive" then process_vm_physical_dvd_drive(dvdprops)
-                 when "ISOImage"  then process_iso_image(vm)
-                 end
-
-      devices.flatten.compact
+      devices.concat(process_iso_image(vm['DVDISO'])) unless vm['DVDISO'].blank?
+      devices.flatten.compact.uniq
     end
 
     def process_vm_physical_dvd_drive(dvd)
-      uid       = dvd[:ID]
-      name      = dvd[:Name]
-      hostdrive = dvd[:HostDrive]
-
-      new_result = {
+      {
         :device_type     => 'cdrom',  # TODO: add DVD to model
         :present         => true,
         :controller_type => 'IDE',
         :mode            => 'persistent',
-        :filename        => hostdrive,
-        :uid_ems         => uid,
-        :device_name     => name,
+        :filename        => dvd['HostDrive'],
+        :uid_ems         => dvd['ID'],
+        :device_name     => dvd['Name']
       }
-      new_result
     end
 
-    def process_iso_image(vm)
-      vm[:DVDs].collect do |dvd|
+    def process_iso_image(isos)
+      isos.collect do |iso|
         {
-          :size            => dvd[:MS][:Size] / 1.megabyte,
+          :size            => iso['Size'] / 1.megabyte,
           :device_type     => 'cdrom', # TODO: add DVD to model
           :present         => true,
           :controller_type => 'IDE',
           :mode            => 'persistent',
-          :filename        => dvd[:MS][:SharePath],
-          :uid_ems         => dvd[:MS][:ID],
-          :device_name     => dvd[:MS][:Name],
+          :filename        => iso['SharePath'],
+          :uid_ems         => iso['ID'],
+          :device_name     => iso['Name']
         }
       end
     end
 
     def process_vm_storages(properties)
-      return if properties[:VirtualHardDisks].nil?
+      return if properties['VirtualHardDisks'].blank?
 
-      properties[:VirtualHardDisks].collect do |vhd|
-        @data_index.fetch_path(:storages, vhd[:Props][:HostVolumeId])
+      properties['VirtualHardDisks'].collect do |vhd|
+        @data_index.fetch_path(:storages, vhd['HostVolumeId'])
       end.compact.uniq
     end
 
@@ -467,27 +462,27 @@ module ManageIQ::Providers::Microsoft
 
     def process_os(property_hash)
       {
-        :product_name => property_hash[:OperatingSystem][:ToString],
-        :version      => property_hash[:OperatingSystemVersion],
-        :product_type => "microsoft"
+        :product_name => property_hash['OperatingSystem']['Name'],
+        :version      => property_hash['OperatingSystemVersionString'],
+        :product_type => 'microsoft'
       }
     end
 
-    def process_vm_os(os)
-      return nil if os.nil?
-
-      {
-        :product_name => os[:Props][:Name]
-      }
+    def process_vm_os_description(vm)
+      if vm['OperatingSystem']['Name'].casecmp('unknown').zero?
+        "Unknown"
+      else
+        vm['OperatingSystem']['Description']
+      end
     end
 
     def process_tools_status(property_hash)
       tools = {
-        "OS shutdown"          => property_hash[:OperatingSystemShutdownEnabled],
-        "Time synchronization" => property_hash[:TimeSynchronizationEnabled],
-        "Data exchange"        => property_hash[:DataExchangeEnabled],
-        "Heartbeat"            => property_hash[:HeartbeatEnabled],
-        "Backup"               => property_hash[:BackupEnabled],
+        "OS shutdown"          => property_hash['OperatingSystemShutdownEnabled'],
+        "Time synchronization" => property_hash['TimeSynchronizationEnabled'],
+        "Data exchange"        => property_hash['DataExchangeEnabled'],
+        "Heartbeat"            => property_hash['HeartbeatEnabled'],
+        "Backup"               => property_hash['BackupEnabled'],
       }
 
       tools.collect { |kv| kv.join(": ") }.join(", ").truncate(255).chomp(", ")
@@ -495,8 +490,8 @@ module ManageIQ::Providers::Microsoft
 
     def set_relationship_on_hosts(cluster, nodes)
       nodes.each do |host|
-        host = @data_index.fetch_path(:hosts, host[:Props][:ID])
-        host[:ems_cluster] = cluster unless host.nil?
+        host = @data_index.fetch_path(:hosts, host['ID'])
+        host[:ems_cluster] = cluster if host
       end
     end
 
@@ -553,15 +548,27 @@ module ManageIQ::Providers::Microsoft
       @data[:hosts].select { |h| h[:ems_cluster].nil? }
     end
 
-    def identify_primary_ip(nics, host)
-      prefix = "MIQ(#{self.class.name})##{__method__})"
+    # Get the first IPAddress from the first Network Adapter where the
+    # UsedForManagement property is true.
+    #
+    def identify_primary_ip(host)
+      prefix    = "MIQ(#{self.class.name})##{__method__})"
+      switches  = host['VirtualSwitch']
+      adapters  = switches.collect{ |s| s['VMHostNetworkAdapters'] }.flatten
+      host_name = host['Name']
 
-      primary_ip = nics.select { |nic| nic[:Props][:UsedForManagement] == true }
-      if primary_ip.empty?
-        $scvmm_log.warn("#{prefix} Found no management IP for #{host}. Setting IP to nil")
+      if switches.blank? || adapters.blank?
+        $scvmm_log.warn("#{prefix} Found no management IP for #{host_name}. Setting IP to nil")
+        return nil
+      end
+
+      adapter = adapters.find { |e| e['UsedForManagement'] }
+
+      if adapter.blank?
+        $scvmm_log.warn("#{prefix} Found no management IP for #{host_name}. Setting IP to nil")
         nil
       else
-        primary_ip.fetch_path(0, :Props, :IPAddresses, 0, :ToString)
+        adapter['IPAddresses'].split.first # Avoid IPv6 text if present
       end
     end
 
@@ -586,30 +593,20 @@ module ManageIQ::Providers::Microsoft
     end
 
     def lookup_disk_type(disk)
-      case disk[:VHDType]
-      when "DynamicallyExpanding", "Expandable", "Differencing" # TODO: Add A New Type In Database For Differencing
+      # TODO: Add A New Type In Database For Differencing
+      case disk['VHDType']
+      when "DynamicallyExpanding", "Expandable", "Differencing", 1, 3
         "thin"
-      when "Fixed"
+      when "Fixed", 0, 2
         "thick"
       else
         "unknown"
       end
     end
 
-    #
-    # Helper methods
-    #
-
-    def normalize_blank_property_num(property)
-      property.try(:to_i)
-    end
-
-    def normalize_blank_property(property)
-      property.blank? ? nil : property
-    end
-
-    def normalize_blank_property_str(property)
-      property.blank? ? nil : property[:ToString]
+    def convert_windows_date_string_to_ruby_time(string)
+      seconds = string[/Date\((.*?)\)/, 1].to_i
+      Time.at(seconds / 1000).utc
     end
 
     def process_collection(collection, key)
@@ -617,7 +614,7 @@ module ManageIQ::Providers::Microsoft
       return if collection.nil?
 
       collection.each do |item|
-        uid, new_result = yield(item[1])
+        uid, new_result = yield(item)
         next if new_result.nil?
 
         @data[key] << new_result

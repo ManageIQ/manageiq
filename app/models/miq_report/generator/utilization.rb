@@ -9,7 +9,7 @@ module MiqReport::Generator::Utilization
     #   :resource_id    => 5
     #   :tag            => "Host/environment/prod"
 
-    resource = Object.const_get(db_options[:resource_type]).find_by_id(db_options[:resource_id])
+    resource = Object.const_get(db_options[:resource_type]).find_by(:id => db_options[:resource_id])
     if resource.nil?
       raise _("unable to find %{type} with id %{number}") % {:type   => db_options[:resource_type],
                                                              :number => db_options[:resource_id]}

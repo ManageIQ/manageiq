@@ -37,7 +37,7 @@ module ResourceFeeder
       resource_link = ->(r) { SimplyHelpful::PolymorphicRoutes.polymorphic_url(r, options[:url_writer]) }
 
       rss_root_attributes = {:version => 2.0}
-      rss_root_attributes.merge!("xmlns:content" => "http://purl.org/rss/1.0/modules/content/") if use_content_encoded
+      rss_root_attributes["xmlns:content"] = "http://purl.org/rss/1.0/modules/content/" if use_content_encoded
 
       xml.instruct!
 

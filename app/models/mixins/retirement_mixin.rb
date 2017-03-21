@@ -8,7 +8,7 @@ module RetirementMixin
   module ClassMethods
     def retire(ids, options = {})
       ids.each do |id|
-        object = find_by_id(id)
+        object = find_by(:id => id)
         object.retire(options) if object.respond_to?(:retire)
       end
       MiqQueue.put(:class_name => base_model.name, :method_name => "retirement_check")
@@ -49,9 +49,10 @@ module RetirementMixin
     self.retirement_requester = nil
   end
 
-  def extend_retires_on(days, date = Time.zone.today)
+  def extend_retires_on(days, date = Time.zone.now)
+    raise _("Invalid Date specified: %{date}") % {:date => date} unless date.kind_of?(ActiveSupport::TimeWithZone)
     _log.info "Extending Retirement Date on #{self.class.name} id:<#{self.id}>, name:<#{self.name}> "
-    new_retires_date = date + days.to_i
+    new_retires_date = date.in_time_zone + days.to_i.days
     _log.info "Original Date: #{date} Extend days: #{days} New Retirement Date: #{new_retires_date}"
     self.retires_on = new_retires_date
     save

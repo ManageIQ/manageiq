@@ -1,9 +1,9 @@
 describe 'YAML reports' do
   let(:report_dirs) { [REPORTS_FOLDER, "#{TIMELINES_FOLDER}/miq_reports"] }
   let(:report_yamls) { report_dirs.collect { |dir| Dir.glob(File.join(dir, "**", "*.yaml")) }.flatten }
+  let(:chart_dirs) { [CHARTS_REPORTS_FOLDER] }
+  let(:chart_yamls) { chart_dirs.collect { |dir| Dir.glob(File.join(dir, "**", "*.yaml")) }.flatten }
   let!(:user) { FactoryGirl.create(:user_with_group) }
-
-  # TODO: CHARTS_REPORTS_FOLDER
 
   before :each do
     EvmSpecHelper.local_miq_server
@@ -15,6 +15,7 @@ describe 'YAML reports' do
   end
 
   it 'can be build even though without data' do
+    # TODO: CHARTS_REPORTS_FOLDER
     report_yamls.each do |yaml|
       report_data = YAML.load(File.open(yaml))
       report_data.delete('menu_name')
@@ -26,7 +27,7 @@ describe 'YAML reports' do
   end
 
   it 'defines headers that match col_order' do
-    report_yamls.each do |yaml|
+    (chart_yamls + report_yamls).each do |yaml|
       report_data = YAML.load(File.open(yaml))
       col_order = report_data['col_order'].length
       headers = report_data['headers'].length

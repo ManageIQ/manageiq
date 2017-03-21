@@ -8,7 +8,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
       @end_time = end_time
       @interval = interval
       @tenant = target.try(:container_project).try(:name) || '_system'
-      @ext_management_system = @target.ext_management_system
+      @ext_management_system = @target.ext_management_system || @target.try(:old_ext_management_system)
       @ts_values = Hash.new { |h, k| h[k] = {} }
       @metrics = []
 

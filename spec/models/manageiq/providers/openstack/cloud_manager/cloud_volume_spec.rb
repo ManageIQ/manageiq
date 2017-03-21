@@ -135,4 +135,15 @@ describe ManageIQ::Providers::Openstack::CloudManager::CloudVolume do
       end
     end
   end
+
+  describe "instance linsting for attaching volumes" do
+    let(:first_instance) { FactoryGirl.create(:vm_openstack, :ext_management_system => ems, :ems_ref => "instance_0", :cloud_tenant => tenant) }
+    let(:second_instance) { FactoryGirl.create(:vm_openstack, :ext_management_system => ems, :ems_ref => "instance_1", :cloud_tenant => tenant) }
+    let(:other_tenant) { FactoryGirl.create(:cloud_tenant_openstack, :ext_management_system => ems) }
+    let(:other_instance) { FactoryGirl.create(:vm_openstack, :ext_management_system => ems, :ems_ref => "instance_2", :cloud_tenant => other_tenant) }
+
+    it "supports attachment to only those instances that are in the same tenant" do
+      expect(cloud_volume.available_vms).to contain_exactly(first_instance, second_instance)
+    end
+  end
 end

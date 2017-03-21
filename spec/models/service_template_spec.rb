@@ -35,16 +35,16 @@ describe ServiceTemplate do
       assigned_group_buttons = assigned_group.expanded_serializable_hash.reject do |key, _|
         %w(created_on updated_on).include?(key)
       end
-      expected_assigned_group_set = assigned_group_set.serializable_hash.reject { |key, _|
+      expected_assigned_group_set = assigned_group_set.serializable_hash.reject do |key, _|
         %w(created_on updated_on).include?(key)
-      }.merge(:buttons => [assigned_group_buttons])
+      end.merge(:buttons => [assigned_group_buttons])
 
       generic_group_buttons = generic_group.expanded_serializable_hash.reject do |key, _|
         %w(created_on updated_on).include?(key)
       end
-      expected_generic_group_set = generic_group_set.serializable_hash.reject { |key, _|
+      expected_generic_group_set = generic_group_set.serializable_hash.reject do |key, _|
         %w(created_on updated_on).include?(key)
-      }.merge(:buttons => [generic_group_buttons])
+      end.merge(:buttons => [generic_group_buttons])
 
       expected_hash_without_created_or_updated = service_template.custom_actions
       expected_hash_without_created_or_updated[:button_groups].each do |button_group|
@@ -113,6 +113,28 @@ describe ServiceTemplate do
     end
   end
 
+  context "initiator" do
+    shared_examples_for 'initiator example' do |initiator, match|
+      it 'test initiator' do
+        svc_template = FactoryGirl.create(:service_template, :name => 'Svc A')
+        options = {:dialog => {}}
+        options[:initiator] = initiator if initiator
+        svc_task = instance_double("service_task", :options => options)
+        svc = svc_template.create_service(svc_task, nil)
+
+        expect(svc.initiator).to eq(match)
+      end
+    end
+
+    context "initiator specified" do
+      it_behaves_like 'initiator example', 'fred', 'fred'
+    end
+
+    context "initiator not specified" do
+      it_behaves_like 'initiator example', nil, 'user'
+    end
+  end
+
   context "with multiple services" do
     before(:each) do
       @svc_a = FactoryGirl.create(:service_template, :name => 'Svc A')
@@ -171,6 +193,22 @@ describe ServiceTemplate do
 
       @svc_a.create_service(sub_svc)
     end
+
+    it "should pass display attribute to created top level service" do
+      @svc_a.display = true
+      expect(@svc_a.create_service(double(:options => {:dialog => {}})).display).to eq(true)
+    end
+
+    it "should set created child service's display to false" do
+      @svc_a.display = true
+      allow(@svc_b).to receive(:add_resource!)
+      expect(@svc_a.create_service(double(:options => {:dialog => {}}), @svc_b).display).to eq(false)
+    end
+
+    it "should set created service's display to false by default" do
+      expect(@svc_a.create_service(double(:options => {:dialog => {}})).display).to eq(false)
+    end
+
     it "should return all parent services for a service" do
       add_and_save_service(@svc_a, @svc_b)
       add_and_save_service(@svc_a, @svc_c)
@@ -325,7 +363,7 @@ describe ServiceTemplate do
     before do
       @st1 = FactoryGirl.create(:service_template, :name => 'Service Template 1')
 
-      user         = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
+      user         = FactoryGirl.create(:user, :name => 'Fred Flintstone', :userid => 'fred')
       @vm_template = FactoryGirl.create(:template_vmware, :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication))
       @ptr = FactoryGirl.create(:miq_provision_request_template, :requester => user, :src_vm_id => @vm_template.id)
     end
@@ -496,43 +534,44 @@ describe ServiceTemplate do
     end
   end
 
-  describe '#create_catalog_item' do
-    let(:user) { FactoryGirl.create(:user_with_group) }
-    let(:ra1) { FactoryGirl.create(:resource_action, :action => 'Provision') }
-    let(:ra2) { FactoryGirl.create(:resource_action, :action => 'Retirement') }
-    let(:ems) { FactoryGirl.create(:ems_amazon) }
-    let(:vm) { FactoryGirl.create(:vm_amazon, :ext_management_system => ems) }
-    let(:flavor) { FactoryGirl.create(:flavor_amazon) }
-    let(:request_dialog) { FactoryGirl.create(:miq_dialog_provision) }
-    let(:service_dialog) { FactoryGirl.create(:dialog) }
-    let(:catalog_item_options) do
-      {
-        :name         => 'Atomic Service Template',
-        :service_type => 'atomic',
-        :prov_type    => 'amazon',
-        :display      => 'false',
-        :description  => 'a description',
-        :config_info  => {
-          :miq_request_dialog_name => request_dialog.name,
-          :placement_auto          => [true, 1],
-          :number_of_vms           => [1, '1'],
-          :src_vm_id               => [vm.id, vm.name],
-          :vm_name                 => vm.name,
-          :schedule_type           => ['immediately', 'Immediately on Approval'],
-          :instance_type           => [flavor.id, flavor.name],
-          :src_ems_id              => [ems.id, ems.name],
-          :provision               => {
-            :fqname    => ra1.fqname,
-            :dialog_id => service_dialog.id
-          },
-          :retirement              => {
-            :fqname    => ra2.fqname,
-            :dialog_id => service_dialog.id
-          }
+  let(:user) { FactoryGirl.create(:user_with_group) }
+  let(:ra1) { FactoryGirl.create(:resource_action, :action => 'Provision') }
+  let(:ra2) { FactoryGirl.create(:resource_action, :action => 'Retirement') }
+  let(:ra3) { FactoryGirl.create(:resource_action, :action => 'Reconfigure') }
+  let(:ems) { FactoryGirl.create(:ems_amazon) }
+  let(:vm) { FactoryGirl.create(:vm_amazon, :ext_management_system => ems) }
+  let(:flavor) { FactoryGirl.create(:flavor_amazon) }
+  let(:request_dialog) { FactoryGirl.create(:miq_dialog_provision) }
+  let(:service_dialog) { FactoryGirl.create(:dialog) }
+  let(:catalog_item_options) do
+    {
+      :name         => 'Atomic Service Template',
+      :service_type => 'atomic',
+      :prov_type    => 'amazon',
+      :display      => 'false',
+      :description  => 'a description',
+      :config_info  => {
+        :miq_request_dialog_name => request_dialog.name,
+        :placement_auto          => [true, 1],
+        :number_of_vms           => [1, '1'],
+        :src_vm_id               => [vm.id, vm.name],
+        :vm_name                 => vm.name,
+        :schedule_type           => ['immediately', 'Immediately on Approval'],
+        :instance_type           => [flavor.id, flavor.name],
+        :src_ems_id              => [ems.id, ems.name],
+        :provision               => {
+          :fqname    => ra1.fqname,
+          :dialog_id => service_dialog.id
+        },
+        :retirement              => {
+          :fqname    => ra2.fqname,
+          :dialog_id => service_dialog.id
         }
       }
-    end
+    }
+  end
 
+  describe '.create_catalog_item' do
     it 'creates and returns a catalog item' do
       service_template = ServiceTemplate.create_catalog_item(catalog_item_options, user)
 
@@ -545,6 +584,99 @@ describe ServiceTemplate do
       expect(service_template.resource_actions.first.dialog).to eq(service_dialog)
       expect(service_template.resource_actions.last.dialog).to eq(service_dialog)
       expect(service_template.config_info).to eq(catalog_item_options[:config_info])
+    end
+  end
+
+  describe '#update_catalog_item' do
+    let(:new_vm) { FactoryGirl.create(:vm_amazon, :ext_management_system => ems) }
+    let(:updated_catalog_item_options) do
+      {
+        :name        => 'Updated Template Name',
+        :display     => 'false',
+        :description => 'a description',
+        :config_info => {
+          :miq_request_dialog_name => request_dialog.name,
+          :placement_auto          => [true, 1],
+          :number_of_vms           => [1, '1'],
+          :src_vm_id               => [new_vm.id, new_vm.name],
+          :vm_name                 => new_vm.name,
+          :schedule_type           => ['immediately', 'Immediately on Approval'],
+          :instance_type           => [flavor.id, flavor.name],
+          :src_ems_id              => [ems.id, ems.name],
+          :provision               => {
+            :fqname    => ra1.fqname,
+            :dialog_id => nil
+          },
+          :reconfigure             => {
+            :fqname    => ra3.fqname,
+            :dialog_id => service_dialog.id
+          }
+        }
+      }
+    end
+
+    before do
+      @catalog_item = ServiceTemplate.create_catalog_item(catalog_item_options, user)
+      @catalog_item.update_attributes!(:options => @catalog_item.options.merge(:foo => 'bar'))
+    end
+
+    it 'updates the catalog item' do
+      updated = @catalog_item.update_catalog_item(updated_catalog_item_options, user)
+
+      # Removes Retirement / Adds Reconfigure
+      expect(updated.resource_actions.pluck(:action)).to match_array(%w(Provision Reconfigure))
+      expect(updated.resource_actions.first.dialog_id).to be_nil # Removes the dialog from Provision
+      expect(updated.resource_actions.last.dialog).to eq(service_dialog)
+      expect(updated.name).to eq('Updated Template Name')
+      expect(updated.service_resources.first.resource.source_id).to eq(new_vm.id) # Validate request update
+      expect(updated.config_info).to eq(updated_catalog_item_options[:config_info])
+      expect(updated.options.key?(:foo)).to be_truthy # Test that the options were merged
+    end
+
+    it 'does not allow service_type to be changed' do
+      expect do
+        @catalog_item.update_catalog_item({:service_type => 'new'}, user)
+      end.to raise_error(StandardError, /service_type cannot be changed/)
+    end
+
+    it 'does not allow prov_type to be changed' do
+      expect do
+        @catalog_item.update_catalog_item({:prov_type => 'new'}, user)
+      end.to raise_error(StandardError, /prov_type cannot be changed/)
+    end
+
+    it 'accepts prov_type and service_type if they are not changed' do
+      expect do
+        @catalog_item.update_catalog_item({:name         => 'new_name',
+                                           :service_type => @catalog_item.service_type,
+                                           :prov_type    => @catalog_item.prov_type}, user)
+      end.to change(@catalog_item, :name)
+      expect(@catalog_item.reload.name).to eq('new_name')
+    end
+
+    it 'allows for update without the presence of config_info' do
+      expect do
+        @catalog_item.update_catalog_item(:name => 'new_name')
+      end.to change(@catalog_item, :name)
+      expect(@catalog_item.reload.name).to eq('new_name')
+    end
+  end
+
+  describe "#provision_request" do
+    it "provision's a service template " do
+      user = FactoryGirl.create(:user, :userid => "barney")
+      resource_action = FactoryGirl.create(:resource_action, :action => "Provision")
+      service_template = FactoryGirl.create(:service_template,
+                                            :resource_actions => [resource_action])
+      hash = {:target => service_template, :initiator => 'control'}
+      workflow = instance_double(ResourceActionWorkflow)
+      expect(ResourceActionWorkflow).to(receive(:new)
+        .with({}, user, resource_action, hash).and_return(workflow))
+      expect(workflow).to receive(:submit_request)
+      expect(workflow).to receive(:set_value).with('ordered_by', 'fred')
+      expect(workflow).to receive(:set_value).with(:initiator, 'control')
+
+      service_template.provision_request(user, 'ordered_by' => 'fred', :initiator => 'control')
     end
   end
 end

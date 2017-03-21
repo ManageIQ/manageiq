@@ -3,6 +3,51 @@ describe RssFeed do
 
   before(:each) { Kernel.silence_warnings { RssFeed.const_set(:YML_DIR, Y_DIR) } }
 
+  context "with vms" do
+    before do
+      Tenant.seed
+      allow(User).to receive_messages(:server_timezone => "UTC")
+      RssFeed.sync_from_yml_file("newest_vms")
+    end
+
+    let(:owner_tenant)    { FactoryGirl.create(:tenant) }
+    let(:owner_group)     { FactoryGirl.create(:miq_group, :tenant => owner_tenant) }
+    let(:owner_user)      { FactoryGirl.create(:user, :miq_groups => [owner_group]) }
+    let!(:owned_vm)       { FactoryGirl.create(:vm_vmware, :tenant => owner_tenant) }
+    let!(:tenant_root_vm) { FactoryGirl.create(:vm_vmware, :tenant => Tenant.root_tenant) }
+    let(:rss_feed)        { RssFeed.find_by(:name => "newest_vms") }
+
+    it "#generate 1 vms with owner_tenant tenant in newest_vms rss" do
+      [owner_group, owner_user].each do |user_or_group|
+        User.with_user(owner_user) do
+          feed_container = rss_feed.generate(nil, nil, nil, user_or_group)
+
+          expect(feed_container[:text]).to eq <<-EOXML
+<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<rss version=\"2.0\">
+  <channel>
+    <title>Recently Discovered VMs</title>
+    <link>https://localhost:3000/alert/rss?feed=newest_vms</link>
+    <description>Virtual machines added</description>
+    <language>en-us</language>
+    <ttl>40</ttl>
+    <item>
+      <title>#{owned_vm.name} - location unknown</title>
+      <description>#{owned_vm.name} is a #{owned_vm.vendor_display} VM located at "#{owned_vm.location}"</description>
+      <pubDate>#{owned_vm.created_on.rfc2822}</pubDate>
+      <guid>https://localhost:3000/vm/show/#{owned_vm.id}</guid>
+      <link>https://localhost:3000/vm/show/#{owned_vm.id}</link>
+    </item>
+  </channel>
+</rss>
+          EOXML
+
+          expect(feed_container[:content_type]).to eq('application/rss+xml')
+        end
+      end
+    end
+  end
+
   context "with 2 hosts" do
     before(:each) do
       @host1 = FactoryGirl.create(:host,           :created_on => Time.utc(2013, 1, 1, 0, 0, 0))

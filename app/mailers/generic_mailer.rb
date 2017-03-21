@@ -19,7 +19,7 @@ class GenericMailer < ActionMailer::Base
       rcpts = [msg.to].flatten
       rcpts.each do |rcpt|
         rcpt.split(',').each do |to|
-          options.merge! :to => to
+          options[:to] = to
           individual =  send(method, options)
           begin
             individual.deliver_now

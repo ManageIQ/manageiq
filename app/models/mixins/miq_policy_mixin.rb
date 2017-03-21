@@ -28,7 +28,7 @@ module MiqPolicyMixin
     tag_list(:ns => ns, :cat => cat).split.collect do|t|
       klass, id = t.split("/")
       next unless ["miq_policy", "miq_policy_set"].include?(klass)
-      policy = klass.camelize.constantize.find_by_id(id.to_i)
+      policy = klass.camelize.constantize.find_by(:id => id.to_i)
       mode.nil? || policy.mode == mode ? policy : nil
     end.compact
   end

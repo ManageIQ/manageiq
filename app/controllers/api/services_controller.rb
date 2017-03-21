@@ -3,6 +3,7 @@ module Api
     include Subcollections::ServiceDialogs
     include Subcollections::Tags
     include Subcollections::Vms
+    include Subcollections::OrchestrationStacks
 
     def create_resource(_type, _id, data)
       validate_service_data(data)
@@ -10,6 +11,11 @@ module Api
       service    = collection_class(:services).create(attributes)
       validate_service(service)
       service
+    end
+
+    def edit_resource(type, id, data)
+      attributes = build_service_attributes(data)
+      super(type, id, attributes)
     end
 
     def reconfigure_resource(type, id = nil, data = nil)
@@ -109,19 +115,19 @@ module Api
     end
 
     def fetch_ext_management_system(data)
-      orchestration_manager_id = parse_id(data, :orchestration_manager)
+      orchestration_manager_id = parse_id(data, :providers)
       raise BadRequestError, 'Missing ExtManagementSystem identifier id' if orchestration_manager_id.nil?
       resource_search(orchestration_manager_id, :ext_management_systems, ExtManagementSystem)
     end
 
     def fetch_service(data)
-      service_id = parse_id(data, :service)
+      service_id = parse_id(data, :services)
       raise BadRequestError, 'Missing Service identifier id' if service_id.nil?
       resource_search(service_id, :services, Service)
     end
 
     def fetch_orchestration_template(data)
-      orchestration_template_id = parse_id(data, :orchestration_template)
+      orchestration_template_id = parse_id(data, :orchestration_templates)
       raise BadRequestError, 'Missing OrchestrationTemplate identifier id' if orchestration_template_id.nil?
       resource_search(orchestration_template_id, :orchestration_templates, OrchestrationTemplate)
     end

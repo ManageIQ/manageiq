@@ -19,9 +19,25 @@ describe Notification, :type => :model do
         expect(user.unseen_notifications.count).to eq(1)
       end
 
-      it 'broadcasts the message through ActionCable' do
-        expect_any_instance_of(ActionCable::Server::Base).to receive(:broadcast)
-        subject # force the creation of the db object
+      context 'asynchronous notifications' do
+        before { stub_settings(:server => {:asynchronous_notifications => async}) }
+        context 'enabled' do
+          let(:async) { true }
+
+          it 'broadcasts the message through ActionCable' do
+            expect_any_instance_of(ActionCable::Server::Base).to receive(:broadcast)
+            subject # force the creation of the db object
+          end
+        end
+
+        context 'disabled' do
+          let(:async) { false }
+
+          it 'broadcasts the message through ActionCable' do
+            expect_any_instance_of(ActionCable::Server::Base).not_to receive(:broadcast)
+            subject # force the creation of the db object
+          end
+        end
       end
 
       context 'tenant includes user without access to the subject (vm)' do

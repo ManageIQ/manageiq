@@ -6,6 +6,7 @@ class CloudVolume < ApplicationRecord
   include AsyncDeleteMixin
   include AvailabilityMixin
   include SupportsFeatureMixin
+  include CloudTenancyMixin
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ExtManagementSystem"
   belongs_to :availability_zone
@@ -130,4 +131,7 @@ class CloudVolume < ApplicationRecord
     raise NotImplementedError, _("raw_delete_volume must be implemented in a subclass")
   end
 
+  def available_vms
+    raise NotImplementedError, _("available_vms must be implemented in a subclass")
+  end
 end

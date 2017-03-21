@@ -235,7 +235,7 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
 
   def manageable(taskid = nil)
     unless taskid.nil?
-      task = MiqTask.find_by_id(taskid)
+      task = MiqTask.find_by(:id => taskid)
       task.state_active if task
     end
 
@@ -300,7 +300,7 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
 
   def introspect(taskid = nil)
     unless taskid.nil?
-      task = MiqTask.find_by_id(taskid)
+      task = MiqTask.find_by(:id => taskid)
       task.state_active if task
     end
 
@@ -374,7 +374,7 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
 
   def provide(taskid = nil)
     unless taskid.nil?
-      task = MiqTask.find_by_id(taskid)
+      task = MiqTask.find_by(:id => taskid)
       task.state_active if task
     end
 
@@ -487,7 +487,7 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
 
   def destroy_ironic(taskid = nil)
     unless taskid.nil?
-      task = MiqTask.find_by_id(taskid)
+      task = MiqTask.find_by(:id => taskid)
       task.state_active if task
     end
 

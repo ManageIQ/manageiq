@@ -34,7 +34,7 @@ module MiqAeEvent
     if target.kind_of?(Array)
       klass, id = target
       klass = Object.const_get(klass)
-      target = klass.find_by_id(id)
+      target = klass.find_by(:id => id)
       raise "Unable to find object with class: [#{klass}], Id: [#{id}]" if target.nil?
     end
 
@@ -70,7 +70,7 @@ module MiqAeEvent
         raise "Unexpected class #{input[:vmdb_class]} for #{hash[:key]} -- expected class=#{hash[:class].name}" if input[:vmdb_class] != hash[:class].name
         raise "Invalid vmdb_id=#{input[:vmdb_id].inspect} for #{hash[:key]}" unless input[:vmdb_id].kind_of?(Numeric)
 
-        vmdb_object = hash[:class].find_by_id(input[:vmdb_id])
+        vmdb_object = hash[:class].find_by(:id => input[:vmdb_id])
         raise "VMDB Object not found" if vmdb_object.nil?
       elsif inputs[hash[:key]].kind_of?(hash[:class])
         vmdb_object = inputs.delete(hash[:key])
@@ -103,9 +103,9 @@ module MiqAeEvent
       # TODO: Need to setup inputs for policy.
       unless inputs
         inputs = {}
-        inputs[:vm]                    = Vm.find_by_id(aevent[:vm_id])                   unless aevent[:vm_id].nil?
-        inputs[:host]                  = Host.find_by_id(aevent[:host_id])               unless aevent[:host_id].nil?
-        inputs[:ext_management_system] = ExtManagementSystem.find_by_id(aevent[:ems_id]) unless aevent[:ems_id].nil?
+        inputs[:vm]                    = Vm.find_by(:id => aevent[:vm_id])                   unless aevent[:vm_id].nil?
+        inputs[:host]                  = Host.find_by(:id => aevent[:host_id])               unless aevent[:host_id].nil?
+        inputs[:ext_management_system] = ExtManagementSystem.find_by(:id => aevent[:ems_id]) unless aevent[:ems_id].nil?
       end
 
       target     = inputs.delete(:target) || inputs['vm']

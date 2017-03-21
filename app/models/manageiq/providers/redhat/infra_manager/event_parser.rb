@@ -30,7 +30,7 @@ module ManageIQ::Providers::Redhat::InfraManager::EventParser
     _log.debug { "#{log_header}event: [#{event.inspect}]" }
 
     # Connect back to RHEV to get the actual user_name
-    ems       = ManageIQ::Providers::Redhat::InfraManager.find_by_id(ems_id)
+    ems       = ManageIQ::Providers::Redhat::InfraManager.find_by(:id => ems_id)
     user_href = ems_ref_from_object_in_event(event[:user])
     username  = nil
     if ems && user_href

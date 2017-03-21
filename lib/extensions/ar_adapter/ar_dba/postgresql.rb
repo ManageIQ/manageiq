@@ -11,6 +11,14 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
     select_value("SELECT pg_backend_pid()").to_i
   end
 
+  def xlog_location
+    select_value("SELECT pg_current_xlog_insert_location()")
+  end
+
+  def xlog_location_diff(lsn1, lsn2)
+    select_value("SELECT pg_xlog_location_diff(#{quote(lsn1)}, #{quote(lsn2)})").to_i
+  end
+
   def client_connections
     data = select(<<-SQL, "Client Connections").to_a
                   SELECT client_addr   AS client_address

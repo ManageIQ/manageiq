@@ -8,8 +8,10 @@ module Metric::CiMixin::Capture
   def queue_name_for_metrics_collection
     ems = if self.kind_of?(ExtManagementSystem)
             self
-          elsif self.respond_to?(:ext_management_system)
+          elsif respond_to?(:ext_management_system) && ext_management_system.present?
             ext_management_system
+          elsif respond_to?(:old_ext_management_system) && old_ext_management_system.present?
+            old_ext_management_system
           end
     raise _("Unsupported type %{name} (id: %{number})") % {:name => self.class.name, :number => id} if ems.nil?
     ems.metrics_collector_queue_name

@@ -1,15 +1,21 @@
 class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
+  RETIREMENT_ENTRY_POINTS = {
+    'yes_without_playbook' => '/Service/Generic/StateMachines/GenericLifecycle/Retire_Basic_Resource',
+    'no_without_playbook'  => '/Service/Generic/StateMachines/GenericLifecycle/Retire_Basic_Resource_None',
+    'no_with_playbook'     => '/Service/Generic/StateMachines/GenericLifecycle/Retire_Advanced_Resource_None',
+    'pre_with_playbook'    => '/Service/Generic/StateMachines/GenericLifecycle/Retire_Advanced_Resource_Pre',
+    'post_with_playbook'   => '/Service/Generic/StateMachines/GenericLifecycle/Retire_Advanced_Resource_Post'
+  }.freeze
+  private_constant :RETIREMENT_ENTRY_POINTS
+
   def self.default_provisioning_entry_point(_service_type)
     '/Service/Generic/StateMachines/GenericLifecycle/provision'
   end
 
   def self.default_retirement_entry_point
-    '/Service/Generic/StateMachines/GenericLifecycle/retire'
+    RETIREMENT_ENTRY_POINTS['yes_without_playbook']
   end
 
-  def job_template(action)
-    resource_actions.find_by!(:action => action).configuration_template
-  end
 
   # create ServiceTemplate and supporting ServiceResources and ResourceActions
   # options
@@ -44,28 +50,24 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
           next unless dialog_name
 
           job_template = enhanced_config.fetch_path(action, :configuration_template)
-          enhanced_config[action][:dialog] =
-            Dialog::AnsiblePlaybookServiceDialog.create_dialog(dialog_name, job_template)
+
+          new_dialog = service_template.send(:create_new_dialog, dialog_name, job_template)
+          enhanced_config[action][:dialog] = new_dialog
+          service_template.options[:config_info][action][:dialog_id] = new_dialog.id
         end
         service_template.create_resource_actions(enhanced_config)
       end
     end
   end
 
-  def self.prepare_job_template_and_dialog(action, service_name, description, config_info)
-    job_template = create_job_template("#{service_name}_#{action}", description, config_info[action])
-    config_info[action][:configuration_template] = job_template
-
-    if config_info[:new_dialog_name]
-      config_info[action][:dialog] =
-        Dialog::AnsiblePlaybookService.new.create_dialog(config_info[:new_dialog_name], job_template)
-    end
+  def create_new_dialog(dialog_name, job_template)
+    Dialog::AnsiblePlaybookServiceDialog.create_dialog(dialog_name, job_template)
   end
-  private_class_method :prepare_job_template_and_dialog
+  private :create_new_dialog
 
   def self.create_job_templates(service_name, description, config_info, auth_user)
     [:provision, :retirement, :reconfigure].each_with_object({}) do |action, hash|
-      next unless config_info[action]
+      next unless config_info[action] && config_info[action].key?(:playbook_id)
       hash[action] = { :configuration_template => create_job_template("miq_#{service_name}_#{action}", description, config_info[action], auth_user) }
     end
   end
@@ -74,7 +76,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   def self.create_job_template(name, description, info, auth_user)
     tower, params = build_parameter_list(name, description, info)
 
-    task_id = ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript.create_in_provider_queue(tower.id, params, auth_user)
+    task_id = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript.create_in_provider_queue(tower.id, params, auth_user)
     task = MiqTask.wait_for_taskid(task_id)
     raise task.message unless task.status == "Ok"
     task.task_results
@@ -82,14 +84,14 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   private_class_method :create_job_template
 
   def self.build_parameter_list(name, description, info)
-    playbook = ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook.find(info[:playbook_id])
+    playbook = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook.find(info[:playbook_id])
     tower = playbook.manager
     params = {
       :name                     => name,
       :description              => description || '',
       :project                  => playbook.configuration_script_source.manager_ref,
       :playbook                 => playbook.name,
-      :inventory                => tower.inventory_root_groups.first.ems_ref,
+      :inventory                => tower.inventory_root_groups.find_by!(:name => 'Demo Inventory').ems_ref,
       :ask_variables_on_launch  => true,
       :ask_limit_on_launch      => true,
       :ask_inventory_on_launch  => true,
@@ -107,13 +109,46 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   private_class_method :build_parameter_list
 
   def self.validate_config_info(info)
-    info[:provision][:fqname] ||= default_provisioning_entry_point('atomic') if info.key?(:provision)
-    info[:retirement][:fqname] ||= default_retirement_entry_point if info.key?(:retirement)
+    info[:provision][:fqname]   ||= default_provisioning_entry_point('atomic') if info.key?(:provision)
     info[:reconfigure][:fqname] ||= default_reconfiguration_entry_point if info.key?(:reconfigure)
+
+    if info.key?(:retirement)
+      info[:retirement][:fqname] ||= RETIREMENT_ENTRY_POINTS[info[:retirement][:remove_resources]]
+      info[:retirement][:fqname] ||= default_retirement_entry_point
+    else
+      info[:retirement] = {:fqname => default_retirement_entry_point}
+    end
 
     # TODO: Add more validation for required fields
 
     info
   end
   private_class_method :validate_config_info
+
+  def validate_update_config_info(options)
+    opts = super
+    self.class.send(:validate_config_info, opts)
+  end
+
+  def job_template(action)
+    resource_actions.find_by!(:action => action.to_s.capitalize).configuration_template
+  end
+
+  def update_catalog_item(options, auth_user = nil)
+    config_info = validate_update_config_info(options)
+    name = options[:name]
+    description = options[:description]
+    [:provision, :retirement, :reconfigure].each do |action|
+      next unless config_info[action]
+      info = config_info[action]
+      new_dialog = create_new_dialog(info[:new_dialog_name], job_template(action)) if info[:new_dialog_name]
+      config_info[action][:dialog_id] = new_dialog.id if new_dialog
+
+      next unless info.key?(:playbook_id)
+      tower, params = self.class.send(:build_parameter_list, "miq_#{name}_#{action}", description, info)
+      params[:manager_ref] = job_template(action).manager_ref
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript.update_in_provider_queue(tower.id, params, auth_user)
+    end
+    super
+  end
 end

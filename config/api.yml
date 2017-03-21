@@ -88,6 +88,36 @@
        :post:
        - :name: create
          :identifier: alert_status_action_new
+  :alert_definitions:
+    :description: Alert Definitions
+    :identifier: alert_definition
+    :options:
+    - :collection
+    :verbs: *gpd
+    :klass: MiqAlert
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: alert_definitions_show_list
+      :post:
+      - :name: create
+        :identifier: alert_definition_new
+      - :name: edit
+        :identifier: alert_definition_edit
+      - :name: delete
+        :identifier: alert_definition_delete
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: alert_definition_show
+      :post:
+      - :name: edit
+        :identifier: alert_definition_edit
+      - :name: delete
+        :identifier: alert_definition_delete
+      :delete:
+      - :name: delete
+        :identifier: alert_definition_delete
   :alerts:
     :description: Alerts
     :identifier: alert
@@ -204,7 +234,8 @@
     :description: Authentications
     :options:
     - :collection
-    :verbs: *gpd
+    - :subcollection
+    :verbs: *gpppd
     :klass: Authentication
     :collection_actions:
       :get:
@@ -213,6 +244,8 @@
       :post:
       - :name: delete
         :identifier: embedded_automation_manager_credentials_delete
+      - :name: edit
+        :identifier: embedded_automation_manager_credentials_edit
     :resource_actions:
       :get:
       - :name: read
@@ -220,9 +253,15 @@
       :post:
       - :name: delete
         :identifier: embedded_automation_manager_credentials_delete
+      - :name: edit
+        :identifier: embedded_automation_manager_credentials_edit
       :delete:
       - :name: delete
         :identifier: embedded_automation_manager_credentials_delete
+    :subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: embedded_automation_manager_credentials_view
   :automate:
     :description: Automate
     :options:
@@ -440,6 +479,24 @@
       :get:
       - :name: read
         :identifier: miq_cloud_networks_view
+  :cloud_volumes:
+    :description: Cloud Volumes
+    :identifier: cloud_volume
+    :options:
+    - :collection
+    :verbs: *gp
+    :klass: CloudVolume
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: cloud_volume_show_list
+      :post:
+      - :name: query
+        :identifier: cloud_volume_show_list
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: cloud_volume
   :clusters:
     :description: Clusters
     :identifier: ems_cluster
@@ -525,6 +582,8 @@
     - :collection
     :verbs: *g
     :klass: ConfigurationScriptPayload
+    :subcollections:
+      - :authentications
     :collection_actions:
       :get:
       - :name: read
@@ -537,16 +596,31 @@
     :description: Configuration Script Source
     :options:
     - :collection
-    :verbs: *g
+    :verbs: *gpppd
     :klass: ConfigurationScriptSource
     :collection_actions:
       :get:
       - :name: read
         :identifier: embedded_configuration_script_source_view
+      :post:
+      - :name: edit
+        :identifier: embedded_configuration_script_source_edit
+      - :name: delete
+        :identifier: embedded_configuration_script_source_delete
+      - :name: create
+        :identifier: embedded_configuration_script_source_add
     :resource_actions:
       :get:
       - :name: read
         :identifier: embedded_configuration_script_source_view
+      :post:
+      - :name: edit
+        :identifier: embedded_configuration_script_source_edit
+      - :name: delete
+        :identifier: embedded_configuration_script_source_delete
+      :delete:
+      - :name: delete
+        :identifier: embedded_configuration_script_source_delete
   :container_deployments:
     :description: Container Provider Deployment
     :identifier: container_deployment
@@ -927,6 +1001,20 @@
       :post:
       - :name: mark_as_seen
       - :name: delete
+  :orchestration_stacks:
+    :description: Orchestration Stacks
+    :options:
+    - :subcollection
+    :verbs: *g
+    :klass: OrchestrationStack
+    :subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: orchestration_stack_view
+    :subresource_actions:
+      :get:
+      - :name: read
+        :identifier: orchestration_stack_view
   :orchestration_templates:
     :description: Orchestration Template
     :identifier: orchestration_templates_accord
@@ -1272,6 +1360,24 @@
       :delete:
       - :name: delete
         :identifier: chargeback_rates_delete
+  :regions:
+    :description: Regions
+    :identifier: region
+    :options:
+    - :collection
+    :verbs: *gp
+    :klass: MiqRegion
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: region
+      :post:
+      - :name: query
+        :identifier: region
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: region
   :reports:
     :description: Reports
     :identifier: miq_report
@@ -1737,6 +1843,8 @@
       :post:
       - :name: edit
         :identifier: catalogitem_edit
+      - :name: delete
+        :identifier: catalogitem_delete
       :delete:
       - :name: delete
         :identifier: catalogitem_delete
@@ -1775,6 +1883,7 @@
     - :tags
     - :service_dialogs
     - :vms
+    - :orchestration_stacks
     :collection_actions:
       :get:
       - :name: read
@@ -1823,6 +1932,8 @@
         :identifier: service_admin
       - :name: suspend
         :identifier: service_admin
+      - :name: delete
+        :identifier: service_delete
       :delete:
       - :name: delete
         :identifier: service_delete
@@ -1967,6 +2078,8 @@
         :disabled: true
       - :name: set_ownership
         :identifier: miq_template_ownership
+      - :name: delete
+        :identifier: miq_template_delete
       :delete:
       - :name: delete
         :identifier: miq_template_delete
@@ -2262,6 +2375,8 @@
       - :name: read
         :identifier: vm_snapshot_view
       :post:
+      - :name: revert
+        :identifier: vm_snapshot_revert
       - :name: delete
         :identifier: vm_snapshot_delete
       :delete:

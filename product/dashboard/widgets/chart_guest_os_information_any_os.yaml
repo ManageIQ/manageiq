@@ -2,6 +2,7 @@ description: chart_guest_os_information_any_os
 title: Guest OS Information
 content_type: chart
 options:
+  :timezone_matters: false
 visibility:
   :roles:
   - _ALL_

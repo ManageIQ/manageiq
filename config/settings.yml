@@ -96,24 +96,30 @@
     :keep_drift_states: 6.months
     :purge_window_size: 10000
 :ems:
+  :ems_openstack:
+    :excon:
+      :omit_default_port: true
+      :read_timeout: 60
   :ems_redhat:
     :resolve_ip_addresses: true
+    :inventory:
+      :read_timeout: 1.hour
     :service:
       :read_timeout: 1.hour
   :ems_kubernetes:
     :miq_namespace: management-infra
     :image_inspector_registry: docker.io
     :image_inspector_repository: openshift/image-inspector
-  :ems_azure:
-    :disabled_regions: []
-    :additional_regions: {}
 :event_streams:
   :history:
     :keep_events: 6.months
     :purge_window_size: 1000
 :ems_refresh:
+  :debug_trace: false
   :capture_vm_created_on_date: false
   :ansible_tower_automation:
+    :refresh_interval: 15.minutes
+  :embedded_ansible_automation:
     :refresh_interval: 15.minutes
   :foreman_configuration:
     :refresh_interval: 15.minutes
@@ -126,14 +132,10 @@
     :refresh_interval: 15.minutes
   :openshift:
     :refresh_interval: 15.minutes
-  :openshift_enterprise:
-    :refresh_interval: 15.minutes
   :raise_vm_snapshot_complete_if_created_within: 15.minutes
   :refresh_interval: 24.hours
   :scvmm:
     :refresh_interval: 15.minutes
-  :vmware_cloud:
-    :get_public_images: false
 :event_handling:
   :bottleneck_event_groups:
     :Capacity:
@@ -179,7 +181,6 @@
       - USER_ADD_VM_TEMPLATE_FINISHED_SUCCESS
       - USER_FAILED_ADD_HOST
       - USER_FAILED_ADD_VM_TEMPLATE
-      - virtualMachines_write_EndRequest
       - GceOperationDone_compute.instances.insert
       - VmConnectedEvent
       - VmCreatedEvent
@@ -190,6 +191,9 @@
       - aggregate.removehost.end
       - aggregate.updateprop.end
       - aggregate.updatemetadata.end
+      - identity.project.created
+      - identity.project.deleted
+      - identity.project.updated
       - image.update
       - image.create
       - image.upload
@@ -320,7 +324,6 @@
       - USER_REMOVE_VM_FINISHED
       - USER_REMOVE_VM_TEMPLATE
       - USER_REMOVE_VM_TEMPLATE_FINISHED
-      - virtualMachines_delete_EndRequest
       - GceOperationDone_compute.instances.delete
       - VmDisconnectedEvent
       - VmRemovedEvent
@@ -671,9 +674,6 @@
       - USER_SUSPEND_VM_FINISH_FAILURE
       - USER_SUSPEND_VM_FINISH_SUCCESS
       - USER_SUSPEND_VM_OK
-      - virtualMachines_deallocate_EndRequest
-      - virtualMachines_start_EndRequest
-      - virtualMachines_restart_EndRequest
       - GceOperationDone_compute.instances.start
       - GceOperationDone_compute.instances.stop
       - VM_DOWN
@@ -950,11 +950,6 @@
     :password:
     :port:
     :user:
-  :azure:
-    :host:
-    :password:
-    :port:
-    :user:
   :gce:
     :host:
     :password:
@@ -986,8 +981,6 @@
   :level_rails: info
   :level_lenovo: info
   :level_lenovo_in_evm: error
-  :level_azure: warn
-  :level_azure_in_evm: error
   :level_mw: info
   :level_mw_in_evm: error
   :level_datawarehouse: info
@@ -1041,6 +1034,8 @@
   :maindb: ExtManagementSystem
   :container_deployment_wizard: false
   :datawarehouse_manager: false
+:prototype:
+  :monitoring: false
 :recommendations:
   :cpu_minimum: 1
   :mem_minimum: 32.megabytes
@@ -1060,6 +1055,7 @@
 :repository_scanning:
   :defaultsmartproxy:
 :server:
+  :asynchronous_notifications: true
   :case_sensitive_name_search: false
   :company: My Company
   :console_proxy_disabled: true
@@ -1197,6 +1193,7 @@
       :starting_timeout: 10.minutes
       :stopping_timeout: 10.minutes
     :embedded_ansible_worker:
+      :starting_timeout: 20.minutes
       :poll: 10.seconds
       :memory_threshold: 0.megabytes
     :ems_refresh_core_worker:
@@ -1214,19 +1211,10 @@
         :poll: 1.seconds
       :event_catcher_ansible_tower:
         :poll: 20.seconds
+      :event_catcher_embedded_ansible:
+        :poll: 20.seconds
       :event_catcher_redhat:
         :poll: 15.seconds
-      :event_catcher_vmware:
-        :flooding_monitor_enabled: true
-        :poll: 1.seconds
-        :ems_event_max_wait: 60
-      :event_catcher_vmware_cloud:
-        :poll: 15.seconds
-        :duration: 10.seconds
-        :capacity: 50
-        :amqp_port: 5672
-        :amqp_heartbeat: 30
-        :amqp_recovery_attempts: 4
       :event_catcher_openstack:
         :poll: 15.seconds
         :topics:
@@ -1267,24 +1255,22 @@
         :amqp_recovery_attempts: 4
         :ceilometer:
           :event_types_regex: '\A(firewall|floatingip|gateway|net|port|router|subnet|security_group|vpn)'
-      :event_catcher_azure:
-        :poll: 15.seconds
       :event_catcher_hawkular:
         :poll: 10.seconds
+      :event_catcher_hawkular_datawarehouse:
+        :alertable_tenants: ['_system', '_ops']
+        :poll: 1.minute
       :event_catcher_google:
         :poll: 15.seconds
       :event_catcher_kubernetes:
         :poll: 1.seconds
       :event_catcher_openshift:
         :poll: 1.seconds
-      :event_catcher_openshift_enterprise:
-        :poll: 1.seconds
-      :event_catcher_atomic_enterprise:
-        :poll: 1.seconds
       :event_catcher_cinder:
         :poll: 10.seconds
       :event_catcher_swift:
         :poll: 10.seconds
+      :event_catcher_openstack_service: "auto"
     :queue_worker_base:
       :defaults:
         :cpu_usage_threshold: 100.percent
@@ -1298,18 +1284,15 @@
           :memory_threshold: 400.megabytes
           :nice_delta: 3
           :poll_method: :escalate
-        :ems_metrics_collector_worker_azure: {}
         :ems_metrics_collector_worker_google: {}
         :ems_metrics_collector_worker_kubernetes:
           :metrics_port: 5000
           :metrics_path: "/hawkular/metrics"
         :ems_metrics_collector_worker_openshift: {}
-        :ems_metrics_collector_worker_openshift_enterprise: {}
         :ems_metrics_collector_worker_openstack: {}
         :ems_metrics_collector_worker_openstack_infra: {}
         :ems_metrics_collector_worker_openstack_network: {}
         :ems_metrics_collector_worker_redhat: {}
-        :ems_metrics_collector_worker_vmware: {}
         :ems_metrics_openstack_default_service: "auto"
       :ems_metrics_processor_worker:
         :count: 2
@@ -1325,8 +1308,7 @@
           :queue_timeout: 120.minutes
           :restart_interval: 2.hours
         :ems_refresh_worker_ansible_tower_automation: {}
-        :ems_refresh_worker_azure: {}
-        :ems_refresh_worker_azure_network: {}
+        :ems_refresh_worker_embedded_ansible_automation: {}
         :ems_refresh_worker_foreman_configuration: {}
         :ems_refresh_worker_foreman_provisioning: {}
         :ems_refresh_worker_google: {}
@@ -1335,15 +1317,11 @@
         :ems_refresh_worker_kubernetes: {}
         :ems_refresh_worker_microsoft: {}
         :ems_refresh_worker_openshift: {}
-        :ems_refresh_worker_openshift_enterprise: {}
         :ems_refresh_worker_openstack: {}
         :ems_refresh_worker_openstack_infra: {}
         :ems_refresh_worker_openstack_network: {}
         :ems_refresh_worker_nuage_network: {}
         :ems_refresh_worker_redhat: {}
-        :ems_refresh_worker_vmware: {}
-        :ems_refresh_worker_vmware_cloud: {}
-        :ems_refresh_worker_vmware_cloud_network: {}
         :ems_refresh_worker_cinder: {}
         :ems_refresh_worker_swift: {}
       :event_handler:

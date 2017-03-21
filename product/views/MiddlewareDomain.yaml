@@ -34,6 +34,11 @@ headers:
 - Feed
 - Provider
 
+include:
+  ext_management_system:
+    columns:
+      - name
+
 # Condition(s) string for the SQL query
 conditions:
 

@@ -9,6 +9,7 @@ module ManageIQ::Providers
     supports_not :smartstate_analysis
     supports_not :block_storage
     supports_not :object_storage
+    supports_not :cloud_object_store_container_create
 
     belongs_to :parent_manager,
                :foreign_key => :parent_ems_id,

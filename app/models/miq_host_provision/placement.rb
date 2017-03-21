@@ -1,14 +1,14 @@
 module MiqHostProvision::Placement
   def placement_ems
-    @placement_ems ||= ExtManagementSystem.find_by_id(get_option(:placement_ems_name))
+    @placement_ems ||= ExtManagementSystem.find_by(:id => get_option(:placement_ems_name))
   end
 
   def placement_cluster
-    @placement_cluster ||= EmsCluster.find_by_id(get_option(:placement_cluster_name))
+    @placement_cluster ||= EmsCluster.find_by(:id => get_option(:placement_cluster_name))
   end
 
   def placement_folder
-    @placement_folder ||= EmsFolder.find_by_id(get_option(:placement_folder_name))
+    @placement_folder ||= EmsFolder.find_by(:id => get_option(:placement_folder_name))
   end
 
   # TODO: Subclass

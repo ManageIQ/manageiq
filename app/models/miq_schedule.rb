@@ -58,7 +58,7 @@ class MiqSchedule < ApplicationRecord
     # puts "now:         #{Time.now.to_f}, #{Time.now}"
     # puts "params: #{params.inspect}"
 
-    sched = find_by_id(id)
+    sched = find_by(:id => id)
     unless sched
       _log.warn("unable to find schedule with id: [#{id}], skipping")
       return

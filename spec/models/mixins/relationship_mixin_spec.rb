@@ -196,6 +196,62 @@ describe RelationshipMixin do
       end
     end
 
+    describe "#add_parent" do
+      let(:folder1) { FactoryGirl.create(:ems_folder) }
+      let(:folder2) { FactoryGirl.create(:ems_folder) }
+      let(:vm)      { FactoryGirl.create(:vm) }
+
+      it "puts an object under another object" do
+        vm.with_relationship_type(test_rel_type) do
+          vm.add_parent(folder1)
+
+          expect(vm.parents).to eq([folder1])
+          expect(vm.parent).to eq(folder1)
+        end
+
+        expect(folder1.with_relationship_type(test_rel_type) { folder1.children }).to eq([vm])
+      end
+
+      it "allows an object to be placed under multiple parents" do
+        vm.with_relationship_type(test_rel_type) do
+          vm.add_parent(folder1)
+          vm.add_parent(folder2)
+
+          expect(vm.parents).to match_array([folder1, folder2])
+          expect { vm.parent }.to raise_error(RuntimeError, "Multiple parents found.")
+        end
+
+        expect(folder1.with_relationship_type(test_rel_type) { folder1.children }).to eq([vm])
+        expect(folder2.with_relationship_type(test_rel_type) { folder2.children }).to eq([vm])
+      end
+    end
+
+    describe "#parent=" do
+      let(:folder) { FactoryGirl.create(:ems_folder) }
+      let(:vm)     { FactoryGirl.create(:vm) }
+
+      it "puts an object under another object" do
+        vm.with_relationship_type(test_rel_type) do
+          vm.parent = folder
+          expect(vm.parent).to eq(folder)
+        end
+
+        expect(folder.with_relationship_type(test_rel_type) { folder.children }).to eq([vm])
+      end
+
+      it "moves an object that already has a parent under an another object" do
+        vm.with_relationship_type(test_rel_type) { vm.parent = FactoryGirl.create(:ems_folder) }
+        vm.reload
+
+        vm.with_relationship_type(test_rel_type) do
+          vm.parent = folder
+          expect(vm.parent).to eq(folder)
+        end
+
+        expect(folder.with_relationship_type(test_rel_type) { folder.children }).to eq([vm])
+      end
+    end
+
     it "#replace_children" do
       new_vms = (0...2).collect { FactoryGirl.create(:vm_vmware) }
       vms[0].with_relationship_type(test_rel_type) do |v|

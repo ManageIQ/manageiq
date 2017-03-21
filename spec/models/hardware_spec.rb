@@ -199,4 +199,69 @@ describe Hardware do
       expect(virtual_column_sql_value(Hardware, "ram_size_in_bytes")).to eq(5.megabytes)
     end
   end
+
+  # this is disks + ram_size_in_bytes
+  # so we end up with 4 different senarios
+  describe "#provisioned_storage" do
+    let(:hardware) { FactoryGirl.create(:hardware) }
+
+    context "with no disks AND no memory" do
+      it "calculates in ruby" do
+        expect(hardware.provisioned_storage).to eq(0) # TODO
+      end
+
+      it "calculates in the database" do
+        hardware
+        expect(virtual_column_sql_value(Hardware, "provisioned_storage")).to eq(0)
+      end
+    end
+
+    context "with disks AND no memory" do
+      before do
+        FactoryGirl.create(:disk, :size_on_disk => 1024, :size => 10_240, :hardware => hardware)
+        FactoryGirl.create(:disk, :size => 1024, :hardware => hardware)
+        FactoryGirl.create(:disk, :hardware => hardware)
+      end
+
+      it "calculates in ruby" do
+        expect(hardware.provisioned_storage).to eq(11_264)
+      end
+
+      it "calculates in the database" do
+        hardware
+        expect(virtual_column_sql_value(Hardware, "provisioned_storage")).to eq(11_264)
+      end
+    end
+
+    context "with no disks and memory" do
+      let(:hardware) { FactoryGirl.create(:hardware, :memory_mb => 5) }
+
+      it "works in ruby" do
+        expect(hardware.provisioned_storage).to eq(5.megabytes)
+      end
+
+      it "works in sql" do
+        hardware
+        expect(virtual_column_sql_value(Hardware, "provisioned_storage")).to eq(5.megabytes)
+      end
+    end
+
+    context "with disks and memory" do
+      let(:hardware) { FactoryGirl.create(:hardware, :memory_mb => 5) }
+      before do
+        FactoryGirl.create(:disk, :size_on_disk => 1024, :size => 10_240, :hardware => hardware)
+        FactoryGirl.create(:disk, :size => 1024, :hardware => hardware)
+        FactoryGirl.create(:disk, :hardware => hardware)
+      end
+
+      it "works in ruby" do
+        expect(hardware.provisioned_storage).to eq(5.megabytes + 11_264)
+      end
+
+      it "works in sql" do
+        hardware
+        expect(virtual_column_sql_value(Hardware, "provisioned_storage")).to eq(5.megabytes + 11_264)
+      end
+    end
+  end
 end

@@ -1,4 +1,4 @@
-class ManageIQ::Providers::ConfigurationManager < ::ExtManagementSystem
+class ManageIQ::Providers::ConfigurationManager < ManageIQ::Providers::BaseManager
   has_many :configured_systems,           :dependent => :destroy, :foreign_key => "manager_id"
   has_many :configuration_profiles,       :dependent => :destroy, :foreign_key => "manager_id"
   has_many :configuration_scripts,        :dependent => :destroy, :foreign_key => "manager_id"

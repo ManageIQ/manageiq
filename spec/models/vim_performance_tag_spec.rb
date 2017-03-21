@@ -20,7 +20,7 @@ describe VimPerformanceTag do
       @vms << FactoryGirl.create(:vm_vmware, :name => "none")
 
       @host = FactoryGirl.create(:host, :vms => @vms, :vmm_vendor => 'vmware', :vmm_product => "ESX", :type => "ManageIQ::Providers::Vmware::InfraManager::HostEsx")
-      @host = Host.find_by_id(@host.id)
+      @host = Host.find_by(:id => @host.id)
     end
 
     context "with Vm hourly performances" do

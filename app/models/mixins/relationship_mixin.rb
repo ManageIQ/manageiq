@@ -522,7 +522,7 @@ module RelationshipMixin
     Relationship.resource_types(child_rels(*args))
   end
 
-  def parent=(parent)
+  def add_parent(parent)
     parent.with_relationship_type(relationship_type) { parent.add_child(self) }
   end
 
@@ -560,25 +560,28 @@ module RelationshipMixin
   end
   alias_method :add_child, :add_children
 
-  #
-  # Backward compatibility methods
-  #
-
-  alias_method :set_parent, :parent=
-  alias_method :set_child,  :add_children
-
-  def replace_parent(parent)
+  def parent=(parent)
     if parent.nil?
       remove_all_parents
     else
       parent.with_relationship_type(relationship_type) do
         parent_rel = parent.init_relationship
         init_relationship(parent_rel)  # TODO: Deal with any multi-instances
+
+        parent.clear_relationships_cache
       end
     end
 
     clear_relationships_cache
   end
+  alias_method :replace_parent, :parent=
+
+  #
+  # Backward compatibility methods
+  #
+
+  alias_method :set_parent, :parent=
+  alias_method :set_child,  :add_children
 
   def replace_children(*child_objs)
     child_objs = child_objs.flatten

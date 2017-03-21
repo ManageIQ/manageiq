@@ -131,11 +131,13 @@ module Authenticator
 
     def update_user_attributes(user, _username, lobj)
       user.userid     = ldap.normalize(ldap.get_attr(lobj, :userprincipalname) || ldap.get_attr(lobj, :dn))
-      user.name       = ldap.get_attr(lobj, :displayname)
       user.first_name = ldap.get_attr(lobj, :givenname)
       user.last_name  = ldap.get_attr(lobj, :sn)
       email           = ldap.get_attr(lobj, :mail)
       user.email      = email unless email.blank?
+      user.name       = ldap.get_attr(lobj, :displayname)
+      user.name       = "#{user.first_name} #{user.last_name}" if user.name.blank?
+      user.name       = user.userid if user.name.blank?
     end
 
     REQUIRED_LDAP_USER_PROXY_KEYS = [:basedn, :bind_dn, :bind_pwd, :ldaphost, :ldapport, :mode]

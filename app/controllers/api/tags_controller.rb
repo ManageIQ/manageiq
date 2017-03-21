@@ -47,7 +47,7 @@ module Api
       unless category_id
         raise BadRequestError, "Category id, href or name needs to be specified for creating a new tag resource"
       end
-      Category.find_by_id(category_id)
+      Category.find_by(:id => category_id)
     end
 
     def destroy_tag_and_classification(tag_id)

@@ -1,103 +1,54 @@
 import-module virtualmachinemanager
-$diskvols = @{}
 
-function get_vms($vms){
-  $results = @{}
+$hash = @{}
 
-  $vms | ForEach {
-    $vm_hash = @{}
-    $id = $_.ID
+$ems = Get-SCVMMServer -ComputerName localhost |
+  Select @{name='Guid';expression={$_.ManagedComputer.ID -As [string]}},
+    @{name='Version';expression={$_.ServerInterfaceVersion -As [string]}}
 
-    $vm_hash["Properties"] = $_
-    $vm_hash["Networks"] = $_.VirtualNetworkAdapters.IPv4Addresses
-    $vm_hash["DVDs"] = @($_.VirtualDVDDrives | Select -Expand ISO | Select -Property ID, Name, SharePath, Size)
-    $vm_hash["vmnet"] = $_.VirtualNetworkAdapters | Select VMNetwork
-    $results[$id]= $vm_hash
-  }
-
-  return $results
-}
-
-function get_images($ims){
-  $results = @{}
-
-  $ims | ForEach {
-    $i_hash = @{}
-    $id = $_.ID
-    $i_hash["Properties"] = $_
-    $i_hash["DVDs"] = @($_.VirtualDVDDrives | Select -Expand ISO | Select -Property ID, Name, SharePath, Size)
-    $i_hash["vmnet"] = $_.VirtualNetworkAdapters | Select VMNetwork
-    $results[$id]= $i_hash
-  }
-
-  return $results
-}
-
-function get_host_inventory($hosts) {
-  $results = @{}
-
-  $hosts | ForEach {
-    $h_hash = @{}
-    $h_hash["NetworkAdapters"] = @(Get-VMHostNetworkAdapter -VMHost $_)
-    $h_hash["VirtualSwitch"] = @(Get-SCVirtualNetwork -VMHost $_)
-    $h_hash["Properties"] = $_
-    $results[$_.ID] = $h_hash
-    $_.DiskVolumes | where-object VolumeLabel -ne "System Reserved" | ForEach {
-      $diskvols[$_.ID]=$_
+$vms = Get-SCVirtualMachine -VMMServer localhost -All |
+  Select -Property BackupEnabled,BiosGuid,ComputerName,CPUCount,CPUType,DataExchangeEnabled,
+    HeartbeatEnabled,HostName,ID,LastRestoredCheckpointID,Memory,Name,OperatingSystem,
+    OperatingSystemShutdownEnabled,ServerConnection,TimeSynchronizationEnabled,
+    VirtualDVDDrives,VirtualHardDisks,VirtualNetworkAdapters,VMCheckpoints,VMCPath,
+    @{name='StatusString';expression={$_.Status -As [string]}},
+    @{name='VirtualMachineStateString';expression={$_.VirtualMachineState -As [string]}},
+    @{name='DVDISO';expression={ $_.VirtualDVDDrives.ISO | Select -Property Name, ID, SharePath, Size }} |
+    % {
+      if($_.DVDISO){ $_.DVDISO = @($_.DVDISO); $_ } # Force array context
+      else{ $_ }
     }
-  }
 
-  return $results
-}
+$hosts = Get-SCVMHost -VMMServer localhost |
+  Select -Property CommunicationStateString,CoresPerCPU,DiskVolumes,DVDDriveList,
+    HyperVStateString,ID,LogicalProcessorCount,Name,OperatingSystem,PhysicalCPUCount,
+    ProcessorFamily,ProcessorManufacturer,ProcessorModel,ProcessorSpeed,TotalMemory,
+    @{name='HyperVVersionString';expression={$_.HyperVVersion -As [string]}},
+    @{name='OperatingSystemVersionString';expression={$_.OperatingSystemVersion -As [string]}},
+    @{name='VirtualizationPlatformString';expression={$_.VirtualizationPlatform -As [string]}}
 
-function get_clusters($clusters) {
-  $results = @{}
+$vnets = Get-SCVirtualNetwork -VMMServer localhost |
+  Select -Property ID,Name,LogicalNetworks,VMHostNetworkAdapters,
+    @{name='VMHostName';expression={$_.VMHost.Name -As [string]}}
 
-  $clusters | ForEach {
-    $c_hash = @{}
-    $c_hash["Properties"] = $_
-    $results[$_.ID] = $c_hash
-  }
+$images = Get-SCVMTemplate -VMMServer localhost -All |
+  Select -Property CPUCount,Memory,Name,ID,VirtualHardDisks,VirtualDVDDrives,
+    @{name="CPUTypeString";expression={$_.CPUType.Name}},
+    @{name="OperatingSystemString";expression={$_.OperatingSystem.Name}},
+    @{name='DVDISO';expression={ $_.VirtualDVDDrives.ISO | Select -Property Name, ID, SharePath, Size }} |
+    % {
+      if($_.DVDISO){ $_.DVDISO = @($_.DVDISO); $_ } # Force array context
+      else{ $_ }
+    }
 
-  return $results
-}
+$clusters = @(Get-SCVMHostCluster -VMMServer localhost | Select -Property ClusterName,ID,Nodes)
 
-$r = @{}
-$v = Get-SCVirtualMachine -VMMServer "localhost"
+$hash["ems"] = $ems
+$hash["hosts"] = $hosts
+$hash["vnets"] = $vnets
+$hash["clusters"] = $clusters
+$hash["images"] = $images
+$hash["vms"] = $vms
 
-$r["vms"] = get_vms($v)
-
-$i = Get-SCVMTemplate -VMMServer "localhost"
-$r["images"] = get_images($i)
-
-$h = Get-SCVMHost -VMMServer "localhost"
-$r["hosts"] = get_host_inventory($h)
-$r["datastores"] = $diskvols
-
-$c = Get-SCVMHostCluster -VMMServer "localhost"
-$r["clusters"] = get_clusters($c)
-
-$e = Get-SCVMMServer -ComputerName "localhost"
-$r["ems"] = $e
-
-$inFile = [System.IO.Path]::GetTempFileName()
-$outFile = $inFile + '.gz'
-
-Export-CLIXML -Input $r -Path $inFile -Encoding UTF8
-
-$in = New-Object System.IO.FileStream $inFile, ([IO.FileMode]::Open), ([IO.FileAccess]::Read), ([IO.FileShare]::Read)
-$buf = New-Object byte[]($in.Length)
-$x = $in.Read($buf, 0, $in.Length)
-$in.Dispose()
-
-$out = New-Object System.IO.FileStream $outFile, ([IO.FileMode]::Create), ([IO.FileAccess]::Write), ([IO.FileShare]::None)
-
-$gStream = New-Object System.IO.Compression.GzipStream $out, ([IO.Compression.CompressionMode]::Compress)
-$x = $gStream.Write($buf, 0, $buf.Length)
-$gStream.Dispose()
-$out.Dispose()
-
-[System.convert]::ToBase64String([System.IO.File]::ReadAllBytes($outFile))
-
-Remove-Item -Force $inFile
-Remove-Item -Force $outFile
+# Maximum depth is 4 due to VMHostNetworkAdapters
+ConvertTo-Json -InputObject $hash -Depth 4 -Compress

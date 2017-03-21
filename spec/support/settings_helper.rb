@@ -4,6 +4,11 @@ def stub_settings(hash)
   allow(Vmdb::Settings).to receive(:for_resource) { settings }
 end
 
+def stub_settings_merge(hash)
+  hash = Settings.to_hash.deep_merge(hash)
+  stub_settings(hash)
+end
+
 def stub_template_settings(hash)
   settings = Config::Options.new.merge!(hash)
   allow(Vmdb::Settings).to receive(:template_settings) { settings }

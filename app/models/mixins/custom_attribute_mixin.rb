@@ -25,7 +25,7 @@ module CustomAttributeMixin
     end
 
     def self.custom_keys
-      CustomAttribute.where(:resource_type => base_class).distinct.pluck(:name)
+      CustomAttribute.where(:resource_type => base_class).distinct.pluck(:name).compact
     end
 
     def self.load_custom_attributes_for(cols)

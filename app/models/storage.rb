@@ -126,7 +126,7 @@ class Storage < ApplicationRecord
   end
 
   def scan_starting(miq_task_id, host)
-    miq_task = MiqTask.find_by_id(miq_task_id)
+    miq_task = MiqTask.find_by(:id => miq_task_id)
     if miq_task.nil?
       _log.warn("MiqTask with ID: [#{miq_task_id}] cannot be found")
       return
@@ -139,7 +139,7 @@ class Storage < ApplicationRecord
   def scan_complete_callback(miq_task_id, status, _message, result)
     _log.info "Storage ID: [#{id}], MiqTask ID: [#{miq_task_id}], Status: [#{status}]"
 
-    miq_task = MiqTask.find_by_id(miq_task_id)
+    miq_task = MiqTask.find_by(:id => miq_task_id)
     if miq_task.nil?
       _log.warn("MiqTask with ID: [#{miq_task_id}] cannot be found")
       return
@@ -202,7 +202,7 @@ class Storage < ApplicationRecord
       storage_id = unprocessed.shift
       break if storage_id.nil?
 
-      storage = Storage.find_by_id(storage_id.to_i)
+      storage = Storage.find_by(:id => storage_id.to_i)
       if storage.nil?
         _log.warn("Storage with ID: [#{storage_id}] cannot be found - removing from target list")
         miq_task.context_data[:targets] = miq_task.context_data[:targets].reject { |sid| sid == storage_id }
@@ -265,7 +265,7 @@ class Storage < ApplicationRecord
   end
 
   def self.scan_watchdog(miq_task_id)
-    miq_task = MiqTask.find_by_id(miq_task_id)
+    miq_task = MiqTask.find_by(:id => miq_task_id)
     if miq_task.nil?
       _log.warn("MiqTask with ID: [#{miq_task_id}] cannot be found")
       return
@@ -278,7 +278,7 @@ class Storage < ApplicationRecord
 
     miq_task.lock(:exclusive) do |locked_miq_task|
       locked_miq_task.context_data[:pending].each do |storage_id, qitem_id|
-        qitem = MiqQueue.find_by_id(qitem_id)
+        qitem = MiqQueue.find_by(:id => qitem_id)
         if qitem.nil?
           _log.warn "Pending Scan for Storage ID: [#{storage_id}] is missing MiqQueue ID: [#{qitem_id}] - will requeue"
           locked_miq_task.context_data[:pending].delete(storage_id)
@@ -522,7 +522,7 @@ class Storage < ApplicationRecord
     method_name = "smartstate_analysis"
 
     unless miq_task_id.nil?
-      miq_task = MiqTask.find_by_id(miq_task_id)
+      miq_task = MiqTask.find_by(:id => miq_task_id)
       miq_task.state_active unless miq_task.nil?
     end
 

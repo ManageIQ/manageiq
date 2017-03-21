@@ -18,6 +18,10 @@ module VmOrTemplate::Scanning
       return nil
     end
 
+    check_policy_prevent(:request_vm_scan, :raw_scan, userid, options)
+  end
+
+  def raw_scan(userid = "system", options = {})
     options = {
       :target_id    => id,
       :target_class => self.class.base_class.name,
@@ -29,23 +33,13 @@ module VmOrTemplate::Scanning
 
     _log.info "NAME [#{options[:name]}] SCAN [#{options[:categories].inspect}] [#{options[:categories].class}]"
 
-    begin
-      inputs = {:vm => self, :host => host}
-      MiqEvent.raise_evm_job_event(self, {:type => "scan", :prefix => "request"}, inputs)
-    rescue => err
-      _log.warn("NAME [#{options[:name]}] #{err.message}")
-      return
-    end
-
-    begin
-      self.last_scan_attempt_on = Time.now.utc
-      save
-      job = Job.create_job("VmScan", options)
-      return job
-    rescue => err
-      _log.log_backtrace(err)
-      raise
-    end
+    self.last_scan_attempt_on = Time.now.utc
+    save
+    job = Job.create_job("VmScan", options)
+    return job
+  rescue => err
+    _log.log_backtrace(err)
+    raise
   end
 
   #

@@ -455,7 +455,7 @@ class CimAssociations < Hash
   end
 
   def self.list
-    @instance.keys.sort { |a, b| a.to_s <=> b.to_s }.each { |k| puts k }
+    @instance.keys.sort_by(&:to_s).each { |k| puts k }
   end
 
   def self.method_missing(sym, *args, &block)
@@ -541,12 +541,12 @@ class CimProfiles < Hash
   end
 
   def self.list
-    @instance.keys.sort { |a, b| a.to_s <=> b.to_s }.each { |k| puts k }
+    @instance.keys.sort_by(&:to_s).each { |k| puts k }
   end
 
   def self.check
     puts "#{name}.check: Checking profiles..."
-    keys = @instance.keys.sort { |a, b| a.to_s <=> b.to_s }
+    keys = @instance.keys.sort_by(&:to_s)
     keys.each do |pn|
       puts "    #{pn}:"
       @instance[pn].check('        ')

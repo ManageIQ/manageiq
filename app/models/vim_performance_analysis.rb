@@ -551,7 +551,7 @@ module VimPerformanceAnalysis
   end
 
   def self.calc_slope_from_data(recs, x_attr, y_attr)
-    recs = recs.sort { |a, b| a.send(x_attr) <=> b.send(x_attr) } if recs.first.respond_to?(x_attr)
+    recs = recs.sort_by { |r| r.send(x_attr) } if recs.first.respond_to?(x_attr)
 
     y_array, x_array = recs.inject([]) do |arr, r|
       arr[0] ||= []; arr[1] ||= []

@@ -24,9 +24,9 @@ module ManageIQ::Providers
 
     virtual_column :port_show, :type => :string
 
-    supports :external_logging_support do
+    supports :external_logging do
       unless respond_to?(:external_logging_route_name)
-        unsupported_reason_add(:external_logging_support, _('This provider type does not support external_logging_support'))
+        unsupported_reason_add(:external_logging, _('This provider type does not support external_logging'))
       end
     end
 

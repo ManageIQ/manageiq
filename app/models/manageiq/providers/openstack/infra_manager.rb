@@ -25,12 +25,11 @@ class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
     build_network_manager(:type => 'ManageIQ::Providers::Openstack::NetworkManager') unless network_manager
   end
 
-  def cloud_tenants
-    CloudTenant.where(:ems_id => provider.try(:cloud_ems).try(:collect, &:id).try(:uniq))
+  # A placeholder relation for NetworkTopology to work
+  def availability_zones
   end
 
-  def availability_zones
-    AvailabilityZone.where(:ems_id => provider.try(:cloud_ems).try(:collect, &:id).try(:uniq))
+  def cloud_tenants
   end
 
   def host_aggregates

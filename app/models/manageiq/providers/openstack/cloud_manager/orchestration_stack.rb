@@ -15,7 +15,7 @@ class ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack < ManageI
   def raw_update_stack(template, options)
     update_options = {:template => template.content}.merge(options.except(:disable_rollback, :timeout_mins))
     connection_options = {:service => "Orchestration"}
-    connection_options.merge!(:tenant_name => cloud_tenant.name) if cloud_tenant
+    connection_options[:tenant_name] = cloud_tenant.name if cloud_tenant
     ext_management_system.with_provider_connection(connection_options) do |service|
       service.stacks.get(name, ems_ref).save(update_options)
     end
@@ -26,7 +26,7 @@ class ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack < ManageI
 
   def raw_delete_stack
     options = {:service => "Orchestration"}
-    options.merge!(:tenant_name => cloud_tenant.name) if cloud_tenant
+    options[:tenant_name] = cloud_tenant.name if cloud_tenant
     ext_management_system.with_provider_connection(options) do |service|
       service.stacks.get(name, ems_ref).try(:delete)
     end
@@ -38,7 +38,7 @@ class ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack < ManageI
   def raw_status
     ems = ext_management_system
     options = {:service => "Orchestration"}
-    options.merge!(:tenant_name => cloud_tenant.name) if cloud_tenant
+    options[:tenant_name] = cloud_tenant.name if cloud_tenant
     ems.with_provider_connection(options) do |service|
       raw_stack = service.stacks.get(name, ems_ref)
       raise MiqException::MiqOrchestrationStackNotExistError, "#{name} does not exist on #{ems.name}" unless raw_stack

@@ -1,7 +1,12 @@
-class ManageIQ::Providers::AutomationManager < ::ExtManagementSystem
+class ManageIQ::Providers::AutomationManager < ManageIQ::Providers::BaseManager
+  require_nested :Authentication
+  require_nested :ConfigurationScript
+  require_nested :ConfigurationScriptPayload
+  require_nested :ConfigurationScriptSource
+  require_nested :ConfiguredSystem
   require_nested :InventoryGroup
   require_nested :InventoryRootGroup
-  require_nested :Authentication
+  require_nested :OrchestrationStack
 
   has_many :configured_systems,           :dependent => :destroy, :foreign_key => "manager_id"
   has_many :configuration_profiles,       :dependent => :destroy, :foreign_key => "manager_id"

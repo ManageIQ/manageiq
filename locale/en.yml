@@ -736,6 +736,30 @@ en:
       LdapServer:               LDAP Server
       LoadBalancer:             Load Balancer
       ManageIQ::Providers::BaseManager:                                     Provider
+      ManageIQ::Providers::EmbeddedAutomationManager::Authentication:                Credential
+      ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource:     Repository
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AmazonCredential:     Credential (Amazon)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AzureCredential:      Credential (Microsoft Azure)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::GoogleCredential:     Credential (Google)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::MachineCredential:    Credential (Machine)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::NetworkCredential:    Credential (Network)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::OpenstackCredential:  Credential (OpenStack)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::RackspaceCredential:  Credential (Rackspace)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Satellite6Credential: Credential (Satellite)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ScmCredential:        Credential (SCM)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VmwareCredential:     Credential (VMware)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook:             Playbook (Embedded Ansible)
+      ManageIQ::Providers::AutomationManager::Authentication:                     Credential
+      ManageIQ::Providers::AnsibleTower::AutomationManager::AmazonCredential:     Credential (Amazon)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::AzureCredential:      Credential (Microsoft Azure)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::GoogleCredential:     Credential (Google)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential:    Credential (Machine)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::NetworkCredential:    Credential (Network)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::OpenstackCredential:  Credential (OpenStack)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::RackspaceCredential:  Credential (Rackspace)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::Satellite6Credential: Credential (Satellite)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::ScmCredential:        Credential (SCM)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::VmwareCredential:     Credential (VMware)
       ManageIQ::Providers::AnsibleTower::AutomationManager:                 Automation Manager (Ansible Tower)
       ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript: Job Template (Ansible Tower)
       ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook: Playbook (Ansible Tower)
@@ -780,8 +804,7 @@ en:
       ManageIQ::Providers::Azure::NetworkManager::CloudNetwork:             Cloud Network (Microsoft Azure)
       ManageIQ::Providers::Kubernetes::ContainerManager:                    Container Provider (Kubernetes)
       ManageIQ::Providers::Kubernetes::ContainerManager::ContainerGroup:    Pod (Kubernetes)
-      ManageIQ::Providers::Openshift::ContainerManager:                     Container Provider (OpenShift Origin)
-      ManageIQ::Providers::OpenshiftEnterprise::ContainerManager:           Container Provider (OpenShift Container Platform)
+      ManageIQ::Providers::Openshift::ContainerManager:                     Container Provider (OpenShift)
       ManageIQ::Providers::Amazon::NetworkManager::CloudNetwork:            Cloud Network (Amazon)
       ManageIQ::Providers::Amazon::NetworkManager::CloudSubnet:             Cloud Subnet (Amazon)
       ManageIQ::Providers::Amazon::NetworkManager::LoadBalancer:            Load Balancer (Amazon)
@@ -807,6 +830,7 @@ en:
       ManageIQ::Providers::Azure::CloudManager::OrchestrationStack:         Orchestration Stack (Microsoft Azure)
       ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack:        Orchestration Stack (Amazon)
       ManageIQ::Providers::Amazon::NetworkManager::NetworkPort:             Network Port (Amazon)
+      ManageIQ::Providers::Azure::NetworkManager:                           Network Manager (Microsoft Azure)
       ManageIQ::Providers::Azure::NetworkManager::NetworkPort:              Network Port (Microsoft Azure)
       ManageIQ::Providers::Openstack::NetworkManager::NetworkPort:          Network Port (OpenStack)
       ManageIQ::Providers::StorageManager:                                  Storage Manager
@@ -971,6 +995,7 @@ en:
       ems_phyical_infra:           Physical Infrastructure Provider
       ems_phyical_infras:          Physical Infrastructure Providers
       ems_storage:                 Storage Manager
+      floating_ips:                Floating IP
       load_balancer:               Load Balancer
       middleware_server:           Middleware Server
       middleware_servers:          Middleware Servers

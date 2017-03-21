@@ -48,7 +48,7 @@ module MiqServer::EnvironmentManagement
         if MiqEnvironment::Command.is_appliance?
           eth0 = LinuxAdmin::NetworkInterface.new("eth0")
 
-          ipaddr      = eth0.address
+          ipaddr      = eth0.address || eth0.address6
           hostname    = LinuxAdmin::Hosts.new.hostname
           mac_address = eth0.mac_address
         else
@@ -85,10 +85,19 @@ module MiqServer::EnvironmentManagement
     def prep_apache_proxying
       return unless MiqEnvironment::Command.supports_apache?
 
-      MiqApache::Control.stop
       MiqUiWorker.install_apache_proxy_config
       MiqWebServiceWorker.install_apache_proxy_config
       MiqWebsocketWorker.install_apache_proxy_config
+
+      # Because adding balancer members does a validation of the configuration
+      # files and these files try to load the redirect files among others,
+      # we need to add the balancers members after all configuration files have
+      # been written by install_apache_proxy_config.
+      MiqUiWorker.add_apache_balancer_members
+      MiqWebServiceWorker.add_apache_balancer_members
+      MiqWebsocketWorker.add_apache_balancer_members
+
+      MiqApache::Control.restart
     end
   end
 

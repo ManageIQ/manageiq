@@ -55,14 +55,14 @@ module Api
 
     def parse_set_group(data)
       group = parse_fetch_group(data.delete("group"))
-      data.merge!("miq_groups" => Array(group)) if group
+      data["miq_groups"] = Array(group) if group
     end
 
     def parse_set_settings(data, user = nil)
       settings = data.delete("settings")
       if settings.present?
         current_settings = user.nil? ? {} : user.settings
-        data.merge!("settings" => Hash(current_settings).deep_merge(settings.deep_symbolize_keys))
+        data["settings"] = Hash(current_settings).deep_merge(settings.deep_symbolize_keys)
       end
     end
 

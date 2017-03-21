@@ -32,7 +32,7 @@ module Api
 
     def parse_set_parent(data)
       parent = parse_fetch_tenant(data.delete("parent"))
-      data.merge!("parent" => parent) if parent
+      data["parent"] = parent if parent
     end
 
     def data_includes_invalid_attrs(data)

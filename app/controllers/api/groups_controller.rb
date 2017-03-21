@@ -43,19 +43,19 @@ module Api
 
     def parse_set_role(data)
       role = parse_fetch_role(data.delete("role"))
-      data.merge!("miq_user_role" => role) if role
+      data["miq_user_role"] = role if role
     end
 
     def parse_set_tenant(data)
       tenant = parse_fetch_tenant(data.delete("tenant"))
-      data.merge!("tenant" => tenant) if tenant
+      data["tenant"] = tenant if tenant
     end
 
     # HACK: Format attrs to use accepts_nested_attributes_for (Entitlements)
     # Required for backwards compatibility of creating filters via group
     def parse_set_filters(data, entitlement_id: nil)
       filters = data.delete("filters")
-      data.merge!("entitlement_attributes" => {"id" => entitlement_id, "filters" => filters}) if filters
+      data["entitlement_attributes"] = {"id" => entitlement_id, "filters" => filters} if filters
     end
 
     def group_data_includes_invalid_attrs(data)

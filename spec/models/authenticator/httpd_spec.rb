@@ -295,6 +295,34 @@ describe Authenticator::Httpd do
             expect(MiqTask.status_error?(task.status)).to be_truthy
           end
         end
+
+        context "when fullname is blank" do
+          let(:username) { 'betty' }
+          let(:headers) do
+            super().merge('X-Remote-User-FullName'  => '',
+                          'X-Remote-User-FirstName' => 'Betty',
+                          'X-Remote-User-LastName'  => 'Boop',
+                          'X-Remote-User-Email'     => 'betty@example.com')
+          end
+
+          it "creates a new User with name set to FirstName + LastName" do
+            expect(-> { authenticate }).to change { User.where(:name => 'Betty Boop').count }.from(0).to(1)
+          end
+        end
+
+        context "when fullname, firstname and lastname are blank" do
+          let(:username) { 'sam' }
+          let(:headers) do
+            super().merge('X-Remote-User-FullName'  => '',
+                          'X-Remote-User-FirstName' => '',
+                          'X-Remote-User-LastName'  => '',
+                          'X-Remote-User-Email'     => 'sam@example.com')
+          end
+
+          it "creates a new User with name set to the userid" do
+            expect(-> { authenticate }).to change { User.where(:name => 'sam').count }.from(0).to(1)
+          end
+        end
       end
 
       describe ".user_attrs_from_external_directory" do
