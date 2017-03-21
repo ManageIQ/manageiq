@@ -419,8 +419,6 @@ RSpec.describe 'Authentications API' do
 
   describe 'OPTIONS /api/authentications' do
     it 'returns expected and additional attributes' do
-      api_basic_authorize
-
       run_options(authentications_url)
 
       additional_options = {

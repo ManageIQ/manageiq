@@ -694,8 +694,6 @@ describe "Querying" do
 
   describe 'OPTIONS /api/vms' do
     it 'returns the options information' do
-      api_basic_authorize
-
       run_options(vms_url)
       expect_options_results(:vms)
     end
