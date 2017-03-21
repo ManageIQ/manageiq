@@ -6,7 +6,7 @@ module Api
     end
 
     def options
-      render_options(:container_deployments, ContainerDeploymentService.new.all_data)
+      render_options(:container_deployments, :deployment_types => ContainerDeployment::DEPLOYMENT_TYPES)
     end
   end
 end
