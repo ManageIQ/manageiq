@@ -59,6 +59,8 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
                    lvm2                    \
                    openldap-clients        \
                    gdbm-devel              \
+                   cronie                  \
+                   logrotate               \
                    &&                      \
     yum clean all
 
@@ -133,7 +135,7 @@ RUN source /etc/default/evm && \
     rm -rvf ${RUBY_GEMS_ROOT}/cache/* && \
     rm -rvf /root/.bundle/cache && \
     rm -rvf ${APP_ROOT}/tmp/cache/assets && \
-    rm -rf ${APP_ROOT}/log/*
+    rm -vf ${APP_ROOT}/log/*.log
 
 ## Build SUI
 RUN source /etc/default/evm && \
@@ -149,7 +151,7 @@ COPY docker-assets/appliance-initialize.sh /bin
 RUN ln -s /var/www/miq/vmdb/docker-assets/docker_initdb /usr/bin
 
 ## Enable services on systemd
-RUN systemctl enable memcached appliance-initialize evmserverd evminit evm-watchdog miqvmstat miqtop
+RUN systemctl enable memcached appliance-initialize evmserverd evminit evm-watchdog miqvmstat miqtop crond
 
 ## Expose required container ports
 EXPOSE 80 443

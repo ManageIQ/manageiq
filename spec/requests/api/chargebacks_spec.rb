@@ -223,8 +223,8 @@ RSpec.describe "chargebacks API" do
                  :description => "rate_0",
                  :enabled     => true
       end.not_to change(ChargebackRateDetail, :count)
-      expect_bad_request(/group can't be blank/i)
-      expect_bad_request(/source can't be blank/i)
+      expect_bad_request(/Chargeback rate can't be blank/i)
+      expect_bad_request(/Chargeable field can't be blank/i)
     end
 
     it "can edit a chargeback rate detail through POST" do

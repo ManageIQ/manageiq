@@ -43,8 +43,10 @@ module ManageIQ::Providers::Openstack::ManagerMixin
         :ssl_ca_path    => ::Settings.ssl.ssl_ca_path,
         :ssl_cert_store => OpenSSL::X509::Store.new
       }
-      extra_options[:domain_id] = keystone_v3_domain_id
-      extra_options[:region]    = provider_region if provider_region.present?
+      extra_options[:domain_id]         = keystone_v3_domain_id
+      extra_options[:region]            = provider_region if provider_region.present?
+      extra_options[:omit_default_port] = ::Settings.ems.ems_openstack.excon.omit_default_port
+      extra_options[:read_timeout]      = ::Settings.ems.ems_openstack.excon.read_timeout
 
       osh = OpenstackHandle::Handle.new(username, password, address, port, api_version, security_protocol, extra_options)
       osh.connection_options = {:instrumentor => $fog_log}
@@ -164,7 +166,7 @@ module ManageIQ::Providers::Openstack::ManagerMixin
 
     raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(auth_type)
 
-    options.merge!(:auth_type => auth_type)
+    options[:auth_type] = auth_type
     case auth_type.to_s
     when 'default' then verify_api_credentials(options)
     when 'amqp' then    verify_amqp_credentials(options)

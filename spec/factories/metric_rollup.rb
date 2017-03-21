@@ -43,4 +43,9 @@ FactoryGirl.define do
     capture_interval_name "daily"
     resource_type         "ExtManagementSystem"
   end
+
+  factory :metric_rollup_storage_hr, :parent => :metric_rollup, :class => :MetricRollup do
+    capture_interval_name "hourly"
+    resource_type         "Storage"
+  end
 end

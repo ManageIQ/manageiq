@@ -13,10 +13,7 @@ describe ChargebackContainerImage do
 
   let(:hourly_variable_tier_rate) { {:variable_rate => hourly_rate.to_s} }
 
-  let(:detail_params) do
-    {:chargeback_rate_detail_fixed_compute_cost => { :tiers  => [hourly_variable_tier_rate],
-                                                     :detail => { :source => "compute_1"} } }
-  end
+  let(:detail_params) { {:chargeback_rate_detail_fixed_compute_cost => { :tiers => [hourly_variable_tier_rate] } } }
 
   let!(:chargeback_rate) do
     FactoryGirl.create(:chargeback_rate, :detail_params => detail_params)
@@ -32,7 +29,7 @@ describe ChargebackContainerImage do
     EvmSpecHelper.create_guid_miq_server_zone
     @node = FactoryGirl.create(:container_node, :name => "node")
     @image = FactoryGirl.create(:container_image, :ext_management_system => ems)
-    @label = FactoryGirl.build(:custom_attribute, :name => "version_label-1", :value => "1.0.0-rc_2", :section => 'docker_labels')
+    @label = FactoryGirl.build(:custom_attribute, :name => "version/1.2/_label-1", :value => "test/1.0.0  rc_2", :section => 'docker_labels')
     @project = FactoryGirl.create(:container_project, :name => "my project", :ext_management_system => ems)
     @group = FactoryGirl.create(:container_group, :ext_management_system => ems, :container_project => @project,
                                 :container_node => @node)

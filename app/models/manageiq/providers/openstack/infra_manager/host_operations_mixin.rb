@@ -40,7 +40,7 @@ module ManageIQ::Providers::Openstack::InfraManager::HostOperationsMixin
                              power_state_text_verb = "Stopping",
                              power_state_text = "stop")
     unless taskid.nil?
-      task = MiqTask.find_by_id(taskid)
+      task = MiqTask.find_by(:id => taskid)
       task.state_active if task
     end
 

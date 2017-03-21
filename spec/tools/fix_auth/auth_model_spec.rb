@@ -5,7 +5,7 @@ require "fix_auth/auth_config_model"
 require "fix_auth/models"
 
 describe FixAuth::AuthModel do
-  let(:v0_key)  { CryptString.new(nil, "AES-128-CBC", "9999999999999999", "5555555555555555") }
+  let(:v0_key)  { MiqPassword::Key.new("AES-128-CBC", Base64.encode64("9999999999999999"), Base64.encode64("5555555555555555")) }
   let(:v1_key)  { MiqPassword.generate_symmetric }
   let(:pass)    { "password" }
   let(:enc_v1)  { MiqPassword.new.encrypt(pass, "v1", v1_key) }

@@ -57,7 +57,7 @@ module VmOrTemplate::Operations::Snapshot
 
   def raw_remove_snapshot(snapshot_id)
     raise MiqVmError, unsupported_reason(:remove_snapshot) unless supports_remove_snapshot?
-    snapshot = snapshots.find_by_id(snapshot_id)
+    snapshot = snapshots.find_by(:id => snapshot_id)
     raise _("Requested VM snapshot not found, unable to remove snapshot") unless snapshot
     begin
       run_command_via_parent(:vm_remove_snapshot, :snMor => snapshot.uid_ems)
@@ -146,7 +146,7 @@ module VmOrTemplate::Operations::Snapshot
 
   def raw_revert_to_snapshot(snapshot_id)
     raise MiqVmError, unsupported_reason(:revert_to_snapshot) unless supports_revert_to_snapshot?
-    snapshot = snapshots.find_by_id(snapshot_id)
+    snapshot = snapshots.find_by(:id => snapshot_id)
     raise _("Requested VM snapshot not found, unable to RevertTo snapshot") unless snapshot
     run_command_via_parent(:vm_revert_to_snapshot, :snMor => snapshot.uid_ems)
   end

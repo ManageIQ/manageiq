@@ -15,8 +15,7 @@ describe ChargebackContainerProject do
 
   let(:detail_params) do
     {
-      :chargeback_rate_detail_fixed_compute_cost => {:tiers  => [hourly_variable_tier_rate],
-                                                     :detail => { :source => 'compute_1'} },
+      :chargeback_rate_detail_fixed_compute_cost => {:tiers => [hourly_variable_tier_rate]},
       :chargeback_rate_detail_cpu_cores_used     => {:tiers => [hourly_variable_tier_rate]},
       :chargeback_rate_detail_net_io_used        => {:tiers => [hourly_variable_tier_rate]},
       :chargeback_rate_detail_memory_used        => {:tiers => [hourly_variable_tier_rate]}
@@ -171,6 +170,33 @@ describe ChargebackContainerProject do
       add_metric_rollups_for(@project, (month_beginning + 12.hours)...month_end, 24.hours, metric_rollup_params, nil)
 
       @metric_size = @project.metric_rollups.size
+    end
+
+    subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(options).first.first }
+
+    it "fixed_compute" do
+      # .to be_within(0.01) is used since theres a float error here
+      expect(subject.fixed_compute_1_cost).to be_within(0.01).of(hourly_rate * hours_in_month)
+      expect(subject.fixed_compute_metric).to eq(@metric_size / 2)
+    end
+  end
+
+  context "gets rate from enterprise" do
+    let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @project.id, :tag => nil) }
+    let(:miq_enterprise) { FactoryGirl.create(:miq_enterprise) }
+
+    before do
+      add_metric_rollups_for(@project, month_beginning...month_end, 24.hours, metric_rollup_params)
+
+      metric_rollup_params[:cpu_usage_rate_average] = 0.0
+      metric_rollup_params[:derived_memory_used] = 0.0
+
+      add_metric_rollups_for(@project, (month_beginning + 12.hours)...month_end, 24.hours, metric_rollup_params, nil)
+
+      @metric_size = @project.metric_rollups.size
+
+      temp = {:cb_rate => chargeback_rate, :object => miq_enterprise}
+      ChargebackRate.set_assignments(:compute, [temp])
     end
 
     subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(options).first.first }

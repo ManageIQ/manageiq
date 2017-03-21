@@ -25,7 +25,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
   def self.class_for_source(source_or_id)
     source = case source_or_id
              when ActiveRecord::Base then source_or_id
-             else VmOrTemplate.find_by_id(source_or_id)
+             else VmOrTemplate.find_by(:id => source_or_id)
              end
     return nil if source.nil?
     source.class.manager_class.provision_workflow_class

@@ -162,6 +162,22 @@ describe Rbac::Filterer do
         let(:child_tenant)   { FactoryGirl.create(:tenant, :divisible => false, :parent => owner_tenant) }
         let(:child_group)    { FactoryGirl.create(:miq_group, :tenant => child_tenant) }
 
+        context 'with Vm as resource of VmPerformance model' do
+          let!(:root_tenant_vm)              { FactoryGirl.create(:vm_vmware, :tenant => Tenant.root_tenant) }
+          let!(:vm_performance_root_tenant)  { FactoryGirl.create(:vm_performance, :resource => root_tenant_vm) }
+          let!(:vm_performance_other_tenant) { FactoryGirl.create(:vm_performance, :resource => other_vm) }
+
+          it 'list only other_user\'s VmPerformances' do
+            results = described_class.search(:class => VmPerformance, :user => other_user).first
+            expect(results).to match_array [vm_performance_other_tenant]
+          end
+
+          it 'list all VmPerformances' do
+            results = described_class.search(:class => VmPerformance, :user => admin_user).first
+            expect(results).to match_array [vm_performance_other_tenant, vm_performance_root_tenant]
+          end
+        end
+
         context "searching MiqTemplate" do
           it "can't see descendant tenant's templates" do
             owned_template.update_attributes!(:tenant_id => child_tenant.id, :miq_group_id => child_group.id)
@@ -341,6 +357,10 @@ describe Rbac::Filterer do
           FactoryGirl.create(:miq_user_role, :name => MiqUserRole::SUPER_ADMIN_ROLE_NAME)
         end
 
+        let!(:administrator_user_role) do
+          FactoryGirl.create(:miq_user_role, :name => MiqUserRole::ADMIN_ROLE_NAME)
+        end
+
         let(:group) do
           FactoryGirl.create(:miq_group, :tenant => default_tenant, :miq_user_role => tenant_administrator_user_role)
         end
@@ -348,12 +368,12 @@ describe Rbac::Filterer do
         let!(:user) { FactoryGirl.create(:user, :miq_groups => [group]) }
 
         it 'can see all roles expect to EvmRole-super_administrator' do
-          expect(MiqUserRole.count).to eq(2)
+          expect(MiqUserRole.count).to eq(3)
           get_rbac_results_for_and_expect_objects(MiqUserRole, [tenant_administrator_user_role])
         end
 
         it 'can see all groups expect to group with role EvmRole-super_administrator' do
-          expect(MiqUserRole.count).to eq(2)
+          expect(MiqUserRole.count).to eq(3)
           get_rbac_results_for_and_expect_objects(MiqGroup, [group])
         end
       end
@@ -1296,7 +1316,7 @@ describe Rbac::Filterer do
 
       it "skips lookup if current_group_id passed" do
         # ensuring same_group is a different object from user1.current_group
-        same_group = MiqGroup.find_by_id(user1.current_group.id)
+        same_group = MiqGroup.find_by(:id => user1.current_group.id)
         expect do
           _, group = filter.send(:lookup_user_group, user1, nil, same_group, nil)
           expect(group).to eq(same_group)
@@ -1370,6 +1390,48 @@ describe Rbac::Filterer do
     end
   end
 
+  describe "cloud_tenant based search" do
+    let(:ems_openstack)         { FactoryGirl.create(:ems_cloud) }
+    let(:project1_tenant)       { FactoryGirl.create(:tenant, :source_type => 'CloudTenant') }
+    let(:project1_cloud_tenant) { FactoryGirl.create(:cloud_tenant, :source_tenant => project1_tenant) }
+    let(:project1_group)        { FactoryGirl.create(:miq_group, :tenant => project1_tenant) }
+    let(:project1_user)         { FactoryGirl.create(:user, :miq_groups => [project1_group]) }
+    let(:project1_volume)       { FactoryGirl.create(:cloud_volume, :ext_management_system => ems_openstack, :cloud_tenant => project1_cloud_tenant) }
+    let(:project2_tenant)       { FactoryGirl.create(:tenant, :source_type => 'CloudTenant') }
+    let(:project2_cloud_tenant) { FactoryGirl.create(:cloud_tenant, :source_tenant => project2_tenant) }
+    let(:project2_group)        { FactoryGirl.create(:miq_group, :tenant => project2_tenant) }
+    let(:project2_user)         { FactoryGirl.create(:user, :miq_groups => [project2_group]) }
+    let(:project2_volume)       { FactoryGirl.create(:cloud_volume, :ext_management_system => ems_openstack, :cloud_tenant => project2_cloud_tenant) }
+    let(:ems_other)             { FactoryGirl.create(:ems_cloud, :name => 'ems_other', :tenant_mapping_enabled => false) }
+    let(:volume_other)          { FactoryGirl.create(:cloud_volume, :ext_management_system => ems_other) }
+    let!(:all_volumes)          { [project1_volume, project2_volume, volume_other] }
+
+    it "lists its own cloud volumes and other volumes where tenant_mapping is not enabled" do
+      ems_openstack.tenant_mapping_enabled = true
+      ems_openstack.save!
+      results = described_class.search(:class => CloudVolume, :user => project1_user).first
+      expect(results).to match_array [project1_volume, volume_other]
+
+      results = described_class.search(:class => CloudVolume, :user => project2_user).first
+      expect(results).to match_array [project2_volume, volume_other]
+
+      results = described_class.search(:class => CloudVolume, :user => owner_user).first
+      expect(results).to match_array [volume_other]
+    end
+
+    it "all cloud volumes are visible to all users when tenant_mapping is not enabled" do
+      ems_openstack.tenant_mapping_enabled = false
+      ems_openstack.save!
+      results = described_class.search(:class => CloudVolume, :user => project1_user).first
+      expect(results).to match_array [project1_volume, project2_volume, volume_other]
+
+      results = described_class.search(:class => CloudVolume, :user => project2_user).first
+      expect(results).to match_array [project1_volume, project2_volume, volume_other]
+
+      results = described_class.search(:class => CloudVolume, :user => owner_user).first
+      expect(results).to match_array [project1_volume, project2_volume, volume_other]
+    end
+  end
 
   private
 

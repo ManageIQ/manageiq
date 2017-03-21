@@ -16,10 +16,12 @@ describe JobProxyDispatcher do
     NUM_STORAGES = 3
   end
 
+  before(:each) do
+    @server = EvmSpecHelper.local_miq_server(:name => "test_server_main_server")
+  end
+
   context "With a default zone, server, with hosts with a miq_proxy, vmware vms on storages" do
     before(:each) do
-      @server = EvmSpecHelper.local_miq_server(:name => "test_server_main_server")
-
       (NUM_SERVERS - 1).times do |i|
         FactoryGirl.create(:miq_server, :zone => @server.zone, :name => "test_server_#{i}")
       end
@@ -64,7 +66,7 @@ describe JobProxyDispatcher do
             @vm = @vms.first
             @vm.storage = nil
             @vm.save
-            @vm.scan
+            @vm.raw_scan
           end
 
           it "should expect queue_signal and dispatch without errors" do
@@ -82,7 +84,7 @@ describe JobProxyDispatcher do
             @vm.storage = nil
             @vm.vendor = "microsoft"
             @vm.save
-            @vm.scan
+            @vm.raw_scan
           end
 
           it "should run dispatch without calling queue_signal" do
@@ -99,7 +101,7 @@ describe JobProxyDispatcher do
             @vm.storage.store_type = "CSVFS"
             @vm.vendor = "microsoft"
             @vm.save
-            @vm.scan
+            @vm.raw_scan
           end
 
           it "should run dispatch without calling queue_signal" do
@@ -116,7 +118,7 @@ describe JobProxyDispatcher do
             @vm.storage.store_type = "XFS"
             @vm.vendor = "microsoft"
             @vm.save
-            @vm.scan
+            @vm.raw_scan
           end
 
           it "should expect queue_signal and dispatch without errors" do
@@ -140,7 +142,7 @@ describe JobProxyDispatcher do
             @repo_proxy.host.save
             stub_settings(:repository_scanning => {:defaultsmartproxy => @repo_proxy.id})
           end
-          @jobs = (@vms + @repo_vms).collect(&:scan)
+          @jobs = (@vms + @repo_vms).collect(&:raw_scan)
         end
 
         # Don't run these tests if we only want to run dispatch for load testing
@@ -175,8 +177,8 @@ describe JobProxyDispatcher do
 
     context "with container and vms jobs" do
       before(:each) do
-        @jobs = (@vms + @repo_vms).collect(&:scan)
-        @jobs += @container_images.map { |img| img.ext_management_system.raw_scan_job_create(img) }
+        @jobs = (@vms + @repo_vms).collect(&:raw_scan)
+        @jobs += @container_images.map { |img| img.ext_management_system.raw_scan_job_create(img.class, img.id) }
         @dispatcher = JobProxyDispatcher.new
       end
 
@@ -256,7 +258,7 @@ describe JobProxyDispatcher do
 
     describe "#active_vm_scans_by_zone" do
       it "returns active vm scans for this zone" do
-        job = @vms.first.scan
+        job = @vms.first.raw_scan
         dispatcher = JobProxyDispatcher.new
         dispatcher.instance_variable_set(:@zone, MiqServer.my_zone) # memoized during pending_jobs call
         job.update(:dispatch_status => "active")
@@ -264,12 +266,55 @@ describe JobProxyDispatcher do
       end
 
       it "returns 0 for active vm scan for other zones" do
-        job = @vms.first.scan
+        job = @vms.first.raw_scan
         dispatcher = JobProxyDispatcher.new
         dispatcher.instance_variable_set(:@zone, MiqServer.my_zone) # memoized during pending_jobs call
         job.update(:dispatch_status => "active")
         expect(dispatcher.active_vm_scans_by_zone['defult']).to eq(0)
       end
+    end
+  end
+
+  context "limiting number of smart state analysis running on one server" do
+    before(:each) do
+      Job.create_job("VmScan", :agent_id => @server.id, :name => "Hello - 1")
+         .update_attributes(:dispatch_status => "any")
+      Job.create_job("VmScan", :agent_id => @server.id, :name => "Hello - 2")
+         .update_attributes(:dispatch_status => "active")
+      Job.create_job("VmScan", :agent_id => @server.id, :name => "Hello - 3")
+         .update_attributes(:dispatch_status => "active")
+      @proxy_dispatcher = JobProxyDispatcher.new
+    end
+
+    describe "#busy_proxies" do
+      it "it returns hash with number of not finished jobs with dispatch status 'active' for each MiqServer" do
+        expect(@proxy_dispatcher.busy_proxies).to eq "MiqServer_#{@server.id}" => 2
+      end
+    end
+
+    describe "#assign_proxy_to_job" do
+      it "increses by 1 number of jobs (how busy server is) for server" do
+        job = Job.create_job("VmScan", :agent_id => @server.id, :name => "Hello - 4")
+        expect(@proxy_dispatcher.busy_proxies).to eq "MiqServer_#{@server.id}" => 2
+
+        allow(@proxy_dispatcher).to receive(:embedded_scan_resource).and_return(nil)
+        @proxy_dispatcher.assign_proxy_to_job(@server, job)
+        expect(@proxy_dispatcher.busy_proxies).to eq "MiqServer_#{@server.id}" => 3
+      end
+    end
+  end
+
+  describe "#start_job_on_proxy" do
+    it "creates job options and passing it to `queue_signal'" do
+      job = Job.create_job("VmScan", :agent_id => @server.id, :name => "Hello, World")
+      proxy_dispatcher = JobProxyDispatcher.new
+      proxy_dispatcher.instance_variable_set(:@active_vm_scans_by_zone, @server.my_zone => 0)
+
+      job_options = {:args => ["start"], :zone => @server.my_zone, :server_guid => @server.guid, :role => "smartproxy"}
+      expect(proxy_dispatcher).to receive(:assign_proxy_to_job)
+      expect(proxy_dispatcher).to receive(:queue_signal).with(job, job_options)
+
+      proxy_dispatcher.start_job_on_proxy(job, @server)
     end
   end
 end

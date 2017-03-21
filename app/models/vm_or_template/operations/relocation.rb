@@ -92,9 +92,9 @@ module VmOrTemplate::Operations::Relocation
   end
 
   def migrate_via_ids(host_id, pool_id = nil, priority = "defaultPriority", state = nil)
-    host = Host.find_by_id(host_id)
+    host = Host.find_by(:id => host_id)
     raise _("Host with ID=%{host_id} was not found") % {:host_id => host_id} if host.nil?
-    pool = pool_id.nil? ? nil : ResourcePool.find_by_id(pool_id)
+    pool = pool_id.nil? ? nil : ResourcePool.find_by(:id => pool_id)
     migrate(host, pool, priority, state)
   end
 end

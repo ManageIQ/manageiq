@@ -29,6 +29,11 @@ namespace :evm do
     EvmApplication.status
   end
 
+  desc "Report Status of the ManageIQ EVM Application"
+  task :status_full => :environment do
+    EvmApplication.status(true)
+  end
+
   desc "Write a remote region id to this server's REGION file"
   task :join_region => :environment do
     configured_region = ApplicationRecord.region_number_from_sequence.to_i

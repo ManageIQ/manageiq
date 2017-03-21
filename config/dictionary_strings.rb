@@ -1311,9 +1311,9 @@ _("Condition")
 # TRANSLATORS: en.yml key: dictionary.model.Condition (plural form)
 _("Conditions")
 # TRANSLATORS: en.yml key: dictionary.model.ContainerBuild
-_("Container Build")
+_("Build")
 # TRANSLATORS: en.yml key: dictionary.model.ContainerBuild (plural form)
-_("Container Builds")
+_("Builds")
 # TRANSLATORS: en.yml key: dictionary.model.CustomButton
 _("Button")
 # TRANSLATORS: en.yml key: dictionary.model.CustomButton (plural form)
@@ -1322,14 +1322,26 @@ _("Buttons")
 _("Buttons Group")
 # TRANSLATORS: en.yml key: dictionary.model.CustomButtonSet (plural form)
 _("Buttons Groups")
+# TRANSLATORS: en.yml key: dictionary.model.ConfigurationScriptSource
+_("Repository")
+# TRANSLATORS: en.yml key: dictionary.model.ConfigurationScriptSource (plural form)
+_("Repositories")
 # TRANSLATORS: en.yml key: dictionary.model.Container
 _("Container")
 # TRANSLATORS: en.yml key: dictionary.model.Container (plural form)
 _("Containers")
+# TRANSLATORS: en.yml key: dictionary.model.ContainerPerformance
+_("Performance - Container")
+# TRANSLATORS: en.yml key: dictionary.model.ContainerPerformance (plural form)
+_("Performance - Containers")
 # TRANSLATORS: en.yml key: dictionary.model.ContainerGroup
 _("Pod")
 # TRANSLATORS: en.yml key: dictionary.model.ContainerGroup (plural form)
 _("Pods")
+# TRANSLATORS: en.yml key: dictionary.model.ContainerGroupPerformance
+_("Performance - Pod")
+# TRANSLATORS: en.yml key: dictionary.model.ContainerGroupPerformance (plural form)
+_("Performance - Pods")
 # TRANSLATORS: en.yml key: dictionary.model.ContainerImageRegistry
 _("Image Registry")
 # TRANSLATORS: en.yml key: dictionary.model.ContainerImageRegistry (plural form)
@@ -1342,10 +1354,18 @@ _("Container Images")
 _("Node")
 # TRANSLATORS: en.yml key: dictionary.model.ContainerNode (plural form)
 _("Nodes")
+# TRANSLATORS: en.yml key: dictionary.model.ContainerNodePerformance
+_("Performance - ContainerNode")
+# TRANSLATORS: en.yml key: dictionary.model.ContainerNodePerformance (plural form)
+_("Performance - ContainerNodes")
 # TRANSLATORS: en.yml key: dictionary.model.ContainerProject
 _("Project")
 # TRANSLATORS: en.yml key: dictionary.model.ContainerProject (plural form)
 _("Projects")
+# TRANSLATORS: en.yml key: dictionary.model.ContainerProjectPerformance
+_("Performance - ContainerProject")
+# TRANSLATORS: en.yml key: dictionary.model.ContainerProjectPerformance (plural form)
+_("Performance - ContainerProjects")
 # TRANSLATORS: en.yml key: dictionary.model.ContainerRoute
 _("Route")
 # TRANSLATORS: en.yml key: dictionary.model.ContainerRoute (plural form)
@@ -1448,14 +1468,114 @@ _("Load Balancers")
 _("Provider")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::BaseManager (plural form)
 _("Providers")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAutomationManager::Authentication
+_("Credential")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAutomationManager::Authentication (plural form)
+_("Credentials")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource
+_("Repository")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource (plural form)
+_("Repositories")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AmazonCredential
+_("Credential (Amazon)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AmazonCredential (plural form)
+_("Credentials (Amazon)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AzureCredential
+_("Credential (Microsoft Azure)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AzureCredential (plural form)
+_("Credentials (Microsoft Azure)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::GoogleCredential
+_("Credential (Google)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::GoogleCredential (plural form)
+_("Credentials (Google)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::MachineCredential
+_("Credential (Machine)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::MachineCredential (plural form)
+_("Credentials (Machine)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::NetworkCredential
+_("Credential (Network)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::NetworkCredential (plural form)
+_("Credentials (Network)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::OpenstackCredential
+_("Credential (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::OpenstackCredential (plural form)
+_("Credentials (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::RackspaceCredential
+_("Credential (Rackspace)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::RackspaceCredential (plural form)
+_("Credentials (Rackspace)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Satellite6Credential
+_("Credential (Satellite)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Satellite6Credential (plural form)
+_("Credentials (Satellite)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ScmCredential
+_("Credential (SCM)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ScmCredential (plural form)
+_("Credentials (SCM)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VmwareCredential
+_("Credential (VMware)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VmwareCredential (plural form)
+_("Credentials (VMware)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook
+_("Playbook (Embedded Ansible)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook (plural form)
+_("Playbooks (Embedded Ansible)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AutomationManager::Authentication
+_("Credential")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AutomationManager::Authentication (plural form)
+_("Credentials")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::AmazonCredential
+_("Credential (Amazon)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::AmazonCredential (plural form)
+_("Credentials (Amazon)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::AzureCredential
+_("Credential (Microsoft Azure)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::AzureCredential (plural form)
+_("Credentials (Microsoft Azure)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::GoogleCredential
+_("Credential (Google)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::GoogleCredential (plural form)
+_("Credentials (Google)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential
+_("Credential (Machine)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential (plural form)
+_("Credentials (Machine)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::NetworkCredential
+_("Credential (Network)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::NetworkCredential (plural form)
+_("Credentials (Network)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::OpenstackCredential
+_("Credential (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::OpenstackCredential (plural form)
+_("Credentials (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::RackspaceCredential
+_("Credential (Rackspace)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::RackspaceCredential (plural form)
+_("Credentials (Rackspace)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::Satellite6Credential
+_("Credential (Satellite)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::Satellite6Credential (plural form)
+_("Credentials (Satellite)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::ScmCredential
+_("Credential (SCM)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::ScmCredential (plural form)
+_("Credentials (SCM)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::VmwareCredential
+_("Credential (VMware)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::VmwareCredential (plural form)
+_("Credentials (VMware)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager
-_("Configuration Manager (Ansible Tower)")
+_("Automation Manager (Ansible Tower)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager (plural form)
-_("Configuration Managers (Ansible Tower)")
+_("Automation Managers (Ansible Tower)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript
 _("Job Template (Ansible Tower)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript (plural form)
 _("Job Templates (Ansible Tower)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook
+_("Playbook (Ansible Tower)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook (plural form)
+_("Playbooks (Ansible Tower)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Foreman::ConfigurationManager
 _("Configuration Manager (Foreman)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Foreman::ConfigurationManager (plural form)
@@ -1480,6 +1600,10 @@ _("Ansible Tower Jobs")
 _("Cloud Provider")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager (plural form)
 _("Cloud Providers")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager::AuthKeyPair
+_("Key Pair")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager::AuthKeyPair (plural form)
+_("Key Pairs")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager::Vm
 _("Instance")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager::Vm (plural form)
@@ -1540,6 +1664,10 @@ _("Middleware Providers")
 _("Network Manager")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::NetworkManager (plural form)
 _("Network Managers")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::PhysicalInfraManager
+_("Physical Infrastructure Provider")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::PhysicalInfraManager (plural form)
+_("Physical Infrastructure Providers")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::InfraManager
 _("Infrastructure Provider (OpenStack)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::InfraManager (plural form)
@@ -1613,13 +1741,9 @@ _("Pod (Kubernetes)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Kubernetes::ContainerManager::ContainerGroup (plural form)
 _("Pods (Kubernetes)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openshift::ContainerManager
-_("Container Provider (OpenShift Origin)")
+_("Container Provider (OpenShift)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openshift::ContainerManager (plural form)
-_("Container Providers (OpenShift Origin)")
-# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::OpenshiftEnterprise::ContainerManager
-_("Container Provider (OpenShift Container Platform)")
-# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::OpenshiftEnterprise::ContainerManager (plural form)
-_("Container Providers (OpenShift Container Platform)")
+_("Container Providers (OpenShift)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::NetworkManager::CloudNetwork
 _("Cloud Network (Amazon)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::NetworkManager::CloudNetwork (plural form)
@@ -1720,6 +1844,10 @@ _("Orchestration Stacks (Amazon)")
 _("Network Port (Amazon)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::NetworkManager::NetworkPort (plural form)
 _("Network Ports (Amazon)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::NetworkManager
+_("Network Manager (Microsoft Azure)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::NetworkManager (plural form)
+_("Network Managers (Microsoft Azure)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::NetworkManager::NetworkPort
 _("Network Port (Microsoft Azure)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::NetworkManager::NetworkPort (plural form)
@@ -2066,6 +2194,10 @@ _("Windows Images")
 _("Zone")
 # TRANSLATORS: en.yml key: dictionary.model.Zone (plural form)
 _("Zones")
+# TRANSLATORS: en.yml key: dictionary.table.ansible_playbook
+_("Playbook")
+# TRANSLATORS: en.yml key: dictionary.table.ansible_playbook (plural form)
+_("Playbooks")
 # TRANSLATORS: en.yml key: dictionary.table.auth_key_pair_cloud
 _("Key Pair")
 # TRANSLATORS: en.yml key: dictionary.table.auth_key_pair_cloud (plural form)
@@ -2292,10 +2424,20 @@ _("EVM Servers")
 _("Network Provider")
 # TRANSLATORS: en.yml key: dictionary.table.ems_network (plural form)
 _("Network Providers")
+# TRANSLATORS: en.yml key: dictionary.table.ems_phyical_infra
+_("Physical Infrastructure Provider")
+# TRANSLATORS: en.yml key: dictionary.table.ems_phyical_infra (plural form)
+_("Physical Infrastructure Providers")
+# TRANSLATORS: en.yml key: dictionary.table.ems_phyical_infras
+_("Physical Infrastructure Providers")
 # TRANSLATORS: en.yml key: dictionary.table.ems_storage
 _("Storage Manager")
 # TRANSLATORS: en.yml key: dictionary.table.ems_storage (plural form)
 _("Storage Managers")
+# TRANSLATORS: en.yml key: dictionary.table.floating_ips
+_("Floating IP")
+# TRANSLATORS: en.yml key: dictionary.table.floating_ips (plural form)
+_("Floating IPs")
 # TRANSLATORS: en.yml key: dictionary.table.load_balancer
 _("Load Balancer")
 # TRANSLATORS: en.yml key: dictionary.table.load_balancer (plural form)

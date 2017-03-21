@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :provider do
     sequence(:name) { |n| "provider_#{seq_padded_for_sorting(n)}" }
     guid            { MiqUUID.new_guid }
+    zone            { Zone.first || FactoryGirl.create(:zone) }
   end
 
   factory :provider_foreman, :class => "ManageIQ::Providers::Foreman::Provider", :parent => :provider do
@@ -23,4 +24,5 @@ FactoryGirl.define do
       end
     end
   end
+  factory :provider_embedded_ansible, :class => "ManageIQ::Providers::EmbeddedAnsible::Provider", :parent => :provider_ansible_tower
 end

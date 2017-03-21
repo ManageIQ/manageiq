@@ -1,0 +1,5 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_EmbeddedAnsible_AutomationManager_ScmCredential <
+    MiqAeServiceManageIQ_Providers_EmbeddedAnsible_AutomationManager_Credential
+  end
+end

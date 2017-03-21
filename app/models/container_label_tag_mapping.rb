@@ -13,14 +13,20 @@ class ContainerLabelTagMapping < ApplicationRecord
   # All involved tags must also have a Classification.
 
   AUTOTAG_PREFIX = "kubernetes".freeze
-  MAPPABLE_ENTITIES = [nil,
-                       "ContainerProject",
-                       "ContainerRoute",
-                       "ContainerNode",
-                       "ContainerReplicator",
-                       "ContainerService",
-                       "ContainerGroup",
-                       "ContainerBuild"].freeze
+
+  MAPPABLE_ENTITIES = [
+    nil,
+    "Amazon::Vm",
+    "Amazon::Image",
+    "Kubernetes::ContainerProject",
+    "Kubernetes::ContainerRoute",
+    "Kubernetes::ContainerNode",
+    "Kubernetes::ContainerReplicator",
+    "Kubernetes::ContainerService",
+    "Kubernetes::ContainerGroup",
+    "Kubernetes::ContainerBuild"
+  ].freeze
+
   belongs_to :tag
 
   # Pass the data this returns to map_* methods.

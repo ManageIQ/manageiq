@@ -785,7 +785,7 @@ describe MiqAeEngine do
     it "#before_ae_starts" do
       allow(MiqAeEngine).to receive(:create_automation_object).with(any_args).and_return(nil)
       expect(test_class_name).to receive(:constantize).and_return(test_class)
-      expect(test_class).to receive(:find_by_id).with(any_args).and_return(test_class_instance)
+      expect(test_class).to receive(:find_by).with(any_args).and_return(test_class_instance)
       allow(MiqAeEngine).to receive(:resolve_automation_object).with(any_args).and_return(workspace)
       allow(MiqAeEngine).to receive(:create_automation_attribute_key).with(any_args).and_return("abc")
       expect(test_class_instance).to receive(:before_ae_starts).once.with(options)

@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_EmbeddedAnsible_AutomationManager_Inventory < MiqAeServiceManageIQ_Providers_EmbeddedAutomationManager_InventoryGroup
+  end
+end

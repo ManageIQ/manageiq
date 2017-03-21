@@ -74,7 +74,7 @@ class ClassificationImport
       data.each do|category, entries|
         cat = Classification.find_by(:description => category)
         if cat.single_value && entries.length > 1
-          vm = VmOrTemplate.find_by_id(id)
+          vm = VmOrTemplate.find_by(:id => id)
           while entries.length > 1
             e = entries.shift
             _log.warn "Vm: #{vm.name}, Location: #{vm.location}, Category: #{category}: Multiple values given for single-valued category, value #{e} will be ignored"
@@ -90,7 +90,7 @@ class ClassificationImport
 
   def apply
     @verified_data.each do|id, data|
-      vm = VmOrTemplate.find_by_id(id)
+      vm = VmOrTemplate.find_by(:id => id)
       if vm
         data.each do|category, entries|
           cat = Classification.find_by(:description => category)

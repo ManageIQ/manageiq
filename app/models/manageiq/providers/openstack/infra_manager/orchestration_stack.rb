@@ -35,7 +35,7 @@ class ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack < ::Orche
 
   def raw_delete_stack
     options = {:service => "Orchestration"}
-    options.merge!(:tenant_name => cloud_tenant.name) if cloud_tenant
+    options[:tenant_name] = cloud_tenant.name if cloud_tenant
     ext_management_system.with_provider_connection(options) do |service|
       service.stacks.get(name, ems_ref).try(:delete)
     end

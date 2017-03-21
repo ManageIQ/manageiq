@@ -101,6 +101,10 @@ class PglogicalSubscription < ActsAsArModel
                                                  connection_hash['dbname'])
   end
 
+  def backlog
+    connection.xlog_location_diff(remote_node_lsn, remote_replication_lsn)
+  end
+
   # translate the output from the pglogical stored proc to our object columns
   def self.subscription_to_columns(sub)
     cols = sub.symbolize_keys
@@ -109,6 +113,8 @@ class PglogicalSubscription < ActsAsArModel
     cols.delete(:slot_name)
     cols.delete(:replication_sets)
     cols.delete(:forward_origins)
+    cols.delete(:remote_replication_lsn)
+    cols.delete(:local_replication_lsn)
 
     cols[:id] = cols.delete(:subscription_name)
 
@@ -164,7 +170,7 @@ class PglogicalSubscription < ActsAsArModel
   private
 
   def remote_region_number
-    MiqRegionRemote.with_remote_connection(host, port || 5432, user, decrypted_password, dbname, "postgresql") do |_conn|
+    with_remote_connection do |_conn|
       return MiqRegionRemote.region_number_from_sequence
     end
   end
@@ -217,7 +223,7 @@ class PglogicalSubscription < ActsAsArModel
     local_errors = EvmDatabase.check_schema
     raise local_errors if local_errors
     find_password if password.nil?
-    MiqRegionRemote.with_remote_connection(host, port || 5432, user, decrypted_password, dbname, "postgresql") do |conn|
+    with_remote_connection do |conn|
       remote_errors = EvmDatabase.check_schema(conn)
       raise remote_errors if remote_errors
     end
@@ -236,5 +242,20 @@ class PglogicalSubscription < ActsAsArModel
 
   def decrypted_password
     MiqPassword.try_decrypt(password)
+  end
+
+  def remote_replication_lsn
+    pglogical.subscription_show_status(id)["remote_replication_lsn"]
+  end
+
+  def remote_node_lsn
+    with_remote_connection(&:xlog_location)
+  end
+
+  def with_remote_connection
+    find_password
+    MiqRegionRemote.with_remote_connection(host, port || 5432, user, decrypted_password, dbname, "postgresql") do |conn|
+      yield conn
+    end
   end
 end

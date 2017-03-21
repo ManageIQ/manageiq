@@ -28,7 +28,7 @@ class MiqPolicySet < ApplicationRecord
   def add_to(ids, db)
     model = db.respond_to?(:constantize) ? db.constantize : db
     ids.each do|id|
-      rec = model.find_by_id(id)
+      rec = model.find_by(:id => id)
       next unless rec
 
       rec.add_policy(self)
@@ -38,7 +38,7 @@ class MiqPolicySet < ApplicationRecord
   def remove_from(ids, db)
     model = db.respond_to?(:constantize) ? db.constantize : db
     ids.each do|id|
-      rec = model.find_by_id(id)
+      rec = model.find_by(:id => id)
       next unless rec
 
       rec.remove_policy(self)

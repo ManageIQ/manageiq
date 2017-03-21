@@ -1,5 +1,6 @@
 class CloudNetwork < ApplicationRecord
   include NewWithTypeStiMixin
+  include SupportsFeatureMixin
 
   acts_as_miq_taggable
 

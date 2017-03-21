@@ -44,12 +44,7 @@ class Condition < ApplicationRecord
     when "script"
       result = eval(expression["expr"].strip)
     when "tag"
-      case expression["include"]
-      when "any"
-        result = false
-      when "all", "none"
-        result = true
-      else
+      unless %w(any all none).include?(expression["include"])
         raise _("condition '%{name}', include value \"%{value}\", is invalid. Should be one of \"any, all or none\"") %
                 {:name => name, :value => expression["include"]}
       end

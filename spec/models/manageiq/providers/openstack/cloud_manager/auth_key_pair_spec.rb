@@ -6,11 +6,12 @@ describe ManageIQ::Providers::Openstack::CloudManager::AuthKeyPair do
     it 'creates new key pair in nova' do
       service = double
       key_pairs = double
+      allow(ExtManagementSystem).to receive(:find).with(ems.id).and_return(ems)
       allow(ems).to receive(:connect).with(:service => 'Compute').and_return(service)
       allow(service).to receive(:key_pairs).and_return(key_pairs)
       allow(key_pairs).to receive(:create).with(key_pair_attributes).and_return(
         FactoryGirl.create :auth_key_pair_openstack)
-      subject.class.create_key_pair(ems, key_pair_attributes)
+      subject.class.create_key_pair(ems.id, key_pair_attributes)
     end
 
     it 'deletes existing key pair from nova' do

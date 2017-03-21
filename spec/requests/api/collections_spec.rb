@@ -84,6 +84,11 @@ describe "Rest API Collections" do
       test_collection_query(:clusters, clusters_url, EmsCluster)
     end
 
+    it "query CloudVolumes" do
+      FactoryGirl.create(:cloud_volume)
+      test_collection_query(:cloud_volumes, cloud_volumes_url, CloudVolume)
+    end
+
     it "query Conditions" do
       FactoryGirl.create(:condition)
       test_collection_query(:conditions, conditions_url, Condition)
@@ -166,6 +171,11 @@ describe "Rest API Collections" do
     it "query Rates" do
       FactoryGirl.build(:chargeback_rate_detail)
       test_collection_query(:rates, rates_url, ChargebackRateDetail)
+    end
+
+    it "query Regions" do
+      FactoryGirl.create(:miq_region)
+      test_collection_query(:regions, regions_url, MiqRegion)
     end
 
     it "query Reports" do
@@ -433,6 +443,11 @@ describe "Rest API Collections" do
       test_collection_bulk_query(:rates, rates_url, ChargebackRateDetail)
     end
 
+    it "bulk query Regions" do
+      FactoryGirl.create(:miq_region)
+      test_collection_bulk_query(:regions, regions_url, MiqRegion)
+    end
+
     it "bulk query Report Results" do
       FactoryGirl.create(:miq_report_result)
       test_collection_bulk_query(:results, results_url, MiqReportResult)
@@ -559,6 +574,11 @@ describe "Rest API Collections" do
     it 'bulk query LoadBalancers' do
       FactoryGirl.create(:load_balancer)
       test_collection_bulk_query(:load_balancers, load_balancers_url, LoadBalancer)
+    end
+
+    it 'bulk query CloudVolumes' do
+      FactoryGirl.create(:cloud_volume)
+      test_collection_bulk_query(:cloud_volumes, cloud_volumes_url, CloudVolume)
     end
   end
 end

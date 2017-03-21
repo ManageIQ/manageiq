@@ -108,7 +108,7 @@ module PerEmsWorkerMixin
     end
 
     def ems_from_queue_name(queue_name)
-      ExtManagementSystem.find_by_id(ems_id_from_queue_name(queue_name))
+      ExtManagementSystem.find_by(:id => ems_id_from_queue_name(queue_name))
     end
   end
 

@@ -1,4 +1,4 @@
 module MiqAeMethodService
-  class MiqAeServiceManageIQ_Providers_AnsibleTower_AutomationManager_ScmCredential < MiqAeServiceManageIQ_Providers_AutomationManager_Authentication
+  class MiqAeServiceManageIQ_Providers_AnsibleTower_AutomationManager_ScmCredential < MiqAeServiceManageIQ_Providers_AnsibleTower_AutomationManager_Credential
   end
 end

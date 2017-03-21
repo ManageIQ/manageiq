@@ -25,6 +25,28 @@ module ManageIQ::Providers
     has_many :load_balancer_health_checks,        :foreign_key => :ems_id, :dependent => :destroy
     has_many :load_balancer_health_check_members, :through => :load_balancer_health_checks
 
+    # Uses "ext_management_systems"."parent_ems_id" instead of "ext_management_systems"."id"
+    #
+    # ORDER BY ((
+    #   SELECT COUNT(*)
+    #   FROM "vms"
+    #   WHERE "ext_management_systems"."parent_ems_id" = "vms"."ems_id"
+    # ))
+    #
+    # So unlike the parent class definition, this looks at "ext_management_systems"."parent_ems_id" instead of
+    # "ext_management_systems"."id"
+    # If we are able to define a has_many :vms, :through => :parent_manager, that does actual join, this code should
+    # not be needed.
+    virtual_total :total_vms, :vms, {
+      :arel => lambda do |t|
+        foreign_table = Vm.arel_table
+        local_key     = :parent_ems_id
+        foreign_key   = :ems_id
+        arel_column   = Arel.star.count
+        t.grouping(foreign_table.project(arel_column).where(t[local_key].eq(foreign_table[foreign_key])))
+      end
+    }
+
     alias all_cloud_networks cloud_networks
 
     belongs_to :parent_manager,

@@ -11,7 +11,11 @@ class Tag < ApplicationRecord
   def self.list(object, options = {})
     ns = get_namespace(options)
     if ns[0..7] == "/virtual"
-      predicate = ns.split("/")[2..-1] # throw away /virtual
+      ns.gsub!('/virtual/','')  # throw away /virtual
+      ns, virtual_custom_attribute = MiqExpression.escape_virtual_custom_attribute(ns)
+      predicate = ns.split("/")
+      predicate.map!{ |x| URI::RFC2396_Parser.new.unescape(x) } if virtual_custom_attribute
+
       begin
         predicate.inject(object) { |target, method| target.public_send method }
       rescue NoMethodError

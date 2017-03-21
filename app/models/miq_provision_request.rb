@@ -27,7 +27,7 @@ class MiqProvisionRequest < MiqRequest
 
   def self.request_task_class_from(attribs)
     source_id = MiqRequestMixin.get_option(:src_vm_id, nil, attribs['options'])
-    vm_or_template = VmOrTemplate.find_by_id(source_id)
+    vm_or_template = VmOrTemplate.find_by(:id => source_id)
     raise MiqException::MiqProvisionError, "Unable to find source Template/Vm with id [#{source_id}]" if vm_or_template.nil?
 
     via = MiqRequestMixin.get_option(:provision_type, nil, attribs['options'])

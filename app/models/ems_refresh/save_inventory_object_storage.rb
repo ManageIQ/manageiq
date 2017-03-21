@@ -77,7 +77,7 @@ module EmsRefresh::SaveInventoryObjectStorage
       h[:cloud_object_store_container_id] = h.fetch_path(:container, :id)
     end
 
-    save_inventory_multi(ems.cloud_object_store_objects, hashes, deletes, [:ems_ref], nil, [:tenant, :container])
+    save_inventory_multi(ems.cloud_object_store_objects, hashes, deletes, [:ems_ref], nil, [:tenant, :container], true)
     store_ids_for_new_records(ems.cloud_object_store_objects, hashes, :ems_ref)
   end
 end

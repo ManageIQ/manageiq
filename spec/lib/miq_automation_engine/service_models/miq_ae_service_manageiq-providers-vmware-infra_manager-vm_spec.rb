@@ -42,12 +42,12 @@ module MiqAeServiceManageIQ_Providers_Vmware_InfraManager_VmSpec
     end
 
     it "#add_disk" do
-      service_vm.add_disk('disk_1', 100)
+      service_vm.add_disk('disk_1', 100, :thin_provisioned => true)
 
       expect(MiqQueue.first).to have_attributes(
         @base_queue_options.merge(
           :method_name => 'add_disk',
-          :args        => ['disk_1', 100])
+          :args        => ['disk_1', 100, :thin_provisioned => true])
       )
     end
 

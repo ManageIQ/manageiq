@@ -77,6 +77,7 @@ class MiqExpression
 
   INCLUDE_TABLES = %w(
     advanced_settings
+    archived_container_groups
     audit_events
     availability_zones
     cloud_networks
@@ -1050,8 +1051,19 @@ class MiqExpression
     tag
   end
 
+  def self.escape_virtual_custom_attribute(attribute)
+    if attribute.include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
+      uri_parser = URI::RFC2396_Parser.new
+      [uri_parser.escape(attribute, /[^A-Za-z0-9:\-_]/), true]
+    else
+      [attribute, false]
+    end
+  end
+
   def self.value2tag(tag, val = nil)
+    tag, virtual_custom_attribute = escape_virtual_custom_attribute(tag)
     model, *values = tag.to_s.gsub(/[\.-]/, "/").split("/") # replace model path ".", column name "-" with "/"
+    values.map!{ |x|  URI::RFC2396_Parser.new.unescape(x) } if virtual_custom_attribute
 
     case values.first
     when "user_tag"
@@ -1161,10 +1173,10 @@ class MiqExpression
 
     klass.custom_keys.each do |custom_key|
       custom_detail_column = [model, CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX + custom_key].join("-")
-      custom_detail_name = custom_key
+      custom_detail_name = _("Labels: %{custom_key}") % { :custom_key => custom_key }
       if options[:include_model]
         model_name = Dictionary.gettext(model, :type => :model, :notfound => :titleize)
-        custom_detail_name = [model_name, custom_key].join(" : ")
+        custom_detail_name = [model_name, custom_detail_name].join(" : ")
       end
       custom_attributes_details.push([custom_detail_name, custom_detail_column])
     end

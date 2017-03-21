@@ -6,7 +6,7 @@ module MiqAeMethodService
 
     def add_to_service(service)
       raise ArgumentError, "service must be a MiqAeServiceService" unless service.kind_of?(MiqAeMethodService::MiqAeServiceService)
-      ar_method { wrap_results(Service.find_by_id(service.id).add_resource!(@object)) }
+      ar_method { wrap_results(@object.add_to_service(Service.find_by(:id => service.id))) }
     end
 
     def remove_from_service

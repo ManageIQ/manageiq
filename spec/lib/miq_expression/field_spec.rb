@@ -70,6 +70,13 @@ RSpec.describe MiqExpression::Field do
       tag = "Vm.hosts.user_tag-name"
       expect(described_class.parse(tag)).to be_nil
     end
+
+    it 'parses field with numbers in association' do
+      field = 'Vm.win32_services-dependencies'
+      expect(described_class.parse(field)).to have_attributes(:model        => Vm,
+                                                              :associations => %w(win32_services),
+                                                              :column       => 'dependencies')
+    end
   end
 
   describe "#parse!" do

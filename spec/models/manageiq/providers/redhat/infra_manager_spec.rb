@@ -22,6 +22,24 @@ describe ManageIQ::Providers::Redhat::InfraManager do
       expect(ems.rhevm_metrics_connect_options(:hostname => "different.tld")[:host])
         .to eq("different.tld")
     end
+
+    it "rhevm_metrics_connect_options fetches the default database name" do
+      expect(ems.rhevm_metrics_connect_options[:database])
+        .to eq(ems.class.default_history_database_name)
+    end
+
+    context "non default metrics database name" do
+      let(:ems) do
+        FactoryGirl.create(:ems_redhat,
+                           :hostname                  => "some.thing.tld",
+                           :connection_configurations => [{:endpoint => {:role => :metrics,
+                                                                         :path => "some.database"}}])
+      end
+
+      it "fetches the set database name" do
+        expect(ems.rhevm_metrics_connect_options[:database]).to eq("some.database")
+      end
+    end
   end
 
   context "#vm_reconfigure" do

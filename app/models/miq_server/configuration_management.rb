@@ -13,6 +13,7 @@ module MiqServer::ConfigurationManagement
   def set_config(config)
     config = config.config if config.respond_to?(:config)
     add_settings_for_resource(config)
+    ntp_reload_queue
   end
 
   def reload_settings

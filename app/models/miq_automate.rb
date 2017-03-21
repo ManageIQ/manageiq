@@ -20,7 +20,7 @@ class MiqAutomate
   end
 
   def self._async_datastore_reset(taskid)
-    task = MiqTask.find_by_id(taskid)
+    task = MiqTask.find_by(:id => taskid)
     task.update_status("Active",   "Ok", "Resetting Automate Datastore") if task
     MiqAeDatastore.reset_to_defaults
     task.update_status("Finished", "Ok", "Resetting Automate Datastore complete") if task
