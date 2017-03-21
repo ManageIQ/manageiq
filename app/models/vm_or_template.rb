@@ -336,24 +336,7 @@ class VmOrTemplate < ApplicationRecord
   # cb_method:    the MiqQueue callback method along with the parameters that is called
   #               when automate process is done and the event is not prevented to proceed by policy
   def check_policy_prevent(policy_event, *cb_method)
-    cb = {
-      :class_name  => self.class.to_s,
-      :instance_id => id,
-      :method_name => :check_policy_prevent_callback,
-      :args        => [*cb_method],
-      :server_guid => MiqServer.my_guid
-    }
-    enforce_policy(policy_event, {}, :miq_callback => cb) unless policy_event.nil?
-  end
-
-  def check_policy_prevent_callback(*action, _status, _message, result)
-    prevented = false
-    if result.kind_of?(MiqAeEngine::MiqAeWorkspaceRuntime)
-      event = result.get_obj_from_path("/")['event_stream']
-      data  = event.attributes["full_data"]
-      prevented = data.fetch_path(:policy, :prevented) if data
-    end
-    prevented ? _log.info(event.attributes["message"].to_s) : send(*action)
+    enforce_policy(policy_event, {}, {:miq_callback => prevent_callback_settings(*cb_method)}) unless policy_event.nil?
   end
 
   def enforce_policy(event, inputs = {}, options = {})
