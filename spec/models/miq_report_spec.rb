@@ -784,4 +784,190 @@ describe MiqReport do
       expect(report.cols).to eq(%w(name name2))
     end
   end
+
+  context "chargeback reports" do
+    let(:hourly_rate) { 0.01 }
+    let(:hourly_variable_tier_rate) { {:variable_rate => hourly_rate.to_s} }
+    let(:detail_params) { {:chargeback_rate_detail_fixed_compute_cost => { :tiers => [hourly_variable_tier_rate] } } }
+    let!(:chargeback_rate) do
+      FactoryGirl.create(:chargeback_rate, :detail_params => detail_params)
+    end
+    let(:report_params) do
+      {
+        :rpt_group     => "Custom",
+        :rpt_type      => "Custom",
+        :include       => { :custom_attributes => {} },
+        :group         => "y",
+        :template_type => "report",
+      }
+    end
+
+    before do
+      MiqRegion.seed
+      ChargebackRateDetailMeasure.seed
+      ChargeableField.seed
+      ChargebackRate.seed
+      EvmSpecHelper.create_guid_miq_server_zone
+    end
+
+    context "chargeback based on container images" do
+      let(:label_name) { "version" }
+      let(:label_value) { "1.0.0" }
+      let(:label) { FactoryGirl.build(:custom_attribute, :name => label_name, :value => label_value, :section => 'docker_labels') }
+      let(:label_report_column) { "virtual_custom_attribute_#{label_name}" }
+      let(:report) do
+        MiqReport.new(
+          report_params.merge(
+            :db          => "ChargebackContainerImage",
+            :cols        => ["start_date", "display_range", "project_name", "image_name", label_report_column],
+            :col_order   => ["project_name", "image_name", "display_range", label_report_column],
+            :headers     => ["Project Name", "Image Name", "Date Range", nil],
+            :sortby      => ["project_name", "image_name", "start_date"],
+            :db_options  => { :rpt_type => "ChargebackContainerImage",
+                              :options  => { :interval            => "daily",
+                                             :interval_size       => 28,
+                                             :end_interval_offset => 1,
+                                             :provider_id         => "all",
+                                             :entity_id           => "all",
+                                             :include_metrics     => true,
+                                             :groupby             => "date",
+                                             :groupby_tag         => nil }},
+            :col_options => ChargebackContainerImage.report_col_options
+          )
+        )
+      end
+
+      it "runs a report with a custom attribute" do
+        ems = FactoryGirl.create(:ems_openshift)
+        image = FactoryGirl.create(:container_image, :ext_management_system => ems)
+        image.docker_labels << label
+        project_name = "my project"
+        project = FactoryGirl.create(:container_project, :name => project_name, :ext_management_system => ems)
+        group = FactoryGirl.create(:container_group, :ext_management_system => ems, :container_project => project)
+        container = FactoryGirl.create(:kubernetes_container, :container_group => group, :container_image => image)
+        container.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
+                                                       :with_data,
+                                                       :timestamp     => 1.day.ago,
+                                                       :resource_id   => container.id,
+                                                       :resource_name => container.name,
+                                                       :parent_ems_id => ems.id,
+                                                       :tag_names     => "")
+        ChargebackRate.set_assignments(:compute, [{ :cb_rate => chargeback_rate, :label => [label, "container_image"] }])
+        rpt = report.generate_table(:userid => "admin")
+        row = rpt[project_name][:row]
+        expect(row[label_report_column]).to eq(label_value)
+      end
+    end
+
+    context "chargeback based on container projects" do
+      let(:label_name) { "version" }
+      let(:label_value) { "1.0.0" }
+      let(:label) { FactoryGirl.build(:custom_attribute, :name => label_name, :value => label_value, :section => 'labels') }
+      let(:label_report_column) { "virtual_custom_attribute_#{label_name}" }
+      let(:report) do
+        MiqReport.new(
+          report_params.merge(
+            :db          => "ChargebackContainerProject",
+            :cols        => ["start_date", "display_range", "project_name", label_report_column],
+            :col_order   => ["project_name", "display_range", label_report_column],
+            :headers     => ["Project Name", "Date Range", nil],
+            :sortby      => ["project_name", "start_date"],
+            :db_options  => {:rpt_type => "ChargebackContainerProject",
+                             :options  => { :interval            => "daily",
+                                            :interval_size       => 28,
+                                            :end_interval_offset => 1,
+                                            :provider_id         => "all",
+                                            :entity_id           => "all",
+                                            :include_metrics     => true,
+                                            :groupby             => "date",
+                                            :groupby_tag         => nil }},
+            :col_options => ChargebackContainerProject.report_col_options
+          )
+        )
+      end
+
+      it "runs a report with a custom attribute" do
+        ems = FactoryGirl.create(:ems_openshift)
+        project_name = "my project"
+        project = FactoryGirl.create(:container_project, :name => project_name, :ext_management_system => ems, :created_on => 2.days.ago)
+        project.labels << label
+        project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
+                                                     :with_data,
+                                                     :timestamp     => 1.day.ago,
+                                                     :resource_id   => project.id,
+                                                     :resource_name => project.name,
+                                                     :parent_ems_id => ems.id,
+                                                     :tag_names     => "")
+        ChargebackRate.set_assignments(:compute, [{ :cb_rate => chargeback_rate, :object => ems }])
+        rpt = report.generate_table(:userid => "admin")
+        row = rpt[project_name][:row]
+        expect(row[label_report_column]).to eq(label_value)
+      end
+    end
+
+    context "chargeback based on vms" do
+      let(:label_name) { "version" }
+      let(:label_value) { "1.0.0" }
+      let(:label) { FactoryGirl.build(:custom_attribute, :name => label_name, :value => label_value, :section => 'labels') }
+      let(:label_report_column) { "virtual_custom_attribute_#{label_name}" }
+      let(:report) do
+        MiqReport.new(
+          report_params.merge(
+            :db          => "ChargebackVm",
+            :cols        => ["start_date", "display_range", "vm_name", label_report_column],
+            :col_order   => ["vm_name", "display_range", label_report_column],
+            :headers     => ["Vm Name", "Date Range", nil],
+            :sortby      => ["vm_name", "start_date"],
+            :db_options  => {:rpt_type => "ChargebackVm",
+                             :options  => { :interval            => "daily",
+                                            :interval_size       => 28,
+                                            :end_interval_offset => 1,
+                                            :provider_id         => "all",
+                                            :entity_id           => "all",
+                                            :include_metrics     => true,
+                                            :groupby             => "date",
+                                            :groupby_tag         => nil,
+                                            :tag                 => '/managed/environment/prod'}},
+            :col_options => ChargebackVm.report_col_options
+          )
+        )
+      end
+
+      it "runs a report with a custom attribute" do
+        ems = FactoryGirl.create(:ems_vmware)
+
+        cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
+        c = FactoryGirl.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
+        tag = Tag.find_by(:name => "/managed/environment/prod")
+
+        temp = {:cb_rate => chargeback_rate, :tag => [c, "vm"]}
+        ChargebackRate.set_assignments(:compute, [temp])
+        vm_name = "test_vm"
+        vm1 = FactoryGirl.create(:vm_vmware, :name => vm_name, :evm_owner => FactoryGirl.create(:user_admin), :ems_ref => "ems_ref",
+                                  :created_on => 2.days.ago)
+        vm1.tag_with(tag.name, :ns => '*')
+        vm1.labels << label
+
+        host1   = FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :memory_mb => 8124, :cpu_total_cores => 1, :cpu_speed => 9576), :vms => [vm1])
+        storage = FactoryGirl.create(:storage_target_vmware)
+        host1.storages << storage
+
+        ems_cluster = FactoryGirl.create(:ems_cluster, :ext_management_system => ems)
+        ems_cluster.hosts << host1
+        vm1.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
+                                                 :with_data,
+                                                 :timestamp             => 1.day.ago,
+                                                 :resource_id           => vm1.id,
+                                                 :resource_name         => vm1.name,
+                                                 :tag_names             => "environment/prod",
+                                                 :parent_host_id        => host1.id,
+                                                 :parent_ems_cluster_id => ems_cluster.id,
+                                                 :parent_ems_id         => ems.id,
+                                                 :parent_storage_id     => storage.id)
+        rpt = report.generate_table(:userid => "admin")
+        row = rpt[vm_name][:row]
+        expect(row[label_report_column]).to eq(label_value)
+      end
+    end
+  end
 end
