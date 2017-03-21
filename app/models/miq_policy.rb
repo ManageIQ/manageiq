@@ -103,11 +103,6 @@ class MiqPolicy < ApplicationRecord
     end.compact
   end
 
-  def action_result_for_event(action, event)
-    pe = miq_policy_contents.find_by(:miq_action => action, :miq_event_definition => event)
-    pe.qualifier == "success"
-  end
-
   def delete_event(event)
     MiqPolicyContent.where(:miq_policy => self, :miq_event_definition => event).destroy_all
   end
