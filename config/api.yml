@@ -620,13 +620,7 @@
       - :name: assign
         :identifier: storage_tag
       - :name: unassign
-        :identifier: storage_tag
-  :ems_events:
-     :description: LXCA Events
-     :options:
-     - :collection
-     :verbs: *g
-     :klass: EmsEvent        
+        :identifier: storage_tag     
   :events:
     :description: Events
     :identifier: event
