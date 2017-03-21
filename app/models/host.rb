@@ -1346,22 +1346,17 @@ class Host < ApplicationRecord
     Classification.first_cat_entry(name, self)
   end
 
-  # TODO: Rename this to scan_queue and rename scan_from_queue to scan to match
-  #   standard from other places.
-  def scan(userid = "system", _options = {})
+  def scan(userid = "system", options = {})
     log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
+    _log.info("Requesting scan of #{log_target}")
+    check_policy_prevent(:request_host_scan, :scan_queue, userid, options)
+  end
+
+  def scan_queue(userid = 'system', _options = {})
+    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
+    _log.info("Queuing scan of #{log_target}")
 
     task = MiqTask.create(:name => "SmartState Analysis for '#{name}' ", :userid => userid)
-
-    _log.info("Requesting scan of #{log_target}")
-    begin
-      MiqEvent.raise_evm_job_event(self, :type => "scan", :prefix => "request")
-    rescue => err
-      _log.warn("Error raising request scan event for #{log_target}: #{err.message}")
-      return
-    end
-
-    _log.info("Queuing scan of #{log_target}")
     timeout = ::Settings.host_scan.queue_timeout.to_i_with_method
     cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
     MiqQueue.put(
