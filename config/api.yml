@@ -88,6 +88,41 @@
        :post:
        - :name: create
          :identifier: alert_status_action_new
+  :alert_definition_profiles:
+    :description: Alert Definition Profiles
+    :identifier: alert_definition_profile
+    :options:
+    - :collection
+    - :subcollection
+    :verbs: *gpd
+    :klass: MiqAlertSet
+    :subcollections:
+    - :alert_definitions
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: alert_definition_profiles_show_list
+      :post:
+      - :name: read
+        :identifier: alert_definition_profile_view
+      - :name: create
+        :identifier: alert_definition_profile_new
+      - :name: edit
+        :identifier: alert_definition_profile_edit
+      - :name: delete
+        :identifier: alert_definition_profile_delete
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: alert_definition_profile_view
+      :post:
+      - :name: edit
+        :identifier: alert_definition_profile_edit
+      - :name: delete
+        :identifier: alert_definition_profile_delete
+      :delete:
+      - :name: delete
+        :identifier: alert_definition_profile_delete
   :alert_definitions:
     :description: Alert Definitions
     :identifier: alert_definition

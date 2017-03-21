@@ -2035,6 +2035,46 @@
         :feature_type: admin
         :hidden: true
         :identifier: alert_definition_delete
+  - :name: Alert Definition Profiles
+    :description: Everything under Alert Definition Profiles
+    :feature_type: node
+    :hidden: true
+    :identifier: alert_definition_profile
+    :children:
+    - :name: View
+      :description: View Alert Definition Profiles
+      :feature_type: view
+      :identifier: alert_definition_profile_view
+      :children:
+      - :name: List
+        :description: Display List of Alert Definition Profiles
+        :feature_type: view
+        :identifier: alert_definition_profiles_show_list
+      - :name: Show
+        :description: Display Individual Alert Definition Profile
+        :feature_type: view
+        :identifier: alert_definition_profile_show
+    - :name: Modify
+      :description: Modify Alert Definition Profiles
+      :feature_type: admin
+      :hidden: true
+      :identifier: alert_definition_profile_admin
+      :children:
+      - :name: Add
+        :description: Add an Alert Definition Profile
+        :feature_type: admin
+        :hidden: true
+        :identifier: alert_definition_profile_new
+      - :name: Edit
+        :description: Edit an Alert Definition Profile
+        :feature_type: admin
+        :hidden: true
+        :identifier: alert_definition_profile_edit
+      - :name: Delete
+        :description: Delete an Alert Definition Profile
+        :feature_type: admin
+        :hidden: true
+        :identifier: alert_definition_profile_delete
 
 # Policy Simulation
 - :name: Simulation
