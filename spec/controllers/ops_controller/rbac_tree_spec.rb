@@ -1,9 +1,6 @@
 describe OpsController::RbacTree do
   let(:role) do
-    roles = YAML.load_file(MiqUserRole::FIXTURE_YAML)
-    role = roles.detect { |r| r[:name] == "EvmRole-approver" }
-
-    FactoryGirl.create(:miq_user_role, :role => "approver", :features => role[:miq_product_feature_identifiers])
+    FactoryGirl.create(:miq_user_role, :role => "approver", :features => %w(control_explorer_view dashboard))
   end
 
   let(:features) { role.miq_product_features.order(:identifier).pluck(:identifier) }
