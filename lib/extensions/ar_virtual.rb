@@ -124,7 +124,7 @@ module VirtualDelegates
       col = col.to_s
       type = to_ref.klass.type_for_attribute(col)
       raise "unknown attribute #{to}##{col} referenced in #{name}" unless type
-      arel = virtual_delegate_arel(col, to_ref)
+      arel = virtual_delegate_arel(col, to_ref, :default => options[:default])
       define_virtual_attribute method_name, type, :uses => (options[:uses] || to), :arel => arel
     end
 
@@ -191,19 +191,20 @@ module VirtualDelegates
     #
     #   See select_from_alias for examples
 
-    def virtual_delegate_arel(col, to_ref)
+    def virtual_delegate_arel(col, to_ref, options)
       # ensure the column has sql and the association is reachable via sql
       # There is currently no way to propagate sql over a virtual association
       if to_ref.klass.arel_attribute(col) && reflect_on_association(to_ref.name)
+        default = options[:default]
         if to_ref.macro == :has_one
           lambda do |t|
             src_model_id = arel_attribute(to_ref.association_primary_key, t)
-            VirtualDelegates.select_from_alias(to_ref, col, to_ref.foreign_key, src_model_id)
+            VirtualDelegates.select_from_alias(to_ref, col, to_ref.foreign_key, src_model_id, default)
           end
         elsif to_ref.macro == :belongs_to
           lambda do |t|
             src_model_id = arel_attribute(to_ref.foreign_key, t)
-            VirtualDelegates.select_from_alias(to_ref, col, to_ref.active_record_primary_key, src_model_id)
+            VirtualDelegates.select_from_alias(to_ref, col, to_ref.active_record_primary_key, src_model_id, default)
           end
         end
       end
@@ -240,6 +241,28 @@ module VirtualDelegates
   #
   #     SELECT to_model[col] from to_model where to_model[to_model_col_name] = src_model_table[:src_model_id]
   #     (SELECT "hosts"."name" FROM "hosts" WHERE "hosts"."id" = "vms"."host_id")
+  #
+  #   ----
+  #
+  #   for the given belongs_to class definition with a default value:
+  #
+  #     class Vm
+  #       belongs_to :hosts #, :foreign_key => :host_id, :primary_key => :id
+  #       virtual_delegate :name, :to => :host, :prefix => true, :allow_nil => true, :default => 0
+  #     end
+  #
+  #   The virtual_delegate calls:
+  #
+  #     virtual_delegate_arel("name", Vm.reflection_with_virtual(:host), :default => 0)
+  #
+  #   which calls:
+  #
+  #     select_from_alias(Vm.reflection_with_virtual(:host), "name", "id", Vm.arel_table[:host_id], 0)
+  #
+  #   which produces the sql:
+  #
+  #     COALESCE(SELECT to_model[col] from to_model where to_model[to_model_col_name] = src_model_table[:src_model_id], default)
+  #     COALESCE((SELECT "hosts"."name" FROM "hosts" WHERE "hosts"."id" = "vms"."host_id"), 0)
   #
   #   ----
   #
@@ -286,11 +309,16 @@ module VirtualDelegates
   #     (SELECT "vms_sub"."name" FROM "vms" AS "vms_ss" WHERE "vms_ss"."id" = "vms"."src_template_id")
   #
 
-  def self.select_from_alias(to_ref, col, to_model_col_name, src_model_id)
+  def self.select_from_alias(to_ref, col, to_model_col_name, src_model_id, default)
     to_table = select_from_alias_table(to_ref.klass, src_model_id.relation)
     to_model_id = to_ref.klass.arel_attribute(to_model_col_name, to_table)
     to_column = to_ref.klass.arel_attribute(col, to_table)
-    Arel.sql("(#{to_table.project(to_column).where(to_model_id.eq(src_model_id)).to_sql})")
+    sql = "(#{to_table.project(to_column).where(to_model_id.eq(src_model_id)).to_sql})"
+    if default
+      Arel.sql("COALESCE(#{sql}, #{ActiveRecord::Base.connection.quote(default)})")
+    else
+      Arel.sql(sql)
+    end
   end
 
   # determine table reference to use for a sub query
