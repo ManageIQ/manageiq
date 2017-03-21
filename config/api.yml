@@ -622,7 +622,7 @@
       - :name: unassign
         :identifier: storage_tag
   :ems_events:
-     :description: LXCA Events
+     :description: LenovoXclarity Events
      :options:
      - :collection
      :verbs: *g
