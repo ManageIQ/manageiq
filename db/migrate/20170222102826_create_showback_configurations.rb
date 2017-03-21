@@ -1,6 +1,6 @@
 class CreateShowbackConfigurations < ActiveRecord::Migration[5.0]
   def up
-    create_table :showback_configurations do |t|
+    create_table :showback_configurations, id: :bigserial, force: :cascade do |t|
       t.string     :name
       t.string     :description
       t.string     :measure

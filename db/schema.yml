@@ -6477,6 +6477,22 @@ shares:
 - allow_tenant_inheritance
 - created_at
 - updated_at
+showback_buckets:
+- id
+- name
+- description
+- resource_type
+- resource_id
+- created_at
+- updated_at
+showback_charges:
+- id
+- fixed_cost
+- variable_cost
+- showback_bucket_id
+- showback_event_id
+- created_at
+- updated_at
 showback_configurations:
 - id
 - name
