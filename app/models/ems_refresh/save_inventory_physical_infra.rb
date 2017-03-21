@@ -22,6 +22,7 @@ module EmsRefresh::SaveInventoryPhysicalInfra
     end
 
     child_keys = [
+      # :firmwares,
       :physical_servers,
     ]
 
@@ -34,6 +35,12 @@ module EmsRefresh::SaveInventoryPhysicalInfra
     _log.info("#{log_header} Saving EMS Inventory...Complete")
 
     ems
+  end
+
+  def save_firmwares_inventory(parent, hash, foo=nil)
+    return if hash.nil?
+    save_inventory_single(:firmware, parent, hash)
+    parent.save!
   end
 
   def save_physical_servers_inventory(ems, hashes, target = nil)
