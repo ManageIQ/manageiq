@@ -6511,6 +6511,14 @@ showback_events:
 - showback_configuration_id
 - updated_at
 - created_at
+showback_rates:
+- id
+- fixed_cost
+- variable_cost
+- date
+- concept
+- created_at
+- updated_at
 snapshots:
 - id
 - uid
