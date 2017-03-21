@@ -6,6 +6,7 @@ class ApplicationRecord < ActiveRecord::Base
   include ArRegion
   include ArLock
   include ArNestedCountBy
+  include ArHrefSlug
   include ToModelHash
 
   extend ArTableLock
