@@ -1578,7 +1578,6 @@ jobs:
 - type
 - process
 - agent_id
-- agent_class
 - agent_message
 - started_on
 - dispatch_status
