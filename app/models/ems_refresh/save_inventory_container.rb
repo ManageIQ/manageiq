@@ -35,11 +35,13 @@ module EmsRefresh::SaveInventoryContainer
     @inv_collections[:container_projects] = ::ManagerRefresh::InventoryCollection.new(
       :model_class => ContainerProject,
       :parent => ems,
+      :builder_params => {:ems_id => ems.id},
       :association => :container_projects
     )
     @inv_collections[:container_quotas] = ::ManagerRefresh::InventoryCollection.new(
       :model_class => ContainerQuota,
       :parent => ems,
+      :builder_params => {:ems_id => ems.id},
       :arel => ContainerQuota.joins(:container_project).where('container_projects.ems_id' => ems.id),
       #:manager_ref => [:ems_ref]
     )
@@ -58,7 +60,7 @@ module EmsRefresh::SaveInventoryContainer
     target = ems if target.nil?  # TODO deletes - partial vs full ?
 
     hashes.each do |h|
-      @inv_collections[:container_projects].build(h.merge(:ems_id => ems.id))
+      @inv_collections[:container_projects].build(h)
     end
 
     # TODO                     [:labels, :tags], [], true)
@@ -105,8 +107,7 @@ module EmsRefresh::SaveInventoryContainer
 
     hashes.each do |h|
       h = h.merge(
-        :ems_id            => ems.id,
-        :container_project => @inv_collections[:container_projects].lazy_find(h.delete(:project)[:ems_ref])
+        :container_project =>  @inv_collections[:container_projects].lazy_find(h.delete(:project)[:ems_ref])
       )
       items = h.delete(:container_quota_items)
       graph_container_quota_items_inventory(h, items)
