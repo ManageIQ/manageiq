@@ -2,14 +2,13 @@
 -# widget MiqWidget object
 - button_id = "btn_#{presenter.widget.id}"
 %div{:id => "w_#{presenter.widget.id}"}
-  .card-pf
-    .card-pf-heading
-      %h2.card-pf-title.sortable-handle{:style => "cursor:move"}
-        = h(presenter.widget.title)
-        .dropdown.dropdown-kebab-pf.pull-right
-          %button.btn.btn-link.dropdown-toggle{:type => "button", :id => button_id, "data-toggle" => "dropdown"}
+  .card-pf.card-pf-view
+    .card-pf-body
+      .card-pf-heading-kebab
+        .dropdown.pull-right.dropdown-kebab-pf
+          %button.btn.btn-link.dropdown-toggle{:type => "button", :id => button_id, "data-toggle" => "dropdown", "aria-haspopup" => "true"}
             %span.fa.fa-ellipsis-v
-          %ul.dropdown-menu{"aria-labelledby" => button_id}
+          %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => button_id}
             - if role_allows?(:feature => "dashboard_add")
               %li
                 = presenter.button_close
@@ -24,6 +23,8 @@
               - if %(chart).include?(presenter.widget.content_type)
                 %li
                   = presenter.button_zoom
+        %h2.card-pf-title.sortable-handle{:style => "cursor:move"}
+          = h(presenter.widget.title)
 
     - if presenter.widget.content_type == "menu"
       = render :partial => 'widget_menu', :locals => {:widget => presenter.widget}

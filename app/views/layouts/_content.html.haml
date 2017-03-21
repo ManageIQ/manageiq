@@ -111,12 +111,12 @@
 
     - elsif dashboard_no_listnav?
       = render :partial => "layouts/vertical_navbar"
-      .container-fluid.container-cards-pf.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-sub-menus{:style => "overflow: hidden; height: 100%;"}
+      .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-sub-menus{:style => "overflow: hidden; height: 100%;"}
         .row.toolbar-pf#toolbar
           .col-md-12
             - if @widgets_menu
               = render :partial => "layouts/angular/toolbar"
-        .row#main-content
+        .row#main-content.miq-body
           .col-md-12
             .spacer
             = render :partial => 'layouts/tabs'
