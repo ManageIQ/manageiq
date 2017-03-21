@@ -36,6 +36,48 @@ describe Metric::CiMixin::Capture do
     parse_datetime('2013-08-28T12:41:40Z')
   end
 
+  context "#perf_capture_queue" do
+    def test_perf_capture_queue(time_since_last_perf_capture, total_queue_items, verify_queue_items_count)
+      # There are usually some lingering queue items from creating the provider above.  Notably `stop_event_monitor`
+      MiqQueue.delete_all
+      Timecop.freeze do
+        start_time = (Time.now.utc - time_since_last_perf_capture)
+        @vm.last_perf_capture_on = start_time
+        @vm.perf_capture_queue("realtime")
+        expect(MiqQueue.count).to eq total_queue_items
+
+        # make sure the queue items are in the correct order
+        queue_items = MiqQueue.order(:id).limit(verify_queue_items_count)
+        days_ago = (time_since_last_perf_capture.to_i / 1.day.to_i).days
+        partial_days = time_since_last_perf_capture - days_ago
+        interval_start_time = (start_time + days_ago).utc
+        interval_end_time = (interval_start_time + partial_days).utc
+        queue_items.each do |q_item|
+          q_start_time, q_end_time = q_item.args
+          expect(q_start_time).to be_same_time_as interval_start_time
+          expect(q_end_time).to be_same_time_as interval_end_time
+          interval_end_time = interval_start_time
+          # if the collection threshold is ever parameterized, then this 1.day will have to change
+          interval_start_time -= 1.day
+        end
+      end
+    end
+
+    it "splits up long perf_capture durations for old last_perf_capture_on" do
+      # test when last perf capture was many days ago
+      # total queue items == 11
+      # verify last 3 queue items
+      test_perf_capture_queue(10.days + 5.hours + 23.minutes, 11, 3)
+    end
+
+    it "does not get confused when dealing with a single day" do
+      # test when perf capture is just a few hours ago
+      # total queue items == 1
+      # verify last 1 queue item
+      test_perf_capture_queue(0.days + 2.hours + 5.minutes, 1, 1)
+    end
+  end
+
   context "2 collection periods total, end of 1. period has incomplete stat" do
     ###################################################################################################################
     # DESCRIPTION FOR: net_usage_rate_average
