@@ -159,7 +159,7 @@ class ManageIQ::Providers::Openstack::Inventory::Parser::CloudManager < ManagerR
       image[:cloud_tenants] = image_tenants(i)
       image[:location] = "unknown"
       image[:hardware] = persister.hardwares.find_or_build(i.id)
-      image[:hardware][:vm_or_template] = persister.miq_templates.lazy_find(i.id)
+      image[:hardware][:vm_or_template] = image
       image[:hardware][:bitness] = image_architecture(i)
       image[:hardware][:disk_size_minimum] = (i.min_disk * 1.gigabyte)
       image[:hardware][:memory_mb_minimum] = i.min_ram
@@ -331,32 +331,26 @@ class ManageIQ::Providers::Openstack::Inventory::Parser::CloudManager < ManagerR
       # that we don't already have from the flavor field on the server details
       # returned from the openstack api. It's possible that no such flavor was found
       # due to some intermittent network issue or etc, so we use try to not break.
-      flavor = collector.flavors_by_id[s.flavor["id"].to_s]
-      if flavor.nil?
-        # the flavor might be private, which the flavor list doesn't seem to handle
-        # correctly. fetch it now and build an inventory object for it.
-        flavor = collector.private_flavor(s.flavor["id"].to_s)
-        make_flavor(flavor) unless flavor.nil?
-      end
+      flavor = collector.find_flavor(s.flavor["id"].to_s)
+      make_flavor(flavor) unless flavor.nil?
       server[:flavor] = persister.flavors.lazy_find(s.flavor["id"].to_s)
-      server[:hardware] = persister.hardwares.find_or_build(s.id)
-      server[:hardware][:vm_or_template] = persister.vms.lazy_find(s.id)
-      server[:hardware][:cpu_sockets] = flavor.try(:vcpus)
-      server[:hardware][:cpu_total_cores] = flavor.try(:vcpus)
-      server[:hardware][:cpu_speed] = parent_host.try(:hardware).try(:cpu_speed)
-      server[:hardware][:memory_mb] = flavor.try(:ram)
-      server[:hardware][:disk_capacity] = (
+
+      hardware = persister.hardwares.find_or_build(s.id)
+      hardware[:vm_or_template] = persister.vms.lazy_find(s.id)
+      hardware[:cpu_sockets] = flavor.try(:vcpus)
+      hardware[:cpu_total_cores] = flavor.try(:vcpus)
+      hardware[:cpu_speed] = parent_host.try(:hardware).try(:cpu_speed)
+      hardware[:memory_mb] = flavor.try(:ram)
+      hardware[:disk_capacity] = (
         flavor.try(:disk).to_i.gigabytes + flavor.try(:swap).to_i.megabytes + flavor.try(:ephemeral).to_i.gigabytes
       )
 
-      server[:hardware][:networks] = []
       unless s.private_ip_address.blank?
         private_network = persister.networks.find_or_build_by(
           :hardware    => persister.hardwares.lazy_find(s.id),
           :description => "private"
         )
         private_network["description"] = "private"
-        server[:hardware][:networks] << private_network
       end
       unless s.public_ip_address.blank?
         public_network = persister.networks.find_or_build_by(
@@ -364,25 +358,20 @@ class ManageIQ::Providers::Openstack::Inventory::Parser::CloudManager < ManagerR
           :description => "public"
         )
         public_network["description"] = "public"
-        server[:hardware][:networks] << public_network
       end
 
-      server[:hardware][:disks] = []
       disk_location = "vda"
       if (root_size = flavor.try(:disk).to_i.gigabytes).zero?
         root_size = 1.gigabytes
       end
       root_disk = make_instance_disk(s.id, root_size, disk_location.dup, "Root disk")
-      server[:hardware][:disks] << root_disk
       ephemeral_size = flavor.try(:ephemeral).to_i.gigabytes
       unless ephemeral_size.zero?
         ephemeral_disk = make_instance_disk(s.id, ephemeral_size, disk_location.succ!.dup, "Ephemeral disk")
-        server[:hardware][:disks] << ephemeral_disk
       end
       swap_size = flavor.try(:swap).to_i.megabytes
       unless swap_size.zero?
         swap_disk = make_instance_disk(s.id, swap_size, disk_location.succ!.dup, "Swap disk")
-        server[:hardware][:disks] << swap_disk
       end
     end
   end

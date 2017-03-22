@@ -54,6 +54,16 @@ class ManageIQ::Providers::Openstack::Inventory::Collector::CloudManager < Manag
     @flavors = connection.handled_list(:flavors)
   end
 
+  def find_flavor(flavor_id)
+    flavor = flavors_by_id[flavor_id]
+    if flavor.nil?
+      # the flavor might be private, which the flavor list api
+      # doesn't seem to handle correctly. Try to get it separately.
+      flavor = private_flavor(flavor_id)
+    end
+    flavor
+  end
+
   def private_flavor(flavor_id)
     flavor = safe_get { connection.flavors.get(flavor_id) }
     if flavor
@@ -107,11 +117,6 @@ class ManageIQ::Providers::Openstack::Inventory::Collector::CloudManager < Manag
   def vnfds
     return [] unless nfv_service
     nfv_service.handled_list(:vnfds)
-  end
-
-  def volumes
-    return [] unless volume_service.name == :cinder
-    volume_service.handled_list(:volumes)
   end
 
   def orchestration_stacks
