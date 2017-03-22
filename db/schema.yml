@@ -4871,6 +4871,7 @@ miq_alert_statuses:
 - description
 - resolved
 - event_ems_ref
+- assignee_id
 miq_alerts:
 - id
 - guid

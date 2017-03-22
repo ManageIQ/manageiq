@@ -13,6 +13,7 @@ class MiqAlertStatusAction < ApplicationRecord
   validate :only_assignee_can_acknowledge
 
   after_save :update_status_acknowledgement
+  after_save :update_status_assignee
 
   def only_assignee_can_acknowledge
     if ['acknowledge', 'unacknowledge', 'hide', 'show'].include?(action_type) &&
@@ -23,9 +24,13 @@ class MiqAlertStatusAction < ApplicationRecord
 
   def update_status_acknowledgement
     if %w(assign unassign unacknowledge).include?(action_type)
-      miq_alert_status.update(:acknowledged => false)
+      miq_alert_status.update_attributes!(:acknowledged => false)
     elsif "acknowledge" == action_type
-      miq_alert_status.update(:acknowledged => true)
+      miq_alert_status.update_attributes!(:acknowledged => true)
     end
+  end
+
+  def update_status_assignee
+    miq_alert_status.update_attributes!(:assignee => assignee) if %w(assign unassign).include?(action_type)
   end
 end
