@@ -202,7 +202,23 @@ describe ServiceTemplateAnsiblePlaybook do
     end
   end
 
-  describe '#update_catalog_item' do
+  context '#update_for_new_template' do
+    it 'returns immediately if we do not have a playbook_id and job_template is not nil' do
+      service_template = prebuild_service_template
+      info = catalog_item_options_two[:config_info][:retirement]
+      update_resp = service_template.send(:update_for_new_template, info, :retirement, 'test_name', 'test', 'system')
+      expect(update_resp).to be_nil
+    end
+
+    it 'adds a new configuration_template if a playbook_id is passed in and the job_template is nil' do
+      service_template = prebuild_service_template(:job_template => false)
+      info = catalog_item_options_two[:config_info][:retirement]
+      allow_any_instance_of(Hash).to receive(:fetch_path).and_return(job_template)
+      service_template.send(:update_for_new_template, info, :retirement, 'test_name', 'test', 'system')
+    end
+  end
+
+  context '#update_catalog_item' do
     it 'updates and returns the modified catalog item' do
       service_template = prebuild_service_template
       new_dialog_label = catalog_item_options_three
@@ -237,14 +253,22 @@ describe ServiceTemplateAnsiblePlaybook do
 
       expect(service_template.dialogs.first.id).to eq info[:service_dialog_id]
     end
+  end
 
-    def prebuild_service_template
-      expect(described_class)
-        .to receive(:create_job_templates).and_return(:provision => {:configuration_template => job_template})
-      service_template = described_class.create_catalog_item(catalog_item_options_two, user)
+  def prebuild_service_template(opts = {:job_template => true})
+    expect(described_class)
+      .to receive(:create_job_templates).and_return(:provision => {:configuration_template => job_template})
+      .at_least(:once)
+    service_template = described_class.create_catalog_item(catalog_item_options_two, user)
+
+    if opts[:job_template]
       expect(service_template).to receive(:job_template)
         .and_return(job_template).at_least(:once)
-      service_template
+    else
+      expect(service_template).to receive(:job_template)
+        .and_return(nil)
     end
+
+    service_template
   end
 end
