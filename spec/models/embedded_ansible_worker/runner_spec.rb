@@ -10,7 +10,9 @@ describe EmbeddedAnsibleWorker::Runner do
     let(:runner) {
       worker
       allow_any_instance_of(described_class).to receive(:worker_initialization)
-      described_class.new(:guid => worker_guid)
+      r = described_class.new(:guid => worker_guid)
+      allow(r).to receive(:worker).and_return(worker)
+      r
     }
 
     it "#do_before_work_loop exits on exceptions" do
@@ -21,13 +23,20 @@ describe EmbeddedAnsibleWorker::Runner do
     end
 
     context "#update_embedded_ansible_provider" do
+      let(:api_connection) { double("AnsibleAPIConnection") }
       before do
         EvmSpecHelper.local_guid_miq_server_zone
         MiqDatabase.seed
         MiqDatabase.first.set_ansible_admin_authentication(:password => "secret")
+
+        allow(EmbeddedAnsible).to receive(:api_connection).and_return(api_connection)
       end
 
       it "creates initial" do
+        expect(worker).to receive(:remove_demo_data).with(api_connection)
+        expect(worker).to receive(:ensure_initial_objects)
+          .with(instance_of(ManageIQ::Providers::EmbeddedAnsible::Provider), api_connection)
+
         runner.update_embedded_ansible_provider
 
         provider = ManageIQ::Providers::EmbeddedAnsible::Provider.first
@@ -39,6 +48,10 @@ describe EmbeddedAnsibleWorker::Runner do
       end
 
       it "updates existing" do
+        expect(worker).to receive(:remove_demo_data).twice.with(api_connection)
+        expect(worker).to receive(:ensure_initial_objects).twice
+          .with(instance_of(ManageIQ::Providers::EmbeddedAnsible::Provider), api_connection)
+
         runner.update_embedded_ansible_provider
         new_zone = FactoryGirl.create(:zone)
         miq_server.update(:hostname => "boringserver", :zone => new_zone)
@@ -51,6 +64,25 @@ describe EmbeddedAnsibleWorker::Runner do
         expect(provider.default_endpoint.url).to eq("https://boringserver/ansibleapi/v1")
       end
     end
+
+    context "#setup_ansible" do
+      it "configures EmbeddedAnsible if it is not configured" do
+        expect(EmbeddedAnsible).to receive(:start)
+
+        expect(EmbeddedAnsible).to receive(:configured?).and_return(false)
+        expect(EmbeddedAnsible).to receive(:configure)
+
+        runner.setup_ansible
+      end
+
+      it "doesn't call configure if EmbeddedAnsible is already configured" do
+        expect(EmbeddedAnsible).to receive(:start)
+
+        expect(EmbeddedAnsible).to receive(:configured?).and_return(true)
+        expect(EmbeddedAnsible).not_to receive(:configure)
+
+        runner.setup_ansible
+      end
+    end
   end
 end
-

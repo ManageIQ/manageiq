@@ -12,6 +12,7 @@ class EmbeddedAnsible
   START_EXCLUDE_TAGS          = "packages,migrations,firewall".freeze
   HTTP_PORT                   = 54_321
   HTTPS_PORT                  = 54_322
+  WAIT_FOR_ANSIBLE_SLEEP      = 1.second
 
   def self.available?
     path = ENV["APPLIANCE_ANSIBLE_DIRECTORY"] || APPLIANCE_ANSIBLE_DIRECTORY
@@ -50,6 +51,15 @@ class EmbeddedAnsible
   def self.start
     configure_secret_key
     run_setup_script(START_EXCLUDE_TAGS)
+
+    5.times do
+      return if alive?
+
+      _log.info("Waiting for EmbeddedAnsible to respond")
+      sleep WAIT_FOR_ANSIBLE_SLEEP
+    end
+
+    raise "EmbeddedAnsible service is not responding after setup"
   end
 
   def self.stop
@@ -62,6 +72,15 @@ class EmbeddedAnsible
 
   def self.services
     AwesomeSpawn.run!("source /etc/sysconfig/ansible-tower; echo $TOWER_SERVICES").output.split
+  end
+
+  def self.api_connection
+    admin_auth = miq_database.ansible_admin_authentication
+    AnsibleTowerClient::Connection.new(
+      :base_url => URI::HTTP.build(:host => "localhost", :path => "/api/v1", :port => HTTP_PORT).to_s,
+      :username => admin_auth.userid,
+      :password => admin_auth.password
+    )
   end
 
   def self.run_setup_script(exclude_tags)
@@ -171,14 +190,4 @@ class EmbeddedAnsible
     ActiveRecord::Base.connection
   end
   private_class_method :database_connection
-
-  def self.api_connection
-    admin_auth = miq_database.ansible_admin_authentication
-    AnsibleTowerClient::Connection.new(
-      :base_url => URI::HTTP.build(:host => "localhost", :path => "/api/v1", :port => HTTP_PORT).to_s,
-      :username => admin_auth.userid,
-      :password => admin_auth.password
-    )
-  end
-  private_class_method :api_connection
 end

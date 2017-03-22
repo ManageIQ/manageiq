@@ -49,6 +49,10 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
 
     provider.save!
 
+    api_connection = EmbeddedAnsible.api_connection
+    worker.remove_demo_data(api_connection)
+    worker.ensure_initial_objects(provider, api_connection)
+
     admin_auth = MiqDatabase.first.ansible_admin_authentication
 
     provider.update_authentication(:default => {:userid => admin_auth.userid, :password => admin_auth.password})

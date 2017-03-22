@@ -1,5 +1,6 @@
 class EmbeddedAnsibleWorker < MiqWorker
   require_nested :Runner
+  include_concern 'ObjectManagement'
 
   self.required_roles = ['embedded_ansible']
 
