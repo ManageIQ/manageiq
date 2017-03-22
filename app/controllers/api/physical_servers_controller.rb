@@ -7,7 +7,7 @@ module Api
         response_payload['host'] = case physical_server.host
                                    when nil then nil
                                    else physical_server.host.id
-        end
+      end
 
         render :json => response_payload
       else
