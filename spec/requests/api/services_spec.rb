@@ -659,6 +659,34 @@ describe "Services API" do
       expect(response.parsed_body).to include(expected)
     end
 
+    it 'can query a specific orchestration stack asking for stdout' do
+      api_basic_authorize subcollection_action_identifier(:services, :orchestration_stacks, :read, :get)
+
+      allow_any_instance_of(OrchestrationStack).to receive(:stdout).with(nil).and_return("default text stdout")
+      run_get("#{services_url(svc.id)}/orchestration_stacks/#{os.id}", :attributes => "stdout")
+
+      expected = {
+        'id'     => os.id,
+        'stdout' => "default text stdout"
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'can query a specific orchestration stack asking for stdout in alternate format' do
+      api_basic_authorize subcollection_action_identifier(:services, :orchestration_stacks, :read, :get)
+
+      allow_any_instance_of(OrchestrationStack).to receive(:stdout).with("json").and_return("json stdout")
+      run_get("#{services_url(svc.id)}/orchestration_stacks/#{os.id}", :attributes => "stdout", :format_attributes => "stdout=json")
+
+      expected = {
+        'id'     => os.id,
+        'stdout' => "json stdout"
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
     it 'will not return orchestration stacks without an appropriate role' do
       api_basic_authorize
 

@@ -41,6 +41,8 @@ class OrchestrationStack < ApplicationRecord
   virtual_total :total_security_groups, :security_groups
   virtual_total :total_cloud_networks, :cloud_networks
 
+  virtual_column :stdout, :type => :string
+
   alias_method :orchestration_stack_parameters, :parameters
   alias_method :orchestration_stack_outputs,    :outputs
   alias_method :orchestration_stack_resources,  :resources
@@ -76,6 +78,11 @@ class OrchestrationStack < ApplicationRecord
   def directs_and_indirects(direct_attrs)
     MiqPreloader.preload_and_map(subtree, direct_attrs)
   end
+
+  def stdout(format = nil)
+    try(:raw_stdout, format)
+  end
+
   private :directs_and_indirects
 
   def self.create_stack(orchestration_manager, stack_name, template, options = {})
