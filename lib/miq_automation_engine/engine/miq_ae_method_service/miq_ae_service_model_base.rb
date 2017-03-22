@@ -89,21 +89,8 @@ module MiqAeMethodService
     end
     private_class_method :model
 
-    def self.model_name_from_file(filename)
-      File.basename(filename, '.*').split('-').map(&:camelize).join('_')
-    end
-
     def self.model_name_from_active_record_model(ar_model)
       "MiqAeMethodService::MiqAeService#{ar_model.name.gsub(/::/, '_')}"
-    end
-
-    def self.service_models
-      Dir.glob(MiqAeMethodService::MiqAeServiceModelBase::SERVICE_MODEL_GLOB).collect do |f|
-        model_name = MiqAeMethodService::MiqAeServiceModelBase.model_name_from_file(f)
-        next if model_name == "MiqAeServiceMethods"
-
-        "MiqAeMethodService::#{model_name}".constantize
-      end.compact!
     end
 
     def self.create_service_model_from_name(name)
@@ -355,9 +342,4 @@ module MiqAeMethodService
       self.class.ar_method(&block)
     end
   end
-end
-
-Dir.glob(MiqAeMethodService::MiqAeServiceModelBase::SERVICE_MODEL_GLOB).each do |f|
-  f = File.basename(f, '.*')
-  MiqAeMethodService.autoload(MiqAeMethodService::MiqAeServiceModelBase.model_name_from_file(f), "service_models/#{f}")
 end
