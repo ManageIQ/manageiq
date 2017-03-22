@@ -18,22 +18,6 @@ class ManageIQ::Providers::NativeOperationWorkflow < Job
   #       finished <---------- notifying --------------/
   #                   :finish              :notify
   #
-  def load_transitions
-    self.state ||= 'initialize'
-
-    {
-      :initializing     => {'initialize'       => 'waiting_to_start'},
-      :start            => {'waiting_to_start' => 'running'},
-      :poll_native_task => {'running'          => 'running'},
-      :refresh          => {'running'          => 'refreshing'},
-      :poll_refresh     => {'refreshing'       => 'refreshing'},
-      :notify           => {'*'                => 'notifying'},
-      :finish           => {'*'                => 'finished'},
-      :abort_job        => {'*'                => 'aborting'},
-      :cancel           => {'*'                => 'canceling'},
-      :error            => {'*'                => '*'}
-    }
-  end
 
   def run_native_op
     raise NotImplementedError, _("run_native_op must be implemented by a subclass")
@@ -126,4 +110,23 @@ class ManageIQ::Providers::NativeOperationWorkflow < Job
   alias finish       process_finished
   alias abort_job    process_abort
   alias cancel       process_cancel
+
+  protected
+
+  def load_transitions
+    self.state ||= 'initialize'
+
+    {
+      :initializing     => {'initialize'       => 'waiting_to_start'},
+      :start            => {'waiting_to_start' => 'running'},
+      :poll_native_task => {'running'          => 'running'},
+      :refresh          => {'running'          => 'refreshing'},
+      :poll_refresh     => {'refreshing'       => 'refreshing'},
+      :notify           => {'*'                => 'notifying'},
+      :finish           => {'*'                => 'finished'},
+      :abort_job        => {'*'                => 'aborting'},
+      :cancel           => {'*'                => 'canceling'},
+      :error            => {'*'                => '*'}
+    }
+  end
 end
