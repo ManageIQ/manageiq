@@ -91,7 +91,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
       :description              => description || '',
       :project                  => playbook.configuration_script_source.manager_ref,
       :playbook                 => playbook.name,
-      :inventory                => tower.inventory_root_groups.find_by!(:name => 'Demo Inventory').ems_ref,
+      :inventory                => tower.provider.default_inventory,
       :ask_variables_on_launch  => true,
       :ask_limit_on_launch      => true,
       :ask_inventory_on_launch  => true,

@@ -102,8 +102,10 @@ class ServiceAnsiblePlaybook < ServiceGeneric
   end
 
   def create_inventory_with_hosts(action, hosts)
-    manager(action).with_provider_connection do |connection|
-      connection.api.inventories.create!(:name => inventory_name(action), :organization => 1).tap do |inventory|
+    tower = manager(action)
+    tower.with_provider_connection do |connection|
+      miq_org = tower.provider.default_organization
+      connection.api.inventories.create!(:name => inventory_name(action), :organization => miq_org).tap do |inventory|
         hosts.split(',').each do |host|
           connection.api.hosts.create!(:name => host, :inventory => inventory.id)
         end
