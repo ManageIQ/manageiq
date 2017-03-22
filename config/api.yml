@@ -1034,7 +1034,6 @@
     :verbs: *gp
     :klass: PhysicalServer
     :subcollections:
-    - :firmwares
     :collection_actions:
       :post:
       - :name: power_on
