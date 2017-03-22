@@ -110,9 +110,12 @@ describe ManageIQ::Providers::NativeOperationWorkflow do
 
     it 'calls error if queuing the refresh failed' do
       expect(EmsRefresh).to receive(:queue_refresh_task).and_return(nil)
-      expect(@job).to receive(:queue_signal).with(:error, "Failed to queue refresh", "error")
+      expect(@job).to receive(:queue_signal).with(:notify)
 
       @job.signal(:refresh)
+
+      expect(@job.status).to  eq("error")
+      expect(@job.message).to eq("Failed to queue refresh")
     end
   end
 
@@ -135,9 +138,12 @@ describe ManageIQ::Providers::NativeOperationWorkflow do
       refresh_task = FactoryGirl.create(:miq_task, :status => MiqTask::STATUS_ERROR)
       @job.context[:refresh_task_ids] = [refresh_task.id]
 
-      expect(@job).to receive(:queue_signal).with(:error, "Refresh failed", "error")
+      expect(@job).to receive(:queue_signal).with(:notify)
 
       @job.signal(:poll_refresh)
+
+      expect(@job.status).to  eq("error")
+      expect(@job.message).to eq("Refresh failed")
     end
 
     it 'with a refresh task that is still running' do

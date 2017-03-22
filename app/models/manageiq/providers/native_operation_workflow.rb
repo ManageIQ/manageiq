@@ -32,7 +32,8 @@ class ManageIQ::Providers::NativeOperationWorkflow < Job
 
     task_ids = EmsRefresh.queue_refresh_task(target)
     if task_ids.blank?
-      queue_signal(:error, "Failed to queue refresh", "error")
+      process_error("Failed to queue refresh", "error")
+      queue_signal(:notify)
     else
       context[:refresh_task_ids] = task_ids
       update_attributes!(:context => context)
@@ -42,30 +43,11 @@ class ManageIQ::Providers::NativeOperationWorkflow < Job
   end
 
   def poll_refresh
-    refresh_finished = true
-
-    context[:refresh_task_ids].each do |task_id|
-      task = MiqTask.find(task_id)
-      if task.status != MiqTask::STATUS_OK
-        return queue_signal(:error, "Refresh failed", "error")
-      end
-
-      if task.state != MiqTask::STATE_FINISHED
-        refresh_finished = false
-        break
-      end
-    end
-
-    if refresh_finished
+    if refresh_finished?
       queue_signal(:notify)
     else
       queue_signal(:poll_refresh, :deliver_on => Time.now.utc + 1.minute)
     end
-  end
-
-  def error(*args)
-    process_error(*args)
-    queue_signal(:notify)
   end
 
   def notify
@@ -110,6 +92,7 @@ class ManageIQ::Providers::NativeOperationWorkflow < Job
   alias finish       process_finished
   alias abort_job    process_abort
   alias cancel       process_cancel
+  alias error        process_error
 
   protected
 
@@ -128,5 +111,19 @@ class ManageIQ::Providers::NativeOperationWorkflow < Job
       :cancel           => {'*'                => 'canceling'},
       :error            => {'*'                => '*'}
     }
+  end
+
+  def refresh_finished?
+    context[:refresh_task_ids].each do |task_id|
+      task = MiqTask.find(task_id)
+
+      if task.status != MiqTask::STATUS_OK
+        process_error("Refresh failed", "error")
+      elsif task.state != MiqTask::STATE_FINISHED
+        return false
+      end
+    end
+
+    true
   end
 end
