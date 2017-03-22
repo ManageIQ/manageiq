@@ -155,7 +155,7 @@ class VmScan < Job
     _log.info "Enter"
 
     begin
-      MiqServer.find(agent_id)
+      host = MiqServer.find(agent_id)
       vm = VmOrTemplate.find(target_id)
       # Send down metadata to allow the host to make decisions.
       scan_args = create_scan_args(vm)
