@@ -400,8 +400,7 @@ class ExtManagementSystem < ApplicationRecord
     end
   end
 
-  def refresh_ems(opts = nil)
-    opts ||= {}
+  def refresh_ems(opts = {})
     if missing_credentials?
       raise _("no %{table} credentials defined") % {:table => ui_lookup(:table => "ext_management_systems")}
     end
