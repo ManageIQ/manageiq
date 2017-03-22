@@ -151,4 +151,14 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     end
     super
   end
+
+  def destroy
+    auth_user = User.current_userid || 'system'
+    resource_actions.where.not(:configuration_template_id => nil).each do |resource_action|
+      job_template = resource_action.configuration_template
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript
+        .delete_in_provider_queue(job_template.manager.id, { :manager_ref => job_template.manager_ref }, auth_user)
+    end
+    super
+  end
 end
