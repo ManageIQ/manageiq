@@ -76,6 +76,14 @@ describe EmsRefresh do
         expect(task_ids2.length).to eq(1)
         expect(task_ids.first).to   eq(task_ids2.first)
       end
+
+      it "sets the queue callback correctly" do
+        task_ids = described_class.queue_refresh_task(target1)
+        described_class.queue_refresh_task(target2)
+
+        queue_item = MiqQueue.find_by(:task_id => task_ids.first.to_s)
+        expect(queue_item.miq_callback[:class_name]).to eq("MiqTask")
+      end
     end
 
     context "with Vms on different EMSs" do
