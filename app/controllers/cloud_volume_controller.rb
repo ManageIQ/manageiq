@@ -388,11 +388,11 @@ class CloudVolumeController < ApplicationController
   def delete_volumes
     assert_privileges("cloud_volume_delete")
     volumes = if @lastaction == "show_list" || (@lastaction == "show" && @layout != "cloud_volume")
-                find_checked_items
+                find_checked_items_with_rbac(CloudVolume)
               elsif params[:id].present?
                 [params[:id]]
               else
-                find_checked_items
+                find_checked_items_with_rbac(CloudVolume)
               end
 
     if volumes.empty?
