@@ -320,4 +320,23 @@ describe MiqProvisionVirtWorkflow do
       expect(request.source_id).to eq(template.id)
     end
   end
+
+  context "#allowed_templates" do
+    let(:external_region_id) do
+      remote_region_number = ApplicationRecord.my_region_number + 1
+      ApplicationRecord.region_to_range(remote_region_number).first
+    end
+
+    let(:remote_vmware) { FactoryGirl.create(:ems_vmware_with_authentication, :id => external_region_id) }
+    let(:local_vmware)  { FactoryGirl.create(:ems_vmware_with_authentication) }
+
+    it "only returns records from its region" do
+      EvmSpecHelper.local_guid_miq_server_zone # Because there is no default timezone in settings
+      FactoryGirl.create(:template_vmware, :ext_management_system => remote_vmware, :id => external_region_id)
+      FactoryGirl.create(:template_vmware, :ext_management_system => local_vmware)
+
+      expect(MiqTemplate.count).to eq(2)
+      expect(workflow.allowed_templates.count).to eq(1)
+    end
+  end
 end
