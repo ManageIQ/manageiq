@@ -4,5 +4,6 @@ module MiqAeMethodService
     expose :delete_network_router
     expose :add_interface
     expose :remove_interface
+    expose :delete_network_router_queue
   end
 end
