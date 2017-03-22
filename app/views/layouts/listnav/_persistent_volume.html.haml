@@ -13,5 +13,5 @@
         - if role_allows?(:feature => "ems_container_show") && !@record.parent.nil?
           %li
             = link_to("#{ui_lookup(:table => "ems_container")}: #{@record.parent.name}",
-                {:controller => "ems_container", :action => 'show', :id => @record.parent.id.to_s},
-                :title => _("Show this container volume's parent Containers Provider"))
+                polymorphic_path(@record.parent),
+                :title => _("Show this persistent volume's parent Containers Provider"))
