@@ -33,6 +33,10 @@ describe MiqAeMethodService::MiqAeServiceVm do
     expect(@ae_vm.associations).to be_kind_of(Array)
   end
 
+  it "href_slug" do
+    expect(@vm.href_slug).to eq(@ae_vm.href_slug)
+  end
+
   describe "#tag_assign" do
     let(:category)    { FactoryGirl.create(:classification) }
     let(:tag)         { FactoryGirl.create(:classification_tag, :parent_id => category.id) }
