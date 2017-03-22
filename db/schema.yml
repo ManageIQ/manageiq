@@ -553,6 +553,7 @@ configuration_script_sources:
 - scm_update_on_launch
 - authentication_id
 - type
+- scm_update_cache_timeout
 configuration_scripts:
 - id
 - manager_id
