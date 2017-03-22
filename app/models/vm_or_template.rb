@@ -1521,8 +1521,10 @@ class VmOrTemplate < ApplicationRecord
   # Hardware Disks/Memory storage methods
   #
 
-  virtual_delegate :allocated_disk_storage, :used_disk_storage, :provisioned_storage,
+  virtual_delegate :allocated_disk_storage, :used_disk_storage,
                    :to => :hardware, :allow_nil => true, :uses => {:hardware => :disks}
+
+  virtual_delegate :provisioned_storage, :to => :hardware, :allow_nil => true, :default => 0
 
   def used_storage
     used_disk_storage.to_i + ram_size_in_bytes
