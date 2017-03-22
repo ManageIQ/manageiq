@@ -11,7 +11,7 @@ module Api
 
     def create_resource(_type, _id, data)
       manager_resource, attrs = validate_auth_attrs(data)
-      task_id = AuthenticationService.create_authentication(manager_resource, attrs)
+      task_id = AuthenticationService.create_authentication_task(manager_resource, attrs)
       action_result(true, 'Creating Authentication', :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -45,11 +45,9 @@ module Api
     def validate_auth_attrs(data)
       raise 'must supply a manager resource' unless data['manager_resource']
       attrs = data.dup.except('manager_resource')
-      manager_resource = if data['manager_resource'].key?('href')
-                           parse_href(data['manager_resource']['href']).last
-                         elsif data['manager_resource'].key?('id')
-                           data['manager_resource']['id']
-                         end
+      manager_collection, manager_id = parse_href(data['manager_resource']['href'])
+      raise 'invalid manger_resource href specified' unless manager_collection && manager_id
+      manager_resource = resource_search(manager_id, manager_collection, collection_class(manager_collection))
       [manager_resource, attrs]
     end
   end

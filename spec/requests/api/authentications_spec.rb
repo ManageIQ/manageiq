@@ -256,6 +256,24 @@ RSpec.describe 'Authentications API' do
       expect(response.parsed_body).to include(expected)
     end
 
+    it 'requires a valid manager_resource' do
+      api_basic_authorize collection_action_identifier(:authentications, :create, :post)
+      create_params[:manager_resource] = { :href => '1' }
+
+      expected = {
+        'results' => [
+          a_hash_including(
+            'success' => false,
+            'message' => 'invalid manger_resource href specified',
+          )
+        ]
+      }
+      run_post(authentications_url, :resources => [create_params])
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
     it 'will forbid creation of an authentication without appropriate role' do
       api_basic_authorize
 
