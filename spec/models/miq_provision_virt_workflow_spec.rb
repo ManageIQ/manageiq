@@ -20,7 +20,7 @@ describe MiqProvisionVirtWorkflow do
     end
 
     it "sets initial_pass equal to true when values are empty and initial_pass => true is passed in as an option" do
-      expect_any_instance_of(MiqProvisionVirtWorkflow).to receive(:get_value).once
+      expect_any_instance_of(MiqProvisionVirtWorkflow).to receive(:get_value).twice
 
       init_options = {:use_pre_dialog => false, :skip_dialog_load => true, :request_type => :clone_to_vm, :initial_pass => true}
       p = MiqProvisionVirtWorkflow.new({}, user, init_options)
@@ -65,7 +65,7 @@ describe MiqProvisionVirtWorkflow do
     end
   end
 
-  context 'network selection' do
+  context 'network selection vm' do
     before do
       @ems    = FactoryGirl.create(:ems_vmware)
       @host1  = FactoryGirl.create(:host_vmware, :ems_id => @ems.id)
@@ -318,6 +318,50 @@ describe MiqProvisionVirtWorkflow do
 
     it 'updates soruce_id' do
       expect(request.source_id).to eq(template.id)
+    end
+  end
+
+  context '#make_request (update) with cloud volume' do
+    let(:volume) do
+      FactoryGirl.create(
+        :cloud_volume_openstack,
+        :name                  => "volume1",
+        :ext_management_system => FactoryGirl.create(:ems_cinder, :parent_manager => FactoryGirl.create(:ems_openstack))
+      )
+    end
+    let(:values)  { {:src_vm_id => [volume.id, volume.name], :src_type => 'CloudVolume'} }
+    let(:request) { workflow.make_request(nil, :src_vm_id => [999, 'old_template']) }
+    before { workflow.make_request(request, values) }
+
+    it 'updates options' do
+      expect(request.options).to include(values)
+    end
+
+    it 'updates source_id and source_type' do
+      expect(request.source_id).to eq(volume.id)
+      expect(request.source_type).to eq("cloudvolume")
+    end
+  end
+
+  context '#make_request (update) with cloud volume snapshot' do
+    let(:snapshot) do
+      FactoryGirl.create(
+        :cloud_volume_snapshot_openstack,
+        :name                  => "snapshot1",
+        :ext_management_system => FactoryGirl.create(:ems_cinder, :parent_manager => FactoryGirl.create(:ems_openstack))
+      )
+    end
+    let(:values)  { {:src_vm_id => [snapshot.id, snapshot.name], :src_type => 'CloudVolumeSnapshot'} }
+    let(:request) { workflow.make_request(nil, :src_vm_id => [999, 'old_template']) }
+    before { workflow.make_request(request, values) }
+
+    it 'updates options' do
+      expect(request.options).to include(values)
+    end
+
+    it 'updates source_id and source_type' do
+      expect(request.source_id).to eq(snapshot.id)
+      expect(request.source_type).to eq("cloudvolumesnapshot")
     end
   end
 end
