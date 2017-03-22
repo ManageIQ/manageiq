@@ -343,27 +343,11 @@ class Host < ApplicationRecord
     ipmi.send(verb)
   end
 
-  # request:   the event sent to automate for policy resolution
+  # event:   the event sent to automate for policy resolution
   # cb_method: the MiqQueue callback method along with the parameters that is called
   #            when automate process is done and the request is not prevented to proceed by policy
-  def check_policy_prevent(request, *cb_method)
-    cb = {:class_name  => self.class.to_s,
-          :instance_id => id,
-          :method_name => :check_policy_prevent_callback,
-          :args        => [*cb_method],
-          :server_guid => MiqServer.my_guid
-    }
-    MiqEvent.raise_evm_event(self, request, {:host => self}, :miq_callback => cb)
-  end
-
-  def check_policy_prevent_callback(*action, _status, _message, result)
-    prevented = false
-    if result.kind_of?(MiqAeEngine::MiqAeWorkspaceRuntime)
-      event = result.get_obj_from_path("/")['event_stream']
-      data  = event.attributes["full_data"]
-      prevented = data.fetch_path(:policy, :prevented) if data
-    end
-    prevented ? _log.info((event.attributes["message"]).to_s) : send(*action)
+  def check_policy_prevent(event, *cb_method)
+    MiqEvent.raise_evm_event(self, event, {:host => self}, {:miq_callback => prevent_callback_settings(*cb_method)})
   end
 
   def ipmi_power_on
