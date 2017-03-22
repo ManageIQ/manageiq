@@ -16,7 +16,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh
         when Host
           data,  = Benchmark.realtime_block(:fetch_host_data) { host_targeted_refresh(inventory, target) }
         when VmOrTemplate
-          data,  = Benchmark.realtime_block(:fetch_vm_data) { vm_targeted_refresh(inventory, target)  }
+          data,  = Benchmark.realtime_block(:fetch_vm_data) { vm_targeted_refresh(inventory, target) }
         else
           data,  = Benchmark.realtime_block(:fetch_all) { inventory.refresh }
 

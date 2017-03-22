@@ -3,7 +3,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
   let(:use_ovirt_engine_sdk) { true }
   describe 'chooses the right refresher strategy' do
     before do
-      ::Settings.ems.ems_redhat.use_ovirt_engine_sdk = use_ovirt_engine_sdk
+      stub_settings_merge(:ems => { :ems_redhat => { :use_ovirt_engine_sdk => use_ovirt_engine_sdk } })
     end
 
     context "when v4 api" do

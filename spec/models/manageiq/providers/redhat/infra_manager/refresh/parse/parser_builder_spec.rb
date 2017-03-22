@@ -5,7 +5,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::ParserBuilde
   subject { described_class.new(ems, options).build }
   describe 'chooses the right parsing strategy' do
     before do
-      ::Settings.ems.ems_redhat.use_ovirt_engine_sdk = use_ovirt_engine_sdk
+      stub_settings_merge(:ems => { :ems_redhat => { :use_ovirt_engine_sdk => use_ovirt_engine_sdk } })
     end
 
     context "when v4 api" do

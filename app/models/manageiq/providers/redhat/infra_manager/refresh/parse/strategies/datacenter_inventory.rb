@@ -1,10 +1,10 @@
 module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
   class DatacenterInventory
-    attr_reader :datacenter_inv, :_log
+    attr_reader :datacenter_inv, :logger
 
     def initialize(args)
       @datacenter_inv = args[:inv]
-      @_log = args[:logger]
+      @logger = args[:logger]
     end
 
     def datacenter_inv_to_hashes(inv, cluster_uids, vm_uids, storage_uids, host_uids)

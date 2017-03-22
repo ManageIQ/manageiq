@@ -5,7 +5,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
                               :port => 8443)
     @ems.update_authentication(:default => {:userid => "admin@internal", :password => "123456"})
     allow(@ems).to receive(:supported_api_versions).and_return([3, 4])
-    ::Settings.ems.ems_redhat.use_ovirt_engine_sdk = true
+    stub_settings_merge(:ems => { :ems_redhat => { :use_ovirt_engine_sdk => true } })
   end
 
   it ".ems_type" do
