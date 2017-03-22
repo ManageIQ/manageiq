@@ -23,18 +23,10 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
 
     @ems.authentications << FactoryGirl.create(:authentication, cred)
     @ems.update_attributes(:azure_tenant_id => @tenant_id)
-
-    # A true thread may fail the test with VCR
-    allow(Thread).to receive(:new) do |*args, &block|
-      block.call(*args)
-      Class.new do
-        def join; end
-      end.new
-    end
   end
 
   after do
-    ::Azure::Armrest::ArmrestService.clear_caches
+    ::Azure::Armrest::Configuration.clear_caches
   end
 
   it ".ems_type" do
@@ -61,7 +53,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       it "will perform a full refresh with a plain proxy enabled" do
         allow(VMDB::Util).to receive(:http_proxy_uri).and_return(proxy)
         setup_ems_and_cassette
-        expect(OrchestrationTemplate.count).to eql(2)
+        expect(OrchestrationTemplate.count).to eql(4)
         assert_specific_orchestration_template
       end
     end
@@ -73,7 +65,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
 
         allow(VMDB::Util).to receive(:http_proxy_uri).and_return(proxy)
         setup_ems_and_cassette
-        expect(OrchestrationTemplate.count).to eql(2)
+        expect(OrchestrationTemplate.count).to eql(4)
         assert_specific_orchestration_template
       end
     end
@@ -102,27 +94,27 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   def expected_table_counts
     {
       :ext_management_system         => 2,
-      :flavor                        => 63,
+      :flavor                        => 80,
       :availability_zone             => 1,
-      :vm_or_template                => 9,
-      :vm                            => 8,
+      :vm_or_template                => 12,
+      :vm                            => 11,
       :miq_template                  => 1,
-      :disk                          => 8,
+      :disk                          => 11,
       :guest_device                  => 0,
-      :hardware                      => 9,
-      :network                       => 14,
-      :operating_system              => 8,
+      :hardware                      => 12,
+      :network                       => 20,
+      :operating_system              => 11,
       :relationship                  => 0,
-      :miq_queue                     => 10,
-      :orchestration_template        => 2,
-      :orchestration_stack           => 10,
-      :orchestration_stack_parameter => 138,
-      :orchestration_stack_output    => 7,
-      :orchestration_stack_resource  => 42,
-      :security_group                => 8,
-      :network_port                  => 10,
+      :miq_queue                     => 13,
+      :orchestration_template        => 4,
+      :orchestration_stack           => 20,
+      :orchestration_stack_parameter => 196,
+      :orchestration_stack_output    => 9,
+      :orchestration_stack_resource  => 62,
+      :security_group                => 11,
+      :network_port                  => 11,
       :cloud_network                 => 6,
-      :floating_ip                   => 10,
+      :floating_ip                   => 13,
       :network_router                => 0,
       :cloud_subnet                  => 6,
     }
@@ -177,7 +169,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     expect(@ems.miq_templates.size).to eq(expected_table_counts[:miq_template])
 
     expect(@ems.orchestration_stacks.size).to eql(expected_table_counts[:orchestration_stack])
-    expect(@ems.direct_orchestration_stacks.size).to eql(9)
+    expect(@ems.direct_orchestration_stacks.size).to eql(19)
   end
 
   def assert_specific_security_group
@@ -327,7 +319,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
 
     expect(v.hardware.guest_devices.size).to eql(0)
     expect(v.hardware.nics.size).to eql(0)
-    floating_ip   = ManageIQ::Providers::Azure::NetworkManager::FloatingIp.where(:address => "40.117.32.144").first
+    floating_ip   = ManageIQ::Providers::Azure::NetworkManager::FloatingIp.where(:address => "13.92.233.217").first
     cloud_network = ManageIQ::Providers::Azure::NetworkManager::CloudNetwork.where(:name => "miq-azure-test1").first
     cloud_subnet  = cloud_network.cloud_subnets.first
     expect(v.floating_ip).to eql(floating_ip)
@@ -342,7 +334,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     network = v.hardware.networks.where(:description => "public").first
     expect(network).to have_attributes(
       :description => "public",
-      :ipaddress   => "40.117.32.144",
+      :ipaddress   => "13.92.233.217",
       :hostname    => "ipconfig1"
     )
     network = v.hardware.networks.where(:description => "private").first
@@ -586,7 +578,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   def assert_specific_nic_and_ip
     nic_group  = 'miq-azure-test1' # EastUS
     ip_group   = 'miq-azure-test4' # Also EastUS
-    ip_address = '13.82.28.187'
+    ip_address = '13.68.212.56'
 
     nic_name = "/subscriptions/#{@subscription_id}/resourceGroups"\
                "/#{nic_group}/providers/Microsoft.Network"\

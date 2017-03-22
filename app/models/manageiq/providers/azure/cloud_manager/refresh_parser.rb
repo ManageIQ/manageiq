@@ -167,7 +167,7 @@ module ManageIQ::Providers
       #
       def get_images
         images = gather_data_for_this_region(@sas, 'list_all_private_images')
-      rescue Azure::Armrest::ApiException => err
+      rescue ::Azure::Armrest::ApiException => err
         _log.warn("Unable to collect Azure private images for: [#{@ems.name}] - [#{@ems.id}]: #{err.message}")
       else
         process_collection(images, :vms) { |image| parse_image(image) }
