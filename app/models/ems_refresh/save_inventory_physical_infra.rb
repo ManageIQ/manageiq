@@ -22,7 +22,6 @@ module EmsRefresh::SaveInventoryPhysicalInfra
     end
 
     child_keys = [
-      # :firmwares,
       :physical_servers,
     ]
 
@@ -37,12 +36,6 @@ module EmsRefresh::SaveInventoryPhysicalInfra
     ems
   end
 
-  def save_firmwares_inventory(parent, hash, foo=nil)
-    return if hash.nil?
-    save_inventory_single(:firmware, parent, hash)
-    parent.save!
-  end
-
   def save_physical_servers_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
@@ -53,7 +46,8 @@ module EmsRefresh::SaveInventoryPhysicalInfra
                 []
               end
 
-    save_inventory_multi(ems.physical_servers, hashes, deletes, [:ems_ref])
+    child_keys = [:hardware]
+    save_inventory_multi(ems.physical_servers, hashes, deletes, [:ems_ref], child_keys)
     store_ids_for_new_records(ems.physical_servers, hashes, :ems_ref)
   end
 end

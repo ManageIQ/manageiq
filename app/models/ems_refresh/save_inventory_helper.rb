@@ -52,6 +52,7 @@ module EmsRefresh::SaveInventoryHelper
     record_index = TypedIndex.new(association, find_key)
 
     new_records = []
+
     hashes.each do |h|
       found = save_inventory_with_findkey(association, h.except(*remove_keys), deletes_index, new_records, record_index)
       save_child_inventory(found, h, child_keys)
