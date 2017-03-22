@@ -1,7 +1,9 @@
 class ManageIQ::Providers::Openstack::InfraManager::MetricsCapture < ManageIQ::Providers::Openstack::BaseMetricsCapture
   CPU_METERS     = %w(hardware.cpu.util)
   MEMORY_METERS  = %w(hardware.memory.used
-                      hardware.memory.total)
+                      hardware.memory.total
+                      hardware.memory.buffer
+                      hardware.memory.cached)
   SWAP_METERS    = %w(hardware.memory.swap.avail
                       hardware.memory.swap.total)
   DISK_METERS    = %w(hardware.system_stats.io.outgoing.blocks
@@ -21,7 +23,7 @@ class ManageIQ::Providers::Openstack::InfraManager::MetricsCapture < ManageIQ::P
   # TODO(lsmola) until we have hardware.memory.util in Ceilometer, we have to compute it, but this computation
   # should be done rather on the Ceilometer side
   def self.memory_util_calculation(stats, _)
-    stats['hardware.memory.total'] > 0 ? 100.0 / stats['hardware.memory.total'] * stats['hardware.memory.used'] : 0
+    stats['hardware.memory.total'] > 0 ? 100.0 / stats['hardware.memory.total'] * (stats['hardware.memory.used'] - stats['hardware.memory.cached'] - stats['hardware.memory.buffer']) : 0
   end
 
   def self.memory_swapped_calculation(stats, _)
