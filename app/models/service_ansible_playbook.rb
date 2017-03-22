@@ -9,7 +9,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
 
   def execute(action)
     jt = job_template(action)
-    opts = get_job_options(action)
+    opts = get_job_options(action).deep_merge(:extra_vars => {'manageiq' => manageiq_extra_vars})
 
     _log.info("Launching Ansible Tower job with options: #{opts}")
     new_job = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job.create_job(jt, opts)
@@ -46,6 +46,15 @@ class ServiceAnsiblePlaybook < ServiceGeneric
   end
 
   private
+
+  def manageiq_extra_vars
+    {
+      'api_url'   => MiqRegion.my_region.remote_ws_url,
+      'api_token' => Api::UserTokenService.new.generate_token(evm_owner.userid, 'api'),
+      'service'   => href_slug,
+      'user'      => evm_owner.href_slug
+    }
+  end
 
   def get_job_options(action)
     job_opts = options[job_option_key(action)].deep_dup
