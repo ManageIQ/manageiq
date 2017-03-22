@@ -29,6 +29,10 @@ class DialogFieldTagControl < DialogFieldSortedItem
     options[:force_single_value] = setting
   end
 
+  def force_multi_value
+    !single_value?
+  end
+
   def self.allowed_tag_categories
     tag_cats = Classification.where(:show => true, :parent_id => 0, :read_only => false).includes(:tag).to_a
 
