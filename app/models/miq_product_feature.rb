@@ -153,6 +153,53 @@ class MiqProductFeature < ApplicationRecord
     return feature, status
   end
 
+  def self.find_all_by_identifier(features)
+    where(:identifier => features)
+  end
+
+  def self.obj_features
+    @obj_cache ||= begin
+      # create hash with parent identifier and details
+      features = select('*').select(:parent_identifier).each_with_object({}) do |f, h|
+        parent_ident = f.parent_identifier
+        h[f.identifier] = {:parent => parent_ident, :children => [], :feature => f}
+      end
+
+      # populate the children based on parent identifier
+      features.each do |_, n|
+        if (parent = n[:parent])
+          features[parent][:children] << n[:feature]
+        end
+      end
+
+      features
+    end
+  end
+
+  def self.obj_feature_all_children(identifier)
+    obj_features.fetch_path(identifier.to_s, :children)
+  end
+
+  def self.obj_feature_children(identifier)
+    obj_feature_all_children(identifier).try(:reject, &:hidden?)
+  end
+
+  def self.obj_feature_parent(identifier)
+    obj_features.fetch_path(identifier.to_s, :parent)
+  end
+
+  def self.obj_feature_ancestors(identifier)
+    feature = obj_features[identifier.to_s]
+    return [] unless feature
+
+    parent_feature = obj_features[feature[:parent]].try(:[], :feature)
+    return [] unless parent_feature
+
+    obj_feature_ancestors(parent_feature.identifier).unshift(parent_feature)
+  end
+
+  ### Instance methods
+
   def seed_vm_explorer_for_custom_roles
     return unless identifier == "vm_explorer"
 
@@ -162,7 +209,11 @@ class MiqProductFeature < ApplicationRecord
     end
   end
 
-  def self.find_all_by_identifier(features)
-    where(:identifier => features)
+  def details
+    @details ||= begin
+      attributes.symbolize_keys.slice(*DETAIL_ATTRS).merge(
+        :children => children.where(:hidden => [false, nil])
+      )
+    end
   end
 end
