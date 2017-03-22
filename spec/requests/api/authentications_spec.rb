@@ -233,22 +233,6 @@ RSpec.describe 'Authentications API' do
       expect(response.parsed_body).to include(expected)
     end
 
-    it 'requires a valid manager resource' do
-      api_basic_authorize collection_action_identifier(:authentications, :create, :post)
-      create_params[:manager_resource] = { :href => users_url(10) }
-
-      expected = {
-        'results' => [a_hash_including(
-          'success' => false,
-          'message' => 'users is not a valid manager resource'
-        )]
-      }
-      run_post(authentications_url, create_params)
-
-      expect(response).to have_http_status(:ok)
-      expect(response.parsed_body).to include(expected)
-    end
-
     it 'can create authentications in bulk' do
       api_basic_authorize collection_action_identifier(:authentications, :create, :post)
 

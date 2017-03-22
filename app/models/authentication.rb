@@ -55,8 +55,6 @@ class Authentication < ApplicationRecord
     :embedded_ansible_credential_types => 'ManageIQ::Providers::EmbeddedAutomationManager::Authentication'
   }.freeze
 
-  MANAGER_TYPES = [:providers].freeze
-
   # FIXME: To address problem with url resolution when displayed as a quadicon,
   # but it's not *really* the db_name. Might be more proper to override `to_partial_path`
   def self.db_name
