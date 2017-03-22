@@ -65,7 +65,7 @@ class ManageIQ::Providers::NativeOperationWorkflow < Job
 
     Notification.create(:type => type, :options => notification_options)
 
-    queue_signal(:finish)
+    queue_signal(:finish, message, status)
   end
 
   def queue_signal(*args, deliver_on: nil)
