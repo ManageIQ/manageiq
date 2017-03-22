@@ -6,9 +6,9 @@ shared_examples_for "ansible configuration_script" do
   let(:connection)   { double(:connection, :api => api) }
   let(:job)          { AnsibleTowerClient::Job.new(connection.api, "id" => 1) }
   let(:job_template) { AnsibleTowerClient::JobTemplate.new(connection.api, "limit" => "", "id" => 1, "url" => "api/job_templates/1/", "name" => "template", "description" => "description", "extra_vars" => {:instance_ids => ['i-3434']}) }
-  let(:manager)      { FactoryGirl.create(:automation_manager_ansible_tower, :provider, :configuration_script) }
+  let(:manager)      { manager_with_configuration_scripts }
 
-  it "belongs_to the Ansible Tower manager" do
+  it "belongs_to the manager" do
     expect(manager.configuration_scripts.size).to eq 1
     expect(manager.configuration_scripts.first.variables).to eq :instance_ids => ['i-3434']
     expect(manager.configuration_scripts.first).to be_a ConfigurationScript
@@ -85,12 +85,11 @@ shared_examples_for "ansible configuration_script" do
   end
 
   context "creates via the API" do
-    let(:provider)      { FactoryGirl.create(:provider_ansible_tower, :with_authentication) }
-    let(:manager)       { provider.managers.first }
     let(:atc)           { double("AnsibleTowerClient::Connection", :api => api) }
     let(:api)           { double("AnsibleTowerClient::Api", :job_templates => job_templates) }
     let(:job_templates) { double("AnsibleTowerClient::Collection", :create! => job_template) }
     let(:job_template)  { AnsibleTowerClient::JobTemplate.new(nil, job_template_json) }
+    let(:manager)       { manager_with_authentication }
 
     let(:job_template_json) do
       params.merge(
