@@ -77,7 +77,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::Inventory::Parser::AutomationM
                                 when 'net' then "#{provider_module}::AutomationManager::NetworkCredential"
                                 when 'ssh' then "#{provider_module}::AutomationManager::MachineCredential"
                                 when 'vmware' then "#{provider_module}::AutomationManager::VmwareCredential"
-                                # when 'scm' then "#{provider_module}::AutomationManager::???Credential"
+                                when 'scm' then "#{provider_module}::AutomationManager::ScmCredential"
                                 when 'aws' then "#{provider_module}::AutomationManager::AmazonCredential"
                                 when 'rax' then "#{provider_module}::AutomationManager::RackspaceCredential"
                                 when 'satellite6' then "#{provider_module}::AutomationManager::Satellite6Credential"

@@ -107,6 +107,13 @@ shared_examples_for "ansible refresher" do |ansible_provider, manager_class, ems
       :userid => "MiqAnsibleUser@vsphere.local",
     )
     expect(cloud_credential.options.keys).to match_array(cloud_credential.class::EXTRA_ATTRIBUTES.keys)
+
+    scm_credential = expected_configuration_script_source.authentication
+    expect(scm_credential).to have_attributes(
+      :name   => "db-github",
+      :userid => "syncrou"
+    )
+    expect(scm_credential.options.keys).to match_array(scm_credential.class::EXTRA_ATTRIBUTES.keys)
   end
 
   def assert_playbooks
