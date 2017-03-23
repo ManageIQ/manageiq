@@ -2,4 +2,5 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::P
   include ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Job
 
   require_nested :Status
+  undef retire_now
 end
