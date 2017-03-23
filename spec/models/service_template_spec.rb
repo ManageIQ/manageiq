@@ -674,9 +674,10 @@ describe ServiceTemplate do
         .with({}, user, resource_action, hash).and_return(workflow))
       expect(workflow).to receive(:submit_request)
       expect(workflow).to receive(:set_value).with('ordered_by', 'fred')
-      expect(workflow).to receive(:set_value).with(:initiator, 'control')
+      expect(workflow).to receive(:request_options=).with(:initiator => 'control')
 
-      service_template.provision_request(user, 'ordered_by' => 'fred', :initiator => 'control')
+      service_template.provision_request(user, {'ordered_by' => 'fred'},
+                                         {:initiator => 'control'})
     end
   end
 end

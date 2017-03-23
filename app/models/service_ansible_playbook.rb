@@ -54,7 +54,11 @@ class ServiceAnsiblePlaybook < ServiceGeneric
       'service'   => href_slug,
       'user'      => evm_owner.href_slug,
       'action'    => action
-    }
+    }.merge(request_options_extra_vars)
+  end
+
+  def request_options_extra_vars
+    miq_request_task.options.fetch_path(:request_options, :manageiq_extra_vars) || {}
   end
 
   def get_job_options(action)

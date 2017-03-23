@@ -111,14 +111,17 @@ describe(ServiceAnsiblePlaybook) do
   describe '#execute' do
     before do
       FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
+      miq_request_task = FactoryGirl.create(:miq_request_task)
+      @control_extras = { 'a' => 'A', 'b' => 'B', 'c' => 'C'}
+      miq_request_task.update_attributes(:options => {:request_options => {:manageiq_extra_vars => @control_extras}})
       loaded_service.update_attributes(:evm_owner        => FactoryGirl.create(:user),
-                                       :miq_request_task => FactoryGirl.create(:miq_request_task))
+                                       :miq_request_task => miq_request_task)
     end
 
     it 'creates an Ansible Tower job' do
       expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job).to receive(:create_job) do |jobtemp, opts|
         expect(jobtemp).to eq(tower_job_temp)
-        exposed_miq = %w(api_url api_token service user action)
+        exposed_miq = %w(api_url api_token service user) + @control_extras.keys
         expect(opts[:extra_vars].delete('manageiq').keys).to include(*exposed_miq)
         expect(opts).to include(provision_options[:provision_job_options])
         tower_job
