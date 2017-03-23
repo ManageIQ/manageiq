@@ -1,0 +1,2 @@
+app/models/mixins/supports_feature_mixin.rb
+app/models/manager_refresh/inventory_collection.rb

@@ -85,3 +85,7 @@ node_modules/
 
 # ignore included plugins in bundler.d
 bundler.d/*
+
+# yardoc
+/doc/
+.yardoc
