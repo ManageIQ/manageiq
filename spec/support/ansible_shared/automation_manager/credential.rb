@@ -97,7 +97,8 @@ shared_examples_for "ansible credential" do |ansible_provider|
     it "#update_in_provider" do
       expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
       expect(EmsRefresh).to receive(:queue_refresh_task).and_return([finished_task])
-      expect(ansible_cred.update_in_provider({})).to be_a(described_class)
+      expect(credential).to receive(:update_attributes!).with({:username => 'john'})
+      expect(ansible_cred.update_in_provider({:userid => 'john'})).to be_a(described_class)
     end
 
     it "#update_in_provider_queue" do
