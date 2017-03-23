@@ -750,7 +750,7 @@ describe "Providers API" do
 
       provider = FactoryGirl.create(:ext_management_system, sample_vmware.symbolize_keys.except(:type))
       provider.update_authentication(:default => default_credentials.symbolize_keys)
-      allow_any_instance_of(provider.class).to receive_messages(:authentication_status_ok? => true)
+      provider.authentication_type(:default).update(:status => "Valid")
 
       run_post(providers_url(provider.id), gen_request(:refresh))
 
@@ -765,7 +765,7 @@ describe "Providers API" do
 
       provider = FactoryGirl.create(:provider_foreman, :zone => @zone, :url => "example.com", :verify_ssl => false)
       provider.update_authentication(:default => default_credentials.symbolize_keys)
-      allow_any_instance_of(provider.class).to receive_messages(:authentication_status_ok? => true)
+      provider.authentication_type(:default).update(:status => "Valid")
 
       run_post(providers_url(provider.id) + '?provider_class=provider', gen_request(:refresh))
 
