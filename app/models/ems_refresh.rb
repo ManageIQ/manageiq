@@ -101,7 +101,7 @@ module EmsRefresh
   def self.refresh_new_target(target_hash, ems_id)
     ems = ExtManagementSystem.find(ems_id)
 
-    target = save_new_target(target_hash)
+    target = save_new_target(ems, target_hash)
     if target.nil?
       _log.warn "Unknown target for event data: #{target_hash}."
       return
