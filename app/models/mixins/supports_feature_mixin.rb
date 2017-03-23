@@ -1,60 +1,60 @@
+#
+# Including this in a model gives you a DSL to make features supported or not
+#
+#   class Post
+#     include SupportsFeatureMixin
+#     supports :publish
+#     supports_not :fake, :reason => 'We keep it real'
+#     supports :archive do
+#       unsupported_reason_add(:archive, 'Its too good') if featured?
+#     end
+#   end
+#
+# To make a feature conditionally supported, pass a block to the +supports+ method.
+# The block is evaluated in the context of the instance.
+# If you call the private method +unsupported_reason_add+ with the feature
+# and a reason, then the feature will be unsupported and the reason will be
+# accessible through
+#
+#   instance.unsupported_reason(:feature)
+#
+# The above allows you to call +supports_feature?+ or +supports?(feature) :methods
+# on the Class and Instance
+#
+#   Post.supports_publish?                       # => true
+#   Post.supports?(:publish)                     # => true
+#   Post.new.supports_publish?                   # => true
+#   Post.supports_fake?                          # => false
+#   Post.supports_archive?                       # => true
+#   Post.new(featured: true).supports_archive?   # => false
+#
+# To get a reason why a feature is unsupported use the +unsupported_reason+ method
+#
+#   Post.unsupported_reason(:publish)                     # => "Feature not supported"
+#   Post.unsupported_reason(:fake)                        # => "We keep it real"
+#   Post.new(featured: true).unsupported_reason(:archive) # => "Its too good"
+#
+# To query for known features you can ask the class or the instance via +feature_known?+
+#
+#   Post.feature_known?('fake')     # => true
+#   Post.new.feature_known?(:fake)  # => true
+#   Post.new.feature_known?(:alert) # => false
+#
+# If you include this concern in a Module that gets included by the Model
+# you have to extend that model with +ActiveSupport::Concern+ and wrap the
+# +supports+ calls in an +included+ block. This is also true for modules in between!
+#
+#   module Operations
+#     extend ActiveSupport::Concern
+#     module Power
+#       extend ActiveSupport::Concern
+#       included do
+#         supports :operation
+#       end
+#     end
+#   end
+#
 module SupportsFeatureMixin
-  #
-  # Including this in a model gives you a DSL to make features supported or not
-  #
-  #   class Post
-  #     include SupportsFeatureMixin
-  #     supports :publish
-  #     supports_not :fake, :reason => 'We keep it real'
-  #     supports :archive do
-  #       unsupported_reason_add(:archive, 'Its too good') if featured?
-  #     end
-  #   end
-  #
-  # To make a feature conditionally supported, pass a block to the +supports+ method.
-  # The block is evaluated in the context of the instance.
-  # If you call the private method +unsupported_reason_add+ with the feature
-  # and a reason, then the feature will be unsupported and the reason will be
-  # accessible through
-  #
-  #   instance.unsupported_reason(:feature)
-  #
-  # The above allows you to call +supports_feature?+ or +supports?(feature) :methods
-  # on the Class and Instance
-  #
-  #   Post.supports_publish?                       # => true
-  #   Post.supports?(:publish)                     # => true
-  #   Post.new.supports_publish?                   # => true
-  #   Post.supports_fake?                          # => false
-  #   Post.supports_archive?                       # => true
-  #   Post.new(featured: true).supports_archive?   # => false
-  #
-  # To get a reason why a feature is unsupported use the +unsupported_reason+ method
-  #
-  #   Post.unsupported_reason(:publish)                     # => "Feature not supported"
-  #   Post.unsupported_reason(:fake)                        # => "We keep it real"
-  #   Post.new(featured: true).unsupported_reason(:archive) # => "Its too good"
-  #
-  # To query for known features you can ask the class or the instance via +feature_known?+
-  #
-  #   Post.feature_known?('fake')     # => true
-  #   Post.new.feature_known?(:fake)  # => true
-  #   Post.new.feature_known?(:alert) # => false
-  #
-  # If you include this concern in a Module that gets included by the Model
-  # you have to extend that model with +ActiveSupport::Concern+ and wrap the
-  # +supports+ calls in an +included+ block. This is also true for modules in between!
-  #
-  #   module Operations
-  #     extend ActiveSupport::Concern
-  #     module Power
-  #       extend ActiveSupport::Concern
-  #       included do
-  #         supports :operation
-  #       end
-  #     end
-  #   end
-  #
   extend ActiveSupport::Concern
 
   QUERYABLE_FEATURES = {

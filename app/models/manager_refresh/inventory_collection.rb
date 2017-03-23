@@ -1,3 +1,50 @@
+# Usage:
+####################################################################################################################
+# Example 1, storing Vm model data into the DB:
+####################################################################################################################
+#   ################################################################################################################
+#   # Example 1.1 Starting with no vms, lets add vm1 and vm2
+#   @ems = ManageIQ::Providers::BaseManager.first
+#   puts @ems.vms.collect(&:ems_ref) # => []
+#   # Init InventoryCollection
+#   vms_inventory_collection = ::ManagerRefresh::InventoryCollection.new(
+#     :model_class => ManageIQ::Providers::CloudManager::Vm, :parent => @ems, :association => :vms
+#   )
+#
+#   # Fill InventoryCollection with data
+#   vms_inventory_collection.build(:ems_ref => "vm1", :name => "vm1")
+#   vms_inventory_collection.build(:ems_ref => "vm2", :name => "vm2")
+#
+#   # Save InventoryCollection to the db
+#   ManagerRefresh::SaveInventory.save_inventory(@ems, [vms_inventory_collection])
+#
+#   # The result in the DB is that vm1 and vm2 were created
+#   puts @ems.vms.collect(&:ems_ref) # => ["vm1", "vm2"]
+#
+#   ################################################################################################################
+#   # Example 1.2 In another refresh, vm1 does not exist anymore and vm3 was added
+#   # Init InventoryCollection
+#   vms_inventory_collection = ::ManagerRefresh::InventoryCollection.new(
+#     :model_class => ManageIQ::Providers::CloudManager::Vm, :parent => @ems, :association => :vms
+#   )
+#   # Fill InventoryCollection with data
+#   vms_inventory_collection.build(:ems_ref => "vm2", :name => "vm2")
+#   vms_inventory_collection.build(:ems_ref => "vm3", :name => "vm3")
+#
+#   # Save InventoryCollection to the db
+#   ManagerRefresh::SaveInventory.save_inventory(@ems, [vms_inventory_collection])
+#
+#   # The result in the DB is that vm1 was deleted, vm2 was updated and vm3 was created
+#   puts @ems.vms.collect(&:ems_ref) # => ["vm2", "vm3"]
+#
+####################################################################################################################
+#
+# For more usage examples please follow spec examples in:
+# spec/models/manager_refresh/save_inventory/single_inventory_collection_spec.rb
+# spec/models/manager_refresh/save_inventory/acyclic_graph_of_inventory_collections_spec.rb
+# spec/models/manager_refresh/save_inventory/graph_of_inventory_collections_spec.rb
+# spec/models/manager_refresh/save_inventory/graph_of_inventory_collections_targeted_refresh_spec.rb
+# spec/models/manager_refresh/save_inventory/strategies_and_references_spec.rb
 module ManagerRefresh
   class InventoryCollection
     # @return [Boolean] Says whether this collection is already saved into the DB , e.g. InventoryCollections with
@@ -49,54 +96,6 @@ module ManagerRefresh
 
     delegate :each, :size, :to => :to_a
 
-    # Usage:
-    ####################################################################################################################
-    # Example 1, storing Vm model data into the DB:
-    ####################################################################################################################
-    #   ################################################################################################################
-    #   # Example 1.1 Starting with no vms, lets add vm1 and vm2
-    #   @ems = ManageIQ::Providers::BaseManager.first
-    #   puts @ems.vms.collect(&:ems_ref) # => []
-    #   # Init InventoryCollection
-    #   vms_inventory_collection = ::ManagerRefresh::InventoryCollection.new(
-    #     :model_class => ManageIQ::Providers::CloudManager::Vm, :parent => @ems, :association => :vms
-    #   )
-    #
-    #   # Fill InventoryCollection with data
-    #   vms_inventory_collection.build(:ems_ref => "vm1", :name => "vm1")
-    #   vms_inventory_collection.build(:ems_ref => "vm2", :name => "vm2")
-    #
-    #   # Save InventoryCollection to the db
-    #   ManagerRefresh::SaveInventory.save_inventory(@ems, [vms_inventory_collection])
-    #
-    #   # The result in the DB is that vm1 and vm2 were created
-    #   puts @ems.vms.collect(&:ems_ref) # => ["vm1", "vm2"]
-    #
-    #   ################################################################################################################
-    #   # Example 1.2 In another refresh, vm1 does not exist anymore and vm3 was added
-    #   # Init InventoryCollection
-    #   vms_inventory_collection = ::ManagerRefresh::InventoryCollection.new(
-    #     :model_class => ManageIQ::Providers::CloudManager::Vm, :parent => @ems, :association => :vms
-    #   )
-    #   # Fill InventoryCollection with data
-    #   vms_inventory_collection.build(:ems_ref => "vm2", :name => "vm2")
-    #   vms_inventory_collection.build(:ems_ref => "vm3", :name => "vm3")
-    #
-    #   # Save InventoryCollection to the db
-    #   ManagerRefresh::SaveInventory.save_inventory(@ems, [vms_inventory_collection])
-    #
-    #   # The result in the DB is that vm1 was deleted, vm2 was updated and vm3 was created
-    #   puts @ems.vms.collect(&:ems_ref) # => ["vm2", "vm3"]
-    #
-    ####################################################################################################################
-    #
-    # For more usage examples please follow spec examples in:
-    # spec/models/manager_refresh/save_inventory/single_inventory_collection_spec.rb
-    # spec/models/manager_refresh/save_inventory/acyclic_graph_of_inventory_collections_spec.rb
-    # spec/models/manager_refresh/save_inventory/graph_of_inventory_collections_spec.rb
-    # spec/models/manager_refresh/save_inventory/graph_of_inventory_collections_targeted_refresh_spec.rb
-    # spec/models/manager_refresh/save_inventory/strategies_and_references_spec.rb
-    #
     # @param model_class [Class] A class of an ApplicationRecord model, that we want to persist into the DB or load from
     #        the DB.
     # @param manager_ref [Array] Array of Symbols, that are keys of the InventoryObject's data, inserted into this
