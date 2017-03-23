@@ -4,7 +4,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::P
   require_nested :Status
 
   def retire_now(requester = nil)
-    update_attributes(:retirement_requester => requester)
     finish_retirement
+    update_attributes(:retirement_requester => requester)
   end
 end
