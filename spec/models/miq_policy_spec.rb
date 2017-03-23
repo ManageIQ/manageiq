@@ -139,12 +139,6 @@ describe MiqPolicy do
       end
     end
 
-    describe "#action_result_for_event" do
-      it "finds the action result to be true or false" do
-        expect(policy.action_result_for_event(action, event)).to be true
-      end
-    end
-
     describe "#copy, .clean_attrs" do
       it "creates new instance based on the existing one" do
         new_policy = policy.copy(:name => 'newname', :description => 'newdesc')
