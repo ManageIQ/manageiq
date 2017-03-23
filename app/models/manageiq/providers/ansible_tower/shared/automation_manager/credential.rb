@@ -4,6 +4,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Credential
   module ClassMethods
     def provider_params(params)
       params[:username] = params.delete(:userid) if params.include?(:userid)
+      params[:kind] = self::TOWER_KIND
       params
     end
 
@@ -82,4 +83,5 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Credential
   COMMON_ATTRIBUTES = {}.freeze
   EXTRA_ATTRIBUTES = {}.freeze
   API_ATTRIBUTES = COMMON_ATTRIBUTES.merge(EXTRA_ATTRIBUTES).freeze
+  # TOWER_KIND = 'ssh'.freeze # default to `ssh` just like Tower does
 end

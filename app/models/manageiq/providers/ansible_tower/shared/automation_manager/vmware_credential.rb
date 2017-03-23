@@ -32,4 +32,5 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::VmwareCrede
     :type       => 'cloud',
     :attributes => API_ATTRIBUTES
   }.freeze
+  TOWER_KIND = 'vmware'.freeze
 end

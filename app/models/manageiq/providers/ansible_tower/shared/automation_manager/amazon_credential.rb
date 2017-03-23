@@ -31,4 +31,5 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::AmazonCrede
     :label      => N_('Amazon'),
     :attributes => API_ATTRIBUTES
   }.freeze
+  TOWER_KIND = 'aws'.freeze
 end
