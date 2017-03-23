@@ -46,9 +46,8 @@ module EmsRefresh::SaveInventoryPhysicalInfra
                 []
               end
 
-    servers = save_inventory_multi(ems.physical_servers, hashes, deletes, [:ems_ref])
-    
-    #Assign the physical server to host relationship
+    servers = save_inventory_multi(ems.physical_servers, hashes, deletes, [:ems_ref]) 
+    # Assign the physical server to host relationship
     servers.map do |s|
       host = Host.where(:service_tag => s.serial_number)
       host.physical_server = s
