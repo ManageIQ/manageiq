@@ -1,13 +1,8 @@
 class ManageIQ::Providers::Openstack::Inventory::Parser::CloudManager < ManagerRefresh::Inventory::Parser
   include ManageIQ::Providers::Openstack::RefreshParserCommon::HelperMethods
   include ManageIQ::Providers::Openstack::RefreshParserCommon::Images
-  include Vmdb::Logging
 
   def parse
-    # the parser needs a reference to the os_handle
-    # for the logger in safe_call to work.
-    @os_handle = collector.os_handle
-
     availability_zones
     cloud_services
     flavors
@@ -174,7 +169,7 @@ class ManageIQ::Providers::Openstack::Inventory::Parser::CloudManager < ManagerR
   end
 
   def orchestration_stack_resources(stack)
-    raw_resources = safe_list { stack.resources }
+    raw_resources = collector.orchestration_resources(stack)
     # reject resources that don't have a physical resource id, because that
     # means they failed to be successfully created
     raw_resources.reject! { |r| r.physical_resource_id.nil? }
@@ -196,7 +191,7 @@ class ManageIQ::Providers::Openstack::Inventory::Parser::CloudManager < ManagerR
   end
 
   def orchestration_stack_parameters(stack)
-    raw_parameters = safe_list { stack.parameters }
+    raw_parameters = collector.orchestration_parameters(stack)
     raw_parameters.each do |param_key, param_val|
       uid = compose_ems_ref(stack.id, param_key)
       o = persister.orchestration_stacks_parameters.find_or_build(uid)
@@ -208,7 +203,7 @@ class ManageIQ::Providers::Openstack::Inventory::Parser::CloudManager < ManagerR
   end
 
   def orchestration_stack_outputs(stack)
-    raw_outputs = safe_list { stack.outputs }
+    raw_outputs = collector.orchestration_outputs(stack)
     raw_outputs.each do |output|
       uid = compose_ems_ref(stack.id, output['output_key'])
       o = persister.orchestration_stacks_outputs.find_or_build(uid)
@@ -221,7 +216,7 @@ class ManageIQ::Providers::Openstack::Inventory::Parser::CloudManager < ManagerR
   end
 
   def orchestration_template(stack)
-    template = safe_call { stack.template }
+    template = collector.orchestration_template(stack)
     if template
       o = persister.orchestration_templates.find_or_build(stack.id)
       o.type = stack.template.format == "HOT" ? "OrchestrationTemplateHot" : "OrchestrationTemplateCfn"
@@ -257,7 +252,7 @@ class ManageIQ::Providers::Openstack::Inventory::Parser::CloudManager < ManagerR
 
     collector.servers.each do |s|
       if hosts && !s.os_ext_srv_attr_host.blank?
-        parent_host = hosts.where('lower(hypervisor_hostname) = ?', s.os_ext_srv_attr_host.downcase).first
+        parent_host = hosts.find_by('lower(hypervisor_hostname) = ?', s.os_ext_srv_attr_host.downcase)
         parent_cluster = parent_host.try(:ems_cluster)
       else
         parent_host = nil
@@ -305,28 +300,30 @@ class ManageIQ::Providers::Openstack::Inventory::Parser::CloudManager < ManagerR
           :hardware    => persister.hardwares.lazy_find(s.id),
           :description => "private"
         )
-        private_network["description"] = "private"
+        private_network.description = "private"
+        private_network.ipaddress = s.private_ip_address
       end
       unless s.public_ip_address.blank?
         public_network = persister.networks.find_or_build_by(
           :hardware    => persister.hardwares.lazy_find(s.id),
           :description => "public"
         )
-        public_network["description"] = "public"
+        public_network.description = "public"
+        public_network.ipaddress = s.public_ip_address
       end
 
       disk_location = "vda"
       if (root_size = flavor.try(:disk).to_i.gigabytes).zero?
         root_size = 1.gigabytes
       end
-      root_disk = make_instance_disk(s.id, root_size, disk_location.dup, "Root disk")
+      make_instance_disk(s.id, root_size, disk_location.dup, "Root disk")
       ephemeral_size = flavor.try(:ephemeral).to_i.gigabytes
       unless ephemeral_size.zero?
-        ephemeral_disk = make_instance_disk(s.id, ephemeral_size, disk_location.succ!.dup, "Ephemeral disk")
+        make_instance_disk(s.id, ephemeral_size, disk_location.succ!.dup, "Ephemeral disk")
       end
       swap_size = flavor.try(:swap).to_i.megabytes
       unless swap_size.zero?
-        swap_disk = make_instance_disk(s.id, swap_size, disk_location.succ!.dup, "Swap disk")
+        make_instance_disk(s.id, swap_size, disk_location.succ!.dup, "Swap disk")
       end
     end
   end

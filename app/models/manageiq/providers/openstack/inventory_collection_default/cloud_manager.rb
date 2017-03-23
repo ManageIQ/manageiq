@@ -162,6 +162,17 @@ class ManageIQ::Providers::Openstack::InventoryCollectionDefault::CloudManager <
       super(attributes.merge!(extra_attributes))
     end
 
+    def networks(extra_attributes = {})
+      attributes = {
+        :inventory_object_attributes => [
+          :hardware,
+          :description,
+          :ipaddress
+        ]
+      }
+      super(attributes.merge!(extra_attributes))
+    end
+
     def orchestration_stacks_outputs(extra_attributes = {})
       attributes = {
         :inventory_object_attributes => [

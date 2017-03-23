@@ -2,11 +2,8 @@ class ManageIQ::Providers::Openstack::Inventory::Collector::CloudManager < Manag
   include ManageIQ::Providers::Openstack::RefreshParserCommon::HelperMethods
   include Vmdb::Logging
 
-  def os_handle
-    @os_handle ||= manager.openstack_handle
-  end
-
   def connection
+    @os_handle ||= manager.openstack_handle
     @connection ||= manager.connect
   end
 
@@ -129,5 +126,21 @@ class ManageIQ::Providers::Openstack::Inventory::Collector::CloudManager < Manag
     # Orchestration service is detected but not open to the user
     $log.warn("Skip refreshing stacks because the user cannot access the orchestration service")
     []
+  end
+
+  def orchestration_outputs(stack)
+    safe_list { stack.outputs }
+  end
+
+  def orchestration_parameters(stack)
+    safe_list { stack.parameters }
+  end
+
+  def orchestration_resources(stack)
+    safe_list { stack.resources }
+  end
+
+  def orchestration_template(stack)
+    safe_call { stack.template }
   end
 end
