@@ -321,7 +321,7 @@ describe JobProxyDispatcher do
 
   describe "#do_dispatch" do
     let(:ems_id) { 1 }
-    let(:job) { Job.create_job("VmScan", :name => "Hello, World")}
+    let(:job) { Job.create_job("VmScan", :name => "Hello, World") }
 
     before(:each) do
       dispatcher.instance_variable_set(:@zone, @server.my_zone)
@@ -353,7 +353,7 @@ describe JobProxyDispatcher do
       expect(counter_by_zone_ems[@server.my_zone][ems_id]).to eq 1
     end
 
-    it "queues call to Job#signal" do
+    it "queues call to Job::StateMachine#signal with argument 'start'" do
       expect(MiqQueue.count).to eq 0
 
       dispatcher.do_dispatch(job, ems_id)
@@ -361,6 +361,31 @@ describe JobProxyDispatcher do
       queue_record = MiqQueue.where(:instance_id => job.id)[0]
       expect(queue_record.method_name).to eq "signal"
       expect(queue_record.class_name).to eq "Job"
+    end
+  end
+
+  describe "#queue_signal" do
+    let(:job) { Job.create_job("VmScan", :name => "Hello, World") }
+    
+    it "queues call to Job::StateMachine#signal_abort if signal is 'abort'" do
+      options = {:args => [:abort]}
+
+      dispatcher.queue_signal(job, options)
+
+      queue_record = MiqQueue.where(:instance_id => job.id)[0]
+      expect(queue_record.method_name).to eq "signal_abort"
+      expect(queue_record.class_name).to eq "Job"
+    end
+
+    it "queues call to Job::StateMachine#signal if signal is not 'abort'" do
+      options = {:args => [:start_snapshot]}
+
+      dispatcher.queue_signal(job, options)
+
+      queue_record = MiqQueue.where(:instance_id => job.id)[0]
+      expect(queue_record.method_name).to eq "signal"
+      expect(queue_record.class_name).to eq "Job"
+      expect(queue_record.args[0]).to eq :start_snapshot
     end
   end
 end
