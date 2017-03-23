@@ -1397,8 +1397,14 @@ class ApplicationController < ActionController::Base
 
   def find_checked_items_with_rbac(klass, prefix = nil)
     items = find_checked_items(prefix)
-    assert_rbac(current_user, klass, items)
+    assert_rbac(klass, items)
     items
+  end
+
+  # Test RBAC in case there is only one record, not checked by checkbox
+  def test_item_with_rbac(klass, id)
+    assert_rbac(klass, Array.wrap(id))
+    id
   end
 
   # Common Saved Reports button handler routines
@@ -2382,8 +2388,16 @@ class ApplicationController < ActionController::Base
           _("The user is not authorized for this task or item.") unless role_allows?(:feature => feature)
   end
 
-  def assert_rbac(user, klass, ids)
-    filtered, _ = Rbac.search(:targets => ids.map(&:to_i), :user => user, :class => klass, :results_format => :ids)
+  # Method tests, whether the user has rights to access records sent in request
+  # Params:
+  #   klass - class of accessed objects
+  #   ids   - array of accessed object ids
+  def assert_rbac(klass, ids)
+    filtered, _ = Rbac.search(
+      :targets => ids.map(&:to_i),
+      :user => current_user,
+      :class => klass,
+      :results_format => :ids)
     raise _("Unauthorized object or action") unless ids.length == filtered.length
   end
 

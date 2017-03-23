@@ -66,7 +66,7 @@ class CatalogController < ApplicationController
 
   def servicetemplate_edit
     assert_privileges(params[:pressed]) if params[:pressed].present?
-    checked_id = find_checked_id_items_with_rbac(ServiceTemplate).first || params[:id]
+    checked_id = find_checked_id_items_with_rbac(ServiceTemplate).first || test_item_with_rbac(ServiceTemplate, params[:id])
     @sb[:cached_waypoint_ids] = MiqAeClass.waypoint_ids_for_state_machines
     @record = checked_id || ServiceTemplate.new
     @sb[:st_form_active_tab] = "basic"
