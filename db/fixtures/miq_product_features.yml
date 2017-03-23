@@ -6419,6 +6419,12 @@
       :feature_type: control
       :identifier: physical_server_refresh
 
+# Firmwares
+- :name: Firmwares
+  :description: Everything under Firmware 
+  :feature_type: node
+  :identifier: firmware
+
 # Physical Infrastructure Topology
 - :name: Physical Infra Topology
   :description: Physical Infra Topology
