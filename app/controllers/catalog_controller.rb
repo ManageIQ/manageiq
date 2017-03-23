@@ -65,16 +65,16 @@ class CatalogController < ApplicationController
   end
 
   def servicetemplate_edit
-    assert_privileges(params[:pressed]) if params[:pressed]
-    checked = find_checked_items_with_rbac(ServiceTemplate).first || params[:id]
+    assert_privileges(params[:pressed]) if params[:pressed].present?
+    checked_id = find_checked_id_items_with_rbac(ServiceTemplate).first || params[:id]
     @sb[:cached_waypoint_ids] = MiqAeClass.waypoint_ids_for_state_machines
-    @record = checked ? find_by_id_filtered(ServiceTemplate, checked) : ServiceTemplate.new
+    @record = checked_id || ServiceTemplate.new
     @sb[:st_form_active_tab] = "basic"
     composite_type = @record.service_type == "composite"
     new_atomic_item = params[:pressed] == "atomic_catalogitem_new" ||
       (params[:button].present? &&
        session[:edit][:new][:service_type] == "atomic")
-    if checked.present? && composite_type || checked.nil? && !new_atomic_item
+    if checked_id.present? && composite_type || checked_id.nil? && !new_atomic_item
       st_edit
     else
       atomic_st_edit
