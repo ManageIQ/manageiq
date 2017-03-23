@@ -1,5 +1,5 @@
 require 'support/ansible_shared/automation_manager/credential'
 
 describe ManageIQ::Providers::AnsibleTower::AutomationManager::Credential do
-  it_behaves_like 'ansible credential'
+  it_behaves_like 'ansible credential', :provider_ansible_tower
 end
