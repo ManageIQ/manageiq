@@ -256,12 +256,8 @@ class ManageIQ::Providers::Openstack::Inventory::Parser::CloudManager < ManagerR
     hosts = related_infra_ems.try(:hosts)
 
     collector.servers.each do |s|
-      if hosts
-        # Find associated host from OpenstackInfra
-        filtered_hosts = hosts.select do |h|
-          h.hypervisor_hostname && s.os_ext_srv_attr_host && s.os_ext_srv_attr_host.include?(h.hypervisor_hostname.downcase)
-        end
-        parent_host = filtered_hosts.first
+      if hosts && !s.os_ext_srv_attr_host.blank?
+        parent_host = hosts.where('lower(hypervisor_hostname) = ?', s.os_ext_srv_attr_host.downcase).first
         parent_cluster = parent_host.try(:ems_cluster)
       else
         parent_host = nil
