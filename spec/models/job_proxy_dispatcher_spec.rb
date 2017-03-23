@@ -292,7 +292,7 @@ describe JobProxyDispatcher do
         dispatcher.assign_proxy_to_job(@server, job)
         expect(dispatcher.busy_proxies).to eq "MiqServer_#{@server.id}" => 3
       end
-      
+
       it "links job to instance of MiqServer and updates :started_on and :dispatch_status atributes" do
         allow(dispatcher).to receive(:embedded_scan_resource).and_return(nil)
         Timecop.freeze do
@@ -366,7 +366,7 @@ describe JobProxyDispatcher do
 
   describe "#queue_signal" do
     let(:job) { Job.create_job("VmScan", :name => "Hello, World") }
-    
+
     it "queues call to Job::StateMachine#signal_abort if signal is 'abort'" do
       options = {:args => [:abort]}
 
@@ -386,6 +386,24 @@ describe JobProxyDispatcher do
       expect(queue_record.method_name).to eq "signal"
       expect(queue_record.class_name).to eq "Job"
       expect(queue_record.args[0]).to eq :start_snapshot
+    end
+  end
+
+  describe "#dispatch_to_ems" do
+    let(:ems_id) { 1 }
+    let(:jobs) do
+      [Job.create_job("VmScan", :name => "Hello, World 1"), Job.create_job("VmScan", :name => "Hello, World 2")]
+    end
+
+    it "dispatches all supplied jobs if supplied concurency limit is 0" do
+      dispatcher.dispatch_to_ems(ems_id, jobs, 0)
+      expect(MiqQueue.where(:class_name => "Job", :method_name => "signal").count).to eq 2
+    end
+
+    it "limits dispatching supplied jobs if supplied concurrency limit > 0" do
+      concurrency_limit = 1
+      dispatcher.dispatch_to_ems(ems_id, jobs, concurrency_limit)
+      expect(MiqQueue.where(:class_name => "Job", :method_name => "signal").count).to eq concurrency_limit
     end
   end
 end
