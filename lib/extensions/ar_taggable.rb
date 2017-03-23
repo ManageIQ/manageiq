@@ -148,7 +148,7 @@ module ActsAsTaggable
         relationship = "self"
         macro = :has_one
       else
-        macro = subject.class.reflect_on_association(relationship.to_sym).macro
+        macro = subject.class.reflection_with_virtual(relationship.to_sym).macro
       end
       if macro == :has_one || macro == :belongs_to
         value = subject.public_send(relationship).public_send(attr)
