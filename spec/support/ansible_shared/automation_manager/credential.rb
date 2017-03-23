@@ -20,16 +20,25 @@ shared_examples_for "ansible credential" do |ansible_provider|
       {
         :description  => "Description",
         :name         => "My Credential",
-        :related      => {}
+        :related      => {},
+        :userid       => 'john'
       }
     end
 
     it ".create_in_provider" do
+      expected_params = {
+        :description  => "Description",
+        :name         => "My Credential",
+        :related      => {},
+        :username     => "john",
+        :kind         => described_class::TOWER_KIND
+      }
+      expected_params[:organization] = 1 if described_class.name.include?("::EmbeddedAnsible::")
       expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
       store_new_credential(credential, manager)
       expect(EmsRefresh).to receive(:queue_refresh_task).and_return([finished_task])
       expect(ExtManagementSystem).to receive(:find).with(manager.id).and_return(manager)
-
+      expect(credentials).to receive(:create!).with(expected_params)
       expect(described_class.create_in_provider(manager.id, params)).to be_a(described_class)
     end
 
@@ -95,13 +104,15 @@ shared_examples_for "ansible credential" do |ansible_provider|
     let(:ansible_cred)  { described_class.create!(:resource => manager, :manager_ref => credential.id) }
 
     it "#update_in_provider" do
+      expected_params = {
+        :username => 'john',
+        :kind     => described_class::TOWER_KIND
+      }
+      expected_params[:organization] = 1 if described_class.name.include?("::EmbeddedAnsible::")
       expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
       expect(EmsRefresh).to receive(:queue_refresh_task).and_return([finished_task])
-      expect(credential).to receive(:update_attributes!).with({
-        :username => 'john',
-        :kind     => 'scm' # described_class::TOWER_KIND
-      })
-      expect(ansible_cred.update_in_provider({:userid => 'john'})).to be_a(described_class)
+      expect(credential).to receive(:update_attributes!).with(expected_params)
+      expect(ansible_cred.update_in_provider(:userid => 'john')).to be_a(described_class)
     end
 
     it "#update_in_provider_queue" do
