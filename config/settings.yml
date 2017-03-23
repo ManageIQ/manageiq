@@ -1315,6 +1315,7 @@
         :ems_refresh_worker_google_network: {}
         :ems_refresh_worker_hawkular: {}
         :ems_refresh_worker_kubernetes: {}
+        :ems_refresh_worker_lenovo_physical_infra: {}
         :ems_refresh_worker_microsoft: {}
         :ems_refresh_worker_openshift: {}
         :ems_refresh_worker_openstack: {}
