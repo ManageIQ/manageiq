@@ -91,8 +91,8 @@ class Host < ApplicationRecord
   has_many                  :host_aggregate_hosts, :dependent => :destroy
   has_many                  :host_aggregates, :through => :host_aggregate_hosts
 
-  # Physical infra reference
-  has_one :physical_server, :inverse_of => :host
+  # Physical server reference
+  belongs_to :physical_server, :inverse_of => :host
 
   serialize :settings, Hash
 
