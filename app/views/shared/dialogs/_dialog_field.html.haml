@@ -47,12 +47,10 @@
       = button_tag(_("Save"), :class => edit ? 'btn btn-primary' : 'btn btn-primary disabled')
 
     - when 'DialogFieldTagControl'
-      - if edit
-        - multiple = field.single_value? ? {} : {:multiple => true}
+      - if edit         
         = select_tag(field.name,
                      options_for_select(dialog_dropdown_select_values(field), wf.value(field.name)),
-                     drop_down_options(field, url).merge(multiple))
-
+                     drop_down_options(field, url))
         :javascript
           dialogFieldRefresh.initializeDialogSelectPicker('#{field.name}', undefined, '#{url}', JSON.parse('#{j(auto_refresh_options.to_json)}'));
 
