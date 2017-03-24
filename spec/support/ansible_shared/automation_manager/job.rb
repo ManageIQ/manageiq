@@ -29,7 +29,7 @@ shared_examples_for "ansible job" do
       'cloud_credential_id'   => cloud_credential.manager_ref,
       'network_credential_id' => network_credential.manager_ref
     ).tap do |rjob|
-      allow(rjob).to receive(:stdout).and_return('job stdout')
+      allow(rjob).to receive(:stdout).with('html').and_return('<html><body>job stdout</body></html>')
       allow(rjob).to receive(:job_plays).and_return(the_raw_plays)
     end
   end
@@ -145,12 +145,12 @@ shared_examples_for "ansible job" do
     end
 
     it 'gets the standard output of the job' do
-      expect(subject.raw_stdout).to eq('job stdout')
+      expect(subject.raw_stdout('html')).to eq('<html><body>job stdout</body></html>')
     end
 
     it 'catches errors from provider' do
       expect(connection.api.jobs).to receive(:find).and_raise("bad happened")
-      expect { subject.raw_stdout }.to raise_error(MiqException::MiqOrchestrationStatusError)
+      expect { subject.raw_stdout('html') }.to raise_error(MiqException::MiqOrchestrationStatusError)
     end
   end
 end
