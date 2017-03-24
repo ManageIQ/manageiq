@@ -1,6 +1,6 @@
 RSpec.describe Api::ServiceTemplateWorkflow do
   describe ".create" do
-    it "creates a workflow" do
+    xit "creates a workflow" do
       provision_action = instance_double("Provision Action")
       service_template = instance_double("ServiceTemplate", :provision_action => provision_action)
       workflow = instance_double(ResourceActionWorkflow)
@@ -13,7 +13,7 @@ RSpec.describe Api::ServiceTemplateWorkflow do
       expect(described_class.create(service_template, {})).to be(workflow)
     end
 
-    it "creates a workflow and sets service request values if passed" do
+    xit "creates a workflow and sets service request values if passed" do
       provision_action = instance_double("Provision Action")
       service_template = instance_double("ServiceTemplate", :provision_action => provision_action)
       workflow = instance_double(ResourceActionWorkflow)
