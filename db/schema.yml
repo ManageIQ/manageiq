@@ -6519,6 +6519,13 @@ showback_rates:
 - concept
 - created_at
 - updated_at
+- showback_tariff_id
+showback_tariffs:
+- id
+- name
+- description
+- created_at
+- updated_at
 snapshots:
 - id
 - uid

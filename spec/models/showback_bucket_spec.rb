@@ -30,6 +30,13 @@ RSpec.describe ShowbackBucket, type: :model do
       expect(bucket.errors.details[:description]). to include({:error => :blank})
     end
 
+    it 'deletes costs associated when deleting the bucket' do
+      FactoryGirl.create(:showback_charge, showback_bucket: bucket)
+      FactoryGirl.create(:showback_charge, showback_bucket: bucket)
+      expect(bucket.showback_charges.count).to be(2)
+      expect{ bucket.destroy }.to change(ShowbackCharge, :count).from(2).to(0)
+    end
+
     pending 'it can  be on states open, processing, pending'
     pending 'it can transition from open to processing'
     pending 'it can not transition from open to closed'
@@ -65,12 +72,13 @@ RSpec.describe ShowbackBucket, type: :model do
       expect{ charge.variable_cost = 3 }.to change(charge, :variable_cost).from(nil).to(3)
     end
 
+
     pending 'charges can be updated for an event'
     pending 'charges can be updated for all events in the bucket'
     pending 'charges can be deleted for an event'
     pending 'charges can be deleted for all events in the bucket'
-    pending 'is possible to return costs for an event'
-    pending 'is possible to return costs for all events'
+    pending 'is possible to return charges for an event'
+    pending 'is possible to return charges for all events'
     pending 'sum of charges can be calculated for the bucket'
     pending 'sum of charges can be calculated for an event type'
   end
@@ -82,8 +90,8 @@ RSpec.describe ShowbackBucket, type: :model do
     pending 'charges can be deleted for all events in the bucket'
     pending 'charges can be updated for an event'
     pending 'charges can be updated for all events in the bucket'
-    pending 'is possible to return costs for an event'
-    pending 'is possible to return costs for all events'
+    pending 'is possible to return charges for an event'
+    pending 'is possible to return charges for all events'
     pending 'sum of charges can be calculated for the bucket'
     pending 'sum of charges can be calculated for an event type'
   end
@@ -95,8 +103,8 @@ RSpec.describe ShowbackBucket, type: :model do
     pending 'charges can not be deleted for all events in the bucket'
     pending 'charges can not be updated for an event'
     pending 'charges can not be updated for all events in the bucket'
-    pending 'is possible to return costs for an event'
-    pending 'is possible to return costs for all events'
+    pending 'is possible to return charges for an event'
+    pending 'is possible to return charges for all events'
     pending 'sum of charges can be calculated for the bucket'
     pending 'sum of charges can be calculated for an event type'
   end
