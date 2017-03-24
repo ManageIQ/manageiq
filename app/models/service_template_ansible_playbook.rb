@@ -50,8 +50,9 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
           next unless dialog_name
 
           job_template = enhanced_config.fetch_path(action, :configuration_template)
+          hosts        = enhanced_config.fetch_path(action, :hosts)
 
-          new_dialog = service_template.send(:create_new_dialog, dialog_name, job_template)
+          new_dialog = service_template.send(:create_new_dialog, dialog_name, job_template, hosts)
           enhanced_config[action][:dialog] = new_dialog
           service_template.options[:config_info][action][:dialog_id] = new_dialog.id
         end
@@ -60,8 +61,8 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     end
   end
 
-  def create_new_dialog(dialog_name, job_template)
-    Dialog::AnsiblePlaybookServiceDialog.create_dialog(dialog_name, job_template)
+  def create_new_dialog(dialog_name, job_template, hosts)
+    Dialog::AnsiblePlaybookServiceDialog.create_dialog(dialog_name, job_template, hosts)
   end
   private :create_new_dialog
 
@@ -141,7 +142,8 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     [:provision, :retirement, :reconfigure].each do |action|
       next unless config_info[action]
       info = config_info[action]
-      new_dialog = create_new_dialog(info[:new_dialog_name], job_template(action)) if info[:new_dialog_name]
+
+      new_dialog = create_new_dialog(info[:new_dialog_name], job_template(action), info[:hosts]) if info[:new_dialog_name]
       config_info[action][:dialog_id] = new_dialog.id if new_dialog
 
       next unless info.key?(:playbook_id)
