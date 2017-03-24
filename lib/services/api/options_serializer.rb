@@ -13,13 +13,12 @@ module Api
     end
 
     def serialize
-      resource = config.name_for_klass(klass) if klass
       options = {
         :attributes         => attributes,
         :virtual_attributes => virtual_attributes,
         :relationships      => relationships
       }
-      options[:subcollections] = Array(resource ? config[resource].subcollections : nil).sort
+      options[:subcollections] = subcollections
       options[:data] = data
       options
     end
@@ -39,6 +38,11 @@ module Api
     def relationships
       return [] unless klass
       (klass.reflections.keys | klass.virtual_reflections.keys.collect(&:to_s)).sort
+    end
+
+    def subcollections
+      resource = config.name_for_klass(klass) if klass
+      Array(resource ? config[resource].subcollections : nil).sort
     end
 
     def options_attribute_list(attrlist)
