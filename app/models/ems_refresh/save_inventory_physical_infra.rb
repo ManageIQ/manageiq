@@ -46,7 +46,7 @@ module EmsRefresh::SaveInventoryPhysicalInfra
                 []
               end
 
-    child_keys = [:hardware]
+    child_keys = [:computer_system]
     save_inventory_multi(ems.physical_servers, hashes, deletes, [:ems_ref], child_keys)
     store_ids_for_new_records(ems.physical_servers, hashes, :ems_ref)
   end

@@ -280,7 +280,11 @@ module EmsRefresh::SaveInventory
   def save_firmwares_inventory(hardware, hashes)
     return if hashes.nil?
 
-    save_inventory_multi(hardware.firmwares, hashes, :use_association, nil)
+    save_inventory_multi(hardware.firmwares, hashes, :use_association, [:name])
+  end
+
+  def save_computer_system_inventory(parent, hash, _target = nil)
+    save_inventory_single(:computer_system, parent, hash, [:hardware, :operating_system])
   end
 
   def save_system_services_inventory(parent, hashes, mode = :refresh)
