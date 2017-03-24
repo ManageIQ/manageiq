@@ -616,7 +616,7 @@ module ApplicationController::CiProcessing
 
   def evacuate_vm
     assert_privileges("instance_evacuate")
-    @record = VmOrTemplate.find_by_id(params[:id])
+    @record = find_by_id_filtered(VmOrTemplate, params[:id])
 
     case params[:button]
     when "cancel"
