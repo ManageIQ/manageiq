@@ -147,7 +147,7 @@ module VirtualDelegates
       if allow_nil
         method_def = <<-METHOD
           def #{method_name}(#{definition})
-            return self[:#{method_name}] if has_attribute?(:#{method_name})
+            return self[:#{method_name}]#{default} if has_attribute?(:#{method_name})
             _ = #{to}
             if !_.nil? || nil.respond_to?(:#{method})
               _.#{method}(#{definition})
@@ -159,7 +159,7 @@ module VirtualDelegates
 
         method_def = <<-METHOD
           def #{method_name}(#{definition})
-            return self[:#{method_name}] if has_attribute?(:#{method_name})
+            return self[:#{method_name}]#{default} if has_attribute?(:#{method_name})
             _ = #{to}
             _.#{method}(#{definition})#{default}
           rescue NoMethodError => e

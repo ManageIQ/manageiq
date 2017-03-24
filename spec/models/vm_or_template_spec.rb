@@ -596,6 +596,22 @@ describe VmOrTemplate do
     end
   end
 
+  describe "#provisioned_storage" do
+    context "with no hardware" do
+      let(:vm) { FactoryGirl.create(:vm_vmware) }
+
+      it "calculates in ruby" do
+        expect(vm.provisioned_storage).to eq(0.0)
+      end
+
+      it "uses calculated (inline) attribute" do
+        vm # make sure the record is created
+        vm2 = VmOrTemplate.select(:id, :provisioned_storage).first
+        expect { expect(vm2.provisioned_storage).to eq(0) }.to match_query_limit_of(0)
+      end
+    end
+  end
+
   describe ".ram_size", ".mem_cpu" do
     let(:vm) { FactoryGirl.create(:vm_vmware, :hardware => hardware) }
     let(:hardware) { FactoryGirl.create(:hardware, :memory_mb => 10) }
