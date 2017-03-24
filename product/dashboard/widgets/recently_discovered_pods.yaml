@@ -11,7 +11,7 @@ visibility:
   :roles:
   - _ALL_
 user_id: 
-resource_id: 198
+resource_name: Recently Discovered Pods
 resource_type: MiqReport
 miq_schedule_options:
   :run_at:
