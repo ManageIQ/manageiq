@@ -1,6 +1,7 @@
 class SecurityGroup < ApplicationRecord
   include NewWithTypeStiMixin
   include SupportsFeatureMixin
+  include CloudTenancyMixin
 
   acts_as_miq_taggable
 

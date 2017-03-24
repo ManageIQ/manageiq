@@ -1,5 +1,6 @@
 class Flavor < ApplicationRecord
   include NewWithTypeStiMixin
+  include CloudTenancyMixin
 
   acts_as_miq_taggable
 
@@ -32,5 +33,9 @@ class Flavor < ApplicationRecord
       :memory_gigabytes    => memory.bytes / 1.0.gigabytes,
       :root_disk_gigabytes => root_disk_size.nil? ? nil : root_disk_size.bytes / 1.0.gigabytes
     }
+  end
+
+  def self.tenant_joins_clause(scope)
+    scope.includes(:cloud_tenants => "source_tenant").includes(:ext_management_system)
   end
 end
