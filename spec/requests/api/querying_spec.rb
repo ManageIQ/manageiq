@@ -695,16 +695,9 @@ describe "Querying" do
   describe 'OPTIONS /api/vms' do
     it 'returns the options information' do
       api_basic_authorize
-      expected = {
-        'attributes'         => (Vm.attribute_names - Vm.virtual_attribute_names).sort.as_json,
-        'virtual_attributes' => Vm.virtual_attribute_names.sort.as_json,
-        'relationships'      => (Vm.reflections.keys | Vm.virtual_reflections.keys.collect(&:to_s)).sort,
-        'subcollections'     => Array(Api::ApiConfig.collections[:vms].subcollections).collect(&:to_s).sort,
-        'data'               => {}
-      }
+
       run_options(vms_url)
-      expect(response.parsed_body).to eq(expected)
-      expect(response.headers['Access-Control-Allow-Methods']).to include('OPTIONS')
+      expect_options_results(:vms)
     end
   end
 

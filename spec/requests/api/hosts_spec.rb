@@ -82,11 +82,10 @@ RSpec.describe "hosts API" do
       it 'returns hosts node_types' do
         api_basic_authorize
 
-        expected = a_hash_including("data" => {"node_types" => Host.node_types.to_s})
+        expected_data = {"node_types" => Host.node_types.to_s}
 
         run_options(hosts_url)
-        expect(response.parsed_body).to match(expected)
-        expect(response.headers['Access-Control-Allow-Methods']).to include('OPTIONS')
+        expect_options_results(:hosts, expected_data)
       end
     end
   end
