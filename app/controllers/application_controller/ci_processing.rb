@@ -2282,10 +2282,9 @@ module ApplicationController::CiProcessing
 
   def cluster_button_operation(method, display_name)
     clusters = []
-
     # Either a list or coming from a different controller (eg from host screen, go to its clusters)
     if @lastaction == "show_list" || @layout != "ems_cluster"
-      clusters = find_checked_items
+      clusters = find_checked_items_with_rbac(EmsCluster)
       if clusters.empty?
         add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "ems_clusters"), :task => display_name}, :error)
       else
@@ -2301,7 +2300,7 @@ module ApplicationController::CiProcessing
       if params[:id].nil? || EmsCluster.find_by_id(params[:id]).nil?
         add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:tables => "ems_cluster")}, :error)
       else
-        clusters.push(params[:id])
+        clusters.push(test_item_with_rbac(EmsCluster, params[:id]))
         process_clusters(clusters, method)  unless clusters.empty?
       end
 
