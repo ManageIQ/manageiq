@@ -26,10 +26,11 @@ module ApplicationController::CiProcessing
     if !session[:checked_items].nil? && @lastaction == "set_checked_items"
       recs = session[:checked_items]
     else
-      recs = find_checked_items
+      recs = find_checked_items_with_rbac(get_class_from_controller_param(params[:controller]))
     end
     if recs.blank?
-      recs = [params[:id].to_i]
+      id = test_item_with_rbac(get_class_from_controller_param(params[:controller]), params[:id])
+      recs = [id.to_i]
     end
     if recs.length < 1
       add_flash(_("One or more %{model} must be selected to Set Ownership") % {
