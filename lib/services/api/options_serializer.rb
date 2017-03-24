@@ -18,11 +18,10 @@ module Api
                   {
                     :attributes         => attributes,
                     :virtual_attributes => virtual_attributes,
-                    :relationships      => (klass.reflections.keys |
-                                            klass.virtual_reflections.keys.collect(&:to_s)).sort
+                    :relationships      => relationships
                   }
                 else
-                  {:attributes => attributes, :virtual_attributes => virtual_attributes, :relationships => []}
+                  {:attributes => attributes, :virtual_attributes => virtual_attributes, :relationships => relationships}
                 end
       options[:subcollections] = Array(resource ? config[resource].subcollections : nil).sort
       options[:data] = data
@@ -39,6 +38,11 @@ module Api
     def virtual_attributes
       return [] unless klass
       options_attribute_list(klass.virtual_attribute_names)
+    end
+
+    def relationships
+      return [] unless klass
+      (klass.reflections.keys | klass.virtual_reflections.keys.collect(&:to_s)).sort
     end
 
     def options_attribute_list(attrlist)
