@@ -81,7 +81,7 @@ module Api
         raise BadRequestError, "Must specify a service_template_href for adding a service_request"
       end
       service_template = resource_search(service_template_id, :service_templates, ServiceTemplate)
-      ServiceTemplateWorkflow.create(service_template, service_request)
+      service_template.provision_workflow(User.current_user, service_request)
     end
 
     def check_validation(validation)
