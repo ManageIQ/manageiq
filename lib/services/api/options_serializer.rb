@@ -4,15 +4,15 @@ module Api
       new(klass, data).serialize
     end
 
-    attr_reader :klass, :data
+    attr_reader :klass, :data, :config
 
     def initialize(klass, data = {})
       @klass = klass
       @data = data
+      @config = CollectionConfig.new
     end
 
     def serialize
-      config = CollectionConfig.new
       resource = config.name_for_klass(klass) if klass
       options = if klass
                   {
