@@ -58,6 +58,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::StorageManager::CinderManager::EventCatcher
     ManageIQ::Providers::Vmware::InfraManager::EventCatcher
     ManageIQ::Providers::Vmware::CloudManager::EventCatcher
+    ManageIQ::Providers::Lenovo::PhysicalInfraManager::EventCatcher
     EmbeddedAnsibleWorker
     MiqEventHandler
     MiqGenericWorker
@@ -145,6 +146,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Google::CloudManager::EventCatcher
     ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcher
     ManageIQ::Providers::Openshift::ContainerManager::EventCatcher
+    ManageIQ::Providers::Lenovo::PhysicalInfraManager::EventCatcher
     MiqUiWorker
     MiqWebsocketWorker
   ).freeze

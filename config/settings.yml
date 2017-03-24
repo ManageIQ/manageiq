@@ -1264,6 +1264,8 @@
         :poll: 15.seconds
       :event_catcher_kubernetes:
         :poll: 1.seconds
+      :event_catcher_lenovo:
+        :poll: 4.minutes
       :event_catcher_openshift:
         :poll: 1.seconds
       :event_catcher_cinder:
