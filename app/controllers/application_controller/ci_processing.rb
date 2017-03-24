@@ -1873,7 +1873,8 @@ module ApplicationController::CiProcessing
        !%w(orchestration_stack service vm_cloud vm_infra vm miq_template vm_or_template).include?(
          request.parameters["controller"]) # showing a list
 
-      vms = find_checked_items
+      # FIXME retrieving vms from DB two times
+      vms = find_checked_items_with_rbac(VmOrTemplate)
       if method == 'retire_now' &&
          !%w(orchestration_stack service).include?(request.parameters["controller"]) &&
          VmOrTemplate.find(vms).any? { |vm| !vm.supports_retire? }
@@ -1907,7 +1908,8 @@ module ApplicationController::CiProcessing
         show_list unless @explorer
         @refresh_partial = "layouts/gtl"
       else
-        vms.push(params[:id])
+
+        vms.push(test_item_with_rbac(klass, params[:id]))
         process_objects(vms, method) unless vms.empty?
 
         # TODO: tells callers to go back to show_list because this VM may be gone
