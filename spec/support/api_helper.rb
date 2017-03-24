@@ -280,11 +280,7 @@ module Spec
       end
 
       def select_attributes(attrlist)
-        attrlist.sort.select { |attr| !encrypted_attribute?(attr) }
-      end
-
-      def encrypted_attribute?(attr)
-        Api::Environment.normalized_attributes[:encrypted].key?(attr.to_s) || attr.to_s.include?('password')
+        attrlist.sort.select { |attr| !Api.encrypted_attribute?(attr) }
       end
     end
   end

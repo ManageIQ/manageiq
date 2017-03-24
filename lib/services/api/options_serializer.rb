@@ -18,11 +18,7 @@ module Api
     end
 
     def self.options_attribute_list(attrlist)
-      attrlist.sort.select { |attr| !encrypted_attribute?(attr) }
-    end
-
-    def self.encrypted_attribute?(attr)
-      Environment.normalized_attributes[:encrypted].key?(attr.to_s) || attr.to_s.include?('password')
+      attrlist.sort.select { |attr| !Api.encrypted_attribute?(attr) }
     end
   end
 end
