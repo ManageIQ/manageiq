@@ -188,12 +188,8 @@ module EmsRefresh::SaveInventory
   #
   # {:category_tag_id=>139, :entry_name=>"foo", :entry_description=>"bar"}
   #
-  # For now, the object must be a VmOrTemplate object.
-  #
-  def save_tags_inventory(object, hash)
+  def save_tags_inventory(object, hash, _target = nil)
     return if hash.blank?
-    return unless object.kind_of?(VmOrTemplate)
-
     ContainerLabelTagMapping.retag_entity(object, hash[:tags])
   rescue => err
     raise if EmsRefresh.debug_failures

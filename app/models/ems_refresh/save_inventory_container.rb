@@ -230,7 +230,7 @@ module EmsRefresh::SaveInventoryContainer
       h[:container_node_id] = h.fetch_path(:container_node, :id)
       h[:container_replicator_id] = h.fetch_path(:container_replicator, :id)
       h[:container_project_id] = h.fetch_path(:project, :id)
-      h[:container_build_pod_id] = ems.container_build_pods.find_by(:name => 
+      h[:container_build_pod_id] = ems.container_build_pods.find_by(:name =>
         h[:build_pod_name]).try(:id)
     end
 
@@ -422,16 +422,6 @@ module EmsRefresh::SaveInventoryContainer
 
   def save_docker_labels_inventory(entity, hashes, target = nil)
     save_custom_attribute_attribute_inventory(entity, :docker_labels, hashes, target)
-  end
-
-  def save_tags_inventory(entity, hashes, _target = nil)
-    return if hashes.nil?
-
-    ContainerLabelTagMapping.retag_entity(entity, hashes) # Keeps user-assigned tags.
-  rescue => err
-    raise if EmsRefresh.debug_failures
-    _log.error("Auto-tagging failed on #{entity.class} [#{entity.name}] with error [#{err}].")
-    _log.log_backtrace(err)
   end
 
   def save_selector_parts_inventory(entity, hashes, target = nil)
