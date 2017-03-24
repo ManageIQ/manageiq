@@ -414,7 +414,7 @@ module ApplicationController::CiProcessing
     load_edit("vm_resize__#{params[:id]}")
     flavor_id = @edit[:new][:flavor]
     flavor = find_record_with_rbac(Flavor, flavor_id)
-    @record = VmOrTemplate.find_by_id(params[:id])
+    @record = find_record_with_rbac(VmOrTemplate, params[:id])
 
     case params[:button]
     when "cancel"
