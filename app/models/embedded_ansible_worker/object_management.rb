@@ -18,39 +18,61 @@ module EmbeddedAnsibleWorker::ObjectManagement
 
   def ensure_organization(provider, connection)
     return if provider.default_organization
+    attrs = default_organization_attributes
 
-    provider.default_organization = connection.api.organizations.create!(
-      :name        => I18n.t("product.name"),
-      :description => "#{I18n.t("product.name")} Default Organization"
-    ).id
+    provider.default_organization = connection.api.organizations.create!(attrs).id
   end
 
   def ensure_credential(provider, connection)
     return if provider.default_credential
+    attrs = default_credential_attributes(provider.default_organization)
 
-    provider.default_credential = connection.api.credentials.create!(
-      :name         => "#{I18n.t("product.name")} Default Credential",
-      :kind         => "ssh",
-      :organization => provider.default_organization
-    ).id
+    provider.default_credential = connection.api.credentials.create!(attrs).id
   end
 
   def ensure_inventory(provider, connection)
     return if provider.default_inventory
+    attrs = default_inventory_attributes(provider.default_organization)
 
-    provider.default_inventory = connection.api.inventories.create!(
-      :name         => "#{I18n.t("product.name")} Default Inventory",
-      :organization => provider.default_organization
-    ).id
+    provider.default_inventory = connection.api.inventories.create!(attrs).id
   end
 
   def ensure_host(provider, connection)
     return if provider.default_host
+    attrs = default_host_attributes(provider.default_inventory)
 
-    provider.default_host = connection.api.hosts.create!(
+    provider.default_host = connection.api.hosts.create!(attrs).id
+  end
+
+  private
+
+  def default_organization_attributes
+    {
+      :name        => I18n.t("product.name"),
+      :description => "#{I18n.t("product.name")} Default Organization"
+    }
+  end
+
+  def default_credential_attributes(org_id)
+    {
+      :name         => "#{I18n.t("product.name")} Default Credential",
+      :kind         => "ssh",
+      :organization => org_id
+    }
+  end
+
+  def default_inventory_attributes(org_id)
+    {
+      :name         => "#{I18n.t("product.name")} Default Inventory",
+      :organization => org_id
+    }
+  end
+
+  def default_host_attributes(inv_id)
+    {
       :name      => "localhost",
-      :inventory => provider.default_inventory,
+      :inventory => inv_id,
       :variables => {'ansible_connection' => "local"}.to_yaml
-    ).id
+    }
   end
 end
