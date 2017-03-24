@@ -52,6 +52,7 @@ RSpec.describe 'Authentications API' do
   end
 
   describe 'POST /api/authentications' do
+    let(:manager) { provider.managers.first }
     let(:params) do
       {
         :id          => auth.id,
@@ -173,6 +174,110 @@ RSpec.describe 'Authentications API' do
       api_basic_authorize
 
       run_post(authentications_url, :action => 'edit', :resources => [params])
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    let(:create_params) do
+      {
+        :action           => 'create',
+        :description      => "Description",
+        :name             => "A Credential",
+        :related          => {},
+        :type             => 'ManageIQ::Providers::AnsibleTower::AutomationManager::Credential',
+        :manager_resource => { :href => providers_url(manager.id) }
+      }
+    end
+
+    it 'requires a manager resource when creating an authentication' do
+      api_basic_authorize collection_action_identifier(:authentications, :create, :post)
+
+      run_post(authentications_url, :action => 'create', :type => 'Authentication')
+
+      expected = {
+        'results' => [
+          { 'success' => false, 'message' => 'must supply a manager resource' }
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'requires that the type support create_in_provider_queue' do
+      api_basic_authorize collection_action_identifier(:authentications, :create, :post)
+
+      run_post(authentications_url, :action => 'create', :type => 'Authentication', :manager_resource => { :href => providers_url(manager.id) })
+
+      expected = {
+        'results' => [
+          { 'success' => false, 'message' => 'type not currently supported' }
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'can create an authentication' do
+      api_basic_authorize collection_action_identifier(:authentications, :create, :post)
+
+      expected = {
+        'results' => [a_hash_including(
+          'success' => true,
+          'message' => 'Creating Authentication',
+          'task_id' => a_kind_of(Numeric)
+        )]
+      }
+      run_post(authentications_url, create_params)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'can create authentications in bulk' do
+      api_basic_authorize collection_action_identifier(:authentications, :create, :post)
+
+      expected = {
+        'results' => [
+          a_hash_including(
+            'success' => true,
+            'message' => 'Creating Authentication',
+            'task_id' => a_kind_of(Numeric)
+          ),
+          a_hash_including(
+            'success' => true,
+            'message' => 'Creating Authentication',
+            'task_id' => a_kind_of(Numeric)
+          )
+        ]
+      }
+      run_post(authentications_url, :resources => [create_params, create_params])
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'requires a valid manager_resource' do
+      api_basic_authorize collection_action_identifier(:authentications, :create, :post)
+      create_params[:manager_resource] = { :href => '1' }
+
+      expected = {
+        'results' => [
+          a_hash_including(
+            'success' => false,
+            'message' => 'invalid manger_resource href specified',
+          )
+        ]
+      }
+      run_post(authentications_url, :resources => [create_params])
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'will forbid creation of an authentication without appropriate role' do
+      api_basic_authorize
+
+      run_post(authentications_url, :action => 'create')
 
       expect(response).to have_http_status(:forbidden)
     end

@@ -246,6 +246,8 @@
         :identifier: embedded_automation_manager_credentials_delete
       - :name: edit
         :identifier: embedded_automation_manager_credentials_edit
+      - :name: create
+        :identifier: embedded_automation_manager_credentials_add
     :resource_actions:
       :get:
       - :name: read
@@ -262,6 +264,9 @@
       :get:
       - :name: read
         :identifier: embedded_automation_manager_credentials_view
+      :post:
+      - :name: create
+        :identifier: embedded_automation_manager_credentials_add
   :automate:
     :description: Automate
     :options:
@@ -592,6 +597,13 @@
       :get:
       - :name: read
         :identifier: embedded_configuration_script_payload_view
+    :authentications_subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: embedded_automation_manager_credentials_view
+      :post:
+      - :name: create
+        :identifier: embedded_automation_manager_credentials_add
   :configuration_script_sources:
     :description: Configuration Script Source
     :options:
