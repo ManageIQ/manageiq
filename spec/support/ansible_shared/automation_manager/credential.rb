@@ -1,8 +1,7 @@
 require 'ansible_tower_client'
 
-shared_examples_for "ansible credential" do |ansible_provider|
+shared_examples_for "ansible credential" do
   let(:finished_task) { FactoryGirl.create(:miq_task, :state => "Finished") }
-  let(:manager)       { FactoryGirl.create(ansible_provider, :with_authentication).managers.first }
   let(:atc)           { double("AnsibleTowerClient::Connection", :api => api) }
   let(:api)           { double("AnsibleTowerClient::Api", :credentials => credentials) }
 
@@ -33,7 +32,7 @@ shared_examples_for "ansible credential" do |ansible_provider|
         :username     => "john",
         :kind         => described_class::TOWER_KIND
       }
-      expected_params[:organization] = 1 if described_class.name.include?("::EmbeddedAnsible::")
+      expected_params[:organization_id] = 1 if described_class.name.include?("::EmbeddedAnsible::")
       expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
       store_new_credential(credential, manager)
       expect(EmsRefresh).to receive(:queue_refresh_task).and_return([finished_task])
@@ -108,11 +107,11 @@ shared_examples_for "ansible credential" do |ansible_provider|
         :username => 'john',
         :kind     => described_class::TOWER_KIND
       }
-      expected_params[:organization] = 1 if described_class.name.include?("::EmbeddedAnsible::")
+      expected_params[:organization_id] = 1 if described_class.name.include?("::EmbeddedAnsible::")
       expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
       expect(EmsRefresh).to receive(:queue_refresh_task).and_return([finished_task])
       expect(credential).to receive(:update_attributes!).with(expected_params)
-      expect(ansible_cred.update_in_provider(:userid => 'john')).to be_a(described_class)
+      expect(ansible_cred.update_in_provider('userid' => 'john')).to be_a(described_class)
     end
 
     it "#update_in_provider_queue" do
