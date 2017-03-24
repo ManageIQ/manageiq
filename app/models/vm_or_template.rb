@@ -478,7 +478,7 @@ class VmOrTemplate < ApplicationRecord
 
   def save_genealogy_information
     if defined?(@genealogy_parent_object) && @genealogy_parent_object
-      @genealogy_parent_object.with_relationship_type('genealogy') { @genealogy_parent_object.set_child(self) }
+      with_relationship_type('genealogy') { self.parent = @genealogy_parent_object }
     end
   end
 
