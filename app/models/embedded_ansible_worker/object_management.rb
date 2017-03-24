@@ -52,8 +52,14 @@ module EmbeddedAnsibleWorker::ObjectManagement
 
   private
 
+  def attributes_for_find(attrs)
+    # It seems the matching for attributes doesn't really work
+    # for YAML serialized data so we exclude the variables key here
+    attrs.dup.delete_if { |k, _v| k == :variables }
+  end
+
   def find_or_create!(collection, attrs)
-    resources = collection.all(attrs)
+    resources = collection.all(attributes_for_find(attrs))
     return resources.first unless resources.count.zero?
 
     collection.create!(attrs)
