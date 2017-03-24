@@ -64,6 +64,12 @@ class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
     @description ||= "OpenStack Platform Director".freeze
   end
 
+  def self.default_blacklisted_event_names
+    %w(
+      identity.authenticate
+    )
+  end
+
   def supports_port?
     true
   end
