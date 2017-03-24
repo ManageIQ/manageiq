@@ -1690,10 +1690,10 @@ module ApplicationController::CiProcessing
       @request_id = params[:id]
       recs = session[:checked_items]
     elsif !params[:id] || params[:pressed] == 'vm_reconfigure'
-      recs = find_checked_items
+      recs = find_checked_items_with_rbac(VmOrTemplate)
     end
     if recs.blank?
-      recs = [params[:id].to_i]
+      recs = [test_item_with_rbac(VmOrTemplate, params[:id]).to_i]
     end
     if recs.length < 1
       add_flash(_("One or more %{model} must be selected to Reconfigure") %
@@ -1701,6 +1701,7 @@ module ApplicationController::CiProcessing
       javascript_flash(:scroll_top => true)
       return
     else
+
       if VmOrTemplate.includes_template?(recs)
         add_flash(_("Reconfigure does not apply because you selected at least one %{model}") %
           {:model => ui_lookup(:table => "miq_template")}, :error)
