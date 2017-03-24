@@ -404,7 +404,7 @@ module Api
 
       def render_options(resource, data = {})
         klass = collection_class(resource)
-        render :json => OptionsSerializer.serialize(klass, data)
+        render :json => OptionsSerializer.new(klass, data).serialize
       end
     end
   end

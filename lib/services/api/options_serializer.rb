@@ -1,9 +1,5 @@
 module Api
   class OptionsSerializer
-    def self.serialize(klass, data = {})
-      new(klass, data).serialize
-    end
-
     attr_reader :klass, :data, :config
 
     def initialize(klass, data = {})
