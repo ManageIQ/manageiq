@@ -5,5 +5,5 @@ FactoryGirl.define do
 
   factory :ansible_configuration_script_source,
           :parent => :configuration_script_source,
-          :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScriptSource"
+          :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::Project"
 end

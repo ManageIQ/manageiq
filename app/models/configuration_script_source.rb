@@ -6,7 +6,6 @@ class ConfigurationScriptSource < ApplicationRecord
   virtual_total :total_payloads, :configuration_script_payloads
 
   def self.class_for_manager(manager)
-    type = "#{manager.type}::ConfigurationScriptSource"
-    descendants.find { |klass| klass.name == type }
+    descendants.find { |klass| klass.name.start_with? manager.type }
   end
 end

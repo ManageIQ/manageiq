@@ -82,15 +82,15 @@ shared_examples_for "ansible refresher_v2" do |ansible_provider, manager_class, 
   end
 
   def assert_playbooks
-    expect(expected_configuration_script_source.configuration_script_payloads.first).to be_an_instance_of(manager_class::Playbook)
-    expect(expected_configuration_script_source.configuration_script_payloads.count).to eq(7)
-    expect(expected_configuration_script_source.configuration_script_payloads.map(&:name)).to include('create_ec2.yml')
+    expect(expected_project.playbooks.first).to be_an_instance_of(manager_class::Playbook)
+    expect(expected_project.playbooks.count).to eq(7)
+    expect(expected_project.playbooks.map(&:name)).to include('create_ec2.yml')
   end
 
   def assert_configuration_script_sources
     expect(automation_manager.configuration_script_sources.count).to eq(6)
-    expect(expected_configuration_script_source).to be_an_instance_of(manager_class::ConfigurationScriptSource)
-    expect(expected_configuration_script_source).to have_attributes(
+    expect(expected_project).to be_an_instance_of(manager_class::Project)
+    expect(expected_project).to have_attributes(
       :name        => 'db-projects',
       :description => 'projects',
     )
@@ -153,7 +153,7 @@ shared_examples_for "ansible refresher_v2" do |ansible_provider, manager_class, 
     @expected_inventory_root_group ||= automation_manager.inventory_groups.where(:name => "Dev VC60").first
   end
 
-  def expected_configuration_script_source
-    @expected_configuration_script_source ||= automation_manager.configuration_script_sources.find_by(:name => 'db-projects')
+  def expected_project
+    @expected_project ||= automation_manager.projects.find_by(:name => 'db-projects')
   end
 end

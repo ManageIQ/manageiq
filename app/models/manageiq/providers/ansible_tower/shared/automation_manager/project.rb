@@ -1,4 +1,4 @@
-module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::ConfigurationScriptSource
+module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Project
   extend ActiveSupport::Concern
 
   module ClassMethods
@@ -49,6 +49,8 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Configurati
       MiqTask.generic_action_with_callback(task_opts, queue_opts)
     end
   end
+
+  alias_attribute :playbooks, :configuration_script_payloads
 
   def update_in_provider(params)
     params.delete(:task_id) # in case this is being called through update_in_provider_queue which will stick in a :task_id
