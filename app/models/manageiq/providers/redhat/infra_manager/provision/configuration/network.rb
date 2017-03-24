@@ -38,9 +38,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Netw
   end
 
   def find_network_in_cluster(network_name)
-    network = source.with_provider_connection do |rhevm|
-      Ovirt::Cluster.find_by_href(rhevm, dest_cluster.ems_ref).try(:find_network_by_name, network_name)
-    end
+    network = source.inventory.cluster_find_network_by_name(dest_cluster.ems_ref, network_name)
 
     _log.warn "Cannot find network name=#{network_name}" if network.nil?
     network

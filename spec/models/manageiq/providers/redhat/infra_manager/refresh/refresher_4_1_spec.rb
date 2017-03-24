@@ -11,8 +11,35 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     expect(described_class.ems_type).to eq(:rhevm)
   end
 
+  require 'yaml'
+  def load_response_mock_for(filename)
+    prefix = described_class.name.underscore
+    YAML.load_file(File.join('spec', 'models', prefix, 'response_yamls', filename + '.yml'))
+  end
+
+  before(:each) do
+    inventory_wrapper_class = ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4
+    allow_any_instance_of(inventory_wrapper_class)
+      .to receive(:collect_clusters).and_return(load_response_mock_for('clusters'))
+    allow_any_instance_of(inventory_wrapper_class)
+      .to receive(:collect_storages).and_return(load_response_mock_for('storages'))
+    allow_any_instance_of(inventory_wrapper_class)
+      .to receive(:collect_hosts).and_return(load_response_mock_for('hosts'))
+    allow_any_instance_of(inventory_wrapper_class)
+      .to receive(:collect_vms).and_return(load_response_mock_for('vms'))
+    allow_any_instance_of(inventory_wrapper_class)
+      .to receive(:collect_templates).and_return(load_response_mock_for('templates'))
+    allow_any_instance_of(inventory_wrapper_class)
+      .to receive(:collect_networks).and_return(load_response_mock_for('networks'))
+    allow_any_instance_of(inventory_wrapper_class)
+      .to receive(:collect_datacenters).and_return(load_response_mock_for('datacenters'))
+    allow_any_instance_of(inventory_wrapper_class).to receive(:api).and_return("4.2.0_master")
+    allow_any_instance_of(inventory_wrapper_class).to receive(:service)
+      .and_return(OpenStruct.new(:version_string => '4.2.0_master'))
+  end
+
   it "will perform a full refresh on v4.1" do
-    VCR.use_cassette("#{described_class.name.underscore}_4_1", :allow_unused_http_interactions => true) do
+    VCR.use_cassette("#{described_class.name.underscore}_4_1", :allow_unused_http_interactions => true, :allow_playback_repeats => true, :record => :new_episodes) do
       EmsRefresh.refresh(@ems)
     end
     @ems.reload
@@ -21,11 +48,11 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     assert_ems
     assert_specific_cluster
     assert_specific_storage
-    # assert_specific_host
-    # assert_specific_vm_powered_on
-    # assert_specific_vm_powered_off
-    # assert_specific_template
-    # assert_relationship_tree
+    assert_specific_host
+    assert_specific_vm_powered_on
+    assert_specific_vm_powered_off
+    assert_specific_template
+    assert_relationship_tree
   end
 
   def assert_table_counts
@@ -42,14 +69,14 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     expect(CustomAttribute.count).to eq(0) # TODO: 3.0 spec has values for this
     expect(CustomizationSpec.count).to eq(0)
     expect(Disk.count).to eq(5)
-    expect(GuestDevice.count).to eq(6)
+    expect(GuestDevice.count).to eq(7)
     expect(Hardware.count).to eq(13)
     expect(Lan.count).to eq(3)
     expect(MiqScsiLun.count).to eq(0)
     expect(MiqScsiTarget.count).to eq(0)
-    expect(Network.count).to eq(4)
+    expect(Network.count).to eq(7)
     expect(OperatingSystem.count).to eq(13)
-    expect(Snapshot.count).to eq(12)
+    expect(Snapshot.count).to eq(11)
     expect(Switch.count).to eq(3)
     expect(SystemService.count).to eq(0)
 
@@ -59,7 +86,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
 
   def assert_ems
     expect(@ems).to have_attributes(
-      :api_version => "4.1.0_master.",
+      :api_version => "4.2.0_master",
       :uid_ems     => nil
     )
 
@@ -119,9 +146,9 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
       :ems_ref_obj                   => "/api/storagedomains/27a3bcce-c4d0-4bce-afe9-1d669d5a9d02",
       :name                          => "data1",
       :store_type                    => "NFS",
-      :total_space                   => 53687091200,
-      :free_space                    => 49392123904,
-      :uncommitted                   => 36507222016,
+      :total_space                   => 53_687_091_200,
+      :free_space                    => 46_170_898_432,
+      :uncommitted                   => -17_179_869_184,
       :multiplehostaccess            => 1, # TODO: Should this be a boolean column?
       :location                      => "spider.eng.lab.tlv.redhat.com:/vol/vol_bodnopoz/data1",
       :directory_hierarchy_supported => nil,
@@ -134,8 +161,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
       :ems_ref_obj                   => "/api/storagedomains/4672fe17-c260-4ecc-aab0-b535f4d0dbeb",
       :name                          => "data2",
       :store_type                    => "NFS",
-      :total_space                   => 53687091200,
-      :free_space                    => 49392123904,
+      :total_space                   => 53_687_091_200,
+      :free_space                    => 46_170_898_432,
       :uncommitted                   => 49392123904,
       :multiplehostaccess            => 1, # TODO: Should this be a boolean column?
       :location                      => "spider.eng.lab.tlv.redhat.com:/vol/vol_bodnopoz/data2",
@@ -146,41 +173,43 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
   end
 
   def assert_specific_host
-    @host = ManageIQ::Providers::Redhat::InfraManager::Host.find_by(:name => "per410-rh1")
+    @host = ManageIQ::Providers::Redhat::InfraManager::Host.find_by(:name => "bodh1")
     expect(@host).to have_attributes(
-      :ems_ref          => "/api/hosts/2f1d11cc-e269-11e2-839c-005056a217db",
-      :ems_ref_obj      => "/api/hosts/2f1d11cc-e269-11e2-839c-005056a217db",
-      :name             => "per410-rh1",
-      :hostname         => "192.168.252.232",
-      :ipaddress        => "192.168.252.232",
-      :uid_ems          => "2f1d11cc-e269-11e2-839c-005056a217db",
+      :ems_ref          => "/api/hosts/5bf6b336-f86d-4551-ac08-d34621ec5f0a",
+      :ems_ref_obj      => "/api/hosts/5bf6b336-f86d-4551-ac08-d34621ec5f0a",
+      :name             => "bodh1",
+      :hostname         => "bodh1.usersys.redhat.com",
+      :ipaddress        => "10.35.19.12",
+      :uid_ems          => "5bf6b336-f86d-4551-ac08-d34621ec5f0a",
       :vmm_vendor       => "redhat",
-      :vmm_version      => nil,
+      :vmm_version      => "7",
       :vmm_product      => "rhel",
       :vmm_buildnumber  => nil,
       :power_state      => "on",
       :connection_state => "connected"
     )
 
-    expect(@host.ems_cluster).to eq(@cluster)
-    expect(@host.storages.size).to eq(4)
-    expect(@host.storages).to      include(@storage)
+    @host_cluster = EmsCluster.find_by(:ems_ref => "/api/clusters/00000002-0002-0002-0002-000000000092")
+
+    expect(@host.ems_cluster).to eq(@host_cluster)
+    expect(@host.storages.size).to eq(1)
+    expect(@host.storages).to      include(@storage2)
 
     expect(@host.operating_system).to have_attributes(
-      :name         => "192.168.252.232", # TODO: ?????
-      :product_name => "rhel",
-      :version      => nil,
+      :name         => "bodh1.usersys.redhat.com", # TODO: ?????
+      :product_name => "RHEL",
+      :version      => "7 - 1.1503.el7.centos.2.8",
       :build_number => nil,
       :product_type => "linux"
     )
 
     expect(@host.system_services.size).to eq(0)
 
-    expect(@host.switches.size).to eq(3)
-    switch = @host.switches.find_by(:name => "rhevm")
+    expect(@host.switches.size).to eq(1)
+    switch = @host.switches.first
     expect(switch).to have_attributes(
       :uid_ems           => "00000000-0000-0000-0000-000000000009",
-      :name              => "rhevm",
+      :name              => "ovirtmgmt",
       :ports             => nil,
       :allow_promiscuous => nil,
       :forged_transmits  => nil,
@@ -188,10 +217,10 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     )
 
     expect(switch.lans.size).to eq(1)
-    @lan = switch.lans.find_by(:name => "rhevm")
+    @lan = switch.lans.first
     expect(@lan).to have_attributes(
       :uid_ems                    => "00000000-0000-0000-0000-000000000009",
-      :name                       => "rhevm",
+      :name                       => "ovirtmgmt",
       :tag                        => nil,
       :allow_promiscuous          => nil,
       :forged_transmits           => nil,
@@ -202,16 +231,16 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     )
 
     expect(@host.hardware).to have_attributes(
-      :cpu_speed            => 1995,
-      :cpu_type             => "Intel(R) Xeon(R) CPU           E5504  @ 2.00GHz",
-      :manufacturer         => "",
-      :model                => "",
+      :cpu_speed            => 2400,
+      :cpu_type             => "Westmere E56xx/L56xx/X56xx (Nehalem-C)",
+      :manufacturer         => "Red Hat",
+      :model                => "RHEV Hypervisor",
       :number_of_nics       => nil,
-      :memory_mb            => 56333,
+      :memory_mb            => 3789,
       :memory_console       => nil,
       :cpu_sockets          => 2,
-      :cpu_total_cores      => 8,
-      :cpu_cores_per_socket => 4,
+      :cpu_total_cores      => 2,
+      :cpu_cores_per_socket => 1,
       :guest_os             => nil,
       :guest_os_full_name   => nil,
       :vmotion_enabled      => nil,
@@ -219,33 +248,25 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
       :memory_usage         => nil
     )
 
-    expect(@host.hardware.networks.size).to eq(3)
-    network = @host.hardware.networks.find_by(:description => "em1")
+    expect(@host.hardware.networks.size).to eq(1)
+    network = @host.hardware.networks.find_by(:description => "eth0")
     expect(network).to have_attributes(
-      :description  => "em1",
+      :description  => "eth0",
       :dhcp_enabled => nil,
-      :ipaddress    => "192.168.252.232",
-      :subnet_mask  => "255.255.254.0"
-    )
-
-    nic_without_ip = @host.hardware.networks.find_by(:description => "em3")
-    expect(nic_without_ip).to have_attributes(
-      :description  => "em3",
-      :dhcp_enabled => nil,
-      :ipaddress    => nil,
-      :subnet_mask  => nil
+      :ipaddress    => "10.35.19.12",
+      :subnet_mask  => "255.255.252.0"
     )
 
     # TODO: Verify this host should have 3 nics, 2 cdroms, 1 floppy, any storage adapters?
-    expect(@host.hardware.guest_devices.size).to eq(3)
+    expect(@host.hardware.guest_devices.size).to eq(1)
 
-    expect(@host.hardware.nics.size).to eq(3)
-    nic = @host.hardware.nics.find_by_device_name("em1")
+    expect(@host.hardware.nics.size).to eq(1)
+    nic = @host.hardware.nics.first
     expect(nic).to have_attributes(
-      :uid_ems         => "1e783be8-fe80-456e-9a19-42329b03f28c",
-      :device_name     => "em1",
+      :uid_ems         => "01c2d4a8-5d7a-4960-bfc4-ca1b400a9bdd",
+      :device_name     => "eth0",
       :device_type     => "ethernet",
-      :location        => "1",
+      :location        => "0",
       :present         => true,
       :controller_type => "ethernet"
     )
@@ -256,22 +277,22 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
   end
 
   def assert_specific_vm_powered_on
-    v = ManageIQ::Providers::Redhat::InfraManager::Vm.find_by(:name => "EmsRefreshSpec-PoweredOn")
+    v = ManageIQ::Providers::Redhat::InfraManager::Vm.find_by(:name => "vm1")
     expect(v).to have_attributes(
       :template              => false,
-      :ems_ref               => "/api/vms/fe052832-2350-48ce-8e56-c24b4cd91876",
-      :ems_ref_obj           => "/api/vms/fe052832-2350-48ce-8e56-c24b4cd91876",
-      :uid_ems               => "fe052832-2350-48ce-8e56-c24b4cd91876",
+      :ems_ref               => "/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f",
+      :ems_ref_obj           => "/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f",
+      :uid_ems               => "3a9401a0-bf3d-4496-8acf-edd3e903511f",
       :vendor                => "redhat",
       :raw_power_state       => "up",
       :power_state           => "on",
-      :location              => "fe052832-2350-48ce-8e56-c24b4cd91876.ovf",
+      :location              => "3a9401a0-bf3d-4496-8acf-edd3e903511f.ovf",
       :tools_status          => nil,
-      :boot_time             => Time.parse("2014-10-07T21:01:24.183000Z"),
+      :boot_time             => Time.zone.parse("2016-12-28T11:59:55.6020000Z"),
       :standby_action        => nil,
       :connection_state      => "connected",
       :cpu_affinity          => nil,
-      :memory_reserve        => 682,
+      :memory_reserve        => 2024,
       :memory_reserve_expand => nil,
       :memory_limit          => nil,
       :memory_shares         => nil,
@@ -286,106 +307,82 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     expect(v.ext_management_system).to eq(@ems)
     expect(v.ems_cluster).to eq(@cluster)
     expect(v.parent_resource_pool).to eq(@default_rp)
-    expect(v.host).to eq(@host)
+    host = ManageIQ::Providers::Redhat::InfraManager::Host.find_by(:name => "bodh2")
+    expect(v.host).to eq(host)
     expect(v.storages).to eq([@storage])
     # v.storage  # TODO: Fix bug where duplication location GUIDs could cause the wrong value to appear.
 
     expect(v.operating_system).to have_attributes(
-      :product_name => "rhel_6x64"
+      :product_name => "other"
     )
 
     expect(v.custom_attributes.size).to eq(0)
 
-    expect(v.snapshots.size).to eq(1)
+    expect(v.snapshots.size).to eq(2)
     snapshot = v.snapshots.detect { |s| s.current == 1 } # TODO: Fix this boolean column
     expect(snapshot).to have_attributes(
-      :uid         => "d7db04c1-9030-4c39-8618-3978787c3278",
-      :parent_uid  => nil,
-      :uid_ems     => "d7db04c1-9030-4c39-8618-3978787c3278",
+      :uid         => "e13fc61c-c566-4264-9a75-0e62fe5d7a30",
+      :parent_uid  => "05ff445a-0bfc-44c3-90d1-a338e9095510",
+      :uid_ems     => "e13fc61c-c566-4264-9a75-0e62fe5d7a30",
       :name        => "Active VM",
       :description => "Active VM",
       :current     => 1,
       :total_size  => nil,
       :filename    => nil
     )
-    expect(snapshot.parent).to be_nil
+    snapshot_parent = ManageIQ::Providers::Redhat::InfraManager::Snapshot.find_by(:name => "vm1_snap")
+    expect(snapshot.parent).to eq(snapshot_parent)
 
     expect(v.hardware).to have_attributes(
-      :guest_os             => "rhel_6x64",
+      :guest_os             => "other",
       :guest_os_full_name   => nil,
       :bios                 => nil,
       :cpu_cores_per_socket => 1,
-      :cpu_total_cores      => 2,
-      :cpu_sockets          => 2,
-      :annotation           => "Powered On VM for EmsRefresh testing with DirectLUN Disk",
-      :memory_mb            => 1024
+      :cpu_total_cores      => 4,
+      :cpu_sockets          => 4,
+      :annotation           => nil,
+      :memory_mb            => 2024
     )
 
-    expect(v.hardware.disks.size).to eq(3)
-    disk = v.hardware.disks.find_by_device_name("EmsRefreshSpec-PoweredOn_Disk1")
+    expect(v.hardware.disks.size).to eq(1)
+    disk = v.hardware.disks.find_by(:device_name => "vm1_Disk1")
     expect(disk).to have_attributes(
-      :device_name     => "EmsRefreshSpec-PoweredOn_Disk1",
+      :device_name     => "vm1_Disk1",
       :device_type     => "disk",
-      :controller_type => "ide",
+      :controller_type => "virtio",
       :present         => true,
-      :filename        => "5fc5484d-1730-42bc-adc3-262592ea595a",
+      :filename        => "af578e0e-b222-4754-aefc-879bf37eacec",
       :location        => "0",
-      :size            => 5.gigabytes,
-      :size_on_disk    => 1.gigabytes,
+      :size            => 6.gigabytes,
+      :size_on_disk    => 2_987_851_776,
       :mode            => "persistent",
       :disk_type       => "thin",
       :start_connected => true
     )
     expect(disk.storage).to eq(@storage)
 
-    # DirectLUN disk
-    disk = v.hardware.disks.find_by_device_name("EmsRefreshSpec-PoweredOn_Disk3")
-    expect(disk).to have_attributes(
-      :device_name     => "EmsRefreshSpec-PoweredOn_Disk3",
-      :device_type     => "disk",
-      :controller_type => "virtio",
-      :present         => true,
-      :filename        => "b7139a48-854b-49b4-b4a0-92ef88261b7b",
-      :location        => "1",
-      :size            => 1.gigabytes,
-      :size_on_disk    => 1.gigabytes,
-      :mode            => "persistent",
-      :disk_type       => "thick",
-      :start_connected => true
-    )
-    expect(disk.storage).to eq(@storage)
-
-    expect(v.hardware.guest_devices.size).to eq(3)
-    expect(v.hardware.nics.size).to eq(3)
+    expect(v.hardware.guest_devices.size).to eq(1)
+    expect(v.hardware.nics.size).to eq(1)
     nic = v.hardware.nics.find_by_device_name("nic1")
     expect(nic).to have_attributes(
-      :uid_ems         => "98610918-86f6-45a9-b96f-b9849ab3ad7d",
+      :uid_ems         => "6a538d86-38a2-4ac9-98f5-9d401a596e93",
       :device_name     => "nic1",
       :device_type     => "ethernet",
       :controller_type => "ethernet",
       :present         => true,
       :start_connected => true,
-      :address         => "00:1a:4a:a8:fc:12"
+      :address         => "00:1a:4a:16:01:51"
     )
     # nic.lan.should == @lan # TODO: Hook up this connection
 
-    expect(v.hardware.networks.size).to eq(1)
-    network = v.hardware.networks.first
-    expect(network).to have_attributes(
-      :hostname    => nil, # TODO: Should be miq-winxpsp3 (or something like that)?
-      :ipaddress   => "192.168.253.45",
-      :ipv6address => nil
-    )
-    # nic.network.should == network # TODO: Hook up this connection
-
     expect(v.parent_datacenter).to have_attributes(
-      :ems_ref     => "/api/datacenters/45b5a710-eccd-11e1-bc2c-005056a217db",
-      :ems_ref_obj => "/api/datacenters/45b5a710-eccd-11e1-bc2c-005056a217db",
-      :uid_ems     => "45b5a710-eccd-11e1-bc2c-005056a217db",
-      :name        => "Default",
+      :ems_ref     => "/api/datacenters/b60b3daa-dcbd-40c9-8d09-3fc08c91f5d1",
+      :ems_ref_obj => "/api/datacenters/b60b3daa-dcbd-40c9-8d09-3fc08c91f5d1",
+      :uid_ems     => "b60b3daa-dcbd-40c9-8d09-3fc08c91f5d1",
+      :name        => "dc1",
       :type        => "Datacenter",
 
-      :folder_path => "Datacenters/Default"
+      :folder_path => "Datacenters/dc1"
     )
 
     expect(v.parent_folder).to have_attributes(
@@ -401,31 +398,31 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     expect(v.parent_blue_folder).to have_attributes(
       :ems_ref     => nil,
       :ems_ref_obj => nil,
-      :uid_ems     => "45b5a710-eccd-11e1-bc2c-005056a217db_vm",
+      :uid_ems     => "b60b3daa-dcbd-40c9-8d09-3fc08c91f5d1_vm",
       :name        => "vm",
       :type        => nil,
 
-      :folder_path => "Datacenters/Default/vm"
+      :folder_path => "Datacenters/dc1/vm"
     )
   end
 
   def assert_specific_vm_powered_off
-    v = ManageIQ::Providers::Redhat::InfraManager::Vm.find_by(:name => "EmsRefreshSpec-PoweredOff")
+    v = ManageIQ::Providers::Redhat::InfraManager::Vm.find_by(:name => "vm2")
     expect(v).to have_attributes(
       :template              => false,
-      :ems_ref               => "/api/vms/26a050fb-62c3-4645-9088-be6efec860e1",
-      :ems_ref_obj           => "/api/vms/26a050fb-62c3-4645-9088-be6efec860e1",
-      :uid_ems               => "26a050fb-62c3-4645-9088-be6efec860e1",
+      :ems_ref               => "/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf",
+      :ems_ref_obj           => "/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf",
+      :uid_ems               => "072093dc-3492-4cb1-b240-dbf88a8f4fbf",
       :vendor                => "redhat",
       :raw_power_state       => "down",
       :power_state           => "off",
-      :location              => "26a050fb-62c3-4645-9088-be6efec860e1.ovf",
+      :location              => "072093dc-3492-4cb1-b240-dbf88a8f4fbf.ovf",
       :tools_status          => nil,
       :boot_time             => nil,
       :standby_action        => nil,
       :connection_state      => "connected",
       :cpu_affinity          => nil,
-      :memory_reserve        => 512,
+      :memory_reserve        => 1024,
       :memory_reserve_expand => nil,
       :memory_limit          => nil,
       :memory_shares         => nil,
@@ -441,83 +438,74 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     expect(v.ems_cluster).to eq(@cluster)
     expect(v.parent_resource_pool).to eq(@default_rp)
     expect(v.host).to be_nil
-    expect(v.storages).to eq([@storage2])
+    expect(v.storages).to eq([@storage])
     # v.storage  # TODO: Fix bug where duplication location GUIDs could cause the wrong value to appear.
 
     expect(v.operating_system).to have_attributes(
-      :product_name => "rhel_6x64"
+      :product_name => "other"
     )
 
     expect(v.custom_attributes.size).to eq(0)
 
-    expect(v.snapshots.size).to eq(3)
+    expect(v.snapshots.size).to eq(2)
     snapshot = v.snapshots.detect { |s| s.current == 1 } # TODO: Fix this boolean column
     expect(snapshot).to have_attributes(
-      :uid         => "a49102de-1e2a-45b7-b464-185f959dbfbb",
-      :parent_uid  => "edbc4501-23a6-45c9-a736-b378f45a2aec",
-      :uid_ems     => "a49102de-1e2a-45b7-b464-185f959dbfbb",
-      :name        => "Active VM",
-      :description => "Active VM",
+      :uid         => "677a1c40-8112-4e4a-bd03-c430e7505912",
+      :parent_uid  => "ef7b7d35-c7b8-4270-8ec7-b85047a50bdc",
+      :uid_ems     => "677a1c40-8112-4e4a-bd03-c430e7505912",
+      :name        => "22",
+      :description => "22",
       :current     => 1,
       :total_size  => nil,
       :filename    => nil
     )
     snapshot = snapshot.parent # TODO: THIS IS COMPLETELY WRONG
     expect(snapshot).to have_attributes(
-      :uid         => "edbc4501-23a6-45c9-a736-b378f45a2aec",
-      :parent_uid  => "f5990c3f-c608-4fc7-b50d-17fe1d389757",
-      :uid_ems     => "edbc4501-23a6-45c9-a736-b378f45a2aec",
-      :name        => "Snapshot1",
-      :description => "Snapshot1",
-      :current     => 0
-    )
-    snapshot = snapshot.parent
-    expect(snapshot).to have_attributes(
-      :uid         => "f5990c3f-c608-4fc7-b50d-17fe1d389757",
+      :uid         => "ef7b7d35-c7b8-4270-8ec7-b85047a50bdc",
       :parent_uid  => nil,
-      :uid_ems     => "f5990c3f-c608-4fc7-b50d-17fe1d389757",
-      :name        => "Snapshot2",
-      :description => "Snapshot2",
+      :uid_ems     => "ef7b7d35-c7b8-4270-8ec7-b85047a50bdc",
+      :name        => "Active VM",
+      :description => "Active VM",
       :current     => 0
     )
     expect(snapshot.parent).to be_nil
 
     expect(v.hardware).to have_attributes(
-      :guest_os           => "rhel_6x64",
+      :guest_os           => "other",
       :guest_os_full_name => nil,
       :bios               => nil,
-      :cpu_sockets        => 2,
-      :annotation         => "Powered Off VM for EmsRefresh testing",
+      :cpu_sockets        => 1,
+      :annotation         => nil,
       :memory_mb          => 1024
     )
 
-    expect(v.hardware.disks.size).to eq(2)
-    disk = v.hardware.disks.find_by_device_name("Disk 1")
+    expect(v.hardware.disks.size).to eq(1)
+    disk = v.hardware.disks.find_by(:device_name => "vm2_Disk1")
     expect(disk).to have_attributes(
-      :device_name     => "Disk 1",
+      :device_name     => "vm2_Disk1",
       :device_type     => "disk",
       :controller_type => "virtio",
       :present         => true,
-      :filename        => "21fc55f7-2775-4fec-8442-fa546e06fabc",
+      :filename        => "9a3e866c-4497-46df-801a-d1739c31c69d",
       :location        => "0",
-      :size            => 1.gigabytes,
+      :size            => 5.gigabytes,
       :mode            => "persistent",
       :disk_type       => "thin",
       :start_connected => true
     )
-    expect(disk.storage).to eq(@storage2)
+    expect(disk.storage).to eq(@storage)
 
-    expect(v.hardware.guest_devices.size).to eq(3)
-    expect(v.hardware.nics.size).to eq(3)
+    expect(v.hardware.guest_devices.size).to eq(1)
+    expect(v.hardware.nics.size).to eq(1)
     nic = v.hardware.nics.find_by_device_name("nic1")
     expect(nic).to have_attributes(
-      :uid_ems         => "f2b9d3dc-e948-4ec9-a746-b03c409cfd18",
+      :uid_ems         => "fdc2d708-01d1-4aa4-8b53-d64177181e2e",
       :device_name     => "nic1",
       :device_type     => "ethernet",
       :controller_type => "ethernet",
       :present         => true,
       :start_connected => true,
-      :address         => "00:1a:4a:a8:fc:0c"
+      :address         => "00:1a:4a:16:01:52"
     )
     expect(nic.lan).to     be_nil
     expect(nic.network).to be_nil
@@ -525,13 +513,13 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     expect(v.hardware.networks.size).to eq(0)
 
     expect(v.parent_datacenter).to have_attributes(
-      :ems_ref     => "/api/datacenters/45b5a710-eccd-11e1-bc2c-005056a217db",
-      :ems_ref_obj => "/api/datacenters/45b5a710-eccd-11e1-bc2c-005056a217db",
-      :uid_ems     => "45b5a710-eccd-11e1-bc2c-005056a217db",
-      :name        => "Default",
+      :ems_ref     => "/api/datacenters/b60b3daa-dcbd-40c9-8d09-3fc08c91f5d1",
+      :ems_ref_obj => "/api/datacenters/b60b3daa-dcbd-40c9-8d09-3fc08c91f5d1",
+      :uid_ems     => "b60b3daa-dcbd-40c9-8d09-3fc08c91f5d1",
+      :name        => "dc1",
       :type        => "Datacenter",
 
-      :folder_path => "Datacenters/Default"
+      :folder_path => "Datacenters/dc1"
     )
 
     expect(v.parent_folder).to have_attributes(
@@ -547,30 +535,30 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     expect(v.parent_blue_folder).to have_attributes(
       :ems_ref     => nil,
       :ems_ref_obj => nil,
-      :uid_ems     => "45b5a710-eccd-11e1-bc2c-005056a217db_vm",
+      :uid_ems     => "b60b3daa-dcbd-40c9-8d09-3fc08c91f5d1_vm",
       :name        => "vm",
       :type        => nil,
 
-      :folder_path => "Datacenters/Default/vm"
+      :folder_path => "Datacenters/dc1/vm"
     )
   end
 
   def assert_specific_template
-    v = ManageIQ::Providers::Redhat::InfraManager::Template.find_by(:name => "EmsRefreshSpec-Template")
+    v = ManageIQ::Providers::Redhat::InfraManager::Template.find_by(:name => "template_cd1")
     expect(v).to have_attributes(
       :template              => true,
-      :ems_ref               => "/api/templates/7a6db798-9df9-40ca-8cc3-3baab32e7613",
-      :ems_ref_obj           => "/api/templates/7a6db798-9df9-40ca-8cc3-3baab32e7613",
-      :uid_ems               => "7a6db798-9df9-40ca-8cc3-3baab32e7613",
+      :ems_ref               => "/api/templates/785e845e-baa0-4812-8a8c-467f37ad6c79",
+      :ems_ref_obj           => "/api/templates/785e845e-baa0-4812-8a8c-467f37ad6c79",
+      :uid_ems               => "785e845e-baa0-4812-8a8c-467f37ad6c79",
       :vendor                => "redhat",
       :power_state           => "never",
-      :location              => "7a6db798-9df9-40ca-8cc3-3baab32e7613.ovf",
+      :location              => "785e845e-baa0-4812-8a8c-467f37ad6c79.ovf",
       :tools_status          => nil,
       :boot_time             => nil,
       :standby_action        => nil,
       :connection_state      => "connected",
       :cpu_affinity          => nil,
-      :memory_reserve        => nil,
+      :memory_reserve        => 4024,
       :memory_reserve_expand => nil,
       :memory_limit          => nil,
       :memory_shares         => nil,
@@ -586,55 +574,55 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     expect(v.ems_cluster).to eq(@cluster)
     expect(v.parent_resource_pool).to  be_nil
     expect(v.host).to                  be_nil
-    expect(v.storages).to eq([@storage2])
+    expect(v.storages).to eq([@storage])
     # v.storage  # TODO: Fix bug where duplication location GUIDs could cause the wrong value to appear.
 
     expect(v.operating_system).to have_attributes(
-      :product_name => "rhel_6x64"
+      :product_name => "other"
     )
 
     expect(v.custom_attributes.size).to eq(0)
     expect(v.snapshots.size).to eq(0)
 
     expect(v.hardware).to have_attributes(
-      :guest_os             => "rhel_6x64",
+      :guest_os             => "other",
       :guest_os_full_name   => nil,
       :bios                 => nil,
-      :cpu_sockets          => 2,
+      :cpu_sockets          => 4,
       :cpu_cores_per_socket => 1,
-      :cpu_total_cores      => 2,
-      :annotation           => "Template for EmsRefresh testing",
-      :memory_mb            => 1024
+      :cpu_total_cores      => 4,
+      :annotation           => nil,
+      :memory_mb            => 4024
     )
 
-    expect(v.hardware.disks.size).to eq(2)
-    disk = v.hardware.disks.find_by_device_name("EmsRefreshSpec_Disk1")
+    expect(v.hardware.disks.size).to eq(1)
+    disk = v.hardware.disks.first
     expect(disk).to have_attributes(
-      :device_name     => "EmsRefreshSpec_Disk1",
+      :device_name     => "vm1_Disk1",
       :device_type     => "disk",
       :controller_type => "virtio",
       :present         => true,
-      :filename        => "95a35764-4e49-4d6c-895f-33948f30ea69",
+      :filename        => "7917730e-39fb-4da4-9256-da652c33e5b6",
       :location        => "0",
-      :size            => 1.gigabytes,
+      :size            => 6.gigabytes,
       :mode            => "persistent",
       :disk_type       => "thin",
       :start_connected => true
     )
-    expect(disk.storage).to eq(@storage2)
+    expect(disk.storage).to eq(@storage)
 
-    expect(v.hardware.guest_devices.size).to eq(0) # TODO: Should this be 3 like the other tests?
-    expect(v.hardware.nics.size).to eq(0)
+    expect(v.hardware.guest_devices.size).to eq(1)
+    expect(v.hardware.nics.size).to eq(1)
     expect(v.hardware.networks.size).to eq(0)
 
     expect(v.parent_datacenter).to have_attributes(
-      :ems_ref     => "/api/datacenters/45b5a710-eccd-11e1-bc2c-005056a217db",
-      :ems_ref_obj => "/api/datacenters/45b5a710-eccd-11e1-bc2c-005056a217db",
-      :uid_ems     => "45b5a710-eccd-11e1-bc2c-005056a217db",
-      :name        => "Default",
+      :ems_ref     => "/api/datacenters/b60b3daa-dcbd-40c9-8d09-3fc08c91f5d1",
+      :ems_ref_obj => "/api/datacenters/b60b3daa-dcbd-40c9-8d09-3fc08c91f5d1",
+      :uid_ems     => "b60b3daa-dcbd-40c9-8d09-3fc08c91f5d1",
+      :name        => "dc1",
       :type        => "Datacenter",
 
-      :folder_path => "Datacenters/Default"
+      :folder_path => "Datacenters/dc1"
     )
 
     expect(v.parent_folder).to have_attributes(
@@ -650,100 +638,56 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     expect(v.parent_blue_folder).to have_attributes(
       :ems_ref     => nil,
       :ems_ref_obj => nil,
-      :uid_ems     => "45b5a710-eccd-11e1-bc2c-005056a217db_vm",
+      :uid_ems     => "b60b3daa-dcbd-40c9-8d09-3fc08c91f5d1_vm",
       :name        => "vm",
       :type        => nil,
 
-      :folder_path => "Datacenters/Default/vm"
+      :folder_path => "Datacenters/dc1/vm"
     )
   end
 
   def assert_relationship_tree
     expect(@ems.descendants_arranged).to match_relationship_tree(
       [EmsFolder, "Datacenters", {:hidden => true}] => {
-        [Datacenter, "Default"] => {
+        [Datacenter, "dc1"] => {
           [EmsFolder, "host", {:hidden => true}] => {
-            [EmsCluster, "iSCSI"] => {
-              [ResourcePool, "Default for Cluster iSCSI"] => {
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "BD-F17-Desktop"]                => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-DHS-Test"]                  => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "EmsRefreshSpec-NoDisks-NoNics"] => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "EmsRefreshSpec-PoweredOff"]     => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "EmsRefreshSpec-PoweredOn"]      => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "abc123"]                        => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "abc1234"]                       => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "bd-isotest-14-ir"]              => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "bd-isotest-14-pr"]              => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "bd-wintest"]                    => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "bd-wintest-01-18-c"]            => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "bill-t1"]                       => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "evm-5012"]                      => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "lucy-test"]                     => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "lucy_cpu"]                      => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "lucy_cpu7"]                     => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "lucy_cpu8"]                     => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "miqutil"]                       => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "rmtest06"]                      => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "rpo-evm-iscsi"]                 => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "rpo-test1"]                     => {},
+            [EmsCluster, "cc1"] => {
+              [ResourcePool, "Default for Cluster cc1"] => {
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "vm1"] => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "vm2"] => {},
               }
+            },
+            [EmsCluster, "dccc2"] => {
+              [ResourcePool, "Default for Cluster dccc2"] => {},
             }
           },
           [EmsFolder, "vm", {:hidden => true}]   => {
-            [ManageIQ::Providers::Redhat::InfraManager::Template, "CFME_Base"]               => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Template, "EVM-v50017"]              => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Template, "EVM-v50025"]              => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Template, "EmsRefreshSpec-Template"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Template, "PxeRhelRhevm31"]          => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Template, "evm-v5012"]               => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Template, "rmrhel"]                  => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "BD-F17-Desktop"]                => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "EVM-DHS-Test"]                  => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "EmsRefreshSpec-NoDisks-NoNics"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "EmsRefreshSpec-PoweredOff"]     => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "EmsRefreshSpec-PoweredOn"]      => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "abc123"]                        => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "abc1234"]                       => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "bd-isotest-14-ir"]              => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "bd-isotest-14-pr"]              => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "bd-wintest"]                    => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "bd-wintest-01-18-c"]            => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "bill-t1"]                       => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "evm-5012"]                      => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "lucy-test"]                     => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "lucy_cpu"]                      => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "lucy_cpu7"]                     => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "lucy_cpu8"]                     => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "miqutil"]                       => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "rmtest06"]                      => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "rpo-evm-iscsi"]                 => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "rpo-test1"]                     => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Template, "template_cd1"] => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "vm1"]                => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "vm2"]                => {}
           }
         },
-        [Datacenter, "NFS"]     => {
+        [Datacenter, "Default"]     => {
           [EmsFolder, "host", {:hidden => true}] => {
-            [EmsCluster, "NFS"] => {
-              [ResourcePool, "Default for Cluster NFS"] => {
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "MK_AUG_05_003_DELETE"] => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "aab_demo_vm"]          => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "aab_test_vm"]          => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "bd-testiso1"]          => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "bd1"]                  => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "rpo-test2"]            => {},
+            [EmsCluster, "Default"] => {
+              [ResourcePool, "Default for Cluster Default"] => {
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "external-manageiq"]    => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "external-as"]          => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "vmdc1"]                => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "vm3"]                  => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "external-yo"]          => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "external-test_se121"]  => {},
               }
             }
           },
           [EmsFolder, "vm", {:hidden => true}]   => {
-            [ManageIQ::Providers::Redhat::InfraManager::Template, "757e824d-6d97-4568-be29-9346c354e802"] => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Template, "bd-clone-template"]                    => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Template, "bd-temp1"]                             => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Template, "prov-template"]                        => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "MK_AUG_05_003_DELETE"]                       => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "aab_demo_vm"]                                => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "aab_test_vm"]                                => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "bd-testiso1"]                                => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "bd1"]                                        => {},
-            [ManageIQ::Providers::Redhat::InfraManager::Vm, "rpo-test2"]                                  => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Template, "template_ex_default"] => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "external-manageiq"]         => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "external-as"]               => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "vmdc1"]                     => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "vm3"]                       => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "external-yo"]               => {},
+            [ManageIQ::Providers::Redhat::InfraManager::Vm, "external-test_se121"]       => {},
           },
         }
       }

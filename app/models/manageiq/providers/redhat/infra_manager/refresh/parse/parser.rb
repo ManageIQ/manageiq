@@ -275,7 +275,6 @@ class ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Parser
     result = []
     result_uids = {}
     return result, result_uids if pnic.nil?
-
     result_uids[:pnic] = {}
     pnic.to_miq_a.each do |data|
       # Find the switch to which this pnic is connected

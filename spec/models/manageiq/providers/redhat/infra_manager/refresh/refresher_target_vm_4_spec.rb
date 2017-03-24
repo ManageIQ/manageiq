@@ -1,132 +1,75 @@
 describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
-  context 'targeted refresh of a Vm' do
-    let(:ip_address) { '192.168.1.31' }
+  let(:ip_address) { '192.168.1.105' }
 
-    before(:each) do
-      _, _, zone = EvmSpecHelper.create_guid_miq_server_zone
-      @ems = FactoryGirl.create(:ems_redhat, :zone => zone, :hostname => ip_address, :ipaddress => ip_address,
-                                :port => 8443)
-      @ems.update_authentication(:default => {:userid => "admin@internal", :password => "engine"})
-
-      @cluster = FactoryGirl.create(:ems_cluster,
-                                    :ems_ref => "/api/clusters/00000002-0002-0002-0002-0000000001e9",
-                                    :uid_ems => "00000002-0002-0002-0002-0000000001e9",
-                                    :ems_id  => @ems.id,
-                                    :name    => "Default")
-
-      allow(@ems).to receive(:supported_api_versions).and_return([3])
-      allow(@ems).to receive(:resolve_ip_address).with(ip_address).and_return(ip_address)
-    end
-
-    it "should refresh a vm" do
-      storage = FactoryGirl.create(:storage,
-                                   :ems_ref  => "/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0",
-                                   :location => "192.168.1.106:/home/pkliczewski/export/hosted")
-
-      disk = FactoryGirl.create(:disk,
-                                :storage  => storage,
-                                :filename => "da123bb9-095a-4933-95f2-8032dfa332e1")
-      hardware = FactoryGirl.create(:hardware,
-                                    :disks => [disk])
-
-      vm = FactoryGirl.create(:vm_redhat,
-                              :ext_management_system => @ems,
-                              :uid_ems               => "4f6dd4c3-5241-494f-8afc-f1c67254bf77",
-                              :ems_cluster           => @cluster,
-                              :ems_ref               => "/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77",
-                              :storage               => storage,
-                              :storages              => [storage],
-                              :hardware              => hardware)
-
-      VCR.use_cassette("#{described_class.name.underscore}_target_vm") do
-        EmsRefresh.refresh(vm)
-      end
-
-      assert_table_counts
-      assert_vm(vm, storage)
-      assert_vm_rels(vm, hardware, storage)
-      assert_cluster(vm)
-      assert_storage(storage, vm)
-    end
-
-    it "should refresh new vm" do
-      vm = FactoryGirl.create(:vm_redhat,
-                              :ext_management_system => @ems,
-                              :uid_ems               => "4f6dd4c3-5241-494f-8afc-f1c67254bf77",
-                              :ems_cluster           => @cluster,
-                              :ems_ref               => "/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77")
-
-      VCR.use_cassette("#{described_class.name.underscore}_target_new_vm") do
-        EmsRefresh.refresh(vm)
-      end
-
-      assert_table_counts
-
-      storage = Storage.find_by(:ems_ref => "/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0")
-      assert_vm(vm, storage)
-
-      hardware = Hardware.find_by(:vm_or_template_id => vm.id)
-      assert_vm_rels(vm, hardware, storage)
-      assert_cluster(vm)
-      assert_storage(storage, vm)
-    end
+  before(:each) do
+    _, _, zone = EvmSpecHelper.create_guid_miq_server_zone
+    @ems = FactoryGirl.create(:ems_redhat, :zone => zone, :hostname => "192.168.1.105", :ipaddress => "192.168.1.105",
+                              :port => 8443)
+    @ems.update_authentication(:default => {:userid => "admin@internal", :password => "engine"})
+    @ems.default_endpoint.path = "/ovirt-engine/api"
+    allow(@ems).to receive(:supported_api_versions).and_return([3, 4])
+    allow(@ems).to receive(:resolve_ip_address).with(ip_address).and_return(ip_address)
   end
 
-  context 'targeted refresh after vm migration' do
-    let(:ip_address) { '10.35.161.51' }
+  it ".ems_type" do
+    expect(described_class.ems_type).to eq(:rhevm)
+  end
 
-    before(:each) do
-      _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
-      @ems = FactoryGirl.create(:ems_redhat, :zone => zone,
-                                :hostname => ip_address, :ipaddress => ip_address, :port => 443)
-      @ems.update_authentication(:default => {:userid => "admin@internal", :password => "password"})
-      allow(@ems).to receive(:supported_api_versions).and_return([3])
-      allow(@ems).to receive(:resolve_ip_address).with(ip_address).and_return(ip_address)
-    end
+  require 'yaml'
+  def load_response_mock_for(filename)
+    prefix = described_class.name.underscore
+    YAML.load_file(File.join('spec', 'models', prefix, 'target_response_yamls', filename + '.yml'))
+  end
 
-    it 'should save the vms new host' do
-      VCR.use_cassette("#{described_class.name.underscore}_before_migration") do
-        EmsRefresh.refresh(@ems)
-      end
-      @ems.reload
-      vm = @ems.vms.where(:name => "migrate_test_1").first
-      expect(vm.host.name).to eq("pluto-vdsg.eng.lab.tlv.redhat.com")
-      expect(vm.host.ems_ref).to eq("/api/hosts/0b4c3cf3-3b51-479a-bd36-ab968151a9a9")
+  before(:each) do
+    inventory_wrapper_class = ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4
+    allow_any_instance_of(inventory_wrapper_class)
+      .to receive(:collect_clusters).and_return(load_response_mock_for('clusters'))
+    allow_any_instance_of(inventory_wrapper_class)
+      .to receive(:collect_datacenters).and_return(load_response_mock_for('datacenters'))
+    allow_any_instance_of(inventory_wrapper_class)
+      .to receive(:collect_vm_by_uuid).and_return(load_response_mock_for('vms'))
+    allow_any_instance_of(inventory_wrapper_class)
+      .to receive(:collect_storage).and_return(load_response_mock_for('storages'))
+    allow_any_instance_of(inventory_wrapper_class)
+      .to receive(:search_templates).and_return(load_response_mock_for('templates'))
+    allow_any_instance_of(inventory_wrapper_class).to receive(:api).and_return("4.2.0_master")
+    allow_any_instance_of(inventory_wrapper_class).to receive(:service)
+      .and_return(OpenStruct.new(:version_string => '4.2.0_master'))
+  end
 
-      assert_host(vm.host)
+  it "should refresh a vm" do
+    @cluster = FactoryGirl.create(:ems_cluster,
+                                  :ems_ref => "/api/clusters/00000002-0002-0002-0002-00000000017a",
+                                  :uid_ems => "00000002-0002-0002-0002-00000000017a",
+                                  :ems_id  => @ems.id,
+                                  :name    => "Default")
 
-      VCR.use_cassette("#{described_class.name.underscore}_after_migration", :allow_unused_http_interactions => true) do
-        EmsRefresh.refresh(vm)
-      end
+    storage = FactoryGirl.create(:storage,
+                                 :ems_ref  => "/api/storagedomains/6cc26c9d-e1a7-43ba-95d3-c744442c7500",
+                                 :location => "192.168.1.107:/export/data")
 
-      vm.reload
+    disk = FactoryGirl.create(:disk,
+                              :storage  => storage,
+                              :filename => "c413aff6-e988-4830-8b24-f74af66ced5a")
+    hardware = FactoryGirl.create(:hardware,
+                                  :disks => [disk])
 
-      # Check that the VM is on a new host
-      expect(vm.host.name).to eq("lilach-vdsa.tlv.redhat.com")
-      expect(vm.host.ems_ref).to eq("/api/hosts/bfb0c0b4-8616-4bbf-9210-9de48892adc6")
+    vm = FactoryGirl.create(:vm_redhat,
+                            :ext_management_system => @ems,
+                            :uid_ems               => "3a697bd0-7cea-42a1-95ef-fd292fcee721",
+                            :ems_cluster           => @cluster,
+                            :ems_ref               => "/api/vms/3a697bd0-7cea-42a1-95ef-fd292fcee721",
+                            :storage               => storage,
+                            :storages              => [storage],
+                            :hardware              => hardware)
+    EmsRefresh.refresh(vm)
 
-      # And everything else about the hosts are the same
-      assert_host(vm.host)
-    end
-
-    def assert_host(host)
-      expect(host.ems_cluster).not_to be_nil
-      expect(host.ems_cluster.name).to eq("Default")
-
-      expect(host.storages.count).to eq(1)
-
-      storage = host.storages.find_by(:name => "data1_new")
-      expect(storage.ems_ref).to eq("/api/storagedomains/2ef34a5b-2046-4707-9180-7723aad1b8ce")
-
-      expect(host.lans.count).to eq(2)
-      lan = host.lans.find_by(:name => "rhevm")
-      expect(lan.name).to eq("rhevm")
-
-      expect(host.switches.count).to eq(2)
-      switch = host.switches.find_by(:name => "rhevm")
-      expect(switch.name).to eq("rhevm")
-      expect(switch.lans).to include(lan)
-    end
+    assert_table_counts
+    assert_vm(vm, storage)
+    assert_vm_rels(vm, hardware, storage)
+    assert_cluster(vm)
+    assert_storage(storage, vm)
   end
 
   def assert_table_counts
@@ -150,18 +93,18 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     vm.reload
     expect(vm).to have_attributes(
       :template               => false,
-      :ems_ref                => "/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77",
-      :ems_ref_obj            => "/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77",
-      :uid_ems                => "4f6dd4c3-5241-494f-8afc-f1c67254bf77",
+      :ems_ref                => "/api/vms/3a697bd0-7cea-42a1-95ef-fd292fcee721",
+      :ems_ref_obj            => "/api/vms/3a697bd0-7cea-42a1-95ef-fd292fcee721",
+      :uid_ems                => "3a697bd0-7cea-42a1-95ef-fd292fcee721",
       :vendor                 => "redhat",
       :raw_power_state        => "down",
       :power_state            => "off",
       :connection_state       => "connected",
-      :name                   => "123",
+      :name                   => "new",
       :format                 => nil,
       :version                => nil,
       :description            => nil,
-      :location               => "4f6dd4c3-5241-494f-8afc-f1c67254bf77.ovf",
+      :location               => "3a697bd0-7cea-42a1-95ef-fd292fcee721.ovf",
       :config_xml             => nil,
       :autostart              => nil,
       :host_id                => nil,
@@ -223,9 +166,9 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     expect(vm.snapshots.size).to eq(1)
     snapshot = vm.snapshots.first
     expect(snapshot).to have_attributes(
-      :uid               => "768f1e7a-c517-4619-9d55-59e641bfd038",
+      :uid               => "4af35c92-7c6e-4c23-b25e-e05cb29bed49",
       :parent_uid        => nil,
-      :uid_ems           => "768f1e7a-c517-4619-9d55-59e641bfd038",
+      :uid_ems           => "4af35c92-7c6e-4c23-b25e-e05cb29bed49",
       :name              => "Active VM",
       :description       => "Active VM",
       :current           => 1,
@@ -245,7 +188,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
       :cpu_cores_per_socket => 1,
       :cpu_total_cores      => 1,
       :cpu_sockets          => 1,
-      :annotation           => nil,
+      :annotation           => "12345",
       :memory_mb            => 1024,
       :config_version       => nil,
       :virtual_hw_version   => nil,
@@ -277,16 +220,16 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     disk = vm.hardware.disks.first
     expect(disk.storage).to eq(storage)
     expect(disk).to have_attributes(
-      :device_name        => "GlanceDisk-73786f4",
+      :device_name        => "new_Disk1",
       :device_type        => "disk",
       :location           => "0",
-      :filename           => "da123bb9-095a-4933-95f2-8032dfa332e1",
+      :filename           => "c413aff6-e988-4830-8b24-f74af66ced5a",
       :hardware_id        => hardware.id,
       :mode               => "persistent",
-      :controller_type    => "virtio",
-      :size               => 41.megabyte,
+      :controller_type    => "virtio_scsi",
+      :size               => 1.gigabyte,
       :free_space         => nil,
-      :size_on_disk       => 25.megabyte,
+      :size_on_disk       => 0,
       :present            => true,
       :start_connected    => true,
       :auto_detect        => nil,
@@ -295,7 +238,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
       :backing_id         => nil,
       :backing_type       => nil,
       :storage_profile_id => nil,
-      :bootable           => false
+      :bootable           => true
     )
 
     expect(vm.hardware.guest_devices.size).to eq(1)
@@ -311,7 +254,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
       :size              => nil,
       :free_space        => nil,
       :size_on_disk      => nil,
-      :address           => "00:1a:4a:16:01:52",
+      :address           => "00:1a:4a:16:01:51",
       :switch_id         => nil,
       :lan_id            => nil,
       :model             => nil,
@@ -320,7 +263,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
       :present           => true,
       :start_connected   => true,
       :auto_detect       => nil,
-      :uid_ems           => "6409858a-e1a1-4049-bef2-22a438442420",
+      :uid_ems           => "bec92d4f-9b9e-462f-9cd4-7d6b99948a81",
       :chap_auth_enabled => nil
     )
 
@@ -357,8 +300,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
   def assert_cluster(vm)
     @cluster.reload
     expect(@cluster).to have_attributes(
-      :ems_ref                 => "/api/clusters/00000002-0002-0002-0002-0000000001e9",
-      :uid_ems                 => "00000002-0002-0002-0002-0000000001e9",
+      :ems_ref                 => "/api/clusters/00000002-0002-0002-0002-00000000017a",
+      :uid_ems                 => "00000002-0002-0002-0002-00000000017a",
       :name                    => "Default",
       :ha_enabled              => nil,
       :ha_admit_control        => nil,
@@ -377,7 +320,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     expect(rp).to have_attributes(
       :ems_ref               => nil,
       :ems_ref_obj           => nil,
-      :uid_ems               => "00000002-0002-0002-0002-0000000001e9_respool",
+      :uid_ems               => "00000002-0002-0002-0002-00000000017a_respool",
       :name                  => "Default for Cluster Default",
       :memory_reserve        => nil,
       :memory_reserve_expand => nil,
@@ -395,8 +338,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
 
     expect(vm.parent_datacenter).to have_attributes(
       :name    => "Default",
-      :ems_ref => "/api/datacenters/00000001-0001-0001-0001-0000000002c0",
-      :uid_ems => "00000001-0001-0001-0001-0000000002c0",
+      :ems_ref => "/api/datacenters/00000001-0001-0001-0001-000000000311",
+      :uid_ems => "00000001-0001-0001-0001-000000000311",
       :type    => "Datacenter",
       :hidden  => nil
     )
@@ -412,7 +355,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
       :total_space                   => 922.gigabyte,
       :free_space                    => 791.gigabyte,
       :multiplehostaccess            => 1,
-      :location                      => "192.168.1.106:/home/pkliczewski/export/hosted",
+      :location                      => "192.168.1.107:/export/data",
       :last_scan_on                  => nil,
       :uncommitted                   => 908.gigabyte,
       :last_perf_capture_on          => nil,
@@ -420,7 +363,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
       :thin_provisioning_supported   => nil,
       :raw_disk_mappings_supported   => nil,
       :master                        => true,
-      :ems_ref                       => "/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0",
+      :ems_ref                       => "/api/storagedomains/6cc26c9d-e1a7-43ba-95d3-c744442c7500",
       :storage_domain_type           => "data"
     )
   end
