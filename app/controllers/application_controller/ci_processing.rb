@@ -877,7 +877,7 @@ module ApplicationController::CiProcessing
     assert_privileges(params[:pressed])
     # check to see if coming from show_list or drilled into vms from another CI
     rec_cls = "vm"
-    recs = params[:display] ? find_checked_items : [params[:id].to_i]
+    recs = params[:display] ? find_checked_items_with_rbac(VmOrTemplate) : [test_item_with_rbac(VmOrTemplate, params[:id]).to_i]
     if recs.length < 1
       add_flash(_("One or more %{model} must be selected to Right-Size Recommendations") %
         {:model => ui_lookup(:table => request.parameters[:controller])}, :error)
