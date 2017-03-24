@@ -1,6 +1,6 @@
 RSpec.describe Api::OptionsSerializer do
   it "returns some default values when the class is nil" do
-    actual = described_class.serialize(nil, :settings)
+    actual = described_class.serialize(nil)
 
     expected = {
       :attributes         => [],
