@@ -1,6 +1,17 @@
 module Api
   class OptionsSerializer
     def self.serialize(klass, data = {})
+      new(klass, data).serialize
+    end
+
+    attr_reader :klass, :data
+
+    def initialize(klass, data = {})
+      @klass = klass
+      @data = data
+    end
+
+    def serialize
       config = CollectionConfig.new
       resource = config.name_for_klass(klass) if klass
       options = if klass
@@ -19,7 +30,9 @@ module Api
       options
     end
 
-    def self.options_attribute_list(attrlist)
+    private
+
+    def options_attribute_list(attrlist)
       attrlist.sort.select { |attr| !Api.encrypted_attribute?(attr) }
     end
   end
