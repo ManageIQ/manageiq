@@ -14,15 +14,11 @@ module Api
 
     def serialize
       resource = config.name_for_klass(klass) if klass
-      options = if klass
-                  {
-                    :attributes         => attributes,
-                    :virtual_attributes => virtual_attributes,
-                    :relationships      => relationships
-                  }
-                else
-                  {:attributes => attributes, :virtual_attributes => virtual_attributes, :relationships => relationships}
-                end
+      options = {
+        :attributes         => attributes,
+        :virtual_attributes => virtual_attributes,
+        :relationships      => relationships
+      }
       options[:subcollections] = Array(resource ? config[resource].subcollections : nil).sort
       options[:data] = data
       options
