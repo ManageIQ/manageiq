@@ -16,6 +16,8 @@ describe JobProxyDispatcher do
     NUM_STORAGES = 3
   end
 
+  let(:dispatcher) { JobProxyDispatcher.new }
+
   before(:each) do
     @server = EvmSpecHelper.local_miq_server(:name => "test_server_main_server")
   end
@@ -70,7 +72,6 @@ describe JobProxyDispatcher do
           end
 
           it "should expect queue_signal and dispatch without errors" do
-            dispatcher = JobProxyDispatcher.new
             expect(dispatcher).to receive(:queue_signal)
             expect { dispatcher.dispatch }.not_to raise_error
           end
@@ -88,7 +89,6 @@ describe JobProxyDispatcher do
           end
 
           it "should run dispatch without calling queue_signal" do
-            dispatcher = JobProxyDispatcher.new
             expect(dispatcher).not_to receive(:queue_signal)
           end
         end
@@ -105,7 +105,6 @@ describe JobProxyDispatcher do
           end
 
           it "should run dispatch without calling queue_signal" do
-            dispatcher = JobProxyDispatcher.new
             expect(dispatcher).not_to receive(:queue_signal)
           end
         end
@@ -122,7 +121,6 @@ describe JobProxyDispatcher do
           end
 
           it "should expect queue_signal and dispatch without errors" do
-            dispatcher = JobProxyDispatcher.new
             expect(dispatcher).to receive(:queue_signal)
             expect { dispatcher.dispatch }.not_to raise_error
           end
@@ -179,12 +177,11 @@ describe JobProxyDispatcher do
       before(:each) do
         @jobs = (@vms + @repo_vms).collect(&:raw_scan)
         @jobs += @container_images.map { |img| img.ext_management_system.raw_scan_job_create(img.class, img.id) }
-        @dispatcher = JobProxyDispatcher.new
       end
 
       describe "#pending_jobs" do
         it "returns only vm jobs by default" do
-          jobs = @dispatcher.pending_jobs
+          jobs = dispatcher.pending_jobs
           expect(jobs.count).to eq(@vms.count + @repo_vms.count)
           jobs.each do |x|
             expect(x.target_class).to eq 'VmOrTemplate'
@@ -193,7 +190,7 @@ describe JobProxyDispatcher do
         end
 
         it "returns only container images jobs when requested" do
-          jobs = @dispatcher.pending_jobs(ContainerImage)
+          jobs = dispatcher.pending_jobs(ContainerImage)
           expect(jobs.count).to eq(@container_images.count)
           jobs.each do |x|
             expect(x.target_class).to eq 'ContainerImage'
@@ -204,7 +201,7 @@ describe JobProxyDispatcher do
 
       describe "#pending_container_jobs" do
         it "returns container jobs by provider" do
-          jobs_by_ems, = @dispatcher.pending_container_jobs
+          jobs_by_ems, = dispatcher.pending_container_jobs
           expect(jobs_by_ems.keys).to match_array(@container_providers.map(&:id))
 
           expect(jobs_by_ems[@container_providers.first.id].count).to eq(1)
@@ -217,8 +214,8 @@ describe JobProxyDispatcher do
           job = @jobs.find { |j| j.target_class == ContainerImage.name }
           job.update(:dispatch_status => "active")
           provider = ExtManagementSystem.find(job.options[:ems_id])
-          @dispatcher.instance_variable_set(:@zone, MiqServer.my_zone) # memoized during pending_jobs call
-          expect(@dispatcher.active_container_scans_by_zone_and_ems).to eq(
+          dispatcher.instance_variable_set(:@zone, MiqServer.my_zone) # memoized during pending_jobs call
+          expect(dispatcher.active_container_scans_by_zone_and_ems).to eq(
             job.zone => {provider.id => 1}
           )
         end
@@ -227,29 +224,29 @@ describe JobProxyDispatcher do
       describe "#dispatch_container_scan_jobs" do
         it "dispatches jobs until reaching limit" do
           stub_settings(:container_scanning => {:concurrent_per_ems => 1})
-          @dispatcher.dispatch_container_scan_jobs
+          dispatcher.dispatch_container_scan_jobs
           expect(Job.where(:target_class => ContainerImage, :dispatch_status => "pending").count).to eq(1)
           # 1 per ems, one ems has 1 job and the other 2
         end
 
         it "does not dispach if limit is already reached" do
           stub_settings(:container_scanning => {:concurrent_per_ems => 1})
-          @dispatcher.dispatch_container_scan_jobs
+          dispatcher.dispatch_container_scan_jobs
           expect(Job.where(:target_class => ContainerImage, :dispatch_status => "pending").count).to eq(1)
-          @dispatcher.dispatch_container_scan_jobs
+          dispatcher.dispatch_container_scan_jobs
           expect(Job.where(:target_class => ContainerImage, :dispatch_status => "pending").count).to eq(1)
         end
 
         it "does not apply limit when concurrent_per_ems is 0" do
           stub_settings(:container_scanning => {:concurrent_per_ems => 0})
-          @dispatcher.dispatch_container_scan_jobs
+          dispatcher.dispatch_container_scan_jobs
           expect(Job.where(:target_class => ContainerImage, :dispatch_status => "pending").count).to eq(0)
           # 1 per ems, one ems has 1 job and the other 2
         end
 
         it "does not apply limit when concurrent_per_ems is -1" do
           stub_settings(:container_scanning => {:concurrent_per_ems => -1})
-          @dispatcher.dispatch_container_scan_jobs
+          dispatcher.dispatch_container_scan_jobs
           expect(Job.where(:target_class => ContainerImage, :dispatch_status => "pending").count).to eq(0)
           # 1 per ems, one ems has 1 job and the other 2
         end
@@ -259,7 +256,6 @@ describe JobProxyDispatcher do
     describe "#active_vm_scans_by_zone" do
       it "returns active vm scans for this zone" do
         job = @vms.first.raw_scan
-        dispatcher = JobProxyDispatcher.new
         dispatcher.instance_variable_set(:@zone, MiqServer.my_zone) # memoized during pending_jobs call
         job.update(:dispatch_status => "active")
         expect(dispatcher.active_vm_scans_by_zone[job.zone]).to eq(1)
@@ -267,7 +263,6 @@ describe JobProxyDispatcher do
 
       it "returns 0 for active vm scan for other zones" do
         job = @vms.first.raw_scan
-        dispatcher = JobProxyDispatcher.new
         dispatcher.instance_variable_set(:@zone, MiqServer.my_zone) # memoized during pending_jobs call
         job.update(:dispatch_status => "active")
         expect(dispatcher.active_vm_scans_by_zone['defult']).to eq(0)
@@ -276,30 +271,37 @@ describe JobProxyDispatcher do
   end
 
   context "limiting number of smart state analysis running on one server" do
+    let(:job) { Job.create_job("VmScan", :agent_id => @server.id, :name => "Hello - 1") }
     before(:each) do
-      Job.create_job("VmScan", :agent_id => @server.id, :name => "Hello - 1")
-         .update_attributes(:dispatch_status => "any")
       Job.create_job("VmScan", :agent_id => @server.id, :name => "Hello - 2")
          .update_attributes(:dispatch_status => "active")
       Job.create_job("VmScan", :agent_id => @server.id, :name => "Hello - 3")
          .update_attributes(:dispatch_status => "active")
-      @proxy_dispatcher = JobProxyDispatcher.new
     end
 
     describe "#busy_proxies" do
       it "it returns hash with number of not finished jobs with dispatch status 'active' for each MiqServer" do
-        expect(@proxy_dispatcher.busy_proxies).to eq "MiqServer_#{@server.id}" => 2
+        expect(dispatcher.busy_proxies).to eq "MiqServer_#{@server.id}" => 2
       end
     end
 
     describe "#assign_proxy_to_job" do
       it "increses by 1 number of jobs (how busy server is) for server" do
-        job = Job.create_job("VmScan", :agent_id => @server.id, :name => "Hello - 4")
-        expect(@proxy_dispatcher.busy_proxies).to eq "MiqServer_#{@server.id}" => 2
+        expect(dispatcher.busy_proxies).to eq "MiqServer_#{@server.id}" => 2
+        allow(dispatcher).to receive(:embedded_scan_resource).and_return(nil)
+        dispatcher.assign_proxy_to_job(@server, job)
+        expect(dispatcher.busy_proxies).to eq "MiqServer_#{@server.id}" => 3
+      end
 
-        allow(@proxy_dispatcher).to receive(:embedded_scan_resource).and_return(nil)
-        @proxy_dispatcher.assign_proxy_to_job(@server, job)
-        expect(@proxy_dispatcher.busy_proxies).to eq "MiqServer_#{@server.id}" => 3
+      it "links job to instance of MiqServer and updates :started_on and :dispatch_status atributes" do
+        allow(dispatcher).to receive(:embedded_scan_resource).and_return(nil)
+        Timecop.freeze do
+          timestamp = Time.now.utc
+          dispatcher.assign_proxy_to_job(@server, job)
+          expect(job.started_on).to eq timestamp
+        end
+        expect(job.miq_server_id).to eq @server.id
+        expect(job.dispatch_status).to eq "active"
       end
     end
   end
@@ -307,14 +309,101 @@ describe JobProxyDispatcher do
   describe "#start_job_on_proxy" do
     it "creates job options and passing it to `queue_signal'" do
       job = Job.create_job("VmScan", :agent_id => @server.id, :name => "Hello, World")
-      proxy_dispatcher = JobProxyDispatcher.new
-      proxy_dispatcher.instance_variable_set(:@active_vm_scans_by_zone, @server.my_zone => 0)
+      dispatcher.instance_variable_set(:@active_vm_scans_by_zone, @server.my_zone => 0)
 
       job_options = {:args => ["start"], :zone => @server.my_zone, :server_guid => @server.guid, :role => "smartproxy"}
-      expect(proxy_dispatcher).to receive(:assign_proxy_to_job)
-      expect(proxy_dispatcher).to receive(:queue_signal).with(job, job_options)
+      expect(dispatcher).to receive(:assign_proxy_to_job)
+      expect(dispatcher).to receive(:queue_signal).with(job, job_options)
 
-      proxy_dispatcher.start_job_on_proxy(job, @server)
+      dispatcher.start_job_on_proxy(job, @server)
+    end
+  end
+
+  describe "#do_dispatch" do
+    let(:ems_id) { 1 }
+    let(:job) { Job.create_job("VmScan", :name => "Hello, World") }
+
+    before(:each) do
+      dispatcher.instance_variable_set(:@zone, @server.my_zone)
+      dispatcher.instance_variable_set(:@active_container_scans_by_zone_and_ems, @server.my_zone => {ems_id => 0})
+    end
+
+    it "updates 'dispatch_status' attribute of job record to 'active'" do
+      expect(job.dispatch_status).not_to eq "active"
+      dispatcher.do_dispatch(job, ems_id)
+      expect(job.dispatch_status).to eq "active"
+    end
+
+    it "updates ':started_on' attribute of job record" do
+      expect(job.started_on).to be nil
+      Timecop.freeze do
+        timestamp = Time.now.utc
+        dispatcher.do_dispatch(job, ems_id)
+        expect(job.started_on).to eq timestamp
+      end
+    end
+
+    it "increases counter of active container scans by zone and ems by 1" do
+      counter_by_zone_ems = dispatcher.instance_variable_get(:@active_container_scans_by_zone_and_ems)
+      expect(counter_by_zone_ems[@server.my_zone][ems_id]).to eq 0
+
+      dispatcher.do_dispatch(job, ems_id)
+
+      counter_by_zone_ems = dispatcher.instance_variable_get(:@active_container_scans_by_zone_and_ems)
+      expect(counter_by_zone_ems[@server.my_zone][ems_id]).to eq 1
+    end
+
+    it "queues call to Job::StateMachine#signal with argument 'start'" do
+      expect(MiqQueue.count).to eq 0
+
+      dispatcher.do_dispatch(job, ems_id)
+
+      queue_record = MiqQueue.where(:instance_id => job.id)[0]
+      expect(queue_record.method_name).to eq "signal"
+      expect(queue_record.class_name).to eq "Job"
+    end
+  end
+
+  describe "#queue_signal" do
+    let(:job) { Job.create_job("VmScan", :name => "Hello, World") }
+
+    it "queues call to Job::StateMachine#signal_abort if signal is 'abort'" do
+      options = {:args => [:abort]}
+
+      dispatcher.queue_signal(job, options)
+
+      queue_record = MiqQueue.where(:instance_id => job.id)[0]
+      expect(queue_record.method_name).to eq "signal_abort"
+      expect(queue_record.class_name).to eq "Job"
+    end
+
+    it "queues call to Job::StateMachine#signal if signal is not 'abort'" do
+      options = {:args => [:start_snapshot]}
+
+      dispatcher.queue_signal(job, options)
+
+      queue_record = MiqQueue.where(:instance_id => job.id)[0]
+      expect(queue_record.method_name).to eq "signal"
+      expect(queue_record.class_name).to eq "Job"
+      expect(queue_record.args[0]).to eq :start_snapshot
+    end
+  end
+
+  describe "#dispatch_to_ems" do
+    let(:ems_id) { 1 }
+    let(:jobs) do
+      [Job.create_job("VmScan", :name => "Hello, World 1"), Job.create_job("VmScan", :name => "Hello, World 2")]
+    end
+
+    it "dispatches all supplied jobs if supplied concurency limit is 0" do
+      dispatcher.dispatch_to_ems(ems_id, jobs, 0)
+      expect(MiqQueue.where(:class_name => "Job", :method_name => "signal").count).to eq 2
+    end
+
+    it "limits dispatching supplied jobs if supplied concurrency limit > 0" do
+      concurrency_limit = 1
+      dispatcher.dispatch_to_ems(ems_id, jobs, concurrency_limit)
+      expect(MiqQueue.where(:class_name => "Job", :method_name => "signal").count).to eq concurrency_limit
     end
   end
 end
