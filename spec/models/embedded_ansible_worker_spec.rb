@@ -92,6 +92,23 @@ describe EmbeddedAnsibleWorker do
 
         subject.ensure_credential(provider, api_connection)
       end
+
+      it "creates the organization if one doesn't exist" do
+        expect(org_collection).to receive(:create!).with(
+          :name        => "ManageIQ",
+          :description => "ManageIQ Default Organization"
+        ).and_return(org_resource)
+
+        expect(cred_collection).to receive(:create!).with(
+          :name         => "ManageIQ Default Credential",
+          :kind         => "ssh",
+          :organization => 12
+        ).and_return(cred_resource)
+
+        subject.ensure_credential(provider, api_connection)
+        expect(provider.default_credential).to eq(13)
+        expect(provider.default_organization).to eq(12)
+      end
     end
 
     describe "#ensure_inventory" do
@@ -111,6 +128,22 @@ describe EmbeddedAnsibleWorker do
         expect(inv_collection).not_to receive(:create!)
 
         subject.ensure_inventory(provider, api_connection)
+      end
+
+      it "creates the organization if one doesn't exist" do
+        expect(org_collection).to receive(:create!).with(
+          :name        => "ManageIQ",
+          :description => "ManageIQ Default Organization"
+        ).and_return(org_resource)
+
+        expect(inv_collection).to receive(:create!).with(
+          :name         => "ManageIQ Default Inventory",
+          :organization => 12
+        ).and_return(inv_resource)
+
+        subject.ensure_inventory(provider, api_connection)
+        expect(provider.default_inventory).to eq(14)
+        expect(provider.default_organization).to eq(12)
       end
     end
 
@@ -132,6 +165,24 @@ describe EmbeddedAnsibleWorker do
         expect(host_collection).not_to receive(:create!)
 
         subject.ensure_host(provider, api_connection)
+      end
+
+      it "creates the inventory if one doesn't exist" do
+        provider.default_organization = 12
+        expect(inv_collection).to receive(:create!).with(
+          :name         => "ManageIQ Default Inventory",
+          :organization => 12
+        ).and_return(inv_resource)
+
+        expect(host_collection).to receive(:create!).with(
+          :name      => "localhost",
+          :inventory => 14,
+          :variables => "---\nansible_connection: local\n"
+        ).and_return(host_resource)
+
+        subject.ensure_host(provider, api_connection)
+        expect(provider.default_host).to eq(15)
+        expect(provider.default_inventory).to eq(14)
       end
     end
   end
