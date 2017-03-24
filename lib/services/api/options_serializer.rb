@@ -1,7 +1,8 @@
 module Api
   class OptionsSerializer
     def self.serialize(klass, data = {})
-      resource = CollectionConfig.new.name_for_klass(klass) if klass
+      config = CollectionConfig.new
+      resource = config.name_for_klass(klass) if klass
       options = if klass
                   {
                     :attributes         => options_attribute_list(klass.attribute_names -
@@ -13,7 +14,7 @@ module Api
                 else
                   {:attributes => [], :virtual_attributes => [], :relationships => []}
                 end
-      options[:subcollections] = Array(resource ? CollectionConfig.new[resource].subcollections : nil).sort
+      options[:subcollections] = Array(resource ? config[resource].subcollections : nil).sort
       options[:data] = data
       options
     end
