@@ -2188,9 +2188,9 @@ module ApplicationController::CiProcessing
   # Policy simulation for selected VMs
   def polsimvms
     assert_privileges(params[:pressed])
-    vms = find_checked_items
+    vms = find_checked_items_with_rbac(VmOrTemplate)
     if vms.blank?
-      vms = [params[:id]]
+      vms = [test_item_with_rbac(VmOrTemplate, params[:id])]
     end
     if vms.length < 1
       add_flash(_("At least 1 %{model} must be selected for Policy Simulation") %
