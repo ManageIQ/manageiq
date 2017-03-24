@@ -50,6 +50,9 @@ module Openstack
       #   https://github.com/fog/fog/blob/master/lib/fog/openstack/compute.rb#L308
       VCR.use_cassette("#{described_class.name.underscore}_rhos_#{version}",
                        :match_requests_on => [:method, :host, :path, :query]) do
+        # clear Fog's version cache before running the tests with the cassette,
+        # otherwise it will not call the version API in subsequent runs
+        Fog::OpenStack.instance_variable_set(:@version, nil)
         yield
       end
       ems.reload
