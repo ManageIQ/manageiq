@@ -2730,7 +2730,7 @@ module ApplicationController::CiProcessing
     assert_privileges("storage_delete")
     datastores = []
     if %w(show_list storage_list storage_pod_list).include?(@lastaction) || (@lastaction == "show" && @layout != "storage") # showing a list, scan all selected hosts
-      datastores = find_checked_items
+      datastores = find_checked_items_with_rbac(Storage)
       if datastores.empty?
         add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "storage"), :task => display_name}, :error)
       end
@@ -2749,7 +2749,7 @@ module ApplicationController::CiProcessing
       if params[:id].nil? || Storage.find_by_id(params[:id]).nil?
         add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:tables => "storage")}, :error)
       else
-        datastores.push(params[:id])
+        datastores.push(test_item_with_rbac(Storage, params[:id]))
       end
       process_storage(datastores, "destroy")  unless datastores.empty?
       @single_delete = true unless flash_errors?
