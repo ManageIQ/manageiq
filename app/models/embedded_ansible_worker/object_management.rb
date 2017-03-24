@@ -20,7 +20,7 @@ module EmbeddedAnsibleWorker::ObjectManagement
     return if provider.default_organization
     attrs = default_organization_attributes
 
-    provider.default_organization = connection.api.organizations.create!(attrs).id
+    provider.default_organization = find_or_create!(connection.api.organizations, attrs).id
   end
 
   def ensure_credential(provider, connection)
@@ -29,7 +29,7 @@ module EmbeddedAnsibleWorker::ObjectManagement
 
     attrs = default_credential_attributes(provider.default_organization)
 
-    provider.default_credential = connection.api.credentials.create!(attrs).id
+    provider.default_credential = find_or_create!(connection.api.credentials, attrs).id
   end
 
   def ensure_inventory(provider, connection)
@@ -38,7 +38,7 @@ module EmbeddedAnsibleWorker::ObjectManagement
 
     attrs = default_inventory_attributes(provider.default_organization)
 
-    provider.default_inventory = connection.api.inventories.create!(attrs).id
+    provider.default_inventory = find_or_create!(connection.api.inventories, attrs).id
   end
 
   def ensure_host(provider, connection)
@@ -47,10 +47,17 @@ module EmbeddedAnsibleWorker::ObjectManagement
 
     attrs = default_host_attributes(provider.default_inventory)
 
-    provider.default_host = connection.api.hosts.create!(attrs).id
+    provider.default_host = find_or_create!(connection.api.hosts, attrs).id
   end
 
   private
+
+  def find_or_create!(collection, attrs)
+    resources = collection.all(attrs)
+    return resources.first unless resources.count.zero?
+
+    collection.create!(attrs)
+  end
 
   def default_organization_attributes
     {
