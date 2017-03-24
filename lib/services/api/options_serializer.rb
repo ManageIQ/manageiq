@@ -40,8 +40,8 @@ module Api
     end
 
     def subcollections
-      resource = config.name_for_klass(klass) if klass
-      Array(resource ? config[resource].subcollections : nil).sort
+      return [] unless klass
+      Array(config[config.name_for_klass(klass)].subcollections).sort
     end
 
     def options_attribute_list(attrlist)
