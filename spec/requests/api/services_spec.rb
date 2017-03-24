@@ -671,15 +671,14 @@ describe "Services API" do
   describe 'add_resource' do
     let(:vm1) { FactoryGirl.create(:vm_vmware) }
     let(:vm2) { FactoryGirl.create(:vm_vmware) }
-    let(:vm3) { FactoryGirl.create(:vm_vmware) }
 
-    it 'can add multiple vms to multiple services by href with an appropriate role' do
+    it 'can add vm to services by href with an appropriate role' do
       api_basic_authorize(collection_action_identifier(:services, :add_resource))
       request = {
         'action'    => 'add_resource',
         'resources' => [
-          { 'href' => services_url(svc.id), 'resources' => [{'href' => vms_url(vm1.id)}, {'href' => vms_url(vm2.id)}] },
-          { 'href' => services_url(svc1.id), 'resources' => [{'href' => vms_url(vm3.id)}] }
+          { 'href' => services_url(svc.id), 'resource' => {'href' => vms_url(vm1.id)} },
+          { 'href' => services_url(svc1.id), 'resource' => {'href' => vms_url(vm2.id)} }
         ]
       }
 
@@ -688,15 +687,14 @@ describe "Services API" do
       expected = {
         'results' => [
           { 'success' => true, 'message' => "Assigned resource vms id:#{vm1.id} to Service id:#{svc.id} name:'#{svc.name}'"},
-          { 'success' => true, 'message' => "Assigned resource vms id:#{vm2.id} to Service id:#{svc.id} name:'#{svc.name}'"},
-          { 'success' => true, 'message' => "Assigned resource vms id:#{vm3.id} to Service id:#{svc1.id} name:'#{svc1.name}'"}
+          { 'success' => true, 'message' => "Assigned resource vms id:#{vm2.id} to Service id:#{svc1.id} name:'#{svc1.name}'"}
         ]
       }
 
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to eq(expected)
-      expect(svc.reload.vms).to eq([vm1, vm2])
-      expect(svc1.reload.vms).to eq([vm3])
+      expect(svc.reload.vms).to eq([vm1])
+      expect(svc1.reload.vms).to eq([vm2])
     end
 
     it 'returns individual success and failures' do
@@ -705,8 +703,8 @@ describe "Services API" do
       request = {
         'action'    => 'add_resource',
         'resources' => [
-          { 'href' => services_url(svc.id), 'resources' => [{'href' => vms_url(vm1.id)}, {'href' => users_url(user.id)}] },
-          { 'href' => services_url(svc1.id), 'resources' => [{'href' => vms_url(vm3.id)}] }
+          { 'href' => services_url(svc.id), 'resource' => {'href' => vms_url(vm1.id)} },
+          { 'href' => services_url(svc1.id), 'resource' => {'href' => users_url(user.id)} }
         ]
       }
 
@@ -715,15 +713,75 @@ describe "Services API" do
       expected = {
         'results' => [
           { 'success' => true, 'message' => "Assigned resource vms id:#{vm1.id} to Service id:#{svc.id} name:'#{svc.name}'"},
-          { 'success' => false, 'message' => "Cannot assign users to Service id:#{svc.id} name:'#{svc.name}'"},
-          { 'success' => true, 'message' => "Assigned resource vms id:#{vm3.id} to Service id:#{svc1.id} name:'#{svc1.name}'"}
+          { 'success' => false, 'message' => "Cannot assign users to Service id:#{svc1.id} name:'#{svc1.name}'"}
         ]
       }
 
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to eq(expected)
       expect(svc.reload.vms).to eq([vm1])
-      expect(svc1.reload.vms).to eq([vm3])
+    end
+
+    it 'requires a valid resource' do
+      api_basic_authorize(collection_action_identifier(:services, :add_resource))
+      request = {
+        'action'   => 'add_resource',
+        'resource' => { 'resource' => { 'href' => '1' } }
+      }
+
+      run_post(services_url(svc.id), request)
+
+      expected = { 'success' => false, 'message' => "Invalid resource href specified 1"}
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to eq(expected)
+    end
+
+    it 'requires the resource to respond to add_to_service' do
+      user = FactoryGirl.create(:user)
+      api_basic_authorize(collection_action_identifier(:services, :add_resource))
+      request = {
+        'action'   => 'add_resource',
+        'resource' => { 'resource' => { 'href' => users_url(user.id) } }
+      }
+
+      run_post(services_url(svc.id), request)
+
+      expected = { 'success' => false, 'message' => "Cannot assign users to Service id:#{svc.id} name:'#{svc.name}'"}
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to eq(expected)
+    end
+
+    it 'requires a resource reference' do
+      api_basic_authorize(collection_action_identifier(:services, :add_resource))
+      request = {
+        'action'   => 'add_resource',
+        'resource' => { 'resource' => {} }
+      }
+
+      run_post(services_url(svc.id), request)
+
+      expected = { 'success' => false, 'message' => "Must specify a resource reference"}
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to eq(expected)
+    end
+
+    it 'can add a vm to a resource with appropriate role' do
+      api_basic_authorize(collection_action_identifier(:services, :add_resource))
+      request = {
+        'action'   => 'add_resource',
+        'resource' => { 'resource' => {'href' => vms_url(vm1.id)} }
+      }
+
+      run_post(services_url(svc.id), request)
+
+      expected = { 'success' => true, 'message' => "Assigned resource vms id:#{vm1.id} to Service id:#{svc.id} name:'#{svc.name}'"}
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to eq(expected)
+      expect(svc.reload.vms).to eq([vm1])
     end
 
     it 'cannot add multiple vms to multiple services by href without an appropriate role' do

@@ -19,18 +19,20 @@ module Api
     end
 
     def add_resource_resource(type, id, data)
+      raise "Must specify a service href or id to add_resource to" unless id
       svc = resource_search(id, type, collection_class(type))
-      data['resources'].collect do |resource_ref|
-        begin
-          resource_type, resource_id = parse_href(resource_ref['href'])
-          resource = resource_search(resource_id, resource_type, collection_class(resource_type))
-          raise "Cannot assign #{resource_type} to #{service_ident(svc)}" unless resource.respond_to? :add_to_service
-          resource.add_to_service(svc)
-          action_result(true, "Assigned resource #{resource_type} id:#{resource_id} to #{service_ident(svc)}")
-        rescue => err
-          action_result(false, err.to_s)
-        end
-      end
+
+      resource_href = data.fetch_path("resource", "href")
+      raise "Must specify a resource reference" unless resource_href
+
+      resource_type, resource_id = parse_href(resource_href)
+      raise "Invalid resource href specified #{resource_href}" unless resource_type && resource_id
+
+      resource = resource_search(resource_id, resource_type, collection_class(resource_type))
+      raise "Cannot assign #{resource_type} to #{service_ident(svc)}" unless resource.respond_to? :add_to_service
+
+      resource.add_to_service(svc)
+      action_result(true, "Assigned resource #{resource_type} id:#{resource_id} to #{service_ident(svc)}")
     rescue => err
       action_result(false, err.to_s)
     end

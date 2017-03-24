@@ -1936,6 +1936,8 @@
         :identifier: service_admin
       - :name: delete
         :identifier: service_delete
+      - :name: add_resource
+        :identifier: service_edit
       :delete:
       - :name: delete
         :identifier: service_delete
