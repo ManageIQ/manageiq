@@ -2,6 +2,7 @@ description: Pods per Ready Status Chart
 title: Pods per Ready Status Chart
 content_type: chart
 options:
+  :timezone_matters: false
 visibility:
   :roles:
   - _ALL_

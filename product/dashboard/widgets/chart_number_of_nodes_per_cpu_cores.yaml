@@ -1,7 +1,8 @@
 description: Number of Nodes per CPU Cores Chart
 title: Number of Nodes per CPU Cores Chart
 content_type: chart
-options: {}
+options:
+  :timezone_matters: false
 visibility:
   :roles:
   - _ALL_
