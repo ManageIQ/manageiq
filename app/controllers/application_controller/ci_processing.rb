@@ -2575,7 +2575,7 @@ module ApplicationController::CiProcessing
 
     # Either a list or coming from a different controller (eg from ems screen, go to its hosts)
     if @lastaction == "show_list" || @layout != "host"
-      hosts = find_checked_items
+      hosts = find_checked_items_with_rbac(Host)
       if hosts.empty?
         add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "host"), :task => display_name}, :error)
       else
@@ -2591,7 +2591,7 @@ module ApplicationController::CiProcessing
       if params[:id].nil? || Host.find_by_id(params[:id]).nil?
         add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => "host")}, :error)
       else
-        hosts.push(params[:id])
+        hosts.push(test_item_with_rbac(Host, params[:id]))
         process_hosts(hosts, method, display_name)  unless hosts.empty?
       end
 
