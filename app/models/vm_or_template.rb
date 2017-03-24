@@ -145,7 +145,6 @@ class VmOrTemplate < ApplicationRecord
   virtual_column :v_owning_blue_folder_path,            :type => :string,     :uses => :all_relationships
   virtual_column :v_datastore_path,                     :type => :string,     :uses => :storage
   virtual_column :thin_provisioned,                     :type => :boolean,    :uses => {:hardware => :disks}
-  virtual_column :provisioned_storage,                  :type => :integer,    :uses => [:allocated_disk_storage, :mem_cpu]
   virtual_column :used_storage,                         :type => :integer,    :uses => [:used_disk_storage, :mem_cpu]
   virtual_column :used_storage_by_state,                :type => :integer,    :uses => :used_storage
   virtual_column :uncommitted_storage,                  :type => :integer,    :uses => [:provisioned_storage, :used_storage_by_state]
