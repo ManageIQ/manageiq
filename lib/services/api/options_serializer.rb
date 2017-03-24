@@ -13,14 +13,13 @@ module Api
     end
 
     def serialize
-      options = {
+      {
         :attributes         => attributes,
         :virtual_attributes => virtual_attributes,
-        :relationships      => relationships
+        :relationships      => relationships,
+        :subcollections     => subcollections,
+        :data               => data
       }
-      options[:subcollections] = subcollections
-      options[:data] = data
-      options
     end
 
     private
