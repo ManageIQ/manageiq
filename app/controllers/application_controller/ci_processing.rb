@@ -2766,7 +2766,7 @@ module ApplicationController::CiProcessing
     elements = []
     model_name ||= model_class.table_name
     if @lastaction == "show_list" || (@lastaction == "show" && @layout != model_name.singularize) # showing a list
-      elements = find_checked_items
+      elements = find_checked_items_with_rbac(model_class)
       if elements.empty?
         add_flash(_("No %{model} were selected for deletion") %
           {:model => ui_lookup(:tables => model_name)}, :error)
@@ -2782,7 +2782,7 @@ module ApplicationController::CiProcessing
       if params[:id].nil? || model_class.find_by_id(params[:id]).nil?
         add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => model_name)}, :error)
       else
-        elements.push(params[:id])
+        elements.push(test_item_with_rbac(model_class, params[:id]))
       end
       send(destroy_method, elements, "destroy") unless elements.empty?
       @single_delete = true unless flash_errors?
