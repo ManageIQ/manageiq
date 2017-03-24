@@ -1979,10 +1979,10 @@ module ApplicationController::CiProcessing
       if params[:id].nil? || !ExtManagementSystem.where(:id => params[:id]).exists?
         add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => controller_name)}, :error)
       else
-        items.push(params[:id])
+        items.push(test_item_with_rbac(ExtManagementSystem, params[:id]))
       end
     else
-      items = find_checked_items
+      items = find_checked_items_with_rbac(ExtManagementSystem)
     end
 
     if items.empty?
