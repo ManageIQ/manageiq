@@ -2655,10 +2655,9 @@ module ApplicationController::CiProcessing
 
   def storage_button_operation(method, display_name)
     storages = []
-
     # Either a list or coming from a different controller (eg from host screen, go to its storages)
     if params.key?(:miq_grid_checks)
-      storages = find_checked_items
+      storages = find_checked_items_with_rbac(Storage)
 
       if method == 'scan' && !Storage.batch_operation_supported?('smartstate_analysis', storages)
         render_flash_not_applicable_to_model(_('Smartstate Analysis'), ui_lookup(:tables => "storage"))
@@ -2679,7 +2678,7 @@ module ApplicationController::CiProcessing
       if params[:id].nil? || Storage.find_by_id(params[:id]).nil?
         add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:tables => "storage")}, :error)
       else
-        storages.push(params[:id])
+        storages.push(test_item_with_rbac(Storage, params[:id]))
         process_storage(storages, method)  unless storages.empty?
       end
 
