@@ -82,19 +82,19 @@ class ManageIQ::Providers::Openstack::Inventory::Parser::CloudManager < ManagerR
     flavor.swap_disk_size = f.swap.to_i.megabytes
     flavor.ephemeral_disk_size = f.ephemeral.nil? ? nil : f.ephemeral.to_i.gigabytes
     flavor.ephemeral_disk_count = if f.ephemeral.nil?
-                                      nil
-                                    elsif f.ephemeral.to_i > 0
-                                      1
-                                    else
-                                      0
-                                    end
-    if f.is_public
-      # public flavors are associated with every tenant
-      flavor.cloud_tenants = collector.tenants.map { |tenant| persister.cloud_tenants.lazy_find(tenant.id) }
-    else
-      # Add tenants with access to the private flavor
-      flavor.cloud_tenants = collector.tenant_ids_with_flavor_access(f.id).map { |tenant_id| persister.cloud_tenants.lazy_find(tenant_id) }
-    end
+                                    nil
+                                  elsif f.ephemeral.to_i > 0
+                                    1
+                                  else
+                                    0
+                                  end
+    flavor.cloud_tenants = if f.is_public
+                             # public flavors are associated with every tenant
+                             collector.tenants.map { |tenant| persister.cloud_tenants.lazy_find(tenant.id) }
+                           else
+                             # Add tenants with access to the private flavor
+                             collector.tenant_ids_with_flavor_access(f.id).map { |tenant_id| persister.cloud_tenants.lazy_find(tenant_id) }
+                           end
   end
 
   def host_aggregates
@@ -338,7 +338,7 @@ class ManageIQ::Providers::Openstack::Inventory::Parser::CloudManager < ManagerR
       vnf.cloud_tenant = persister.cloud_tenants.lazy_find(v.tenant_id)
 
       output = persister.orchestration_stacks_outputs.find_or_build(v.id + 'mgmt_url')
-      output.key = 'mgmt_url',
+      output.key = 'mgmt_url'
       output.value = v.mgmt_url
       output.stack = vnf
     end
