@@ -1395,17 +1395,32 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # Test RBAC on every item checked
+  # Params:
+  #   klass - class of accessed objects
   def find_checked_items_with_rbac(klass, prefix = nil)
     items = find_checked_items(prefix)
     assert_rbac(klass, items)
     items
   end
 
-  # Test RBAC in case there is only one record, not checked by checkbox
-  def test_item_with_rbac(klass, id)
-    assert_rbac(klass, Array.wrap(id))
-    id
+  # Test RBAC in case there is only one record
+  # Params:
+  #   klass - class of accessed object
+  #   id    - accessed object id
+  def find_by_id_filtered(klass, id, options = {})
+    raise _("Invalid input") unless is_integer?(id)
+    tested_object = klass.find(id)
+    if tested_object.nil?
+      raise _("Selected %{model_name} no longer exists") % {:model_name => ui_lookup(:model => klass.to_s)}
+    end
+    Rbac.filtered_object(tested_object, :user => current_user, :named_scope => options[:named_scope]) ||
+      raise(_("User '%{user_id}' is not authorized to access '%{model}' record id '%{record_id}'") %
+              {:user_id   => current_userid,
+               :record_id => id,
+               :model     => ui_lookup(:model => klass.to_s)})
   end
+
 
   # Common Saved Reports button handler routines
   def process_saved_reports(saved_reports, task)
@@ -2286,23 +2301,6 @@ class ApplicationController < ActionController::Base
       get_data_size(session_hash)
       dump_session_data(session_hash) if ::Settings.product.dump_session
     end
-  end
-
-  # Following 3 methods moved here to ensure they are loaded at the right time and will be available to all controllers
-  def find_by_id_filtered(db, id, options = {})
-    raise _("Invalid input") unless is_integer?(id)
-
-    db_obj = db.find_by(:id => from_cid(id))
-    if db_obj.nil?
-      msg = _("Selected %{model_name} no longer exists") % {:model_name => ui_lookup(:model => db.to_s)}
-      raise msg
-    end
-
-    Rbac.filtered_object(db_obj, :user => current_user, :named_scope => options[:named_scope]) ||
-      raise(_("User '%{user_id}' is not authorized to access '%{model}' record id '%{record_id}'") %
-              {:user_id   => current_userid,
-               :record_id => id,
-               :model     => ui_lookup(:model => db.to_s)})
   end
 
   def find_filtered(db)
