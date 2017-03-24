@@ -531,7 +531,7 @@ module ApplicationController::CiProcessing
 
   def live_migrate_vm
     assert_privileges("instance_live_migrate")
-    @record = VmOrTemplate.find_by_id(params[:id])
+    @record = find_by_id_filtered(VmOrTemplate, params[:id])
     case params[:button]
     when "cancel"
       add_flash(_("Live Migration of %{model} \"%{name}\" was cancelled by the user") % {
