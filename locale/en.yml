@@ -749,6 +749,7 @@ en:
       ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ScmCredential:        Credential (SCM)
       ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VmwareCredential:     Credential (VMware)
       ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook:             Playbook (Embedded Ansible)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource: Repository (Embedded Ansible)
       ManageIQ::Providers::AutomationManager::Authentication:                     Credential
       ManageIQ::Providers::AnsibleTower::AutomationManager::AmazonCredential:     Credential (Amazon)
       ManageIQ::Providers::AnsibleTower::AutomationManager::AzureCredential:      Credential (Microsoft Azure)
