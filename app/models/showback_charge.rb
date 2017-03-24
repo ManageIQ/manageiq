@@ -14,7 +14,7 @@ class ShowbackCharge < ApplicationRecord
 
   def variable_cost_big_decimal
     unless variable_cost.nil?
-      variable_cost = variable_cost.to_d
+      self.variable_cost = self.variable_cost.to_d
       errors.add(:variable_cost, "must be of class money") unless variable_cost.class == BigDecimal
     end
   end

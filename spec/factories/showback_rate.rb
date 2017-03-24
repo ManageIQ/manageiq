@@ -4,5 +4,6 @@ FactoryGirl.define do
     fixed_cost                 BigDecimal.new("4.05")
     date                       DateTime.current
     sequence(:concept)         { |n| "Concept #{n}" }
+    showback_tariff
   end
 end
