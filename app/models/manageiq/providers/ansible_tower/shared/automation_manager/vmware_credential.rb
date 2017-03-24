@@ -4,12 +4,14 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::VmwareCrede
   COMMON_ATTRIBUTES = {
     :userid => {
       :label     => N_('Username'),
-      :help_text => N_('Username for this credential')
+      :help_text => N_('Username for this credential'),
+      :required  => true
     },
     :password => {
       :type      => :password,
       :label     => N_('Password'),
-      :help_text => N_('Password for this credential')
+      :help_text => N_('Password for this credential'),
+      :required  => true
     }
   }.freeze
 
@@ -18,7 +20,8 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::VmwareCrede
       :type       => :string,
       :label      => N_('vCenter Host'),
       :help_text  => N_('The hostname or IP address of the vCenter Host'),
-      :max_length => 1024
+      :max_length => 1024,
+      :required   => true
     }
   }.freeze
 
