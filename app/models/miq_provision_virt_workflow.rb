@@ -288,7 +288,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
 
     rails_logger('allowed_templates', 0)
-    vms = VmOrTemplate.all
+    vms = VmOrTemplate.in_my_region.all
     condition = allowed_template_condition
 
     unless options[:tag_filters].blank?
@@ -309,7 +309,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
       unless tag_conditions.blank?
         _log.info "Filtering VM templates with the following tag_filters: <#{tag_conditions.inspect}>"
-        vms = MiqTemplate.where(condition).find_tags_by_grouping(tag_conditions, :ns => "/managed")
+        vms = MiqTemplate.in_my_region.where(condition).find_tags_by_grouping(tag_conditions, :ns => "/managed")
       end
     end
 
