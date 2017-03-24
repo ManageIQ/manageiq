@@ -6,12 +6,10 @@ module Authenticator
   def self.subclass_for(config, username)
     return Database if username == "admin"
 
-    case config[:mode]
-    when "database"      then Database
-    when "ldap", "ldaps" then Ldap
-    when "amazon"        then Amazon
-    when "httpd"         then Httpd
-    end
+    mode_class_name = config[:mode].camelize
+    mode_class_name = 'Ldap' if mode_class_name == 'Ldaps'
+
+    "Authenticator::#{mode_class_name}".constantize
   end
 
   class Base
