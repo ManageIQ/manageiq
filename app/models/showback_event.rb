@@ -1,5 +1,4 @@
 class ShowbackEvent < ApplicationRecord
-  belongs_to :showback_configuration
 
   validates :data, :start_time, :end_time, :id_obj, :type_obj, :presence => true
   validate :start_time_before_end_time
