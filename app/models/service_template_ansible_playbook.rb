@@ -125,11 +125,6 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   end
   private_class_method :validate_config_info
 
-  def validate_update_config_info(options)
-    opts = super
-    self.class.send(:validate_config_info, opts)
-  end
-
   def job_template(action)
     resource_actions.find_by!(:action => action.to_s.capitalize).configuration_template
   end
@@ -141,8 +136,10 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     [:provision, :retirement, :reconfigure].each do |action|
       next unless config_info[action]
       info = config_info[action]
+
       new_dialog = create_new_dialog(info[:new_dialog_name], job_template(action)) if info[:new_dialog_name]
-      config_info[action][:dialog_id] = new_dialog.id if new_dialog
+      info[:dialog_id] = new_dialog.id if new_dialog
+      update_for_new_template(info, action, name, description, auth_user)
 
       next unless info.key?(:playbook_id)
       tower, params = self.class.send(:build_parameter_list, "miq_#{name}_#{action}", description, info)
@@ -151,4 +148,33 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     end
     super
   end
+
+  def validate_update_config_info(options)
+    opts = super
+    self.class.send(:validate_config_info, opts)
+  end
+
+  def create_job_templates(name, description, config_info, auth_user)
+    self.class.send(:create_job_templates, name, description, config_info, auth_user)
+  end
+  private :create_job_templates
+
+  def update_for_new_template(info, action, name, description, auth_user)
+    return unless job_template(action).nil? && info.key?(:playbook_id)
+    single_config = { action => info }
+    config_template = single_config.deep_merge(create_job_templates(name, description, single_config, auth_user))
+    transaction do
+      job_template = config_template.fetch_path(action, :configuration_template)
+      new_dialog = create_new_dialog(info[:new_dialog_name], job_template) if info[:new_dialog_name]
+      updatable_resources = {
+        :configuration_template_id   => job_template.id,
+        :configuration_template_type => 'ConfigurationScriptBase',
+      }
+      updatable_resources[:dialog_id] = new_dialog.id if new_dialog
+      resource_actions
+        .find_by!(:action => action.to_s.capitalize)
+        .update_attributes!(updatable_resources)
+    end
+  end
+  private :update_for_new_template
 end
