@@ -118,7 +118,7 @@ describe(ServiceAnsiblePlaybook) do
     it 'creates an Ansible Tower job' do
       expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job).to receive(:create_job) do |jobtemp, opts|
         expect(jobtemp).to eq(tower_job_temp)
-        exposed_miq = %w(api_url api_token service user)
+        exposed_miq = %w(api_url api_token service user action)
         expect(opts[:extra_vars].delete('manageiq').keys).to include(*exposed_miq)
         expect(opts).to include(provision_options[:provision_job_options])
         tower_job
