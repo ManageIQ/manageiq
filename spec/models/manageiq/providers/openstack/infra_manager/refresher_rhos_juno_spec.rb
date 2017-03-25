@@ -20,6 +20,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
       #   query param to avoid HTTP caching - ignore_awful_caching##########
       #   https://github.com/fog/fog/blob/master/lib/fog/openstack/compute.rb#L308
       VCR.use_cassette("#{described_class.name.underscore}_rhos_juno", :match_requests_on => [:method, :host, :path]) do
+        Fog::OpenStack.instance_variable_set(:@version, nil)
         EmsRefresh.refresh(@ems)
         EmsRefresh.refresh(@ems.network_manager)
       end
