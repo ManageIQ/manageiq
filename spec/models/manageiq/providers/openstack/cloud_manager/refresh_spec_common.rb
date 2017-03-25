@@ -25,31 +25,31 @@ module Openstack
     end
 
     def stub_excon_errors
-      forbidden = Excon::Errors::Forbidden.new("Forbidden")
-      not_found = Excon::Errors::NotFound.new("NotFound")
+      forbidden = Excon::Errors::Forbidden
+      not_found = Excon::Errors::NotFound
 
       # Error in all stack relations
-      allow_any_instance_of(Fog::Orchestration::OpenStack::Stack).to receive(:outputs).and_raise(forbidden)
-      allow_any_instance_of(Fog::Orchestration::OpenStack::Stack).to receive(:resources).and_raise(not_found)
-      allow_any_instance_of(Fog::Orchestration::OpenStack::Stack).to receive(:parameters).and_raise(not_found)
-      allow_any_instance_of(Fog::Orchestration::OpenStack::Stack).to receive(:template).and_raise(not_found)
+      allow_any_instance_of(Fog::Orchestration::OpenStack::Stack).to receive(:outputs).and_raise(forbidden, "Fog::Orchestration::OpenStack::Stack.outputs Forbidden")
+      allow_any_instance_of(Fog::Orchestration::OpenStack::Stack).to receive(:resources).and_raise(not_found, "Fog::Orchestration::OpenStack::Stack.resources NotFound")
+      allow_any_instance_of(Fog::Orchestration::OpenStack::Stack).to receive(:parameters).and_raise(not_found, "Fog::Orchestration::OpenStack::Stack.parameters NotFound")
+      allow_any_instance_of(Fog::Orchestration::OpenStack::Stack).to receive(:template).and_raise(not_found, "Fog::Orchestration::OpenStack::Stack.template NotFound")
 
       # Error in directory relation
-      allow_any_instance_of(Fog::Storage::OpenStack::Directory).to receive(:files).and_raise(not_found)
+      allow_any_instance_of(Fog::Storage::OpenStack::Directory).to receive(:files).and_raise(not_found, "Fog::Storage::OpenStack::Directory Files NotFound")
 
       # Error in Availability zones list
-      allow_any_instance_of(Fog::Compute::OpenStack::Real).to receive(:availability_zones).and_raise(forbidden)
-      allow_any_instance_of(Fog::Volume::OpenStack::Real).to  receive(:availability_zones).and_raise(not_found)
-      allow_any_instance_of(Fog::Compute::OpenStack::AvailabilityZones).to receive(:summary).and_raise(forbidden)
-      allow_any_instance_of(Fog::Volume::OpenStack::AvailabilityZones).to  receive(:summary).and_raise(not_found)
+      allow_any_instance_of(Fog::Compute::OpenStack::Real).to receive(:availability_zones).and_raise(forbidden, "Fog::Compute::OpenStack::Real.availability_zones Forbidden")
+      allow_any_instance_of(Fog::Volume::OpenStack::Real).to  receive(:availability_zones).and_raise(not_found, "Fog::Volume::OpenStack::Real.availability_zones NotFound")
+      allow_any_instance_of(Fog::Compute::OpenStack::AvailabilityZones).to receive(:summary).and_raise(forbidden, "Fog::Compute::OpenStack::AvailabilityZones.summary Forbidden")
+      allow_any_instance_of(Fog::Volume::OpenStack::AvailabilityZones).to  receive(:summary).and_raise(not_found, "Fog::Volume::OpenStack::AvailabilityZones.summary NotFound")
       # Error in list of quotas
-      allow_any_instance_of(Fog::Compute::OpenStack::Real).to receive(:get_quota).and_raise(forbidden)
-      allow_any_instance_of(Fog::Network::OpenStack::Real).to receive(:get_quota).and_raise(not_found)
-      allow_any_instance_of(Fog::Volume::OpenStack::Real).to  receive(:get_quota).and_raise(not_found)
+      allow_any_instance_of(Fog::Compute::OpenStack::Real).to receive(:get_quota).and_raise(forbidden, "Fog::Compute::OpenStack::Real.get_quota Forbidden")
+      allow_any_instance_of(Fog::Network::OpenStack::Real).to receive(:get_quota).and_raise(not_found, "Fog::Network::OpenStack::Real.get_quota NotFound")
+      allow_any_instance_of(Fog::Volume::OpenStack::Real).to  receive(:get_quota).and_raise(not_found, "Fog::Volume::OpenStack::Real.get_quota NotFound")
 
       # And random error caught by handled_list
-      allow_any_instance_of(Fog::Compute::OpenStack::KeyPairs).to receive(:all).and_raise(not_found)
-      allow_any_instance_of(Fog::Compute::OpenStack::Flavors).to receive(:all).and_raise(forbidden)
+      allow_any_instance_of(Fog::Compute::OpenStack::KeyPairs).to receive(:all).and_raise(not_found, "Fog::Compute::OpenStack::KeyPairs.all NotFound")
+      allow_any_instance_of(Fog::Compute::OpenStack::Flavors).to receive(:all).and_raise(forbidden, "Fog::Compute::OpenStack::Flavors.all Forbidden")
     end
 
     def assert_with_errors

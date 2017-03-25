@@ -24,8 +24,8 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
   end
 
   def refresh_ems(ems, error)
-    allow(ManageIQ::Providers::Openstack::CloudManager::RefreshParser)
-      .to receive(:ems_inv_to_hashes).and_raise(Excon::Errors::BadRequest.new(error))
+    allow_any_instance_of(ManageIQ::Providers::Openstack::CloudManager::Refresher)
+      .to receive(:refresh_targets_for_ems).and_raise(Excon::Errors::BadRequest.new(error))
     expect do
       EmsRefresh.refresh(ems)
     end.to raise_error(EmsRefresh::Refreshers::EmsRefresherMixin::PartialRefreshError)
