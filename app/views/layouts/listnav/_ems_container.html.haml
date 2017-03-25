@@ -11,7 +11,7 @@
         - if @record.has_perf_data?
           %li
             = link_to(_('Capacity & Utilization'),
-              {:action => 'show', :id => @record, :display => 'performance'},
+              polymorphic_path(@record, :display => "performance"),
               :title => _("Show Capacity & Utilization"))
         - else
           %li.disabled
