@@ -1,3 +1,5 @@
+require 'fog/openstack'
+
 describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
   before(:each) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
@@ -41,6 +43,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
                      :match_requests_on => [:method, :host, :path]) do
       @ems.reload
       @ems.reset_openstack_handle
+      Fog::OpenStack.instance_variable_set(:@version, nil)
       EmsRefresh.refresh(@ems)
       EmsRefresh.refresh(@ems.network_manager)
       @ems.reload
