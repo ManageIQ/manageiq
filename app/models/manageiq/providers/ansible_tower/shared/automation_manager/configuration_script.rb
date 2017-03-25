@@ -2,6 +2,12 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Configurati
   extend ActiveSupport::Concern
 
   module ClassMethods
+    NAME_MAP = {
+      'create' => 'Creating',
+      'update' => 'Updating',
+      'delete' => 'Deleting'
+    }.freeze
+    private_constant :NAME_MAP
 
     def create_in_provider(manager_id, params)
       manager = ExtManagementSystem.find(manager_id)
@@ -25,24 +31,39 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Configurati
 
       # Get the record in our database
       # TODO: This needs to be targeted refresh so it doesn't take too long
-      EmsRefresh.queue_refresh(manager, nil, true)
+      EmsRefresh.queue_refresh(manager)
+    end
+
+    def delete_in_provider(manager_id, params)
+      manager = ExtManagementSystem.find(manager_id)
+      manager.with_provider_connection do |connection|
+        connection.api.job_templates.find(params[:manager_ref]).destroy!
+      end
+
+      # Get the record in our database
+      # TODO: This needs to be targeted refresh so it doesn't take too long
+      EmsRefresh.queue_refresh(manager)
+    end
+
+    def delete_in_provider_queue(manager_id, params, auth_user = nil)
+      operate_in_provider_queue('delete', manager_id, params, auth_user)
     end
 
     def update_in_provider_queue(manager_id, params, auth_user = nil)
-      create_or_update_in_provider_queue('update', manager_id, params, auth_user)
+      operate_in_provider_queue('update', manager_id, params, auth_user)
     end
 
     def create_in_provider_queue(manager_id, params, auth_user = nil)
-      create_or_update_in_provider_queue('create', manager_id, params, auth_user)
+      operate_in_provider_queue('create', manager_id, params, auth_user)
     end
 
     private
 
-    def create_or_update_in_provider_queue(action, manager_id, params, auth_user)
+    def operate_in_provider_queue(action, manager_id, params, auth_user)
       manager = ExtManagementSystem.find(manager_id)
 
       task_opts = {
-        :action => "#{(action == "create" ? "Creating" : "Updating")} Ansible Tower Job Template",
+        :action => "#{NAME_MAP[action]} Ansible Tower Job Template",
         :userid => auth_user || "system"
       }
       queue_opts = {

@@ -17,7 +17,8 @@ describe ServiceTemplateAnsiblePlaybook do
 
   let(:job_template) do
     FactoryGirl.create(:configuration_script,
-                       :variables => catalog_item_options.fetch_path(:config_info, :provision, :extra_vars))
+                       :variables => catalog_item_options.fetch_path(:config_info, :provision, :extra_vars),
+                       :manager   => ems)
   end
 
   let(:catalog_item_options) do
@@ -234,14 +235,41 @@ describe ServiceTemplateAnsiblePlaybook do
 
       expect(service_template.dialogs.first.id).to eq info[:service_dialog_id]
     end
+  end
 
-    def prebuild_service_template
-      expect(described_class)
-        .to receive(:create_job_templates).and_return(:provision => {:configuration_template => job_template})
-      service_template = described_class.create_catalog_item(catalog_item_options_two, user)
-      expect(service_template).to receive(:job_template)
-        .and_return(job_template).at_least(:once)
-      service_template
+  describe '#destroy' do
+    it 'destroys a job template if there is an associated configuration_template' do
+      service_template = prebuild_service_template(:job_template => false)
+      adjust_resource_actions(service_template, job_template.id)
+
+      expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript)
+        .to receive(:delete_in_provider_queue)
+      service_template.destroy
+    end
+
+    it 'does not destroy a job template if there is no associated configuration_template' do
+      service_template = prebuild_service_template(:job_template => false)
+      adjust_resource_actions(service_template, nil)
+
+      expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript)
+        .to receive(:delete_in_provider_queue).never
+      service_template.destroy
+    end
+
+    def adjust_resource_actions(service_template, item)
+      service_template.resource_actions.first.tap do |resource_action|
+        resource_action.configuration_template_id = item
+      end.save
+    end
+  end
+
+  def prebuild_service_template(options = { :job_template => true })
+    ret = {:provision => {:configuration_template => job_template}}
+    expect(described_class).to receive(:create_job_templates).and_return(ret).at_least(:once)
+    described_class.create_catalog_item(catalog_item_options_two, user).tap do |service_template|
+      if options[:job_template]
+        expect(service_template).to receive(:job_template).and_return(job_template).at_least(:once)
+      end
     end
   end
 end
