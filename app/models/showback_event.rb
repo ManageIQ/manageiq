@@ -1,6 +1,9 @@
 class ShowbackEvent < ApplicationRecord
   belongs_to :showback_configuration
 
+  has_many :showback_charges, dependent: :destroy
+  has_many :showback_buckets, through: :showback_charges
+
   validates :data, :start_time, :end_time, :id_obj, :type_obj, :presence => true
   validate :start_time_before_end_time
 

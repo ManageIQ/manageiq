@@ -37,6 +37,14 @@ RSpec.describe ShowbackBucket, type: :model do
       expect{ bucket.destroy }.to change(ShowbackCharge, :count).from(2).to(0)
     end
 
+    it 'deletes costs associated when deleting the event' do
+      FactoryGirl.create(:showback_charge, showback_bucket: bucket)
+      FactoryGirl.create(:showback_charge, showback_bucket: bucket)
+      expect(bucket.showback_charges.count).to be(2)
+      event = bucket.showback_charges.first.showback_event
+      expect{ event.destroy }.to change(ShowbackCharge, :count).from(2).to(1)
+    end
+
     pending 'it can  be on states open, processing, pending'
     pending 'it can transition from open to processing'
     pending 'it can not transition from open to closed'
