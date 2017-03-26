@@ -55,16 +55,16 @@ context "save_tags_inventory" do
   it "creates the expected taggings for a VM" do
     EmsRefresh.save_tags_inventory(@vm, data)
     taggings = Tagging.all
-    expect(taggings.all?{ |e| e.taggable_id == @vm.id }).to be true
-    expect(taggings.map(&:taggable_type).all?{ |e| e == 'VmOrTemplate' }).to be true
+    expect(taggings.all? { |e| e.taggable_id == @vm.id }).to be true
+    expect(taggings.map(&:taggable_type).all? { |e| e == 'VmOrTemplate' }).to be true
     expect(@vm.tags.map(&:id).sort).to eql(taggings.map(&:tag_id).sort)
   end
 
   it "creates the expected taggings for a container node" do
     EmsRefresh.save_tags_inventory(@node, data)
     taggings = Tagging.all
-    expect(taggings.all?{ |e| e.taggable_id == @node.id }).to be true
-    expect(taggings.map(&:taggable_type).all?{ |e| e == 'ContainerNode' }).to be true
+    expect(taggings.all? { |e| e.taggable_id == @node.id }).to be true
+    expect(taggings.map(&:taggable_type).all? { |e| e == 'ContainerNode' }).to be true
     expect(@node.tags.map(&:id).sort).to eql(taggings.map(&:tag_id).sort)
   end
 end
