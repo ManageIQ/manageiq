@@ -188,9 +188,13 @@ module EmsRefresh::SaveInventory
   #
   # {:category_tag_id=>139, :entry_name=>"foo", :entry_description=>"bar"}
   #
+  # The +hash+ argument can either be a Hash, in which case the argument should
+  # have a single :tags key, or a simple Array of hashes.
+  #
   def save_tags_inventory(object, hash, _target = nil)
     return if hash.blank?
-    ContainerLabelTagMapping.retag_entity(object, hash[:tags])
+    tags = hash.is_a?(Hash) ? hash[:tags] : hash
+    ContainerLabelTagMapping.retag_entity(object, tags)
   rescue => err
     raise if EmsRefresh.debug_failures
     _log.error("Auto-tagging failed on #{object.class} [#{object.name}] with error [#{err}].")
