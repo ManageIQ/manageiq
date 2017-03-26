@@ -182,18 +182,18 @@ module EmsRefresh::SaveInventory
   end
 
   # Convert all mapped hashes into actual tags and associate them with the object.
-  # The hash[:tags] object should be an array of hashes, probably created by
-  # the ContainerLabelTagMapping.map_labels method. Each hash in the array should
-  # have the following basic structure:
+  # The collection or collection[:tags] object should be an array of hashes, probably
+  # created by the ContainerLabelTagMapping.map_labels method. Each hash in the array
+  # should have the following basic structure:
   #
   # {:category_tag_id=>139, :entry_name=>"foo", :entry_description=>"bar"}
   #
-  # The +hash+ argument can either be a Hash, in which case the argument should
-  # have a single :tags key, or a simple Array of hashes.
+  # The +collection+ argument can either be a Hash, in which case the argument
+  # should have a single :tags key, or a simple Array of hashes.
   #
-  def save_tags_inventory(object, hash, _target = nil)
-    return if hash.blank?
-    tags = hash.is_a?(Hash) ? hash[:tags] : hash
+  def save_tags_inventory(object, collection, _target = nil)
+    return if collection.blank?
+    tags = collection.is_a?(Hash) ? collection[:tags] : collection
     ContainerLabelTagMapping.retag_entity(object, tags)
   rescue => err
     raise if EmsRefresh.debug_failures
