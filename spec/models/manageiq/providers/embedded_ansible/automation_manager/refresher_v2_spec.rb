@@ -1,5 +1,3 @@
-require 'support/ansible_shared/automation_manager/refresher_v2'
-
 describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Refresher do
   it_behaves_like 'ansible refresher_v2',
                   :provider_embedded_ansible,
