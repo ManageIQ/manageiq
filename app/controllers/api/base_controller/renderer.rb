@@ -415,26 +415,8 @@ module Api
       end
 
       def render_options(resource, data = {})
-        collection = collection_class(resource)
-        options =
-          if collection.blank?
-            { :attributes => [], :virtual_attributes => [], :relationships => [] }
-          else
-            {
-              :attributes         => options_attribute_list(collection.attribute_names -
-                                                              collection.virtual_attribute_names),
-              :virtual_attributes => options_attribute_list(collection.virtual_attribute_names),
-              :relationships      => (collection.reflections.keys |
-                                       collection.virtual_reflections.keys.collect(&:to_s)).sort
-            }
-          end
-        options[:subcollections] = Array(collection_config[resource].subcollections).sort
-        options[:data] = data
-        render :json => options
-      end
-
-      def options_attribute_list(attrlist)
-        attrlist.sort.select { |attr| !encrypted_attribute?(attr) }
+        klass = collection_class(resource)
+        render :json => OptionsSerializer.new(klass, data).serialize
       end
     end
   end
