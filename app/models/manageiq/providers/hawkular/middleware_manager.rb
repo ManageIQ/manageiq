@@ -12,7 +12,6 @@ module ManageIQ::Providers
     require_nested :MiddlewareDatasource
     require_nested :MiddlewareMessaging
     require_nested :MiddlewareServer
-    require_nested :RefreshParser
     require_nested :RefreshWorker
     require_nested :Refresher
 
@@ -31,7 +30,7 @@ module ManageIQ::Providers
     attr_accessor :client
 
     def middleware_server_groups
-      MiddlewareServerGroup.where(:middleware_domain => { :ext_management_system => self })
+      MiddlewareServerGroup.joins(:middleware_domain).where(:middleware_domains => { :ext_management_system => self })
     end
 
     def verify_credentials(_auth_type = nil, options = {})

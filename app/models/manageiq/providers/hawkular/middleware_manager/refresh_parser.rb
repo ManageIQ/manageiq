@@ -6,7 +6,6 @@ module ManageIQ::Providers
       def initialize
         @eaps = []
         @data_index = {}
-        @data = {}
       end
 
       def self.ems_inv_to_hashes(ems, options = nil)
@@ -20,7 +19,7 @@ module ManageIQ::Providers
         fetch_middleware_servers
         fetch_domains_with_servers
         fetch_server_entities
-        # fetch_availability
+        fetch_availability
       end
 
       def fetch_middleware_servers
@@ -82,7 +81,7 @@ module ManageIQ::Providers
           @data_index.store_path(:middleware_server_groups, :by_name, parsed_group[:name], parsed_group)
 
           inventory_object = persister.middleware_server_groups.find_or_build(parsed_group[:ems_ref])
-          server.each { |k, v| inventory_object.send "#{k}=", v }
+          parsed_group.each { |k, v| inventory_object.send "#{k}=", v }
           inventory_object.middleware_domain = persister.middleware_domains.lazy_find(parsed_domain[:ems_ref])
 
           parsed_group
@@ -106,12 +105,11 @@ module ManageIQ::Providers
           server_group = @data_index.fetch_path(:middleware_server_groups, :by_name, server_group_name)
           server[:middleware_server_group] = server_group
 
-          # @data[:middleware_servers] << server
           @data_index.store_path(:middleware_servers, :by_ems_ref, server[:ems_ref], server)
 
           inventory_object = persister.middleware_servers.find_or_build(server[:ems_ref])
           server.each { |k, v| inventory_object.send "#{k}=", v }
-          inventory_object.middleware_server_group = persister.middleware_server_groups.lazy_find(parsed_server_group[:ems_ref])
+          inventory_object.middleware_server_group = persister.middleware_server_groups.lazy_find(server_group[:ems_ref])
         end
       end
 
@@ -156,7 +154,6 @@ module ManageIQ::Providers
       end
 
       def fetch_server_entities
-        @data[:middleware_deployments] = []
         @eaps.map do |eap|
           @ems.child_resources(eap.path, true).map do |child|
             next unless child.type_path.end_with?('Deployment', 'Datasource', 'JMS%20Topic', 'JMS%20Queue')
@@ -185,10 +182,10 @@ module ManageIQ::Providers
             metric_id_by_resource_path[resource_path.to_s] = deployment_status_metric.hawkular_metric_id
           end
         end
-        @data[:middleware_deployments].each do |deployment|
+        persister.middleware_deployments.each do |deployment|
           # Mark default status for all deployments
-          deployment[:status] = process_availability
-          path = ::Hawkular::Inventory::CanonicalPath.parse(deployment[:ems_ref])
+          deployment.status = process_availability
+          path = ::Hawkular::Inventory::CanonicalPath.parse(deployment.ems_ref)
           # for subdeployments use it's parent deployment availability.
           path = path.up if path.resource_ids.last.include? CGI.escape('/subdeployment=')
           # Ensure consistency on keys (resource_path) used on metric_id_by_resource_path
@@ -251,7 +248,7 @@ module ManageIQ::Providers
         availabilities.each do |availability|
           availability_status = process_availability(availability['data'].first)
           resources_by_metric_id[availability['id']].each do |resource|
-            resource[:status] = availability_status
+            resource.status = availability_status
           end
         end
         resources_by_metric_id

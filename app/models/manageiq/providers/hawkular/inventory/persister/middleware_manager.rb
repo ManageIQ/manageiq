@@ -6,15 +6,14 @@ module ManageIQ::Providers
 
     has_inventory(
       :model_class                 => provider_module::MiddlewareManager::MiddlewareDomain,
-      :association                 => middleware_domains,
+      :association                 => :middleware_domains,
       :inventory_object_attributes => %i(type_path).concat(COMMON_ATTRIBUTES),
       :builder_params              => { :ext_management_system => ->(persister) { persister.manager } }
     )
     has_inventory(
       :model_class                 => provider_module::MiddlewareManager::MiddlewareServerGroup,
       :association                 => :middleware_server_groups,
-      :inventory_object_attributes => %i(type_path profile middleware_domain).concat(COMMON_ATTRIBUTES),
-      :builder_params              => { :ext_management_system => ->(persister) { persister.manager } }
+      :inventory_object_attributes => %i(type_path profile middleware_domain).concat(COMMON_ATTRIBUTES)
     )
     has_inventory(
       :model_class                 => provider_module::MiddlewareManager::MiddlewareServer,
@@ -26,7 +25,7 @@ module ManageIQ::Providers
     has_inventory(
       :model_class                 => provider_module::MiddlewareManager::MiddlewareDeployment,
       :association                 => :middleware_deployments,
-      :inventory_object_attributes => %i(middleware_server).concat(COMMON_ATTRIBUTES),
+      :inventory_object_attributes => %i(middleware_server status).concat(COMMON_ATTRIBUTES),
       :builder_params              => { :ext_management_system => ->(persister) { persister.manager } }
     )
     has_inventory(
