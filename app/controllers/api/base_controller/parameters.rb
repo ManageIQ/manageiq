@@ -35,6 +35,14 @@ module Api
         search_options.map(&:downcase).include?(what.to_s)
       end
 
+      def format_attributes
+        params['format_attributes'].to_s.split(",").map { |af| af.split("=").map(&:strip) }
+      end
+
+      def attribute_format(attr)
+        format_attributes.detect { |af| af.first == attr }.try(:second)
+      end
+
       def attribute_selection
         if !@req.attributes.empty? || @additional_attributes
           @req.attributes | Array(@additional_attributes) | ID_ATTRS
