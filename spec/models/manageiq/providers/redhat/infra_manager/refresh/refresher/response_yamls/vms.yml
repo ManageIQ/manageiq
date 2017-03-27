@@ -1,0 +1,5523 @@
+---
+- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4::VmPreloadedAttributesDecorator
+  :__v2__:
+  - :@obj
+  - :@disks
+  - :@nics
+  - :@reported_devices
+  - :@snapshots
+  ? - &1 !ruby/object:OvirtSDK4::Vm
+      href: "/ovirt-engine/api/vms/63978315-2d17-4e67-b393-2ea60a8aeacb"
+      comment: 
+      description: 
+      id: 63978315-2d17-4e67-b393-2ea60a8aeacb
+      name: external-as
+      bios: !ruby/object:OvirtSDK4::Bios
+        href: 
+        boot_menu: !ruby/object:OvirtSDK4::BootMenu
+          href: 
+          enabled: false
+      cluster: !ruby/object:OvirtSDK4::Cluster
+        href: "/ovirt-engine/api/clusters/00000002-0002-0002-0002-000000000092"
+        comment: 
+        description: 
+        id: 00000002-0002-0002-0002-000000000092
+        name: 
+        affinity_groups: 
+        ballooning_enabled: 
+        cpu: 
+        cpu_profiles: 
+        custom_scheduling_policy_properties: 
+        data_center: 
+        display: 
+        error_handling: 
+        fencing_policy: 
+        gluster_hooks: 
+        gluster_service: 
+        gluster_volumes: 
+        ha_reservation: 
+        ksm: 
+        maintenance_reason_required: 
+        management_network: 
+        memory_policy: 
+        migration: 
+        network_filters: 
+        networks: 
+        optional_reason: 
+        permissions: 
+        required_rng_sources: 
+        scheduling_policy: 
+        serial_number: 
+        supported_versions: 
+        switch_type: 
+        threads_as_cores: 
+        trusted_service: 
+        tunnel_migration: 
+        version: 
+        virt_service: 
+      console: 
+      cpu: !ruby/object:OvirtSDK4::Cpu
+        href: 
+        architecture: x86_64
+        cores: 
+        cpu_tune: 
+        level: 
+        mode: 
+        name: 
+        speed: 
+        topology: !ruby/object:OvirtSDK4::CpuTopology
+          href: 
+          cores: 1
+          sockets: 1
+          threads: 1
+        type: 
+      cpu_profile: !ruby/object:OvirtSDK4::CpuProfile
+        href: "/ovirt-engine/api/cpuprofiles/0000000e-000e-000e-000e-000000000384"
+        comment: 
+        description: 
+        id: 0000000e-000e-000e-000e-000000000384
+        name: 
+        cluster: 
+        permissions: 
+        qos: 
+      cpu_shares: 0
+      creation_time: !ruby/object:DateTime 2016-06-28 12:08:47.228000000 +03:00
+      custom_compatibility_version: 
+      custom_cpu_model: 
+      custom_emulated_machine: 
+      custom_properties: 
+      delete_protected: false
+      display: !ruby/object:OvirtSDK4::Display
+        href: 
+        address: 
+        allow_override: false
+        certificate: 
+        copy_paste_enabled: true
+        disconnect_action: LOCK_SCREEN
+        file_transfer_enabled: true
+        keyboard_layout: 
+        monitors: 1
+        port: 
+        proxy: 
+        secure_port: 
+        single_qxl_pci: false
+        smartcard_enabled: false
+        type: spice
+      domain: 
+      high_availability: !ruby/object:OvirtSDK4::HighAvailability
+        href: 
+        enabled: false
+        priority: 0
+      initialization: 
+      io: !ruby/object:OvirtSDK4::Io
+        href: 
+        threads: 0
+      large_icon: !ruby/object:OvirtSDK4::Icon
+        href: "/ovirt-engine/api/icons/db8d96f8-75cd-475a-b2f5-c37d75a288b1"
+        comment: 
+        description: 
+        id: db8d96f8-75cd-475a-b2f5-c37d75a288b1
+        name: 
+        data: 
+        media_type: 
+      memory: 1073741824
+      memory_policy: !ruby/object:OvirtSDK4::MemoryPolicy
+        href: 
+        ballooning: 
+        guaranteed: 1073741824
+        over_commit: 
+        transparent_huge_pages: 
+      migration: !ruby/object:OvirtSDK4::MigrationOptions
+        href: 
+        auto_converge: inherit
+        bandwidth: 
+        compressed: inherit
+        policy: 
+      migration_downtime: -1
+      origin: external
+      os: !ruby/object:OvirtSDK4::OperatingSystem
+        href: 
+        boot: !ruby/object:OvirtSDK4::Boot
+          href: 
+          devices:
+          - hd
+        cmdline: 
+        custom_kernel_cmdline: 
+        initrd: 
+        kernel: 
+        reported_kernel_cmdline: 
+        type: other
+        version: 
+      quota: 
+      rng_device: 
+      serial_number: 
+      small_icon: !ruby/object:OvirtSDK4::Icon
+        href: "/ovirt-engine/api/icons/c947ca42-629e-46cf-aeeb-ef949fae52c0"
+        comment: 
+        description: 
+        id: c947ca42-629e-46cf-aeeb-ef949fae52c0
+        name: 
+        data: 
+        media_type: 
+      soundcard_enabled: 
+      sso: !ruby/object:OvirtSDK4::Sso
+        href: 
+        methods: !ruby/array:OvirtSDK4::List
+          internal:
+          - !ruby/object:OvirtSDK4::Method
+            href: 
+            id: guest_agent
+          ivars:
+            :@href: 
+      start_paused: false
+      stateless: false
+      storage_domain: 
+      time_zone: !ruby/object:OvirtSDK4::TimeZone
+        href: 
+        name: Etc/GMT
+        utc_offset: 
+      tunnel_migration: 
+      type: desktop
+      usb: !ruby/object:OvirtSDK4::Usb
+        href: 
+        enabled: false
+        type: 
+      virtio_scsi: 
+      affinity_labels: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/63978315-2d17-4e67-b393-2ea60a8aeacb/affinitylabels"
+      applications: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/63978315-2d17-4e67-b393-2ea60a8aeacb/applications"
+      cdroms: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/63978315-2d17-4e67-b393-2ea60a8aeacb/cdroms"
+      disk_attachments: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/63978315-2d17-4e67-b393-2ea60a8aeacb/diskattachments"
+      external_host_provider: 
+      floppies: 
+      fqdn: 
+      graphics_consoles: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/63978315-2d17-4e67-b393-2ea60a8aeacb/graphicsconsoles"
+      guest_operating_system: 
+      guest_time_zone: 
+      host: 
+      host_devices: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/63978315-2d17-4e67-b393-2ea60a8aeacb/hostdevices"
+      instance_type: 
+      katello_errata: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/63978315-2d17-4e67-b393-2ea60a8aeacb/katelloerrata"
+      next_run_configuration_exists: false
+      nics: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/63978315-2d17-4e67-b393-2ea60a8aeacb/nics"
+      numa_nodes: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/63978315-2d17-4e67-b393-2ea60a8aeacb/numanodes"
+      numa_tune_mode: interleave
+      payloads: 
+      permissions: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/63978315-2d17-4e67-b393-2ea60a8aeacb/permissions"
+      placement_policy: !ruby/object:OvirtSDK4::VmPlacementPolicy
+        href: 
+        affinity: migratable
+        hosts: 
+      reported_devices: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/63978315-2d17-4e67-b393-2ea60a8aeacb/reporteddevices"
+      run_once: 
+      sessions: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/63978315-2d17-4e67-b393-2ea60a8aeacb/sessions"
+      snapshots: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/63978315-2d17-4e67-b393-2ea60a8aeacb/snapshots"
+      start_time: 
+      statistics: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/63978315-2d17-4e67-b393-2ea60a8aeacb/statistics"
+      status: down
+      status_detail: 
+      stop_reason: 
+      stop_time: !ruby/object:DateTime 2016-06-28 12:08:47.232000000 +03:00
+      tags: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/63978315-2d17-4e67-b393-2ea60a8aeacb/tags"
+      template: !ruby/object:OvirtSDK4::Template
+        href: "/ovirt-engine/api/templates/00000000-0000-0000-0000-000000000000"
+        comment: 
+        description: 
+        id: 00000000-0000-0000-0000-000000000000
+        name: 
+        bios: 
+        cluster: 
+        console: 
+        cpu: 
+        cpu_profile: 
+        cpu_shares: 
+        creation_time: 
+        custom_compatibility_version: 
+        custom_cpu_model: 
+        custom_emulated_machine: 
+        custom_properties: 
+        delete_protected: 
+        display: 
+        domain: 
+        high_availability: 
+        initialization: 
+        io: 
+        large_icon: 
+        memory: 
+        memory_policy: 
+        migration: 
+        migration_downtime: 
+        origin: 
+        os: 
+        quota: 
+        rng_device: 
+        serial_number: 
+        small_icon: 
+        soundcard_enabled: 
+        sso: 
+        start_paused: 
+        stateless: 
+        storage_domain: 
+        time_zone: 
+        tunnel_migration: 
+        type: 
+        usb: 
+        virtio_scsi: 
+        cdroms: 
+        disk_attachments: 
+        graphics_consoles: 
+        nics: 
+        permissions: 
+        status: 
+        tags: 
+        version: 
+        vm: 
+        watchdogs: 
+      use_latest_template_version: 
+      vm_pool: 
+      watchdogs: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/63978315-2d17-4e67-b393-2ea60a8aeacb/watchdogs"
+    - []
+    - !ruby/array:OvirtSDK4::List
+      internal: []
+      ivars:
+        :@href: 
+    - !ruby/array:OvirtSDK4::List
+      internal: []
+      ivars:
+        :@href: 
+    - !ruby/array:OvirtSDK4::List
+      internal:
+      - !ruby/object:OvirtSDK4::Snapshot
+        href: "/ovirt-engine/api/vms/63978315-2d17-4e67-b393-2ea60a8aeacb/snapshots/45a18e0d-7564-4e0b-9c18-ae06cf69d048"
+        comment: 
+        description: Active VM
+        id: 45a18e0d-7564-4e0b-9c18-ae06cf69d048
+        name: 
+        bios: 
+        cluster: 
+        console: 
+        cpu: 
+        cpu_profile: 
+        cpu_shares: 
+        creation_time: 
+        custom_compatibility_version: 
+        custom_cpu_model: 
+        custom_emulated_machine: 
+        custom_properties: 
+        delete_protected: 
+        display: 
+        domain: 
+        high_availability: 
+        initialization: 
+        io: 
+        large_icon: 
+        memory: 
+        memory_policy: 
+        migration: 
+        migration_downtime: 
+        origin: 
+        os: 
+        quota: 
+        rng_device: 
+        serial_number: 
+        small_icon: 
+        soundcard_enabled: 
+        sso: 
+        start_paused: 
+        stateless: 
+        storage_domain: 
+        time_zone: 
+        tunnel_migration: 
+        type: 
+        usb: 
+        virtio_scsi: 
+        affinity_labels: 
+        applications: 
+        cdroms: 
+        disk_attachments: 
+        external_host_provider: 
+        floppies: 
+        fqdn: 
+        graphics_consoles: 
+        guest_operating_system: 
+        guest_time_zone: 
+        host: 
+        host_devices: 
+        instance_type: 
+        katello_errata: 
+        next_run_configuration_exists: 
+        nics: 
+        numa_nodes: 
+        numa_tune_mode: 
+        payloads: 
+        permissions: 
+        placement_policy: 
+        reported_devices: 
+        run_once: 
+        sessions: 
+        snapshots: 
+        start_time: 
+        statistics: 
+        status: 
+        status_detail: 
+        stop_reason: 
+        stop_time: 
+        tags: 
+        template: 
+        use_latest_template_version: 
+        vm_pool: 
+        watchdogs: 
+        date: !ruby/object:DateTime 2016-06-28 12:08:47.238000000 +03:00
+        persist_memorystate: false
+        snapshot_status: ok
+        snapshot_type: active
+        vm: 
+      ivars:
+        :@href: 
+  : *1
+- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4::VmPreloadedAttributesDecorator
+  :__v2__:
+  - :@obj
+  - :@disks
+  - :@nics
+  - :@reported_devices
+  - :@snapshots
+  ? - &2 !ruby/object:OvirtSDK4::Vm
+      href: "/ovirt-engine/api/vms/ed7f875f-4518-4618-aec6-e04d0034475b"
+      comment: 
+      description: 
+      id: ed7f875f-4518-4618-aec6-e04d0034475b
+      name: external-manageiq
+      bios: !ruby/object:OvirtSDK4::Bios
+        href: 
+        boot_menu: !ruby/object:OvirtSDK4::BootMenu
+          href: 
+          enabled: false
+      cluster: !ruby/object:OvirtSDK4::Cluster
+        href: "/ovirt-engine/api/clusters/00000002-0002-0002-0002-000000000092"
+        comment: 
+        description: 
+        id: 00000002-0002-0002-0002-000000000092
+        name: 
+        affinity_groups: 
+        ballooning_enabled: 
+        cpu: 
+        cpu_profiles: 
+        custom_scheduling_policy_properties: 
+        data_center: 
+        display: 
+        error_handling: 
+        fencing_policy: 
+        gluster_hooks: 
+        gluster_service: 
+        gluster_volumes: 
+        ha_reservation: 
+        ksm: 
+        maintenance_reason_required: 
+        management_network: 
+        memory_policy: 
+        migration: 
+        network_filters: 
+        networks: 
+        optional_reason: 
+        permissions: 
+        required_rng_sources: 
+        scheduling_policy: 
+        serial_number: 
+        supported_versions: 
+        switch_type: 
+        threads_as_cores: 
+        trusted_service: 
+        tunnel_migration: 
+        version: 
+        virt_service: 
+      console: 
+      cpu: !ruby/object:OvirtSDK4::Cpu
+        href: 
+        architecture: x86_64
+        cores: 
+        cpu_tune: 
+        level: 
+        mode: 
+        name: 
+        speed: 
+        topology: !ruby/object:OvirtSDK4::CpuTopology
+          href: 
+          cores: 1
+          sockets: 4
+          threads: 1
+        type: 
+      cpu_profile: !ruby/object:OvirtSDK4::CpuProfile
+        href: "/ovirt-engine/api/cpuprofiles/0000000e-000e-000e-000e-000000000384"
+        comment: 
+        description: 
+        id: 0000000e-000e-000e-000e-000000000384
+        name: 
+        cluster: 
+        permissions: 
+        qos: 
+      cpu_shares: 0
+      creation_time: !ruby/object:DateTime 2016-06-28 12:08:46.888000000 +03:00
+      custom_compatibility_version: 
+      custom_cpu_model: 
+      custom_emulated_machine: 
+      custom_properties: 
+      delete_protected: false
+      display: !ruby/object:OvirtSDK4::Display
+        href: 
+        address: 
+        allow_override: false
+        certificate: 
+        copy_paste_enabled: true
+        disconnect_action: LOCK_SCREEN
+        file_transfer_enabled: true
+        keyboard_layout: 
+        monitors: 1
+        port: 
+        proxy: 
+        secure_port: 
+        single_qxl_pci: false
+        smartcard_enabled: false
+        type: spice
+      domain: 
+      high_availability: !ruby/object:OvirtSDK4::HighAvailability
+        href: 
+        enabled: false
+        priority: 0
+      initialization: 
+      io: !ruby/object:OvirtSDK4::Io
+        href: 
+        threads: 0
+      large_icon: !ruby/object:OvirtSDK4::Icon
+        href: "/ovirt-engine/api/icons/db8d96f8-75cd-475a-b2f5-c37d75a288b1"
+        comment: 
+        description: 
+        id: db8d96f8-75cd-475a-b2f5-c37d75a288b1
+        name: 
+        data: 
+        media_type: 
+      memory: 6410993664
+      memory_policy: !ruby/object:OvirtSDK4::MemoryPolicy
+        href: 
+        ballooning: 
+        guaranteed: 6410993664
+        over_commit: 
+        transparent_huge_pages: 
+      migration: !ruby/object:OvirtSDK4::MigrationOptions
+        href: 
+        auto_converge: inherit
+        bandwidth: 
+        compressed: inherit
+        policy: 
+      migration_downtime: -1
+      origin: external
+      os: !ruby/object:OvirtSDK4::OperatingSystem
+        href: 
+        boot: !ruby/object:OvirtSDK4::Boot
+          href: 
+          devices:
+          - hd
+        cmdline: 
+        custom_kernel_cmdline: 
+        initrd: 
+        kernel: 
+        reported_kernel_cmdline: 
+        type: other
+        version: 
+      quota: 
+      rng_device: 
+      serial_number: 
+      small_icon: !ruby/object:OvirtSDK4::Icon
+        href: "/ovirt-engine/api/icons/c947ca42-629e-46cf-aeeb-ef949fae52c0"
+        comment: 
+        description: 
+        id: c947ca42-629e-46cf-aeeb-ef949fae52c0
+        name: 
+        data: 
+        media_type: 
+      soundcard_enabled: 
+      sso: !ruby/object:OvirtSDK4::Sso
+        href: 
+        methods: !ruby/array:OvirtSDK4::List
+          internal:
+          - !ruby/object:OvirtSDK4::Method
+            href: 
+            id: guest_agent
+          ivars:
+            :@href: 
+      start_paused: false
+      stateless: false
+      storage_domain: 
+      time_zone: !ruby/object:OvirtSDK4::TimeZone
+        href: 
+        name: Etc/GMT
+        utc_offset: 
+      tunnel_migration: 
+      type: desktop
+      usb: !ruby/object:OvirtSDK4::Usb
+        href: 
+        enabled: false
+        type: 
+      virtio_scsi: 
+      affinity_labels: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/ed7f875f-4518-4618-aec6-e04d0034475b/affinitylabels"
+      applications: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/ed7f875f-4518-4618-aec6-e04d0034475b/applications"
+      cdroms: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/ed7f875f-4518-4618-aec6-e04d0034475b/cdroms"
+      disk_attachments: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/ed7f875f-4518-4618-aec6-e04d0034475b/diskattachments"
+      external_host_provider: 
+      floppies: 
+      fqdn: 
+      graphics_consoles: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/ed7f875f-4518-4618-aec6-e04d0034475b/graphicsconsoles"
+      guest_operating_system: 
+      guest_time_zone: 
+      host: 
+      host_devices: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/ed7f875f-4518-4618-aec6-e04d0034475b/hostdevices"
+      instance_type: 
+      katello_errata: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/ed7f875f-4518-4618-aec6-e04d0034475b/katelloerrata"
+      next_run_configuration_exists: false
+      nics: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/ed7f875f-4518-4618-aec6-e04d0034475b/nics"
+      numa_nodes: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/ed7f875f-4518-4618-aec6-e04d0034475b/numanodes"
+      numa_tune_mode: interleave
+      payloads: 
+      permissions: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/ed7f875f-4518-4618-aec6-e04d0034475b/permissions"
+      placement_policy: !ruby/object:OvirtSDK4::VmPlacementPolicy
+        href: 
+        affinity: migratable
+        hosts: 
+      reported_devices: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/ed7f875f-4518-4618-aec6-e04d0034475b/reporteddevices"
+      run_once: 
+      sessions: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/ed7f875f-4518-4618-aec6-e04d0034475b/sessions"
+      snapshots: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/ed7f875f-4518-4618-aec6-e04d0034475b/snapshots"
+      start_time: 
+      statistics: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/ed7f875f-4518-4618-aec6-e04d0034475b/statistics"
+      status: down
+      status_detail: 
+      stop_reason: 
+      stop_time: !ruby/object:DateTime 2016-06-28 12:08:46.890000000 +03:00
+      tags: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/ed7f875f-4518-4618-aec6-e04d0034475b/tags"
+      template: !ruby/object:OvirtSDK4::Template
+        href: "/ovirt-engine/api/templates/00000000-0000-0000-0000-000000000000"
+        comment: 
+        description: 
+        id: 00000000-0000-0000-0000-000000000000
+        name: 
+        bios: 
+        cluster: 
+        console: 
+        cpu: 
+        cpu_profile: 
+        cpu_shares: 
+        creation_time: 
+        custom_compatibility_version: 
+        custom_cpu_model: 
+        custom_emulated_machine: 
+        custom_properties: 
+        delete_protected: 
+        display: 
+        domain: 
+        high_availability: 
+        initialization: 
+        io: 
+        large_icon: 
+        memory: 
+        memory_policy: 
+        migration: 
+        migration_downtime: 
+        origin: 
+        os: 
+        quota: 
+        rng_device: 
+        serial_number: 
+        small_icon: 
+        soundcard_enabled: 
+        sso: 
+        start_paused: 
+        stateless: 
+        storage_domain: 
+        time_zone: 
+        tunnel_migration: 
+        type: 
+        usb: 
+        virtio_scsi: 
+        cdroms: 
+        disk_attachments: 
+        graphics_consoles: 
+        nics: 
+        permissions: 
+        status: 
+        tags: 
+        version: 
+        vm: 
+        watchdogs: 
+      use_latest_template_version: 
+      vm_pool: 
+      watchdogs: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/ed7f875f-4518-4618-aec6-e04d0034475b/watchdogs"
+    - []
+    - !ruby/array:OvirtSDK4::List
+      internal: []
+      ivars:
+        :@href: 
+    - !ruby/array:OvirtSDK4::List
+      internal: []
+      ivars:
+        :@href: 
+    - !ruby/array:OvirtSDK4::List
+      internal:
+      - !ruby/object:OvirtSDK4::Snapshot
+        href: "/ovirt-engine/api/vms/ed7f875f-4518-4618-aec6-e04d0034475b/snapshots/0b304821-d2d5-4de0-82b2-de8d18e51e00"
+        comment: 
+        description: Active VM
+        id: 0b304821-d2d5-4de0-82b2-de8d18e51e00
+        name: 
+        bios: 
+        cluster: 
+        console: 
+        cpu: 
+        cpu_profile: 
+        cpu_shares: 
+        creation_time: 
+        custom_compatibility_version: 
+        custom_cpu_model: 
+        custom_emulated_machine: 
+        custom_properties: 
+        delete_protected: 
+        display: 
+        domain: 
+        high_availability: 
+        initialization: 
+        io: 
+        large_icon: 
+        memory: 
+        memory_policy: 
+        migration: 
+        migration_downtime: 
+        origin: 
+        os: 
+        quota: 
+        rng_device: 
+        serial_number: 
+        small_icon: 
+        soundcard_enabled: 
+        sso: 
+        start_paused: 
+        stateless: 
+        storage_domain: 
+        time_zone: 
+        tunnel_migration: 
+        type: 
+        usb: 
+        virtio_scsi: 
+        affinity_labels: 
+        applications: 
+        cdroms: 
+        disk_attachments: 
+        external_host_provider: 
+        floppies: 
+        fqdn: 
+        graphics_consoles: 
+        guest_operating_system: 
+        guest_time_zone: 
+        host: 
+        host_devices: 
+        instance_type: 
+        katello_errata: 
+        next_run_configuration_exists: 
+        nics: 
+        numa_nodes: 
+        numa_tune_mode: 
+        payloads: 
+        permissions: 
+        placement_policy: 
+        reported_devices: 
+        run_once: 
+        sessions: 
+        snapshots: 
+        start_time: 
+        statistics: 
+        status: 
+        status_detail: 
+        stop_reason: 
+        stop_time: 
+        tags: 
+        template: 
+        use_latest_template_version: 
+        vm_pool: 
+        watchdogs: 
+        date: !ruby/object:DateTime 2016-06-28 12:08:46.897000000 +03:00
+        persist_memorystate: false
+        snapshot_status: ok
+        snapshot_type: active
+        vm: 
+      ivars:
+        :@href: 
+  : *2
+- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4::VmPreloadedAttributesDecorator
+  :__v2__:
+  - :@obj
+  - :@disks
+  - :@nics
+  - :@reported_devices
+  - :@snapshots
+  ? - &3 !ruby/object:OvirtSDK4::Vm
+      href: "/ovirt-engine/api/vms/5aa608f3-1e02-4aca-8db5-445ec2170a27"
+      comment: 
+      description: 
+      id: 5aa608f3-1e02-4aca-8db5-445ec2170a27
+      name: external-test_se121
+      bios: !ruby/object:OvirtSDK4::Bios
+        href: 
+        boot_menu: !ruby/object:OvirtSDK4::BootMenu
+          href: 
+          enabled: false
+      cluster: !ruby/object:OvirtSDK4::Cluster
+        href: "/ovirt-engine/api/clusters/00000002-0002-0002-0002-000000000092"
+        comment: 
+        description: 
+        id: 00000002-0002-0002-0002-000000000092
+        name: 
+        affinity_groups: 
+        ballooning_enabled: 
+        cpu: 
+        cpu_profiles: 
+        custom_scheduling_policy_properties: 
+        data_center: 
+        display: 
+        error_handling: 
+        fencing_policy: 
+        gluster_hooks: 
+        gluster_service: 
+        gluster_volumes: 
+        ha_reservation: 
+        ksm: 
+        maintenance_reason_required: 
+        management_network: 
+        memory_policy: 
+        migration: 
+        network_filters: 
+        networks: 
+        optional_reason: 
+        permissions: 
+        required_rng_sources: 
+        scheduling_policy: 
+        serial_number: 
+        supported_versions: 
+        switch_type: 
+        threads_as_cores: 
+        trusted_service: 
+        tunnel_migration: 
+        version: 
+        virt_service: 
+      console: 
+      cpu: !ruby/object:OvirtSDK4::Cpu
+        href: 
+        architecture: x86_64
+        cores: 
+        cpu_tune: 
+        level: 
+        mode: 
+        name: 
+        speed: 
+        topology: !ruby/object:OvirtSDK4::CpuTopology
+          href: 
+          cores: 1
+          sockets: 1
+          threads: 1
+        type: 
+      cpu_profile: !ruby/object:OvirtSDK4::CpuProfile
+        href: "/ovirt-engine/api/cpuprofiles/0000000e-000e-000e-000e-000000000384"
+        comment: 
+        description: 
+        id: 0000000e-000e-000e-000e-000000000384
+        name: 
+        cluster: 
+        permissions: 
+        qos: 
+      cpu_shares: 0
+      creation_time: !ruby/object:DateTime 2016-06-28 12:07:48.904000000 +03:00
+      custom_compatibility_version: 
+      custom_cpu_model: 
+      custom_emulated_machine: 
+      custom_properties: 
+      delete_protected: false
+      display: !ruby/object:OvirtSDK4::Display
+        href: 
+        address: 
+        allow_override: false
+        certificate: 
+        copy_paste_enabled: true
+        disconnect_action: LOCK_SCREEN
+        file_transfer_enabled: true
+        keyboard_layout: 
+        monitors: 1
+        port: 
+        proxy: 
+        secure_port: 
+        single_qxl_pci: false
+        smartcard_enabled: false
+        type: spice
+      domain: 
+      high_availability: !ruby/object:OvirtSDK4::HighAvailability
+        href: 
+        enabled: false
+        priority: 0
+      initialization: 
+      io: !ruby/object:OvirtSDK4::Io
+        href: 
+        threads: 0
+      large_icon: !ruby/object:OvirtSDK4::Icon
+        href: "/ovirt-engine/api/icons/db8d96f8-75cd-475a-b2f5-c37d75a288b1"
+        comment: 
+        description: 
+        id: db8d96f8-75cd-475a-b2f5-c37d75a288b1
+        name: 
+        data: 
+        media_type: 
+      memory: 1073741824
+      memory_policy: !ruby/object:OvirtSDK4::MemoryPolicy
+        href: 
+        ballooning: 
+        guaranteed: 1073741824
+        over_commit: 
+        transparent_huge_pages: 
+      migration: !ruby/object:OvirtSDK4::MigrationOptions
+        href: 
+        auto_converge: inherit
+        bandwidth: 
+        compressed: inherit
+        policy: 
+      migration_downtime: -1
+      origin: external
+      os: !ruby/object:OvirtSDK4::OperatingSystem
+        href: 
+        boot: !ruby/object:OvirtSDK4::Boot
+          href: 
+          devices:
+          - hd
+        cmdline: 
+        custom_kernel_cmdline: 
+        initrd: 
+        kernel: 
+        reported_kernel_cmdline: 
+        type: other
+        version: 
+      quota: 
+      rng_device: 
+      serial_number: 
+      small_icon: !ruby/object:OvirtSDK4::Icon
+        href: "/ovirt-engine/api/icons/c947ca42-629e-46cf-aeeb-ef949fae52c0"
+        comment: 
+        description: 
+        id: c947ca42-629e-46cf-aeeb-ef949fae52c0
+        name: 
+        data: 
+        media_type: 
+      soundcard_enabled: 
+      sso: !ruby/object:OvirtSDK4::Sso
+        href: 
+        methods: !ruby/array:OvirtSDK4::List
+          internal:
+          - !ruby/object:OvirtSDK4::Method
+            href: 
+            id: guest_agent
+          ivars:
+            :@href: 
+      start_paused: false
+      stateless: false
+      storage_domain: 
+      time_zone: !ruby/object:OvirtSDK4::TimeZone
+        href: 
+        name: Etc/GMT
+        utc_offset: 
+      tunnel_migration: 
+      type: desktop
+      usb: !ruby/object:OvirtSDK4::Usb
+        href: 
+        enabled: false
+        type: 
+      virtio_scsi: 
+      affinity_labels: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/5aa608f3-1e02-4aca-8db5-445ec2170a27/affinitylabels"
+      applications: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/5aa608f3-1e02-4aca-8db5-445ec2170a27/applications"
+      cdroms: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/5aa608f3-1e02-4aca-8db5-445ec2170a27/cdroms"
+      disk_attachments: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/5aa608f3-1e02-4aca-8db5-445ec2170a27/diskattachments"
+      external_host_provider: 
+      floppies: 
+      fqdn: 
+      graphics_consoles: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/5aa608f3-1e02-4aca-8db5-445ec2170a27/graphicsconsoles"
+      guest_operating_system: 
+      guest_time_zone: 
+      host: 
+      host_devices: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/5aa608f3-1e02-4aca-8db5-445ec2170a27/hostdevices"
+      instance_type: 
+      katello_errata: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/5aa608f3-1e02-4aca-8db5-445ec2170a27/katelloerrata"
+      next_run_configuration_exists: false
+      nics: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/5aa608f3-1e02-4aca-8db5-445ec2170a27/nics"
+      numa_nodes: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/5aa608f3-1e02-4aca-8db5-445ec2170a27/numanodes"
+      numa_tune_mode: interleave
+      payloads: 
+      permissions: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/5aa608f3-1e02-4aca-8db5-445ec2170a27/permissions"
+      placement_policy: !ruby/object:OvirtSDK4::VmPlacementPolicy
+        href: 
+        affinity: migratable
+        hosts: 
+      reported_devices: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/5aa608f3-1e02-4aca-8db5-445ec2170a27/reporteddevices"
+      run_once: 
+      sessions: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/5aa608f3-1e02-4aca-8db5-445ec2170a27/sessions"
+      snapshots: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/5aa608f3-1e02-4aca-8db5-445ec2170a27/snapshots"
+      start_time: 
+      statistics: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/5aa608f3-1e02-4aca-8db5-445ec2170a27/statistics"
+      status: down
+      status_detail: 
+      stop_reason: 
+      stop_time: !ruby/object:DateTime 2016-06-28 12:07:48.913000000 +03:00
+      tags: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/5aa608f3-1e02-4aca-8db5-445ec2170a27/tags"
+      template: !ruby/object:OvirtSDK4::Template
+        href: "/ovirt-engine/api/templates/00000000-0000-0000-0000-000000000000"
+        comment: 
+        description: 
+        id: 00000000-0000-0000-0000-000000000000
+        name: 
+        bios: 
+        cluster: 
+        console: 
+        cpu: 
+        cpu_profile: 
+        cpu_shares: 
+        creation_time: 
+        custom_compatibility_version: 
+        custom_cpu_model: 
+        custom_emulated_machine: 
+        custom_properties: 
+        delete_protected: 
+        display: 
+        domain: 
+        high_availability: 
+        initialization: 
+        io: 
+        large_icon: 
+        memory: 
+        memory_policy: 
+        migration: 
+        migration_downtime: 
+        origin: 
+        os: 
+        quota: 
+        rng_device: 
+        serial_number: 
+        small_icon: 
+        soundcard_enabled: 
+        sso: 
+        start_paused: 
+        stateless: 
+        storage_domain: 
+        time_zone: 
+        tunnel_migration: 
+        type: 
+        usb: 
+        virtio_scsi: 
+        cdroms: 
+        disk_attachments: 
+        graphics_consoles: 
+        nics: 
+        permissions: 
+        status: 
+        tags: 
+        version: 
+        vm: 
+        watchdogs: 
+      use_latest_template_version: 
+      vm_pool: 
+      watchdogs: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/5aa608f3-1e02-4aca-8db5-445ec2170a27/watchdogs"
+    - []
+    - !ruby/array:OvirtSDK4::List
+      internal: []
+      ivars:
+        :@href: 
+    - !ruby/array:OvirtSDK4::List
+      internal: []
+      ivars:
+        :@href: 
+    - !ruby/array:OvirtSDK4::List
+      internal:
+      - !ruby/object:OvirtSDK4::Snapshot
+        href: "/ovirt-engine/api/vms/5aa608f3-1e02-4aca-8db5-445ec2170a27/snapshots/4c39e12b-030c-427e-98bd-877bd80a279d"
+        comment: 
+        description: Active VM
+        id: 4c39e12b-030c-427e-98bd-877bd80a279d
+        name: 
+        bios: 
+        cluster: 
+        console: 
+        cpu: 
+        cpu_profile: 
+        cpu_shares: 
+        creation_time: 
+        custom_compatibility_version: 
+        custom_cpu_model: 
+        custom_emulated_machine: 
+        custom_properties: 
+        delete_protected: 
+        display: 
+        domain: 
+        high_availability: 
+        initialization: 
+        io: 
+        large_icon: 
+        memory: 
+        memory_policy: 
+        migration: 
+        migration_downtime: 
+        origin: 
+        os: 
+        quota: 
+        rng_device: 
+        serial_number: 
+        small_icon: 
+        soundcard_enabled: 
+        sso: 
+        start_paused: 
+        stateless: 
+        storage_domain: 
+        time_zone: 
+        tunnel_migration: 
+        type: 
+        usb: 
+        virtio_scsi: 
+        affinity_labels: 
+        applications: 
+        cdroms: 
+        disk_attachments: 
+        external_host_provider: 
+        floppies: 
+        fqdn: 
+        graphics_consoles: 
+        guest_operating_system: 
+        guest_time_zone: 
+        host: 
+        host_devices: 
+        instance_type: 
+        katello_errata: 
+        next_run_configuration_exists: 
+        nics: 
+        numa_nodes: 
+        numa_tune_mode: 
+        payloads: 
+        permissions: 
+        placement_policy: 
+        reported_devices: 
+        run_once: 
+        sessions: 
+        snapshots: 
+        start_time: 
+        statistics: 
+        status: 
+        status_detail: 
+        stop_reason: 
+        stop_time: 
+        tags: 
+        template: 
+        use_latest_template_version: 
+        vm_pool: 
+        watchdogs: 
+        date: !ruby/object:DateTime 2016-06-28 12:07:48.967000000 +03:00
+        persist_memorystate: false
+        snapshot_status: ok
+        snapshot_type: active
+        vm: 
+      ivars:
+        :@href: 
+  : *3
+- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4::VmPreloadedAttributesDecorator
+  :__v2__:
+  - :@obj
+  - :@disks
+  - :@nics
+  - :@reported_devices
+  - :@snapshots
+  ? - &4 !ruby/object:OvirtSDK4::Vm
+      href: "/ovirt-engine/api/vms/f664d87c-6a0d-4207-b6e5-d418247cecbe"
+      comment: 
+      description: 
+      id: f664d87c-6a0d-4207-b6e5-d418247cecbe
+      name: external-yo
+      bios: !ruby/object:OvirtSDK4::Bios
+        href: 
+        boot_menu: !ruby/object:OvirtSDK4::BootMenu
+          href: 
+          enabled: false
+      cluster: !ruby/object:OvirtSDK4::Cluster
+        href: "/ovirt-engine/api/clusters/00000002-0002-0002-0002-000000000092"
+        comment: 
+        description: 
+        id: 00000002-0002-0002-0002-000000000092
+        name: 
+        affinity_groups: 
+        ballooning_enabled: 
+        cpu: 
+        cpu_profiles: 
+        custom_scheduling_policy_properties: 
+        data_center: 
+        display: 
+        error_handling: 
+        fencing_policy: 
+        gluster_hooks: 
+        gluster_service: 
+        gluster_volumes: 
+        ha_reservation: 
+        ksm: 
+        maintenance_reason_required: 
+        management_network: 
+        memory_policy: 
+        migration: 
+        network_filters: 
+        networks: 
+        optional_reason: 
+        permissions: 
+        required_rng_sources: 
+        scheduling_policy: 
+        serial_number: 
+        supported_versions: 
+        switch_type: 
+        threads_as_cores: 
+        trusted_service: 
+        tunnel_migration: 
+        version: 
+        virt_service: 
+      console: 
+      cpu: !ruby/object:OvirtSDK4::Cpu
+        href: 
+        architecture: x86_64
+        cores: 
+        cpu_tune: 
+        level: 
+        mode: 
+        name: 
+        speed: 
+        topology: !ruby/object:OvirtSDK4::CpuTopology
+          href: 
+          cores: 1
+          sockets: 1
+          threads: 1
+        type: 
+      cpu_profile: !ruby/object:OvirtSDK4::CpuProfile
+        href: "/ovirt-engine/api/cpuprofiles/0000000e-000e-000e-000e-000000000384"
+        comment: 
+        description: 
+        id: 0000000e-000e-000e-000e-000000000384
+        name: 
+        cluster: 
+        permissions: 
+        qos: 
+      cpu_shares: 0
+      creation_time: !ruby/object:DateTime 2016-06-28 12:08:47.070000000 +03:00
+      custom_compatibility_version: 
+      custom_cpu_model: 
+      custom_emulated_machine: 
+      custom_properties: 
+      delete_protected: false
+      display: !ruby/object:OvirtSDK4::Display
+        href: 
+        address: 
+        allow_override: false
+        certificate: 
+        copy_paste_enabled: true
+        disconnect_action: LOCK_SCREEN
+        file_transfer_enabled: true
+        keyboard_layout: 
+        monitors: 1
+        port: 
+        proxy: 
+        secure_port: 
+        single_qxl_pci: false
+        smartcard_enabled: false
+        type: spice
+      domain: 
+      high_availability: !ruby/object:OvirtSDK4::HighAvailability
+        href: 
+        enabled: false
+        priority: 0
+      initialization: 
+      io: !ruby/object:OvirtSDK4::Io
+        href: 
+        threads: 0
+      large_icon: !ruby/object:OvirtSDK4::Icon
+        href: "/ovirt-engine/api/icons/db8d96f8-75cd-475a-b2f5-c37d75a288b1"
+        comment: 
+        description: 
+        id: db8d96f8-75cd-475a-b2f5-c37d75a288b1
+        name: 
+        data: 
+        media_type: 
+      memory: 1073741824
+      memory_policy: !ruby/object:OvirtSDK4::MemoryPolicy
+        href: 
+        ballooning: 
+        guaranteed: 1073741824
+        over_commit: 
+        transparent_huge_pages: 
+      migration: !ruby/object:OvirtSDK4::MigrationOptions
+        href: 
+        auto_converge: inherit
+        bandwidth: 
+        compressed: inherit
+        policy: 
+      migration_downtime: -1
+      origin: external
+      os: !ruby/object:OvirtSDK4::OperatingSystem
+        href: 
+        boot: !ruby/object:OvirtSDK4::Boot
+          href: 
+          devices:
+          - hd
+        cmdline: 
+        custom_kernel_cmdline: 
+        initrd: 
+        kernel: 
+        reported_kernel_cmdline: 
+        type: other
+        version: 
+      quota: 
+      rng_device: 
+      serial_number: 
+      small_icon: !ruby/object:OvirtSDK4::Icon
+        href: "/ovirt-engine/api/icons/c947ca42-629e-46cf-aeeb-ef949fae52c0"
+        comment: 
+        description: 
+        id: c947ca42-629e-46cf-aeeb-ef949fae52c0
+        name: 
+        data: 
+        media_type: 
+      soundcard_enabled: 
+      sso: !ruby/object:OvirtSDK4::Sso
+        href: 
+        methods: !ruby/array:OvirtSDK4::List
+          internal:
+          - !ruby/object:OvirtSDK4::Method
+            href: 
+            id: guest_agent
+          ivars:
+            :@href: 
+      start_paused: false
+      stateless: false
+      storage_domain: 
+      time_zone: !ruby/object:OvirtSDK4::TimeZone
+        href: 
+        name: Etc/GMT
+        utc_offset: 
+      tunnel_migration: 
+      type: desktop
+      usb: !ruby/object:OvirtSDK4::Usb
+        href: 
+        enabled: false
+        type: 
+      virtio_scsi: 
+      affinity_labels: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/f664d87c-6a0d-4207-b6e5-d418247cecbe/affinitylabels"
+      applications: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/f664d87c-6a0d-4207-b6e5-d418247cecbe/applications"
+      cdroms: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/f664d87c-6a0d-4207-b6e5-d418247cecbe/cdroms"
+      disk_attachments: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/f664d87c-6a0d-4207-b6e5-d418247cecbe/diskattachments"
+      external_host_provider: 
+      floppies: 
+      fqdn: 
+      graphics_consoles: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/f664d87c-6a0d-4207-b6e5-d418247cecbe/graphicsconsoles"
+      guest_operating_system: 
+      guest_time_zone: 
+      host: 
+      host_devices: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/f664d87c-6a0d-4207-b6e5-d418247cecbe/hostdevices"
+      instance_type: 
+      katello_errata: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/f664d87c-6a0d-4207-b6e5-d418247cecbe/katelloerrata"
+      next_run_configuration_exists: false
+      nics: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/f664d87c-6a0d-4207-b6e5-d418247cecbe/nics"
+      numa_nodes: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/f664d87c-6a0d-4207-b6e5-d418247cecbe/numanodes"
+      numa_tune_mode: interleave
+      payloads: 
+      permissions: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/f664d87c-6a0d-4207-b6e5-d418247cecbe/permissions"
+      placement_policy: !ruby/object:OvirtSDK4::VmPlacementPolicy
+        href: 
+        affinity: migratable
+        hosts: 
+      reported_devices: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/f664d87c-6a0d-4207-b6e5-d418247cecbe/reporteddevices"
+      run_once: 
+      sessions: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/f664d87c-6a0d-4207-b6e5-d418247cecbe/sessions"
+      snapshots: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/f664d87c-6a0d-4207-b6e5-d418247cecbe/snapshots"
+      start_time: 
+      statistics: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/f664d87c-6a0d-4207-b6e5-d418247cecbe/statistics"
+      status: down
+      status_detail: 
+      stop_reason: 
+      stop_time: !ruby/object:DateTime 2016-07-12 10:58:45.464000000 +03:00
+      tags: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/f664d87c-6a0d-4207-b6e5-d418247cecbe/tags"
+      template: !ruby/object:OvirtSDK4::Template
+        href: "/ovirt-engine/api/templates/00000000-0000-0000-0000-000000000000"
+        comment: 
+        description: 
+        id: 00000000-0000-0000-0000-000000000000
+        name: 
+        bios: 
+        cluster: 
+        console: 
+        cpu: 
+        cpu_profile: 
+        cpu_shares: 
+        creation_time: 
+        custom_compatibility_version: 
+        custom_cpu_model: 
+        custom_emulated_machine: 
+        custom_properties: 
+        delete_protected: 
+        display: 
+        domain: 
+        high_availability: 
+        initialization: 
+        io: 
+        large_icon: 
+        memory: 
+        memory_policy: 
+        migration: 
+        migration_downtime: 
+        origin: 
+        os: 
+        quota: 
+        rng_device: 
+        serial_number: 
+        small_icon: 
+        soundcard_enabled: 
+        sso: 
+        start_paused: 
+        stateless: 
+        storage_domain: 
+        time_zone: 
+        tunnel_migration: 
+        type: 
+        usb: 
+        virtio_scsi: 
+        cdroms: 
+        disk_attachments: 
+        graphics_consoles: 
+        nics: 
+        permissions: 
+        status: 
+        tags: 
+        version: 
+        vm: 
+        watchdogs: 
+      use_latest_template_version: 
+      vm_pool: 
+      watchdogs: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/f664d87c-6a0d-4207-b6e5-d418247cecbe/watchdogs"
+    - []
+    - !ruby/array:OvirtSDK4::List
+      internal: []
+      ivars:
+        :@href: 
+    - !ruby/array:OvirtSDK4::List
+      internal: []
+      ivars:
+        :@href: 
+    - !ruby/array:OvirtSDK4::List
+      internal:
+      - !ruby/object:OvirtSDK4::Snapshot
+        href: "/ovirt-engine/api/vms/f664d87c-6a0d-4207-b6e5-d418247cecbe/snapshots/dddc0532-12c3-42bc-935f-57127a08f63b"
+        comment: 
+        description: Active VM
+        id: dddc0532-12c3-42bc-935f-57127a08f63b
+        name: 
+        bios: 
+        cluster: 
+        console: 
+        cpu: 
+        cpu_profile: 
+        cpu_shares: 
+        creation_time: 
+        custom_compatibility_version: 
+        custom_cpu_model: 
+        custom_emulated_machine: 
+        custom_properties: 
+        delete_protected: 
+        display: 
+        domain: 
+        high_availability: 
+        initialization: 
+        io: 
+        large_icon: 
+        memory: 
+        memory_policy: 
+        migration: 
+        migration_downtime: 
+        origin: 
+        os: 
+        quota: 
+        rng_device: 
+        serial_number: 
+        small_icon: 
+        soundcard_enabled: 
+        sso: 
+        start_paused: 
+        stateless: 
+        storage_domain: 
+        time_zone: 
+        tunnel_migration: 
+        type: 
+        usb: 
+        virtio_scsi: 
+        affinity_labels: 
+        applications: 
+        cdroms: 
+        disk_attachments: 
+        external_host_provider: 
+        floppies: 
+        fqdn: 
+        graphics_consoles: 
+        guest_operating_system: 
+        guest_time_zone: 
+        host: 
+        host_devices: 
+        instance_type: 
+        katello_errata: 
+        next_run_configuration_exists: 
+        nics: 
+        numa_nodes: 
+        numa_tune_mode: 
+        payloads: 
+        permissions: 
+        placement_policy: 
+        reported_devices: 
+        run_once: 
+        sessions: 
+        snapshots: 
+        start_time: 
+        statistics: 
+        status: 
+        status_detail: 
+        stop_reason: 
+        stop_time: 
+        tags: 
+        template: 
+        use_latest_template_version: 
+        vm_pool: 
+        watchdogs: 
+        date: !ruby/object:DateTime 2016-06-28 12:08:47.077000000 +03:00
+        persist_memorystate: false
+        snapshot_status: ok
+        snapshot_type: active
+        vm: 
+      ivars:
+        :@href: 
+  : *4
+- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4::VmPreloadedAttributesDecorator
+  :__v2__:
+  - :@obj
+  - :@disks
+  - :@nics
+  - :@reported_devices
+  - :@snapshots
+  ? - &5 !ruby/object:OvirtSDK4::Vm
+      href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f"
+      comment: 
+      description: 
+      id: 3a9401a0-bf3d-4496-8acf-edd3e903511f
+      name: vm1
+      bios: !ruby/object:OvirtSDK4::Bios
+        href: 
+        boot_menu: !ruby/object:OvirtSDK4::BootMenu
+          href: 
+          enabled: true
+      cluster: !ruby/object:OvirtSDK4::Cluster
+        href: "/ovirt-engine/api/clusters/504ae500-3476-450e-8243-f6df0f7f7acf"
+        comment: 
+        description: 
+        id: 504ae500-3476-450e-8243-f6df0f7f7acf
+        name: 
+        affinity_groups: 
+        ballooning_enabled: 
+        cpu: 
+        cpu_profiles: 
+        custom_scheduling_policy_properties: 
+        data_center: 
+        display: 
+        error_handling: 
+        fencing_policy: 
+        gluster_hooks: 
+        gluster_service: 
+        gluster_volumes: 
+        ha_reservation: 
+        ksm: 
+        maintenance_reason_required: 
+        management_network: 
+        memory_policy: 
+        migration: 
+        network_filters: 
+        networks: 
+        optional_reason: 
+        permissions: 
+        required_rng_sources: 
+        scheduling_policy: 
+        serial_number: 
+        supported_versions: 
+        switch_type: 
+        threads_as_cores: 
+        trusted_service: 
+        tunnel_migration: 
+        version: 
+        virt_service: 
+      console: 
+      cpu: !ruby/object:OvirtSDK4::Cpu
+        href: 
+        architecture: x86_64
+        cores: 
+        cpu_tune: 
+        level: 
+        mode: 
+        name: 
+        speed: 
+        topology: !ruby/object:OvirtSDK4::CpuTopology
+          href: 
+          cores: 1
+          sockets: 4
+          threads: 1
+        type: 
+      cpu_profile: !ruby/object:OvirtSDK4::CpuProfile
+        href: "/ovirt-engine/api/cpuprofiles/c34525ea-072c-452d-baa1-0c5efe643e4d"
+        comment: 
+        description: 
+        id: c34525ea-072c-452d-baa1-0c5efe643e4d
+        name: 
+        cluster: 
+        permissions: 
+        qos: 
+      cpu_shares: 0
+      creation_time: !ruby/object:DateTime 2016-06-28 13:31:17.000000000 +03:00
+      custom_compatibility_version: 
+      custom_cpu_model: 
+      custom_emulated_machine: 
+      custom_properties: 
+      delete_protected: false
+      display: !ruby/object:OvirtSDK4::Display
+        href: 
+        address: 10.35.18.214
+        allow_override: false
+        certificate: 
+        copy_paste_enabled: true
+        disconnect_action: LOCK_SCREEN
+        file_transfer_enabled: true
+        keyboard_layout: 
+        monitors: 1
+        port: 
+        proxy: 
+        secure_port: 5900
+        single_qxl_pci: false
+        smartcard_enabled: false
+        type: spice
+      domain: 
+      high_availability: !ruby/object:OvirtSDK4::HighAvailability
+        href: 
+        enabled: false
+        priority: 1
+      initialization: !ruby/object:OvirtSDK4::Initialization
+        href: 
+        active_directory_ou: 
+        authorized_ssh_keys: ''
+        cloud_init: 
+        configuration: 
+        custom_script: ''
+        dns_search: 
+        dns_servers: 
+        domain: 
+        host_name: 
+        input_locale: 
+        nic_configurations: !ruby/array:OvirtSDK4::List
+          internal: []
+          ivars:
+            :@href: 
+        org_name: 
+        regenerate_ids: 
+        regenerate_ssh_keys: false
+        root_password: 
+        system_locale: 
+        timezone: 
+        ui_language: 
+        user_locale: 
+        user_name: 
+        windows_license_key: 
+      io: !ruby/object:OvirtSDK4::Io
+        href: 
+        threads: 0
+      large_icon: !ruby/object:OvirtSDK4::Icon
+        href: "/ovirt-engine/api/icons/db8d96f8-75cd-475a-b2f5-c37d75a288b1"
+        comment: 
+        description: 
+        id: db8d96f8-75cd-475a-b2f5-c37d75a288b1
+        name: 
+        data: 
+        media_type: 
+      memory: 2122317824
+      memory_policy: !ruby/object:OvirtSDK4::MemoryPolicy
+        href: 
+        ballooning: 
+        guaranteed: 2122317824
+        over_commit: 
+        transparent_huge_pages: 
+      migration: !ruby/object:OvirtSDK4::MigrationOptions
+        href: 
+        auto_converge: inherit
+        bandwidth: 
+        compressed: inherit
+        policy: 
+      migration_downtime: -1
+      origin: ovirt
+      os: !ruby/object:OvirtSDK4::OperatingSystem
+        href: 
+        boot: !ruby/object:OvirtSDK4::Boot
+          href: 
+          devices:
+          - hd
+        cmdline: 
+        custom_kernel_cmdline: 
+        initrd: 
+        kernel: 
+        reported_kernel_cmdline: 
+        type: other
+        version: 
+      quota: 
+      rng_device: 
+      serial_number: 
+      small_icon: !ruby/object:OvirtSDK4::Icon
+        href: "/ovirt-engine/api/icons/c947ca42-629e-46cf-aeeb-ef949fae52c0"
+        comment: 
+        description: 
+        id: c947ca42-629e-46cf-aeeb-ef949fae52c0
+        name: 
+        data: 
+        media_type: 
+      soundcard_enabled: 
+      sso: !ruby/object:OvirtSDK4::Sso
+        href: 
+        methods: !ruby/array:OvirtSDK4::List
+          internal:
+          - !ruby/object:OvirtSDK4::Method
+            href: 
+            id: guest_agent
+          ivars:
+            :@href: 
+      start_paused: false
+      stateless: false
+      storage_domain: 
+      time_zone: !ruby/object:OvirtSDK4::TimeZone
+        href: 
+        name: Etc/GMT
+        utc_offset: 
+      tunnel_migration: 
+      type: desktop
+      usb: !ruby/object:OvirtSDK4::Usb
+        href: 
+        enabled: false
+        type: 
+      virtio_scsi: 
+      affinity_labels: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/affinitylabels"
+      applications: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/applications"
+      cdroms: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/cdroms"
+      disk_attachments: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/diskattachments"
+      external_host_provider: 
+      floppies: 
+      fqdn: vm-18-82.eng.lab.tlv.redhat.com
+      graphics_consoles: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/graphicsconsoles"
+      guest_operating_system: !ruby/object:OvirtSDK4::GuestOperatingSystem
+        href: 
+        architecture: x86_64
+        codename: Core
+        distribution: CentOS Linux
+        family: Linux
+        kernel: !ruby/object:OvirtSDK4::Kernel
+          href: 
+          version: !ruby/object:OvirtSDK4::Version
+            href: 
+            comment: 
+            description: 
+            id: 
+            name: 
+            build: 0
+            full_version: 3.10.0-123.el7.x86_64
+            major: 3
+            minor: 10
+            revision: 123
+        version: !ruby/object:OvirtSDK4::Version
+          href: 
+          comment: 
+          description: 
+          id: 
+          name: 
+          build: 1406
+          full_version: 7.0.1406
+          major: 7
+          minor: 0
+          revision: 
+      guest_time_zone: !ruby/object:OvirtSDK4::TimeZone
+        href: 
+        name: Asia/Jerusalem
+        utc_offset: "+02:00"
+      host: !ruby/object:OvirtSDK4::Host
+        href: "/ovirt-engine/api/hosts/69cd8141-a6f5-4968-880d-121de26f3747"
+        comment: 
+        description: 
+        id: 69cd8141-a6f5-4968-880d-121de26f3747
+        name: 
+        address: 
+        affinity_labels: 
+        agents: 
+        auto_numa_status: 
+        certificate: 
+        cluster: 
+        cpu: 
+        device_passthrough: 
+        devices: 
+        display: 
+        external_host_provider: 
+        external_status: 
+        hardware_information: 
+        hooks: 
+        hosted_engine: 
+        iscsi: 
+        katello_errata: 
+        kdump_status: 
+        ksm: 
+        libvirt_version: 
+        max_scheduling_memory: 
+        memory: 
+        network_attachments: 
+        nics: 
+        numa_nodes: 
+        numa_supported: 
+        os: 
+        override_iptables: 
+        permissions: 
+        port: 
+        power_management: 
+        protocol: 
+        root_password: 
+        se_linux: 
+        spm: 
+        ssh: 
+        statistics: 
+        status: 
+        status_detail: 
+        storage_connection_extensions: 
+        storages: 
+        summary: 
+        tags: 
+        transparent_huge_pages: 
+        type: 
+        unmanaged_networks: 
+        update_available: 
+        version: 
+      host_devices: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/hostdevices"
+      instance_type: 
+      katello_errata: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/katelloerrata"
+      next_run_configuration_exists: false
+      nics: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/nics"
+      numa_nodes: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/numanodes"
+      numa_tune_mode: interleave
+      payloads: 
+      permissions: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/permissions"
+      placement_policy: !ruby/object:OvirtSDK4::VmPlacementPolicy
+        href: 
+        affinity: migratable
+        hosts: 
+      reported_devices: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/reporteddevices"
+      run_once: false
+      sessions: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/sessions"
+      snapshots: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/snapshots"
+      start_time: !ruby/object:DateTime 2016-12-28 13:59:55.602000000 +02:00
+      statistics: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/statistics"
+      status: up
+      status_detail: 
+      stop_reason: 
+      stop_time: !ruby/object:DateTime 2016-12-28 12:36:24.611000000 +02:00
+      tags: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/tags"
+      template: !ruby/object:OvirtSDK4::Template
+        href: "/ovirt-engine/api/templates/00000000-0000-0000-0000-000000000000"
+        comment: 
+        description: 
+        id: 00000000-0000-0000-0000-000000000000
+        name: 
+        bios: 
+        cluster: 
+        console: 
+        cpu: 
+        cpu_profile: 
+        cpu_shares: 
+        creation_time: 
+        custom_compatibility_version: 
+        custom_cpu_model: 
+        custom_emulated_machine: 
+        custom_properties: 
+        delete_protected: 
+        display: 
+        domain: 
+        high_availability: 
+        initialization: 
+        io: 
+        large_icon: 
+        memory: 
+        memory_policy: 
+        migration: 
+        migration_downtime: 
+        origin: 
+        os: 
+        quota: 
+        rng_device: 
+        serial_number: 
+        small_icon: 
+        soundcard_enabled: 
+        sso: 
+        start_paused: 
+        stateless: 
+        storage_domain: 
+        time_zone: 
+        tunnel_migration: 
+        type: 
+        usb: 
+        virtio_scsi: 
+        cdroms: 
+        disk_attachments: 
+        graphics_consoles: 
+        nics: 
+        permissions: 
+        status: 
+        tags: 
+        version: 
+        vm: 
+        watchdogs: 
+      use_latest_template_version: 
+      vm_pool: 
+      watchdogs: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/watchdogs"
+    - - !ruby/object:OvirtSDK4::Disk
+        href: "/ovirt-engine/api/disks/af578e0e-b222-4754-aefc-879bf37eacec"
+        comment: 
+        description: 
+        id: af578e0e-b222-4754-aefc-879bf37eacec
+        name: vm1_Disk1
+        instance_type: 
+        template: 
+        vm: 
+        vms: 
+        active: true
+        actual_size: 2987851776
+        alias_: vm1_Disk1
+        bootable: true
+        disk_profile: !ruby/object:OvirtSDK4::DiskProfile
+          href: "/ovirt-engine/api/diskprofiles/0be3e43c-1d7a-4c2c-b0b5-8e9c894b0486"
+          comment: 
+          description: 
+          id: 0be3e43c-1d7a-4c2c-b0b5-8e9c894b0486
+          name: 
+          permissions: 
+          qos: 
+          storage_domain: 
+        format: cow
+        image_id: 54a3215e-1cde-4912-8b85-b9908c519983
+        interface: virtio
+        logical_name: 
+        lun_storage: 
+        openstack_volume_type: 
+        permissions: !ruby/array:OvirtSDK4::List
+          internal: []
+          ivars:
+            :@href: "/ovirt-engine/api/disks/af578e0e-b222-4754-aefc-879bf37eacec/permissions"
+        propagate_errors: false
+        provisioned_size: 6442450944
+        quota: 
+        read_only: 
+        sgio: 
+        shareable: false
+        snapshot: 
+        sparse: true
+        statistics: !ruby/array:OvirtSDK4::List
+          internal: []
+          ivars:
+            :@href: "/ovirt-engine/api/disks/af578e0e-b222-4754-aefc-879bf37eacec/statistics"
+        status: ok
+        storage_domain: 
+        storage_domains: !ruby/array:OvirtSDK4::List
+          internal:
+          - !ruby/object:OvirtSDK4::StorageDomain
+            href: "/ovirt-engine/api/storagedomains/27a3bcce-c4d0-4bce-afe9-1d669d5a9d02"
+            comment: 
+            description: 
+            id: 27a3bcce-c4d0-4bce-afe9-1d669d5a9d02
+            name: 
+            available: 
+            committed: 
+            critical_space_action_blocker: 
+            data_center: 
+            data_centers: 
+            disk_profiles: 
+            disk_snapshots: 
+            disks: 
+            external_status: 
+            files: 
+            host: 
+            images: 
+            import: 
+            master: 
+            permissions: 
+            status: 
+            storage: 
+            storage_connections: 
+            storage_format: 
+            templates: 
+            type: 
+            used: 
+            vms: 
+            warning_low_space_indicator: 
+            wipe_after_delete: 
+          ivars:
+            :@href: 
+        storage_type: image
+        uses_scsi_reservation: 
+        wipe_after_delete: false
+    - !ruby/array:OvirtSDK4::List
+      internal:
+      - !ruby/object:OvirtSDK4::Nic
+        href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/nics/6a538d86-38a2-4ac9-98f5-9d401a596e93"
+        comment: 
+        description: 
+        id: 6a538d86-38a2-4ac9-98f5-9d401a596e93
+        name: nic1
+        instance_type: 
+        template: 
+        vm: !ruby/object:OvirtSDK4::Vm
+          href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f"
+          comment: 
+          description: 
+          id: 3a9401a0-bf3d-4496-8acf-edd3e903511f
+          name: 
+          bios: 
+          cluster: 
+          console: 
+          cpu: 
+          cpu_profile: 
+          cpu_shares: 
+          creation_time: 
+          custom_compatibility_version: 
+          custom_cpu_model: 
+          custom_emulated_machine: 
+          custom_properties: 
+          delete_protected: 
+          display: 
+          domain: 
+          high_availability: 
+          initialization: 
+          io: 
+          large_icon: 
+          memory: 
+          memory_policy: 
+          migration: 
+          migration_downtime: 
+          origin: 
+          os: 
+          quota: 
+          rng_device: 
+          serial_number: 
+          small_icon: 
+          soundcard_enabled: 
+          sso: 
+          start_paused: 
+          stateless: 
+          storage_domain: 
+          time_zone: 
+          tunnel_migration: 
+          type: 
+          usb: 
+          virtio_scsi: 
+          affinity_labels: 
+          applications: 
+          cdroms: 
+          disk_attachments: 
+          external_host_provider: 
+          floppies: 
+          fqdn: 
+          graphics_consoles: 
+          guest_operating_system: 
+          guest_time_zone: 
+          host: 
+          host_devices: 
+          instance_type: 
+          katello_errata: 
+          next_run_configuration_exists: 
+          nics: 
+          numa_nodes: 
+          numa_tune_mode: 
+          payloads: 
+          permissions: 
+          placement_policy: 
+          reported_devices: 
+          run_once: 
+          sessions: 
+          snapshots: 
+          start_time: 
+          statistics: 
+          status: 
+          status_detail: 
+          stop_reason: 
+          stop_time: 
+          tags: 
+          template: 
+          use_latest_template_version: 
+          vm_pool: 
+          watchdogs: 
+        vms: 
+        boot_protocol: 
+        interface: virtio
+        linked: true
+        mac: !ruby/object:OvirtSDK4::Mac
+          href: 
+          address: 00:1a:4a:16:01:51
+        network: 
+        network_attachments: 
+        network_labels: 
+        on_boot: 
+        plugged: true
+        reported_devices: !ruby/array:OvirtSDK4::List
+          internal:
+          - !ruby/object:OvirtSDK4::ReportedDevice
+            href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/reporteddevices/65746830-3030-3a31-613a-34613a31363a"
+            comment: 
+            description: guest reported data
+            id: 65746830-3030-3a31-613a-34613a31363a
+            name: eth0
+            ips: !ruby/array:OvirtSDK4::List
+              internal:
+              - !ruby/object:OvirtSDK4::Ip
+                href: 
+                address: 10.35.18.3
+                gateway: 
+                netmask: 
+                version: v4
+              - !ruby/object:OvirtSDK4::Ip
+                href: 
+                address: fe80::21a:4aff:fe16:151
+                gateway: 
+                netmask: 
+                version: v6
+              - !ruby/object:OvirtSDK4::Ip
+                href: 
+                address: 2620:52:0:2310:21a:4aff:fe16:151
+                gateway: 
+                netmask: 
+                version: v6
+              ivars:
+                :@href: 
+            mac: !ruby/object:OvirtSDK4::Mac
+              href: 
+              address: 00:1a:4a:16:01:51
+            type: network
+            vm: !ruby/object:OvirtSDK4::Vm
+              href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f"
+              comment: 
+              description: 
+              id: 3a9401a0-bf3d-4496-8acf-edd3e903511f
+              name: 
+              bios: 
+              cluster: 
+              console: 
+              cpu: 
+              cpu_profile: 
+              cpu_shares: 
+              creation_time: 
+              custom_compatibility_version: 
+              custom_cpu_model: 
+              custom_emulated_machine: 
+              custom_properties: 
+              delete_protected: 
+              display: 
+              domain: 
+              high_availability: 
+              initialization: 
+              io: 
+              large_icon: 
+              memory: 
+              memory_policy: 
+              migration: 
+              migration_downtime: 
+              origin: 
+              os: 
+              quota: 
+              rng_device: 
+              serial_number: 
+              small_icon: 
+              soundcard_enabled: 
+              sso: 
+              start_paused: 
+              stateless: 
+              storage_domain: 
+              time_zone: 
+              tunnel_migration: 
+              type: 
+              usb: 
+              virtio_scsi: 
+              affinity_labels: 
+              applications: 
+              cdroms: 
+              disk_attachments: 
+              external_host_provider: 
+              floppies: 
+              fqdn: 
+              graphics_consoles: 
+              guest_operating_system: 
+              guest_time_zone: 
+              host: 
+              host_devices: 
+              instance_type: 
+              katello_errata: 
+              next_run_configuration_exists: 
+              nics: 
+              numa_nodes: 
+              numa_tune_mode: 
+              payloads: 
+              permissions: 
+              placement_policy: 
+              reported_devices: 
+              run_once: 
+              sessions: 
+              snapshots: 
+              start_time: 
+              statistics: 
+              status: 
+              status_detail: 
+              stop_reason: 
+              stop_time: 
+              tags: 
+              template: 
+              use_latest_template_version: 
+              vm_pool: 
+              watchdogs: 
+          ivars:
+            :@href: 
+        statistics: !ruby/array:OvirtSDK4::List
+          internal: []
+          ivars:
+            :@href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/nics/6a538d86-38a2-4ac9-98f5-9d401a596e93/statistics"
+        virtual_function_allowed_labels: 
+        virtual_function_allowed_networks: 
+        vnic_profile: !ruby/object:OvirtSDK4::VnicProfile
+          href: "/ovirt-engine/api/vnicprofiles/361634d2-4975-4ef7-8429-c009871ce903"
+          comment: 
+          description: 
+          id: 361634d2-4975-4ef7-8429-c009871ce903
+          name: 
+          custom_properties: 
+          network: 
+          network_filter: 
+          pass_through: 
+          permissions: 
+          port_mirroring: 
+          qos: 
+      ivars:
+        :@href: 
+    - !ruby/array:OvirtSDK4::List
+      internal:
+      - !ruby/object:OvirtSDK4::ReportedDevice
+        href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/reporteddevices/65746830-3030-3a31-613a-34613a31363a"
+        comment: 
+        description: guest reported data
+        id: 65746830-3030-3a31-613a-34613a31363a
+        name: eth0
+        ips: !ruby/array:OvirtSDK4::List
+          internal:
+          - !ruby/object:OvirtSDK4::Ip
+            href: 
+            address: 10.35.18.3
+            gateway: 
+            netmask: 
+            version: v4
+          - !ruby/object:OvirtSDK4::Ip
+            href: 
+            address: fe80::21a:4aff:fe16:151
+            gateway: 
+            netmask: 
+            version: v6
+          - !ruby/object:OvirtSDK4::Ip
+            href: 
+            address: 2620:52:0:2310:21a:4aff:fe16:151
+            gateway: 
+            netmask: 
+            version: v6
+          ivars:
+            :@href: 
+        mac: !ruby/object:OvirtSDK4::Mac
+          href: 
+          address: 00:1a:4a:16:01:51
+        type: network
+        vm: !ruby/object:OvirtSDK4::Vm
+          href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f"
+          comment: 
+          description: 
+          id: 3a9401a0-bf3d-4496-8acf-edd3e903511f
+          name: 
+          bios: 
+          cluster: 
+          console: 
+          cpu: 
+          cpu_profile: 
+          cpu_shares: 
+          creation_time: 
+          custom_compatibility_version: 
+          custom_cpu_model: 
+          custom_emulated_machine: 
+          custom_properties: 
+          delete_protected: 
+          display: 
+          domain: 
+          high_availability: 
+          initialization: 
+          io: 
+          large_icon: 
+          memory: 
+          memory_policy: 
+          migration: 
+          migration_downtime: 
+          origin: 
+          os: 
+          quota: 
+          rng_device: 
+          serial_number: 
+          small_icon: 
+          soundcard_enabled: 
+          sso: 
+          start_paused: 
+          stateless: 
+          storage_domain: 
+          time_zone: 
+          tunnel_migration: 
+          type: 
+          usb: 
+          virtio_scsi: 
+          affinity_labels: 
+          applications: 
+          cdroms: 
+          disk_attachments: 
+          external_host_provider: 
+          floppies: 
+          fqdn: 
+          graphics_consoles: 
+          guest_operating_system: 
+          guest_time_zone: 
+          host: 
+          host_devices: 
+          instance_type: 
+          katello_errata: 
+          next_run_configuration_exists: 
+          nics: 
+          numa_nodes: 
+          numa_tune_mode: 
+          payloads: 
+          permissions: 
+          placement_policy: 
+          reported_devices: 
+          run_once: 
+          sessions: 
+          snapshots: 
+          start_time: 
+          statistics: 
+          status: 
+          status_detail: 
+          stop_reason: 
+          stop_time: 
+          tags: 
+          template: 
+          use_latest_template_version: 
+          vm_pool: 
+          watchdogs: 
+      ivars:
+        :@href: 
+    - !ruby/array:OvirtSDK4::List
+      internal:
+      - !ruby/object:OvirtSDK4::Snapshot
+        href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/snapshots/e13fc61c-c566-4264-9a75-0e62fe5d7a30"
+        comment: 
+        description: Active VM
+        id: e13fc61c-c566-4264-9a75-0e62fe5d7a30
+        name: 
+        bios: 
+        cluster: 
+        console: 
+        cpu: 
+        cpu_profile: 
+        cpu_shares: 
+        creation_time: 
+        custom_compatibility_version: 
+        custom_cpu_model: 
+        custom_emulated_machine: 
+        custom_properties: 
+        delete_protected: 
+        display: 
+        domain: 
+        high_availability: 
+        initialization: 
+        io: 
+        large_icon: 
+        memory: 
+        memory_policy: 
+        migration: 
+        migration_downtime: 
+        origin: 
+        os: 
+        quota: 
+        rng_device: 
+        serial_number: 
+        small_icon: 
+        soundcard_enabled: 
+        sso: 
+        start_paused: 
+        stateless: 
+        storage_domain: 
+        time_zone: 
+        tunnel_migration: 
+        type: 
+        usb: 
+        virtio_scsi: 
+        affinity_labels: 
+        applications: 
+        cdroms: 
+        disk_attachments: 
+        external_host_provider: 
+        floppies: 
+        fqdn: 
+        graphics_consoles: 
+        guest_operating_system: 
+        guest_time_zone: 
+        host: 
+        host_devices: 
+        instance_type: 
+        katello_errata: 
+        next_run_configuration_exists: 
+        nics: 
+        numa_nodes: 
+        numa_tune_mode: 
+        payloads: 
+        permissions: 
+        placement_policy: 
+        reported_devices: 
+        run_once: 
+        sessions: 
+        snapshots: 
+        start_time: 
+        statistics: 
+        status: 
+        status_detail: 
+        stop_reason: 
+        stop_time: 
+        tags: 
+        template: 
+        use_latest_template_version: 
+        vm_pool: 
+        watchdogs: 
+        date: !ruby/object:DateTime 2016-07-05 13:14:08.116000000 +03:00
+        persist_memorystate: false
+        snapshot_status: ok
+        snapshot_type: active
+        vm: 
+      - !ruby/object:OvirtSDK4::Snapshot
+        href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/snapshots/05ff445a-0bfc-44c3-90d1-a338e9095510"
+        comment: 
+        description: vm1_snap
+        id: 05ff445a-0bfc-44c3-90d1-a338e9095510
+        name: 
+        bios: 
+        cluster: 
+        console: 
+        cpu: 
+        cpu_profile: 
+        cpu_shares: 
+        creation_time: 
+        custom_compatibility_version: 
+        custom_cpu_model: 
+        custom_emulated_machine: 
+        custom_properties: 
+        delete_protected: 
+        display: 
+        domain: 
+        high_availability: 
+        initialization: 
+        io: 
+        large_icon: 
+        memory: 
+        memory_policy: 
+        migration: 
+        migration_downtime: 
+        origin: 
+        os: 
+        quota: 
+        rng_device: 
+        serial_number: 
+        small_icon: 
+        soundcard_enabled: 
+        sso: 
+        start_paused: 
+        stateless: 
+        storage_domain: 
+        time_zone: 
+        tunnel_migration: 
+        type: 
+        usb: 
+        virtio_scsi: 
+        affinity_labels: 
+        applications: 
+        cdroms: !ruby/array:OvirtSDK4::List
+          internal: []
+          ivars:
+            :@href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/snapshots/05ff445a-0bfc-44c3-90d1-a338e9095510/cdroms"
+        disk_attachments: 
+        external_host_provider: 
+        floppies: 
+        fqdn: 
+        graphics_consoles: 
+        guest_operating_system: 
+        guest_time_zone: 
+        host: 
+        host_devices: 
+        instance_type: 
+        katello_errata: 
+        next_run_configuration_exists: 
+        nics: !ruby/array:OvirtSDK4::List
+          internal: []
+          ivars:
+            :@href: "/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/snapshots/05ff445a-0bfc-44c3-90d1-a338e9095510/nics"
+        numa_nodes: 
+        numa_tune_mode: 
+        payloads: 
+        permissions: 
+        placement_policy: 
+        reported_devices: 
+        run_once: 
+        sessions: 
+        snapshots: 
+        start_time: 
+        statistics: 
+        status: 
+        status_detail: 
+        stop_reason: 
+        stop_time: 
+        tags: 
+        template: 
+        use_latest_template_version: 
+        vm_pool: 
+        watchdogs: 
+        date: !ruby/object:DateTime 2016-12-15 09:51:43.247000000 +02:00
+        persist_memorystate: true
+        snapshot_status: ok
+        snapshot_type: regular
+        vm: !ruby/object:OvirtSDK4::Vm
+          href: 
+          comment: 
+          description: 
+          id: 3a9401a0-bf3d-4496-8acf-edd3e903511f
+          name: vm1
+          bios: !ruby/object:OvirtSDK4::Bios
+            href: 
+            boot_menu: !ruby/object:OvirtSDK4::BootMenu
+              href: 
+              enabled: true
+          cluster: !ruby/object:OvirtSDK4::Cluster
+            href: 
+            comment: 
+            description: 
+            id: 504ae500-3476-450e-8243-f6df0f7f7acf
+            name: 
+            affinity_groups: 
+            ballooning_enabled: 
+            cpu: 
+            cpu_profiles: 
+            custom_scheduling_policy_properties: 
+            data_center: 
+            display: 
+            error_handling: 
+            fencing_policy: 
+            gluster_hooks: 
+            gluster_service: 
+            gluster_volumes: 
+            ha_reservation: 
+            ksm: 
+            maintenance_reason_required: 
+            management_network: 
+            memory_policy: 
+            migration: 
+            network_filters: 
+            networks: 
+            optional_reason: 
+            permissions: 
+            required_rng_sources: 
+            scheduling_policy: 
+            serial_number: 
+            supported_versions: 
+            switch_type: 
+            threads_as_cores: 
+            trusted_service: 
+            tunnel_migration: 
+            version: 
+            virt_service: 
+          console: 
+          cpu: !ruby/object:OvirtSDK4::Cpu
+            href: 
+            architecture: x86_64
+            cores: 
+            cpu_tune: 
+            level: 
+            mode: 
+            name: 
+            speed: 
+            topology: !ruby/object:OvirtSDK4::CpuTopology
+              href: 
+              cores: 1
+              sockets: 4
+              threads: 1
+            type: 
+          cpu_profile: !ruby/object:OvirtSDK4::CpuProfile
+            href: 
+            comment: 
+            description: 
+            id: c34525ea-072c-452d-baa1-0c5efe643e4d
+            name: 
+            cluster: 
+            permissions: 
+            qos: 
+          cpu_shares: 0
+          creation_time: !ruby/object:DateTime 2016-06-28 13:31:17.000000000 +03:00
+          custom_compatibility_version: 
+          custom_cpu_model: 
+          custom_emulated_machine: 
+          custom_properties: 
+          delete_protected: false
+          display: !ruby/object:OvirtSDK4::Display
+            href: 
+            address: 10.35.18.214
+            allow_override: false
+            certificate: 
+            copy_paste_enabled: true
+            disconnect_action: LOCK_SCREEN
+            file_transfer_enabled: true
+            keyboard_layout: 
+            monitors: 1
+            port: 
+            proxy: 
+            secure_port: 5900
+            single_qxl_pci: false
+            smartcard_enabled: false
+            type: spice
+          domain: 
+          high_availability: !ruby/object:OvirtSDK4::HighAvailability
+            href: 
+            enabled: false
+            priority: 1
+          initialization: !ruby/object:OvirtSDK4::Initialization
+            href: 
+            active_directory_ou: 
+            authorized_ssh_keys: 
+            cloud_init: 
+            configuration: 
+            custom_script: 
+            dns_search: 
+            dns_servers: 
+            domain: 
+            host_name: 
+            input_locale: 
+            nic_configurations: 
+            org_name: 
+            regenerate_ids: 
+            regenerate_ssh_keys: 
+            root_password: 
+            system_locale: 
+            timezone: 
+            ui_language: 
+            user_locale: 
+            user_name: 
+            windows_license_key: 
+          io: !ruby/object:OvirtSDK4::Io
+            href: 
+            threads: 0
+          large_icon: !ruby/object:OvirtSDK4::Icon
+            href: 
+            comment: 
+            description: 
+            id: db8d96f8-75cd-475a-b2f5-c37d75a288b1
+            name: 
+            data: 
+            media_type: 
+          memory: 2122317824
+          memory_policy: !ruby/object:OvirtSDK4::MemoryPolicy
+            href: 
+            ballooning: 
+            guaranteed: 2122317824
+            over_commit: 
+            transparent_huge_pages: 
+          migration: !ruby/object:OvirtSDK4::MigrationOptions
+            href: 
+            auto_converge: inherit
+            bandwidth: 
+            compressed: inherit
+            policy: 
+          migration_downtime: -1
+          origin: ovirt
+          os: !ruby/object:OvirtSDK4::OperatingSystem
+            href: 
+            boot: !ruby/object:OvirtSDK4::Boot
+              href: 
+              devices:
+              - hd
+            cmdline: 
+            custom_kernel_cmdline: 
+            initrd: 
+            kernel: 
+            reported_kernel_cmdline: 
+            type: other
+            version: 
+          quota: 
+          rng_device: 
+          serial_number: 
+          small_icon: !ruby/object:OvirtSDK4::Icon
+            href: 
+            comment: 
+            description: 
+            id: c947ca42-629e-46cf-aeeb-ef949fae52c0
+            name: 
+            data: 
+            media_type: 
+          soundcard_enabled: 
+          sso: !ruby/object:OvirtSDK4::Sso
+            href: 
+            methods: !ruby/array:OvirtSDK4::List
+              internal:
+              - !ruby/object:OvirtSDK4::Method
+                href: 
+                id: guest_agent
+              ivars:
+                :@href: 
+          start_paused: false
+          stateless: false
+          storage_domain: 
+          time_zone: !ruby/object:OvirtSDK4::TimeZone
+            href: 
+            name: Etc/GMT
+            utc_offset: 
+          tunnel_migration: 
+          type: desktop
+          usb: !ruby/object:OvirtSDK4::Usb
+            href: 
+            enabled: false
+            type: 
+          virtio_scsi: 
+          affinity_labels: 
+          applications: 
+          cdroms: 
+          disk_attachments: 
+          external_host_provider: 
+          floppies: 
+          fqdn: vm-18-82.eng.lab.tlv.redhat.com
+          graphics_consoles: 
+          guest_operating_system: !ruby/object:OvirtSDK4::GuestOperatingSystem
+            href: 
+            architecture: x86_64
+            codename: Core
+            distribution: CentOS Linux
+            family: Linux
+            kernel: !ruby/object:OvirtSDK4::Kernel
+              href: 
+              version: !ruby/object:OvirtSDK4::Version
+                href: 
+                comment: 
+                description: 
+                id: 
+                name: 
+                build: 0
+                full_version: 3.10.0-123.el7.x86_64
+                major: 3
+                minor: 10
+                revision: 123
+            version: !ruby/object:OvirtSDK4::Version
+              href: 
+              comment: 
+              description: 
+              id: 
+              name: 
+              build: 1406
+              full_version: 7.0.1406
+              major: 7
+              minor: 0
+              revision: 
+          guest_time_zone: !ruby/object:OvirtSDK4::TimeZone
+            href: 
+            name: Asia/Jerusalem
+            utc_offset: "+02:00"
+          host: !ruby/object:OvirtSDK4::Host
+            href: 
+            comment: 
+            description: 
+            id: 69cd8141-a6f5-4968-880d-121de26f3747
+            name: 
+            address: 
+            affinity_labels: 
+            agents: 
+            auto_numa_status: 
+            certificate: 
+            cluster: 
+            cpu: 
+            device_passthrough: 
+            devices: 
+            display: 
+            external_host_provider: 
+            external_status: 
+            hardware_information: 
+            hooks: 
+            hosted_engine: 
+            iscsi: 
+            katello_errata: 
+            kdump_status: 
+            ksm: 
+            libvirt_version: 
+            max_scheduling_memory: 
+            memory: 
+            network_attachments: 
+            nics: 
+            numa_nodes: 
+            numa_supported: 
+            os: 
+            override_iptables: 
+            permissions: 
+            port: 
+            power_management: 
+            protocol: 
+            root_password: 
+            se_linux: 
+            spm: 
+            ssh: 
+            statistics: 
+            status: 
+            status_detail: 
+            storage_connection_extensions: 
+            storages: 
+            summary: 
+            tags: 
+            transparent_huge_pages: 
+            type: 
+            unmanaged_networks: 
+            update_available: 
+            version: 
+          host_devices: 
+          instance_type: 
+          katello_errata: 
+          next_run_configuration_exists: false
+          nics: 
+          numa_nodes: 
+          numa_tune_mode: interleave
+          payloads: 
+          permissions: 
+          placement_policy: !ruby/object:OvirtSDK4::VmPlacementPolicy
+            href: 
+            affinity: migratable
+            hosts: 
+          reported_devices: 
+          run_once: false
+          sessions: 
+          snapshots: 
+          start_time: !ruby/object:DateTime 2016-12-28 13:59:55.602000000 +02:00
+          statistics: 
+          status: up
+          status_detail: 
+          stop_reason: 
+          stop_time: !ruby/object:DateTime 2016-12-28 12:36:24.611000000 +02:00
+          tags: 
+          template: !ruby/object:OvirtSDK4::Template
+            href: 
+            comment: 
+            description: 
+            id: 00000000-0000-0000-0000-000000000000
+            name: 
+            bios: 
+            cluster: 
+            console: 
+            cpu: 
+            cpu_profile: 
+            cpu_shares: 
+            creation_time: 
+            custom_compatibility_version: 
+            custom_cpu_model: 
+            custom_emulated_machine: 
+            custom_properties: 
+            delete_protected: 
+            display: 
+            domain: 
+            high_availability: 
+            initialization: 
+            io: 
+            large_icon: 
+            memory: 
+            memory_policy: 
+            migration: 
+            migration_downtime: 
+            origin: 
+            os: 
+            quota: 
+            rng_device: 
+            serial_number: 
+            small_icon: 
+            soundcard_enabled: 
+            sso: 
+            start_paused: 
+            stateless: 
+            storage_domain: 
+            time_zone: 
+            tunnel_migration: 
+            type: 
+            usb: 
+            virtio_scsi: 
+            cdroms: 
+            disk_attachments: 
+            graphics_consoles: 
+            nics: 
+            permissions: 
+            status: 
+            tags: 
+            version: 
+            vm: 
+            watchdogs: 
+          use_latest_template_version: 
+          vm_pool: 
+          watchdogs: 
+      ivars:
+        :@href: 
+  : *5
+- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4::VmPreloadedAttributesDecorator
+  :__v2__:
+  - :@obj
+  - :@disks
+  - :@nics
+  - :@reported_devices
+  - :@snapshots
+  ? - &6 !ruby/object:OvirtSDK4::Vm
+      href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf"
+      comment: 
+      description: 
+      id: 072093dc-3492-4cb1-b240-dbf88a8f4fbf
+      name: vm2
+      bios: !ruby/object:OvirtSDK4::Bios
+        href: 
+        boot_menu: !ruby/object:OvirtSDK4::BootMenu
+          href: 
+          enabled: true
+      cluster: !ruby/object:OvirtSDK4::Cluster
+        href: "/ovirt-engine/api/clusters/504ae500-3476-450e-8243-f6df0f7f7acf"
+        comment: 
+        description: 
+        id: 504ae500-3476-450e-8243-f6df0f7f7acf
+        name: 
+        affinity_groups: 
+        ballooning_enabled: 
+        cpu: 
+        cpu_profiles: 
+        custom_scheduling_policy_properties: 
+        data_center: 
+        display: 
+        error_handling: 
+        fencing_policy: 
+        gluster_hooks: 
+        gluster_service: 
+        gluster_volumes: 
+        ha_reservation: 
+        ksm: 
+        maintenance_reason_required: 
+        management_network: 
+        memory_policy: 
+        migration: 
+        network_filters: 
+        networks: 
+        optional_reason: 
+        permissions: 
+        required_rng_sources: 
+        scheduling_policy: 
+        serial_number: 
+        supported_versions: 
+        switch_type: 
+        threads_as_cores: 
+        trusted_service: 
+        tunnel_migration: 
+        version: 
+        virt_service: 
+      console: 
+      cpu: !ruby/object:OvirtSDK4::Cpu
+        href: 
+        architecture: x86_64
+        cores: 
+        cpu_tune: 
+        level: 
+        mode: 
+        name: 
+        speed: 
+        topology: !ruby/object:OvirtSDK4::CpuTopology
+          href: 
+          cores: 1
+          sockets: 1
+          threads: 1
+        type: 
+      cpu_profile: !ruby/object:OvirtSDK4::CpuProfile
+        href: "/ovirt-engine/api/cpuprofiles/c34525ea-072c-452d-baa1-0c5efe643e4d"
+        comment: 
+        description: 
+        id: c34525ea-072c-452d-baa1-0c5efe643e4d
+        name: 
+        cluster: 
+        permissions: 
+        qos: 
+      cpu_shares: 0
+      creation_time: !ruby/object:DateTime 2016-07-05 14:48:58.000000000 +03:00
+      custom_compatibility_version: 
+      custom_cpu_model: 
+      custom_emulated_machine: 
+      custom_properties: 
+      delete_protected: false
+      display: !ruby/object:OvirtSDK4::Display
+        href: 
+        address: 
+        allow_override: false
+        certificate: 
+        copy_paste_enabled: true
+        disconnect_action: LOCK_SCREEN
+        file_transfer_enabled: true
+        keyboard_layout: 
+        monitors: 1
+        port: 
+        proxy: 
+        secure_port: 
+        single_qxl_pci: false
+        smartcard_enabled: false
+        type: spice
+      domain: 
+      high_availability: !ruby/object:OvirtSDK4::HighAvailability
+        href: 
+        enabled: false
+        priority: 1
+      initialization: 
+      io: !ruby/object:OvirtSDK4::Io
+        href: 
+        threads: 0
+      large_icon: !ruby/object:OvirtSDK4::Icon
+        href: "/ovirt-engine/api/icons/db8d96f8-75cd-475a-b2f5-c37d75a288b1"
+        comment: 
+        description: 
+        id: db8d96f8-75cd-475a-b2f5-c37d75a288b1
+        name: 
+        data: 
+        media_type: 
+      memory: 1073741824
+      memory_policy: !ruby/object:OvirtSDK4::MemoryPolicy
+        href: 
+        ballooning: 
+        guaranteed: 1073741824
+        over_commit: 
+        transparent_huge_pages: 
+      migration: !ruby/object:OvirtSDK4::MigrationOptions
+        href: 
+        auto_converge: inherit
+        bandwidth: 
+        compressed: inherit
+        policy: 
+      migration_downtime: -1
+      origin: ovirt
+      os: !ruby/object:OvirtSDK4::OperatingSystem
+        href: 
+        boot: !ruby/object:OvirtSDK4::Boot
+          href: 
+          devices:
+          - network
+          - hd
+        cmdline: 
+        custom_kernel_cmdline: 
+        initrd: 
+        kernel: 
+        reported_kernel_cmdline: 
+        type: other
+        version: 
+      quota: 
+      rng_device: 
+      serial_number: 
+      small_icon: !ruby/object:OvirtSDK4::Icon
+        href: "/ovirt-engine/api/icons/c947ca42-629e-46cf-aeeb-ef949fae52c0"
+        comment: 
+        description: 
+        id: c947ca42-629e-46cf-aeeb-ef949fae52c0
+        name: 
+        data: 
+        media_type: 
+      soundcard_enabled: 
+      sso: !ruby/object:OvirtSDK4::Sso
+        href: 
+        methods: !ruby/array:OvirtSDK4::List
+          internal:
+          - !ruby/object:OvirtSDK4::Method
+            href: 
+            id: guest_agent
+          ivars:
+            :@href: 
+      start_paused: false
+      stateless: false
+      storage_domain: 
+      time_zone: !ruby/object:OvirtSDK4::TimeZone
+        href: 
+        name: Etc/GMT
+        utc_offset: 
+      tunnel_migration: 
+      type: desktop
+      usb: !ruby/object:OvirtSDK4::Usb
+        href: 
+        enabled: false
+        type: 
+      virtio_scsi: 
+      affinity_labels: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/affinitylabels"
+      applications: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/applications"
+      cdroms: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/cdroms"
+      disk_attachments: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/diskattachments"
+      external_host_provider: 
+      floppies: 
+      fqdn: 
+      graphics_consoles: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/graphicsconsoles"
+      guest_operating_system: 
+      guest_time_zone: 
+      host: 
+      host_devices: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/hostdevices"
+      instance_type: 
+      katello_errata: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/katelloerrata"
+      next_run_configuration_exists: false
+      nics: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/nics"
+      numa_nodes: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/numanodes"
+      numa_tune_mode: interleave
+      payloads: 
+      permissions: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/permissions"
+      placement_policy: !ruby/object:OvirtSDK4::VmPlacementPolicy
+        href: 
+        affinity: migratable
+        hosts: 
+      reported_devices: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/reporteddevices"
+      run_once: 
+      sessions: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/sessions"
+      snapshots: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/snapshots"
+      start_time: 
+      statistics: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/statistics"
+      status: down
+      status_detail: 
+      stop_reason: ''
+      stop_time: !ruby/object:DateTime 2016-11-17 17:24:40.816000000 +02:00
+      tags: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/tags"
+      template: !ruby/object:OvirtSDK4::Template
+        href: "/ovirt-engine/api/templates/00000000-0000-0000-0000-000000000000"
+        comment: 
+        description: 
+        id: 00000000-0000-0000-0000-000000000000
+        name: 
+        bios: 
+        cluster: 
+        console: 
+        cpu: 
+        cpu_profile: 
+        cpu_shares: 
+        creation_time: 
+        custom_compatibility_version: 
+        custom_cpu_model: 
+        custom_emulated_machine: 
+        custom_properties: 
+        delete_protected: 
+        display: 
+        domain: 
+        high_availability: 
+        initialization: 
+        io: 
+        large_icon: 
+        memory: 
+        memory_policy: 
+        migration: 
+        migration_downtime: 
+        origin: 
+        os: 
+        quota: 
+        rng_device: 
+        serial_number: 
+        small_icon: 
+        soundcard_enabled: 
+        sso: 
+        start_paused: 
+        stateless: 
+        storage_domain: 
+        time_zone: 
+        tunnel_migration: 
+        type: 
+        usb: 
+        virtio_scsi: 
+        cdroms: 
+        disk_attachments: 
+        graphics_consoles: 
+        nics: 
+        permissions: 
+        status: 
+        tags: 
+        version: 
+        vm: 
+        watchdogs: 
+      use_latest_template_version: 
+      vm_pool: 
+      watchdogs: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/watchdogs"
+    - - !ruby/object:OvirtSDK4::Disk
+        href: "/ovirt-engine/api/disks/9a3e866c-4497-46df-801a-d1739c31c69d"
+        comment: 
+        description: 
+        id: 9a3e866c-4497-46df-801a-d1739c31c69d
+        name: vm2_Disk1
+        instance_type: 
+        template: 
+        vm: 
+        vms: 
+        active: true
+        actual_size: 204800
+        alias_: vm2_Disk1
+        bootable: true
+        disk_profile: 
+        format: cow
+        image_id: b181984a-e625-48c7-895c-f2cbac41d5db
+        interface: virtio
+        logical_name: 
+        lun_storage: 
+        openstack_volume_type: 
+        permissions: !ruby/array:OvirtSDK4::List
+          internal: []
+          ivars:
+            :@href: "/ovirt-engine/api/disks/9a3e866c-4497-46df-801a-d1739c31c69d/permissions"
+        propagate_errors: false
+        provisioned_size: 5368709120
+        quota: 
+        read_only: 
+        sgio: 
+        shareable: false
+        snapshot: 
+        sparse: true
+        statistics: !ruby/array:OvirtSDK4::List
+          internal: []
+          ivars:
+            :@href: "/ovirt-engine/api/disks/9a3e866c-4497-46df-801a-d1739c31c69d/statistics"
+        status: ok
+        storage_domain: 
+        storage_domains: !ruby/array:OvirtSDK4::List
+          internal:
+          - !ruby/object:OvirtSDK4::StorageDomain
+            href: "/ovirt-engine/api/storagedomains/27a3bcce-c4d0-4bce-afe9-1d669d5a9d02"
+            comment: 
+            description: 
+            id: 27a3bcce-c4d0-4bce-afe9-1d669d5a9d02
+            name: 
+            available: 
+            committed: 
+            critical_space_action_blocker: 
+            data_center: 
+            data_centers: 
+            disk_profiles: 
+            disk_snapshots: 
+            disks: 
+            external_status: 
+            files: 
+            host: 
+            images: 
+            import: 
+            master: 
+            permissions: 
+            status: 
+            storage: 
+            storage_connections: 
+            storage_format: 
+            templates: 
+            type: 
+            used: 
+            vms: 
+            warning_low_space_indicator: 
+            wipe_after_delete: 
+          ivars:
+            :@href: 
+        storage_type: image
+        uses_scsi_reservation: 
+        wipe_after_delete: false
+    - !ruby/array:OvirtSDK4::List
+      internal:
+      - !ruby/object:OvirtSDK4::Nic
+        href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/nics/fdc2d708-01d1-4aa4-8b53-d64177181e2e"
+        comment: 
+        description: 
+        id: fdc2d708-01d1-4aa4-8b53-d64177181e2e
+        name: nic1
+        instance_type: 
+        template: 
+        vm: !ruby/object:OvirtSDK4::Vm
+          href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf"
+          comment: 
+          description: 
+          id: 072093dc-3492-4cb1-b240-dbf88a8f4fbf
+          name: 
+          bios: 
+          cluster: 
+          console: 
+          cpu: 
+          cpu_profile: 
+          cpu_shares: 
+          creation_time: 
+          custom_compatibility_version: 
+          custom_cpu_model: 
+          custom_emulated_machine: 
+          custom_properties: 
+          delete_protected: 
+          display: 
+          domain: 
+          high_availability: 
+          initialization: 
+          io: 
+          large_icon: 
+          memory: 
+          memory_policy: 
+          migration: 
+          migration_downtime: 
+          origin: 
+          os: 
+          quota: 
+          rng_device: 
+          serial_number: 
+          small_icon: 
+          soundcard_enabled: 
+          sso: 
+          start_paused: 
+          stateless: 
+          storage_domain: 
+          time_zone: 
+          tunnel_migration: 
+          type: 
+          usb: 
+          virtio_scsi: 
+          affinity_labels: 
+          applications: 
+          cdroms: 
+          disk_attachments: 
+          external_host_provider: 
+          floppies: 
+          fqdn: 
+          graphics_consoles: 
+          guest_operating_system: 
+          guest_time_zone: 
+          host: 
+          host_devices: 
+          instance_type: 
+          katello_errata: 
+          next_run_configuration_exists: 
+          nics: 
+          numa_nodes: 
+          numa_tune_mode: 
+          payloads: 
+          permissions: 
+          placement_policy: 
+          reported_devices: 
+          run_once: 
+          sessions: 
+          snapshots: 
+          start_time: 
+          statistics: 
+          status: 
+          status_detail: 
+          stop_reason: 
+          stop_time: 
+          tags: 
+          template: 
+          use_latest_template_version: 
+          vm_pool: 
+          watchdogs: 
+        vms: 
+        boot_protocol: 
+        interface: virtio
+        linked: true
+        mac: !ruby/object:OvirtSDK4::Mac
+          href: 
+          address: 00:1a:4a:16:01:52
+        network: 
+        network_attachments: 
+        network_labels: 
+        on_boot: 
+        plugged: true
+        reported_devices: !ruby/array:OvirtSDK4::List
+          internal: []
+          ivars:
+            :@href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/nics/fdc2d708-01d1-4aa4-8b53-d64177181e2e/reporteddevices"
+        statistics: !ruby/array:OvirtSDK4::List
+          internal: []
+          ivars:
+            :@href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/nics/fdc2d708-01d1-4aa4-8b53-d64177181e2e/statistics"
+        virtual_function_allowed_labels: 
+        virtual_function_allowed_networks: 
+        vnic_profile: !ruby/object:OvirtSDK4::VnicProfile
+          href: "/ovirt-engine/api/vnicprofiles/361634d2-4975-4ef7-8429-c009871ce903"
+          comment: 
+          description: 
+          id: 361634d2-4975-4ef7-8429-c009871ce903
+          name: 
+          custom_properties: 
+          network: 
+          network_filter: 
+          pass_through: 
+          permissions: 
+          port_mirroring: 
+          qos: 
+      ivars:
+        :@href: 
+    - !ruby/array:OvirtSDK4::List
+      internal: []
+      ivars:
+        :@href: 
+    - !ruby/array:OvirtSDK4::List
+      internal:
+      - !ruby/object:OvirtSDK4::Snapshot
+        href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/snapshots/677a1c40-8112-4e4a-bd03-c430e7505912"
+        comment: 
+        description: '22'
+        id: 677a1c40-8112-4e4a-bd03-c430e7505912
+        name: 
+        bios: 
+        cluster: 
+        console: 
+        cpu: 
+        cpu_profile: 
+        cpu_shares: 
+        creation_time: 
+        custom_compatibility_version: 
+        custom_cpu_model: 
+        custom_emulated_machine: 
+        custom_properties: 
+        delete_protected: 
+        display: 
+        domain: 
+        high_availability: 
+        initialization: 
+        io: 
+        large_icon: 
+        memory: 
+        memory_policy: 
+        migration: 
+        migration_downtime: 
+        origin: 
+        os: 
+        quota: 
+        rng_device: 
+        serial_number: 
+        small_icon: 
+        soundcard_enabled: 
+        sso: 
+        start_paused: 
+        stateless: 
+        storage_domain: 
+        time_zone: 
+        tunnel_migration: 
+        type: 
+        usb: 
+        virtio_scsi: 
+        affinity_labels: 
+        applications: 
+        cdroms: !ruby/array:OvirtSDK4::List
+          internal: []
+          ivars:
+            :@href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/snapshots/677a1c40-8112-4e4a-bd03-c430e7505912/cdroms"
+        disk_attachments: 
+        external_host_provider: 
+        floppies: 
+        fqdn: 
+        graphics_consoles: 
+        guest_operating_system: 
+        guest_time_zone: 
+        host: 
+        host_devices: 
+        instance_type: 
+        katello_errata: 
+        next_run_configuration_exists: 
+        nics: !ruby/array:OvirtSDK4::List
+          internal: []
+          ivars:
+            :@href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/snapshots/677a1c40-8112-4e4a-bd03-c430e7505912/nics"
+        numa_nodes: 
+        numa_tune_mode: 
+        payloads: 
+        permissions: 
+        placement_policy: 
+        reported_devices: 
+        run_once: 
+        sessions: 
+        snapshots: 
+        start_time: 
+        statistics: 
+        status: 
+        status_detail: 
+        stop_reason: 
+        stop_time: 
+        tags: 
+        template: 
+        use_latest_template_version: 
+        vm_pool: 
+        watchdogs: 
+        date: !ruby/object:DateTime 2016-08-02 14:42:19.378000000 +03:00
+        persist_memorystate: false
+        snapshot_status: ok
+        snapshot_type: regular
+        vm: !ruby/object:OvirtSDK4::Vm
+          href: 
+          comment: 
+          description: 
+          id: 072093dc-3492-4cb1-b240-dbf88a8f4fbf
+          name: vm2
+          bios: !ruby/object:OvirtSDK4::Bios
+            href: 
+            boot_menu: !ruby/object:OvirtSDK4::BootMenu
+              href: 
+              enabled: true
+          cluster: !ruby/object:OvirtSDK4::Cluster
+            href: 
+            comment: 
+            description: 
+            id: 504ae500-3476-450e-8243-f6df0f7f7acf
+            name: 
+            affinity_groups: 
+            ballooning_enabled: 
+            cpu: 
+            cpu_profiles: 
+            custom_scheduling_policy_properties: 
+            data_center: 
+            display: 
+            error_handling: 
+            fencing_policy: 
+            gluster_hooks: 
+            gluster_service: 
+            gluster_volumes: 
+            ha_reservation: 
+            ksm: 
+            maintenance_reason_required: 
+            management_network: 
+            memory_policy: 
+            migration: 
+            network_filters: 
+            networks: 
+            optional_reason: 
+            permissions: 
+            required_rng_sources: 
+            scheduling_policy: 
+            serial_number: 
+            supported_versions: 
+            switch_type: 
+            threads_as_cores: 
+            trusted_service: 
+            tunnel_migration: 
+            version: 
+            virt_service: 
+          console: 
+          cpu: !ruby/object:OvirtSDK4::Cpu
+            href: 
+            architecture: x86_64
+            cores: 
+            cpu_tune: 
+            level: 
+            mode: 
+            name: 
+            speed: 
+            topology: !ruby/object:OvirtSDK4::CpuTopology
+              href: 
+              cores: 1
+              sockets: 1
+              threads: 1
+            type: 
+          cpu_profile: !ruby/object:OvirtSDK4::CpuProfile
+            href: 
+            comment: 
+            description: 
+            id: c34525ea-072c-452d-baa1-0c5efe643e4d
+            name: 
+            cluster: 
+            permissions: 
+            qos: 
+          cpu_shares: 0
+          creation_time: !ruby/object:DateTime 2016-07-05 14:48:58.000000000 +03:00
+          custom_compatibility_version: 
+          custom_cpu_model: 
+          custom_emulated_machine: 
+          custom_properties: 
+          delete_protected: false
+          display: !ruby/object:OvirtSDK4::Display
+            href: 
+            address: 
+            allow_override: false
+            certificate: 
+            copy_paste_enabled: true
+            disconnect_action: LOCK_SCREEN
+            file_transfer_enabled: true
+            keyboard_layout: 
+            monitors: 1
+            port: 
+            proxy: 
+            secure_port: 
+            single_qxl_pci: false
+            smartcard_enabled: false
+            type: 
+          domain: 
+          high_availability: !ruby/object:OvirtSDK4::HighAvailability
+            href: 
+            enabled: false
+            priority: 1
+          initialization: !ruby/object:OvirtSDK4::Initialization
+            href: 
+            active_directory_ou: 
+            authorized_ssh_keys: 
+            cloud_init: 
+            configuration: 
+            custom_script: 
+            dns_search: 
+            dns_servers: 
+            domain: 
+            host_name: 
+            input_locale: 
+            nic_configurations: 
+            org_name: 
+            regenerate_ids: 
+            regenerate_ssh_keys: 
+            root_password: 
+            system_locale: 
+            timezone: 
+            ui_language: 
+            user_locale: 
+            user_name: 
+            windows_license_key: 
+          io: !ruby/object:OvirtSDK4::Io
+            href: 
+            threads: 0
+          large_icon: !ruby/object:OvirtSDK4::Icon
+            href: 
+            comment: 
+            description: 
+            id: db8d96f8-75cd-475a-b2f5-c37d75a288b1
+            name: 
+            data: 
+            media_type: 
+          memory: 1073741824
+          memory_policy: !ruby/object:OvirtSDK4::MemoryPolicy
+            href: 
+            ballooning: 
+            guaranteed: 1073741824
+            over_commit: 
+            transparent_huge_pages: 
+          migration: !ruby/object:OvirtSDK4::MigrationOptions
+            href: 
+            auto_converge: inherit
+            bandwidth: 
+            compressed: inherit
+            policy: 
+          migration_downtime: -1
+          origin: ovirt
+          os: !ruby/object:OvirtSDK4::OperatingSystem
+            href: 
+            boot: !ruby/object:OvirtSDK4::Boot
+              href: 
+              devices:
+              - network
+              - hd
+            cmdline: 
+            custom_kernel_cmdline: 
+            initrd: 
+            kernel: 
+            reported_kernel_cmdline: 
+            type: other
+            version: 
+          quota: 
+          rng_device: 
+          serial_number: 
+          small_icon: !ruby/object:OvirtSDK4::Icon
+            href: 
+            comment: 
+            description: 
+            id: c947ca42-629e-46cf-aeeb-ef949fae52c0
+            name: 
+            data: 
+            media_type: 
+          soundcard_enabled: 
+          sso: !ruby/object:OvirtSDK4::Sso
+            href: 
+            methods: !ruby/array:OvirtSDK4::List
+              internal:
+              - !ruby/object:OvirtSDK4::Method
+                href: 
+                id: guest_agent
+              ivars:
+                :@href: 
+          start_paused: false
+          stateless: false
+          storage_domain: 
+          time_zone: !ruby/object:OvirtSDK4::TimeZone
+            href: 
+            name: Etc/GMT
+            utc_offset: 
+          tunnel_migration: 
+          type: desktop
+          usb: !ruby/object:OvirtSDK4::Usb
+            href: 
+            enabled: false
+            type: 
+          virtio_scsi: 
+          affinity_labels: 
+          applications: 
+          cdroms: 
+          disk_attachments: 
+          external_host_provider: 
+          floppies: 
+          fqdn: 
+          graphics_consoles: 
+          guest_operating_system: 
+          guest_time_zone: 
+          host: 
+          host_devices: 
+          instance_type: 
+          katello_errata: 
+          next_run_configuration_exists: false
+          nics: 
+          numa_nodes: 
+          numa_tune_mode: interleave
+          payloads: 
+          permissions: 
+          placement_policy: !ruby/object:OvirtSDK4::VmPlacementPolicy
+            href: 
+            affinity: migratable
+            hosts: 
+          reported_devices: 
+          run_once: 
+          sessions: 
+          snapshots: 
+          start_time: 
+          statistics: 
+          status: down
+          status_detail: 
+          stop_reason: ''
+          stop_time: !ruby/object:DateTime 2016-11-17 17:24:40.816000000 +02:00
+          tags: 
+          template: !ruby/object:OvirtSDK4::Template
+            href: 
+            comment: 
+            description: 
+            id: 00000000-0000-0000-0000-000000000000
+            name: 
+            bios: 
+            cluster: 
+            console: 
+            cpu: 
+            cpu_profile: 
+            cpu_shares: 
+            creation_time: 
+            custom_compatibility_version: 
+            custom_cpu_model: 
+            custom_emulated_machine: 
+            custom_properties: 
+            delete_protected: 
+            display: 
+            domain: 
+            high_availability: 
+            initialization: 
+            io: 
+            large_icon: 
+            memory: 
+            memory_policy: 
+            migration: 
+            migration_downtime: 
+            origin: 
+            os: 
+            quota: 
+            rng_device: 
+            serial_number: 
+            small_icon: 
+            soundcard_enabled: 
+            sso: 
+            start_paused: 
+            stateless: 
+            storage_domain: 
+            time_zone: 
+            tunnel_migration: 
+            type: 
+            usb: 
+            virtio_scsi: 
+            cdroms: 
+            disk_attachments: 
+            graphics_consoles: 
+            nics: 
+            permissions: 
+            status: 
+            tags: 
+            version: 
+            vm: 
+            watchdogs: 
+          use_latest_template_version: 
+          vm_pool: 
+          watchdogs: 
+      - !ruby/object:OvirtSDK4::Snapshot
+        href: "/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/snapshots/ef7b7d35-c7b8-4270-8ec7-b85047a50bdc"
+        comment: 
+        description: Active VM
+        id: ef7b7d35-c7b8-4270-8ec7-b85047a50bdc
+        name: 
+        bios: 
+        cluster: 
+        console: 
+        cpu: 
+        cpu_profile: 
+        cpu_shares: 
+        creation_time: 
+        custom_compatibility_version: 
+        custom_cpu_model: 
+        custom_emulated_machine: 
+        custom_properties: 
+        delete_protected: 
+        display: 
+        domain: 
+        high_availability: 
+        initialization: 
+        io: 
+        large_icon: 
+        memory: 
+        memory_policy: 
+        migration: 
+        migration_downtime: 
+        origin: 
+        os: 
+        quota: 
+        rng_device: 
+        serial_number: 
+        small_icon: 
+        soundcard_enabled: 
+        sso: 
+        start_paused: 
+        stateless: 
+        storage_domain: 
+        time_zone: 
+        tunnel_migration: 
+        type: 
+        usb: 
+        virtio_scsi: 
+        affinity_labels: 
+        applications: 
+        cdroms: 
+        disk_attachments: 
+        external_host_provider: 
+        floppies: 
+        fqdn: 
+        graphics_consoles: 
+        guest_operating_system: 
+        guest_time_zone: 
+        host: 
+        host_devices: 
+        instance_type: 
+        katello_errata: 
+        next_run_configuration_exists: 
+        nics: 
+        numa_nodes: 
+        numa_tune_mode: 
+        payloads: 
+        permissions: 
+        placement_policy: 
+        reported_devices: 
+        run_once: 
+        sessions: 
+        snapshots: 
+        start_time: 
+        statistics: 
+        status: 
+        status_detail: 
+        stop_reason: 
+        stop_time: 
+        tags: 
+        template: 
+        use_latest_template_version: 
+        vm_pool: 
+        watchdogs: 
+        date: !ruby/object:DateTime 2016-11-17 17:24:11.967000000 +02:00
+        persist_memorystate: false
+        snapshot_status: ok
+        snapshot_type: active
+        vm: 
+      ivars:
+        :@href: 
+  : *6
+- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4::VmPreloadedAttributesDecorator
+  :__v2__:
+  - :@obj
+  - :@disks
+  - :@nics
+  - :@reported_devices
+  - :@snapshots
+  ? - &7 !ruby/object:OvirtSDK4::Vm
+      href: "/ovirt-engine/api/vms/7c0f1dfc-ffd5-48b1-b9f8-bfb492b39761"
+      comment: 
+      description: 
+      id: 7c0f1dfc-ffd5-48b1-b9f8-bfb492b39761
+      name: vm3
+      bios: !ruby/object:OvirtSDK4::Bios
+        href: 
+        boot_menu: !ruby/object:OvirtSDK4::BootMenu
+          href: 
+          enabled: false
+      cluster: !ruby/object:OvirtSDK4::Cluster
+        href: "/ovirt-engine/api/clusters/00000002-0002-0002-0002-000000000092"
+        comment: 
+        description: 
+        id: 00000002-0002-0002-0002-000000000092
+        name: 
+        affinity_groups: 
+        ballooning_enabled: 
+        cpu: 
+        cpu_profiles: 
+        custom_scheduling_policy_properties: 
+        data_center: 
+        display: 
+        error_handling: 
+        fencing_policy: 
+        gluster_hooks: 
+        gluster_service: 
+        gluster_volumes: 
+        ha_reservation: 
+        ksm: 
+        maintenance_reason_required: 
+        management_network: 
+        memory_policy: 
+        migration: 
+        network_filters: 
+        networks: 
+        optional_reason: 
+        permissions: 
+        required_rng_sources: 
+        scheduling_policy: 
+        serial_number: 
+        supported_versions: 
+        switch_type: 
+        threads_as_cores: 
+        trusted_service: 
+        tunnel_migration: 
+        version: 
+        virt_service: 
+      console: 
+      cpu: !ruby/object:OvirtSDK4::Cpu
+        href: 
+        architecture: x86_64
+        cores: 
+        cpu_tune: 
+        level: 
+        mode: 
+        name: 
+        speed: 
+        topology: !ruby/object:OvirtSDK4::CpuTopology
+          href: 
+          cores: 1
+          sockets: 1
+          threads: 1
+        type: 
+      cpu_profile: !ruby/object:OvirtSDK4::CpuProfile
+        href: "/ovirt-engine/api/cpuprofiles/0000000e-000e-000e-000e-000000000384"
+        comment: 
+        description: 
+        id: 0000000e-000e-000e-000e-000000000384
+        name: 
+        cluster: 
+        permissions: 
+        qos: 
+      cpu_shares: 0
+      creation_time: !ruby/object:DateTime 2016-08-02 14:27:54.349000000 +03:00
+      custom_compatibility_version: 
+      custom_cpu_model: 
+      custom_emulated_machine: 
+      custom_properties: 
+      delete_protected: false
+      display: !ruby/object:OvirtSDK4::Display
+        href: 
+        address: 
+        allow_override: false
+        certificate: 
+        copy_paste_enabled: true
+        disconnect_action: LOCK_SCREEN
+        file_transfer_enabled: true
+        keyboard_layout: 
+        monitors: 1
+        port: 
+        proxy: 
+        secure_port: 
+        single_qxl_pci: false
+        smartcard_enabled: false
+        type: spice
+      domain: 
+      high_availability: !ruby/object:OvirtSDK4::HighAvailability
+        href: 
+        enabled: false
+        priority: 1
+      initialization: 
+      io: !ruby/object:OvirtSDK4::Io
+        href: 
+        threads: 0
+      large_icon: !ruby/object:OvirtSDK4::Icon
+        href: "/ovirt-engine/api/icons/db8d96f8-75cd-475a-b2f5-c37d75a288b1"
+        comment: 
+        description: 
+        id: db8d96f8-75cd-475a-b2f5-c37d75a288b1
+        name: 
+        data: 
+        media_type: 
+      memory: 1073741824
+      memory_policy: !ruby/object:OvirtSDK4::MemoryPolicy
+        href: 
+        ballooning: 
+        guaranteed: 1073741824
+        over_commit: 
+        transparent_huge_pages: 
+      migration: !ruby/object:OvirtSDK4::MigrationOptions
+        href: 
+        auto_converge: inherit
+        bandwidth: 
+        compressed: inherit
+        policy: 
+      migration_downtime: -1
+      origin: ovirt
+      os: !ruby/object:OvirtSDK4::OperatingSystem
+        href: 
+        boot: !ruby/object:OvirtSDK4::Boot
+          href: 
+          devices:
+          - hd
+        cmdline: 
+        custom_kernel_cmdline: 
+        initrd: 
+        kernel: 
+        reported_kernel_cmdline: 
+        type: other
+        version: 
+      quota: 
+      rng_device: 
+      serial_number: 
+      small_icon: !ruby/object:OvirtSDK4::Icon
+        href: "/ovirt-engine/api/icons/c947ca42-629e-46cf-aeeb-ef949fae52c0"
+        comment: 
+        description: 
+        id: c947ca42-629e-46cf-aeeb-ef949fae52c0
+        name: 
+        data: 
+        media_type: 
+      soundcard_enabled: 
+      sso: !ruby/object:OvirtSDK4::Sso
+        href: 
+        methods: !ruby/array:OvirtSDK4::List
+          internal:
+          - !ruby/object:OvirtSDK4::Method
+            href: 
+            id: guest_agent
+          ivars:
+            :@href: 
+      start_paused: false
+      stateless: false
+      storage_domain: 
+      time_zone: !ruby/object:OvirtSDK4::TimeZone
+        href: 
+        name: Etc/GMT
+        utc_offset: 
+      tunnel_migration: 
+      type: desktop
+      usb: !ruby/object:OvirtSDK4::Usb
+        href: 
+        enabled: false
+        type: 
+      virtio_scsi: 
+      affinity_labels: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/7c0f1dfc-ffd5-48b1-b9f8-bfb492b39761/affinitylabels"
+      applications: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/7c0f1dfc-ffd5-48b1-b9f8-bfb492b39761/applications"
+      cdroms: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/7c0f1dfc-ffd5-48b1-b9f8-bfb492b39761/cdroms"
+      disk_attachments: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/7c0f1dfc-ffd5-48b1-b9f8-bfb492b39761/diskattachments"
+      external_host_provider: 
+      floppies: 
+      fqdn: 
+      graphics_consoles: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/7c0f1dfc-ffd5-48b1-b9f8-bfb492b39761/graphicsconsoles"
+      guest_operating_system: 
+      guest_time_zone: 
+      host: 
+      host_devices: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/7c0f1dfc-ffd5-48b1-b9f8-bfb492b39761/hostdevices"
+      instance_type: 
+      katello_errata: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/7c0f1dfc-ffd5-48b1-b9f8-bfb492b39761/katelloerrata"
+      next_run_configuration_exists: false
+      nics: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/7c0f1dfc-ffd5-48b1-b9f8-bfb492b39761/nics"
+      numa_nodes: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/7c0f1dfc-ffd5-48b1-b9f8-bfb492b39761/numanodes"
+      numa_tune_mode: interleave
+      payloads: 
+      permissions: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/7c0f1dfc-ffd5-48b1-b9f8-bfb492b39761/permissions"
+      placement_policy: !ruby/object:OvirtSDK4::VmPlacementPolicy
+        href: 
+        affinity: migratable
+        hosts: 
+      reported_devices: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/7c0f1dfc-ffd5-48b1-b9f8-bfb492b39761/reporteddevices"
+      run_once: 
+      sessions: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/7c0f1dfc-ffd5-48b1-b9f8-bfb492b39761/sessions"
+      snapshots: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/7c0f1dfc-ffd5-48b1-b9f8-bfb492b39761/snapshots"
+      start_time: 
+      statistics: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/7c0f1dfc-ffd5-48b1-b9f8-bfb492b39761/statistics"
+      status: down
+      status_detail: 
+      stop_reason: 
+      stop_time: !ruby/object:DateTime 2016-08-02 14:27:54.353000000 +03:00
+      tags: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/7c0f1dfc-ffd5-48b1-b9f8-bfb492b39761/tags"
+      template: !ruby/object:OvirtSDK4::Template
+        href: "/ovirt-engine/api/templates/00000000-0000-0000-0000-000000000000"
+        comment: 
+        description: 
+        id: 00000000-0000-0000-0000-000000000000
+        name: 
+        bios: 
+        cluster: 
+        console: 
+        cpu: 
+        cpu_profile: 
+        cpu_shares: 
+        creation_time: 
+        custom_compatibility_version: 
+        custom_cpu_model: 
+        custom_emulated_machine: 
+        custom_properties: 
+        delete_protected: 
+        display: 
+        domain: 
+        high_availability: 
+        initialization: 
+        io: 
+        large_icon: 
+        memory: 
+        memory_policy: 
+        migration: 
+        migration_downtime: 
+        origin: 
+        os: 
+        quota: 
+        rng_device: 
+        serial_number: 
+        small_icon: 
+        soundcard_enabled: 
+        sso: 
+        start_paused: 
+        stateless: 
+        storage_domain: 
+        time_zone: 
+        tunnel_migration: 
+        type: 
+        usb: 
+        virtio_scsi: 
+        cdroms: 
+        disk_attachments: 
+        graphics_consoles: 
+        nics: 
+        permissions: 
+        status: 
+        tags: 
+        version: 
+        vm: 
+        watchdogs: 
+      use_latest_template_version: 
+      vm_pool: 
+      watchdogs: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/7c0f1dfc-ffd5-48b1-b9f8-bfb492b39761/watchdogs"
+    - - !ruby/object:OvirtSDK4::Disk
+        href: "/ovirt-engine/api/disks/15bf929f-5935-4e66-91e3-12a1c362aab0"
+        comment: 
+        description: 
+        id: 15bf929f-5935-4e66-91e3-12a1c362aab0
+        name: vm3_Disk1
+        instance_type: 
+        template: 
+        vm: 
+        vms: 
+        active: true
+        actual_size: 0
+        alias_: vm3_Disk1
+        bootable: false
+        disk_profile: !ruby/object:OvirtSDK4::DiskProfile
+          href: "/ovirt-engine/api/diskprofiles/b1f0065e-9aef-4eb1-8939-aaad13eee28e"
+          comment: 
+          description: 
+          id: b1f0065e-9aef-4eb1-8939-aaad13eee28e
+          name: 
+          permissions: 
+          qos: 
+          storage_domain: 
+        format: raw
+        image_id: 9df4ba4f-66d2-4018-baf5-728e7306d5d7
+        interface: virtio
+        logical_name: 
+        lun_storage: 
+        openstack_volume_type: 
+        permissions: !ruby/array:OvirtSDK4::List
+          internal: []
+          ivars:
+            :@href: "/ovirt-engine/api/disks/15bf929f-5935-4e66-91e3-12a1c362aab0/permissions"
+        propagate_errors: false
+        provisioned_size: 1073741824
+        quota: 
+        read_only: 
+        sgio: 
+        shareable: false
+        snapshot: 
+        sparse: true
+        statistics: !ruby/array:OvirtSDK4::List
+          internal: []
+          ivars:
+            :@href: "/ovirt-engine/api/disks/15bf929f-5935-4e66-91e3-12a1c362aab0/statistics"
+        status: ok
+        storage_domain: 
+        storage_domains: !ruby/array:OvirtSDK4::List
+          internal:
+          - !ruby/object:OvirtSDK4::StorageDomain
+            href: "/ovirt-engine/api/storagedomains/4672fe17-c260-4ecc-aab0-b535f4d0dbeb"
+            comment: 
+            description: 
+            id: 4672fe17-c260-4ecc-aab0-b535f4d0dbeb
+            name: 
+            available: 
+            committed: 
+            critical_space_action_blocker: 
+            data_center: 
+            data_centers: 
+            disk_profiles: 
+            disk_snapshots: 
+            disks: 
+            external_status: 
+            files: 
+            host: 
+            images: 
+            import: 
+            master: 
+            permissions: 
+            status: 
+            storage: 
+            storage_connections: 
+            storage_format: 
+            templates: 
+            type: 
+            used: 
+            vms: 
+            warning_low_space_indicator: 
+            wipe_after_delete: 
+          ivars:
+            :@href: 
+        storage_type: image
+        uses_scsi_reservation: 
+        wipe_after_delete: false
+    - !ruby/array:OvirtSDK4::List
+      internal: []
+      ivars:
+        :@href: 
+    - !ruby/array:OvirtSDK4::List
+      internal: []
+      ivars:
+        :@href: 
+    - !ruby/array:OvirtSDK4::List
+      internal:
+      - !ruby/object:OvirtSDK4::Snapshot
+        href: "/ovirt-engine/api/vms/7c0f1dfc-ffd5-48b1-b9f8-bfb492b39761/snapshots/d19294eb-adde-4795-a1ad-cb7552fa4a91"
+        comment: 
+        description: Active VM
+        id: d19294eb-adde-4795-a1ad-cb7552fa4a91
+        name: 
+        bios: 
+        cluster: 
+        console: 
+        cpu: 
+        cpu_profile: 
+        cpu_shares: 
+        creation_time: 
+        custom_compatibility_version: 
+        custom_cpu_model: 
+        custom_emulated_machine: 
+        custom_properties: 
+        delete_protected: 
+        display: 
+        domain: 
+        high_availability: 
+        initialization: 
+        io: 
+        large_icon: 
+        memory: 
+        memory_policy: 
+        migration: 
+        migration_downtime: 
+        origin: 
+        os: 
+        quota: 
+        rng_device: 
+        serial_number: 
+        small_icon: 
+        soundcard_enabled: 
+        sso: 
+        start_paused: 
+        stateless: 
+        storage_domain: 
+        time_zone: 
+        tunnel_migration: 
+        type: 
+        usb: 
+        virtio_scsi: 
+        affinity_labels: 
+        applications: 
+        cdroms: 
+        disk_attachments: 
+        external_host_provider: 
+        floppies: 
+        fqdn: 
+        graphics_consoles: 
+        guest_operating_system: 
+        guest_time_zone: 
+        host: 
+        host_devices: 
+        instance_type: 
+        katello_errata: 
+        next_run_configuration_exists: 
+        nics: 
+        numa_nodes: 
+        numa_tune_mode: 
+        payloads: 
+        permissions: 
+        placement_policy: 
+        reported_devices: 
+        run_once: 
+        sessions: 
+        snapshots: 
+        start_time: 
+        statistics: 
+        status: 
+        status_detail: 
+        stop_reason: 
+        stop_time: 
+        tags: 
+        template: 
+        use_latest_template_version: 
+        vm_pool: 
+        watchdogs: 
+        date: !ruby/object:DateTime 2016-08-02 14:27:54.388000000 +03:00
+        persist_memorystate: false
+        snapshot_status: ok
+        snapshot_type: active
+        vm: 
+      ivars:
+        :@href: 
+  : *7
+- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4::VmPreloadedAttributesDecorator
+  :__v2__:
+  - :@obj
+  - :@disks
+  - :@nics
+  - :@reported_devices
+  - :@snapshots
+  ? - &8 !ruby/object:OvirtSDK4::Vm
+      href: "/ovirt-engine/api/vms/9a3d9765-1a23-41f0-a578-50013a8ad5ba"
+      comment: 
+      description: 
+      id: 9a3d9765-1a23-41f0-a578-50013a8ad5ba
+      name: vmdc1
+      bios: !ruby/object:OvirtSDK4::Bios
+        href: 
+        boot_menu: !ruby/object:OvirtSDK4::BootMenu
+          href: 
+          enabled: false
+      cluster: !ruby/object:OvirtSDK4::Cluster
+        href: "/ovirt-engine/api/clusters/00000002-0002-0002-0002-000000000092"
+        comment: 
+        description: 
+        id: 00000002-0002-0002-0002-000000000092
+        name: 
+        affinity_groups: 
+        ballooning_enabled: 
+        cpu: 
+        cpu_profiles: 
+        custom_scheduling_policy_properties: 
+        data_center: 
+        display: 
+        error_handling: 
+        fencing_policy: 
+        gluster_hooks: 
+        gluster_service: 
+        gluster_volumes: 
+        ha_reservation: 
+        ksm: 
+        maintenance_reason_required: 
+        management_network: 
+        memory_policy: 
+        migration: 
+        network_filters: 
+        networks: 
+        optional_reason: 
+        permissions: 
+        required_rng_sources: 
+        scheduling_policy: 
+        serial_number: 
+        supported_versions: 
+        switch_type: 
+        threads_as_cores: 
+        trusted_service: 
+        tunnel_migration: 
+        version: 
+        virt_service: 
+      console: 
+      cpu: !ruby/object:OvirtSDK4::Cpu
+        href: 
+        architecture: x86_64
+        cores: 
+        cpu_tune: 
+        level: 
+        mode: 
+        name: 
+        speed: 
+        topology: !ruby/object:OvirtSDK4::CpuTopology
+          href: 
+          cores: 1
+          sockets: 1
+          threads: 1
+        type: 
+      cpu_profile: !ruby/object:OvirtSDK4::CpuProfile
+        href: "/ovirt-engine/api/cpuprofiles/0000000e-000e-000e-000e-000000000384"
+        comment: 
+        description: 
+        id: 0000000e-000e-000e-000e-000000000384
+        name: 
+        cluster: 
+        permissions: 
+        qos: 
+      cpu_shares: 0
+      creation_time: !ruby/object:DateTime 2016-07-12 10:53:13.985000000 +03:00
+      custom_compatibility_version: 
+      custom_cpu_model: 
+      custom_emulated_machine: 
+      custom_properties: 
+      delete_protected: false
+      display: !ruby/object:OvirtSDK4::Display
+        href: 
+        address: 
+        allow_override: false
+        certificate: 
+        copy_paste_enabled: true
+        disconnect_action: LOCK_SCREEN
+        file_transfer_enabled: true
+        keyboard_layout: 
+        monitors: 1
+        port: 
+        proxy: 
+        secure_port: 
+        single_qxl_pci: false
+        smartcard_enabled: false
+        type: spice
+      domain: 
+      high_availability: !ruby/object:OvirtSDK4::HighAvailability
+        href: 
+        enabled: false
+        priority: 1
+      initialization: 
+      io: !ruby/object:OvirtSDK4::Io
+        href: 
+        threads: 0
+      large_icon: !ruby/object:OvirtSDK4::Icon
+        href: "/ovirt-engine/api/icons/db8d96f8-75cd-475a-b2f5-c37d75a288b1"
+        comment: 
+        description: 
+        id: db8d96f8-75cd-475a-b2f5-c37d75a288b1
+        name: 
+        data: 
+        media_type: 
+      memory: 1073741824
+      memory_policy: !ruby/object:OvirtSDK4::MemoryPolicy
+        href: 
+        ballooning: 
+        guaranteed: 1073741824
+        over_commit: 
+        transparent_huge_pages: 
+      migration: !ruby/object:OvirtSDK4::MigrationOptions
+        href: 
+        auto_converge: inherit
+        bandwidth: 
+        compressed: inherit
+        policy: 
+      migration_downtime: -1
+      origin: ovirt
+      os: !ruby/object:OvirtSDK4::OperatingSystem
+        href: 
+        boot: !ruby/object:OvirtSDK4::Boot
+          href: 
+          devices:
+          - hd
+        cmdline: 
+        custom_kernel_cmdline: 
+        initrd: 
+        kernel: 
+        reported_kernel_cmdline: 
+        type: other
+        version: 
+      quota: 
+      rng_device: 
+      serial_number: 
+      small_icon: !ruby/object:OvirtSDK4::Icon
+        href: "/ovirt-engine/api/icons/c947ca42-629e-46cf-aeeb-ef949fae52c0"
+        comment: 
+        description: 
+        id: c947ca42-629e-46cf-aeeb-ef949fae52c0
+        name: 
+        data: 
+        media_type: 
+      soundcard_enabled: 
+      sso: !ruby/object:OvirtSDK4::Sso
+        href: 
+        methods: !ruby/array:OvirtSDK4::List
+          internal:
+          - !ruby/object:OvirtSDK4::Method
+            href: 
+            id: guest_agent
+          ivars:
+            :@href: 
+      start_paused: false
+      stateless: false
+      storage_domain: 
+      time_zone: !ruby/object:OvirtSDK4::TimeZone
+        href: 
+        name: Etc/GMT
+        utc_offset: 
+      tunnel_migration: 
+      type: desktop
+      usb: !ruby/object:OvirtSDK4::Usb
+        href: 
+        enabled: false
+        type: 
+      virtio_scsi: 
+      affinity_labels: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/9a3d9765-1a23-41f0-a578-50013a8ad5ba/affinitylabels"
+      applications: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/9a3d9765-1a23-41f0-a578-50013a8ad5ba/applications"
+      cdroms: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/9a3d9765-1a23-41f0-a578-50013a8ad5ba/cdroms"
+      disk_attachments: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/9a3d9765-1a23-41f0-a578-50013a8ad5ba/diskattachments"
+      external_host_provider: 
+      floppies: 
+      fqdn: 
+      graphics_consoles: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/9a3d9765-1a23-41f0-a578-50013a8ad5ba/graphicsconsoles"
+      guest_operating_system: 
+      guest_time_zone: 
+      host: 
+      host_devices: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/9a3d9765-1a23-41f0-a578-50013a8ad5ba/hostdevices"
+      instance_type: 
+      katello_errata: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/9a3d9765-1a23-41f0-a578-50013a8ad5ba/katelloerrata"
+      next_run_configuration_exists: false
+      nics: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/9a3d9765-1a23-41f0-a578-50013a8ad5ba/nics"
+      numa_nodes: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/9a3d9765-1a23-41f0-a578-50013a8ad5ba/numanodes"
+      numa_tune_mode: interleave
+      payloads: 
+      permissions: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/9a3d9765-1a23-41f0-a578-50013a8ad5ba/permissions"
+      placement_policy: !ruby/object:OvirtSDK4::VmPlacementPolicy
+        href: 
+        affinity: migratable
+        hosts: 
+      reported_devices: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/9a3d9765-1a23-41f0-a578-50013a8ad5ba/reporteddevices"
+      run_once: 
+      sessions: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/9a3d9765-1a23-41f0-a578-50013a8ad5ba/sessions"
+      snapshots: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/9a3d9765-1a23-41f0-a578-50013a8ad5ba/snapshots"
+      start_time: 
+      statistics: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/9a3d9765-1a23-41f0-a578-50013a8ad5ba/statistics"
+      status: down
+      status_detail: 
+      stop_reason: ''
+      stop_time: !ruby/object:DateTime 2016-07-18 17:34:44.729000000 +03:00
+      tags: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/9a3d9765-1a23-41f0-a578-50013a8ad5ba/tags"
+      template: !ruby/object:OvirtSDK4::Template
+        href: "/ovirt-engine/api/templates/00000000-0000-0000-0000-000000000000"
+        comment: 
+        description: 
+        id: 00000000-0000-0000-0000-000000000000
+        name: 
+        bios: 
+        cluster: 
+        console: 
+        cpu: 
+        cpu_profile: 
+        cpu_shares: 
+        creation_time: 
+        custom_compatibility_version: 
+        custom_cpu_model: 
+        custom_emulated_machine: 
+        custom_properties: 
+        delete_protected: 
+        display: 
+        domain: 
+        high_availability: 
+        initialization: 
+        io: 
+        large_icon: 
+        memory: 
+        memory_policy: 
+        migration: 
+        migration_downtime: 
+        origin: 
+        os: 
+        quota: 
+        rng_device: 
+        serial_number: 
+        small_icon: 
+        soundcard_enabled: 
+        sso: 
+        start_paused: 
+        stateless: 
+        storage_domain: 
+        time_zone: 
+        tunnel_migration: 
+        type: 
+        usb: 
+        virtio_scsi: 
+        cdroms: 
+        disk_attachments: 
+        graphics_consoles: 
+        nics: 
+        permissions: 
+        status: 
+        tags: 
+        version: 
+        vm: 
+        watchdogs: 
+      use_latest_template_version: 
+      vm_pool: 
+      watchdogs: !ruby/array:OvirtSDK4::List
+        internal: []
+        ivars:
+          :@href: "/ovirt-engine/api/vms/9a3d9765-1a23-41f0-a578-50013a8ad5ba/watchdogs"
+    - - !ruby/object:OvirtSDK4::Disk
+        href: "/ovirt-engine/api/disks/1e9668b0-0054-4afd-8ae3-970346ebe513"
+        comment: 
+        description: 
+        id: 1e9668b0-0054-4afd-8ae3-970346ebe513
+        name: vmdc1_Disk1
+        instance_type: 
+        template: 
+        vm: 
+        vms: 
+        active: true
+        actual_size: 204800
+        alias_: vmdc1_Disk1
+        bootable: false
+        disk_profile: !ruby/object:OvirtSDK4::DiskProfile
+          href: "/ovirt-engine/api/diskprofiles/b1f0065e-9aef-4eb1-8939-aaad13eee28e"
+          comment: 
+          description: 
+          id: b1f0065e-9aef-4eb1-8939-aaad13eee28e
+          name: 
+          permissions: 
+          qos: 
+          storage_domain: 
+        format: cow
+        image_id: 7a9246c6-c600-4755-afd9-48551b807372
+        interface: virtio
+        logical_name: 
+        lun_storage: 
+        openstack_volume_type: 
+        permissions: !ruby/array:OvirtSDK4::List
+          internal: []
+          ivars:
+            :@href: "/ovirt-engine/api/disks/1e9668b0-0054-4afd-8ae3-970346ebe513/permissions"
+        propagate_errors: false
+        provisioned_size: 1073741824
+        quota: 
+        read_only: 
+        sgio: 
+        shareable: false
+        snapshot: 
+        sparse: true
+        statistics: !ruby/array:OvirtSDK4::List
+          internal: []
+          ivars:
+            :@href: "/ovirt-engine/api/disks/1e9668b0-0054-4afd-8ae3-970346ebe513/statistics"
+        status: ok
+        storage_domain: 
+        storage_domains: !ruby/array:OvirtSDK4::List
+          internal:
+          - !ruby/object:OvirtSDK4::StorageDomain
+            href: "/ovirt-engine/api/storagedomains/4672fe17-c260-4ecc-aab0-b535f4d0dbeb"
+            comment: 
+            description: 
+            id: 4672fe17-c260-4ecc-aab0-b535f4d0dbeb
+            name: 
+            available: 
+            committed: 
+            critical_space_action_blocker: 
+            data_center: 
+            data_centers: 
+            disk_profiles: 
+            disk_snapshots: 
+            disks: 
+            external_status: 
+            files: 
+            host: 
+            images: 
+            import: 
+            master: 
+            permissions: 
+            status: 
+            storage: 
+            storage_connections: 
+            storage_format: 
+            templates: 
+            type: 
+            used: 
+            vms: 
+            warning_low_space_indicator: 
+            wipe_after_delete: 
+          ivars:
+            :@href: 
+        storage_type: image
+        uses_scsi_reservation: 
+        wipe_after_delete: false
+    - !ruby/array:OvirtSDK4::List
+      internal: []
+      ivars:
+        :@href: 
+    - !ruby/array:OvirtSDK4::List
+      internal: []
+      ivars:
+        :@href: 
+    - !ruby/array:OvirtSDK4::List
+      internal:
+      - !ruby/object:OvirtSDK4::Snapshot
+        href: "/ovirt-engine/api/vms/9a3d9765-1a23-41f0-a578-50013a8ad5ba/snapshots/3bccd9d6-484d-48a6-9d90-0d018d045d32"
+        comment: 
+        description: Active VM
+        id: 3bccd9d6-484d-48a6-9d90-0d018d045d32
+        name: 
+        bios: 
+        cluster: 
+        console: 
+        cpu: 
+        cpu_profile: 
+        cpu_shares: 
+        creation_time: 
+        custom_compatibility_version: 
+        custom_cpu_model: 
+        custom_emulated_machine: 
+        custom_properties: 
+        delete_protected: 
+        display: 
+        domain: 
+        high_availability: 
+        initialization: 
+        io: 
+        large_icon: 
+        memory: 
+        memory_policy: 
+        migration: 
+        migration_downtime: 
+        origin: 
+        os: 
+        quota: 
+        rng_device: 
+        serial_number: 
+        small_icon: 
+        soundcard_enabled: 
+        sso: 
+        start_paused: 
+        stateless: 
+        storage_domain: 
+        time_zone: 
+        tunnel_migration: 
+        type: 
+        usb: 
+        virtio_scsi: 
+        affinity_labels: 
+        applications: 
+        cdroms: 
+        disk_attachments: 
+        external_host_provider: 
+        floppies: 
+        fqdn: 
+        graphics_consoles: 
+        guest_operating_system: 
+        guest_time_zone: 
+        host: 
+        host_devices: 
+        instance_type: 
+        katello_errata: 
+        next_run_configuration_exists: 
+        nics: 
+        numa_nodes: 
+        numa_tune_mode: 
+        payloads: 
+        permissions: 
+        placement_policy: 
+        reported_devices: 
+        run_once: 
+        sessions: 
+        snapshots: 
+        start_time: 
+        statistics: 
+        status: 
+        status_detail: 
+        stop_reason: 
+        stop_time: 
+        tags: 
+        template: 
+        use_latest_template_version: 
+        vm_pool: 
+        watchdogs: 
+        date: !ruby/object:DateTime 2016-07-12 10:53:14.025000000 +03:00
+        persist_memorystate: false
+        snapshot_status: ok
+        snapshot_type: active
+        vm: 
+      - !ruby/object:OvirtSDK4::Snapshot
+        href: "/ovirt-engine/api/vms/9a3d9765-1a23-41f0-a578-50013a8ad5ba/snapshots/fc550453-c7d4-4146-ad23-4298c0b8defa"
+        comment: 
+        description: tests1
+        id: fc550453-c7d4-4146-ad23-4298c0b8defa
+        name: 
+        bios: 
+        cluster: 
+        console: 
+        cpu: 
+        cpu_profile: 
+        cpu_shares: 
+        creation_time: 
+        custom_compatibility_version: 
+        custom_cpu_model: 
+        custom_emulated_machine: 
+        custom_properties: 
+        delete_protected: 
+        display: 
+        domain: 
+        high_availability: 
+        initialization: 
+        io: 
+        large_icon: 
+        memory: 
+        memory_policy: 
+        migration: 
+        migration_downtime: 
+        origin: 
+        os: 
+        quota: 
+        rng_device: 
+        serial_number: 
+        small_icon: 
+        soundcard_enabled: 
+        sso: 
+        start_paused: 
+        stateless: 
+        storage_domain: 
+        time_zone: 
+        tunnel_migration: 
+        type: 
+        usb: 
+        virtio_scsi: 
+        affinity_labels: 
+        applications: 
+        cdroms: !ruby/array:OvirtSDK4::List
+          internal: []
+          ivars:
+            :@href: "/ovirt-engine/api/vms/9a3d9765-1a23-41f0-a578-50013a8ad5ba/snapshots/fc550453-c7d4-4146-ad23-4298c0b8defa/cdroms"
+        disk_attachments: 
+        external_host_provider: 
+        floppies: 
+        fqdn: 
+        graphics_consoles: 
+        guest_operating_system: 
+        guest_time_zone: 
+        host: 
+        host_devices: 
+        instance_type: 
+        katello_errata: 
+        next_run_configuration_exists: 
+        nics: !ruby/array:OvirtSDK4::List
+          internal: []
+          ivars:
+            :@href: "/ovirt-engine/api/vms/9a3d9765-1a23-41f0-a578-50013a8ad5ba/snapshots/fc550453-c7d4-4146-ad23-4298c0b8defa/nics"
+        numa_nodes: 
+        numa_tune_mode: 
+        payloads: 
+        permissions: 
+        placement_policy: 
+        reported_devices: 
+        run_once: 
+        sessions: 
+        snapshots: 
+        start_time: 
+        statistics: 
+        status: 
+        status_detail: 
+        stop_reason: 
+        stop_time: 
+        tags: 
+        template: 
+        use_latest_template_version: 
+        vm_pool: 
+        watchdogs: 
+        date: !ruby/object:DateTime 2016-07-13 13:28:42.963000000 +03:00
+        persist_memorystate: true
+        snapshot_status: ok
+        snapshot_type: regular
+        vm: !ruby/object:OvirtSDK4::Vm
+          href: 
+          comment: 
+          description: 
+          id: 9a3d9765-1a23-41f0-a578-50013a8ad5ba
+          name: vmdc1
+          bios: !ruby/object:OvirtSDK4::Bios
+            href: 
+            boot_menu: !ruby/object:OvirtSDK4::BootMenu
+              href: 
+              enabled: false
+          cluster: !ruby/object:OvirtSDK4::Cluster
+            href: 
+            comment: 
+            description: 
+            id: 00000002-0002-0002-0002-000000000092
+            name: 
+            affinity_groups: 
+            ballooning_enabled: 
+            cpu: 
+            cpu_profiles: 
+            custom_scheduling_policy_properties: 
+            data_center: 
+            display: 
+            error_handling: 
+            fencing_policy: 
+            gluster_hooks: 
+            gluster_service: 
+            gluster_volumes: 
+            ha_reservation: 
+            ksm: 
+            maintenance_reason_required: 
+            management_network: 
+            memory_policy: 
+            migration: 
+            network_filters: 
+            networks: 
+            optional_reason: 
+            permissions: 
+            required_rng_sources: 
+            scheduling_policy: 
+            serial_number: 
+            supported_versions: 
+            switch_type: 
+            threads_as_cores: 
+            trusted_service: 
+            tunnel_migration: 
+            version: 
+            virt_service: 
+          console: 
+          cpu: !ruby/object:OvirtSDK4::Cpu
+            href: 
+            architecture: x86_64
+            cores: 
+            cpu_tune: 
+            level: 
+            mode: 
+            name: 
+            speed: 
+            topology: !ruby/object:OvirtSDK4::CpuTopology
+              href: 
+              cores: 1
+              sockets: 1
+              threads: 1
+            type: 
+          cpu_profile: !ruby/object:OvirtSDK4::CpuProfile
+            href: 
+            comment: 
+            description: 
+            id: 0000000e-000e-000e-000e-000000000384
+            name: 
+            cluster: 
+            permissions: 
+            qos: 
+          cpu_shares: 0
+          creation_time: !ruby/object:DateTime 2016-07-12 10:53:13.000000000 +03:00
+          custom_compatibility_version: 
+          custom_cpu_model: 
+          custom_emulated_machine: 
+          custom_properties: 
+          delete_protected: false
+          display: !ruby/object:OvirtSDK4::Display
+            href: 
+            address: 
+            allow_override: false
+            certificate: 
+            copy_paste_enabled: true
+            disconnect_action: LOCK_SCREEN
+            file_transfer_enabled: true
+            keyboard_layout: 
+            monitors: 1
+            port: 
+            proxy: 
+            secure_port: 
+            single_qxl_pci: false
+            smartcard_enabled: false
+            type: 
+          domain: 
+          high_availability: !ruby/object:OvirtSDK4::HighAvailability
+            href: 
+            enabled: false
+            priority: 1
+          initialization: !ruby/object:OvirtSDK4::Initialization
+            href: 
+            active_directory_ou: 
+            authorized_ssh_keys: 
+            cloud_init: 
+            configuration: 
+            custom_script: 
+            dns_search: 
+            dns_servers: 
+            domain: 
+            host_name: 
+            input_locale: 
+            nic_configurations: 
+            org_name: 
+            regenerate_ids: 
+            regenerate_ssh_keys: 
+            root_password: 
+            system_locale: 
+            timezone: 
+            ui_language: 
+            user_locale: 
+            user_name: 
+            windows_license_key: 
+          io: !ruby/object:OvirtSDK4::Io
+            href: 
+            threads: 0
+          large_icon: !ruby/object:OvirtSDK4::Icon
+            href: 
+            comment: 
+            description: 
+            id: db8d96f8-75cd-475a-b2f5-c37d75a288b1
+            name: 
+            data: 
+            media_type: 
+          memory: 1073741824
+          memory_policy: !ruby/object:OvirtSDK4::MemoryPolicy
+            href: 
+            ballooning: 
+            guaranteed: 1073741824
+            over_commit: 
+            transparent_huge_pages: 
+          migration: !ruby/object:OvirtSDK4::MigrationOptions
+            href: 
+            auto_converge: inherit
+            bandwidth: 
+            compressed: inherit
+            policy: 
+          migration_downtime: -1
+          origin: ovirt
+          os: !ruby/object:OvirtSDK4::OperatingSystem
+            href: 
+            boot: !ruby/object:OvirtSDK4::Boot
+              href: 
+              devices:
+              - hd
+            cmdline: 
+            custom_kernel_cmdline: 
+            initrd: 
+            kernel: 
+            reported_kernel_cmdline: 
+            type: other
+            version: 
+          quota: 
+          rng_device: 
+          serial_number: 
+          small_icon: !ruby/object:OvirtSDK4::Icon
+            href: 
+            comment: 
+            description: 
+            id: c947ca42-629e-46cf-aeeb-ef949fae52c0
+            name: 
+            data: 
+            media_type: 
+          soundcard_enabled: 
+          sso: !ruby/object:OvirtSDK4::Sso
+            href: 
+            methods: !ruby/array:OvirtSDK4::List
+              internal:
+              - !ruby/object:OvirtSDK4::Method
+                href: 
+                id: guest_agent
+              ivars:
+                :@href: 
+          start_paused: false
+          stateless: false
+          storage_domain: 
+          time_zone: !ruby/object:OvirtSDK4::TimeZone
+            href: 
+            name: Etc/GMT
+            utc_offset: 
+          tunnel_migration: 
+          type: desktop
+          usb: !ruby/object:OvirtSDK4::Usb
+            href: 
+            enabled: false
+            type: 
+          virtio_scsi: 
+          affinity_labels: 
+          applications: 
+          cdroms: 
+          disk_attachments: 
+          external_host_provider: 
+          floppies: 
+          fqdn: 
+          graphics_consoles: 
+          guest_operating_system: 
+          guest_time_zone: 
+          host: 
+          host_devices: 
+          instance_type: 
+          katello_errata: 
+          next_run_configuration_exists: false
+          nics: 
+          numa_nodes: 
+          numa_tune_mode: interleave
+          payloads: 
+          permissions: 
+          placement_policy: !ruby/object:OvirtSDK4::VmPlacementPolicy
+            href: 
+            affinity: migratable
+            hosts: 
+          reported_devices: 
+          run_once: 
+          sessions: 
+          snapshots: 
+          start_time: 
+          statistics: 
+          status: down
+          status_detail: 
+          stop_reason: ''
+          stop_time: !ruby/object:DateTime 2016-07-18 17:34:44.729000000 +03:00
+          tags: 
+          template: !ruby/object:OvirtSDK4::Template
+            href: 
+            comment: 
+            description: 
+            id: 00000000-0000-0000-0000-000000000000
+            name: 
+            bios: 
+            cluster: 
+            console: 
+            cpu: 
+            cpu_profile: 
+            cpu_shares: 
+            creation_time: 
+            custom_compatibility_version: 
+            custom_cpu_model: 
+            custom_emulated_machine: 
+            custom_properties: 
+            delete_protected: 
+            display: 
+            domain: 
+            high_availability: 
+            initialization: 
+            io: 
+            large_icon: 
+            memory: 
+            memory_policy: 
+            migration: 
+            migration_downtime: 
+            origin: 
+            os: 
+            quota: 
+            rng_device: 
+            serial_number: 
+            small_icon: 
+            soundcard_enabled: 
+            sso: 
+            start_paused: 
+            stateless: 
+            storage_domain: 
+            time_zone: 
+            tunnel_migration: 
+            type: 
+            usb: 
+            virtio_scsi: 
+            cdroms: 
+            disk_attachments: 
+            graphics_consoles: 
+            nics: 
+            permissions: 
+            status: 
+            tags: 
+            version: 
+            vm: 
+            watchdogs: 
+          use_latest_template_version: 
+          vm_pool: 
+          watchdogs: 
+      ivars:
+        :@href: 
+  : *8

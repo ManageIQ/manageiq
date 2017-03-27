@@ -108,14 +108,22 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
       end
 
       context "with a destination vm" do
+        let(:destination_vm) { FactoryGirl.create(:vm_redhat, :ext_management_system => @ems) }
         before do
+          allow(@ems).to receive(:resolve_ip_address).with(@ems.hostname).and_return("1.2.3.4")
           rhevm_vm = double(:attributes => {:status => {:state => "down"}})
           allow(@vm_prov).to receive(:get_provider_destination).and_return(rhevm_vm)
+          allow(@vm_prov).to receive(:destination).and_return(destination_vm)
+          allow_any_instance_of(ManageIQ::Providers::Redhat::InfraManager).to receive(:supported_api_versions)
+            .and_return([3])
+          allow(destination_vm).to receive(:provider_object).and_return(rhevm_vm)
+          allow(destination_vm).to receive(:with_provider_object)
+            .and_yield(rhevm_vm)
         end
 
         context "destination_image_locked?" do
           it "with a powered-off destination" do
-            expect(subject.destination_image_locked?).to be_falsey
+            expect(@vm_prov.destination_image_locked?).to be_falsey
           end
 
           it "with an imaged_locked destination" do

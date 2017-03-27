@@ -7,6 +7,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionViaIso do
       options  = {:src_vm_id => template.id}
 
       @task = FactoryGirl.create(:miq_provision_redhat_via_iso, :source => template, :destination => vm, :state => 'pending', :status => 'Ok', :options => options)
+      allow(@task).to receive(:destination_image_locked?).and_return(false)
     end
 
     include_examples "common rhev state machine methods"
