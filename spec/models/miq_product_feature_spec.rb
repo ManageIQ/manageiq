@@ -112,20 +112,18 @@ describe MiqProductFeature do
     it "returns only visible features" do
       hierarchical_features
       expect(MiqProductFeature).not_to receive(:sort_children)
-      expect(MiqProductFeature.feature_children("miq_report_widget_admin", false)).to match_array(
-        %w(widget_copy widget_edit))
+      expect(MiqProductFeature.feature_children("miq_report_widget_admin", false)).to match_array(%w(widget_copy widget_edit))
     end
 
     it "returns direct children only" do
       hierarchical_features
-      expect(MiqProductFeature.feature_children("miq_report_widget_editor")).to eq(
-        %w(miq_report_widget_admin))
+      expect(MiqProductFeature.feature_children("miq_report_widget_editor")).to match_array(%w(miq_report_widget_admin))
     end
 
     it "sorts features" do
       hierarchical_features
       expect(MiqProductFeature).to receive(:sort_children).and_call_original
-      expect(MiqProductFeature.feature_children("miq_report_widget_admin")).to eq(%w(widget_copy widget_edit))
+      expect(MiqProductFeature.feature_children("miq_report_widget_admin")).to match_array(%w(widget_copy widget_edit))
     end
   end
 
@@ -187,9 +185,9 @@ describe MiqProductFeature do
       expect { MiqProductFeature.features }.to match_query_limit_of(0)
 
       expect(MiqProductFeature.feature_root).to eq("f1")
-      expect(MiqProductFeature.feature_children("f1")).to eq(%w(f2 f3))
-      expect(MiqProductFeature.feature_children("f2")).to eq([])
-      expect(MiqProductFeature.feature_children("f3")).to eq(%w(f4 f5))
+      expect(MiqProductFeature.feature_children("f1")).to match_array(%w(f2 f3))
+      expect(MiqProductFeature.feature_children("f2")).to match_array([])
+      expect(MiqProductFeature.feature_children("f3")).to match_array(%w(f4 f5))
 
       expect(MiqProductFeature.feature_parent("f1")).to be_nil
       expect(MiqProductFeature.feature_parent("f2")).to eq("f1")
@@ -216,9 +214,9 @@ describe MiqProductFeature do
 
     it "builds a hash of features objects with child objects" do
       expect(MiqProductFeature.feature_root).to eq("everything")
-      expect(MiqProductFeature.obj_feature_children("f1")).to eq([f2, f3])
-      expect(MiqProductFeature.obj_feature_children("f2")).to eq([])
-      expect(MiqProductFeature.obj_feature_children("f3")).to eq([f4, f5])
+      expect(MiqProductFeature.obj_feature_children("f1")).to match_array([f2, f3])
+      expect(MiqProductFeature.obj_feature_children("f2")).to match_array([])
+      expect(MiqProductFeature.obj_feature_children("f3")).to match_array([f4, f5])
     end
 
     it "references the parent by identifier" do
