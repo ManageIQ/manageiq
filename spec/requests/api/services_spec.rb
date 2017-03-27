@@ -666,6 +666,18 @@ describe "Services API" do
 
       expect(response).to have_http_status(:forbidden)
     end
+
+    it 'can return the stdout of an orchestration_stack' do
+      api_basic_authorize subcollection_action_identifier(:services, :orchestration_stacks, :stdout, :post)
+      allow_any_instance_of(OrchestrationStack).to receive(:raw_stdout).and_return('stdoutput')
+      run_post("#{services_url(svc.id)}/orchestration_stacks/#{os.id}", :action => 'stdout')
+
+      expected = {
+        'stdout' => 'stdoutput'
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
   end
 
   describe 'add_resource' do

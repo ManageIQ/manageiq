@@ -1023,15 +1023,21 @@
     :description: Orchestration Stacks
     :options:
     - :subcollection
-    :verbs: *g
+    :verbs: *gp
     :klass: OrchestrationStack
     :subcollection_actions:
       :get:
       - :name: read
         :identifier: orchestration_stack_view
+      :post:
+      - :name: stdout
+        :identifier: orchestration_stack_view
     :subresource_actions:
       :get:
       - :name: read
+        :identifier: orchestration_stack_view
+      :post:
+      - :name: stdout
         :identifier: orchestration_stack_view
   :orchestration_templates:
     :description: Orchestration Template
