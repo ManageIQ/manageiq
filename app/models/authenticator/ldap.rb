@@ -4,6 +4,18 @@ module Authenticator
       'LDAP'
     end
 
+    def self.authenticates_for
+      super + %w(ldaps)
+    end
+
+    def self.validate_config(config)
+      if config[:ldaphost].blank?
+        [:ldaphost, "ldaphost can't be blank"]
+      else
+        []
+      end
+    end
+
     def lookup_by_identity(username)
       super ||
         find_or_create_by_ldap(username)

@@ -2,6 +2,14 @@ module Authenticator
   class Base
     include Vmdb::Logging
 
+    def self.validate_config(_config)
+      []
+    end
+
+    def self.authenticates_for
+      [name.demodulize.underscore]
+    end
+
     def self.authorize(config, *args)
       new(config).authorize(*args)
     end

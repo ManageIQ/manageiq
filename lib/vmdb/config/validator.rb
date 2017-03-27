@@ -71,25 +71,16 @@ module VMDB
       def authentication(data)
         valid, errors = true, []
 
-        keys = data.each_pair.to_a.transpose.first.to_set
+        return valid, errors if data.mode == 'none'
 
-        if keys.include?(:mode) && !AUTH_TYPES.include?(data.mode)
+        authenticator = Authenticator.authenticator_class(data.mode)
+
+        if authenticator
+          errors = authenticator.validate_config(data)
+          valid = errors.empty?
+        else
           valid = false
-          errors << [:mode, "authentication type, \"#{data.mode}\", invalid. Should be one of: #{AUTH_TYPES.join(", ")}"]
-        end
-
-        if data.mode == "ldap"
-          if data.ldaphost.blank?
-            valid = false; errors << [:ldaphost, "ldaphost can't be blank"]
-          end
-        elsif data.mode == "amazon"
-          if data.amazon_key.blank?
-            valid = false; errors << [:amazon_key, "amazon key can't be blank"]
-          end
-
-          if data.amazon_secret.blank?
-            valid = false; errors << [:amazon_secret, "amazon secret can't be blank"]
-          end
+          errors << [:mode, "authentication type, \"#{data.mode}\", invalid. Should be one of: #{Authenticator::Base.subclasses.map(&:authenticates_for).join(", ")}"]
         end
 
         return valid, errors

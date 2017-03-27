@@ -29,7 +29,8 @@ describe VMDB::Config::Validator do
     {:webservices => {:timeout => 123}},   true,
     {:webservices => {:timeout => "xxx"}}, false,
 
-    {:authentication => {:mode => "ldaps"}}, true,
+    {:authentication => {:mode => "ldaps"}}, false,
+    {:authentication => {:mode => "ldaps", :ldaphost => "foo"}}, true,
     {:authentication => {:mode => "xxx"}},   false,
 
     {:authentication => {:mode => "ldap", :ldaphost => "foo"}}, true,
