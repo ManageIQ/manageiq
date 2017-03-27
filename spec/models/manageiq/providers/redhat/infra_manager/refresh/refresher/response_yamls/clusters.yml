@@ -1,0 +1,470 @@
+--- !ruby/array:OvirtSDK4::List
+internal:
+- !ruby/object:OvirtSDK4::Cluster
+  href: "/ovirt-engine/api/clusters/504ae500-3476-450e-8243-f6df0f7f7acf"
+  comment: 
+  description: 
+  id: 504ae500-3476-450e-8243-f6df0f7f7acf
+  name: cc1
+  affinity_groups: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/clusters/504ae500-3476-450e-8243-f6df0f7f7acf/affinitygroups"
+  ballooning_enabled: false
+  cpu: !ruby/object:OvirtSDK4::Cpu
+    href: 
+    architecture: x86_64
+    cores: 
+    cpu_tune: 
+    level: 
+    mode: 
+    name: 
+    speed: 
+    topology: 
+    type: Intel Westmere Family
+  cpu_profiles: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/clusters/504ae500-3476-450e-8243-f6df0f7f7acf/cpuprofiles"
+  custom_scheduling_policy_properties: !ruby/array:OvirtSDK4::List
+    internal:
+    - !ruby/object:OvirtSDK4::Property
+      href: 
+      name: HighUtilization
+      value: '80'
+    - !ruby/object:OvirtSDK4::Property
+      href: 
+      name: CpuOverCommitDurationMinutes
+      value: '2'
+    ivars:
+      :@href: 
+  data_center: !ruby/object:OvirtSDK4::DataCenter
+    href: "/ovirt-engine/api/datacenters/b60b3daa-dcbd-40c9-8d09-3fc08c91f5d1"
+    comment: 
+    description: 
+    id: b60b3daa-dcbd-40c9-8d09-3fc08c91f5d1
+    name: 
+    clusters: 
+    iscsi_bonds: 
+    local: 
+    mac_pool: 
+    networks: 
+    permissions: 
+    qoss: 
+    quota_mode: 
+    quotas: 
+    status: 
+    storage_domains: 
+    storage_format: 
+    supported_versions: 
+    version: 
+  display: 
+  error_handling: !ruby/object:OvirtSDK4::ErrorHandling
+    href: 
+    on_error: migrate
+  fencing_policy: !ruby/object:OvirtSDK4::FencingPolicy
+    href: 
+    enabled: true
+    skip_if_connectivity_broken: !ruby/object:OvirtSDK4::SkipIfConnectivityBroken
+      href: 
+      enabled: true
+      threshold: 50
+    skip_if_sd_active: !ruby/object:OvirtSDK4::SkipIfSdActive
+      href: 
+      enabled: true
+  gluster_hooks: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/clusters/504ae500-3476-450e-8243-f6df0f7f7acf/glusterhooks"
+  gluster_service: false
+  gluster_volumes: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/clusters/504ae500-3476-450e-8243-f6df0f7f7acf/glustervolumes"
+  ha_reservation: false
+  ksm: !ruby/object:OvirtSDK4::Ksm
+    href: 
+    enabled: false
+    merge_across_nodes: true
+  maintenance_reason_required: false
+  management_network: 
+  memory_policy: !ruby/object:OvirtSDK4::MemoryPolicy
+    href: 
+    ballooning: 
+    guaranteed: 
+    over_commit: !ruby/object:OvirtSDK4::MemoryOverCommit
+      href: 
+      percent: 100
+    transparent_huge_pages: !ruby/object:OvirtSDK4::TransparentHugePages
+      href: 
+      enabled: true
+  migration: !ruby/object:OvirtSDK4::MigrationOptions
+    href: 
+    auto_converge: inherit
+    bandwidth: !ruby/object:OvirtSDK4::MigrationBandwidth
+      href: 
+      assignment_method: auto
+      custom_value: 
+    compressed: inherit
+    policy: !ruby/object:OvirtSDK4::MigrationPolicy
+      href: 
+      comment: 
+      description: 
+      id: 80554327-0569-496b-bdeb-fcbbf52b827b
+      name: 
+  network_filters: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/clusters/504ae500-3476-450e-8243-f6df0f7f7acf/networkfilters"
+  networks: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/clusters/504ae500-3476-450e-8243-f6df0f7f7acf/networks"
+  optional_reason: false
+  permissions: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/clusters/504ae500-3476-450e-8243-f6df0f7f7acf/permissions"
+  required_rng_sources:
+  - random
+  scheduling_policy: !ruby/object:OvirtSDK4::SchedulingPolicy
+    href: "/ovirt-engine/api/schedulingpolicies/b4ed2332-a7ac-4d5f-9596-99a439cb2812"
+    comment: 
+    description: 
+    id: b4ed2332-a7ac-4d5f-9596-99a439cb2812
+    name: 
+    balances: 
+    default_policy: 
+    filters: 
+    locked: 
+    properties: 
+    weight: 
+  serial_number: 
+  supported_versions: 
+  switch_type: legacy
+  threads_as_cores: false
+  trusted_service: false
+  tunnel_migration: false
+  version: !ruby/object:OvirtSDK4::Version
+    href: 
+    comment: 
+    description: 
+    id: 
+    name: 
+    build: 
+    full_version: 
+    major: 3
+    minor: 6
+    revision: 
+  virt_service: true
+- !ruby/object:OvirtSDK4::Cluster
+  href: "/ovirt-engine/api/clusters/13fea00a-05fc-4024-8ed2-216cf20bf610"
+  comment: 
+  description: 
+  id: 13fea00a-05fc-4024-8ed2-216cf20bf610
+  name: dccc2
+  affinity_groups: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/clusters/13fea00a-05fc-4024-8ed2-216cf20bf610/affinitygroups"
+  ballooning_enabled: false
+  cpu: !ruby/object:OvirtSDK4::Cpu
+    href: 
+    architecture: x86_64
+    cores: 
+    cpu_tune: 
+    level: 
+    mode: 
+    name: 
+    speed: 
+    topology: 
+    type: Intel Conroe Family
+  cpu_profiles: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/clusters/13fea00a-05fc-4024-8ed2-216cf20bf610/cpuprofiles"
+  custom_scheduling_policy_properties: !ruby/array:OvirtSDK4::List
+    internal:
+    - !ruby/object:OvirtSDK4::Property
+      href: 
+      name: HighUtilization
+      value: '80'
+    - !ruby/object:OvirtSDK4::Property
+      href: 
+      name: CpuOverCommitDurationMinutes
+      value: '2'
+    ivars:
+      :@href: 
+  data_center: !ruby/object:OvirtSDK4::DataCenter
+    href: "/ovirt-engine/api/datacenters/b60b3daa-dcbd-40c9-8d09-3fc08c91f5d1"
+    comment: 
+    description: 
+    id: b60b3daa-dcbd-40c9-8d09-3fc08c91f5d1
+    name: 
+    clusters: 
+    iscsi_bonds: 
+    local: 
+    mac_pool: 
+    networks: 
+    permissions: 
+    qoss: 
+    quota_mode: 
+    quotas: 
+    status: 
+    storage_domains: 
+    storage_format: 
+    supported_versions: 
+    version: 
+  display: 
+  error_handling: !ruby/object:OvirtSDK4::ErrorHandling
+    href: 
+    on_error: migrate
+  fencing_policy: !ruby/object:OvirtSDK4::FencingPolicy
+    href: 
+    enabled: true
+    skip_if_connectivity_broken: !ruby/object:OvirtSDK4::SkipIfConnectivityBroken
+      href: 
+      enabled: true
+      threshold: 50
+    skip_if_sd_active: !ruby/object:OvirtSDK4::SkipIfSdActive
+      href: 
+      enabled: true
+  gluster_hooks: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/clusters/13fea00a-05fc-4024-8ed2-216cf20bf610/glusterhooks"
+  gluster_service: false
+  gluster_volumes: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/clusters/13fea00a-05fc-4024-8ed2-216cf20bf610/glustervolumes"
+  ha_reservation: false
+  ksm: !ruby/object:OvirtSDK4::Ksm
+    href: 
+    enabled: false
+    merge_across_nodes: true
+  maintenance_reason_required: false
+  management_network: 
+  memory_policy: !ruby/object:OvirtSDK4::MemoryPolicy
+    href: 
+    ballooning: 
+    guaranteed: 
+    over_commit: !ruby/object:OvirtSDK4::MemoryOverCommit
+      href: 
+      percent: 100
+    transparent_huge_pages: !ruby/object:OvirtSDK4::TransparentHugePages
+      href: 
+      enabled: true
+  migration: !ruby/object:OvirtSDK4::MigrationOptions
+    href: 
+    auto_converge: inherit
+    bandwidth: !ruby/object:OvirtSDK4::MigrationBandwidth
+      href: 
+      assignment_method: auto
+      custom_value: 
+    compressed: inherit
+    policy: !ruby/object:OvirtSDK4::MigrationPolicy
+      href: 
+      comment: 
+      description: 
+      id: 80554327-0569-496b-bdeb-fcbbf52b827b
+      name: 
+  network_filters: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/clusters/13fea00a-05fc-4024-8ed2-216cf20bf610/networkfilters"
+  networks: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/clusters/13fea00a-05fc-4024-8ed2-216cf20bf610/networks"
+  optional_reason: false
+  permissions: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/clusters/13fea00a-05fc-4024-8ed2-216cf20bf610/permissions"
+  required_rng_sources:
+  - random
+  scheduling_policy: !ruby/object:OvirtSDK4::SchedulingPolicy
+    href: "/ovirt-engine/api/schedulingpolicies/b4ed2332-a7ac-4d5f-9596-99a439cb2812"
+    comment: 
+    description: 
+    id: b4ed2332-a7ac-4d5f-9596-99a439cb2812
+    name: 
+    balances: 
+    default_policy: 
+    filters: 
+    locked: 
+    properties: 
+    weight: 
+  serial_number: 
+  supported_versions: 
+  switch_type: legacy
+  threads_as_cores: false
+  trusted_service: false
+  tunnel_migration: false
+  version: !ruby/object:OvirtSDK4::Version
+    href: 
+    comment: 
+    description: 
+    id: 
+    name: 
+    build: 
+    full_version: 
+    major: 3
+    minor: 6
+    revision: 
+  virt_service: true
+- !ruby/object:OvirtSDK4::Cluster
+  href: "/ovirt-engine/api/clusters/00000002-0002-0002-0002-000000000092"
+  comment: 
+  description: The default server cluster
+  id: 00000002-0002-0002-0002-000000000092
+  name: Default
+  affinity_groups: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/clusters/00000002-0002-0002-0002-000000000092/affinitygroups"
+  ballooning_enabled: false
+  cpu: !ruby/object:OvirtSDK4::Cpu
+    href: 
+    architecture: x86_64
+    cores: 
+    cpu_tune: 
+    level: 
+    mode: 
+    name: 
+    speed: 
+    topology: 
+    type: Intel Westmere Family
+  cpu_profiles: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/clusters/00000002-0002-0002-0002-000000000092/cpuprofiles"
+  custom_scheduling_policy_properties: !ruby/array:OvirtSDK4::List
+    internal:
+    - !ruby/object:OvirtSDK4::Property
+      href: 
+      name: HighUtilization
+      value: '80'
+    - !ruby/object:OvirtSDK4::Property
+      href: 
+      name: CpuOverCommitDurationMinutes
+      value: '2'
+    ivars:
+      :@href: 
+  data_center: !ruby/object:OvirtSDK4::DataCenter
+    href: "/ovirt-engine/api/datacenters/00000001-0001-0001-0001-00000000009f"
+    comment: 
+    description: 
+    id: 00000001-0001-0001-0001-00000000009f
+    name: 
+    clusters: 
+    iscsi_bonds: 
+    local: 
+    mac_pool: 
+    networks: 
+    permissions: 
+    qoss: 
+    quota_mode: 
+    quotas: 
+    status: 
+    storage_domains: 
+    storage_format: 
+    supported_versions: 
+    version: 
+  display: 
+  error_handling: !ruby/object:OvirtSDK4::ErrorHandling
+    href: 
+    on_error: migrate
+  fencing_policy: !ruby/object:OvirtSDK4::FencingPolicy
+    href: 
+    enabled: true
+    skip_if_connectivity_broken: !ruby/object:OvirtSDK4::SkipIfConnectivityBroken
+      href: 
+      enabled: false
+      threshold: 50
+    skip_if_sd_active: !ruby/object:OvirtSDK4::SkipIfSdActive
+      href: 
+      enabled: false
+  gluster_hooks: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/clusters/00000002-0002-0002-0002-000000000092/glusterhooks"
+  gluster_service: false
+  gluster_volumes: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/clusters/00000002-0002-0002-0002-000000000092/glustervolumes"
+  ha_reservation: false
+  ksm: !ruby/object:OvirtSDK4::Ksm
+    href: 
+    enabled: true
+    merge_across_nodes: true
+  maintenance_reason_required: false
+  management_network: 
+  memory_policy: !ruby/object:OvirtSDK4::MemoryPolicy
+    href: 
+    ballooning: 
+    guaranteed: 
+    over_commit: !ruby/object:OvirtSDK4::MemoryOverCommit
+      href: 
+      percent: 100
+    transparent_huge_pages: !ruby/object:OvirtSDK4::TransparentHugePages
+      href: 
+      enabled: true
+  migration: !ruby/object:OvirtSDK4::MigrationOptions
+    href: 
+    auto_converge: inherit
+    bandwidth: !ruby/object:OvirtSDK4::MigrationBandwidth
+      href: 
+      assignment_method: auto
+      custom_value: 
+    compressed: inherit
+    policy: 
+  network_filters: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/clusters/00000002-0002-0002-0002-000000000092/networkfilters"
+  networks: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/clusters/00000002-0002-0002-0002-000000000092/networks"
+  optional_reason: false
+  permissions: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/clusters/00000002-0002-0002-0002-000000000092/permissions"
+  required_rng_sources:
+  - urandom
+  scheduling_policy: !ruby/object:OvirtSDK4::SchedulingPolicy
+    href: "/ovirt-engine/api/schedulingpolicies/b4ed2332-a7ac-4d5f-9596-99a439cb2812"
+    comment: 
+    description: 
+    id: b4ed2332-a7ac-4d5f-9596-99a439cb2812
+    name: 
+    balances: 
+    default_policy: 
+    filters: 
+    locked: 
+    properties: 
+    weight: 
+  serial_number: 
+  supported_versions: 
+  switch_type: legacy
+  threads_as_cores: false
+  trusted_service: false
+  tunnel_migration: false
+  version: !ruby/object:OvirtSDK4::Version
+    href: 
+    comment: 
+    description: 
+    id: 
+    name: 
+    build: 
+    full_version: 
+    major: 4
+    minor: 1
+    revision: 
+  virt_service: true
+ivars:
+  :@href: 
