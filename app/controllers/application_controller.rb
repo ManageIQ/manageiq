@@ -1407,6 +1407,19 @@ class ApplicationController < ActionController::Base
     items
   end
 
+  # Test RBAC on every item checked
+  # Params:
+  #   klass - class of accessed objects
+  # Returns:
+  #   array of records. If user does not have rigts for it,
+  #   raises exception
+  def find_checked_records_with_rbac(klass)
+    ids = find_checked_items
+    filtered = Rbac.filtered(klass.where(:id => ids))
+    raise _("Unauthorized object or action") unless ids.length == filtered.length
+    filtered
+  end
+
   # Test RBAC in case there is only one record
   # Params:
   #   klass - class of accessed object
