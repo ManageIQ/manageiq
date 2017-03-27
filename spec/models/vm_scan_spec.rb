@@ -1,18 +1,19 @@
 describe VmScan do
   context "A single VM Scan Job," do
     before(:each) do
-      @server = EvmSpecHelper.local_miq_server
+      @server = EvmSpecHelper.local_miq_server(:capabilities => {:vixDisk => true})
+      assign_smartproxy_role_to_server(@server)
 
-      # TODO: We should be able to set values so we don't need to stub behavior
-      allow_any_instance_of(MiqServer).to receive_messages(:is_a_proxy? => true, :has_active_role? => true, :is_vix_disk? => true)
-      allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive_messages(:authentication_status_ok? => true)
-      allow(Vm).to receive_messages(:scan_via_ems? => true)
+      # TODO: stub only settings needed for test instead of all from settings.yml
+      stub_settings(::Settings.to_hash.merge(:coresident_miqproxy => {:scan_via_host => false}))
 
       @user      = FactoryGirl.create(:user_with_group, :userid => "tester")
-      @ems       = FactoryGirl.create(:ems_vmware,       :name => "Test EMS", :zone => @server.zone, :tenant => FactoryGirl.create(:tenant))
-      @storage   = FactoryGirl.create(:storage,          :name => "test_storage", :store_type => "VMFS")
-      @host      = FactoryGirl.create(:host,             :name => "test_host", :hostname => "test_host", :state => 'on', :ext_management_system => @ems)
-      @vm        = FactoryGirl.create(:vm_vmware,        :name => "test_vm", :location => "abc/abc.vmx",
+      @ems       = FactoryGirl.create(:ems_vmware_with_authentication, :name   => "Test EMS", :zone => @server.zone,
+                                      :tenant                                  => FactoryGirl.create(:tenant))
+      @storage   = FactoryGirl.create(:storage, :name => "test_storage", :store_type => "VMFS")
+      @host      = FactoryGirl.create(:host, :name => "test_host", :hostname => "test_host",
+                                      :state       => 'on', :ext_management_system => @ems)
+      @vm        = FactoryGirl.create(:vm_vmware, :name => "test_vm", :location => "abc/abc.vmx",
                                       :raw_power_state       => 'poweredOn',
                                       :host                  => @host,
                                       :ext_management_system => @ems,
@@ -20,11 +21,9 @@ describe VmScan do
                                       :evm_owner             => @user,
                                       :storage               => @storage
                                      )
-      @ems_auth  = FactoryGirl.create(:authentication, :resource => @ems)
 
       allow(MiqEventDefinition).to receive_messages(:find_by => true)
-      allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'sucess', MiqAeEngine::MiqAeWorkspaceRuntime.new])
-
+      @ems.authentication_type(:default).update_attribute(:status, "Valid")
       @vm.scan
       job_item = MiqQueue.find_by(:class_name => "MiqAeEngine", :method_name => "deliver")
       job_item.delivered(*job_item.deliver)
@@ -126,8 +125,10 @@ describe VmScan do
           end
 
           it "should call callback when message is delivered" do
-            allow_any_instance_of(VmScan).to receive_messages(:signal => true)
-            expect_any_instance_of(VmScan).to receive(:check_policy_complete)
+            allow(@job).to receive(:signal).and_return(true)
+            vm_scan = double("VmScan")
+            allow(VmScan).to receive(:find).and_return(vm_scan)
+            expect(vm_scan).to receive(:check_policy_complete)
             q = MiqQueue.where(:class_name => "MiqAeEngine", :method_name => "deliver").first
             q.delivered(*q.deliver)
           end
@@ -229,5 +230,25 @@ describe VmScan do
         job.call_check_policy
       end
     end
+  end
+
+  private
+
+  def assign_smartproxy_role_to_server(server)
+    server_role = FactoryGirl.create(
+      :server_role,
+      :name              => "smartproxy",
+      :description       => "SmartProxy",
+      :max_concurrent    => 1,
+      :external_failover => false,
+      :role_scope        => "zone"
+    )
+    FactoryGirl.create(
+      :assigned_server_role,
+      :miq_server_id  => server.id,
+      :server_role_id => server_role.id,
+      :active         => true,
+      :priority       => AssignedServerRole::DEFAULT_PRIORITY
+    )
   end
 end
