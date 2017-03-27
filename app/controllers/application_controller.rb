@@ -1453,6 +1453,11 @@ class ApplicationController < ActionController::Base
   def find_id_with_rbac(klass, id)
     assert_rbac(klass, Array.wrap(id))
     id
+=======
+  # returns array of selected records
+  def fetch_checked_items(klass)
+    Rbac.filtered(klass.where(:id => find_checked_items))
+>>>>>>> Add description to find_checked_items_with_rbac function
   end
 
   # Common Saved Reports button handler routines
