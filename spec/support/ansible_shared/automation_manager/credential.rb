@@ -2,7 +2,6 @@ require 'ansible_tower_client'
 
 shared_examples_for "ansible credential" do
   let(:finished_task) { FactoryGirl.create(:miq_task, :state => "Finished") }
-  let(:manager)       { FactoryGirl.create(:provider_ansible_tower, :with_authentication).managers.first }
   let(:atc)           { double("AnsibleTowerClient::Connection", :api => api) }
   let(:api)           { double("AnsibleTowerClient::Api", :credentials => credentials) }
 
@@ -20,16 +19,25 @@ shared_examples_for "ansible credential" do
       {
         :description  => "Description",
         :name         => "My Credential",
-        :related      => {}
+        :related      => {},
+        :userid       => 'john'
       }
     end
 
     it ".create_in_provider" do
+      expected_params = {
+        :description  => "Description",
+        :name         => "My Credential",
+        :related      => {},
+        :username     => "john",
+        :kind         => described_class::TOWER_KIND
+      }
+      expected_params[:organization_id] = 1 if described_class.name.include?("::EmbeddedAnsible::")
       expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
       store_new_credential(credential, manager)
       expect(EmsRefresh).to receive(:queue_refresh_task).and_return([finished_task])
       expect(ExtManagementSystem).to receive(:find).with(manager.id).and_return(manager)
-
+      expect(credentials).to receive(:create!).with(expected_params)
       expect(described_class.create_in_provider(manager.id, params)).to be_a(described_class)
     end
 
@@ -95,9 +103,15 @@ shared_examples_for "ansible credential" do
     let(:ansible_cred)  { described_class.create!(:resource => manager, :manager_ref => credential.id) }
 
     it "#update_in_provider" do
+      expected_params = {
+        :username => 'john',
+        :kind     => described_class::TOWER_KIND
+      }
+      expected_params[:organization_id] = 1 if described_class.name.include?("::EmbeddedAnsible::")
       expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
       expect(EmsRefresh).to receive(:queue_refresh_task).and_return([finished_task])
-      expect(ansible_cred.update_in_provider({})).to be_a(described_class)
+      expect(credential).to receive(:update_attributes!).with(expected_params)
+      expect(ansible_cred.update_in_provider('userid' => 'john')).to be_a(described_class)
     end
 
     it "#update_in_provider_queue" do

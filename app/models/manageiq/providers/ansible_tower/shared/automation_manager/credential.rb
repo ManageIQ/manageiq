@@ -2,7 +2,15 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Credential
   extend ActiveSupport::Concern
 
   module ClassMethods
+    def provider_params(params)
+      params[:username] = params.delete(:userid) if params.include?(:userid)
+      params[:username] = params.delete('userid') if params.include?('userid')
+      params[:kind] = self::TOWER_KIND
+      params
+    end
+
     def create_in_provider(manager_id, params)
+      params = provider_params(params)
       manager = ExtManagementSystem.find(manager_id)
       credential = manager.with_provider_connection do |connection|
         connection.api.credentials.create!(params)
@@ -48,6 +56,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Credential
 
   def update_in_provider(params)
     params.delete(:task_id) # in case this is being called through update_in_provider_queue which will stick in a :task_id
+    params = self.class.provider_params(params)
     resource.with_provider_connection do |connection|
       connection.api.credentials.find(manager_ref).update_attributes!(params)
     end

@@ -34,4 +34,5 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::ScmCredenti
     :type       => 'scm',
     :attributes => API_ATTRIBUTES
   }.freeze
+  TOWER_KIND = 'scm'.freeze
 end

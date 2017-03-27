@@ -58,4 +58,5 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::MachineCred
     :type       => 'machine',
     :attributes => API_ATTRIBUTES
   }.freeze
+  TOWER_KIND = 'ssh'.freeze
 end
