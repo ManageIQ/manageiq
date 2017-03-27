@@ -66,6 +66,11 @@ describe EmbeddedAnsibleWorker::Runner do
     end
 
     context "#setup_ansible" do
+      before do
+        ServerRole.seed
+        NotificationType.seed
+      end
+
       it "configures EmbeddedAnsible if it is not configured" do
         expect(EmbeddedAnsible).to receive(:start)
 
@@ -82,6 +87,18 @@ describe EmbeddedAnsibleWorker::Runner do
         expect(EmbeddedAnsible).not_to receive(:configure)
 
         runner.setup_ansible
+      end
+
+      it "creates a notification to inform the user that the service has started" do
+        expect(EmbeddedAnsible).to receive(:configured?).and_return(true)
+        expect(EmbeddedAnsible).to receive(:start)
+
+        runner.setup_ansible
+
+        note = Notification.first
+        expect(note.notification_type.name).to eq("role_activate_success")
+        expect(note.options[:role_name]).to eq("Embedded Ansible")
+        expect(note.options.keys).to include(:server_name)
       end
     end
   end

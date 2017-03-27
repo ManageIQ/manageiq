@@ -36,6 +36,8 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
     _log.info("calling EmbeddedAnsible.start")
     EmbeddedAnsible.start
     _log.info("calling EmbeddedAnsible.start finished")
+
+    raise_role_notification
   end
 
   def update_embedded_ansible_provider
@@ -64,4 +66,14 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
   def set_connection_pool_size; end
   def message_sync_active_roles(*_args); end
   def message_sync_config(*_args); end
+
+  private
+
+  def raise_role_notification
+    notification_options = {
+      :role_name   => ServerRole.find_by(:name => worker.class.required_roles.first).description,
+      :server_name => MiqServer.my_server.name
+    }
+    Notification.create(:type => :role_activate_success, :options => notification_options)
+  end
 end
