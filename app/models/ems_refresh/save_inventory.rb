@@ -155,7 +155,7 @@ module EmsRefresh::SaveInventory
         parent = vms[h.fetch_path(:parent_vm, :id)]
         child = vms[h[:id]]
 
-        parent.with_relationship_type('genealogy') { parent.set_child(child) } if parent && child
+        child.with_relationship_type('genealogy') { child.parent = parent } if parent && child
       end
     end
 
