@@ -1,0 +1,76 @@
+%h3
+  = _('Basic Information')
+.form-horizontal
+  .form-group{"ng-class" => "{'has-error': angularForm.name.$invalid}"}
+    %label.col-md-2.control-label
+      = _('Router Name')
+    .col-md-8
+      %input.form-control{:type          => "text",
+                          :name          => "name",
+                          "ng-model"     => "networkRouterModel.name",
+                          "ng-maxlength" => 128,
+                          "required"     => "",
+                          :checkchange   => true}
+      %span.help-block{"ng-show" => "angularForm.name.$error.required"}
+        = _("Required")
+%h3
+  = _('External Gateway')
+.form-horizontal
+  .form-group
+    %label.col-md-2.control-label{"for" => "network_router_enable_snat"}
+    .col-md-8
+      %input{"bs-switch"   => "",
+             :data         => {:on_text => _('Yes'), :off_text => _('No'), :size => 'mini'},
+             "type"        => "checkbox",
+             "id"          => "network_router_external_gateway",
+             "name"        => "external_gateway",
+             "checkchange" => "true",
+             "ng-model"    => "networkRouterModel.external_gateway"}
+
+.form-horizontal{"ng-if" => "networkRouterModel.external_gateway"}
+  .form-group{"ng-if" => "networkRouterModel.ems_id"}
+    %label.col-md-2.control-label{"for" => "network_router_enable_snat"}
+      = _('Enable Source NAT')
+    .col-md-8
+      %input{"bs-switch"   => "",
+             :data         => {:on_text => _('Yes'), :off_text => _('No'), :size => 'mini'},
+             "type"        => "checkbox",
+             "id"          => "network_router_enable_snat",
+             "name"        => "enable_snat",
+             "checkchange" => "true",
+             "ng-model"    => "networkRouterModel.enable_snat"}
+
+  .form-group{"ng-class" => "{'has-error': angularForm.cloud_network_id.$invalid}"}
+    %label.col-md-2.control-label
+      = _('Network')
+    .col-md-8
+      %select{"name"                        => "cloud_network_id",
+              "ng-model"                    => "networkRouterModel.cloud_network_id",
+              :checkchange                  => true,
+              "ng-options"                  => "network.id as network.name for network in available_networks",
+              "ng-change"                   => "filterCloudNetworkChanged(networkRouterModel.cloud_network_id)",
+              "pf-select"                   => true,
+              "ng-selected"                 => "networkRouterModel.cloud_network_id",
+              "ng-required"                 => "networkRouterModel.enable_snat == true",
+              "selectpicker-for-select-tag" => ""}
+        %option{"value" => ""}
+          = "<#{_('Choose')}>"
+      %span.help-block{"ng-show" => "angularForm.cloud_network_id.$error.required"}
+        = _("Required")
+
+  %h2
+  .form-horizontal{"ng-if" => "networkRouterModel.cloud_network_id"}
+    = _('Fixed IPs')
+    .form-group
+      %label.col-md-2.control-label
+        = _('Subnet')
+      .col-md-8
+        %select{"name"                        => "cloud_subnet_id",
+                "ng-model"                    => "networkRouterModel.cloud_subnet_id",
+                :checkchange                  => true,
+                "ng-options"                  => "subnet.id as subnet.name for subnet in available_subnets",
+                "pf-select"                   => true,
+                "ng-selected"                 => "networkRouterModel.cloud_subnet_id",
+                "selectpicker-for-select-tag" => ""}
+          %option{"value" => ""}
+            = "<#{_('Choose')}>"

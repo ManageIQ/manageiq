@@ -3,7 +3,7 @@
   %h3
     = _('Network Provider')
   .form-horizontal
-    .form-group
+    .form-group{"ng-class" => "{'has-error': angularForm.ems_id.$invalid}"}
       %label.col-md-2.control-label
         = _('Network Manager')
       .col-md-8
@@ -15,38 +15,15 @@
                       :checkchange                  => true,
                       "ng-change"                   => "filterNetworkManagerChanged(networkRouterModel.ems_id)",
                       "selectpicker-for-select-tag" => "")
+        %span.help-block{"ng-show" => "angularForm.ems_id.$error.required"}
+          = _('Required')
+
+  = render :partial => "common_new_edit"
 
   %h3
-    = _('Basic Information')
-  .form-horizontal
-    .form-group
-      %label.col-md-2.control-label
-        = _('Router Name')
-      .col-md-8
-        %input.form-control{:type          => "text",
-                            :name          => "name",
-                            'ng-model'     => "networkRouterModel.name",
-                            'ng-maxlength' => 128,
-                            :miqrequired   => true,
-                            :checkchange   => true}
-    .form-group{"ng-if" => "networkRouterModel.ems_id"}
-      %label.col-md-2.control-label
-        = _('Network')
-      .col-md-8
-        %select{"name"                        => "cloud_network_id",
-                "ng-model"                    => "networkRouterModel.cloud_network_id",
-                "required"                    => "",
-                :miqrequired                  => true,
-                :checkchange                  => true,
-                'ng-options'                  => 'network.id as network.name for network in available_networks',
-                'pf-select'                   => true,
-                "selectpicker-for-select-tag" => ""}
-          %option{"value" => ""}
-            = "<#{_('Choose')}>"
-
     = _('Placement')
   .form-horizontal
-    .form-group
+    .form-group{"ng-class" => "{'has-error': angularForm.cloud_tenant_id.$invalid}"}
       %label.col-md-2.control-label
         = _('Cloud Tenant')
       .col-md-8
@@ -57,6 +34,8 @@
                       :miqrequired                  => true,
                       :checkchange                  => true,
                       "selectpicker-for-select-tag" => "")
+        %span.help-block{"ng-show" => "angularForm.cloud_tenant_id.$error.required"}
+          = _("Required")
 
   %table{:width => '100%'}
     %tr
