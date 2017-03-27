@@ -80,7 +80,7 @@ class OrchestrationStack < ApplicationRecord
   end
 
   def stdout(format = nil)
-    try(:raw_stdout, format)
+    format.nil? ? try(:raw_stdout) : try(:raw_stdout, format)
   end
 
   private :directs_and_indirects
