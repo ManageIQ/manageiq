@@ -1,30 +1,29 @@
 module ManageIQ::Providers
   module Hawkular
-    class MiddlewareManager::RefreshParser
+    class MiddlewareManager::RefreshParser < ManagerRefresh::Inventory::Parser
       include ::Hawkular::ClientUtils
+
+      def initialize
+        @eaps = []
+        @data_index = {}
+        @data = {}
+      end
 
       def self.ems_inv_to_hashes(ems, options = nil)
         new(ems, options).ems_inv_to_hashes
       end
 
-      def initialize(ems, _options = nil)
-        @ems = ems
-        @eaps = []
-        @data = {}
-        @data_index = {}
-      end
+      def parse
+        @ems = collector.manager if collector && !@ems
 
-      def ems_inv_to_hashes
         # the order of the method calls is important here, because they make use of @eaps and @data_index
         fetch_middleware_servers
         fetch_domains_with_servers
         fetch_server_entities
-        fetch_availability
-        @data
+        # fetch_availability
       end
 
       def fetch_middleware_servers
-        @data[:middleware_servers] = []
         @ems.feeds.each do |feed|
           @ems.eaps(feed).each do |eap|
             @eaps << eap
@@ -44,7 +43,9 @@ module ManageIQ::Providers
               set_lives_on(server, host_instance) if host_instance
             end
 
-            @data[:middleware_servers] << server
+            inventory_object = persister.middleware_servers.find_or_build(server[:ems_ref])
+            server.each { |k, v| inventory_object.send "#{k}=", v }
+
             @data_index.store_path(:middleware_servers, :by_ems_ref, server[:ems_ref], server)
           end
         end
@@ -56,14 +57,17 @@ module ManageIQ::Providers
       end
 
       def fetch_domains_with_servers
-        @data[:middleware_domains] = []
         @ems.feeds.each do |feed|
           @ems.domains(feed).each do |domain|
             parsed_domain = parse_middleware_domain(feed, domain)
 
             # add the server groups to the domain
-            parsed_domain[:middleware_server_groups] = fetch_server_groups(feed)
-            @data[:middleware_domains] << parsed_domain
+            # parsed_domain[:middleware_server_groups] = fetch_server_groups(feed)
+            fetch_server_groups(feed, parsed_domain)
+
+            inventory_object = persister.middleware_domains.find_or_build(parsed_domain[:ems_ref])
+            parsed_domain.each { |k, v| inventory_object.send "#{k}=", v }
+
             @data_index.store_path(:middleware_domains, :by_ems_ref, parsed_domain[:ems_ref], parsed_domain)
 
             # now it's safe to fetch the domain servers (it assumes the server groups to be already fetched)
@@ -72,10 +76,15 @@ module ManageIQ::Providers
         end
       end
 
-      def fetch_server_groups(feed)
+      def fetch_server_groups(feed, parsed_domain)
         @ems.server_groups(feed).map do |group|
           parsed_group = parse_middleware_server_group(group)
           @data_index.store_path(:middleware_server_groups, :by_name, parsed_group[:name], parsed_group)
+
+          inventory_object = persister.middleware_server_groups.find_or_build(parsed_group[:ems_ref])
+          server.each { |k, v| inventory_object.send "#{k}=", v }
+          inventory_object.middleware_domain = persister.middleware_domains.lazy_find(parsed_domain[:ems_ref])
+
           parsed_group
         end
       end
@@ -97,8 +106,12 @@ module ManageIQ::Providers
           server_group = @data_index.fetch_path(:middleware_server_groups, :by_name, server_group_name)
           server[:middleware_server_group] = server_group
 
-          @data[:middleware_servers] << server
+          # @data[:middleware_servers] << server
           @data_index.store_path(:middleware_servers, :by_ems_ref, server[:ems_ref], server)
+
+          inventory_object = persister.middleware_servers.find_or_build(server[:ems_ref])
+          server.each { |k, v| inventory_object.send "#{k}=", v }
+          inventory_object.middleware_server_group = persister.middleware_server_groups.lazy_find(parsed_server_group[:ems_ref])
         end
       end
 
@@ -144,8 +157,6 @@ module ManageIQ::Providers
 
       def fetch_server_entities
         @data[:middleware_deployments] = []
-        @data[:middleware_datasources] = []
-        @data[:middleware_messagings] = []
         @eaps.map do |eap|
           @ems.child_resources(eap.path, true).map do |child|
             next unless child.type_path.end_with?('Deployment', 'Datasource', 'JMS%20Topic', 'JMS%20Queue')
@@ -209,12 +220,18 @@ module ManageIQ::Providers
 
       def process_server_entity(server, entity)
         if entity.type_path.end_with?('Deployment')
-          @data[:middleware_deployments] << parse_deployment(server, entity)
+          parsed_item = parse_deployment(server, entity)
+          inventory_object = persister.middleware_deployments.find_or_build(parsed_item[:ems_ref])
         elsif entity.type_path.end_with?('Datasource')
-          @data[:middleware_datasources] << process_entity_with_config(server, entity, :parse_datasource)
+          parsed_item = process_entity_with_config(server, entity, :parse_datasource)
+          inventory_object = persister.middleware_datasources.find_or_build(parsed_item[:ems_ref])
         else
-          @data[:middleware_messagings] << process_entity_with_config(server, entity, :parse_messaging)
+          parsed_item = process_entity_with_config(server, entity, :parse_messaging)
+          inventory_object = persister.middleware_messagings.find_or_build(parsed_item[:ems_ref])
         end
+
+        parsed_item.each { |k, v| inventory_object.send "#{k}=", v }
+        inventory_object.middleware_server = persister.middleware_servers.lazy_find(server[:ems_ref])
       end
 
       def process_availability(availability = nil)

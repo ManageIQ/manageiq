@@ -30,6 +30,10 @@ module ManageIQ::Providers
 
     attr_accessor :client
 
+    def middleware_server_groups
+      MiddlewareServerGroup.where(:middleware_domain => { :ext_management_system => self })
+    end
+
     def verify_credentials(_auth_type = nil, options = {})
       begin
         # As the connect will only give a handle
