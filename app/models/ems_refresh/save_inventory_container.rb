@@ -230,8 +230,7 @@ module EmsRefresh::SaveInventoryContainer
       h[:container_node_id] = h.fetch_path(:container_node, :id)
       h[:container_replicator_id] = h.fetch_path(:container_replicator, :id)
       h[:container_project_id] = h.fetch_path(:project, :id)
-      h[:container_build_pod_id] = ems.container_build_pods.find_by(:name =>
-        h[:build_pod_name]).try(:id)
+      h[:container_build_pod_id] = ems.container_build_pods.find_by(:name => h[:build_pod_name]).try(:id)
     end
 
     save_inventory_multi(ems.container_groups, hashes, deletes, [:ems_ref],

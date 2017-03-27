@@ -20,8 +20,8 @@ context "save_tags_inventory" do
   # creation here, the assumption is that these were the generated mappings.
   #
   let(:data) do
-    {:tags =>
-      [
+    {
+      :tags => [
         {
           :category_tag_id   => @cat1.tag_id,
           :entry_name        => 'owner',

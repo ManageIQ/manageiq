@@ -193,7 +193,7 @@ module EmsRefresh::SaveInventory
   #
   def save_tags_inventory(object, collection, _target = nil)
     return if collection.blank?
-    tags = collection.is_a?(Hash) ? collection[:tags] : collection
+    tags = collection.kind_of?(Hash) ? collection[:tags] : collection
     ContainerLabelTagMapping.retag_entity(object, tags)
   rescue => err
     raise if EmsRefresh.debug_failures
