@@ -1929,6 +1929,8 @@
         :identifier: service_tag
       - :name: unassign_tags
         :identifier: service_tag
+      - :name: add_resource
+        :identifier: service_edit
     :resource_actions:
       :get:
       - :name: read
@@ -1952,6 +1954,8 @@
         :identifier: service_admin
       - :name: delete
         :identifier: service_delete
+      - :name: add_resource
+        :identifier: service_edit
       :delete:
       - :name: delete
         :identifier: service_delete
