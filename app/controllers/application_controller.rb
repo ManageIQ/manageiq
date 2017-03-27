@@ -1460,6 +1460,11 @@ class ApplicationController < ActionController::Base
 >>>>>>> Add description to find_checked_items_with_rbac function
   end
 
+  # returns selected record
+  def fetch_selected_item(klass)
+    Rbac.filtered_object(klass.where(:id => params[:id]))
+  end
+
   # Common Saved Reports button handler routines
   def process_saved_reports(saved_reports, task)
     success_count = 0
