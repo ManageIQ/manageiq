@@ -213,7 +213,7 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
                                 .select([:id])
                                 .where(:id => vms_genealogy_parents.keys).find_each do |vm|
           parent = miq_templates[vms_genealogy_parents[vm.id]]
-          parent.with_relationship_type('genealogy') { parent.set_child(vm) }
+          vm.with_relationship_type('genealogy') { vm.parent = parent }
         end
       end
 
