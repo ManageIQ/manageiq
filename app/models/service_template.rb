@@ -400,8 +400,19 @@ class ServiceTemplate < ApplicationRecord
   end
   private_class_method :create_from_options
 
-  def provision_request(user, options = nil)
-    provision_workflow(user, options).submit_request
+  def provision_request(user, options = nil, request_options = nil)
+    provision_workflow(user, options, request_options).submit_request
+  end
+
+  def provision_workflow(user, dialog_options = nil, request_options = nil)
+    dialog_options ||= {}
+    request_options ||= {}
+    ra_options = { :target => self, :initiator => request_options[:initiator] }
+    ResourceActionWorkflow.new({}, user,
+                               provision_action, ra_options).tap do |wf|
+      wf.request_options = request_options
+      dialog_options.each { |key, value| wf.set_value(key, value) }
+    end
   end
 
   private
@@ -461,15 +472,6 @@ class ServiceTemplate < ApplicationRecord
   def update_from_options(params)
     options[:config_info] = params[:config_info]
     update_attributes!(params.except(:config_info))
-  end
-
-  def provision_workflow(user, options = nil)
-    options ||= {}
-    ra_options = { :target => self, :initiator => options[:initiator] }
-    ResourceActionWorkflow.new({}, user,
-                               provision_action, ra_options).tap do |wf|
-      options.each { |key, value| wf.set_value(key, value) }
-    end
   end
 
   def construct_config_info

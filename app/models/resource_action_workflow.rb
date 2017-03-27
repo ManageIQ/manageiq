@@ -1,5 +1,6 @@
 class ResourceActionWorkflow < MiqRequestWorkflow
   attr_accessor :dialog
+  attr_accessor :request_options
 
   def self.base_model
     ResourceActionWorkflow
@@ -55,7 +56,10 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   end
 
   def create_values
-    create_values_hash.tap { |value| value[:src_id] = @target.id }
+    create_values_hash.tap do |value|
+      value[:src_id] = @target.id
+      value[:request_options] = request_options unless request_options.blank?
+    end
   end
 
   def request_class
