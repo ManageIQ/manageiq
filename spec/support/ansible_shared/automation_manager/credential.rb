@@ -17,20 +17,20 @@ shared_examples_for "ansible credential" do
 
     let(:params) do
       {
-        :description  => "Description",
-        :name         => "My Credential",
-        :related      => {},
-        :userid       => 'john'
+        :description => "Description",
+        :name        => "My Credential",
+        :related     => {},
+        :userid      => 'john'
       }
     end
 
     it ".create_in_provider" do
       expected_params = {
-        :description  => "Description",
-        :name         => "My Credential",
-        :related      => {},
-        :username     => "john",
-        :kind         => described_class::TOWER_KIND
+        :description => "Description",
+        :name        => "My Credential",
+        :related     => {},
+        :username    => "john",
+        :kind        => described_class::TOWER_KIND
       }
       expected_params[:organization_id] = 1 if described_class.name.include?("::EmbeddedAnsible::")
       expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
