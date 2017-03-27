@@ -156,15 +156,9 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
         'resource_id_1' => [{
           :status => 'Enabled'
         }],
-        'resource_id_2' => [{
-          :status => 'Unknown'
-        }],
-        'resource_id_3' => [{
-          :status => 'Unknown'
-        }],
-        'resource_id_4' => [{
-          :status => 'Unknown'
-        }]
+        'resource_id_2' => [{}],
+        'resource_id_3' => [{}],
+        'resource_id_4' => [{}]
       }
       expect(parser.send(:parse_availability,
                          availabilities,
