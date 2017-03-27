@@ -20,10 +20,6 @@ module MiqRequestTask::Dumping
       end
     end
 
-    def dumpWIN32OLE(obj, prefix, prnt_obj, prnt_meth, _options)
-      prnt_obj.send(prnt_meth, "#{prefix} (WIN32OLE)\n#{obj.GetObjectText_.strip} #{obj.Path_.Path}\n\n")
-    end
-
     def dumpHash(hd, prefix, prnt_obj, prnt_meth, options)
       hd.each { |k, v| dumpObj(v, "#{prefix}[#{k.inspect}]", prnt_obj, prnt_meth, options) }
     end
