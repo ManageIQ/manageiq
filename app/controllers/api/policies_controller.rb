@@ -13,10 +13,9 @@ module Api
 
     def edit_resource(type, id = nil, data = {})
       raise BadRequestError, "Must specify an id for editing a #{type} resource" unless id
-      assert_all_required_fields_exists(data, type, %w(conditions_ids policy_contents))
       policy = resource_search(id, type, collection_class(:policies))
       begin
-        add_policies_content(data, policy)
+        add_policies_content(data, policy) if data["policy_contents"]
         policy.conditions = Condition.where(:id => data.delete("conditions_ids")) if data["conditions_ids"]
         policy.update_attributes(data)
       rescue => err
@@ -46,7 +45,7 @@ module Api
       policy.miq_policy_contents.destroy_all
       data.delete("policy_contents").each do |policy_content|
         add_policy_content(policy_content, policy)
-      end if data["policy_contents"]
+      end
     end
 
     def add_policy_content(policy_content, policy)
