@@ -20,6 +20,7 @@ module Authenticator
 
     # try to constantize in case the subclass is not loaded yet, but it still exists
     # this is happens with authenticators from provider gems
-    "Authenticator::#{name.camelize}".safe_constantize
+    subclass = "Authenticator::#{name.camelize}".safe_constantize
+    subclass if subclass && subclass.authenticates_for.include?(name)
   end
 end
