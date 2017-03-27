@@ -225,7 +225,7 @@ class MiqAction < ApplicationRecord
   def action_run_ansible_playbook(action, rec, inputs)
     service_template = ServiceTemplate.find(action.options[:service_template_id])
     dialog_options = { :hosts => target_hosts(action, rec) }
-    request_options = { :manageiq_extra_vars => { 'event_source' => rec.href_slug,
+    request_options = { :manageiq_extra_vars => { 'event_target' => rec.href_slug,
                                                   'event_name'   => inputs[:event].try(:name) },
                         :initiator           => 'control' }
     service_template.provision_request(target_user(rec), dialog_options, request_options)

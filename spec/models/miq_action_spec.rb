@@ -410,7 +410,7 @@ describe MiqAction do
     end
 
     let(:request_options) do
-      { :manageiq_extra_vars => { "event_source" => vm.href_slug, "event_name" => event_name },
+      { :manageiq_extra_vars => { "event_target" => vm.href_slug, "event_name" => event_name },
         :initiator           => 'control' }
     end
 
