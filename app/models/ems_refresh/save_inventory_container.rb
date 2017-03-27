@@ -2,11 +2,26 @@ module EmsRefresh::SaveInventoryContainer
   def save_ems_container_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
-    child_keys = [:container_projects, :container_quotas, :container_limits, :container_nodes,
-                  :container_builds, :container_build_pods, :persistent_volume_claims, :persistent_volumes,
-                  :container_image_registries, :container_images, :container_replicators, :container_groups,
-                  :container_services, :container_routes, :container_component_statuses, :container_templates,
+    graph_keys = [:container_projects, :container_quotas, :container_nodes,
                  ]
+    child_keys = [:container_image_registries, :container_images, :container_replicators, :container_groups,
+                  :container_services, :container_routes, :container_component_statuses, :container_templates,
+                  # things moved to end - if they work here, nothing depended on their ids
+                  :container_limits, :container_builds, :container_build_pods,
+                  :persistent_volume_claims, :persistent_volumes,
+                 ]
+
+    initialize_inventory_collections(ems)
+    graph_keys.each do |k|
+      send("graph_#{k}_inventory", ems, hashes[k], target)
+    end
+    ManagerRefresh::SaveInventory.save_inventory(ems, @inv_collections.values)
+
+    graph_keys.each do |k|
+      association = ems.send(k)
+      association.reset
+      store_ids_for_new_records(association, hashes[k], :ems_ref)
+    end
 
     # Save and link other subsections
     child_keys.each do |k|
@@ -16,20 +31,55 @@ module EmsRefresh::SaveInventoryContainer
     ems.save!
   end
 
-  def save_container_projects_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-    target = ems if target.nil?
+  def initialize_inventory_collections(ems)
+    @inv_collections = {}
+    @inv_collections[:container_projects] = ::ManagerRefresh::InventoryCollection.new(
+      :model_class => ContainerProject,
+      :parent => ems,
+      :builder_params => {:ems_id => ems.id},
+      :association => :container_projects
+    )
+    @inv_collections[:container_quotas] = ::ManagerRefresh::InventoryCollection.new(
+      :model_class => ContainerQuota,
+      :parent => ems,
+      :builder_params => {:ems_id => ems.id},
+      :arel => ContainerQuota.joins(:container_project).where(:container_projects => {:ems_id => ems.id}),
+    )
+    @inv_collections[:container_quota_items] = ::ManagerRefresh::InventoryCollection.new(
+      :model_class => ContainerQuotaItem,
+      :parent => ems,
+      :arel => ContainerQuotaItem.joins(:container_quota => :container_project).where(:container_projects => {:ems_id => ems.id}),
+      # TODO: this builds uuids like "97__cpu", i.e. uses quota id, ideally would use quota ems_ref.
+      #   Can't(?) pass an extra attribute like quota_ems_ref because can't exclude it from saving, manager_ref attributes can't be in attributes_blacklist.
+      :manager_ref => [:container_quota, :resource],
+    )
+    @inv_collections[:container_nodes] = ::ManagerRefresh::InventoryCollection.new(
+      :model_class => ContainerNode,
+      :parent => ems,
+      :builder_params => {:ems_id => ems.id},
+      :association => :container_nodes,
+    )
+    @inv_collections[:container_conditions] = ::ManagerRefresh::InventoryCollection.new(
+      :model_class => ContainerCondition,
+      :parent => ems,
+      # TODO polymorphic child of ContainerNode & ContainerGroup
+      # TODO define 2 has_many through on EMS
+      :arel => ContainerCondition.joins(
+        'INNER JOIN "container_nodes" ON "container_conditions"."container_entity_id" = "container_nodes"."id"'
+      ).where(:container_entity_type => 'ContainerNode',
+              :container_nodes => {:ems_id => ems.id}),
+      :manager_ref => [:container_entity, :name],
+    )
+  end
 
-    ems.container_projects.reset
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
+  def graph_container_projects_inventory(ems, hashes, target = nil)
+    target = ems if target.nil?  # TODO deletes - partial vs full ?
 
-    save_inventory_multi(ems.container_projects, hashes, deletes, [:ems_ref],
-                         [:labels, :tags], [], true)
-    store_ids_for_new_records(ems.container_projects, hashes, :ems_ref)
+    hashes.to_a.each do |h|
+      @inv_collections[:container_projects].build(h)
+    end
+
+    # TODO children [:labels, :tags], [], true)
   end
 
   def save_persistent_volumes_inventory(ems, hashes, target = nil)
@@ -68,35 +118,24 @@ module EmsRefresh::SaveInventoryContainer
     store_ids_for_new_records(ems.persistent_volume_claims, hashes, :ems_ref)
   end
 
-  def save_container_quotas_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-    target = ems if target.nil?
-
-    ems.container_quotas.reset
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
-
-    hashes.each do |h|
-      h[:container_project_id] = h.fetch_path(:project, :id)
+  def graph_container_quotas_inventory(ems, hashes, target = nil)
+    hashes.to_a.each do |h|
+      h = h.merge(
+        :container_project =>  @inv_collections[:container_projects].lazy_find(h.delete(:project)[:ems_ref])
+      )
+      items = h.delete(:container_quota_items)
+      graph_container_quota_items_inventory(h, items)
+      @inv_collections[:container_quotas].build(h)
     end
-
-    save_inventory_multi(ems.container_quotas, hashes, deletes, [:ems_ref], :container_quota_items, :project)
-    store_ids_for_new_records(ems.container_quotas, hashes, :ems_ref)
   end
 
-  def save_container_quota_items_inventory(container_quota, hashes, target = nil)
-    return if hashes.nil?
-    container_quota.container_quota_items.reset
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
-    save_inventory_multi(container_quota.container_quota_items, hashes, deletes, [:resource])
-    store_ids_for_new_records(container_quota.container_quota_items, hashes, :resource)
+  def graph_container_quota_items_inventory(container_quota, hashes, target = nil)
+    hashes.to_a.each do |h|
+      h = h.merge(
+        :container_quota => @inv_collections[:container_quotas].lazy_find(container_quota[:ems_ref]),
+      )
+      @inv_collections[:container_quota_items].build(h)
+    end
   end
 
   def save_container_limits_inventory(ems, hashes, target = nil)
@@ -150,21 +189,16 @@ module EmsRefresh::SaveInventoryContainer
     store_ids_for_new_records(ems.container_routes, hashes, :ems_ref)
   end
 
-  def save_container_nodes_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-    target = ems if target.nil?
-
-    ems.container_nodes.reset
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
-
-    save_inventory_multi(ems.container_nodes, hashes, deletes, [:ems_ref],
-                         [:labels, :tags, :computer_system, :container_conditions,
-                          :additional_attributes], [:namespace])
-    store_ids_for_new_records(ems.container_nodes, hashes, :ems_ref)
+  def graph_container_nodes_inventory(ems, hashes, target = nil)
+    hashes.to_a.each do |h|
+      h = h.merge(:ems_id => ems.id)
+      h = h.except(:labels, :tags, :computer_system, :additional_attributes) # TODO children
+      h = h.except(:namespace)
+      node = @inv_collections[:container_nodes].lazy_find(h[:ems_ref])
+      graph_container_conditions_inventory({:container_entity => node},
+                                           h.delete(:container_conditions))
+      @inv_collections[:container_nodes].build(h)
+    end
   end
 
   def save_computer_system_inventory(container_node, hash, _target = nil)
@@ -230,7 +264,7 @@ module EmsRefresh::SaveInventoryContainer
       h[:container_node_id] = h.fetch_path(:container_node, :id)
       h[:container_replicator_id] = h.fetch_path(:container_replicator, :id)
       h[:container_project_id] = h.fetch_path(:project, :id)
-      h[:container_build_pod_id] = ems.container_build_pods.find_by(:name => 
+      h[:container_build_pod_id] = ems.container_build_pods.find_by(:name =>
         h[:build_pod_name]).try(:id)
     end
 
@@ -360,6 +394,14 @@ module EmsRefresh::SaveInventoryContainer
     save_inventory_single(:container, container_definition, hash, [], :container_image, true)
   end
 
+  def graph_container_conditions_inventory(parent_hash, hashes, target = nil)
+    hashes.to_a.each do |h|
+      h = h.merge(parent_hash)
+      @inv_collections[:container_conditions].build(h)
+    end
+  end
+
+  # still used for pods
   def save_container_conditions_inventory(container_entity, hashes, target = nil)
     return if hashes.nil?
 
