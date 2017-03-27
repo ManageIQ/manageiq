@@ -126,7 +126,8 @@ module RelationshipMixin
   # Returns all of the relationships of the parents of the record, [] for a root node
   def parent_rels(*args)
     options = args.extract_options!
-    rels = Relationship.where(:id => parent_rel_ids)
+    pri = parent_rel_ids
+    rels = pri.kind_of?(Array) && pri.empty? ? Relationship.none : Relationship.where(:id => parent_rel_ids)
     Relationship.filter_by_resource_type(rels, options)
   end
 
