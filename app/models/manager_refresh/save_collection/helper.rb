@@ -50,9 +50,13 @@ module ManagerRefresh::SaveCollection
             # Change the InventoryCollection's :association or :arel parameter to return distinct results. The :through
             # relations can return the same record multiple times. We don't want to do SELECT DISTINCT by default, since
             # it can be very slow.
-            _log.warn("Please update :association or :arel for #{inventory_collection} to returns a DISTINCT result. "\
-                      " The duplicate value is being ignored.")
-            next
+            if Rails.env.production?
+              _log.warn("Please update :association or :arel for #{inventory_collection} to return a DISTINCT result. "\
+                        " The duplicate value is being ignored.")
+              next
+            else
+              raise("Please update :association or :arel for #{inventory_collection} to return a DISTINCT result. ")
+            end
           elsif unique_db_indexes.include?(index) # Include on Set is O(1)
             # We have a duplicate in the DB, destroy it. A find_each method does automatically .order(:id => :asc)
             # so we always keep the oldest record in the case of duplicates.
