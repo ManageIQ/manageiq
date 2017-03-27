@@ -24,6 +24,7 @@ class MiqPolicy < ApplicationRecord
 
   validates_presence_of     :name, :description, :guid
   validates_uniqueness_of   :name, :description, :guid
+  validates :mode, :inclusion => { :in => %w(compliance control) }
 
   serialize :expression
 
