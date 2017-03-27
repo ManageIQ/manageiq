@@ -10,10 +10,11 @@ class ServiceAnsiblePlaybook < ServiceGeneric
   def execute(action)
     jt = job_template(action)
     opts = get_job_options(action).deep_merge(:extra_vars => {'manageiq' => manageiq_extra_vars(action)})
+    hosts = opts.delete(:hosts)
 
     _log.info("Launching Ansible Tower job with options: #{opts}")
     new_job = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job.create_job(jt, opts)
-    update_job_for_playbook(action, new_job, opts[:hosts])
+    update_job_for_playbook(action, new_job, hosts)
 
     _log.info("Ansible Tower job with ref #{new_job.ems_ref} was created.")
     add_resource!(new_job, :name => action)
@@ -72,7 +73,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     credential_id = job_options.delete(:credential_id)
     job_options[:credential] = Authentication.find(credential_id).manager_ref unless credential_id.blank?
 
-    hosts = job_options.delete(:hosts)
+    hosts = job_options[:hosts]
     job_options[:inventory] = create_inventory_with_hosts(action, hosts).id unless use_default_inventory?(hosts)
 
     # TODO: encryption my be needed
@@ -135,8 +136,9 @@ class ServiceAnsiblePlaybook < ServiceGeneric
 
   # update job attributes only available to playbook provisioning
   def update_job_for_playbook(action, job, hosts)
-    hosts = (hosts || 'localhost').split(',')
+    hosts = 'localhost' if use_default_inventory?(hosts)
+    host_array = hosts.split(',')
     playbook_id = options.fetch_path(:config_info, action.downcase.to_sym, :playbook_id)
-    job.update_attributes(:configuration_script_base_id => playbook_id, :hosts => hosts)
+    job.update_attributes(:configuration_script_base_id => playbook_id, :hosts => host_array)
   end
 end
