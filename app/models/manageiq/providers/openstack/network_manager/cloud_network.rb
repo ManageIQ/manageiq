@@ -22,6 +22,15 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork < ::CloudNetw
   require_nested :Private
   require_nested :Public
 
+  def self.class_by_ems(ext_management_system, external = false)
+    # TODO: A factory on ExtManagementSystem to return class for each provider
+    if external
+      ext_management_system && ext_management_system.class::CloudNetwork::Public
+    else
+      ext_management_system && ext_management_system.class::CloudNetwork::Private
+    end
+  end
+
   def self.remapping(options)
     new_options = options.dup
     new_options[:router_external] = options[:external_facing] if options[:external_facing]

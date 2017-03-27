@@ -40,13 +40,9 @@ class CloudNetwork < ApplicationRecord
 
   virtual_total :total_vms, :vms, :uses => :vms
 
-  def self.class_by_ems(ext_management_system, external = false)
+  def self.class_by_ems(ext_management_system, _external = false)
     # TODO: A factory on ExtManagementSystem to return class for each provider
-    if external
-      ext_management_system && ext_management_system.class::CloudNetwork::Public
-    else
-      ext_management_system && ext_management_system.class::CloudNetwork::Private
-    end
+    ext_management_system && ext_management_system.class::CloudNetwork
   end
 
   private
