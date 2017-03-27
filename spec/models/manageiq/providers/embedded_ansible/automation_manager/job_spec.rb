@@ -1,5 +1,3 @@
-require 'support/ansible_shared/automation_manager/job'
-
 describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
   let(:job) { FactoryGirl.create(:embedded_ansible_job) }
 

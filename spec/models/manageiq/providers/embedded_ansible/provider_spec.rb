@@ -1,5 +1,3 @@
-require 'support/ansible_shared/provider'
-
 describe ManageIQ::Providers::EmbeddedAnsible::Provider do
   subject { FactoryGirl.create(:provider_embedded_ansible) }
 
