@@ -120,7 +120,7 @@ describe(ServiceAnsiblePlaybook) do
         expect(jobtemp).to eq(tower_job_temp)
         exposed_miq = %w(api_url api_token service user action)
         expect(opts[:extra_vars].delete('manageiq').keys).to include(*exposed_miq)
-        expect(opts).to include(provision_options[:provision_job_options])
+        expect(opts).to include(provision_options[:provision_job_options].except(:hosts))
         tower_job
       end
       loaded_service.execute(action)
