@@ -1,6 +1,9 @@
 module EmbeddedAnsibleWorker::ObjectManagement
   extend ActiveSupport::Concern
 
+  # This should not change as we match this to existing objects on the ansible side
+  DEFAULT_NAME = "EVM".freeze
+
   def ensure_initial_objects(provider, connection)
     ensure_organization(provider, connection)
     ensure_credential(provider, connection)
@@ -67,14 +70,14 @@ module EmbeddedAnsibleWorker::ObjectManagement
 
   def default_organization_attributes
     {
-      :name        => I18n.t("product.name"),
-      :description => "#{I18n.t("product.name")} Default Organization"
+      :name        => DEFAULT_NAME,
+      :description => "#{DEFAULT_NAME} Default Organization"
     }
   end
 
   def default_credential_attributes(org_id)
     {
-      :name         => "#{I18n.t("product.name")} Default Credential",
+      :name         => "#{DEFAULT_NAME} Default Credential",
       :kind         => "ssh",
       :organization => org_id
     }
@@ -82,7 +85,7 @@ module EmbeddedAnsibleWorker::ObjectManagement
 
   def default_inventory_attributes(org_id)
     {
-      :name         => "#{I18n.t("product.name")} Default Inventory",
+      :name         => "#{DEFAULT_NAME} Default Inventory",
       :organization => org_id
     }
   end

@@ -94,8 +94,8 @@ describe EmbeddedAnsibleWorker do
       describe "#ensure_organization" do
         it "sets the provider default organization" do
           expect(org_collection).to receive(:create!).with(
-            :name        => "ManageIQ",
-            :description => "ManageIQ Default Organization"
+            :name        => "EVM",
+            :description => "EVM Default Organization"
           ).and_return(org_resource)
 
           subject.ensure_organization(provider, api_connection)
@@ -114,7 +114,7 @@ describe EmbeddedAnsibleWorker do
         it "sets the provider default credential" do
           provider.default_organization = 123
           expect(cred_collection).to receive(:create!).with(
-            :name         => "ManageIQ Default Credential",
+            :name         => "EVM Default Credential",
             :kind         => "ssh",
             :organization => 123
           ).and_return(cred_resource)
@@ -132,12 +132,12 @@ describe EmbeddedAnsibleWorker do
 
         it "creates the organization if one doesn't exist" do
           expect(org_collection).to receive(:create!).with(
-            :name        => "ManageIQ",
-            :description => "ManageIQ Default Organization"
+            :name        => "EVM",
+            :description => "EVM Default Organization"
           ).and_return(org_resource)
 
           expect(cred_collection).to receive(:create!).with(
-            :name         => "ManageIQ Default Credential",
+            :name         => "EVM Default Credential",
             :kind         => "ssh",
             :organization => 12
           ).and_return(cred_resource)
@@ -152,7 +152,7 @@ describe EmbeddedAnsibleWorker do
         it "sets the provider default inventory" do
           provider.default_organization = 123
           expect(inv_collection).to receive(:create!).with(
-            :name         => "ManageIQ Default Inventory",
+            :name         => "EVM Default Inventory",
             :organization => 123
           ).and_return(inv_resource)
 
@@ -169,12 +169,12 @@ describe EmbeddedAnsibleWorker do
 
         it "creates the organization if one doesn't exist" do
           expect(org_collection).to receive(:create!).with(
-            :name        => "ManageIQ",
-            :description => "ManageIQ Default Organization"
+            :name        => "EVM",
+            :description => "EVM Default Organization"
           ).and_return(org_resource)
 
           expect(inv_collection).to receive(:create!).with(
-            :name         => "ManageIQ Default Inventory",
+            :name         => "EVM Default Inventory",
             :organization => 12
           ).and_return(inv_resource)
 
@@ -207,7 +207,7 @@ describe EmbeddedAnsibleWorker do
         it "creates the inventory if one doesn't exist" do
           provider.default_organization = 12
           expect(inv_collection).to receive(:create!).with(
-            :name         => "ManageIQ Default Inventory",
+            :name         => "EVM Default Inventory",
             :organization => 12
           ).and_return(inv_resource)
 
