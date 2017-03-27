@@ -744,6 +744,36 @@ describe "Providers API" do
       expect(response).to have_http_status(:ok)
       expect_results_to_match_hash("results", [failed_auth_action(p1.id), failed_auth_action(p2.id)])
     end
+
+    it "provider refresh are created with a task" do
+      api_basic_authorize collection_action_identifier(:providers, :refresh)
+
+      provider = FactoryGirl.create(:ext_management_system, sample_vmware.symbolize_keys.except(:type))
+      provider.update_authentication(:default => default_credentials.symbolize_keys)
+      provider.authentication_type(:default).update(:status => "Valid")
+
+      run_post(providers_url(provider.id), gen_request(:refresh))
+
+      expect_single_action_result(:success => true,
+                                  :message => a_string_matching("Provider .* refreshing"),
+                                  :href    => providers_url(provider.id),
+                                  :task    => true)
+    end
+
+    it "provider refresh for provider_class=provider are created with a task" do
+      api_basic_authorize collection_action_identifier(:providers, :refresh)
+
+      provider = FactoryGirl.create(:provider_foreman, :zone => @zone, :url => "example.com", :verify_ssl => false)
+      provider.update_authentication(:default => default_credentials.symbolize_keys)
+      provider.authentication_type(:default).update(:status => "Valid")
+
+      run_post(providers_url(provider.id) + '?provider_class=provider', gen_request(:refresh))
+
+      expect_single_action_result(:success => true,
+                                  :message => a_string_matching("Provider .* refreshing"),
+                                  :href    => providers_url(provider.id),
+                                  :task    => true)
+    end
   end
 
   describe 'Providers import VM' do
