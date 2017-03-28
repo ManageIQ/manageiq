@@ -16,7 +16,7 @@ class EvmTestSetupReplication
 
   def write_released_migrations
     file_contents = released_migrations.sort.join("\n")
-    File.write(Rails.root.join("spec/replication/util/data/euwe_migrations"), file_contents)
+    File.write(Rails.root.join("spec/replication/util/data/previous_migrations"), file_contents)
   end
 
   private
@@ -40,6 +40,6 @@ class EvmTestSetupReplication
   end
 
   def fetch_command
-    "git fetch #{'--depth=1 ' if ENV['CI']}http://github.com/ManageIQ/manageiq.git refs/heads/euwe:#{TEST_BRANCH}"
+    "git fetch #{'--depth=1 ' if ENV['CI']}http://github.com/ManageIQ/manageiq.git refs/heads/fine:#{TEST_BRANCH}"
   end
 end
