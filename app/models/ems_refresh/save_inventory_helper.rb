@@ -119,7 +119,7 @@ module EmsRefresh::SaveInventoryHelper
       hashes_index[build_index_from_hash(keys, hash)] = hash
     end
 
-    records.find_each do |record|
+    records.uniq.each do |record|
       record_index = build_index_from_record(keys, record)
       hash = hashes_index[record_index]
       hash[:id] = record.id if hash
