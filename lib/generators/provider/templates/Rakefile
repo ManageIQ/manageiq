@@ -1,5 +1,6 @@
 require 'bundler/setup'
 require 'bundler/gem_tasks'
+require 'manageiq-providers-<%= provider_name %>'
 
 begin
   require 'rspec/core/rake_task'
@@ -9,12 +10,6 @@ begin
 rescue LoadError
 end
 
-namespace :spec do
-  desc "Setup environment for specs"
-  task :setup => 'app:test:providers:<%= provider_name %>:setup'
-end
-
-desc "Run all <%= provider_name %> specs"
-task :spec => 'app:test:providers:<%= provider_name %>'
+FileList['lib/tasks_private/**/*.rake'].each { |r| load r }
 
 task :default => :spec
