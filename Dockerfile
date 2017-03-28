@@ -142,7 +142,8 @@ RUN source /etc/default/evm && \
 RUN source /etc/default/evm && \
     cd ${SUI_ROOT} && \
     yarn install && \
-    yarn run build
+    yarn run build && \
+    rm -rvf node_modules
 
 ## Copy appliance-initialize script and service unit file
 COPY docker-assets/appliance-initialize.service /usr/lib/systemd/system
