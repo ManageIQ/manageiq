@@ -7,15 +7,15 @@ Dir.chdir ManageIQ::Environment::APP_ROOT do
   ManageIQ::Environment.ensure_config_files
 
   puts '== Installing dependencies =='
+  ManageIQ::Environment.install_bundler
+
+  # TODO: This unlocks your dependencies and installs all updates.
+  # From: https://github.com/ManageIQ/manageiq/pull/11137
+  # It should be 'bundle check' || 'bundle install'.
+  # If we need a "reset all the things" script, we should call it bin/reset.
+  ManageIQ::Environment.bundle_update
+
   ManageIQ::Environment.while_updating_bower do
-    ManageIQ::Environment.install_bundler
-
-    # TODO: This unlocks your dependencies and installs all updates.
-    # From: https://github.com/ManageIQ/manageiq/pull/11137
-    # It should be 'bundle check' || 'bundle install'.
-    # If we need a "reset all the things" script, we should call it bin/reset.
-    ManageIQ::Environment.bundle_update
-
     ManageIQ::Environment.migrate_database
     ManageIQ::Environment.seed_database
 
