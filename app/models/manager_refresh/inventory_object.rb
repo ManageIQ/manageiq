@@ -69,6 +69,10 @@ module ManagerRefresh
       attributes_for_saving
     end
 
+    def assign_attributes(attributes)
+      attributes.each { |k, v| @data[k] = v if self.respond_to?("#{k}=") }
+    end
+
     def to_s
       manager_uuid
     end
