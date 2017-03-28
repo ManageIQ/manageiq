@@ -230,6 +230,98 @@ describe VmScan do
         job.call_check_policy
       end
     end
+
+    describe "#check_policy_complete" do
+      it "sends signal :abort with passed message if passed status is not 'ok' " do
+        message = "Hello, World!"
+        expect(@job).to receive(:signal).with(:abort, message, any_args)
+        @job.check_policy_complete('some status', message, nil)
+      end
+
+      it "does not send signal :abort if passed status is 'ok' " do
+        expect(@job).not_to receive(:signal).with(:abort)
+        @job.check_policy_complete('ok', nil, nil)
+      end
+
+      it "sends signal :start_snapshot if passed status is 'ok'" do
+        expect(@job).to receive(:signal).with(:start_snapshot)
+        @job.check_policy_complete('ok', nil, nil)
+      end
+    end
+
+    describe "#call_snapshot_create" do
+      context "for ManageIQ::Providers::Openstack::CloudManager::Vm" do
+        let(:vm) { double("ManageIQ::Providers::Openstack::CloudManager::Vm") }
+        before(:each) do
+          allow(VmOrTemplate).to receive(:find).and_return(vm)
+          allow(vm).to receive(:kind_of?).with(ManageIQ::Providers::Openstack::CloudManager::Vm).and_return(true)
+          allow(vm).to receive(:kind_of?).with(ManageIQ::Providers::Microsoft::InfraManager::Vm).and_return(false)
+        end
+
+        it "executes VmScan#create_snapshot and send signal ::snapshot_complete" do
+          expect(@job).to receive(:create_snapshot).and_return(true)
+          expect(@job).to receive(:signal).with(:snapshot_complete)
+          @job.call_snapshot_create
+        end
+      end
+
+      context "for ManageIQ::Providers::Microsoft::InfraManager::Vm" do
+        let(:vm) { double("ManageIQ::Providers::Microsoft::InfraManager::Vm") }
+        before(:each) do
+          allow(VmOrTemplate).to receive(:find).and_return(vm)
+          allow(vm).to receive(:kind_of?).with(ManageIQ::Providers::Openstack::CloudManager::Vm).and_return(false)
+          allow(vm).to receive(:kind_of?).with(ManageIQ::Providers::Microsoft::InfraManager::Vm).and_return(true)
+        end
+
+        it "executes VmScan#create_snapshot and send signal :snapshot_complete" do
+          expect(@job).to receive(:create_snapshot).and_return(true)
+          expect(@job).to receive(:signal).with(:snapshot_complete)
+          @job.call_snapshot_create
+        end
+      end
+
+      context "for providers other than OpenStack and Microsoft" do
+        before(:each) { @job.agent_id = @server.id }
+
+        it "does not call #create_snapshot but sends signal :snapshot_complete" do
+          expect(@job).to receive(:signal).with(:snapshot_complete)
+          expect(@job).not_to receive(:create_snapshot)
+          @job.call_snapshot_create
+        end
+
+        context "if snapshot for scan required" do
+          before(:each) do
+            allow(@vm).to receive(:require_snapshot_for_scan?).and_return(true)
+            allow(MiqServer).to receive(:use_broker_for_embedded_proxy?).and_return(true)
+          end
+
+          it "sends signal :broker_unavailable and :snapshot_complete if there is no MiqVimBrokerWorker available" do
+            allow(MiqVimBrokerWorker).to receive(:available?).and_return(false)
+            expect(@job).to receive(:signal).with(:broker_unavailable)
+            expect(@job).not_to receive(:signal).with(:snapshot_complete)
+            @job.call_snapshot_create
+          end
+
+          it "logs user event and sends signal :snapshot_complete" do
+            allow(MiqVimBrokerWorker).to receive(:available?).and_return(true)
+            expect(@job).not_to receive(:signal).with(:broker_unavailable)
+            expect(@job).to receive(:signal).with(:snapshot_complete)
+            expect(@job).to receive(:log_user_event)
+            @job.call_snapshot_create
+          end
+        end
+
+        context "if snapshot for scan not requiered" do
+          it "logs user events: Initializing and sends signal :snapshot_complete" do
+            allow(@vm).to receive(:require_snapshot_for_scan?).and_return(false)
+            event_message = "EVM SmartState Analysis Initiated for VM [#{@vm.name}]"
+            expect(@job).to receive(:signal).with(:snapshot_complete)
+            expect(@job).to receive(:log_user_event).with(event_message, any_args)
+            @job.call_snapshot_create
+          end
+        end
+      end
+    end
   end
 
   private
