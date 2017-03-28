@@ -41,7 +41,7 @@ generate_rows:
 col_formats:
 -
 -
--
+- :megabytes_human_precision_2
 tz:
 time_profile_id:
 display_filter:
