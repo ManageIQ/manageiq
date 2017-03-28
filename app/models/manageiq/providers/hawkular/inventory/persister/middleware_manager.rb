@@ -25,7 +25,7 @@ module ManageIQ::Providers
     has_inventory(
       :model_class                 => provider_module::MiddlewareManager::MiddlewareDeployment,
       :association                 => :middleware_deployments,
-      :inventory_object_attributes => %i(middleware_server status).concat(COMMON_ATTRIBUTES),
+      :inventory_object_attributes => %i(middleware_server middleware_server_group status).concat(COMMON_ATTRIBUTES),
       :builder_params              => { :ext_management_system => ->(persister) { persister.manager } }
     )
     has_inventory(

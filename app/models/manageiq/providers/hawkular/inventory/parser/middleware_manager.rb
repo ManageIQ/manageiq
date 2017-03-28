@@ -7,13 +7,7 @@ module ManageIQ::Providers
         @data_index = {}
       end
 
-      def self.ems_inv_to_hashes(ems, options = nil)
-        new(ems, options).ems_inv_to_hashes
-      end
-
       def parse
-        @ems = collector.manager if collector && !@ems
-
         # the order of the method calls is important here, because they make use of @data_index
         fetch_middleware_servers
         fetch_domains_with_servers
@@ -22,20 +16,20 @@ module ManageIQ::Providers
       end
 
       def fetch_middleware_servers
-        @ems.feeds.each do |feed|
-          @ems.eaps(feed).each do |eap|
+        collector.feeds.each do |feed|
+          collector.eaps(feed).each do |eap|
             server = persister.middleware_servers.find_or_build(eap.path)
             parse_middleware_server(eap, server)
 
             if server.properties['In Container'] == 'true'
-              container_id = @ems.container_id(eap.feed)
+              container_id = collector.container_id(eap.feed)
               if container_id
                 backing_ref = 'docker://' + container_id
                 container = Container.find_by(:backing_ref => backing_ref)
                 set_lives_on(server, container) if container
               end
             else
-              machine_id = @ems.machine_id(eap.feed)
+              machine_id = collector.machine_id(eap.feed)
               host_instance = find_host_by_bios_uuid(machine_id) ||
                               find_host_by_bios_uuid(alternate_machine_id(machine_id))
               set_lives_on(server, host_instance) if host_instance
@@ -50,8 +44,8 @@ module ManageIQ::Providers
       end
 
       def fetch_domains_with_servers
-        @ems.feeds.each do |feed|
-          @ems.domains(feed).each do |domain|
+        collector.feeds.each do |feed|
+          collector.domains(feed).each do |domain|
             parsed_domain = persister.middleware_domains.find_or_build(domain.path)
             parse_middleware_domain(feed, domain, parsed_domain)
 
@@ -65,7 +59,7 @@ module ManageIQ::Providers
       end
 
       def fetch_server_groups(feed, parsed_domain)
-        @ems.server_groups(feed).map do |group|
+        collector.server_groups(feed).map do |group|
           parsed_group = persister.middleware_server_groups.find_or_build(group.path)
           parse_middleware_server_group(group, parsed_group)
           @data_index.store_path(:middleware_server_groups, :by_name, parsed_group[:name], parsed_group)
@@ -75,10 +69,7 @@ module ManageIQ::Providers
       end
 
       def fetch_domain_servers(feed)
-        path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id          => hawk_escape_id(feed),
-                                                        :resource_type_id => hawk_escape_id('Domain WildFly Server'))
-        domain_servers = @ems.inventory_client.list_resources_for_type(path.to_s, :fetch_properties => true)
-        domain_servers.each do |domain_server|
+        collector.domain_servers(feed).each do |domain_server|
           server_name = parse_domain_server_name(domain_server.id)
 
           server = persister.middleware_servers.find_or_build(domain_server.path)
@@ -87,7 +78,7 @@ module ManageIQ::Providers
           # Add the association to server group. The information about what server is in which server group is under
           # the server-config resource's configuration
           config_path = domain_server.path.to_s.sub(/%2Fserver%3D/, '%2Fserver-config%3D')
-          config = @ems.inventory_client.get_config_data_for_resource(config_path)
+          config = collector.config_data_for_resource(config_path)
           server_group_name = config['value']['Server Group']
           server_group = @data_index.fetch_path(:middleware_server_groups, :by_name, server_group_name)
           server.middleware_server_group = persister.middleware_server_groups.lazy_find(server_group[:ems_ref])
@@ -136,7 +127,7 @@ module ManageIQ::Providers
 
       def fetch_server_entities
         persister.middleware_servers.each do |eap|
-          @ems.child_resources(eap.ems_ref, true).map do |child|
+          collector.child_resources(eap.ems_ref, true).map do |child|
             next unless child.type_path.end_with?('Deployment', 'Datasource', 'JMS%20Topic', 'JMS%20Queue')
             server = persister.middleware_servers.find(eap.ems_ref)
             process_server_entity(server, child)
@@ -147,11 +138,11 @@ module ManageIQ::Providers
       def fetch_availability
         resources_by_metric_id = {}
         metric_id_by_resource_path = {}
-        @ems.feeds.each do |feed|
+        collector.feeds.each do |feed|
           deployment_status_mt_path = ::Hawkular::Inventory::CanonicalPath.new(
             :metric_type_id => 'Deployment%20Status~Deployment%20Status', :feed_id => feed
           )
-          deployment_status_metrics = @ems.inventory_client.list_metrics_for_metric_type(deployment_status_mt_path)
+          deployment_status_metrics = collector.metrics_for_metric_type(deployment_status_mt_path)
           deployment_status_metrics.each do |deployment_status_metric|
             deployment_status_metric_path = ::Hawkular::Inventory::CanonicalPath.parse(deployment_status_metric.path)
             # By dropping metric_id from the canonical path we end up with the resource path
@@ -180,8 +171,8 @@ module ManageIQ::Providers
           resources_by_metric_id[metric_id] << deployment
         end
         unless resources_by_metric_id.empty?
-          availabilities = @ems.metrics_client.avail.raw_data(resources_by_metric_id.keys,
-                                                              :limit => 1, :order => 'DESC')
+          availabilities = collector.raw_availability_data(resources_by_metric_id.keys,
+                                                            :limit => 1, :order => 'DESC')
           parse_availability availabilities, resources_by_metric_id
         end
       end
@@ -192,7 +183,7 @@ module ManageIQ::Providers
         resource_ids = server_path.resource_ids << entity_id
         resource_path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id      => server_path.feed_id,
                                                                  :resource_ids => resource_ids)
-        config = @ems.inventory_client.get_config_data_for_resource(resource_path.to_s)
+        config = collector.config_data_for_resource(resource_path.to_s)
         send(continuation, entity, inventory_object, config)
       end
 
@@ -209,6 +200,7 @@ module ManageIQ::Providers
         end
 
         inventory_object.middleware_server = persister.middleware_servers.lazy_find(server.ems_ref)
+        inventory_object.middleware_server_group = server.middleware_server_group if inventory_object.respond_to?(:middleware_server_group=)
       end
 
       def process_availability(availability = nil)
