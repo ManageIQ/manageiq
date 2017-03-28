@@ -115,7 +115,7 @@ module EmsRefresh::SaveInventoryHelper
     keys = Array(keys)
     # Lets first index the hashes based on keys, so we can do O(1) lookups
     record_index = {}
-    records.uniq.each do |record|
+    records.each do |record|
       record_index[build_index_from_record(keys, record)] = record
     end
 
@@ -123,7 +123,7 @@ module EmsRefresh::SaveInventoryHelper
 
     hashes.each do |hash|
       record = record_index[build_index_from_hash(keys, hash, record_class)]
-      hash[:id] = record.try(:id)
+      hash[:id] = record.id
     end
   end
 
