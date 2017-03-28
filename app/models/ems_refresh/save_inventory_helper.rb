@@ -129,15 +129,11 @@ module EmsRefresh::SaveInventoryHelper
   end
 
   def build_index_from_hash(keys, hash)
-    keys.map { |key| hash[key].to_s }.join(index_joiner)
+    keys.map { |key| hash[key].to_s }
   end
 
   def build_index_from_record(keys, record)
-    keys.map { |key| record.send(key).to_s }.join(index_joiner)
-  end
-
-  def index_joiner
-    "___"
+    keys.map { |key| record.send(key).to_s }
   end
 
   def link_children_references(records)
