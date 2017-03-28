@@ -113,10 +113,31 @@ module EmsRefresh::SaveInventoryHelper
 
   def store_ids_for_new_records(records, hashes, keys)
     keys = Array(keys)
-    hashes.each do |h|
-      r = records.detect { |r| keys.all? { |k| r.send(k) == r.class.type_for_attribute(k.to_s).cast(h[k]) } }
-      h[:id] = r.id
+    # Lets first index the hashes based on keys, so we can do O(1) lookups
+    hashes_index = {}
+    hashes.each do |hash|
+      hashes_index[build_index_from_hash(keys, hash)] = hash
     end
+
+    records.find_each do |record|
+      record_index = build_index_from_record(keys, record)
+      hash = hashes_index[record_index]
+      hash[:id] = record.id if hash
+    end
+
+    hashes
+  end
+
+  def build_index_from_hash(keys, hash)
+    keys.map { |key| hash[key].to_s }.join(index_joiner)
+  end
+
+  def build_index_from_record(keys, record)
+    keys.map { |key| record.send(key).to_s }.join(index_joiner)
+  end
+
+  def index_joiner
+    "___"
   end
 
   def link_children_references(records)
