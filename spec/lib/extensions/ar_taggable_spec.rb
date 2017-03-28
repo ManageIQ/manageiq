@@ -123,6 +123,12 @@ describe ActsAsTaggable do
       expect(@vm1).to be_is_tagged_with("/test/tags/red", :ns => "none")
       expect(@vm1).to be_is_tagged_with("/test/tags/red", :ns => :none)
     end
+
+    it "with virtual reflections" do
+      lan = FactoryGirl.create(:lan, :name => "VM NFS Network")
+      vm  = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :guest_devices => [FactoryGirl.create(:guest_device_nic, :lan => lan)]))
+      expect(vm).to be_is_tagged_with("/virtual/lans/name/VM NFS Network", :ns => "*")
+    end
   end
 
   it "#tag_list" do
