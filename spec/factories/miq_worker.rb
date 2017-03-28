@@ -4,6 +4,7 @@ FactoryGirl.define do
     status "ready"
   end
 
+  factory :miq_generic_worker, :class => "MiqGenericWorker", :parent => :miq_worker
   factory :miq_ui_worker, :class => "MiqUiWorker", :parent => :miq_worker
   factory :miq_websocket_worker, :class => "MiqWebsocketWorker", :parent => :miq_worker
 

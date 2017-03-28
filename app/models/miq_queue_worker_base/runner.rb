@@ -35,7 +35,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
   def get_message_via_drb
     loop do
       begin
-        msg_id, lock_version = @worker_monitor_drb.get_queue_message(@worker.pid)
+        msg_id, lock_version = worker_monitor_drb.get_queue_message(@worker.pid)
       rescue DRb::DRbError => err
         do_exit("Error communicating with WorkerMonitor because <#{err.message}>", 1)
       end
@@ -64,6 +64,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
         _log.debug("#{log_prefix} #{MiqQueue.format_short_log_msg(msg)} stale, retrying...")
         next
       rescue => err
+        msg.update_column(:state, MiqQueue::STATUS_ERROR)
         raise _("%{log} \"%{error}\" attempting to get next message") % {:log => log_prefix, :error => err}
       end
     end
