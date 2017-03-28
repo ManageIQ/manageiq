@@ -9,11 +9,11 @@ class PhysicalServer < ApplicationRecord
   has_one :host, :inverse_of => :physical_server
 
   VENDOR_TYPES = {
-     # DB            Displayed
-    "lenovo"          => "lenovo",
-    "unknown"         => "Unknown",
-    nil               => "Unknown",
-  }
+    # DB        Displayed
+    "lenovo"  => "lenovo",
+    "unknown" => "Unknown",
+    nil       => "Unknown",
+  }.freeze
 
   def name_with_details
     details % {
@@ -27,6 +27,6 @@ class PhysicalServer < ApplicationRecord
   end
 
   def label_for_vendor
-    VENDOR_TYPES[self.vendor]
+    VENDOR_TYPES[vendor]
   end
 end
