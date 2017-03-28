@@ -6,22 +6,40 @@ describe ShowbackRate do
       expect(showback_rate).to be_valid
     end
 
-    it "should ensure presence of fixed_cost" do
+    it "is not valid with a nil fixed_cost" do
       showback_rate.fixed_cost = nil
       showback_rate.valid?
-      expect(showback_rate.errors[:fixed_cost]).to include "can't be blank"
+      expect(showback_rate.errors.details[:fixed_cost]).to include({:error=>:blank})
     end
 
-    it "should ensure presence of variable_cost" do
+    it "is not valid with a nil variable_cost" do
       showback_rate.variable_cost = nil
       showback_rate.valid?
-      expect(showback_rate.errors[:variable_cost]).to include "can't be blank"
+      expect(showback_rate.errors.details[:variable_cost]).to include({:error=>:blank})
     end
 
-    it "should ensure presence of concept" do
+    it "is  valid with a nil concept" do
       showback_rate.concept = nil
       showback_rate.valid?
-      expect(showback_rate.errors[:concept]).to include "can't be blank"
+      expect(showback_rate).to be_valid
+    end
+
+    it "is not valid with a nil calculation" do
+      showback_rate.calculation = nil
+      showback_rate.valid?
+      expect(showback_rate.errors.details[:calculation]).to include({:error=>:blank})
+    end
+
+    it "is is valid with a nil concept" do
+      showback_rate.concept = nil
+      showback_rate.valid?
+      expect(showback_rate).to be_valid
+    end
+
+    it "is not valid with a nil dimension" do
+      showback_rate.dimension = nil
+      showback_rate.valid?
+      expect(showback_rate.errors.details[:dimension]).to include({:error=>:blank})
     end
 
     it "variable_cost expected to be BigDeciaml" do

@@ -6519,6 +6519,9 @@ showback_rates:
 - created_at
 - updated_at
 - showback_tariff_id
+- calculation
+- category
+- dimension
 showback_tariffs:
 - id
 - name

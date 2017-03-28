@@ -1,8 +1,10 @@
 class ShowbackRate < ApplicationRecord
   belongs_to :showback_tariff
-  validates :fixed_cost,                                       :presence => true
-  validates :variable_cost,                                    :presence => true
-  validates :concept,                                          :presence => true
+  validates :fixed_cost,     :presence => true
+  validates :variable_cost,  :presence => true
+  validates :calculation,    :presence => true
+  validates :category,       :presence => true
+  validates :dimension,      :presence => true
   validate  :fixed_cost_big_decimal, :variable_cost_big_decimal
 
   def fixed_cost_big_decimal
