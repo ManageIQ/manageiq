@@ -443,51 +443,52 @@ class MiqAction < ApplicationRecord
   def run_script(rec)
     filename = self.options[:filename]
     raise _("unable to execute script, no file name specified") if filename.nil?
+
     unless File.exist?(filename)
       raise _("unable to execute script, file name [%{file_name} does not exist]") % {:file_name => filename}
     end
 
-    fd    = Tempfile.new("miq_action", SCRIPT_DIR)
-    fname = fd.path
-    fd.puts((File.extname(filename) == ".rb") ? RB_PREAMBLE : SH_PREAMBLE)
-    fd.puts(File.read(filename))
-    fd.close
+    command_result = nil
+    ruby_file = File.extname(filename) == '.rb'
 
-    File.chmod(0755, fname)
+    Tempfile.open('miq_action', SCRIPT_DIR) do |fd|
+      fd.puts ruby_file ? RB_PREAMBLE : SH_PREAMBLE
+      fd.puts File.read(filename)
+      fd.chmod(0755)
 
-    MiqPolicy.logger.info("MIQ(action_script): Executing: [#{filename}]")
-    if File.extname(filename) == ".rb"
-      runner_cmd = MiqEnvironment::Command.runner_command
-      MiqPolicy.logger.info("MIQ(action_script): Running: [#{runner_cmd} #{fname} '#{rec.name}'}]")
-      command_result = AwesomeSpawn.run(runner_cmd, :params => [fname, rec.name])
-    else
-      MiqPolicy.logger.info("MIQ(action_script): Running: [#{fname}]")
-      command_result = AwesomeSpawn.run(fname)
+      MiqPolicy.logger.info("MIQ(action_script): Executing: [#{filename}]")
+
+      if ruby_file
+        runner_cmd = MiqEnvironment::Command.runner_command
+        MiqPolicy.logger.info("MIQ(action_script): Running: [#{runner_cmd} #{fd.path} '#{rec.name}'}]")
+        command_result = AwesomeSpawn.run(runner_cmd, :params => [fd.path, rec.name])
+      else
+        MiqPolicy.logger.info("MIQ(action_script): Running: [#{fd.path}]")
+        command_result = AwesomeSpawn.run(fname)
+      end
     end
+
     rc = command_result.exit_status
     rc_verbose = RC_HASH[rc] || "Unknown RC: [#{rc}]"
 
-    fd.delete
-
     MiqPolicy.logger.info("MIQ(action_script): Result:\n#{result}")
 
+    info_msg = "MIQ(action_script): Result: #{command_result.output}, rc: #{rc_verbose}"
+
+    fail_msg = _("Action script exited with rc=%{rc_value}, error=%{error_text}") %
+      {:rc_value => rc_verbose, :error_text => command_result.error}
+
     case rc
-    when 0
-      MiqPolicy.logger.info("MIQ(action_script): Result: #{command_result.output}, rc: #{rc_verbose}")
-    when 4
-      MiqPolicy.logger.warn("MIQ(action_script): Result: #{command_result.output}, rc: #{rc_verbose}")
-    when 8
-      raise MiqException::StopAction,
-            _("Action script exited with rc=%{rc_value}, error=%{error_text}") % {:rc_value   => rc_verbose,
-                                                                                  :error_text => command_result.error}
-    when 16
-      raise MiqException::AbortAction,
-            _("Action script exited with rc=%{rc_value}, error=%{error_text}") % {:rc_value   => rc_verbose,
-                                                                                  :error_text => command_result.error}
+    when 0  # Success
+      MiqPolicy.logger.info(info_msg)
+    when 4  # Interrupted
+      MiqPolicy.logger.warn(info_msg)
+    when 8  # Exec format error
+      raise MiqException::StopAction, fail_msg
+    when 16 # Resource busy
+      raise MiqException::AbortAction, fail_msg
     else
-      raise MiqException::UnknownActionRc,
-            _("Action script exited with rc=%{rc_value}, error=%{error_text}") % {:rc_value   => rc_verbose,
-                                                                                  :error_text => command_result.error}
+      raise MiqException::UnknownActionRc, fail_msg
     end
   end
 
