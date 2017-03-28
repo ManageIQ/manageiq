@@ -619,7 +619,7 @@ describe MiqReport do
         YAML.load '--- !ruby/object:MiqExpression
                        exp:
                          ">":
-                           count: tenants.tenant_quotas
+                           count: Tenant.tenant_quotas
                            value: 0'
       end
 
