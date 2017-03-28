@@ -6493,14 +6493,6 @@ showback_charges:
 - showback_event_id
 - created_at
 - updated_at
-showback_configurations:
-- id
-- name
-- description
-- measure
-- types
-- updated_at
-- created_at
 showback_events:
 - id
 - data
@@ -6508,7 +6500,14 @@ showback_events:
 - end_time
 - id_obj
 - type_obj
-- showback_configuration_id
+- updated_at
+- created_at
+showback_measure_types:
+- id
+- category
+- description
+- measure
+- dimensions
 - updated_at
 - created_at
 showback_rates:
