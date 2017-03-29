@@ -514,21 +514,19 @@ openstack-keystone:                     active
       allow(ext_management_system).to receive(:openstack_handle).and_return(openstack_handle)
       expect(MiqQueue.where(:method_name => "refresh").count).to eq(0)
 
-      task = FactoryGirl.create(:miq_task)
-      host.introspect(task.id)
+      host.introspect
       expect(MiqQueue.where(:method_name => "refresh").count).to eq(1)
 
       MiqQueue.all.map(&:delete)
       expect(MiqQueue.where(:method_name => "refresh").count).to eq(0)
-      task = FactoryGirl.create(:miq_task)
-      host.provide(task.id)
+
+      host.provide
       expect(MiqQueue.where(:method_name => "refresh").count).to eq(1)
 
       MiqQueue.all.map(&:delete)
       expect(MiqQueue.where(:method_name => "refresh").count).to eq(0)
-      task = FactoryGirl.create(:miq_task)
-      host.manageable(task.id)
-      expect(task.status).to eq("Ok")
+
+      host.manageable
       expect(MiqQueue.where(:method_name => "refresh").count).to eq(1)
     end
 
