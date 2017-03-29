@@ -114,8 +114,11 @@ module ManageIQ::Providers
       def find_host_by_bios_uuid(machine_id)
         return if machine_id.nil?
         identity_system = machine_id.downcase
-        Vm.find_by(:uid_ems => identity_system,
-                   :type    => uuid_provider_types) if identity_system
+
+        if identity_system
+          Vm.find_by(:uid_ems => identity_system,
+                     :type    => uuid_provider_types)
+        end
       end
 
       def uuid_provider_types
@@ -172,7 +175,7 @@ module ManageIQ::Providers
         end
         unless resources_by_metric_id.empty?
           availabilities = collector.raw_availability_data(resources_by_metric_id.keys,
-                                                            :limit => 1, :order => 'DESC')
+                                                           :limit => 1, :order => 'DESC')
           parse_availability availabilities, resources_by_metric_id
         end
       end
@@ -204,12 +207,11 @@ module ManageIQ::Providers
       end
 
       def process_availability(availability = nil)
-        case
-        when availability.blank?, availability['value'].casecmp('unknown').zero?
+        if availability.blank? || availability['value'].casecmp('unknown').zero?
           'Unknown'
-        when availability['value'].casecmp('up').zero?
+        elsif availability['value'].casecmp('up').zero?
           'Enabled'
-        when availability['value'].casecmp('down').zero?
+        elsif availability['value'].casecmp('down').zero?
           'Disabled'
         else
           'Unknown'

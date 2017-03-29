@@ -70,7 +70,7 @@ module ManagerRefresh
     end
 
     def assign_attributes(attributes)
-      attributes.each { |k, v| @data[k] = v if self.respond_to?("#{k}=") }
+      attributes.each { |k, v| @data[k] = v if respond_to?("#{k}=") }
     end
 
     def to_s

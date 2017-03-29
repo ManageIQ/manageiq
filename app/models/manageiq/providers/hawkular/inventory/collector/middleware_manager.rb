@@ -63,6 +63,7 @@ module ManageIQ::Providers
     end
 
     private
+
     def os_property_for(feed, property)
       os_resource_for(feed)
         .try(:properties)
