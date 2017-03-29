@@ -1,10 +1,6 @@
 module Api
   class BaseController
     module ErrorHandler
-      #
-      # Class Methods
-      #
-
       module ClassMethods
         def rescue_from_api_errors
           ERROR_MAPPING.each { |error, type| rescue_from(error) { |e| api_error(type, e) } }
