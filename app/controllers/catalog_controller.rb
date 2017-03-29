@@ -68,7 +68,7 @@ class CatalogController < ApplicationController
     assert_privileges(params[:pressed]) if params[:pressed].present?
     checked_id = find_checked_items.first || params[:id]
     @sb[:cached_waypoint_ids] = MiqAeClass.waypoint_ids_for_state_machines
-    @record = checked_id.present? ? find_by_id_filtered(ServiceTemplate, checked_id) : ServiceTemplate.new
+    @record = checked_id.present? ? find_record_with_rbac(ServiceTemplate, checked_id) : ServiceTemplate.new
     @sb[:st_form_active_tab] = "basic"
     composite_type = @record.service_type == "composite"
     new_atomic_item = params[:pressed] == "atomic_catalogitem_new" ||
@@ -540,7 +540,7 @@ class CatalogController < ApplicationController
     assert_privileges("svc_catalog_provision")
     checked = find_checked_items
     checked[0] = params[:id] if checked.blank? && params[:id]
-    st = find_by_id_filtered(ServiceTemplate, checked[0])
+    st = find_record_with_rbac(ServiceTemplate, checked[0])
     @right_cell_text = _("Order %{model} \"%{name}\"") % {:name  => st.name,
                                                           :model => ui_lookup(:model => "Service")}
     ra = nil
@@ -666,7 +666,7 @@ class CatalogController < ApplicationController
     assert_privileges("orchestration_template_edit")
     checked = find_checked_items
     checked[0] = params[:id] if checked.blank? && params[:id]
-    @record = find_by_id_filtered(OrchestrationTemplate, checked[0])
+    @record = find_record_with_rbac(OrchestrationTemplate, checked[0])
     if @record.in_use?
       add_flash(_("Orchestration template \"%{name}\" is read-only and cannot be edited.") %
         {:name => @record.name}, :error)
@@ -966,7 +966,7 @@ class CatalogController < ApplicationController
   def ot_edit_set_form_vars(right_cell_text)
     checked = find_checked_items
     checked[0] = params[:id] if checked.blank? && params[:id]
-    @record = checked[0] ? find_by_id_filtered(OrchestrationTemplate, checked[0]) : OrchestrationTemplate.new
+    @record = checked[0] ? find_record_with_rbac(OrchestrationTemplate, checked[0]) : OrchestrationTemplate.new
     @edit = {:current => {:name        => @record.name,
                           :description => @record.description,
                           :content     => @record.content,
@@ -1168,7 +1168,7 @@ class CatalogController < ApplicationController
     checked = find_checked_items
     checked[0] = params[:id] if checked.blank? && params[:id]
 
-    @record = checked[0] ? find_by_id_filtered(ServiceTemplateCatalog, checked[0]) : ServiceTemplateCatalog.new
+    @record = checked[0] ? find_record_with_rbac(ServiceTemplateCatalog, checked[0]) : ServiceTemplateCatalog.new
     @right_cell_text = @record.id ?
         _("Editing %{model} \"%{name}\"") % {:name => @record.name, :model => ui_lookup(:model => "ServiceTemplateCatalog")} :
         _("Adding a new %{model}") % {:model => ui_lookup(:model => "ServiceTemplateCatalog")}

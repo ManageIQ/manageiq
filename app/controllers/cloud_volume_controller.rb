@@ -50,7 +50,7 @@ class CloudVolumeController < ApplicationController
       javascript_redirect :action => "attach", :id => checked_volume_id
     elsif params[:pressed] == "cloud_volume_detach"
       checked_volume_id = get_checked_volume_id(params)
-      @volume = find_by_id_filtered(CloudVolume, checked_volume_id)
+      @volume = find_record_with_rbac(CloudVolume, checked_volume_id)
       if @volume.attachments.empty?
         render_flash(_("%{volume} \"%{volume_name}\" is not attached to any %{instances}") % {
                      :volume      => ui_lookup(:table => 'cloud_volume'),
@@ -157,8 +157,13 @@ class CloudVolumeController < ApplicationController
     params[:id] = get_checked_volume_id(params) unless params[:id].present?
     assert_privileges("cloud_volume_attach")
     @vm_choices = {}
+<<<<<<< HEAD
     @volume = find_by_id_filtered(CloudVolume, params[:id])
     @volume.cloud_tenant.vms.each { |vm| @vm_choices[vm.name] = vm.id }
+=======
+    @volume = find_record_with_rbac(CloudVolume, params[:id])
+    @volume.available_vms.each { |vm| @vm_choices[vm.name] = vm.id }
+>>>>>>> dad3455... Renamed method 'find_by_id_filtered' methods name to 'find_record_with_rbac'
 
     @in_a_form = true
     drop_breadcrumb(
@@ -172,7 +177,7 @@ class CloudVolumeController < ApplicationController
   def detach
     params[:id] = get_checked_volume_id(params) unless params[:id].present?
     assert_privileges("cloud_volume_detach")
-    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @volume = find_record_with_rbac(CloudVolume, params[:id])
     @vm_choices = @volume.vms.each_with_object({}) { |vm, hash| hash[vm.name] = vm.id }
 
     @in_a_form = true
@@ -187,7 +192,7 @@ class CloudVolumeController < ApplicationController
   def attach_volume
     assert_privileges("cloud_volume_attach")
 
-    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @volume = find_record_with_rbac(CloudVolume, params[:id])
     case params[:button]
     when "cancel"
       cancel_action(_("Attaching %{model} \"%{name}\" was cancelled by the user") % {
@@ -196,7 +201,7 @@ class CloudVolumeController < ApplicationController
       })
     when "attach"
       options = form_params
-      vm = find_by_id_filtered(VmCloud, options[:vm_id])
+      vm = find_record_with_rbac(VmCloud, options[:vm_id])
       if @volume.is_available?(:attach_volume)
         begin
           @volume.raw_attach_volume(vm.ems_ref, options['device_path'])
@@ -217,14 +222,35 @@ class CloudVolumeController < ApplicationController
       session[:edit] = nil
       session[:flash_msgs] = @flash_array.dup if @flash_array
 
+<<<<<<< HEAD
       javascript_redirect previous_breadcrumb_url
+=======
+  def attach_finished
+    task_id = session[:async][:params][:task_id]
+    volume_id = session[:async][:params][:id]
+    volume_name = session[:async][:params][:name]
+    vm_id = session[:async][:params][:vm_id]
+    vm = find_record_with_rbac(VmCloud, vm_id)
+    task = MiqTask.find(task_id)
+    if MiqTask.status_ok?(task.status)
+      add_flash(_("Attaching Cloud Volume \"%{volume_name}\" to %{vm_name} finished") % {
+        :volume_name => volume_name,
+        :vm_name     => vm.name
+      })
+    else
+      add_flash(_("Unable to attach Cloud Volume \"%{volume_name}\" to %{vm_name}: %{details}") % {
+        :volume_name => volume_name,
+        :vm_name     => vm.name,
+        :details     => task.message
+      }, :error)
+>>>>>>> dad3455... Renamed method 'find_by_id_filtered' methods name to 'find_record_with_rbac'
     end
   end
 
   def detach_volume
     assert_privileges("cloud_volume_detach")
 
-    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @volume = find_record_with_rbac(CloudVolume, params[:id])
     case params[:button]
     when "cancel"
       cancel_action(_("Detaching %{model} \"%{name}\" was cancelled by the user") % {
@@ -234,7 +260,7 @@ class CloudVolumeController < ApplicationController
 
     when "detach"
       options = form_params
-      vm = find_by_id_filtered(VmCloud, options[:vm_id])
+      vm = find_record_with_rbac(VmCloud, options[:vm_id])
       if @volume.is_available?(:detach_volume)
         begin
           @volume.raw_detach_volume(vm.ems_ref)
@@ -255,7 +281,28 @@ class CloudVolumeController < ApplicationController
       session[:edit] = nil
       session[:flash_msgs] = @flash_array.dup if @flash_array
 
+<<<<<<< HEAD
       javascript_redirect previous_breadcrumb_url
+=======
+  def detach_finished
+    task_id = session[:async][:params][:task_id]
+    volume_id = session[:async][:params][:id]
+    volume_name = session[:async][:params][:name]
+    vm_id = session[:async][:params][:vm_id]
+    vm = find_record_with_rbac(VmCloud, vm_id)
+    task = MiqTask.find(task_id)
+    if MiqTask.status_ok?(task.status)
+      add_flash(_("Detaching Cloud Volume \"%{volume_name}\" from %{vm_name} finished") % {
+        :volume_name => volume_name,
+        :vm_name     => vm.name
+      })
+    else
+      add_flash(_("Unable to detach Cloud Volume \"%{volume_name}\" from %{vm_name}: %{details}") % {
+        :volume_name => volume_name,
+        :vm_name     => vm.name,
+        :details     => task.message
+      }, :error)
+>>>>>>> dad3455... Renamed method 'find_by_id_filtered' methods name to 'find_record_with_rbac'
     end
   end
 
@@ -312,7 +359,7 @@ class CloudVolumeController < ApplicationController
     when "validate"
       @in_a_form = true
       options = form_params
-      cloud_tenant = find_by_id_filtered(CloudTenant, options[:cloud_tenant_id])
+      cloud_tenant = find_record_with_rbac(CloudTenant, options[:cloud_tenant_id])
       valid_action, action_details = CloudVolume.validate_create_volume(cloud_tenant.ext_management_system)
       if valid_action
         add_flash(_("Validation successful"))
@@ -326,7 +373,7 @@ class CloudVolumeController < ApplicationController
   def edit
     params[:id] = get_checked_volume_id(params) unless params[:id].present?
     assert_privileges("cloud_volume_edit")
-    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @volume = find_record_with_rbac(CloudVolume, params[:id])
     @in_a_form = true
     drop_breadcrumb(
       :name => _("Edit %{model} \"%{name}\"") % {:model => ui_lookup(:table => 'cloud_volume'), :name => @volume.name},
@@ -336,7 +383,7 @@ class CloudVolumeController < ApplicationController
 
   def update
     assert_privileges("cloud_volume_edit")
-    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @volume = find_record_with_rbac(CloudVolume, params[:id])
 
     case params[:button]
     when "cancel"
@@ -373,7 +420,7 @@ class CloudVolumeController < ApplicationController
     when "validate"
       @in_a_form = true
       options = form_params
-      cloud_tenant = find_by_id_filtered(CloudTenant, options[:cloud_tenant_id])
+      cloud_tenant = find_record_with_rbac(CloudTenant, options[:cloud_tenant_id])
       valid_action, action_details = CloudVolume.validate_create_volume(cloud_tenant.ext_management_system)
       if valid_action
         add_flash(_("Validation successful"))
@@ -451,7 +498,7 @@ class CloudVolumeController < ApplicationController
 
   def backup_new
     assert_privileges("cloud_volume_backup_create")
-    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @volume = find_record_with_rbac(CloudVolume, params[:id])
     @in_a_form = true
     drop_breadcrumb(
       :name => _("Create Backup for %{model} \"%{name}\"") % {
@@ -464,7 +511,7 @@ class CloudVolumeController < ApplicationController
 
   def backup_create
     assert_privileges("cloud_volume_backup_create")
-    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @volume = find_record_with_rbac(CloudVolume, params[:id])
 
     case params[:button]
     when "cancel"
@@ -500,7 +547,7 @@ class CloudVolumeController < ApplicationController
     task_id = session[:async][:params][:task_id]
     volume_id = session[:async][:params][:id]
     task = MiqTask.find(task_id)
-    @volume = find_by_id_filtered(CloudVolume, volume_id)
+    @volume = find_record_with_rbac(CloudVolume, volume_id)
     if task.results_ready?
       add_flash(_("Backup for %{model} \"%{name}\" created") % {
         :model => ui_lookup(:table => 'cloud_volume'),
@@ -522,7 +569,7 @@ class CloudVolumeController < ApplicationController
 
   def backup_select
     assert_privileges("cloud_volume_backup_restore")
-    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @volume = find_record_with_rbac(CloudVolume, params[:id])
     @backup_choices = {}
     @volume.cloud_volume_backups.each do |backup|
       @backup_choices[backup.name] = backup.id
@@ -539,7 +586,7 @@ class CloudVolumeController < ApplicationController
 
   def backup_restore
     assert_privileges("cloud_volume_backup_restore")
-    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @volume = find_record_with_rbac(CloudVolume, params[:id])
 
     case params[:button]
     when "cancel"
@@ -549,7 +596,7 @@ class CloudVolumeController < ApplicationController
       })
 
     when "restore"
-      @backup = find_by_id_filtered(CloudVolumeBackup, params[:backup_id])
+      @backup = find_record_with_rbac(CloudVolumeBackup, params[:backup_id])
       task_id = @volume.backup_restore_queue(session[:userid], @backup.ems_ref)
 
       add_flash(_("Cloud volume restore failed: Task start failed: ID [%{id}]") %
@@ -567,7 +614,7 @@ class CloudVolumeController < ApplicationController
     task_id = session[:async][:params][:task_id]
     volume_id = session[:async][:params][:id]
     task = MiqTask.find(task_id)
-    @volume = find_by_id_filtered(CloudVolume, volume_id)
+    @volume = find_record_with_rbac(CloudVolume, volume_id)
     if task.results_ready?
       add_flash(_("Restoring %{model} \"%{name}\" from backup") % {
         :model => ui_lookup(:table => 'cloud_volume'),
@@ -589,7 +636,7 @@ class CloudVolumeController < ApplicationController
 
   def snapshot_new
     assert_privileges("cloud_volume_snapshot_create")
-    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @volume = find_record_with_rbac(CloudVolume, params[:id])
     @in_a_form = true
     drop_breadcrumb(
       :name => _("Create Snapshot for Cloud Volume \"%{name}\"") % {
@@ -601,7 +648,7 @@ class CloudVolumeController < ApplicationController
 
   def snapshot_create
     assert_privileges("cloud_volume_snapshot_create")
-    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @volume = find_record_with_rbac(CloudVolume, params[:id])
     case params[:button]
     when "cancel"
       cancel_action(_("Snapshot of Cloud Volume \"%{name}\" was cancelled by the user") % {
@@ -625,7 +672,7 @@ class CloudVolumeController < ApplicationController
     task_id = session[:async][:params][:task_id]
     volume_id = session[:async][:params][:id]
     task = MiqTask.find(task_id)
-    @volume = find_by_id_filtered(CloudVolume, volume_id)
+    @volume = find_record_with_rbac(CloudVolume, volume_id)
     if task.results_ready?
       add_flash(_("Snapshot for Cloud Volume \"%{name}\" created") % {
         :name => @volume.name
@@ -651,6 +698,38 @@ class CloudVolumeController < ApplicationController
     options[:cloud_tenant_id] = params[:cloud_tenant_id] if params[:cloud_tenant_id]
     options[:vm_id] = params[:vm_id] if params[:vm_id]
     options[:device_path] = params[:device_path] if params[:device_path]
+<<<<<<< HEAD
+=======
+    options[:volume_type] = params[:aws_volume_type] if params[:aws_volume_type]
+    # Only set IOPS if io1 (provisioned IOPS) and IOPS available
+    options[:iops] = params[:aws_iops] if options[:volume_type] == 'io1' && params[:aws_iops]
+    options
+  end
+
+  def form_params_create
+    options = {}
+    options[:name] = params[:name] if params[:name]
+    options[:size] = params[:size].to_i if params[:size]
+
+    # Depending on the storage manager type, collect required form params.
+    case params[:emstype]
+    when "ManageIQ::Providers::StorageManager::CinderManager"
+      cloud_tenant_id = params[:cloud_tenant_id] if params[:cloud_tenant_id]
+      cloud_tenant = find_record_with_rbac(CloudTenant, cloud_tenant_id)
+      options[:cloud_tenant] = cloud_tenant
+      options[:ems] = cloud_tenant.ext_management_system
+    when "ManageIQ::Providers::Amazon::StorageManager::Ebs"
+      options[:volume_type] = params[:aws_volume_type] if params[:aws_volume_type]
+      # Only set IOPS if io1 (provisioned IOPS) and IOPS available
+      options[:iops] = params[:aws_iops] if options[:volume_type] == 'io1' && params[:aws_iops]
+      options[:availability_zone] = params[:aws_availability_zone_id] if params[:aws_availability_zone_id]
+      options[:encrypted] = params[:aws_encryption]
+
+      # Get the storage manager.
+      storage_manager_id = params[:storage_manager_id] if params[:storage_manager_id]
+      options[:ems] = find_record_with_rbac(ExtManagementSystem, storage_manager_id)
+    end
+>>>>>>> dad3455... Renamed method 'find_by_id_filtered' methods name to 'find_record_with_rbac'
     options
   end
 

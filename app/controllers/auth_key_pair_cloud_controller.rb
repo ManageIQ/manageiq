@@ -101,7 +101,7 @@ class AuthKeyPairCloudController < ApplicationController
                           :flash_msg => _("Add of new %{model} was cancelled by the user") %
                           {:model => ui_lookup(:table => 'auth_key_pair_cloud')}
     when "save"
-      ext_management_system = find_by_id_filtered(ManageIQ::Providers::CloudManager, options[:ems_id])
+      ext_management_system = find_record_with_rbac(ManageIQ::Providers::CloudManager, options[:ems_id])
       kls = kls.class_by_ems(ext_management_system)
       if kls.is_available?(:create_key_pair, ext_management_system, options)
         begin
@@ -130,7 +130,7 @@ class AuthKeyPairCloudController < ApplicationController
       end
     when "validate"
       @in_a_form = true
-      ext_management_system = find_by_id_filtered(ManageIQ::Providers::CloudManager, options[:ems_id])
+      ext_management_system = find_record_with_rbac(ManageIQ::Providers::CloudManager, options[:ems_id])
       kls = kls.class_by_ems(ext_management_system)
       if kls.is_available?(:create_key_pair, ext_management_system, options)
         add_flash(_("Validation successful"))

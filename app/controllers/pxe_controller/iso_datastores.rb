@@ -44,7 +44,7 @@ module PxeController::IsoDatastores
       get_node_info(x_node)
       replace_right_cell(x_node)
     elsif params[:button] == "add"
-      isd = params[:id] ? find_by_id_filtered(IsoDatastore, params[:id]) : IsoDatastore.new
+      isd = params[:id] ? find_record_with_rbac(IsoDatastore, params[:id]) : IsoDatastore.new
       if @edit[:new][:ems_id].blank?
         add_flash(_("Provider is required"), :error)
       end
@@ -174,7 +174,7 @@ module PxeController::IsoDatastores
       replace_right_cell(x_node)
     when "save"
       return unless load_edit("iso_img_edit__#{params[:id]}", "replace_cell__explorer")
-      update_img = find_by_id_filtered(IsoImage, params[:id])
+      update_img = find_record_with_rbac(IsoImage, params[:id])
       iso_img_set_record_vars(update_img)
       if update_img.valid? && !flash_errors? && update_img.save!
         add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "IsoImage"), :name => update_img.name})
@@ -246,7 +246,7 @@ module PxeController::IsoDatastores
   def identify_isd_datastore
     @isd = nil
     begin
-      @record = @isd = find_by_id_filtered(IsoDatastore, from_cid(params[:id]))
+      @record = @isd = find_record_with_rbac(IsoDatastore, from_cid(params[:id]))
     rescue ActiveRecord::RecordNotFound
     rescue StandardError => @bang
     end

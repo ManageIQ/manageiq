@@ -151,7 +151,7 @@ class ServiceController < ApplicationController
     when "reset", nil # Reset or first time in
       checked = find_checked_items
       checked[0] = params[:id] if checked.blank? && params[:id]
-      @service = find_by_id_filtered(Service, checked[0])
+      @service = find_record_with_rbac(Service, checked[0])
       @in_a_form = true
       replace_right_cell("service_edit")
       return
@@ -393,7 +393,7 @@ class ServiceController < ApplicationController
   # Overwriting from application controller
   #
   # FIXME:  Find a more graceful way of adding .with_aggregates to the @record
-  def find_by_id_filtered(db, id)
+  def find_record_with_rbac(db, id)
     options = @find_with_aggregates ? { :named_scope => :with_aggregates } : {}
     super(db, id, options)
   end

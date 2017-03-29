@@ -14,7 +14,7 @@ module ReportController::Widgets
       obj = find_checked_items
       @_params[:id] = obj[0] unless obj.empty?
     end
-    widget = find_by_id_filtered(MiqWidget, params[:id])
+    widget = find_record_with_rbac(MiqWidget, params[:id])
     @widget.title = widget.title
     @widget.description = widget.description
     @widget.resource = widget.resource
@@ -348,7 +348,7 @@ module ReportController::Widgets
 
     # Schedule Box - create new sched for copy/new, use existing for edit
     @edit[:schedule] = @widget.id && !@widget.miq_schedule.nil? ?
-                          find_by_id_filtered(MiqSchedule, @widget.miq_schedule.id) :
+                          find_record_with_rbac(MiqSchedule, @widget.miq_schedule.id) :
                           MiqSchedule.new
 
     if @widget.resource_id && @widget.resource_type == "MiqReport"

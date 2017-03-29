@@ -37,7 +37,7 @@ class NetworkRouterController < ApplicationController
 
   def network_router_form_fields
     assert_privileges("network_router_edit")
-    router = find_by_id_filtered(NetworkRouter, params[:id])
+    router = find_record_with_rbac(NetworkRouter, params[:id])
     render :json => {
       :name => router.name
     }
@@ -165,7 +165,7 @@ class NetworkRouterController < ApplicationController
   def edit
     params[:id] = get_checked_router_id(params) unless params[:id].present?
     assert_privileges("network_router_edit")
-    @router = find_by_id_filtered(NetworkRouter, params[:id])
+    @router = find_record_with_rbac(NetworkRouter, params[:id])
     @in_a_form = true
     drop_breadcrumb(
       :name => _("Edit Router \"%{name}\"") % {:model => ui_lookup(:table => 'network_router'), :name => @router.name},
@@ -185,7 +185,7 @@ class NetworkRouterController < ApplicationController
 
   def update
     assert_privileges("network_router_edit")
-    @router = find_by_id_filtered(NetworkRouter, params[:id])
+    @router = find_record_with_rbac(NetworkRouter, params[:id])
     options = form_params
     case params[:button]
     when "cancel"
@@ -237,7 +237,7 @@ class NetworkRouterController < ApplicationController
     options[:admin_state_up] = params[:admin_state_up] if params[:admin_state_up]
 
     # Relationships
-    options[:cloud_tenant] = find_by_id_filtered(CloudTenant, params[:cloud_tenant_id]) if params[:cloud_tenant_id]
+    options[:cloud_tenant] = find_record_with_rbac(CloudTenant, params[:cloud_tenant_id]) if params[:cloud_tenant_id]
     options[:cloud_network_id] = params[:cloud_network_id].gsub(/number:/, '') if params[:cloud_network_id]
     options[:cloud_group_id] = params[:cloud_group_id] if params[:cloud_group_id]
     options

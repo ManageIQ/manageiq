@@ -50,7 +50,7 @@ module PxeController::PxeServers
       get_node_info(x_node)
       replace_right_cell(x_node)
     elsif ["add", "save"].include?(params[:button])
-      pxe = params[:id] ? find_by_id_filtered(PxeServer, params[:id]) : PxeServer.new
+      pxe = params[:id] ? find_record_with_rbac(PxeServer, params[:id]) : PxeServer.new
       pxe_server_validate_fields
       if @flash_array
         javascript_flash
@@ -194,7 +194,7 @@ module PxeController::PxeServers
       replace_right_cell(x_node)
     when "save"
       return unless load_edit("pxe_img_edit__#{params[:id]}", "replace_cell__explorer")
-      update_img = find_by_id_filtered(PxeImage, params[:id])
+      update_img = find_record_with_rbac(PxeImage, params[:id])
       pxe_img_set_record_vars(update_img)
       if update_img.valid? && !flash_errors? && update_img.save!
         add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "PxeImage"), :name => update_img.name})
@@ -245,7 +245,7 @@ module PxeController::PxeServers
       replace_right_cell(x_node)
     when "save"
       return unless load_edit("pxe_wimg_edit__#{params[:id]}", "replace_cell__explorer")
-      update_wimg = find_by_id_filtered(WindowsImage, params[:id])
+      update_wimg = find_record_with_rbac(WindowsImage, params[:id])
       pxe_wimg_set_record_vars(update_wimg)
       if update_wimg.valid? && !flash_errors? && update_wimg.save!
         add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "WindowsImage"), :name => update_wimg.name})
@@ -370,7 +370,7 @@ module PxeController::PxeServers
   def identify_pxe_server
     @ps = nil
     begin
-      @record = @ps = find_by_id_filtered(PxeServer, from_cid(params[:id]))
+      @record = @ps = find_record_with_rbac(PxeServer, from_cid(params[:id]))
     rescue ActiveRecord::RecordNotFound
     rescue StandardError => @bang
     end

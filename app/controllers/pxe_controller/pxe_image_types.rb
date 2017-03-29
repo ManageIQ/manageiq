@@ -37,7 +37,7 @@ module PxeController::PxeImageTypes
       id = params[:id] || "new"
       return unless load_edit("pxe_image_type_edit__#{id}", "replace_cell__explorer")
       pxe_image_type_get_form_vars
-      add_pxe = params[:id] ? find_by_id_filtered(PxeImageType, params[:id]) : PxeImageType.new
+      add_pxe = params[:id] ? find_record_with_rbac(PxeImageType, params[:id]) : PxeImageType.new
       pxe_image_type_validate_fields
       if @flash_array
         javascript_flash
