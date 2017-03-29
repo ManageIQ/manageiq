@@ -75,7 +75,7 @@ function miqInitWidgetPulldown() {
 }
 
 function miqCalendarDateConversion(server_offset) {
-  return moment().utcOffset(Number(server_offset) / 60);
+  return moment().utcOffset(Number(server_offset) / 60).toDate();
 }
 
 // The expressions variable is used only in the following two functions
