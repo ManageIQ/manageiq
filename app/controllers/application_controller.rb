@@ -1798,14 +1798,13 @@ class ApplicationController < ActionController::Base
   end
 
   def task_supported?(typ)
-    vm_ids = find_checked_items.map(&:to_i).uniq
+    vms = find_checked_records_with_rbac(VmOrTemplate)
 
-    if %w(migrate publish).include?(typ) && VmOrTemplate.includes_template?(vm_ids)
+    if %w(migrate publish).include?(typ) && vms.any? { |vm| vm.template? }
       render_flash_not_applicable_to_model(typ, ui_lookup(:table => "miq_template"))
       return
     end
 
-    vms = VmOrTemplate.where(:id => vm_ids)
     if typ == "migrate"
       # if one of the providers in question cannot support simultaneous migration of his subset of
       # the selected VMs, we abort
