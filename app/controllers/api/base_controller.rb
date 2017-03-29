@@ -19,7 +19,6 @@ module Api
     include_concern 'Generic'
     include_concern 'Authentication'
     include ActionController::HttpAuthentication::Basic::ControllerMethods
-    extend ErrorHandler::ClassMethods
 
     before_action :require_api_user_or_token, :except => [:handle_options_request]
     before_action :set_gettext_locale
@@ -31,7 +30,7 @@ module Api
     after_action :log_api_response
 
     respond_to :json
-    rescue_from_api_errors
+    ERROR_MAPPING.each { |error, type| rescue_from(error) { |e| api_error(type, e) } }
 
     private
 
