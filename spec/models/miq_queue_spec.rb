@@ -334,6 +334,18 @@ describe MiqQueue do
       expect(msg_from_db.miq_callback).to eq({})
     end
 
+    it "does not allow objects on the queue" do
+      expect do
+        MiqQueue.put(:class_name => 'MyClass', :method_name => 'method1', :args => [MiqServer.first])
+      end.to raise_error(ArgumentError)
+    end
+  end
+
+  context "#put_unless_exists" do
+    before do
+      _, @miq_server, = EvmSpecHelper.create_guid_miq_server_zone
+    end
+
     it "should put a unique message on the queue if method_name is different" do
       msg1 = MiqQueue.put(
         :class_name  => 'MyClass',
@@ -406,6 +418,12 @@ describe MiqQueue do
       expect(MiqQueue.get).to eq(msg1)
       expect(MiqQueue.get).to eq(nil)
     end
+  end
+
+  context "#put_or_update" do
+    before do
+      _, @miq_server, = EvmSpecHelper.create_guid_miq_server_zone
+    end
 
     it "should use args param to find messages on the queue" do
       msg1 = MiqQueue.put(
@@ -459,12 +477,6 @@ describe MiqQueue do
       expect(MiqQueue.get).to have_attributes(:args => [1, 2], :task_id => 'first_task')
       expect(MiqQueue.get).to have_attributes(:args => [3, 4], :task_id => 'fun_task')
       expect(MiqQueue.get).to eq(nil)
-    end
-
-    it "does not allow objects on the queue" do
-      expect do
-        MiqQueue.put(:class_name => 'MyClass', :method_name => 'method1', :args => [MiqServer.first])
-      end.to raise_error(ArgumentError)
     end
   end
 
