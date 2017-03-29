@@ -344,7 +344,7 @@ class ApplicationController < ActionController::Base
 
     @display = "show_statistics"
     session[:stats_record_id] = params[:id] if params[:id]
-    @record = find_by_id_filtered(db, session[:stats_record_id])
+    @record = find_record_with_rbac(db, session[:stats_record_id])
 
     # Need to use paged_view_search code, once the relationship is working. Following is workaround for the demo
     @stats = @record.derived_metrics
@@ -1408,7 +1408,10 @@ class ApplicationController < ActionController::Base
   # Params:
   #   klass - class of accessed object
   #   id    - accessed object id
-  def find_by_id_filtered(klass, id, options = {})
+  # Returns:
+  #   database record of checked item. If user does not have rights for it,
+  #   raises an exception
+  def find_record_with_rbac(klass, id, options = {})
     raise _("Invalid input") unless is_integer?(id)
     tested_object = klass.find(id)
     if tested_object.nil?
@@ -2353,7 +2356,7 @@ class ApplicationController < ActionController::Base
     rec = model.constantize.find_by_id(id)
     if rec
       begin
-        authrec = find_by_id_filtered(model.constantize, id)
+        authrec = find_record_with_rbac(model.constantize, id)
       rescue ActiveRecord::RecordNotFound
       rescue StandardError => @bang
       end

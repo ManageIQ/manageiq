@@ -94,7 +94,7 @@ class EmsInfraController < ApplicationController
     if host_ids.nil?
       log_and_flash_message(_("No compute hosts were selected for scale down."))
     else
-      hosts = host_ids.map { |host_id| find_by_id_filtered(Host, host_id) }
+      hosts = host_ids.map { |host_id| find_record_with_rbac(Host, host_id) }
       services = hosts.collect(&:cloud_services).flatten
 
       # verify selected nodes can be removed
@@ -246,7 +246,7 @@ class EmsInfraController < ApplicationController
     parent_resource_names = []
     host_physical_resource_ids.each do |pr_id|
       host_resource = resources_by_physical_resource_id[pr_id]
-      host_stack = find_by_id_filtered(OrchestrationStack, host_resource.stack_id)
+      host_stack = find_record_with_rbac(OrchestrationStack, host_resource.stack_id)
       parent_host_resource = resources_by_physical_resource_id[host_stack.ems_ref]
       parent_resource_names << parent_host_resource.logical_resource
     end

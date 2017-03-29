@@ -471,15 +471,15 @@ module ApplicationController::Compare
     begin
       db = @sb[:compare_db].constantize
       if @sb[:compare_db] == "Host"
-        @record = @host = @drift_obj = find_by_id_filtered(db, params[:id])
+        @record = @host = @drift_obj = find_record_with_rbac(db, params[:id])
       elsif @sb[:compare_db] == "MiqTemplate"
-        @record = @miq_templates = @drift_obj = find_by_id_filtered(db, params[:id])
+        @record = @miq_templates = @drift_obj = find_record_with_rbac(db, params[:id])
       elsif @sb[:compare_db] == "Vm"
-        @record = @vm = @drift_obj = find_by_id_filtered(db, params[:id])
+        @record = @vm = @drift_obj = find_record_with_rbac(db, params[:id])
       elsif @sb[:compare_db] == "EmsCluster"
-        @record = @ems_cluster = @drift_obj = find_by_id_filtered(db, params[:id])
+        @record = @ems_cluster = @drift_obj = find_record_with_rbac(db, params[:id])
       else
-        @record = @drift_obj = find_by_id_filtered(db, params[:id])
+        @record = @drift_obj = find_record_with_rbac(db, params[:id])
       end
     rescue ActiveRecord::RecordNotFound
       return

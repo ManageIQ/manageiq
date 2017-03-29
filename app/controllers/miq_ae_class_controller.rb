@@ -1023,7 +1023,7 @@ class MiqAeClassController < ApplicationController
       @in_a_form = false
       replace_right_cell
     when "save"
-      ae_class = find_by_id_filtered(MiqAeClass, params[:id])
+      ae_class = find_record_with_rbac(MiqAeClass, params[:id])
       set_record_vars(ae_class)                     # Set the record variables, but don't save
       begin
         MiqAeClass.transaction do
@@ -1068,7 +1068,7 @@ class MiqAeClassController < ApplicationController
       @in_a_form = false
       replace_right_cell
     when "save"
-      ae_class = find_by_id_filtered(MiqAeClass, params[:id])
+      ae_class = find_record_with_rbac(MiqAeClass, params[:id])
       begin
         MiqAeClass.transaction do
           set_field_vars(ae_class)
@@ -1118,7 +1118,7 @@ class MiqAeClassController < ApplicationController
       @in_a_form = false
       replace_right_cell
     when "save"
-      ae_ns = find_by_id_filtered(@edit[:typ].constantize, params[:id])
+      ae_ns = find_record_with_rbac(@edit[:typ].constantize, params[:id])
       ns_set_record_vars(ae_ns)                     # Set the record variables, but don't save
       begin
         ae_ns.save!
@@ -1164,7 +1164,7 @@ class MiqAeClassController < ApplicationController
       @in_a_form = false
       replace_right_cell
     when "save"
-      ae_method = find_by_id_filtered(MiqAeMethod, params[:id])
+      ae_method = find_record_with_rbac(MiqAeMethod, params[:id])
       set_method_record_vars(ae_method)                     # Set the record variables, but don't save
       begin
         MiqAeMethod.transaction do

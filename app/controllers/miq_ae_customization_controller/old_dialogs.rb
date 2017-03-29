@@ -249,7 +249,7 @@ module MiqAeCustomizationController::OldDialogs
       get_node_info
       replace_right_cell(x_node)
     when "add", "save"
-      # dialog = find_by_id_filtered(MiqDialog, params[:id])
+      # dialog = find_record_with_rbac(MiqDialog, params[:id])
       dialog = @dialog.id.blank? ? MiqDialog.new : MiqDialog.find(@dialog.id) # Get new or existing record
       if @edit[:new][:name].blank?
         add_flash(_("Name is required"), :error)

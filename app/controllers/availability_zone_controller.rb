@@ -61,7 +61,7 @@ class AvailabilityZoneController < ApplicationController
     when "timeline"
       @showtype = "timeline"
       session[:tl_record_id] = params[:id] if params[:id]
-      @record = find_by_id_filtered(AvailabilityZone, session[:tl_record_id])
+      @record = find_record_with_rbac(AvailabilityZone, session[:tl_record_id])
       @timeline = @timeline_filter = true
       @lastaction = "show_timeline"
       tl_build_timeline                       # Create the timeline report

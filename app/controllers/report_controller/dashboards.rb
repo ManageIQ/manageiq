@@ -97,7 +97,7 @@ module ReportController::Dashboards
       end
     else
       add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
-      @db = params[:id] && params[:id] != "new" ? find_by_id_filtered(MiqWidgetSet, params[:id]) : MiqWidgetSet.new
+      @db = params[:id] && params[:id] != "new" ? find_record_with_rbac(MiqWidgetSet, params[:id]) : MiqWidgetSet.new
       db_set_form_vars
       session[:changed] = false
       @in_a_form = true

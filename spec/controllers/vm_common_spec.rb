@@ -117,7 +117,7 @@ describe VmOrTemplateController do
     it "Redirects user to the referrer controller/action" do
       login_as FactoryGirl.create(:user)
       request.env["HTTP_REFERER"] = "http://localhost:3000/dashboard/show"
-      allow(controller).to receive(:find_by_id_filtered).and_return(nil)
+      allow(controller).to receive(:find_record_with_rbac).and_return(nil)
       get :show, :params => {:id => @vm.id}
       expect(response.status).to eq(302)
       expect(response).to redirect_to(:controller => "dashboard", :action => 'show')

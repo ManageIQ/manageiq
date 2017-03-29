@@ -51,7 +51,7 @@ module ReportController::Reports::Editor
       return unless load_edit("report_edit__#{id}", "replace_cell__explorer")
       get_form_vars
       @changed = (@edit[:new] != @edit[:current])
-      @rpt = @edit[:rpt_id] ? find_by_id_filtered(MiqReport, params[:id]) :
+      @rpt = @edit[:rpt_id] ? find_record_with_rbac(MiqReport, params[:id]) :
           MiqReport.new
       set_record_vars(@rpt)
       unless valid_report?(@rpt)

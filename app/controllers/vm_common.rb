@@ -71,7 +71,7 @@ module VmCommon
     db = get_rec_cls
     @display = "timeline"
     session[:tl_record_id] = params[:id] if params[:id]
-    @record = find_by_id_filtered(db, from_cid(session[:tl_record_id]))
+    @record = find_record_with_rbac(db, from_cid(session[:tl_record_id]))
     @timeline = @timeline_filter = true
     @lastaction = "show_timeline"
     tl_build_timeline                       # Create the timeline report
@@ -734,7 +734,7 @@ module VmCommon
   end
 
   def evm_relationship
-    @record = find_by_id_filtered(VmOrTemplate, params[:id])  # Set the VM object
+    @record = find_record_with_rbac(VmOrTemplate, params[:id])  # Set the VM object
     @edit = {}
     @edit[:vm_id] = @record.id
     @edit[:key] = "evm_relationship_edit__new"
@@ -821,7 +821,7 @@ module VmCommon
   end
 
   def destroy
-    find_by_id_filtered(VmOrTemplate, params[:id]).destroy
+    find_record_with_rbac(VmOrTemplate, params[:id]).destroy
     redirect_to :action => 'list'
   end
 
@@ -857,7 +857,7 @@ module VmCommon
   end
 
   def add_to_service
-    @record = find_by_id_filtered(Vm, params[:id])
+    @record = find_record_with_rbac(Vm, params[:id])
     @svcs = {}
     Service.all.each { |s| @svcs[s.name] = s.id }
     drop_breadcrumb(:name => _("Add VM to a Service"), :url => "/vm/add_to_service")
@@ -865,7 +865,7 @@ module VmCommon
   end
 
   def add_vm_to_service
-    @record = find_by_id_filtered(Vm, params[:id])
+    @record = find_record_with_rbac(Vm, params[:id])
     if params["cancel.x"]
       flash = _("Add VM \"%{name}\" to a Service was cancelled by the user") % {:name => @record.name}
       redirect_to :action => @lastaction, :id => @record.id, :flash_msg => flash
@@ -883,7 +883,7 @@ module VmCommon
 
   def remove_service
     assert_privileges(params[:pressed])
-    @record = find_by_id_filtered(Vm, params[:id])
+    @record = find_record_with_rbac(Vm, params[:id])
     begin
       @vervice_name = Service.find_by_name(@record.location).name
       @record.remove_from_vsc(@vervice_name)
@@ -895,7 +895,7 @@ module VmCommon
   end
 
   def edit
-    @record = find_by_id_filtered(VmOrTemplate, params[:id])  # Set the VM object
+    @record = find_record_with_rbac(VmOrTemplate, params[:id])  # Set the VM object
     set_form_vars
     build_edit_screen
     session[:changed] = false

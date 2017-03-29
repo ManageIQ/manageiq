@@ -43,7 +43,7 @@ class NetworkRouterController < ApplicationController
 
   def network_router_form_fields
     assert_privileges("network_router_edit")
-    router = find_by_id_filtered(NetworkRouter, params[:id])
+    router = find_record_with_rbac(NetworkRouter, params[:id])
     available_networks = get_networks_by_ems(router.ems_id)
     network_id = nil
     subnet_id = nil
@@ -203,7 +203,7 @@ class NetworkRouterController < ApplicationController
   def edit
     params[:id] = get_checked_router_id(params) unless params[:id].present?
     assert_privileges("network_router_edit")
-    @router = find_by_id_filtered(NetworkRouter, params[:id])
+    @router = find_record_with_rbac(NetworkRouter, params[:id])
     @in_a_form = true
     drop_breadcrumb(
       :name => _("Edit Router \"%{name}\"") % {:model => ui_lookup(:table => 'network_router'), :name => @router.name},

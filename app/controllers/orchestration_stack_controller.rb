@@ -158,7 +158,7 @@ class OrchestrationStackController < ApplicationController
   end
 
   def stacks_ot_info
-    ot = find_by_id_filtered(OrchestrationStack, params[:id]).orchestration_template
+    ot = find_record_with_rbac(OrchestrationStack, params[:id]).orchestration_template
     render :json => {
       :template_id          => ot.id,
       :template_name        => ot.name,
@@ -180,7 +180,7 @@ class OrchestrationStackController < ApplicationController
   private ############################
 
   def make_ot_orderable
-    stack = find_by_id_filtered(OrchestrationStack, params[:id])
+    stack = find_record_with_rbac(OrchestrationStack, params[:id])
     template = stack.orchestration_template
     if template.orderable?
       add_flash(_("Orchestration template \"%{name}\" is already orderable") % {:name => template.name}, :error)
@@ -206,7 +206,7 @@ class OrchestrationStackController < ApplicationController
   end
 
   def orchestration_template_copy
-    @record = find_by_id_filtered(OrchestrationStack, params[:id])
+    @record = find_record_with_rbac(OrchestrationStack, params[:id])
     if @record.orchestration_template.orderable?
       add_flash(_("Orchestration template \"%{name}\" is already orderable") %
         {:name => @record.orchestration_template.name}, :error)
@@ -221,7 +221,7 @@ class OrchestrationStackController < ApplicationController
   end
 
   def stacks_ot_copy_cancel
-    @record = find_by_id_filtered(OrchestrationStack, params[:id])
+    @record = find_record_with_rbac(OrchestrationStack, params[:id])
     add_flash(_("Copy of Orchestration Template was cancelled by the user"))
     render :update do |page|
       page << javascript_prologue
@@ -232,7 +232,7 @@ class OrchestrationStackController < ApplicationController
 
   def stacks_ot_copy_submit
     assert_privileges('orchestration_template_copy')
-    original_template = find_by_id_filtered(OrchestrationTemplate, params[:templateId])
+    original_template = find_record_with_rbac(OrchestrationTemplate, params[:templateId])
     if params[:templateContent] == original_template.content
       add_flash(_("Unable to create a new template copy \"%{name}\": old and new template content have to differ.") %
         {:name => params[:templateName]})
@@ -267,7 +267,7 @@ class OrchestrationStackController < ApplicationController
   end
 
   def orchestration_templates_view
-    template = find_by_id_filtered(OrchestrationStack, params[:id]).orchestration_template
+    template = find_record_with_rbac(OrchestrationStack, params[:id]).orchestration_template
     javascript_redirect :controller => 'catalog', :action => 'ot_show', :id => template.id
   end
 

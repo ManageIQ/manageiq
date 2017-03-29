@@ -124,7 +124,7 @@ class StorageManagerController < ApplicationController
 
   def edit
     assert_privileges("storage_manager_edit")
-    @sm = find_by_id_filtered(StorageManager, params[:id])
+    @sm = find_record_with_rbac(StorageManager, params[:id])
     set_form_vars
     @in_a_form = true
     session[:changed] = false
@@ -166,7 +166,7 @@ class StorageManagerController < ApplicationController
       flash = _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "StorageManager"), :name => @sm.name}
       javascript_redirect :action => @lastaction, :id => @sm.id, :display => session[:sm_display], :flash_msg => flash
     when "save"
-      update_sm = find_by_id_filtered(StorageManager, params[:id])
+      update_sm = find_record_with_rbac(StorageManager, params[:id])
       set_record_vars(update_sm)
       if valid_record?(update_sm) && update_sm.save
         # update_sm.reload
@@ -194,7 +194,7 @@ class StorageManagerController < ApplicationController
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       javascript_redirect :action => 'edit', :id => @sm.id.to_s
     when "validate"
-      verify_sm = find_by_id_filtered(StorageManager, params[:id])
+      verify_sm = find_record_with_rbac(StorageManager, params[:id])
       set_record_vars(verify_sm, :validate)
       @in_a_form = true
       @changed = session[:changed]

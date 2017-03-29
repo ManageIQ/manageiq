@@ -306,7 +306,7 @@ class HostController < ApplicationController
   def edit
     assert_privileges("host_edit")
     if session[:host_items].nil?
-      @host = find_by_id_filtered(Host, params[:id])
+      @host = find_record_with_rbac(Host, params[:id])
       @in_a_form = true
       session[:changed] = false
       drop_breadcrumb(:name => _("Edit Host '%{name}'") % {:name => @host.name}, :url => "/host/edit/#{@host.id}")
@@ -314,7 +314,7 @@ class HostController < ApplicationController
     else            # if editing credentials for multi host
       @title = _("Credentials/Settings")
       if params[:selected_host]
-        @host = find_by_id_filtered(Host, params[:selected_host])
+        @host = find_record_with_rbac(Host, params[:selected_host])
       else
         @host = Host.new
       end
@@ -346,16 +346,16 @@ class HostController < ApplicationController
         # redirect_to :action => @lastaction, :display=>session[:host_display], :flash_msg=>flash
         javascript_redirect :action => @lastaction, :display => session[:host_display], :flash_msg => flash
       else
-        @host = find_by_id_filtered(Host, params[:id])
+        @host = find_record_with_rbac(Host, params[:id])
         flash = _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "Host"), :name => @host.name}
         javascript_redirect :action => @lastaction, :id => @host.id, :display => session[:host_display], :flash_msg => flash
       end
 
     when "save"
       if session[:host_items].nil?
-        @host = find_by_id_filtered(Host, params[:id])
+        @host = find_record_with_rbac(Host, params[:id])
         old_host_attributes = @host.attributes.clone
-        valid_host = find_by_id_filtered(Host, params[:id])
+        valid_host = find_record_with_rbac(Host, params[:id])
         set_record_vars(valid_host, :validate)                      # Set the record variables, but don't save
         if valid_record?(valid_host) && set_record_vars(@host) && @host.save
           add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "Host"), :name => @host.name})
@@ -374,7 +374,7 @@ class HostController < ApplicationController
           javascript_flash
         end
       else
-        valid_host = find_by_id_filtered(Host, !params[:validate_id].blank? ?
+        valid_host = find_record_with_rbac(Host, !params[:validate_id].blank? ?
                                                params[:validate_id] :
                                                session[:host_items].first.to_i)
         # Set the record variables, but don't save
@@ -399,7 +399,7 @@ class HostController < ApplicationController
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       javascript_redirect :action => 'edit', :id => @host.id.to_s
     when "validate"
-      verify_host = find_by_id_filtered(Host, params[:validate_id] ? params[:validate_id].to_i : params[:id])
+      verify_host = find_record_with_rbac(Host, params[:validate_id] ? params[:validate_id].to_i : params[:id])
       if session[:host_items].nil?
         set_record_vars(verify_host, :validate)
       else
@@ -574,7 +574,7 @@ class HostController < ApplicationController
 
   def host_form_fields
     assert_privileges("host_edit")
-    host = find_by_id_filtered(Host, params[:id])
+    host = find_record_with_rbac(Host, params[:id])
     validate_against = session.fetch_path(:edit, :validate_against) &&
                        params[:button] != "reset" ? session.fetch_path(:edit, :validate_against) : nil
 

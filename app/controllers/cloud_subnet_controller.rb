@@ -42,7 +42,7 @@ class CloudSubnetController < ApplicationController
 
   def cloud_subnet_form_fields
     assert_privileges("cloud_subnet_edit")
-    subnet = find_by_id_filtered(CloudSubnet, params[:id])
+    subnet = find_record_with_rbac(CloudSubnet, params[:id])
     render :json => {
       :name             => subnet.name,
       :cidr             => subnet.cidr,
@@ -160,7 +160,7 @@ class CloudSubnetController < ApplicationController
   def edit
     params[:id] = get_checked_subnet_id(params) unless params[:id].present?
     assert_privileges("cloud_subnet_edit")
-    @subnet = find_by_id_filtered(CloudSubnet, params[:id])
+    @subnet = find_record_with_rbac(CloudSubnet, params[:id])
     @in_a_form = true
     drop_breadcrumb(
       :name => _("Edit Subnet \"%{name}\"") % {:model => ui_lookup(:table => 'cloud_subnet'), :name => @subnet.name},
@@ -180,7 +180,7 @@ class CloudSubnetController < ApplicationController
 
   def update
     assert_privileges("cloud_subnet_edit")
-    @subnet = find_by_id_filtered(CloudSubnet, params[:id])
+    @subnet = find_record_with_rbac(CloudSubnet, params[:id])
     options = changed_form_params
     case params[:button]
     when "cancel"
@@ -259,7 +259,7 @@ class CloudSubnetController < ApplicationController
       options[:gateway] = params[:gateway].blank? ? nil : params[:gateway]
     end
     options[:ip_version] = params[:network_protocol]
-    options[:cloud_tenant] = find_by_id_filtered(CloudTenant, params[:cloud_tenant_id]) if params[:cloud_tenant_id]
+    options[:cloud_tenant] = find_record_with_rbac(CloudTenant, params[:cloud_tenant_id]) if params[:cloud_tenant_id]
     options[:network_id] = params[:network_id] if params[:network_id]
     options[:enable_dhcp] = params[:dhcp_enabled]
     # TODO: Add extra fields
