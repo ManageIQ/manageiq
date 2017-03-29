@@ -29,7 +29,20 @@ module Api
     after_action :log_api_response
 
     respond_to :json
-    ERROR_MAPPING.each { |error, type| rescue_from(error) { |e| api_error(type, e) } }
+
+    # Order *Must* be from most generic to most specific
+    rescue_from(StandardError)                  { |e| api_error(:internal_server_error, e) }
+    rescue_from(NoMethodError)                  { |e| api_error(:internal_server_error, e) }
+    rescue_from(ActiveRecord::RecordNotFound)   { |e| api_error(:not_found, e) }
+    rescue_from(ActiveRecord::StatementInvalid) { |e| api_error(:bad_request, e) }
+    rescue_from(JSON::ParserError)              { |e| api_error(:bad_request, e) }
+    rescue_from(MultiJson::LoadError)           { |e| api_error(:bad_request, e) }
+    rescue_from(MiqException::MiqEVMLoginError) { |e| api_error(:unauthorized, e) }
+    rescue_from(AuthenticationError)            { |e| api_error(:unauthorized, e) }
+    rescue_from(ForbiddenError)                 { |e| api_error(:forbidden, e) }
+    rescue_from(BadRequestError)                { |e| api_error(:bad_request, e) }
+    rescue_from(NotFoundError)                  { |e| api_error(:not_found, e) }
+    rescue_from(UnsupportedMediaTypeError)      { |e| api_error(:unsupported_media_type, e) }
 
     private
 

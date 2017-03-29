@@ -6,22 +6,6 @@ module Api
   NotFoundError = Class.new(ApiError)
   UnsupportedMediaTypeError = Class.new(ApiError)
 
-  # Order *Must* be from most generic to most specific
-  ERROR_MAPPING = {
-    StandardError                  => :internal_server_error,
-    NoMethodError                  => :internal_server_error,
-    ActiveRecord::RecordNotFound   => :not_found,
-    ActiveRecord::StatementInvalid => :bad_request,
-    JSON::ParserError              => :bad_request,
-    MultiJson::LoadError           => :bad_request,
-    MiqException::MiqEVMLoginError => :unauthorized,
-    AuthenticationError            => :unauthorized,
-    ForbiddenError                 => :forbidden,
-    BadRequestError                => :bad_request,
-    NotFoundError                  => :not_found,
-    UnsupportedMediaTypeError      => :unsupported_media_type
-  }.freeze
-
   def self.encrypted_attribute?(attr)
     Environment.encrypted_attributes.include?(attr.to_s) || attr.to_s.include?('password')
   end
