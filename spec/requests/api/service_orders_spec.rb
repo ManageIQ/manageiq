@@ -544,8 +544,8 @@ RSpec.describe "service orders API" do
 
   context 'Copy Service Order' do
     before do
-      @service_order = FactoryGirl.create(:shopping_cart, :user => @user)
-      @service_order_2 = FactoryGirl.create(:shopping_cart, :user => @user)
+      @service_order = FactoryGirl.create(:service_order, :user => @user)
+      @service_order2 = FactoryGirl.create(:service_order, :user => @user)
     end
 
     it 'forbids service order copy without an appropriate role' do
@@ -578,7 +578,7 @@ RSpec.describe "service orders API" do
       expect do
         run_post(service_orders_url, :action => 'copy', :resources => [
                    { :id => @service_order.id, :name => 'foo'},
-                   { :id => @service_order_2.id, :name => 'bar' }
+                   { :id => @service_order2.id, :name => 'bar' }
                  ])
       end.to change(ServiceOrder, :count).by(2)
       expect(response.parsed_body).to include(expected)
