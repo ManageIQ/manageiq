@@ -2,56 +2,184 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased - as of Sprint 56 end 2017-03-13
+# Fine Beta
 
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+56+Ending+Mar+13%2C+2017%22+label%3Aenhancement)
+## Added
 
 - Automate
-  - Alerts: Pass metadata from an EmsEvent to an alert [(#14136)](https://github.com/ManageIQ/manageiq/pull/14136)
+  - Alerts
+    - Pass metadata from an EmsEvent to an alert [(#14136)](https://github.com/ManageIQ/manageiq/pull/14136)
+    - Add hide & show alert status actions (backend) [(#13650)](https://github.com/ManageIQ/manageiq/pull/13650)
   - Ansible Tower
     - Require EmbeddedAnsible playbook to create playbook service [(#14226)](https://github.com/ManageIQ/manageiq/pull/14226)
     - Add relationships between Ansible job and its playbook [(#14144)](https://github.com/ManageIQ/manageiq/pull/14144)
     - Associate job with credentials [(#14113)](https://github.com/ManageIQ/manageiq/pull/14113)
     - Save newly created dialog_id in options [(#14254)](https://github.com/ManageIQ/manageiq/pull/14254)
     - Collect more attributes for Ansible Tower job [(#14076)](https://github.com/ManageIQ/manageiq/pull/14076)
+    - Add Run Ansible Playbook control action type [(#13943)](https://github.com/ManageIQ/manageiq/pull/13943)
+    - Create service template with Ansible Tower after first creating a new job template [(#13896)](https://github.com/ManageIQ/manageiq/pull/13896)
+    - Added "Ansible Playbook" to the list of catalog item types [(#13936)](https://github.com/ManageIQ/manageiq/pull/13936)
+    - Expose job_template from a service template [(#13895)](https://github.com/ManageIQ/manageiq/pull/13895)
+    - Create catalog item after job templates are created [(#13893)](https://github.com/ManageIQ/manageiq/pull/13893)
+    - Create temporary inventory when execute a playbook [(#14008)](https://github.com/ManageIQ/manageiq/pull/14008)
+    - Run a control action to order Ansible Playbook Service [(#13874)](https://github.com/ManageIQ/manageiq/pull/13874)
   - Orchestration
     - Add Picture to Orchestration Template [(#14201)](https://github.com/ManageIQ/manageiq/pull/14201)
+    - Use task queue for update stack operation [(#13897)](https://github.com/ManageIQ/manageiq/pull/13897)
+  - Provisioning
+    - Change vLan name to Virtual Network  [(#13747)](https://github.com/ManageIQ/manageiq/pull/13747)
+    - Advanced networking placement features and automate exposure for OpenStack  [(#13608)](https://github.com/ManageIQ/manageiq/pull/13608)
+    - Add multiple_value option to expose_eligible_resources [(#13853)](https://github.com/ManageIQ/manageiq/pull/13853)
   - Service Model
     - Add ae service model for S3 CloudObjectStoreContainer [(#14164)](https://github.com/ManageIQ/manageiq/pull/14164)
     - Add ae service model for S3 CloudObjectStoreObject [(#14189)](https://github.com/ManageIQ/manageiq/pull/14189)
   - Services
+    - Add a add_to_service method to Vm [(#14416)](https://github.com/ManageIQ/manageiq/pull/14416)
     - Add orchestration_stacks to ServiceAnsiblePlaybook [(#14248)](https://github.com/ManageIQ/manageiq/pull/14248)
     - Update catalog item without config_options [(#14147)](https://github.com/ManageIQ/manageiq/pull/14147)
     - Set the initiator from the workflow/request [(#14070)](https://github.com/ManageIQ/manageiq/pull/14070)
+    - Add service object to deliver to automate. [(#13956)](https://github.com/ManageIQ/manageiq/pull/13956)
+    - Create a provision request for a service template [(#13972)](https://github.com/ManageIQ/manageiq/pull/13972)
+    - ServiceTemplate update_catalog_item [(#13811)](https://github.com/ManageIQ/manageiq/pull/13811)
+    - Add create_catalog_item to ServiceTemplateAnsibleTower  [(#13646)](https://github.com/ManageIQ/manageiq/pull/13646)
+    - Tool to create a service dialog for an Ansible playbook [(#13494)](https://github.com/ManageIQ/manageiq/pull/13494)
+    - Resource action - Add service_action. [(#13751)](https://github.com/ManageIQ/manageiq/pull/13751)
+    - Initial commit for ansible playbook methods and service model. [(#13717)](https://github.com/ManageIQ/manageiq/pull/13717)
+    - Add automate engine support for array elements containing text values ([#11667](https://github.com/ManageIQ/manageiq/pull/11667))
+  - Add 'delete' to generic object configuration dropdown ([#13541](https://github.com/ManageIQ/manageiq/pull/13541))
+  - Automate Model: Add Amazon block storage automation models ([#13458](https://github.com/ManageIQ/manageiq/pull/13458))
+  - Orchestration Services: create_catalog_item to ServiceTemplateOrchestration ([#13628](https://github.com/ManageIQ/manageiq/pull/13628))
+  - Add create_catalog_item class method to ServiceTemplate ([#13589](https://github.com/ManageIQ/manageiq/pull/13589))
+  - Save playbook service template ([#13600](https://github.com/ManageIQ/manageiq/pull/13600))
+  - Allow adding disks to vm provision via api and automation ([#13318](https://github.com/ManageIQ/manageiq/pull/13318))
+  - Move MiqAeEngine components into the appropriate directory in preparation for extracting the Automate engine into its own repository ([#13406](https://github.com/ManageIQ/manageiq/pull/13406))
+  - Automate Retry with Server Affinity ([#13363](https://github.com/ManageIQ/manageiq/pull/13363))
+  - Service Model: Added container components for service model ([#12863](https://github.com/ManageIQ/manageiq/pull/12863))
+  - Expose attach/detach method for volume [(#14289)](https://github.com/ManageIQ/manageiq/pull/14289)
+  - Allow passing options when adding a disk in automate. [(#14350)](https://github.com/ManageIQ/manageiq/pull/14350)  
+
+  - See also [Manageiq/manageiq-content](https://github.com/ManageIQ/manageiq-content)
 
 - Platform
   - Add remote servers to rake evm:status_full [(#14107)](https://github.com/ManageIQ/manageiq/pull/14107)
   - Ansible Tower
+    - Create initial tower objects when we start the worker [(#14283)](https://github.com/ManageIQ/manageiq/pull/14283)
+    - Add embedded_ansible to the list of roles that need apache [(#14353)](https://github.com/ManageIQ/manageiq/pull/14353)
+    - Raise a notification when the embedded ansible server starts [(#14529)](https://github.com/ManageIQ/manageiq/pull/14529)
     - Move embedded ansible worker thread up to start_runner [(#14256)](https://github.com/ManageIQ/manageiq/pull/14256)
     - Run #authentication_check after the embedded ansible service starts [(#14235)](https://github.com/ManageIQ/manageiq/pull/14235)
     - Rely on 10 minute starting_timeout instead of a heartbeating thread [(#14053)](https://github.com/ManageIQ/manageiq/pull/14053)
+    - Add methods for configuring and starting Ansible inside ([#13584](https://github.com/ManageIQ/manageiq/pull/13584))
+    - New class for determining the availability of embedded ansible ([#13435](https://github.com/ManageIQ/manageiq/pull/13435)).
   - Authentication: Ensure user name is set even when common LDAP attributes are missing. [(#14142)](https://github.com/ManageIQ/manageiq/pull/14142)
-  - Chargeback: Add tenant scoping for resources of performance reports in RBAC [(#14095)](https://github.com/ManageIQ/manageiq/pull/14095)
-  - RBAC: Add RBAC for rss feeds [(#14041)](https://github.com/ManageIQ/manageiq/pull/14041)
-  - Reporting: Add archived Container Groups [(#13810)](https://github.com/ManageIQ/manageiq/pull/13810)
+  - RBAC
+    - Introduce CloudTenancyMixin to fix RBAC for cloud_tenant based models [(#13535)](https://github.com/ManageIQ/manageiq/pull/13535)
+    - Add RBAC for rss feeds [(#14041)](https://github.com/ManageIQ/manageiq/pull/14041)
+    - Add View and Modify/Add RBAC features for the Embedded Automation Provider [(#13716)](https://github.com/ManageIQ/manageiq/pull/13716)
+    - Add list of providers to RBAC on catalog items ([#13395](https://github.com/ManageIQ/manageiq/pull/13395))
+  - Reporting
+    - Add archived Container Groups [(#13810)](https://github.com/ManageIQ/manageiq/pull/13810)
+    - Adding new report and widgets for Containers [(#13055)](https://github.com/ManageIQ/manageiq/pull/13055)
+    - Add option for container performance reports ([#11904](https://github.com/ManageIQ/manageiq/pull/11904))
+  - Chargeback
+    - Chargeback without C & U [(#13884)](https://github.com/ManageIQ/manageiq/pull/13884)
+    - Containers: Enterprise rate parent for chargeback [(#14079)](https://github.com/ManageIQ/manageiq/pull/14079)
+    - Add tenant scoping for resources of performance reports in RBAC [(#14095)](https://github.com/ManageIQ/manageiq/pull/14095)
+    - Introduce Vm/Chargeback tab backend ([#13687](https://github.com/ManageIQ/manageiq/pull/13687))
+    - Charge SCVMM's vm only until it is retired. ([#13451](https://github.com/ManageIQ/manageiq/pull/13451))
+  - Add a #backlog method to PglogicalSubscription objects [(#14010)](https://github.com/ManageIQ/manageiq/pull/14010)
+  - Metrics: Collect metrics for archived containers [(#13686)](https://github.com/ManageIQ/manageiq/pull/13686)
+
+  - See also [Manageiq/manageiq-appliance](https://github.com/ManageIQ/manageiq-appliance)
 
 - Providers
-  - Import AWS Tags as CustomAttributes for Instances and Images [(#14202)](https://github.com/ManageIQ/manageiq/pull/14202)
+  - Enhanced inventory collector target and parser classes [(#13907)](https://github.com/ManageIQ/manageiq/pull/13907)
+  - Force unique endpoint hostname only for same type ([#12912](https://github.com/ManageIQ/manageiq/pull/12912))
+  - Amazon
+    - Namespace the mappable object types add Amazon VM and Image types. [(#14288)](https://github.com/ManageIQ/manageiq/pull/14288)
+    - Map Amazon labels to tags [(#14436)](https://github.com/ManageIQ/manageiq/pull/14436)
+    - Import AWS Tags as CustomAttributes for Instances and Images [(#14202)](https://github.com/ManageIQ/manageiq/pull/14202)
+    - Move amazon settings to ManageIQ/manageiq-providers-amazon ([#13192](https://github.com/ManageIQ/manageiq/pull/13192))
   - Ansible Tower
+    - Prepare parameter hash before passing to Tower API credential CU [(#14483)](https://github.com/ManageIQ/manageiq/pull/14483)
+    - Add manageiq to the extra_var before launching a job [(#14354)](https://github.com/ManageIQ/manageiq/pull/14354)
+    - Use embedded tower default objects for ManageIQ [(#14467)](https://github.com/ManageIQ/manageiq/pull/14467)
+    - Catalog item accepts remove_resources option [(#14328)](https://github.com/ManageIQ/manageiq/pull/14328)
+    - Enable scm_credential type in refresh [(#14471)](https://github.com/ManageIQ/manageiq/pull/14471)
+    - Add a concern for storing and accessing embedded ansible object ids [(#14377)](https://github.com/ManageIQ/manageiq/pull/14377)
+    - Added Inventory to EmbeddedAnsible namespace [(#14282)](https://github.com/ManageIQ/manageiq/pull/14282)
+    - Create/Update/Delete Ansible Tower Projects and Credentials via queue [(#14305)](https://github.com/ManageIQ/manageiq/pull/14305)
+    - Add retire_now to Embedded Ansible job. [(#14479)](https://github.com/ManageIQ/manageiq/pull/14479)
+    - Destroy Ansible Playbook job templates [(#14461)](https://github.com/ManageIQ/manageiq/pull/14461)
+    - Add job_plays to job [(#14331)](https://github.com/ManageIQ/manageiq/pull/14331)
     - Add EmbeddedAnsible workers to WorkerManagement [(#14234)](https://github.com/ManageIQ/manageiq/pull/14234)
     - Refresh to pick up scm options for Tower Project [(#14220)](https://github.com/ManageIQ/manageiq/pull/14220)
     - Refresh to pick up extra attributes of Ansible Credentials [(#14106)](https://github.com/ManageIQ/manageiq/pull/14106)
+    - Enhanced dependency and references scanning [(#13995)](https://github.com/ManageIQ/manageiq/pull/13995)
+    - Introducing find by and find or build by methods [(#13926)](https://github.com/ManageIQ/manageiq/pull/13926)
+    - Model change for Ansible Tower Credential [(#13773)](https://github.com/ManageIQ/manageiq/pull/13773)
+    - Add missing `ConfigurationScriptSource` hierarchy and Automate models [(#14069)](https://github.com/ManageIQ/manageiq/pull/14069)
+    - Models for EmbeddedAnsible provider [(#13879)](https://github.com/ManageIQ/manageiq/pull/13879)
+    - Refresh inventory [(#13807)](https://github.com/ManageIQ/manageiq/pull/13807)
+    - Event Catcher ([#13423](https://github.com/ManageIQ/manageiq/pull/13423))
+    - Migrate AnsibleTower ConfigurationManager to AutomationManager ([#13630](https://github.com/ManageIQ/manageiq/pull/13630))
   - Cloud Providers
+    - Enable cloud_tenant based RBAC for additional models  [(#14036)](https://github.com/ManageIQ/manageiq/pull/14036)
+    - Update Cloud Image View to Differentiate Between Snapshots and Non-Snapshots [(#12970)](https://github.com/ManageIQ/manageiq/pull/12970)
     - Allow cloud volume to provide a list of volumes for attach [(#14058)](https://github.com/ManageIQ/manageiq/pull/14058)
     - Add relationship between VM and ResourceGroup. [(#14000)](https://github.com/ManageIQ/manageiq/pull/14000)
     - Support operation `create` on CloudObjectStoreContainer [(#14269)](https://github.com/ManageIQ/manageiq/pull/14269)
-  - Middleware: Be able to use tls when connecting to Hawkular [(#14054)](https://github.com/ManageIQ/manageiq/pull/14054)
-  - Pluggable: Ems event groups - allow provider settings (deeper_merge edition) [(#14177)](https://github.com/ManageIQ/manageiq/pull/14177)
-  - Red Hat Virtualization Manager
+  - Console: Add product feature for VMware WebMKS HTML consoles [(#13945)](https://github.com/ManageIQ/manageiq/pull/13945)
+  - Containers
+    - Support alerts on container nodes [(#13812)](https://github.com/ManageIQ/manageiq/pull/13812)
+    - Add External Logging Support SupportFeature [(#13319)](https://github.com/ManageIQ/manageiq/pull/13319)
+    - Add datawarehouse logger [(#13813)](https://github.com/ManageIQ/manageiq/pull/13813)
+    - Instantiate Container Template ([#10737](https://github.com/ManageIQ/manageiq/pull/10737))
+    - Collect node custom attributes from hawkular during refresh ([#12924](https://github.com/ManageIQ/manageiq/pull/12924))
+    - Add alerts on container nodes ([#13323](https://github.com/ManageIQ/manageiq/pull/13323))  
+  - Middleware
+    - Be able to use tls when connecting to Hawkular [(#14054)](https://github.com/ManageIQ/manageiq/pull/14054)
+    - Send data source properties when adding data source operation is performed [(#13937)](https://github.com/ManageIQ/manageiq/pull/13937)
+    - Middleware server group power ops [(#13741)](https://github.com/ManageIQ/manageiq/pull/13741)
+  - OpenStack
+    - Use task queue for set/unset node maintenance [(#13657)](https://github.com/ManageIQ/manageiq/pull/13657)
+    - Use task queue for CRUD operations on auth key pair  [(#13464)](https://github.com/ManageIQ/manageiq/pull/13464)
+    - Add OpenStack excon settings [(#14172)](https://github.com/ManageIQ/manageiq/pull/14172)
+    - Add OpenStack infra provider event blacklist [(#14369)](https://github.com/ManageIQ/manageiq/pull/14369)
+  - Physical Infrastructure
+    - Add physical infra refresh monitor [(#14424)](https://github.com/ManageIQ/manageiq/pull/14424)
+    - Add physical server views to the product [(#14031)](https://github.com/ManageIQ/manageiq/pull/14031)
+  - Pluggable
+    - Ems event groups - allow provider settings (deeper_merge edition) [(#14177)](https://github.com/ManageIQ/manageiq/pull/14177)
+    - Add registered_provider_plugins to Vmdb::Plugins [(#13983)](https://github.com/ManageIQ/manageiq/pull/13983)
+  - Red Hat Virtualization
+    - Use the new OvirtSDK for refresh [(#14398)](https://github.com/ManageIQ/manageiq/pull/14398)
+    - Don't pass empty lists of certificates to the oVirt SDK [(#14160)](https://github.com/ManageIQ/manageiq/pull/14160)
     - Always pass the URL path to the oVirt SDK [(#14159)](https://github.com/ManageIQ/manageiq/pull/14159)
     - Set 'https' as the default protocol when using oVirt SDK [(#14157)](https://github.com/ManageIQ/manageiq/pull/14157)
+  - VMware Infrastructure: Validate CPU and Memory Hot-Plug settings in reconfigure ([#12275](https://github.com/ManageIQ/manageiq/pull/12275))
+
+  - See also [Manageiq/manageiq-providers-amazon](https://github.com/ManageIQ/manageiq-providers-amazon)
+  - See also [Manageiq/manageiq-providers-azure](https://github.com/ManageIQ/manageiq-providers-azure)
 
 - REST API
+  - Add Alert Definitions (MiqAlert) bulk edits support [(#14397)](https://github.com/ManageIQ/manageiq/pull/14397)
+  - Add_resource to Service api [(#14409)](https://github.com/ManageIQ/manageiq/pull/14409)
+  - API Authentication create [(#14217)](https://github.com/ManageIQ/manageiq/pull/14217)
+  - Added support for API slugs [(#14344)](https://github.com/ManageIQ/manageiq/pull/14344)
+  - Enable put/patch on configuration script sources and authentications [(#14381)](https://github.com/ManageIQ/manageiq/pull/14381)
+  - API Enhancement to support fine-grained settings whitelisting [(#13948)](https://github.com/ManageIQ/manageiq/pull/13948)
+  - Create configuration script sources [(#14006)](https://github.com/ManageIQ/manageiq/pull/14006)
+  - Edit Authentications API [(#14319)](https://github.com/ManageIQ/manageiq/pull/14319)
+  - Delete and update configuration script sources [(#14323)](https://github.com/ManageIQ/manageiq/pull/14323)
+  - Delete authentication in provider [(#14307)](https://github.com/ManageIQ/manageiq/pull/14307)
+  - Collections API for Cloud Volumes [(#14260)](https://github.com/ManageIQ/manageiq/pull/14260)
+  - Orchestration stack subcollection [(#14273)](https://github.com/ManageIQ/manageiq/pull/14273)
+  - Add cloud types to authentication options [(#13951)](https://github.com/ManageIQ/manageiq/pull/13951)
+  - Adds host to physical server relationship [(#14026)](https://github.com/ManageIQ/manageiq/pull/14026)
+  - Adding support for a format_attributes parameter [(#14449)](https://github.com/ManageIQ/manageiq/pull/14449)
+  - Added Api::Utils.resource_search_by_href_slug helper method [(#14443)](https://github.com/ManageIQ/manageiq/pull/14443)
+  - Enhanced API to have a task created for provider refreshes [(#14387)](https://github.com/ManageIQ/manageiq/pull/14387)
   - Add Alert Definitions (MiqAlert) REST API support [(#13967)](https://github.com/ManageIQ/manageiq/pull/13967)
   - Enhance service edit to accept attribute references  [(#14124)](https://github.com/ManageIQ/manageiq/pull/14124)
   - Delete service templates via POST [(#14112)](https://github.com/ManageIQ/manageiq/pull/14112)
@@ -60,216 +188,10 @@ All notable changes to this project will be documented in this file.
   - Exposing regions as a primary collection /api/regions [(#14109)](https://github.com/ManageIQ/manageiq/pull/14109)
   - Add authentications sub collection to ConfigurationScriptPayload  [(#14002)](https://github.com/ManageIQ/manageiq/pull/14002)
   - Improve error handling on destroy action [(#14098)](https://github.com/ManageIQ/manageiq/pull/14098)
-
-- User Interface (Classic)
-  - Changes for Embedded Ansible models [(#14199)](https://github.com/ManageIQ/manageiq/pull/14199)
-  - Add missing fields to Middleware views [(#14115)](https://github.com/ManageIQ/manageiq/pull/14115)
-
-
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+56+Ending+Mar+13%2C+2017%22+label%3Aenhancement)
-
-- Automate
-  - Switched to the latest version of `ansible_tower_client` gem [(#14117)](https://github.com/ManageIQ/manageiq/pull/14117)
-
-
-- Performance
-  - Speed up widget generation [(#14224)](https://github.com/ManageIQ/manageiq/pull/14224)
-  - Fix ordering by VMs in NetworkManagers list [(#14092)](https://github.com/ManageIQ/manageiq/pull/14092)
-
-- Platform
-  - Allow regex for MiqExpression::Field which contains numbers in associations [(#14229)](https://github.com/ManageIQ/manageiq/pull/14229)
-  - Move the call to reload ntp settings to the server only [(#14208)](https://github.com/ManageIQ/manageiq/pull/14208)
-  - Ansible Tower: Use http_port extra variables instead of nginx ones [(#14204)](https://github.com/ManageIQ/manageiq/pull/14204)
-  - Fix ordering by VMs in NetworkManagers list [(#14092)](https://github.com/ManageIQ/manageiq/pull/14092)
-  - Configure apache balancer with up to 10 members at startup [(#14007)](https://github.com/ManageIQ/manageiq/pull/14007)
-
-- Providers
-  - Ansible event catcher - mark event_monitor_runnning when there are no events at startup [(#13903)](https://github.com/ManageIQ/manageiq/pull/13903)
-  - Virtual Infrastructure: Deprecate callers to Address in Host [(#14138)](https://github.com/ManageIQ/manageiq/pull/14138)
-  - Set timeout for inventory refresh calls [(#14245)](https://github.com/ManageIQ/manageiq/pull/14245)
-  - OpenStack
-    - Add openstack cloud tenant events [(#14052)](https://github.com/ManageIQ/manageiq/pull/14052)
-    - Set the raw power state when starting Openstack instance [(#14122)](https://github.com/ManageIQ/manageiq/pull/14122)
-
-
-### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+56+Ending+Mar+13%2C+2017%22+label%3Abug)
-
-- Automate
-  - Fix for Service Dialog not saving default value <None> for drop down or radio button [(#14240)](https://github.com/ManageIQ/manageiq/pull/14240)
-  - Avoid calling $evm.backtrace over DRb to prevent DRb-level mutex locks [(#14239)](https://github.com/ManageIQ/manageiq/pull/14239)
-
-- Platform
-  - Do not truncate(255) message attribute in miq_tasks table [(#14105)](https://github.com/ManageIQ/manageiq/pull/14105)
-  - Fix "Multiple Parents Found" issue when moving a relationship. [(#14060)](https://github.com/ManageIQ/manageiq/pull/14060)
-
-- Providers
-  - Microsoft Sesrvice Control Virtualization Manager: - Enable VM reset functionality [(#14123)](https://github.com/ManageIQ/manageiq/pull/14123)
-  - Red Hat Virtualization Manager: Set timeout for inventory refresh calls [(#14245)](https://github.com/ManageIQ/manageiq/pull/14245)
-
-- User Interface
-  - Added missing second level menu keys for Storage menu [(#14145)](https://github.com/ManageIQ/manageiq/pull/14145)
-
-
-
-
-## Unreleased - as of Sprint 55 end 2017-02-27
-
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+55+Ending+Feb+27%2C+2017%22+label%3Aenhancement)
-
-- Automate
-  - Ansible
-    - Add Run Ansible Playbook control action type [(#13943)](https://github.com/ManageIQ/manageiq/pull/13943)
-    - Create service template with Ansible Tower after first creating a new job template [(#13896)](https://github.com/ManageIQ/manageiq/pull/13896)
-    - Added "Ansible Playbook" to the list of catalog item types [(#13936)](https://github.com/ManageIQ/manageiq/pull/13936)
-    - Expose job_template from a service template [(#13895)](https://github.com/ManageIQ/manageiq/pull/13895)
-    - Create catalog item after job templates are created [(#13893)](https://github.com/ManageIQ/manageiq/pull/13893)
-    - Create temporary inventory when execute a playbook [(#14008)](https://github.com/ManageIQ/manageiq/pull/14008)
-    - Run a control action to order Ansible Playbook Service [(#13874)](https://github.com/ManageIQ/manageiq/pull/13874)
-  - Orchestration: Use task queue for update stack operation [(#13897)](https://github.com/ManageIQ/manageiq/pull/13897)
-  - Services
-    - Add service object to deliver to automate. [(#13956)](https://github.com/ManageIQ/manageiq/pull/13956)
-    - Create a provision request for a service template [(#13972)](https://github.com/ManageIQ/manageiq/pull/13972)
-    - ServiceTemplate update_catalog_item [(#13811)](https://github.com/ManageIQ/manageiq/pull/13811)
-  - See also [Manageiq/manageiq-content](https://github.com/ManageIQ/manageiq-content)
-
-- Platform
-  - Chargeback
-    - Chargeback without C & U [(#13884)](https://github.com/ManageIQ/manageiq/pull/13884)
-    - Containers: Enterprise rate parent for chargeback [(#14079)](https://github.com/ManageIQ/manageiq/pull/14079)
-  - Add a #backlog method to PglogicalSubscription objects [(#14010)](https://github.com/ManageIQ/manageiq/pull/14010)
-  - See also [Manageiq/manageiq-appliance](https://github.com/ManageIQ/manageiq-appliance)
-
-- Providers
-  - Enhanced inventory collector target and parser classes [(#13907)](https://github.com/ManageIQ/manageiq/pull/13907)
-  - Ansible
-    - Enhanced dependency and references scanning [(#13995)](https://github.com/ManageIQ/manageiq/pull/13995)
-    - Introducing find by and find or build by methods [(#13926)](https://github.com/ManageIQ/manageiq/pull/13926)
-    - Model change for Ansible Tower Credential [(#13773)](https://github.com/ManageIQ/manageiq/pull/13773)
-    - Add missing `ConfigurationScriptSource` hierarchy and Automate models [(#14069)](https://github.com/ManageIQ/manageiq/pull/14069)
-    - Models for EmbeddedAnsible provider [(#13879)](https://github.com/ManageIQ/manageiq/pull/13879)
-  - Console: Add product feature for VMware WebMKS HTML consoles [(#13945)](https://github.com/ManageIQ/manageiq/pull/13945)
-  - Containers
-    - Support alerts on container nodes [(#13812)](https://github.com/ManageIQ/manageiq/pull/13812)
-    - Add External Logging Support SupportFeature [(#13319)](https://github.com/ManageIQ/manageiq/pull/13319)
-  - Hawkular
-    - Send data source properties when adding data source operation is performed [(#13937)](https://github.com/ManageIQ/manageiq/pull/13937)
-    - Middleware server group power ops [(#13741)](https://github.com/ManageIQ/manageiq/pull/13741)
-  - OpenStack Cloud
-    - Use task queue for set/unset node maintenance [(#13657)](https://github.com/ManageIQ/manageiq/pull/13657)
-    - Use task queue for CRUD operations on auth key pair [(#13464)](https://github.com/ManageIQ/manageiq/pull/13464)
-  - Pluggable: Add registered_provider_plugins to Vmdb::Plugins [(#13983)](https://github.com/ManageIQ/manageiq/pull/13983)
-  - See also [Manageiq/manageiq-providers-amazon](https://github.com/ManageIQ/manageiq-providers-amazon)
-  - See also [Manageiq/manageiq-providers-azure](https://github.com/ManageIQ/manageiq-providers-azure)
-
-
-- REST API
   - Differentiate Vms/Instances in messages [(#13971)](https://github.com/ManageIQ/manageiq/pull/13971)
   - Authentications Read and Delete api [(#13780)](https://github.com/ManageIQ/manageiq/pull/13780)
   - Create service template REST api [(#12594)](https://github.com/ManageIQ/manageiq/pull/12594)
   - Snapshots revert API [(#13829)](https://github.com/ManageIQ/manageiq/pull/13829)
-
-- Service UI
-  - See [Manageiq/manageiq-ui-service](https://github.com/ManageIQ/manageiq-ui-service)
-
-- SmartState
-  - SmartState: Make docker registry & repo configurable for 'image-inspector' [(#8439)](https://github.com/ManageIQ/manageiq/pull/8439)
-  - Warn if OpenSCAP binary not available [(#13878)](https://github.com/ManageIQ/manageiq/pull/13878)
-
-- User Interface (Classic)
-  - Add multiselect option to dropdowns [(#10270)](https://github.com/ManageIQ/manageiq/pull/10270)
-  - Core changes for Ansible Tower Playbooks & Repositories UI [(#13731)](https://github.com/ManageIQ/manageiq/pull/13731)
-  - Core changes for Ansible Credentials UI [(#14020)](https://github.com/ManageIQ/manageiq/pull/14020)
-  - See also [Manageiq/manageiq-ui-classic changelog] (https://github.com/ManageIQ/manageiq-ui-classic/pull/461)
-
-
-
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+55+Ending+Feb+27%2C+2017%22+label%3Aenhancement)
-
-- Automate
-  - Update the service dialog to use the correct automate entry point [(#13955)](https://github.com/ManageIQ/manageiq/pull/13955)
-  - Change default provisioning entry point for AutomationManagement. [(#13762)](https://github.com/ManageIQ/manageiq/pull/13762)
-
-- Performance
-  - Use eager_load for extra_resources [(#13904)](https://github.com/ManageIQ/manageiq/pull/13904)
-  - Perfomance fix for Object Storage Manager deletion [(#14009)](https://github.com/ManageIQ/manageiq/pull/14009)
-  - Avoid N+1 queries by including snapshots [(#13833)](https://github.com/ManageIQ/manageiq/pull/13833)
-  - Load created Vms in batches so they don't load all in memory [(#14067)](https://github.com/ManageIQ/manageiq/pull/14067)
-  - Do not keep all association records in the memory [(#14066)](https://github.com/ManageIQ/manageiq/pull/14066)
-  - Scanning for used attributes for query optimizations [(#14023)](https://github.com/ManageIQ/manageiq/pull/14023)
-
-- Platform
-  - Remove admin role for tenant admin [(#14081)](https://github.com/ManageIQ/manageiq/pull/14081)
-  - Ansible: Properly monitor the embedded ansible service [(#13978)](https://github.com/ManageIQ/manageiq/pull/13978)
-  - Remove the mechanisms around "configuring" central admin [(#13966)](https://github.com/ManageIQ/manageiq/pull/13966)
-  - Allow users to input ipv6 where it makes sense [(#70)](https://github.com/ManageIQ/manageiq-gems-pending/pull/70)
-
-- Providers
-  - RHV: Resolve oVirt IP addresses [(#13767)](https://github.com/ManageIQ/manageiq/pull/13767)
-  - Use task queue for VM actions [(#13782)](https://github.com/ManageIQ/manageiq/pull/13782)
-
-### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+55+Ending+Feb+27%2C+2017%22+label%3Abug)
-
-- Automate
-  - Fix Automate domain reset for legacy directory. [(#13933)](https://github.com/ManageIQ/manageiq/pull/13933)
-
-- Platform
-  - Chargeback: Fix tier selection when using different units. [(#13593)](https://github.com/ManageIQ/manageiq/pull/13593)
-  - Core
-    - Fix missing reason constants [(#13919)](https://github.com/ManageIQ/manageiq/pull/13919)
-    - Rescue worker class sync_workers exceptions and move on [(#13976)](https://github.com/ManageIQ/manageiq/pull/13976)
-  - Reporting: Ignore custom attributes that have a nil name [(#14055)](https://github.com/ManageIQ/manageiq/pull/14055)
-
-- Providers
-  - Containers: Fix creating Kubernetes or OSE with `credentials.auth_key` [(#13317)](https://github.com/ManageIQ/manageiq/pull/13317)
-  - Red Hat Enterprise Virtualization
-    - Disks should be added as 'active' in RHV [(#13913)](https://github.com/ManageIQ/manageiq/pull/13913)
-    - Use the provided database name during metric collection [(#13909)](https://github.com/ManageIQ/manageiq/pull/13909)
-    - Fix authentication of metrics credentials in RHV [(#13981)](https://github.com/ManageIQ/manageiq/pull/13981)
-  - Pluggable: Changing ordering of checks to see if snapshot operations are supported [(#14014)](https://github.com/ManageIQ/manageiq/pull/14014)
-  - Ansible
-    - Add missing authentication require_nested [(#14018)](https://github.com/ManageIQ/manageiq/pull/14018)
-    - Disable SSL verification for embedded Ansible. [(#14078)](https://github.com/ManageIQ/manageiq/pull/14078)
-    - Allow create_in_provider to fail [(#14049)](https://github.com/ManageIQ/manageiq/pull/14049)
-  - Containers
-    - Create a hawkular client for partial endpoints [(#13814)](https://github.com/ManageIQ/manageiq/pull/13814)
-    - Container managers #connect: don't mutate argument [(#13719)](https://github.com/ManageIQ/manageiq/pull/13719)
-
-- User Interface (Classic)
-  - Update spice-html5-bower to 1.6.3 fixing an extra GET .../null request [(#13889)](https://github.com/ManageIQ/manageiq/pull/13889)
-  - Add the Automation Manager submenu key to the permission yaml file [(#13931)](https://github.com/ManageIQ/manageiq/pull/13931)
-  - See also [Manageiq/manageiq-ui-classic changelog](https://github.com/ManageIQ/manageiq-ui-classic/pull/461)
-
-
-## Unreleased - as of Sprint 54 end 2017-02-13
-
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+54+Ending+Feb+13%2C+2017%22+label%3Aenhancement)
-
-- Automate
-  - Alerts: Add hide & show alert status actions (backend) [(#13650)](https://github.com/ManageIQ/manageiq/pull/13650)
-  - Provisioning
-    - Change vLan name to Virtual Network  [(#13747)](https://github.com/ManageIQ/manageiq/pull/13747)
-    - Advanced networking placement features and automate exposure for OpenStack  [(#13608)](https://github.com/ManageIQ/manageiq/pull/13608)
-    - Add multiple_value option to expose_eligible_resources [(#13853)](https://github.com/ManageIQ/manageiq/pull/13853)
-  - Services
-    - Add create_catalog_item to ServiceTemplateAnsibleTower  [(#13646)](https://github.com/ManageIQ/manageiq/pull/13646)
-    - Tool to create a service dialog for an Ansible playbook [(#13494)](https://github.com/ManageIQ/manageiq/pull/13494)
-    - Resource action - Add service_action. [(#13751)](https://github.com/ManageIQ/manageiq/pull/13751)
-    - Initial commit for ansible playbook methods and service model. [(#13717)](https://github.com/ManageIQ/manageiq/pull/13717)
-  - See also [Manageiq/manageiq-content](https://github.com/ManageIQ/manageiq-content)
-
-- Platform
-  - Add View and Modify/Add RBAC features for the Embedded Automation Provider [(#13716)](https://github.com/ManageIQ/manageiq/pull/13716)
-  - Reporting: Adding new report and widgets for Containers [(#13055)](https://github.com/ManageIQ/manageiq/pull/13055)
-  - Metrics: Collect metrics for archived containers [(#13686)](https://github.com/ManageIQ/manageiq/pull/13686)
-  - See also [Manageiq/manageiq-appliance](https://github.com/ManageIQ/manageiq-appliance)
-
-- Providers
-  - Ansible: Refresh inventory [(#13807)](https://github.com/ManageIQ/manageiq/pull/13807)
-  - Containers: Add datawarehouse logger [(#13813)](https://github.com/ManageIQ/manageiq/pull/13813)
-  - See also [Manageiq/manageiq-providers-amazon](https://github.com/ManageIQ/manageiq-providers-amazon)
-  - See also [Manageiq/manageiq-providers-azure](https://github.com/ManageIQ/manageiq-providers-azure)
-
-- REST API
   - Add snapshotting for instances in the API [(#13729)](https://github.com/ManageIQ/manageiq/pull/13729)
   - Bulk unassign tags on services and vms  [(#13712)](https://github.com/ManageIQ/manageiq/pull/13712)
   - Add bulk delete for snapshots API [(#13711)](https://github.com/ManageIQ/manageiq/pull/13711)
@@ -278,671 +200,590 @@ All notable changes to this project will be documented in this file.
   - Api enhancement to support optional collection_class parameter [(#13845)](https://github.com/ManageIQ/manageiq/pull/13845)
   - Allows specification for optional multiple identifiers [(#13827)](https://github.com/ManageIQ/manageiq/pull/13827)
   - Add config_info as additional attribute to Service Templates API [(#13842)](https://github.com/ManageIQ/manageiq/pull/13842)
-
-- User Interface (Classic)
-  - Added changes to show Catalog Item type in UI [(#13516)](https://github.com/ManageIQ/manageiq/pull/13516)
-  - Physical Infrastructure provider (lenovo) changes required for the UI [(#13735)](https://github.com/ManageIQ/manageiq/pull/13735)
-  - Adding Physical Infra Providers Menu Item [(#13587)](https://github.com/ManageIQ/manageiq/pull/13587)
-  - Added new features for the Ansible UI move to the Automation tab [(#13526)](https://github.com/ManageIQ/manageiq/pull/13526)
-  - Added new features for the Ansible UI move to the Automation tab [(#13526)](https://github.com/ManageIQ/manageiq/pull/13526)
-  - See also [Manageiq/manageiq-ui-classic changelog](https://github.com/ManageIQ/manageiq-ui-classic/pull/352)
-
-- Service UI
- - See [Manageiq/manageiq-ui-service](https://github.com/ManageIQ/manageiq-ui-service)
-
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+54+Ending+Feb+13%2C+2017%22+label%3Aenhancement)
-
-- Platform
-  - Rename events "ExtManagementSystem Compliance\*" -> "Provider Compliance\*" [(#13388)](https://github.com/ManageIQ/manageiq/pull/13388)
-  - Kill workers that don't stop after a configurable time [(#13805)](https://github.com/ManageIQ/manageiq/pull/13805)
-
-
-### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+54+Ending+Feb+13%2C+2017%22+label%3Abug)
-
-- Providers
-  - RHEV Fix Host getting disconnected from Cluster when migrating a VM in  [(#13815)](https://github.com/ManageIQ/manageiq/pull/13815)
-
-- Automate
-  - Services
-    - Power state for services that do not have an associated service_template [(#13785)](https://github.com/ManageIQ/manageiq/pull/13785)
-  - Provisioning
-    - Update validation regex to prohibit only numbers for Azure VM provisioning [(#13730)](https://github.com/ManageIQ/manageiq/pull/13730)
-
-- User Interface (Classic)
-  - Added missing Automate sub menu key to permissions yml. [(#13819)](https://github.com/ManageIQ/manageiq/pull/13819)
-
-- Platform
-  - Chargeback
-    - Skip calculation when there is zero consumed hours [(#13723)](https://github.com/ManageIQ/manageiq/pull/13723)
-    - Bring currency symbols back to chargeback reports [(#13861)](https://github.com/ManageIQ/manageiq/pull/13861)
-  - Add MiqUserRole to RBAC [(#13689)](https://github.com/ManageIQ/manageiq/pull/13689)
-  - Fix broken C&U collection [(#13843)](https://github.com/ManageIQ/manageiq/pull/13843)
-  - Instead of default(system) assign current user to generating report task [(#13823)](https://github.com/ManageIQ/manageiq/pull/13823)
-
-- Providers
-  - Hawkular: Allow adding datawarehouse provider with a port other than 80 [(#13840)](https://github.com/ManageIQ/manageiq/pull/13840)
-
-- REST API
-  - Convey a useful message to queue_object_action [(#13710)](https://github.com/ManageIQ/manageiq/pull/13710)
-  - Fix load balancers access in API [(#13866)](https://github.com/ManageIQ/manageiq/pull/13866)
-  - Fix cloud networks access in API [(#13865)](https://github.com/ManageIQ/manageiq/pull/13865)
-  - Fix schedule access in API [(#13864)](https://github.com/ManageIQ/manageiq/pull/13864)
-
-## Unreleased - as of Sprint 53 end 2017-01-30
-
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+53+Ending+Jan+30%2C+2017%22+label%3Aenhancement)
-
-- Automate
-  - Add 'delete' to generic object configuration dropdown ([#13541](https://github.com/ManageIQ/manageiq/pull/13541))
-  - Automate Model: Add Amazon block storage automation models ([#13458](https://github.com/ManageIQ/manageiq/pull/13458))
-  - Orchestration Services: create_catalog_item to ServiceTemplateOrchestration ([#13628](https://github.com/ManageIQ/manageiq/pull/13628))
-  - Add create_catalog_item class method to ServiceTemplate ([#13589](https://github.com/ManageIQ/manageiq/pull/13589))
-  - Save playbook service template ([#13600](https://github.com/ManageIQ/manageiq/pull/13600))
-  - Allow adding disks to vm provision via api and automation ([#13318](https://github.com/ManageIQ/manageiq/pull/13318))
-  - See also [manageiq-content repository](https://github.com/ManageIQ/manageiq-content).
-
-- Platform
-  - Chargeback: Introduce Vm/Chargeback tab backend ([#13687](https://github.com/ManageIQ/manageiq/pull/13687))
-  - Add methods for configuring and starting Ansible inside ([#13584](https://github.com/ManageIQ/manageiq/pull/13584))
-  - See also [manageiq-appliance repository](https://github.com/ManageIQ/manageiq-appliance).
-
-- Providers
-  - Ansible Tower
-    - Event Catcher ([#13423](https://github.com/ManageIQ/manageiq/pull/13423))
-    - Migrate AnsibleTower ConfigurationManager to AutomationManager ([#13630](https://github.com/ManageIQ/manageiq/pull/13630))
-  - Containers
-    - Instantiate Container Template ([#10737](https://github.com/ManageIQ/manageiq/pull/10737))
-    - Collect node custom attributes from hawkular during refresh ([#12924](https://github.com/ManageIQ/manageiq/pull/12924))
-  - See also [manageiq-providers-azure changelog](https://github.com/ManageIQ/manageiq-providers-azure/pull/29).
-  - See also [manageiq-providers-amazon changelog](https://github.com/ManageIQ/manageiq-providers-amazon/pull/124).
-
-- REST API
   - API collection OPTIONS Enhancement to expose list of supported subcollections ([#13681](https://github.com/ManageIQ/manageiq/pull/13681))
   - API Enhancement to support filtering on id attributes by compressed id's ([#13645](https://github.com/ManageIQ/manageiq/pull/13645))
   - Adds remove_approver_resource to ServiceRequestController. ([#13596](https://github.com/ManageIQ/manageiq/pull/13596))
   - Add OPTIONS method to Clusters and Hosts ([#13574](https://github.com/ManageIQ/manageiq/pull/13574))
   - VMs/Snapshots API CRD ([#13552](https://github.com/ManageIQ/manageiq/pull/13552))
   - Add alert actions api ([#13325](https://github.com/ManageIQ/manageiq/pull/13325))
-
-- Storage
-  - Add Amazon EC2 block storage manager EMS ([#13539](https://github.com/ManageIQ/manageiq/pull/13539))
-
-- Services UI
-  - See [manageiq-ui-service repository](https://github.com/ManageIQ/manageiq-ui-service).
-
-- User Interface (Classic)
-  - See [manageiq-ui-classic changelog](https://github.com/ManageIQ/manageiq-ui-classic/pull/276).
-
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+53+Ending+Jan+30%2C+2017%22+label%3Aenhancement)
-
-- Automate
-  - Look for resources in the same region as the selected template during provisioning. ([#13045](https://github.com/ManageIQ/manageiq/pull/13045))
-
-- Providers
-  - Red Hat Virtualization Manager: Save host for a VM after migration ([#13511](https://github.com/ManageIQ/manageiq/pull/13511))
-
-- Storage
-  - Rename Amazon EBS storage manager ([#13569](https://github.com/ManageIQ/manageiq/pull/13569))
-
-### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+53+Ending+Jan+30%2C+2017%22+label%3Abug)
-
-Notable fixes include:
-
-- Automate
-  - Allow a service power state to correctly handle nil actions ([#13232](https://github.com/ManageIQ/manageiq/pull/13232))
-
-- Platform
-  - Tenant admin should not be able to create groups in other tenants. ([#13483](https://github.com/ManageIQ/manageiq/pull/13483))
-  - Chargeback: Fix rate adjustment rounding bug ([#13331](https://github.com/ManageIQ/manageiq/pull/13331))
-
-- Providers
-  - Console: Added missing parameter when requesting OpenStack remote console ([#13558](https://github.com/ManageIQ/manageiq/pull/13558))
-
-## Unreleased - as of Sprint 52 end 2017-01-16
-
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+52+Ending+Jan+16%2C+2017%22+label%3Aenhancement)
-
-- Automate
-  - Move MiqAeEngine components into the appropriate directory in preparation for extracting the Automate engine into its own repository ([#13406](https://github.com/ManageIQ/manageiq/pull/13406))
-  - Automate Retry with Server Affinity ([#13363](https://github.com/ManageIQ/manageiq/pull/13363))
-  - Service Model: Added container components for service model ([#12863](https://github.com/ManageIQ/manageiq/pull/12863))
-  - Services: Add automate engine support for array elements containing text values ([#11667](https://github.com/ManageIQ/manageiq/pull/11667))
-  - See also [manageiq-content repository](https://github.com/ManageIQ/manageiq-content).
-
-- Platform
-  - Reporting: Add option for container performance reports ([#11904](https://github.com/ManageIQ/manageiq/pull/11904))
-  - Chargeback: Charge SCVMM's vm only until it is retired. ([#13451](https://github.com/ManageIQ/manageiq/pull/13451))
-  - New class for determining the availability of embedded ansible ([#13435](https://github.com/ManageIQ/manageiq/pull/13435)).
-  - See also [manageiq-appliance repository](https://github.com/ManageIQ/manageiq-appliance).
-
-- Providers
-  - Force unique endpoint hostname only for same type ([#12912](https://github.com/ManageIQ/manageiq/pull/12912))
-  - Containers: Add alerts on container nodes ([#13323](https://github.com/ManageIQ/manageiq/pull/13323))
-  - VMware Infrastructure: Validate CPU and Memory Hot-Plug settings in reconfigure ([#12275](https://github.com/ManageIQ/manageiq/pull/12275))
-  - See also [manageiq-providers-azure repository](https://github.com/ManageIQ/manageiq-providers-azure).
-  - See also [manageiq-providers-amazon repository](https://github.com/ManageIQ/manageiq-providers-amazon).
-
-- REST API
   - Copy orchestration template ([#13053](https://github.com/ManageIQ/manageiq/pull/13053))
   - Expose Request Workflow class name ([#13441](https://github.com/ManageIQ/manageiq/pull/13441))
   - Sort on sql friendly virtual attributes ([#13409](https://github.com/ManageIQ/manageiq/pull/13409))
   - Expose allowed tags for a request workflow ([#13379](https://github.com/ManageIQ/manageiq/pull/13379))
 
-- Services UI
-  - See [manageiq-ui-service repository](https://github.com/ManageIQ/manageiq-ui-service).
+- Service UI
+  - See [Manageiq/manageiq-ui-service](https://github.com/ManageIQ/manageiq-ui-service)
+
+- SmartState
+  - Make docker registry & repo configurable for 'image-inspector' [(#8439)](https://github.com/ManageIQ/manageiq/pull/8439)
+  - Warn if OpenSCAP binary not available [(#13878)](https://github.com/ManageIQ/manageiq/pull/13878)
+
+- Storage
+  - Add Amazon EC2 block storage manager EMS ([#13539](https://github.com/ManageIQ/manageiq/pull/13539))
 
 - User Interface (Classic)
+  - Add missing ui_lookup for Repository [(#14485)](https://github.com/ManageIQ/manageiq/pull/14485)
+  - Remove 'retired' column from the services list [(#14378)](https://github.com/ManageIQ/manageiq/pull/14378)
+  - Changes for Embedded Ansible models [(#14199)](https://github.com/ManageIQ/manageiq/pull/14199)
+  - Add missing fields to Middleware views [(#14115)](https://github.com/ManageIQ/manageiq/pull/14115)
+  - Add multiselect option to dropdowns [(#10270)](https://github.com/ManageIQ/manageiq/pull/10270)
+  - Core changes for Ansible Tower Playbooks & Repositories UI [(#13731)](https://github.com/ManageIQ/manageiq/pull/13731)
+  - Core changes for Ansible Credentials UI [(#14020)](https://github.com/ManageIQ/manageiq/pull/14020)
+  - Added changes to show Catalog Item type in UI [(#13516)](https://github.com/ManageIQ/manageiq/pull/13516)
+  - Physical Infrastructure provider (lenovo) changes required for the UI [(#13735)](https://github.com/ManageIQ/manageiq/pull/13735)
+  - Adding Physical Infra Providers Menu Item [(#13587)](https://github.com/ManageIQ/manageiq/pull/13587)
+  - Added new features for the Ansible UI move to the Automation tab [(#13526)](https://github.com/ManageIQ/manageiq/pull/13526)
+  - Added new features for the Ansible UI move to the Automation tab [(#13526)](https://github.com/ManageIQ/manageiq/pull/13526)
   - Add edit functionality for generic object UI ([#11815](https://github.com/ManageIQ/manageiq/pull/11815))
-  - See also [manageiq-ui-classic repository](https://github.com/ManageIQ/manageiq-ui-classic).
 
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+52+Ending+Jan+16%2C+2017%22+label%3Aenhancement)
+  - See also [Manageiq/manageiq-ui-classic changelog] (https://github.com/ManageIQ/manageiq-ui-classic/pull/461)
 
-- Platform
-  - Add list of providers to RBAC on catalog items ([#13395](https://github.com/ManageIQ/manageiq/pull/13395))
-
-- Providers
-  - Amazon: Move amazon settings to ManageIQ/manageiq-providers-amazon ([#13192](https://github.com/ManageIQ/manageiq/pull/13192))
-
-
-### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+52+Ending+Jan+16%2C+2017%22+label%3Abug)
-
-Notable fixes include:
+## Changed
 
 - Automate
+  - Switched to the latest version of `ansible_tower_client` gem [(#14117)](https://github.com/ManageIQ/manageiq/pull/14117)
+  - Update the service dialog to use the correct automate entry point [(#13955)](https://github.com/ManageIQ/manageiq/pull/13955)
+  - Change default provisioning entry point for AutomationManagement. [(#13762)](https://github.com/ManageIQ/manageiq/pull/13762)
+  - Look for resources in the same region as the selected template during provisioning. ([#13045](https://github.com/ManageIQ/manageiq/pull/13045))
+
+- Performance
+  - Make Widget run without timezones [(#14386)](https://github.com/ManageIQ/manageiq/pull/14386)
+  - boot skips all seeding with env variable [(#14207)](https://github.com/ManageIQ/manageiq/pull/14207)
+  - Add a cache for full Feature objects [(#14037)](https://github.com/ManageIQ/manageiq/pull/14037)
+  - Report Widget [(#14285)](https://github.com/ManageIQ/manageiq/pull/14285)
+  - Skip relationship query when we know there are none [(#14480)](https://github.com/ManageIQ/manageiq/pull/14480)
+  - Report Widget [(#14285)](https://github.com/ManageIQ/manageiq/pull/14285)
+  - Speed up widget generation [(#14224)](https://github.com/ManageIQ/manageiq/pull/14224)
+  - Fix ordering by VMs in NetworkManagers list [(#14092)](https://github.com/ManageIQ/manageiq/pull/14092)
+  - Use eager_load for extra_resources [(#13904)](https://github.com/ManageIQ/manageiq/pull/13904)
+  - Perfomance fix for Object Storage Manager deletion [(#14009)](https://github.com/ManageIQ/manageiq/pull/14009)
+  - Avoid N+1 queries by including snapshots [(#13833)](https://github.com/ManageIQ/manageiq/pull/13833)
+  - Load created Vms in batches so they don't load all in memory [(#14067)](https://github.com/ManageIQ/manageiq/pull/14067)
+  - Do not keep all association records in the memory [(#14066)](https://github.com/ManageIQ/manageiq/pull/14066)
+  - Scanning for used attributes for query optimizations [(#14023)](https://github.com/ManageIQ/manageiq/pull/14023)
+
+- Platform
+  - Use the new setup script argument types [(#14313)](https://github.com/ManageIQ/manageiq/pull/14313)
+  - Exclude chargeback lookup tables in replication [(#14466)](https://github.com/ManageIQ/manageiq/pull/14466)
+  - Reporting
+    - Support dots and slashes in virtual custom attributes [(#14329)](https://github.com/ManageIQ/manageiq/pull/14329)
+    - Link recently_discovered_pods widget to rpt [(#14493)](https://github.com/ManageIQ/manageiq/pull/14493)
+  - Allow regex for MiqExpression::Field which contains numbers in associations [(#14229)](https://github.com/ManageIQ/manageiq/pull/14229)
+  - Move the call to reload ntp settings to the server only [(#14208)](https://github.com/ManageIQ/manageiq/pull/14208)
+  - Ansible Tower: Use http_port extra variables instead of nginx ones [(#14204)](https://github.com/ManageIQ/manageiq/pull/14204)
+  - Fix ordering by VMs in NetworkManagers list [(#14092)](https://github.com/ManageIQ/manageiq/pull/14092)
+  - Configure apache balancer with up to 10 members at startup [(#14007)](https://github.com/ManageIQ/manageiq/pull/14007)
+  - Remove admin role for tenant admin [(#14081)](https://github.com/ManageIQ/manageiq/pull/14081)
+  - Ansible: Properly monitor the embedded ansible service [(#13978)](https://github.com/ManageIQ/manageiq/pull/13978)
+  - Remove the mechanisms around "configuring" central admin [(#13966)](https://github.com/ManageIQ/manageiq/pull/13966)
+  - Allow users to input ipv6 where it makes sense [(#70)](https://github.com/ManageIQ/manageiq-gems-pending/pull/70)
+  - Rename events "ExtManagementSystem Compliance\*" -> "Provider Compliance\*" [(#13388)](https://github.com/ManageIQ/manageiq/pull/13388)
+  - Kill workers that don't stop after a configurable time [(#13805)](https://github.com/ManageIQ/manageiq/pull/13805)
+
+- Providers
+  - Move azure settings to azure provider [(#14345)](https://github.com/ManageIQ/manageiq/pull/14345)
+  - Ansible event catcher - mark event_monitor_runnning when there are no events at startup [(#13903)](https://github.com/ManageIQ/manageiq/pull/13903)
+  - Virtual Infrastructure: Deprecate callers to Address in Host [(#14138)](https://github.com/ManageIQ/manageiq/pull/14138)
+  - Set timeout for inventory refresh calls [(#14245)](https://github.com/ManageIQ/manageiq/pull/14245)
+  - OpenStack
+    - Add openstack cloud tenant events [(#14052)](https://github.com/ManageIQ/manageiq/pull/14052)
+    - Set the raw power state when starting Openstack instance [(#14122)](https://github.com/ManageIQ/manageiq/pull/14122)
+  - Red Hat Virtualization
+    - Resolve oVirt IP addresses [(#13767)](https://github.com/ManageIQ/manageiq/pull/13767)
+    - Save host for a VM after migration ([#13511](https://github.com/ManageIQ/manageiq/pull/13511))
+  - Use task queue for VM actions [(#13782)](https://github.com/ManageIQ/manageiq/pull/13782)
+
+- Storage
+  - Rename Amazon EBS storage manager ([#13569](https://github.com/ManageIQ/manageiq/pull/13569))
+
+- User Interface (Classic): Updated patternfly to v3.23 [(#13940)](https://github.com/ManageIQ/manageiq/pull/13940)
+
+## Fixed
+
+- Automate
+  - Fix services always invisible [(#14403)](https://github.com/ManageIQ/manageiq/pull/14403)
+  - Fixes tag control multi-value [(#14382)](https://github.com/ManageIQ/manageiq/pull/14382)
+  - Control
+    - Add the logic to allow a policy to prevent request_vm_scan. [(#14370)](https://github.com/ManageIQ/manageiq/pull/14370)
+    - During control action host was not being passed in  [(#14500)](https://github.com/ManageIQ/manageiq/pull/14500)
+  - Don't allow selecting resources from another region when creating a catalog item [(#14468)](https://github.com/ManageIQ/manageiq/pull/14468)
+  - Merge service template options on update [(#14314)](https://github.com/ManageIQ/manageiq/pull/14314)
+  - Fix for Service Dialog not saving default value <None> for drop down or radio button [(#14240)](https://github.com/ManageIQ/manageiq/pull/14240)
+  - Avoid calling $evm.backtrace over DRb to prevent DRb-level mutex locks [(#14239)](https://github.com/ManageIQ/manageiq/pull/14239)
+  - Fix Automate domain reset for legacy directory. [(#13933)](https://github.com/ManageIQ/manageiq/pull/13933)
+  - Services: Power state for services that do not have an associated service_template [(#13785)](https://github.com/ManageIQ/manageiq/pull/13785)
+  - Provisioning: Update validation regex to prohibit only numbers for Azure VM provisioning [(#13730)](https://github.com/ManageIQ/manageiq/pull/13730)
+  - Allow a service power state to correctly handle nil actions ([#13232](https://github.com/ManageIQ/manageiq/pull/13232))
   - Increment the ae_state_retries when on_exit sets retry ([#13339](https://github.com/ManageIQ/manageiq/pull/13339))
 
 - Platform
-  - Chargeback: Charge only for past hours ([#13134](https://github.com/ManageIQ/manageiq/pull/13134))
+  - Metrics: Split metric collections into smaller intervals [(#14332)](https://github.com/ManageIQ/manageiq/pull/14332)
+  - Add balancer members after configs have been written [(#14311)](https://github.com/ManageIQ/manageiq/pull/14311)
+  - MiqApache::Conf.create_balancer_config expects a :lbmethod key [(#14306)](https://github.com/ManageIQ/manageiq/pull/14306)
+  - If we can't update_attributes on a queue row, set state to error [(#14365)](https://github.com/ManageIQ/manageiq/pull/14365)
+  - Do not truncate(255) message attribute in miq_tasks table [(#14105)](https://github.com/ManageIQ/manageiq/pull/14105)
+  - Fix "Multiple Parents Found" issue when moving a relationship. [(#14060)](https://github.com/ManageIQ/manageiq/pull/14060)
+  - Core
+    - Fix missing reason constants [(#13919)](https://github.com/ManageIQ/manageiq/pull/13919)
+    - Rescue worker class sync_workers exceptions and move on [(#13976)](https://github.com/ManageIQ/manageiq/pull/13976)
+  - Reporting: Ignore custom attributes that have a nil name [(#14055)](https://github.com/ManageIQ/manageiq/pull/14055)
+  - Chargeback
+    - Skip calculation when there is zero consumed hours [(#13723)](https://github.com/ManageIQ/manageiq/pull/13723)
+    - Bring currency symbols back to chargeback reports [(#13861)](https://github.com/ManageIQ/manageiq/pull/13861)
+    - Fix tier selection when using different units. [(#13593)](https://github.com/ManageIQ/manageiq/pull/13593)
+    - Fix rate adjustment rounding bug ([#13331](https://github.com/ManageIQ/manageiq/pull/13331))
+    - Charge only for past hours ([#13134](https://github.com/ManageIQ/manageiq/pull/13134))
+    - Delegate custom attributes to images in ChargebackContainerImage [(#14395)](https://github.com/ManageIQ/manageiq/pull/14395)
+  - Add MiqUserRole to RBAC [(#13689)](https://github.com/ManageIQ/manageiq/pull/13689)
+  - Fix broken C&U collection [(#13843)](https://github.com/ManageIQ/manageiq/pull/13843)
+  - Instead of default(system) assign current user to generating report task [(#13823)](https://github.com/ManageIQ/manageiq/pull/13823)
+  - Tenant admin should not be able to create groups in other tenants. ([#13483](https://github.com/ManageIQ/manageiq/pull/13483))
   - Replication: Expose a method for encrypting using a remote v2_key ([#13083](https://github.com/ManageIQ/manageiq/pull/13083))
 
 - Providers
+  - Fixing full_name not returning docker_id when it should [(#14412)](https://github.com/ManageIQ/manageiq/pull/14412)
+  - Remove queue serialization [(#13722)](https://github.com/ManageIQ/manageiq/pull/13722)
+  - Fix general CloudNetwork class_by_ems method [(#14392)](https://github.com/ManageIQ/manageiq/pull/14392)
+  - Prevent a DVPortGroup from overwriting a LAN with the same name in provisioning [(#14292)](https://github.com/ManageIQ/manageiq/pull/14292)
+  - Fix EmsRefresh miq_callback when merging queue items [(#14441)](https://github.com/ManageIQ/manageiq/pull/14441)
+  - Pass hosts as a parameter to create the service dialog [(#14507)](https://github.com/ManageIQ/manageiq/pull/14507)
+  - Provide better error message when migrating to the same host [(#14155)](https://github.com/ManageIQ/manageiq/pull/14155)
+  - Fixed refresh & save for Physical Infra. [(#14351)](https://github.com/ManageIQ/manageiq/pull/14351)
+  - Always pass valid date format [(#14296)](https://github.com/ManageIQ/manageiq/pull/14296)
+  - Check if project has credential before try to use it [(#14297)](https://github.com/ManageIQ/manageiq/pull/14297)
+  - Ansible
+    - Fix saving hosts in ansible playbook job [(#14522)](https://github.com/ManageIQ/manageiq/pull/14522)
+    - Add missing authentication require_nested [(#14018)](https://github.com/ManageIQ/manageiq/pull/14018)
+    - Disable SSL verification for embedded Ansible. [(#14078)](https://github.com/ManageIQ/manageiq/pull/14078)
+    - Allow create_in_provider to fail [(#14049)](https://github.com/ManageIQ/manageiq/pull/14049)
+  - Console: Added missing parameter when requesting OpenStack remote console ([#13558](https://github.com/ManageIQ/manageiq/pull/13558))
+  - Containers
+    - Identifying container images by digest only [(#14185)](https://github.com/ManageIQ/manageiq/pull/14185)
+    - Create a hawkular client for partial endpoints [(#13814)](https://github.com/ManageIQ/manageiq/pull/13814)
+    - Container managers #connect: don't mutate argument [(#13719)](https://github.com/ManageIQ/manageiq/pull/13719)
+    - Fix creating Kubernetes or OSE with `credentials.auth_key` [(#13317)](https://github.com/ManageIQ/manageiq/pull/13317)
+  - Microsoft Sesrvice Control Virtualization Manager: - Enable VM reset functionality [(#14123)](https://github.com/ManageIQ/manageiq/pull/14123)
+  - Middleware: Hawkular Allow adding datawarehouse provider with a port other than 80 [(#13840)](https://github.com/ManageIQ/manageiq/pull/13840)
   - OpenStack Cloud Network Router:  Raw commands are wrapped in raw prefixed methods ([#13072](https://github.com/ManageIQ/manageiq/pull/13072))
   - OpenStack Infra: Ssh keypair validation fixes ([#13445](https://github.com/ManageIQ/manageiq/pull/13445))
-
-
-## Unreleased - as of Sprint 51 end 2017-01-02
-
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+51+Ending+Jan+2%2C+2017%22+label%3Aenhancement)
-
-- Automate
-  - Events: Add openstack floatingip/security group events ([#12941](https://github.com/ManageIQ/manageiq/pull/12941))
-  - Pluggable automate domains ([#11083](https://github.com/ManageIQ/manageiq/pull/11083))
-  - When importing domains from the UI, pass in the tenant_id ([#13031](https://github.com/ManageIQ/manageiq/pull/13031))
-
-- Platform
- - Notifications: Use initiator's tenant when subject lacks tenant relationship ([#13081](https://github.com/ManageIQ/manageiq/pull/13081))
- - Replication: Add a default value for the replication subscription database name ([#12994](https://github.com/ManageIQ/manageiq/pull/12994))
- - Chargeback: Prioritize rate with tag of VM when selecting from more rates ([#12534](https://github.com/ManageIQ/manageiq/pull/12534))
-
-- Providers
-  - Amazon: Add an additional_regions key for amazon EC2 ([#12965](https://github.com/ManageIQ/manageiq/pull/12965))
-  - Hawkular: Enable deployment actions in server deployments list view ([#12991](https://github.com/ManageIQ/manageiq/pull/12991))
-  - Network: Model for add/remove interface on network router ([#13032](https://github.com/ManageIQ/manageiq/pull/13032))
-  - VMware: Add VM specific customisations to vApp orchestration ([#12273](https://github.com/ManageIQ/manageiq/pull/12273))
+  - Pluggable: Changing ordering of checks to see if snapshot operations are supported [(#14014)](https://github.com/ManageIQ/manageiq/pull/14014)
+  - Red Hat Virtualization
+    - Add oVirt cloud-init customization template [(#14139)](https://github.com/ManageIQ/manageiq/pull/14139)
+    - Disks should be added as 'active' in RHV [(#13913)](https://github.com/ManageIQ/manageiq/pull/13913)
+    - Use the provided database name during metric collection [(#13909)](https://github.com/ManageIQ/manageiq/pull/13909)
+    - Fix authentication of metrics credentials in RHV [(#13981)](https://github.com/ManageIQ/manageiq/pull/13981)
+    - Set timeout for inventory refresh calls [(#14245)](https://github.com/ManageIQ/manageiq/pull/14245)
+    - Fix Host getting disconnected from Cluster when migrating a VM in  [(#13815)](https://github.com/ManageIQ/manageiq/pull/13815)
 
 - REST API
-  - Missing DELETE /api/actions/:id ([#13160](https://github.com/ManageIQ/manageiq/pull/13160))
-  - Missing DELETE /api/conditions/:id ([#13161](https://github.com/ManageIQ/manageiq/pull/13161))
-  - Expose workflow on request resources ([#13254](https://github.com/ManageIQ/manageiq/pull/13254))
-
-- Services UI
-  - Load Balancers API ([#13067](https://github.com/ManageIQ/manageiq/pull/13067))
-  - Add Service Request Approver ([#12997](https://github.com/ManageIQ/manageiq/pull/12997))
-  - Service order copy API ([#12951](https://github.com/ManageIQ/manageiq/pull/12951))
-  - Service Request edit API ([#12929](https://github.com/ManageIQ/manageiq/pull/12929))
-  - ServiceOrder deep copy ([#12945](https://github.com/ManageIQ/manageiq/pull/12945))
-  - Update Blueprint ui_properties with service template ids on publish ([#13153](https://github.com/ManageIQ/manageiq/pull/13153))
-
-- User Interface (Classic)
-  - Providers: OpenStack: Add ipv4 ipv6 selection to Subnet view for Network Manager ([#12650](https://github.com/ManageIQ/manageiq/pull/12650))
-  - Access Control: Make a link from User/Group/Role screens text ([#13022](https://github.com/ManageIQ/manageiq/pull/13022))
-  - Cloud Subnet UI: Task queue validation buttons ([#12045](https://github.com/ManageIQ/manageiq/pull/12045))
-  - Floating IPs provisioning UI ([#12097](https://github.com/ManageIQ/manageiq/pull/12097))
-  - Add Cores and Memory of Infra Provider list view ([#12758](https://github.com/ManageIQ/manageiq/pull/12758))
-  - Cloud Providers: VCpus and Memory for Cloud Providers visual ([#13124](https://github.com/ManageIQ/manageiq/pull/13124))
-  - Display IPv6Address on VM summary page ([#13190](https://github.com/ManageIQ/manageiq/pull/13190))
-
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+51+Ending+Jan+2%2C+2017%22+label%3Aenhancement)
-
-- Automate
-  - Provisioning: Update Azure provision template to restrict VM names ([#12947](https://github.com/ManageIQ/manageiq/pull/12947))
-  - UI: Fixed code to expect keys as strings instead of symbols. ([#13087](https://github.com/ManageIQ/manageiq/pull/13087))
-
-- Performance
-  - Filter undercloud resource query for performance ([#13004](https://github.com/ManageIQ/manageiq/pull/13004))
-
-- Platform
-  - Chargeback: Set different undeleteable default rate for container image chargeback ([#13063](https://github.com/ManageIQ/manageiq/pull/13063))
-  - Upgrade pglogical to 1.2.1 ([#13070](https://github.com/ManageIQ/manageiq/pull/13070))
-  - Reporting: Introduce report result purging timer ([#13044](https://github.com/ManageIQ/manageiq/pull/13044))
-  - Introduce purge timer for drift states ([#13086](https://github.com/ManageIQ/manageiq/pull/13086))
-  - Add configuration support for websocket logging level ([#13265](https://github.com/ManageIQ/manageiq/pull/13265))
+  - Ensure actions are returned correctly in the API [(#14033)](https://github.com/ManageIQ/manageiq/pull/14033)
+  - Return result of destroy action to user not nil [(#14097)](https://github.com/ManageIQ/manageiq/pull/14097)
+  - Convey a useful message to queue_object_action [(#13710)](https://github.com/ManageIQ/manageiq/pull/13710)
+  - Fix load balancers access in API [(#13866)](https://github.com/ManageIQ/manageiq/pull/13866)
+  - Fix cloud networks access in API [(#13865)](https://github.com/ManageIQ/manageiq/pull/13865)
+  - Fix schedule access in API [(#13864)](https://github.com/ManageIQ/manageiq/pull/13864)
 
 - User Interface
-  - Add validation for charts with values ([#13079](https://github.com/ManageIQ/manageiq/pull/13079))
-  - Convert summary screen images to fonticons and SVGs ([#13222](https://github.com/ManageIQ/manageiq/pull/13222))
-  - Rename the `:icon` parameter in tree nodes to `:image` ([#13297](https://github.com/ManageIQ/manageiq/pull/13297))
-  - UI Repository Split ([#13303](https://github.com/ManageIQ/manageiq/pull/13303))
+  - Fix mixed values in Low and High operating ranges for CU charts [(#14324)](https://github.com/ManageIQ/manageiq/pull/14324)
+  - Revert "Remove unneeded include from reports" [(#14439)](https://github.com/ManageIQ/manageiq/pull/14439)
+  - Added missing second level menu keys for Storage menu [(#14145)](https://github.com/ManageIQ/manageiq/pull/14145)
+  - Update spice-html5-bower to 1.6.3 fixing an extra GET .../null request [(#13889)](https://github.com/ManageIQ/manageiq/pull/13889)
+  - Add the Automation Manager submenu key to the permission yaml file [(#13931)](https://github.com/ManageIQ/manageiq/pull/13931)
+  - Added missing Automate sub menu key to permissions yml. [(#13819)](https://github.com/ManageIQ/manageiq/pull/13819)
 
-### [Fixed](https://github.com/ManageIQ/manageiq/issues?utf8=%E2%9C%93&q=milestone%3A%22Sprint%2051%20Ending%20Jan%202%2C%202017%22%20label%3Bbug)
+  - See also [Manageiq/manageiq-ui-classic changelog](https://github.com/ManageIQ/manageiq-ui-classic/pull/461)
+
+# Euwe-2
+
+## Added
+
+### Automate
+- Automate Retry with Server Affinity ([#13543](https://github.com/ManageIQ/manageiq/pull/13543))
+
+### Platform
+- Chargeback
+  - Chargebacks for SCVMM (rollup-less) ([#13419](https://github.com/ManageIQ/manageiq/pull/13419))
+  - Chargebacks for SCVMM (rollup-less) [2/2] ([#13554](https://github.com/ManageIQ/manageiq/pull/13554))
+  - Prioritize rate with tag of VM when selecting from more rates ([#13556](https://github.com/ManageIQ/manageiq/pull/13556))
+- Reporting: Add option for container performance reports ([#11904](https://github.com/ManageIQ/manageiq/pull/11904))
+
+### Providers
+- Ansible Tower: Advanced search for Ansible Tower Jobs not visible on switch from a different tab ([#12717](https://github.com/ManageIQ/manageiq/pull/12717))
+- Containers: Common mixin: ui_lookup should get a string ([#13389](https://github.com/ManageIQ/manageiq/pull/13389))
+- Microsoft Azure: Delete all resources when deleting an Azure stack ([#24](https://github.com/ManageIQ/manageiq-providers-azure/pull/24))
+
+### User Interface (Classic)
+- Ops_rbac - group detail - don't render trees that are not visible ([#13399](https://github.com/ManageIQ/manageiq/pull/13399))
+- Launch a URL returned by an automate button ([#13449](https://github.com/ManageIQ/manageiq/pull/13449))
+- Remove confirmation when opening the HTML5 vnc/spice console. ([#13465](https://github.com/ManageIQ/manageiq/pull/13465))
+- Cloud Network UI: Task queue ([#13416](https://github.com/ManageIQ/manageiq/pull/13416))
+
+## Changed
+
+### Automate
+  - Look for resources in the same region as the selected template during provisioning. ([#13045](https://github.com/ManageIQ/manageiq/pull/13045))
+
+### Performance
+- Don't lookup category names if tag tree view all ([#13308](https://github.com/ManageIQ/manageiq/pull/13308))
+
+### Platform
+- Add list of providers to RBAC on catalog items ([#13395](https://github.com/ManageIQ/manageiq/pull/13395))
+- Gem changes
+  - Upgrade azure-armrest gem to 0.5.2. [(#13670)](https://github.com/ManageIQ/manageiq/pull/13670)
+  - Use version 0.14.0 of the 'ovirt' gem ([#13425](https://github.com/ManageIQ/manageiq/pull/13425))
+  - Updated PatternFly to v3.15.0 ([#13404](https://github.com/ManageIQ/manageiq/pull/13404))
+
+### Providers
+- Network: Added exception clases for router add/remove interfaces ([#13005](https://github.com/ManageIQ/manageiq/pull/13005))
+
+### User Interface
+- UX improvements for attaching Openstack cloud volumes to instances ([#13437](https://github.com/ManageIQ/manageiq/pull/13437))
+- Add latest VMRC API version ([#184](https://github.com/ManageIQ/manageiq-ui-classic/pull/184))
+
+
+## Fixed
 
 Notable fixes include:
 
-- Platform
-  - Chargeback: Fix chargeback for container Images with rate assigning by docker label ([#12851](https://github.com/ManageIQ/manageiq/pull/12851))
-  - Fix master server failover race condition ([#13065](https://github.com/ManageIQ/manageiq/pull/13065))
-  - Notify only a group of users when notifying about MiqRequest ([#13051](https://github.com/ManageIQ/manageiq/pull/13051))
-  - Remove default consumption admin user ([#13039](https://github.com/ManageIQ/manageiq/pull/13039))
-  - Filter attempt from the authentication_check options ([#13026](https://github.com/ManageIQ/manageiq/pull/13026))
-  - Reporting: Added 'VMware ESXi' to the list of known operating systems ([#13249](https://github.com/ManageIQ/manageiq/pull/13249))
+### Automate
+- Inconsistent attribute names inside Automate Engine ([#13545](https://github.com/ManageIQ/manageiq/pull/13545))
+- Allow a service power state to correctly handle nil actions ([#13232](https://github.com/ManageIQ/manageiq/pull/13232))
+- Increment the ae_state_retries when on_exit sets retry ([#13339](https://github.com/ManageIQ/manageiq/pull/13339))
 
-- Providers
-  - Ensure AnsibleTowerClient.logger is set to $log not a NullLogger ([#12996](https://github.com/ManageIQ/manageiq/pull/12996))
+### Platform
+- Chargeback
+  - BigDecimal not working properly on ruby 2.3.1 ([#13634](https://github.com/ManageIQ/manageiq/pull/13634))
+  - Skip calculation when there is zero consumed hours ([#13723](https://github.com/ManageIQ/manageiq/pull/13723))
+- Tenant admin should not be able to create groups in other tenants. ([#13483](https://github.com/ManageIQ/manageiq/pull/13483))
+- Add MiqUserRole to RBAC ([#13689](https://github.com/ManageIQ/manageiq/pull/13689))
+- Reporting: Introduce report result purging timer ([#13429](https://github.com/ManageIQ/manageiq/pull/13429))
 
-- User Interface
-  - OpenStack: Remove duplicate flash message. ([#13035](https://github.com/ManageIQ/manageiq/pull/13035))
-  - Memory checkbox should not show when VM is not powerd on ([#12678](https://github.com/ManageIQ/manageiq/pull/12678))
-  - Disallow subnet deletion if it has an associated instance ([#13098](https://github.com/ManageIQ/manageiq/pull/13098))
-  - Fix format in providers view list in Infrastructure ([#13248](https://github.com/ManageIQ/manageiq/pull/13248))
+### Providers
+- Hawkular: Adding alt and title attributes for buttons ([#13468](https://github.com/ManageIQ/manageiq/pull/13468))
+- RHEV
+  - Save host for a Vm after migration ([#13618](https://github.com/ManageIQ/manageiq/pull/13618))
+  - Fix Host getting disconnected from Cluster when migrating a VM in RHEV [(#13836)](https://github.com/ManageIQ/manageiq/pull/13836)
+  - Disks should be added as 'active' in RHV ([#13913)](https://github.com/ManageIQ/manageiq/pull/13913)
+- OpenStack
+  - Add Openstack metric service to Settings ([#13918](https://github.com/ManageIQ/manageiq/pull/13918))
+  - OpenStack Infra: ssh keypair validation fixes ([#13445](https://github.com/ManageIQ/manageiq/pull/13445))
+  - Console: Added missing parameter when requesting OpenStack remote console ([#13558](https://github.com/ManageIQ/manageiq/pull/13558))
 
+### User Interface (Classic)
+- Pulled out simulation parameters ([#13472](https://github.com/ManageIQ/manageiq/pull/13472))
+- Advanced search not working for the ansible job ([#12719](https://github.com/ManageIQ/manageiq/pull/12719))
+- Fix missing Smart State Analysis button on Cloud Instances list view ([#13422](https://github.com/ManageIQ/manageiq/pull/13422))
+- Remove disabling of 'instance_retire' button ([#14016)](https://github.com/ManageIQ/manageiq/pull/14016)
+- Fix Snapshot revert ([#13986)](https://github.com/ManageIQ/manageiq/pull/13986)
+- Make created filters in Datastores visible and fix commiting filters ([#13621](https://github.com/ManageIQ/manageiq/pull/13621))
+- Add missing icons for provider policies & compliance events ([#13502](https://github.com/ManageIQ/manageiq/pull/13502))
+- Allow configuration managers providers and configuration scripts trees to display the advanced search box ([#13763](https://github.com/ManageIQ/manageiq/pull/13763))
+- Cloud Subnet UI: Task queue validation buttons ([#13490](https://github.com/ManageIQ/manageiq/pull/13490))
+- Tenant admin should not be able to create groups in other tenants. ([#151](https://github.com/ManageIQ/manageiq-ui-classic/pull/151))
+- Floating IPs: Adds missing route for wait_for_task ([#192](https://github.com/ManageIQ/manageiq-ui-classic/pull/192))
+- Fix valid_tenant check in ops ([#203](https://github.com/ManageIQ/manageiq-ui-classic/pull/203))
+- Red Hat Enterprise Virtualization: Removed the option to migrate the VMs outside of the cluster. ([#207](https://github.com/ManageIQ/manageiq-ui-classic/pull/207))
+- Fix check_box_tag parameters for snap_memory ([#217](https://github.com/ManageIQ/manageiq-ui-classic/pull/217))
+- Add list of roles to rbac ([#271)](https://github.com/ManageIQ/manageiq-ui-classic/pull/271)
+- Fix assigning roles in group form ([#296)](https://github.com/ManageIQ/manageiq-ui-classic/pull/296)
+- Fix repeating values on Y-axis of C&U charts ([#40](https://github.com/ManageIQ/manageiq-ui-classic/pull/40))
 
-## Unreleased - as of Sprint 50 end 2016-12-05
+# Euwe-1
 
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+50+Ending+Dec+5%2C+2016%22+label%3Aenhancement)
+## Added
 
-- Automate
-  - Retirement: Generic service retirement option ([#12619](https://github.com/ManageIQ/manageiq/pull/12619))
-  - Service Dialog: Add dynamic dropdown list support for orchestration service dialog ([#12693](https://github.com/ManageIQ/manageiq/pull/12693))
-  - Service Model
-    - Expose custom_attribute methods to ext_management_system service model. ([#12602](https://github.com/ManageIQ/manageiq/pull/12602))
-    - Move snapshot code to Vm in service model. ([#12726](https://github.com/ManageIQ/manageiq/pull/12726))
-    - RBAC support for Automate Service Models ([#12369](https://github.com/ManageIQ/manageiq/pull/12369))
-    - Add ae_service for google auth_key_pair ([#12973](https://github.com/ManageIQ/manageiq/pull/12973))
-    - Expose miq_groups ([#12294](https://github.com/ManageIQ/manageiq/pull/12294))
-  - Notifications: Send Notification when retirement starts for Services and VMs ([#12796](https://github.com/ManageIQ/manageiq/pull/12796))
+### Automate
 
-- Platform
-  - Reporting: Round of metric values to precision 2 in chargeback reports ([#12629](https://github.com/ManageIQ/manageiq/pull/12629))
-  - Allow network manager features for tenant administrator ([#12383](https://github.com/ManageIQ/manageiq/pull/12383))
-  - Use settings.yaml for purging records ([#12552](https://github.com/ManageIQ/manageiq/pull/12552))
-  - Chargebacks without rollups :: Fixed metrics for HyperV ([#13229](https://github.com/ManageIQ/manageiq/pull/13229))
-
-- Providers
-  - Middleware: Add link to Server Group in the summary page of a server ([#12815](https://github.com/ManageIQ/manageiq/pull/12815))
-  - Add root password validation regex for Azure dialog ([#12967](https://github.com/ManageIQ/manageiq/pull/12967))
-
-- REST API
-  - Add option to hide resources ([#12694](https://github.com/ManageIQ/manageiq/pull/12694))
-  - Allow adding custom attributes with sections ([#12913](https://github.com/ManageIQ/manageiq/pull/12913))
-
-- User Interface (Classic)
-  - Add Replication excluded tables to the Settings Replication tab ([#12604](https://github.com/ManageIQ/manageiq/pull/12604))
-  - Orchestration: Support hash values in dropdown orchestration dialog fields ([#12570](https://github.com/ManageIQ/manageiq/pull/12570))
-  - Containers
-    - Provider policies ([#11002](https://github.com/ManageIQ/manageiq/pull/11002))
-    - Custom attributes table on Container Node ([#12832](https://github.com/ManageIQ/manageiq/pull/12832))
-  - OpenStack: Add human readable names of private and public openstack cloud networks ([#12855](https://github.com/ManageIQ/manageiq/pull/12855))
-  - Add settings key to disable console proxy ([#12675](https://github.com/ManageIQ/manageiq/pull/12675))
-  - Separate Storage Managers By Type ([#12399](https://github.com/ManageIQ/manageiq/pull/12399))
-  - Launch an URL returned by an automate button ([#10118](https://github.com/ManageIQ/manageiq/pull/10118))
-
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+50+Ending+Dec+5%2C+2016%22+label%3Aenhancement)
-
-- Performance
-  - DTO refresh optimization for saves ([#12679](https://github.com/ManageIQ/manageiq/pull/12679))
-  - Purge remaining records using single query ([#12560](https://github.com/ManageIQ/manageiq/pull/12560))
-  - Use `Settings` API over `VMDB::Config.new` for speed improvements for `VmOrTemplate::RightSizing`  ([#12751](https://github.com/ManageIQ/manageiq/pull/12751))
-  - Don't queue ntp reload on newly created zones ([#12974](https://github.com/ManageIQ/manageiq/pull/12974))
-
-- Platform
-  - LDAP: Allow apostrophes in email address ([#12729](https://github.com/ManageIQ/manageiq/pull/12729))
-  - Increase the web socket worker's pool size  ([#12800](https://github.com/ManageIQ/manageiq/pull/12800))
-  - Drop currency column when editing chargeback rates ([#12834](https://github.com/ManageIQ/manageiq/pull/12834))
-
-- REST API: Updating API versioning to 2.4.0-pre ([#12890](https://github.com/ManageIQ/manageiq/pull/12890))
-
-- Service UI
-  - Hid  power status and buttons in the SUI Services list view until more performant [manageiq-ui-service #368](https://github.com/ManageIQ/manageiq-ui-service/pull/368)
-  - Add power status and buttons to the Service detail page
-[ManageIQ/manageiq-ui-service #330](https://github.com/ManageIQ/manageiq-ui-service/pull/330)
-
-- SmartState analysis
-  - Containers deletion: Separate the pod deletion and skip it if no pod was created before ([#12750](https://github.com/ManageIQ/manageiq/pull/12750))
-
-- User Interface
-  - Reports: Better names for policy event sample reports  ([#12934](https://github.com/ManageIQ/manageiq/pull/12934))
-
-### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+50+Ending+Dec+5%2C+2016%22%20label%3Bbug)
-
-Notable fixes include:
-
-- Automate
-  - Automate Provisioned Notifications - Use Automate notifications instead of event notifications ([#12424](https://github.com/ManageIQ/manageiq/pull/12424))
-  - Provisioning
-    - Fix auto-placement for hosts without a datastore that can hold the new VM ([#12931](https://github.com/ManageIQ/manageiq/pull/12931))
-    - Support provider name & template name to uniquely identify a template ([#11669](https://github.com/ManageIQ/manageiq/pull/11669))
-  - Git Domains: Delete the repo directory for Git based domains ([#12539](https://github.com/ManageIQ/manageiq/pull/12539))
-
-- Platform
-  - Authentication
-    - Support a separate auth URL for external authentication ([#12697](https://github.com/ManageIQ/manageiq/pull/12697))
-    - Remove the FQDN from group names for ext authentication ([#12752](https://github.com/ManageIQ/manageiq/pull/12752))
-  - Fix Audit Log to record settings/values when creating new user ([#12786](https://github.com/ManageIQ/manageiq/pull/12786))
-  - Fix issue where local settings files were ignoredFix issue where local settings files were ignored ([#12821](https://github.com/ManageIQ/manageiq/pull/12821))
-
-- Providers
-  - RHVM
-    - Require a description when creating Snapshot ([#12637](https://github.com/ManageIQ/manageiq/pull/12637))
-    - Update cluster when modified ([#12927](https://github.com/ManageIQ/manageiq/pull/12927))
-  - Openstack: Remove port_security_enabled from attributes passed to network create ([#12736](https://github.com/ManageIQ/manageiq/pull/12736))
-  - Fetch disk info when a vm removed ([#12788](https://github.com/ManageIQ/manageiq/pull/12788))
-
-- User Interface
-  - Prevent service dialog refreshing every time a dropdown item is selected ([#12718](https://github.com/ManageIQ/manageiq/pull/12718))
-  - Fix angular controller for Network Router Network Router ([#12707](https://github.com/ManageIQ/manageiq/pull/12707)) and Cloud Subnet ([#12706](https://github.com/ManageIQ/manageiq/pull/12706))
-  - Ansible: Add configuration_scripts to the list of trees with advanced search ([#12704](https://github.com/ManageIQ/manageiq/pull/12704))
-  - RBAC: Add Storage Product Features for Adding Roles ([#12701](https://github.com/ManageIQ/manageiq/pull/12701))
-  - Remove confirmation when opening the HTML5 vnc/spice console. ([#12673](https://github.com/ManageIQ/manageiq/pull/12673))
-  - Set categories correctly for policy timelines ([#12664](https://github.com/ManageIQ/manageiq/pull/12664))
-  - Display name of a chosen filter in Infrastructure Providers ([#12307](https://github.com/ManageIQ/manageiq/pull/12307))
-  - Only enable git import submit button when a branch or tag is selected ([#12753](https://github.com/ManageIQ/manageiq/pull/12753))
-  - Send notifications only when user is authorized to see the referenced object ([#12771](https://github.com/ManageIQ/manageiq/pull/12771))
-  - Add tags to objects in list view in Cloud Tenant ([#12833](https://github.com/ManageIQ/manageiq/pull/12833))
-  - Set start date explicitly only when changing schedule interval ([#12816](https://github.com/ManageIQ/manageiq/pull/12816))
-  - Display parent tenant only when it is allowed by RBAC ([#12848](https://github.com/ManageIQ/manageiq/pull/12848))
-  - Fix position of chart menu in C&U when clicking close to right edge ([#12922](https://github.com/ManageIQ/manageiq/pull/12922))
-  Fix missing Smart State Analysis button on Cloud Instances list view ([#12559](https://github.com/ManageIQ/manageiq/pull/12559))
-
-## Unreleased - as of Sprint 49 end 2016-11-14
-
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+49+Ending+Nov+14%2C+2016%22+label%3Aenhancement)
-
-- Automate
-  - Git Support: Support automate model git repositories without domain directory
-  - Notification: Add global and tenant notification audiences
-  - Service Model
-    - Expose ems_events to Vm service model
-    - Expose a group's filters.
-    - Expose authentication_key in EMS service model
-  - Provisioning
-    - Set zone when deliver a service template provision task
-    - Create a request per region for VM reconfigure
-  - Services
-    - Expose service power state
-- Platform
-  - High Availability: Raise event when failover successful
-  - Chargeback: Add daily to chargeback rate for 'per time' types
-  - Replication: Add logging when the replication set is altered
-  - Logging: Add configurable number of saved logfile rotations
-- Providers
-  - Containers UI: Label based Auto-Tagging UI
-  - Middleware (Hawkular)
-    - Add support to overwrite an existing deployment
-  - Networks
-    - Nuage: UI for Network elements
-    - Add Network Topology button for the Load Balancer class
-  - Red Hat Enterprise Virtualization Manager
-      - Enable VM reconfigure disks for supported rhevm version
-      - Migrate support
-  - VMware vCloud: Event monitoring
-- REST API
-  - Add IDs to Dialog Content
-  - Actions support
-  - Conditions support
-  - Support for /api/requests approve and deny actions
-  - Service Dialogs Copy API
-  - MiqPolicies support
-  - Service Request Delete
-- SmartState: Support analysis of VMs residing on NFS41 datastores
-
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+49+Ending+Nov+14%2C+2016%22+label%3Aenhancement)
-
-- Performance
-  - For resource_pools only bring back usable Resource Pools
-  - Prune VM Tree folders first, so nodes can be properly prune and tree nodes can then be collapsed
-  - Remove full refresh from provisioning flow
-- Platform
- - Chargeback: Simplify Chargeback rates editor to only show relevant parameters
-- Providers
- - RHEVM: Make C&U Metrics Database a mandatory field for Validation
-
-### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+49+Ending+Nov+14%2C+2016%22%20label%3Bbug)
-
-Notable fixes include:
-
-- Automate
-  - Services: Set default value of param visible to true for all field types
-  - Git Domains for Automate: Ensure a response when git repository does not contain domains
-- Platform
-  - Increase worker memory thresholds to avoid frequent restarts.
-  - Perform RBAC user filter check on requested ids before allowing request
-- Providers
-  - Fix targeted refresh of a VM without its host clearing all folder relationships
-  - OpenStack Cloud
-    - Add logs for network and subnet CRUD
-    - UI: Add missing toolbar options for cloud tenants and host aggregates
-    - UI: Add missing add/remove hosts actions to host aggregate UI
-  - RHVM: Pass storage domains collection in disks RHV api request
-- User Interface
-  - Internationalization: i18n support in pdf reports
-  - Fix custom logo issue in header
-  - Routing Error for reload on infrastructure networking
-  - Add Advanced Search to Containers explorer
-  - Fall-"back" to VMRC desktop client if no NPAPI plugin is available
-  - Displays a more informative message on datasource deletion.
-  - Display Advanced Search in Configuration management
-  - Allow the retirement date to be cleared
-  - Default Filters can be saved or reset
-
-## Unreleased - as of Sprint 48 end 2016-10-24
-
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+48+Ending+Oct+24%2C+2016%22+label%3Aenhancement)
-
-- Automate
-  - Reset domain priorities at startup and restore
-  - Set default entry points for non-generic catalog items
-  - Model: Schema change for Cloud Orchestration Retirement class
-  - Automation method that will choose VDC networks available in the given
-cloud provider
-  - Provisioning
-    - Show shared networks in the OpenStack provisioning dialog
-    - Reconnect orchestration stack with its template at post-provisioning
-  - Domain Import
-    - Rake task to import an Automate Model stored in a  Git Repository
-    - Allow for setting up self signed certificate in Import Screen
-    - REST API Git refresh and import
-    - Route the REST API import call to the correct server with the Git Owner Server role
-  - Added Automate $evm.create_notification method
-  - Retirement
-    - Allow VM's with unknown power state to retire.
-    - Allow archived/orphaned VM's to retire
-    - Added checks and logging for amazon retirement
-  - Service Model
-    - Added cinder backup/restore actions
-    - RBAC for service models
-  - Scheduling Automate Tasks via the rails console
-- Platform
-  - Configure kerberos to do dns_lookups for external authentication
-  - Add additional cloud objects to RBAC filter
-  - Chargeback
-    - Add Vm Guid to report fields for ChargebackVm reports
-    - Enable custom attributes for chargeback reports
-    - Add monthly/hourly/weekly in rates for 'per time' types
-    - Calculation changes taking into account averages and maximums per selected interval in report(monthly, weekly, daily)
-  - Logging: Add the ability to use a different disk for storing log files
-  - Tenancy: Introduce service for sharing resources across tenants
-- Providers
-  - Allow Vm to show floating and fixed ip addresses
-  - Containers
-    - Persist Container Templates
-    - UI: Add Container Templates
-  - Google Compute Engine: Support for parsing Google health checks during refresh
-  - OpenStack
-    - Cloud
-      - UI: Cloud volume backup
-      - CRUD for OpenStack Cloud tenants
-      - Enable Image Snapshots
-      - CRUD for OpenStack Host Aggregates
-    - Infra
-      - Enable node start and stop
-      - Node destroy deletes node from Ironic
-      - Add Ironic Controls
-      - Set boot image for registered hosts
-  - Storage: Cinder backup
-- REST API
-  - Service power operations
-  - Add custom attributes to provider
-  - Service Dialog Create
-  - Support for /api/requests creation and edits
-- SmartState: Add /etc/redhat-access-insights/machine-id to the sample VM analysis profile
-- User Interface
-  - Dashboard view for Infrastructure views
-  - Conversion of Middleware Provider form to Angular
-  - Add human name for Google & Azure load balancers
-  - Ability to get to details of Ansible jobs
-  - Add UI for generating authorization keys for remote regions
-  - Disable tenant edit from cloud tenant mapping
-  - Topology for Cloud Manager
-  - Topology for Infra provider
-
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+48+Ending+Oct+24%2C+2016%22+label%3Aenhancement)
-
-- Performance
-  - Speed up RBAC when no vm in tree in Virtual Machine Explorer
-  - Speed-up lookup for min/max storage_used metric
-  - Add option to hide VMs in trees
-- Platform: Set appliance "system" memory/swap information
-- Providers
-  - Google Cloud Platform: Use standard health states
-  - Microsoft SCVMM: Set  default security protocol to ssl
-  - Network: Use RESTful routes
-
-
-### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+48+Ending+Oct+24%2C+2016%22%20label%3Bbug)
-
-Notable fixes include:
-
-- Automate
-  - Broken ordering ae_domains for a root tenant.
-  - Model: Added missing ServiceTemplateProvisionRequest_denied and ServiceTemplateProvisionRequest_pending instances so that Denied Service requests will properly generate emails.
-  - Validate user roles against domain edit before allowing copy/edit on any objects under it
-  - Provisioning: Stop appending the `_` character as part of the enforced VM naming.
-  - Fixed case where user can't add alerts.
-  - Fixed issue where alerts don't send SNMP v1 traps
-- Platform
-  - Chargeback: Fix Group by tag in chargeback report
-  - Replication
-    - Add repmgr tables to replication excludes
-    - Don't consider tables that are always excluded during the schema check
-    - Fixed bug in settings/access control where tenants from remote regions
-are displayed in the tenant list view and in the tenant selection when adding/editing a group
-- Providers
-  - Containers: Ability to add a container provider with a port other than 8443
-  - Azure: Show 'Memory (MB)' chart for azure instance
-  - Hawkular UI: Domain mode server has different operations than normal standalone server
-- User Interface
-  - Enable Provision VMs button via relationships
-  - Missing reset button for Job Template Service Dialog
-  - Display the number of access control elements based on user permission
-  - Rebuild timeline options when Apply button is pressed
-
-
-## Unreleased - as of Sprint 47 end 2016-10-03
-
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+47+Ending+Oct+3%2C+2016%22+label%3Aenhancement)
-
-- Automate
-  - Provisioning
-    - Filter networks and floating_ips for OpenStack provisioning
-    - Added Google pre and post provisioning methods
-    - Enabled support for vApp provisioning service
-    - Backend support to enable VMware provisioning through selection of a DRS-enabled cluster instead of a host
-    - Set VM storage profile in provisioning
-  - Services
-    - Log properly dynamic dialog field script error
-    - Back-end support for Power Operations on Services
-      - Service Items: Pass start/stop commands to associated resources.
-      - Service Bundles: Honor bundle resource configuration for start/stop actions
+- Automate Model
   - Added top_level_namespace to miq_ae_namespace model to support filtering for pluggable providers
-  - Created service_connections table to support connecting services together along with metadata
-  - Generic Objects
-    - Process Generic Object method call via automate
-    - Methods content stored in Automate
+  - Added /System/Process/MiqEvent instance
+  - Class Schema allows for EMS, Host, Policy, Provision, Request, Server, Storage, and VM(or Template) datatypes
+    - Value is id of the objects
+    - If object is not found, the attribute is not defined.
+  - Import Rake task `OVERWRITE` argument: Setting  `OVERWRITE=true` removes the target domain prior to import
+  - Null Coalescing Operator
+    - Multiple String values separated by “||”
+    - Evaluated on new attribute data type “Null Coalescing”
+    - Order dependent, left to right evaluation
+    - First non-blank value is used
+    - Skip and warn about missing objects
+- Generic Objects
+  - Model updates
+    - Associations
+    - Tagging
+  - Service Methods: `add_to_service / remove_from_service`
+  - Service models created for GenericObject and GenericObjectDefinition
+  - Process Generic Object method call via automate
+  - Methods content stored in Automate
     - Generic Object Definition model contains the method name only (Parameters defined in automate)
     - Methods can return data to caller
     - Methods can be overridden by domain ordering
-- Platform
-  - Centralized Administration
-    - VM power operations
-    - VM retirement
-    - Leverages new ManageIQ API Client gem
-  - Chargeback
-    - Generate monthly report for a Service
-Instance method on Service class
-    - Daily schedule generates report for each Service
-    - Enables SUI display of Service costs over last 30 days
-    - Containers
-      - Added image tag names for Containers in vim performance state.
-      - Added a 'fixed_compute_metric' column to chargeback
-      - Added rate assigning by tags to container images
-      - Chargeback vm group by tag
-  - Notifications
-    - Dynamic substitution in notification messages
-    - Generate for Lifecycle events
-  - Tenancy
-    - Mapping Cloud Tenants to ManageIQ Tenants
-      - Prevent deleting mapped tenants from cloud provider
-      - Added checkbox "Tenant Mapping Enabled" to Openstack Manager
-    - Ad hoc sharing of resources across tenants
-      - Backend modeling completed
-      - Implementation in progress
-- Providers
-  - Core
-    - Override default http proxy
-    - Default reasons for supported features
-    - Known features are discoverable
-    - Every known feature is unsupported by default
-    - `supports :reboot_guest`
-  - Generate a csv of features supported across all models
+- Git Automate support
+  - Branch/Tag support
+  - Contents are locked and can be copied to other domains for editing
+  - Editable properties
+    - Enabled/Disabled
+    - Priority
+    - Removal of Domain
+    - Dedicated Server Role to store the repository
+- Methods
+  - `extend_retires_on` method: Used by Automate methods to set a retirement date to specified number of days from today, or from a future date.
+  - `taggable?` to programmatically determine if a Service Model class or instance is taggable.
+  - Added $evm.create_notification
+- Provisioning
+  - Service Provisioning: Exposed number_of_vms when building the provision request for a service
+  - Filter networks and floating_ips for OpenStack provisioning
+  - Added Google pre and post provisioning methods
+  - Enabled support for vApp provisioning service
+  - Backend support to enable VMware provisioning through selection of a DRS-enabled cluster instead of a host
+  - Set VM storage profile in provisioning
+  - Show shared networks in the OpenStack provisioning dialog
+  - Enhanced messaging for provisioning: Displayed elements
+    - ManageIQ Server name
+    - Name of VM/Service being provisioned
+    - Current Automate state machine step
+    - Status message
+    - Provision Task Message
+    - Retry count (when applicable)
+  - Set zone when deliver a service template provision task
+- Reconfigure: Route VM reconfigure request to appropriate region
+- Retirement
+  - Restored retirement logic to verify that VM was provisioned or contains Lifecycle tag before processing
+  - Built-in policy to prevent retired VM from starting on a resume power
+  - Added lifecycle tag as a default tag
+  - Schema change for Cloud Orchestration Retirement class
+  - Added Provider refresh call to Amazon retire state machine in Pre-Retirement state
+- Service Dialogs
+  - Added ‘Visible’ flag to all dialog fields
+  - Support for “visible” flag for dynamic fields
+- Service Models - New
+  - Compliance: `expose :compliance_details`
+  - ComplianceDetail: `expose :compliance`, `expose :miq_policy`
+  - MiqAeServicePartition
+  - MiqAeServiceVolume
+  - GenericObject
+  - GenericObjectDefinition
+- Service Models - Updates
+    - MiqAeServiceServiceTemplateProvisionTask updated to expose provision_priority value
+    - MiqAeServiceHardware updated to expose a relationship to partitions.
+    - Added cinder backup/restore actions
+    - New associations on VmOrTemplate and Host models
+      - `expose :compliances`
+      - `expose :last_compliance`
+    - Expose ems_events to Vm service model
+    - Expose a group's filters.
+
+- Services
+  - Set default entry points for non-generic catalog items
+  - Service resolution based on Provision Order
+  - Log properly dynamic dialog field script error
+  - Back-end support for Power Operations on Services
+    - Service Items: Pass start/stop commands to associated resources.
+    - Service Bundles: Honor bundle resource configuration for start/stop actions
+    - Created service_connections table to support connecting services together along with metadata
+
+### Platform
+
+- Centralized Administration
+  - Server to server authentication
+  - Invoke tasks on remote regions
+  - Leverage new API client (WIP)
+  - VM power operations
+  - VM retirement
+- Chargeback
+  - Support for generating chargeback for services
+  - Will be used in Service UI for showing the cost of a service
+  - Generate monthly report for a Service
+  - Daily schedule generates report for each Service
+  - Enables SUI display of Service costs over last 30 days
   - Containers
-    - Allow policies to prevent Container image scans
-    - Chargeback rates based on container image tags
-    - Keep pod-container relationship after disconnection
-  - Google Compute Engine: Load Balancer refresh
-  - Middleware (Hawkular)
-    - Change labels in middleware topology
-    - Added "Server State" into Middleware Server Details
-    - Enabled search for Middleware entities
-    - Users can add Middleware Datasources and JDBC Drivers
-    - Metrics for JMS Topics and Queues
-  - Microsoft Cloud (Azure)
-    - Load Balancer inventory collection for Azure
-    - Pagination support in armrest gem
-  - Microsoft Infrastructure (SCVMM)
-    - Set CPU sockets and cores per socket
-  - Network
-    - Nuage policy groups added
+    - Added a 'fixed_compute_metric' column to chargeback
+    - Added rate assigning by tags to container images
+    - Chargeback vm group by tag
+- Database Maintenance
+  - Hourly reindex: High Churn Tables
+  - Periodic full vacuum
+  - Configure in appliance console
+  - Database maintenance scripts added to appliance
+- Notifications
+  - Dynamic substitution in notification messages
+  - Generate for Lifecycle events
+  - Model for asynchronous notifications
+  - Authentication token generation for web sockets
+  - API for notification drawer
+- PostgreSQL High Availability
+  - Added [repmgr](http://repmgr.org/)  to support automatic failover
+    - Maintain list of active standby database servers
+    - Added [pg-dsn_parser](https://github.com/ManageIQ/pg-dsn_parser) for converting DSN to a hash
+  - DB Cluster - Primary, Standbys
+  - Uses [repmgr](http://www.repmgr.org/) (replication)
+  - Failover
+    - Primary to Standby
+    - Appliance connects to new primary DB
+    - Primary/Standby DB config in Appliance Console
+    - Database-only appliance config in Appliance Console
+    - Failover Monitor
+    - Raise event when failover successful
+- Replication: Add logging when the replication set is altered
+- Reporting
+  - Watermark reports updated to be based on max of daily max value instead of max of average value
+  - Custom attributes support in reporting and expressions
+    - Selectable as a column
+    - Usable in report filters and charts
+- Tenancy
+  - Groundwork in preparation for supporting multiple entitlements
+  - ApplicationHelper#role_allows and User#role_allows? combined and moved to RBAC
+  - Added parent_id to CloudTenant as prerequisite for mapping OpenStack tenants to ManageIQ tenants
+  - Mapping Cloud Tenants to ManageIQ Tenants
+    - Prevent deleting mapped tenants from cloud provider
+    - Added checkbox "Tenant Mapping Enabled" to Openstack Manager
+    - Post refresh hook to queue mapping of Cloud Tenants
+- Appliance Console: Removed menu items that are not applicable when running inside a container
+- Nice values added to worker processes
+
+### Providers
+
+- Core
+  - Override default http proxy
+  - Known features are discoverable
+  - Every known feature is unsupported by default
+  - Allow Vm to show floating and fixed ip addresses
+  - Generate a csv of features supported across all models
+- Amazon: Public Images Filter
+- Ansible Tower
+  - Collect Job parameters during Provider Refresh
+  - Log Ansible Tower Job output when deployment fails
+- Containers
+  - Persist Container Templates
+  - Reports: Pods for images per project, Pods per node
+  - Deployment wizard
+  - Models for container deployments
+  - Limit number of concurrent SmartState Analyses
+  - Allow policies to prevent Container image scans
+  - Chargeback rates based on container image tags
+  - Keep pod-container relationship after disconnection
+  - Label based Auto-Tagging UI
+- Google Compute Engine
+  - Use standard health states
+  - Provision Preemptible VMs
+  - Preemptible Instances
+  - Retirement support
+  - Metrics
+  - Load Balancer refresh
+- Middleware (Hawkular)  
+  - JMS support (entities, topology)
+  - Reports for Transactions (in App servers)
+  - Support micro-lifecycle for Middleware-deployments
+  - Alerts
+    - Link miq alerts and hawkular events on the provider
+    - Convert ManageIQ alerts/profiles to hawkular group triggers/members of group triggers
+    - Sync the provider when ManageIQ alerts and alert profiles are created/updated
+    - Support for alert profiles and alert automated expressions
+  - Added entities: Domains and Server Groups including their visualization in topology
+  - Datasource entity now has deletion operation
+  - Cross linking to VMs added to topology
+  - Operations: Add Deployment, Start/stop deployment
+  - Performance reports for datasources
+  - Collect more metrics for datasources
+  - Deployment entity operations: Undeploy, redeploy
+  - Server operations: Reload, suspend, resume
+  - Live metrics for datasources and transactions
+  - Performance reports for middleware servers
+  - Crosslink middleware servers with RHEV VMs
+  - Collect and display deployment status
+  - Datasources topology view
+  - Added missing fields in UI to improve user experience
+  - Middleware as top level menu item
+  - Default view for Middleware is datasource
+  - Change labels in middleware topology
+  - Added "Server State" into Middleware Server Details
+  - Enabled search for Middleware entities
+  - Users can add Middleware Datasources and JDBC Drivers
+  - Metrics for JMS Topics and Queues
+  - Add support to overwrite an existing deployment
+- Kubernetes: Cross-linking with OpenStack instances
+- Microsoft Cloud (Azure)
+  - Handle new events: Create Security Group, VM Capture
+  - Provider-specific logging
+  - Added memory and disk utilization metrics
+  - Support floating IPs during provisioning
+  - Load Balancer inventory collection for Azure
+  - Pagination support in armrest gem
+- Microsoft Infrastructure (SCVMM): Set CPU sockets and cores per socket
+- Networking
+  - Allow port ranges for Load Balancers
+  - Load Balancer user interface
+  - Separate Google Network Manager
+  - NFV: VNFD Templates and VNF Stacks
+  - Nuage: Inventory of Managed Cloud Subnets
+  - Nuage policy groups added
     - Load balancer service type actions for reconfigure, retirement, provisioning
-    - UI for creating subnets
-  - OpenStack
-    - Add hardware state for Hosts
+  - UI for creating subnets
+  - UI for Network elements
+- OpenStack
+  - Cloud
+    - Collect inventory for cloud volume backups
+    - UI: Cloud volume backup
+    - UI: CRUD for Host Aggregates
+    - UI: CRUD for OpenStack Cloud tenants
+    - Enable image snapshot
     - Map Flavors to Cloud Tenants during Openstack Cloud refresh
-    - Cinder backup/restore actions added to model
+    - Associate/Disassociate Floating IPs
+    - Region Support
+    - Create provider base tenant under a root tenant
+    - Topology
+  - Infrastructure
+    - Set boot image for registered hosts
+    - Node destroy deletes node from Ironic
+    - Enable node start and stop
+    - Ironic Controls
     - UI to register Ironic nodes through Mistral
-  - Red Hat Enterprise Virtualization
-    - Report manufacturer and product info for RHEVM hosts
-  - Storage
-    - New Swift Storage Manager
-    - New Cinder Storage Manager
-    - Initial User Interface support for Storage Managers
-  - VMware Cloud
-    - Cloud orchestration stack operation: Create and delete stack
-    - Collect virtual datacenters as availability zones
-    - Event Catcher
-  - VMware Infrastructure: Datastores are filtered by Storage Profiles in provisioning
-- REST API
-  - Version bumped to 2.3.0 in preparation for Euwe release
-  - New /api/automate primary collection
+    - Topology
+- Red Hat Enterprise Virtualization
+  - Get Host OS version and type
+  - Disk Management in VM Reconfigure
+  - Snapshot support
+  - Report manufacturer and product info for RHEVM hosts
+  - Make C&U Metrics Database a mandatory field for Validation
+  - Migrate support
+  - Enable VM reconfigure disks for supported version
+- Storage
+  - New Swift Storage Manager
+  - New Cinder Storage Manager
+  - Initial User Interface support for Storage Managers
+- VMware vSphere
+  - Storage Profiles modeling and inventory
+  - Datastores are filtered by Storage Profiles in provisioning
+- vCloud
+  - Collect status of vCloud Orchestration Stacks
+  - Add Network Manager
+  - Collect networking inventory
+  - Cloud orchestration stack operation: Create and delete stack
+  - Collect virtual datacenters as availability zones
+  - Event Catcher
+  - Event monitoring
+
+### REST API
+
+- Support for /api/requests creation and edits
+- Token manager supports for web sockets
+- Added ability to query virtual machines for cockpit support
+- Support for Bulk queries
+- Support for UI notification drawer
+- API entrypoint returns details about the appliance via server_info
+- Support for compressed ids in inbound requests
+- CRUD support for Arbitration Rules
+- Added GET role identifiers
+- Support for arbitrary resource paths
+- Support for Arbitration Profiles
+- Support for Cloud Networks queries
+- Support for Arbitration Settings
+- Updated /api/users to support edits of user settings
+- Support for report schedules
+- Support for approving or denying service requests
+- Support for OpenShift Container Deployments
+- Support for Virtual Templates
+- Added /api/automate primary collection
   - Enhanced to return additional product information for the About modal
   - Bulk queries now support referencing resources by attributes
   - Added ability to delete one’s own notifications
@@ -951,413 +792,245 @@ Instance method on Service class
   - CRUD for Service create and orchestration template
   - Api for refreshing automate domain from git
   - Allow compressed IDs in resource references
-- Service UI
-  - Create picture
-  - Generic requests OPTION method
-  - Delete dialogs API
-  - Updated the “update” API for blueprints to be more efficient
-  - Cockpit integration
-  - Added About modal
-- SmartState
-  - Containers: Settings for proxy environment variables
-- User Interface
-  - Add GUID validation for certain Azure fields in Cloud Provider screen
-  - OpenStack: Register new Ironic nodes through Mistral
-  - Timelines resdesigned
-  - vSphere Distributed Switches tagging
-  - Patternfly Labels for OpenSCAP Results
-  - Operations UI Notifications
 
+###  Service UI
 
-
-
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+47+Ending+Oct+3%2C+2016%22+label%3Aenhancement)
-
-- Automate:
-  - Changed Automate import to enable system domains
-  - Google schema changes in Cloud Provision Method class
-- Performance: Do not reload miq server in tree builder
-- Providers: vSphere Host storage device inventory collection improvements
-- REST API: Update API CLI to support the HTTP OPTIONS method.
-- User Interface
-  - Updated PatternFly to v3.11.0
-  - Summary Screen styling updates
-
-### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+47+Ending+Oct+3%2C+2016%22+label%3bugs)
-
-Notable fixes include:
-
-- Automate
-  - Fixed problem with request_pending email method
-  - Set User.current_user in Automation Engine to fix issue where provisioning resources were not being assigned to the correct tenant
-- Platform
-  - Use correct adjustment in chargeback reports
-  - Replication: Fix typo prevention full error message
-  - Tenancy: User friendly tenant names
-- Providers
-    - Openstack: Catch unauthorized exception in refresh
-    - Middleware: Fix operation timeout parameter fetch
-    - Red Hat Enterprise Virtualization: Access VM Cluster relationship correctly
-- Provisioning: VMware Infrastructure: sysprep_product_id field is no longer required
-- REST API
-  - API: Fix creation of Foreman provider
-  - Ensure api config references only valid miq_product_features
-- SmartState: Update logging and job error message when getting the service account for Containers
-- User Interface
-  - Add missing Searchbar and Advanced Search button
-  - Containers: Download to PDF/CSV/Text - don't download deleted containers
-  - Allow bring VM out of retirement from detail page
-  - Inconsitent menues in Middleware Views
-  - Save Authentication status on a Save
-  - User friendly tenant names
-  - RBAC:List only those VMs that the user has access to in planning
-
-## Unreleased - as of Sprint 46 end 2016-09-12
-
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+46+Ending+Sep+12%2C+2016%22+label%3Aenhancement)
-
-- Automate
-  - Import Rake task `OVERWRITE` argument: Setting  `OVERWRITE=true` removes the target domain prior to import
-  - New `extend_retires_on` method: Used by Automate methods to set a retirement date to specified number of days from today, or from a future date.
-  - Service model updates
-    - MiqAeServiceHardware
-    - MiqAeServicePartition
-    - MiqAeServiceVolume
-- Platform
-  - Centralized Administration
-    - Server to server authentication
-    - Invoke tasks on remote regions
-    - Leverage new API client (WIP)
-  - Chargeback
-    - Support for generating chargeback for services
-    - Will be used in Service UI for showing the cost of a service
-  - Database Maintenance
-    - Hourly reindex: High Churn Tables
-    - Periodic full vacuum
-    - Configure in appliance console
-  - Notification Backend
-    - Model for asynchronous notifications
-    - Authentication token generation for web sockets
-    - API for notification drawer
-  - PostgreSQL High Availability
-    - DB Cluster - Primary, Standbys
-    - Uses [repmgr](http://www.repmgr.org/) (replication)
-    - Failover
-      - Primary to Standby
-      - Appliance connects to new primary DB
-  - Tenancy: Mapping Cloud Tenants to ManageIQ Tenants
-    - Post refresh hook on OpenStack provider
-    - Create provider base tenant under a root tenant
-    - Cloud Tenant tree generated under provider base tenant
-    - Create / Update / Delete
-- Providers
-  - Containers
-    - Reports: Pods for images per project, Pods per node
-    - Deployment wizard
-  - Google Compute Engine: Provision Preemptible VMs
-  - Hawkular  
-    - JMS support (entities, topology)
-    - Reports for Transactions (in App servers)
-    - Support micro-lifecycle for Middleware-deployments
-    - Middleware provider now uses restful routes
-  - Microsoft Azure
-    - Handle new events: Create Security Group, VM Capture
-    - Provider-specific logging
-  - Networking
-    - Allow port ranges for Load Balancers
-    - Load Balancer user interface
-  - OpenStack
-    - Collect inventory for cloud volume backups
-    - Show topology for undercloud
-    - Associate/Disassociate Floating IPs
-  - Red Hat Enterprise Virtualization
-    - Get Host OS version and type
-    - Disk Management in VM Reconfigure
-  - VMware: Filter Storage by Profile
-  - vCloud
-    - Collect status of vCloud Orchestration Stacks
-    - Add Network Manager
-    - Collect networking inventory
-- REST API
-  - Token manager supports for web sockets
-  - Added querying for cockpit support
-  - Added support for Bulk queries
-  - Added support for UI notification drawer
-  - API entrypoint returns details about the appliance via server_info
-  - Blueprint updates now supports removal of the Service Catalog or Service Dialog from a Blueprint
-- Service Broker: Service UI (name change from Self Service UI)
-  - Renamed due to expanding number of use cases
-  - Adding in Arbitration Rules UI
-- User Interface
-  - Added mandatory Subscription field to Microsoft Azure Discovery screen
-  - Added Notifications Drawer and Toast Notifications List
-  - Added support for vSphere Distributed Switches
-  - Added support to show child/parent relations of Orchestration Stacks
-  - Added Middleware Messaging entities to topology chart
-
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+46+Ending+Sep+12%2C+2016%22+label%3Aenhancement)
-
-- Automate: Description for Datastore Reset action now includes list of target domains
-- Performance
-  - Page rendering
-    - Compute -> Infrastructure -> Virtual Machines: 9% faster, 32% fewer rows tested on 3k active vms and 3k archived vms
-    - Services -> My Services: 60% faster, 98% fewer queries, 32% fewer db rows returned
-  - `Ownershipmixin`
-    - Filtering now done in SQL
-    - 99.5% faster (93.8s -> 0.5s) testing
-      - VMs / All VMs / VMs I Own
-      - VMs / All VMs / VMs in My LDAP Group
-- User Interface: Dynatree replaced with bootstrap-treeview
-
-## Unreleased - as of Sprint 45 end 2016-08-22
-
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+45+Ending+Aug+22%2C+2016%22+label%3Aenhancement)
-
-- Automate
-  - Enhanced messaging for provisioning: Displayed elements
-    - ManageIQ Server name
-    - Name of VM/Service being provisioned
-    - Current Automate state machine step
-    - Status message
-    - Provision Task Message
-    - Retry count (when applicable)
-  - New method `taggable?` to programmatically determine if a Service Model class or instance is taggable.
-  - Generic Objects: Model updates
-    - Associations
-    - Tagging
-    - Service Methods: `add_to_service / remove_from_service`
-  - Git Automate support
-    - Branch/Tag support
-    - Contents are locked and can be copied to other domains for editing
-    - Editable properties
-      - Enabled/Disabled
-      - Priority
-      - Removal of Domain
-    - Dedicated Server Role to store the repository
-- Platform
-  - PostgreSQL High Availability
-    - Primary/Standby DB config in Appliance Console
-    - Database-only appliance config in Appliance Console
-    - Failover Monitor
-  - Tenancy
-    - Groundwork in preparation for supporting multiple entitlements
-    - ApplicationHelper#role_allows and User#role_allows? combined and moved to RBAC
-    - Post refresh hook to queue mapping of Cloud Tenants
-  - Database maintenance scripts added to appliance
-- Providers
-  - Containers: Models for container deployments
-  - Google Compute Engine
-    - Preemptible Instances
-    - Retirement support
-  - Hawkular    
-    - Alerts
-       - Link miq alerts and hawkular events on the provider
-       - Convert ManageIQ alerts/profiles to hawkular group triggers/members of group triggers
-       - Sync the provider when ManageIQ alerts and alert profiles are created/updated
-   - Added entities: Domains and Server Groups including their visualization in topology
-   - Datasource entity now has deletion operation
-   - Support more event types for datasource and deployment
-   - Cross linking to VMs added to topology
-  - Microsoft Azure: Added memory and disk utilization metrics
-  - OpenStack
-    - Host Aggregates
-    - Region Support
-  - Red Hat Enterprise Virtualization: Snapshot support
-  - VMware vSphere: Storage profiles
-- REST API
-  - Support for compressed ids in inbound requests
-  - CRUD support for Arbitration Rules
-- Service Broker
-  - Service Designer: Blueprint API is 90% done, edit and publish are still in development
+- Renamed from Self-Service UI due to expanding number of use cases
+- Language selections separated from Operations UI
+- Order History with detail
+- Added Arbitration Rules UI
+- Service Designer: Blueprint API
   - Arbitration Profiles
-      - Collection of pre-defined settings
-      - Work in conjunction with the Arbitration Engine
-  - Rules Engine: API completed
-- SmartState: Deployed new MiqDiskCache module for use with Microsoft Azure
-    - Scan time reduced from >20 minutes to <5 minutes
-    - Microsoft Azure backed read requests reduced from >7000 requests to <1000
-- User Interface
-  - I18n support for UI plugins
-  - Arbitration Profiles management for Service Broker
-  - Re-check Authentication button added to Provider list views
-  - Provisioning button added to the Templates & Images list and summary screens
-  - Subtype option added to Generic Catalog Items
-  - About modal added to OPS UI
+    - Collection of pre-defined settings
+    - Work in conjunction with the Arbitration Engine
+  - Rules Engine: API
+- Added datastore for the default settings for resourceless servers
+- Create picture
+- Generic requests OPTION method
+- API for Delete dialogs
+- Cockpit integration: Added About modal
+- Set default visibility to true for all dialog fields
 
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+45+Ending+Aug+22%2C+2016%22+label%3Aenhancement)
+### SmartState
 
-- Performance: Page rendering performance
+- Add /etc/redhat-access-insights/machine-id to the sample VM analysis
+- Deployed new MiqDiskCache module for use with Microsoft Azure
+  - Scan time reduced from >20 minutes to <5 minutes
+  - Microsoft Azure backed read requests reduced from >7000 requests to <1000
+- Generalized disk LRU caching module
+  - Caching module can be used by any disk module, eliminating duplication.
+  - Can be inserted “higher” in the IO path.
+  - Configurable caching parameters (memory vs performance)
+  - Will be employed to address Azure performance and throttling issues.
+  - Other disk modules converted over time.
+- Containers: Settings for proxy environment variables
+- Support analysis of VMs residing on NFS41 datastores
+
+### User Interface
+
+- Added mandatory Subscription field to Microsoft Azure Discovery screen
+- Added Notifications Drawer and Toast Notifications List
+- Added support for vSphere Distributed Switches
+- Added support to show child/parent relations of Orchestration Stacks
+- Added Middleware Messaging entities to topology chart
+- Arbitration Profiles management for Service Broker
+- Re-check Authentication button added to Provider list views
+- Provisioning button added to the Templates & Images list and summary screens
+- Subtype option added to Generic Catalog Items
+- About modal added to OPS UI
+- Both UIs updated to latest PatternFly and Angular PatternFly
+- Internationalization
+  - Virtual Columns
+  - Toolbars
+  - Changed to use gettext’s pluralization
+  - i18n support in pdf reports
+  - i18n support for UI plugins
+- Ansible Tower Jobs moved to the Configuration tab (from Clouds/Stacks)
+- Interactivity added to C3 charts on C&U screens  
+- Settings moved to top right navigation header
+- Tagging for Ansible Tower job templates
+- Live Search added to bootstrap selects
+- Add GUID validation for certain Azure fields in Cloud Provider screen
+- OpenStack: Register new Ironic nodes through Mistral
+- Timeline resdesign
+- vSphere Distributed Switches tagging
+- Patternfly Labels for OpenSCAP Results
+- Notifications
+- Conversion of Middleware Provider form to Angular
+- Add UI for generating authorization keys for remote regions
+- Topology for Cloud Managers
+- Topology for Infrastructure Providers
+- Show replication excluded tables to the replication tab in Settings
+- Fix angular controller for Network Router and Cloud Subnet
+
+## Changed
+
+### Automate
+
+- Description for Datastore Reset action now includes list of target domains
+- Simulation: Updated defaults
+  - Entry-point: `/System/Process/Request` (Previous value of “Automation”)
+  - Execute Method: Enabled
+- Infrastructure Provision: Updated memory values for VM provisioning dialogs to 1, 2, 4, 8, 12, 16, 32 GB
+- Generic Object: Model refactoring/cleanup, use PostgreSQL jsonb column
+- Changed Automate import to enable system domains
+- Google schema changes in Cloud Provision Method class
+
+### Performance
+
+- Page rendering
+  - Compute -> Infrastructure -> Virtual Machines: 9% faster, 32% fewer rows tested on 3k active vms and 3k archived vms
+  - Services -> My Services: 60% faster, 98% fewer queries, 32% fewer db rows returned
   - Services -> Workloads -> All VMs page load time reduced from 93,770ms to 524ms (99%) with a test of 20,000 VMs
-- Platform
-  - Upgrade ruby 2.2.5 to 2.3.1
-  - Configure Rails web server - Puma or Thin
-    - Puma is still the default
-    - Planning on adding additional servers
+- `OwnershipMixin`
+  - Filtering now done in SQL
+  - 99.5% faster (93.8s -> 0.5s) testing
+    - VMs / All VMs / VMs I Own
+    - VMs / All VMs / VMs in My LDAP Group
+- Reduced the time and memory required to schedule Capacity and Utilization data collection.
+- Capacity and Utlization improvements included reduced number of SQL queries and number of objects
+- Improved tag processing for Alert Profiles
+- Do not reload miq server in tree builder
+- Prune VM Tree folders first, so nodes can be properly prune and tree nodes can then be collapsed
+- For resource_pools only bring back usable Resource Pools
 
-### [Fixes](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+45+Ending+Aug+22%2C+2016%22+label%3A"technical+debt")
+### Platform
 
-Notable fixes include:
-- Microsoft Azure: Fix proxy for template lookups
-- VMware vSphere: Block duplicate events
-- REST API
-  - Hide internal Tenant Groups from /api/groups
-  - Raise 403 Forbidden for deleting read-only groups
-  - API Request logging
+- Upgrade ruby 2.2.5 to 2.3.1
+- Configure Rails web server - Puma or Thin
+  - Puma is still the default
+  - Planning on adding additional servers
+- Expression refactoring and cleanup with relative dates and times
+- Set appliance "system" memory/swap information
+- PostgreSQL upgraded to 9.5 needed for HA feature
+- Performance: Lazy load message catalogs for faster startup and reduced memory
+- Replication: Added "deprecated" in replication worker screen (Rubyrep replication removed in Euwe release)
+- Tenancy: Splitting MiqGroup
+  - Filters moved to to Entitlement model
+  - Enabler for sharing entitlements   
+- MiqExpression Refactoring
+- LDAP: Allow apostrophes in email addresses
 
-## Unreleased - as of Sprint 44 end 2016-08-1
+### Providers
 
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+44+Ending+Aug+1%2C+2016%22+label%3Aenhancement)
-
-- Automate
-  - Simulation: RBAC filtering applied to Object Attributes
-  - Service Provisioning: Exposed number_of_vms when building the provision request for a service
-  - Service Dialogs: Support for “visible” flag for dynamic fields
-  - Expose Compliance and ComplianceDetail models
-  - New associations on VmOrTemplate and Host models:
-    - `expose :compliances`
-    - `expose :last_compliance`
-  - New Service Models
-    - Compliance: `expose :compliance_details`
-    - ComplianceDetail: `expose :compliance`, `expose :miq_policy`
-  - Generic Object: Service models created for GenericObject and GenericObjectDefinition
-- Platform
-  - PostgreSQL High Availability
-    - Added [repmgr](http://repmgr.org/)  to support automatic failover
-    - Maintain list of active standby database servers
-    - Added [pg-dsn_parser](https://github.com/ManageIQ/pg-dsn_parser) for converting DSN to a hash
-  - Tenancy: Added parent_id to CloudTenant as prerequisite for mapping OpenStack tenants to ManageIQ tenants
-  - Watermark reports updated to be based on max of daily max value instead of max of average value
-  - Nice values added to worker processes
--  Providers
-  - Google Compute Engine: Metrics
-  - Hawkular
-    - Operations: Add Deployment, Start/stop deployment
-    - Performance reports for datasources
-    - Collect more metrics for datasource
-  - Kubernetes: Cross-linking with OpenStack instances
-  - Microsoft Azure: Support floating IPs during provisioning
-  - Nuage: Inventory of Managed Cloud Subnets
-  - Red Hat Enterprise Virtualization: v4 API
-  - VMware vSphere: Storage Profiles modeling and inventory
-  - VMware vCloud: Initial PRs for modeling and inventory
-- REST API
-  - Support for arbitrary resource paths
-  - Work started on [ManageIQ API Client](https://github.com/ManageIQ/manageiq-api-client)
-  - Support for Arbitration Profiles
-  - Support for Cloud Networks queries
-  - Support for Arbitration Settings
-  - Updated /api/users to support edits of user settings
-- User Interface
-  - Both UIs updated to latest PatternFly and Angular PatternFly
-  - Self Service UI language selections separated from Operations UI
-  - Internationalization
-    - Virtual Columns
-    - Toolbars
-    - Removed string interpolation (for better localization)
-    - Changed to use gettext’s pluralization
-  - Ansible Tower Jobs moved to the Configuration tab (from Clouds/Stacks)
-  - Interactivity added to C3 charts on C&U screens  
-
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+44+Ending+Aug+1%2C+2016%22+label%3Aenhancement)
-
-- Automate
-  - Simulation: Updated defaults
-    - Entry-point: `/System/Process/Request` (Previous value of “Automation”)
-    - Execute Method: Enabled
-  - Infrastructure Provision: Updated memory values for VM provisioning dialogs to 1, 2, 4, 8, 12, 16, 32 GB
-- Performance: Reduced the time and memory required to schedule Capacity and Utilization data collection.
-- Platform: Expression refactoring and cleanup with relative dates and times
-- Providers: Hawkular
+- Core
+  - Remove provider specific constants
+  - Ask whether provider supports VM architecture instead of assuming support by provider type
+- Ansible: Automate method updated to pass JobTemplate “Extra Variables” defined in the Provision Task
+- Hawkular
   - Upgrade of Hawkular gem to 2.3.0
   - Skip unreachable middleware providers when reporting
   - Add re-checking authentication status functionality/button
-- User Interface
-  - Converted to TreeBuilder - Snapshot, Policy, Policy RSOP, C&U Build Datastores and Clusters/Hosts, Automate Results
-  - CodeMirror version updated (used for text/yaml editors)
+  - Refactor infrastructure for easier configuration
+  - Optimization and enhancement of event fetching
+- Microsoft SCVMM: Set default security protocol to ssl
+- vSphere Host storage device inventory collection improvements
 
-### [Removed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+44+Ending+Aug+1%2C+2016%22+label%3Aenhancement)
+### REST API
+
+- Updated /api entrypoint so collection list is sorted
+- API CLI moved to tools/rest_api.rb
+- Update API CLI to support the HTTP OPTIONS method
+
+### User Interface
+
+- Dynatree replaced with bootstrap-treeview
+- Converted to TreeBuilder - Snapshot, Policy, Policy RSOP, C&U Build Datastores and Clusters/Hosts, Automate Results
+- CodeMirror version updated (used for text/yaml editors)
+- Default Filters tree converted to TreeBuilder - more on the way
+- Cloud Key Pair form converted to AngularJS
+- Toolbars:Cleaned up partials, YAML -> classes
+- Provider Forms: Credentials Validation improvements
+- Updated PatternFly to v3.11.0
+- Summary Screen styling updates
+
+## Removed
 
 - Platform
   - Removed rubyrep
   - Removed hourly checking of log growth and rotation if > 1gb
 - User Interface: Explorer Presenter RJS removal
 
-## Unreleased - as of Sprint 43 end 2016-07-11
+## Fixed
 
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+43+Ending+July+11%2C+2016%22+label%3Aenhancement)
+Notable fixes include:
 
-- Automate
-  - Service resolution based on Provision Order
-  - Added /System/Process/MiqEvent instance
-  - Added Provider refresh call to Amazon retire state machine in Pre-Retirement state
-  - Service Dialogs: Added ‘Visible’ flag to all dialog fields
-  - Class Schema allows for EMS, Host, Policy, Provision, Request, Server, Storage, and VM(or Template) datatypes
-    - Value is id of the objects
-    - If object is not found, the attribute is not defined.
-  - Null Coalescing Operator
-    - Multiple String values separated by “||”
-    - Evaluated on new attribute data type “Null Coalescing”
-    - Order dependent, left to right evaluation
-    - First non-blank value is used
-    - Skip and warn about missing objects
-- Platform: Custom attributes support in reporting and expressions
-  - Selectable as a column
-  - Usable in report filters and charts
-- Providers
-  - Amazon: Public Images Filter
-  - Networking
-    - Separate Google Network Manager
-    - NFV: VNFD Templates and VNF Stacks
-  - Hawkular
-    - Deployment entity operations: Undeploy, redeploy
-    - Server operations: Reload, suspend, resume
-    - Live metrics for datasources and transactions
-    - Performance reports for middleware servers
-    - Support for alert profiles and alert automated expressions for middleware server
-    - Crosslink middleware servers with RHEV VMs
-    - Collect and display deployment status
-    - Datasources topology view
-- REST API
-  - Support for report schedules
-  - Support for approving or denying service requests
-  - Support for OpenShift Container Deployments
-  - Support for Virtual Templates
-- Service Broker
-  - Started work on Service Broker to allow ManageIQ to select VM for you based on criteria (cloud, cost, or performance)
-  - Added API backend for Resourceless Servers
-  - Added datastore for the default settings for resourceless servers
-- SmartState: Generalized disk LRU caching module
-  - Caching module can be used by any disk module, eliminating duplication.
-  - Can be inserted “higher” in the IO path.
-  - Configurable caching parameters (memory vs performance)
-  - Will be employed to address Azure performance and throttling issues.
-  - Other disk modules converted over time.
-- User Interface
-  - Settings moved to top right navigation header
-  - C3 Charts fully implemented - chart interaction coming soon!
-  - Tagging for Ansible Tower job templates
-  - Live Search added to bootstrap selects
-  - Self Service UI Order History with detail
+### Automate
 
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+43+Ending+July+11%2C+2016%22+label%3Aenhancement)
+- Fixed case where user can't add alerts
+- Fixed issue where alerts don't send SNMP v1 traps
+- Fixed problem with request_pending email method
+- Set User.current_user in Automation Engine to fix issue where provisioning resources were not being assigned to the correct tenant
+- Provisioning
+  - VMware Infrastructure: sysprep_product_id field is no longer required
+  - Provisioned Notifications - Use Automate notifications instead of event notifications.
+- Fixed ordering ae_domains for a root tenant
+- Set default value of param visible to true for all field types
+- Git Domains
+  - When a domain is deleted, also delete git based bare repository on the appliance with the git owner server role
+  - Only enable git import submit button when a branch or tag is selected
 
-- Automate: Generic Object: Model refactoring/cleanup, use PostgreSQL jsonb column
-- Performance
-  - Capacity and Utlization improvements included reduced number of SQL queries and number of objects
-  - Improved tag processing for Alert Profiles
-  - UI Performance: specific pages targeted resulted in up to 98% reduction in rendering for those pages
-- Platform: PostgreSQL upgraded to 9.5 needed for HA feature
-- Providers:
-  - Pluggability: Began extraction of Amazon Provider into separate repository
-  - Hawkular
-      - Upgraded to hawkular gem version 2.2.1
-      - Refactor infrastructure for easier configuration
-  - Ansible: Automate method updated to pass JobTemplate “Extra Variables” defined in the Provision Task
-- User Interface
-  - Default Filters tree converted to TreeBuilder - more on the way
-  - Cloud Key Pair form converted to AngularJS (Dana - UX team)
-  - Toolbars:Cleaned up partials, YAML -> classes
-  - Provider Forms: Credentials Validation improvements
+### Platform
+
+-  Authentication
+  - Support a separate auth URL for external authentication
+  - Remove the FQDN from group names for external authentication
+- Use correct adjustment in chargeback reports
+- Replication
+  - Add repmgr tables to replication excludes
+  - Don't consider tables that are always excluded during the schema check
+  - Fix typo prevention full error message
+- Tenancy: User friendly tenant names
+- Perform RBAC user filter check on requested ids before allowing request
+- Increase worker memory thresholds to avoid frequent restarts
+- Send notifications only when user is authorized to see referenced object
+- Increase  web socket worker's pool size
+
+### Providers
+
+- Fix targeted refresh of a VM without its host clearing all folder relationships
+- Containers: Ability to add a container provider with a port other than 8443
+- Microsoft Azure: Fix proxy for template lookups
+- VMware vSphere: Block duplicate events
+- VMware: Fix for adding multiple disks
+- Openstack
+  - Catch unauthorized exception in refresh
+  - Add logs for network and subnet CRUD
+  - Remove port_security_enabled from attributes passed to network create
+- Middleware: Fix operation timeout parameter fetch
+- Red Hat Enterprise Virtualization
+  - Access VM Cluster relationship correctly
+  - Pass storage domains collection in disks RHV api request
+  - Require a description when creating Snapshot
+
+### REST API
+
+- Hide internal Tenant Groups from /api/groups
+- Raise 403 Forbidden for deleting read-only groups
+- API Request logging
+- Fix creation of Foreman provider
+- Ensure api config references only valid miq_product_features
+
+### SmartState
+
+- Update logging and job error message when getting the service account for Containers
+
+### User Interface
+
+- Add missing Searchbar and Advanced Search button
+- Containers: Download to PDF/CSV/Text - don't download deleted containers
+- Ability to bring VM out of retirement from detail page
+- Inconsistent menus in Middleware Views
+- Save Authentication status on a Save
+- RBAC:List only those VMs that the user has access to in planning
+- Enable Provision VMs button via relationships
+- Missing reset button for Job Template Service Dialog
+- Fix for custom logo in header
+- Fall back to VMRC desktop client if no NPAPI plugin is available
+- Default Filters can be saved or reset
+- Prevent service dialog refreshing every time a dropdown item is selected
+- RBAC: Add Storage Product Features for Roles
+- Set categories correctly for policy timelines
 
 ## Unreleased - as of Sprint 42 end 2016-06-20
 
@@ -1406,35 +1079,6 @@ Notable fixes include:
 - Providers
   - Hawkular: Fixes for LiveMetrics
   - VMware: Fix for adding multiple disks
-
-## Unreleased - as of Sprint 41 end 2016-05-30
-
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+41+Ending+May+30%2C+2016%22+label%3Aenhancement)
-
-- REST API: API CLI moved to tools/rest_api.rb
-- Providers: Hawkular
-  - Test additions for topology
-  - Optimization and enhancement of event fetching
-
-### [Removed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+41+Ending+May+30%2C+2016%22+label%3A"technical debt")
-
-- REST API: gems/cfme_client removed
-
-## Unreleased - as of Sprint 40 end 2016-05-09
-
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+40+Ending+May+30%2C+2016%22+label%3Aenhancement)
-
-- REST API
-  - Post Darga versioning updated to v2.3.0-pre
-  - Added GET role identifiers
-
-### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+40+Ending+May+9%2C+2016%22+label%3Aenhancement)
-
-- Platform
-  - Tenancy: Splitting MiqGroup, Part 2
-     - Filters moved to to Entitlement model
-     - Enabler for sharing entitlements   
-   - MiqExpression Refactoring
 
 # Darga
 
