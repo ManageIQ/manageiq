@@ -31,10 +31,6 @@ module Api
         api_error(type, e.message, e.class.name, e.backtrace.join("\n"), Rack::Utils.status_code(type))
       end
 
-      def api_error_type(type, message)
-        api_error(type, message, self.class.name, "", Rack::Utils.status_code(type))
-      end
-
       private
 
       def api_error(kind, message, klass, backtrace, status)
