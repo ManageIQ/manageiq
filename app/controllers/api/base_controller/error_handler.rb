@@ -23,12 +23,8 @@ module Api
 
       module ClassMethods
         def rescue_from_api_errors
-          ERROR_MAPPING.each { |error, type| rescue_from(error) { |e| api_exception_type(type, e) } }
+          ERROR_MAPPING.each { |error, type| rescue_from(error) { |e| api_error(type, e) } }
         end
-      end
-
-      def api_exception_type(type, e)
-        api_error(type, e)
       end
 
       private
