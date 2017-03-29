@@ -373,33 +373,23 @@ describe MiqQueue do
       expect(MiqQueue.first.state).to eq(MiqQueue::STATE_READY)
     end
 
-    it "should respect hash updates in put_unless_exists" do
+    it "should yield object found" do
       MiqQueue.put_unless_exists(
         :class_name  => 'MyClass',
         :method_name => 'method1',
         :args        => [1, 2]
-      ) do |_msg, find_options|
-        find_options.merge(:args => [3, 3])
+      ) do |msg, _find_options|
+        expect(msg).to be_nil
+        nil
       end
-
-      expect(MiqQueue.first.args).to eq([3, 3])
-    end
-
-    it "should not call into put_unless_exists" do
       MiqQueue.put_unless_exists(
         :class_name  => 'MyClass',
         :method_name => 'method1',
         :args        => [1, 2]
-      )
-      MiqQueue.put_unless_exists(
-        :class_name  => 'MyClass',
-        :method_name => 'method1',
-        :args        => [1, 2]
-      ) do |_msg, find_options|
-        find_options.merge(:args => [3, 3])
+      ) do |msg, _find_options|
+        expect(msg).not_to be_nil
+        nil
       end
-
-      expect(MiqQueue.first.args).to eq([1, 2])
     end
 
     it "should not put duplicate messages on the queue" do
@@ -423,6 +413,38 @@ describe MiqQueue do
   context "#put_or_update" do
     before do
       _, @miq_server, = EvmSpecHelper.create_guid_miq_server_zone
+    end
+
+    it "should respect hash updates in put_or_update for create" do
+      MiqQueue.put_or_update(
+        :class_name  => 'MyClass',
+        :method_name => 'method1',
+        :args        => [1, 2]
+      ) do |_msg, find_options|
+        find_options.merge(:args => [3, 3])
+      end
+
+      expect(MiqQueue.first.args).to eq([3, 3])
+    end
+
+    it "should respect hash updates in put_or_update for update" do
+      MiqQueue.put_or_update(
+        :class_name  => 'MyClass',
+        :method_name => 'method1',
+        :args        => [1, 2]
+      )
+
+      expect(MiqQueue.first.args).to eq([1, 2])
+
+      MiqQueue.put_or_update(
+        :class_name  => 'MyClass',
+        :method_name => 'method1',
+        :args        => [1, 2]
+      ) do |_msg, find_options|
+        find_options.merge(:args => [3, 3])
+      end
+
+      expect(MiqQueue.first.args).to eq([3, 3])
     end
 
     it "should use args param to find messages on the queue" do
