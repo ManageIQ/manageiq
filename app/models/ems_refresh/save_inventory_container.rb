@@ -401,6 +401,8 @@ module EmsRefresh::SaveInventoryContainer
   end
 
   def save_custom_attribute_attribute_inventory(entity, attribute_name, hashes, target = nil)
+    # This serves the AWS labels refresh also.
+
     return if hashes.nil?
 
     entity.send(attribute_name).reset
@@ -412,6 +414,8 @@ module EmsRefresh::SaveInventoryContainer
   end
 
   def save_labels_inventory(entity, hashes, target = nil)
+    # This serves the AWS labels refresh also.
+
     save_custom_attribute_attribute_inventory(entity, :labels, hashes, target)
   end
 
