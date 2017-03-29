@@ -119,3 +119,23 @@
   :expires_in: 24.hours
   :level: :info
   :audience: superadmin
+- :name: vm_cloud_live_migrate_success
+  :message: 'Live migrating Instance %{instance_name} completed successfully.'
+  :expires_in: 24.hours
+  :audience: global
+  :level: :success
+- :name: vm_cloud_live_migrate_error
+  :message: 'Live migrating Instance %{instance_name} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: vm_cloud_evacuate_success
+  :message: 'Evacuating Instance %{instance_name} completed successfully.'
+  :expires_in: 24.hours
+  :audience: global
+  :level: :success
+- :name: vm_cloud_evacuate_error
+  :message: 'Evacuating Instance %{instance_name} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
