@@ -9,7 +9,10 @@ class ConfigurationScriptBase < ApplicationRecord
   belongs_to :manager,              :class_name => "ExtManagementSystem"
 
   belongs_to :parent,               :class_name => "ConfigurationScriptBase"
-  has_many   :children,             :class_name => "ConfigurationScriptBase", :foreign_key => "parent_id"
+  has_many   :children,
+             :class_name  => "ConfigurationScriptBase",
+             :foreign_key => "parent_id",
+             :dependent   => :nullify
 
   has_many   :authentication_configuration_script_bases,
              :dependent => :destroy
