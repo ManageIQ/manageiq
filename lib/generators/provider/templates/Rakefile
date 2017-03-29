@@ -1,5 +1,4 @@
 require 'bundler/setup'
-require 'bundler/gem_tasks'
 require 'manageiq-providers-<%= provider_name %>'
 
 begin
@@ -7,8 +6,11 @@ begin
 
   APP_RAKEFILE = File.expand_path("../spec/manageiq/Rakefile", __FILE__)
   load 'rails/tasks/engine.rake'
+  load 'rails/tasks/statistics.rake'
 rescue LoadError
 end
+
+require 'bundler/gem_tasks'
 
 FileList['lib/tasks_private/**/*.rake'].each { |r| load r }
 
