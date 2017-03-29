@@ -9,16 +9,10 @@ module MiqReport::Formatting
       sfx = col.to_s.split("__").last
       MiqReport::Formats.available_formats_for(col, sfx, dt)
     end
-
-    def get_default_format(path, dt)
-      col = path.split("-").last.to_sym
-      sfx = col.to_s.split("__").last.try(:to_sym)
-      MiqReport::Formats.default_format_for(col, sfx, dt)
-    end
   end
 
   def javascript_format(col, format_name)
-    format_name ||= self.class.get_default_format(col, nil)
+    format_name ||= MiqReport::Formats.get_default_format_path(col, nil)
     return nil unless format_name && format_name != :_none_
 
     format = MiqReport::Formats.details(format_name)
