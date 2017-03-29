@@ -323,7 +323,7 @@ describe MiqQueue do
       end
     end
 
-    it "defaults args / miq_callback to [] / {}" do
+    it "defaults :args" do
       msg = MiqQueue.put(
         :class_name  => "Class1",
         :method_name => "Method1",
@@ -331,13 +331,150 @@ describe MiqQueue do
 
       msg_from_db = MiqQueue.find(msg.id)
       expect(msg_from_db.args).to eq([])
+    end
+
+    it "defaults :miq_callback" do
+      msg = MiqQueue.put(
+        :class_name  => "Class1",
+        :method_name => "Method1",
+      )
+
+      msg_from_db = MiqQueue.find(msg.id)
       expect(msg_from_db.miq_callback).to eq({})
+    end
+
+    it "creates with :miq_callback" do
+      miq_callback = {
+        :class_name  => "Class1",
+        :method_name => "callback_method",
+      }
+
+      msg = MiqQueue.put(
+        :class_name   => "Class1",
+        :method_name  => "Method1",
+        :miq_callback => miq_callback
+      )
+
+      msg_from_db = MiqQueue.find(msg.id)
+      expect(msg_from_db.miq_callback).to include(miq_callback)
+    end
+
+    it "creates with :miq_callback via create_with" do
+      miq_callback = {
+        :class_name  => "Class1",
+        :method_name => "callback_method",
+      }
+
+      msg = MiqQueue.create_with(:miq_callback => miq_callback).put(
+        :class_name  => "Class1",
+        :method_name => "Method1",
+      )
+
+      msg_from_db = MiqQueue.find(msg.id)
+      expect(msg_from_db.miq_callback).to include(miq_callback)
     end
 
     it "does not allow objects on the queue" do
       expect do
         MiqQueue.put(:class_name => 'MyClass', :method_name => 'method1', :args => [MiqServer.first])
       end.to raise_error(ArgumentError)
+    end
+
+    it "defaults :queue_name" do
+      msg = MiqQueue.put(
+        :class_name  => 'MyClass',
+        :method_name => 'method1',
+        :args        => [1, 2],
+      )
+      expect(msg.queue_name).to eq("generic")
+    end
+
+    it "sets other :queue_name" do
+      msg = MiqQueue.put(
+        :class_name  => 'MyClass',
+        :method_name => 'method1',
+        :args        => [1, 2],
+        :queue_name  => "other"
+      )
+      expect(msg.queue_name).to eq("other")
+    end
+
+    it "defaults :priority" do
+      msg = MiqQueue.put(
+        :class_name  => 'MyClass',
+        :method_name => 'method1',
+        :args        => [1, 2],
+      )
+      expect(msg.priority).to eq(MiqQueue::NORMAL_PRIORITY)
+    end
+
+    it "sets :prority" do
+      msg = MiqQueue.put(
+        :class_name  => 'MyClass',
+        :method_name => 'method1',
+        :args        => [1, 2],
+        :priority    => MiqQueue::LOW_PRIORITY
+      )
+      expect(msg.priority).to eq(MiqQueue::LOW_PRIORITY)
+    end
+
+    it "defaults :role" do
+      msg = MiqQueue.put(
+        :class_name  => 'MyClass',
+        :method_name => 'method1',
+        :args        => [1, 2],
+      )
+      expect(msg.role).to eq(nil)
+    end
+
+    it "defaults :server_guid" do
+      msg = MiqQueue.put(
+        :class_name  => 'MyClass',
+        :method_name => 'method1',
+        :args        => [1, 2],
+      )
+      expect(msg.server_guid).to eq(nil)
+    end
+
+    it "defaults :msg_timeout" do
+      msg = MiqQueue.put(
+        :class_name  => 'MyClass',
+        :method_name => 'method1',
+        :args        => [1, 2],
+      )
+      expect(msg.msg_timeout).to eq(MiqQueue::TIMEOUT)
+    end
+
+    it "sets :msg_timeout" do
+      msg = MiqQueue.put(
+        :class_name  => 'MyClass',
+        :method_name => 'method1',
+        :args        => [1, 2],
+        :msg_timeout => 3.minutes
+      )
+      expect(msg.msg_timeout).to eq(3.minutes)
+    end
+
+    it "defaults :deliver_on" do
+      msg = MiqQueue.put(
+        :class_name  => 'MyClass',
+        :method_name => 'method1',
+        :args        => [1, 2],
+      )
+      expect(msg.deliver_on).to eq(nil)
+    end
+
+    it "creates with :deliver_on" do
+      deliver_on = 10.minutes.ago.change(:usec => 0)
+
+      msg = MiqQueue.put(
+        :class_name  => "Class1",
+        :method_name => "Method1",
+        :deliver_on  => deliver_on
+      )
+
+      msg_from_db = MiqQueue.find(msg.id)
+      expect(msg_from_db.deliver_on).to eq(deliver_on)
     end
   end
 
@@ -407,6 +544,29 @@ describe MiqQueue do
 
       expect(MiqQueue.get).to eq(msg1)
       expect(MiqQueue.get).to eq(nil)
+    end
+
+    it "should add create_with options" do
+      MiqQueue.create_with(:args => [3, 3]).put_unless_exists(
+        :class_name  => 'MyClass',
+        :method_name => 'method1',
+      )
+
+      expect(MiqQueue.first.args).to eq([3, 3])
+    end
+
+    it "should not update create_with options" do
+      MiqQueue.create_with(:args => [3, 3]).put_unless_exists(
+        :class_name  => 'MyClass',
+        :method_name => 'method1',
+      )
+
+      MiqQueue.create_with(:args => [1, 2]).put_unless_exists(
+        :class_name  => 'MyClass',
+        :method_name => 'method1',
+      )
+
+      expect(MiqQueue.first.args).to eq([3, 3])
     end
   end
 
