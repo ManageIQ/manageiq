@@ -1,0 +1,12 @@
+# Apache Directives
+---
+:scl24: &scl24
+  :scl: true
+  :package_name: httpd24
+  :service_name: httpd24-httpd
+  :root_dir: /opt/rh/httpd24/root
+  :base_dir: /opt/rh/httpd24/root/etc/httpd
+  :config_dir: /opt/rh/httpd24/root/etc/httpd/conf.d
+  :apachectl: /opt/rh/httpd24/root/usr/sbin/apachectl
+# Appliance Apache Deployment
+<<: *scl24

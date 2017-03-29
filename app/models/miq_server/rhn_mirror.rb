@@ -3,7 +3,7 @@ require 'miq_apache'
 
 module MiqServer::RhnMirror
   extend ActiveSupport::Concern
-  APACHE_MIRROR_CONF_FILE = "/etc/httpd/conf.d/manageiq-https-mirror.conf"
+  APACHE_MIRROR_CONF_FILE = "#{MiqApache.config_dir}/manageiq-https-mirror.conf".freeze
   YUM_MIRROR_CONF_FILE    = "/etc/yum.repos.d/manageiq-mirror.repo"
 
   def configure_rhn_mirror_client
