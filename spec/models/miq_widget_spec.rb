@@ -82,6 +82,17 @@ describe MiqWidget do
         @widget.queue_generate_content_for_users_or_group(@user1.userid)
         expect(MiqQueue.exists?({:method_name => "generate_content"}.merge(@queue_conditions))).to be_truthy
       end
+
+      it "inserts a callback for tasks" do
+        @widget.create_miq_task
+        @widget.queue_generate_content_for_users_or_group([@user1.userid, @user2.userid])
+        expect(MiqQueue.where(@queue_conditions).count).to eq(1)
+        expect(MiqQueue.find_by(@queue_conditions).miq_callback).to eq(
+          :class_name  => @widget.class.name,
+          :instance_id => @widget.id,
+          :method_name => :generate_content_complete_callback
+        )
+      end
     end
 
     context "#grouped_subscribers" do
