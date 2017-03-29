@@ -33,9 +33,9 @@ module Api
 
       private
 
-      def api_error(kind, message, klass, backtrace, status)
+      def api_error(type, message, klass, backtrace, status)
         err = {
-          :kind    => kind,
+          :kind    => type,
           :message => message,
           :klass   => klass
         }
@@ -43,7 +43,7 @@ module Api
 
         api_log_error("#{klass}: #{message}")
         # We don't want to return the stack trace, but only log it in case of an internal error
-        api_log_error("\n\n#{backtrace}") if kind == :internal_server_error && !backtrace.empty?
+        api_log_error("\n\n#{backtrace}") if type == :internal_server_error && !backtrace.empty?
 
         render :json => {:error => err}, :status => status
         log_api_response
