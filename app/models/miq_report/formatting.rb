@@ -55,11 +55,11 @@ module MiqReport::Formatting
 
     # Use default format for column stil nil
     if format.nil? || format == :_default_
-      dt = MiqExpression.get_col_type(col_to_expression_col(col))
+      expression_col = col_to_expression_col(col)
+      dt = MiqExpression.get_col_type(expression_col)
       dt = value.class.to_s.downcase.to_sym if dt.nil?
       dt = dt.to_sym unless dt.nil?
-      sfx = col.to_s.split('__').last.try(:to_sym)
-      format = MiqReport::Formats.default_format_details_for(col, sfx, dt)
+      format = MiqReport::Formats.default_format_details_for(expression_col, col, dt)
     else
       format = format.deep_clone # Make sure we don't taint the original
     end

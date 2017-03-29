@@ -32,8 +32,8 @@ class MiqReport::Formats
       DEFAULTS_AND_OVERRIDES[:formats_by_data_type][datatype]
   end
 
-  def self.default_format_details_for(column, suffix, datatype)
-    format = FORMATS[default_format_for(column.to_sym, suffix, datatype)]
+  def self.default_format_details_for(path, column, datatype)
+    format = FORMATS[default_format_for_path(path, datatype)]
     if format
       format = format.deep_clone # Make sure we don't taint the original
       if DEFAULTS_AND_OVERRIDES[:precision_by_column].key?(column.to_sym)
