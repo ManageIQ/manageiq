@@ -35,18 +35,11 @@ module Api
         backtrace = error.backtrace.join("\n")
         status = Rack::Utils.status_code(type)
 
-        err = {
-          :kind    => type,
-          :message => message,
-          :klass   => klass
-        }
-        err[:backtrace] = backtrace if Rails.env.test?
-
         api_log_error("#{klass}: #{message}")
         # We don't want to return the stack trace, but only log it in case of an internal error
         api_log_error("\n\n#{backtrace}") if type == :internal_server_error && !backtrace.empty?
 
-        render :json => {:error => err}, :status => status
+        render :json => ErrorSerializer.new(type, error).serialize, :status => status
         log_api_response
       end
     end
