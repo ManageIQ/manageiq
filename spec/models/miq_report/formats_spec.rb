@@ -1,4 +1,22 @@
 describe MiqReport::Formats do
+  describe '.default_format_details_for' do
+    let(:human_mb_details) do
+      { :description => 'Suffixed Megabytes (MB, GB)',
+        :columns     => nil,
+        :sub_types   => [:megabytes],
+        :function    => {:name => 'mbytes_to_human_size'},
+        :precision   => 1 }
+    end
+
+    it 'returns human MB format details for memory_mb' do
+      expect(described_class.default_format_details_for('memory_mb', 'memory_mb', :integer)).to eq(human_mb_details)
+    end
+
+    it 'returns human MB format details for computer_system_hardware.memory_mb' do
+      expect(described_class.default_format_details_for('Hardware-memory_mb', 'computer_system.hardware.memory_mb', :integer)).to eq(human_mb_details)
+    end
+  end
+
   describe '.default_format_for' do
     context 'for chargebacks' do
       let(:columns) { Chargeback.descendants.collect(&:virtual_attributes_to_define).inject({}, &:merge) }
