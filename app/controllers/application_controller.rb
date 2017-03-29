@@ -1398,6 +1398,9 @@ class ApplicationController < ActionController::Base
   # Test RBAC on every item checked
   # Params:
   #   klass - class of accessed objects
+  # Returns:
+  #   array of checked items. If user does not have rigts for it,
+  #   raises exception
   def find_checked_items_with_rbac(klass, prefix = nil)
     items = find_checked_items(prefix)
     assert_rbac(klass, items)
@@ -1424,6 +1427,17 @@ class ApplicationController < ActionController::Base
                :model     => ui_lookup(:model => klass.to_s)})
   end
 
+  # Test RBAC in case there is only one record
+  # Params:
+  #   klass - class of accessed object
+  #   id    - accessed object id
+  # Returns:
+  #   id of checked item. If user does not have rights for it,
+  #   raises an exception
+  def find_id_with_rbac(klass, id)
+    assert_rbac(klass, Array.wrap(id))
+    id
+  end
 
   # Common Saved Reports button handler routines
   def process_saved_reports(saved_reports, task)
