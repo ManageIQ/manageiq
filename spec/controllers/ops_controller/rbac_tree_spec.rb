@@ -8,7 +8,7 @@ describe OpsController::RbacTree do
   subject { described_class.new(role, features, false).build }
 
   before do
-    EvmSpecHelper.seed_specific_product_features(%w(control_explorer))
+    EvmSpecHelper.seed_specific_product_features(%w(control_explorer_view policy_import_export policy))
   end
 
   it 'builds a hash tree' do
