@@ -221,7 +221,7 @@ module ApplicationController::CiProcessing
   # Retire 1 or more VMs
   def retirevms
     assert_privileges(params[:pressed])
-    vms = find_checked_items_with_rbac(VmOrTemplate)
+    vms = find_checked_ids_with_rbac(VmOrTemplate)
     if !%w(orchestration_stack service).include?(request.parameters["controller"]) && !%w(orchestration_stacks).include?(params[:display]) &&
        VmOrTemplate.find(vms).any? { |vm| !vm.supports_retire? }
       add_flash(_("Set Retirement Date does not apply to selected %{model}") %

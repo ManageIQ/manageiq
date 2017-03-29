@@ -1401,7 +1401,7 @@ class ApplicationController < ActionController::Base
   # Returns:
   #   array of checked items. If user does not have rigts for it,
   #   raises exception
-  def find_checked_items_with_rbac(klass, prefix = nil)
+  def find_checked_ids_with_rbac(klass, prefix = nil)
     items = find_checked_items(prefix)
     assert_rbac(klass, items)
     items

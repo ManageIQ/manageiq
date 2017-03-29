@@ -294,7 +294,7 @@ class CatalogController < ApplicationController
         {:record => ui_lookup(:table => "service_template")}) if @flash_array.nil?
       self.x_node = "root"
     else # showing 1 element, delete it
-      elements = find_checked_items
+      elements = find_checked_ids_with_rbac(ServiceTemplate)
       if elements.empty?
         add_flash(_("No %{model} were selected for deletion") %
           {:model => ui_lookup(:tables => "service_template")}, :error)
