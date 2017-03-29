@@ -28,12 +28,17 @@ module Api
       end
 
       def api_exception_type(type, e)
-        api_error(type, e.message, e.class.name, e.backtrace.join("\n"), Rack::Utils.status_code(type))
+        api_error(type, e)
       end
 
       private
 
-      def api_error(type, message, klass, backtrace, status)
+      def api_error(type, error)
+        message = error.message
+        klass = error.class.name
+        backtrace = error.backtrace.join("\n")
+        status = Rack::Utils.status_code(type)
+
         err = {
           :kind    => type,
           :message => message,
