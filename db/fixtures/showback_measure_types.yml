@@ -1,5 +1,5 @@
 ---
-- :category: "VM"
+- :category: "VmOrTemplate"
   :description: "Calculate CPU Showback of VM"
   :measure: "CPU"
   :dimensions: ["average", "number", "max_number_of_cpu"]

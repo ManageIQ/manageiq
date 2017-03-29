@@ -1,7 +1,7 @@
 class ShowbackMeasureType < ApplicationRecord
   validates :description, :dimensions, :presence => true
 
-  VALID_CATEGORY = %w(VM).freeze
+  VALID_CATEGORY = %w(VmOrTemplate).freeze
   validates :category,
             :inclusion => { :in => VALID_CATEGORY }
 

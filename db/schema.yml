@@ -6502,6 +6502,7 @@ showback_events:
 - type_obj
 - updated_at
 - created_at
+- context
 showback_measure_types:
 - id
 - category

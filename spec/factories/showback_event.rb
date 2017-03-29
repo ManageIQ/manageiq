@@ -8,5 +8,6 @@ FactoryGirl.define do
     type_obj                  'VM'
     start_time                4.hours.ago
     end_time                  1.hour.ago
+    context                   {}
   end
 end
