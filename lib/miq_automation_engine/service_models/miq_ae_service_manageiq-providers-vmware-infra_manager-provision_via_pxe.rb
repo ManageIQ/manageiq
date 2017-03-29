@@ -1,4 +1,0 @@
-module MiqAeMethodService
-  class MiqAeServiceManageIQ_Providers_Vmware_InfraManager_ProvisionViaPxe < MiqAeServiceManageIQ_Providers_Vmware_InfraManager_Provision
-  end
-end

@@ -6,9 +6,7 @@ module MiqAeMethodService
     end
 
     def service_model(model_name)
-      "MiqAeMethodService::MiqAeService#{model_name}".constantize
-    rescue NameError
-      service_model_lookup(model_name)
+      "MiqAeMethodService::MiqAeService#{model_name}".safe_constantize || service_model_lookup(model_name)
     end
   end
 end

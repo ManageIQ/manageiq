@@ -1,5 +1,0 @@
-module MiqAeMethodService
-  class MiqAeServiceManageIQ_Providers_EmbeddedAnsible_AutomationManager_CloudCredential <
-    MiqAeServiceManageIQ_Providers_EmbeddedAnsible_AutomationManager_Credential
-  end
-end

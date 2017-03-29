@@ -2,9 +2,8 @@ require_relative 'miq_ae_service_object_common'
 require_relative 'miq_ae_service_rbac'
 module MiqAeMethodService
   class MiqAeServiceModelBase
-    SERVICE_MODEL_PATH = Rails.root.join("lib/miq_automation_engine/service_models")
-    SERVICE_MODEL_GLOB = SERVICE_MODEL_PATH.join("miq_ae_service_*.rb")
-    EXPOSED_ATTR_BLACK_LIST = [/password/, /^auth_key$/]
+    SERVICE_MODEL_PATH = Rails.root.join("lib", "miq_automation_engine", "service_models")
+    EXPOSED_ATTR_BLACK_LIST = [/password/, /^auth_key$/].freeze
     class << self
       include DRbUndumped  # Ensure that Automate Method can get at the class itself over DRb
     end
@@ -39,6 +38,11 @@ module MiqAeMethodService
     private_class_method :allowed_find_method?
 
     def self.inherited(subclass)
+      # Skip for anonymous classes
+      expose_class_attributes(subclass) if subclass.name
+    end
+
+    def self.expose_class_attributes(subclass)
       subclass.class_eval do
         model.attribute_names.each do |attr|
           next if EXPOSED_ATTR_BLACK_LIST.any? { |rexp| attr =~ rexp }
@@ -85,21 +89,64 @@ module MiqAeMethodService
     end
     private_class_method :model
 
-    def self.model_name_from_file(filename)
-      File.basename(filename, '.*').split('-').map(&:camelize).join('_')
-    end
-
     def self.model_name_from_active_record_model(ar_model)
       "MiqAeMethodService::MiqAeService#{ar_model.name.gsub(/::/, '_')}"
     end
 
-    def self.service_models
-      Dir.glob(MiqAeMethodService::MiqAeServiceModelBase::SERVICE_MODEL_GLOB).collect do |f|
-        model_name = MiqAeMethodService::MiqAeServiceModelBase.model_name_from_file(f)
-        next if model_name == "MiqAeServiceMethods"
+    def self.create_service_model_from_name(name)
+      backing_model = service_model_name_to_model(name)
 
-        "MiqAeMethodService::#{model_name}".constantize
-      end.compact!
+      create_service_model(backing_model) if ar_model?(backing_model)
+    end
+
+    def self.create_service_model(ar_model)
+      file_path = model_to_file_path(ar_model)
+      if File.exist?(file_path)
+        require file_path
+        model_name_from_active_record_model(ar_model).safe_constantize
+      else
+        dynamic_service_model_creation(ar_model, service_model_superclass(ar_model))
+      end
+    end
+    private_class_method :create_service_model
+
+    def self.dynamic_service_model_creation(ar_model, super_class)
+      Class.new(super_class) do |klass|
+        ::MiqAeMethodService.const_set(model_to_service_model_name(ar_model), klass)
+        expose_class_attributes(klass)
+      end
+    end
+    private_class_method :dynamic_service_model_creation
+
+    def self.service_model_superclass(ar_model)
+      return self if ar_model.superclass == ApplicationRecord
+
+      model_name_from_active_record_model(ar_model.superclass).safe_constantize
+    end
+    private_class_method :service_model_superclass
+
+    def self.ar_model?(the_model)
+      return false unless the_model
+      the_model < ApplicationRecord || false
+    end
+
+    def self.service_model_name_to_model(service_model_name)
+      ar_model_name = /MiqAeService(.+)$/.match(service_model_name)
+      return if ar_model_name.nil?
+
+      ar_model_name[1].gsub(/_/, '::').safe_constantize
+    end
+
+    def self.model_to_service_model_name(ar_model)
+      "MiqAeService#{ar_model.name.gsub(/::/, '_')}"
+    end
+
+    def self.model_to_file_name(ar_model)
+      "miq_ae_service_#{ar_model.name.underscore.tr('/', '-')}.rb"
+    end
+
+    def self.model_to_file_path(ar_model)
+      File.join(SERVICE_MODEL_PATH, model_to_file_name(ar_model))
     end
 
     def self.ar_base_model
@@ -150,8 +197,8 @@ module MiqAeMethodService
     #   delims      = "<" | ">" | "#" | "%" | <">
     #   unwise      = "{" | "}" | "|" | "\" | "^" | "[" | "]" | "`"
     #
-    DELIMS = ['<', '>', '#', '%', "\""]
-    UNWISE = ['{', '}', '|', "\\", '^', '[', ']', "\`"]
+    DELIMS = ['<', '>', '#', '%', "\""].freeze
+    UNWISE = ['{', '}', '|', "\\", '^', '[', ']', "\`"].freeze
     def self.normalize(str)
       return str unless str.kind_of?(String)
 
@@ -194,7 +241,7 @@ module MiqAeMethodService
       if obj.kind_of?(ActiveRecord::Base) && !obj.kind_of?(ar_klass)
         raise ArgumentError.new("#{ar_klass.name} Object expected, but received #{obj.class.name}")
       end
-      @object = obj.kind_of?(ar_klass) ? obj : ar_method { self.class.find_ar_object_by_id(obj.to_i) }
+      @object = obj.kind_of?(ar_klass) ? obj : ar_method { ar_klass.find_by(:id => obj) }
       raise MiqAeException::ServiceNotFound, "#{ar_klass.name} Object [#{obj}] not found" if @object.nil?
     end
 
@@ -264,7 +311,7 @@ module MiqAeMethodService
       ar_method do
         begin
           @object.public_send(name, *params)
-        rescue Exception => err
+        rescue Exception
           $miq_ae_logger.error("The following error occurred during instance method <#{name}> for AR object <#{@object.inspect}>")
           raise
         end
@@ -295,9 +342,4 @@ module MiqAeMethodService
       self.class.ar_method(&block)
     end
   end
-end
-
-Dir.glob(MiqAeMethodService::MiqAeServiceModelBase::SERVICE_MODEL_GLOB).each do |f|
-  f = File.basename(f, '.*')
-  MiqAeMethodService.autoload(MiqAeMethodService::MiqAeServiceModelBase.model_name_from_file(f), "service_models/#{f}")
 end

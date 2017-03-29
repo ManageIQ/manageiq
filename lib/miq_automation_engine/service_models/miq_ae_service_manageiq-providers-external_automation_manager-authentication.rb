@@ -1,4 +1,0 @@
-module MiqAeMethodService
-  class MiqAeServiceManageIQ_Providers_ExternalAutomationManager_Authentication < MiqAeServiceManageIQ_Providers_AutomationManager_Authentication
-  end
-end

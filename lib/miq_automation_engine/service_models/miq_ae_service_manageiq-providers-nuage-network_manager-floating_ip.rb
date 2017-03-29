@@ -1,4 +1,0 @@
-module MiqAeMethodService
-  class MiqAeServiceManageIQ_Providers_Nuage_NetworkManager_FloatingIp < MiqAeServiceFloatingIp
-  end
-end
