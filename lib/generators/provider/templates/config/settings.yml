@@ -1,0 +1,11 @@
+---
+:ems:
+  :ems_<%= provider_name %>:
+    :event_handling:
+      :event_groups:
+:http_proxy:
+  :<%= provider_name %>:
+    :host:
+    :password:
+    :port:
+    :user:
