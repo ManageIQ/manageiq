@@ -1562,26 +1562,39 @@ module ApplicationController::CiProcessing
   end
 
   def process_elements(elements, klass, task, display_name = nil, order_field = nil)
-    ['name', 'description', 'title'].each { |key| order_field ||= key if klass.column_names.include?(key) }
+    order_field ||= %w(name description title).find do |field|
+                      klass.column_names.include?(field)
+                    end
 
-    lower_field = order_field == "ems_id" ? order_field : klass.arel_attribute(order_field).lower
-    klass.where(:id => elements).order(lower_field).each do |elem|
-      id          = elem.id
-      description = get_record_display_name(elem)
-      name        = elem.send(order_field.to_sym)
-      if task == "destroy"
-        process_element_destroy(elem, klass, name)
+    order_by = order_field == "ems_id" ? order_field : "lower(#{order_field})"
+
+    klass.where(:id => elements).order(order_by).each do |record|
+      name = record.send(order_field.to_sym)
+      if task == 'destroy'
+        process_element_destroy(record, klass, name)
       else
-        model_name = ui_lookup(:model => klass.name) # Lookup friendly model name in dictionary
         begin
-          elem.send(task.to_sym) if elem.respond_to?(task) # Run the task
+          record.send(task.to_sym) if record.respond_to?(task) # Run the task
         rescue => bang
-          add_flash(_("%{model} \"%{name}\": Error during '%{task}': %{error_msg}") %
-                   {:model => model_name, :name => record_name, :task => (display_name || task),
-                    :error_msg => bang.message}, :error)
+          add_flash(
+            _("%{model} \"%{name}\": Error during '%{task}': %{error_msg}") %
+            {
+              :model     => ui_lookup(:model => klass.name),
+              :name      => get_record_display_name(record),
+              :task      => (display_name || task),
+              :error_msg => bang.message
+            },
+            :error
+          )
         else
-          add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") %
-                   {:model => model_name, :name => description, :task => (display_name || task)})
+          add_flash(
+            _("%{model} \"%{name}\": %{task} successfully initiated") %
+            {
+              :model => ui_lookup(:model => klass.name),
+              :name  => get_record_display_name(record),
+              :task  => (display_name || task)
+            }
+          )
         end
       end
     end
