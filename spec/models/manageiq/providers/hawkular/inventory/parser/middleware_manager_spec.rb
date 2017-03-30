@@ -1,7 +1,7 @@
 require 'recursive-open-struct'
-require_relative 'hawkular_helper'
+require_relative '../../middleware_manager/hawkular_helper'
 
-describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
+describe ManageIQ::Providers::Hawkular::Inventory::Parser::MiddlewareManager do
   let(:ems_hawkular) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     auth = AuthToken.new(:name => "test", :auth_key => "valid-token", :userid => "jdoe", :password => "password")
@@ -11,7 +11,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
                        :authentications => [auth],
                        :zone            => zone)
   end
-  let(:parser) { described_class.new(ems_hawkular) }
+  let(:persister) { ::ManageIQ::Providers::Hawkular::Inventory::Persister::MiddlewareManager.new(ems_hawkular, ems_hawkular) }
+  let(:parser) { described_class.new }
   let(:server) do
     FactoryGirl.create(:hawkular_middleware_server,
                        :name                  => 'Local',
@@ -29,8 +30,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
                                            :id   => 'Local~/subsystem=datasources/data-source=ExampleDS',
                                            :path => '/t;Hawkular'\
                                                     "/f;#{the_feed_id}/r;Local~~"\
-                                                    '/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS'
-                                          )
+                                                    '/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS')
       config = {
         'value' => {
           'Driver Name'    => 'h2',
@@ -41,7 +41,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
       }
       parsed_datasource = {
         :name              => 'ruby-sample-build',
-        :middleware_server => server,
+        :middleware_server => nil,
         :nativeid          => 'Local~/subsystem=datasources/data-source=ExampleDS',
         :ems_ref           => '/t;Hawkular'\
                                                  "/f;#{the_feed_id}/r;Local~~"\
@@ -53,7 +53,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
           'Enabled'        => 'true'
         }
       }
-      expect(parser.send(:parse_datasource, server, datasource, config)).to eq(parsed_datasource)
+      inventory_obj = persister.middleware_datasources.build(:ems_ref => datasource.path)
+      expect(parser.send(:parse_datasource, datasource, inventory_obj, config)).to eq(parsed_datasource)
     end
   end
 
@@ -84,7 +85,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
         :ems_ref    => path,
         :properties => properties,
       }
-      expect(parser.send(:parse_middleware_domain, 'master.Unnamed Domain', domain)).to eq(parsed_domain)
+      inventory_obj = persister.middleware_domains.build(:ems_ref => path)
+      expect(parser.send(:parse_middleware_domain, 'master.Unnamed Domain', domain, inventory_obj)).to eq(parsed_domain)
     end
   end
 
@@ -121,7 +123,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
         }],
         'resource_id_2' => [
           {
-          :status => 'Disabled'
+            :status => 'Disabled'
           },
           {
             :status => 'Disabled'

@@ -39,7 +39,7 @@ module ManageIQ::Providers
     end
 
     def child_resources(resource_path, recursive = false)
-      connection.inventory.list_child_resources(resource_path, recursive)
+      manager.child_resources(resource_path, recursive)
     end
 
     def machine_id(feed)

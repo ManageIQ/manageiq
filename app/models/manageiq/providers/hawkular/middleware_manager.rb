@@ -108,6 +108,12 @@ module ManageIQ::Providers
       end
     end
 
+    def child_resources(resource_path, recursive = false)
+      with_provider_connection do |connection|
+        connection.inventory.list_child_resources(resource_path, recursive)
+      end
+    end
+
     def metrics_resource(resource_path)
       with_provider_connection do |connection|
         connection.inventory.list_metrics_for_resource(resource_path)
@@ -408,10 +414,10 @@ module ManageIQ::Providers
                   end
 
       Notification.create(:type => type, :options => {
-        :op_name   => op_name,
-        :op_arg    => op_arg.nil? ? '' : op_arg,
-        :mw_server => "#{mw_server.name} (#{mw_server.feed})"
-      })
+                            :op_name   => op_name,
+                            :op_arg    => op_arg.nil? ? '' : op_arg,
+                            :mw_server => "#{mw_server.name} (#{mw_server.feed})"
+                          })
     end
 
     # UI methods for determining availability of fields

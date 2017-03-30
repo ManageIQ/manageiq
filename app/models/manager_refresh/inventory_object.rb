@@ -97,6 +97,18 @@ module ManagerRefresh
       end
     end
 
+    def ==(other)
+      if other.kind_of?(self.class)
+        data == other.data
+      elsif other.kind_of?(::Hash)
+        inventory_collection.inventory_object_attributes.all? do |attr|
+          data[attr] == other[attr]
+        end
+      else
+        raise ArgumentError, _("Equality comparer between %{me} and %{it} is not defined.") % { :me => self.class, :it => other.class }
+      end
+    end
+
     private
 
     def association?(inventory_collection_scope, key)

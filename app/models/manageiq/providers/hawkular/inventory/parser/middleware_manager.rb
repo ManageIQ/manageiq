@@ -222,18 +222,21 @@ module ManageIQ::Providers
         availabilities.each do |availability|
           availability_status = process_availability(availability['data'].first)
           resources_by_metric_id[availability['id']].each do |resource|
-            resource.status = availability_status
+            resource[:status] = availability_status
           end
         end
         resources_by_metric_id
       end
 
       def parse_deployment(deployment, inventory_object)
-        inventory_object.name = parse_deployment_name(deployment.id)
         parse_base_item(deployment, inventory_object)
+        inventory_object.name = parse_deployment_name(deployment.id)
+        inventory_object
       end
 
       def parse_messaging(messaging, inventory_object, config)
+        parse_base_item(messaging, inventory_object)
+
         inventory_object.name = messaging.name
         inventory_object.messaging_type = messaging.to_h['type']['name']
 
@@ -241,37 +244,42 @@ module ManageIQ::Providers
           inventory_object.properties = config['value'].except('Username', 'Password')
         end
 
-        parse_base_item(messaging, inventory_object)
+        inventory_object
       end
 
       def parse_datasource(datasource, inventory_object, config)
+        parse_base_item(datasource, inventory_object)
         inventory_object.name = datasource.name
 
         if !config.empty? && !config['value'].empty? && config['value'].respond_to?(:except)
           inventory_object.properties = config['value'].except('Username', 'Password')
         end
 
-        parse_base_item(datasource, inventory_object)
+        inventory_object
       end
 
       def parse_middleware_domain(feed, domain, inventory_object)
+        parse_base_item(domain, inventory_object)
         inventory_object.name = parse_domain_name(feed)
         inventory_object.type_path = domain.type_path
 
-        parse_base_item(domain, inventory_object)
+        inventory_object
       end
 
       def parse_middleware_server_group(group, inventory_object)
+        parse_base_item(group, inventory_object)
         inventory_object.assign_attributes(
           :name      => parse_server_group_name(group.name),
           :type_path => group.type_path,
           :profile   => group.properties['Profile']
         )
 
-        parse_base_item(group, inventory_object)
+        inventory_object
       end
 
       def parse_middleware_server(eap, inventory_object, domain = false, name = nil)
+        parse_base_item(eap, inventory_object)
+
         not_started = domain && eap.properties['Server State'] == 'STOPPED'
 
         hostname, product = ['Hostname', 'Product Name'].map do |x|
@@ -284,7 +292,8 @@ module ManageIQ::Providers
           :hostname  => hostname,
           :product   => product
         )
-        parse_base_item(eap, inventory_object)
+
+        inventory_object
       end
 
       private
@@ -296,6 +305,8 @@ module ManageIQ::Providers
         [:properties, :feed].each do |field|
           inventory_object[field] = item.send(field) if item.respond_to?(field)
         end
+
+        inventory_object
       end
 
       def parse_deployment_name(name)
