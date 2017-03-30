@@ -292,6 +292,15 @@ describe VmScan do
         end
       end
     end
+
+    describe "#wait_for_vim_broker" do
+      it "waits 60 seconds inside loop and send signal :start_snapshot if MiqVimBrokerWorker is available" do
+        allow(@job).to receive(:loop).and_yield
+        expect(@job).to receive(:sleep).with(60)
+        expect(@job).to receive(:signal).with(:start_snapshot)
+        @job.wait_for_vim_broker
+      end
+    end
   end
 
   context "A single VM Scan Job on Openstack provider" do
