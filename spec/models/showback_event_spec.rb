@@ -25,16 +25,25 @@ describe ShowbackEvent do
       expect(showback_event.errors[:start_time]).to include "Start time should be before end time"
     end
 
-    it "should ensure presence of id_obj" do
-      showback_event.id_obj = nil
+    it "should ensure presence of resource_id" do
+      showback_event.resource_id = nil
       showback_event.valid?
-      expect(showback_event.errors[:id_obj]).to include "can't be blank"
+      expect(showback_event.errors[:resource_id]).to include "can't be blank"
     end
 
-    it "should ensure presence of type_obj" do
-      showback_event.type_obj = nil
-      showback_event.valid?
-      expect(showback_event.errors[:type_obj]).to include "can't be blank"
+    it "should ensure resource exists" do
+      vm = FactoryGirl.create(:vm_or_template)
+      showback_event.resource_type = "VmOrTemplate"
+      showback_event.resource_id   = vm.id
+      expect(showback_event).to be_valid
+    end
+
+    it "should fails with error resource" do
+      vm = FactoryGirl.create(:vm_or_template)
+      showback_event.resource_type = "VmOrTemplate"
+      showback_event.resource_id   = 99999
+      expect(showback_event).not_to be_valid
+      expect(showback_event.errors[:resource_type]).to include "Resource should exists"
     end
   end
 

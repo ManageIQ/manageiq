@@ -6498,8 +6498,8 @@ showback_events:
 - data
 - start_time
 - end_time
-- id_obj
-- type_obj
+- resource_id
+- resource_type
 - updated_at
 - created_at
 - context
