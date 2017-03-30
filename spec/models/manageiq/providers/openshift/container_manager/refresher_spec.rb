@@ -31,7 +31,8 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
       @ems.reload
       VCR.use_cassette(described_class.name.underscore,
                        :match_requests_on => [:path,]) do # , :record => :new_episodes) do
-        EmsRefresh.refresh(@ems)
+        #EmsRefresh.refresh(@ems)
+        @ems.refresher.new([@ems]).inlined_refresh1(@ems)
       end
       @ems.reload
 

@@ -32,6 +32,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     2.times do # Run twice to verify that a second run with existing data does not change anything
       VCR.use_cassette(described_class.name.underscore) do # , :record => :new_episodes) do
         EmsRefresh.refresh(@ems)
+        #@ems.refresher.inlined_refresh1(@ems)
       end
       @ems.reload
 

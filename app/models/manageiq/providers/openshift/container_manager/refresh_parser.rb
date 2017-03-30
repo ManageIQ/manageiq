@@ -1,6 +1,8 @@
 module ManageIQ::Providers
   module Openshift
     class ContainerManager::RefreshParser < ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser
+      attr_accessor :data, :data_index
+
       def ems_inv_to_hashes(inventory)
         super(inventory)
         get_projects(inventory)
