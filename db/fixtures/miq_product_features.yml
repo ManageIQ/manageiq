@@ -6402,6 +6402,17 @@
       :feature_type: view
       :identifier: physical_server_show
 
+# Physical Infrastructure Topology
+- :name: Physical Infra Topology
+  :description: Physical Infra Topology
+  :feature_type: node
+  :identifier: physical_infra_topology
+  :children:
+    - :name: View
+      :description: View Physical Infra Topology
+      :feature_type: view
+      :identifier: physical_infra_topology_view
+
 # Monitor
 - :name: Monitor
   :description: Everything under Monitor
