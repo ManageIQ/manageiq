@@ -102,7 +102,7 @@ module ManageIQ
     end
 
     def self.update_bower
-      system!("bower update --allow-root -F --silent --config.analytics=false")
+      system!("bundle exec rake update:bower")
     end
 
     def self.bundler_version

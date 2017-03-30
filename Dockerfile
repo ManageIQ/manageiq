@@ -121,8 +121,8 @@ RUN source /etc/default/evm && \
     export RAILS_USE_MEMORY_STORE="true" && \
     npm install bower yarn -g && \
     gem install bundler --conservative && \
-    bower install --allow-root -F --silent --config.analytics=false && \
     bundle install && \
+    rake update:bower && \
     bin/rails log:clear tmp:clear && \
     rake evm:compile_assets && \
     rake evm:compile_sti_loader && \

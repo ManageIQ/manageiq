@@ -15,7 +15,7 @@ before_script:
 test:vmdb:
   script:
     - bundle update
-    - bower install --allow-root -F --config.analytics=false
+    - bundle exec rake update:bower
     - bundle exec rake test:vmdb:setup
     - bundle exec rake test:vmdb
 test:migrations:

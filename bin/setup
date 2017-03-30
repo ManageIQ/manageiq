@@ -23,10 +23,10 @@ Dir.chdir ManageIQ::Environment::APP_ROOT do
   ManageIQ::Environment.ensure_config_files
 
   puts '== Installing dependencies =='
-  ManageIQ::Environment.while_updating_bower do
-    ManageIQ::Environment.install_bundler
-    ManageIQ::Environment.bundle_install
+  ManageIQ::Environment.install_bundler
+  ManageIQ::Environment.bundle_install
 
+  ManageIQ::Environment.while_updating_bower do
     if options[:do_db]
       # Note, we deviate from the default rails db:setup here because
       # it invokes the db:setup rake task which creates the db from the
