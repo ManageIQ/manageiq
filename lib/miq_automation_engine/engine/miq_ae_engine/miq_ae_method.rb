@@ -1,9 +1,10 @@
 module MiqAeEngine
   class MiqAeMethod
-    AE_ROOT_DIR    = File.expand_path(File.join(Rails.root,  'product/automate'))
-    Dir.mkdir(AE_ROOT_DIR) unless File.directory?(AE_ROOT_DIR)
-    AE_METHODS_DIR = File.expand_path(File.join(AE_ROOT_DIR, 'methods'))
-    Dir.mkdir(AE_METHODS_DIR) unless File.directory?(AE_METHODS_DIR)
+    def self.ae_methods_dir
+      @ae_methods_dir ||= begin
+        Rails.root.join("product", "automate", "methods").tap { |path| Dir.mkdir_p(path) unless path.directory? }
+      end
+    end
 
     def self.invoke_inline(aem, obj, inputs)
       return invoke_inline_ruby(aem, obj, inputs) if aem.language.downcase.strip == "ruby"
@@ -15,7 +16,7 @@ module MiqAeEngine
       raise  MiqAeException::MethodNotFound, "Specified URI [#{aem.data}] in Method [#{aem.name}] has unsupported scheme of #{scheme}; supported scheme is file" unless scheme.downcase == "file"
       raise  MiqAeException::MethodNotFound, "Invalid file specification -- #{aem.data}" if path.nil?
       # Create the filename corresponding to the URI specification
-      fname = File.join(AE_METHODS_DIR, path)
+      fname = ae_methods_dir.join(path)
       raise  MiqAeException::MethodNotFound, "Method [#{aem.data}] Not Found (fname=#{fname})" unless File.exist?(fname)
       cmd = "#{aem.language} #{fname}"
       invoke_external(cmd, obj.workspace)
