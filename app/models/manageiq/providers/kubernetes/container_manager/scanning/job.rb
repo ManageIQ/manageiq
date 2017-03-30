@@ -1,5 +1,6 @@
 require 'image-inspector-client'
 require 'kubeclient'
+require 'securerandom'
 
 class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   PROVIDER_CLASS = ManageIQ::Providers::Kubernetes::ContainerManager
@@ -15,6 +16,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   INSPECTOR_ADMIN_SECRET_PATH = '/var/run/secrets/kubernetes.io/inspector-admin-secret-'
   ATTRIBUTE_SECTION = 'cluster_settings'
   PROXY_ENV_VARIABLES = %w(no_proxy http_proxy https_proxy)
+  INSPECTOR_AUTH_TOKEN = "INSPECTOR_AUTH_TOKEN"
 
   def load_transitions
     self.state ||= 'initializing'
@@ -285,7 +287,8 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
         :cert_store => ext_management_system.ssl_cert_store
       },
       :auth_options   => kubeclient.auth_options,
-      :http_proxy_uri => kubeclient.http_proxy_uri
+      :http_proxy_uri => kubeclient.http_proxy_uri,
+      :auth_token     => auth_token
     )
   end
 
@@ -440,6 +443,11 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
                    :name    => PROXY_ENV_VARIABLES).each_with_object([]) do |att, env|
       env << {:name  => att.name.upcase,
               :value => att.value} unless att.value.blank?
-    end
+    end << { :name => INSPECTOR_AUTH_TOKEN,
+             :value => auth_token}
+  end
+
+  def auth_token
+    @auth_token ||= SecureRandom.hex
   end
 end
