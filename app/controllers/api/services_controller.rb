@@ -43,6 +43,15 @@ module Api
       action_result(false, err.to_s)
     end
 
+    def remove_all_resources_resource(type, id, _data)
+      raise "Must specify a service href or id to remove resources from" unless id
+      svc = resource_search(id, type, collection_class(type))
+      svc.remove_all_resources
+      action_result(true, "Removed all resources from #{service_ident(svc)}")
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
     def reconfigure_resource(type, id = nil, data = nil)
       raise BadRequestError, "Must specify an id for Reconfiguring a #{type} resource" unless id
 

@@ -928,4 +928,70 @@ describe "Services API" do
       expect(svc.reload.service_resources).to eq([])
     end
   end
+
+  describe 'remove_all_resources' do
+    let(:vm1) { FactoryGirl.create(:vm_vmware) }
+    let(:vm2) { FactoryGirl.create(:vm_vmware) }
+    let(:vm3) { FactoryGirl.create(:vm_vmware) }
+
+    before do
+      svc.add_resource(vm1)
+      svc.add_resource(vm2)
+      svc1.add_resource(vm3)
+    end
+
+    it 'cannot remove all resources without an appropriate role' do
+      api_basic_authorize
+
+      run_post(services_url, 'action' => 'remove_all_resources')
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'can remove all resources from multiple services' do
+      api_basic_authorize collection_action_identifier(:services, :remove_all_resources)
+      request = {
+        'action'    => 'remove_all_resources',
+        'resources' => [
+          { 'href' => services_url(svc.id) },
+          { 'href' => services_url(svc1.id) }
+        ]
+      }
+
+      run_post(services_url, request)
+
+      expected = {
+        'results' => [
+          { 'success' => true, 'message' =>  "Removed all resources from Service id:#{svc.id} name:'#{svc.name}'"},
+          { 'success' => true, 'message' =>  "Removed all resources from Service id:#{svc1.id} name:'#{svc1.name}'"}
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to eq(expected)
+      expect(svc.reload.service_resources).to eq([])
+      expect(svc1.reload.service_resources).to eq([])
+    end
+
+    it 'cannot remove all resources without an appropriate role' do
+      api_basic_authorize
+
+      run_post(services_url(svc.id), :action => 'remove_all_resources')
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'can remove all resources from a service' do
+      api_basic_authorize collection_action_identifier(:services, :remove_all_resources)
+
+      run_post(services_url(svc.id), :action => 'remove_all_resources')
+
+      expected = {
+        'success' => true, 'message' => "Removed all resources from Service id:#{svc.id} name:'#{svc.name}'"
+      }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to eq(expected)
+      expect(svc.reload.service_resources).to eq([])
+    end
+  end
 end
