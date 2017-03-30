@@ -214,7 +214,7 @@
   :rbac_feature_name: container_node_show_list
   :startup: true
 - :name: container_groups
-  :description: Containers / Groups
+  :description: Containers / Pods
   :url: /container_group/show_list
   :rbac_feature_name: container_group_show_list
   :startup: true
