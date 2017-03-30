@@ -5,8 +5,8 @@ module ManageIQ::Providers::Microsoft::InfraManager::Provision::Cloning
     _log.info("Provisioning [#{source.name}] to [#{clone_options[:name]}]")
     _log.info("Source Image:                    [#{clone_options[:image_ref]}]")
 
-    dumpObj(clone_options, "#{_log.prefix} Clone Options: ", $log, :info)
-    dumpObj(options, "#{_log.prefix} Prov Options:  ", $log, :info, :protected => {:path => workflow_class.encrypted_options_field_regs})
+    dump_obj(clone_options, "#{_log.prefix} Clone Options: ", $log, :info)
+    dump_obj(options, "#{_log.prefix} Prov Options:  ", $log, :info, :protected => {:path => workflow_class.encrypted_options_field_regs})
   end
 
   def clone_complete?

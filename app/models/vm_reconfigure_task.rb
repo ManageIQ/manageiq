@@ -41,7 +41,7 @@ class VmReconfigureTask < MiqRequestTask
 
   def do_request
     config = vm.build_config_spec(options)
-    dumpObj(config, "#{_log.prefix} Config spec: ", $log, :info)
+    dump_obj(config, "#{_log.prefix} Config spec: ", $log, :info)
     vm.spec_reconfigure(config)
 
     if AUTOMATE_DRIVES
