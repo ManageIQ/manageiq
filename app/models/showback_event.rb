@@ -14,7 +14,16 @@ class ShowbackEvent < ApplicationRecord
   end
 
   serialize :data, JSON # Implement data column as a JSON
-  default_value_for(:data) { {} }
+  default_value_for(:data) {
+    hash = {}
+    ShowbackMeasureType.all.each do |measure_type|
+      hash[measure_type.measure] = {}
+      measure_type.dimensions.each do |dim|
+        hash[measure_type.measure][dim] = 0
+      end
+    end
+    hash
+  }
 
   # return the parsing error message if not valid JSON; otherwise nil
   def validate_format

@@ -1,5 +1,5 @@
 
-DATA = { 3.hours.ago => {"cpu_usage_rate_average" => 2} }.to_json
+DATA = { "CPU" => {"average" => 0} }.to_json
 
 FactoryGirl.define do
   factory :showback_event do
