@@ -820,4 +820,112 @@ describe "Services API" do
       expect(response).to have_http_status(:forbidden)
     end
   end
+
+  describe 'remove_resource' do
+    let(:vm1) { FactoryGirl.create(:vm_vmware) }
+    let(:vm2) { FactoryGirl.create(:vm_vmware) }
+
+    before do
+      svc.add_resource(vm1)
+      svc1.add_resource(vm2)
+    end
+
+    it 'cannot remove vms from services without an appropriate role' do
+      api_basic_authorize
+
+      run_post(services_url, 'action' => 'remove_resource')
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'can remove vms from multiple services by href with an appropriate role' do
+      api_basic_authorize collection_action_identifier(:services, :remove_resource)
+      request = {
+        'action'    => 'remove_resource',
+        'resources' => [
+          { 'href' => services_url(svc.id), 'resource' => { 'href' => vms_url(vm1.id)} },
+          { 'href' => services_url(svc1.id), 'resource' => { 'href' => vms_url(vm2.id)} }
+        ]
+      }
+
+      run_post(services_url, request)
+
+      expected = {
+        'results' => [
+          { 'success' => true, 'message' => "Unassigned resource vms id:#{vm1.id} from Service id:#{svc.id} name:'#{svc.name}'" },
+          { 'success' => true, 'message' => "Unassigned resource vms id:#{vm2.id} from Service id:#{svc1.id} name:'#{svc1.name}'" }
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to eq(expected)
+      expect(svc.reload.service_resources).to eq([])
+      expect(svc1.reload.service_resources).to eq([])
+    end
+
+    it 'requires a service id to be specified' do
+      api_basic_authorize collection_action_identifier(:services, :remove_resource)
+      request = {
+        'action'    => 'remove_resource',
+        'resources' => [
+          { 'href' => services_url, 'resource' => { 'href' => vms_url(vm1.id)} }
+        ]
+      }
+
+      run_post(services_url, request)
+
+      expected = {
+        'results' => [
+          { 'success' => false, 'message' => 'Must specify a resource to remove_resource from' }
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to eq(expected)
+    end
+
+    it 'requires that a resource be specified' do
+      api_basic_authorize collection_action_identifier(:services, :remove_resource)
+      request = {
+        'action'    => 'remove_resource',
+        'resources' => [
+          { 'href' => services_url(svc.id), 'resource' => {} }
+        ]
+      }
+
+      run_post(services_url, request)
+
+      expected = {
+        'results' => [
+          { 'success' => false, 'message' => 'Must specify a resource reference' }
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to eq(expected)
+    end
+
+    it 'cannot remove a vm from a service without an appropriate role' do
+      api_basic_authorize
+
+      run_post(services_url(svc.id), 'action' => 'remove_resource')
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'can remove a vm from a service by href with an appropriate role' do
+      api_basic_authorize collection_action_identifier(:services, :remove_resource)
+      request = {
+        'action'   => 'remove_resource',
+        'resource' => { 'resource' => {'href' => vms_url(vm1.id)} }
+      }
+
+      run_post(services_url(svc.id), request)
+
+      expected = {
+        'success' => true,
+        'message' => "Unassigned resource vms id:#{vm1.id} from Service id:#{svc.id} name:'#{svc.name}'"
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to eq(expected)
+      expect(svc.reload.service_resources).to eq([])
+    end
+  end
 end
