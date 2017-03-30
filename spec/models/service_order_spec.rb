@@ -99,6 +99,10 @@ describe ServiceOrder do
   end
 
   context '#deep_copy' do
+    before do
+      service_order.update_attributes(:state => ServiceOrder::STATE_ORDERED)
+    end
+
     it 'should copy the miq_requests' do
       service_order.miq_requests << [request, request2]
       service_order_copy = service_order.deep_copy
@@ -118,6 +122,19 @@ describe ServiceOrder do
     it 'should be in the cart state' do
       service_order_copy = service_order.deep_copy
       expect(service_order_copy.state).to eq(ServiceOrder::STATE_CART)
+    end
+
+    it 'should create only one new service order' do
+      expect do
+        service_order.deep_copy
+      end.to change(ServiceOrder, :count).by(1)
+    end
+
+    it 'does not allow copying of a service order in the cart state' do
+      service_order.update_attributes(:state => ServiceOrder::STATE_CART)
+      expect do
+        service_order.deep_copy
+      end.to raise_error(RuntimeError, 'Cannot copy a service order in the cart state')
     end
   end
 end
