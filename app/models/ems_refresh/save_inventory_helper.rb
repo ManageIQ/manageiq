@@ -112,6 +112,8 @@ module EmsRefresh::SaveInventoryHelper
   end
 
   def store_ids_for_new_records(records, hashes, keys)
+    return if records.blank?
+
     keys = Array(keys)
     # Lets first index the hashes based on keys, so we can do O(1) lookups
     record_index = records.index_by { |record| build_index_from_record(keys, record) }
