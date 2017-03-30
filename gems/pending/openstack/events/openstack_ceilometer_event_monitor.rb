@@ -4,12 +4,13 @@ require 'openstack/events/openstack_ceilometer_event_converter'
 
 class OpenstackCeilometerEventMonitor < OpenstackEventMonitor
   def self.available?(options = {})
+    return connect_service_from_settings(options[:ems]) if event_services.keys.include? event_service_settings
     begin
-      options[:ems].connect(:service => "Metering")
+      options[:ems].connect(:service => "Event")
       return true
-    rescue => ex
-      $log.debug("Skipping Openstack Ceilometer events. Availability check failed with #{ex}.") if $log
-      raise
+    rescue MiqException::ServiceNotAvailable => ex
+      $log.debug("Skipping Openstack Panko events. Availability check failed with #{ex}. Trying Ceilometer.") if $log
+      options[:ems].connect(:service => "Metering")
     end
   end
 
@@ -33,18 +34,24 @@ class OpenstackCeilometerEventMonitor < OpenstackEventMonitor
   end
 
   def provider_connection
-    @provider_connection ||= @ems.connect(:service => "Metering")
+    return @provider_connection ||= self.class.connect_service_from_settings(@ems) if self.class.event_services.keys.include? self.class.event_service_settings
+    begin
+      @provider_connection ||= @ems.connect(:service => "Event")
+    rescue MiqException::ServiceNotAvailable => ex
+      $log.debug("Panko is not available, trying access events using Ceilometer (#{ex.inspect})") if $log
+      @provider_connection = @ems.connect(:service => "Metering")
+    end
   end
 
   def each_batch
     while @monitor_events
-      $log.info("Querying Openstack Ceilometer for events newer than #{latest_event_timestamp}...") if $log
+      $log.info("Querying OpenStack for events newer than #{latest_event_timestamp}...") if $log
       events = list_events(query_options).sort_by(&:generated)
       @since = events.last.generated unless events.empty?
 
       amqp_events = filter_unwanted_events(events).map do |event|
         converted_event = OpenstackCeilometerEventConverter.new(event)
-        $log.debug("Openstack Ceilometer is processing a new event: #{event.inspect}") if $log
+        $log.debug("Processing a new OpenStack event: #{event.inspect}") if $log
         openstack_event(nil, converted_event.metadata, converted_event.payload)
       end
 
@@ -58,10 +65,26 @@ class OpenstackCeilometerEventMonitor < OpenstackEventMonitor
     end
   end
 
+  def self.connect_service_from_settings(ems)
+    $log.debug "#{_log.prefix} Using events provided by \"#{event_service_settings}\" service, which was set in settings.yml."
+    ems.connect(:service => event_services[event_service_settings])
+  end
+
+  def self.event_service_settings
+    Settings[:workers][:worker_base][:event_catcher][:event_catcher_openstack_service]
+  rescue StandardError => err
+    $log.warn "#{_log.prefix} Settings key :event_catcher_openstack_service is missing, #{err}."
+    nil
+  end
+
+  def self.event_services
+    {"panko" => "Event", "ceilometer" => "Metering"}
+  end
+
   private
 
   def filter_unwanted_events(events)
-    $log.debug("Openstack Ceilometer received a new events batch: (before filtering)") if $log && events.any?
+    $log.debug("Received a new OpenStack events batch: (before filtering)") if $log && events.any?
     $log.debug(events.inspect) if $log && events.any?
     @event_type_regex ||= Regexp.new(@config[:event_types_regex].to_s)
     events.select { |event| @event_type_regex.match(event.event_type) }
@@ -77,7 +100,11 @@ class OpenstackCeilometerEventMonitor < OpenstackEventMonitor
 
   def list_events(query_options)
     provider_connection.list_events(query_options).body.map do |event_hash|
-      Fog::Metering::OpenStack::Event.new(event_hash)
+      begin
+        Fog::Event::OpenStack::Event.new(event_hash)
+      rescue NameError
+        Fog::Metering::OpenStack::Event.new(event_hash)
+      end
     end
   end
 
