@@ -44,7 +44,7 @@ class Dialog
         :position       => position,
         :dialog_group   => group
       ).tap do |dialog_field|
-        dialog_field.resource_action.fqname = "AutomationManagement/AnsibleTower/Operations/Methods/Available_Machine_Credentials"
+        dialog_field.resource_action.fqname = "AutomationManagement/AnsibleTower/Operations/Methods/Embedded_Ansible_Available_Machine_Credentials"
       end
     end
 
