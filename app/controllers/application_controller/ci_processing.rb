@@ -41,16 +41,16 @@ module ApplicationController::CiProcessing
       ownership_items = recs.collect(&:to_i)
     end
 
+    if filter_ownership_items(get_class_from_controller_param(controller), ownership_items).empty?
+      add_flash(_('None of the selected items allow ownership changes'), :error)
+      @refresh_div = "flash_msg_div"
+      @refresh_partial = "layouts/flash_msg"
+      return
+    end
+
     if @explorer
       @sb[:explorer] = true
       ownership(ownership_items)
-      if @ownershipitems.empty?
-        add_flash(_('None of the selected items allow ownership changes'), :error)
-
-        @refresh_div = "flash_msg_div"
-        @refresh_partial = "layouts/flash_msg"
-        return
-      end
     else
       if role_allows?(:feature => "vm_ownership")
         drop_breadcrumb(:name => _("Set Ownership"), :url => "/vm_common/ownership")
@@ -96,6 +96,15 @@ module ApplicationController::CiProcessing
 
   DONT_CHANGE_OWNER = "0"
 
+  def filter_ownership_items(klass, ownership_items)
+    @origin_ownership_items = ownership_items
+    @ownershipitems ||= begin
+      ownership_scope = klass.where(:id => ownership_items)
+      ownership_scope = ownership_scope.with_ownership if klass.respond_to?(:with_ownership)
+      Rbac.filtered(ownership_scope.order(:name))
+    end
+  end
+
   def build_ownership_info(ownership_items)
     @users = {}   # Users array for first chooser
     klass = get_class_from_controller_param(params[:controller])
@@ -111,10 +120,7 @@ module ApplicationController::CiProcessing
     Rbac.filtered(MiqGroup.non_tenant_groups).each { |g| @groups[g.description] = g.id.to_s }
 
     @user = @group = DONT_CHANGE_OWNER if ownership_items.length > 1
-    ownership_scope = klass.where(:id => ownership_items)
-    ownership_scope = ownership_scope.with_ownership if klass.respond_to?(:with_ownership)
-    @origin_ownership_items = ownership_items
-    @ownershipitems = ownership_scope.order(:name)
+    filter_ownership_items(klass, ownership_items)
     @view = get_db_view(klass == VmOrTemplate ? Vm : klass) # Instantiate the MIQ Report view object
     @view.table = MiqFilter.records2table(@ownershipitems, @view.cols + ['id'])
   end
