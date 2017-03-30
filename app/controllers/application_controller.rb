@@ -1418,7 +1418,10 @@ class ApplicationController < ActionController::Base
     raise _("Invalid input") unless is_integer?(id)
     tested_object = klass.find_by(:id => id)
     if tested_object.nil?
-      raise _("Selected %{model_name} no longer exists") % {:model_name => ui_lookup(:model => klass.to_s)}
+      raise(_("User '%{user_id}' is not authorized to access '%{model}' record id '%{record_id}'") %
+              {:user_id   => current_userid,
+               :record_id => id,
+               :model     => ui_lookup(:model => klass.to_s)})
     end
     Rbac.filtered_object(tested_object, :user => current_user, :named_scope => options[:named_scope]) ||
       raise(_("User '%{user_id}' is not authorized to access '%{model}' record id '%{record_id}'") %

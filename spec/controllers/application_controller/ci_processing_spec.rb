@@ -184,7 +184,7 @@ describe ApplicationController do
     it "Verify flash error message when passed in ID no longer exists in database" do
       record = controller.send(:identify_record, "1", ExtManagementSystem)
       expect(record).to be_nil
-      expect(assigns(:bang).message).to include("Selected Provider no longer exists")
+      expect(assigns(:bang).message).to match(/User 'user[0-9]+' is not authorized to access 'Provider' record id '1'/)
     end
 
     it "Verify @record is set for passed in ID" do
