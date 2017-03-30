@@ -152,8 +152,6 @@
     :addition:
       :critical:
       - CloneTaskEvent
-      - ClusterCreatedEvent
-      - DatacenterCreatedEvent
       - HOST_DETECTED
       - HOST_REGISTER_AUTO_APPROVE_PATTERN
       - HOST_REGISTER_ERROR_UPDATING_HOST
@@ -167,7 +165,6 @@
       - HOST_REGISTER_SUCCEEDED
       - IMPORTEXPORT_STARTING_EXPORT_TEMPLATE
       - IMPORTEXPORT_EXPORT_TEMPLATE
-      - ResourcePoolCreatedEvent
       - TemplateDeployedEvent
       - USER_ADD
       - USER_ADD_HOST
@@ -180,9 +177,6 @@
       - USER_FAILED_ADD_HOST
       - USER_FAILED_ADD_VM_TEMPLATE
       - GceOperationDone_compute.instances.insert
-      - VmConnectedEvent
-      - VmDeployedEvent
-      - VmRegisteredEvent
       - aggregate.addhost.end
       - aggregate.create.end
       - aggregate.removehost.end
@@ -214,9 +208,6 @@
       - ReconnectHost_Task
       - RegisterVM_Task
       - RegisterVM_Task_Complete
-      - VmBeingClonedEvent
-      - VmBeingCreatedEvent
-      - VmBeingDeployedEvent
       :name: Creation/Addition
     :application:
       :critical:
@@ -238,13 +229,11 @@
       - ansible_tower_update
       - ansible_tower_delete
       - ansible_tower_associate
-      - ClusterReconfiguredEvent
       - EnterMaintenanceMode_Task_Complete
       - ExitMaintenanceMode_Task_Complete
       - FailoverLevelRestored
       - MarkAsTemplate_Complete
       - RefreshStorageSystem
-      - ResourcePoolReconfiguredEvent
       - TemplateToVm
       - USER_ADD_DISK_TO_VM
       - USER_ADD_DISK_TO_VM_FINISHED_FAILURE
@@ -265,8 +254,6 @@
       - USER_UPDATE_VM
       - USER_UPDATE_VM_DISK
       - USER_UPDATE_VM_TEMPLATE
-      - VmReconfiguredEvent
-      - VmResourcePoolMovedEvent
       - VmToTemplate
       - compute.instance.rebuild.end
       - compute.instance.resize.end
@@ -288,23 +275,15 @@
       - MoveIntoResourcePool_Complete
       - ReconfigVM_Task
       - ReconfigVM_Task_Complete
-      - VmMacAssignedEvent
-      - VmResourceReallocatedEvent
-      - VmUuidAssignedEvent
       :name: Configuration/Reconfiguration
     :console:
       :critical:
       - USER_LOGGED_IN_VM
       - USER_LOGGED_OUT_VM
-      - UserLoginSessionEvent
-      - UserLogoutSessionEvent
-      - VmAcquiredMksTicketEvent
       :detail: []
       :name: Console Activity
     :deletion:
       :critical:
-      - ClusterDestroyedEvent
-      - ResourcePoolDestroyedEvent
       - UnregisterVM_Complete
       - USER_FAILED_REMOVE_HOST
       - USER_FAILED_REMOVE_VM
@@ -315,8 +294,6 @@
       - USER_REMOVE_VM_TEMPLATE
       - USER_REMOVE_VM_TEMPLATE_FINISHED
       - GceOperationDone_compute.instances.delete
-      - VmDisconnectedEvent
-      - VmRemovedEvent
       - aggregate.delete.end
       - image.delete
       - orchestration.stack.delete.end
@@ -371,12 +348,10 @@
       - RECONSTRUCT_MASTER_FAILED_NO_MASTER
       - RescanAllHBA
       - RescanVMFS
-      - ScheduledTaskStartedEvent
       - SYSTEM_CHANGE_STORAGE_POOL_STATUS_PROBLEMATIC_SEARCHING_NEW_SPM
       - SYSTEM_CHANGE_STORAGE_POOL_STATUS_PROBLEMATIC_WITH_ERROR
       - SYSTEM_UPDATE_HOST_GROUP
       - SYSTEM_UPDATE_HOST_GROUP_FAILED
-      - TaskTimeoutEvent
       - TASK_CLEARING_ASYNC_TASK
       - TASK_STOPPING_ASYNC_TASK
       - UPDATE_TAGS_VM_DEFAULT_DISPLAY_TYPE
@@ -501,7 +476,6 @@
       :name: Import/Export
     :migration:
       :critical:
-      - DatastoreFileMovedEvent
       - DrsMigrateVM_Task
       - DrsVmMigratedEvent
       - MigrateTaskEvent
@@ -524,16 +498,13 @@
       - VM_MIGRATION_ON_CONNECT_CHECK_SUCCEEDED
       - VM_MIGRATION_START
       - VM_MIGRATION_TRYING_RERUN
-      - VmMigratedEvent
       :detail:
       - DrsMigrateVM_Task_Complete
       - MigrateVM_Task_Complete
-      - MigrationHostWarningEvent
       - Move_Task
       - Move_Task_Complete
       - RelocateTaskEvent
       - RelocateVM_Task_Complete
-      - VmBeingRelocatedEvent
       :name: Migration/Vmotion
     :network:
       :critical:
@@ -667,9 +638,6 @@
       - VM_PAUSED_ENOSPC
       - VM_PAUSED_ERROR
       - VM_SHUTDOWN_FAILED
-      - VmGuestRebootEvent
-      - VmGuestShutdownEvent
-      - VmResumingEvent
       - VmStartedOnEvent
       - VmStoppedEvent
       - compute.instance.create.end
@@ -703,9 +671,6 @@
       - ShutdownGuest_Complete
       - SuspendVM_Task
       - SuspendVM_Task_Complete
-      - VmStartingEvent
-      - VmStoppingEvent
-      - VmSuspendingEvent
       :name: Power Activity
     :snapshot:
       :critical:
@@ -730,16 +695,9 @@
       :name: Snapshot Activity
     :status:
       :critical:
-      - AlarmCreatedEvent
-      - AlarmRemovedEvent
       - AlarmStatusChangedEventVm
       - CERTIFICATE_FILE_NOT_FOUND
-      - ClusterStatusChangedEvent
-      - DasHostFailedEvent
-      - DuplicateIpDetectedEvent
       - EVMAlertEvent
-      - GeneralHostWarningEvent
-      - HostDasErrorEvent
       - HOST_ACTIVATE
       - HOST_ACTIVATE_FAILED
       - HOST_CPU_LOWER_THAN_CLUSTER
@@ -763,7 +721,6 @@
       - USER_FAILED_ATTACH_USER_TO_VM
       - VM_FAILURE
       - VM_NOT_RESPONDING
-      - VmConfigMissingEvent
       - NODE_NODEREADY
       - NODE_NODENOTREADY
       - POD_FAILEDVALIDATION
@@ -778,9 +735,6 @@
       - POD_SCHEDULED
       - POD_FAILEDSCHEDULING
       :detail:
-      - DatacenterRenamedEvent
-      - GeneralUserEvent
-      - LicenseServerUnavailableEvent
       - Rename_Task_Complete
       - RenameDatacenter_Task
       - RenameDatacenter_Task_Complete
