@@ -139,6 +139,29 @@ describe "Policies Assignment API" do
     expect(object.get_policies.first.guid).to eq(ps1.guid)
   end
 
+  context "Policy profile policies assignment" do
+    it "adds Policies to a Policy Profile" do
+      api_basic_authorize
+
+      run_post("#{policy_profiles_url(ps2.id)}/policies", gen_request(:assign, [{"id" => p1.id}, {"id" => p2.id}]))
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["results"].count).to eq(2)
+      expect(ps2.reload.miq_policies.count).to eq(3)
+      expect(response.parsed_body["results"].first["guid"]).to eq(p1.guid)
+      expect(response.parsed_body["results"].second["guid"]).to eq(p2.guid)
+    end
+
+    it "removes a Policy from a Policy Profile" do
+      api_basic_authorize
+
+      run_post("#{policy_profiles_url(ps2.id)}/policies", gen_request(:unassign, [{"id" => p3.id}]))
+
+      expect(response).to have_http_status(:ok)
+      expect(ps2.reload.miq_policies.count).to eq(0)
+    end
+  end
+
   context "Provider policies subcollection assignment" do
     let(:provider_url)                  { providers_url(provider.id) }
     let(:provider_policies_url)         { "#{provider_url}/policies" }

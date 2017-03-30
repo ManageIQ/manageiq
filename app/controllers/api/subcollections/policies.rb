@@ -8,11 +8,19 @@ module Api
       end
 
       def policies_assign_resource(object, _type, id = nil, data = nil)
-        policy_assign_action(object, :policies, id, data)
+        if object.kind_of?(collection_class(:policy_profiles))
+          object.add_member(policy_specified(id, data, :policies, MiqPolicy))
+        else
+          policy_assign_action(object, :policies, id, data)
+        end
       end
 
       def policies_unassign_resource(object, _type, id = nil, data = nil)
-        policy_unassign_action(object, :policies, id, data)
+        if object.kind_of?(collection_class(:policy_profiles))
+          object.remove_member(policy_specified(id, data, :policies, MiqPolicy))
+        else
+          policy_unassign_action(object, :policies, id, data)
+        end
       end
 
       def policies_resolve_resource(object, _type, id = nil, data = nil)
