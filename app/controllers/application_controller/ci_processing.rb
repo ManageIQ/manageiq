@@ -531,7 +531,7 @@ module ApplicationController::CiProcessing
 
   def live_migrate_vm
     assert_privileges("instance_live_migrate")
-    @record = find_by_id_filtered(VmOrTemplate, params[:id])
+    @record = find_record_with_rbac(VmOrTemplate, params[:id])
     case params[:button]
     when "cancel"
       add_flash(_("Live Migration of %{model} \"%{name}\" was cancelled by the user") % {
@@ -577,7 +577,6 @@ module ApplicationController::CiProcessing
       session[:flash_msgs] = @flash_array.dup
       javascript_redirect previous_breadcrumb_url
     end
-    return
   end
 
   def evacuate
@@ -616,7 +615,7 @@ module ApplicationController::CiProcessing
 
   def evacuate_vm
     assert_privileges("instance_evacuate")
-    @record = find_by_id_filtered(VmOrTemplate, params[:id])
+    @record = find_record_with_rbac(VmOrTemplate, params[:id])
 
     case params[:button]
     when "cancel"
