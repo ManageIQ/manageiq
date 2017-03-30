@@ -1,20 +1,15 @@
 module EmsRefresh::SaveInventory
   def save_ems_inventory(ems, hashes, target = nil)
-    log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
-
     if hashes.kind_of?(Array)
-      _log.debug "#{log_header} Saving inventory using ManagerRefresh having received an object of array kind."
       ManagerRefresh::SaveInventory.save_inventory(ems, hashes)
       return
     end
     if hashes && hashes[:_inventory_collection]
-      _log.debug "#{log_header} Saving inventory using ManagerRefresh having received a hash marked as inventory collection."
       hashes.delete(:_inventory_collection)
       ManagerRefresh::SaveInventory.save_inventory(ems, hashes.values)
       return
     end
 
-    _log.debug "#{log_header} Saving inventory based on ems type."
     case ems
     when EmsCloud                                           then save_ems_cloud_inventory(ems, hashes, target)
     when EmsInfra                                           then save_ems_infra_inventory(ems, hashes, target)

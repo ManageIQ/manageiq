@@ -2,6 +2,12 @@ require 'recursive-open-struct'
 require_relative '../../middleware_manager/hawkular_helper'
 
 describe ManageIQ::Providers::Hawkular::Inventory::Parser::MiddlewareManager do
+  def inventory_object_data(inventory_object)
+    inventory_object
+      .data
+      .slice(*inventory_object.inventory_collection.inventory_object_attributes)
+  end
+
   let(:ems_hawkular) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     auth = AuthToken.new(:name => "test", :auth_key => "valid-token", :userid => "jdoe", :password => "password")
@@ -40,13 +46,12 @@ describe ManageIQ::Providers::Hawkular::Inventory::Parser::MiddlewareManager do
         }
       }
       parsed_datasource = {
-        :name              => 'ruby-sample-build',
-        :middleware_server => nil,
-        :nativeid          => 'Local~/subsystem=datasources/data-source=ExampleDS',
-        :ems_ref           => '/t;Hawkular'\
-                                                 "/f;#{the_feed_id}/r;Local~~"\
-                                                 '/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS',
-        :properties        => {
+        :name       => 'ruby-sample-build',
+        :nativeid   => 'Local~/subsystem=datasources/data-source=ExampleDS',
+        :ems_ref    => '/t;Hawkular'\
+                            "/f;#{the_feed_id}/r;Local~~"\
+                            '/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS',
+        :properties => {
           'Driver Name'    => 'h2',
           'JNDI Name'      => 'java:jboss/datasources/ExampleDS',
           'Connection URL' => 'jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE',
@@ -54,7 +59,8 @@ describe ManageIQ::Providers::Hawkular::Inventory::Parser::MiddlewareManager do
         }
       }
       inventory_obj = persister.middleware_datasources.build(:ems_ref => datasource.path)
-      expect(parser.send(:parse_datasource, datasource, inventory_obj, config)).to eq(parsed_datasource)
+      parser.parse_datasource(datasource, inventory_obj, config)
+      expect(inventory_object_data(inventory_obj)).to eq(parsed_datasource)
     end
   end
 
@@ -86,7 +92,8 @@ describe ManageIQ::Providers::Hawkular::Inventory::Parser::MiddlewareManager do
         :properties => properties,
       }
       inventory_obj = persister.middleware_domains.build(:ems_ref => path)
-      expect(parser.send(:parse_middleware_domain, 'master.Unnamed Domain', domain, inventory_obj)).to eq(parsed_domain)
+      parser.parse_middleware_domain('master.Unnamed Domain', domain, inventory_obj)
+      expect(inventory_object_data(inventory_obj)).to eq(parsed_domain)
     end
   end
 
@@ -136,9 +143,8 @@ describe ManageIQ::Providers::Hawkular::Inventory::Parser::MiddlewareManager do
           :status => 'Unknown'
         }]
       }
-      expect(parser.send(:parse_availability,
-                         availabilities,
-                         resources_by_metric_id)).to eq(parsed_resources_with_availability)
+      expect(parser.parse_availability(availabilities, resources_by_metric_id))
+        .to eq(parsed_resources_with_availability)
     end
     it 'handles missing metrics' do
       resources_by_metric_id = {
@@ -162,9 +168,8 @@ describe ManageIQ::Providers::Hawkular::Inventory::Parser::MiddlewareManager do
         'resource_id_3' => [{}],
         'resource_id_4' => [{}]
       }
-      expect(parser.send(:parse_availability,
-                         availabilities,
-                         resources_by_metric_id)).to eq(parsed_resources_with_availability)
+      expect(parser.parse_availability(availabilities, resources_by_metric_id))
+        .to eq(parsed_resources_with_availability)
     end
   end
 

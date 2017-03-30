@@ -1,6 +1,7 @@
+require 'hawkular/hawkular_client'
+
 module ManageIQ::Providers
   class Hawkular::Inventory::Collector::MiddlewareManager < ManagerRefresh::Inventory::Collector
-    require 'hawkular/hawkular_client'
     include ::Hawkular::ClientUtils
 
     def connection
@@ -12,30 +13,20 @@ module ManageIQ::Providers
     end
 
     def eaps(feed)
-      path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id          => hawk_escape_id(feed),
-                                                      :resource_type_id => hawk_escape_id('WildFly Server'))
-      connection.inventory.list_resources_for_type(path.to_s, :fetch_properties => true)
+      resources_for(feed, 'WildFly Server')
     end
 
     def domains(feed)
-      path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id          => hawk_escape_id(feed),
-                                                      :resource_type_id => hawk_escape_id('Domain Host'))
-      host_controllers = connection.inventory.list_resources_for_type(path.to_s, :fetch_properties => true)
-
-      # filter only the domain controllers
-      host_controllers.select { |host_controller| host_controller.properties['Is Domain Controller'] == 'true' }
+      resources_for(feed, 'Domain Host')
+        .select { |host| host.properties['Is Domain Controller'] == 'true' }
     end
 
     def server_groups(feed)
-      path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id          => hawk_escape_id(feed),
-                                                      :resource_type_id => hawk_escape_id('Domain Server Group'))
-      connection.inventory.list_resources_for_type(path.to_s, :fetch_properties => true)
+      resources_for(feed, 'Domain Server Group')
     end
 
     def domain_servers(feed)
-      path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id          => hawk_escape_id(feed),
-                                                      :resource_type_id => hawk_escape_id('Domain WildFly Server'))
-      connection.inventory.list_resources_for_type(path.to_s, :fetch_properties => true)
+      resources_for(feed, 'Domain WildFly Server')
     end
 
     def child_resources(resource_path, recursive = false)
@@ -71,26 +62,26 @@ module ManageIQ::Providers
     end
 
     def os_resource_for(feed)
-      os = os_for(feed)
-      unless os.nil?
-        os_resources = connection.inventory.list_resources_for_type(os.path, true)
-        unless os_resources.nil? || os_resources.empty?
-          return os_resources.first
-        end
-        $mw_log.warn "Found no OS resources for resource type #{os.path}"
-      end
-      nil
+      os_for(feed)
+        .try { |os| connection.inventory.list_resources_for_type(os.path, true) }
+        .presence
+        .try(:first)
     end
 
     def os_for(feed)
-      resource_types = connection.inventory.list_resource_types(hawk_escape_id(feed))
-      os_types = resource_types.select { |item| item.id.include? 'Operating System' }
-      unless os_types.nil? || os_types.empty?
-        return os_types.first
-      end
+      connection
+        .inventory
+        .list_resource_types(hawk_escape_id(feed))
+        .select { |item| item.id.include? 'Operating System' }
+        .first
+    end
 
-      $mw_log.warn "Found no OS resource types for feed #{feed}"
-      nil
+    def resources_for(feed, resource_type_path)
+      path = ::Hawkular::Inventory::CanonicalPath.new(
+        :feed_id          => hawk_escape_id(feed),
+        :resource_type_id => hawk_escape_id(resource_type_path)
+      )
+      connection.inventory.list_resources_for_type(path.to_s, :fetch_properties => true)
     end
   end
 end

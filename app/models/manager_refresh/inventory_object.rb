@@ -70,7 +70,7 @@ module ManagerRefresh
     end
 
     def assign_attributes(attributes)
-      attributes.each { |k, v| @data[k] = v if respond_to?("#{k}=") }
+      attributes.each { |k, v| public_send("#{k}=", v) }
     end
 
     def to_s
@@ -94,18 +94,6 @@ module ManagerRefresh
         define_method(attr) do
           data[attr]
         end
-      end
-    end
-
-    def ==(other)
-      if other.kind_of?(self.class)
-        data == other.data
-      elsif other.kind_of?(::Hash)
-        inventory_collection.inventory_object_attributes.all? do |attr|
-          data[attr] == other[attr]
-        end
-      else
-        raise ArgumentError, _("Equality comparer between %{me} and %{it} is not defined.") % { :me => self.class, :it => other.class }
       end
     end
 

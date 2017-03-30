@@ -26,12 +26,9 @@ module ManageIQ::Providers
     has_many :middleware_deployments, :foreign_key => :ems_id, :dependent => :destroy
     has_many :middleware_datasources, :foreign_key => :ems_id, :dependent => :destroy
     has_many :middleware_messagings, :foreign_key => :ems_id, :dependent => :destroy
+    has_many :middleware_server_groups, :through => :middleware_domains
 
     attr_accessor :client
-
-    def middleware_server_groups
-      MiddlewareServerGroup.joins(:middleware_domain).where(:middleware_domains => { :ext_management_system => self })
-    end
 
     def verify_credentials(_auth_type = nil, options = {})
       begin
@@ -209,16 +206,6 @@ module ManageIQ::Providers
 
     def create_jdr_report(ems_ref)
       run_generic_operation(:JDR, ems_ref)
-    end
-
-    def self.raw_alerts_connect(hostname, port, username, password)
-      require 'hawkular_all'
-      url = URI::HTTP.build(:host => hostname, :port => port.to_i, :path => '/hawkular/alerts').to_s
-      credentials = {
-        :username => username,
-        :password => password
-      }
-      ::Hawkular::Alerts::Client.new(url, credentials)
     end
 
     def add_middleware_datasource(ems_ref, hash)
@@ -413,11 +400,13 @@ module ManageIQ::Providers
                     MiddlewareServer.find_by(:id => mw_entity.server_id)
                   end
 
-      Notification.create(:type => type, :options => {
-                            :op_name   => op_name,
-                            :op_arg    => op_arg.nil? ? '' : op_arg,
-                            :mw_server => "#{mw_server.name} (#{mw_server.feed})"
-                          })
+      Notification.create(
+        :type => type, :options => {
+          :op_name   => op_name,
+          :op_arg    => op_arg.nil? ? '' : op_arg,
+          :mw_server => "#{mw_server.name} (#{mw_server.feed})"
+        }
+      )
     end
 
     # UI methods for determining availability of fields
