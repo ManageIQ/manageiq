@@ -30,9 +30,11 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     2.times do
       @ems.reload
       VCR.use_cassette(described_class.name.underscore,
+                       :allow_unused_http_interactions => true, # TODO kclient, oclient
+                       :allow_playback_repeats => true, # TODO?
                        :match_requests_on => [:path,]) do # , :record => :new_episodes) do
         #EmsRefresh.refresh(@ems)
-        @ems.refresher.new([@ems]).inlined_refresh1(@ems)
+        @ems.refresher.new([@ems]).inlined_refresh2(@ems)
       end
       @ems.reload
 
@@ -78,6 +80,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     VCR.use_cassette("#{described_class.name.underscore}_hawk_fails",
                      :match_requests_on => [:path,]) do # , :record => :new_episodes) do
       EmsRefresh.refresh(ems)
+      #TODO ems.refresher.new([ems]).inlined_refresh2(ems)
     end
     ems.reload
 
