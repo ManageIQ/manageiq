@@ -83,6 +83,17 @@ describe "Vmware_best_fit_least_utilized" do
         expect(miq_provision.options[:placement_host_name]).to eq([host1.id, host1.name])
         expect(miq_provision.options[:placement_ds_name]).to   eq([host1.storages[1].id, host1.storages[1].name])
       end
+
+      it "selects a host not in maintenance" do
+        allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_hosts).and_return(host_struct)
+        allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_storages).and_return(storages)
+        host1.update_attributes(:maintenance => true)
+
+        ws.root
+        miq_provision.reload
+        expect(miq_provision.options[:placement_host_name]).to eq([host2.id, host2.name])
+        expect(miq_provision.options[:placement_ds_name]).to   eq([host2.storages[1].id, host2.storages[1].name])
+      end
     end
   end
 end

@@ -16,6 +16,7 @@ $evm.log("info", "vm=[#{vm.name}], space required=[#{vm.provisioned_storage}]")
 host = storage = nil
 min_registered_vms = nil
 prov.eligible_hosts.each do |h|
+  next if h.maintenance
   next unless h.power_state == "on"
   nvms = h.vms.length
   if min_registered_vms.nil? || nvms < min_registered_vms
