@@ -29,7 +29,7 @@ module ApplicationController::CiProcessing
       recs = find_checked_ids_with_rbac(get_class_from_controller_param(params[:controller]))
     end
     if recs.blank?
-      id = test_item_with_rbac(get_class_from_controller_param(params[:controller]), params[:id])
+      id = find_id_with_rbac(get_class_from_controller_param(params[:controller]), params[:id])
       recs = [id.to_i]
     end
     if recs.length < 1
@@ -876,7 +876,7 @@ module ApplicationController::CiProcessing
     assert_privileges(params[:pressed])
     # check to see if coming from show_list or drilled into vms from another CI
     rec_cls = "vm"
-    recs = params[:display] ? find_checked_ids_with_rbac(VmOrTemplate) : [test_item_with_rbac(VmOrTemplate, params[:id]).to_i]
+    recs = params[:display] ? find_checked_ids_with_rbac(VmOrTemplate) : [find_id_with_rbac(VmOrTemplate, params[:id]).to_i]
     if recs.length < 1
       add_flash(_("One or more %{model} must be selected to Right-Size Recommendations") %
         {:model => ui_lookup(:table => request.parameters[:controller])}, :error)
@@ -1692,7 +1692,7 @@ module ApplicationController::CiProcessing
       recs = find_checked_ids_with_rbac(VmOrTemplate)
     end
     if recs.blank?
-      recs = [test_item_with_rbac(VmOrTemplate, params[:id]).to_i]
+      recs = [find_id_with_rbac(VmOrTemplate, params[:id]).to_i]
     end
     if recs.length < 1
       add_flash(_("One or more %{model} must be selected to Reconfigure") %
@@ -1908,7 +1908,7 @@ module ApplicationController::CiProcessing
         @refresh_partial = "layouts/gtl"
       else
 
-        vms.push(test_item_with_rbac(klass, params[:id]))
+        vms.push(find_id_with_rbac(klass, params[:id]))
         process_objects(vms, method) unless vms.empty?
 
         # TODO: tells callers to go back to show_list because this VM may be gone
@@ -1978,7 +1978,7 @@ module ApplicationController::CiProcessing
       if params[:id].nil? || !ExtManagementSystem.where(:id => params[:id]).exists?
         add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => controller_name)}, :error)
       else
-        items.push(test_item_with_rbac(ExtManagementSystem, params[:id]))
+        items.push(find_id_with_rbac(ExtManagementSystem, params[:id]))
       end
     else
       items = find_checked_ids_with_rbac(ExtManagementSystem)
@@ -2189,7 +2189,7 @@ module ApplicationController::CiProcessing
     assert_privileges(params[:pressed])
     vms = find_checked_ids_with_rbac(VmOrTemplate)
     if vms.blank?
-      vms = [test_item_with_rbac(VmOrTemplate, params[:id])]
+      vms = [find_id_with_rbac(VmOrTemplate, params[:id])]
     end
     if vms.length < 1
       add_flash(_("At least 1 %{model} must be selected for Policy Simulation") %
@@ -2299,7 +2299,7 @@ module ApplicationController::CiProcessing
       if params[:id].nil? || EmsCluster.find_by_id(params[:id]).nil?
         add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:tables => "ems_cluster")}, :error)
       else
-        clusters.push(test_item_with_rbac(EmsCluster, params[:id]))
+        clusters.push(find_id_with_rbac(EmsCluster, params[:id]))
         process_clusters(clusters, method)  unless clusters.empty?
       end
 
@@ -2590,7 +2590,7 @@ module ApplicationController::CiProcessing
       if params[:id].nil? || Host.find_by_id(params[:id]).nil?
         add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => "host")}, :error)
       else
-        hosts.push(test_item_with_rbac(Host, params[:id]))
+        hosts.push(find_id_with_rbac(Host, params[:id]))
         process_hosts(hosts, method, display_name)  unless hosts.empty?
       end
 
@@ -2677,7 +2677,7 @@ module ApplicationController::CiProcessing
       if params[:id].nil? || Storage.find_by_id(params[:id]).nil?
         add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:tables => "storage")}, :error)
       else
-        storages.push(test_item_with_rbac(Storage, params[:id]))
+        storages.push(find_id_with_rbac(Storage, params[:id]))
         process_storage(storages, method)  unless storages.empty?
       end
 
@@ -2748,7 +2748,7 @@ module ApplicationController::CiProcessing
       if params[:id].nil? || Storage.find_by_id(params[:id]).nil?
         add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:tables => "storage")}, :error)
       else
-        datastores.push(test_item_with_rbac(Storage, params[:id]))
+        datastores.push(find_id_with_rbac(Storage, params[:id]))
       end
       process_storage(datastores, "destroy")  unless datastores.empty?
       @single_delete = true unless flash_errors?
@@ -2781,7 +2781,7 @@ module ApplicationController::CiProcessing
       if params[:id].nil? || model_class.find_by_id(params[:id]).nil?
         add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => model_name)}, :error)
       else
-        elements.push(test_item_with_rbac(model_class, params[:id]))
+        elements.push(find_id_with_rbac(model_class, params[:id]))
       end
       send(destroy_method, elements, "destroy") unless elements.empty?
       @single_delete = true unless flash_errors?
