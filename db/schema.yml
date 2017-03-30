@@ -6529,6 +6529,8 @@ showback_tariffs:
 - description
 - created_at
 - updated_at
+- resource_type
+- resource_id
 snapshots:
 - id
 - uid
