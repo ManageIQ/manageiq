@@ -21,5 +21,10 @@ describe ApplicationHelper::Button::SetOwnership do
       let(:tenant_mapping_enabled) { false }
       it_behaves_like 'an enabled button'
     end
+
+    context 'when vm does not belong to any Vm' do
+      let(:ext_management_system)  { nil }
+      it_behaves_like 'an enabled button'
+    end
   end
 end
