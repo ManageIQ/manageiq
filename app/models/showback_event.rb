@@ -4,7 +4,7 @@ class ShowbackEvent < ApplicationRecord
   has_many :showback_charges, dependent: :destroy
   has_many :showback_buckets, through: :showback_charges
 
-  validates :data, :start_time, :end_time, :id_obj, :type_obj, :presence => true
+  validates :start_time, :end_time, :id_obj, :type_obj, :presence => true
   validate :start_time_before_end_time
 
   def start_time_before_end_time
@@ -17,6 +17,7 @@ class ShowbackEvent < ApplicationRecord
   default_value_for(:data) {
     hash = {}
     ShowbackMeasureType.all.each do |measure_type|
+      next unless measure_type.category == type_obj
       hash[measure_type.measure] = {}
       measure_type.dimensions.each do |dim|
         hash[measure_type.measure][dim] = 0
