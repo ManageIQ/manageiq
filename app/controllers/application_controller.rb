@@ -1420,7 +1420,7 @@ class ApplicationController < ActionController::Base
   #   raises an exception
   def find_record_with_rbac(klass, id, options = {})
     raise _("Invalid input") unless is_integer?(id)
-    tested_object = klass.find(id)
+    tested_object = klass.find_by(:id => id)
     if tested_object.nil?
       raise _("Selected %{model_name} no longer exists") % {:model_name => ui_lookup(:model => klass.to_s)}
     end
