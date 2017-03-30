@@ -1,7 +1,7 @@
 module ManageIQ::Providers
   module Hawkular
     class MiddlewareManager::RefreshParser
-      include ::HawkularUtilsMixin
+      include ::Hawkular::ClientUtils
 
       def self.ems_inv_to_hashes(ems, options = nil)
         new(ems, options).ems_inv_to_hashes
