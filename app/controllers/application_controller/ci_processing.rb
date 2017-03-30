@@ -1568,7 +1568,7 @@ module ApplicationController::CiProcessing
 
     order_by = order_field == "ems_id" ? order_field : "lower(#{order_field})"
 
-    klass.where(:id => elements).order(order_by).each do |record|
+    Rbac.filtered(klass.where(:id => elements).order(order_by)).each do |record|
       name = record.send(order_field.to_sym)
       if task == 'destroy'
         process_element_destroy(record, klass, name)
