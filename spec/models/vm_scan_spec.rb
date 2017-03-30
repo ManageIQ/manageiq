@@ -1,5 +1,5 @@
 describe VmScan do
-  context "A single VM Scan Job," do
+  context "A single VM Scan Job on VMware provider," do
     before(:each) do
       @server = EvmSpecHelper.local_miq_server(:capabilities => {:vixDisk => true})
       assign_smartproxy_role_to_server(@server)
@@ -250,36 +250,6 @@ describe VmScan do
     end
 
     describe "#call_snapshot_create" do
-      context "for ManageIQ::Providers::Openstack::CloudManager::Vm" do
-        let(:vm) { double("ManageIQ::Providers::Openstack::CloudManager::Vm") }
-        before(:each) do
-          allow(VmOrTemplate).to receive(:find).and_return(vm)
-          allow(vm).to receive(:kind_of?).with(ManageIQ::Providers::Openstack::CloudManager::Vm).and_return(true)
-          allow(vm).to receive(:kind_of?).with(ManageIQ::Providers::Microsoft::InfraManager::Vm).and_return(false)
-        end
-
-        it "executes VmScan#create_snapshot and send signal ::snapshot_complete" do
-          expect(@job).to receive(:create_snapshot).and_return(true)
-          expect(@job).to receive(:signal).with(:snapshot_complete)
-          @job.call_snapshot_create
-        end
-      end
-
-      context "for ManageIQ::Providers::Microsoft::InfraManager::Vm" do
-        let(:vm) { double("ManageIQ::Providers::Microsoft::InfraManager::Vm") }
-        before(:each) do
-          allow(VmOrTemplate).to receive(:find).and_return(vm)
-          allow(vm).to receive(:kind_of?).with(ManageIQ::Providers::Openstack::CloudManager::Vm).and_return(false)
-          allow(vm).to receive(:kind_of?).with(ManageIQ::Providers::Microsoft::InfraManager::Vm).and_return(true)
-        end
-
-        it "executes VmScan#create_snapshot and send signal :snapshot_complete" do
-          expect(@job).to receive(:create_snapshot).and_return(true)
-          expect(@job).to receive(:signal).with(:snapshot_complete)
-          @job.call_snapshot_create
-        end
-      end
-
       context "for providers other than OpenStack and Microsoft" do
         before(:each) { @job.agent_id = @server.id }
 
@@ -320,6 +290,44 @@ describe VmScan do
             @job.call_snapshot_create
           end
         end
+      end
+    end
+  end
+
+  context "A single VM Scan Job on Openstack provider" do
+    let(:vm) do
+      vm = double("ManageIQ::Providers::Openstack::CloudManager::Vm")
+      allow(vm).to receive(:kind_of?).with(ManageIQ::Providers::Openstack::CloudManager::Vm).and_return(true)
+      allow(vm).to receive(:kind_of?).with(ManageIQ::Providers::Microsoft::InfraManager::Vm).and_return(false)
+      vm
+    end
+    let(:job) { VmScan.new(:context => {}, :options => {}) }
+
+    describe "#call_snapshot_create" do
+      it "executes VmScan#create_snapshot and send signal :snapshot_complete" do
+        allow(VmOrTemplate).to receive(:find).and_return(vm)
+        expect(job).to receive(:create_snapshot).and_return(true)
+        expect(job).to receive(:signal).with(:snapshot_complete)
+        job.call_snapshot_create
+      end
+    end
+  end
+
+  context "A single VM Scan Job on Microsoft provider" do
+    let(:vm) do
+      vm = double("ManageIQ::Providers::Microsoft::InfraManager::Vm")
+      allow(vm).to receive(:kind_of?).with(ManageIQ::Providers::Openstack::CloudManager::Vm).and_return(false)
+      allow(vm).to receive(:kind_of?).with(ManageIQ::Providers::Microsoft::InfraManager::Vm).and_return(true)
+      vm
+    end
+    let(:job) { VmScan.new(:context => {}, :options => {}) }
+
+    describe "#call_snapshot_create" do
+      it "executes VmScan#create_snapshot and send signal :snapshot_complete" do
+        allow(VmOrTemplate).to receive(:find).and_return(vm)
+        expect(job).to receive(:create_snapshot).and_return(true)
+        expect(job).to receive(:signal).with(:snapshot_complete)
+        job.call_snapshot_create
       end
     end
   end
