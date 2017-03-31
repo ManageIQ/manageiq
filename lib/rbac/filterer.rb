@@ -430,6 +430,13 @@ module Rbac
       tenant_id_clause ? scope.where(tenant_id_clause) : scope
     end
 
+    def scope_to_cloud_tenant(scope, user, miq_group)
+      klass = scope.respond_to?(:klass) ? scope.klass : scope
+      user_or_group = user || miq_group
+      tenant_id_clause = klass.tenant_id_clause(user_or_group)
+      klass.tenant_joins_clause(scope).where(tenant_id_clause)
+    end
+
     ##
     # Main scoping method
     #
@@ -439,6 +446,8 @@ module Rbac
       # TENANT_ACCESS_STRATEGY are a consolidated list of them.
       if klass.respond_to?(:scope_by_tenant?) && klass.scope_by_tenant?
         scope = scope_to_tenant(scope, user, miq_group)
+      elsif klass.respond_to?(:scope_by_cloud_tenant?) && klass.scope_by_cloud_tenant?
+        scope = scope_to_cloud_tenant(scope, user, miq_group)
       end
 
       if apply_rbac_directly?(klass)
