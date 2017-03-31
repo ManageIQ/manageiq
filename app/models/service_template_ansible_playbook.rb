@@ -1,4 +1,6 @@
 class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
+  before_destroy :check_retirement_potential
+
   RETIREMENT_ENTRY_POINTS = {
     'yes_without_playbook' => '/Service/Generic/StateMachines/GenericLifecycle/Retire_Basic_Resource',
     'no_without_playbook'  => '/Service/Generic/StateMachines/GenericLifecycle/Retire_Basic_Resource_None',
@@ -162,5 +164,25 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
         .delete_in_provider_queue(job_template.manager.id, { :manager_ref => job_template.manager_ref }, auth_user)
     end
     super
+  end
+
+  # ServiceTemplate includes a retirement resource action
+  #   with a defined job template:
+  #
+  #   1. A resource_action that includes a configuration_template_id.
+  #   2. At least one service instance where :retired is set to false.
+  #
+  def retirement_potential?
+    retirement_jt_exists = resource_actions.where(:action => 'Retirement').where.not(:configuration_template_id => nil).present?
+    retirement_jt_exists && services.where(:retired => false).exists?
+  end
+
+  private
+
+  def check_retirement_potential
+    return true unless retirement_potential?
+    error_text = 'Destroy aborted.  Active Services require retirement resources associated with this instance.'
+    errors[:base] << error_text
+    throw :abort
   end
 end
