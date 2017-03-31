@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe ChargeableField, :type => :model do
   describe '#rate_name' do
     let(:source) { 'used' }

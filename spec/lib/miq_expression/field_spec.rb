@@ -1,5 +1,3 @@
-require "rails_helper"
-
 RSpec.describe MiqExpression::Field do
   describe ".parse" do
     it "can parse the model name" do
