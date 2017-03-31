@@ -1838,11 +1838,12 @@ class ApplicationController < ActionController::Base
     @in_a_form = true
     if request.parameters[:pressed].starts_with?("host_")       # need host id for host prov
       @org_controller = "host"                                  # request originated from controller
+      klass = Host
       @refresh_partial = "prov_edit"
       if params[:id]
-        @prov_id = params[:id]
+        @prov_id = find_id_with_rbac(Host, params[:id])
       else
-        @prov_id = find_checked_items.map(&:to_i).uniq
+        @prov_id = find_checked_ids_with_rbac(Host).map(&:to_i).uniq
         res = Host.ready_for_provisioning?(@prov_id)
         if res != true
           res.each do |field, msg|
@@ -1854,19 +1855,19 @@ class ApplicationController < ActionController::Base
       end
     else
       @org_controller = "vm"                                      # request originated from controller
+      klass = VmOrTemplate
       @refresh_partial = typ ? "prov_edit" : "pre_prov"
     end
     if typ
-      vms = find_checked_items
+      vms = find_checked_ids_with_rbac(klass)
+      @prov_id = vms.empty? ? find_id_with_rbac(klass, params[:id]) : vms[0]
       case typ
       when "clone"
-        @prov_id = !vms.empty? ? vms[0] : params[:id]
         @prov_type = "clone_to_vm"
       when "migrate"
-        @prov_id = !vms.empty? ? vms : [params[:id]]
+        @prov_id = [@prov_id]
         @prov_type = "migrate"
       when "publish"
-        @prov_id = !vms.empty? ? vms[0] : params[:id]
         @prov_type = "clone_to_template"
       end
       @_params[:prov_id] = @prov_id
@@ -1881,14 +1882,13 @@ class ApplicationController < ActionController::Base
         if %w(image_miq_request_new miq_template_miq_request_new).include?(params[:pressed])
           # skip pre prov grid
           set_pre_prov_vars
-          templates = find_checked_items
-          templates = [params[:id]] if templates.blank?
+          template = find_checked_records_with_rbac(VmOrTemplate).first
+          template = find_record_with_rbac(VmOrTemplate, params[:id]) if template.nil?
 
-          template = VmOrTemplate.find_by_id(from_cid(templates.first))
           render_flash_not_applicable_to_model("provisioning") unless template.supports_provisioning?
           return if performed?
 
-          @edit[:src_vm_id] = templates.first
+          @edit[:src_vm_id] = template
           session[:edit] = @edit
           @_params[:button] = "continue"
         end
