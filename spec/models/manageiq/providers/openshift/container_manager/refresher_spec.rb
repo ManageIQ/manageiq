@@ -47,7 +47,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
       assert_specific_container_build
       assert_specific_container_build_pod
       assert_specific_container_template
-      assert_specific_container_image
+#     assert_specific_container_image
       assert_specific_container_node_custom_attributes
     end
   end
@@ -95,7 +95,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     expect(ContainerBuild.count).to eq(3)
     expect(ContainerBuildPod.count).to eq(3)
     expect(ContainerTemplate.count).to eq(26)
-    expect(ContainerImage.count).to eq(40)
+    expect(ContainerImage.count).to eq(12)
   end
 
   def assert_ems
