@@ -301,6 +301,38 @@ describe VmScan do
         @job.wait_for_vim_broker
       end
     end
+
+    describe "#call_scan" do
+      before(:each) do
+        @job.agent_id = @server.id
+        allow(VmOrTemplate).to receive(:find).with(@vm.id).and_return(@vm)
+        allow(MiqServer).to receive(:find).with(@server.id).and_return(@server)
+      end
+
+      it "calls #scan_metadata on target VM and as result " do
+        expect(@vm).to receive(:scan_metadata)
+        @job.call_scan
+      end
+
+      it "triggers adding MiqServer#scan_metada to MiqQueue" do
+        @job.call_scan
+        queue_item = MiqQueue.where(:class_name => "MiqServer", :queue_name => "smartproxy").first
+        expect(@server.id).to eq queue_item.instance_id
+        expect(queue_item.args[0].vm_guid).to eq @vm.guid
+      end
+
+      it "updates job message" do
+        allow(@vm).to receive(:scan_metadata)
+        @job.call_scan
+        expect(@job.message).to eq "Scanning for metadata from VM"
+      end
+
+      it "sends signal :abort if there is any error" do
+        allow(@vm).to receive(:scan_metadata).and_raise("Any Error")
+        expect(@job).to receive(:signal).with(:abort, any_args)
+        @job.call_scan
+      end
+    end
   end
 
   context "A single VM Scan Job on Openstack provider" do
