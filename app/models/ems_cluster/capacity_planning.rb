@@ -160,7 +160,7 @@ module EmsCluster::CapacityPlanning
   def capacity_resources_per_vm_with_min_max(profile, resource)
     min = capacity_profile_minimum(profile, resource)
     max = capacity_profile_maximum(profile, resource)
-    capacity_resources_per_vm(profile, resource).apply_min_max(min, max)
+    capacity_resources_per_vm(profile, resource).clamp(min, max)
   end
 
   def capacity_available_host_resources(profile, resource)
