@@ -71,7 +71,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
 
   def save_job_options(action, overrides)
     job_options = options.fetch_path(:config_info, action.downcase.to_sym).slice(:hosts, :extra_vars)
-    job_options.deep_merge!(parse_dialog_options)
+    job_options.deep_merge!(parse_dialog_options) unless action == ResourceAction::RETIREMENT
     job_options.deep_merge!(overrides)
 
     credential_id = job_options.delete(:credential_id)

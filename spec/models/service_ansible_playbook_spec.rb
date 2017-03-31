@@ -4,6 +4,7 @@ describe(ServiceAnsiblePlaybook) do
   let(:basic_service)  { FactoryGirl.create(:service_ansible_playbook, :options => config_info_options) }
   let(:service)        { FactoryGirl.create(:service_ansible_playbook, :options => config_info_options.merge(dialog_options)) }
   let(:action)         { ResourceAction::PROVISION }
+  let(:credential_0)   { FactoryGirl.create(:authentication, :manager_ref => '1') }
   let(:credential_1)   { FactoryGirl.create(:authentication, :manager_ref => 'a') }
   let(:credential_2)   { FactoryGirl.create(:authentication, :manager_ref => 'b') }
 
@@ -37,9 +38,10 @@ describe(ServiceAnsiblePlaybook) do
     {
       :config_info => {
         :provision => {
-          :hosts       => "default_host1,default_host2",
-          :playbook_id => 10,
-          :extra_vars  => {
+          :hosts         => "default_host1,default_host2",
+          :credential_id => credential_0.id,
+          :playbook_id   => 10,
+          :extra_vars    => {
             "var1" => "default_val1",
             "var2" => "default_val2",
             "var3" => "default_val3"
@@ -90,6 +92,28 @@ describe(ServiceAnsiblePlaybook) do
           :credential => credential_1.manager_ref,
           :extra_vars => {'var1' => 'value1', 'var2' => 'value2', 'var3' => 'default_val3'}
         )
+      end
+
+      context 'action is retirement' do
+        let(:action) { ResourceAction::RETIREMENT }
+
+        before do
+          service_options = service.options
+          service_options[:config_info][:retirement] = service_options[:config_info][:provision]
+          service.update_attributes(:options => service_options)
+        end
+
+        it 'ignores dialog options' do
+          hosts = service.options.fetch_path(:config_info, :retirement, :hosts)
+          expect(service).to receive(:create_inventory_with_hosts).with(action, hosts).and_return(double(:id => 20))
+          service.preprocess(action)
+          service.reload
+          expect(service.options[:retirement_job_options]).to have_attributes(
+            :inventory  => 20,
+            :credential => nil,
+            :extra_vars => {'var1' => 'default_val1', 'var2' => 'default_val2', 'var3' => 'default_val3'}
+          )
+        end
       end
     end
 
