@@ -926,18 +926,22 @@ module OpsController::OpsRbac
 
   def rbac_group_get_details(id)
     @record = @group = MiqGroup.find_by_id(from_cid(id))
-    get_tagdata(@group)
-    # Build the belongsto filters hash
     @belongsto = {}
-    @group.get_belongsto_filters.each do |b|            # Go thru the belongsto tags
-      bobj = MiqFilter.belongsto2object(b)            # Convert to an object
-      next unless bobj
-      @belongsto[bobj.class.to_s + "_" + bobj.id.to_s] = b # Store in hash as <class>_<id> string
-    end
     @filters = {}
-    # Build the managed filters hash
-    [@group.get_managed_filters].flatten.each do |f|
-      @filters[f.split("/")[-2] + "-" + f.split("/")[-1]] = f
+    if @record.present?
+      get_tagdata(@group)
+      # Build the belongsto filters hash
+
+      @group.get_belongsto_filters.each do |b|            # Go thru the belongsto tags
+        bobj = MiqFilter.belongsto2object(b)            # Convert to an object
+        next unless bobj
+        @belongsto[bobj.class.to_s + "_" + bobj.id.to_s] = b # Store in hash as <class>_<id> string
+      end
+
+      # Build the managed filters hash
+      [@group.get_managed_filters].flatten.each do |f|
+        @filters[f.split("/")[-2] + "-" + f.split("/")[-1]] = f
+      end
     end
 
     rbac_group_right_tree(@belongsto.keys)
