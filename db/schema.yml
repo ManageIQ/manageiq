@@ -1529,7 +1529,6 @@ hosts:
 - ems_id
 - user_assigned_os
 - power_state
-- smart
 - settings
 - last_perf_capture_on
 - uid_ems
@@ -6793,7 +6792,6 @@ vms:
 - last_perf_capture_on
 - registered
 - busy
-- smart
 - memory_reserve
 - memory_reserve_expand
 - memory_limit

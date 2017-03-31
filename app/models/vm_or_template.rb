@@ -312,11 +312,6 @@ class VmOrTemplate < ApplicationRecord
     raw_set_custom_field(attribute, value)
   end
 
-  def makesmart(_options = {})
-    self.smart = true
-    save
-  end
-
   def run_command_via_parent(verb, options = {})
     unless ext_management_system
       raise _("VM/Template <%{name}> with Id: <%{id}> is not associated with a provider.") % {:name => name, :id => id}
