@@ -174,9 +174,11 @@ class VmOrTemplate < ApplicationRecord
   virtual_has_many  :file_shares,          :class_name => 'SniaFileShare'
   virtual_has_many  :storage_volumes,      :class_name => 'CimStorageVolume'
   virtual_has_many  :logical_disks,        :class_name => 'CimLogicalDisk'
+  virtual_has_many  :children,             :class_name => 'VmOrTemplate'
 
   virtual_has_one   :direct_service,       :class_name => 'Service'
   virtual_has_one   :service,              :class_name => 'Service'
+  virtual_has_one   :parent,               :class_name => 'VmOrTemplate'
 
   virtual_delegate :name, :to => :host, :prefix => true, :allow_nil => true
   virtual_delegate :name, :to => :storage, :prefix => true, :allow_nil => true
