@@ -102,10 +102,6 @@ gem "ruport",                         "=1.7.0",                       :git => "h
 # https://github.com/jeremyevans/ruby-american_date
 gem "american_date"
 
-group :automate do
-  gem "savon",                        "~>2.2.0",   :require => false  # Automate uses this for simple SOAP Integration
-end
-
 group :ui_dependencies do # Added to Bundler.require in config/application.rb
   # Modified gems (forked on Github)
   gem "jquery-rjs",                   "=0.1.1",                       :git => "https://github.com/ManageIQ/jquery-rjs.git", :tag => "v0.1.1-1"
