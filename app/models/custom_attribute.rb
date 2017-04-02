@@ -4,6 +4,8 @@ class CustomAttribute < ApplicationRecord
   belongs_to :resource, :polymorphic => true
   serialize :serialized_value
 
+  default_value_for :visible, true
+
   def value=(value)
     self.serialized_value = value
     self[:value] = value

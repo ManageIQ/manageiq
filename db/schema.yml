@@ -993,6 +993,7 @@ custom_attributes:
 - value_interpolated
 - unique_name
 - serialized_value
+- visible
 custom_buttons:
 - id
 - guid
