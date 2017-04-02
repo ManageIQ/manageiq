@@ -35,7 +35,12 @@ module ManageIQ::Providers
         _inflate(entities)
         entities["additional_attributes"] = fetch_hawk_inv(ems) || {}
         EmsRefresh.log_inv_debug_trace(entities, "inv_hash:")
-        ManageIQ::Providers::Openshift::ContainerManager::RefreshParser.ems_inv_to_hashes(entities)
+
+        res = nil
+        puts "parser:", Benchmark.measure {  res = ManageIQ::Providers::Openshift::ContainerManager::RefreshParser.ems_inv_to_hashes(entities) }
+        res
+      end
+
       # DEBUGGING
       INFLATE_FACTOR = ENV['CONTAINER_INFLATE_FACTOR'] ? ENV['CONTAINER_INFLATE_FACTOR'].to_i : 1
 

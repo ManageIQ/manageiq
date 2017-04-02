@@ -10,7 +10,7 @@ module EmsRefresh::SaveInventoryContainer
 
     # Save and link other subsections
     child_keys.each do |k|
-      send("save_#{k}_inventory", ems, hashes[k], target)
+      puts "save_#{k}_inventory", Benchmark.measure { send("save_#{k}_inventory", ems, hashes[k], target) }
     end
 
     ems.save!

@@ -4,7 +4,11 @@ module ManageIQ::Providers::Kubernetes
   class ContainerManager::RefreshParser
     include Vmdb::Logging
     def self.ems_inv_to_hashes(inventory)
-      new.ems_inv_to_hashes(inventory)
+      result, t = Benchmark.realtime_block(:total_ems_inv_to_hashes) do
+        new.ems_inv_to_hashes(inventory)
+      end
+      puts "containers refresh_parser - Timings: #{t.inspect}"
+      result
     end
 
     def initialize
@@ -129,7 +133,9 @@ module ManageIQ::Providers::Kubernetes
 
     def process_collection(collection, key, &block)
       @data[key] ||= []
-      collection.each { |item| process_collection_item(item, key, &block) }
+      Benchmark.realtime_block(key) do
+        collection.each { |item| process_collection_item(item, key, &block) }
+      end
     end
 
     def process_collection_item(item, key)
