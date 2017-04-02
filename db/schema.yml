@@ -6461,6 +6461,60 @@ shares:
 - allow_tenant_inheritance
 - created_at
 - updated_at
+showback_buckets:
+- id
+- name
+- description
+- resource_type
+- resource_id
+- created_at
+- updated_at
+showback_charges:
+- id
+- fixed_cost
+- variable_cost
+- showback_bucket_id
+- showback_event_id
+- created_at
+- updated_at
+showback_events:
+- id
+- data
+- start_time
+- end_time
+- resource_id
+- resource_type
+- context
+- updated_at
+- created_at
+showback_measure_types:
+- id
+- category
+- description
+- measure
+- dimensions
+- updated_at
+- created_at
+showback_rates:
+- id
+- fixed_cost
+- variable_cost
+- calculation
+- category
+- dimension
+- date
+- concept
+- showback_tariff_id
+- created_at
+- updated_at
+showback_tariffs:
+- id
+- name
+- description
+- resource_type
+- resource_id
+- created_at
+- updated_at
 snapshots:
 - id
 - uid
