@@ -351,7 +351,7 @@ module ManageIQ::Providers::Kubernetes
         if createdby.kind_of?(Hash) && !createdby['reference'].nil?
           new_result[:container_replicator] = @data_index.fetch_path(
             :container_replicators, :by_namespace_and_name,
-            createdby['reference']['namespace'], createdby['reference']['name'])
+            pod.metadata["table"][:namespace], createdby['reference']['name'])
         end
       end
 

@@ -1,4 +1,6 @@
 describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
+  let(:inflate_factor) { ManageIQ::Providers::Openshift::ContainerManager::Refresher::INFLATE_FACTOR }
+
   before(:each) do
     allow(MiqServer).to receive(:my_zone).and_return("default")
     hostname = 'host.example.com'
@@ -84,17 +86,17 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
   end
 
   def assert_table_counts
-    expect(ContainerGroup.count).to eq(20)
+    expect(ContainerGroup.count).to eq(20 * inflate_factor)
     expect(ContainerNode.count).to eq(2)
-    expect(Container.count).to eq(20)
-    expect(ContainerService.count).to eq(12)
-    expect(ContainerPortConfig.count).to eq(23)
-    expect(ContainerDefinition.count).to eq(20)
-    expect(ContainerRoute.count).to eq(6)
-    expect(ContainerProject.count).to eq(9)
-    expect(ContainerBuild.count).to eq(3)
-    expect(ContainerBuildPod.count).to eq(3)
-    expect(ContainerTemplate.count).to eq(26)
+    expect(Container.count).to eq(20 * inflate_factor)
+    expect(ContainerService.count).to eq(12 * inflate_factor)
+    expect(ContainerPortConfig.count).to eq(23 * inflate_factor)
+    expect(ContainerDefinition.count).to eq(20 * inflate_factor)
+    expect(ContainerRoute.count).to eq(6 * inflate_factor)
+    expect(ContainerProject.count).to eq(9 * inflate_factor)
+    expect(ContainerBuild.count).to eq(3 * inflate_factor)
+    expect(ContainerBuildPod.count).to eq(3 * inflate_factor)
+    expect(ContainerTemplate.count).to eq(26 * inflate_factor)
     expect(ContainerImage.count).to eq(40)
   end
 
