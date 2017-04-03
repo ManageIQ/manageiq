@@ -5,8 +5,8 @@ module Api
       gen_attr_type_hash
     end
 
-    def log_kv(key, val, pref = "")
-      $api_log.info("#{pref}  #{key.to_s.ljust([24, key.to_s.length].max, ' ')}: #{val}")
+    def log_kv(key, val)
+      $api_log.info("  #{key.to_s.ljust([24, key.to_s.length].max, ' ')}: #{val}")
     end
 
     #
