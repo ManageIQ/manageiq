@@ -191,9 +191,9 @@ class AuthKeyPairCloudController < ApplicationController
     key_pairs = []
 
     if @lastaction == "show_list" || (@lastaction == "show" && @layout != "auth_key_pair_cloud")
-      key_pairs = find_checked_items
+      key_pairs = find_checked_records_with_rbac(ManageIQ::Providers::CloudManager::AuthKeyPair)
     else
-      key_pairs = [params[:id]]
+      key_pairs = [find_record_with_rbac(ManageIQ::Providers::CloudManager::AuthKeyPair, params[:id])]
     end
 
     if key_pairs.empty?
@@ -201,20 +201,15 @@ class AuthKeyPairCloudController < ApplicationController
     end
 
     key_pairs_to_delete = []
-    key_pairs.each do |k|
-      key_pair = ManageIQ::Providers::CloudManager::AuthKeyPair.find_by_id(k)
-      if key_pair.nil?
-        add_flash(_("%{model} no longer exists.") % {:model => ui_lookup(:table => "auth_key_pair_cloud")}, :error)
+    key_pairs.each do |key_pair|
+      if key_pair.is_available?(:delete_key_pair)
+        key_pairs_to_delete.push(key_pair.id)
       else
-        if key_pair.is_available?(:delete_key_pair)
-          key_pairs_to_delete.push(k)
-        else
-          add_flash(_("Couldn't initiate deletion of %{model} \"%{name}\": %{details}") % {
-            :model   => ui_lookup(:table => 'auth_key_pair_cloud'),
-            :name    => key_pair.name,
-            :details => key_pair.is_available_now_error_message(:delete_key_pair)
-          }, :error)
-        end
+        add_flash(_("Couldn't initiate deletion of %{model} \"%{name}\": %{details}") % {
+          :model   => ui_lookup(:table => 'auth_key_pair_cloud'),
+          :name    => key_pair.name,
+          :details => key_pair.is_available_now_error_message(:delete_key_pair)
+        }, :error)
       end
     end
     process_deletions(key_pairs_to_delete) unless key_pairs_to_delete.empty?
