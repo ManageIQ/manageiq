@@ -720,7 +720,7 @@ class CatalogController < ApplicationController
 
   def ot_remove_submit
     assert_privileges("orchestration_template_remove")
-    checked = find_checked_items
+    checked = find_checked_ids_with_rbac(OrchestrationTemplate)
     checked[0] = params[:id] if checked.blank? && params[:id]
     elements = OrchestrationTemplate.where(:id => checked)
     elements.each do |ot|
