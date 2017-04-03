@@ -1,9 +1,4 @@
 module Api
-  #
-  # Initializing REST API environment, called once @ startup
-  #
-  Initializer.new.go
-
   class BaseController < ActionController::API
     TAG_NAMESPACE = "/managed".freeze
 
