@@ -28,6 +28,75 @@ describe "Vms API" do
     vms.each { |vm| vm.update_attributes!(:raw_power_state => state) }
   end
 
+  context 'Vm edit' do
+    let(:new_vms) { FactoryGirl.create_list(:vm_openstack, 2) }
+
+    before do
+      vm.set_child(vm_openstack)
+      vm.set_parent(vm_openstack1)
+    end
+
+    it 'cannot edit a VM without an appropriate role' do
+      api_basic_authorize
+
+      run_post(vms_url(vm.id), :action => 'edit')
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'can edit a VM with an appropriate role' do
+      api_basic_authorize collection_action_identifier(:vms, :edit)
+      children = new_vms.collect do |vm|
+        { 'href' => vms_url(vm.id) }
+      end
+
+      run_post(vms_url(vm.id), :action      => 'edit',
+                               :description => 'bar',
+                               :children    => children,
+                               :custom_1    => 'foobar',
+                               :parent      => vms_url(vm_openstack2.id))
+
+      expected = {
+        'description' => 'bar'
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+      expect(vm.reload.children).to match_array(new_vms)
+      expect(vm.parent).to eq(vm_openstack2)
+      expect(vm.custom_1).to eq('foobar')
+    end
+
+    it 'only allows edit of custom_1, description, parent, and children' do
+      api_basic_authorize collection_action_identifier(:vms, :edit)
+
+      run_post(vms_url(vm.id), :action => 'edit', :name => 'foo', :autostart => true, :power_state => 'off')
+
+      expected = {
+        'error' => a_hash_including(
+          'kind'    => 'bad_request',
+          'message' => 'Cannot edit VM - Cannot edit values name, autostart, power_state'
+        )
+      }
+      expect(response).to have_http_status(:bad_request)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'can edit multiple vms' do
+      api_basic_authorize collection_action_identifier(:vms, :edit)
+
+      run_post(vms_url, :action => 'edit', :resources => [{ :id => vm.id, :description => 'foo' }, { :id => vm_openstack.id, :description => 'bar'}])
+
+      expected = {
+        'results' => [
+          a_hash_including('description' => 'foo'),
+          a_hash_including('description' => 'bar')
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+  end
+
   context "Vm accounts subcollection" do
     let(:acct1) { FactoryGirl.create(:account, :vm_or_template_id => vm.id, :name => "John") }
     let(:acct2) { FactoryGirl.create(:account, :vm_or_template_id => vm.id, :name => "Jane") }

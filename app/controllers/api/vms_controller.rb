@@ -8,6 +8,8 @@ module Api
     include Subcollections::Software
     include Subcollections::Snapshots
 
+    VALID_EDIT_ATTRS = %w(custom_1 description children parent).freeze
+
     def start_resource(type, id = nil, _data = nil)
       raise BadRequestError, "Must specify an id for starting a #{type} resource" unless id
 
@@ -84,6 +86,18 @@ module Api
         result = shelve_offload_vm(vm) if result[:success]
         result
       end
+    end
+
+    def edit_resource(type, id, data)
+      attrs = validate_edit_data(data)
+      parent, children = build_parent_children(data)
+      resource_search(id, type, collection_class(type)).tap do |vm|
+        vm.update_attributes!(attrs)
+        vm.replace_children(children)
+        vm.set_parent(parent)
+      end
+    rescue => err
+      raise BadRequestError, "Cannot edit VM - #{err}"
     end
 
     def delete_resource(type, id = nil, _data = nil)
@@ -230,6 +244,30 @@ module Api
     end
 
     private
+
+    def validate_edit_data(data)
+      invalid_keys = data.keys - VALID_EDIT_ATTRS
+      raise BadRequestError, "Cannot edit values #{invalid_keys.join(', ')}" if invalid_keys.present?
+      data.dup.except('parent', 'children')
+    end
+
+    def build_parent_children(data)
+      children = if data.key?('children')
+                   data['children'].collect do |child|
+                     child_collection, child_id = parse_href(child['href'])
+                     resource_search(child_id, child_collection, collection_class(child_collection))
+                   end
+                 else
+                   []
+                 end
+
+      parent = if data.key?('parent')
+                 parent_collection, parent_id = parse_href(data.fetch('parent', 'href'))
+                 resource_search(parent_id, parent_collection, collection_class(parent_collection))
+               end
+
+      [parent, children]
+    end
 
     def vm_ident(vm)
       "VM id:#{vm.id} name:'#{vm.name}'"
