@@ -238,6 +238,8 @@ describe ServiceTemplateAnsiblePlaybook do
   end
 
   describe '#destroy' do
+    let(:service) { FactoryGirl.create(:service_ansible_tower) }
+
     it 'destroys a job template if there is an associated configuration_template' do
       service_template = prebuild_service_template(:job_template => false)
       adjust_resource_actions(service_template, job_template.id)
@@ -256,8 +258,16 @@ describe ServiceTemplateAnsiblePlaybook do
       service_template.destroy
     end
 
-    def adjust_resource_actions(service_template, item)
-      service_template.resource_actions.first.tap do |resource_action|
+    it '#retirement_potential?' do
+      service.update_attributes(:retired => false)
+      service_template = prebuild_service_template(:job_template => false)
+      adjust_resource_actions(service_template, job_template.id, :last)
+      service_template.services << service
+      expect(service_template.retirement_potential?).to be_truthy
+    end
+
+    def adjust_resource_actions(service_template, item, list_name = :first)
+      service_template.resource_actions.send(list_name).tap do |resource_action|
         resource_action.configuration_template_id = item
       end.save
     end

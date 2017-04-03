@@ -17,7 +17,7 @@ module ManageIQ::Providers
     require_nested :Refresher
 
     include AuthenticationMixin
-    include ::HawkularUtilsMixin
+    include ::Hawkular::ClientUtils
 
     DEFAULT_PORT = 80
     default_value_for :port, DEFAULT_PORT
@@ -279,7 +279,7 @@ module ManageIQ::Providers
         :username => username,
         :password => password
       }
-      ::Hawkular::Alerts::AlertsClient.new(url, credentials)
+      ::Hawkular::Alerts::Client.new(url, credentials)
     end
 
     def add_middleware_datasource(ems_ref, hash)

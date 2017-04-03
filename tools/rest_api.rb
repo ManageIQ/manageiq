@@ -19,7 +19,7 @@ require 'faraday'
 require 'faraday_middleware'
 
 class RestApi
-  VERSION = "2.4.0-pre".freeze
+  VERSION = "2.5.0-pre".freeze
   API_CMD = File.basename($PROGRAM_NAME)
 
   class Cli
@@ -45,7 +45,7 @@ class RestApi
     SCRIPTDIR_ACTIONS    = %w(ls run).freeze
     SUB_COMMANDS         = ACTIONS + %w(edit vi) + SCRIPTDIR_ACTIONS
     API_PARAMETERS       = %w(expand hide attributes decorators limit offset
-                              depth search_options
+                              depth search_options format_attributes
                               sort_by sort_order sort_options
                               filter by_tag provider_class collection_class requester_type).freeze
 

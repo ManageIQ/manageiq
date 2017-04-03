@@ -1,4 +1,6 @@
 class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
+  before_destroy :check_retirement_potential
+
   RETIREMENT_ENTRY_POINTS = {
     'yes_without_playbook' => '/Service/Generic/StateMachines/GenericLifecycle/Retire_Basic_Resource',
     'no_without_playbook'  => '/Service/Generic/StateMachines/GenericLifecycle/Retire_Basic_Resource_None',
@@ -50,8 +52,9 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
           next unless dialog_name
 
           job_template = enhanced_config.fetch_path(action, :configuration_template)
+          hosts        = enhanced_config.fetch_path(action, :hosts)
 
-          new_dialog = service_template.send(:create_new_dialog, dialog_name, job_template)
+          new_dialog = service_template.send(:create_new_dialog, dialog_name, job_template, hosts)
           enhanced_config[action][:dialog] = new_dialog
           service_template.options[:config_info][action][:dialog_id] = new_dialog.id
         end
@@ -60,8 +63,8 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     end
   end
 
-  def create_new_dialog(dialog_name, job_template)
-    Dialog::AnsiblePlaybookServiceDialog.create_dialog(dialog_name, job_template)
+  def create_new_dialog(dialog_name, job_template, hosts)
+    Dialog::AnsiblePlaybookServiceDialog.create_dialog(dialog_name, job_template, hosts)
   end
   private :create_new_dialog
 
@@ -141,7 +144,8 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     [:provision, :retirement, :reconfigure].each do |action|
       next unless config_info[action]
       info = config_info[action]
-      new_dialog = create_new_dialog(info[:new_dialog_name], job_template(action)) if info[:new_dialog_name]
+
+      new_dialog = create_new_dialog(info[:new_dialog_name], job_template(action), info[:hosts]) if info[:new_dialog_name]
       config_info[action][:dialog_id] = new_dialog.id if new_dialog
 
       next unless info.key?(:playbook_id)
@@ -160,5 +164,25 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
         .delete_in_provider_queue(job_template.manager.id, { :manager_ref => job_template.manager_ref }, auth_user)
     end
     super
+  end
+
+  # ServiceTemplate includes a retirement resource action
+  #   with a defined job template:
+  #
+  #   1. A resource_action that includes a configuration_template_id.
+  #   2. At least one service instance where :retired is set to false.
+  #
+  def retirement_potential?
+    retirement_jt_exists = resource_actions.where(:action => 'Retirement').where.not(:configuration_template_id => nil).present?
+    retirement_jt_exists && services.where(:retired => false).exists?
+  end
+
+  private
+
+  def check_retirement_potential
+    return true unless retirement_potential?
+    error_text = 'Destroy aborted.  Active Services require retirement resources associated with this instance.'
+    errors[:base] << error_text
+    throw :abort
   end
 end

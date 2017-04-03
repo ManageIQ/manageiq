@@ -134,9 +134,9 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Job
     raise MiqException::MiqOrchestrationStatusError, err.to_s, err.backtrace
   end
 
-  def raw_stdout
+  def raw_stdout(format = 'txt')
     ext_management_system.with_provider_connection do |connection|
-      connection.api.jobs.find(ems_ref).stdout
+      connection.api.jobs.find(ems_ref).stdout(format)
     end
   rescue AnsibleTowerClient::ResourceNotFoundError
     msg = "AnsibleTower Job #{name} with id(#{id}) does not exist on #{ext_management_system.name}"

@@ -139,8 +139,8 @@ module Api
 
     def refresh_provider(provider)
       desc = "#{provider_ident(provider)} refreshing"
-      provider.refresh_ems
-      action_result(true, desc)
+      task_id = provider.refresh_ems(:create_task => true).first
+      action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
     end

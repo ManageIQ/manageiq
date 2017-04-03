@@ -1,6 +1,6 @@
 describe "migration order" do
   let(:current_release_migrations) do
-    File.read(File.join(__dir__, 'data/euwe_migrations')).split.map(&:to_i).sort
+    File.read(File.join(__dir__, 'data/previous_migrations')).split.map(&:to_i).sort
   end
 
   let(:migrations_now) do

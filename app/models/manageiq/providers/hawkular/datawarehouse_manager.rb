@@ -46,7 +46,7 @@ module ManageIQ::Providers
               when :metrics
                 ::Hawkular::Metrics::Client
               when :alerts
-                ::Hawkular::Alerts::AlertsClient
+                ::Hawkular::Alerts::Client
               else
                 raise ArgumentError, "Client not found for [#{type}]"
               end

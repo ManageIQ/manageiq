@@ -5,7 +5,9 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
   include_concern 'ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared'
 
   supports :migrate do
-    unless ext_management_system.supports_migrate?
+    if blank? || orphaned? || archived?
+      unsupported_reason_add(:migrate, "Migrate operation in not supported.")
+    elsif !ext_management_system.supports_migrate?
       unsupported_reason_add(:migrate, 'RHV API version does not support migrate')
     end
   end
@@ -45,6 +47,9 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
   alias_method :ems_cluster, :parent_cluster
 
   def disconnect_storage(_s = nil)
+    unless active?
+      return
+    end
     vm_disks = collect_disks
 
     if vm_disks.blank?
@@ -61,7 +66,7 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
     disks = hardware.disks.map { |disk| "#{disk.storage.ems_ref}/disks/#{disk.filename}" }
     vm_disks = []
 
-    ext_management_system.with_provider_connection do |rhevm|
+    ext_management_system.try(:with_provider_connection) do |rhevm|
       disks.each do |disk|
         begin
           vm_disks << Ovirt::Disk.find_by_href(rhevm, disk)
@@ -70,7 +75,14 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
         end
       end
     end
+
     vm_disks
+  end
+
+  def disconnect_inv
+    disconnect_storage
+
+    super
   end
 
   #

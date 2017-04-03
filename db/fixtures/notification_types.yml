@@ -114,3 +114,8 @@
   :expires_in: 24.hours
   :level: :warning
   :audience: global
+- :name: role_activate_success
+  :message: 'The role %{role_name} has been activated on server %{server_name}'
+  :expires_in: 24.hours
+  :level: :info
+  :audience: superadmin

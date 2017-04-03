@@ -174,10 +174,13 @@ class EmsEvent < EventStream
   end
 
   def parse_event_metadata
+    data = full_data || {}
     [
       event_type == "datawarehouse_alert" ? message : nil,
-      full_data.try(:[], :severity),
-      full_data.try(:[], :url),
+      data[:severity],
+      data[:url],
+      data[:ems_ref],
+      data[:resolved],
     ]
   end
 

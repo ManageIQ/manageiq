@@ -38,7 +38,7 @@ gem "activerecord-session_store",     "~>1.0.0"
 gem "acts_as_list",                   "~>0.7.2"
 gem "acts_as_tree",                   "~>2.1.0" # acts_as_tree needs to be required so that it loads before ancestry
 gem "ancestry",                       "~>2.2.1",       :require => false
-gem "ansible_tower_client",           "~>0.9.0",       :require => false
+gem "ansible_tower_client",           "~>0.10.0",      :require => false
 gem "aws-sdk",                        "~>2",           :require => false
 gem "bundler",                        ">=1.11.1",      :require => false
 gem "color",                          "~>1.8"
@@ -101,10 +101,6 @@ gem "ruport",                         "=1.7.0",                       :git => "h
 # See miq_expression_spec Date/Time Support examples.
 # https://github.com/jeremyevans/ruby-american_date
 gem "american_date"
-
-group :automate do
-  gem "savon",                        "~>2.2.0",   :require => false  # Automate uses this for simple SOAP Integration
-end
 
 group :ui_dependencies do # Added to Bundler.require in config/application.rb
   # Modified gems (forked on Github)
