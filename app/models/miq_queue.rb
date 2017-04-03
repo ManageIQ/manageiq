@@ -163,7 +163,7 @@ class MiqQueue < ApplicationRecord
     msgs.each do |msg|
       begin
         _log.info("#{MiqQueue.format_short_log_msg(msg)} previously timed out, retrying...") if msg.state == STATE_TIMEOUT
-        w = MiqWorker.server_scope.find_by(:pid => Process.pid)
+        w = MiqWorker.my_worker
         if w.nil?
           msg.update_attributes!(:state => STATE_DEQUEUE, :handler => MiqServer.my_server)
         else
