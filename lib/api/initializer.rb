@@ -56,12 +56,7 @@ module Api
     # Converted to normalized_attributes hash at init, much faster access.
     #
     def attr_types
-      @attr_types ||= {
-        :time      => %w(expires_on),
-        :encrypted => %w(password) |
-                      ::MiqRequestWorkflow.all_encrypted_options_fields.map(&:to_s) |
-                      ::Vmdb::Settings::PASSWORD_FIELDS.map(&:to_s)
-      }
+      @attr_types ||= {:time => %w(expires_on)}
     end
   end
 end

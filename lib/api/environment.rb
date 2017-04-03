@@ -5,8 +5,14 @@ module Api
         :time      => {},
         :url       => {"href" => true},
         :resource  => {"image_href" => true},
-        :encrypted => {}
+        :encrypted => encrypted_attributes.each_with_object({}) { |attr, hsh| hsh[attr] = true }
       }
+    end
+
+    def self.encrypted_attributes
+      @encrypted_attributes ||= %w(password) |
+                                ::MiqRequestWorkflow.all_encrypted_options_fields.map(&:to_s) |
+                                ::Vmdb::Settings::PASSWORD_FIELDS.map(&:to_s)
     end
 
     def self.user_token_service
