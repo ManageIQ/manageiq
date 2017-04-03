@@ -62,6 +62,11 @@ module ManageIQ::Providers
         collector.server_groups(feed).map do |group|
           parsed_group = persister.middleware_server_groups.find_or_build(group.path)
           parse_middleware_server_group(group, parsed_group)
+
+          # TODO: remove this index. Two options for this: 1) try to find or build the ems_ref
+          # of the server group. 2) add `find_by` methods to InventoryCollection class. Once this
+          # is removed, the order in #parse method will no longer be needed. For now, at least
+          # domains, sever groups and domain servers must be collected in order.
           @data_index.store_path(:middleware_server_groups, :by_name, parsed_group[:name], parsed_group)
 
           parsed_group.middleware_domain = persister.middleware_domains.lazy_find(parsed_domain[:ems_ref])
@@ -231,7 +236,6 @@ module ManageIQ::Providers
       def parse_deployment(deployment, inventory_object)
         parse_base_item(deployment, inventory_object)
         inventory_object.name = parse_deployment_name(deployment.id)
-        inventory_object
       end
 
       def parse_messaging(messaging, inventory_object, config)
@@ -243,8 +247,6 @@ module ManageIQ::Providers
         if !config.empty? && !config['value'].empty? && config['value'].respond_to?(:except)
           inventory_object.properties = config['value'].except('Username', 'Password')
         end
-
-        inventory_object
       end
 
       def parse_datasource(datasource, inventory_object, config)
@@ -254,16 +256,12 @@ module ManageIQ::Providers
         if !config.empty? && !config['value'].empty? && config['value'].respond_to?(:except)
           inventory_object.properties = config['value'].except('Username', 'Password')
         end
-
-        inventory_object
       end
 
       def parse_middleware_domain(feed, domain, inventory_object)
         parse_base_item(domain, inventory_object)
         inventory_object.name = parse_domain_name(feed)
         inventory_object.type_path = domain.type_path
-
-        inventory_object
       end
 
       def parse_middleware_server_group(group, inventory_object)
@@ -273,8 +271,6 @@ module ManageIQ::Providers
           :type_path => group.type_path,
           :profile   => group.properties['Profile']
         )
-
-        inventory_object
       end
 
       def parse_middleware_server(eap, inventory_object, domain = false, name = nil)
@@ -292,8 +288,6 @@ module ManageIQ::Providers
           :hostname  => hostname,
           :product   => product
         )
-
-        inventory_object
       end
 
       private
@@ -305,8 +299,6 @@ module ManageIQ::Providers
         [:properties, :feed].each do |field|
           inventory_object[field] = item.send(field) if item.respond_to?(field)
         end
-
-        inventory_object
       end
 
       def parse_deployment_name(name)

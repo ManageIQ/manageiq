@@ -72,8 +72,7 @@ module ManageIQ::Providers
       connection
         .inventory
         .list_resource_types(hawk_escape_id(feed))
-        .select { |item| item.id.include? 'Operating System' }
-        .first
+        .find { |item| item.id.include? 'Operating System' }
     end
 
     def resources_for(feed, resource_type_path)
