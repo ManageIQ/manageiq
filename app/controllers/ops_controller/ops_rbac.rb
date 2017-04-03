@@ -142,7 +142,7 @@ module OpsController::OpsRbac
     when "reset", nil # Reset or first time in
       obj = find_checked_items
       obj[0] = params[:id] if obj.blank? && params[:id]
-      @tenant = params[:typ] == "new" ? Tenant.new : Tenant.find(obj[0])          # Get existing or new record
+      @tenant = params[:typ] == "new" ? Tenant.new : find_checked_records_with_rbac(Tenant, obj).first # Get existing or new record
 
       # This is only because ops_controller tries to set form locals, otherwise we should not use the @edit variable
       @edit = {:tenant_id => @tenant.id}
@@ -211,7 +211,7 @@ module OpsController::OpsRbac
     when "reset", nil # Reset or first time in
       obj = find_checked_items
       obj[0] = params[:id] if obj.blank? && params[:id]
-      @tenant = Tenant.find(obj[0])          # Get existing or new record
+      @tenant = find_checked_records_with_rbac(Tenant, obj).first # Get existing or new record
       # This is only because ops_controller tries to set form locals, otherwise we should not use the @edit variable
       @edit = {:tenant_id => @tenant.id}
       session[:edit] = {:key => "tenant_manage_quotas__#{@tenant.id}"}
