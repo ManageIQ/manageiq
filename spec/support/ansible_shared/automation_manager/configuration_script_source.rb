@@ -5,6 +5,7 @@ shared_examples_for "ansible configuration_script_source" do
   let(:manager)       { FactoryGirl.create(:provider_ansible_tower, :with_authentication).managers.first }
   let(:atc)           { double("AnsibleTowerClient::Connection", :api => api) }
   let(:api)           { double("AnsibleTowerClient::Api", :projects => projects) }
+  let(:credential)    { FactoryGirl.create(:ansible_scm_credential, :manager_ref => '1') }
 
   context "create through API" do
     let(:projects) { double("AnsibleTowerClient::Collection", :create! => project) }
@@ -54,6 +55,20 @@ shared_examples_for "ansible configuration_script_source" do
       expected_notify[:type] = :tower_op_failure
       expect(Notification).to receive(:create).with(expected_notify)
       expect { described_class.create_in_provider(manager.id, params) }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it ".create_in_provider with credential" do
+      params[:authentication_id] = credential.id
+      expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
+      store_new_project(project, manager)
+      expect(EmsRefresh).to receive(:queue_refresh_task).and_return([finished_task])
+      expect(ExtManagementSystem).to receive(:find).with(manager.id).and_return(manager)
+      expected_params = params.clone.merge(:credential => '1')
+      expected_params.delete(:authentication_id)
+      expect(projects).to receive(:create!).with(expected_params)
+      expected_notify[:options][:op_arg] = expected_params.to_s
+      expect(Notification).to receive(:create).with(expected_notify)
+      expect(described_class.create_in_provider(manager.id, params)).to be_a(described_class)
     end
 
     it ".create_in_provider_queue" do
