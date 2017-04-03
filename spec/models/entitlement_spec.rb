@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 describe Entitlement do
   describe "::remove_tag_from_all_managed_filters" do
     let!(:entitlement1) { FactoryGirl.create(:entitlement) }

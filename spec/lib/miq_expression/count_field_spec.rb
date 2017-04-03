@@ -1,5 +1,3 @@
-require "rails_helper"
-
 RSpec.describe MiqExpression::CountField do
   describe '.parse' do
     it 'parses field model.has_many_associations with valid format' do

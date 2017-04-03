@@ -1,5 +1,3 @@
-require "rails_helper"
-
 RSpec.describe MiqExpression::Tag do
   describe ".parse" do
     it "with model.managed-in_tag" do
