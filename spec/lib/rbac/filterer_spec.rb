@@ -1344,6 +1344,51 @@ describe Rbac::Filterer do
     end
   end
 
+  describe "cloud_tenant based search" do
+    let(:ems_openstack)         { FactoryGirl.create(:ems_cloud) }
+
+    let(:project1_tenant)       { FactoryGirl.create(:tenant, :source_type => 'CloudTenant') }
+    let!(:project1_cloud_tenant) { FactoryGirl.create(:cloud_tenant, :source_tenant => project1_tenant, :ext_management_system => ems_openstack) }
+
+    let(:project1_group)        { FactoryGirl.create(:miq_group, :tenant => project1_tenant) }
+    let(:project1_user)         { FactoryGirl.create(:user, :miq_groups => [project1_group]) }
+
+    let(:project2_tenant)       { FactoryGirl.create(:tenant, :source_type => 'CloudTenant') }
+    let!(:project2_cloud_tenant) { FactoryGirl.create(:cloud_tenant, :source_tenant => project2_tenant, :ext_management_system => ems_openstack) }
+    let(:project2_group)        { FactoryGirl.create(:miq_group, :tenant => project2_tenant) }
+    let(:project2_user)         { FactoryGirl.create(:user, :miq_groups => [project2_group]) }
+    let(:ems_other)             { FactoryGirl.create(:ems_cloud, :name => 'ems_other', :tenant_mapping_enabled => false) }
+    let(:tenant_other)          { FactoryGirl.create(:tenant, :source_type => 'CloudTenant') }
+    let!(:cloud_tenant_other) { FactoryGirl.create(:cloud_tenant, :source_tenant => tenant_other, :ext_management_system => ems_other) }
+
+    it "lists its own project's objects and other objects where tenant_mapping is enabled" do
+      ems_openstack.tenant_mapping_enabled = true
+      ems_openstack.save!
+
+      results = described_class.search(:class => CloudTenant, :user => project1_user).first
+      expect(results).to match_array [project1_cloud_tenant, cloud_tenant_other]
+
+      results = described_class.search(:class => CloudTenant, :user => project2_user).first
+      expect(results).to match_array [project2_cloud_tenant, cloud_tenant_other]
+
+      results = described_class.search(:class => CloudTenant, :user => other_user).first
+      expect(results).to match_array [cloud_tenant_other]
+    end
+
+    it "all objects are visible to all users when tenant_mapping is not enabled" do
+      ems_openstack.tenant_mapping_enabled = false
+      ems_openstack.save!
+
+      results = described_class.search(:class => CloudTenant, :user => project1_user).first
+      expect(results).to match_array [project1_cloud_tenant, project2_cloud_tenant, cloud_tenant_other]
+
+      results = described_class.search(:class => CloudTenant, :user => project2_user).first
+      expect(results).to match_array [project1_cloud_tenant, project2_cloud_tenant, cloud_tenant_other]
+
+      results = described_class.search(:class => CloudTenant, :user => other_user).first
+      expect(results).to match_array [project1_cloud_tenant, project2_cloud_tenant, cloud_tenant_other]
+    end
+  end
 
   private
 

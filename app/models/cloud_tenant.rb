@@ -33,6 +33,28 @@ class CloudTenant < ApplicationRecord
 
   virtual_total :total_vms, :vms
 
+  def self.scope_by_cloud_tenant?
+    true
+  end
+
+  def self.accessible_tenant_ids(user_or_group, strategy)
+    tenant = user_or_group.try(:current_tenant)
+    return [] if tenant.nil? || tenant.root?
+
+    tenant.accessible_tenant_ids(strategy)
+  end
+
+  def self.tenant_id_clause(user_or_group)
+    tenant_ids = accessible_tenant_ids(user_or_group, Rbac.accessible_tenant_ids_strategy(self))
+    return if tenant_ids.empty?
+
+    ["(tenants.id IN (?) AND ext_management_systems.tenant_mapping_enabled IS TRUE) OR ext_management_systems.tenant_mapping_enabled IS FALSE OR ext_management_systems.tenant_mapping_enabled IS NULL", tenant_ids]
+  end
+
+  def self.tenant_joins_clause(scope)
+    scope.eager_load(:source_tenant).includes(:ext_management_system)
+  end
+
   def self.class_by_ems(ext_management_system)
     ext_management_system && ext_management_system.class::CloudTenant
   end
