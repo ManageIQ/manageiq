@@ -1931,6 +1931,8 @@
         :identifier: service_tag
       - :name: add_resource
         :identifier: service_edit
+      - :name: remove_all_resources
+        :identifier: service_edit
       - :name: remove_resource
         :identifier: service_edit
     :resource_actions:
@@ -1957,6 +1959,8 @@
       - :name: delete
         :identifier: service_delete
       - :name: add_resource
+        :identifier: service_edit
+      - :name: remove_all_resources
         :identifier: service_edit
       - :name: remove_resource
         :identifier: service_edit
