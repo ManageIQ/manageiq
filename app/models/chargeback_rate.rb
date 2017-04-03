@@ -72,16 +72,10 @@ class ChargebackRate < ApplicationRecord
         rec = find_by(:guid => cbr[:guid])
         rates = cbr.delete(:rates)
 
-        # The yml measure field is the name of the measure. It's changed to the id
         rates.each do |rate_detail|
-          measure = ChargebackRateDetailMeasure.find_by(:name => rate_detail.delete(:measure))
           currency = ChargebackRateDetailCurrency.find_by(:name => rate_detail.delete(:type_currency))
-          metric = rate_detail[:metric] || "#{rate_detail[:group]}_#{rate_detail[:source]}"
-          field = ChargeableField.find_by(:metric => metric)
+          field = ChargeableField.find_by(:metric => rate_detail.delete(:metric))
           rate_detail[:chargeable_field_id] = field.id
-          unless measure.nil?
-            rate_detail[:chargeback_rate_detail_measure_id] = measure.id
-          end
           if currency
             rate_detail[:chargeback_rate_detail_currency_id] = currency.id
           end

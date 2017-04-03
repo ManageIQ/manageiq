@@ -5,12 +5,9 @@
   :default: true
   :rates:
     - :description: Used CPU
-      :group: cpu
-      :source: used
       :metric: cpu_usagemhz_rate_average
       :per_time: hourly
       :per_unit: megahertz
-      :measure: Hz Units
       :type_currency: Dollars
       :tiers:
         - :start: 0
@@ -18,8 +15,6 @@
           :fixed_rate: 0.0
           :variable_rate: 0.02
     - :description: Used CPU Cores
-      :group: cpu_cores
-      :source: used
       :metric: v_derived_cpu_total_cores_used
       :per_time: hourly
       :per_unit: cpu core
@@ -30,8 +25,6 @@
           :fixed_rate: 1.0
           :variable_rate: 0.02
     - :description: Allocated CPU Count
-      :group: cpu
-      :source: allocated
       :metric: derived_vm_numvcpus
       :per_time: hourly
       :per_unit: cpu
@@ -42,12 +35,9 @@
           :fixed_rate: 1.0
           :variable_rate: 0.0
     - :description: Used Memory
-      :group: memory
-      :source: used
       :metric: derived_memory_used
       :per_time: hourly
       :per_unit: megabytes
-      :measure: Bytes Units
       :type_currency: Dollars
       :tiers:
         - :start: 0
@@ -55,12 +45,9 @@
           :fixed_rate: 0.0
           :variable_rate: 0.02
     - :description: Allocated Memory
-      :group: memory
-      :source: allocated
       :metric: derived_memory_available
       :per_time: hourly
       :per_unit: megabytes
-      :measure: Bytes Units
       :type_currency: Dollars
       :tiers:
         - :start: 0
@@ -68,12 +55,9 @@
           :fixed_rate: 0.0
           :variable_rate: 0.0
     - :description: Used Network I/O
-      :group: net_io
-      :source: used
       :metric: net_usage_rate_average
       :per_time: hourly
       :per_unit: kbps
-      :measure: Bytes per Second Units
       :type_currency: Dollars
       :tiers:
         - :start: 0
@@ -85,12 +69,9 @@
           :fixed_rate: 0.5
           :variable_rate: 0.005
     - :description: Used Disk I/O
-      :group: disk_io
-      :source: used
       :metric: disk_usage_rate_average
       :per_time: hourly
       :per_unit: kbps
-      :measure: Bytes per Second Units
       :type_currency: Dollars
       :tiers:
         - :start: 0
@@ -98,8 +79,7 @@
           :fixed_rate: 0.0
           :variable_rate: 0.005
     - :description: Fixed Compute Cost 1
-      :group: fixed
-      :source: compute_1
+      :metric: fixed_compute_1
       :per_time: hourly
       :type_currency: Dollars
       :tiers:
@@ -108,8 +88,7 @@
           :fixed_rate: 0.0
           :variable_rate: 0.0
     - :description: Fixed Compute Cost 2
-      :group: fixed
-      :source: compute_2
+      :metric: fixed_compute_2
       :per_time: hourly
       :type_currency: Dollars
       :tiers:
@@ -123,12 +102,9 @@
   :default: true
   :rates:
     - :description: Allocated Disk Storage
-      :group: storage
-      :source: allocated
       :metric: derived_vm_allocated_disk_storage
       :per_time: hourly
       :per_unit: gigabytes
-      :measure: Bytes Units
       :type_currency: Dollars
       :tiers:
         - :start: 0
@@ -136,12 +112,9 @@
           :fixed_rate: 1.0
           :variable_rate: 0.0
     - :description: Used Disk Storage
-      :group: storage
-      :source: used
       :metric: derived_vm_used_disk_storage
       :per_time: hourly
       :per_unit: gigabytes
-      :measure: Bytes Units
       :type_currency: Dollars
       :tiers:
         - :start: 0
@@ -149,8 +122,7 @@
           :fixed_rate: 0.0
           :variable_rate: 2.0
     - :description: Fixed Storage Cost 1
-      :group: fixed
-      :source: storage_1
+      :metric: fixed_storage_1
       :per_time: hourly
       :type_currency: Dollars
       :tiers:
@@ -159,8 +131,7 @@
           :fixed_rate: 0.0
           :variable_rate: 0.0
     - :description: Fixed Storage Cost 2
-      :group: fixed
-      :source: storage_2
+      :metric: fixed_storage_2
       :per_time: hourly
       :type_currency: Dollars
       :tiers:
@@ -174,12 +145,9 @@
   :default: false
   :rates:
     - :description: Used CPU
-      :group: cpu
-      :source: used
       :metric: cpu_usagemhz_rate_average
       :per_time: hourly
       :per_unit: megahertz
-      :measure: Hz Units
       :type_currency: Dollars
       :tiers:
         - :start: 0
@@ -187,8 +155,6 @@
           :fixed_rate: 0.0
           :variable_rate: 0.02
     - :description: Used CPU Cores
-      :group: cpu_cores
-      :source: used
       :metric: v_derived_cpu_total_cores_used
       :per_time: hourly
       :per_unit: cpu core
@@ -199,8 +165,6 @@
           :fixed_rate: 1.0
           :variable_rate: 0.02
     - :description: Allocated CPU Count
-      :group: cpu
-      :source: allocated
       :metric: derived_vm_numvcpus
       :per_time: hourly
       :per_unit: cpu
@@ -211,12 +175,9 @@
           :fixed_rate: 1.0
           :variable_rate: 0.0
     - :description: Used Memory
-      :group: memory
-      :source: used
       :metric: derived_memory_used
       :per_time: hourly
       :per_unit: megabytes
-      :measure: Bytes Units
       :type_currency: Dollars
       :tiers:
         - :start: 0
@@ -224,12 +185,9 @@
           :fixed_rate: 0.0
           :variable_rate: 0.02
     - :description: Allocated Memory
-      :group: memory
-      :source: allocated
       :metric: derived_memory_available
       :per_time: hourly
       :per_unit: megabytes
-      :measure: Bytes Units
       :type_currency: Dollars
       :tiers:
         - :start: 0
@@ -237,12 +195,9 @@
           :fixed_rate: 0.0
           :variable_rate: 0.0
     - :description: Used Network I/O
-      :group: net_io
-      :source: used
       :metric: net_usage_rate_average
       :per_time: hourly
       :per_unit: kbps
-      :measure: Bytes per Second Units
       :type_currency: Dollars
       :tiers:
         - :start: 0
@@ -254,12 +209,9 @@
           :fixed_rate: 0.5
           :variable_rate: 0.005
     - :description: Used Disk I/O
-      :group: disk_io
-      :source: used
       :metric: disk_usage_rate_average
       :per_time: hourly
       :per_unit: kbps
-      :measure: Bytes per Second Units
       :type_currency: Dollars
       :tiers:
         - :start: 0
@@ -267,8 +219,7 @@
           :fixed_rate: 0.0
           :variable_rate: 0.005
     - :description: Fixed Compute Cost 1
-      :group: fixed
-      :source: compute_1
+      :metric: fixed_compute_1
       :per_time: hourly
       :type_currency: Dollars
       :tiers:
@@ -277,8 +228,7 @@
           :fixed_rate: 0.0
           :variable_rate: 0.0
     - :description: Fixed Compute Cost 2
-      :group: fixed
-      :source: compute_2
+      :metric: fixed_compute_2
       :per_time: hourly
       :type_currency: Dollars
       :tiers:
