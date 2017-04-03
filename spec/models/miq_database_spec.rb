@@ -1,4 +1,11 @@
 describe MiqDatabase do
+  describe ".encrypted_columns" do
+    it "returns the encrypted columns" do
+      expected = %w(csrf_secret_token csrf_secret_token_encrypted session_secret_token session_secret_token_encrypted)
+      expect(described_class.encrypted_columns).to match_array(expected)
+    end
+  end
+
   let(:db) { described_class.seed }
 
   let!(:region) do
