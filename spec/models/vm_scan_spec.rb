@@ -333,6 +333,35 @@ describe VmScan do
         @job.call_scan
       end
     end
+
+    describe "#call_synchronize" do
+      before(:each) do
+        @job.agent_id = @server.id
+        allow(VmOrTemplate).to receive(:find).with(@vm.id).and_return(@vm)
+        allow(MiqServer).to receive(:find).with(@server.id).and_return(@server)
+      end
+
+      it "calls VmOrTemlate#synch_metadata with correct parameters" do
+        expect(@vm).to receive(:sync_metadata).with(any_args, "taskid" => @job.jobid, "host" => @server)
+        @job.call_synchronize
+      end
+
+      it "sends signal :abort if there is any error" do
+        allow(@vm).to receive(:sync_metadata).and_raise("Any Error")
+        expect(@job).to receive(:signal).with(:abort, any_args)
+        @job.call_synchronize
+      end
+
+      it "does not updates job status" do
+        expect(@job).to receive(:set_status).with("Synchronizing metadata from VM")
+        @job.call_synchronize
+      end
+
+      it "executes Job#dispatch_finish" do
+        expect(@job).to receive(:dispatch_finish)
+        @job.call_synchronize
+      end
+    end
   end
 
   context "A single VM Scan Job on Openstack provider" do
