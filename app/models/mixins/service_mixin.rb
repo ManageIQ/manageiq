@@ -84,7 +84,11 @@ module ServiceMixin
   end
 
   def each_group_resource(grp_idx = nil)
-    if grp_idx.nil?
+    if children.present? && service_resources.empty?
+      children.each do |child|
+        child.service_resources.each { |sr| yield(sr) }
+      end
+    elsif grp_idx.nil?
       service_resources.each do |sr|
         yield(sr)
       end
