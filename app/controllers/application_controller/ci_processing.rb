@@ -219,12 +219,13 @@ module ApplicationController::CiProcessing
     end
   end
 
-  # Retire 1 or more VMs
+  # Retire 1 or more items (vms, stacks, services)
   def retirevms
     assert_privileges(params[:pressed])
-    vms = find_checked_ids_with_rbac(VmOrTemplate)
+    klass = get_class_from_controller_param(params[:controller])
+    selected_items = find_checked_ids_with_rbac(klass)
     if !%w(orchestration_stack service).include?(request.parameters["controller"]) && !%w(orchestration_stacks).include?(params[:display]) &&
-       VmOrTemplate.find(vms).any? { |vm| !vm.supports_retire? }
+       VmOrTemplate.find(selected_items).any? { |vm| !vm.supports_retire? }
       add_flash(_("Set Retirement Date does not apply to selected %{model}") %
         {:model => ui_lookup(:table => "miq_template")}, :error)
       javascript_flash(:scroll_top => true)
@@ -241,18 +242,16 @@ module ApplicationController::CiProcessing
       rec_cls = "orchestration_stack"
       bc_msg = _("Retire Orchestration Stack")
     end
-    if vms.blank?
+    if selected_items.blank?
       session[:retire_items] = [params[:id]]
-    else
-      if vms.length < 1
+    elsif selected_items.empty?
         add_flash(_("At least one %{model} must be selected for tagging") %
           {:model => ui_lookup(:model => "Vm")}, :error)
         @refresh_div = "flash_msg_div"
         @refresh_partial = "layouts/flash_msg"
         return
-      else
-        session[:retire_items] = vms                                # Set the array of retire items
-      end
+    else
+      session[:retire_items] = selected_items # Set the array of retire items
     end
     session[:assigned_filters] = assigned_filters
     if @explorer
@@ -1876,44 +1875,43 @@ module ApplicationController::CiProcessing
     return humansize.to_s, fmt
   end
 
-  # Common VM button handler routines
+  # Common item button handler routines
   def vm_button_operation(method, display_name, partial_after_single_selection = nil)
-    vms = []
-
-    # Either a list or coming from a different controller (eg from host screen, go to its vms)
+    selected_items = []
+    klass = get_rec_cls
+    # Either a list or coming from a different controller (eg from host screen, go to its selected_items)
     if @lastaction == "show_list" ||
        !%w(orchestration_stack service vm_cloud vm_infra vm miq_template vm_or_template).include?(
          request.parameters["controller"]) # showing a list
 
       # FIXME retrieving vms from DB two times
-      vms = find_checked_ids_with_rbac(VmOrTemplate)
+      selected_items = find_checked_ids_with_rbac(klass)
       if method == 'retire_now' &&
          !%w(orchestration_stack service).include?(request.parameters["controller"]) &&
-         VmOrTemplate.find(vms).any? { |vm| !vm.supports_retire? }
+         VmOrTemplate.find(selected_items).any? { |vm| !vm.supports_retire? }
         add_flash(_("Retire does not apply to selected %{model}") %
           {:model => ui_lookup(:table => "miq_template")}, :error)
         javascript_flash(:scroll_top => true)
         return
       end
 
-      if method == 'scan' && !VmOrTemplate.batch_operation_supported?('smartstate_analysis', vms)
+      if method == 'scan' && !VmOrTemplate.batch_operation_supported?('smartstate_analysis', selected_items)
         render_flash_not_applicable_to_model('Smartstate Analysis', ui_lookup(:tables => "vm_or_template"))
         return
       end
 
-      if vms.empty?
+      if selected_items.empty?
         add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => request.parameters["controller"]), :task => display_name}, :error)
       else
-        process_objects(vms, method)
+        process_objects(selected_items, method)
       end
 
-      if @lastaction == "show_list" # In vm controller, refresh show_list, else let the other controller handle it
+      if @lastaction == "show_list" # In the controller, refresh show_list, else let the other controller handle it
         show_list unless @explorer
         @refresh_partial = "layouts/gtl"
       end
 
-    else # showing 1 vm
-      klass = get_rec_cls
+    else # showing 1 item
       if params[:id].nil? || klass.find_by_id(params[:id]).nil?
         add_flash(_("%{record} no longer exists") %
           {:record => ui_lookup(:table => request.parameters["controller"])}, :error)
@@ -1921,8 +1919,8 @@ module ApplicationController::CiProcessing
         @refresh_partial = "layouts/gtl"
       else
 
-        vms.push(find_id_with_rbac(klass, params[:id]))
-        process_objects(vms, method) unless vms.empty?
+        selected_items.push(find_id_with_rbac(klass, params[:id]))
+        process_objects(selected_items, method) unless selected_items.empty?
 
         # TODO: tells callers to go back to show_list because this VM may be gone
         # Should be refactored into calling show_list right here
@@ -1937,7 +1935,7 @@ module ApplicationController::CiProcessing
         end
       end
     end
-    vms.count
+    selected_items.count
   end
 
   def get_rec_cls
@@ -2065,7 +2063,7 @@ module ApplicationController::CiProcessing
   alias_method :vm_scan, :scanvms
   alias_method :miq_template_scan, :scanvms
 
-  # Immediately retire VMs
+  # Immediately retire items
   def retirevms_now
     assert_privileges(params[:pressed])
     vm_button_operation('retire_now', 'retire')
