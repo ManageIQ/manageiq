@@ -2,7 +2,6 @@ module Api
   class Initializer
     def go
       init_env
-      gen_attr_type_hash
     end
 
     def log_kv(key, val)
@@ -25,38 +24,6 @@ module Api
       $api_log.info("")
       $api_log.info("Dynamic Configuration")
       Environment.user_token_service.api_config.each { |key, val| log_kv(key, val) }
-    end
-
-    #
-    # Let's create our attribute type hashes.
-    # Accessed as normalized_attributes[<name>], much faster than array include?
-    #
-    def gen_attr_type_hash
-      attr_types.each { |type, attrs| attrs.each { |a| Environment.normalized_attributes[type][a] = true } }
-      gen_time_attr_type_hash
-    end
-
-    #
-    # Let's dynamically get the :date and :datetime attributes from the Classes we care about.
-    #
-    def gen_time_attr_type_hash
-      ApiConfig.collections.each do |_, cspec|
-        next if cspec[:klass].blank?
-        klass = cspec[:klass].constantize
-        klass.columns_hash.collect do |name, typeobj|
-          Environment.normalized_attributes[:time][name] = true if %w(date datetime).include?(typeobj.type.to_s)
-        end
-      end
-    end
-
-    private
-
-    #
-    # Custom normalization on these attribute types.
-    # Converted to normalized_attributes hash at init, much faster access.
-    #
-    def attr_types
-      @attr_types ||= {:time => %w(expires_on)}
     end
   end
 end
