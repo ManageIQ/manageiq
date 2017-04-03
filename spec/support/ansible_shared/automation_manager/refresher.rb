@@ -42,6 +42,24 @@ shared_examples_for "ansible refresher" do |ansible_provider, manager_class, ems
     expect(described_class.ems_type).to eq(ems_type)
   end
 
+  it "will remove all objects if an empty collection is returned by tower" do
+    mock_api = double
+    mock_collection = double(:all => [])
+    allow(mock_api).to receive(:version).and_return('3.0')
+    allow(mock_api).to receive_messages(
+      :inventories   => mock_collection,
+      :hosts         => mock_collection,
+      :job_templates => mock_collection,
+      :projects      => mock_collection,
+      :credentials   => mock_collection,
+    )
+    allow(automation_manager.provider).to receive_message_chain(:connect, :api).and_return(mock_api)
+    automation_manager.configuration_script_sources.create!
+    EmsRefresh.refresh(automation_manager)
+
+    expect(ConfigurationScriptSource.count).to eq(0)
+  end
+
   it "will perform a full refresh" do
     expected_counterpart_vm
 
