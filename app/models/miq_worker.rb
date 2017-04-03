@@ -267,9 +267,7 @@ class MiqWorker < ApplicationRecord
     w
   end
 
-  def self.my_worker
-    server_scope.find_by(:pid => Process.pid)
-  end
+  cache_with_timeout(:my_worker) { server_scope.find_by(:pid => Process.pid) }
 
   def self.find_all_current(server_id = nil)
     MiqWorker.find_current(server_id)
