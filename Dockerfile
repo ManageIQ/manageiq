@@ -11,6 +11,9 @@ ENV APP_ROOT /var/www/miq/vmdb
 ENV APPLIANCE_ROOT /opt/manageiq/manageiq-appliance
 ENV SUI_ROOT /opt/manageiq/manageiq-ui-service
 
+## To cleanly shutdown systemd, use SIGRTMIN+3
+STOPSIGNAL SIGRTMIN+3
+
 # Fetch and manageiq release repo
 RUN curl -sSLko /etc/yum.repos.d/manageiq-ManageIQ-Fine-epel-7.repo \
       https://copr.fedorainfracloud.org/coprs/manageiq/ManageIQ-Fine/repo/epel-7/manageiq-ManageIQ-Fine-epel-7.repo
