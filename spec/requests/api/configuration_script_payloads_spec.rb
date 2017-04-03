@@ -73,12 +73,11 @@ RSpec.describe 'Configuration Script Payloads API' do
     let(:playbook) { FactoryGirl.create(:configuration_script_payload, :manager => manager) }
     let(:params) do
       {
-        :action           => 'create',
-        :description      => "Description",
-        :name             => "A Credential",
-        :related          => {},
-        :type             => 'ManageIQ::Providers::AnsibleTower::AutomationManager::Credential',
-        :manager_resource => { :href => providers_url(manager.id) }
+        :action      => 'create',
+        :description => "Description",
+        :name        => "A Credential",
+        :related     => {},
+        :type        => 'ManageIQ::Providers::AnsibleTower::AutomationManager::Credential'
       }
     end
 
