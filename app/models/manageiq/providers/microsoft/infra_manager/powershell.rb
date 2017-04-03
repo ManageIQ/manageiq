@@ -14,14 +14,19 @@ class ManageIQ::Providers::Microsoft::InfraManager
       def run_powershell_script(connection, script)
         log_header = "MIQ(#{self.class.name}.#{__method__})"
         script_string = IO.read(script)
+        results = []
+
         begin
-          results = connection.shell(:powershell).run(script_string)
-          log_dos_error_results(results)
-          results
+          with_winrm_shell(connection) do |shell|
+            results = shell.run(script_string)
+            log_dos_error_results(results.stderr)
+          end
         rescue Errno::ECONNREFUSED => err
-          $scvmm_log.error "MIQ(#{log_header} Unable to connect to SCVMM. #{err.message})"
+          $scvmm_log.error "MIQ(#{log_header} Unable to connect to SCVMM: #{err.message})"
           raise
         end
+
+        results.stdout
       end
 
       def powershell_results_to_hash(results)
@@ -70,6 +75,24 @@ class ManageIQ::Providers::Microsoft::InfraManager
           string << element
         end
       end
+
+      def with_winrm_shell(connection, shell_type = :powershell)
+        shell = connection.shell(shell_type)
+        yield shell
+      ensure
+        shell.close
+      end
+    end
+
+    def with_winrm_shell(shell_type = :powershell)
+      with_provider_connection do |connection|
+        begin
+          shell = connection.shell(shell_type)
+          yield shell
+        ensure
+          shell.close
+        end
+      end
     end
 
     def run_dos_command(command)
@@ -78,15 +101,15 @@ class ManageIQ::Providers::Microsoft::InfraManager
       results = []
 
       _result, timings = Benchmark.realtime_block(:execution) do
-        with_provider_connection do |connection|
-          results = connection.shell(:cmd).run(command)
-          self.class.log_dos_error_results(results)
+        with_winrm_shell(:cmd) do |shell|
+          results = shell.run(command)
+          self.class.log_dos_error_results(results.stderr)
         end
       end
 
       $scvmm_log.debug("#{log_header} Execute DOS command <#{command}>...Complete - Timings: #{timings}")
 
-      results
+      results.stdout
     end
 
     def run_powershell_script(script)
@@ -95,16 +118,16 @@ class ManageIQ::Providers::Microsoft::InfraManager
       results = []
 
       _result, timings = Benchmark.realtime_block(:execution) do
-        with_provider_connection do |connection|
+        with_winrm_shell do |shell|
           script_string = IO.read(script)
-          results = connection.shell(:powershell).run(script_string)
-          self.class.log_dos_error_results(results)
+          results = shell.run(script_string)
+          self.class.log_dos_error_results(results.stderr)
         end
       end
 
       $scvmm_log.debug("#{log_header} Execute Powershell script... Complete - Timings: #{timings}")
 
-      results
+      results.stdout
     end
   end
 end
