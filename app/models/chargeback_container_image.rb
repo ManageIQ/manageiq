@@ -10,12 +10,9 @@ class ChargebackContainerImage < Chargeback
     :cpu_cores_used_metric => :float,
     :fixed_compute_1_cost  => :float,
     :fixed_compute_2_cost  => :float,
-    :fixed_2_cost          => :float,
     :fixed_cost            => :float,
     :memory_used_cost      => :float,
     :memory_used_metric    => :float,
-    :net_io_used_cost      => :float,
-    :net_io_used_metric    => :float,
     :total_cost            => :float,
   )
 
@@ -79,8 +76,6 @@ class ChargebackContainerImage < Chargeback
       "fixed_cost"            => {:grouping => [:total]},
       "memory_used_cost"      => {:grouping => [:total]},
       "memory_used_metric"    => {:grouping => [:total]},
-      "net_io_used_cost"      => {:grouping => [:total]},
-      "net_io_used_metric"    => {:grouping => [:total]},
       "total_cost"            => {:grouping => [:total]}
     }
   end
