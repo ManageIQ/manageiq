@@ -209,9 +209,11 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
       :verify_mode => verify_ssl_mode,
       :cert_store  => ssl_cert_store,
     }
+    headers = client.headers
+    headers[:'X-Auth-Token'] = scan_data[:auth_token] if scan_data[:auth_token]
     MiqContainerGroup.new(pod_proxy + SCAN_CONTENT_PATH,
                           nethttp_options,
-                          client.headers.stringify_keys,
+                          headers.stringify_keys,
                           scan_data[:guest_os])
   end
 

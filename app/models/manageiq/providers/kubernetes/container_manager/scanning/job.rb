@@ -56,7 +56,8 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
       :image_full_name => image.full_name,
       :pod_name        => "manageiq-img-scan-#{guid[0..4]}",
       :pod_port        => INSPECTOR_PORT,
-      :pod_namespace   => namespace
+      :pod_namespace   => namespace,
+      :auth_token      => SecureRandom.hex
     ))
 
     _log.info("Getting inspector-admin secret for pod [#{pod_full_name}]")
@@ -139,7 +140,8 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
       :pod_namespace => options[:pod_namespace],
       :pod_name      => options[:pod_name],
       :pod_port      => options[:pod_port],
-      :guest_os      => IMAGES_GUEST_OS
+      :guest_os      => IMAGES_GUEST_OS,
+      :auth_token    => options[:auth_token]
     }
 
     verify_error = verify_scanned_image_id(image_inspector_client.fetch_metadata)
@@ -324,6 +326,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     Net::HTTP.start(health_url.host, health_url.port, http_opts) do |http|
       request = Net::HTTP::Get.new(health_url.path)
       client.headers.each { |k, v| request[k.to_s] = v }
+      request["X-Auth-Token"] = auth_token
       return http.request(request)
     end
   end
@@ -448,6 +451,6 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   end
 
   def auth_token
-    @auth_token ||= SecureRandom.hex
+    options[:auth_token]
   end
 end
