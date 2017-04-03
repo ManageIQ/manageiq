@@ -1,7 +1,12 @@
 module Api
   class Environment
     def self.normalized_attributes
-      @normalized_attributes ||= {:time => {}, :url => {}, :resource => {}, :encrypted => {}}
+      @normalized_attributes ||= {
+        :time      => {},
+        :url       => {"href" => true},
+        :resource  => {"image_href" => true},
+        :encrypted => {}
+      }
     end
 
     def self.user_token_service
