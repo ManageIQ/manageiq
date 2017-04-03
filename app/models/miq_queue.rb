@@ -163,12 +163,8 @@ class MiqQueue < ApplicationRecord
     msgs.each do |msg|
       begin
         _log.info("#{MiqQueue.format_short_log_msg(msg)} previously timed out, retrying...") if msg.state == STATE_TIMEOUT
-        w = MiqWorker.my_worker
-        if w.nil?
-          msg.update_attributes!(:state => STATE_DEQUEUE, :handler => MiqServer.my_server)
-        else
-          msg.update_attributes!(:state => STATE_DEQUEUE, :handler => w)
-        end
+        handler = MiqWorker.my_worker || MiqServer.my_server
+        msg.update_attributes!(:state => STATE_DEQUEUE, :handler => handler)
         result = msg
         break
       rescue ActiveRecord::StaleObjectError
