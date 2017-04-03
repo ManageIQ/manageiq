@@ -13,10 +13,6 @@ module Api
     #
     def init_env
       $api_log.info("Initializing Environment for #{ApiConfig.base[:name]}")
-      log_config
-    end
-
-    def log_config
       $api_log.info("")
       $api_log.info("Static Configuration")
       ApiConfig.base.each { |key, val| log_kv(key, val) }
