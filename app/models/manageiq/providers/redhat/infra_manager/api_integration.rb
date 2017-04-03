@@ -15,7 +15,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
   end
 
   def connect(options = {})
-    raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
+    raise "no credentials defined" if missing_credentials?(options[:auth_type])
     version = options[:version] || 3
     unless options[:skip_supported_api_validation] || supports_the_api_version?(version)
       raise "version #{version} of the api is not supported by the provider"
@@ -29,7 +29,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     connect_options = {
       :scheme     => options[:scheme] || 'https',
       :server     => options[:ip] || address,
-      :port       => options[:port] || self.port,
+      :port       => options[:port] || port,
       :path       => path,
       :username   => options[:user] || authentication_userid(options[:auth_type]),
       :password   => options[:pass] || authentication_password(options[:auth_type]),
@@ -111,6 +111,13 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     @rhevm_inventory ||= connect(:service => "Inventory")
   end
 
+  def ovirt_services
+    @ovirt_services ||= begin
+                          ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Builder.new(self)
+                                                                                           .build.new(:ems => self)
+                        end
+  end
+
   def with_provider_connection(options = {})
     raise "no block given" unless block_given?
     _log.info("Connecting through #{self.class.name}: [#{name}]")
@@ -152,8 +159,8 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
 
   def rhevm_metrics_connect_options(options = {})
     metrics_hostname = connection_configuration_by_role('metrics')
-      .try(:endpoint)
-      .try(:hostname)
+                       .try(:endpoint)
+                       .try(:hostname)
     server   = options[:hostname] || metrics_hostname || hostname
     username = options[:user] || authentication_userid(:metrics)
     password = options[:pass] || authentication_password(:metrics)
@@ -192,7 +199,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
 
   def authentications_to_validate
     at = [:default]
-    at << :metrics if self.has_authentication_type?(:metrics)
+    at << :metrics if has_authentication_type?(:metrics)
     at
   end
 
@@ -355,7 +362,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
 
     def fetch_fresh(last_refresh_time, options)
       force = options[:force] || stale_cache?(last_refresh_time)
-      res = Rails.cache.fetch(key, force: force) { build_entry { yield } }
+      res = Rails.cache.fetch(key, :force => force) { build_entry { yield } }
       res[:value]
     end
 
