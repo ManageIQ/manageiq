@@ -24,8 +24,7 @@ class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraM
     require 'winrm'
 
     connect_params[:operation_timeout] = 1800
-    winrm = WinRM::Connection.new(connect_params)
-    winrm
+    WinRM::Connection.new(connect_params)
   end
 
   def self.auth_url(hostname, port = nil)
