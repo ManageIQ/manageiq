@@ -1,5 +1,6 @@
 module ManageIQ::Providers
   class Hawkular::DatawarehouseManager < ManageIQ::Providers::DatawarehouseManager
+    require 'openssl'
     require 'hawkular/hawkular_client'
 
     require_nested :EventCatcher
@@ -33,9 +34,13 @@ module ManageIQ::Providers
       {:available => true, :message => nil}
     end
 
-    def self.verify_ssl_mode
-      # TODO: support real authentication using certificates
-      OpenSSL::SSL::VERIFY_NONE
+    def verify_ssl_mode(endpoint = default_endpoint)
+      case endpoint.security_protocol
+      when 'ssl-without-validation'
+        OpenSSL::SSL::VERIFY_NONE
+      else # 'ssl-with-validation', 'ssl-with-validation-custom-ca', secure by default with unexpected values.
+        OpenSSL::SSL::VERIFY_PEER
+      end
     end
 
     # Hawkular Client
@@ -53,7 +58,7 @@ module ManageIQ::Providers
       klass.new(
         URI::HTTPS.build(:host => options[:hostname], :port => options[:port].to_i).to_s,
         { :token => options[:token] },
-        { :tenant => tenant, :verify_ssl => verify_ssl_mode }
+        { :tenant => tenant, :verify_ssl => options[:verify_ssl], :ssl_cert_store => options[:ssl_cert_store] }
       )
     end
 
@@ -62,9 +67,11 @@ module ManageIQ::Providers
       memo_options = options.slice(:type, :tenant)
       @clients[memo_options.freeze] ||= self.class.raw_connect(
         memo_options.merge(
-          :hostname => hostname,
-          :port     => port,
-          :token    => authentication_token('default'),
+          :hostname       => hostname,
+          :port           => port,
+          :token          => authentication_token('default'),
+          :verify_ssl     => verify_ssl_mode,
+          :ssl_cert_store => default_endpoint.ssl_cert_store
         )
       )
     end
