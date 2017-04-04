@@ -139,8 +139,10 @@ describe ApplicationController do
   end
 
   context "#prov_redirect" do
+    let(:user)  { FactoryGirl.create(:user, :features => "vm_migrate") }
     before do
-      login_as FactoryGirl.create(:user, :features => "vm_migrate")
+      allow(User).to receive(:server_timezone).and_return("UTC")
+      login_as user
       controller.request.parameters[:pressed] = "vm_migrate"
     end
 
