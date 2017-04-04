@@ -46,6 +46,12 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     delete_inventory(action) unless use_default_inventory?(hosts)
   end
 
+  def on_error(action)
+    _log.info("on_error called for service action: #{action}")
+    update_attributes(:retirement_state => 'error') if action == "Retirement"
+    postprocess(action)
+  end
+
   private
 
   def manageiq_extra_vars(action)

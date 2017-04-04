@@ -200,6 +200,21 @@ describe(ServiceAnsiblePlaybook) do
     end
   end
 
+  describe '#on_error' do
+    it 'handles retirement error' do
+      executed_service.update_attributes(:retirement_state => 'Retiring')
+      expect(executed_service).to receive(:postprocess)
+      executed_service.on_error(ResourceAction::RETIREMENT)
+      expect(executed_service.retirement_state).to eq('error')
+    end
+
+    it 'handles provisioning error' do
+      expect(executed_service).to receive(:postprocess)
+      executed_service.on_error(action)
+      expect(executed_service.retirement_state).to be_nil
+    end
+  end
+
   describe '#job' do
     before { service.add_resource!(tower_job, :name => action) }
 

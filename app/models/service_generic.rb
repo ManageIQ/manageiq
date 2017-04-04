@@ -32,4 +32,7 @@ class ServiceGeneric < Service
   # Execute after refresh is done. Do cleaning up or update linkage here
   def postprocess(_action)
   end
+
+  def on_error(_action)
+  end
 end
