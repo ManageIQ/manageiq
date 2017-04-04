@@ -1,6 +1,8 @@
 class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
   default_value_for :cloud, true
 
+  virtual_column :image?, :type => :boolean
+
   def image?
     genealogy_parent.nil?
   end
