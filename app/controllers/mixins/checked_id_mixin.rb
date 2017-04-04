@@ -136,4 +136,36 @@ module Mixins
       end
     end
   end
+
+  # Tries to load a single checked item on from params.
+  # If there's none, takes the id sent in params[:id].
+  #
+  # Returns:
+  #   id of the item as a Fixnum
+  #
+  def checked_or_params_id
+    objs = find_checked_items
+    obj = objs.blank? && params[:id].present? ? params[:id] : objs[0]
+    obj = from_cid(obj) if obj.present?
+    obj
+  end
+
+  # Either creates a new instance or loads the one passed in 'ids'.
+  #
+  # Params:
+  #   klass - class of requested object
+  #   id    - id of requested object
+  #
+  # 'id' can be an array (then the first item is taken) or a single value.
+  #
+  # Returns:
+  #   instance of 'klass'
+  #
+  def find_or_new(klass, id)
+    if params[:typ] == "new"
+      klass.new
+    else
+      Rbac.filtered(Array(id), :class => klass).first
+    end
+  end
 end

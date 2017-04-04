@@ -77,9 +77,8 @@ module OpsController::Settings::Ldap
         javascript_flash
       end
     when "reset", nil # Reset or first time in
-      obj = find_checked_items
-      obj[0] = params[:id] if obj.blank? && params[:id]
-      @ldap_region = params[:typ] == "new" ? LdapRegion.new : LdapRegion.find_by_id(from_cid(obj[0]))         # Get existing or new record
+      @ldap_region = find_or_new(LdapRegion, checked_or_params_id)
+
       ldap_region_set_form_vars
       @in_a_form = true
       session[:changed] = false
@@ -106,7 +105,7 @@ module OpsController::Settings::Ldap
   def ldap_region_delete
     ldap_regions = []
     if !params[:id] # showing a list
-      ldap_regions = find_checked_items
+      ldap_regions = find_checked_ids_with_rbac(LdapRegion)
       if ldap_regions.empty?
         add_flash(_("No %{model} were selected for deletion") % {:model => ui_lookup(:tables => "ldap_region")}, :error)
         javascript_flash
@@ -234,9 +233,8 @@ module OpsController::Settings::Ldap
         end
       end
     else  # Reset or first time in
-      obj = find_checked_items
-      obj[0] = params[:id] if obj.blank? && params[:id]
-      @ldap_domain = params[:typ] == "new" ? LdapDomain.new : LdapDomain.find_by_id(from_cid(obj[0]))         # Get existing or new record
+      @ldap_domain = find_or_new(LdapDomain, checked_or_params_id)
+
       ldap_domain_set_form_vars
       @in_a_form = true
       session[:changed] = false
