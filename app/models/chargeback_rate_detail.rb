@@ -209,6 +209,6 @@ class ChargebackRateDetail < ApplicationRecord
       end
     end
 
-    rate_details.sort_by { |rd| [rd[:group], rd[:description]] }
+    rate_details.sort_by { |rd| [rd.chargeable_field.group, rd.chargeable_field.description] }
   end
 end
