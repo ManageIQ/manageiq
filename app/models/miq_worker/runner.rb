@@ -57,12 +57,16 @@ class MiqWorker::Runner
   def worker_initialization
     starting_worker_record
     set_process_title
-
     # Sync the config and roles early since heartbeats and logging require the configuration
     sync_active_roles
     sync_config
 
     set_connection_pool_size
+  end
+
+  # More process specific stuff :-(
+  def set_database_application_name
+    ArApplicationName.name = @worker.database_application_name
   end
 
   def set_connection_pool_size
@@ -144,6 +148,7 @@ class MiqWorker::Runner
   end
 
   def prepare
+    set_database_application_name
     ObjectSpace.garbage_collect
     started_worker_record
     do_wait_for_worker_monitor if self.class.wait_for_worker_monitor?

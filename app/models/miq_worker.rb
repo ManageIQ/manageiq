@@ -478,6 +478,17 @@ class MiqWorker < ApplicationRecord
     type.sub(/^ManageIQ::Providers::/, "")
   end
 
+  def minimal_class_name
+    abbreviated_class_name
+      .sub(/Miq/, "")
+      .sub(/Worker/, "")
+  end
+
+  def database_application_name
+    zone = MiqServer.my_server.zone
+    "MIQ #{Process.pid} #{minimal_class_name}[#{compressed_id}], s[#{miq_server.compressed_id}], #{zone.name}[#{zone.compressed_id}]".truncate(64)
+  end
+
   def format_full_log_msg
     "Worker [#{self.class}] with ID: [#{id}], PID: [#{pid}], GUID: [#{guid}]"
   end

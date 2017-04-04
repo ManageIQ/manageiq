@@ -62,6 +62,7 @@ class EvmServer
 
     PidFile.create(MiqServer.pidfile)
     set_process_title
+    set_database_application_name
     MiqServer.start
   rescue Interrupt => e
     process_hard_signal(e.message)
@@ -75,6 +76,14 @@ class EvmServer
   #
   def set_process_title
     Process.setproctitle(SERVER_PROCESS_TITLE) if Process.respond_to?(:setproctitle)
+  end
+
+  def set_database_application_name
+    ArApplicationName.name = database_application_name
+  end
+
+  def database_application_name
+    MiqServer.my_server.database_application_name
   end
 
   def self.start(*args)
