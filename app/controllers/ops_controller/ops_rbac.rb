@@ -576,7 +576,7 @@ module OpsController::OpsRbac
   end
 
   def rbac_edit_tags_reset(tagging)
-    @object_ids = find_checked_items
+    @object_ids = find_checked_ids_with_rbac(tagging.constantize)
     if params[:button] == "reset"
       id = params[:id] if params[:id]
       return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", "replace_cell__explorer")
