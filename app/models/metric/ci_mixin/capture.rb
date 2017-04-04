@@ -51,7 +51,7 @@ module Metric::CiMixin::Capture
       start_time = Metric::Capture.historical_start_time if start_time.nil?
       end_time = Time.now.utc if end_time.nil?
     else
-      start_time = last_perf_capture_on unless start_time
+      start_time = calculate_start_time unless start_time
       end_time   = Time.now.utc unless end_time
       cb = {:class_name => self.class.name, :instance_id => id, :method_name => :perf_capture_callback, :args => [[task_id]]} if task_id
     end
@@ -97,6 +97,10 @@ module Metric::CiMixin::Capture
         end
       end
     end
+  end
+
+  def calculate_start_time
+    last_perf_capture_on ? [last_perf_capture_on, Metric::Capture.historical_start_time].max : nil
   end
 
   def perf_capture_realtime(*args)
