@@ -34,7 +34,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
                        :allow_playback_repeats => true, # TODO?
                        :match_requests_on => [:path,]) do # , :record => :new_episodes) do
         #EmsRefresh.refresh(@ems)
-        @ems.refresher.new([@ems]).inlined_refresh2(@ems)
+        @ems.refresher.new([@ems]).inlined_refresh3(@ems, :fake_split => true)
       end
       @ems.reload
 
