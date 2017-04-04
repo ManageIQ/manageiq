@@ -2,28 +2,32 @@ require "linux_admin"
 require "awesome_spawn"
 
 describe EmbeddedAnsible do
-  before do
-    ENV["APPLIANCE_ANSIBLE_DIRECTORY"] = nil
-  end
-
   context ".available?" do
-    it "returns true when installed in the default location" do
-      allow(Dir).to receive(:exist?).with("/opt/ansible-installer").and_return(true)
+    context "in an appliance" do
+      before do
+        allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(true)
+      end
 
-      expect(described_class.available?).to be_truthy
+      it "returns true when installed in the default location" do
+        installed_rpms = {
+          "ansible-tower-server" => "1.0.1",
+          "ansible-tower-setup"  => "1.2.3",
+          "vim"                  => "13.5.1"
+        }
+        expect(LinuxAdmin::Rpm).to receive(:list_installed).and_return(installed_rpms)
+
+        expect(described_class.available?).to be_truthy
+      end
+
+      it "returns false when not installed" do
+        expect(LinuxAdmin::Rpm).to receive(:list_installed).and_return("vim" => "13.5.1")
+
+        expect(described_class.available?).to be_falsey
+      end
     end
 
-    it "returns true when installed in the custom location in env var" do
-      ENV["APPLIANCE_ANSIBLE_DIRECTORY"] = "/tmp"
-      allow(Dir).to receive(:exist?).with("/tmp").and_return(true)
-      allow(Dir).to receive(:exist?).with("/opt/ansible-installer").and_return(false)
-
-      expect(described_class.available?).to be_truthy
-    end
-
-    it "returns false when not installed" do
-      allow(Dir).to receive(:exist?).with("/opt/ansible-installer").and_return(false)
-
+    it "returns false outside of an appliance" do
+      allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
       expect(described_class.available?).to be_falsey
     end
   end
