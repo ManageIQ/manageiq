@@ -42,4 +42,14 @@ describe ContainerImage do
     expect(image.computer_system).not_to be_nil
     expect(image.operating_system).to eq(image.computer_system.operating_system)
   end
+
+  context "#refresh_openshift_information" do
+    it "fails gracefully when image doens't exist in Openshift" do
+      # TODO
+    end
+
+    it "updates correctly from Openshift" do
+      # TODO
+    end
+  end
 end

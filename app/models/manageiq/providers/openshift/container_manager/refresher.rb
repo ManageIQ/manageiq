@@ -38,6 +38,10 @@ module ManageIQ::Providers
         EmsRefresh.log_inv_debug_trace(entities, "inv_hash:")
         ManageIQ::Providers::Openshift::ContainerManager::RefreshParser.ems_inv_to_hashes(entities, refresher_options)
       end
+
+      def post_process_refresh_classes
+        [::ContainerImage]
+      end
     end
   end
 end

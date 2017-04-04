@@ -114,4 +114,40 @@ class ContainerImage < ApplicationRecord
   end
 
   alias_method :perform_metadata_sync, :sync_stashed_metadata
+
+  def refresh_openshift_information
+    return if digest.blank?
+    openshift_image = ext_management_system.connect.get_image(digest)
+  rescue KubeException => e
+    raise unless e.message.include?("not found")
+  else
+    openshift_image_data = ManageIQ::Providers::Openshift::ContainerManager::RefreshParser.parse_openshift_image_data(openshift_image)
+    EmsRefresh.save_labels_inventory(self,
+                                     openshift_image_data.delete(:labels))
+    EmsRefresh.save_docker_labels_inventory(self,
+                                            openshift_image_data.delete(:docker_labels))
+    update(openshift_image_data)
+  end
+
+  def update_attributes_from_list(attributes, ca_attribute)
+    ca_attribute.delete_all
+    attributes.each do |ca|
+      ca_attribute.create(ca)
+    end
+  end
+
+  def self.post_refresh_ems(ems_id, update_start_time)
+    return if Settings.ems_refresh.openshift.get_container_images # The images are already updated
+
+    update_start_time = update_start_time.utc
+    ems = ExtManagementSystem.find(ems_id)
+
+    ems.container_images.where("created_on >= ?", update_start_time).each do |image|
+      MiqQueue.put(
+        :class_name  => image.class.name,
+        :instance_id => image.id,
+        :method_name => 'refresh_openshift_information'
+      )
+    end
+  end
 end
