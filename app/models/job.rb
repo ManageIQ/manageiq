@@ -249,6 +249,6 @@ class Job < ApplicationRecord
   end
 
   def attributes_log
-    "guid: [#{guid}], userid: [#{self.userid}], name: [#{self.name}], target class: [#{target_class}], target id: [#{target_id}], process type: [#{type}], agent id: [#{agent_id}], zone: [#{zone}]"
+    "guid: [#{guid}], userid: [#{self.userid}], name: [#{self.name}], target class: [#{target_class}], target id: [#{target_id}], process type: [#{type}], server id: [#{miq_server_id}], zone: [#{zone}]"
   end
 end # class Job

@@ -271,11 +271,11 @@ describe JobProxyDispatcher do
   end
 
   context "limiting number of smart state analysis running on one server" do
-    let(:job) { Job.create_job("VmScan", :agent_id => @server.id, :name => "Hello - 1") }
+    let(:job) { Job.create_job("VmScan", :miq_server_id => @server.id, :name => "Hello - 1") }
     before(:each) do
-      Job.create_job("VmScan", :agent_id => @server.id, :name => "Hello - 2")
+      Job.create_job("VmScan", :miq_server_id => @server.id, :name => "Hello - 2")
          .update_attributes(:dispatch_status => "active")
-      Job.create_job("VmScan", :agent_id => @server.id, :name => "Hello - 3")
+      Job.create_job("VmScan", :miq_server_id => @server.id, :name => "Hello - 3")
          .update_attributes(:dispatch_status => "active")
     end
 
@@ -308,7 +308,7 @@ describe JobProxyDispatcher do
 
   describe "#start_job_on_proxy" do
     it "creates job options and passing it to `queue_signal'" do
-      job = Job.create_job("VmScan", :agent_id => @server.id, :name => "Hello, World")
+      job = Job.create_job("VmScan", :miq_server_id => @server.id, :name => "Hello, World")
       dispatcher.instance_variable_set(:@active_vm_scans_by_zone, @server.my_zone => 0)
 
       job_options = {:args => ["start"], :zone => @server.my_zone, :server_guid => @server.guid, :role => "smartproxy"}

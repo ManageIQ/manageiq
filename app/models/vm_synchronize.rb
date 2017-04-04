@@ -18,7 +18,7 @@ class VmSynchronize < Job
 
     options[:categories] ||= Vm.default_scan_categories
     begin
-      host = Host.find(agent_id)
+      host = MiqServer.find(miq_server_id)
       vm   = VmOrTemplate.find(target_id)
       vm.sync_metadata(options[:categories], "taskid" => jobid, "host" => host)
     rescue Timeout::Error

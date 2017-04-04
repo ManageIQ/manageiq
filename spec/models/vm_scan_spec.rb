@@ -251,7 +251,7 @@ describe VmScan do
 
     describe "#call_snapshot_create" do
       context "for providers other than OpenStack and Microsoft" do
-        before(:each) { @job.agent_id = @server.id }
+        before(:each) { @job.miq_server_id = @server.id }
 
         it "does not call #create_snapshot but sends signal :snapshot_complete" do
           expect(@job).to receive(:signal).with(:snapshot_complete)
@@ -304,7 +304,7 @@ describe VmScan do
 
     describe "#call_scan" do
       before(:each) do
-        @job.agent_id = @server.id
+        @job.miq_server_id = @server.id
         allow(VmOrTemplate).to receive(:find).with(@vm.id).and_return(@vm)
         allow(MiqServer).to receive(:find).with(@server.id).and_return(@server)
       end
@@ -336,7 +336,7 @@ describe VmScan do
 
     describe "#call_synchronize" do
       before(:each) do
-        @job.agent_id = @server.id
+        @job.miq_server_id = @server.id
         allow(VmOrTemplate).to receive(:find).with(@vm.id).and_return(@vm)
         allow(MiqServer).to receive(:find).with(@server.id).and_return(@server)
       end

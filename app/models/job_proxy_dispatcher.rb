@@ -172,15 +172,14 @@ class JobProxyDispatcher
   end
 
   def assign_proxy_to_job(proxy, job)
-    job.agent_id        = proxy.id
     job.miq_server_id   = proxy.id
     job.started_on      = Time.now.utc
     job.dispatch_status = "active"
     job.save
 
     # Increment the counts for busy proxies and busy hosts for embedded
-    busy_proxies["MiqServer_#{job.agent_id}"] ||= 0
-    busy_proxies["MiqServer_#{job.agent_id}"] += 1
+    busy_proxies["MiqServer_#{job.miq_server_id}"] ||= 0
+    busy_proxies["MiqServer_#{job.miq_server_id}"] += 1
 
     # Track the host/vc resource for embedded scans so we can limit the resource impact
     if (key = embedded_scan_resource(@vm))
@@ -242,10 +241,10 @@ class JobProxyDispatcher
     @busy_proxies_hash ||= begin
       Job.where(:dispatch_status => "active")
       .where("state != ?", "finished")
-      .select([:agent_id])
+      .select([:miq_server_id])
       .each_with_object({}) do |j, busy_hsh|
-        busy_hsh["MiqServer_#{j.agent_id}"] ||= 0
-        busy_hsh["MiqServer_#{j.agent_id}"] += 1
+        busy_hsh["MiqServer_#{j.miq_server_id}"] ||= 0
+        busy_hsh["MiqServer_#{j.miq_server_id}"] += 1
       end
     end
   end
