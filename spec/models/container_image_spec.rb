@@ -44,12 +44,50 @@ describe ContainerImage do
   end
 
   context "#refresh_openshift_information" do
+    before(:each) do
+      allow(MiqServer).to receive(:my_zone).and_return("default")
+      hostname = 'host.example.com'
+      token = 'theToken'
+
+      @ems = FactoryGirl.create(
+        :ems_openshift,
+        :name                      => 'OpenShiftProvider',
+        :connection_configurations => [{:endpoint       => {:role              => :default,
+                                                            :hostname          => hostname,
+                                                            :port              => "8443",
+                                                            :security_protocol => nil,
+                                                            :verify_ssl        => 0},
+                                        :authentication => {:role     => :bearer,
+                                                            :auth_key => token,
+                                                            :userid   => "_"}}]
+      )
+    end
+
     it "fails gracefully when image doens't exist in Openshift" do
-      # TODO
+      image = FactoryGirl.create(:container_image,
+                                 :ems_id => @ems.id,
+                                 :digest => "sha256:not_a_real_digest")
+      @ems.container_images << image
+
+      VCR.use_cassette("#{described_class.name.underscore}_image_not_found",
+                       :match_requests_on => [:path,]) do # , :record => :new_episodes) do
+        image.refresh_openshift_information
+        expect(image.architecture).to be(nil)
+      end
     end
 
     it "updates correctly from Openshift" do
-      # TODO
+      digest = "sha256:15048638d6a0dfc1838b69305c0c15d823a13dc55b9f532771bbbe041b064c4a"
+      image = FactoryGirl.create(:container_image,
+                                 :ems_id => @ems.id,
+                                 :digest => digest)
+      @ems.container_images << image
+
+      VCR.use_cassette("#{described_class.name.underscore}_happy_flow",
+                       :match_requests_on => [:path,]) do # , :record => :new_episodes) do
+        image.refresh_openshift_information
+        expect(image.architecture).to eq("amd64")
+      end
     end
   end
 end
