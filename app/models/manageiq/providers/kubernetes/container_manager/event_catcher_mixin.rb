@@ -55,17 +55,23 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
   end
 
   def filtered?(event)
-    extract_event_data(event).nil?
+    parsed_event = extract_event_data(event)
+    parsed_event.nil? || filtered_events.include?(parsed_event[:event_type])
   end
 
   # Returns hash, or nil if event should be discarded.
   def extract_event_data(event)
+    kind = event.object.involvedObject.kind
+    reason = event.object.reason
+    supported_reasons = ENABLED_EVENTS[kind] || []
+    return unless supported_reasons.include?(reason)
+
     event_data = {
       :timestamp => event.object.lastTimestamp,
-      :kind      => event.object.involvedObject.kind,
+      :kind      => kind,
       :name      => event.object.involvedObject.name,
       :namespace => event.object.involvedObject['table'][:namespace],
-      :reason    => event.object.reason,
+      :reason    => reason,
       :message   => event.object.message,
       :uid       => event.object.involvedObject.uid
     }
@@ -74,16 +80,10 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
       event_data[:fieldpath] = event.object.involvedObject.fieldPath
     end
 
-    supported_reasons = ENABLED_EVENTS[event_data[:kind]] || []
-
-    unless supported_reasons.include?(event_data[:reason])
-      return
-    end
-
-    event_type_prefix = event_data[:kind].upcase
+    event_type_prefix = kind.upcase
 
     # Handle event data for specific entities
-    case event_data[:kind]
+    case kind
     when 'Node'
       event_data[:container_node_name] = event_data[:name]
       # Workaround for missing/useless node UID (#9600, https://github.com/kubernetes/kubernetes/issues/29289)
@@ -105,7 +105,7 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
       event_data[:container_namespace] = event_data[:namespace]
     end
 
-    event_data[:event_type] = "#{event_type_prefix}_#{event_data[:reason].upcase}"
+    event_data[:event_type] = "#{event_type_prefix}_#{reason.upcase}"
 
     event_data
   end
