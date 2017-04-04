@@ -24,7 +24,6 @@ module MiqServer::WorkerManagement::Monitor::Quiesce
       return true
     end
 
-    kill_timed_out_worker_quiesce
     false
   end
 
@@ -58,9 +57,5 @@ module MiqServer::WorkerManagement::Monitor::Quiesce
       return true
     end
     false
-  end
-
-  def quiesce_timed_out?(allowance)
-    Time.now.utc > (@quiesce_started_on + allowance)
   end
 end
