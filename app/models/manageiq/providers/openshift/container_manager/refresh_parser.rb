@@ -66,7 +66,7 @@ module ManageIQ::Providers
       def parse_route(route)
         new_result = parse_base_item(route)
 
-        labels = parse_labels(route)
+        labels = self.class.parse_labels(route)
         new_result.merge!(
           # TODO: persist tls
           :host_name => route.spec.try(:host),
@@ -96,7 +96,7 @@ module ManageIQ::Providers
       def parse_build(build)
         new_result = parse_base_item(build)
         new_result.merge! parse_build_source(build.spec.source)
-        labels = parse_labels(build)
+        labels = self.class.parse_labels(build)
         new_result.merge!(
           :labels                      => labels,
           :tags                        => map_labels('ContainerBuild', labels),
@@ -114,7 +114,7 @@ module ManageIQ::Providers
         new_result = parse_base_item(build_pod)
         status = build_pod.status
         new_result.merge!(
-          :labels                        => parse_labels(build_pod),
+          :labels                        => self.class.parse_labels(build_pod),
           :message                       => status[:message],
           :phase                         => status[:phase],
           :reason                        => status[:reason],
@@ -145,24 +145,50 @@ module ManageIQ::Providers
       def parse_template(template)
         new_result = parse_base_item(template)
         new_result[:container_template_parameters] = parse_template_parameters(template.parameters)
-        new_result[:labels] = parse_labels(template)
+        new_result[:labels] = self.class.parse_labels(template)
         new_result[:objects] = template.objects.collect(&:to_h)
         new_result[:container_project] = @data_index.fetch_path(:container_projects, :by_name, new_result[:namespace])
         new_result
       end
 
-      def parse_exposed_ports(exposed_ports)
+      def self.parse_exposed_ports(exposed_ports)
         exposed_ports.to_h.keys.each_with_object({}) do |port, h|
           n, p = port.to_s.split('/', 2)
           h[p] = n
         end
       end
 
-      def parse_env_variables(env_variables)
+      def self.parse_env_variables(env_variables)
         env_variables.to_a.each_with_object({}) do |var_def, h|
           name, value = var_def.split('=', 2)
           h[name] = value
         end
+      end
+
+      def self.parse_openshift_image_data(openshift_image)
+        openshift_data = {}
+        docker_metadata = openshift_image[:dockerImageMetadata]
+        if docker_metadata.present?
+          openshift_data.merge!(
+            :architecture   => docker_metadata[:Architecture],
+            :author         => docker_metadata[:Author],
+            :docker_version => docker_metadata[:DockerVersion],
+            :size           => docker_metadata[:Size],
+            :labels         => parse_labels(openshift_image)
+          )
+          docker_config = docker_metadata[:Config]
+          if docker_config.present?
+            openshift_data.merge!(
+              :command               => docker_config[:Cmd],
+              :entrypoint            => docker_config[:Entrypoint],
+              :exposed_ports         => parse_exposed_ports(docker_config[:ExposedPorts]),
+              :environment_variables => parse_env_variables(docker_config[:Env]),
+              :docker_labels         => parse_identifying_attributes(docker_config[:Labels],
+                                                                     'docker_labels', "openshift")
+            )
+          end
+        end
+        openshift_data
       end
 
       def parse_openshift_image(openshift_image)
@@ -179,28 +205,9 @@ module ManageIQ::Providers
           end
         end
 
-        docker_metadata = openshift_image[:dockerImageMetadata]
-        if docker_metadata.present?
-          new_result.merge!(
-            :architecture   => docker_metadata[:Architecture],
-            :author         => docker_metadata[:Author],
-            :docker_version => docker_metadata[:DockerVersion],
-            :size           => docker_metadata[:Size],
-            :labels         => parse_labels(openshift_image)
-          )
-          docker_config = docker_metadata[:Config]
-          if docker_config.present?
-            new_result.merge!(
-              :command               => docker_config[:Cmd],
-              :entrypoint            => docker_config[:Entrypoint],
-              :exposed_ports         => parse_exposed_ports(docker_config[:ExposedPorts]),
-              :environment_variables => parse_env_variables(docker_config[:Env]),
-              :docker_labels         => parse_identifying_attributes(docker_config[:Labels],
-                                                                     'docker_labels', "openshift")
-            )
-          end
-        end
-        new_result
+        openshift_data = self.class.parse_openshift_image_data(openshift_image)
+
+        new_result.merge!(openshift_data)
       end
     end
   end

@@ -206,7 +206,7 @@ module ManageIQ::Providers::Kubernetes
     def parse_node(node)
       new_result = parse_base_item(node)
 
-      labels = parse_labels(node)
+      labels = self.class.parse_labels(node)
       new_result.merge!(
         :type           => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode',
         :identity_infra => node.spec.providerID,
@@ -273,7 +273,7 @@ module ManageIQ::Providers::Kubernetes
         container_groups << cg unless cg.nil?
       end
 
-      labels = parse_labels(service)
+      labels = self.class.parse_labels(service)
       new_result.merge!(
         # TODO: We might want to change portal_ip to clusterIP
         :portal_ip        => service.spec.clusterIP,
@@ -281,7 +281,7 @@ module ManageIQ::Providers::Kubernetes
         :service_type     => service.spec.type,
         :labels           => labels,
         :tags             => map_labels('ContainerService', labels),
-        :selector_parts   => parse_selector_parts(service),
+        :selector_parts   => self.class.parse_selector_parts(service),
         :container_groups => container_groups
       )
 
@@ -357,9 +357,9 @@ module ManageIQ::Providers::Kubernetes
 
       new_result[:container_conditions] = parse_conditions(pod)
 
-      new_result[:labels] = parse_labels(pod)
+      new_result[:labels] = self.class.parse_labels(pod)
       new_result[:tags] = map_labels('ContainerGroup', new_result[:labels])
-      new_result[:node_selector_parts] = parse_node_selector_parts(pod)
+      new_result[:node_selector_parts] = self.class.parse_node_selector_parts(pod)
       new_result[:container_volumes] = parse_volumes(pod)
       new_result
     end
@@ -385,7 +385,7 @@ module ManageIQ::Providers::Kubernetes
 
     def parse_namespace(namespace)
       new_result = parse_base_item(namespace).except(:namespace)
-      new_result[:labels] = parse_labels(namespace)
+      new_result[:labels] = self.class.parse_labels(namespace)
       new_result[:tags] = map_labels('ContainerProject', new_result[:labels])
       new_result
     end
@@ -536,14 +536,14 @@ module ManageIQ::Providers::Kubernetes
     def parse_replication_controllers(container_replicator)
       new_result = parse_base_item(container_replicator)
 
-      labels = parse_labels(container_replicator)
+      labels = self.class.parse_labels(container_replicator)
       # TODO: parse template
       new_result.merge!(
         :replicas         => container_replicator.spec.replicas,
         :current_replicas => container_replicator.status.replicas,
         :labels           => labels,
         :tags             => map_labels('ContainerReplicator', labels),
-        :selector_parts   => parse_selector_parts(container_replicator)
+        :selector_parts   => self.class.parse_selector_parts(container_replicator)
       )
 
       new_result[:project] = @data_index.fetch_path(:container_projects, :by_name,
@@ -571,19 +571,19 @@ module ManageIQ::Providers::Kubernetes
       new_result
     end
 
-    def parse_labels(entity)
+    def self.parse_labels(entity)
       parse_identifying_attributes(entity.metadata.labels, 'labels')
     end
 
-    def parse_selector_parts(entity)
+    def self.parse_selector_parts(entity)
       parse_identifying_attributes(entity.spec.selector, 'selectors')
     end
 
-    def parse_node_selector_parts(entity)
+    def self.parse_node_selector_parts(entity)
       parse_identifying_attributes(entity.spec.nodeSelector, 'node_selectors')
     end
 
-    def parse_identifying_attributes(attributes, section, source = "kubernetes")
+    def self.parse_identifying_attributes(attributes, section, source = "kubernetes")
       result = []
       return result if attributes.nil?
       attributes.to_h.each do |key, value|
