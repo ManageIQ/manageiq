@@ -166,6 +166,8 @@ class VmOrTemplate < ApplicationRecord
   virtual_has_many   :processes,              :class_name => "OsProcess",    :uses => {:operating_system => :processes}
   virtual_has_many   :event_logs,                                            :uses => {:operating_system => :event_logs}
   virtual_has_many   :lans,                                                  :uses => {:hardware => {:nics => :lan}}
+  virtual_has_many   :child_resources,        :class_name => "VmOrTemplate"
+
   virtual_belongs_to :miq_provision_template, :class_name => "Vm",           :uses => {:miq_provision => :vm_template}
   virtual_belongs_to :parent_resource_pool,   :class_name => "ResourcePool", :uses => :all_relationships
 
@@ -177,6 +179,7 @@ class VmOrTemplate < ApplicationRecord
 
   virtual_has_one   :direct_service,       :class_name => 'Service'
   virtual_has_one   :service,              :class_name => 'Service'
+  virtual_has_one   :parent_resource,      :class_name => "VmOrTemplate"
 
   virtual_delegate :name, :to => :host, :prefix => true, :allow_nil => true
   virtual_delegate :name, :to => :storage, :prefix => true, :allow_nil => true
@@ -1815,6 +1818,14 @@ class VmOrTemplate < ApplicationRecord
     unless console_supported?('spice') || console_supported?('vnc')
       unsupported_reason_add(:console, N_("Console not supported"))
     end
+  end
+
+  def child_resources
+    children
+  end
+
+  def parent_resource
+    parent
   end
 
   private
