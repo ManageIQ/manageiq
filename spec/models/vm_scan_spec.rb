@@ -1,18 +1,19 @@
 describe VmScan do
-  context "A single VM Scan Job," do
+  context "A single VM Scan Job on VMware provider," do
     before(:each) do
-      @server = EvmSpecHelper.local_miq_server
+      @server = EvmSpecHelper.local_miq_server(:capabilities => {:vixDisk => true})
+      assign_smartproxy_role_to_server(@server)
 
-      # TODO: We should be able to set values so we don't need to stub behavior
-      allow_any_instance_of(MiqServer).to receive_messages(:is_a_proxy? => true, :has_active_role? => true, :is_vix_disk? => true)
-      allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive_messages(:authentication_status_ok? => true)
-      allow(Vm).to receive_messages(:scan_via_ems? => true)
+      # TODO: stub only settings needed for test instead of all from settings.yml
+      stub_settings(::Settings.to_hash.merge(:coresident_miqproxy => {:scan_via_host => false}))
 
       @user      = FactoryGirl.create(:user_with_group, :userid => "tester")
-      @ems       = FactoryGirl.create(:ems_vmware,       :name => "Test EMS", :zone => @server.zone, :tenant => FactoryGirl.create(:tenant))
-      @storage   = FactoryGirl.create(:storage,          :name => "test_storage", :store_type => "VMFS")
-      @host      = FactoryGirl.create(:host,             :name => "test_host", :hostname => "test_host", :state => 'on', :ext_management_system => @ems)
-      @vm        = FactoryGirl.create(:vm_vmware,        :name => "test_vm", :location => "abc/abc.vmx",
+      @ems       = FactoryGirl.create(:ems_vmware_with_authentication, :name   => "Test EMS", :zone => @server.zone,
+                                      :tenant                                  => FactoryGirl.create(:tenant))
+      @storage   = FactoryGirl.create(:storage, :name => "test_storage", :store_type => "VMFS")
+      @host      = FactoryGirl.create(:host, :name => "test_host", :hostname => "test_host",
+                                      :state       => 'on', :ext_management_system => @ems)
+      @vm        = FactoryGirl.create(:vm_vmware, :name => "test_vm", :location => "abc/abc.vmx",
                                       :raw_power_state       => 'poweredOn',
                                       :host                  => @host,
                                       :ext_management_system => @ems,
@@ -20,11 +21,9 @@ describe VmScan do
                                       :evm_owner             => @user,
                                       :storage               => @storage
                                      )
-      @ems_auth  = FactoryGirl.create(:authentication, :resource => @ems)
 
       allow(MiqEventDefinition).to receive_messages(:find_by => true)
-      allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'sucess', MiqAeEngine::MiqAeWorkspaceRuntime.new])
-
+      @ems.authentication_type(:default).update_attribute(:status, "Valid")
       @vm.scan
       job_item = MiqQueue.find_by(:class_name => "MiqAeEngine", :method_name => "deliver")
       job_item.delivered(*job_item.deliver)
@@ -126,8 +125,10 @@ describe VmScan do
           end
 
           it "should call callback when message is delivered" do
-            allow_any_instance_of(VmScan).to receive_messages(:signal => true)
-            expect_any_instance_of(VmScan).to receive(:check_policy_complete)
+            allow(@job).to receive(:signal).and_return(true)
+            vm_scan = double("VmScan")
+            allow(VmScan).to receive(:find).and_return(vm_scan)
+            expect(vm_scan).to receive(:check_policy_complete)
             q = MiqQueue.where(:class_name => "MiqAeEngine", :method_name => "deliver").first
             q.delivered(*q.deliver)
           end
@@ -229,5 +230,125 @@ describe VmScan do
         job.call_check_policy
       end
     end
+
+    describe "#check_policy_complete" do
+      it "sends signal :abort with passed message if passed status is not 'ok' " do
+        message = "Hello, World!"
+        expect(@job).to receive(:signal).with(:abort, message, any_args)
+        @job.check_policy_complete('some status', message, nil)
+      end
+
+      it "does not send signal :abort if passed status is 'ok' " do
+        expect(@job).not_to receive(:signal).with(:abort)
+        @job.check_policy_complete('ok', nil, nil)
+      end
+
+      it "sends signal :start_snapshot if passed status is 'ok'" do
+        expect(@job).to receive(:signal).with(:start_snapshot)
+        @job.check_policy_complete('ok', nil, nil)
+      end
+    end
+
+    describe "#call_snapshot_create" do
+      context "for providers other than OpenStack and Microsoft" do
+        before(:each) { @job.agent_id = @server.id }
+
+        it "does not call #create_snapshot but sends signal :snapshot_complete" do
+          expect(@job).to receive(:signal).with(:snapshot_complete)
+          expect(@job).not_to receive(:create_snapshot)
+          @job.call_snapshot_create
+        end
+
+        context "if snapshot for scan required" do
+          before(:each) do
+            allow(@vm).to receive(:require_snapshot_for_scan?).and_return(true)
+            allow(MiqServer).to receive(:use_broker_for_embedded_proxy?).and_return(true)
+          end
+
+          it "sends signal :broker_unavailable and :snapshot_complete if there is no MiqVimBrokerWorker available" do
+            allow(MiqVimBrokerWorker).to receive(:available?).and_return(false)
+            expect(@job).to receive(:signal).with(:broker_unavailable)
+            expect(@job).not_to receive(:signal).with(:snapshot_complete)
+            @job.call_snapshot_create
+          end
+
+          it "logs user event and sends signal :snapshot_complete" do
+            allow(MiqVimBrokerWorker).to receive(:available?).and_return(true)
+            expect(@job).not_to receive(:signal).with(:broker_unavailable)
+            expect(@job).to receive(:signal).with(:snapshot_complete)
+            expect(@job).to receive(:log_user_event)
+            @job.call_snapshot_create
+          end
+        end
+
+        context "if snapshot for scan not requiered" do
+          it "logs user events: Initializing and sends signal :snapshot_complete" do
+            allow(@vm).to receive(:require_snapshot_for_scan?).and_return(false)
+            event_message = "EVM SmartState Analysis Initiated for VM [#{@vm.name}]"
+            expect(@job).to receive(:signal).with(:snapshot_complete)
+            expect(@job).to receive(:log_user_event).with(event_message, any_args)
+            @job.call_snapshot_create
+          end
+        end
+      end
+    end
+  end
+
+  context "A single VM Scan Job on Openstack provider" do
+    let(:vm) do
+      vm = double("ManageIQ::Providers::Openstack::CloudManager::Vm")
+      allow(vm).to receive(:kind_of?).with(ManageIQ::Providers::Openstack::CloudManager::Vm).and_return(true)
+      allow(vm).to receive(:kind_of?).with(ManageIQ::Providers::Microsoft::InfraManager::Vm).and_return(false)
+      vm
+    end
+    let(:job) { VmScan.new(:context => {}, :options => {}) }
+
+    describe "#call_snapshot_create" do
+      it "executes VmScan#create_snapshot and send signal :snapshot_complete" do
+        allow(VmOrTemplate).to receive(:find).and_return(vm)
+        expect(job).to receive(:create_snapshot).and_return(true)
+        expect(job).to receive(:signal).with(:snapshot_complete)
+        job.call_snapshot_create
+      end
+    end
+  end
+
+  context "A single VM Scan Job on Microsoft provider" do
+    let(:vm) do
+      vm = double("ManageIQ::Providers::Microsoft::InfraManager::Vm")
+      allow(vm).to receive(:kind_of?).with(ManageIQ::Providers::Openstack::CloudManager::Vm).and_return(false)
+      allow(vm).to receive(:kind_of?).with(ManageIQ::Providers::Microsoft::InfraManager::Vm).and_return(true)
+      vm
+    end
+    let(:job) { VmScan.new(:context => {}, :options => {}) }
+
+    describe "#call_snapshot_create" do
+      it "executes VmScan#create_snapshot and send signal :snapshot_complete" do
+        allow(VmOrTemplate).to receive(:find).and_return(vm)
+        expect(job).to receive(:create_snapshot).and_return(true)
+        expect(job).to receive(:signal).with(:snapshot_complete)
+        job.call_snapshot_create
+      end
+    end
+  end
+
+  private
+
+  def assign_smartproxy_role_to_server(server)
+    server_role = FactoryGirl.create(
+      :server_role,
+      :name              => "smartproxy",
+      :description       => "SmartProxy",
+      :max_concurrent    => 1,
+      :external_failover => false,
+      :role_scope        => "zone"
+    )
+    FactoryGirl.create(
+      :assigned_server_role,
+      :miq_server_id  => server.id,
+      :server_role_id => server_role.id,
+      :active         => true,
+      :priority       => AssignedServerRole::DEFAULT_PRIORITY
+    )
   end
 end
