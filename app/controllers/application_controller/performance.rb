@@ -523,7 +523,7 @@ module ApplicationController::Performance
 
   # Send error message if record is found and authorized, else return the record
   def perf_menu_record_valid(model, id, resource_name)
-    rec = find_by_model_and_id_check_rbac(model, id, resource_name)
+    rec = find_record_with_rbac_flash(model.constantize, id, resource_name)
     unless @flash_array.blank?
       javascript_flash(:spinner_off => true)
       return false

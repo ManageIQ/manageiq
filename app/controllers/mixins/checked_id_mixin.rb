@@ -84,4 +84,24 @@ module Mixins
       id
     end
   end
+
+  # Find a record by model and ID.
+  # Set flash errors for not found/not authorized.
+  def find_record_with_rbac_flash(model, id, resource_name = nil)
+    tested_object = klass.find(id)
+    if tested_object.nil?
+      record_name = resource_name ? "#{ui_lookup(:model => model)} '#{resource_name}'" : _("The selected record")
+      add_flash(_("%{record_name} no longer exists in the database") % {:record_name => record_name}, :error)
+      return nil
+    end
+
+    checked_object = Rbac.filtered_object(tested_object, :user => current_user)
+    if checked_object.nil?
+      add_flash(_("You are not authorized to view %{model_name} '%{resource_name}'") %
+        {:model_name => ui_lookup(:model => tested_object.class.base_model.to_s), :resource_name => resource_name}, :error)
+      return nil
+    end
+
+    checked_object
+  end
 end

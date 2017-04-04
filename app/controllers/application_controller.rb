@@ -2306,26 +2306,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # Find a record by model name and ID, set flash errors for not found/not authorized
-  def find_by_model_and_id_check_rbac(model, id, resource_name = nil)
-    rec = model.constantize.find_by_id(id)
-    if rec
-      begin
-        authrec = find_record_with_rbac(model.constantize, id)
-      rescue ActiveRecord::RecordNotFound
-      rescue StandardError => @bang
-      end
-    end
-    if rec.nil?
-      record_name = resource_name ? "#{ui_lookup(:model => model)} '#{resource_name}'" : "The selected record"
-      add_flash(_("%{record_name} no longer exists in the database") % {:record_name => record_name}, :error)
-    elsif authrec.nil?
-      add_flash(_("You are not authorized to view %{model_name} '%{resource_name}'") %
-        {:model_name => ui_lookup(:model => rec.class.base_model.to_s), :resource_name => resource_name}, :error)
-    end
-    rec
-  end
-
   def get_record_display_name(record)
     return record.label                      if record.respond_to?("label")
     return record.description                if record.respond_to?("description") && !record.description.nil?
