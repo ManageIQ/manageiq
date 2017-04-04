@@ -6,5 +6,6 @@ module MiqAeMethodService
     expose :refresh
     expose :check_refreshed
     expose :postprocess
+    expose :on_error
   end
 end
