@@ -5,7 +5,7 @@ require "ansible_tower_client"
 
 class EmbeddedAnsible
   ANSIBLE_ROLE                = "embedded_ansible".freeze
-  SETUP_SCRIPT                = "#{APPLIANCE_ANSIBLE_DIRECTORY}/setup.sh".freeze
+  SETUP_SCRIPT                = "ansible-tower-setup".freeze
   SECRET_KEY_FILE             = "/etc/tower/SECRET_KEY".freeze
   CONFIGURE_EXCLUDE_TAGS      = "packages,migrations,firewall,supervisor".freeze
   START_EXCLUDE_TAGS          = "packages,migrations,firewall".freeze

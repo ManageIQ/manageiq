@@ -235,7 +235,7 @@ describe EmbeddedAnsible do
           params                  = options[:params]
           inventory_file_contents = File.read(params[:inventory=])
 
-          expect(script_path).to eq("/opt/ansible-installer/setup.sh")
+          expect(script_path).to eq("ansible-tower-setup")
           expect(params["--"]).to be_nil
           expect(params[:extra_vars=]).to eq(extra_vars)
           expect(params[:skip_tags=]).to eq("packages,migrations,firewall,supervisor")
@@ -262,7 +262,7 @@ describe EmbeddedAnsible do
           params                  = options[:params]
           inventory_file_contents = File.read(params[:inventory=])
 
-          expect(script_path).to eq("/opt/ansible-installer/setup.sh")
+          expect(script_path).to eq("ansible-tower-setup")
           expect(params["--"]).to be_nil
           expect(params[:extra_vars=]).to eq(extra_vars)
           expect(params[:skip_tags=]).to eq("packages,migrations,firewall,supervisor")
@@ -293,7 +293,7 @@ describe EmbeddedAnsible do
           params                  = options[:params]
           inventory_file_contents = File.read(params[:inventory=])
 
-          expect(script_path).to eq("/opt/ansible-installer/setup.sh")
+          expect(script_path).to eq("ansible-tower-setup")
           expect(params["--"]).to be_nil
           expect(params[:extra_vars=]).to eq(extra_vars)
           expect(params[:skip_tags=]).to eq("packages,migrations,firewall")
