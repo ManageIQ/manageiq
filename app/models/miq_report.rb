@@ -119,7 +119,7 @@ class MiqReport < ApplicationRecord
     {
       :data_type         => data_type,
       :available_formats => get_available_formats(path, data_type),
-      :default_format    => Formats.default_format_path(path, data_type),
+      :default_format    => Formats.default_format_for_path(path, data_type),
       :numeric           => [:integer, :decimal, :fixnum, :float].include?(data_type)
     }
   end

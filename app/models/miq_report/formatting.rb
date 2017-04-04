@@ -12,7 +12,7 @@ module MiqReport::Formatting
   end
 
   def javascript_format(col, format_name)
-    format_name ||= MiqReport::Formats.default_format_path(col, nil)
+    format_name ||= MiqReport::Formats.default_format_for_path(col, nil)
     return nil unless format_name && format_name != :_none_
 
     format = MiqReport::Formats.details(format_name)
