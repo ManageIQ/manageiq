@@ -108,6 +108,51 @@ describe MiqAlert do
         expect(@alert.miq_alert_statuses.find_by(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).result).to be_truthy
       end
 
+      it "should update the existing status on susesquent evaluations" do
+        @alert.evaluate(
+          [@vm.class.base_class.name, @vm.id],
+          :ems_event => FactoryGirl.create(:ems_event)
+        )
+        Timecop.travel 10.minutes do
+          @alert.evaluate(
+            [@vm.class.base_class.name, @vm.id],
+            :ems_event => FactoryGirl.create(:ems_event)
+          )
+          statuses = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id)
+          expect(statuses.length).to eq(1)
+        end
+      end
+
+      it "should update the existing status if event metadata has the same ems_ref" do
+        @alert.evaluate(
+          [@vm.class.base_class.name, @vm.id],
+          :ems_event => FactoryGirl.create(:ems_event, :full_data => {:ems_ref => 'same'})
+        )
+        Timecop.travel 10.minutes do
+          @alert.evaluate(
+            [@vm.class.base_class.name, @vm.id],
+            :ems_event => FactoryGirl.create(:ems_event, :full_data => {:ems_ref => 'same'})
+          )
+          statuses = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id)
+          expect(statuses.length).to eq(1)
+        end
+      end
+
+      it "should create a new status if event metadata has a different ems_ref" do
+        @alert.evaluate(
+          [@vm.class.base_class.name, @vm.id],
+          :ems_event => FactoryGirl.create(:ems_event, :full_data => {:ems_ref => 'same'})
+        )
+        Timecop.travel 10.minutes do
+          @alert.evaluate(
+            [@vm.class.base_class.name, @vm.id],
+            :ems_event => FactoryGirl.create(:ems_event, :full_data => {:ems_ref => 'different'})
+          )
+          statuses = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id)
+          expect(statuses.length).to eq(2)
+        end
+      end
+
       it "does not explode if evaluate.input = {}" do
         expect { @alert.evaluate([@vm.class.base_class.name, @vm.id]) }.to_not raise_error
       end
