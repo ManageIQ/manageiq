@@ -25,6 +25,7 @@ module ManageIQ::Providers::Openstack::CloudManager::Vm::Operations::Relocation
       rescue => ex
         error_message = parse_error_message_from_fog_response(ex.to_s)
         Notification.create(:type => :vm_cloud_live_migrate_error, :options => {:instance_name => name, :error_message => error_message})
+        raise
       else
         Notification.create(:type => :vm_cloud_live_migrate_success, :options => {:instance_name => name})
       end
@@ -45,6 +46,7 @@ module ManageIQ::Providers::Openstack::CloudManager::Vm::Operations::Relocation
       rescue => ex
         error_message = parse_error_message_from_fog_response(ex.to_s)
         Notification.create(:type => :vm_cloud_evacuate_error, :options => {:instance_name => name, :error_message => error_message})
+        raise
       else
         Notification.create(:type => :vm_cloud_evacuate_success, :options => {:instance_name => name})
       end
