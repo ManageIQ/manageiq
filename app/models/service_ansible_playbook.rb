@@ -13,7 +13,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     hosts = opts.delete(:hosts)
 
     _log.info("Launching Ansible Tower job with options: #{opts}")
-    new_job = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job.create_job(jt, opts)
+    new_job = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job.create_job(jt, decrypt_options(opts))
     update_job_for_playbook(action, new_job, hosts)
 
     _log.info("Ansible Tower job with ref #{new_job.ems_ref} was created.")
@@ -69,10 +69,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
   end
 
   def get_job_options(action)
-    job_opts = options[job_option_key(action)].deep_dup
-
-    # TODO: decryption may be needed
-    job_opts
+    options[job_option_key(action)].deep_dup
   end
 
   def save_job_options(action, overrides)
@@ -86,7 +83,6 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     hosts = job_options[:hosts]
     job_options[:inventory] = create_inventory_with_hosts(action, hosts).id unless use_default_inventory?(hosts)
 
-    # TODO: encryption my be needed
     options[job_option_key(action)] = job_options
     save!
   end
@@ -107,7 +103,8 @@ class ServiceAnsiblePlaybook < ServiceGeneric
   def extra_vars_from_dialog
     params =
       (options[:dialog] || {}).each_with_object({}) do |(attr, val), obj|
-        obj[attr.sub('dialog_param_', '')] = val if attr =~ /dialog_param_/
+        var_key = attr.sub(/^(password::)?dialog_param_/, '')
+        obj[var_key] = val unless var_key == attr
       end
 
     params.blank? ? {} : {:extra_vars => params}
@@ -150,5 +147,11 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     host_array = hosts.split(',')
     playbook_id = options.fetch_path(:config_info, action.downcase.to_sym, :playbook_id)
     job.update_attributes(:configuration_script_base_id => playbook_id, :hosts => host_array)
+  end
+
+  def decrypt_options(opts)
+    opts.tap do
+      opts[:extra_vars].transform_values! { |val| val.kind_of?(String) ? MiqPassword.try_decrypt(val) : val }
+    end
   end
 end
