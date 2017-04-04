@@ -29,5 +29,13 @@ describe MiqWorker::Runner do
       allow(@worker_base).to receive(:run).and_raise(SignalException, "SIGALRM")
       expect { @worker_base.start }.to raise_error(SignalException, "SIGALRM")
     end
+
+    it "worker_monitor_drb caches DRbObject" do
+      @worker_base.instance_variable_set(:@server, FactoryGirl.create(:miq_server, :drb_uri => "druby://127.0.0.1:123456"))
+      require 'drb'
+      allow(DRbObject).to receive(:new).and_return(0, 1)
+      expect(@worker_base.worker_monitor_drb).to eq 0
+      expect(@worker_base.worker_monitor_drb).to eq 0
+    end
   end
 end

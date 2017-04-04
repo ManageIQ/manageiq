@@ -95,19 +95,21 @@ class MiqWorker::Runner
   end
 
   def worker_monitor_drb
-    raise _("%{log} No MiqServer found to establishing DRb Connection to") % {:log => log_prefix} if server.nil?
-    drb_uri = server.reload.drb_uri
-    if drb_uri.blank?
-      raise _("%{log} Blank DRb_URI for MiqServer with ID=[%{number}], NAME=[%{name}], PID=[%{pid_number}], GUID=[%{guid_number}]") %
-        {:log         => log_prefix,
-         :number      => server.id,
-         :name        => server.name,
-         :pid_number  => server.pid,
-         :guid_number => server.guid}
+    @worker_monitor_drb ||= begin
+      raise _("%{log} No MiqServer found to establishing DRb Connection to") % {:log => log_prefix} if server.nil?
+      drb_uri = server.reload.drb_uri
+      if drb_uri.blank?
+        raise _("%{log} Blank DRb_URI for MiqServer with ID=[%{number}], NAME=[%{name}], PID=[%{pid_number}], GUID=[%{guid_number}]") %
+          {:log         => log_prefix,
+           :number      => server.id,
+           :name        => server.name,
+           :pid_number  => server.pid,
+           :guid_number => server.guid}
+      end
+      _log.info("#{log_prefix} Initializing DRb Connection to MiqServer with ID=[#{server.id}], NAME=[#{server.name}], PID=[#{server.pid}], GUID=[#{server.guid}] DRb URI=[#{drb_uri}]")
+      require 'drb'
+      DRbObject.new(nil, drb_uri)
     end
-    _log.info("#{log_prefix} Initializing DRb Connection to MiqServer with ID=[#{server.id}], NAME=[#{server.name}], PID=[#{server.pid}], GUID=[#{server.guid}] DRb URI=[#{drb_uri}]")
-    require 'drb'
-    DRbObject.new(nil, drb_uri)
   end
 
   ###############################
@@ -355,8 +357,7 @@ class MiqWorker::Runner
     now = Time.now.utc
     # Heartbeats can be expensive, so do them only when needed
     return if @last_hb.kind_of?(Time) && (@last_hb + worker_settings[:heartbeat_freq]) >= now
-    @worker_monitor_drb ||= worker_monitor_drb
-    messages = @worker_monitor_drb.worker_heartbeat(@worker.pid, @worker.class.name, @worker.queue_name)
+    messages = worker_monitor_drb.worker_heartbeat(@worker.pid, @worker.class.name, @worker.queue_name)
     @last_hb = now
     messages.each { |msg, *args| process_message(msg, *args) }
     do_heartbeat_work
