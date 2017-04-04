@@ -346,15 +346,10 @@ module OpsController::OpsRbac
         t.parent.nil?
       end
     else # showing 1 tenant, delete it
-      if params[:id].nil? || Tenant.find_by_id(params[:id]).nil?
-        add_flash(_("Tenant no longer exists"), :error)
-      else
-        tenants.push(params[:id])
-      end
+      tenants.push(params[:id])
       parent_id = Tenant.find_by_id(params[:id]).parent.id
       self.x_node = "tn-#{to_cid(parent_id)}"
     end
-
     process_tenants(tenants, "destroy") unless tenants.empty?
     get_node_info(x_node)
     replace_right_cell(x_node, [:rbac])
@@ -369,11 +364,7 @@ module OpsController::OpsRbac
       process_groups(groups, "destroy") unless groups.empty?
       self.x_node  = "xx-g"  # reset node to show list
     else # showing 1 group, delete it
-      if params[:id].nil? || MiqGroup.find_by_id(params[:id]).nil?
-        add_flash(_("MiqGroup no longer exists"), :error)
-      else
-        groups.push(params[:id])
-      end
+      groups.push(params[:id])
       process_groups(groups, "destroy") unless groups.empty?
       self.x_node  = "xx-g" if MiqGroup.find_by_id(params[:id]).nil? # reset node to show list
     end
