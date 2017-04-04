@@ -311,11 +311,7 @@ module OpsController::OpsRbac
       roles = MiqUserRole.where(:id => ids)
       process_roles(roles, "destroy") unless roles.empty?
     else # showing 1 role, delete it
-      if params[:id].nil? || MiqUserRole.find_by_id(params[:id]).nil?
-        add_flash(_("Role no longer exists"), :error)
-      else
-        roles.push(params[:id])
-      end
+      roles.push(params[:id])
       process_roles(roles, "destroy") unless roles.empty?
       self.x_node  = "xx-ur" if MiqUserRole.find_by_id(params[:id]).nil? # reset node to show list
     end
