@@ -4,9 +4,8 @@ require "linux_admin"
 require "ansible_tower_client"
 
 class EmbeddedAnsible
-  APPLIANCE_ANSIBLE_DIRECTORY = "/opt/ansible-installer".freeze
   ANSIBLE_ROLE                = "embedded_ansible".freeze
-  SETUP_SCRIPT                = "#{APPLIANCE_ANSIBLE_DIRECTORY}/setup.sh".freeze
+  SETUP_SCRIPT                = "ansible-tower-setup".freeze
   SECRET_KEY_FILE             = "/etc/tower/SECRET_KEY".freeze
   CONFIGURE_EXCLUDE_TAGS      = "packages,migrations,firewall,supervisor".freeze
   START_EXCLUDE_TAGS          = "packages,migrations,firewall".freeze
@@ -15,8 +14,10 @@ class EmbeddedAnsible
   WAIT_FOR_ANSIBLE_SLEEP      = 1.second
 
   def self.available?
-    path = ENV["APPLIANCE_ANSIBLE_DIRECTORY"] || APPLIANCE_ANSIBLE_DIRECTORY
-    Dir.exist?(File.expand_path(path.to_s))
+    return false unless MiqEnvironment::Command.is_appliance?
+
+    required_rpms = Set["ansible-tower-server", "ansible-tower-setup"]
+    required_rpms.subset?(LinuxAdmin::Rpm.list_installed.keys.to_set)
   end
 
   def self.enabled?
@@ -85,9 +86,10 @@ class EmbeddedAnsible
 
   def self.run_setup_script(exclude_tags)
     json_extra_vars = {
-      :minimum_var_space => 0,
-      :http_port         => HTTP_PORT,
-      :https_port        => HTTPS_PORT
+      :minimum_var_space  => 0,
+      :http_port          => HTTP_PORT,
+      :https_port         => HTTPS_PORT,
+      :tower_package_name => "ansible-tower-server"
     }.to_json
 
     with_inventory_file do |inventory_file_path|
