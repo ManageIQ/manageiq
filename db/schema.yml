@@ -6153,6 +6153,7 @@ physical_servers:
 - model
 - serial_number
 - field_replaceable_unit
+- location_led_state
 - raw_power_state
 - vendor
 pictures:
