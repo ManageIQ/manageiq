@@ -92,9 +92,10 @@ describe EmbeddedAnsible do
     let(:miq_database) { MiqDatabase.first }
     let(:extra_vars) do
       {
-        :minimum_var_space => 0,
-        :http_port         => described_class::HTTP_PORT,
-        :https_port        => described_class::HTTPS_PORT
+        :minimum_var_space  => 0,
+        :http_port          => described_class::HTTP_PORT,
+        :https_port         => described_class::HTTPS_PORT,
+        :tower_package_name => "ansible-tower-server"
       }.to_json
     end
 
