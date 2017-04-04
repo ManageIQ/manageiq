@@ -189,6 +189,9 @@ class ManageIQ::Providers::Azure::CloudManager::MetricsCapture < ManageIQ::Provi
           .list('Microsoft.Compute', 'virtualMachines', target.name, target.resource_group)
           .select { |m| m.name.value.in?(COUNTER_NAMES) }
       end
+    rescue ::Azure::Armrest::RequestTimeoutException # Problem on Azure side
+      _log.warn("Timeout attempting to collect metrics definitions for: #{target.name}/#{target.resource_group}. Skipping.")
+      counters = []
     rescue Exception => err
       _log.error("Unhandled exception during counter collection: #{target.name}/#{target.resource_group}")
       _log.log_backtrace(err)
