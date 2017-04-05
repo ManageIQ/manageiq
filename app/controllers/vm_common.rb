@@ -1629,7 +1629,11 @@ module VmCommon
     @edit[:current][:custom_1] = @edit[:new][:custom_1] = @record.custom_1.to_s
     @edit[:current][:description] = @edit[:new][:description] = @record.description.to_s
     @edit[:pchoices] = {}                                 # Build a hash for the parent choices box
-    VmOrTemplate.all.each { |vm| @edit[:pchoices][vm.name + " -- #{vm.location}"] =  vm.id unless vm.id == @record.id }   # Build a hash for the parents to choose from, not matching current VM
+    parent_item_scope = VmOrTemplate.where.not(:id => @record.id)
+    @edit[:pchoices] = parent_item_scope.pluck(:name, :location, :id).each_with_object({}) do |vm, memo|
+      memo[vm[0] + " -- #{vm[1]}"] = vm[2]
+    end
+
     @edit[:pchoices]['"no parent"'] = -1                        # Add "no parent" entry
     if @record.parents.length == 0                                            # Set the currently selected parent
       @edit[:new][:parent] = -1
