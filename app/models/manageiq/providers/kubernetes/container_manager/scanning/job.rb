@@ -287,9 +287,8 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
         :verify_ssl => ext_management_system.verify_ssl_mode,
         :cert_store => ext_management_system.ssl_cert_store
       },
-      :auth_options   => kubeclient.auth_options,
-      :http_proxy_uri => kubeclient.http_proxy_uri,
-      :auth_token     => auth_token
+      :auth_options   => kubeclient.auth_options.merge(:auth_token => auth_token),
+      :http_proxy_uri => kubeclient.http_proxy_uri
     )
   end
 
