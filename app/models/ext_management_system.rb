@@ -248,10 +248,6 @@ class ExtManagementSystem < ApplicationRecord
     self::ProvisionWorkflow
   end
 
-  def self.default_blacklisted_event_names
-    []
-  end
-
   # UI methods for determining availability of fields
   def supports_port?
     false
