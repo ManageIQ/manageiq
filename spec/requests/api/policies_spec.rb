@@ -399,6 +399,26 @@ describe "Policies API" do
       expect(response).to have_http_status(:ok)
     end
 
+    describe "DELETE /api/policies/:id" do
+      it "can delete a policy with appropriate role" do
+        api_basic_authorize(action_identifier(:policies, :delete, :resource_actions, :delete))
+        policy = FactoryGirl.create(:miq_policy)
+
+        expect { run_delete(policies_url(policy.id)) }.to change(MiqPolicy, :count).by(-1)
+
+        expect(response).to have_http_status(:no_content)
+      end
+
+      it "will not delete a policy without an appropriate role" do
+        api_basic_authorize
+        policy = FactoryGirl.create(:miq_policy)
+
+        expect { run_delete(policies_url(policy.id)) }.not_to change(MiqPolicy, :count)
+
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
     it "edits policy actions events and conditions" do
       api_basic_authorize collection_action_identifier(:policies, :edit)
       miq_policy.conditions << conditions

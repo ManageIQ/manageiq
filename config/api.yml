@@ -1080,7 +1080,7 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *gp
+    :verbs: *gpd
     :klass: MiqPolicy
     :subcollections:
     - :conditions
