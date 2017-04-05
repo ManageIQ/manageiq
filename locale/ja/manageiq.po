@@ -5647,19 +5647,19 @@ msgstr "サイズ"
 msgid "ContainerImage|Tag"
 msgstr "タグ"
 
-msgid "ContainerLabelTagMapping|Label name"
+msgid "ResourceLabelTagMapping|Label name"
 msgstr "ラベル名"
 
-msgid "ContainerLabelTagMapping|Label value"
+msgid "ResourceLabelTagMapping|Label value"
 msgstr "ラベル値"
 
-msgid "ContainerLabelTagMapping|Labeled resource type"
+msgid "ResourceLabelTagMapping|Labeled resource type"
 msgstr "ラベル付きリソースタイプ"
 
-msgid "ContainerLabelTagMapping|Region description"
+msgid "ResourceLabelTagMapping|Region description"
 msgstr "リージョンの説明"
 
-msgid "ContainerLabelTagMapping|Region number"
+msgid "ResourceLabelTagMapping|Region number"
 msgstr "リージョン番号"
 
 msgid "ContainerLimitItem|Default"

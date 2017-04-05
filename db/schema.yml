@@ -746,14 +746,6 @@ container_images:
 - created_on
 - old_ems_id
 - deleted_on
-container_label_tag_mappings:
-- id
-- labeled_resource_type
-- label_name
-- label_value
-- tag_id
-- created_at
-- updated_at
 container_limit_items:
 - id
 - item_type
@@ -6264,6 +6256,14 @@ resource_groups:
 - ems_ref
 - ems_id
 - type
+- created_at
+- updated_at
+resource_label_tag_mappings:
+- id
+- labeled_resource_type
+- label_name
+- label_value
+- tag_id
 - created_at
 - updated_at
 resource_pools:
