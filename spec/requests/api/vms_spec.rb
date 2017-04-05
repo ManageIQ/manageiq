@@ -50,11 +50,12 @@ describe "Vms API" do
         { 'href' => vms_url(vm.id) }
       end
 
-      run_post(vms_url(vm.id), :action      => 'edit',
-                               :description => 'bar',
-                               :children    => children,
-                               :custom_1    => 'foobar',
-                               :parent      => vms_url(vm_openstack2.id))
+      run_post(vms_url(vm.id), :action          => 'edit',
+                               :description     => 'bar',
+                               :child_resources => children,
+                               :custom_1        => 'foobar',
+                               :custom_9        => 'fizzbuzz',
+                               :parent_resource => { :href => vms_url(vm_openstack2.id) })
 
       expected = {
         'description' => 'bar'
@@ -64,6 +65,7 @@ describe "Vms API" do
       expect(vm.reload.children).to match_array(new_vms)
       expect(vm.parent).to eq(vm_openstack2)
       expect(vm.custom_1).to eq('foobar')
+      expect(vm.custom_9).to eq('fizzbuzz')
     end
 
     it 'only allows edit of custom_1, description, parent, and children' do
@@ -93,6 +95,21 @@ describe "Vms API" do
         ]
       }
       expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'requires a valid child/parent relationship ' do
+      api_basic_authorize collection_action_identifier(:vms, :edit)
+
+      run_post(vms_url(vm.id), :action => 'edit', :parent_resource => { :href => users_url(10) })
+
+      expected = {
+        'error' => a_hash_including(
+          'kind'    => 'bad_request',
+          'message' => 'Cannot edit VM - Invalid relationship type users'
+        )
+      }
+      expect(response).to have_http_status(:bad_request)
       expect(response.parsed_body).to include(expected)
     end
   end
