@@ -319,7 +319,7 @@ http_interactions:
             "Server State" : "running",
             "Product Name" : "Hawkular",
             "Hostname" : "94f76aa25a3a",
-            "In Container" : "true",
+            "In Container" : "false",
             "Name" : "94f76aa25a3a",
             "Suspend State" : "RUNNING",
             "Running Mode" : "NORMAL",
