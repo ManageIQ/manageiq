@@ -15,7 +15,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   INSPECTOR_ADMIN_SECRET_PATH = '/var/run/secrets/kubernetes.io/inspector-admin-secret-'
   ATTRIBUTE_SECTION = 'cluster_settings'
   PROXY_ENV_VARIABLES = %w(no_proxy http_proxy https_proxy)
-  INSPECTOR_AUTH_TOKEN = "INSPECTOR_AUTH_TOKEN"
+  INSPECTOR_AUTH_TOKEN = "INSPECTOR_AUTH_TOKEN".freeze
 
   def load_transitions
     self.state ||= 'initializing'
