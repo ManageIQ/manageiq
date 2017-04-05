@@ -2268,7 +2268,6 @@
         :disabled: true
       - :name: edit
         :identifier: vm_edit
-        :disabled: true
       - :name: add_lifecycle_event
         :identifier: vm_edit
       - :name: add_event
@@ -2316,7 +2315,6 @@
       :post:
       - :name: edit
         :identifier: vm_edit
-        :disabled: true
       - :name: add_lifecycle_event
         :identifier: vm_edit
       - :name: add_event
