@@ -673,15 +673,25 @@ describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
 
       # grab read bytes and write bytes data, these values are pulled directly from
       # spec/tools/openstack_data/openstack_perf_data/multiple_collection_periods.yml
-      @memory_used =  filter_statistics(@mock_stats_data.get_statistics("hardware.memory.used",
-                                                                        "multiple_collection_periods"),
-                                        '<=',
-                                        NET_SECOND_COLLECTION_PERIOD_START)
+      @memory_used =   filter_statistics(@mock_stats_data.get_statistics("hardware.memory.used",
+                                                                         "multiple_collection_periods"),
+                                         '<=',
+                                         NET_SECOND_COLLECTION_PERIOD_START)
 
-      @memory_total = filter_statistics(@mock_stats_data.get_statistics("hardware.memory.total",
-                                                                        "multiple_collection_periods"),
-                                        '<=',
-                                        NET_SECOND_COLLECTION_PERIOD_START)
+      @memory_total =  filter_statistics(@mock_stats_data.get_statistics("hardware.memory.total",
+                                                                         "multiple_collection_periods"),
+                                         '<=',
+                                         NET_SECOND_COLLECTION_PERIOD_START)
+
+      @memory_cached = filter_statistics(@mock_stats_data.get_statistics("hardware.memory.cached",
+                                                                         "multiple_collection_periods"),
+                                         '<=',
+                                         NET_SECOND_COLLECTION_PERIOD_START)
+
+      @memory_buffer = filter_statistics(@mock_stats_data.get_statistics("hardware.memory.buffer",
+                                                                         "multiple_collection_periods"),
+                                         '<=',
+                                         NET_SECOND_COLLECTION_PERIOD_START)
 
       @swap_avail = filter_statistics(@mock_stats_data.get_statistics("hardware.memory.swap.avail",
                                                                       "multiple_collection_periods"),
@@ -710,13 +720,13 @@ describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
       )
 
       avg_stat1_computed_elsewhere = 73.2421875
-      avg_stat1 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, 1)
+      avg_stat1 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, @memory_cached, @memory_buffer, 1)
       avg_stat2_computed_elsewhere = 48.828125
-      avg_stat2 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, 2)
+      avg_stat2 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, @memory_cached, @memory_buffer, 2)
       avg_stat3_computed_elsewhere = 56.15234375
-      avg_stat3 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, 3)
+      avg_stat3 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, @memory_cached, @memory_buffer, 3)
       avg_stat4_computed_elsewhere = 31.73828125
-      avg_stat4 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, 4)
+      avg_stat4 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, @memory_cached, @memory_buffer, 4)
 
       # ensure computations are equal
       expect(avg_stat1_manual).to eq avg_stat1_computed_elsewhere
@@ -752,11 +762,11 @@ describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
 
     it "checks that the mem_usage_absolute_average has aligned data and computed stats correctly" do
       # make computation of stats for comparison
-      avg_stat1 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, 1)
-      avg_stat2 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, 2)
-      avg_stat3 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, 3)
-      avg_stat4 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, 4)
-      avg_stat5 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, 5)
+      avg_stat1 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, @memory_cached, @memory_buffer, 1)
+      avg_stat2 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, @memory_cached, @memory_buffer, 2)
+      avg_stat3 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, @memory_cached, @memory_buffer, 3)
+      avg_stat4 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, @memory_cached, @memory_buffer, 4)
+      avg_stat5 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, @memory_cached, @memory_buffer, 5)
 
       # ensure that the first 30 statistics match avg_stat1
       (0..29).each { |i| expect(@values_by_ts[@ts_keys[i]]["mem_usage_absolute_average"]).to eq avg_stat1 }
@@ -782,7 +792,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
     end
 
     it "tests that last computed statistic has the right value" do
-      avg_stat5 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, 5)
+      avg_stat5 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, @memory_cached, @memory_buffer, 5)
 
       # Test that last value of 1. collection period is this. This test continues in 2. collection period test. This
       # value has to be different to first value of 2.collection period
@@ -849,17 +859,28 @@ describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
 
       # grab read bytes and write bytes data, these values are pulled directly from
       # spec/tools/openstack_data/openstack_perf_data/multiple_collection_periods.yml
-      @memory_used =  filter_statistics(@mock_stats_data.get_statistics("hardware.memory.used",
-                                                                        "multiple_collection_periods"),
-                                        '>',
-                                        NET_SECOND_COLLECTION_PERIOD_START,
-                                        NET_COLLECTION_OVERLAP_PERIOD)
+      @memory_used =   filter_statistics(@mock_stats_data.get_statistics("hardware.memory.used",
+                                                                         "multiple_collection_periods"),
+                                         '>',
+                                         NET_SECOND_COLLECTION_PERIOD_START,
+                                         NET_COLLECTION_OVERLAP_PERIOD)
 
-      @memory_total = filter_statistics(@mock_stats_data.get_statistics("hardware.memory.total",
-                                                                        "multiple_collection_periods"),
-                                        '>',
-                                        NET_SECOND_COLLECTION_PERIOD_START,
-                                        NET_COLLECTION_OVERLAP_PERIOD)
+      @memory_total =  filter_statistics(@mock_stats_data.get_statistics("hardware.memory.total",
+                                                                         "multiple_collection_periods"),
+                                         '>',
+                                         NET_SECOND_COLLECTION_PERIOD_START,
+                                         NET_COLLECTION_OVERLAP_PERIOD)
+      @memory_cached = filter_statistics(@mock_stats_data.get_statistics("hardware.memory.cached",
+                                                                         "multiple_collection_periods"),
+                                         '>',
+                                         NET_SECOND_COLLECTION_PERIOD_START,
+                                         NET_COLLECTION_OVERLAP_PERIOD)
+
+      @memory_buffer = filter_statistics(@mock_stats_data.get_statistics("hardware.memory.buffer",
+                                                                         "multiple_collection_periods"),
+                                         '>',
+                                         NET_SECOND_COLLECTION_PERIOD_START,
+                                         NET_COLLECTION_OVERLAP_PERIOD)
       # Drop fist element of write bytes, as that is an incomplete stat
       @memory_total.shift
       # Drop pre last element of write bytes cause it doesn't have pair sample, therefore it is an incomplete stat
@@ -875,10 +896,10 @@ describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
 
     it "checks that the mem_usage_absolute_average has aligned data and computed stats correctly" do
       # make computation of stats for comparison
-      avg_stat1 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, 1)
-      avg_stat2 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, 2)
-      avg_stat3 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, 3)
-      avg_stat4 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, 4)
+      avg_stat1 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, @memory_cached, @memory_buffer, 1)
+      avg_stat2 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, @memory_cached, @memory_buffer, 2)
+      avg_stat3 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, @memory_cached, @memory_buffer, 3)
+      avg_stat4 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, @memory_cached, @memory_buffer, 4)
 
       # ensure that the next 30 statistics match avg_stat1
       (21..50).each { |i| expect(@values_by_ts[@ts_keys[i]]["mem_usage_absolute_average"]).to eq avg_stat1 }
@@ -906,7 +927,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
 
     it "checks that last sample of 1. collection period is different to first sample of 2. collection period" do
       # make computation of stats for comparison
-      avg_stat1 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, 1)
+      avg_stat1 = make_memory_util_calculation(@counter_info, @memory_used, @memory_total, @memory_cached, @memory_buffer, 1)
 
       expect(avg_stat1).not_to eq MEM_LAST_VALUE_OF_FIRST_COLLECTING_PERIOD
     end
@@ -960,11 +981,13 @@ describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
       }, nil)
   end
 
-  def make_memory_util_calculation(counter_info, memory_used, memory_total, index)
+  def make_memory_util_calculation(counter_info, memory_used, memory_total, memory_cached, memory_buffer, index)
     counter_info[:calculation].call(
       {
-        "hardware.memory.used"  => memory_used[index]['avg'],
-        "hardware.memory.total" => memory_total[index]['avg'],
+        "hardware.memory.used"   => memory_used[index]['avg'],
+        "hardware.memory.total"  => memory_total[index]['avg'],
+        "hardware.memory.cached" => memory_cached[index]['avg'],
+        "hardware.memory.buffer" => memory_buffer[index]['avg'],
       }, nil)
   end
 
@@ -994,5 +1017,24 @@ describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
   def parse_datetime(datetime)
     datetime << "Z" if datetime.size == 19
     Time.parse(datetime)
+  end
+
+  context "memory utilization calculation" do
+    it "cached and buffer memory should not count towards utilized memory as it can be freed" do
+      # hardware.memory.used is calculated by subtracting free memory from total memory.
+      # See https://review.openstack.org/#/c/157257
+      # Cached and buffer memory should be subtracted from hardware.memory.used to get a more
+      # accurate representation of memory that is utilized and can't be freed from memory
+      # pressure.
+      stats = {}
+      stats['hardware.memory.total'] = 100
+      stats['hardware.memory.used'] = 90
+      stats['hardware.memory.buffer'] = 20
+      stats['hardware.memory.cached'] = 10
+
+      used_memory_utilization = 100 * (stats['hardware.memory.used'] - stats['hardware.memory.cached'] - stats['hardware.memory.buffer']) / stats['hardware.memory.total']
+
+      expect(described_class.memory_util_calculation(stats, 'dummy')).to eq used_memory_utilization
+    end
   end
 end
