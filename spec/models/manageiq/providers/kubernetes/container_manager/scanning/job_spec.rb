@@ -1,5 +1,22 @@
 require 'MiqContainerGroup/MiqContainerGroup'
 
+RSpec::Matchers.define :a_multiple_of do |x|
+  match { |actual| (actual % x).zero? }
+end
+
+RSpec::Matchers.define :pod_env_containing do |expected|
+  match do |actual|
+    actual[:spec][:containers][0][:env][0][:name].include?(expected[:name]) && actual[:spec][:containers][0][:env][0][:value].include?(expected[:value])
+    # actual[:apiVersion].include? "v1"
+  end
+end
+
+RSpec::Matchers.define :hash_containing_string do |string|
+  match do |actual|
+    actual["args"] && actual["args"][0] && actual["args"][0].include?(string)
+  end
+end
+
 class MockKubeClient
   def create_pod(*_args)
     nil
@@ -140,10 +157,18 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
 
     context "completes successfully" do
       before(:each) do
+        allow(@job).to receive(:target_entity) { @image }
         allow_any_instance_of(described_class).to receive_messages(:collect_compliance_data) unless OpenscapResult.openscap_available?
 
         expect(@job.state).to eq 'waiting_to_start'
+        allow(Kubeclient::Resource).to receive(:new)
         @job.signal(:start)
+      end
+
+      it 'should create a pod spec with the auth_token environment variable' do
+        expect(Kubeclient::Resource).to have_received(:new).with(pod_env_containing(
+                                                         {:name => ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job::INSPECTOR_AUTH_TOKEN,
+                                                           :value => @job.options[:auth_token]}))
       end
 
       it 'should report success' do
@@ -157,6 +182,27 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
         expect(@image.openscap_result).to be
         expect(@image.openscap_result.binary_blob.md5).to eq('d1f1857281573cd777b31d76e8529dc9')
         expect(@image.openscap_result.openscap_rule_results.count).to eq(213)
+      end
+
+      it 'should generate and store the image inspector auth_token' do
+        expect(@job.options[:auth_token]).not_to be_nil
+      end
+
+      describe 'should fucking work fuck' do
+        let(:dbl) { double }
+        before { expect(dbl).to receive(:foo).with(hash_containing_string("3")) }
+
+        it "passes when the args match" do
+          dbl.foo({"args" => ["13"]})
+        end
+
+        it "fails when the args do not match" do
+          dbl.foo({"args" => ["13"]})
+        end
+      end
+
+      it 'should pass the auth_token as a parameter to scan_metadata' do
+        expect(@image).to have_received(:scan_metadata).with(anything, hash_containing_string(@job.options[:auth_token]))
       end
     end
 
