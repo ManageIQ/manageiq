@@ -48,6 +48,10 @@ describe ManageIQ::Providers::Openstack::CloudManager::Vm do
 
   describe "vm actions" do
     context "#live_migrate" do
+      before do
+        NotificationType.seed
+      end
+
       it "live migrates with default options" do
         expect(handle).to receive(:live_migrate_server).with(vm.ems_ref, nil, false, false)
         vm.live_migrate
@@ -66,6 +70,10 @@ describe ManageIQ::Providers::Openstack::CloudManager::Vm do
     end
 
     context "evacuate" do
+      before do
+        NotificationType.seed
+      end
+
       it "evacuates with default options" do
         expect(handle).to receive(:evacuate_server).with(vm.ems_ref, nil, true, nil)
         vm.evacuate
