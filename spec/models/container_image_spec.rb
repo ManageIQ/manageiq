@@ -90,4 +90,37 @@ describe ContainerImage do
       end
     end
   end
+
+  context "#post_refresh_ems" do
+    before :each do
+      EvmSpecHelper.create_guid_miq_server_zone
+      @ems = FactoryGirl.create(:ems_openshift, :name => 'OpenShiftProvider')
+      @does_not_need_refresh = FactoryGirl.create(:container_image,
+                                                  :ems_id                 => @ems.id,
+                                                  :created_on             => 1.day.ago.utc,
+                                                  :last_openshift_refresh => 10.hours.ago.utc)
+      @needs_refresh = FactoryGirl.create(:container_image,
+                                          :ems_id                 => @ems.id,
+                                          :created_on             => 11.days.ago.utc,
+                                          :last_openshift_refresh => 10.days.ago.utc)
+      @new_image = FactoryGirl.create(:container_image,
+                                      :ems_id                 => @ems.id,
+                                      :created_on             => 1.minute.ago,
+                                      :last_openshift_refresh => nil)
+    end
+
+    it "queue refresh only for new images when delay is nil" do
+      Settings.ems_refresh.openshift.container_image_refresh_delay = nil
+      ContainerImage.post_refresh_ems(@ems.id, 5.minutes.ago.utc)
+      expect(MiqQueue.where(:method_name => 'refresh_openshift_information').count).to eq(1)
+      expect(MiqQueue.find_by(:instance_id => @new_image.id)).not_to eq(nil)
+    end
+
+    it "queues old images that needs refresh" do
+      Settings.ems_refresh.openshift.container_image_refresh_delay = 1
+      ContainerImage.post_refresh_ems(@ems.id, 5.minutes.ago.utc)
+      expect(MiqQueue.where(:method_name => 'refresh_openshift_information').count).to eq(2)
+      expect(MiqQueue.find_by(:instance_id => @needs_refresh.id)).not_to eq(nil)
+    end
+  end
 end

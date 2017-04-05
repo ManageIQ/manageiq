@@ -127,6 +127,7 @@ class ContainerImage < ApplicationRecord
     EmsRefresh.save_docker_labels_inventory(self,
                                             openshift_image_data.delete(:docker_labels))
     update(openshift_image_data)
+    update(:last_openshift_refresh => Time.now.utc)
   end
 
   def update_attributes_from_list(attributes, ca_attribute)
@@ -142,7 +143,14 @@ class ContainerImage < ApplicationRecord
     update_start_time = update_start_time.utc
     ems = ExtManagementSystem.find(ems_id)
 
-    ems.container_images.where("created_on >= ?", update_start_time).each do |image|
+    openshift_data_refresh_delay = Settings.ems_refresh.openshift.container_image_refresh_delay
+    refresh_expiry = openshift_data_refresh_delay.days.ago.utc if openshift_data_refresh_delay
+    if refresh_expiry
+      ems.container_images.where("created_on >= ? OR last_openshift_refresh <= ?",
+                                 update_start_time, refresh_expiry)
+    else
+      ems.container_images.where("created_on >= ?", update_start_time)
+    end.each do |image|
       MiqQueue.put(
         :class_name  => image.class.name,
         :instance_id => image.id,
