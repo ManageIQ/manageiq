@@ -6,7 +6,7 @@ visibility:
   :roles:
   - _ALL_
 user_id: 
-resource_name: Number of Nodes per CPU Cores
+resource_name: Nodes by Number of CPU Cores
 resource_type: MiqReport
 miq_schedule_options:
   :run_at:
