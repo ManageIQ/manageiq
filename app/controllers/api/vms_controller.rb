@@ -8,6 +8,9 @@ module Api
     include Subcollections::Software
     include Subcollections::Snapshots
 
+    VALID_EDIT_ATTRS = %w(description child_resources parent_resource).freeze
+    RELATIONSHIP_COLLECTIONS = [:vms, :templates].freeze
+
     def start_resource(type, id = nil, _data = nil)
       raise BadRequestError, "Must specify an id for starting a #{type} resource" unless id
 
@@ -84,6 +87,18 @@ module Api
         result = shelve_offload_vm(vm) if result[:success]
         result
       end
+    end
+
+    def edit_resource(type, id, data)
+      attrs = validate_edit_data(data)
+      parent, children = build_parent_children(data)
+      resource_search(id, type, collection_class(type)).tap do |vm|
+        vm.update_attributes!(attrs)
+        vm.replace_children(children)
+        vm.set_parent(parent)
+      end
+    rescue => err
+      raise BadRequestError, "Cannot edit VM - #{err}"
     end
 
     def delete_resource(type, id = nil, _data = nil)
@@ -216,7 +231,7 @@ module Api
       #   protocol = data["protocol"] || "mks"
       # However, there are different entitlements for the different protocol as per miq_product_feature,
       # so we may go for different action, i.e. request_console_vnc
-      #protocol = "mks"
+      # protocol = "mks"
       protocol = data["protocol"] || "vnc"
 
       api_action(type, id) do |klass|
@@ -230,6 +245,36 @@ module Api
     end
 
     private
+
+    def validate_edit_data(data)
+      invalid_keys = data.keys - VALID_EDIT_ATTRS - valid_custom_attrs
+      raise BadRequestError, "Cannot edit values #{invalid_keys.join(', ')}" if invalid_keys.present?
+      data.except('parent_resource', 'child_resources')
+    end
+
+    def build_parent_children(data)
+      children = if data.key?('child_resources')
+                   data['child_resources'].collect do |child|
+                     fetch_relationship(child['href'])
+                   end
+                 end
+
+      parent = if data.key?('parent_resource')
+                 fetch_relationship(data['parent_resource']['href'])
+               end
+
+      [parent, Array(children)]
+    end
+
+    def fetch_relationship(href)
+      collection, id = parse_href(href)
+      raise "Invalid relationship type #{collection}" unless RELATIONSHIP_COLLECTIONS.include?(collection)
+      resource_search(id, collection, collection_class(collection))
+    end
+
+    def valid_custom_attrs
+      Vm.virtual_attribute_names.select { |name| name =~ /custom_\d/ }
+    end
 
     def vm_ident(vm)
       "VM id:#{vm.id} name:'#{vm.name}'"
