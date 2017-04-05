@@ -101,31 +101,28 @@ describe Service do
 
     context "#power_states_match?" do
       it "returns the uniq value for the 'on' power state" do
-        allow(@service).to receive(:child_resources?).and_return(true)
+        allow(@service).to receive(:composite?).and_return(true)
         expect(@service).to receive(:map_power_states).with(:start).and_return(["on"])
         expect(@service).to receive(:update_power_status).with(:start).and_return(true)
         expect(@service.power_states_match?(:start)).to be_truthy
       end
 
       it "returns the uniq value for the 'off' power state" do
-        allow(@service).to receive(:child_resources?).and_return(true)
+        allow(@service).to receive(:composite?).and_return(true)
         expect(@service).to receive(:map_power_states).with(:stop).and_return(["off"])
         expect(@service).to receive(:update_power_status).with(:stop).and_return(true)
         expect(@service).to receive(:power_states).and_return(["off"])
         expect(@service.power_states_match?(:stop)).to be_truthy
       end
 
-      it "returns the uniq value for the 'on' power state with an empty_child_resources service" do
-        allow(@service).to receive(:chilren_resources?).and_return(false)
-        allow(@service).to receive(:empty_child_resources?).and_return(true)
-
+      it "returns the uniq value for the 'on' power state with an atomic service" do
         expect(@service).to receive(:update_power_status).with(:start).and_return(true)
         expect(@service.power_states_match?(:start)).to be_truthy
       end
 
-      it "returns the uniq value for the 'off' power state with an empty_child_resources service" do
-        allow(@service).to receive(:child_resources?).and_return(false)
-        allow(@service).to receive(:empty_child_resources?).and_return(true)
+      it "returns the uniq value for the 'off' power state with an atomic service" do
+        allow(@service).to receive(:composite?).and_return(false)
+        allow(@service).to receive(:atomic?).and_return(true)
         allow(@service).to receive(:children).and_return(false)
 
         expect(@service).to receive(:update_power_status).with(:stop).and_return(true)
@@ -135,39 +132,39 @@ describe Service do
     end
 
     context "#all_states_match?" do
-      it "returns false if the child_resources service power states do not match" do
-        allow(@service).to receive(:child_resources?).and_return(true)
+      it "returns false if the composite service power states do not match" do
+        allow(@service).to receive(:composite?).and_return(true)
         expect(@service.all_states_match?(:stop)).to be_falsey
       end
 
-      it "returns true if the child_resources service power states do  match" do
-        allow(@service).to receive(:child_resources?).and_return(true)
+      it "returns true if the composite service power states do  match" do
+        allow(@service).to receive(:composite?).and_return(true)
         allow(@service).to receive(:map_power_states).with(:start).and_return(['on'])
         expect(@service.all_states_match?(:start)).to be_truthy
       end
 
-      it "returns false if the empty_child_resources service power states do not match" do
-        allow(@service).to receive(:child_resources?).and_return(false)
-        allow(@service).to receive(:empty_child_resources?).and_return(true)
+      it "returns false if the atomic service power states do not match" do
+        allow(@service).to receive(:composite?).and_return(false)
+        allow(@service).to receive(:atomic?).and_return(true)
         expect(@service.all_states_match?(:stop)).to be_falsey
       end
 
-      it "returns true if the empty_child_resources service power states do  match" do
-        allow(@service).to receive(:child_resources?).and_return(false)
-        allow(@service).to receive(:empty_child_resources?).and_return(true)
+      it "returns true if the atomic service power states do  match" do
+        allow(@service).to receive(:composite?).and_return(false)
+        allow(@service).to receive(:atomic?).and_return(true)
         expect(@service.all_states_match?(:start)).to be_truthy
       end
 
-      it "returns false if the empty_child_resources service children power states do not match" do
-        allow(@service).to receive(:child_resources?).and_return(false)
-        allow(@service).to receive(:empty_child_resources?).and_return(true)
+      it "returns false if the atomic service children power states do not match" do
+        allow(@service).to receive(:composite?).and_return(false)
+        allow(@service).to receive(:atomic?).and_return(true)
         allow(@service).to receive(:children).and_return(true)
         expect(@service.all_states_match?(:stop)).to be_falsey
       end
 
-      it "returns true if the empty_child_resources service children power states do  match" do
-        allow(@service).to receive(:child_resources?).and_return(false)
-        allow(@service).to receive(:empty_child_resources?).and_return(true)
+      it "returns true if the atomic service children power states do  match" do
+        allow(@service).to receive(:composite?).and_return(false)
+        allow(@service).to receive(:atomic?).and_return(true)
         allow(@service).to receive(:children).and_return(true)
         expect(@service.all_states_match?(:start)).to be_truthy
       end
@@ -490,8 +487,8 @@ describe Service do
       create_deep_tree
       expect(@service.children).to match_array([@service_c1, @service_c2])
       expect(@service.service_template).to be_nil
-      expect(@service.child_resources?).to be_truthy
-      expect(@service.empty_child_resources?).to be_falsey
+      expect(@service.composite?).to be_truthy
+      expect(@service.atomic?).to be_falsey
       expect(@service.services).to match_array([@service_c1, @service_c2]) # alias
       expect(@service.direct_service_children).to match_array([@service_c1, @service_c2]) # alias
     end
@@ -499,8 +496,8 @@ describe Service do
     it "returns no children" do
       @service = FactoryGirl.create(:service)
       expect(@service.children).to be_empty
-      expect(@service.child_resources?).to be_falsey
-      expect(@service.empty_child_resources?).to be_truthy
+      expect(@service.composite?).to be_falsey
+      expect(@service.atomic?).to be_truthy
     end
   end
 

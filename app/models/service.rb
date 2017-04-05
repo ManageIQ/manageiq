@@ -186,16 +186,16 @@ class Service < ApplicationRecord
   end
 
   def all_states_match?(action)
-    return true if child_resources? && (power_states.uniq == map_power_states(action))
-    return true if empty_child_resources? && (power_states[0] == POWER_STATE_MAP[action])
+    return true if composite? && (power_states.uniq == map_power_states(action))
+    return true if atomic? && (power_states[0] == POWER_STATE_MAP[action])
     false
   end
 
-  def child_resources?
+  def composite?
     children.present?
   end
 
-  def empty_child_resources?
+  def atomic?
     children.empty?
   end
 
