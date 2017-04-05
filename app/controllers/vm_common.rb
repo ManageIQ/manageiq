@@ -1629,7 +1629,7 @@ module VmCommon
     @edit[:current][:custom_1] = @edit[:new][:custom_1] = @record.custom_1.to_s
     @edit[:current][:description] = @edit[:new][:description] = @record.description.to_s
     @edit[:pchoices] = {}                                 # Build a hash for the parent choices box
-    parent_item_scope = VmOrTemplate.where.not(:id => @record.id)
+    parent_item_scope = Rbac.filtered(VmOrTemplate.where.not(:id => @record.id))
     @edit[:pchoices] = parent_item_scope.pluck(:name, :location, :id).each_with_object({}) do |vm, memo|
       memo[vm[0] + " -- #{vm[1]}"] = vm[2]
     end
@@ -1654,9 +1654,11 @@ module VmCommon
 
     # Build a hash for the VMs to choose from, only if they have no parent
     available_item_scope = VmOrTemplate.where.not(:id => ids_with_parents)
-    @edit[:choices] = available_item_scope.pluck(:name, :location, :id).each_with_object({}) do |vm, memo|
-      memo[vm[0] + " -- #{vm[1]}"] = vm[2]
-    end
+    @edit[:choices] = Rbac.filtered(available_item_scope)
+                          .pluck(:name, :location, :id)
+                          .each_with_object({}) do |vm, memo|
+                            memo[vm[0] + " -- #{vm[1]}"] = vm[2]
+                          end
 
     @edit[:new][:kids].each_key { |key| @edit[:choices].delete(key) }   # Remove any VMs that are in the kids list box from the choices
 
