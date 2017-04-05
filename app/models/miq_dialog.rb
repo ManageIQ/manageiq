@@ -2,8 +2,6 @@ class MiqDialog < ApplicationRecord
   validates :name, :description, :presence => true
   validates :name, :uniqueness => { :scope => :dialog_type, :case_sensitive => false }
 
-  DIALOG_DIR = "product/dialogs/miq_dialogs".freeze
-
   DIALOG_TYPES = [
     [_("VM Provision"),                "MiqProvisionWorkflow"],
     [_("Configured System Provision"), "MiqProvisionConfiguredSystemWorkflow"],
@@ -14,18 +12,17 @@ class MiqDialog < ApplicationRecord
   serialize :content
 
   def self.seed
-    sync_from_dir(Rails.root)
+    sync_from_dir(Rails.root.join('product', 'dialogs', 'miq_dialogs'))
     sync_from_plugins
   end
 
   def self.sync_from_dir(root)
-    root = root.join(DIALOG_DIR)
     Dir.glob(root.join("*.yaml")).each { |f| sync_from_file(f, root) }
   end
 
   def self.sync_from_plugins
     Vmdb::Plugins.instance.registered_provider_plugins.each do |plugin|
-      sync_from_dir(plugin.root)
+      sync_from_dir(plugin.root.join('content', 'miq_dialogs'))
     end
   end
 

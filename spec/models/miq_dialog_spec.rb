@@ -1,7 +1,7 @@
 describe MiqDialog do
   context '.seed' do
     it 'seeds from the core with correct metadata' do
-      root = Rails.root.join(described_class::DIALOG_DIR)
+      root = Rails.root.join('product', 'dialogs', 'miq_dialogs')
       allow(described_class).to receive(:find_by)
 
       expect(described_class).to receive(:sync_from_file).at_least(:once).with(/^#{root}/, root).and_call_original
@@ -20,7 +20,9 @@ describe MiqDialog do
 
       described_class.seed
 
-      expect(described_class).to have_received(:sync_from_dir).at_least(:once).with(mock_engine.root)
+      expect(described_class).to have_received(:sync_from_dir).at_least(:once).with(
+        mock_engine.root.join('content', 'miq_dialogs')
+      )
     end
   end
 end
