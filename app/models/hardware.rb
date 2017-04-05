@@ -6,6 +6,7 @@ class Hardware < ApplicationRecord
   belongs_to  :computer_system
 
   has_many    :networks, :dependent => :destroy
+  has_many    :firmwares, :as => :resource, :dependent => :destroy
 
   has_many    :disks, -> { order :location }, :dependent => :destroy
   has_many    :hard_disks, -> { where("device_type != 'floppy' AND device_type NOT LIKE '%cdrom%'").order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
@@ -23,6 +24,7 @@ class Hardware < ApplicationRecord
   virtual_column :ipaddresses,   :type => :string_set, :uses => :networks
   virtual_column :hostnames,     :type => :string_set, :uses => :networks
   virtual_column :mac_addresses, :type => :string_set, :uses => :nics
+
   virtual_aggregate :used_disk_storage,      :disks, :sum, :used_disk_storage
   virtual_aggregate :allocated_disk_storage, :disks, :sum, :size
   virtual_attribute :ram_size_in_bytes, :integer, :arel => ->(t) { t.grouping(t[:memory_mb] * 1.megabyte) }

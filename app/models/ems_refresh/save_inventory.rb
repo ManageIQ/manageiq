@@ -214,7 +214,7 @@ module EmsRefresh::SaveInventory
 
   def save_hardware_inventory(parent, hash)
     return if hash.nil?
-    save_inventory_single(:hardware, parent, hash, [:disks, :guest_devices, :networks])
+    save_inventory_single(:hardware, parent, hash, [:disks, :guest_devices, :networks, :firmwares])
     parent.save!
   end
 
@@ -275,6 +275,16 @@ module EmsRefresh::SaveInventory
     when :scan
       save_inventory_multi(hardware.networks, hashes, :use_association, [:description, :guid])
     end
+  end
+
+  def save_firmwares_inventory(hardware, hashes)
+    return if hashes.nil?
+
+    save_inventory_multi(hardware.firmwares, hashes, :use_association, [:name])
+  end
+
+  def save_computer_system_inventory(parent, hash, _target = nil)
+    save_inventory_single(:computer_system, parent, hash, [:hardware, :operating_system])
   end
 
   def save_system_services_inventory(parent, hashes, mode = :refresh)
