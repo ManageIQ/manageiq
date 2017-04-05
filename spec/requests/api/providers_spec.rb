@@ -318,6 +318,37 @@ describe "Providers API" do
         expect(provider.send(item)).to eq(sample_foreman[item])
       end
     end
+
+    it 'returns the correct href reference on the collection' do
+      provider = FactoryGirl.create(:provider_foreman)
+      api_basic_authorize collection_action_identifier(:providers, :read, :get)
+
+      run_get providers_url, :provider_class => 'provider'
+
+      expected = {
+        'resources' => [{'href' => a_string_including("/api/providers/#{provider.id}?provider_class=provider")}],
+        'actions'   => [a_hash_including('href' => a_string_including('?provider_class=provider'))]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'returns the correct href reference on a resource' do
+      provider = FactoryGirl.create(:provider_foreman)
+      api_basic_authorize action_identifier(:providers, :read, :resource_actions, :get),
+                          action_identifier(:providers, :edit)
+
+      run_get providers_url(provider.id), :provider_class => :provider
+
+      expected = {
+        'href'    => a_string_including("/api/providers/#{provider.id}?provider_class=provider"),
+        'actions' => [
+          a_hash_including('href' => a_string_including("/api/providers/#{provider.id}?provider_class=provider"))
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
   end
 
   describe "Providers create" do
