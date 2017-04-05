@@ -3,6 +3,8 @@ require 'shellwords'
 module ManageIQ::Providers::Kubernetes
   class ContainerManager::RefreshParser
     include Vmdb::Logging
+    include CollectionsParserMixin
+
     def self.ems_inv_to_hashes(inventory)
       new.ems_inv_to_hashes(inventory)
     end
@@ -125,20 +127,6 @@ module ManageIQ::Providers::Kubernetes
         ats << {:name => aa[:name], :value => aa[:value], :section => "additional_attributes"}
         @data_index.store_path(:additional_attributes, :by_node, aa[:node], ats)
       end
-    end
-
-    def process_collection(collection, key, &block)
-      @data[key] ||= []
-      collection.each { |item| process_collection_item(item, key, &block) }
-    end
-
-    def process_collection_item(item, key)
-      @data[key] ||= []
-
-      new_result = yield(item)
-
-      @data[key] << new_result
-      new_result
     end
 
     def map_labels(model_name, labels)

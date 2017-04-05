@@ -2,7 +2,7 @@
 
 module ManageIQ::Providers
   class Openstack::NetworkManager::RefreshParser
-    include ManageIQ::Providers::Openstack::RefreshParserCommon::HelperMethods
+    include CollectionsParserMixin
 
     def self.ems_inv_to_hashes(ems, options = nil)
       new(ems, options).ems_inv_to_hashes

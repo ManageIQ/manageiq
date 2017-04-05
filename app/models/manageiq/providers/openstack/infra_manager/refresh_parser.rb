@@ -3,7 +3,7 @@ module ManageIQ
     class Openstack::InfraManager::RefreshParser < ManageIQ::Providers::InfraManager::RefreshParser
       include Vmdb::Logging
 
-      include ManageIQ::Providers::Openstack::RefreshParserCommon::HelperMethods
+      include CollectionsParserMixin
       include ManageIQ::Providers::Openstack::RefreshParserCommon::Images
       include ManageIQ::Providers::Openstack::RefreshParserCommon::Objects
       include ManageIQ::Providers::Openstack::RefreshParserCommon::OrchestrationStacks
@@ -389,19 +389,6 @@ module ManageIQ
       #
       # Helper methods
       #
-
-
-      def process_collection(collection, key)
-        @data[key] ||= []
-        return if collection.nil?
-
-        collection.each do |item|
-          uid, new_result = yield(item)
-
-          @data[key] << new_result
-          @data_index.store_path(key, uid, new_result)
-        end
-      end
     end
   end
 end
