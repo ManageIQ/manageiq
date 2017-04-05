@@ -6,6 +6,6 @@
           = h(breadcrumbs[:name])
     %li.active
       = @title
-- elsif @layout == "container_topology"
+- elsif @layout.end_with?("_topology")
 - else
   %br
