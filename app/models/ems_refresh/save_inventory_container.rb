@@ -5,8 +5,7 @@ module EmsRefresh::SaveInventoryContainer
     child_keys = [:container_projects, :container_quotas, :container_limits, :container_nodes,
                   :container_builds, :container_build_pods, :persistent_volume_claims, :persistent_volumes,
                   :container_image_registries, :container_images, :container_replicators, :container_groups,
-                  :container_services, :container_routes, :container_component_statuses, :container_templates,
-                 ]
+                  :container_services, :container_routes, :container_component_statuses, :container_templates,]
 
     # Save and link other subsections
     child_keys.each do |k|
@@ -167,10 +166,6 @@ module EmsRefresh::SaveInventoryContainer
     store_ids_for_new_records(ems.container_nodes, hashes, :ems_ref)
   end
 
-  def save_computer_system_inventory(container_node, hash, _target = nil)
-    save_inventory_single(:computer_system, container_node, hash, [:hardware, :operating_system])
-  end
-
   def save_container_replicators_inventory(ems, hashes, target = nil)
     return if hashes.nil?
     target = ems if target.nil?
@@ -203,8 +198,8 @@ module EmsRefresh::SaveInventoryContainer
               end
 
     hashes.each do |h|
-      h[:container_group_ids] = h[:container_groups].map { |x| x[:id] }
-      h[:container_project_id] = h.fetch_path(:project, :id)
+      h[:container_group_ids]         = h[:container_groups].map { |x| x[:id] }
+      h[:container_project_id]        = h.fetch_path(:project, :id)
       h[:container_image_registry_id] = h.fetch_path(:container_image_registry, :id)
     end
 
@@ -227,10 +222,10 @@ module EmsRefresh::SaveInventoryContainer
               end
 
     hashes.each do |h|
-      h[:container_node_id] = h.fetch_path(:container_node, :id)
+      h[:container_node_id]       = h.fetch_path(:container_node, :id)
       h[:container_replicator_id] = h.fetch_path(:container_replicator, :id)
-      h[:container_project_id] = h.fetch_path(:project, :id)
-      h[:container_build_pod_id] = ems.container_build_pods.find_by(:name => h[:build_pod_name]).try(:id)
+      h[:container_project_id]    = h.fetch_path(:project, :id)
+      h[:container_build_pod_id]  = ems.container_build_pods.find_by(:name => h[:build_pod_name]).try(:id)
     end
 
     save_inventory_multi(ems.container_groups, hashes, deletes, [:ems_ref],
