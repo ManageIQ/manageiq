@@ -1646,7 +1646,18 @@ module VmCommon
     vms.each { |vm| @edit[:new][:kids][vm.name + " -- #{vm.location}"] = vm.id }      # Build a hash for the kids list box
 
     @edit[:choices] = {}
-    VmOrTemplate.all.each { |vm| @edit[:choices][vm.name + " -- #{vm.location}"] =  vm.id if vm.parents.length == 0 }   # Build a hash for the VMs to choose from, only if they have no parent
+    # items with parents
+    ids_with_parents = Relationship.filtered(VmOrTemplate, nil)
+                                   .where.not(:ancestry => ['', nil])
+                                   .in_relationship('genealogy')
+                                   .pluck(:resource_id)
+
+    # Build a hash for the VMs to choose from, only if they have no parent
+    available_item_scope = VmOrTemplate.where.not(:id => ids_with_parents)
+    @edit[:choices] = available_item_scope.pluck(:name, :location, :id).each_with_object({}) do |vm, memo|
+      memo[vm[0] + " -- #{vm[1]}"] = vm[2]
+    end
+
     @edit[:new][:kids].each_key { |key| @edit[:choices].delete(key) }   # Remove any VMs that are in the kids list box from the choices
 
     @edit[:choices].delete(@record.name + " -- #{@record.location}")                                    # Remove the current VM from the choices list
