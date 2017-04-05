@@ -356,6 +356,8 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   end
 
   def pod_definition(inspector_admin_secret_name)
+    pod_env = inspector_proxy_env_variables << { :name  => INSPECTOR_AUTH_TOKEN,
+                                                 :value => auth_token }
     pod_def = {
       :apiVersion => "v1",
       :kind       => "Pod",
@@ -396,7 +398,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
                 :name      => "docker-socket"
               }
             ],
-            :env             => inspector_proxy_env_variables,
+            :env             => pod_env,
             :readinessProbe  => {
               "initialDelaySeconds" => 15,
               "periodSeconds"       => 5,
@@ -444,8 +446,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
                    :name    => PROXY_ENV_VARIABLES).each_with_object([]) do |att, env|
       env << {:name  => att.name.upcase,
               :value => att.value} unless att.value.blank?
-    end << { :name => INSPECTOR_AUTH_TOKEN,
-             :value => auth_token}
+    end
   end
 
   def auth_token
