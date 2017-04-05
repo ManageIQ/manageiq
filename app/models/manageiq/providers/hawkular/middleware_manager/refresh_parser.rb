@@ -30,19 +30,29 @@ module ManageIQ::Providers
             @eaps << eap
             server = parse_middleware_server(eap)
 
-            machine_id = @ems.machine_id(eap.feed)
-            host_instance = find_host_by_bios_uuid(machine_id) ||
-                            find_host_by_bios_uuid(alternate_machine_id(machine_id))
-
-            if host_instance
-              server[:lives_on_id] = host_instance.id
-              server[:lives_on_type] = host_instance.type
+            if server.fetch_path(:properties, 'In Container') == 'true'
+              container_id = @ems.container_id(eap.feed)
+              if container_id
+                backing_ref = 'docker://' + container_id
+                container = Container.find_by(:backing_ref => backing_ref)
+                set_lives_on(server, container) if container
+              end
+            else
+              machine_id = @ems.machine_id(eap.feed)
+              host_instance = find_host_by_bios_uuid(machine_id) ||
+                              find_host_by_bios_uuid(alternate_machine_id(machine_id))
+              set_lives_on(server, host_instance) if host_instance
             end
 
             @data[:middleware_servers] << server
             @data_index.store_path(:middleware_servers, :by_ems_ref, server[:ems_ref], server)
           end
         end
+      end
+
+      def set_lives_on(server, lives_on)
+        server[:lives_on_id] = lives_on.id
+        server[:lives_on_type] = lives_on.type
       end
 
       def fetch_domains_with_servers
