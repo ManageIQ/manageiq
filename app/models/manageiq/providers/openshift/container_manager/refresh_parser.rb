@@ -8,7 +8,7 @@ module ManageIQ::Providers
         get_builds(inventory)
         get_build_pods(inventory)
         get_templates(inventory)
-        get_openshift_images(inventory)
+#       get_openshift_images(inventory)
         EmsRefresh.log_inv_debug_trace(@data, "data:")
         @data
       end
