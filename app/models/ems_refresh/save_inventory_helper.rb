@@ -53,17 +53,21 @@ module EmsRefresh::SaveInventoryHelper
 
     new_records = []
 
-    hashes.each do |h|
-      found = save_inventory_with_findkey(association, h.except(*remove_keys), deletes_index, new_records, record_index)
-      save_child_inventory(found, h, child_keys)
+    ActiveRecord::Base.transaction do
+      hashes.each do |h|
+        found = save_inventory_with_findkey(association, h.except(*remove_keys), deletes_index, new_records, record_index)
+        save_child_inventory(found, h, child_keys)
+      end
     end
 
     # Delete the items no longer found
     deletes = deletes_index.values
-    unless deletes.blank?
-      type = association.proxy_association.reflection.name
-      _log.info("[#{type}] Deleting #{log_format_deletes(deletes)}")
-      disconnect ? deletes.each(&:disconnect_inv) : association.delete(deletes)
+    ActiveRecord::Base.transaction do
+      unless deletes.blank?
+        type = association.proxy_association.reflection.name
+        _log.info("[#{type}] Deleting #{log_format_deletes(deletes)}")
+        disconnect ? deletes.each(&:disconnect_inv) : association.delete(deletes)
+      end
     end
 
     # Add the new items
