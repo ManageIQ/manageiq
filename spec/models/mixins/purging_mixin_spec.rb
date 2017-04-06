@@ -10,6 +10,14 @@ describe PurgingMixin do
     end
   end
 
+  describe ".purge_mode_and_value" do
+    it "purge_mode_and_value should return proper options" do
+      stub_settings(:policy_events => {:history => {:keep_policy_events => 120}})
+      expect(example_class.purge_mode_and_value.first).to eq(:date)
+      expect(example_class.purge_mode_and_value.last).to be_within(1.second).of(120.seconds.ago.utc)
+    end
+  end
+
   describe ".purge" do
     let(:events) do
       (-2..2).collect do |date_modifier|
