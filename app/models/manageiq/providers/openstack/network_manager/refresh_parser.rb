@@ -187,13 +187,11 @@ module ManageIQ::Providers
       when /^compute\:.*?$/
         # Owner is in format compute:<availability_zone> or compute:None
         return parent_manager_find_device_connected_to_network_port(network_port.device_id)
-      when "network:router_gateway"
-        # TODO(lsmola) the gateway here is public network, we model it directly now, that will probably change
       when "network:dhcp"
         # TODO(lsmola) we need to represent dhcp as object
       when "network:floatingip"
         # We don't need this association, floating ip has a direct link to subnet and network in it
-      when "network:router_interface"
+      when "network:router_interface", "network:router_gateway"
         subnet_id               = network_port.fixed_ips.try(:first).try(:[], "subnet_id")
         network_router          = @data_index.fetch_path(:network_routers, network_port.device_id)
         subnet                  = @data_index.fetch_path(:cloud_subnets, subnet_id)
