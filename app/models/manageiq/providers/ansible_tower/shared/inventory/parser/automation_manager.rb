@@ -32,6 +32,10 @@ module ManageIQ::Providers::AnsibleTower::Shared::Inventory::Parser::AutomationM
       inventory_object.survey_spec = job_template.survey_spec_hash
       inventory_object.variables = job_template.extra_vars_hash
       inventory_object.inventory_root_group = persister.inventory_root_groups.lazy_find(job_template.inventory_id.to_s)
+      inventory_object.parent = persister.configuration_script_payloads.lazy_find(
+        :configuration_script_source => job_template.project_id,
+        :manager_ref                 => job_template.playbook
+      )
 
       inventory_object.authentications = []
       %w(credential_id cloud_credential_id network_credential_id).each do |credential_attr|

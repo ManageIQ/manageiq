@@ -158,6 +158,8 @@ shared_examples_for "ansible refresher" do |ansible_provider, manager_class, ems
       :variables   => {'abc' => 123},
     )
     expect(expected_configuration_script.inventory_root_group).to have_attributes(:ems_ref => "2")
+    expect(expected_configuration_script.parent.name).to eq('hello_world.yml')
+    expect(expected_configuration_script.parent.configuration_script_source.manager_ref).to eq('37')
   end
 
   def assert_configuration_script_with_survey_spec

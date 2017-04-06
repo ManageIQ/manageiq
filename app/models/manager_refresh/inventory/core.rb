@@ -18,7 +18,7 @@ module ManagerRefresh::Inventory::Core
       has_inventory({
         :model_class                 => ::ConfigurationScript,
         :manager_ref                 => [:manager_ref],
-        :inventory_object_attributes => %i(name description survey_spec variables inventory_root_group authentications),
+        :inventory_object_attributes => %i(name description survey_spec variables inventory_root_group authentications parent),
       }.merge(options))
     end
 
