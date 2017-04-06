@@ -3,6 +3,7 @@ describe MiqDialog do
     it 'seeds from the core with correct metadata' do
       root = Rails.root.join('product', 'dialogs', 'miq_dialogs')
       allow(described_class).to receive(:find_by)
+      allow(described_class).to receive(:sync_from_file).with(any_args)
 
       expect(described_class).to receive(:sync_from_file).at_least(:once).with(/^#{root}/, root).and_call_original
       expect(described_class).to receive(:find_by).once.with(
