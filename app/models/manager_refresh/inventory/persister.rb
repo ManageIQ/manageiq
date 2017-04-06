@@ -9,12 +9,24 @@ class ManagerRefresh::Inventory::Persister
 
     @collections = {}
 
+    # call every collection method at least once in order to be initialized
+    # otherwise, if the method was not called during parsing it will not be set
+    self.class.supported_collections.each do |name|
+      public_send(name)
+    end
+
     initialize_inventory_collections
+  end
+
+  def self.supported_collections
+    @supported_collections ||= Concurrent::Array.new
   end
 
   # creates method on class that lazy initializes an InventoryCollection
   def self.has_inventory(options)
-    name = options[:association] || options[:model_class].name.pluralize.underscore
+    name = (options[:association] || options[:model_class].name.pluralize.underscore).to_sym
+
+    supported_collections << name
 
     define_method(name) do
       collections[name] ||= begin
