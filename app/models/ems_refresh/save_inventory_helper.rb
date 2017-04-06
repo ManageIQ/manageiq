@@ -102,9 +102,7 @@ module EmsRefresh::SaveInventoryHelper
 
   def update_attributes!(ar_model, attributes, remove_keys)
     ar_model.assign_attributes(attributes.except(*remove_keys))
-    ar_model.with_transaction_returning_status do
-      ar_model.save! if ar_model.changed?
-    end
+    ar_model.save! if ar_model.changed?
   end
 
   def backup_keys(hash, keys)
