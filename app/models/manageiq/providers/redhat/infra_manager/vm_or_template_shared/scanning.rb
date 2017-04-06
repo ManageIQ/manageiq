@@ -17,9 +17,6 @@ module ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared::Scanning
     vm_name  = File.uri_to_local_path(ost.args[0])
     $log.debug "#{log_pref} VM = #{vm_name}"
 
-    args1 = ost.args[1]
-    args1['ems']['connect'] = true if args1[:mount].blank?
-
     begin
       $log.debug "perform_metadata_scan: vm_name = #{vm_name}"
       @vm_cfg_file = vm_name
