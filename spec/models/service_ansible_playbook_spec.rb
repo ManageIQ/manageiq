@@ -22,7 +22,8 @@ describe(ServiceAnsiblePlaybook) do
 
   let(:executed_service) do
     FactoryGirl.create(:service_ansible_playbook, :options => provision_options).tap do |service|
-      allow(service).to receive(:job).with(action).and_return(tower_job)
+      regex = /(#{ResourceAction::PROVISION})|(#{ResourceAction::RETIREMENT})/
+      allow(service).to receive(:job).with(regex).and_return(tower_job)
     end
   end
 
@@ -210,12 +211,14 @@ describe(ServiceAnsiblePlaybook) do
   describe '#on_error' do
     it 'handles retirement error' do
       executed_service.update_attributes(:retirement_state => 'Retiring')
+      expect(tower_job).to receive(:refresh_ems)
       expect(executed_service).to receive(:postprocess)
       executed_service.on_error(ResourceAction::RETIREMENT)
       expect(executed_service.retirement_state).to eq('error')
     end
 
     it 'handles provisioning error' do
+      expect(tower_job).to receive(:refresh_ems)
       expect(executed_service).to receive(:postprocess)
       executed_service.on_error(action)
       expect(executed_service.retirement_state).to be_nil
