@@ -31,7 +31,7 @@ module ManageIQ::Providers::Redhat::InfraManager::VmImport
   end
 
   def validate_import_vm
-    api_version >= '4.0'
+    api_version && api_version >= '4.0'
   end
 
   private
