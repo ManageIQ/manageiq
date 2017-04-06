@@ -1,70 +1,56 @@
 module ManageIQ::Providers
   module Hawkular
-    class MiddlewareManager::RefreshParser
+    class Inventory::Parser::MiddlewareManager < ManagerRefresh::Inventory::Parser
       include ::Hawkular::ClientUtils
 
-      def self.ems_inv_to_hashes(ems, options = nil)
-        new(ems, options).ems_inv_to_hashes
-      end
-
-      def initialize(ems, _options = nil)
-        @ems = ems
-        @eaps = []
-        @data = {}
+      def initialize
         @data_index = {}
       end
 
-      def ems_inv_to_hashes
-        # the order of the method calls is important here, because they make use of @eaps and @data_index
+      def parse
+        # the order of the method calls is important here, because they make use of @data_index
         fetch_middleware_servers
         fetch_domains_with_servers
         fetch_server_entities
         fetch_availability
-        @data
       end
 
       def fetch_middleware_servers
-        @data[:middleware_servers] = []
-        @ems.feeds.each do |feed|
-          @ems.eaps(feed).each do |eap|
-            @eaps << eap
-            server = parse_middleware_server(eap)
+        collector.feeds.each do |feed|
+          collector.eaps(feed).each do |eap|
+            server = persister.middleware_servers.find_or_build(eap.path)
+            parse_middleware_server(eap, server)
 
-            if server.fetch_path(:properties, 'In Container') == 'true'
-              container_id = @ems.container_id(eap.feed)
+            if server.properties['In Container'] == 'true'
+              container_id = collector.container_id(eap.feed)
               if container_id
                 backing_ref = 'docker://' + container_id
                 container = Container.find_by(:backing_ref => backing_ref)
                 set_lives_on(server, container) if container
               end
             else
-              machine_id = @ems.machine_id(eap.feed)
+              machine_id = collector.machine_id(eap.feed)
               host_instance = find_host_by_bios_uuid(machine_id) ||
                               find_host_by_bios_uuid(alternate_machine_id(machine_id))
               set_lives_on(server, host_instance) if host_instance
             end
-
-            @data[:middleware_servers] << server
-            @data_index.store_path(:middleware_servers, :by_ems_ref, server[:ems_ref], server)
           end
         end
       end
 
       def set_lives_on(server, lives_on)
-        server[:lives_on_id] = lives_on.id
-        server[:lives_on_type] = lives_on.type
+        server.lives_on_id = lives_on.id
+        server.lives_on_type = lives_on.type
       end
 
       def fetch_domains_with_servers
-        @data[:middleware_domains] = []
-        @ems.feeds.each do |feed|
-          @ems.domains(feed).each do |domain|
-            parsed_domain = parse_middleware_domain(feed, domain)
+        collector.feeds.each do |feed|
+          collector.domains(feed).each do |domain|
+            parsed_domain = persister.middleware_domains.find_or_build(domain.path)
+            parse_middleware_domain(feed, domain, parsed_domain)
 
             # add the server groups to the domain
-            parsed_domain[:middleware_server_groups] = fetch_server_groups(feed)
-            @data[:middleware_domains] << parsed_domain
-            @data_index.store_path(:middleware_domains, :by_ems_ref, parsed_domain[:ems_ref], parsed_domain)
+            fetch_server_groups(feed, parsed_domain)
 
             # now it's safe to fetch the domain servers (it assumes the server groups to be already fetched)
             fetch_domain_servers(feed)
@@ -72,33 +58,35 @@ module ManageIQ::Providers
         end
       end
 
-      def fetch_server_groups(feed)
-        @ems.server_groups(feed).map do |group|
-          parsed_group = parse_middleware_server_group(group)
+      def fetch_server_groups(feed, parsed_domain)
+        collector.server_groups(feed).map do |group|
+          parsed_group = persister.middleware_server_groups.find_or_build(group.path)
+          parse_middleware_server_group(group, parsed_group)
+
+          # TODO: remove this index. Two options for this: 1) try to find or build the ems_ref
+          # of the server group. 2) add `find_by` methods to InventoryCollection class. Once this
+          # is removed, the order in #parse method will no longer be needed. For now, at least
+          # domains, sever groups and domain servers must be collected in order.
           @data_index.store_path(:middleware_server_groups, :by_name, parsed_group[:name], parsed_group)
-          parsed_group
+
+          parsed_group.middleware_domain = persister.middleware_domains.lazy_find(parsed_domain[:ems_ref])
         end
       end
 
       def fetch_domain_servers(feed)
-        path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id          => hawk_escape_id(feed),
-                                                        :resource_type_id => hawk_escape_id('Domain WildFly Server'))
-        domain_servers = @ems.inventory_client.list_resources_for_type(path.to_s, :fetch_properties => true)
-        domain_servers.each do |domain_server|
-          @eaps << domain_server
+        collector.domain_servers(feed).each do |domain_server|
           server_name = parse_domain_server_name(domain_server.id)
-          server = parse_middleware_server(domain_server, true, server_name)
+
+          server = persister.middleware_servers.find_or_build(domain_server.path)
+          parse_middleware_server(domain_server, server, true, server_name)
 
           # Add the association to server group. The information about what server is in which server group is under
           # the server-config resource's configuration
           config_path = domain_server.path.to_s.sub(/%2Fserver%3D/, '%2Fserver-config%3D')
-          config = @ems.inventory_client.get_config_data_for_resource(config_path)
+          config = collector.config_data_for_resource(config_path)
           server_group_name = config['value']['Server Group']
           server_group = @data_index.fetch_path(:middleware_server_groups, :by_name, server_group_name)
-          server[:middleware_server_group] = server_group
-
-          @data[:middleware_servers] << server
-          @data_index.store_path(:middleware_servers, :by_ems_ref, server[:ems_ref], server)
+          server.middleware_server_group = persister.middleware_server_groups.lazy_find(server_group[:ems_ref])
         end
       end
 
@@ -131,8 +119,11 @@ module ManageIQ::Providers
       def find_host_by_bios_uuid(machine_id)
         return if machine_id.nil?
         identity_system = machine_id.downcase
-        Vm.find_by(:uid_ems => identity_system,
-                   :type    => uuid_provider_types) if identity_system
+
+        if identity_system
+          Vm.find_by(:uid_ems => identity_system,
+                     :type    => uuid_provider_types)
+        end
       end
 
       def uuid_provider_types
@@ -143,13 +134,10 @@ module ManageIQ::Providers
       end
 
       def fetch_server_entities
-        @data[:middleware_deployments] = []
-        @data[:middleware_datasources] = []
-        @data[:middleware_messagings] = []
-        @eaps.map do |eap|
-          @ems.child_resources(eap.path, true).map do |child|
+        persister.middleware_servers.each do |eap|
+          collector.child_resources(eap.ems_ref, true).map do |child|
             next unless child.type_path.end_with?('Deployment', 'Datasource', 'JMS%20Topic', 'JMS%20Queue')
-            server = @data_index.fetch_path(:middleware_servers, :by_ems_ref, eap.path)
+            server = persister.middleware_servers.find(eap.ems_ref)
             process_server_entity(server, child)
           end
         end
@@ -158,11 +146,11 @@ module ManageIQ::Providers
       def fetch_availability
         resources_by_metric_id = {}
         metric_id_by_resource_path = {}
-        @ems.feeds.each do |feed|
+        collector.feeds.each do |feed|
           deployment_status_mt_path = ::Hawkular::Inventory::CanonicalPath.new(
             :metric_type_id => 'Deployment%20Status~Deployment%20Status', :feed_id => feed
           )
-          deployment_status_metrics = @ems.inventory_client.list_metrics_for_metric_type(deployment_status_mt_path)
+          deployment_status_metrics = collector.metrics_for_metric_type(deployment_status_mt_path)
           deployment_status_metrics.each do |deployment_status_metric|
             deployment_status_metric_path = ::Hawkular::Inventory::CanonicalPath.parse(deployment_status_metric.path)
             # By dropping metric_id from the canonical path we end up with the resource path
@@ -174,10 +162,10 @@ module ManageIQ::Providers
             metric_id_by_resource_path[resource_path.to_s] = deployment_status_metric.hawkular_metric_id
           end
         end
-        @data[:middleware_deployments].each do |deployment|
+        persister.middleware_deployments.each do |deployment|
           # Mark default status for all deployments
-          deployment[:status] = process_availability
-          path = ::Hawkular::Inventory::CanonicalPath.parse(deployment[:ems_ref])
+          deployment.status = process_availability
+          path = ::Hawkular::Inventory::CanonicalPath.parse(deployment.ems_ref)
           # for subdeployments use it's parent deployment availability.
           path = path.up if path.resource_ids.last.include? CGI.escape('/subdeployment=')
           # Ensure consistency on keys (resource_path) used on metric_id_by_resource_path
@@ -191,39 +179,44 @@ module ManageIQ::Providers
           resources_by_metric_id[metric_id] << deployment
         end
         unless resources_by_metric_id.empty?
-          availabilities = @ems.metrics_client.avail.raw_data(resources_by_metric_id.keys,
-                                                              :limit => 1, :order => 'DESC')
+          availabilities = collector.raw_availability_data(resources_by_metric_id.keys,
+                                                           :limit => 1, :order => 'DESC')
           parse_availability availabilities, resources_by_metric_id
         end
       end
 
-      def process_entity_with_config(server, entity, continuation)
+      def process_entity_with_config(server, entity, inventory_object, continuation)
         entity_id = hawk_escape_id entity.id
         server_path = ::Hawkular::Inventory::CanonicalPath.parse(server[:ems_ref])
         resource_ids = server_path.resource_ids << entity_id
         resource_path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id      => server_path.feed_id,
                                                                  :resource_ids => resource_ids)
-        config = @ems.inventory_client.get_config_data_for_resource(resource_path.to_s)
-        send(continuation, server, entity, config)
+        config = collector.config_data_for_resource(resource_path.to_s)
+        send(continuation, entity, inventory_object, config)
       end
 
       def process_server_entity(server, entity)
         if entity.type_path.end_with?('Deployment')
-          @data[:middleware_deployments] << parse_deployment(server, entity)
+          inventory_object = persister.middleware_deployments.find_or_build(entity.path)
+          parse_deployment(entity, inventory_object)
         elsif entity.type_path.end_with?('Datasource')
-          @data[:middleware_datasources] << process_entity_with_config(server, entity, :parse_datasource)
+          inventory_object = persister.middleware_datasources.find_or_build(entity.path)
+          process_entity_with_config(server, entity, inventory_object, :parse_datasource)
         else
-          @data[:middleware_messagings] << process_entity_with_config(server, entity, :parse_messaging)
+          inventory_object = persister.middleware_messagings.find_or_build(entity.path)
+          process_entity_with_config(server, entity, inventory_object, :parse_messaging)
         end
+
+        inventory_object.middleware_server = persister.middleware_servers.lazy_find(server.ems_ref)
+        inventory_object.middleware_server_group = server.middleware_server_group if inventory_object.respond_to?(:middleware_server_group=)
       end
 
       def process_availability(availability = nil)
-        case
-        when availability.blank?, availability['value'].casecmp('unknown').zero?
+        if availability.blank? || availability['value'].casecmp('unknown').zero?
           'Unknown'
-        when availability['value'].casecmp('up').zero?
+        elsif availability['value'].casecmp('up').zero?
           'Enabled'
-        when availability['value'].casecmp('down').zero?
+        elsif availability['value'].casecmp('down').zero?
           'Disabled'
         else
           'Unknown'
@@ -240,83 +233,72 @@ module ManageIQ::Providers
         resources_by_metric_id
       end
 
-      def parse_deployment(server, deployment)
-        specific = {
-          :name              => parse_deployment_name(deployment.id),
-          :middleware_server => server,
-        }
-        parse_base_item(deployment).merge(specific)
+      def parse_deployment(deployment, inventory_object)
+        parse_base_item(deployment, inventory_object)
+        inventory_object.name = parse_deployment_name(deployment.id)
       end
 
-      def parse_messaging(server, messaging, config)
-        specific = {
-          :name              => messaging.name,
-          :middleware_server => server,
-          :messaging_type    => messaging.to_h['type']['name']
-        }
+      def parse_messaging(messaging, inventory_object, config)
+        parse_base_item(messaging, inventory_object)
+
+        inventory_object.name = messaging.name
+        inventory_object.messaging_type = messaging.to_h['type']['name']
+
         if !config.empty? && !config['value'].empty? && config['value'].respond_to?(:except)
-          specific[:properties] = config['value'].except('Username', 'Password')
+          inventory_object.properties = config['value'].except('Username', 'Password')
         end
-        parse_base_item(messaging).merge(specific)
       end
 
-      def parse_datasource(server, datasource, config)
-        specific = {
-          :name              => datasource.name,
-          :middleware_server => server,
-        }
+      def parse_datasource(datasource, inventory_object, config)
+        parse_base_item(datasource, inventory_object)
+        inventory_object.name = datasource.name
+
         if !config.empty? && !config['value'].empty? && config['value'].respond_to?(:except)
-          specific[:properties] = config['value'].except('Username', 'Password')
+          inventory_object.properties = config['value'].except('Username', 'Password')
         end
-        parse_base_item(datasource).merge(specific)
       end
 
-      def parse_middleware_domain(feed, domain)
-        specific = {
-          :name      => parse_domain_name(feed),
-          :type_path => domain.type_path,
-        }
-        parse_base_item(domain).merge(specific)
+      def parse_middleware_domain(feed, domain, inventory_object)
+        parse_base_item(domain, inventory_object)
+        inventory_object.name = parse_domain_name(feed)
+        inventory_object.type_path = domain.type_path
       end
 
-      def parse_middleware_server_group(group)
-        specific = {
+      def parse_middleware_server_group(group, inventory_object)
+        parse_base_item(group, inventory_object)
+        inventory_object.assign_attributes(
           :name      => parse_server_group_name(group.name),
           :type_path => group.type_path,
-          :profile   => group.properties['Profile'],
-        }
-        parse_base_item(group).merge(specific)
+          :profile   => group.properties['Profile']
+        )
       end
 
-      def parse_middleware_server(eap, domain = false, name = nil)
+      def parse_middleware_server(eap, inventory_object, domain = false, name = nil)
+        parse_base_item(eap, inventory_object)
+
         not_started = domain && eap.properties['Server State'] == 'STOPPED'
 
         hostname, product = ['Hostname', 'Product Name'].map do |x|
           not_started && eap.properties[x].nil? ? _('not yet available') : eap.properties[x]
         end
 
-        specific = {
+        inventory_object.assign_attributes(
           :name      => name || parse_standalone_server_name(eap.id),
           :type_path => eap.type_path,
           :hostname  => hostname,
-          :product   => product,
-        }
-        parse_base_item(eap).merge(specific)
+          :product   => product
+        )
       end
 
       private
 
-      def parse_base_item(item)
-        data = {
-          :ems_ref  => item.path,
-          :nativeid => item.id,
-        }
+      def parse_base_item(item, inventory_object)
+        inventory_object.ems_ref = item.path
+        inventory_object.nativeid = item.id
+
         [:properties, :feed].each do |field|
-          if item.respond_to? field
-            data.merge!(field => item.send(field))
-          end
+          inventory_object[field] = item.send(field) if item.respond_to?(field)
         end
-        data
       end
 
       def parse_deployment_name(name)

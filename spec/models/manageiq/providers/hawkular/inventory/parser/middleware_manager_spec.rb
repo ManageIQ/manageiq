@@ -1,7 +1,13 @@
 require 'recursive-open-struct'
-require_relative 'hawkular_helper'
+require_relative '../../middleware_manager/hawkular_helper'
 
-describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
+describe ManageIQ::Providers::Hawkular::Inventory::Parser::MiddlewareManager do
+  def inventory_object_data(inventory_object)
+    inventory_object
+      .data
+      .slice(*inventory_object.inventory_collection.inventory_object_attributes)
+  end
+
   let(:ems_hawkular) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     auth = AuthToken.new(:name => "test", :auth_key => "valid-token", :userid => "jdoe", :password => "password")
@@ -11,7 +17,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
                        :authentications => [auth],
                        :zone            => zone)
   end
-  let(:parser) { described_class.new(ems_hawkular) }
+  let(:persister) { ::ManageIQ::Providers::Hawkular::Inventory::Persister::MiddlewareManager.new(ems_hawkular, ems_hawkular) }
+  let(:parser) { described_class.new }
   let(:server) do
     FactoryGirl.create(:hawkular_middleware_server,
                        :name                  => 'Local',
@@ -29,8 +36,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
                                            :id   => 'Local~/subsystem=datasources/data-source=ExampleDS',
                                            :path => '/t;Hawkular'\
                                                     "/f;#{the_feed_id}/r;Local~~"\
-                                                    '/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS'
-                                          )
+                                                    '/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS')
       config = {
         'value' => {
           'Driver Name'    => 'h2',
@@ -40,20 +46,21 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
         }
       }
       parsed_datasource = {
-        :name              => 'ruby-sample-build',
-        :middleware_server => server,
-        :nativeid          => 'Local~/subsystem=datasources/data-source=ExampleDS',
-        :ems_ref           => '/t;Hawkular'\
-                                                 "/f;#{the_feed_id}/r;Local~~"\
-                                                 '/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS',
-        :properties        => {
+        :name       => 'ruby-sample-build',
+        :nativeid   => 'Local~/subsystem=datasources/data-source=ExampleDS',
+        :ems_ref    => '/t;Hawkular'\
+                            "/f;#{the_feed_id}/r;Local~~"\
+                            '/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS',
+        :properties => {
           'Driver Name'    => 'h2',
           'JNDI Name'      => 'java:jboss/datasources/ExampleDS',
           'Connection URL' => 'jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE',
           'Enabled'        => 'true'
         }
       }
-      expect(parser.send(:parse_datasource, server, datasource, config)).to eq(parsed_datasource)
+      inventory_obj = persister.middleware_datasources.build(:ems_ref => datasource.path)
+      parser.parse_datasource(datasource, inventory_obj, config)
+      expect(inventory_object_data(inventory_obj)).to eq(parsed_datasource)
     end
   end
 
@@ -84,7 +91,9 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
         :ems_ref    => path,
         :properties => properties,
       }
-      expect(parser.send(:parse_middleware_domain, 'master.Unnamed Domain', domain)).to eq(parsed_domain)
+      inventory_obj = persister.middleware_domains.build(:ems_ref => path)
+      parser.parse_middleware_domain('master.Unnamed Domain', domain, inventory_obj)
+      expect(inventory_object_data(inventory_obj)).to eq(parsed_domain)
     end
   end
 
@@ -121,7 +130,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
         }],
         'resource_id_2' => [
           {
-          :status => 'Disabled'
+            :status => 'Disabled'
           },
           {
             :status => 'Disabled'
@@ -134,9 +143,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
           :status => 'Unknown'
         }]
       }
-      expect(parser.send(:parse_availability,
-                         availabilities,
-                         resources_by_metric_id)).to eq(parsed_resources_with_availability)
+      expect(parser.parse_availability(availabilities, resources_by_metric_id))
+        .to eq(parsed_resources_with_availability)
     end
     it 'handles missing metrics' do
       resources_by_metric_id = {
@@ -160,9 +168,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
         'resource_id_3' => [{}],
         'resource_id_4' => [{}]
       }
-      expect(parser.send(:parse_availability,
-                         availabilities,
-                         resources_by_metric_id)).to eq(parsed_resources_with_availability)
+      expect(parser.parse_availability(availabilities, resources_by_metric_id))
+        .to eq(parsed_resources_with_availability)
     end
   end
 

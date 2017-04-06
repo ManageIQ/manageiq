@@ -12,7 +12,6 @@ module ManageIQ::Providers
     require_nested :MiddlewareDatasource
     require_nested :MiddlewareMessaging
     require_nested :MiddlewareServer
-    require_nested :RefreshParser
     require_nested :RefreshWorker
     require_nested :Refresher
 
@@ -27,6 +26,7 @@ module ManageIQ::Providers
     has_many :middleware_deployments, :foreign_key => :ems_id, :dependent => :destroy
     has_many :middleware_datasources, :foreign_key => :ems_id, :dependent => :destroy
     has_many :middleware_messagings, :foreign_key => :ems_id, :dependent => :destroy
+    has_many :middleware_server_groups, :through => :middleware_domains
 
     attr_accessor :client
 
@@ -95,74 +95,6 @@ module ManageIQ::Providers
                                          authentication_password('default'),
                                          default_endpoint.security_protocol,
                                          default_endpoint.ssl_cert_store)
-    end
-
-    def feeds
-      with_provider_connection do |connection|
-        connection.inventory.list_feeds
-      end
-    end
-
-    def machine_id(feed)
-      os_resource_for(feed).try(:properties).try { |prop| prop['Machine Id'] }
-    end
-
-    def container_id(feed)
-      os_resource_for(feed).try(:properties).try { |prop| prop['Container Id'] }
-    end
-
-    def os_resource_for(feed)
-      with_provider_connection do |connection|
-        os = os_for(feed)
-        unless os.nil?
-          os_resources = connection.inventory.list_resources_for_type(os.path, true)
-          unless os_resources.nil? || os_resources.empty?
-            return os_resources.first
-          end
-          $mw_log.warn "Found no OS resources for resource type #{os.path}"
-        end
-        nil
-      end
-    end
-
-    def os_for(feed)
-      with_provider_connection do |connection|
-        resource_types = connection.inventory.list_resource_types(hawk_escape_id(feed))
-        os_types = resource_types.select { |item| item.id.include? 'Operating System' }
-        unless os_types.nil? || os_types.empty?
-          return os_types.first
-        end
-
-        $mw_log.warn "Found no OS resource types for feed #{feed}"
-        nil
-      end
-    end
-
-    def eaps(feed)
-      with_provider_connection do |connection|
-        path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id          => hawk_escape_id(feed),
-                                                        :resource_type_id => hawk_escape_id('WildFly Server'))
-        connection.inventory.list_resources_for_type(path.to_s, :fetch_properties => true)
-      end
-    end
-
-    def domains(feed)
-      with_provider_connection do |connection|
-        path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id          => hawk_escape_id(feed),
-                                                        :resource_type_id => hawk_escape_id('Domain Host'))
-        host_controllers = connection.inventory.list_resources_for_type(path.to_s, :fetch_properties => true)
-
-        # filter only the domain controllers
-        host_controllers.select { |host_controller| host_controller.properties['Is Domain Controller'] == 'true' }
-      end
-    end
-
-    def server_groups(feed)
-      with_provider_connection do |connection|
-        path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id          => hawk_escape_id(feed),
-                                                        :resource_type_id => hawk_escape_id('Domain Server Group'))
-        connection.inventory.list_resources_for_type(path.to_s, :fetch_properties => true)
-      end
     end
 
     def jdbc_drivers(feed)
@@ -274,16 +206,6 @@ module ManageIQ::Providers
 
     def create_jdr_report(ems_ref)
       run_generic_operation(:JDR, ems_ref)
-    end
-
-    def self.raw_alerts_connect(hostname, port, username, password)
-      require 'hawkular_all'
-      url = URI::HTTP.build(:host => hostname, :port => port.to_i, :path => '/hawkular/alerts').to_s
-      credentials = {
-        :username => username,
-        :password => password
-      }
-      ::Hawkular::Alerts::Client.new(url, credentials)
     end
 
     def add_middleware_datasource(ems_ref, hash)
@@ -478,11 +400,13 @@ module ManageIQ::Providers
                     MiddlewareServer.find_by(:id => mw_entity.server_id)
                   end
 
-      Notification.create(:type => type, :options => {
-        :op_name   => op_name,
-        :op_arg    => op_arg.nil? ? '' : op_arg,
-        :mw_server => "#{mw_server.name} (#{mw_server.feed})"
-      })
+      Notification.create(
+        :type => type, :options => {
+          :op_name   => op_name,
+          :op_arg    => op_arg.nil? ? '' : op_arg,
+          :mw_server => "#{mw_server.name} (#{mw_server.feed})"
+        }
+      )
     end
 
     # UI methods for determining availability of fields
