@@ -84,7 +84,7 @@ shared_examples_for "ansible credential" do
 
     it "#delete_in_provider_queue" do
       task_id = ansible_cred.delete_in_provider_queue
-      expect(MiqTask.find(task_id)).to have_attributes(:name => "Deleting #{described_class.name} with manager_ref=#{ansible_cred.manager_ref}")
+      expect(MiqTask.find(task_id)).to have_attributes(:name => "Deleting #{described_class.name} with Tower internal reference=#{ansible_cred.manager_ref}")
       expect(MiqQueue.first).to have_attributes(
         :instance_id => ansible_cred.id,
         :args        => [],
@@ -116,7 +116,7 @@ shared_examples_for "ansible credential" do
 
     it "#update_in_provider_queue" do
       task_id = ansible_cred.update_in_provider_queue({})
-      expect(MiqTask.find(task_id)).to have_attributes(:name => "Updating #{described_class.name} with manager_ref=#{ansible_cred.manager_ref}")
+      expect(MiqTask.find(task_id)).to have_attributes(:name => "Updating #{described_class.name} with Tower internal reference=#{ansible_cred.manager_ref}")
       expect(MiqQueue.first).to have_attributes(
         :instance_id => ansible_cred.id,
         :args        => [{:task_id => task_id}],
