@@ -94,6 +94,10 @@ FactoryGirl.define do
           :parent => :authentication,
           :class  => "ManageIQ::Providers::AutomationManager::Authentication"
 
+  factory :embedded_automation_manager_authentication,
+          :parent => :authentication,
+          :class  => "ManageIQ::Providers::EmbeddedAutomationManager::Authentication"
+
   factory :ansible_cloud_credential,
           :parent => :automation_manager_authentication,
           :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::CloudCredential"
