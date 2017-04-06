@@ -653,15 +653,13 @@ module OpsController::OpsRbac
   def rbac_edit_reset(operation, what, klass)
     @sb[:active_rbac_group_tab] ||= "rbac_customer_tags"
     key = what.to_sym
-    obj = find_checked_items
-    obj[0] = params[:id] if obj.blank? && params[:id]
-    record = klass.find_by_id(from_cid(obj[0])) if obj[0]
-
+    record = find_record_with_rbac(klass, checked_or_params_id)
     if [:group, :role].include?(key) && record && record.read_only && operation != 'copy'
       add_flash(_("Read Only %{model} \"%{name}\" can not be edited") % {:model => key == :role ? ui_lookup(:model => "MiqUserRole") : ui_lookup(:model => "MiqGroup"), :name => key == :role ? record.name : record.description}, :warning)
       javascript_flash
       return
     end
+
     case operation
     when "new"
       # create new record
@@ -686,12 +684,14 @@ module OpsController::OpsRbac
       @record = record
     end
     @sb[:typ] = operation
+
     # set form fields according to what is copied
     case key
     when :user  then rbac_user_set_form_vars
     when :group then rbac_group_set_form_vars
     when :role  then rbac_role_set_form_vars
     end
+
     @in_a_form = true
     session[:changed] = false
     add_flash(_("All changes have been reset"), :warning)  if params[:button] == "reset"
