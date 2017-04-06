@@ -472,4 +472,29 @@ describe MiqAlert do
       msg.delivered(status, message, result)
     end
   end
+
+  describe '.validate_automate_expressions' do
+    it 'Does not allow creation of dwh_generic miq_alerts with delay_next_evaluation > 0 ' do
+      expect do
+        FactoryGirl.create(
+          :miq_alert,
+          :options    => {:notifications => {:delay_next_evaluation => 600, :evm_event => {}}},
+          :expression => {:eval_method => "dwh_generic"}
+        )
+      end.to raise_error(
+        ActiveRecord::RecordInvalid,
+        'Validation failed: Notifications Datawarehouse alerts must have a 0 notification frequency'
+      )
+    end
+
+    it 'Does allow creation of hawkular_alert miq_alerts with delay_next_evaluation > 0 ' do
+      expect do
+        FactoryGirl.create(
+          :miq_alert,
+          :options    => {:notifications => {:delay_next_evaluation => 600, :evm_event => {}}},
+          :expression => {:eval_method => "mw_heap_used"}
+        )
+      end.to_not raise_error
+    end
+  end
 end
