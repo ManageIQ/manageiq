@@ -396,7 +396,7 @@ describe "Service Catalogs API" do
 
       run_post(sc_templates_url(sc.id, st1.id), gen_request(:order))
 
-      expect_single_resource_query(order_request)
+      expect_single_resource_query(order_request.merge("href" => /service_requests/))
     end
 
     it "accepts order requests with required fields" do
