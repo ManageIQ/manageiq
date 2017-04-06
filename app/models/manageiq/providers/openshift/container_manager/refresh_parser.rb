@@ -8,12 +8,13 @@ module ManageIQ::Providers
         get_builds(inventory)
         get_build_pods(inventory)
         get_templates(inventory)
-        get_openshift_images(inventory) if options.get_container_images
+        get_openshift_images(inventory)
         EmsRefresh.log_inv_debug_trace(@data, "data:")
         @data
       end
 
       def get_openshift_images(inventory)
+        return unless inventory["image"]
         inventory["image"].each { |img| parse_openshift_image(img) }
       end
 
