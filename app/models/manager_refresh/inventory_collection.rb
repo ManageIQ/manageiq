@@ -441,7 +441,7 @@ module ManagerRefresh
       when :local_db_find_missing_references
         data_index[manager_uuid] || find_in_db(manager_uuid)
       else
-        data_index[manager_uuid]
+        manager_uuid.kind_of?(Hash) ? find_by(manager_uuid) : data_index[manager_uuid]
       end
     end
 
