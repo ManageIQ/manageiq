@@ -2,40 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://192.168.1.31:8443/api
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - "*/*"
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
-  response:
-    status:
-      code: 401
-      message: Unauthorized
-    headers:
-      Connection:
-      - keep-alive
-      Www-Authenticate:
-      - Basic realm="ENGINE"
-      Content-Type:
-      - text/html;charset=UTF-8
-      Content-Length:
-      - '71'
-      Date:
-      - Fri, 19 Aug 2016 09:43:43 GMT
-    body:
-      encoding: UTF-8
-      string: "<html><head><title>Error</title></head><body>Unauthorized</body></html>"
-    http_version:
-  recorded_at: Fri, 19 Aug 2016 09:43:42 GMT
-- request:
-    method: get
-    uri: https://admin%40internal:engine@192.168.1.31:8443/api
+    uri: https://admin%40internal:engine@192.168.1.31:8443/ovirt-engine/api
     body:
       encoding: US-ASCII
       string: ''
@@ -58,7 +25,7 @@ http_interactions:
       Connection:
       - keep-alive
       Set-Cookie:
-      - JSESSIONID=GTPgk66t3bb5l8wgH-jYtoYt1aj2tt5iGK26fgY5.f18; path=/api; HttpOnly
+      - JSESSIONID=GTPgk66t3bb5l8wgH-jYtoYt1aj2tt5iGK26fgY5.f18; path=/ovirt-engine/api; HttpOnly
       Content-Type:
       - application/xml
       Content-Length:
@@ -66,33 +33,33 @@ http_interactions:
       Jsessionid:
       - GTPgk66t3bb5l8wgH-jYtoYt1aj2tt5iGK26fgY5
       Link:
-      - "<https://192.168.1.31:8443/api/capabilities>; rel=capabilities,<https://192.168.1.31:8443/api/clusters>;
-        rel=clusters,<https://192.168.1.31:8443/api/clusters?search={query}>; rel=clusters/search,<https://192.168.1.31:8443/api/datacenters>;
-        rel=datacenters,<https://192.168.1.31:8443/api/datacenters?search={query}>;
-        rel=datacenters/search,<https://192.168.1.31:8443/api/events>; rel=events,<https://192.168.1.31:8443/api/events;from={event_id}?search={query}>;
-        rel=events/search,<https://192.168.1.31:8443/api/hosts>; rel=hosts,<https://192.168.1.31:8443/api/hosts?search={query}>;
-        rel=hosts/search,<https://192.168.1.31:8443/api/networks>; rel=networks,<https://192.168.1.31:8443/api/networks?search={query}>;
-        rel=networks/search,<https://192.168.1.31:8443/api/roles>; rel=roles,<https://192.168.1.31:8443/api/storagedomains>;
-        rel=storagedomains,<https://192.168.1.31:8443/api/storagedomains?search={query}>;
-        rel=storagedomains/search,<https://192.168.1.31:8443/api/tags>; rel=tags,<https://192.168.1.31:8443/api/bookmarks>;
-        rel=bookmarks,<https://192.168.1.31:8443/api/icons>; rel=icons,<https://192.168.1.31:8443/api/templates>;
-        rel=templates,<https://192.168.1.31:8443/api/templates?search={query}>; rel=templates/search,<https://192.168.1.31:8443/api/instancetypes>;
-        rel=instancetypes,<https://192.168.1.31:8443/api/instancetypes?search={query}>;
-        rel=instancetypes/search,<https://192.168.1.31:8443/api/users>; rel=users,<https://192.168.1.31:8443/api/users?search={query}>;
-        rel=users/search,<https://192.168.1.31:8443/api/groups>; rel=groups,<https://192.168.1.31:8443/api/groups?search={query}>;
-        rel=groups/search,<https://192.168.1.31:8443/api/domains>; rel=domains,<https://192.168.1.31:8443/api/vmpools>;
-        rel=vmpools,<https://192.168.1.31:8443/api/vmpools?search={query}>; rel=vmpools/search,<https://192.168.1.31:8443/api/vms>;
-        rel=vms,<https://192.168.1.31:8443/api/vms?search={query}>; rel=vms/search,<https://192.168.1.31:8443/api/disks>;
-        rel=disks,<https://192.168.1.31:8443/api/disks?search={query}>; rel=disks/search,<https://192.168.1.31:8443/api/jobs>;
-        rel=jobs,<https://192.168.1.31:8443/api/storageconnections>; rel=storageconnections,<https://192.168.1.31:8443/api/vnicprofiles>;
-        rel=vnicprofiles,<https://192.168.1.31:8443/api/diskprofiles>; rel=diskprofiles,<https://192.168.1.31:8443/api/cpuprofiles>;
-        rel=cpuprofiles,<https://192.168.1.31:8443/api/schedulingpolicyunits>; rel=schedulingpolicyunits,<https://192.168.1.31:8443/api/schedulingpolicies>;
-        rel=schedulingpolicies,<https://192.168.1.31:8443/api/permissions>; rel=permissions,<https://192.168.1.31:8443/api/macpools>;
-        rel=macpools,<https://192.168.1.31:8443/api/operatingsystems>; rel=operatingsystems,<https://192.168.1.31:8443/api/externalhostproviders>;
-        rel=externalhostproviders,<https://192.168.1.31:8443/api/openstackimageproviders>;
-        rel=openstackimageproviders,<https://192.168.1.31:8443/api/openstackvolumeproviders>;
-        rel=openstackvolumeproviders,<https://192.168.1.31:8443/api/openstacknetworkproviders>;
-        rel=openstacknetworkproviders,<https://192.168.1.31:8443/api/katelloerrata>;
+      - "<https://192.168.1.31:8443/ovirt-engine/api/capabilities>; rel=capabilities,<https://192.168.1.31:8443/ovirt-engine/api/clusters>;
+        rel=clusters,<https://192.168.1.31:8443/ovirt-engine/api/clusters?search={query}>; rel=clusters/search,<https://192.168.1.31:8443/ovirt-engine/api/datacenters>;
+        rel=datacenters,<https://192.168.1.31:8443/ovirt-engine/api/datacenters?search={query}>;
+        rel=datacenters/search,<https://192.168.1.31:8443/ovirt-engine/api/events>; rel=events,<https://192.168.1.31:8443/ovirt-engine/api/events;from={event_id}?search={query}>;
+        rel=events/search,<https://192.168.1.31:8443/ovirt-engine/api/hosts>; rel=hosts,<https://192.168.1.31:8443/ovirt-engine/api/hosts?search={query}>;
+        rel=hosts/search,<https://192.168.1.31:8443/ovirt-engine/api/networks>; rel=networks,<https://192.168.1.31:8443/ovirt-engine/api/networks?search={query}>;
+        rel=networks/search,<https://192.168.1.31:8443/ovirt-engine/api/roles>; rel=roles,<https://192.168.1.31:8443/ovirt-engine/api/storagedomains>;
+        rel=storagedomains,<https://192.168.1.31:8443/ovirt-engine/api/storagedomains?search={query}>;
+        rel=storagedomains/search,<https://192.168.1.31:8443/ovirt-engine/api/tags>; rel=tags,<https://192.168.1.31:8443/ovirt-engine/api/bookmarks>;
+        rel=bookmarks,<https://192.168.1.31:8443/ovirt-engine/api/icons>; rel=icons,<https://192.168.1.31:8443/ovirt-engine/api/templates>;
+        rel=templates,<https://192.168.1.31:8443/ovirt-engine/api/templates?search={query}>; rel=templates/search,<https://192.168.1.31:8443/ovirt-engine/api/instancetypes>;
+        rel=instancetypes,<https://192.168.1.31:8443/ovirt-engine/api/instancetypes?search={query}>;
+        rel=instancetypes/search,<https://192.168.1.31:8443/ovirt-engine/api/users>; rel=users,<https://192.168.1.31:8443/ovirt-engine/api/users?search={query}>;
+        rel=users/search,<https://192.168.1.31:8443/ovirt-engine/api/groups>; rel=groups,<https://192.168.1.31:8443/ovirt-engine/api/groups?search={query}>;
+        rel=groups/search,<https://192.168.1.31:8443/ovirt-engine/api/domains>; rel=domains,<https://192.168.1.31:8443/ovirt-engine/api/vmpools>;
+        rel=vmpools,<https://192.168.1.31:8443/ovirt-engine/api/vmpools?search={query}>; rel=vmpools/search,<https://192.168.1.31:8443/ovirt-engine/api/vms>;
+        rel=vms,<https://192.168.1.31:8443/ovirt-engine/api/vms?search={query}>; rel=vms/search,<https://192.168.1.31:8443/ovirt-engine/api/disks>;
+        rel=disks,<https://192.168.1.31:8443/ovirt-engine/api/disks?search={query}>; rel=disks/search,<https://192.168.1.31:8443/ovirt-engine/api/jobs>;
+        rel=jobs,<https://192.168.1.31:8443/ovirt-engine/api/storageconnections>; rel=storageconnections,<https://192.168.1.31:8443/ovirt-engine/api/vnicprofiles>;
+        rel=vnicprofiles,<https://192.168.1.31:8443/ovirt-engine/api/diskprofiles>; rel=diskprofiles,<https://192.168.1.31:8443/ovirt-engine/api/cpuprofiles>;
+        rel=cpuprofiles,<https://192.168.1.31:8443/ovirt-engine/api/schedulingpolicyunits>; rel=schedulingpolicyunits,<https://192.168.1.31:8443/ovirt-engine/api/schedulingpolicies>;
+        rel=schedulingpolicies,<https://192.168.1.31:8443/ovirt-engine/api/permissions>; rel=permissions,<https://192.168.1.31:8443/ovirt-engine/api/macpools>;
+        rel=macpools,<https://192.168.1.31:8443/ovirt-engine/api/operatingsystems>; rel=operatingsystems,<https://192.168.1.31:8443/ovirt-engine/api/externalhostproviders>;
+        rel=externalhostproviders,<https://192.168.1.31:8443/ovirt-engine/api/openstackimageproviders>;
+        rel=openstackimageproviders,<https://192.168.1.31:8443/ovirt-engine/api/openstackvolumeproviders>;
+        rel=openstackvolumeproviders,<https://192.168.1.31:8443/ovirt-engine/api/openstacknetworkproviders>;
+        rel=openstacknetworkproviders,<https://192.168.1.31:8443/ovirt-engine/api/katelloerrata>;
         rel=katelloerrata"
       Date:
       - Fri, 19 Aug 2016 09:43:43 GMT
@@ -101,56 +68,56 @@ http_interactions:
       string: |
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <api>
-            <link href="/api/capabilities" rel="capabilities"/>
-            <link href="/api/clusters" rel="clusters"/>
-            <link href="/api/clusters?search={query}" rel="clusters/search"/>
-            <link href="/api/datacenters" rel="datacenters"/>
-            <link href="/api/datacenters?search={query}" rel="datacenters/search"/>
-            <link href="/api/events" rel="events"/>
-            <link href="/api/events;from={event_id}?search={query}" rel="events/search"/>
-            <link href="/api/hosts" rel="hosts"/>
-            <link href="/api/hosts?search={query}" rel="hosts/search"/>
-            <link href="/api/networks" rel="networks"/>
-            <link href="/api/networks?search={query}" rel="networks/search"/>
-            <link href="/api/roles" rel="roles"/>
-            <link href="/api/storagedomains" rel="storagedomains"/>
-            <link href="/api/storagedomains?search={query}" rel="storagedomains/search"/>
-            <link href="/api/tags" rel="tags"/>
-            <link href="/api/bookmarks" rel="bookmarks"/>
-            <link href="/api/icons" rel="icons"/>
-            <link href="/api/templates" rel="templates"/>
-            <link href="/api/templates?search={query}" rel="templates/search"/>
-            <link href="/api/instancetypes" rel="instancetypes"/>
-            <link href="/api/instancetypes?search={query}" rel="instancetypes/search"/>
-            <link href="/api/users" rel="users"/>
-            <link href="/api/users?search={query}" rel="users/search"/>
-            <link href="/api/groups" rel="groups"/>
-            <link href="/api/groups?search={query}" rel="groups/search"/>
-            <link href="/api/domains" rel="domains"/>
-            <link href="/api/vmpools" rel="vmpools"/>
-            <link href="/api/vmpools?search={query}" rel="vmpools/search"/>
-            <link href="/api/vms" rel="vms"/>
-            <link href="/api/vms?search={query}" rel="vms/search"/>
-            <link href="/api/disks" rel="disks"/>
-            <link href="/api/disks?search={query}" rel="disks/search"/>
-            <link href="/api/jobs" rel="jobs"/>
-            <link href="/api/storageconnections" rel="storageconnections"/>
-            <link href="/api/vnicprofiles" rel="vnicprofiles"/>
-            <link href="/api/diskprofiles" rel="diskprofiles"/>
-            <link href="/api/cpuprofiles" rel="cpuprofiles"/>
-            <link href="/api/schedulingpolicyunits" rel="schedulingpolicyunits"/>
-            <link href="/api/schedulingpolicies" rel="schedulingpolicies"/>
-            <link href="/api/permissions" rel="permissions"/>
-            <link href="/api/macpools" rel="macpools"/>
-            <link href="/api/operatingsystems" rel="operatingsystems"/>
-            <link href="/api/externalhostproviders" rel="externalhostproviders"/>
-            <link href="/api/openstackimageproviders" rel="openstackimageproviders"/>
-            <link href="/api/openstackvolumeproviders" rel="openstackvolumeproviders"/>
-            <link href="/api/openstacknetworkproviders" rel="openstacknetworkproviders"/>
-            <link href="/api/katelloerrata" rel="katelloerrata"/>
+            <link href="/ovirt-engine/api/capabilities" rel="capabilities"/>
+            <link href="/ovirt-engine/api/clusters" rel="clusters"/>
+            <link href="/ovirt-engine/api/clusters?search={query}" rel="clusters/search"/>
+            <link href="/ovirt-engine/api/datacenters" rel="datacenters"/>
+            <link href="/ovirt-engine/api/datacenters?search={query}" rel="datacenters/search"/>
+            <link href="/ovirt-engine/api/events" rel="events"/>
+            <link href="/ovirt-engine/api/events;from={event_id}?search={query}" rel="events/search"/>
+            <link href="/ovirt-engine/api/hosts" rel="hosts"/>
+            <link href="/ovirt-engine/api/hosts?search={query}" rel="hosts/search"/>
+            <link href="/ovirt-engine/api/networks" rel="networks"/>
+            <link href="/ovirt-engine/api/networks?search={query}" rel="networks/search"/>
+            <link href="/ovirt-engine/api/roles" rel="roles"/>
+            <link href="/ovirt-engine/api/storagedomains" rel="storagedomains"/>
+            <link href="/ovirt-engine/api/storagedomains?search={query}" rel="storagedomains/search"/>
+            <link href="/ovirt-engine/api/tags" rel="tags"/>
+            <link href="/ovirt-engine/api/bookmarks" rel="bookmarks"/>
+            <link href="/ovirt-engine/api/icons" rel="icons"/>
+            <link href="/ovirt-engine/api/templates" rel="templates"/>
+            <link href="/ovirt-engine/api/templates?search={query}" rel="templates/search"/>
+            <link href="/ovirt-engine/api/instancetypes" rel="instancetypes"/>
+            <link href="/ovirt-engine/api/instancetypes?search={query}" rel="instancetypes/search"/>
+            <link href="/ovirt-engine/api/users" rel="users"/>
+            <link href="/ovirt-engine/api/users?search={query}" rel="users/search"/>
+            <link href="/ovirt-engine/api/groups" rel="groups"/>
+            <link href="/ovirt-engine/api/groups?search={query}" rel="groups/search"/>
+            <link href="/ovirt-engine/api/domains" rel="domains"/>
+            <link href="/ovirt-engine/api/vmpools" rel="vmpools"/>
+            <link href="/ovirt-engine/api/vmpools?search={query}" rel="vmpools/search"/>
+            <link href="/ovirt-engine/api/vms" rel="vms"/>
+            <link href="/ovirt-engine/api/vms?search={query}" rel="vms/search"/>
+            <link href="/ovirt-engine/api/disks" rel="disks"/>
+            <link href="/ovirt-engine/api/disks?search={query}" rel="disks/search"/>
+            <link href="/ovirt-engine/api/jobs" rel="jobs"/>
+            <link href="/ovirt-engine/api/storageconnections" rel="storageconnections"/>
+            <link href="/ovirt-engine/api/vnicprofiles" rel="vnicprofiles"/>
+            <link href="/ovirt-engine/api/diskprofiles" rel="diskprofiles"/>
+            <link href="/ovirt-engine/api/cpuprofiles" rel="cpuprofiles"/>
+            <link href="/ovirt-engine/api/schedulingpolicyunits" rel="schedulingpolicyunits"/>
+            <link href="/ovirt-engine/api/schedulingpolicies" rel="schedulingpolicies"/>
+            <link href="/ovirt-engine/api/permissions" rel="permissions"/>
+            <link href="/ovirt-engine/api/macpools" rel="macpools"/>
+            <link href="/ovirt-engine/api/operatingsystems" rel="operatingsystems"/>
+            <link href="/ovirt-engine/api/externalhostproviders" rel="externalhostproviders"/>
+            <link href="/ovirt-engine/api/openstackimageproviders" rel="openstackimageproviders"/>
+            <link href="/ovirt-engine/api/openstackvolumeproviders" rel="openstackvolumeproviders"/>
+            <link href="/ovirt-engine/api/openstacknetworkproviders" rel="openstacknetworkproviders"/>
+            <link href="/ovirt-engine/api/katelloerrata" rel="katelloerrata"/>
             <special_objects>
-                <link href="/api/templates/00000000-0000-0000-0000-000000000000" rel="templates/blank"/>
-                <link href="/api/tags/00000000-0000-0000-0000-000000000000" rel="tags/root"/>
+                <link href="/ovirt-engine/api/templates/00000000-0000-0000-0000-000000000000" rel="templates/blank"/>
+                <link href="/ovirt-engine/api/tags/00000000-0000-0000-0000-000000000000" rel="tags/root"/>
             </special_objects>
             <product_info>
                 <name>oVirt Engine</name>
@@ -182,7 +149,7 @@ http_interactions:
   recorded_at: Fri, 19 Aug 2016 09:43:42 GMT
 - request:
     method: get
-    uri: https://192.168.1.31:8443/api/clusters?search=sortby%20name%20asc%20page%201
+    uri: https://192.168.1.31:8443/ovirt-engine/api/clusters?search=sortby%20name%20asc%20page%201
     body:
       encoding: US-ASCII
       string: ''
@@ -219,29 +186,29 @@ http_interactions:
       string: |
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <clusters>
-            <cluster href="/api/clusters/00000002-0002-0002-0002-0000000001e9" id="00000002-0002-0002-0002-0000000001e9">
+            <cluster href="/ovirt-engine/api/clusters/00000002-0002-0002-0002-0000000001e9" id="00000002-0002-0002-0002-0000000001e9">
                 <actions>
-                    <link href="/api/clusters/00000002-0002-0002-0002-0000000001e9/resetemulatedmachine" rel="resetemulatedmachine"/>
+                    <link href="/ovirt-engine/api/clusters/00000002-0002-0002-0002-0000000001e9/resetemulatedmachine" rel="resetemulatedmachine"/>
                 </actions>
                 <name>Default</name>
                 <description>The default server cluster</description>
-                <link href="/api/clusters/00000002-0002-0002-0002-0000000001e9/networks" rel="networks"/>
-                <link href="/api/clusters/00000002-0002-0002-0002-0000000001e9/permissions" rel="permissions"/>
-                <link href="/api/clusters/00000002-0002-0002-0002-0000000001e9/glustervolumes" rel="glustervolumes"/>
-                <link href="/api/clusters/00000002-0002-0002-0002-0000000001e9/glusterhooks" rel="glusterhooks"/>
-                <link href="/api/clusters/00000002-0002-0002-0002-0000000001e9/affinitygroups" rel="affinitygroups"/>
-                <link href="/api/clusters/00000002-0002-0002-0002-0000000001e9/cpuprofiles" rel="cpuprofiles"/>
+                <link href="/ovirt-engine/api/clusters/00000002-0002-0002-0002-0000000001e9/networks" rel="networks"/>
+                <link href="/ovirt-engine/api/clusters/00000002-0002-0002-0002-0000000001e9/permissions" rel="permissions"/>
+                <link href="/ovirt-engine/api/clusters/00000002-0002-0002-0002-0000000001e9/glustervolumes" rel="glustervolumes"/>
+                <link href="/ovirt-engine/api/clusters/00000002-0002-0002-0002-0000000001e9/glusterhooks" rel="glusterhooks"/>
+                <link href="/ovirt-engine/api/clusters/00000002-0002-0002-0002-0000000001e9/affinitygroups" rel="affinitygroups"/>
+                <link href="/ovirt-engine/api/clusters/00000002-0002-0002-0002-0000000001e9/cpuprofiles" rel="cpuprofiles"/>
                 <cpu id="Intel SandyBridge Family">
                     <architecture>X86_64</architecture>
                 </cpu>
-                <data_center href="/api/datacenters/00000001-0001-0001-0001-0000000002c0" id="00000001-0001-0001-0001-0000000002c0"/>
+                <data_center href="/ovirt-engine/api/datacenters/00000001-0001-0001-0001-0000000002c0" id="00000001-0001-0001-0001-0000000002c0"/>
                 <memory_policy>
                     <overcommit percent="100"/>
                     <transparent_hugepages>
                         <enabled>true</enabled>
                     </transparent_hugepages>
                 </memory_policy>
-                <scheduling_policy href="/api/schedulingpolicies/b4ed2332-a7ac-4d5f-9596-99a439cb2812" id="b4ed2332-a7ac-4d5f-9596-99a439cb2812">
+                <scheduling_policy href="/ovirt-engine/api/schedulingpolicies/b4ed2332-a7ac-4d5f-9596-99a439cb2812" id="b4ed2332-a7ac-4d5f-9596-99a439cb2812">
                     <name>none</name>
                     <policy>none</policy>
                 </scheduling_policy>
@@ -285,7 +252,7 @@ http_interactions:
   recorded_at: Wed, 30 Nov 2016 15:43:35 GMT
 - request:
     method: get
-    uri: https://192.168.1.31:8443/api/clusters?search=sortby%20name%20asc%20page%202
+    uri: https://192.168.1.31:8443/ovirt-engine/api/clusters?search=sortby%20name%20asc%20page%202
     body:
       encoding: US-ASCII
       string: ''
@@ -326,7 +293,7 @@ http_interactions:
   recorded_at: Wed, 30 Nov 2016 15:43:35 GMT
 - request:
     method: get
-    uri: https://192.168.1.31:8443/api/datacenters?search=sortby%20name%20asc%20page%201
+    uri: https://192.168.1.31:8443/ovirt-engine/api/datacenters?search=sortby%20name%20asc%20page%201
     body:
       encoding: US-ASCII
       string: ''
@@ -363,16 +330,16 @@ http_interactions:
       string: |
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <data_centers>
-            <data_center href="/api/datacenters/00000001-0001-0001-0001-0000000002c0" id="00000001-0001-0001-0001-0000000002c0">
+            <data_center href="/ovirt-engine/api/datacenters/00000001-0001-0001-0001-0000000002c0" id="00000001-0001-0001-0001-0000000002c0">
                 <name>Default</name>
                 <description>The default Data Center</description>
-                <link href="/api/datacenters/00000001-0001-0001-0001-0000000002c0/storagedomains" rel="storagedomains"/>
-                <link href="/api/datacenters/00000001-0001-0001-0001-0000000002c0/clusters" rel="clusters"/>
-                <link href="/api/datacenters/00000001-0001-0001-0001-0000000002c0/networks" rel="networks"/>
-                <link href="/api/datacenters/00000001-0001-0001-0001-0000000002c0/permissions" rel="permissions"/>
-                <link href="/api/datacenters/00000001-0001-0001-0001-0000000002c0/quotas" rel="quotas"/>
-                <link href="/api/datacenters/00000001-0001-0001-0001-0000000002c0/qoss" rel="qoss"/>
-                <link href="/api/datacenters/00000001-0001-0001-0001-0000000002c0/iscsibonds" rel="iscsibonds"/>
+                <link href="/ovirt-engine/api/datacenters/00000001-0001-0001-0001-0000000002c0/storagedomains" rel="storagedomains"/>
+                <link href="/ovirt-engine/api/datacenters/00000001-0001-0001-0001-0000000002c0/clusters" rel="clusters"/>
+                <link href="/ovirt-engine/api/datacenters/00000001-0001-0001-0001-0000000002c0/networks" rel="networks"/>
+                <link href="/ovirt-engine/api/datacenters/00000001-0001-0001-0001-0000000002c0/permissions" rel="permissions"/>
+                <link href="/ovirt-engine/api/datacenters/00000001-0001-0001-0001-0000000002c0/quotas" rel="quotas"/>
+                <link href="/ovirt-engine/api/datacenters/00000001-0001-0001-0001-0000000002c0/qoss" rel="qoss"/>
+                <link href="/ovirt-engine/api/datacenters/00000001-0001-0001-0001-0000000002c0/iscsibonds" rel="iscsibonds"/>
                 <local>false</local>
                 <storage_format>v3</storage_format>
                 <version major="3" minor="6"/>
@@ -382,7 +349,7 @@ http_interactions:
                 <status>
                     <state>up</state>
                 </status>
-                <mac_pool href="/api/macpools/0000000d-000d-000d-000d-000000000365" id="0000000d-000d-000d-000d-000000000365"/>
+                <mac_pool href="/ovirt-engine/api/macpools/0000000d-000d-000d-000d-000000000365" id="0000000d-000d-000d-000d-000000000365"/>
                 <quota_mode>disabled</quota_mode>
             </data_center>
         </data_centers>
@@ -390,7 +357,7 @@ http_interactions:
   recorded_at: Wed, 30 Nov 2016 15:43:36 GMT
 - request:
     method: get
-    uri: https://192.168.1.31:8443/api/datacenters?search=sortby%20name%20asc%20page%202
+    uri: https://192.168.1.31:8443/ovirt-engine/api/datacenters?search=sortby%20name%20asc%20page%202
     body:
       encoding: US-ASCII
       string: ''
@@ -431,7 +398,7 @@ http_interactions:
   recorded_at: Wed, 30 Nov 2016 15:43:36 GMT
 - request:
     method: get
-    uri: https://192.168.1.31:8443/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77
+    uri: https://192.168.1.31:8443/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77
     body:
       encoding: US-ASCII
       string: ''
@@ -467,45 +434,45 @@ http_interactions:
       encoding: ASCII-8BIT
       string: |
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-        <vm href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77" id="4f6dd4c3-5241-494f-8afc-f1c67254bf77">
+        <vm href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77" id="4f6dd4c3-5241-494f-8afc-f1c67254bf77">
             <actions>
-                <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/reboot" rel="reboot"/>
-                <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/undo_snapshot" rel="undo_snapshot"/>
-                <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/clone" rel="clone"/>
-                <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/reordermacaddresses" rel="reordermacaddresses"/>
-                <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/commit_snapshot" rel="commit_snapshot"/>
-                <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/preview_snapshot" rel="preview_snapshot"/>
-                <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/logon" rel="logon"/>
-                <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/freezefilesystems" rel="freezefilesystems"/>
-                <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/thawfilesystems" rel="thawfilesystems"/>
-                <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/cancelmigration" rel="cancelmigration"/>
-                <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/maintenance" rel="maintenance"/>
-                <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/ticket" rel="ticket"/>
-                <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/migrate" rel="migrate"/>
-                <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/detach" rel="detach"/>
-                <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/export" rel="export"/>
-                <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/move" rel="move"/>
-                <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/shutdown" rel="shutdown"/>
-                <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/start" rel="start"/>
-                <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/stop" rel="stop"/>
-                <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/suspend" rel="suspend"/>
+                <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/reboot" rel="reboot"/>
+                <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/undo_snapshot" rel="undo_snapshot"/>
+                <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/clone" rel="clone"/>
+                <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/reordermacaddresses" rel="reordermacaddresses"/>
+                <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/commit_snapshot" rel="commit_snapshot"/>
+                <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/preview_snapshot" rel="preview_snapshot"/>
+                <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/logon" rel="logon"/>
+                <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/freezefilesystems" rel="freezefilesystems"/>
+                <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/thawfilesystems" rel="thawfilesystems"/>
+                <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/cancelmigration" rel="cancelmigration"/>
+                <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/maintenance" rel="maintenance"/>
+                <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/ticket" rel="ticket"/>
+                <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/migrate" rel="migrate"/>
+                <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/detach" rel="detach"/>
+                <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/export" rel="export"/>
+                <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/move" rel="move"/>
+                <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/shutdown" rel="shutdown"/>
+                <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/start" rel="start"/>
+                <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/stop" rel="stop"/>
+                <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/suspend" rel="suspend"/>
             </actions>
             <name>123</name>
-            <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/applications" rel="applications"/>
-            <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/disks" rel="disks"/>
-            <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/nics" rel="nics"/>
-            <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/numanodes" rel="numanodes"/>
-            <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/cdroms" rel="cdroms"/>
-            <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/snapshots" rel="snapshots"/>
-            <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/tags" rel="tags"/>
-            <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/permissions" rel="permissions"/>
-            <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/statistics" rel="statistics"/>
-            <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/reporteddevices" rel="reporteddevices"/>
-            <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/watchdogs" rel="watchdogs"/>
-            <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/sessions" rel="sessions"/>
-            <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/katelloerrata" rel="katelloerrata"/>
-            <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/graphicsconsoles" rel="graphicsconsoles"/>
-            <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/hostdevices" rel="hostdevices"/>
+            <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/applications" rel="applications"/>
+            <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/disks" rel="disks"/>
+            <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/nics" rel="nics"/>
+            <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/numanodes" rel="numanodes"/>
+            <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/cdroms" rel="cdroms"/>
+            <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/snapshots" rel="snapshots"/>
+            <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/tags" rel="tags"/>
+            <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/permissions" rel="permissions"/>
+            <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/statistics" rel="statistics"/>
+            <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/reporteddevices" rel="reporteddevices"/>
+            <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/watchdogs" rel="watchdogs"/>
+            <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/sessions" rel="sessions"/>
+            <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/katelloerrata" rel="katelloerrata"/>
+            <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/graphicsconsoles" rel="graphicsconsoles"/>
+            <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/hostdevices" rel="hostdevices"/>
             <type>desktop</type>
             <status>
                 <state>down</state>
@@ -524,7 +491,7 @@ http_interactions:
             <os type="other">
                 <boot dev="hd"/>
             </os>
-            <cluster href="/api/clusters/00000002-0002-0002-0002-0000000001e9" id="00000002-0002-0002-0002-0000000001e9"/>
+            <cluster href="/ovirt-engine/api/clusters/00000002-0002-0002-0002-0000000001e9" id="00000002-0002-0002-0002-0000000001e9"/>
             <creation_time>2016-07-05T16:41:35.374+02:00</creation_time>
             <origin>ovirt</origin>
             <stateless>false</stateless>
@@ -554,7 +521,7 @@ http_interactions:
             </usb>
             <migration_downtime>-1</migration_downtime>
             <start_paused>false</start_paused>
-            <cpu_profile href="/api/cpuprofiles/0000000e-000e-000e-000e-000000000247" id="0000000e-000e-000e-000e-000000000247"/>
+            <cpu_profile href="/ovirt-engine/api/cpuprofiles/0000000e-000e-000e-000e-000000000247" id="0000000e-000e-000e-000e-000000000247"/>
             <migration>
                 <auto_converge>inherit</auto_converge>
                 <compressed>inherit</compressed>
@@ -565,13 +532,13 @@ http_interactions:
             <time_zone>
                 <name>Etc/GMT</name>
             </time_zone>
-            <small_icon href="/api/icons/1f7b8c1b-c242-41a2-a3de-8bb314293c08" id="1f7b8c1b-c242-41a2-a3de-8bb314293c08"/>
-            <large_icon href="/api/icons/442339c6-6712-4188-830d-2c0b04e0a103" id="442339c6-6712-4188-830d-2c0b04e0a103"/>
+            <small_icon href="/ovirt-engine/api/icons/1f7b8c1b-c242-41a2-a3de-8bb314293c08" id="1f7b8c1b-c242-41a2-a3de-8bb314293c08"/>
+            <large_icon href="/ovirt-engine/api/icons/442339c6-6712-4188-830d-2c0b04e0a103" id="442339c6-6712-4188-830d-2c0b04e0a103"/>
             <memory_policy>
                 <guaranteed>1073741824</guaranteed>
                 <ballooning>false</ballooning>
             </memory_policy>
-            <template href="/api/templates/7cca3cf1-1033-4c01-b46d-cd4b6e573538" id="7cca3cf1-1033-4c01-b46d-cd4b6e573538"/>
+            <template href="/ovirt-engine/api/templates/7cca3cf1-1033-4c01-b46d-cd4b6e573538" id="7cca3cf1-1033-4c01-b46d-cd4b6e573538"/>
             <stop_time>2016-08-11T12:37:33.718+02:00</stop_time>
             <placement_policy>
                 <affinity>migratable</affinity>
@@ -583,7 +550,7 @@ http_interactions:
   recorded_at: Fri, 19 Aug 2016 09:43:42 GMT
 - request:
     method: get
-    uri: https://192.168.1.31:8443/api/templates?search=vm.id=4f6dd4c3-5241-494f-8afc-f1c67254bf77
+    uri: https://192.168.1.31:8443/ovirt-engine/api/templates?search=vm.id=4f6dd4c3-5241-494f-8afc-f1c67254bf77
     body:
       encoding: US-ASCII
       string: ''
@@ -620,19 +587,19 @@ http_interactions:
       string: |
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <templates>
-            <template href="/api/templates/7cca3cf1-1033-4c01-b46d-cd4b6e573538" id="7cca3cf1-1033-4c01-b46d-cd4b6e573538">
+            <template href="/ovirt-engine/api/templates/7cca3cf1-1033-4c01-b46d-cd4b6e573538" id="7cca3cf1-1033-4c01-b46d-cd4b6e573538">
                 <actions>
-                    <link href="/api/templates/7cca3cf1-1033-4c01-b46d-cd4b6e573538/export" rel="export"/>
+                    <link href="/ovirt-engine/api/templates/7cca3cf1-1033-4c01-b46d-cd4b6e573538/export" rel="export"/>
                 </actions>
                 <name>GlanceTemplate-7bb26f9</name>
                 <description>CirrOS 0.3.1 (73786f4)</description>
-                <link href="/api/templates/7cca3cf1-1033-4c01-b46d-cd4b6e573538/disks" rel="disks"/>
-                <link href="/api/templates/7cca3cf1-1033-4c01-b46d-cd4b6e573538/nics" rel="nics"/>
-                <link href="/api/templates/7cca3cf1-1033-4c01-b46d-cd4b6e573538/cdroms" rel="cdroms"/>
-                <link href="/api/templates/7cca3cf1-1033-4c01-b46d-cd4b6e573538/tags" rel="tags"/>
-                <link href="/api/templates/7cca3cf1-1033-4c01-b46d-cd4b6e573538/permissions" rel="permissions"/>
-                <link href="/api/templates/7cca3cf1-1033-4c01-b46d-cd4b6e573538/watchdogs" rel="watchdogs"/>
-                <link href="/api/templates/7cca3cf1-1033-4c01-b46d-cd4b6e573538/graphicsconsoles" rel="graphicsconsoles"/>
+                <link href="/ovirt-engine/api/templates/7cca3cf1-1033-4c01-b46d-cd4b6e573538/disks" rel="disks"/>
+                <link href="/ovirt-engine/api/templates/7cca3cf1-1033-4c01-b46d-cd4b6e573538/nics" rel="nics"/>
+                <link href="/ovirt-engine/api/templates/7cca3cf1-1033-4c01-b46d-cd4b6e573538/cdroms" rel="cdroms"/>
+                <link href="/ovirt-engine/api/templates/7cca3cf1-1033-4c01-b46d-cd4b6e573538/tags" rel="tags"/>
+                <link href="/ovirt-engine/api/templates/7cca3cf1-1033-4c01-b46d-cd4b6e573538/permissions" rel="permissions"/>
+                <link href="/ovirt-engine/api/templates/7cca3cf1-1033-4c01-b46d-cd4b6e573538/watchdogs" rel="watchdogs"/>
+                <link href="/ovirt-engine/api/templates/7cca3cf1-1033-4c01-b46d-cd4b6e573538/graphicsconsoles" rel="graphicsconsoles"/>
                 <type>desktop</type>
                 <status>
                     <state>ok</state>
@@ -651,7 +618,7 @@ http_interactions:
                 <os type="other">
                     <boot dev="hd"/>
                 </os>
-                <cluster href="/api/clusters/00000002-0002-0002-0002-0000000001e9" id="00000002-0002-0002-0002-0000000001e9"/>
+                <cluster href="/ovirt-engine/api/clusters/00000002-0002-0002-0002-0000000001e9" id="00000002-0002-0002-0002-0000000001e9"/>
                 <creation_time>2016-06-03T13:43:25.838+02:00</creation_time>
                 <origin>ovirt</origin>
                 <stateless>false</stateless>
@@ -681,7 +648,7 @@ http_interactions:
                 </usb>
                 <migration_downtime>-1</migration_downtime>
                 <start_paused>false</start_paused>
-                <cpu_profile href="/api/cpuprofiles/0000000e-000e-000e-000e-000000000247" id="0000000e-000e-000e-000e-000000000247"/>
+                <cpu_profile href="/ovirt-engine/api/cpuprofiles/0000000e-000e-000e-000e-000000000247" id="0000000e-000e-000e-000e-000000000247"/>
                 <migration>
                     <auto_converge>inherit</auto_converge>
                     <compressed>inherit</compressed>
@@ -692,13 +659,13 @@ http_interactions:
                 <time_zone>
                     <name>Etc/GMT</name>
                 </time_zone>
-                <small_icon href="/api/icons/1f7b8c1b-c242-41a2-a3de-8bb314293c08" id="1f7b8c1b-c242-41a2-a3de-8bb314293c08"/>
-                <large_icon href="/api/icons/442339c6-6712-4188-830d-2c0b04e0a103" id="442339c6-6712-4188-830d-2c0b04e0a103"/>
+                <small_icon href="/ovirt-engine/api/icons/1f7b8c1b-c242-41a2-a3de-8bb314293c08" id="1f7b8c1b-c242-41a2-a3de-8bb314293c08"/>
+                <large_icon href="/ovirt-engine/api/icons/442339c6-6712-4188-830d-2c0b04e0a103" id="442339c6-6712-4188-830d-2c0b04e0a103"/>
                 <memory_policy>
                     <guaranteed>1073741824</guaranteed>
                 </memory_policy>
                 <version>
-                    <base_template href="/api/templates/7cca3cf1-1033-4c01-b46d-cd4b6e573538" id="7cca3cf1-1033-4c01-b46d-cd4b6e573538"/>
+                    <base_template href="/ovirt-engine/api/templates/7cca3cf1-1033-4c01-b46d-cd4b6e573538" id="7cca3cf1-1033-4c01-b46d-cd4b6e573538"/>
                     <version_number>1</version_number>
                     <version_name>base version</version_name>
                 </version>
@@ -708,7 +675,7 @@ http_interactions:
   recorded_at: Fri, 19 Aug 2016 09:43:43 GMT
 - request:
     method: get
-    uri: https://192.168.1.31:8443/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0
+    uri: https://192.168.1.31:8443/ovirt-engine/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0
     body:
       encoding: US-ASCII
       string: ''
@@ -744,19 +711,19 @@ http_interactions:
       encoding: ASCII-8BIT
       string: |
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-        <storage_domain href="/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0" id="ee745353-c069-4de8-8d76-ec2e155e2ca0">
+        <storage_domain href="/ovirt-engine/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0" id="ee745353-c069-4de8-8d76-ec2e155e2ca0">
             <actions>
-                <link href="/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0/isattached" rel="isattached"/>
-                <link href="/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0/refreshluns" rel="refreshluns"/>
+                <link href="/ovirt-engine/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0/isattached" rel="isattached"/>
+                <link href="/ovirt-engine/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0/refreshluns" rel="refreshluns"/>
             </actions>
             <name>data</name>
-            <link href="/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0/permissions" rel="permissions"/>
-            <link href="/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0/templates" rel="templates"/>
-            <link href="/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0/vms" rel="vms"/>
-            <link href="/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0/disks" rel="disks"/>
-            <link href="/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0/storageconnections" rel="storageconnections"/>
-            <link href="/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0/disksnapshots" rel="disksnapshots"/>
-            <link href="/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0/diskprofiles" rel="diskprofiles"/>
+            <link href="/ovirt-engine/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0/permissions" rel="permissions"/>
+            <link href="/ovirt-engine/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0/templates" rel="templates"/>
+            <link href="/ovirt-engine/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0/vms" rel="vms"/>
+            <link href="/ovirt-engine/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0/disks" rel="disks"/>
+            <link href="/ovirt-engine/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0/storageconnections" rel="storageconnections"/>
+            <link href="/ovirt-engine/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0/disksnapshots" rel="disksnapshots"/>
+            <link href="/ovirt-engine/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0/diskprofiles" rel="diskprofiles"/>
             <data_centers>
                 <data_center id="00000001-0001-0001-0001-0000000002c0"/>
             </data_centers>
@@ -783,7 +750,7 @@ http_interactions:
   recorded_at: Fri, 19 Aug 2016 09:43:43 GMT
 - request:
     method: get
-    uri: https://192.168.1.31:8443/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/disks
+    uri: https://192.168.1.31:8443/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -820,18 +787,18 @@ http_interactions:
       string: |
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <disks>
-            <disk href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/disks/da123bb9-095a-4933-95f2-8032dfa332e1" id="da123bb9-095a-4933-95f2-8032dfa332e1">
+            <disk href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/disks/da123bb9-095a-4933-95f2-8032dfa332e1" id="da123bb9-095a-4933-95f2-8032dfa332e1">
                 <actions>
-                    <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/disks/da123bb9-095a-4933-95f2-8032dfa332e1/deactivate" rel="deactivate"/>
-                    <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/disks/da123bb9-095a-4933-95f2-8032dfa332e1/activate" rel="activate"/>
-                    <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/disks/da123bb9-095a-4933-95f2-8032dfa332e1/export" rel="export"/>
-                    <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/disks/da123bb9-095a-4933-95f2-8032dfa332e1/move" rel="move"/>
+                    <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/disks/da123bb9-095a-4933-95f2-8032dfa332e1/deactivate" rel="deactivate"/>
+                    <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/disks/da123bb9-095a-4933-95f2-8032dfa332e1/activate" rel="activate"/>
+                    <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/disks/da123bb9-095a-4933-95f2-8032dfa332e1/export" rel="export"/>
+                    <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/disks/da123bb9-095a-4933-95f2-8032dfa332e1/move" rel="move"/>
                 </actions>
                 <name>GlanceDisk-73786f4</name>
                 <description>CirrOS 0.3.1 (73786f4)</description>
-                <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/disks/da123bb9-095a-4933-95f2-8032dfa332e1/permissions" rel="permissions"/>
-                <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/disks/da123bb9-095a-4933-95f2-8032dfa332e1/statistics" rel="statistics"/>
-                <vm href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77" id="4f6dd4c3-5241-494f-8afc-f1c67254bf77"/>
+                <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/disks/da123bb9-095a-4933-95f2-8032dfa332e1/permissions" rel="permissions"/>
+                <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/disks/da123bb9-095a-4933-95f2-8032dfa332e1/statistics" rel="statistics"/>
+                <vm href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77" id="4f6dd4c3-5241-494f-8afc-f1c67254bf77"/>
                 <alias>GlanceDisk-73786f4</alias>
                 <image_id>cbfd10d8-6aac-4046-8b4f-0b607a6d4d1b</image_id>
                 <storage_domains>
@@ -852,7 +819,7 @@ http_interactions:
                 <propagate_errors>false</propagate_errors>
                 <active>true</active>
                 <read_only>false</read_only>
-                <disk_profile href="/api/diskprofiles/5e1859c2-9c6b-48f7-af3c-eb7ea49d86c5" id="5e1859c2-9c6b-48f7-af3c-eb7ea49d86c5"/>
+                <disk_profile href="/ovirt-engine/api/diskprofiles/5e1859c2-9c6b-48f7-af3c-eb7ea49d86c5" id="5e1859c2-9c6b-48f7-af3c-eb7ea49d86c5"/>
                 <storage_type>image</storage_type>
             </disk>
         </disks>
@@ -860,7 +827,7 @@ http_interactions:
   recorded_at: Fri, 19 Aug 2016 09:43:43 GMT
 - request:
     method: get
-    uri: https://192.168.1.31:8443/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/snapshots
+    uri: https://192.168.1.31:8443/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -897,9 +864,9 @@ http_interactions:
       string: |
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <snapshots>
-            <snapshot href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/snapshots/768f1e7a-c517-4619-9d55-59e641bfd038" id="768f1e7a-c517-4619-9d55-59e641bfd038">
+            <snapshot href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/snapshots/768f1e7a-c517-4619-9d55-59e641bfd038" id="768f1e7a-c517-4619-9d55-59e641bfd038">
                 <actions>
-                    <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/snapshots/768f1e7a-c517-4619-9d55-59e641bfd038/restore" rel="restore"/>
+                    <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/snapshots/768f1e7a-c517-4619-9d55-59e641bfd038/restore" rel="restore"/>
                 </actions>
                 <description>Active VM</description>
                 <type>active</type>
@@ -912,7 +879,7 @@ http_interactions:
   recorded_at: Fri, 19 Aug 2016 09:43:43 GMT
 - request:
     method: get
-    uri: https://192.168.1.31:8443/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/nics
+    uri: https://192.168.1.31:8443/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -949,28 +916,28 @@ http_interactions:
       string: |
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <nics>
-            <nic href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/nics/6409858a-e1a1-4049-bef2-22a438442420" id="6409858a-e1a1-4049-bef2-22a438442420">
+            <nic href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/nics/6409858a-e1a1-4049-bef2-22a438442420" id="6409858a-e1a1-4049-bef2-22a438442420">
                 <actions>
-                    <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/nics/6409858a-e1a1-4049-bef2-22a438442420/deactivate" rel="deactivate"/>
-                    <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/nics/6409858a-e1a1-4049-bef2-22a438442420/activate" rel="activate"/>
+                    <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/nics/6409858a-e1a1-4049-bef2-22a438442420/deactivate" rel="deactivate"/>
+                    <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/nics/6409858a-e1a1-4049-bef2-22a438442420/activate" rel="activate"/>
                 </actions>
                 <name>nic1</name>
-                <link href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/nics/6409858a-e1a1-4049-bef2-22a438442420/statistics" rel="statistics"/>
-                <vm href="/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77" id="4f6dd4c3-5241-494f-8afc-f1c67254bf77"/>
-                <network href="/api/networks/00000000-0000-0000-0000-000000000009" id="00000000-0000-0000-0000-000000000009"/>
+                <link href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77/nics/6409858a-e1a1-4049-bef2-22a438442420/statistics" rel="statistics"/>
+                <vm href="/ovirt-engine/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77" id="4f6dd4c3-5241-494f-8afc-f1c67254bf77"/>
+                <network href="/ovirt-engine/api/networks/00000000-0000-0000-0000-000000000009" id="00000000-0000-0000-0000-000000000009"/>
                 <linked>true</linked>
                 <interface>virtio</interface>
                 <mac address="00:1a:4a:16:01:52"/>
                 <active>true</active>
                 <plugged>true</plugged>
-                <vnic_profile href="/api/vnicprofiles/0000000a-000a-000a-000a-000000000398" id="0000000a-000a-000a-000a-000000000398"/>
+                <vnic_profile href="/ovirt-engine/api/vnicprofiles/0000000a-000a-000a-000a-000000000398" id="0000000a-000a-000a-000a-000000000398"/>
             </nic>
         </nics>
     http_version:
   recorded_at: Fri, 19 Aug 2016 09:43:43 GMT
 - request:
     method: get
-    uri: https://192.168.1.31:8443/api
+    uri: https://192.168.1.31:8443/ovirt-engine/api
     body:
       encoding: US-ASCII
       string: ''
@@ -1001,33 +968,33 @@ http_interactions:
       Jsessionid:
       - GTPgk66t3bb5l8wgH-jYtoYt1aj2tt5iGK26fgY5
       Link:
-      - "<https://192.168.1.31:8443/api/capabilities>; rel=capabilities,<https://192.168.1.31:8443/api/clusters>;
-        rel=clusters,<https://192.168.1.31:8443/api/clusters?search={query}>; rel=clusters/search,<https://192.168.1.31:8443/api/datacenters>;
-        rel=datacenters,<https://192.168.1.31:8443/api/datacenters?search={query}>;
-        rel=datacenters/search,<https://192.168.1.31:8443/api/events>; rel=events,<https://192.168.1.31:8443/api/events;from={event_id}?search={query}>;
-        rel=events/search,<https://192.168.1.31:8443/api/hosts>; rel=hosts,<https://192.168.1.31:8443/api/hosts?search={query}>;
-        rel=hosts/search,<https://192.168.1.31:8443/api/networks>; rel=networks,<https://192.168.1.31:8443/api/networks?search={query}>;
-        rel=networks/search,<https://192.168.1.31:8443/api/roles>; rel=roles,<https://192.168.1.31:8443/api/storagedomains>;
-        rel=storagedomains,<https://192.168.1.31:8443/api/storagedomains?search={query}>;
-        rel=storagedomains/search,<https://192.168.1.31:8443/api/tags>; rel=tags,<https://192.168.1.31:8443/api/bookmarks>;
-        rel=bookmarks,<https://192.168.1.31:8443/api/icons>; rel=icons,<https://192.168.1.31:8443/api/templates>;
-        rel=templates,<https://192.168.1.31:8443/api/templates?search={query}>; rel=templates/search,<https://192.168.1.31:8443/api/instancetypes>;
-        rel=instancetypes,<https://192.168.1.31:8443/api/instancetypes?search={query}>;
-        rel=instancetypes/search,<https://192.168.1.31:8443/api/users>; rel=users,<https://192.168.1.31:8443/api/users?search={query}>;
-        rel=users/search,<https://192.168.1.31:8443/api/groups>; rel=groups,<https://192.168.1.31:8443/api/groups?search={query}>;
-        rel=groups/search,<https://192.168.1.31:8443/api/domains>; rel=domains,<https://192.168.1.31:8443/api/vmpools>;
-        rel=vmpools,<https://192.168.1.31:8443/api/vmpools?search={query}>; rel=vmpools/search,<https://192.168.1.31:8443/api/vms>;
-        rel=vms,<https://192.168.1.31:8443/api/vms?search={query}>; rel=vms/search,<https://192.168.1.31:8443/api/disks>;
-        rel=disks,<https://192.168.1.31:8443/api/disks?search={query}>; rel=disks/search,<https://192.168.1.31:8443/api/jobs>;
-        rel=jobs,<https://192.168.1.31:8443/api/storageconnections>; rel=storageconnections,<https://192.168.1.31:8443/api/vnicprofiles>;
-        rel=vnicprofiles,<https://192.168.1.31:8443/api/diskprofiles>; rel=diskprofiles,<https://192.168.1.31:8443/api/cpuprofiles>;
-        rel=cpuprofiles,<https://192.168.1.31:8443/api/schedulingpolicyunits>; rel=schedulingpolicyunits,<https://192.168.1.31:8443/api/schedulingpolicies>;
-        rel=schedulingpolicies,<https://192.168.1.31:8443/api/permissions>; rel=permissions,<https://192.168.1.31:8443/api/macpools>;
-        rel=macpools,<https://192.168.1.31:8443/api/operatingsystems>; rel=operatingsystems,<https://192.168.1.31:8443/api/externalhostproviders>;
-        rel=externalhostproviders,<https://192.168.1.31:8443/api/openstackimageproviders>;
-        rel=openstackimageproviders,<https://192.168.1.31:8443/api/openstackvolumeproviders>;
-        rel=openstackvolumeproviders,<https://192.168.1.31:8443/api/openstacknetworkproviders>;
-        rel=openstacknetworkproviders,<https://192.168.1.31:8443/api/katelloerrata>;
+      - "<https://192.168.1.31:8443/ovirt-engine/api/capabilities>; rel=capabilities,<https://192.168.1.31:8443/ovirt-engine/api/clusters>;
+        rel=clusters,<https://192.168.1.31:8443/ovirt-engine/api/clusters?search={query}>; rel=clusters/search,<https://192.168.1.31:8443/ovirt-engine/api/datacenters>;
+        rel=datacenters,<https://192.168.1.31:8443/ovirt-engine/api/datacenters?search={query}>;
+        rel=datacenters/search,<https://192.168.1.31:8443/ovirt-engine/api/events>; rel=events,<https://192.168.1.31:8443/ovirt-engine/api/events;from={event_id}?search={query}>;
+        rel=events/search,<https://192.168.1.31:8443/ovirt-engine/api/hosts>; rel=hosts,<https://192.168.1.31:8443/ovirt-engine/api/hosts?search={query}>;
+        rel=hosts/search,<https://192.168.1.31:8443/ovirt-engine/api/networks>; rel=networks,<https://192.168.1.31:8443/ovirt-engine/api/networks?search={query}>;
+        rel=networks/search,<https://192.168.1.31:8443/ovirt-engine/api/roles>; rel=roles,<https://192.168.1.31:8443/ovirt-engine/api/storagedomains>;
+        rel=storagedomains,<https://192.168.1.31:8443/ovirt-engine/api/storagedomains?search={query}>;
+        rel=storagedomains/search,<https://192.168.1.31:8443/ovirt-engine/api/tags>; rel=tags,<https://192.168.1.31:8443/ovirt-engine/api/bookmarks>;
+        rel=bookmarks,<https://192.168.1.31:8443/ovirt-engine/api/icons>; rel=icons,<https://192.168.1.31:8443/ovirt-engine/api/templates>;
+        rel=templates,<https://192.168.1.31:8443/ovirt-engine/api/templates?search={query}>; rel=templates/search,<https://192.168.1.31:8443/ovirt-engine/api/instancetypes>;
+        rel=instancetypes,<https://192.168.1.31:8443/ovirt-engine/api/instancetypes?search={query}>;
+        rel=instancetypes/search,<https://192.168.1.31:8443/ovirt-engine/api/users>; rel=users,<https://192.168.1.31:8443/ovirt-engine/api/users?search={query}>;
+        rel=users/search,<https://192.168.1.31:8443/ovirt-engine/api/groups>; rel=groups,<https://192.168.1.31:8443/ovirt-engine/api/groups?search={query}>;
+        rel=groups/search,<https://192.168.1.31:8443/ovirt-engine/api/domains>; rel=domains,<https://192.168.1.31:8443/ovirt-engine/api/vmpools>;
+        rel=vmpools,<https://192.168.1.31:8443/ovirt-engine/api/vmpools?search={query}>; rel=vmpools/search,<https://192.168.1.31:8443/ovirt-engine/api/vms>;
+        rel=vms,<https://192.168.1.31:8443/ovirt-engine/api/vms?search={query}>; rel=vms/search,<https://192.168.1.31:8443/ovirt-engine/api/disks>;
+        rel=disks,<https://192.168.1.31:8443/ovirt-engine/api/disks?search={query}>; rel=disks/search,<https://192.168.1.31:8443/ovirt-engine/api/jobs>;
+        rel=jobs,<https://192.168.1.31:8443/ovirt-engine/api/storageconnections>; rel=storageconnections,<https://192.168.1.31:8443/ovirt-engine/api/vnicprofiles>;
+        rel=vnicprofiles,<https://192.168.1.31:8443/ovirt-engine/api/diskprofiles>; rel=diskprofiles,<https://192.168.1.31:8443/ovirt-engine/api/cpuprofiles>;
+        rel=cpuprofiles,<https://192.168.1.31:8443/ovirt-engine/api/schedulingpolicyunits>; rel=schedulingpolicyunits,<https://192.168.1.31:8443/ovirt-engine/api/schedulingpolicies>;
+        rel=schedulingpolicies,<https://192.168.1.31:8443/ovirt-engine/api/permissions>; rel=permissions,<https://192.168.1.31:8443/ovirt-engine/api/macpools>;
+        rel=macpools,<https://192.168.1.31:8443/ovirt-engine/api/operatingsystems>; rel=operatingsystems,<https://192.168.1.31:8443/ovirt-engine/api/externalhostproviders>;
+        rel=externalhostproviders,<https://192.168.1.31:8443/ovirt-engine/api/openstackimageproviders>;
+        rel=openstackimageproviders,<https://192.168.1.31:8443/ovirt-engine/api/openstackvolumeproviders>;
+        rel=openstackvolumeproviders,<https://192.168.1.31:8443/ovirt-engine/api/openstacknetworkproviders>;
+        rel=openstacknetworkproviders,<https://192.168.1.31:8443/ovirt-engine/api/katelloerrata>;
         rel=katelloerrata"
       Date:
       - Fri, 19 Aug 2016 09:43:44 GMT
@@ -1036,56 +1003,56 @@ http_interactions:
       string: |
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <api>
-            <link href="/api/capabilities" rel="capabilities"/>
-            <link href="/api/clusters" rel="clusters"/>
-            <link href="/api/clusters?search={query}" rel="clusters/search"/>
-            <link href="/api/datacenters" rel="datacenters"/>
-            <link href="/api/datacenters?search={query}" rel="datacenters/search"/>
-            <link href="/api/events" rel="events"/>
-            <link href="/api/events;from={event_id}?search={query}" rel="events/search"/>
-            <link href="/api/hosts" rel="hosts"/>
-            <link href="/api/hosts?search={query}" rel="hosts/search"/>
-            <link href="/api/networks" rel="networks"/>
-            <link href="/api/networks?search={query}" rel="networks/search"/>
-            <link href="/api/roles" rel="roles"/>
-            <link href="/api/storagedomains" rel="storagedomains"/>
-            <link href="/api/storagedomains?search={query}" rel="storagedomains/search"/>
-            <link href="/api/tags" rel="tags"/>
-            <link href="/api/bookmarks" rel="bookmarks"/>
-            <link href="/api/icons" rel="icons"/>
-            <link href="/api/templates" rel="templates"/>
-            <link href="/api/templates?search={query}" rel="templates/search"/>
-            <link href="/api/instancetypes" rel="instancetypes"/>
-            <link href="/api/instancetypes?search={query}" rel="instancetypes/search"/>
-            <link href="/api/users" rel="users"/>
-            <link href="/api/users?search={query}" rel="users/search"/>
-            <link href="/api/groups" rel="groups"/>
-            <link href="/api/groups?search={query}" rel="groups/search"/>
-            <link href="/api/domains" rel="domains"/>
-            <link href="/api/vmpools" rel="vmpools"/>
-            <link href="/api/vmpools?search={query}" rel="vmpools/search"/>
-            <link href="/api/vms" rel="vms"/>
-            <link href="/api/vms?search={query}" rel="vms/search"/>
-            <link href="/api/disks" rel="disks"/>
-            <link href="/api/disks?search={query}" rel="disks/search"/>
-            <link href="/api/jobs" rel="jobs"/>
-            <link href="/api/storageconnections" rel="storageconnections"/>
-            <link href="/api/vnicprofiles" rel="vnicprofiles"/>
-            <link href="/api/diskprofiles" rel="diskprofiles"/>
-            <link href="/api/cpuprofiles" rel="cpuprofiles"/>
-            <link href="/api/schedulingpolicyunits" rel="schedulingpolicyunits"/>
-            <link href="/api/schedulingpolicies" rel="schedulingpolicies"/>
-            <link href="/api/permissions" rel="permissions"/>
-            <link href="/api/macpools" rel="macpools"/>
-            <link href="/api/operatingsystems" rel="operatingsystems"/>
-            <link href="/api/externalhostproviders" rel="externalhostproviders"/>
-            <link href="/api/openstackimageproviders" rel="openstackimageproviders"/>
-            <link href="/api/openstackvolumeproviders" rel="openstackvolumeproviders"/>
-            <link href="/api/openstacknetworkproviders" rel="openstacknetworkproviders"/>
-            <link href="/api/katelloerrata" rel="katelloerrata"/>
+            <link href="/ovirt-engine/api/capabilities" rel="capabilities"/>
+            <link href="/ovirt-engine/api/clusters" rel="clusters"/>
+            <link href="/ovirt-engine/api/clusters?search={query}" rel="clusters/search"/>
+            <link href="/ovirt-engine/api/datacenters" rel="datacenters"/>
+            <link href="/ovirt-engine/api/datacenters?search={query}" rel="datacenters/search"/>
+            <link href="/ovirt-engine/api/events" rel="events"/>
+            <link href="/ovirt-engine/api/events;from={event_id}?search={query}" rel="events/search"/>
+            <link href="/ovirt-engine/api/hosts" rel="hosts"/>
+            <link href="/ovirt-engine/api/hosts?search={query}" rel="hosts/search"/>
+            <link href="/ovirt-engine/api/networks" rel="networks"/>
+            <link href="/ovirt-engine/api/networks?search={query}" rel="networks/search"/>
+            <link href="/ovirt-engine/api/roles" rel="roles"/>
+            <link href="/ovirt-engine/api/storagedomains" rel="storagedomains"/>
+            <link href="/ovirt-engine/api/storagedomains?search={query}" rel="storagedomains/search"/>
+            <link href="/ovirt-engine/api/tags" rel="tags"/>
+            <link href="/ovirt-engine/api/bookmarks" rel="bookmarks"/>
+            <link href="/ovirt-engine/api/icons" rel="icons"/>
+            <link href="/ovirt-engine/api/templates" rel="templates"/>
+            <link href="/ovirt-engine/api/templates?search={query}" rel="templates/search"/>
+            <link href="/ovirt-engine/api/instancetypes" rel="instancetypes"/>
+            <link href="/ovirt-engine/api/instancetypes?search={query}" rel="instancetypes/search"/>
+            <link href="/ovirt-engine/api/users" rel="users"/>
+            <link href="/ovirt-engine/api/users?search={query}" rel="users/search"/>
+            <link href="/ovirt-engine/api/groups" rel="groups"/>
+            <link href="/ovirt-engine/api/groups?search={query}" rel="groups/search"/>
+            <link href="/ovirt-engine/api/domains" rel="domains"/>
+            <link href="/ovirt-engine/api/vmpools" rel="vmpools"/>
+            <link href="/ovirt-engine/api/vmpools?search={query}" rel="vmpools/search"/>
+            <link href="/ovirt-engine/api/vms" rel="vms"/>
+            <link href="/ovirt-engine/api/vms?search={query}" rel="vms/search"/>
+            <link href="/ovirt-engine/api/disks" rel="disks"/>
+            <link href="/ovirt-engine/api/disks?search={query}" rel="disks/search"/>
+            <link href="/ovirt-engine/api/jobs" rel="jobs"/>
+            <link href="/ovirt-engine/api/storageconnections" rel="storageconnections"/>
+            <link href="/ovirt-engine/api/vnicprofiles" rel="vnicprofiles"/>
+            <link href="/ovirt-engine/api/diskprofiles" rel="diskprofiles"/>
+            <link href="/ovirt-engine/api/cpuprofiles" rel="cpuprofiles"/>
+            <link href="/ovirt-engine/api/schedulingpolicyunits" rel="schedulingpolicyunits"/>
+            <link href="/ovirt-engine/api/schedulingpolicies" rel="schedulingpolicies"/>
+            <link href="/ovirt-engine/api/permissions" rel="permissions"/>
+            <link href="/ovirt-engine/api/macpools" rel="macpools"/>
+            <link href="/ovirt-engine/api/operatingsystems" rel="operatingsystems"/>
+            <link href="/ovirt-engine/api/externalhostproviders" rel="externalhostproviders"/>
+            <link href="/ovirt-engine/api/openstackimageproviders" rel="openstackimageproviders"/>
+            <link href="/ovirt-engine/api/openstackvolumeproviders" rel="openstackvolumeproviders"/>
+            <link href="/ovirt-engine/api/openstacknetworkproviders" rel="openstacknetworkproviders"/>
+            <link href="/ovirt-engine/api/katelloerrata" rel="katelloerrata"/>
             <special_objects>
-                <link href="/api/templates/00000000-0000-0000-0000-000000000000" rel="templates/blank"/>
-                <link href="/api/tags/00000000-0000-0000-0000-000000000000" rel="tags/root"/>
+                <link href="/ovirt-engine/api/templates/00000000-0000-0000-0000-000000000000" rel="templates/blank"/>
+                <link href="/ovirt-engine/api/tags/00000000-0000-0000-0000-000000000000" rel="tags/root"/>
             </special_objects>
             <product_info>
                 <name>oVirt Engine</name>

@@ -2,59 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://10.35.161.51/api
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - "*/*"
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
-  response:
-    status:
-      code: 401
-      message: Unauthorized
-    headers:
-      Date:
-      - Mon, 16 Jan 2017 08:20:18 GMT
-      Pragma:
-      - No-cache
-      Cache-Control:
-      - no-cache
-      Expires:
-      - Thu, 01 Jan 1970 02:00:00 IST
-      Www-Authenticate:
-      - Basic realm="ENGINE"
-      Content-Type:
-      - text/html;charset=utf-8
-      Vary:
-      - Accept-Encoding
-      Content-Encoding:
-      - gzip
-      Content-Length:
-      - '377'
-      Connection:
-      - close
-    body:
-      encoding: ASCII-8BIT
-      string: !binary |-
-        H4sIAAAAAAAAA7WTXU+DMBSG/0qdt+v42Ma0VJItMyHeuCiJ8bJANxqBYlui
-        uOy/W+i+4i6miSMhbU7f85xz4C3OVJEHOKMkDbBiKqfBw+zlfmbrxxsjEEbR
-        AjwromoJRrYDIMCWkWGpmna5gjB0wHrJSwWXpGB5gyKS8YL0p4KRvC9JKaGk
-        gi39hOdcoI+MKerHJHlbCV6XKTTh67E7nk88vwNJ9kWR61af/gaE7kXojmfo
-        w8vQRx199jh//Qs/zjX6lG/Katw/9roBi9/RDoQt8rjVo4m7vzUF6+4YIGAE
-        m+mgJAU9CYdPh9C+JQgDbBlfaZ8ZU8Y8bbRBnfO+1BqssW03dz2nB0ouM5Lq
-        /XbTC3CleXvQ0L5FQDUVxVYcgAN+gnZkQSsuFLaqH5m2d4NAQaUkK5OMa914
-        +54qdY2UykSwSjFe7tS7c8d1EIgy1tZ6r6lU3coElWZEUquMloolpM0e7Iuc
-        mdMyX83qbvc35+Dx2eQDAAA=
-    http_version: 
-  recorded_at: Mon, 16 Jan 2017 13:08:34 GMT
-- request:
-    method: get
-    uri: https://admin%40internal:password@10.35.161.51/api
+    uri: https://admin%40internal:password@10.35.161.51/ovirt-engine/api
     body:
       encoding: US-ASCII
       string: ''
@@ -85,33 +33,33 @@ http_interactions:
       Set-Cookie:
       - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk; Path=/api; Secure; HttpOnly
       Link:
-      - "<https://10.35.161.51/api/capabilities>; rel=capabilities,<https://10.35.161.51/api/clusters>;
-        rel=clusters,<https://10.35.161.51/api/clusters?search={query}>; rel=clusters/search,<https://10.35.161.51/api/datacenters>;
-        rel=datacenters,<https://10.35.161.51/api/datacenters?search={query}>; rel=datacenters/search,<https://10.35.161.51/api/events>;
-        rel=events,<https://10.35.161.51/api/events;from={event_id}?search={query}>;
-        rel=events/search,<https://10.35.161.51/api/hosts>; rel=hosts,<https://10.35.161.51/api/hosts?search={query}>;
-        rel=hosts/search,<https://10.35.161.51/api/networks>; rel=networks,<https://10.35.161.51/api/networks?search={query}>;
-        rel=networks/search,<https://10.35.161.51/api/roles>; rel=roles,<https://10.35.161.51/api/storagedomains>;
-        rel=storagedomains,<https://10.35.161.51/api/storagedomains?search={query}>;
-        rel=storagedomains/search,<https://10.35.161.51/api/tags>; rel=tags,<https://10.35.161.51/api/bookmarks>;
-        rel=bookmarks,<https://10.35.161.51/api/icons>; rel=icons,<https://10.35.161.51/api/templates>;
-        rel=templates,<https://10.35.161.51/api/templates?search={query}>; rel=templates/search,<https://10.35.161.51/api/instancetypes>;
-        rel=instancetypes,<https://10.35.161.51/api/instancetypes?search={query}>;
-        rel=instancetypes/search,<https://10.35.161.51/api/users>; rel=users,<https://10.35.161.51/api/users?search={query}>;
-        rel=users/search,<https://10.35.161.51/api/groups>; rel=groups,<https://10.35.161.51/api/groups?search={query}>;
-        rel=groups/search,<https://10.35.161.51/api/domains>; rel=domains,<https://10.35.161.51/api/vmpools>;
-        rel=vmpools,<https://10.35.161.51/api/vmpools?search={query}>; rel=vmpools/search,<https://10.35.161.51/api/vms>;
-        rel=vms,<https://10.35.161.51/api/vms?search={query}>; rel=vms/search,<https://10.35.161.51/api/disks>;
-        rel=disks,<https://10.35.161.51/api/disks?search={query}>; rel=disks/search,<https://10.35.161.51/api/jobs>;
-        rel=jobs,<https://10.35.161.51/api/storageconnections>; rel=storageconnections,<https://10.35.161.51/api/vnicprofiles>;
-        rel=vnicprofiles,<https://10.35.161.51/api/diskprofiles>; rel=diskprofiles,<https://10.35.161.51/api/cpuprofiles>;
-        rel=cpuprofiles,<https://10.35.161.51/api/schedulingpolicyunits>; rel=schedulingpolicyunits,<https://10.35.161.51/api/schedulingpolicies>;
-        rel=schedulingpolicies,<https://10.35.161.51/api/permissions>; rel=permissions,<https://10.35.161.51/api/macpools>;
-        rel=macpools,<https://10.35.161.51/api/operatingsystems>; rel=operatingsystems,<https://10.35.161.51/api/externalhostproviders>;
-        rel=externalhostproviders,<https://10.35.161.51/api/openstackimageproviders>;
-        rel=openstackimageproviders,<https://10.35.161.51/api/openstackvolumeproviders>;
-        rel=openstackvolumeproviders,<https://10.35.161.51/api/openstacknetworkproviders>;
-        rel=openstacknetworkproviders,<https://10.35.161.51/api/katelloerrata>; rel=katelloerrata"
+      - "<https://10.35.161.51/ovirt-engine/api/capabilities>; rel=capabilities,<https://10.35.161.51/ovirt-engine/api/clusters>;
+        rel=clusters,<https://10.35.161.51/ovirt-engine/api/clusters?search={query}>; rel=clusters/search,<https://10.35.161.51/ovirt-engine/api/datacenters>;
+        rel=datacenters,<https://10.35.161.51/ovirt-engine/api/datacenters?search={query}>; rel=datacenters/search,<https://10.35.161.51/ovirt-engine/api/events>;
+        rel=events,<https://10.35.161.51/ovirt-engine/api/events;from={event_id}?search={query}>;
+        rel=events/search,<https://10.35.161.51/ovirt-engine/api/hosts>; rel=hosts,<https://10.35.161.51/ovirt-engine/api/hosts?search={query}>;
+        rel=hosts/search,<https://10.35.161.51/ovirt-engine/api/networks>; rel=networks,<https://10.35.161.51/ovirt-engine/api/networks?search={query}>;
+        rel=networks/search,<https://10.35.161.51/ovirt-engine/api/roles>; rel=roles,<https://10.35.161.51/ovirt-engine/api/storagedomains>;
+        rel=storagedomains,<https://10.35.161.51/ovirt-engine/api/storagedomains?search={query}>;
+        rel=storagedomains/search,<https://10.35.161.51/ovirt-engine/api/tags>; rel=tags,<https://10.35.161.51/ovirt-engine/api/bookmarks>;
+        rel=bookmarks,<https://10.35.161.51/ovirt-engine/api/icons>; rel=icons,<https://10.35.161.51/ovirt-engine/api/templates>;
+        rel=templates,<https://10.35.161.51/ovirt-engine/api/templates?search={query}>; rel=templates/search,<https://10.35.161.51/ovirt-engine/api/instancetypes>;
+        rel=instancetypes,<https://10.35.161.51/ovirt-engine/api/instancetypes?search={query}>;
+        rel=instancetypes/search,<https://10.35.161.51/ovirt-engine/api/users>; rel=users,<https://10.35.161.51/ovirt-engine/api/users?search={query}>;
+        rel=users/search,<https://10.35.161.51/ovirt-engine/api/groups>; rel=groups,<https://10.35.161.51/ovirt-engine/api/groups?search={query}>;
+        rel=groups/search,<https://10.35.161.51/ovirt-engine/api/domains>; rel=domains,<https://10.35.161.51/ovirt-engine/api/vmpools>;
+        rel=vmpools,<https://10.35.161.51/ovirt-engine/api/vmpools?search={query}>; rel=vmpools/search,<https://10.35.161.51/ovirt-engine/api/vms>;
+        rel=vms,<https://10.35.161.51/ovirt-engine/api/vms?search={query}>; rel=vms/search,<https://10.35.161.51/ovirt-engine/api/disks>;
+        rel=disks,<https://10.35.161.51/ovirt-engine/api/disks?search={query}>; rel=disks/search,<https://10.35.161.51/ovirt-engine/api/jobs>;
+        rel=jobs,<https://10.35.161.51/ovirt-engine/api/storageconnections>; rel=storageconnections,<https://10.35.161.51/ovirt-engine/api/vnicprofiles>;
+        rel=vnicprofiles,<https://10.35.161.51/ovirt-engine/api/diskprofiles>; rel=diskprofiles,<https://10.35.161.51/ovirt-engine/api/cpuprofiles>;
+        rel=cpuprofiles,<https://10.35.161.51/ovirt-engine/api/schedulingpolicyunits>; rel=schedulingpolicyunits,<https://10.35.161.51/ovirt-engine/api/schedulingpolicies>;
+        rel=schedulingpolicies,<https://10.35.161.51/ovirt-engine/api/permissions>; rel=permissions,<https://10.35.161.51/ovirt-engine/api/macpools>;
+        rel=macpools,<https://10.35.161.51/ovirt-engine/api/operatingsystems>; rel=operatingsystems,<https://10.35.161.51/ovirt-engine/api/externalhostproviders>;
+        rel=externalhostproviders,<https://10.35.161.51/ovirt-engine/api/openstackimageproviders>;
+        rel=openstackimageproviders,<https://10.35.161.51/ovirt-engine/api/openstackvolumeproviders>;
+        rel=openstackvolumeproviders,<https://10.35.161.51/ovirt-engine/api/openstacknetworkproviders>;
+        rel=openstacknetworkproviders,<https://10.35.161.51/ovirt-engine/api/katelloerrata>; rel=katelloerrata"
       Jsessionid:
       - PjLhwAkmc850YyVOZjPCA9Kk
       Content-Type:
@@ -150,7 +98,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:35 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/clusters
+    uri: https://10.35.161.51/ovirt-engine/api/clusters
     body:
       encoding: US-ASCII
       string: ''
@@ -219,7 +167,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:35 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/vmpools
+    uri: https://10.35.161.51/ovirt-engine/api/vmpools
     body:
       encoding: US-ASCII
       string: ''
@@ -270,7 +218,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:35 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/networks
+    uri: https://10.35.161.51/ovirt-engine/api/networks
     body:
       encoding: US-ASCII
       string: ''
@@ -328,7 +276,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:35 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/storagedomains?search=sortby%20name%20asc%20page%201
+    uri: https://10.35.161.51/ovirt-engine/api/storagedomains?search=sortby%20name%20asc%20page%201
     body:
       encoding: US-ASCII
       string: ''
@@ -400,7 +348,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:35 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/storagedomains?search=sortby%20name%20asc%20page%202
+    uri: https://10.35.161.51/ovirt-engine/api/storagedomains?search=sortby%20name%20asc%20page%202
     body:
       encoding: US-ASCII
       string: ''
@@ -452,7 +400,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:35 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/datacenters
+    uri: https://10.35.161.51/ovirt-engine/api/datacenters
     body:
       encoding: US-ASCII
       string: ''
@@ -510,7 +458,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:36 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/hosts?search=sortby%20name%20asc%20page%201
+    uri: https://10.35.161.51/ovirt-engine/api/hosts?search=sortby%20name%20asc%20page%201
     body:
       encoding: US-ASCII
       string: ''
@@ -602,7 +550,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:36 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/hosts?search=sortby%20name%20asc%20page%202
+    uri: https://10.35.161.51/ovirt-engine/api/hosts?search=sortby%20name%20asc%20page%202
     body:
       encoding: US-ASCII
       string: ''
@@ -653,7 +601,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:36 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/vms?search=sortby%20name%20asc%20page%201
+    uri: https://10.35.161.51/ovirt-engine/api/vms?search=sortby%20name%20asc%20page%201
     body:
       encoding: US-ASCII
       string: ''
@@ -759,7 +707,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:36 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/vms?search=sortby%20name%20asc%20page%202
+    uri: https://10.35.161.51/ovirt-engine/api/vms?search=sortby%20name%20asc%20page%202
     body:
       encoding: US-ASCII
       string: ''
@@ -810,7 +758,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:36 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/templates
+    uri: https://10.35.161.51/ovirt-engine/api/templates
     body:
       encoding: US-ASCII
       string: ''
@@ -888,7 +836,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:37 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/datacenters/00000001-0001-0001-0001-0000000003bb/storagedomains
+    uri: https://10.35.161.51/ovirt-engine/api/datacenters/00000001-0001-0001-0001-0000000003bb/storagedomains
     body:
       encoding: US-ASCII
       string: ''
@@ -949,7 +897,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:37 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/hosts/bfb0c0b4-8616-4bbf-9210-9de48892adc6/statistics
+    uri: https://10.35.161.51/ovirt-engine/api/hosts/bfb0c0b4-8616-4bbf-9210-9de48892adc6/statistics
     body:
       encoding: US-ASCII
       string: ''
@@ -1021,7 +969,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:37 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/hosts/bfb0c0b4-8616-4bbf-9210-9de48892adc6/nics
+    uri: https://10.35.161.51/ovirt-engine/api/hosts/bfb0c0b4-8616-4bbf-9210-9de48892adc6/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -1085,7 +1033,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:37 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/hosts/0b4c3cf3-3b51-479a-bd36-ab968151a9a9/statistics
+    uri: https://10.35.161.51/ovirt-engine/api/hosts/0b4c3cf3-3b51-479a-bd36-ab968151a9a9/statistics
     body:
       encoding: US-ASCII
       string: ''
@@ -1157,7 +1105,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:37 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/hosts/0b4c3cf3-3b51-479a-bd36-ab968151a9a9/nics
+    uri: https://10.35.161.51/ovirt-engine/api/hosts/0b4c3cf3-3b51-479a-bd36-ab968151a9a9/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -1223,7 +1171,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:37 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/vms/13054ffb-ae62-49e3-9ec7-9ad426f62fae/disks
+    uri: https://10.35.161.51/ovirt-engine/api/vms/13054ffb-ae62-49e3-9ec7-9ad426f62fae/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -1287,7 +1235,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:38 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/vms/13054ffb-ae62-49e3-9ec7-9ad426f62fae/snapshots
+    uri: https://10.35.161.51/ovirt-engine/api/vms/13054ffb-ae62-49e3-9ec7-9ad426f62fae/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -1344,7 +1292,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:38 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/vms/13054ffb-ae62-49e3-9ec7-9ad426f62fae/nics
+    uri: https://10.35.161.51/ovirt-engine/api/vms/13054ffb-ae62-49e3-9ec7-9ad426f62fae/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -1395,7 +1343,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:38 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/vms/ccda1fdd-852e-4e7f-939d-5598bc8fcbb3/disks
+    uri: https://10.35.161.51/ovirt-engine/api/vms/ccda1fdd-852e-4e7f-939d-5598bc8fcbb3/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -1446,7 +1394,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:38 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/vms/ccda1fdd-852e-4e7f-939d-5598bc8fcbb3/snapshots
+    uri: https://10.35.161.51/ovirt-engine/api/vms/ccda1fdd-852e-4e7f-939d-5598bc8fcbb3/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -1503,7 +1451,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:38 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/vms/ccda1fdd-852e-4e7f-939d-5598bc8fcbb3/nics
+    uri: https://10.35.161.51/ovirt-engine/api/vms/ccda1fdd-852e-4e7f-939d-5598bc8fcbb3/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -1554,7 +1502,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:38 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/vms/9ada55c8-71b8-4e76-9b5e-d9a3f31f8c84/disks
+    uri: https://10.35.161.51/ovirt-engine/api/vms/9ada55c8-71b8-4e76-9b5e-d9a3f31f8c84/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -1619,7 +1567,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:39 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/vms/9ada55c8-71b8-4e76-9b5e-d9a3f31f8c84/snapshots
+    uri: https://10.35.161.51/ovirt-engine/api/vms/9ada55c8-71b8-4e76-9b5e-d9a3f31f8c84/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -1676,7 +1624,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:39 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/vms/9ada55c8-71b8-4e76-9b5e-d9a3f31f8c84/nics
+    uri: https://10.35.161.51/ovirt-engine/api/vms/9ada55c8-71b8-4e76-9b5e-d9a3f31f8c84/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -1738,7 +1686,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:39 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/vms/5e61c5a1-c877-4a93-8c3b-01838e073167/disks
+    uri: https://10.35.161.51/ovirt-engine/api/vms/5e61c5a1-c877-4a93-8c3b-01838e073167/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -1801,7 +1749,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:39 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/vms/5e61c5a1-c877-4a93-8c3b-01838e073167/snapshots
+    uri: https://10.35.161.51/ovirt-engine/api/vms/5e61c5a1-c877-4a93-8c3b-01838e073167/snapshots
     body:
       encoding: US-ASCII
       string: ''
@@ -1858,7 +1806,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:39 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/vms/5e61c5a1-c877-4a93-8c3b-01838e073167/nics
+    uri: https://10.35.161.51/ovirt-engine/api/vms/5e61c5a1-c877-4a93-8c3b-01838e073167/nics
     body:
       encoding: US-ASCII
       string: ''
@@ -1916,7 +1864,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:40 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/templates/00000000-0000-0000-0000-000000000000/disks
+    uri: https://10.35.161.51/ovirt-engine/api/templates/00000000-0000-0000-0000-000000000000/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -1967,7 +1915,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:40 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api/templates/749236d0-6320-46d2-bd0a-8a9989bb607a/disks
+    uri: https://10.35.161.51/ovirt-engine/api/templates/749236d0-6320-46d2-bd0a-8a9989bb607a/disks
     body:
       encoding: US-ASCII
       string: ''
@@ -2030,7 +1978,7 @@ http_interactions:
   recorded_at: Mon, 16 Jan 2017 13:08:40 GMT
 - request:
     method: get
-    uri: https://10.35.161.51/api
+    uri: https://10.35.161.51/ovirt-engine/api
     body:
       encoding: US-ASCII
       string: ''
@@ -2061,33 +2009,33 @@ http_interactions:
       Expires:
       - Thu, 01 Jan 1970 02:00:00 IST
       Link:
-      - "<https://10.35.161.51/api/capabilities>; rel=capabilities,<https://10.35.161.51/api/clusters>;
-        rel=clusters,<https://10.35.161.51/api/clusters?search={query}>; rel=clusters/search,<https://10.35.161.51/api/datacenters>;
-        rel=datacenters,<https://10.35.161.51/api/datacenters?search={query}>; rel=datacenters/search,<https://10.35.161.51/api/events>;
-        rel=events,<https://10.35.161.51/api/events;from={event_id}?search={query}>;
-        rel=events/search,<https://10.35.161.51/api/hosts>; rel=hosts,<https://10.35.161.51/api/hosts?search={query}>;
-        rel=hosts/search,<https://10.35.161.51/api/networks>; rel=networks,<https://10.35.161.51/api/networks?search={query}>;
-        rel=networks/search,<https://10.35.161.51/api/roles>; rel=roles,<https://10.35.161.51/api/storagedomains>;
-        rel=storagedomains,<https://10.35.161.51/api/storagedomains?search={query}>;
-        rel=storagedomains/search,<https://10.35.161.51/api/tags>; rel=tags,<https://10.35.161.51/api/bookmarks>;
-        rel=bookmarks,<https://10.35.161.51/api/icons>; rel=icons,<https://10.35.161.51/api/templates>;
-        rel=templates,<https://10.35.161.51/api/templates?search={query}>; rel=templates/search,<https://10.35.161.51/api/instancetypes>;
-        rel=instancetypes,<https://10.35.161.51/api/instancetypes?search={query}>;
-        rel=instancetypes/search,<https://10.35.161.51/api/users>; rel=users,<https://10.35.161.51/api/users?search={query}>;
-        rel=users/search,<https://10.35.161.51/api/groups>; rel=groups,<https://10.35.161.51/api/groups?search={query}>;
-        rel=groups/search,<https://10.35.161.51/api/domains>; rel=domains,<https://10.35.161.51/api/vmpools>;
-        rel=vmpools,<https://10.35.161.51/api/vmpools?search={query}>; rel=vmpools/search,<https://10.35.161.51/api/vms>;
-        rel=vms,<https://10.35.161.51/api/vms?search={query}>; rel=vms/search,<https://10.35.161.51/api/disks>;
-        rel=disks,<https://10.35.161.51/api/disks?search={query}>; rel=disks/search,<https://10.35.161.51/api/jobs>;
-        rel=jobs,<https://10.35.161.51/api/storageconnections>; rel=storageconnections,<https://10.35.161.51/api/vnicprofiles>;
-        rel=vnicprofiles,<https://10.35.161.51/api/diskprofiles>; rel=diskprofiles,<https://10.35.161.51/api/cpuprofiles>;
-        rel=cpuprofiles,<https://10.35.161.51/api/schedulingpolicyunits>; rel=schedulingpolicyunits,<https://10.35.161.51/api/schedulingpolicies>;
-        rel=schedulingpolicies,<https://10.35.161.51/api/permissions>; rel=permissions,<https://10.35.161.51/api/macpools>;
-        rel=macpools,<https://10.35.161.51/api/operatingsystems>; rel=operatingsystems,<https://10.35.161.51/api/externalhostproviders>;
-        rel=externalhostproviders,<https://10.35.161.51/api/openstackimageproviders>;
-        rel=openstackimageproviders,<https://10.35.161.51/api/openstackvolumeproviders>;
-        rel=openstackvolumeproviders,<https://10.35.161.51/api/openstacknetworkproviders>;
-        rel=openstacknetworkproviders,<https://10.35.161.51/api/katelloerrata>; rel=katelloerrata"
+      - "<https://10.35.161.51/ovirt-engine/api/capabilities>; rel=capabilities,<https://10.35.161.51/ovirt-engine/api/clusters>;
+        rel=clusters,<https://10.35.161.51/ovirt-engine/api/clusters?search={query}>; rel=clusters/search,<https://10.35.161.51/ovirt-engine/api/datacenters>;
+        rel=datacenters,<https://10.35.161.51/ovirt-engine/api/datacenters?search={query}>; rel=datacenters/search,<https://10.35.161.51/ovirt-engine/api/events>;
+        rel=events,<https://10.35.161.51/ovirt-engine/api/events;from={event_id}?search={query}>;
+        rel=events/search,<https://10.35.161.51/ovirt-engine/api/hosts>; rel=hosts,<https://10.35.161.51/ovirt-engine/api/hosts?search={query}>;
+        rel=hosts/search,<https://10.35.161.51/ovirt-engine/api/networks>; rel=networks,<https://10.35.161.51/ovirt-engine/api/networks?search={query}>;
+        rel=networks/search,<https://10.35.161.51/ovirt-engine/api/roles>; rel=roles,<https://10.35.161.51/ovirt-engine/api/storagedomains>;
+        rel=storagedomains,<https://10.35.161.51/ovirt-engine/api/storagedomains?search={query}>;
+        rel=storagedomains/search,<https://10.35.161.51/ovirt-engine/api/tags>; rel=tags,<https://10.35.161.51/ovirt-engine/api/bookmarks>;
+        rel=bookmarks,<https://10.35.161.51/ovirt-engine/api/icons>; rel=icons,<https://10.35.161.51/ovirt-engine/api/templates>;
+        rel=templates,<https://10.35.161.51/ovirt-engine/api/templates?search={query}>; rel=templates/search,<https://10.35.161.51/ovirt-engine/api/instancetypes>;
+        rel=instancetypes,<https://10.35.161.51/ovirt-engine/api/instancetypes?search={query}>;
+        rel=instancetypes/search,<https://10.35.161.51/ovirt-engine/api/users>; rel=users,<https://10.35.161.51/ovirt-engine/api/users?search={query}>;
+        rel=users/search,<https://10.35.161.51/ovirt-engine/api/groups>; rel=groups,<https://10.35.161.51/ovirt-engine/api/groups?search={query}>;
+        rel=groups/search,<https://10.35.161.51/ovirt-engine/api/domains>; rel=domains,<https://10.35.161.51/ovirt-engine/api/vmpools>;
+        rel=vmpools,<https://10.35.161.51/ovirt-engine/api/vmpools?search={query}>; rel=vmpools/search,<https://10.35.161.51/ovirt-engine/api/vms>;
+        rel=vms,<https://10.35.161.51/ovirt-engine/api/vms?search={query}>; rel=vms/search,<https://10.35.161.51/ovirt-engine/api/disks>;
+        rel=disks,<https://10.35.161.51/ovirt-engine/api/disks?search={query}>; rel=disks/search,<https://10.35.161.51/ovirt-engine/api/jobs>;
+        rel=jobs,<https://10.35.161.51/ovirt-engine/api/storageconnections>; rel=storageconnections,<https://10.35.161.51/ovirt-engine/api/vnicprofiles>;
+        rel=vnicprofiles,<https://10.35.161.51/ovirt-engine/api/diskprofiles>; rel=diskprofiles,<https://10.35.161.51/ovirt-engine/api/cpuprofiles>;
+        rel=cpuprofiles,<https://10.35.161.51/ovirt-engine/api/schedulingpolicyunits>; rel=schedulingpolicyunits,<https://10.35.161.51/ovirt-engine/api/schedulingpolicies>;
+        rel=schedulingpolicies,<https://10.35.161.51/ovirt-engine/api/permissions>; rel=permissions,<https://10.35.161.51/ovirt-engine/api/macpools>;
+        rel=macpools,<https://10.35.161.51/ovirt-engine/api/operatingsystems>; rel=operatingsystems,<https://10.35.161.51/ovirt-engine/api/externalhostproviders>;
+        rel=externalhostproviders,<https://10.35.161.51/ovirt-engine/api/openstackimageproviders>;
+        rel=openstackimageproviders,<https://10.35.161.51/ovirt-engine/api/openstackvolumeproviders>;
+        rel=openstackvolumeproviders,<https://10.35.161.51/ovirt-engine/api/openstacknetworkproviders>;
+        rel=openstacknetworkproviders,<https://10.35.161.51/ovirt-engine/api/katelloerrata>; rel=katelloerrata"
       Jsessionid:
       - PjLhwAkmc850YyVOZjPCA9Kk
       Content-Type:
