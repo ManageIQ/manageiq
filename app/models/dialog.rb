@@ -28,6 +28,12 @@ class Dialog < ApplicationRecord
     Dir.glob(ALL_YAML_FILES).each do |file|
       dialog_import_service.import_all_service_dialogs_from_yaml_file(file)
     end
+
+    Vmdb::Plugins.instance.registered_provider_plugins.each do |plugin|
+      Dir.glob(plugin.root.join('content', 'service_dialogs', '*.{yaml,yml}')).each do |file|
+        dialog_import_service.import_all_service_dialogs_from_yaml_file(file)
+      end
+    end
   end
 
   def each_dialog_field(&block)
