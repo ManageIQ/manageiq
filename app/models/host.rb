@@ -177,7 +177,6 @@ class Host < ApplicationRecord
   include VimConnectMixin
   include AvailabilityMixin
 
-  before_create :make_smart
   after_save    :process_events
 
   supports :reset do
@@ -211,10 +210,6 @@ class Host < ApplicationRecord
   def my_zone
     ems = ext_management_system
     ems ? ems.my_zone : MiqServer.my_zone
-  end
-
-  def make_smart
-    self.smart = true
   end
 
   def process_events
@@ -879,7 +874,6 @@ class Host < ApplicationRecord
       send("#{key}=", nil)
     end
 
-    make_smart # before_create callback
     self.settings   = nil
     self.name       = "IPMI <#{ipmi_address}>"
     self.vmm_vendor = 'unknown'

@@ -122,7 +122,6 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
       :last_perf_capture_on   => nil,
       :registered             => nil,
       :busy                   => nil,
-      :smart                  => nil,
       :memory_reserve         => 1024,
       :memory_reserve_expand  => nil,
       :memory_limit           => nil,
