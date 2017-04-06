@@ -17,7 +17,7 @@ class MiqDialog < ApplicationRecord
   end
 
   def self.sync_from_dir(root)
-    Dir.glob(root.join("*.yaml")).each { |f| sync_from_file(f, root) }
+    Dir.glob(root.join("*.{yaml,yml}")).each { |f| sync_from_file(f, root) }
   end
 
   def self.sync_from_plugins
