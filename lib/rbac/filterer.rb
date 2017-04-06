@@ -198,11 +198,9 @@ module Rbac
           target_ids = targets
           # assume klass is passed in
         else
-          target_ids       = targets.collect(&:id)
-          klass            = targets.first.class
-          unless klass.respond_to?(:find)
-            klass = base_class if (base_class = rbac_base_class(klass))
-          end
+          target_ids  = targets.collect(&:id)
+          klass       = targets.first.class
+          klass       = base_class if !klass.respond_to?(:find) && (base_class = rbac_base_class(klass))
         end
         scope = apply_scope(klass, scope)
         scope = apply_select(klass, scope, options[:extra_cols]) if options[:extra_cols]
