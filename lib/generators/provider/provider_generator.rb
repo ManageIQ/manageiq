@@ -52,12 +52,8 @@ class ProviderGenerator < Rails::Generators::NamedBase
   end
 
   def create_manageiq_gem
-    data = <<EOT
-unless dependencies.detect { |d| d.name == "manageiq-providers-#{provider_name}" }
-  gem "manageiq-providers-#{provider_name}", :git => "https://github.com/ManageIQ/manageiq-providers-#{provider_name}", :branch => "master"
-end
-EOT
-    inject_into_file Rails.root.join('Gemfile'), data, :after => "# when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared\n"
+    data = "manageiq_plugin \"manageiq-providers-#{provider_name}\" # TODO: Sort alphabetically...\n"
+    inject_into_file Rails.root.join('Gemfile'), data, :after => "manageiq_plugin \"manageiq-providers-vmware\"\n"
   end
 
   private
