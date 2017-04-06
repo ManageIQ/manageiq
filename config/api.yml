@@ -712,7 +712,7 @@
      :options:
      - :collection
      :verbs: *g
-     :klass: EmsEvent        
+     :klass: EmsEvent
   :events:
     :description: Events
     :identifier: event
