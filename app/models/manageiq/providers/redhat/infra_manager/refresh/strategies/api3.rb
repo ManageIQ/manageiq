@@ -3,7 +3,8 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies
     def host_targeted_refresh(inventory, target)
       methods = {
         :primary   => {
-          :host => target.ems_ref,
+          :host    => target.ems_ref,
+          :network => { :networks => "network" }
         },
         :secondary => {
           :host => [:statistics, :host_nics],

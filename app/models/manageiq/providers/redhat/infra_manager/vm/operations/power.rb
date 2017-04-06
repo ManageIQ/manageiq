@@ -5,19 +5,15 @@ module ManageIQ::Providers::Redhat::InfraManager::Vm::Operations::Power
 
   def raw_start
     start_with_cloud_init = custom_attributes.find_by(:name => "miq_provision_boot_with_cloud_init")
-    with_provider_object do |rhevm_vm|
-      rhevm_vm.start { |action| action.use_cloud_init(true) if start_with_cloud_init }
-    end
+    ext_management_system.ovirt_services.vm_start(self, start_with_cloud_init)
     start_with_cloud_init.try(&:destroy)
-  rescue Ovirt::VmAlreadyRunning
   end
 
   def raw_stop
-    with_provider_object(&:stop)
-  rescue Ovirt::VmIsNotRunning
+    ext_management_system.ovirt_services.vm_stop(self)
   end
 
   def raw_suspend
-    with_provider_object(&:suspend)
+    ext_management_system.ovirt_services.vm_suspend(self)
   end
 end

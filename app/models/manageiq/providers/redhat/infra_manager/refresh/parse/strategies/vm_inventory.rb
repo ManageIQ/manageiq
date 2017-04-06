@@ -46,7 +46,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
 
         # If the vm has a host but the refresh does not include it in the "hosts" hash
         if host.blank? && vm_inv.try(:host).present?
-          host = partial_host_hash(vm_inv.host)
+          host = partial_host_hash(vm_inv.host, ems_cluster)
           added_hosts << host if host
         end
 
@@ -87,7 +87,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
 
     def partial_host_hash(partial_host_inv)
       ems_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(partial_host_inv.href)
-      { :ems_ref => ems_ref, :uid_ems => partial_host_inv.id }
+      { :ems_ref => ems_ref, :uid_ems => partial_host_inv.id, :ems_cluster => ems_cluster }
     end
 
     def create_vm_hash(template, ems_ref, vm_id, name)

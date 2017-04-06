@@ -25,13 +25,12 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::ParserBuilde
       end
 
       context "forced version 3" do
-        let(:options) { { :force_version => 3  } }
+        let(:options) { { :force_version => 3 } }
 
         it 'returns the api3 parser' do
           expect(subject).to eq(ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies::Api3)
         end
       end
-
     end
 
     context "when v3 api" do
@@ -44,7 +43,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::ParserBuilde
       end
 
       context "forced version 4" do
-        let(:options) { { :force_version => 4  } }
+        let(:options) { { :force_version => 4 } }
 
         it 'returns the api4 parser' do
           expect(subject).to eq(ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies::Api4)
