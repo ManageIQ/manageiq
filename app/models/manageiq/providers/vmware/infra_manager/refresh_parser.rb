@@ -1294,6 +1294,8 @@ module ManageIQ::Providers
           mor = data['MOR'] # Use the MOR directly from the data since the mor as a key may be corrupt
 
           config = data["configuration"]
+          next if config.nil?
+
           das_config = config["dasConfig"]
           drs_config = config["drsConfig"]
 
