@@ -12,7 +12,7 @@
 title: Ansible Tower Providers
 
 # Menu name
-name: ConfigurationManagerForeman
+name: Ansible Tower Providers
 
 # Main DB table report is based on
 db: ManageIQ::Providers::AnsibleTower::AutomationManager
@@ -20,6 +20,7 @@ db: ManageIQ::Providers::AnsibleTower::AutomationManager
 # Columns to fetch from the main table
 cols:
 - name
+- url
 - type
 - last_refresh_date
 - region_description
@@ -31,7 +32,7 @@ include:
   zone:
     columns:
     - name
-  provider:
+  endpoints:
     columns:
     - url
 
@@ -41,7 +42,7 @@ include_for_find:
 # Order of columns (from all tables)
 col_order:
 - name
-- provider.url
+- url
 - type
 - zone.name
 - last_refresh_date
