@@ -21,16 +21,12 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
       raise "version #{version} of the api is not supported by the provider"
     end
 
-    # If the API path is stored in the endpoints table then use it:
-    path = options[:path] || default_endpoint.path
-    _log.info("Using stored API path '#{path}'.") unless path.blank?
-
     # Prepare the options to call the method that creates the actual connection:
     connect_options = {
       :scheme     => options[:scheme] || 'https',
       :server     => options[:ip] || address,
       :port       => options[:port] || port,
-      :path       => path,
+      :path       => options[:path] || '/ovirt-engine/api',
       :username   => options[:user] || authentication_userid(options[:auth_type]),
       :password   => options[:pass] || authentication_password(options[:auth_type]),
       :service    => options[:service] || "Service",
@@ -56,7 +52,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     connection = self.class.public_send(connect_method, connect_options)
 
     # Copy the API path to the endpoints table:
-    default_endpoint.path = version.to_i == 4 ? '/ovirt-engine/api' : connection.api_path
+    default_endpoint.path = connect_options[:path]
 
     connection
   end
