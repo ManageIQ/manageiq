@@ -10,7 +10,7 @@ describe NumberOfVmsVisibilityService do
 
         it "adds values to field names to hide and edit" do
           expect(subject.determine_visibility(number_of_vms, platform)).to eq(
-            :hide => [:sysprep_computer_name, :linux_host_name],
+            :hide => [:sysprep_computer_name, :linux_host_name, :floating_ip_address],
             :edit => [:ip_addr]
           )
         end
@@ -21,7 +21,7 @@ describe NumberOfVmsVisibilityService do
 
         it "adds values to field names to hide and edit" do
           expect(subject.determine_visibility(number_of_vms, platform)).to eq(
-            :hide => [:sysprep_computer_name, :linux_host_name],
+            :hide => [:sysprep_computer_name, :linux_host_name, :floating_ip_address],
             :edit => [:ip_addr]
           )
         end
@@ -37,7 +37,7 @@ describe NumberOfVmsVisibilityService do
         it "adds values to field names to hide and edit" do
           expect(subject.determine_visibility(number_of_vms, platform)).to eq(
             :hide => [:ip_addr, :sysprep_computer_name],
-            :edit => [:linux_host_name]
+            :edit => [:floating_ip_address, :linux_host_name]
           )
         end
       end
@@ -48,7 +48,7 @@ describe NumberOfVmsVisibilityService do
         it "adds values to field names to hide and edit" do
           expect(subject.determine_visibility(number_of_vms, platform)).to eq(
             :hide => [:ip_addr, :linux_host_name],
-            :edit => [:sysprep_computer_name]
+            :edit => [:floating_ip_address, :sysprep_computer_name]
           )
         end
       end
