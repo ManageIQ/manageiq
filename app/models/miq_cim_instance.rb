@@ -102,16 +102,14 @@ class MiqCimInstance < ApplicationRecord
   #
   def has_perf_data?(interval_name = "hourly")
     @has_perf_data ||= {}
-    unless (rv = @has_perf_data[interval_name]).nil?
-      return rv
-    end
-
-    return @has_perf_data[interval_name] = false if metrics.nil?
-
-    if interval_name == "realtime"
-      return @has_perf_data[interval_name] = metrics.miq_derived_metrics.exists?
-    end
-    @has_perf_data[interval_name] = metrics.miq_metrics_rollups.exists?(:rollup_type => interval_name)
+    return @has_perf_data[interval_name] unless @has_perf_data[interval_name].nil?
+    @has_perf_data[interval_name] = if metrics.nil?
+                                      false
+                                    elsif interval_name == 'realtime'
+                                      metrics.miq_derived_metrics.exists?
+                                    else
+                                      metrics.miq_metrics_rollups.exists?(:rollup_type => interval_name)
+                                    end
   end
 
   def last_capture(interval_name = "hourly")
