@@ -21,7 +21,7 @@ class ManageIQ::Providers::Hawkular::DatawarehouseManager::EventCatcher::Stream
     ManageIQ::Providers::Hawkular::DatawarehouseManager::EventCatcher.worker_settings[:alertable_tenants]
   end
 
-  def post_fetch(alerts)
-    # Tag with seen_by => server_UUID when that becomes available through the HAWKULAR API
+  def seen_alerts_tags
+    ["seen_by#{MiqServer.my_server.id}|true"]
   end
 end
