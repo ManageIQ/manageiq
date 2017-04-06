@@ -7,6 +7,9 @@ describe(ServiceAnsiblePlaybook) do
   let(:credential_0)   { FactoryGirl.create(:authentication, :manager_ref => '1') }
   let(:credential_1)   { FactoryGirl.create(:authentication, :manager_ref => 'a') }
   let(:credential_2)   { FactoryGirl.create(:authentication, :manager_ref => 'b') }
+  let(:decrpyted_val)  { 'my secret' }
+  let(:encrypted_val)  { MiqPassword.encrypt(decrpyted_val) }
+  let(:encrypted_val2) { MiqPassword.encrypt(decrpyted_val + "new") }
 
   let(:loaded_service) do
     service_template = FactoryGirl.create(:service_template_ansible_playbook)
@@ -26,10 +29,11 @@ describe(ServiceAnsiblePlaybook) do
   let(:dialog_options) do
     {
       :dialog => {
-        'dialog_hosts'      => 'host1,host2',
-        'dialog_credential' => credential_1.id,
-        'dialog_param_var1' => 'value1',
-        'dialog_param_var2' => 'value2'
+        'dialog_hosts'                => 'host1,host2',
+        'dialog_credential'           => credential_1.id,
+        'dialog_param_var1'           => 'value1',
+        'dialog_param_var2'           => 'value2',
+        'password::dialog_param_pswd' => encrypted_val
       }
     }
   end
@@ -55,7 +59,7 @@ describe(ServiceAnsiblePlaybook) do
     {
       :credential_id => credential_2.id,
       :hosts         => 'host3',
-      :extra_vars    => { 'var1' => 'new_val1' }
+      :extra_vars    => { 'var1' => 'new_val1', 'pswd' => encrypted_val2 }
     }
   end
 
@@ -65,7 +69,7 @@ describe(ServiceAnsiblePlaybook) do
         :credential => 1,
         :inventory  => 2,
         :hosts      => "default_host1,default_host2",
-        :extra_vars => {'var1' => 'value1', 'var2' => 'value2'}
+        :extra_vars => {'var1' => 'value1', 'var2' => 'value2', 'pswd' => encrypted_val}
       }
     }
   end
@@ -90,7 +94,7 @@ describe(ServiceAnsiblePlaybook) do
         expect(service.options[:provision_job_options]).to have_attributes(
           :inventory  => 20,
           :credential => credential_1.manager_ref,
-          :extra_vars => {'var1' => 'value1', 'var2' => 'value2', 'var3' => 'default_val3'}
+          :extra_vars => {'var1' => 'value1', 'var2' => 'value2', 'var3' => 'default_val3', 'pswd' => encrypted_val}
         )
       end
 
@@ -126,18 +130,18 @@ describe(ServiceAnsiblePlaybook) do
         expect(service.options[:provision_job_options]).to have_attributes(
           :inventory  => 30,
           :credential => credential_2.manager_ref,
-          :extra_vars => {'var1' => 'new_val1', 'var2' => 'value2', 'var3' => 'default_val3'}
+          :extra_vars => {'var1' => 'new_val1', 'var2' => 'value2', 'var3' => 'default_val3', 'pswd' => encrypted_val2}
         )
       end
     end
   end
 
   describe '#execute' do
+    let(:control_extras) { {'a' => 'A', 'b' => 'B', 'c' => 'C'} }
     before do
       FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
       miq_request_task = FactoryGirl.create(:miq_request_task)
-      @control_extras = { 'a' => 'A', 'b' => 'B', 'c' => 'C'}
-      miq_request_task.update_attributes(:options => {:request_options => {:manageiq_extra_vars => @control_extras}})
+      miq_request_task.update_attributes(:options => {:request_options => {:manageiq_extra_vars => control_extras}})
       loaded_service.update_attributes(:evm_owner        => FactoryGirl.create(:user),
                                        :miq_request_task => miq_request_task)
     end
@@ -145,9 +149,12 @@ describe(ServiceAnsiblePlaybook) do
     it 'creates an Ansible Tower job' do
       expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job).to receive(:create_job) do |jobtemp, opts|
         expect(jobtemp).to eq(tower_job_temp)
-        exposed_miq = %w(api_url api_token service user) + @control_extras.keys
+        exposed_miq = %w(api_url api_token service user) + control_extras.keys
         expect(opts[:extra_vars].delete('manageiq').keys).to include(*exposed_miq)
-        expect(opts).to include(provision_options[:provision_job_options].except(:hosts))
+
+        expected_opts = provision_options[:provision_job_options].except(:hosts)
+        expected_opts[:extra_vars]['pswd'] = decrpyted_val
+        expect(opts).to include(expected_opts)
         tower_job
       end
       loaded_service.execute(action)
