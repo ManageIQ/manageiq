@@ -234,12 +234,16 @@
         :identifier: miq_request_approval
       - :name: deny
         :identifier: miq_request_approval
+      - :name: edit
+        :identifier: miq_request_edit
     :resource_actions:
       :post:
       - :name: approve
         :identifier: miq_request_approval
       - :name: deny
         :identifier: miq_request_approval
+      - :name: edit
+        :identifier: miq_request_edit
   :availability_zones:
     :description: Availability Zones
     :identifier: availability_zone

@@ -67,6 +67,57 @@ describe "Automation Requests API" do
     end
   end
 
+  describe "automation request update" do
+    it 'forbids provision request update without an appropriate role' do
+      automation_request = FactoryGirl.create(:automation_request, :requester => @user, :options => {:foo => "bar"})
+      api_basic_authorize
+
+      run_post(automation_requests_url(automation_request.id), :action => "edit", :options => {:baz => "qux"})
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'updates a single provision request' do
+      automation_request = FactoryGirl.create(:automation_request, :requester => @user, :options => {:foo => "bar"})
+      api_basic_authorize(action_identifier(:automation_requests, :edit))
+
+      run_post(automation_requests_url(automation_request.id), :action => "edit", :options => {:baz => "qux"})
+
+      expected = {
+        "id"      => automation_request.id,
+        "options" => a_hash_including("foo" => "bar", "baz" => "qux")
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'updates multiple provision requests' do
+      automation_request, automation_request2 = FactoryGirl.create_list(:automation_request,
+                                                                        2,
+                                                                        :requester => @user,
+                                                                        :options   => {:foo => "bar"})
+      api_basic_authorize collection_action_identifier(:service_requests, :edit)
+
+      run_post(
+        automation_requests_url,
+        :action    => "edit",
+        :resources => [
+          {:id => automation_request.id, :options => {:baz => "qux"}},
+          {:id => automation_request2.id, :options => {:quux => "quuz"}}
+        ]
+      )
+
+      expected = {
+        'results' => a_collection_containing_exactly(
+          a_hash_including("options" => a_hash_including("foo" => "bar", "baz" => "qux")),
+          a_hash_including("options" => a_hash_including("foo" => "bar", "quux" => "quuz"))
+        )
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+  end
+
   context "Automation requests approval" do
     let(:template)      { FactoryGirl.create(:template_amazon) }
     let(:request_body)  { {:requester => @user, :source_type => 'VmOrTemplate', :source_id => template.id} }
