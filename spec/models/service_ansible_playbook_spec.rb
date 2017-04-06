@@ -202,9 +202,27 @@ describe(ServiceAnsiblePlaybook) do
   end
 
   describe '#postprocess' do
-    it 'deletes inventory' do
-      expect(executed_service).to receive(:delete_inventory)
-      executed_service.postprocess(action)
+    context 'with user selected hosts' do
+      it 'deletes temporary inventory' do
+        expect(executed_service).to receive(:delete_inventory)
+        executed_service.postprocess(action)
+      end
+    end
+
+    context 'with default localhost' do
+      let(:provision_options) do
+        {
+          :provision_job_options => {
+            :credential => 1,
+            :extra_vars => {'var1' => 'value1', 'var2' => 'value2', 'pswd' => encrypted_val}
+          }
+        }
+      end
+
+      it 'needs not to delete the inventory' do
+        expect(executed_service).not_to receive(:delete_inventory)
+        executed_service.postprocess(action)
+      end
     end
   end
 

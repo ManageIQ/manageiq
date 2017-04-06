@@ -42,8 +42,8 @@ class ServiceAnsiblePlaybook < ServiceGeneric
   end
 
   def postprocess(action)
-    hosts = options.fetch_path(job_option_key(action), :inventory)
-    delete_inventory(action) unless use_default_inventory?(hosts)
+    inventory_raw_id = options.fetch_path(job_option_key(action), :inventory)
+    delete_inventory(action, inventory_raw_id) if inventory_raw_id
   end
 
   def on_error(action)
@@ -123,10 +123,9 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     end
   end
 
-  def delete_inventory(action)
+  def delete_inventory(action, inventory_raw_id)
     manager(action).with_provider_connection do |connection|
-      inventory_id = options.fetch_path(job_option_key(action), :inventory)
-      connection.api.inventories.find(inventory_id).destroy!
+      connection.api.inventories.find(inventory_raw_id).destroy!
     end
   end
 
