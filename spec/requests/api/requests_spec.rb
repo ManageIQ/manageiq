@@ -67,7 +67,7 @@ RSpec.describe "Requests API" do
 
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include("id"   => service_request.id,
-                                              "href" => a_string_matching(service_requests_url(service_request.id)))
+                                              "href" => a_string_matching(requests_url(service_request.id)))
     end
 
     it "lists all the service requests if you are admin" do
@@ -110,7 +110,7 @@ RSpec.describe "Requests API" do
 
       expected = {
         "id"   => service_request.id,
-        "href" => a_string_matching(service_requests_url(service_request.id))
+        "href" => a_string_matching(requests_url(service_request.id))
       }
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)
@@ -443,6 +443,23 @@ RSpec.describe "Requests API" do
       }
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)
+    end
+  end
+
+  context "resource hrefs" do
+    it "returns the requests href reference for objects of different subclasses" do
+      provision_request = FactoryGirl.create(:service_template_provision_request, :requester => @user)
+      automation_request = FactoryGirl.create(:automation_request, :requester => @user)
+      api_basic_authorize collection_action_identifier(:requests, :read, :get)
+
+      run_get requests_url, :expand => :resources
+
+      expected = [
+        a_hash_including('href' => a_string_including(requests_url(provision_request.id))),
+        a_hash_including('href' => a_string_including(requests_url(automation_request.id)))
+      ]
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body['resources']).to match_array(expected)
     end
   end
 end

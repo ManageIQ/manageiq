@@ -76,6 +76,7 @@ describe "tenant quotas API" do
       expect(response).to have_http_status(:ok)
       quota.reload
       expect(quota.value).to eq(5)
+      expect(response.parsed_body).to include('href' => /quotas/)
     end
 
     it "can update multiple quotas from a tenant with POST" do
