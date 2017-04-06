@@ -5,24 +5,23 @@ describe MiqDialog do
       allow(described_class).to receive(:find_by)
 
       expect(described_class).to receive(:sync_from_file).at_least(:once).with(/^#{root}/, root).and_call_original
-
-      described_class.seed
-
-      expect(described_class).to have_received(:find_by).once.with(
+      expect(described_class).to receive(:find_by).once.with(
         :name => "miq_host_provision_dialogs", :filename => "miq_host_provision_dialogs.yaml"
       )
+
+      described_class.seed
     end
 
     it 'seed from plugins' do
       mock_engine = double(:root => Pathname.new('/some/root'))
-      allow(Vmdb::Plugins.instance).to receive(:registered_provider_plugins).and_return([mock_engine])
       allow(described_class).to receive(:sync_from_dir)
 
-      described_class.seed
-
-      expect(described_class).to have_received(:sync_from_dir).at_least(:once).with(
+      expect(Vmdb::Plugins.instance).to receive(:registered_provider_plugins).and_return([mock_engine])
+      expect(described_class).to receive(:sync_from_dir).once.with(
         mock_engine.root.join('content', 'miq_dialogs')
       )
+
+      described_class.seed
     end
   end
 end
