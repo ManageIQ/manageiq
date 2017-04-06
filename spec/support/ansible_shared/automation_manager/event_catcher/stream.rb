@@ -17,67 +17,17 @@ shared_examples_for "ansible event_catcher stream" do |cassette_file|
 
   context "#poll" do
     it "yields valid events" do
-      subject.instance_variable_set(:@last_activity, OpenStruct.new(:timestamp => '2016-01-01 01:00:00'))
-      subject.instance_variable_set(:@poll_sleep, 0)
-      expected_event = {
-        "id"                 => 1,
-        "type"               => "activity_stream",
-        "url"                => "/api/v1/activity_stream/1/",
-        "related"            => {
-          "user" => [
-            "/api/v1/users/1/"
-          ]
-        },
-        "summary_fields"     => {
-          "user" => [
-            {
-              "username"   => "admin",
-              "first_name" => "",
-              "last_name"  => "",
-              "id"         => 1
-            }
-          ]
-        },
-        "timestamp"          => "2016-08-02T17:56:37.212874Z",
-        "operation"          => "create",
-        "changes"            => {
-          "username"     => "admin",
-          "first_name"   => "",
-          "last_name"    => "",
-          "is_active"    => true,
-          "id"           => 1,
-          "is_superuser" => true,
-          "is_staff"     => true,
-          "password"     => "hidden",
-          "email"        => "admin@example.com",
-          "date_joined"  => "2016-08-02 17:56:37.162225+00:00"
-        },
-        "object1"            => "user",
-        "object2"            => "",
-        "object_association" => ""
-      }
-
       VCR.use_cassette(cassette_file) do
+        last_activity = subject.send(:last_activity)
+        # do something on tower that creates an activity in activity_stream
+        provider.connect.api.credentials.create!(:name => 'test_stream', :user => 1)
+        polled_event = nil
         subject.poll do |event|
-          polled_event = event
-          expect(polled_event.to_h).to eq(expected_event)
+          expect(event['id']).to eq(last_activity.id + 1)
           subject.stop
+          polled_event = event
         end
-      end
-    end
-  end
-
-  context ".filter" do
-    it "converts timestamp to correct timeformat" do
-      # It must be in YYYY-MM-DD HH:MM[:ss[.uuuuuu]][TZ]
-      timestamps = {
-        '2016-01-01 01:00:00'                  => '2016-01-01 01:00:00',
-        '2017-03-10 19%3A31%3A26'              => '2017-03-10 00:00:00',
-        Time.zone.parse('1975-12-31 01:01:01') => '1975-12-31 01:01:01',
-      }
-      timestamps.each do |input, converted|
-        subject.instance_variable_set(:@last_activity, OpenStruct.new(:timestamp => input))
-        expect(subject.send(:filter)[:timestamp__gt]).to eq(converted)
+        expect(subject.send(:last_activity).id).to eq(polled_event['id'])
       end
     end
   end

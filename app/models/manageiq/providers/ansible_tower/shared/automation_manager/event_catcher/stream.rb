@@ -15,7 +15,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::EventCatche
             ansible.api.activity_stream.all(filter).each do |activity|
               throw :stop_polling if @stop_polling
               yield activity.to_h
-              @last_activity = activity
+              self.last_activity = activity
             end
             sleep @poll_sleep
           end
@@ -29,11 +29,26 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::EventCatche
 
   private
 
+  def last_activity=(activity)
+    @last_activity = activity
+  end
+
+  def last_activity
+    @last_activity ||= begin
+      @ems.with_provider_connection do |ansible|
+        ansible.api.activity_stream.all(:order_by => '-id').first
+      end
+    end
+  end
+
   def filter
-    timestamp = @last_activity ? Time.zone.parse(@last_activity.timestamp.to_s) : 1.minute.ago
-    {
-      :order_by      => 'timestamp',
-      :timestamp__gt => timestamp.to_s(:db)
-    }
+    if last_activity
+      {
+        :order_by => 'id',
+        :id__gt   => last_activity.id
+      }
+    else
+      { :order_by => 'id'}
+    end
   end
 end
