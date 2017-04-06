@@ -7,5 +7,8 @@ FactoryGirl.define do
     factory :service_template_provision_request, :class => "ServiceTemplateProvisionRequest"
     factory :vm_migrate_request,                 :class => "VmMigrateRequest"
     factory :vm_reconfigure_request,             :class => "VmReconfigureRequest"
+    factory :miq_provision_request,              :class => "MiqProvisionRequest" do
+      source { create(:miq_template) }
+    end
   end
 end
