@@ -350,6 +350,17 @@ RSpec.describe "Requests API" do
       expect_single_resource_query(expected)
       expect(response).to have_http_status(:ok)
     end
+
+    it "fails without an id" do
+      api_basic_authorize(collection_action_identifier(:requests, :edit))
+      service = FactoryGirl.create(:service, :name => "service1")
+      ServiceReconfigureRequest.create_request({:src_id => service.id}, @user, false)
+
+      run_post(requests_url, gen_request(:edit, :options => {:some_option => "some_value"}))
+
+      expect(response.parsed_body).to include_error_with_message(/Must specify a id/)
+      expect(response).to have_http_status(:bad_request)
+    end
   end
 
   context "Requests approval" do
