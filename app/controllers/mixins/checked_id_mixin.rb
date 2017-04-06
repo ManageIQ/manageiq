@@ -83,25 +83,57 @@ module Mixins
       assert_rbac(klass, Array.wrap(id))
       id
     end
-  end
 
-  # Find a record by model and ID.
-  # Set flash errors for not found/not authorized.
-  def find_record_with_rbac_flash(model, id, resource_name = nil)
-    tested_object = klass.find(id)
-    if tested_object.nil?
-      record_name = resource_name ? "#{ui_lookup(:model => model)} '#{resource_name}'" : _("The selected record")
-      add_flash(_("%{record_name} no longer exists in the database") % {:record_name => record_name}, :error)
-      return nil
+    # Find a record by model and ID.
+    # Set flash errors for not found/not authorized.
+    def find_record_with_rbac_flash(model, id, resource_name = nil)
+      tested_object = klass.find(id)
+      if tested_object.nil?
+        record_name = resource_name ? "#{ui_lookup(:model => model)} '#{resource_name}'" : _("The selected record")
+        add_flash(_("%{record_name} no longer exists in the database") % {:record_name => record_name}, :error)
+        return nil
+      end
+
+      checked_object = Rbac.filtered_object(tested_object, :user => current_user)
+      if checked_object.nil?
+        add_flash(_("You are not authorized to view %{model_name} '%{resource_name}'") %
+          {:model_name => ui_lookup(:model => tested_object.class.base_model.to_s), :resource_name => resource_name}, :error)
+        return nil
+      end
+
+      checked_object
     end
 
-    checked_object = Rbac.filtered_object(tested_object, :user => current_user)
-    if checked_object.nil?
-      add_flash(_("You are not authorized to view %{model_name} '%{resource_name}'") %
-        {:model_name => ui_lookup(:model => tested_object.class.base_model.to_s), :resource_name => resource_name}, :error)
-      return nil
+    # Tries to load a single checked item on from params.
+    # If there's none, takes the id sent in params[:id].
+    #
+    # Returns:
+    #   id of the item as a Fixnum
+    #
+    def checked_or_params_id
+      objs = find_checked_items
+      obj = objs.blank? && params[:id].present? ? params[:id] : objs[0]
+      obj = from_cid(obj) if obj.present?
+      obj
     end
 
-    checked_object
+    # Either creates a new instance or loads the one passed in 'ids'.
+    #
+    # Params:
+    #   klass - class of requested object
+    #   id    - id of requested object
+    #
+    # 'id' can be an array (then the first item is taken) or a single value.
+    #
+    # Returns:
+    #   instance of 'klass'
+    #
+    def find_or_new(klass, id)
+      if params[:typ] == "new"
+        klass.new
+      else
+        Rbac.filtered(Array(id), :class => klass).first
+      end
+    end
   end
 end
