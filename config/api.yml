@@ -1309,6 +1309,8 @@
         :identifier: miq_request_approval
       - :name: deny
         :identifier: miq_request_approval
+      - :name: edit
+        :identifier: miq_request_edit
     :resource_actions:
       :get:
       - :name: read
@@ -1318,6 +1320,8 @@
         :identifier: miq_request_approval
       - :name: deny
         :identifier: miq_request_approval
+      - :name: edit
+        :identifier: miq_request_edit
   :quotas:
     :description: TenantQuotas
     :options:

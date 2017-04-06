@@ -19,6 +19,12 @@ module Api
                                        additional_values, ems_custom_attrs, miq_custom_attrs)
     end
 
+    def edit_resource(type, id, data)
+      req = resource_search(id, type, collection_class(:provision_requests))
+      RequestEditor.edit(req, data)
+      req
+    end
+
     def deny_resource(type, id, data)
       api_action(type, id) do |klass|
         provreq = resource_search(id, type, klass)

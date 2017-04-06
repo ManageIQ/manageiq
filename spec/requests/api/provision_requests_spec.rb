@@ -92,6 +92,57 @@ describe "Provision Requests API" do
       expect(MiqProvisionRequest.exists?(task_id1)).to be_truthy
       expect(MiqProvisionRequest.exists?(task_id2)).to be_truthy
     end
+
+    describe "provision request update" do
+      it 'forbids provision request update without an appropriate role' do
+        provision_request = FactoryGirl.create(:miq_provision_request, :requester => @user, :options => {:foo => "bar"})
+        api_basic_authorize
+
+        run_post(provision_requests_url(provision_request.id), :action => "edit", :options => {:baz => "qux"})
+
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'updates a single provision request' do
+        provision_request = FactoryGirl.create(:miq_provision_request, :requester => @user, :options => {:foo => "bar"})
+        api_basic_authorize(action_identifier(:provision_requests, :edit))
+
+        run_post(provision_requests_url(provision_request.id), :action => "edit", :options => {:baz => "qux"})
+
+        expected = {
+          "id"      => provision_request.id,
+          "options" => a_hash_including("foo" => "bar", "baz" => "qux")
+        }
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body).to include(expected)
+      end
+
+      it 'updates multiple provision requests' do
+        provision_request, provision_request2 = FactoryGirl.create_list(:miq_provision_request,
+                                                                        2,
+                                                                        :requester => @user,
+                                                                        :options   => {:foo => "bar"})
+        api_basic_authorize collection_action_identifier(:service_requests, :edit)
+
+        run_post(
+          provision_requests_url,
+          :action    => "edit",
+          :resources => [
+            {:id => provision_request.id, :options => {:baz => "qux"}},
+            {:id => provision_request2.id, :options => {:quux => "quuz"}}
+          ]
+        )
+
+        expected = {
+          'results' => a_collection_containing_exactly(
+            a_hash_including("options" => a_hash_including("foo" => "bar", "baz" => "qux")),
+            a_hash_including("options" => a_hash_including("foo" => "bar", "quux" => "quuz"))
+          )
+        }
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body).to include(expected)
+      end
+    end
   end
 
   context "Provision requests approval" do
