@@ -1,9 +1,9 @@
 class OrchestrationTemplateVnfd < OrchestrationTemplate
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::CloudManager"
 
-  before_create :raw_create, :if => :remote_proxy?
-  before_update :raw_update, :if => :remote_proxy?
-  before_destroy :raw_destroy, :if => :remote_proxy?
+  before_create :raw_create,   :unless => :block_raw_action?
+  before_update :raw_update,   :unless => :block_raw_action?
+  before_destroy :raw_destroy, :unless => :block_raw_action?
 
   def raw_create
     vnfd_data = {:attributes    => {:vnfd => content},

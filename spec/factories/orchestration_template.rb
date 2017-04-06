@@ -3,6 +3,7 @@ FactoryGirl.define do
     sequence(:name)        { |n| "template name #{seq_padded_for_sorting(n)}" }
     sequence(:content)     { |n| "any template text #{seq_padded_for_sorting(n)}" }
     sequence(:description) { |n| "some description #{seq_padded_for_sorting(n)}" }
+    block_raw_action       true
   end
 
   factory :orchestration_template_cfn, :parent => :orchestration_template, :class => "OrchestrationTemplateCfn" do
