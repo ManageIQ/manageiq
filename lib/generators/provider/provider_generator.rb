@@ -40,6 +40,7 @@ class ProviderGenerator < Rails::Generators::NamedBase
     chmod "bin", 0755 & ~File.umask, :verbose => false
     template "config/initializers/gettext.rb"
     template "config/settings.yml"
+    template "lib/manageiq-providers-%provider_name%.rb"
     template "lib/manageiq/providers/%provider_name%.rb"
     template "lib/manageiq/providers/%provider_name%/engine.rb"
     template "lib/manageiq/providers/%provider_name%/version.rb"
