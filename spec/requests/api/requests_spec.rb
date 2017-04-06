@@ -335,7 +335,7 @@ RSpec.describe "Requests API" do
     end
 
     it "succeed" do
-      api_basic_authorize collection_action_identifier(:requests, :edit)
+      api_basic_authorize(action_identifier(:requests, :edit))
 
       service = FactoryGirl.create(:service, :name => "service1")
       request = ServiceReconfigureRequest.create_request({ :src_id => service.id }, @user, false)
