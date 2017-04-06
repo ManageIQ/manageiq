@@ -133,6 +133,14 @@ RSpec.describe 'Orchestration Template API' do
       run_post(orchestration_templates_url,
                gen_request(:delete, [{'id' => cfn.id}, {'id' => hot.id}]))
 
+      expected = {
+        'results' => a_collection_containing_exactly(
+          a_hash_including('success' => true, 'message' => "orchestration_templates id: #{cfn.id} deleting"),
+          a_hash_including('success' => true, 'message' => "orchestration_templates id: #{hot.id} deleting")
+        )
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
       expect(OrchestrationTemplate.exists?(cfn.id)).to be_falsey
       expect(OrchestrationTemplate.exists?(hot.id)).to be_falsey
     end
