@@ -1872,7 +1872,7 @@
       :identifier: action_admin
       :children:
       - :name: List
-        :description: Display All MiqActions
+        :description: Display All Policy Actions
         :feature_type: view
         :identifier: action_show_list
       - :name: Show
