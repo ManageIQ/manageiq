@@ -267,16 +267,13 @@ describe MiqAeDatastore do
         expect(dom).not_to be_enabled
       end
 
-
       it "check attributes in namespace" do
         options = {'yaml_file' => @yaml_file}
         assert_single_domain_import(options, options)
-        dom = MiqAeDomain.find_by_fqname(@customer_domain.name, false)
         ns = MiqAeNamespace.find_by(:name => 'customer_namespace_1')
         expect(ns.description).to eq("test")
         expect(ns.display_name).to eq("test")
       end
-
 
       it "import single system domain" do
         options = {'yaml_file' => @yaml_file}
