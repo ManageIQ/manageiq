@@ -134,7 +134,7 @@ shared_examples_for "ansible credential" do
     let(:credentials)     { double("AnsibleTowerClient::Collection", :find => credential) }
     let(:credential)      { double("AnsibleTowerClient::Credential", :id => 1) }
     let(:ansible_cred)    { described_class.create!(:resource => manager, :manager_ref => credential.id) }
-    let(:params)          { {'userid' => 'john'} }
+    let(:params)          { {:userid => 'john'} }
     let(:expected_params) { {:username => 'john', :kind => described_class::TOWER_KIND} }
     let(:expected_notify) do
       {

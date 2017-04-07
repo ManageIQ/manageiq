@@ -17,7 +17,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
 
     def create_in_provider_queue(manager_id, params)
       manager = ExtManagementSystem.find(manager_id)
-      action = "Creating #{name} with name=#{params[:name] || params['name']}"
+      action = "Creating #{name} with name=#{params[:name]}"
       queue(manager.my_zone, nil, "create_in_provider", [manager_id, params], action)
     end
 

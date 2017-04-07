@@ -12,7 +12,6 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Credential
 
     def provider_params(params)
       params[:username] = params.delete(:userid) if params.include?(:userid)
-      params[:username] = params.delete('userid') if params.include?('userid')
       params[:kind] = self::TOWER_KIND
       params
     end
