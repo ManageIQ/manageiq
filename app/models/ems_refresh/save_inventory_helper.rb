@@ -106,6 +106,7 @@ module EmsRefresh::SaveInventoryHelper
 
   def update_attributes!(ar_model, attributes, remove_keys)
     ar_model.assign_attributes(attributes.except(*remove_keys))
+    # HACK: Avoid empty BEGIN/COMMIT pair until fix is made for https://github.com/rails/rails/issues/17937
     ar_model.save! if ar_model.changed?
   end
 
