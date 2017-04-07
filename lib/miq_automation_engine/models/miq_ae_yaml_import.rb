@@ -147,7 +147,7 @@ class MiqAeYamlImport
     process_namespace(domain_obj, namespace_folder, load_file(namespace_file), domain_name)
   end
 
-  def process_namespace(domain_obj, namespace_folder, _namespace_yaml, domain_name)
+  def process_namespace(domain_obj, namespace_folder, namespace_yaml, domain_name)
     fqname = if @domain_name == '.'
                "#{domain_name}/#{namespace_folder}"
              else
@@ -157,6 +157,8 @@ class MiqAeYamlImport
     namespace_obj = MiqAeNamespace.find_by_fqname(fqname, false)
     track_stats('namespace', namespace_obj)
     namespace_obj ||= add_namespace(fqname) unless @preview
+    attrs = namespace_yaml.fetch_path('object', 'attributes').slice('display_name', 'description')
+    namespace_obj.update_attributes(attrs) unless @preview
     if @options['class_name']
       import_class(File.join(namespace_folder, "#{@options['class_name']}#{CLASS_DIR_SUFFIX}"), namespace_obj)
     else
