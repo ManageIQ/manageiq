@@ -60,7 +60,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::Inventory::Parser::AutomationM
       inventory_object.scm_clean = project.scm_clean
       inventory_object.scm_delete_on_update = project.scm_delete_on_update
       inventory_object.scm_update_on_launch = project.scm_update_on_launch
-      inventory_object.last_update_failed = project.last_update_failed
+      inventory_object.status = project.status
 
       project.playbooks.each do |playbook_name|
         inventory_object_playbook = persister.configuration_script_payloads.find_or_build_by(

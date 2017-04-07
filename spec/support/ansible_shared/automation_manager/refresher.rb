@@ -152,7 +152,7 @@ shared_examples_for "ansible refresher" do |ansible_provider, manager_class, ems
       :scm_clean            => false,
       :scm_delete_on_update => false,
       :scm_update_on_launch => true,
-      :last_update_failed   => false
+      :status               => 'successful'
     )
     expect(expected_configuration_script_source.authentication.name).to eq('db-github')
   end
