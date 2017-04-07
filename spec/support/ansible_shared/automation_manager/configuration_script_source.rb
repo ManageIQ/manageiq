@@ -79,7 +79,7 @@ shared_examples_for "ansible configuration_script_source" do
 
     it "#delete_in_provider_queue" do
       task_id = project.delete_in_provider_queue
-      expect(MiqTask.find(task_id)).to have_attributes(:name => "Deleting #{described_class.name} with manager_ref=#{project.manager_ref}")
+      expect(MiqTask.find(task_id)).to have_attributes(:name => "Deleting #{described_class.name} with Tower internal reference=#{project.manager_ref}")
       expect(MiqQueue.first).to have_attributes(
         :instance_id => project.id,
         :args        => [],
@@ -105,7 +105,7 @@ shared_examples_for "ansible configuration_script_source" do
 
     it "#update_in_provider_queue" do
       task_id = project.update_in_provider_queue({})
-      expect(MiqTask.find(task_id)).to have_attributes(:name => "Updating #{described_class.name} with manager_ref=#{project.manager_ref}")
+      expect(MiqTask.find(task_id)).to have_attributes(:name => "Updating #{described_class.name} with Tower internal reference=#{project.manager_ref}")
       expect(MiqQueue.first).to have_attributes(
         :instance_id => project.id,
         :args        => [{:task_id => task_id}],
