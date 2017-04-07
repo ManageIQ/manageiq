@@ -192,7 +192,24 @@ module Api
       end
 
       def expand_subcollection?(sc, target)
-        respond_to?(target) && (@req.expand?(sc) || collection_config.show?(sc))
+        return false unless respond_to?(target) # If there's no query method, no need to go any further
+        expand_resources?(sc) || expand_action_resource?(sc) || resource_requested?(sc)
+      end
+
+      # Expand resource if:
+      # expand='resources' &&  no attributes selected && collection is configured for subcollection
+      def expand_resources?(sc)
+        @req.expand?('resources') && @req.attributes.empty? && collection_config.show?(sc)
+      end
+
+      # Expand resource if it is not a get but resource should be expanded
+      def expand_action_resource?(sc)
+        @req.method != :get && collection_config.show?(sc)
+      end
+
+      # Expand if explicitly requested
+      def resource_requested?(sc)
+        @req.expand?(sc)
       end
 
       #

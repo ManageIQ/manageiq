@@ -44,8 +44,10 @@ module Api
       end
 
       def attribute_selection
-        if !@req.attributes.empty? || @additional_attributes
-          @req.attributes | Array(@additional_attributes) | ID_ATTRS
+        if @req.attributes.empty? && @additional_attributes
+          Array(@additional_attributes) | ID_ATTRS
+        elsif !@req.attributes.empty?
+          @req.attributes
         else
           "all"
         end

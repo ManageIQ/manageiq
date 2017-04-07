@@ -24,6 +24,18 @@ describe "Service Catalogs API" do
     st_id ? "#{st_base}/#{st_id}" : st_base
   end
 
+  describe "Service Catalog Index" do
+    it "will return only the requested attributes" do
+      FactoryGirl.create(:service_template_catalog)
+      api_basic_authorize collection_action_identifier(:service_catalogs, :read, :get)
+
+      run_get service_catalogs_url, :expand => 'resources', :attributes => 'id'
+
+      expect(response).to have_http_status(:ok)
+      expect_hash_to_have_only_keys(response.parsed_body['resources'].first, %w(href id))
+    end
+  end
+
   describe "Service Catalogs create" do
     it "rejects resource creation without appropriate role" do
       api_basic_authorize

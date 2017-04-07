@@ -46,6 +46,16 @@ RSpec.describe "categories API" do
     expect(response).to have_http_status(:ok)
   end
 
+  it "will only return the requested attributes" do
+    FactoryGirl.create(:category)
+    api_basic_authorize collection_action_identifier(:categories, :read, :get)
+
+    run_get categories_url, :expand => 'resources', :attributes => 'id'
+
+    expect(response).to have_http_status(:ok)
+    expect_hash_to_have_only_keys(response.parsed_body['resources'].first, %w(href id))
+  end
+
   it "can list all the tags under a category" do
     classification = FactoryGirl.create(:classification_tag)
     category = FactoryGirl.create(:category, :children => [classification])
