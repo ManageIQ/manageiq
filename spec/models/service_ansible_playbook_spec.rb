@@ -22,7 +22,8 @@ describe(ServiceAnsiblePlaybook) do
 
   let(:executed_service) do
     FactoryGirl.create(:service_ansible_playbook, :options => provision_options).tap do |service|
-      allow(service).to receive(:job).with(action).and_return(tower_job)
+      regex = /(#{ResourceAction::PROVISION})|(#{ResourceAction::RETIREMENT})/
+      allow(service).to receive(:job).with(regex).and_return(tower_job)
     end
   end
 
@@ -201,21 +202,41 @@ describe(ServiceAnsiblePlaybook) do
   end
 
   describe '#postprocess' do
-    it 'deletes inventory' do
-      expect(executed_service).to receive(:delete_inventory)
-      executed_service.postprocess(action)
+    context 'with user selected hosts' do
+      it 'deletes temporary inventory' do
+        expect(executed_service).to receive(:delete_inventory)
+        executed_service.postprocess(action)
+      end
+    end
+
+    context 'with default localhost' do
+      let(:provision_options) do
+        {
+          :provision_job_options => {
+            :credential => 1,
+            :extra_vars => {'var1' => 'value1', 'var2' => 'value2', 'pswd' => encrypted_val}
+          }
+        }
+      end
+
+      it 'needs not to delete the inventory' do
+        expect(executed_service).not_to receive(:delete_inventory)
+        executed_service.postprocess(action)
+      end
     end
   end
 
   describe '#on_error' do
     it 'handles retirement error' do
       executed_service.update_attributes(:retirement_state => 'Retiring')
+      expect(tower_job).to receive(:refresh_ems)
       expect(executed_service).to receive(:postprocess)
       executed_service.on_error(ResourceAction::RETIREMENT)
       expect(executed_service.retirement_state).to eq('error')
     end
 
     it 'handles provisioning error' do
+      expect(tower_job).to receive(:refresh_ems)
       expect(executed_service).to receive(:postprocess)
       executed_service.on_error(action)
       expect(executed_service.retirement_state).to be_nil
