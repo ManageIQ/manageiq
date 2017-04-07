@@ -418,6 +418,15 @@ describe MiqQueue do
       expect(msg.priority).to eq(MiqQueue::LOW_PRIORITY)
     end
 
+    it "creates with :prority via create_with" do
+      msg = MiqQueue.create_with(:priority => MiqQueue::LOW_PRIORITY).put(
+        :class_name  => "Class1",
+        :method_name => "Method1",
+      )
+
+      expect(msg.priority).to eq(MiqQueue::LOW_PRIORITY)
+    end
+
     it "defaults :role" do
       msg = MiqQueue.put(
         :class_name  => 'MyClass',
@@ -455,6 +464,15 @@ describe MiqQueue do
       expect(msg.msg_timeout).to eq(3.minutes)
     end
 
+    it "sets :msg_timeout via create_with" do
+      msg = MiqQueue.create_with(:msg_timeout => 3.minutes).put(
+        :class_name  => "Class1",
+        :method_name => "Method1",
+      )
+
+      expect(msg.msg_timeout).to eq(3.minutes)
+    end
+
     it "defaults :deliver_on" do
       msg = MiqQueue.put(
         :class_name  => 'MyClass',
@@ -471,6 +489,18 @@ describe MiqQueue do
         :class_name  => "Class1",
         :method_name => "Method1",
         :deliver_on  => deliver_on
+      )
+
+      msg_from_db = MiqQueue.find(msg.id)
+      expect(msg_from_db.deliver_on).to eq(deliver_on)
+    end
+
+    it "creates with :deliver_on via create_with" do
+      deliver_on = 10.minutes.ago.change(:usec => 0)
+
+      msg = MiqQueue.create_with(:deliver_on => deliver_on).put(
+        :class_name  => "Class1",
+        :method_name => "Method1",
       )
 
       msg_from_db = MiqQueue.find(msg.id)
