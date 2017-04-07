@@ -872,6 +872,106 @@ describe "Providers API" do
         expect_query_result(:providers, 1, 1)
       end
     end
+
+    it "can return all the relevant info for possible provision providers for container deployment and their templates" do
+      amazon_disk = FactoryGirl.create(:disk, :size => 1024)
+      amazon_hardware = FactoryGirl.create(:hardware, :disks => [amazon_disk], :cpu_total_cores => 1, :memory_mb => 256)
+      amazon_template = FactoryGirl.create(:template_amazon, :hardware => amazon_hardware)
+      amazon_ems = FactoryGirl.create(:ems_amazon, :miq_templates => [amazon_template])
+      api_basic_authorize collection_action_identifier(:providers, :read, :get)
+
+      run_get(
+        providers_url,
+        :expand     => "resources",
+        :attributes => "miq_templates,hardwares,disks",
+        :filter     => [
+          "type='ManageIQ::Providers::Amazon::CloudManager'",
+          "or type='ManageIQ::Providers::Redhat::InfraManager'"
+        ]
+      )
+
+      expected = {
+        "resources" => a_collection_containing_exactly(
+          a_hash_including(
+            "miq_templates" => [
+              a_hash_including(
+                "id"     => amazon_template.id,
+                "ems_id" => amazon_ems.id,
+              )
+            ],
+            "disks"         => [
+              a_hash_including(
+                "size"        => 1024,
+                "hardware_id" => amazon_hardware.id
+              )
+            ],
+            "hardwares"     => [
+              a_hash_including(
+                "vm_or_template_id" => amazon_template.id,
+                "cpu_total_cores"   => 1,
+                "memory_mb"         => 256
+              )
+            ]
+          )
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to be_success
+    end
+
+    it "can return all the relevant info for possible providers for container deployment and their vms" do
+      amazon_disk = FactoryGirl.create(:disk, :size => 1024)
+      amazon_hardware = FactoryGirl.create(:hardware, :disks => [amazon_disk], :cpu_total_cores => 1, :memory_mb => 256)
+      amazon_vm = FactoryGirl.create(:vm_amazon, :name => "Alice's VM", :hardware => amazon_hardware)
+      amazon_ems = FactoryGirl.create(:ems_amazon, :vms => [amazon_vm])
+      api_basic_authorize collection_action_identifier(:providers, :read, :get)
+
+      run_get(
+        providers_url,
+        :expand     => "resources",
+        :attributes => "vms,disks,hardwares",
+        :filter     => [
+          "type='ManageIQ::Providers::Google::CloudManager'",
+          "or type='ManageIQ::Providers::Openstack::CloudManager'",
+          "or type='ManageIQ::Providers::Amazon::CloudManager'",
+          "or type='ManageIQ::Providers::Azure::CloudManager'",
+          "or type='ManageIQ::Providers::Vmware::CloudManager'",
+          "or type='ManageIQ::Providers::Redhat::InfraManager'",
+          "or type='ManageIQ::Providers::Microsoft::InfraManager'",
+          "or type='ManageIQ::Providers::Vmware::InfraManager'",
+          "or type='ManageIQ::Providers::Openstack::InfraManager'"
+        ]
+      )
+
+      expected = {
+        "resources" => a_collection_containing_exactly(
+          a_hash_including(
+            "vms"       => [
+              a_hash_including(
+                "id"     => amazon_vm.id,
+                "name"   => "Alice's VM",
+                "ems_id" => amazon_ems.id,
+              )
+            ],
+            "disks"     => [
+              a_hash_including(
+                "size"        => 1024,
+                "hardware_id" => amazon_hardware.id
+              )
+            ],
+            "hardwares" => [
+              a_hash_including(
+                "vm_or_template_id" => amazon_vm.id,
+                "cpu_total_cores"   => 1,
+                "memory_mb"         => 256
+              )
+            ]
+          )
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to be_success
+    end
   end
 
   context 'load balancers subcollection' do
