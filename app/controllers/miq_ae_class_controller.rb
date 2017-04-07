@@ -1933,10 +1933,10 @@ class MiqAeClassController < ApplicationController
       self.x_node = "root"
     else
       selected = find_checked_items
-      selected.each do |items|
-        item = items.split('-')
-        domain = MiqAeDomain.find_by_id(from_cid(item[1]))
-        next unless domain
+      selected_ids = selected.map { |x| from_cid(x.split('-')[1]) }
+      # TODO replace with RBAC safe method #14665 is merged
+      domains = MiqAeDomain.where(:id => selected_ids)
+      domains.each do |domain|
         if domain.editable_properties?
           domain.git_enabled? ? git_domains.push(domain) : aedomains.push(domain.id)
         else
