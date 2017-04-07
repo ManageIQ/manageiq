@@ -31,6 +31,10 @@ module Api
           @api_prefix ||= "#{base}#{prefix}"
         end
 
+        def api_suffix
+          @api_suffix ||= "?provider_class=#{@params['provider_class']}" if @params['provider_class']
+        end
+
         def attributes
           @attributes ||= @params['attributes'].to_s.split(',')
         end
