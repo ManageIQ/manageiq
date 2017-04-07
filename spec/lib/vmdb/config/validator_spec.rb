@@ -38,11 +38,6 @@ describe VMDB::Config::Validator do
     {:authentication => {:mode => "ldap", :ldaphost => ""}},    false,
     {:authentication => {:mode => "ldap"}},                     false,
 
-    {:authentication => {:mode => "amazon", :amazon_key => "foo", :amazon_secret => "bar"}}, true,
-    {:authentication => {:mode => "amazon", :amazon_key => "foo", :amazon_secret => nil}},   false,
-    {:authentication => {:mode => "amazon", :amazon_key => "", :amazon_secret => "bar"}},    false,
-    {:authentication => {:mode => "amazon"}},                                                false,
-
     {:log => {:level => "debug"}}, true,
     {:log => {:level => "xxx"}},   false,
 
