@@ -246,9 +246,9 @@ class CloudTenantController < ApplicationController
     assert_privileges("cloud_tenant_delete")
 
     tenants = if @lastaction == "show_list" || (@lastaction == "show" && @layout != "cloud_tenant")
-                find_checked_items
+                find_checked_records_with_rbac(CloudTenant)
               else
-                [params[:id]]
+                [find_record_with_rbac(CloudTenant, params[:id])]
               end
 
     if tenants.empty?
@@ -258,13 +258,9 @@ class CloudTenantController < ApplicationController
     end
 
     tenants_to_delete = []
-    tenants.each do |tenant_id|
-      tenant = CloudTenant.find_by_id(tenant_id)
-      if tenant.nil?
-        add_flash(_("%{model} no longer exists.") % {:model => ui_lookup(:table => "cloud_tenant")}, :error)
-      elsif !tenant.vms.empty?
-        add_flash(_("%{model} \"%{name}\" cannot be removed because it is attached to one or more %{instances}") % {
-          :model     => ui_lookup(:table => 'cloud_tenant'),
+    tenants.each do |tenant|
+      if tenant.vms.present?
+        add_flash(_("Cloud Tenant \"%{name}\" cannot be removed because it is attached to one or more %{instances}") % {
           :name      => tenant.name,
           :instances => ui_lookup(:tables => 'vm_cloud')}, :warning)
       else
