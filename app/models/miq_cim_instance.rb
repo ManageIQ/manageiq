@@ -105,8 +105,6 @@ class MiqCimInstance < ApplicationRecord
     return @has_perf_data[interval_name] unless @has_perf_data[interval_name].nil?
     @has_perf_data[interval_name] = if metrics.nil?
                                       false
-                                    elsif interval_name == 'realtime'
-                                      metrics.miq_derived_metrics.exists?
                                     else
                                       metrics.miq_metrics_rollups.exists?(:rollup_type => interval_name)
                                     end
