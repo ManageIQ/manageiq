@@ -47,9 +47,9 @@ describe(ServiceAnsiblePlaybook) do
           :credential_id => credential_0.id,
           :playbook_id   => 10,
           :extra_vars    => {
-            "var1" => "default_val1",
-            :var2  => "default_val2",
-            "var3" => "default_val3"
+            "var1" => {:default => "default_val1"},
+            :var2  => {:default => "default_val2"},
+            "var3" => {:default => "default_val3"}
           },
         }
       }
