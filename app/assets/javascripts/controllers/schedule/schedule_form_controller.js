@@ -145,9 +145,9 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
     } else {
       if ($scope.scheduleModel.action_typ === 'automation_request') {
         // should ignore list of targets as this list can be really long no need to send that up to server
-        var moreUrlParams = $.param(miqService.serializeModelWithIgnoredFields($scope.scheduleModel, ["targets"]));
+        var moreUrlParams = $.param(miqService.serializeModelWithIgnoredFields($scope.scheduleModel, ["targets", "time_zone"]));
         if (moreUrlParams) {
-          url += '&' + decodeURIComponent(moreUrlParams);
+          url += '&' + decodeURIComponent(moreUrlParams) + encodeURIComponent($scope.scheduleModel.time_zone);
         }
       }
       miqService.miqAjaxButton(url, serializeFields);
