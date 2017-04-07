@@ -62,8 +62,8 @@ module EmsRefresh::SaveInventoryHelper
 
     # Delete the items no longer found
     deletes = deletes_index.values
-    ActiveRecord::Base.transaction do
-      unless deletes.blank?
+    unless deletes.blank?
+      ActiveRecord::Base.transaction do
         type = association.proxy_association.reflection.name
         _log.info("[#{type}] Deleting #{log_format_deletes(deletes)}")
         disconnect ? deletes.each(&:disconnect_inv) : association.delete(deletes)
