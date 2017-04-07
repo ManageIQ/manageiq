@@ -1036,7 +1036,7 @@
     :subcollections:
     :collection_actions:
       :get:
-      - :name: read
+      - :name: show
         :identifier: physical_server_show_list
       :post:
       - :name: query
@@ -1055,7 +1055,7 @@
         :identifier: physical_server_turn_off_loc_led
     :resource_actions:
       :get:
-      - :name: read
+      - :name: show
         :identifier: physical_server_show
       :post:
       - :name: power_on
