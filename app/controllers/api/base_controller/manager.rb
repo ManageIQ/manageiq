@@ -113,6 +113,7 @@ module Api
 
       def update_one_collection(is_subcollection, target, type, id, resource)
         id = id.to_i if id =~ /\A\d+\z/
+        return proxy_request(id, @req.json_body) if proxy_request?(id)
         parent_resource = parent_resource_obj if is_subcollection
         if is_subcollection
           send(target, parent_resource, type, id, resource)
@@ -135,9 +136,14 @@ module Api
           elsif !rid && !create_or_add_action
             rid = parse_by_attr(r, type)
           end
-          r.except!(*ID_ATTRS) if rid
           processed += 1
-          update_one_collection(is_subcollection, target, type, rid, r)
+          if proxy_request?(rid)
+            pr = proxy_request(rid, { "action" => @req.action }.merge("resources" => [r]))
+            pr.response.status >= 400 ? pr : pr.response_body["results"]
+          else
+            r.except!(*ID_ATTRS) if rid
+            update_one_collection(is_subcollection, target, type, rid, r)
+          end
         end.flatten
         raise BadRequestError, "No #{type} resources were specified for the #{action} action" if processed == 0
         {"results" => results}

@@ -88,6 +88,13 @@ module Api
         msg.split("\n").each { |l| $api_log.info("#{log_prefix} #{l}") }
       end
 
+      def api_log_warn(msg)
+        method = api_get_method_name(caller.first, __method__)
+        log_prefix = "MIQ(#{self.class.name}.#{method})"
+
+        msg.split("\n").each { |l| $api_log.warn("#{log_prefix} #{l}") }
+      end
+
       private
 
       def log_request_body
