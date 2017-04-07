@@ -35,7 +35,7 @@
     "es6-shim": "~0.35.1",
     "fetch": "~1.0.0",
     "jasmine-jquery": "~2.1.1",
-    "jquery": "~2.1.4",
+    "jquery": "~2.2.4",
     "jquery-1.8": "~1.8.3",
     "jquery-ui": "jqueryui#~1.12.1",
     "jquery-ujs": "~1.2.2",
@@ -62,6 +62,6 @@
     "patternfly-bootstrap-treeview": "~2.1.1",
     "moment": ">=2.10.5",
     "d3": "~3.5.0",
-    "jquery": "~2.1.4"
+    "jquery": "~2.2.4"
   }
 }
