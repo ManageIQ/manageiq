@@ -31,15 +31,18 @@ module Api
     private
 
     def change_resource_state(state, type, id)
-      _log.info("Change the state of resource: #{type} instance: #{id}")
       raise BadRequestError, "Must specify an id for changing a #{type} resource" unless id
 
       api_action(type, id) do |klass|
-        server = resource_search(id, type, klass)
-        api_log_info(" Processing reque:st to #{state} #{server_ident(server)}")
-        desc = state.to_s
-        task_id = queue_object_action(server, desc, :method_name => state, :role => :ems_operations)
-        action_result(true, desc, :task_id => task_id)
+        begin
+          server = resource_search(id, type, klass)
+          desc = "Requested server state #{state} for #{server_ident(server)}"
+          api_log_info("desc")
+          task_id = queue_object_action(server, desc, :method_name => state, :role => :ems_operations)
+          action_result(true, desc, :task_id => task_id)
+        rescue => err
+          action_result(false, err.to_s)
+        end
       end
     end
 

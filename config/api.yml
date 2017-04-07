@@ -1035,13 +1035,18 @@
     :klass: PhysicalServer
     :subcollections:
     :collection_actions:
+      :get:
+      - :name: read
+        :identifier: physical_server_show_list
       :post:
+      - :name: query
+        :identifier: physical_server_show_list
       - :name: power_on
         :identifier: physical_server_power_on
       - :name: power_off
         :identifier: physical_server_power_off
       - :name: restart
-      - :identifier: physical_server_restart
+        :identifier: physical_server_restart
       - :name: blink_loc_led
         :identifier: physical_server_blink_loc_led
       - :name: turn_on_loc_led
@@ -1049,6 +1054,9 @@
       - :name: turn_off_loc_led
         :identifier: physical_server_turn_off_loc_led
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: physical_server_show
       :post:
       - :name: power_on
         :identifier: physical_server_power_on
