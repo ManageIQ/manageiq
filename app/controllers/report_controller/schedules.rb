@@ -75,7 +75,7 @@ module ReportController::Schedules
   # Delete all selected or single displayed action(s)
   def miq_report_schedule_delete
     assert_privileges("miq_report_schedule_delete")
-    scheds = find_checked_items
+    scheds = find_checked_ids_with_rbac(MiqSchedule)
     if params[:id]
       if MiqSchedule.exists?(from_cid(params[:id]))
         scheds.push(from_cid(params[:id]))
@@ -98,7 +98,7 @@ module ReportController::Schedules
 
   def miq_report_schedule_run_now
     assert_privileges("miq_report_schedule_run_now")
-    scheds = find_checked_items
+    scheds = find_checked_ids_with_rbac(MiqSchedule)
     if scheds.empty? && params[:id].nil?
       add_flash(_("No Report Schedules were selected to be Run now"), :error)
       javascript_flash
@@ -141,7 +141,7 @@ module ReportController::Schedules
                    [_("No %{schedules} were selected to be disabled"),
                     _("The selected %{schedules} were disabled")]
                  end
-    scheds = find_checked_items
+    scheds = find_checked_ids_with_rbac(MiqSchedule)
     if scheds.empty?
       add_flash(msg1 % {:schedules => "#{ui_lookup(:model => "MiqReport")} #{ui_lookup(:models => "MiqSchedule")}"},
                 :error)
@@ -272,7 +272,7 @@ module ReportController::Schedules
       add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
       if x_active_tree != :reports_tree
         # dont set these if new schedule is being added from a report show screen
-        obj = find_checked_items
+        obj = find_checked_ids_with_rbac(MiqSchedule)
         obj[0] = params[:id] if obj.blank? && params[:id]
         @schedule = obj[0] && params[:id] != "new" ? MiqSchedule.find(obj[0]) :
             MiqSchedule.new(:userid => session[:userid])  # Get existing or new record
