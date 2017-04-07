@@ -640,6 +640,41 @@ describe Service do
     end
   end
 
+  describe '#my_zone' do
+    let(:service) { FactoryGirl.create(:service) }
+
+    it 'returns nil without any resources' do
+      expect(service.my_zone).to be_nil
+    end
+
+    it 'returns nil zone when VM is archived' do
+      vm = FactoryGirl.build(:vm_vmware)
+
+      service.add_resource!(vm)
+      expect(service.my_zone).to be_nil
+    end
+
+    it 'returns the EMS zone when the VM is connected to a EMS' do
+      ems = FactoryGirl.create(:ext_management_system, :zone => FactoryGirl.create(:zone))
+      vm = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
+
+      service.add_resource!(vm)
+
+      expect(service.my_zone).to eq(ems.my_zone)
+    end
+
+    it 'returns the EMS zone with one VM connected to a EMS and one archived' do
+      service.add_resource!(FactoryGirl.build(:vm_vmware))
+
+      ems = FactoryGirl.create(:ext_management_system, :zone => FactoryGirl.create(:zone))
+      vm = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
+
+      service.add_resource!(vm)
+
+      expect(service.my_zone).to eq(ems.my_zone)
+    end
+  end
+
   def create_deep_tree
     @service      = FactoryGirl.create(:service)
     @service_c1   = FactoryGirl.create(:service, :service => @service)
