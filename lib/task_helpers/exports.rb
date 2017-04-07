@@ -1,10 +1,8 @@
 module TaskHelpers
   class Exports
-    def self.new_filename(filename, keep_spaces = false)
-      new_filename = filename
-      new_filename = new_filename.gsub(%r{[ ]}, '_') unless keep_spaces
-      new_filename = new_filename.gsub(%r{[/]}, 'slash')
-      new_filename.gsub(%r{[|]}, 'pipe')
+    def self.safe_filename(filename, keep_spaces = false)
+      new_filename = keep_spaces ? filename : filename.gsub(%r{[ ]}, '_')
+      new_filename.gsub(%r{[|/]}, '/' => 'slash', '|' => 'pipe')
     end
 
     def self.parse_options
