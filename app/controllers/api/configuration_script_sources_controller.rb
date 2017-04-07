@@ -3,7 +3,7 @@ module Api
     def edit_resource(type, id, data)
       config_script_src = resource_search(id, type, collection_class(:configuration_script_sources))
       raise "Update not supported for #{config_script_src_ident(config_script_src)}" unless config_script_src.respond_to?(:update_in_provider_queue)
-      task_id = config_script_src.update_in_provider_queue(data)
+      task_id = config_script_src.update_in_provider_queue(data.deep_symbolize_keys)
       action_result(true, "Updating #{config_script_src_ident(config_script_src)}", :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -25,7 +25,7 @@ module Api
       manager = resource_search(manager_id, :providers, collection_class(:providers))
       type = ConfigurationScriptSource.class_for_manager(manager)
       raise "ConfigurationScriptSource cannot be added to #{manager_ident(manager)}" unless type.respond_to?(:create_in_provider_queue)
-      task_id = type.create_in_provider_queue(manager.id, data.except('manager_resource'))
+      task_id = type.create_in_provider_queue(manager.id, data.except('manager_resource').deep_symbolize_keys)
       action_result(true, "Creating ConfigurationScriptSource for #{manager_ident(manager)}", :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
