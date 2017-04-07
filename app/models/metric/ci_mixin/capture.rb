@@ -46,19 +46,27 @@ module Metric::CiMixin::Capture
 
     log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
 
+    # Determine the items to queue up
+    # cb is the task used to group cluster realtime metrics
     cb = nil
+    items = []
     if interval_name == 'historical'
       start_time = Metric::Capture.historical_start_time if start_time.nil?
       end_time ||= 1.day.from_now.utc.beginning_of_day # Ensure no more than one historical collection is queue up in the same day
+      items = split_capture_intervals(interval_name, start_time, end_time)
     else
-      start_time = last_perf_capture_on unless start_time
-      end_time   = Time.now.utc unless end_time
+      # if last_perf_capture_on is earlier than 4.hour.ago.beginning_of_day,
+      # then create *one* realtime capture for start_time = 4.hours.ago.beginning_of_day (no end_time)
+      # and create historical captures for each day from last_perf_capture_on until 4.hours.ago.beginning_of_day
+      realtime_cut_off = 4.hours.ago.utc.beginning_of_day
+      if last_perf_capture_on && last_perf_capture_on < realtime_cut_off
+        items = split_capture_intervals("historical", last_perf_capture_on, realtime_cut_off)
+      end
+      # push realtime item to the front of the array
+      items.unshift([interval_name, realtime_cut_off])
+
       cb = {:class_name => self.class.name, :instance_id => id, :method_name => :perf_capture_callback, :args => [[task_id]]} if task_id
     end
-
-    # Determine what items we should be queuing up
-    items = [interval_name]
-    items = split_capture_intervals(interval_name, start_time, end_time) if start_time
 
     # Queue up the actual items
     queue_item = {
@@ -78,7 +86,9 @@ module Metric::CiMixin::Capture
         if msg.nil?
           qi[:priority] = priority
           qi.delete(:state)
-          qi[:miq_callback] = cb if cb
+          if cb and item_interval == "realtime"
+            qi[:miq_callback] = cb
+          end
           qi
         elsif msg.state == "ready" && (task_id || MiqQueue.higher_priority?(priority, msg.priority))
           qi[:priority] = priority
@@ -86,7 +96,7 @@ module Metric::CiMixin::Capture
           qi.delete(:state)
           if task_id
             existing_tasks = (((msg.miq_callback || {})[:args] || []).first) || []
-            qi[:miq_callback] = cb.merge(:args => [existing_tasks + [task_id]])
+            qi[:miq_callback] = cb.merge(:args => [existing_tasks + [task_id]]) if item_interval == "realtime"
           end
           qi
         else
