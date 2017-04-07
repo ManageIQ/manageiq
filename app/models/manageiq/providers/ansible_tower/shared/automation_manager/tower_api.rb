@@ -13,7 +13,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
 
     def create_in_provider_queue(manager_id, params)
       manager = ExtManagementSystem.find(manager_id)
-      action = "Creating #{name} with name=#{params[:name]}"
+      action = "Creating #{name} with name=#{params[:name] || params['name']}"
       queue(manager.my_zone, nil, "create_in_provider", [manager_id, params], action)
     end
 
@@ -56,7 +56,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
   end
 
   def update_in_provider_queue(params)
-    action = "Updating #{self.class.name} with manager_ref=#{manager_ref}"
+    action = "Updating #{self.class.name} with Tower internal reference=#{manager_ref}"
     self.class.send('queue', manager.my_zone, id, "update_in_provider", [params], action)
   end
 
@@ -66,7 +66,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
   end
 
   def delete_in_provider_queue
-    action = "Deleting #{self.class.name} with manager_ref=#{manager_ref}"
+    action = "Deleting #{self.class.name} with Tower internal reference=#{manager_ref}"
     self.class.send('queue', manager.my_zone, id, "delete_in_provider", [], action)
   end
 end
