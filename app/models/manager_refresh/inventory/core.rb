@@ -26,7 +26,10 @@ module ManagerRefresh::Inventory::Core
       has_inventory({
         :model_class                 => ::ConfigurationScriptSource,
         :manager_ref                 => [:manager_ref],
-        :inventory_object_attributes => %i(name description scm_type scm_url scm_branch scm_clean scm_delete_on_update scm_update_on_launch authentication),
+        :inventory_object_attributes => %i(
+          name description scm_type scm_url scm_branch scm_clean scm_delete_on_update
+          scm_update_on_launch authentication last_update_failed
+        ),
       }.merge(options))
     end
 

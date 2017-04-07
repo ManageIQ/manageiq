@@ -553,6 +553,7 @@ configuration_script_sources:
 - scm_update_on_launch
 - authentication_id
 - type
+- last_update_failed
 configuration_scripts:
 - id
 - manager_id
