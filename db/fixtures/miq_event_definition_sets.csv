@@ -8,6 +8,7 @@ vm_operational,VM Operation
 vm_configurational,VM Configuration
 vm_process,VM Lifecycle
 service_process,Service Lifecycle
+orchestration_process,Orchestration Lifecycle
 storage_operational,Datastore Operation
 auth_validation,Authentication Validation
 container_operations,Container Operation

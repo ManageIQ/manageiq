@@ -153,6 +153,14 @@ module MiqAeEngine
       event_object_from_workspace(obj).process_evm_event
     end
 
+    def self.miq_check_policy_prevent(obj, _inputs)
+      event = event_object_from_workspace(obj)
+      if event.full_data && event.full_data[:policy][:prevented]
+        msg = "Event #{event.event_type} for #{event.target} was terminated: #{event.message}"
+        raise MiqAeException::StopInstantiation, msg
+      end
+    end
+
     def self.event_object_from_workspace(obj)
       event = obj.workspace.get_obj_from_path("/")['event_stream']
       raise MiqAeException::MethodParmMissing, "Event not specified" if event.nil?
