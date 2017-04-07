@@ -24,18 +24,15 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
     private
 
     def notify(op, manager_id, params, success)
-      if defined?(API_ATTRIBUTES) && params.kind_of?(Hash)
-        params.each do |k, _v|
-          if self::API_ATTRIBUTES[k] && self::API_ATTRIBUTES[k][:type] == :password
-            params[k] = '******'
-          end
-        end
-      end
+      notify_params = params
+      notify_params = params.each_with_object({}) do |attr, h|
+        h[attr.first] = self::API_ATTRIBUTES[attr.first] && self::API_ATTRIBUTES[attr.first][:type] == :password ? '******' : attr.second
+      end if const_defined?('API_ATTRIBUTES') && params.kind_of?(Hash)
       Notification.create(
         :type    => success ? :tower_op_success : :tower_op_failure,
         :options => {
           :op_name => "#{name.demodulize} #{op}",
-          :op_arg  => params.to_s,
+          :op_arg  => notify_params.to_s,
           :tower   => "Tower(manager_id: #{manager_id})"
         }
       )
