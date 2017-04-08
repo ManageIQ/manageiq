@@ -60,10 +60,11 @@ module Metric::CiMixin::Capture
       # and create historical captures for each day from last_perf_capture_on until 4.hours.ago.beginning_of_day
       realtime_cut_off = 4.hours.ago.utc.beginning_of_day
       if last_perf_capture_on && last_perf_capture_on < realtime_cut_off
-        items = split_capture_intervals("historical", last_perf_capture_on, realtime_cut_off)
+        items = [[interval_name, realtime_cut_off]] +
+          split_capture_intervals("historical", last_perf_capture_on, realtime_cut_off)
+      else
+        items = [interval_name]
       end
-      # push realtime item to the front of the array
-      items.unshift([interval_name, realtime_cut_off])
 
       cb = {:class_name => self.class.name, :instance_id => id, :method_name => :perf_capture_callback, :args => [[task_id]]} if task_id
     end
@@ -86,7 +87,7 @@ module Metric::CiMixin::Capture
         if msg.nil?
           qi[:priority] = priority
           qi.delete(:state)
-          if cb and item_interval == "realtime"
+          if cb && item_interval == "realtime"
             qi[:miq_callback] = cb
           end
           qi
