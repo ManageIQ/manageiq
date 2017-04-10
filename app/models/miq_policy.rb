@@ -353,7 +353,7 @@ class MiqPolicy < ApplicationRecord
   end
 
   def self.seed
-    all.each do |p|
+    where(:towhat => nil).or(where(:active => nil)).or(where(:mode => nil)).each do |p|
       attrs = {}
       attrs[:towhat] = "Vm"      if p.towhat.nil?
       attrs[:active] = true      if p.active.nil?
