@@ -3,7 +3,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
 
   module ClassMethods
     def create_in_provider(manager_id, params)
-      params = provider_params(params) if respond_to? :provider_params
+      params = provider_params(params) if respond_to?(:provider_params)
       manager = ExtManagementSystem.find(manager_id)
       tower_object = provider_collection(manager).create!(params)
 
@@ -23,7 +23,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
 
     private
     def notify(op, manager_id, params, success)
-      params = hide_secrets(params) if respond_to? :hide_secrets
+      params = hide_secrets(params) if respond_to?(:hide_secrets)
       Notification.create(
         :type    => success ? :tower_op_success : :tower_op_failure,
         :options => {
@@ -62,7 +62,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
 
   def update_in_provider(params)
     params.delete(:task_id) # in case this is being called through update_in_provider_queue which will stick in a :task_id
-    params = self.class.provider_params(params) if self.class.respond_to? :provider_params
+    params = self.class.provider_params(params) if self.class.respond_to?(:provider_params)
     with_provider_object do |provider_object|
       provider_object.update_attributes!(params)
     end
