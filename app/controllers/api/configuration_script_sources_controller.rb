@@ -31,6 +31,14 @@ module Api
       action_result(false, err.to_s)
     end
 
+    def refresh_resource(type, id, _data)
+      config_script_src = resource_search(id, type, collection_class(type))
+      task_id = EmsRefresh.queue_refresh_task(config_script_src).first
+      action_result(true, "Refreshing #{config_script_src_ident(config_script_src)}", :task_id => task_id)
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
     private
 
     def config_script_src_ident(config_script_src)

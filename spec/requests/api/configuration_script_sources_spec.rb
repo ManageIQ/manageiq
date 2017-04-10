@@ -126,6 +126,29 @@ RSpec.describe 'Configuration Script Sources API' do
 
       expect(response).to have_http_status(:forbidden)
     end
+
+    it 'can refresh multiple configuration_script_source with an appropriate role' do
+      api_basic_authorize collection_action_identifier(:configuration_script_sources, :refresh, :post)
+
+      run_post(configuration_script_sources_url, :action => 'refresh', :resources => [{ :id => config_script_src.id}, {:id => config_script_src_2.id}])
+
+      expected = {
+        'results' => [
+          a_hash_including(
+            'success' => true,
+            'message' => a_string_including("Refreshing ConfigurationScriptSource id:#{config_script_src.id}"),
+            'task_id' => a_kind_of(Numeric)
+          ),
+          a_hash_including(
+            'success' => true,
+            'message' => a_string_including("Refreshing ConfigurationScriptSource id:#{config_script_src_2.id}"),
+            'task_id' => a_kind_of(Numeric)
+          )
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
   end
 
   describe 'PUT /api/configuration_script_sources/:id' do
@@ -217,6 +240,28 @@ RSpec.describe 'Configuration Script Sources API' do
       run_post(configuration_script_sources_url(config_script_src.id), :action => 'edit', :resource => params)
 
       expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'forbids refresh without an appropriate role' do
+      api_basic_authorize
+
+      run_post(configuration_script_sources_url(config_script_src.id), :action => 'refresh')
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'can refresh a configuration_script_source with an appropriate role' do
+      api_basic_authorize action_identifier(:configuration_script_sources, :refresh)
+
+      run_post(configuration_script_sources_url(config_script_src.id), :action => 'refresh')
+
+      expected = {
+        'success' => true,
+        'message' => /Refreshing ConfigurationScriptSource/,
+        'task_id' => a_kind_of(Numeric)
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
     end
 
     it 'can delete a configuration_script_source with an appropriate role' do
