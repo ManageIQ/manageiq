@@ -36,45 +36,86 @@ describe Metric::CiMixin::Capture do
     parse_datetime('2013-08-28T12:41:40Z')
   end
 
-  context "#perf_capture_queue" do
-    def test_perf_capture_queue(time_since_last_perf_capture, total_queue_items, verify_queue_items_count)
-      # There are usually some lingering queue items from creating the provider above.  Notably `stop_event_monitor`
-      MiqQueue.delete_all
+  context "#perf_capture_queue('realtime')" do
+    def verify_realtime_queue_item(queue_item, expected_start_time = nil)
+      expect(queue_item.method_name).to eq "perf_capture_realtime"
+      if expected_start_time
+        q_start_time = queue_item.args.first
+        expect(q_start_time).to be_same_time_as expected_start_time
+      end
+    end
+
+    def verify_historical_queue_item(queue_item, expected_start_time, expected_end_time)
+      expect(queue_item.method_name).to eq "perf_capture_historical"
+      q_start_time, q_end_time = queue_item.args
+      expect(q_start_time).to be_same_time_as expected_start_time
+      expect(q_end_time).to be_same_time_as expected_end_time
+    end
+
+    def verify_perf_capture_queue(last_perf_capture_on, total_queue_items)
       Timecop.freeze do
-        start_time = (Time.now.utc - time_since_last_perf_capture)
-        @vm.last_perf_capture_on = start_time
+        @vm.last_perf_capture_on = last_perf_capture_on
         @vm.perf_capture_queue("realtime")
         expect(MiqQueue.count).to eq total_queue_items
 
         # make sure the queue items are in the correct order
-        queue_items = MiqQueue.order(:id).limit(verify_queue_items_count)
-        days_ago = (time_since_last_perf_capture.to_i / 1.day.to_i).days
-        partial_days = time_since_last_perf_capture - days_ago
-        interval_start_time = (start_time + days_ago).utc
-        interval_end_time = (interval_start_time + partial_days).utc
-        queue_items.each do |q_item|
-          q_start_time, q_end_time = q_item.args
-          expect(q_start_time).to be_same_time_as interval_start_time
-          expect(q_end_time).to be_same_time_as interval_end_time
-          interval_end_time = interval_start_time
-          # if the collection threshold is ever parameterized, then this 1.day will have to change
-          interval_start_time -= 1.day
+        queue_items = MiqQueue.order(:id).to_a
+
+        # first queue item is realtime and only has a start time
+        realtime_cut_off = 4.hours.ago.utc.beginning_of_day
+        realtime_start_time = realtime_cut_off if last_perf_capture_on.nil? || last_perf_capture_on < realtime_cut_off
+        verify_realtime_queue_item(queue_items.shift, realtime_start_time)
+
+        # rest of the queue items should be historical
+        if queue_items.any? && realtime_start_time
+          interval_start_time = @vm.last_perf_capture_on
+          interval_end_time   = interval_start_time + 1.day
+          queue_items.reverse.each do |q_item|
+            verify_historical_queue_item(q_item, interval_start_time, interval_end_time)
+
+            interval_start_time = interval_end_time
+            interval_end_time  += 1.day # if collection threshold is parameterized, this increment should change
+            interval_end_time   = realtime_start_time if interval_end_time > realtime_start_time
+          end
         end
       end
     end
 
-    it "splits up long perf_capture durations for old last_perf_capture_on" do
-      # test when last perf capture was many days ago
-      # total queue items == 11
-      # verify last 3 queue items
-      test_perf_capture_queue(10.days + 5.hours + 23.minutes, 11, 3)
+    it "when last_perf_capture_on is nil (first time)" do
+      MiqQueue.delete_all
+      Timecop.freeze do
+        Timecop.travel(Time.now.end_of_day - 6.hours)
+        verify_perf_capture_queue(nil, 1)
+      end
     end
 
-    it "does not get confused when dealing with a single day" do
-      # test when perf capture is just a few hours ago
-      # total queue items == 1
-      # verify last 1 queue item
-      test_perf_capture_queue(0.days + 2.hours + 5.minutes, 1, 1)
+    it "when last_perf_capture_on is very old (older than the realtime_cut_off of 4.hours.ago)" do
+      MiqQueue.delete_all
+      Timecop.freeze do
+        Timecop.travel(Time.now.end_of_day - 6.hours)
+        verify_perf_capture_queue((10.days + 5.hours + 23.minutes).ago, 11)
+      end
+    end
+
+    it "when last_perf_capture_on is recent (before the realtime_cut_off of 4.hours.ago)" do
+      MiqQueue.delete_all
+      Timecop.freeze do
+        Timecop.travel(Time.now.end_of_day - 6.hours)
+        verify_perf_capture_queue((0.days + 2.hours + 5.minutes).ago, 1)
+      end
+    end
+
+    it "is able to handle multiple attempts to queue perf_captures and not add new items" do
+      MiqQueue.delete_all
+      Timecop.freeze do
+        # set a specific time of day to avoid sporadic test failures that fall on the exact right time to bump the
+        # queue items to 12 instead of 11
+        Timecop.travel(Time.now.end_of_day - 6.hours)
+        last_perf_capture_on = (10.days + 5.hours + 23.minutes).ago
+        verify_perf_capture_queue(last_perf_capture_on, 11)
+        Timecop.travel(Time.now + 20.minutes)
+        verify_perf_capture_queue(last_perf_capture_on, 11)
+      end
     end
   end
 
