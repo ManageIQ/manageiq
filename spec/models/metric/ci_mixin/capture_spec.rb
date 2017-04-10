@@ -37,25 +37,32 @@ describe Metric::CiMixin::Capture do
   end
 
   context "#perf_capture_queue" do
-    def test_perf_capture_queue(time_since_last_perf_capture, total_queue_items, verify_queue_items_count)
+    def verify_queue_count(count)
+      expect(MiqQueue.count).to eq count
+    end
+
+    def verify_interval(queue_item, expected_start, expected_end)
+      q_start_time, q_end_time = queue_item.args
+      expect(q_start_time).to be_same_time_as expected_start
+      expect(q_end_time).to be_same_time_as expected_end
+    end
+
+    def verify_with_last_perf_capture(time_since_last_perf_capture, total_queue_items, verify_queue_items_count)
       # There are usually some lingering queue items from creating the provider above.  Notably `stop_event_monitor`
       MiqQueue.delete_all
       Timecop.freeze do
         start_time = (Time.now.utc - time_since_last_perf_capture)
         @vm.last_perf_capture_on = start_time
         @vm.perf_capture_queue("realtime")
-        expect(MiqQueue.count).to eq total_queue_items
+        verify_queue_count(total_queue_items)
 
         # make sure the queue items are in the correct order
-        queue_items = MiqQueue.order(:id).limit(verify_queue_items_count)
         days_ago = (time_since_last_perf_capture.to_i / 1.day.to_i).days
         partial_days = time_since_last_perf_capture - days_ago
         interval_start_time = (start_time + days_ago).utc
         interval_end_time = (interval_start_time + partial_days).utc
-        queue_items.each do |q_item|
-          q_start_time, q_end_time = q_item.args
-          expect(q_start_time).to be_same_time_as interval_start_time
-          expect(q_end_time).to be_same_time_as interval_end_time
+        MiqQueue.order(:id).limit(verify_queue_items_count).each do |q_item|
+          verify_interval(q_item, interval_start_time, interval_end_time)
           interval_end_time = interval_start_time
           # if the collection threshold is ever parameterized, then this 1.day will have to change
           interval_start_time -= 1.day
@@ -63,18 +70,59 @@ describe Metric::CiMixin::Capture do
       end
     end
 
-    it "splits up long perf_capture durations for old last_perf_capture_on" do
-      # test when last perf capture was many days ago
-      # total queue items == 11
-      # verify last 3 queue items
-      test_perf_capture_queue(10.days + 5.hours + 23.minutes, 11, 3)
+    def verify_with_historical_start_time(last_perf_capture_on, expected_start_date, total_queue_items, verify_queue_items_count)
+      MiqQueue.delete_all
+      Timecop.freeze do
+        @vm.last_perf_capture_on = last_perf_capture_on
+        @vm.perf_capture_queue("realtime")
+        verify_queue_count(total_queue_items)
+
+        days_ago = ((Time.now.utc - expected_start_date).to_i / 1.day.to_i).days
+        partial_days = (Time.now.utc - Time.now.utc.beginning_of_day)
+        interval_start_time = expected_start_date + days_ago
+        interval_end_time = (interval_start_time + partial_days).utc
+        MiqQueue.order(:id).limit(verify_queue_items_count).each do |q_item|
+          verify_interval(q_item, interval_start_time, interval_end_time)
+          interval_end_time = interval_start_time
+          interval_start_time -= 1.day
+        end
+      end
     end
 
-    it "does not get confused when dealing with a single day" do
-      # test when perf capture is just a few hours ago
-      # total queue items == 1
-      # verify last 1 queue item
-      test_perf_capture_queue(0.days + 2.hours + 5.minutes, 1, 1)
+    context "with last_perf_capture_on" do
+      before do
+        # move the `initial_capture_days` out of the way of the `last_perf_capture_on`
+        stub_settings(:performance => {:history => {:initial_capture_days => 60}})
+      end
+
+      it "splits up long perf_capture durations for old last_perf_capture_on" do
+        # test when last perf capture was many days ago
+        # total queue items == 11
+        # verify last 3 queue items
+        verify_with_last_perf_capture(10.days + 5.hours + 23.minutes, 11, 3)
+      end
+
+      it "does not get confused when dealing with a single day" do
+        # test when perf capture is just a few hours ago
+        # total queue items == 1
+        # verify last 1 queue item
+        verify_with_last_perf_capture(0.days + 2.hours + 5.minutes, 1, 1)
+      end
+    end
+
+    it "uses the Metric::Capture.historical_start_time override" do
+      # This ends up with one more than `initial_capture_days` since `historical_start_time` (based on
+      # `initial_capture_days`) sets the first capture to start_date.beginning_of_day.
+      # This ends up with:
+      #   (start_date + 0).00:00:00, (start_date + 1).00:00:00, (start_date + 2).00:00:00, ...
+      #   (start_date + n).00:00:00, Time.now
+      stub_settings(:performance => {:history => {:initial_capture_days => 5}})
+      verify_with_historical_start_time((10.days + 5.hours + 23.minutes).ago, 5.days.ago.beginning_of_day, 6, 3)
+    end
+
+    it "uses last_perf_capture_on when Metric::Capture.historical_start_time is too old" do
+      stub_settings(:performance => {:history => {:initial_capture_days => 15}})
+      verify_with_last_perf_capture(10.days + 5.hours + 23.minutes, 11, 3)
     end
   end
 
