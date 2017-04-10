@@ -1,6 +1,7 @@
 class EventStream < ApplicationRecord
   module Purging
     extend ActiveSupport::Concern
+    include PurgingMixin
 
     module ClassMethods
       def keep_events
@@ -14,33 +15,11 @@ class EventStream < ApplicationRecord
       end
 
       def purge_window_size
-        ::Settings.event_streams.history.purge_window_size || 1000
+        ::Settings.event_streams.history.purge_window_size
       end
 
-      def purge_timer
-        purge_queue(purge_date)
-      end
-
-      def purge_queue(ts)
-        MiqQueue.put(
-          :class_name  => name,
-          :method_name => "purge",
-          :role        => "event",
-          :queue_name  => "ems",
-          :args        => [ts],
-        )
-      end
-
-      def purge(older_than, window = nil, limit = nil)
-        _log.info("Purging #{limit || "all"} events older than [#{older_than}]...")
-
-        window ||= purge_window_size
-
-        total = where(arel_table[:timestamp].lteq(older_than)).delete_in_batches(window, limit) do |count, _total|
-          _log.info("Purging #{count} events.")
-        end
-
-        _log.info("Purging #{limit || "all"} events older than [#{older_than}]...Complete - Deleted #{total} records")
+      def purge_scope(older_than)
+        where(arel_table[:timestamp].lteq(older_than))
       end
     end
   end
