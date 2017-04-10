@@ -35,7 +35,7 @@ describe ExtManagementSystem do
       "openstack_infra"             => "OpenStack Platform Director",
       "openstack_network"           => "OpenStack Network",
       "nuage_network"               => "Nuage Network Manager",
-      "rhevm"                       => "Red Hat Virtualization Manager",
+      "rhevm"                       => "Red Hat Virtualization",
       "scvmm"                       => "Microsoft System Center VMM",
       "vmwarews"                    => "VMware vCenter",
       "vmware_cloud"                => "VMware vCloud",
