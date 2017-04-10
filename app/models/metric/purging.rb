@@ -36,14 +36,11 @@ module Metric::Purging
   end
 
   def self.purge_timer(ts, interval)
-    MiqQueue.put_unless_exists(
+    MiqQueue.put(
       :class_name  => name,
       :method_name => "purge_#{interval}",
-      :role        => "ems_metrics_processor",
-      :queue_name  => "ems_metrics_processor"
-    ) do |_msg, find_options|
-      find_options.merge(:args => [ts])
-    end
+      :args        => [ts],
+    )
   end
 
   def self.purge_window_size
@@ -75,18 +72,22 @@ module Metric::Purging
   end
 
   def self.purge_daily(older_than, window = nil, total_limit = nil, &block)
-    purge(older_than, "daily", window, total_limit, &block)
+    purge_by_date(older_than, "daily", window, total_limit, &block)
   end
 
   def self.purge_hourly(older_than, window = nil, total_limit = nil, &block)
-    purge(older_than, "hourly", window, total_limit, &block)
+    purge_by_date(older_than, "hourly", window, total_limit, &block)
   end
 
   def self.purge_realtime(older_than, window = nil, total_limit = nil, &block)
-    purge(older_than, "realtime", window, total_limit, &block)
+    purge_by_date(older_than, "realtime", window, total_limit, &block)
   end
 
   def self.purge(older_than, interval, window = nil, total_limit = nil, &block)
+    purge_by_date(older_than, interval, window, total_limit, &block)
+  end
+
+  def self.purge_by_date(older_than, interval, window = nil, total_limit = nil, &block)
     scope = purge_scope(older_than, interval)
     window ||= purge_window_size
     _log.info("Purging #{total_limit || "all"} #{interval} metrics older than [#{older_than}]...")

@@ -64,11 +64,10 @@ describe MiqReportResult do
         expect(q.length).to eq(1)
         expect(q.first).to have_attributes(
           :class_name  => described_class.name,
-          :method_name => "purge"
+          :method_name => "purge_by_date"
         )
 
-        expect(q.first.args[0]).to eq(:date)
-        expect(q.first.args[1]).to be_same_time_as 6.months.to_i.seconds.ago.utc
+        expect(q.first.args[0]).to be_same_time_as 6.months.to_i.seconds.ago.utc
       end
     end
 
@@ -83,20 +82,8 @@ describe MiqReportResult do
         expect(q.length).to eq(1)
         expect(q.first).to have_attributes(
           :class_name  => described_class.name,
-          :method_name => "purge",
-          :args        => [:remaining, 1]
-        )
-      end
-
-      it "with item already in the queue" do
-        described_class.purge_queue(:remaining, 2)
-
-        q = MiqQueue.all
-        expect(q.length).to eq(1)
-        expect(q.first).to have_attributes(
-          :class_name  => described_class.name,
-          :method_name => "purge",
-          :args        => [:remaining, 2]
+          :method_name => "purge_by_remaining",
+          :args        => [1]
         )
       end
     end

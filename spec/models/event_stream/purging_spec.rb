@@ -7,13 +7,14 @@ describe EventStream do
       let(:purge_time) { (Time.zone.now + 10).round }
 
       it "submits to the queue" do
-        described_class.purge_queue(purge_time)
+        expect(described_class).to receive(:purge_date).and_return(purge_time)
+        described_class.purge_timer
 
         q = MiqQueue.all
         expect(q.length).to eq(1)
         expect(q.first).to have_attributes(
           :class_name  => described_class.name,
-          :method_name => "purge",
+          :method_name => "purge_by_date",
           :args        => [purge_time]
         )
       end
@@ -21,14 +22,14 @@ describe EventStream do
 
     context ".purge_date" do
       it "using '3.month' syntax" do
-        allow(described_class).to receive_messages(:keep_events => "3.months")
+        stub_settings(:event_streams => {:history => {:keep_events => "3.months"}})
 
         # Exposes 3.months.seconds.ago.utc != 3.months.ago.utc
         expect(described_class.purge_date).to be_within(2.days).of(3.months.ago.utc)
       end
 
       it "defaults to 6 months" do
-        allow(described_class).to receive_messages(:keep_events => nil)
+        stub_settings(:event_streams => {:history => {:keep_events => nil}})
         expect(described_class.purge_date).to be_within(1.day).of(6.months.ago.utc)
       end
     end
@@ -53,21 +54,6 @@ describe EventStream do
 
       it "with a window" do
         described_class.purge(purge_date, 1)
-        assert_unpurged_ids(@new_event.id)
-      end
-
-      it "with a limit" do
-        described_class.purge(purge_date, nil, 1)
-        assert_unpurged_ids([@purge_date_event.id, @new_event.id])
-      end
-
-      it "with window > limit" do
-        described_class.purge(purge_date, 2, 1)
-        assert_unpurged_ids([@purge_date_event.id, @new_event.id])
-      end
-
-      it "with limit > window" do
-        described_class.purge(purge_date, 1, 2)
         assert_unpurged_ids(@new_event.id)
       end
     end

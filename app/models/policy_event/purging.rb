@@ -12,16 +12,6 @@ class PolicyEvent < ApplicationRecord
         ::Settings.policy_events.history.purge_window_size
       end
 
-      def purge_queue
-        MiqQueue.put_unless_exists(
-          :class_name  => name,
-          :method_name => "purge",
-          :role        => "event",
-          :queue_name  => "ems"
-        )
-      end
-      alias_method :purge_timer, :purge_queue
-
       def purge_scope(older_than)
         where(arel_table[:timestamp].lt(older_than))
       end

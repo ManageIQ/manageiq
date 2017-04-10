@@ -14,19 +14,6 @@ module MiqReportResult::Purging
       ::Settings.reporting.history.purge_window_size
     end
 
-    def purge_timer
-      purge_queue(*purge_mode_and_value)
-    end
-
-    def purge_queue(mode, value)
-      MiqQueue.put_or_update(
-        :class_name  => name,
-        :method_name => "purge",
-        :role        => "reporting",
-        :queue_name  => "reporting"
-      ) { |_msg, item| item.merge(:args => [mode, value]) }
-    end
-
     def purge_count(mode, value)
       send("purge_count_by_#{mode}", value)
     end

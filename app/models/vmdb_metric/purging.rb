@@ -29,14 +29,11 @@ module VmdbMetric::Purging
     end
 
     def purge_timer(value, interval)
-      MiqQueue.put_unless_exists(
+      MiqQueue.put(
         :class_name  => name,
         :method_name => "purge_#{interval}",
-        :role        => "database_operations",
-        :queue_name  => "generic",
-      ) do |_msg, find_options|
-        find_options.merge(:args => [value])
-      end
+        :args        => [value]
+      )
     end
 
     def purge_window_size
@@ -59,7 +56,7 @@ module VmdbMetric::Purging
     # queue is calling purge_interval directly. (and mode is no longer used)
     # keeping around in case messages are in the queue for upgrades
     def purge(_mode, older_than, interval, window = nil, &block)
-      send("purge_#{interval}", older_than, window, &block)
+      purge_by_date(older_than, interval, window, &block)
     end
 
     private
