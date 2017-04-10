@@ -1148,37 +1148,34 @@ module EmsCommon
     end
   end
 
+  def call_ems_refresh(emss)
+    process_emss(emss, "refresh_ems") unless emss.empty?
+    add_flash(n_("Refresh initiated for %{count} %{model} from the %{product} Database",
+                 "Refresh initiated for %{count} %{models} from the %{product} Database", emss.length) %
+      {:count   => emss.length,
+       :product => I18n.t('product.name'),
+       :model   => ui_lookup(:table => @table_name),
+       :models  => ui_lookup(:tables => @table_name)}) if @flash_array.nil?
+  end
+
   # Refresh VM states for all selected or single displayed ems(s)
   def refreshemss
     assert_privileges(params[:pressed])
     emss = []
-    if @lastaction == "show_list" # showing a list, scan all selected emss
+    if @lastaction == "show_list"
       emss = find_checked_items
       if emss.empty?
         add_flash(_("No %{model} were selected for refresh") % {:model => ui_lookup(:table => @table_name)}, :error)
       end
-      process_emss(emss, "refresh_ems") unless emss.empty?
-      add_flash(n_("Refresh initiated for %{count} %{model} from the %{product} Database",
-                   "Refresh initiated for %{count} %{models} from the %{product} Database", emss.length) %
-        {:count   => emss.length,
-         :product => I18n.t('product.name'),
-         :model   => ui_lookup(:table => @table_name),
-         :models  => ui_lookup(:tables => @table_name)}) if @flash_array.nil?
+      call_ems_refresh(emss)
       show_list
       @refresh_partial = "layouts/gtl"
-    else # showing 1 ems, scan it
+    else
       if params[:id].nil? || model.find_by_id(params[:id]).nil?
         add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => @table_name)}, :error)
       else
-        emss.push(params[:id])
+        call_ems_refresh([params[:id]])
       end
-      process_emss(emss, "refresh_ems") unless emss.empty?
-      add_flash(n_("Refresh initiated for %{count} %{model} from the %{product} Database",
-                   "Refresh initiated for %{count} %{models} from the %{product} Database", emss.length) %
-        {:count   => emss.length,
-         :product => I18n.t('product.name'),
-         :model   => ui_lookup(:table => @table_name),
-         :models  => ui_lookup(:tables => @table_name)}) if @flash_array.nil?
       params[:display] = @display
     end
   end
