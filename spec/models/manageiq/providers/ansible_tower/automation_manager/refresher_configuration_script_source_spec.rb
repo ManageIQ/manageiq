@@ -3,5 +3,5 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
                   :provider_ansible_tower,
                   described_class.parent,
                   :ansible_tower_automation,
-                  described_class.name.underscore + '_configuration_script_source'
+                  described_class.name.underscore + '_targeted_configuration_script_source'
 end

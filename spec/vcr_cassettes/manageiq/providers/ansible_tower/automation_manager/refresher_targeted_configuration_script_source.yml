@@ -19,7 +19,7 @@ http_interactions:
       message: MOVED PERMANENTLY
     headers:
       Date:
-      - Mon, 10 Apr 2017 18:37:58 GMT
+      - Mon, 10 Apr 2017 20:49:56 GMT
       Server:
       - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Location:
@@ -32,7 +32,7 @@ http_interactions:
       encoding: UTF-8
       string: ''
     http_version: 
-  recorded_at: Mon, 10 Apr 2017 18:37:58 GMT
+  recorded_at: Mon, 10 Apr 2017 20:49:56 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/config/
@@ -52,7 +52,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 10 Apr 2017 18:37:58 GMT
+      - Mon, 10 Apr 2017 20:49:57 GMT
       Server:
       - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -60,7 +60,7 @@ http_interactions:
       Allow:
       - GET, POST, DELETE, HEAD, OPTIONS
       X-Api-Time:
-      - 0.216s
+      - 0.218s
       Content-Length:
       - '9774'
       Content-Type:
@@ -274,8 +274,8 @@ http_interactions:
         dmFpbGFibGVfaW5zdGFuY2VzIjoxMDAwMCwiaG9zdG5hbWUiOiIxMjk0ZGQ2
         MzAxMjY0NDIxOGI1MmExN2I2YmM0MzBlZCIsImZyZWVfaW5zdGFuY2VzIjo5
         OTEzLCJpbnN0YW5jZV9jb3VudCI6MTAwMDAsInRpbWVfcmVtYWluaW5nIjoy
-        Njg2MDYyNCwiY29tcGxpYW50Ijp0cnVlLCJncmFjZV9wZXJpb2RfcmVtYWlu
-        aW5nIjoyOTQ1MjYyNCwiY29udGFjdF9lbWFpbCI6ImpvZXNtaXRAcmVkaGF0
+        Njg1MjcwNSwiY29tcGxpYW50Ijp0cnVlLCJncmFjZV9wZXJpb2RfcmVtYWlu
+        aW5nIjoyOTQ0NDcwNSwiY29udGFjdF9lbWFpbCI6ImpvZXNtaXRAcmVkaGF0
         LmNvbSIsImNvbXBhbnlfbmFtZSI6IlJlZCBIYXQsIEluYy4iLCJkYXRlX3dh
         cm5pbmciOmZhbHNlLCJsaWNlbnNlX3R5cGUiOiJlbnRlcnByaXNlIiwiY29u
         dGFjdF9uYW1lIjoiSm9lICBTbWl0aCIsImxpY2Vuc2VfZGF0ZSI6MTUxODcx
@@ -287,7 +287,7 @@ http_interactions:
         LCJhbnNpYmxlX3ZlcnNpb24iOiIyLjEuMC4wIiwicHJvamVjdF9sb2NhbF9w
         YXRocyI6W119
     http_version: 
-  recorded_at: Mon, 10 Apr 2017 18:37:59 GMT
+  recorded_at: Mon, 10 Apr 2017 20:49:57 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/472/
@@ -307,7 +307,518 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 10 Apr 2017 18:37:59 GMT
+      - Mon, 10 Apr 2017 20:49:57 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      X-Api-Time:
+      - 0.051s
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      string: '{"id":472,"type":"project","url":"/api/v1/projects/472/","related":{"created_by":"/api/v1/users/1/","credential":"/api/v1/credentials/3/","last_job":"/api/v1/project_updates/634/","notification_templates_error":"/api/v1/projects/472/notification_templates_error/","notification_templates_success":"/api/v1/projects/472/notification_templates_success/","object_roles":"/api/v1/projects/472/object_roles/","notification_templates_any":"/api/v1/projects/472/notification_templates_any/","project_updates":"/api/v1/projects/472/project_updates/","update":"/api/v1/projects/472/update/","access_list":"/api/v1/projects/472/access_list/","playbooks":"/api/v1/projects/472/playbooks/","schedules":"/api/v1/projects/472/schedules/","teams":"/api/v1/projects/472/teams/","activity_stream":"/api/v1/projects/472/activity_stream/","organization":"/api/v1/organizations/1/","last_update":"/api/v1/project_updates/634/"},"summary_fields":{"last_job":{"id":634,"name":"targeted_refresh","description":"","finished":"2017-04-10T20:47:58.795Z","status":"successful","failed":false},"last_update":{"id":634,"name":"targeted_refresh","description":"","status":"successful","failed":false},"credential":{"id":3,"name":"db-github","description":"db-github","kind":"scm","cloud":false},"organization":{"id":1,"name":"Default","description":""},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the project","id":1889,"name":"Admin"},"use_role":{"description":"Can
+        use the project in a job template","id":1891,"name":"Use"},"update_role":{"description":"May
+        update project or inventory or group using the configured source update system","id":1892,"name":"Update"},"read_role":{"description":"May
+        view settings for the project","id":1890,"name":"Read"}}},"created":"2017-04-10T18:28:19.485Z","modified":"2017-04-10T20:21:40.480Z","name":"targeted_refresh","description":"","local_path":"_472__targeted_refresh","scm_type":"git","scm_url":"https://github.com/ansible/ansible.git","scm_branch":"","scm_clean":false,"scm_delete_on_update":false,"credential":3,"last_job_run":"2017-04-10T20:47:58.795252Z","last_job_failed":false,"has_schedules":false,"next_job_run":null,"status":"successful","organization":1,"scm_delete_on_next_update":false,"scm_update_on_launch":false,"scm_update_cache_timeout":0,"last_update_failed":false,"last_updated":"2017-04-10T20:47:58.795252Z"}'
+    http_version: 
+  recorded_at: Mon, 10 Apr 2017 20:49:58 GMT
+- request:
+    method: get
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/472/update/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 10 Apr 2017 20:49:58 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Api-Time:
+      - 0.030s
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      string: '{"can_update":true}'
+    http_version: 
+  recorded_at: Mon, 10 Apr 2017 20:49:58 GMT
+- request:
+    method: post
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/472/update/
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Length:
+      - '0'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 202
+      message: ACCEPTED
+    headers:
+      Date:
+      - Mon, 10 Apr 2017 20:49:59 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Api-Time:
+      - 0.071s
+      Location:
+      - https://dev-ansible-tower3.example.com/api/v1/project_updates/635/
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      string: '{"project_update":635}'
+    http_version: 
+  recorded_at: Mon, 10 Apr 2017 20:49:59 GMT
+- request:
+    method: get
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/project_updates/635/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 10 Apr 2017 20:49:59 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Api-Time:
+      - 0.045s
+      Content-Length:
+      - '1445'
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      string: '{"id":635,"type":"project_update","url":"/api/v1/project_updates/635/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","credential":"/api/v1/credentials/3/","unified_job_template":"/api/v1/projects/472/","stdout":"/api/v1/project_updates/635/stdout/","cancel":"/api/v1/project_updates/635/cancel/","notifications":"/api/v1/project_updates/635/notifications/","project":"/api/v1/projects/472/"},"summary_fields":{"credential":{"id":3,"name":"db-github","description":"db-github","kind":"scm","cloud":false},"unified_job_template":{"id":472,"name":"targeted_refresh","description":"","unified_job_type":"project_update"},"project":{"id":472,"name":"targeted_refresh","description":"","status":"pending"},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""}},"created":"2017-04-10T20:49:59.135Z","modified":"2017-04-10T20:49:59.147Z","name":"targeted_refresh","description":"","local_path":"_472__targeted_refresh","scm_type":"git","scm_url":"https://github.com/ansible/ansible.git","scm_branch":"","scm_clean":false,"scm_delete_on_update":false,"credential":3,"unified_job_template":472,"launch_type":"manual","status":"pending","failed":false,"started":null,"finished":null,"elapsed":0.0,"job_args":"","job_cwd":"","job_env":{},"job_explanation":"","result_stdout":"Waiting
+        for results...","result_traceback":"","project":472}'
+    http_version: 
+  recorded_at: Mon, 10 Apr 2017 20:49:59 GMT
+- request:
+    method: get
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/project_updates/635/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 10 Apr 2017 20:50:01 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Api-Time:
+      - 0.045s
+      Content-Length:
+      - '1445'
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      string: '{"id":635,"type":"project_update","url":"/api/v1/project_updates/635/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","credential":"/api/v1/credentials/3/","unified_job_template":"/api/v1/projects/472/","stdout":"/api/v1/project_updates/635/stdout/","cancel":"/api/v1/project_updates/635/cancel/","notifications":"/api/v1/project_updates/635/notifications/","project":"/api/v1/projects/472/"},"summary_fields":{"credential":{"id":3,"name":"db-github","description":"db-github","kind":"scm","cloud":false},"unified_job_template":{"id":472,"name":"targeted_refresh","description":"","unified_job_type":"project_update"},"project":{"id":472,"name":"targeted_refresh","description":"","status":"pending"},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""}},"created":"2017-04-10T20:49:59.135Z","modified":"2017-04-10T20:49:59.147Z","name":"targeted_refresh","description":"","local_path":"_472__targeted_refresh","scm_type":"git","scm_url":"https://github.com/ansible/ansible.git","scm_branch":"","scm_clean":false,"scm_delete_on_update":false,"credential":3,"unified_job_template":472,"launch_type":"manual","status":"pending","failed":false,"started":null,"finished":null,"elapsed":0.0,"job_args":"","job_cwd":"","job_env":{},"job_explanation":"","result_stdout":"Waiting
+        for results...","result_traceback":"","project":472}'
+    http_version: 
+  recorded_at: Mon, 10 Apr 2017 20:50:01 GMT
+- request:
+    method: get
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/project_updates/635/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 10 Apr 2017 20:50:02 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Api-Time:
+      - 0.044s
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      string: '{"id":635,"type":"project_update","url":"/api/v1/project_updates/635/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","credential":"/api/v1/credentials/3/","unified_job_template":"/api/v1/projects/472/","stdout":"/api/v1/project_updates/635/stdout/","cancel":"/api/v1/project_updates/635/cancel/","notifications":"/api/v1/project_updates/635/notifications/","project":"/api/v1/projects/472/"},"summary_fields":{"credential":{"id":3,"name":"db-github","description":"db-github","kind":"scm","cloud":false},"unified_job_template":{"id":472,"name":"targeted_refresh","description":"","unified_job_type":"project_update"},"project":{"id":472,"name":"targeted_refresh","description":"","status":"pending"},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""}},"created":"2017-04-10T20:49:59.135Z","modified":"2017-04-10T20:49:59.147Z","name":"targeted_refresh","description":"","local_path":"_472__targeted_refresh","scm_type":"git","scm_url":"https://github.com/ansible/ansible.git","scm_branch":"","scm_clean":false,"scm_delete_on_update":false,"credential":3,"unified_job_template":472,"launch_type":"manual","status":"pending","failed":false,"started":null,"finished":null,"elapsed":0.0,"job_args":"","job_cwd":"","job_env":{},"job_explanation":"","result_stdout":"Waiting
+        for results...","result_traceback":"","project":472}'
+    http_version: 
+  recorded_at: Mon, 10 Apr 2017 20:50:02 GMT
+- request:
+    method: get
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/project_updates/635/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 10 Apr 2017 20:50:04 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Api-Time:
+      - 0.045s
+      Content-Length:
+      - '1445'
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      string: '{"id":635,"type":"project_update","url":"/api/v1/project_updates/635/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","credential":"/api/v1/credentials/3/","unified_job_template":"/api/v1/projects/472/","stdout":"/api/v1/project_updates/635/stdout/","cancel":"/api/v1/project_updates/635/cancel/","notifications":"/api/v1/project_updates/635/notifications/","project":"/api/v1/projects/472/"},"summary_fields":{"credential":{"id":3,"name":"db-github","description":"db-github","kind":"scm","cloud":false},"unified_job_template":{"id":472,"name":"targeted_refresh","description":"","unified_job_type":"project_update"},"project":{"id":472,"name":"targeted_refresh","description":"","status":"pending"},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""}},"created":"2017-04-10T20:49:59.135Z","modified":"2017-04-10T20:49:59.147Z","name":"targeted_refresh","description":"","local_path":"_472__targeted_refresh","scm_type":"git","scm_url":"https://github.com/ansible/ansible.git","scm_branch":"","scm_clean":false,"scm_delete_on_update":false,"credential":3,"unified_job_template":472,"launch_type":"manual","status":"pending","failed":false,"started":null,"finished":null,"elapsed":0.0,"job_args":"","job_cwd":"","job_env":{},"job_explanation":"","result_stdout":"Waiting
+        for results...","result_traceback":"","project":472}'
+    http_version: 
+  recorded_at: Mon, 10 Apr 2017 20:50:04 GMT
+- request:
+    method: get
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/project_updates/635/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 10 Apr 2017 20:50:06 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Api-Time:
+      - 0.046s
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      string: '{"id":635,"type":"project_update","url":"/api/v1/project_updates/635/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","credential":"/api/v1/credentials/3/","unified_job_template":"/api/v1/projects/472/","stdout":"/api/v1/project_updates/635/stdout/","cancel":"/api/v1/project_updates/635/cancel/","notifications":"/api/v1/project_updates/635/notifications/","project":"/api/v1/projects/472/"},"summary_fields":{"credential":{"id":3,"name":"db-github","description":"db-github","kind":"scm","cloud":false},"unified_job_template":{"id":472,"name":"targeted_refresh","description":"","unified_job_type":"project_update"},"project":{"id":472,"name":"targeted_refresh","description":"","status":"pending"},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""}},"created":"2017-04-10T20:49:59.135Z","modified":"2017-04-10T20:49:59.147Z","name":"targeted_refresh","description":"","local_path":"_472__targeted_refresh","scm_type":"git","scm_url":"https://github.com/ansible/ansible.git","scm_branch":"","scm_clean":false,"scm_delete_on_update":false,"credential":3,"unified_job_template":472,"launch_type":"manual","status":"pending","failed":false,"started":null,"finished":null,"elapsed":0.0,"job_args":"","job_cwd":"","job_env":{},"job_explanation":"","result_stdout":"Waiting
+        for results...","result_traceback":"","project":472}'
+    http_version: 
+  recorded_at: Mon, 10 Apr 2017 20:50:06 GMT
+- request:
+    method: get
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/project_updates/635/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 10 Apr 2017 20:50:07 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Api-Time:
+      - 0.099s
+      Content-Length:
+      - '1445'
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      string: '{"id":635,"type":"project_update","url":"/api/v1/project_updates/635/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","credential":"/api/v1/credentials/3/","unified_job_template":"/api/v1/projects/472/","stdout":"/api/v1/project_updates/635/stdout/","cancel":"/api/v1/project_updates/635/cancel/","notifications":"/api/v1/project_updates/635/notifications/","project":"/api/v1/projects/472/"},"summary_fields":{"credential":{"id":3,"name":"db-github","description":"db-github","kind":"scm","cloud":false},"unified_job_template":{"id":472,"name":"targeted_refresh","description":"","unified_job_type":"project_update"},"project":{"id":472,"name":"targeted_refresh","description":"","status":"pending"},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""}},"created":"2017-04-10T20:49:59.135Z","modified":"2017-04-10T20:49:59.147Z","name":"targeted_refresh","description":"","local_path":"_472__targeted_refresh","scm_type":"git","scm_url":"https://github.com/ansible/ansible.git","scm_branch":"","scm_clean":false,"scm_delete_on_update":false,"credential":3,"unified_job_template":472,"launch_type":"manual","status":"pending","failed":false,"started":null,"finished":null,"elapsed":0.0,"job_args":"","job_cwd":"","job_env":{},"job_explanation":"","result_stdout":"Waiting
+        for results...","result_traceback":"","project":472}'
+    http_version: 
+  recorded_at: Mon, 10 Apr 2017 20:50:07 GMT
+- request:
+    method: get
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/project_updates/635/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 10 Apr 2017 20:50:09 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Api-Time:
+      - 0.044s
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      string: '{"id":635,"type":"project_update","url":"/api/v1/project_updates/635/","related":{"created_by":"/api/v1/users/1/","credential":"/api/v1/credentials/3/","unified_job_template":"/api/v1/projects/472/","stdout":"/api/v1/project_updates/635/stdout/","cancel":"/api/v1/project_updates/635/cancel/","notifications":"/api/v1/project_updates/635/notifications/","project":"/api/v1/projects/472/"},"summary_fields":{"credential":{"id":3,"name":"db-github","description":"db-github","kind":"scm","cloud":false},"unified_job_template":{"id":472,"name":"targeted_refresh","description":"","unified_job_type":"project_update"},"project":{"id":472,"name":"targeted_refresh","description":"","status":"running"},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""}},"created":"2017-04-10T20:49:59.135Z","modified":"2017-04-10T20:50:08.135Z","name":"targeted_refresh","description":"","local_path":"_472__targeted_refresh","scm_type":"git","scm_url":"https://github.com/ansible/ansible.git","scm_branch":"","scm_clean":false,"scm_delete_on_update":false,"credential":3,"unified_job_template":472,"launch_type":"manual","status":"running","failed":false,"started":"2017-04-10T20:50:08.194363Z","finished":null,"elapsed":0.0,"job_args":"[\"ansible-playbook\",
+        \"-i\", \"localhost,\", \"-v\", \"-e\", \"{\\\"scm_branch\\\": \\\"HEAD\\\",
+        \\\"scm_type\\\": \\\"git\\\", \\\"project_path\\\": \\\"/var/lib/awx/projects/_472__targeted_refresh\\\",
+        \\\"scm_clean\\\": false, \\\"scm_url\\\": \\\"https://syncrou:%2A%2A%2A%2A%2A%2A%2A%2A%2A%2A@github.com/ansible/ansible.git\\\",
+        \\\"scm_delete_on_update\\\": false}\", \"project_update.yml\"]","job_cwd":"/var/lib/awx/venv/tower/lib/python2.7/site-packages/awx/playbooks","job_env":{"ANSIBLE_PARAMIKO_RECORD_HOST_KEYS":"False","DJANGO_LIVE_TEST_SERVER_ADDRESS":"localhost:9013-9199","_MP_FORK_LOGFILE_":"","ANSIBLE_ASK_PASS":"False","CELERY_LOG_REDIRECT":"1","SUPERVISOR_GROUP_NAME":"awx-celeryd","HOME":"/var/lib/awx","PATH":"/var/lib/awx/venv/ansible/bin:/var/lib/awx/venv/tower/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin","PS1":"(tower)","DISPLAY":"","LANG":"en_US.UTF-8","VIRTUAL_ENV":"/var/lib/awx/venv/ansible","SUPERVISOR_SERVER_URL":"unix:///var/run/supervisor/supervisor.sock","TZ":"America/New_York","_MP_FORK_LOGFORMAT_":"[%(asctime)s:
+        %(levelname)s/%(processName)s] %(message)s","SHLVL":"0","SUPERVISOR_ENABLED":"1","CELERY_LOG_FILE":"","DJANGO_PROJECT_DIR":"/var/lib/awx/venv/tower/lib/python2.7/site-packages","ANSIBLE_HOST_KEY_CHECKING":"False","PYTHONPATH":"/var/lib/awx/venv/ansible/lib/python2.7/site-packages:","ANSIBLE_USE_VENV":"True","CELERY_LOADER":"djcelery.loaders.DjangoLoader","_MP_FORK_LOGLEVEL_":"10","ANSIBLE_FORCE_COLOR":"True","CELERY_LOG_REDIRECT_LEVEL":"WARNING","SUPERVISOR_PROCESS_NAME":"awx-celeryd","CELERY_LOG_LEVEL":"10","ANSIBLE_ASK_SUDO_PASS":"False","PWD":"/var/lib/awx","DJANGO_SETTINGS_MODULE":"awx.settings.production","ANSIBLE_VENV_PATH":"/var/lib/awx/venv/ansible","USER":"awx"},"job_explanation":"","result_stdout":"Using
+        /etc/ansible/ansible.cfg as config file\r\n\r\nPLAY [all] *********************************************************************\r\n\r\nTASK
+        [delete project directory before update] **********************************\r\nskipping:
+        [localhost] => {\"changed\": false, \"skip_reason\": \"Conditional check failed\",
+        \"skipped\": true}\r\n\r\nTASK [update project using git and accept hostkey]
+        *****************************\r\nskipping: [localhost] => {\"changed\": false,
+        \"skip_reason\": \"Conditional check failed\", \"skipped\": true}\r\n\r\nTASK
+        [update project using git] ************************************************\r\n","result_traceback":"","project":472}'
+    http_version: 
+  recorded_at: Mon, 10 Apr 2017 20:50:09 GMT
+- request:
+    method: get
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/project_updates/635/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 10 Apr 2017 20:50:10 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Api-Time:
+      - 0.045s
+      Content-Length:
+      - '3937'
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      string: '{"id":635,"type":"project_update","url":"/api/v1/project_updates/635/","related":{"created_by":"/api/v1/users/1/","credential":"/api/v1/credentials/3/","unified_job_template":"/api/v1/projects/472/","stdout":"/api/v1/project_updates/635/stdout/","cancel":"/api/v1/project_updates/635/cancel/","notifications":"/api/v1/project_updates/635/notifications/","project":"/api/v1/projects/472/"},"summary_fields":{"credential":{"id":3,"name":"db-github","description":"db-github","kind":"scm","cloud":false},"unified_job_template":{"id":472,"name":"targeted_refresh","description":"","unified_job_type":"project_update"},"project":{"id":472,"name":"targeted_refresh","description":"","status":"running"},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""}},"created":"2017-04-10T20:49:59.135Z","modified":"2017-04-10T20:50:08.135Z","name":"targeted_refresh","description":"","local_path":"_472__targeted_refresh","scm_type":"git","scm_url":"https://github.com/ansible/ansible.git","scm_branch":"","scm_clean":false,"scm_delete_on_update":false,"credential":3,"unified_job_template":472,"launch_type":"manual","status":"running","failed":false,"started":"2017-04-10T20:50:08.194363Z","finished":null,"elapsed":0.0,"job_args":"[\"ansible-playbook\",
+        \"-i\", \"localhost,\", \"-v\", \"-e\", \"{\\\"scm_branch\\\": \\\"HEAD\\\",
+        \\\"scm_type\\\": \\\"git\\\", \\\"project_path\\\": \\\"/var/lib/awx/projects/_472__targeted_refresh\\\",
+        \\\"scm_clean\\\": false, \\\"scm_url\\\": \\\"https://syncrou:%2A%2A%2A%2A%2A%2A%2A%2A%2A%2A@github.com/ansible/ansible.git\\\",
+        \\\"scm_delete_on_update\\\": false}\", \"project_update.yml\"]","job_cwd":"/var/lib/awx/venv/tower/lib/python2.7/site-packages/awx/playbooks","job_env":{"ANSIBLE_PARAMIKO_RECORD_HOST_KEYS":"False","DJANGO_LIVE_TEST_SERVER_ADDRESS":"localhost:9013-9199","_MP_FORK_LOGFILE_":"","ANSIBLE_ASK_PASS":"False","CELERY_LOG_REDIRECT":"1","SUPERVISOR_GROUP_NAME":"awx-celeryd","HOME":"/var/lib/awx","PATH":"/var/lib/awx/venv/ansible/bin:/var/lib/awx/venv/tower/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin","PS1":"(tower)","DISPLAY":"","LANG":"en_US.UTF-8","VIRTUAL_ENV":"/var/lib/awx/venv/ansible","SUPERVISOR_SERVER_URL":"unix:///var/run/supervisor/supervisor.sock","TZ":"America/New_York","_MP_FORK_LOGFORMAT_":"[%(asctime)s:
+        %(levelname)s/%(processName)s] %(message)s","SHLVL":"0","SUPERVISOR_ENABLED":"1","CELERY_LOG_FILE":"","DJANGO_PROJECT_DIR":"/var/lib/awx/venv/tower/lib/python2.7/site-packages","ANSIBLE_HOST_KEY_CHECKING":"False","PYTHONPATH":"/var/lib/awx/venv/ansible/lib/python2.7/site-packages:","ANSIBLE_USE_VENV":"True","CELERY_LOADER":"djcelery.loaders.DjangoLoader","_MP_FORK_LOGLEVEL_":"10","ANSIBLE_FORCE_COLOR":"True","CELERY_LOG_REDIRECT_LEVEL":"WARNING","SUPERVISOR_PROCESS_NAME":"awx-celeryd","CELERY_LOG_LEVEL":"10","ANSIBLE_ASK_SUDO_PASS":"False","PWD":"/var/lib/awx","DJANGO_SETTINGS_MODULE":"awx.settings.production","ANSIBLE_VENV_PATH":"/var/lib/awx/venv/ansible","USER":"awx"},"job_explanation":"","result_stdout":"Using
+        /etc/ansible/ansible.cfg as config file\r\n\r\nPLAY [all] *********************************************************************\r\n\r\nTASK
+        [delete project directory before update] **********************************\r\nskipping:
+        [localhost] => {\"changed\": false, \"skip_reason\": \"Conditional check failed\",
+        \"skipped\": true}\r\n\r\nTASK [update project using git and accept hostkey]
+        *****************************\r\nskipping: [localhost] => {\"changed\": false,
+        \"skip_reason\": \"Conditional check failed\", \"skipped\": true}\r\n\r\nTASK
+        [update project using git] ************************************************\r\nok:
+        [localhost] => {\"after\": \"3b5dd4e0a0c796d145b19c224ff95a2d2ca62e4f\", \"before\":
+        \"3b5dd4e0a0c796d145b19c224ff95a2d2ca62e4f\", \"changed\": false}\r\n\r\nTASK
+        [update project using hg] *************************************************\r\n","result_traceback":"","project":472}'
+    http_version: 
+  recorded_at: Mon, 10 Apr 2017 20:50:11 GMT
+- request:
+    method: get
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/project_updates/635/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 10 Apr 2017 20:50:12 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, DELETE, HEAD, OPTIONS
+      X-Api-Time:
+      - 0.046s
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      string: '{"id":635,"type":"project_update","url":"/api/v1/project_updates/635/","related":{"created_by":"/api/v1/users/1/","credential":"/api/v1/credentials/3/","unified_job_template":"/api/v1/projects/472/","stdout":"/api/v1/project_updates/635/stdout/","cancel":"/api/v1/project_updates/635/cancel/","notifications":"/api/v1/project_updates/635/notifications/","project":"/api/v1/projects/472/"},"summary_fields":{"credential":{"id":3,"name":"db-github","description":"db-github","kind":"scm","cloud":false},"unified_job_template":{"id":472,"name":"targeted_refresh","description":"","unified_job_type":"project_update"},"project":{"id":472,"name":"targeted_refresh","description":"","status":"successful"},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""}},"created":"2017-04-10T20:49:59.135Z","modified":"2017-04-10T20:50:08.135Z","name":"targeted_refresh","description":"","local_path":"_472__targeted_refresh","scm_type":"git","scm_url":"https://github.com/ansible/ansible.git","scm_branch":"","scm_clean":false,"scm_delete_on_update":false,"credential":3,"unified_job_template":472,"launch_type":"manual","status":"successful","failed":false,"started":"2017-04-10T20:50:08.194363Z","finished":"2017-04-10T20:50:11.429285Z","elapsed":3.235,"job_args":"[\"ansible-playbook\",
+        \"-i\", \"localhost,\", \"-v\", \"-e\", \"{\\\"scm_branch\\\": \\\"HEAD\\\",
+        \\\"scm_type\\\": \\\"git\\\", \\\"project_path\\\": \\\"/var/lib/awx/projects/_472__targeted_refresh\\\",
+        \\\"scm_clean\\\": false, \\\"scm_url\\\": \\\"https://syncrou:%2A%2A%2A%2A%2A%2A%2A%2A%2A%2A@github.com/ansible/ansible.git\\\",
+        \\\"scm_delete_on_update\\\": false}\", \"project_update.yml\"]","job_cwd":"/var/lib/awx/venv/tower/lib/python2.7/site-packages/awx/playbooks","job_env":{"ANSIBLE_PARAMIKO_RECORD_HOST_KEYS":"False","DJANGO_LIVE_TEST_SERVER_ADDRESS":"localhost:9013-9199","_MP_FORK_LOGFILE_":"","ANSIBLE_ASK_PASS":"False","CELERY_LOG_REDIRECT":"1","SUPERVISOR_GROUP_NAME":"awx-celeryd","HOME":"/var/lib/awx","PATH":"/var/lib/awx/venv/ansible/bin:/var/lib/awx/venv/tower/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin","PS1":"(tower)","DISPLAY":"","LANG":"en_US.UTF-8","VIRTUAL_ENV":"/var/lib/awx/venv/ansible","SUPERVISOR_SERVER_URL":"unix:///var/run/supervisor/supervisor.sock","TZ":"America/New_York","_MP_FORK_LOGFORMAT_":"[%(asctime)s:
+        %(levelname)s/%(processName)s] %(message)s","SHLVL":"0","SUPERVISOR_ENABLED":"1","CELERY_LOG_FILE":"","DJANGO_PROJECT_DIR":"/var/lib/awx/venv/tower/lib/python2.7/site-packages","ANSIBLE_HOST_KEY_CHECKING":"False","PYTHONPATH":"/var/lib/awx/venv/ansible/lib/python2.7/site-packages:","ANSIBLE_USE_VENV":"True","CELERY_LOADER":"djcelery.loaders.DjangoLoader","_MP_FORK_LOGLEVEL_":"10","ANSIBLE_FORCE_COLOR":"True","CELERY_LOG_REDIRECT_LEVEL":"WARNING","SUPERVISOR_PROCESS_NAME":"awx-celeryd","CELERY_LOG_LEVEL":"10","ANSIBLE_ASK_SUDO_PASS":"False","PWD":"/var/lib/awx","DJANGO_SETTINGS_MODULE":"awx.settings.production","ANSIBLE_VENV_PATH":"/var/lib/awx/venv/ansible","USER":"awx"},"job_explanation":"","result_stdout":"Using
+        /etc/ansible/ansible.cfg as config file\r\n\r\nPLAY [all] *********************************************************************\r\n\r\nTASK
+        [delete project directory before update] **********************************\r\nskipping:
+        [localhost] => {\"changed\": false, \"skip_reason\": \"Conditional check failed\",
+        \"skipped\": true}\r\n\r\nTASK [update project using git and accept hostkey]
+        *****************************\r\nskipping: [localhost] => {\"changed\": false,
+        \"skip_reason\": \"Conditional check failed\", \"skipped\": true}\r\n\r\nTASK
+        [update project using git] ************************************************\r\nok:
+        [localhost] => {\"after\": \"3b5dd4e0a0c796d145b19c224ff95a2d2ca62e4f\", \"before\":
+        \"3b5dd4e0a0c796d145b19c224ff95a2d2ca62e4f\", \"changed\": false}\r\n\r\nTASK
+        [update project using hg] *************************************************\r\nskipping:
+        [localhost] => {\"changed\": false, \"skip_reason\": \"Conditional check failed\",
+        \"skipped\": true}\r\n\r\nTASK [update project using svn] ************************************************\r\nskipping:
+        [localhost] => {\"changed\": false, \"skip_reason\": \"Conditional check failed\",
+        \"skipped\": true}\r\n\r\nTASK [update project using svn with auth] **************************************\r\nskipping:
+        [localhost] => {\"changed\": false, \"skip_reason\": \"Conditional check failed\",
+        \"skipped\": true}\r\n\r\nTASK [detect requirements.yml] *************************************************\r\nok:
+        [localhost] => {\"changed\": false, \"stat\": {\"exists\": false}}\r\n\r\nTASK
+        [fetch galaxy roles from requirements.yml] ********************************\r\nskipping:
+        [localhost] => {\"changed\": false, \"skip_reason\": \"Conditional check failed\",
+        \"skipped\": true}\r\n\r\nPLAY RECAP *********************************************************************\r\nlocalhost                  :
+        ok=2    changed=0    unreachable=0    failed=0   \r\n\r\n","result_traceback":"","project":472}'
+    http_version: 
+  recorded_at: Mon, 10 Apr 2017 20:50:12 GMT
+- request:
+    method: get
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/472/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 10 Apr 2017 20:50:13 GMT
       Server:
       - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -316,19 +827,19 @@ http_interactions:
       - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
       X-Api-Time:
       - 0.050s
-      Transfer-Encoding:
-      - chunked
+      Content-Length:
+      - '2442'
       Content-Type:
       - application/json
     body:
       encoding: UTF-8
-      string: '{"id":472,"type":"project","url":"/api/v1/projects/472/","related":{"created_by":"/api/v1/users/1/","credential":"/api/v1/credentials/3/","last_job":"/api/v1/project_updates/625/","notification_templates_error":"/api/v1/projects/472/notification_templates_error/","notification_templates_success":"/api/v1/projects/472/notification_templates_success/","object_roles":"/api/v1/projects/472/object_roles/","notification_templates_any":"/api/v1/projects/472/notification_templates_any/","project_updates":"/api/v1/projects/472/project_updates/","update":"/api/v1/projects/472/update/","access_list":"/api/v1/projects/472/access_list/","playbooks":"/api/v1/projects/472/playbooks/","schedules":"/api/v1/projects/472/schedules/","teams":"/api/v1/projects/472/teams/","activity_stream":"/api/v1/projects/472/activity_stream/","organization":"/api/v1/organizations/1/","last_update":"/api/v1/project_updates/625/"},"summary_fields":{"last_job":{"id":625,"name":"targeted_refresh","description":"","finished":"2017-04-10T18:32:14.021Z","status":"successful","failed":false},"last_update":{"id":625,"name":"targeted_refresh","description":"","status":"successful","failed":false},"credential":{"id":3,"name":"db-github","description":"db-github","kind":"scm","cloud":false},"organization":{"id":1,"name":"Default","description":""},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+      string: '{"id":472,"type":"project","url":"/api/v1/projects/472/","related":{"created_by":"/api/v1/users/1/","credential":"/api/v1/credentials/3/","last_job":"/api/v1/project_updates/635/","notification_templates_error":"/api/v1/projects/472/notification_templates_error/","notification_templates_success":"/api/v1/projects/472/notification_templates_success/","object_roles":"/api/v1/projects/472/object_roles/","notification_templates_any":"/api/v1/projects/472/notification_templates_any/","project_updates":"/api/v1/projects/472/project_updates/","update":"/api/v1/projects/472/update/","access_list":"/api/v1/projects/472/access_list/","playbooks":"/api/v1/projects/472/playbooks/","schedules":"/api/v1/projects/472/schedules/","teams":"/api/v1/projects/472/teams/","activity_stream":"/api/v1/projects/472/activity_stream/","organization":"/api/v1/organizations/1/","last_update":"/api/v1/project_updates/635/"},"summary_fields":{"last_job":{"id":635,"name":"targeted_refresh","description":"","finished":"2017-04-10T20:50:11.429Z","status":"successful","failed":false},"last_update":{"id":635,"name":"targeted_refresh","description":"","status":"successful","failed":false},"credential":{"id":3,"name":"db-github","description":"db-github","kind":"scm","cloud":false},"organization":{"id":1,"name":"Default","description":""},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
         manage all aspects of the project","id":1889,"name":"Admin"},"use_role":{"description":"Can
         use the project in a job template","id":1891,"name":"Use"},"update_role":{"description":"May
         update project or inventory or group using the configured source update system","id":1892,"name":"Update"},"read_role":{"description":"May
-        view settings for the project","id":1890,"name":"Read"}}},"created":"2017-04-10T18:28:19.485Z","modified":"2017-04-10T18:31:52.619Z","name":"targeted_refresh","description":"","local_path":"_472__targeted_refresh","scm_type":"git","scm_url":"https://github.com/ansible/ansible.git","scm_branch":"","scm_clean":false,"scm_delete_on_update":false,"credential":3,"last_job_run":"2017-04-10T18:32:14.021311Z","last_job_failed":false,"has_schedules":false,"next_job_run":null,"status":"successful","organization":1,"scm_delete_on_next_update":false,"scm_update_on_launch":false,"scm_update_cache_timeout":0,"last_update_failed":false,"last_updated":"2017-04-10T18:32:14.021311Z"}'
+        view settings for the project","id":1890,"name":"Read"}}},"created":"2017-04-10T18:28:19.485Z","modified":"2017-04-10T20:21:40.480Z","name":"targeted_refresh","description":"","local_path":"_472__targeted_refresh","scm_type":"git","scm_url":"https://github.com/ansible/ansible.git","scm_branch":"","scm_clean":false,"scm_delete_on_update":false,"credential":3,"last_job_run":"2017-04-10T20:50:11.429285Z","last_job_failed":false,"has_schedules":false,"next_job_run":null,"status":"successful","organization":1,"scm_delete_on_next_update":false,"scm_update_on_launch":false,"scm_update_cache_timeout":0,"last_update_failed":false,"last_updated":"2017-04-10T20:50:11.429285Z"}'
     http_version: 
-  recorded_at: Mon, 10 Apr 2017 18:37:59 GMT
+  recorded_at: Mon, 10 Apr 2017 20:50:13 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/472/playbooks/
@@ -348,7 +859,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 10 Apr 2017 18:38:00 GMT
+      - Mon, 10 Apr 2017 20:50:13 GMT
       Server:
       - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -356,7 +867,7 @@ http_interactions:
       Allow:
       - GET, HEAD, OPTIONS
       X-Api-Time:
-      - 0.162s
+      - 0.163s
       Transfer-Encoding:
       - chunked
       Content-Type:
@@ -365,7 +876,7 @@ http_interactions:
       encoding: UTF-8
       string: '["docs/docsite/keyword_desc.yml","packaging/release/release.yml","shippable.yml","test/integration/amazon.yml","test/integration/asa.yaml","test/integration/azure.yml","test/integration/cloudflare.yml","test/integration/cloudscale.yml","test/integration/cloudstack.yml","test/integration/cnos.yaml","test/integration/consul.yml","test/integration/consul_inventory.yml","test/integration/dellos10.yaml","test/integration/dellos6.yaml","test/integration/dellos9.yaml","test/integration/destructive.yml","test/integration/eos.yaml","test/integration/exoscale.yml","test/integration/galaxy_playbook.yml","test/integration/galaxy_playbook_git.yml","test/integration/gce.yml","test/integration/ios.yaml","test/integration/iosxr.yaml","test/integration/jenkins.yml","test/integration/junos.yaml","test/integration/net_command.yml","test/integration/non_destructive.yml","test/integration/nxos.yaml","test/integration/ops.yaml","test/integration/rackspace.yml","test/integration/targets/async_extra_data/test_async.yml","test/integration/targets/binary_modules/download_binary_modules.yml","test/integration/targets/binary_modules/test_binary_modules.yml","test/integration/targets/blocks/main.yml","test/integration/targets/blocks/nested_fail.yml","test/integration/targets/blocks/nested_nested_fail.yml","test/integration/targets/callback_retry_task_name/test.yml","test/integration/targets/check_mode/check_mode.yml","test/integration/targets/connection/test_connection.yml","test/integration/targets/delegate_to/test_delegate_to.yml","test/integration/targets/environment/test_environment.yml","test/integration/targets/filters/vars/main.yml","test/integration/targets/gathering_facts/test_gathering_facts.yml","test/integration/targets/group_by/test_group_by.yml","test/integration/targets/groupby_filter/test_jinja2_groupby.yml","test/integration/targets/handlers/test_force_handlers.yml","test/integration/targets/handlers/test_handlers.yml","test/integration/targets/handlers/test_handlers_include.yml","test/integration/targets/handlers/test_handlers_inexistent_notify.yml","test/integration/targets/handlers/test_handlers_listen.yml","test/integration/targets/handlers/test_listening_handlers.yml","test/integration/targets/hash/test_hash.yml","test/integration/targets/hosts_field/test_hosts_field.yml","test/integration/targets/includes/test_includes.yml","test/integration/targets/includes/test_includes2.yml","test/integration/targets/includes/test_includes3.yml","test/integration/targets/lookup_paths/play.yml","test/integration/targets/lookup_paths/testplay.yml","test/integration/targets/lookup_properties/test_lookup_properties.yml","test/integration/targets/module_utils/module_utils_envvar.yml","test/integration/targets/module_utils/module_utils_test.yml","test/integration/targets/no_log/no_log_local.yml","test/integration/targets/parsing/bad_parsing.yml","test/integration/targets/parsing/good_parsing.yml","test/integration/targets/pull/pull-integration-test/local.yml","test/integration/targets/tags/test_tags.yml","test/integration/targets/template_jinja2_latest/main.yml","test/integration/targets/templating_settings/test_templating_settings.yml","test/integration/targets/test_infra/test_test_infra.yml","test/integration/targets/unicode/unicode.yml","test/integration/targets/var_blending/test_var_blending.yml","test/integration/targets/var_precedence/test_var_precedence.yml","test/integration/targets/vault/test_vault.yml","test/integration/targets/vault/test_vault_embedded.yml","test/integration/targets/vault/test_vaulted_inventory.yml","test/integration/test_win_group1.yml","test/integration/test_win_group2.yml","test/integration/test_win_group3.yml","test/integration/vars/test_var_encrypted.yml","test/integration/vyos.yaml","test/utils/docker/httptester/httptester.yml"]'
     http_version: 
-  recorded_at: Mon, 10 Apr 2017 18:38:00 GMT
+  recorded_at: Mon, 10 Apr 2017 20:50:13 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/credentials
@@ -385,7 +896,7 @@ http_interactions:
       message: MOVED PERMANENTLY
     headers:
       Date:
-      - Mon, 10 Apr 2017 18:38:00 GMT
+      - Mon, 10 Apr 2017 20:50:14 GMT
       Server:
       - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Location:
@@ -398,7 +909,7 @@ http_interactions:
       encoding: UTF-8
       string: ''
     http_version: 
-  recorded_at: Mon, 10 Apr 2017 18:38:01 GMT
+  recorded_at: Mon, 10 Apr 2017 20:50:14 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/credentials/
@@ -418,7 +929,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 10 Apr 2017 18:38:01 GMT
+      - Mon, 10 Apr 2017 20:50:14 GMT
       Server:
       - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -426,7 +937,7 @@ http_interactions:
       Allow:
       - GET, POST, HEAD, OPTIONS
       X-Api-Time:
-      - 0.333s
+      - 0.319s
       Transfer-Encoding:
       - chunked
       Content-Type:
@@ -530,7 +1041,7 @@ http_interactions:
         ","type":"user","id":1,"name":"admin"}]},"created":"2017-04-10T08:21:35.727Z","modified":"2017-04-10T08:21:35.800Z","name":"No
         no no","description":"","kind":"ssh","cloud":false,"host":"","username":"","password":"","security_token":"","project":"","domain":"","ssh_key_data":"$encrypted$","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""}]}'
     http_version: 
-  recorded_at: Mon, 10 Apr 2017 18:38:02 GMT
+  recorded_at: Mon, 10 Apr 2017 20:50:15 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/credentials/?page=2
@@ -550,7 +1061,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 10 Apr 2017 18:38:02 GMT
+      - Mon, 10 Apr 2017 20:50:16 GMT
       Server:
       - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -558,9 +1069,9 @@ http_interactions:
       Allow:
       - GET, POST, HEAD, OPTIONS
       X-Api-Time:
-      - 0.162s
-      Content-Length:
-      - '14793'
+      - 0.156s
+      Transfer-Encoding:
+      - chunked
       Content-Type:
       - application/json
     body:
@@ -605,5 +1116,46 @@ http_interactions:
         use the credential in a job template","id":1750,"name":"Use"},"read_role":{"description":"May
         view settings for the credential","id":1749,"name":"Read"}},"owners":[]},"created":"2017-03-28T22:02:10.054Z","modified":"2017-03-28T22:02:10.109Z","name":"vv","description":"","kind":"vmware","cloud":true,"host":"v","username":"v","password":"$encrypted$","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""}]}'
     http_version: 
-  recorded_at: Mon, 10 Apr 2017 18:38:02 GMT
+  recorded_at: Mon, 10 Apr 2017 20:50:16 GMT
+- request:
+    method: get
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/472/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 10 Apr 2017 20:50:18 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      X-Api-Time:
+      - 0.050s
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      string: '{"id":472,"type":"project","url":"/api/v1/projects/472/","related":{"created_by":"/api/v1/users/1/","credential":"/api/v1/credentials/3/","last_job":"/api/v1/project_updates/635/","notification_templates_error":"/api/v1/projects/472/notification_templates_error/","notification_templates_success":"/api/v1/projects/472/notification_templates_success/","object_roles":"/api/v1/projects/472/object_roles/","notification_templates_any":"/api/v1/projects/472/notification_templates_any/","project_updates":"/api/v1/projects/472/project_updates/","update":"/api/v1/projects/472/update/","access_list":"/api/v1/projects/472/access_list/","playbooks":"/api/v1/projects/472/playbooks/","schedules":"/api/v1/projects/472/schedules/","teams":"/api/v1/projects/472/teams/","activity_stream":"/api/v1/projects/472/activity_stream/","organization":"/api/v1/organizations/1/","last_update":"/api/v1/project_updates/635/"},"summary_fields":{"last_job":{"id":635,"name":"targeted_refresh","description":"","finished":"2017-04-10T20:50:11.429Z","status":"successful","failed":false},"last_update":{"id":635,"name":"targeted_refresh","description":"","status":"successful","failed":false},"credential":{"id":3,"name":"db-github","description":"db-github","kind":"scm","cloud":false},"organization":{"id":1,"name":"Default","description":""},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the project","id":1889,"name":"Admin"},"use_role":{"description":"Can
+        use the project in a job template","id":1891,"name":"Use"},"update_role":{"description":"May
+        update project or inventory or group using the configured source update system","id":1892,"name":"Update"},"read_role":{"description":"May
+        view settings for the project","id":1890,"name":"Read"}}},"created":"2017-04-10T18:28:19.485Z","modified":"2017-04-10T20:21:40.480Z","name":"targeted_refresh","description":"","local_path":"_472__targeted_refresh","scm_type":"git","scm_url":"https://github.com/ansible/ansible.git","scm_branch":"","scm_clean":false,"scm_delete_on_update":false,"credential":3,"last_job_run":"2017-04-10T20:50:11.429285Z","last_job_failed":false,"has_schedules":false,"next_job_run":null,"status":"successful","organization":1,"scm_delete_on_next_update":false,"scm_update_on_launch":false,"scm_update_cache_timeout":0,"last_update_failed":false,"last_updated":"2017-04-10T20:50:11.429285Z"}'
+    http_version: 
+  recorded_at: Mon, 10 Apr 2017 20:50:18 GMT
 recorded_with: VCR 3.0.3

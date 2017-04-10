@@ -4,6 +4,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::Inventory::Collector::Configur
   end
 
   def projects
+    target.refresh_on_tower
     [
       connection.api.projects.find(target.manager_ref)
     ]
