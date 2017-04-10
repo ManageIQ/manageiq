@@ -130,19 +130,23 @@ RSpec.describe 'Configuration Script Sources API' do
     it 'can refresh multiple configuration_script_source with an appropriate role' do
       api_basic_authorize collection_action_identifier(:configuration_script_sources, :refresh, :post)
 
-      run_post(configuration_script_sources_url, :action => 'refresh', :resources => [{ :id => config_script_src.id}, {:id => config_script_src_2.id}])
+      run_post(configuration_script_sources_url, :action => :refresh, :resources => [{ :id => config_script_src.id}, {:id => config_script_src_2.id}])
 
       expected = {
         'results' => [
           a_hash_including(
-            'success' => true,
-            'message' => a_string_including("Refreshing ConfigurationScriptSource id:#{config_script_src.id}"),
-            'task_id' => a_kind_of(Numeric)
+            'success'   => true,
+            'message'   => a_string_including("Refreshing ConfigurationScriptSource id:#{config_script_src.id}"),
+            'task_id'   => a_kind_of(Numeric),
+            'task_href' => /task/,
+            'tasks'     => [a_hash_including('id' => a_kind_of(Numeric), 'href' => /task/)]
           ),
           a_hash_including(
-            'success' => true,
-            'message' => a_string_including("Refreshing ConfigurationScriptSource id:#{config_script_src_2.id}"),
-            'task_id' => a_kind_of(Numeric)
+            'success'   => true,
+            'message'   => a_string_including("Refreshing ConfigurationScriptSource id:#{config_script_src_2.id}"),
+            'task_id'   => a_kind_of(Numeric),
+            'task_href' => /task/,
+            'tasks'     => [a_hash_including('id' => a_kind_of(Numeric), 'href' => /task/)]
           )
         ]
       }
@@ -253,12 +257,14 @@ RSpec.describe 'Configuration Script Sources API' do
     it 'can refresh a configuration_script_source with an appropriate role' do
       api_basic_authorize action_identifier(:configuration_script_sources, :refresh)
 
-      run_post(configuration_script_sources_url(config_script_src.id), :action => 'refresh')
+      run_post(configuration_script_sources_url(config_script_src.id), :action => :refresh)
 
       expected = {
-        'success' => true,
-        'message' => /Refreshing ConfigurationScriptSource/,
-        'task_id' => a_kind_of(Numeric)
+        'success'   => true,
+        'message'   => /Refreshing ConfigurationScriptSource/,
+        'task_id'   => a_kind_of(Numeric),
+        'task_href' => /task/,
+        'tasks'     => [a_hash_including('id' => a_kind_of(Numeric), 'href' => /tasks/)]
       }
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)
