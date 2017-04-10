@@ -88,8 +88,7 @@ module Metric::Capture
         true
       else
         _log.debug do
-          log_target = "#{target.class.name} name: [#{target.name}], id: [#{target.id}]"
-          "Skipping capture of #{log_target} -" +
+          "Skipping capture of #{target.log_target} -" +
             "Performance last captured on [#{target.last_perf_capture_on}] is within threshold"
         end
         false

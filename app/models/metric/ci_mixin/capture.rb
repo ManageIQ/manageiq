@@ -45,8 +45,6 @@ module Metric::CiMixin::Capture
     start_time = start_time.utc unless start_time.nil?
     end_time = end_time.utc unless end_time.nil?
 
-    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
-
     # Determine the items to queue up
     # cb is the task used to group cluster realtime metrics
     cb = nil
@@ -135,7 +133,6 @@ module Metric::CiMixin::Capture
     end_time = end_time.utc unless end_time.nil?
 
     log_header = "[#{interval_name}]"
-    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
     log_time = ''
     log_time << ", start_time: [#{start_time}]" unless start_time.nil?
     log_time << ", end_time: [#{end_time}]" unless end_time.nil?
@@ -244,8 +241,6 @@ module Metric::CiMixin::Capture
 
   def perf_capture_realtime_now
     # For UI to enable refresh of realtime charts on demand
-    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
-
     _log.info "Realtime capture requested for #{log_target}"
 
     perf_capture_queue('realtime', :priority => MiqQueue::HIGH_PRIORITY)

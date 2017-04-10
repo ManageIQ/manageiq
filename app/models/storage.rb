@@ -727,7 +727,6 @@ class Storage < ApplicationRecord
     end
 
     log_header = "[#{interval_name}]"
-    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
 
     _log.info "#{log_header} Capture for #{log_target}..."
 

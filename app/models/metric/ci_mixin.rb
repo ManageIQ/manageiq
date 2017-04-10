@@ -216,4 +216,8 @@ module Metric::CiMixin
     return if tz.nil?
     TimeProfile.in_region(region_id).rollup_daily_metrics.find_all_with_entire_tz.detect { |p| p.tz_or_default == tz }
   end
+
+  def log_target
+    "#{self.class.name} name: [#{name}], id: [#{id}]"
+  end
 end
