@@ -1976,6 +1976,7 @@
     :verbs: *g
     :categories:
       - product
+      - prototype
     :collection_actions:
       :get:
       - :name: read
