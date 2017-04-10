@@ -48,11 +48,11 @@ module Metric::CiMixin::Capture
 
     cb = nil
     if interval_name == 'historical'
-      start_time = Metric::Capture.historical_start_time if start_time.nil?
-      end_time = Time.now.utc if end_time.nil?
+      start_time ||= Metric::Capture.historical_start_time
+      end_time   ||= Time.now.utc
     else
-      start_time = last_perf_capture_on unless start_time
-      end_time   = Time.now.utc unless end_time
+      start_time ||= [last_perf_capture_on, historical_start_time].max
+      end_time   ||= Time.now.utc
       cb = {:class_name => self.class.name, :instance_id => id, :method_name => :perf_capture_callback, :args => [[task_id]]} if task_id
     end
 
