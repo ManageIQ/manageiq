@@ -14,7 +14,7 @@ module ManageIQ::Providers::Openstack
           :type               => self.class.miq_template_type,
           :uid_ems            => uid,
           :ems_ref            => uid,
-          :name               => image.name,
+          :name               => image.name || image.id,
           :vendor             => "openstack",
           :raw_power_state    => "never",
           :template           => true,
