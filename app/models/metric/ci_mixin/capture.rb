@@ -5,16 +5,14 @@ module Metric::CiMixin::Capture
 
   delegate :perf_collect_metrics, :to => :perf_capture_object
 
-  def queue_name_for_metrics_collection
-    ems = if self.kind_of?(ExtManagementSystem)
-            self
-          elsif respond_to?(:ext_management_system) && ext_management_system.present?
-            ext_management_system
-          elsif respond_to?(:old_ext_management_system) && old_ext_management_system.present?
-            old_ext_management_system
-          end
-    raise _("Unsupported type %{name} (id: %{number})") % {:name => self.class.name, :number => id} if ems.nil?
-    ems.metrics_collector_queue_name
+  def ems_for_capture_target
+    if self.kind_of?(ExtManagementSystem)
+      self
+    elsif respond_to?(:ext_management_system) && ext_management_system.present?
+      ext_management_system
+    elsif respond_to?(:old_ext_management_system) && old_ext_management_system.present?
+      old_ext_management_system
+    end
   end
 
   def split_capture_intervals(interval_name, start_time, end_time, threshold = 1.day)
@@ -38,8 +36,11 @@ module Metric::CiMixin::Capture
     task_id    = options[:task_id]
     zone       = options[:zone] || my_zone
     zone = zone.name if zone.respond_to?(:name)
+    ems        = ems_for_capture_target
+
     raise ArgumentError, "invalid interval_name '#{interval_name}'" unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
     raise ArgumentError, "end_time cannot be specified if start_time is nil" if start_time.nil? && !end_time.nil?
+    raise ArgumentError, "target does not have an ExtManagementSystem" if ems.nil?
 
     start_time = start_time.utc unless start_time.nil?
     end_time = end_time.utc unless end_time.nil?
@@ -76,7 +77,7 @@ module Metric::CiMixin::Capture
       :class_name  => self.class.name,
       :instance_id => id,
       :role        => 'ems_metrics_collector',
-      :queue_name  => queue_name_for_metrics_collection,
+      :queue_name  => ems.metrics_collector_queue_name,
       :zone        => zone,
       :state       => ['ready', 'dequeue'],
     }
