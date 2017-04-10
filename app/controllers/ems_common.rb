@@ -1180,12 +1180,6 @@ module EmsCommon
          :model   => ui_lookup(:table => @table_name),
          :models  => ui_lookup(:tables => @table_name)}) if @flash_array.nil?
       params[:display] = @display
-      show
-      if ["vms", "hosts", "storages"].include?(@display)
-        @refresh_partial = "layouts/gtl"
-      else
-        @refresh_partial = "main"
-      end
     end
   end
 
