@@ -441,6 +441,8 @@ cloud_volumes:
 - bootable
 - creation_time
 - cloud_tenant_id
+- iops
+- encrypted
 compliance_details:
 - id
 - compliance_id
