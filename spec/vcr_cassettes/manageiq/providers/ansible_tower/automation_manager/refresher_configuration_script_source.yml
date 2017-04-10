@@ -1,0 +1,609 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/config
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 301
+      message: MOVED PERMANENTLY
+    headers:
+      Date:
+      - Mon, 10 Apr 2017 18:37:58 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
+      Location:
+      - https://dev-ansible-tower3.example.com/api/v1/config/
+      Content-Length:
+      - '0'
+      Content-Type:
+      - text/html; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Mon, 10 Apr 2017 18:37:58 GMT
+- request:
+    method: get
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/config/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 10 Apr 2017 18:37:58 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, POST, DELETE, HEAD, OPTIONS
+      X-Api-Time:
+      - 0.216s
+      Content-Length:
+      - '9774'
+      Content-Type:
+      - application/json
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        eyJldWxhIjoiQU5TSUJMRSBUT1dFUiBCWSBSRUQgSEFUIEVORCBVU0VSIExJ
+        Q0VOU0UgQUdSRUVNRU5UXG5cblRoaXMgZW5kIHVzZXIgbGljZW5zZSBhZ3Jl
+        ZW1lbnQgKOKAnEVVTEHigJ0pIGdvdmVybnMgdGhlIHVzZSBvZiB0aGUgQW5z
+        aWJsZSBUb3dlciBzb2Z0d2FyZSBhbmQgYW55IHJlbGF0ZWQgdXBkYXRlcywg
+        dXBncmFkZXMsIHZlcnNpb25zLCBhcHBlYXJhbmNlLCBzdHJ1Y3R1cmUgYW5k
+        IG9yZ2FuaXphdGlvbiAodGhlIOKAnEFuc2libGUgVG93ZXIgU29mdHdhcmXi
+        gJ0pLCByZWdhcmRsZXNzIG9mIHRoZSBkZWxpdmVyeSBtZWNoYW5pc20uICBc
+        blxuMS4gIExpY2Vuc2UgR3JhbnQuICBTdWJqZWN0IHRvIHRoZSB0ZXJtcyBv
+        ZiB0aGlzIEVVTEEsIFJlZCBIYXQsIEluYy4gYW5kIGl0cyBhZmZpbGlhdGVz
+        ICjigJxSZWQgSGF04oCdKSBncmFudCB0byB5b3UgKOKAnFlvdeKAnSkgYSBu
+        b24tdHJhbnNmZXJhYmxlLCBub24tZXhjbHVzaXZlLCB3b3JsZHdpZGUsIG5v
+        bi1zdWJsaWNlbnNhYmxlLCBsaW1pdGVkLCByZXZvY2FibGUgbGljZW5zZSB0
+        byB1c2UgdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgZm9yIHRoZSB0ZXJt
+        IG9mIHRoZSBhc3NvY2lhdGVkIFJlZCBIYXQgU29mdHdhcmUgU3Vic2NyaXB0
+        aW9uKHMpIGFuZCBpbiBhIHF1YW50aXR5IGVxdWFsIHRvIHRoZSBudW1iZXIg
+        b2YgUmVkIEhhdCBTb2Z0d2FyZSBTdWJzY3JpcHRpb25zIHB1cmNoYXNlZCBm
+        cm9tIFJlZCBIYXQgZm9yIHRoZSBBbnNpYmxlIFRvd2VyIFNvZnR3YXJlICji
+        gJxMaWNlbnNl4oCdKSwgZWFjaCBhcyBzZXQgZm9ydGggb24gdGhlIGFwcGxp
+        Y2FibGUgUmVkIEhhdCBvcmRlcmluZyBkb2N1bWVudC4gIFlvdSBhY3F1aXJl
+        IG9ubHkgdGhlIHJpZ2h0IHRvIHVzZSB0aGUgQW5zaWJsZSBUb3dlciBTb2Z0
+        d2FyZSBhbmQgZG8gbm90IGFjcXVpcmUgYW55IHJpZ2h0cyBvZiBvd25lcnNo
+        aXAuIFJlZCBIYXQgcmVzZXJ2ZXMgYWxsIHJpZ2h0cyB0byB0aGUgQW5zaWJs
+        ZSBUb3dlciBTb2Z0d2FyZSBub3QgZXhwcmVzc2x5IGdyYW50ZWQgdG8gWW91
+        LiAgVGhpcyBMaWNlbnNlIGdyYW50IHBlcnRhaW5zIHNvbGVseSB0byBZb3Vy
+        IHVzZSBvZiB0aGUgQW5zaWJsZSBUb3dlciBTb2Z0d2FyZSBhbmQgaXMgbm90
+        IGludGVuZGVkIHRvIGxpbWl0IFlvdXIgcmlnaHRzIHVuZGVyLCBvciBncmFu
+        dCBZb3UgcmlnaHRzIHRoYXQgc3VwZXJzZWRlLCB0aGUgbGljZW5zZSB0ZXJt
+        cyBvZiBhbnkgc29mdHdhcmUgcGFja2FnZXMgd2hpY2ggbWF5IGJlIG1hZGUg
+        YXZhaWxhYmxlIHdpdGggdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgdGhh
+        dCBhcmUgc3ViamVjdCB0byBhbiBvcGVuIHNvdXJjZSBzb2Z0d2FyZSBsaWNl
+        bnNlLiAgXG4gXG4yLiAgSW50ZWxsZWN0dWFsIFByb3BlcnR5IFJpZ2h0cy4g
+        IFRpdGxlIHRvIHRoZSBBbnNpYmxlIFRvd2VyIFNvZnR3YXJlIGFuZCBlYWNo
+        IGNvbXBvbmVudCwgY29weSBhbmQgbW9kaWZpY2F0aW9uLCBpbmNsdWRpbmcg
+        YWxsIGRlcml2YXRpdmUgd29ya3Mgd2hldGhlciBtYWRlIGJ5IFJlZCBIYXQs
+        IFlvdSBvciBvbiBSZWQgSGF0J3MgYmVoYWxmLCBpbmNsdWRpbmcgdGhvc2Ug
+        bWFkZSBhdCBZb3VyIHN1Z2dlc3Rpb24gYW5kIGFsbCBhc3NvY2lhdGVkIGlu
+        dGVsbGVjdHVhbCBwcm9wZXJ0eSByaWdodHMsIGFyZSBhbmQgc2hhbGwgcmVt
+        YWluIHRoZSBzb2xlIGFuZCBleGNsdXNpdmUgcHJvcGVydHkgb2YgUmVkIEhh
+        dCBhbmQvb3IgaXQgbGljZW5zb3JzLiAgVGhlIExpY2Vuc2UgZG9lcyBub3Qg
+        YXV0aG9yaXplIFlvdSAobm9yIG1heSBZb3UgYWxsb3cgYW55IHRoaXJkIHBh
+        cnR5LCBzcGVjaWZpY2FsbHkgbm9uLWVtcGxveWVlcyBvZiBZb3VycykgdG86
+        IChhKSBjb3B5LCBkaXN0cmlidXRlLCByZXByb2R1Y2UsIHVzZSBvciBhbGxv
+        dyB0aGlyZCBwYXJ0eSBhY2Nlc3MgdG8gdGhlIEFuc2libGUgVG93ZXIgU29m
+        dHdhcmUgZXhjZXB0IGFzIGV4cHJlc3NseSBhdXRob3JpemVkIGhlcmV1bmRl
+        cjsgKGIpIGRlY29tcGlsZSwgZGlzYXNzZW1ibGUsIHJldmVyc2UgZW5naW5l
+        ZXIsIHRyYW5zbGF0ZSwgbW9kaWZ5LCBjb252ZXJ0IG9yIGFwcGx5IGFueSBw
+        cm9jZWR1cmUgb3IgcHJvY2VzcyB0byB0aGUgQW5zaWJsZSBUb3dlciBTb2Z0
+        d2FyZSBpbiBvcmRlciB0byBhc2NlcnRhaW4sIGRlcml2ZSwgYW5kL29yIGFw
+        cHJvcHJpYXRlIGZvciBhbnkgcmVhc29uIG9yIHB1cnBvc2UsIGluY2x1ZGlu
+        ZyB0aGUgQW5zaWJsZSBUb3dlciBTb2Z0d2FyZSBzb3VyY2UgY29kZSBvciBz
+        b3VyY2UgbGlzdGluZ3Mgb3IgYW55IHRyYWRlIHNlY3JldCBpbmZvcm1hdGlv
+        biBvciBwcm9jZXNzIGNvbnRhaW5lZCBpbiB0aGUgQW5zaWJsZSBUb3dlciBT
+        b2Z0d2FyZSAoZXhjZXB0IGFzIHBlcm1pdHRlZCB1bmRlciBhcHBsaWNhYmxl
+        IGxhdyk7IChjKSBleGVjdXRlIG9yIGluY29ycG9yYXRlIG90aGVyIHNvZnR3
+        YXJlIChleGNlcHQgZm9yIGFwcHJvdmVkIHNvZnR3YXJlIGFzIGFwcGVhcnMg
+        aW4gdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgZG9jdW1lbnRhdGlvbiBv
+        ciBzcGVjaWZpY2FsbHkgYXBwcm92ZWQgYnkgUmVkIEhhdCBpbiB3cml0aW5n
+        KSBpbnRvIEFuc2libGUgVG93ZXIgU29mdHdhcmUsIG9yIGNyZWF0ZSBhIGRl
+        cml2YXRpdmUgd29yayBvZiBhbnkgcGFydCBvZiB0aGUgQW5zaWJsZSBUb3dl
+        ciBTb2Z0d2FyZTsgKGQpIHJlbW92ZSBhbnkgdHJhZGVtYXJrcywgdHJhZGUg
+        bmFtZXMgb3IgdGl0bGVzLCBjb3B5cmlnaHRzIGxlZ2VuZHMgb3IgYW55IG90
+        aGVyIHByb3ByaWV0YXJ5IG1hcmtpbmcgb24gdGhlIEFuc2libGUgVG93ZXIg
+        U29mdHdhcmU7IChlKSBkaXNjbG9zZSB0aGUgcmVzdWx0cyBvZiBhbnkgYmVu
+        Y2htYXJraW5nIG9mIHRoZSBBbnNpYmxlIFRvd2VyIFNvZnR3YXJlICh3aGV0
+        aGVyIG9yIG5vdCBvYnRhaW5lZCB3aXRoIFJlZCBIYXTigJlzIGFzc2lzdGFu
+        Y2UpIHRvIGFueSB0aGlyZCBwYXJ0eTsgKGYpIGF0dGVtcHQgdG8gY2lyY3Vt
+        dmVudCBhbnkgdXNlciBsaW1pdHMgb3Igb3RoZXIgbGljZW5zZSwgdGltaW5n
+        IG9yIHVzZSByZXN0cmljdGlvbnMgdGhhdCBhcmUgYnVpbHQgaW50bywgZGVm
+        aW5lZCBvciBhZ3JlZWQgdXBvbiwgcmVnYXJkaW5nIHRoZSBBbnNpYmxlIFRv
+        d2VyIFNvZnR3YXJlLiBZb3UgYXJlIGhlcmVieSBub3RpZmllZCB0aGF0IHRo
+        ZSBBbnNpYmxlIFRvd2VyIFNvZnR3YXJlIG1heSBjb250YWluIHRpbWUtb3V0
+        IGRldmljZXMsIGNvdW50ZXIgZGV2aWNlcywgYW5kL29yIG90aGVyIGRldmlj
+        ZXMgaW50ZW5kZWQgdG8gZW5zdXJlIHRoZSBsaW1pdHMgb2YgdGhlIExpY2Vu
+        c2Ugd2lsbCBub3QgYmUgZXhjZWVkZWQgKOKAnExpbWl0aW5nIERldmljZXPi
+        gJ0pLiAgSWYgdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgY29udGFpbnMg
+        TGltaXRpbmcgRGV2aWNlcywgUmVkIEhhdCB3aWxsIHByb3ZpZGUgWW91IG1h
+        dGVyaWFscyBuZWNlc3NhcnkgdG8gdXNlIHRoZSBBbnNpYmxlIFRvd2VyIFNv
+        ZnR3YXJlIHRvIHRoZSBleHRlbnQgcGVybWl0dGVkLiAgWW91IG1heSBub3Qg
+        dGFtcGVyIHdpdGggb3Igb3RoZXJ3aXNlIHRha2UgYW55IGFjdGlvbiB0byBk
+        ZWZlYXQgb3IgY2lyY3VtdmVudCBhIExpbWl0aW5nIERldmljZSBvciBvdGhl
+        ciBjb250cm9sIG1lYXN1cmUsIGluY2x1ZGluZyBidXQgbm90IGxpbWl0ZWQg
+        dG8sIHJlc2V0dGluZyB0aGUgdW5pdCBhbW91bnQgb3IgdXNpbmcgZmFsc2Ug
+        aG9zdCBpZGVudGlmaWNhdGlvbiBudW1iZXIgZm9yIHRoZSBwdXJwb3NlIG9m
+        IGV4dGVuZGluZyBhbnkgdGVybSBvZiB0aGUgTGljZW5zZS4gXG5cbjMuICBF
+        dmFsdWF0aW9uIExpY2Vuc2VzLiBVbmxlc3MgWW91IGhhdmUgcHVyY2hhc2Vk
+        IEFuc2libGUgVG93ZXIgU29mdHdhcmUgU3Vic2NyaXB0aW9ucyBmcm9tIFJl
+        ZCBIYXQgb3IgYW4gYXV0aG9yaXplZCByZXNlbGxlciB1bmRlciB0aGUgdGVy
+        bXMgb2YgYSBjb21tZXJjaWFsIGFncmVlbWVudCB3aXRoIFJlZCBIYXQsIGFs
+        bCB1c2Ugb2YgdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgc2hhbGwgYmUg
+        bGltaXRlZCB0byB0ZXN0aW5nIHB1cnBvc2VzIGFuZCBub3QgZm9yIHByb2R1
+        Y3Rpb24gdXNlICjigJxFdmFsdWF0aW9u4oCdKS4gVW5sZXNzIG90aGVyd2lz
+        ZSBhZ3JlZWQgYnkgUmVkIEhhdCwgRXZhbHVhdGlvbiBvZiB0aGUgQW5zaWJs
+        ZSBUb3dlciBTb2Z0d2FyZSBzaGFsbCBiZSBsaW1pdGVkIHRvIGFuIGV2YWx1
+        YXRpb24gZW52aXJvbm1lbnQgYW5kIHRoZSBBbnNpYmxlIFRvd2VyIFNvZnR3
+        YXJlIHNoYWxsIG5vdCBiZSB1c2VkIHRvIG1hbmFnZSBhbnkgc3lzdGVtcyBv
+        ciB2aXJ0dWFsIG1hY2hpbmVzIG9uIG5ldHdvcmtzIGJlaW5nIHVzZWQgaW4g
+        dGhlIG9wZXJhdGlvbiBvZiBZb3VyIGJ1c2luZXNzIG9yIGFueSBvdGhlciBu
+        b24tZXZhbHVhdGlvbiBwdXJwb3NlLiAgVW5sZXNzIG90aGVyd2lzZSBhZ3Jl
+        ZWQgYnkgUmVkIEhhdCwgWW91IHNoYWxsIGxpbWl0IGFsbCBFdmFsdWF0aW9u
+        IHVzZSB0byBhIHNpbmdsZSAzMCBkYXkgZXZhbHVhdGlvbiBwZXJpb2QgYW5k
+        IHNoYWxsIG5vdCBkb3dubG9hZCBvciBvdGhlcndpc2Ugb2J0YWluIGFkZGl0
+        aW9uYWwgY29waWVzIG9mIHRoZSBBbnNpYmxlIFRvd2VyIFNvZnR3YXJlIG9y
+        IGxpY2Vuc2Uga2V5cyBmb3IgRXZhbHVhdGlvbi5cblxuNC4gIExpbWl0ZWQg
+        V2FycmFudHkuICBFeGNlcHQgYXMgc3BlY2lmaWNhbGx5IHN0YXRlZCBpbiB0
+        aGlzIFNlY3Rpb24gNCwgdG8gdGhlIG1heGltdW0gZXh0ZW50IHBlcm1pdHRl
+        ZCB1bmRlciBhcHBsaWNhYmxlIGxhdywgdGhlIEFuc2libGUgVG93ZXIgU29m
+        dHdhcmUgYW5kIHRoZSBjb21wb25lbnRzIGFyZSBwcm92aWRlZCBhbmQgbGlj
+        ZW5zZWQg4oCcYXMgaXPigJ0gd2l0aG91dCB3YXJyYW50eSBvZiBhbnkga2lu
+        ZCwgZXhwcmVzc2VkIG9yIGltcGxpZWQsIGluY2x1ZGluZyB0aGUgaW1wbGll
+        ZCB3YXJyYW50aWVzIG9mIG1lcmNoYW50YWJpbGl0eSwgbm9uLWluZnJpbmdl
+        bWVudCBvciBmaXRuZXNzIGZvciBhIHBhcnRpY3VsYXIgcHVycG9zZS4gIFJl
+        ZCBIYXQgd2FycmFudHMgc29sZWx5IHRvIFlvdSB0aGF0IHRoZSBtZWRpYSBv
+        biB3aGljaCB0aGUgQW5zaWJsZSBUb3dlciBTb2Z0d2FyZSBtYXkgYmUgZnVy
+        bmlzaGVkIHdpbGwgYmUgZnJlZSBmcm9tIGRlZmVjdHMgaW4gbWF0ZXJpYWxz
+        IGFuZCBtYW51ZmFjdHVyZSB1bmRlciBub3JtYWwgdXNlIGZvciBhIHBlcmlv
+        ZCBvZiB0aGlydHkgKDMwKSBkYXlzIGZyb20gdGhlIGRhdGUgb2YgZGVsaXZl
+        cnkgdG8gWW91LiAgUmVkIEhhdCBkb2VzIG5vdCB3YXJyYW50IHRoYXQgdGhl
+        IGZ1bmN0aW9ucyBjb250YWluZWQgaW4gdGhlIEFuc2libGUgVG93ZXIgU29m
+        dHdhcmUgd2lsbCBtZWV0IFlvdXIgcmVxdWlyZW1lbnRzIG9yIHRoYXQgdGhl
+        IG9wZXJhdGlvbiBvZiB0aGUgQW5zaWJsZSBUb3dlciBTb2Z0d2FyZSB3aWxs
+        IGJlIGVudGlyZWx5IGVycm9yIGZyZWUsIGFwcGVhciBwcmVjaXNlbHkgYXMg
+        ZGVzY3JpYmVkIGluIHRoZSBhY2NvbXBhbnlpbmcgZG9jdW1lbnRhdGlvbiwg
+        b3IgY29tcGx5IHdpdGggcmVndWxhdG9yeSByZXF1aXJlbWVudHMuIFxuXG41
+        LiAgTGltaXRhdGlvbiBvZiBSZW1lZGllcyBhbmQgTGlhYmlsaXR5LiBUbyB0
+        aGUgbWF4aW11bSBleHRlbnQgcGVybWl0dGVkIGJ5IGFwcGxpY2FibGUgbGF3
+        LCBZb3VyIGV4Y2x1c2l2ZSByZW1lZHkgdW5kZXIgdGhpcyBFVUxBIGlzIHRv
+        IHJldHVybiBhbnkgZGVmZWN0aXZlIG1lZGlhIHdpdGhpbiB0aGlydHkgKDMw
+        KSBkYXlzIG9mIGRlbGl2ZXJ5IGFsb25nIHdpdGggYSBjb3B5IG9mIFlvdXIg
+        cGF5bWVudCByZWNlaXB0IGFuZCBSZWQgSGF0LCBhdCBpdHMgb3B0aW9uLCB3
+        aWxsIHJlcGxhY2UgaXQgb3IgcmVmdW5kIHRoZSBtb25leSBwYWlkIGJ5IFlv
+        dSBmb3IgdGhlIG1lZGlhLiAgVG8gdGhlIG1heGltdW0gZXh0ZW50IHBlcm1p
+        dHRlZCB1bmRlciBhcHBsaWNhYmxlIGxhdywgbmVpdGhlciBSZWQgSGF0IG5v
+        ciBhbnkgUmVkIEhhdCBhdXRob3JpemVkIGRpc3RyaWJ1dG9yIHdpbGwgYmUg
+        bGlhYmxlIHRvIFlvdSBmb3IgYW55IGluY2lkZW50YWwgb3IgY29uc2VxdWVu
+        dGlhbCBkYW1hZ2VzLCBpbmNsdWRpbmcgbG9zdCBwcm9maXRzIG9yIGxvc3Qg
+        c2F2aW5ncyBhcmlzaW5nIG91dCBvZiB0aGUgdXNlIG9yIGluYWJpbGl0eSB0
+        byB1c2UgdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgb3IgYW55IGNvbXBv
+        bmVudCwgZXZlbiBpZiBSZWQgSGF0IG9yIHRoZSBhdXRob3JpemVkIGRpc3Ry
+        aWJ1dG9yIGhhcyBiZWVuIGFkdmlzZWQgb2YgdGhlIHBvc3NpYmlsaXR5IG9m
+        IHN1Y2ggZGFtYWdlcy4gIEluIG5vIGV2ZW50IHNoYWxsIFJlZCBIYXQncyBs
+        aWFiaWxpdHkgb3IgYW4gYXV0aG9yaXplZCBkaXN0cmlidXRvcuKAmXMgbGlh
+        YmlsaXR5IGV4Y2VlZCB0aGUgYW1vdW50IHRoYXQgWW91IHBhaWQgdG8gUmVk
+        IEhhdCBmb3IgdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgZHVyaW5nIHRo
+        ZSB0d2VsdmUgbW9udGhzIHByZWNlZGluZyB0aGUgZmlyc3QgZXZlbnQgZ2l2
+        aW5nIHJpc2UgdG8gbGlhYmlsaXR5LlxuXG42LiAgRXhwb3J0IENvbnRyb2wu
+        ICBJbiBhY2NvcmRhbmNlIHdpdGggdGhlIGxhd3Mgb2YgdGhlIFVuaXRlZCBT
+        dGF0ZXMgYW5kIG90aGVyIGNvdW50cmllcywgWW91IHJlcHJlc2VudCBhbmQg
+        d2FycmFudCB0aGF0IFlvdTogKGEpIHVuZGVyc3RhbmQgdGhhdCB0aGUgQW5z
+        aWJsZSBUb3dlciBTb2Z0d2FyZSBhbmQgaXRzIGNvbXBvbmVudHMgbWF5IGJl
+        IHN1YmplY3QgdG8gZXhwb3J0IGNvbnRyb2xzIHVuZGVyIHRoZSBVLlMuIENv
+        bW1lcmNlIERlcGFydG1lbnTigJlzIEV4cG9ydCBBZG1pbmlzdHJhdGlvbiBS
+        ZWd1bGF0aW9ucyAo4oCcRUFS4oCdKTsgKGIpIGFyZSBub3QgbG9jYXRlZCBp
+        biBhbnkgY291bnRyeSBsaXN0ZWQgaW4gQ291bnRyeSBHcm91cCBFOjEgaW4g
+        U3VwcGxlbWVudCBOby4gMSB0byBwYXJ0IDc0MCBvZiB0aGUgRUFSOyAoYykg
+        d2lsbCBub3QgZXhwb3J0LCByZS1leHBvcnQsIG9yIHRyYW5zZmVyIHRoZSBB
+        bnNpYmxlIFRvd2VyIFNvZnR3YXJlIHRvIGFueSBwcm9oaWJpdGVkIGRlc3Rp
+        bmF0aW9uIG9yIHRvIGFueSBlbmQgdXNlciB3aG8gaGFzIGJlZW4gcHJvaGli
+        aXRlZCBmcm9tIHBhcnRpY2lwYXRpbmcgaW4gVVMgZXhwb3J0IHRyYW5zYWN0
+        aW9ucyBieSBhbnkgZmVkZXJhbCBhZ2VuY3kgb2YgdGhlIFVTIGdvdmVybm1l
+        bnQ7ICAoZCkgd2lsbCBub3QgdXNlIG9yIHRyYW5zZmVyIHRoZSBBbnNpYmxl
+        IFRvd2VyIFNvZnR3YXJlIGZvciB1c2UgaW4gY29ubmVjdGlvbiB3aXRoIHRo
+        ZSBkZXNpZ24sIGRldmVsb3BtZW50IG9yIHByb2R1Y3Rpb24gb2YgbnVjbGVh
+        ciwgY2hlbWljYWwgb3IgYmlvbG9naWNhbCB3ZWFwb25zLCBvciByb2NrZXQg
+        c3lzdGVtcywgc3BhY2UgbGF1bmNoIHZlaGljbGVzLCBvciBzb3VuZGluZyBy
+        b2NrZXRzIG9yIHVubWFubmVkIGFpciB2ZWhpY2xlIHN5c3RlbXM7IChlKSB1
+        bmRlcnN0YW5kIGFuZCBhZ3JlZSB0aGF0IGlmIHlvdSBhcmUgaW4gdGhlIFVu
+        aXRlZCBTdGF0ZXMgYW5kIHlvdSBleHBvcnQgb3IgdHJhbnNmZXIgdGhlIEFu
+        c2libGUgVG93ZXIgU29mdHdhcmUgdG8gZWxpZ2libGUgZW5kIHVzZXJzLCB5
+        b3Ugd2lsbCwgdG8gdGhlIGV4dGVudCByZXF1aXJlZCBieSBFQVIgU2VjdGlv
+        biA3NDAuMTcgb2J0YWluIGEgbGljZW5zZSBmb3Igc3VjaCBleHBvcnQgb3Ig
+        dHJhbnNmZXIgYW5kIHdpbGwgc3VibWl0IHNlbWktYW5udWFsIHJlcG9ydHMg
+        dG8gdGhlIENvbW1lcmNlIERlcGFydG1lbnTigJlzIEJ1cmVhdSBvZiBJbmR1
+        c3RyeSBhbmQgU2VjdXJpdHksIHdoaWNoIGluY2x1ZGUgdGhlIG5hbWUgYW5k
+        IGFkZHJlc3MgKGluY2x1ZGluZyBjb3VudHJ5KSBvZiBlYWNoIHRyYW5zZmVy
+        ZWU7IGFuZCAoZikgdW5kZXJzdGFuZCB0aGF0IGNvdW50cmllcyBpbmNsdWRp
+        bmcgdGhlIFVuaXRlZCBTdGF0ZXMgbWF5IHJlc3RyaWN0IHRoZSBpbXBvcnQs
+        IHVzZSwgb3IgZXhwb3J0IG9mIGVuY3J5cHRpb24gcHJvZHVjdHMgKHdoaWNo
+        IG1heSBpbmNsdWRlIHRoZSBBbnNpYmxlIFRvd2VyIFNvZnR3YXJlKSBhbmQg
+        YWdyZWUgdGhhdCB5b3Ugc2hhbGwgYmUgc29sZWx5IHJlc3BvbnNpYmxlIGZv
+        ciBjb21wbGlhbmNlIHdpdGggYW55IHN1Y2ggaW1wb3J0LCB1c2UsIG9yIGV4
+        cG9ydCByZXN0cmljdGlvbnMuXG5cbjcuICBHZW5lcmFsLiAgSWYgYW55IHBy
+        b3Zpc2lvbiBvZiB0aGlzIEVVTEEgaXMgaGVsZCB0byBiZSB1bmVuZm9yY2Vh
+        YmxlLCB0aGF0IHNoYWxsIG5vdCBhZmZlY3QgdGhlIGVuZm9yY2VhYmlsaXR5
+        IG9mIHRoZSByZW1haW5pbmcgcHJvdmlzaW9ucy4gIFRoaXMgYWdyZWVtZW50
+        IHNoYWxsIGJlIGdvdmVybmVkIGJ5IHRoZSBsYXdzIG9mIHRoZSBTdGF0ZSBv
+        ZiBOZXcgWW9yayBhbmQgb2YgdGhlIFVuaXRlZCBTdGF0ZXMsIHdpdGhvdXQg
+        cmVnYXJkIHRvIGFueSBjb25mbGljdCBvZiBsYXdzIHByb3Zpc2lvbnMuIFRo
+        ZSByaWdodHMgYW5kIG9ibGlnYXRpb25zIG9mIHRoZSBwYXJ0aWVzIHRvIHRo
+        aXMgRVVMQSBzaGFsbCBub3QgYmUgZ292ZXJuZWQgYnkgdGhlIFVuaXRlZCBO
+        YXRpb25zIENvbnZlbnRpb24gb24gdGhlIEludGVybmF0aW9uYWwgU2FsZSBv
+        ZiBHb29kcy4gXG5cbkNvcHlyaWdodCDCqSAyMDE1IFJlZCBIYXQsIEluYy4g
+        IEFsbCByaWdodHMgcmVzZXJ2ZWQuICBcIlJlZCBIYXRcIiBhbmQg4oCcQW5z
+        aWJsZSBUb3dlcuKAnSBhcmUgcmVnaXN0ZXJlZCB0cmFkZW1hcmtzIG9mIFJl
+        ZCBIYXQsIEluYy4gIEFsbCBvdGhlciB0cmFkZW1hcmtzIGFyZSB0aGUgcHJv
+        cGVydHkgb2YgdGhlaXIgcmVzcGVjdGl2ZSBvd25lcnMuXG4iLCJsaWNlbnNl
+        X2luZm8iOnsiZGVwbG95bWVudF9pZCI6IjE1YmViMDE2MmNlNmQ3YTNiMzVm
+        NzVjZjYxMDY0ZjJmMDM2Mjk3MDgiLCJzdWJzY3JpcHRpb25fbmFtZSI6IkFu
+        c2libGUgVG93ZXIgYnkgUmVkIEhhdCwgU3RhbmRhcmQgKDEwMDAwIE1hbmFn
+        ZWQgTm9kZXMpIiwiY3VycmVudF9pbnN0YW5jZXMiOjg3LCJmZWF0dXJlcyI6
+        eyJzdXJ2ZXlzIjp0cnVlLCJtdWx0aXBsZV9vcmdhbml6YXRpb25zIjp0cnVl
+        LCJzeXN0ZW1fdHJhY2tpbmciOnRydWUsImVudGVycHJpc2VfYXV0aCI6dHJ1
+        ZSwicmVicmFuZGluZyI6dHJ1ZSwiYWN0aXZpdHlfc3RyZWFtcyI6dHJ1ZSwi
+        bGRhcCI6dHJ1ZSwiaGEiOnRydWV9LCJkYXRlX2V4cGlyZWQiOmZhbHNlLCJh
+        dmFpbGFibGVfaW5zdGFuY2VzIjoxMDAwMCwiaG9zdG5hbWUiOiIxMjk0ZGQ2
+        MzAxMjY0NDIxOGI1MmExN2I2YmM0MzBlZCIsImZyZWVfaW5zdGFuY2VzIjo5
+        OTEzLCJpbnN0YW5jZV9jb3VudCI6MTAwMDAsInRpbWVfcmVtYWluaW5nIjoy
+        Njg2MDYyNCwiY29tcGxpYW50Ijp0cnVlLCJncmFjZV9wZXJpb2RfcmVtYWlu
+        aW5nIjoyOTQ1MjYyNCwiY29udGFjdF9lbWFpbCI6ImpvZXNtaXRAcmVkaGF0
+        LmNvbSIsImNvbXBhbnlfbmFtZSI6IlJlZCBIYXQsIEluYy4iLCJkYXRlX3dh
+        cm5pbmciOmZhbHNlLCJsaWNlbnNlX3R5cGUiOiJlbnRlcnByaXNlIiwiY29u
+        dGFjdF9uYW1lIjoiSm9lICBTbWl0aCIsImxpY2Vuc2VfZGF0ZSI6MTUxODcx
+        MDEwMiwibGljZW5zZV9rZXkiOiIwM2NiYzNlNzM3OWViM2Y3ZTFmZDEzOWVj
+        NjkyZDg1YjliNmRhNDNkOWNiY2IwY2JiMmQ0MzYzOTliOWQ2OThjIiwidmFs
+        aWRfa2V5Ijp0cnVlfSwiYW5hbHl0aWNzX3N0YXR1cyI6ImRldGFpbGVkIiwi
+        dmVyc2lvbiI6IjMuMC4xIiwicHJvamVjdF9iYXNlX2RpciI6Ii92YXIvbGli
+        L2F3eC9wcm9qZWN0cyIsInRpbWVfem9uZSI6IkFtZXJpY2EvTmV3X1lvcmsi
+        LCJhbnNpYmxlX3ZlcnNpb24iOiIyLjEuMC4wIiwicHJvamVjdF9sb2NhbF9w
+        YXRocyI6W119
+    http_version: 
+  recorded_at: Mon, 10 Apr 2017 18:37:59 GMT
+- request:
+    method: get
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/472/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 10 Apr 2017 18:37:59 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+      X-Api-Time:
+      - 0.050s
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      string: '{"id":472,"type":"project","url":"/api/v1/projects/472/","related":{"created_by":"/api/v1/users/1/","credential":"/api/v1/credentials/3/","last_job":"/api/v1/project_updates/625/","notification_templates_error":"/api/v1/projects/472/notification_templates_error/","notification_templates_success":"/api/v1/projects/472/notification_templates_success/","object_roles":"/api/v1/projects/472/object_roles/","notification_templates_any":"/api/v1/projects/472/notification_templates_any/","project_updates":"/api/v1/projects/472/project_updates/","update":"/api/v1/projects/472/update/","access_list":"/api/v1/projects/472/access_list/","playbooks":"/api/v1/projects/472/playbooks/","schedules":"/api/v1/projects/472/schedules/","teams":"/api/v1/projects/472/teams/","activity_stream":"/api/v1/projects/472/activity_stream/","organization":"/api/v1/organizations/1/","last_update":"/api/v1/project_updates/625/"},"summary_fields":{"last_job":{"id":625,"name":"targeted_refresh","description":"","finished":"2017-04-10T18:32:14.021Z","status":"successful","failed":false},"last_update":{"id":625,"name":"targeted_refresh","description":"","status":"successful","failed":false},"credential":{"id":3,"name":"db-github","description":"db-github","kind":"scm","cloud":false},"organization":{"id":1,"name":"Default","description":""},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the project","id":1889,"name":"Admin"},"use_role":{"description":"Can
+        use the project in a job template","id":1891,"name":"Use"},"update_role":{"description":"May
+        update project or inventory or group using the configured source update system","id":1892,"name":"Update"},"read_role":{"description":"May
+        view settings for the project","id":1890,"name":"Read"}}},"created":"2017-04-10T18:28:19.485Z","modified":"2017-04-10T18:31:52.619Z","name":"targeted_refresh","description":"","local_path":"_472__targeted_refresh","scm_type":"git","scm_url":"https://github.com/ansible/ansible.git","scm_branch":"","scm_clean":false,"scm_delete_on_update":false,"credential":3,"last_job_run":"2017-04-10T18:32:14.021311Z","last_job_failed":false,"has_schedules":false,"next_job_run":null,"status":"successful","organization":1,"scm_delete_on_next_update":false,"scm_update_on_launch":false,"scm_update_cache_timeout":0,"last_update_failed":false,"last_updated":"2017-04-10T18:32:14.021311Z"}'
+    http_version: 
+  recorded_at: Mon, 10 Apr 2017 18:37:59 GMT
+- request:
+    method: get
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/472/playbooks/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 10 Apr 2017 18:38:00 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, HEAD, OPTIONS
+      X-Api-Time:
+      - 0.162s
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      string: '["docs/docsite/keyword_desc.yml","packaging/release/release.yml","shippable.yml","test/integration/amazon.yml","test/integration/asa.yaml","test/integration/azure.yml","test/integration/cloudflare.yml","test/integration/cloudscale.yml","test/integration/cloudstack.yml","test/integration/cnos.yaml","test/integration/consul.yml","test/integration/consul_inventory.yml","test/integration/dellos10.yaml","test/integration/dellos6.yaml","test/integration/dellos9.yaml","test/integration/destructive.yml","test/integration/eos.yaml","test/integration/exoscale.yml","test/integration/galaxy_playbook.yml","test/integration/galaxy_playbook_git.yml","test/integration/gce.yml","test/integration/ios.yaml","test/integration/iosxr.yaml","test/integration/jenkins.yml","test/integration/junos.yaml","test/integration/net_command.yml","test/integration/non_destructive.yml","test/integration/nxos.yaml","test/integration/ops.yaml","test/integration/rackspace.yml","test/integration/targets/async_extra_data/test_async.yml","test/integration/targets/binary_modules/download_binary_modules.yml","test/integration/targets/binary_modules/test_binary_modules.yml","test/integration/targets/blocks/main.yml","test/integration/targets/blocks/nested_fail.yml","test/integration/targets/blocks/nested_nested_fail.yml","test/integration/targets/callback_retry_task_name/test.yml","test/integration/targets/check_mode/check_mode.yml","test/integration/targets/connection/test_connection.yml","test/integration/targets/delegate_to/test_delegate_to.yml","test/integration/targets/environment/test_environment.yml","test/integration/targets/filters/vars/main.yml","test/integration/targets/gathering_facts/test_gathering_facts.yml","test/integration/targets/group_by/test_group_by.yml","test/integration/targets/groupby_filter/test_jinja2_groupby.yml","test/integration/targets/handlers/test_force_handlers.yml","test/integration/targets/handlers/test_handlers.yml","test/integration/targets/handlers/test_handlers_include.yml","test/integration/targets/handlers/test_handlers_inexistent_notify.yml","test/integration/targets/handlers/test_handlers_listen.yml","test/integration/targets/handlers/test_listening_handlers.yml","test/integration/targets/hash/test_hash.yml","test/integration/targets/hosts_field/test_hosts_field.yml","test/integration/targets/includes/test_includes.yml","test/integration/targets/includes/test_includes2.yml","test/integration/targets/includes/test_includes3.yml","test/integration/targets/lookup_paths/play.yml","test/integration/targets/lookup_paths/testplay.yml","test/integration/targets/lookup_properties/test_lookup_properties.yml","test/integration/targets/module_utils/module_utils_envvar.yml","test/integration/targets/module_utils/module_utils_test.yml","test/integration/targets/no_log/no_log_local.yml","test/integration/targets/parsing/bad_parsing.yml","test/integration/targets/parsing/good_parsing.yml","test/integration/targets/pull/pull-integration-test/local.yml","test/integration/targets/tags/test_tags.yml","test/integration/targets/template_jinja2_latest/main.yml","test/integration/targets/templating_settings/test_templating_settings.yml","test/integration/targets/test_infra/test_test_infra.yml","test/integration/targets/unicode/unicode.yml","test/integration/targets/var_blending/test_var_blending.yml","test/integration/targets/var_precedence/test_var_precedence.yml","test/integration/targets/vault/test_vault.yml","test/integration/targets/vault/test_vault_embedded.yml","test/integration/targets/vault/test_vaulted_inventory.yml","test/integration/test_win_group1.yml","test/integration/test_win_group2.yml","test/integration/test_win_group3.yml","test/integration/vars/test_var_encrypted.yml","test/integration/vyos.yaml","test/utils/docker/httptester/httptester.yml"]'
+    http_version: 
+  recorded_at: Mon, 10 Apr 2017 18:38:00 GMT
+- request:
+    method: get
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/credentials
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 301
+      message: MOVED PERMANENTLY
+    headers:
+      Date:
+      - Mon, 10 Apr 2017 18:38:00 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
+      Location:
+      - https://dev-ansible-tower3.example.com/api/v1/credentials/
+      Content-Length:
+      - '0'
+      Content-Type:
+      - text/html; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Mon, 10 Apr 2017 18:38:01 GMT
+- request:
+    method: get
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/credentials/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 10 Apr 2017 18:38:01 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Api-Time:
+      - 0.333s
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      string: '{"count":35,"next":"/api/v1/credentials/?page=2","previous":null,"results":[{"id":47,"type":"credential","url":"/api/v1/credentials/47/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","organization":"/api/v1/organizations/1/","owner_teams":"/api/v1/credentials/47/owner_teams/","owner_users":"/api/v1/credentials/47/owner_users/","activity_stream":"/api/v1/credentials/47/activity_stream/","access_list":"/api/v1/credentials/47/access_list/","object_roles":"/api/v1/credentials/47/object_roles/"},"summary_fields":{"host":{},"project":{},"organization":{"id":1,"name":"Default","description":""},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":1668,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":1670,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":1669,"name":"Read"}},"owners":[]},"created":"2017-03-27T19:06:13.710Z","modified":"2017-03-27T19:13:51.406Z","name":"abc","description":"","kind":"aws","cloud":true,"host":"","username":"a","password":"$encrypted$","security_token":"$encrypted$","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":48,"type":"credential","url":"/api/v1/credentials/48/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","owner_teams":"/api/v1/credentials/48/owner_teams/","owner_users":"/api/v1/credentials/48/owner_users/","activity_stream":"/api/v1/credentials/48/activity_stream/","access_list":"/api/v1/credentials/48/access_list/","object_roles":"/api/v1/credentials/48/object_roles/","user":"/api/v1/users/1/"},"summary_fields":{"host":{},"project":{},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":1689,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":1691,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":1690,"name":"Read"}},"owners":[{"url":"/api/v1/users/1/","description":"
+        ","type":"user","id":1,"name":"admin"}]},"created":"2017-03-27T21:52:29.559Z","modified":"2017-03-27T21:52:37.133Z","name":"ec2
+        cred","description":"","kind":"aws","cloud":true,"host":"","username":"065ZMGNV5WNKPMX4FF82","password":"$encrypted$","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":10,"type":"credential","url":"/api/v1/credentials/10/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","organization":"/api/v1/organizations/2/","owner_teams":"/api/v1/credentials/10/owner_teams/","owner_users":"/api/v1/credentials/10/owner_users/","activity_stream":"/api/v1/credentials/10/activity_stream/","access_list":"/api/v1/credentials/10/access_list/","object_roles":"/api/v1/credentials/10/object_roles/"},"summary_fields":{"host":{},"project":{},"organization":{"id":2,"name":"Test
+        Org","description":"For tests"},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":298,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":300,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":299,"name":"Read"}},"owners":[]},"created":"2017-02-10T23:12:52.021Z","modified":"2017-02-10T23:12:52.109Z","name":"jwong-aws-test","description":"test
+        aws cred","kind":"aws","cloud":true,"host":"","username":"asdfa","password":"$encrypted$","security_token":"$encrypted$","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":55,"type":"credential","url":"/api/v1/credentials/55/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","organization":"/api/v1/organizations/1/","owner_teams":"/api/v1/credentials/55/owner_teams/","owner_users":"/api/v1/credentials/55/owner_users/","activity_stream":"/api/v1/credentials/55/activity_stream/","access_list":"/api/v1/credentials/55/access_list/","object_roles":"/api/v1/credentials/55/object_roles/"},"summary_fields":{"host":{},"project":{},"organization":{"id":1,"name":"Default","description":""},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":1745,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":1747,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":1746,"name":"Read"}},"owners":[]},"created":"2017-03-28T21:58:22.568Z","modified":"2017-03-28T21:58:22.628Z","name":"mm","description":"","kind":"aws","cloud":true,"host":"","username":"m","password":"$encrypted$","security_token":"$encrypted$","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":5,"type":"credential","url":"/api/v1/credentials/5/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","organization":"/api/v1/organizations/1/","owner_teams":"/api/v1/credentials/5/owner_teams/","owner_users":"/api/v1/credentials/5/owner_users/","activity_stream":"/api/v1/credentials/5/activity_stream/","access_list":"/api/v1/credentials/5/access_list/","object_roles":"/api/v1/credentials/5/object_roles/"},"summary_fields":{"host":{},"project":{},"organization":{"id":1,"name":"Default","description":""},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":92,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":94,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":93,"name":"Read"}},"owners":[]},"created":"2017-01-17T22:13:22.752Z","modified":"2017-01-17T22:13:22.805Z","name":"Demo
+        Creds 2","description":"test","kind":"net","cloud":false,"host":"","username":"awdd","password":"$encrypted$","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":17,"type":"credential","url":"/api/v1/credentials/17/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","owner_teams":"/api/v1/credentials/17/owner_teams/","owner_users":"/api/v1/credentials/17/owner_users/","activity_stream":"/api/v1/credentials/17/activity_stream/","access_list":"/api/v1/credentials/17/access_list/","object_roles":"/api/v1/credentials/17/object_roles/","user":"/api/v1/users/1/"},"summary_fields":{"host":{},"project":{},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":1170,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":1172,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":1171,"name":"Read"}},"owners":[{"url":"/api/v1/users/1/","description":"
+        ","type":"user","id":1,"name":"admin"}]},"created":"2017-03-17T14:29:00.374Z","modified":"2017-03-17T14:29:00.450Z","name":"Rakespace
+        Fake","description":"","kind":"rax","cloud":true,"host":"","username":"no_valid","password":"$encrypted$","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":3,"type":"credential","url":"/api/v1/credentials/3/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","organization":"/api/v1/organizations/1/","owner_teams":"/api/v1/credentials/3/owner_teams/","owner_users":"/api/v1/credentials/3/owner_users/","activity_stream":"/api/v1/credentials/3/activity_stream/","access_list":"/api/v1/credentials/3/access_list/","object_roles":"/api/v1/credentials/3/object_roles/"},"summary_fields":{"host":{},"project":{},"organization":{"id":1,"name":"Default","description":""},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":71,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":73,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":72,"name":"Read"}},"owners":[]},"created":"2017-01-09T16:12:22.945Z","modified":"2017-01-09T16:12:22.994Z","name":"db-github","description":"db-github","kind":"scm","cloud":false,"host":"","username":"syncrou","password":"$encrypted$","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":12,"type":"credential","url":"/api/v1/credentials/12/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","owner_teams":"/api/v1/credentials/12/owner_teams/","owner_users":"/api/v1/credentials/12/owner_users/","activity_stream":"/api/v1/credentials/12/activity_stream/","access_list":"/api/v1/credentials/12/access_list/","object_roles":"/api/v1/credentials/12/object_roles/"},"summary_fields":{"host":{},"project":{},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":331,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":333,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":332,"name":"Read"}},"owners":[]},"created":"2017-02-13T18:42:11.981Z","modified":"2017-03-27T14:24:25.605Z","name":"jwong-scm","description":"github
+        cred","kind":"scm","cloud":false,"host":"","username":"james","password":"$encrypted$","security_token":"","project":"","domain":"","ssh_key_data":"$encrypted$","ssh_key_unlock":"$encrypted$","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":58,"type":"credential","url":"/api/v1/credentials/58/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","organization":"/api/v1/organizations/1/","owner_teams":"/api/v1/credentials/58/owner_teams/","owner_users":"/api/v1/credentials/58/owner_users/","activity_stream":"/api/v1/credentials/58/activity_stream/","access_list":"/api/v1/credentials/58/access_list/","object_roles":"/api/v1/credentials/58/object_roles/"},"summary_fields":{"host":{},"project":{},"organization":{"id":1,"name":"Default","description":""},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":1754,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":1756,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":1755,"name":"Read"}},"owners":[]},"created":"2017-03-29T00:21:48.628Z","modified":"2017-03-29T00:21:48.683Z","name":"999","description":"","kind":"ssh","cloud":false,"host":"","username":"999","password":"","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"su","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":8,"type":"credential","url":"/api/v1/credentials/8/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","owner_teams":"/api/v1/credentials/8/owner_teams/","owner_users":"/api/v1/credentials/8/owner_users/","activity_stream":"/api/v1/credentials/8/activity_stream/","access_list":"/api/v1/credentials/8/access_list/","object_roles":"/api/v1/credentials/8/object_roles/","user":"/api/v1/users/1/"},"summary_fields":{"host":{},"project":{},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":152,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":154,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":153,"name":"Read"}},"owners":[{"url":"/api/v1/users/1/","description":"
+        ","type":"user","id":1,"name":"admin"}]},"created":"2017-02-01T19:34:37.462Z","modified":"2017-03-27T19:28:27.614Z","name":"bd-test-change","description":"","kind":"ssh","cloud":false,"host":"","username":"abc","password":"$encrypted$","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"sudo","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":1,"type":"credential","url":"/api/v1/credentials/1/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","owner_teams":"/api/v1/credentials/1/owner_teams/","owner_users":"/api/v1/credentials/1/owner_users/","activity_stream":"/api/v1/credentials/1/activity_stream/","access_list":"/api/v1/credentials/1/access_list/","object_roles":"/api/v1/credentials/1/object_roles/","user":"/api/v1/users/1/"},"summary_fields":{"host":{},"project":{},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":12,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":14,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":13,"name":"Read"}},"owners":[{"url":"/api/v1/users/1/","description":"
+        ","type":"user","id":1,"name":"admin"}]},"created":"2016-08-02T17:57:03.019Z","modified":"2016-08-02T17:57:03.109Z","name":"Demo
+        Credential","description":"","kind":"ssh","cloud":false,"host":"","username":"admin","password":"","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":4,"type":"credential","url":"/api/v1/credentials/4/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","organization":"/api/v1/organizations/1/","owner_teams":"/api/v1/credentials/4/owner_teams/","owner_users":"/api/v1/credentials/4/owner_users/","activity_stream":"/api/v1/credentials/4/activity_stream/","access_list":"/api/v1/credentials/4/access_list/","object_roles":"/api/v1/credentials/4/object_roles/"},"summary_fields":{"host":{},"project":{},"organization":{"id":1,"name":"Default","description":""},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":86,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":88,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":87,"name":"Read"}},"owners":[]},"created":"2017-01-16T15:50:23.815Z","modified":"2017-01-16T15:50:23.865Z","name":"Demo
+        Creds 2","description":"test","kind":"ssh","cloud":false,"host":"","username":"demo-cred","password":"$encrypted$","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"sudo","become_username":"root","become_password":"$encrypted$","vault_password":"$encrypted$","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":63,"type":"credential","url":"/api/v1/credentials/63/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","owner_teams":"/api/v1/credentials/63/owner_teams/","owner_users":"/api/v1/credentials/63/owner_users/","activity_stream":"/api/v1/credentials/63/activity_stream/","access_list":"/api/v1/credentials/63/access_list/","object_roles":"/api/v1/credentials/63/object_roles/","user":"/api/v1/users/1/"},"summary_fields":{"host":{},"project":{},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":1883,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":1885,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":1884,"name":"Read"}},"owners":[{"url":"/api/v1/users/1/","description":"
+        ","type":"user","id":1,"name":"admin"}]},"created":"2017-04-10T08:12:31.806Z","modified":"2017-04-10T08:20:39.771Z","name":"Jose","description":"","kind":"ssh","cloud":false,"host":"","username":"","password":"$encrypted$","security_token":"","project":"","domain":"","ssh_key_data":"$encrypted$","ssh_key_unlock":"$encrypted$","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":9,"type":"credential","url":"/api/v1/credentials/9/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","organization":"/api/v1/organizations/1/","owner_teams":"/api/v1/credentials/9/owner_teams/","owner_users":"/api/v1/credentials/9/owner_users/","activity_stream":"/api/v1/credentials/9/activity_stream/","access_list":"/api/v1/credentials/9/access_list/","object_roles":"/api/v1/credentials/9/object_roles/"},"summary_fields":{"host":{},"project":{},"organization":{"id":1,"name":"Default","description":""},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":235,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":237,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":236,"name":"Read"}},"owners":[]},"created":"2017-02-08T22:20:19.758Z","modified":"2017-02-08T22:40:34.603Z","name":"jwongCred","description":"jwong
+        tests cred post","kind":"ssh","cloud":false,"host":"","username":"james","password":"$encrypted$","security_token":"","project":"","domain":"","ssh_key_data":"$encrypted$","ssh_key_unlock":"$encrypted$","become_method":"sudo","become_username":"jroot","become_password":"$encrypted$","vault_password":"$encrypted$","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":29,"type":"credential","url":"/api/v1/credentials/29/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","organization":"/api/v1/organizations/1/","owner_teams":"/api/v1/credentials/29/owner_teams/","owner_users":"/api/v1/credentials/29/owner_users/","activity_stream":"/api/v1/credentials/29/activity_stream/","access_list":"/api/v1/credentials/29/access_list/","object_roles":"/api/v1/credentials/29/object_roles/","user":"/api/v1/users/1/"},"summary_fields":{"host":{},"project":{},"organization":{"id":1,"name":"Default","description":""},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":1480,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":1482,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":1481,"name":"Read"}},"owners":[{"url":"/api/v1/users/1/","description":"
+        ","type":"user","id":1,"name":"admin"}]},"created":"2017-03-23T16:31:01.639Z","modified":"2017-03-23T16:32:40.579Z","name":"jwongtes43","description":"test","kind":"ssh","cloud":false,"host":"","username":"","password":"","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":14,"type":"credential","url":"/api/v1/credentials/14/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","organization":"/api/v1/organizations/1/","owner_teams":"/api/v1/credentials/14/owner_teams/","owner_users":"/api/v1/credentials/14/owner_users/","activity_stream":"/api/v1/credentials/14/activity_stream/","access_list":"/api/v1/credentials/14/access_list/","object_roles":"/api/v1/credentials/14/object_roles/"},"summary_fields":{"host":{},"project":{},"organization":{"id":1,"name":"Default","description":""},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":615,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":617,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":616,"name":"Read"}},"owners":[]},"created":"2017-02-22T21:24:36.452Z","modified":"2017-03-27T17:19:53.594Z","name":"jwong-test-post__","description":"","kind":"ssh","cloud":false,"host":"","username":"jwong-test-username","password":"$encrypted$","security_token":"$encrypted$","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":52,"type":"credential","url":"/api/v1/credentials/52/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","owner_teams":"/api/v1/credentials/52/owner_teams/","owner_users":"/api/v1/credentials/52/owner_users/","activity_stream":"/api/v1/credentials/52/activity_stream/","access_list":"/api/v1/credentials/52/access_list/","object_roles":"/api/v1/credentials/52/object_roles/","user":"/api/v1/users/1/"},"summary_fields":{"host":{},"project":{},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":1701,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":1703,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":1702,"name":"Read"}},"owners":[{"url":"/api/v1/users/1/","description":"
+        ","type":"user","id":1,"name":"admin"}]},"created":"2017-03-28T15:33:08.356Z","modified":"2017-03-28T15:33:08.455Z","name":"lucy_machine","description":"","kind":"ssh","cloud":false,"host":"","username":"root","password":"$encrypted$","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":59,"type":"credential","url":"/api/v1/credentials/59/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","organization":"/api/v1/organizations/1/","owner_teams":"/api/v1/credentials/59/owner_teams/","owner_users":"/api/v1/credentials/59/owner_users/","activity_stream":"/api/v1/credentials/59/activity_stream/","access_list":"/api/v1/credentials/59/access_list/","object_roles":"/api/v1/credentials/59/object_roles/"},"summary_fields":{"host":{},"project":{},"organization":{"id":1,"name":"Default","description":""},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":1761,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":1763,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":1762,"name":"Read"}},"owners":[]},"created":"2017-03-29T13:23:44.596Z","modified":"2017-03-29T13:23:44.647Z","name":"machine01","description":"","kind":"ssh","cloud":false,"host":"","username":"username","password":"$encrypted$","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":50,"type":"credential","url":"/api/v1/credentials/50/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","organization":"/api/v1/organizations/1/","owner_teams":"/api/v1/credentials/50/owner_teams/","owner_users":"/api/v1/credentials/50/owner_users/","activity_stream":"/api/v1/credentials/50/activity_stream/","access_list":"/api/v1/credentials/50/access_list/","object_roles":"/api/v1/credentials/50/object_roles/"},"summary_fields":{"host":{},"project":{},"organization":{"id":1,"name":"Default","description":""},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":1695,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":1697,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":1696,"name":"Read"}},"owners":[]},"created":"2017-03-28T13:52:09.509Z","modified":"2017-03-28T13:52:09.561Z","name":"machine-cred-01","description":"","kind":"ssh","cloud":false,"host":"","username":"","password":"","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":53,"type":"credential","url":"/api/v1/credentials/53/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","organization":"/api/v1/organizations/1/","owner_teams":"/api/v1/credentials/53/owner_teams/","owner_users":"/api/v1/credentials/53/owner_users/","activity_stream":"/api/v1/credentials/53/activity_stream/","access_list":"/api/v1/credentials/53/access_list/","object_roles":"/api/v1/credentials/53/object_roles/"},"summary_fields":{"host":{},"project":{},"organization":{"id":1,"name":"Default","description":""},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":1714,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":1716,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":1715,"name":"Read"}},"owners":[]},"created":"2017-03-28T16:59:37.981Z","modified":"2017-03-28T16:59:38.041Z","name":"machine-cred-02","description":"","kind":"ssh","cloud":false,"host":"","username":"root","password":"","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":54,"type":"credential","url":"/api/v1/credentials/54/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","organization":"/api/v1/organizations/1/","owner_teams":"/api/v1/credentials/54/owner_teams/","owner_users":"/api/v1/credentials/54/owner_users/","activity_stream":"/api/v1/credentials/54/activity_stream/","access_list":"/api/v1/credentials/54/access_list/","object_roles":"/api/v1/credentials/54/object_roles/"},"summary_fields":{"host":{},"project":{},"organization":{"id":1,"name":"Default","description":""},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":1723,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":1725,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":1724,"name":"Read"}},"owners":[]},"created":"2017-03-28T17:23:29.527Z","modified":"2017-03-28T17:23:29.583Z","name":"machine-cred-03","description":"","kind":"ssh","cloud":false,"host":"","username":"root","password":"","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":45,"type":"credential","url":"/api/v1/credentials/45/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","owner_teams":"/api/v1/credentials/45/owner_teams/","owner_users":"/api/v1/credentials/45/owner_users/","activity_stream":"/api/v1/credentials/45/activity_stream/","access_list":"/api/v1/credentials/45/access_list/","object_roles":"/api/v1/credentials/45/object_roles/"},"summary_fields":{"host":{},"project":{},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":1617,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":1619,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":1618,"name":"Read"}},"owners":[]},"created":"2017-03-24T14:04:47.916Z","modified":"2017-03-27T15:29:50.504Z","name":"machine-credential-01","description":"","kind":"ssh","cloud":false,"host":"","username":"user01","password":"$encrypted$","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"sudo","become_username":"root","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":27,"type":"credential","url":"/api/v1/credentials/27/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","organization":"/api/v1/organizations/4/","owner_teams":"/api/v1/credentials/27/owner_teams/","owner_users":"/api/v1/credentials/27/owner_users/","activity_stream":"/api/v1/credentials/27/activity_stream/","access_list":"/api/v1/credentials/27/access_list/","object_roles":"/api/v1/credentials/27/object_roles/"},"summary_fields":{"host":{},"project":{},"organization":{"id":4,"name":"ManageIQ","description":"ManageIQ
+        Default Organization"},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":1433,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":1435,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":1434,"name":"Read"}},"owners":[]},"created":"2017-03-22T21:57:45.946Z","modified":"2017-03-22T21:57:46.033Z","name":"ManageIQ
+        Default Credential","description":"","kind":"ssh","cloud":false,"host":"","username":"","password":"","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":51,"type":"credential","url":"/api/v1/credentials/51/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","organization":"/api/v1/organizations/1/","owner_teams":"/api/v1/credentials/51/owner_teams/","owner_users":"/api/v1/credentials/51/owner_users/","activity_stream":"/api/v1/credentials/51/activity_stream/","access_list":"/api/v1/credentials/51/access_list/","object_roles":"/api/v1/credentials/51/object_roles/"},"summary_fields":{"host":{},"project":{},"organization":{"id":1,"name":"Default","description":""},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":1698,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":1700,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":1699,"name":"Read"}},"owners":[]},"created":"2017-03-28T14:09:52.476Z","modified":"2017-03-28T14:09:52.532Z","name":"new-credential","description":"","kind":"ssh","cloud":false,"host":"","username":"root","password":"$encrypted$","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":64,"type":"credential","url":"/api/v1/credentials/64/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","owner_teams":"/api/v1/credentials/64/owner_teams/","owner_users":"/api/v1/credentials/64/owner_users/","activity_stream":"/api/v1/credentials/64/activity_stream/","access_list":"/api/v1/credentials/64/access_list/","object_roles":"/api/v1/credentials/64/object_roles/","user":"/api/v1/users/1/"},"summary_fields":{"host":{},"project":{},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":1886,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":1888,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":1887,"name":"Read"}},"owners":[{"url":"/api/v1/users/1/","description":"
+        ","type":"user","id":1,"name":"admin"}]},"created":"2017-04-10T08:21:35.727Z","modified":"2017-04-10T08:21:35.800Z","name":"No
+        no no","description":"","kind":"ssh","cloud":false,"host":"","username":"","password":"","security_token":"","project":"","domain":"","ssh_key_data":"$encrypted$","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""}]}'
+    http_version: 
+  recorded_at: Mon, 10 Apr 2017 18:38:02 GMT
+- request:
+    method: get
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/credentials/?page=2
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 10 Apr 2017 18:38:02 GMT
+      Server:
+      - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Api-Time:
+      - 0.162s
+      Content-Length:
+      - '14793'
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      string: '{"count":35,"next":null,"previous":"/api/v1/credentials/?page=1","results":[{"id":57,"type":"credential","url":"/api/v1/credentials/57/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","organization":"/api/v1/organizations/1/","owner_teams":"/api/v1/credentials/57/owner_teams/","owner_users":"/api/v1/credentials/57/owner_users/","activity_stream":"/api/v1/credentials/57/activity_stream/","access_list":"/api/v1/credentials/57/access_list/","object_roles":"/api/v1/credentials/57/object_roles/"},"summary_fields":{"host":{},"project":{},"organization":{"id":1,"name":"Default","description":""},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":1751,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":1753,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":1752,"name":"Read"}},"owners":[]},"created":"2017-03-29T00:00:57.231Z","modified":"2017-03-29T00:00:57.287Z","name":"ppp","description":"","kind":"ssh","cloud":false,"host":"","username":"","password":"","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"sudo","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":46,"type":"credential","url":"/api/v1/credentials/46/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","organization":"/api/v1/organizations/1/","owner_teams":"/api/v1/credentials/46/owner_teams/","owner_users":"/api/v1/credentials/46/owner_users/","activity_stream":"/api/v1/credentials/46/activity_stream/","access_list":"/api/v1/credentials/46/access_list/","object_roles":"/api/v1/credentials/46/object_roles/"},"summary_fields":{"host":{},"project":{},"organization":{"id":1,"name":"Default","description":""},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":1620,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":1622,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":1621,"name":"Read"}},"owners":[]},"created":"2017-03-24T14:05:43.381Z","modified":"2017-03-24T14:05:43.431Z","name":"scm-credential-01","description":"","kind":"ssh","cloud":false,"host":"","username":"","password":"$encrypted$","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":62,"type":"credential","url":"/api/v1/credentials/62/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","owner_teams":"/api/v1/credentials/62/owner_teams/","owner_users":"/api/v1/credentials/62/owner_users/","activity_stream":"/api/v1/credentials/62/activity_stream/","access_list":"/api/v1/credentials/62/access_list/","object_roles":"/api/v1/credentials/62/object_roles/","user":"/api/v1/users/1/"},"summary_fields":{"host":{},"project":{},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":1876,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":1878,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":1877,"name":"Read"}},"owners":[{"url":"/api/v1/users/1/","description":"
+        ","type":"user","id":1,"name":"admin"}]},"created":"2017-04-05T07:18:01.678Z","modified":"2017-04-05T07:18:01.767Z","name":"test_stream","description":"","kind":"ssh","cloud":false,"host":"","username":"","password":"","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":60,"type":"credential","url":"/api/v1/credentials/60/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","owner_teams":"/api/v1/credentials/60/owner_teams/","owner_users":"/api/v1/credentials/60/owner_users/","activity_stream":"/api/v1/credentials/60/activity_stream/","access_list":"/api/v1/credentials/60/access_list/","object_roles":"/api/v1/credentials/60/object_roles/","user":"/api/v1/users/1/"},"summary_fields":{"host":{},"project":{},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":1826,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":1828,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":1827,"name":"Read"}},"owners":[{"url":"/api/v1/users/1/","description":"
+        ","type":"user","id":1,"name":"admin"}]},"created":"2017-04-04T15:51:42.125Z","modified":"2017-04-04T15:51:42.218Z","name":"test_stream","description":"","kind":"ssh","cloud":false,"host":"","username":"","password":"","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":61,"type":"credential","url":"/api/v1/credentials/61/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","owner_teams":"/api/v1/credentials/61/owner_teams/","owner_users":"/api/v1/credentials/61/owner_users/","activity_stream":"/api/v1/credentials/61/activity_stream/","access_list":"/api/v1/credentials/61/access_list/","object_roles":"/api/v1/credentials/61/object_roles/","user":"/api/v1/users/1/"},"summary_fields":{"host":{},"project":{},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":1829,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":1831,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":1830,"name":"Read"}},"owners":[{"url":"/api/v1/users/1/","description":"
+        ","type":"user","id":1,"name":"admin"}]},"created":"2017-04-04T16:06:08.867Z","modified":"2017-04-04T16:06:08.940Z","name":"test_stream","description":"","kind":"ssh","cloud":false,"host":"","username":"","password":"","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":49,"type":"credential","url":"/api/v1/credentials/49/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","organization":"/api/v1/organizations/1/","owner_teams":"/api/v1/credentials/49/owner_teams/","owner_users":"/api/v1/credentials/49/owner_users/","activity_stream":"/api/v1/credentials/49/activity_stream/","access_list":"/api/v1/credentials/49/access_list/","object_roles":"/api/v1/credentials/49/object_roles/"},"summary_fields":{"host":{},"project":{},"organization":{"id":1,"name":"Default","description":""},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":1692,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":1694,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":1693,"name":"Read"}},"owners":[]},"created":"2017-03-27T22:41:18.832Z","modified":"2017-03-29T00:20:20.463Z","name":"zzz","description":"","kind":"ssh","cloud":false,"host":"","username":"nnn","password":"","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"pbrun","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":2,"type":"credential","url":"/api/v1/credentials/2/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","owner_teams":"/api/v1/credentials/2/owner_teams/","owner_users":"/api/v1/credentials/2/owner_users/","activity_stream":"/api/v1/credentials/2/activity_stream/","access_list":"/api/v1/credentials/2/access_list/","object_roles":"/api/v1/credentials/2/object_roles/","user":"/api/v1/users/1/"},"summary_fields":{"host":{},"project":{},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":28,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":30,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":29,"name":"Read"}},"owners":[{"url":"/api/v1/users/1/","description":"
+        ","type":"user","id":1,"name":"admin"}]},"created":"2016-08-30T22:41:59.056Z","modified":"2016-08-31T16:59:02.652Z","name":"dev-vc60","description":"","kind":"vmware","cloud":true,"host":"dev-vc60.example.com","username":"MiqAnsibleUser@vsphere.local","password":"$encrypted$","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":16,"type":"credential","url":"/api/v1/credentials/16/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","owner_teams":"/api/v1/credentials/16/owner_teams/","owner_users":"/api/v1/credentials/16/owner_users/","activity_stream":"/api/v1/credentials/16/activity_stream/","access_list":"/api/v1/credentials/16/access_list/","object_roles":"/api/v1/credentials/16/object_roles/","user":"/api/v1/users/1/"},"summary_fields":{"host":{},"project":{},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":894,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":896,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":895,"name":"Read"}},"owners":[{"url":"/api/v1/users/1/","description":"
+        ","type":"user","id":1,"name":"admin"}]},"created":"2017-03-03T20:13:07.200Z","modified":"2017-03-27T17:49:08.114Z","name":"lucy
+        dev00","description":"","kind":"vmware","cloud":true,"host":"10.8.96.135","username":"MiqAnsibleUser@vsphere.local","password":"$encrypted$","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":7,"type":"credential","url":"/api/v1/credentials/7/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","organization":"/api/v1/organizations/3/","owner_teams":"/api/v1/credentials/7/owner_teams/","owner_users":"/api/v1/credentials/7/owner_users/","activity_stream":"/api/v1/credentials/7/activity_stream/","access_list":"/api/v1/credentials/7/access_list/","object_roles":"/api/v1/credentials/7/object_roles/"},"summary_fields":{"host":{},"project":{},"organization":{"id":3,"name":"ACME
+        Corp","description":"Which belongs to goern"},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":112,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":114,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":113,"name":"Read"}},"owners":[]},"created":"2017-01-30T11:07:37.190Z","modified":"2017-01-30T11:07:37.269Z","name":"syseng-e2e-vcenter6","description":"This
+        is a vCenter","kind":"vmware","cloud":true,"host":"vcsa6.vcenter.e2e.bos.redhat.com","username":"administrator@vsphere.local","password":"$encrypted$","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""},{"id":56,"type":"credential","url":"/api/v1/credentials/56/","related":{"created_by":"/api/v1/users/1/","modified_by":"/api/v1/users/1/","organization":"/api/v1/organizations/1/","owner_teams":"/api/v1/credentials/56/owner_teams/","owner_users":"/api/v1/credentials/56/owner_users/","activity_stream":"/api/v1/credentials/56/activity_stream/","access_list":"/api/v1/credentials/56/access_list/","object_roles":"/api/v1/credentials/56/object_roles/"},"summary_fields":{"host":{},"project":{},"organization":{"id":1,"name":"Default","description":""},"created_by":{"id":1,"username":"admin","first_name":"","last_name":""},"modified_by":{"id":1,"username":"admin","first_name":"","last_name":""},"object_roles":{"admin_role":{"description":"Can
+        manage all aspects of the credential","id":1748,"name":"Admin"},"use_role":{"description":"Can
+        use the credential in a job template","id":1750,"name":"Use"},"read_role":{"description":"May
+        view settings for the credential","id":1749,"name":"Read"}},"owners":[]},"created":"2017-03-28T22:02:10.054Z","modified":"2017-03-28T22:02:10.109Z","name":"vv","description":"","kind":"vmware","cloud":true,"host":"v","username":"v","password":"$encrypted$","security_token":"","project":"","domain":"","ssh_key_data":"","ssh_key_unlock":"","become_method":"","become_username":"","become_password":"","vault_password":"","subscription":"","tenant":"","secret":"","client":"","authorize":false,"authorize_password":""}]}'
+    http_version: 
+  recorded_at: Mon, 10 Apr 2017 18:38:02 GMT
+recorded_with: VCR 3.0.3
