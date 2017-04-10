@@ -653,11 +653,13 @@ module OpsController::OpsRbac
   def rbac_edit_reset(operation, what, klass)
     @sb[:active_rbac_group_tab] ||= "rbac_customer_tags"
     key = what.to_sym
-    record = find_record_with_rbac(klass, checked_or_params_id)
-    if [:group, :role].include?(key) && record && record.read_only && operation != 'copy'
-      add_flash(_("Read Only %{model} \"%{name}\" can not be edited") % {:model => key == :role ? ui_lookup(:model => "MiqUserRole") : ui_lookup(:model => "MiqGroup"), :name => key == :role ? record.name : record.description}, :warning)
-      javascript_flash
-      return
+    if (operation != "new")
+      record = find_record_with_rbac(klass, checked_or_params_id)
+      if [:group, :role].include?(key) && record && record.read_only && operation != 'copy'
+        add_flash(_("Read Only %{model} \"%{name}\" can not be edited") % {:model => key == :role ? ui_lookup(:model => "MiqUserRole") : ui_lookup(:model => "MiqGroup"), :name => key == :role ? record.name : record.description}, :warning)
+        javascript_flash
+        return
+      end
     end
 
     case operation
