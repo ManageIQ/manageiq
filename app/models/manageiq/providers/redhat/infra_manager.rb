@@ -34,7 +34,7 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   end
 
   def self.description
-    @description ||= "Red Hat Virtualization Manager".freeze
+    @description ||= "Red Hat Virtualization".freeze
   end
 
   def self.default_blacklisted_event_names
