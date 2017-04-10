@@ -237,7 +237,7 @@ describe ServiceTemplateAnsiblePlaybook do
     end
   end
 
-  describe '#destroy' do
+  describe '#delete_job_templates' do
     let(:service) { FactoryGirl.create(:service_ansible_tower) }
 
     it 'destroys a job template if there is an associated configuration_template' do
@@ -246,7 +246,7 @@ describe ServiceTemplateAnsiblePlaybook do
 
       expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript)
         .to receive(:delete_in_provider_queue)
-      service_template.destroy
+      service_template.send(:delete_job_templates, [job_template])
     end
 
     it 'does not destroy a job template if there is no associated configuration_template' do
@@ -255,6 +255,14 @@ describe ServiceTemplateAnsiblePlaybook do
 
       expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript)
         .to receive(:delete_in_provider_queue).never
+      service_template.send(:delete_job_templates, [])
+    end
+
+    it '#destroy' do
+      service_template = prebuild_service_template(:job_template => false)
+      adjust_resource_actions(service_template, nil)
+      expect(service_template).to receive(:delete_job_templates).once
+
       service_template.destroy
     end
 
