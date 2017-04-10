@@ -4,7 +4,7 @@ RSpec.describe "physical_servers API" do
       it "shows all of its properties" do
         FactoryGirl.create(:physical_server, :id => 1, :ems_ref => "A59D5B36821111E1A9F5E41F13ED4F6A")
 
-        api_basic_authorize collection_action_identifier(:physical_servers, :show, :get)
+        api_basic_authorize action_identifier(:physical_servers, :read, :resource_actions, :get)
 
         run_get "/api/physical_servers/1"
 
@@ -19,7 +19,7 @@ RSpec.describe "physical_servers API" do
       it "powers on a server successfully" do
         FactoryGirl.create(:physical_server, :id => 1)
 
-        api_basic_authorize collection_action_identifier(:physical_servers, :power_on)
+        api_basic_authorize action_identifier(:physical_servers, :power_on, :resource_actions, :post)
 
         request = gen_request(:power_on)
         run_post("/api/physical_servers/1", request)
@@ -30,7 +30,7 @@ RSpec.describe "physical_servers API" do
       it "powers off a server successfully" do
         FactoryGirl.create(:physical_server, :id => 1)
 
-        api_basic_authorize collection_action_identifier(:physical_servers, :power_off)
+        api_basic_authorize action_identifier(:physical_servers, :power_off, :resource_actions, :post)
 
         request = gen_request(:power_off)
         run_post("/api/physical_servers/1", request)
@@ -41,7 +41,7 @@ RSpec.describe "physical_servers API" do
       it "restarts a server successfully" do
         FactoryGirl.create(:physical_server, :id => 1)
 
-        api_basic_authorize collection_action_identifier(:physical_servers, :restart)
+        api_basic_authorize action_identifier(:physical_servers, :restart, :resource_actions, :post)
 
         request = gen_request(:restart)
         run_post("/api/physical_servers/1", request)
@@ -91,7 +91,7 @@ RSpec.describe "physical_servers API" do
       it "turns on a location LED successfully" do
         FactoryGirl.create(:physical_server, :id => 1)
 
-        api_basic_authorize collection_action_identifier(:physical_servers, :turn_on_loc_led)
+        api_basic_authorize action_identifier(:physical_servers, :turn_on_loc_led, :resource_actions, :post)
 
         request = gen_request(:turn_on_loc_led)
         run_post("/api/physical_servers/1", request)
@@ -102,7 +102,7 @@ RSpec.describe "physical_servers API" do
       it "turns off a location LED successfully" do
         FactoryGirl.create(:physical_server, :id => 1)
 
-        api_basic_authorize collection_action_identifier(:physical_servers, :turn_off_loc_led)
+        api_basic_authorize action_identifier(:physical_servers, :turn_off_loc_led, :resource_actions, :post)
 
         request = gen_request(:turn_off_loc_led)
         run_post("/api/physical_servers/1", request)
@@ -113,7 +113,7 @@ RSpec.describe "physical_servers API" do
       it "blinks a location LED successfully" do
         FactoryGirl.create(:physical_server, :id => 1)
 
-        api_basic_authorize collection_action_identifier(:physical_servers, :blink_loc_led)
+        api_basic_authorize action_identifier(:physical_servers, :blink_loc_led, :resource_actions, :post)
 
         request = gen_request(:blink_loc_led)
         run_post("/api/physical_servers/1", request)
