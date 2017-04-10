@@ -26,6 +26,14 @@ module Api
       action_result(false, err.to_s)
     end
 
+    def refresh_resource(type, id, _data)
+      auth = resource_search(id, type, collection_class(type))
+      task_ids = EmsRefresh.queue_refresh_task(auth)
+      action_result(true, "Refreshing #{authentication_ident(auth)}", :task_ids => task_ids)
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
     def options
       render_options(:authentications, build_additional_fields)
     end

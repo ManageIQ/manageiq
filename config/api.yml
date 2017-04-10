@@ -248,6 +248,8 @@
         :identifier: embedded_automation_manager_credentials_edit
       - :name: create
         :identifier: embedded_automation_manager_credentials_add
+      - :name: refresh
+        :identifier: embedded_automation_manager_credentials_refresh
     :resource_actions:
       :get:
       - :name: read
@@ -257,6 +259,8 @@
         :identifier: embedded_automation_manager_credentials_delete
       - :name: edit
         :identifier: embedded_automation_manager_credentials_edit
+      - :name: refresh
+        :identifier: embedded_automation_manager_credentials_refresh
       :delete:
       - :name: delete
         :identifier: embedded_automation_manager_credentials_delete
