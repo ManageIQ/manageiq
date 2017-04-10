@@ -282,9 +282,9 @@ describe Metric::CiMixin::Capture do
       group.disconnect_inv
       project.disconnect_inv
 
-      expect(container.queue_name_for_metrics_collection).to eq ems.metrics_collector_queue_name
-      expect(group.queue_name_for_metrics_collection).to eq ems.metrics_collector_queue_name
-      expect(project.queue_name_for_metrics_collection).to eq ems.metrics_collector_queue_name
+      expect(container.ems_for_capture_target).to eq ems
+      expect(group.ems_for_capture_target).to     eq ems
+      expect(project.ems_for_capture_target).to   eq ems
 
       expect(container.my_zone).to eq ems.my_zone
       expect(group.my_zone).to eq ems.my_zone
