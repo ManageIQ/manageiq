@@ -1,5 +1,6 @@
 class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
-  before_destroy :check_retirement_potential
+  before_destroy :check_retirement_potential, :prepend => true
+  around_destroy :around_destroy_callback
 
   RETIREMENT_ENTRY_POINTS = {
     'yes_without_playbook' => '/Service/Generic/StateMachines/GenericLifecycle/Retire_Basic_Resource',
@@ -156,16 +157,6 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     super
   end
 
-  def destroy
-    auth_user = User.current_userid || 'system'
-    resource_actions.where.not(:configuration_template_id => nil).each do |resource_action|
-      job_template = resource_action.configuration_template
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript
-        .delete_in_provider_queue(job_template.manager.id, { :manager_ref => job_template.manager_ref }, auth_user)
-    end
-    super
-  end
-
   # ServiceTemplate includes a retirement resource action
   #   with a defined job template:
   #
@@ -179,10 +170,24 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
 
   private
 
+  def around_destroy_callback
+    job_templates = resource_actions.where.not(:configuration_template_id => nil).collect(&:configuration_template)
+    yield
+    delete_job_templates(job_templates)
+  end
+
   def check_retirement_potential
     return true unless retirement_potential?
     error_text = 'Destroy aborted.  Active Services require retirement resources associated with this instance.'
     errors[:base] << error_text
     throw :abort
+  end
+
+  def delete_job_templates(job_templates)
+    auth_user = User.current_userid || 'system'
+    job_templates.each do |job_template|
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript
+        .delete_in_provider_queue(job_template.manager.id, { :manager_ref => job_template.manager_ref }, auth_user)
+    end
   end
 end
