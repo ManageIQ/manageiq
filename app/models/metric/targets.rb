@@ -53,7 +53,7 @@ module Metric::Targets
     zone.ems_containers.each do |ems|
       targets += ems.container_nodes
       targets += ems.container_groups
-      targets += ems.container_groups.flat_map(&:containers)
+      targets += ems.containers
     end
 
     targets
