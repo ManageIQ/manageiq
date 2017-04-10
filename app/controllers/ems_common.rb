@@ -1152,18 +1152,19 @@ module EmsCommon
 
   def call_ems_refresh(emss)
     process_emss(emss, "refresh_ems") unless emss.empty?
+    return if @flash_array.present?
+
     add_flash(n_("Refresh initiated for %{count} %{model} from the %{product} Database",
                  "Refresh initiated for %{count} %{models} from the %{product} Database", emss.length) %
       {:count   => emss.length,
        :product => I18n.t('product.name'),
        :model   => ui_lookup(:table => @table_name),
-       :models  => ui_lookup(:tables => @table_name)}) if @flash_array.nil?
+       :models  => ui_lookup(:tables => @table_name)})
   end
 
   # Refresh VM states for all selected or single displayed ems(s)
   def refreshemss
     assert_privileges(params[:pressed])
-    emss = []
     if @lastaction == "show_list"
       emss = find_checked_items
       if emss.empty?
