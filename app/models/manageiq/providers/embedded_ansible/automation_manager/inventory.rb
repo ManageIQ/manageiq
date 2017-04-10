@@ -1,2 +1,2 @@
-class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Inventory < ManageIQ::Providers::EmbeddedAutomationManager::InventoryGroup
+class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Inventory < ManageIQ::Providers::EmbeddedAutomationManager::InventoryRootGroup
 end
