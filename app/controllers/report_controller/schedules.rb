@@ -75,7 +75,7 @@ module ReportController::Schedules
   # Delete all selected or single displayed action(s)
   def miq_report_schedule_delete
     assert_privileges("miq_report_schedule_delete")
-    scheds = find_checked_ids_with_rbac(MiqSchedule)
+    scheds = find_checked_records_with_rbac(MiqSchedule)
     if params[:id]
       if MiqSchedule.exists?(from_cid(params[:id]))
         scheds.push(from_cid(params[:id]))
@@ -83,7 +83,7 @@ module ReportController::Schedules
         add_flash(_("%{model} no longer exists") % {:model => ui_lookup(:model => "MiqSchedule")}, :error)
       end
     end
-    single_name = MiqSchedule.find(scheds).first.name if scheds.length == 1
+    single_name = scheds.first.name if scheds.length == 1
     process_schedules(scheds, "destroy") unless scheds.empty?
     unless flash_errors?
       if single_name
