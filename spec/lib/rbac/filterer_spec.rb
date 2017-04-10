@@ -41,6 +41,18 @@ describe Rbac::Filterer do
       end
     end
 
+    context 'when class does not participate in RBAC' do
+      let(:miq_ae_domain) { FactoryGirl.create(:miq_ae_domain) }
+
+      it 'returns same class as input' do
+        User.with_user(admin_user) do
+          results = described_class.search(:targets => [miq_ae_domain]).first
+          expect(results.first).to be_an_instance_of(MiqAeDomain)
+          expect(results).to match_array [miq_ae_domain]
+        end
+      end
+    end
+
     describe "with find_options_for_tenant filtering" do
       before do
         owned_vm # happy path

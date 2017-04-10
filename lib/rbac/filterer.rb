@@ -198,8 +198,9 @@ module Rbac
           target_ids = targets
           # assume klass is passed in
         else
-          target_ids       = targets.collect(&:id)
-          klass            = targets.first.class.base_class unless klass.respond_to?(:find)
+          target_ids  = targets.collect(&:id)
+          klass       = targets.first.class
+          klass       = base_class if !klass.respond_to?(:find) && (base_class = rbac_base_class(klass))
         end
         scope = apply_scope(klass, scope)
         scope = apply_select(klass, scope, options[:extra_cols]) if options[:extra_cols]
@@ -213,7 +214,7 @@ module Rbac
           klass = targets
           klass = klass.klass if klass.respond_to?(:klass)
           # working around MiqAeDomain not being in rbac_class
-          klass = klass.base_class if klass.respond_to?(:base_class) && rbac_class(klass).nil? && rbac_class(klass.base_class)
+          klass = base_class if (base_class = rbac_base_class(klass))
         end
         scope = apply_select(klass, scope, options[:extra_cols]) if options[:extra_cols]
       end
@@ -301,6 +302,10 @@ module Rbac
     #
     def apply_rbac_through_association?(klass)
       klass != VimPerformanceDaily && (klass < MetricRollup || klass < Metric)
+    end
+
+    def rbac_base_class(klass)
+      klass.base_class if klass.respond_to?(:base_class) && rbac_class(klass).nil? && rbac_class(klass.base_class)
     end
 
     def safe_base_class(klass)
