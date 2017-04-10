@@ -136,8 +136,9 @@ module Metric::CiMixin::Capture
 
     log_header = "[#{interval_name}]"
     log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
-    log_target << ", start_time: [#{start_time}]" unless start_time.nil?
-    log_target << ", end_time: [#{end_time}]" unless end_time.nil?
+    log_time = ''
+    log_time << ", start_time: [#{start_time}]" unless start_time.nil?
+    log_time << ", end_time: [#{end_time}]" unless end_time.nil?
 
     # Determine the start_time for capturing if not provided
     if interval_name == 'historical'
@@ -171,7 +172,7 @@ module Metric::CiMixin::Capture
       expected_start_range = expected_start_range.iso8601
     end
 
-    _log.info "#{log_header} Capture for #{log_target}..."
+    _log.info "#{log_header} Capture for #{log_target}#{log_time}..."
 
     start_range = end_range = counters = counter_values = nil
     _, t = Benchmark.realtime_block(:total_time) do
@@ -187,15 +188,15 @@ module Metric::CiMixin::Capture
       end_range   = ts.last
     end
 
-    _log.info "#{log_header} Capture for #{log_target}...Complete - Timings: #{t.inspect}"
+    _log.info "#{log_header} Capture for #{log_target}#{log_time}...Complete - Timings: #{t.inspect}"
 
     if start_range.nil?
-      _log.info "#{log_header} Skipping processing for #{log_target} as no metrics were captured."
+      _log.info "#{log_header} Skipping processing for #{log_target}#{log_time} as no metrics were captured."
       # Set the last capture on to end_time to prevent forever queueing up the same collection range
       update_attributes(:last_perf_capture_on => end_time || Time.now.utc) if interval_name == 'realtime'
     else
       if expected_start_range && start_range > expected_start_range
-        _log.warn "#{log_header} For #{log_target}, expected to get data as of [#{expected_start_range}], but got data as of [#{start_range}]."
+        _log.warn "#{log_header} For #{log_target}#{log_time}, expected to get data as of [#{expected_start_range}], but got data as of [#{start_range}]."
 
         # Raise ems_performance_gap_detected alert event to enable notification.
         MiqEvent.raise_evm_alert_event_queue(ext_management_system, "ems_performance_gap_detected",
