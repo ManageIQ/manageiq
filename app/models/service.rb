@@ -275,8 +275,8 @@ class Service < ApplicationRecord
   end
 
   def my_zone
-    first_vm = vms.first
-    first_vm.ext_management_system.zone.name unless first_vm.nil?
+    # Verify the VM has a provider or my_zone will return the miq_server zone by default
+    vms.detect(&:ext_management_system).try(:my_zone)
   end
 
   def service_action(requested, service_resource)
