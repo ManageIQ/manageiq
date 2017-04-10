@@ -52,7 +52,7 @@ module Metric::ChargebackHelper
     when ContainerProject.name
       [parent_ems, MiqEnterprise.my_enterprise].compact
     when Container.name
-      [parent_ems]
+      [parent_ems, MiqEnterprise.my_enterprise].compact
     end
   end
 end
