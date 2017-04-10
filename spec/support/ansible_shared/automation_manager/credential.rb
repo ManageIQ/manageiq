@@ -96,14 +96,14 @@ shared_examples_for "ansible credential" do
 
   context "Delete through API" do
     let(:credentials)   { double("AnsibleTowerClient::Collection", :find => credential) }
-    let(:credential)    { double("AnsibleTowerClient::Credential", :destroy! => nil, :id => 1) }
+    let(:credential)    { double("AnsibleTowerClient::Credential", :destroy! => nil, :id => '1') }
     let(:ansible_cred)  { described_class.create!(:resource => manager, :manager_ref => credential.id) }
     let(:expected_notify) do
       {
         :type    => :tower_op_success,
         :options => {
           :op_name => "#{described_class.name.demodulize} delete_in_provider",
-          :op_arg  => "manager_ref=#{credential.id}",
+          :op_arg  => {:manager_ref => credential.id}.to_s,
           :tower   => "Tower(manager_id: #{manager.id})"
         }
       }

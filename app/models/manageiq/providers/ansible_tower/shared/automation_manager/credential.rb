@@ -15,6 +15,12 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Credential
       params[:kind] = self::TOWER_KIND
       params
     end
+
+    def hide_secrets(params)
+      params.each_with_object({}) do |attr, h|
+        h[attr.first] = self::API_ATTRIBUTES[attr.first] && self::API_ATTRIBUTES[attr.first][:type] == :password ? '******' : attr.second
+      end
+    end
   end
 
   def provider_object(connection = nil)

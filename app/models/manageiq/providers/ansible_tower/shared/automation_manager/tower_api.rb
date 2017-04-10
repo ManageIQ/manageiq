@@ -22,17 +22,13 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
     end
 
     private
-
     def notify(op, manager_id, params, success)
-      notify_params = params
-      notify_params = params.each_with_object({}) do |attr, h|
-        h[attr.first] = self::API_ATTRIBUTES[attr.first] && self::API_ATTRIBUTES[attr.first][:type] == :password ? '******' : attr.second
-      end if const_defined?('API_ATTRIBUTES') && params.kind_of?(Hash)
+      params = hide_secrets(params) if respond_to? :hide_secrets
       Notification.create(
         :type    => success ? :tower_op_success : :tower_op_failure,
         :options => {
           :op_name => "#{name.demodulize} #{op}",
-          :op_arg  => notify_params.to_s,
+          :op_arg  => params.to_s,
           :tower   => "Tower(manager_id: #{manager_id})"
         }
       )
@@ -89,7 +85,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
   rescue AnsibleTowerClient::ClientError => error
     raise
   ensure
-    self.class.send('notify', 'delete_in_provider', manager.id, "manager_ref=#{manager_ref}", error.nil?)
+    self.class.send('notify', 'delete_in_provider', manager.id, {:manager_ref => manager_ref}, error.nil?)
   end
 
   def delete_in_provider_queue

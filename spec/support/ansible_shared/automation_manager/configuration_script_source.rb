@@ -81,14 +81,14 @@ shared_examples_for "ansible configuration_script_source" do
 
   context "Delete through API" do
     let(:projects)      { double("AnsibleTowerClient::Collection", :find => tower_project) }
-    let(:tower_project) { double("AnsibleTowerClient::Project", :destroy! => nil, :id => 1) }
+    let(:tower_project) { double("AnsibleTowerClient::Project", :destroy! => nil, :id => '1') }
     let(:project)       { described_class.create!(:manager => manager, :manager_ref => tower_project.id) }
     let(:expected_notify) do
       {
         :type    => :tower_op_success,
         :options => {
           :op_name => "#{described_class.name.demodulize} delete_in_provider",
-          :op_arg  => "manager_ref=#{tower_project.id}",
+          :op_arg  => {:manager_ref => tower_project.id}.to_s,
           :tower   => "Tower(manager_id: #{manager.id})"
         }
       }
