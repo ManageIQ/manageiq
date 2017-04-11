@@ -16,6 +16,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::MachineCred
   EXTRA_ATTRIBUTES = {
     :ssh_key_data => {
       :type       => :password,
+      :multiline  => true,
       :label      => N_('Private key'),
       :help_text  => N_('RSA or DSA private key to be used instead of password')
     },
