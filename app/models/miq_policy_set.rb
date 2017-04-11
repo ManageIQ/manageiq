@@ -113,9 +113,6 @@ class MiqPolicySet < ApplicationRecord
     fixtures = File.exist?(fixture_file) ? YAML.load_file(fixture_file) : []
     MiqPolicy.import_from_array(fixtures, :save => true)
 
-    where(:mode => nil).each do |ps|
-      _log.info("Updating [#{ps.name}]")
-      ps.update_attribute(:mode, "control")
-    end
+    where(:mode => nil).update_all(:mode => 'control')
   end
 end # class MiqPolicySet
