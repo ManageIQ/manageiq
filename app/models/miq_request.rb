@@ -41,6 +41,9 @@ class MiqRequest < ApplicationRecord
 
   delegate :allowed_tags,                :to => :workflow,   :prefix => :v,  :allow_nil => true
   delegate :class,                       :to => :workflow,   :prefix => :v_workflow
+  delegate :deny, :reason, :stamped_on,  :to => :first_approval
+  delegate :userid,                      :to => :requester, :prefix => true
+  delegate :request_task_class, :request_types, :task_description, :to => :class
 
   virtual_has_one :workflow
 
@@ -88,11 +91,6 @@ class MiqRequest < ApplicationRecord
   REQUEST_TYPE_TO_MODEL = MODEL_REQUEST_TYPES.values.each_with_object({}) do |i, h|
     i.each { |k, v| v.keys.each { |vk| h[vk] = k } }
   end
-
-
-  delegate :deny, :reason, :stamped_on, :to => :first_approval
-  delegate :userid, :to => :requester, :prefix => true
-  delegate :request_task_class, :request_types, :task_description, :to => :class
 
   def self.class_from_request_data(data)
     request_type = (data[:__request_type__] || data[:request_type]).try(:to_sym)
