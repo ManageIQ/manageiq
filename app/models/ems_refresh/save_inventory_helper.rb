@@ -50,17 +50,21 @@ module EmsRefresh::SaveInventoryHelper
     record_index = TypedIndex.new(association, find_key)
 
     new_records = []
-    hashes.each do |h|
-      found = save_inventory_with_findkey(association, h.except(*remove_keys), deletes_index, new_records, record_index)
-      save_child_inventory(found, h, child_keys)
+    ActiveRecord::Base.transaction do
+      hashes.each do |h|
+        found = save_inventory_with_findkey(association, h.except(*remove_keys), deletes_index, new_records, record_index)
+        save_child_inventory(found, h, child_keys)
+      end
     end
 
     # Delete the items no longer found
     deletes = deletes_index.values
     unless deletes.blank?
-      type = association.proxy_association.reflection.name
-      _log.info("[#{type}] Deleting #{log_format_deletes(deletes)}")
-      disconnect ? deletes.each(&:disconnect_inv) : association.delete(deletes)
+      ActiveRecord::Base.transaction do
+        type = association.proxy_association.reflection.name
+        _log.info("[#{type}] Deleting #{log_format_deletes(deletes)}")
+        disconnect ? deletes.each(&:disconnect_inv) : association.delete(deletes)
+      end
     end
 
     # Add the new items
@@ -77,7 +81,7 @@ module EmsRefresh::SaveInventoryHelper
     child_keys = Array.wrap(child_keys)
     remove_keys = Array.wrap(extra_keys) + child_keys + [:id]
     if child
-      child.update_attributes!(hash.except(:type, *remove_keys))
+      update_attributes!(child, hash, [:type, *remove_keys])
     else
       child = parent.send("create_#{type}!", hash.except(*remove_keys))
     end
@@ -91,10 +95,16 @@ module EmsRefresh::SaveInventoryHelper
       found = association.build(hash.except(:id))
       new_records << found
     else
-      found.update_attributes!(hash.except(:id, :type))
+      update_attributes!(found, hash, [:id, :type])
       deletes.delete(found) unless deletes.blank?
     end
     found
+  end
+
+  def update_attributes!(ar_model, attributes, remove_keys)
+    ar_model.assign_attributes(attributes.except(*remove_keys))
+    # HACK: Avoid empty BEGIN/COMMIT pair until fix is made for https://github.com/rails/rails/issues/17937
+    ar_model.save! if ar_model.changed?
   end
 
   def backup_keys(hash, keys)
