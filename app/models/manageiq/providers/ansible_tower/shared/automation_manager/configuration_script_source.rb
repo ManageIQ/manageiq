@@ -16,7 +16,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Configurati
   end
 
   REFRESH_ON_TOWER_SLEEP = 1.second
-  def refresh_on_tower
+  def refresh_in_provider
     with_provider_object do |project|
       return unless project.can_update?
 

@@ -4,7 +4,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::Inventory::Collector::Configur
   end
 
   def projects
-    target.refresh_on_tower
+    target.refresh_in_provider
     [project]
   end
 
