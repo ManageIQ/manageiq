@@ -1,6 +1,7 @@
 require 'appliance_console/logging'
 require 'appliance_console/prompts'
 require 'appliance_console/database_replication'
+require "appliance_console/logical_volume_management"
 require 'util/postgres_admin'
 require 'fileutils'
 require 'linux_admin'
@@ -12,7 +13,7 @@ module ApplianceConsole
     REGISTER_CMD    = 'repmgr standby register'.freeze
     REPMGRD_SERVICE = 'rh-postgresql95-repmgr'.freeze
 
-    attr_accessor :standby_host, :run_repmgrd_configuration
+    attr_accessor :disk, :standby_host, :run_repmgrd_configuration
 
     def initialize
       self.cluster_name      = nil
@@ -27,6 +28,7 @@ module ApplianceConsole
     def ask_questions
       clear_screen
       say("Establish Replication Standby Server\n")
+      self.disk = ask_for_disk("Standby database disk")
       ask_for_unique_cluster_node_number
       ask_for_database_credentials
       ask_for_standby_host
@@ -37,6 +39,9 @@ module ApplianceConsole
 
     def confirm
       super
+      say(<<-EOS) if disk
+        Database Disk:              #{disk.path}
+      EOS
       say(<<-EOS)
         Standby Host:               #{standby_host}
         Automatic Failover:         #{run_repmgrd_configuration ? "enabled" : "disabled"}
@@ -54,6 +59,8 @@ module ApplianceConsole
 
     def activate
       say("Configuring Replication Standby Server...")
+      initialize_postgresql_disk if disk
+      PostgresAdmin.prep_data_directory
       data_dir_empty? &&
         generate_cluster_name &&
         create_config_file(standby_host) &&
@@ -102,6 +109,19 @@ module ApplianceConsole
       Logging.logger.error(message)
       say(message)
       false
+    end
+
+    private
+
+    def initialize_postgresql_disk
+      log_and_feedback(__method__) do
+        LogicalVolumeManagement.new(:disk                => disk,
+                                    :mount_point         => PostgresAdmin.mount_point,
+                                    :name                => "pg",
+                                    :volume_group_name   => PostgresAdmin.volume_group_name,
+                                    :filesystem_type     => PostgresAdmin.database_disk_filesystem,
+                                    :logical_volume_path => PostgresAdmin.logical_volume_path).setup
+      end
     end
   end # class DatabaseReplicationStandby < DatabaseReplication
 end # module ApplianceConsole

@@ -26,13 +26,16 @@ describe ApplianceConsole::DatabaseReplicationStandby do
       expect(subject).to receive(:ask_for_database_credentials)
       expect(subject).to receive(:ask_for_standby_host)
       expect(subject).to receive(:ask_for_repmgrd_configuration)
+      expect(subject).to receive(:ask_for_disk).and_return("/dev/sdd")
     end
 
-    it "returns true when input is confirmed" do
+    it "sets the disk and returns true when input is confirmed" do
       expect(subject).to receive(:repmgr_configured?).and_return(false)
       expect(subject).to_not receive(:confirm_reconfiguration)
       expect(subject).to receive(:confirm).and_return(true)
       expect(subject.ask_questions).to be true
+
+      expect(subject.disk).to eq("/dev/sdd")
     end
 
     it "returns true when confirm_reconfigure and input is confirmed" do
@@ -58,8 +61,10 @@ describe ApplianceConsole::DatabaseReplicationStandby do
   end
 
   context "#activate" do
-    it "returns true when configure succeeds" do
+    before do
       subject.run_repmgrd_configuration = false
+      expect(PostgresAdmin).to receive(:prep_data_directory)
+
       expect(subject).to receive(:data_dir_empty?).and_return(true)
       expect(subject).to receive(:generate_cluster_name).and_return(true)
       expect(subject).to receive(:create_config_file).and_return(true)
@@ -67,19 +72,31 @@ describe ApplianceConsole::DatabaseReplicationStandby do
       expect(subject).to receive(:start_postgres).and_return(true)
       expect(subject).to receive(:register_standby_server).and_return(true)
       expect(subject).to receive(:write_pgpass_file).and_return(true)
+    end
+
+    it "returns true when configure succeeds" do
       expect(subject.activate).to be true
     end
 
     it "runs #start_repmgrd when run_repmgrd_configuration is set" do
       subject.run_repmgrd_configuration = true
-      expect(subject).to receive(:data_dir_empty?).and_return(true)
-      expect(subject).to receive(:generate_cluster_name).and_return(true)
-      expect(subject).to receive(:create_config_file).and_return(true)
-      expect(subject).to receive(:clone_standby_server).and_return(true)
-      expect(subject).to receive(:start_postgres).and_return(true)
-      expect(subject).to receive(:register_standby_server).and_return(true)
-      expect(subject).to receive(:write_pgpass_file).and_return(true)
       expect(subject).to receive(:start_repmgrd).and_return(true)
+      expect(subject.activate).to be true
+    end
+
+    it "configures the postgres disk when given a disk" do
+      subject.disk = "/dev/sdd"
+
+      lvm = double("ApplianceConsole::LogicalVolumeManagement")
+      expect(ApplianceConsole::LogicalVolumeManagement).to receive(:new)
+        .with(hash_including(:disk => "/dev/sdd")).and_return(lvm)
+      expect(lvm).to receive(:setup)
+      expect(subject.activate).to be true
+    end
+
+    it "doesn't configure a disk if disk is not set" do
+      subject.disk = nil
+      expect(ApplianceConsole::LogicalVolumeManagement).not_to receive(:new)
       expect(subject.activate).to be true
     end
   end
