@@ -166,8 +166,8 @@ class MiqRequest < ApplicationRecord
     MiqAeEvent.raise_evm_event(event_name, self, build_request_event(event_name))
     _log.info("Raised  event [#{event_name}] to Automate")
   rescue MiqAeException::Error => err
-    message = _("Error returned from %{name} event processing in Automate: %{error_message}") %
-                {:name => event_name, :error_message => err.message}
+    message = _("Error returned from %{name} event processing in Automate: %{error_message}") % {:name => event_name, :error_message => err.message}
+    _log.error(message)
     raise
   end
 
@@ -177,8 +177,8 @@ class MiqRequest < ApplicationRecord
     _log.info("Raised event [#{event_name}] to Automate")
     return ws
   rescue MiqAeException::Error => err
-    message = _("Error returned from %{name} event processing in Automate: %{error_message}") %
-                {:name => event_name, :error_message => err.message}
+    message = _("Error returned from %{name} event processing in Automate: %{error_message}") % {:name => event_name, :error_message => err.message}
+    _log.error(message)
     raise
   end
 
