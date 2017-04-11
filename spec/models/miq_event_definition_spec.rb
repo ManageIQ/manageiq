@@ -127,6 +127,7 @@ describe MiqEventDefinition do
 
     context 'with defaults in db' do
       before do
+        MiqEventDefinitionSet.seed
         described_class.seed_default_events
       end
 
