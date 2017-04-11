@@ -3,21 +3,36 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
 
   module ClassMethods
     def create_in_provider(manager_id, params)
-      params = provider_params(params) if respond_to? :provider_params
+      params = provider_params(params) if respond_to?(:provider_params)
       manager = ExtManagementSystem.find(manager_id)
       tower_object = provider_collection(manager).create!(params)
 
       refresh(manager)
       find_by!(:manager_id => manager.id, :manager_ref => tower_object.id)
+    rescue AnsibleTowerClient::ClientError, ActiveRecord::RecordNotFound => error
+      raise
+    ensure
+      notify('create_in_provider', manager.id, params, error.nil?)
     end
 
     def create_in_provider_queue(manager_id, params)
       manager = ExtManagementSystem.find(manager_id)
-      action = "Creating #{name} with name=#{params[:name] || params['name']}"
+      action = "Creating #{name} with name=#{params[:name]}"
       queue(manager.my_zone, nil, "create_in_provider", [manager_id, params], action)
     end
 
     private
+    def notify(op, manager_id, params, success)
+      params = hide_secrets(params) if respond_to?(:hide_secrets)
+      Notification.create(
+        :type    => success ? :tower_op_success : :tower_op_failure,
+        :options => {
+          :op_name => "#{name.demodulize} #{op}",
+          :op_arg  => params.to_s,
+          :tower   => "Tower(manager_id: #{manager_id})"
+        }
+      )
+    end
 
     def refresh(manager)
       # Get the record in our database
@@ -47,12 +62,16 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
 
   def update_in_provider(params)
     params.delete(:task_id) # in case this is being called through update_in_provider_queue which will stick in a :task_id
-    params = self.class.provider_params(params) if self.class.respond_to? :provider_params
+    params = self.class.provider_params(params) if self.class.respond_to?(:provider_params)
     with_provider_object do |provider_object|
       provider_object.update_attributes!(params)
     end
     self.class.send('refresh', manager)
     reload
+  rescue AnsibleTowerClient::ClientError => error
+    raise
+  ensure
+    self.class.send('notify', 'update_in_provider', manager.id, params, error.nil?)
   end
 
   def update_in_provider_queue(params)
@@ -63,6 +82,10 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
   def delete_in_provider
     with_provider_object(&:destroy!)
     self.class.send('refresh', manager)
+  rescue AnsibleTowerClient::ClientError => error
+    raise
+  ensure
+    self.class.send('notify', 'delete_in_provider', manager.id, {:manager_ref => manager_ref}, error.nil?)
   end
 
   def delete_in_provider_queue
