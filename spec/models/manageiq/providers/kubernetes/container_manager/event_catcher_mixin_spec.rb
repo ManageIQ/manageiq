@@ -100,24 +100,6 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin do
           'type'           => 'Warning'
         }
       end
-
-      it 'extracts POD_FAILEDSYNC data' do
-        expected_data = {
-          :timestamp            => '2016-07-25T11:04:06Z',
-          :kind                 => 'Pod',
-          :name                 => 'ruby-ex-4-6o0b5',
-          :namespace            => 'proj',
-          :reason               => 'FailedSync',
-          :message              => 'Error syncing pod, skipping: API error (500): Unknown device '\
-                                   'bd312cc17e3e1554ca5cb15468232c0d0cc51b0c25bf6fb487481237dab5d453\n',
-          :uid                  => 'e12e8bf2-4d8f-11e6-bcf3-525400c7c086',
-          :container_group_name => 'ruby-ex-4-6o0b5',
-          :container_namespace  => 'proj',
-          :event_type           => 'POD_FAILEDSYNC'
-        }
-        event = RecursiveOpenStruct.new(:object => kubernetes_event)
-        expect(test_class.new.extract_event_data(event)).to eq(expected_data)
-      end
     end
 
     context 'given replicator event' do
