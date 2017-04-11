@@ -72,12 +72,6 @@ module EmsRefresh::SaveInventoryNetwork
                 []
               end
 
-    hashes.each do |h|
-      %i(cloud_tenant orchestration_stack).each do |relation|
-        h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
-      end
-    end
-
     save_inventory_multi(ems.cloud_networks,
                          hashes,
                          deletes,
@@ -96,10 +90,6 @@ module EmsRefresh::SaveInventoryNetwork
                 []
               end
 
-    hashes.each do |h|
-      h[:orchestration_stack_id] = h.fetch_path(:orchestration_stack, :id)
-    end
-
     save_inventory_multi(ems.network_groups,
                          hashes,
                          deletes,
@@ -111,14 +101,11 @@ module EmsRefresh::SaveInventoryNetwork
 
   def save_cloud_subnets_inventory(network, hashes)
     hashes.each do |h|
-      %i(availability_zone parent_cloud_subnet).each do |relation|
-        h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
-      end
-
+      h[:cloud_network_id] = h.fetch_path(:cloud_network, :id) if h.key?(:cloud_network)
       h[:ems_id] = network.ems_id
     end
 
-    save_inventory_multi(network.cloud_subnets, hashes, :use_association, [:ems_ref], nil, [:network_router])
+    save_inventory_multi(network.cloud_subnets, hashes, :use_association, [:ems_ref], nil, [:network_router, :cloud_network])
 
     network.save!
     store_ids_for_new_records(network.cloud_subnets, hashes, :ems_ref)
@@ -135,15 +122,16 @@ module EmsRefresh::SaveInventoryNetwork
               end
 
     hashes.each do |h|
-      %i(cloud_tenant cloud_network orchestration_stack network_group).each do |relation|
-        h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
-      end
+      h[:cloud_network_id] = h.fetch_path(:cloud_network, :id)
+      h[:network_group_id] = h.fetch_path(:network_group, :id)
     end
 
-    save_inventory_multi(ems.security_groups, hashes,
+    save_inventory_multi(ems.security_groups,
+                         hashes,
                          deletes,
                          [:ems_ref],
-                         :firewall_rules)
+                         :firewall_rules,
+                         [:cloud_network, :network_group])
     store_ids_for_new_records(ems.security_groups, hashes, :ems_ref)
 
     # Reset the source_security_group_id for the firewall rules after all
@@ -168,12 +156,11 @@ module EmsRefresh::SaveInventoryNetwork
               end
 
     hashes.each do |h|
-      %i(vm cloud_tenant cloud_network network_port).each do |relation|
-        h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
-      end
+      h[:cloud_network_id] = h.fetch_path(:cloud_network, :id)
+      h[:network_port_id]  = h.fetch_path(:network_port, :id)
     end
 
-    save_inventory_multi(ems.floating_ips, hashes, deletes, [:ems_ref])
+    save_inventory_multi(ems.floating_ips, hashes, deletes, [:ems_ref], nil, [:cloud_network, :network_port])
     store_ids_for_new_records(ems.floating_ips, hashes, :ems_ref)
   end
 
@@ -211,15 +198,16 @@ module EmsRefresh::SaveInventoryNetwork
               end
 
     hashes.each do |h|
-      %i(cloud_tenant cloud_network network_group).each do |relation|
-        h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
-      end
+      h[:cloud_network_id] = h.fetch_path(:cloud_network, :id)
+      h[:network_group_id] = h.fetch_path(:network_group, :id)
     end
 
     save_inventory_multi(ems.network_routers,
                          hashes,
                          deletes,
-                         [:ems_ref])
+                         [:ems_ref],
+                         nil,
+                         [:cloud_network, :network_group])
     store_ids_for_new_records(ems.network_routers, hashes, :ems_ref)
   end
 
@@ -251,15 +239,24 @@ module EmsRefresh::SaveInventoryNetwork
     hashes.compact!
 
     hashes.each do |h|
-      %i(cloud_tenant device cloud_subnet).each do |relation|
-        h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
+      device = h.fetch_path(:device)
+      if device.kind_of?(Hash)
+        h.delete(:device)
+
+        h[:device_id]   = device[:id]
+        h[:device_type] = device[:type].constantize.base_class.name
       end
 
-      h[:security_groups] = (h.fetch_path(:security_groups) || []).map { |x| x.try(:[], :_object) }.compact.uniq
+      h[:security_group_ids] = (h.delete(:security_groups) || []).map { |x| x.try(:[], :id) }.compact.uniq
       h[:source] = mode
     end
 
-    save_inventory_multi(ems.network_ports, hashes, deletes, [:ems_ref], :cloud_subnet_network_ports)
+    save_inventory_multi(ems.network_ports,
+                         hashes,
+                         deletes,
+                         [:ems_ref],
+                         :cloud_subnet_network_ports,
+                         [:cloud_subnet])
 
     store_ids_for_new_records(ems.network_ports, hashes, :ems_ref)
   end
@@ -268,12 +265,15 @@ module EmsRefresh::SaveInventoryNetwork
     deletes = network_port.cloud_subnet_network_ports.reload.dup
 
     hashes.each do |h|
-      %i(cloud_subnet).each do |relation|
-        h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
-      end
+      h[:cloud_subnet_id] = h.fetch_path(:cloud_subnet, :id)
     end
 
-    save_inventory_multi(network_port.cloud_subnet_network_ports, hashes, deletes, [:cloud_subnet, :address])
+    save_inventory_multi(network_port.cloud_subnet_network_ports,
+                         hashes,
+                         deletes,
+                         [:cloud_subnet_id, :address],
+                         nil,
+                         [:cloud_subnet])
   end
 
   def save_load_balancer_pool_members_inventory(ems, hashes, target = nil)
@@ -285,12 +285,6 @@ module EmsRefresh::SaveInventoryNetwork
               else
                 []
               end
-
-    hashes.each do |h|
-      %i(vm).each do |relation|
-        h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
-      end
-    end
 
     save_inventory_multi(ems.load_balancer_pool_members,
                          hashes,
@@ -321,12 +315,13 @@ module EmsRefresh::SaveInventoryNetwork
     deletes = load_balancer_pool.load_balancer_pool_member_pools.reload.dup
 
     hashes.each do |h|
-      %i(load_balancer_pool_member).each do |relation|
-        h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
-      end
+      h[:load_balancer_pool_member_id] = h.fetch_path(:load_balancer_pool_member, :id)
     end
 
-    save_inventory_multi(load_balancer_pool.load_balancer_pool_member_pools, hashes, deletes,
+    save_inventory_multi(load_balancer_pool.load_balancer_pool_member_pools,
+                         hashes, deletes,
+                         [:load_balancer_pool_member_id],
+                         nil,
                          [:load_balancer_pool_member])
   end
 
@@ -341,16 +336,15 @@ module EmsRefresh::SaveInventoryNetwork
               end
 
     hashes.each do |h|
-      %i(load_balancer).each do |relation|
-        h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
-      end
+      h[:load_balancer_id] = h.fetch_path(:load_balancer, :id)
     end
 
     save_inventory_multi(ems.load_balancer_listeners,
                          hashes,
                          deletes,
                          [:ems_ref],
-                         :load_balancer_listener_pools)
+                         :load_balancer_listener_pools,
+                         [:load_balancer])
     store_ids_for_new_records(ems.load_balancer_listeners, hashes, :ems_ref)
   end
 
@@ -358,12 +352,15 @@ module EmsRefresh::SaveInventoryNetwork
     deletes = load_balancer_listener.load_balancer_listener_pools.reload.dup
 
     hashes.each do |h|
-      %i(load_balancer_pool).each do |relation|
-        h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
-      end
+      h[:load_balancer_pool_id] = h.fetch_path(:load_balancer_pool, :id)
     end
 
-    save_inventory_multi(load_balancer_listener.load_balancer_listener_pools, hashes, deletes, [:load_balancer_pool])
+    save_inventory_multi(load_balancer_listener.load_balancer_listener_pools,
+                         hashes,
+                         deletes,
+                         [:load_balancer_pool_id],
+                         nil,
+                         [:load_balancer_pool])
   end
 
   def save_load_balancer_health_checks_inventory(ems, hashes, target = nil)
@@ -377,16 +374,16 @@ module EmsRefresh::SaveInventoryNetwork
               end
 
     hashes.each do |h|
-      %i(load_balancer load_balancer_listener).each do |relation|
-        h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
-      end
+      h[:load_balancer_id] = h.fetch_path(:load_balancer, :id)
+      h[:load_balancer_listener_id] = h.fetch_path(:load_balancer_listener, :id)
     end
 
     save_inventory_multi(ems.load_balancer_health_checks,
                          hashes,
                          deletes,
                          [:ems_ref],
-                         :load_balancer_health_check_members)
+                         :load_balancer_health_check_members,
+                         [:load_balancer, :load_balancer_listener])
     store_ids_for_new_records(ems.load_balancer_health_checks, hashes, :ems_ref)
   end
 
@@ -394,19 +391,22 @@ module EmsRefresh::SaveInventoryNetwork
     deletes = load_balancer_health_check.load_balancer_health_check_members.reload.dup
 
     hashes.each do |h|
-      %i(load_balancer_pool_member).each do |relation|
-        h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
-      end
+      h[:load_balancer_pool_member_id] = h.fetch_path(:load_balancer_pool_member, :id)
     end
 
-    save_inventory_multi(load_balancer_health_check.load_balancer_health_check_members, hashes, deletes,
+    save_inventory_multi(load_balancer_health_check.load_balancer_health_check_members,
+                         hashes,
+                         deletes,
+                         [:load_balancer_pool_member_id],
+                         nil,
                          [:load_balancer_pool_member])
   end
 
   def link_cloud_subnets_to_network_routers(hashes)
+    return if hashes.blank?
+
     hashes.each do |hash|
-      network_router = hash.fetch_path(:network_router, :_object)
-      hash[:_object].update_attributes(:network_router => network_router)
+      CloudSubnet.where(:id => hash[:id]).update_all(:network_router_id => hash.fetch_path(:network_router, :id))
     end
   end
 end

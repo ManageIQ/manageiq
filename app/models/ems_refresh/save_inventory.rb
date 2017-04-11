@@ -53,6 +53,8 @@ module EmsRefresh::SaveInventory
     _log.info "#{log_header} Duplicate unique values found: #{dup_vms_uids.inspect}" unless dup_vms_uids.empty?
 
     invalids_found = false
+    # Clear vms, so GC can clean them
+    vms = nil
 
     ActiveRecord::Base.transaction do
       hashes.each do |h|
@@ -69,7 +71,7 @@ module EmsRefresh::SaveInventory
         h[:cloud_network_id]       = key_backup.fetch_path(:cloud_network, :id)
         h[:cloud_subnet_id]        = key_backup.fetch_path(:cloud_subnet, :id)
         h[:cloud_tenant_id]        = key_backup.fetch_path(:cloud_tenant, :id)
-        h[:cloud_tenants]          = key_backup.fetch_path(:cloud_tenants).compact.map { |x| x[:_object] } if key_backup.fetch_path(:cloud_tenants, 0, :_object)
+        h[:cloud_tenant_ids]       = key_backup.fetch_path(:cloud_tenants).compact.map { |x| x[:id] } if key_backup.fetch_path(:cloud_tenants, 0, :id)
         h[:orchestration_stack_id] = key_backup.fetch_path(:orchestration_stack, :id)
         begin
           raise MiqException::MiqIncompleteData if h[:invalid]
@@ -96,7 +98,7 @@ module EmsRefresh::SaveInventory
             h[:location] = "unknown" if h[:location].blank?
 
             # build a type-specific vm or template
-            found = ems.vms_and_templates.build(h)
+            found = ems.vms_and_templates.klass.new(h)
           else
             vms_by_uid_ems[h[:uid_ems]].delete(found)
             h.delete(:type)
@@ -115,8 +117,6 @@ module EmsRefresh::SaveInventory
 
           found.save!
           h[:id] = found.id
-          found.reload
-          h[:_object] = found
         rescue => err
           # If a vm failed to process, mark it as invalid and log an error
           h[:invalid] = invalids_found = true
