@@ -929,6 +929,52 @@ describe "Providers API" do
     end
   end
 
+  context 'cloud tenants subcollection' do
+    before do
+      @provider = FactoryGirl.create(:ems_openstack)
+      @cloud_tenant = FactoryGirl.create(:cloud_tenant, :ext_management_system => @provider)
+    end
+
+    it 'queries all cloud tenants' do
+      api_basic_authorize subcollection_action_identifier(:providers, :cloud_tenants, :read, :get)
+      expected = {
+        'resources' => [
+          { 'href' => a_string_matching("#{providers_url(@provider.id)}/cloud_tenants/#{@cloud_tenant.id}") }
+        ]
+
+      }
+      run_get("#{providers_url(@provider.id)}/cloud_tenants")
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it "will not show a provider's cloud tenants without the appropriate role" do
+      api_basic_authorize
+
+      run_get("#{providers_url(@provider.id)}/cloud_tenants")
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'queries a single cloud tenant' do
+      api_basic_authorize subcollection_action_identifier(:providers, :cloud_tenants, :read, :get)
+
+      run_get("#{providers_url(@provider.id)}/cloud_tenants/#{@cloud_tenant.id}")
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include('id' => @cloud_tenant.id)
+    end
+
+    it "will not show a provider's cloud tenant without the appropriate role" do
+      api_basic_authorize
+
+      run_get("#{providers_url(@provider.id)}/cloud_tenants/#{@cloud_tenant.id}")
+
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
+
   describe 'edit custom_attributes on providers' do
     context 'provider_class=provider' do
       let(:generic_provider) { FactoryGirl.create(:provider) }
