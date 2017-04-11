@@ -13,8 +13,7 @@ class MiqProvisionRequest < MiqRequest
   validates_inclusion_of :request_state,
                          :in      => %w(pending provisioned finished) + ACTIVE_STATES,
                          :message => "should be pending, #{ACTIVE_STATES.join(", ")}, provisioned, or finished"
-  validates_presence_of  :source_id,      :message => "must have valid template"
-  validate               :must_have_valid_vm
+  validates :source, :presence => true
   validate               :must_have_user
 
   default_value_for :options,      :number_of_vms => 1
@@ -37,10 +36,6 @@ class MiqProvisionRequest < MiqRequest
   def self.new_request_task(attribs)
     klass = request_task_class_from(attribs)
     klass.new(attribs)
-  end
-
-  def must_have_valid_vm
-    errors.add(:vm_template, "must have valid VM (must be in vmdb)") if vm_template.nil?
   end
 
   def set_description(force = false)
