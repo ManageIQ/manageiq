@@ -23,6 +23,7 @@ class EvmDatabase
     RssFeed
     MiqWidget
     MiqAction
+    MiqEventDefinitionSet
     MiqEventDefinition
     MiqPolicySet
     ChargebackRateDetailMeasure

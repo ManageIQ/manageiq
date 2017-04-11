@@ -117,7 +117,6 @@ class MiqEventDefinition < ApplicationRecord
   end
 
   def self.seed
-    MiqEventDefinitionSet.seed
     seed_default_events
     seed_default_definitions
   end
