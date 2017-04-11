@@ -621,6 +621,8 @@
         :identifier: embedded_configuration_script_source_delete
       - :name: create
         :identifier: embedded_configuration_script_source_add
+      - :name: refresh
+        :identifier: embedded_configuration_script_source_refresh
     :resource_actions:
       :get:
       - :name: read
@@ -630,6 +632,8 @@
         :identifier: embedded_configuration_script_source_edit
       - :name: delete
         :identifier: embedded_configuration_script_source_delete
+      - :name: refresh
+        :identifier: embedded_configuration_script_source_refresh
       :delete:
       - :name: delete
         :identifier: embedded_configuration_script_source_delete
