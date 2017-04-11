@@ -35,7 +35,7 @@ shared_examples_for "refresh configuration_script_source" do |ansible_provider, 
 
     2.times do
       VCR.use_cassette(cassette_path) do
-        EmsRefresh.refresh(configuration_script_source)
+        EmsRefresh.refresh([[configuration_script_source.class.to_s, configuration_script_source.id]])
 
         expect(automation_manager.reload.last_refresh_error).to be_nil
         expect(automation_manager.configuration_script_sources.count).to eq(2)
