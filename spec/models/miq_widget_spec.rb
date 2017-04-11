@@ -1,6 +1,6 @@
 describe MiqWidget do
   describe '.seed' do
-    before { MiqReport.seed }
+    before { [MiqReport, RssFeed].each(&:seed) }
     include_examples(".seed called multiple times", 21)
   end
 

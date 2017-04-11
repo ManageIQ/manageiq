@@ -539,7 +539,6 @@ class MiqWidget < ApplicationRecord
   end
 
   def self.seed
-    RssFeed.seed
     sync_from_dir
     MiqWidgetSet.seed
   end
