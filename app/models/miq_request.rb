@@ -107,6 +107,10 @@ class MiqRequest < ApplicationRecord
     self
   end
 
+  def create_request
+    self
+  end
+
   def resource_type
     self.class.name
   end
@@ -312,10 +316,6 @@ class MiqRequest < ApplicationRecord
   def customize_request_task_attributes(req_task_attrs, idx)
     req_task_attrs[:source_id]   = idx
     req_task_attrs[:source_type] = self.class::SOURCE_CLASS_NAME
-  end
-
-  def create_request
-    self
   end
 
   def set_description(force = false)
