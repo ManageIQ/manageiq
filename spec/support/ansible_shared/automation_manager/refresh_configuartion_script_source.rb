@@ -17,11 +17,13 @@ shared_examples_for "refresh configuration_script_source" do |ansible_provider, 
   it "will perform a targeted refresh" do
     # TODO: use this factory if running for embedded tower
     # factory :embedded_ansible_configuration_script_source,
+    credential = FactoryGirl.create(:ansible_scm_credential, :name => '2keep')
+    automation_manager.credentials << credential
     configuration_script_source = FactoryGirl.create(:ansible_configuration_script_source,
-                                                     :manager     => automation_manager,
-                                                     :manager_ref => 472)
+                                                     :authentication => credential,
+                                                     :manager        => automation_manager,
+                                                     :manager_ref    => 472)
     configuration_script_source.configuration_script_payloads.create!(:manager_ref => '2b_rm', :name => '2b_rm')
-    configuration_script_source.create_authentication!(:name => '2keep')
     configuration_script_source_other = FactoryGirl.create(:ansible_configuration_script_source,
                                                            :manager_ref => 5,
                                                            :manager     => automation_manager,
@@ -51,7 +53,7 @@ shared_examples_for "refresh configuration_script_source" do |ansible_provider, 
         expect(ConfigurationScriptPayload.count).to eq(81)
         expect(configuration_script_source.configuration_script_payloads.count).to eq(81)
         expect(configuration_script_source.authentication.name).to eq('db-github')
-        expect(Authentication.where(:name => '2keep').count).to eq(1)
+        expect(credential.reload).to eq(credential)
 
         expect(configuration_script_source_other.name).to eq("Dont touch this")
       end
