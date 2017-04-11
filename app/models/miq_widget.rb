@@ -540,7 +540,6 @@ class MiqWidget < ApplicationRecord
 
   def self.seed
     sync_from_dir
-    MiqWidgetSet.seed
   end
 
   def self.seed_widget(pattern)
