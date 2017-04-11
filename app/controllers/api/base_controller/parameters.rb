@@ -47,7 +47,7 @@ module Api
         if @req.attributes.empty? && @additional_attributes
           Array(@additional_attributes) | ID_ATTRS
         elsif !@req.attributes.empty?
-          @req.attributes
+          @req.attributes | ID_ATTRS
         else
           "all"
         end

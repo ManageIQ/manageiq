@@ -17,6 +17,16 @@ RSpec.describe "reports API" do
     expect(response).to have_http_status(:ok)
   end
 
+  it 'returns only the requested attributes' do
+    FactoryGirl.create(:miq_report_with_results)
+    api_basic_authorize collection_action_identifier(:reports, :read, :get)
+
+    run_get reports_url, :expand => 'resources', :attributes => 'template_type'
+
+    expect(response).to have_http_status(:ok)
+    response.parsed_body['resources'].each { |res| expect_hash_to_have_only_keys(res, %w(href id template_type)) }
+  end
+
   it "can fetch a report" do
     report = FactoryGirl.create(:miq_report_with_results)
 

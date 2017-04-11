@@ -47,13 +47,13 @@ RSpec.describe "categories API" do
   end
 
   it "will only return the requested attributes" do
-    FactoryGirl.create(:category)
+    FactoryGirl.create(:category, :example_text => 'foo')
     api_basic_authorize collection_action_identifier(:categories, :read, :get)
 
-    run_get categories_url, :expand => 'resources', :attributes => 'id'
+    run_get categories_url, :expand => 'resources', :attributes => 'example_text'
 
     expect(response).to have_http_status(:ok)
-    expect_hash_to_have_only_keys(response.parsed_body['resources'].first, %w(href id))
+    response.parsed_body['resources'].each { |res| expect_hash_to_have_only_keys(res, %w(href id example_text)) }
   end
 
   it "can list all the tags under a category" do

@@ -29,10 +29,10 @@ describe "Service Catalogs API" do
       FactoryGirl.create(:service_template_catalog)
       api_basic_authorize collection_action_identifier(:service_catalogs, :read, :get)
 
-      run_get service_catalogs_url, :expand => 'resources', :attributes => 'id'
+      run_get service_catalogs_url, :expand => 'resources', :attributes => 'name'
 
       expect(response).to have_http_status(:ok)
-      expect_hash_to_have_only_keys(response.parsed_body['resources'].first, %w(href id))
+      response.parsed_body['resources'].each { |res| expect_hash_to_have_only_keys(res, %w(href id name)) }
     end
   end
 

@@ -196,18 +196,18 @@ module Api
         expand_resources?(sc) || expand_action_resource?(sc) || resource_requested?(sc)
       end
 
-      # Expand resource if:
-      # expand='resources' &&  no attributes selected && collection is configured for subcollection
+      # Expand if: expand='resources' && no attributes specified && subcollection is configured
       def expand_resources?(sc)
         @req.expand?('resources') && @req.attributes.empty? && collection_config.show?(sc)
       end
 
-      # Expand resource if it is not a get but resource should be expanded
+      # Expand if: resource is being returned and subcollection is configured
+      # IE an update to /service_catalogs expects service_templates as part of its resource
       def expand_action_resource?(sc)
         @req.method != :get && collection_config.show?(sc)
       end
 
-      # Expand if explicitly requested
+      # Expand if: explicitly requested
       def resource_requested?(sc)
         @req.expand?(sc)
       end
