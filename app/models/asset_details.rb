@@ -3,6 +3,6 @@ class AssetDetails < ApplicationRecord
 
   acts_as_miq_taggable
 
-  belongs_to :physical_server
+  belongs_to :physical_server, :inverse_of => :asset_details
 
 end
