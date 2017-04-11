@@ -105,7 +105,7 @@ module ApplicationController::ReportDownloads
     options = session[:paged_view_search_options].merge(:page => nil, :per_page => nil) # Get all pages
     @view.table, _attrs = @view.paged_view_search(options) # Get the records
 
-    @view.title = _(@view.title)
+    @view.title = _(@view.title.pluralize)
     @view.headers.map! { |header| _(header) }
 
     @filename = filename_timestamp(@view.title)
