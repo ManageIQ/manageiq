@@ -1,4 +1,4 @@
-shared_examples_for "refresh configuration_script_source" do |ansible_provider, manager_class, _ems_type, cassette_path|
+shared_examples_for "refresh configuration_script_source" do |ansible_provider, manager_class, ems_type, cassette_path|
   let(:tower_url) { ENV['TOWER_URL'] || "https://dev-ansible-tower3.example.com/api/v1/" }
   let(:auth_userid) { ENV['TOWER_USER'] || 'testuser' }
   let(:auth_password) { ENV['TOWER_PASSWORD'] || 'secret' }
@@ -15,16 +15,14 @@ shared_examples_for "refresh configuration_script_source" do |ansible_provider, 
   let(:manager_class) { manager_class }
 
   it "will perform a targeted refresh" do
-    # TODO: use this factory if running for embedded tower
-    # factory :embedded_ansible_configuration_script_source,
-    credential = FactoryGirl.create(:ansible_scm_credential, :name => '2keep')
+    credential = FactoryGirl.create(:"#{ems_type}_scm_credential", :name => '2keep')
     automation_manager.credentials << credential
-    configuration_script_source = FactoryGirl.create(:ansible_configuration_script_source,
+    configuration_script_source = FactoryGirl.create(:"#{ems_type}_configuration_script_source",
                                                      :authentication => credential,
                                                      :manager        => automation_manager,
                                                      :manager_ref    => 472)
     configuration_script_source.configuration_script_payloads.create!(:manager_ref => '2b_rm', :name => '2b_rm')
-    configuration_script_source_other = FactoryGirl.create(:ansible_configuration_script_source,
+    configuration_script_source_other = FactoryGirl.create(:"#{ems_type}_configuration_script_source",
                                                            :manager_ref => 5,
                                                            :manager     => automation_manager,
                                                            :name        => 'Dont touch this')
@@ -51,6 +49,7 @@ shared_examples_for "refresh configuration_script_source" do |ansible_provider, 
 
         expect(configuration_script_source.name).to eq("targeted_refresh")
         expect(ConfigurationScriptPayload.count).to eq(81)
+        expect(ConfigurationScriptPayload.where(:name => '2b_rm')).to be_empty
         expect(configuration_script_source.configuration_script_payloads.count).to eq(81)
         expect(configuration_script_source.authentication.name).to eq('db-github')
         expect(credential.reload).to eq(credential)

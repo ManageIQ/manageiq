@@ -113,4 +113,8 @@ FactoryGirl.define do
   factory :ansible_scm_credential,
           :parent => :automation_manager_authentication,
           :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::ScmCredential"
+
+  factory :embedded_ansible_scm_credential,
+          :parent => :automation_manager_authentication,
+          :class  => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ScmCredential"
 end
