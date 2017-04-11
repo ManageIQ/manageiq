@@ -48,10 +48,11 @@ describe Dialog do
       mock_engine = double(:root => Rails.root)
       expect(Vmdb::Plugins.instance).to receive(:registered_provider_plugins).and_return([mock_engine])
 
-      described_class.with_constants(:DIALOG_DIR_PLUGIN => test_file_path) do
+      described_class.with_constants(:DIALOG_DIR_PLUGIN => test_file_path, :DIALOG_DIR_CORE => 'non-existent-dir') do
         expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
           Rails.root.join(test_file_path, "seed_test.yaml").to_path
         )
+        expect(mock_engine).to receive(:root)
         described_class.seed
       end
     end
