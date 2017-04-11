@@ -78,6 +78,12 @@ class Storage < ApplicationRecord
     end
   end
 
+  supports :delete do
+    if vms_and_templates.any? || hosts.any?
+      unsupported_reason_add(:delete, _("Only storage without VMs and Hosts can be removed"))
+    end
+  end
+
   def to_s
     name
   end
