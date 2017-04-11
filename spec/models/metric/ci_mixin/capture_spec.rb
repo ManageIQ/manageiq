@@ -86,6 +86,8 @@ describe Metric::CiMixin::Capture do
       Timecop.freeze do
         Timecop.travel(Time.now.end_of_day - 6.hours)
         verify_perf_capture_queue(nil, 1)
+        Timecop.travel(Time.now + 20.minutes)
+        verify_perf_capture_queue(nil, 1)
       end
     end
 
@@ -110,11 +112,62 @@ describe Metric::CiMixin::Capture do
       Timecop.freeze do
         # set a specific time of day to avoid sporadic test failures that fall on the exact right time to bump the
         # queue items to 12 instead of 11
-        Timecop.travel(Time.now.end_of_day - 6.hours)
+        current_time = Time.now.end_of_day - 6.hours
+        Timecop.travel(current_time)
         last_perf_capture_on = (10.days + 5.hours + 23.minutes).ago
         verify_perf_capture_queue(last_perf_capture_on, 11)
-        Timecop.travel(Time.now + 20.minutes)
+        Timecop.travel(current_time + 20.minutes)
         verify_perf_capture_queue(last_perf_capture_on, 11)
+      end
+    end
+  end
+
+  context "historical with capture days > 0 and multiple attempts" do
+    def verify_perf_capture_queue_historical(last_perf_capture_on, total_queue_items)
+      @vm.last_perf_capture_on = last_perf_capture_on
+      @vm.perf_capture_queue("historical")
+      expect(MiqQueue.count).to eq total_queue_items
+    end
+
+    it "when last_perf_capture_on is nil(first time)" do
+      MiqQueue.delete_all
+      Timecop.freeze do
+        allow(Metric::Capture).to receive(:historical_days).and_return(7)
+        current_time = Time.now.end_of_day - 6.hours
+        Timecop.travel(current_time)
+        verify_perf_capture_queue_historical(nil, 8)
+        Timecop.travel(current_time + 20.minutes)
+        verify_perf_capture_queue_historical(nil, 8)
+      end
+    end
+
+    it "when last_perf_capture_on is very old" do
+      MiqQueue.delete_all
+      Timecop.freeze do
+        # set a specific time of day to avoid sporadic test failures that fall on the exact right time to bump the
+        # queue items to 12 instead of 11
+        allow(Metric::Capture).to receive(:historical_days).and_return(7)
+        current_time = Time.now.end_of_day - 6.hours
+        last_capture_on = (10.days + 5.hours + 23.minutes).ago
+        Timecop.travel(current_time)
+        verify_perf_capture_queue_historical(last_capture_on, 8)
+        Timecop.travel(current_time + 20.minutes)
+        verify_perf_capture_queue_historical(last_capture_on, 8)
+      end
+    end
+
+    it "when last_perf_capture_on is fairly recent" do
+      MiqQueue.delete_all
+      Timecop.freeze do
+        # set a specific time of day to avoid sporadic test failures that fall on the exact right time to bump the
+        # queue items to 12 instead of 11
+        allow(Metric::Capture).to receive(:historical_days).and_return(7)
+        current_time = Time.now.end_of_day - 6.hours
+        last_capture_on = (10.days + 5.hours + 23.minutes).ago
+        Timecop.travel(current_time)
+        verify_perf_capture_queue_historical(last_capture_on, 8)
+        Timecop.travel(current_time + 20.minutes)
+        verify_perf_capture_queue_historical(last_capture_on, 8)
       end
     end
   end
