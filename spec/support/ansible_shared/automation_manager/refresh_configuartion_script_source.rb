@@ -19,7 +19,8 @@ shared_examples_for "refresh configuration_script_source" do |ansible_provider, 
     # factory :embedded_ansible_configuration_script_source,
     configuration_script_source = FactoryGirl.create(:ansible_configuration_script_source,
                                                      :manager     => automation_manager,
-                                                     :manager_ref => 472,)
+                                                     :manager_ref => 472)
+    configuration_script_source.configuration_script_payloads.create!(:manager_ref => '2b_rm', :name => '2b_rm')
     configuration_script_source_other = FactoryGirl.create(:ansible_configuration_script_source,
                                                            :manager_ref => 5,
                                                            :manager     => automation_manager,
