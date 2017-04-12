@@ -156,7 +156,7 @@ module ApplicationController::PolicySupport
     if ids.blank?
       ids = [find_id_with_rbac(db, params[:id])]
     end
-    if ids.length < 1
+    if ids.empty?
       add_flash(_("One or more %{model} must be selected to Policy assignment") % {
         :model => Dictionary.gettext(db.to_s, :type => :model, :notfound => :titleize, :plural => true)}, :error)
       @refresh_div = "flash_msg_div"
