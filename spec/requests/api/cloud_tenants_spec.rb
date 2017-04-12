@@ -3,6 +3,7 @@ RSpec.describe 'CloudTenants API' do
     it 'lists all cloud tenants with an appropriate role' do
       cloud_tenant = FactoryGirl.create(:cloud_tenant)
       api_basic_authorize collection_action_identifier(:cloud_tenants, :read, :get)
+      run_get(cloud_tenants_url)
 
       expected = {
         'count'     => 1,
@@ -12,8 +13,6 @@ RSpec.describe 'CloudTenants API' do
           hash_including('href' => a_string_matching(cloud_tenants_url(cloud_tenant.id)))
         ]
       }
-      run_get(cloud_tenants_url)
-
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)
     end
