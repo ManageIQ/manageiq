@@ -506,7 +506,7 @@
     :subcollection_actions:
       :get:
       - :name: read
-        :identifier: cloud_tenant_show
+        :identifier: cloud_tenant_show_list
     :subresource_actions:
       :get:
       - :name: read
