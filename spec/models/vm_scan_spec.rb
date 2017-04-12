@@ -47,7 +47,7 @@ describe VmScan do
       expect(@vm.storage2hosts).to eq([@host])
     end
 
-    context "without MiqVimBrokerWorker record," do
+    context "without VimBrokerWorker record," do
       it "should not be dispatched" do
         JobProxyDispatcher.dispatch
         @job.reload
@@ -56,7 +56,7 @@ describe VmScan do
       end
     end
 
-    context "without Broker Running and with valid MiqVimBrokerWorker record," do
+    context "without Broker Running and with valid VimBrokerWorker record," do
       before(:each) do
         @vim_broker_worker = FactoryGirl.create(:miq_vim_broker_worker, :miq_server_id => @server.id)
       end
@@ -265,15 +265,15 @@ describe VmScan do
             allow(MiqServer).to receive(:use_broker_for_embedded_proxy?).and_return(true)
           end
 
-          it "sends signal :broker_unavailable and :snapshot_complete if there is no MiqVimBrokerWorker available" do
-            allow(MiqVimBrokerWorker).to receive(:available?).and_return(false)
+          it "sends signal :broker_unavailable and :snapshot_complete if there is no VimBrokerWorker available" do
+            allow(ManageIQ::Providers::Vmware::InfraManager::VimBrokerWorker).to receive(:available?).and_return(false)
             expect(@job).to receive(:signal).with(:broker_unavailable)
             expect(@job).not_to receive(:signal).with(:snapshot_complete)
             @job.call_snapshot_create
           end
 
           it "logs user event and sends signal :snapshot_complete" do
-            allow(MiqVimBrokerWorker).to receive(:available?).and_return(true)
+            allow(ManageIQ::Providers::Vmware::InfraManager::VimBrokerWorker).to receive(:available?).and_return(true)
             expect(@job).not_to receive(:signal).with(:broker_unavailable)
             expect(@job).to receive(:signal).with(:snapshot_complete)
             expect(@job).to receive(:log_user_event)
@@ -294,7 +294,7 @@ describe VmScan do
     end
 
     describe "#wait_for_vim_broker" do
-      it "waits 60 seconds inside loop and send signal :start_snapshot if MiqVimBrokerWorker is available" do
+      it "waits 60 seconds inside loop and send signal :start_snapshot if VimBrokerWorker is available" do
         allow(@job).to receive(:loop).and_yield
         expect(@job).to receive(:sleep).with(60)
         expect(@job).to receive(:signal).with(:start_snapshot)

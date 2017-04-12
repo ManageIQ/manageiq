@@ -64,7 +64,7 @@ describe JobProxyDispatcher do
         context "with a vm without a storage" do
           before(:each) do
             # Test a vm without a storage (ie, removed from VC but retained in the VMDB)
-            allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
+            allow(ManageIQ::Providers::Vmware::InfraManager::VimBrokerWorker).to receive(:available_in_zone?).and_return(true)
             @vm = @vms.first
             @vm.storage = nil
             @vm.save
@@ -80,7 +80,7 @@ describe JobProxyDispatcher do
         context "with a Microsoft vm without a storage" do
           before(:each) do
             # Test a Microsoft vm without a storage
-            allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
+            allow(ManageIQ::Providers::Vmware::InfraManager::VimBrokerWorker).to receive(:available_in_zone?).and_return(true)
             @vm = @vms.first
             @vm.storage = nil
             @vm.vendor = "microsoft"
@@ -96,7 +96,7 @@ describe JobProxyDispatcher do
         context "with a Microsoft vm with a Microsoft storage" do
           before(:each) do
             # Test a Microsoft vm without a storage
-            allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
+            allow(ManageIQ::Providers::Vmware::InfraManager::VimBrokerWorker).to receive(:available_in_zone?).and_return(true)
             @vm = @vms.first
             @vm.storage.store_type = "CSVFS"
             @vm.vendor = "microsoft"
@@ -112,7 +112,7 @@ describe JobProxyDispatcher do
         context "with a Microsoft vm with an invalid storage" do
           before(:each) do
             # Test a Microsoft vm without a storage
-            allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
+            allow(ManageIQ::Providers::Vmware::InfraManager::VimBrokerWorker).to receive(:available_in_zone?).and_return(true)
             @vm = @vms.first
             @vm.storage.store_type = "XFS"
             @vm.vendor = "microsoft"
@@ -129,7 +129,7 @@ describe JobProxyDispatcher do
 
       context "with jobs, a default smartproxy for repo scanning" do
         before(:each) do
-          allow(MiqVimBrokerWorker).to receive(:available?).and_return(true)
+          allow(ManageIQ::Providers::Vmware::InfraManager::VimBrokerWorker).to receive(:available?).and_return(true)
           # JobProxyDispatcher.stub(:start_job_on_proxy).and_return(nil)
           # MiqProxy.any_instance.stub(:concurrent_job_max).and_return(1)
           @repo_proxy = @proxies.last

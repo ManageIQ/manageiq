@@ -71,7 +71,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqStorageMetricsCollectorWorker
     MiqWebsocketWorker
     MiqUiWorker
-    MiqVimBrokerWorker
+    ManageIQ::Providers::Vmware::InfraManager::VimBrokerWorker
     MiqVmdbStorageBridgeWorker
     MiqWebServiceWorker
   ).freeze
@@ -129,7 +129,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqPriorityWorker
     MiqWebServiceWorker
     MiqEmsRefreshCoreWorker
-    MiqVimBrokerWorker
+    ManageIQ::Providers::Vmware::InfraManager::VimBrokerWorker
     ManageIQ::Providers::Vmware::CloudManager::EventCatcher
     ManageIQ::Providers::Vmware::InfraManager::EventCatcher
     ManageIQ::Providers::Redhat::InfraManager::EventCatcher

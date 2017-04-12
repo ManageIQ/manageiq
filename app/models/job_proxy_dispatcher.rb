@@ -20,7 +20,7 @@ class JobProxyDispatcher
 
       # Skip work if there are no jobs to dispatch
       if jobs_to_dispatch.length > 0
-        broker_available, = Benchmark.realtime_block(:miq_vim_broker_available) { MiqVimBrokerWorker.available_in_zone?(@zone) }
+        broker_available, = Benchmark.realtime_block(:miq_vim_broker_available) { ManageIQ::Providers::Vmware::InfraManager::VimBrokerWorker.available_in_zone?(@zone) }
         logged_broker_unavailable = false
 
         Benchmark.realtime_block(:active_vm_scans) { active_vm_scans_by_zone }

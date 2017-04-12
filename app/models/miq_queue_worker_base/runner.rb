@@ -93,7 +93,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
 
   def message_delivery_suspended?
     if self.class.require_vim_broker?
-      return true unless MiqVimBrokerWorker.available?
+      return true unless ManageIQ::Providers::Vmware::InfraManager::VimBrokerWorker.available?
     end
 
     false

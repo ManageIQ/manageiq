@@ -42,7 +42,7 @@ module MiqServer::WorkerManagement::Monitor
     _log.warn(msg)
     MiqEvent.raise_evm_event_queue(w.miq_server, "evm_worker_killed", :event_details => msg, :type => w.class.name)
     w.kill
-    MiqVimBrokerWorker.cleanup_for_pid(w.pid)
+    ManageIQ::Providers::Vmware::InfraManager::VimBrokerWorker.cleanup_for_pid(w.pid)
   end
 
   def sync_workers
