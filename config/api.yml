@@ -679,6 +679,8 @@
       :post:
       - :name: edit
       - :name: delete
+      :delete:
+      - :name: delete
   :data_stores:
     :description: Datastores
     :identifier: storage
