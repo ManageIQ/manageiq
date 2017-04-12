@@ -690,9 +690,20 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *g
+    :verbs: *gp
     :klass: Firmware
     :identifier: firmware
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: firmware_show_list
+      :post:
+      - :name: query
+        :identifier: firmware_show_list
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: firmware_show
   :flavors:
     :description: Flavors
     :identifier: flavor

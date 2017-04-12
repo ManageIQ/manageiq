@@ -6424,6 +6424,20 @@
   :description: Everything under Firmware 
   :feature_type: node
   :identifier: firmware
+  :children:
+  - :name: View
+    :description: View Firmware
+    :feature_type: view
+    :identifier: firmware_view
+    :children:
+    - :name: List
+      :description: Display Lists of Firmware
+      :feature_type: view
+      :identifier: firmware_show_list
+    - :name: Show
+      :description: Display Individual Firmware
+      :feature_type: view
+      :identifier: firmware_show
 
 # Physical Infrastructure Topology
 - :name: Physical Infra Topology
