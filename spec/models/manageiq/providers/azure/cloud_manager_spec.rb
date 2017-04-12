@@ -25,6 +25,25 @@ describe ManageIQ::Providers::Azure::CloudManager do
     expect(ExtManagementSystem.count).to eq(0)
   end
 
+  it "moves the network_manager to the same zone and provider region as the cloud_manager" do
+    zone1 = FactoryGirl.create(:zone)
+    zone2 = FactoryGirl.create(:zone)
+
+    ems = FactoryGirl.create(:ems_azure, :zone => zone1, :provider_region => "region1")
+    expect(ems.network_manager.zone).to eq zone1
+    expect(ems.network_manager.zone_id).to eq zone1.id
+    expect(ems.network_manager.provider_region).to eq "region1"
+
+    ems.zone = zone2
+    ems.provider_region = "region2"
+    ems.save!
+    ems.reload
+
+    expect(ems.network_manager.zone).to eq zone2
+    expect(ems.network_manager.zone_id).to eq zone2.id
+    expect(ems.network_manager.provider_region).to eq "region2"
+  end
+
   context "#connectivity" do
     before do
       @e = FactoryGirl.create(:ems_azure)
