@@ -20,6 +20,7 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
   supports :regions
 
   before_create :ensure_managers
+  before_update :ensure_managers_zone_and_provider_region
 
   def ensure_network_manager
     build_network_manager(:type => 'ManageIQ::Providers::Google::NetworkManager') unless network_manager
