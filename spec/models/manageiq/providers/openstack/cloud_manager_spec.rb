@@ -11,6 +11,41 @@ describe ManageIQ::Providers::Openstack::CloudManager do
     expect(described_class.description).to eq('OpenStack')
   end
 
+  it "moves the child managers to the same zone and provider region as the cloud_manager" do
+    zone1 = FactoryGirl.create(:zone)
+    zone2 = FactoryGirl.create(:zone)
+
+    ems = FactoryGirl.create(:ems_openstack, :zone => zone1, :provider_region => "region1")
+    expect(ems.network_manager.zone).to eq zone1
+    expect(ems.network_manager.zone_id).to eq zone1.id
+    expect(ems.network_manager.provider_region).to eq "region1"
+
+    expect(ems.cinder_manager.zone).to eq zone1
+    expect(ems.cinder_manager.zone_id).to eq zone1.id
+    expect(ems.cinder_manager.provider_region).to eq "region1"
+
+    expect(ems.swift_manager.zone).to eq zone1
+    expect(ems.swift_manager.zone_id).to eq zone1.id
+    expect(ems.swift_manager.provider_region).to eq "region1"
+
+    ems.zone = zone2
+    ems.provider_region = "region2"
+    ems.save!
+    ems.reload
+
+    expect(ems.network_manager.zone).to eq zone2
+    expect(ems.network_manager.zone_id).to eq zone2.id
+    expect(ems.network_manager.provider_region).to eq "region2"
+
+    expect(ems.cinder_manager.zone).to eq zone2
+    expect(ems.cinder_manager.zone_id).to eq zone2.id
+    expect(ems.cinder_manager.provider_region).to eq "region2"
+
+    expect(ems.swift_manager.zone).to eq zone2
+    expect(ems.swift_manager.zone_id).to eq zone2.id
+    expect(ems.swift_manager.provider_region).to eq "region2"
+  end
+
   describe ".metrics_collector_queue_name" do
     it "returns the correct queue name" do
       worker_queue = ManageIQ::Providers::Openstack::CloudManager::MetricsCollectorWorker.default_queue_name
