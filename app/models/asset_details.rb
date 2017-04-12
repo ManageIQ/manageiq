@@ -4,5 +4,4 @@ class AssetDetails < ApplicationRecord
   acts_as_miq_taggable
 
   belongs_to :physical_server, :polymorphic => true
-
 end
