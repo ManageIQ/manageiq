@@ -23,4 +23,20 @@ describe MiqCimInstance do
     expect(@instance2.getAssociatedVmdbObjs(:AssocClass => "A", :Role => "B", :ResultRole => "C"))
       .to eq [host]
   end
+
+  describe '#has_perf_data?' do
+    subject { @instance1.has_perf_data? }
+
+    context 'without metrics' do
+      it { is_expected.to be_falsey }
+    end
+
+    context 'with metrics' do
+      let(:rollup) { FactoryGirl.create(:ontap_system_metrics_rollup, :rollup_type => 'hourly') }
+      before do
+        @instance1.metrics = FactoryGirl.create(:ontap_system_metric, :miq_metrics_rollups => [rollup])
+      end
+      it { is_expected.to be_truthy }
+    end
+  end
 end

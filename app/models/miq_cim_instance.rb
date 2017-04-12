@@ -97,21 +97,11 @@ class MiqCimInstance < ApplicationRecord
   end
 
   #
-  # Are metrics for the given interval available?
-  # interval_name: "hourly" || "daily" || "realtime"
+  # Are hourly metrics for the given interval available?
   #
-  def has_perf_data?(interval_name = "hourly")
-    @has_perf_data ||= {}
-    unless (rv = @has_perf_data[interval_name]).nil?
-      return rv
-    end
-
-    return @has_perf_data[interval_name] = false if metrics.nil?
-
-    if interval_name == "realtime"
-      return @has_perf_data[interval_name] = metrics.miq_derived_metrics.exists?
-    end
-    @has_perf_data[interval_name] = metrics.miq_metrics_rollups.exists?(:rollup_type => interval_name)
+  def has_perf_data?
+    return @has_perf_data unless @has_perf_data.nil?
+    @has_perf_data = metrics.nil? ? false : metrics.miq_metrics_rollups.exists?(:rollup_type => 'hourly')
   end
 
   def last_capture(interval_name = "hourly")
