@@ -1168,7 +1168,7 @@ _("Everything under Policy Actions Accordion")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Policy Actions")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Display All MiqActions")
+_("Display All Policy Actions")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Show MiqAction")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2779,6 +2779,10 @@ _("Remove Repository")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Remove a Repository")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Refresh Repositories")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Ansible Repositories Refresh")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAnsible_AutomationManager_Playbook.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAutomationManager_ConfigurationScriptSource.yaml
 _("Playbooks")
@@ -2796,6 +2800,10 @@ _("Add a Playbook")
 _("Edit Playbook")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit a Playbook")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Refresh Playbooks")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Ansible Playbooks Refresh")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAutomationManager_Authentication.yaml
 _("Credentials")
@@ -2817,6 +2825,10 @@ _("Edit a Credential")
 _("Delete Credentials")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Delete a Credential")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Refresh Credentials")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Ansible Credentials Refresh")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Ansible Tower")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -3353,6 +3365,10 @@ _("Display Lists of Physical Servers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Display Individual Physical Server")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("Physical Infra Topology")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
+_("View Physical Infra Topology")
+# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Monitor")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Everything under Monitor")
@@ -3498,6 +3514,12 @@ _("%{message}")
 _("The operation %{op_name} %{op_arg} on %{mw_server} completed successfully.")
 # TRANSLATORS: file: db/fixtures/notification_types.yml
 _("The operation %{op_name} %{op_arg} on %{mw_server} has failed to complete. Please check the logs for further details.")
+# TRANSLATORS: file: db/fixtures/notification_types.yml
+_("The role %{role_name} has been activated on server %{server_name}")
+# TRANSLATORS: file: db/fixtures/notification_types.yml
+_("The operation %{op_name} %{op_arg} on %{tower} completed successfully.")
+# TRANSLATORS: file: db/fixtures/notification_types.yml
+_("The operation %{op_name} %{op_arg} on %{tower} has failed to complete. Please check the logs for further details.")
 # TRANSLATORS: file: product/charts/layouts/daily_util_charts.yaml
 _("Trend of CPU Used (Mhz)")
 # TRANSLATORS: file: product/charts/layouts/daily_util_charts.yaml
@@ -3987,6 +4009,7 @@ _("Cluster Relationships")
 # TRANSLATORS: file: product/views/LoadBalancer.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_AutomationManager_ConfigurationScript.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_AutomationManager_InventoryGroup.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AutomationManager_InventoryRootGroup.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_AuthKeyPair.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
@@ -4934,6 +4957,8 @@ _("Memory - Aggregate Used for Child VMs for Collected Intervals (MB)")
 _("Activity Sample - Day  (MM DD YY)")
 # TRANSLATORS: file: product/reports/410_Operations - EVM/032_EVM Server_ UserIDs Never Used.yaml
 _("EVM Server UserIDs Never Used")
+# TRANSLATORS: file: product/reports/410_Operations - EVM/032_EVM Server_ UserIDs Never Used.yaml
+_("EVM Server User IDs Never Used")
 # TRANSLATORS: file: product/reports/410_Operations - EVM/030_EVM Server_ UserID Usage Report.yaml
 # TRANSLATORS: file: product/reports/410_Operations - EVM/032_EVM Server_ UserIDs Never Used.yaml
 _("UserID")
@@ -6375,7 +6400,6 @@ _("Cloud")
 # TRANSLATORS: file: product/views/MiqWidget-all.yaml
 # TRANSLATORS: file: product/views/MiqWidget.yaml
 _("Active")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_AutomationManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
 _("ConfigurationManagerForeman")
@@ -6432,6 +6456,7 @@ _("Total Configuration Profiles")
 # TRANSLATORS: file: product/views/ConfigurationProfile.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_AutomationManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_AutomationManager_InventoryGroup.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AutomationManager_InventoryRootGroup.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
 _("Total Configured Systems")
@@ -7285,6 +7310,7 @@ _("Datastore Non-VM Files")
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-all_vms_and_templates.yaml
 _("Instances and Images")
 # TRANSLATORS: file: product/views/ManageIQ_Providers_AutomationManager_InventoryGroup.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AutomationManager_InventoryRootGroup.yaml
 _("InventoryGroup")
 # TRANSLATORS: file: product/views/NetworkRouter.yaml
 _("Network Router")
@@ -7343,8 +7369,6 @@ _("Enabled run levels")
 # TRANSLATORS: file: product/views/Service.yaml
 _("Service")
 # TRANSLATORS: file: product/views/Service.yaml
-_("Retired")
-# TRANSLATORS: file: product/views/Service.yaml
 _("Total CPUs")
 # TRANSLATORS: file: product/views/Service.yaml
 _("Total VM Disk Count")
@@ -7359,7 +7383,7 @@ _("Direct VMs")
 # TRANSLATORS: file: product/views/ResourcePool.yaml
 _("vApp")
 # TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAnsible_AutomationManager_Playbook.yaml
-_("Ansible Tower Playbooks")
+_("Ansible Playbooks")
 # TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAnsible_AutomationManager_Playbook.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAutomationManager_ConfigurationScriptSource.yaml
 _("Repository")
