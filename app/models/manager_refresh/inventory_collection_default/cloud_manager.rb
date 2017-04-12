@@ -201,8 +201,10 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
 
         # Fetch IDs of all vms and genealogy_parents, only if genealogy_parent is present
         vms_genealogy_parents = vms_inventory_collection.data.each_with_object({}) do |x, obj|
-          genealogy_parent_id = x.data[:genealogy_parent].load.try(:id)
-          obj[x.id]           = genealogy_parent_id if genealogy_parent_id
+          unless x.data[:genealogy_parent].nil?
+            genealogy_parent_id = x.data[:genealogy_parent].load.try(:id)
+            obj[x.id]           = genealogy_parent_id if genealogy_parent_id
+          end
         end
 
         miq_templates = miq_templates_inventory_collection.model_class
