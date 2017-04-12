@@ -10,7 +10,7 @@ class PhysicalServer < ApplicationRecord
 
   has_one :host, :inverse_of => :physical_server
 
-  has_one :asset_details, :inverse_of => :physical_server, :dependent => :destroy
+  has_one :asset_details, :as => :resource, :dependent => :destroy
 
   def name_with_details
     details % {
