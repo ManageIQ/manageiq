@@ -937,14 +937,15 @@ describe "Providers API" do
 
     it 'queries all cloud tenants' do
       api_basic_authorize subcollection_action_identifier(:providers, :cloud_tenants, :read, :get)
+
+      run_get("#{providers_url(@provider.id)}/cloud_tenants")
+
       expected = {
         'resources' => [
           { 'href' => a_string_matching("#{providers_url(@provider.id)}/cloud_tenants/#{@cloud_tenant.id}") }
         ]
 
       }
-      run_get("#{providers_url(@provider.id)}/cloud_tenants")
-
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)
     end
@@ -958,7 +959,7 @@ describe "Providers API" do
     end
 
     it 'queries a single cloud tenant' do
-      api_basic_authorize subcollection_action_identifier(:providers, :cloud_tenants, :read, :get)
+      api_basic_authorize action_identifier(:cloud_tenants, :read, :subresource_actions, :get)
 
       run_get("#{providers_url(@provider.id)}/cloud_tenants/#{@cloud_tenant.id}")
 
