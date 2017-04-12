@@ -33,6 +33,7 @@ class ManagerRefresh::Inventory::Persister
         collection_options = options.dup
 
         collection_options[:parent] = manager unless collection_options.key?(:parent)
+        collection_options[:parent] = @target if collection_options[:parent] == :target
 
         if collection_options[:builder_params]
           collection_options[:builder_params] = collection_options[:builder_params].transform_values do |value|
