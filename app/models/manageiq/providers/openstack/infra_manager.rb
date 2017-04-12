@@ -20,6 +20,7 @@ class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
   before_save :ensure_parent_provider
   before_destroy :destroy_parent_provider
   before_create :ensure_managers
+  before_update :ensure_managers_zone_and_provider_region
 
   def ensure_network_manager
     build_network_manager(:type => 'ManageIQ::Providers::Openstack::NetworkManager') unless network_manager
