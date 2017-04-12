@@ -763,10 +763,20 @@ describe MiqReport do
 
   context "chargeback reports" do
     let(:hourly_rate) { 0.01 }
-    let(:hourly_variable_tier_rate) { {:variable_rate => hourly_rate.to_s} }
-    let(:detail_params) { {:chargeback_rate_detail_fixed_compute_cost => { :tiers => [hourly_variable_tier_rate] } } }
-    let!(:chargeback_rate) do
-      FactoryGirl.create(:chargeback_rate, :detail_params => detail_params)
+    let(:chargeback_rate) { FactoryGirl.create(:chargeback_rate) }
+    let!(:rate_detail) do
+      FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
+                         :chargeback_rate  => chargeback_rate,
+                         :per_time         => "hourly",
+                         :source           => "compute_1",
+                         :chargeback_tiers => [cbt])
+    end
+    let(:cbt) do
+      FactoryGirl.create(:chargeback_tier,
+                         :start         => 0,
+                         :finish        => Float::INFINITY,
+                         :fixed_rate    => 0.0,
+                         :variable_rate => hourly_rate.to_s)
     end
     let(:report_params) do
       {
@@ -780,8 +790,6 @@ describe MiqReport do
 
     before do
       MiqRegion.seed
-      ChargebackRateDetailMeasure.seed
-      ChargeableField.seed
       ChargebackRate.seed
       EvmSpecHelper.create_guid_miq_server_zone
     end
