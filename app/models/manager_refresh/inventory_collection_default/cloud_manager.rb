@@ -13,9 +13,10 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
 
     def miq_templates(extra_attributes = {})
       attributes = {
-        :model_class   => ::ManageIQ::Providers::CloudManager::Template,
-        :association   => :miq_templates,
-        :delete_method => :disconnect_inv,
+        :model_class          => ::ManageIQ::Providers::CloudManager::Template,
+        :association          => :miq_templates,
+        :delete_method        => :disconnect_inv,
+        :attributes_blacklist => [:genealogy_parent]
       }
 
       attributes.merge!(extra_attributes)
@@ -205,15 +206,32 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
           obj[x.id]           = genealogy_parent_id if genealogy_parent_id
         end
 
-        miq_templates = miq_templates_inventory_collection.model_class
+        miq_template_genealogy_parents = miq_templates_inventory_collection.data.each_with_object({}) do |x, obj|
+          unless x.data[:genealogy_parent].nil?
+            genealogy_parent_id = x.data[:genealogy_parent].load.try(:id)
+            obj[x.id]           = genealogy_parent_id if genealogy_parent_id
+          end
+        end
+
+        # associate parent templates to child instances
+        parent_miq_templates = miq_templates_inventory_collection.model_class
                                                           .select([:id])
                                                           .where(:id => vms_genealogy_parents.values).find_each.index_by(&:id)
-
         vms_inventory_collection.model_class
                                 .select([:id])
                                 .where(:id => vms_genealogy_parents.keys).find_each do |vm|
-          parent = miq_templates[vms_genealogy_parents[vm.id]]
+          parent = parent_miq_templates[vms_genealogy_parents[vm.id]]
           vm.with_relationship_type('genealogy') { vm.parent = parent }
+        end
+        # associate parent instances to child templates
+        parent_vms = vms_inventory_collection.model_class
+                                             .select([:id])
+                                             .where(:id => miq_template_genealogy_parents.values).find_each.index_by(&:id)
+        miq_templates_inventory_collection.model_class
+                                .select([:id])
+                                .where(:id => miq_template_genealogy_parents.keys).find_each do |miq_template|
+          parent = parent_vms[miq_template_genealogy_parents[miq_template.id]]
+          miq_template.with_relationship_type('genealogy') { miq_template.parent = parent }
         end
       end
 
