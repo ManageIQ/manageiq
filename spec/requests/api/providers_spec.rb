@@ -805,6 +805,29 @@ describe "Providers API" do
                                   :href    => providers_url(provider.id),
                                   :task    => true)
     end
+
+    it "provider refresh for provider_class=provider are created with multiple tasks for multi-manager providers" do
+      api_basic_authorize collection_action_identifier(:providers, :refresh)
+
+      provider = FactoryGirl.create(:provider_foreman, :zone => @zone, :url => "example.com", :verify_ssl => false)
+      provider.update_authentication(:default => default_credentials.symbolize_keys)
+      provider.authentication_type(:default).update(:status => "Valid")
+
+      run_post(providers_url(provider.id) + '?provider_class=provider', gen_request(:refresh))
+
+      expected = {
+        "success"   => true,
+        "message"   => a_string_matching("Provider .* refreshing"),
+        "href"      => a_string_matching(providers_url(provider.id)),
+        "task_id"   => a_kind_of(Numeric),
+        "task_href" => a_string_matching(tasks_url),
+        "tasks"     => [a_hash_including("id" => a_kind_of(Numeric), "href" => a_string_matching(tasks_url)),
+                        a_hash_including("id" => a_kind_of(Numeric), "href" => a_string_matching(tasks_url))]
+      }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
   end
 
   describe 'Providers import VM' do
