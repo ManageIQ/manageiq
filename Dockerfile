@@ -50,8 +50,11 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
                    sysvinit-tools          \
                    which                   \
                    httpd                   \
+                   httpd24                 \
                    mod_ssl                 \
+                   httpd24-mod_ssl         \
                    mod_auth_kerb           \
+                   httpd24-mod_auth_kerb   \
                    mod_authnz_pam          \
                    mod_intercept_form_submit \
                    mod_lookup_identity     \
@@ -111,9 +114,11 @@ ADD . ${APP_ROOT}
 ## Setup environment
 RUN ${APPLIANCE_ROOT}/setup && \
     echo "export PATH=\$PATH:/opt/rubies/ruby-2.3.1/bin" >> /etc/default/evm && \
+    sed --follow-symlinks -i /etc/default/evm_apache -e s:^RUBY_EXEC=.*$:RUBY_EXEC=/opt/rubies/ruby-2.3.1/bin/ruby: && \
+    source /etc/default/evm_apache && \
     mkdir ${APP_ROOT}/log/apache && \
-    mv /etc/httpd/conf.d/ssl.conf{,.orig} && \
-    echo "# This file intentionally left blank. ManageIQ maintains its own SSL configuration" > /etc/httpd/conf.d/ssl.conf && \
+    mv ${APPLIANCE_APACHE_CONFIG_DIR}/ssl.conf{,.orig} && \
+    echo "# This file intentionally left blank. ManageIQ maintains its own SSL configuration" > ${APPLIANCE_APACHE_CONFIG_DIR}/ssl.conf && \
     cp ${APP_ROOT}/config/cable.yml.sample ${APP_ROOT}/config/cable.yml && \
     echo "export APP_ROOT=${APP_ROOT}" >> /etc/default/evm && \
     echo "export CONTAINER=true" >> /etc/default/evm
