@@ -149,22 +149,21 @@ module ApplicationController::PolicySupport
   private ############################
 
   # Assign policies to selected records of db
-  def assign_policies(db = nil)
+  def assign_policies(db)
     assert_privileges(params[:pressed])
-    session[:pol_db] = db                               # Remember the DB
-    recs = []
-    recs = find_checked_items
-    if recs.blank?
-      recs = [params[:id]]
+    session[:pol_db] = db # Remember the DB
+    ids = find_checked_ids_with_rbac(db)
+    if ids.blank?
+      ids = [find_id_with_rbac(db, params[:id])]
     end
-    if recs.length < 1
+    if ids.length < 1
       add_flash(_("One or more %{model} must be selected to Policy assignment") % {
         :model => Dictionary.gettext(db.to_s, :type => :model, :notfound => :titleize, :plural => true)}, :error)
       @refresh_div = "flash_msg_div"
       @refresh_partial = "layouts/flash_msg"
       return
     else
-      session[:pol_items] = recs    # Set the array of tag items
+      session[:pol_items] = ids # Set the array of tag items
     end
     @in_a_form = true
     if @explorer
