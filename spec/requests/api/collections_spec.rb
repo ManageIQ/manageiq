@@ -303,6 +303,11 @@ describe "Rest API Collections" do
       FactoryGirl.create(:miq_alert_status)
       test_collection_query(:alerts, alerts_url, MiqAlertStatus)
     end
+
+    it 'query Firmwares' do
+      FactoryGirl.create(:firmware)
+      test_collection_query(:firmwares, "/api/firmwares", Firmware)
+    end
   end
 
   context "Collections Bulk Queries" do
@@ -557,6 +562,11 @@ describe "Rest API Collections" do
     it 'bulk query CloudVolumes' do
       FactoryGirl.create(:cloud_volume)
       test_collection_bulk_query(:cloud_volumes, cloud_volumes_url, CloudVolume)
+    end
+
+    it 'bulk query Firmwares' do
+      FactoryGirl.create(:firmware)
+      test_collection_bulk_query(:firmwares, "/api/firmwares", Firmware)
     end
   end
 end
