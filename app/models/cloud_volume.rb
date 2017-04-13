@@ -54,14 +54,6 @@ class CloudVolume < ApplicationRecord
     tenant = options[:cloud_tenant]
 
     created_volume = klass.raw_create_volume(ext_management_system, options)
-
-    klass.create(
-      :name                  => created_volume[:name],
-      :ems_ref               => created_volume[:ems_ref],
-      :status                => created_volume[:status],
-      :size                  => options[:size].to_i.gigabytes,
-      :ext_management_system => ext_management_system,
-      :cloud_tenant          => tenant)
   end
 
   def self.validate_create_volume(ext_management_system)
