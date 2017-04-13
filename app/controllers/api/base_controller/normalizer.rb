@@ -91,24 +91,13 @@ module Api
       # Let's normalize an href based on type and id value
       #
       def normalize_href(type, value)
-        # If it is already a string, ie "/vms/:id/", OR it is defined as a collection
-        if type.kind_of?(String) || collection_config[type].options.include?(:collection)
-          collection_href(type, value)
-        else # If it is not a string and not defined as a collection
-          subcollection_href(type, value)
-        end
+        type.to_s == @req.subcollection ? subcollection_href(type, value) : collection_href(type, value)
       end
 
-      #
-      # Subcollection href
-      #
       def subcollection_href(type, value)
         normalize_url("#{@req.collection}/#{@req.c_id}/#{type}/#{value}")
       end
 
-      #
-      # Collection href
-      #
       def collection_href(type, value)
         normalize_url("#{type}/#{value}")
       end
