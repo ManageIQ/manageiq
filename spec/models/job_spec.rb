@@ -415,6 +415,26 @@ describe Job do
     end
   end
 
+  describe "#update_message" do
+    let(:message) { "Very Interesting Message" }
+
+    it "updates 'jobs.message' column" do
+      Job.create_job("VmScan").update_message(message)
+      expect(Job.first.message).to eq message
+    end
+  end
+
+  describe ".update_message" do
+    let(:message) { "Very Interesting Message" }
+    let(:guid) { "qwerty" }
+
+    it "finds job by passed guid and updates 'message' column for found record" do
+      Job.create_job("VmScan", :guid => guid)
+      Job.update_message(guid, message)
+      expect(Job.find_by(:guid => guid).message).to eq message
+    end
+  end
+
   private
 
   def expect_signal_abort_and_timeout_message
