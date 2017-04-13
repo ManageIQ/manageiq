@@ -3,6 +3,7 @@ require_relative 'hawkular_helper'
 # VCR Cassettes: Hawkular Services 0.0.13.Final-SNAPSHOT (commit 3cef2062513f4d949aa21a90db51f9cd105cf329)
 
 describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
+  subject { described_class.new(:properties => {}) }
 
   let(:ems_hawkular) do
     # allow(MiqServer).to receive(:my_zone).and_return("default")
@@ -23,7 +24,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
                        :name                  => 'Local',
                        :feed                  => the_feed_id,
                        :ems_ref               => '/t;hawkular'\
-                                                 "/f;#{the_feed_id}/r;Local~~",
+                       "/f;#{the_feed_id}/r;Local~~",
                        :nativeid              => 'Local~~',
                        :ext_management_system => ems_hawkular)
   end
@@ -64,11 +65,11 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
                      :allow_unused_http_interactions => true,
                      :match_requests_on              => [:method, :uri, :body],
                      :decode_compressed_response     => true) do # , :record => :new_episodes) do
-      metrics_available = eap.metrics_available
-      metrics_ids_map, raw_stats = eap.collect_stats_metrics(metrics_available, start_time, end_time, interval)
-      expect(metrics_ids_map.keys.size).to be > 0
-      expect(raw_stats.keys.size).to be > 0
-    end
+                       metrics_available = eap.metrics_available
+                       metrics_ids_map, raw_stats = eap.collect_stats_metrics(metrics_available, start_time, end_time, interval)
+                       expect(metrics_ids_map.keys.size).to be > 0
+                       expect(raw_stats.keys.size).to be > 0
+                     end
   end
 
   it "#collect_live_metrics for all metrics available" do
@@ -79,11 +80,11 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
                      :allow_unused_http_interactions => true,
                      :match_requests_on              => [:method, :uri, :body],
                      :decode_compressed_response     => true) do # , :record => :new_episodes) do
-      metrics_available = eap.metrics_available
-      metrics_data = eap.collect_live_metrics(metrics_available, start_time, end_time, interval)
-      keys = metrics_data.keys
-      expect(metrics_data[keys[0]].keys.size).to be > 3
-    end
+                       metrics_available = eap.metrics_available
+                       metrics_data = eap.collect_live_metrics(metrics_available, start_time, end_time, interval)
+                       keys = metrics_data.keys
+                       expect(metrics_data[keys[0]].keys.size).to be > 3
+                     end
   end
 
   it "#collect_live_metrics for three metrics" do
@@ -93,27 +94,27 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
     VCR.use_cassette(described_class.name.underscore.to_s,
                      :allow_unused_http_interactions => true,
                      :match_requests_on              => [:method, :uri, :body],
-                     :decode_compressed_response     => true) do # , :record => :new_episodes) do
-      metrics_available = eap.metrics_available
-      expect(metrics_available.size).to be > 3
-      metrics_data = eap.collect_live_metrics(metrics_available[0, 3],
-                                              start_time,
-                                              end_time,
-                                              interval)
-      keys = metrics_data.keys
-      # Assuming that for the test the first key has data for 3 metrics
-      expect(metrics_data[keys[0]].keys.size).to eq(3)
-    end
+                     :decode_compressed_response     => true) do
+                       metrics_available = eap.metrics_available
+                       expect(metrics_available.size).to be > 3
+                       metrics_data = eap.collect_live_metrics(metrics_available[0, 3],
+                                                               start_time,
+                                                               end_time,
+                                                               interval)
+                       keys = metrics_data.keys
+                       # Assuming that for the test the first key has data for 3 metrics
+                       expect(metrics_data[keys[0]].keys.size).to eq(3)
+                     end
   end
 
   it "#first_and_last_capture" do
     VCR.use_cassette(described_class.name.underscore.to_s,
                      :allow_unused_http_interactions => true,
-                     :decode_compressed_response     => true) do # , :record => :new_episodes) do
-      capture = eap.first_and_last_capture
-      expect(capture.any?).to be true
-      expect(capture[0]).to be < capture[1]
-    end
+                     :decode_compressed_response     => true) do
+                       capture = eap.first_and_last_capture
+                       expect(capture.any?).to be true
+                       expect(capture[0]).to be < capture[1]
+                     end
   end
 
   it "#supported_metrics" do
@@ -128,9 +129,25 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
   it "#metrics_available" do
     VCR.use_cassette(described_class.name.underscore.to_s,
                      :allow_unused_http_interactions => true,
-                     :decode_compressed_response     => true) do # , :record => :new_episodes) do
-      metrics_available = eap.metrics_available
-      metrics_available.each { |metric| expect(expected_metrics.value?(metric[:name])).to be(true) }
+                     :decode_compressed_response     => true) do
+                       metrics_available = eap.metrics_available
+                       metrics_available.each { |metric| expect(expected_metrics.value?(metric[:name])).to be(true) }
+                     end
+  end
+
+  describe '#immutable?' do
+    it 'is true if "Immutable" is set as true' do
+      subject.properties = { 'Immutable' => 'true' }
+      expect(subject).to be_immutable
+    end
+
+    it 'is false if "Immutable" is set as false' do
+      subject.properties = { 'Immutable' => 'false' }
+      expect(subject).not_to be_immutable
+    end
+
+    it 'is false if no keys are defined' do
+      expect(subject).not_to be_immutable
     end
   end
 end
