@@ -64,21 +64,19 @@ class Job < ApplicationRecord
     true
   end
 
-  def self.agent_message_update_queue(jobid, message)
-    job = Job.where("guid = ?", jobid).select("id, state, guid").first
-    unless job.nil?
-      job.agent_message_update(message)
+  def self.update_message(job_guid, message)
+    job = Job.find_by(:guid => job_guid)
+    if job
+      job.update_message(message)
     else
-      _log.warn "jobid: [#{jobid}] not found"
+      _log.warn "jobs.guid: [#{jobid}] not found"
     end
-  rescue => err
-    _log.warn "Error '#{err.message}', updating jobid: [#{jobid}]"
-    _log.log_backtrace(err)
   end
 
-  def agent_message_update(agent_message)
-    $log.info("JOB([#{guid}] Agent message update: [#{agent_message}]")
-    update_attributes(:agent_message => agent_message)
+  def update_message(message)
+    $log.info("JOB([#{guid}] Message update: [#{message}]")
+    self.message = message
+    save
 
     return unless self.is_active?
 
