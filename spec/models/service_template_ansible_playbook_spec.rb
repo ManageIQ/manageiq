@@ -235,6 +235,17 @@ describe ServiceTemplateAnsiblePlaybook do
 
       expect(service_template.dialogs.first.id).to eq info[:service_dialog_id]
     end
+
+    it 'creates a new job_template if a new one is passed in' do
+      service_template = prebuild_service_template(:job_template => false)
+      catalog_item_options[:config_info][:provision].delete(:new_dialog_name)
+
+      allow(service_template).to receive(:new_job_template_required).and_return(true)
+      expect(service_template).to receive(:populate_active_config).twice
+      expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript).to receive(:update_in_provider_queue).never
+
+      service_template.update_catalog_item(catalog_item_options, user)
+    end
   end
 
   describe '#delete_job_templates' do

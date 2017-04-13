@@ -9,7 +9,11 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     'pre_with_playbook'    => '/Service/Generic/StateMachines/GenericLifecycle/Retire_Advanced_Resource_Pre',
     'post_with_playbook'   => '/Service/Generic/StateMachines/GenericLifecycle/Retire_Advanced_Resource_Post'
   }.freeze
+
+  CONFIG_BASIC_HASH = { :provision => {}, :retirement => {}, :reconfigure => {} }.freeze
+
   private_constant :RETIREMENT_ENTRY_POINTS
+  private_constant :CONFIG_BASIC_HASH
 
   def self.default_provisioning_entry_point(_service_type)
     '/Service/Generic/StateMachines/GenericLifecycle/provision'
@@ -146,13 +150,19 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
       next unless config_info[action]
       info = config_info[action]
 
-      new_dialog = create_new_dialog(info[:new_dialog_name], job_template(action), info[:hosts]) if info[:new_dialog_name]
-      config_info[action][:dialog_id] = new_dialog.id if new_dialog
+      if new_dialog_required(info)
+        info[:dialog_id] = create_new_dialog(info[:new_dialog_name], job_template(action), info[:hosts]).id
+      end
 
-      next unless info.key?(:playbook_id)
-      tower, params = self.class.send(:build_parameter_list, "miq_#{name}_#{action}", description, info)
-      params[:manager_ref] = job_template(action).manager_ref
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript.update_in_provider_queue(tower.id, params, auth_user)
+      if new_job_template_required(info, action)
+        single_config = populate_active_config(info, action)
+        config_info.deep_merge!(self.class.send(:create_job_templates, name, description, single_config, auth_user))
+      else
+        next unless info.key?(:playbook_id)
+        tower, params = self.class.send(:build_parameter_list, "miq_#{name}_#{action}", description, info)
+        params[:manager_ref] = job_template(action).manager_ref
+        ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript.update_in_provider_queue(tower.id, params, auth_user)
+      end
     end
     super
   end
@@ -189,5 +199,17 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
       ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript
         .delete_in_provider_queue(job_template.manager.id, { :manager_ref => job_template.manager_ref }, auth_user)
     end
+  end
+
+  def populate_active_config(info, action)
+    CONFIG_BASIC_HASH.merge(action => info)
+  end
+
+  def new_dialog_required(info)
+    info.key?(:new_dialog_name)
+  end
+
+  def new_job_template_required(info, action)
+    job_template(action).nil? && info.key?(:playbook_id)
   end
 end
