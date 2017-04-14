@@ -318,12 +318,12 @@ module ManageIQ::Providers
         :connection_state    => "connected",
 
         :hardware            => {
-          :cpu_sockets          => flavor[:cpus],
+          :cpu_sockets          => flavor && flavor[:cpus],
           :cpu_cores_per_socket => 1,
-          :cpu_total_cores      => flavor[:cpus],
+          :cpu_total_cores      => flavor && flavor[:cpus],
           :cpu_speed            => parent_host.try(:hardware).try(:cpu_speed),
-          :memory_mb            => flavor[:memory] / 1.megabyte,
-          :disk_capacity        => flavor[:root_disk_size] + flavor[:ephemeral_disk_size] + flavor[:swap_disk_size],
+          :memory_mb            => flavor && flavor[:memory] / 1.megabyte,
+          :disk_capacity        => flavor && flavor[:root_disk_size] + flavor[:ephemeral_disk_size] + flavor[:swap_disk_size],
           :disks                => [], # Filled in later conditionally on flavor
           # TODO(lsmola) keeping for backwards compatibility, replaced with new networking models using network_ports
           # for connections, delete when not needed.
@@ -349,14 +349,16 @@ module ManageIQ::Providers
       disks = new_result[:hardware][:disks]
       dev = "vda"
 
-      if (sz = flavor[:root_disk_size]) == 0
-        sz = 1.gigabytes
+      if flavor
+        if (sz = flavor[:root_disk_size]) == 0
+          sz = 1.gigabytes
+        end
+        add_instance_disk(disks, sz, dev.dup,       "Root disk")
+        sz = flavor[:ephemeral_disk_size]
+        add_instance_disk(disks, sz, dev.succ!.dup, "Ephemeral disk") unless sz.zero?
+        sz = flavor[:swap_disk_size]
+        add_instance_disk(disks, sz, dev.succ!.dup, "Swap disk")      unless sz.zero?
       end
-      add_instance_disk(disks, sz, dev.dup,       "Root disk")
-      sz = flavor[:ephemeral_disk_size]
-      add_instance_disk(disks, sz, dev.succ!.dup, "Ephemeral disk") unless sz.zero?
-      sz = flavor[:swap_disk_size]
-      add_instance_disk(disks, sz, dev.succ!.dup, "Swap disk")      unless sz.zero?
 
       return uid, new_result
     end
