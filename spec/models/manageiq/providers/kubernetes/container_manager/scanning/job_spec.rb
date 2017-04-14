@@ -166,9 +166,12 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
       end
 
       it 'should create a pod spec with the auth_token environment variable' do
-        expect(Kubeclient::Resource).to have_received(:new).with(pod_env_containing(
-                                                         {:name => ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job::INSPECTOR_AUTH_TOKEN,
-                                                           :value => @job.options[:auth_token]}))
+        expect(Kubeclient::Resource).to have_received(:new).with(
+          pod_env_containing(
+            :name  => ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job::INSPECTOR_AUTH_TOKEN,
+            :value => @job.options[:auth_token]
+          )
+        )
       end
 
       it 'should report success' do
@@ -186,19 +189,6 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
 
       it 'should generate and store the image inspector auth_token' do
         expect(@job.options[:auth_token]).not_to be_nil
-      end
-
-      describe 'should fucking work fuck' do
-        let(:dbl) { double }
-        before { expect(dbl).to receive(:foo).with(hash_containing_string("3")) }
-
-        it "passes when the args match" do
-          dbl.foo({"args" => ["13"]})
-        end
-
-        it "fails when the args do not match" do
-          dbl.foo({"args" => ["13"]})
-        end
       end
 
       it 'should pass the auth_token as a parameter to scan_metadata' do
