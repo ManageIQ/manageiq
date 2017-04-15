@@ -32,6 +32,7 @@ RSpec.describe ShowbackTariff, :type => :model do
     rate = FactoryGirl.build(:showback_rate, :showback_tariff => tariff)
     expect { rate.save }.to change(tariff.showback_rates, :count).from(0).to(1)
   end
+
   it 'rates are deleted when deleting the tariff' do
     FactoryGirl.create(:showback_rate, :showback_tariff => tariff)
     FactoryGirl.create(:showback_rate, :showback_tariff => tariff)
