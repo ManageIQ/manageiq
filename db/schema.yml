@@ -6491,12 +6491,14 @@ showback_buckets:
 - updated_at
 showback_charges:
 - id
-- fixed_cost
-- variable_cost
 - showback_bucket_id
 - showback_event_id
 - created_at
 - updated_at
+- fixed_cost_cents
+- fixed_cost_currency
+- variable_cost_cents
+- variable_cost_currency
 showback_events:
 - id
 - data
@@ -6517,8 +6519,6 @@ showback_measure_types:
 - created_at
 showback_rates:
 - id
-- fixed_cost
-- variable_cost
 - calculation
 - category
 - dimension
@@ -6527,6 +6527,10 @@ showback_rates:
 - showback_tariff_id
 - created_at
 - updated_at
+- fixed_rate_cents
+- fixed_rate_currency
+- variable_rate_cents
+- variable_rate_currency
 showback_tariffs:
 - id
 - name

@@ -6,16 +6,16 @@ describe ShowbackRate do
       expect(showback_rate).to be_valid
     end
 
-    it "is not valid with a nil fixed_cost" do
-      showback_rate.fixed_cost = nil
+    it "is not valid with a nil fixed_rate" do
+      showback_rate.fixed_rate_cents = nil
       showback_rate.valid?
-      expect(showback_rate.errors.details[:fixed_cost]).to include(:error=>:blank)
+      expect(showback_rate.errors.details[:fixed_rate]).to include(:error => :not_a_number, :value => '')
     end
 
-    it "is not valid with a nil variable_cost" do
-      showback_rate.variable_cost = nil
+    it "is not valid with a nil variable_rate" do
+      showback_rate.variable_rate_cents = nil
       showback_rate.valid?
-      expect(showback_rate.errors.details[:variable_cost]).to include(:error=>:blank)
+      expect(showback_rate.errors.details[:variable_rate]).to include(:error => :not_a_number, :value => '')
     end
 
     it "is  valid with a nil concept" do
@@ -42,12 +42,14 @@ describe ShowbackRate do
       expect(showback_rate.errors.details[:dimension]).to include(:error=>:blank)
     end
 
-    it "variable_cost expected to be BigDeciaml" do
-      expect(FactoryGirl.create(:showback_rate, :variable_cost => BigDecimal.new("2.5634525342534"))).to be_valid
+    it "fixed_rate expected to be Money" do
+      expect(FactoryGirl.create(:showback_rate, :fixed_rate => Money.new("2.5634525342534"))).to be_valid
+      expect(ShowbackRate).to monetize(:fixed_rate)
     end
 
-    it "fixed_cost expected to be BigDeciaml" do
-      expect(FactoryGirl.create(:showback_rate, :fixed_cost => BigDecimal.new("67.4525342534"))).to be_valid
+    it "variable_rate expected to be BigDeciaml" do
+      expect(FactoryGirl.create(:showback_rate, :variable_rate => Money.new("67.4525342534"))).to be_valid
+      expect(ShowbackRate).to monetize(:variable_rate)
     end
   end
 end
