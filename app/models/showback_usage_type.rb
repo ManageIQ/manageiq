@@ -1,4 +1,4 @@
-class ShowbackMeasureType < ApplicationRecord
+class ShowbackUsageType < ApplicationRecord
   validates :description, :dimensions, :presence => true
 
   VALID_CATEGORY = %w(VmOrTemplate).freeze
@@ -16,7 +16,7 @@ class ShowbackMeasureType < ApplicationRecord
     seed_data.each do |measure_type_attributtes|
       measure_type_name = measure_type_attributtes[:category]
       measure_type_measure = measure_type_attributtes[:measure]
-      next if ShowbackMeasureType.find_by(:category => measure_type_name, :measure => measure_type_measure)
+      next if ShowbackUsageType.find_by(:category => measure_type_name, :measure => measure_type_measure)
       log_attrs = measure_type_attributtes.slice(:category, :description, :measure, :dimensions)
       _log.info("Creating consumption measure type with parameters #{log_attrs.inspect}")
       _log.info("Creating #{measure_type_name} consumption measure type...")

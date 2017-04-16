@@ -6509,14 +6509,6 @@ showback_events:
 - context
 - updated_at
 - created_at
-showback_measure_types:
-- id
-- category
-- description
-- measure
-- dimensions
-- updated_at
-- created_at
 showback_rates:
 - id
 - calculation
@@ -6539,6 +6531,14 @@ showback_tariffs:
 - resource_id
 - created_at
 - updated_at
+showback_usage_types:
+- id
+- category
+- description
+- measure
+- dimensions
+- updated_at
+- created_at
 snapshots:
 - id
 - uid
