@@ -1,0 +1,114 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://host.example.com:8443/oapi/v1
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (darwin16.5.0 x86_64) ruby/2.3.3p222
+      Authorization:
+      - Bearer theToken
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 01 May 2017 11:05:36 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: '{"kind":"APIResourceList","groupVersion":"v1","resources":[{"name":"appliedclusterresourcequotas","namespaced":true,"kind":"AppliedClusterResourceQuota"},{"name":"buildconfigs","namespaced":true,"kind":"BuildConfig"},{"name":"buildconfigs/instantiate","namespaced":true,"kind":"BuildRequest"},{"name":"buildconfigs/instantiatebinary","namespaced":true,"kind":"BinaryBuildRequestOptions"},{"name":"buildconfigs/webhooks","namespaced":true,"kind":"Status"},{"name":"builds","namespaced":true,"kind":"Build"},{"name":"builds/clone","namespaced":true,"kind":"BuildRequest"},{"name":"builds/details","namespaced":true,"kind":"Build"},{"name":"builds/log","namespaced":true,"kind":"BuildLog"},{"name":"clusternetworks","namespaced":false,"kind":"ClusterNetwork"},{"name":"clusterpolicies","namespaced":false,"kind":"ClusterPolicy"},{"name":"clusterpolicybindings","namespaced":false,"kind":"ClusterPolicyBinding"},{"name":"clusterresourcequotas","namespaced":false,"kind":"ClusterResourceQuota"},{"name":"clusterresourcequotas/status","namespaced":false,"kind":"ClusterResourceQuota"},{"name":"clusterrolebindings","namespaced":false,"kind":"ClusterRoleBinding"},{"name":"clusterroles","namespaced":false,"kind":"ClusterRole"},{"name":"deploymentconfigrollbacks","namespaced":true,"kind":"DeploymentConfigRollback"},{"name":"deploymentconfigs","namespaced":true,"kind":"DeploymentConfig"},{"name":"deploymentconfigs/instantiate","namespaced":true,"kind":"DeploymentRequest"},{"name":"deploymentconfigs/log","namespaced":true,"kind":"DeploymentLog"},{"name":"deploymentconfigs/rollback","namespaced":true,"kind":"DeploymentConfigRollback"},{"name":"deploymentconfigs/scale","namespaced":true,"kind":"Scale"},{"name":"deploymentconfigs/status","namespaced":true,"kind":"DeploymentConfig"},{"name":"egressnetworkpolicies","namespaced":true,"kind":"EgressNetworkPolicy"},{"name":"generatedeploymentconfigs","namespaced":true,"kind":"DeploymentConfig"},{"name":"groups","namespaced":false,"kind":"Group"},{"name":"hostsubnets","namespaced":false,"kind":"HostSubnet"},{"name":"identities","namespaced":false,"kind":"Identity"},{"name":"images","namespaced":false,"kind":"Image"},{"name":"imagesignatures","namespaced":false,"kind":"ImageSignature"},{"name":"imagestreamimages","namespaced":true,"kind":"ImageStreamImage"},{"name":"imagestreamimports","namespaced":true,"kind":"ImageStreamImport"},{"name":"imagestreammappings","namespaced":true,"kind":"ImageStreamMapping"},{"name":"imagestreams","namespaced":true,"kind":"ImageStream"},{"name":"imagestreams/secrets","namespaced":true,"kind":"SecretList"},{"name":"imagestreams/status","namespaced":true,"kind":"ImageStream"},{"name":"imagestreamtags","namespaced":true,"kind":"ImageStreamTag"},{"name":"localresourceaccessreviews","namespaced":true,"kind":"LocalResourceAccessReview"},{"name":"localsubjectaccessreviews","namespaced":true,"kind":"LocalSubjectAccessReview"},{"name":"netnamespaces","namespaced":false,"kind":"NetNamespace"},{"name":"oauthaccesstokens","namespaced":false,"kind":"OAuthAccessToken"},{"name":"oauthauthorizetokens","namespaced":false,"kind":"OAuthAuthorizeToken"},{"name":"oauthclientauthorizations","namespaced":false,"kind":"OAuthClientAuthorization"},{"name":"oauthclients","namespaced":false,"kind":"OAuthClient"},{"name":"podsecuritypolicyreviews","namespaced":true,"kind":"PodSecurityPolicyReview"},{"name":"podsecuritypolicyselfsubjectreviews","namespaced":true,"kind":"PodSecurityPolicySelfSubjectReview"},{"name":"podsecuritypolicysubjectreviews","namespaced":true,"kind":"PodSecurityPolicySubjectReview"},{"name":"policies","namespaced":true,"kind":"Policy"},{"name":"policybindings","namespaced":true,"kind":"PolicyBinding"},{"name":"processedtemplates","namespaced":true,"kind":"Template"},{"name":"projectrequests","namespaced":false,"kind":"ProjectRequest"},{"name":"projects","namespaced":false,"kind":"Project"},{"name":"resourceaccessreviews","namespaced":true,"kind":"ResourceAccessReview"},{"name":"rolebindingrestrictions","namespaced":true,"kind":"RoleBindingRestriction"},{"name":"rolebindings","namespaced":true,"kind":"RoleBinding"},{"name":"roles","namespaced":true,"kind":"Role"},{"name":"routes","namespaced":true,"kind":"Route"},{"name":"routes/status","namespaced":true,"kind":"Route"},{"name":"selfsubjectrulesreviews","namespaced":true,"kind":"SelfSubjectRulesReview"},{"name":"subjectaccessreviews","namespaced":true,"kind":"SubjectAccessReview"},{"name":"subjectrulesreviews","namespaced":true,"kind":"SubjectRulesReview"},{"name":"templates","namespaced":true,"kind":"Template"},{"name":"useridentitymappings","namespaced":false,"kind":"UserIdentityMapping"},{"name":"users","namespaced":false,"kind":"User"}]}
+
+'
+    http_version:
+  recorded_at: Mon, 01 May 2017 11:05:36 GMT
+- request:
+    method: get
+    uri: https://host.example.com:8443/api/v1
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (darwin16.5.0 x86_64) ruby/2.3.3p222
+      Authorization:
+      - Bearer theToken
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 01 May 2017 11:05:36 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: '{"kind":"APIResourceList","groupVersion":"v1","resources":[{"name":"bindings","namespaced":true,"kind":"Binding"},{"name":"componentstatuses","namespaced":false,"kind":"ComponentStatus"},{"name":"configmaps","namespaced":true,"kind":"ConfigMap"},{"name":"endpoints","namespaced":true,"kind":"Endpoints"},{"name":"events","namespaced":true,"kind":"Event"},{"name":"limitranges","namespaced":true,"kind":"LimitRange"},{"name":"namespaces","namespaced":false,"kind":"Namespace"},{"name":"namespaces/finalize","namespaced":false,"kind":"Namespace"},{"name":"namespaces/status","namespaced":false,"kind":"Namespace"},{"name":"nodes","namespaced":false,"kind":"Node"},{"name":"nodes/proxy","namespaced":false,"kind":"Node"},{"name":"nodes/status","namespaced":false,"kind":"Node"},{"name":"persistentvolumeclaims","namespaced":true,"kind":"PersistentVolumeClaim"},{"name":"persistentvolumeclaims/status","namespaced":true,"kind":"PersistentVolumeClaim"},{"name":"persistentvolumes","namespaced":false,"kind":"PersistentVolume"},{"name":"persistentvolumes/status","namespaced":false,"kind":"PersistentVolume"},{"name":"pods","namespaced":true,"kind":"Pod"},{"name":"pods/attach","namespaced":true,"kind":"Pod"},{"name":"pods/binding","namespaced":true,"kind":"Binding"},{"name":"pods/eviction","namespaced":true,"kind":"Eviction"},{"name":"pods/exec","namespaced":true,"kind":"Pod"},{"name":"pods/log","namespaced":true,"kind":"Pod"},{"name":"pods/portforward","namespaced":true,"kind":"Pod"},{"name":"pods/proxy","namespaced":true,"kind":"Pod"},{"name":"pods/status","namespaced":true,"kind":"Pod"},{"name":"podtemplates","namespaced":true,"kind":"PodTemplate"},{"name":"replicationcontrollers","namespaced":true,"kind":"ReplicationController"},{"name":"replicationcontrollers/scale","namespaced":true,"kind":"Scale"},{"name":"replicationcontrollers/status","namespaced":true,"kind":"ReplicationController"},{"name":"resourcequotas","namespaced":true,"kind":"ResourceQuota"},{"name":"resourcequotas/status","namespaced":true,"kind":"ResourceQuota"},{"name":"secrets","namespaced":true,"kind":"Secret"},{"name":"securitycontextconstraints","namespaced":false,"kind":"SecurityContextConstraints"},{"name":"serviceaccounts","namespaced":true,"kind":"ServiceAccount"},{"name":"services","namespaced":true,"kind":"Service"},{"name":"services/proxy","namespaced":true,"kind":"Service"},{"name":"services/status","namespaced":true,"kind":"Service"}]}
+
+'
+    http_version:
+  recorded_at: Mon, 01 May 2017 11:05:36 GMT
+- request:
+    method: get
+    uri: https://host.example.com:8443/api/v1/namespaces/testproject/replicationcontrollers/mysql-1
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (darwin16.5.0 x86_64) ruby/2.3.3p222
+      Authorization:
+      - Bearer theToken
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 01 May 2017 11:05:36 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: '{"kind":"ReplicationController","apiVersion":"v1","metadata":{"name":"mysql-1","namespace":"testproject","selfLink":"/api/v1/namespaces/testproject/replicationcontrollers/mysql-1","uid":"eb13cb0b-29c9-11e7-b2c1-000c294e0cbd","resourceVersion":"77125","generation":2,"creationTimestamp":"2017-04-25T15:14:46Z","labels":{"app":"cakephp-mysql-example","openshift.io/deployment-config.name":"mysql","template":"cakephp-mysql-example"},"annotations":{"openshift.io/deployer-pod.name":"mysql-1-deploy","openshift.io/deployment-config.latest-version":"1","openshift.io/deployment-config.name":"mysql","openshift.io/deployment.phase":"Complete","openshift.io/deployment.replicas":"1","openshift.io/deployment.status-reason":"image
+        change","openshift.io/encoded-deployment-config":"{\"kind\":\"DeploymentConfig\",\"apiVersion\":\"v1\",\"metadata\":{\"name\":\"mysql\",\"namespace\":\"testproject\",\"selfLink\":\"/oapi/v1/namespaces/testproject/deploymentconfigs/mysql\",\"uid\":\"eb0f2c16-29c9-11e7-b2c1-000c294e0cbd\",\"resourceVersion\":\"55131\",\"generation\":2,\"creationTimestamp\":\"2017-04-25T15:14:46Z\",\"labels\":{\"app\":\"cakephp-mysql-example\",\"template\":\"cakephp-mysql-example\"},\"annotations\":{\"description\":\"Defines
+        how to deploy the database\"}},\"spec\":{\"strategy\":{\"type\":\"Recreate\",\"recreateParams\":{\"timeoutSeconds\":600},\"resources\":{},\"activeDeadlineSeconds\":21600},\"triggers\":[{\"type\":\"ImageChange\",\"imageChangeParams\":{\"automatic\":true,\"containerNames\":[\"mysql\"],\"from\":{\"kind\":\"ImageStreamTag\",\"namespace\":\"openshift\",\"name\":\"mysql:5.7\"},\"lastTriggeredImage\":\"registry.access.redhat.com/rhscl/mysql-57-rhel7@sha256:a0b801081fff903a4e7042aaa193121be8f58df863445dfe8aa3d33695fcff94\"}},{\"type\":\"ConfigChange\"}],\"replicas\":1,\"test\":false,\"selector\":{\"name\":\"mysql\"},\"template\":{\"metadata\":{\"name\":\"mysql\",\"creationTimestamp\":null,\"labels\":{\"name\":\"mysql\"}},\"spec\":{\"volumes\":[{\"name\":\"data\",\"emptyDir\":{}}],\"containers\":[{\"name\":\"mysql\",\"image\":\"registry.access.redhat.com/rhscl/mysql-57-rhel7@sha256:a0b801081fff903a4e7042aaa193121be8f58df863445dfe8aa3d33695fcff94\",\"ports\":[{\"containerPort\":3306,\"protocol\":\"TCP\"}],\"env\":[{\"name\":\"MYSQL_USER\",\"valueFrom\":{\"secretKeyRef\":{\"name\":\"cakephp-mysql-example\",\"key\":\"database-user\"}}},{\"name\":\"MYSQL_PASSWORD\",\"valueFrom\":{\"secretKeyRef\":{\"name\":\"cakephp-mysql-example\",\"key\":\"database-password\"}}},{\"name\":\"MYSQL_DATABASE\",\"value\":\"default\"}],\"resources\":{\"limits\":{\"memory\":\"512Mi\"}},\"volumeMounts\":[{\"name\":\"data\",\"mountPath\":\"/var/lib/mysql/data\"}],\"livenessProbe\":{\"tcpSocket\":{\"port\":3306},\"initialDelaySeconds\":30,\"timeoutSeconds\":1,\"periodSeconds\":10,\"successThreshold\":1,\"failureThreshold\":3},\"readinessProbe\":{\"exec\":{\"command\":[\"/bin/sh\",\"-i\",\"-c\",\"MYSQL_PWD=''1wWtoJa4tVmclAQ6''
+        mysql -h 127.0.0.1 -u cakephp -D default -e ''SELECT 1''\"]},\"initialDelaySeconds\":5,\"timeoutSeconds\":1,\"periodSeconds\":10,\"successThreshold\":1,\"failureThreshold\":3},\"terminationMessagePath\":\"/dev/termination-log\",\"imagePullPolicy\":\"IfNotPresent\"}],\"restartPolicy\":\"Always\",\"terminationGracePeriodSeconds\":30,\"dnsPolicy\":\"ClusterFirst\",\"securityContext\":{}}}},\"status\":{\"latestVersion\":1,\"observedGeneration\":1,\"replicas\":0,\"updatedReplicas\":0,\"availableReplicas\":0,\"unavailableReplicas\":0,\"details\":{\"message\":\"image
+        change\",\"causes\":[{\"type\":\"ImageChange\",\"imageTrigger\":{\"from\":{\"kind\":\"ImageStreamTag\",\"namespace\":\"openshift\",\"name\":\"mysql:5.7\"}}}]},\"conditions\":[{\"type\":\"Available\",\"status\":\"False\",\"lastUpdateTime\":\"2017-04-25T15:14:46Z\",\"lastTransitionTime\":\"2017-04-25T15:14:46Z\",\"message\":\"Deployment
+        config does not have minimum availability.\"}]}}\n"}},"spec":{"replicas":1,"selector":{"deployment":"mysql-1","deploymentconfig":"mysql","name":"mysql"},"template":{"metadata":{"creationTimestamp":null,"labels":{"deployment":"mysql-1","deploymentconfig":"mysql","name":"mysql"},"annotations":{"openshift.io/deployment-config.latest-version":"1","openshift.io/deployment-config.name":"mysql","openshift.io/deployment.name":"mysql-1"}},"spec":{"volumes":[{"name":"data","emptyDir":{}}],"containers":[{"name":"mysql","image":"registry.access.redhat.com/rhscl/mysql-57-rhel7@sha256:a0b801081fff903a4e7042aaa193121be8f58df863445dfe8aa3d33695fcff94","ports":[{"containerPort":3306,"protocol":"TCP"}],"env":[{"name":"MYSQL_USER","valueFrom":{"secretKeyRef":{"name":"cakephp-mysql-example","key":"database-user"}}},{"name":"MYSQL_PASSWORD","valueFrom":{"secretKeyRef":{"name":"cakephp-mysql-example","key":"database-password"}}},{"name":"MYSQL_DATABASE","value":"default"}],"resources":{"limits":{"memory":"512Mi"}},"volumeMounts":[{"name":"data","mountPath":"/var/lib/mysql/data"}],"livenessProbe":{"tcpSocket":{"port":3306},"initialDelaySeconds":30,"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"exec":{"command":["/bin/sh","-i","-c","MYSQL_PWD=''1wWtoJa4tVmclAQ6''
+        mysql -h 127.0.0.1 -u cakephp -D default -e ''SELECT 1''"]},"initialDelaySeconds":5,"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{}}}},"status":{"replicas":1,"fullyLabeledReplicas":1,"readyReplicas":1,"availableReplicas":1,"observedGeneration":2}}
+
+'
+    http_version:
+  recorded_at: Mon, 01 May 2017 11:05:36 GMT
+recorded_with: VCR 3.0.3

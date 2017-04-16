@@ -1,0 +1,109 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://host.example.com:8443/oapi/v1
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (darwin16.5.0 x86_64) ruby/2.3.3p222
+      Authorization:
+      - Bearer theToken
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 30 Apr 2017 19:52:52 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: '{"kind":"APIResourceList","groupVersion":"v1","resources":[{"name":"appliedclusterresourcequotas","namespaced":true,"kind":"AppliedClusterResourceQuota"},{"name":"buildconfigs","namespaced":true,"kind":"BuildConfig"},{"name":"buildconfigs/instantiate","namespaced":true,"kind":"BuildRequest"},{"name":"buildconfigs/instantiatebinary","namespaced":true,"kind":"BinaryBuildRequestOptions"},{"name":"buildconfigs/webhooks","namespaced":true,"kind":"Status"},{"name":"builds","namespaced":true,"kind":"Build"},{"name":"builds/clone","namespaced":true,"kind":"BuildRequest"},{"name":"builds/details","namespaced":true,"kind":"Build"},{"name":"builds/log","namespaced":true,"kind":"BuildLog"},{"name":"clusternetworks","namespaced":false,"kind":"ClusterNetwork"},{"name":"clusterpolicies","namespaced":false,"kind":"ClusterPolicy"},{"name":"clusterpolicybindings","namespaced":false,"kind":"ClusterPolicyBinding"},{"name":"clusterresourcequotas","namespaced":false,"kind":"ClusterResourceQuota"},{"name":"clusterresourcequotas/status","namespaced":false,"kind":"ClusterResourceQuota"},{"name":"clusterrolebindings","namespaced":false,"kind":"ClusterRoleBinding"},{"name":"clusterroles","namespaced":false,"kind":"ClusterRole"},{"name":"deploymentconfigrollbacks","namespaced":true,"kind":"DeploymentConfigRollback"},{"name":"deploymentconfigs","namespaced":true,"kind":"DeploymentConfig"},{"name":"deploymentconfigs/instantiate","namespaced":true,"kind":"DeploymentRequest"},{"name":"deploymentconfigs/log","namespaced":true,"kind":"DeploymentLog"},{"name":"deploymentconfigs/rollback","namespaced":true,"kind":"DeploymentConfigRollback"},{"name":"deploymentconfigs/scale","namespaced":true,"kind":"Scale"},{"name":"deploymentconfigs/status","namespaced":true,"kind":"DeploymentConfig"},{"name":"egressnetworkpolicies","namespaced":true,"kind":"EgressNetworkPolicy"},{"name":"generatedeploymentconfigs","namespaced":true,"kind":"DeploymentConfig"},{"name":"groups","namespaced":false,"kind":"Group"},{"name":"hostsubnets","namespaced":false,"kind":"HostSubnet"},{"name":"identities","namespaced":false,"kind":"Identity"},{"name":"images","namespaced":false,"kind":"Image"},{"name":"imagesignatures","namespaced":false,"kind":"ImageSignature"},{"name":"imagestreamimages","namespaced":true,"kind":"ImageStreamImage"},{"name":"imagestreamimports","namespaced":true,"kind":"ImageStreamImport"},{"name":"imagestreammappings","namespaced":true,"kind":"ImageStreamMapping"},{"name":"imagestreams","namespaced":true,"kind":"ImageStream"},{"name":"imagestreams/secrets","namespaced":true,"kind":"SecretList"},{"name":"imagestreams/status","namespaced":true,"kind":"ImageStream"},{"name":"imagestreamtags","namespaced":true,"kind":"ImageStreamTag"},{"name":"localresourceaccessreviews","namespaced":true,"kind":"LocalResourceAccessReview"},{"name":"localsubjectaccessreviews","namespaced":true,"kind":"LocalSubjectAccessReview"},{"name":"netnamespaces","namespaced":false,"kind":"NetNamespace"},{"name":"oauthaccesstokens","namespaced":false,"kind":"OAuthAccessToken"},{"name":"oauthauthorizetokens","namespaced":false,"kind":"OAuthAuthorizeToken"},{"name":"oauthclientauthorizations","namespaced":false,"kind":"OAuthClientAuthorization"},{"name":"oauthclients","namespaced":false,"kind":"OAuthClient"},{"name":"podsecuritypolicyreviews","namespaced":true,"kind":"PodSecurityPolicyReview"},{"name":"podsecuritypolicyselfsubjectreviews","namespaced":true,"kind":"PodSecurityPolicySelfSubjectReview"},{"name":"podsecuritypolicysubjectreviews","namespaced":true,"kind":"PodSecurityPolicySubjectReview"},{"name":"policies","namespaced":true,"kind":"Policy"},{"name":"policybindings","namespaced":true,"kind":"PolicyBinding"},{"name":"processedtemplates","namespaced":true,"kind":"Template"},{"name":"projectrequests","namespaced":false,"kind":"ProjectRequest"},{"name":"projects","namespaced":false,"kind":"Project"},{"name":"resourceaccessreviews","namespaced":true,"kind":"ResourceAccessReview"},{"name":"rolebindingrestrictions","namespaced":true,"kind":"RoleBindingRestriction"},{"name":"rolebindings","namespaced":true,"kind":"RoleBinding"},{"name":"roles","namespaced":true,"kind":"Role"},{"name":"routes","namespaced":true,"kind":"Route"},{"name":"routes/status","namespaced":true,"kind":"Route"},{"name":"selfsubjectrulesreviews","namespaced":true,"kind":"SelfSubjectRulesReview"},{"name":"subjectaccessreviews","namespaced":true,"kind":"SubjectAccessReview"},{"name":"subjectrulesreviews","namespaced":true,"kind":"SubjectRulesReview"},{"name":"templates","namespaced":true,"kind":"Template"},{"name":"useridentitymappings","namespaced":false,"kind":"UserIdentityMapping"},{"name":"users","namespaced":false,"kind":"User"}]}
+
+'
+    http_version:
+  recorded_at: Sun, 30 Apr 2017 19:52:52 GMT
+- request:
+    method: get
+    uri: https://host.example.com:8443/api/v1
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (darwin16.5.0 x86_64) ruby/2.3.3p222
+      Authorization:
+      - Bearer theToken
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 30 Apr 2017 19:52:52 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: '{"kind":"APIResourceList","groupVersion":"v1","resources":[{"name":"bindings","namespaced":true,"kind":"Binding"},{"name":"componentstatuses","namespaced":false,"kind":"ComponentStatus"},{"name":"configmaps","namespaced":true,"kind":"ConfigMap"},{"name":"endpoints","namespaced":true,"kind":"Endpoints"},{"name":"events","namespaced":true,"kind":"Event"},{"name":"limitranges","namespaced":true,"kind":"LimitRange"},{"name":"namespaces","namespaced":false,"kind":"Namespace"},{"name":"namespaces/finalize","namespaced":false,"kind":"Namespace"},{"name":"namespaces/status","namespaced":false,"kind":"Namespace"},{"name":"nodes","namespaced":false,"kind":"Node"},{"name":"nodes/proxy","namespaced":false,"kind":"Node"},{"name":"nodes/status","namespaced":false,"kind":"Node"},{"name":"persistentvolumeclaims","namespaced":true,"kind":"PersistentVolumeClaim"},{"name":"persistentvolumeclaims/status","namespaced":true,"kind":"PersistentVolumeClaim"},{"name":"persistentvolumes","namespaced":false,"kind":"PersistentVolume"},{"name":"persistentvolumes/status","namespaced":false,"kind":"PersistentVolume"},{"name":"pods","namespaced":true,"kind":"Pod"},{"name":"pods/attach","namespaced":true,"kind":"Pod"},{"name":"pods/binding","namespaced":true,"kind":"Binding"},{"name":"pods/eviction","namespaced":true,"kind":"Eviction"},{"name":"pods/exec","namespaced":true,"kind":"Pod"},{"name":"pods/log","namespaced":true,"kind":"Pod"},{"name":"pods/portforward","namespaced":true,"kind":"Pod"},{"name":"pods/proxy","namespaced":true,"kind":"Pod"},{"name":"pods/status","namespaced":true,"kind":"Pod"},{"name":"podtemplates","namespaced":true,"kind":"PodTemplate"},{"name":"replicationcontrollers","namespaced":true,"kind":"ReplicationController"},{"name":"replicationcontrollers/scale","namespaced":true,"kind":"Scale"},{"name":"replicationcontrollers/status","namespaced":true,"kind":"ReplicationController"},{"name":"resourcequotas","namespaced":true,"kind":"ResourceQuota"},{"name":"resourcequotas/status","namespaced":true,"kind":"ResourceQuota"},{"name":"secrets","namespaced":true,"kind":"Secret"},{"name":"securitycontextconstraints","namespaced":false,"kind":"SecurityContextConstraints"},{"name":"serviceaccounts","namespaced":true,"kind":"ServiceAccount"},{"name":"services","namespaced":true,"kind":"Service"},{"name":"services/proxy","namespaced":true,"kind":"Service"},{"name":"services/status","namespaced":true,"kind":"Service"}]}
+
+'
+    http_version:
+  recorded_at: Sun, 30 Apr 2017 19:52:52 GMT
+- request:
+    method: get
+    uri: https://host.example.com:8443/api/v1/namespaces/testproject/services/mysql
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (darwin16.5.0 x86_64) ruby/2.3.3p222
+      Authorization:
+      - Bearer theToken
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Sun, 30 Apr 2017 19:52:52 GMT
+      Content-Length:
+      - '626'
+    body:
+      encoding: UTF-8
+      string: '{"kind":"Service","apiVersion":"v1","metadata":{"name":"mysql","namespace":"testproject","selfLink":"/api/v1/namespaces/testproject/services/mysql","uid":"eb0effb0-29c9-11e7-b2c1-000c294e0cbd","resourceVersion":"64745","creationTimestamp":"2017-04-25T15:14:46Z","labels":{"app":"cakephp-mysql-example-test-patch","template":"cakephp-mysql-example"},"annotations":{"description":"Description
+        has been updated."}},"spec":{"ports":[{"name":"mysql","protocol":"TCP","port":3306,"targetPort":3306}],"selector":{"name":"mysql"},"clusterIP":"172.30.208.196","type":"ClusterIP","sessionAffinity":"None"},"status":{"loadBalancer":{}}}
+
+'
+    http_version:
+  recorded_at: Sun, 30 Apr 2017 19:52:52 GMT
+recorded_with: VCR 3.0.3
