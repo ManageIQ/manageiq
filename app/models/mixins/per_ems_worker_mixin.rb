@@ -18,7 +18,7 @@ module PerEmsWorkerMixin
     end
 
     def all_valid_ems_in_zone
-      all_ems_in_zone.select(&:authentication_status_ok?)
+      all_ems_in_zone.where(:enabled => true).select(&:authentication_status_ok?)
     end
 
     def desired_queue_names
