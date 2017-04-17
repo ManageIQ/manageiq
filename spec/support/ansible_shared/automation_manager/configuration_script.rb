@@ -130,6 +130,22 @@ shared_examples_for "ansible configuration_script" do
 
         expect { described_class.create_in_provider(manager.id, params) }.to raise_error(ActiveRecord::RecordNotFound)
       end
+
+      context "provider raises on create" do
+        it "with a hash" do
+          expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
+          expect(job_templates).to receive(:create!).and_raise(AnsibleTowerClient::Error, {"name"=>["Job template with this Name already exists."]}.to_json)
+
+          expect { described_class.create_in_provider(manager.id, params) }.to raise_error(AnsibleTowerClient::Error, "Job template with this Name already exists.")
+        end
+
+        it "with a string" do
+          expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
+          expect(job_templates).to receive(:create!).and_raise(AnsibleTowerClient::Error, "Job template with this Name already exists.")
+
+          expect { described_class.create_in_provider(manager.id, params) }.to raise_error(AnsibleTowerClient::Error, "Job template with this Name already exists.")
+        end
+      end
     end
 
     it ".create_in_provider_queue" do
