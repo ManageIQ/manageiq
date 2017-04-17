@@ -122,9 +122,21 @@ module Spec
         create_vmware_vms
       end
 
+      def vmware_reconfigure_model
+        @ems = FactoryGirl.create(:ems_vmware)
+        @storage = FactoryGirl.create(:storage_nfs)
+        create_hardware
+        create_vmware_vms
+        @reconfigure_request = FactoryGirl.create(:vm_reconfigure_request, :requester => @user)
+        @vm_hardware = FactoryGirl.build(:hardware, :virtual_hw_version => "07", :cpu_total_cores => 2,\
+         :memory_mb => 4096, :cpu_sockets => 2, :cpu_cores_per_socket => 1)
+        @vm_vmware = FactoryGirl.create(:vm_vmware, :hardware => @vm_hardware)
+        @vm_vmware.update_attributes(:ems_id => @ems.id)
+      end
+
       def google_template
         @ems = FactoryGirl.create(:ems_google_with_authentication,
-                                 :availability_zones => [FactoryGirl.create(:availability_zone_google)])
+                                  :availability_zones => [FactoryGirl.create(:availability_zone_google)])
         FactoryGirl.create(:template_google, :ext_management_system => @ems)
       end
 
