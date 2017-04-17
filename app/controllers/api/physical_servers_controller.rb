@@ -12,10 +12,6 @@ module Api
       change_resource_state(:turn_off_loc_led, type, id)
     end
 
-    #
-    # Name: power_on_resource
-    # Description: Power on server
-    #
     def power_on_resource(type, id, _data)
       change_resource_state(:power_on, type, id)
     end
