@@ -157,6 +157,16 @@ describe MiqServer do
           allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(true)
         end
 
+        it "doesn't sync the settings when running in a container" do
+          allow(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
+
+          @zone.update_attribute(:settings, :ntp => zone_ntp)
+          stub_settings(:ntp => server_ntp)
+
+          expect(LinuxAdmin::Chrony).not_to receive(:new)
+          @miq_server.ntp_reload
+        end
+
         it "syncs with server settings with zone and server configured" do
           @zone.update_attribute(:settings, :ntp => zone_ntp)
           stub_settings(:ntp => server_ntp)
