@@ -5459,7 +5459,7 @@ networks:
 - hostname
 - domain
 - ipv6address
-- mac_address
+- mac_addresses
 notification_recipients:
 - id
 - notification_id
