@@ -24,7 +24,7 @@ module TaskHelpers
       end
 
       unless File.writable?(directory)
-        return 'Destination directory must be writeable'
+        return 'Destination directory must be writable'
       end
 
       nil

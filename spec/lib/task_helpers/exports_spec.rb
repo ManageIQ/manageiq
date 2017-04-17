@@ -43,4 +43,29 @@ describe TaskHelpers::Exports do
       end
     end
   end
+
+  describe '.validate_directory' do
+    before(:each) do
+      @export_dir = Dir.mktmpdir('miq_exp_dir')
+      @export_dir2 = Dir.mktmpdir('miq_exp_dir')
+      FileUtils.remove_entry @export_dir2
+    end
+
+    after(:each) do
+      FileUtils.remove_entry @export_dir
+    end
+
+    it 'is a directory and writable' do
+      expect(TaskHelpers::Exports.validate_directory(@export_dir)).to be_nil
+    end
+
+    it 'does not exist' do
+      expect(TaskHelpers::Exports.validate_directory(@export_dir2)).to eq('Destination directory must exist')
+    end
+
+    it 'is not writable' do
+      File.chmod(0500, @export_dir)
+      expect(TaskHelpers::Exports.validate_directory(@export_dir)).to eq('Destination directory must be writable')
+    end
+  end
 end
