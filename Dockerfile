@@ -134,6 +134,7 @@ RUN source /etc/default/evm && \
     bower cache clean && \
     find ${RUBY_GEMS_ROOT}/gems/ -name .git | xargs rm -rvf && \
     find ${RUBY_GEMS_ROOT}/gems/ | grep "\.s\?o$" | xargs rm -rvf && \
+    rm -rvf ${RUBY_GEMS_ROOT}/bundler/gems/**/spec && \
     rm -rvf ${RUBY_GEMS_ROOT}/gems/rugged-*/vendor/libgit2/build && \
     rm -rvf ${RUBY_GEMS_ROOT}/cache/* && \
     rm -rvf /root/.bundle/cache && \
@@ -144,7 +145,8 @@ RUN source /etc/default/evm && \
 RUN source /etc/default/evm && \
     cd ${SUI_ROOT} && \
     yarn install && \
-    yarn run build
+    yarn run build && \
+    rm -rvf node_modules
 
 ## Copy appliance-initialize script and service unit file
 COPY docker-assets/appliance-initialize.service /usr/lib/systemd/system
