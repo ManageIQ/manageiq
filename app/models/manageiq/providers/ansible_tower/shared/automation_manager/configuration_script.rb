@@ -21,6 +21,12 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Configurati
       task_ids.each { |tid| MiqTask.wait_for_taskid(tid) }
 
       find_by!(:manager_id => manager.id, :manager_ref => job_template.id)
+    rescue AnsibleTowerClient::Error => err
+      begin
+        raise err.class, JSON.parse(err.message).values.flatten.join(", ")
+      rescue JSON::ParserError
+        raise err
+      end
     end
 
     def update_in_provider(manager_id, params)
