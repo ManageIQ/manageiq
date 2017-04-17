@@ -396,16 +396,6 @@
       :description: Display Individual Cloud Providers
       :feature_type: view
       :identifier: ems_cloud_show
-    - :name: Arbitration Profiles List
-      :description: Display Lists of Arbitration Profiles
-      :feature_type: view
-      :hidden: true
-      :identifier: arbitration_profile_show_list
-    - :name: Arbitration Profile Show
-      :description: Display Individual Arbitration Profiles
-      :feature_type: view
-      :hidden: true
-      :identifier: arbitration_profile_show
     - :name: Timeline
       :description: Display Timelines for Cloud Providers
       :feature_type: view
@@ -456,18 +446,6 @@
       :description: Add a Cloud Provider
       :feature_type: admin
       :identifier: ems_cloud_new
-    - :name: Add Arbitration Profile
-      :description: Add Arbitration Profile
-      :feature_type: admin
-      :identifier: arbitration_profile_new
-    - :name: Edit Arbitration Profile
-      :description: Edit Arbitration Profile
-      :feature_type: admin
-      :identifier: arbitration_profile_edit
-    - :name: Remove Arbitration Profile
-      :description: Remove Arbitration Profile
-      :feature_type: admin
-      :identifier: arbitration_profile_delete
 
 # Cloud Topology
 - :name: Cloud Topology
@@ -6127,52 +6105,6 @@
       :description: Show Cloud Networks
       :feature_type: view
       :identifier: miq_cloud_networks_view
-
-# ArbitrationSettings
-- :name: Arbitration Settings
-  :description: Get and Edit Arbitration Settings
-  :feature_type: admin
-  :identifier: miq_arbitration_settings
-  :children:
-  - :name: Show Arbitration Settings
-    :description: Show Arbitration Settings
-    :feature_type: admin
-    :identifier: show_arbitration_setting
-  - :name: Create Arbitration Settings
-    :description: Create Arbitration Setting
-    :feature_type: admin
-    :identifier: create_arbitration_setting
-  - :name: Edit Arbitration Settings
-    :description: Edit Arbitration Settings
-    :feature_type: admin
-    :identifier: edit_arbitration_setting
-  - :name: Delete Arbitration Settings
-    :description: Delete Arbitration Settings
-    :feature_type: admin
-    :identifier: delete_arbitration_setting
-
-# ArbitrationRules
-- :name: Arbitration Rules
-  :description: All functions for Arbitration Rules
-  :feature_type: admin
-  :identifier: miq_arbitration_rules
-  :children:
-  - :name: Show Arbitration List
-    :description: Show Arbitration Rule list
-    :feature_type: admin
-    :identifier: arbitration_rule_show_list
-  - :name: Create Arbitration Rule
-    :description: Create Arbitration Rule
-    :feature_type: admin
-    :identifier: arbitration_rule_new
-  - :name: Delete Arbitration Rule
-    :description: Delete Arbitration Rule
-    :feature_type: admin
-    :identifier: arbitration_rule_delete
-  - :name: Edit Arbitration Rule
-    :description: Edit Arbitration Rule
-    :feature_type: admin
-    :identifier: arbitration_rule_edit
 
 # Blueprints
 - :name: Blueprints
