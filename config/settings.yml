@@ -972,6 +972,7 @@
       - "/etc/default/ntp*"
       - "/var/log/messages*"
       - "/var/log/cron*"
+      - "/var/log/tower/*.log"
       - BUILD
       - GUID
       - VERSION
