@@ -15,6 +15,23 @@ describe 'Notifications API' do
     end
   end
 
+  describe "notification read" do
+    it "renders the available actions" do
+      api_basic_authorize
+
+      run_get(notification_url)
+
+      expected = {
+        "actions" => a_collection_including(
+          a_hash_including("name" => "mark_as_seen", "method" => "post"),
+          a_hash_including("name" => "delete", "method" => "post"),
+          a_hash_including("name" => "delete", "method" => "delete")
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+    end
+  end
+
   describe 'notification edit' do
     it 'is not supported' do
       api_basic_authorize
