@@ -19,6 +19,11 @@ module MiqEnvironment
       @supports_nohup = self.is_appliance? && self.supports_command?('nohup')
     end
 
+    def self.is_container?
+      return @is_container unless @is_container.nil?
+      @is_container = ENV["CONTAINER"] == "true"
+    end
+
     def self.is_appliance?
       return @is_appliance unless @is_appliance.nil?
       @is_appliance = self.is_linux? && File.exist?('/var/www/miq/vmdb')
