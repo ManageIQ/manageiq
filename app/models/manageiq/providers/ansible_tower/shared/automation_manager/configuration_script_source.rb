@@ -4,6 +4,12 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Configurati
   include ProviderObjectMixin
 
   module ClassMethods
+    def provider_params(params)
+      authentication_id = params.delete(:authentication_id)
+      params[:credential] = Authentication.find(authentication_id).manager_ref if authentication_id
+      params
+    end
+
     def provider_collection(manager)
       manager.with_provider_connection do |connection|
         connection.api.projects
