@@ -47,11 +47,10 @@ describe ManageIQ::Providers::Openstack::CloudManager::CloudVolume do
         expect(the_new_volume).to receive(:save).and_return(the_new_volume)
 
         volume = CloudVolume.create_volume(ems, volume_options)
-        expect(volume.class).to        eq described_class
-        expect(volume.name).to         eq 'new_name'
-        expect(volume.ems_ref).to      eq 'new_id'
-        expect(volume.status).to       eq 'creating'
-        expect(volume.cloud_tenant).to eq tenant
+        expect(volume.class).to        eq Hash
+        expect(volume[:name]).to       eq 'new_name'
+        expect(volume[:ems_ref]).to    eq 'new_id'
+        expect(volume[:status]).to     eq 'creating'
       end
 
       it "raises an error when the ems is missing" do
