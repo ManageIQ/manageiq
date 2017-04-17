@@ -398,7 +398,7 @@ module EmsRefresh::SaveInventory
   def save_asset_details_inventory(parent, hash)
     return if hash.nil?
     
-    save_inventoy_single(:asset_details, parent, hash)
+    save_inventory_single(:asset_details, parent, hash)
 
   end
 
