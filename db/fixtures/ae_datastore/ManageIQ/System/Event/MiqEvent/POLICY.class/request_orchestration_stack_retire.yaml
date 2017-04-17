@@ -10,6 +10,10 @@ object:
   fields:
   - logical_event:
       value: request_orchestration_stack_retire
+  - rel1:
+      value: "/System/event_handlers/event_enforce_policy"
+  - rel2:
+      value: "/System/event_handlers/check_policy_prevent"
   - rel4:
       value: "/System/Process/parse_provider_category"
   - rel5:

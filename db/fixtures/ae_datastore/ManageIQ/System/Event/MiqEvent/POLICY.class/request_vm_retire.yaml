@@ -10,9 +10,11 @@ object:
   fields:
   - logical_event:
       value: request_vm_retire
+  - rel2:
+      value: "/System/event_handlers/event_enforce_policy"
+  - rel3:
+      value: "/System/event_handlers/check_policy_prevent"
   - rel4:
       value: "/System/Process/parse_provider_category"
   - rel5:
       value: "/${/#ae_provider_category}/VM/Lifecycle/Retirement?vm_id=${process#vm_id}"
-  - rel6:
-      value: "/System/event_handlers/event_enforce_policy"

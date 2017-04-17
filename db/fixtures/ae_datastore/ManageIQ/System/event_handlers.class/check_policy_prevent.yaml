@@ -1,0 +1,12 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: check_policy_prevent
+    inherits: 
+    description: 
+  fields:
+  - meth1:
+      value: check_policy_prevent

@@ -11,8 +11,10 @@ object:
   - logical_event:
       value: request_service_retire
   - rel1:
+      value: "/System/event_handlers/event_enforce_policy"
+  - rel2:
+      value: "/System/event_handlers/check_policy_prevent"
+  - rel3:
       value: "/Service/Retirement/StateMachines/Methods/GetRetirementEntryPoint"
   - rel4:
       value: "${/#retirement_entry_point}?service_id=${process#service_id}"
-  - rel5:
-      value: "/System/event_handlers/event_enforce_policy"
