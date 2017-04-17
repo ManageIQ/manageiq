@@ -2,6 +2,87 @@
 
 All notable changes to this project will be documented in this file.
 
+# Euwe-3
+
+## Added
+
+### Automate
+- Allow passing options when adding a disk in automate. [(#14350)](https://github.com/ManageIQ/manageiq/pull/14350)
+- Added container components for service model. ([#12863](https://github.com/ManageIQ/manageiq/pull/12863))
+- Services
+  - Add automate engine support for array elements containing text values. ([#11667](https://github.com/ManageIQ/manageiq/pull/11667))
+  - Add multiselect option to dropdowns [(#10270)](https://github.com/ManageIQ/manageiq/pull/10270)
+
+### Platform
+- Authentication: Ensure user name is set even when common LDAP attributes are missing. [(#14142)](https://github.com/ManageIQ/manageiq/pull/14142)
+- Chargeback
+  - Add tenant scoping for resources of performance reports in RBAC [(#14095)](https://github.com/ManageIQ/manageiq/pull/14095)
+  - Enterprise rate parent for containers chargeback [(#14079)](https://github.com/ManageIQ/manageiq/pull/14079)
+- RBAC: Add RBAC for rss feeds [(#14041)](https://github.com/ManageIQ/manageiq/pull/14041)
+
+### Providers
+- Openstack
+  - Add openstack excon settings [(#14172)](https://github.com/ManageIQ/manageiq/pull/14172)
+  - Add :event_catcher_openstack_service setting [(#13985)](https://github.com/ManageIQ/manageiq/pull/13985)
+- Red Hat Virtualization Manager: Resolve oVirt IP addresses [(#13767)](https://github.com/ManageIQ/manageiq/pull/13767)
+
+## Changed
+
+### Performance
+- Optimize number of transactions sent in refresh [(#14670)](https://github.com/ManageIQ/manageiq/pull/14670)
+- Make Widget run without timezones [(#14386)](https://github.com/ManageIQ/manageiq/pull/14386)
+- Speed up widget generation [(#14224)](https://github.com/ManageIQ/manageiq/pull/14224)
+
+### Platform
+- RBAC: Remove admin role for tenant admin [(#14081)](https://github.com/ManageIQ/manageiq/pull/14081)
+- Reporting: Support dots and slashes in virtual custom attributes [(#14329)](https://github.com/ManageIQ/manageiq/pull/14329)
+
+## Fixed
+
+### Automate
+- Provisioning: Add multiple_value option to expose_eligible_resources. [(#13853)](https://github.com/ManageIQ/manageiq/pull/13853)
+- Services
+  - Fixes tag control multi-value [(#14382)](https://github.com/ManageIQ/manageiq/pull/14382)
+  - Power state for services that do not have an associated service_template [(#13785)](https://github.com/ManageIQ/manageiq/pull/13785)
+
+### Platform
+- Appliance: Move the call to reload ntp settings to the server only [(#14208)](https://github.com/ManageIQ/manageiq/pull/14208)
+- Chargeback: Do not pass nil to the assignment mixin [(#14713)](https://github.com/ManageIQ/manageiq/pull/14713)
+- Fix "Multiple Parents Found" issue when moving a relationship. [(#14060)](https://github.com/ManageIQ/manageiq/pull/14060)
+- Workers
+  - Make worker_monitor_drb act like a reader again! [(#14638)](https://github.com/ManageIQ/manageiq/pull/14638)
+  - Fix missing reason constants [(#13919)](https://github.com/ManageIQ/manageiq/pull/13919)
+  - Add balancer members after configs have been written [(#14311)](https://github.com/ManageIQ/manageiq/pull/14311)
+  - Rescue worker class sync_workers exceptions and move on [(#13976)](https://github.com/ManageIQ/manageiq/pull/13976)
+  - Configure apache balancer with up to 10 members at startup [(#14007)](https://github.com/ManageIQ/manageiq/pull/14007)
+  - If we can't update_attributes on a queue row set state to error [(#14365)](https://github.com/ManageIQ/manageiq/pull/14365)
+
+### Performance
+- Optimize store_ids_for_new_records by getting rid of the O(n^2) lookups [(#14542)](https://github.com/ManageIQ/manageiq/pull/14542)
+
+### Providers
+- Containers
+  - Delegate custom attributes to images in ChargebackContainerImage [(#14395)](https://github.com/ManageIQ/manageiq/pull/14395)
+  - Fix queueing of historical metrics collection [(#14695)](https://github.com/ManageIQ/manageiq/pull/14695)
+  - Identifying container images by digest only [(#14185)](https://github.com/ManageIQ/manageiq/pull/14185)
+  - Container Project reports: add archived Container Groups [(#13810)](https://github.com/ManageIQ/manageiq/pull/13810)
+- Metrics
+  - Split metric collections into smaller intervals [(#14332)](https://github.com/ManageIQ/manageiq/pull/14332)
+  - Handle exception when a metrics target doesn't have an ext_management_system [(#14718)](https://github.com/ManageIQ/manageiq/pull/14718)
+- Microsoft: SCVMM - Enable VM reset functionality [(#14123)](https://github.com/ManageIQ/manageiq/pull/14123)
+- Openstack: Set the raw power state when starting Openstack instance [(#14122)](https://github.com/ManageIQ/manageiq/pull/14122)
+- Red Hat Virtualization Manager
+  - Set timeout for inventory refresh calls [(#14245)](https://github.com/ManageIQ/manageiq/pull/14245)
+  - Add oVirt cloud-init customization template [(#14139)](https://github.com/ManageIQ/manageiq/pull/14139)
+  - Fix authentication of metrics credentials in RHV [(#13981)](https://github.com/ManageIQ/manageiq/pull/13981)
+
+### SmartState
+- Add the logic to allow a policy to prevent request_vm_scan. [(#14370)](https://github.com/ManageIQ/manageiq/pull/14370)
+
+### User Interface (Classic)
+- Update spice-html5-bower to 1.6.3 fixing an extra GET .../null request [(#13889)](https://github.com/ManageIQ/manageiq/pull/13889)
+- Fix mixed values in Low and High operating ranges for CU charts [(#14324)](https://github.com/ManageIQ/manageiq/pull/14324)
+
 # Euwe-2
 
 ## Added
