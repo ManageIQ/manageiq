@@ -1577,7 +1577,6 @@ jobs:
 - target_id
 - target_class
 - type
-- process
 - agent_id
 - agent_message
 - started_on
