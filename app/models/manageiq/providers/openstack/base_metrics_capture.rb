@@ -95,6 +95,25 @@ class ManageIQ::Providers::Openstack::BaseMetricsCapture < ManageIQ::Providers::
 
   def find_meter_counters(metric_capture_module, resource_filter, metadata_filter, log_header)
     counters = list_resource_meters(resource_filter, log_header) + list_metadata_meters(metadata_filter, log_header)
+
+    # With Gnocchi, the network metrics are not associated with the instance's resource id
+    # but with the instance's network interface resource id. Here we fetch the counters
+    # for the network interface, so that the network metrics can be fetched.
+    if target.respond_to?(:network_ports)
+      target.network_ports.each do |port|
+        # fetch the list of resources and use the original_resource_id and type to find
+        # the network interface's resource
+        original_resource_id = "#{target.ems_ref}-tap#{port.ems_ref[0..10]}"
+        resources = @perf_ems.list_resources.body
+        resources.each do |r|
+          if r["type"].to_s == "instance_network_interface" && r["original_resource_id"].include?(original_resource_id)
+            resource_filter = {"field" => "resource_id", "value" => r["id"]}
+            counters = counters + list_resource_meters(resource_filter, log_header)
+          end
+        end
+      end
+    end
+
     # Select only allowed counters, with unique names
     counters.select { |c| meter_names(metric_capture_module).include?(c["name"]) }.uniq { |x| x['name'] }
   end
