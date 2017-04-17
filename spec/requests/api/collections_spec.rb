@@ -311,7 +311,7 @@ describe "Rest API Collections" do
 
     it 'query PhysicalServers' do
       FactoryGirl.create(:physical_server)
-      test_collection_query(:physical_servers, "/api/physical_servers", PhysicalServer)
+      test_collection_query(:physical_servers, physical_servers_url, PhysicalServer)
     end
   end
 
@@ -569,15 +569,14 @@ describe "Rest API Collections" do
       test_collection_bulk_query(:cloud_volumes, cloud_volumes_url, CloudVolume)
     end
 
-<<<<<<< a1ec6f1a4d59b41dc1deece4492d6b4d0ebd3aeb
     it 'bulk query Firmwares' do
       FactoryGirl.create(:firmware)
       test_collection_bulk_query(:firmwares, firmwares_url, Firmware)
-=======
+    end
+    
     it 'bulk query PhysicalServers' do
       FactoryGirl.create(:physical_server)
-      test_collection_bulk_query(:physical_servers, "/api/physical_servers", PhysicalServer)
->>>>>>> Adds collection, bulk api spec tests. Changes action name show->read
+      test_collection_bulk_query(:physical_servers, physical_servers_url, PhysicalServer)
     end
   end
 end
