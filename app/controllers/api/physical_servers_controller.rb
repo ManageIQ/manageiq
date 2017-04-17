@@ -37,7 +37,7 @@ module Api
         begin
           server = resource_search(id, type, klass)
           desc = "Requested server state #{state} for #{server_ident(server)}"
-          api_log_info("desc")
+          api_log_info(desc)
           task_id = queue_object_action(server, desc, :method_name => state, :role => :ems_operations)
           action_result(true, desc, :task_id => task_id)
         rescue => err
