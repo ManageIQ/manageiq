@@ -181,8 +181,6 @@ RSpec.describe 'Arbitration Rule API' do
 
   context 'OPTIONS /api/arbitration_rules' do
     it 'returns arbitration rule field_values' do
-      api_basic_authorize
-
       run_options(arbitration_rules_url)
 
       additional_options = { 'field_values' => ArbitrationRule.field_values }

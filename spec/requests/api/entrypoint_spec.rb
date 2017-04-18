@@ -69,4 +69,12 @@ RSpec.describe "API entrypoint" do
       )
     )
   end
+
+  describe "OPTIONS /api" do
+    it "does not require a user or token" do
+      run_options(entrypoint_url)
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
 end

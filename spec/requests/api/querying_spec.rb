@@ -754,10 +754,45 @@ describe "Querying" do
 
   describe 'OPTIONS /api/vms' do
     it 'returns the options information' do
-      api_basic_authorize
-
       run_options(vms_url)
       expect_options_results(:vms)
+    end
+  end
+
+  describe "OPTIONS /api/vms/:c_id/" do
+    it "responds OK" do
+      run_options(vms_url(vm1.id))
+
+      expect(response.headers['Access-Control-Allow-Methods']).to include('OPTIONS')
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  describe "OPTIONS /api/vms/:c_id/snapshots" do
+    it "responds OK" do
+      run_options("#{vms_url(vm1.id)}/software")
+
+      expect(response.headers['Access-Control-Allow-Methods']).to include('OPTIONS')
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  describe "OPTIONS /api/vms/:c_id/software/:s_id" do
+    it "responds OK" do
+      software = FactoryGirl.create(:software, :vm_or_template => vm1)
+      run_options("#{vms_url(vm1.id)}/software/#{software.id}")
+
+      expect(response.headers['Access-Control-Allow-Methods']).to include('OPTIONS')
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  describe "OPTIONS /api/automate/custom/system" do
+    it "responds OK" do
+      run_options(automate_url("custom/system"))
+
+      expect(response.headers['Access-Control-Allow-Methods']).to include('OPTIONS')
+      expect(response).to have_http_status(:ok)
     end
   end
 

@@ -25,10 +25,14 @@ Vmdb::Application.routes.draw do
     end
 
     Api::ApiConfig.collections.each do |collection_name, collection|
-      # OPTIONS action for each collection
-      match collection_name.to_s, :controller => collection_name, :action => :options, :via => :options
-
       scope collection_name, :controller => collection_name do
+        # OPTIONS action for each collection
+        if collection.options.include?(:arbitrary_resource_path)
+          match "/(*c_suffix)", :controller => collection_name, :action => :options, :via => :options
+        else
+          match "/(:c_id)", :controller => collection_name, :action => :options, :via => :options
+        end
+
         collection.verbs.each do |verb|
           root :action => API_ACTIONS[verb], :via => verb if collection.options.include?(:primary)
 
@@ -54,6 +58,8 @@ Vmdb::Application.routes.draw do
         end
 
         Array(collection.subcollections).each do |subcollection_name|
+          match "/:c_id/#{subcollection_name}(/:s_id)", :controller => collection_name, :action => :options, :via => :options
+
           Api::ApiConfig.collections[subcollection_name].verbs.each do |verb|
             case verb
             when :get
