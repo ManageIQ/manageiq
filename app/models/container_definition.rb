@@ -1,5 +1,6 @@
 class ContainerDefinition < ApplicationRecord
   include ArchivedMixin
+  include_concern 'Purging'
   # :name, :image, :image_pull_policy, :memory, :cpu
   belongs_to :container_group
   belongs_to :ext_management_system, :foreign_key => :ems_id

@@ -121,6 +121,14 @@ class MiqScheduleWorker::Jobs
     queue_work(:class_name => "MiqReportResult", :method_name => "purge_timer", :zone => nil)
   end
 
+  def archived_entities_purge_timer
+    queue_work(:class_name => "Container", :method_name => "purge_timer", :zone => nil)
+    queue_work(:class_name => "ContainerGroup", :method_name => "purge_timer", :zone => nil)
+    queue_work(:class_name => "ContainerImage", :method_name => "purge_timer", :zone => nil)
+    queue_work(:class_name => "ContainerProject", :method_name => "purge_timer", :zone => nil)
+    queue_work(:class_name => "ContainerDefinition", :method_name => "purge_timer", :zone => nil)
+  end
+
   def storage_refresh_metrics
     queue_work(
       :class_name  => "StorageManager",
