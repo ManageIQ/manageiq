@@ -1142,3 +1142,92 @@
   - dashboard
   - chargeback
   - miq_report
+
+- :name: EvmRole-container_administrator
+  :read_only: true
+  :miq_product_feature_identifiers:
+  - vms_filter_accord
+  - instances_filter_accord
+  - datacenter_controller
+  - storage_pod
+  - dashboard
+  - miq_report
+  - consumption
+  - chargeback
+  - pictures
+  - control_explorer
+  - generic_object_explorer
+  - my_settings
+  - tasks
+  - about
+  - ontap_storage_system
+  - ontap_storage_volume
+  - ontap_logical_disk
+  - cim_base_storage_extent
+  - ontap_file_share
+  - snia_local_file_system
+  - storage_manager
+  - ems_container
+  - middleware_server_group
+  - container_group
+  - container_node
+  - container_replicator
+  - container_image
+  - container_image_registry
+  - persistent_volume
+  - container_build
+  - container_template
+  - container_service
+  - container_route
+  - container_project
+  - containers
+  - container_topology
+  - container_dashboard
+  - ems_infra_dashboard
+  - instance_view
+  - vm_view
+  - miq_cloud_networks
+  - miq_arbitration_settings
+  - miq_arbitration_rules
+  - blueprint
+  - redhat_access_insights_admin
+  - ems_container_ad_hoc_metrics
+
+
+- :name: EvmRole-container_operator
+  :read_only: true
+  :miq_product_feature_identifiers:
+  - vms_filter_accord
+  - instances_filter_accord
+  - dashboard_view
+  - miq_report_saved_reports_view
+  - miq_report_view
+  - miq_report_control
+  - chargeback_reports
+  - my_settings
+  - tasks
+  - ems_container_view
+  - ems_container_check_compliance
+  - container_group_view
+  - container_group_check_compliance
+  - container_node_view
+  - container_node_check_compliance
+  - container_replicator_check_compliance
+  - container_image_view
+  - container_image_scan
+  - container_image_check_compliance
+  - container_image_registry_view
+  - persistent_volume_view
+  - container_build_view
+  - container_template_view
+  - container_service_view
+  - container_route_view
+  - container_project_view
+  - container_filter_accord
+  - container_view
+  - container_control
+  - container_topology
+  - container_dashboard
+  - instance_view
+  - vm_view
+  - ems_container_ad_hoc_metrics
