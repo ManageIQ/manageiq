@@ -343,16 +343,6 @@ class MiqExpression
   def initialize(exp, ctype = nil)
     @exp = exp
     @context_type = ctype
-
-    load_virtual_custom_attributes
-  end
-
-  def load_virtual_custom_attributes
-    return unless @exp
-
-    fields.compact.select { |x| x.instance_of?(MiqExpression::Field) && x.custom_attribute_column? }.each do |field|
-      field.model.add_custom_attribute(field.column)
-    end
   end
 
   def self.proto?
