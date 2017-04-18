@@ -69,15 +69,7 @@
 
                         - else
                           - if field.values.length > 1
-                            - if field.sort_by.to_s != "none"
-                              - if field.data_type == "integer"
-                                - val = field.values.sort_by { |d| field.sort_by == :value ? d.first.to_i : d.last.to_i }
-                                - val = val.reverse if field.sort_order == :descending
-                              - else
-                                - val = field.values.sort_by { |d| field.sort_by == :value ? d.first : d.last }
-                                - val = val.reverse if field.sort_order == :descending
-                            - else
-                              - val = copy_array(field.values)
+                            - val = copy_array(field.values)
 
                             - if field.type == "DialogFieldDropDownList"
                               - if field.required
