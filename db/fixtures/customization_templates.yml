@@ -283,7 +283,7 @@
 
 - :name: SSH key addition template
   :description: This template enables placing ssh public key in authorized keys
-  :script: "#cloud-config\nusers:\n  - name: root\n    ssh-authorized-keys:\n      - <%= evm[:ws_values][:ssh_public_key] %>"
+  :script: "#cloud-config\nusers:\n  - name: root\n    ssh-authorized-keys:\n      - <%= evm.fetch_path(:ws_values, :ssh_public_key) %>"
   :type: CustomizationTemplateCloudInit
   :system: true
 
