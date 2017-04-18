@@ -2282,24 +2282,6 @@
         :identifier: rbac_user_tags_edit
       - :name: unassign
         :identifier: rbac_user_tags_edit
-  :virtual_templates:
-    :description: Virtual Templates
-    :identifier: miq_virtual_template
-    :options:
-    - :collection
-    :verbs: *gp
-    :klass: ManageIQ::Providers::CloudManager::VirtualTemplate
-    :collection_actions:
-      :get:
-      - :name: read
-        :identifier: virtual_template_show
-      :post:
-      - :name: query
-        :identifier: virtual_template_show
-    :resource_actions:
-      :get:
-      - :name: read
-        :identifier: virtual_template_show
   :vms:
     :description: Virtual Machines
     :identifier: vm
