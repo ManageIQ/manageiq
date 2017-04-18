@@ -1,6 +1,7 @@
 class Container < ApplicationRecord
   include NewWithTypeStiMixin
   include ArchivedMixin
+  include_concern 'Purging'
 
   has_one    :container_group, :through => :container_definition
   belongs_to :ext_management_system, :foreign_key => :ems_id
