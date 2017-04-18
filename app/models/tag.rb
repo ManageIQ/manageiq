@@ -17,6 +17,10 @@ class Tag < ApplicationRecord
 
       if virtual_custom_attribute
         predicate.map! { |x| URI::RFC2396_Parser.new.unescape(x) }
+        # it is always array with one string element - name of virtual custom attribute because they are supported only
+        # in direct relations
+        custom_attribute = predicate.first
+        object.class.add_custom_attribute(custom_attribute) if object.class < CustomAttributeMixin
       end
 
       begin
