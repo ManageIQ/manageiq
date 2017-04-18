@@ -102,23 +102,20 @@ describe Service do
     context "#power_states_match?" do
       it "returns the uniq value for the 'on' power state" do
         allow(@service).to receive(:composite?).and_return(true)
-        expect(@service).to receive(:map_composite_power_states).with(:start).and_return(["on"])
+        expect(@service).to receive(:map_power_states).with(:start).and_return(["on"])
         expect(@service).to receive(:update_power_status).with(:start).and_return(true)
         expect(@service.power_states_match?(:start)).to be_truthy
       end
 
       it "returns the uniq value for the 'off' power state" do
         allow(@service).to receive(:composite?).and_return(true)
-        expect(@service).to receive(:map_composite_power_states).with(:stop).and_return(["off"])
+        expect(@service).to receive(:map_power_states).with(:stop).and_return(["off"])
         expect(@service).to receive(:update_power_status).with(:stop).and_return(true)
         expect(@service).to receive(:power_states).and_return(["off"])
         expect(@service.power_states_match?(:stop)).to be_truthy
       end
 
       it "returns the uniq value for the 'on' power state with an atomic service" do
-        allow(@service).to receive(:composite?).and_return(false)
-        allow(@service).to receive(:atomic?).and_return(true)
-
         expect(@service).to receive(:update_power_status).with(:start).and_return(true)
         expect(@service.power_states_match?(:start)).to be_truthy
       end
@@ -126,6 +123,7 @@ describe Service do
       it "returns the uniq value for the 'off' power state with an atomic service" do
         allow(@service).to receive(:composite?).and_return(false)
         allow(@service).to receive(:atomic?).and_return(true)
+        allow(@service).to receive(:children).and_return(false)
 
         expect(@service).to receive(:update_power_status).with(:stop).and_return(true)
         expect(@service).to receive(:power_states).and_return(["off"])
@@ -133,28 +131,69 @@ describe Service do
       end
     end
 
+    context "#all_states_match?" do
+      it "returns false if the composite service power states do not match" do
+        allow(@service).to receive(:composite?).and_return(true)
+        expect(@service.all_states_match?(:stop)).to be_falsey
+      end
+
+      it "returns true if the composite service power states do  match" do
+        allow(@service).to receive(:composite?).and_return(true)
+        allow(@service).to receive(:map_power_states).with(:start).and_return(['on'])
+        expect(@service.all_states_match?(:start)).to be_truthy
+      end
+
+      it "returns false if the atomic service power states do not match" do
+        allow(@service).to receive(:composite?).and_return(false)
+        allow(@service).to receive(:atomic?).and_return(true)
+        expect(@service.all_states_match?(:stop)).to be_falsey
+      end
+
+      it "returns true if the atomic service power states do  match" do
+        allow(@service).to receive(:composite?).and_return(false)
+        allow(@service).to receive(:atomic?).and_return(true)
+        expect(@service.all_states_match?(:start)).to be_truthy
+      end
+
+      it "returns false if the atomic service children power states do not match" do
+        allow(@service).to receive(:composite?).and_return(false)
+        allow(@service).to receive(:atomic?).and_return(true)
+        allow(@service).to receive(:children).and_return(true)
+        expect(@service.all_states_match?(:stop)).to be_falsey
+      end
+
+      it "returns true if the atomic service children power states do  match" do
+        allow(@service).to receive(:composite?).and_return(false)
+        allow(@service).to receive(:atomic?).and_return(true)
+        allow(@service).to receive(:children).and_return(true)
+        expect(@service.all_states_match?(:start)).to be_truthy
+      end
+    end
+
     context "#map_power_states" do
       it "returns the power value when start_action is set" do
         expect(@service.service_resources.first.start_action).to eq "Power On"
-        expect(@service.map_composite_power_states(:start)).to eq ["on"]
+        expect(@service.map_power_states(:start)).to eq ["on"]
       end
 
       it "returns the power value when stop_action is set" do
         expect(@service.service_resources.first.stop_action).to eq "Power Off"
-        expect(@service.map_composite_power_states(:stop)).to eq ["off"]
+        expect(@service.map_power_states(:stop)).to eq ["off"]
       end
 
       it "assumes the start_action and returns a value if none of the start_actions are set" do
         expect(@service_c2.service_resources.first.id).to_not eq @service_c2.service_resources.last.id
         expect(@service_c2.service_resources.first.start_action).to be_nil
         expect(@service_c2.service_resources.last.start_action).to be_nil
-        expect(@service_c2.map_composite_power_states(:start)).to eq ["on"]
+        expect(@service_c2.group_resource_actions(:start_action)).to eq [nil]
+        expect(@service_c2.map_power_states(:start)).to eq ["on"]
       end
 
       it "assumes the stop_action and returns a value if none of the stop_actions are set" do
         expect(@service_c2.service_resources.first.stop_action).to be_nil
         expect(@service_c2.service_resources.last.stop_action).to be_nil
-        expect(@service_c2.map_composite_power_states(:stop)).to eq ["off"]
+        expect(@service_c2.group_resource_actions(:stop_action)).to eq [nil]
+        expect(@service_c2.map_power_states(:stop)).to eq ["off"]
       end
     end
 

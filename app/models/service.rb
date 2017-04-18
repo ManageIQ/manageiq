@@ -181,30 +181,38 @@ class Service < ApplicationRecord
   end
 
   def power_states_match?(action)
-    if composite? && (power_states.uniq == map_composite_power_states(action))
-      return update_power_status(action)
-    elsif atomic? && (power_states[0] == POWER_STATE_MAP[action])
-      return update_power_status(action)
-    end
+    all_states_match?(action) ? update_power_status(action) : false
+  end
+
+  def all_states_match?(action)
+    return true if composite? && (power_states.uniq == map_power_states(action))
+    return true if atomic? && (power_states[0] == POWER_STATE_MAP[action])
     false
   end
 
   def composite?
-    service_template ? service_template.composite? : children.present?
+    children.present?
   end
 
   def atomic?
-    service_template ? service_template.atomic? : children.empty?
+    children.empty?
   end
 
   def orchestration_stacks
     service_resources.where(:resource_type => 'OrchestrationStack').collect(&:resource)
   end
 
-  def map_composite_power_states(action)
-    action_name = "#{action}_action"
-    service_actions = service_resources.map(&action_name.to_sym).uniq
+  def group_resource_actions(action_name)
+    [].tap do |sa|
+      each_group_resource do |svc_rsc|
+        sa << svc_rsc
+      end
+    end.map(&action_name).uniq
+  end
 
+  def map_power_states(action)
+    action_name = "#{action}_action".to_sym
+    service_actions = group_resource_actions(action_name)
     # We need to account for all nil :start_action or :stop_action attributes
     #   When all :start_actions are nil then return 'Power On' for the :start_action
     #   When all :stop_actions are nil then return 'Power Off' for the :stop_action
