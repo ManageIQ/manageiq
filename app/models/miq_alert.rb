@@ -6,6 +6,7 @@ class MiqAlert < ApplicationRecord
 
   validates_presence_of     :description, :guid
   validates_uniqueness_of   :description, :guid
+  validate :validate_automate_expressions
 
   has_many :miq_alert_statuses, :dependent => :destroy
   before_save :set_responds_to_events
@@ -70,6 +71,22 @@ class MiqAlert < ApplicationRecord
   def set_responds_to_events
     events = responds_to_events_from_expression
     self.responds_to_events = events unless events.nil?
+  end
+
+  def validate_automate_expressions
+    # if always_evaluate = true, delay_next_evaluation must be 0
+    valid = true
+    automate_expression = if expression.kind_of?(Hash) && self.class.expression_by_name(expression[:eval_method])
+                            self.class.expression_by_name(expression[:eval_method])
+                          else
+                            {}
+                          end
+    next_frequency = (options || {}).fetch_path(:notifications, :delay_next_evaluation)
+    if automate_expression[:always_evaluate] && next_frequency != 0
+      valid = false
+      errors.add(:notifications, "Datawarehouse alerts must have a 0 notification frequency")
+    end
+    valid
   end
 
   def self.assigned_to_target(target, event = nil)
@@ -199,8 +216,7 @@ class MiqAlert < ApplicationRecord
 
   def add_status_post_evaluate(target, result, event)
     status_description, severity, url, ems_ref, resolved = event.try(:parse_event_metadata)
-    status = miq_alert_statuses.find_or_initialize_by(:resource => target)
-
+    status = miq_alert_statuses.find_or_initialize_by(:resource => target, :event_ems_ref => ems_ref)
     status.result = result
     status.ems_id = target.try(:ems_id)
     status.description = status_description || description
@@ -442,7 +458,7 @@ class MiqAlert < ApplicationRecord
           {:name => :value_mw_garbage_collector, :description => _("Duration Per Minute (ms)"), :numeric => true}
         ]},
       {:name => "dwh_generic", :description => _("All Datawarehouse alerts"), :db => ["ContainerNode"], :responds_to_events => "datawarehouse_alert",
-        :options => []}
+        :options => [], :always_evaluate => true}
     ]
   end
 

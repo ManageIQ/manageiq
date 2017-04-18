@@ -166,6 +166,11 @@ request_service_stop,Service Stop Request,Default,service_process
 service_stopped,Service Stopped,Default,service_process
 
 #
+# Orchestration
+#
+request_orchestration_stack_retire,Orchestration Stack Retire Request,Default,orchestration_process
+
+#
 # Container Operations
 #
 request_containerimage_scan,Container Image Analysis Request,Default,container_operations

@@ -80,34 +80,32 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     queue_signal(:pod_wait)
   end
 
+  def poll_pod_wait
+    queue_signal(:pod_wait, :deliver_on => POD_POLL_INTERVAL.seconds.from_now.utc)
+  end
+
   def pod_wait
     _log.info("waiting for pod #{pod_full_name} to be available")
 
-    client       = kubernetes_client
-    health_url   = pod_proxy_url(client, INSPECTOR_HEALTH_PATH)
-    http_options = {
-      :use_ssl     => health_url.scheme == 'https',
-      :verify_mode => ext_management_system.verify_ssl_mode,
-      :cert_store  => ext_management_system.ssl_cert_store,
-    }
-
-    # TODO: move this to a more appropriate place (lib)
-    response = pod_health_poll(client, health_url, http_options)
-
-    case response
-    when Net::HTTPOK
-      _log.info("pod #{pod_full_name} is ready and accessible")
-      queue_signal(:analyze)
-    when Net::HTTPServiceUnavailable
-      # TODO: check that the pod wasn't terminated (exit code)
-      # continue: pod is still not up and running
-      _log.info("pod #{pod_full_name} is not available")
-      queue_signal(:pod_wait,
-                   :deliver_on => POD_POLL_INTERVAL.seconds.from_now.utc)
-    else
-      msg = "unknown access error to pod #{pod_full_name}: #{response}"
+    begin
+      statuses = kubernetes_client.get_pod(options[:pod_name], options[:pod_namespace])[:status].try(:containerStatuses)
+      unless statuses
+        _log.info("No containerStatuses for pod #{options[:pod_name]}")
+        return poll_pod_wait
+      end
+      ready = statuses[0][:ready]
+    rescue SocketError, KubeException => e
+      msg = "unknown access error to pod #{pod_full_name}: [#{e.message}]"
       _log.info(msg)
-      queue_signal(:abort_job, msg, "error")
+      return queue_signal(:abort_job, msg, "error")
+    end
+    if ready
+      _log.info("pod #{pod_full_name} is ready and accessible")
+      return queue_signal(:analyze)
+    else
+      # continue: pod is still not up and running
+      _log.info("pod #{pod_full_name} is not ready")
+      return poll_pod_wait
     end
   end
 
@@ -394,7 +392,15 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
                 :name      => "docker-socket"
               }
             ],
-            :env             => inspector_proxy_env_variables
+            :env             => inspector_proxy_env_variables,
+            :readinessProbe  => {
+              "initialDelaySeconds" => 15,
+              "periodSeconds"       => 5,
+              "httpGet"             => {
+                "path" => "/healthz",
+                "port" => options[:pod_port]
+              }
+            }
           }
         ],
         :volumes       => [

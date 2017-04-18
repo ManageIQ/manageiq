@@ -18,7 +18,7 @@ module ManagerRefresh::Inventory::Core
       has_inventory({
         :model_class                 => ::ConfigurationScript,
         :manager_ref                 => [:manager_ref],
-        :inventory_object_attributes => %i(name description survey_spec variables inventory_root_group authentications),
+        :inventory_object_attributes => %i(name description survey_spec variables inventory_root_group authentications parent),
       }.merge(options))
     end
 
@@ -26,7 +26,10 @@ module ManagerRefresh::Inventory::Core
       has_inventory({
         :model_class                 => ::ConfigurationScriptSource,
         :manager_ref                 => [:manager_ref],
-        :inventory_object_attributes => %i(name description scm_type scm_url scm_branch scm_clean scm_delete_on_update scm_update_on_launch authentication),
+        :inventory_object_attributes => %i(
+          name description scm_type scm_url scm_branch scm_clean scm_delete_on_update
+          scm_update_on_launch authentication status
+        ),
       }.merge(options))
     end
 

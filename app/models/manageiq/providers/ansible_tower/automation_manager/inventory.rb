@@ -1,2 +1,2 @@
-class ManageIQ::Providers::AnsibleTower::AutomationManager::Inventory < ManageIQ::Providers::ExternalAutomationManager::InventoryGroup
+class ManageIQ::Providers::AnsibleTower::AutomationManager::Inventory < ManageIQ::Providers::ExternalAutomationManager::InventoryRootGroup
 end

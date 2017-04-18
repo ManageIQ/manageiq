@@ -9,6 +9,7 @@ module EmsRefresh::SaveInventory
       ManagerRefresh::SaveInventory.save_inventory(ems, hashes.values)
       return
     end
+
     case ems
     when EmsCloud                                           then save_ems_cloud_inventory(ems, hashes, target)
     when EmsInfra                                           then save_ems_infra_inventory(ems, hashes, target)
@@ -18,7 +19,6 @@ module EmsRefresh::SaveInventory
     when ManageIQ::Providers::ContainerManager              then save_ems_container_inventory(ems, hashes, target)
     when ManageIQ::Providers::NetworkManager                then save_ems_network_inventory(ems, hashes, target)
     when ManageIQ::Providers::StorageManager                then save_ems_storage_inventory(ems, hashes, target)
-    when ManageIQ::Providers::MiddlewareManager             then save_ems_middleware_inventory(ems, hashes, target)
     when ManageIQ::Providers::DatawarehouseManager          then save_ems_datawarehouse_inventory(ems, hashes, target)
     end
   end

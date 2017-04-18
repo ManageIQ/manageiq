@@ -418,24 +418,6 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
   end
 
   describe "parse_iec_number" do
-    it "converts IEC bytes size to integer value" do
-      [
-        ["0",    0],
-        ["1",    1],
-        ["10",   10],
-        ["1Ki",  1_024],
-        ["7Ki",  7_168],
-        ["10Ki", 10_240],
-        ["1Mi",  1_048_576],
-        ["3Mi",  3_145_728],
-        ["10Mi", 10_485_760],
-        ["1Gi",  1_073_741_824],
-        ["1Ti",  1_099_511_627_776]
-      ].each do |iec, bytes|
-        expect(iec.to_iec_integer).to eq(bytes)
-      end
-    end
-
     it "parse capacity hash correctly" do
       hash = {:storage => "10Gi", :foo => "10"}
       expect(parser.send(:parse_resource_list, hash)).to eq({:storage => 10.gigabytes, :foo => 10})

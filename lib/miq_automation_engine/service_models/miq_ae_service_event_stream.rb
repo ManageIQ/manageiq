@@ -9,6 +9,7 @@ module MiqAeMethodService
     expose :dest_vm,               :association => true, :method => :dest_vm_or_template
     expose :dest_host,             :association => true
     expose :service,               :association => true
+    expose :target,                :association => true
 
     def event_namespace
       object_class.name

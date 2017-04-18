@@ -484,6 +484,33 @@
       :get:
       - :name: read
         :identifier: miq_cloud_networks_view
+  :cloud_tenants:
+    :description: Cloud Tenants
+    :identifier: cloud_tenant
+    :options:
+    - :collection
+    - :subcollection
+    :verbs: *gp
+    :klass: CloudTenant
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: cloud_tenant_show_list
+      :post:
+      - :name: query
+        :identifier: cloud_tenant_show_list
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: cloud_tenant_show
+    :subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: cloud_tenant_show_list
+    :subresource_actions:
+      :get:
+      - :name: read
+        :identifier: cloud_tenant_show
   :cloud_volumes:
     :description: Cloud Volumes
     :identifier: cloud_volume
@@ -621,6 +648,8 @@
         :identifier: embedded_configuration_script_source_delete
       - :name: create
         :identifier: embedded_configuration_script_source_add
+      - :name: refresh
+        :identifier: embedded_configuration_script_source_refresh
     :resource_actions:
       :get:
       - :name: read
@@ -630,6 +659,8 @@
         :identifier: embedded_configuration_script_source_edit
       - :name: delete
         :identifier: embedded_configuration_script_source_delete
+      - :name: refresh
+        :identifier: embedded_configuration_script_source_refresh
       :delete:
       - :name: delete
         :identifier: embedded_configuration_script_source_delete
@@ -675,6 +706,8 @@
       :post:
       - :name: edit
       - :name: delete
+      :delete:
+      - :name: delete
   :data_stores:
     :description: Datastores
     :identifier: storage
@@ -707,12 +740,6 @@
         :identifier: storage_tag
       - :name: unassign
         :identifier: storage_tag
-  :ems_events:
-     :description: LenovoXclarity Events
-     :options:
-     - :collection
-     :verbs: *g
-     :klass: EmsEvent        
   :events:
     :description: Events
     :identifier: event
@@ -1019,6 +1046,8 @@
       :post:
       - :name: mark_as_seen
       - :name: delete
+      :delete:
+      - :name: delete
   :orchestration_stacks:
     :description: Orchestration Stacks
     :options:
@@ -1080,7 +1109,7 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *gp
+    :verbs: *gpd
     :klass: MiqPolicy
     :subcollections:
     - :conditions
@@ -1200,6 +1229,7 @@
     - :policies
     - :policy_profiles
     - :cloud_networks
+    - :cloud_tenants
     - :custom_attributes
     - :load_balancers
     :collection_actions:
@@ -1982,6 +2012,7 @@
     :verbs: *g
     :categories:
       - product
+      - prototype
     :collection_actions:
       :get:
       - :name: read

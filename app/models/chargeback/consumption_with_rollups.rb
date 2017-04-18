@@ -32,6 +32,11 @@ class Chargeback
 
     private
 
+    def born_at
+      # metrics can be older than resource (first capture may go few days back)
+      [super, first_metric_rollup_record.timestamp].compact.min
+    end
+
     def values(metric)
       @values ||= {}
       @values[metric] ||= @rollups.collect(&metric.to_sym).compact

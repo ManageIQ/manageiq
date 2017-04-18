@@ -237,8 +237,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def v_approved_by_email
-    emails = miq_approvals.inject([]) { |arr, a| arr << a.stamper.email unless a.stamper.nil? || a.stamper.email.nil?; arr }
-    emails.join(", ")
+    miq_approvals.collect { |i| i.stamper.try(:email) }.compact.join(", ")
   end
 
   def get_options

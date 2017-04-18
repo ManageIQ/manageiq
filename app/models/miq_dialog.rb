@@ -1,30 +1,35 @@
 class MiqDialog < ApplicationRecord
-  validates_presence_of   :name, :description
-  validates_uniqueness_of :name, :scope => :dialog_type, :case_sensitive => false
-
-  DIALOG_DIR = Rails.root.join("product/dialogs/miq_dialogs")
+  validates :name, :description, :presence => true
+  validates :name, :uniqueness => { :scope => :dialog_type, :case_sensitive => false }
 
   DIALOG_TYPES = [
     [_("VM Provision"),                "MiqProvisionWorkflow"],
     [_("Configured System Provision"), "MiqProvisionConfiguredSystemWorkflow"],
     [_("Host Provision"),              "MiqHostProvisionWorkflow"],
     [_("VM Migrate"),                  "VmMigrateWorkflow"],
-  ]
+  ].freeze
 
   serialize :content
 
   def self.seed
-    sync_from_dir
+    sync_from_dir(Rails.root.join('product', 'dialogs', 'miq_dialogs'))
+    sync_from_plugins
   end
 
-  def self.sync_from_dir
-    Dir.glob(File.join(DIALOG_DIR, "*.yaml")).each { |f| sync_from_file(f) }
+  def self.sync_from_dir(root)
+    Dir.glob(root.join("*.{yaml,yml}")).each { |f| sync_from_file(f, root) }
   end
 
-  def self.sync_from_file(filename)
+  def self.sync_from_plugins
+    Vmdb::Plugins.instance.registered_provider_plugins.each do |plugin|
+      sync_from_dir(plugin.root.join('content', 'miq_dialogs'))
+    end
+  end
+
+  def self.sync_from_file(filename, root)
     item = YAML.load_file(filename)
 
-    item[:filename] = filename.sub(DIALOG_DIR.to_path + "/", "")
+    item[:filename] = filename.sub("#{root}/", "")
     item[:file_mtime] = File.mtime(filename).utc
     item[:default] = true
 

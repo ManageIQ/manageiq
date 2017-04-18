@@ -10,7 +10,7 @@ class Chargeback
       #   2) We cannot charge for future hours (i.e. weekly report on Monday, should charge just monday)
       #   3) We cannot charge for hours after the resource has been retired.
       @consumed_hours_in_interval ||= begin
-                                        consumption_start = [@start_time, resource.try(:created_on)].compact.max
+                                        consumption_start = [@start_time, born_at].compact.max
                                         consumption_end = [Time.current, @end_time, resource.try(:retires_on)].compact.min
                                         consumed = (consumption_end - consumption_start).round / 1.hour
                                         consumed > 0 ? consumed : 0
@@ -32,6 +32,10 @@ class Chargeback
     def monthly?
       # A heuristic. Is the interval lenght about 30 days?
       (hours_in_interval * 1.hour - 1.month).abs < 3.days
+    end
+
+    def born_at
+      resource.try(:created_on)
     end
   end
 end

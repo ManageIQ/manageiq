@@ -1872,7 +1872,7 @@
       :identifier: action_admin
       :children:
       - :name: List
-        :description: Display All MiqActions
+        :description: Display All Policy Actions
         :feature_type: view
         :identifier: action_show_list
       - :name: Show
@@ -5270,6 +5270,10 @@
           :description: Remove a Repository
           :feature_type: admin
           :identifier: embedded_configuration_script_source_delete
+        - :name: Refresh Repositories
+          :description: Ansible Repositories Refresh
+          :feature_type: control
+          :identifier: embedded_configuration_script_source_refresh
   - :name: Playbooks
     :description: Everything under Playbooks
     :feature_type: node
@@ -5292,6 +5296,11 @@
           :description: Edit a Playbook
           :feature_type: admin
           :identifier: embedded_configuration_script_payload_edit
+        - :name: Refresh Playbooks
+          :description: Ansible Playbooks Refresh
+          :feature_type: control
+          :identifier: embedded_configuration_script_payload_refresh
+
   - :name: Credentials
     :description: Everything under Credentials
     :feature_type: node
@@ -5318,6 +5327,10 @@
           :description: Delete a Credential
           :feature_type: admin
           :identifier: embedded_automation_manager_credentials_delete
+        - :name: Refresh Credentials
+          :description: Ansible Credentials Refresh
+          :feature_type: control
+          :identifier: embedded_automation_manager_credentials_refresh
 
 # Automation Manager
 - :name: Ansible Tower

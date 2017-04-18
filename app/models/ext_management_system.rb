@@ -152,6 +152,8 @@ class ExtManagementSystem < ApplicationRecord
   alias_method :clusters, :ems_clusters # Used by web-services to return clusters as the property name
   alias_attribute :to_s, :name
 
+  default_value_for :enabled, true
+
   def self.with_ipaddress(ipaddress)
     joins(:endpoints).where(:endpoints => {:ipaddress => ipaddress})
   end
@@ -412,6 +414,16 @@ class ExtManagementSystem < ApplicationRecord
 
   def self.ems_infra_discovery_types
     @ems_infra_discovery_types ||= %w(virtualcenter scvmm rhevm)
+  end
+
+  def disable!
+    _log.info "Disabling EMS [#{name}] id [#{id}]."
+    update!(:enabled => false)
+  end
+
+  def enable!
+    _log.info "Enabling EMS [#{name}] id [#{id}]."
+    update!(:enabled => true)
   end
 
   def disconnect_inv

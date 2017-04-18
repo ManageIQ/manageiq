@@ -5,7 +5,6 @@ module EmsRefresh
   extend EmsRefresh::SaveInventoryInfra
   extend EmsRefresh::SaveInventoryPhysicalInfra
   extend EmsRefresh::SaveInventoryContainer
-  extend EmsRefresh::SaveInventoryMiddleware
   extend EmsRefresh::SaveInventoryDatawarehouse
   extend EmsRefresh::SaveInventoryNetwork
   extend EmsRefresh::SaveInventoryObjectStorage
@@ -121,7 +120,9 @@ module EmsRefresh
     targets_by_type = target.each_with_object(Hash.new { |h, k| h[k] = [] }) do |(target_class, id), hash|
       # Take care of both String or Class type being passed in
       target_class = target_class.to_s.constantize unless target_class.kind_of?(Class)
-      if [VmOrTemplate, Host, ExtManagementSystem, ManagerRefresh::Target].none? { |k| target_class <= k }
+
+      if ManagerRefresh::Inventory.persister_class_for(target_class).blank? &&
+         [VmOrTemplate, Host, ExtManagementSystem, ManagerRefresh::Target].none? { |k| target_class <= k }
         _log.warn "Unknown target type: [#{target_class}]."
         next
       end

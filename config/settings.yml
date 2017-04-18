@@ -791,7 +791,6 @@
       - NODE_NODENOTREADY
       - POD_FAILEDVALIDATION
       - POD_DEADLINEEXCEEDED
-      - POD_FAILEDSYNC
       - POD_INSUFFICIENTFREECPU
       - CONTAINER_UNHEALTHY
       - POD_NODESELECTORMISMATCHING
@@ -974,6 +973,7 @@
       - "/etc/default/ntp*"
       - "/var/log/messages*"
       - "/var/log/cron*"
+      - "/var/log/tower/*.log"
       - BUILD
       - GUID
       - VERSION

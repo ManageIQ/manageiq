@@ -75,10 +75,12 @@ module Api
         return reftype unless resource.respond_to?(:attributes)
 
         rclass = resource.class
-        if collection_class(type) != rclass
-          matched_type = collection_config.name_for_klass(rclass)
-        end
-        matched_type || reftype
+        collection_class = collection_class(type)
+
+        # Ensures hrefs are consistent with those of the collection they were requested from
+        return reftype if collection_class == rclass || collection_class.descendants.include?(rclass)
+
+        collection_config.name_for_klass(rclass) || reftype
       end
 
       #

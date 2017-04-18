@@ -8,6 +8,7 @@ module Api
         res[:message] = message if message.present?
         res[:result]  = options[:result] unless options[:result].nil?
         add_task_to_result(res, options[:task_id]) if options[:task_id].present?
+        add_tasks_to_result(res, options[:task_ids]) if options[:task_ids].present?
         res
       end
 
@@ -23,8 +24,15 @@ module Api
 
       def add_task_to_result(hash, task_id)
         hash[:task_id]   = task_id
-        hash[:task_href] = "#{@req.api_prefix}/tasks/#{task_id}"
+        hash[:task_href] = task_href(task_id)
         hash
+      end
+
+      def add_tasks_to_result(hash, task_ids)
+        add_task_to_result(hash, task_ids.first)
+        hash[:tasks] = task_ids.collect do |task_id|
+          { :id => task_id, :href => task_href(task_id) }
+        end
       end
 
       def add_tag_to_result(hash, tag_spec)
@@ -32,6 +40,10 @@ module Api
         hash[:tag_name]     = tag_spec[:name] if tag_spec[:name].present?
         hash[:tag_href]     = "#{@req.api_prefix}/tags/#{tag_spec[:id]}" if tag_spec[:id].present?
         hash
+      end
+
+      def task_href(task_id)
+        "#{@req.api_prefix}/tasks/#{task_id}"
       end
 
       def add_subcollection_resource_to_result(hash, ctype, object)

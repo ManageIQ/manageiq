@@ -134,12 +134,8 @@ module EmsRefresh
           log_header = format_ems_for_logging(ems)
           _log.debug "#{log_header} Parsing inventory..."
           inventory_collections, = Benchmark.realtime_block(:parse_inventory) do
-            provider_module = ManageIQ::Providers::Inflector.provider_module(ems.class).name
-            persister_class = "#{provider_module}::Inventory::Persister::#{target.class.name.demodulize}".safe_constantize
-            persister = persister_class.new(ems, target)
-
-            parser_class = "#{provider_module}::Inventory::Parser::#{target.class.name.demodulize}".safe_constantize
-            parser = parser_class.new
+            persister = ManagerRefresh::Inventory.persister_class_for(target.class).new(ems, target)
+            parser = ManagerRefresh::Inventory.parser_class_for(target.class).new
 
             i = ManagerRefresh::Inventory.new(persister, collector, parser)
             i.inventory_collections

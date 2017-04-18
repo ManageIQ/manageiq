@@ -69,6 +69,10 @@ module ManagerRefresh
       attributes_for_saving
     end
 
+    def assign_attributes(attributes)
+      attributes.each { |k, v| public_send("#{k}=", v) }
+    end
+
     def to_s
       manager_uuid
     end

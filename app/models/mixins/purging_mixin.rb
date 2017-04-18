@@ -43,6 +43,22 @@ module PurgingMixin
   extend ActiveSupport::Concern
 
   module ClassMethods
+    def purge_mode_and_value
+      [:date, purge_date]
+    end
+
+    def purge_timer
+      purge_queue(*purge_mode_and_value)
+    end
+
+    def purge_queue(mode, value)
+      MiqQueue.put(
+        :class_name  => name,
+        :method_name => "purge_by_#{mode}",
+        :args        => [value]
+      )
+    end
+
     def purge(older_than = nil, window = nil, &block)
       purge_by_date(older_than || purge_date, window || purge_window_size, &block)
     end

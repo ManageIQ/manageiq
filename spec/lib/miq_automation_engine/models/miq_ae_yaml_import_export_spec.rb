@@ -267,6 +267,14 @@ describe MiqAeDatastore do
         expect(dom).not_to be_enabled
       end
 
+      it "check attributes in namespace" do
+        options = {'yaml_file' => @yaml_file}
+        assert_single_domain_import(options, options)
+        ns = MiqAeNamespace.find_by(:name => 'customer_namespace_1')
+        expect(ns.description).to eq("test")
+        expect(ns.display_name).to eq("test")
+      end
+
       it "import single system domain" do
         options = {'yaml_file' => @yaml_file}
         @customer_domain.update_attributes(:source => MiqAeDomain::SYSTEM_SOURCE)
@@ -733,7 +741,7 @@ describe MiqAeDatastore do
 
   def create_factory_data(domain_name, priority, source = MiqAeDomain::USER_SOURCE)
     domain   = FactoryGirl.create(:miq_ae_domain_enabled, :name => domain_name, :source => source, :priority => priority)
-    n1       = FactoryGirl.create(:miq_ae_namespace, :name => "#{domain_name}_namespace_1",    :parent_id => domain.id)
+    n1       = FactoryGirl.create(:miq_ae_namespace, :name => "#{domain_name}_namespace_1",    :parent_id => domain.id, :description => "test", :display_name => "test")
     n1_c1    = FactoryGirl.create(:miq_ae_class,     :name => "#{domain_name}_test_class_1",   :namespace_id => n1.id)
     n1_1     = FactoryGirl.create(:miq_ae_namespace, :name => "#{domain_name}_namespace_1_1",  :parent_id => n1.id)
     n1_1_c1  = FactoryGirl.create(:miq_ae_class,     :name => "#{domain_name}_test_class_4",   :namespace_id => n1_1.id)

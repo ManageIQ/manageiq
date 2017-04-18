@@ -19,6 +19,11 @@ class MockKubeClient
         :annotations => {
           'manageiq.org/jobid' => '5'
         }
+      },
+      :status   => {
+        :containerStatuses => [
+          { :ready => true },
+        ]
       }
     )
   end
@@ -137,10 +142,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
       before(:each) do
         allow_any_instance_of(described_class).to receive_messages(:collect_compliance_data) unless OpenscapResult.openscap_available?
 
-        VCR.use_cassette(described_class.name.underscore, :record => :none) do # needed for health check
-          expect(@job.state).to eq 'waiting_to_start'
-          @job.signal(:start)
-        end
+        expect(@job.state).to eq 'waiting_to_start'
+        @job.signal(:start)
       end
 
       it 'should report success' do
@@ -258,21 +261,17 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
         allow_any_instance_of(described_class).to receive_messages(:collect_compliance_data) unless OpenscapResult.openscap_available?
         allow_any_instance_of(described_class).to receive_messages(
           :image_inspector_client => MockImageInspectorClient.new(MODIFIED_IMAGE_ID, IMAGE_ID))
-        VCR.use_cassette(described_class.name.underscore, :record => :none) do # needed for health check
-          @job.signal(:start)
-          expect(@job.state).to eq 'finished'
-          expect(@job.status).to eq 'ok'
-        end
+        @job.signal(:start)
+        expect(@job.state).to eq 'finished'
+        expect(@job.status).to eq 'ok'
       end
 
       it 'should report the error' do
-        VCR.use_cassette(described_class.name.underscore, :record => :none) do # needed for health check
-          @job.signal(:start)
-          expect(@job.state).to eq 'finished'
-          expect(@job.status).to eq 'error'
-          expect(@job.message).to eq "cannot analyze image #{IMAGE_NAME} with id #{IMAGE_ID[0..11]}:"\
-                                     " detected ids were #{MODIFIED_IMAGE_ID[0..11]}"
-        end
+        @job.signal(:start)
+        expect(@job.state).to eq 'finished'
+        expect(@job.status).to eq 'error'
+        expect(@job.message).to eq "cannot analyze image #{IMAGE_NAME} with id #{IMAGE_ID[0..11]}:"\
+                                   " detected ids were #{MODIFIED_IMAGE_ID[0..11]}"
       end
     end
 

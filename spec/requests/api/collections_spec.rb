@@ -295,6 +295,11 @@ describe "Rest API Collections" do
       test_collection_query(:cloud_networks, cloud_networks_url, CloudNetwork)
     end
 
+    it 'queries CloudTenants' do
+      FactoryGirl.create(:cloud_tenant)
+      test_collection_query(:cloud_tenants, cloud_tenants_url, CloudTenant)
+    end
+
     it 'queries ArbitrationSettings' do
       FactoryGirl.create(:arbitration_setting)
       test_collection_query(:arbitration_settings, arbitration_settings_url, ArbitrationSetting)
@@ -574,6 +579,11 @@ describe "Rest API Collections" do
     it 'bulk query LoadBalancers' do
       FactoryGirl.create(:load_balancer)
       test_collection_bulk_query(:load_balancers, load_balancers_url, LoadBalancer)
+    end
+
+    it 'bulk query CloudTenants' do
+      FactoryGirl.create(:cloud_tenant)
+      test_collection_bulk_query(:cloud_tenants, cloud_tenants_url, CloudTenant)
     end
 
     it 'bulk query CloudVolumes' do

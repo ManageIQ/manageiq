@@ -10,7 +10,7 @@ conditions: !ruby/object:MiqExpression
 updated_on: 2008-08-14 03:18:37.949439 Z
 order: Ascending
 graph: 
-menu_name: "EVM Server UserIDs Never Used"
+menu_name: "EVM Server User IDs Never Used"
 rpt_group: Custom
 priority: 200
 col_order: 

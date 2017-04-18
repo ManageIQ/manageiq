@@ -98,19 +98,17 @@ class MiqQueue < ApplicationRecord
   end
 
   def self.put(options)
-    options = options.reverse_merge(
-      :priority     => NORMAL_PRIORITY,
-      :queue_name   => "generic",
-      :role         => nil,
-      :server_guid  => nil,
-      :msg_timeout  => TIMEOUT,
-      :deliver_on   => nil
-    ).merge(
+    options = options.merge(
       :zone         => Zone.determine_queue_zone(options),
       :state        => STATE_READY,
       :handler_type => nil,
       :handler_id   => nil,
     )
+
+    create_with_options = all.values[:create_with] || {}
+    options[:priority]    ||= create_with_options[:priority] || NORMAL_PRIORITY
+    options[:queue_name]  ||= create_with_options[:queue_name] || "generic"
+    options[:msg_timeout] ||= create_with_options[:msg_timeout] || TIMEOUT
     options[:task_id]      = $_miq_worker_current_msg.try(:task_id) unless options.key?(:task_id)
     options[:role]         = options[:role].to_s unless options[:role].nil?
 

@@ -18,8 +18,11 @@ class ManageIQ::Providers::AutomationManager < ManageIQ::Providers::BaseManager
   has_many :configuration_script_sources, :dependent => :destroy, :foreign_key => "manager_id"
   has_many :configuration_script_payloads, :through => :configuration_script_sources
 
+  delegate :url, :to => :provider
+
   virtual_column  :total_configuration_profiles, :type => :integer
   virtual_column  :total_configured_systems, :type => :integer
+  virtual_column  :url, :type => :string
 
   def self.hostname_required?
     false

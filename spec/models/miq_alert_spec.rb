@@ -108,6 +108,51 @@ describe MiqAlert do
         expect(@alert.miq_alert_statuses.find_by(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).result).to be_truthy
       end
 
+      it "should update the existing status on susesquent evaluations" do
+        @alert.evaluate(
+          [@vm.class.base_class.name, @vm.id],
+          :ems_event => FactoryGirl.create(:ems_event)
+        )
+        Timecop.travel 10.minutes do
+          @alert.evaluate(
+            [@vm.class.base_class.name, @vm.id],
+            :ems_event => FactoryGirl.create(:ems_event)
+          )
+          statuses = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id)
+          expect(statuses.length).to eq(1)
+        end
+      end
+
+      it "should update the existing status if event metadata has the same ems_ref" do
+        @alert.evaluate(
+          [@vm.class.base_class.name, @vm.id],
+          :ems_event => FactoryGirl.create(:ems_event, :full_data => {:ems_ref => 'same'})
+        )
+        Timecop.travel 10.minutes do
+          @alert.evaluate(
+            [@vm.class.base_class.name, @vm.id],
+            :ems_event => FactoryGirl.create(:ems_event, :full_data => {:ems_ref => 'same'})
+          )
+          statuses = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id)
+          expect(statuses.length).to eq(1)
+        end
+      end
+
+      it "should create a new status if event metadata has a different ems_ref" do
+        @alert.evaluate(
+          [@vm.class.base_class.name, @vm.id],
+          :ems_event => FactoryGirl.create(:ems_event, :full_data => {:ems_ref => 'same'})
+        )
+        Timecop.travel 10.minutes do
+          @alert.evaluate(
+            [@vm.class.base_class.name, @vm.id],
+            :ems_event => FactoryGirl.create(:ems_event, :full_data => {:ems_ref => 'different'})
+          )
+          statuses = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id)
+          expect(statuses.length).to eq(2)
+        end
+      end
+
       it "does not explode if evaluate.input = {}" do
         expect { @alert.evaluate([@vm.class.base_class.name, @vm.id]) }.to_not raise_error
       end
@@ -470,6 +515,31 @@ describe MiqAlert do
       )
       status, message, result = msg.deliver
       msg.delivered(status, message, result)
+    end
+  end
+
+  describe '.validate_automate_expressions' do
+    it 'Does not allow creation of dwh_generic miq_alerts with delay_next_evaluation > 0 ' do
+      expect do
+        FactoryGirl.create(
+          :miq_alert,
+          :options    => {:notifications => {:delay_next_evaluation => 600, :evm_event => {}}},
+          :expression => {:eval_method => "dwh_generic"}
+        )
+      end.to raise_error(
+        ActiveRecord::RecordInvalid,
+        'Validation failed: Notifications Datawarehouse alerts must have a 0 notification frequency'
+      )
+    end
+
+    it 'Does allow creation of hawkular_alert miq_alerts with delay_next_evaluation > 0 ' do
+      expect do
+        FactoryGirl.create(
+          :miq_alert,
+          :options    => {:notifications => {:delay_next_evaluation => 600, :evm_event => {}}},
+          :expression => {:eval_method => "mw_heap_used"}
+        )
+      end.to_not raise_error
     end
   end
 end

@@ -1,5 +1,6 @@
 class PhysicalServer < ApplicationRecord
   include NewWithTypeStiMixin
+  include MiqPolicyMixin
 
   acts_as_miq_taggable
 
@@ -12,9 +13,25 @@ class PhysicalServer < ApplicationRecord
 
   has_one :asset_details, :as => :resource, :dependent => :destroy
 
+  VENDOR_TYPES = {
+    # DB        Displayed
+    "lenovo"  => "lenovo",
+    "unknown" => "Unknown",
+    nil       => "Unknown",
+  }.freeze
+
   def name_with_details
     details % {
       :name => name,
     }
+  end
+
+  def has_compliance_policies?
+    _, plist = MiqPolicy.get_policies_for_target(self, "compliance", "physicalserver_compliance_check")
+    !plist.blank?
+  end
+
+  def label_for_vendor
+    VENDOR_TYPES[vendor]
   end
 end

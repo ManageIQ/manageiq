@@ -43,11 +43,6 @@ class CloudTenant < ApplicationRecord
 
     klass = class_by_ems(ext_management_system)
     created_cloud_tenant = klass.raw_create_cloud_tenant(ext_management_system, options)
-
-    klass.create(
-      :name                  => created_cloud_tenant[:name],
-      :ems_ref               => created_cloud_tenant[:ems_ref],
-      :ext_management_system => ext_management_system)
   end
 
   def self.raw_create_cloud_tenant(_ext_management_system, _options = {})

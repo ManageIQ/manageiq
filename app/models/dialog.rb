@@ -1,8 +1,9 @@
 class Dialog < ApplicationRecord
-  DIALOG_DIR = Rails.root.join("product/dialogs/service_dialogs")
+  DIALOG_DIR_CORE   = 'product/dialogs/service_dialogs'.freeze
+  DIALOG_DIR_PLUGIN = 'content/service_dialogs'.freeze
 
   # The following gets around a glob symbolic link issue
-  ALL_YAML_FILES = DIALOG_DIR.join("{,*/**/}*.{yaml,yml}")
+  YAML_FILES_PATTERN = "{,*/**/}*.{yaml,yml}".freeze
 
   has_many :dialog_tabs, -> { order :position }, :dependent => :destroy
   validate :validate_children
@@ -25,8 +26,14 @@ class Dialog < ApplicationRecord
   def self.seed
     dialog_import_service = DialogImportService.new
 
-    Dir.glob(ALL_YAML_FILES).each do |file|
+    Dir.glob(Rails.root.join(DIALOG_DIR_CORE, YAML_FILES_PATTERN)).each do |file|
       dialog_import_service.import_all_service_dialogs_from_yaml_file(file)
+    end
+
+    Vmdb::Plugins.instance.registered_provider_plugins.each do |plugin|
+      Dir.glob(plugin.root.join(DIALOG_DIR_PLUGIN, YAML_FILES_PATTERN)).each do |file|
+        dialog_import_service.import_all_service_dialogs_from_yaml_file(file)
+      end
     end
   end
 

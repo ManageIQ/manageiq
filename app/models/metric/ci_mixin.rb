@@ -21,12 +21,9 @@ module Metric::CiMixin
     end
   end
 
-  def has_perf_data?(interval_name = "hourly")
-    @has_perf_data ||= {}
-    unless @has_perf_data.key?(interval_name) # memoize boolean
-      @has_perf_data[interval_name] = associated_metrics(interval_name).exists?
-    end
-    @has_perf_data[interval_name]
+  def has_perf_data?
+    return @has_perf_data unless @has_perf_data.nil?
+    @has_perf_data = associated_metrics('hourly').exists?
   end
 
   def associated_metrics(interval_name)

@@ -12,7 +12,7 @@ module Api
       collection, id = href_slug.split('/')
       collection_config = Api::CollectionConfig.new if collection
 
-      raise _("Invalid href_slug #{href_slug} specified") unless collection && id && collection_config.collection?(collection)
+      raise _("Invalid href_slug %{href_slug} specified") % {:href_slug => href_slug} unless collection && id && collection_config.collection?(collection)
       raise _("User must be defined") unless user
 
       klass = collection_config.klass(collection)

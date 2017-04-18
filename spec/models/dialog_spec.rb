@@ -1,8 +1,7 @@
 describe Dialog do
   describe ".seed" do
     let(:dialog_import_service) { double("DialogImportService") }
-    let(:test_file_path) { Rails.root.join("spec/fixtures/files/dialogs") }
-    let(:all_yaml_files) { test_file_path.join("{,*/**/}*.{yaml,yml}") }
+    let(:test_file_path) { "spec/fixtures/files/dialogs" }
 
     before do
       allow(DialogImportService).to receive(:new).and_return(dialog_import_service)
@@ -10,33 +9,49 @@ describe Dialog do
     end
 
     it "delegates to the dialog import service with a file in the default directory" do
-      Dialog.with_constants(:DIALOG_DIR => test_file_path, :ALL_YAML_FILES => all_yaml_files) do
-        expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
-          test_file_path.join("seed_test.yaml").to_path)
-        expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
-          test_file_path.join("seed_test.yml").to_path)
-        Dialog.seed
-      end
+      stub_const('Dialog::DIALOG_DIR_CORE', test_file_path)
+      expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
+        Rails.root.join(test_file_path, "seed_test.yaml").to_path
+      )
+      expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
+        Rails.root.join(test_file_path, "seed_test.yml").to_path
+      )
+      described_class.seed
     end
 
     it "delegates to the dialog import service with a file in a sub directory" do
-      Dialog.with_constants(:DIALOG_DIR => test_file_path, :ALL_YAML_FILES => all_yaml_files) do
-        expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
-          test_file_path.join("service_dialogs/service_seed_test.yaml").to_path)
-        expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
-          test_file_path.join("service_dialogs/service_seed_test.yml").to_path)
-        Dialog.seed
-      end
+      stub_const('Dialog::DIALOG_DIR_CORE', test_file_path)
+      expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
+        Rails.root.join(test_file_path, "service_dialogs", "service_seed_test.yaml").to_path
+      )
+      expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
+        Rails.root.join(test_file_path, "service_dialogs", "service_seed_test.yml").to_path
+      )
+      described_class.seed
     end
 
     it "delegates to the dialog import service with a symlinked file" do
-      Dialog.with_constants(:DIALOG_DIR => test_file_path, :ALL_YAML_FILES => all_yaml_files) do
-        expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
-          test_file_path.join("service_dialog_symlink/service_seed_test.yaml").to_path)
-        expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
-          test_file_path.join("service_dialog_symlink/service_seed_test.yml").to_path)
-        Dialog.seed
-      end
+      stub_const('Dialog::DIALOG_DIR_CORE', test_file_path)
+      expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
+        Rails.root.join(test_file_path, "service_dialog_symlink", "service_seed_test.yaml").to_path
+      )
+      expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
+        Rails.root.join(test_file_path, "service_dialog_symlink", "service_seed_test.yml").to_path
+      )
+      described_class.seed
+    end
+
+    it "seed files from plugins" do
+      mock_engine = double(:root => Rails.root)
+      expect(Vmdb::Plugins.instance).to receive(:registered_provider_plugins).and_return([mock_engine])
+
+      stub_const('Dialog::DIALOG_DIR_PLUGIN', test_file_path)
+      stub_const('Dialog::DIALOG_DIR_CORE', 'non-existent-dir')
+      expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
+        Rails.root.join(test_file_path, "seed_test.yaml").to_path
+      )
+      expect(mock_engine).to receive(:root)
+      described_class.seed
     end
   end
 

@@ -553,6 +553,7 @@ configuration_script_sources:
 - scm_update_on_launch
 - authentication_id
 - type
+- status
 configuration_scripts:
 - id
 - manager_id
@@ -1281,6 +1282,7 @@ ext_management_systems:
 - last_metrics_update_date
 - last_metrics_success_date
 - tenant_mapping_enabled
+- enabled
 file_depots:
 - id
 - name

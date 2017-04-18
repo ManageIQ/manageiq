@@ -17,6 +17,7 @@ class MiqExpression
     ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem
     ManageIQ::Providers::ConfigurationManager
     Container
+    ContainerBuild
     ContainerPerformance
     ContainerGroup
     ContainerGroupPerformance
@@ -254,8 +255,17 @@ class MiqExpression
     'VmOrTemplate'                                => 'vm',
     'ManageIQ::Providers::CloudManager::Vm'       => 'vm',
     'ManageIQ::Providers::InfraManager::Vm'       => 'vm',
+    'Container'                                   => 'container',
+    'ContainerBuild'                              => 'container_build',
+    'ContainerGroup'                              => 'container_group',
+    'ContainerImage'                              => 'container_image',
+    'ContainerImageRegistry'                      => 'container_image_registry',
+    'ContainerNode'                               => 'container_node',
     'ContainerProject'                            => 'container_project',
-    'ContainerImage'                              => 'container_image'
+    'ContainerReplicator'                         => 'container_replicator',
+    'ContainerRoute'                              => 'container_route',
+    'ContainerService'                            => 'container_service',
+    'ContainerTemplate'                           => 'container_template'
   }
   EXCLUDE_FROM_RELATS = {
     "ManageIQ::Providers::CloudManager" => ["hosts", "ems_clusters", "resource_pools"]
@@ -774,7 +784,7 @@ class MiqExpression
     if col
       f = Field.new(model, [], col)
       result[:data_type] = f.column_type
-      result[:format_sub_type] = MiqReport::Formats.sub_type(col.to_sym) || result[:data_type]
+      result[:format_sub_type] = f.sub_type
       result[:virtual_column] = model.virtual_attribute?(col.to_s)
       result[:sql_support] = !result[:virtual_reflection] && model.attribute_supported_by_sql?(col.to_s)
       result[:excluded_by_preprocess_options] = self.exclude_col_by_preprocess_options?(col, options)

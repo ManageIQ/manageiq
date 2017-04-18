@@ -12,33 +12,28 @@ gem "handsoap", "~>0.2.5", :require => false, :git => "https://github.com/Manage
 gem "rubywbem",            :require => false, :git => "https://github.com/ManageIQ/rubywbem.git", :branch => "rubywbem_0_1_0"
 
 # when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared
-unless dependencies.detect { |d| d.name == "manageiq-content" }
-  gem "manageiq-content", :git => "https://github.com/ManageIQ/manageiq-content", :branch => "master"
-end
-unless dependencies.detect { |d| d.name == "manageiq-providers-amazon" }
-  gem "manageiq-providers-amazon", :git => "https://github.com/ManageIQ/manageiq-providers-amazon", :branch => "master"
-end
-unless dependencies.detect { |d| d.name == "manageiq-providers-azure" }
-  gem "manageiq-providers-azure", :git => "https://github.com/ManageIQ/manageiq-providers-azure", :branch => "master"
-end
-unless dependencies.detect { |d| d.name == "manageiq-providers-vmware" }
-  gem "manageiq-providers-vmware", :git => "https://github.com/ManageIQ/manageiq-providers-vmware", :branch => "master"
+def manageiq_plugin(plugin_name)
+  unless dependencies.detect { |d| d.name == plugin_name }
+    gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :branch => "master"
+  end
 end
 
-unless dependencies.detect { |d| d.name == "manageiq-ui-classic" }
-  gem "manageiq-ui-classic", :git => "https://github.com/ManageIQ/manageiq-ui-classic", :branch => "master"
-end
-
-unless dependencies.detect { |d| d.name == "manageiq-providers-lenovo" }
-  gem "manageiq-providers-lenovo", :git => "https://github.com/ManageIQ/manageiq-providers-lenovo", :branch => "master"
-end
+manageiq_plugin "manageiq-content"
+manageiq_plugin "manageiq-providers-amazon"
+manageiq_plugin "manageiq-providers-azure"
+manageiq_plugin "manageiq-providers-hawkular"
+manageiq_plugin "manageiq-providers-lenovo"
+manageiq_plugin "manageiq-providers-openstack"
+manageiq_plugin "manageiq-providers-ovirt"
+manageiq_plugin "manageiq-providers-vmware"
+manageiq_plugin "manageiq-ui-classic"
 
 # Unmodified gems
 gem "activerecord-session_store",     "~>1.0.0"
 gem "acts_as_list",                   "~>0.7.2"
 gem "acts_as_tree",                   "~>2.1.0" # acts_as_tree needs to be required so that it loads before ancestry
 gem "ancestry",                       "~>2.2.1",       :require => false
-gem "ansible_tower_client",           "~>0.10.0",      :require => false
+gem "ansible_tower_client",           "~>0.11.0",      :require => false
 gem "aws-sdk",                        "~>2",           :require => false
 gem "bundler",                        ">=1.11.1",      :require => false
 gem "color",                          "~>1.8"

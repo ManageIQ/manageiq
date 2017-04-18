@@ -707,7 +707,7 @@ en:
       ContainerImageRegistry:   Image Registry
       ContainerImage:           Container Image
       ContainerNode:            Node
-      ContainerNodePerformance: Performance - ContainerNode
+      ContainerNodePerformance: Performance - Container Node
       ContainerProject:         Project
       ContainerProjectPerformance: Performance - ContainerProject
       ContainerRoute:           Route
