@@ -24,11 +24,7 @@ module PxeController::PxeServers
 
   def pxe_server_edit
     assert_privileges("pxe_server_edit")
-    unless params[:id]
-      obj           = find_checked_items
-      @_params[:id] = obj[0] unless obj.empty?
-    end
-    @ps = @record = identify_record(params[:id], PxeServer) if params[:id]
+    @ps = @record = find_record_with_rbac(PxeServer, @_params[:id] = checked_or_params_id)
     pxe_server_set_form_vars
     @in_a_form = true
     session[:changed] = false
