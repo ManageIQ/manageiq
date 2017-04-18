@@ -14,7 +14,10 @@ class Tag < ApplicationRecord
       ns.gsub!('/virtual/','')  # throw away /virtual
       ns, virtual_custom_attribute = MiqExpression.escape_virtual_custom_attribute(ns)
       predicate = ns.split("/")
-      predicate.map!{ |x| URI::RFC2396_Parser.new.unescape(x) } if virtual_custom_attribute
+
+      if virtual_custom_attribute
+        predicate.map! { |x| URI::RFC2396_Parser.new.unescape(x) }
+      end
 
       begin
         predicate.inject(object) { |target, method| target.public_send method }
