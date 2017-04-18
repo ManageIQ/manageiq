@@ -121,9 +121,9 @@ class CloudNetworkController < ApplicationController
     assert_privileges("cloud_network_delete")
 
     networks = if @lastaction == "show_list" || (@lastaction == "show" && @layout != "cloud_network") || @lastaction.nil?
-                 find_checked_items
+                 find_checked_ids_with_rbac(CloudNetwork)
                else
-                 [params[:id]]
+                 [find_id_with_rbac(CloudNetwork, params[:id])]
                end
     if networks.empty?
       add_flash(_("No Cloud Network were selected for deletion."), :error)
