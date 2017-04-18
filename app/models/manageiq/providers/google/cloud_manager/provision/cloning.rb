@@ -33,8 +33,8 @@ module ManageIQ::Providers::Google::CloudManager::Provision::Cloning
     _log.info("Destination Availability Zone: [#{clone_options[:zone_name]}]")
     _log.info("Machine Type:                  [#{clone_options[:machine_type]}]")
 
-    dumpObj(clone_options, "#{_log.prefix} Clone Options: ", $log, :info)
-    dumpObj(options, "#{_log.prefix} Prov Options:  ", $log, :info,
+    dump_obj(clone_options, "#{_log.prefix} Clone Options: ", $log, :info)
+    dump_obj(options, "#{_log.prefix} Prov Options:  ", $log, :info,
             :protected => {:path => workflow_class.encrypted_options_field_regs})
   end
 
