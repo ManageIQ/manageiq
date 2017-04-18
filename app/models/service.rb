@@ -181,8 +181,7 @@ class Service < ApplicationRecord
   end
 
   def power_states_match?(action)
-    return update_power_status(action) if all_states_match?(action)
-    false
+    all_states_match?(action) ? update_power_status(action) : false
   end
 
   def all_states_match?(action)
@@ -203,14 +202,17 @@ class Service < ApplicationRecord
     service_resources.where(:resource_type => 'OrchestrationStack').collect(&:resource)
   end
 
-  def map_power_states(action)
-    action_name = "#{action}_action"
-    service_actions = [].tap do |sa|
+  def group_resource_actions(action_name)
+    [].tap do |sa|
       each_group_resource do |svc_rsc|
         sa << svc_rsc
       end
-    end.map(&action_name.to_sym).uniq
+    end.map(&action_name).uniq
+  end
 
+  def map_power_states(action)
+    action_name = "#{action}_action".to_sym
+    service_actions = group_resource_actions(action_name)
     # We need to account for all nil :start_action or :stop_action attributes
     #   When all :start_actions are nil then return 'Power On' for the :start_action
     #   When all :stop_actions are nil then return 'Power Off' for the :stop_action

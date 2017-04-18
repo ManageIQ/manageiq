@@ -185,12 +185,14 @@ describe Service do
         expect(@service_c2.service_resources.first.id).to_not eq @service_c2.service_resources.last.id
         expect(@service_c2.service_resources.first.start_action).to be_nil
         expect(@service_c2.service_resources.last.start_action).to be_nil
+        expect(@service_c2.group_resource_actions(:start_action)).to eq [nil]
         expect(@service_c2.map_power_states(:start)).to eq ["on"]
       end
 
       it "assumes the stop_action and returns a value if none of the stop_actions are set" do
         expect(@service_c2.service_resources.first.stop_action).to be_nil
         expect(@service_c2.service_resources.last.stop_action).to be_nil
+        expect(@service_c2.group_resource_actions(:stop_action)).to eq [nil]
         expect(@service_c2.map_power_states(:stop)).to eq ["off"]
       end
     end
