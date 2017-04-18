@@ -136,6 +136,19 @@ function miqOnCheckProvTags(node, treename) {
   return true;
 }
 
+function miqOnClickSelectRbacTreeNode(id) {
+  var tree = 'rbac_tree';
+  miqTreeExpandNode(tree, 'xx-' + id.split('-')[0]);
+  miqJqueryRequest('/' + ManageIQ.controller + '/tree_select/?id=' + id + '&tree=' + tree, {beforeSend: true});
+  miqTreeScrollToNode(tree, id);
+}
+
+function miqTreeScrollToNode(tree, id) {
+  var node = miqTreeFindNodeByKey(tree, id);
+  var parentPanelBody = node.$el.parents('div.panel-body');
+  parentPanelBody.animate({scrollTop: (parentPanelBody.position().top + node.$el.position().top)});
+}
+
 function miqOnClickSelectAETreeNode(id) {
   miqTreeExpandNode('automate_tree', id);
   miqJqueryRequest('/' + ManageIQ.controller + '/ae_tree_select/?id=' + id + '&tree=automate_tree');

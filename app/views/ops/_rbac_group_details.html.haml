@@ -37,7 +37,7 @@
           - if @group.miq_user_role
             - if role_allows?(:feature => "rbac_role_show")
               - params = {:class   => "pointer",
-                          :onclick => "miqTreeActivateNode('rbac_tree', 'ur-#{to_cid(@group.miq_user_role.id)}');",
+                          :onclick => "miqOnClickSelectRbacTreeNode('ur-#{to_cid(@group.miq_user_role.id)}');",
                           :title   => _("View this Role")}
             - else
               - params = {}
