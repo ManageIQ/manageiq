@@ -402,7 +402,7 @@
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?
             -# Display notes if available
             = field_hash[:notes]
-      - elsif [:pxe_server_id, :number_of_vms, :number_of_cpus, :number_of_sockets, :cores_per_socket, :snapshot, :sysprep_enabled].include?(field)
+      - elsif [:pxe_server_id, :number_of_vms, :number_of_cpus, :number_of_sockets, :cores_per_socket, :snapshot, :sysprep_enabled, :sysprep_timezone].include?(field)
         -# ### Pull Down for fields that dont need <None> in the list
         .col-md-8
           - if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ]
@@ -414,7 +414,9 @@
                 - opts = []
               - else
                 - opts = [["<#{_('Choose')}>", nil]]
-              - if field_hash[:data_type] == :integer
+              - if field == :sysprep_timezone
+                - opts += Array(field_hash[:values].invert)
+              - elsif field_hash[:data_type] == :integer
                 - opts += Array(field_hash[:values].invert).sort_by(&:last)
               - else
                 - opts += Array(field_hash[:values].invert).sort_by(&:first)
@@ -434,40 +436,6 @@
           - unless field_hash[:notes_display] == :hide || field_hash[:notes].blank?
             -# Display notes if available
             = field_hash[:notes]
-      - elsif [:sysprep_timezone].include?(field)
-        -# Pull down with Array of Arrays
-        .col-md-8
-          - if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ]
-            -# Allow editing of this pulldown field
-            - if field_hash[:values].length == 1
-              -# Only 1 choice, show the value
-              = options[field].last
-              -# Description is in the second, last, array element
-            - else
-              - if field_hash[:values].blank?
-                - opts = [["<#{_('No Choices Available')}>", nil]]
-              - else
-                - if field_hash[:required]
-                  - if field_hash[:default]
-                    - opts = []
-                  - else
-                    - opts = [["<#{_('Choose')}>", nil]]
-                - else
-                  - opts = [["<#{_('None')}>", nil]]
-                - opts += field_hash[:values]
-              = select_tag(field_id,
-                           options_for_select(opts, options[field].kind_of?(Array) ? options[field].first : options[field]),
-                           :disabled              => disabled,
-                           "data-miq_sparkle_on"  => true,
-                           "data-miq_sparkle_off" => true,
-                           :class                 => "selectpicker")
-              :javascript
-                miqInitSelectPicker();
-                miqSelectPickerEvent("#{field_id}", "#{url}")
-          - else
-            -# Just show the field value %>
-            -# Description is in the second, last, array element
-            = options[field].last
       - elsif [:linked_clone, :placement_auto, :stateless, :sysprep_auto_logon, :sysprep_change_sid,
                :sysprep_delete_accounts, :sysprep_spec_override, :vm_auto_start, :vm_dynamic_memory, :is_preemptible].include?(field)
         -# ### Checkbox fields
