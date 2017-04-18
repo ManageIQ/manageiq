@@ -128,3 +128,6 @@ node_modules/
 
 # ignore included plugins in bundler.d
 bundler.d/*
+
+# specs
+spec/replication/util/data/*_migrations
