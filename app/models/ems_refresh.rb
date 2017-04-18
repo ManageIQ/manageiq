@@ -101,7 +101,7 @@ module EmsRefresh
   def self.refresh_new_target(ems_id, target_hash, target_class, target_find)
     ems = ExtManagementSystem.find(ems_id)
 
-    save_ems_inventory(ems, target_hash, nil, :refresh_new_target)
+    save_ems_inventory_no_disconnect(ems, target_hash)
 
     target = target_class.find_by(target_find)
     if target.nil?

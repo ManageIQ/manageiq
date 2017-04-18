@@ -1,5 +1,5 @@
 module EmsRefresh::SaveInventory
-  def save_ems_inventory(ems, hashes, target = nil, mode = :refresh)
+  def save_ems_inventory(ems, hashes, target = nil, disconnect = true)
     if hashes.kind_of?(Array)
       ManagerRefresh::SaveInventory.save_inventory(ems, hashes)
       return
@@ -7,7 +7,7 @@ module EmsRefresh::SaveInventory
 
     case ems
     when EmsCloud                                           then save_ems_cloud_inventory(ems, hashes, target)
-    when EmsInfra                                           then save_ems_infra_inventory(ems, hashes, target, mode)
+    when EmsInfra                                           then save_ems_infra_inventory(ems, hashes, target, disconnect)
     when EmsPhysicalInfra                                   then save_ems_physical_infra_inventory(ems, hashes, target)
     when ManageIQ::Providers::AutomationManager             then save_automation_manager_inventory(ems, hashes, target)
     when ManageIQ::Providers::ConfigurationManager          then save_configuration_manager_inventory(ems, hashes, target)
@@ -18,13 +18,17 @@ module EmsRefresh::SaveInventory
     end
   end
 
+  def save_ems_inventory_no_disconnect(ems, hashes, target = nil)
+    save_ems_inventory(ems, hashes, target, false)
+  end
+
   #
   # Shared between Cloud and Infra
   #
 
-  def save_vms_inventory(ems, hashes, target = nil, mode = :refresh)
+  def save_vms_inventory(ems, hashes, target = nil, disconnect = true)
     return if hashes.nil?
-    target = ems if target.nil? && mode == :refresh
+    target = ems if target.nil? && disconnect
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
     disconnects = if target.kind_of?(ExtManagementSystem) || target.kind_of?(Host)
