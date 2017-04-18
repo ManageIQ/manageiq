@@ -13,8 +13,8 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
 
     @resource_group = 'miq-azure-test1'
     @device_name    = 'miq-test-rhel1' # Make sure this is running if generating a new cassette.
-    @ip_address     = '13.90.136.193'  # This will change if you had to restart the @device_name.
-    @mismatch_ip    = '13.90.141.128'  # This will change if you had to restart the 'miqmismatch' VM.
+    @ip_address     = '52.170.90.61'  # This will change if you had to restart the @device_name.
+    @mismatch_ip    = '52.170.92.166'  # This will change if you had to restart the 'miqmismatch' VM.
     @template = nil
     @avail_zone = nil
 
@@ -100,7 +100,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   def expected_table_counts
     {
       :ext_management_system         => 2,
-      :flavor                        => 83,
+      :flavor                        => 99,
       :availability_zone             => 1,
       :vm_or_template                => 12,
       :vm                            => 11,
@@ -120,7 +120,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       :security_group                => 11,
       :network_port                  => 11,
       :cloud_network                 => 6,
-      :floating_ip                   => 13,
+      :floating_ip                   => 12,
       :network_router                => 0,
       :cloud_subnet                  => 6,
     }
