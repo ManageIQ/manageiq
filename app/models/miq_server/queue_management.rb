@@ -55,7 +55,8 @@ module MiqServer::QueueManagement
   end
 
   def ntp_reload_queue
-    return unless MiqEnvironment::Command.is_appliance? # matches ntp_reload's guard clause
+    # matches ntp_reload's guard clause
+    return if !MiqEnvironment::Command.is_appliance? || MiqEnvironment::Command.is_container?
 
     MiqQueue.put(
       :class_name  => "MiqServer",
