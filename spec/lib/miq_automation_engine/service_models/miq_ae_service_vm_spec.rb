@@ -117,6 +117,7 @@ module MiqAeServiceVmSpec
     end
 
     it "#finish_retirement" do
+      expect(Notification).to receive(:create)
       expect(service_vm.retired).to be_nil
       expect(service_vm.retirement_state).to be_nil
       expect(service_vm.retires_on).to be_nil

@@ -102,6 +102,7 @@ describe "Service Retirement Management" do
 
   it "#finish_retirement" do
     expect(@service.retirement_state).to be_nil
+    expect(Notification).to receive(:create)
     @service.finish_retirement
     @service.reload
     expect(@service.retired).to be_truthy

@@ -137,6 +137,7 @@ module RetirementMixin
     $log.info("Calling audit event for: #{message} ")
     raise_audit_event(retired_event_name, message)
     $log.info("Called audit event for: #{message} ")
+    Notification.create(:type => retired_event_name, :subject => self)
   end
 
   def start_retirement
