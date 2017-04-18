@@ -101,7 +101,7 @@ class OpsController
 
       node = default_node.merge(
         :key      => "#{node_id}__#{feature}",
-        :icon     => img("100/feature_#{details[:feature_type]}"),
+        :icon     => img("100/feature_#{details[:feature_type]}.png"),
         :title    => _(details[:name]),
         :tooltip  => _(details[:description]) || _(details[:name]),
         :children => {}
