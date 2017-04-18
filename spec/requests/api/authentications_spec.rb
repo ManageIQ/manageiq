@@ -281,6 +281,33 @@ RSpec.describe 'Authentications API' do
 
       expect(response).to have_http_status(:forbidden)
     end
+
+    it 'can refresh multiple authentications with an appropriate role' do
+      api_basic_authorize collection_action_identifier(:authentications, :refresh, :post)
+
+      run_post(authentications_url, :action => :refresh, :resources => [{ :id => auth.id}, {:id => auth_2.id}])
+
+      expected = {
+        'results' => [
+          a_hash_including(
+            'success'   => true,
+            'message'   => a_string_including("Refreshing Authentication id:#{auth.id}"),
+            'task_id'   => a_kind_of(Numeric),
+            'task_href' => /task/,
+            'tasks'     => [a_hash_including('id' => a_kind_of(Numeric), 'href' => /task/)]
+          ),
+          a_hash_including(
+            'success'   => true,
+            'message'   => a_string_including("Refreshing Authentication id:#{auth_2.id}"),
+            'task_id'   => a_kind_of(Numeric),
+            'task_href' => /task/,
+            'tasks'     => [a_hash_including('id' => a_kind_of(Numeric), 'href' => /task/)]
+          )
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
   end
 
   describe 'PUT /api/authentications/:id' do
@@ -394,6 +421,30 @@ RSpec.describe 'Authentications API' do
       run_post(authentications_url(auth.id), :action => 'edit', :resource => params)
 
       expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'forbids refresh without an appropriate role' do
+      api_basic_authorize
+
+      run_post(authentications_url(auth.id), :action => :refresh)
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'can refresh a authentications with an appropriate role' do
+      api_basic_authorize action_identifier(:authentications, :refresh)
+
+      run_post(authentications_url(auth.id), :action => :refresh)
+
+      expected = {
+        'success'   => true,
+        'message'   => /Refreshing Authentication/,
+        'task_id'   => a_kind_of(Numeric),
+        'task_href' => /task/,
+        'tasks'     => [a_hash_including('id' => a_kind_of(Numeric), 'href' => /tasks/)]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
     end
   end
 
