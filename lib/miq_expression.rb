@@ -17,6 +17,7 @@ class MiqExpression
     ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem
     ManageIQ::Providers::ConfigurationManager
     Container
+    ContainerBuild
     ContainerPerformance
     ContainerGroup
     ContainerGroupPerformance
@@ -254,8 +255,17 @@ class MiqExpression
     'VmOrTemplate'                                => 'vm',
     'ManageIQ::Providers::CloudManager::Vm'       => 'vm',
     'ManageIQ::Providers::InfraManager::Vm'       => 'vm',
+    'Container'                                   => 'container',
+    'ContainerBuild'                              => 'container_build',
+    'ContainerGroup'                              => 'container_group',
+    'ContainerImage'                              => 'container_image',
+    'ContainerImageRegistry'                      => 'container_image_registry',
+    'ContainerNode'                               => 'container_node',
     'ContainerProject'                            => 'container_project',
-    'ContainerImage'                              => 'container_image'
+    'ContainerReplicator'                         => 'container_replicator',
+    'ContainerRoute'                              => 'container_route',
+    'ContainerService'                            => 'container_service',
+    'ContainerTemplate'                           => 'container_template'
   }
   EXCLUDE_FROM_RELATS = {
     "ManageIQ::Providers::CloudManager" => ["hosts", "ems_clusters", "resource_pools"]
