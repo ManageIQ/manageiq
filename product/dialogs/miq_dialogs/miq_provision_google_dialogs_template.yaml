@@ -258,7 +258,7 @@
                 2.weeks: 2 Weeks
                 30.days: 30 Days
               :include_equals: false
-              :field: s:retirement
+              :field: :retirement
             :method: :values_less_then
           :description: Retirement Warning
           :required: true
