@@ -350,18 +350,6 @@ class MiqExpression
   def initialize(exp, ctype = nil)
     @exp = exp
     @context_type = ctype
-
-    load_virtual_custom_attributes
-  end
-
-  def load_virtual_custom_attributes
-    return unless @exp
-
-    custom_attributes_group_by_model = custom_attribute_columns_and_models.compact.group_by { |x| x[:model] }
-
-    custom_attributes_group_by_model.each do |model, custom_attribute|
-      model.load_custom_attributes_for(custom_attribute.map { |x| x[:column] })
-    end
   end
 
   def self.proto?
