@@ -100,7 +100,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def custom_sysprep_timezone(field, data_value)
     set_value_from_list(:sysprep_timezone, field, "%03d" % data_value, @timezones)
-    @values[:sysprep_timezone].reverse!
   end
 
   def custom_sysprep_domain_name(field, data_value)
