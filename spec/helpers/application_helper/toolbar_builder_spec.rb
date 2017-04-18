@@ -1886,18 +1886,46 @@ describe ApplicationHelper do
         end
 
         context "id = vm_snapshot_revert" do
-          before { @id = "vm_snapshot_revert" }
-          context "when with available message" do
-            before { allow(@record).to receive(:is_available?).with(:revert_to_snapshot).and_return(false) }
-            it_behaves_like 'record with error message', 'revert_to_snapshot'
+          before do
+            @id = "vm_snapshot_revert"
           end
-          context "when without snapshots" do
-            before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(0) }
-            it_behaves_like 'record with error message', 'revert_to_snapshot'
+
+          context "when @record does not respond to #revert_to_snapshot_denied_message" do
+            before do
+              allow(@record).to receive(:revert_to_snapshot_denied_message).with(@active).and_return(nil)
+            end
+
+            context "when with available message" do
+              before { allow(@record).to receive(:is_available?).with(:revert_to_snapshot).and_return(false) }
+              it_behaves_like 'record with error message', 'revert_to_snapshot'
+            end
+            context "when without snapshots" do
+              before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(0) }
+              it_behaves_like 'record with error message', 'revert_to_snapshot'
+            end
+            context "when with snapshots" do
+              before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(2) }
+              it_behaves_like 'record with error message', 'revert_to_snapshot'
+            end
           end
-          context "when with snapshots" do
-            before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(2) }
-            it_behaves_like 'record with error message', 'revert_to_snapshot'
+
+          context "when @record responds to #revert_to_snapshot_denied_message" do
+            before do
+              allow(@record).to receive(:revert_to_snapshot_denied_message).with(@active).and_return("xx revert_to_snapshot message")
+            end
+
+            context "when with available message" do
+              before { allow(@record).to receive(:is_available?).with(:revert_to_snapshot).and_return(false) }
+              it_behaves_like 'record with error message', 'revert_to_snapshot'
+            end
+            context "when without snapshots" do
+              before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(0) }
+              it_behaves_like 'record with error message', 'revert_to_snapshot'
+            end
+            context "when with snapshots" do
+              before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(2) }
+              it_behaves_like 'record with error message', 'revert_to_snapshot'
+            end
           end
         end
       end

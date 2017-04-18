@@ -49,11 +49,20 @@ module ManageIQ::Providers::Redhat::InfraManager::Vm::Operations::Snapshot
 
   def validate_revert_to_snapshot
     {:available => allowed_to_revert?,
-     :message   => "Revert is allowed only when vm is down. Current state is #{current_state}"}
+     :message   => revert_unsupported_message}
   end
 
   def allowed_to_revert?
     current_state == 'off'
+  end
+
+  def revert_to_snapshot_denied_message(active = false)
+    return revert_unsupported_message unless allowed_to_revert?
+    return _("Revert is not allowed for a snapshot that is the active one") if active
+  end
+
+  def revert_unsupported_message
+    _("Revert is allowed only when vm is down. Current state is %{state}") % {:state => current_state}
   end
 
   def snapshotting_memory_allowed?
