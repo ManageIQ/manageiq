@@ -2,7 +2,12 @@
 require_relative '../lib/manageiq/environment'
 require 'optparse'
 
-options = {:do_tests => true, :do_db => true}
+options = {
+  # Don't run tests by default if we are in a prod env since no task exists.
+  :do_tests => ENV['RAILS_ENV'] != "production",
+  :do_db => true
+}
+
 OptionParser.new do |opts|
   opts.banner = "Usage: setup [options]"
   opts.on("-d", "--no-db", "Do not prepare db") do

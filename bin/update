@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 require_relative '../lib/manageiq/environment'
 
+# Don't run tests by default if we are in a prod env since no task exists.
+ENV["SKIP_TEST_RESET"] = '1' if ENV['RAILS_ENV'] == 'production'
+
 Dir.chdir ManageIQ::Environment::APP_ROOT do
   # This script is a way to update your development environment automatically.
   # Add necessary update steps to this file.
