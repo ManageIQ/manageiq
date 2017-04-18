@@ -72,6 +72,7 @@ describe "Service Retirement Management" do
   end
 
   it "#finish_retirement" do
+    expect(Notification).to receive(:create)
     expect(@stack.retirement_state).to be_nil
     @stack.finish_retirement
     @stack.reload
