@@ -162,9 +162,9 @@ class NetworkRouterController < ApplicationController
     routers = if @lastaction == "show_list" ||
                  (@lastaction == "show" && @layout != "network_router") ||
                  @lastaction.nil?
-                find_checked_items
+                find_checked_ids_with_rbac(NetworkRouter)
               else
-                [params[:id]]
+                [find_id_with_rbac(NetworkRouter, params[:id])]
               end
 
     if routers.empty?
