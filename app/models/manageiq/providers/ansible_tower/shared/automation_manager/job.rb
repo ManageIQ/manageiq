@@ -94,15 +94,15 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Job
 
   def update_plays(raw_job)
     last_play_hash = nil
-    plays = raw_job.job_plays.collect do |play|
+    plays = raw_job.job_events(:event => 'playbook_on_play_start').collect do |play|
       {
         :name              => play.play,
         :resource_status   => play.failed ? 'failed' : 'successful',
-        :start_time        => play.started,
+        :start_time        => play.created,
         :ems_ref           => play.id,
         :resource_category => 'job_play'
       }.tap do |h|
-        last_play_hash[:finish_time] = play.started if last_play_hash
+        last_play_hash[:finish_time] = play.created if last_play_hash
         last_play_hash = h
       end
     end

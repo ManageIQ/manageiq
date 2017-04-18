@@ -72,7 +72,7 @@ describe ServiceAnsibleTower do
                             :verbosity       => 0,
                             :started         => Time.current,
                             :finished        => Time.current,
-                            :job_plays       => [],
+                            :job_events      => [],
                             :extra_vars_hash => {'var_name' => 'var_val'}))
 
       job_done = service_mix_dialog_setter.launch_job
