@@ -35,12 +35,12 @@
 
 module EmsRefresh::SaveInventoryInfra
   def save_ems_infra_inventory(ems, hashes, target = nil, disconnect = true)
-    target = ems if target.nil? && disconnect
+    target = ems if target.nil?
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
     # Check if the data coming in reflects a complete removal from the ems
     if hashes.blank? || (hashes[:hosts].blank? && hashes[:vms].blank? && hashes[:storages].blank? && hashes[:folders].blank?)
-      target.disconnect_inv
+      target.disconnect_inv if disconnect
       return
     end
 
@@ -83,8 +83,8 @@ module EmsRefresh::SaveInventoryInfra
     ems
   end
 
-  def save_storages_inventory(ems, hashes, target = nil, disconnect = true)
-    target = ems if target.nil? && disconnect
+  def save_storages_inventory(ems, hashes, target = nil, _disconnect = true)
+    target = ems if target.nil?
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
     # Query for all of the storages ahead of time

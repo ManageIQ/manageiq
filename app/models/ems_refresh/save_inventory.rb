@@ -6,7 +6,7 @@ module EmsRefresh::SaveInventory
     end
 
     case ems
-    when EmsCloud                                           then save_ems_cloud_inventory(ems, hashes, target)
+    when EmsCloud                                           then save_ems_cloud_inventory(ems, hashes, target, disconnect)
     when EmsInfra                                           then save_ems_infra_inventory(ems, hashes, target, disconnect)
     when EmsPhysicalInfra                                   then save_ems_physical_infra_inventory(ems, hashes, target)
     when ManageIQ::Providers::AutomationManager             then save_automation_manager_inventory(ems, hashes, target)

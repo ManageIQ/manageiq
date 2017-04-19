@@ -15,7 +15,7 @@ module EmsRefresh
       hashes.zip(templates).each { |hash, template| hash[:id] = template.id }
     end
 
-    def save_orchestration_templates_catalog_inventory(ems, hashes, target = nil)
+    def save_orchestration_templates_catalog_inventory(ems, hashes, target = nil, disconnect = true)
       target = ems if target.nil?
 
       deletes = target == ems ? :use_association : []
