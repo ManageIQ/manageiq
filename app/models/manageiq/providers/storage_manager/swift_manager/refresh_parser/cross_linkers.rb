@@ -5,6 +5,10 @@ module ManageIQ::Providers::StorageManager::SwiftManager::RefreshParser::CrossLi
       _log.warn "Manager does not have a parent."
       return
     end
+    unless data
+      _log.warn "Manager does not have any object storage."
+      return
+    end
 
     parent_type = parent_manager.class.ems_type
     _log.debug "Parent type: #{parent_type}"

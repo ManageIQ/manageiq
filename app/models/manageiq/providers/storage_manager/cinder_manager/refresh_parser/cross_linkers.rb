@@ -5,6 +5,10 @@ module ManageIQ::Providers::StorageManager::CinderManager::RefreshParser::CrossL
       _log.warn "Manager does not have a parent."
       return
     end
+    unless data
+      _log.warn "Manager does not have volumes, snapshots, or volume backups."
+      return
+    end
 
     parent_type = parent_manager.class.ems_type
     _log.debug "Parent type: #{parent_type}"
