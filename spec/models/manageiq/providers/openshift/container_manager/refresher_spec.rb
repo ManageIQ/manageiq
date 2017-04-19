@@ -1,4 +1,7 @@
 describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
+  let(:all_images_count) { 40 } # including /oapi/v1/images data
+  let(:pod_images_count) { 12 } # only images mentioned by pods
+
   before(:each) do
     allow(MiqServer).to receive(:my_zone).and_return("default")
     hostname = 'host.example.com'
@@ -26,13 +29,17 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     expect(described_class.ems_type).to eq(:openshift)
   end
 
+  def normal_refresh
+    VCR.use_cassette(described_class.name.underscore,
+                     :match_requests_on => [:path,]) do # , :record => :new_episodes) do
+      EmsRefresh.refresh(@ems)
+    end
+  end
+
   it "will perform a full refresh on openshift" do
     2.times do
       @ems.reload
-      VCR.use_cassette(described_class.name.underscore,
-                       :match_requests_on => [:path,]) do # , :record => :new_episodes) do
-        EmsRefresh.refresh(@ems)
-      end
+      normal_refresh
       @ems.reload
 
       assert_ems
@@ -47,7 +54,8 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
       assert_specific_container_build
       assert_specific_container_build_pod
       assert_specific_container_template
-      assert_specific_container_image
+      assert_specific_used_container_image(:metadata => true)
+      assert_specific_unused_container_image(:metadata => true, :connected => true)
       assert_specific_container_node_custom_attributes
     end
   end
@@ -193,10 +201,25 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
   end
 
   it 'will skip container_images if get_container_images = false' do
-    stub_settings(
+    stub_settings_merge(
       :ems_refresh => {:openshift => {:get_container_images => false}},
-      :http_proxy  => {},
-      :ssl         => {}
+    )
+    VCR.use_cassette(described_class.name.underscore,
+                     :match_requests_on              => [:path,],
+                     :allow_unused_http_interactions => true) do # , :record => :new_episodes) do
+      EmsRefresh.refresh(@ems)
+    end
+
+    @ems.reload
+
+    expect(ContainerImage.count).to eq(pod_images_count)
+    assert_specific_used_container_image(:metadata => false)
+  end
+
+  it 'will not delete previously collected metadata if get_container_images = false' do
+    normal_refresh
+    stub_settings_merge(
+      :ems_refresh => {:openshift => {:get_container_images => false}},
     )
 
     VCR.use_cassette(described_class.name.underscore,
@@ -207,7 +230,10 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
 
     @ems.reload
 
-    expect(ContainerImage.count).to eq(12)
+    # Unused images are disconnected, metadata is retained either way.
+    expect(@ems.container_images.count).to eq(pod_images_count)
+    assert_specific_used_container_image(:metadata => true)
+    assert_specific_unused_container_image(:metadata => true, :connected => false)
   end
 
   def assert_table_counts
@@ -222,7 +248,8 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     expect(ContainerBuild.count).to eq(3)
     expect(ContainerBuildPod.count).to eq(3)
     expect(ContainerTemplate.count).to eq(26)
-    expect(ContainerImage.count).to eq(40)
+    expect(ContainerImage.count).to eq(all_images_count)
+    expect(ContainerImage.joins(:containers).distinct.count).to eq(pod_images_count)
   end
 
   def assert_ems
@@ -391,13 +418,25 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     )
   end
 
-  def assert_specific_container_image
+  def assert_specific_unused_container_image(metadata:, connected:)
+    # An image not mentioned in /pods, only in /images, built by openshift so it has metadata.
     @container_image = ContainerImage.find_by(:name => "openshift/nodejs-010-centos7")
 
-    expect(@container_image.ext_management_system).to eq(@ems)
-    expect(@container_image.environment_variables.count).to eq(10)
+    expect(@container_image.ext_management_system).to eq(connected ? @ems : nil)
+    expect(@container_image.environment_variables.count).to eq(metadata ? 10 : 0)
     expect(@container_image.labels.count).to eq(1)
-    expect(@container_image.docker_labels.count).to eq(15)
+    expect(@container_image.docker_labels.count).to eq(metadata ? 15 : 0)
+  end
+
+  def assert_specific_used_container_image(metadata:)
+    # An image mentioned both in /pods and /images, built by openshift so it has metadata.
+    @container_image = ContainerImage.find_by(:name => "python-project/python-project")
+
+    expect(@container_image.ext_management_system).to eq(@ems)
+    expect(@container_image.environment_variables.count).to eq(metadata ? 12 : 0)
+    # TODO: for next recording, oc label some running, openshift-built image
+    expect(@container_image.labels.count).to eq(0)
+    expect(@container_image.docker_labels.count).to eq(metadata ? 19 : 0)
   end
 
   def assert_container_node_with_no_hawk_attributes
