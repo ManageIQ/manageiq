@@ -113,8 +113,8 @@ ADD . ${APP_ROOT}
 
 ## Setup environment
 RUN ${APPLIANCE_ROOT}/setup && \
-    echo "export PATH=\$PATH:/opt/rubies/ruby-2.3.1/bin" >> /etc/default/evm && \
-    sed --follow-symlinks -i /etc/default/evm_apache -e s:^RUBY_EXEC=.*$:RUBY_EXEC=/opt/rubies/ruby-2.3.1/bin/ruby: && \
+    echo "export PATH=\$PATH:/opt/rubies/ruby-2.3.1/bin" >> /etc/default/evm_ruby && \
+    source /etc/default/evm_ruby && \
     source /etc/default/evm_apache && \
     mkdir ${APP_ROOT}/log/apache && \
     mv ${APPLIANCE_APACHE_CONFIG_DIR}/ssl.conf{,.orig} && \
