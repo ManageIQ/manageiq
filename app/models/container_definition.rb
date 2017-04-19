@@ -11,6 +11,7 @@ class ContainerDefinition < ApplicationRecord
   has_one :container_image,         :through => :container
 
   def disconnect_inv
+    return if ems_id.nil?
     _log.info "Disconnecting Container definition [#{name}] id [#{id}]"
     self.container.try(:disconnect_inv)
     self.deleted_on = Time.now.utc
