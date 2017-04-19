@@ -4,6 +4,11 @@
   :url: /dashboard/show
   :rbac_feature_name: dashboard_view
   :startup: true
+- :name: chargeback
+  :description: Cloud Intelligence / Chargeback
+  :url: /chargeback/explorer
+  :rbac_feature_name: chargeback
+  :startup: true
 - :name: report_explorer
   :description: Cloud Intelligence / Reports
   :url: /report/explorer
