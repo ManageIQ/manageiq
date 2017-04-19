@@ -721,7 +721,7 @@ class Storage < ApplicationRecord
   end
 
   # TODO: See if we can reuse the main perf_capture method, and only overwrite the perf_collect_metrics method
-  def perf_capture(interval_name)
+  def perf_capture(interval_name, *_args)
     unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
       raise ArgumentError, _("invalid interval_name '%{name}'") % {:name => interval_name}
     end
