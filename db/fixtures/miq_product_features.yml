@@ -6399,7 +6399,7 @@
       :identifier: physical_server_show_list
     - :name: Show
       :description: Display Individual Physical Server
-      :feature_type: view 
+      :feature_type: view
       :identifier: physical_server_show
   - :name: Modify
     :description: Modify Physical Servers
