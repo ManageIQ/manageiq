@@ -112,7 +112,6 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     stub_settings_merge(
       :ems_refresh => {:openshift => {:get_container_images => false}},
     )
-
     VCR.use_cassette(described_class.name.underscore,
                      :match_requests_on              => [:path,],
                      :allow_unused_http_interactions => true) do # , :record => :new_episodes) do
@@ -120,11 +119,21 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     end
 
     @ems.reload
-
     # Unused images are disconnected, metadata is retained either way.
     expect(@ems.container_images.count).to eq(pod_images_count)
+    expect(ContainerImage.count).to eq(all_images_count)
     assert_specific_used_container_image(:metadata => true)
     assert_specific_unused_container_image(:metadata => true, :connected => false)
+
+    # Are images re-connected when we see them again?
+    stub_settings_merge(
+      :ems_refresh => {:openshift => {:get_container_images => true}},
+    )
+    normal_refresh
+
+    @ems.reload
+    assert_specific_unused_container_image(:metadata => true, :connected => true)
+    expect(ContainerImage.count).to eq(all_images_count)
   end
 
   def assert_table_counts
@@ -311,7 +320,9 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
 
   def assert_specific_unused_container_image(metadata:, connected:)
     # An image not mentioned in /pods, only in /images, built by openshift so it has metadata.
-    @container_image = ContainerImage.find_by(:name => "openshift/nodejs-010-centos7")
+    matches = ContainerImage.where(:name => "openshift/nodejs-010-centos7")
+    expect(matches.count).to eq(1)
+    @container_image = matches.first
 
     expect(@container_image.ext_management_system).to eq(connected ? @ems : nil)
     expect(@container_image.environment_variables.count).to eq(metadata ? 10 : 0)
@@ -321,7 +332,9 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
 
   def assert_specific_used_container_image(metadata:)
     # An image mentioned both in /pods and /images, built by openshift so it has metadata.
-    @container_image = ContainerImage.find_by(:name => "python-project/python-project")
+    matches = ContainerImage.where(:name => "python-project/python-project")
+    expect(matches.count).to eq(1)
+    @container_image = matches.first
 
     expect(@container_image.ext_management_system).to eq(@ems)
     expect(@container_image.environment_variables.count).to eq(metadata ? 12 : 0)
