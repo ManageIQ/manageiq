@@ -83,11 +83,7 @@ module EmsRefresh::SaveInventoryCloud
     target = ems if target.nil?
 
     ems.flavors.reset
-    deletes = if (target == ems)
-                :use_association
-              else
-                []
-              end
+    deletes = determine_deletes_using_association(ems, target, disconnect)
 
     hashes.each do |h|
       h[:cloud_tenant_ids] = (h.delete(:cloud_tenants) || []).compact.map { |x| x[:id] }.uniq
@@ -101,11 +97,7 @@ module EmsRefresh::SaveInventoryCloud
     target = ems if target.nil?
 
     ems.availability_zones.reset
-    deletes = if (target == ems)
-                :use_association
-              else
-                []
-              end
+    deletes = determine_deletes_using_association(ems, target, disconnect)
 
     save_inventory_multi(ems.availability_zones, hashes, deletes, [:ems_ref])
     store_ids_for_new_records(ems.availability_zones, hashes, :ems_ref)
@@ -115,11 +107,7 @@ module EmsRefresh::SaveInventoryCloud
     target ||= ems
 
     ems.host_aggregates.reset
-    deletes = if (target == ems)
-                :use_association
-              else
-                []
-              end
+    deletes = determine_deletes_using_association(ems, target, disconnect)
 
     save_inventory_multi(ems.host_aggregates, hashes, deletes, [:ems_ref])
     store_ids_for_new_records(ems.host_aggregates, hashes, :ems_ref)
@@ -130,11 +118,7 @@ module EmsRefresh::SaveInventoryCloud
     target ||= ems
 
     ems.cloud_tenants.reset
-    deletes = if (target == ems)
-                :use_association
-              else
-                []
-              end
+    deletes = determine_deletes_using_association(ems, target, disconnect)
 
     save_inventory_multi(ems.cloud_tenants, hashes, deletes, [:ems_ref], nil, [:parent_id])
     store_ids_for_new_records(ems.cloud_tenants, hashes, :ems_ref)
@@ -144,11 +128,7 @@ module EmsRefresh::SaveInventoryCloud
     target ||= ems
 
     ems.cloud_resource_quotas.reset
-    deletes = if (target == ems)
-                :use_association
-              else
-                []
-              end
+    deletes = determine_deletes_using_association(ems, target, disconnect)
 
     hashes.each do |h|
       h[:cloud_tenant_id] = h.fetch_path(:cloud_tenant, :id)
@@ -162,11 +142,7 @@ module EmsRefresh::SaveInventoryCloud
     target = ems if target.nil?
 
     ems.key_pairs.reset
-    deletes = if (target == ems)
-                :use_association
-              else
-                []
-              end
+    deletes = determine_deletes_using_association(ems, target, disconnect)
 
     save_inventory_multi(ems.key_pairs, hashes, deletes, [:name])
     store_ids_for_new_records(ems.key_pairs, hashes, :name)
@@ -176,11 +152,7 @@ module EmsRefresh::SaveInventoryCloud
     target = ems if target.nil?
 
     ems.cloud_volumes.reset
-    deletes = if (target == ems)
-                :use_association
-              else
-                []
-              end
+    deletes = determine_deletes_using_association(ems, target, disconnect)
 
     hashes.each do |h|
       h[:ems_id]               = ems.id
@@ -197,11 +169,7 @@ module EmsRefresh::SaveInventoryCloud
     target = ems if target.nil?
 
     ems.cloud_volume_backups.reset
-    deletes = if target == ems
-                :use_association
-              else
-                []
-              end
+    deletes = determine_deletes_using_association(ems, target, disconnect)
 
     hashes.each do |h|
       h[:ems_id]          = ems.id
@@ -218,11 +186,7 @@ module EmsRefresh::SaveInventoryCloud
     target = ems if target.nil?
 
     ems.cloud_volume_snapshots.reset
-    deletes = if (target == ems)
-                :use_association
-              else
-                []
-              end
+    deletes = determine_deletes_using_association(ems, target, disconnect)
 
     hashes.each do |h|
       h[:ems_id]          = ems.id
@@ -265,11 +229,7 @@ module EmsRefresh::SaveInventoryCloud
     target = ems if target.nil?
 
     ems.cloud_object_store_containers.reset
-    deletes = if target == ems
-                :use_association
-              else
-                []
-              end
+    deletes = determine_deletes_using_association(ems, target, disconnect)
 
     hashes.each do |h|
       h[:ems_id]          = ems.id
@@ -284,11 +244,7 @@ module EmsRefresh::SaveInventoryCloud
     target = ems if target.nil?
 
     ems.cloud_object_store_objects.reset
-    deletes = if target == ems
-                :use_association
-              else
-                []
-              end
+    deletes = determine_deletes_using_association(ems, target, disconnect)
 
     hashes.each do |h|
       h[:ems_id]                          = ems.id
@@ -304,11 +260,7 @@ module EmsRefresh::SaveInventoryCloud
     target = ems if target.nil?
 
     ems.resource_groups.reset
-    deletes = if (target == ems)
-                :use_association
-              else
-                []
-              end
+    deletes = determine_deletes_using_association(ems, target, disconnect)
 
     save_inventory_multi(ems.resource_groups, hashes, deletes, [:ems_ref])
     store_ids_for_new_records(ems.resource_groups, hashes, :ems_ref)
@@ -318,11 +270,7 @@ module EmsRefresh::SaveInventoryCloud
     target = ems if target.nil?
 
     ems.cloud_services.reset
-    deletes = if target == ems
-                :use_association
-              else
-                []
-              end
+    deletes = determine_deletes_using_association(ems, target, disconnect)
 
     save_inventory_multi(ems.cloud_services, hashes, deletes, [:ems_ref])
     store_ids_for_new_records(ems.cloud_services, hashes, :ems_ref)

@@ -18,7 +18,7 @@ module EmsRefresh
     def save_orchestration_templates_catalog_inventory(ems, hashes, target = nil, disconnect = true)
       target = ems if target.nil?
 
-      deletes = target == ems ? :use_association : []
+      deletes = determine_deletes_using_association(ems, target, disconnect)
 
       save_inventory_multi(ems.orchestration_templates,
                            hashes,
@@ -29,9 +29,9 @@ module EmsRefresh
     end
 
     def save_orchestration_stacks_inventory(ems, hashes, target = nil, disconnect = true)
-      target = ems if target.nil? && disconnect
+      target = ems if target.nil?
 
-      deletes = target == ems ? :use_association : []
+      deletes = determine_deletes_using_association(ems, target, disconnect)
 
       hashes.each do |h|
         h[:orchestration_template_id] = h.fetch_path(:orchestration_template, :id)
