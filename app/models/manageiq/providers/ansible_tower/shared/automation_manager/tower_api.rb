@@ -9,7 +9,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
 
       refresh(manager)
       find_by!(:manager_id => manager.id, :manager_ref => tower_object.id)
-    rescue AnsibleTowerClient::ClientError, ActiveRecord::RecordNotFound => error
+    rescue Exception => error
       raise
     ensure
       notify('create_in_provider', manager.id, params, error.nil?)
@@ -68,7 +68,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
     end
     self.class.send('refresh', manager)
     reload
-  rescue AnsibleTowerClient::ClientError => error
+  rescue Exception => error
     raise
   ensure
     self.class.send('notify', 'update_in_provider', manager.id, params, error.nil?)
@@ -82,7 +82,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
   def delete_in_provider
     with_provider_object(&:destroy!)
     self.class.send('refresh', manager)
-  rescue AnsibleTowerClient::ClientError => error
+  rescue Exception => error
     raise
   ensure
     self.class.send('notify', 'delete_in_provider', manager.id, {:manager_ref => manager_ref}, error.nil?)

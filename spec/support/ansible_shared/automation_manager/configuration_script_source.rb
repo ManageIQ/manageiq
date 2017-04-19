@@ -57,6 +57,14 @@ shared_examples_for "ansible configuration_script_source" do
       expect { described_class.create_in_provider(manager.id, params) }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
+    it ".create_in_provider to fail with any error and send failure notification" do
+      expect(AnsibleTowerClient::Connection).to receive(:new).and_raise(RuntimeError)
+      expect(ExtManagementSystem).to receive(:find).with(manager.id).and_return(manager)
+      expected_notify[:type] = :tower_op_failure
+      expect(Notification).to receive(:create).with(expected_notify)
+      expect { described_class.create_in_provider(manager.id, params) }.to raise_error(RuntimeError)
+    end
+
     it ".create_in_provider with credential" do
       params[:authentication_id] = credential.id
       expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
@@ -124,6 +132,13 @@ shared_examples_for "ansible configuration_script_source" do
       expect { project.delete_in_provider }.to raise_error(AnsibleTowerClient::ClientError)
     end
 
+    it "#delete_in_provider to fail with any error and send failure notification" do
+      expect(AnsibleTowerClient::Connection).to receive(:new).and_raise(RuntimeError)
+      expected_notify[:type] = :tower_op_failure
+      expect(Notification).to receive(:create).with(expected_notify)
+      expect { project.delete_in_provider }.to raise_error(RuntimeError)
+    end
+
     it "#delete_in_provider_queue" do
       task_id = project.delete_in_provider_queue
       expect(MiqTask.find(task_id)).to have_attributes(:name => "Deleting #{described_class.name} with Tower internal reference=#{project.manager_ref}")
@@ -167,6 +182,13 @@ shared_examples_for "ansible configuration_script_source" do
       expected_notify[:type] = :tower_op_failure
       expect(Notification).to receive(:create).with(expected_notify)
       expect { project.update_in_provider({}) }.to raise_error(AnsibleTowerClient::ClientError)
+    end
+
+    it "#update_in_provider to fail with any error and send failure notification" do
+      expect(AnsibleTowerClient::Connection).to receive(:new).and_raise(RuntimeError)
+      expected_notify[:type] = :tower_op_failure
+      expect(Notification).to receive(:create).with(expected_notify)
+      expect { project.update_in_provider({}) }.to raise_error(RuntimeError)
     end
 
     it "#update_in_provider_queue" do
