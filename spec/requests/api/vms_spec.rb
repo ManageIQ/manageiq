@@ -1431,4 +1431,93 @@ describe "Vms API" do
       expect(vm2.tags.count).to eq(0)
     end
   end
+
+  describe "custom actions" do
+    it "renders custom actions" do
+      vm = FactoryGirl.create(:vm_vmware)
+      FactoryGirl.create(
+        :custom_button_set,
+        :members => [FactoryGirl.create(:custom_button, :name => "test button", :applies_to_class => "Vm")],
+      )
+      api_basic_authorize(action_identifier(:vms, :read, :resource_actions, :get))
+
+      run_get(vms_url(vm.id))
+
+      expected = {
+        "actions" => a_collection_including(
+          a_hash_including("name" => "test button")
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it "renders the custom actions when requested" do
+      vm = FactoryGirl.create(:vm_vmware)
+      FactoryGirl.create(
+        :custom_button_set,
+        :name    => "test button group",
+        :members => [FactoryGirl.create(:custom_button, :name => "test button", :applies_to_class => "Vm")]
+      )
+      api_basic_authorize(action_identifier(:vms, :read, :resource_actions, :get))
+
+      run_get(vms_url(vm.id), :attributes => "custom_actions")
+
+      expected = {
+        "custom_actions" => a_hash_including(
+          "button_groups" => [
+            a_hash_including(
+              "name"    => "test button group",
+              "buttons" => [
+                a_hash_including("name" => "test button")
+              ]
+            )
+          ]
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it "renders the custom action buttons when requested" do
+      vm = FactoryGirl.create(:vm_vmware)
+      FactoryGirl.create(
+        :custom_button_set,
+        :members => [FactoryGirl.create(:custom_button, :name => "test button", :applies_to_class => "Vm")]
+      )
+      api_basic_authorize(action_identifier(:vms, :read, :resource_actions, :get))
+
+      run_get(vms_url(vm.id), :attributes => "custom_action_buttons")
+
+      expected = {
+        "custom_action_buttons" => a_collection_containing_exactly(
+          a_hash_including("name" => "test button"),
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it "can execute a custom action" do
+      vm = FactoryGirl.create(:vm_vmware)
+      FactoryGirl.create(
+        :custom_button_set,
+        :members => [
+          FactoryGirl.create(
+            :custom_button,
+            :name             => "test button",
+            :applies_to_class => "Vm",
+            :resource_action  => FactoryGirl.create(:resource_action)
+          )
+        ]
+      )
+      api_basic_authorize
+
+      run_post(vms_url(vm.id), :action => "test button", :button_key1 => "foo")
+
+      expected = {
+        "success" => true,
+        "message" => "Invoked custom action test button for vms id: #{vm.id}",
+        "href"    => a_string_matching(vms_url(vm.id))
+      }
+      expect(response.parsed_body).to include(expected)
+    end
+  end
 end
