@@ -908,7 +908,7 @@ class MiqExpression
       dict_col = model.nil? ? col : [model, col].join(".")
       column_human = if col
                        if col.starts_with?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
-                         col.gsub(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX, "")
+                         CustomAttributeMixin.to_human(col)
                        else
                          Dictionary.gettext(dict_col, :type => :column, :notfound => :titleize)
                        end
