@@ -44,12 +44,13 @@ class ChargebackContainerImage < Chargeback
       @data_index.store_path(:container_image, :by_container_id, c.id, c.container_image)
     end
 
+    @unknown_project ||= OpenStruct.new(:id => 0, :name => _('Unknown Project'), :ems_ref => _('Unknown'))
     build_results_for_report_chargeback(options)
   end
 
   def self.default_key(metric_rollup_record, ts_key)
-    project = @data_index.fetch_path(:container_project, :by_container_id, metric_rollup_record.resource_id)
-    image = @data_index.fetch_path(:container_image, :by_container_id, metric_rollup_record.resource_id)
+    project = self.project(metric_rollup_record)
+    image = self.image(metric_rollup_record)
     @options[:groupby] == 'project' ? "#{project.id}_#{ts_key}" : "#{project.id}_#{image.id}_#{ts_key}"
   end
 
@@ -58,7 +59,7 @@ class ChargebackContainerImage < Chargeback
   end
 
   def self.project(consumption)
-    @data_index.fetch_path(:container_project, :by_container_id, consumption.resource_id)
+    @data_index.fetch_path(:container_project, :by_container_id, consumption.resource_id) || @unknown_project
   end
 
   def self.where_clause(records, _options)
