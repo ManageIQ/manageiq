@@ -47,10 +47,6 @@ class ServerRole < ApplicationRecord
     where(:role_scope => 'database').order(:name).pluck(:name)
   end
 
-  def self.database_scoped_roles
-    @database_scoped_roles ||= where(:role_scope => 'database').order(:name).to_a
-  end
-
   def self.region_scoped_roles
     @region_scoped_roles ||= where(:role_scope => 'region').order(:name).to_a
   end
@@ -59,28 +55,12 @@ class ServerRole < ApplicationRecord
     @zone_scoped_roles ||= where(:role_scope => 'zone').order(:name).to_a
   end
 
-  def self.database_role?(role)
-    database_scoped_roles.any? { |r| r.name == role.to_s }
-  end
-
   def self.regional_role?(role)
     region_scoped_roles.any? { |r| r.name == role.to_s }
   end
 
-  def self.zonal_role?(role)
-    zone_scoped_roles.any? { |r| r.name == role.to_s }
-  end
-
-  def database_role?
-    current_role_scope == "database"
-  end
-
   def regional_role?
     current_role_scope == "region"
-  end
-
-  def zonal_role?
-    current_role_scope == "zone"
   end
 
   def current_role_scope
