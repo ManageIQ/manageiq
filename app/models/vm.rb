@@ -2,11 +2,9 @@ class Vm < VmOrTemplate
   default_scope { where(:template => false) }
   has_one :container_deployment, :through => :container_deployment_node
   has_one :container_deployment_node
-  has_many :custom_button_sets, :as => :owner, :dependent => :destroy
-  virtual_has_one :custom_actions, :class_name => "Hash"
-  virtual_has_one :custom_action_buttons, :class_name => "Array"
 
   extend InterRegionApiMethodRelay
+  include CustomActionsMixin
 
   include_concern 'Operations'
 
@@ -111,26 +109,7 @@ class Vm < VmOrTemplate
     console.id
   end
 
-  def custom_actions
-    generic_button_group = CustomButton.buttons_for("Vm").select { |button| !button.parent.nil? }
-    custom_button_sets_with_generics = custom_button_sets + generic_button_group.map(&:parent).uniq.flatten
-    {
-      :buttons       => custom_buttons.collect(&:expanded_serializable_hash),
-      :button_groups => custom_button_sets_with_generics.collect do |button_set|
-        button_set.serializable_hash.merge(:buttons => button_set.children.collect(&:expanded_serializable_hash))
-      end
-    }
-  end
-
-  def custom_action_buttons
-    custom_buttons + custom_button_sets.collect(&:children).flatten
-  end
-
-  def custom_buttons
-    CustomButton.buttons_for("Vm").select { |button| button.parent.nil? } + direct_custom_buttons
-  end
-
-  def direct_custom_buttons
-    CustomButton.buttons_for(self).select { |b| b.parent.nil? }
+  def generic_custom_buttons
+    CustomButton.buttons_for("Vm")
   end
 end

@@ -30,6 +30,7 @@ class ServiceTemplate < ApplicationRecord
                                   :configuration_template_id,
                                   :configuration_template_type].freeze
 
+  include CustomActionsMixin
   include ServiceMixin
   include OwnershipMixin
   include NewWithTypeStiMixin
@@ -49,12 +50,10 @@ class ServiceTemplate < ApplicationRecord
 
   has_one :picture, :dependent => :destroy, :as => :resource, :autosave => true
 
-  has_many   :custom_button_sets, :as => :owner, :dependent => :destroy
   belongs_to :service_template_catalog
 
   has_many   :dialogs, -> { distinct }, :through => :resource_actions
 
-  virtual_has_many :custom_buttons
   virtual_column   :type_display,                 :type => :string
   virtual_column   :template_valid,               :type => :boolean
   virtual_column   :template_valid_error_message, :type => :string
@@ -62,8 +61,6 @@ class ServiceTemplate < ApplicationRecord
   default_value_for :service_type, 'unknown'
   default_value_for(:generic_subtype) { |st| 'custom' if st.prov_type == 'generic' }
 
-  virtual_has_one :custom_actions, :class_name => "Hash"
-  virtual_has_one :custom_action_buttons, :class_name => "Array"
   virtual_has_one :config_info, :class_name => "Hash"
 
   def self.create_catalog_item(options, auth_user)
@@ -123,35 +120,6 @@ class ServiceTemplate < ApplicationRecord
 
   def subtree
     [self] + descendants
-  end
-
-  def custom_actions
-    {
-      :buttons       => custom_buttons.collect(&:expanded_serializable_hash),
-      :button_groups => custom_button_sets_with_generics.collect do |button_set|
-        button_set.serializable_hash.merge(:buttons => button_set.children.collect(&:expanded_serializable_hash))
-      end
-    }
-  end
-
-  def custom_action_buttons
-    custom_buttons + custom_button_sets_with_generics.collect(&:children).flatten
-  end
-
-  def generic_button_group
-    CustomButton.buttons_for("Service").select { |button| !button.parent.nil? }
-  end
-
-  def custom_button_sets_with_generics
-    custom_button_sets + generic_button_group.map(&:parent).uniq.flatten
-  end
-
-  def custom_buttons
-    CustomButton.buttons_for("Service").select { |button| button.parent.nil? } + direct_custom_buttons
-  end
-
-  def direct_custom_buttons
-    CustomButton.buttons_for(self).select { |b| b.parent.nil? }
   end
 
   def vms_and_templates
@@ -499,5 +467,9 @@ class ServiceTemplate < ApplicationRecord
       config_info[resource_action.action.downcase.to_sym] = resource_options.symbolize_keys
     end
     config_info
+  end
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("Service")
   end
 end
