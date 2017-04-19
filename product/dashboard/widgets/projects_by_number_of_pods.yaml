@@ -6,6 +6,7 @@ options:
   :col_order:
   - name
   - groups_count
+  :timezone_matters: false
 visibility:
   :roles:
   - _ALL_

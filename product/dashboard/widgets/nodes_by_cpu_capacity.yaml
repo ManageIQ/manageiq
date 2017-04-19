@@ -7,6 +7,7 @@ options:
   - name
   - computer_system.hardware.cpu_total_cores
   - computer_system.hardware.memory_mb
+  :timezone_matters: false
 visibility:
   :roles:
   - _ALL_

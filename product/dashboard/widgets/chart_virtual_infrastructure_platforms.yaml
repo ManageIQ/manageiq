@@ -2,6 +2,7 @@ description: chart_virtual_infrastructure_platforms
 title: Virtual Infrastructure Platforms
 content_type: chart
 options:
+  :timezone_matters: false
 visibility:
   :roles:
   - _ALL_
