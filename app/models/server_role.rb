@@ -59,16 +59,8 @@ class ServerRole < ApplicationRecord
     region_scoped_roles.any? { |r| r.name == role.to_s }
   end
 
-  def self.zonal_role?(role)
-    zone_scoped_roles.any? { |r| r.name == role.to_s }
-  end
-
   def regional_role?
     current_role_scope == "region"
-  end
-
-  def zonal_role?
-    current_role_scope == "zone"
   end
 
   def current_role_scope
