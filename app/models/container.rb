@@ -43,6 +43,7 @@ class Container < ApplicationRecord
   end
 
   def disconnect_inv
+    return if ems_id.nil?
     _log.info "Disconnecting Container [#{name}] id [#{id}] from EMS "
     self.deleted_on = Time.now.utc
     self.old_ems_id = self.ems_id
