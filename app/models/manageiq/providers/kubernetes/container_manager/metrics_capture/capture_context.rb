@@ -33,6 +33,14 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
       end
     end
 
+    def total_memory
+      @node_memory
+    end
+
+    def total_cpu_time
+      @node_cores
+    end
+
     def ts_values
       # Filtering out entries that are not containing all the metrics.
       # This generally happens because metrics are collected at slightly

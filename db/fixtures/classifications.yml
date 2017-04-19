@@ -943,4 +943,20 @@
   :parent_id: 0
   :default: true
   :single_value: "1"
-
+- :description: LiveReports
+  :entries:
+  - :description: Use Hawkular as Live data source for Reports
+    :read_only: "0"
+    :syntax: string
+    :name: use_hawkular
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: live_reports
+  :example_text: LiveReports Options
+  :parent_id: 0
+  :default: true
+  :single_value: "1"
