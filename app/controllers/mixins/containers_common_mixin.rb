@@ -51,6 +51,7 @@ module ContainersCommonMixin
   private
 
   def display_name
+    return unless @record
     ui_lookup(:tables => @record.class.base_class.name)
   end
 
