@@ -33,7 +33,7 @@ module EmsRefresh::SaveInventoryHelper
     end
   end
 
-  def save_inventory_multi(association, hashes, deletes, find_key, child_keys = [], extra_keys = [], disconnect = false)
+  def save_inventory_multi(association, hashes, deletes, find_key, child_keys = [], extra_keys = [], disconnect = false, reconnect_from: [])
     association.reset
 
     if deletes == :use_association
@@ -50,12 +50,15 @@ module EmsRefresh::SaveInventoryHelper
     remove_keys = Array.wrap(extra_keys) + child_keys
 
     record_index = TypedIndex.new(association, find_key)
+    reconnect_index = TypedIndex.new(reconnect_from, find_key)
 
     new_records = []
+    reconnect_records = []
 
     ActiveRecord::Base.transaction do
       hashes.each do |h|
-        found = save_inventory_with_findkey(association, h.except(*remove_keys), deletes_index, new_records, record_index)
+        found = save_inventory_with_findkey(association, h.except(*remove_keys), deletes_index, new_records, record_index,
+                                            :reconnect_index => reconnect_index, :reconnect_records => reconnect_records)
         save_child_inventory(found, h, child_keys)
       end
     end
@@ -70,8 +73,9 @@ module EmsRefresh::SaveInventoryHelper
       end
     end
 
-    # Add the new items
+    # Add the new & reconnected items
     association.push(new_records)
+    association.push(reconnect_records)
   end
 
   def save_inventory_single(type, parent, hash, child_keys = [], extra_keys = [], disconnect = false)
@@ -91,15 +95,22 @@ module EmsRefresh::SaveInventoryHelper
     save_child_inventory(child, hash, child_keys)
   end
 
-  def save_inventory_with_findkey(association, hash, deletes, new_records, record_index)
+  def save_inventory_with_findkey(association, hash, deletes, new_records, record_index,
+                                  reconnect_index: nil, reconnect_records: nil)
     # Find the record, and update if found, else create it
     found = record_index.fetch(hash)
-    if found.nil?
-      found = association.build(hash.except(:id))
-      new_records << found
-    else
+    if found
       update_attributes!(found, hash, [:id, :type])
       deletes.delete(found) unless deletes.blank?
+    else
+      found = reconnect_index.fetch(hash) if reconnect_index
+      if found
+        found.update_attributes!(hash.except(:id, :type))
+        reconnect_records << found
+      else
+        found = association.build(hash.except(:id))
+        new_records << found
+      end
     end
     found
   end
