@@ -306,7 +306,7 @@ describe "Rest API Collections" do
 
     it 'query Firmwares' do
       FactoryGirl.create(:firmware)
-      test_collection_query(:firmwares, "/api/firmwares", Firmware)
+      test_collection_query(:firmwares, firmwares_url, Firmware)
     end
   end
 
@@ -566,7 +566,7 @@ describe "Rest API Collections" do
 
     it 'bulk query Firmwares' do
       FactoryGirl.create(:firmware)
-      test_collection_bulk_query(:firmwares, "/api/firmwares", Firmware)
+      test_collection_bulk_query(:firmwares, firmwares_url, Firmware)
     end
   end
 end
