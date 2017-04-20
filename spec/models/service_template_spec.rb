@@ -38,16 +38,9 @@ describe ServiceTemplate do
       assigned_group_buttons = assigned_group.expanded_serializable_hash.reject do |key, _|
         %w(created_on updated_on).include?(key)
       end
-      expected_assigned_group_set = assigned_group_set.serializable_hash.reject do |key, _|
-        %w(created_on updated_on).include?(key)
-      end.merge(:buttons => [assigned_group_buttons])
-
       generic_group_buttons = generic_group.expanded_serializable_hash.reject do |key, _|
         %w(created_on updated_on).include?(key)
       end
-      expected_generic_group_set = generic_group_set.serializable_hash.reject do |key, _|
-        %w(created_on updated_on).include?(key)
-      end.merge(:buttons => [generic_group_buttons])
 
       expected_hash_without_created_or_updated = service_template.custom_actions
       expected_hash_without_created_or_updated[:button_groups].each do |button_group|
@@ -67,8 +60,12 @@ describe ServiceTemplate do
           a_hash_including("name" => "assigned_no_group")
         ),
         :button_groups => a_collection_containing_exactly(
-          expected_assigned_group_set,
-          expected_generic_group_set
+          assigned_group_set.serializable_hash.reject do |key, _|
+            %w(created_on updated_on).include?(key)
+          end.merge(:buttons => [assigned_group_buttons]),
+          generic_group_set.serializable_hash.reject do |key, _|
+            %w(created_on updated_on).include?(key)
+          end.merge(:buttons => [generic_group_buttons])
         )
       }
       expect(actual).to match(expected)
