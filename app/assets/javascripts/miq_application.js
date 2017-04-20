@@ -448,31 +448,18 @@ function miqButtonOnWhen(button, onwhen, count) {
 
 // Set the buttons in a div based on the count of checked items passed in
 function miqSetButtons(count, button_div) {
-  if (!miqDomElementExists(button_div)) {
-    return
+  if (button_div.match("_tb$") && count === 0) {
+    // FIXME: this should be happening regardless of `count === 0`
+    // ..but that needs more refactoring around miqUpdateAllCheckboxes, miqUpdateButtons, etc.
+    sendDataWithRx({
+      eventType: 'updateToolbarCount',
+      countSelected: count,
+    });
+
+    return;
   }
 
-  if (button_div.match("_tb$")) {
-    var toolbar = $('#' + button_div);
-
-    // Non-dropdown master buttons
-    toolbar.find('button:not(.dropdown-toggle)').each(function (_k, v) {
-      var button = $(v);
-      miqButtonOnWhen(button, button.data('onwhen'), count);
-    });
-
-    // Dropdown master buttons
-    toolbar.find('button.dropdown-toggle').each(function (_k, v) {
-      var button = $(v);
-      miqButtonOnWhen(button, button.data('onwhen'), count);
-    });
-
-    // Dropdown button items
-    toolbar.find('ul.dropdown-menu > li > a').each(function (_k, v) {
-      var button = $(v);
-      miqButtonOnWhen(button.parent(), button.data('onwhen'), count);
-    });
-  } else if (button_div.match("_buttons$")) { // Handle buttons that are not part of miq toolbars
+  if (miqDomElementExists(button_div) && button_div.match("_buttons$")) { // Handle buttons that are not part of miq toolbars
     if (count === 0) {
       $("#" + button_div + " button[id$=on_1]").prop('disabled', true);
     } else if (count == 1) {
