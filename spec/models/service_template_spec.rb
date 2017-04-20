@@ -25,8 +25,6 @@ describe ServiceTemplate do
       assigned_group_set.add_member(assigned_group)
       service_template.update(:custom_button_sets => [assigned_group_set])
 
-      actual = service_template.custom_actions
-
       expected = {
         :buttons       => a_collection_containing_exactly(
           a_hash_including("name" => "generic_no_group"),
@@ -47,7 +45,7 @@ describe ServiceTemplate do
           )
         )
       }
-      expect(actual).to match(expected)
+      expect(service_template.custom_actions).to match(expected)
     end
   end
 
