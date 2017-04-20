@@ -3,7 +3,7 @@ describe ServiceTemplate do
 
   describe "#custom_actions" do
     let(:service_template) do
-      described_class.create(:name => "test", :description => "test", :custom_button_sets => [assigned_group_set])
+      FactoryGirl.create(:service_template, :custom_button_sets => [assigned_group_set])
     end
     let(:generic_no_group) do
       FactoryGirl.create(:custom_button, :name => "generic_no_group", :applies_to_class => "Service")
