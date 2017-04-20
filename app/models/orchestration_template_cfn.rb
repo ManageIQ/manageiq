@@ -9,7 +9,7 @@ class OrchestrationTemplateCfn < OrchestrationTemplate
   end
 
   def parameters
-    raw_parameters = JSON.load(content)["Parameters"]
+    raw_parameters = parse_content(content)["Parameters"]
     (raw_parameters || {}).collect do |key, val|
       OrchestrationTemplate::OrchestrationParameter.new(
         :name          => key,
@@ -38,7 +38,7 @@ class OrchestrationTemplateCfn < OrchestrationTemplate
   end
 
   def resources
-    @resources ||= (JSON.parse(content)["Resources"] || {}).collect do |key, val|
+    @resources ||= (parse_content(content)["Resources"] || {}).collect do |key, val|
       OrchestrationTemplate::OrchestrationResource.new(
         :name => key,
         :type => val['Type']
@@ -54,11 +54,18 @@ class OrchestrationTemplateCfn < OrchestrationTemplate
     @eligible_manager_types ||= [ManageIQ::Providers::Openstack::CloudManager]
   end
 
-  # return the parsing error message if not valid JSON; otherwise nil
+  # return the parsing error message if content is not parsable; otherwise nil
   def validate_format
+    self.format = "json"
     JSON.parse(content) && nil if content
-  rescue JSON::ParserError => err
-    err.message
+  rescue JSON::ParserError
+    begin
+      self.format = "yaml"
+      YAML.safe_load(content) && nil if content
+    rescue Psych::SyntaxError => err
+      self.format = nil
+      err.message
+    end
   end
 
   private
@@ -196,5 +203,13 @@ class OrchestrationTemplateCfn < OrchestrationTemplate
     return if (desc = val['ConstraintDescription']).nil?
 
     parameter.constraints.each { |c| c.description = desc }
+  end
+
+  def parse_content(content)
+    if format == "json"
+      JSON.parse(content)
+    else
+      YAML.safe_load(content)
+    end
   end
 end
