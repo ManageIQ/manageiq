@@ -5,10 +5,16 @@ describe ServiceTemplate do
     let(:service_template) do
       described_class.create(:name => "test", :description => "test", :custom_button_sets => [assigned_group_set])
     end
-    let(:generic_no_group) { FactoryGirl.create(:custom_button, :applies_to_class => "Service") }
-    let(:assigned_no_group) { FactoryGirl.create(:custom_button, :applies_to_class => "ServiceTemplate") }
-    let(:generic_group) { FactoryGirl.create(:custom_button, :applies_to_class => "Service") }
-    let(:assigned_group) { FactoryGirl.create(:custom_button, :applies_to_class => "ServiceTemplate") }
+    let(:generic_no_group) do
+      FactoryGirl.create(:custom_button, :name => "generic_no_group", :applies_to_class => "Service")
+    end
+    let(:assigned_no_group) do
+      FactoryGirl.create(:custom_button, :name => "assigned_no_group", :applies_to_class => "ServiceTemplate")
+    end
+    let(:generic_group) { FactoryGirl.create(:custom_button, :name => "generic_group", :applies_to_class => "Service") }
+    let(:assigned_group) do
+      FactoryGirl.create(:custom_button, :name => "assigned_group", :applies_to_class => "ServiceTemplate")
+    end
     let(:assigned_group_set) do
       FactoryGirl.create(:custom_button_set, :name => "assigned_group")
     end
