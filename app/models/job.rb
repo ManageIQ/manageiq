@@ -165,7 +165,9 @@ class Job < ApplicationRecord
 
           # Allow jobs to run longer if the MiqQueue task is still active.  (Limited to MiqServer for now.)
           # TODO: can we add method_name, queue_name, role, instance_id to the exists?
-          next if MiqQueue.exists?(:state => %w(dequeue ready), :task_id => job.guid)
+          if job.miq_server_id
+            next if MiqQueue.exists?(:state => %w(dequeue ready), :task_id => job.guid, :class_name => "MiqServer")
+          end
           job.timeout!
         end
     rescue Exception

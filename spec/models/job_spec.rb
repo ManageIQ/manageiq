@@ -272,6 +272,51 @@ describe Job do
         end
       end
     end
+
+    describe "#timeout!" do
+      it "adds to MiqQueue signal 'signal_abort' for this job " do
+        @job.timeout!
+        expect_signal_abort_and_timeout_message
+      end
+    end
+
+    describe ".check_jobs_for_timeout" do
+      before(:each) do
+        @job.update_attributes(:state => "active")
+        @queue_item = MiqQueue.put(:task_id => @job.guid)
+      end
+
+      context "job timed out" do
+        it "calls 'job#timeout!' if server was not assigned to job" do
+          Timecop.travel 5.minutes
+          Job.check_jobs_for_timeout
+          expect_signal_abort_and_timeout_message
+        end
+
+        it "calls 'job#timeout!' if server was assigned to job but queue item not in 'ready' or 'dequeue' state" do
+          @queue_item.update_attributes(:state => MiqQueue::STATE_WARN, :class_name => "MiqServer")
+          @job.update_attributes(:miq_server_id => @server1.id)
+          Timecop.travel 5.minutes
+          Job.check_jobs_for_timeout
+          expect_signal_abort_and_timeout_message
+        end
+
+        it "does not call 'job#timeout!' if queue state is 'ready' and server was assigned to job" do
+          @queue_item.update_attributes(:state => MiqQueue::STATE_READY, :class_name => "MiqServer")
+          @job.update_attributes(:miq_server_id => @server1.id)
+          Timecop.travel 5.minutes
+          Job.check_jobs_for_timeout
+          expect_no_signal_abort
+        end
+      end
+
+      context "job not timed out" do
+        it "does not call 'job#timeout!'" do
+          Job.check_jobs_for_timeout
+          expect_no_signal_abort
+        end
+      end
+    end
   end
 
   context "before_destroy callback" do
@@ -371,6 +416,16 @@ describe Job do
   end
 
   private
+
+  def expect_signal_abort_and_timeout_message
+    queue_item = MiqQueue.find_by(:instance_id => @job.id, :class_name => "Job", :method_name => "signal_abort")
+    expect(queue_item.args[0].starts_with?("job timed out after")).to be true
+  end
+
+  def expect_no_signal_abort
+    queue_item = MiqQueue.find_by(:instance_id => @job.id, :class_name => "Job", :method_name => "signal_abort")
+    expect(queue_item).to be nil
+  end
 
   def assert_queue_message
     expect(MiqQueue.count).to eq(1)
