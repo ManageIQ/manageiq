@@ -30,6 +30,6 @@ class PhysicalServer < ApplicationRecord
   end
 
   def label_for_vendor
-    VENDOR_TYPES[vendor]
+    VENDOR_TYPES[vendor.downcase]
   end
 end
