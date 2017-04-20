@@ -154,7 +154,9 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
   end
 
   def raw_scan_job_create(target_class, target_id = nil)
-    target_class, target_id = target_class.class.name, target_class.id if target_class.kind_of?(ContainerImage)
+    if target_class.kind_of?(ContainerImage)
+      target_class, target_id = target_class.class.name, target_class.id
+    end
     Job.create_job(
       "ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job",
       :name            => "Container image analysis",
