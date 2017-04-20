@@ -56,10 +56,13 @@ describe ServiceTemplate do
         end
       end
 
-      expect(expected_hash_without_created_or_updated).to eq(
+      actual = expected_hash_without_created_or_updated
+
+      expected = {
         :buttons       => %w(generic_no_group assigned_no_group),
         :button_groups => [expected_assigned_group_set, expected_generic_group_set]
-      )
+      }
+      expect(actual).to eq(expected)
     end
   end
 
