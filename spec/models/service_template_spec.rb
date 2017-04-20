@@ -16,10 +16,10 @@ describe ServiceTemplate do
       FactoryGirl.create(:custom_button, :name => "assigned_group", :applies_to_class => "ServiceTemplate")
     end
     let(:assigned_group_set) do
-      FactoryGirl.create(:custom_button_set, :name => "assigned_group")
+      FactoryGirl.create(:custom_button_set, :name => "assigned_group_set")
     end
     let(:generic_group_set) do
-      FactoryGirl.create(:custom_button_set, :name => "generic_group")
+      FactoryGirl.create(:custom_button_set, :name => "generic_group_set")
     end
 
     before do
@@ -60,8 +60,8 @@ describe ServiceTemplate do
           a_hash_including("name" => "assigned_no_group")
         ),
         :button_groups => a_collection_containing_exactly(
-          a_hash_including("name" => "assigned_group", :buttons => [assigned_group_buttons]),
-          a_hash_including("name" => "generic_group", :buttons => [generic_group_buttons])
+          a_hash_including("name" => "assigned_group_set", :buttons => [assigned_group_buttons]),
+          a_hash_including("name" => "generic_group_set", :buttons => [generic_group_buttons])
         )
       }
       expect(actual).to match(expected)
