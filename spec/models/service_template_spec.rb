@@ -37,9 +37,6 @@ describe ServiceTemplate do
     it "returns the custom actions in a hash grouped by buttons and button groups" do
       expected_hash_without_created_or_updated = service_template.custom_actions
       expected_hash_without_created_or_updated[:button_groups].each do |button_group|
-        button_group.reject! do |key, _|
-          %w(created_on updated_on).include?(key)
-        end
       end
 
       actual = expected_hash_without_created_or_updated
