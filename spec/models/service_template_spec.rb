@@ -33,15 +33,11 @@ describe ServiceTemplate do
         :button_groups => a_collection_containing_exactly(
           a_hash_including(
             "name"   => "assigned_group_set",
-            :buttons => [
-              a_hash_including("name" => "assigned_group")
-            ]
+            :buttons => [a_hash_including("name" => "assigned_group")]
           ),
           a_hash_including(
             "name"   => "generic_group_set",
-            :buttons => [
-              a_hash_including("name" => "generic_group")
-            ]
+            :buttons => [a_hash_including("name" => "generic_group")]
           )
         )
       }
