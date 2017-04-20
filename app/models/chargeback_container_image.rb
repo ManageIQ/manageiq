@@ -45,6 +45,7 @@ class ChargebackContainerImage < Chargeback
     end
 
     @unknown_project ||= OpenStruct.new(:id => 0, :name => _('Unknown Project'), :ems_ref => _('Unknown'))
+    @unknown_image ||= OpenStruct.new(:id => 0, :full_name => _('Unknown Image'))
     build_results_for_report_chargeback(options)
   end
 
@@ -55,7 +56,7 @@ class ChargebackContainerImage < Chargeback
   end
 
   def self.image(consumption)
-    @data_index.fetch_path(:container_image, :by_container_id, consumption.resource_id)
+    @data_index.fetch_path(:container_image, :by_container_id, consumption.resource_id) || @unknown_image
   end
 
   def self.project(consumption)
@@ -90,8 +91,7 @@ class ChargebackContainerImage < Chargeback
 
   def init_extra_fields(consumption)
     self.project_name  = self.class.project(consumption).name
-    # until image archiving is implemented
-    self.image_name    = self.class.image(consumption).try(:full_name) || _('Deleted')
+    self.image_name    = self.class.image(consumption).try(:full_name)
     self.project_uid   = self.class.project(consumption).ems_ref
     self.provider_name = consumption.parent_ems.try(:name)
     self.provider_uid  = consumption.parent_ems.try(:guid)
