@@ -310,8 +310,10 @@ module EmsRefresh::SaveInventoryContainer
       h[:container_image_registry_id] = h[:container_image_registry][:id] unless h[:container_image_registry].nil?
     end
 
+    # We never want 2 records for same image. Reconnect old images if we see them again.
     save_inventory_multi(ems.container_images, hashes, deletes, [:image_ref, :container_image_registry_id],
-                         [:labels, :docker_labels], :container_image_registry, true)
+                         [:labels, :docker_labels], :container_image_registry, true,
+                         :reconnect_from => ContainerImage.where(:old_ems_id => ems.id))
     store_ids_for_new_records(ems.container_images, hashes,
                               [:image_ref, :container_image_registry_id])
   end
