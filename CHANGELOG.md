@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+The ManageIQ organization is continuously adding new smaller repositories.  The repositories listed below maintain their own changelogs on GitHub:
+- [manageiq-content CHANGELOG](https://github.com/ManageIQ/manageiq-content/blob/master/CHANGELOG.md)
+- [manageiq-providers-amazon CHANGELOG](https://github.com/ManageIQ/manageiq-providers-amazon/blob/master/CHANGELOG.md)
+- [manageiq-providers-azure CHANGELOG](https://github.com/ManageIQ/manageiq-providers-azure/blob/master/CHANGELOG.md)
+- [manageiq-providers-vmware CHANGELOG](https://github.com/ManageIQ/manageiq-providers-vmware/blob/master/CHANGELOG.md)
+- [manageiq-ui-classic CHANGELOG](https://github.com/ManageIQ/manageiq-ui-classic/blob/master/CHANGELOG.md)
+
 ## Unreleased - as of Sprint 58 end 2017-04-10
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+58+Ending+Apr+27%2C+2017%22+label%3Aenhancement)
