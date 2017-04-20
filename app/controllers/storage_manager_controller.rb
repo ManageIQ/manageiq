@@ -385,9 +385,10 @@ class StorageManagerController < ApplicationController
 
     # List of Storage Managers
     if @lastaction == "show_list"
-      sms = find_checked_items
+      sms = find_checked_ids_with_rbac(StorageManager)
       if sms.empty?
-        add_flash(_("No %{model} were selected to %{button}") % {:model => ui_lookup(:model => "StorageManager"), :button => display_name}, :error)
+        add_flash(_("No %{model} were selected to %{button}") % {:model => ui_lookup(:model => "StorageManager"),
+                                                                 :button => display_name}, :error)
       else
         process_sms(sms, method)
       end
@@ -397,20 +398,19 @@ class StorageManagerController < ApplicationController
         @refresh_partial = "layouts/gtl"
       end
 
-    else # showing 1 Storage Manager
-      if params[:id].nil? || StorageManager.find_by_id(params[:id]).nil?
-        add_flash(_("%{model} no longer exists") % {:model => ui_lookup(:model => "StorageManager")}, :error)
-        show_list
-        @refresh_partial = "layouts/gtl"
-      else
-        sms.push(params[:id])
-        process_sms(sms, method)  unless sms.empty?
+    elsif params[:id].nil? || find_id_with_rbac(StorageManager, params[:id]).nil?
+      # showing 1 Storage Manager
+      add_flash(_("%{model} no longer exists") % {:model => ui_lookup(:model => "StorageManager")}, :error)
+      show_list
+      @refresh_partial = "layouts/gtl"
+    else
+      sms.push(params[:id])
+      process_sms(sms, method)  unless sms.empty?
 
-        # TODO: tells callers to go back to show_list because this Storage Manager may be gone
-        # Should be refactored into calling show_list right here
-        if method == 'destroy'
-          @single_delete = true unless flash_errors?
-        end
+      # TODO: tells callers to go back to show_list because this Storage Manager may be gone
+      # Should be refactored into calling show_list right here
+      if method == 'destroy'
+        @single_delete = true unless flash_errors?
       end
     end
 
