@@ -60,12 +60,12 @@ describe ServiceTemplate do
           a_hash_including("name" => "assigned_no_group")
         ),
         :button_groups => a_collection_containing_exactly(
-          assigned_group_set.serializable_hash.reject do |key, _|
+          a_hash_including(assigned_group_set.serializable_hash.reject do |key, _|
             %w(created_on updated_on).include?(key)
-          end.merge(:buttons => [assigned_group_buttons]),
-          generic_group_set.serializable_hash.reject do |key, _|
+          end.merge(:buttons => [assigned_group_buttons])),
+          a_hash_including(generic_group_set.serializable_hash.reject do |key, _|
             %w(created_on updated_on).include?(key)
-          end.merge(:buttons => [generic_group_buttons])
+          end.merge(:buttons => [generic_group_buttons]))
         )
       }
       expect(actual).to match(expected)
