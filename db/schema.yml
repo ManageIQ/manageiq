@@ -767,6 +767,7 @@ container_images:
 - created_on
 - old_ems_id
 - deleted_on
+- last_openshift_refresh
 container_label_tag_mappings:
 - id
 - labeled_resource_type

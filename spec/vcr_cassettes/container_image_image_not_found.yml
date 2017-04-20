@@ -1,0 +1,74 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://vm-48-110.eng.lab.tlv.redhat.com:8443/oapi/v1
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.1 (linux-gnu x86_64) ruby/2.2.4p230
+      Authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJtYW5hZ2VtZW50LWluZnJhIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6Im1hbmFnZW1lbnQtYWRtaW4tdG9rZW4tNXc2anMiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoibWFuYWdlbWVudC1hZG1pbiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjE3MzkxOTEyLTE0OWMtMTFlNy04NTRjLTAwMWE0YTE2MjY2ZSIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDptYW5hZ2VtZW50LWluZnJhOm1hbmFnZW1lbnQtYWRtaW4ifQ.Y6lP1xa2ATLQa7d_dMJWozT259mjcpkAjSzkhG2OFrbPiE4pXlIwSNx5g01IwSWH8erXj3vDrg61LzIlFi1PNrSFXe1LuMr32_zUVx4ZMdiIoE7b5OjffR-OGegFggj5gGAKAmip7S1wthXAoNLWWWe8JqKh_ulPFV7dHPUCvyWtltcVFyQjqYIkIfLA5P6ibOTTspcWVwQoyukCbUHSSwUGYnc_4DMzfGPxnCikIDNs9OqhEkkaCoiXcHY3kee2xWpTc0BUQsthnYR9vayTBx8ejbS8rVqDGYeXzPBhlJ7-facAp1ZMaWSbPorCYSUOhU7NAyI9xhVGmaQpAJQz6g
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 04 Apr 2017 15:42:27 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: '{"kind":"APIResourceList","groupVersion":"v1","resources":[{"name":"appliedclusterresourcequotas","namespaced":true,"kind":"AppliedClusterResourceQuota"},{"name":"buildconfigs","namespaced":true,"kind":"BuildConfig"},{"name":"buildconfigs/instantiate","namespaced":true,"kind":"BuildRequest"},{"name":"buildconfigs/instantiatebinary","namespaced":true,"kind":"BinaryBuildRequestOptions"},{"name":"buildconfigs/webhooks","namespaced":true,"kind":"Status"},{"name":"builds","namespaced":true,"kind":"Build"},{"name":"builds/clone","namespaced":true,"kind":"BuildRequest"},{"name":"builds/details","namespaced":true,"kind":"Build"},{"name":"builds/log","namespaced":true,"kind":"BuildLog"},{"name":"clusternetworks","namespaced":false,"kind":"ClusterNetwork"},{"name":"clusterpolicies","namespaced":false,"kind":"ClusterPolicy"},{"name":"clusterpolicybindings","namespaced":false,"kind":"ClusterPolicyBinding"},{"name":"clusterresourcequotas","namespaced":false,"kind":"ClusterResourceQuota"},{"name":"clusterresourcequotas/status","namespaced":false,"kind":"ClusterResourceQuota"},{"name":"clusterrolebindings","namespaced":false,"kind":"ClusterRoleBinding"},{"name":"clusterroles","namespaced":false,"kind":"ClusterRole"},{"name":"deploymentconfigrollbacks","namespaced":true,"kind":"DeploymentConfigRollback"},{"name":"deploymentconfigs","namespaced":true,"kind":"DeploymentConfig"},{"name":"deploymentconfigs/instantiate","namespaced":true,"kind":"DeploymentRequest"},{"name":"deploymentconfigs/log","namespaced":true,"kind":"DeploymentLog"},{"name":"deploymentconfigs/rollback","namespaced":true,"kind":"DeploymentConfigRollback"},{"name":"deploymentconfigs/scale","namespaced":true,"kind":"Scale"},{"name":"deploymentconfigs/status","namespaced":true,"kind":"DeploymentConfig"},{"name":"egressnetworkpolicies","namespaced":true,"kind":"EgressNetworkPolicy"},{"name":"generatedeploymentconfigs","namespaced":true,"kind":"DeploymentConfig"},{"name":"groups","namespaced":false,"kind":"Group"},{"name":"hostsubnets","namespaced":false,"kind":"HostSubnet"},{"name":"identities","namespaced":false,"kind":"Identity"},{"name":"images","namespaced":false,"kind":"Image"},{"name":"imagesignatures","namespaced":false,"kind":"ImageSignature"},{"name":"imagestreamimages","namespaced":true,"kind":"ImageStreamImage"},{"name":"imagestreamimports","namespaced":true,"kind":"ImageStreamImport"},{"name":"imagestreammappings","namespaced":true,"kind":"ImageStreamMapping"},{"name":"imagestreams","namespaced":true,"kind":"ImageStream"},{"name":"imagestreams/secrets","namespaced":true,"kind":"SecretList"},{"name":"imagestreams/status","namespaced":true,"kind":"ImageStream"},{"name":"imagestreamtags","namespaced":true,"kind":"ImageStreamTag"},{"name":"localresourceaccessreviews","namespaced":true,"kind":"LocalResourceAccessReview"},{"name":"localsubjectaccessreviews","namespaced":true,"kind":"LocalSubjectAccessReview"},{"name":"netnamespaces","namespaced":false,"kind":"NetNamespace"},{"name":"oauthaccesstokens","namespaced":false,"kind":"OAuthAccessToken"},{"name":"oauthauthorizetokens","namespaced":false,"kind":"OAuthAuthorizeToken"},{"name":"oauthclientauthorizations","namespaced":false,"kind":"OAuthClientAuthorization"},{"name":"oauthclients","namespaced":false,"kind":"OAuthClient"},{"name":"podsecuritypolicyreviews","namespaced":true,"kind":"PodSecurityPolicyReview"},{"name":"podsecuritypolicyselfsubjectreviews","namespaced":true,"kind":"PodSecurityPolicySelfSubjectReview"},{"name":"podsecuritypolicysubjectreviews","namespaced":true,"kind":"PodSecurityPolicySubjectReview"},{"name":"policies","namespaced":true,"kind":"Policy"},{"name":"policybindings","namespaced":true,"kind":"PolicyBinding"},{"name":"processedtemplates","namespaced":true,"kind":"Template"},{"name":"projectrequests","namespaced":false,"kind":"ProjectRequest"},{"name":"projects","namespaced":false,"kind":"Project"},{"name":"resourceaccessreviews","namespaced":true,"kind":"ResourceAccessReview"},{"name":"rolebindingrestrictions","namespaced":true,"kind":"RoleBindingRestriction"},{"name":"rolebindings","namespaced":true,"kind":"RoleBinding"},{"name":"roles","namespaced":true,"kind":"Role"},{"name":"routes","namespaced":true,"kind":"Route"},{"name":"routes/status","namespaced":true,"kind":"Route"},{"name":"selfsubjectrulesreviews","namespaced":true,"kind":"SelfSubjectRulesReview"},{"name":"subjectaccessreviews","namespaced":true,"kind":"SubjectAccessReview"},{"name":"subjectrulesreviews","namespaced":true,"kind":"SubjectRulesReview"},{"name":"templates","namespaced":true,"kind":"Template"},{"name":"useridentitymappings","namespaced":false,"kind":"UserIdentityMapping"},{"name":"users","namespaced":false,"kind":"User"}]}
+
+'
+    http_version: 
+  recorded_at: Tue, 04 Apr 2017 15:40:14 GMT
+- request:
+    method: get
+    uri: https://vm-48-110.eng.lab.tlv.redhat.com:8443/oapi/v1/images/sha256:not_a_real_digest
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.1 (linux-gnu x86_64) ruby/2.2.4p230
+      Authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJtYW5hZ2VtZW50LWluZnJhIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6Im1hbmFnZW1lbnQtYWRtaW4tdG9rZW4tNXc2anMiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoibWFuYWdlbWVudC1hZG1pbiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjE3MzkxOTEyLTE0OWMtMTFlNy04NTRjLTAwMWE0YTE2MjY2ZSIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDptYW5hZ2VtZW50LWluZnJhOm1hbmFnZW1lbnQtYWRtaW4ifQ.Y6lP1xa2ATLQa7d_dMJWozT259mjcpkAjSzkhG2OFrbPiE4pXlIwSNx5g01IwSWH8erXj3vDrg61LzIlFi1PNrSFXe1LuMr32_zUVx4ZMdiIoE7b5OjffR-OGegFggj5gGAKAmip7S1wthXAoNLWWWe8JqKh_ulPFV7dHPUCvyWtltcVFyQjqYIkIfLA5P6ibOTTspcWVwQoyukCbUHSSwUGYnc_4DMzfGPxnCikIDNs9OqhEkkaCoiXcHY3kee2xWpTc0BUQsthnYR9vayTBx8ejbS8rVqDGYeXzPBhlJ7-facAp1ZMaWSbPorCYSUOhU7NAyI9xhVGmaQpAJQz6g
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 04 Apr 2017 15:42:27 GMT
+      Content-Length:
+      - '220'
+    body:
+      encoding: UTF-8
+      string: '{"kind":"Status","apiVersion":"v1","metadata":{},"status":"Failure","message":"images
+        \"sha256:not_a_real_digest\" not found","reason":"NotFound","details":{"name":"sha256:not_a_real_digest","kind":"images"},"code":404}
+
+'
+    http_version: 
+  recorded_at: Tue, 04 Apr 2017 15:40:14 GMT
+recorded_with: VCR 3.0.3
