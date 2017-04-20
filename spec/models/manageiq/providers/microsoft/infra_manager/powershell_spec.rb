@@ -158,7 +158,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Powershell do
       allow(connection).to receive(:shell).and_return(shell)
       allow(shell).to receive(:run).and_return(results)
 
-      expect(powershell.run_powershell_script(connection, ps_script)).to eql("stdout")
+      expect(powershell.run_powershell_script(connection, ps_script).stdout).to eql("stdout")
     end
   end
 end

@@ -4,7 +4,8 @@ class ManageIQ::Providers::Microsoft::InfraManager
 
     module ClassMethods
       def execute_powershell_json(connection, script)
-        parse_json_results(run_powershell_script(connection, script))
+        results = run_powershell_script(connection, script)
+        parse_json_results(results.stdout)
       end
 
       def execute_powershell(connection, script)
@@ -12,8 +13,9 @@ class ManageIQ::Providers::Microsoft::InfraManager
       end
 
       def run_powershell_script(connection, script)
+        require 'winrm'
         log_header = "MIQ(#{self.class.name}.#{__method__})"
-        results = []
+        results = ::WinRM::Output.new
 
         begin
           with_winrm_shell(connection) do |shell|
@@ -25,7 +27,7 @@ class ManageIQ::Providers::Microsoft::InfraManager
           raise
         end
 
-        results.stdout
+        results
       end
 
       def powershell_results_to_hash(results)
@@ -108,13 +110,14 @@ class ManageIQ::Providers::Microsoft::InfraManager
 
       $scvmm_log.debug("#{log_header} Execute DOS command <#{command}>...Complete - Timings: #{timings}")
 
-      results.stdout
+      results
     end
 
     def run_powershell_script(script)
+      require 'winrm'
       log_header = "MIQ(#{self.class.name}##{__method__})"
       $scvmm_log.debug("#{log_header} Execute Powershell Script...")
-      results = []
+      results = ::WinRM::Output.new
 
       _result, timings = Benchmark.realtime_block(:execution) do
         with_winrm_shell do |shell|
@@ -125,7 +128,7 @@ class ManageIQ::Providers::Microsoft::InfraManager
 
       $scvmm_log.debug("#{log_header} Execute Powershell script... Complete - Timings: #{timings}")
 
-      results.stdout
+      results
     end
   end
 end
