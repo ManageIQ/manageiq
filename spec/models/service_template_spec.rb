@@ -40,9 +40,6 @@ describe ServiceTemplate do
         button_group.reject! do |key, _|
           %w(created_on updated_on).include?(key)
         end
-        button_group[:buttons].each do |button|
-          button.reject! { |key, _| %w(created_on updated_on).include?(key) }
-        end
       end
 
       actual = expected_hash_without_created_or_updated
