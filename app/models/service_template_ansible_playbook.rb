@@ -75,11 +75,16 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
 
   def self.create_job_templates(service_name, description, config_info, auth_user)
     [:provision, :retirement, :reconfigure].each_with_object({}) do |action, hash|
-      next unless config_info[action] && config_info[action].key?(:playbook_id)
+      next unless new_job_template_required(config_info[action])
       hash[action] = { :configuration_template => create_job_template("miq_#{service_name}_#{action}", description, config_info[action], auth_user) }
     end
   end
   private_class_method :create_job_templates
+
+  def self.new_job_template_required(info)
+    info && info.key?(:playbook_id)
+  end
+  private_class_method :new_job_template_required
 
   def self.create_job_template(name, description, info, auth_user)
     tower, params = build_parameter_list(name, description, info)
@@ -142,28 +147,44 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     resource_actions.find_by!(:action => action.to_s.capitalize).configuration_template
   end
 
+  def new_dialogs(config_info)
+    [:provision, :retirement, :reconfigure].each do |action|
+      info = config_info[action]
+      if new_dialog_required(info)
+        info[:dialog_id] = create_new_dialog(info[:new_dialog_name], job_template(action), info[:hosts]).id
+      end
+    end
+  end
+
+  def new_job_templates(config_info, name, description, auth_user)
+    config_info.deep_merge!(send(:create_job_template, name, description, config_info, auth_user))
+  end
+
+  def job_template_modifications(name, description, config_info, auth_user)
+    [:provision, :retirement, :reconfigure].each do |action|
+      info = config_info[action]
+      if info && info.key?(:playbook_id) && !info.key?(:create_only)
+        tower, params = self.class.send(:build_parameter_list, "miq_#{name}_#{action}", description, info)
+        params[:manager_ref] = job_template(action).manager_ref
+        ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript.update_in_provider_queue(tower.id, params, auth_user)
+      else
+        job_template = job_template(action) rescue nil
+        delete_job_templates([job_template]) if job_template
+      end
+    end
+  end
+
   def update_catalog_item(options, auth_user = nil)
     config_info = validate_update_config_info(options)
     name = options[:name]
     description = options[:description]
-    [:provision, :retirement, :reconfigure].each do |action|
-      next unless config_info[action]
-      info = config_info[action]
 
-      if new_dialog_required(info)
-        info[:dialog_id] = create_new_dialog(info[:new_dialog_name], job_template(action), info[:hosts]).id
-      end
+    new_dialogs(config_info)
 
-      if new_job_template_required(info, action)
-        single_config = populate_active_config(info, action)
-        config_info.deep_merge!(self.class.send(:create_job_templates, name, description, single_config, auth_user))
-      else
-        next unless info.key?(:playbook_id)
-        tower, params = self.class.send(:build_parameter_list, "miq_#{name}_#{action}", description, info)
-        params[:manager_ref] = job_template(action).manager_ref
-        ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript.update_in_provider_queue(tower.id, params, auth_user)
-      end
-    end
+    new_job_templates(config_info, name, description, auth_user)
+
+    job_template_modifications(name, description, config_info, auth_user)
+
     super
   end
 
@@ -201,15 +222,19 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     end
   end
 
-  def populate_active_config(info, action)
-    CONFIG_BASIC_HASH.merge(action => info)
-  end
-
   def new_dialog_required(info)
-    info.key?(:new_dialog_name)
+    info && info.key?(:new_dialog_name)
   end
 
   def new_job_template_required(info, action)
-    job_template(action).nil? && info.key?(:playbook_id)
+    info && job_template(action).nil? && info.key?(:playbook_id)
+  end
+
+  def create_job_template(service_name, description, config_info, auth_user)
+    [:provision, :retirement, :reconfigure].each_with_object({}) do |action, hash|
+      next unless new_job_template_required(config_info[action], action)
+      hash[action] = { :configuration_template => self.class.send(:create_job_template, "miq_#{service_name}_#{action}", description, config_info[action], auth_user),
+                       :create_only            => true }
+    end
   end
 end
