@@ -35,11 +35,7 @@ describe ServiceTemplate do
     end
 
     it "returns the custom actions in a hash grouped by buttons and button groups" do
-      expected_hash_without_created_or_updated = service_template.custom_actions
-      expected_hash_without_created_or_updated[:button_groups].each do |button_group|
-      end
-
-      actual = expected_hash_without_created_or_updated
+      actual = service_template.custom_actions
 
       expected = {
         :buttons       => a_collection_containing_exactly(
