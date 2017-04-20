@@ -22,19 +22,16 @@ describe ServiceTemplate do
       FactoryGirl.create(:custom_button_set, :name => "generic_group_set")
     end
 
-    before do
+    it "returns the custom actions in a hash grouped by buttons and button groups" do
       generic_group_set.add_member(generic_group)
       assigned_group_set.add_member(assigned_group)
-
       allow(CustomButton).to receive(:buttons_for).with("Service").and_return(
         [generic_no_group, generic_group]
       )
       allow(CustomButton).to receive(:buttons_for).with(service_template).and_return(
         [assigned_no_group, assigned_group]
       )
-    end
 
-    it "returns the custom actions in a hash grouped by buttons and button groups" do
       actual = service_template.custom_actions
 
       expected = {
