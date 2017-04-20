@@ -48,7 +48,7 @@ describe(ServiceAnsiblePlaybook) do
           :playbook_id   => 10,
           :extra_vars    => {
             "var1" => "default_val1",
-            "var2" => "default_val2",
+            :var2  => "default_val2",
             "var3" => "default_val3"
           },
         }
@@ -60,7 +60,7 @@ describe(ServiceAnsiblePlaybook) do
     {
       :credential_id => credential_2.id,
       :hosts         => 'host3',
-      :extra_vars    => { 'var1' => 'new_val1', 'pswd' => encrypted_val2 }
+      'extra_vars'   => { :var1 => 'new_val1', 'pswd' => encrypted_val2 }
     }
   end
 
