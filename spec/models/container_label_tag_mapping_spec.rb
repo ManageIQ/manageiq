@@ -37,7 +37,7 @@ describe ContainerLabelTagMapping do
   context "with empty mapping" do
     it "does nothing" do
       expect(ContainerLabelTagMapping.cache).to be_empty
-      expect(map_labels('ContainerNode',
+      expect(map_labels('Kubernetes::ContainerNode',
                         'foo'  => 'bar',
                         'quux' => 'whatever')).to be_empty
     end
@@ -46,15 +46,17 @@ describe ContainerLabelTagMapping do
   context "with 2 mappings for same label" do
     before(:each) do
       FactoryGirl.create(:container_label_tag_mapping, :only_nodes, :label_value => 'value-1', :tag => tag1)
-      FactoryGirl.create(:container_label_tag_mapping, :only_nodes, :label_value => 'value-1', :tag => tag2)
+      # check that type without 'ContainerNode' works too.
+      FactoryGirl.create(:container_label_tag_mapping, :labeled_resource_type => 'ContainerNode',
+                         :label_value => 'value-1', :tag => tag2)
     end
 
     it "map_labels returns 2 tags" do
-      expect(map_labels('ContainerNode', 'name' => 'value-1')).to contain_exactly(
+      expect(map_labels('Kubernetes::ContainerNode', 'name' => 'value-1')).to contain_exactly(
         {:tag_id => tag1.id},
         {:tag_id => tag2.id}
       )
-      expect(map_to_tags('ContainerNode', 'name' => 'value-1')).to contain_exactly(tag1, tag2)
+      expect(map_to_tags('Kubernetes::ContainerNode', 'name' => 'value-1')).to contain_exactly(tag1, tag2)
     end
   end
 
@@ -68,7 +70,7 @@ describe ContainerLabelTagMapping do
     end
 
     it "prefers specific-value" do
-      expect(map_to_tags('ContainerNode', 'name' => 'value-1')).to contain_exactly(tag1, tag2)
+      expect(map_to_tags('Kubernetes::ContainerNode', 'name' => 'value-1')).to contain_exactly(tag1, tag2)
     end
 
     it "creates tag for new value" do
@@ -77,7 +79,7 @@ describe ContainerLabelTagMapping do
       expect(ContainerLabelTagMapping.controls_tag?(tag_in_another_cat)).to be false
 
       cached1 = ContainerLabelTagMapping.cache
-      tags = to_tags(ContainerLabelTagMapping.map_labels(cached1, 'ContainerNode', labels('name' => 'value-2')))
+      tags = to_tags(ContainerLabelTagMapping.map_labels(cached1, 'Kubernetes::ContainerNode', labels('name' => 'value-2')))
       expect(tags.size).to eq(1)
       expect(tags[0].name).to eq(cat_tag.name + '/value_2')
       expect(tags[0].classification.description).to eq('value-2')
@@ -88,7 +90,7 @@ describe ContainerLabelTagMapping do
 
       # But nothing changes when called again, the previously created tag is re-used.
 
-      tags2 = to_tags(ContainerLabelTagMapping.map_labels(cached1, 'ContainerNode', labels('name' => 'value-2')))
+      tags2 = to_tags(ContainerLabelTagMapping.map_labels(cached1, 'Kubernetes::ContainerNode', labels('name' => 'value-2')))
       expect(tags2).to contain_exactly(tags[0])
 
       expect(ContainerLabelTagMapping.controls_tag?(tag1)).to be true
@@ -99,7 +101,7 @@ describe ContainerLabelTagMapping do
 
       cached2 = ContainerLabelTagMapping.cache
 
-      tags2 = to_tags(ContainerLabelTagMapping.map_labels(cached2, 'ContainerNode', labels('name' => 'value-2')))
+      tags2 = to_tags(ContainerLabelTagMapping.map_labels(cached2, 'Kubernetes::ContainerNode', labels('name' => 'value-2')))
       expect(tags2).to contain_exactly(tags[0])
 
       expect(ContainerLabelTagMapping.controls_tag?(tag1)).to be true
@@ -112,8 +114,8 @@ describe ContainerLabelTagMapping do
       # (but the optional domain prefix must be lowercase).
       FactoryGirl.create(:container_label_tag_mapping,
                          :label_name => 'Name_Case', :label_value => 'value', :tag => tag2)
-      tags = map_to_tags('ContainerNode', 'name_case' => 'value')
-      tags2 = map_to_tags('ContainerNode', 'Name_Case' => 'value', 'naME_caSE' => 'value')
+      tags = map_to_tags('Kubernetes::ContainerNode', 'name_case' => 'value')
+      tags2 = map_to_tags('Kubernetes::ContainerNode', 'Name_Case' => 'value', 'naME_caSE' => 'value')
       expect(tags).to be_empty
       expect(tags2).to contain_exactly(tag2)
 
@@ -122,9 +124,9 @@ describe ContainerLabelTagMapping do
     end
 
     it "handles values that differ only by case / punctuation" do
-      tags = map_to_tags('ContainerNode', 'name' => 'value-case.punct')
-      tags2 = map_to_tags('ContainerNode', 'name' => 'VaLuE-CASE.punct')
-      tags3 = map_to_tags('ContainerNode', 'name' => 'value-case/punct')
+      tags = map_to_tags('Kubernetes::ContainerNode', 'name' => 'value-case.punct')
+      tags2 = map_to_tags('Kubernetes::ContainerNode', 'name' => 'VaLuE-CASE.punct')
+      tags3 = map_to_tags('Kubernetes::ContainerNode', 'name' => 'value-case/punct')
       # TODO: They get mapped to the same tag, is this desired?
       # TODO: What do we want the description to be?
       expect(tags2).to eq(tags)
@@ -132,9 +134,9 @@ describe ContainerLabelTagMapping do
     end
 
     it "handles values that differ only past 50th character" do
-      tags = map_to_tags('ContainerNode', 'name' => 'x' * 50)
-      tags2 = map_to_tags('ContainerNode', 'name' => 'x' * 50 + 'y')
-      tags3 = map_to_tags('ContainerNode', 'name' => 'x' * 50 + 'z')
+      tags = map_to_tags('Kubernetes::ContainerNode', 'name' => 'x' * 50)
+      tags2 = map_to_tags('Kubernetes::ContainerNode', 'name' => 'x' * 50 + 'y')
+      tags3 = map_to_tags('Kubernetes::ContainerNode', 'name' => 'x' * 50 + 'z')
       # TODO: They get mapped to the same tag, is this desired?
       # TODO: What do we want the description to be?
       expect(tags2).to eq(tags)
@@ -147,8 +149,8 @@ describe ContainerLabelTagMapping do
       it "handle known value simultaneously" do
         cached1 = ContainerLabelTagMapping.cache
         cached2 = ContainerLabelTagMapping.cache
-        tags1 = to_tags(ContainerLabelTagMapping.map_labels(cached1, 'ContainerNode', labels('name' => 'value-1')))
-        tags2 = to_tags(ContainerLabelTagMapping.map_labels(cached2, 'ContainerNode', labels('name' => 'value-1')))
+        tags1 = to_tags(ContainerLabelTagMapping.map_labels(cached1, 'Kubernetes::ContainerNode', labels('name' => 'value-1')))
+        tags2 = to_tags(ContainerLabelTagMapping.map_labels(cached2, 'Kubernetes::ContainerNode', labels('name' => 'value-1')))
         expect(tags1).to contain_exactly(tag1, tag2)
         expect(tags2).to contain_exactly(tag1, tag2)
       end
@@ -156,8 +158,8 @@ describe ContainerLabelTagMapping do
       it "handle new value encountered simultaneously" do
         cached1 = ContainerLabelTagMapping.cache
         cached2 = ContainerLabelTagMapping.cache
-        tags1 = to_tags(ContainerLabelTagMapping.map_labels(cached1, 'ContainerNode', labels('name' => 'value-2')))
-        tags2 = to_tags(ContainerLabelTagMapping.map_labels(cached2, 'ContainerNode', labels('name' => 'value-2')))
+        tags1 = to_tags(ContainerLabelTagMapping.map_labels(cached1, 'Kubernetes::ContainerNode', labels('name' => 'value-2')))
+        tags2 = to_tags(ContainerLabelTagMapping.map_labels(cached2, 'Kubernetes::ContainerNode', labels('name' => 'value-2')))
         expect(tags1.size).to eq(1)
         expect(tags1).to eq(tags2)
       end
@@ -171,7 +173,7 @@ describe ContainerLabelTagMapping do
     end
 
     it "maps same new value in both into 1 new tag" do
-      tags = map_to_tags('ContainerNode', 'name1' => 'value', 'name2' => 'value')
+      tags = map_to_tags('Kubernetes::ContainerNode', 'name1' => 'value', 'name2' => 'value')
       expect(tags.size).to eq(1)
       expect(ContainerLabelTagMapping.controls_tag?(tags[0])).to be true
     end
@@ -180,15 +182,15 @@ describe ContainerLabelTagMapping do
   context "given a label with empty value" do
     it "any-value mapping is ignored" do
       FactoryGirl.create(:container_label_tag_mapping, :tag => cat_tag)
-      expect(map_to_tags('ContainerNode', 'name' => '')).to be_empty
+      expect(map_to_tags('Kubernetes::ContainerNode', 'name' => '')).to be_empty
     end
 
     it "honors specific mapping for the empty value" do
       FactoryGirl.create(:container_label_tag_mapping, :label_value => '', :tag => empty_tag_under_cat)
-      expect(map_to_tags('ContainerNode', 'name' => '')).to contain_exactly(empty_tag_under_cat)
+      expect(map_to_tags('Kubernetes::ContainerNode', 'name' => '')).to contain_exactly(empty_tag_under_cat)
       # same with both any-value and specific-value mappings
       FactoryGirl.create(:container_label_tag_mapping, :tag => cat_tag)
-      expect(map_to_tags('ContainerNode', 'name' => '')).to contain_exactly(empty_tag_under_cat)
+      expect(map_to_tags('Kubernetes::ContainerNode', 'name' => '')).to contain_exactly(empty_tag_under_cat)
     end
   end
 
@@ -203,11 +205,11 @@ describe ContainerLabelTagMapping do
     end
 
     it "applies both independently" do
-      expect(map_to_tags('ContainerNode', 'name' => 'value')).to contain_exactly(tag1, tag2)
+      expect(map_to_tags('Kubernetes::ContainerNode', 'name' => 'value')).to contain_exactly(tag1, tag2)
     end
 
     it "skips specific-type when type doesn't match" do
-      expect(map_to_tags('ContainerProject', 'name' => 'value')).to contain_exactly(tag2)
+      expect(map_to_tags('Kubernetes::ContainerProject', 'name' => 'value')).to contain_exactly(tag2)
     end
   end
 
@@ -218,7 +220,7 @@ describe ContainerLabelTagMapping do
     end
 
     it "resolves them independently" do
-      tags = map_to_tags('ContainerNode', 'name' => 'value')
+      tags = map_to_tags('Kubernetes::ContainerNode', 'name' => 'value')
       expect(tags.size).to eq(2)
       expect(tags).to include(tag2)
     end
@@ -254,6 +256,18 @@ describe ContainerLabelTagMapping do
       node.tags = [tag1, user_tag, tag2]
       ContainerLabelTagMapping.retag_entity(node, [{:tag_id => tag1.id}, {:tag_id => tag3.id}])
       expect(node.tags).to contain_exactly(user_tag, tag1, tag3)
+    end
+  end
+
+  describe ".split_provider_entity" do
+    it "handles nil" do
+      expect(ContainerLabelTagMapping.split_provider_entity(nil)).to eq(nil)
+    end
+
+    it "works with and without Provider:: prefix" do
+      expect(ContainerLabelTagMapping.split_provider_entity('Foo')).to             eq(['Kubernetes', 'Foo'])
+      expect(ContainerLabelTagMapping.split_provider_entity('Kubernetes::Foo')).to eq(['Kubernetes', 'Foo'])
+      expect(ContainerLabelTagMapping.split_provider_entity('Amazon::Bar')).to     eq(['Amazon', 'Bar'])
     end
   end
 end

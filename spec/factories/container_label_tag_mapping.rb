@@ -3,7 +3,7 @@ FactoryGirl.define do
     label_name 'name'
 
     trait :only_nodes do
-      labeled_resource_type 'ContainerNode'
+      labeled_resource_type 'Kubernetes::ContainerNode'
     end
   end
 end

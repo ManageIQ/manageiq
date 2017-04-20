@@ -22,10 +22,17 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
   # Smoke test the use of ContainerLabelTagMapping during refresh.
   before :each do
     @name_category = FactoryGirl.create(:classification, :name => 'name', :description => 'Name')
-    @label_tag_mapping = FactoryGirl.create(
+    @name_mapping = FactoryGirl.create(
       :container_label_tag_mapping,
       :label_name => 'name', :tag => @name_category.tag
     )
+    @hostname_category = FactoryGirl.create(:classification, :name => 'hostname', :description => 'Hostname')
+    @hostname_mapping = FactoryGirl.create(
+      :container_label_tag_mapping, :only_nodes,
+      :label_name => 'kubernetes.io/hostname', :tag => @hostname_category.tag
+    )
+    # Verify we're testing with labeled_resource_type column matching what UI would create.
+    expect(ContainerLabelTagMapping::MAPPABLE_ENTITIES).to include(@hostname_mapping.labeled_resource_type)
   end
 
   it "will perform a full refresh on k8s" do
@@ -210,6 +217,9 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
 
     expect(@containernode.labels).to contain_exactly(
       label_with_name_value("kubernetes.io/hostname", "10.35.0.169")
+    )
+    expect(@containernode.tags).to contain_exactly(
+      tag_in_category_with_description(@hostname_category, "10.35.0.169")
     )
 
     expect(@containernode.computer_system.operating_system).to have_attributes(
