@@ -1,4 +1,6 @@
 module ReportHelper
+  include_concern 'Editor'
+
   STYLE_CLASSES = {
     :miq_rpt_red_text    => _("Red Text"),
     :miq_rpt_red_bg      => _("Red Background"),
