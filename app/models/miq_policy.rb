@@ -9,6 +9,10 @@ class MiqPolicy < ApplicationRecord
   include YAMLImportExportMixin
   before_validation :default_name_to_guid, :on => :create
 
+  default_value_for :towhat, 'Vm'
+  default_value_for :active, true
+  default_value_for :mode,   'control'
+
   # NOTE: If another class references MiqPolicy through an ActiveRecord association,
   #   particularly has_one and belongs_to, calling .conditions will result in
   #   that method being directly called on the proxy object, as opposed to the
@@ -350,18 +354,6 @@ class MiqPolicy < ApplicationRecord
 
   def first_and_last_event
     [first_event, last_event].compact
-  end
-
-  def self.seed
-    all.each do |p|
-      attrs = {}
-      attrs[:towhat] = "Vm"      if p.towhat.nil?
-      attrs[:active] = true      if p.active.nil?
-      attrs[:mode]   = "control" if p.mode.nil?
-      next if attrs.empty?
-      _log.info("Updating [#{p.name}]")
-      p.update_attributes(attrs)
-    end
   end
 
   def self.get_policies_for_target(target, mode, event, inputs = {})
