@@ -2,29 +2,16 @@ describe ServiceTemplate do
   include_examples "OwnershipMixin"
 
   describe "#custom_actions" do
-    let(:service_template) do
-      FactoryGirl.create(:service_template, :custom_button_sets => [assigned_group_set])
-    end
-    let(:generic_no_group) do
-      FactoryGirl.create(:custom_button, :name => "generic_no_group", :applies_to_class => "Service")
-    end
-    let(:assigned_no_group) do
-      FactoryGirl.create(:custom_button, :name => "assigned_no_group", :applies_to_class => "ServiceTemplate")
-    end
-    let(:generic_group) { FactoryGirl.create(:custom_button, :name => "generic_group", :applies_to_class => "Service") }
-    let(:assigned_group) do
-      FactoryGirl.create(:custom_button, :name => "assigned_group", :applies_to_class => "ServiceTemplate")
-    end
-    let(:assigned_group_set) do
-      FactoryGirl.create(:custom_button_set, :name => "assigned_group_set")
-    end
-    let(:generic_group_set) do
-      FactoryGirl.create(:custom_button_set, :name => "generic_group_set")
-    end
-
     it "returns the custom actions in a hash grouped by buttons and button groups" do
+      generic_no_group = FactoryGirl.create(:custom_button, :name => "generic_no_group", :applies_to_class => "Service")
+      assigned_no_group = FactoryGirl.create(:custom_button, :name => "assigned_no_group", :applies_to_class => "ServiceTemplate")
+      generic_group = FactoryGirl.create(:custom_button, :name => "generic_group", :applies_to_class => "Service")
+      assigned_group = FactoryGirl.create(:custom_button, :name => "assigned_group", :applies_to_class => "ServiceTemplate")
+      assigned_group_set = FactoryGirl.create(:custom_button_set, :name => "assigned_group_set")
+      generic_group_set = FactoryGirl.create(:custom_button_set, :name => "generic_group_set")
       generic_group_set.add_member(generic_group)
       assigned_group_set.add_member(assigned_group)
+      service_template = FactoryGirl.create(:service_template, :custom_button_sets => [assigned_group_set])
       allow(CustomButton).to receive(:buttons_for).with("Service").and_return(
         [generic_no_group, generic_group]
       )
