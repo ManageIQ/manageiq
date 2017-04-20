@@ -20,6 +20,35 @@ describe Rbac::Filterer do
   let(:child_openstack_vm) { FactoryGirl.create(:vm_openstack, :tenant => child_tenant, :miq_group => child_group) }
 
   describe ".search" do
+    context 'with virtual custom attributes' do
+      let(:virtual_custom_attribute_1) { "virtual_custom_attribute_attribute_1" }
+      let(:virtual_custom_attribute_2) { "virtual_custom_attribute_attribute_2" }
+      let!(:vm_1)                { FactoryGirl.create(:vm) }
+      let!(:vm_2)                { FactoryGirl.create(:vm) }
+
+      let!(:custom_attribute_1) do
+        FactoryGirl.create(:custom_attribute, :name => 'attribute_1', :value => vm_1.name, :resource => vm_1)
+      end
+
+      let!(:custom_attribute_2) do
+        FactoryGirl.create(:custom_attribute, :name => 'attribute_2', :value => 'any_value', :resource => vm_1)
+      end
+
+      let(:miq_expression) do
+        exp1 = {'EQUAL' => {'field' => 'Vm-name', 'value' => "Vm-#{virtual_custom_attribute_1}"}}
+        exp2 = {'EQUAL' => {'field' => "Vm-#{virtual_custom_attribute_2}", "value" => 'any_value'}}
+
+        MiqExpression.new("AND" => [exp1, exp2])
+      end
+
+      it 'returns instance of Vm with related condition' do
+        User.with_user(admin_user) do
+          results = described_class.search(:class => Vm, :filter => miq_expression).first
+          expect(results).to match_array [vm_1]
+        end
+      end
+    end
+
     describe "with find_options_for_tenant filtering (basic) all resources" do
       {
         "ExtManagementSystem"    => :ems_vmware,
