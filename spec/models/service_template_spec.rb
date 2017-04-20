@@ -66,7 +66,10 @@ describe ServiceTemplate do
           a_hash_including("name" => "generic_no_group"),
           a_hash_including("name" => "assigned_no_group")
         ),
-        :button_groups => [expected_assigned_group_set, expected_generic_group_set]
+        :button_groups => a_collection_containing_exactly(
+          expected_assigned_group_set,
+          expected_generic_group_set
+        )
       }
       expect(actual).to match(expected)
     end
