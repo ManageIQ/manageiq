@@ -9,11 +9,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     'pre_with_playbook'    => '/Service/Generic/StateMachines/GenericLifecycle/Retire_Advanced_Resource_Pre',
     'post_with_playbook'   => '/Service/Generic/StateMachines/GenericLifecycle/Retire_Advanced_Resource_Post'
   }.freeze
-
-  CONFIG_BASIC_HASH = { :provision => {}, :retirement => {}, :reconfigure => {} }.freeze
-
   private_constant :RETIREMENT_ENTRY_POINTS
-  private_constant :CONFIG_BASIC_HASH
 
   def self.default_provisioning_entry_point(_service_type)
     '/Service/Generic/StateMachines/GenericLifecycle/provision'
