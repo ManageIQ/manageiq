@@ -1,42 +1,4 @@
 describe MiqExpression do
-  context "virtual custom attributes" do
-    let(:virtual_custom_attribute)   { "virtual_custom_attribute_attribute" }
-    let(:virtual_custom_attribute_1) { "virtual_custom_attribute_attribute_1" }
-    let(:virtual_custom_attribute_2) { "virtual_custom_attribute_attribute_2" }
-    let(:virtual_custom_attribute_3) { "virtual_custom_attribute_attribute_3" }
-    let(:virtual_custom_attribute_4) { "virtual_custom_attribute_attribute_4" }
-    let(:klass)                      { Vm }
-    let(:vm)                         { FactoryGirl.create(:vm) }
-
-    it "automatically loads virtual custom attributes from MiqExpression on class" do
-      expect do
-        MiqExpression.new("EQUAL" => {"field" => "#{klass}-#{virtual_custom_attribute}", "value" => "foo"})
-      end.to change { vm.respond_to?(virtual_custom_attribute) }.from(false).to(true)
-    end
-
-    it "automatically loads virtual custom attributes from right side in expression" do
-      expect do
-        MiqExpression.new("EQUAL" => {"field" => "#{klass}-name", "value" => "#{klass}-#{virtual_custom_attribute_1}"})
-      end.to change { vm.respond_to?(virtual_custom_attribute_1) }.from(false).to(true)
-    end
-
-    it "automatically loads virtual custom attributes from right side in nested expression" do
-      exp1 = {"STARTS WITH" => {"field" => "#{klass}-name", "value" => "#{klass}-#{virtual_custom_attribute_2}"}}
-      exp2 = {"ENDS WITH" => {"field" => "#{klass}-name", "value" => "#{klass}-#{virtual_custom_attribute_3}"}}
-      exp3 = {"ENDS WITH" => {"field" => "#{klass}-#{virtual_custom_attribute_4}", "value" => "any_value"}}
-
-      expect do
-        MiqExpression.new("AND" => [exp1, {"AND" => [exp2, exp3]}])
-      end.to change {
-        [
-          vm.respond_to?(virtual_custom_attribute_2),
-          vm.respond_to?(virtual_custom_attribute_3),
-          vm.respond_to?(virtual_custom_attribute_4)
-        ]
-      }.from([false, false, false]).to([true, true, true])
-    end
-  end
-
   describe "#to_sql" do
     it "generates the SQL for an EQUAL expression" do
       sql, * = MiqExpression.new("EQUAL" => {"field" => "Vm-name", "value" => "foo"}).to_sql
