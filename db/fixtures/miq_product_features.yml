@@ -6236,6 +6236,19 @@
       :description: Display Timelines for Block Storage Managers
       :feature_type: view
       :identifier: ems_block_storage_timeline
+  - :name: Operate
+    :description: Perform Operations on Block Storage Managers
+    :feature_type: control
+    :identifier: ems_block_storage_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Block Storage Managers
+      :feature_type: control
+      :identifier: ems_block_storage_tag
+    - :name: Manage Policies
+      :description: Manage Policies of Block Storage Managers
+      :feature_type: control
+      :identifier: ems_block_storage_protect
 
 # EmsObjectStorage
 - :name: Object Storage Managers
@@ -6260,6 +6273,19 @@
       :description: Display Timelines for Object Storage Managers
       :feature_type: view
       :identifier: ems_object_storage_timeline
+  - :name: Operate
+    :description: Perform Operations on Object Storage Managers
+    :feature_type: control
+    :identifier: ems_object_storage_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Object Storage Managers
+      :feature_type: control
+      :identifier: ems_object_storage_tag
+    - :name: Manage Policies
+      :description: Manage Policies of Object Storage Managers
+      :feature_type: control
+      :identifier: ems_object_storage_protect
 
 # EmsPhysicalInfra
 - :name: Physical Infrastructure Providers
