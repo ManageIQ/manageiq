@@ -4,14 +4,17 @@ describe ServiceTemplate do
   describe "#custom_actions" do
     it "returns the custom actions in a hash grouped by buttons and button groups" do
       generic_no_group = FactoryGirl.create(:custom_button, :name => "generic_no_group", :applies_to_class => "Service")
-      assigned_no_group = FactoryGirl.create(:custom_button, :name => "assigned_no_group", :applies_to_class => "ServiceTemplate")
       generic_group = FactoryGirl.create(:custom_button, :name => "generic_group", :applies_to_class => "Service")
-      assigned_group = FactoryGirl.create(:custom_button, :name => "assigned_group", :applies_to_class => "ServiceTemplate")
-      assigned_group_set = FactoryGirl.create(:custom_button_set, :name => "assigned_group_set")
       generic_group_set = FactoryGirl.create(:custom_button_set, :name => "generic_group_set")
       generic_group_set.add_member(generic_group)
+
+      service_template = FactoryGirl.create(:service_template)
+      assigned_no_group = FactoryGirl.create(:custom_button, :name => "assigned_no_group", :applies_to_class => "ServiceTemplate")
+      assigned_group = FactoryGirl.create(:custom_button, :name => "assigned_group", :applies_to_class => "ServiceTemplate")
+      assigned_group_set = FactoryGirl.create(:custom_button_set, :name => "assigned_group_set")
       assigned_group_set.add_member(assigned_group)
-      service_template = FactoryGirl.create(:service_template, :custom_button_sets => [assigned_group_set])
+      service_template.update(:custom_button_sets => [assigned_group_set])
+
       allow(CustomButton).to receive(:buttons_for).with("Service").and_return(
         [generic_no_group, generic_group]
       )
