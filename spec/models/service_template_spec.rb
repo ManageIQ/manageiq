@@ -35,13 +35,6 @@ describe ServiceTemplate do
     end
 
     it "returns the custom actions in a hash grouped by buttons and button groups" do
-      assigned_group_buttons = assigned_group.expanded_serializable_hash.reject do |key, _|
-        %w(created_on updated_on).include?(key)
-      end
-      generic_group_buttons = generic_group.expanded_serializable_hash.reject do |key, _|
-        %w(created_on updated_on).include?(key)
-      end
-
       expected_hash_without_created_or_updated = service_template.custom_actions
       expected_hash_without_created_or_updated[:button_groups].each do |button_group|
         button_group.reject! do |key, _|
@@ -60,8 +53,18 @@ describe ServiceTemplate do
           a_hash_including("name" => "assigned_no_group")
         ),
         :button_groups => a_collection_containing_exactly(
-          a_hash_including("name" => "assigned_group_set", :buttons => [assigned_group_buttons]),
-          a_hash_including("name" => "generic_group_set", :buttons => [generic_group_buttons])
+          a_hash_including(
+            "name"   => "assigned_group_set",
+            :buttons => [
+              a_hash_including("name" => "assigned_group")
+            ]
+          ),
+          a_hash_including(
+            "name"   => "generic_group_set",
+            :buttons => [
+              a_hash_including("name" => "generic_group")
+            ]
+          )
         )
       }
       expect(actual).to match(expected)
