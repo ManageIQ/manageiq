@@ -2,6 +2,7 @@ require 'recursive-open-struct'
 
 describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
   let(:parser) { described_class.new }
+  let(:options) { Settings.ems_refresh.openshift }
 
   describe "get_openshift_images" do
     let(:image_name) { "image_name" }
@@ -67,7 +68,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
 
     it "collects data from openshift images correctly" do
       expect(parser.send(:parse_openshift_image,
-                         image_from_openshift).except(:registered_on)).to eq(
+                         image_from_openshift, options).except(:registered_on)).to eq(
                            :name                     => image_name,
                            :digest                   => image_digest,
                            :image_ref                => image_ref,
@@ -97,7 +98,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
 
     it "handles openshift images without dockerImageManifest and dockerImageMetadata" do
       expect(parser.send(:parse_openshift_image,
-                         image_without_dockerImage_fields).except(:registered_on)).to eq(
+                         image_without_dockerImage_fields, options).except(:registered_on)).to eq(
                            :container_image_registry => nil,
                            :digest                   => nil,
                            :image_ref                => "docker-pullable://sha256:abcdefg",
@@ -108,7 +109,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
 
     it "handles openshift image without dockerConfig" do
       expect(parser.send(:parse_openshift_image,
-                         image_without_dockerConfig).except(:registered_on)).to eq(
+                         image_without_dockerConfig, options).except(:registered_on)).to eq(
                            :container_image_registry => nil,
                            :digest                   => nil,
                            :image_ref                => "docker-pullable://sha256:abcdefg",
@@ -125,7 +126,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
     # check https://bugzilla.redhat.com/show_bug.cgi?id=1414508
     it "handles openshift image without environment variables" do
       expect(parser.send(:parse_openshift_image,
-                         image_without_environment_variables).except(:registered_on)).to eq(
+                         image_without_environment_variables, options).except(:registered_on)).to eq(
                            :container_image_registry => nil,
                            :digest                   => nil,
                            :image_ref                => "docker-pullable://sha256:abcdefg",
@@ -160,7 +161,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
 
       inventory = {"image" => [image_from_openshift,]}
 
-      parser.get_openshift_images(inventory)
+      parser.get_openshift_images(inventory, options)
       expect(parser.instance_variable_get('@data')[:container_images].size).to eq(1)
       expect(parser.instance_variable_get('@data')[:container_images][0]).to eq(
         parser.instance_variable_get('@data_index')[:container_image][:by_digest].values[0])
@@ -187,7 +188,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
 
       inventory = {"image" => [image_from_openshift,]}
 
-      parser.get_openshift_images(inventory)
+      parser.get_openshift_images(inventory, options)
       expect(parser.instance_variable_get('@data')[:container_images].size).to eq(1)
       expect(parser.instance_variable_get('@data')[:container_images][0]).to eq(
         parser.instance_variable_get('@data_index')[:container_image][:by_digest].values[0]
@@ -200,7 +201,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
       def parse_single_openshift_image_with_registry
         inventory = {"image" => [image_from_openshift]}
 
-        parser.get_openshift_images(inventory)
+        parser.get_openshift_images(inventory, options)
         expect(parser.instance_variable_get('@data_index')[:container_image_registry][:by_host_and_port].size).to eq(1)
         expect(parser.instance_variable_get('@data')[:container_image_registries].size).to eq(1)
       end

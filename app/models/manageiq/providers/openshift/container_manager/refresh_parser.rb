@@ -8,13 +8,15 @@ module ManageIQ::Providers
         get_builds(inventory)
         get_build_pods(inventory)
         get_templates(inventory)
-        get_openshift_images(inventory) if options.get_container_images
+        # /oapi/v1/images parsing assumes we've already parsed images from pods.
+        get_openshift_images(inventory, options)
         EmsRefresh.log_inv_debug_trace(@data, "data:")
         @data
       end
 
-      def get_openshift_images(inventory)
-        inventory["image"].each { |img| parse_openshift_image(img) }
+      def get_openshift_images(inventory, options)
+        return unless inventory["image"]
+        inventory["image"].each { |img| parse_openshift_image(img, options) }
       end
 
       def get_builds(inventory)
@@ -165,10 +167,11 @@ module ManageIQ::Providers
         end
       end
 
-      def parse_openshift_image(openshift_image)
+      def parse_openshift_image(openshift_image, options)
         id = openshift_image[:dockerImageReference] || openshift_image[:metadata][:name]
         ref = "#{ContainerImage::DOCKER_PULLABLE_PREFIX}#{id}"
-        new_result = parse_container_image(id, ref)
+        new_result = parse_container_image(id, ref, :store_new_images => options.store_unused_images)
+        return if new_result.nil? # not storing because store_unused_images = false and wasn't mentioned by any pod
 
         if openshift_image[:dockerImageManifest].present?
           begin
