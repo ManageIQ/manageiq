@@ -23,9 +23,6 @@ describe ServiceTemplate do
     end
 
     before do
-      allow(generic_no_group).to receive(:expanded_serializable_hash).and_return("generic_no_group")
-      allow(assigned_no_group).to receive(:expanded_serializable_hash).and_return("assigned_no_group")
-
       generic_group_set.add_member(generic_group)
       assigned_group_set.add_member(assigned_group)
 
@@ -65,10 +62,13 @@ describe ServiceTemplate do
       actual = expected_hash_without_created_or_updated
 
       expected = {
-        :buttons       => %w(generic_no_group assigned_no_group),
+        :buttons       => a_collection_containing_exactly(
+          a_hash_including("name" => "generic_no_group"),
+          a_hash_including("name" => "assigned_no_group")
+        ),
         :button_groups => [expected_assigned_group_set, expected_generic_group_set]
       }
-      expect(actual).to eq(expected)
+      expect(actual).to match(expected)
     end
   end
 
