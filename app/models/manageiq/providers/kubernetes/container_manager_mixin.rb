@@ -4,6 +4,8 @@ require 'MiqContainerGroup/MiqContainerGroup'
 module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
   extend ActiveSupport::Concern
 
+  include ContainerVporMixin
+
   DEFAULT_PORT = 6443
   included do
     default_value_for :port do |provider|

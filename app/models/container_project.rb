@@ -36,6 +36,7 @@ class ContainerProject < ApplicationRecord
 
   include EventMixin
   include Metric::CiMixin
+  include ContainerVporMixin
 
   PERF_ROLLUP_CHILDREN = :all_container_groups
 

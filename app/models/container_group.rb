@@ -57,6 +57,7 @@ class ContainerGroup < ApplicationRecord
 
   include EventMixin
   include Metric::CiMixin
+  include ContainerVporMixin
 
   acts_as_miq_taggable
 

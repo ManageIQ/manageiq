@@ -55,6 +55,8 @@ class ContainerNode < ApplicationRecord
   include EventMixin
   include Metric::CiMixin
   include CustomAttributeMixin
+  include ContainerVporMixin
+
   acts_as_miq_taggable
 
   def event_where_clause(assoc = :ems_events)

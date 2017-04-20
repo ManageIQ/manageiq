@@ -24,6 +24,14 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
       validate_target
     end
 
+    def total_memory
+      @node_memory
+    end
+
+    def total_cpu_time
+      @node_cores
+    end
+
     def collect_metrics
       case @target
       when ContainerNode  then collect_node_metrics

@@ -6,12 +6,14 @@ class ManageIQ::Providers::Kubernetes::ContainerManager < ManageIQ::Providers::C
   require_nested :EventCatcherMixin
   require_nested :EventParser
   require_nested :EventParserMixin
+  require_nested :LongTermAverages
   require_nested :MetricsCapture
   require_nested :MetricsCollectorWorker
   require_nested :RefreshParser
   require_nested :RefreshWorker
   require_nested :Refresher
   require_nested :Scanning
+  require_nested :VimPerformanceAnalysis
 
   include ManageIQ::Providers::Kubernetes::ContainerManagerMixin
 
