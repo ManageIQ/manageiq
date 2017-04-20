@@ -42,6 +42,8 @@ class ChargebackContainerProject < Chargeback
     return [[]] if @projects.empty?
 
     build_results_for_report_chargeback(options)
+  ensure
+    @projects = nil
   end
 
   def self.where_clause(records, _options)

@@ -47,6 +47,8 @@ class ChargebackContainerImage < Chargeback
     @unknown_project ||= OpenStruct.new(:id => 0, :name => _('Unknown Project'), :ems_ref => _('Unknown'))
     @unknown_image ||= OpenStruct.new(:id => 0, :full_name => _('Unknown Image'))
     build_results_for_report_chargeback(options)
+  ensure
+    @data_index = @containers = nil
   end
 
   def self.default_key(metric_rollup_record, ts_key)
