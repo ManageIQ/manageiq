@@ -9,18 +9,21 @@ describe ServiceTemplate do
       generic_group_set.add_member(generic_group)
 
       service_template = FactoryGirl.create(:service_template)
-      assigned_no_group = FactoryGirl.create(:custom_button, :name => "assigned_no_group", :applies_to_class => "ServiceTemplate")
-      assigned_group = FactoryGirl.create(:custom_button, :name => "assigned_group", :applies_to_class => "ServiceTemplate")
+      assigned_no_group = FactoryGirl.create(
+        :custom_button,
+        :name             => "assigned_no_group",
+        :applies_to_class => "ServiceTemplate",
+        :applies_to_id    => service_template.id
+      )
+      assigned_group = FactoryGirl.create(
+        :custom_button,
+        :name             => "assigned_group",
+        :applies_to_class => "ServiceTemplate",
+        :applies_to_id    => service_template.id
+      )
       assigned_group_set = FactoryGirl.create(:custom_button_set, :name => "assigned_group_set")
       assigned_group_set.add_member(assigned_group)
       service_template.update(:custom_button_sets => [assigned_group_set])
-
-      allow(CustomButton).to receive(:buttons_for).with("Service").and_return(
-        [generic_no_group, generic_group]
-      )
-      allow(CustomButton).to receive(:buttons_for).with(service_template).and_return(
-        [assigned_no_group, assigned_group]
-      )
 
       actual = service_template.custom_actions
 
