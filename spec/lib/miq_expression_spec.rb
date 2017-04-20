@@ -1917,7 +1917,7 @@ describe MiqExpression do
     let!(:custom_attr2) { FactoryGirl.create(:custom_attribute, :resource => vm, :name => nil,       :value => "Value 2") }
 
     it "ignores custom_attibutes with a nil name" do
-      expect(MiqExpression._custom_details_for("Vm", {})).to eq([["Labels: CATTR_1", "Vm-virtual_custom_attribute_CATTR_1"]])
+      expect(MiqExpression._custom_details_for("Vm", {})).to eq([["Custom Attribute: CATTR_1", "Vm-virtual_custom_attribute_CATTR_1"]])
     end
   end
 
