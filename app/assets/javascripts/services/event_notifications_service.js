@@ -68,7 +68,7 @@ function eventNotifications($timeout) {
     state.toastNotifications = [];
 
     if (seed) {
-      API.get('/api/notifications?expand=resources&attributes=details')
+      API.get('/api/notifications?expand=resources&attributes=details&sort_by=id&sort_order=desc&limit=100')
       .then(function (data) {
         data.resources.forEach(function(resource) {
           var msg = miqFormatNotification(resource.details.text, resource.details.bindings);
