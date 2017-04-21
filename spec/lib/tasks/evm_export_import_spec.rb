@@ -1,7 +1,7 @@
 require 'rake'
 
 describe 'evm_export_import' do
-  let(:task_path) {'lib/tasks/evm_export_import'}
+  let(:task_path) { 'lib/tasks/evm_export_import' }
 
   describe 'evm:import:alerts', :type => :rake_task do
     it 'depends on the environment' do

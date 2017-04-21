@@ -1,6 +1,6 @@
 describe 'TaskHelpers::Exports::AlertSets' do
   let(:data_dir) { File.join(File.expand_path(__dir__), '..', 'imports', 'data', 'alert_sets') }
-  let(:alert) {'Alert_Profile_VM_Import_Test.yaml'}
+  let(:alert) { 'Alert_Profile_VM_Import_Test.yaml' }
 
   before(:each) do
     @export_dir = Dir.mktmpdir('miq_exp_dir')
@@ -16,6 +16,6 @@ describe 'TaskHelpers::Exports::AlertSets' do
 
     options = { :directory => @export_dir }
     TaskHelpers::Exports::AlertSets.new.export(options)
-    expect( (Dir.entries(@export_dir) - %w{ . .. }) ).not_to be_empty
+    expect((Dir.entries(@export_dir) - %w(. ..))).not_to be_empty
   end
 end

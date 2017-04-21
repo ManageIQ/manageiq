@@ -24,6 +24,7 @@ describe TaskHelpers::Exports do
       expect(TaskHelpers::Imports.validate_source(@import_dir2)).to eq('Import source must be a filename or directory')
     end
 
+    # rubocop:disable Style/NumericLiteralPrefix
     it 'is a directory not readable' do
       File.chmod(0300, @import_dir)
       expect(TaskHelpers::Imports.validate_source(@import_dir)).to eq('Import source is not readable')
@@ -35,5 +36,6 @@ describe TaskHelpers::Exports do
       expect(TaskHelpers::Imports.validate_source(@import_file)).to eq('Import source is not readable')
       File.chmod(0600, @import_file)
     end
+    # rubocop:enable Style/NumericLiteralPrefix
   end
 end
