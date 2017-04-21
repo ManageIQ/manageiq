@@ -112,9 +112,9 @@ class SecurityGroupController < ApplicationController
     assert_privileges("security_group_delete")
 
     security_groups = if @lastaction == "show_list" || (@lastaction == "show" && @layout != "security_group")
-                        find_checked_items
+                        find_checked_records_with_rbac(SecurityGroup)
                       else
-                        [params[:id]]
+                        [find_record_with_rbac(SecurityGroup, params[:id])]
                       end
 
     if security_groups.empty?
@@ -122,8 +122,7 @@ class SecurityGroupController < ApplicationController
     end
 
     security_groups_to_delete = []
-    security_groups.each do |s|
-      security_group = SecurityGroup.find(s)
+    security_groups.each do |security_group|
       if security_group.nil?
         add_flash(_("Security Group no longer exists."), :error)
       elsif security_group.supports_delete?
