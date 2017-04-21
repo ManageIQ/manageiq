@@ -4803,6 +4803,7 @@ miq_ae_methods:
 - updated_on
 - updated_by
 - updated_by_user_id
+- embedded_methods
 miq_ae_namespaces:
 - id
 - parent_id
