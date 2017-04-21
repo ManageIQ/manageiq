@@ -13,7 +13,7 @@ class EmbeddedAnsibleWorker < MiqWorker
         # Because we're running in a thread on the Server
         # we need to intercept SystemExit and exit our thread,
         # not the main server thread!
-        log.info("#{log_prefix} SystemExit received, exiting monitoring Thread")
+        _log.info("SystemExit received, exiting monitoring Thread")
         Thread.exit
       end
     end
