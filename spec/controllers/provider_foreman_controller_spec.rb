@@ -82,6 +82,16 @@ describe ProviderForemanController do
     expect(response.body).to_not be_empty
   end
 
+  it "renders explorer sorted by url" do
+    login_as user_with_feature(%w(providers_accord configured_systems_filter_accord))
+    FactoryGirl.create(:provider_foreman, :name => "foremantest1", :url => "z_url")
+    FactoryGirl.create(:provider_foreman, :name => "foremantest2", :url => "a_url")
+
+    get :explorer, :params => {:sortby => '2'}
+    expect(response.status).to eq(200)
+    expect(response.body).to match('a_url(.|\n)*z_url')
+  end
+
   context "renders explorer based on RBAC" do
     it "renders explorer based on RBAC access to feature 'configured_system_tag'" do
       login_as user_with_feature %w(configured_system_tag)

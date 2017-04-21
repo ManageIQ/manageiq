@@ -15,7 +15,7 @@
         - if role_allows?(:feature => "provider_foreman_view") && @record.ext_management_system
           %li
             = link_to("#{ui_lookup(:model => @record.ext_management_system.class.to_s)}: #{@record.ext_management_system.name}",
-              {:controller => "provider_foreman", :action => 'explorer', :id => "at-#{to_cid(@record.ext_management_system.id)}"},
+              {:controller => "automation_manager", :action => 'explorer', :id => "at-#{to_cid(@record.ext_management_system.id)}"},
               :title => _("Show parent %s for this Job") % ui_lookup(:model => @record.ext_management_system.class.to_s))
         - if role_allows?(:feature => "service_view") && @record.service
           %li
