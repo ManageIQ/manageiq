@@ -392,4 +392,19 @@ describe ExtManagementSystem do
       expect(tenant.ext_management_systems).to include(ems)
     end
   end
+
+  context "destroy" do
+    it "destroys an ems with no active workers" do
+      ems = FactoryGirl.create(:ext_management_system)
+      ems.destroy
+      expect(ExtManagementSystem.count).to eq(0)
+    end
+
+    it "does not destroy an ems with active workers" do
+      ems = FactoryGirl.create(:ext_management_system)
+      FactoryGirl.create(:miq_ems_refresh_worker, :queue_name => ems.queue_name, :status => "started")
+      ems.destroy
+      expect(ExtManagementSystem.count).to eq(1)
+    end
+  end
 end
