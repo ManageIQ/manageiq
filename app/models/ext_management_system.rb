@@ -435,6 +435,10 @@ class ExtManagementSystem < ApplicationRecord
     resource_pools.destroy_all
   end
 
+  def queue_name
+    "ems_#{id}"
+  end
+
   def enforce_policy(target, event)
     inputs = {:ext_management_system => self}
     inputs[:vm]   = target if target.kind_of?(Vm)
