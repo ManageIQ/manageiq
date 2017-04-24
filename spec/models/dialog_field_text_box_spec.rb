@@ -122,14 +122,25 @@ describe DialogFieldTextBox do
         context "when data type is integer" do
           before { df.data_type = 'integer' }
 
-          it "returns nil when the value is a number" do
-            df.value = '123'
-            expect(df.validate_field_data(dt, dg)).to be_nil
+          context "when the value is a number string" do
+            it "returns nil" do
+              df.value = '123'
+              expect(df.validate_field_data(dt, dg)).to be_nil
+            end
           end
 
-          it "returns an error when the value is not a number" do
-            df.value = 'a12'
-            expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field must be an integer')
+          context "when the value is not a number string" do
+            it "returns an error" do
+              df.value = 'a12'
+              expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field must be an integer')
+            end
+          end
+
+          context "when the value is an actual integer" do
+            it "returns nil" do
+              df.value = 123
+              expect(df.validate_field_data(dt, dg)).to be_nil
+            end
           end
         end
       end
