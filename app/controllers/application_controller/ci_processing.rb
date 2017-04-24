@@ -234,7 +234,7 @@ module ApplicationController::CiProcessing
       rec_cls = "orchestration_stack"
       bc_msg = _("Retire Orchestration Stack")
     end
-    klass = get_class_from_controller_param(params[:controller])
+    klass = rec_cls ? rec_cls.camelize.constantize : get_class_from_controller_param(params[:controller])
     selected_items = find_checked_ids_with_rbac(klass)
     if !%w(orchestration_stack service).include?(request.parameters["controller"]) && !%w(orchestration_stacks).include?(params[:display]) &&
        VmOrTemplate.find(selected_items).any? { |vm| !vm.supports_retire? }
