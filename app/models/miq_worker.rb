@@ -319,6 +319,7 @@ class MiqWorker < ApplicationRecord
     close_pg_sockets_inherited_from_parent
     DRb.stop_service
     renice(Process.pid)
+    Benchmark.delete_current_realtime
   end
 
   # When we fork, the children inherits the parent's file descriptors
