@@ -93,7 +93,6 @@
     :identifier: alert_definition_profile
     :options:
     - :collection
-    - :subcollection
     :verbs: *gpd
     :klass: MiqAlertSet
     :subcollections:
