@@ -560,7 +560,7 @@ module Rbac
     end
 
     def get_belongsto_matches(blist, klass)
-      return get_belongsto_matches_for_host(blist) if klass == Host
+      return get_belongsto_matches_for_host(blist) if klass <= Host
       return get_belongsto_matches_for_storage(blist) if klass == Storage
       association_name = klass.base_model.to_s.tableize
 

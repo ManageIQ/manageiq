@@ -817,6 +817,21 @@ describe Rbac::Filterer do
           expect(attrs[:auth_count]).to eq(1)
           expect(results3.length).to eq(1)
         end
+
+        it 'searches Hosts with tag and host & cluster filters' do
+          group.entitlement = Entitlement.new
+          group.entitlement.set_belongsto_filters([@cluster_folder_path])
+          group.entitlement.set_managed_filters([['/managed/environment/prod']])
+          group.save!
+
+          @host_1.tag_with('/managed/environment/prod', :ns => '*')
+
+          results, attrs = described_class.search(:class => "Host", :user => user)
+
+          expect(attrs[:user_filters]).to eq("managed"   => [['/managed/environment/prod']], "belongsto" => [@cluster_folder_path])
+          expect(attrs[:auth_count]).to eq(1)
+          expect(results.length).to eq(1)
+        end
       end
     end
 
