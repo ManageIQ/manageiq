@@ -685,6 +685,24 @@
       :post:
       - :name: assign
       - :name: unassign
+  :firmwares:
+    :description: Firmwares
+    :options:
+    - :collection
+    :verbs: *gp
+    :klass: Firmware
+    :identifier: firmware
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: firmware_show_list
+      :post:
+      - :name: query
+        :identifier: firmware_show_list
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: firmware_show
   :flavors:
     :description: Flavors
     :identifier: flavor
