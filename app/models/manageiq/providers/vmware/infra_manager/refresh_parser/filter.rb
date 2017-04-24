@@ -43,6 +43,19 @@ class ManageIQ::Providers::Vmware::InfraManager
             storage_profile_inv_by_vm_inv(vm_data)
         end
 
+      when EmsFolder
+        filtered_data = Hash.new { |h, k| h[k] = {} }
+
+        folder_data = folder_inv_by_folder(target)
+        unless folder_data.nil?
+          _, target_data = folder_data.first
+          if folder_children(target_data).blank?
+            inv_by_folder_inv(folder_data, filtered_data)
+          else
+            filtered_data = @vc_data
+            target = ems
+          end
+        end
       end
 
       filtered_counts = filtered_data.inject({}) { |h, (k, v)| h[k] = v.blank? ? 0 : v.length; h }
@@ -50,7 +63,7 @@ class ManageIQ::Providers::Vmware::InfraManager
 
       EmsRefresh.log_inv_debug_trace(filtered_data, "#{_log.prefix} #{log_header} filtered_data:", 2)
 
-      filtered_data
+      return target, filtered_data
     end
 
     #
@@ -70,6 +83,16 @@ class ManageIQ::Providers::Vmware::InfraManager
 
     def vm_inv_by_vm(vm)
       inv_by_ar_object(@vc_data[:vm], vm)
+    end
+
+    # Since a Folder and a Datacenter are both an EmsFolder
+    # we need to handle @vc_data[:folder] and @vc_data[:dc]
+    def folder_inv_by_folder(folder)
+      mor = folder.ems_ref_obj
+      return nil if mor.nil?
+
+      _type, target = RefreshParser.inv_target_by_mor(mor, @vc_data)
+      target.nil? ? nil : {mor => target}
     end
 
     ### Collection methods by Host inv
@@ -224,6 +247,21 @@ class ManageIQ::Providers::Vmware::InfraManager
       return inv[:folder], inv[:dc], inv[:cluster], inv[:host_res]
     end
 
+    def inv_by_folder_inv(folder_inv, inv)
+      folder_inv.each do |folder_mor, _folder_data|
+        # The parents of a folder/datacenter have to be either a folder or a datacenter
+        # as well so we don't have to worry about other inventory types for a
+        # folders parents (yet)
+        ems_metadata_parents_by_folder_mor(folder_mor, @vc_data).each do |type, mor, data|
+          inv[type][mor] ||= data
+        end
+
+        inv_children_by_folder_mor(folder_mor, @vc_data).each do |type, mor, data|
+          inv[type][mor] ||= data
+        end
+      end
+    end
+
     def rp_metadata_inv_by_vm_inv(vm_inv)
       rp_inv = {}
       vm_inv.each_key do |vm_mor|
@@ -319,6 +357,46 @@ class ManageIQ::Providers::Vmware::InfraManager
       ems_metadata
     end
 
+    def ems_metadata_parents_by_folder_mor(folder_mor, data_source)
+      ems_metadata = []
+
+      parent_mor = folder_mor
+      until parent_mor.nil?
+        parent_type, parent = ems_metadata_target_by_mor(parent_mor, data_source)
+
+        break if parent.nil?
+        ems_metadata << [parent_type, parent_mor, parent]
+
+        parent_mor = parent['parent']
+      end
+
+      ems_metadata
+    end
+
+    def inv_children_by_folder_mor(folder_mor, data_source)
+      inv = []
+
+      type, data = ems_metadata_target_by_mor(folder_mor, data_source)
+      return if data.nil?
+
+      children = if type == :dc
+                   [data["vmFolder"], data["networkFolder"], data["hostFolder"], data["datastoreFolder"]].compact
+                 else
+                   Array(data["childEntity"])
+                 end
+
+      children.each do |child_mor|
+        child_type, child = RefreshParser.inv_target_by_mor(child_mor, data_source)
+        inv << [child_type, child_mor, child]
+
+        if child.key?("childEntity")
+          inv.concat(inv_children_by_folder_mor(child_mor, data_source))
+        end
+      end
+
+      inv
+    end
+
     def rp_metadata_inv_by_vm_mor(vm_mor, data_source)
       rp_metadata = []
       parent_mor = vm_mor
@@ -376,6 +454,16 @@ class ManageIQ::Providers::Vmware::InfraManager
 
     def ems_metadata_target_by_mor(*args)
       RefreshParser.inv_target_by_mor(*args)
+    end
+
+    def folder_children(folder_inv)
+      child_keys = if RefreshParser.get_mor_type(folder_inv["MOR"]) == "datacenter"
+                     %w(datastoreFolder networkFolder hostFolder vmFolder)
+                   else
+                     %w(childEntity)
+                   end
+
+      child_keys.collect { |key| get_mors(folder_inv, key) }.flatten
     end
   end
 end

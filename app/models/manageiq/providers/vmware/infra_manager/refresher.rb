@@ -28,7 +28,9 @@ module ManageIQ::Providers
         # Filter the data, and determine for which hosts we will need to get extended data
         filtered_host_mors = []
         targets_with_data = targets.collect do |target|
-          filtered_data, = Benchmark.realtime_block(:filter_vc_data) { filter_vc_data(ems, target) }
+          filter_result, = Benchmark.realtime_block(:filter_vc_data) { filter_vc_data(ems, target) }
+
+          target, filtered_data = filter_result
           filtered_host_mors += filtered_data[:host].keys
           [target, filtered_data]
         end
