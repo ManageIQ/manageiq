@@ -1,6 +1,7 @@
 # Feed id to be used for all spec
 def the_feed_id
-  '71daaa4b-da76-4373-8753-68279f33a884'.freeze
+  # '71daaa4b-da76-4373-8753-68279f33a884'.freeze
+  '1aae80bd1d13'.freeze
 end
 
 def test_start_time
@@ -12,11 +13,13 @@ def test_end_time
 end
 
 def test_hostname
-  'hservices.torii.gva.redhat.com'.freeze
+  # 'hservices.torii.gva.redhat.com'.freeze
+  'localhost'.freeze
 end
 
 def test_port
-  80
+  # 80
+  8080
 end
 
 def test_userid
