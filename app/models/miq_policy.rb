@@ -353,15 +353,8 @@ class MiqPolicy < ApplicationRecord
   end
 
   def self.seed
-    all.each do |p|
-      attrs = {}
-      attrs[:towhat] = "Vm"      if p.towhat.nil?
-      attrs[:active] = true      if p.active.nil?
-      attrs[:mode]   = "control" if p.mode.nil?
-      next if attrs.empty?
-      _log.info("Updating [#{p.name}]")
-      p.update_attributes(attrs)
-    end
+    defaults = { :towhat => 'Vm', :active => true, :mode => 'control' }
+    defaults.each { |col, val| where(col => nil).update_all(col => val) }
   end
 
   def self.get_policies_for_target(target, mode, event, inputs = {})
