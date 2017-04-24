@@ -2792,6 +2792,18 @@ describe MiqExpression do
   end
 
   describe ".get_col_info" do
+    it "return column info for missing model" do
+      field = "hostname"
+      col_info = described_class.get_col_info(field)
+      expect(col_info).to match(
+        :data_type                      => nil,
+        :excluded_by_preprocess_options => false,
+        :include                        => {},
+        :tag                            => false,
+        :sql_support                    => false,
+      )
+    end
+
     it "return column info for model-virtual field" do
       field = "VmInfra-uncommitted_storage"
       col_info = described_class.get_col_info(field)
@@ -2831,6 +2843,7 @@ describe MiqExpression do
       )
     end
 
+    # TODO: think this should return same results as missing model?
     it "return column info for managed-field" do
       tag = "managed-location"
       col_info = described_class.get_col_info(tag)
