@@ -39,7 +39,7 @@ class DialogFieldTextBox < DialogField
     return if !required? && @value.blank? || !visible
 
     return "#{dialog_tab.label}/#{dialog_group.label}/#{label} is required" if required? && @value.blank?
-    if data_type == "integer" && !@value.match(/^[0-9]+$/)
+    if data_type == "integer" && !@value.to_s.match(/^[0-9]+$/)
       return "#{dialog_tab.label}/#{dialog_group.label}/#{label} must be an integer"
     end
 
