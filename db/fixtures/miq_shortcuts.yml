@@ -165,7 +165,7 @@
   :rbac_feature_name: storage_show_list
   :startup: true
 - :name: configuration_management
-  :description: Infrastructure / Configuration Management
+  :description: Configuration / Management
   :url: provider_foreman/explorer
   :rbac_feature_name: provider_foreman_explorer
   :startup: true
