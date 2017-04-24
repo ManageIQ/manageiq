@@ -126,6 +126,30 @@ describe ManageIQ::Providers::Openstack::CloudManager::Vm do
         expect(vm.supports_disassociate_floating_ip?).to eq false
       end
     end
+
+    context "snapshot actions" do
+      it "supports snapshot_create" do
+        expect(vm.supports_snapshot_create?).to eq true
+      end
+
+      it "checks remove_snapshot is_available? when snapshots are associated with the instance" do
+        expect(vm).to receive(:snapshots).and_return([1]) # fake a floating ip being associated
+        expect(vm.supports_remove_snapshot?).to eq true
+      end
+
+      it "checks remove_snapshot is_available? when no snapshots are associated with the instance" do
+        expect(vm).to receive(:snapshots).and_return([])
+        expect(vm.supports_remove_snapshot?).to eq false
+      end
+
+      it "does not support remove_snapshot_by_description" do
+        expect(vm.supports_remove_snapshot_by_description?).to eq false
+      end
+
+      it "does not support revert_to_snapshot" do
+        expect(vm.supports_revert_to_snapshot?).to eq false
+      end
+    end
   end
 
   context "#is_available?" do
