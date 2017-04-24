@@ -249,6 +249,34 @@ describe MiqVimBrokerWorker::Runner do
           expect(q.args).to eq([[[host.class.name, host.id]]])
         end
 
+        it "will handle create events properly" do
+          event = {
+            :server   => @ems.address,
+            :username => @ems.authentication_userid,
+            :objType  => "Folder",
+            :op       => "create",
+            :mor      => "group-v123"
+          }
+
+          expected_folder_hash = {
+            :folder => {
+              :type        => "EmsFolder",
+              :ems_ref     => "group-v123",
+              :ems_ref_obj => "group-v123",
+              :uid_ems     => "group-v123"
+            }
+          }
+
+          @vim_broker_worker.instance_variable_get(:@queue).enq(event.dup)
+
+          @vim_broker_worker.drain_event
+          expect(MiqQueue.count).to eq(1)
+          q = MiqQueue.first
+          expect(q.class_name).to eq("EmsRefresh")
+          expect(q.method_name).to eq("refresh_new_target")
+          expect(q.args).to eq([expected_folder_hash, @ems.id])
+        end
+
         it "will ignore updates to unknown properties" do
           vm = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems)
           @vim_broker_worker.instance_variable_get(:@queue).enq(:server       => @ems.address,
