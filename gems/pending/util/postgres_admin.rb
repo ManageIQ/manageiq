@@ -93,8 +93,7 @@ class PostgresAdmin
     # initdb will fail if the database directory is not empty or not owned by the PostgresAdmin.user
     FileUtils.mkdir(PostgresAdmin.data_directory) unless Dir.exist?(PostgresAdmin.data_directory)
     FileUtils.chown_R(PostgresAdmin.user, PostgresAdmin.user, PostgresAdmin.data_directory)
-    FileUtils.rm_rf(PostgresAdmin.data_directory.join("pg_log"))
-    FileUtils.rm_rf(PostgresAdmin.data_directory.join("lost+found"))
+    FileUtils.rm_rf(PostgresAdmin.data_directory.children.map(&:to_s))
   end
 
   def self.backup(opts)
