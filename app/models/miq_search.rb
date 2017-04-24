@@ -4,6 +4,10 @@ class MiqSearch < ApplicationRecord
 
   validates_uniqueness_of :name, :scope => "db"
 
+  # validate if the name of a new filter is unique in Global Filters
+  validates :description, :uniqueness => { :scope => "db", :conditions => -> { where.not(:search_type => 'user') },
+                          :if => proc { |miq_search| miq_search.search_type == 'global' } }
+
   has_many  :miq_schedules
 
   before_destroy :check_schedules_empty_on_destroy
