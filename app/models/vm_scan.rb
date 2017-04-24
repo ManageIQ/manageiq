@@ -104,7 +104,7 @@ class VmScan < Job
         proxy = MiqServer.find(miq_server_id)
 
         # Check if the broker is available
-        if MiqServer.use_broker_for_embedded_proxy? && !MiqVimBrokerWorker.available?
+        if MiqServer.use_broker_for_embedded_proxy? && !ManageIQ::Providers::Vmware::InfraManager::VimBrokerWorker.available?
           _log.warn("VimBroker is not available")
           signal(:broker_unavailable)
           return
@@ -145,7 +145,7 @@ class VmScan < Job
       set_status("Waiting for VimBroker to become available (#{i += 1})")
       sleep(60)
       _log.info "Checking VimBroker connection status.  Count=[#{i}]"
-      break if MiqVimBrokerWorker.available?
+      break if ManageIQ::Providers::Vmware::InfraManager::VimBrokerWorker.available?
     end
 
     signal(:start_snapshot)
@@ -415,7 +415,7 @@ class VmScan < Job
         begin
           password_decrypt = MiqPassword.decrypt(miqVimHost[:password])
           if MiqServer.use_broker_for_embedded_proxy?(ems_type)
-            $vim_broker_client ||= MiqVimBroker.new(:client, MiqVimBrokerWorker.drb_port)
+            $vim_broker_client ||= MiqVimBroker.new(:client, ManageIQ::Providers::Vmware::InfraManager::VimBrokerWorker.drb_port)
             miqVim = $vim_broker_client.getMiqVim(miqVimHost[:address], miqVimHost[:username], password_decrypt)
           else
             require 'VMwareWebService/MiqVim'
