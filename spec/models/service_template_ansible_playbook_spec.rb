@@ -235,49 +235,21 @@ describe ServiceTemplateAnsiblePlaybook do
 
       expect(service_template.dialogs.first.id).to eq info[:service_dialog_id]
     end
-
-    it 'creates a new job_template if a new one is passed in' do
-      service_template = prebuild_service_template(:job_template => false)
-      catalog_item_options[:config_info][:provision].delete(:new_dialog_name)
-
-      expect(service_template).to receive(:new_job_template_required).thrice
-
-      service_template.update_catalog_item(catalog_item_options, user)
-    end
   end
 
-  describe '#create_job_template' do
-    it 'creates a new job template when one is required' do
-      service_template = prebuild_service_template(:job_template => false)
-      allow(service_template).to receive(:new_job_template_required).and_return(true)
-      expect(described_class).to receive(:create_job_template).and_return(job_template).thrice
-
-      expect(service_template.send(:create_job_template, 'blah', 'blah', catalog_item_options, user)).to have_attributes(
-        :provision   => { :configuration_template => job_template, :create_only => true },
-        :reconfigure => { :configuration_template => job_template, :create_only => true },
-        :retirement  => { :configuration_template => job_template, :create_only => true },
-      )
-    end
-  end
-
-  describe '#job_template_modifications' do
+  describe '#update_job_templates' do
     let(:service_template) { prebuild_service_template(:job_template => false) }
 
-    it 'does not update a job_template if the create_only key is included' do
-      [:provision, :retirement, :reconfigure].each do |action|
-        next unless catalog_item_options[action]
-        catalog_item_options[action].merge!(:create_only => true)
-      end
-
+    it 'does not update a job_template if the there is no playbook_id' do
       expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript)
         .to receive(:update_in_provider_queue).never
-      service_template.send(:job_template_modifications, 'blah', 'blah', catalog_item_options, user)
+      service_template.send(:update_job_templates, 'blah', 'blah', catalog_item_options, user)
     end
 
-    it 'does update a job_template if the create_only key is not included but includes a playbook_id' do
+    it 'does update a job_template if a playbook_id is included' do
       expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript)
         .to receive(:update_in_provider_queue)
-      service_template.send(:job_template_modifications, 'blah', 'blah', catalog_item_options[:config_info], user)
+      service_template.send(:update_job_templates, 'blah', 'blah', catalog_item_options[:config_info], user)
     end
 
     it 'deletes a job_template if a playbook id is not passed in' do
@@ -287,7 +259,7 @@ describe ServiceTemplateAnsiblePlaybook do
       end
       expect(service_template).to receive(:delete_job_templates)
 
-      service_template.send(:job_template_modifications, 'blah', 'blah', catalog_item_options[:config_info], user)
+      service_template.send(:update_job_templates, 'blah', 'blah', catalog_item_options[:config_info], user)
     end
   end
 
