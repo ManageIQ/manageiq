@@ -315,7 +315,7 @@ module Service::Aggregation
   def aggregate_all_vm_memory_on_disk
     if has_attribute?("aggregate_all_vm_memory_on_disk")
       # Avoids (poorly) "ERROR:  integer out of range" in postgres
-      self["aggregate_all_vm_memory_on_disk"] * 1.megabyte
+      self["aggregate_all_vm_memory_on_disk"].try(:*, 1.megabyte)
     else
       all_vms.inject(0) { |aggregate, vm| aggregate + vm.ram_size_in_bytes_by_state.to_i }
     end
