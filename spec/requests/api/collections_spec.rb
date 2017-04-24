@@ -308,6 +308,11 @@ describe "Rest API Collections" do
       FactoryGirl.create(:firmware)
       test_collection_query(:firmwares, firmwares_url, Firmware)
     end
+
+    it 'query PhysicalServers' do
+      FactoryGirl.create(:physical_server)
+      test_collection_query(:physical_servers, physical_servers_url, PhysicalServer)
+    end
   end
 
   context "Collections Bulk Queries" do
@@ -567,6 +572,11 @@ describe "Rest API Collections" do
     it 'bulk query Firmwares' do
       FactoryGirl.create(:firmware)
       test_collection_bulk_query(:firmwares, firmwares_url, Firmware)
+    end
+
+    it 'bulk query PhysicalServers' do
+      FactoryGirl.create(:physical_server)
+      test_collection_bulk_query(:physical_servers, physical_servers_url, PhysicalServer)
     end
   end
 end
