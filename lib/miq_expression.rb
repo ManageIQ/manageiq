@@ -31,6 +31,7 @@ class MiqExpression
     ContainerRoute
     ContainerService
     ContainerTemplate
+    PersistentVolume
     ManageIQ::Providers::CloudManager
     EmsCluster
     EmsClusterPerformance
@@ -265,7 +266,8 @@ class MiqExpression
     'ContainerReplicator'                         => 'container_replicator',
     'ContainerRoute'                              => 'container_route',
     'ContainerService'                            => 'container_service',
-    'ContainerTemplate'                           => 'container_template'
+    'ContainerTemplate'                           => 'container_template',
+    'PersistentVolume'                            => 'persistent_volume'
   }
   EXCLUDE_FROM_RELATS = {
     "ManageIQ::Providers::CloudManager" => ["hosts", "ems_clusters", "resource_pools"]

@@ -25,6 +25,7 @@ module Rbac
       ContainerRoute
       ContainerService
       ContainerTemplate
+      ContainerVolume
       EmsCluster
       EmsFolder
       ExtManagementSystem
