@@ -51,6 +51,9 @@ class ManageIQ::Providers::Google::CloudManager::EventCatcher::Stream
     # If event catcher is not yet setup, then we'll get a fog error
     google.subscriptions.get(subscription_name) ||
       google.subscriptions.create(:name  => subscription_name,
+                                  # add empty config - workaround for https://github.com/fog/fog-google/issues/214
+                                  # TODO: remove once the above is resolved
+                                  :push_config => {},
                                   :topic => topic_name)
   rescue Fog::Errors::NotFound
     # Rather than expose the notfound error, we expose our own exception
