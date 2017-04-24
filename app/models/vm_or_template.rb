@@ -1855,6 +1855,14 @@ class VmOrTemplate < ApplicationRecord
     [true, nil]
   end
 
+  def create_notification(type, options)
+    Notification.create!(
+      :type    => type,
+      :subject => self,
+      :options => options
+    )
+  end
+
   # this is verbose, helper for generating arel
   def self.arel_coalesce(values)
     Arel::Nodes::NamedFunction.new('COALESCE', values)
