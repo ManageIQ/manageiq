@@ -55,6 +55,7 @@ module ManageIQ::Providers
 
       def parse_project(project_item)
         project = @data_index.fetch_path(:container_projects, :by_name, project_item.metadata.name)
+        return if project.nil? # ignore openshift projects without an underlying kubernetes namespace
         project[:display_name] = project_item.metadata.annotations['openshift.io/display-name'] unless
             project_item.metadata.annotations.nil?
       end

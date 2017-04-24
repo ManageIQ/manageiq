@@ -356,4 +356,17 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
                                   )
     end
   end
+
+  describe "parse_project" do
+    it "handles no underlying namespace" do
+      expect(parser.send(:parse_project,
+                         RecursiveOpenStruct.new(
+                           :metadata   => {
+                             :annotations => {
+                               'openshift.io/display-name' => 'example'
+                             },
+                           },
+                         ))).to eq(nil)
+    end
+  end
 end
