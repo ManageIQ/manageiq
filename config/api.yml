@@ -1160,15 +1160,19 @@
       - :name: delete
         :identifier: profile_delete
         :disabled: true
-    :subcollection_actions:
+    :policies_subcollection_actions:
       :post:
       - :name: assign
+        :identifier: policy_profile_assign
       - :name: unassign
+        :identifier: policy_profile_assign
       - :name: resolve
-    :subresource_actions:
+    :policies_subresource_actions:
       :post:
       - :name: assign
+        :identifier: policy_profile_assign
       - :name: unassign
+        :identifier: policy_profile_assign
       - :name: resolve
   :providers:
     :description: Providers

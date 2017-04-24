@@ -25,6 +25,18 @@ class MiqPolicySet < ApplicationRecord
     Tag.find_by(:name => "/miq_policy/assignment/#{self.class.to_s.underscore}/#{id}").try!(:destroy)
   end
 
+  def add_policy(policy)
+    add_member(policy)
+  end
+
+  def remove_policy(policy)
+    remove_member(policy)
+  end
+
+  def get_policies
+    miq_policies
+  end
+
   def add_to(ids, db)
     model = db.respond_to?(:constantize) ? db.constantize : db
     ids.each do|id|

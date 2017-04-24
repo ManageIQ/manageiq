@@ -118,9 +118,9 @@ describe "Policies Assignment API" do
     api_basic_authorize subcollection_action_identifier(collection, subcollection, :unassign)
 
     object = options[:object]
-
     [p1, p2, p3].each { |p| object.add_policy(p) }
     run_post(object_policies_url, gen_request(:unassign, [{:guid => p2.guid}, {:guid => p3.guid}]))
+    object.reload
 
     expect_multiple_action_result(2)
     expect(object.get_policies.size).to eq(1)
@@ -140,25 +140,20 @@ describe "Policies Assignment API" do
   end
 
   context "Policy profile policies assignment" do
+    let(:policy_profile_url)            { policy_profiles_url(ps2.id) }
+    let(:policy_profile_policies_url)   { "#{policy_profile_url}/policies" }
+
     it "adds Policies to a Policy Profile" do
-      api_basic_authorize
-
-      run_post("#{policy_profiles_url(ps2.id)}/policies", gen_request(:assign, [{"id" => p1.id}, {"id" => p2.id}]))
-
-      expect(response).to have_http_status(:ok)
-      expect(response.parsed_body["results"].count).to eq(2)
-      expect(ps2.reload.miq_policies.count).to eq(3)
-      expect(response.parsed_body["results"].first["guid"]).to eq(p1.guid)
-      expect(response.parsed_body["results"].second["guid"]).to eq(p2.guid)
+      test_assign_multiple_policies(policy_profile_url,
+                                    policy_profile_policies_url,
+                                    :policy_profiles,
+                                    :policies,
+                                    :object   => ps2,
+                                    :policies => [p1, p2, p3])
     end
 
-    it "removes a Policy from a Policy Profile" do
-      api_basic_authorize
-
-      run_post("#{policy_profiles_url(ps2.id)}/policies", gen_request(:unassign, [{"id" => p3.id}]))
-
-      expect(response).to have_http_status(:ok)
-      expect(ps2.reload.miq_policies.count).to eq(0)
+    it "removes Policies from a Policy Profile" do
+      test_unassign_multiple_policies(policy_profile_policies_url, :policy_profiles, :policies, :object => ps2)
     end
   end
 
