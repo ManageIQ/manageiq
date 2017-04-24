@@ -4,7 +4,6 @@ describe Authenticator do
       expect(Authenticator.for(:mode => 'database')).to be_a(Authenticator::Database)
       expect(Authenticator.for(:mode => 'ldap')).to be_a(Authenticator::Ldap)
       expect(Authenticator.for(:mode => 'ldaps')).to be_a(Authenticator::Ldap)
-      expect(Authenticator.for(:mode => 'amazon')).to be_a(Authenticator::Amazon)
       expect(Authenticator.for(:mode => 'httpd')).to be_a(Authenticator::Httpd)
     end
 
