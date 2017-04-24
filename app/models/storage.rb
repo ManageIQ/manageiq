@@ -894,4 +894,9 @@ class Storage < ApplicationRecord
   def self.supports?(store_type)
     Storage::SUPPORTED_STORAGE_TYPES.include?(store_type)
   end
+
+  # @param [String, Storage] store_type upcased version of the storage type
+  def self.supports?(store_type)
+    Storage::SUPPORTED_STORAGE_TYPES.include?(store_type)
+  end
 end
