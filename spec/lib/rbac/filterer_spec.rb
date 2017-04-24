@@ -909,8 +909,8 @@ describe Rbac::Filterer do
             group.entitlement.set_belongsto_filters([])
             group.save!
 
-            ansible_configuration_script_with_tag.tag_with(['/managed/environment/prod'].join(' '), :ns => '*')
-            ansible_playbook_with_tag.tag_with(['/managed/environment/prod'].join(' '), :ns => '*')
+            ansible_configuration_script_with_tag.tag_with('/managed/environment/prod', :ns => '*')
+            ansible_playbook_with_tag.tag_with('/managed/environment/prod', :ns => '*')
           end
 
           it 'lists only tagged ConfigurationScripts' do
@@ -962,7 +962,7 @@ describe Rbac::Filterer do
               group.entitlement.set_belongsto_filters([])
               group.save!
 
-              network_object_with_tag.tag_with(['/managed/environment/prod'].join(' '), :ns => '*')
+              network_object_with_tag.tag_with('/managed/environment/prod', :ns => '*')
             end
 
             it "lists only tagged #{network_model}" do
