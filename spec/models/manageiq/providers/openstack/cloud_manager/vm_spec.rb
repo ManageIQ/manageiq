@@ -9,6 +9,8 @@ describe ManageIQ::Providers::Openstack::CloudManager::Vm do
                        :cloud_tenant          => tenant)
   end
 
+  let(:archived_vm) { FactoryGirl.create(:vm_openstack) }
+
   let(:handle) do
     double.tap do |handle|
       allow(ems).to receive(:connect).with(:service => 'Compute', :tenant_name => tenant.name).and_return(handle)
@@ -130,6 +132,10 @@ describe ManageIQ::Providers::Openstack::CloudManager::Vm do
     context "snapshot actions" do
       it "supports snapshot_create" do
         expect(vm.supports_snapshot_create?).to eq true
+      end
+
+      it "does not support snapshot_create on archived VM" do
+        expect(archived_vm.supports_snapshot_create?).to be_falsy
       end
 
       it "checks remove_snapshot is_available? when snapshots are associated with the instance" do
