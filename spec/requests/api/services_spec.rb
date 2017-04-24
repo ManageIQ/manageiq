@@ -819,6 +819,25 @@ describe "Services API" do
 
       expect(response).to have_http_status(:forbidden)
     end
+
+    it 'can add service resource to a service by href with an appropriate role' do
+      api_basic_authorize(collection_action_identifier(:services, :add_resource))
+      request = {
+        'action'   => 'add_resource',
+        'resource' => { 'resource' => { 'href' => services_url(svc2.id) } }
+      }
+
+      run_post(services_url(svc.id), request)
+
+      expected = {
+        'success' => true,
+        'message' => "Assigned resource services id:#{svc2.id} to Service id:#{svc.id} name:'#{svc.name}'"
+      }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to eq(expected)
+      expect(svc.reload.services).to eq([svc2])
+    end
   end
 
   describe 'remove_resource' do
