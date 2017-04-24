@@ -20,7 +20,8 @@ module ManageIQ::Providers::Microsoft
       log_header = "MIQ(#{self.class.name}.#{__method__}) Collecting data for EMS name: [#{@ems.name}] id: [#{@ems.id}]"
       $scvmm_log.info("#{log_header}...")
 
-      @inventory = ManageIQ::Providers::Microsoft::InfraManager.execute_powershell_json(@connection, INVENTORY_SCRIPT)
+      script = IO.read(INVENTORY_SCRIPT)
+      @inventory = ManageIQ::Providers::Microsoft::InfraManager.execute_powershell_json(@connection, script)
 
       if @inventory.empty?
         $scvmm_log.warn("#{log_header}...Empty inventory set returned from SCVMM.")
