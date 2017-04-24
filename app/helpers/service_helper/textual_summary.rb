@@ -40,7 +40,7 @@ module ServiceHelper::TextualSummary
   end
 
   def textual_aggregate_all_vm_memory
-    {:label => _("Memory"), :value => number_to_human_size(@record.aggregate_all_vm_memory.megabytes, :precision => 2)}
+    {:label => _("Memory"), :value => number_to_human_size(@record.aggregate_all_vm_memory.try(:megabytes) || 0, :precision => 2)}
   end
 
   def textual_aggregate_all_vm_disk_count
@@ -49,17 +49,17 @@ module ServiceHelper::TextualSummary
 
   def textual_aggregate_all_vm_disk_space_allocated
     {:label => _("Disk Space Allocated"),
-     :value => number_to_human_size(@record.aggregate_all_vm_disk_space_allocated, :precision => 2)}
+     :value => number_to_human_size(@record.aggregate_all_vm_disk_space_allocated || 0, :precision => 2)}
   end
 
   def textual_aggregate_all_vm_disk_space_used
     {:label => _("Disk Space Used"),
-     :value => number_to_human_size(@record.aggregate_all_vm_disk_space_used, :precision => 2)}
+     :value => number_to_human_size(@record.aggregate_all_vm_disk_space_used || 0, :precision => 2)}
   end
 
   def textual_aggregate_all_vm_memory_on_disk
     {:label => _("Memory on Disk"),
-     :value => number_to_human_size(@record.aggregate_all_vm_memory_on_disk, :precision => 2)}
+     :value => number_to_human_size(@record.aggregate_all_vm_memory_on_disk || 0, :precision => 2)}
   end
 
   def textual_retirement_date
