@@ -1,6 +1,9 @@
 class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
+  include ServiceAnsibleMixin
   before_destroy :check_retirement_potential, :prepend => true
   around_destroy :around_destroy_callback
+
+  CONFIG_ACTIONS = [:provision, :retirement, :reconfigure].freeze
 
   RETIREMENT_ENTRY_POINTS = {
     'yes_without_playbook' => '/Service/Generic/StateMachines/GenericLifecycle/Retire_Basic_Resource',
@@ -48,7 +51,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
 
     transaction do
       create_from_options(options).tap do |service_template|
-        [:provision, :retirement, :reconfigure].each do |action|
+        with_applied_config_info(CONFIG_ACTIONS, config_info) do |action|
           dialog_name = config_info.fetch_path(action, :new_dialog_name)
           next unless dialog_name
 
@@ -70,8 +73,8 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   private :create_new_dialog
 
   def self.create_job_templates(service_name, description, config_info, auth_user)
-    [:provision, :retirement, :reconfigure].each_with_object({}) do |action, hash|
-      next unless config_info[action] && config_info[action].key?(:playbook_id)
+    with_applied_config_info(CONFIG_ACTIONS, config_info, {}) do |action, hash|
+      next unless config_info[action].key?(:playbook_id)
       hash[action] = { :configuration_template => create_job_template("miq_#{service_name}_#{action}", description, config_info[action], auth_user) }
     end
   end
@@ -146,8 +149,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     config_info = validate_update_config_info(options)
     name = options[:name]
     description = options[:description]
-    [:provision, :retirement, :reconfigure].each do |action|
-      next unless config_info[action]
+    self.class.with_applied_config_info(CONFIG_ACTIONS, config_info) do |action|
       info = config_info[action]
 
       new_dialog = create_new_dialog(info[:new_dialog_name], job_template(action), info[:hosts]) if info[:new_dialog_name]

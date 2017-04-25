@@ -1,4 +1,6 @@
 describe ServiceTemplateAnsiblePlaybook do
+  include ServiceAnsibleMixin
+
   let(:user)     { FactoryGirl.create(:user_with_group) }
   let(:auth_one) { FactoryGirl.create(:authentication, :manager_ref => 6) }
   let(:auth_two) { FactoryGirl.create(:authentication, :manager_ref => 10) }
@@ -78,7 +80,7 @@ describe ServiceTemplateAnsiblePlaybook do
                                           catalog_item_options_two[:name],
                                           catalog_item_options_two[:description],
                                           catalog_item_options_two[:config_info], 'system')
-      [:provision, :retirement].each do |action|
+      described_class.with_applied_config_info(ServiceTemplateAnsiblePlaybook::CONFIG_ACTIONS, catalog_item_options) do |action|
         expect(options_hash[action.to_sym][:configuration_template]).to eq job_template
       end
     end
