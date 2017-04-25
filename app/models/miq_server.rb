@@ -455,6 +455,10 @@ class MiqServer < ApplicationRecord
     @who_am_i ||= "#{name} #{my_zone} #{self.class.name} #{id}"
   end
 
+  def database_application_name
+    "MIQ #{Process.pid} Server[#{compressed_id}], #{zone.name}[#{zone.compressed_id}]".truncate(64)
+  end
+
   def is_local?
     guid == MiqServer.my_guid
   end
