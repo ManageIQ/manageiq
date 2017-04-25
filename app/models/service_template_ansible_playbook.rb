@@ -101,7 +101,11 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
       :ask_inventory_on_launch  => true,
       :ask_credential_on_launch => true
     }
-    params[:extra_vars] = info[:extra_vars].to_json if info[:extra_vars]
+    if info[:extra_vars]
+      params[:extra_vars] = info[:extra_vars].transform_values do |val|
+        val.kind_of?(String) ? val : val[:default] # TODO: support Hash only
+      end.to_json
+    end
 
     [:credential, :cloud_credential, :network_credential].each do |credential|
       cred_sym = "#{credential}_id".to_sym
