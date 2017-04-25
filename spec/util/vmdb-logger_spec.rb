@@ -1,4 +1,5 @@
 require 'util/vmdb-logger'
+require 'util/miq-password'
 
 describe VMDBLogger do
   describe "#log_hashes" do
@@ -10,7 +11,7 @@ describe VMDBLogger do
       logger.log_hashes(hash)
 
       buffer.rewind
-      expect(buffer.read).to_not include("pa$$w0rd")
+      expect(buffer.read).to include(":password: [FILTERED]")
     end
 
     it "filters out passwords when keys are strings" do
@@ -18,7 +19,7 @@ describe VMDBLogger do
       logger.log_hashes(hash)
 
       buffer.rewind
-      expect(buffer.read).to_not include("pa$$w0rd")
+      expect(buffer.read).to include("password: [FILTERED]")
     end
 
     it "with :filter option, filters out given keys and passwords" do
@@ -26,7 +27,9 @@ describe VMDBLogger do
       logger.log_hashes(hash, :filter => :extra_key)
 
       buffer.rewind
-      expect(buffer.read).to_not include("pa$$w0rd")
+      message = buffer.read
+      expect(message).to include(':extra_key: [FILTERED]')
+      expect(message).to include(':password: [FILTERED]')
     end
 
     it "when :filter option is a Set object, filters out the given Set elements" do
@@ -34,7 +37,34 @@ describe VMDBLogger do
       logger.log_hashes(hash, :filter => %i(bind_pwd password amazon_secret).to_set)
 
       buffer.rewind
-      expect(buffer.read).to_not include("pa$$w0rd")
+      message = buffer.read
+      expect(message).to include(':bind_pwd: [FILTERED]')
+      expect(message).to include(':amazon_secret: [FILTERED]')
+      expect(message).to include(':password: [FILTERED]')
+    end
+
+    it "filters out encrypted value" do
+      hash = {:a => {:b => 1, :extra_key => "v2:{c5qTeiuz6JgbBOiDqp3eiQ==}"}}
+      logger.log_hashes(hash)
+
+      buffer.rewind
+      expect(buffer.read).to include(':extra_key: [FILTERED]')
+    end
+
+    it "filters out root_password" do
+      hash = {"a" => {"b" => 1, "root_password" => "pa$$w0rd"}}
+      logger.log_hashes(hash)
+
+      buffer.rewind
+      expect(buffer.read).to include("root_password: [FILTERED]")
+    end
+
+    it "filters out password_for_important_thing" do
+      hash = {:a => {:b => 1, :password_for_important_thing => "pa$$w0rd"}}
+      logger.log_hashes(hash)
+
+      buffer.rewind
+      expect(buffer.read).to include(":password_for_important_thing: [FILTERED]")
     end
   end
 
