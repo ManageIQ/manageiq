@@ -1,6 +1,16 @@
 describe ManageIQ::Providers::Microsoft::InfraManager::Powershell do
   before(:all) do
     class PowershellTemp; end
+    class Connection; end
+
+    class Shell
+      def close; end
+    end
+
+    class Results
+      def stdout; "stdout"; end
+      def stderr; "stderr"; end
+    end
   end
 
   before(:each) do
@@ -108,6 +118,47 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Powershell do
     it "handles plain yaml text" do
       expect(powershell.parse_json_results(json)).to be_kind_of(Array)
       expect(powershell.parse_json_results(json).first).to be_kind_of(Hash)
+    end
+  end
+
+  context "run_powershell_script" do
+    before(:all) do
+      @connection = Connection.new
+      @shell = Shell.new
+      @results = Results.new
+    end
+
+    let(:connection) { @connection }
+    let(:shell) { @shell }
+    let(:results) { @results }
+    let(:tempfile) { @tempfile }
+
+    let(:ps_script) do
+      <<-PS_SCRIPT
+        Import-Module VirtualMachineManager | Out-Null; \
+        Get-SCVMMServer localhost | Out-Null;\
+
+        $vm = New-SCVirtualMachine \
+          -Name 'foo_test-1a' \
+          -VMHost some_host \
+          -Path 'C:\\foo\\bar' \
+          -VMTemplate some_template; \
+
+        $vm | Select-Object ID | ConvertTo-Json
+      PS_SCRIPT
+    end
+
+    it "requires two arguments" do
+      expect { powershell.run_powershell_script }.to raise_error(ArgumentError)
+      expect { powershell.run_powershell_script(connection) }.to raise_error(ArgumentError)
+    end
+
+    it "accepts a string argument for a script" do
+      allow(powershell).to receive(:with_winrm_connection).and_return(connection)
+      allow(connection).to receive(:shell).and_return(shell)
+      allow(shell).to receive(:run).and_return(results)
+
+      expect(powershell.run_powershell_script(connection, ps_script)).to eql("stdout")
     end
   end
 end
