@@ -28,6 +28,21 @@ describe CustomAttributeMixin do
     end
   end
 
+  describe '#custom_keys' do
+    let!(:custom_attribute) { FactoryGirl.create(:custom_attribute, :name => "attr_1", :value => 'value') }
+    let!(:custom_attribute_with_section) do
+      FactoryGirl.create(:custom_attribute, :name => "attr_2", :value => 'value', :section => 'labels')
+    end
+
+    let!(:vm) do
+      FactoryGirl.create(:vm_redhat, :custom_attributes => [custom_attribute, custom_attribute_with_section])
+    end
+
+    it 'returns human form of virtual custom attribute with sections' do
+      expect(vm.class.custom_keys).to match_array(["attr_1", "attr_2#{described_class::SECTION_SEPARATOR}labels"])
+    end
+  end
+
   it "defines #miq_custom_keys" do
     expect(test_class.new).to respond_to(:miq_custom_keys)
   end
