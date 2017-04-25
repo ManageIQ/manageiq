@@ -33,8 +33,7 @@ describe ApplianceConsole::DatabaseReplication do
     it "should store the newly supplied values" do
       expect(subject).to receive(:just_ask).with(/ name/i, "defaultdatabasename").and_return("newdatabasename")
       expect(subject).to receive(:just_ask).with(/ user/i, "defaultuser").and_return("newuser")
-      expect(subject).to receive(:ask_for_password_or_none).with(/password/i, nil).and_return("newpassword")
-      expect(subject).to receive(:ask_for_password).with(/password/i).and_return("newpassword")
+      expect(subject).to receive(:ask_for_password).with(/password/i, any_args).twice.and_return("newpassword")
       expect(subject)
         .to receive(:ask_for_ip_or_hostname).with(/primary.*hostname/i, "defaultprimary").and_return("newprimary")
 

@@ -100,7 +100,7 @@ Replication Server Configuration
       count = 0
       loop do
         count += 1
-        password1 = ask_for_password_or_none("cluster database password", database_password)
+        password1 = ask_for_password("cluster database password", database_password)
         # if they took the default, just bail
         break if password1 == database_password
         password2 = ask_for_password("cluster database password")
@@ -108,7 +108,7 @@ Replication Server Configuration
           self.database_password = password1
           break
         elsif count > 1 # only reprompt password once
-          raise ArgumentError, "passwords did not match"
+          raise RuntimeError, "passwords did not match"
         else
           say("\nThe passwords did not match, please try again")
         end

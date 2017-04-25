@@ -118,17 +118,22 @@ module ApplianceConsole
       self.username = just_ask("username", username) unless local?
       count = 0
       loop do
-        count += 1
-        password1   = ask_for_password_or_none("database password on #{host}", password)
+        password1 = ask_for_password("database password on #{host}", password)
         # if they took the default, just bail
         break if (password1 == password)
-        password2   = ask_for_password("database password again")
+        
+        if password1.strip.length == 0
+          say("\nPassword can not be empty, please try again")
+          next
+        end
+        password2 = ask_for_password("database password again")
         if password1 == password2
           self.password = password1
           break
-        elsif count > 1 # only reprompt password once
-          raise ArgumentError, "passwords did not match"
+        elsif count > 0 # only reprompt password once
+          raise RuntimeError, "passwords did not match"
         else
+          count += 1
           say("\nThe passwords did not match, please try again")
         end
       end

@@ -208,7 +208,14 @@ describe ApplianceConsole::DatabaseConfiguration do
     it "should raise an error if passwords do not match twice" do
       expect(subject).to receive(:just_ask).with(/password/i, anything).twice.and_return(*%w(pass1 pass2 pass3 pass4))
 
-      expect { subject.ask_for_database_credentials }.to raise_error(ArgumentError, "passwords did not match")
+      expect { subject.ask_for_database_credentials }.to raise_error(RuntimeError, "passwords did not match")
+    end
+
+    it "does not allow empty password" do
+      expect(subject).to receive(:just_ask).and_return(" ")
+      expect(subject).to receive(:say).with("\nPassword can not be empty, please try again")
+      expect(subject).to receive(:loop).and_yield
+      subject.ask_for_database_credentials
     end
   end
 
