@@ -42,11 +42,11 @@ class MiddlewareServer < ApplicationRecord
 
   # Returns whether a server is immutable or not.
   #
-  # By default, we define all servers as being immutable, so that power
-  # operations are not allowed, and it is the provider responsability to
+  # By default, we define all servers as being mutable, so that power
+  # operations are allowed, and it is the provider responsability to
   # reimplement this method if necessary.
   def immutable?
-    true
+    properties['Immutable'] == 'true'
   end
 
   # Returns whether a server is immutable or not.
