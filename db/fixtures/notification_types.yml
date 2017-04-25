@@ -119,6 +119,11 @@
   :expires_in: 24.hours
   :level: :info
   :audience: superadmin
+- :name: role_activate_start
+  :message: 'The role %{role_name} has started activation on server %{server_name}'
+  :expires_in: 24.hours
+  :level: :info
+  :audience: superadmin
 - :name: vm_cloud_live_migrate_success
   :message: 'Live migrating Instance %{instance_name} completed successfully.'
   :expires_in: 24.hours

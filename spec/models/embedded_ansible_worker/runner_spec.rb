@@ -66,6 +66,9 @@ describe EmbeddedAnsibleWorker::Runner do
     end
 
     context "#setup_ansible" do
+      let(:start_notification_id) { NotificationType.find_by(:name => "role_activate_start").id }
+      let(:success_notification_id) { NotificationType.find_by(:name => "role_activate_success").id }
+
       before do
         ServerRole.seed
         NotificationType.seed
@@ -95,8 +98,18 @@ describe EmbeddedAnsibleWorker::Runner do
 
         runner.setup_ansible
 
-        note = Notification.first
-        expect(note.notification_type.name).to eq("role_activate_success")
+        note = Notification.find_by(:notification_type_id => success_notification_id)
+        expect(note.options[:role_name]).to eq("Embedded Ansible")
+        expect(note.options.keys).to include(:server_name)
+      end
+
+      it "creates a notification to inform the user that the role has been assigned" do
+        expect(EmbeddedAnsible).to receive(:configured?).and_return(true)
+        expect(EmbeddedAnsible).to receive(:start)
+
+        runner.setup_ansible
+
+        note = Notification.find_by(:notification_type_id => start_notification_id)
         expect(note.options[:role_name]).to eq("Embedded Ansible")
         expect(note.options.keys).to include(:server_name)
       end
