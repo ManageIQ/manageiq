@@ -8,39 +8,6 @@ describe Dialog do
       allow(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file)
     end
 
-    it "delegates to the dialog import service with a file in the default directory" do
-      stub_const('Dialog::DIALOG_DIR_CORE', test_file_path)
-      expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
-        Rails.root.join(test_file_path, "seed_test.yaml").to_path
-      )
-      expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
-        Rails.root.join(test_file_path, "seed_test.yml").to_path
-      )
-      described_class.seed
-    end
-
-    it "delegates to the dialog import service with a file in a sub directory" do
-      stub_const('Dialog::DIALOG_DIR_CORE', test_file_path)
-      expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
-        Rails.root.join(test_file_path, "service_dialogs", "service_seed_test.yaml").to_path
-      )
-      expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
-        Rails.root.join(test_file_path, "service_dialogs", "service_seed_test.yml").to_path
-      )
-      described_class.seed
-    end
-
-    it "delegates to the dialog import service with a symlinked file" do
-      stub_const('Dialog::DIALOG_DIR_CORE', test_file_path)
-      expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
-        Rails.root.join(test_file_path, "service_dialog_symlink", "service_seed_test.yaml").to_path
-      )
-      expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
-        Rails.root.join(test_file_path, "service_dialog_symlink", "service_seed_test.yml").to_path
-      )
-      described_class.seed
-    end
-
     it "seed files from plugins" do
       mock_engine = double(:root => Rails.root)
       expect(Vmdb::Plugins.instance).to receive(:registered_provider_plugins).and_return([mock_engine])
