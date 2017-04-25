@@ -1,6 +1,6 @@
 class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   before_destroy :check_retirement_potential, :prepend => true
-  around_destroy :around_destroy_callback
+  around_destroy :around_destroy_callback, :prepend => true
 
   RETIREMENT_ENTRY_POINTS = {
     'yes_without_playbook' => '/Service/Generic/StateMachines/GenericLifecycle/Retire_Basic_Resource',
