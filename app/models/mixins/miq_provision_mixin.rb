@@ -156,6 +156,18 @@ module MiqProvisionMixin
     result.tap { set_resource(result) }
   end
 
+  def get_folder_paths
+    # If the host is selected we need to limit the folders returned based on the data-center
+    # the host is in.  Otherwise we return all folders in all data-centers.
+    host = get_option(:placement_host_name)
+    if host.nil?
+      vm_template.ext_management_system.get_folder_paths
+    else
+      dest_host = Host.find(host)
+      vm_template.ext_management_system.get_folder_paths(dest_host.owning_datacenter)
+    end
+  end
+
   def get_source_vm
     vm_id = get_option(:src_vm_id)
     raise _("Source VM not provided") if vm_id.nil?
