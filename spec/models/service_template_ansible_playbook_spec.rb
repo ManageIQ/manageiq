@@ -201,8 +201,9 @@ describe ServiceTemplateAnsiblePlaybook do
   end
 
   describe '#update_catalog_item' do
+    let(:service_template) { prebuild_service_template }
+
     it 'updates and returns the modified catalog item' do
-      service_template = prebuild_service_template
       new_dialog_label = catalog_item_options_three
                          .fetch_path(:config_info, :provision, :new_dialog_name)
       expect(Dialog.where(:label => new_dialog_label)).to be_empty
@@ -221,7 +222,6 @@ describe ServiceTemplateAnsiblePlaybook do
     end
 
     it 'uses the existing dialog if :service_dialog_id is passed in' do
-      service_template = prebuild_service_template
       info = catalog_item_options_three.fetch_path(:config_info, :provision)
       info.delete(:new_dialog_name)
       info[:service_dialog_id] = service_template.dialogs.first.id
@@ -234,6 +234,32 @@ describe ServiceTemplateAnsiblePlaybook do
       service_template.reload
 
       expect(service_template.dialogs.first.id).to eq info[:service_dialog_id]
+    end
+  end
+
+  describe '#update_job_templates' do
+    let(:service_template) { prebuild_service_template(:job_template => false) }
+
+    it 'does not update a job_template if the there is no playbook_id' do
+      expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript)
+        .to receive(:update_in_provider_queue).never
+      service_template.send(:update_job_templates, 'blah', 'blah', catalog_item_options, user)
+    end
+
+    it 'does update a job_template if a playbook_id is included' do
+      expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript)
+        .to receive(:update_in_provider_queue)
+      service_template.send(:update_job_templates, 'blah', 'blah', catalog_item_options[:config_info], user)
+    end
+
+    it 'deletes a job_template if a playbook id is not passed in' do
+      [:provision, :retirement, :reconfigure].each do |action|
+        next unless catalog_item_options[:config_info][action]
+        catalog_item_options[:config_info][action].delete(:playbook_id)
+      end
+      expect(service_template).to receive(:delete_job_templates)
+
+      service_template.send(:update_job_templates, 'blah', 'blah', catalog_item_options[:config_info], user)
     end
   end
 
