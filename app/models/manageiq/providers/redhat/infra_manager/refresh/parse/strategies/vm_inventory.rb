@@ -85,7 +85,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
       return result, result_uids, added_hosts
     end
 
-    def partial_host_hash(partial_host_inv)
+    def partial_host_hash(partial_host_inv, ems_cluster)
       ems_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(partial_host_inv.href)
       { :ems_ref => ems_ref, :uid_ems => partial_host_inv.id, :ems_cluster => ems_cluster }
     end
