@@ -109,7 +109,7 @@ module VMDB
       zfile = zfile.to_s
 
       _log.info "Creating: [#{zfile_display}]"
-      Zip::ZipFile.open(zfile, Zip::ZipFile::CREATE) do |zip|
+      Zip::File.open(zfile, Zip::File::CREATE) do |zip|
         dirs.each do |dir|
           dir = Rails.root.join(dir) unless Pathname.new(dir).absolute?
           Dir.glob(dir).each do |file|
