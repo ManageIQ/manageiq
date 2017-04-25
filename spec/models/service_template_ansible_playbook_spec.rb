@@ -44,8 +44,8 @@ describe ServiceTemplateAnsiblePlaybook do
       :config_info => {
         :provision  => {
           :extra_vars => {
-            'key1' => 'val1',
-            'key2' => 'val2'
+            'key1' => {:default => 'val1'},
+            'key2' => {:default => 'val2'}
           }
         },
         :retirement => {
@@ -63,8 +63,8 @@ describe ServiceTemplateAnsiblePlaybook do
                         :provision => {
                           :new_dialog_name => 'test_dialog_updated',
                           :extra_vars      => {
-                            'key1' => 'updated_val1',
-                            'key2' => 'updated_val2'
+                            'key1' => {:default => 'updated_val1'},
+                            'key2' => {:default => 'updated_val2'}
                           }
                         }
                       }}
@@ -212,8 +212,8 @@ describe ServiceTemplateAnsiblePlaybook do
       expect(service_template.name).to eq(catalog_item_options_three[:name])
       expect(service_template.description).to eq(catalog_item_options_three[:description])
       expect(service_template.options.fetch_path(:config_info, :provision, :extra_vars)).to have_attributes(
-        'key1' => 'updated_val1',
-        'key2' => 'updated_val2'
+        'key1' => {:default => 'updated_val1'},
+        'key2' => {:default => 'updated_val2'}
       )
       new_dialog_record = Dialog.where(:label => new_dialog_label).first
       expect(new_dialog_record).to be_truthy
