@@ -2,6 +2,8 @@ module CustomAttributeMixin
   extend ActiveSupport::Concern
 
   CUSTOM_ATTRIBUTES_PREFIX = "virtual_custom_attribute_".freeze
+  SECTION_SEPARATOR        = ":SECTION:".freeze
+  DEFAULT_SECTION_NAME     = 'Custom Attribute'.freeze
 
   included do
     has_many   :custom_attributes,     :as => :resource, :dependent => :destroy
@@ -43,6 +45,11 @@ module CustomAttributeMixin
         custom_attributes.detect { |x| custom_attribute_without_prefix == x.name }.try(:value)
       end
     end
+  end
+
+  def self.to_human(column)
+    col_name, section = column.gsub(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX, '').split(SECTION_SEPARATOR)
+    _("%{section}: %{custom_key}") % { :custom_key => col_name, :section => section.try(:titleize) || DEFAULT_SECTION_NAME}
   end
 
   def self.select_virtual_custom_attributes(cols)
