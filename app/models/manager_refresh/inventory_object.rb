@@ -71,6 +71,7 @@ module ManagerRefresh
 
     def assign_attributes(attributes)
       attributes.each { |k, v| public_send("#{k}=", v) }
+      self
     end
 
     def to_s
