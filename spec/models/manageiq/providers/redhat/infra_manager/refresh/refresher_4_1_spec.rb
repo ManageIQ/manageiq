@@ -317,6 +317,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
       :product_name => "other"
     )
 
+    expect(v.hostnames).to match_array(%w(vm-18-82.eng.lab.tlv.redhat.com))
     expect(v.custom_attributes.size).to eq(0)
 
     expect(v.snapshots.size).to eq(2)

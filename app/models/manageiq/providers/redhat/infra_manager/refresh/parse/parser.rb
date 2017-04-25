@@ -533,6 +533,11 @@ class ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Parser
       guest_device[:network] = result.first unless guest_device.nil?
     end
 
+    # RHV reports hostname for the entire vm and not per specific network interface.
+    # Therefore, the hostname will be set for the first nic.
+    fqdn = inv.attributes.fetch_path(:guest_info, :fqdn)
+    result[0][:hostname] = fqdn if !result.blank? && fqdn
+
     result
   end
 

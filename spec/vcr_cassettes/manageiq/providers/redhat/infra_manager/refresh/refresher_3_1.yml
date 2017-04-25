@@ -1218,7 +1218,7 @@ http_interactions:
         \       <stateless>false</stateless>\n        <placement_policy>\n            <affinity>migratable</affinity>\n
         \       </placement_policy>\n        <memory_policy>\n            <guaranteed>715128832</guaranteed>\n
         \       </memory_policy>\n        <guest_info>\n            <ips>\n                <ip
-        address=\"192.168.253.45\"/>\n            </ips>\n        </guest_info>\n
+        address=\"192.168.253.45\"/>\n            </ips>\n        <fqdn>server.example.com</fqdn>        </guest_info>\n
         \       <quota id=\"00000000-0000-0000-0000-000000000000\"/>\n        <usb>\n
         \           <enabled>false</enabled>\n        </usb>\n    </vm>\n    <vm href=\"/ovirt-engine/api/vms/4c5ecdbb-5b52-4578-a619-3b9a4bf2024b\"
         id=\"4c5ecdbb-5b52-4578-a619-3b9a4bf2024b\">\n        <actions>\n            <link

@@ -391,7 +391,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     expect(v.hardware.networks.size).to eq(1)
     network = v.hardware.networks.first
     expect(network).to have_attributes(
-      :hostname    => nil, # TODO: Should be miq-winxpsp3 (or something like that)?
+      :hostname    => "server.example.com",
       :ipaddress   => "192.168.253.45",
       :ipv6address => nil
     )
