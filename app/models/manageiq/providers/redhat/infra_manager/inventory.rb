@@ -1,3 +1,3 @@
 module ManageIQ::Providers::Redhat::InfraManager::Inventory
-  require_nested :Inventory
+  require_nested :Builder
 end

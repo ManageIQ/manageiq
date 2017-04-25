@@ -56,6 +56,9 @@ describe ManageIQ::Providers::Redhat::InfraManager do
       allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:name).and_return('myvm')
       allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:memory).and_return(4.gigabytes)
       allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:memory_policy, :guaranteed).and_return(2.gigabytes)
+      allow(@ems).to receive(:highest_allowed_api_version).and_return(3)
+      # TODO: Add tests for when the highest_supported_api_version is 4
+      allow(@ems).to receive(:highest_supported_api_version).and_return(3)
       @rhevm_vm = double('rhevm_vm')
       allow(@rhevm_vm).to receive(:attributes).and_return(@rhevm_vm_attrs)
       allow(@vm).to receive(:with_provider_object).and_yield(@rhevm_vm)

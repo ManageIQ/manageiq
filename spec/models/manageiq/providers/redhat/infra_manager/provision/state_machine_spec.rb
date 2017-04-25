@@ -12,6 +12,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine do
       allow(v).to receive(:with_provider_object).and_yield(rhevm_vm)
       allow(ems).to receive(:with_disk_attachments_service).with(v).and_return(disk_attachments_service)
       allow(ems).to receive(:with_provider_connection).and_return(false)
+      # TODO: (inventory) write for v4
+      allow(ems).to receive(:supported_api_versions).and_return([3])
     end
   end
 

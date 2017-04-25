@@ -1,7 +1,7 @@
 module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Network
   def configure_network_adapters
     configure_dialog_nic
-    requested_vnics   = options[:networks]
+    requested_vnics = options[:networks]
 
     if requested_vnics.nil?
       _log.info "NIC settings will be inherited from the template."
@@ -34,20 +34,22 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Netw
 
   def destination_vnics
     # Nics are not always ordered in the XML response
-    @destination_vnics ||= get_provider_destination.nics.sort_by { |n| n[:name] }
+    @destination_vnics ||= nics.sort_by(&:name)
   end
 
   def find_network_in_cluster(network_name)
-    network = source.with_provider_connection do |rhevm|
-      Ovirt::Cluster.find_by_href(rhevm, dest_cluster.ems_ref).try(:find_network_by_name, network_name)
-    end
+    network = source.ext_management_system.ovirt_services.cluster_find_network_by_name(dest_cluster.ems_ref, network_name)
 
     _log.warn "Cannot find network name=#{network_name}" if network.nil?
     network
   end
 
+  def nics
+    destination.ext_management_system.ovirt_services.nics_for_vm(destination)
+  end
+
   def find_nic_on_network(network)
-    nic = get_provider_destination.nics.detect { |n| n[:network][:id] == network[:id] }
+    nic = nics.detect { |n| n.network.try(:id) == network[:id] }
 
     _log.warn "Cannot find NIC with network id=#{network[:id].inspect}" if nic.nil?
     nic
@@ -68,15 +70,14 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Netw
     network   = find_network_in_cluster(network_hash[:network])
     raise MiqException::MiqProvisionError, "Unable to find specified network: <#{network_hash[:network]}>" if network.nil?
 
-    options = {
-      :name        => name,
-      :interface   => network_hash[:interface],
-      :network_id  => network[:id],
-      :mac_address => mac_addr,
-    }.delete_blanks
-
-    _log.info("with options: <#{options.inspect}>")
-
-    vnic.nil? ? get_provider_destination.create_nic(options) : vnic.apply_options!(options)
+    ems.ovirt_services.configure_vnic(
+      :vm        => destination,
+      :mac_addr  => mac_addr,
+      :network   => network,
+      :nic_name  => name,
+      :interface => network_hash[:interface],
+      :vnic      => vnic,
+      :logger    => _log
+    )
   end
 end

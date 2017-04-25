@@ -364,7 +364,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
 
     expect(v.hardware.guest_devices.size).to eq(1)
     expect(v.hardware.nics.size).to eq(1)
-    nic = v.hardware.nics.find_by_device_name("nic1")
+    nic = v.hardware.nics.find_by(:device_name => "nic1")
     expect(nic).to have_attributes(
       :uid_ems         => "6a538d86-38a2-4ac9-98f5-9d401a596e93",
       :device_name     => "nic1",
@@ -498,7 +498,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
 
     expect(v.hardware.guest_devices.size).to eq(1)
     expect(v.hardware.nics.size).to eq(1)
-    nic = v.hardware.nics.find_by_device_name("nic1")
+    nic = v.hardware.nics.find_by(:device_name => "nic1")
     expect(nic).to have_attributes(
       :uid_ems         => "fdc2d708-01d1-4aa4-8b53-d64177181e2e",
       :device_name     => "nic1",
@@ -650,9 +650,9 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
   def assert_relationship_tree
     expect(@ems.descendants_arranged).to match_relationship_tree(
       [EmsFolder, "Datacenters", {:hidden => true}] => {
-        [Datacenter, "dc1"] => {
+        [Datacenter, "dc1"]     => {
           [EmsFolder, "host", {:hidden => true}] => {
-            [EmsCluster, "cc1"] => {
+            [EmsCluster, "cc1"]   => {
               [ResourcePool, "Default for Cluster cc1"] => {
                 [ManageIQ::Providers::Redhat::InfraManager::Vm, "vm1"] => {},
                 [ManageIQ::Providers::Redhat::InfraManager::Vm, "vm2"] => {},
@@ -668,16 +668,16 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
             [ManageIQ::Providers::Redhat::InfraManager::Vm, "vm2"]                => {}
           }
         },
-        [Datacenter, "Default"]     => {
+        [Datacenter, "Default"] => {
           [EmsFolder, "host", {:hidden => true}] => {
             [EmsCluster, "Default"] => {
               [ResourcePool, "Default for Cluster Default"] => {
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "external-manageiq"]    => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "external-as"]          => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "vmdc1"]                => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "vm3"]                  => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "external-yo"]          => {},
-                [ManageIQ::Providers::Redhat::InfraManager::Vm, "external-test_se121"]  => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "external-manageiq"]   => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "external-as"]         => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "vmdc1"]               => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "vm3"]                 => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "external-yo"]         => {},
+                [ManageIQ::Providers::Redhat::InfraManager::Vm, "external-test_se121"] => {},
               }
             }
           },

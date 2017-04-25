@@ -1,3 +1,3 @@
 module ManageIQ::Providers::Redhat::InfraManager::OvirtServices
-  require_nested :Builder
+  require_nested :OvirtServices
 end

@@ -11,17 +11,17 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Ne
   let(:ems)           { FactoryGirl.create(:ems_redhat_with_authentication) }
   let(:ems_cluster)   { FactoryGirl.create(:ems_cluster, :ext_management_system => ems) }
   let(:template)      { FactoryGirl.create(:template_redhat, :ext_management_system => ems) }
-  let(:rhevm_vm)      { FactoryGirl.create(:vm_redhat) }
+  let(:rhevm_vm)      { double("Ovirt::Vm") } # FactoryGirl.create(:vm_redhat, :ext_management_system => ems) }
+  let(:target_vm)     { FactoryGirl.create(:vm_redhat, :ext_management_system => ems) }
   let(:ovirt_service) { double("Ovirt::Service", :api_path => "/api") }
 
   before do
     @task = FactoryGirl.create(:miq_provision_redhat,
                                :source      => template,
-                               :destination => rhevm_vm,
+                               :destination => target_vm,
                                :state       => 'pending',
                                :status      => 'Ok',
-                               :options     => {:src_vm_id => template.id}
-                              )
+                               :options     => {:src_vm_id => template.id})
     allow(@task).to receive_messages(
       :dest_cluster             => ems_cluster,
       :get_provider_destination => rhevm_vm
@@ -31,8 +31,11 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Ne
 
     allow(rhevm_vm).to receive_messages(:nics => [rhevm_nic1, rhevm_nic2])
     allow(Ovirt::Cluster).to receive_messages(:find_by_href => rhevm_cluster)
+    # TODO: (inventory) write for version 4
     allow_any_instance_of(ManageIQ::Providers::Redhat::InfraManager).to receive(:supported_api_versions)
-      .and_return([3, 4])
+      .and_return([3])
+    allow(ems.ovirt_services).to receive(:get_vm_proxy).and_return(rhevm_vm)
+    allow(target_vm).to receive(:provider_object).and_return(rhevm_vm)
   end
 
   context "#configure_network_adapters" do
@@ -49,9 +52,9 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Ne
         @task.configure_network_adapters
 
         expect(@task.options[:networks]).to eq([
-          {:network => network_name, :mac_address => nil},
-          {:network => network_name}
-        ])
+                                                 {:network => network_name, :mac_address => nil},
+                                                 {:network => network_name}
+                                               ])
       end
 
       it "no NIC from dialog" do

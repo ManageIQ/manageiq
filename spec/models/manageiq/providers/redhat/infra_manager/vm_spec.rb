@@ -121,7 +121,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::Vm do
       ems = FactoryGirl.create(:ems_redhat, :zone => zone, :hostname => ip_address,
                                :ipaddress => ip_address, :port => 8443)
       ems.update_authentication(:default => {:userid => "admin@internal", :password => "engine"})
-      allow(ems).to receive(:supported_api_versions).and_return([3, 4])
+      # TODO: (inventory) resvisit this test and write one for V4
+      allow(ems).to receive(:supported_api_versions).and_return([3])
       allow(ems).to receive(:resolve_ip_address).with(ip_address).and_return(ip_address)
 
       @storage = FactoryGirl.create(:storage, :ems_ref => "/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0")

@@ -79,10 +79,10 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine
   private
 
   def powered_off_in_provider?
-    destination.with_provider_object(&:status)[:state] == "down"
+    destination.ext_management_system.ovirt_services.powered_off_in_provider?(destination)
   end
 
   def powered_on_in_provider?
-    destination.with_provider_object(&:status)[:state] == "up"
+    destination.ext_management_system.ovirt_service.powered_on_in_provider?(destination)
   end
 end
