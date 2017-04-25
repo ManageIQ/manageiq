@@ -2,7 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-# Fine RC-1
+# Fine Beta-2
+
+The ManageIQ organization is continuously adding new smaller repositories.  The repositories listed below maintain their own changelogs on GitHub:
+- [manageiq-content CHANGELOG](https://github.com/ManageIQ/manageiq-content/blob/fine/CHANGELOG.md)
+- [manageiq-providers-amazon CHANGELOG](https://github.com/ManageIQ/manageiq-providers-amazon/blob/fine/CHANGELOG.md)
+- [manageiq-providers-azure CHANGELOG](https://github.com/ManageIQ/manageiq-providers-azure/blob/fine/CHANGELOG.md)
+- [manageiq-providers-vmware CHANGELOG](https://github.com/ManageIQ/manageiq-providers-vmware/blob/fine/CHANGELOG.md)
+- [manageiq-ui-classic CHANGELOG](https://github.com/ManageIQ/manageiq-ui-classic/blob/fine/CHANGELOG.md)
 
 ## Added
 
