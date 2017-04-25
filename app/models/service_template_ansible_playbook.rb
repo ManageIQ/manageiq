@@ -133,39 +133,9 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   end
   private_class_method :validate_config_info
 
-  def validate_update_config_info(options)
-    opts = super
-    self.class.send(:validate_config_info, opts)
-  end
 
   def job_template(action)
     resource_actions.find_by(:action => action.to_s.capitalize).try(:configuration_template)
-  end
-
-  def create_dialogs(config_info)
-    [:provision, :retirement, :reconfigure].each do |action|
-      info = config_info[action]
-      if new_dialog_required?(info)
-        info[:dialog_id] = create_new_dialog(info[:new_dialog_name], job_template(action), info[:hosts]).id
-      end
-    end
-  end
-
-  def update_job_templates(name, description, config_info, auth_user)
-    [:provision, :retirement, :reconfigure].each do |action|
-      info = config_info[action]
-      next unless info
-
-      job_template = job_template(action)
-      next unless job_template
-      if info.key?(:playbook_id)
-        tower, params = self.class.send(:build_parameter_list, self.class.send(:build_name, name, action), description, info)
-        params[:manager_ref] = job_template(action).manager_ref
-        ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript.update_in_provider_queue(tower.id, params, auth_user)
-      else
-        delete_job_templates([job_template])
-      end
-    end
   end
 
   def update_catalog_item(options, auth_user = nil)
@@ -209,6 +179,15 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     throw :abort
   end
 
+  def create_dialogs(config_info)
+    [:provision, :retirement, :reconfigure].each do |action|
+      info = config_info[action]
+      if new_dialog_required?(info)
+        info[:dialog_id] = create_new_dialog(info[:new_dialog_name], job_template(action), info[:hosts]).id
+      end
+    end
+  end
+
   def delete_job_templates(job_templates)
     auth_user = User.current_userid || 'system'
     job_templates.each do |job_template|
@@ -226,4 +205,26 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     info && info.key?(:playbook_id) && service_template.job_template(action).nil?
   end
   private_class_method :new_job_template_required?
+
+  def update_job_templates(name, description, config_info, auth_user)
+    [:provision, :retirement, :reconfigure].each do |action|
+      info = config_info[action]
+      next unless info
+
+      job_template = job_template(action)
+      next unless job_template
+      if info.key?(:playbook_id)
+        tower, params = self.class.send(:build_parameter_list, self.class.send(:build_name, name, action), description, info)
+        params[:manager_ref] = job_template(action).manager_ref
+        ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript.update_in_provider_queue(tower.id, params, auth_user)
+      else
+        delete_job_templates([job_template])
+      end
+    end
+  end
+
+  def validate_update_config_info(options)
+    opts = super
+    self.class.send(:validate_config_info, opts)
+  end
 end
