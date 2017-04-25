@@ -13,7 +13,7 @@ class ManageIQ::Providers::Microsoft::InfraManager
 
       def run_powershell_script(connection, script)
         log_header = "MIQ(#{self.class.name}.#{__method__})"
-        script_string = IO.read(script)
+        script_string = File.exist?(script) ? IO.read(script) : script
         results = []
 
         begin
@@ -119,7 +119,7 @@ class ManageIQ::Providers::Microsoft::InfraManager
 
       _result, timings = Benchmark.realtime_block(:execution) do
         with_winrm_shell do |shell|
-          script_string = IO.read(script)
+          script_string = File.exist?(script) ? IO.read(script) : script
           results = shell.run(script_string)
           self.class.log_dos_error_results(results.stderr)
         end
