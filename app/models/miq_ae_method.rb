@@ -3,7 +3,6 @@ require 'miq-syntax-checker'
 class MiqAeMethod < ApplicationRecord
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
-  serialize :embedded_methods, Array
   default_value_for :embedded_methods, []
 
   belongs_to :ae_class, :class_name => "MiqAeClass", :foreign_key => :class_id
