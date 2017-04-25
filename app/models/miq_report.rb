@@ -40,6 +40,9 @@ class MiqReport < ApplicationRecord
   belongs_to                :user
   has_many                  :miq_widgets, :as => :resource
 
+  virtual_column  :human_expression, :type => :string
+  virtual_column  :based_on, :type => :string
+
   alias_attribute :menu_name, :name
   attr_accessor_that_yamls :table, :sub_table, :filter_summary, :extras, :ids, :scoped_association, :html_title, :file_name,
                            :extras, :record_id, :tl_times, :user_categories, :trend_data, :performance, :include_for_find,
@@ -87,6 +90,14 @@ class MiqReport < ApplicationRecord
   # NOTE: this can by dynamically manipulated
   def cols
     self[:cols] ||= (self[:col_order] || []).reject { |x| x.include?(".") }
+  end
+
+  def human_expression
+    conditions.to_human
+  end
+
+  def based_on
+    Dictionary.gettext(db, :type => :model, :notfound => :titleize)
   end
 
   def view_filter_columns
