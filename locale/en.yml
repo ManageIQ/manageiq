@@ -839,6 +839,11 @@ en:
       ManageIQ::Providers::StorageManager:                                  Storage Manager
       ManageIQ::Providers::StorageManager::CinderManager:                   Storage Manager (Cinder)
       ManageIQ::Providers::StorageManager::SwiftManager:                    Storage Manager (Swift)
+      ManageIQ::Providers::Microsoft::InfraManager::Host:                   Host (Microsoft)
+      ManageIQ::Providers::Openstack::InfraManager::Host:                   Host (OpenStack)
+      ManageIQ::Providers::Redhat::InfraManager::Host:                      Host (Redhat)
+      ManageIQ::Providers::Vmware::InfraManager::Host:                      Host (Vmware)
+      ManageIQ::Providers::Vmware::InfraManager::HostEsx:                   Host (Vmware)
       MiddlewareDatasource:     Middleware Datasource
       MiddlewareDomain:         Middleware Domain
       MiddlewareMessaging:      Middleware Messaging
