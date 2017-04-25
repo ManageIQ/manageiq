@@ -63,6 +63,7 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
 
   # Base class methods we override since we don't have a separate process.  We might want to make these opt-in features in the base class that this subclass can choose to opt-out.
   def set_process_title; end
+  def set_database_application_name; end
   def set_connection_pool_size; end
   def message_sync_active_roles(*_args); end
   def message_sync_config(*_args); end
