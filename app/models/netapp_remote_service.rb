@@ -149,21 +149,13 @@ class NetappRemoteService < StorageManager
     agent_ids_by_zone(nrsIds).each do |z, ids|
       _log.info "rollup_time = #{rollup_time}, zone = #{z}, time_profile_id = #{time_profile_id}"
       _log.info "queueing requests to zone #{z} for [ #{ids.join(', ')} ]"
-      MiqQueue.put_or_update(
+      MiqQueue.put(
         :zone          => z,
         :queue_name    => "storage_metrics_collector",
         :class_name    => name,
         :method_name   => 'rollup_daily_metrics',
-        :args_selector => ->(a) { a[1] == time_profile_id }
-      ) do |msg, queue_options|
-        merged_ids = ids
-        unless msg.nil?
-          merged_ids = (merged_ids + msg[:args][2]).uniq
-          _log.info "merging requests from #{msg[:args][0]} with #{rollup_time}, zone = #{z}, time_profile_id = #{time_profile_id}"
-          _log.info "merging requests to zone #{z} for [ #{merged_ids.join(', ')} ]"
-        end
-        queue_options.merge(:args => [rollup_time, time_profile_id, merged_ids])
-      end
+        :args          => [rollup_time, time_profile_id, ids],
+      )
     end
   end
 
