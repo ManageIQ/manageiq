@@ -910,7 +910,7 @@ class MiqExpression
       dict_col = model.nil? ? col : [model, col].join(".")
       column_human = if col
                        if col.starts_with?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
-                         col.gsub(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX, "")
+                         CustomAttributeMixin.to_human(col)
                        else
                          Dictionary.gettext(dict_col, :type => :column, :notfound => :titleize)
                        end
@@ -1175,7 +1175,8 @@ class MiqExpression
 
     klass.custom_keys.each do |custom_key|
       custom_detail_column = [model, CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX + custom_key].join("-")
-      custom_detail_name = _("Labels: %{custom_key}") % { :custom_key => custom_key }
+      custom_detail_name = CustomAttributeMixin.to_human(custom_key)
+
       if options[:include_model]
         model_name = Dictionary.gettext(model, :type => :model, :notfound => :titleize)
         custom_detail_name = [model_name, custom_detail_name].join(" : ")
