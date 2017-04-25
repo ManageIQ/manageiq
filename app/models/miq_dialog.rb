@@ -21,7 +21,7 @@ class MiqDialog < ApplicationRecord
   end
 
   def self.sync_from_plugins
-    Vmdb::Plugins.instance.registered_provider_plugins.each do |plugin|
+    Vmdb::Plugins.instance.vmdb_plugins.each do |plugin|
       sync_from_dir(plugin.root.join('content', 'miq_dialogs'))
     end
   end
