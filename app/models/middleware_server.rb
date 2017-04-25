@@ -9,6 +9,7 @@ class MiddlewareServer < ApplicationRecord
   acts_as_miq_taggable
 
   include LiveMetricsMixin
+  include NewWithTypeStiMixin
 
   def properties
     super || {}

@@ -6,4 +6,6 @@ class MiddlewareServerGroup < ApplicationRecord
   acts_as_miq_taggable
 
   delegate :ext_management_system, :to => :middleware_domain, :allow_nil => true
+
+  include NewWithTypeStiMixin
 end

@@ -3,4 +3,6 @@ class MiddlewareDomain < ApplicationRecord
   has_many :middleware_server_groups, :foreign_key => "domain_id", :dependent => :destroy
   serialize :properties
   acts_as_miq_taggable
+
+  include NewWithTypeStiMixin
 end

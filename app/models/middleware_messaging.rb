@@ -5,6 +5,7 @@ class MiddlewareMessaging < ApplicationRecord
   serialize :properties
 
   include LiveMetricsMixin
+  include NewWithTypeStiMixin
 
   def metrics_capture
     @metrics_capture ||= ManageIQ::Providers::Hawkular::MiddlewareManager::LiveMetricsCapture.new(self)

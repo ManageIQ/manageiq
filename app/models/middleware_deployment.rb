@@ -5,4 +5,6 @@ class MiddlewareDeployment < ApplicationRecord
   acts_as_miq_taggable
 
   delegate :mutable?, :in_domain?, :to => :middleware_server
+
+  include NewWithTypeStiMixin
 end
