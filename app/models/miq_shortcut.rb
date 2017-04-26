@@ -12,11 +12,9 @@ class MiqShortcut < ApplicationRecord
       _log.warn("Duplicate seeds for names: #{names.join(",")}")
     end
 
-    names = []
     seed_records.each_with_index do |s, index|
-      names << s[:name]
       s[:sequence] = index
-      rec = find_by(:name => s[:name])
+      rec = db_data[s[:name]]
       if rec.nil?
         _log.info("Creating #{s.inspect}")
         rec = create!(s)
@@ -29,8 +27,8 @@ class MiqShortcut < ApplicationRecord
       end
     end
 
-    all.each do |rec|
-      next if names.include?(rec.name)
+    db_data.each do |name, rec|
+      next if seed_records_by_name[name]
       _log.info("Deleting #{rec.inspect}")
       rec.destroy
     end
