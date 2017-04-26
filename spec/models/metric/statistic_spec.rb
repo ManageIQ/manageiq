@@ -5,7 +5,7 @@ describe Metric::Statistic do
                          :zone => Zone.first)
     end
 
-    hour = Time.parse(Metric::Helper.nearest_hourly_timestamp(Time.now)).utc
+    hour = Time.now.utc.change(:min => 0)
 
     let(:c1) { FactoryGirl.create(:container_group, :ems_created_on => hour - 10.minutes) }
     let(:c2) { FactoryGirl.create(:container_group, :ems_created_on => hour - 50.minutes) }
