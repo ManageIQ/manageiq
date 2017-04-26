@@ -6,6 +6,6 @@ FactoryGirl.define do
     sequence(:category)        { |n| "CPU#{n}" }
     sequence(:dimension)       { |n| "max_CPU#{n}" }
     sequence(:concept)         { |n| "Concept #{n}" }
-    showback_tariff
+    showback_price_plan
   end
 end

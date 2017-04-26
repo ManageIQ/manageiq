@@ -6504,34 +6504,12 @@ showback_events:
 - data
 - start_time
 - end_time
-- resource_id
 - resource_type
+- resource_id
 - context
 - updated_at
 - created_at
-showback_measure_types:
-- id
-- category
-- description
-- measure
-- dimensions
-- updated_at
-- created_at
-showback_rates:
-- id
-- calculation
-- category
-- dimension
-- date
-- concept
-- showback_tariff_id
-- created_at
-- updated_at
-- fixed_rate_cents
-- fixed_rate_currency
-- variable_rate_cents
-- variable_rate_currency
-showback_tariffs:
+showback_price_plans:
 - id
 - name
 - description
@@ -6539,6 +6517,28 @@ showback_tariffs:
 - resource_id
 - created_at
 - updated_at
+showback_rates:
+- id
+- calculation
+- category
+- dimension
+- date
+- concept
+- showback_price_plan_id
+- created_at
+- updated_at
+- fixed_rate_cents
+- fixed_rate_currency
+- variable_rate_cents
+- variable_rate_currency
+showback_usage_types:
+- id
+- category
+- description
+- measure
+- dimensions
+- updated_at
+- created_at
 snapshots:
 - id
 - uid
