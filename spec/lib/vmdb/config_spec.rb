@@ -18,9 +18,11 @@ describe VMDB::Config do
       data.store_path(:api, :token_ttl, "1.day")
       data = data.to_yaml
 
+      count_before = SettingsChange.count
+      puts "SettingsChange.count = #{count_before} but expecting 0" unless count_before == 0
       expect(VMDB::Config.save_file(data, resource)).to be true
-      expect(SettingsChange.count).to eq(1)
-      expect(SettingsChange.first).to have_attributes(:key => '/api/token_ttl', :value => "1.day")
+      expect(SettingsChange.count).to eq(count_before + 1)
+      expect(SettingsChange.last).to have_attributes(:key => '/api/token_ttl', :value => "1.day")
     end
 
     it "catches syntax errors" do
