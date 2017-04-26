@@ -837,5 +837,23 @@ describe MiqAeEngine do
       expect(workspace.root['field2']).to eq('Bamm Bamm Rubble')
       expect(workspace.root.attributes.keys.exclude?('field3')).to be_truthy
     end
+
+    context ".deliver_synchronous" do
+      it "check task results" do
+        EvmSpecHelper.local_guid_miq_server_zone
+        root = {'ae_result' => 'error', 'test' => 1}
+        allow(MiqAeEngine).to receive(:deliver).and_return(root)
+        original_method = MiqTask.method(:wait_for_taskid)
+        allow(MiqTask).to receive(:wait_for_taskid) do |task_id, options = {}|
+          q = MiqQueue.first
+          state, message, result = q.deliver
+          q.delivered(state, message, result)
+          original_method.call(task_id, options)
+        end
+
+        expect(MiqAeEngine.deliver_synchronous('a' => 1, 'b' => 2)).to eql(root)
+        expect(MiqTask.first.task_results).to be_nil
+      end
+    end
   end
 end
