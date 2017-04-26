@@ -18,6 +18,7 @@
 /data/
 /productization
 /plugins
+/providers
 /vmdb/
 BUILD
 ca/root
