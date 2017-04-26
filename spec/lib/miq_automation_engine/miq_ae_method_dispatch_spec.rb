@@ -99,8 +99,10 @@ describe "MiqAeMethodDispatch" do
     send_ae_request_via_queue(@automate_args, 2)
     status, _msg, _ws = deliver_ae_request_from_queue
     expect(status).to eql 'timeout'
-    pid = File.read(@pidfile).to_i
-    expect { Process.getpgid(pid) }.to raise_error(Errno::ESRCH)
+    if File.exist?(@pidfile)
+      pid = File.read(@pidfile).to_i
+      expect { Process.getpgid(pid) }.to raise_error(Errno::ESRCH)
+    end
   end
 
   it "run method that writes to stderr and stdout" do
