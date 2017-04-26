@@ -59,11 +59,6 @@
   :url: /ems_cloud/show_list
   :rbac_feature_name: ems_cloud_show_list
   :startup: true
-- :name: auth_key_pair_clouds
-  :description: Clouds / Key Pairs
-  :url: /auth_key_pair_cloud/show_list
-  :rbac_feature_name: auth_key_pair_cloud_show_list
-  :startup: true
 - :name: availability_zones
   :description: Clouds / Availability Zones
   :url: /availability_zone/show_list
@@ -74,25 +69,10 @@
   :url: /host_aggregate/show_list
   :rbac_feature_name: host_aggregate_show_list
   :startup: true
-- :name: cloud_object_store_containers
-  :description: Clouds / Object Store Containers
-  :url: /cloud_object_store_container/show_list
-  :rbac_feature_name: cloud_object_store_container_show_list
-  :startup: true
 - :name: cloud_tenants
   :description: Clouds / Tenants
   :url: /cloud_tenant/show_list
   :rbac_feature_name: cloud_tenant_show_list
-  :startup: true
-- :name: cloud_volumes
-  :description: Clouds / Volumes
-  :url: /cloud_volume/show_list
-  :rbac_feature_name: cloud_volume_show_list
-  :startup: true
-- :name: cloud_volumes
-  :description: Clouds / Snapshots
-  :url: /cloud_volume_snapshot/show_list
-  :rbac_feature_name: cloud_volume_snapshot_show_list
   :startup: true
 - :name: flavors
   :description: Clouds / Flavors
@@ -123,6 +103,16 @@
   :description: Clouds / Stacks
   :url: orchestration_stack/show_list
   :rbac_feature_name: orchestration_stack
+  :startup: true
+- :name: auth_key_pair_clouds
+  :description: Clouds / Key Pairs
+  :url: /auth_key_pair_cloud/show_list
+  :rbac_feature_name: auth_key_pair_cloud_show_list
+  :startup: true
+- :name: cloud_topology
+  :description: Clouds / Topology
+  :url: /cloud_topology
+  :rbac_feature_name: cloud_topology_view
   :startup: true
 - :name: ems_networks
   :description: Networks / Providers
