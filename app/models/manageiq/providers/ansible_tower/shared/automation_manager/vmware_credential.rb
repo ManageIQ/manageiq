@@ -3,9 +3,10 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::VmwareCrede
 
   COMMON_ATTRIBUTES = {
     :userid => {
-      :label     => N_('Username'),
-      :help_text => N_('Username for this credential'),
-      :required  => true
+      :label        => N_('Username'),
+      :help_text    => N_('Username for this credential'),
+      :navtive_attr => true,
+      :required     => true
     },
     :password => {
       :type      => :password,
