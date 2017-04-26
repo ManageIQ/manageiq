@@ -28,7 +28,7 @@ class AnsibleTowerCheckProvisioned
 
     unless @handle.root['ae_result'] == 'retry'
       @handle.log("info", "AnsibleTower job finished. Status: #{@handle.root['ae_result']}, reason: #{@handle.root['ae_reason']}")
-      @handle.log("info", "Please examine job console output for more details") if @handle.root['ae_result'] == 'error'
+      @handle.log('error', 'Please examine job console output for more details') if @handle.root['ae_result'] == 'error'
 
       job.refresh_ems
       task.miq_request.user_message = @handle.root['ae_reason'].truncate(255) unless @handle.root['ae_reason'].blank?

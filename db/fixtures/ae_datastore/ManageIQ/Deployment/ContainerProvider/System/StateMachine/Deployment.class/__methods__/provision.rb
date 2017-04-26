@@ -10,7 +10,7 @@ def check_state(finished, fail)
     $evm.root['ae_result'] = "ok"
   elsif fail
     $evm.root['ae_result'] = "error"
-    $evm.log(:info, "*********  Provision failed  ************")
+    $evm.log(:error, '*********  Provision failed  ************')
   else
     $evm.log(:info, "*********  Provision isnt finished re-trying in 1 min  ************")
     $evm.root['ae_result']         = 'retry'
