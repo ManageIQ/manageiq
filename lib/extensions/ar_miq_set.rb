@@ -64,6 +64,7 @@ module ActsAsMiqSet
     alias_with_relationship_type :miq_sets,           :children
     alias_with_relationship_type :remove_member,      :remove_child
     alias_with_relationship_type :remove_all_members, :remove_all_children
+    alias_with_relationship_type :add_members,        :add_children
 
     alias_method model_table_name.to_sym, :children
   end
