@@ -18,6 +18,7 @@ module MiqAeMethodService
     expose :to_s
     expose :authentication_userid
     expose :authentication_password
+    expose :authentication_token
     expose :authentication_password_encrypted
     expose :authentication_key
     expose :refresh, :method => :refresh_ems
