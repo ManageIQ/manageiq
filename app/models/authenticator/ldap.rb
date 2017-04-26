@@ -28,7 +28,7 @@ module Authenticator
     private
 
     def ldap
-      @ldap ||= ldap_bind(config[:bind_dn], config[:bind_pwd])
+      @ldap = MiqLdap.new(:auth => config)
     end
 
     # Unbound LDAP handle
@@ -37,7 +37,6 @@ module Authenticator
     end
 
     def ldap_bind(username, password)
-      ldap = MiqLdap.new(:auth => config)
       ldap if ldap.bind(username, password)
     end
 
