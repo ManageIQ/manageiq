@@ -51,13 +51,18 @@ shared_examples_for "refresh configuration_script_source_v2" do |ansible_provide
         expect(ConfigurationScriptPayload.count).to eq(60)
         expect(ConfigurationScriptPayload.where(:name => '2b_rm')).to be_empty
         expect(configuration_script_source.configuration_script_payloads.count).to eq(60)
+        expect(
+          configuration_script_source.configuration_script_payloads.where(
+            :name => "jboss-standalone/demo-aws-launch.yml"
+          ).count
+        ).to eq(1)
         expect(configuration_script_source.authentication.name).to eq('db-github')
         expect(credential.reload).to eq(credential)
 
         expect(configuration_script_source_other.name).to eq("Dont touch this")
       end
       # check if a playbook will be added back in on the second run
-      configuration_script_source.configuration_script_payloads.where(:name => "test/utils/docker/httptester/httptester.yml").destroy_all
+      configuration_script_source.configuration_script_payloads.where(:name => "jboss-standalone/demo-aws-launch.yml").destroy_all
     end
   end
 end
