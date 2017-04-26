@@ -14,6 +14,12 @@ module Api
       AutomationRequest.create_from_ws(version_str, User.current_user, uri_parts, parameters, requester)
     end
 
+    def edit_resource(type, id, data)
+      request = resource_search(id, type, collection_class(:automation_requests))
+      RequestEditor.edit(request, data)
+      request
+    end
+
     def approve_resource(type, id, data)
       raise "Must specify a reason for approving an automation request" unless data["reason"].present?
       api_action(type, id) do |klass|

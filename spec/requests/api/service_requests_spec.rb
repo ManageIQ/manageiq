@@ -523,17 +523,23 @@ describe "Service Requests API" do
 
   context 'service request update' do
     it 'forbids service request update without an appropriate role' do
+      service_request = FactoryGirl.create(:service_template_provision_request,
+                                           :requester => @user,
+                                           :options   => {:foo => "bar"})
       api_basic_authorize
 
-      run_post(service_requests_url, gen_request(:edit))
+      run_post(service_requests_url(service_request.id), :action => "edit", :options => {:baz => "qux"})
 
       expect(response).to have_http_status(:forbidden)
     end
 
     it 'updates a single service request' do
-      api_basic_authorize collection_action_identifier(:service_requests, :edit)
+      service_request = FactoryGirl.create(:service_template_provision_request,
+                                           :requester => @user,
+                                           :options   => {:foo => "bar"})
+      api_basic_authorize(action_identifier(:service_requests, :edit))
 
-      run_post(service_requests_url(service_request.id), gen_request(:edit, :options => {:foo => "bar"}))
+      run_post(service_requests_url(service_request.id), :action => "edit", :options => {:baz => "qux"})
 
       expected = {
         "id"      => service_request.id,
@@ -544,24 +550,25 @@ describe "Service Requests API" do
     end
 
     it 'updates multiple service requests' do
-      service_request_2 = FactoryGirl.create(:service_template_provision_request,
-                                             :requester   => @user,
-                                             :source_id   => template.id,
-                                             :source_type => template.class.name)
+      service_request, service_request2 = FactoryGirl.create_list(:service_template_provision_request,
+                                                                  2,
+                                                                  :requester => @user,
+                                                                  :options   => {:foo => "bar"})
       api_basic_authorize collection_action_identifier(:service_requests, :edit)
 
-      run_post(service_requests_url,
-               :action    => "edit",
-               :resources => [
-                 {:id      => service_request.id,
-                  :options => {:foo => 'bar'}},
-                 {:id      => service_request_2.id,
-                  :options => {:foo => 'foo'}}
-               ])
+      run_post(
+        service_requests_url,
+        :action    => "edit",
+        :resources => [
+          {:id => service_request.id, :options => {:baz => "qux"}},
+          {:id => service_request2.id, :options => {:quux => "quuz"}}
+        ]
+      )
+
       expected = {
-        'results' => a_collection_including(
-          a_hash_including("options" => { "foo" => "bar"}),
-          a_hash_including("options" => {"foo" => "foo"})
+        "results" => a_collection_including(
+          a_hash_including("options" => a_hash_including("foo" => "bar", "baz" => "qux")),
+          a_hash_including("options" => a_hash_including("foo" => "bar", "quux" => "quuz"))
         )
       }
       expect(response).to have_http_status(:ok)

@@ -29,18 +29,8 @@ module Api
 
     def edit_resource(type, id = nil, data = {})
       raise BadRequestError, "Must specify a id for editing a #{type} resource" unless id
-      request_klass = collection_class(:requests)
-      request = resource_search(id, type, request_klass)
-
-      request_options = RequestParser.parse_options(data)
-      user = RequestParser.parse_user(data) || User.current_user
-
-      begin
-        request.update_request(request_options, user)
-      rescue => err
-        raise BadRequestError, "Could not update the request - #{err}"
-      end
-
+      request = resource_search(id, type, collection_class(:requests))
+      RequestEditor.edit(request, data)
       request
     end
 

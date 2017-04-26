@@ -27,11 +27,8 @@ module Api
 
     def edit_resource(type, id, data)
       request = resource_search(id, type, collection_class(:service_requests))
-      request_options = RequestParser.parse_options(data)
-      user = RequestParser.parse_user(data) || User.current_user
-      request.update_request(request_options, user)
-    rescue => err
-      raise BadRequestError, "Could not update the service request - #{err}"
+      RequestEditor.edit(request, data)
+      request
     end
 
     def find_service_requests(id)
