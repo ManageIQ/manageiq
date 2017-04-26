@@ -1,6 +1,6 @@
 class ShowbackModels < ActiveRecord::Migration[5.0]
   def up
-    create_table :showback_measure_types, :id => :bigserial, :force => :cascade do |t|
+    create_table :showback_usage_types, :id => :bigserial, :force => :cascade do |t|
       t.string     :category
       t.string     :description
       t.string     :measure
@@ -22,7 +22,7 @@ class ShowbackModels < ActiveRecord::Migration[5.0]
     add_index  :showback_events, :resource_id
     add_index  :showback_events, :resource_type
 
-    create_table :showback_tariffs, :id => :bigserial, :force => :cascade do |t|
+    create_table :showback_price_plans, :id => :bigserial, :force => :cascade do |t|
       t.string     :name
       t.string     :description
       t.belongs_to :resource, :allow_nil => false, :type => :bigint, :polymorphic => true
@@ -37,11 +37,11 @@ class ShowbackModels < ActiveRecord::Migration[5.0]
       t.string     :dimension,     :allow_nil  => false
       t.datetime   :date
       t.string     :concept
-      t.belongs_to :showback_tariff, :type => :bigint
+      t.belongs_to :showback_price_plan, :type => :bigint
       t.timestamps
     end
     add_index :showback_rates, :category
-    add_index :showback_rates, [:category, :dimension, :showback_tariff_id, :calculation], :unique => true, :name => 'unique_measure_type_for_rate'
+    add_index :showback_rates, [:category, :dimension, :showback_price_plan_id, :calculation], :unique => true, :name => 'unique_usage_type_for_rate'
 
     create_table :showback_buckets, :id => :bigserial, :force => :cascade do |t|
       t.string     :name
@@ -60,9 +60,9 @@ class ShowbackModels < ActiveRecord::Migration[5.0]
   end
 
   def down
-    drop_table :showback_measure_types
+    drop_table :showback_usage_types
     drop_table :showback_events
-    drop_table :showback_tariffs
+    drop_table :showback_price_plans
     drop_table :showback_rates
     drop_table :showback_buckets
     drop_table :showback_charges

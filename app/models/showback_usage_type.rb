@@ -5,24 +5,24 @@ class ShowbackUsageType < ApplicationRecord
   validates :category,
             :inclusion => { :in => VALID_CATEGORY }
 
-  VALID_MEASURE_TYPES = %w(CPU).freeze
+  VALID_USAGE_TYPES = %w(CPU).freeze
   validates :measure,
-            :inclusion => { :in => VALID_MEASURE_TYPES }
+            :inclusion => { :in => VALID_USAGE_TYPES }
 
   VALID_DIMENSIONS = %w(average number max_number_of_cpu).freeze
   validate :validate_dimensions_measures
 
   def self.seed
-    seed_data.each do |measure_type_attributtes|
-      measure_type_name = measure_type_attributtes[:category]
-      measure_type_measure = measure_type_attributtes[:measure]
-      next if ShowbackUsageType.find_by(:category => measure_type_name, :measure => measure_type_measure)
-      log_attrs = measure_type_attributtes.slice(:category, :description, :measure, :dimensions)
-      _log.info("Creating consumption measure type with parameters #{log_attrs.inspect}")
-      _log.info("Creating #{measure_type_name} consumption measure type...")
-      measure_new = create(measure_type_attributtes)
-      measure_new.save
-      _log.info("Creating #{measure_type_name} consumption measure type... Complete")
+    seed_data.each do |usage_type_attributtes|
+      usage_type_name = usage_type_attributtes[:category]
+      usage_type_measure = usage_type_attributtes[:measure]
+      next if ShowbackUsageType.find_by(:category => usage_type_name, :measure => usage_type_measure)
+      log_attrs = usage_type_attributtes.slice(:category, :description, :measure, :dimensions)
+      _log.info("Creating consumption usage type with parameters #{log_attrs.inspect}")
+      _log.info("Creating #{usage_type_name} consumption usage type...")
+      usage_new = create(usage_type_attributtes)
+      usage_new.save
+      _log.info("Creating #{usage_type_name} consumption usage type... Complete")
     end
   end
 

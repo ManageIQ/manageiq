@@ -27,19 +27,19 @@ describe ShowbackUsageType do
       expect(showback_usage.errors[:description]).to include "can't be blank"
     end
 
-    it "should ensure presence of measure type" do
+    it "should ensure presence of usage type" do
       showback_usage.measure = nil
       showback_usage.valid?
       expect(showback_usage.errors[:measure]).to include "is not included in the list"
     end
 
-    it "should invalidate incorrect measure type" do
+    it "should invalidate incorrect usage type" do
       showback_usage.measure = "AA"
       showback_usage.valid?
       expect(showback_usage.errors[:measure]).to include "is not included in the list"
     end
 
-    it "should validate correct measure type" do
+    it "should validate correct usage type" do
       showback_usage.measure = "CPU"
       expect(showback_usage).to be_valid
     end
