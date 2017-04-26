@@ -1,0 +1,213 @@
+---
+object_type: class
+version: 1.0
+object:
+  attributes:
+    description: Automation Requests
+    display_name:
+    name: Deployment
+    type:
+    inherits:
+    visibility:
+    owner:
+  schema:
+  - field:
+      aetype: state
+      name: analyze_deployment
+      display_name:
+      datatype: string
+      priority: 1
+      owner:
+      default_value:
+      substitute: true
+      message: create
+      visibility:
+      collect:
+      scope:
+      description:
+      condition:
+      on_entry: analyze_deployment
+      on_exit:
+      on_error:
+      max_retries:
+      max_time:
+  - field:
+      aetype: state
+      name: provision
+      display_name:
+      datatype: string
+      priority: 2
+      owner:
+      default_value:
+      substitute: true
+      message: create
+      visibility:
+      collect:
+      scope:
+      description:
+      condition:
+      on_entry: provision
+      on_exit:
+      on_error:
+      max_retries: 100
+      max_time:
+  - field:
+      aetype: state
+      name: post_provision
+      display_name:
+      datatype: string
+      priority: 3
+      owner:
+      default_value:
+      substitute: true
+      message: create
+      visibility:
+      collect:
+      scope:
+      description:
+      condition:
+      on_entry: post_provision
+      on_exit:
+      on_error:
+      max_retries: 100
+      max_time:
+  - field:
+      aetype: state
+      name: check_ssh
+      display_name:
+      datatype: string
+      priority: 4
+      owner:
+      default_value:
+      substitute: true
+      message: create
+      visibility:
+      collect:
+      scope:
+      description:
+      condition:
+      on_entry: check_ssh
+      on_exit:
+      on_error:
+      max_retries:
+      max_time:
+  - field:
+      aetype: state
+      name: pre_validate
+      display_name:
+      datatype: string
+      priority: 5
+      owner:
+      default_value:
+      substitute: true
+      message: create
+      visibility:
+      collect:
+      scope:
+      description:
+      condition:
+      on_entry: pre_validate
+      on_exit:
+      on_error:
+      max_retries:
+      max_time:
+  - field:
+      aetype: state
+      name: create_ansible_inventory
+      display_name:
+      datatype:
+      priority: 6
+      owner:
+      default_value:
+      substitute: true
+      message: create
+      visibility:
+      collect:
+      scope:
+      description:
+      condition:
+      on_entry: create_ansible_inventory
+      on_exit:
+      on_error:
+      max_retries:
+      max_time:
+  - field:
+      aetype: state
+      name: master_pre_deployment
+      display_name:
+      datatype: string
+      priority: 7
+      owner:
+      default_value:
+      substitute: true
+      message: create
+      visibility:
+      collect:
+      scope:
+      description:
+      condition:
+      on_entry: pre_deployment
+      on_exit:
+      on_error:
+      max_retries:
+      max_time:
+  - field:
+      aetype: state
+      name: ansible_deployment
+      display_name:
+      datatype:
+      priority: 8
+      owner:
+      default_value:
+      substitute: true
+      message: create
+      visibility:
+      collect:
+      scope:
+      description:
+      condition:
+      on_entry: deployment
+      on_exit:
+      on_error:
+      max_retries:
+      max_time:
+  - field:
+      aetype: state
+      name: add_provider
+      display_name:
+      datatype:
+      priority: 9
+      owner:
+      default_value:
+      substitute: true
+      message: create
+      visibility:
+      collect:
+      scope:
+      description:
+      condition:
+      on_entry: add_provider
+      on_exit:
+      on_error:
+      max_retries:
+      max_time:
+  - field:
+      aetype: state
+      name: clean_up
+      display_name:
+      datatype:
+      priority: 10
+      owner:
+      default_value:
+      substitute: true
+      message: create
+      visibility:
+      collect:
+      scope:
+      description:
+      condition:
+      on_entry: cleanup
+      on_exit:
+      on_error:
+      max_retries:
+      max_time:
