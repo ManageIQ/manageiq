@@ -146,14 +146,14 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
       orchestration_template_save_block = lambda do |_ems, inventory_collection|
         hashes = inventory_collection.data.map(&:attributes)
 
-        templates = ::OrchestrationTemplate.find_or_create_by_contents(hashes)
+        templates = inventory_collection.model_class.find_or_create_by_contents(hashes)
         inventory_collection.data.zip(templates).each do |inventory_object, template|
           inventory_object.id = template.id
         end
       end
 
       attributes = {
-        :model_class       => ::OrchestrationTemplateCfn,
+        :model_class       => ::OrchestrationTemplate,
         :association       => :orchestration_templates,
         :custom_save_block => orchestration_template_save_block
       }
