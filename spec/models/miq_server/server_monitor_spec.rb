@@ -283,6 +283,59 @@ describe "Server Monitor" do
         end
       end
 
+      context "should evenly distribute singular roles on multiple servers" do
+        it "with identical assigned roles" do
+          @miq_server1.role = 'ems_inventory, scheduler, event, notifier, storage_inventory, ems_metrics_coordinator'
+          @miq_server2.role = 'ems_inventory, scheduler, event, notifier, storage_inventory, ems_metrics_coordinator'
+
+          @miq_server1.monitor_server_roles
+          @miq_server2.reload
+
+          expect(@miq_server1.active_roles.count).to eq(@miq_server2.active_roles.count)
+        end
+
+        it "with partially shared assigned roles" do
+          @miq_server1.role = 'ems_inventory, scheduler, event, notifier, storage_inventory, ems_metrics_coordinator'
+          @miq_server2.role = 'ems_inventory, scheduler'
+
+          @miq_server1.monitor_server_roles
+          @miq_server2.reload
+
+          expect(@miq_server1.active_role_names).to match_array(%w(event notifier storage_inventory ems_metrics_coordinator))
+          expect(@miq_server2.active_role_names).to match_array(%w(ems_inventory scheduler))
+        end
+
+        it "when migrating roles from low priority server" do
+          roles = %w(ems_inventory scheduler event notifier storage_inventory ems_metrics_coordinator)
+          @miq_server3 = FactoryGirl.create(:miq_server, :zone => @miq_server1.zone)
+          @miq_server3.deactivate_all_roles
+
+          # Assign the roles as low priority to server 3 and no roles for 1 and 2.
+          @miq_server1.role = []
+          @miq_server2.role = []
+          roles.each { |role| @miq_server3.assign_role(role, AssignedServerRole::LOW_PRIORITY) }
+
+          @miq_server1.monitor_server_roles
+          @miq_server2.reload
+          @miq_server3.reload
+
+          expect(@miq_server1.active_roles).to be_empty
+          expect(@miq_server2.active_roles).to be_empty
+          expect(@miq_server3.active_role_names).to match_array(roles)
+
+          # Now, assign the same roles to all servers with 1 and 2 as default priority.
+          @miq_server1.role = roles.join(",")
+          @miq_server2.role = roles.join(",")
+          @miq_server1.monitor_server_roles
+          @miq_server2.reload
+          @miq_server3.reload
+
+          expect(@miq_server3.active_roles).to be_empty
+          expect(@miq_server2.active_roles.size).to eq 3
+          expect(@miq_server1.active_roles.size).to eq 3
+        end
+      end
+
       context "with Non-Master having the active roles" do
         before(:each) do
           @miq_server2.activate_roles("event")
