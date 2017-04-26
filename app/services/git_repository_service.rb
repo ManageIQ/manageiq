@@ -7,7 +7,7 @@ class GitRepositoryService
     )
 
     if git_username && git_password
-      git_repo.update_authentication(:values => {:userid => git_username, :password => git_password})
+      git_repo.update_authentication(:default => {:userid => git_username, :password => git_password})
     end
 
     return {:git_repo_id => git_repo.id, :new_git_repo? => new_git_repo}

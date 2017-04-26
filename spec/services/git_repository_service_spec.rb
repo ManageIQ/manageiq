@@ -39,7 +39,7 @@ describe GitRepositoryService do
 
             it "updates the authentication" do
               git_repository_service.setup(git_url, git_username, git_password, verify_ssl)
-              authentication = git_repo.authentications.first
+              authentication = git_repo.default_authentication
               expect(authentication.userid).to eq("username")
               expect(authentication.password).to eq("password")
             end
