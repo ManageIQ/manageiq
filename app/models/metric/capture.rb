@@ -154,11 +154,17 @@ module Metric::Capture
     default_task_start_time = 1.hour.ago.utc.iso8601
 
     # Create a new task for each rollup parent
-    tasks_by_rollup_parent = targets_by_rollup_parent.keys.inject({}) do |h, pkey|
+    targets_by_rollup_parent.keys.each_with_object({}) do |pkey, h|
       name = "Performance rollup for #{pkey}"
       prev_task = MiqTask.where(:identifier => pkey).order("id DESC").first
       task_start_time = prev_task ? prev_task.context_data[:end] : default_task_start_time
 
+      if prev_task && prev_task.state == MiqTask::STATE_QUEUED && prev_task.context_data[:targets] == targets_by_rollup_parent[pkey]
+        task = prev_task
+        _log.info "Reuse task id: [#{task.id}] for: [#{pkey}] with targets: #{targets_by_rollup_parent[pkey].inspect} for time range: [#{task_start_time} - #{task_end_time}]"
+        h[pkey] = task
+        next
+      end
       task = MiqTask.create(
         :name         => name,
         :identifier   => pkey,
@@ -176,10 +182,7 @@ module Metric::Capture
       )
       _log.info "Created task id: [#{task.id}] for: [#{pkey}] with targets: #{targets_by_rollup_parent[pkey].inspect} for time range: [#{task_start_time} - #{task_end_time}]"
       h[pkey] = task
-      h
     end
-
-    tasks_by_rollup_parent
   end
   private_class_method :calc_tasks_by_rollup_parent
 
@@ -189,8 +192,8 @@ module Metric::Capture
 
       options = {:zone => zone}
       target.perf_rollup_parents(interval_name).to_a.compact.each do |parent|
-        if tasks_by_rollup_parent.key?("#{parent.class}:#{parent.id}")
-          pkey = "#{parent.class}:#{parent.id}"
+        pkey = "#{parent.class}:#{parent.id}"
+        if tasks_by_rollup_parent.key?(pkey)
           tkey = "#{target.class}:#{target.id}"
           if targets_by_rollup_parent[pkey].include?(tkey)
             # FIXME: check that this is still correct
