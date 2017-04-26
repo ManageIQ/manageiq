@@ -443,15 +443,21 @@ module Rbac
       klass.tenant_joins_clause(scope).where(tenant_id_clause)
     end
 
-    def scope_for_user_role_group(klass, scope, miq_group, user)
+    def scope_for_user_role_group(klass, scope, miq_group, user, managed_filters)
       user_or_group = miq_group || user
 
       if user_or_group.try!(:self_service?) && MiqUserRole != klass
         scope.where(:id => klass == User ? user.id : miq_group.id)
-      elsif user_or_group.disallowed_roles
-        scope.with_allowed_roles_for(user_or_group)
       else
-        scope
+        if user_or_group.disallowed_roles
+          scope = scope.with_allowed_roles_for(user_or_group)
+        end
+
+        if MiqUserRole != klass
+          filtered_ids = pluck_ids(get_managed_filter_object_ids(scope, managed_filters))
+        end
+
+        scope_by_ids(scope, filtered_ids)
       end
     end
 
@@ -483,7 +489,7 @@ module Rbac
         filtered_ids = calc_filtered_ids(associated_class, rbac_filters, user, miq_group, scope_tenant_filter)
         scope_by_parent_ids(associated_class, scope, filtered_ids)
       elsif [MiqUserRole, MiqGroup, User].include?(klass)
-        scope_for_user_role_group(klass, scope, miq_group, user)
+        scope_for_user_role_group(klass, scope, miq_group, user, rbac_filters['managed'])
       else
         scope
       end
