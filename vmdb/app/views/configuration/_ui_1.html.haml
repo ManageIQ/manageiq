@@ -1,0 +1,189 @@
+- url = url_for(:action => "form_field_changed")
+- url_json = {:url => url}.to_json
+= render :partial => "layouts/flash_msg"
+
+#tab_div
+  = form_tag({:action => "update"}, {:id => "config_form"}) do
+    %dl.col2
+      %dd
+        %fieldset
+          %p.legend Grid/Tile Icons
+          %table.style1
+            - if role_allows(:feature => "ems_infra_show_list")
+              %tr
+                %td.key Show #{ui_lookup(:table => "ems_infra")} Quadrants
+                %td
+                  = check_box_tag("quadicons_ems",
+                                  "1",
+                                  @edit[:new][:quadicons][:ems],
+                                  "data-miq_observe_checkbox" => url_json)
+            - if role_allows(:feature => "ems_cloud_show_list")
+              %tr
+                %td.key Show #{ui_lookup(:table => "ems_cloud")} Quadrants
+                %td
+                  = check_box_tag("quadicons_ems_cloud",
+                                  "1",
+                                  @edit[:new][:quadicons][:ems_cloud],
+                                  "data-miq_observe_checkbox" => url_json)
+            - if role_allows(:feature => "host_show_list")
+              %tr
+                %td.key Show Host Quadrants
+                %td
+                  = check_box_tag("quadicons_host",
+                                  "1",
+                                  @edit[:new][:quadicons][:host],
+                                  "data-miq_observe_checkbox" => url_json)
+            - if false
+              -# Commented until we have host item quads
+              %tr
+                %td.key Show Host Item Quadrants
+                %td
+                  = check_box_tag("quadicons_hostitem",
+                                  "1",
+                                  @edit[:new][:quadicons][:hostitem],
+                                  "data-miq_observe_checkbox" => url_json)
+            - if role_allows(:feature => "storage_show_list")
+              %tr
+                %td.key Show #{ui_lookup(:table => "storages")} Quadrants
+                %td
+                  = check_box_tag("quadicons_storage",
+                                  "1",
+                                  @edit[:new][:quadicons][:storage],
+                                  "data-miq_observe_checkbox" => url_json)
+              %tr
+                %td.key Show #{ui_lookup(:table => "storages")} Item Quadrants
+                %td
+                  = check_box_tag("quadicons_storageitem",
+                                  "1",
+                                  @edit[:new][:quadicons][:storageitem],
+                                  "data-miq_observe_checkbox" => url_json)
+            %tr
+              %td.key Show VM Quadrants
+              %td
+                = check_box_tag("quadicons_vm",
+                                "1",
+                                @edit[:new][:quadicons][:vm],
+                                "data-miq_observe_checkbox" => url_json)
+            %tr
+              %td.key Show VM Item Quadrants
+              %td
+                = check_box_tag("quadicons_vmitem",
+                                "1",
+                                @edit[:new][:quadicons][:vmitem],
+                                "data-miq_observe_checkbox" => url_json)
+            %tr
+              %td.key Show Template Quadrants
+              %td
+                = check_box_tag("quadicons_miq_template",
+                                "1",
+                                @edit[:new][:quadicons][:miq_template],
+                                "data-miq_observe_checkbox" => url_json)
+            - if get_vmdb_config[:product][:vdi]
+              %tr
+                %td.key Show VM VDI Quadrants
+                %td
+                  = check_box_tag("quadicons_vmvdi",
+                                  "1",
+                                  @edit[:new][:quadicons][:vmvdi],
+                                  "data-miq_observe_checkbox" => url_json)
+              %tr
+                %td.key Show VDI Controller Quadrants
+                %td
+                  = check_box_tag("quadicons_vdicontroller",
+                                  "1",
+                                  @edit[:new][:quadicons][:vdicontroller],
+                                  "data-miq_observe_checkbox" => url_json)
+              %tr
+                %td.key Show VDI Desktop Pools Quadrants
+                %td
+                  = check_box_tag("quadicons_vdidesktoppool",
+                                  "1",
+                                  @edit[:new][:quadicons][:vdidesktoppool],
+                                  "data-miq_observe_checkbox" => url_json)
+            %tr
+              %td.key Truncate Long Text
+              %td
+                = select_tag("quad_truncate",
+                             options_for_select([["Front (...1234)", "f"],
+                                                 ["Middle (AB...34)", "m"],
+                                                 ["Back (ABCD...)", "b"]],
+                             @edit[:new][:display][:quad_truncate]),
+                             "data-miq_observe" => url_json)
+        %fieldset
+          %p.legend Start Page
+          %table.style1
+            %tr
+              %td.key Show at Login
+              %td
+                = select_tag("start_page",
+                             options_for_select(session[:start_pages], @edit[:new][:display][:startpage]),
+                             "data-miq_observe" => url_json)
+      %dd
+        %fieldset
+          %p.legend Default Items Per Page
+          %table.style1
+            %tr
+              %td.key Grid View
+              %td
+                = select_tag("perpage_grid",
+                             options_for_select(PPCHOICES, @edit[:new][:perpage][:grid]),
+                             "data-miq_observe" => url_json)
+            %tr
+              %td.key Tile View
+              %td
+                = select_tag("perpage_tile",
+                             options_for_select(PPCHOICES, @edit[:new][:perpage][:tile]),
+                             "data-miq_observe" => url_json)
+            %tr
+              %td.key List View
+              %td
+                = select_tag("perpage_list",
+                             options_for_select(PPCHOICES, @edit[:new][:perpage][:list]),
+                             "data-miq_observe" => url_json)
+            %tr
+              %td.key Reports
+              %td
+                = select_tag("perpage_reports",
+                             options_for_select(PPCHOICES, @edit[:new][:perpage][:reports]),
+                             "data-miq_observe" => url_json)
+        %fieldset
+          %p.legend Display Settings
+          %table.style1
+            %tr
+              %td.key Header Accent Color
+              %td.wide
+                - THEMES.each do |t|
+                  - if t.last == @edit[:new][:display][:theme]
+                    %div{:title => "The #{t.first} theme is currently selected",
+                         :style => "background-color: #{THEME_CSS_SETTINGS[t.last][:background_color]};" |
+                                   "border: 3px solid #000;" +                                           |
+                                   "width: 32px;" +                                                      |
+                                   "height: 32px;" +                                                     |
+                                   "float: left;"}                                                       |
+                  - else
+                    %div{:onclick => "#{remote_function(:url => {:action => 'theme_changed',
+                                                                 :theme  => t.last})}",
+                         :title   => "Click to select the #{t.first} theme",
+                         :style   => "background-color: #{THEME_CSS_SETTINGS[t.last][:background_color]};" |
+                                     "border: 3px solid #fff;" +                                           |
+                                     "width: 32px;" +                                                      |
+                                     "height: 32px;" +                                                     |
+                                     "float: left;"}                                                       |
+            %tr
+              %td.key Chart Theme
+              %td.wide
+                = select_tag("display_reporttheme",
+                             options_for_select(ZiyaCharting::ZTHEMES, @edit[:new][:display][:reporttheme]),
+                             "data-miq_observe" => url_json)
+            %tr
+              %td.key Time Zone
+              %td.wide
+                = select_tag("display_timezone",
+                             options_for_select(ALL_TIMEZONES, @edit[:new][:display][:timezone]),
+                             "data-miq_observe" => url_json)
+
+      = render :partial => '/layouts/form_buttons'
+
+    -# Need this to bind checkbox observers when under DHTMLX tabs
+    -# TODO: Remove whenn DHTMLX tabs are converted to jQuery tabs
+    %script miqObserveCheckboxes();
