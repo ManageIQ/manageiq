@@ -46,7 +46,7 @@ module Rbac
       VmOrTemplate
     )
 
-    TAGGABLE_FILTER_CLASSES = CLASSES_THAT_PARTICIPATE_IN_RBAC - %w(EmsFolder)
+    TAGGABLE_FILTER_CLASSES = CLASSES_THAT_PARTICIPATE_IN_RBAC - %w(EmsFolder) + %w(MiqGroup User)
 
     BELONGSTO_FILTER_CLASSES = %w(
       VmOrTemplate
