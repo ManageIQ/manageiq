@@ -2,7 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
-# Fine RC-1
+
+The ManageIQ organization is continuously adding new smaller repositories.  The repositories listed below maintain their own changelogs on GitHub:
+- [manageiq-content CHANGELOG](https://github.com/ManageIQ/manageiq-content/blob/fine/CHANGELOG.md)
+- [manageiq-providers-amazon CHANGELOG](https://github.com/ManageIQ/manageiq-providers-amazon/blob/fine/CHANGELOG.md)
+- [manageiq-providers-azure CHANGELOG](https://github.com/ManageIQ/manageiq-providers-azure/blob/fine/CHANGELOG.md)
+- [manageiq-providers-vmware CHANGELOG](https://github.com/ManageIQ/manageiq-providers-vmware/blob/fine/CHANGELOG.md)
+- [manageiq-ui-classic CHANGELOG](https://github.com/ManageIQ/manageiq-ui-classic/blob/fine/CHANGELOG.md)
+
+
+# Fine Beta-2
 
 ## Added
 
@@ -12,7 +21,11 @@ All notable changes to this project will be documented in this file.
     - Modified destroying an Ansible Service Template [(#14586)](https://github.com/ManageIQ/manageiq/pull/14586)
     - Ansible Playbook Service add on_error method. [(#14583)](https://github.com/ManageIQ/manageiq/pull/14583)
 
+- Platform
+  - Include embedded ansible logs in log collection [(#14770)](https://github.com/ManageIQ/manageiq/pull/14770)
+
 - Providers
+  - New folder targeted refresh [Depends on vmware/32] [(#14460)](https://github.com/ManageIQ/manageiq/pull/14460)
   - Ansible Tower: Refresh job_template -> playbook connection [(#14432)](https://github.com/ManageIQ/manageiq/pull/14432)
   - Middleware: Cross-linking Middleware server model with containers. [(#14043)](https://github.com/ManageIQ/manageiq/pull/14043)
   - Physical Infrastructure: Add Physical Infra Topology feature [(#14589)](https://github.com/ManageIQ/manageiq/pull/14589)
@@ -29,6 +42,16 @@ All notable changes to this project will be documented in this file.
 - Performance
   - Optimize number of transactions sent in refresh [(#14670)](https://github.com/ManageIQ/manageiq/pull/14670)
   - Optimize store_ids_for_new_records by getting rid of the O(n^2) lookups [(#14542)](https://github.com/ManageIQ/manageiq/pull/14542)
+  - Do not run MiqEventDefinitionSet.seed twice on every start-up [(#14725)](https://github.com/ManageIQ/manageiq/pull/14725)
+  - Do not run these seeds twice [(#14726)](https://github.com/ManageIQ/manageiq/pull/14726)
+  - Speed up MiqEventDefinitionSet.seed [(#14721)](https://github.com/ManageIQ/manageiq/pull/14721)
+  - Do not store whole container env. in the reporting worker forever [(#14807)](https://github.com/ManageIQ/manageiq/pull/14807)
+
+- Platform
+  - RBAC
+    - Allow descendants of Host model to use belongsto filters in RBAC [(#14852)](https://github.com/ManageIQ/manageiq/pull/14852)
+    - Add chargeback to shortcuts to allow access to chargeback only. [(#14809)](https://github.com/ManageIQ/manageiq/pull/14809)
+    - Define new product features for specific types of Storage Managers [(#14745)](https://github.com/ManageIQ/manageiq/pull/14745)
 
 - Providers
   - Red Hat Virtualization: Drop support for oVirt /api always use /ovirt-engine/api [(#14469)](https://github.com/ManageIQ/manageiq/pull/14469)
@@ -36,6 +59,7 @@ All notable changes to this project will be documented in this file.
 ## Fixed
 
 - Automate
+  - Automate - Added finish retirement notification. [(#14780)](https://github.com/ManageIQ/manageiq/pull/14780)
   - Add policy checking for retirement request. [(#14641)](https://github.com/ManageIQ/manageiq/pull/14641)
   - Ansible Tower
     - Ensure job is refreshed in the condition of state machine exits on error [(#14684)](https://github.com/ManageIQ/manageiq/pull/14684)
@@ -43,19 +67,34 @@ All notable changes to this project will be documented in this file.
     - Ansible Service: skip dialog options for retirement [(#14602)](https://github.com/ManageIQ/manageiq/pull/14602)
     - Modified to use Embedded Ansible instance [(#14568)](https://github.com/ManageIQ/manageiq/pull/14568)
   - Control: Add policy checking for request_host_scan. [(#14427)](https://github.com/ManageIQ/manageiq/pull/14427)
-  - Provisioning: First and Last name are no longer required. [(#14694)](https://github.com/ManageIQ/manageiq/pull/14694)
+  - Provisioning
+   - Remove reverse! call for timezone after converting structure to hash [(#14772)](https://github.com/ManageIQ/manageiq/pull/14772)
+   - First and Last name are no longer required. [(#14694)](https://github.com/ManageIQ/manageiq/pull/14694)
+   - Use fetch_path to handle the case where :ws_values is nil. [(#14797)](https://github.com/ManageIQ/manageiq/pull/14797)
   - Services: Service#my_zone should only reference a VM associated to a provider. [(#14696)](https://github.com/ManageIQ/manageiq/pull/14696)
 
 - Platform
-  - Make worker_monitor_drb act like a reader again! [(#14638)](https://github.com/ManageIQ/manageiq/pull/14638)
+  - Chargeback
+    - Group chargeback with unknown image under 'unknown image' [(#14816)](https://github.com/ManageIQ/manageiq/pull/14816)
+    - Charge since the first MetricRollup [(#14666)](https://github.com/ManageIQ/manageiq/pull/14666)
+    - Group results with unknown project under 'unknown project' [(#14811)](https://github.com/ManageIQ/manageiq/pull/14811)
+  - Reports: Add Container entities to TAG_CLASSES [(#14535)](https://github.com/ManageIQ/manageiq/pull/14535)
+  - Make worker_monitor_drb act like a reader [(#14638)](https://github.com/ManageIQ/manageiq/pull/14638)
   - Do not pass nil to the assignment mixin [(#14713)](https://github.com/ManageIQ/manageiq/pull/14713)
   - Use base class only when it is supported by direct rbac [(#14665)](https://github.com/ManageIQ/manageiq/pull/14665)
 
 - Providers
+  - Google: Ensure google managers change zone and provider region with cloud manager [(#14742)](https://github.com/ManageIQ/manageiq/pull/14742)
   - Metrics: Handle exception when a metrics target doesn't have an ext_management_system [(#14718)](https://github.com/ManageIQ/manageiq/pull/14718)
   - Microsoft Infrastructure: Ensure remote shells generated by SCVMM are closed when finished [(#14591)](https://github.com/ManageIQ/manageiq/pull/14591)
-  - Containers: Fix queueing of historical metrics collection [(#14695)](https://github.com/ManageIQ/manageiq/pull/14695)
+  - Containers
+    - Container Volumes should honor tag visibility [(#14517)](https://github.com/ManageIQ/manageiq/pull/14517)
+    - Fix queueing of historical metrics collection [(#14695)](https://github.com/ManageIQ/manageiq/pull/14695)
   - Ansible Tower
+    - It's \_log not log and we don't need the undefined variable prefix [(#14846)](https://github.com/ManageIQ/manageiq/pull/14846)
+    - Reload the ems object in the event catcher if we fail to start [(#14736)](https://github.com/ManageIQ/manageiq/pull/14736)
+    - Add multiline to ssh attribute [(#14707)](https://github.com/ManageIQ/manageiq/pull/14707)
+    - Create/update Tower project with scm_credential [(#14618)](https://github.com/ManageIQ/manageiq/pull/14618)
     - Nullify dependents when destroying configuration_script_sources/configuration_scripts [(#14567)](https://github.com/ManageIQ/manageiq/pull/14567)
     - Use organization instead of organization_id when talking to Tower [(#14538)](https://github.com/ManageIQ/manageiq/pull/14538)
     - Fix task name for task that create Tower project [(#14656)](https://github.com/ManageIQ/manageiq/pull/14656)
@@ -70,6 +109,8 @@ All notable changes to this project will be documented in this file.
   - Return correct resource hrefs [(#14549)](https://github.com/ManageIQ/manageiq/pull/14549)
   - Removing ems_events from config/api.yml [(#14699)](https://github.com/ManageIQ/manageiq/pull/14699)
 
+- SmartState
+  - Timeout was not triggered for Image Scanning Job after removing Job#agent_class [(#14791)](https://github.com/ManageIQ/manageiq/pull/14791)
 
 # Fine Beta
 
