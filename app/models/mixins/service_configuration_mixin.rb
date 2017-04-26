@@ -17,4 +17,8 @@ module ServiceConfigurationMixin
   def configuration_manager
     configuration_script.try(:manager)
   end
+
+  def configuration_manager=(manager)
+    configuration_script.manager = manager
+  end
 end
