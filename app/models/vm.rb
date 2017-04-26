@@ -4,6 +4,7 @@ class Vm < VmOrTemplate
   has_one :container_deployment_node
 
   extend InterRegionApiMethodRelay
+  include CustomActionsMixin
 
   include_concern 'Operations'
 
@@ -106,5 +107,9 @@ class Vm < VmOrTemplate
       :url_secret => SecureRandom.hex
     )
     console.id
+  end
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("Vm")
   end
 end

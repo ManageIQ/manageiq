@@ -2246,6 +2246,7 @@
     :identifier: vm
     :options:
     - :collection
+    - :custom_actions
     :verbs: *gpd
     :klass: Vm
     :subcollections:
