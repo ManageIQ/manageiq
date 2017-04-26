@@ -33,6 +33,10 @@ module EmsRefresh::SaveInventoryCloud
     target = ems if target.nil?
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
+    # This line force loading the network manager and hence will prevent
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1389459
+    network_manager = ems.network_manager
+
     # Check if the data coming in reflects a complete removal from the ems
     if hashes.blank?
       target.disconnect_inv
