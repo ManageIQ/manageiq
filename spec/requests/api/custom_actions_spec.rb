@@ -174,6 +174,25 @@ describe "Custom Actions API" do
     end
   end
 
+  describe "Services with grouped generic custom buttons" do
+    it "accepts a custom action" do
+      button = FactoryGirl.create(
+        :custom_button,
+        :name             => "test button",
+        :applies_to_class => "Service",
+        :resource_action  => FactoryGirl.create(:resource_action)
+      )
+      button_group = FactoryGirl.create(:custom_button_set)
+      button_group.add_member(button)
+      service = FactoryGirl.create(:service, :service_template => FactoryGirl.create(:service_template))
+      api_basic_authorize
+
+      run_post(services_url(service.id), "action" => "test button")
+
+      expect(response.parsed_body).to include("success" => true, "message" => /Invoked custom action test button/)
+    end
+  end
+
   describe "Services with custom button dialogs" do
     it "queries for custom_actions returns expanded details for dialog buttons" do
       api_basic_authorize action_identifier(:services, :read, :resource_actions, :get)
