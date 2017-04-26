@@ -33,9 +33,13 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Configurati
       log_header = "updating project #{project.id} (#{self.class.name} #{id})"
       _log.info "#{log_header}..."
       Timeout.timeout(5.minutes) do
-        while project_update.finished.blank?
-          sleep REFRESH_ON_TOWER_SLEEP
+        loop do
           project_update = project_update.api.project_updates.find(project_update.id)
+          # the sleep here is also needed because tower needs some time to actually propagate it's updates
+          # if we would return immediately it _could_ be that the we get the old playbooks
+          # the whole sleep business is a workaround anyway until we get proper polling via the PR mentioned above
+          sleep REFRESH_ON_TOWER_SLEEP
+          break if project_update.finished.present?
         end
       end
       _log.info "#{log_header}...Complete"
