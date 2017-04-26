@@ -24,6 +24,7 @@ cols:
 - total_payloads
 - created_at
 - updated_at
+- status
 
 # Included tables (joined, has_one, has_many) and columns
 
@@ -36,6 +37,7 @@ col_order:
 - total_payloads
 - created_at
 - updated_at
+- status
 
 # Column titles, in order
 headers:
@@ -44,6 +46,7 @@ headers:
 - Playbooks
 - Created On
 - Updated On
+- Status
 
 col_formats:
 -
