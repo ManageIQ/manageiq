@@ -90,8 +90,9 @@ describe MiqRequest do
 
       it "re-raises exceptions" do
         allow(MiqAeEvent).to receive(:raise_evm_event).and_raise(MiqAeException::AbortInstantiation.new("bogus automate error"))
-
-        expect { request.call_automate_event_sync(event_name) }.to raise_error(MiqAeException::Error, "bogus automate error")
+        expect do
+          request.call_automate_event_sync(event_name)
+        end.to raise_error(MiqAeException::AbortInstantiation, /#{event_name}.*bogus automate error/)
       end
     end
 
@@ -103,7 +104,9 @@ describe MiqRequest do
 
       it "re-raises exceptions" do
         allow(MiqAeEvent).to receive(:raise_evm_event).and_raise(MiqAeException::AbortInstantiation.new("bogus automate error"))
-        expect { request.call_automate_event(event_name) }.to raise_error(MiqAeException::Error, "bogus automate error")
+        expect do
+          request.call_automate_event(event_name)
+        end.to raise_error(MiqAeException::AbortInstantiation, /#{event_name}.*bogus automate error/)
       end
     end
 
