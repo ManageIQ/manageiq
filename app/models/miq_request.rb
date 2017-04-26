@@ -41,6 +41,9 @@ class MiqRequest < ApplicationRecord
 
   delegate :allowed_tags,                :to => :workflow,   :prefix => :v,  :allow_nil => true
   delegate :class,                       :to => :workflow,   :prefix => :v_workflow
+  delegate :deny, :reason, :stamped_on,  :to => :first_approval
+  delegate :userid,                      :to => :requester, :prefix => true
+  delegate :request_task_class, :request_types, :task_description, :to => :class
 
   virtual_has_one :workflow
 
@@ -89,11 +92,6 @@ class MiqRequest < ApplicationRecord
     i.each { |k, v| v.keys.each { |vk| h[vk] = k } }
   end
 
-
-  delegate :deny, :reason, :stamped_on, :to => :first_approval
-  delegate :userid, :to => :requester, :prefix => true
-  delegate :request_task_class, :request_types, :task_description, :to => :class
-
   def self.class_from_request_data(data)
     request_type = (data[:__request_type__] || data[:request_type]).try(:to_sym)
     model_symbol = REQUEST_TYPE_TO_MODEL[request_type] || raise(ArgumentError, "Invalid request_type")
@@ -106,6 +104,10 @@ class MiqRequest < ApplicationRecord
   end
 
   def miq_request
+    self
+  end
+
+  def create_request
     self
   end
 
@@ -166,8 +168,8 @@ class MiqRequest < ApplicationRecord
     MiqAeEvent.raise_evm_event(event_name, self, build_request_event(event_name))
     _log.info("Raised  event [#{event_name}] to Automate")
   rescue MiqAeException::Error => err
-    message = _("Error returned from %{name} event processing in Automate: %{error_message}") %
-                {:name => event_name, :error_message => err.message}
+    message = _("Error returned from %{name} event processing in Automate: %{error_message}") % {:name => event_name, :error_message => err.message}
+    _log.error(message)
     raise
   end
 
@@ -177,8 +179,8 @@ class MiqRequest < ApplicationRecord
     _log.info("Raised event [#{event_name}] to Automate")
     return ws
   rescue MiqAeException::Error => err
-    message = _("Error returned from %{name} event processing in Automate: %{error_message}") %
-                {:name => event_name, :error_message => err.message}
+    message = _("Error returned from %{name} event processing in Automate: %{error_message}") % {:name => event_name, :error_message => err.message}
+    _log.error(message)
     raise
   end
 
@@ -314,10 +316,6 @@ class MiqRequest < ApplicationRecord
   def customize_request_task_attributes(req_task_attrs, idx)
     req_task_attrs[:source_id]   = idx
     req_task_attrs[:source_type] = self.class::SOURCE_CLASS_NAME
-  end
-
-  def create_request
-    self
   end
 
   def set_description(force = false)
