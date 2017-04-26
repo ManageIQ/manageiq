@@ -243,6 +243,7 @@ class MiqServer < ApplicationRecord
     Vmdb::Appliance.log_config_on_startup
 
     server.ntp_reload
+    server.set_database_application_name
 
     EvmDatabase.seed_last
 
@@ -457,6 +458,10 @@ class MiqServer < ApplicationRecord
 
   def database_application_name
     "MIQ #{Process.pid} Server[#{compressed_id}], #{zone.name}[#{zone.compressed_id}]".truncate(64)
+  end
+
+  def set_database_application_name
+    ArApplicationName.name = database_application_name
   end
 
   def is_local?
