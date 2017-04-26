@@ -192,8 +192,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   def delete_job_templates(job_templates, action = nil)
     auth_user = User.current_userid || 'system'
     job_templates.each do |job_template|
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript
-        .delete_in_provider_queue(job_template.manager.id, { :manager_ref => job_template.manager_ref }, auth_user)
+      job_template.delete_in_provider_queue(auth_user)
       resource_actions.find_by(:action => action.capitalize).update_attributes(:configuration_template => nil) if action
     end
   end
@@ -212,13 +211,11 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     [:provision, :retirement, :reconfigure].each do |action|
       info = config_info[action]
       next unless info
-
       job_template = job_template(action)
       next unless job_template
       if info.key?(:playbook_id)
-        tower, params = self.class.send(:build_parameter_list, self.class.send(:build_name, name, action), description, info)
-        params[:manager_ref] = job_template(action).manager_ref
-        ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript.update_in_provider_queue(tower.id, params, auth_user)
+        _tower, params = self.class.send(:build_parameter_list, self.class.send(:build_name, name, action), description, info)
+        job_template.update_in_provider_queue(params)
       else
         delete_job_templates([job_template], action)
       end

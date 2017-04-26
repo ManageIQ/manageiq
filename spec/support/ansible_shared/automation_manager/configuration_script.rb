@@ -84,10 +84,10 @@ shared_examples_for "ansible configuration_script" do
     end
   end
 
-  context "creates via the API" do
+  context "CUD via the API" do
     let(:atc)           { double("AnsibleTowerClient::Connection", :api => api) }
     let(:api)           { double("AnsibleTowerClient::Api", :job_templates => job_templates) }
-    let(:job_templates) { double("AnsibleTowerClient::Collection", :create! => job_template) }
+    let(:job_templates) { double("AnsibleTowerClient::Collection", :create! => job_template, :find => job_template) }
     let(:job_template)  { AnsibleTowerClient::JobTemplate.new(nil, job_template_json) }
     let(:manager)       { manager_with_authentication }
 
@@ -127,22 +127,13 @@ shared_examples_for "ansible configuration_script" do
         expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
         expect(EmsRefresh).to receive(:queue_refresh_task).and_return([finished_task])
         expect(ExtManagementSystem).to receive(:find).with(manager.id).and_return(manager)
-
         expect { described_class.create_in_provider(manager.id, params) }.to raise_error(ActiveRecord::RecordNotFound)
       end
 
       context "provider raises on create" do
-        it "with a hash" do
-          expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
-          expect(job_templates).to receive(:create!).and_raise(AnsibleTowerClient::Error, {"name"=>["Job template with this Name already exists."]}.to_json)
-
-          expect { described_class.create_in_provider(manager.id, params) }.to raise_error(AnsibleTowerClient::Error, "Job template with this Name already exists.")
-        end
-
         it "with a string" do
           expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
           expect(job_templates).to receive(:create!).and_raise(AnsibleTowerClient::Error, "Job template with this Name already exists.")
-
           expect { described_class.create_in_provider(manager.id, params) }.to raise_error(AnsibleTowerClient::Error, "Job template with this Name already exists.")
         end
       end
@@ -151,7 +142,7 @@ shared_examples_for "ansible configuration_script" do
     it ".create_in_provider_queue" do
       EvmSpecHelper.local_miq_server
       task_id = described_class.create_in_provider_queue(manager.id, params)
-      expect(MiqTask.find(task_id)).to have_attributes(:name => "Creating Ansible Tower Job Template")
+      expect(MiqTask.find(task_id)).to have_attributes(:name => "Creating #{described_class::FRIENDLY_NAME} (name=#{params[:name]})")
       expect(MiqQueue.first).to have_attributes(
         :args        => [manager.id, params],
         :class_name  => described_class.name,
@@ -162,19 +153,25 @@ shared_examples_for "ansible configuration_script" do
       )
     end
 
-    it ".update_in_provider_queue" do
-      EvmSpecHelper.local_miq_server
-      params[:manager_ref] = 10
-      task_id = described_class.update_in_provider_queue(manager.id, params)
-      expect(MiqTask.find(task_id)).to have_attributes(:name => "Updating Ansible Tower Job Template")
-      expect(MiqQueue.first).to have_attributes(
-        :args        => [manager.id, params],
-        :class_name  => described_class.name,
-        :method_name => "update_in_provider",
-        :priority    => MiqQueue::HIGH_PRIORITY,
-        :role        => "ems_operations",
-        :zone        => manager.zone.name
-      )
+    context "Update through API" do
+      let(:job_templates) { double("AnsibleTowerClient::Collection", :find => tower_project) }
+      let(:tower_project) { double("AnsibleTowerClient::Project", :update_attributes! => {}, :id => 1) }
+      let(:project)       { described_class.create!(:manager => manager, :manager_ref => tower_project.id) }
+
+      it "#update_in_provider_queue" do
+        task_id = project.update_in_provider_queue(params)
+        expect(MiqTask.find(task_id)).to have_attributes(:name => "Updating #{described_class::FRIENDLY_NAME} (Tower internal reference=#{project.manager_ref})")
+        expected_args = params.tap { |p| p[:task_id] = task_id }
+        expect(MiqQueue.first).to have_attributes(
+          :instance_id => project.id,
+          :args        => [expected_args],
+          :class_name  => described_class.name,
+          :method_name => "update_in_provider",
+          :priority    => MiqQueue::HIGH_PRIORITY,
+          :role        => "ems_operations",
+          :zone        => manager.my_zone
+        )
+      end
     end
 
     def store_new_job_template(job_template, manager)
