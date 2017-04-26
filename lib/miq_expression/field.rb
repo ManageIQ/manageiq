@@ -18,6 +18,12 @@ class MiqExpression::Field < MiqExpression::Target
         parsed_params[:virtual_custom_column])
   end
 
+  def self.get_col_name(field)
+    return field.split('.').last.tr('-', '.') unless is_field?(field)
+    parsed_field = parse(field)
+    parsed_field.associations.push(parsed_field.column).join('.')
+  end
+
   def self.is_field?(field)
     return false unless field.kind_of?(String)
     match = REGEX.match(field)
