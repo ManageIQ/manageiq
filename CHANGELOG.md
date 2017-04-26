@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-# Fine RC-1
+# Fine Beta-2
 
 ## Added
 
@@ -369,6 +369,33 @@ All notable changes to this project will be documented in this file.
 
 ## Fixed
 
+- Automate - Added finish retirement notification. [(#14780)](https://github.com/ManageIQ/manageiq/pull/14780)
+- Allow descendants of Host model to use belongsto filters in RBAC [(#14852)](https://github.com/ManageIQ/manageiq/pull/14852)
+- Reload the ems object in the event catcher if we fail to start [(#14736)](https://github.com/ManageIQ/manageiq/pull/14736)
+- Add a dummy args to storage.perf_capture [(#14790)](https://github.com/ManageIQ/manageiq/pull/14790)
+- Load custom attribute before evaluation [(#14785)](https://github.com/ManageIQ/manageiq/pull/14785)
+- group chargeback with unknown image under 'unknown image' [(#14816)](https://github.com/ManageIQ/manageiq/pull/14816)
+- Charge since the first MetricRollup [(#14666)](https://github.com/ManageIQ/manageiq/pull/14666)
+- It's \_log not log and we don't need the undefined variable prefix [(#14846)](https://github.com/ManageIQ/manageiq/pull/14846)
+- Use fetch_path to handle the case where :ws_values is nil. [(#14797)](https://github.com/ManageIQ/manageiq/pull/14797)
+- Method for ensuring managers change zone and provider region with CloudManager [(#14741)](https://github.com/ManageIQ/manageiq/pull/14741)
+- Fix for Error in re-configuring service 'undefined method `match` for Fixnum' [(#14861)](https://github.com/ManageIQ/manageiq/pull/14861)
+- Ensure google managers change zone and provider region with cloud manager [(#14742)](https://github.com/ManageIQ/manageiq/pull/14742)
+- Do never run disconnect twice [(#14815)](https://github.com/ManageIQ/manageiq/pull/14815)
+- Remove reverse! call for timezone after converting structure to hash [(#14772)](https://github.com/ManageIQ/manageiq/pull/14772)
+- Add method for validating global filters names [(#13816)](https://github.com/ManageIQ/manageiq/pull/13816)
+- Include embedded ansible logs in log collection [(#14770)](https://github.com/ManageIQ/manageiq/pull/14770)
+- Add multiline to ssh attribute [(#14707)](https://github.com/ManageIQ/manageiq/pull/14707)
+- Create/update Tower project with scm_credential [(#14618)](https://github.com/ManageIQ/manageiq/pull/14618)
+- Use HashWithIndifferentAccess for job options [(#14824)](https://github.com/ManageIQ/manageiq/pull/14824)
+- Container Volumes should honour tag visibility [(#14517)](https://github.com/ManageIQ/manageiq/pull/14517)
+- Reports: Add Container entities to TAG_CLASSES [(#14535)](https://github.com/ManageIQ/manageiq/pull/14535)
+- Google pubsub - undefined method \`empty?' for nil:NilClass [(#14856)](https://github.com/ManageIQ/manageiq/pull/14856)
+- Add chargeback to shortcuts to allow access to chargeback only. [(#14809)](https://github.com/ManageIQ/manageiq/pull/14809)
+- Define new product features for specific types of Storage Managers [(#14745)](https://github.com/ManageIQ/manageiq/pull/14745)
+- Use try for the multiplication with self["aggregate_all_vm_memory_on_disk] [(#14834)](https://github.com/ManageIQ/manageiq/pull/14834)
+- Fixed bug: timeout was not triggered for Image Scanning Job after removing Job#agent_class [(#14791)](https://github.com/ManageIQ/manageiq/pull/14791)
+- Fix names and descriptions of Object Store Containers and Object Storage Objects in product features [(#14820)](https://github.com/ManageIQ/manageiq/pull/14820)
 - Automate
   - Fix services always invisible [(#14403)](https://github.com/ManageIQ/manageiq/pull/14403)
   - Fixes tag control multi-value [(#14382)](https://github.com/ManageIQ/manageiq/pull/14382)
