@@ -3,7 +3,11 @@ class ServiceAnsiblePlaybook < ServiceGeneric
 
   # A chance for taking options from automate script to override options from a service dialog
   def preprocess(action, add_options = {})
-    _log.info("Override with new options: #{add_options}") unless add_options.blank?
+    unless add_options.blank?
+      _log.info("Override with new options:")
+      $log.log_hashes(add_options)
+    end
+
     save_job_options(action, add_options)
   end
 
@@ -12,7 +16,8 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     opts = get_job_options(action).deep_merge(:extra_vars => {'manageiq' => manageiq_extra_vars(action)})
     hosts = opts.delete(:hosts)
 
-    _log.info("Launching Ansible Tower job with options: #{opts}")
+    _log.info("Launching Ansible Tower job with options:")
+    $log.log_hashes(opts)
     new_job = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job.create_job(jt, decrypt_options(opts))
     update_job_for_playbook(action, new_job, hosts)
 
