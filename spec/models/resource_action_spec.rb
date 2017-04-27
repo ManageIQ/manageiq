@@ -61,7 +61,7 @@ describe ResourceAction do
         targets = [FactoryGirl.create(:vm_vmware), FactoryGirl.create(:vm_vmware)]
         ae_attributes[:array_object_type] = targets.first.class.base_class.name
         klass = targets.first.id.class
-        ae_attributes['Array::object_ids']  = targets.collect { |t| "#{klass}::#{t.id}" }.join(",")
+        ae_attributes['Array::object_ids'] = targets.collect { |t| "#{klass}::#{t.id}" }.join(",")
         expect(MiqQueue).to receive(:put).with(q_options).once
         ra.deliver_to_automate_from_dialog({}, targets, user)
       end
