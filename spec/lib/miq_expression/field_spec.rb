@@ -77,13 +77,10 @@ RSpec.describe MiqExpression::Field do
     end
   end
 
-  describe '#parse_report_field' do
-    it 'returns the correct format for a non field' do
-      expect(MiqExpression::Field.parse_report_field('Vm.managed-environment')).to eq('managed.environment')
-    end
-
+  describe '#report_column' do
     it 'returns the correct format for a field' do
-      expect(MiqExpression::Field.parse_report_field('Vm.miq_provision.miq_request-requester_name')).to eq('miq_provision.miq_request.requester_name')
+      field = MiqExpression::Field.parse('Vm.miq_provision.miq_request-requester_name')
+      expect(field.report_column).to eq('miq_provision.miq_request.requester_name')
     end
   end
 

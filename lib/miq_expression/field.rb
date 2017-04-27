@@ -18,12 +18,6 @@ class MiqExpression::Field < MiqExpression::Target
         parsed_params[:virtual_custom_column])
   end
 
-  def self.parse_report_field(field)
-    return field.split('.').last.tr('-', '.') unless is_field?(field)
-    parsed_field = parse(field)
-    (parsed_field.associations + [parsed_field.column]).join('.')
-  end
-
   def self.is_field?(field)
     return false unless field.kind_of?(String)
     match = REGEX.match(field)
@@ -81,6 +75,10 @@ class MiqExpression::Field < MiqExpression::Target
 
   def arel_attribute
     target.arel_attribute(column)
+  end
+
+  def report_column
+    (associations + [column]).join('.')
   end
 
   private

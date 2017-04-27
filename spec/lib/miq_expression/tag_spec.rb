@@ -63,6 +63,13 @@ RSpec.describe MiqExpression::Tag do
     end
   end
 
+  describe '#report_column' do
+    it 'returns the correct format for a tag' do
+      tag = MiqExpression::Tag.parse('Vm.managed-environment')
+      expect(tag.report_column).to eq('managed.environment')
+    end
+  end
+
   describe "#column_type" do
     it "is always a string" do
       expect(described_class.new(Vm, [], "/host").column_type).to eq(:string)
