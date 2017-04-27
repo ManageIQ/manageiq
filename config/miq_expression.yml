@@ -345,3 +345,7 @@
 :regkey_operators:
   - KEY EXISTS
   - VALUE EXISTS
+:boolean_operators:
+  - "="
+  - IS NULL
+  - IS NOT NULL
