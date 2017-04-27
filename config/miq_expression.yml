@@ -251,3 +251,8 @@
   ContainerService: container_service
   ContainerTemplate: container_template
   PersistentVolume: persistent_volume
+:exclude_from_relats:
+  ManageIQ::Providers::CloudManager:
+    - hosts
+    - ems_clusters
+    - resource_pools

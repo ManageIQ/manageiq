@@ -9,10 +9,7 @@ class MiqExpression
   EXCLUDE_COLUMNS = CONFIG[:exclude_columns]
   EXCLUDE_EXCEPTIONS = CONFIG[:exclude_exceptions]
   TAG_CLASSES = CONFIG[:tag_classes]
-
-  EXCLUDE_FROM_RELATS = {
-    "ManageIQ::Providers::CloudManager" => ["hosts", "ems_clusters", "resource_pools"]
-  }
+  EXCLUDE_FROM_RELATS = CONFIG[:exclude_from_relats]
 
   FORMAT_SUB_TYPES = {
     :boolean     => {
