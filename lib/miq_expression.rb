@@ -1034,8 +1034,7 @@ class MiqExpression
   NUM_OPERATORS     = CONFIG[:num_operators].freeze
   STRING_OPERATORS  = CONFIG[:string_operators]
   SET_OPERATORS     = CONFIG[:set_operators]
-  REGKEY_OPERATORS  = ["KEY EXISTS",
-                       "VALUE EXISTS"]
+  REGKEY_OPERATORS  = CONFIG[:regkey_operators]
   BOOLEAN_OPERATORS = ["=",
                        "IS NULL",
                        "IS NOT NULL"]

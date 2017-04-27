@@ -342,3 +342,6 @@
   - INCLUDES ALL
   - INCLUDES ANY
   - LIMITED TO
+:regkey_operators:
+  - KEY EXISTS
+  - VALUE EXISTS
