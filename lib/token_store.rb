@@ -3,13 +3,16 @@ class TokenStore
 
   def self.acquire(namespace, token_ttl)
     @token_caches[namespace] ||= begin
-      if test_environment?
+      case ::Settings.server.session_store
+      when "memory"
         require 'active_support/cache/memory_store'
         ActiveSupport::Cache::MemoryStore.new(cache_store_options(namespace, token_ttl))
-      else
+      when "cache"
         require 'active_support/cache/dalli_store'
         memcache_server = ::Settings.session.memcache_server
         ActiveSupport::Cache::DalliStore.new(memcache_server, cache_store_options(namespace, token_ttl))
+      else
+        raise "unsupported session store type: #{::Settings.server.session_store}"
       end
     end
   end
@@ -22,9 +25,4 @@ class TokenStore
     }
   end
   private_class_method :cache_store_options
-
-  def self.test_environment?
-    !Rails.env.development? && !Rails.env.production?
-  end
-  private_class_method :test_environment?
 end
