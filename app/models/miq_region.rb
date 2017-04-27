@@ -189,7 +189,7 @@ class MiqRegion < ApplicationRecord
   end
 
   def assigned_roles
-    miq_servers.includes(:server_roles).collect(&:assigned_roles).flatten.uniq.compact
+    miq_servers.eager_load(:server_roles).collect(&:assigned_roles).flatten.uniq.compact
   end
 
   def role_active?(role_name)
