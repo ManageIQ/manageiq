@@ -77,6 +77,16 @@ RSpec.describe MiqExpression::Field do
     end
   end
 
+  describe '#parse_report_field' do
+    it 'returns the correct format for a non field' do
+      expect(MiqExpression::Field.parse_report_field('Vm.managed-environment')).to eq('managed.environment')
+    end
+
+    it 'returns the correct format for a field' do
+      expect(MiqExpression::Field.parse_report_field('Vm.miq_provision.miq_request-requester_name')).to eq('miq_provision.miq_request.requester_name')
+    end
+  end
+
   describe "#parse!" do
     it "can parse the model name" do
       field = "Vm-name"

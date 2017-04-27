@@ -18,10 +18,10 @@ class MiqExpression::Field < MiqExpression::Target
         parsed_params[:virtual_custom_column])
   end
 
-  def self.get_col_name(field)
+  def self.parse_report_field(field)
     return field.split('.').last.tr('-', '.') unless is_field?(field)
     parsed_field = parse(field)
-    parsed_field.associations.push(parsed_field.column).join('.')
+    (parsed_field.associations + [parsed_field.column]).join('.')
   end
 
   def self.is_field?(field)
