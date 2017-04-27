@@ -158,7 +158,8 @@ module ManageIQ::Providers
       def fetch_availability
         resources_by_metric_id = {}
         metric_id_by_resource_path = {}
-        @ems.feeds.each do |feed|
+        feeds_of_interest = @eaps.map(&:feed).uniq
+        feeds_of_interest.each do |feed|
           deployment_status_mt_path = ::Hawkular::Inventory::CanonicalPath.new(
             :metric_type_id => 'Deployment%20Status~Deployment%20Status', :feed_id => feed
           )
@@ -171,7 +172,7 @@ module ManageIQ::Providers
               :feed_id      => deployment_status_metric_path.feed_id,
               :resource_ids => deployment_status_metric_path.resource_ids
             )
-            metric_id_by_resource_path[resource_path.to_s] = deployment_status_metric.hawkular_metric_id
+            metric_id_by_resource_path[URI.decode(resource_path.to_s)] = deployment_status_metric.hawkular_metric_id
           end
         end
         @data[:middleware_deployments].each do |deployment|
@@ -179,12 +180,12 @@ module ManageIQ::Providers
           deployment[:status] = process_availability
           path = ::Hawkular::Inventory::CanonicalPath.parse(deployment[:ems_ref])
           # for subdeployments use it's parent deployment availability.
-          path = path.up if path.resource_ids.last.include? CGI.escape('/subdeployment=')
+          path = path.up if URI.decode(path.resource_ids.last).include? '/subdeployment='
           # Ensure consistency on keys (resource_path) used on metric_id_by_resource_path
           path = ::Hawkular::Inventory::CanonicalPath.new(:tenant_id    => path.tenant_id,
                                                           :feed_id      => path.feed_id,
                                                           :resource_ids => path.resource_ids)
-          path = path.to_s
+          path = URI.decode(path.to_s)
           next unless metric_id_by_resource_path.key? path
           metric_id = metric_id_by_resource_path[path]
           resources_by_metric_id[metric_id] = [] unless resources_by_metric_id.key? metric_id
@@ -249,10 +250,12 @@ module ManageIQ::Providers
       end
 
       def parse_messaging(server, messaging, config)
+        type_path = ::Hawkular::Inventory::CanonicalPath.parse(messaging.type_path)
+
         specific = {
           :name              => messaging.name,
           :middleware_server => server,
-          :messaging_type    => messaging.to_h['type']['name']
+          :messaging_type    => URI.decode(type_path.resource_type_id)
         }
         if !config.empty? && !config['value'].empty? && config['value'].respond_to?(:except)
           specific[:properties] = config['value'].except('Username', 'Password')
