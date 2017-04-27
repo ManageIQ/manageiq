@@ -3,6 +3,8 @@ class MiqExpression
   include Vmdb::Logging
   attr_accessor :exp, :context_type, :preprocess_options
 
+  CONFIG = YAML.load_file(Rails.root.join("config", "miq_expression.yml"))
+
   BASE_TABLES = %w(
     AuditEvent
     AvailabilityZone
