@@ -328,9 +328,14 @@ class EmsCluster < ApplicationRecord
     end
   end
 
-  def self.node_types
-    return :non_openstack unless openstack_clusters_exists?
-    non_openstack_clusters_exists? ? :mixed_clusters : :openstack
+  cache_with_timeout(:node_types) do
+    if !openstack_clusters_exists?
+      :non_openstack
+    elsif non_openstack_clusters_exists?
+      :mixed_clusters
+    else
+      :openstack
+    end
   end
 
   def self.openstack_clusters_exists?

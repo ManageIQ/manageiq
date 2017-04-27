@@ -1813,9 +1813,14 @@ class Host < ApplicationRecord
     !plist.blank?
   end
 
-  def self.node_types # TODO: This doesn't belong here
-    return :non_openstack unless openstack_hosts_exists?
-    non_openstack_hosts_exists? ? :mixed_hosts : :openstack
+  cache_with_timeout(:node_types) do # TODO: This doesn't belong here
+    if !openstack_hosts_exists?
+      :non_openstack
+    elsif non_openstack_hosts_exists?
+      :mixed_hosts
+    else
+      :openstack
+    end
   end
 
   def self.openstack_hosts_exists? # TODO: This doesn't belong here
