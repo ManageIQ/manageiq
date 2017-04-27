@@ -1032,16 +1032,7 @@ class MiqExpression
   end
 
   NUM_OPERATORS     = CONFIG[:num_operators].freeze
-  STRING_OPERATORS  = ["=",
-                       "STARTS WITH",
-                       "ENDS WITH",
-                       "INCLUDES",
-                       "IS NULL",
-                       "IS NOT NULL",
-                       "IS EMPTY",
-                       "IS NOT EMPTY",
-                       "REGULAR EXPRESSION MATCHES",
-                       "REGULAR EXPRESSION DOES NOT MATCH"]
+  STRING_OPERATORS  = CONFIG[:string_operators]
   SET_OPERATORS     = ["INCLUDES ALL",
                        "INCLUDES ANY",
                        "LIMITED TO"]

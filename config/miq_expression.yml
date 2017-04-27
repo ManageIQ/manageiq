@@ -327,3 +327,14 @@
   - "<="
   - ">="
   - ">"
+:string_operators:
+  - "="
+  - STARTS WITH
+  - ENDS WITH
+  - INCLUDES
+  - IS NULL
+  - IS NOT NULL
+  - IS EMPTY
+  - IS NOT EMPTY
+  - REGULAR EXPRESSION MATCHES
+  - REGULAR EXPRESSION DOES NOT MATCH
