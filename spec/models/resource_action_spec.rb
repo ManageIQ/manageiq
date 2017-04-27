@@ -4,6 +4,7 @@ describe ResourceAction do
     let(:zone_name) { "default" }
     let(:ra) { FactoryGirl.create(:resource_action) }
     let(:miq_server) { FactoryGirl.create(:miq_server) }
+    let(:ae_attributes) { {} }
     let(:q_args) do
       {
         :namespace        => nil,
@@ -13,7 +14,7 @@ describe ResourceAction do
         :user_id          => user.id,
         :miq_group_id     => user.current_group.id,
         :tenant_id        => user.current_tenant.id,
-        :attrs            => {},
+        :attrs            => ae_attributes,
       }
     end
     let(:q_options) do
@@ -51,6 +52,18 @@ describe ResourceAction do
         q_args[:object_id]   = target.id
         expect(MiqQueue).to receive(:put).with(q_options).once
         ra.deliver_to_automate_from_dialog({}, target, user)
+      end
+    end
+
+    context 'with targets' do
+      let(:zone_name) { nil }
+      it "validates queue entry" do
+        targets = [FactoryGirl.create(:vm_vmware), FactoryGirl.create(:vm_vmware)]
+        ae_attributes[:array_object_type] = targets.first.class.base_class.name
+        klass = targets.first.id.class
+        ae_attributes['Array::object_ids']  = targets.collect { |t| "#{klass}::#{t.id}" }.join(",")
+        expect(MiqQueue).to receive(:put).with(q_options).once
+        ra.deliver_to_automate_from_dialog({}, targets, user)
       end
     end
   end
