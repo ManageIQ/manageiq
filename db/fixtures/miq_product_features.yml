@@ -2570,20 +2570,12 @@
     :feature_type: view
     :identifier: tasks_view
     :children:
-    - :name: All VM and Container Analysis Tasks
-      :description: Display Lists of All VM and Container Analysis Tasks
-      :feature_type: view
-      :identifier: job_all_smartproxy
-    - :name: All Other Tasks
-      :description: Display Lists of All UI Tasks
+    - :name: All Tasks
+      :description: Display Lists of All Tasks
       :feature_type: view
       :identifier: miq_task_all_ui
-    - :name: VM and Container Analysis Tasks
-      :description: Display Lists of VM and Container Analysis Tasks
-      :feature_type: view
-      :identifier: job_my_smartproxy
-    - :name: Other UI Tasks
-      :description: Display Lists of UI Tasks
+    - :name: My Tasks
+      :description: Display Lists of My Tasks
       :feature_type: view
       :identifier: miq_task_my_ui
   - :name: Modify
