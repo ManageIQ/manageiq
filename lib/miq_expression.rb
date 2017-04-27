@@ -1063,7 +1063,7 @@ class MiqExpression
     end
   end
 
-  STYLE_OPERATORS_EXCLUDES = ["REGULAR EXPRESSION MATCHES", "REGULAR EXPRESSION DOES NOT MATCH", "FROM"].freeze
+  STYLE_OPERATORS_EXCLUDES = CONFIG[:style_operators_excludes]
   def self.get_col_style_operators(field)
     result = get_col_operators(field) - STYLE_OPERATORS_EXCLUDES
   end
