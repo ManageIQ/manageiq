@@ -6,50 +6,7 @@ class MiqExpression
   CONFIG = YAML.load_file(Rails.root.join("config", "miq_expression.yml"))
   BASE_TABLES = CONFIG[:base_tables]
   INCLUDE_TABLES = CONFIG[:include_tables]
-
-  EXCLUDE_COLUMNS = %w(
-    ^.*_id$
-    ^id$
-    ^min_derived_storage.*$
-    ^max_derived_storage.*$
-    assoc_ids
-    capture_interval
-    filters
-    icon
-
-    intervals_in_rollup
-
-    max_cpu_ready_delta_summation
-    max_cpu_system_delta_summation
-    max_cpu_used_delta_summation
-    max_cpu_wait_delta_summation
-    max_derived_cpu_available
-    max_derived_cpu_reserved
-    max_derived_memory_available
-    max_derived_memory_reserved
-
-    memory_usage
-
-    min_cpu_ready_delta_summation
-    min_cpu_system_delta_summation
-    min_cpu_used_delta_summation
-    min_cpu_wait_delta_summation
-    min_derived_memory_available
-    min_derived_memory_reserved
-    min_derived_cpu_available
-    min_derived_cpu_reserved
-
-    min_max
-
-    options
-    password
-    policy_settings
-    ^reserved$
-    resource_id
-    settings
-    tag_names
-    v_qualified_desc
-  )
+  EXCLUDE_COLUMNS = CONFIG[:exclude_columns]
 
   EXCLUDE_EXCEPTIONS = %w(
     capacity_profile_1_memory_per_vm_with_min_max
