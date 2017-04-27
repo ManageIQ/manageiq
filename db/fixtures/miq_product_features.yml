@@ -1728,6 +1728,11 @@
         :feature_type: admin
         :hidden: true
         :identifier: profile_edit
+      - :name: Edit Policies Assignment
+        :description: Edit Policy Profile's policies assignments
+        :feature_type: admin
+        :hidden: true
+        :identifier: policy_profile_assign
   - :name: Policies
     :description: Everything under Policies Accordion
     :protected: true
