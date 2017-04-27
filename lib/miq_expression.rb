@@ -3,7 +3,7 @@ class MiqExpression
   include Vmdb::Logging
   attr_accessor :exp, :context_type, :preprocess_options
 
-  CONFIG = YAML.load_file(Rails.root.join("config", "miq_expression.yml"))
+  CONFIG = YAML.load(ERB.new(File.read(Rails.root.join("config", "miq_expression.yml"))).result)
   BASE_TABLES = CONFIG[:base_tables]
   INCLUDE_TABLES = CONFIG[:include_tables]
   EXCLUDE_COLUMNS = CONFIG[:exclude_columns]
