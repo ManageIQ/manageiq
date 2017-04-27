@@ -242,12 +242,15 @@ describe ServiceTemplateAnsiblePlaybook do
   end
 
   describe '#update_job_templates' do
-    let(:service_template) { prebuild_service_template(:job_template => false) }
+    let(:service_template) { prebuild_service_template(:job_template => true) }
 
     it 'does not update a job_template if the there is no playbook_id' do
+      [:provision, :retirement, :reconfigure].each do |action|
+        catalog_item_options[:config_info][action].delete(:playbook_id) if catalog_item_options[:config_info][action]
+      end
       expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript)
         .to receive(:update_in_provider_queue).never
-      service_template.send(:update_job_templates, 'blah', 'blah', catalog_item_options, user)
+      service_template.send(:update_job_templates, 'blah', 'blah', catalog_item_options[:config_info], user)
     end
 
     it 'does update a job_template if a playbook_id is included' do
