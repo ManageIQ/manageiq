@@ -420,4 +420,31 @@ describe ServiceController do
         include("Retirement initiated for 1 Service from the %{product} Database" % {:product => I18n.t('product.name')})
     end
   end
+
+  describe MiqTemplateController do
+    context "#vm_button_operation" do
+      before do
+        _guid, @miq_server, @zone = EvmSpecHelper.remote_guid_miq_server_zone
+        allow(MiqServer).to receive(:my_zone).and_return("default")
+        controller.instance_variable_set(:@lastaction, "show_list")
+      end
+
+      it "should continue to set ownership for a template" do
+        controller.request.parameters["controller"] = "miq_template"
+        allow(controller).to receive(:role_allows?).and_return(true)
+        allow(controller).to receive(:drop_breadcrumb)
+        template = FactoryGirl.create(:template,
+                                      :ext_management_system => FactoryGirl.create(:ems_openstack_infra),
+                                      :storage               => FactoryGirl.create(:storage))
+        controller.instance_variable_set(:@_params,
+                                         :miq_grid_checks => template.id.to_s,
+                                         :pressed         => 'miq_template_set_ownership')
+        expect(controller).to receive(:javascript_redirect).with(:controller => "miq_template",
+                                                                 :action     => 'ownership',
+                                                                 :rec_ids    => [template.id],
+                                                                 :escape     => false)
+        controller.send('set_ownership')
+      end
+    end
+  end
 end
