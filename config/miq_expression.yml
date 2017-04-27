@@ -349,3 +349,10 @@
   - "="
   - IS NULL
   - IS NOT NULL
+:date_time_operators:
+  - IS
+  - BEFORE
+  - AFTER
+  - FROM
+  - IS EMPTY
+  - IS NOT EMPTY

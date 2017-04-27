@@ -1036,7 +1036,7 @@ class MiqExpression
   SET_OPERATORS     = CONFIG[:set_operators]
   REGKEY_OPERATORS  = CONFIG[:regkey_operators]
   BOOLEAN_OPERATORS = CONFIG[:boolean_operators]
-  DATE_TIME_OPERATORS       = ["IS", "BEFORE", "AFTER", "FROM", "IS EMPTY", "IS NOT EMPTY"]
+  DATE_TIME_OPERATORS = CONFIG[:date_time_operators]
 
   def self.get_col_operators(field)
     if field == :count || field == :regkey
