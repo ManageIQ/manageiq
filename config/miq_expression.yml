@@ -212,3 +212,11 @@
   - settings
   - tag_names
   - v_qualified_desc
+:exclude_exceptions:
+  - capacity_profile_1_memory_per_vm_with_min_max
+  - capacity_profile_1_vcpu_per_vm_with_min_max
+  - capacity_profile_2_memory_per_vm_with_min_max
+  - capacity_profile_2_vcpu_per_vm_with_min_max
+  - chain_id
+  - guid
+  - openscap_id

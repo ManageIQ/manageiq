@@ -7,16 +7,7 @@ class MiqExpression
   BASE_TABLES = CONFIG[:base_tables]
   INCLUDE_TABLES = CONFIG[:include_tables]
   EXCLUDE_COLUMNS = CONFIG[:exclude_columns]
-
-  EXCLUDE_EXCEPTIONS = %w(
-    capacity_profile_1_memory_per_vm_with_min_max
-    capacity_profile_1_vcpu_per_vm_with_min_max
-    capacity_profile_2_memory_per_vm_with_min_max
-    capacity_profile_2_vcpu_per_vm_with_min_max
-    chain_id
-    guid
-    openscap_id
-  )
+  EXCLUDE_EXCEPTIONS = CONFIG[:exclude_exceptions]
 
   TAG_CLASSES = {
     'ManageIQ::Providers::CloudManager'           => 'ext_management_system',
