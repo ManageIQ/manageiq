@@ -104,7 +104,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
       :ask_limit_on_launch      => true,
       :ask_inventory_on_launch  => true,
       :ask_credential_on_launch => true
-    }
+    }.merge(info.slice(:become_enabled))
     if info[:extra_vars]
       params[:extra_vars] = info[:extra_vars].transform_values do |val|
         val.kind_of?(String) ? val : val[:default] # TODO: support Hash only
