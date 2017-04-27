@@ -1033,9 +1033,7 @@ class MiqExpression
 
   NUM_OPERATORS     = CONFIG[:num_operators].freeze
   STRING_OPERATORS  = CONFIG[:string_operators]
-  SET_OPERATORS     = ["INCLUDES ALL",
-                       "INCLUDES ANY",
-                       "LIMITED TO"]
+  SET_OPERATORS     = CONFIG[:set_operators]
   REGKEY_OPERATORS  = ["KEY EXISTS",
                        "VALUE EXISTS"]
   BOOLEAN_OPERATORS = ["=",
