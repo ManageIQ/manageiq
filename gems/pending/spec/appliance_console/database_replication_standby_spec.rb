@@ -117,6 +117,8 @@ describe ApplianceConsole::DatabaseReplicationStandby do
 
   context "#activate" do
     before do
+      expect(subject).to receive(:stop_postgres)
+      expect(subject).to receive(:stop_repmgrd)
       expect(subject).to receive(:generate_cluster_name).and_return(true)
       expect(subject).to receive(:create_config_file).and_return(true)
       expect(subject).to receive(:clone_standby_server).and_return(true)
@@ -245,6 +247,16 @@ describe ApplianceConsole::DatabaseReplicationStandby do
     end
   end
 
+  context "#stop_postgres" do
+    it "should stop postgres and return true" do
+      service = double("PostgresService", :service => nil)
+      expect(LinuxAdmin::Service).to receive(:new).and_return(service)
+      expect(service).to receive(:stop)
+
+      expect(subject.stop_postgres).to be_truthy
+    end
+  end
+
   context "#start_repmgrd" do
     it "starts and enables repmgrd" do
       service = double(SPEC_NAME)
@@ -261,6 +273,16 @@ describe ApplianceConsole::DatabaseReplicationStandby do
       expect(service).to receive(:enable).and_return(service)
       expect(service).to receive(:start).and_raise(AwesomeSpawn::CommandResultError.new("", result))
       expect(subject.start_repmgrd).to be false
+    end
+  end
+
+  context "#stop_repmgrd" do
+    it "stops the repmgrd service" do
+      service = double("RepmgrdService")
+      expect(LinuxAdmin::Service).to receive(:new).and_return(service)
+      expect(service).to receive(:stop)
+
+      expect(subject.stop_repmgrd).to be true
     end
   end
 

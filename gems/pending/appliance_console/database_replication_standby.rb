@@ -62,6 +62,8 @@ module ApplianceConsole
 
     def activate
       say("Configuring Replication Standby Server...")
+      stop_postgres
+      stop_repmgrd
       initialize_postgresql_disk if disk
       PostgresAdmin.prep_data_directory if disk || resync_data
       generate_cluster_name &&
@@ -102,6 +104,11 @@ module ApplianceConsole
       true
     end
 
+    def stop_postgres
+      LinuxAdmin::Service.new(PostgresAdmin.service_name).stop
+      true
+    end
+
     def register_standby_server
       run_repmgr_command(REGISTER_CMD, :force => nil)
     end
@@ -114,6 +121,11 @@ module ApplianceConsole
       Logging.logger.error(message)
       say(message)
       false
+    end
+
+    def stop_repmgrd
+      LinuxAdmin::Service.new(REPMGRD_SERVICE).stop
+      true
     end
 
     def node_number_valid?
