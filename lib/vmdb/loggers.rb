@@ -1,5 +1,11 @@
 require 'util/vmdb-logger'
 
+# Intitialize this sub module
+module Vmdb
+  module Loggers
+  end
+end
+
 Dir.glob(File.join(File.dirname(__FILE__), "loggers", "*")).each { |f| require f }
 
 module Vmdb

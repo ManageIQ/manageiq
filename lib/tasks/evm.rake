@@ -1,11 +1,11 @@
 $:.push(File.dirname(__FILE__))
 require 'evm_application'
-require 'evm_rake_helper'
 
 namespace :evm do
   desc "Start the ManageIQ EVM Application"
-  task :start => :environment do
-    EvmApplication.start
+  task :start do
+    Mini::MiqServer.with_temporary_connection { EvmApplication.start }
+    puts "Mem: #{((1024 * BigDecimal.new(`ps -o rss= -p #{Process.pid}`))/BigDecimal.new(1_048_576)).to_f}MiB"
   end
 
   desc "Restart the ManageIQ EVM Application"
@@ -15,8 +15,9 @@ namespace :evm do
   end
 
   desc "Stop the ManageIQ EVM Application"
-  task :stop => :environment do
-    EvmApplication.stop
+  task :stop do
+    Mini::MiqServer.with_temporary_connection { EvmApplication.stop }
+    puts "Mem: #{((1024 * BigDecimal.new(`ps -o rss= -p #{Process.pid}`))/BigDecimal.new(1_048_576)).to_f}MiB"
   end
 
   desc "Kill the ManageIQ EVM Application"
@@ -25,13 +26,15 @@ namespace :evm do
   end
 
   desc "Report Status of the ManageIQ EVM Application"
-  task :status => :environment do
-    EvmApplication.status
+  task :status do
+    Mini::MiqServer.with_temporary_connection { EvmApplication.status }
+    puts "Mem: #{((1024 * BigDecimal.new(`ps -o rss= -p #{Process.pid}`))/BigDecimal.new(1_048_576)).to_f}MiB"
   end
 
   desc "Report Status of the ManageIQ EVM Application"
-  task :status_full => :environment do
-    EvmApplication.status(true)
+  task :status_full do
+    Mini::MiqServer.with_temporary_connection { EvmApplication.status(true) }
+    puts "Mem: #{((1024 * BigDecimal.new(`ps -o rss= -p #{Process.pid}`))/BigDecimal.new(1_048_576)).to_f}MiB"
   end
 
   desc "Write a remote region id to this server's REGION file"
@@ -68,6 +71,9 @@ namespace :evm do
 
   desc "Compile STI inheritance relationship cache"
   task :compile_sti_loader do
+    require File.expand_path('../../../config/application', __FILE__)
+    Vmdb::Application.load_tasks
+
     EvmRakeHelper.with_dummy_database_url_configuration do
       Rake::Task["environment"].invoke
       DescendantLoader.instance.class_inheritance_relationships
