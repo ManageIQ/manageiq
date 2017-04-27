@@ -1031,7 +1031,7 @@ class MiqExpression
     parse_field_or_tag(field).try(:column_type)
   end
 
-  NUM_OPERATORS     = ["=", "!=", "<", "<=", ">=", ">"].freeze
+  NUM_OPERATORS     = CONFIG[:num_operators].freeze
   STRING_OPERATORS  = ["=",
                        "STARTS WITH",
                        "ENDS WITH",

@@ -320,3 +320,10 @@
   :fixnum: *integer
   :mhz_avg: *mhz
   :text: *string
+:num_operators:
+  - "="
+  - "!="
+  - "<"
+  - "<="
+  - ">="
+  - ">"
