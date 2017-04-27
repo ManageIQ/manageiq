@@ -8,39 +8,8 @@ class MiqExpression
   INCLUDE_TABLES = CONFIG[:include_tables]
   EXCLUDE_COLUMNS = CONFIG[:exclude_columns]
   EXCLUDE_EXCEPTIONS = CONFIG[:exclude_exceptions]
+  TAG_CLASSES = CONFIG[:tag_classes]
 
-  TAG_CLASSES = {
-    'ManageIQ::Providers::CloudManager'           => 'ext_management_system',
-    'EmsCluster'                                  => 'ems_cluster',
-    'ManageIQ::Providers::InfraManager'           => 'ext_management_system',
-    'ManageIQ::Providers::ContainerManager'       => 'ext_management_system',
-    'ExtManagementSystem'                         => 'ext_management_system',
-    'Host'                                        => 'host',
-    'MiqGroup'                                    => 'miq_group',
-    'MiqTemplate'                                 => 'miq_template',
-    'ResourcePool'                                => 'resource_pool',
-    'Service'                                     => 'service',
-    'Storage'                                     => 'storage',
-    'ManageIQ::Providers::CloudManager::Template' => 'miq_template',
-    'ManageIQ::Providers::InfraManager::Template' => 'miq_template',
-    'User'                                        => 'user',
-    'Vm'                                          => 'vm',
-    'VmOrTemplate'                                => 'vm',
-    'ManageIQ::Providers::CloudManager::Vm'       => 'vm',
-    'ManageIQ::Providers::InfraManager::Vm'       => 'vm',
-    'Container'                                   => 'container',
-    'ContainerBuild'                              => 'container_build',
-    'ContainerGroup'                              => 'container_group',
-    'ContainerImage'                              => 'container_image',
-    'ContainerImageRegistry'                      => 'container_image_registry',
-    'ContainerNode'                               => 'container_node',
-    'ContainerProject'                            => 'container_project',
-    'ContainerReplicator'                         => 'container_replicator',
-    'ContainerRoute'                              => 'container_route',
-    'ContainerService'                            => 'container_service',
-    'ContainerTemplate'                           => 'container_template',
-    'PersistentVolume'                            => 'persistent_volume'
-  }
   EXCLUDE_FROM_RELATS = {
     "ManageIQ::Providers::CloudManager" => ["hosts", "ems_clusters", "resource_pools"]
   }
