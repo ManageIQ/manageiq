@@ -13,6 +13,7 @@ module MiqAeMethodService
     expose :openscap_rule_results,        :association => true
     expose :exposed_ports,                :association => true
     expose :environment_variables,        :association => true
+    expose :image_ref
     expose :is_tagged_with?
     expose :tags
   end

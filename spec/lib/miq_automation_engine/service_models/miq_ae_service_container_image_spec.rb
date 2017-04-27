@@ -51,5 +51,9 @@ module MiqAeServiceContainerSpec
     it "#environment_variables" do
       expect(described_class.instance_methods).to include(:environment_variables)
     end
+
+    it "#image_ref" do
+      expect(described_class.instance_methods).to include(:image_ref)
+    end
   end
 end
