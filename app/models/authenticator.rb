@@ -13,14 +13,25 @@ module Authenticator
   end
 
   def self.authenticator_class(name)
-    name = name.to_s
-    Base.subclasses.find do |subclass|
-      return subclass if subclass.authenticates_for.include?(name)
-    end
+    authenticator_classes_cache[name.to_s]
+  end
 
+  def self.authenticator_classes_cache
+    @authenticator_classes_cache ||= Concurrent::Hash.new do |hash, name|
+      hash[name] = authenticator_class_for(name) || force_load_authenticator_for(name)
+    end
+  end
+
+  def self.force_load_authenticator_for(name)
     # try to constantize in case the subclass is not loaded yet, but it still exists
     # this is happens with authenticators from provider gems
     subclass = "Authenticator::#{name.camelize}".safe_constantize
     subclass if subclass && subclass.authenticates_for.include?(name)
+  end
+
+  def self.authenticator_class_for(name)
+    Base.subclasses.find do |subclass|
+      subclass.authenticates_for.include?(name)
+    end
   end
 end
