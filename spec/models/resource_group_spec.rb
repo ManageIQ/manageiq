@@ -23,8 +23,24 @@ describe ResourceGroup do
   end
 
   context "relationships" do
-    it "has many vms" do
-      expect(resource_group).to respond_to(:vms)
+    before do
+      @vm       = FactoryGirl.create(:vm_google, :template => false, :resource_group => resource_group)
+      @template = FactoryGirl.create(:template_google, :template => true, :resource_group => resource_group)
+    end
+
+    it "returns the expected results for vms" do
+      expect(resource_group.vms).to include(@vm)
+      expect(resource_group.vms).to_not include(@template)
+    end
+
+    it "returns the expected results for templates" do
+      expect(resource_group.templates).to include(@template)
+      expect(resource_group.templates).to_not include(@vm)
+    end
+
+    it "returns the expected results for vm_or_templates" do
+      expect(resource_group.vm_or_templates).to include(@template)
+      expect(resource_group.vm_or_templates).to include(@vm)
     end
   end
 end

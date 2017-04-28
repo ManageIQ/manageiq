@@ -79,6 +79,8 @@ class VmOrTemplate < ApplicationRecord
   has_many                  :guest_applications, :dependent => :destroy
   has_many                  :patches, :dependent => :destroy
 
+  belongs_to                :resource_group
+
   # Accounts - Users and Groups
   has_many                  :accounts, :dependent => :destroy
   has_many                  :users, -> { where(:accttype => 'user') }, :class_name => "Account"
