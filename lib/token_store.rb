@@ -4,6 +4,8 @@ class TokenStore
   def self.acquire(namespace, token_ttl)
     @token_caches[namespace] ||= begin
       case ::Settings.server.session_store
+      when "sql"
+        SqlStore.new(cache_store_options(namespace, token_ttl))
       when "memory"
         require 'active_support/cache/memory_store'
         ActiveSupport::Cache::MemoryStore.new(cache_store_options(namespace, token_ttl))
