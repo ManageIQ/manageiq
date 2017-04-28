@@ -31,6 +31,7 @@ describe ServiceTemplateAnsiblePlaybook do
         :provision => {
           :new_dialog_name       => 'test_dialog',
           :hosts                 => 'many',
+          :become_enabled        => true,
           :credential_id         => auth_one.id,
           :network_credential_id => auth_two.id,
           :playbook_id           => playbook.id
@@ -62,6 +63,7 @@ describe ServiceTemplateAnsiblePlaybook do
                       :config_info => {
                         :provision => {
                           :new_dialog_name => 'test_dialog_updated',
+                          :become_enabled  => false,
                           :extra_vars      => {
                             'key1' => {:default => 'updated_val1'},
                             'key2' => {:default => 'updated_val2'}
@@ -127,6 +129,7 @@ describe ServiceTemplateAnsiblePlaybook do
       expect(params).to have_attributes(
         :name               => name,
         :description        => description,
+        :become_enabled     => true,
         :credential         => '6',
         :network_credential => '10'
       )
@@ -216,6 +219,7 @@ describe ServiceTemplateAnsiblePlaybook do
         'key1' => {:default => 'updated_val1'},
         'key2' => {:default => 'updated_val2'}
       )
+      expect(service_template.options.fetch_path(:config_info, :provision, :become_enabled)).to be false
       new_dialog_record = Dialog.where(:label => new_dialog_label).first
       expect(new_dialog_record).to be_truthy
       expect(service_template.resource_actions.first.dialog.id).to eq new_dialog_record.id

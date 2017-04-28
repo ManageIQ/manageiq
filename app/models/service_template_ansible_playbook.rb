@@ -100,6 +100,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
       :project                  => playbook.configuration_script_source.manager_ref,
       :playbook                 => playbook.name,
       :inventory                => tower.provider.default_inventory,
+      :become_enabled           => info[:become_enabled].present?,
       :ask_variables_on_launch  => true,
       :ask_limit_on_launch      => true,
       :ask_inventory_on_launch  => true,
@@ -144,8 +145,8 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
 
   def update_catalog_item(options, auth_user = nil)
     config_info = validate_update_config_info(options)
-    name = options[:name] || name
-    description = options[:description] || description
+    name = options[:name] || self.name
+    description = options[:description] || self.description
 
     update_job_templates(name, description, config_info, auth_user)
 
