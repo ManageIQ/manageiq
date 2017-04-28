@@ -25,6 +25,12 @@ describe ShowbackEvent do
       expect(showback_event.errors[:start_time]).to include "Start time should be before end time"
     end
 
+    it "should valid if start time is equal to end time" do
+      showback_event.start_time = 1.hour.ago
+      showback_event.end_time = showback_event.start_time
+      expect(showback_event).to be_valid
+    end
+
     it "should ensure presence of resource_id" do
       showback_event.resource_id = nil
       showback_event.valid?
