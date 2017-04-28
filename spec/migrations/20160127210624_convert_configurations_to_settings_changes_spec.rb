@@ -56,9 +56,9 @@ describe ConvertConfigurationsToSettingsChanges do
         "simple" => YAML.load_file(data_dir.join("simple.tmpl.yml")).deep_symbolize_keys,
         "vmdb"   => YAML.load_file(data_dir.join("simple.tmpl.yml")).deep_symbolize_keys
       }
-      described_class.with_constants(:TEMPLATES => test_templates) do
-        migrate
-      end
+
+      stub_const('ConvertConfigurationsToSettingsChanges::TEMPLATES', test_templates)
+      migrate
 
       expect(settings_change_stub.count).to eq(12)
 
