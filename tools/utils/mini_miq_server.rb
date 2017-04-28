@@ -14,10 +14,14 @@ end
 
 
 # HACK:  find a better way to share this code...
-module MiqServer
-  module WorkerManagement
-    module Monitor
-      module Kill
+begin
+  MiqServer
+rescue
+  module MiqServer
+    module WorkerManagement
+      module Monitor
+        module Kill
+        end
       end
     end
   end
@@ -265,6 +269,10 @@ module Mini
 end
 
 # HACK:  find a better way to share this code...
-MiqWorker = Mini::MiqWorker
+begin
+  MiqWorker
+rescue
+  MiqWorker = Mini::MiqWorker
+end
 
 # puts Mini::MiqServer.with_temporary_connection { Mini::MiqServer.my_server.inspect }
