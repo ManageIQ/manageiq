@@ -43,6 +43,7 @@ module Rbac
       Service
       ServiceTemplate
       Storage
+      Tenant
       VmOrTemplate
     )
 
