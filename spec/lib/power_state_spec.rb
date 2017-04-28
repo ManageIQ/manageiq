@@ -24,6 +24,7 @@ describe PowerState do
     it "partializes the state with the most entries" do
       allow(service).to receive(:power_states).and_return(partial_power_states)
       power_state = PowerState.new(options, service)
+
       expect(power_state.partialize).to eq "partial_on"
     end
 

@@ -32,9 +32,9 @@ class PowerState
     extract_action
     if @action.nil?
       Service::POWER_STATE_MAP.each do |action, value|
-        return value if service.power_states_match?(action, @states)
+        return value if @service.power_states_match?(action, @states)
       end
-    elsif service.power_states_match?(@action, @states)
+    elsif @service.power_states_match?(@action, @states)
       return Service::POWER_STATE_MAP[@action]
     end
     partialize
