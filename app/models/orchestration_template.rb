@@ -1,7 +1,5 @@
 require 'digest/md5'
 class OrchestrationTemplate < ApplicationRecord
-  TEMPLATE_DIR = Rails.root.join("product/orchestration_templates")
-
   include NewWithTypeStiMixin
 
   acts_as_miq_taggable
@@ -24,10 +22,12 @@ class OrchestrationTemplate < ApplicationRecord
 
   # Try to create the template if the name is not found in table
   def self.seed
-    Dir.glob(TEMPLATE_DIR.join('*.yml')).each do |file|
-      hash = YAML.load_file(file)
-      next if hash[:type].constantize.find_by(:name => hash[:name])
-      find_or_create_by_contents(hash)
+    Vmdb::Plugins.instance.vmdb_plugins.each do |plugin|
+      Dir.glob(plugin.root.join('content', 'orchestration_templates', '*.{yaml,yml}')).each do |file|
+        hash = YAML.load_file(file)
+        next if hash[:type].constantize.find_by(:name => hash[:name])
+        find_or_create_by_contents(hash)
+      end
     end
   end
 
