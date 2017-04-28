@@ -68,8 +68,10 @@ namespace :evm do
 
   desc "Compile STI inheritance relationship cache"
   task :compile_sti_loader do
-    require File.expand_path('../../../config/application', __FILE__)
-    Vmdb::Application.load_tasks
+    unless defined? Vmdb::Application
+      require File.expand_path('../../../config/application', __FILE__)
+      Vmdb::Application.load_tasks
+    end
 
     EvmRakeHelper.with_dummy_database_url_configuration do
       Rake::Task["environment"].invoke
