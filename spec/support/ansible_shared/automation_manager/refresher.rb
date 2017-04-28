@@ -101,9 +101,10 @@ shared_examples_for "ansible refresher" do |ansible_provider, manager_class, ems
       :type => manager_class::MachineCredential
     )
     expect(machine_credential).to have_attributes(
-      :name   => "Demo Credential"
+      :name => "Demo Credential"
     )
     expect(machine_credential.options[:username]).to eq('admin')
+    expect(machine_credential.options[:name]).to eq('Demo Credential')
     expect(machine_credential.options.keys).to match_array(machine_credential.class::API_ATTRIBUTES.keys)
     expect(machine_credential.options[:become_method]).to eq('su')
     expect(machine_credential.options[:become_username]).to eq('root')
@@ -112,7 +113,7 @@ shared_examples_for "ansible refresher" do |ansible_provider, manager_class, ems
       :type => manager_class::NetworkCredential
     )
     expect(network_credential).to have_attributes(
-      :name   => "Demo Creds 2"
+      :name => "Demo Creds 2"
     )
     expect(network_credential.options).to eq({})
     expect(network_credential.options.keys).to match_array(network_credential.class::API_ATTRIBUTES.keys)
@@ -121,16 +122,18 @@ shared_examples_for "ansible refresher" do |ansible_provider, manager_class, ems
       :type => manager_class::VmwareCredential
     )
     expect(cloud_credential).to have_attributes(
-      :name   => "dev-vc60"
+      :name => "dev-vc60"
     )
     expect(cloud_credential.options[:username]).to eq('MiqAnsibleUser@vsphere.local')
+    expect(cloud_credential.options[:name]).to eq('dev-vc60')
     expect(cloud_credential.options.keys).to match_array(cloud_credential.class::API_ATTRIBUTES.keys)
 
     scm_credential = expected_configuration_script_source.authentication
     expect(scm_credential).to have_attributes(
-      :name   => "db-github"
+      :name => "db-github"
     )
     expect(scm_credential.options[:username]).to eq('syncrou')
+    expect(scm_credential.options[:name]).to eq('db-github')
     expect(scm_credential.options.keys).to match_array(scm_credential.class::API_ATTRIBUTES.keys)
   end
 
