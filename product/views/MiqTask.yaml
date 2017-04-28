@@ -31,7 +31,8 @@ cols:
 include:
   job:
     columns:
-    - guid
+    - target_class
+    - target_id
 
 # Order of columns (from all tables)
 col_order:
