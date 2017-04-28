@@ -245,7 +245,7 @@ describe ServiceTemplateAnsiblePlaybook do
 
     it 'does not update a job_template if the there is no playbook_id' do
       [:provision, :retirement, :reconfigure].each do |action|
-        catalog_item_options[:config_info][action].delete(:playbook_id) if catalog_item_options[:config_info][action]
+        catalog_item_options.delete_path(:config_info, action, :playbook_id)
       end
       service_template.send(:update_job_templates, 'blah', 'blah', catalog_item_options[:config_info], user)
       expect(job_template).to receive(:update_in_provider_queue).never

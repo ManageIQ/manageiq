@@ -15,9 +15,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
     rescue AnsibleTowerClient::ClientError, ActiveRecord::RecordNotFound => error
       raise
     ensure
-      if respond_to?(:notify_on_provider_interaction?) && notify_on_provider_interaction?
-        notify('creation', manager.id, params, error.nil?)
-      end
+      notify('creation', manager.id, params, error.nil?) if try(:notify_on_provider_interaction?)
     end
 
     def create_in_provider_queue(manager_id, params, auth_user = nil)
@@ -51,7 +49,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
     def queue(zone, instance_id, method_name, args, action, auth_user)
       task_opts = {
         :action => action,
-        :userid => auth_user || 'system'
+        :userid => auth_user || "system"
       }
 
       queue_opts = {
@@ -82,7 +80,9 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
   rescue AnsibleTowerClient::ClientError => error
     raise
   ensure
-    self.class.send('notify', 'update', manager.id, params, error.nil?)
+    if self.class.try(:notify_on_provider_interaction?)
+      self.class.send('notify', 'update', manager.id, params, error.nil?)
+    end
   end
 
   def update_in_provider_queue(params, auth_user = nil)
@@ -97,7 +97,9 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
   rescue AnsibleTowerClient::ClientError => error
     raise
   ensure
-    self.class.send('notify', 'deletion', manager.id, {:manager_ref => manager_ref}, error.nil?)
+    if self.class.try(:notify_on_provider_interaction?)
+      self.class.send('notify', 'deletion', manager.id, {:manager_ref => manager_ref}, error.nil?)
+    end
   end
 
   def delete_in_provider_queue(auth_user = nil)
