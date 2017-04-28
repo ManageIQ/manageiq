@@ -30,6 +30,20 @@ module ManageIQ::Providers
             @eaps << eap
             server = parse_middleware_server(eap)
 
+            # if immutable or in container flag is not set, check also the agent resource
+            if server.fetch_path(:properties, 'Immutable').nil? || server.fetch_path(:properties, 'In Container').nil?
+              agent_resource_id = 'Local%20JMX~org.hawkular:type%3dhawkular-javaagent'
+              feed_id = ::Hawkular::Inventory::CanonicalPath.parse(eap.path).feed_id
+              agent_resource_path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id      => feed_id,
+                                                                             :resource_ids => [agent_resource_id])
+              agent_config = @ems.inventory_client.get_config_data_for_resource(agent_resource_path.to_s)
+              ['Immutable', 'In Container'].each do |feature|
+                if agent_config.try(:[], 'value').try(:[], feature) == 'true'
+                  server[:properties][feature] = 'true'
+                end
+              end
+            end
+
             if server.fetch_path(:properties, 'In Container') == 'true'
               container_id = @ems.container_id(eap.feed)
               if container_id
