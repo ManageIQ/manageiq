@@ -255,9 +255,9 @@ describe MiqAeEngine do
     it "with a starting point other than /SYSTEM/PROCESS" do
       vm = FactoryGirl.create(:vm_vmware)
       fqclass = "Factory/StateMachines/ServiceProvision_template"
-      uri = MiqAeEngine.create_automation_object("DEFAULT", {}, :vmdb_object => vm, :fqclass => fqclass)
+      uri = MiqAeEngine.create_automation_object("DEFAULT", {}, {:vmdb_object => vm, :fqclass => fqclass, :message => 'fred'})
       extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}"
-      expected_uri = "/#{fqclass}/DEFAULT?#{extras}&VmOrTemplate%3A%3Avm=#{vm.id}&object_name=DEFAULT&vmdb_object_type=vm"
+      expected_uri = "/#{fqclass}/DEFAULT?#{extras}&VmOrTemplate%3A%3Avm=#{vm.id}&object_name=DEFAULT&vmdb_object_type=vm#fred"
       expect(uri).to eq(expected_uri)
     end
 
