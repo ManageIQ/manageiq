@@ -33,7 +33,7 @@ class ShowbackEvent < ApplicationRecord
 
   def generate_data
     self.data = {}
-    ShowbackMeasureType.all.each do |measure_type|
+    ShowbackUsageType.all.each do |measure_type|
       next unless measure_type.category == self.resource_type
       self.data[measure_type.measure] = {}
       measure_type.dimensions.each do |dim|

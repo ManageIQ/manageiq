@@ -1,4 +1,5 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
+require "money-rails/test_helpers"
 
 if ENV["TRAVIS"]
   require 'coveralls'
