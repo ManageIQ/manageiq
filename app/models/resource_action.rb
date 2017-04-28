@@ -22,8 +22,8 @@ class ResourceAction < ApplicationRecord
     elsif target.kind_of?(Array) || target.kind_of?(ActiveRecord::Relation)
       klass = target.first.id.class
       object_ids = target.collect { |t| "#{klass}::#{t.id}" }.join(",")
-      override_attrs = {:array_object_type  => target.first.class.base_class.name,
-                        'Array::object_ids' => object_ids}.merge(override_attrs || {})
+      override_attrs = {:target_object_type  => target.first.class.base_class.name,
+                        'Array::target_object_ids' => object_ids}.merge(override_attrs || {})
       override_values = {}
     else
       override_values = {:object_type => target.class.base_class.name, :object_id => target.id}
