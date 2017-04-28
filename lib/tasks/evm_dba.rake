@@ -1,5 +1,4 @@
 require 'awesome_spawn'
-require 'evm_rake_helper'
 
 # TODO: move into DatabaseYml
 # TODO: can we use EvmDatabseOps directly?
