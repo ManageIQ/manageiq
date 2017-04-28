@@ -13,9 +13,7 @@ class ShowbackEvent < ApplicationRecord
   after_create :generate_data
 
   def start_time_before_end_time
-    if start_time.to_i >= end_time.to_i
-      errors.add(:start_time, "Start time should be before end time")
-    end
+    errors.add(:start_time, "Start time should be before end time") unless end_time.to_i >= start_time.to_i
   end
 
   def resource_is_real
