@@ -358,7 +358,7 @@ describe Rbac::Filterer do
       }
     end
 
-    context "with User and Group" do
+    context "with User, Group and Tenant" do
       def get_rbac_results_for_and_expect_objects(klass, expected_objects)
         User.current_user = user
 
@@ -401,6 +401,19 @@ describe Rbac::Filterer do
 
           expect(MiqGroup.count).to eq(3)
           get_rbac_results_for_and_expect_objects(MiqGroup, [tagged_group])
+        end
+
+        context 'when searching Tenant' do
+          let!(:tenant_without_tag) { FactoryGirl.create(:tenant) }
+          let(:tenant_with_tag) { FactoryGirl.create(:tenant, :parent => default_tenant) }
+
+          before do
+            tenant_with_tag.tag_with('/managed/environment/prod', :ns => '*')
+          end
+
+          it 'returns tagged tenants and user\'s tenant' do
+            get_rbac_results_for_and_expect_objects(Tenant, [tenant_with_tag, default_tenant])
+          end
         end
       end
 
