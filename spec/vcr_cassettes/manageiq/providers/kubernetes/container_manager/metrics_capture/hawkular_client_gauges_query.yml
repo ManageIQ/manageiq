@@ -46,7 +46,7 @@ http_interactions:
   recorded_at: Wed, 26 Oct 2016 08:24:59 GMT
 - request:
     method: get
-    uri: https://hawkular.example.com/hawkular/metrics/metrics/?tags=type:pod&type=gauge
+    uri: https://hawkular.example.com/hawkular/metrics/metrics/?tags=type:pod&timestamps=true&type=gauge
     body:
       encoding: US-ASCII
       string: ''
