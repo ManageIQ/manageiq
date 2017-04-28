@@ -476,7 +476,8 @@ module Rbac
       end
 
       if apply_rbac_directly?(klass)
-        filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group, nil)
+        scope_with_current_tenant = scope.with_current_tenant if rbac_filters['managed'].present? && klass == Tenant
+        filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group, scope_with_current_tenant)
         scope_by_ids(scope, filtered_ids)
       elsif apply_rbac_through_association?(klass)
         # if subclasses of MetricRollup or Metric, use the associated
