@@ -18,27 +18,11 @@ shared_examples_for "ansible credential" do
         :description => "Description",
         :name        => "My Credential",
         :related     => {},
-        :userid      => 'john'
+        :username    => 'john'
       }
     end
-    let(:expected_params) do
-      {
-        :description => "Description",
-        :name        => "My Credential",
-        :related     => {},
-        :username    => "john",
-        :kind        => described_class::TOWER_KIND
-      }
-    end
-    let(:expected_notify_params) do
-      {
-        :description => "Description",
-        :name        => "My Credential",
-        :related     => {},
-        :username    => "john",
-        :kind        => described_class::TOWER_KIND
-      }
-    end
+    let(:expected_params) { params.clone.tap { |h| h[:kind] = described_class::TOWER_KIND } }
+    let(:expected_notify_params) { expected_params }
     let(:expected_notify) do
       {
         :type    => :tower_op_success,
@@ -143,7 +127,7 @@ shared_examples_for "ansible credential" do
     let(:credentials)     { double("AnsibleTowerClient::Collection", :find => credential) }
     let(:credential)      { double("AnsibleTowerClient::Credential", :id => 1) }
     let(:ansible_cred)    { described_class.create!(:resource => manager, :manager_ref => credential.id) }
-    let(:params)          { {:userid => 'john'} }
+    let(:params)          { {:username => 'john'} }
     let(:expected_params) { {:username => 'john', :kind => described_class::TOWER_KIND} }
     let(:expected_notify) do
       {

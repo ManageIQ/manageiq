@@ -76,7 +76,6 @@ module ManageIQ::Providers::AnsibleTower::Shared::Inventory::Parser::AutomationM
     collector.credentials.each do |credential|
       inventory_object = persister.credentials.find_or_build(credential.id.to_s)
       inventory_object.name = credential.name
-      inventory_object.userid = credential.username
       provider_module = ManageIQ::Providers::Inflector.provider_module(collector.manager.class).name
       inventory_object.type = case credential.kind
                                 when 'net' then "#{provider_module}::AutomationManager::NetworkCredential"
@@ -93,7 +92,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::Inventory::Parser::AutomationM
                                 when 'openstack' then "#{provider_module}::AutomationManager::OpenstackCredential"
                                 else "#{provider_module}::AutomationManager::Credential"
                                 end
-      inventory_object.options = inventory_object.type.constantize::EXTRA_ATTRIBUTES.keys.each_with_object({}) do |k, h|
+      inventory_object.options = inventory_object.type.constantize::API_ATTRIBUTES.keys.each_with_object({}) do |k, h|
         h[k] = credential.public_send(k)
       end
     end

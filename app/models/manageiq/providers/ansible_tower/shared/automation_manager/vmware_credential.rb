@@ -2,7 +2,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::VmwareCrede
   extend ActiveSupport::Concern
 
   COMMON_ATTRIBUTES = {
-    :userid => {
+    :username => {
       :label     => N_('Username'),
       :help_text => N_('Username for this credential'),
       :required  => true
