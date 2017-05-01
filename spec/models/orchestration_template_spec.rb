@@ -287,6 +287,11 @@ describe OrchestrationTemplate do
   describe ".seed" do
     let(:azure_template) { "azure-single-vm-from-user-image" }
 
+    before do
+      mock_engine = double(:root => Rails.root.join('spec', 'fixtures', 'vmdb_plugin_root'))
+      allow(Vmdb::Plugins.instance).to receive(:vmdb_plugins).and_return([mock_engine])
+    end
+
     context "the first time seeding" do
       it "adds templates from default location" do
         OrchestrationTemplate.seed
