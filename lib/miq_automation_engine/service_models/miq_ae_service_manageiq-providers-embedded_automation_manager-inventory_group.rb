@@ -1,4 +1,0 @@
-module MiqAeMethodService
-  class MiqAeServiceManageIQ_Providers_EmbeddedAutomationManager_InventoryGroup < MiqAeServiceManageIQ_Providers_AutomationManager_InventoryGroup
-  end
-end
