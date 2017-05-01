@@ -104,7 +104,6 @@ module MiqWebServerWorkerMixin
       options = {
         :member_file    => self::BALANCE_MEMBER_CONFIG_FILE,
         :redirects_file => self::REDIRECTS_CONFIG_FILE,
-        :lbmethod       => self::LB_METHOD,
         :redirects      => self::REDIRECTS,
         :cluster        => self::CLUSTER,
         :protocol       => self::PROTOCOL

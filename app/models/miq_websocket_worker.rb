@@ -8,7 +8,6 @@ class MiqWebsocketWorker < MiqWorker
   REDIRECTS_CONFIG_FILE      = '/etc/httpd/conf.d/manageiq-redirects-websocket'
   STARTING_PORT              = 5000
   PROTOCOL                   = 'ws'
-  LB_METHOD                  = :busy
   REDIRECTS                  = '/ws'
   CLUSTER                    = 'evmcluster_websocket'
 
