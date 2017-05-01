@@ -1,3 +1,5 @@
+require 'miq_apache'
+
 class MiqUiWorker < MiqWorker
   require_nested :Runner
 
@@ -13,8 +15,8 @@ class MiqUiWorker < MiqWorker
     end
   end
 
-  BALANCE_MEMBER_CONFIG_FILE = '/etc/httpd/conf.d/manageiq-balancer-ui.conf'
-  REDIRECTS_CONFIG_FILE      = '/etc/httpd/conf.d/manageiq-redirects-ui'
+  BALANCE_MEMBER_CONFIG_FILE = "#{MiqApache.config_dir}/manageiq-balancer-ui.conf".freeze
+  REDIRECTS_CONFIG_FILE      = "#{MiqApache.config_dir}/manageiq-redirects-ui".freeze
   STARTING_PORT              = 3000
   PROTOCOL                   = 'http'
   LB_METHOD                  = :busy
