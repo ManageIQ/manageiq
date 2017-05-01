@@ -95,7 +95,7 @@ module Win32
       # Decode disk signature
       unless result[:os_device].nil?
         d = result[:os_device].split(',')
-        result[:disk_sig] = (d[59] + d[58] + d[57] + d[56]).to_i(16)
+        result[:disk_sig] = (d[59] + d[58] + d[57] + d[56]).to_i(16) if d.size >= 60
       end
       result
     end
