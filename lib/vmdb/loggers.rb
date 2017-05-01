@@ -42,34 +42,26 @@ module Vmdb
     private
 
     def self.create_loggers
-      # Intentionally setting false to enable logging so we can
-      # diagnose an Automate method failure
-      if false && ENV.key?("CI")
-        $log       = $rails_log = $audit_log = $fog_log = $policy_log = $vim_log = $rhevm_log = Vmdb.null_logger
-        $aws_log   = $kube_log = $mw_log = $scvmm_log = $api_log = $miq_ae_logger = $websocket_log = Vmdb.null_logger
-        $azure_log = $lenovo_log = $datawarehouse_log = Vmdb.null_logger
-      else
-        path_dir = Rails.root.join("log")
+      path_dir = Rails.root.join("log")
 
-        $log               = VMDBLogger.new(path_dir.join("evm.log"))
-        $rails_log         = VMDBLogger.new(path_dir.join("#{Rails.env}.log"))
-        $audit_log         = AuditLogger.new(path_dir.join("audit.log"))
-        $fog_log           = FogLogger.new(path_dir.join("fog.log"))
-        $policy_log        = MirroredLogger.new(path_dir.join("policy.log"),        "<PolicyEngine> ")
-        $vim_log           = MirroredLogger.new(path_dir.join("vim.log"),           "<VIM> ")
-        $rhevm_log         = MirroredLogger.new(path_dir.join("rhevm.log"),         "<RHEVM> ")
-        $aws_log           = MirroredLogger.new(path_dir.join("aws.log"),           "<AWS> ")
-        $lenovo_log        = MirroredLogger.new(path_dir.join("lenovo.log"),        "<LENOVO> ")
-        $kube_log          = MirroredLogger.new(path_dir.join("kubernetes.log"),    "<KUBERNETES> ")
-        $mw_log            = MirroredLogger.new(path_dir.join("middleware.log"),    "<MIDDLEWARE> ")
-        $datawarehouse_log = MirroredLogger.new(path_dir.join("datawarehouse.log"), "<DATAWAREHOUSE> ")
-        $scvmm_log         = MirroredLogger.new(path_dir.join("scvmm.log"),         "<SCVMM> ")
-        $azure_log         = MirroredLogger.new(path_dir.join("azure.log"),         "<AZURE> ")
-        $api_log           = MirroredLogger.new(path_dir.join("api.log"),           "<API> ")
-        $websocket_log     = MirroredLogger.new(path_dir.join("websocket.log"),     "<WEBSOCKET> ")
-        $miq_ae_logger     = MirroredLogger.new(path_dir.join("automation.log"),    "<AutomationEngine> ")
-        $miq_ae_logger.mirror_level = VMDBLogger::INFO
-      end
+      $log               = VMDBLogger.new(path_dir.join("evm.log"))
+      $rails_log         = VMDBLogger.new(path_dir.join("#{Rails.env}.log"))
+      $audit_log         = AuditLogger.new(path_dir.join("audit.log"))
+      $fog_log           = FogLogger.new(path_dir.join("fog.log"))
+      $policy_log        = MirroredLogger.new(path_dir.join("policy.log"),        "<PolicyEngine> ")
+      $vim_log           = MirroredLogger.new(path_dir.join("vim.log"),           "<VIM> ")
+      $rhevm_log         = MirroredLogger.new(path_dir.join("rhevm.log"),         "<RHEVM> ")
+      $aws_log           = MirroredLogger.new(path_dir.join("aws.log"),           "<AWS> ")
+      $lenovo_log        = MirroredLogger.new(path_dir.join("lenovo.log"),        "<LENOVO> ")
+      $kube_log          = MirroredLogger.new(path_dir.join("kubernetes.log"),    "<KUBERNETES> ")
+      $mw_log            = MirroredLogger.new(path_dir.join("middleware.log"),    "<MIDDLEWARE> ")
+      $datawarehouse_log = MirroredLogger.new(path_dir.join("datawarehouse.log"), "<DATAWAREHOUSE> ")
+      $scvmm_log         = MirroredLogger.new(path_dir.join("scvmm.log"),         "<SCVMM> ")
+      $azure_log         = MirroredLogger.new(path_dir.join("azure.log"),         "<AZURE> ")
+      $api_log           = MirroredLogger.new(path_dir.join("api.log"),           "<API> ")
+      $websocket_log     = MirroredLogger.new(path_dir.join("websocket.log"),     "<WEBSOCKET> ")
+      $miq_ae_logger     = MirroredLogger.new(path_dir.join("automation.log"),    "<AutomationEngine> ")
+      $miq_ae_logger.mirror_level = VMDBLogger::INFO
 
       configure_external_loggers
     end
