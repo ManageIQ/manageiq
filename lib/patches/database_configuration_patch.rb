@@ -1,9 +1,8 @@
 module DatabaseConfigurationPatch
   def database_configuration
-    path = paths["config/database"].existent.first
-    yaml = Pathname.new(path) if path
+    yaml = Pathname.new(File.expand_path("../../config/database.yml", __dir__))
 
-    if yaml && yaml.exist?
+    if yaml.exist?
       require "yaml"
       require "erb"
 
