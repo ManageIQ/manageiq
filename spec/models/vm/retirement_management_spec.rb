@@ -70,7 +70,6 @@ describe "VM Retirement Management" do
 
   it "#finish_retirement" do
     expect(@vm.retirement_state).to be_nil
-    expect(Notification).to receive(:create)
     @vm.finish_retirement
     @vm.reload
 
