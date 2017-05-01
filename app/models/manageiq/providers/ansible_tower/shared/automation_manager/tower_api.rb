@@ -6,7 +6,9 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
       params = provider_params(params) if respond_to?(:provider_params)
       manager = ExtManagementSystem.find(manager_id)
       tower_object = provider_collection(manager).create!(params)
-
+      if respond_to?(:refresh_in_provider)
+        refresh_in_provider(tower_object)
+      end
       refresh(manager)
       find_by!(:manager_id => manager.id, :manager_ref => tower_object.id)
     rescue AnsibleTowerClient::ClientError, ActiveRecord::RecordNotFound => error
@@ -34,10 +36,9 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
       )
     end
 
-    def refresh(manager)
-      # Get the record in our database
-      # TODO: This needs to be targeted refresh so it doesn't take too long
-      task_ids = EmsRefresh.queue_refresh_task(manager)
+    def refresh(target)
+      # Get the record into our database
+      task_ids = EmsRefresh.queue_refresh_task(target)
       task_ids.each { |tid| MiqTask.wait_for_taskid(tid) }
     end
 
@@ -66,7 +67,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
     with_provider_object do |provider_object|
       provider_object.update_attributes!(params)
     end
-    self.class.send('refresh', manager)
+    self.class.send('refresh', self)
     reload
   rescue AnsibleTowerClient::ClientError => error
     raise
