@@ -1,5 +1,5 @@
 class PowerState
-  attr_reader :service, :states, :action
+  attr_reader :service, :states
 
   ACTION_MAP = {
     :starting   => :start,
@@ -29,19 +29,10 @@ class PowerState
   private
 
   def determine_power_state
-    extract_action
-    if @action.nil?
-      Service::POWER_STATE_MAP.each do |action, value|
-        return value if @service.power_states_match?(action, @states)
-      end
-    elsif @service.power_states_match?(@action, @states)
-      return Service::POWER_STATE_MAP[@action]
+    Service::POWER_STATE_MAP.each do |action, value|
+      return value if @service.power_states_match?(action, @states)
     end
     partialize
-  end
-
-  def extract_action
-    @action = ACTION_MAP[@options[:power_status]]
   end
 
   def partial_state_calculation
