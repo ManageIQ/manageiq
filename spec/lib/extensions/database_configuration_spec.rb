@@ -3,7 +3,7 @@ describe "DatabaseConfiguration patch" do
   let(:fake_db_config) { Pathname.new("does/not/exist") }
 
   before(:each) do
-    allow(Rails).to receive_messages(:env => ActiveSupport::StringInquirer.new("production"))
+    allow(ManageIQ).to receive_messages(:env => ActiveSupport::StringInquirer.new("production"))
 
     @app = Vmdb::Application.new
     @app.config.paths["config/database"] = fake_db_config.to_s # ignore real database.yml

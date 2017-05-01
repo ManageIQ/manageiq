@@ -1,3 +1,5 @@
+require "manageiq"
+
 module DatabaseConfigurationPatch
   def database_configuration
     yaml = Pathname.new(File.expand_path("../../config/database.yml", __dir__))
@@ -7,7 +9,7 @@ module DatabaseConfigurationPatch
       require "erb"
 
       data = yaml.read
-      data = ERB.new(data).result if !Rails.env.production? || ENV['ERB_IN_CONFIG']
+      data = ERB.new(data).result if !ManageIQ.env.production? || ENV['ERB_IN_CONFIG']
 
       begin
         data = YAML.load(data) || {}
