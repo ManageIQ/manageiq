@@ -11,6 +11,7 @@ module ReportController::Reports::Editor
     -archived
     -chargeback_rates
     -vm_guid
+    -vm_uid
   ).freeze
 
   def miq_report_new
