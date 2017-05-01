@@ -1,5 +1,9 @@
 - wf = @edit[:wf] if @edit && @edit[:wf]
 = render :partial => "layouts/flash_msg"
+
+:javascript
+  dialogFieldRefresh.unbindAllPreviousListeners();
+
 .row
   .col-md-12.col-lg-12
     #dialog_tabs

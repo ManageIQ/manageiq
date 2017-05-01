@@ -1,16 +1,20 @@
 /* global miqInitSelectPicker miqSelectPickerEvent miqSparkle miqSparkleOn */
 
 var dialogFieldRefresh = {
+  unbindAllPreviousListeners: function() {
+    $(document).off('dialog::autoRefresh');
+  },
+
   listenForAutoRefreshMessages: function(autoRefreshOptions, callbackFunction) {
-    var thisIsTheFieldToUpdate = function(event) {
-      var tabIndex = event.data.tabIndex;
-      var groupIndex = event.data.groupIndex;
-      var fieldIndex = event.data.fieldIndex;
+    var thisIsTheFieldToUpdate = function(data) {
+      var tabIndex = data.tabIndex;
+      var groupIndex = data.groupIndex;
+      var fieldIndex = data.fieldIndex;
       return tabIndex === autoRefreshOptions.tab_index && groupIndex === autoRefreshOptions.group_index && fieldIndex === autoRefreshOptions.field_index;
     };
 
-    window.addEventListener('message', function(event) {
-      if (thisIsTheFieldToUpdate(event)) {
+    $(document).on('dialog::autoRefresh', function(_event, data) {
+      if (thisIsTheFieldToUpdate(data)) {
         callbackFunction.call();
       }
     });
@@ -181,11 +185,11 @@ var dialogFieldRefresh = {
       nextAvailable = nextAvailable[0];
 
       if (nextAvailable !== undefined) {
-        parent.postMessage({
+        $(document).trigger('dialog::autoRefresh', {
           tabIndex: nextAvailable.tab_index,
           groupIndex: nextAvailable.group_index,
           fieldIndex: nextAvailable.field_index,
-        }, '*');
+        });
       }
     }
   },
