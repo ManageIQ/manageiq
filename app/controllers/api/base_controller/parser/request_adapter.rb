@@ -105,7 +105,11 @@ module Api
         end
 
         def path
-          URI.parse(url).path.sub(%r{/*$}, '') # /api/...
+          URI.parse(url).path.sub(%r{/*$}, '').sub(%r{^/kerberos/}, '/') # /api/...
+        end
+
+        def self.kerberos_path?(request)
+          URI.parse(request.original_url).path.match(%r{^/kerberos/})
         end
 
         def version

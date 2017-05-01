@@ -68,6 +68,9 @@ Vmdb::Application.routes.draw do
     end
   end
 
+  # Support Kerberos user authentication for /api/auth
+  match "/kerberos/api/auth", :to => "api/auth#show", :via => :get
+
   # ping response for load balancing
   get '/ping' => 'ping#index'
 

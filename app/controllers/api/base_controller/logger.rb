@@ -16,7 +16,11 @@ module Api
           auth_type = "system"
           log_request("System Auth", {:x_miq_token => request.headers[HttpHeaders::MIQ_TOKEN]}.merge(@miq_token_hash))
         else
-          auth_type = @auth_token.blank? ? "basic" : "token"
+          auth_type = if @auth_token.present?
+                        "token"
+                      else
+                        Parser::RequestAdapter.kerberos_path?(request) ? "kerberos" : "basic"
+                      end
         end
         log_request("Authentication", :type        => auth_type,
                                       :token       => @auth_token,

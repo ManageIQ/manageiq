@@ -17,8 +17,15 @@ module Api
             :timeout      => ::Settings.api.authentication_timeout.to_i_with_method
           }
 
-          if (user = authenticate_with_http_basic { |u, p| User.authenticate(u, p, request, authenticate_options) })
-            @auth_user     = user.userid
+          user = if Parser::RequestAdapter.kerberos_path?(request)
+                   user_name = request.headers["X-Remote-User"].present? ? request.headers["X-Remote-User"].split("@").first : ""
+                   User.authenticate(user_name, "", request, authenticate_options)
+                 else
+                   authenticate_with_http_basic { |u, p| User.authenticate(u, p, request, authenticate_options) }
+                 end
+
+          if user
+            @auth_user    = user.userid
             auth_user_obj = userid_to_userobj(@auth_user)
             authorize_user_group(auth_user_obj)
             validate_user_identity(auth_user_obj)
