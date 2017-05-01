@@ -185,6 +185,15 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     fields(:hardware) { |fn, f, _dn, _d| f[:read_only] = true if options[:read_only_fields].include?(fn) }
   end
 
+  def allowed_hosts_obj(options = {})
+    all_hosts = super
+    vlan_name = get_value(@values[:vlan])
+    return all_hosts unless vlan_name
+
+    _log.info "Filtering hosts with the following network: <#{vlan_name}>"
+    all_hosts.reject { |h| !h.lans.pluck(:name).include?(vlan_name) }
+  end
+
   #
   # Methods for populating lists of allowed values for a field
   # => Input  - A hash containing options specific to the called method
