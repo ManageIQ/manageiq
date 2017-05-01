@@ -12,7 +12,7 @@ class MiqOpenStackInstance
 
   attr_reader :vmConfigFile
 
-  SUPPORTED_METHODS = [:rootTrees, :extract, :diskInitErrors]
+  SUPPORTED_METHODS = [:rootTrees, :extract, :diskInitErrors, :vmConfig, :volumeManager]
 
   def initialize(instance_id, openstack_handle)
     @instance_id      = instance_id
