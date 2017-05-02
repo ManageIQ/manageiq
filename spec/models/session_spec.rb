@@ -44,5 +44,39 @@ describe Session do
 
       expect(described_class.count).to eq 0
     end
+
+    context "given some token store data" do
+      around { |example| Timecop.freeze { example.run } }
+
+      it "will purge an expired token" do
+        FactoryGirl.create(
+          :session,
+          :data => serialize_data(
+            :expires_on => 1.second.ago,
+          )
+        )
+
+        described_class.purge(0)
+
+        expect(described_class.count).to eq(0)
+      end
+
+      it "won't purge an unexpired token" do
+        FactoryGirl.create(
+          :session,
+          :data => serialize_data(
+            :expires_on => 1.second.from_now,
+          )
+        )
+
+        described_class.purge(0)
+
+        expect(described_class.count).to eq(1)
+      end
+
+      def serialize_data(data)
+        Base64.encode64(Marshal.dump(data))
+      end
+    end
   end
 end
