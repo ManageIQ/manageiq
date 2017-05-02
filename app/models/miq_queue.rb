@@ -2,6 +2,7 @@ require 'timeout'
 require 'digest'
 
 require 'miq_queue/constants'
+require 'miq_queue/format_methods'
 
 # Message Queue entry to run a method on any server
 #   zone
@@ -22,6 +23,8 @@ require 'miq_queue/constants'
 class MiqQueue < ApplicationRecord
 
   include MiqQueueConstants
+
+  extend MiqQueueFormatMethods
 
   belongs_to :handler, :polymorphic => true
 
@@ -428,14 +431,6 @@ class MiqQueue < ApplicationRecord
       message.update_attributes(:state => STATE_ERROR) rescue nil
     end
     _log.info("Cleaning up queue messages... Complete")
-  end
-
-  def self.format_full_log_msg(msg)
-    "Message id: [#{msg.id}], #{msg.handler_type} id: [#{msg.handler_id}], Zone: [#{msg.zone}], Role: [#{msg.role}], Server: [#{msg.server_guid}], Ident: [#{msg.queue_name}], Target id: [#{msg.target_id}], Instance id: [#{msg.instance_id}], Task id: [#{msg.task_id}], Command: [#{msg.class_name}.#{msg.method_name}], Timeout: [#{msg.msg_timeout}], Priority: [#{msg.priority}], State: [#{msg.state}], Deliver On: [#{msg.deliver_on}], Data: [#{msg.data.nil? ? "" : "#{msg.data.length} bytes"}], Args: #{MiqPassword.sanitize_string(msg.args.inspect)}"
-  end
-
-  def self.format_short_log_msg(msg)
-    "Message id: [#{msg.id}]"
   end
 
   def get_worker
