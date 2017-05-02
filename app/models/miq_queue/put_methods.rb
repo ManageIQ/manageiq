@@ -17,7 +17,7 @@ module MiqQueuePutMethods
 
     options[:args] = [options[:args]] if options[:args] && !options[:args].kind_of?(Array)
 
-    if !Rails.env.production? && options[:args] &&
+    if !vmdb_env.production? && options[:args] &&
        (arg = options[:args].detect { |a| a.kind_of?(ActiveRecord::Base) && !a.new_record? })
       raise ArgumentError, "MiqQueue.put(:class_name => #{options[:class_name]}, :method => #{options[:method_name]}) does not support args with #{arg.class.name} objects"
     end
@@ -109,5 +109,10 @@ module MiqQueuePutMethods
       ret if msg.nil?
     end
   end
+
+  def vmdb_env
+    @_env ||= ActiveSupport::StringInquirer.new(ENV["RAILS_ENV"].presence || ENV["RACK_ENV"].presence || "development")
+  end
+  private :vmdb_env
 
 end
