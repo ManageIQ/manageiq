@@ -48,14 +48,15 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     transaction do
       create_from_options(options).tap do |service_template|
         [:provision, :retirement, :reconfigure].each do |action|
-          dialog_name = config_info.fetch_path(action, :new_dialog_name)
-          next unless dialog_name
+          action_info = enhanced_config[action]
+          next unless service_template.send(:new_dialog_required?, action_info)
 
-          job_template = enhanced_config.fetch_path(action, :configuration_template)
-          hosts        = enhanced_config.fetch_path(action, :hosts)
+          dialog_name  = action_info[:new_dialog_name]
+          job_template = action_info[:configuration_template]
+          hosts        = action_info[:hosts]
 
           new_dialog = service_template.send(:create_new_dialog, dialog_name, job_template, hosts)
-          enhanced_config[action][:dialog] = new_dialog
+          action_info[:dialog] = new_dialog
           service_template.options[:config_info][action][:dialog_id] = new_dialog.id
         end
         service_template.create_resource_actions(enhanced_config)
@@ -202,7 +203,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   end
 
   def new_dialog_required?(info)
-    info && info.key?(:new_dialog_name)
+    info && info.key?(:new_dialog_name) && !info.key?(:dialog_id)
   end
 
   def self.new_job_template_required?(info, action, service_template)
