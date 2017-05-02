@@ -64,14 +64,14 @@
         = render :partial => 'dialog_field_form_dynamic_options', :locals => {:url => url}
       - else
         = render :partial => 'dialog_field_form_non_dynamic_options', :locals => {:url => url}
-      
-      .form-group
-        %label.col-md-2.control-label
-          = _('Auto Refresh other fields when modified')
-        .col-md-8
-          = check_box_tag('field_trigger_auto_refresh', '1',
-                          @edit[:field_trigger_auto_refresh],
-                          'data-miq_observe_checkbox' => {:url => url}.to_json)
+
+        .form-group
+          %label.col-md-2.control-label
+            = _('Auto Refresh other fields when modified')
+          .col-md-8
+            = check_box_tag('field_trigger_auto_refresh', '1',
+                            @edit[:field_trigger_auto_refresh],
+                            'data-miq_observe_checkbox' => {:url => url}.to_json)
 
   - if @edit[:field_typ] =~ /Radio/ && !@edit[:field_dynamic]
     = render :partial => 'field_values', :locals => {:entry => nil}
@@ -85,9 +85,15 @@
                           @edit[:field_multi_value],
                           "data-miq_observe_checkbox" => {:url => url}.to_json)
     - unless @edit[:field_dynamic]
-      = render :partial => 'field_values', :locals => {:entry => nil}   
+      = render :partial => 'field_values', :locals => {:entry => nil}
   - elsif @edit[:field_typ] && @edit[:field_typ].include?("TagControl") && @edit[:field_category].present?
     = render :partial => 'tag_field_values', :locals => {:entry => nil}
+
+  - if @edit[:field_dynamic] == true
+    %h3
+      = _('Overridable Options')
+    .form-horizontal
+      = render :partial => 'dialog_field_form_overridable_dynamic_options', :locals => {:url => url}
 
   - unless @edit[:field_typ].nil?
     %h3

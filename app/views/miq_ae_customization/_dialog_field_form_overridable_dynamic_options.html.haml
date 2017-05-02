@@ -1,0 +1,59 @@
+.form-group
+  %label.col-md-2.control-label
+    = _('Read only')
+  .col-md-8
+    = check_box_tag('field_read_only', '1', @edit[:field_read_only],
+                    "data-miq_observe_checkbox" => {:url => url}.to_json)
+.form-group
+  %label.col-md-2.control-label
+    = _('Visible')
+  .col-md-8
+    = check_box_tag('field_visible', '1',
+                    @edit[:field_visible],
+                    'data-miq_observe_checkbox' => {:url => url}.to_json)
+- if %w(DialogFieldDropDownList DialogFieldRadioButton).include?(@edit[:field_typ])
+  .form-group
+    %label.col-md-2.control-label
+      = _('Sort By')
+    .col-md-8
+      = select_tag('field_sort_by',
+                      options_for_select([[_("None"), "none"], [_("Description"), "description"], [_("Value"), "value"]], @edit[:field_sort_by]),
+                      :class    => "selectpicker")
+      :javascript
+          miqSelectPickerEvent('field_sort_by', "#{url}")
+  - if @edit[:field_sort_by] != "none"
+    .form-group
+      %label.col-md-2.control-label
+        = _('Sort Order')
+      .col-md-8
+        = select_tag('field_sort_order',
+                      options_for_select([[_("Ascending"), "ascending"], [_("Descending"), "descending"]], @edit[:field_sort_order]),
+                      :class    => "selectpicker")
+      :javascript
+        miqSelectPickerEvent('field_sort_order', "#{url}")
+- elsif @edit[:field_typ] =~ /Text|Check/
+  .form-group
+    %label.col-md-2.control-label
+      = _('Default Value')
+    .col-md-8
+      - if @edit[:field_typ] =~ /TextArea/
+        = text_area_tag("field_default_value",
+          @edit[:field_default_value],
+          "data-miq_observe" => {:interval => '.5', :url => url}.to_json,
+          :maxlength         => 8196,
+          :size              => "50x6")
+      - elsif @edit[:field_typ] =~ /TextBox/
+        - if @edit[:field_protected]
+          = password_field_tag('field_default_value__protected',
+                                @edit[:field_default_value],
+                                'data-miq_observe' => {:interval => '.5', :url => url}.to_json)
+        - else
+          = text_field_tag("field_default_value",
+                            @edit[:field_default_value],
+                            "data-miq_observe" => {:interval => '.5', :url => url}.to_json,
+                            :class => "form-control",
+                            :maxlength         => 50)
+      - else
+        = check_box_tag("field_default_value", "1",
+                        @edit[:field_default_value],
+                        "data-miq_observe_checkbox" => {:url => url}.to_json)

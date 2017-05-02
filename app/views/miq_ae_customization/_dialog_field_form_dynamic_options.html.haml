@@ -28,4 +28,91 @@
     = check_box_tag('field_auto_refresh', '1',
                     @edit[:field_auto_refresh],
                     'data-miq_observe_checkbox' => {:url => url}.to_json)
+.form-group
+  %label.col-md-2.control-label
+    = _('Auto Refresh other fields when modified')
+  .col-md-8
+    = check_box_tag('field_trigger_auto_refresh', '1',
+                            @edit[:field_trigger_auto_refresh],
+                            'data-miq_observe_checkbox' => {:url => url}.to_json)
 
+- if @edit[:field_typ].include?('TextBox')
+  .form-group
+    %label.col-md-2.control-label
+      = _('Value Type')
+    .col-md-8
+      = select_tag('field_data_typ',
+                    options_for_select([[_("Integer"), "integer"], [_("String"), "string"]],
+                                        @edit[:field_data_typ]),
+                    "data-miq_sparkle_on" => true,
+                    :class    => "selectpicker")
+      :javascript
+        miqSelectPickerEvent('field_data_typ', "#{url}")
+  .form-group
+    %label.col-md-2.control-label
+      = _('Protected')
+    .col-md-8
+      = check_box_tag('field_protected', 'true',
+                      @edit[:field_protected],
+                      "data-miq_observe_checkbox" => {:url => url}.to_json)
+- if @edit[:field_typ] =~ /Text|Check/
+  .form-group
+    %label.col-md-2.control-label= _('Required')
+    .col-md-8
+      = check_box_tag('field_required', 'true',
+                      @edit[:field_required],
+                        "data-miq_observe_checkbox" => {:url => url}.to_json)
+- if %w(DialogFieldTextBox DialogFieldTextAreaBox).include?(@edit[:field_typ])
+  .form-group
+    %label.col-md-2.control-label
+      = _('Validator Type')
+    .col-md-8
+      = select_tag('field_validator_type',
+                    options_for_select([[_("None"), nil], [_("Regular Expression"), 'regex']],
+                                        @edit[:field_validator_type]),
+                    "data-miq_sparkle_on" => true,
+                    :class    => "selectpicker")
+    :javascript
+      miqSelectPickerEvent('field_validator_type', "#{url}")
+  .form-group
+    %label.col-md-2.control-label
+      = _('Validator Rule')
+    .col-md-8
+      \/
+      = text_field_tag("field_validator_rule",
+                        @edit[:field_validator_rule],
+                        "data-miq_observe" => {:interval => '.5', :url => url}.to_json,
+                        :disabled          => @edit[:field_validator_type].blank?,
+                        :class => "form-control",
+                        :maxlength         => 250)
+      \/
+- elsif %w(DialogFieldDropDownList DialogFieldRadioButton).include?(@edit[:field_typ])
+  .form-group
+    %label.col-md-2.control-label
+      = _('Required')
+    .col-md-8
+      = select_tag('field_required',
+                  options_for_select([[_("True"), true], [_("False"), false]], @edit[:field_required].to_s),
+                  "data-miq_sparkle_on" => true,
+                  :class    => "selectpicker")
+      :javascript
+        miqSelectPickerEvent('field_required', "#{url}")
+  .form-group
+    %label.col-md-2.control-label
+      = _('Value Type')
+    .col-md-8
+      = select_tag('field_data_typ',
+                    options_for_select([[_("Integer"), "integer"], [_("String"), "string"]],
+                                        @edit[:field_data_typ]),
+                    "data-miq_sparkle_on" => true,
+                    :class    => "selectpicker")
+      :javascript
+        miqSelectPickerEvent('field_data_typ', "#{url}")
+- elsif %w(DialogFieldDateControl DialogFieldDateTimeControl).include?(@edit[:field_typ])
+  .form-group
+    %label.col-md-2.control-label
+      = _('Show Past Dates')
+    .col-md-8
+      = check_box_tag("field_past_dates", "1",
+                      @edit[:field_past_dates],
+                      "data-miq_observe_checkbox" => {:url => url}.to_json)
