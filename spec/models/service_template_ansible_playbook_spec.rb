@@ -225,19 +225,18 @@ describe ServiceTemplateAnsiblePlaybook do
       expect(service_template.resource_actions.first.dialog.id).to eq new_dialog_record.id
     end
 
-    it 'uses the existing dialog if :service_dialog_id is passed in' do
+    it 'uses the existing dialog if :dialog_id is passed in' do
       info = catalog_item_options_three.fetch_path(:config_info, :provision)
-      info.delete(:new_dialog_name)
-      info[:service_dialog_id] = service_template.dialogs.first.id
+      info[:dialog_id] = service_template.dialogs.first.id
 
-      expect(service_template.dialogs.first.id).to eq info[:service_dialog_id]
+      expect(service_template.dialogs.first.id).to eq info[:dialog_id]
       expect(described_class).to receive(:create_new_dialog).never
       expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript).to receive(:update_in_provider_queue).once
 
       service_template.update_catalog_item(catalog_item_options_three, user)
       service_template.reload
 
-      expect(service_template.dialogs.first.id).to eq info[:service_dialog_id]
+      expect(service_template.dialogs.first.id).to eq info[:dialog_id]
     end
   end
 
