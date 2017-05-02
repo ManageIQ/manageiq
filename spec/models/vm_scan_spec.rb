@@ -362,6 +362,31 @@ describe VmScan do
         @job.call_synchronize
       end
     end
+
+    describe "#call_snapshot_delete" do
+      let(:snapshot_description) { "Snapshot description" }
+      before(:each) do
+        allow(VmOrTemplate).to receive(:find).with(@vm.id).and_return(@vm)
+        @job.update_attributes(:state => 'snapshot_delete')
+        @job.context[:snapshot_mor] = snapshot_description
+        # always sent 'snapshot_complete'
+        expect(@job).to receive(:signal).with(:snapshot_complete)
+      end
+
+      it "does not call 'delete_snapshot' if there is no provider this VM belongs to" do
+        allow(@vm).to receive(:ext_management_system).and_return(false)
+        expect(@job).not_to receive(:delete_snapshot)
+        @job.call_snapshot_delete
+        expect(@job.message).to eq "No #{ui_lookup(:table => "ext_management_systems")} available to delete snapshot, skipping"
+      end
+
+      it "calls 'delete_snapshot'" do
+        allow(@vm).to receive(:ext_management_system).and_return(true)
+        expect(@job).to receive(:delete_snapshot)
+        @job.call_snapshot_delete
+        expect(@job.message).to eq "Snapshot deleted: reference: [#{snapshot_description}]"
+      end
+    end
   end
 
   context "A single VM Scan Job on Openstack provider" do
