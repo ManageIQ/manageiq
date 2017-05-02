@@ -38,6 +38,7 @@ class MiqExpression
     ExtManagementSystem
     ExtManagementSystemPerformance
     Flavor
+    GuestApplication
     Host
     HostAggregate
     HostPerformance
