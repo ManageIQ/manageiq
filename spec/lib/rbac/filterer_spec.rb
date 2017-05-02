@@ -417,6 +417,17 @@ describe Rbac::Filterer do
           expect(MiqUserRole.count).to eq(3)
           get_rbac_results_for_and_expect_objects(MiqGroup, [group])
         end
+
+        let(:super_admin_group) do
+          FactoryGirl.create(:miq_group, :tenant => default_tenant, :miq_user_role => super_administrator_user_role)
+        end
+
+        let!(:super_admin_user) { FactoryGirl.create(:user, :miq_groups => [super_admin_group]) }
+
+        it 'can see all users expect to user with group with role EvmRole-super_administrator' do
+          expect(User.count).to eq(2)
+          get_rbac_results_for_and_expect_objects(User, [user])
+        end
       end
     end
 
