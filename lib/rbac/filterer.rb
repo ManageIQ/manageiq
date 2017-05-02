@@ -43,10 +43,11 @@ module Rbac
       Service
       ServiceTemplate
       Storage
+      Tenant
       VmOrTemplate
     )
 
-    TAGGABLE_FILTER_CLASSES = CLASSES_THAT_PARTICIPATE_IN_RBAC - %w(EmsFolder)
+    TAGGABLE_FILTER_CLASSES = CLASSES_THAT_PARTICIPATE_IN_RBAC - %w(EmsFolder) + %w(MiqGroup User Tenant)
 
     BELONGSTO_FILTER_CLASSES = %w(
       VmOrTemplate
@@ -443,6 +444,24 @@ module Rbac
       klass.tenant_joins_clause(scope).where(tenant_id_clause)
     end
 
+    def scope_for_user_role_group(klass, scope, miq_group, user, managed_filters)
+      user_or_group = miq_group || user
+
+      if user_or_group.try!(:self_service?) && MiqUserRole != klass
+        scope.where(:id => klass == User ? user.id : miq_group.id)
+      else
+        if user_or_group.disallowed_roles
+          scope = scope.with_allowed_roles_for(user_or_group)
+        end
+
+        if MiqUserRole != klass
+          filtered_ids = pluck_ids(get_managed_filter_object_ids(scope, managed_filters))
+        end
+
+        scope_by_ids(scope, filtered_ids)
+      end
+    end
+
     ##
     # Main scoping method
     #
@@ -457,7 +476,8 @@ module Rbac
       end
 
       if apply_rbac_directly?(klass)
-        filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group, nil)
+        scope_with_current_tenant = scope.with_current_tenant if rbac_filters['managed'].present? && klass == Tenant
+        filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group, scope_with_current_tenant)
         scope_by_ids(scope, filtered_ids)
       elsif apply_rbac_through_association?(klass)
         # if subclasses of MetricRollup or Metric, use the associated
@@ -470,15 +490,8 @@ module Rbac
 
         filtered_ids = calc_filtered_ids(associated_class, rbac_filters, user, miq_group, scope_tenant_filter)
         scope_by_parent_ids(associated_class, scope, filtered_ids)
-      elsif klass == User && user.try!(:self_service?)
-        # Self service users searching for users only see themselves
-        scope.where(:id => user.id)
-      elsif klass == MiqGroup && miq_group.try!(:self_service?)
-        # Self Service users searching for groups only see their group
-        scope.where(:id => miq_group.id)
-      elsif [MiqUserRole, MiqGroup, User].include?(klass) && (user_or_group = miq_group || user) &&
-            user_or_group.disallowed_roles
-        scope.with_allowed_roles_for(user_or_group)
+      elsif [MiqUserRole, MiqGroup, User].include?(klass)
+        scope_for_user_role_group(klass, scope, miq_group, user, rbac_filters['managed'])
       else
         scope
       end
