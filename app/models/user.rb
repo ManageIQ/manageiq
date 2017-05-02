@@ -47,6 +47,10 @@ class User < ApplicationRecord
   serialize     :settings, Hash   # Implement settings column as a hash
   default_value_for(:settings) { Hash.new }
 
+  def self.with_allowed_roles_for(user_or_group)
+    includes(:miq_groups => :miq_user_role).where.not(:miq_user_roles => {:name => user_or_group.disallowed_roles})
+  end
+
   def self.scope_by_tenant?
     true
   end
