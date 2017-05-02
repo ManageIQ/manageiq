@@ -1,6 +1,8 @@
 require 'timeout'
 require 'digest'
 
+require 'miq_queue/constants'
+
 # Message Queue entry to run a method on any server
 #   zone
 #     This states the subset of miq_servers in this region that can perform this job.
@@ -18,18 +20,12 @@ require 'digest'
 #     get: Defaults to "generic" but is typically overridden by the caller (a worker)
 #
 class MiqQueue < ApplicationRecord
+
+  include MiqQueueConstants
+
   belongs_to :handler, :polymorphic => true
 
   attr_accessor :last_exception
-
-  MAX_PRIORITY    = 0
-  HIGH_PRIORITY   = 20
-  NORMAL_PRIORITY = 100
-  LOW_PRIORITY    = 150
-  MIN_PRIORITY    = 200
-
-  PRIORITY_WHICH  = [:max, :high, :normal, :low, :min]
-  PRIORITY_DIR    = [:higher, :lower]
 
   def self.columns_for_requeue
     @requeue_columns ||= MiqQueue.column_names.map(&:to_sym) - [:id]
@@ -67,27 +63,10 @@ class MiqQueue < ApplicationRecord
     p1 > p2
   end
 
-  TIMEOUT = 10.minutes
-
   serialize :args, Array
   serialize :miq_callback, Hash
 
-  STATE_READY   = 'ready'.freeze
-  STATE_DEQUEUE = 'dequeue'.freeze
-  STATE_WARN    = 'warn'.freeze
-  STATE_ERROR   = 'error'.freeze
-  STATE_TIMEOUT = 'timeout'.freeze
-  STATE_EXPIRED = "expired".freeze
   validates_inclusion_of :state,  :in => [STATE_READY, STATE_DEQUEUE, STATE_WARN, STATE_ERROR, STATE_TIMEOUT, STATE_EXPIRED]
-  FINISHED_STATES = [STATE_WARN, STATE_ERROR, STATE_TIMEOUT, STATE_EXPIRED].freeze
-
-  STATUS_OK      = 'ok'.freeze
-  STATUS_RETRY   = 'retry'.freeze
-  STATUS_WARN    = STATE_WARN
-  STATUS_ERROR   = STATE_ERROR
-  STATUS_TIMEOUT = STATE_TIMEOUT
-  STATUS_EXPIRED = STATE_EXPIRED
-  DEFAULT_QUEUE  = "generic"
 
   def data
     msg_data && Marshal.load(msg_data)
@@ -468,15 +447,6 @@ class MiqQueue < ApplicationRecord
   end
 
   private
-
-  # default values for get operations
-  def self.default_get_options(options)
-    options.reverse_merge(
-      :queue_name => DEFAULT_QUEUE,
-      :state      => STATE_READY,
-      :zone       => Zone.determine_queue_zone(options)
-    )
-  end
 
   # when searching miq_queue, we often want to see if a key is nil, or a particular value
   # given a set of keys, modify the params to have those values
