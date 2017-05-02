@@ -366,6 +366,44 @@ describe Rbac::Filterer do
         expect(results).to match_array(expected_objects)
       end
 
+      context 'with tags' do
+        let!(:tagged_group) { FactoryGirl.create(:miq_group, :tenant => default_tenant) }
+        let!(:user)         { FactoryGirl.create(:user, :miq_groups => [tagged_group]) }
+        let!(:other_user)   { FactoryGirl.create(:user, :miq_groups => [group]) }
+
+        before do
+          tagged_group.entitlement = Entitlement.new
+          tagged_group.entitlement.set_belongsto_filters([])
+          tagged_group.entitlement.set_managed_filters([["/managed/environment/prod"]])
+          tagged_group.save!
+
+          tagged_group.tag_with('/managed/environment/prod', :ns => '*')
+          user.tag_with('/managed/environment/prod', :ns => '*')
+        end
+
+        it 'returns tagged users' do
+          expect(User.count).to eq(2)
+          get_rbac_results_for_and_expect_objects(User, [user])
+        end
+
+        it 'returns tagged groups' do
+          expect(MiqGroup.count).to eq(3)
+          get_rbac_results_for_and_expect_objects(MiqGroup, [tagged_group])
+        end
+
+        let(:tenant_administrator_user_role) do
+          FactoryGirl.create(:miq_user_role, :name => MiqUserRole::DEFAULT_TENANT_ROLE_NAME)
+        end
+
+        it 'returns tagged groups when user\'s role has disallowed other roles' do
+          tagged_group.miq_user_role = tenant_administrator_user_role
+          tagged_group.save!
+
+          expect(MiqGroup.count).to eq(3)
+          get_rbac_results_for_and_expect_objects(MiqGroup, [tagged_group])
+        end
+      end
+
       it "returns all users" do
         get_rbac_results_for_and_expect_objects(User, [user, other_user])
       end
