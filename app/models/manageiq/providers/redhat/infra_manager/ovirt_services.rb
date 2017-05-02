@@ -1,3 +1,4 @@
 module ManageIQ::Providers::Redhat::InfraManager::OvirtServices
-  require_nested :OvirtServices
+  class Error < StandardError; end
+  class VmNotReadyToBoot < Error; end
 end

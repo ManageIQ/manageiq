@@ -16,7 +16,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ProvisionViaIso::StateMachine
 
     begin
       ext_management_system.ovirt_services.vm_boot_from_cdrom(self, iso_image.name)
-    rescue OvirtServices::VmNotReadyToBoot
+    rescue ManageIQ::Providers::Redhat::InfraManager::OvirtServices::VmNotReadyToBoot
       _log.info("#{destination_type} [#{dest_name}] is not yet ready to boot, will retry")
       requeue_phase
     else

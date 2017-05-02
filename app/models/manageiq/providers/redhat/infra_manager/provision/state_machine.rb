@@ -83,6 +83,6 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine
   end
 
   def powered_on_in_provider?
-    destination.ext_management_system.ovirt_service.powered_on_in_provider?(destination)
+    destination.ext_management_system.ovirt_services.powered_on_in_provider?(destination)
   end
 end
