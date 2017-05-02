@@ -3,14 +3,14 @@ class MiqExpression
   include Vmdb::Logging
   attr_accessor :exp, :context_type, :preprocess_options
 
-  CONFIG = YAML.load(ERB.new(File.read(Rails.root.join("config", "miq_expression.yml"))).result)
-  BASE_TABLES = CONFIG[:base_tables]
-  INCLUDE_TABLES = CONFIG[:include_tables]
-  EXCLUDE_COLUMNS = CONFIG[:exclude_columns]
-  EXCLUDE_EXCEPTIONS = CONFIG[:exclude_exceptions]
-  TAG_CLASSES = CONFIG[:tag_classes]
-  EXCLUDE_FROM_RELATS = CONFIG[:exclude_from_relats]
-  FORMAT_SUB_TYPES = CONFIG[:format_sub_types]
+  config = YAML.load(ERB.new(File.read(Rails.root.join("config", "miq_expression.yml"))).result)
+  BASE_TABLES = config[:base_tables]
+  INCLUDE_TABLES = config[:include_tables]
+  EXCLUDE_COLUMNS = config[:exclude_columns]
+  EXCLUDE_EXCEPTIONS = config[:exclude_exceptions]
+  TAG_CLASSES = config[:tag_classes]
+  EXCLUDE_FROM_RELATS = config[:exclude_from_relats]
+  FORMAT_SUB_TYPES = config[:format_sub_types]
   FORMAT_BYTE_SUFFIXES = FORMAT_SUB_TYPES[:bytes][:units].inject({}) { |h, (v, k)| h[k] = v; h }
   BYTE_FORMAT_WHITELIST = Hash[FORMAT_BYTE_SUFFIXES.keys.collect(&:to_s).zip(FORMAT_BYTE_SUFFIXES.keys)]
 
@@ -1031,12 +1031,12 @@ class MiqExpression
     parse_field_or_tag(field).try(:column_type)
   end
 
-  NUM_OPERATORS     = CONFIG[:num_operators].freeze
-  STRING_OPERATORS  = CONFIG[:string_operators]
-  SET_OPERATORS     = CONFIG[:set_operators]
-  REGKEY_OPERATORS  = CONFIG[:regkey_operators]
-  BOOLEAN_OPERATORS = CONFIG[:boolean_operators]
-  DATE_TIME_OPERATORS = CONFIG[:date_time_operators]
+  NUM_OPERATORS     = config[:num_operators].freeze
+  STRING_OPERATORS  = config[:string_operators]
+  SET_OPERATORS     = config[:set_operators]
+  REGKEY_OPERATORS  = config[:regkey_operators]
+  BOOLEAN_OPERATORS = config[:boolean_operators]
+  DATE_TIME_OPERATORS = config[:date_time_operators]
 
   def self.get_col_operators(field)
     if field == :count || field == :regkey
@@ -1063,7 +1063,7 @@ class MiqExpression
     end
   end
 
-  STYLE_OPERATORS_EXCLUDES = CONFIG[:style_operators_excludes]
+  STYLE_OPERATORS_EXCLUDES = config[:style_operators_excludes]
   def self.get_col_style_operators(field)
     result = get_col_operators(field) - STYLE_OPERATORS_EXCLUDES
   end
