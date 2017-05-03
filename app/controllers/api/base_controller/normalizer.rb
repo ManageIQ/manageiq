@@ -31,13 +31,13 @@ module Api
           normalize_array(attr, value)
         elsif value.respond_to?(:attributes) || value.respond_to?(:keys)
           normalize_hash(attr, value)
-        elsif Environment.normalized_attributes[:time].key?(attr.to_s)
+        elsif Environment.normalized_attributes[:time].include?(attr.to_s)
           normalize_time(value)
-        elsif Environment.normalized_attributes[:url].key?(attr.to_s)
+        elsif Environment.normalized_attributes[:url].include?(attr.to_s)
           normalize_url(value)
         elsif Api.encrypted_attribute?(attr)
           normalize_encrypted
-        elsif Environment.normalized_attributes[:resource].key?(attr.to_s)
+        elsif Environment.normalized_attributes[:resource].include?(attr.to_s)
           normalize_resource(value)
         else
           value

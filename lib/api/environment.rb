@@ -2,15 +2,15 @@ module Api
   class Environment
     def self.normalized_attributes
       @normalized_attributes ||= {
-        :time      => time_attributes.each_with_object({}) { |attr, hsh| hsh[attr] = true },
-        :url       => {"href" => true},
-        :resource  => {"image_href" => true},
-        :encrypted => encrypted_attributes.each_with_object({}) { |attr, hsh| hsh[attr] = true }
+        :time      => time_attributes,
+        :url       => Set.new(%w(href)),
+        :resource  => Set.new(%w(image_href)),
+        :encrypted => encrypted_attributes
       }
     end
 
     def self.encrypted_attributes
-      @encrypted_attributes ||= %w(password) |
+      @encrypted_attributes ||= Set.new(%w(password)) |
                                 ::MiqRequestWorkflow.all_encrypted_options_fields.map(&:to_s) |
                                 ::Vmdb::Settings::PASSWORD_FIELDS.map(&:to_s)
     end
@@ -32,7 +32,7 @@ module Api
     def self.fetch_encrypted_attribute_names(klass)
       return [] unless klass.respond_to?(:encrypted_columns)
       encrypted_objects_checked[klass.name] ||= klass.encrypted_columns.each do |attr|
-        normalized_attributes[:encrypted][attr] = true
+        normalized_attributes[:encrypted] << attr
       end
     end
 
