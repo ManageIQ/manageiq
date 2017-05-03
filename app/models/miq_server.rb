@@ -405,6 +405,20 @@ class MiqServer < ApplicationRecord
     (pid == Process.pid) ? shutdown_and_exit : Process.kill(9, pid)
   end
 
+  def kill_all_workers
+    return unless is_local?
+
+    killed_workers = []
+    miq_workers.each do |w|
+      next unless MiqWorker::STATUSES_CURRENT_OR_STARTING.include?(w.status)
+
+      w.kill
+      worker_delete(w.pid)
+      killed_workers << w
+    end
+    miq_workers.delete(*killed_workers) unless killed_workers.empty?
+  end
+
   def self.kill
     svr = my_server(true)
     svr.kill unless svr.nil?
