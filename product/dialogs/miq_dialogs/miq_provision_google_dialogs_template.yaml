@@ -282,6 +282,7 @@
           :required: true
           :display: :edit
           :data_type: string
+          :sort_by: :none
         :instance_type:
           :values_from:
             :method: :allowed_instance_types
