@@ -36,7 +36,7 @@ module ServiceMixin
         sr = service_resources.new(nh.merge(:resource => rsc))
         set_service_type if self.respond_to?(:set_service_type)
         # Create link between services
-        rsc.update_attributes(:parent => self) if self.class == Service && rsc.class == Service
+        rsc.update_attributes(:parent => self) if self.class == Service && rsc.kind_of?(Service)
       end
     end
     sr

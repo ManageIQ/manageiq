@@ -215,6 +215,12 @@ describe Service do
       expect(@service.service_resources.size).to eq(1)
     end
 
+    it "should allow a service to connect to ansible tower service" do
+      s2 = FactoryGirl.create(:service_ansible_tower, :name => 'ansible')
+      @service.add_resource(s2)
+      expect(s2.parent).to eq(@service)
+    end
+
     it "should not allow service to connect to itself" do
       expect { @service << @service }.to raise_error(MiqException::MiqServiceCircularReferenceError)
     end
