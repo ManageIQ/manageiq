@@ -1,14 +1,5 @@
 module Api
   class Environment
-    def self.normalized_attributes
-      @normalized_attributes ||= {
-        :time      => time_attributes,
-        :url       => url_attributes,
-        :resource  => resource_attributes,
-        :encrypted => encrypted_attributes
-      }
-    end
-
     def self.url_attributes
       @url_attributes ||= Set.new(%w(href))
     end
