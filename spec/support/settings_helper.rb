@@ -1,11 +1,11 @@
-def stub_settings(hash)
+def stub_settings(hash, overwrite = false)
+  hash = Settings.to_hash.deep_merge(hash) unless overwrite
   settings = Config::Options.new.merge!(hash)
   stub_const("Settings", settings)
   allow(Vmdb::Settings).to receive(:for_resource) { settings }
 end
 
 def stub_settings_merge(hash)
-  hash = Settings.to_hash.deep_merge(hash)
   stub_settings(hash)
 end
 
