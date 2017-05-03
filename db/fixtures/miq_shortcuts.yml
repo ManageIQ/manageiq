@@ -219,8 +219,8 @@
   :rbac_feature_name: container_service_show_list
   :startup: true
 - :name: container_containers
-  :description: Containers / Explorer
-  :url: /container/explorer
+  :description: Containers / Containers
+  :url: /container/show_list
   :rbac_feature_name: containers
   :startup: true
 - :name: control_explorer
