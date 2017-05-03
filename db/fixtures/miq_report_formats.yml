@@ -148,6 +148,10 @@
     :v_snapshot_newest_total_size: :bytes
     :v_snapshot_oldest_total_size: :bytes
 
+    :disk_total_bytes: :bytes
+    :disk_free_bytes: :bytes
+    :disk_used_bytes: :bytes
+
     :capacity_profile_1_available_host_memory: :bytes
     :capacity_profile_2_available_host_memory: :bytes
     :capacity_profile_2_available_host_vcpu: :mhz
