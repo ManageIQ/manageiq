@@ -4,8 +4,7 @@ describe VmScan do
       @server = EvmSpecHelper.local_miq_server(:capabilities => {:vixDisk => true})
       assign_smartproxy_role_to_server(@server)
 
-      # TODO: stub only settings needed for test instead of all from settings.yml
-      stub_settings(::Settings.to_hash.merge(:coresident_miqproxy => {:scan_via_host => false}))
+      stub_settings(:coresident_miqproxy => {:scan_via_host => false, :use_vim_broker => false})
 
       @user      = FactoryGirl.create(:user_with_group, :userid => "tester")
       @ems       = FactoryGirl.create(:ems_vmware_with_authentication, :name   => "Test EMS", :zone => @server.zone,

@@ -214,7 +214,7 @@ describe EmsEvent do
     end
 
     it 'returns the provider event if configured' do
-      stub_settings_merge(
+      stub_settings(
         :ems => {
           :some_provider => {
             :event_handling => {
