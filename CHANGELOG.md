@@ -10,6 +10,42 @@ The ManageIQ organization is continuously adding new smaller repositories.  The 
 - [manageiq-providers-vmware CHANGELOG](https://github.com/ManageIQ/manageiq-providers-vmware/blob/fine/CHANGELOG.md)
 - [manageiq-ui-classic CHANGELOG](https://github.com/ManageIQ/manageiq-ui-classic/blob/fine/CHANGELOG.md)
 
+# Fine Release Candidate
+
+## Added
+
+- Providers
+  - Ansible: Escalate privilege [(#14929)](https://github.com/ManageIQ/manageiq/pull/14929)
+  - Hawkular
+      - Stop using deprecated names of hawkular-client gem [(#14543)](https://github.com/ManageIQ/manageiq/pull/14543)
+      - Adaptations to have a working refresh for Hawkular's Inventory.v3 [(#14927)](https://github.com/ManageIQ/manageiq/pull/14927)
+
+## Fixed
+
+Remove default server.cer.key [(#14917)](https://github.com/ManageIQ/manageiq/pull/14917)
+- Automate
+  - Revert removal of get_folder_paths [(#14887)](https://github.com/ManageIQ/manageiq/pull/14887)
+  - Ansible
+    - Create or delete a catalog item on update [(#14830)](https://github.com/ManageIQ/manageiq/pull/14830)
+    - Prefer :dialog_id to :new_dialog_name in config_info [(#14958)](https://github.com/ManageIQ/manageiq/pull/14958)
+  - Retirement
+    - Add orchestration_stack_retired notification type. [(#14957)](https://github.com/ManageIQ/manageiq/pull/14957)
+    - Revert previous changes adding notification to finish retirement. [(#14955)](https://github.com/ManageIQ/manageiq/pull/14955)
+  - Services: Removed notification check from finish_retirement tests. [(#14963)](https://github.com/ManageIQ/manageiq/pull/14963)
+
+- Platform
+  - RBAC
+    - For User model regard to allowed role [(#14898)](https://github.com/ManageIQ/manageiq/pull/14898)
+    - Tag visibility for User and MiqGroup model [(#14903)](https://github.com/ManageIQ/manageiq/pull/14903)
+    - Join RBAC check for MiqUserRole User and MiqGroup to one if branch [(#14901)](https://github.com/ManageIQ/manageiq/pull/14901)
+
+- Providers
+  - Containers: Add relationship between PersistentVolumes and Pods [(#14231)](https://github.com/ManageIQ/manageiq/pull/14231)
+  - Middleware: Fix defaults for immutability of MiddlewareServers [(#14822)](https://github.com/ManageIQ/manageiq/pull/14822)
+  - SCVMM: Always assume a string for run_powershell_script [(#14859)](https://github.com/ManageIQ/manageiq/pull/14859)
+
+- User Interface
+  - Fix name of PDF summary report for Hosts [(#14853)](https://github.com/ManageIQ/manageiq/pull/14853)
 
 # Fine Beta-2
 
