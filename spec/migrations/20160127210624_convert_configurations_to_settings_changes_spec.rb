@@ -56,9 +56,14 @@ describe ConvertConfigurationsToSettingsChanges do
         "simple" => YAML.load_file(data_dir.join("simple.tmpl.yml")).deep_symbolize_keys,
         "vmdb"   => YAML.load_file(data_dir.join("simple.tmpl.yml")).deep_symbolize_keys
       }
-      described_class.with_constants(:TEMPLATES => test_templates) do
-        migrate
-      end
+
+      # capture stdout, because stub_const will trigger method_missing in active_record/migration.rb
+      # at https://github.com/rails/rails/blob/efcf71fb64319519784fe1c69fd66f36fb52e47a/activerecord/lib/active_record/migration.rb#L838
+      # which calls `say_with_time`
+      $stdout = StringIO.new
+      stub_const('ConvertConfigurationsToSettingsChanges::TEMPLATES', test_templates)
+      migrate
+      $stdout = STDOUT
 
       expect(settings_change_stub.count).to eq(12)
 
