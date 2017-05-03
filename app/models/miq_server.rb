@@ -1,4 +1,5 @@
 require 'resolv'
+require 'miq_server/base_constants'
 
 class MiqServer < ApplicationRecord
   include_concern 'WorkerManagement'
@@ -32,21 +33,7 @@ class MiqServer < ApplicationRecord
 
   virtual_column :zone_description, :type => :string
 
-  RUN_AT_STARTUP  = %w( MiqRegion MiqWorker MiqQueue MiqReportResult )
-
-  STATUS_STARTING       = 'starting'.freeze
-  STATUS_STARTED        = 'started'.freeze
-  STATUS_RESTARTING     = 'restarting'.freeze
-  STATUS_STOPPED        = 'stopped'.freeze
-  STATUS_QUIESCE        = 'quiesce'.freeze
-  STATUS_NOT_RESPONDING = 'not responding'.freeze
-  STATUS_KILLED         = 'killed'.freeze
-
-  STATUSES_STOPPED = [STATUS_STOPPED, STATUS_KILLED]
-  STATUSES_ACTIVE  = [STATUS_STARTING, STATUS_STARTED]
-  STATUSES_ALIVE   = STATUSES_ACTIVE + [STATUS_RESTARTING, STATUS_QUIESCE]
-
-  RESTART_EXIT_STATUS = 123
+  include MiqServerBaseConstants
 
   def self.active_miq_servers
     where(:status => STATUSES_ACTIVE)
