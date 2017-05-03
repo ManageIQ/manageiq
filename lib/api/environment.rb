@@ -16,15 +16,13 @@ module Api
     end
 
     def self.time_attributes
-      @time_attributes ||= begin
-                             ApiConfig.collections.each.with_object(Set.new(%w(expires_on))) do |(_, cspec), result|
-                               next if cspec[:klass].blank?
-                               klass = cspec[:klass].constantize
-                               klass.columns_hash.each do |name, typeobj|
-                                 result << name if %w(date datetime).include?(typeobj.type.to_s)
-                               end
-                             end
-                           end
+      @time_attributes ||= ApiConfig.collections.each.with_object(Set.new(%w(expires_on))) do |(_, cspec), result|
+        next if cspec[:klass].blank?
+        klass = cspec[:klass].constantize
+        klass.columns_hash.each do |name, typeobj|
+          result << name if %w(date datetime).include?(typeobj.type.to_s)
+        end
+      end
     end
 
     def self.user_token_service
