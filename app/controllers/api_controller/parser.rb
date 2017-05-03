@@ -19,6 +19,7 @@ class ApiController
         end
       end
       @req[:api_prefix]    = "#{@req[:base]}#{@req[:prefix]}"
+      @req[:api_suffix]    = "?provider_class=#{params[:provider_class]}" if params[:provider_class]
 
       @req[:collection]    = params[:collection]
       @req[:c_id]          = params[:c_id]
