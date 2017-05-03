@@ -74,6 +74,7 @@ gem "rails",                          "~>5.0.2"
 gem "rails-controller-testing",                        :require => false
 gem "rails-i18n",                     "~>5.x"
 gem "responders",                     "~>2.0"
+gem "rest-client",                    "~>2.0.0",       :require => false
 gem "ripper_ruby_parser",                              :require => false
 gem "ruby-dbus" # For external auth
 gem "ruby-progressbar",               "~>1.7.0",       :require => false

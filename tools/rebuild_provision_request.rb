@@ -246,7 +246,7 @@ class AutomateHash
 
   def console
     print "\nPlace in a Rails console to run the POST API call\n" unless @quiet
-    print "\nRestClient.post '#{build_url}', '#{output.to_json}'\n\n"
+    print "\nrequire 'rest-client'; RestClient.post '#{build_url}', '#{output.to_json}'\n\n"
   end
 
   def hash_output
