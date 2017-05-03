@@ -259,7 +259,7 @@ class VmScan < Job
         end
       else
         _log.error("Deleting snapshot: reference: [#{mor}], No #{ui_lookup(:table => "ext_management_systems")} available to delete snapshot")
-        set_status("No #{ui_lookup(:table => "ext_management_systems")} available to delete snapshot, skipping", "error", 1)
+        set_status("No #{ui_lookup(:table => "ext_management_systems")} available to delete snapshot, skipping", "error")
       end
     else
       set_status("Snapshot was not taken, delete not required") if options[:snapshot] == :skipped
