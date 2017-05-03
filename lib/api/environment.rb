@@ -3,10 +3,18 @@ module Api
     def self.normalized_attributes
       @normalized_attributes ||= {
         :time      => time_attributes,
-        :url       => Set.new(%w(href)),
-        :resource  => Set.new(%w(image_href)),
+        :url       => url_attributes,
+        :resource  => resource_attributes,
         :encrypted => encrypted_attributes
       }
+    end
+
+    def self.url_attributes
+      @url_attributes ||= Set.new(%w(href))
+    end
+
+    def self.resource_attributes
+      @resource_attributes ||= Set.new(%w(image_href))
     end
 
     def self.encrypted_attributes
