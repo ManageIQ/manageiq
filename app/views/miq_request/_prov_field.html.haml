@@ -277,7 +277,9 @@
                   - opts = [["<#{_('Choose')}>", nil]]
               - else
                 - opts = multiple ? [] : [["<#{_('None')}>", nil]]
-              - if field_hash[:data_type] == :integer
+              - if field_hash[:sort_by] == :none
+                - opts += Array(field_hash[:values].invert)
+              - elsif field_hash[:data_type] == :integer
                 - opts += Array(field_hash[:values].invert).sort_by(&:last)
               - else
                 - opts += Array(field_hash[:values].invert).sort_by { |a| a.first.downcase }
