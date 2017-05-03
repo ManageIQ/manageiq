@@ -57,7 +57,7 @@ describe Metric do
 
       context "executing perf_capture_timer" do
         before(:each) do
-          stub_settings(:performance => {:history => {:initial_capture_days => 7}})
+          stub_settings_merge(:performance => {:history => {:initial_capture_days => 7}})
           Metric::Capture.perf_capture_timer
         end
 
