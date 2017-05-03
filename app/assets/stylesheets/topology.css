@@ -40,6 +40,11 @@ kubernetes-topology-icon svg {
   display: inline-block;
 }
 
+_:-ms-fullscreen, :root kubernetes-topology-icon svg,  /* IE11 hack */
+_:-ms-lang(x), _:-webkit-full-screen, kubernetes-topology-icon svg /* Edge hack */{
+  padding: 20px 0 0 20px;  
+}
+
 .kube-topology g text.attached-label {
   display: none;
 }
