@@ -3,11 +3,18 @@ class MiqShortcut < ApplicationRecord
   has_many :miq_widgets, :through => :miq_widget_shortcuts
 
   def self.seed
-    names = []
-    seed_data.each_with_index do |s, index|
-      names << s[:name]
+    db_data = all.index_by(&:name)
+    seed_records = seed_data
+
+    seed_records_by_name = seed_records.group_by { |x| x[:name] }
+    if seed_records.size != seed_records_by_name.size
+      names = seed_records_by_name.select { |_n, v| v.size > 1 }.map(&:first)
+      _log.warn("Duplicate seeds for names: #{names.join(",")}")
+    end
+
+    seed_records.each_with_index do |s, index|
       s[:sequence] = index
-      rec = find_by(:name => s[:name])
+      rec = db_data[s[:name]]
       if rec.nil?
         _log.info("Creating #{s.inspect}")
         rec = create!(s)
@@ -20,8 +27,8 @@ class MiqShortcut < ApplicationRecord
       end
     end
 
-    all.each do |rec|
-      next if names.include?(rec.name)
+    db_data.each do |name, rec|
+      next if seed_records_by_name[name]
       _log.info("Deleting #{rec.inspect}")
       rec.destroy
     end
