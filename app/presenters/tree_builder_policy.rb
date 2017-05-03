@@ -95,6 +95,16 @@ class TreeBuilderPolicy < TreeBuilder
 
     success = count_only_or_objects(count_only, pol_rec ? pol_rec.actions_for_event(parent, :success) : [])
     failure = count_only_or_objects(count_only, pol_rec ? pol_rec.actions_for_event(parent, :failure) : [])
+    unless count_only
+      add_flag_to(success, :success) unless success.empty?
+      add_flag_to(failure, :failure) unless failure.empty?
+    end
     success + failure
+  end
+
+  def add_flag_to(array, flag)
+    array.each do |i|
+      i.instance_variable_set(:@flag, flag)
+    end
   end
 end
