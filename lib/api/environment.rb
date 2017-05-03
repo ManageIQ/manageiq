@@ -40,7 +40,7 @@ module Api
     def self.fetch_encrypted_attribute_names(klass)
       return [] unless klass.respond_to?(:encrypted_columns)
       encrypted_objects_checked[klass.name] ||= klass.encrypted_columns.each do |attr|
-        normalized_attributes[:encrypted] << attr
+        encrypted_attributes << attr
       end
     end
 
