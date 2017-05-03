@@ -30,13 +30,13 @@ module Api
 
     def self.fetch_encrypted_attribute_names(klass)
       return [] unless klass.respond_to?(:encrypted_columns)
-      encrypted_objects_checked[klass.name] ||= klass.encrypted_columns.each do |attr|
-        encrypted_attributes << attr
-      end
+      return if encrypted_objects_checked.include?(klass.name)
+      encrypted_attributes.merge(klass.encrypted_columns)
+      encrypted_objects_checked << klass.name
     end
 
     def self.encrypted_objects_checked
-      @encrypted_objects_checked ||= {}
+      @encrypted_objects_checked ||= Set.new
     end
   end
 end
