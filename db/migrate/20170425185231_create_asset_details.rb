@@ -10,7 +10,7 @@ class CreateAssetDetails < ActiveRecord::Migration[5.0]
       t.bigint  :resource_id
       t.string  :resource_type
       t.timestamps
-      t.index %w(resource_id resource_type), :name => "index_asset_details_on_resource_id_and_resource_type", :using => :btree
+      t.index %w(resource_id resource_type)
     end
   end
 end
