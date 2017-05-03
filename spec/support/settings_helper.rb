@@ -6,6 +6,7 @@ def stub_settings(hash, overwrite = false)
 end
 
 def stub_settings_merge(hash)
+  warn("DEPRECATION WARNING: stub_settings_merge is deprecated as stub_settings defaults to merging")
   stub_settings(hash)
 end
 
