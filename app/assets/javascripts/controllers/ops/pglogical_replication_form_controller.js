@@ -346,7 +346,7 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', 
       animation: $ctrl.animationsEnabled,
       ariaLabelledBy: 'modal-title',
       ariaDescribedBy: 'modal-body',
-      templateUrl: 'authkeyModalForm.html',
+      templateUrl: '/static/authkey_modal_form.html',
       controller: 'authkeyModalFormController',
       controllerAs: '$ctrl',
       resolve: {
