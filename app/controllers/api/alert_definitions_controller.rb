@@ -6,6 +6,7 @@ module Api
       assert_id_not_specified(data, type)
       assert_all_required_fields_exists(data, type, REQUIRED_FIELDS)
       begin
+        data["options"].deep_symbolize_keys!
         data["expression"] = MiqExpression.new(data["expression"])
         data["enabled"] = true if data["enabled"].nil?
         super(type, id, data)
