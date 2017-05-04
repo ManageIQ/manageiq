@@ -1,5 +1,5 @@
 class ShowbackEvent < ApplicationRecord
-  belongs_to :showback_configuration
+  belongs_to :resource, :polymorphic => true
 
   has_many :showback_charges, :dependent => :destroy
   has_many :showback_buckets, :through   => :showback_charges
@@ -32,7 +32,7 @@ class ShowbackEvent < ApplicationRecord
   def generate_data
     self.data = {}
     ShowbackUsageType.all.each do |measure_type|
-      next unless measure_type.category == self.resource_type
+      next unless resource_type.ends_with?(measure_type.category)
       self.data[measure_type.measure] = {}
       measure_type.dimensions.each do |dim|
         self.data[measure_type.measure][dim] = 0
