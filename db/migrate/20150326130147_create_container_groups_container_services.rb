@@ -1,4 +1,4 @@
-class CreateContainerGroupsContainerServices < ActiveRecord::Migration
+class CreateContainerGroupsContainerServices < ActiveRecord::Migration[4.2]
   def change
     create_table :container_groups_container_services, :id => false do |t|
       t.bigint :container_service_id

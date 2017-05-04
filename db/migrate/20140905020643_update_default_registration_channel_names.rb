@@ -1,4 +1,4 @@
-class UpdateDefaultRegistrationChannelNames < ActiveRecord::Migration
+class UpdateDefaultRegistrationChannelNames < ActiveRecord::Migration[4.2]
   class MiqDatabase < ActiveRecord::Base; end
 
   def up

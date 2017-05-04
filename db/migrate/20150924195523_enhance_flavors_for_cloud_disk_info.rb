@@ -1,4 +1,4 @@
-class EnhanceFlavorsForCloudDiskInfo < ActiveRecord::Migration
+class EnhanceFlavorsForCloudDiskInfo < ActiveRecord::Migration[4.2]
   def change
     add_column :flavors, :root_disk_size, :bigint
     add_column :flavors, :swap_disk_size, :bigint

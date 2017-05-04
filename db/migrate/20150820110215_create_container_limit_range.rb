@@ -1,4 +1,4 @@
-class CreateContainerLimitRange < ActiveRecord::Migration
+class CreateContainerLimitRange < ActiveRecord::Migration[4.2]
   def change
     create_table :container_limits do |t|
       t.string     :name

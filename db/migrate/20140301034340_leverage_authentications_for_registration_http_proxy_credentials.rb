@@ -1,4 +1,4 @@
-class LeverageAuthenticationsForRegistrationHttpProxyCredentials < ActiveRecord::Migration
+class LeverageAuthenticationsForRegistrationHttpProxyCredentials < ActiveRecord::Migration[4.2]
   class MiqDatabase < ActiveRecord::Base; end
 
   class Authentication < ActiveRecord::Base

@@ -1,4 +1,4 @@
-class AddVmwareRoDatastoresToHostsStorages < ActiveRecord::Migration
+class AddVmwareRoDatastoresToHostsStorages < ActiveRecord::Migration[4.2]
   class HostsStorage < ActiveRecord::Base; end
 
   def up

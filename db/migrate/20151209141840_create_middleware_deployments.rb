@@ -1,4 +1,4 @@
-class CreateMiddlewareDeployments < ActiveRecord::Migration
+class CreateMiddlewareDeployments < ActiveRecord::Migration[4.2]
   def change
     create_table :middleware_deployments do |t|
       t.string :name # name of the deployment

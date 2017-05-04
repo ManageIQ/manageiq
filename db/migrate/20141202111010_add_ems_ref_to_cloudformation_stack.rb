@@ -1,4 +1,4 @@
-class AddEmsRefToCloudformationStack < ActiveRecord::Migration
+class AddEmsRefToCloudformationStack < ActiveRecord::Migration[4.2]
   def up
     change_column :orchestration_stacks, :ems_ref, :text
     add_column :orchestration_stack_parameters, :ems_ref, :text

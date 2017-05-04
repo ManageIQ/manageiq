@@ -1,4 +1,4 @@
-class AddContainerEvents < ActiveRecord::Migration
+class AddContainerEvents < ActiveRecord::Migration[4.2]
   def change
     add_column  :ems_events, :container_node_id, :bigint
     add_column  :ems_events, :container_node_name, :string

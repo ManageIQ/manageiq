@@ -1,4 +1,4 @@
-class CreateSettingsChangesTable < ActiveRecord::Migration
+class CreateSettingsChangesTable < ActiveRecord::Migration[4.2]
   def up
     create_table :settings_changes do |t|
       t.belongs_to :resource, :type => :bigint, :polymorphic => true

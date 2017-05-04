@@ -1,4 +1,4 @@
-class RemoveVmDiscoverRowFromMiqEventDefinitions < ActiveRecord::Migration
+class RemoveVmDiscoverRowFromMiqEventDefinitions < ActiveRecord::Migration[4.2]
   class Relationship < ActiveRecord::Base; end
 
   class MiqEventDefinition < ActiveRecord::Base; end

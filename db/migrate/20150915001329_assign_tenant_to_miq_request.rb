@@ -1,4 +1,4 @@
-class AssignTenantToMiqRequest < ActiveRecord::Migration
+class AssignTenantToMiqRequest < ActiveRecord::Migration[4.2]
   class Tenant < ActiveRecord::Base
     # seed and return the current root_tenant
     def self.root_tenant

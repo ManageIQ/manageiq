@@ -1,4 +1,4 @@
-class NamespaceEmsClasses < ActiveRecord::Migration
+class NamespaceEmsClasses < ActiveRecord::Migration[4.2]
   include MigrationHelper
 
   NAME_MAP = Hash[*%w(

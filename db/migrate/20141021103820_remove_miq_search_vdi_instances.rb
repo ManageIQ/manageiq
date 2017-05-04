@@ -1,4 +1,4 @@
-class RemoveMiqSearchVdiInstances < ActiveRecord::Migration
+class RemoveMiqSearchVdiInstances < ActiveRecord::Migration[4.2]
   class MiqSearch < ActiveRecord::Base; end
 
   def up

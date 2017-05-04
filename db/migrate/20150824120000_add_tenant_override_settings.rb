@@ -1,4 +1,4 @@
-class AddTenantOverrideSettings < ActiveRecord::Migration
+class AddTenantOverrideSettings < ActiveRecord::Migration[4.2]
   include MigrationHelper
 
   def change

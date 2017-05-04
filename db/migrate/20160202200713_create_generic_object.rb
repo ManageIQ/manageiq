@@ -1,4 +1,4 @@
-class CreateGenericObject < ActiveRecord::Migration
+class CreateGenericObject < ActiveRecord::Migration[4.2]
   def change
     create_table :generic_object_definitions do |t|
       t.string     :name

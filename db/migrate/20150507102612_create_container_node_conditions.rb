@@ -1,4 +1,4 @@
-class CreateContainerNodeConditions < ActiveRecord::Migration
+class CreateContainerNodeConditions < ActiveRecord::Migration[4.2]
   def up
     create_table :container_node_conditions do |t|
       t.belongs_to :container_node, :type => :bigint

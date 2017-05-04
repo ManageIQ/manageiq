@@ -1,4 +1,4 @@
-class OrchestrationTemplateRenameEmsRefToMd5AndDropUnique < ActiveRecord::Migration
+class OrchestrationTemplateRenameEmsRefToMd5AndDropUnique < ActiveRecord::Migration[4.2]
   def up
     remove_index  :orchestration_templates, :ems_ref
     rename_column :orchestration_templates, :ems_ref, :md5

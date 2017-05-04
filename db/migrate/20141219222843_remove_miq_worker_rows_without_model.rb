@@ -1,4 +1,4 @@
-class RemoveMiqWorkerRowsWithoutModel < ActiveRecord::Migration
+class RemoveMiqWorkerRowsWithoutModel < ActiveRecord::Migration[4.2]
   class MiqWorker < ActiveRecord::Base
     self.inheritance_column = :_type_disabled
   end

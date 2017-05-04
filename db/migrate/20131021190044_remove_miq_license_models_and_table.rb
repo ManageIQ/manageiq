@@ -1,4 +1,4 @@
-class RemoveMiqLicenseModelsAndTable < ActiveRecord::Migration
+class RemoveMiqLicenseModelsAndTable < ActiveRecord::Migration[4.2]
   def up
     drop_table :miq_license_contents
   end

@@ -1,4 +1,4 @@
-class AddMissingFieldsAndIndexesToFloatingIps < ActiveRecord::Migration
+class AddMissingFieldsAndIndexesToFloatingIps < ActiveRecord::Migration[4.2]
   def change
     add_column :floating_ips, :network_router_id, :bigint
     add_column :floating_ips, :network_port_id,   :bigint

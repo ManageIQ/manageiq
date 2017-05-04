@@ -1,4 +1,4 @@
-class ChargebackRateDetailCurrencyNotNil < ActiveRecord::Migration
+class ChargebackRateDetailCurrencyNotNil < ActiveRecord::Migration[4.2]
   # Migration in order to put a currency by default in rates that were added by a user before the addition of currencies
   class ChargebackRateDetail < ActiveRecord::Base; end
 

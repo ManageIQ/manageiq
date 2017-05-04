@@ -1,4 +1,4 @@
-class AddPersistentVolumesToContainerVolumes < ActiveRecord::Migration
+class AddPersistentVolumesToContainerVolumes < ActiveRecord::Migration[4.2]
   class ContainerVolume < ActiveRecord::Base
     self.inheritance_column = :_type_disabled # disable STI
   end

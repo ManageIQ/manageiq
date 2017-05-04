@@ -1,4 +1,4 @@
-class MigrateFilteredEventsToBlacklistedEvents < ActiveRecord::Migration
+class MigrateFilteredEventsToBlacklistedEvents < ActiveRecord::Migration[4.2]
   class Configuration < ActiveRecord::Base
     serialize :settings
   end

@@ -1,4 +1,4 @@
-class CreateConfigurationTags < ActiveRecord::Migration
+class CreateConfigurationTags < ActiveRecord::Migration[4.2]
   def change
     create_table :configuration_tags do |t|
       t.string :type

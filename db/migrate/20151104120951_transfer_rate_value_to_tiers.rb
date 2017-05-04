@@ -1,4 +1,4 @@
-class TransferRateValueToTiers < ActiveRecord::Migration
+class TransferRateValueToTiers < ActiveRecord::Migration[4.2]
   class ChargebackRateDetail < ActiveRecord::Base
     has_many :chargeback_tiers
   end

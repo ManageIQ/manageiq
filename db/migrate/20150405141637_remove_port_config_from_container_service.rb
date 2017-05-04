@@ -1,4 +1,4 @@
-class RemovePortConfigFromContainerService < ActiveRecord::Migration
+class RemovePortConfigFromContainerService < ActiveRecord::Migration[4.2]
   class ContainerService < ActiveRecord::Base
     has_many :container_service_port_configs,
              :class_name => "RemovePortConfigFromContainerService::ContainerServicePortConfig"

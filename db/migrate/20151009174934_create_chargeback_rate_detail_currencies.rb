@@ -1,4 +1,4 @@
-class CreateChargebackRateDetailCurrencies < ActiveRecord::Migration
+class CreateChargebackRateDetailCurrencies < ActiveRecord::Migration[4.2]
   def change
     create_table :chargeback_rate_detail_currencies do |t|
       t.string :code

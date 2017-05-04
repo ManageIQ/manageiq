@@ -1,4 +1,4 @@
-class CreateContainerPortConfigs < ActiveRecord::Migration
+class CreateContainerPortConfigs < ActiveRecord::Migration[4.2]
   def up
     create_table :container_port_configs do |t|
       t.string     :ems_ref

@@ -1,4 +1,4 @@
-class FixReplicationOnUpgradeFromVersionFour < ActiveRecord::Migration
+class FixReplicationOnUpgradeFromVersionFour < ActiveRecord::Migration[4.2]
   include MigrationHelper
 
   class Configuration < ActiveRecord::Base

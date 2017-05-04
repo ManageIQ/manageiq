@@ -1,4 +1,4 @@
-class CreateContainerGroups < ActiveRecord::Migration
+class CreateContainerGroups < ActiveRecord::Migration[4.2]
   def up
     create_table :container_groups do |t|
       t.string     :ems_ref

@@ -1,4 +1,4 @@
-class AddMissingFieldsAndIndexesToSecurityGroups < ActiveRecord::Migration
+class AddMissingFieldsAndIndexesToSecurityGroups < ActiveRecord::Migration[4.2]
   def change
     add_index  :security_groups, :ems_id
     add_index  :security_groups, :cloud_tenant_id

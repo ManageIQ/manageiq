@@ -1,4 +1,4 @@
-class CreateCloudObjectStoreContainersAndCloudObjectStoreObjects < ActiveRecord::Migration
+class CreateCloudObjectStoreContainersAndCloudObjectStoreObjects < ActiveRecord::Migration[4.2]
   def change
     create_table :cloud_object_store_containers do |t|
       t.string     :ems_ref

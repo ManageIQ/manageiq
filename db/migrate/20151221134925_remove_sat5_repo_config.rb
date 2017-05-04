@@ -1,4 +1,4 @@
-class RemoveSat5RepoConfig < ActiveRecord::Migration
+class RemoveSat5RepoConfig < ActiveRecord::Migration[4.2]
   class MiqDatabase < ActiveRecord::Base; end
 
   class Authentication < ActiveRecord::Base

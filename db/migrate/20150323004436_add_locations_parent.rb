@@ -1,4 +1,4 @@
-class AddLocationsParent < ActiveRecord::Migration
+class AddLocationsParent < ActiveRecord::Migration[4.2]
   def change
     add_column :configuration_locations, :parent_id, :bigint
     add_column :configuration_locations, :parent_ref, :string

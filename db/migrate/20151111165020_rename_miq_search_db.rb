@@ -1,4 +1,4 @@
-class RenameMiqSearchDb < ActiveRecord::Migration
+class RenameMiqSearchDb < ActiveRecord::Migration[4.2]
   class MiqSearch < ActiveRecord::Base; end
 
   NAME_HASH = Hash[*%w(

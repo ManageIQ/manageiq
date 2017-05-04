@@ -1,4 +1,4 @@
-class UpdateDefaultUpdateRepoNames < ActiveRecord::Migration
+class UpdateDefaultUpdateRepoNames < ActiveRecord::Migration[4.2]
   class MiqDatabase < ActiveRecord::Base; end
 
   REPO_NAME_HASH = {

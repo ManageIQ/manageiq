@@ -1,4 +1,4 @@
-class FixEventClassForEvmAlertEvent < ActiveRecord::Migration
+class FixEventClassForEvmAlertEvent < ActiveRecord::Migration[4.2]
   class EventStream < ActiveRecord::Base
     self.inheritance_column = :_type_disabled # disable STI
   end

@@ -1,4 +1,4 @@
-class CreateMiddlewareServers < ActiveRecord::Migration
+class CreateMiddlewareServers < ActiveRecord::Migration[4.2]
   def change
     create_table :middleware_servers do |t|
       t.string :name       # server name generated from id

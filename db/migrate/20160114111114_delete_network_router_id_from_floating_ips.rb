@@ -1,4 +1,4 @@
-class DeleteNetworkRouterIdFromFloatingIps < ActiveRecord::Migration
+class DeleteNetworkRouterIdFromFloatingIps < ActiveRecord::Migration[4.2]
   def up
     remove_index :floating_ips, :column => :network_router_id
     remove_column :floating_ips, :network_router_id, :bigint

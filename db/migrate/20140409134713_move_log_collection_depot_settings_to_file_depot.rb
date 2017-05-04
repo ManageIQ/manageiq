@@ -1,4 +1,4 @@
-class MoveLogCollectionDepotSettingsToFileDepot < ActiveRecord::Migration
+class MoveLogCollectionDepotSettingsToFileDepot < ActiveRecord::Migration[4.2]
   class Authentication < ActiveRecord::Base
     self.inheritance_column = :_type_disabled # disable STI
   end

@@ -1,6 +1,6 @@
 require Rails.root.join('lib/migration_helper')
 
-class CollapsedInitialMigration < ActiveRecord::Migration
+class CollapsedInitialMigration < ActiveRecord::Migration[4.2]
   include MigrationHelper
 
   def up
