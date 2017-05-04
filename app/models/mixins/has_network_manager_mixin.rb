@@ -16,7 +16,6 @@ module HasNetworkManagerMixin
              :network_routers,
              :public_networks,
              :private_networks,
-             :all_private_networks,
              :all_cloud_networks,
              :to        => :network_manager,
              :allow_nil => true
