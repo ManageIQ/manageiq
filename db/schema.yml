@@ -66,6 +66,18 @@ arbitration_settings:
 - value
 - created_on
 - updated_on
+asset_details:
+- id
+- description
+- contact
+- location
+- room
+- rack_name
+- lowest_rack_unit
+- resource_id
+- resource_type
+- created_at
+- updated_at
 assigned_server_roles:
 - id
 - miq_server_id
