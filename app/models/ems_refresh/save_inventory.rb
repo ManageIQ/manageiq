@@ -391,12 +391,4 @@ module EmsRefresh::SaveInventory
     save_ems_block_storage_inventory(ems, hashes, target) if ems.supports?(:block_storage)
     save_ems_object_storage_inventory(ems, hashes, target) if ems.supports?(:object_storage)
   end
-
-  #
-  # Saves asset details information of a resource
-  #
-  def save_asset_details_inventory(parent, hash)
-    return if hash.nil?
-    save_inventory_single(:asset_details, parent, hash)
-  end
 end
