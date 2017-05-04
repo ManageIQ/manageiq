@@ -54,7 +54,7 @@ describe EmsRefresh::SaveInventory do
 
     context "with dups in the database" do
       before(:each) do
-        @uid = MiqUUID.new_guid
+        @uid = SecureRandom.uuid
         @vm1 = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems, :uid_ems => @uid)
         @vm2 = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems, :uid_ems => @uid)
       end
@@ -102,7 +102,7 @@ describe EmsRefresh::SaveInventory do
 
     context "with disconnected dups in the database" do
       before(:each) do
-        @uid = MiqUUID.new_guid
+        @uid = SecureRandom.uuid
         @vm1 = FactoryGirl.create(:vm_with_ref, :ext_management_system => nil,  :uid_ems => @uid)
         @vm2 = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems, :uid_ems => @uid)
       end
@@ -152,7 +152,7 @@ describe EmsRefresh::SaveInventory do
     context "with non-dup on a different EMS in the database" do
       before(:each) do
         @ems2 = FactoryGirl.create(:ems_vmware)
-        @uid  = MiqUUID.new_guid
+        @uid  = SecureRandom.uuid
         @vm1  = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems2, :uid_ems => @uid)
         @vm2  = FactoryGirl.build(:vm_with_ref, :ext_management_system => @ems, :uid_ems => @uid)
       end
@@ -177,7 +177,7 @@ describe EmsRefresh::SaveInventory do
 
     context "with disconnected non-dup in the database" do
       before(:each) do
-        @uid  = MiqUUID.new_guid
+        @uid  = SecureRandom.uuid
         @vm1 = FactoryGirl.create(:vm_with_ref, :ext_management_system => nil, :uid_ems => @uid)
         @vm2 = FactoryGirl.build(:vm_with_ref, :ext_management_system => @ems, :uid_ems => @uid)
       end
@@ -272,7 +272,7 @@ describe EmsRefresh::SaveInventory do
 
   def raw_data_without_dups(*args)
     data = raw_data_process(*args)
-    data[1][:uid_ems] = MiqUUID.new_guid if data[0][:uid_ems] == data[1][:uid_ems]
+    data[1][:uid_ems] = SecureRandom.uuid if data[0][:uid_ems] == data[1][:uid_ems]
     data
   end
 

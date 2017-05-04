@@ -532,7 +532,7 @@ class MiqServer < ApplicationRecord
   def self.my_guid
     @@my_guid_cache ||= begin
       guid_file = Rails.root.join("GUID")
-      File.write(guid_file, MiqUUID.new_guid) unless File.exist?(guid_file)
+      File.write(guid_file, SecureRandom.uuid) unless File.exist?(guid_file)
       File.read(guid_file).strip
     end
   end

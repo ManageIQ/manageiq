@@ -797,7 +797,7 @@ describe "Server Monitor" do
           @miq_server1 = EvmSpecHelper.local_miq_server(:zone => @zone1, :name => "Server 1")
           @miq_server1.deactivate_all_roles
 
-          @miq_server2 = FactoryGirl.create(:miq_server, :guid => MiqUUID.new_guid, :zone => @zone2, :name => "Server 2")
+          @miq_server2 = FactoryGirl.create(:miq_server, :guid => SecureRandom.uuid, :zone => @zone2, :name => "Server 2")
           @miq_server2.deactivate_all_roles
         end
 
@@ -832,7 +832,7 @@ describe "Server Monitor" do
           @roles1 = [['ems_operations', 1], ['event', 1], ['ems_metrics_coordinator', 2], ['scheduler', 1], ['reporting', 1]]
           @roles1.each { |role, priority| @miq_server1.assign_role(role, priority) }
 
-          @miq_server2 = FactoryGirl.create(:miq_server, :guid => MiqUUID.new_guid, :zone => @zone2, :name => "Server 2")
+          @miq_server2 = FactoryGirl.create(:miq_server, :guid => SecureRandom.uuid, :zone => @zone2, :name => "Server 2")
           @miq_server2.deactivate_all_roles
           @roles2 = [['ems_operations', 1], ['event', 2], ['ems_metrics_coordinator', 1], ['scheduler', 2], ['reporting', 1]]
           @roles2.each { |role, priority| @miq_server2.assign_role(role, priority) }

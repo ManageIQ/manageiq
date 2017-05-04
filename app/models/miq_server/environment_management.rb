@@ -55,7 +55,7 @@ module MiqServer::EnvironmentManagement
           require 'MiqSockUtil'
           ipaddr      = MiqSockUtil.getIpAddr
           hostname    = MiqSockUtil.getFullyQualifiedDomainName
-          mac_address = MiqUUID.mac_address.dup
+          mac_address = UUIDTools::UUID.mac_address.dup
         end
       rescue
       end

@@ -5,7 +5,7 @@ describe EmbeddedAnsibleWorker::Runner do
       s.update(:hostname => "fancyserver")
       s
     }
-    let(:worker_guid) { MiqUUID.new_guid }
+    let(:worker_guid) { SecureRandom.uuid }
     let(:worker)      { FactoryGirl.create(:embedded_ansible_worker, :guid => worker_guid, :miq_server_id => miq_server.id) }
     let(:runner) {
       worker

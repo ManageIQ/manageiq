@@ -30,7 +30,7 @@ class CustomButtonSet < ApplicationRecord
     raise ArgumentError, "options[:owner] is required" if options[:owner].blank?
 
     options.each_with_object(dup) { |(k, v), button_set| button_set.send("#{k}=", v) }.tap do |cbs|
-      cbs.guid = MiqUUID.new_guid
+      cbs.guid = SecureRandom.uuid
       cbs.name = "#{name}-#{cbs.guid}"
       cbs.save!
       custom_buttons.each { |cb| cbs.add_member(cb.copy(:applies_to => options[:owner])) }

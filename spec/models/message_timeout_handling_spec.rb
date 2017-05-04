@@ -1,6 +1,6 @@
 describe "Message Timeout Handling" do
   before(:each) do
-    @guid = MiqUUID.new_guid
+    @guid = SecureRandom.uuid
     allow(MiqServer).to receive(:my_guid).and_return(@guid)
 
     @zone       = FactoryGirl.create(:zone)
