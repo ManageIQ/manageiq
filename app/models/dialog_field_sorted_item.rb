@@ -83,7 +83,6 @@ class DialogFieldSortedItem < DialogField
     return data_to_sort if sort_by == :none
 
     value_position = sort_by == :value ? :first : :last
-    value_modifier = data_type == "integer" ? :to_i : :to_s
 
     data_to_sort = data_to_sort.sort_by { |d| d.send(value_position).send(value_modifier) }
     return data_to_sort.reverse! if sort_order == :descending
@@ -93,7 +92,7 @@ class DialogFieldSortedItem < DialogField
   def raw_values
     @raw_values ||= dynamic ? values_from_automate : static_raw_values
     use_first_value_as_default unless default_value_included_in_raw_values?
-    self.value ||= default_value
+    self.value ||= default_value.send(value_modifier)
 
     @raw_values
   end
@@ -103,7 +102,7 @@ class DialogFieldSortedItem < DialogField
   end
 
   def default_value_included_in_raw_values?
-    @raw_values.collect { |value_pair| value_pair[0] }.include?(default_value)
+    @raw_values.collect { |value_pair| value_pair[0] }.include?(default_value.send(value_modifier))
   end
 
   def static_raw_values
@@ -118,5 +117,9 @@ class DialogFieldSortedItem < DialogField
   def load_values_on_init?
     return true unless show_refresh_button
     load_values_on_init
+  end
+
+  def value_modifier
+    data_type == "integer" ? :to_i : :to_s
   end
 end
