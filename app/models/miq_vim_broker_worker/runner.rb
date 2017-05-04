@@ -162,7 +162,7 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
   }.freeze
 
   def on_create_event(ems_id, event)
-    target_hash, target_class, target_find = ManageIQ::Providers::Vmware::InfraManager::EventParser.obj_update_to_hash(event)
+    target_hash, target_class, target_find = ManageIQ::Providers::Vmware::InfraManager::EventParser.parse_new_target(event)
     if target_hash.nil?
       _log.debug("Ignoring refresh for EMS id: [#{ems_id}] on event [#{event[:objType]}-create]")
     else
