@@ -13,7 +13,7 @@ describe MiqProvision::PostInstallCallback do
       def for_destination; end
 
       def _log
-        @logger ||= Vmdb.null_logger
+        @logger ||= Vmdb.logger
       end
     end
   end
