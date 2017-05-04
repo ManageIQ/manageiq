@@ -166,14 +166,11 @@ describe DialogFieldDropDownList do
   end
 
   describe "#values" do
-    let(:dialog_field) { described_class.new(:dynamic => dynamic) }
+    let(:dialog_field) { described_class.new(:dynamic => dynamic, :data_type => data_type, :sort_by => :value) }
+    let(:data_type) { "string" }
 
     context "when the dialog_field is dynamic" do
       let(:dynamic) { true }
-
-      before do
-        allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return(%w(automate values))
-      end
 
       context "when the raw values are already set" do
         before do
@@ -186,8 +183,49 @@ describe DialogFieldDropDownList do
       end
 
       context "when the raw values are not already set" do
-        it "returns the values from automate" do
-          expect(dialog_field.values).to eq(%w(automate values))
+        context "when the values returned are strings" do
+          before do
+            allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return(%w(automate values))
+          end
+
+          it "returns the values from automate" do
+            expect(dialog_field.values).to eq(%w(automate values))
+          end
+        end
+
+        context "when the values returned are integers" do
+          before do
+            allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return(
+              0  => "zero",
+              5  => "five",
+              10 => "ten"
+            )
+            dialog_field.default_value = "5"
+          end
+
+          context "when the data type is integer" do
+            let(:data_type) { "integer" }
+
+            it "returns the values from automate, sorted" do
+              expect(dialog_field.values).to eq([[0, "zero"], [5, "five"], [10, "ten"]])
+            end
+
+            it "sets the value to the default value" do
+              dialog_field.values
+              expect(dialog_field.value).to eq(5)
+            end
+          end
+
+          context "when the data type is string" do
+            it "returns the values from automate, sorted by string comparison" do
+              expect(dialog_field.values).to eq([[0, "zero"], [10, "ten"], [5, "five"]])
+            end
+
+            it "sets the value to the first value" do
+              dialog_field.values
+              expect(dialog_field.value).to eq("0")
+            end
+          end
         end
       end
     end
