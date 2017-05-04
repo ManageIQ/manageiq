@@ -586,11 +586,11 @@ describe ServiceTemplate do
           :instance_type           => [flavor.id, flavor.name],
           :src_ems_id              => [ems.id, ems.name],
           :provision               => {
-            :fqname    => ra1.fqname,
+            :fqname    => 'a1/b1/c1',
             :dialog_id => nil
           },
           :reconfigure             => {
-            :fqname    => ra3.fqname,
+            :fqname    => 'x1/y1/z1',
             :dialog_id => service_dialog.id
           }
         }
@@ -608,7 +608,9 @@ describe ServiceTemplate do
       # Removes Retirement / Adds Reconfigure
       expect(updated.resource_actions.pluck(:action)).to match_array(%w(Provision Reconfigure))
       expect(updated.resource_actions.first.dialog_id).to be_nil # Removes the dialog from Provision
+      expect(updated.resource_actions.first.fqname).to eq('/a1/b1/c1')
       expect(updated.resource_actions.last.dialog).to eq(service_dialog)
+      expect(updated.resource_actions.last.fqname).to eq('/x1/y1/z1')
       expect(updated.name).to eq('Updated Template Name')
       expect(updated.service_resources.first.resource.source_id).to eq(new_vm.id) # Validate request update
       expect(updated.config_info).to eq(updated_catalog_item_options[:config_info])
