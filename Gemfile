@@ -167,4 +167,4 @@ dev_gemfile = File.expand_path("Gemfile.dev.rb", __dir__)
 eval_gemfile(dev_gemfile) if File.exist?(dev_gemfile)
 
 # Load other additional Gemfiles
-Dir.glob("bundler.d/*.rb").each { |f| eval_gemfile(File.expand_path(f, __dir__)) }
+Dir.glob(File.join(__dir__, 'bundler.d/*.rb')).each { |f| eval_gemfile(File.expand_path(f, __dir__)) }
