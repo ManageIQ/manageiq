@@ -117,7 +117,7 @@ describe VMDB::Util do
   end
 
   it ".add_zip_entry(private)" do
-    require 'zip/zipfilesystem'
+    require 'zip/filesystem'
     file  = "/var/log/messages.log"
     entry = "ROOT/var/log/messages.log"
     mtime = Time.parse("2013-09-24 09:00:45 -0400")

@@ -97,7 +97,7 @@ module VMDB
     end
 
     def self.zip_logs(zip_filename, dirs, userid = "system")
-      require 'zip/zipfilesystem'
+      require 'zip/filesystem'
 
       zip_dir = Rails.root.join("data", "user", userid)
       FileUtils.mkdir_p(zip_dir) unless File.exist?(zip_dir)
@@ -109,7 +109,7 @@ module VMDB
       zfile = zfile.to_s
 
       _log.info "Creating: [#{zfile_display}]"
-      Zip::ZipFile.open(zfile, Zip::ZipFile::CREATE) do |zip|
+      Zip::File.open(zfile, Zip::File::CREATE) do |zip|
         dirs.each do |dir|
           dir = Rails.root.join(dir) unless Pathname.new(dir).absolute?
           Dir.glob(dir).each do |file|
