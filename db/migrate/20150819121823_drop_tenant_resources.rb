@@ -1,4 +1,4 @@
-class DropTenantResources < ActiveRecord::Migration
+class DropTenantResources < ActiveRecord::Migration[4.2]
   def up
     drop_table :tenant_resources
   end

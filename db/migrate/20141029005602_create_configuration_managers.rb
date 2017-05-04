@@ -1,4 +1,4 @@
-class CreateConfigurationManagers < ActiveRecord::Migration
+class CreateConfigurationManagers < ActiveRecord::Migration[4.2]
   def up
     create_table :configuration_managers do |t|
       t.string     :type

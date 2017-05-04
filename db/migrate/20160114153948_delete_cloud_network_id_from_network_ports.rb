@@ -1,4 +1,4 @@
-class DeleteCloudNetworkIdFromNetworkPorts < ActiveRecord::Migration
+class DeleteCloudNetworkIdFromNetworkPorts < ActiveRecord::Migration[4.2]
   def up
     remove_index :network_ports, :column => :cloud_network_id
     remove_column :network_ports, :cloud_network_id, :bigint

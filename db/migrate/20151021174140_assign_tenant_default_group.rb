@@ -1,4 +1,4 @@
-class AssignTenantDefaultGroup < ActiveRecord::Migration
+class AssignTenantDefaultGroup < ActiveRecord::Migration[4.2]
   class Tenant < ActiveRecord::Base
     def add_default_miq_group
       tenant_group = ::AssignTenantDefaultGroup::MiqGroup.create_tenant_group(self)

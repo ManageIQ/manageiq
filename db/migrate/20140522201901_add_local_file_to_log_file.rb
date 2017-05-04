@@ -1,4 +1,4 @@
-class AddLocalFileToLogFile < ActiveRecord::Migration
+class AddLocalFileToLogFile < ActiveRecord::Migration[4.2]
   def up
     add_column :log_files, :local_file, :string
   end

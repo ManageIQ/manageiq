@@ -1,4 +1,4 @@
-class SetCorrectStiTypeOnOpenstackCloudVolume < ActiveRecord::Migration
+class SetCorrectStiTypeOnOpenstackCloudVolume < ActiveRecord::Migration[4.2]
   class ExtManagementSystem < ActiveRecord::Base
     self.inheritance_column = :_type_disabled
   end

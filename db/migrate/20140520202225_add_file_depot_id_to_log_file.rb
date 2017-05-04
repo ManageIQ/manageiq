@@ -1,4 +1,4 @@
-class AddFileDepotIdToLogFile < ActiveRecord::Migration
+class AddFileDepotIdToLogFile < ActiveRecord::Migration[4.2]
   def up
     add_column :log_files, :file_depot_id, :bigint
   end

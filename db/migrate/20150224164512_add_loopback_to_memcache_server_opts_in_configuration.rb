@@ -1,4 +1,4 @@
-class AddLoopbackToMemcacheServerOptsInConfiguration < ActiveRecord::Migration
+class AddLoopbackToMemcacheServerOptsInConfiguration < ActiveRecord::Migration[4.2]
   class Configuration < ActiveRecord::Base
     serialize :settings, Hash
   end

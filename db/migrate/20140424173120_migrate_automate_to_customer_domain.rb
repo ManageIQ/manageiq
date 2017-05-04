@@ -1,4 +1,4 @@
-class MigrateAutomateToCustomerDomain < ActiveRecord::Migration
+class MigrateAutomateToCustomerDomain < ActiveRecord::Migration[4.2]
   class MiqAeNamespace < ActiveRecord::Base
     def self.root_instances
       where(:parent_id => nil).where(arel_table[:name].not_eq("$"))

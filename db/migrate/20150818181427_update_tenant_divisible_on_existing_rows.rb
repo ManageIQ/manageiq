@@ -1,4 +1,4 @@
-class UpdateTenantDivisibleOnExistingRows < ActiveRecord::Migration
+class UpdateTenantDivisibleOnExistingRows < ActiveRecord::Migration[4.2]
   class Tenant < ActiveRecord::Base; end
 
   def up

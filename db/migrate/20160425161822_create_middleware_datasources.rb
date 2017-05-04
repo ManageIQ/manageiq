@@ -1,4 +1,4 @@
-class CreateMiddlewareDatasources < ActiveRecord::Migration
+class CreateMiddlewareDatasources < ActiveRecord::Migration[4.2]
   def change
     create_table :middleware_datasources do |t|
       t.string :name # name of the datasource

@@ -1,4 +1,4 @@
-class RenameEmsEventTableToEventStream < ActiveRecord::Migration
+class RenameEmsEventTableToEventStream < ActiveRecord::Migration[4.2]
   disable_ddl_transaction!
   include MigrationHelper
 

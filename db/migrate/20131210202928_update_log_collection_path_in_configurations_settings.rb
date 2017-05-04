@@ -1,4 +1,4 @@
-class UpdateLogCollectionPathInConfigurationsSettings < ActiveRecord::Migration
+class UpdateLogCollectionPathInConfigurationsSettings < ActiveRecord::Migration[4.2]
   class Configuration < ActiveRecord::Base
     serialize :settings
   end

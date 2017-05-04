@@ -1,4 +1,4 @@
-class RemoveLicenseRequiredFromServerRoles < ActiveRecord::Migration
+class RemoveLicenseRequiredFromServerRoles < ActiveRecord::Migration[4.2]
   def up
     remove_column :server_roles, :license_required
   end

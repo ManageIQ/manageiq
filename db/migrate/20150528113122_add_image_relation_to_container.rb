@@ -1,4 +1,4 @@
-class AddImageRelationToContainer < ActiveRecord::Migration
+class AddImageRelationToContainer < ActiveRecord::Migration[4.2]
   def up
     add_column :containers, :container_image_id, :bigint
     remove_column :containers, :image

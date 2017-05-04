@@ -1,4 +1,4 @@
-class ChangeIndexOnMiqQueueV2 < ActiveRecord::Migration
+class ChangeIndexOnMiqQueueV2 < ActiveRecord::Migration[4.2]
   def up
     remove_index :miq_queue, :name => "miq_queue_idx"
 

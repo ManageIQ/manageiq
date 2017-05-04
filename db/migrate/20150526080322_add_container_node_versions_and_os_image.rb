@@ -1,4 +1,4 @@
-class AddContainerNodeVersionsAndOsImage < ActiveRecord::Migration
+class AddContainerNodeVersionsAndOsImage < ActiveRecord::Migration[4.2]
   def change
     add_column    :operating_systems, :kernel_version, :string
     add_column    :container_nodes, :kubernetes_kubelet_version, :string

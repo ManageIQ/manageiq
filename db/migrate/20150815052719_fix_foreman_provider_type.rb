@@ -1,4 +1,4 @@
-class FixForemanProviderType < ActiveRecord::Migration
+class FixForemanProviderType < ActiveRecord::Migration[4.2]
   include MigrationHelper
 
   NAME_MAP = Hash[*%w(

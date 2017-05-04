@@ -1,4 +1,4 @@
-class DropTenantApplianceName < ActiveRecord::Migration
+class DropTenantApplianceName < ActiveRecord::Migration[4.2]
   def up
     remove_column :tenants, :appliance_name
   end

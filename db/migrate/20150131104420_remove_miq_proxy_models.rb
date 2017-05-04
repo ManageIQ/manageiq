@@ -1,4 +1,4 @@
-class RemoveMiqProxyModels < ActiveRecord::Migration
+class RemoveMiqProxyModels < ActiveRecord::Migration[4.2]
   def up
     remove_index "miq_proxies", "guid"
     remove_index "miq_proxies", "host_id"

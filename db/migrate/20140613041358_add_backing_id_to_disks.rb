@@ -1,4 +1,4 @@
-class AddBackingIdToDisks < ActiveRecord::Migration
+class AddBackingIdToDisks < ActiveRecord::Migration[4.2]
   def up
     change_table :disks do |t|
       t.integer :backing_id, :limit => 8

@@ -1,4 +1,4 @@
-class AddFileDepotIdToMiqSchedule < ActiveRecord::Migration
+class AddFileDepotIdToMiqSchedule < ActiveRecord::Migration[4.2]
   class MiqSchedule < ActiveRecord::Base
     def file_depot
       return @file_depot if defined?(@file_depot)

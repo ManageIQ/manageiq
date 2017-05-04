@@ -1,4 +1,4 @@
-class AddDynamicFieldToDialogFields < ActiveRecord::Migration
+class AddDynamicFieldToDialogFields < ActiveRecord::Migration[4.2]
   def up
     add_column :dialog_fields, :dynamic, :boolean
   end

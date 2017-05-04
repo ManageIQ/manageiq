@@ -1,4 +1,4 @@
-class AddOrderableToOrchestrationTemplates < ActiveRecord::Migration
+class AddOrderableToOrchestrationTemplates < ActiveRecord::Migration[4.2]
   class OrchestrationTemplate < ActiveRecord::Base
     self.inheritance_column = :_type_disabled # disable STI
   end

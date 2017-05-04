@@ -1,4 +1,4 @@
-class AddContainerNodeCrossProviderAssociation < ActiveRecord::Migration
+class AddContainerNodeCrossProviderAssociation < ActiveRecord::Migration[4.2]
   def up
     add_column :container_nodes, :lives_on_type, :string
     add_column :container_nodes, :lives_on_id,   :bigint

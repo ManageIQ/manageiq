@@ -1,4 +1,4 @@
-class MiqGroupsAddLdapRole < ActiveRecord::Migration
+class MiqGroupsAddLdapRole < ActiveRecord::Migration[4.2]
   class MiqUserRole < ActiveRecord::Base; end
 
   class MiqGroup < ActiveRecord::Base; end

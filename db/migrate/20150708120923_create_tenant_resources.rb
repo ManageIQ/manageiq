@@ -1,4 +1,4 @@
-class CreateTenantResources < ActiveRecord::Migration
+class CreateTenantResources < ActiveRecord::Migration[4.2]
   def change
     create_table :tenant_resources do |t|
       t.belongs_to :tenant, :type => :bigint

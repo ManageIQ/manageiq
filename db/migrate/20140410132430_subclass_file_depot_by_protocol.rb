@@ -1,4 +1,4 @@
-class SubclassFileDepotByProtocol < ActiveRecord::Migration
+class SubclassFileDepotByProtocol < ActiveRecord::Migration[4.2]
   class FileDepot < ActiveRecord::Base
     self.inheritance_column = :_type_disabled # disable STI
   end

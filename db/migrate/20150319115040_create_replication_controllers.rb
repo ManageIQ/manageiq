@@ -1,4 +1,4 @@
-class CreateReplicationControllers < ActiveRecord::Migration
+class CreateReplicationControllers < ActiveRecord::Migration[4.2]
   def up
     create_table :container_replication_controllers do |t|
       t.string     :ems_ref

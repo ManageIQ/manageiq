@@ -1,4 +1,4 @@
-class CorrectUserCreatedRoleFeatureSets < ActiveRecord::Migration
+class CorrectUserCreatedRoleFeatureSets < ActiveRecord::Migration[4.2]
   class MiqUserRole < ActiveRecord::Base
     has_and_belongs_to_many :miq_product_features, :join_table => :miq_roles_features, :class_name => "CorrectUserCreatedRoleFeatureSets::MiqProductFeature"
   end

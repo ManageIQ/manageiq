@@ -1,4 +1,4 @@
-class CreatePersistentVolumeClaim < ActiveRecord::Migration
+class CreatePersistentVolumeClaim < ActiveRecord::Migration[4.2]
   def change
     create_table :persistent_volume_claims do |t|
       t.belongs_to :ems, :type => :bigint

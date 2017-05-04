@@ -1,4 +1,4 @@
-class CreateContainerVolumes < ActiveRecord::Migration
+class CreateContainerVolumes < ActiveRecord::Migration[4.2]
   def up
     create_table :container_volumes do |t|
       # prefixes are used to specify the volume source kind

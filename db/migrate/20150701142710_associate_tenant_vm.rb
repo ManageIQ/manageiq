@@ -1,4 +1,4 @@
-class AssociateTenantVm < ActiveRecord::Migration
+class AssociateTenantVm < ActiveRecord::Migration[4.2]
   def change
     add_column :providers, :tenant_owner_id, :bigint
     add_column :vms, :tenant_owner_id, :bigint

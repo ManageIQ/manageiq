@@ -1,4 +1,4 @@
-class FixMiqGroupSequences < ActiveRecord::Migration
+class FixMiqGroupSequences < ActiveRecord::Migration[4.2]
   class MiqGroup < ActiveRecord::Base; end
 
   def up

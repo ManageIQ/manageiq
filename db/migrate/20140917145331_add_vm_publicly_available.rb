@@ -1,4 +1,4 @@
-class AddVmPubliclyAvailable < ActiveRecord::Migration
+class AddVmPubliclyAvailable < ActiveRecord::Migration[4.2]
   def up
     add_column :vms, :publicly_available, :boolean
   end

@@ -1,4 +1,4 @@
-class AddContainerGroupPhase < ActiveRecord::Migration
+class AddContainerGroupPhase < ActiveRecord::Migration[4.2]
   def change
     add_column :container_groups, :phase, :string
     add_column :container_groups, :message, :string

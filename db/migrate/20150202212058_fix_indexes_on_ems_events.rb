@@ -1,4 +1,4 @@
-class FixIndexesOnEmsEvents < ActiveRecord::Migration
+class FixIndexesOnEmsEvents < ActiveRecord::Migration[4.2]
   def up
     if find_index_by_name(:ems_events, "index_ems_events_on_vm_id")
       rename_index :ems_events, "index_ems_events_on_vm_id",      "index_ems_events_on_vm_or_template_id"

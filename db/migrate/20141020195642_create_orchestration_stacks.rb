@@ -1,4 +1,4 @@
-class CreateOrchestrationStacks < ActiveRecord::Migration
+class CreateOrchestrationStacks < ActiveRecord::Migration[4.2]
   def change
     create_table :orchestration_templates do |t|
       t.string   :name

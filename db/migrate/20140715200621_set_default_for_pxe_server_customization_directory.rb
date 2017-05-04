@@ -1,4 +1,4 @@
-class SetDefaultForPxeServerCustomizationDirectory < ActiveRecord::Migration
+class SetDefaultForPxeServerCustomizationDirectory < ActiveRecord::Migration[4.2]
   class PxeServer < ActiveRecord::Base; end
 
   def up

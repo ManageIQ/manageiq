@@ -1,4 +1,4 @@
-class CreateSecurityContext < ActiveRecord::Migration
+class CreateSecurityContext < ActiveRecord::Migration[4.2]
   def change
     create_table :security_contexts do |t|
       t.references :resource, :polymorphic => true, :type => :bigint

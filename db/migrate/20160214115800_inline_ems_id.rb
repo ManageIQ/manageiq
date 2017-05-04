@@ -1,4 +1,4 @@
-class InlineEmsId < ActiveRecord::Migration
+class InlineEmsId < ActiveRecord::Migration[4.2]
   class ContainerDefinition < ActiveRecord::Base; end
 
   class ContainerGroup < ActiveRecord::Base

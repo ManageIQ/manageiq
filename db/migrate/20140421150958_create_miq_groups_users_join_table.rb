@@ -1,4 +1,4 @@
-class CreateMiqGroupsUsersJoinTable < ActiveRecord::Migration
+class CreateMiqGroupsUsersJoinTable < ActiveRecord::Migration[4.2]
   class MiqGroupsUsers < ActiveRecord::Base
     self.primary_key = nil
   end

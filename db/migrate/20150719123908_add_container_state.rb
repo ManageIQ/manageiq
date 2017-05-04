@@ -1,4 +1,4 @@
-class AddContainerState < ActiveRecord::Migration
+class AddContainerState < ActiveRecord::Migration[4.2]
   def change
     add_column :containers, :reason, :string
     add_column :containers, :started_at, :datetime

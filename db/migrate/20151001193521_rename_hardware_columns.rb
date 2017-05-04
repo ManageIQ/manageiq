@@ -1,4 +1,4 @@
-class RenameHardwareColumns < ActiveRecord::Migration
+class RenameHardwareColumns < ActiveRecord::Migration[4.2]
   def change
     rename_column :hardwares, :cores_per_socket, :cpu_cores_per_socket
     rename_column :hardwares, :numvcpus, :cpu_sockets

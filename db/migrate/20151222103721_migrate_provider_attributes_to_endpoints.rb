@@ -1,4 +1,4 @@
-class MigrateProviderAttributesToEndpoints < ActiveRecord::Migration
+class MigrateProviderAttributesToEndpoints < ActiveRecord::Migration[4.2]
   class Provider < ActiveRecord::Base
     self.inheritance_column = :_type_disabled # disable STI
   end

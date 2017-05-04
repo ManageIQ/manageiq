@@ -1,4 +1,4 @@
-class AddDeletionTimeForContainerArchivables < ActiveRecord::Migration
+class AddDeletionTimeForContainerArchivables < ActiveRecord::Migration[4.2]
   def change
     add_column :container_projects, :deleted_on, :datetime
     add_column :container_projects, :old_ems_id, :bigint

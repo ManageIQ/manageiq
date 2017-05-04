@@ -1,4 +1,4 @@
-class CreateHostServiceGroups < ActiveRecord::Migration
+class CreateHostServiceGroups < ActiveRecord::Migration[4.2]
   def up
     create_table :host_service_groups do |t|
       t.string     :name

@@ -1,4 +1,4 @@
-class AddWatermarkReportingFieldsToMetricAndMetricRollup < ActiveRecord::Migration
+class AddWatermarkReportingFieldsToMetricAndMetricRollup < ActiveRecord::Migration[4.2]
   def change
     add_column :metrics,        :derived_host_sockets,     :integer
     add_column :metrics,        :derived_host_count_total, :integer

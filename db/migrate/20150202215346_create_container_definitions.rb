@@ -1,4 +1,4 @@
-class CreateContainerDefinitions < ActiveRecord::Migration
+class CreateContainerDefinitions < ActiveRecord::Migration[4.2]
   def up
     create_table :container_definitions do |t|
       t.string     :ems_ref
