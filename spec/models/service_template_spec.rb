@@ -647,13 +647,12 @@ describe ServiceTemplate do
   context "#provision_request" do
     let(:user) { FactoryGirl.create(:user, :userid => "barney") }
     let(:resource_action) { FactoryGirl.create(:resource_action, :action => "Provision") }
-    let(:service_template) { FactoryGirl.create(:service_template,
-                                                :resource_actions => [resource_action]) }
-    let(:hash) {  {:target => service_template, :initiator => 'control'} }
-    let(:workflow)  { instance_double(ResourceActionWorkflow) }
+    let(:service_template) { FactoryGirl.create(:service_template, :resource_actions => [resource_action]) }
+    let(:hash) { {:target => service_template, :initiator => 'control'} }
+    let(:workflow) { instance_double(ResourceActionWorkflow) }
     let(:miq_request) { FactoryGirl.create(:service_template_provision_request) }
     let(:good_result) { { :errors => [], :request => miq_request } }
-    let(:bad_result) { { :errors => ["Error1","Error2"], :request => miq_request } }
+    let(:bad_result) { { :errors => %w(Error1 Error2), :request => miq_request } }
     let(:arg1) { {'ordered_by' => 'fred'} }
     let(:arg2) { {:initiator => 'control'} }
 
@@ -675,7 +674,6 @@ describe ServiceTemplate do
       expect(workflow).to receive(:request_options=).with(:initiator => 'control')
       expect { service_template.provision_request(user, arg1, arg2) }.to raise_error(RuntimeError)
     end
-
   end
 end
 
