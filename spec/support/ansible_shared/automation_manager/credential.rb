@@ -43,9 +43,9 @@ shared_examples_for "ansible credential" do
       {
         :type    => :tower_op_success,
         :options => {
-          :op_name => "#{described_class.name.demodulize} create_in_provider",
-          :op_arg  => expected_params.to_s,
-          :tower   => "Tower(manager_id: #{manager.id})"
+          :op_name => "#{described_class::FRIENDLY_NAME} creation",
+          :op_arg  => "(name=My Credential)",
+          :tower   => "Tower(manager_id=#{manager.id})"
         }
       }
     end
@@ -102,9 +102,9 @@ shared_examples_for "ansible credential" do
       {
         :type    => :tower_op_success,
         :options => {
-          :op_name => "#{described_class.name.demodulize} delete_in_provider",
-          :op_arg  => {:manager_ref => credential.id}.to_s,
-          :tower   => "Tower(manager_id: #{manager.id})"
+          :op_name => "#{described_class::FRIENDLY_NAME} deletion",
+          :op_arg  => "(manager_ref=#{credential.id})",
+          :tower   => "Tower(manager_id=#{manager.id})"
         }
       }
     end
@@ -149,9 +149,9 @@ shared_examples_for "ansible credential" do
       {
         :type    => :tower_op_success,
         :options => {
-          :op_name => "#{described_class.name.demodulize} update_in_provider",
-          :op_arg  => expected_params.to_s,
-          :tower   => "Tower(manager_id: #{manager.id})"
+          :op_name => "#{described_class::FRIENDLY_NAME} update",
+          :op_arg  => "()",
+          :tower   => "Tower(manager_id=#{manager.id})"
         }
       }
     end

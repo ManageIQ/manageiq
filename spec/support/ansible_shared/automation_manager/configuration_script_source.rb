@@ -32,9 +32,9 @@ shared_examples_for "ansible configuration_script_source" do
       {
         :type    => :tower_op_success,
         :options => {
-          :op_name => "#{described_class.name.demodulize} create_in_provider",
-          :op_arg  => params.to_s,
-          :tower   => "Tower(manager_id: #{manager.id})"
+          :op_name => "#{described_class::FRIENDLY_NAME} creation",
+          :op_arg  => "(name=My Project)",
+          :tower   => "Tower(manager_id=#{manager.id})"
         }
       }
     end
@@ -70,7 +70,6 @@ shared_examples_for "ansible configuration_script_source" do
       expected_params = params.clone.merge(:credential => '1')
       expected_params.delete(:authentication_id)
       expect(projects).to receive(:create!).with(expected_params)
-      expected_notify[:options][:op_arg] = expected_params.to_s
       expect(Notification).to receive(:create).with(expected_notify)
       expect(described_class.create_in_provider(manager.id, params)).to be_a(described_class)
     end
@@ -106,9 +105,9 @@ shared_examples_for "ansible configuration_script_source" do
       {
         :type    => :tower_op_success,
         :options => {
-          :op_name => "#{described_class.name.demodulize} delete_in_provider",
-          :op_arg  => {:manager_ref => tower_project.id}.to_s,
-          :tower   => "Tower(manager_id: #{manager.id})"
+          :op_name => "#{described_class::FRIENDLY_NAME} deletion",
+          :op_arg  => "(manager_ref=#{tower_project.id})",
+          :tower   => "Tower(manager_id=#{manager.id})"
         }
       }
     end
@@ -151,9 +150,9 @@ shared_examples_for "ansible configuration_script_source" do
       {
         :type    => :tower_op_success,
         :options => {
-          :op_name => "#{described_class.name.demodulize} update_in_provider",
-          :op_arg  => {}.to_s,
-          :tower   => "Tower(manager_id: #{manager.id})"
+          :op_name => "#{described_class::FRIENDLY_NAME} update",
+          :op_arg  => "()",
+          :tower   => "Tower(manager_id=#{manager.id})"
         }
       }
     end
