@@ -23,7 +23,6 @@ class ManageIQ::Providers::Openstack::NetworkManager < ManageIQ::Providers::Netw
            :class_name => "ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Public"
   has_many :private_networks, :foreign_key => :ems_id, :dependent => :destroy,
            :class_name => "ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private"
-  alias_method :all_private_networks, :private_networks
 
   # Auth and endpoints delegations, editing of this type of manager must be disabled
   delegate :authentication_check,
