@@ -376,7 +376,7 @@ class ServiceTemplate < ApplicationRecord
 
   def provision_request(user, options = nil, request_options = nil)
     result = provision_workflow(user, options, request_options).submit_request
-    raise result[:errors].join(",") if result[:errors].any?
+    raise result[:errors].join(", ") if result[:errors].any?
     result[:request]
   end
 
