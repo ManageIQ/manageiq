@@ -8,17 +8,12 @@ module HasNetworkManagerMixin
             :autosave    => true,
             :dependent   => :destroy
 
-    delegate :floating_ips,
-             :security_groups,
-             :cloud_networks,
-             :cloud_subnets,
-             :network_ports,
-             :network_routers,
-             :public_networks,
-             :private_networks,
-             :all_cloud_networks,
-             :to        => :network_manager,
-             :allow_nil => true
+    has_many :floating_ips,    :through => :network_manager
+    has_many :security_groups, :through => :network_manager
+    has_many :cloud_networks,  :through => :network_manager
+    has_many :cloud_subnets,   :through => :network_manager
+    has_many :network_ports,   :through => :network_manager
+    has_many :network_routers, :through => :network_manager
 
     alias_method :all_cloud_networks, :cloud_networks
 
