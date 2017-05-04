@@ -159,7 +159,7 @@ class CustomButton < ApplicationRecord
   end
 
   def copy(options = {})
-    options[:guid] = MiqUUID.new_guid
+    options[:guid] = SecureRandom.uuid
     options.each_with_object(dup) { |(k, v), button| button.send("#{k}=", v) }.tap(&:save!)
   end
 end

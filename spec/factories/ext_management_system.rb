@@ -3,7 +3,7 @@ FactoryGirl.define do
     sequence(:name)      { |n| "ems_#{seq_padded_for_sorting(n)}" }
     sequence(:hostname)  { |n| "ems-#{seq_padded_for_sorting(n)}" }
     sequence(:ipaddress) { |n| ip_from_seq(n) }
-    guid                 { MiqUUID.new_guid }
+    guid                 { SecureRandom.uuid }
     zone                 { Zone.first || FactoryGirl.create(:zone) }
     storage_profiles     { [] }
 

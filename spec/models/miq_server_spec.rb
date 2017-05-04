@@ -33,7 +33,7 @@ describe MiqServer do
 
     it "should not generate a new GUID file if new_guid blows up" do # Test for case 10942
       MiqServer.my_guid_cache = nil
-      expect(MiqUUID).to receive(:new_guid).and_raise(StandardError)
+      expect(SecureRandom).to receive(:uuid).and_raise(StandardError)
       expect(File).to receive(:exist?).with(guid_file).and_return(false)
       expect(File).not_to receive(:write)
       expect { MiqServer.my_guid }.to raise_error(StandardError)

@@ -8,7 +8,7 @@ class FixMiqGroupSequences < ActiveRecord::Migration
 
     say_with_time("Update MiqGroup missing guids") do
       MiqGroup.where(:guid => nil).each do |g|
-        g.update_attributes(:guid => MiqUUID.new_guid)
+        g.update_attributes(:guid => SecureRandom.uuid)
       end
     end
   end

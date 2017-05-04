@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :provider do
     sequence(:name) { |n| "provider_#{seq_padded_for_sorting(n)}" }
-    guid            { MiqUUID.new_guid }
+    guid            { SecureRandom.uuid }
     zone            { Zone.first || FactoryGirl.create(:zone) }
   end
 
