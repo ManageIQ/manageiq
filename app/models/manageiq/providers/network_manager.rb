@@ -25,27 +25,19 @@ module ManageIQ::Providers
     has_many :load_balancer_health_checks,        :foreign_key => :ems_id, :dependent => :destroy
     has_many :load_balancer_health_check_members, :through => :load_balancer_health_checks
 
-    # Uses "ext_management_systems"."parent_ems_id" instead of "ext_management_systems"."id"
-    #
-    # ORDER BY ((
-    #   SELECT COUNT(*)
-    #   FROM "vms"
-    #   WHERE "ext_management_systems"."parent_ems_id" = "vms"."ems_id"
-    # ))
-    #
-    # So unlike the parent class definition, this looks at "ext_management_systems"."parent_ems_id" instead of
-    # "ext_management_systems"."id"
-    # If we are able to define a has_many :vms, :through => :parent_manager, that does actual join, this code should
-    # not be needed.
-    virtual_total :total_vms, :vms, {
-      :arel => lambda do |t|
-        foreign_table = Vm.arel_table
-        local_key     = :parent_ems_id
-        foreign_key   = :ems_id
-        arel_column   = Arel.star.count
-        t.grouping(foreign_table.project(arel_column).where(t[local_key].eq(foreign_table[foreign_key])))
-      end
-    }
+    # Relations using a parent manager
+    has_many :availability_zones,             -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
+    has_many :cloud_tenants,                  -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
+    has_many :flavors,                        -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
+    has_many :cloud_resource_quotas,          -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
+    has_many :key_pairs,                      -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id,
+             :class_name  => "AuthPrivateKey"
+    has_many :orchestration_stacks,           -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
+    has_many :orchestration_stacks_resources, -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
+    has_many :direct_orchestration_stacks,    -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
+    has_many :resource_groups,                -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
+    has_many :vms,                            -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
+    has_many :hosts,                          -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
 
     alias all_cloud_networks cloud_networks
 
@@ -54,24 +46,12 @@ module ManageIQ::Providers
                :class_name  => "ManageIQ::Providers::BaseManager",
                :autosave    => true
 
-    has_many :availability_zones, -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
-
-    # Relationships delegated to parent manager
-    delegate :cloud_tenants,
-             :flavors,
-             :cloud_resource_quotas,
-             :cloud_volumes,
+    # We cannot us a has many using :parent_ems_id primary key, since this doesn't belong to parent manager, so we need
+    # proper has_many :through or to delete these delegations.
+    delegate :cloud_volumes,
              :cloud_volume_snapshots,
              :cloud_object_store_containers,
              :cloud_object_store_objects,
-             :key_pairs,
-             :orchestration_stacks,
-             :orchestration_stacks_resources,
-             :direct_orchestration_stacks,
-             :resource_groups,
-             :vms,
-             :total_vms,
-             :hosts,
              :to        => :parent_manager,
              :allow_nil => true
 
