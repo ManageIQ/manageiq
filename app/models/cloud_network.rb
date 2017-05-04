@@ -16,6 +16,10 @@ class CloudNetwork < ApplicationRecord
   has_many :floating_ips,  :dependent => :destroy
   has_many :vms, :through => :network_ports, :source => :device, :source_type => 'VmOrTemplate'
 
+  has_many :public_network_vms, -> { distinct }, :through => :public_network_routers, :source => :vms
+  has_many :public_network_routers, :foreign_key => :cloud_network_id, :class_name => NetworkRouter
+  has_many :private_networks, -> { distinct }, :through => :public_network_routers, :source => :cloud_networks
+
   # TODO(lsmola) figure out what this means, like security groups used by VMs in the network? It's not being
   # refreshed, so we can probably delete this association
   has_many   :security_groups
