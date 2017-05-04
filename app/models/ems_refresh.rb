@@ -100,6 +100,7 @@ module EmsRefresh
 
   def self.refresh_new_target(ems_id, target_hash, target_class, target_find)
     ems = ExtManagementSystem.find(ems_id)
+    target_class = target_class.constantize if target_class.kind_of? String
 
     save_ems_inventory_no_disconnect(ems, target_hash)
 
@@ -110,6 +111,8 @@ module EmsRefresh
     end
 
     ems.refresher.refresh(get_target_objects(target))
+
+    target
   end
 
   def self.get_target_objects(target, single_id = nil)
