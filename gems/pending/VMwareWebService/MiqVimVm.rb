@@ -610,6 +610,15 @@ class MiqVimVm
     waitForTask(taskMor)
   end
 
+  def getHardware
+    getProp("config.hardware").try(:fetch_path, "config", "hardware") || {}
+  end
+
+  def getScsiControllers(hardware = nil)
+    hardware ||= getHardware()
+    hardware["device"].to_a.select { |dev| VIRTUAL_SCSI_CONTROLLERS.include?(dev.xsiType) }
+  end
+
   def getMemory
     getProp("summary.config.memorySizeMB")["summary"]["config"]["memorySizeMB"].to_i
   end
@@ -854,12 +863,14 @@ class MiqVimVm
   # Find a SCSI controller and
   # return its key and next available unit number.
   #
-  def available_scsi_units
+  def available_scsi_units(hardware = nil)
     scsi_units       = []
     all_unit_numbers = [*0..MAX_SCSI_DEVICES]
 
-    devices = getProp("config.hardware")["config"]["hardware"]["device"]
-    scsi_controllers = devices.select { |dev| VIRTUAL_SCSI_CONTROLLERS.include?(dev.xsiType) }
+    hardware ||= getHardware()
+
+    devices = hardware["device"]
+    scsi_controllers = getScsiControllers(hardware)
 
     scsi_controllers.sort_by { |s| s["key"].to_i }.each do |scsi_controller|
       # Skip if all controller units are populated
@@ -887,12 +898,10 @@ class MiqVimVm
     scsi_units
   end # def available_scsi_units
 
-  def available_scsi_buses
+  def available_scsi_buses(hardware = nil)
     scsi_controller_bus_numbers = [*0..MAX_SCSI_CONTROLLERS - 1]
 
-    devices = getProp("config.hardware")["config"]["hardware"]["device"]
-
-    scsi_controllers = devices.select { |dev| VIRTUAL_SCSI_CONTROLLERS.include?(dev.xsiType) }
+    scsi_controllers = getScsiControllers(hardware)
     scsi_controllers.each do |controller|
       scsi_controller_bus_numbers -= [controller["busNumber"].to_i]
     end
@@ -904,10 +913,10 @@ class MiqVimVm
   # Returns the [controllerKey, key] pair for the virtul device
   # associated with the given backing file.
   #
-  def getDeviceKeysByBacking(backingFile)
-    devs = getProp("config.hardware")["config"]["hardware"]["device"]
+  def getDeviceKeysByBacking(backingFile, hardware = nil)
+    hardware ||= getHardware()
 
-    devs.each do |dev|
+    hardware["device"].to_a.each do |dev|
       next if dev.xsiType != "VirtualDisk"
       next if dev["backing"]["fileName"] != backingFile
       return([dev["controllerKey"], dev["key"]])
