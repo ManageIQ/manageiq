@@ -54,7 +54,7 @@ shared_examples_for "ansible credential" do
       expected_params[:organization] = 1 if described_class.name.include?("::EmbeddedAnsible::")
       expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
       store_new_credential(credential, manager)
-      expect(EmsRefresh).to receive(:queue_refresh_task).and_return([finished_task])
+      expect(EmsRefresh).to receive(:queue_refresh_task).with(manager).and_return([finished_task])
       expect(ExtManagementSystem).to receive(:find).with(manager.id).and_return(manager)
       expect(credentials).to receive(:create!).with(expected_params)
       expect(Notification).to receive(:create).with(expected_notify)
