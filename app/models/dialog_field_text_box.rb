@@ -8,7 +8,7 @@ class DialogFieldTextBox < DialogField
   end
 
   def initial_values
-    "<None>"
+    ""
   end
 
   def protected=(passed_in_value)
