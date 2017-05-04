@@ -1,4 +1,12 @@
 describe DialogFieldTextBox do
+  describe "#initial_values" do
+    let(:dialog_field) { described_class.new }
+
+    it "returns a blank string" do
+      expect(dialog_field.initial_values).to eq("")
+    end
+  end
+
   context "dialog field text box without options hash" do
     before do
       @df = FactoryGirl.build(:dialog_field_text_box, :label => 'test field', :name => 'test field')
@@ -294,7 +302,7 @@ describe DialogFieldTextBox do
       it_behaves_like "DialogFieldTextBox#normalize_automate_values"
 
       it "returns the initial values" do
-        expect(dialog_field.normalize_automate_values(automate_hash)).to eq("<None>")
+        expect(dialog_field.normalize_automate_values(automate_hash)).to eq("")
       end
     end
 

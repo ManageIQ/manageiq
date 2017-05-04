@@ -46,7 +46,7 @@ describe DialogFieldTextAreaBox do
       it_behaves_like "DialogFieldTextBox#normalize_automate_values"
 
       it "returns the initial values" do
-        expect(dialog_field.normalize_automate_values(automate_hash)).to eq("<None>")
+        expect(dialog_field.normalize_automate_values(automate_hash)).to eq("")
       end
     end
 
