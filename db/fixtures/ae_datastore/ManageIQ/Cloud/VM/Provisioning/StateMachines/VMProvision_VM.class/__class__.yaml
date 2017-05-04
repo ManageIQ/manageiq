@@ -208,7 +208,7 @@ object:
       condition: 
       on_entry: 
       on_exit: update_provision_status(status => 'Creating VM')
-      on_error: update_provision_status(status => '${/#ae_reason}')
+      on_error: update_provision_status(status => 'Error Creating VM')
       max_retries: '100'
       max_time: 
   - field:
@@ -296,7 +296,7 @@ object:
       name: Finished
       display_name: 
       datatype: string
-      priority: 16
+      priority: 15
       owner: 
       default_value: "/System/CommonMethods/StateMachineMethods/vm_provision_finished"
       substitute: true

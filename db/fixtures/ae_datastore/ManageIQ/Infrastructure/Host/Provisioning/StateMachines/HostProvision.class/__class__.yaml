@@ -188,7 +188,7 @@ object:
       condition: 
       on_entry: 
       on_exit: update_provision_status(status => 'Provisioning Host')
-      on_error: update_provision_status(status => '${/#ae_reason}')
+      on_error: update_provision_status(status => 'Error Provisioning Host')
       max_retries: '100'
       max_time: 
   - field:

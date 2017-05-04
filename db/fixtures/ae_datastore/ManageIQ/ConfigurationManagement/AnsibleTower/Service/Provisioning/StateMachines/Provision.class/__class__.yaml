@@ -148,7 +148,7 @@ object:
       condition: 
       on_entry: update_serviceprovision_status(status => 'Launching Job')
       on_exit: update_serviceprovision_status(status => 'Launching Job')
-      on_error: update_serviceprovision_status(status => '${/#ae_reason}')
+      on_error: update_serviceprovision_status(status => 'Error Launching Job')
       max_retries: '100'
       max_time: 
   - field:
@@ -168,7 +168,7 @@ object:
       condition: 
       on_entry: 
       on_exit: update_serviceprovision_status(status => 'Launching Job')
-      on_error: update_serviceprovision_status(status => '${/#ae_reason}')
+      on_error: update_serviceprovision_status(status => 'Error Launching Job')
       max_retries: '100'
       max_time: 
   - field:

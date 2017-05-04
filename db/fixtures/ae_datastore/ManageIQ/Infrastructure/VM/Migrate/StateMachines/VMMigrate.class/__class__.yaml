@@ -128,7 +128,7 @@ object:
       condition: 
       on_entry: 
       on_exit: update_migration_status(status => 'Migrating VM')
-      on_error: update_migration_status(status => '${/#ae_reason}')
+      on_error: update_migration_status(status => 'Error Migrating VM')
       max_retries: '100'
       max_time: 
   - field:

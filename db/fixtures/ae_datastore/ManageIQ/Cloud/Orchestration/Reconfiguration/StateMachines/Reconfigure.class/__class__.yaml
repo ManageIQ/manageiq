@@ -128,7 +128,7 @@ object:
       condition: 
       on_entry: update_servicereconfigure_status(status => 'Updating Stack')
       on_exit: update_servicereconfigure_status(status => 'Updating Stack')
-      on_error: update_servicereconfigure_status(status => '${/#ae_reason}')
+      on_error: update_servicereconfigure_status(status => 'Error Updating Stack')
       max_retries: '100'
       max_time: 
   - field:
@@ -148,7 +148,7 @@ object:
       condition: 
       on_entry: 
       on_exit: update_servicereconfigure_status(status => 'Updating Stack')
-      on_error: update_servicereconfigure_status(status => '${/#ae_reason}')
+      on_error: update_servicereconfigure_status(status => 'Error Updating Stack')
       max_retries: '100'
       max_time: 
   - field:
