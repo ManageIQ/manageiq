@@ -49,11 +49,10 @@ module Api
       end
 
       def resource_to_jbuilder(type, reftype, resource, opts = {})
+        normalize_options = {}
         reftype = get_reftype(type, reftype, resource, opts)
         json    = Jbuilder.new
         json.ignore_nil!
-
-        normalize_options = {:add_href => true}
 
         pas = physical_attribute_selection(resource)
         normalize_options[:render_attributes] = pas if pas.present?
@@ -341,7 +340,7 @@ module Api
           json.set! sc.to_s do |js|
             subresources.each do |scr|
               if @req.expand?(sc) || scr["id"].nil?
-                add_child js, normalize_hash(sctype, scr, :add_href => true)
+                add_child js, normalize_hash(sctype, scr)
               else
                 js.child! { |jsc| jsc.href normalize_href(sctype, scr["id"]) }
               end

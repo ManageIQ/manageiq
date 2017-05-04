@@ -128,8 +128,8 @@ RSpec.describe "Blueprints API" do
 
       expected = {
         "results" => a_collection_containing_exactly(
-          a_hash_including("name" => "foo", "description" => "bar"),
-          a_hash_including("name" => "baz", "description" => "qux")
+          a_hash_including("name" => "foo", "description" => "bar", "href" => a_string_including("/api/blueprints")),
+          a_hash_including("name" => "baz", "description" => "qux", "href" => a_string_including("/api/blueprints"))
         )
       }
       expect(response.parsed_body).to include(expected)

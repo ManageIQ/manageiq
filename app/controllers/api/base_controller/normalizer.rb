@@ -10,7 +10,7 @@ module Api
         attrs = normalize_select_attributes(obj, opts)
         result = {}
 
-        href = new_href(type, obj["id"], obj["href"], opts)
+        href = new_href(type, obj["id"], obj["href"])
         if href.present?
           result["href"] = href
           attrs -= ["href"]
@@ -113,8 +113,8 @@ module Api
         obj.collect { |item| normalize_attr(name, item) }
       end
 
-      def new_href(type, current_id, current_href, opts)
-        normalize_href(type, current_id) if opts[:add_href] && current_id.present? && current_href.blank?
+      def new_href(type, current_id, current_href)
+        normalize_href(type, current_id) if current_id.present? && current_href.blank?
       end
     end
   end
