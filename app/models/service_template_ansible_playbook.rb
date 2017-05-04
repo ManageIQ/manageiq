@@ -47,18 +47,9 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
 
     transaction do
       create_from_options(options).tap do |service_template|
-        [:provision, :retirement, :reconfigure].each do |action|
-          action_info = enhanced_config[action]
-          next unless service_template.send(:new_dialog_required?, action_info)
-
-          dialog_name  = action_info[:new_dialog_name]
-          job_template = action_info[:configuration_template]
-          hosts        = action_info[:hosts]
-
-          new_dialog = service_template.send(:create_new_dialog, dialog_name, job_template, hosts)
-          action_info[:dialog] = new_dialog
-          service_template.options[:config_info][action][:dialog_id] = new_dialog.id
-        end
+        dialog_ids = service_template.send(:create_dialogs, enhanced_config)
+        enhanced_config.deep_merge!(dialog_ids)
+        service_template.options[:config_info].deep_merge!(dialog_ids)
         service_template.create_resource_actions(enhanced_config)
       end
     end
@@ -151,10 +142,15 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
 
     update_job_templates(name, description, config_info, auth_user)
 
-    updated_config = config_info.deep_merge(self.class.send(:create_job_templates, name, description, config_info, auth_user, self))
+    config_info.deep_merge!(self.class.send(:create_job_templates, name, description, config_info, auth_user, self))
 
-    create_dialogs(updated_config)
-    options[:config_info] = updated_config
+    [:provision, :retirement, :reconfigure].each do |action|
+      next unless config_info.key?(action)
+      config_info[action][:configuration_template] ||= job_template(action)
+    end
+    config_info.deep_merge!(create_dialogs(config_info))
+
+    options[:config_info] = config_info
 
     super
   end
@@ -186,11 +182,10 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   end
 
   def create_dialogs(config_info)
-    [:provision, :retirement, :reconfigure].each do |action|
+    [:provision, :retirement, :reconfigure].each_with_object({}) do |action, hash|
       info = config_info[action]
-      if new_dialog_required?(info)
-        info[:dialog_id] = create_new_dialog(info[:new_dialog_name], job_template(action), info[:hosts]).id
-      end
+      next unless new_dialog_required?(info)
+      hash[action] = {:dialog_id => create_new_dialog(info[:new_dialog_name], info[:configuration_template], info[:hosts]).id}
     end
   end
 
