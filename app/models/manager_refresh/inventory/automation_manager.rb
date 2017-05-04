@@ -1,6 +1,6 @@
 module ManagerRefresh::Inventory::AutomationManager
   extend ActiveSupport::Concern
-  include Core
+  include ::ManagerRefresh::Inventory::Core
 
   class_methods do
     def has_automation_manager_configuration_scripts(options = {})
