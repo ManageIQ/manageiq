@@ -233,4 +233,15 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     opts = super
     self.class.send(:validate_config_info, opts)
   end
+
+  # override
+  def update_service_resources(_config_info, _auth_user = nil)
+    # do nothing since no service resources for this template
+  end
+
+  # override
+  def update_from_options(params)
+    options[:config_info] = Hash[params[:config_info].collect { |k, v| [k, v.except(:configuration_template)] }]
+    update_attributes!(params.except(:config_info))
+  end
 end
