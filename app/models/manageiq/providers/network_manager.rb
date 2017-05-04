@@ -54,9 +54,10 @@ module ManageIQ::Providers
                :class_name  => "ManageIQ::Providers::BaseManager",
                :autosave    => true
 
+    has_many :availability_zones, -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
+
     # Relationships delegated to parent manager
-    delegate :availability_zones,
-             :cloud_tenants,
+    delegate :cloud_tenants,
              :flavors,
              :cloud_resource_quotas,
              :cloud_volumes,
