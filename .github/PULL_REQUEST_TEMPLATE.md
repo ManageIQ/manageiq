@@ -1,3 +1,7 @@
+Thank you for a new Pull Request!
+
+Please, make reviewers work easier by checking, if you are not introducing any technical debt: https://github.com/ManageIQ/guides/blob/master/reviewers_guidelines.md
+
 Describe the rationale and use case for this pull request.  Provide any background, examples, and images that provide further information to accurately describe what it is that you are adding to the repo.  Add subsections as necessary to organize and feel free to link and reference other PRs as necessary, but also include them in the links section below as a quick reference.
 
 Guidelines:
