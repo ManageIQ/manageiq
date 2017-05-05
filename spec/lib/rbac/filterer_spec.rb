@@ -358,14 +358,14 @@ describe Rbac::Filterer do
       }
     end
 
+    def get_rbac_results_for_and_expect_objects(klass, expected_objects)
+      User.current_user = user
+
+      results = described_class.search(:class => klass).first
+      expect(results).to match_array(expected_objects)
+    end
+
     context "with User and Group" do
-      def get_rbac_results_for_and_expect_objects(klass, expected_objects)
-        User.current_user = user
-
-        results = described_class.search(:class => klass).first
-        expect(results).to match_array(expected_objects)
-      end
-
       context 'with tags' do
         let!(:tagged_group) { FactoryGirl.create(:miq_group, :tenant => default_tenant) }
         let!(:user)         { FactoryGirl.create(:user, :miq_groups => [tagged_group]) }
