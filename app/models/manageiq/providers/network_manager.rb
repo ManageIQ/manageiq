@@ -48,8 +48,7 @@ module ManageIQ::Providers
                :class_name  => "ManageIQ::Providers::BaseManager",
                :autosave    => true
 
-    # We cannot us a has many using :parent_ems_id primary key, since this doesn't belong to parent manager, so we need
-    # proper has_many :through or to delete these delegations.
+    # Since this belongs_to the parent ems, we need to use a has_many :through or delegate these relations.
     delegate :cloud_volumes,
              :cloud_volume_snapshots,
              :cloud_object_store_containers,
