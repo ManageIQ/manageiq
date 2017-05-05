@@ -331,7 +331,7 @@ module RelationshipMixin
     options = args.extract_options!
     rel = relationship(:raise_on_multiple => true)
     return {} if rel.nil?  # TODO: Should this return nil or init_relationship or Relationship.new in a Hash?
-    Relationship.filter_arranged_rels_by_resource_type(rel.descendants.arrange, options)
+    Relationship.filter_by_resource_type(rel.descendants, options).arrange
   end
 
   # Returns the descendant class/id pairs arranged in a tree
@@ -374,7 +374,7 @@ module RelationshipMixin
     options = args.extract_options!
     rel = relationship(:raise_on_multiple => true)
     return {} if rel.nil?  # TODO: Should this return nil or init_relationship or Relationship.new in a Hash?
-    Relationship.filter_arranged_rels_by_resource_type(rel.subtree.arrange, options)
+    Relationship.filter_by_resource_type(rel.subtree, options).arrange
   end
 
   # Returns the subtree class/id pairs arranged in a tree
@@ -485,7 +485,7 @@ module RelationshipMixin
     return {} if self.is_isolated_root? # TODO: Should this return nil or init_relationship or Relationship.new in a Hash?
     root_id = relationship.root_id
     rels = Relationship.subtree_of(root_id).arrange
-    Relationship.filter_arranged_rels_by_resource_type(rels, options)
+    Relationship.filter_by_resource_type(Relationship.subtree_of(root_id), options).arrange
   end
 
   # Returns the class/id pairs in the tree from the root arranged in a tree
