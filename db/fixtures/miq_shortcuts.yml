@@ -4,24 +4,24 @@
   :url: /dashboard/show
   :rbac_feature_name: dashboard_view
   :startup: true
-- :name: chargeback
-  :description: Cloud Intelligence / Chargeback
-  :url: /chargeback/explorer
-  :rbac_feature_name: chargeback
-  :startup: true
-- :name: report_explorer
-  :description: Cloud Intelligence / Reports
+- :name: miq_report
+  :description: Cloud Intel / Reports
   :url: /report/explorer
   :rbac_feature_name: miq_report
   :startup: true
+- :name: chargeback
+  :description: Cloud Intel / Chargeback
+  :url: /chargeback/explorer
+  :rbac_feature_name: chargeback
+  :startup: true
 - :name: timelines
-  :description: Cloud Intelligence / Timelines
+  :description: Cloud Intel / Timelines
   :url: /dashboard/timeline
   :rbac_feature_name: timeline
   :startup: true
 - :name: rss
-  :description: Cloud Intelligence / RSS
-  :url: /alert
+  :description: Cloud Intel / RSS
+  :url: /alert/show_list
   :rbac_feature_name: rss
   :startup: true
 - :name: service_explorer
@@ -97,6 +97,21 @@
 - :name: vm_cloud_images_filter_accord
   :description: Clouds / Instances / Images
   :url: /vm_cloud/explorer?accordion=images_filter
+  :rbac_feature_name: vm_cloud_explorer
+  :startup: true
+- :name: vm_cloud_instances_accord
+  :description: Clouds / Instances / Instances By Providers
+  :url: /vm_cloud/explorer?accordion=instances
+  :rbac_feature_name: vm_cloud_explorer
+  :startup: true
+- :name: vm_cloud_images_accord
+  :description: Clouds / Instances / Images By Providers
+  :url: /vm_cloud/explorer?accordion=images
+  :rbac_feature_name: vm_cloud_explorer
+  :startup: true
+- :name: vm_cloud_instances_filter_accord
+  :description: Clouds / Instances / Instances
+  :url: /vm_cloud/explorer?accordion=instances_filter
   :rbac_feature_name: vm_cloud_explorer
   :startup: true
 - :name: cloud_orchestration_stack
