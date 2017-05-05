@@ -662,22 +662,35 @@ describe ServiceTemplate do
     end
   end
 
-  describe "#provision_request" do
-    it "provision's a service template " do
-      user = FactoryGirl.create(:user, :userid => "barney")
-      resource_action = FactoryGirl.create(:resource_action, :action => "Provision")
-      service_template = FactoryGirl.create(:service_template,
-                                            :resource_actions => [resource_action])
-      hash = {:target => service_template, :initiator => 'control'}
-      workflow = instance_double(ResourceActionWorkflow)
+  context "#provision_request" do
+    let(:user) { FactoryGirl.create(:user, :userid => "barney") }
+    let(:resource_action) { FactoryGirl.create(:resource_action, :action => "Provision") }
+    let(:service_template) { FactoryGirl.create(:service_template, :resource_actions => [resource_action]) }
+    let(:hash) { {:target => service_template, :initiator => 'control'} }
+    let(:workflow) { instance_double(ResourceActionWorkflow) }
+    let(:miq_request) { FactoryGirl.create(:service_template_provision_request) }
+    let(:good_result) { { :errors => [], :request => miq_request } }
+    let(:bad_result) { { :errors => %w(Error1 Error2), :request => miq_request } }
+    let(:arg1) { {'ordered_by' => 'fred'} }
+    let(:arg2) { {:initiator => 'control'} }
+
+    it "provision's a service template without errors" do
       expect(ResourceActionWorkflow).to(receive(:new)
         .with({}, user, resource_action, hash).and_return(workflow))
-      expect(workflow).to receive(:submit_request)
+      expect(workflow).to receive(:submit_request).and_return(good_result)
       expect(workflow).to receive(:set_value).with('ordered_by', 'fred')
       expect(workflow).to receive(:request_options=).with(:initiator => 'control')
 
-      service_template.provision_request(user, {'ordered_by' => 'fred'},
-                                         {:initiator => 'control'})
+      expect(service_template.provision_request(user, arg1, arg2)).to eq(miq_request)
+    end
+
+    it "provision's a service template with errors" do
+      expect(ResourceActionWorkflow).to(receive(:new)
+        .with({}, user, resource_action, hash).and_return(workflow))
+      expect(workflow).to receive(:submit_request).and_return(bad_result)
+      expect(workflow).to receive(:set_value).with('ordered_by', 'fred')
+      expect(workflow).to receive(:request_options=).with(:initiator => 'control')
+      expect { service_template.provision_request(user, arg1, arg2) }.to raise_error(RuntimeError)
     end
   end
 end
