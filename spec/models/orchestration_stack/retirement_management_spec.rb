@@ -35,7 +35,7 @@ describe "Service Retirement Management" do
     event_hash = {:orchestration_stack => @stack, :type => "OrchestrationStack",
                   :retirement_initiator => "user", :userid => "freddy"}
 
-    expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash, {}).once
 
     @stack.retire_now('freddy')
     @stack.reload
@@ -47,7 +47,7 @@ describe "Service Retirement Management" do
     event_hash = {:orchestration_stack => @stack, :type => "OrchestrationStack",
                   :retirement_initiator => "system"}
 
-    expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash, {}).once
 
     @stack.retire_now
     @stack.reload
@@ -132,7 +132,8 @@ describe "Service Retirement Management" do
       :type                 => "OrchestrationStack",
       :retirement_initiator => "system"
     }
-    expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash)
+
+    expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash, {})
     @stack.raise_retirement_event(event_name)
   end
 
