@@ -6,7 +6,7 @@ module Api
       #
       def require_api_user_or_token
         log_request_initiated
-        @auth_token = @auth_user = nil
+        @auth_token = nil
         if request.headers[HttpHeaders::MIQ_TOKEN]
           authenticate_with_system_token(request.headers[HttpHeaders::MIQ_TOKEN])
         elsif request.headers[HttpHeaders::AUTH_TOKEN]
@@ -18,8 +18,7 @@ module Api
           }
 
           if (user = authenticate_with_http_basic { |u, p| User.authenticate(u, p, request, authenticate_options) })
-            @auth_user     = user.userid
-            auth_user_obj = userid_to_userobj(@auth_user)
+            auth_user_obj = userid_to_userobj(user.userid)
             authorize_user_group(auth_user_obj)
             validate_user_identity(auth_user_obj)
             User.current_user = auth_user_obj
@@ -69,8 +68,7 @@ module Api
         if !api_token_mgr.token_valid?(@auth_token)
           raise AuthenticationError, "Invalid Authentication Token #{@auth_token} specified"
         else
-          @auth_user     = api_token_mgr.token_get_info(@auth_token, :userid)
-          auth_user_obj = userid_to_userobj(@auth_user)
+          auth_user_obj = userid_to_userobj(api_token_mgr.token_get_info(@auth_token, :userid))
 
           unless request.headers['X-Auth-Skip-Token-Renewal'] == 'true'
             api_token_mgr.reset_token(@auth_token)
@@ -90,8 +88,7 @@ module Api
 
         User.authorize_user(@miq_token_hash[:userid])
 
-        @auth_user     = @miq_token_hash[:userid]
-        auth_user_obj = userid_to_userobj(@auth_user)
+        auth_user_obj = userid_to_userobj(@miq_token_hash[:userid])
 
         authorize_user_group(auth_user_obj)
         validate_user_identity(auth_user_obj)
