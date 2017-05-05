@@ -5,9 +5,6 @@ module Api
       # Object or Hash Normalizer
       #
 
-      # Note: revisit merging direct and virtual normalize hash methods here once support for
-      # virtual subcollections is added.
-
       def normalize_hash(type, obj, opts = {})
         Environment.fetch_encrypted_attribute_names(obj.class)
         attrs = normalize_select_attributes(obj, opts)
@@ -20,37 +17,21 @@ module Api
         end
 
         attrs.each do |k|
-          value =  normalize_direct(type, k, obj.kind_of?(ActiveRecord::Base) ? obj.try(k) : obj[k])
+          value = normalize_attr(k, obj.kind_of?(ActiveRecord::Base) ? obj.try(k) : obj[k])
           result[k] = value unless value.nil?
         end
         result
       end
 
-      def normalize_virtual(vtype, name, obj, options = {})
-        return normalize_virtual_array(vtype, name, obj, options) if obj.kind_of?(Array) || obj.kind_of?(ActiveRecord::Relation)
-        return normalize_virtual_hash(vtype, obj, options) if obj.respond_to?(:attributes) || obj.respond_to?(:keys)
-        normalize_attr_byname(name, obj)
-      end
+      private
 
-      def normalize_virtual_array(vtype, name, obj, options)
-        obj.collect { |item| normalize_virtual(vtype, name, item, options) }
-      end
-
-      def normalize_virtual_hash(vtype, obj, options)
-        Environment.fetch_encrypted_attribute_names(obj.class)
-        attrs = (obj.respond_to?(:attributes) ? obj.attributes.keys : obj.keys)
-        attrs.each_with_object({}) do |k, res|
-          value = normalize_virtual(vtype, k, obj[k], options)
-          res[k] = value unless options[:ignore_nil] && value.nil?
-        end
-      end
-
-      #
-      # Let's normalize the attribute based on its name
-      #
-      def normalize_attr_byname(attr, value)
+      def normalize_attr(attr, value)
         return if value.nil?
-        if Environment.normalized_attributes[:time].key?(attr.to_s)
+        if value.kind_of?(Array) || value.kind_of?(ActiveRecord::Relation)
+          normalize_array(attr, value)
+        elsif value.respond_to?(:attributes) || value.respond_to?(:keys)
+          normalize_hash(attr, value)
+        elsif Environment.normalized_attributes[:time].key?(attr.to_s)
           normalize_time(value)
         elsif Environment.normalized_attributes[:url].key?(attr.to_s)
           normalize_url(value)
@@ -116,8 +97,6 @@ module Api
         nil
       end
 
-      private
-
       def normalize_select_attributes(obj, opts)
         if opts[:render_attributes].present?
           opts[:render_attributes]
@@ -130,14 +109,8 @@ module Api
         end
       end
 
-      def normalize_direct(type, name, obj)
-        return normalize_direct_array(type, name, obj) if obj.kind_of?(Array) || obj.kind_of?(ActiveRecord::Relation)
-        return normalize_hash(type, obj) if obj.respond_to?(:attributes) || obj.respond_to?(:keys)
-        normalize_attr_byname(name, obj)
-      end
-
-      def normalize_direct_array(type, name, obj)
-        obj.collect { |item| normalize_direct(type, name, item) }
+      def normalize_array(name, obj)
+        obj.collect { |item| normalize_attr(name, item) }
       end
 
       def new_href(type, current_id, current_href, opts)
