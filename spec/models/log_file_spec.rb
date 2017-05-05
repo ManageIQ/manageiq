@@ -1,5 +1,3 @@
-require "models/shared_examples/log_collection"
-
 describe LogFile do
   context "With server and zone" do
     before do
