@@ -24,20 +24,15 @@
   :url: /alert/show_list
   :rbac_feature_name: rss
   :startup: true
-- :name: service_explorer
+- :name: services
   :description: Services / My Services
   :url: /service/explorer
   :rbac_feature_name: service
   :startup: true
-- :name: catalog_explorer
+- :name: catalogs
   :description: Services / Catalogs
   :url: /catalog/explorer
   :rbac_feature_name: catalog
-  :startup: true
-- :name: requests
-  :description: Services / Requests
-  :url: /miq_request/show_list
-  :rbac_feature_name: miq_request_show_list
   :startup: true
 - :name: vms_myvms
   :description: Services / Workloads / VMs & Instances
@@ -54,6 +49,11 @@
   :url: /vm_or_template/explorer?button=vm_miq_request_new
   :rbac_feature_name: vm_miq_request_new
   :startup: false
+- :name: miq_requests
+  :description: Services / Requests
+  :url: /miq_request/show_list
+  :rbac_feature_name: miq_request_show_list
+  :startup: true
 - :name: ems_clouds
   :description: Clouds / Providers
   :url: /ems_cloud/show_list
