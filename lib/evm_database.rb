@@ -95,7 +95,11 @@ class EvmDatabase
   end
 
   def self.host
-    Rails.configuration.database_configuration[Rails.env]['host']
+    if defined?(Rails)
+      Rails.configuration.database_configuration[Rails.env]['host']
+    else
+      ActiveRecord::Base.configurations[ENV['RAILS_ENV']]['host']
+    end
   end
 
   def self.local?
