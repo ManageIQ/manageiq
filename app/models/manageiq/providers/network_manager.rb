@@ -39,6 +39,8 @@ module ManageIQ::Providers
     has_many :vms,                            -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
     has_many :hosts,                          -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
 
+    virtual_total :total_vms, :vms
+
     alias all_cloud_networks cloud_networks
 
     belongs_to :parent_manager,
