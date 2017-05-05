@@ -21,10 +21,10 @@ module Api
         log_request("Authentication", :type        => auth_type,
                                       :token       => @auth_token,
                                       :x_miq_group => request.headers[HttpHeaders::MIQ_GROUP],
-                                      :user        => @auth_user)
+                                      :user        => User.current_user.userid)
         if User.current_user
           group = User.current_user.current_group
-          log_request("Authorization", :user   => @auth_user,
+          log_request("Authorization", :user   => User.current_user.userid,
                                        :group  => group.description,
                                        :role   => group.miq_user_role_name,
                                        :tenant => group.tenant.name)

@@ -24,7 +24,7 @@ module Api
       raise "Must specify a reason for approving an automation request" unless data["reason"].present?
       api_action(type, id) do |klass|
         request = resource_search(id, type, klass)
-        request.approve(@auth_user, data["reason"])
+        request.approve(User.current_user.userid, data["reason"])
         action_result(true, "Automation request #{id} approved")
       end
     rescue => err
@@ -35,7 +35,7 @@ module Api
       raise "Must specify a reason for denying an automation request" unless data["reason"].present?
       api_action(type, id) do |klass|
         request = resource_search(id, type, klass)
-        request.deny(@auth_user, data["reason"])
+        request.deny(User.current_user.userid, data["reason"])
         action_result(true, "Automation request #{id} denied")
       end
     rescue => err

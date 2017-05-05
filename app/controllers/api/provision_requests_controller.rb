@@ -28,7 +28,7 @@ module Api
     def deny_resource(type, id, data)
       api_action(type, id) do |klass|
         provreq = resource_search(id, type, klass)
-        provreq.deny(@auth_user, data['reason'])
+        provreq.deny(User.current_user.userid, data['reason'])
         action_result(true, "Provision request #{id} denied")
       end
     rescue => err
@@ -38,7 +38,7 @@ module Api
     def approve_resource(type, id, data)
       api_action(type, id) do |klass|
         provreq = resource_search(id, type, klass)
-        provreq.approve(@auth_user, data['reason'])
+        provreq.approve(User.current_user.userid, data['reason'])
         action_result(true, "Provision request #{id} approved")
       end
     rescue => err

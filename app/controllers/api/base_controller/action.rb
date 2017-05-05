@@ -16,7 +16,7 @@ module Api
       def queue_object_action(object, summary, options)
         task_options = {
           :action => summary,
-          :userid => @auth_user
+          :userid => User.current_user.userid
         }
 
         queue_options = {
