@@ -1,6 +1,7 @@
 require 'resolv'
 require 'miq_server/base_constants'
 require 'miq_server/base_methods'
+require 'miq_server/queue_management'
 
 class MiqServer < ApplicationRecord
   include_concern 'WorkerManagement'
@@ -10,7 +11,6 @@ class MiqServer < ApplicationRecord
   include_concern 'EnvironmentManagement'
   include_concern 'LogManagement'
   include_concern 'NtpManagement'
-  include_concern 'QueueManagement'
   include_concern 'RoleManagement'
   include_concern 'StatusManagement'
   include_concern 'UpdateManagement'
@@ -34,6 +34,7 @@ class MiqServer < ApplicationRecord
 
   include MiqServerBaseConstants
   include MiqServerBaseMethods
+  include MiqServerQueueManagement
 
   def self.active_miq_servers
     where(:status => STATUSES_ACTIVE)
