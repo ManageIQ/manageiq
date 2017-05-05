@@ -274,6 +274,51 @@
   :url: provider_foreman/explorer
   :rbac_feature_name: provider_foreman_explorer
   :startup: true
+- :name: ems_networks
+  :description: Networks / Providers
+  :url: /ems_network/show_list
+  :rbac_feature_name: ems_network_show_list
+  :startup: true
+- :name: cloud_networks
+  :description: Networks / Networks
+  :url: /cloud_network/show_list
+  :rbac_feature_name: cloud_network_show_list
+  :startup: true
+- :name: cloud_subnets
+  :description: Networks / Subnets
+  :url: /cloud_subnet/show_list
+  :rbac_feature_name: cloud_subnet_show_list
+  :startup: true
+- :name: network_routers
+  :description: Networks / Network Routers
+  :url: /network_router/show_list
+  :rbac_feature_name: network_router_show_list
+  :startup: true
+- :name: secutiry_groups
+  :description: Networks / Security Groups
+  :url: /security_group/show_list
+  :rbac_feature_name: security_group_show_list
+  :startup: true
+- :name: floating_ips
+  :description: Networks / Floating IPs
+  :url: /floating_ip/show_list
+  :rbac_feature_name: floating_ip_show_list
+  :startup: true
+- :name: network_ports
+  :description: Networks / Network Ports
+  :url: /network_port/show_list
+  :rbac_feature_name: network_port_show_list
+  :startup: true
+- :name: load_balancers
+  :description: Networks / Load Balancers
+  :url: /load_balancer/show_list
+  :rbac_feature_name: load_balancer_show_list
+  :startup: true
+- :name: network_topology
+  :description: Networks / Topology
+  :url: /network_topology
+  :rbac_feature_name: network_topology_view
+  :startup: true
 - :name: storage_systems
   :description: Storage / Storage Systems
   :url: /ontap_storage_system/show_list
