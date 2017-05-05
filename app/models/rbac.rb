@@ -439,6 +439,7 @@ module Rbac
 
     if targets.nil?
       scope = apply_scope(klass, scope)
+      scope = apply_select(klass, scope, options[:extra_cols]) if options[:extra_cols]
     elsif targets.kind_of?(Array)
       if targets.first.kind_of?(Numeric)
         target_ids = targets
@@ -448,6 +449,7 @@ module Rbac
         results_format ||= :objects
       end
       scope = apply_scope(klass, scope)
+      scope = apply_select(klass, scope, options[:extra_cols]) if options[:extra_cols]
 
       ids_clause = ["#{klass.table_name}.id IN (?)", target_ids] if klass.respond_to?(:table_name)
     else # targets is a scope, class, or AASM class (VimPerformanceDaily in particular)
@@ -456,6 +458,7 @@ module Rbac
 
       results_format ||= :objects
       scope = apply_scope(targets, scope)
+      scope = apply_select(klass, scope, options[:extra_cols]) if options[:extra_cols]
 
       unless klass.respond_to?(:find)
         klass = targets
@@ -535,6 +538,10 @@ module Rbac
       end
       klass.send(*scope)
     end
+  end
+
+  def self.apply_select(klass, scope, extra_cols)
+    scope.select(scope.select_values.blank? ? klass.arel_table[Arel.star] : nil).select(extra_cols)
   end
 
   def self.get_belongsto_matches(blist, klass)
