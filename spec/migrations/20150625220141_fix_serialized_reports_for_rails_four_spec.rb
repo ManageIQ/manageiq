@@ -1,9 +1,18 @@
 require_migration
 
 describe FixSerializedReportsForRailsFour do
+  before do
+    # Create the various classes that are represented in the serialized data
+    stub_const("MiqReport", Class.new(ActiveRecord::Base))
+    stub_const("Ruport", Module.new)
+    stub_const("Ruport::Data", Module.new)
+    stub_const("Ruport::Data::Table", Class.new)
+    stub_const("Ruport::Data::Record", Class.new)
+  end
+
   let(:report_result_stub)  { migration_stub(:MiqReportResult) }
   let(:binary_blob)  { migration_stub(:BinaryBlob) }
-  let(:data_dir) { File.join(Rails.root, 'spec/migrations/data', File.basename(__FILE__, '.rb')) }
+  let(:data_dir) { File.expand_path(File.join("data", File.basename(__FILE__, '.rb')), __dir__) }
 
   migration_context :up do
     before(:each) do
