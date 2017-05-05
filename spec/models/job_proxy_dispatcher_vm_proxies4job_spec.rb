@@ -14,6 +14,17 @@ describe "JobProxyDispatcherVmProxies4Job" do
         @vm = @vms.first
       end
 
+      context "with available active proxy" do
+        before(:each) do
+          allow(@vm).to receive_messages(:storage2proxies => [@server1])
+          allow(@vm).to receive_messages(:storage2active_proxies => [@server1])
+        end
+
+        it "should return with message informing that Smart State Analysis will be performed on this VM" do
+          expect(@vm.proxies4job[:message]).to eq("Perform SmartState Analysis on this VM")
+        end
+      end
+
       context "with no eligible active proxies, " do
         before(:each) do
           allow(@vm).to receive_messages(:storage2active_proxies => [])
