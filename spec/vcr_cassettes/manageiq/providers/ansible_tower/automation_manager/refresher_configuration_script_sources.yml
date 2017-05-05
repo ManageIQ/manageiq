@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects
+    uri: https://dev-ansible-tower3.example.com/api/v1/projects
     body:
       encoding: US-ASCII
       string: ''
@@ -13,6 +13,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 301
@@ -35,7 +36,7 @@ http_interactions:
   recorded_at: Tue, 07 Feb 2017 10:41:16 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/
+    uri: https://dev-ansible-tower3.example.com/api/v1/projects/
     body:
       encoding: US-ASCII
       string: ''
@@ -46,6 +47,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -109,7 +111,7 @@ http_interactions:
   recorded_at: Tue, 07 Feb 2017 10:41:17 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/4/playbooks/
+    uri: https://dev-ansible-tower3.example.com/api/v1/projects/4/playbooks/
     body:
       encoding: US-ASCII
       string: ''
@@ -120,6 +122,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -146,7 +149,7 @@ http_interactions:
   recorded_at: Tue, 07 Feb 2017 10:41:18 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/29/playbooks/
+    uri: https://dev-ansible-tower3.example.com/api/v1/projects/29/playbooks/
     body:
       encoding: US-ASCII
       string: ''
@@ -157,6 +160,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -183,7 +187,7 @@ http_interactions:
   recorded_at: Tue, 07 Feb 2017 10:41:18 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/35/playbooks/
+    uri: https://dev-ansible-tower3.example.com/api/v1/projects/35/playbooks/
     body:
       encoding: US-ASCII
       string: ''
@@ -194,6 +198,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -220,7 +225,7 @@ http_interactions:
   recorded_at: Tue, 07 Feb 2017 10:41:19 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/36/playbooks/
+    uri: https://dev-ansible-tower3.example.com/api/v1/projects/36/playbooks/
     body:
       encoding: US-ASCII
       string: ''
@@ -231,6 +236,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -398,7 +404,7 @@ http_interactions:
   recorded_at: Tue, 07 Feb 2017 10:41:22 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/37/playbooks/
+    uri: https://dev-ansible-tower3.example.com/api/v1/projects/37/playbooks/
     body:
       encoding: US-ASCII
       string: ''
@@ -409,6 +415,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -435,7 +442,7 @@ http_interactions:
   recorded_at: Tue, 07 Feb 2017 10:41:22 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/40/playbooks/
+    uri: https://dev-ansible-tower3.example.com/api/v1/projects/40/playbooks/
     body:
       encoding: US-ASCII
       string: ''
@@ -446,6 +453,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200

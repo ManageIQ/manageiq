@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/activity_stream?order_by=-id
+    uri: https://dev-ansible-tower3.example.com/api/v1/activity_stream?order_by=-id
     body:
       encoding: US-ASCII
       string: ''
@@ -13,6 +13,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 301
@@ -35,7 +36,7 @@ http_interactions:
   recorded_at: Wed, 05 Apr 2017 07:17:59 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/activity_stream/?order_by=-id
+    uri: https://dev-ansible-tower3.example.com/api/v1/activity_stream/?order_by=-id
     body:
       encoding: US-ASCII
       string: ''
@@ -46,6 +47,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -88,7 +90,7 @@ http_interactions:
   recorded_at: Wed, 05 Apr 2017 07:18:01 GMT
 - request:
     method: post
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/credentials/
+    uri: https://dev-ansible-tower3.example.com/api/v1/credentials/
     body:
       encoding: UTF-8
       string: '{"name":"test_stream","user":1}'
@@ -101,6 +103,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 201
@@ -133,7 +136,7 @@ http_interactions:
   recorded_at: Wed, 05 Apr 2017 07:18:01 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/activity_stream?id__gt=4853&order_by=id
+    uri: https://dev-ansible-tower3.example.com/api/v1/activity_stream?id__gt=4853&order_by=id
     body:
       encoding: US-ASCII
       string: ''
@@ -144,6 +147,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 301
@@ -166,7 +170,7 @@ http_interactions:
   recorded_at: Wed, 05 Apr 2017 07:18:02 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/activity_stream/?id__gt=4853&order_by=id
+    uri: https://dev-ansible-tower3.example.com/api/v1/activity_stream/?id__gt=4853&order_by=id
     body:
       encoding: US-ASCII
       string: ''
@@ -177,6 +181,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200

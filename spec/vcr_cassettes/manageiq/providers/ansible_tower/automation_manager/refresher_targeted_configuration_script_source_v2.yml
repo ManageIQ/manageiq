@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/config
+    uri: https://dev-ansible-tower2.example.com/api/v1/config
     body:
       encoding: US-ASCII
       string: ''
@@ -13,6 +13,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 301
@@ -35,7 +36,7 @@ http_interactions:
   recorded_at: Wed, 26 Apr 2017 08:12:16 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/config/
+    uri: https://dev-ansible-tower2.example.com/api/v1/config/
     body:
       encoding: US-ASCII
       string: ''
@@ -46,6 +47,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -104,7 +106,7 @@ http_interactions:
   recorded_at: Wed, 26 Apr 2017 08:12:17 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/projects/437/
+    uri: https://dev-ansible-tower2.example.com/api/v1/projects/437/
     body:
       encoding: US-ASCII
       string: ''
@@ -115,6 +117,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -162,7 +165,7 @@ http_interactions:
   recorded_at: Wed, 26 Apr 2017 08:12:18 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/projects/437/update/
+    uri: https://dev-ansible-tower2.example.com/api/v1/projects/437/update/
     body:
       encoding: US-ASCII
       string: ''
@@ -173,6 +176,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -199,7 +203,7 @@ http_interactions:
   recorded_at: Wed, 26 Apr 2017 08:12:18 GMT
 - request:
     method: post
-    uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/projects/437/update/
+    uri: https://dev-ansible-tower2.example.com/api/v1/projects/437/update/
     body:
       encoding: UTF-8
       string: ''
@@ -212,6 +216,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 202
@@ -240,7 +245,7 @@ http_interactions:
   recorded_at: Wed, 26 Apr 2017 08:12:19 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/project_updates/902/
+    uri: https://dev-ansible-tower2.example.com/api/v1/project_updates/902/
     body:
       encoding: US-ASCII
       string: ''
@@ -251,6 +256,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -296,7 +302,7 @@ http_interactions:
   recorded_at: Wed, 26 Apr 2017 08:12:20 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/project_updates/902/
+    uri: https://dev-ansible-tower2.example.com/api/v1/project_updates/902/
     body:
       encoding: US-ASCII
       string: ''
@@ -307,6 +313,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -383,7 +390,7 @@ http_interactions:
   recorded_at: Wed, 26 Apr 2017 08:12:21 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/projects/437/
+    uri: https://dev-ansible-tower2.example.com/api/v1/projects/437/
     body:
       encoding: US-ASCII
       string: ''
@@ -394,6 +401,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -441,7 +449,7 @@ http_interactions:
   recorded_at: Wed, 26 Apr 2017 08:12:23 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/projects/437/playbooks/
+    uri: https://dev-ansible-tower2.example.com/api/v1/projects/437/playbooks/
     body:
       encoding: US-ASCII
       string: ''
@@ -452,6 +460,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -501,7 +510,7 @@ http_interactions:
   recorded_at: Wed, 26 Apr 2017 08:12:24 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/credentials/9/
+    uri: https://dev-ansible-tower2.example.com/api/v1/credentials/9/
     body:
       encoding: US-ASCII
       string: ''
@@ -512,6 +521,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -549,7 +559,7 @@ http_interactions:
   recorded_at: Wed, 26 Apr 2017 08:12:24 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/projects/437/
+    uri: https://dev-ansible-tower2.example.com/api/v1/projects/437/
     body:
       encoding: US-ASCII
       string: ''
@@ -560,6 +570,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
