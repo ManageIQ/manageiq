@@ -132,7 +132,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
 
 
   def job_template(action)
-    resource_actions.find_by(:action => action.to_s.capitalize).try(:configuration_template)
+    resource_actions.find_by(:action => action.capitalize).try(:configuration_template)
   end
 
   def update_catalog_item(options, auth_user = nil)
@@ -189,11 +189,12 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     end
   end
 
-  def delete_job_templates(job_templates)
+  def delete_job_templates(job_templates, action = nil)
     auth_user = User.current_userid || 'system'
     job_templates.each do |job_template|
       ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript
         .delete_in_provider_queue(job_template.manager.id, { :manager_ref => job_template.manager_ref }, auth_user)
+      resource_actions.find_by(:action => action.capitalize).update_attributes(:configuration_template => nil) if action
     end
   end
 
@@ -219,7 +220,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
         params[:manager_ref] = job_template(action).manager_ref
         ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript.update_in_provider_queue(tower.id, params, auth_user)
       else
-        delete_job_templates([job_template])
+        delete_job_templates([job_template], action)
       end
     end
   end
