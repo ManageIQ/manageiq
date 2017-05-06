@@ -4,13 +4,12 @@ require "more_core_extensions/core_ext/array/tableize"
 
 class EvmApplication
   include Vmdb::Logging
-
-  VMDB_ROOT = File.expand_path("../..", File.dirname(__FILE__)).freeze
+  Vmdb::Loggers.init
 
   def self.start
     if server_state == :no_db
       puts "EVM has no Database connection"
-      File.open(File.join(VMDB_ROOT, "tmp", "pids", "evm.pid"), "w") { |f| f.write("no_db") }
+      File.open(Miq.root.join("tmp", "pids", "evm.pid"), "w") { |f| f.write("no_db") }
       exit
     end
 
@@ -22,16 +21,14 @@ class EvmApplication
     puts "Starting EVM..."
     _log.info("EVM Startup initiated")
 
-    include_miq_killer
     Mini::MiqServer.kill_all_workers
-    evm_server_file = File.join(*([VMDB_ROOT] + %w(lib workers bin evm_server.rb)))
+    evm_server_file = Miq.root.join(*%w(lib workers bin evm_server.rb))
     command_line = "#{Gem.ruby} #{evm_server_file}"
-    puts command_line
 
     env_options = {}
     env_options["EVMSERVER"] = "true" if MiqEnvironment::Command.is_appliance?
     puts "Running EVM in background..."
-    pid = Kernel.spawn(env_options, command_line, :pgroup => true, [:out, :err] => [File.join(VMDB_ROOT, "log/evm.log"), "a"])
+    pid = Kernel.spawn(env_options, command_line, :pgroup => true, [:out, :err] => [Miq.root.join("log", "evm.log"), "a"])
     Process.detach(pid)
   end
 
@@ -143,11 +140,5 @@ class EvmApplication
 
     _log.info("Changing REGION file from [#{old_region}] to [#{new_region}]. Restart to use the new region.")
     region_file.write(new_region)
-  end
-
-  def self.include_miq_killer
-    require File.expand_path("../../app/models/miq_server/worker_management/monitor/kill.rb", __dir__)
-
-    Mini::MiqServer.send(:include, MiqServer::WorkerManagement::Monitor::Kill)
   end
 end

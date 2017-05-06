@@ -95,7 +95,11 @@ class EvmDatabase
   end
 
   def self.host
-    Rails.configuration.database_configuration[Rails.env]['host']
+    if defined?(Rails)
+      Rails.configuration.database_configuration[Rails.env]['host']
+    else
+      ActiveRecord::Base.configurations[ENV['RAILS_ENV']]['host']
+    end
   end
 
   def self.local?
@@ -103,7 +107,7 @@ class EvmDatabase
   end
 
   # Determines the average time to the database in milliseconds
-  def self.ping(connection = ApplicationRecord.connection)
+  def self.ping(connection = ActiveRecord::Base.connection)
     query = "SELECT 1"
     Benchmark.realtime { 10.times { connection.select_value(query) } } / 10 * 1000
   end

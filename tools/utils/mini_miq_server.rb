@@ -4,27 +4,22 @@ require "sync"
 require "manageiq-gems-pending"
 require "active_record"
 
+# Files from lib/
 begin
-  lib_files = %w[extensions/as_include_concern pid_file miq_db_config miq_environment]
+  lib_files = %w[miq_helper miq_environment pid_file vmdb/settings/walker extensions/as_include_concern extensions/miq_db_config]
   lib_files.each { |req| require req }
 rescue LoadError
   # Looks like lib isn't in the path, so just load things the hard way
   lib_files.each { |req| require File.expand_path("../../lib/#{req}", File.dirname(__FILE__)) }
 end
 
-
-# HACK:  find a better way to share this code...
+# Files from app/models/
 begin
-  MiqServer
-rescue
-  module MiqServer
-    module WorkerManagement
-      module Monitor
-        module Kill
-        end
-      end
-    end
-  end
+  lib_files = %w(miq_server/base_constants miq_server/base_methods miq_server/worker_management_base miq_server/queue_management)
+  lib_files.each { |req| require req }
+rescue LoadError
+  # Looks like lib isn't in the path, so just load things the hard way
+  lib_files.each { |req| require File.expand_path("../../app/models/#{req}", File.dirname(__FILE__)) }
 end
 
 module Mini
@@ -82,44 +77,37 @@ module Mini
   end
 
   class MiqServer < ActiveRecord::Base
-    STATUS_STARTING       = 'starting'.freeze
-    STATUS_STARTED        = 'started'.freeze
-    STATUS_RESTARTING     = 'restarting'.freeze
-    STATUS_STOPPED        = 'stopped'.freeze
-    STATUS_QUIESCE        = 'quiesce'.freeze
-    STATUS_NOT_RESPONDING = 'not responding'.freeze
-    STATUS_KILLED         = 'killed'.freeze
+    extend MiqDbConfig
+    include MiqServerBaseConstants
+    include MiqServerBaseMethods
+    include MiqServerWorkerManagementBase
+    include MiqServerQueueManagement
 
-    STATUSES_STOPPED = [STATUS_STOPPED, STATUS_KILLED]
-    STATUSES_ACTIVE  = [STATUS_STARTING, STATUS_STARTED]
-    STATUSES_ALIVE   = STATUSES_ACTIVE + [STATUS_RESTARTING, STATUS_QUIESCE]
+    # puts self.methods.grep(/kill/).inspect
+    # puts self.name
 
-    class << self
-      include MiqDbConfig
-    end
-
-
-    # Dup definitiion:  app/models/miq_server/worker_management.rb:9
-    has_many :miq_workers
     # Dup definitiion:  app/models/miq_server/role_management.rb:9
     has_many :assigned_server_roles, :dependent => :destroy
     has_many :server_roles,   :through => :assigned_server_roles
     has_many :active_roles,   -> { where('assigned_server_roles.active' => true) }, :through => :assigned_server_roles, :source => :server_role
-    belongs_to              :zone
+    belongs_to :zone
 
-    MIQ_ROOT = File.expand_path("../..", File.dirname(__FILE__)).to_s.freeze
+    def self.queue_class
+      Mini::MiqQueue
+    end
 
-    #
     # Modified from tools/fix_auth/fix_auth.rb:fix_database_passwords
     #
-    # Not sure if this is re-usable or not with that code
-    #
+    # Not sure if this is re-usable or not with that code, but basically
+    # establishes a connect for ActiveRecord if one doesn't exist, and executes
+    # the block, terminating the connection afterwards if one needed to be
+    # created.
     def self.with_temporary_connection
       begin
         ActiveRecord::Base.connection_config
       rescue ActiveRecord::ConnectionNotEstablished
         # not configured, lets try again
-        ActiveRecord::Base.logger = Logger.new("#{MIQ_ROOT}/log/mini_miq_server.log")
+        ActiveRecord::Base.logger = Logger.new(Miq.root.join("log", "mini_miq_server.log"))
         new_connection = true
       end
 
@@ -132,147 +120,26 @@ module Mini
       end
     end
 
-    # Don't used cached_with_timeout for this... excessive since this shouldn't
-    # be used for more then starting up a process.  Consider caching this with a
-    # class var though.
-    def self.my_server(skip_cache=false)
-      find_by(:guid => my_guid)
-    end
-
-    # vvvvv Duplicate Code vvvvv
-    # vvvvvvvvvvvvvvvvvvvvvvvvvv
-
-    # Dup definitiion:  app/models/miq_server/worker_management.rb:13
-    def self.kill_all_workers
-      svr = my_server(true)
-      svr.kill_all_workers unless svr.nil?
-    end
-
-    def self.pidfile
-      @pidfile ||= "#{MIQ_ROOT}/tmp/pids/evm.pid"
-    end
-
-    def self.running?
-      p = PidFile.new(pidfile)
-      p.running? ? p.pid : false
-    end
-
     # From app/models/miq_server/role_management.rb:174
     def active_role_names
       active_roles.collect(&:name).sort
     end
 
-    #
-    # Zone and Role methods
-    #
-    def self.my_guid
-      @@my_guid_cache ||= begin
-        guid_file = File.join(MIQ_ROOT, "GUID")
-        File.write(guid_file, MiqUUID.new_guid) unless File.exist?(guid_file)
-        File.read(guid_file).strip
-      end
-    end
-
+    # TODO:  Determine if it is worth it to make this work with Settings
     def stop_poll
       # ::Settings.server.stop_poll.to_i_with_method
       10.seconds
     end
 
-    def stop(sync = false)
-      return if self.stopped?
-
-      shutdown_and_exit_queue
-      wait_for_stopped if sync
-    end
-
-    def wait_for_stopped
-      loop do
-        reload
-        break if self.stopped?
-        sleep stop_poll
-      end
-    end
-
     def self.stop(sync = false)
+      # Don't require this until it is needed, basically
+      #
+      # MiqQueue code isn't needed for start/status
       require_relative "mini_miq_queue"
-      # require "more_core_extensions/core_ext/shared/nested"
-      # require 'vmdb/plugins'
-      # require 'vmdb/settings'
-      # Vmdb::Settings.init
-      # Vmdb::Loggers.apply_config(::Settings.log)
 
-      svr = my_server(true) rescue nil
-      svr.stop(sync) unless svr.nil?
-      PidFile.new(pidfile).remove
-    end
-
-    def enqueue_for_server(method_name)
-      MiqQueue.put_unless_exists(
-        :class_name  => "MiqServer",
-        :instance_id => id,
-        :queue_name  => 'miq_server',
-        :zone        => zone.name,
-        :method_name => method_name,
-        :server_guid => guid
-      )
-    end
-
-    def shutdown_and_exit_queue
-      enqueue_for_server('shutdown_and_exit')
-    end
-
-    def is_local?
-      guid == MiqServer.my_guid
-    end
-
-    def is_remote?
-      !is_local?
-    end
-
-    def stopped?
-      STATUSES_STOPPED.include?(status)
-    end
-
-    # Dup definitiion:  app/models/miq_server/worker_management.rb:19
-    def setup_drb_variables
-      @workers_lock        = Sync.new
-      @workers             = {}
-
-      @queue_messages_lock = Sync.new
-      @queue_messages      = {}
-    end
-
-    # Dup definitiion:  app/models/miq_server/worker_management.rb:27
-    def start_drb_server
-      require 'drb'
-      require 'drb/acl'
-
-      setup_drb_variables
-
-      acl = ACL.new(%w( deny all allow 127.0.0.1/32 ))
-      DRb.install_acl(acl)
-
-      drb = DRb.start_service("druby://127.0.0.1:0", self)
-      update_attributes(:drb_uri => drb.uri)
-    end
-
-    # Dup definitiion:  app/models/miq_server/worker_management.rb:40
-    def worker_add(worker_pid)
-      @workers_lock.synchronize(:EX) { @workers[worker_pid] ||= {} } unless @workers_lock.nil?
-    end
-
-    # Dup definitiion:  app/models/miq_server/worker_management.rb:44
-    def worker_delete(worker_pid)
-      @workers_lock.synchronize(:EX) { @workers.delete(worker_pid) } unless @workers_lock.nil?
+      super
     end
   end
-end
-
-# HACK:  find a better way to share this code...
-begin
-  MiqWorker
-rescue
-  MiqWorker = Mini::MiqWorker
 end
 
 # puts Mini::MiqServer.with_temporary_connection { Mini::MiqServer.my_server.inspect }

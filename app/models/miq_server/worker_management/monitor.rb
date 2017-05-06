@@ -2,7 +2,6 @@ module MiqServer::WorkerManagement::Monitor
   extend ActiveSupport::Concern
 
   include_concern 'ClassNames'
-  include_concern 'Kill'
   include_concern 'Quiesce'
   include_concern 'Reason'
   include_concern 'Settings'

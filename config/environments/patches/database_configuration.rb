@@ -3,6 +3,8 @@
 # password fields as strings without ERB.
 
 require 'rails/application/configuration'
+require 'extensions/miq_db_config'
+
 Rails::Application::Configuration.module_eval do
   prepend MiqDbConfig
 end

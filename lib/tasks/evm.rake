@@ -18,8 +18,8 @@ namespace :evm do
   end
 
   desc "Kill the ManageIQ EVM Application"
-  task :kill => :environment do
-    EvmApplication.kill
+  task :kill => :evm_app_init do
+    Mini::MiqServer.with_temporary_connection { EvmApplication.kill }
   end
 
   desc "Report Status of the ManageIQ EVM Application"
