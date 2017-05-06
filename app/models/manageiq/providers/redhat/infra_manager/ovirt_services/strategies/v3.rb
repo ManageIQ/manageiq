@@ -198,16 +198,16 @@ module ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies
     end
 
     class GeneralUpdateMethodNamesDecorator < SimpleDelegator
-      def method_missing(method_name, *args)
+      def method_missing(method_name, *args, &block)
         str_method_name = method_name.to_s
         if str_method_name =~ /update_.*!/
           attribute_to_update = str_method_name.split("update_")[1].delete('!')
-          send("#{attribute_to_update}=", *args)
+          send("#{attribute_to_update}=", *args, &block)
         else
           # This is requied becasue of Ovirt::Vm strage behaviour - while rhevm.respond_to?(:nics)
           # returns false, rhevm.nics actually works.
           begin
-            __getobj__.send(method_name, *args)
+            __getobj__.send(method_name, *args, &block)
           rescue NoMethodError
             super
           end
