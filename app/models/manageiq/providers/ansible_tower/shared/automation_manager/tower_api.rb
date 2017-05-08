@@ -24,6 +24,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
     end
 
     private
+
     def notify(op, manager_id, params, success)
       params = hide_secrets(params) if respond_to?(:hide_secrets)
       _log.info "#{name} in_provider #{op} with parameters: #{params} #{success ? 'succeeded' : 'failed'}"

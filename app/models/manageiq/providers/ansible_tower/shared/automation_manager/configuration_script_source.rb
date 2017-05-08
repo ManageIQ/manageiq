@@ -5,8 +5,10 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Configurati
 
   module ClassMethods
     def provider_params(params)
-      authentication_id = params.delete(:authentication_id)
-      params[:credential] = Authentication.find(authentication_id).manager_ref if authentication_id
+      if params.keys.include?(:authentication_id)
+        authentication_id = params.delete(:authentication_id)
+        params[:credential] = authentication_id ? Authentication.find(authentication_id).manager_ref : nil
+      end
       params
     end
 
