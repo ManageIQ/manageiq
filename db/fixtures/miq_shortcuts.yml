@@ -409,6 +409,66 @@
   :url: /miq_policy/log
   :rbac_feature_name: policy_log
   :startup: true
+- :name: embedded_configuration_script_payload
+  :description: Automation / Ansible / Playbooks
+  :url: /ansible_playbook
+  :rbac_feature_name: embedded_configuration_script_payload
+  :startup: true
+- :name: embedded_configuration_script_source
+  :description: Automation / Ansible / Repositories
+  :url: /ansible_repository
+  :rbac_feature_name: embedded_configuration_script_source
+  :startup: true
+- :name: embedded_automation_manager_credentials
+  :description: Automation / Ansible / Credentials
+  :url: /ansible_credential
+  :rbac_feature_name: embedded_automation_manager_credentials
+  :startup: true
+- :name: automation_manager
+  :description: Automation / Ansible Tower / Explorer
+  :url: /automation_manager/explorer
+  :rbac_feature_name: automation_manager
+  :startup: true
+- :name: configuration_job
+  :description: Automation / Ansible Tower / Jobs
+  :url: /configuration_job
+  :rbac_feature_name: configuration_job_show_list
+  :startup: true
+- :name: miq_ae_class_explorer
+  :description: Automation / Automate / Explorer
+  :url: /miq_ae_class/explorer
+  :rbac_feature_name: miq_ae_domain_view
+  :startup: true
+- :name: miq_ae_class_simulation
+  :description: Automation / Automate / Simulation
+  :url: /miq_ae_tools/resolve
+  :rbac_feature_name: miq_ae_class_simulation
+  :startup: true
+- :name: miq_ae_customization_explorer
+  :description: Automation / Automate / Customization
+  :url: /miq_ae_customization/explorer
+  :rbac_feature_name: miq_ae_customization_explorer
+  :startup: true
+- :name: miq_ae_class_import_export
+  :description: Automation / Automate / Import / Export
+  :url: /miq_ae_tools/import_export
+  :rbac_feature_name: miq_ae_class_import_export
+  :startup: true
+- :name: miq_ae_class_log
+  :description: Automation / Automate / Log
+  :url: /miq_ae_tools/log
+  :rbac_feature_name: miq_ae_class_log
+  :startup: true
+- :name: requests
+  :description: Automation / Automate / Requests
+  :url: /miq_request?typ=ae
+  :rbac_feature_name: miq_request_show_list
+  :startup: true
+- :name: utilization
+  :description: Optimize / Utilization
+  :url: /miq_capacity/utilization
+  :rbac_feature_name: utilization
+  :startup: true
 - :name: utilization
   :description: Optimize / Utilization
   :url: /miq_capacity/utilization
