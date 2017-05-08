@@ -26,6 +26,7 @@ class ServiceTemplate < ApplicationRecord
 
   RESOURCE_ACTION_UPDATE_ATTRS = [:dialog,
                                   :dialog_id,
+                                  :fqname,
                                   :configuration_template,
                                   :configuration_template_id,
                                   :configuration_template_type].freeze

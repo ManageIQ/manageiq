@@ -223,6 +223,7 @@ describe ServiceTemplateAnsiblePlaybook do
       new_dialog_record = Dialog.where(:label => new_dialog_label).first
       expect(new_dialog_record).to be_truthy
       expect(service_template.resource_actions.first.dialog.id).to eq new_dialog_record.id
+      expect(service_template.options[:config_info][:provision]).not_to have_key(:configuration_template)
     end
 
     it 'uses the existing dialog if :dialog_id is passed in' do
