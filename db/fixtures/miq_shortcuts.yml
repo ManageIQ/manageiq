@@ -372,7 +372,22 @@
 - :name: control_explorer
   :description: Control / Explorer
   :url: /miq_policy/explorer
-  :rbac_feature_name: control_explorer
+  :rbac_feature_name: control_explorer_view
+  :startup: true
+- :name: policy_simulation
+  :description: Control / Simulation
+  :url: /miq_policy/rsop
+  :rbac_feature_name: policy_simulation
+  :startup: true
+- :name: policy_import_export
+  :description: Control / Import / Export
+  :url: /miq_policy/export
+  :rbac_feature_name: policy_import_export
+  :startup: true
+- :name: policy_logs
+  :description: Control / Log
+  :url: /miq_policy/log
+  :rbac_feature_name: policy_log
   :startup: true
 - :name: utilization
   :description: Optimize / Utilization
