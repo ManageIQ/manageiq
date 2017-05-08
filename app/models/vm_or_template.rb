@@ -879,46 +879,22 @@ class VmOrTemplate < ApplicationRecord
   #
 
   # TODO: Come back to this
-  def proxies4job(job = nil)
+  def proxies4job(_job = nil)
     _log.debug "Enter"
-    proxies = []
-    msg = 'Perform SmartState Analysis on this VM'
-    embedded_msg = nil
-
-    # If we do not get passed an model object assume it is a job guid
-    if job && !job.kind_of?(ActiveRecord::Base)
-      jobid = job
-      job = Job.find_by(:guid => jobid)
-    end
 
     all_proxy_list = storage2proxies
-    proxies += storage2active_proxies(all_proxy_list)
+    proxies = storage2active_proxies(all_proxy_list)
     _log.debug "# proxies = #{proxies.length}"
 
-    # If we detect that a MiqServer was in the all_proxies list advise that then host need credentials to use it.
-    if all_proxy_list.any? { |p| (MiqServer === p && p.state == "on") }
-      embedded_msg = "Provide credentials for this VM's Host to perform SmartState Analysis"
-    end
+    msg = if all_proxy_list.empty?
+            "No active SmartProxies found to analyze this VM"
+          elsif proxies.empty?
+            "Provide credentials for this VM's Host to perform SmartState Analysis"
+          else
+            'Perform SmartState Analysis on this VM'
+          end
 
-    if proxies.empty?
-      msg = embedded_msg.nil? ? 'No active SmartProxies found to analyze this VM' : embedded_msg
-    else
-      # Work around for the inability to scan running VMs from a host other than the registered host.
-      proxies.delete_if { |p| Host === p && p != host } if self.scan_on_registered_host_only?
-
-      # If the proxy list is now empty it is because we had to remove all but the registered host above
-      if proxies.empty?
-        if embedded_msg
-          # If we detect that a MiqServer was in the all_proxies list advise that then host need credentials to use it.
-          msg = "Start a SmartProxy or provide credentials for this VM's Host to perform SmartState Analysis"
-        else
-          msg = 'SmartState Analysis is only available through the registered Host for running VM'
-        end
-      end
-    end
-
-    log_proxies(proxies, all_proxy_list, msg, job) if proxies.empty? && job
-
+    log_all_proxies(all_proxy_list, msg) if proxies.empty?
     {:proxies => proxies.flatten, :message => msg}
   end
 
@@ -932,6 +908,13 @@ class VmOrTemplate < ApplicationRecord
     $log.send(log_method, "JOB([#{job_guid}] #{method_name}) Proxies for #{log_proxies_vm_config} : #{proxies_text}")
     $log.send(log_method, "JOB([#{job_guid}] #{method_name}) Proxies message: #{message}") if message
   rescue
+  end
+
+  def log_all_proxies(all_proxy_list, message)
+    proxies = all_proxy_list.collect { |a| "[#{log_proxies_format_instance(a)}]" }
+    proxies_text = proxies.empty? ? "[none]" : proxies.join(" -- ")
+    _log.warn("Proxies for #{log_proxies_vm_config} : #{proxies_text}")
+    _log.warn("Proxies message: #{message}")
   end
 
   def log_proxies_vm_config
