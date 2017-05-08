@@ -9,7 +9,7 @@ class ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Parser
     result[:storages], uids[:storages] = storage_inv_to_hashes(inv[:storage])
     result[:clusters], uids[:clusters], result[:resource_pools] = cluster_inv_to_hashes(inv[:cluster])
     result[:hosts], uids[:hosts], uids[:lans], uids[:switches], uids[:guest_devices], uids[:scsi_luns] = host_inv_to_hashes(inv[:host], inv, uids[:clusters], uids[:storages])
-    vms_inv = inv[:vm] + inv[:template]
+    vms_inv = Array(inv[:vm]) + Array(inv[:template])
     result[:vms], uids[:vms], added_hosts_from_vms =
       vm_inv_to_hashes(vms_inv, inv[:storage], uids[:storages], uids[:clusters], uids[:hosts], uids[:lans])
     result[:folders] = datacenter_inv_to_hashes(inv[:datacenter], uids[:clusters], uids[:vms], uids[:storages], uids[:hosts])
