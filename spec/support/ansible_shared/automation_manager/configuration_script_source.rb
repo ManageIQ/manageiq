@@ -160,7 +160,8 @@ shared_examples_for "ansible configuration_script_source" do
 
     it "#update_in_provider to succeed and send notification" do
       expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
-      expect(EmsRefresh).to receive(:queue_refresh_task).with(project).and_return([finished_task])
+      expect(EmsRefresh).to receive(:queue_refresh_task).with(manager).and_return([finished_task])
+      expect(project).to receive(:refresh_in_provider)
       expect(Notification).to receive(:create).with(expected_notify)
       expect(project.update_in_provider({})).to be_a(described_class)
     end
