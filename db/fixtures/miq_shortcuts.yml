@@ -369,49 +369,10 @@
   :url: /cloud_object_store_object/show_list
   :rbac_feature_name: cloud_object_store_object_show_list
   :startup: true
-- :name: storage_managers
-  :description: Storage / Storage Managers
-  :url: /storage_manager/show_list
-  :rbac_feature_name: storage_manager_show_list
-- :name: ems_containers_overview
-  :description: Containers / Overview
-  :url: /container_dashboard/show
-  :rbac_feature_name: ems_container_show_list
-  :startup: true
-- :name: ems_containers
-  :description: Containers / Providers
-  :url: /ems_container/show_list
-  :rbac_feature_name: ems_container_show_list
-  :startup: true
-- :name: container_nodes
-  :description: Containers / Nodes
-  :url: /container_node/show_list
-  :rbac_feature_name: container_node_show_list
-  :startup: true
-- :name: container_groups
-  :description: Containers / Pods
-  :url: /container_group/show_list
-  :rbac_feature_name: container_group_show_list
-  :startup: true
-- :name: container_services
-  :description: Containers / Services
-  :url: /container_service/show_list
-  :rbac_feature_name: container_service_show_list
-  :startup: true
-- :name: container_containers
-  :description: Containers / Containers
-  :url: /container/show_list
-  :rbac_feature_name: containers
-  :startup: true
 - :name: control_explorer
   :description: Control / Explorer
   :url: /miq_policy/explorer
   :rbac_feature_name: control_explorer
-  :startup: true
-- :name: automate_explorer
-  :description: Automate / Explorer
-  :url: /miq_ae_class/explorer
-  :rbac_feature_name: miq_ae_class_explorer
   :startup: true
 - :name: utilization
   :description: Optimize / Utilization
@@ -427,14 +388,4 @@
   :description: Optimize / Bottlenecks
   :url: /miq_capacity/bottlenecks
   :rbac_feature_name: bottlenecks
-  :startup: true
-- :name: miq_proxy_tasks
-  :description: Configure / Tasks
-  :url: /miq_task/index?jobs_tab=alltasks
-  :rbac_feature_name: tasks
-  :startup: true
-- :name: miq_automate_log
-  :description: Automate Log
-  :url: /miq_ae_tools/log
-  :rbac_feature_name: miq_ae_class_log
   :startup: true
