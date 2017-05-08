@@ -334,30 +334,40 @@
   :url: /middleware_topology
   :rbac_feature_name: middleware_topology_view
   :startup: true
-- :name: storage_systems
-  :description: Storage / Storage Systems
-  :url: /ontap_storage_system/show_list
-  :rbac_feature_name: ontap_storage_system_show_list
+- :name: ems_block_storage
+  :description: Storage / Block Storage / Managers
+  :url: /ems_block_storage/show_list
+  :rbac_feature_name: ems_block_storage_show_list
   :startup: true
-- :name: file_shares
-  :description: Storage / File Shares
-  :url: /ontap_file_share/show_list
-  :rbac_feature_name: ontap_file_share_show_list
+- :name: cloud_volumes
+  :description: Storage / Block Storage / Volumes
+  :url: /cloud_volume/show_list
+  :rbac_feature_name: cloud_volume_show_list
   :startup: true
-- :name: logical_disks
-  :description: Storage / Logical Disks
-  :url: /ontap_logical_disk/show_list
-  :rbac_feature_name: ontap_logical_disk_show_list
+- :name: volume_snapshots
+  :description: Storage / Block Storage / Volume Snapshots
+  :url: /cloud_volume_snapshot/show_list
+  :rbac_feature_name: cloud_volume_snapshot_show_list
   :startup: true
-- :name: base_extents
-  :description: Storage / Base Extents
-  :url: /cim_base_storage_extent/show_list
-  :rbac_feature_name: cim_storage_extent_show_list
+- :name: volume_backups
+  :description: Storage / Block Storage / Volume Backups
+  :url: /cloud_volume_backup/show_list
+  :rbac_feature_name: cloud_volume_backup_show_list
   :startup: true
-- :name: storage_volumes
-  :description: Storage / Storage Volumes
-  :url: /ontap_storage_volume/show_list
-  :rbac_feature_name: ontap_storage_volume_show_list
+- :name: ems_object_storage
+  :description: Storage / Object Storage / Managers
+  :url: /ems_object_storage/show_list
+  :rbac_feature_name: ems_object_storage_show_list
+  :startup: true
+- :name: cloud_object_store_containers
+  :description: Storage / Object Storage / Object Store Containers
+  :url: /cloud_object_store_container/show_list
+  :rbac_feature_name: cloud_object_store_container_show_list
+  :startup: true
+- :name: cloud_object_store_objects
+  :description: Storage / Object Storage / Object Store Objects
+  :url: /cloud_object_store_object/show_list
+  :rbac_feature_name: cloud_object_store_object_show_list
   :startup: true
 - :name: storage_managers
   :description: Storage / Storage Managers
