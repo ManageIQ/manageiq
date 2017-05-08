@@ -471,15 +471,15 @@
   :startup: true
 - :name: utilization
   :description: Optimize / Utilization
-  :url: /miq_capacity/utilization
+  :url: /miq_capacity
   :rbac_feature_name: utilization
   :startup: true
-- :name: capacity_planning
+- :name: planning
   :description: Optimize / Planning
   :url: /miq_capacity/planning
   :rbac_feature_name: planning
   :startup: true
-- :name: capacity_bottlenecks
+- :name: bottlenecks
   :description: Optimize / Bottlenecks
   :url: /miq_capacity/bottlenecks
   :rbac_feature_name: bottlenecks
