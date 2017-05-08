@@ -45,4 +45,6 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Configurati
       self.class.refresh_in_provider(project, id)
     end
   end
+
+  FRIENDLY_NAME = 'Ansible Tower Project'.freeze
 end
