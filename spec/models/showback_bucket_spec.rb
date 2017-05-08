@@ -43,13 +43,61 @@ RSpec.describe ShowbackBucket, :type => :model do
       expect { event.destroy }.to change(ShowbackCharge, :count).from(2).to(1)
     end
 
-    pending 'it can  be on states open, processing, pending'
-    pending 'it can transition from open to processing'
-    pending 'it can not transition from open to closed'
-    pending 'a new bucket is created automatically when transitioning from open to processing'
-    pending 'it can not transition from processing to open'
-    pending 'it can transition from processing to closed'
-    pending 'it can not transition from closed to open or processing'
+    it 'it can  be on states open, processing, close' do
+      bucket.state = "ERROR"
+      expect(bucket).not_to be_valid
+      expect(bucket.errors[:state]).to include "is not included in the list"
+    end
+
+    it 'it can not be different of states open, processing, close' do
+      bucket.state = "CLOSE"
+      expect(bucket).to be_valid
+    end
+
+    context ".control lifecycle state" do
+      before(:each) do
+        @bucket_lifecycle = FactoryGirl.create(:showback_bucket)
+      end
+
+      it 'it can transition from open to processing' do
+        @bucket_lifecycle.state = "PROCESSING"
+        expect { @bucket_lifecycle.save }.not_to raise_error
+      end
+
+      it 'a new bucket is created automatically when transitioning from open to processing if not exists' do
+        @bucket_lifecycle.state = "PROCESSING"
+        @bucket_lifecycle.save
+        expect(ShowbackBucket.count).to eq(1)
+      end
+
+      it 'it can not transition from open to closed' do
+        @bucket_lifecycle.state = "CLOSE"
+        expect{ @bucket_lifecycle.save }.to raise_error(RuntimeError,"Bucket can't pass to CLOSE after OPEN")
+      end
+
+      it 'it can not transition from processing to open' do
+        @bucket_lifecycle = FactoryGirl.create(:showback_bucket_processing)
+        @bucket_lifecycle.state = "OPEN"
+        expect{ @bucket_lifecycle.save }.to raise_error(RuntimeError,"Bucket can't pass to OPEN after PROCESSING")
+      end
+
+      it 'it can transition from processing to closed' do
+        @bucket_lifecycle = FactoryGirl.create(:showback_bucket_processing)
+        @bucket_lifecycle.state = "CLOSE"
+        expect{ @bucket_lifecycle.save }.not_to raise_error
+      end
+
+      it 'it can not transition from closed to open or processing' do
+        @bucket_lifecycle = FactoryGirl.create(:showback_bucket_close)
+        @bucket_lifecycle.state = "OPEN"
+        expect{ @bucket_lifecycle.save }.to raise_error(RuntimeError,"Bucket can't change state after CLOSE")
+        @bucket_lifecycle = FactoryGirl.create(:showback_bucket_close)
+        @bucket_lifecycle.state = "PROCESSING"
+        expect{ @bucket_lifecycle.save }.to raise_error(RuntimeError,"Bucket can't change state after CLOSE")
+      end
+    end
+
+    pending 'it can not exists 2 buckets opened from one resource'
   end
 
   describe '#state:open' do
