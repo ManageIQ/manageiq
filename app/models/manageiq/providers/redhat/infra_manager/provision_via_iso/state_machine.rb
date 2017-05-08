@@ -27,7 +27,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ProvisionViaIso::StateMachine
   def post_provision
     update_and_notify_parent(:message => "Post Provisioning")
 
-    get_provider_destination.detach_floppy
+    ext_management_system.ovirt_services.detach_floppy(self)
 
     signal :autostart_destination
   end

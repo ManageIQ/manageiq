@@ -19,6 +19,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionViaPxe do
       expect(@task).to receive(:create_pxe_configuration_file)
       @task.configure_destination
     end
+
     describe "#boot_from_network" do
       context "vm is ready" do
         before do

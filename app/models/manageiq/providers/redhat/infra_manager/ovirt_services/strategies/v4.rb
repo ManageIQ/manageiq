@@ -79,11 +79,11 @@ module ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies
         profile_id = network_profile_id(connection, args[:network])
         nics_service = connection.system_service.vms_service.vm_service(uuid).nics_service
         options = {
-          :name         => args[:nic_name] || vnic.name,
-          :interface    => interface || vnic.interface,
-          :mac          => mac_addr ? OvirtSDK4::Mac.new(:address => mac_addr) : vnic.mac,
-          :vnic_profile => profile_id ? { :id => profile_id } : vnic.vnic_profile
-        }
+          :name         => args[:nic_name] || vnic && vnic.name,
+          :interface    => interface || vnic && vnic.interface,
+          :mac          => mac_addr ? OvirtSDK4::Mac.new(:address => mac_addr) : vnic && vnic.mac,
+          :vnic_profile => profile_id ? { :id => profile_id } : vnic && vnic.vnic_profile
+        }.delete_blanks
         args[:logger].info("with options: <#{options.inspect}>")
         if vnic
           nics_service.nic_service(vnic.id).update(options)
@@ -102,38 +102,50 @@ module ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies
     end
 
     def vm_boot_from_cdrom(operation, name)
-      operation.get_provider_destination.vm_service.start(
-        :vm => {
-          :os     => {
-            :boot => {
-              :devices => [OvirtSDK4::BootDevice::CDROM]
-            }
-          },
-          :cdroms => [
-            {
-              :id => name
-            }
-          ]
-        }
-      )
+      operation.destination.with_provider_object(VERSION_HASH) do |vm_service|
+        vm_service.start(
+          :vm => {
+            :os     => {
+              :boot => {
+                :devices => [OvirtSDK4::BootDevice::CDROM]
+              }
+            },
+            :cdroms => [
+              {
+                :file => {
+                  :id => name
+                }
+              }
+            ]
+          }
+        )
+      end
     rescue OvirtSDK4::Error
-      raise OvirtServices::VmNotReadyToBoot
+      raise ManageIQ::Providers::Redhat::InfraManager::OvirtServices::VmNotReadyToBoot
+    end
+
+    def detach_floppy(operation)
+      operation.destination.with_provider_object(VERSION_HASH) do |vm_service|
+        vm_service.update(:payloads => [])
+      end
     end
 
     def vm_boot_from_network(operation)
-      operation.get_provider_destination.start(
-        :vm => {
-          :os => {
-            :boot => {
-              :devices => [
-                OvirtSDK4::BootDevice::NETWORK
-              ]
+      operation.destination.with_provider_object(VERSION_HASH) do |vm_service|
+        vm_service.start(
+          :vm => {
+            :os => {
+              :boot => {
+                :devices => [
+                  OvirtSDK4::BootDevice::NETWORK
+                ]
+              }
             }
           }
-        }
-      )
+        )
+      end
     rescue OvirtSDK4::Error
-      raise OvirtServices::VmNotReadyToBoot
+      raise ManageIQ::Providers::Redhat::InfraManager::OvirtServices::VmNotReadyToBoot
     end
 
     def get_template_proxy(template, connection)

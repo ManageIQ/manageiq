@@ -22,7 +22,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ProvisionViaPxe::StateMachine
     update_and_notify_parent(:message => message)
 
     begin
-      destination.ext_management_system.ovirt_services.vm_boot_from_network(self)
+      ext_management_system.ovirt_services.vm_boot_from_network(self)
     rescue ManageIQ::Providers::Redhat::InfraManager::OvirtServices::VmNotReadyToBoot
       _log.info("#{destination_type} [#{dest_name}] is not yet ready to boot, will retry")
       requeue_phase

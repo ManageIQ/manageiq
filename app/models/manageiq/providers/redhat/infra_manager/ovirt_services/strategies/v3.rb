@@ -106,6 +106,10 @@ module ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies
       raise OvirtServices::VmNotReadyToBoot
     end
 
+    def detach_floppy(operation)
+      operation.get_provider_destination.detach_floppy
+    end
+
     def vm_boot_from_network(operation)
       operation.get_provider_destination.boot_from_network
     rescue Ovirt::VmNotReadyToBoot

@@ -76,6 +76,10 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine
     super
   end
 
+  def ext_management_system
+    destination && destination.ext_management_system
+  end
+
   private
 
   def powered_off_in_provider?
