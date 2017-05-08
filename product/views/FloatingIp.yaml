@@ -30,6 +30,9 @@ include:
   vm:
     columns:
     - name
+  network_port:
+    columns:
+    - name
 
 # Included tables and columns for query performance
 include_for_find:
@@ -39,6 +42,7 @@ col_order:
 - address
 - fixed_ip_address
 - vm.name
+- network_port.name
 - ext_management_system.name
 
 # Column titles, in order
@@ -46,6 +50,7 @@ headers:
 - Address
 - Fixed Address
 - Instance name
+- Network Port name
 - Network Provider
 
 # Condition(s) string for the SQL query
