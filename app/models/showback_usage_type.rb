@@ -1,16 +1,5 @@
 class ShowbackUsageType < ApplicationRecord
-  validates :description, :dimensions, :presence => true
-
-  VALID_CATEGORY = %w(Vm).freeze
-  validates :category,
-            :inclusion => { :in => VALID_CATEGORY }
-
-  VALID_USAGE_TYPES = %w(CPU).freeze
-  validates :measure,
-            :inclusion => { :in => VALID_USAGE_TYPES }
-
-  VALID_DIMENSIONS = %w(average number max_number_of_cpu).freeze
-  validate :validate_dimensions_measures
+  validates :description, :category, :measure, :dimensions, :presence => true
 
   def self.seed
     seed_data.each do |usage_type_attributtes|
@@ -34,13 +23,5 @@ class ShowbackUsageType < ApplicationRecord
 
   def self.seed_data
     File.exist?(seed_file_name) ? YAML.load_file(seed_file_name) : []
-  end
-
-  def validate_dimensions_measures
-    if (invalid_dimensions = (dimensions - VALID_DIMENSIONS))
-      invalid_dimensions.each do |dim|
-        errors.add(:dimensions, dim + " is not a valid measure dimension")
-      end
-    end
   end
 end

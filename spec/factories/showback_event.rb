@@ -1,7 +1,6 @@
 FactoryGirl.define do
   factory :showback_event do
-    resource_type             'VmOrTemplate'
-    resource_id               { FactoryGirl.create(:vm_or_template).id }
+    association :resource, :factory => :vm, :strategy => :build_stubbed
     start_time                4.hours.ago
     end_time                  1.hour.ago
     context                   {}

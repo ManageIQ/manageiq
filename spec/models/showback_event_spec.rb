@@ -31,25 +31,33 @@ describe ShowbackEvent do
       expect(showback_event).to be_valid
     end
 
-    it "should ensure presence of resource_id" do
-      showback_event.resource_id = nil
-      showback_event.valid?
-      expect(showback_event.errors[:resource_id]).to include "can't be blank"
+    it "should ensure presence of resource" do
+      showback_event.resource = nil
+      expect(showback_event).not_to be_valid
     end
 
     it "should ensure resource exists" do
-      vm = FactoryGirl.create(:vm_or_template)
-      showback_event.resource_type = "VmOrTemplate"
-      showback_event.resource_id   = vm.id
+      vm = FactoryGirl.create(:vm)
+      showback_event.resource = vm
       expect(showback_event).to be_valid
     end
 
-    it "should fails with error resource" do
-      vm = FactoryGirl.create(:vm_or_template)
-      showback_event.resource_type = vm.class.name
-      showback_event.resource_id   = vm.id + 100
-      expect(showback_event).not_to be_valid
-      expect(showback_event.errors[:resource_type]).to include "Resource should exists"
+    it 'should generate a data' do
+      showback_event.data = {}
+      showback_event.resource = FactoryGirl.create(:vm)
+      hash = {}
+      ShowbackUsageType.seed
+      ShowbackUsageType.all.each do |measure_type|
+        next unless showback_event.resource.type.ends_with?(measure_type.category)
+        hash[measure_type.measure] = {}
+        measure_type.dimensions.each do |dim|
+          hash[measure_type.measure][dim] = 0
+        end
+      end
+      showback_event.generate_data
+      expect(showback_event.data).to eq(hash)
+      expect(showback_event.data).not_to be_empty
+      expect(showback_event.start_time).not_to eq("")
     end
   end
 
