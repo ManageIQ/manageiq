@@ -43,9 +43,9 @@ shared_examples_for "ansible credential" do
       {
         :type    => :tower_op_success,
         :options => {
-          :op_name => "#{described_class.name.demodulize} create_in_provider",
-          :op_arg  => expected_params.to_s,
-          :tower   => "Tower(manager_id: #{manager.id})"
+          :op_name => "#{described_class::FRIENDLY_NAME} creation",
+          :op_arg  => "(name=My Credential)",
+          :tower   => "Tower(manager_id=#{manager.id})"
         }
       }
     end
@@ -74,7 +74,7 @@ shared_examples_for "ansible credential" do
 
     it ".create_in_provider_queue" do
       task_id = described_class.create_in_provider_queue(manager.id, params)
-      expect(MiqTask.find(task_id)).to have_attributes(:name => "Creating #{described_class.name} with name=#{params[:name]}")
+      expect(MiqTask.find(task_id)).to have_attributes(:name => "Creating #{described_class::FRIENDLY_NAME} (name=#{params[:name]})")
       expect(MiqQueue.first).to have_attributes(
         :args        => [manager.id, params],
         :class_name  => described_class.name,
@@ -102,9 +102,9 @@ shared_examples_for "ansible credential" do
       {
         :type    => :tower_op_success,
         :options => {
-          :op_name => "#{described_class.name.demodulize} delete_in_provider",
-          :op_arg  => {:manager_ref => credential.id}.to_s,
-          :tower   => "Tower(manager_id: #{manager.id})"
+          :op_name => "#{described_class::FRIENDLY_NAME} deletion",
+          :op_arg  => "(manager_ref=#{credential.id})",
+          :tower   => "Tower(manager_id=#{manager.id})"
         }
       }
     end
@@ -126,7 +126,7 @@ shared_examples_for "ansible credential" do
 
     it "#delete_in_provider_queue" do
       task_id = ansible_cred.delete_in_provider_queue
-      expect(MiqTask.find(task_id)).to have_attributes(:name => "Deleting #{described_class.name} with Tower internal reference=#{ansible_cred.manager_ref}")
+      expect(MiqTask.find(task_id)).to have_attributes(:name => "Deleting #{described_class::FRIENDLY_NAME} (Tower internal reference=#{ansible_cred.manager_ref})")
       expect(MiqQueue.first).to have_attributes(
         :instance_id => ansible_cred.id,
         :args        => [],
@@ -149,9 +149,9 @@ shared_examples_for "ansible credential" do
       {
         :type    => :tower_op_success,
         :options => {
-          :op_name => "#{described_class.name.demodulize} update_in_provider",
-          :op_arg  => expected_params.to_s,
-          :tower   => "Tower(manager_id: #{manager.id})"
+          :op_name => "#{described_class::FRIENDLY_NAME} update",
+          :op_arg  => "()",
+          :tower   => "Tower(manager_id=#{manager.id})"
         }
       }
     end
@@ -176,7 +176,7 @@ shared_examples_for "ansible credential" do
 
     it "#update_in_provider_queue" do
       task_id = ansible_cred.update_in_provider_queue({})
-      expect(MiqTask.find(task_id)).to have_attributes(:name => "Updating #{described_class.name} with Tower internal reference=#{ansible_cred.manager_ref}")
+      expect(MiqTask.find(task_id)).to have_attributes(:name => "Updating #{described_class::FRIENDLY_NAME} (Tower internal reference=#{ansible_cred.manager_ref})")
       expect(MiqQueue.first).to have_attributes(
         :instance_id => ansible_cred.id,
         :args        => [{:task_id => task_id}],
