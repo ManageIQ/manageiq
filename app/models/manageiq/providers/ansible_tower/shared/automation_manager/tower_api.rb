@@ -67,7 +67,10 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
     with_provider_object do |provider_object|
       provider_object.update_attributes!(params)
     end
-    self.class.send('refresh', self)
+    if respond_to?(:refresh_in_provider)
+      refresh_in_provider
+    end
+    self.class.send('refresh', manager)
     reload
   rescue AnsibleTowerClient::ClientError => error
     raise
