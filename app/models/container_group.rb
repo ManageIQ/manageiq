@@ -24,6 +24,8 @@ class ContainerGroup < ApplicationRecord
   belongs_to :old_container_project, :foreign_key => "old_container_project_id", :class_name => 'ContainerProject'
   belongs_to :container_build_pod
   has_many :container_volumes, :as => :parent, :dependent => :destroy
+  has_many :persistent_volume_claim, :through => :container_volumes
+  has_many :persistent_volumes, -> { where(:type=>'PersistentVolume') }, :through => :persistent_volume_claim, :source => :container_volumes
 
   # Metrics destroy is handled by purger
   has_many :metrics, :as => :resource
