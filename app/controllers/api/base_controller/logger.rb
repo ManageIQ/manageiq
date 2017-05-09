@@ -5,50 +5,59 @@ module Api
         @requested_at = Time.now.utc
         return unless api_log_info?
         api_log_info(" ")
-        log_request("API Request", :requested_at => @requested_at.to_s,
-                                   :method       => request.request_method,
-                                   :url          => request.original_url)
+        api_log_info(format_data_for_logging("API Request",
+                                             :requested_at => @requested_at.to_s,
+                                             :method       => request.request_method,
+                                             :url          => request.original_url))
       end
 
       def log_api_auth
         return unless api_log_info?
         if @miq_token_hash
           auth_type = "system"
-          log_request("System Auth", {:x_miq_token => request.headers[HttpHeaders::MIQ_TOKEN]}.merge(@miq_token_hash))
+          api_log_info(
+            format_data_for_logging(
+              "System Auth",
+              {:x_miq_token => request.headers[HttpHeaders::MIQ_TOKEN]}.merge(@miq_token_hash)
+            )
+          )
         else
           auth_type = request.headers[HttpHeaders::AUTH_TOKEN].blank? ? "basic" : "token"
         end
-        log_request("Authentication", :type        => auth_type,
-                                      :token       => request.headers[HttpHeaders::AUTH_TOKEN],
-                                      :x_miq_group => request.headers[HttpHeaders::MIQ_GROUP],
-                                      :user        => User.current_user.userid)
+        api_log_info(format_data_for_logging("Authentication",
+                                             :type        => auth_type,
+                                             :token       => request.headers[HttpHeaders::AUTH_TOKEN],
+                                             :x_miq_group => request.headers[HttpHeaders::MIQ_GROUP],
+                                             :user        => User.current_user.userid))
         if User.current_user
           group = User.current_user.current_group
-          log_request("Authorization", :user   => User.current_user.userid,
-                                       :group  => group.description,
-                                       :role   => group.miq_user_role_name,
-                                       :tenant => group.tenant.name)
+          api_log_info(format_data_for_logging("Authorization",
+                                               :user   => User.current_user.userid,
+                                               :group  => group.description,
+                                               :role   => group.miq_user_role_name,
+                                               :tenant => group.tenant.name))
         end
       end
 
       def log_api_request
         @parameter_filter ||= ActionDispatch::Http::ParameterFilter.new(Rails.application.config.filter_parameters)
         return unless api_log_info?
-        log_request("Request", @req.to_hash)
+        api_log_info(format_data_for_logging("Request", @req.to_hash))
         unfiltered_params = request.query_parameters
                                    .merge(params.permit(:action, :controller, :format).to_h)
                                    .merge("body" => @req.json_body)
-        log_request("Parameters", @parameter_filter.filter(unfiltered_params))
+        api_log_info(format_data_for_logging("Parameters", @parameter_filter.filter(unfiltered_params)))
         log_request_body
       end
 
       def log_api_response
         @completed_at = Time.now.utc
         return unless api_log_info?
-        log_request("Response", :completed_at => @completed_at.to_s,
-                                :size         => '%.3f KBytes' % (response.body.size / 1000.0),
-                                :time_taken   => '%.3f Seconds' % (@completed_at - @requested_at),
-                                :status       => response.status)
+        api_log_info(format_data_for_logging("Response",
+                                             :completed_at => @completed_at.to_s,
+                                             :size         => '%.3f KBytes' % (response.body.size / 1000.0),
+                                             :time_taken   => '%.3f Seconds' % (@completed_at - @requested_at),
+                                             :status       => response.status))
       end
 
       def api_log_debug?
@@ -91,11 +100,9 @@ module Api
       end
 
       def log_request_body
-        log_request("Body", JSON.pretty_generate(@req.json_body)) if api_log_debug? && @req.json_body.present?
-      end
-
-      def log_request(header, data)
-        api_log_info(format_data_for_logging(header, data))
+        if api_log_debug? && @req.json_body.present?
+          api_log_info(format_data_for_logging("Body", JSON.pretty_generate(@req.json_body)))
+        end
       end
 
       def format_data_for_logging(header, data)
