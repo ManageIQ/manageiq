@@ -2,25 +2,22 @@ describe ManageIQ::Providers::Openstack::InfraManager::Host do
   describe "#refresh_openstack_services" do
     let(:openstack_status_text) do
       <<-EOT
-== Nova services ==
 openstack-nova-api:                     active
 openstack-nova-cert:                    inactive  (disabled on boot)
 openstack-nova-compute:                 active
 openstack-nova-network:                 inactive  (disabled on boot)
 openstack-nova-scheduler:               active
 openstack-nova-conductor:               active
-== Glance services ==
 openstack-glance-api:                   active
 openstack-glance-registry:              active
 openstack-glance-for-test:              active
-== Keystone service ==
 openstack-keystone:                     active
       EOT
     end
 
     let(:ssu) do
       double('ssu').tap do |ssu|
-        expect(ssu).to receive(:shell_exec).with("openstack-status").and_return(openstack_status_text)
+        expect(ssu).to receive(:shell_exec).with(/systemctl/).and_return(openstack_status_text)
       end
     end
 
@@ -64,7 +61,7 @@ openstack-keystone:                     active
     end
 
     before do
-      FactoryGirl.create(:host_service_group_openstack, :host => host, :name =>  'Keystone service')
+      FactoryGirl.create(:host_service_group_openstack, :host => host, :name => 'Keystone')
     end
 
     context "with stubbed MiqLinux::Utils" do
@@ -94,15 +91,15 @@ openstack-keystone:                     active
 
       let(:expected) do
         [
-          'Nova services',
-          'Glance services',
-          'Keystone service',
+          'Nova',
+          'Glance',
+          'Keystone',
         ]
       end
 
       let(:unexpected) do
         [
-          'Swift services',
+          'Swift',
         ]
       end
 
@@ -156,7 +153,7 @@ openstack-keystone:                     active
     describe "existing HostServiceGroupOpenstack gets updated" do
       let(:glance_host_service_group) do
         host.refresh_openstack_services(ssu)
-        host.host_service_group_openstacks.where(:name => 'Glance services').first
+        host.host_service_group_openstacks.where(:name => 'Glance').first
       end
 
       describe "system_service names" do
