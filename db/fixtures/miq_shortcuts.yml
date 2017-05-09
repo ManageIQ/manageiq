@@ -24,6 +24,11 @@
   :url: /alert/show_list
   :rbac_feature_name: rss
   :startup: true
+- :name: consumption
+  :description: Consumption / Dashboard
+  :url: /consumption/show
+  :rbac_feature_name: consumption
+  :startup: true
 - :name: services
   :description: Services / My Services
   :url: /service/explorer
@@ -334,6 +339,11 @@
   :url: /middleware_topology
   :rbac_feature_name: middleware_topology_view
   :startup: true
+- :name: ems_datawarehouse
+  :description: Datawarehouse / Providers
+  :url: /ems_datawarehouse
+  :rbac_feature_name: ems_datawarehouse_show_list
+  :startup: true
 - :name: ems_block_storage
   :description: Storage / Block Storage / Managers
   :url: /ems_block_storage/show_list
@@ -463,4 +473,19 @@
   :description: Optimize / Bottlenecks
   :url: /miq_capacity/bottlenecks
   :rbac_feature_name: bottlenecks
+  :startup: true
+- :name: monitor_alerts_overview
+  :description: Monitor / Alerts / Overview
+  :url: /alerts_overview
+  :rbac_feature_name: monitor_alerts_overview
+  :startup: true
+- :name: monitor_alerts_list
+  :description: Monitor / Alerts / All Alerts
+  :url: /alerts_list
+  :rbac_feature_name: monitor_alerts_list
+  :startup: true
+- :name: monitor_alerts_most_recent
+  :description: Monitor / Alerts / Most Recent Alerts
+  :url: /alerts_most_recent
+  :rbac_feature_name: monitor_alerts_most_recent
   :startup: true
