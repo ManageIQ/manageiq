@@ -230,8 +230,14 @@ class MiqGroup < ApplicationRecord
     end
   end
 
+  def own_users
+    own_users = []
+    users.each { |user| own_users << user if user.miq_groups.count == 1 }
+    own_users
+  end
+
   def ensure_can_be_destroyed
-    raise _("Still has users assigned.") unless users.empty?
+    raise _("Still has users assigned.") unless own_users.empty?
     raise _("A tenant default group can not be deleted") if tenant_group? && referenced_by_tenant?
     raise _("A read only group cannot be deleted.") if system_group?
   end
