@@ -205,18 +205,6 @@ class Job < ApplicationRecord
     (timestamp >= job_not_found_delay.seconds.ago)
   end
 
-  def self.extend_timeout(_host_id, jobs)
-    jobs = Marshal.load(jobs)
-    job_guids = jobs.collect { |j| j[:taskid] }
-    unless job_guids.empty?
-      Job.where(:guid => job_guids).where.not(:state => 'finished').each do |job|
-        _log.debug("Job: guid: [#{job.guid}], job timeout extended due to work pending.")
-        job.updated_on = Time.now.utc
-        job.save
-      end
-    end
-  end
-
   def is_active?
     !["finished", "waiting_to_start"].include?(state)
   end
