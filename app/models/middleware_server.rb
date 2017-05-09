@@ -1,4 +1,7 @@
 class MiddlewareServer < ApplicationRecord
+  include NewWithTypeStiMixin
+  include LiveMetricsMixin
+
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   belongs_to :middleware_server_group, :foreign_key => "server_group_id"
   belongs_to :lives_on, :polymorphic => true
@@ -7,9 +10,6 @@ class MiddlewareServer < ApplicationRecord
   has_many :middleware_messagings, :foreign_key => "server_id", :dependent => :destroy
   serialize :properties
   acts_as_miq_taggable
-
-  include LiveMetricsMixin
-  include NewWithTypeStiMixin
 
   def properties
     super || {}
