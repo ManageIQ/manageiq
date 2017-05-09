@@ -4,12 +4,14 @@ module ManageIQ::Providers
     include SupportsFeatureMixin
 
     has_many :container_nodes, :foreign_key => :ems_id, :dependent => :destroy
+    has_many :container_node_conditions, :through => :container_nodes, :source => :container_conditions
     has_many :container_groups, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_services, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_replicators, :foreign_key => :ems_id, :dependent => :destroy
     has_many :containers, :foreign_key => :ems_id
     has_many :container_projects, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_quotas, :foreign_key => :ems_id, :dependent => :destroy
+    has_many :container_quota_items, :through => :container_quotas
     has_many :container_limits, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_image_registries, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_images, :foreign_key => :ems_id, :dependent => :destroy

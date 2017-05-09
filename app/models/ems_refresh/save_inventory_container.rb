@@ -43,14 +43,14 @@ module EmsRefresh::SaveInventoryContainer
       :model_class => ContainerQuota,
       :parent => ems,
       :builder_params => {:ems_id => ems.id},
-      :arel => ContainerQuota.joins(:container_project).where(:container_projects => {:ems_id => ems.id}),
+      :association => :container_quotas,
+      #:arel => ContainerQuota.joins(:container_project).where(:container_projects => {:ems_id => ems.id}),
     )
     @inv_collections[:container_quota_items] = ::ManagerRefresh::InventoryCollection.new(
       :model_class => ContainerQuotaItem,
       :parent => ems,
-      :arel => ContainerQuotaItem.joins(:container_quota => :container_project).where(:container_projects => {:ems_id => ems.id}),
-      # TODO: this builds uuids like "97__cpu", i.e. uses quota id, ideally would use quota ems_ref.
-      #   Can't(?) pass an extra attribute like quota_ems_ref because can't exclude it from saving, manager_ref attributes can't be in attributes_blacklist.
+      :association => :container_quota_items,
+      #:arel => ContainerQuotaItem.joins(:container_quota => :container_project).where(:container_projects => {:ems_id => ems.id}),
       :manager_ref => [:container_quota, :resource],
     )
     @inv_collections[:container_nodes] = ::ManagerRefresh::InventoryCollection.new(
@@ -59,15 +59,15 @@ module EmsRefresh::SaveInventoryContainer
       :builder_params => {:ems_id => ems.id},
       :association => :container_nodes,
     )
-    @inv_collections[:container_conditions] = ::ManagerRefresh::InventoryCollection.new(
+    # ContainerCondition is polymorphic child of ContainerNode & ContainerGroup
+    @inv_collections[:container_node_conditions] = ::ManagerRefresh::InventoryCollection.new(
       :model_class => ContainerCondition,
       :parent => ems,
-      # TODO polymorphic child of ContainerNode & ContainerGroup
-      # TODO define 2 has_many through on EMS
-      :arel => ContainerCondition.joins(
-        'INNER JOIN "container_nodes" ON "container_conditions"."container_entity_id" = "container_nodes"."id"'
-      ).where(:container_entity_type => 'ContainerNode',
-              :container_nodes => {:ems_id => ems.id}),
+      :association => :container_node_conditions,
+      #:arel => ContainerCondition.joins(
+      #  'INNER JOIN "container_nodes" ON "container_conditions"."container_entity_id" = "container_nodes"."id"'
+      #).where(:container_entity_type => 'ContainerNode',
+      #        :container_nodes => {:ems_id => ems.id}),
       :manager_ref => [:container_entity, :name],
     )
   end
@@ -195,8 +195,7 @@ module EmsRefresh::SaveInventoryContainer
       h = h.except(:labels, :tags, :computer_system, :additional_attributes) # TODO children
       h = h.except(:namespace)
       node = @inv_collections[:container_nodes].lazy_find(h[:ems_ref])
-      graph_container_conditions_inventory({:container_entity => node},
-                                           h.delete(:container_conditions))
+      graph_container_node_conditions_inventory(node, h.delete(:container_conditions))
       @inv_collections[:container_nodes].build(h)
     end
   end
@@ -394,10 +393,10 @@ module EmsRefresh::SaveInventoryContainer
     save_inventory_single(:container, container_definition, hash, [], :container_image, true)
   end
 
-  def graph_container_conditions_inventory(parent_hash, hashes, target = nil)
+  def graph_container_node_conditions_inventory(parent, hashes, target = nil)
     hashes.to_a.each do |h|
-      h = h.merge(parent_hash)
-      @inv_collections[:container_conditions].build(h)
+      h = h.merge(:container_entity => parent)
+      @inv_collections[:container_node_conditions].build(h)
     end
   end
 
