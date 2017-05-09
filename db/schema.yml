@@ -1565,7 +1565,6 @@ jobs:
 - sync_key
 - miq_server_id
 - zone
-- agent_name
 - options
 - context
 - miq_task_id
