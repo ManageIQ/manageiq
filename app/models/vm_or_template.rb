@@ -898,18 +898,6 @@ class VmOrTemplate < ApplicationRecord
     {:proxies => proxies.flatten, :message => msg}
   end
 
-  def log_proxies(proxy_list = [], all_proxy_list = nil, message = nil, job = nil)
-    log_method = proxy_list.empty? ? :warn : :debug
-    all_proxy_list ||= storage2proxies
-    proxies = all_proxy_list.collect { |a| "[#{log_proxies_format_instance(a)}]" }
-    job_guid = job.nil? ? "" : job.guid
-    proxies_text = proxies.empty? ? "[none]" : proxies.join(" -- ")
-    method_name = caller[0][/`([^']*)'/, 1]
-    $log.send(log_method, "JOB([#{job_guid}] #{method_name}) Proxies for #{log_proxies_vm_config} : #{proxies_text}")
-    $log.send(log_method, "JOB([#{job_guid}] #{method_name}) Proxies message: #{message}") if message
-  rescue
-  end
-
   def log_all_proxies(all_proxy_list, message)
     proxies = all_proxy_list.collect { |a| "[#{log_proxies_format_instance(a)}]" }
     proxies_text = proxies.empty? ? "[none]" : proxies.join(" -- ")
@@ -918,14 +906,8 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def log_proxies_vm_config
-    msg = "[#{log_proxies_format_instance(self)}] on host [#{log_proxies_format_instance(host)}] "\
-    "#{ui_lookup(:table => "storages").downcase} "
-    msg += if storage
-             "[#{storage.name}-#{storage.store_type}]"
-           else
-             "No storage"
-           end
-    msg
+    msg = "[#{log_proxies_format_instance(self)}] on host [#{log_proxies_format_instance(host)}] #{ui_lookup(:table => "storages").downcase} "
+    msg << (storage ? "[#{storage.name}-#{storage.store_type}]" : "No storage")
   end
 
   def log_proxies_format_instance(object)
