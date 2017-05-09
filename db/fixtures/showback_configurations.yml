@@ -1,0 +1,17 @@
+---
+- :name: "Showback::CPU"
+  :description: "Calculate CPU Showback"
+  :measure: "Integer"
+  :types: ["cpu_usage_rate_average", "cpu_usagemhz_rate_average"]
+- :name: "Showback::MEM"
+  :description: "Calculate Memory Showback"
+  :measure: "Capacity"
+  :types: ["mem_usage_absolute_average"]
+- :name: "Showback::NET"
+  :description: "Calculate Network Showback"
+  :measure: "Throughput"
+  :types: ["net_usage_rate_average"]
+- :name: "Showback::STO"
+  :description: "Calculate Storage Showback"
+  :measure: "Capacity"
+  :types: ["disk_usage_rate_average"]
