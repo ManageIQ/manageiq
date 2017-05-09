@@ -3,7 +3,6 @@ module Api
     module Logger
       def log_request_initiated
         @requested_at = Time.now.utc
-        return unless api_log_info?
         api_log_info { " " }
         api_log_info do
           format_data_for_logging("API Request",
@@ -14,7 +13,6 @@ module Api
       end
 
       def log_api_auth
-        return unless api_log_info?
         if @miq_token_hash
           auth_type = "system"
           api_log_info do
@@ -48,7 +46,6 @@ module Api
 
       def log_api_request
         @parameter_filter ||= ActionDispatch::Http::ParameterFilter.new(Rails.application.config.filter_parameters)
-        return unless api_log_info?
         api_log_info { format_data_for_logging("Request", @req.to_hash) }
 
         api_log_info do
@@ -62,7 +59,6 @@ module Api
 
       def log_api_response
         @completed_at = Time.now.utc
-        return unless api_log_info?
         api_log_info do
           format_data_for_logging("Response",
                                   :completed_at => @completed_at.to_s,
