@@ -65,11 +65,9 @@ module Api
       end
 
       def api_log_error(msg)
-        method = api_get_method_name(caller.first, __method__)
-        log_prefix = "MIQ(#{self.class.name}.#{method})"
-
-        $api_log.error("#{log_prefix} #{ApiConfig.base.name} Error")
-        msg.split("\n").each { |l| $api_log.error("#{log_prefix} #{l}") }
+        prefix = log_prefix(caller.first, __method__)
+        $api_log.error("#{prefix} #{ApiConfig.base.name} Error")
+        msg.split("\n").each { |l| $api_log.error("#{prefix} #{l}") }
       end
 
       def api_log_debug(msg)
@@ -82,13 +80,15 @@ module Api
       end
 
       def api_log_info(msg)
-        method = api_get_method_name(caller.first, __method__)
-        log_prefix = "MIQ(#{self.class.name}.#{method})"
-
-        msg.split("\n").each { |l| $api_log.info("#{log_prefix} #{l}") }
+        prefix = log_prefix(caller.first, __method__)
+        msg.split("\n").each { |l| $api_log.info("#{prefix} #{l}") }
       end
 
       private
+
+      def log_prefix(backtrace, meth)
+        "MIQ(#{self.class.name}.#{api_get_method_name(backtrace, meth)})"
+      end
 
       def log_request_body
         log_request("Body", JSON.pretty_generate(@req.json_body)) if api_log_debug? && @req.json_body.present?
