@@ -113,6 +113,17 @@ RSpec.describe "reports API" do
       expect_result_to_match_hash(response.parsed_body, "result_set" => [])
       expect(response).to have_http_status(:ok)
     end
+
+    it "returns an empty result set if none has been run" do
+      report = FactoryGirl.create(:miq_report_with_results, :miq_group => user.current_group)
+      report_result = report.miq_report_results.first
+
+      api_basic_authorize
+      run_get "#{reports_url(report.id)}/results/#{report_result.id}"
+
+      expect_result_to_match_hash(response.parsed_body, "result_set" => [])
+      expect(response).to have_http_status(:ok)
+    end
   end
 
   it "can fetch all the schedule" do
@@ -179,17 +190,6 @@ RSpec.describe "reports API" do
     run_get("#{reports_url(report.id)}/schedules/#{schedule.id}")
 
     expect(response).to have_http_status(:forbidden)
-  end
-
-  it "returns an empty result set if none has been run" do
-    report = FactoryGirl.create(:miq_report_with_results)
-    report_result = report.miq_report_results.first
-
-    api_basic_authorize
-    run_get "#{reports_url(report.id)}/results/#{report_result.id}"
-
-    expect_result_to_match_hash(response.parsed_body, "result_set" => [])
-    expect(response).to have_http_status(:ok)
   end
 
   context "with an appropriate role" do
