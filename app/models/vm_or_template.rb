@@ -918,7 +918,14 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def log_proxies_vm_config
-    "[#{log_proxies_format_instance(self)}] on host [#{log_proxies_format_instance(host)}] #{ui_lookup(:table => "storages").downcase} [#{storage.name}-#{storage.store_type}]"
+    msg = "[#{log_proxies_format_instance(self)}] on host [#{log_proxies_format_instance(host)}] "\
+    "#{ui_lookup(:table => "storages").downcase} "
+    msg += if storage
+             "[#{storage.name}-#{storage.store_type}]"
+           else
+             "No storage"
+           end
+    msg
   end
 
   def log_proxies_format_instance(object)
