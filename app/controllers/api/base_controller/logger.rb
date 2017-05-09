@@ -77,20 +77,20 @@ module Api
         (match ? match[:mname] : method).sub(/block .*in /, "")
       end
 
+      def api_log_debug(msg = nil)
+        return unless $api_log.debug?
+        prefix = log_prefix(caller.first, __method__)
+        (block_given? ? yield : msg).split("\n").each do |l|
+          $api_log.debug("#{prefix} #{l}")
+        end
+      end
+
       def api_log_error(msg = nil)
         return unless $api_log.error?
         prefix = log_prefix(caller.first, __method__)
         $api_log.error("#{prefix} #{ApiConfig.base.name} Error")
         (block_given? ? yield : msg).split("\n").each do |l|
           $api_log.error("#{prefix} #{l}")
-        end
-      end
-
-      def api_log_debug(msg = nil)
-        return unless $api_log.debug?
-        prefix = log_prefix(caller.first, __method__)
-        (block_given? ? yield : msg).split("\n").each do |l|
-          $api_log.debug("#{prefix} #{l}")
         end
       end
 
@@ -109,8 +109,8 @@ module Api
       end
 
       def log_request_body
-        if api_log_debug? && @req.json_body.present?
-          api_log_info { format_data_for_logging("Body", JSON.pretty_generate(@req.json_body)) }
+        if @req.json_body.present?
+          api_log_debug { format_data_for_logging("Body", JSON.pretty_generate(@req.json_body)) }
         end
       end
 
