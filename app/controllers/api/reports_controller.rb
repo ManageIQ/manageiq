@@ -8,11 +8,11 @@ module Api
     before_action :set_additional_attributes, :only => [:index, :show]
 
     def reports_search_conditions
-      MiqReport.for_user(@auth_user_obj).where_clause.ast unless @auth_user_obj.admin?
+      MiqReport.for_user(User.current_user).where_clause.ast unless User.current_user.admin?
     end
 
     def find_reports(id)
-      MiqReport.for_user(@auth_user_obj).find(id)
+      MiqReport.for_user(User.current_user).find(id)
     end
 
     def run_resource(type, id, _data)
