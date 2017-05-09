@@ -160,14 +160,19 @@ module ManageIQ::Providers
 
         retrieve_from_vc(ems, cleanup_callback) do
           _log.info("#{log_header} Retrieving Storage Device inventory for [#{host_mors.length}] hosts...")
-
-          @vi.hostSystemsStorageDevice(host_mors, :ems_refresh_host_scsi).to_miq_a.each do |sd|
-            next if sd.nil? || sd['MOR'].nil?
-
-            data = @vc_data.fetch_path(:host, sd['MOR'])
+          host_mors.each do |mor|
+            data = @vc_data.fetch_path(:host, mor)
             next if data.nil?
 
-            data.store_path('config', 'storageDevice', sd.fetch_path('config', 'storageDevice'))
+            _log.info("#{log_header} Retrieving Storage Device inventory for Host [#{mor}]...")
+            begin
+              vim_host = @vi.getVimHostByMor(mor)
+              sd = vim_host.storageDevice(:ems_refresh_host_scsi)
+              data.store_path('config', 'storageDevice', sd.fetch_path('config', 'storageDevice')) unless sd.nil?
+            ensure
+              vim_host.release if vim_host rescue nil
+            end
+            _log.info("#{log_header} Retrieving Storage Device inventory for Host [#{mor}]...Complete")
           end
           _log.info("#{log_header} Retrieving Storage Device inventory for [#{host_mors.length}] hosts...Complete")
 
