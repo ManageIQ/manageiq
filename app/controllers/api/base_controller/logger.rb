@@ -95,7 +95,11 @@ module Api
       end
 
       def log_request(header, data)
-        api_log_info("#{('%s:' % header).ljust(15)} #{data}")
+        api_log_info(format_data_for_logging(header, data))
+      end
+
+      def format_data_for_logging(header, data)
+        "#{('%s:' % header).ljust(15)} #{data}"
       end
     end
   end
