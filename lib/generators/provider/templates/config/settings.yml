@@ -1,6 +1,7 @@
 ---
 :ems:
   :ems_<%= provider_name %>:
+    :blacklisted_event_names: []
     :event_handling:
       :event_groups:
 :http_proxy:
