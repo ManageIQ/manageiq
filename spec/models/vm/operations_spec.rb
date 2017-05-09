@@ -14,17 +14,12 @@ describe 'VM::Operations' do
     end
   end
 
-  context '#get_ipv4_address' do
+  context '#ipv4_address' do
     after(:each) { @vm.send(:return_ipv4_address) }
 
     it 'returns the existing ipv4 address' do
       @ipaddresses = %w(fe80::21a:4aff:fe22:dde5 127.0.0.1)
       expect(@vm).to receive(:return_ipv4_address).and_return('127.0.0.1')
-    end
-
-    it 'returns the first ip address when no ipv4 addresses exist' do
-      @ipaddresses = %w(fe80::21a:4aff:fe22:dde5 fe80::dc0f:6b21:504b:2fb0)
-      expect(@vm).to receive(:return_ipv4_address).and_return('fe80::21a:4aff:fe22:dde5')
     end
   end
 end
