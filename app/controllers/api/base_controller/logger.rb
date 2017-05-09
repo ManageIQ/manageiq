@@ -74,6 +74,7 @@ module Api
       end
 
       def api_log_error(msg = nil)
+        return unless $api_log.error?
         prefix = log_prefix(caller.first, __method__)
         $api_log.error("#{prefix} #{ApiConfig.base.name} Error")
         (block_given? ? yield : msg).split("\n").each do |l|
@@ -82,6 +83,7 @@ module Api
       end
 
       def api_log_debug(msg = nil)
+        return unless $api_log.debug?
         prefix = log_prefix(caller.first, __method__)
         (block_given? ? yield : msg).split("\n").each do |l|
           $api_log.debug("#{prefix} #{l}")
@@ -89,6 +91,7 @@ module Api
       end
 
       def api_log_info(msg = nil)
+        return unless $api_log.info
         prefix = log_prefix(caller.first, __method__)
         (block_given? ? yield : msg).split("\n").each do |l|
           $api_log.info("#{prefix} #{l}")
