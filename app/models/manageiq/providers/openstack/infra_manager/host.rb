@@ -139,14 +139,14 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
   end
 
   def refresh_openstack_services(ssu)
-    openstack_status = ssu.shell_exec("openstack-status")
+    openstack_status = ssu.shell_exec("systemctl -la --plain | awk '/openstack/ {gsub(/ +/, \" \"); gsub(\".service\", \":\"); gsub(\"not-found\",\"(disabled)\"); split($0,s,\" \"); print s[1],s[3],s[2]}' | sed \"s/ loaded//g\"")
     services = MiqLinux::Utils.parse_openstack_status(openstack_status)
     self.host_service_group_openstacks = services.map do |service|
       # find OpenstackHostServiceGroup records by host and name and initialize if not found
       host_service_group_openstacks.where(:name => service['name'])
         .first_or_initialize.tap do |host_service_group_openstack|
         # find SystemService records by host
-        # filter SystemService records by names from openstack-status results
+        # filter SystemService records by names from openstack systemctl status results
         sys_services = system_services.where(:name => service['services'].map { |ser| ser['name'] })
         # associate SystemService record with OpenstackHostServiceGroup
         host_service_group_openstack.system_services = sys_services
