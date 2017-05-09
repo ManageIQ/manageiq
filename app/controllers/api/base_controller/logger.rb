@@ -68,10 +68,6 @@ module Api
         end
       end
 
-      def api_log_debug?
-        $api_log.debug?
-      end
-
       def api_get_method_name(call_stack, method)
         match = /`(?<mname>[^']*)'/.match(call_stack)
         (match ? match[:mname] : method).sub(/block .*in /, "")
