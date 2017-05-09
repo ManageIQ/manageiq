@@ -73,24 +73,26 @@ module Api
         (match ? match[:mname] : method).sub(/block .*in /, "")
       end
 
-      def api_log_error(msg)
+      def api_log_error(msg = nil)
         prefix = log_prefix(caller.first, __method__)
         $api_log.error("#{prefix} #{ApiConfig.base.name} Error")
-        msg.split("\n").each { |l| $api_log.error("#{prefix} #{l}") }
-      end
-
-      def api_log_debug(msg)
-        if api_log_debug?
-          method = api_get_method_name(caller.first, __method__)
-          log_prefix = "MIQ(#{self.class.name}.#{method})"
-
-          msg.split("\n").each { |l| $api_log.info("#{log_prefix} #{l}") }
+        (block_given? ? yield : msg).split("\n").each do |l|
+          $api_log.error("#{prefix} #{l}")
         end
       end
 
-      def api_log_info(msg)
+      def api_log_debug(msg = nil)
         prefix = log_prefix(caller.first, __method__)
-        msg.split("\n").each { |l| $api_log.info("#{prefix} #{l}") }
+        (block_given? ? yield : msg).split("\n").each do |l|
+          $api_log.debug("#{prefix} #{l}")
+        end
+      end
+
+      def api_log_info(msg = nil)
+        prefix = log_prefix(caller.first, __method__)
+        (block_given? ? yield : msg).split("\n").each do |l|
+          $api_log.info("#{prefix} #{l}")
+        end
       end
 
       private
