@@ -54,15 +54,13 @@ module Api
         json    = Jbuilder.new
         json.ignore_nil!
 
-        pas = physical_attribute_selection(resource)
-        normalize_options[:render_attributes] = pas if pas.present?
+        physical_attrs, virtual_attrs = attr_validation(resource)
+        normalize_options[:render_attributes] = physical_attrs if physical_attrs.present?
 
         add_hash json, normalize_hash(reftype, resource, normalize_options), :render_resource_attr, resource
 
-        if resource.respond_to?(:attributes)
-          expand_virtual_attributes(json, type, resource)
-          expand_subcollections(json, type, resource)
-        end
+        expand_virtual_attributes(json, type, resource, virtual_attrs) unless virtual_attrs.empty?
+        expand_subcollections(json, type, resource) if resource.respond_to?(:attributes)
 
         expand_actions(resource, json, type, opts) if opts[:expand_actions]
         expand_resource_custom_actions(resource, json, type)
@@ -186,10 +184,10 @@ module Api
       # Let's expand virtual attributes and related objects if asked for
       # Supporting [<related_object>]*.<virtual_attribute>
       #
-      def expand_virtual_attributes(json, type, resource)
+      def expand_virtual_attributes(json, type, resource, attrs)
         result = {}
         object_hash = {}
-        virtual_attributes_list(resource).each do |vattr|
+        attrs.each do |vattr|
           attr_name, attr_base = split_virtual_attribute(vattr)
           value, value_result = if attr_base.blank?
                                   fetch_direct_virtual_attribute(type, resource, attr_name)
@@ -323,6 +321,24 @@ module Api
         return [] if resource.kind_of?(Hash)
         physical_attributes = @req.attributes.select { |attr| attr_physical?(resource, attr) }
         physical_attributes.present? ? ID_ATTRS | physical_attributes : []
+      end
+
+      def attr_validation(resource)
+        physical_attrs, virtual_attrs = [], []
+        attrs = attribute_selection
+        return [physical_attrs, virtual_attrs] if resource.kind_of?(Hash) || attrs == 'all'
+
+        attrs.each do |attr|
+          if attr_physical?(resource, attr) || attr == 'actions'
+            physical_attrs.push(attr)
+          elsif attr_virtual?(resource, attr) || @additional_attributes.try(:include?, attr)
+            virtual_attrs.push(attr)
+          end
+        end
+
+        attrs = attrs - physical_attrs - virtual_attrs
+        raise BadRequestError, "#{attrs.join(',')} are not valid attributes" unless attrs.empty?
+        [(physical_attrs - ID_ATTRS).empty? ? [] : physical_attrs, virtual_attrs]
       end
 
       #
