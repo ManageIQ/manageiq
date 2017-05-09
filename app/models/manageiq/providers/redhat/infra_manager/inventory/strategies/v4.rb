@@ -14,6 +14,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
         @connection = connection
         res = {}
         res[:host] = collect_host(get_uuid_from_target(target))
+        res[:network] = collect_networks
         res
       end
     end
