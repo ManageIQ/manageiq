@@ -8,17 +8,12 @@ describe "Logging" do
     it "logs hashed details about the request" do
       api_basic_authorize collection_action_identifier(:users, :read, :get)
 
-      expect($api_log).to receive(:info).with(/API Request/)
-      expect($api_log).to receive(:info).with(/Authentication/)
-      expect($api_log).to receive(:info).with(/Authorization/)
       expect($api_log).to receive(:info).with(a_string_matching(/Request:/)
                                                .and(matching(%r{:path=>"/api/users"}))
                                                .and(matching(/:collection=>"users"/))
                                                .and(matching(/:c_id=>nil/))
                                                .and(matching(/:subcollection=>nil/))
                                                .and(matching(/:s_id=>nil/)))
-      expect($api_log).to receive(:info).with(/Parameters/)
-      expect($api_log).to receive(:info).with(/Response/)
 
       run_get users_url
     end
@@ -26,9 +21,6 @@ describe "Logging" do
     it "logs all hash entries about the request" do
       api_basic_authorize
 
-      expect($api_log).to receive(:info).with(/API Request/)
-      expect($api_log).to receive(:info).with(/Authentication/)
-      expect($api_log).to receive(:info).with(/Authorization/)
       expect($api_log).to receive(:info).with(
         a_string_matching(
           'Request:        {:method=>:get, :action=>"read", :fullpath=>"/api", :url=>"http://www.example.com/api", ' \
@@ -37,8 +29,6 @@ describe "Logging" do
           ':subcollection=>nil, :s_id=>nil}'
         )
       )
-      expect($api_log).to receive(:info).with(/Parameters/)
-      expect($api_log).to receive(:info).with(/Response/)
 
       run_get entrypoint_url
     end
@@ -46,10 +36,6 @@ describe "Logging" do
     it "filters password attributes in nested parameters" do
       api_basic_authorize collection_action_identifier(:services, :create)
 
-      expect($api_log).to receive(:info).with(/API Request/)
-      expect($api_log).to receive(:info).with(/Authentication/)
-      expect($api_log).to receive(:info).with(/Authorization/)
-      expect($api_log).to receive(:info).with(/Request/)
       expect($api_log).to receive(:info).with(
         a_string_matching(
           'Parameters:     {"action"=>"update", "controller"=>"api/services", "format"=>"json", ' \
@@ -57,7 +43,6 @@ describe "Logging" do
           '"options"=>{"password"=>"\[FILTERED\]"}}}}'
         )
       )
-      expect($api_log).to receive(:info).with(/Response/)
 
       run_post(services_url, gen_request(:create, "name" => "new_service_1", "options" => { "password" => "SECRET" }))
     end
@@ -70,7 +55,6 @@ describe "Logging" do
 
         miq_token = MiqPassword.encrypt({:server_guid => server_guid, :userid => userid, :timestamp => timestamp}.to_yaml)
 
-        expect($api_log).to receive(:info).with(/API Request/)
         expect($api_log).to receive(:info).with(
           a_string_matching(
             "System Auth:    {:x_miq_token=>\"#{Regexp.escape(miq_token)}\", :server_guid=>\"#{server_guid}\", " \
@@ -82,10 +66,6 @@ describe "Logging" do
             'Authentication: {:type=>"system", :token=>nil, :x_miq_group=>nil, :user=>"api_user_id"}'
           )
         )
-        expect($api_log).to receive(:info).with(/Authorization/)
-        expect($api_log).to receive(:info).with(/Request/)
-        expect($api_log).to receive(:info).with(/Parameters/)
-        expect($api_log).to receive(:info).with(/Response/)
 
         run_get entrypoint_url, :headers => {Api::HttpHeaders::MIQ_TOKEN => miq_token}
       end
