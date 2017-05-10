@@ -2,13 +2,25 @@ module Vmdb
   class Plugins
     include Singleton
 
-    attr_reader :vmdb_plugins
     attr_reader :registered_automate_domains
 
     def initialize
       @registered_automate_domains = []
       @registered_provider_plugin_map = {}
       @vmdb_plugins = []
+    end
+
+    def vmdb_plugins
+      @vmdb_plugins.empty? ? register_vmdb_plugins : @vmdb_plugins
+    end
+
+    def register_vmdb_plugins
+      Rails.application.railties.each do |railtie|
+        next unless railtie.class.name.start_with?("ManageIQ::Providers::") || railtie.try(:vmdb_plugin?)
+        register_vmdb_plugin(railtie)
+      end
+
+      @vmdb_plugins
     end
 
     def register_vmdb_plugin(engine)
