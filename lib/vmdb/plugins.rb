@@ -11,6 +11,19 @@ module Vmdb
       @vmdb_plugins = []
     end
 
+    def vmdb_plugins
+      @vmdb_plugins.empty? ? register_from_railties : @vmdb_plugins
+    end
+
+    def register_from_railties
+      Rails.application.railties.each do |railtie|
+        next unless railtie.class.name.start_with?("ManageIQ::Providers::") || railtie.try(:vmdb_plugin?)
+        register_vmdb_plugin(railtie)
+      end
+
+      @vmdb_plugins
+    end
+
     def register_vmdb_plugin(engine)
       @vmdb_plugins << engine
 

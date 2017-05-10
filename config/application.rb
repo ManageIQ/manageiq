@@ -115,10 +115,7 @@ module Vmdb
     # Because this is easy to mess up, keep your initializers in order.
     # register plugins even before loading settings, as plugins can bring their own settings
     initializer :register_vmdb_plugins, :before => :load_vmdb_settings do
-      Rails.application.railties.each do |railtie|
-        next unless railtie.class.name.start_with?("ManageIQ::Providers::") || railtie.try(:vmdb_plugin?)
-        Vmdb::Plugins.instance.register_vmdb_plugin(railtie)
-      end
+      Vmdb::Plugins.instance.register_from_railties
     end
 
     initializer :load_vmdb_settings, :before => :load_config_initializers do
