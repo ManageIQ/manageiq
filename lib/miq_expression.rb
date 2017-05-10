@@ -1236,11 +1236,7 @@ class MiqExpression
 
   def self.parse_field_or_tag(str)
     # managed.location, Model.x.y.managed-location
-    if str =~ /(^|[.])managed[-.]/
-      MiqExpression::Tag.parse(str)
-    else
-      Field.parse(str)
-    end
+    MiqExpression::Tag.parse(str) || MiqExpression::Field.parse(str) || MiqExpression::CountField.parse(str)
   end
 
   def fields(expression = exp)
