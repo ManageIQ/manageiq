@@ -1,16 +1,19 @@
-require 'pid_file'
+require File.expand_path("../../tools/utils/mini_miq_server", __dir__)
+require "vmdb/logging"
+require "more_core_extensions/core_ext/array/tableize"
 
 class EvmApplication
   include Vmdb::Logging
+  Vmdb::Loggers.init
 
   def self.start
     if server_state == :no_db
       puts "EVM has no Database connection"
-      File.open(Rails.root.join("tmp", "pids", "evm.pid"), "w") { |f| f.write("no_db") }
+      File.open(Miq.root.join("tmp", "pids", "evm.pid"), "w") { |f| f.write("no_db") }
       exit
     end
 
-    if pid = MiqServer.running?
+    if pid = Mini::MiqServer.running?
       puts "EVM is already running (PID=#{pid})"
       exit
     end
@@ -18,30 +21,31 @@ class EvmApplication
     puts "Starting EVM..."
     _log.info("EVM Startup initiated")
 
-    MiqServer.kill_all_workers
-    command_line = "#{Gem.ruby} #{Rails.root.join(*%w(lib workers bin evm_server.rb)).expand_path}"
+    Mini::MiqServer.kill_all_workers
+    evm_server_file = Miq.root.join(*%w(lib workers bin evm_server.rb))
+    command_line = "#{Gem.ruby} #{evm_server_file}"
 
     env_options = {}
     env_options["EVMSERVER"] = "true" if MiqEnvironment::Command.is_appliance?
     puts "Running EVM in background..."
-    pid = Kernel.spawn(env_options, command_line, :pgroup => true, [:out, :err] => [Rails.root.join("log/evm.log"), "a"])
+    pid = Kernel.spawn(env_options, command_line, :pgroup => true, [:out, :err] => [Miq.root.join("log", "evm.log"), "a"])
     Process.detach(pid)
   end
 
   def self.stop
     puts "Stopping EVM gracefully..."
     _log.info("EVM Shutdown initiated")
-    MiqServer.stop(true)
+    Mini::MiqServer.stop(true)
   end
 
   def self.kill
     puts "Killing EVM..."
     _log.info("EVM Kill initiated")
-    MiqServer.kill
+    Mini::MiqServer.kill
   end
 
   def self.server_state
-    MiqServer.my_server.status
+    Mini::MiqServer.my_server.status
   rescue => error
     :no_db if error.message =~ /Connection refused/i
   end
@@ -49,12 +53,12 @@ class EvmApplication
   def self.status(include_remotes = false)
     puts "Checking EVM status..."
 
-    server = MiqServer.my_server(true)
+    server = Mini::MiqServer.my_server
     servers = Set.new
     servers << server if server
     if include_remotes
       all_servers =
-        MiqServer
+        Mini::MiqServer
         .order(:zone_id, :status)
         .includes(:active_roles, :miq_workers, :zone)
         .all.to_a
@@ -112,7 +116,7 @@ class EvmApplication
 
   def self.update_start
     require 'fileutils'
-    filename = MiqServer.pidfile
+    filename = Mini::MiqServer.pidfile
     tempfile = "#{filename}.yum"
     FileUtils.mkdir_p(File.dirname(filename))
     File.write(filename, "no_db") if File.file?(tempfile)
@@ -120,10 +124,10 @@ class EvmApplication
   end
 
   def self.update_stop
-    return if MiqServer.my_server.status != "started"
+    return if Mini::MiqServer.my_server.status != "started"
 
     require 'fileutils'
-    tempfile = "#{MiqServer.pidfile}.yum"
+    tempfile = "#{Mini::MiqServer.pidfile}.yum"
     FileUtils.mkdir_p(File.dirname(tempfile))
     File.write(tempfile, " ")
     stop

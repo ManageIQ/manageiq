@@ -1,19 +1,25 @@
-module MiqServer::QueueManagement
+module MiqServerQueueManagement
   extend ActiveSupport::Concern
+
+  module ClassMethods
+    def queue_class
+      MiqQueue
+    end
+  end
 
   def clear_miq_queue_for_this_server
     loop do
-      msg = MiqQueue.get(:queue_name => 'miq_server', :zone => my_zone)
+      msg = self.class.queue_class.get(:queue_name => 'miq_server', :zone => my_zone)
       break if msg.nil?
 
-      _log.info("Removing message #{MiqQueue.format_full_log_msg(msg)}")
+      _log.info("Removing message #{self.class.queue_class.format_full_log_msg(msg)}")
       msg.destroy
     end
   end
 
   def process_miq_queue
     loop do
-      msg = MiqQueue.get(:queue_name => 'miq_server', :zone => my_zone)
+      msg = self.class.queue_class.get(:queue_name => 'miq_server', :zone => my_zone)
       break if msg.nil?
 
       status, message, result = msg.deliver(self)
@@ -32,8 +38,8 @@ module MiqServer::QueueManagement
   end
 
   def enqueue_for_server(method_name)
-    MiqQueue.put_unless_exists(
-      :class_name  => self.class.name,
+    self.class.queue_class.put_unless_exists(
+      :class_name  => "MiqServer",
       :instance_id => id,
       :queue_name  => 'miq_server',
       :zone        => zone.name,
@@ -58,12 +64,12 @@ module MiqServer::QueueManagement
     # matches ntp_reload's guard clause
     return if !MiqEnvironment::Command.is_appliance? || MiqEnvironment::Command.is_container?
 
-    MiqQueue.put(
+    self.class.queue_class.put(
       :class_name  => "MiqServer",
       :instance_id => id,
       :method_name => "ntp_reload",
       :server_guid => guid,
-      :priority    => MiqQueue::HIGH_PRIORITY,
+      :priority    => self.class.queue_class::HIGH_PRIORITY,
       :args => [server_ntp_settings],
       :zone        => my_zone
     )
