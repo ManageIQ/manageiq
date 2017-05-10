@@ -217,18 +217,20 @@ describe MiqGroup do
     it "fails if referenced by user#current_group" do
       FactoryGirl.create(:user, :miq_groups => [group])
 
-      expect {
-        expect { group.destroy }.to raise_error(RuntimeError, /Still has users assigned/)
-      }.to_not change { MiqGroup.count }
+      expect { expect { group.destroy }.to raise_error(RuntimeError, /Still has users assigned/) }.to_not change { MiqGroup.count }
     end
 
-    it "fails if referenced by user#miq_groups" do
+    it "succeeds if referenced by multiple user#miq_groups" do
       group2 = FactoryGirl.create(:miq_group)
       FactoryGirl.create(:user, :miq_groups => [group, group2], :current_group => group2)
+      expect { group.destroy }.not_to raise_error
+    end
 
-      expect {
-        expect { group.destroy }.to raise_error(RuntimeError, /Still has users assigned/)
-      }.to_not change { MiqGroup.count }
+    it "fails if one user in the group does not belong to any other group" do
+      group2 = FactoryGirl.create(:miq_group)
+      FactoryGirl.create(:user, :miq_groups => [group, group2], :current_group => group2)
+      FactoryGirl.create(:user, :miq_groups => [group], :current_group => group)
+      expect { expect { group.destroy }.to raise_error(RuntimeError, /Still has users assigned/) }.to_not change { MiqGroup.count }
     end
 
     it "fails if referenced by a tenant#default_miq_group" do
