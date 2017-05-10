@@ -9,7 +9,7 @@ module MiqAeMethodService
     expose :floating_ips,          :association => true
     expose :cloud_resource_quotas, :association => true
 
-    expose :raw_update_cloud_tenant
-    expose :raw_delete_cloud_tenant
+    expose :update_cloud_tenant
+    expose :delete_cloud_tenant
   end
 end
