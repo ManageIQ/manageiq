@@ -58,6 +58,38 @@ module Api
 
       private
 
+      def log_api_auth
+        if @miq_token_hash
+          auth_type = "system"
+          api_log_info do
+            format_data_for_logging(
+              "System Auth",
+              {:x_miq_token => request.headers[HttpHeaders::MIQ_TOKEN]}.merge(@miq_token_hash)
+            )
+          end
+        else
+          auth_type = request.headers[HttpHeaders::AUTH_TOKEN].blank? ? "basic" : "token"
+        end
+
+        api_log_info do
+          format_data_for_logging("Authentication",
+                                  :type        => auth_type,
+                                  :token       => request.headers[HttpHeaders::AUTH_TOKEN],
+                                  :x_miq_group => request.headers[HttpHeaders::MIQ_GROUP],
+                                  :user        => User.current_user.userid)
+        end
+        if User.current_user
+          group = User.current_user.current_group
+          api_log_info do
+            format_data_for_logging("Authorization",
+                                    :user   => User.current_user.userid,
+                                    :group  => group.description,
+                                    :role   => group.miq_user_role_name,
+                                    :tenant => group.tenant.name)
+          end
+        end
+      end
+
       def api_token_mgr
         Environment.user_token_service.token_mgr('api')
       end
