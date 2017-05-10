@@ -9,6 +9,11 @@ module Vmdb
       @registered_automate_domains = []
       @registered_provider_plugin_map = {}
       @vmdb_plugins = []
+
+      Rails.application.railties.each do |railtie|
+        next unless railtie.class.name.start_with?("ManageIQ::Providers::") || railtie.try(:vmdb_plugin?)
+        register_vmdb_plugin(railtie)
+      end
     end
 
     def register_vmdb_plugin(engine)
