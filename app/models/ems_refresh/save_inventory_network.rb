@@ -142,7 +142,11 @@ module EmsRefresh::SaveInventoryNetwork
     firewall_rules       = ems.security_groups.collect(&:firewall_rules).flatten
     firewall_rules.each do |fr|
       fr_hash = firewall_rule_hashes[fr.id] || {}
-      fr_hash[:source_security_group_id] = fr_hash.fetch_path(:source_security_group, :id)
+      unless fr_hash[:source_security_group].nil?
+        hashes.each do |sg, _v|
+          fr_hash[:source_security_group_id] = sg[:id] if sg[:ems_ref] == fr_hash[:source_security_group]
+        end
+      end
       fr.update_attribute(:source_security_group_id, fr_hash[:source_security_group_id])
     end
   end
