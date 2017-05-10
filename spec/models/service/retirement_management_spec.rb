@@ -35,7 +35,7 @@ describe "Service Retirement Management" do
     event_hash = {:service => @service, :type => "Service",
                   :retirement_initiator => "user", :userid => "freddy"}
 
-    expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash, {}).once
 
     @service.retire_now('freddy')
     @service.reload
@@ -47,7 +47,7 @@ describe "Service Retirement Management" do
     event_hash = {:service => @service, :type => "Service",
                   :retirement_initiator => "system"}
 
-    expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash, {}).once
 
     @service.retire_now
     @service.reload
@@ -165,7 +165,7 @@ describe "Service Retirement Management" do
   it "#raise_retirement_event" do
     event_name = 'foo'
     event_hash = {:service => @service, :type => "Service", :retirement_initiator => "system"}
-    expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash)
+    expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash, {})
     @service.raise_retirement_event(event_name)
   end
 
