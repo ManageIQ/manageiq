@@ -148,7 +148,7 @@ def override_gem(name, *args)
 
     calling_file = caller_locations.detect { |loc| !loc.path.include?("lib/bundler") }.path
     gem(name, *args).tap do
-      Bundler::UI::Shell.new.warn "** override_gem: #{name}, #{args.inspect}, caller: #{calling_file}" unless ENV["RAILS_ENV"] == "production"
+      warn "** override_gem: #{name}, #{args.inspect}, caller: #{calling_file}" unless ENV["RAILS_ENV"] == "production"
     end
   end
 end
