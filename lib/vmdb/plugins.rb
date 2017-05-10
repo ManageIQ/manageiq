@@ -11,10 +11,10 @@ module Vmdb
     end
 
     def vmdb_plugins
-      @vmdb_plugins.empty? ? register_from_railties : @vmdb_plugins
+      @vmdb_plugins.empty? ? register_vmdb_plugins : @vmdb_plugins
     end
 
-    def register_from_railties
+    def register_vmdb_plugins
       Rails.application.railties.each do |railtie|
         next unless railtie.class.name.start_with?("ManageIQ::Providers::") || railtie.try(:vmdb_plugin?)
         register_vmdb_plugin(railtie)
