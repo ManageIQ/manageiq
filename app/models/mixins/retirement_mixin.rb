@@ -175,7 +175,7 @@ module RetirementMixin
 
   def raise_retirement_event(event_name, requester = nil)
     $log.info("Raising Retirement Event for [#{name}]")
-    MiqEvent.raise_evm_event(self, event_name, setup_event_hash(requester))
+    MiqEvent.raise_evm_event(self, event_name, setup_event_hash(requester), retire_queue_options)
   end
 
   def raise_audit_event(event_name, message)
@@ -197,6 +197,14 @@ module RetirementMixin
   end
 
   private
+
+  def retire_queue_options
+    valid_zone? ? {:zone => my_zone} : {}
+  end
+
+  def valid_zone?
+    respond_to?(:my_zone) && my_zone.present?
+  end
 
   def setup_event_hash(requester)
     event_hash = {:retirement_initiator => "system"}
