@@ -2,7 +2,6 @@ module Vmdb
   class Plugins
     include Singleton
 
-    attr_reader :vmdb_plugins
     attr_reader :registered_automate_domains
 
     def initialize
