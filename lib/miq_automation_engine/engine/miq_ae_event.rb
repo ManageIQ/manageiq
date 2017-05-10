@@ -125,6 +125,7 @@ module MiqAeEvent
       :priority     => MiqQueue::HIGH_PRIORITY,
       :task_id      => nil          # Clear task_id to allow running synchronously under current worker process
     }
+    q_options[:zone] = options[:zone] if options[:zone].present?
 
     args = {
       :object_type      => obj.class.name,
