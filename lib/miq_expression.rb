@@ -725,24 +725,8 @@ class MiqExpression
   end
 
   def self.value2tag(tag, val = nil)
-    tag, virtual_custom_attribute = escape_virtual_custom_attribute(tag)
-    model, *values = tag.to_s.gsub(/[\.-]/, "/").split("/") # replace model path ".", column name "-" with "/"
-    values.map!{ |x|  URI::RFC2396_Parser.new.unescape(x) } if virtual_custom_attribute
-
-    case values.first
-    when "user_tag"
-      values[0] = "user"
-    when "managed", "user"
-      # Keep as-is
-    else
-      values.unshift("virtual") # add in tag designation
-    end
-
-    unless val.nil?
-      values << val.to_s.gsub(/\//, "%2f") # encode embedded / characters in values since / is used as a tag seperator
-    end
-
-    [model.downcase, "/#{values.join('/')}"]
+    target = parse_field_or_tag(tag)
+    [target.model.to_s.downcase, target.tag_path_with(val)]
   end
 
   def self.normalize_ruby_operator(str)

@@ -64,4 +64,8 @@ class MiqExpression::Target
       reflections.last.klass
     end
   end
+
+  def tag_path_with(value = nil)
+    ''
+  end
 end
