@@ -17,4 +17,10 @@ class MiqExpression::CountField < MiqExpression::Target
   def initialize(model, associations)
     super(model, associations, nil)
   end
+
+  private
+
+  def tag_values
+    ['virtual'] + @associations
+  end
 end
