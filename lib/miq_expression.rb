@@ -190,7 +190,7 @@ class MiqExpression
     when "contains"
       op_args["tag"] ||= col_name
       operands = if context_type != "hash"
-                   ref, val = value2tag(preprocess_managed_tag(op_args["tag"]), op_args["value"])
+                   ref, val = value2tag(op_args["tag"], op_args["value"])
                    ["<exist ref=#{ref}>#{val}</exist>"]
                  elsif context_type == "hash"
                    # This is only for supporting reporting "display filters"
@@ -700,19 +700,6 @@ class MiqExpression
   # Escape any unescaped forward slashes and/or interpolation
   def self.sanitize_regular_expression(string)
     string.gsub(%r{\\*/}, "\\/").gsub(/\\*#/, "\\\#")
-  end
-
-  def self.preprocess_managed_tag(tag)
-    path, val = tag.split("-")
-    path_arr = path.split(".")
-    if path_arr.include?("managed") || path_arr.include?("user_tag")
-      name = nil
-      while path_arr.first != "managed" && path_arr.first != "user_tag"
-        name = path_arr.shift
-      end
-      return [name].concat(path_arr).join(".") + "-" + val
-    end
-    tag
   end
 
   def self.escape_virtual_custom_attribute(attribute)
