@@ -3,10 +3,11 @@
 #
 describe "Logging" do
   describe "Successful Requests logging" do
+    before { allow($api_log).to receive(:info) }
+
     it "logs hashed details about the request" do
       api_basic_authorize collection_action_identifier(:users, :read, :get)
 
-      allow($api_log).to receive(:info)
       expect($api_log).to receive(:info).with(/API Request/)
       expect($api_log).to receive(:info).with(/Authentication/)
       expect($api_log).to receive(:info).with(/Authorization/)
@@ -25,7 +26,6 @@ describe "Logging" do
     it "logs all hash entries about the request" do
       api_basic_authorize
 
-      allow($api_log).to receive(:info)
       expect($api_log).to receive(:info).with(/API Request/)
       expect($api_log).to receive(:info).with(/Authentication/)
       expect($api_log).to receive(:info).with(/Authorization/)
@@ -46,7 +46,6 @@ describe "Logging" do
     it "filters password attributes in nested parameters" do
       api_basic_authorize collection_action_identifier(:services, :create)
 
-      allow($api_log).to receive(:info)
       expect($api_log).to receive(:info).with(/API Request/)
       expect($api_log).to receive(:info).with(/Authentication/)
       expect($api_log).to receive(:info).with(/Authorization/)
@@ -71,7 +70,6 @@ describe "Logging" do
 
         miq_token = MiqPassword.encrypt({:server_guid => server_guid, :userid => userid, :timestamp => timestamp}.to_yaml)
 
-        allow($api_log).to receive(:info)
         expect($api_log).to receive(:info).with(/API Request/)
         expect($api_log).to receive(:info).with(
           a_string_matching(
