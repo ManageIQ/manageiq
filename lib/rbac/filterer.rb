@@ -34,6 +34,12 @@ module Rbac
       Host
       LoadBalancer
       MiqCimInstance
+      MiddlewareDatasource
+      MiddlewareDeployment
+      MiddlewareDomain
+      MiddlewareMessaging
+      MiddlewareServer
+      MiddlewareServerGroup
       NetworkPort
       NetworkRouter
       OrchestrationTemplate
