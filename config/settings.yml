@@ -109,6 +109,17 @@
     :additional_regions: {}
   :ems_azure:
     :disabled_regions: []
+    :api_versions:
+      :availability_set: 2017-03-30
+      :ip_address: 2017-03-01
+      :load_balancer: 2017-03-01
+      :network_interface: 2017-03-01
+      :network_security_group: 2016-12-01
+      :resource_group: 2016-09-01
+      :storage_account: 2016-12-01
+      :template_deployment: 2016-09-01
+      :virtual_machine: 2017-03-30
+      :virtual_network: 2017-03-01
 :ems_events:
   :history:
     :keep_ems_events: 6.months

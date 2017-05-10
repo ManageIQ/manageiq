@@ -12,12 +12,14 @@ class ManageIQ::Providers::Azure::NetworkManager::RefreshParser
     @ems               = ems
     @config            = ems.connect
     @subscription_id   = @config.subscription_id
-    @rgs               = ::Azure::Armrest::ResourceGroupService.new(@config)
-    @vns               = ::Azure::Armrest::Network::VirtualNetworkService.new(@config)
-    @ips               = ::Azure::Armrest::Network::IpAddressService.new(@config)
-    @nis               = ::Azure::Armrest::Network::NetworkInterfaceService.new(@config)
-    @nsg               = ::Azure::Armrest::Network::NetworkSecurityGroupService.new(@config)
-    @lbs               = ::Azure::Armrest::Network::LoadBalancerService.new(@config)
+
+    @rgs = resource_group_service(@config)
+    @vns = virtual_network_service(@config)
+    @ips = ip_address_service(@config)
+    @nis = network_interface_service(@config)
+    @nsg = network_security_group_service(@config)
+    @lbs = load_balancer_service(@config)
+
     @options           = options || {}
     @data              = {}
     @data_index        = {}
