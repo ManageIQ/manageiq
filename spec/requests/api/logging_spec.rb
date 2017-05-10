@@ -6,17 +6,18 @@ describe "Logging" do
     it "logs hashed details about the request" do
       api_basic_authorize collection_action_identifier(:users, :read, :get)
 
-      expect_any_instance_of(Api::UsersController).to receive(:log_request).with("API Request", a_kind_of(Hash))
-      expect_any_instance_of(Api::UsersController).to receive(:log_request).with("Authentication", a_kind_of(Hash))
-      expect_any_instance_of(Api::UsersController).to receive(:log_request).with("Authorization", a_kind_of(Hash))
-      expect_any_instance_of(Api::UsersController).to receive(:log_request).with("Request", a_hash_including(
-                                                                                  :path          => "/api/users",
-                                                                                  :collection    => "users",
-                                                                                  :c_id          => nil,
-                                                                                  :subcollection => nil,
-                                                                                  :s_id          => nil))
-      expect_any_instance_of(Api::UsersController).to receive(:log_request).with("Parameters", a_kind_of(Hash))
-      expect_any_instance_of(Api::UsersController).to receive(:log_request).with("Response", a_kind_of(Hash))
+      allow($api_log).to receive(:info)
+      expect($api_log).to receive(:info).with(/API Request/)
+      expect($api_log).to receive(:info).with(/Authentication/)
+      expect($api_log).to receive(:info).with(/Authorization/)
+      expect($api_log).to receive(:info).with(a_string_matching(/Request:/)
+                                               .and(matching(%r{:path=>"/api/users"}))
+                                               .and(matching(/:collection=>"users"/))
+                                               .and(matching(/:c_id=>nil/))
+                                               .and(matching(/:subcollection=>nil/))
+                                               .and(matching(/:s_id=>nil/)))
+      expect($api_log).to receive(:info).with(/Parameters/)
+      expect($api_log).to receive(:info).with(/Response/)
 
       run_get users_url
     end
@@ -24,26 +25,20 @@ describe "Logging" do
     it "logs all hash entries about the request" do
       api_basic_authorize
 
-      expect_any_instance_of(Api::ApiController).to receive(:log_request).with("API Request", a_kind_of(Hash))
-      expect_any_instance_of(Api::ApiController).to receive(:log_request).with("Authentication", a_kind_of(Hash))
-      expect_any_instance_of(Api::ApiController).to receive(:log_request).with("Authorization", a_kind_of(Hash))
-      expect_any_instance_of(Api::ApiController).to receive(:log_request).with("Request", a_hash_including(
-                                                                                 :method,
-                                                                                 :action,
-                                                                                 :fullpath,
-                                                                                 :url,
-                                                                                 :base,
-                                                                                 :path,
-                                                                                 :prefix,
-                                                                                 :version,
-                                                                                 :api_prefix,
-                                                                                 :collection,
-                                                                                 :c_suffix,
-                                                                                 :c_id,
-                                                                                 :subcollection,
-                                                                                 :s_id))
-      expect_any_instance_of(Api::ApiController).to receive(:log_request).with("Parameters", a_kind_of(Hash))
-      expect_any_instance_of(Api::ApiController).to receive(:log_request).with("Response", a_kind_of(Hash))
+      allow($api_log).to receive(:info)
+      expect($api_log).to receive(:info).with(/API Request/)
+      expect($api_log).to receive(:info).with(/Authentication/)
+      expect($api_log).to receive(:info).with(/Authorization/)
+      expect($api_log).to receive(:info).with(
+        a_string_matching(
+          'Request:        {:method=>:get, :action=>"read", :fullpath=>"/api", :url=>"http://www.example.com/api", ' \
+          ':base=>"http://www.example.com", :path=>"/api", :prefix=>"/api", :version=>"3.0.0-pre", ' \
+          ':api_prefix=>"http://www.example.com/api", :collection=>nil, :c_suffix=>"", :c_id=>nil, ' \
+          ':subcollection=>nil, :s_id=>nil}'
+        )
+      )
+      expect($api_log).to receive(:info).with(/Parameters/)
+      expect($api_log).to receive(:info).with(/Response/)
 
       run_get entrypoint_url
     end
@@ -51,44 +46,51 @@ describe "Logging" do
     it "filters password attributes in nested parameters" do
       api_basic_authorize collection_action_identifier(:services, :create)
 
-      expect_any_instance_of(Api::ServicesController).to receive(:log_request).with("API Request", a_kind_of(Hash))
-      expect_any_instance_of(Api::ServicesController).to receive(:log_request).with("Authentication", a_kind_of(Hash))
-      expect_any_instance_of(Api::ServicesController).to receive(:log_request).with("Authorization", a_kind_of(Hash))
-      expect_any_instance_of(Api::ServicesController).to receive(:log_request).with("Request", a_kind_of(Hash))
-      expect_any_instance_of(Api::ServicesController).to receive(:log_request).with("Parameters", a_hash_including(
-                                                                                      "action"     => "update",
-                                                                                      "format"     => "json",
-                                                                                      "controller" => "api/services",
-                                                                                      "body"       => a_hash_including(
-                                                                                        "resource" => a_hash_including(
-                                                                                          "options" => a_hash_including("password" => "[FILTERED]")))))
-      expect_any_instance_of(Api::ServicesController).to receive(:log_request).with("Response", a_kind_of(Hash))
+      allow($api_log).to receive(:info)
+      expect($api_log).to receive(:info).with(/API Request/)
+      expect($api_log).to receive(:info).with(/Authentication/)
+      expect($api_log).to receive(:info).with(/Authorization/)
+      expect($api_log).to receive(:info).with(/Request/)
+      expect($api_log).to receive(:info).with(
+        a_string_matching(
+          'Parameters:     {"action"=>"update", "controller"=>"api/services", "format"=>"json", ' \
+          '"body"=>{"action"=>"create", "resource"=>{"name"=>"new_service_1", ' \
+          '"options"=>{"password"=>"\[FILTERED\]"}}}}'
+        )
+      )
+      expect($api_log).to receive(:info).with(/Response/)
 
       run_post(services_url, gen_request(:create, "name" => "new_service_1", "options" => { "password" => "SECRET" }))
     end
 
     it "logs additional system authentication with miq_token" do
-      server_guid = MiqServer.first.guid
-      userid = api_config(:user)
-      timestamp = Time.now.utc
+      Timecop.freeze("2017-01-01 00:00:00 UTC") do
+        server_guid = MiqServer.first.guid
+        userid = api_config(:user)
+        timestamp = Time.now.utc
 
-      miq_token = MiqPassword.encrypt({:server_guid => server_guid, :userid => userid, :timestamp => timestamp}.to_yaml)
+        miq_token = MiqPassword.encrypt({:server_guid => server_guid, :userid => userid, :timestamp => timestamp}.to_yaml)
 
-      expect_any_instance_of(Api::ApiController).to receive(:log_request).with("API Request", a_kind_of(Hash))
-      expect_any_instance_of(Api::ApiController).to receive(:log_request).with("System Auth", a_hash_including(
-                                                                                   :x_miq_token => miq_token,
-                                                                                   :server_guid => server_guid,
-                                                                                   :userid => userid,
-                                                                                   :timestamp => timestamp))
-      expect_any_instance_of(Api::ApiController).to receive(:log_request).with("Authentication", a_hash_including(
-                                                                                   :type => "system",
-                                                                                   :user => "api_user_id"))
-      expect_any_instance_of(Api::ApiController).to receive(:log_request).with("Authorization", a_kind_of(Hash))
-      expect_any_instance_of(Api::ApiController).to receive(:log_request).with("Request", a_kind_of(Hash))
-      expect_any_instance_of(Api::ApiController).to receive(:log_request).with("Parameters", a_kind_of(Hash))
-      expect_any_instance_of(Api::ApiController).to receive(:log_request).with("Response", a_kind_of(Hash))
+        allow($api_log).to receive(:info)
+        expect($api_log).to receive(:info).with(/API Request/)
+        expect($api_log).to receive(:info).with(
+          a_string_matching(
+            "System Auth:    {:x_miq_token=>\"#{Regexp.escape(miq_token)}\", :server_guid=>\"#{server_guid}\", " \
+            ":userid=>\"api_user_id\", :timestamp=>2017-01-01 00:00:00 UTC}"
+          )
+        )
+        expect($api_log).to receive(:info).with(
+          a_string_matching(
+            'Authentication: {:type=>"system", :token=>nil, :x_miq_group=>nil, :user=>"api_user_id"}'
+          )
+        )
+        expect($api_log).to receive(:info).with(/Authorization/)
+        expect($api_log).to receive(:info).with(/Request/)
+        expect($api_log).to receive(:info).with(/Parameters/)
+        expect($api_log).to receive(:info).with(/Response/)
 
-      run_get entrypoint_url, :headers => {Api::HttpHeaders::MIQ_TOKEN => miq_token}
+        run_get entrypoint_url, :headers => {Api::HttpHeaders::MIQ_TOKEN => miq_token}
+      end
     end
   end
 end
