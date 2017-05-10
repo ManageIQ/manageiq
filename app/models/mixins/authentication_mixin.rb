@@ -301,7 +301,7 @@ module AuthenticationMixin
     save            = options.fetch(:save, true)
     auth            = authentication_best_fit(args.first)
     type            = args.first || auth.try(:authtype)
-    status, details = authentication_check_no_validation(type, options)
+    status, details = authentication_check_no_validation(type, options.except(:attempt))
 
     if auth && save
       status == :valid ? auth.validation_successful : auth.validation_failed(status, details)
