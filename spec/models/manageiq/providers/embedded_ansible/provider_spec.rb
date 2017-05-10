@@ -1,6 +1,12 @@
 describe ManageIQ::Providers::EmbeddedAnsible::Provider do
   subject { FactoryGirl.create(:provider_embedded_ansible) }
 
+  let(:miq_server) { FactoryGirl.create(:miq_server) }
+
+  before do
+    EvmSpecHelper.assign_embedded_ansible_role(miq_server)
+  end
+
   it_behaves_like 'ansible provider'
 
   context "DefaultAnsibleObjects concern" do
@@ -33,6 +39,17 @@ describe ManageIQ::Providers::EmbeddedAnsible::Provider do
           subject.public_send("default_#{obj_name}=", obj_name.length)
           expect(subject.default_ansible_objects.where(:name => obj_name).count).to eq(1)
         end
+      end
+    end
+
+    context "Embedded Ansible role" do
+      it "disabled #raw_connect" do
+        miq_server.active_roles.delete_all
+        expect { described_class.raw_connect('a', 'b', 'c', 'd') }.to raise_exception(StandardError, 'Embedded ansible is disabled')
+      end
+
+      it "enabled #raw_connect" do
+        expect(described_class.raw_connect('a', 'b', 'c', 'd')).to be_truthy
       end
     end
   end
