@@ -25,7 +25,6 @@ describe MiqAeEvent do
                            :vm_or_template_id => vm.id
                           )
       end
-      before { allow(MiqServer).to receive_messages(:my_zone => "zone test") }
 
       context "with user owned VM" do
         let(:vm_owner) { user }
@@ -63,15 +62,57 @@ describe MiqAeEvent do
                           )
       end
 
-      context "with user owned VM" do
-        let(:vm_owner) { user }
-
-        it "has tenant" do
-          args = {:miq_group_id => group.id, :tenant_id => tenant.id, :user_id => user.id}
-          expect(MiqAeEngine).to receive(:deliver_queue).with(hash_including(args), anything)
-
-          MiqAeEvent.raise_evm_event("vm_create", vm, :vm => vm)
+      shared_context "variables" do
+        let(:vm_owner)   { user }
+        let(:miq_server) { EvmSpecHelper.local_miq_server(:is_master => true) }
+        let(:args) do
+          { :miq_group_id => group.id, :tenant_id => tenant.id, :user_id => user.id}
         end
+        let(:inputs) do
+          {:vm => vm}
+        end
+      end
+
+      shared_examples_for "#pass zone to raise_evm_event" do
+        include_context "variables"
+
+        it "runs successfully" do
+          expect(MiqAeEngine).to receive(:deliver_queue).with(hash_including(args), hash_including(:zone => zone_name))
+          MiqAeEvent.raise_evm_event("vm_create", vm, inputs, options)
+        end
+      end
+
+      shared_examples_for "#zone not passed to raise_evm_event" do
+        include_context "variables"
+
+        it "runs successfully" do
+          expect(MiqAeEngine).to receive(:deliver_queue).with(hash_including(args), hash_excluding(:zone))
+          MiqAeEvent.raise_evm_event("vm_create", vm, inputs, options)
+        end
+      end
+
+      context "with zone" do
+        let(:zone) { FactoryGirl.create(:zone) }
+        let(:zone_name) { zone.name }
+        let(:options) do
+          {:zone => zone.name}
+        end
+        it_behaves_like "#pass zone to raise_evm_event"
+      end
+
+      context "nil zone" do
+        let(:zone_name) { nil }
+        let(:options) do
+          {:zone => nil}
+        end
+      end
+
+      context "nil options" do
+        let(:zone_name) { 'default' }
+        let(:options) do
+          {}
+        end
+        it_behaves_like "#zone not passed to raise_evm_event"
       end
 
       context "with group owned VM" do
