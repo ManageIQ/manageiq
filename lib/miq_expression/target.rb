@@ -66,6 +66,17 @@ class MiqExpression::Target
   end
 
   def tag_path_with(value = nil)
-    ''
+    # encode embedded / characters in values since / is used as a tag seperator
+    "#{tag_path}#{value.nil? ? '' : '/' + value.to_s.gsub(/\//, "%2f")}"
+  end
+
+  private
+
+  def tag_path
+    "/#{tag_values.join('/')}"
+  end
+
+  def tag_values
+    ['virtual'] + @associations + [@column]
   end
 end
