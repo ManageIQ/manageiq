@@ -36,6 +36,15 @@ describe GenericMailer do
     end
   end
 
+  context 'without a notifier within a region' do
+    before { MiqRegion.seed }
+
+    it 'does not queue any mail notifications' do
+      @args[:attachment] = [{:content_type => "text/plain", :filename => "generic_mailer_test.txt", :body => "generic_notification with text/plain attachment" * 10}]
+      expect { GenericMailer.deliver_queue(:generic_notification, @args) }.not_to change { MiqQueue.count }
+    end
+  end
+
   context "delivery error" do
     it "call attempts to send message to recipients indivually" do
       # generate message w/ two recipients that
