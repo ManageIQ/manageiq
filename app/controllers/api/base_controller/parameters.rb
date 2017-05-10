@@ -1,16 +1,6 @@
 module Api
   class BaseController
     module Parameters
-      def paginate_params?
-        params['offset'] || params['limit']
-      end
-
-      def expand_paginate_params
-        offset = params['offset']   # 0 based
-        limit  = params['limit']    # i.e. page size
-        [offset, limit]
-      end
-
       def hash_fetch(hash, element, default = {})
         hash[element] || default
       end

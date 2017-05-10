@@ -156,7 +156,9 @@ module Api
 
         options = {:user => User.current_user}
         options[:order] = sort_options if sort_options.present?
-        options[:offset], options[:limit] = expand_paginate_params if paginate_params?
+
+        @paging.options(options)
+
         options[:filter] = miq_expression if miq_expression
 
         Rbac.filtered(res, options)
