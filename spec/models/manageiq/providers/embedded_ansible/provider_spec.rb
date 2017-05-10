@@ -4,9 +4,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::Provider do
   let(:miq_server) { FactoryGirl.create(:miq_server) }
 
   before do
-    FactoryGirl.create(:server_role, :name => 'embedded_ansible', :max_concurrent => 0)
-    server_role = miq_server.assign_role('embedded_ansible')
-    miq_server.assigned_server_roles.where(:server_role_id => server_role.id).first.update_attributes(:active => true)
+    EvmSpecHelper.assign_embedded_ansible_role(miq_server)
   end
 
   it_behaves_like 'ansible provider'

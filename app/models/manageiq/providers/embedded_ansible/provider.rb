@@ -10,8 +10,8 @@ class ManageIQ::Providers::EmbeddedAnsible::Provider < ::Provider
           :autosave    => true
 
   def self.raw_connect(base_url, username, password, verify_ssl)
-    raise StandardError, 'Embedded ansible is disabled' unless role_enabled?
-    super
+    return super if role_enabled?
+    raise StandardError, 'Embedded ansible is disabled'
   end
 
   def self.role_enabled?
