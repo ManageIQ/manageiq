@@ -564,6 +564,7 @@
     :description: Configuration Script Payloads
     :options:
     - :collection
+    - :subcollection
     :verbs: *g
     :klass: ConfigurationScriptPayload
     :subcollections:
@@ -573,6 +574,10 @@
       - :name: read
         :identifier: embedded_configuration_script_payload_view
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: embedded_configuration_script_payload_view
+    :subcollection_actions:
       :get:
       - :name: read
         :identifier: embedded_configuration_script_payload_view
@@ -589,6 +594,8 @@
     - :collection
     :verbs: *gpppd
     :klass: ConfigurationScriptSource
+    :subcollections:
+      - :configuration_script_payloads
     :collection_actions:
       :get:
       - :name: read
