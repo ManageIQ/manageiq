@@ -193,7 +193,7 @@ module ManageIQ::Providers
         # TODO(lsmola) we need to represent dhcp as object
       when "network:floatingip"
         # We don't need this association, floating ip has a direct link to subnet and network in it
-      when "network:router_interface"
+      when "network:router_interface", "network:router_ha_interface"
         subnet_id               = network_port.fixed_ips.try(:first).try(:[], "subnet_id")
         network_router          = @data_index.fetch_path(:network_routers, network_port.device_id)
         subnet                  = @data_index.fetch_path(:cloud_subnets, subnet_id)
