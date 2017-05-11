@@ -103,13 +103,33 @@ describe DialogFieldTextBox do
         end
 
         it "returns an error when the value doesn't match the regex rule" do
-          df.value = '123'
+          df.value = 123
           expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field is invalid')
         end
 
         it "returns an error when no value is set" do
           df.value = nil
           expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field is required')
+        end
+
+        context "when the validation rule is supposed to match a set of integers" do
+          before do
+            df.validator_rule = '916'
+          end
+
+          context "when the value is a string" do
+            it "returns nil" do
+              df.value = '916'
+              expect(df.validate_field_data(dt, dg)).to be_nil
+            end
+          end
+
+          context "when the value is an integer" do
+            it "returns nil" do
+              df.value = 916
+              expect(df.validate_field_data(dt, dg)).to be_nil
+            end
+          end
         end
       end
 
