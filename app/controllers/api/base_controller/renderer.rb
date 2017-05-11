@@ -30,9 +30,10 @@ module Api
       def collection_to_jbuilder(type, reftype, resources, opts = {})
         Jbuilder.new do |json|
           json.ignore_nil!
-          [:name, :count, :subcount].each do |opt_name|
-            json.set! opt_name.to_s, opts[opt_name] if opts[opt_name]
-          end
+          json.set! 'name', opts[:name] if opts[:name]
+
+          @paging.collection_counts(json)
+
           unless @req.hide?("resources")
             json.resources resources.collect do |resource|
               if opts[:expand_resources]
@@ -45,6 +46,8 @@ module Api
           cspec = collection_config[type]
           aspecs = gen_action_spec_for_collections(type, cspec, opts[:is_subcollection], reftype) if cspec
           add_actions(json, aspecs, reftype)
+
+          @paging.paging_links(json)
         end
       end
 

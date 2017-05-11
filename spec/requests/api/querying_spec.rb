@@ -75,6 +75,50 @@ describe "Querying" do
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:bad_request)
     end
+
+    it "returns paging links if offset and limit are specified" do
+      create_vms_by_name %w(aa bb cc dd ee ff gg)
+
+      run_get vms_url, :offset => 0, :limit => 2, :sort_by => "name", :expand => "resources"
+
+      expect_query_result(:vms, 2, 7)
+      expect_result_resources_to_match_hash([{"name" => "aa"}, {"name" => "bb"}])
+      links = response.parsed_body["links"]
+
+      run_get(links["self"])
+
+      expect_query_result(:vms, 2, 7)
+      expect_result_resources_to_match_hash([{"name" => "aa"}, {"name" => "bb"}])
+
+      run_get(links["next"])
+
+      expect_query_result(:vms, 2, 7)
+      expect_result_resources_to_match_hash([{"name" => "cc"}, {"name" => "dd"}])
+
+      run_get(links["first"])
+
+      expect_query_result(:vms, 2, 7)
+      expect_result_resources_to_match_hash([{"name" => "aa"}, {"name" => "bb"}])
+
+      run_get(links["last"])
+
+      expect_query_result(:vms, 1, 7)
+      expect_result_resources_to_match_hash([{"name" => "gg"}])
+      previous = response.parsed_body["links"]["previous"]
+
+      run_get(previous)
+
+      expect_query_result(:vms, 2, 7)
+      expect_result_resources_to_match_hash([{"name" => "ee"}, {"name" => "ff"}])
+    end
+
+    it "only returns paging links if both offset and limit are specified" do
+      create_vms_by_name %w(aa bb)
+
+      run_get vms_url, :offset => 0, :expand => :resources
+
+      expect(response.parsed_body.keys).to eq(%w(name count subcount resources actions))
+    end
   end
 
   describe "Sorting vms by attribute" do

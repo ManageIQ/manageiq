@@ -41,6 +41,10 @@ module Api
           url.partition(fullpath)[0] # http://target
         end
 
+        def paging_href
+          base + fullpath
+        end
+
         #
         # c_path_parts returns: [collection, c_id, subcollection, s_id, ...]
         #
