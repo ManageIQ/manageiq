@@ -266,6 +266,10 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     end
   end
 
+  def self.current_job_timeout(timeout_adjustment = 1)
+    ::Settings.container_scanning.scanning_job_timeout.to_f_with_method * timeout_adjustment
+  end
+
   private
 
   def ext_management_system

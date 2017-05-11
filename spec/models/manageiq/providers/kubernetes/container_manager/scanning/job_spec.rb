@@ -157,6 +157,16 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
       end
     end
 
+    context "#current_job_timeout" do
+      it "checks for timeout in Settings" do
+        expect(@job.send(:current_job_timeout)).to eq(1200)
+        stub_settings_merge(:container_scanning => {:scanning_job_timeout => '15.minutes'})
+        expect(@job.send(:current_job_timeout)).to eq(900)
+        stub_settings_merge(:container_scanning => {:scanning_job_timeout => 600})
+        expect(@job.send(:current_job_timeout)).to eq(600)
+      end
+    end
+
     it 'should add correct environment variables' do
       att_name = 'http_proxy'
       my_value = "MY_TEST_VALUE"
