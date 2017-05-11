@@ -115,7 +115,7 @@ module ManageIQ::Providers::Microsoft::InfraManager::Provision::Cloning
       -LogicalNetwork #{logical_network_ps_script} | Out-Null;"
   end
 
-  def build_ps_script
+  def create_vm_script
     <<-PS_SCRIPT
       Import-Module VirtualMachineManager | Out-Null; \
       Get-SCVMMServer localhost | Out-Null;\
@@ -125,18 +125,42 @@ module ManageIQ::Providers::Microsoft::InfraManager::Provision::Cloning
         -VMHost #{dest_host} \
         -Path '#{dest_mount_point}' \
         -VMTemplate #{template_ps_script}; \
+
+      $vm | ConvertTo-Json -Compress
+    PS_SCRIPT
+  end
+
+  def update_vm_script(json)
+    <<-PS_SCRIPT
+      $vm = ConvertFrom-Json #{json}; \
+
       Set-SCVirtualMachine -VM $vm \
         #{cpu_ps_script} \
         #{memory_ps_script} | Out-Null;  \
-      #{network_adapter_ps_script} \
-      $vm | Select-Object ID | ConvertTo-Json
+      #{network_adapter_ps_script}; \
+
+      $vm | Select-Object ID | ConvertTo-Json -Compress
     PS_SCRIPT
   end
 
   def start_clone(_clone_options)
-    $scvmm_log.debug(build_ps_script)
-    json_results = source.ext_management_system.run_powershell_script(build_ps_script)
-    vm_json      = ManageIQ::Providers::Microsoft::InfraManager.parse_json_results(json_results)
-    phase_context[:new_vm_ems_ref] = vm_json["ID"]
+    $scvmm_log.debug(create_vm_script)
+    results = source.ext_management_system.run_powershell_script(create_vm_script)
+
+    if results.stdout.blank?
+      raise MiqException::MiqProvisionError, results.stderr
+    else
+      $scvmm_log.debug(update_vm_script)
+
+      script  = update_vm_script(results.stdout)
+      results = source.ext_management_system.run_powershell_script(script)
+
+      if results.stdout.blank?
+        raise MiqException::MiqProvisionError, results.stderr
+      else
+        json = JSON.parse(results.stdout)
+        phase_context[:new_vm_ems_ref] = json['ID']
+      end
+    end
   end
 end
