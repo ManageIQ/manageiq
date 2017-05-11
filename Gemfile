@@ -20,6 +20,7 @@ end
 manageiq_plugin "manageiq-automation_engine"
 manageiq_plugin "manageiq-content"
 manageiq_plugin "manageiq-providers-amazon"
+manageiq_plugin "manageiq-providers-ansible_tower"
 manageiq_plugin "manageiq-providers-azure"
 manageiq_plugin "manageiq-providers-hawkular"
 manageiq_plugin "manageiq-providers-kubernetes"
