@@ -62,8 +62,7 @@ module Api
         Environment.user_token_service.token_mgr('api')
       end
 
-      def authenticate_with_user_token(x_auth_token)
-        auth_token = x_auth_token
+      def authenticate_with_user_token(auth_token)
         if !api_token_mgr.token_valid?(auth_token)
           raise AuthenticationError, "Invalid Authentication Token #{auth_token} specified"
         else
