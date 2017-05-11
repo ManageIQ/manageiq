@@ -10,7 +10,7 @@ require 'sprockets/railtie'
 require 'action_cable/engine'
 
 if defined?(Bundler)
-  Bundler.require(*Rails.groups(:assets => %w(development test)), :ui_dependencies)
+  Bundler.require(*Rails.groups, :ui_dependencies)
 end
 
 module Vmdb
