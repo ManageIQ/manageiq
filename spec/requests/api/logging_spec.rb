@@ -23,10 +23,8 @@ describe "Logging" do
 
       expect($api_log).to receive(:info).with(
         a_string_matching(
-          'Request:        {:method=>:get, :action=>"read", :fullpath=>"/api", :url=>"http://www.example.com/api", ' \
-          ':base=>"http://www.example.com", :path=>"/api", :prefix=>"/api", :version=>"3.0.0-pre", ' \
-          ':api_prefix=>"http://www.example.com/api", :collection=>nil, :c_suffix=>"", :c_id=>nil, ' \
-          ':subcollection=>nil, :s_id=>nil}'
+          ":method.*:action.*:fullpath.*url.*:base.*:path.*:prefix.*:version.*:api_prefix.*:collection.*:c_suffix.*" \
+          ":c_id.*:subcollection.*:s_id"
         )
       )
 
