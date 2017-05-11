@@ -188,6 +188,10 @@ class JobProxyDispatcher
     end
   end
 
+  def self.waiting?
+    Job.where(:state => 'waiting_to_start').exists?
+  end
+
   def pending_jobs(target_class = VmOrTemplate)
     class_name = target_class.base_class.name
     @zone = MiqServer.my_zone
