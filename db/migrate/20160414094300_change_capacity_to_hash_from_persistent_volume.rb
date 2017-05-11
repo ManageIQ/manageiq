@@ -20,7 +20,7 @@ class ChangeCapacityToHashFromPersistentVolume < ActiveRecord::Migration[5.0]
             begin
               result_hash[key.to_sym] = val.iec_60027_2_to_i
             rescue ArgumentError
-              _log.warn("Capacity attribute was in bad format - #{val}")
+              logger.warn("Capacity attribute was in bad format - #{val}")
             end
           end
         end

@@ -7,7 +7,7 @@ describe SetDefaultForPxeServerCustomizationDirectory do
     it "Sets customization_directory to '' if nil" do
       pxe_server_stub.create!(:name => "pxe_server_a", :uri => "nfs://example.com/share")
 
-      expect(PxeServer.count).to eq(1)
+      expect(pxe_server_stub.count).to eq(1)
 
       migrate
 
