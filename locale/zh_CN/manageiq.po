@@ -5645,19 +5645,19 @@ msgstr "大小"
 msgid "ContainerImage|Tag"
 msgstr "标签"
 
-msgid "ContainerLabelTagMapping|Label name"
+msgid "LabelTagMapping|Label name"
 msgstr "标记名称"
 
-msgid "ContainerLabelTagMapping|Label value"
+msgid "LabelTagMapping|Label value"
 msgstr "标记值"
 
-msgid "ContainerLabelTagMapping|Labeled resource type"
+msgid "LabelTagMapping|Labeled resource type"
 msgstr "标记的资源类型"
 
-msgid "ContainerLabelTagMapping|Region description"
+msgid "LabelTagMapping|Region description"
 msgstr "区域描述"
 
-msgid "ContainerLabelTagMapping|Region number"
+msgid "LabelTagMapping|Region number"
 msgstr "区域编号"
 
 msgid "ContainerLimitItem|Default"

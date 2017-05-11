@@ -746,7 +746,7 @@ container_images:
 - created_on
 - old_ems_id
 - deleted_on
-container_label_tag_mappings:
+label_tag_mappings:
 - id
 - labeled_resource_type
 - label_name
@@ -1557,6 +1557,7 @@ jobs:
 - target_id
 - target_class
 - type
+- process
 - agent_id
 - agent_message
 - started_on
@@ -1564,6 +1565,7 @@ jobs:
 - sync_key
 - miq_server_id
 - zone
+- agent_name
 - options
 - context
 - miq_task_id
