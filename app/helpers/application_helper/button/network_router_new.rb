@@ -8,6 +8,6 @@ class ApplicationHelper::Button::NetworkRouterNew < ApplicationHelper::Button::B
 
   # disable button if no active providers support create action
   def disabled?
-    EmsNetwork.all.none? { |ems| NetworkRouter.class_by_ems(ems).supports_create? }
+    EmsNetwork.all.none? { |ems| NetworkRouter.class_by_ems(ems).supports_create_network_router? }
   end
 end
