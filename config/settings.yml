@@ -1102,6 +1102,9 @@
         :memory_threshold: 600.megabytes
         :nice_delta: 7
         :poll_method: :escalate
+      :ems_inventory_persister:
+        :memory_threshold: 2.gigabytes
+        :count: 0
       :ems_refresh_worker:
         :defaults:
           :memory_threshold: 2.gigabytes

@@ -61,6 +61,7 @@ MIQ_WORKER_TYPES = {
   "MiqCockpitWsWorker"                                                        => [:cockpit],
   "MiqEmsMetricsProcessorWorker"                                              => [],
   "MiqEmsRefreshCoreWorker"                                                   => [],
+  "MiqEmsInventoryPersister"                                                  => [],
   "MiqEventHandler"                                                           => [],
   "MiqGenericWorker"                                                          => [],
   "MiqPriorityWorker"                                                         => [],
@@ -121,6 +122,7 @@ MIQ_WORKER_TYPES_IN_KILL_ORDER = %w(
   MiqScheduleWorker
   MiqPriorityWorker
   MiqWebServiceWorker
+  MiqEmsInventoryPersister
   MiqEmsRefreshCoreWorker
   MiqVimBrokerWorker
   ManageIQ::Providers::Vmware::CloudManager::EventCatcher
