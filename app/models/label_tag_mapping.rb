@@ -1,4 +1,4 @@
-class ContainerLabelTagMapping < ApplicationRecord
+class LabelTagMapping < ApplicationRecord
   # A mapping matches labels on `resource_type` (NULL means any), `name` (required),
   # and `value` (NULL means any).
   #

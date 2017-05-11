@@ -5646,19 +5646,19 @@ msgstr "Taille"
 msgid "ContainerImage|Tag"
 msgstr "Balise"
 
-msgid "ContainerLabelTagMapping|Label name"
+msgid "LabelTagMapping|Label name"
 msgstr "Nom du libellé"
 
-msgid "ContainerLabelTagMapping|Label value"
+msgid "LabelTagMapping|Label value"
 msgstr "Valeur du libellé"
 
-msgid "ContainerLabelTagMapping|Labeled resource type"
+msgid "LabelTagMapping|Labeled resource type"
 msgstr "Type de ressource étiquetée"
 
-msgid "ContainerLabelTagMapping|Region description"
+msgid "LabelTagMapping|Region description"
 msgstr "Description de la région"
 
-msgid "ContainerLabelTagMapping|Region number"
+msgid "LabelTagMapping|Region number"
 msgstr "Numéro de la région"
 
 msgid "ContainerLimitItem|Default"

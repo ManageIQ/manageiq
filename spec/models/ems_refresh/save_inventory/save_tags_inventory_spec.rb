@@ -15,7 +15,7 @@ context "save_tags_inventory" do
     @cat3 = FactoryGirl.create(:category, :description => 'location', :tag => @tag3)
   end
 
-  # This is what ContainerLabelTagMapping.map_labels(cache, 'Type', labels) would
+  # This is what LabelTagMapping.map_labels(cache, 'Type', labels) would
   # return in the refresh parser. Note that we don't explicitly test the mapping
   # creation here, the assumption is that these were the generated mappings.
   #
