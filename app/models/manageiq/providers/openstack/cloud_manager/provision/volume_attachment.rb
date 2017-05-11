@@ -1,7 +1,10 @@
 module ManageIQ::Providers::Openstack::CloudManager::Provision::VolumeAttachment
   def create_requested_volumes(requested_volumes)
     volumes_attrs_list = [default_volume_attributes]
-    source.ext_management_system.with_provider_connection(:service => "volume") do |service|
+
+    connection_options = {:service => "volume"}
+    connection_options[:tenant_name] = options[:cloud_tenant][1] if options[:cloud_tenant].kind_of? Array
+    source.ext_management_system.with_provider_connection(connection_options) do |service|
       requested_volumes.each do |volume_attrs|
         new_volume_id = service.volumes.create(volume_attrs).id
         new_volume_attrs = volume_attrs.clone
