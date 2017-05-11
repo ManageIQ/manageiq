@@ -1275,3 +1275,33 @@
           value: analysis_success
     search_type: default
     db: ManageIQ::Providers::InfraManager::Vm
+- attributes:
+    name: default_State / Running
+    description: State / Running
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: Container-state
+          value: "running"
+    search_type: default
+    db: Container
+- attributes:
+    name: default_State / Terminated
+    description: State / Terminated
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: Container-state
+          value: "terminated"
+    search_type: default
+    db: Container
+- attributes:
+    name: default_State / Waiting
+    description: State / Waiting
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: Container-state
+          value: "waiting"
+    search_type: default
+    db: Container
