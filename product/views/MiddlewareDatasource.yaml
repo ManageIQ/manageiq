@@ -63,8 +63,7 @@ sortby:
 - middleware_server.hostname
 
 # Group rows (y=yes,n=no,c=count)
-group: y
-
+group: n
 
 # Graph type
 #   Bar
