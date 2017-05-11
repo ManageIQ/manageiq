@@ -663,33 +663,6 @@ describe MiqQueue do
       expect(MiqQueue.get).to have_attributes(:args => [3, 4], :task_id => 'fun_task')
       expect(MiqQueue.get).to eq(nil)
     end
-
-    it "should use args proc to find messages on the queue" do
-      msg1 = MiqQueue.put(
-        :class_name  => 'MyClass',
-        :method_name => 'method1',
-        :args        => [1, 2],
-        :task_id     => 'first_task'
-      )
-      msg2 = MiqQueue.put(
-        :class_name  => 'MyClass',
-        :method_name => 'method1',
-        :args        => [3, 4],
-        :task_id     => 'booring_task'
-      )
-
-      MiqQueue.put_or_update(
-        :class_name    => 'MyClass',
-        :method_name   => 'method1',
-        :args_selector => ->(args) { args.kind_of?(Array) && args.last == 4 }
-      ) do |_msg, params|
-        params.merge(:task_id => 'fun_task')
-      end
-
-      expect(MiqQueue.get).to have_attributes(:args => [1, 2], :task_id => 'first_task')
-      expect(MiqQueue.get).to have_attributes(:args => [3, 4], :task_id => 'fun_task')
-      expect(MiqQueue.get).to eq(nil)
-    end
   end
 
   describe ".unqueue" do

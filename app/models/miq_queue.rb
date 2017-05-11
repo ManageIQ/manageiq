@@ -213,12 +213,8 @@ class MiqQueue < ApplicationRecord
   #   the record.  If the record was not found, the block's options will be
   #   used to put a new item on the queue.
   #
-  #   The find options may also contain an optional :args_selector proc that
-  #   will allow multiple records found by the find options to further be
-  #   searched against the args column, which is normally not easily searchable.
   def self.put_or_update(find_options)
     find_options  = default_get_options(find_options)
-    args_selector = find_options.delete(:args_selector)
     conds = find_options.dup
 
     # Since args are a serializable field, remove them and manually dump them
@@ -233,17 +229,10 @@ class MiqQueue < ApplicationRecord
 
     msg = nil
     loop do
-      msg = if args_selector
-              where_scope.order("priority, id").detect { |m| args_selector.call(m.args) }
-            else
-              where_scope.order("priority, id").first
-            end
+      msg = where_scope.order("priority, id").first
 
       save_options = block_given? ? yield(msg, find_options) : nil
-      unless save_options.nil?
-        save_options = save_options.dup
-        save_options.delete(:args_selector)
-      end
+      save_options = save_options.dup unless save_options.nil?
 
       # Add a new queue item based on the returned save options, or the find
       #   options if no save options were given.
