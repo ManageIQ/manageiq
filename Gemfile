@@ -23,6 +23,7 @@ manageiq_plugin "manageiq-content"
 manageiq_plugin "manageiq-providers-amazon"
 manageiq_plugin "amazon_ssa_support" # Temporary dependency to be moved to manageiq-providers-amazon when officially released
 manageiq_plugin "manageiq-providers-azure"
+manageiq_plugin "manageiq-providers-foreman"
 manageiq_plugin "manageiq-providers-hawkular"
 manageiq_plugin "manageiq-providers-kubernetes"
 manageiq_plugin "manageiq-providers-lenovo"
