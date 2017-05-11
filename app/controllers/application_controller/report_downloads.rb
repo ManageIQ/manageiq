@@ -184,7 +184,7 @@ module ApplicationController::ReportDownloads
 
       disable_client_cache
       html_string = render_to_string(:template => "/layouts/show_pdf", :layout => false)
-      pdf_data = PdfGenerator.pdf_from_string(html_string, "pdf_summary")
+      pdf_data = PdfGenerator.pdf_from_string(html_string, "pdf_summary.css")
       send_data(pdf_data,
                 :type     => "application/pdf",
                 :filename => filename_timestamp("#{klass}_#{@record.name}_summary") + '.pdf'
