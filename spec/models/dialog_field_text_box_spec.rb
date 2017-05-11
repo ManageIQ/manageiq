@@ -103,7 +103,7 @@ describe DialogFieldTextBox do
         end
 
         it "returns an error when the value doesn't match the regex rule" do
-          df.value = '123'
+          df.value = 123
           expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field is invalid')
         end
 

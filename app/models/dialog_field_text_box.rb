@@ -47,7 +47,7 @@ class DialogFieldTextBox < DialogField
     rule = validator_rule if validator_type == 'regex'
 
     return unless rule
-    "#{dialog_tab.label}/#{dialog_group.label}/#{label} is invalid" unless value.match(/#{rule}/)
+    "#{dialog_tab.label}/#{dialog_group.label}/#{label} is invalid" unless value.to_s.match(/#{rule}/)
   end
 
   def script_error_values
