@@ -285,14 +285,14 @@ module Api
       def expand_actions(resource, json, type, opts)
         return unless render_actions(resource)
 
-        href   = json.attributes!["href"]
+        href = json.attributes!["href"]
         cspec = collection_config[type]
         aspecs = gen_action_spec_for_resources(cspec, opts[:is_subcollection], href, resource) if cspec
         add_actions(json, aspecs, type)
       end
 
       def add_actions(json, aspecs, type)
-        if aspecs && aspecs.size > 0
+        if aspecs && aspecs.any?
           json.actions do |js|
             aspecs.each { |action_spec| add_child js, normalize_hash(type, action_spec) }
           end
