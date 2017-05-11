@@ -7,7 +7,19 @@ module Api
   UnsupportedMediaTypeError = Class.new(ApiError)
 
   def self.encrypted_attribute?(attr)
-    Environment.normalized_attributes[:encrypted].key?(attr.to_s) || attr.to_s.include?('password')
+    Environment.encrypted_attributes.include?(attr.to_s) || attr.to_s.include?('password')
+  end
+
+  def self.time_attribute?(attr)
+    Environment.time_attributes.include?(attr.to_s)
+  end
+
+  def self.url_attribute?(attr)
+    Environment.url_attributes.include?(attr.to_s)
+  end
+
+  def self.resource_attribute?(attr)
+    Environment.resource_attributes.include?(attr.to_s)
   end
 
   def self.init_env
