@@ -3,8 +3,9 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::ScmCredenti
 
   COMMON_ATTRIBUTES = {
     :userid => {
-      :label     => N_('Access Key'),
-      :help_text => N_('AWS Access Key for this credential')
+      :label        => N_('Access Key'),
+      :help_text    => N_('AWS Access Key for this credential'),
+      :navtive_attr => true
     },
     :password => {
       :type      => :password,

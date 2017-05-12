@@ -3,8 +3,9 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::MachineCred
 
   COMMON_ATTRIBUTES = {
     :userid => {
-      :label     => N_('Username'),
-      :help_text => N_('Username for this credential')
+      :label        => N_('Username'),
+      :help_text    => N_('Username for this credential'),
+      :navtive_attr => true
     },
     :password => {
       :type      => :password,
