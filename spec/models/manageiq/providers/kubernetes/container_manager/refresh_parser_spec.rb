@@ -37,123 +37,130 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
   end
 
   describe "parse_image_name" do
-    example_ref = "docker://abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    digest = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    example_ref = "docker://#{digest}"
     example_images = [{:image_name => "example",
                        :image_ref  => example_ref,
-                       :image      => {:name => "example", :tag => nil, :digest => nil,
-                                       :image_ref => example_ref},
+                       :image      => {:name => "example", :tag => nil, :digest => digest,
+                                       :image_ref => "docker://example@#{digest}"},
+                       :registry   => nil},
+
+                      {:image_name => "example",
+                       :image_ref  => "docker://sha256:#{digest}",
+                       :image      => {:name => "example", :tag => nil, :digest => "sha256:#{digest}",
+                                       :image_ref => "docker://example@sha256:#{digest}"},
                        :registry   => nil},
 
                       {:image_name => "example:tag",
                        :image_ref  => example_ref,
-                       :image      => {:name => "example", :tag => "tag", :digest => nil,
-                                       :image_ref => example_ref},
+                       :image      => {:name => "example", :tag => "tag", :digest => digest,
+                                       :image_ref => "docker://example@#{digest}"},
                        :registry   => nil},
 
                       {:image_name => "user/example",
                        :image_ref  => example_ref,
-                       :image      => {:name => "user/example", :tag => nil, :digest => nil,
-                                       :image_ref => example_ref},
+                       :image      => {:name => "user/example", :tag => nil, :digest => digest,
+                                       :image_ref => "docker://user/example@#{digest}"},
                        :registry   => nil},
 
                       {:image_name => "user/example:tag",
                        :image_ref  => example_ref,
-                       :image      => {:name => "user/example", :tag => "tag", :digest => nil,
-                                       :image_ref => example_ref},
+                       :image      => {:name => "user/example", :tag => "tag", :digest => digest,
+                                       :image_ref => "docker://user/example@#{digest}"},
                        :registry   => nil},
 
                       {:image_name => "example/subname/example",
                        :image_ref  => example_ref,
-                       :image      => {:name => "example/subname/example", :tag => nil, :digest => nil,
-                                       :image_ref => example_ref},
+                       :image      => {:name => "example/subname/example", :tag => nil, :digest => digest,
+                                       :image_ref => "docker://example/subname/example@#{digest}"},
                        :registry   => nil},
 
                       {:image_name => "example/subname/example:tag",
                        :image_ref  => example_ref,
-                       :image      => {:name => "example/subname/example", :tag => "tag", :digest => nil,
-                                       :image_ref => example_ref},
+                       :image      => {:name => "example/subname/example", :tag => "tag", :digest => digest,
+                                       :image_ref => "docker://example/subname/example@#{digest}"},
                        :registry   => nil},
 
                       {:image_name => "host:1234/subname/example",
                        :image_ref  => example_ref,
-                       :image      => {:name => "subname/example", :tag => nil, :digest => nil,
-                                       :image_ref => example_ref},
+                       :image      => {:name => "subname/example", :tag => nil, :digest => digest,
+                                       :image_ref => "docker://host:1234/subname/example@#{digest}"},
                        :registry   => {:name => "host", :host => "host", :port => "1234"}},
 
                       {:image_name => "host:1234/subname/example:tag",
                        :image_ref  => example_ref,
-                       :image      => {:name => "subname/example", :tag => "tag", :digest => nil,
-                                       :image_ref => example_ref},
+                       :image      => {:name => "subname/example", :tag => "tag", :digest => digest,
+                                       :image_ref => "docker://host:1234/subname/example@#{digest}"},
                        :registry   => {:name => "host", :host => "host", :port => "1234"}},
 
                       {:image_name => "host.com:1234/subname/example",
                        :image_ref  => example_ref,
-                       :image      => {:name => "subname/example", :tag => nil, :digest => nil,
-                                       :image_ref => example_ref},
+                       :image      => {:name => "subname/example", :tag => nil, :digest => digest,
+                                       :image_ref => "docker://host.com:1234/subname/example@#{digest}"},
                        :registry   => {:name => "host.com", :host => "host.com", :port => "1234"}},
 
                       {:image_name => "host.com:1234/subname/example:tag",
                        :image_ref  => example_ref,
-                       :image      => {:name => "subname/example", :tag => "tag", :digest => nil,
-                                       :image_ref => example_ref},
+                       :image      => {:name => "subname/example", :tag => "tag", :digest => digest,
+                                       :image_ref => "docker://host.com:1234/subname/example@#{digest}"},
                        :registry   => {:name => "host.com", :host => "host.com", :port => "1234"}},
 
                       {:image_name => "host.com/subname/example",
                        :image_ref  => example_ref,
-                       :image      => {:name => "subname/example", :tag => nil, :digest => nil,
-                                       :image_ref => example_ref},
+                       :image      => {:name => "subname/example", :tag => nil, :digest => digest,
+                                       :image_ref => "docker://host.com/subname/example@#{digest}"},
                        :registry   => {:name => "host.com", :host => "host.com", :port => nil}},
 
                       {:image_name => "host.com/example",
                        :image_ref  => example_ref,
-                       :image      => {:name => "example", :tag => nil, :digest => nil,
-                                       :image_ref => example_ref},
+                       :image      => {:name => "example", :tag => nil, :digest => digest,
+                                       :image_ref => "docker://host.com/example@#{digest}"},
                        :registry   => {:name => "host.com", :host => "host.com", :port => nil}},
 
                       {:image_name => "host.com:1234/subname/more/names/example:tag",
                        :image_ref  => example_ref,
-                       :image      => {:name => "subname/more/names/example", :tag => "tag", :digest => nil,
-                                       :image_ref => example_ref},
+                       :image      => {:name => "subname/more/names/example", :tag => "tag", :digest => digest,
+                                       :image_ref => "docker://host.com:1234/subname/more/names/example@#{digest}"},
                        :registry   => {:name => "host.com", :host => "host.com", :port => "1234"}},
 
                       {:image_name => "localhost:1234/name",
                        :image_ref  => example_ref,
-                       :image      => {:name => "name", :tag => nil, :digest => nil,
-                                       :image_ref => example_ref},
+                       :image      => {:name => "name", :tag => nil, :digest => digest,
+                                       :image_ref => "docker://localhost:1234/name@#{digest}"},
                        :registry   => {:name => "localhost", :host => "localhost", :port => "1234"}},
 
                       {:image_name => "localhost:1234/name@sha256:1234567abcdefg",
                        :image_ref  => example_ref,
                        :image      => {:name => "name", :tag => nil, :digest => "sha256:1234567abcdefg",
-                                       :image_ref => "docker-pullable://localhost:1234/name@sha256:1234567abcdefg"},
+                                       :image_ref => "docker://localhost:1234/name@sha256:1234567abcdefg"},
                        :registry   => {:name => "localhost", :host => "localhost", :port => "1234"}},
 
                       # host with no port. more than one subdomain (a.b.c.com)
                       {:image_name => "reg.access.rh.com/openshift3/image-inspector",
                        :image_ref  => example_ref,
-                       :image      => {:name => "openshift3/image-inspector", :tag => nil, :digest => nil,
-                                       :image_ref => example_ref},
+                       :image      => {:name => "openshift3/image-inspector", :tag => nil, :digest => digest,
+                                       :image_ref => "docker://reg.access.rh.com/openshift3/image-inspector@#{digest}"},
                        :registry   => {:name => "reg.access.rh.com", :host => "reg.access.rh.com", :port => nil}},
 
                       # host with port. more than one subdomain (a.b.c.com:1234)
                       {:image_name => "host.access.com:1234/subname/more/names/example:tag",
                        :image_ref  => example_ref,
-                       :image      => {:name => "subname/more/names/example", :tag => "tag", :digest => nil,
-                                       :image_ref => example_ref},
+                       :image      => {:name => "subname/more/names/example", :tag => "tag", :digest => digest,
+                                       :image_ref => "docker://host.access.com:1234/subname/more/names/example@#{digest}"},
                        :registry   => {:name => "host.access.com", :host => "host.access.com", :port => "1234"}},
 
                       # localhost no port
                       {:image_name => "localhost/name",
                        :image_ref  => example_ref,
-                       :image      => {:name => "name", :tag => nil, :digest => nil,
-                                       :image_ref => example_ref},
+                       :image      => {:name => "name", :tag => nil, :digest => digest,
+                                       :image_ref => "docker://localhost/name@#{digest}"},
                        :registry   => {:name => "localhost", :host => "localhost", :port => nil}},
 
                       # tag and digest together
                       {:image_name => "reg.example.com:1234/name1:tagos@sha256:123abcdef",
                        :image_ref  => example_ref,
                        :image      => {:name => "name1", :tag => "tagos", :digest => "sha256:123abcdef",
-                                       :image_ref => "docker-pullable://reg.example.com:1234/name1@sha256:123abcdef"},
+                                       :image_ref => "docker://reg.example.com:1234/name1@sha256:123abcdef"},
                        :registry   => {:name => "reg.example.com", :host => "reg.example.com", :port => "1234"}},
 
                       # digest from new docker-pullable
@@ -163,10 +170,24 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
                                        :image_ref => "docker-pullable://reg.example.com:1234/name1@sha256:321bcd"},
                        :registry   => {:name => "reg.example.com", :host => "reg.example.com", :port => "1234"}},
 
+                      # no image ref
+                      {:image_name => "reg.example.com:1234/name1:tagos",
+                       :image_ref  => "",
+                       :image      => {:name => "name1", :tag => "tagos", :digest => nil,
+                                       :image_ref => "docker://reg.example.com:1234/name1"},
+                       :registry   => {:name => "reg.example.com", :host => "reg.example.com", :port => "1234"}},
+
+                      # no image ref, digest in name
+                      {:image_name => "reg.example.com:1234/name1:tagos@sha256:321bcd",
+                       :image_ref  => "",
+                       :image      => {:name => "name1", :tag => "tagos", :digest => "sha256:321bcd",
+                                       :image_ref => "docker://reg.example.com:1234/name1@sha256:321bcd"},
+                       :registry   => {:name => "reg.example.com", :host => "reg.example.com", :port => "1234"}},
+
                       {:image_name => "example@sha256:1234567abcdefg",
                        :image_ref  => example_ref,
                        :image      => {:name => "example", :tag => nil, :digest => "sha256:1234567abcdefg",
-                                       :image_ref => "docker-pullable://example@sha256:1234567abcdefg"},
+                                       :image_ref => "docker://example@sha256:1234567abcdefg"},
                        :registry   => nil}]
 
     example_images.each do |ex|

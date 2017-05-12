@@ -356,7 +356,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     expect(@image).to have_attributes(
       :name      => "kubernetes/heapster",
       :tag       => "v0.16.0",
-      :image_ref => "docker://f79cf2701046bea8d5f1384f7efe79dd4d20620b3594fff5be39142fa862259d",
+      :image_ref => "docker://example.com:1234/kubernetes/heapster@f79cf2701046bea8d5f1384f7efe79dd4d20620b3594fff5be39142fa862259d",
     )
 
     expect(@image.container_image_registry).not_to be_nil
