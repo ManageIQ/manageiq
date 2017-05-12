@@ -1,7 +1,14 @@
 module Vmdb
   class Settings
     module Walker
-      PASSWORD_FIELDS = %i(bind_pwd password amazon_secret).to_set.freeze
+      def self.secret_set
+        Set.new([:password, :ssh_key_data, :ssh_key_unlock, :become_password, :vault_password, :security_token])
+        # ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential.descendants.inject(Set.new) do |s, klass|
+        #   s += klass::API_ATTRIBUTES.collect{ |k, meta| k if meta[:type]==:password }.compact
+        # end
+      end
+
+      PASSWORD_FIELDS = (%i(bind_pwd password amazon_secret).to_set + secret_set).freeze
 
       # Walks the settings and yields each value along the way
       #

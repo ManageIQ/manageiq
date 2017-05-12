@@ -175,11 +175,13 @@ shared_examples_for "ansible credential" do
     end
 
     it "#update_in_provider_queue" do
-      task_id = ansible_cred.update_in_provider_queue({})
+      expect(Vmdb::Settings).to receive(:encrypt_passwords!).with(params)
+      task_id = ansible_cred.update_in_provider_queue(params)
       expect(MiqTask.find(task_id)).to have_attributes(:name => "Updating #{described_class::FRIENDLY_NAME} (Tower internal reference=#{ansible_cred.manager_ref})")
+      params[:task_id] = task_id
       expect(MiqQueue.first).to have_attributes(
         :instance_id => ansible_cred.id,
-        :args        => [{:task_id => task_id}],
+        :args        => [params],
         :class_name  => described_class.name,
         :method_name => "update_in_provider",
         :priority    => MiqQueue::HIGH_PRIORITY,
