@@ -1,3 +1,5 @@
+require "miq_helper"
+
 module MiqDbConfig
   def database_configuration
     yaml = Pathname.new(File.expand_path("../../config/database.yml", __dir__))
@@ -6,10 +8,8 @@ module MiqDbConfig
       require "yaml"
       require "erb"
 
-      vmdb_env = ActiveSupport::StringInquirer.new(ENV["RAILS_ENV"].presence || ENV["RACK_ENV"].presence || "development")
-
       data = yaml.read
-      data = ERB.new(data).result if !vmdb_env.production? || ENV['ERB_IN_CONFIG']
+      data = ERB.new(data).result if !Miq.env.production? || ENV['ERB_IN_CONFIG']
 
       begin
         # TODO: Allow this to work with miq-yaml:
@@ -27,7 +27,7 @@ module MiqDbConfig
         raise e, "Cannot load `Rails.application.database_configuration`:\n#{e.message}", e.backtrace
       end
 
-      Vmdb::Settings.decrypt_passwords!(data)
+      Vmdb::Settings::Walker.decrypt_passwords!(data)
     else
       super
     end
