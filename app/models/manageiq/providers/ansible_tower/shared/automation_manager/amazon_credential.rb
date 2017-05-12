@@ -2,7 +2,13 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::AmazonCrede
   extend ActiveSupport::Concern
 
   COMMON_ATTRIBUTES = {
-    :userid => {
+    :name     => {
+      :type      => :string,
+      :label     => N_('Name'),
+      :help_text => N_('Name of this credential'),
+      :required  => true
+    },
+    :username => {
       :label     => N_('Access Key'),
       :help_text => N_('AWS Access Key for this credential'),
       :required  => true

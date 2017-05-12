@@ -2,7 +2,13 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::MachineCred
   extend ActiveSupport::Concern
 
   COMMON_ATTRIBUTES = {
-    :userid => {
+    :name     => {
+      :type      => :string,
+      :label     => N_('Name'),
+      :help_text => N_('Name of this credential'),
+      :required  => true
+    },
+    :username => {
       :label     => N_('Username'),
       :help_text => N_('Username for this credential')
     },
