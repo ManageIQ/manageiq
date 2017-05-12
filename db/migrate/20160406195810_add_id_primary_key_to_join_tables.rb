@@ -49,7 +49,7 @@ class AddIdPrimaryKeyToJoinTables < ActiveRecord::Migration[5.0]
 
   def delete_remote_region_rows(table)
     model = Class.new(ActiveRecord::Base) { self.table_name = table }
-    col = model.column_names_symbols.first
+    col = model.column_names.first
     ar_region_class = ArRegion.anonymous_class_with_ar_region
     model.where.not(col => ar_region_class.region_to_range(ar_region_class.my_region_number)).delete_all
   end

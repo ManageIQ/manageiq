@@ -12,8 +12,8 @@ describe CreateTaskForEachJobAndTransferAttributes do
       migrate
 
       expect(miq_tasks_stub.count).to eq 2
-      expect(MiqTask.find_by(:name => "Hello Test Job").status).to eq "Some test status"
-      expect(MiqTask.find_by(:name => "Hello Test Job2").state).to eq "Some state"
+      expect(miq_tasks_stub.find_by(:name => "Hello Test Job").status).to eq "Some test status"
+      expect(miq_tasks_stub.find_by(:name => "Hello Test Job2").state).to eq "Some state"
     end
   end
 
