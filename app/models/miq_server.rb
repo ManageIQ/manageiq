@@ -97,12 +97,12 @@ class MiqServer < ApplicationRecord
 
   def self.setup_data_directory
     # create root data directory
-    data_dir = File.join(File.expand_path(Rails.root), "data")
+    data_dir = File.join(File.expand_path(Miq.root), "data")
     Dir.mkdir data_dir unless File.exist?(data_dir)
   end
 
   def self.pidfile
-    @pidfile ||= "#{Rails.root}/tmp/pids/evm.pid"
+    @pidfile ||= "#{Miq.root}/tmp/pids/evm.pid"
   end
 
   def self.running?
@@ -528,7 +528,7 @@ class MiqServer < ApplicationRecord
   #
   def self.my_guid
     @@my_guid_cache ||= begin
-      guid_file = Rails.root.join("GUID")
+      guid_file = Miq.root.join("GUID")
       File.write(guid_file, SecureRandom.uuid) unless File.exist?(guid_file)
       File.read(guid_file).strip
     end

@@ -7,7 +7,7 @@ require_dependency 'vmdb/settings/walker'
 module Vmdb
   class Settings
     PASSWORD_FIELDS = Vmdb::Settings::Walker::PASSWORD_FIELDS
-    DUMP_LOG_FILE   = Rails.root.join("log/last_settings.txt").freeze
+    DUMP_LOG_FILE   = Miq.root.join("log/last_settings.txt").freeze
 
     cattr_accessor :last_loaded
 
@@ -115,7 +115,7 @@ module Vmdb
     private_class_method :build_without_local
 
     def self.template_roots
-      Vmdb::Plugins.instance.vmdb_plugins.each_with_object([Rails.root.join('config')]) do |plugin, roots|
+      Vmdb::Plugins.instance.vmdb_plugins.each_with_object([Miq.root.join('config')]) do |plugin, roots|
         roots << plugin.root.join('config')
       end
     end
@@ -125,8 +125,8 @@ module Vmdb
       template_roots.each_with_object([]) do |root, sources|
         sources.push(
           root.join("settings.yml").to_s,
-          root.join("settings/#{Rails.env}.yml").to_s,
-          root.join("environments/#{Rails.env}.yml").to_s
+          root.join("settings/#{Miq.env}.yml").to_s,
+          root.join("environments/#{Miq.env}.yml").to_s
         )
       end
     end
@@ -136,8 +136,8 @@ module Vmdb
       template_roots.each_with_object([]) do |root, sources|
         sources.push(
           root.join("settings.local.yml").to_s,
-          root.join("settings/#{Rails.env}.local.yml").to_s,
-          root.join("environments/#{Rails.env}.local.yml").to_s
+          root.join("settings/#{Miq.env}.local.yml").to_s,
+          root.join("environments/#{Miq.env}.local.yml").to_s
         )
       end
     end

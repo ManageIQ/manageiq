@@ -144,7 +144,7 @@ module ArRegion
     private
 
     def discover_my_region_number
-      region_file = File.join(Rails.root, "REGION")
+      region_file = File.join(Miq.root, "REGION")
       region_num = File.read(region_file) if File.exist?(region_file)
       region_num ||= ENV.fetch("REGION", nil)
       region_num ||= region_number_from_sequence
