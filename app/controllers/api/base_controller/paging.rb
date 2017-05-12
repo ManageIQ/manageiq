@@ -12,10 +12,10 @@ module Api
       attr_reader :offset, :limit, :href
       attr_accessor :count, :subcount
 
-      def initialize(params, paging_href)
+      def initialize(params, href)
         @offset = params["offset"].to_i if params["offset"]
         @limit = params["limit"].to_i if params["limit"]
-        @href = paging_href
+        @href = href
       end
 
       def options(options)
@@ -26,10 +26,6 @@ module Api
       def collection_counts(json)
         json.set! 'count', count
         json.set! 'subcount', subcount
-      end
-
-      def paging_links?
-        offset && limit
       end
 
       def paging_links(json)
@@ -47,7 +43,7 @@ module Api
 
       def next
         next_offset = offset + limit
-        return last if next_offset > count
+        return if next_offset >= count
         href.gsub "offset=#{offset}", "offset=#{next_offset}"
       end
 
@@ -68,6 +64,7 @@ module Api
 
       def last
         return href if limit.zero? || limit.nil?
+        return if (offset + limit) >= count
         last_offset = count - (count % limit)
         href.gsub "offset=#{offset}", "offset=#{last_offset}"
       end
