@@ -262,6 +262,7 @@ class MiqTask < ApplicationRecord
   end
 
   def self.delete_by_id(ids)
+    return if ids.empty?
     _log.info("Queuing deletion of tasks with the following ids: #{ids.inspect}")
     MiqQueue.put(
       :class_name  => name,
