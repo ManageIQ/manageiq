@@ -684,7 +684,8 @@ module ManageIQ::Providers::Kubernetes
         end
       end
 
-      # old docker references won't yield a digest and will always be distinct
+      # if a digest exists then it is more identifiying than the image name/repo/tag
+      # as one image might have many names/repos/tags.
       container_image_identity = container_image[:digest] || container_image[:image_ref]
       stored_container_image = @data_index.fetch_path(
         :container_image, :by_digest, container_image_identity)
@@ -748,7 +749,7 @@ module ManageIQ::Providers::Kubernetes
     def parse_image_name(image, image_ref)
       # parsing using same logic as in docker
       # https://github.com/docker/docker/blob/348f6529b71502b561aa493e250fd5be248da0d5/reference/reference.go#L174
-      image_definition_re = %r{
+      docker_pullable_re = %r{
         \A
           (?<protocol>#{ContainerImage::DOCKER_PULLABLE_PREFIX})?
           (?:(?:
@@ -761,16 +762,29 @@ module ManageIQ::Providers::Kubernetes
           (?:\@(?<digest>.+))?
         \z
       }x
-      image_parts = image_definition_re.match(image)
-      image_ref_parts = image_definition_re.match(image_ref)
+      docker_daemon_re = %r{
+        \A
+          (?<protocol>#{ContainerImage::DOCKER_IMAGE_PREFIX})?
+            (?<digest>(sha256:)?.+)?
+        \z
+      }x
+      image_parts = docker_pullable_re.match(image)
+      image_ref_parts = docker_pullable_re.match(image_ref) || docker_daemon_re.match(image_ref)
 
-      hostname = image_parts[:host] || image_parts[:host2] || image_parts[:localhost]
-      if image_ref.start_with?(ContainerImage::DOCKER_IMAGE_PREFIX) && image_parts[:digest]
-        image_ref = "%{prefix}%{registry}%{name}@%{digest}" % {
-          :prefix   => ContainerImage::DOCKER_PULLABLE_PREFIX,
-          :registry => ("#{hostname}:#{image_parts[:port]}/" if hostname && image_parts[:port]),
+      if image_ref.start_with?(ContainerImage::DOCKER_PULLABLE_PREFIX)
+        hostname = image_ref_parts[:host] || image_ref_parts[:host2]
+        port = image_ref_parts[:port]
+        digest = image_ref_parts[:digest]
+      else
+        hostname = image_parts[:host] || image_parts[:host2] || image_parts[:localhost]
+        port = image_parts[:port]
+        digest = image_parts[:digest] || image_ref_parts.try(:[], :digest)
+        registry = ((port.present? ? "#{hostname}:#{port}/" : "#{hostname}/") if hostname.present?)
+        image_ref = "%{prefix}%{registry}%{name}%{digest}" % {
+          :prefix   => ContainerImage::DOCKER_IMAGE_PREFIX,
+          :registry => registry,
           :name     => image_parts[:name],
-          :digest   => image_parts[:digest],
+          :digest   => ("@#{digest}" if !digest.blank?),
         }
       end
 
@@ -778,7 +792,7 @@ module ManageIQ::Providers::Kubernetes
         {
           :name          => image_parts[:name],
           :tag           => image_parts[:tag],
-          :digest        => image_parts[:digest] || (image_ref_parts[:digest] if image_ref_parts),
+          :digest        => digest,
           :image_ref     => image_ref,
           :registered_on => Time.now.utc
         },
