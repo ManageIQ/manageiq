@@ -27,7 +27,6 @@ cols:
 - message
 - name
 - userid
-- agent_message
 - target_class
 - target_id
 
@@ -47,7 +46,6 @@ col_order:
 - name
 - userid
 - miq_server.name
-- agent_message
 
 # Column titles, in order
 headers:
@@ -59,7 +57,6 @@ headers:
 - Task Name
 - User
 - Owner
-- Owner Message
 
 # Condition(s) string for the SQL query
 conditions:
