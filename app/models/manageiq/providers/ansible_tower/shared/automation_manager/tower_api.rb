@@ -26,6 +26,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
     end
 
     private
+
     def notify(op, manager_id, params, success)
       op_arg = params.each_with_object([]) { |(k, v), l| l.push("#{k}=#{v}") if [:name, :manager_ref].include?(k) }.join(', ')
       _log.info "#{name} in_provider #{op} with parameters: #{op_arg} #{success ? 'succeeded' : 'failed'}"

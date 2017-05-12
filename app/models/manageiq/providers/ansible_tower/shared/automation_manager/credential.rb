@@ -18,9 +18,9 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Credential
 
     def process_secrets(params, decrypt = false)
       if decrypt
-        Vmdb::Settings::decrypt_passwords!(params)
+        Vmdb::Settings.decrypt_passwords!(params)
       else
-        Vmdb::Settings::encrypt_passwords!(params)
+        Vmdb::Settings.encrypt_passwords!(params)
       end
     end
   end

@@ -52,6 +52,7 @@ shared_examples_for "ansible credential" do
 
     it ".create_in_provider to succeed and send notification" do
       expected_params[:organization] = 1 if described_class.name.include?("::EmbeddedAnsible::")
+      expect(Vmdb::Settings).to receive(:decrypt_passwords!).with(expected_params)
       expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
       store_new_credential(credential, manager)
       expect(EmsRefresh).to receive(:queue_refresh_task).with(manager).and_return([finished_task])
@@ -63,6 +64,7 @@ shared_examples_for "ansible credential" do
 
     it ".create_in_provider to fail (not found during refresh) and send notification" do
       expected_params[:organization] = 1 if described_class.name.include?("::EmbeddedAnsible::")
+      expect(Vmdb::Settings).to receive(:decrypt_passwords!).with(expected_params)
       expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
       expect(EmsRefresh).to receive(:queue_refresh_task).and_return([finished_task])
       expect(ExtManagementSystem).to receive(:find).with(manager.id).and_return(manager)
@@ -73,6 +75,7 @@ shared_examples_for "ansible credential" do
     end
 
     it ".create_in_provider_queue" do
+      expect(Vmdb::Settings).to receive(:encrypt_passwords!).with(params)
       task_id = described_class.create_in_provider_queue(manager.id, params)
       expect(MiqTask.find(task_id)).to have_attributes(:name => "Creating #{described_class::FRIENDLY_NAME} (name=#{params[:name]})")
       expect(MiqQueue.first).to have_attributes(
@@ -157,6 +160,7 @@ shared_examples_for "ansible credential" do
     end
 
     it "#update_in_provider to succeed and send notification" do
+      expect(Vmdb::Settings).to receive(:decrypt_passwords!).with(params)
       expected_params[:organization] = 1 if described_class.name.include?("::EmbeddedAnsible::")
       expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
       expect(credential).to receive(:update_attributes!).with(expected_params)
