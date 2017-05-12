@@ -121,6 +121,10 @@ module MiqServer::EnvironmentManagement
     MiqApache::Control.restart(false)
   end
 
+  def start_apache
+    MiqApache::Control.start
+  end
+
   def stop_apache
     MiqApache::Control.stop(false)
   end
