@@ -1,7 +1,6 @@
 class CloudSubnet < ApplicationRecord
   include NewWithTypeStiMixin
   include SupportsFeatureMixin
-  include CloudTenancyMixin
 
   acts_as_miq_taggable
 
@@ -50,6 +49,14 @@ class CloudSubnet < ApplicationRecord
   def self.class_by_ems(ext_management_system)
     # TODO: use a factory on ExtManagementSystem side to return correct class for each provider
     ext_management_system && ext_management_system.class::CloudSubnet
+  end
+
+  def delete_cloud_subnet
+    raw_delete_cloud_subnet
+  end
+
+  def raw_delete_cloud_subnet
+    raise NotImplementedError, _("raw_delete_cloud_subnet must be implemented in a subclass")
   end
 
   private
