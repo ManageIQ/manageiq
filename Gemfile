@@ -164,5 +164,7 @@ if File.exist?(dev_gemfile)
   eval_gemfile(dev_gemfile)
 end
 
+gem 'sidekiq', '~> 4.1', '>= 4.1.2'
+
 # Load other additional Gemfiles
 Dir.glob(File.join(__dir__, 'bundler.d/*.rb')).each { |f| eval_gemfile(File.expand_path(f, __dir__)) }
