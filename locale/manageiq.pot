@@ -7168,23 +7168,23 @@ msgid "ContainerImage|Tag"
 msgstr ""
 
 #: ../config/model_attributes.rb:773
-msgid "ContainerLabelTagMapping|Label name"
+msgid "LabelTagMapping|Label name"
 msgstr ""
 
 #: ../config/model_attributes.rb:774
-msgid "ContainerLabelTagMapping|Label value"
+msgid "LabelTagMapping|Label value"
 msgstr ""
 
 #: ../config/model_attributes.rb:775
-msgid "ContainerLabelTagMapping|Labeled resource type"
+msgid "LabelTagMapping|Labeled resource type"
 msgstr ""
 
 #: ../config/model_attributes.rb:776
-msgid "ContainerLabelTagMapping|Region description"
+msgid "LabelTagMapping|Region description"
 msgstr ""
 
 #: ../config/model_attributes.rb:777
-msgid "ContainerLabelTagMapping|Region number"
+msgid "LabelTagMapping|Region number"
 msgstr ""
 
 #: ../config/model_attributes.rb:787

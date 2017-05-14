@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :container_label_tag_mapping do
+  factory :label_tag_mapping do
     label_name 'name'
 
     trait :only_nodes do
