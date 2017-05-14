@@ -193,7 +193,6 @@ containernode_compliance_failed,Container Node Compliance Failed,Default,complia
 
 containergroup_deadlineexceeded,Pod Deadline Exceeded,Default,container_operations
 containergroup_failedscheduling,Pod Failed Scheduling,Default,container_operations
-containergroup_failedsync,Pod Failed Sync,Default,container_operations
 containergroup_failedvalidation,Pod Failed Validation,Default,container_operations
 containergroup_hostportconflict,Pod hostPort Conflict,Default,container_operations
 containergroup_insufficientfreecpu,Pod Insufficient Free CPU,Default,container_operations
