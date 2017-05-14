@@ -412,6 +412,12 @@ class Storage < ApplicationRecord
       .each_with_object(Hash.new(0)) { |(storage_id, count), h| h[storage_id] = count.to_i }
   end
 
+  # searches for a storage by its ID or name, while the ID gets precedence over the name if both provided
+  def self.search_by_id_or_name(storage_id, storage_name)
+    return Storage.find_by(:id => storage_id) if storage_id
+    return Storage.find_by(:name => storage_name) if storage_name
+  end
+
   def count_of_vmdk_disk_files
     self.class.count_of_vmdk_disk_files[id]
   end
