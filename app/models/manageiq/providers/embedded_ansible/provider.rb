@@ -10,12 +10,7 @@ class ManageIQ::Providers::EmbeddedAnsible::Provider < ::Provider
           :autosave    => true
 
   def self.raw_connect(base_url, username, password, verify_ssl)
-    return super if role_enabled?
+    return super if MiqRegion.my_region.role_active?('embedded_ansible')
     raise StandardError, 'Embedded ansible is disabled'
   end
-
-  def self.role_enabled?
-    MiqServer.all.any? { |x| x.has_active_role?('embedded_ansible') }
-  end
-  private_class_method :role_enabled?
 end
