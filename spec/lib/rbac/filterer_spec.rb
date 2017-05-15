@@ -217,6 +217,37 @@ describe Rbac::Filterer do
             results = described_class.search(:class => VmPerformance, :user => admin_user).first
             expect(results).to match_array [vm_performance_other_tenant, vm_performance_root_tenant]
           end
+
+          context 'with tags' do
+            let(:role)         { FactoryGirl.create(:miq_user_role) }
+            let(:tagged_group) { FactoryGirl.create(:miq_group, :tenant => Tenant.root_tenant, :miq_user_role => role) }
+            let(:user)         { FactoryGirl.create(:user, :miq_groups => [tagged_group]) }
+
+            before do
+              tagged_group.entitlement = Entitlement.new
+              tagged_group.entitlement.set_belongsto_filters([])
+              tagged_group.entitlement.set_managed_filters([["/managed/environment/prod"]])
+              tagged_group.save!
+            end
+
+            it 'lists only VmPerformances with tagged resources without any tenant restriction' do
+              root_tenant_vm.tag_with('/managed/environment/prod', :ns => '*')
+
+              results = described_class.search(:class => VmPerformance, :user => user).first
+              expect(results).to match_array [vm_performance_root_tenant]
+            end
+
+            it 'lists only VmPerformances with tagged resources with any tenant restriction' do
+              root_tenant_vm.tag_with('/managed/environment/prod', :ns => '*')
+              other_vm.tag_with('/managed/environment/prod', :ns => '*')
+
+              results = described_class.search(:class => VmPerformance, :user => other_user).first
+              expect(results).to match_array [vm_performance_other_tenant]
+
+              vm_or_template_records = described_class.search(:class => VmOrTemplate, :user => other_user).first
+              expect(results.map(&:resource_id)).to match_array vm_or_template_records.map(&:id)
+            end
+          end
         end
 
         context "searching MiqTemplate" do
