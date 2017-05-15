@@ -360,7 +360,8 @@ module Rbac
     end
     #
     # Algorithm: filter = u_filtered_ids UNION (b_filtered_ids INTERSECTION m_filtered_ids)
-    #            filter = (filter UNION d_filtered_ids if filter is not nil) UNION tenant_filter_ids
+    #            filter = (filter UNION d_filtered_ids if filter is not nil)
+    #            filter = filter INTERSECTION tenant_filter_ids if tenant_filter_ids is not nil
     # a nil as input for any field means it does not apply
     # a nil as output means there is not filter
     #
@@ -392,8 +393,8 @@ module Rbac
         filtered_ids.uniq!
       end
 
-      if filtered_ids.kind_of?(Array)
-        filtered_ids | tenant_filter_ids.to_a
+      if filtered_ids.kind_of?(Array) && tenant_filter_ids
+        filtered_ids & tenant_filter_ids.to_a
       elsif filtered_ids.nil? && tenant_filter_ids.kind_of?(Array) && tenant_filter_ids.present?
         tenant_filter_ids
       end
