@@ -397,6 +397,8 @@ module Rbac
         filtered_ids & tenant_filter_ids.to_a
       elsif filtered_ids.nil? && tenant_filter_ids.kind_of?(Array) && tenant_filter_ids.present?
         tenant_filter_ids
+      else
+        filtered_ids
       end
     end
 
