@@ -1,0 +1,14 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: PreProvision_Clone_to_VM
+    inherits: 
+    description: 
+  fields:
+  - amazon_meth1:
+      value: amazon_PreProvision_clone_to_vm
+  - openstack_meth1:
+      value: openstack_PreProvision_clone_to_vm
