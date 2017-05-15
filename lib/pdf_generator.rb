@@ -42,17 +42,10 @@ class PdfGenerator
   end
   private_class_method :sanitize_html
 
-  # Search through plugins to find the first existing pdf stylesheet
-  #
-  # TODO: this could be refactored later to support multiple stylesheets
-  # from multiple plugins.
+  # Find stylesheet asset with short path and return filesystem path
   #
   def self.stylesheet_file_path(stylesheet)
-    paths = Vmdb::Plugins.instance.vmdb_plugins.map do |plugin|
-      plugin.root.join("app/assets/stylesheets", stylesheet)
-    end
-
-    paths.detect { |p| File.exist?(p) }
+    Rails.application.assets.find_asset(stylesheet).try(:pathname).try(:to_s)
   end
 
   private_class_method :stylesheet_file_path
