@@ -112,7 +112,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager do
       require 'kubeclient'
       expect(Kubeclient::Client).to receive(:new).with(
         instance_of(URI::HTTPS), 'v1',
-        hash_including(:http_proxy_uri => VMDB::Util.http_proxy_uri)
+        hash_including(:http_proxy_uri => VMDB::Util.http_proxy_uri,
+                       :timeouts       => match(:open => be > 0, :read => be > 0))
       )
       described_class.raw_connect(hostname, port, options)
     end

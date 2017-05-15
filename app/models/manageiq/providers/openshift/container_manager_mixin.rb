@@ -39,7 +39,11 @@ module ManageIQ::Providers::Openshift::ContainerManagerMixin
         options[:version] || api_version,
         :ssl_options    => Kubeclient::Client::DEFAULT_SSL_OPTIONS.merge(options[:ssl_options] || {}),
         :auth_options   => kubernetes_auth_options(options),
-        :http_proxy_uri => VMDB::Util.http_proxy_uri
+        :http_proxy_uri => VMDB::Util.http_proxy_uri,
+        :timeouts       => {
+          :open => Settings.ems.ems_kubernetes.open_timeout.to_f_with_method,
+          :read => Settings.ems.ems_kubernetes.read_timeout.to_f_with_method
+        }
       )
     end
   end
