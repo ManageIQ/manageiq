@@ -69,7 +69,9 @@ class MiqScheduleWorker::Jobs
   end
 
   def job_proxy_dispatcher_dispatch
-    queue_work_on_each_zone(:class_name  => "JobProxyDispatcher", :method_name => "dispatch", :task_id => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY, :role => "smartstate", :state => "ready")
+    if JobProxyDispatcher.waiting?
+      queue_work_on_each_zone(:class_name => "JobProxyDispatcher", :method_name => "dispatch", :task_id => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY, :role => "smartstate", :state => "ready")
+    end
   end
 
   def ems_refresh_timer(klass)
