@@ -480,6 +480,13 @@ module ManagerRefresh
     def build(hash)
       hash = hash.merge(builder_params)
       inventory_object = new_inventory_object(hash)
+
+      uuid = inventory_object.manager_uuid
+      # Each InventoryObject must be able to build an UUID, return nil if it can't
+      return nil if uuid.blank?
+      # Return existing InventoryObject if we have it
+      return data_index[uuid] if data_index[uuid]
+      # Store new InventoryObject and return it
       push(inventory_object)
       inventory_object
     end
