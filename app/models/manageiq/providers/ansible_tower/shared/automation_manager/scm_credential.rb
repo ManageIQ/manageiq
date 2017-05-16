@@ -3,13 +3,13 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::ScmCredenti
 
   COMMON_ATTRIBUTES = {
     :userid => {
-      :label     => N_('Access Key'),
-      :help_text => N_('AWS Access Key for this credential')
+      :label     => N_('Username'),
+      :help_text => N_('Username for this credential')
     },
     :password => {
       :type      => :password,
-      :label     => N_('Secret Key'),
-      :help_text => N_('AWS Secret Key for this credential')
+      :label     => N_('Password'),
+      :help_text => N_('Password for this credential')
     }
   }.freeze
 
@@ -22,6 +22,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::ScmCredenti
     },
     :ssh_key_data => {
       :type       => :password,
+      :multiline  => true,
       :label      => N_('Private key'),
       :help_text  => N_('RSA or DSA private key to be used instead of password')
     }
