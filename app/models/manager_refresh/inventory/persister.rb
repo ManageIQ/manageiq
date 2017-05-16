@@ -92,6 +92,16 @@ class ManagerRefresh::Inventory::Persister
   def add_inventory_collection(options)
     options[:parent] = manager if !options.key?(:parent) && manager
 
+    if options[:builder_params]
+      options[:builder_params] = options[:builder_params].transform_values do |value|
+        if value.respond_to? :call
+          value.call(self)
+        else
+          value
+        end
+      end
+    end
+
     collections[options[:association]] = ::ManagerRefresh::InventoryCollection.new(options)
   end
 
