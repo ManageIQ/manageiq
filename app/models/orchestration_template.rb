@@ -7,6 +7,8 @@ class OrchestrationTemplate < ApplicationRecord
   has_many :stacks, :class_name => "OrchestrationStack"
   has_one :picture, :dependent => :destroy, :as => :resource, :autosave => true
 
+  has_ancestry
+
   default_value_for :draft, false
   default_value_for :orderable, true
 
