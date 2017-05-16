@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_Amazon_StorageManager_Ebs_CloudVolume < MiqAeServiceCloudVolume
+  end
+end
