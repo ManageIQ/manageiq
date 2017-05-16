@@ -41,6 +41,14 @@ describe "Cloud Volumes API" do
     )
   end
 
+  it "rejects delete request without appropriate role" do
+    api_basic_authorize
+
+    run_post(cloud_volumes_url, :action => 'delete')
+
+    expect(response).to have_http_status(:forbidden)
+  end
+
   it 'can delete cloud volumes through POST' do
     zone = FactoryGirl.create(:zone, :name => "api_zone")
     aws = FactoryGirl.create(:ems_amazon, :zone => zone)
