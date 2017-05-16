@@ -184,10 +184,12 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       enqueue :drift_state_purge_timer
     end
 
-    # Schedule - Check for session timeouts
-    scheduler.schedule_every(worker_settings[:session_timeout_interval]) do
-      # Session is global to the region, therefore, run it only once on the scheduler's server
-      enqueue :session_check_session_timeout
+    if Session.enabled?
+      # Schedule - Check for session timeouts
+      scheduler.schedule_every(worker_settings[:session_timeout_interval]) do
+        # Session is global to the region, therefore, run it only once on the scheduler's server
+        enqueue :session_check_session_timeout
+      end
     end
 
     # Schedule - Check for rogue EVM snapshots
