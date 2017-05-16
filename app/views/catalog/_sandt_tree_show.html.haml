@@ -74,6 +74,9 @@
               #{entry_points_op[0]} #{_('Entry Point')}
             .col-md-8
               = h(@sb[entry_points_op[1]])
+        .form-group
+          .col-md-9
+            = render textual_group_render_options(:smart_management)
       %hr
       %h3
         = _('Custom Image')
