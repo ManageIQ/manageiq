@@ -74,6 +74,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqVimBrokerWorker
     MiqVmdbStorageBridgeWorker
     MiqWebServiceWorker
+    MiqCockpitWsWorker
   ).freeze
 
   MONITOR_CLASS_NAMES_IN_KILL_ORDER = %w(
@@ -149,6 +150,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Lenovo::PhysicalInfraManager::EventCatcher
     MiqUiWorker
     MiqWebsocketWorker
+    MiqCockpitWsWorker
   ).freeze
 
   module ClassMethods

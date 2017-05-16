@@ -88,6 +88,7 @@ module MiqServer::EnvironmentManagement
       MiqUiWorker.install_apache_proxy_config
       MiqWebServiceWorker.install_apache_proxy_config
       MiqWebsocketWorker.install_apache_proxy_config
+      MiqCockpitWsWorker.install_apache_proxy_config
 
       # Because adding balancer members does a validation of the configuration
       # files and these files try to load the redirect files among others,

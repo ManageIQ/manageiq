@@ -271,4 +271,32 @@ describe Vm do
     service.reload
     expect(service.vms.count).to eq(1)
   end
+
+  context "#cockpit_url" do
+    before(:each) do
+      @csv = <<-CSV.gsub(/^\s+/, "")
+        name,description,max_concurrent,external_failover,role_scope
+        cockpit_ws,Cockpit,1,false,zone
+      CSV
+      allow(ServerRole).to receive(:seed_data).and_return(@csv)
+      ServerRole.seed
+      _, _, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      @ems = FactoryGirl.create(:ext_management_system, :zone => @zone)
+    end
+
+    it "is direct when no role" do
+      vm = FactoryGirl.create(:vm_openstack)
+      allow(vm).to receive_messages(:ipaddresses => ["10.0.0.1"])
+      expect(vm.cockpit_url).to eq(URI::HTTP.build(:host => "10.0.0.1", :port => 9090))
+    end
+
+    it "uses dashboard redirect when cockpit role is active" do
+      vm = FactoryGirl.create(:vm_openstack, :ext_management_system => @ems)
+      allow(vm).to receive_messages(:ipaddresses => ["10.0.0.1"])
+      server = FactoryGirl.create(:miq_server, :ipaddress => "10.0.0.2", :has_active_cockpit_ws => true, :zone => @zone)
+      server.assign_role('cockpit_ws', 1)
+      server.activate_roles('cockpit_ws')
+      expect(vm.cockpit_url).to eq(URI.parse("https://10.0.0.2/cws/=10.0.0.1"))
+    end
+  end
 end
