@@ -118,7 +118,7 @@ module MiqWebServerWorkerMixin
     end
 
     def add_apache_balancer_members
-      conf = MiqApache::Conf.instance(self::BALANCE_MEMBER_CONFIG_FILE)
+      conf = MiqApache::Conf.new(self::BALANCE_MEMBER_CONFIG_FILE)
       conf.add_ports(port_range.to_a, self::PROTOCOL)
       conf.save
     end
