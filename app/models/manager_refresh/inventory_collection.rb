@@ -378,6 +378,10 @@ module ManagerRefresh
       data_collection_finalized
     end
 
+    def supports_sti?
+      @supports_sti_cache ||= model_class.column_names.include?("type")
+    end
+
     def <<(inventory_object)
       unless data_index[inventory_object.manager_uuid]
         data_index[inventory_object.manager_uuid] = inventory_object
