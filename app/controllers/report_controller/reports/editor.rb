@@ -1179,10 +1179,13 @@ module ReportController::Reports::Editor
       if field.include?("__")                         # Check for pivot calculated field
         f = field.split("-")[1].split("__").first     # Grab the field name after the hyphen, before the "__"
         rpt.cols.push(f) unless rpt.cols.include?(f)  # Add the original field, if not already there
+        rpt.col_order.push(field.split("-")[1])       # Add the field to the col_order array
       else
-        rpt.cols.push(field.split("-")[1])            # Grab the field name after the hyphen
+        field_column = MiqExpression::Field.parse(field).column
+        rpt.cols.push(field_column)
+        rpt.col_order.push(field_column) # Add the field to the col_order array
       end
-      rpt.col_order.push(field.split("-")[1])         # Add the field to the col_order array
+
       if field == sortby1                             # Is this the first sort field?
         rpt.sortby = [@edit[:new][:sortby1].split("-")[1]] + rpt.sortby # Put the field first in the sortby array
       elsif field == sortby2                          # Is this the second sort field?
