@@ -1023,8 +1023,7 @@ describe Metric do
 
         it "should queue up enabled targets" do
           expected_targets = Metric::Targets.capture_targets
-          expected_queue_count = expected_targets.count * 9 # 1 realtime, 8 historical
-          expect(MiqQueue.count).to eq(expected_queue_count)
+          expect(MiqQueue.group(:method_name).count).to eq('perf_capture_realtime' => expected_targets.count, 'perf_capture_historical' => expected_targets.count * 8)
           assert_metric_targets(expected_targets)
         end
       end
