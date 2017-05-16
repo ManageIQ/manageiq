@@ -40,4 +40,33 @@ describe "Cloud Volumes API" do
       "id"   => cloud_volume.id
     )
   end
+
+  it 'can delete cloud volumes through POST' do
+    zone = FactoryGirl.create(:zone, :name => "api_zone")
+    aws = FactoryGirl.create(:ems_amazon, :zone => zone)
+
+    cloud_volume1 = FactoryGirl.create(:cloud_volume, :ext_management_system => aws, :name => "CloudVolume1")
+    cloud_volume2 = FactoryGirl.create(:cloud_volume, :ext_management_system => aws, :name => "CloudVolume2")
+
+    api_basic_authorize collection_action_identifier(:cloud_volumes, :delete, :post)
+
+    expected = {
+      'results' => [
+        a_hash_including(
+          'success' => true,
+          'message' => a_string_including('Deleting Cloud Volume CloudVolume1'),
+          'task_id' => a_kind_of(Numeric)
+        ),
+        a_hash_including(
+          'success' => true,
+          'message' => a_string_including('Deleting Cloud Volume CloudVolume2'),
+          'task_id' => a_kind_of(Numeric)
+        )
+      ]
+    }
+    run_post(cloud_volumes_url, :action => 'delete', :resources => [{ 'id' => cloud_volume1.id }, { 'id' => cloud_volume2.id }])
+
+    expect(response.parsed_body).to include(expected)
+    expect(response).to have_http_status(:ok)
+  end
 end
