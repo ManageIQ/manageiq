@@ -8,6 +8,22 @@
   .col-md-12.col-lg-6
     = render :partial => "shared/summary/textual", :locals => {:title => _("Totals for Service VMs"), :items => textual_group_vm_totals}
     = render :partial => "shared/summary/textual_tags", :locals => {:title => _("Smart Management"), :items => textual_group_tags}
+
+- child_services = @record.direct_service_children.select(&:display)
+- unless child_services.blank?
+  .row
+    .col-md-12.col-lg-6
+      %h3
+        = _('Child Services')
+      %table.table.table-striped.table-bordered.table-hover
+        %tbody
+          - child_services.sort_by { |o| o.name.downcase }.each do |s|
+            %tr{:class => "", :onclick => "DoNav('#{url_for(:controller => 'service', :action => 'show', :id => s)}');", :title => _("View this Service")}
+              %td.table-view-pf-select
+                %i.pficon.pficon-service
+              %td
+                = h(s.name)
+
 .row
   .col-md-12.col-lg-6
     %h3
