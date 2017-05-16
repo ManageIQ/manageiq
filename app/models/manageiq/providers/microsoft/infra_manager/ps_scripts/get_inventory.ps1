@@ -31,7 +31,7 @@ $vnets = Get-SCVirtualNetwork -VMMServer localhost |
   Select -Property ID,Name,LogicalNetworks,VMHostNetworkAdapters,
     @{name='VMHostName';expression={$_.VMHost.Name -As [string]}}
 
-$images = Get-SCVMTemplate -VMMServer localhost -All |
+$images = Get-SCVMTemplate -VMMServer localhost |
   Select -Property CPUCount,Memory,Name,ID,VirtualHardDisks,VirtualDVDDrives,
     @{name="CPUTypeString";expression={$_.CPUType.Name}},
     @{name="OperatingSystemString";expression={$_.OperatingSystem.Name}},
