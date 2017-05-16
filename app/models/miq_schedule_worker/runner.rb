@@ -135,28 +135,11 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       enqueue :job_check_jobs_for_timeout
     end
 
-    # Schedule - Check for Retired Services
-    every = worker_settings[:service_retired_interval]
+    # Schedule - Check for retired items and start retirement
+    # TODO: remove redundant settings in follow-up pr
+    every = [worker_settings[:service_retired_interval], worker_settings[:vm_retired_interval], worker_settings[:orchestration_stack_retired_interval], worker_settings[:load_balancer_retired_interval]].min
     scheduler.schedule_every(every, :first_in => every) do
-      enqueue :service_retirement_check
-    end
-
-    # Schedule - Check for Retired VMs
-    every = worker_settings[:vm_retired_interval]
-    scheduler.schedule_every(every, :first_in => every) do
-      enqueue :vm_retirement_check
-    end
-
-    # Schedule - Check for Retired Orchestration Stacks
-    every = worker_settings[:orchestration_stack_retired_interval]
-    scheduler.schedule_every(every, :first_in => every) do
-      enqueue :orchestration_stack_retirement_check
-    end
-
-    # Schedule - Check for Retired Load Balancers
-    every = worker_settings[:load_balancer_retired_interval]
-    scheduler.schedule_every(every, :first_in => every) do
-      enqueue :load_balancer_retirement_check
+      enqueue :retirement_check
     end
 
     # Schedule - Periodic validation of authentications
