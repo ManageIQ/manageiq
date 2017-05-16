@@ -26,10 +26,11 @@ module Api
       def collection_counts(json)
         json.set! 'count', count
         json.set! 'subcount', subcount
+        json.set! 'pages', pages if paging?
       end
 
       def paging_links(json)
-        return unless offset && limit
+        return unless paging?
         json.links do |js|
           PAGING_LINKS.each do |link|
             new_href = send(link)
@@ -40,6 +41,14 @@ module Api
       end
 
       private
+
+      def pages
+        (count / limit.to_f).ceil
+      end
+
+      def paging?
+        offset && limit
+      end
 
       def next
         next_offset = offset + limit

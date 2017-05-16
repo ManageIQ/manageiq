@@ -126,6 +126,22 @@ describe "Querying" do
 
       expect(response.parsed_body.keys).to eq(%w(name count subcount resources actions))
     end
+
+    it "returns the correct page count" do
+      create_vms_by_name %w(aa bb cc dd)
+
+      run_get vms_url, :offset => 0, :limit => 2
+
+      expect(response.parsed_body['pages']).to eq(2)
+
+      run_get vms_url, :offset => 0, :limit => 3
+
+      expect(response.parsed_body['pages']).to eq(2)
+
+      run_get vms_url, :offset => 0, :limit => 4
+
+      expect(response.parsed_body['pages']).to eq(1)
+    end
   end
 
   describe "Sorting vms by attribute" do
