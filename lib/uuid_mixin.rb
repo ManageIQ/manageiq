@@ -1,7 +1,7 @@
 module UuidMixin
   extend ActiveSupport::Concern
   included do
-    before_validation :set_guid, :on => :create if respond_to?(:before_validation)
+    before_create :set_guid, :on => :create
   end
 
   private
