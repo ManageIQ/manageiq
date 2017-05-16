@@ -41,10 +41,6 @@ module Api
           url.partition(fullpath)[0] # http://target
         end
 
-        def paging_href
-          base + fullpath
-        end
-
         #
         # c_path_parts returns: [collection, c_id, subcollection, s_id, ...]
         #
@@ -118,6 +114,10 @@ module Api
                        end
         end
 
+        def url
+          @request.original_url # http://target/api/...
+        end
+
         private
 
         def expand_requested
@@ -135,10 +135,6 @@ module Api
         def prefix
           prefix = "/#{path.split('/')[1]}" # /api
           version_override? ? "#{prefix}/#{@params[:version]}" : prefix
-        end
-
-        def url
-          @request.original_url # http://target/api/...
         end
       end
     end

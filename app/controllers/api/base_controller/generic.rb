@@ -10,7 +10,7 @@ module Api
         res = collection_search(@req.subcollection?, @req.subject, klass)
 
         @paging.count = klass.count
-        @paging.subcount = res.length
+        @paging.subcount = res.count
 
         opts = {
           :name             => @req.subject,

@@ -83,6 +83,7 @@ describe "Querying" do
 
       expect_query_result(:vms, 2, 7)
       expect_result_resources_to_match_hash([{"name" => "aa"}, {"name" => "bb"}])
+      expect(response.parsed_body["links"].keys).to eq(%w(self next last))
       links = response.parsed_body["links"]
 
       run_get(links["self"])
@@ -94,18 +95,14 @@ describe "Querying" do
 
       expect_query_result(:vms, 2, 7)
       expect_result_resources_to_match_hash([{"name" => "cc"}, {"name" => "dd"}])
-
-      run_get(links["first"])
-
-      expect_query_result(:vms, 2, 7)
-      expect_result_resources_to_match_hash([{"name" => "aa"}, {"name" => "bb"}])
+      expect(response.parsed_body["links"].keys).to eq(%w(self next previous first last))
 
       run_get(links["last"])
 
       expect_query_result(:vms, 1, 7)
       expect_result_resources_to_match_hash([{"name" => "gg"}])
-      expect(response.parsed_body["links"].keys).to eq(%w(self previous first))
       previous = response.parsed_body["links"]["previous"]
+      expect(response.parsed_body["links"].keys).to eq(%w(self previous first))
 
       run_get(previous)
 
@@ -141,6 +138,23 @@ describe "Querying" do
       run_get vms_url, :offset => 0, :limit => 4
 
       expect(response.parsed_body['pages']).to eq(1)
+    end
+
+    it "returns the correct pages if filters are specified" do
+      create_vms_by_name %w(aa bb cc)
+
+      run_get vms_url,:sort_by => "name", :filter => ["name='aa'", "or name='bb'"], :expand => "resources", :offset => 0, :limit => 1
+
+      expect_query_result(:vms, 1, 3)
+      expect_result_resources_to_match_hash([{"name" => "aa"}])
+      expect(response.parsed_body["links"].keys).to eq(%w(self next last))
+
+      run_get response.parsed_body["links"]["next"]
+
+      expect_query_result(:vms, 1, 3)
+      expect_result_resources_to_match_hash([{"name" => "bb"}])
+
+      expect(response.parsed_body["links"].keys).to eq(%w(self previous first))
     end
   end
 

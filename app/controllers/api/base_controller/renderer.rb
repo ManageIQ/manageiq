@@ -153,7 +153,6 @@ module Api
           sql, _, attrs = miq_expression.to_sql
           res = res.where(sql) if attrs[:supported_by_sql]
         end
-
         sort_options = sort_params(klass) if res.respond_to?(:reorder)
         res = res.reorder(sort_options) if sort_options.present?
 
@@ -164,6 +163,12 @@ module Api
 
         options[:filter] = miq_expression if miq_expression
 
+        miq_expression.present? ? subquery_search(res, options) : Rbac.filtered(res, options)
+      end
+
+      def subquery_search(res, options)
+        subquery_res = Rbac.search(:targets => res, :skip_counts => true)
+        @paging.subquery_count = subquery_res.count
         Rbac.filtered(res, options)
       end
 
