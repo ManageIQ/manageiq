@@ -329,6 +329,48 @@ module ManagerRefresh
       data_index
     end
 
+    def from_raw_data(inventory_objects_data, available_inventory_collections)
+      inventory_objects_data.each do |inventory_object_data|
+        hash = inventory_object_data.each_with_object({}) do |(key, value), result|
+          result[key.to_sym] = if value.kind_of?(Array)
+                                 value.map { |x| from_raw_value(x, available_inventory_collections) }
+                               else
+                                 from_raw_value(value, available_inventory_collections)
+                               end
+        end
+        build(hash)
+      end
+    end
+
+    def from_raw_value(value, available_inventory_collections)
+      if value.kind_of?(Hash) && value['type'] == "ManagerRefresh::InventoryObjectLazy"
+        inventory_collection = available_inventory_collections[value['inventory_collection_name'].try(:to_sym)]
+        raise "Couldn't build lazy_link #{value} the inventory_collection_name was not found" if inventory_collection.blank?
+        inventory_collection.lazy_find(value['ems_ref'], :key => value['key'], :default => value['default'])
+      elsif inventory_object?(value)
+        raise "We cannot convert a non lazy link to a raw_data for #{value} and #{self}, use lazy_find instead of find."
+      else
+        value
+      end
+    end
+
+    def to_raw_data
+      data.map do |inventory_object|
+        inventory_object.data.transform_values do |value|
+          if inventory_object_lazy?(value)
+            value.to_raw_data
+          elsif value.kind_of?(Array) && inventory_object_lazy?(value.compact.first)
+            # We can't really do array now, since that is either N:M table or HABTM
+            value.compact.map(&:to_raw_data)
+          elsif inventory_object?(value)
+            raise "We cannot convert non lazy link to a raw_data for #{value}, use lazy_find instead of find."
+          else
+            value
+          end
+        end
+      end
+    end
+
     def process_strategy(strategy_name)
       return unless strategy_name
 
