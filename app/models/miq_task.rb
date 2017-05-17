@@ -22,6 +22,8 @@ class MiqTask < ApplicationRecord
   has_one :miq_report_result, :dependent => :destroy
   has_one :job, :dependent => :destroy
 
+  belongs_to :miq_server
+
   before_validation :initialize_attributes, :on => :create
 
   before_destroy :check_associations
@@ -59,9 +61,13 @@ class MiqTask < ApplicationRecord
   def update_status(state, status, message)
     status = STATUS_ERROR if status == STATUS_EXPIRED
     _log.info("Task: [#{id}] [#{state}] [#{status}] [#{message}]")
-    attributes = {:state => state, :status => status, :message => message}
-    attributes[:started_on] = Time.now.utc if state == STATE_ACTIVE && started_on.nil?
-    update_attributes!(attributes)
+    self.status = status
+    self.message = message
+    self.state = state
+    self.started_on ||= Time.now.utc if state == STATE_ACTIVE
+    self.miq_server ||= MiqServer.my_server
+
+    save!
   end
 
   def self.update_message(taskid, message)
@@ -133,9 +139,11 @@ class MiqTask < ApplicationRecord
   end
 
   def state_active
-    attributes = {:state => STATE_ACTIVE}
-    attributes[:started_on] = Time.now.utc if started_on.nil?
-    update_attributes!(attributes)
+    self.state = STATE_ACTIVE
+    self.started_on ||= Time.now.utc
+    self.miq_server ||= MiqServer.my_server
+
+    save!
   end
 
   def self.state_finished(taskid)
