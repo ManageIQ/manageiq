@@ -6,7 +6,7 @@ module ManagerRefresh
                 :internal_attributes, :delete_method, :data, :data_index, :dependency_attributes, :manager_ref,
                 :association, :complete, :update_only, :transitive_dependency_attributes, :custom_manager_uuid,
                 :custom_db_finder, :check_changed, :arel, :builder_params, :loaded_references, :db_data_index,
-                :inventory_object_attributes
+                :inventory_object_attributes, :name
 
     delegate :each, :size, :to => :to_a
 
@@ -280,11 +280,13 @@ module ManagerRefresh
     #             inventory_object[:label] = inventory_object[:name]
     #           So by using inventory_object_attributes, we will be guarding the allowed attributes and will have an
     #           explicit list of allowed attributes, that can be used also for documentation purposes.
+    # @param name [Symbol] A unique name of the InventoryCollection under a Persister. If not provided, the :association
+    #        attribute is used. Providing either :name or :association is mandatory.
     def initialize(model_class: nil, manager_ref: nil, association: nil, parent: nil, strategy: nil, saved: nil,
                    custom_save_block: nil, delete_method: nil, data_index: nil, data: nil, dependency_attributes: nil,
                    attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil,
                    check_changed: nil, custom_manager_uuid: nil, custom_db_finder: nil, arel: nil, builder_params: {},
-                   inventory_object_attributes: nil)
+                   inventory_object_attributes: nil, name: nil)
       @model_class           = model_class
       @manager_ref           = manager_ref || [:ems_ref]
       @custom_manager_uuid   = custom_manager_uuid
@@ -304,6 +306,10 @@ module ManagerRefresh
       @complete              = complete.nil? ? true : complete
       @update_only           = update_only.nil? ? false : update_only
       @builder_params        = builder_params
+      @name                  = name || association
+
+      raise "You have to pass either :name or :association argument to InventoryCollection.new" if @name.blank?
+
       @inventory_object_attributes = inventory_object_attributes
 
       @attributes_blacklist             = Set.new
