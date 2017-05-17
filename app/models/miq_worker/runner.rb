@@ -335,6 +335,7 @@ class MiqWorker::Runner
   end
 
   def do_work_loop
+    warn_about_heartbeat_skipping if skip_heartbeat?
     loop do
       begin
         heartbeat
@@ -359,6 +360,10 @@ class MiqWorker::Runner
   end
 
   def heartbeat
+    # Disable heartbeat check.  Useful if a worker is running in isolation
+    # without the oversight of MiqServer::WorkerManagement
+    return if skip_heartbeat?
+
     now = Time.now.utc
     # Heartbeats can be expensive, so do them only when needed
     return if @last_hb.kind_of?(Time) && (@last_hb + worker_settings[:heartbeat_freq]) >= now
@@ -488,5 +493,20 @@ class MiqWorker::Runner
 
   def set_process_title
     Process.setproctitle(process_title)
+  end
+
+  private
+
+  def skip_heartbeat?
+    ENV["DISABLE_MIQ_WORKER_HEARTBEAT"]
+  end
+
+  def warn_about_heartbeat_skipping
+    puts "**************************************************"
+    puts "WARNING:  SKIPPING HEARTBEATING WITH THIS WORKER!"
+    puts "**************************************************"
+    puts ""
+    puts "Remove the `DISABLE_MIQ_WORKER_HEARTBEAT` ENV variable"
+    puts "to reenable heartbeating normally."
   end
 end
