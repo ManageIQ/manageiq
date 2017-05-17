@@ -210,3 +210,9 @@ containerreplicator_successfulcreate,Replicator Successfully Created Pod,Default
 containerreplicator_compliance_check,Replicator Compliance Check,Default,compliance
 containerreplicator_compliance_passed,Replicator Compliance Passed,Default,compliance
 containerreplicator_compliance_failed,Replicator Compliance Failed,Default,compliance
+
+#
+# Physical Servers Operations
+#
+phs_poweroff,PHS Power OFF,Default,phs_operations
+phs_poweron,PHS Power ON,Default,phs_operations

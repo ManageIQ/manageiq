@@ -1,6 +1,7 @@
 class PhysicalServer < ApplicationRecord
   include NewWithTypeStiMixin
   include MiqPolicyMixin
+  include TenantIdentityMixin
   include_concern 'Operations'
 
   acts_as_miq_taggable

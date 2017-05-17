@@ -26,6 +26,7 @@ class EventStream < ApplicationRecord
   belongs_to :container_node
 
   belongs_to :middleware_server, :foreign_key => :middleware_server_id
+  belongs_to :physical_server
 
   after_commit :emit_notifications, :on => :create
 

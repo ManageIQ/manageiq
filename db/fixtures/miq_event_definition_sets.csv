@@ -12,3 +12,4 @@ orchestration_process,Orchestration Lifecycle
 storage_operational,Datastore Operation
 auth_validation,Authentication Validation
 container_operations,Container Operation
+phs_operations,Physical Server Operation
