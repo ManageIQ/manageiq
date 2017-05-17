@@ -15,4 +15,8 @@ FactoryGirl.define do
                                  :class  => "ManageIQ::Providers::Azure::NetworkManager::SecurityGroup"
   factory :security_group_google, :parent => :security_group,
                                   :class  => "ManageIQ::Providers::Google::NetworkManager::SecurityGroup"
+
+  factory :security_group_with_firewall_rules_openstack,
+          :parent => :security_group_with_firewall_rules,
+          :class  => "ManageIQ::Providers::Openstack::NetworkManager::SecurityGroup"
 end
