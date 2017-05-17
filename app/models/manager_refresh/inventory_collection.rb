@@ -343,6 +343,10 @@ module ManagerRefresh
     end
 
     def from_raw_value(value, available_inventory_collections)
+      if value.kind_of?(Hash) && (value['type'] || value[:type]) == "ManagerRefresh::InventoryObjectLazy"
+        value.transform_keys!(&:to_s)
+      end
+
       if value.kind_of?(Hash) && value['type'] == "ManagerRefresh::InventoryObjectLazy"
         inventory_collection = available_inventory_collections[value['inventory_collection_name'].try(:to_sym)]
         raise "Couldn't build lazy_link #{value} the inventory_collection_name was not found" if inventory_collection.blank?
