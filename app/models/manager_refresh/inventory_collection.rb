@@ -351,8 +351,6 @@ module ManagerRefresh
         inventory_collection = available_inventory_collections[value['inventory_collection_name'].try(:to_sym)]
         raise "Couldn't build lazy_link #{value} the inventory_collection_name was not found" if inventory_collection.blank?
         inventory_collection.lazy_find(value['ems_ref'], :key => value['key'], :default => value['default'])
-      elsif inventory_object?(value)
-        raise "We cannot convert a non lazy link to a raw_data for #{value} and #{self}, use lazy_find instead of find."
       else
         value
       end
