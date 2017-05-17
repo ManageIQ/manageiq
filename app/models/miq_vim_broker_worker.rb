@@ -70,7 +70,7 @@ class MiqVimBrokerWorker < MiqWorker
   def self.queue_reconnect_ems(ems)
     deliver_on = Time.now.utc + (worker_settings[:reconnect_retry_interval] || 5.minutes)
     _log.info "Queueing reconnect for EMS name: [#{ems.name}], id: [#{ems.id}] at [#{deliver_on}]"
-    MiqQueue.put(
+    MiqQueue.put_with_delay(
       :class_name  => name,
       :method_name => "reconnect_ems",
       :args        => [ems.id],

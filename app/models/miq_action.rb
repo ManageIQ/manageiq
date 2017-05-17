@@ -754,7 +754,7 @@ class MiqAction < ApplicationRecord
     else
       MiqPolicy.logger.info("MIQ(#{__method__}): Queueing [#{action.description}] for event "\
                             "[#{inputs[:event].description}]")
-      MiqQueue.put(
+      MiqQueue.put_with_affinity(
         :class_name  => rec.class.name,
         :method_name => "annotate_deny_execution",
         :args        => inputs[:policy].name,
@@ -782,15 +782,14 @@ class MiqAction < ApplicationRecord
       MiqPolicy.logger.info("MIQ(#{action_method}): Now executing [#{action.description}] of Host [#{rec.name}]")
       rec.scan
     else
-      role = "smartstate"
       MiqPolicy.logger.info("MIQ(#{action_method}): Queueing [#{action.description}] of Host [#{rec.name}]")
-      MiqQueue.put(
+      MiqQueue.put_with_affinity(
         :class_name  => "Host",
         :method_name => "scan_from_queue",
         :instance_id => rec.id,
         :priority    => MiqQueue::HIGH_PRIORITY,
         :zone        => rec.my_zone,
-        :role        => role
+        :role        => "smartstate"
       )
     end
   end

@@ -203,7 +203,7 @@ class Zone < ApplicationRecord
     _log.info("Zone: [#{name}], Queueing ntp_reload for [#{servers.length}] active_miq_servers, ids: #{servers.collect(&:id)}")
 
     servers.each do |s|
-      MiqQueue.put(
+      MiqQueue.put_with_guid(
         :class_name  => "MiqServer",
         :instance_id => s.id,
         :method_name => "ntp_reload",

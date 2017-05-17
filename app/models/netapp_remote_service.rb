@@ -426,7 +426,7 @@ class NetappRemoteService < StorageManager
 
   def queue_volume_create(volName, aggrName, volSize, spaceReserve = "none")
     cb = {:class_name => self.class.name, :instance_id => id, :method_name => :queue_volume_create_callback}
-    MiqQueue.put(
+    MiqQueue.put_with_affinity(
       :class_name   => self.class.name,
       :instance_id  => id,
       :method_name  => 'volume_create',

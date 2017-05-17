@@ -1157,7 +1157,7 @@ class VmOrTemplate < ApplicationRecord
   private_class_method :post_refresh_ems_folder_updates
 
   def self.assign_ems_created_on_queue(vm_ids)
-    MiqQueue.put(
+    MiqQueue.put_simple(
       :class_name  => name,
       :method_name => 'assign_ems_created_on',
       :args        => [vm_ids],
@@ -1196,7 +1196,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def post_create_actions_queue
-    MiqQueue.put(
+    MiqQueue.put_simple(
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => 'post_create_actions'
@@ -1347,7 +1347,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def classify_with_parent_folder_path_queue(add = true)
-    MiqQueue.put(
+    MiqQueue.put_simple(
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => 'classify_with_parent_folder_path',
