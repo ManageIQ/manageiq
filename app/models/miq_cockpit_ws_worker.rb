@@ -36,7 +36,6 @@ class MiqCockpitWsWorker < MiqWorker
     elsif File.exist?(APACHE_CONF_FILE)
       File.truncate(APACHE_CONF_FILE, 0)
     end
-    MiqServer.my_server.queue_restart_apache
   end
 
   def kill
