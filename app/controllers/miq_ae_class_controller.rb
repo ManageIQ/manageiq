@@ -1353,7 +1353,7 @@ class MiqAeClassController < ApplicationController
     @changed = (@edit[:new] != @edit[:current])
     render :update do |page|
       page << javascript_prologue
-      page.replace_html("class_fields_div", :partial => "class_fields")
+      page.replace("class_fields_div", :partial => "class_fields")
       page << javascript_for_miq_button_visibility(@changed)
       page << "miqSparkle(false);"
     end
@@ -1367,7 +1367,7 @@ class MiqAeClassController < ApplicationController
     @dtype_combo_xml = build_dtype_options
     render :update do |page|
       page << javascript_prologue
-      page.replace_html("class_fields_div", :partial => "class_fields")
+      page.replace("class_fields_div", :partial => "class_fields")
       page << javascript_for_miq_button_visibility(@changed)
       page << "miqSparkle(false);"
     end
@@ -1387,7 +1387,7 @@ class MiqAeClassController < ApplicationController
     @changed = (@edit[:new] != @edit[:current])
     render :update do |page|
       page << javascript_prologue
-      page.replace_html("class_fields_div", :partial => "class_fields")
+      page.replace("class_fields_div", :partial => "class_fields")
       page << javascript_for_miq_button_visibility(@changed)
       page << "miqSparkle(false);"
     end
