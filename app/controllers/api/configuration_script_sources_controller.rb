@@ -1,5 +1,7 @@
 module Api
   class ConfigurationScriptSourcesController < BaseController
+    include Subcollections::ConfigurationScriptPayloads
+
     def edit_resource(type, id, data)
       config_script_src = resource_search(id, type, collection_class(:configuration_script_sources))
       raise "Update not supported for #{config_script_src_ident(config_script_src)}" unless config_script_src.respond_to?(:update_in_provider_queue)
