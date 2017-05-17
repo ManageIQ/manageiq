@@ -125,8 +125,13 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure do
       @vim_obj  = double('provider object', :getDeviceKeysByBacking => [900, 1])
       @filename = "[datastore] vm_name/abc.vmdk"
       @options  = {:disk_name => @filename}
+      @hardware = {
+        "device"   => [],
+        "memoryMB" => vm.hardware.memory_mb,
+        "numCPU"   => vm.hardware.cpu_total_cores
+      }
     end
-    subject { vm.remove_disk_config_spec(@vim_obj, @vmcs, @options).first }
+    subject { vm.remove_disk_config_spec(@vim_obj, @vmcs, @hardware, @options).first }
 
     it 'with default options' do
       expect(subject["operation"]).to eq("remove")
@@ -191,7 +196,14 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure do
 
   context '#add_disks' do
     let(:vim)  { double("vim object") }
-    let(:vmcs) { double("VirtualMachineConfigSpec").as_null_object }
+    let(:vmcs) { VimHash.new("VirtualMachineConfigSpec") }
+    let(:hardware) do
+      {
+        "device"   => [],
+        "memoryMB" => vm.hardware.memory_mb,
+        "numCPU"   => vm.hardware.cpu_total_cores
+      }
+    end
 
     context 'add 1 disk' do
       let(:disk) { {:disk_size_in_mb => 1024} }
@@ -202,16 +214,16 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure do
 
         expect(vm).not_to receive(:add_scsi_controller)
         expect(vm).to receive(:add_disk_config_spec).with(vmcs, disk).once
-        vm.add_disks(vim, vmcs, [disk])
+        vm.add_disks(vim, vmcs, hardware, [disk])
       end
 
       it 'with no controller key' do
         allow(vim).to receive(:available_scsi_units).and_return([])
-        allow(vim).to receive(:available_scsi_buses).and_return([1, 2, 3])
+        allow(vim).to receive(:available_scsi_buses).and_return([0, 1, 2, 3])
 
-        expect(vm).to receive(:add_scsi_controller).with(vmcs, 1, -99).once
+        expect(vm).to receive(:add_scsi_controller).with(vim, vmcs, hardware, 0, -99).once
         expect(vm).to receive(:add_disk_config_spec).with(vmcs, disk).once
-        vm.add_disks(vim, vmcs, [disk])
+        vm.add_disks(vim, vmcs, hardware, [disk])
       end
     end
 
@@ -231,7 +243,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure do
         expect(vm).to receive(:add_disk_config_spec).with(vmcs, expected_disks[0]).once
         expect(vm).to receive(:add_disk_config_spec).with(vmcs, expected_disks[1]).once
 
-        vm.add_disks(vim, vmcs, disks)
+        vm.add_disks(vim, vmcs, hardware, disks)
       end
 
       it 'with 2 non-consecutive controller units' do
@@ -247,7 +259,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure do
         expect(vm).to receive(:add_disk_config_spec).with(vmcs, expected_disks[0]).once
         expect(vm).to receive(:add_disk_config_spec).with(vmcs, expected_disks[1]).once
 
-        vm.add_disks(vim, vmcs, disks)
+        vm.add_disks(vim, vmcs, hardware, disks)
       end
 
       it 'with 1 free controller unit' do
@@ -259,11 +271,11 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure do
           disks[1].merge(:controller_key => -99,  :unit_number => 0)
         ]
 
-        expect(vm).to receive(:add_scsi_controller).with(vmcs, 1, -99).once
+        expect(vm).to receive(:add_scsi_controller).with(vim, vmcs, hardware, 1, -99).once
         expect(vm).to receive(:add_disk_config_spec).with(vmcs, expected_disks[0]).once
         expect(vm).to receive(:add_disk_config_spec).with(vmcs, expected_disks[1]).once
 
-        vm.add_disks(vim, vmcs, disks)
+        vm.add_disks(vim, vmcs, hardware, disks)
       end
 
       it 'with 1 free unit on second controller' do
@@ -275,11 +287,11 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure do
           disks[1].merge(:controller_key => -99,  :unit_number => 0)
         ]
 
-        expect(vm).to receive(:add_scsi_controller).with(vmcs, 2, -99).once
+        expect(vm).to receive(:add_scsi_controller).with(vim, vmcs, hardware, 2, -99).once
         expect(vm).to receive(:add_disk_config_spec).with(vmcs, expected_disks[0]).once
         expect(vm).to receive(:add_disk_config_spec).with(vmcs, expected_disks[1]).once
 
-        vm.add_disks(vim, vmcs, disks)
+        vm.add_disks(vim, vmcs, hardware, disks)
       end
 
       it 'with 1 free unit on the last scsi controller' do
@@ -291,7 +303,61 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure do
         expect(vm).not_to receive(:add_scsi_controller)
         expect(vm).to receive(:add_disk_config_spec).with(vmcs, expected_disk).once
 
-        vm.add_disks(vim, vmcs, disks)
+        vm.add_disks(vim, vmcs, hardware, disks)
+      end
+    end
+
+    context '#add_scsi_controller' do
+      let(:disk)           { {:disk_size_in_mb => 1024} }
+      let(:lsi_scsi_ctrlr) { VimHash.new("VirtualLsiLogicController") { |ctrlr| ctrlr.key = 1000 } }
+      let(:pv_scsi_ctrlr)  { VimHash.new("ParaVirtualSCSIController") { |ctrlr| ctrlr.key = 1001 } }
+
+      context 'with no existing controllers' do
+        before do
+          allow(vim).to receive(:getScsiControllers).and_return([])
+          allow(vim).to receive(:available_scsi_units).and_return([])
+          allow(vim).to receive(:available_scsi_buses).and_return([0, 1, 2, 3])
+        end
+
+        it 'adds an LSI Logic Controller' do
+          vm.add_disks(vim, vmcs, hardware, [disk])
+          expect(vmcs.deviceChange.count).to eq(2)
+
+          new_ctrlr = vmcs.deviceChange.first.device
+          expect(new_ctrlr.xsiType).to eq('VirtualLsiLogicController')
+        end
+      end
+
+      context 'with an existing PV SCSI Controller' do
+        before do
+          allow(vim).to receive(:getScsiControllers).and_return([pv_scsi_ctrlr])
+          allow(vim).to receive(:available_scsi_units).and_return([])
+          allow(vim).to receive(:available_scsi_buses).and_return([1, 2, 3])
+        end
+
+        it 'adds a new pv scsi controller' do
+          vm.add_disks(vim, vmcs, hardware, [disk])
+          expect(vmcs.deviceChange.count).to eq(2)
+
+          new_ctrlr = vmcs.deviceChange.first.device
+          expect(new_ctrlr.xsiType).to eq('ParaVirtualSCSIController')
+        end
+      end
+
+      context 'with two existing controllers' do
+        before do
+          allow(vim).to receive(:getScsiControllers).and_return([lsi_scsi_ctrlr, pv_scsi_ctrlr])
+          allow(vim).to receive(:available_scsi_units).and_return([])
+          allow(vim).to receive(:available_scsi_buses).and_return([2, 3])
+        end
+
+        it 'adds a new controller with the same type as the last one' do
+          vm.add_disks(vim, vmcs, hardware, [disk])
+          expect(vmcs.deviceChange.count).to eq(2)
+
+          new_ctrlr = vmcs.deviceChange.first.device
+          expect(new_ctrlr.xsiType).to eq('ParaVirtualSCSIController')
+        end
       end
     end
   end

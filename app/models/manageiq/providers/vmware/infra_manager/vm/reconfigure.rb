@@ -68,16 +68,24 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure
 
       if options[:disk_remove] || options[:disk_add]
         with_provider_object do |vim_obj|
-          options[:disk_remove].each { |d| remove_disk_config_spec(vim_obj, vmcs, d) } if options[:disk_remove]
-          add_disks(vim_obj, vmcs, options[:disk_add]) if options[:disk_add]
+          hardware = vim_obj.getHardware
+
+          remove_disks(vim_obj, vmcs, hardware, options[:disk_remove]) if options[:disk_remove]
+          add_disks(vim_obj, vmcs, hardware, options[:disk_add])       if options[:disk_add]
         end
       end
     end
   end
 
-  def add_disks(vim_obj, vmcs, disks)
-    available_units         = vim_obj.send(:available_scsi_units)
-    available_scsi_buses    = vim_obj.send(:available_scsi_buses)
+  def remove_disks(vim_obj, vmcs, hardware, disks)
+    disks.each do |disk|
+      remove_disk_config_spec(vim_obj, vmcs, hardware, disk)
+    end
+  end
+
+  def add_disks(vim_obj, vmcs, hardware, disks)
+    available_units         = vim_obj.available_scsi_units(hardware)
+    available_scsi_buses    = vim_obj.available_scsi_buses(hardware)
     new_scsi_controller_key = -99
 
     disks.each do |d|
@@ -89,7 +97,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure
         break if new_scsi_bus_number.nil? # No more scsi controllers can be added
 
         # Add a new controller with this reconfig task
-        add_scsi_controller(vmcs, new_scsi_bus_number, new_scsi_controller_key)
+        add_scsi_controller(vim_obj, vmcs, hardware, new_scsi_bus_number, new_scsi_controller_key)
 
         # Add all units on the new controller as available
         new_scsi_units = scsi_controller_units(new_scsi_controller_key)
@@ -113,8 +121,8 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure
     end
   end
 
-  def add_scsi_controller(vmcs, bus_number, dev_key)
-    device_type = 'VirtualLsiLogicController'
+  def add_scsi_controller(vim_obj, vmcs, hardware, bus_number, dev_key)
+    device_type = get_new_scsi_controller_device_type(vim_obj, hardware)
     add_device_config_spec(vmcs, VirtualDeviceConfigSpecOperation::Add) do |vdcs|
       vdcs.device = VimHash.new(device_type) do |dev|
         dev.sharedBus = VimString.new('noSharing', 'VirtualSCSISharing')
@@ -122,6 +130,17 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure
         dev.key       = dev_key
       end
     end
+  end
+
+  def get_new_scsi_controller_device_type(vim_obj, hardware)
+    default_scsi_type = 'VirtualLsiLogicController'
+
+    scsi_controllers = vim_obj.getScsiControllers(hardware)
+
+    last_scsi_controller = scsi_controllers.sort_by { |c| c["key"].to_i }.last
+    device_type = last_scsi_controller.try(:xsiType) || default_scsi_type
+
+    device_type
   end
 
   def backing_filename
@@ -166,11 +185,11 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure
     end
   end
 
-  def remove_disk_config_spec(vim_obj, vmcs, options)
+  def remove_disk_config_spec(vim_obj, vmcs, hardware, options)
     raise "remove_disk_config_spec: disk filename is required." unless options[:disk_name]
 
     options.reverse_merge!(:delete_backing => false)
-    controller_key, key = vim_obj.send(:getDeviceKeysByBacking, options[:disk_name])
+    controller_key, key = vim_obj.getDeviceKeysByBacking(options[:disk_name], hardware)
     raise "remove_disk_config_spec: no virtual device associated with: #{options[:disk_name]}" unless key
 
     add_device_config_spec(vmcs, VirtualDeviceConfigSpecOperation::Remove) do |vdcs|
