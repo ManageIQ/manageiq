@@ -379,7 +379,8 @@ module ManagerRefresh
     end
 
     def supports_sti?
-      @supports_sti_cache ||= model_class.column_names.include?("type")
+      @supports_sti_cache = model_class.column_names.include?("type") if @supports_sti_cache.nil?
+      @supports_sti_cache
     end
 
     def <<(inventory_object)
