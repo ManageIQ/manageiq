@@ -468,7 +468,7 @@
     :identifier: cloud_volume
     :options:
     - :collection
-    :verbs: *gpppd
+    :verbs: *gpd
     :klass: CloudVolume
     :collection_actions:
       :get:
@@ -479,11 +479,17 @@
         :identifier: cloud_volume_show_list
       - :name: delete
         :identifier: cloud_volume_delete
+      :delete:
+      - :name: delete
+        :identifier: cloud_volume_delete
     :resource_actions:
       :get:
       - :name: read
         :identifier: cloud_volume
       :post:
+      - :name: delete
+        :identifier: cloud_volume_delete
+      :delete:
       - :name: delete
         :identifier: cloud_volume_delete
   :clusters:

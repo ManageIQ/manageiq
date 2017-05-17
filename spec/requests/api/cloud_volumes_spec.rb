@@ -69,6 +69,52 @@ describe "Cloud Volumes API" do
     expect(response).to have_http_status(:ok)
   end
 
+  it "can delete a cloud volume with DELETE as a resource action" do
+    zone = FactoryGirl.create(:zone, :name => "api_zone")
+    aws = FactoryGirl.create(:ems_amazon, :zone => zone)
+
+    cloud_volume1 = FactoryGirl.create(:cloud_volume, :ext_management_system => aws, :name => "CloudVolume1")
+
+    api_basic_authorize action_identifier(:cloud_volumes, :delete, :resource_actions, :delete)
+
+    run_delete cloud_volumes_url(cloud_volume1.id)
+
+    expect(response).to have_http_status(:no_content)
+  end
+
+  it "can delete a cloud volume with DELETE as a collection action" do
+    zone = FactoryGirl.create(:zone, :name => "api_zone")
+    aws = FactoryGirl.create(:ems_amazon, :zone => zone)
+
+    cloud_volume1 = FactoryGirl.create(:cloud_volume, :ext_management_system => aws, :name => "CloudVolume1")
+
+    api_basic_authorize action_identifier(:cloud_volumes, :delete, :collection_actions, :delete)
+
+    run_delete(cloud_volumes_url, :resources => [{ 'id' => cloud_volume1.id }])
+
+    expect(response).to have_http_status(:no_content)
+  end
+
+  it "rejects delete request with DELETE as a resource action without appropriate role" do
+    cloud_volume = FactoryGirl.create(:cloud_volume)
+
+    api_basic_authorize
+
+    run_delete cloud_volumes_url(cloud_volume.id)
+
+    expect(response).to have_http_status(:forbidden)
+  end
+
+  it "rejects delete request with DELETE as a collection action without appropriate role" do
+    cloud_volume = FactoryGirl.create(:cloud_volume)
+
+    api_basic_authorize
+
+    run_delete(cloud_volumes_url, :resources => [{ 'id' => cloud_volume.id }])
+
+    expect(response).to have_http_status(:forbidden)
+  end
+
   it 'can delete cloud volumes through POST' do
     zone = FactoryGirl.create(:zone, :name => "api_zone")
     aws = FactoryGirl.create(:ems_amazon, :zone => zone)
