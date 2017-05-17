@@ -126,7 +126,7 @@ module MiqServer::EnvironmentManagement
   end
 
   def stop_apache
-    MiqApache::Control.stop(false)
+    MiqApache::Control.stop
   end
 
   def disk_usage_threshold
