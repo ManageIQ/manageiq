@@ -522,7 +522,7 @@ module ManagerRefresh
     end
 
     def build(hash)
-      hash = hash.merge(builder_params)
+      hash = builder_params.merge(hash)
       inventory_object = new_inventory_object(hash)
 
       uuid = inventory_object.manager_uuid
