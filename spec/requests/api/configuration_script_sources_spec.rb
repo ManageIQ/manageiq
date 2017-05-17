@@ -432,4 +432,55 @@ RSpec.describe 'Configuration Script Sources API' do
       expect(response).to have_http_status(:forbidden)
     end
   end
+
+  describe 'GET /api/configuration_script_sources/:id/configuration_script_payloads' do
+    let(:payload) { FactoryGirl.create(:configuration_script_payload) }
+    let(:url) { "#{configuration_script_sources_url(config_script_src.id)}/configuration_script_payloads" }
+
+    before do
+      config_script_src.configuration_script_payloads << payload
+    end
+
+    it 'forbids configuration_script_payload retrievel without an appropriate role' do
+      api_basic_authorize
+
+      run_get(url)
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'lists all configuration_script_payloads belonging to a configuration_script_source' do
+      api_basic_authorize subcollection_action_identifier(:configuration_script_sources, :configuration_script_payloads, :read, :get)
+
+      run_get(url)
+
+      expected = {
+        'resources' => [{'href' => a_string_including("#{url}/#{payload.id}")}]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'can filter on region_number' do
+      api_basic_authorize subcollection_action_identifier(:configuration_script_sources, :configuration_script_payloads, :read, :get)
+
+      run_get url, :filter => ["region_number=#{payload.region_number}"]
+
+      expected = {
+        'subcount'  => 1,
+        'resources' => [{'href' => a_string_including("#{url}/#{payload.id}")}]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+
+      run_get url, :filter => ["region_number=foo"]
+
+      expected = {
+        'subcount'  => 0,
+        'resources' => []
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+  end
 end
