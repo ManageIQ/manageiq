@@ -358,12 +358,11 @@ module ManagerRefresh
       data.map do |inventory_object|
         inventory_object.data.transform_values do |value|
           if inventory_object_lazy?(value)
-            value.to_raw_data
-          elsif value.kind_of?(Array) && inventory_object_lazy?(value.compact.first)
-            # We can't really do array now, since that is either N:M table or HABTM
-            value.compact.map(&:to_raw_data)
+            value.to_raw_lazy_relation
+          elsif value.kind_of?(Array) && (inventory_object_lazy?(value.compact.first) || inventory_object?(value.compact.first))
+            value.compact.map(&:to_raw_lazy_relation)
           elsif inventory_object?(value)
-            raise "We cannot convert non lazy link to a raw_data for #{value}, use lazy_find instead of find."
+            value.to_raw_lazy_relation
           else
             value
           end
