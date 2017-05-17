@@ -125,7 +125,7 @@ describe "Cloud Volumes API" do
     api_basic_authorize collection_action_identifier(:cloud_volumes, :delete, :post)
 
     expected = {
-      'results' => [
+      'results' => a_collection_containing_exactly(
         a_hash_including(
           'success' => true,
           'message' => a_string_including('Deleting Cloud Volume CloudVolume1'),
@@ -136,7 +136,7 @@ describe "Cloud Volumes API" do
           'message' => a_string_including('Deleting Cloud Volume CloudVolume2'),
           'task_id' => a_kind_of(Numeric)
         )
-      ]
+      )
     }
     run_post(cloud_volumes_url, :action => 'delete', :resources => [{ 'id' => cloud_volume1.id }, { 'id' => cloud_volume2.id }])
 
