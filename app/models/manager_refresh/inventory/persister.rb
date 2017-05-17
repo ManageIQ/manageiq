@@ -1,5 +1,6 @@
 class ManagerRefresh::Inventory::Persister
   require 'json'
+  require 'yaml'
 
   attr_reader :manager, :target, :collections
 
@@ -30,6 +31,14 @@ class ManagerRefresh::Inventory::Persister
 
   def to_json
     JSON.dump(to_raw_data)
+  end
+
+  def self.from_yaml(yaml_data)
+    from_raw_data(YAML.load(yaml_data))
+  end
+
+  def to_yaml
+    YAML.dump(to_raw_data)
   end
 
   # creates method on class that lazy initializes an InventoryCollection
@@ -166,6 +175,8 @@ class ManagerRefresh::Inventory::Persister
     protected
 
     def from_raw_data(persister_data)
+      persister_data.transform_keys!(&:to_s)
+
       # Extract the specific Persister class
       persister_class = persister_data['class'].constantize
       unless persister_class < ManagerRefresh::Inventory::Persister
@@ -176,6 +187,8 @@ class ManagerRefresh::Inventory::Persister
       # Load the Persister object and fill the InventoryCollections with the data
       persister = persister_class.new(ManageIQ::Providers::BaseManager.find(persister_data['ems_id']))
       persister_data['collections'].each do |collection|
+        collection.transform_keys!(&:to_s)
+
         inventory_collection = persister.collections[collection['name'].try(:to_sym)]
         raise "Unrecognized InventoryCollection name: #{inventory_collection}" if inventory_collection.blank?
 
