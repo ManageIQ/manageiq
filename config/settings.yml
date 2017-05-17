@@ -101,8 +101,10 @@
     :resolve_ip_addresses: true
     :inventory:
       :read_timeout: 1.hour
+      :open_timeout: 1.minute
     :service:
       :read_timeout: 1.hour
+      :open_timeout: 1.minute
   :ems_kubernetes:
     :miq_namespace: management-infra
     :image_inspector_registry: docker.io
