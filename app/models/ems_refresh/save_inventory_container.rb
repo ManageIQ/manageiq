@@ -70,6 +70,34 @@ module EmsRefresh::SaveInventoryContainer
       #        :container_nodes => {:ems_id => ems.id}),
       :manager_ref => [:container_entity, :name],
     )
+
+    # polymorphic child of ContainerNode & ContainerImage
+    # TODO these are dumb, find way to share same InventoryCollections via both.
+    @inv_collections[:container_node_computer_systems] =
+      ::ManagerRefresh::InventoryCollection.new(
+        :model_class => ComputerSystem,
+        :parent => ems,
+        :association => :container_node_computer_systems,
+        :manager_ref => [:managed_entity],
+      )
+    @inv_collections[:container_node_computer_system_hardwares] =
+      ::ManagerRefresh::InventoryCollection.new(
+        :model_class => Hardware,
+        :parent => ems,
+        # can't nest has_many through
+        :arel => Hardware.joins(:computer_system => :container_node)
+                         .where(:container_nodes => {:ems_id => ems.id}),
+        :manager_ref => [:computer_system],
+      )
+    @inv_collections[:container_node_computer_system_operating_systems] =
+      ::ManagerRefresh::InventoryCollection.new(
+        :model_class => OperatingSystem,
+        :parent => ems,
+        # can't nest has_many through
+        :arel => OperatingSystem.joins(:computer_system => :container_node)
+                                .where(:container_nodes => {:ems_id => ems.id}),
+        :manager_ref => [:computer_system],
+      )
   end
 
   def graph_container_projects_inventory(ems, hashes, target = nil)
@@ -191,17 +219,26 @@ module EmsRefresh::SaveInventoryContainer
 
   def graph_container_nodes_inventory(ems, hashes, target = nil)
     hashes.to_a.each do |h|
-      h = h.merge(:ems_id => ems.id)
-      h = h.except(:labels, :tags, :computer_system, :additional_attributes) # TODO children
+      h = h.except(:labels, :tags, :additional_attributes) # TODO children
       h = h.except(:namespace)
       node = @inv_collections[:container_nodes].lazy_find(h[:ems_ref])
       graph_container_node_conditions_inventory(node, h.delete(:container_conditions))
+      graph_computer_system_inventory(node, h.delete(:computer_system))
       @inv_collections[:container_nodes].build(h)
     end
   end
 
-  def save_computer_system_inventory(container_node, hash, _target = nil)
-    save_inventory_single(:computer_system, container_node, hash, [:hardware, :operating_system])
+  def graph_computer_system_inventory(parent, hash, _target = nil)
+    return if hash.nil?
+    hash = hash.merge(:managed_entity => parent)
+    # TODO: there is probably is shorter way to link them?
+    # I've done this in other places by giving the children a lazy_find for the parent.
+    # But that's also silly, if I'm building the parent here too.
+    hw = hash.delete(:hardware)
+    os = hash.delete(:operating_system)
+    cs = @inv_collections[:container_node_computer_systems].build(hash)
+    @inv_collections[:container_node_computer_system_hardwares].build(hw.merge(:computer_system => cs))
+    @inv_collections[:container_node_computer_system_operating_systems].build(os.merge(:computer_system => cs))
   end
 
   def save_container_replicators_inventory(ems, hashes, target = nil)
@@ -393,7 +430,7 @@ module EmsRefresh::SaveInventoryContainer
     save_inventory_single(:container, container_definition, hash, [], :container_image, true)
   end
 
-  def graph_container_node_conditions_inventory(parent, hashes, target = nil)
+  def graph_container_node_conditions_inventory(parent, hashes)
     hashes.to_a.each do |h|
       h = h.merge(:container_entity => parent)
       @inv_collections[:container_node_conditions].build(h)

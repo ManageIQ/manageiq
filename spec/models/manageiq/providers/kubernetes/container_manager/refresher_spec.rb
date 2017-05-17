@@ -210,15 +210,15 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     #  label_with_name_value("kubernetes.io/hostname", "10.35.0.169")
     #)
 
-    #expect(@containernode.computer_system.operating_system).to have_attributes(
-    #  :distribution   => "Fedora 20 (Heisenbug)",
-    #  :kernel_version => "3.18.9-100.fc20.x86_64"
-    #)
+    expect(@containernode.computer_system.operating_system).to have_attributes(
+      :distribution   => "Fedora 20 (Heisenbug)",
+      :kernel_version => "3.18.9-100.fc20.x86_64"
+    )
 
-    #expect(@containernode.hardware).to have_attributes(
-    #  :cpu_total_cores => 2,
-    #  :memory_mb       => 2000
-    #)
+    expect(@containernode.hardware).to have_attributes(
+      :cpu_total_cores => 2,
+      :memory_mb       => 2000
+    )
 
     expect(@containernode.ready_condition_status).not_to be_nil
     expect(@containernode.lives_on).to eq(@openstack_vm)
