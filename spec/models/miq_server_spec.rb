@@ -213,23 +213,6 @@ describe MiqServer do
       end
     end
 
-    context "enqueueing restart of apache" do
-      before(:each) do
-        @cond = {:method_name => 'restart_apache', :queue_name => "miq_server", :class_name => 'MiqServer', :instance_id => @miq_server.id, :server_guid => @miq_server.guid, :zone => @miq_server.zone.name}
-        @miq_server.queue_restart_apache
-      end
-
-      it "will queue only one restart_apache" do
-        @miq_server.queue_restart_apache
-        expect(MiqQueue.where(@cond).count).to eq(1)
-      end
-
-      it "delivering will restart apache" do
-        expect(MiqApache::Control).to receive(:restart).with(false)
-        @miq_server.process_miq_queue
-      end
-    end
-
     context "with a worker" do
       before(:each) do
         @worker = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id, :pid => Process.pid)

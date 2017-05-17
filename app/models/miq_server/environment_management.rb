@@ -105,23 +105,6 @@ module MiqServer::EnvironmentManagement
   #
   # Apache
   #
-  def queue_restart_apache
-    MiqQueue.put_unless_exists(
-      :class_name  => 'MiqServer',
-      :instance_id => id,
-      :method_name => 'restart_apache',
-      :queue_name  => 'miq_server',
-      :zone        => zone.name,
-      :server_guid => guid
-    ) do |msg|
-      _log.info("Server: [#{id}] [#{name}], there is already a prior request to restart apache, skipping...") unless msg.nil?
-    end
-  end
-
-  def restart_apache
-    MiqApache::Control.restart(false)
-  end
-
   def start_apache
     MiqApache::Control.start
   end
