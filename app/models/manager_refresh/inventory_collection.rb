@@ -308,7 +308,7 @@ module ManagerRefresh
       @builder_params        = builder_params
       @name                  = name || association
 
-      raise "You have to pass either :name or :association argument to InventoryCollection.new" if @name.blank?
+      raise "You have to pass either :name or :association argument to .new of #{self}" if @name.blank?
 
       @inventory_object_attributes = inventory_object_attributes
 
