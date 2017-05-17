@@ -11,10 +11,8 @@ class MiqReportResult < ApplicationRecord
   serialize :report
 
   virtual_delegate :description, :to => :miq_group, :prefix => true, :allow_nil => true
-  virtual_delegate :state_or_status, :to => "miq_task", :allow_nil => true
-  virtual_attribute :status, :string, :uses => :state_or_status
+  virtual_attribute :status, :string
   virtual_column :status_message,        :type => :string, :uses => :miq_task
-
   virtual_has_one :result_set,           :class_name => "Hash"
 
   before_save do
@@ -32,11 +30,15 @@ class MiqReportResult < ApplicationRecord
   end
 
   def status
-    MiqTask.human_status(state_or_status)
+    if miq_task
+      miq_task.human_status
+    else
+      report_results.blank? ? "Error" : "Complete"
+    end
   end
 
   def status_message
-    miq_task.nil? ? _("Report results are no longer available") : miq_task.message
+    miq_task.nil? ? _("The task associated with this report is no longer available") : miq_task.message
   end
 
   def report_results
