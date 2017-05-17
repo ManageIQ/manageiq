@@ -129,24 +129,17 @@ module AuthenticationMixin
 
     data.each_pair do |type, value|
       cred = authentication_type(type)
-      current = {:new => nil, :old => nil}
-
-      unless value.key?(:userid) && value[:userid].blank?
-        current[:new] = {:user => value[:userid], :password => value[:password], :auth_key => value[:auth_key]}
-      end
-      current[:old] = {:user => cred.userid, :password => cred.password, :auth_key => cred.auth_key} if cred
 
       # Raise an error if required fields are blank
       Array(options[:required]).each { |field| raise(ArgumentError, "#{field} is required") if value[field].blank? }
 
+      fields = [:userid, :password, :auth_key]
       # If old and new are the same then there is nothing to do
-      next if current[:old] == current[:new]
+      next if fields.all? { |a| value[a] == cred.try(a) }
 
       # Check if it is a delete
-      if value.key?(:userid) && value[:userid].blank?
-        current[:new] = nil
-        next if options[:save] == false
-        authentication_delete(type)
+      if required_credential_fields(type).any? { |field| value.key?(field) && value[field].blank? }
+        authentication_delete(type) if options[:save]
         next
       end
 
@@ -166,9 +159,7 @@ module AuthenticationMixin
                                             :type => "AuthUseridPassword")
         end
       end
-      cred.userid = value[:userid]
-      cred.password = value[:password]
-      cred.auth_key = value[:auth_key]
+      cred.assign_attributes(value.slice(fields))
 
       cred.save if options[:save] && id
     end
