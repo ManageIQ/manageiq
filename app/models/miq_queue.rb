@@ -124,7 +124,9 @@ class MiqQueue < ApplicationRecord
       _log.info(MiqQueue.format_full_log_msg(msg))
       msg
     else
-      MiqCatchAllWorker.perform_async(options)
+      queue_name = options[:queue_name]
+      queue_name = options[:role] if queue_name == 'generic' && options[:role]
+      MiqCatchAllWorker.set(:queue => queue_name.to_sym).perform_async(options)
     end
   end
 
