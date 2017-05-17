@@ -21,6 +21,16 @@ module ManagerRefresh
       "InventoryObjectLazy:('#{self}', #{inventory_collection})#{suffix}"
     end
 
+    def to_raw_lazy_relation
+      {
+        :type                      => "ManagerRefresh::InventoryObjectLazy",
+        :inventory_collection_name => inventory_collection.name,
+        :ems_ref                   => ems_ref,
+        :key                       => key,
+        :default                   => default,
+      }
+    end
+
     def load
       key ? load_object_with_key : load_object
     end
