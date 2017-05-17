@@ -14,8 +14,8 @@ class TokenManager
 
   def gen_token(token_options = {})
     token = SecureRandom.hex(16)
-    token_ttl = token_options.delete(:token_ttl_override) || @options[:token_ttl]
-    token_data = {:token_ttl => token_ttl, :expires_on => Time.now.utc + token_ttl}
+    ttl = token_options.delete(:token_ttl_override) || @options[:token_ttl]
+    token_data = {:token_ttl => ttl, :expires_on => Time.now.utc + ttl}
 
     token_store.write(token,
                       token_data.merge!(prune_token_options(token_options)),
@@ -27,11 +27,11 @@ class TokenManager
     token_data = token_store.read(token)
     return {} if token_data.nil?
 
-    token_ttl = token_data[:token_ttl]
-    token_data[:expires_on] = Time.now.utc + token_ttl
+    ttl = token_data[:token_ttl]
+    token_data[:expires_on] = Time.now.utc + ttl
     token_store.write(token,
                       token_data,
-                      :expires_in => token_ttl)
+                      :expires_in => ttl)
   end
 
   def token_get_info(token, what = nil)
