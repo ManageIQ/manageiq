@@ -335,6 +335,7 @@ class MiqWorker::Runner
   end
 
   def do_work_loop
+    warn_about_heartbeat_skipping if skip_heartbeat?
     loop do
       begin
         heartbeat
@@ -498,5 +499,14 @@ class MiqWorker::Runner
 
   def skip_heartbeat?
     ENV["DISABLE_MIQ_WORKER_HEARTBEAT"]
+  end
+
+  def warn_about_heartbeat_skipping
+    puts "**************************************************"
+    puts "WARNING:  SKIPPING HEARTBEATING WITH THIS WORKER!"
+    puts "**************************************************"
+    puts ""
+    puts "Remove the `DISABLE_MIQ_WORKER_HEARTBEAT` ENV variable"
+    puts "to reenable heartbeating normally."
   end
 end
