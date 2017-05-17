@@ -14,12 +14,12 @@ class TokenManager
 
   def gen_token(token_options = {})
     token = SecureRandom.hex(16)
-    ttl = token_options.delete(:token_ttl_override) || @options[:token_ttl]
+    ttl = token_options.delete(:token_ttl_override) || token_ttl
     token_data = {:token_ttl => ttl, :expires_on => Time.now.utc + ttl}
 
     token_store.write(token,
                       token_data.merge!(prune_token_options(token_options)),
-                      :expires_in => @options[:token_ttl])
+                      :expires_in => token_ttl)
     token
   end
 
@@ -55,7 +55,7 @@ class TokenManager
   private
 
   def token_store
-    TokenStore.acquire(@namespace, @options[:token_ttl])
+    TokenStore.acquire(@namespace, token_ttl)
   end
 
   def prune_token_options(token_options = {})
