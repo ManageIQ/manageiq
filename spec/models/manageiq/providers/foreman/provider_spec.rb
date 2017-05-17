@@ -2,7 +2,7 @@ require "foreman_api_client"
 
 describe ManageIQ::Providers::Foreman::Provider do
   let(:provider) { FactoryGirl.build(:provider_foreman) }
-  let(:attrs)    do
+  let(:attrs) do
     {:base_url => "example.com", :username => "admin", :password => "smartvm", :verify_ssl => OpenSSL::SSL::VERIFY_PEER}
   end
 
@@ -18,6 +18,12 @@ describe ManageIQ::Providers::Foreman::Provider do
 
       expect(ForemanApiClient::Connection).to receive(:new).with(attrs)
       provider.connect
+    end
+
+    it "without https uri" do
+      provider.url = "example.com"
+      attrs[:base_url] = "example.com"
+      expect { provider.verify_credentials }.to raise_error(RuntimeError, "URL has to be HTTPS")
     end
   end
 

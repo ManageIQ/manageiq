@@ -49,6 +49,10 @@ class ManageIQ::Providers::Foreman::Provider < ::Provider
   end
 
   def verify_credentials(auth_type = nil, options = {})
+    uri = URI.parse(url) unless url.blank?
+    unless uri.kind_of?(URI::HTTPS)
+      raise "URL has to be HTTPS"
+    end
     with_provider_connection(options.merge(:auth_type => auth_type), &:verify?)
   rescue SocketError,
          Errno::ECONNREFUSED,
