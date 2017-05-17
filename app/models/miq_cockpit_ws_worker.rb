@@ -1,5 +1,3 @@
-require 'miq_apache'
-
 class MiqCockpitWsWorker < MiqWorker
   require_nested :Runner
   require_nested :Authenticator
