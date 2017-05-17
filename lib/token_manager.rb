@@ -48,6 +48,10 @@ class TokenManager
     token_store.delete(token)
   end
 
+  def token_ttl
+    @options[:token_ttl]
+  end
+
   private
 
   def token_store
