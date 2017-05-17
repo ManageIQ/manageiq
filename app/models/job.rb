@@ -226,7 +226,7 @@ class Job < ApplicationRecord
 
   def attributes_for_task
     {:status        => status.try(:capitalize),
-     :state         => state.try(:capitalize),
+     :state         => state == "waiting_to_start" ? MiqTask::STATE_QUEUED : state.try(:capitalize),
      :name          => name,
      :message       => message,
      :userid        => userid,
