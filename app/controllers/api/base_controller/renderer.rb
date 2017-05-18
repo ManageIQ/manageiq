@@ -165,6 +165,19 @@ module Api
         Rbac.filtered(res, options)
       end
 
+      def virtual_attribute_search(resource, attribute)
+        if resource.class < ApplicationRecord
+          # is relation in 'attribute' variable plural in the model class (from 'resource.class') ?
+          if [:has_many, :has_and_belongs_to_many].include?(resource.class.reflection_with_virtual(attribute).try(:macro))
+            Rbac.filtered(resource.public_send(attribute))
+          else
+            Rbac.filtered_object(resource).try(:public_send, attribute)
+          end
+        else
+          resource.public_send(attribute)
+        end
+      end
+
       #
       # Let's expand subcollections for objects if asked for
       #
@@ -205,7 +218,7 @@ module Api
       def fetch_direct_virtual_attribute(type, resource, attr)
         return unless attr_accessible?(resource, attr)
         virtattr_accessor = virtual_attribute_accessor(type, attr)
-        value = virtattr_accessor.nil? ? resource.public_send(attr) : send(virtattr_accessor, resource)
+        value = virtattr_accessor ? send(virtattr_accessor, resource) : virtual_attribute_search(resource, attr)
         result = {attr => normalize_attr(attr, value)}
         # set nil vtype above to "#{type}/#{resource.id}/#{attr}" to support id normalization
         [value, result]
@@ -214,7 +227,7 @@ module Api
       def fetch_indirect_virtual_attribute(_type, resource, base, attr, object_hash)
         query_related_objects(base, resource, object_hash)
         return unless attr_accessible?(object_hash[base], attr)
-        value = object_hash[base].public_send(attr)
+        value  = virtual_attribute_search(object_hash[base], attr)
         result = {attr => normalize_attr(attr, value)}
         # set nil vtype above to "#{type}/#{resource.id}/#{base.tr('.', '/')}/#{attr}" to support id normalization
         base.split(".").reverse_each { |level| result = {level => result} }
