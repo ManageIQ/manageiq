@@ -18,6 +18,14 @@ module ManagerRefresh
       manager_ref.map { |attribute| data[attribute].try(:id) || data[attribute].to_s }.join("__")
     end
 
+    def to_raw_lazy_relation
+      {
+        :type                      => "ManagerRefresh::InventoryObjectLazy",
+        :inventory_collection_name => inventory_collection.name,
+        :ems_ref                   => manager_uuid,
+      }
+    end
+
     def load
       self
     end

@@ -329,6 +329,49 @@ module ManagerRefresh
       data_index
     end
 
+    def from_raw_data(inventory_objects_data, available_inventory_collections)
+      inventory_objects_data.each do |inventory_object_data|
+        hash = inventory_object_data.each_with_object({}) do |(key, value), result|
+          result[key.to_sym] = if value.kind_of?(Array)
+                                 value.map { |x| from_raw_value(x, available_inventory_collections) }
+                               else
+                                 from_raw_value(value, available_inventory_collections)
+                               end
+        end
+        build(hash)
+      end
+    end
+
+    def from_raw_value(value, available_inventory_collections)
+      if value.kind_of?(Hash) && (value['type'] || value[:type]) == "ManagerRefresh::InventoryObjectLazy"
+        value.transform_keys!(&:to_s)
+      end
+
+      if value.kind_of?(Hash) && value['type'] == "ManagerRefresh::InventoryObjectLazy"
+        inventory_collection = available_inventory_collections[value['inventory_collection_name'].try(:to_sym)]
+        raise "Couldn't build lazy_link #{value} the inventory_collection_name was not found" if inventory_collection.blank?
+        inventory_collection.lazy_find(value['ems_ref'], :key => value['key'], :default => value['default'])
+      else
+        value
+      end
+    end
+
+    def to_raw_data
+      data.map do |inventory_object|
+        inventory_object.data.transform_values do |value|
+          if inventory_object_lazy?(value)
+            value.to_raw_lazy_relation
+          elsif value.kind_of?(Array) && (inventory_object_lazy?(value.compact.first) || inventory_object?(value.compact.first))
+            value.compact.map(&:to_raw_lazy_relation)
+          elsif inventory_object?(value)
+            value.to_raw_lazy_relation
+          else
+            value
+          end
+        end
+      end
+    end
+
     def process_strategy(strategy_name)
       return unless strategy_name
 
@@ -479,7 +522,7 @@ module ManagerRefresh
     end
 
     def build(hash)
-      hash = hash.merge(builder_params)
+      hash = builder_params.merge(hash)
       inventory_object = new_inventory_object(hash)
 
       uuid = inventory_object.manager_uuid

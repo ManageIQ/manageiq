@@ -1,9 +1,12 @@
 class ManagerRefresh::Inventory::Persister
+  require 'json'
+  require 'yaml'
+
   attr_reader :manager, :target, :collections
 
   # @param manager [ManageIQ::Providers::BaseManager] A manager object
   # @param target [Object] A refresh Target object
-  def initialize(manager, target)
+  def initialize(manager, target = nil)
     @manager = manager
     @target  = target
 
@@ -20,6 +23,22 @@ class ManagerRefresh::Inventory::Persister
 
   def self.supported_collections
     @supported_collections ||= Concurrent::Array.new
+  end
+
+  def self.from_json(json_data)
+    from_raw_data(JSON.parse(json_data))
+  end
+
+  def to_json
+    JSON.dump(to_raw_data)
+  end
+
+  def self.from_yaml(yaml_data)
+    from_raw_data(YAML.load(yaml_data))
+  end
+
+  def to_yaml
+    YAML.dump(to_raw_data)
   end
 
   # creates method on class that lazy initializes an InventoryCollection
@@ -131,6 +150,51 @@ class ManagerRefresh::Inventory::Persister
       add_inventory_collections(default,
                                 all_inventory_collections - defined_inventory_collections,
                                 options)
+    end
+  end
+
+  def to_raw_data
+    collections_data = collections.map do |key, collection|
+      next if collection.data.blank?
+
+      {
+        :name         => key,
+        :unique_uuids => [], # TODO(lsmola) allow to set a scope, so we can say it's a complete set of data
+        :data         => collection.to_raw_data
+      }
+    end.compact
+
+    {
+      :ems_id      => manager.id,
+      :class       => self.class.name,
+      :collections => collections_data
+    }
+  end
+
+  class << self
+    protected
+
+    def from_raw_data(persister_data)
+      persister_data.transform_keys!(&:to_s)
+
+      # Extract the specific Persister class
+      persister_class = persister_data['class'].constantize
+      unless persister_class < ManagerRefresh::Inventory::Persister
+        raise "Persister class must inherit from a ManagerRefresh::Inventory::Persister"
+      end
+
+      # TODO(lsmola) do we need a target in this case?
+      # Load the Persister object and fill the InventoryCollections with the data
+      persister = persister_class.new(ManageIQ::Providers::BaseManager.find(persister_data['ems_id']))
+      persister_data['collections'].each do |collection|
+        collection.transform_keys!(&:to_s)
+
+        inventory_collection = persister.collections[collection['name'].try(:to_sym)]
+        raise "Unrecognized InventoryCollection name: #{inventory_collection}" if inventory_collection.blank?
+
+        inventory_collection.from_raw_data(collection['data'], persister.collections)
+      end
+      persister
     end
   end
 end
