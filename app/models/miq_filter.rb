@@ -15,7 +15,7 @@ module MiqFilter
     # root object
     klass, name = parts.shift.split("|")
     klass = klass.constantize
-    obj = klass.find_by_name(name)
+    obj = klass.find_by(:name => name)
 
     if obj.nil?
       _log.warn("lookup for klass=#{klass.to_s.inspect} with name=#{name.inspect} failed in tag=#{tag.inspect}")

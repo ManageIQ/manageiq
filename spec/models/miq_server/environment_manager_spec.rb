@@ -98,7 +98,7 @@ describe "Server Environment Management" do
     end
 
     it "database disk exceeds usage" do
-      disks = [{:used_bytes_percent => 85, :mount_point => '/var/lib/pgsql/data'}]
+      disks = [{:used_bytes_percent => 85, :mount_point => '/var/lib/pgsql'}]
       expect(@miq_server.check_disk_usage(disks))
       queue = MiqQueue.first
 

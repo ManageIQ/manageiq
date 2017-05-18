@@ -8,6 +8,41 @@ describe CustomAttributeMixin do
     end
   end
 
+  describe '#to_human' do
+    let(:custom_attribute)                { 'virtual_custom_attribute_name' }
+    let(:custom_attribute_with_section_1) { "virtual_custom_attribute_name#{described_class::SECTION_SEPARATOR}labels" }
+    let(:custom_attribute_with_section_2) do
+      "virtual_custom_attribute_name#{described_class::SECTION_SEPARATOR}docker_labels"
+    end
+
+    it 'returns human form of virtual custom attribute with sections' do
+      expect(described_class.to_human(custom_attribute)).to eq('Custom Attribute: name')
+    end
+
+    it 'returns human form of virtual custom attribute' do
+      expect(described_class.to_human(custom_attribute_with_section_1)).to eq('Labels: name')
+    end
+
+    it 'returns human form of virtual custom attribute' do
+      expect(described_class.to_human(custom_attribute_with_section_2)).to eq('Docker Labels: name')
+    end
+  end
+
+  describe '#custom_keys' do
+    let!(:custom_attribute) { FactoryGirl.create(:custom_attribute, :name => "attr_1", :value => 'value') }
+    let!(:custom_attribute_with_section) do
+      FactoryGirl.create(:custom_attribute, :name => "attr_2", :value => 'value', :section => 'labels')
+    end
+
+    let!(:vm) do
+      FactoryGirl.create(:vm_redhat, :custom_attributes => [custom_attribute, custom_attribute_with_section])
+    end
+
+    it 'returns human form of virtual custom attribute with sections' do
+      expect(vm.class.custom_keys).to match_array(["attr_1", "attr_2#{described_class::SECTION_SEPARATOR}labels"])
+    end
+  end
+
   it "defines #miq_custom_keys" do
     expect(test_class.new).to respond_to(:miq_custom_keys)
   end

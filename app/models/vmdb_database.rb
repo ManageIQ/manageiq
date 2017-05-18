@@ -37,8 +37,9 @@ class VmdbDatabase < ApplicationRecord
     # latest_hourly_metric via includes causes too many rows to come back.
     #   Instead we will manually query for the MAX(id), which is simpler than
     #   MAX(timestamp).
-    table_ids  = evm_tables.collect(&:id)
-    latest_ids = VmdbMetric.where(:resource_type => "VmdbTable", :resource_id => table_ids, :capture_interval_name => "hourly").select("MAX(id) AS id").group(:resource_type, :resource_id).collect(&:id)
+    latest_ids = VmdbMetric.where(:resource_type => 'VmdbTable', :resource_id => evm_table_ids,
+                                  :capture_interval_name => 'hourly')
+                           .select("MAX(id) AS id").group(:resource_type, :resource_id).collect(&:id)
     metrics    = VmdbMetric.where(:id => latest_ids).to_a
 
     metrics = metrics.sort_by { |m| m.send(sorted_by) }.reverse

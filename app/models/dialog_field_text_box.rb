@@ -8,7 +8,7 @@ class DialogFieldTextBox < DialogField
   end
 
   def initial_values
-    "<None>"
+    ""
   end
 
   def protected=(passed_in_value)
@@ -39,15 +39,13 @@ class DialogFieldTextBox < DialogField
     return if !required? && @value.blank? || !visible
 
     return "#{dialog_tab.label}/#{dialog_group.label}/#{label} is required" if required? && @value.blank?
-    if data_type == "integer" && !@value.match(/^[0-9]+$/)
-      return "#{dialog_tab.label}/#{dialog_group.label}/#{label} must be an integer"
-    end
+    return "#{dialog_tab.label}/#{dialog_group.label}/#{label} must be an integer" if value_supposed_to_be_int?
 
     # currently only regex is supported
     rule = validator_rule if validator_type == 'regex'
 
     return unless rule
-    "#{dialog_tab.label}/#{dialog_group.label}/#{label} is invalid" unless value.match(/#{rule}/)
+    "#{dialog_tab.label}/#{dialog_group.label}/#{label} is invalid" unless @value.to_s =~ /#{rule}/
   end
 
   def script_error_values
@@ -80,5 +78,9 @@ class DialogFieldTextBox < DialogField
 
   def convert_value_to_type
     data_type == "integer" ? @value.to_i : @value
+  end
+
+  def value_supposed_to_be_int?
+    data_type == "integer" && @value.to_s !~ /^[0-9]+$/
   end
 end

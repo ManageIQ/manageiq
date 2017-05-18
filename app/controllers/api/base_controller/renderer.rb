@@ -2,31 +2,6 @@ module Api
   class BaseController
     module Renderer
       #
-      # Helper proc for rendering a collection of type specified.
-      #
-      def render_collection_type(type, id, is_subcollection = false)
-        klass = collection_class(type)
-        opts  = {
-          :name               => type.to_s,
-          :is_subcollection   => is_subcollection,
-          :resource_actions   => "resource_actions_#{type}",
-          :collection_actions => "collection_actions_#{type}"
-        }
-        if id
-          render_resource type, resource_search(id, type, klass), opts
-        else
-          opts[:count]            = klass.count
-          opts[:expand_resources] = @req.expand?(:resources)
-
-          res = collection_search(is_subcollection, type, klass)
-
-          opts[:subcount] = res.length
-
-          render_collection type, res, opts
-        end
-      end
-
-      #
       # Helper proc to render a collection
       #
       def render_collection(type, resources, opts = {})
@@ -58,15 +33,17 @@ module Api
           [:name, :count, :subcount].each do |opt_name|
             json.set! opt_name.to_s, opts[opt_name] if opts[opt_name]
           end
-          json.resources resources.collect do |resource|
-            if opts[:expand_resources]
-              add_hash json, resource_to_jbuilder(type, reftype, resource, opts).attributes!
-            else
-              json.href normalize_href(reftype, resource["id"])
+          unless @req.hide?("resources")
+            json.resources resources.collect do |resource|
+              if opts[:expand_resources]
+                add_hash json, resource_to_jbuilder(type, reftype, resource, opts).attributes!
+              else
+                json.href normalize_href(reftype, resource["id"])
+              end
             end
           end
-          aspecs = get_aspecs(type, opts[:collection_actions], :collection,
-                              :is_subcollection => opts[:is_subcollection], :ref => reftype)
+          cspec = collection_config[type]
+          aspecs = gen_action_spec_for_collections(type, cspec, opts[:is_subcollection], reftype) if cspec
           add_actions(json, aspecs, reftype)
         end
       end
@@ -88,7 +65,7 @@ module Api
           expand_subcollections(json, type, resource)
         end
 
-        expand_actions(resource, json, type, opts)
+        expand_actions(resource, json, type, opts) if opts[:expand_actions]
         expand_resource_custom_actions(resource, json, type)
         json
       end
@@ -98,31 +75,12 @@ module Api
         return reftype unless resource.respond_to?(:attributes)
 
         rclass = resource.class
-        if collection_class(type) != rclass
-          matched_type = collection_config.name_for_klass(rclass)
-        end
-        matched_type || reftype
-      end
+        collection_class = collection_class(type)
 
-      #
-      # type is the collection type we need to get actions specifications for
-      # typed_actions is the optional type specific method to return actions
-      # item_type is :collection or :resource
-      #
-      # opts[:is_subcollection] is true if accessing as subcollection or subresource
-      # opts[:ref] is how to identify item, either the reftype of the collection or href of resource
-      # opts[:resource] is the object to get action specs for the specific resource
-      #
-      def get_aspecs(type, typed_actions, item_type, opts = {})
-        aspecs = []
-        if typed_actions
-          aspecs = if respond_to?(typed_actions)
-                     send(typed_actions, opts[:is_subcollection], opts[:ref])
-                   else
-                     gen_action_specs(type, item_type, opts[:is_subcollection], opts[:ref], opts[:resource])
-                   end
-        end
-        aspecs
+        # Ensures hrefs are consistent with those of the collection they were requested from
+        return reftype if collection_class == rclass || collection_class.descendants.include?(rclass)
+
+        collection_config.name_for_klass(rclass) || reftype
       end
 
       #
@@ -169,7 +127,7 @@ module Api
       def resource_search(id, type, klass)
         validate_id(id, klass)
         target = respond_to?("find_#{type}") ? public_send("find_#{type}", id) : klass.find(id)
-        res = Rbac.filtered_object(target, :user => @auth_user_obj, :class => klass)
+        res = Rbac.filtered_object(target, :user => User.current_user, :class => klass)
         raise ForbiddenError, "Access to the resource #{type}/#{id} is forbidden" unless res
         res
       end
@@ -189,6 +147,9 @@ module Api
         miq_expression = filter_param(klass)
 
         if miq_expression
+          if is_subcollection && !res.respond_to?(:where)
+            raise BadRequestError, "Filtering is not supported on #{type} subcollection"
+          end
           sql, _, attrs = miq_expression.to_sql
           res = res.where(sql) if attrs[:supported_by_sql]
         end
@@ -196,7 +157,7 @@ module Api
         sort_options = sort_params(klass) if res.respond_to?(:reorder)
         res = res.reorder(sort_options) if sort_options.present?
 
-        options = {:user => @auth_user_obj}
+        options = {:user => User.current_user}
         options[:order] = sort_options if sort_options.present?
         options[:offset], options[:limit] = expand_paginate_params if paginate_params?
         options[:filter] = miq_expression if miq_expression
@@ -245,7 +206,7 @@ module Api
         return unless attr_accessible?(resource, attr)
         virtattr_accessor = virtual_attribute_accessor(type, attr)
         value = virtattr_accessor.nil? ? resource.public_send(attr) : send(virtattr_accessor, resource)
-        result = {attr => normalize_virtual(nil, attr, value, :ignore_nil => true)}
+        result = {attr => normalize_attr(attr, value)}
         # set nil vtype above to "#{type}/#{resource.id}/#{attr}" to support id normalization
         [value, result]
       end
@@ -254,7 +215,7 @@ module Api
         query_related_objects(base, resource, object_hash)
         return unless attr_accessible?(object_hash[base], attr)
         value = object_hash[base].public_send(attr)
-        result = {attr => normalize_virtual(nil, attr, value, :ignore_nil => true)}
+        result = {attr => normalize_attr(attr, value)}
         # set nil vtype above to "#{type}/#{resource.id}/#{base.tr('.', '/')}/#{attr}" to support id normalization
         base.split(".").reverse_each { |level| result = {level => result} }
         [value, result]
@@ -293,11 +254,11 @@ module Api
       end
 
       def attr_accessible?(object, attr)
-        return false unless object && object.respond_to?(attr)
-        object.class.has_attribute?(attr) ||
-          object.class.reflect_on_association(attr) ||
-          object.class.virtual_attribute?(attr) ||
-          object.class.virtual_reflection?(attr)
+        return true if object && object.respond_to?(attr)
+        object.class.try(:has_attribute?, attr) ||
+          object.class.try(:reflect_on_association, attr) ||
+          object.class.try(:virtual_attribute?, attr) ||
+          object.class.try(:virtual_reflection?, attr)
       end
 
       def attr_virtual?(object, attr)
@@ -324,14 +285,14 @@ module Api
       def expand_actions(resource, json, type, opts)
         return unless render_actions(resource)
 
-        href   = json.attributes!["href"]
-        aspecs = get_aspecs(type, opts[:resource_actions], :resource,
-                            :is_subcollection => opts[:is_subcollection], :ref => href, :resource => resource)
+        href = json.attributes!["href"]
+        cspec = collection_config[type]
+        aspecs = gen_action_spec_for_resources(cspec, opts[:is_subcollection], href, resource) if cspec
         add_actions(json, aspecs, type)
       end
 
       def add_actions(json, aspecs, type)
-        if aspecs && aspecs.size > 0
+        if aspecs && aspecs.any?
           json.actions do |js|
             aspecs.each { |action_spec| add_child js, normalize_hash(type, action_spec) }
           end
@@ -389,28 +350,16 @@ module Api
         end
       end
 
-      #
-      # Let's create the action specs for the different collections
-      #
-      # type is :collection or :resource
-      # subcollection set to true, if accessing collection or resource as subcollection
-      # href is the optional href for the action specs, required for resources
-      #
-      def gen_action_specs(collection, type, is_subcollection, href = nil, resource = nil)
-        cspec = collection_config[collection]
-        if cspec
-          if type == :collection
-            gen_action_spec_for_collections(collection, cspec, is_subcollection, href)
-          else
-            gen_action_spec_for_resources(cspec, is_subcollection, href, resource)
-          end
-        end
-      end
-
       def gen_action_spec_for_collections(collection, cspec, is_subcollection, href)
-        target = is_subcollection ? :subcollection_actions : :collection_actions
-        return [] unless cspec[target]
-        cspec[target].each.collect do |method, action_definitions|
+        if is_subcollection
+          target = :subcollection_actions
+          cspec_target = cspec[target] || collection_config.typed_subcollection_actions(@req.collection, collection)
+        else
+          target = :collection_actions
+          cspec_target = cspec[target]
+        end
+        return [] unless cspec_target
+        cspec_target.each.collect do |method, action_definitions|
           next unless render_actions_for_method(cspec[:verbs], method)
           typed_action_definitions = fetch_typed_subcollection_actions(method, is_subcollection) || action_definitions
           typed_action_definitions.each.collect do |action|
@@ -422,11 +371,17 @@ module Api
       end
 
       def gen_action_spec_for_resources(cspec, is_subcollection, href, resource)
-        target = is_subcollection ? :subresource_actions : :resource_actions
-        return [] unless cspec[target]
-        cspec[target].each.collect do |method, action_definitions|
+        if is_subcollection
+          target = :subresource_actions
+          cspec_target = cspec[target] || collection_config.typed_subcollection_actions(@req.collection, @req.subcollection, :subresource)
+        else
+          target = :resource_actions
+          cspec_target = cspec[target]
+        end
+        return [] unless cspec_target
+        cspec_target.each.collect do |method, action_definitions|
           next unless render_actions_for_method(cspec[:verbs], method)
-          typed_action_definitions = fetch_typed_subcollection_actions(method, is_subcollection) || action_definitions
+          typed_action_definitions = action_definitions || fetch_typed_subcollection_actions(method, is_subcollection)
           typed_action_definitions.each.collect do |action|
             if !action[:disabled] && api_user_role_allows?(action[:identifier]) && action_validated?(resource, action)
               {"name" => action[:name], "method" => method, "href" => href}
@@ -446,7 +401,7 @@ module Api
 
       def api_user_role_allows?(action_identifier)
         return true unless action_identifier
-        @auth_user_obj.role_allows?(:identifier => action_identifier)
+        Array(action_identifier).any? { |identifier| User.current_user.role_allows?(:identifier => identifier) }
       end
 
       def render_actions(resource)
@@ -462,25 +417,8 @@ module Api
       end
 
       def render_options(resource, data = {})
-        collection = collection_class(resource)
-        options =
-          if collection.blank?
-            { :attributes => [], :virtual_attributes => [], :relationships => [] }
-          else
-            {
-              :attributes         => options_attribute_list(collection.attribute_names -
-                                                              collection.virtual_attribute_names),
-              :virtual_attributes => options_attribute_list(collection.virtual_attribute_names),
-              :relationships      => (collection.reflections.keys |
-                                       collection.virtual_reflections.keys.collect(&:to_s)).sort
-            }
-          end
-        options[:data] = data
-        render :json => options
-      end
-
-      def options_attribute_list(attrlist)
-        attrlist.sort.select { |attr| !encrypted_attribute?(attr) }
+        klass = collection_class(resource)
+        render :json => OptionsSerializer.new(klass, data).serialize
       end
     end
   end

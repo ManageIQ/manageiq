@@ -1,4 +1,4 @@
-class CreateNetworkGroups < ActiveRecord::Migration
+class CreateNetworkGroups < ActiveRecord::Migration[4.2]
   def change
     create_table :network_groups do |t|
       t.string     :ems_ref

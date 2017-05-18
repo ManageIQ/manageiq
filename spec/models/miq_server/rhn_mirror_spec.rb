@@ -34,7 +34,7 @@ describe "MiqServer" do
 
       expect(FileUtils).to receive(:mkdir_p).with("/repo/mirror")
       expect(MiqApache::Conf).to receive(:create_conf_file).once.and_return(true)
-      expect(FileUtils).to receive(:rm).with("/etc/httpd/conf.d/manageiq-https-mirror.conf", :force => true)
+      expect(FileUtils).to receive(:rm).with("/etc/httpd/conf.d/manageiq-https-mirror.conf", hash_including(:force => true))
       expect(MiqApache::Control).to receive(:restart).once
       expect(LinuxAdmin::Yum).to receive(:download_packages).once.with("/repo/mirror", "cfme-appliance")
       expect(Dir).to receive(:glob).with("/repo/mirror/**/*.rpm").and_return(rpm_file_list)

@@ -9,11 +9,14 @@ ENV TERM xterm
 ENV RUBY_GEMS_ROOT /opt/rubies/ruby-2.3.1/lib/ruby/gems/2.3.0
 ENV APP_ROOT /var/www/miq/vmdb
 ENV APPLIANCE_ROOT /opt/manageiq/manageiq-appliance
-ENV SSUI_ROOT /opt/manageiq/manageiq-ui-self_service
+ENV SUI_ROOT /opt/manageiq/manageiq-ui-service
 
-# Fetch pglogical repo
-RUN curl -sSLko /etc/yum.repos.d/ncarboni-pglogical-SCL-epel-7.repo \
-      https://copr.fedorainfracloud.org/coprs/ncarboni/pglogical-SCL/repo/epel-7/ncarboni-pglogical-SCL-epel-7.repo
+## To cleanly shutdown systemd, use SIGRTMIN+3
+STOPSIGNAL SIGRTMIN+3
+
+# Fetch and manageiq release repo
+RUN curl -sSLko /etc/yum.repos.d/manageiq-ManageIQ-Fine-epel-7.repo \
+      https://copr.fedorainfracloud.org/coprs/manageiq/ManageIQ-Fine/repo/epel-7/manageiq-ManageIQ-Fine-epel-7.repo
 
 ## Install EPEL repo, yum necessary packages for the build without docs, clean all caches
 RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
@@ -36,12 +39,12 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
                    net-tools               \
                    nodejs                  \
                    openssl-devel           \
+                   openscap-scanner        \
                    patch                   \
                    rh-postgresql95-postgresql-server \
                    rh-postgresql95-postgresql-devel  \
-                   rh-postgresql95-postgresql-pglogical-output \
                    rh-postgresql95-postgresql-pglogical \
-                   rh-repmgr95             \
+                   rh-postgresql95-repmgr  \
                    readline-devel          \
                    sqlite-devel            \
                    sysvinit-tools          \
@@ -59,11 +62,23 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
                    lvm2                    \
                    openldap-clients        \
                    gdbm-devel              \
+                   cronie                  \
+                   logrotate               \
                    &&                      \
     yum clean all
 
 # Add persistent data volume for postgres
 VOLUME [ "/var/opt/rh/rh-postgresql95/lib/pgsql/data" ]
+
+## Systemd cleanup base image
+RUN (cd /lib/systemd/system/sysinit.target.wants && for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -vf $i; done) && \
+    rm -vf /lib/systemd/system/multi-user.target.wants/* && \
+    rm -vf /etc/systemd/system/*.wants/* && \
+    rm -vf /lib/systemd/system/local-fs.target.wants/* && \
+    rm -vf /lib/systemd/system/sockets.target.wants/*udev* && \
+    rm -vf /lib/systemd/system/sockets.target.wants/*initctl* && \
+    rm -vf /lib/systemd/system/basic.target.wants/* && \
+    rm -vf /lib/systemd/system/anaconda.target.wants/*
 
 # Download chruby and chruby-install, install, setup environment, clean all
 RUN curl -sL https://github.com/postmodern/chruby/archive/v0.3.9.tar.gz | tar xz && \
@@ -81,13 +96,13 @@ RUN curl -sL https://github.com/postmodern/chruby/archive/v0.3.9.tar.gz | tar xz
     rm -rf /usr/local/src/* && \
     yum clean all
 
-## GIT clone manageiq-appliance and self-service UI repo (SSUI)
+## GIT clone manageiq-appliance and service UI repo (SUI)
 RUN mkdir -p ${APP_ROOT} && \
     mkdir -p ${APPLIANCE_ROOT} && \
-    mkdir -p ${SSUI_ROOT} && \
+    mkdir -p ${SUI_ROOT} && \
     ln -vs ${APP_ROOT} /opt/manageiq/manageiq && \
     curl -L https://github.com/ManageIQ/manageiq-appliance/tarball/${REF} | tar vxz -C ${APPLIANCE_ROOT} --strip 1 && \
-    curl -L https://github.com/ManageIQ/manageiq-ui-self_service/tarball/${REF} | tar vxz -C ${SSUI_ROOT} --strip 1
+    curl -L https://github.com/ManageIQ/manageiq-ui-service/tarball/${REF} | tar vxz -C ${SUI_ROOT} --strip 1
 
 ## Add ManageIQ source from local directory (dockerfile development) or from Github (official build)
 ADD . ${APP_ROOT}
@@ -99,6 +114,7 @@ RUN ${APPLIANCE_ROOT}/setup && \
     mkdir ${APP_ROOT}/log/apache && \
     mv /etc/httpd/conf.d/ssl.conf{,.orig} && \
     echo "# This file intentionally left blank. ManageIQ maintains its own SSL configuration" > /etc/httpd/conf.d/ssl.conf && \
+    cp ${APP_ROOT}/config/cable.yml.sample ${APP_ROOT}/config/cable.yml && \
     echo "export APP_ROOT=${APP_ROOT}" >> /etc/default/evm && \
     echo "export CONTAINER=true" >> /etc/default/evm
 
@@ -106,10 +122,11 @@ RUN ${APPLIANCE_ROOT}/setup && \
 WORKDIR ${APP_ROOT}
 RUN source /etc/default/evm && \
     export RAILS_USE_MEMORY_STORE="true" && \
-    npm install npm -g && \
-    npm install gulp bower -g && \
-    gem install bundler -v ">=1.8.4" && \
-    bin/setup --no-db --no-tests && \
+    npm install bower yarn -g && \
+    gem install bundler --conservative && \
+    bundle install && \
+    rake update:bower && \
+    bin/rails log:clear tmp:clear && \
     rake evm:compile_assets && \
     rake evm:compile_sti_loader && \
     # Cleanup install artifacts
@@ -120,17 +137,15 @@ RUN source /etc/default/evm && \
     rm -rvf ${RUBY_GEMS_ROOT}/gems/rugged-*/vendor/libgit2/build && \
     rm -rvf ${RUBY_GEMS_ROOT}/cache/* && \
     rm -rvf /root/.bundle/cache && \
-    rm -rvf ${APP_ROOT}/tmp/cache/assets
+    rm -rvf ${APP_ROOT}/tmp/cache/assets && \
+    rm -vf ${APP_ROOT}/log/*.log
 
-## Build SSUI
+## Build SUI
 RUN source /etc/default/evm && \
-    cd ${SSUI_ROOT} && \
-    npm install && \
-    bower -F --allow-root install && \
-    gulp build && \
-    # Cleanup install artifacts
-    npm cache clean && \
-    bower cache clean
+    cd ${SUI_ROOT} && \
+    yarn install && \
+    yarn run build && \
+    yarn cache clean
 
 ## Copy appliance-initialize script and service unit file
 COPY docker-assets/appliance-initialize.service /usr/lib/systemd/system
@@ -140,7 +155,7 @@ COPY docker-assets/appliance-initialize.sh /bin
 RUN ln -s /var/www/miq/vmdb/docker-assets/docker_initdb /usr/bin
 
 ## Enable services on systemd
-RUN systemctl enable memcached appliance-initialize evmserverd evminit evm-watchdog miqvmstat miqtop
+RUN systemctl enable memcached appliance-initialize evmserverd evminit evm-watchdog miqvmstat miqtop crond
 
 ## Expose required container ports
 EXPOSE 80 443
@@ -156,11 +171,11 @@ LABEL name="manageiq" \
       url="http://manageiq.org/" \
       summary="ManageIQ appliance image" \
       description="ManageIQ is a management and automation platform for virtual, private, and hybrid cloud infrastructures." \
-      INSTALL='docker run -ti --privileged \
+      INSTALL='docker run -ti \
                 --name ${NAME}_volume \
                 --entrypoint /usr/bin/docker_initdb \
                 $IMAGE' \
-      RUN='docker run -di --privileged \
+      RUN='docker run -di \
             --name ${NAME}_run \
             -v /etc/localtime:/etc/localtime:ro \
             --volumes-from ${NAME}_volume \
@@ -169,6 +184,12 @@ LABEL name="manageiq" \
             $IMAGE' \
       STOP='docker stop ${NAME}_run && echo "Container ${NAME}_run has been stopped"' \
       UNINSTALL='docker rm -v ${NAME}_volume ${NAME}_run && echo "Uninstallation complete"'
+
+## OpenShift Labels
+LABEL io.k8s.description="ManageIQ is a management and automation platform for virtual, private, and hybrid cloud infrastructures." \
+      io.k8s.display-name="ManageIQ" \
+      io.openshift.expose-services="443:https" \
+      io.openshift.tags="ManageIQ,miq,manageiq"
 
 ## Call systemd to bring up system
 CMD [ "/usr/sbin/init" ]

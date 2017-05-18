@@ -29,7 +29,7 @@ module Api
       def service_templates_order_resource(_object, type, id = nil, data = nil)
         klass = collection_class(:service_templates)
         service_template = resource_search(id, type, klass)
-        workflow = service_template_workflow(service_template, data || {})
+        workflow = service_template.provision_workflow(User.current_user, data || {})
         request_result = workflow.submit_request
         errors = request_result[:errors]
         if errors.present?
@@ -116,8 +116,8 @@ module Api
       end
 
       def define_service_template_dialog(st, dialog_fields)
-        resource_action = st.resource_actions.find_by_action("Provision")
-        workflow = ResourceActionWorkflow.new({}, @auth_user_obj, resource_action, :target => st)
+        resource_action = st.resource_actions.find_by(:action => "Provision")
+        workflow = ResourceActionWorkflow.new({}, User.current_user, resource_action, :target => st)
         dialog_fields.each { |key, value| workflow.set_value(key, value) }
         workflow.dialog
       end

@@ -1,5 +1,0 @@
-%div{"ng-controller" => "containers.deployProviderMasterNodesController"}
-  %div{"miq-wizard-substep" => "", "next-enabled" => "deploymentDetailsMasterNodesComplete", "on-show" => "onShow",
-  "review-template" => "{{reviewTemplate}}", "step-id" => "details-nodes", "step-priority" => "2", "step-title" => _("Masters & Nodes")}
-    %div{"ng-if" => "data.provisionOn == 'existingVms' || data.provisionOn == 'newVms'", "ng-include" => "'/static/deploy_containers_provider/deploy-provider-details-existing-vms.html'"}
-    %div{"ng-if" => "data.provisionOn == 'noProvider'", "ng-include" => "'/static/deploy_containers_provider/deploy-provider-details-no-provider.html'"}

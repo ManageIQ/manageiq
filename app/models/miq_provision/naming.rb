@@ -29,7 +29,6 @@ module MiqProvision::Naming
 
       # Check if we need to force a unique target name
       if prov_obj.get_option(:miq_force_unique_name) == true && unresolved_vm_name !~ NAME_SEQUENCE_REGEX
-        unresolved_vm_name += '_' unless unresolved_vm_name.ends_with?('_')
         unresolved_vm_name += '$n{4}'
         _log.info "Forced unique provision name to #{unresolved_vm_name} for #{prov_obj.class}:#{prov_obj.id}"
       end

@@ -29,7 +29,7 @@
   unit: "packet"
 -
   user_id: "62992b0399a34653907ded01238a9b2b"
-  name: "hardware.system_stats.cpu.util"
+  name: "hardware.cpu.util"
   resource_id: "998f6beb-825c-44f3-9fad-6f3270cab1d8"
   project_id: "3bbc20f34655462d8112ef8db50e5a19"
   type: "gauge"

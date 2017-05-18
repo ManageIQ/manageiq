@@ -25,10 +25,22 @@ class MiqPolicySet < ApplicationRecord
     Tag.find_by(:name => "/miq_policy/assignment/#{self.class.to_s.underscore}/#{id}").try!(:destroy)
   end
 
+  def add_policy(policy)
+    add_member(policy)
+  end
+
+  def remove_policy(policy)
+    remove_member(policy)
+  end
+
+  def get_policies
+    miq_policies
+  end
+
   def add_to(ids, db)
     model = db.respond_to?(:constantize) ? db.constantize : db
     ids.each do|id|
-      rec = model.find_by_id(id)
+      rec = model.find_by(:id => id)
       next unless rec
 
       rec.add_policy(self)
@@ -38,7 +50,7 @@ class MiqPolicySet < ApplicationRecord
   def remove_from(ids, db)
     model = db.respond_to?(:constantize) ? db.constantize : db
     ids.each do|id|
-      rec = model.find_by_id(id)
+      rec = model.find_by(:id => id)
       next unless rec
 
       rec.remove_policy(self)
@@ -53,8 +65,7 @@ class MiqPolicySet < ApplicationRecord
   end
 
   def export_to_yaml
-    a = export_to_array
-    a.to_yaml
+    export_to_array.to_yaml
   end
 
   def self.import_from_hash(policy_profile, options = {})
@@ -70,7 +81,7 @@ class MiqPolicySet < ApplicationRecord
       policies.push(policy)
     end
 
-    pset = MiqPolicySet.find_by_guid(policy_profile["guid"])
+    pset = MiqPolicySet.find_by(:guid => policy_profile["guid"])
     msg_pfx = "Importing Policy Profile: guid=[#{policy_profile["guid"]}] description=[#{policy_profile["description"]}]"
     if pset.nil?
       pset = MiqPolicySet.new(policy_profile)
@@ -102,16 +113,11 @@ class MiqPolicySet < ApplicationRecord
   end
 
   def self.import_from_yaml(fd)
-    stats = []
-
     input = YAML.load(fd)
-
-    input.each do |e|
-      p, stat = import_from_hash(e["MiqPolicySet"])
-      stats.push(stat)
+    input.collect do |e|
+      _p, stat = import_from_hash(e["MiqPolicySet"])
+      stat
     end
-
-    stats
   end
 
   def self.seed

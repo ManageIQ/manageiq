@@ -52,7 +52,7 @@ order: Ascending
 
 # Columns to sort the report on, in order
 sortby:
-- name
+- description
 
 # Group rows (y=yes,n=no,c=count)
 group: n

@@ -19,7 +19,7 @@ require 'faraday'
 require 'faraday_middleware'
 
 class RestApi
-  VERSION = "2.3.0-pre".freeze
+  VERSION = "3.0.0-pre".freeze
   API_CMD = File.basename($PROGRAM_NAME)
 
   class Cli
@@ -44,10 +44,10 @@ class RestApi
     METHODS_NEEDING_DATA = %w(put post patch).freeze
     SCRIPTDIR_ACTIONS    = %w(ls run).freeze
     SUB_COMMANDS         = ACTIONS + %w(edit vi) + SCRIPTDIR_ACTIONS
-    API_PARAMETERS       = %w(expand attributes decorators limit offset
-                              depth search_options
+    API_PARAMETERS       = %w(expand hide attributes decorators limit offset
+                              depth search_options format_attributes
                               sort_by sort_order sort_options
-                              filter by_tag provider_class requester_type).freeze
+                              filter by_tag provider_class collection_class requester_type).freeze
 
     MULTI_PARAMS         = %w(filter).freeze
 
@@ -74,9 +74,16 @@ class RestApi
       data
     end
 
+    def script_filename(scriptdir, filename)
+      filename &&= filename.strip
+      return if filename.nil? || filename == ""
+      filename = "api_#{filename}" unless filename =~ /^api_/
+      filename = "#{filename}.rb" unless filename =~ /\.rb$/
+      File.join(scriptdir, filename)
+    end
+
     def run
       data      = ""
-      path      = ""
       params    = {}
 
       opts = Trollop.options do
@@ -95,8 +102,7 @@ class RestApi
 
              #{API_CMD} [options] vi|edit [script]
 
-                  Edit optional api_* scripts. script names must be specified without the
-                  api_ prefix or .rb suffix. Edits this script if not specified.
+                  Edit optional api_*.rb scripts.
 
              #{API_CMD} [options] run script [method]
 
@@ -161,12 +167,7 @@ class RestApi
       end
 
       if action == "vi" || action == "edit"
-        api_script = ARGV.shift
-        api_script_file = if api_script.nil? || api_script == ""
-                            File.expand_path($PROGRAM_NAME)
-                          else
-                            File.join(opts[:scriptdir], "api_#{api_script}.rb")
-                          end
+        api_script_file = script_filename(opts[:scriptdir], ARGV.shift) || File.expand_path($PROGRAM_NAME)
         ed_cmd = "vi"
         ed_cmd = ENV["EDITOR"] if action == "edit" && ENV["EDITOR"]
         cmd = "#{ed_cmd} #{api_script_file}"
@@ -177,8 +178,8 @@ class RestApi
       if action == "run"
         script = ARGV.shift
         method = ARGV.shift
-        msg_exit("Must specify a script to run.") if script.nil?
-        api_script = "#{opts[:scriptdir]}/api_#{script}.rb"
+        api_script = script_filename(opts[:scriptdir], script)
+        msg_exit("Must specify a script to run.") if api_script.nil?
         msg_exit("Script file #{api_script} does not exist") unless File.exist?(api_script)
       else
         api_params = Trollop.options do
@@ -186,7 +187,13 @@ class RestApi
           multi_options = {:default => "", :multi => true}
           API_PARAMETERS.each { |p| opt p.intern, p, (MULTI_PARAMS.include?(p) ? multi_options.dup : norm_options.dup) }
         end
-        API_PARAMETERS.each { |param| params[param] = api_params[param.intern] unless api_params[param.intern].empty? }
+        API_PARAMETERS.each do |param|
+          if MULTI_PARAMS.include?(param)
+            params[param] = api_params[param.intern] unless api_params[param.intern].all?(&:empty?)
+          else
+            params[param] = api_params[param.intern] unless api_params[param.intern].empty?
+          end
+        end
       end
 
       if action != "run"

@@ -119,6 +119,17 @@
       :feature_type: control
       :identifier: infra_networking_tag
 
+# Infrastructure Topology
+- :name: Infra Topology
+  :description: Infra Topology
+  :feature_type: node
+  :identifier: infra_topology
+  :children:
+    - :name: View
+      :description: View Infra Topology
+      :feature_type: view
+      :identifier: infra_topology_view
+
 # MiqRequest
 - :name: Requests
   :description: Everything under Requests
@@ -385,14 +396,6 @@
       :description: Display Individual Cloud Providers
       :feature_type: view
       :identifier: ems_cloud_show
-    - :name: Arbitration Profiles List
-      :description: Display Lists of Arbitration Profiles
-      :feature_type: view
-      :identifier: arbitration_profile_show_list
-    - :name: Arbitration Profile Show
-      :description: Display Individual Arbitration Profiles
-      :feature_type: view
-      :identifier: arbitration_profile_show
     - :name: Timeline
       :description: Display Timelines for Cloud Providers
       :feature_type: view
@@ -414,6 +417,10 @@
       :description: Manage Policies of Cloud Providers
       :feature_type: control
       :identifier: ems_cloud_protect
+    - :name: Check Compliance
+      :description: Check Compliance of Last Known Configuration
+      :feature_type: control
+      :identifier: ems_cloud_check_compliance
     - :name: Refresh
       :description: Refresh Cloud Providers
       :feature_type: control
@@ -439,18 +446,17 @@
       :description: Add a Cloud Provider
       :feature_type: admin
       :identifier: ems_cloud_new
-    - :name: Add Arbitration Profile
-      :description: Add Arbitration Profile
-      :feature_type: admin
-      :identifier: arbitration_profile_new
-    - :name: Edit Arbitration Profile
-      :description: Edit Arbitration Profile
-      :feature_type: admin
-      :identifier: arbitration_profile_edit
-    - :name: Remove Arbitration Profile
-      :description: Remove Arbitration Profile
-      :feature_type: admin
-      :identifier: arbitration_profile_delete
+
+# Cloud Topology
+- :name: Cloud Topology
+  :description: Cloud Topology
+  :feature_type: node
+  :identifier: cloud_topology
+  :children:
+    - :name: View
+      :description: View Cloud Topology
+      :feature_type: view
+      :identifier: cloud_topology_view
 
 # AvailabilityZone
 - :name: Availability Zones
@@ -489,63 +495,151 @@
       :feature_type: control
       :identifier: availability_zone_tag
 
+# HostAggregate
+- :name: Host Aggregates
+  :description: Everything under Host Aggregates
+  :feature_type: node
+  :identifier: host_aggregate
+  :children:
+  - :name: View
+    :description: View Host Aggregates
+    :feature_type: view
+    :identifier: host_aggregate_view
+    :children:
+    - :name: List
+      :description: Display Lists of Host Aggregates
+      :feature_type: view
+      :identifier: host_aggregate_show_list
+    - :name: Show
+      :description: Display Individual Host Aggregates
+      :feature_type: view
+      :identifier: host_aggregate_show
+    - :name: Utilization
+      :description: Show Capacity & Utilization data of Host Aggregates
+      :feature_type: view
+      :identifier: host_aggregate_perf
+    - :name: Timeline
+      :description: Display Timelines for Host Aggregates
+      :feature_type: view
+      :identifier: host_aggregate_timeline
+  - :name: Operate
+    :description: Perform Operations on Host Aggregates
+    :feature_type: control
+    :identifier: host_aggregate_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Host Aggregate
+      :feature_type: control
+      :identifier: host_aggregate_tag
+  - :name: Modify
+    :description: Modify Host Aggregate
+    :feature_type: admin
+    :identifier: host_aggregate_admin
+    :children:
+    - :name: Add
+      :description: Create a Host Aggregate
+      :feature_type: admin
+      :identifier: host_aggregate_new
+    - :name: Edit
+      :description: Edit a Host Aggregate
+      :feature_type: admin
+      :identifier: host_aggregate_edit
+    - :name: Remove
+      :description: Remove Host Aggregates
+      :feature_type: admin
+      :identifier: host_aggregate_delete
+    - :name: Add Host
+      :description: Add Host to Host Aggregate
+      :feature_type: admin
+      :identifier: host_aggregate_add_host
+    - :name: Remove Host
+      :description: Remove Host from Host Aggregate
+      :feature_type: admin
+      :identifier: host_aggregate_remove_host
+
 # CloudObjectStoreContainer
-- :name: Cloud Object Stores
-  :description: Everything under Cloud Object Stores
+- :name: Cloud Object Store Containers
+  :description: Everything under Cloud Object Store Containers
   :feature_type: node
   :identifier: cloud_object_store_container
   :children:
   - :name: View
-    :description: View Volumes
+    :description: View Cloud Object Store Containers
     :feature_type: view
     :identifier: cloudobject_store_container_view
     :children:
     - :name: List
-      :description: Display Lists of Object Store Containers
+      :description: Display Lists of Cloud Object Store Containers
       :feature_type: view
       :identifier: cloud_object_store_container_show_list
     - :name: Show
-      :description: Display Individual Object Store Containers
+      :description: Display Individual Cloud Object Store Container
       :feature_type: view
       :identifier: cloud_object_store_container_show
   - :name: Operate
-    :description: Perform Operations on Object Store Containers
+    :description: Perform Operations on Cloud Object Store Container
     :feature_type: control
     :identifier: cloud_object_store_container_control
     :children:
     - :name: Edit Tags
-      :description: Edit Tags of Object Store Containers
+      :description: Edit Tags of Cloud Object Store Container
       :feature_type: control
       :identifier: cloud_object_store_container_tag
+  - :name: Modify
+    :description: Modify Cloud Object Store Container
+    :feature_type: admin
+    :identifier: cloud_object_store_container_admin
+    :children:
+    - :name: Create
+      :description: Create Cloud Object Store Container
+      :feature_type: admin
+      :identifier: cloud_object_store_container_new
+    - :name: Delete
+      :description: Delete Cloud Object Store Container
+      :feature_type: admin
+      :identifier: cloud_object_store_container_delete
+    - :name: Clear
+      :description: Clear Cloud Object Store Container
+      :feature_type: admin
+      :identifier: cloud_object_store_container_clear
 
 # CloudObjectStoreObject
-- :name: Cloud Objects
-  :description: Everything under Cloud Objects
+- :name: Cloud Object Store Objects
+  :description: Everything under Cloud Object Store Objects
   :feature_type: node
   :identifier: cloud_object_store_object
   :children:
   - :name: View
-    :description: View Objects
+    :description: View Cloud Object Store Objects
     :feature_type: view
     :identifier: cloud_object_store_object_view
     :children:
     - :name: List
-      :description: Display Lists of Objects
+      :description: Display Lists of Cloud Object Store Objects
       :feature_type: view
       :identifier: cloud_object_store_object_show_list
     - :name: Show
-      :description: Display Individual Objects
+      :description: Display Individual Cloud Object Store Object
       :feature_type: view
       :identifier: cloud_object_store_object_show
   - :name: Operate
-    :description: Perform Operations on Objects
+    :description: Perform Operations on Cloud Object Store Object
     :feature_type: control
     :identifier: cloud_object_store_object_control
     :children:
     - :name: Edit Tags
-      :description: Edit Tags of Objects
+      :description: Edit Tags of Cloud Object Store Object
       :feature_type: control
       :identifier: cloud_object_store_object_tag
+  - :name: Modify
+    :description: Modify Cloud Object Store Object
+    :feature_type: admin
+    :identifier: cloud_object_store_object_admin
+    :children:
+    - :name: Delete
+      :description: Delete Cloud Object Store Object
+      :feature_type: admin
+      :identifier: cloud_object_store_object_delete
 
 # CloudTenant
 - :name: Cloud Tenants
@@ -583,6 +677,23 @@
       :description: Edit Tags of Tenants
       :feature_type: control
       :identifier: cloud_tenant_tag
+  - :name: Modify
+    :description: Modify Tenants
+    :feature_type: admin
+    :identifier: cloud_tenant_admin
+    :children:
+    - :name: Add
+      :description: Add a Tenant
+      :feature_type: admin
+      :identifier: cloud_tenant_new
+    - :name: Edit
+      :description: Edit a Tenant
+      :feature_type: admin
+      :identifier: cloud_tenant_edit
+    - :name: Remove
+      :description: Remove Tenants
+      :feature_type: admin
+      :identifier: cloud_tenant_delete
 
 # CloudVolume
 - :name: Cloud Volumes
@@ -625,6 +736,18 @@
       :description: Edit a Volume
       :feature_type: admin
       :identifier: cloud_volume_edit
+    - :name: Create a Backup
+      :description: Create a Volume Backup
+      :feature_type: admin
+      :identifier: cloud_volume_backup_create
+    - :name: Restore from a Backup
+      :description: Restore from a Volume Backup
+      :feature_type: admin
+      :identifier: cloud_volume_backup_restore
+    - :name: Create a Snapshot
+      :description: Create a Volume Snapshot
+      :feature_type: admin
+      :identifier: cloud_volume_snapshot_create
     - :name: Attach
       :description: Attach a Volume
       :feature_type: admin
@@ -708,6 +831,39 @@
       :description: Edit Tags of Snapshots
       :feature_type: control
       :identifier: cloud_volume_snapshot_tag
+    - :name: Remove
+      :description: Remove Snapshot
+      :feature_type: admin
+      :identifier: cloud_volume_snapshot_delete
+
+# CloudVolumeBackup
+- :name: Cloud Volume Backups
+  :description: Everything under Cloud Volume Backups
+  :feature_type: node
+  :identifier: cloud_volume_backup
+  :children:
+  - :name: View
+    :description: View Backups
+    :feature_type: view
+    :identifier: cloud_volume_backup_view
+    :children:
+    - :name: List
+      :description: Display Lists of Backups
+      :feature_type: view
+      :identifier: cloud_volume_backup_show_list
+    - :name: Show
+      :description: Display Individual Backups
+      :feature_type: view
+      :identifier: cloud_volume_backup_show
+  - :name: Operate
+    :description: Perform Operations on Backups
+    :feature_type: control
+    :identifier: cloud_volume_backup_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Backups
+      :feature_type: control
+      :identifier: cloud_volume_backup_tag
 
 # Flavor
 - :name: Flavors
@@ -778,6 +934,10 @@
       :description: Manage Policies of Infrastructure Providers
       :feature_type: control
       :identifier: ems_infra_protect
+    - :name: Check Compliance
+      :description: Check Compliance of Last Known Configuration
+      :feature_type: control
+      :identifier: ems_infra_check_compliance
     - :name: Refresh
       :description: Refresh Infrastructure Providers
       :feature_type: control
@@ -786,6 +946,10 @@
       :description: Re-check Authentication Status of Infrastructure Providers
       :feature_type: control
       :identifier: ems_infra_recheck_auth_status
+    - :name: Import VM
+      :description: Import Virtual Machine from other Infrastructure Provider
+      :feature_type: admin
+      :identifier: ems_infra_import_vm
   - :name: Modify
     :description: Modify Infrastructure Providers
     :feature_type: admin
@@ -1026,6 +1190,18 @@
       :description: Register new Hosts / Nodes
       :feature_type: admin
       :identifier: host_register_nodes
+    - :name: Set Hosts / Nodes to Manageable State
+      :description: Set Hosts / Nodes to Manageable State
+      :feature_type: admin
+      :identifier: host_manageable
+    - :name: Introspect Hosts / Nodes
+      :description: Introspect Hosts / Nodes
+      :feature_type: admin
+      :identifier: host_introspect
+    - :name: Provide Hosts / Nodes
+      :description: Provide Hosts / Nodes
+      :feature_type: admin
+      :identifier: host_provide
 
 
 # Resource Pools
@@ -1202,6 +1378,11 @@
         :description: Delete a Saved Report
         :feature_type: admin
         :identifier: saved_report_delete
+      - :name: Show full screen Report
+        :description: Show full screen Report
+        :feature_type: admin
+        :hidden: true
+        :identifier: report_only
   - :name: Reports
     :description: Everything under Reports Accordion
     :feature_type: node
@@ -1212,6 +1393,21 @@
       :feature_type: view
       :identifier: miq_report_view
       :children:
+      - :name: View Graph
+        :description: Show Report Graph
+        :feature_type: admin
+        :hidden: true
+        :identifier: view_graph
+      - :name: View Hybrid
+        :description: Show Report Hybrid
+        :feature_type: admin
+        :hidden: true
+        :identifier: view_hybrid
+      - :name: View Tabular
+        :description: Show Report Tabular
+        :feature_type: admin
+        :hidden: true
+        :identifier: view_tabular
       - :name: Download CSV Format
         :description: Download Report in CSV Format
         :feature_type: admin
@@ -1411,6 +1607,11 @@
       :feature_type: admin
       :hidden: true
       :identifier: chargeback_download_text
+    - :name: Show Full Screen Report
+      :description: Show Full Screen Report
+      :feature_type: admin
+      :hidden: true
+      :identifier: chargeback_report_only
   - :name: Rates
     :description: Rates Accordion
     :feature_type: node
@@ -1450,12 +1651,39 @@
   :description: Everything under Timelines
   :feature_type: node
   :identifier: timeline
+  :children:
+  - :name: Download CSV Format
+    :description: Download Timeline Data in CSV Format
+    :feature_type: admin
+    :hidden: true
+    :identifier: timeline_csv
+  - :name: Download PDF Format
+    :description: Download Timeline Data in PDF Format
+    :feature_type: admin
+    :hidden: true
+    :identifier: timeline_pdf
+  - :name: Download Text Format
+    :description: Download Timeline Data in Text Format
+    :feature_type: admin
+    :hidden: true
+    :identifier: timeline_txt
 
 # RSS
 - :name: RSS
   :description: Everything under RSS
   :feature_type: node
   :identifier: rss
+
+# Pictures
+- :name: Pictures
+  :description: Everything under Pictures
+  :feature_type: admin
+  :identifier: pictures
+  :children:
+  - :name: Create new Picture
+    :description: Create a new picture
+    :feature_type: admin
+    :identifier: picture_new
 
 # Policy
 - :name: Explorer
@@ -1500,6 +1728,11 @@
         :feature_type: admin
         :hidden: true
         :identifier: profile_edit
+      - :name: Edit Policies Assignment
+        :description: Edit Policy Profile's policies assignments
+        :feature_type: admin
+        :hidden: true
+        :identifier: policy_profile_assign
   - :name: Policies
     :description: Everything under Policies Accordion
     :protected: true
@@ -1621,6 +1854,14 @@
       :hidden: true
       :identifier: action_admin
       :children:
+      - :name: List
+        :description: Display All Policy Actions
+        :feature_type: view
+        :identifier: action_show_list
+      - :name: Show
+        :description: Show MiqAction
+        :feature_type: view
+        :identifier: action_show
       - :name: Add
         :description: Add a Policy Action
         :feature_type: admin
@@ -1702,6 +1943,121 @@
         :feature_type: admin
         :hidden: true
         :identifier: alert_delete
+  - :name: Alerts Statuses
+    :description: Everything under Alerts Statuses
+    :protected: true
+    :feature_type: node
+    :hidden: true
+    :identifier: alert_status
+    :children:
+    - :name: View
+      :description: View Alerts Statuses
+      :feature_type: view
+      :identifier: alert_status_view
+      :children:
+      - :name: List
+        :description: Display Lists of Alert Statuses
+        :feature_type: view
+        :identifier: alert_status_show_list
+      - :name: Show
+        :description: Display Individual Alert Status
+        :feature_type: view
+        :identifier: alert_status_show
+  - :name: Alerts Status Actions
+    :description: Everything under Status Actions
+    :protected: true
+    :feature_type: node
+    :hidden: true
+    :identifier: alert_action
+    :children:
+    - :name: List
+      :description: Display Lists of Alert Status Actions
+      :feature_type: view
+      :identifier: alert_status_action_show_list
+    - :name: Add
+      :description: Display Individual Alert Status
+      :feature_type: admin
+      :identifier: alert_status_action_new
+  - :name: Alert Definitions
+    :description: Everything under Alert Definitions
+    :feature_type: node
+    :hidden: true
+    :identifier: alert_definition
+    :children:
+    - :name: View
+      :description: View Alert Definitions
+      :feature_type: view
+      :identifier: alert_definition_view
+      :children:
+      - :name: List
+        :description: Display List of Alert Definitions
+        :feature_type: view
+        :identifier: alert_definitions_show_list
+      - :name: Show
+        :description: Display Individual Alert Definition
+        :feature_type: view
+        :identifier: alert_definition_show
+    - :name: Modify
+      :description: Modify Alert Definitions
+      :feature_type: admin
+      :hidden: true
+      :identifier: alert_definition_admin
+      :children:
+      - :name: Add
+        :description: Add an Alert Definition
+        :feature_type: admin
+        :hidden: true
+        :identifier: alert_definition_new
+      - :name: Edit
+        :description: Edit an Alert Definition
+        :feature_type: admin
+        :hidden: true
+        :identifier: alert_definition_edit
+      - :name: Delete
+        :description: Delete an Alert Definition
+        :feature_type: admin
+        :hidden: true
+        :identifier: alert_definition_delete
+  - :name: Alert Definition Profiles
+    :description: Everything under Alert Definition Profiles
+    :feature_type: node
+    :hidden: true
+    :identifier: alert_definition_profile
+    :children:
+    - :name: View
+      :description: View Alert Definition Profiles
+      :feature_type: view
+      :identifier: alert_definition_profile_view
+      :children:
+      - :name: List
+        :description: Display List of Alert Definition Profiles
+        :feature_type: view
+        :identifier: alert_definition_profiles_show_list
+      - :name: Show
+        :description: Display Individual Alert Definition Profile
+        :feature_type: view
+        :identifier: alert_definition_profile_show
+    - :name: Modify
+      :description: Modify Alert Definition Profiles
+      :feature_type: admin
+      :hidden: true
+      :identifier: alert_definition_profile_admin
+      :children:
+      - :name: Add
+        :description: Add an Alert Definition Profile
+        :feature_type: admin
+        :hidden: true
+        :identifier: alert_definition_profile_new
+      - :name: Edit
+        :description: Edit an Alert Definition Profile
+        :feature_type: admin
+        :hidden: true
+        :identifier: alert_definition_profile_edit
+      - :name: Delete
+        :description: Delete an Alert Definition Profile
+        :feature_type: admin
+        :hidden: true
+        :identifier: alert_definition_profile_delete
 
 # Policy Simulation
 - :name: Simulation
@@ -2109,6 +2465,14 @@
       :description: Generic Object Definition Create
       :feature_type: node
       :identifier: generic_object_definition_create
+    - :name: Generic Object Definition Edit
+      :description: Generic Object Definition Edit
+      :feature_type: node
+      :identifier: generic_object_definition_edit
+    - :name: Generic Object Definition Delete
+      :description: Generic Object Definition Delete
+      :feature_type: node
+      :identifier: generic_object_definition_delete
 
 # Automate Import/Export
 - :name: Import/Export
@@ -2206,20 +2570,12 @@
     :feature_type: view
     :identifier: tasks_view
     :children:
-    - :name: All VM and Container Analysis Tasks
-      :description: Display Lists of All VM and Container Analysis Tasks
-      :feature_type: view
-      :identifier: job_all_smartproxy
-    - :name: All Other Tasks
-      :description: Display Lists of All UI Tasks
+    - :name: All Tasks
+      :description: Display Lists of All Tasks
       :feature_type: view
       :identifier: miq_task_all_ui
-    - :name: VM and Container Analysis Tasks
-      :description: Display Lists of VM and Container Analysis Tasks
-      :feature_type: view
-      :identifier: job_my_smartproxy
-    - :name: Other UI Tasks
-      :description: Display Lists of UI Tasks
+    - :name: My Tasks
+      :description: Display Lists of My Tasks
       :feature_type: view
       :identifier: miq_task_my_ui
   - :name: Modify
@@ -2383,6 +2739,23 @@
           :feature_type: admin
           :hidden: true
           :identifier: zone_delete
+    - :name: Regions
+      :description: Regions
+      :feature_type: node
+      :hidden: true
+      :identifier: region
+      :children:
+      - :name: Modify
+        :description: Modify Regions
+        :feature_type: admin
+        :identifier: region_admin
+        :hidden: true
+        :children:
+        - :name: Edit
+          :description: Edit a Region
+          :feature_type: admin
+          :hidden: true
+          :identifier: region_edit
   - :name: Access Control
     :description: Access Control Accordion
     :feature_type: node
@@ -2555,15 +2928,6 @@
         :description: View Tenants
         :feature_type: view
         :identifier: rbac_tenant_view
-        :children:
-        - :name: List
-          :description: Display Lists of Tenants
-          :feature_type: view
-          :identifier: rbac_tenant_show_list
-        - :name: Show
-          :description: Display Individual Tenants
-          :feature_type: view
-          :identifier: rbac_tenant_show
       - :name: Modify
         :description: Modify Tenant/Project
         :feature_type: admin
@@ -3400,6 +3764,10 @@
       :description: Show Capacity & Utilization data of Providers
       :feature_type: view
       :identifier: ems_container_perf
+    - :name: Ad hoc Metrics
+      :description: Show Ad hoc Metrics of Providers
+      :feature_type: view
+      :identifier: ems_container_ad_hoc_metrics
     - :name: Timeline
       :description: Display Timelines for Containers Providers
       :feature_type: view
@@ -3425,6 +3793,14 @@
       :description: Re-check Authentication Status of Containers Providers
       :feature_type: control
       :identifier: ems_container_recheck_auth_status
+    - :name: Check Compliance
+      :description: Check Compliance of Last Known Configuration
+      :feature_type: control
+      :identifier: ems_container_check_compliance
+    - :name: Launch External Logging
+      :description: Open External Logging from Container Provider
+      :feature_type: control
+      :identifier: ems_container_launch_external_logging
     - :name: Container Deployments
       :description: Container Deployments
       :feature_type: node
@@ -3584,6 +3960,18 @@
       :description: Stop Middleware Server
       :feature_type: admin
       :identifier: middleware_server_stop
+    - :name: Stop middleware server in domain
+      :description: Stop Middleware Server in Domain
+      :feature_type: admin
+      :identifier: middleware_domain_server_stop
+    - :name: Start middleware server in domain
+      :description: Start Middleware Server in Domain
+      :feature_type: admin
+      :identifier: middleware_domain_server_start
+    - :name: Kill middleware server in domain
+      :description: Kill Middleware Server in Domain
+      :feature_type: admin
+      :identifier: middleware_domain_server_kill
     - :name: Shut down middleware server
       :description: Shut Middleware Server down
       :feature_type: admin
@@ -3600,10 +3988,22 @@
       :description: Restart a Middleware Server
       :feature_type: admin
       :identifier: middleware_server_restart
+    - :name: Restart middleware server in domain
+      :description: Restart a Middleware Server in Domain
+      :feature_type: admin
+      :identifier: middleware_domain_server_restart
     - :name: Add middleware deployment
       :description: Add middleware deployment
       :feature_type: admin
       :identifier: middleware_deployment_add
+    - :name: Add middleware jdbc driver
+      :description: Add middleware jdbc driver
+      :feature_type: admin
+      :identifier: middleware_jdbc_driver_add
+    - :name: Add middleware datasource
+      :description: Add middleware datasource
+      :feature_type: admin
+      :identifier: middleware_datasource_add
 
 # MiddlewareDeployment
 - :name: Middleware Deployment
@@ -3774,6 +4174,34 @@
       :description: Edit Tags of Middleware Server Groups
       :feature_type: control
       :identifier: middleware_server_group_tag
+    - :name: Reload middleware server group
+      :description: Trigger reload operation for Middleware Server Group
+      :feature_type: admin
+      :identifier: middleware_server_group_reload
+    - :name: Stop middleware server group
+      :description: Stop Middleware Server Group
+      :feature_type: admin
+      :identifier: middleware_server_group_stop
+    - :name: Start middleware server group
+      :description: Start Middleware Server Group
+      :feature_type: admin
+      :identifier: middleware_server_group_start
+    - :name: Suspend middleware server group
+      :description: Suspend Middleware Server Group
+      :feature_type: admin
+      :identifier: middleware_server_group_suspend
+    - :name: Resume middleware server group
+      :description: Resume a suspended Middleware Server Group
+      :feature_type: admin
+      :identifier: middleware_server_group_resume
+    - :name: Restart middleware server group
+      :description: Restart a Middleware Server Group
+      :feature_type: admin
+      :identifier: middleware_server_group_restart
+    - :name: Add middleware deployment
+      :description: Add middleware deployment for Server Group
+      :feature_type: admin
+      :identifier: middleware_group_deployment_add
 
 # Middleware Messaging
 - :name: Middleware Messaging
@@ -3807,6 +4235,64 @@
       :description: Edit Tags of Middleware Messaging
       :feature_type: control
       :identifier: middleware_messaging_tag
+
+# EmsDatawarehouse
+- :name: Providers
+  :description: Everything under Datawarehouse Providers
+  :feature_type: node
+  :identifier: ems_datawarehouse
+  :children:
+  - :name: View
+    :description: View Datawarehouse Providers
+    :feature_type: view
+    :identifier: ems_datawarehouse_view
+    :children:
+    - :name: List
+      :description: Display Lists of Datawarehouse Providers
+      :feature_type: view
+      :identifier: ems_datawarehouse_show_list
+    - :name: Show
+      :description: Display Individual Datawarehouse Providers
+      :feature_type: view
+      :identifier: ems_datawarehouse _show
+    - :name: Timeline
+      :description: Display Timelines for Datawarehouse Providers
+      :feature_type: view
+      :identifier: ems_datawarehouse_timeline
+  - :name: Operate
+    :description: Perform Operations on Datawarehouse Providers
+    :feature_type: control
+    :identifier: ems_datawarehouse_control
+    :children:
+    - :name: Refresh
+      :description: Refresh Datawarehouse Providers
+      :feature_type: control
+      :identifier: ems_datawarehouse_refresh
+    - :name: Re-check Authentication Status
+      :description: Re-check Authentication Status of Datawarehouse Providers
+      :feature_type: control
+      :identifier: ems_datawarehouse_recheck_auth_status
+    - :name: Edit Tags
+      :description: Edit Tags of Datawarehouse Providers
+      :feature_type: control
+      :identifier: ems_datawarehouse_tag
+  - :name: Modify
+    :description: Modify Datawarehouse Providers
+    :feature_type: admin
+    :identifier: ems_datawarehouse_admin
+    :children:
+    - :name: Remove
+      :description: Remove Datawarehouse Providers
+      :feature_type: admin
+      :identifier: ems_datawarehouse_delete
+    - :name: Edit
+      :description: Edit a Datawarehouse Provider
+      :feature_type: admin
+      :identifier: ems_datawarehouse_edit
+    - :name: Add
+      :description: Add a Datawarehouse Provider
+      :feature_type: admin
+      :identifier: ems_datawarehouse_new
 
 # EmsNetwork
 - :name: Network Providers
@@ -3898,6 +4384,23 @@
       :description: Edit Tags of Security Group
       :feature_type: control
       :identifier: security_group_tag
+  - :name: Modify
+    :description: Modify Security Groups
+    :feature_type: admin
+    :identifier: security_group_admin
+    :children:
+    - :name: Add
+      :description: Add a Security Group
+      :feature_type: admin
+      :identifier: security_group_new
+    - :name: Edit
+      :description: Edit a Security Group
+      :feature_type: admin
+      :identifier: security_group_edit
+    - :name: Remove
+      :description: Remove Security Groups
+      :feature_type: admin
+      :identifier: security_group_delete
 
 # Floating IP
 - :name: Floating IPs
@@ -3927,6 +4430,23 @@
       :description: Edit Tags of Floating IP
       :feature_type: control
       :identifier: floating_ip_tag
+  - :name: Modify
+    :description: Modify Floating IPs
+    :feature_type: admin
+    :identifier: floating_ip_admin
+    :children:
+    - :name: Add
+      :description: Add a Floating IP
+      :feature_type: admin
+      :identifier: floating_ip_new
+    - :name: Edit
+      :description: Associate/Disassociate a Floating IP
+      :feature_type: admin
+      :identifier: floating_ip_edit
+    - :name: Remove
+      :description: Remove Floating IPs
+      :feature_type: admin
+      :identifier: floating_ip_delete
 
 # Cloud Network
 - :name: Cloud Networks
@@ -3956,6 +4476,24 @@
       :description: Edit Tags of Cloud Network
       :feature_type: control
       :identifier: cloud_network_tag
+  - :name: Modify
+    :description: Modify Networks
+    :feature_type: admin
+    :identifier: cloud_network_admin
+    :children:
+    - :name: Add
+      :description: Add a network
+      :feature_type: admin
+      :identifier: cloud_network_new
+    - :name: Edit
+      :description: Edit a network
+      :feature_type: admin
+      :identifier: cloud_network_edit
+    - :name: Remove
+      :description: Remove Networks
+      :feature_type: admin
+      :identifier: cloud_network_delete
+
 
 # Network Port
 - :name: Network Ports
@@ -4071,6 +4609,32 @@
       :description: Edit Tags of Network Router
       :feature_type: control
       :identifier: network_router_tag
+  - :name: Modify
+    :description: Modify Routers
+    :feature_type: admin
+    :identifier: network_router_admin
+    :children:
+    - :name: Add
+      :description: Add a Router
+      :feature_type: admin
+      :identifier: network_router_new
+    - :name: Edit
+      :description: Edit a Router
+      :feature_type: admin
+      :identifier: network_router_edit
+    - :name: Remove
+      :description: Remove Routers
+      :feature_type: admin
+      :identifier: network_router_delete
+    - :name: Add Interface
+      :description: Add Interface to Router
+      :feature_type: admin
+      :identifier: network_router_add_interface
+    - :name: Remove Interface
+      :description: Remove Interface from Router
+      :feature_type: admin
+      :identifier: network_router_remove_interface
+
 
 # Load Balancer
 - :name: Load Balancers
@@ -4128,23 +4692,6 @@
       :description: Show Capacity & Utilization data of Pods
       :feature_type: view
       :identifier: container_group_perf
-  - :name: Modify
-    :description: Modify Pods
-    :feature_type: admin
-    :identifier: container_group_admin
-    :children:
-    - :name: Remove
-      :description: Remove Pod
-      :feature_type: admin
-      :identifier: container_group_delete
-    - :name: Edit
-      :description: Edit a Pod
-      :feature_type: admin
-      :identifier: container_group_edit
-    - :name: Add
-      :description: Add a Pod
-      :feature_type: admin
-      :identifier: container_group_new
   - :name: Operate
     :description: Perform Operations on Pods
     :feature_type: control
@@ -4190,23 +4737,6 @@
       :description: Display Timelines for Container Nodes
       :feature_type: view
       :identifier: container_node_timeline
-  - :name: Modify
-    :description: Modify Container Nodes
-    :feature_type: admin
-    :identifier: container_node_admin
-    :children:
-    - :name: Remove
-      :description: Remove Container Nodes
-      :feature_type: admin
-      :identifier: container_node_delete
-    - :name: Edit
-      :description: Edit a Container Nodes
-      :feature_type: admin
-      :identifier: container_node_edit
-    - :name: Add
-      :description: Add a Container Nodes
-      :feature_type: admin
-      :identifier: container_node_new
   - :name: Operate
     :description: Perform Operations on Container Nodes
     :feature_type: control
@@ -4252,23 +4782,6 @@
       :description: Display Timelines for container Replicators
       :feature_type: view
       :identifier: container_replicator_timeline
-  - :name: Modify
-    :description: Modify Container Nodes
-    :feature_type: admin
-    :identifier: container_replicator_admin
-    :children:
-    - :name: Remove
-      :description: Remove Container Replicator
-      :feature_type: admin
-      :identifier: container_replicator_delete
-    - :name: Edit
-      :description: Edit a Container Replicator
-      :feature_type: admin
-      :identifier: container_replicator_edit
-    - :name: Add
-      :description: Add a Container Replicator
-      :feature_type: admin
-      :identifier: container_replicator_new
   - :name: Operate
     :description: Perform Operations on Container Replicators
     :feature_type: control
@@ -4348,23 +4861,6 @@
       :description: Display Individual Container Image Registries
       :feature_type: view
       :identifier: container_image_registry_show
-  - :name: Modify
-    :description: Modify Container Image Registries
-    :feature_type: admin
-    :identifier: container_image_registry_admin
-    :children:
-    - :name: Remove
-      :description: Remove Container Image Registry
-      :feature_type: admin
-      :identifier: container_image_registry_delete
-    - :name: Edit
-      :description: Edit a Container Image Registry
-      :feature_type: admin
-      :identifier: container_image_registry_edit
-    - :name: Add
-      :description: Add a Container Image Registry
-      :feature_type: admin
-      :identifier: container_image_registry_new
   - :name: Operate
     :description: Perform Operations on Container Image Registries
     :feature_type: control
@@ -4440,23 +4936,6 @@
       :description: Display Individual Container Build
       :feature_type: view
       :identifier: container_build_show
-  - :name: Modify
-    :description: Modify Container Build
-    :feature_type: admin
-    :identifier: container_build_admin
-    :children:
-    - :name: Remove
-      :description: Remove Container Build
-      :feature_type: admin
-      :identifier: container_build_delete
-    - :name: Edit
-      :description: Edit a Container Build
-      :feature_type: admin
-      :identifier: container_build_edit
-    - :name: Add
-      :description: Add a Container Build
-      :feature_type: admin
-      :identifier: container_build_new
   - :name: Operate
     :description: Perform Operations on Container Build
     :feature_type: control
@@ -4466,6 +4945,35 @@
       :description: Edit Tags of Container Build
       :feature_type: control
       :identifier: container_build_tag
+
+# ContainerTemplate
+- :name: Templates
+  :description: Everything under Container Template
+  :feature_type: node
+  :identifier: container_template
+  :children:
+  - :name: View
+    :description: View Container Template
+    :feature_type: node
+    :identifier: container_template_view
+    :children:
+    - :name: List
+      :description: Display Lists of Container Template
+      :feature_type: view
+      :identifier: container_template_show_list
+    - :name: Show
+      :description: Display Individual Container Template
+      :feature_type: view
+      :identifier: container_template_show
+  - :name: Operate
+    :description: Perform Operations on Container Template
+    :feature_type: control
+    :identifier: container_template_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Container Template
+      :feature_type: control
+      :identifier: container_template_tag
 
 # ContainerService
 - :name: Services
@@ -4490,23 +4998,6 @@
       :description: Show Capacity & Utilization data of Service
       :feature_type: view
       :identifier: container_service_perf
-  - :name: Modify
-    :description: Modify Container Services
-    :feature_type: admin
-    :identifier: container_service_admin
-    :children:
-    - :name: Remove
-      :description: Remove Container Services
-      :feature_type: admin
-      :identifier: container_service_delete
-    - :name: Edit
-      :description: Edit a Container Services
-      :feature_type: admin
-      :identifier: container_service_edit
-    - :name: Add
-      :description: Add a Container Services
-      :feature_type: admin
-      :identifier: container_service_new
   - :name: Operate
     :description: Perform Operations on Container Services
     :feature_type: control
@@ -4621,18 +5112,6 @@
       :feature_type: admin
       :identifier: container_admin
       :children:
-      - :name: Remove Container
-        :description: Remove Container
-        :feature_type: admin
-        :identifier: container_delete
-      - :name: Edit Container
-        :description: Edit a Container
-        :feature_type: admin
-        :identifier: container_edit
-      - :name: Add Container
-        :description: Add a Container
-        :feature_type: admin
-        :identifier: container_new
       - :name: Utilization
         :description: Show Capacity & Utilization data of Containers
         :feature_type: view
@@ -4668,6 +5147,17 @@
     :description: View Containers Dashboard
     :feature_type: view
     :identifier: container_dashboard_view
+
+# Infra Provider Dashboard
+- :name: Infra Providers Dashboard
+  :description: Infra Providers Dashboard
+  :feature_type: node
+  :identifier: ems_infra_dashboard
+  :children:
+  - :name: View
+    :description: View Infra Providers Dashboard
+    :feature_type: view
+    :identifier: ems_infra_dashboard_view
 
 # Foreman
 - :name: Configuration Management
@@ -4762,6 +5252,187 @@
           :description: Edit Job Templates Tags
           :feature_type: control
           :identifier: configuration_script_tag
+
+# Embedded Automation Manager
+- :name: Embedded Automation Manager
+  :description: Everything under Ansible
+  :feature_type: node
+  :identifier: embedded_automation_manager
+  :children:
+  - :name: Repositories
+    :description: Everything under Repositories
+    :feature_type: node
+    :identifier: embedded_configuration_script_source
+    :children:
+    - :name: View
+      :description: View Repositories
+      :feature_type: view
+      :identifier: embedded_configuration_script_source_view
+    - :name: Modify
+      :description: Modify Repositories
+      :feature_type: admin
+      :identifier: embedded_configuration_script_source_admin
+      :children:
+        - :name: Add Repository
+          :description: Add a Repository
+          :feature_type: admin
+          :identifier: embedded_configuration_script_source_add
+        - :name: Edit Repository
+          :description: Edit a Repository
+          :feature_type: admin
+          :identifier: embedded_configuration_script_source_edit
+        - :name: Remove Repository
+          :description: Remove a Repository
+          :feature_type: admin
+          :identifier: embedded_configuration_script_source_delete
+        - :name: Refresh Repositories
+          :description: Ansible Repositories Refresh
+          :feature_type: control
+          :identifier: embedded_configuration_script_source_refresh
+  - :name: Playbooks
+    :description: Everything under Playbooks
+    :feature_type: node
+    :identifier: embedded_configuration_script_payload
+    :children:
+    - :name: View
+      :description: View Playbooks
+      :feature_type: view
+      :identifier: embedded_configuration_script_payload_view
+    - :name: Modify
+      :description: Modify Playbooks
+      :feature_type: admin
+      :identifier: embedded_configuration_script_payload_admin
+      :children:
+        - :name: Add Playbook
+          :description: Add a Playbook
+          :feature_type: admin
+          :identifier: embedded_configuration_script_payload_add
+        - :name: Edit Playbook
+          :description: Edit a Playbook
+          :feature_type: admin
+          :identifier: embedded_configuration_script_payload_edit
+        - :name: Refresh Playbooks
+          :description: Ansible Playbooks Refresh
+          :feature_type: control
+          :identifier: embedded_configuration_script_payload_refresh
+
+  - :name: Credentials
+    :description: Everything under Credentials
+    :feature_type: node
+    :identifier: embedded_automation_manager_credentials
+    :children:
+    - :name: View
+      :description: View Credentials
+      :feature_type: view
+      :identifier: embedded_automation_manager_credentials_view
+    - :name: Modify
+      :description: Modify Credentials
+      :feature_type: admin
+      :identifier: embedded_automation_manager_credentials_admin
+      :children:
+        - :name: Add Credentials
+          :description: Add a Credential
+          :feature_type: admin
+          :identifier: embedded_automation_manager_credentials_add
+        - :name: Edit Credentials
+          :description: Edit a Credential
+          :feature_type: admin
+          :identifier: embedded_automation_manager_credentials_edit
+        - :name: Delete Credentials
+          :description: Delete a Credential
+          :feature_type: admin
+          :identifier: embedded_automation_manager_credentials_delete
+        - :name: Refresh Credentials
+          :description: Ansible Credentials Refresh
+          :feature_type: control
+          :identifier: embedded_automation_manager_credentials_refresh
+
+# Automation Manager
+- :name: Ansible Tower
+  :description: Everything under Ansible Tower
+  :feature_type: node
+  :identifier: automation_manager
+  :children:
+  - :name: Ansible Tower Providers
+    :description: Everything under the Providers accordion
+    :feature_type: node
+    :identifier: automation_manager_providers
+    :children:
+    - :name: View
+      :description: View Providers, Inventory Groups, Configured Systems
+      :feature_type: view
+      :identifier: automation_manager_providers_view
+    - :name: Operate
+      :description: Perform Operations on Providers and Configured Systems
+      :feature_type: control
+      :identifier: automation_manager_providers_control
+      :children:
+        - :name: Edit Tags
+          :description: Edit Configured Systems Tags
+          :feature_type: control
+          :identifier: automation_manager_provider_configured_system_tag
+        - :name: Refresh Providers
+          :description: Refresh relationships for all items related of Provider
+          :feature_type: control
+          :identifier: automation_manager_refresh_provider
+    - :name: Modify
+      :description: Modify Providers
+      :feature_type: admin
+      :identifier: automation_manager_admin
+      :children:
+        - :name: Remove Providers
+          :description: Remove Provier
+          :feature_type: admin
+          :identifier: automation_manager_delete_provider
+        - :name: Edit Provider
+          :description: Edit a Provider
+          :feature_type: admin
+          :identifier: automation_manager_edit_provider
+        - :name: Add Provider
+          :description: Add a Provider
+          :feature_type: admin
+          :identifier: automation_manager_add_provider
+  - :name: Configured Systems
+    :description: Everything under Configured Systems accordion
+    :feature_type: node
+    :identifier: automation_manager_configured_system
+    :children:
+      - :name: View
+        :description: View Configured Systems
+        :feature_type: view
+        :identifier: automation_manager_configured_system_view
+      - :name: Operate
+        :description: Perform Operations on Configured Systems
+        :feature_type: control
+        :identifier: automation_manager_configured_system_control
+        :children:
+          - :name: Edit Tags
+            :description: Edit Configured Systems Tags
+            :feature_type: control
+            :identifier: automation_manager_configured_system_tag
+  - :name: Automation Scripts
+    :description: Everything under Automation Scripts accordion
+    :feature_type: node
+    :identifier: automation_manager_configuration_scripts_accord
+    :children:
+    - :name: View
+      :description: View Automation Scripts
+      :feature_type: view
+      :identifier: automation_manager_configuration_script_view
+    - :name: Operate
+      :description: Perform Operations on Providers and Configured Systems
+      :feature_type: control
+      :identifier: automation_manager_configuration_script_control
+      :children:
+        - :name: Create Service Dialog
+          :description: Create Service Dialog
+          :feature_type: admin
+          :identifier: automation_manager_configuration_script_service_dialog
+        - :name: Edit Tags
+          :description: Edit Job Templates Tags
+          :feature_type: control
+          :identifier: automation_manager_configuration_script_tag
+
 # Configuration Jobs
 - :name: Configuration Jobs
   :description: Everything under Configuration Jobs
@@ -4852,6 +5523,22 @@
         :description: Display Instances Drift
         :feature_type: view
         :identifier: instance_drift
+        :children:
+        - :name: Download as CSV
+          :description: Download comparison report in CSV Format
+          :feature_type: admin
+          :hidden: true
+          :identifier: drift_download_csv
+        - :name: Download as PDF
+          :description: Download comparison report in PDF Format
+          :feature_type: admin
+          :hidden: true
+          :identifier: drift_download_pdf
+        - :name: Download as Text
+          :description: Download comparison report in Text Format
+          :feature_type: admin
+          :hidden: true
+          :identifier: drift_download_txt
       - :name: Utilization
         :description: Show Capacity & Utilization data of Instances
         :feature_type: view
@@ -5121,6 +5808,10 @@
         :description: Display Timelines for VMs
         :feature_type: view
         :identifier: vm_timeline
+      - :name: VM's Chargeback
+        :description: Show Chargeback Preview for a VM
+        :feature_type: view
+        :identifier: vm_chargeback
     - :name: Operate
       :description: Perform Operations on VMs
       :feature_type: control
@@ -5194,6 +5885,10 @@
         :description: Open a web-based console for VMs
         :feature_type: control
         :identifier: vm_console
+      - :name: Console using WebMKS
+        :description: Open a web-based console for VMs
+        :feature_type: control
+        :identifier: vm_webmks_console
       - :name: Console using VNC
         :description: Open a web-based VNC console for VMs
         :feature_type: control
@@ -5380,27 +6075,6 @@
         :description: Edit EVM Server Relationship
         :feature_type: admin
         :identifier: miq_template_evm_relationship
-    - :name: Virtual Templates
-      :description: Everything for Virtual Templates
-      :feature_type: admin
-      :identifier: miq_virtual_template
-      :children:
-      - :name: Show Virtual Templates
-        :description: Show Virtual Templates
-        :feature_type: admin
-        :identifier: virtual_template_show
-      - :name: Edit Virtual Templates
-        :description: Edit Virtual Template
-        :feature_type: admin
-        :identifier: edit_virtual_template
-      - :name: Delete Virtual Template
-        :description: Delete Virtual Template
-        :feature_type: admin
-        :identifier: delete_virtual_template
-      - :name: Provision Virtual Template
-        :description: Provision Virtual Template
-        :feature_type: admin
-        :identifier: provision_virtual_template
     - :name: Snapshots
       :description: Everything for Template Snapshots
       :feature_type: node
@@ -5448,52 +6122,6 @@
       :feature_type: view
       :identifier: miq_cloud_networks_view
 
-# ArbitrationSettings
-- :name: Arbitration Settings
-  :description: Get and Edit Arbitration Settings
-  :feature_type: admin
-  :identifier: miq_arbitration_settings
-  :children:
-  - :name: Show Arbitration Settings
-    :description: Show Arbitration Settings
-    :feature_type: admin
-    :identifier: show_arbitration_setting
-  - :name: Create Arbitration Settings
-    :description: Create Arbitration Setting
-    :feature_type: admin
-    :identifier: create_arbitration_setting
-  - :name: Edit Arbitration Settings
-    :description: Edit Arbitration Settings
-    :feature_type: admin
-    :identifier: edit_arbitration_setting
-  - :name: Delete Arbitration Settings
-    :description: Delete Arbitration Settings
-    :feature_type: admin
-    :identifier: delete_arbitration_setting
-
-# ArbitrationRules
-- :name: Arbitration Rules
-  :description: All functions for Arbitration Rules
-  :feature_type: admin
-  :identifier: miq_arbitration_rules
-  :children:
-  - :name: Show Arbitration List
-    :description: Show Arbitration Rule list
-    :feature_type: admin
-    :identifier: arbitration_rule_show_list
-  - :name: Create Arbitration Rule
-    :description: Create Arbitration Rule
-    :feature_type: admin
-    :identifier: arbitration_rule_new
-  - :name: Delete Arbitration Rule
-    :description: Delete Arbitration Rule
-    :feature_type: admin
-    :identifier: arbitration_rule_delete
-  - :name: Edit Arbitration Rule
-    :description: Edit Arbitration Rule
-    :feature_type: admin
-    :identifier: arbitration_rule_edit
-
 # Blueprints
 - :name: Blueprints
   :description: All Blueprint Access Rules
@@ -5538,3 +6166,326 @@
       :description: Publish Blueprint
       :feature_type: admin
       :identifier: blueprint_publish
+
+# EmsStorage
+- :name: Storage Managers
+  :description: Everything under Storage Managers
+  :feature_type: node
+  :identifier: ems_storage
+  :children:
+  - :name: View
+    :description: View Storage Managers
+    :feature_type: view
+    :identifier: ems_storage_view
+    :children:
+    - :name: List
+      :description: Display Lists of Storage Managers
+      :feature_type: view
+      :identifier: ems_storage_show_list
+    - :name: Show
+      :description: Display Individual Storage Managers
+      :feature_type: view
+      :identifier: ems_storage_show
+    - :name: Timeline
+      :description: Display Timelines for Storage Managers
+      :feature_type: view
+      :identifier: ems_storage_timeline
+  - :name: Operate
+    :description: Perform Operations on Storage Managers
+    :feature_type: control
+    :identifier: ems_storage_control
+    :children:
+    - :name: Discover
+      :description: Discover Storage Managers
+      :feature_type: control
+      :identifier: ems_storage_discover
+    - :name: Edit Tags
+      :description: Edit Tags of Storage Managers
+      :feature_type: control
+      :identifier: ems_storage_tag
+    - :name: Manage Policies
+      :description: Manage Policies of Storage Managers
+      :feature_type: control
+      :identifier: ems_storage_protect
+    - :name: Refresh
+      :description: Refresh Storage Managers
+      :feature_type: control
+      :identifier: ems_storage_refresh
+  - :name: Modify
+    :description: Modify Storage Managers
+    :feature_type: admin
+    :identifier: ems_storage_admin
+    :children:
+    - :name: Remove
+      :description: Remove Storage Manager
+      :feature_type: admin
+      :identifier: ems_storage_delete
+    - :name: Edit
+      :description: Edit a Storage Manager
+      :feature_type: admin
+      :identifier: ems_storage_edit
+    - :name: Add
+      :description: Add a Storage Manager
+      :feature_type: admin
+      :identifier: ems_storage_new
+
+# EmsBlockStorage
+- :name: Block Storage Managers
+  :description: Everything under Block Storage Managers
+  :feature_type: node
+  :identifier: ems_block_storage
+  :children:
+  - :name: View
+    :description: View Block Storage Managers
+    :feature_type: view
+    :identifier: ems_block_storage_view
+    :children:
+    - :name: List
+      :description: Display Lists of Block Storage Managers
+      :feature_type: view
+      :identifier: ems_block_storage_show_list
+    - :name: Show
+      :description: Display Individual Block Storage Managers
+      :feature_type: view
+      :identifier: ems_block_storage_show
+    - :name: Timeline
+      :description: Display Timelines for Block Storage Managers
+      :feature_type: view
+      :identifier: ems_block_storage_timeline
+  - :name: Operate
+    :description: Perform Operations on Block Storage Managers
+    :feature_type: control
+    :identifier: ems_block_storage_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Block Storage Managers
+      :feature_type: control
+      :identifier: ems_block_storage_tag
+    - :name: Manage Policies
+      :description: Manage Policies of Block Storage Managers
+      :feature_type: control
+      :identifier: ems_block_storage_protect
+
+# EmsObjectStorage
+- :name: Object Storage Managers
+  :description: Everything under Object Storage Managers
+  :feature_type: node
+  :identifier: ems_object_storage
+  :children:
+  - :name: View
+    :description: View Object Storage Managers
+    :feature_type: view
+    :identifier: ems_object_storage_view
+    :children:
+    - :name: List
+      :description: Display Lists of Object Storage Managers
+      :feature_type: view
+      :identifier: ems_object_storage_show_list
+    - :name: Show
+      :description: Display Individual Object Storage Managers
+      :feature_type: view
+      :identifier: ems_object_storage_show
+    - :name: Timeline
+      :description: Display Timelines for Object Storage Managers
+      :feature_type: view
+      :identifier: ems_object_storage_timeline
+  - :name: Operate
+    :description: Perform Operations on Object Storage Managers
+    :feature_type: control
+    :identifier: ems_object_storage_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Object Storage Managers
+      :feature_type: control
+      :identifier: ems_object_storage_tag
+    - :name: Manage Policies
+      :description: Manage Policies of Object Storage Managers
+      :feature_type: control
+      :identifier: ems_object_storage_protect
+
+# EmsPhysicalInfra
+- :name: Physical Infrastructure Providers
+  :description: Everything under Physical Infrastructure Providers
+  :feature_type: node
+  :identifier: ems_physical_infra
+  :children:
+  - :name: View
+    :description: View Physical Infrastructure Providers
+    :feature_type: view
+    :identifier: ems_physical_infra_view
+    :children:
+    - :name: List
+      :description: Display List of Physical Infrastructure Providers
+      :feature_type: view
+      :identifier: ems_physical_infra_show_list
+    - :name: Show
+      :description: Display Individual Physical Infrastructure Providers
+      :feature_type: view
+      :identifier: ems_physical_infra_show
+    - :name: Timeline
+      :description: Display Timelines for Physical Infrastructure Providers
+      :feature_type: view
+      :identifier: ems_physical_infra_timeline
+  - :name: Operate
+    :description: Perform Operations on Physical Infrastructure Providers
+    :feature_type: control
+    :identifier: ems_physical_infra_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Physical Infrastructure Providers
+      :feature_type: control
+      :identifier: ems_physical_infra_tag
+    - :name: Manage Policies
+      :description: Manage Policies of Physical Infrastructure Providers
+      :feature_type: control
+      :identifier: ems_physical_infra_protect
+    - :name: Check Compliance
+      :description: Check Compliance of Last Known Configuration
+      :feature_type: control
+      :identifier: ems_physical_infra_check_compliance
+    - :name: Refresh
+      :description: Refresh Physical Infrastructure Providers
+      :feature_type: control
+      :identifier: ems_physical_infra_refresh
+    - :name: Re-check Authentication Status
+      :description: Re-check Authentication Status of Physical Infrastructure Providers
+      :feature_type: control
+      :identifier: ems_physical_infra_recheck_auth_status
+  - :name: Modify
+    :description: Modify Physical Infrastructure Providers
+    :feature_type: admin
+    :identifier: ems_physical_infra_admin
+    :children:
+    - :name: Remove
+      :description: Remove Physical Infrastructure Providers
+      :feature_type: admin
+      :identifier: ems_physical_infra_delete
+    - :name: Edit
+      :description: Edit a Physical Infrastructure Provider
+      :feature_type: admin
+      :identifier: ems_physical_infra_edit
+    - :name: Add
+      :description: Add a Physical Infrastructure Provider
+      :feature_type: admin
+      :identifier: ems_physical_infra_new
+
+# Physical Servers
+- :name: Physical Servers
+  :description: Everything under Physical Servers
+  :feature_type: node
+  :identifier: physical_server
+  :children:
+  - :name: View
+    :description: View Physical Server
+    :feature_type: view
+    :identifier: physical_server_view
+    :children:
+    - :name: List
+      :description: Display Lists of Physical Servers
+      :feature_type: view
+      :identifier: physical_server_show_list
+    - :name: Show
+      :description: Display Individual Physical Server
+      :feature_type: view
+      :identifier: physical_server_show
+  - :name: Modify
+    :description: Modify Physical Servers
+    :feature_type: admin
+    :identifier: physical_server_admin
+    :children:
+    - :name: Remove
+      :description: Remove Physical Server(s)
+      :feature_type: admin
+      :identifier: physical_server_delete
+    - :name: Edit
+      :description: Edit a Physical Server
+      :feature_type: admin
+      :identifier: physical_server_edit
+  - :name: Operate
+    :description: Perform Operations on Physical Servers
+    :feature_type: control
+    :identifier: physical_server_control
+    :children:
+    - :name: Turn On Server
+      :description: Turn On Server
+      :feature_type: control
+      :identifier: physical_server_power_on        
+    - :name: Turn Off Server
+      :description: Turn Off Server
+      :feature_type: control
+      :identifier: physical_server_power_off  
+    - :name: Restart Server
+      :description: Restart Server
+      :feature_type: control
+      :identifier: physical_server_restart
+    - :name: Blink LED
+      :description: Blink Loc LED
+      :feature_type: control
+      :identifier: physical_server_blink_loc_led
+    - :name: Turn On LED
+      :description: Turn On Loc LED
+      :feature_type: control
+      :identifier: physical_server_turn_on_loc_led
+    - :name: Turn Off LED
+      :description: Turn Off Loc LED
+      :feature_type: control
+      :identifier: physical_server_turn_off_loc_led
+    - :name: Refresh
+      :description: Refresh relationships and power states for all items related to Physical Servers / Nodes
+      :feature_type: control
+      :identifier: physical_server_refresh
+
+# Firmwares
+- :name: Firmwares
+  :description: Everything under Firmware 
+  :feature_type: node
+  :identifier: firmware
+  :children:
+  - :name: View
+    :description: View Firmware
+    :feature_type: view
+    :identifier: firmware_view
+    :children:
+    - :name: List
+      :description: Display Lists of Firmware
+      :feature_type: view
+      :identifier: firmware_show_list
+    - :name: Show
+      :description: Display Individual Firmware
+      :feature_type: view
+      :identifier: firmware_show
+
+# Physical Infrastructure Topology
+- :name: Physical Infra Topology
+  :description: Physical Infra Topology
+  :feature_type: node
+  :identifier: physical_infra_topology
+  :children:
+    - :name: View
+      :description: View Physical Infra Topology
+      :feature_type: view
+      :identifier: physical_infra_topology_view
+
+# Monitor
+- :name: Monitor
+  :description: Everything under Monitor
+  :feature_type: node
+  :identifier: monitor
+  :children:
+  - :name: Alerts
+    :description: Alerts
+    :feature_type: node
+    :identifier: monitor_alerts
+    :children:
+    - :name: Overview
+      :description: Alerts Overview
+      :feature_type: view
+      :identifier: monitor_alerts_overview
+    - :name: All Alerts
+      :description: Show Alerts List
+      :feature_type: view
+      :identifier: monitor_alerts_list
+    - :name: Most Recent Alerts
+      :description: Show Most Recent Alerts
+      :feature_type: view
+      :identifier: monitor_alerts_most_recent

@@ -10,7 +10,10 @@
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
+  - automation_manager
+  - embedded_automation_manager
   - availability_zone
+  - host_aggregate
   - compute
   - flavor
   - floating_ip
@@ -22,6 +25,8 @@
   - ontap_storage_volume
   - catalog
   - cloud_network
+  - cloud_object_store_container
+  - cloud_object_store_object
   - control_explorer
   - dashboard
   - datacenter
@@ -31,6 +36,7 @@
   - ems_network
   - ems_cluster
   - ems_infra
+  - ems_physical_infra
   - container_dashboard
   - ems_container
   - ems_container_deployment
@@ -52,10 +58,10 @@
   - middleware_deployment
   - middleware_datasource
   - middleware_topology
+  - cloud_topology
+  - infra_topology
   - host
   - infra_networking
-  - job_all_smartproxy
-  - job_my_smartproxy
   - miq_ae_class_explorer
   - miq_ae_customization_explorer
   - miq_ae_class_import_export
@@ -125,12 +131,15 @@
   - ems_infra_show_list
   - ems_infra_tag
   - ems_infra_timeline
+  - ems_physical_infra_show
+  - ems_physical_infra_show_list
+  - ems_physical_infra_tag
+  - ems_physical_infra_timeline
   - host_show
   - host_show_list
   - host_perf
   - host_tag
   - host_timeline
-  - job_my_smartproxy
   - storage_manager_new
   - storage_manager_edit
   - storage_manager_refresh_inventory
@@ -181,6 +190,7 @@
   - usage
   - vm_check_compliance
   - vm_console
+  - vm_webmks_console
   - vm_cloud_explorer
   - vm_explorer
   - vm_infra_explorer
@@ -194,12 +204,15 @@
   - vm_snapshot
   - vm_tag
   - vm_timeline
+  - vm_chargeback
 
 - :name: EvmRole-auditor
   :read_only: true
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
+  - automation_manager
+  - embedded_automation_manager
   - bottlenecks
   - compute
   - chargeback
@@ -232,12 +245,15 @@
   - ems_infra_show_list
   - ems_infra_tag
   - ems_infra_timeline
+  - ems_physical_infra_show
+  - ems_physical_infra_show_list
+  - ems_physical_infra_tag
+  - ems_physical_infra_timeline
   - host_show
   - host_show_list
   - host_perf
   - host_tag
   - host_timeline
-  - job_my_smartproxy
   - storage_manager_new
   - storage_manager_edit
   - storage_manager_refresh_inventory
@@ -289,6 +305,7 @@
   - utilization
   - vm_check_compliance
   - vm_console
+  - vm_webmks_console
   - vm_cloud_explorer
   - vm_explorer
   - vm_infra_explorer
@@ -301,12 +318,14 @@
   - vm_snapshot_view
   - vm_tag
   - vm_timeline
+  - vm_chargeback
 
 - :name: EvmRole-desktop
   :read_only: true
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
+  - automation_manager
   - compute
   - dashboard
   - miq_request_admin
@@ -329,6 +348,7 @@
   - vm_clone
   - vm_compare
   - vm_console
+  - vm_webmks_console
   - vm_cloud_explorer
   - vm_explorer
   - vm_infra_explorer
@@ -353,12 +373,15 @@
   - vm_shelve
   - vm_shelve_offload
   - vm_timeline
+  - vm_chargeback
 
 - :name: EvmRole-operator
   :read_only: true
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
+  - automation_manager
+  - embedded_automation_manager
   - compute
   - chargeback
   - chargeback_reports
@@ -398,6 +421,14 @@
   - ems_infra_show_list
   - ems_infra_tag
   - ems_infra_timeline
+  - ems_physical_infra_new
+  - ems_physical_infra_delete
+  - ems_physical_infra_edit
+  - ems_physical_infra_refresh
+  - ems_physical_infra_show
+  - ems_physical_infra_show_list
+  - ems_physical_infra_tag
+  - ems_physical_infra_timeline
   - host_new
   - host_analyze
   - host_compare
@@ -410,7 +441,6 @@
   - host_perf
   - host_tag
   - host_timeline
-  - job_my_smartproxy
   - storage_manager_new
   - storage_manager_edit
   - storage_manager_refresh_inventory
@@ -465,6 +495,7 @@
   - vm_collect_running_processes
   - vm_compare
   - vm_console
+  - vm_webmks_console
   - vm_cloud_explorer
   - vm_explorer
   - vm_infra_explorer
@@ -490,6 +521,7 @@
   - vm_sync
   - vm_tag
   - vm_timeline
+  - vm_chargeback
 
 - :name: EvmRole-security
   :read_only: true
@@ -523,12 +555,15 @@
   - ems_infra_show_list
   - ems_infra_tag
   - ems_infra_timeline
+  - ems_physical_infra_show
+  - ems_physical_infra_show_list
+  - ems_physical_infra_tag
+  - ems_physical_infra_timeline
   - host_show
   - host_show_list
   - host_perf
   - host_tag
   - host_timeline
-  - job_my_smartproxy
   - storage_manager_show
   - storage_manager_show_list
   - my_settings_default_views
@@ -588,6 +623,7 @@
   - vm_snapshot_revert
   - vm_tag
   - vm_timeline
+  - vm_chargeback
 
 - :name: EvmRole-support
   :read_only: true
@@ -619,12 +655,15 @@
   - ems_infra_show_list
   - ems_infra_tag
   - ems_infra_timeline
+  - ems_physical_infra_show
+  - ems_physical_infra_show_list
+  - ems_physical_infra_tag
+  - ems_physical_infra_timeline
   - host_show
   - host_show_list
   - host_perf
   - host_tag
   - host_timeline
-  - job_my_smartproxy
   - storage_manager_show
   - storage_manager_show_list
   - miq_task_my_ui
@@ -666,6 +705,7 @@
   - vm_check_compliance
   - vm_collect_running_processes
   - vm_console
+  - vm_webmks_console
   - vm_cloud_explorer
   - vm_explorer
   - vm_infra_explorer
@@ -681,6 +721,7 @@
   - vm_snapshot
   - vm_tag
   - vm_timeline
+  - vm_chargeback
 
 - :name: EvmRole-user
   :read_only: true
@@ -711,12 +752,15 @@
   - ems_infra_show_list
   - ems_infra_tag
   - ems_infra_timeline
+  - ems_physical_infra_show
+  - ems_physical_infra_show_list
+  - ems_physical_infra_tag
+  - ems_physical_infra_timeline
   - host_show
   - host_show_list
   - host_perf
   - host_tag
   - host_timeline
-  - job_my_smartproxy
   - storage_manager_show
   - storage_manager_show_list
   - miq_task_my_ui
@@ -756,6 +800,7 @@
   - usage
   - vm_check_compliance
   - vm_console
+  - vm_webmks_console
   - vm_cloud_explorer
   - vm_explorer
   - vm_infra_explorer
@@ -770,6 +815,7 @@
   - vm_snapshot
   - vm_tag
   - vm_timeline
+  - vm_chargeback
 
 - :name: EvmRole-user_limited_self_service
   :read_only: true
@@ -820,6 +866,8 @@
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
+  - automation_manager
+  - embedded_automation_manager
   - compute
   - miq_template_clone
   - miq_template_drift
@@ -845,9 +893,11 @@
   - service_view
   - svc_catalog_provision
   - vm_console
+  - vm_webmks_console
   - vm_clone
   - vm_cloud_explorer
   - vm_console
+  - vm_webmks_console
   - vm_drift
   - vm_edit
   - vm_filter_accord
@@ -872,6 +922,7 @@
   - vm_sync
   - vm_tag
   - vm_timeline
+  - vm_chargeback
   - vm_vmrc_console
   - vm_vnc_console
   - cockpit_console
@@ -881,6 +932,8 @@
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
+  - automation_manager
+  - embedded_automation_manager
   - compute
   - miq_request_admin
   - miq_request_view
@@ -906,6 +959,7 @@
   - vm_collect_running_processes
   - vm_compare
   - vm_console
+  - vm_webmks_console
   - vm_drift
   - vm_explorer
   - vm_guest_restart
@@ -930,6 +984,7 @@
   - vm_sync
   - vm_tag
   - vm_timeline
+  - vm_chargeback
   - vm_vmrc_console
   - vm_vnc_console
   - cockpit_console
@@ -938,10 +993,16 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - automation_manager
+  - embedded_automation_manager
   - availability_zone
+  - host_aggregate
   - all_vm_rules
   - compute
+  - cloud_network
+  - cloud_subnet
   - flavor
+  - floating_ip
   - bottlenecks
   - chargeback
   - ontap_storage_system
@@ -955,11 +1016,12 @@
   - datacenter
   - storage
   - ems_cloud
+  - ems_network
   - ems_cluster
   - ems_infra
+  - ems_physical_infra
   - host
-  - job_all_smartproxy
-  - job_my_smartproxy
+  - load_balancer
   - miq_ae_class_explorer
   - miq_ae_customization_explorer
   - miq_ae_class_import_export
@@ -969,6 +1031,8 @@
   - miq_task_all_ui
   - miq_task_my_ui
   - my_settings
+  - network_port
+  - network_router
   - policy_simulation
   - policy_log
   - miq_report
@@ -1001,7 +1065,10 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - automation_manager
+  - embedded_automation_manager
   - availability_zone
+  - host_aggregate
   - all_vm_rules
   - flavor
   - bottlenecks
@@ -1020,9 +1087,8 @@
   - ems_cloud
   - ems_cluster
   - ems_infra
+  - ems_physical_infra
   - host
-  - job_all_smartproxy
-  - job_my_smartproxy
   - miq_ae_class_explorer
   - miq_ae_customization_explorer
   - miq_ae_class_import_export
@@ -1064,3 +1130,92 @@
   - dashboard
   - chargeback
   - miq_report
+
+- :name: EvmRole-container_administrator
+  :read_only: true
+  :miq_product_feature_identifiers:
+  - vms_filter_accord
+  - instances_filter_accord
+  - datacenter_controller
+  - storage_pod
+  - dashboard
+  - miq_report
+  - consumption
+  - chargeback
+  - pictures
+  - control_explorer
+  - generic_object_explorer
+  - my_settings
+  - tasks
+  - about
+  - ontap_storage_system
+  - ontap_storage_volume
+  - ontap_logical_disk
+  - cim_base_storage_extent
+  - ontap_file_share
+  - snia_local_file_system
+  - storage_manager
+  - ems_container
+  - middleware_server_group
+  - container_group
+  - container_node
+  - container_replicator
+  - container_image
+  - container_image_registry
+  - persistent_volume
+  - container_build
+  - container_template
+  - container_service
+  - container_route
+  - container_project
+  - containers
+  - container_topology
+  - container_dashboard
+  - ems_infra_dashboard
+  - instance_view
+  - vm_view
+  - miq_cloud_networks
+  - miq_arbitration_settings
+  - miq_arbitration_rules
+  - blueprint
+  - redhat_access_insights_admin
+  - ems_container_ad_hoc_metrics
+
+
+- :name: EvmRole-container_operator
+  :read_only: true
+  :miq_product_feature_identifiers:
+  - vms_filter_accord
+  - instances_filter_accord
+  - dashboard_view
+  - miq_report_saved_reports_view
+  - miq_report_view
+  - miq_report_control
+  - chargeback_reports
+  - my_settings
+  - tasks
+  - ems_container_view
+  - ems_container_check_compliance
+  - container_group_view
+  - container_group_check_compliance
+  - container_node_view
+  - container_node_check_compliance
+  - container_replicator_check_compliance
+  - container_image_view
+  - container_image_scan
+  - container_image_check_compliance
+  - container_image_registry_view
+  - persistent_volume_view
+  - container_build_view
+  - container_template_view
+  - container_service_view
+  - container_route_view
+  - container_project_view
+  - container_filter_accord
+  - container_view
+  - container_control
+  - container_topology
+  - container_dashboard
+  - instance_view
+  - vm_view
+  - ems_container_ad_hoc_metrics

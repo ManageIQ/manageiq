@@ -51,6 +51,23 @@ describe EmsCloud do
         "#{ManageIQ::Providers::Openstack::CloudManager.description} Cloud Provider #{ems_cloud.name}"
       end
 
+      context "provider is not created under root tenant" do
+        let(:tenant) { FactoryGirl.build(:tenant, :parent => default_tenant) }
+        let(:ems_cloud_without_root_tenant) do
+          FactoryGirl.create(:ems_openstack, :tenant => tenant, :tenant_mapping_enabled => true)
+        end
+
+        it "creates provider's tenant under tenant of provider" do
+          ems_cloud_without_root_tenant.sync_cloud_tenants_with_tenants
+
+          ems_cloud_without_root_tenant.reload
+
+          expect(ems_cloud_without_root_tenant.source_tenant.parent).not_to be_nil
+          expect(ems_cloud_without_root_tenant.source_tenant.parent).not_to eq(default_tenant)
+          expect(ems_cloud_without_root_tenant.source_tenant.parent).to eq(tenant)
+        end
+      end
+
       it "creates tenant related to provider" do
         ems_cloud.sync_cloud_tenants_with_tenants
 
@@ -135,12 +152,20 @@ describe EmsCloud do
           [tenant_ct_1.name, tenant_ct_2.name, tenant_ct_3.name, tenant_ct_4.name]
         end
 
+        let(:tenant_descriptions) do
+          [tenant_ct_1.description, tenant_ct_2.description, tenant_ct_3.description, tenant_ct_4.description]
+        end
+
         let(:tenant_parent_names) do
           [tenant_ct_1.parent.name, tenant_ct_2.parent.name, tenant_ct_3.parent.name, tenant_ct_4.parent.name]
         end
 
         def expect_tenant_names
           expect(tenant_names).to eq([ct_1.name, ct_2.name, ct_3.name, ct_4.name])
+        end
+
+        def expect_tenant_descriptions
+          expect(tenant_descriptions).to eq([ct_1.description, ct_2.description, ct_3.description, ct_4.description])
         end
 
         def expect_tenant_parent_names
@@ -154,6 +179,8 @@ describe EmsCloud do
 
         def expect_created_tenant_tree
           expect_tenant_names
+
+          expect_tenant_descriptions
 
           expect_tenant_parent_names
 
@@ -192,7 +219,7 @@ describe EmsCloud do
           expect_created_tenant_tree
 
           ct_4.name = "New name"
-          ct_4.description = "New name"
+          ct_4.description = "New description"
           ct_4.vms_and_templates << vm_5
           ct_4.save
 
@@ -200,8 +227,20 @@ describe EmsCloud do
           tenant_ct_4.reload
 
           expect(tenant_ct_4.name).to eq(ct_4.name)
+          expect(tenant_ct_4.description).to eq(ct_4.description)
           expect(tenant_ct_4.parent.name).to eq(ct_2.name)
+          expect(tenant_ct_4.parent.description).to eq(ct_2.description)
           expect(tenant_ct_4.vm_or_templates).to match_array([vm_3, vm_4, vm_5])
+        end
+
+        it "sets description to CloudTenant#name when CloudTenant#description is empty" do
+          ct_4.description = ""
+          ct_4.save
+
+          ems_cloud.sync_cloud_tenants_with_tenants
+
+          expect(tenant_ct_4.name).to eq(ct_4.name)
+          expect(tenant_ct_4.description).to eq(ct_4.name)
         end
 
         it "moves out tenant when CloudTenant does not exist under provider's tenant" do

@@ -101,8 +101,7 @@ class VmScan < Job
          vm.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm)
         return unless create_snapshot(vm)
       elsif vm.require_snapshot_for_scan?
-        host  = Object.const_get(agent_class).find(agent_id)
-        proxy = host.respond_to?("miq_proxy") ? host.miq_proxy : nil
+        proxy = MiqServer.find(miq_server_id)
 
         # Check if the broker is available
         if MiqServer.use_broker_for_embedded_proxy? && !MiqVimBrokerWorker.available?
@@ -156,7 +155,7 @@ class VmScan < Job
     _log.info "Enter"
 
     begin
-      host = Object.const_get(agent_class).find(agent_id)
+      host = MiqServer.find(miq_server_id)
       vm = VmOrTemplate.find(target_id)
       # Send down metadata to allow the host to make decisions.
       scan_args = create_scan_args(vm)
@@ -172,8 +171,10 @@ class VmScan < Job
                                                                    :name => ems_list[scan_ci_type][:hostname]}
         end
       end
-
-      _log.info "[#{host.name}] communicates with [#{scan_ci_type}:#{ems_list[scan_ci_type][:hostname]}(#{ems_list[scan_ci_type][:address]})] to scan vm [#{vm.name}]" if agent_class == "MiqServer" && !ems_list[scan_ci_type].nil?
+      if ems_list[scan_ci_type]
+        _log.info "[#{host.name}] communicates with [#{scan_ci_type}:#{ems_list[scan_ci_type][:hostname]}"\
+                  "(#{ems_list[scan_ci_type][:address]})] to scan vm [#{vm.name}]"
+      end
       vm.scan_metadata(options[:categories], "taskid" => jobid, "host" => host, "args" => [YAML.dump(scan_args)])
     rescue Timeout::Error
       message = "timed out attempting to scan, aborting"
@@ -190,11 +191,10 @@ class VmScan < Job
   end
 
   def config_snapshot
-    config = VMDB::Config.new('vmdb').config
     snapshot = {"use_existing" => options[:use_existing_snapshot],
                 "description"  => options[:snapshot_description]}
-    snapshot['create_free_percent'] = config.fetch_path(:snapshots, :create_free_percent) || 100
-    snapshot['remove_free_percent'] = config.fetch_path(:snapshots, :remove_free_percent) || 100
+    snapshot['create_free_percent'] = ::Settings.snapshots.create_free_percent
+    snapshot['remove_free_percent'] = ::Settings.snapshots.remove_free_percent
     snapshot
   end
 
@@ -259,7 +259,7 @@ class VmScan < Job
         end
       else
         _log.error("Deleting snapshot: reference: [#{mor}], No #{ui_lookup(:table => "ext_management_systems")} available to delete snapshot")
-        set_status("No #{ui_lookup(:table => "ext_management_systems")} available to delete snapshot, skipping", "error", 1)
+        set_status("No #{ui_lookup(:table => "ext_management_systems")} available to delete snapshot, skipping", "error")
       end
     else
       set_status("Snapshot was not taken, delete not required") if options[:snapshot] == :skipped
@@ -273,7 +273,7 @@ class VmScan < Job
     _log.info "Enter"
 
     begin
-      host = Object.const_get(agent_class).find(agent_id)
+      host = MiqServer.find(miq_server_id)
       vm = VmOrTemplate.find(target_id)
       vm.sync_metadata(options[:categories],
                        "taskid" => jobid,
@@ -329,7 +329,7 @@ class VmScan < Job
             signal(:abort, message, "error")
           else
             _log.info("sending :finish")
-            vm = VmOrTemplate.find_by_id(target_id)
+            vm = VmOrTemplate.find_by(:id => target_id)
 
             # Collect any VIM data here
             # TODO: Make this a separate state?
@@ -418,7 +418,7 @@ class VmScan < Job
             $vim_broker_client ||= MiqVimBroker.new(:client, MiqVimBrokerWorker.drb_port)
             miqVim = $vim_broker_client.getMiqVim(miqVimHost[:address], miqVimHost[:username], password_decrypt)
           else
-            require 'MiqVim'
+            require 'VMwareWebService/MiqVim'
             miqVim = MiqVim.new(miqVimHost[:address], miqVimHost[:username], password_decrypt)
           end
 
@@ -488,7 +488,7 @@ class VmScan < Job
 
   def process_abort(*args)
     begin
-      vm = VmOrTemplate.find_by_id(target_id)
+      vm = VmOrTemplate.find_by(:id => target_id)
       unless context[:snapshot_mor].nil?
         mor = context[:snapshot_mor]
         context[:snapshot_mor] = nil

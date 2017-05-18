@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :metric_rollup do
     timestamp { Time.now.utc }
     trait :with_data do
+      cpu_usage_rate_average            50.0
       cpu_usagemhz_rate_average         50.0
       derived_vm_numvcpus               1.0
       derived_memory_available          1000.0
@@ -41,5 +42,10 @@ FactoryGirl.define do
   factory :metric_rollup_cm_daily, :parent => :metric_rollup, :class => :MetricRollup do
     capture_interval_name "daily"
     resource_type         "ExtManagementSystem"
+  end
+
+  factory :metric_rollup_storage_hr, :parent => :metric_rollup, :class => :MetricRollup do
+    capture_interval_name "hourly"
+    resource_type         "Storage"
   end
 end

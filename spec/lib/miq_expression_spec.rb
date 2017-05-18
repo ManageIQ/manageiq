@@ -17,9 +17,19 @@ describe MiqExpression do
       expect(sql).to eq("\"vms\".\"name\" = 'foo'")
     end
 
+    it "generates the SQL for a = expression with expression as a value" do
+      sql, * = MiqExpression.new("=" => {"field" => "Vm-name", "value" => "Vm-name"}).to_sql
+      expect(sql).to eq("\"vms\".\"name\" = \"vms\".\"name\"")
+    end
+
     it "generates the SQL for a < expression" do
       sql, * = described_class.new("<" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}).to_sql
       expect(sql).to eq("\"hardwares\".\"cpu_sockets\" < 2")
+    end
+
+    it "generates the SQL for a < expression with expression as a value" do
+      sql, * = described_class.new("<" => {"field" => "Vm.hardware-cpu_sockets", "value" => "Vm.hardware-cpu_sockets"}).to_sql
+      expect(sql).to eq("\"hardwares\".\"cpu_sockets\" < \"hardwares\".\"cpu_sockets\"")
     end
 
     it "generates the SQL for a <= expression" do
@@ -27,9 +37,19 @@ describe MiqExpression do
       expect(sql).to eq("\"hardwares\".\"cpu_sockets\" <= 2")
     end
 
+    it "generates the SQL for a <= expression with expression as a value" do
+      sql, * = described_class.new("<=" => {"field" => "Vm.hardware-cpu_sockets", "value" => "Vm.hardware-cpu_sockets"}).to_sql
+      expect(sql).to eq("\"hardwares\".\"cpu_sockets\" <= \"hardwares\".\"cpu_sockets\"")
+    end
+
     it "generates the SQL for a > expression" do
       sql, * = described_class.new(">" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}).to_sql
       expect(sql).to eq("\"hardwares\".\"cpu_sockets\" > 2")
+    end
+
+    it "generates the SQL for a > expression with expression as a value" do
+      sql, * = described_class.new(">" => {"field" => "Vm.hardware-cpu_sockets", "value" => "Vm.hardware-cpu_sockets"}).to_sql
+      expect(sql).to eq("\"hardwares\".\"cpu_sockets\" > \"hardwares\".\"cpu_sockets\"")
     end
 
     it "generates the SQL for a >= expression" do
@@ -37,9 +57,19 @@ describe MiqExpression do
       expect(sql).to eq("\"hardwares\".\"cpu_sockets\" >= 2")
     end
 
+    it "generates the SQL for a >= expression with expression as a value" do
+      sql, * = described_class.new(">=" => {"field" => "Vm.hardware-cpu_sockets", "value" => "Vm.hardware-cpu_sockets"}).to_sql
+      expect(sql).to eq("\"hardwares\".\"cpu_sockets\" >= \"hardwares\".\"cpu_sockets\"")
+    end
+
     it "generates the SQL for a != expression" do
       sql, * = described_class.new("!=" => {"field" => "Vm-name", "value" => "foo"}).to_sql
       expect(sql).to eq("\"vms\".\"name\" != 'foo'")
+    end
+
+    it "generates the SQL for a != expression with expression as a value" do
+      sql, * = described_class.new("!=" => {"field" => "Vm-name", "value" => "Vm-name"}).to_sql
+      expect(sql).to eq("\"vms\".\"name\" != \"vms\".\"name\"")
     end
 
     it "generates the SQL for a LIKE expression" do
@@ -354,6 +384,26 @@ describe MiqExpression do
 
     describe "integration" do
       context "date/time support" do
+        it "finds the correct instances for an gt expression with a dynamic integer field" do
+          _vm1 = FactoryGirl.create(:vm_vmware, :memory_reserve => 1, :cpu_reserve => 2)
+          vm2 = FactoryGirl.create(:vm_vmware, :memory_reserve => 2, :cpu_reserve => 1)
+          filter = MiqExpression.new(">" => {"field" => "Vm-memory_reserve", "value" => "Vm-cpu_reserve"})
+          result = Vm.where(filter.to_sql.first)
+          expect(result).to eq([vm2])
+        end
+
+        it "finds the correct instances for an gt expression with a custom attribute dynamic integer field" do
+          custom_attribute =  FactoryGirl.create(:custom_attribute, :name => "example", :value => 10)
+          vm1 = FactoryGirl.create(:vm, :memory_reserve => 2)
+          vm1.custom_attributes << custom_attribute
+          _vm2 = FactoryGirl.create(:vm, :memory_reserve => 0)
+          name_of_attribute = "VmOrTemplate-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}example"
+          filter = MiqExpression.new("<" => {"field" => "VmOrTemplate-memory_reserve", "value" => name_of_attribute})
+          result = Rbac.search(:targets => Vm, :filter => filter).first.first
+          expect(filter.to_sql.last).to eq(:supported_by_sql => false)
+          expect(result).to eq(vm1)
+        end
+
         it "finds the correct instances for an AFTER expression with a datetime field" do
           _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 9:00")
           vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 9:00:00.000001")
@@ -615,9 +665,289 @@ describe MiqExpression do
   end
 
   describe "#to_ruby" do
+    it "generates the ruby for a = expression with count" do
+      actual = described_class.new("=" => {"count" => "Vm-snapshots", "value" => "1"}).to_ruby
+      expected = "<count ref=vm>/virtual/snapshots</count> == 1"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a = expression with regkey" do
+      actual = described_class.new("=" => {"regkey" => "foo", "regval" => "bar", "value" => "baz"}).to_ruby
+      expected = "<registry>foo : bar</registry> == \"baz\""
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a < expression with hash context" do
+      actual = described_class.new({"<" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}}, "hash").to_ruby
+      expected = "<value type=integer>hardware.cpu_sockets</value> < 2"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a < expression with count" do
+      actual = described_class.new("<" => {"count" => "Vm-snapshots", "value" => "2"}).to_ruby
+      expected = "<count ref=vm>/virtual/snapshots</count> < 2"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a > expression with hash context" do
+      actual = described_class.new({">" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}}, "hash").to_ruby
+      expected = "<value type=integer>hardware.cpu_sockets</value> > 2"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a > expression with count" do
+      actual = described_class.new(">" => {"count" => "Vm-snapshots", "value" => "2"}).to_ruby
+      expected = "<count ref=vm>/virtual/snapshots</count> > 2"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a >= expression with hash context" do
+      actual = described_class.new({">=" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}}, "hash").to_ruby
+      expected = "<value type=integer>hardware.cpu_sockets</value> >= 2"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a >= expression with count" do
+      actual = described_class.new(">=" => {"count" => "Vm-snapshots", "value" => "2"}).to_ruby
+      expected = "<count ref=vm>/virtual/snapshots</count> >= 2"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a <= expression with hash context" do
+      actual = described_class.new({"<=" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}}, "hash").to_ruby
+      expected = "<value type=integer>hardware.cpu_sockets</value> <= 2"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a <= expression with count" do
+      actual = described_class.new("<=" => {"count" => "Vm-snapshots", "value" => "2"}).to_ruby
+      expected = "<count ref=vm>/virtual/snapshots</count> <= 2"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a !=  expression with hash context" do
+      actual = described_class.new({"!=" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}}, "hash").to_ruby
+      expected = "<value type=integer>hardware.cpu_sockets</value> != 2"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a != expression with count" do
+      actual = described_class.new("!=" => {"count" => "Vm-snapshots", "value" => "2"}).to_ruby
+      expected = "<count ref=vm>/virtual/snapshots</count> != 2"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a BEFORE expression with hash context" do
+      actual = described_class.new({"BEFORE" => {"field" => "Vm-retires_on", "value" => "2011-01-10"}}, "hash").to_ruby
+      expected = "val=<value type=datetime>Vm.retires_on</value>; !val.nil? && val.to_time < '2011-01-10T00:00:00Z'.to_time(:utc)"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a AFTER expression with hash context" do
+      actual = described_class.new({"AFTER" => {"field" => "Vm-retires_on", "value" => "2011-01-10"}}, "hash").to_ruby
+      expected = "val=<value type=datetime>Vm.retires_on</value>; !val.nil? && val.to_time > '2011-01-10T23:59:59Z'.to_time(:utc)"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a INCLUDES ALL expression with hash context" do
+      actual = described_class.new(
+        {"INCLUDES ALL" => {"field" => "Host-enabled_inbound_ports", "value" => "22, 427, 5988, 5989, 1..4"}},
+        "hash"
+      ).to_ruby
+      expected = "(<value type=numeric_set>Host.enabled_inbound_ports</value> & [1,2,3,4,22,427,5988,5989]) == [1,2,3,4,22,427,5988,5989]"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a INCLUDES ANY expression with hash context" do
+      actual = described_class.new(
+        {"INCLUDES ANY" => {"field" => "Host-enabled_inbound_ports", "value" => "22, 427, 5988, 5989, 1..4"}},
+        "hash"
+      ).to_ruby
+      expected = "([1,2,3,4,22,427,5988,5989] - <value type=numeric_set>Host.enabled_inbound_ports</value>) != [1,2,3,4,22,427,5988,5989]"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a INCLUDES ONLY expression with hash context" do
+      actual = described_class.new(
+        {"INCLUDES ONLY" => {"field" => "Host-enabled_inbound_ports", "value" => "22, 427, 5988, 5989, 1..4"}},
+        "hash"
+      ).to_ruby
+      expected = "(<value type=numeric_set>Host.enabled_inbound_ports</value> - [1,2,3,4,22,427,5988,5989]) == []"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a LIMITED TO expression with hash context" do
+      actual = described_class.new(
+        {"LIMITED TO" => {"field" => "Host-enabled_inbound_ports", "value" => "22, 427, 5988, 5989, 1..4"}},
+        "hash"
+      ).to_ruby
+      expected = "(<value type=numeric_set>Host.enabled_inbound_ports</value> - [1,2,3,4,22,427,5988,5989]) == []"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a LIKE expression with field" do
+      actual = described_class.new("LIKE" => {"field" => "Vm-name", "value" => "foo"}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> =~ /foo/"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a LIKE expression with hash context" do
+      actual = described_class.new({"LIKE" => {"field" => "Vm-name", "value" => "foo"}}, "hash").to_ruby
+      expected = "<value type=string>Vm.name</value> =~ /foo/"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a LIKE  expression with regkey" do
+      actual = described_class.new("LIKE" => {"regkey" => "foo", "regval" => "bar", "value" => "baz"}).to_ruby
+      expected = "<registry>foo : bar</registry> =~ /baz/"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a NOT LIKE expression with field" do
+      actual = described_class.new("NOT LIKE" => {"field" => "Vm-name", "value" => "foo"}).to_ruby
+      expected = "!(<value ref=vm, type=string>/virtual/name</value> =~ /foo/)"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a NOT LIKE expression with hash context" do
+      actual = described_class.new({"NOT LIKE" => {"field" => "Vm-name", "value" => "foo"}}, "hash").to_ruby
+      expected = "!(<value type=string>Vm.name</value> =~ /foo/)"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a NOT LIKE expression with regkey" do
+      actual = described_class.new("NOT LIKE" => {"regkey" => "foo", "regval" => "bar", "value" => "baz"}).to_ruby
+      expected = "!(<registry>foo : bar</registry> =~ /baz/)"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a STARTS WITH expression with hash context with field" do
+      actual = described_class.new({"STARTS WITH" => {"field" => "Vm-name", "value" => "foo"}}, "hash").to_ruby
+      expected = "<value type=string>Vm.name</value> =~ /^foo/"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a STARTS WITH expression with regkey" do
+      actual = described_class.new("STARTS WITH" => {"regkey" => "foo", "regval" => "bar", "value" => "baz"}).to_ruby
+      expected = "<registry>foo : bar</registry> =~ /^baz/"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a ENDS WITH expression with hash context" do
+      actual = described_class.new({"ENDS WITH" => {"field" => "Vm-name", "value" => "foo"}}, "hash").to_ruby
+      expected = "<value type=string>Vm.name</value> =~ /foo$/"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a ENDS WITH expression with regkey" do
+      actual = described_class.new("ENDS WITH" => {"regkey" => "foo", "regval" => "bar", "value" => "baz"}).to_ruby
+      expected = "<registry>foo : bar</registry> =~ /baz$/"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a INCLUDES expression with hash context" do
+      actual = described_class.new({"INCLUDES" => {"field" => "Vm-name", "value" => "foo"}}, "hash").to_ruby
+      expected = "<value type=string>Vm.name</value> =~ /foo/"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a INCLUDES expression with regkey" do
+      actual = described_class.new("INCLUDES" => {"regkey" => "foo", "regval" => "bar", "value" => "baz"}).to_ruby
+      expected = "<registry>foo : bar</registry> =~ /baz/"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a REGULAR EXPRESSION MATCHES expression with regkey" do
+      actual = described_class.new(
+        "REGULAR EXPRESSION MATCHES" => {"regkey" => "foo", "regval" => "bar", "value" => "baz"}
+      ).to_ruby
+      expected = "<registry>foo : bar</registry> =~ /baz/"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a REGULAR EXPRESSION DOES NOT MATCH expression with hash context" do
+      actual = described_class.new(
+        {"REGULAR EXPRESSION DOES NOT MATCH" => {"field" => "Vm-name", "value" => "foo"}},
+        "hash"
+      ).to_ruby
+      expected = "<value type=string>Vm.name</value> !~ /foo/"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a REGULAR EXPRESSION DOES NOT MATCH expression with regkey" do
+      actual = described_class.new(
+        "REGULAR EXPRESSION DOES NOT MATCH" => {"regkey" => "foo", "regval" => "bar", "value" => "baz"}
+      ).to_ruby
+      expected = "<registry>foo : bar</registry> !~ /baz/"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a IS NULL expression with hash context" do
+      actual = described_class.new({"IS NULL" => {"field" => "Vm-name"}}, "hash").to_ruby
+      expected = "<value type=string>Vm.name</value> == \"\""
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a IS NULL expression with regkey" do
+      actual = described_class.new("IS NULL" => {"regkey" => "foo", "regval" => "bar"}).to_ruby
+      expected = "<registry>foo : bar</registry> == \"\""
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a IS NOT NULL expression with hash context" do
+      actual = described_class.new({"IS NOT NULL" => {"field" => "Vm-name"}}, "hash").to_ruby
+      expected = "<value type=string>Vm.name</value> != \"\""
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a IS NOT NULL expression with regkey" do
+      actual = described_class.new("IS NOT NULL" => {"regkey" => "foo", "regval" => "bar"}).to_ruby
+      expected = "<registry>foo : bar</registry> != \"\""
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a IS EMPTY expression with hash context" do
+      actual = described_class.new({"IS EMPTY" => {"field" => "Vm-name"}}, "hash").to_ruby
+      expected = "<value type=string>Vm.name</value> == \"\""
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a IS EMPTY expression with regkey" do
+      actual = described_class.new("IS EMPTY" => {"regkey" => "foo", "regval" => "bar"}).to_ruby
+      expected = "<registry>foo : bar</registry> == \"\""
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a IS NOT EMPTY expression with hash context" do
+      actual = described_class.new({"IS NOT EMPTY" => {"field" => "Vm-name"}}, "hash").to_ruby
+      expected = "<value type=string>Vm.name</value> != \"\""
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a IS NOT EMPTY expression with regkey" do
+      actual = described_class.new("IS NOT EMPTY" => {"regkey" => "foo", "regval" => "bar"}).to_ruby
+      expected = "<registry>foo : bar</registry> != \"\""
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a CONTAINS expression with hash context" do
+      actual = described_class.new(
+        {"CONTAINS" => {"tag" => "Host.managed-environment", "value" => "prod"}},
+        "hash"
+      ).to_ruby
+      expected = "<value type=string>managed.environment</value> CONTAINS \"\""
+      expect(actual).to eq(expected)
+    end
+
     it "generates the SQL for a < expression" do
       actual = described_class.new("<" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}).to_ruby
       expected = "<value ref=vm, type=integer>/virtual/hardware/cpu_sockets</value> < 2"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the SQL for a < expression with dynamic value" do
+      actual = described_class.new("<" => {"field" => "Vm.hardware-cpu_sockets", "value" => "Vm.hardware-cpu_sockets"}).to_ruby
+      expected = "<value ref=vm, type=integer>/virtual/hardware/cpu_sockets</value> < <value ref=vm, type=integer>/virtual/hardware/cpu_sockets</value>"
       expect(actual).to eq(expected)
     end
 
@@ -627,9 +957,21 @@ describe MiqExpression do
       expect(actual).to eq(expected)
     end
 
+    it "generates the SQL for a <= expression with dynamic value" do
+      actual = described_class.new("<=" => {"field" => "Vm.hardware-cpu_sockets", "value" => "Vm.hardware-cpu_sockets"}).to_ruby
+      expected = "<value ref=vm, type=integer>/virtual/hardware/cpu_sockets</value> <= <value ref=vm, type=integer>/virtual/hardware/cpu_sockets</value>"
+      expect(actual).to eq(expected)
+    end
+
     it "generates the SQL for a != expression" do
       actual = described_class.new("!=" => {"field" => "Vm-name", "value" => "foo"}).to_ruby
       expected = "<value ref=vm, type=string>/virtual/name</value> != \"foo\""
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the SQL for a != expression with dynamic value" do
+      actual = described_class.new("!=" => {"field" => "Vm.hardware-cpu_sockets", "value" => "Vm.hardware-cpu_sockets"}).to_ruby
+      expected = "<value ref=vm, type=integer>/virtual/hardware/cpu_sockets</value> != <value ref=vm, type=integer>/virtual/hardware/cpu_sockets</value>"
       expect(actual).to eq(expected)
     end
 
@@ -648,20 +990,107 @@ describe MiqExpression do
       expect(exp.to_ruby).to eq('<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> == [22,427,5988,5989]')
     end
 
+    it "escapes forward slashes for values in REGULAR EXPRESSION MATCHES expressions" do
+      value = "//; puts 'Hi, mom!';//"
+      actual = described_class.new("REGULAR EXPRESSION MATCHES" => {"field" => "Vm-name", "value" => value}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> =~ /\\/; puts 'Hi, mom!';\\//"
+      expect(actual).to eq(expected)
+    end
+
+    it "preserves the delimiters when escaping forward slashes in case-insensitive REGULAR EXPRESSION MATCHES expressions" do
+      value = "//; puts 'Hi, mom!';//i"
+      actual = described_class.new("REGULAR EXPRESSION MATCHES" => {"field" => "Vm-name", "value" => value}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> =~ /\\/; puts 'Hi, mom!';\\//i"
+      expect(actual).to eq(expected)
+    end
+
+    it "escapes forward slashes for non-Regexp literal values in REGULAR EXPRESSION MATCHES expressions" do
+      value = ".*/; puts 'Hi, mom!';/.*"
+      actual = described_class.new("REGULAR EXPRESSION MATCHES" => {"field" => "Vm-name", "value" => value}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> =~ /.*\\/; puts 'Hi, mom!';\\/.*/"
+      expect(actual).to eq(expected)
+    end
+
+    it "does not escape escaped forward slashes for values in REGULAR EXPRESSION MATCHES expressions" do
+      value = "\/foo\/bar"
+      actual = described_class.new("REGULAR EXPRESSION MATCHES" => {"field" => "Vm-name", "value" => value}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> =~ /\\/foo\\/bar/"
+      expect(actual).to eq(expected)
+    end
+
+    it "handles arbitarily long escaping of forward " do
+      value = "\\\\\\/foo\\\\\\/bar"
+      actual = described_class.new("REGULAR EXPRESSION MATCHES" => {"field" => "Vm-name", "value" => value}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> =~ /\\/foo\\/bar/"
+      expect(actual).to eq(expected)
+    end
+
+    it "escapes interpolation in REGULAR EXPRESSION MATCHES expressions" do
+      value = "/\#{puts 'Hi, mom!'}/"
+      actual = described_class.new("REGULAR EXPRESSION MATCHES" => {"field" => "Vm-name", "value" => value}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> =~ /\\\#{puts 'Hi, mom!'}/"
+      expect(actual).to eq(expected)
+    end
+
+    it "handles arbitrarily long escaping of interpolation in REGULAR EXPRESSION MATCHES expressions" do
+      value = "/\\\\\#{puts 'Hi, mom!'}/"
+      actual = described_class.new("REGULAR EXPRESSION MATCHES" => {"field" => "Vm-name", "value" => value}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> =~ /\\\#{puts 'Hi, mom!'}/"
+      expect(actual).to eq(expected)
+    end
+
+    it "escapes interpolation in non-Regexp literal values in REGULAR EXPRESSION MATCHES expressions" do
+      value = "\#{puts 'Hi, mom!'}"
+      actual = described_class.new("REGULAR EXPRESSION MATCHES" => {"field" => "Vm-name", "value" => value}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> =~ /\\\#{puts 'Hi, mom!'}/"
+      expect(actual).to eq(expected)
+    end
+
+    it "escapes forward slashes for values in REGULAR EXPRESSION DOES NOT MATCH expressions" do
+      value = "//; puts 'Hi, mom!';//"
+      actual = described_class.new("REGULAR EXPRESSION DOES NOT MATCH" => {"field" => "Vm-name", "value" => value}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> !~ /\\/; puts 'Hi, mom!';\\//"
+      expect(actual).to eq(expected)
+    end
+
+    it "preserves the delimiters when escaping forward slashes in case-insensitive REGULAR EXPRESSION DOES NOT MATCH expressions" do
+      value = "//; puts 'Hi, mom!';//i"
+      actual = described_class.new("REGULAR EXPRESSION DOES NOT MATCH" => {"field" => "Vm-name", "value" => value}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> !~ /\\/; puts 'Hi, mom!';\\//i"
+      expect(actual).to eq(expected)
+    end
+
+    it "escapes forward slashes for non-Regexp literal values in REGULAR EXPRESSION DOES NOT MATCH expressions" do
+      value = ".*/; puts 'Hi, mom!';/.*"
+      actual = described_class.new("REGULAR EXPRESSION DOES NOT MATCH" => {"field" => "Vm-name", "value" => value}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> !~ /.*\\/; puts 'Hi, mom!';\\/.*/"
+      expect(actual).to eq(expected)
+    end
+
+    it "does not escape escaped forward slashes for values in REGULAR EXPRESSION DOES NOT MATCH expressions" do
+      value = "\/foo\/bar"
+      actual = described_class.new("REGULAR EXPRESSION DOES NOT MATCH" => {"field" => "Vm-name", "value" => value}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> !~ /\\/foo\\/bar/"
+      expect(actual).to eq(expected)
+    end
+
     # Note: To debug these tests, the following may be helpful:
     # puts "Expression Raw:      #{filter.exp.inspect}"
     # puts "Expression in Human: #{filter.to_human}"
     # puts "Expression in Ruby:  #{filter.to_ruby}"
 
-    it "expands ranges" do
+    it "expands ranges with INCLUDES ALL" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         INCLUDES ALL:
           field: Host-enabled_inbound_ports
           value: 22, 427, 5988, 5989, 1..4
       '
-      expect(filter.to_ruby).to eq('(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> & [1,2,3,4,22,427,5988,5989]) == [1,2,3,4,22,427,5988,5989]')
+      expected = "(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> & [1,2,3,4,22,427,5988,5989]) == [1,2,3,4,22,427,5988,5989]"
+      expect(filter.to_ruby).to eq(expected)
+    end
 
+    it "expands ranges with INCLUDES ANY" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         INCLUDES ANY:
@@ -669,66 +1098,95 @@ describe MiqExpression do
           value: 22, 427, 5988, 5989, 1..3
       '
 
-      expect(filter.to_ruby).to eq('([1,2,3,22,427,5988,5989] - <value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value>) != [1,2,3,22,427,5988,5989]')
+      expected = "([1,2,3,22,427,5988,5989] - <value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value>) != [1,2,3,22,427,5988,5989]"
+      expect(filter.to_ruby).to eq(expected)
+    end
 
+    it "expands ranges with INCLUDES ONLY" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         INCLUDES ONLY:
           field: Host-enabled_inbound_ports
           value: 22
       '
-      expect(filter.to_ruby).to eq('(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> - [22]) == []')
 
+      expected = "(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> - [22]) == []"
+      expect(filter.to_ruby).to eq(expected)
+    end
+
+    it "expands ranges with LIMITED TO" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         LIMITED TO:
           field: Host-enabled_inbound_ports
           value: 22
       '
-      expect(filter.to_ruby).to eq('(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> - [22]) == []')
+
+      expected = "(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> - [22]) == []"
+      expect(filter.to_ruby).to eq(expected)
     end
 
-    it "should test string set expressions" do
+    it "should test string set expressions with EQUAL" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         "=":
           field: Host-service_names
           value: "ntpd, sshd, vmware-vpxa, vmware-webAccess"
       '
-      expect(filter.to_ruby).to eq("<value ref=host, type=string_set>/virtual/service_names</value> == ['ntpd','sshd','vmware-vpxa','vmware-webAccess']")
 
+      expected = "<value ref=host, type=string_set>/virtual/service_names</value> == ['ntpd','sshd','vmware-vpxa','vmware-webAccess']"
+      expect(filter.to_ruby).to eq(expected)
+    end
+
+    it "should test string set expressions with INCLUDES ALL" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         INCLUDES ALL:
           field: Host-service_names
           value: "ntpd, sshd, vmware-vpxa, vmware-webAccess"
       '
-      expect(filter.to_ruby).to eq("(<value ref=host, type=string_set>/virtual/service_names</value> & ['ntpd','sshd','vmware-vpxa','vmware-webAccess']) == ['ntpd','sshd','vmware-vpxa','vmware-webAccess']")
 
+      expected = "(<value ref=host, type=string_set>/virtual/service_names</value> & ['ntpd','sshd','vmware-vpxa','vmware-webAccess']) == ['ntpd','sshd','vmware-vpxa','vmware-webAccess']"
+      expect(filter.to_ruby).to eq(expected)
+    end
+
+    it "should test string set expressions with INCLUDES ANY" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         INCLUDES ANY:
           field: Host-service_names
           value: "ntpd, sshd, vmware-vpxa, vmware-webAccess"
       '
-      expect(filter.to_ruby).to eq("(['ntpd','sshd','vmware-vpxa','vmware-webAccess'] - <value ref=host, type=string_set>/virtual/service_names</value>) != ['ntpd','sshd','vmware-vpxa','vmware-webAccess']")
 
+      expected = "(['ntpd','sshd','vmware-vpxa','vmware-webAccess'] - <value ref=host, type=string_set>/virtual/service_names</value>) != ['ntpd','sshd','vmware-vpxa','vmware-webAccess']"
+      expect(filter.to_ruby).to eq(expected)
+    end
+
+    it "should test string set expressions with INCLUDES ONLY" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         INCLUDES ONLY:
           field: Host-service_names
           value: "ntpd, sshd, vmware-vpxa"
       '
-      expect(filter.to_ruby).to eq("(<value ref=host, type=string_set>/virtual/service_names</value> - ['ntpd','sshd','vmware-vpxa']) == []")
 
+      expected = "(<value ref=host, type=string_set>/virtual/service_names</value> - ['ntpd','sshd','vmware-vpxa']) == []"
+      expect(filter.to_ruby).to eq(expected)
+    end
+
+    it "should test string set expressions with LIMITED TO" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         LIMITED TO:
           field: Host-service_names
           value: "ntpd, sshd, vmware-vpxa"
       '
-      expect(filter.to_ruby).to eq("(<value ref=host, type=string_set>/virtual/service_names</value> - ['ntpd','sshd','vmware-vpxa']) == []")
 
+      expected = "(<value ref=host, type=string_set>/virtual/service_names</value> - ['ntpd','sshd','vmware-vpxa']) == []"
+      expect(filter.to_ruby).to eq(expected)
+    end
+
+    it "should test string set expressions with FIND/checkall" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         FIND:
@@ -741,10 +1199,12 @@ describe MiqExpression do
               field: Host.filesystems-permissions
               value: "0644"
       '
-      expect(filter.to_ruby).to eq('<find><search><value ref=host, type=text>/virtual/filesystems/name</value> == "/etc/passwd"</search><check mode=all><value ref=host, type=string>/virtual/filesystems/permissions</value> == "0644"</check></find>')
+
+      expected = '<find><search><value ref=host, type=text>/virtual/filesystems/name</value> == "/etc/passwd"</search><check mode=all><value ref=host, type=string>/virtual/filesystems/permissions</value> == "0644"</check></find>'
+      expect(filter.to_ruby).to eq(expected)
     end
 
-    it "should test regexp" do
+    it "should test regexp with regex literal" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         REGULAR EXPRESSION MATCHES:
@@ -752,7 +1212,9 @@ describe MiqExpression do
           value: /^[^.]*\.galaxy\..*$/
       '
       expect(filter.to_ruby).to eq('<value ref=host, type=string>/virtual/name</value> =~ /^[^.]*\.galaxy\..*$/')
+    end
 
+    it "should test regexp with string literal" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         REGULAR EXPRESSION MATCHES:
@@ -760,7 +1222,9 @@ describe MiqExpression do
           value: ^[^.]*\.galaxy\..*$
       '
       expect(filter.to_ruby).to eq('<value ref=host, type=string>/virtual/name</value> =~ /^[^.]*\.galaxy\..*$/')
+    end
 
+    it "should test regexp as part of a FIND/checkany expression" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         FIND:
@@ -773,8 +1237,11 @@ describe MiqExpression do
               field: Host.firewall_rules-name
               value: /^.*SLP.*$/'
 
-      expect(filter.to_ruby).to eq('<find><search><value ref=host, type=boolean>/virtual/firewall_rules/enabled</value> == "true"</search><check mode=any><value ref=host, type=string>/virtual/firewall_rules/name</value> =~ /^.*SLP.*$/</check></find>')
+      expected = '<find><search><value ref=host, type=boolean>/virtual/firewall_rules/enabled</value> == "true"</search><check mode=any><value ref=host, type=string>/virtual/firewall_rules/name</value> =~ /^.*SLP.*$/</check></find>'
+      expect(filter.to_ruby).to eq(expected)
+    end
 
+    it "should test negative regexp with FIND/checkany expression" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         FIND:
@@ -787,7 +1254,8 @@ describe MiqExpression do
               field: Host.firewall_rules-name
               value: /^.*SLP.*$/'
 
-      expect(filter.to_ruby).to eq('<find><search><value ref=host, type=boolean>/virtual/firewall_rules/enabled</value> == "true"</search><check mode=any><value ref=host, type=string>/virtual/firewall_rules/name</value> !~ /^.*SLP.*$/</check></find>')
+      expected = '<find><search><value ref=host, type=boolean>/virtual/firewall_rules/enabled</value> == "true"</search><check mode=any><value ref=host, type=string>/virtual/firewall_rules/name</value> !~ /^.*SLP.*$/</check></find>'
+      expect(filter.to_ruby).to eq(expected)
     end
 
     it "should test fb7726" do
@@ -809,7 +1277,9 @@ describe MiqExpression do
           value: 25.kilobytes
       '
       expect(filter.to_ruby).to eq('<value ref=vm, type=integer>/virtual/memory_shares</value> >= 25600')
+    end
 
+    it "should test numbers with commas with methods" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       context_type:
       exp:
@@ -834,28 +1304,41 @@ describe MiqExpression do
         expect(Condition.subst(filter.to_ruby, data)).to eq("\"C:\\\\Documents and Users\\\\O'Neill, April\\\\\" =~ /\\$foo/")
       end
 
-      it "should test context hash" do
-        data = {"name" => "VM_1", "guest_applications.version" => "3.1.2.7193", "guest_applications.release" => nil, "guest_applications.vendor" => "VMware, Inc.", "id" => 9, "guest_applications.name" => "VMware Tools", "guest_applications.package_name" => nil}
+      context "when context_type is 'hash'" do
+        let(:data) do
+          {
+            "name"                            => "VM_1",
+            "guest_applications.version"      => "3.1.2.7193",
+            "guest_applications.release"      => nil,
+            "guest_applications.vendor"       => "VMware, Inc.", "id" => 9,
+            "guest_applications.name"         => "VMware Tools",
+            "guest_applications.package_name" => nil
+          }
+        end
 
-        filter = YAML.load '--- !ruby/object:MiqExpression
-        exp:
-          "=":
-            field: Vm.guest_applications-name
-            value: VMware Tools
-        context_type: hash
-        '
-        expect(filter.to_ruby).to eq("<value type=string>guest_applications.name</value> == \"VMware Tools\"")
-        expect(Condition.subst(filter.to_ruby, data)).to eq("\"VMware Tools\" == \"VMware Tools\"")
+        it "should test context hash with EQUAL" do
+          filter = YAML.load '--- !ruby/object:MiqExpression
+          exp:
+            "=":
+              field: Vm.guest_applications-name
+              value: VMware Tools
+          context_type: hash
+          '
+          expect(filter.to_ruby).to eq("<value type=string>guest_applications.name</value> == \"VMware Tools\"")
+          expect(Condition.subst(filter.to_ruby, data)).to eq("\"VMware Tools\" == \"VMware Tools\"")
+        end
 
-        filter = YAML.load '--- !ruby/object:MiqExpression
-        exp:
-          REGULAR EXPRESSION MATCHES:
-            field: Vm.guest_applications-vendor
-            value: /^[^.]*ware.*$/
-        context_type: hash
-        '
-        expect(filter.to_ruby).to eq("<value type=string>guest_applications.vendor</value> =~ /^[^.]*ware.*$/")
-        expect(Condition.subst(filter.to_ruby, data)).to eq('"VMware, Inc." =~ /^[^.]*ware.*$/')
+        it "should test context hash with REGULAR EXPRESSION MATCHES" do
+          filter = YAML.load '--- !ruby/object:MiqExpression
+          exp:
+            REGULAR EXPRESSION MATCHES:
+              field: Vm.guest_applications-vendor
+              value: /^[^.]*ware.*$/
+          context_type: hash
+          '
+          expect(filter.to_ruby).to eq("<value type=string>guest_applications.vendor</value> =~ /^[^.]*ware.*$/")
+          expect(Condition.subst(filter.to_ruby, data)).to eq('"VMware, Inc." =~ /^[^.]*ware.*$/')
+        end
       end
     end
 
@@ -924,39 +1407,84 @@ describe MiqExpression do
     it "generates the ruby for a FIND expression with checkall" do
       actual = described_class.new(
         "FIND" => {"search"   => {"=" => {"field" => "Vm-name", "value" => "foo"}},
-                   "checkall" => {">" => {"field" => "Vm.hardware.cpu_sockets", "value" => "2"}}}
+                   "checkall" => {">" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}}}
       ).to_ruby
-      expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=all><value ref=vm, type=string>/virtual/hardware/cpu_sockets</value> > \"2\"</check></find>"
+      expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=all><value ref=vm, type=integer>/virtual/hardware/cpu_sockets</value> > 2</check></find>"
       expect(actual).to eq(expected)
     end
 
     it "generates the ruby for a FIND expression with checkany" do
       actual = described_class.new(
         "FIND" => {"search"   => {"=" => {"field" => "Vm-name", "value" => "foo"}},
-                   "checkany" => {">" => {"field" => "Vm.hardware.cpu_sockets", "value" => "2"}}}
+                   "checkany" => {">" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}}}
       ).to_ruby
-      expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=any><value ref=vm, type=string>/virtual/hardware/cpu_sockets</value> > \"2\"</check></find>"
+      expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=any><value ref=vm, type=integer>/virtual/hardware/cpu_sockets</value> > 2</check></find>"
       expect(actual).to eq(expected)
     end
 
-    it "generates the ruby for a FIND expression with checkcount" do
+    it "generates the ruby for a FIND expression with checkcount and =" do
       actual = described_class.new(
         "FIND" => {"search"     => {"=" => {"field" => "Vm-name", "value" => "foo"}},
-                   "checkcount" => {">" => {"field" => "Vm.hardware.cpu_sockets", "value" => "2"}}}
+                   "checkcount" => {"=" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}}}
+      ).to_ruby
+      expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=count><count> == 2</check></find>"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a FIND expression with checkcount and !=" do
+      actual = described_class.new(
+        "FIND" => {"search"     => {"=" => {"field" => "Vm-name", "value" => "foo"}},
+                   "checkcount" => {"!=" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}}}
+      ).to_ruby
+      expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=count><count> != 2</check></find>"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a FIND expression with checkcount and <" do
+      actual = described_class.new(
+        "FIND" => {"search"     => {"=" => {"field" => "Vm-name", "value" => "foo"}},
+                   "checkcount" => {"<" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}}}
+      ).to_ruby
+      expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=count><count> < 2</check></find>"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a FIND expression with checkcount and >" do
+      actual = described_class.new(
+        "FIND" => {"search"     => {"=" => {"field" => "Vm-name", "value" => "foo"}},
+                   "checkcount" => {">" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}}}
       ).to_ruby
       expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=count><count> > 2</check></find>"
       expect(actual).to eq(expected)
     end
 
+    it "generates the ruby for a FIND expression with checkcount and <=" do
+      actual = described_class.new(
+        "FIND" => {"search"     => {"=" => {"field" => "Vm-name", "value" => "foo"}},
+                   "checkcount" => {"<=" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}}}
+      ).to_ruby
+      expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=count><count> <= 2</check></find>"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a FIND expression with checkcount and >=" do
+      actual = described_class.new(
+        "FIND" => {"search"     => {"=" => {"field" => "Vm-name", "value" => "foo"}},
+                   "checkcount" => {">=" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}}}
+      ).to_ruby
+      expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=count><count> >= 2</check></find>"
+      expect(actual).to eq(expected)
+    end
+
     it "generates the ruby for a KEY EXISTS expression" do
-      actual = described_class.new("KEY EXISTS" => {"field" => "Host-settings", "value" => "foo"}).to_ruby
-      expected = ["<value ref=host, type=string>/virtual/settings</value>", "\"foo\""]
+      actual = described_class.new("KEY EXISTS" => {"regkey" => "foo"}).to_ruby
+      expected = "<registry key_exists=1, type=boolean>foo</registry>  == 'true'"
       expect(actual).to eq(expected)
     end
 
     it "generates the ruby for a VALUE EXISTS expression" do
-      actual = described_class.new("VALUE EXISTS" => {"field" => "Host-settings", "value" => "foo"}).to_ruby
-      expected = ["<value ref=host, type=string>/virtual/settings</value>", "\"foo\""]
+      actual = described_class.new("VALUE EXISTS" => {"regkey" => "foo", "regval" => "bar"}).to_ruby
+      expected = "<registry value_exists=1, type=boolean>foo : bar</registry>  == 'true'"
       expect(actual).to eq(expected)
     end
 
@@ -992,6 +1520,12 @@ describe MiqExpression do
           expect(exp.to_ruby).to eq("val=<value ref=vm, type=datetime>/virtual/last_scan_on</value>; !val.nil? && val.to_time >= '2011-01-10T00:00:00Z'.to_time(:utc) && val.to_time <= '2011-01-10T23:59:59Z'.to_time(:utc)")
         end
 
+        it "generates the ruby for a IS expression with hash context" do
+          actual = described_class.new({"IS" => {"field" => "Vm-retires_on", "value" => "2011-01-10"}}, "hash").to_ruby
+          expected = "val=<value type=datetime>Vm.retires_on</value>; !val.nil? && val.to_time >= '2011-01-10T00:00:00Z'.to_time(:utc) && val.to_time <= '2011-01-10T23:59:59Z'.to_time(:utc)"
+          expect(actual).to eq(expected)
+        end
+
         it "generates the ruby for a FROM expression with date values" do
           exp = MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["2011-01-09", "2011-01-10"]})
           expect(exp.to_ruby).to eq("val=<value ref=vm, type=datetime>/virtual/retires_on</value>; !val.nil? && val.to_time >= '2011-01-09T00:00:00Z'.to_time(:utc) && val.to_time <= '2011-01-10T23:59:59Z'.to_time(:utc)")
@@ -1010,6 +1544,15 @@ describe MiqExpression do
         it "generates the ruby for a FROM expression with identical datetime values" do
           exp = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["2011-01-10 00:00", "2011-01-10 00:00"]})
           expect(exp.to_ruby).to eq("val=<value ref=vm, type=datetime>/virtual/last_scan_on</value>; !val.nil? && val.to_time >= '2011-01-10T00:00:00Z'.to_time(:utc) && val.to_time <= '2011-01-10T00:00:00Z'.to_time(:utc)")
+        end
+
+        it "generates the ruby for a FROM expression with hash context" do
+          actual = described_class.new(
+            {"FROM" => {"field" => "Vm-retires_on", "value" => ["2011-01-09", "2011-01-10"]}},
+            "hash"
+          ).to_ruby
+          expected = "val=<value type=datetime>Vm.retires_on</value>; !val.nil? && val.to_time >= '2011-01-09T00:00:00Z'.to_time(:utc) && val.to_time <= '2011-01-10T23:59:59Z'.to_time(:utc)"
+          expect(actual).to eq(expected)
         end
       end
 
@@ -1131,6 +1674,12 @@ describe MiqExpression do
         it "generates the ruby for an IS expression with datetime value of Last Week" do
           exp = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "Last Week"})
           expect(exp.to_ruby).to eq("val=<value ref=vm, type=datetime>/virtual/last_scan_on</value>; !val.nil? && val.to_time >= '2011-01-03T00:00:00Z'.to_time(:utc) && val.to_time <= '2011-01-09T23:59:59Z'.to_time(:utc)")
+        end
+
+        it "generates the ruby for an IS expression with relative date with hash context" do
+          actual = described_class.new({"IS" => {"field" => "Vm-retires_on", "value" => "Yesterday"}}, "hash").to_ruby
+          expected = "val=<value type=datetime>Vm.retires_on</value>; !val.nil? && val.to_time >= '2011-01-10T00:00:00Z'.to_time(:utc) && val.to_time <= '2011-01-10T23:59:59Z'.to_time(:utc)"
+          expect(actual).to eq(expected)
         end
 
         it "generates the ruby for an IS expression with date value of Last Week" do
@@ -1358,6 +1907,38 @@ describe MiqExpression do
                                          :include_my_tags => false,
                                          :userid          => 'admin')
       expect(tags.uniq.length).to eq(tags.length)
+    end
+  end
+
+  context "._custom_details_for" do
+    let(:klass)         { Vm }
+    let(:vm)            { FactoryGirl.create(:vm) }
+    let!(:custom_attr1) { FactoryGirl.create(:custom_attribute, :resource => vm, :name => "CATTR_1", :value => "Value 1") }
+    let!(:custom_attr2) { FactoryGirl.create(:custom_attribute, :resource => vm, :name => nil,       :value => "Value 2") }
+
+    it "ignores custom_attibutes with a nil name" do
+      expect(MiqExpression._custom_details_for("Vm", {})).to eq([["Custom Attribute: CATTR_1", "Vm-virtual_custom_attribute_CATTR_1"]])
+    end
+
+    let(:conatiner_image) { FactoryGirl.create(:container_image) }
+
+    let!(:custom_attribute_with_section_1) do
+      FactoryGirl.create(:custom_attribute, :resource => conatiner_image, :name => 'CATTR_3', :value => "Value 3",
+                         :section => 'section_3')
+    end
+
+    let!(:custom_attribute_with_section_2) do
+      FactoryGirl.create(:custom_attribute, :resource => conatiner_image, :name => 'CATTR_3', :value => "Value 3",
+                         :section => 'docker_labels')
+    end
+
+    it "returns human names of custom attributes with sections" do
+      expected_result = [
+        ['Docker Labels: CATTR_3', 'ContainerImage-virtual_custom_attribute_CATTR_3:SECTION:docker_labels'],
+        ['Section 3: CATTR_3', 'ContainerImage-virtual_custom_attribute_CATTR_3:SECTION:section_3']
+      ]
+
+      expect(MiqExpression._custom_details_for("ContainerImage", {})).to match_array(expected_result)
     end
   end
 
@@ -1626,15 +2207,34 @@ describe MiqExpression do
 
   describe ".get_col_type" do
     subject { described_class.get_col_type(@field) }
+    let(:string_custom_attribute) do
+      FactoryGirl.create(:custom_attribute,
+                         :name          => "foo",
+                         :value         => "string",
+                         :resource_type => 'ExtManagementSystem')
+    end
+    let(:date_custom_attribute) do
+      FactoryGirl.create(:custom_attribute,
+                         :name          => "foo",
+                         :value         => DateTime.current,
+                         :resource_type => 'ExtManagementSystem')
+    end
 
     it "with model-field__with_pivot_table_suffix" do
       @field = "Vm-name__pv"
       expect(subject).to eq(described_class.get_col_type("Vm-name"))
     end
 
-    it "with managed-field" do
-      @field = "managed.location"
+    it "with custom attribute without value_type" do
+      string_custom_attribute
+      @field = "ExtManagementSystem-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}foo"
       expect(subject).to eq(:string)
+    end
+
+    it "with custom attribute with value_type" do
+      date_custom_attribute
+      @field = "ExtManagementSystem-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}foo"
+      expect(subject).to eq(:datetime)
     end
 
     it "with model.managed-in_field" do
@@ -1649,8 +2249,7 @@ describe MiqExpression do
 
     it "with valid model-in_field" do
       @field = "Vm-cpu_limit"
-      allow(described_class).to receive_messages(:col_type => :some_type)
-      expect(subject).to eq(:some_type)
+      expect(subject).to eq(:integer)
     end
 
     it "with invalid model-in_field" do
@@ -1660,8 +2259,7 @@ describe MiqExpression do
 
     it "with valid model.association-in_field" do
       @field = "Vm.guest_applications-vendor"
-      allow(described_class).to receive_messages(:col_type => :some_type)
-      expect(subject).to eq(:some_type)
+      expect(subject).to eq(:string)
     end
 
     it "with invalid model.association-in_field" do
@@ -1677,40 +2275,6 @@ describe MiqExpression do
     it "with field without model" do
       @field = "storage"
       expect(subject).to be_nil
-    end
-  end
-
-  describe ".parse_field" do
-    subject { described_class.parse_field(@field) }
-
-    it "with model-field__with_pivot_table_suffix" do
-      @field = "Vm-name__pv"
-      expect(subject).to eq(["Vm", [], "name"])
-    end
-
-    it "with managed-field" do
-      @field = "managed.location"
-      expect(subject).to eq(["managed", ["location"], "managed.location"])
-    end
-
-    it "with model.managed-in_field" do
-      @field = "Vm.managed-service_level"
-      expect(subject).to eq(["Vm", ["managed"], "service_level"])
-    end
-
-    it "with model.last.managed-in_field" do
-      @field = "Vm.host.managed-environment"
-      expect(subject).to eq(["Vm", ["host", "managed"], "environment"])
-    end
-
-    it "with valid model-in_field" do
-      @field = "Vm-cpu_limit"
-      expect(subject).to eq(["Vm", [], "cpu_limit"])
-    end
-
-    it "with field without model" do
-      @field = "storage"
-      expect(subject).to eq(["storage", [], "storage"])
     end
   end
 
@@ -1971,6 +2535,36 @@ describe MiqExpression do
       )
     end
 
+    it "return column info for model-virtual field" do
+      field = "VmInfra-active"
+      col_info = described_class.get_col_info(field)
+      expect(col_info).to match(
+        :data_type                      => :boolean,
+        :excluded_by_preprocess_options => false,
+        :format_sub_type                => :boolean,
+        :include                        => {},
+        :tag                            => false,
+        :virtual_column                 => true,
+        :sql_support                    => true,
+        :virtual_reflection             => false
+      )
+    end
+
+    it "return column info for model-invalid" do
+      field = "ManageIQ::Providers::InfraManager::Vm-invalid"
+      col_info = described_class.get_col_info(field)
+      expect(col_info).to match(
+        :data_type                      => nil,
+        :excluded_by_preprocess_options => false,
+        :format_sub_type                => nil,
+        :include                        => {},
+        :tag                            => false,
+        :virtual_column                 => false,
+        :sql_support                    => false,
+        :virtual_reflection             => false
+      )
+    end
+
     it "return column info for managed-field" do
       tag = "managed-location"
       col_info = described_class.get_col_info(tag)
@@ -2058,6 +2652,35 @@ describe MiqExpression do
       )
     end
 
+    it "return column info for model.virtualassociation..virtualassociation-invalid" do
+      field = "ManageIQ::Providers::InfraManager::Vm.service.user.vms-invalid"
+      col_info = described_class.get_col_info(field)
+      expect(col_info).to match(
+        :data_type                      => nil,
+        :excluded_by_preprocess_options => false,
+        :format_sub_type                => nil,
+        :include                        => {},
+        :tag                            => false,
+        :virtual_column                 => false,
+        :sql_support                    => false,
+        :virtual_reflection             => true
+      )
+    end
+
+    it "return column info for model.invalid-active" do
+      field = "ManageIQ::Providers::InfraManager::Vm.invalid-active"
+      col_info = described_class.get_col_info(field)
+      expect(col_info).to match(
+        :data_type                      => nil,
+        :excluded_by_preprocess_options => false,
+        :include                        => {},
+        :tag                            => false,
+        :virtual_column                 => true,
+        :sql_support                    => false,
+        :virtual_reflection             => true
+      )
+    end
+
     it "return column info for model.virtualassociation..virtualassociation-field (with sql)" do
       field = "ManageIQ::Providers::InfraManager::Vm.service.user.vms-active"
       col_info = described_class.get_col_info(field)
@@ -2068,7 +2691,7 @@ describe MiqExpression do
         :include                        => {},
         :tag                            => false,
         :virtual_column                 => true,
-        :sql_support                    => true,
+        :sql_support                    => false,
         :virtual_reflection             => true
       )
     end
@@ -2344,6 +2967,46 @@ describe MiqExpression do
         }
       end
       include_examples :coerces_value_to_integer
+    end
+  end
+
+  describe "#fields" do
+    it "extracts fields" do
+      expression = {
+        "AND" => [
+          {">=" => {"field" => "EmsClusterPerformance-cpu_usagemhz_rate_average", "value" => "0"}},
+          {"<"  => {"field" => "Vm-name", "value" => 5}}
+        ]
+      }
+      actual = described_class.new(expression).fields.sort_by(&:column)
+      expect(actual).to contain_exactly(
+        an_object_having_attributes(:model => EmsClusterPerformance, :column => "cpu_usagemhz_rate_average"),
+        an_object_having_attributes(:model => Vm, :column => "name")
+      )
+    end
+
+    it "extracts tags" do
+      expression = {
+        "AND" => [
+          {">=" => {"field" => "EmsClusterPerformance-cpu_usagemhz_rate_average", "value" => "0"}},
+          {"<"  => {"field" => "Vm.managed-favorite_color", "value" => "5"}}
+        ]
+      }
+      actual = described_class.new(expression).fields
+      expect(actual).to contain_exactly(
+        an_object_having_attributes(:model => EmsClusterPerformance, :column => "cpu_usagemhz_rate_average"),
+        an_object_having_attributes(:model => Vm, :namespace => "/managed/favorite_color")
+      )
+    end
+
+    it "extracts values" do
+      expression =
+        {">=" => {"field" => "EmsClusterPerformance-cpu_usagemhz_rate_average", "value" => "Vm.managed-favorite_color"}}
+      actual = described_class.new(expression).fields
+      expect(actual).to contain_exactly(
+        an_object_having_attributes(:model => EmsClusterPerformance, :column => "cpu_usagemhz_rate_average"),
+        an_object_having_attributes(:model => Vm, :namespace => "/managed/favorite_color")
+      )
     end
   end
 end

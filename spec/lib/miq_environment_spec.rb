@@ -43,6 +43,18 @@ describe MiqEnvironment do
           assert_same_result_every_time(:is_appliance?, true)
         end
       end
+
+      describe ".is_container?" do
+        it "returns false if the environment variable is not set" do
+          assert_same_result_every_time(:is_container?, false)
+        end
+
+        it "returns true if the environment variable is set" do
+          ENV["CONTAINER"] = "true"
+          assert_same_result_every_time(:is_container?, true)
+          ENV.delete("CONTAINER")
+        end
+      end
     end
   end
 

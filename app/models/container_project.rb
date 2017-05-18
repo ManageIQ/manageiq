@@ -1,6 +1,8 @@
 class ContainerProject < ApplicationRecord
+  include SupportsFeatureMixin
   include CustomAttributeMixin
-  include VirtualTotalMixin
+  include ArchivedMixin
+  include_concern 'Purging'
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   has_many :container_groups
   has_many :container_routes
@@ -16,12 +18,12 @@ class ContainerProject < ApplicationRecord
   has_many :container_limit_items, :through => :container_limits
   has_many :container_builds
   has_many :container_templates
+  has_many :archived_container_groups, :foreign_key => "old_container_project_id", :class_name => "ContainerGroup"
 
   # Needed for metrics
   has_many :metrics,                :as => :resource
   has_many :metric_rollups,         :as => :resource
   has_many :vim_performance_states, :as => :resource
-  delegate :my_zone,                :to => :ext_management_system
 
   has_many :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
 
@@ -59,15 +61,12 @@ class ContainerProject < ApplicationRecord
   end
 
   def disconnect_inv
+    return if ems_id.nil?
     _log.info "Disconnecting Container Project [#{name}] id [#{id}] from EMS [#{ext_management_system.name}]" \
     "id [#{ext_management_system.id}] "
     self.old_ems_id = ems_id
     self.ext_management_system = nil
     self.deleted_on = Time.now.utc
     save
-  end
-
-  def archived?
-    ems_id.nil?
   end
 end

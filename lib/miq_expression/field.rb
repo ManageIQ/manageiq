@@ -1,63 +1,38 @@
-class MiqExpression::Field
-  FIELD_REGEX = /
+class MiqExpression::Field < MiqExpression::Target
+  REGEX = /
 (?<model_name>([[:upper:]][[:alnum:]]*(::)?)+)
-\.?(?<associations>[a-z_\.]+)*
--(?<column>[a-z]+(_[[:alnum:]]+)*)
+(?!.*\b(managed|user_tag)\b)
+\.?(?<associations>[a-z][0-9a-z_\.]+)?
+-
+(?:
+  (?<virtual_custom_column>#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}[a-z]+[:_\-.\/[:alnum:]]*)|
+  (?<column>[a-z]+(_[[:alnum:]]+)*)
+)
 /x
 
-  ParseError = Class.new(StandardError)
-
-  def self.parse(field)
-    match = FIELD_REGEX.match(field) or raise ParseError, field
-    new(match[:model_name].constantize, match[:associations].to_s.split("."), match[:column])
-  end
-
-  attr_reader :model, :associations, :column
   delegate :eq, :not_eq, :lteq, :gteq, :lt, :gt, :between, :to => :arel_attribute
 
-  def initialize(model, associations, column)
-    @model = model
-    @associations = associations
-    @column = column
+  def self.parse(field)
+    parsed_params = parse_params(field) || return
+    new(parsed_params[:model_name], parsed_params[:associations], parsed_params[:column] ||
+        parsed_params[:virtual_custom_column])
   end
 
-  def date?
-    column_type == :date
+  def self.is_field?(field)
+    return false unless field.kind_of?(String)
+    match = REGEX.match(field)
+    return false unless match
+    model = match[:model_name].safe_constantize
+    return false unless model
+    !!(model < ApplicationRecord)
   end
 
-  def datetime?
-    column_type == :datetime
-  end
-
-  def string?
-    column_type == :string
-  end
-
-  def plural?
-    return false if reflections.empty?
-    [:has_many, :has_and_belongs_to_many].include?(reflections.last.macro)
+  def attribute_supported_by_sql?
+    !custom_attribute_column? && target.attribute_supported_by_sql?(column)
   end
 
   def custom_attribute_column?
     column.include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
-  end
-
-  def reflections
-    klass = model
-    associations.collect do |association|
-      klass.reflection_with_virtual(association).tap do |reflection|
-        raise ArgumentError, "One or more associations are invalid: #{associations.join(", ")}" unless reflection
-        klass = reflection.klass
-      end
-    end
-  end
-
-  def target
-    if associations.none?
-      model
-    else
-      reflections.last.klass
-    end
   end
 
   def matches(other)
@@ -82,7 +57,31 @@ class MiqExpression::Field
     )
   end
 
+  def column_type
+    if custom_attribute_column?
+      CustomAttribute.where(:name => custom_attribute_column_name, :resource_type => model.to_s).first.try(:value_type)
+    else
+      target.type_for_attribute(column).type
+    end
+  end
+
+  def virtual_attribute?
+    target.virtual_attribute?(column)
+  end
+
+  def sub_type
+    MiqReport::Formats.sub_type(column.to_sym) || column_type
+  end
+
+  def arel_attribute
+    target.arel_attribute(column)
+  end
+
   private
+
+  def custom_attribute_column_name
+    column.gsub(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX, "")
+  end
 
   class WhereExtractionVisitor < Arel::Visitors::PostgreSQL
     def visit_Arel_Nodes_SelectStatement(o, collector)
@@ -122,13 +121,5 @@ class MiqExpression::Field
       collect = visitor.accept(arel.ast, Arel::Collectors::Bind.new)
       collect.substitute_binds(binds).join
     end
-  end
-
-  def arel_attribute
-    target.arel_attribute(column)
-  end
-
-  def column_type
-    target.type_for_attribute(column).type
   end
 end

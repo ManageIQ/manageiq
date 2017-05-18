@@ -23,9 +23,14 @@ class EvmDatabase
     RssFeed
     MiqWidget
     MiqAction
+    MiqEventDefinitionSet
     MiqEventDefinition
     MiqPolicySet
-  )
+    ChargebackRateDetailMeasure
+    ChargeableField
+    ChargebackRateDetailCurrency
+    ChargebackRate
+  ).freeze
 
   RAILS_ENGINE_MODEL_CLASS_NAMES = %w(MiqAeDatastore)
 
@@ -40,16 +45,18 @@ class EvmDatabase
   end
 
   def self.seed_primordial
-    if ENV['SKIP_PRIMORDIAL_SEED'] && MiqDatabase.count > 0
-      puts "** Primordial seedings is skipped."
-      puts "** Unset SKIP_PRIMORDIAL_SEED to re-enable"
+    if ENV['SKIP_SEEDING'] && MiqDatabase.count > 0
+      puts "** seedings is skipped on startup."
+      puts "** Unset SKIP_SEEDING to re-enable"
     else
       seed(PRIMORDIAL_CLASSES)
     end
   end
 
   def self.seed_last
-    seed(seedable_model_class_names - PRIMORDIAL_CLASSES)
+    unless ENV['SKIP_SEEDING'] && MiqDatabase.count > 0
+      seed(seedable_model_class_names - PRIMORDIAL_CLASSES)
+    end
   end
 
   def self.seed(classes = nil, exclude_list = [])
@@ -88,7 +95,11 @@ class EvmDatabase
   end
 
   def self.host
-    Rails.configuration.database_configuration[Rails.env]['host']
+    if defined?(Rails)
+      Rails.configuration.database_configuration[Rails.env]['host']
+    else
+      ActiveRecord::Base.configurations[ENV['RAILS_ENV']]['host']
+    end
   end
 
   def self.local?
@@ -96,7 +107,7 @@ class EvmDatabase
   end
 
   # Determines the average time to the database in milliseconds
-  def self.ping(connection = ApplicationRecord.connection)
+  def self.ping(connection = ActiveRecord::Base.connection)
     query = "SELECT 1"
     Benchmark.realtime { 10.times { connection.select_value(query) } } / 10 * 1000
   end
@@ -114,6 +125,11 @@ class EvmDatabase
   # @param connection Write the schema at this connection to the file
   def self.write_expected_schema(connection = ActiveRecord::Base.connection)
     File.write(SCHEMA_FILE, current_schema(connection).to_yaml)
+  end
+
+  def self.raise_server_event(event)
+    msg = "Server IP: #{MiqServer.my_server.ipaddress}, Server Host Name: #{MiqServer.my_server.hostname}"
+    MiqEvent.raise_evm_event_queue(MiqServer.my_server, event, :event_details => msg)
   end
 
   class << self
@@ -152,8 +168,8 @@ class EvmDatabase
     end
 
     def check_schema_tables(connection)
-      current_tables  = current_schema(connection).keys
-      expected_tables = expected_schema.keys
+      current_tables  = current_schema(connection).keys - MiqPglogical::ALWAYS_EXCLUDED_TABLES
+      expected_tables = expected_schema.keys - MiqPglogical::ALWAYS_EXCLUDED_TABLES
 
       return if current_tables == expected_tables
 

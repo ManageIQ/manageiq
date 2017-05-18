@@ -237,12 +237,8 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.clean_workers
-    time_threshold = 1.hour
     server_scope.each do |w|
       Process.kill(9, w.pid) if w.pid && w.is_alive? rescue nil
-      # if w.last_heartbeat && (time_threshold.ago.utc < w.last_heartbeat)
-      #   ActiveRecord::Base.connection.kill(w.sql_spid)
-      # end
       w.destroy
     end
   end
@@ -271,6 +267,8 @@ class MiqWorker < ApplicationRecord
     w
   end
 
+  cache_with_timeout(:my_worker) { server_scope.find_by(:pid => Process.pid) }
+
   def self.find_all_current(server_id = nil)
     MiqWorker.find_current(server_id)
   end
@@ -296,7 +294,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.send_message_to_worker_monitor(wid, message, *args)
-    w = MiqWorker.find_by_id(wid)
+    w = MiqWorker.find_by(:id => wid)
     raise _("Worker with id=<%{id}> does not exist") % {:id => wid} if w.nil?
     w.send_message_to_worker_monitor(message, *args)
   end
@@ -336,7 +334,7 @@ class MiqWorker < ApplicationRecord
     end
   end
 
-  def start
+  def start_runner
     self.class.before_fork
     pid = fork(:cow_friendly => true) do
       self.class.after_fork
@@ -345,7 +343,11 @@ class MiqWorker < ApplicationRecord
     end
 
     Process.detach(pid)
-    self.pid = pid
+    pid
+  end
+
+  def start
+    self.pid = start_runner
     save
 
     msg = "Worker started: ID [#{id}], PID [#{pid}], GUID [#{guid}]"
@@ -395,12 +397,24 @@ class MiqWorker < ApplicationRecord
     STATUSES_STOPPED.include?(status)
   end
 
+  def started?
+    STATUS_STARTED == status
+  end
+
   def actually_running?
     MiqProcess.is_worker?(pid)
   end
 
   def enabled_or_running?
     !is_stopped? || actually_running?
+  end
+
+  def stopping_for_too_long?
+    # Note, a 'stopping' worker heartbeats in DRb but NOT to
+    # the database, so we can see how long it's been
+    # 'stopping' by checking the last_heartbeat.
+    stopping_timeout = self.class.worker_settings[:stopping_timeout] || 10.minutes
+    status == MiqWorker::STATUS_STOPPING && last_heartbeat < stopping_timeout.seconds.ago
   end
 
   def validate_active_messages
@@ -460,6 +474,21 @@ class MiqWorker < ApplicationRecord
 
   delegate :normalized_type, :to => :class
 
+  def abbreviated_class_name
+    type.sub(/^ManageIQ::Providers::/, "")
+  end
+
+  def minimal_class_name
+    abbreviated_class_name
+      .sub(/Miq/, "")
+      .sub(/Worker/, "")
+  end
+
+  def database_application_name
+    zone = MiqServer.my_server.zone
+    "MIQ #{Process.pid} #{minimal_class_name}[#{compressed_id}], s[#{miq_server.compressed_id}], #{zone.name}[#{zone.compressed_id}]".truncate(64)
+  end
+
   def format_full_log_msg
     "Worker [#{self.class}] with ID: [#{id}], PID: [#{pid}], GUID: [#{guid}]"
   end
@@ -474,10 +503,6 @@ class MiqWorker < ApplicationRecord
 
   def update_heartbeat
     update_attribute(:last_heartbeat, Time.now.utc)
-  end
-
-  def is_current_process?
-    Process.pid == pid
   end
 
   def self.config_settings_path

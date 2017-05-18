@@ -1,0 +1,6 @@
+--require manageiq/spec/spec_helper
+--require spec_helper
+--color
+--order random
+--profile 25
+--exclude-pattern "spec/manageiq/**/*_spec.rb"

@@ -76,6 +76,11 @@ describe MoveNetworkPortCloudSubnetIdToNetworkPortsCloudSubnets do
     ]
   end
 
+  let(:remote_region_start) do
+    ArRegion.anonymous_class_with_ar_region.rails_sequence_start +
+      ArRegion.anonymous_class_with_ar_region.rails_sequence_factor
+  end
+
   migration_context :up do
     it "migrates a series of representative row" do
       cloud_subnet_entries.each do |x|
@@ -103,8 +108,6 @@ describe MoveNetworkPortCloudSubnetIdToNetworkPortsCloudSubnets do
     end
 
     it "does not migrate rows from remote regions" do
-      remote_region_start = (ApplicationRecord.my_region_number + 1) * ApplicationRecord.rails_sequence_factor
-
       id = remote_region_start
 
       cloud_subnet_entries.each do |x|
@@ -165,8 +168,6 @@ describe MoveNetworkPortCloudSubnetIdToNetworkPortsCloudSubnets do
     end
 
     it "does not migrate rows from remote regions" do
-      remote_region_start = (ApplicationRecord.my_region_number + 1) * ApplicationRecord.rails_sequence_factor
-
       id = remote_region_start
 
       cloud_subnet_entries.each do |x|

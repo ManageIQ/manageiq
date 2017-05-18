@@ -18,6 +18,11 @@ Vmdb::Application.configure do
   config.public_file_server.enabled = true
   config.static_cache_control = "public, max-age=3600"
 
+  # Avoid potential warnings and race conditions
+  config.assets.configure do |env|
+    env.cache = ActiveSupport::Cache.lookup_store(:memory_store)
+  end
+
   # Log error messages when you accidentally call methods on nil
   config.whiny_nils = true
 
@@ -45,9 +50,6 @@ Vmdb::Application.configure do
   # should just be raised intact
   config.middleware.delete ::ActionDispatch::ShowExceptions
   config.middleware.delete ::ActionDispatch::DebugExceptions
-
-  # Raise exceptions in transactional callbacks
-  config.active_record.raise_in_transactional_callbacks = true
 
   # Customize any additional options below...
 

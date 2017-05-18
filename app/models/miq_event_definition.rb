@@ -21,6 +21,10 @@ class MiqEventDefinition < ApplicationRecord
     where(:event_type => "Default")
   end
 
+  def self.all_control_events
+    all_events.where.not("name like ?", "%compliance_check").select { |e| e.etype }
+  end
+
   def miq_policies
     p_ids = MiqPolicyContent.where(:miq_event_definition_id => id).uniq.pluck(:miq_policy_id)
     MiqPolicy.where(:id => p_ids).to_a
@@ -33,8 +37,18 @@ class MiqEventDefinition < ApplicationRecord
   end
 
   def self.import_from_hash(event, options = {})
+    # The import is only intended to create non-projected event
+    # definitions which have a `#definition` of `nil`. The
+    # `#definition` attribute is only used for projected event
+    # definitions which are not user-defined. The message within the
+    # definition gets `eval`d, so it is critical that projected events
+    # cannot be created on import. So here any definition attribute
+    # keyed with either a string or symbol (AR accepts either) is
+    # removed from the hash.
+    event.except!("definition", :definition)
+
     status = {:class => name, :description => event["description"]}
-    e = MiqEventDefinition.find_by_name(event["name"])
+    e = MiqEventDefinition.find_by(:name => event["name"])
     msg_pfx = "Importing Event: name=[#{event["name"]}]"
 
     if e.nil?
@@ -63,9 +77,7 @@ class MiqEventDefinition < ApplicationRecord
   end
 
   def etype
-    set = memberof.first
-    raise "unexpected error, no type found for event #{name}" if set.nil?
-    set
+    memberof.first.tap { |set| _log.error("No type found for event #{name}") if set.nil? }
   end
 
   def self.etypes
@@ -105,18 +117,18 @@ class MiqEventDefinition < ApplicationRecord
   end
 
   def self.seed
-    MiqEventDefinitionSet.seed
     seed_default_events
     seed_default_definitions
   end
 
   def self.seed_default_events
+    event_sets = MiqEventDefinitionSet.all.index_by(&:name)
     fname = File.join(FIXTURE_DIR, "#{to_s.pluralize.underscore}.csv")
     CSV.foreach(fname, :headers => true, :skip_lines => /^#/, :skip_blanks => true) do |csv_row|
       event = csv_row.to_hash
       set_type = event.delete('set_type')
 
-      rec = find_by_name(event['name'])
+      rec = find_by(:name => event['name'])
       if rec.nil?
         _log.info("Creating [#{event['name']}]")
         rec = create(event)
@@ -128,7 +140,7 @@ class MiqEventDefinition < ApplicationRecord
         end
       end
 
-      es = MiqEventDefinitionSet.find_by_name(set_type)
+      es = event_sets[set_type]
       rec.memberof.each { |old_set| rec.make_not_memberof(old_set) unless old_set == es } # handle changes in set membership
       es.add_member(rec) if es && !es.members.include?(rec)
     end

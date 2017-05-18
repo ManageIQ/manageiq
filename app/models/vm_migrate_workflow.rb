@@ -16,12 +16,16 @@ class VmMigrateWorkflow < MiqRequestWorkflow
   def get_source_and_targets(refresh = false)
     return @target_resource if @target_resource && refresh == false
 
-    ems = @values[:src_ids].to_miq_a.collect { |v_id| v = Vm.find_by_id(v_id); v.ext_management_system }.uniq.compact
+    vms = Vm.where(:id => @values[:src_ids])
+
+    emses = ExtManagementSystem.where(:id => vms.pluck(:ems_id)).distinct.compact
 
     # If all the selected VMs share the same EMS we can present a list of CIs.
-    return @target_resource = {} if ems.length != 1
+    return @target_resource = {} if emses.length != 1
 
-    result = {:ems => ci_to_hash_struct(ems.first)}
+    result = {:ems => ci_to_hash_struct(emses.first)}
+    @manager = emses.first
+
     add_target(:placement_host_name,    :host,    Host,         result)
     add_target(:placement_ds_name,      :storage, Storage,      result)
     add_target(:placement_cluster_name, :cluster, EmsCluster,   result)
@@ -34,8 +38,25 @@ class VmMigrateWorkflow < MiqRequestWorkflow
     else
       add_target(:placement_dc_name, :datacenter, EmsFolder, result)
     end
+
+    unless field_supported(:cluster)
+      # If the user can not pick a cluster there can only be one to select
+      # from => preselect it so the hosts will be filtered accordingly.
+      cluster = vms.first.ems_cluster
+      result[:cluster] = ci_to_hash_struct(cluster)
+    end
+
     rails_logger('get_source_and_targets', 1)
     @target_resource = result
+  end
+
+  def add_target(dialog_key, key, klass, result)
+    super if field_supported(key)
+  end
+
+  def field_supported(key)
+    !(@manager.respond_to?(:unsupported_migration_options) &&
+      @manager.unsupported_migration_options.include?(key))
   end
 
   private

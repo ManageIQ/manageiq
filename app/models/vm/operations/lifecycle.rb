@@ -11,13 +11,17 @@ module Vm::Operations::Lifecycle
         unsupported_reason_add(:migrate, "Migrate operation in not supported.")
       end
     end
-  end
 
-  def validate_clone
-    {:available => self.cloneable? && !(self.blank? || self.orphaned? || self.archived?), :message => nil}
-  end
+    supports :publish do
+      if blank? || orphaned? || archived?
+        unsupported_reason_add(:publish, _('Publish operation in not supported'))
+      end
+    end
 
-  def validate_publish
-    {:available => !(self.blank? || self.orphaned? || self.archived?), :message   => nil}
+    api_relay_method :retire do |options|
+      options
+    end
+
+    api_relay_method :retire_now, :retire
   end
 end

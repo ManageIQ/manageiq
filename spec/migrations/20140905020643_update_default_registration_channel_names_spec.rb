@@ -7,7 +7,7 @@ describe UpdateDefaultRegistrationChannelNames do
     it "Updates the default registration channel names for v5.3" do
       miq_database_stub.create!(:update_repo_name => "cf-me-5.2-for-rhel-6-rpms")
 
-      expect(MiqDatabase.count).to eq(1)
+      expect(miq_database_stub.count).to eq(1)
       expect(miq_database_stub.first.update_repo_name).to eq("cf-me-5.2-for-rhel-6-rpms")
 
       migrate
@@ -18,7 +18,7 @@ describe UpdateDefaultRegistrationChannelNames do
     it "Skips non-default channels" do
       miq_database_stub.create!(:update_repo_name => "not-default")
 
-      expect(MiqDatabase.count).to eq(1)
+      expect(miq_database_stub.count).to eq(1)
       expect(miq_database_stub.first.update_repo_name).to eq("not-default")
 
       migrate

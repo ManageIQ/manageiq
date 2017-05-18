@@ -1,4 +1,4 @@
-class CreateProvisioningManagers < ActiveRecord::Migration
+class CreateProvisioningManagers < ActiveRecord::Migration[4.2]
   def up
     create_table :customization_scripts do |t|
       t.string     :name

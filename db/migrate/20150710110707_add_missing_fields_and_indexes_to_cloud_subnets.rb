@@ -1,4 +1,4 @@
-class AddMissingFieldsAndIndexesToCloudSubnets < ActiveRecord::Migration
+class AddMissingFieldsAndIndexesToCloudSubnets < ActiveRecord::Migration[4.2]
   def change
     add_column :cloud_subnets, :cloud_tenant_id,                :bigint
     add_column :cloud_subnets, :dns_nameservers,                :string

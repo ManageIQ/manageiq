@@ -21,7 +21,7 @@ module Api
           raise BadRequestError,
                 "#{service_dialog_ident(resource)} is not referenced by #{service_template_ident(service_template)}"
         end
-        resource.content(service_template, resource_action)
+        resource.content(service_template, resource_action, true)
       end
     end
   end

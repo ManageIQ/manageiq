@@ -1,6 +1,0 @@
-- if @showtype == "performance"
-  = render(:partial => "layouts/performance")
-  :javascript
-    ManageIQ.afterOnload = "miqAsyncAjax('#{url_for(:action => @ajax_action, :id => @record)}');"
-- else
-  = render :partial => @showtype

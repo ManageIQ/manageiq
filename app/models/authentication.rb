@@ -15,8 +15,22 @@ class Authentication < ApplicationRecord
 
   belongs_to :resource, :polymorphic => true
 
+  has_many :authentication_configuration_script_bases,
+           :dependent => :destroy
+  has_many :configuration_script_bases,
+           :through => :authentication_configuration_script_bases
+
+  has_many :authentication_orchestration_stacks,
+           :dependent => :destroy
+  has_many :orchestration_stacks,
+           :through => :authentication_orchestration_stacks
+
+  has_many :configuration_script_sources
+
   before_save :set_credentials_changed_on
   after_save :after_authentication_changed
+
+  serialize :options
 
   # TODO: DELETE ME!!!!
   ERRORS = {
@@ -34,6 +48,13 @@ class Authentication < ApplicationRecord
     "invalid"     => 3,
   ).freeze
 
+  RETRYABLE_STATUS = %w(error unreachable).freeze
+
+  CREDENTIAL_TYPES = {
+    :external_credential_types         => 'ManageIQ::Providers::ExternalAutomationManager::Authentication',
+    :embedded_ansible_credential_types => 'ManageIQ::Providers::EmbeddedAutomationManager::Authentication'
+  }.freeze
+
   # FIXME: To address problem with url resolution when displayed as a quadicon,
   # but it's not *really* the db_name. Might be more proper to override `to_partial_path`
   def self.db_name
@@ -42,6 +63,10 @@ class Authentication < ApplicationRecord
 
   def status_severity
     STATUS_SEVERITY[status.to_s.downcase]
+  end
+
+  def retryable_status?
+    RETRYABLE_STATUS.include?(status.to_s.downcase)
   end
 
   def authentication_type
@@ -83,6 +108,23 @@ class Authentication < ApplicationRecord
 
   def assign_values(options)
     self.attributes = options
+  end
+
+  def self.build_credential_options
+    CREDENTIAL_TYPES.each_with_object({}) do |(k, v), hash|
+      hash[k] = v.constantize.descendants.each_with_object({}) do |klass, fields|
+        fields[klass.name] = klass::API_OPTIONS if defined? klass::API_OPTIONS
+      end
+    end
+  end
+
+  def self.class_from_request_data(data)
+    if !data.key?('type') || data['type'] == to_s
+      return self
+    end
+    type = descendants.find { |klass| klass.name == data['type'] }
+    raise _('Must be an Authentication type') unless type
+    type
   end
 
   private

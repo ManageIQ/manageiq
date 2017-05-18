@@ -1,4 +1,4 @@
-class CreateNetworkPortsAndRouters < ActiveRecord::Migration
+class CreateNetworkPortsAndRouters < ActiveRecord::Migration[4.2]
   def change
     create_table :network_ports do |t|
       t.string     :type

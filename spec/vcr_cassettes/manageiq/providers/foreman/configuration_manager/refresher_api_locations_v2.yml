@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/hostgroups/1
+    uri: http://example.com/api/hostgroups/1
     body:
       encoding: US-ASCII
       string: ''
@@ -13,6 +13,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -41,11 +42,11 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"id":1,"name":"Raleigh","title":"Raleigh","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":1,"domain_name":"example.com","environment_id":1,"environment_name":"production","compute_profile_id":null,"compute_profile_name":null,"ancestry":null,"puppet_proxy_id":1,"puppet_ca_proxy_id":1,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":1,"architecture_name":"x86_64","realm_id":null,"realm_name":null,"created_at":"2014-08-14T20:29:03Z","updated_at":"2014-08-14T20:29:03Z","all_puppetclasses":[{"id":5,"name":"cli_essentials","module_name":"cli_essentials"},{"id":84,"name":"dns_settings","module_name":"dns_settings"},{"id":94,"name":"epel","module_name":"epel"},{"id":1,"name":"ntp","module_name":"ntp"},{"id":11,"name":"ssh_authorized_keys","module_name":"ssh_authorized_keys"}],"locations":[{"id":1,"name":"Raleigh","title":"Raleigh"}],"organizations":[{"id":3,"name":"ProviderRefreshSpecOrganization","title":"Infra/ProviderRefreshSpecOrganization"}],"parameters":[],"template_combinations":[],"puppetclasses":[{"id":5,"name":"cli_essentials","module_name":"cli_essentials"},{"id":84,"name":"dns_settings","module_name":"dns_settings"},{"id":94,"name":"epel","module_name":"epel"},{"id":1,"name":"ntp","module_name":"ntp"},{"id":11,"name":"ssh_authorized_keys","module_name":"ssh_authorized_keys"}],"config_groups":[]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/hostgroups/10
+    uri: http://example.com/api/hostgroups/10
     body:
       encoding: US-ASCII
       string: ''
@@ -56,6 +57,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -84,11 +86,11 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"id":10,"name":"brewmaster","title":"Raleigh/Virt/Productivity/brewmaster","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"1/3/4","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2014-11-17T21:26:08Z","updated_at":"2014-11-17T21:26:08Z","all_puppetclasses":[{"id":68,"name":"apache_config","module_name":"apache_config"},{"id":71,"name":"brewmaster","module_name":"brewmaster"},{"id":28,"name":"cfme_bot_ssh_key","module_name":"cfme_bot_ssh_key"},{"id":5,"name":"cli_essentials","module_name":"cli_essentials"},{"id":84,"name":"dns_settings","module_name":"dns_settings"},{"id":94,"name":"epel","module_name":"epel"},{"id":58,"name":"kerberos_auth","module_name":"kerberos_auth"},{"id":26,"name":"lab_repo","module_name":"lab_repo"},{"id":1,"name":"ntp","module_name":"ntp"},{"id":27,"name":"rpm_git","module_name":"rpm_git"},{"id":11,"name":"ssh_authorized_keys","module_name":"ssh_authorized_keys"}],"locations":[{"id":1,"name":"Raleigh","title":"Raleigh"}],"organizations":[{"id":2,"name":"Infra","title":"Infra"}],"parameters":[],"template_combinations":[],"puppetclasses":[{"id":68,"name":"apache_config","module_name":"apache_config"},{"id":71,"name":"brewmaster","module_name":"brewmaster"},{"id":28,"name":"cfme_bot_ssh_key","module_name":"cfme_bot_ssh_key"},{"id":58,"name":"kerberos_auth","module_name":"kerberos_auth"}],"config_groups":[]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/hostgroups/11
+    uri: http://example.com/api/hostgroups/11
     body:
       encoding: US-ASCII
       string: ''
@@ -99,6 +101,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -127,11 +130,11 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"id":11,"name":"Foreman","title":"Raleigh/Virt/Foreman","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"1/3","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2014-11-26T19:08:50Z","updated_at":"2014-11-26T19:08:50Z","all_puppetclasses":[{"id":5,"name":"cli_essentials","module_name":"cli_essentials"},{"id":84,"name":"dns_settings","module_name":"dns_settings"},{"id":94,"name":"epel","module_name":"epel"},{"id":79,"name":"foreman","module_name":"foreman"},{"id":1,"name":"ntp","module_name":"ntp"},{"id":11,"name":"ssh_authorized_keys","module_name":"ssh_authorized_keys"}],"locations":[{"id":1,"name":"Raleigh","title":"Raleigh"}],"organizations":[{"id":2,"name":"Infra","title":"Infra"}],"parameters":[],"template_combinations":[],"puppetclasses":[{"id":79,"name":"foreman","module_name":"foreman"}],"config_groups":[]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/hostgroups/12
+    uri: http://example.com/api/hostgroups/12
     body:
       encoding: US-ASCII
       string: ''
@@ -142,6 +145,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -170,11 +174,11 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"id":12,"name":"CfmeBz","title":"Raleigh/Virt/Productivity/CfmeBz","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"1/3/4","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2015-01-07T18:41:35Z","updated_at":"2015-01-07T18:41:35Z","all_puppetclasses":[{"id":85,"name":"bugzilla_mirror","module_name":"bugzilla_mirror"},{"id":5,"name":"cli_essentials","module_name":"cli_essentials"},{"id":84,"name":"dns_settings","module_name":"dns_settings"},{"id":94,"name":"epel","module_name":"epel"},{"id":26,"name":"lab_repo","module_name":"lab_repo"},{"id":33,"name":"nginx","module_name":"nginx"},{"id":1,"name":"ntp","module_name":"ntp"},{"id":27,"name":"rpm_git","module_name":"rpm_git"},{"id":11,"name":"ssh_authorized_keys","module_name":"ssh_authorized_keys"}],"locations":[{"id":1,"name":"Raleigh","title":"Raleigh"}],"organizations":[{"id":2,"name":"Infra","title":"Infra"}],"parameters":[],"template_combinations":[],"puppetclasses":[{"id":85,"name":"bugzilla_mirror","module_name":"bugzilla_mirror"},{"id":33,"name":"nginx","module_name":"nginx"}],"config_groups":[]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/hostgroups/13
+    uri: http://example.com/api/hostgroups/13
     body:
       encoding: US-ASCII
       string: ''
@@ -185,6 +189,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -214,11 +219,11 @@ http_interactions:
       encoding: UTF-8
       string: '{"id":13,"name":"ProviderRefreshSpec-HostGroup","title":"ProviderRefreshSpec-HostGroup","subnet_id":null,"subnet_name":null,"operatingsystem_id":4,"operatingsystem_name":"OS
         1.2","domain_id":null,"domain_name":null,"environment_id":1,"environment_name":"production","compute_profile_id":null,"compute_profile_name":null,"ancestry":null,"puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":8,"medium_name":"ProviderRefreshSpec-Media","architecture_id":1,"architecture_name":"x86_64","realm_id":null,"realm_name":null,"created_at":"2015-01-15T19:42:50Z","updated_at":"2015-01-22T16:34:33Z","all_puppetclasses":[],"locations":[{"id":4,"name":"ProviderRefreshSpec-Location","title":"ProviderRefreshSpec-Location"},{"id":5,"name":"ProviderRefreshSpec-ChildLocation","title":"ProviderRefreshSpec-Location/ProviderRefreshSpec-ChildLocation"}],"organizations":[{"id":3,"name":"ProviderRefreshSpecOrganization","title":"Infra/ProviderRefreshSpecOrganization"},{"id":6,"name":"ProviderRefreshSpecChildOrganization","title":"Infra/ProviderRefreshSpecOrganization/ProviderRefreshSpecChildOrganization"}],"parameters":[{"id":4,"name":"ChildOverride","value":"parent"},{"id":3,"name":"ParentParam","value":"parent"}],"template_combinations":[],"puppetclasses":[],"config_groups":[]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/hostgroups/14
+    uri: http://example.com/api/hostgroups/14
     body:
       encoding: US-ASCII
       string: ''
@@ -229,6 +234,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -257,11 +263,11 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"id":14,"name":"ProviderRefreshSpec-ChildHostGroup","title":"ProviderRefreshSpec-HostGroup/ProviderRefreshSpec-ChildHostGroup","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"13","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":12,"ptable_name":"ProviderRefreshSpec-PartitionTable","medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2015-01-15T19:43:14Z","updated_at":"2015-01-22T16:35:24Z","all_puppetclasses":[],"locations":[{"id":4,"name":"ProviderRefreshSpec-Location","title":"ProviderRefreshSpec-Location"},{"id":5,"name":"ProviderRefreshSpec-ChildLocation","title":"ProviderRefreshSpec-Location/ProviderRefreshSpec-ChildLocation"}],"organizations":[{"id":3,"name":"ProviderRefreshSpecOrganization","title":"Infra/ProviderRefreshSpecOrganization"},{"id":6,"name":"ProviderRefreshSpecChildOrganization","title":"Infra/ProviderRefreshSpecOrganization/ProviderRefreshSpecChildOrganization"}],"parameters":[{"id":1,"name":"ChildOverride","value":"child"},{"id":2,"name":"ChildParam","value":"child"}],"template_combinations":[],"puppetclasses":[],"config_groups":[]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/hostgroups/15
+    uri: http://example.com/api/hostgroups/15
     body:
       encoding: US-ASCII
       string: ''
@@ -272,6 +278,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -300,11 +307,11 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"id":15,"name":"RHEV Host","title":"Raleigh/Metal/RHEV Host","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"1/2","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2015-01-19T21:04:11Z","updated_at":"2015-01-19T21:04:11Z","all_puppetclasses":[{"id":5,"name":"cli_essentials","module_name":"cli_essentials"},{"id":84,"name":"dns_settings","module_name":"dns_settings"},{"id":94,"name":"epel","module_name":"epel"},{"id":1,"name":"ntp","module_name":"ntp"},{"id":11,"name":"ssh_authorized_keys","module_name":"ssh_authorized_keys"}],"locations":[{"id":1,"name":"Raleigh","title":"Raleigh"}],"organizations":[{"id":2,"name":"Infra","title":"Infra"}],"parameters":[],"template_combinations":[],"puppetclasses":[],"config_groups":[]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/hostgroups/16
+    uri: http://example.com/api/hostgroups/16
     body:
       encoding: US-ASCII
       string: ''
@@ -315,6 +322,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -343,11 +351,11 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"id":16,"name":"Brewery","title":"Raleigh/Virt/Productivity/Brewery","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"1/3/4","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2015-01-30T19:21:19Z","updated_at":"2015-01-30T19:21:19Z","all_puppetclasses":[{"id":96,"name":"brewery","module_name":"brewery"},{"id":5,"name":"cli_essentials","module_name":"cli_essentials"},{"id":84,"name":"dns_settings","module_name":"dns_settings"},{"id":94,"name":"epel","module_name":"epel"},{"id":58,"name":"kerberos_auth","module_name":"kerberos_auth"},{"id":26,"name":"lab_repo","module_name":"lab_repo"},{"id":1,"name":"ntp","module_name":"ntp"},{"id":27,"name":"rpm_git","module_name":"rpm_git"},{"id":11,"name":"ssh_authorized_keys","module_name":"ssh_authorized_keys"}],"locations":[{"id":1,"name":"Raleigh","title":"Raleigh"}],"organizations":[{"id":2,"name":"Infra","title":"Infra"}],"parameters":[],"template_combinations":[],"puppetclasses":[{"id":96,"name":"brewery","module_name":"brewery"},{"id":58,"name":"kerberos_auth","module_name":"kerberos_auth"}],"config_groups":[]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/hostgroups/2
+    uri: http://example.com/api/hostgroups/2
     body:
       encoding: US-ASCII
       string: ''
@@ -358,6 +366,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -386,11 +395,11 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"id":2,"name":"Metal","title":"Raleigh/Metal","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"1","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2014-08-14T20:30:30Z","updated_at":"2014-08-14T20:30:30Z","all_puppetclasses":[{"id":5,"name":"cli_essentials","module_name":"cli_essentials"},{"id":84,"name":"dns_settings","module_name":"dns_settings"},{"id":94,"name":"epel","module_name":"epel"},{"id":1,"name":"ntp","module_name":"ntp"},{"id":11,"name":"ssh_authorized_keys","module_name":"ssh_authorized_keys"}],"locations":[{"id":1,"name":"Raleigh","title":"Raleigh"}],"organizations":[{"id":2,"name":"Infra","title":"Infra"}],"parameters":[],"template_combinations":[],"puppetclasses":[],"config_groups":[]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/hostgroups/3
+    uri: http://example.com/api/hostgroups/3
     body:
       encoding: US-ASCII
       string: ''
@@ -401,6 +410,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -429,11 +439,11 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"id":3,"name":"Virt","title":"Raleigh/Virt","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"1","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2014-10-20T20:25:24Z","updated_at":"2014-10-20T20:25:24Z","all_puppetclasses":[{"id":5,"name":"cli_essentials","module_name":"cli_essentials"},{"id":84,"name":"dns_settings","module_name":"dns_settings"},{"id":94,"name":"epel","module_name":"epel"},{"id":1,"name":"ntp","module_name":"ntp"},{"id":11,"name":"ssh_authorized_keys","module_name":"ssh_authorized_keys"}],"locations":[{"id":1,"name":"Raleigh","title":"Raleigh"}],"organizations":[{"id":2,"name":"Infra","title":"Infra"}],"parameters":[],"template_combinations":[],"puppetclasses":[],"config_groups":[]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/hostgroups/4
+    uri: http://example.com/api/hostgroups/4
     body:
       encoding: US-ASCII
       string: ''
@@ -444,6 +454,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -472,11 +483,11 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"id":4,"name":"Productivity","title":"Raleigh/Virt/Productivity","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"1/3","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2014-10-20T20:45:56Z","updated_at":"2014-10-20T20:45:56Z","all_puppetclasses":[{"id":5,"name":"cli_essentials","module_name":"cli_essentials"},{"id":84,"name":"dns_settings","module_name":"dns_settings"},{"id":94,"name":"epel","module_name":"epel"},{"id":26,"name":"lab_repo","module_name":"lab_repo"},{"id":1,"name":"ntp","module_name":"ntp"},{"id":27,"name":"rpm_git","module_name":"rpm_git"},{"id":11,"name":"ssh_authorized_keys","module_name":"ssh_authorized_keys"}],"locations":[{"id":1,"name":"Raleigh","title":"Raleigh"}],"organizations":[{"id":2,"name":"Infra","title":"Infra"},{"id":3,"name":"ProviderRefreshSpecOrganization","title":"Infra/ProviderRefreshSpecOrganization"}],"parameters":[],"template_combinations":[],"puppetclasses":[{"id":26,"name":"lab_repo","module_name":"lab_repo"},{"id":27,"name":"rpm_git","module_name":"rpm_git"}],"config_groups":[]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/hostgroups/5
+    uri: http://example.com/api/hostgroups/5
     body:
       encoding: US-ASCII
       string: ''
@@ -487,6 +498,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -515,11 +527,11 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"id":5,"name":"Cruisers","title":"Raleigh/Virt/Productivity/Cruisers","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"1/3/4","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2014-10-20T20:46:14Z","updated_at":"2014-10-20T20:46:14Z","all_puppetclasses":[{"id":28,"name":"cfme_bot_ssh_key","module_name":"cfme_bot_ssh_key"},{"id":5,"name":"cli_essentials","module_name":"cli_essentials"},{"id":13,"name":"cruise_control","module_name":"cruise_control"},{"id":84,"name":"dns_settings","module_name":"dns_settings"},{"id":94,"name":"epel","module_name":"epel"},{"id":26,"name":"lab_repo","module_name":"lab_repo"},{"id":33,"name":"nginx","module_name":"nginx"},{"id":1,"name":"ntp","module_name":"ntp"},{"id":27,"name":"rpm_git","module_name":"rpm_git"},{"id":11,"name":"ssh_authorized_keys","module_name":"ssh_authorized_keys"}],"locations":[{"id":1,"name":"Raleigh","title":"Raleigh"}],"organizations":[{"id":2,"name":"Infra","title":"Infra"}],"parameters":[],"template_combinations":[],"puppetclasses":[{"id":28,"name":"cfme_bot_ssh_key","module_name":"cfme_bot_ssh_key"},{"id":13,"name":"cruise_control","module_name":"cruise_control"},{"id":33,"name":"nginx","module_name":"nginx"},{"id":27,"name":"rpm_git","module_name":"rpm_git"}],"config_groups":[]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/hostgroups/6
+    uri: http://example.com/api/hostgroups/6
     body:
       encoding: US-ASCII
       string: ''
@@ -530,6 +542,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -558,11 +571,11 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"id":6,"name":"Downstream","title":"Raleigh/Virt/Productivity/Cruisers/Downstream","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"1/3/4/5","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2014-10-20T20:46:30Z","updated_at":"2014-10-20T20:46:30Z","all_puppetclasses":[{"id":28,"name":"cfme_bot_ssh_key","module_name":"cfme_bot_ssh_key"},{"id":5,"name":"cli_essentials","module_name":"cli_essentials"},{"id":13,"name":"cruise_control","module_name":"cruise_control"},{"id":19,"name":"cruise_control::config","module_name":"cruise_control"},{"id":84,"name":"dns_settings","module_name":"dns_settings"},{"id":94,"name":"epel","module_name":"epel"},{"id":26,"name":"lab_repo","module_name":"lab_repo"},{"id":33,"name":"nginx","module_name":"nginx"},{"id":1,"name":"ntp","module_name":"ntp"},{"id":27,"name":"rpm_git","module_name":"rpm_git"},{"id":11,"name":"ssh_authorized_keys","module_name":"ssh_authorized_keys"}],"locations":[{"id":1,"name":"Raleigh","title":"Raleigh"}],"organizations":[{"id":2,"name":"Infra","title":"Infra"}],"parameters":[],"template_combinations":[],"puppetclasses":[{"id":19,"name":"cruise_control::config","module_name":"cruise_control"}],"config_groups":[]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/hostgroups/7
+    uri: http://example.com/api/hostgroups/7
     body:
       encoding: US-ASCII
       string: ''
@@ -573,6 +586,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -601,11 +615,11 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"id":7,"name":"CcMonitor","title":"Raleigh/Virt/Productivity/CcMonitor","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"1/3/4","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2014-10-20T20:51:44Z","updated_at":"2014-10-20T20:51:44Z","all_puppetclasses":[{"id":5,"name":"cli_essentials","module_name":"cli_essentials"},{"id":84,"name":"dns_settings","module_name":"dns_settings"},{"id":94,"name":"epel","module_name":"epel"},{"id":26,"name":"lab_repo","module_name":"lab_repo"},{"id":1,"name":"ntp","module_name":"ntp"},{"id":27,"name":"rpm_git","module_name":"rpm_git"},{"id":11,"name":"ssh_authorized_keys","module_name":"ssh_authorized_keys"}],"locations":[{"id":1,"name":"Raleigh","title":"Raleigh"}],"organizations":[{"id":2,"name":"Infra","title":"Infra"}],"parameters":[],"template_combinations":[],"puppetclasses":[],"config_groups":[]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/hostgroups/9
+    uri: http://example.com/api/hostgroups/9
     body:
       encoding: US-ASCII
       string: ''
@@ -616,6 +630,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -644,11 +659,11 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"id":9,"name":"CfmeBot","title":"Raleigh/Virt/Productivity/CfmeBot","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"1/3/4","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2014-11-17T15:25:27Z","updated_at":"2014-11-17T15:25:27Z","all_puppetclasses":[{"id":5,"name":"cli_essentials","module_name":"cli_essentials"},{"id":84,"name":"dns_settings","module_name":"dns_settings"},{"id":94,"name":"epel","module_name":"epel"},{"id":26,"name":"lab_repo","module_name":"lab_repo"},{"id":52,"name":"miq_bot","module_name":"miq_bot"},{"id":33,"name":"nginx","module_name":"nginx"},{"id":1,"name":"ntp","module_name":"ntp"},{"id":27,"name":"rpm_git","module_name":"rpm_git"},{"id":11,"name":"ssh_authorized_keys","module_name":"ssh_authorized_keys"}],"locations":[{"id":1,"name":"Raleigh","title":"Raleigh"}],"organizations":[{"id":2,"name":"Infra","title":"Infra"}],"parameters":[],"template_combinations":[],"puppetclasses":[{"id":52,"name":"miq_bot","module_name":"miq_bot"},{"id":33,"name":"nginx","module_name":"nginx"}],"config_groups":[]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/hostgroups?page=1&per_page=50
+    uri: http://example.com/api/hostgroups?page=1&per_page=50
     body:
       encoding: US-ASCII
       string: ''
@@ -659,6 +674,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -689,11 +705,11 @@ http_interactions:
       string: '{"total":15,"subtotal":15,"page":1,"per_page":50,"search":null,"sort":{"by":null,"order":null},"results":[{"id":13,"name":"ProviderRefreshSpec-HostGroup","title":"ProviderRefreshSpec-HostGroup","subnet_id":null,"subnet_name":null,"operatingsystem_id":4,"operatingsystem_name":"OS
         1.2","domain_id":null,"domain_name":null,"environment_id":1,"environment_name":"production","compute_profile_id":null,"compute_profile_name":null,"ancestry":null,"puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":8,"medium_name":"ProviderRefreshSpec-Media","architecture_id":1,"architecture_name":"x86_64","realm_id":null,"realm_name":null,"created_at":"2015-01-15T19:42:50Z","updated_at":"2015-01-22T16:34:33Z"},{"id":14,"name":"ProviderRefreshSpec-ChildHostGroup","title":"ProviderRefreshSpec-HostGroup/ProviderRefreshSpec-ChildHostGroup","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"13","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":12,"ptable_name":"ProviderRefreshSpec-PartitionTable","medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2015-01-15T19:43:14Z","updated_at":"2015-01-22T16:35:24Z"},{"id":1,"name":"Raleigh","title":"Raleigh","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":1,"domain_name":"example.com","environment_id":1,"environment_name":"production","compute_profile_id":null,"compute_profile_name":null,"ancestry":null,"puppet_proxy_id":1,"puppet_ca_proxy_id":1,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":1,"architecture_name":"x86_64","realm_id":null,"realm_name":null,"created_at":"2014-08-14T20:29:03Z","updated_at":"2014-08-14T20:29:03Z"},{"id":2,"name":"Metal","title":"Raleigh/Metal","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"1","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2014-08-14T20:30:30Z","updated_at":"2014-08-14T20:30:30Z"},{"id":15,"name":"RHEV
         Host","title":"Raleigh/Metal/RHEV Host","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"1/2","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2015-01-19T21:04:11Z","updated_at":"2015-01-19T21:04:11Z"},{"id":3,"name":"Virt","title":"Raleigh/Virt","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"1","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2014-10-20T20:25:24Z","updated_at":"2014-10-20T20:25:24Z"},{"id":11,"name":"Foreman","title":"Raleigh/Virt/Foreman","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"1/3","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2014-11-26T19:08:50Z","updated_at":"2014-11-26T19:08:50Z"},{"id":4,"name":"Productivity","title":"Raleigh/Virt/Productivity","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"1/3","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2014-10-20T20:45:56Z","updated_at":"2014-10-20T20:45:56Z"},{"id":16,"name":"Brewery","title":"Raleigh/Virt/Productivity/Brewery","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"1/3/4","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2015-01-30T19:21:19Z","updated_at":"2015-01-30T19:21:19Z"},{"id":7,"name":"CcMonitor","title":"Raleigh/Virt/Productivity/CcMonitor","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"1/3/4","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2014-10-20T20:51:44Z","updated_at":"2014-10-20T20:51:44Z"},{"id":9,"name":"CfmeBot","title":"Raleigh/Virt/Productivity/CfmeBot","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"1/3/4","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2014-11-17T15:25:27Z","updated_at":"2014-11-17T15:25:27Z"},{"id":12,"name":"CfmeBz","title":"Raleigh/Virt/Productivity/CfmeBz","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"1/3/4","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2015-01-07T18:41:35Z","updated_at":"2015-01-07T18:41:35Z"},{"id":5,"name":"Cruisers","title":"Raleigh/Virt/Productivity/Cruisers","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"1/3/4","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2014-10-20T20:46:14Z","updated_at":"2014-10-20T20:46:14Z"},{"id":6,"name":"Downstream","title":"Raleigh/Virt/Productivity/Cruisers/Downstream","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"1/3/4/5","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2014-10-20T20:46:30Z","updated_at":"2014-10-20T20:46:30Z"},{"id":10,"name":"brewmaster","title":"Raleigh/Virt/Productivity/brewmaster","subnet_id":null,"subnet_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"domain_id":null,"domain_name":null,"environment_id":null,"environment_name":null,"compute_profile_id":null,"compute_profile_name":null,"ancestry":"1/3/4","puppet_proxy_id":null,"puppet_ca_proxy_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"architecture_id":null,"architecture_name":null,"realm_id":null,"realm_name":null,"created_at":"2014-11-17T21:26:08Z","updated_at":"2014-11-17T21:26:08Z"}]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/hosts?page=1&per_page=50
+    uri: http://example.com/api/hosts?page=1&per_page=50
     body:
       encoding: US-ASCII
       string: ''
@@ -704,6 +720,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -812,11 +829,11 @@ http_interactions:
         1.2","subnet_id":null,"subnet_name":null,"sp_subnet_id":null,"ptable_id":12,"ptable_name":"ProviderRefreshSpec-PartitionTable","medium_id":8,"medium_name":"ProviderRefreshSpec-Media","build":true,"comment":"","disk":"","installed_at":null,"model_id":null,"model_name":null,"hostgroup_id":14,"hostgroup_name":"ProviderRefreshSpec-HostGroup/ProviderRefreshSpec-ChildHostGroup","owner_id":1,"owner_type":"User","enabled":true,"puppet_ca_proxy_id":null,"managed":true,"use_image":null,"image_file":"","uuid":null,"compute_resource_id":null,"compute_resource_name":null,"compute_profile_id":null,"compute_profile_name":null,"capabilities":["build"],"provision_method":"build","puppet_proxy_id":null,"certname":"providerrefreshspecbaremetalchild.example.com","image_id":null,"image_name":null,"created_at":"2015-03-12T22:01:47Z","updated_at":"2015-03-12T22:01:47Z","last_compile":null,"last_freshcheck":null,"serial":null,"source_file_id":null,"puppet_status":0,"organization_id":6,"organization_name":"Infra/ProviderRefreshSpecOrganization/ProviderRefreshSpecChildOrganization","location_id":5,"location_name":"ProviderRefreshSpec-Location/ProviderRefreshSpec-ChildLocation"},{"name":"pxe.example.com","id":39,"ip":null,"environment_id":1,"environment_name":"production","last_report":"2015-03-13T02:46:01Z","mac":null,"realm_id":null,"realm_name":null,"sp_mac":null,"sp_ip":null,"sp_name":null,"domain_id":1,"domain_name":"example.com","architecture_id":null,"architecture_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"subnet_id":null,"subnet_name":null,"sp_subnet_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"build":false,"comment":"","disk":null,"installed_at":null,"model_id":null,"model_name":null,"hostgroup_id":3,"hostgroup_name":"Raleigh/Virt","owner_id":1,"owner_type":"User","enabled":true,"puppet_ca_proxy_id":1,"managed":false,"use_image":null,"image_file":"","uuid":null,"compute_resource_id":null,"compute_resource_name":null,"compute_profile_id":null,"compute_profile_name":null,"capabilities":["build"],"provision_method":"build","puppet_proxy_id":1,"certname":"pxe.example.com","image_id":null,"image_name":null,"created_at":"2015-01-19T17:29:02Z","updated_at":"2015-03-13T02:46:13Z","last_compile":"2015-03-13T02:46:07Z","last_freshcheck":null,"serial":null,"source_file_id":null,"puppet_status":0,"organization_id":2,"organization_name":"Infra","location_id":1,"location_name":"Raleigh"},{"name":"rhev30.example.com","id":42,"ip":null,"environment_id":1,"environment_name":"production","last_report":"2015-03-13T02:44:19Z","mac":"","realm_id":null,"realm_name":null,"sp_mac":null,"sp_ip":null,"sp_name":null,"domain_id":null,"domain_name":null,"architecture_id":null,"architecture_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"subnet_id":null,"subnet_name":null,"sp_subnet_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"build":false,"comment":null,"disk":null,"installed_at":null,"model_id":null,"model_name":null,"hostgroup_id":3,"hostgroup_name":"Raleigh/Virt","owner_id":null,"owner_type":null,"enabled":true,"puppet_ca_proxy_id":1,"managed":true,"use_image":null,"image_file":"","uuid":null,"compute_resource_id":null,"compute_resource_name":null,"compute_profile_id":null,"compute_profile_name":null,"capabilities":["build"],"provision_method":"build","puppet_proxy_id":1,"certname":"rhev30.example.com","image_id":null,"image_name":null,"created_at":"2015-01-27T16:17:29Z","updated_at":"2015-03-13T02:44:33Z","last_compile":"2015-03-13T02:44:26Z","last_freshcheck":null,"serial":null,"source_file_id":null,"puppet_status":0,"organization_id":2,"organization_name":"Infra","location_id":1,"location_name":"Raleigh"},{"name":"rhev31.example.com","id":43,"ip":null,"environment_id":1,"environment_name":"production","last_report":"2015-03-13T02:44:23Z","mac":"","realm_id":null,"realm_name":null,"sp_mac":null,"sp_ip":null,"sp_name":null,"domain_id":null,"domain_name":null,"architecture_id":null,"architecture_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"subnet_id":null,"subnet_name":null,"sp_subnet_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"build":false,"comment":null,"disk":null,"installed_at":null,"model_id":null,"model_name":null,"hostgroup_id":3,"hostgroup_name":"Raleigh/Virt","owner_id":null,"owner_type":null,"enabled":true,"puppet_ca_proxy_id":1,"managed":false,"use_image":null,"image_file":"","uuid":null,"compute_resource_id":null,"compute_resource_name":null,"compute_profile_id":null,"compute_profile_name":null,"capabilities":["build"],"provision_method":"build","puppet_proxy_id":1,"certname":"rhev31.example.com","image_id":null,"image_name":null,"created_at":"2015-01-27T16:18:01Z","updated_at":"2015-03-13T02:44:39Z","last_compile":"2015-03-13T02:44:30Z","last_freshcheck":null,"serial":null,"source_file_id":null,"puppet_status":0,"organization_id":2,"organization_name":"Infra","location_id":1,"location_name":"Raleigh"},{"name":"rhev32.example.com","id":44,"ip":null,"environment_id":1,"environment_name":"production","last_report":"2015-03-13T02:44:34Z","mac":"","realm_id":null,"realm_name":null,"sp_mac":null,"sp_ip":null,"sp_name":null,"domain_id":null,"domain_name":null,"architecture_id":null,"architecture_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"subnet_id":null,"subnet_name":null,"sp_subnet_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"build":false,"comment":null,"disk":null,"installed_at":null,"model_id":null,"model_name":null,"hostgroup_id":3,"hostgroup_name":"Raleigh/Virt","owner_id":null,"owner_type":null,"enabled":true,"puppet_ca_proxy_id":1,"managed":true,"use_image":null,"image_file":"","uuid":null,"compute_resource_id":null,"compute_resource_name":null,"compute_profile_id":null,"compute_profile_name":null,"capabilities":["build"],"provision_method":"build","puppet_proxy_id":1,"certname":"rhev32.example.com","image_id":null,"image_name":null,"created_at":"2015-01-27T16:18:30Z","updated_at":"2015-03-13T02:44:49Z","last_compile":"2015-03-13T02:44:41Z","last_freshcheck":null,"serial":null,"source_file_id":null,"puppet_status":0,"organization_id":2,"organization_name":"Infra","location_id":1,"location_name":"Raleigh"},{"name":"rhev33.example.com","id":36,"ip":"192.168.1.101","environment_id":1,"environment_name":"production","last_report":"2015-03-13T02:37:00Z","mac":"00:00:00:00:1f:a7","realm_id":null,"realm_name":null,"sp_mac":null,"sp_ip":null,"sp_name":null,"domain_id":1,"domain_name":"example.com","architecture_id":1,"architecture_name":"x86_64","operatingsystem_id":1,"operatingsystem_name":"RHEL
         Server 6.5","subnet_id":null,"subnet_name":null,"sp_subnet_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"build":false,"comment":"","disk":null,"installed_at":null,"model_id":1,"model_name":"RHEV
         Hypervisor","hostgroup_id":3,"hostgroup_name":"Raleigh/Virt","owner_id":1,"owner_type":"User","enabled":true,"puppet_ca_proxy_id":1,"managed":false,"use_image":null,"image_file":"","uuid":null,"compute_resource_id":null,"compute_resource_name":null,"compute_profile_id":null,"compute_profile_name":null,"capabilities":["build"],"provision_method":"build","puppet_proxy_id":1,"certname":"rhev33.example.com","image_id":null,"image_name":null,"created_at":"2015-01-07T17:54:51Z","updated_at":"2015-03-13T02:37:15Z","last_compile":"2015-03-13T02:37:07Z","last_freshcheck":null,"serial":null,"source_file_id":null,"puppet_status":0,"organization_id":2,"organization_name":"Infra","location_id":1,"location_name":"Raleigh"},{"name":"rhev34.example.com","id":45,"ip":null,"environment_id":1,"environment_name":"production","last_report":"2015-03-13T02:44:38Z","mac":"","realm_id":null,"realm_name":null,"sp_mac":null,"sp_ip":null,"sp_name":null,"domain_id":null,"domain_name":null,"architecture_id":null,"architecture_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"subnet_id":null,"subnet_name":null,"sp_subnet_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"build":false,"comment":null,"disk":null,"installed_at":null,"model_id":null,"model_name":null,"hostgroup_id":3,"hostgroup_name":"Raleigh/Virt","owner_id":null,"owner_type":null,"enabled":true,"puppet_ca_proxy_id":1,"managed":true,"use_image":null,"image_file":"","uuid":null,"compute_resource_id":null,"compute_resource_name":null,"compute_profile_id":null,"compute_profile_name":null,"capabilities":["build"],"provision_method":"build","puppet_proxy_id":1,"certname":"rhev34.example.com","image_id":null,"image_name":null,"created_at":"2015-01-27T16:19:03Z","updated_at":"2015-03-13T02:44:51Z","last_compile":"2015-03-13T02:44:45Z","last_freshcheck":null,"serial":null,"source_file_id":null,"puppet_status":0,"organization_id":2,"organization_name":"Infra","location_id":1,"location_name":"Raleigh"},{"name":"rhev35.example.com","id":46,"ip":null,"environment_id":1,"environment_name":"production","last_report":"2015-03-13T02:44:36Z","mac":"","realm_id":null,"realm_name":null,"sp_mac":null,"sp_ip":null,"sp_name":null,"domain_id":null,"domain_name":null,"architecture_id":null,"architecture_name":null,"operatingsystem_id":null,"operatingsystem_name":null,"subnet_id":null,"subnet_name":null,"sp_subnet_id":null,"ptable_id":null,"ptable_name":null,"medium_id":null,"medium_name":null,"build":false,"comment":null,"disk":null,"installed_at":null,"model_id":null,"model_name":null,"hostgroup_id":3,"hostgroup_name":"Raleigh/Virt","owner_id":null,"owner_type":null,"enabled":true,"puppet_ca_proxy_id":1,"managed":false,"use_image":null,"image_file":"","uuid":null,"compute_resource_id":null,"compute_resource_name":null,"compute_profile_id":null,"compute_profile_name":null,"capabilities":["build"],"provision_method":"build","puppet_proxy_id":1,"certname":"rhev35.example.com","image_id":null,"image_name":null,"created_at":"2015-01-27T16:19:22Z","updated_at":"2015-03-13T02:44:50Z","last_compile":"2015-03-13T02:44:43Z","last_freshcheck":null,"serial":null,"source_file_id":null,"puppet_status":0,"organization_id":2,"organization_name":"Infra","location_id":1,"location_name":"Raleigh"}]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/locations?page=1&per_page=50
+    uri: http://example.com/api/locations?page=1&per_page=50
     body:
       encoding: US-ASCII
       string: ''
@@ -827,6 +844,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -855,11 +873,11 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"total":3,"subtotal":3,"page":1,"per_page":50,"search":null,"sort":{"by":null,"order":null},"results":[{"id":4,"name":"ProviderRefreshSpec-Location","title":"ProviderRefreshSpec-Location","created_at":"2015-02-25T02:03:48Z","updated_at":"2015-02-25T02:03:48Z"},{"id":5,"name":"ProviderRefreshSpec-ChildLocation","title":"ProviderRefreshSpec-Location/ProviderRefreshSpec-ChildLocation","created_at":"2015-02-26T20:21:48Z","updated_at":"2015-02-26T20:21:49Z"},{"id":1,"name":"Raleigh","title":"Raleigh","created_at":"2015-02-24T19:27:43Z","updated_at":"2015-02-25T02:02:59Z"}]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/media?page=1&per_page=50
+    uri: http://example.com/api/media?page=1&per_page=50
     body:
       encoding: US-ASCII
       string: ''
@@ -870,6 +888,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -905,11 +924,11 @@ http_interactions:
         mirror","path":"http://download.opensuse.org/distribution/$major.$minor/repo/oss","os_family":"Suse","created_at":"2014-07-24T22:22:05Z","updated_at":"2014-07-24T22:22:05Z"},{"id":8,"name":"ProviderRefreshSpec-Media","path":"http://example.com/refreshspec","os_family":null,"created_at":"2015-01-15T19:49:04Z","updated_at":"2015-01-15T19:49:04Z"},{"id":7,"name":"RHEL
         Server mirror","path":"http://download.eng.rdu2.redhat.com/released/RHEL-$major/$major.$minor/Server/$arch/os","os_family":"Redhat","created_at":"2014-11-07T19:20:23Z","updated_at":"2015-02-12T20:17:19Z"},{"id":6,"name":"Ubuntu
         mirror","path":"http://archive.ubuntu.com/ubuntu/","os_family":"Debian","created_at":"2014-07-24T22:22:05Z","updated_at":"2014-07-24T22:22:05Z"}]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/operatingsystems/1
+    uri: http://example.com/api/operatingsystems/1
     body:
       encoding: US-ASCII
       string: ''
@@ -920,6 +939,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -956,11 +976,11 @@ http_interactions:
         RHEL cfme","template_kind_id":4,"template_kind_name":"provision"},{"id":3,"config_template_id":17,"config_template_name":"Kickstart
         default PXELinux","template_kind_id":1,"template_kind_name":"PXELinux"},{"id":4,"config_template_id":18,"config_template_name":"Kickstart
         default iPXE","template_kind_id":3,"template_kind_name":"iPXE"}],"images":[]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/operatingsystems/2
+    uri: http://example.com/api/operatingsystems/2
     body:
       encoding: US-ASCII
       string: ''
@@ -971,6 +991,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -1000,11 +1021,11 @@ http_interactions:
       encoding: UTF-8
       string: '{"id":2,"name":"RedHat","fullname":"RedHat 6.4","description":"RHEL
         Server 6.4","major":"6","minor":"4","family":"Redhat","release_name":null,"created_at":"2014-10-20T19:46:10Z","updated_at":"2014-10-20T19:46:10Z","parameters":[],"media":[],"architectures":[],"ptables":[],"config_templates":[],"os_default_templates":[],"images":[]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/operatingsystems/3
+    uri: http://example.com/api/operatingsystems/3
     body:
       encoding: US-ASCII
       string: ''
@@ -1015,6 +1036,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -1050,11 +1072,11 @@ http_interactions:
         default iPXE","template_kind_id":3,"template_kind_name":"iPXE"}],"os_default_templates":[{"id":1,"config_template_id":38,"config_template_name":"Kickstart
         RHEL cfme","template_kind_id":4,"template_kind_name":"provision"},{"id":5,"config_template_id":18,"config_template_name":"Kickstart
         default iPXE","template_kind_id":3,"template_kind_name":"iPXE"}],"images":[]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/operatingsystems/4
+    uri: http://example.com/api/operatingsystems/4
     body:
       encoding: US-ASCII
       string: ''
@@ -1065,6 +1087,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -1094,11 +1117,11 @@ http_interactions:
       encoding: UTF-8
       string: '{"id":4,"name":"ProviderRefreshSpec-OperatingSystem","fullname":"ProviderRefreshSpec-OperatingSystem
         1.2","description":"OS 1.2","major":"1","minor":"2","family":null,"release_name":"","created_at":"2015-01-15T19:44:25Z","updated_at":"2015-01-15T19:44:25Z","parameters":[],"media":[{"id":8,"name":"ProviderRefreshSpec-Media"}],"architectures":[{"name":"x86_64","id":1}],"ptables":[{"name":"ProviderRefreshSpec-PartitionTable","id":12}],"config_templates":[],"os_default_templates":[],"images":[]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/operatingsystems/5
+    uri: http://example.com/api/operatingsystems/5
     body:
       encoding: US-ASCII
       string: ''
@@ -1109,6 +1132,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -1137,11 +1161,11 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"id":5,"name":"RedHat","fullname":"RedHat 6.6","description":null,"major":"6","minor":"6","family":"Redhat","release_name":null,"created_at":"2015-01-19T17:29:07Z","updated_at":"2015-01-19T17:29:07Z","parameters":[],"media":[],"architectures":[],"ptables":[],"config_templates":[],"os_default_templates":[],"images":[]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/operatingsystems?page=1&per_page=50
+    uri: http://example.com/api/operatingsystems?page=1&per_page=50
     body:
       encoding: US-ASCII
       string: ''
@@ -1152,6 +1176,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -1185,11 +1210,11 @@ http_interactions:
         6.4","description":"RHEL Server 6.4","major":"6","minor":"4","family":"Redhat","release_name":null,"created_at":"2014-10-20T19:46:10Z","updated_at":"2014-10-20T19:46:10Z"},{"id":1,"name":"RedHat","fullname":"RedHat
         6.5","description":"RHEL Server 6.5","major":"6","minor":"5","family":"Redhat","release_name":"","created_at":"2014-07-24T22:55:07Z","updated_at":"2014-11-07T19:12:03Z"},{"id":5,"name":"RedHat","fullname":"RedHat
         6.6","description":null,"major":"6","minor":"6","family":"Redhat","release_name":null,"created_at":"2015-01-19T17:29:07Z","updated_at":"2015-01-19T17:29:07Z"}]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/organizations?page=1&per_page=50
+    uri: http://example.com/api/organizations?page=1&per_page=50
     body:
       encoding: US-ASCII
       string: ''
@@ -1200,6 +1225,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -1228,11 +1254,11 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"total":3,"subtotal":3,"page":1,"per_page":50,"search":null,"sort":{"by":null,"order":null},"results":[{"id":2,"name":"Infra","title":"Infra","created_at":"2015-02-24T19:28:42Z","updated_at":"2015-02-24T19:28:42Z"},{"id":3,"name":"ProviderRefreshSpecOrganization","title":"Infra/ProviderRefreshSpecOrganization","created_at":"2015-02-24T19:32:10Z","updated_at":"2015-02-26T21:04:08Z"},{"id":6,"name":"ProviderRefreshSpecChildOrganization","title":"Infra/ProviderRefreshSpecOrganization/ProviderRefreshSpecChildOrganization","created_at":"2015-02-26T20:22:15Z","updated_at":"2015-02-26T20:22:15Z"}]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/ptables?page=1&per_page=50
+    uri: http://example.com/api/ptables?page=1&per_page=50
     body:
       encoding: US-ASCII
       string: ''
@@ -1243,6 +1269,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -1280,11 +1307,11 @@ http_interactions:
         default","id":7,"os_family":"Redhat","created_at":"2014-07-24T22:22:04Z","updated_at":"2014-07-24T22:22:04Z"},{"name":"Preseed
         custom LVM","id":9,"os_family":"Debian","created_at":"2014-07-24T22:22:05Z","updated_at":"2014-07-24T22:22:05Z"},{"name":"Preseed
         default","id":8,"os_family":"Debian","created_at":"2014-07-24T22:22:05Z","updated_at":"2014-07-24T22:22:05Z"},{"name":"ProviderRefreshSpec-PartitionTable","id":12,"os_family":null,"created_at":"2015-01-15T19:48:08Z","updated_at":"2015-01-15T19:48:08Z"}]}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/architectures?page=1&per_page=50
+    uri: http://example.com/api/architectures?page=1&per_page=50
     body:
       encoding: US-ASCII
       string: ''
@@ -1297,6 +1324,7 @@ http_interactions:
       - rest-client/2.0.0.alpha (darwin13.4.0 x86_64) ruby/2.0.0p576
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -1351,11 +1379,11 @@ http_interactions:
           },
           "results": [{"name":"i386","id":2,"created_at":"2014-07-24T22:22:02Z","updated_at":"2014-07-24T22:22:02Z"},{"name":"x86_64","id":1,"created_at":"2014-07-24T22:22:02Z","updated_at":"2014-07-24T22:22:02Z"}]
         }
-    http_version:
+    http_version: 
   recorded_at: Sat, 28 Mar 2015 00:51:53 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/compute_profiles?page=1&per_page=50
+    uri: http://example.com/api/compute_profiles?page=1&per_page=50
     body:
       encoding: US-ASCII
       string: ''
@@ -1368,6 +1396,7 @@ http_interactions:
       - rest-client/2.0.0.alpha (darwin13.4.0 x86_64) ruby/2.0.0p576
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -1422,11 +1451,11 @@ http_interactions:
           },
           "results": [{"id":1,"name":"1-Small","created_at":"2014-07-24T22:22:13Z","updated_at":"2014-07-24T22:22:13Z"},{"id":2,"name":"2-Medium","created_at":"2014-07-24T22:22:14Z","updated_at":"2014-07-24T22:22:14Z"},{"id":3,"name":"3-Large","created_at":"2014-07-24T22:22:14Z","updated_at":"2014-07-24T22:22:14Z"}]
         }
-    http_version:
+    http_version: 
   recorded_at: Sat, 28 Mar 2015 00:51:53 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/domains?page=1&per_page=50
+    uri: http://example.com/api/domains?page=1&per_page=50
     body:
       encoding: US-ASCII
       string: ''
@@ -1439,6 +1468,7 @@ http_interactions:
       - rest-client/2.0.0.alpha (darwin13.4.0 x86_64) ruby/2.0.0p576
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -1493,11 +1523,11 @@ http_interactions:
           },
           "results": [{"id":1,"name":"cloudforms.lab.eng.rdu2.redhat.com","fullname":"","dns_id":null,"created_at":"2014-07-24T22:55:07Z","updated_at":"2015-03-12T21:32:56Z"}]
         }
-    http_version:
+    http_version: 
   recorded_at: Sat, 28 Mar 2015 00:51:53 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/environments?page=1&per_page=50
+    uri: http://example.com/api/environments?page=1&per_page=50
     body:
       encoding: US-ASCII
       string: ''
@@ -1510,6 +1540,7 @@ http_interactions:
       - rest-client/2.0.0.alpha (darwin13.4.0 x86_64) ruby/2.0.0p576
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -1564,11 +1595,11 @@ http_interactions:
           },
           "results": [{"name":"production","id":1,"created_at":"2014-07-24T22:55:07Z","updated_at":"2014-07-24T22:55:07Z"}]
         }
-    http_version:
+    http_version: 
   recorded_at: Sat, 28 Mar 2015 00:51:54 GMT
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/api/realms?page=1&per_page=50
+    uri: http://example.com/api/realms?page=1&per_page=50
     body:
       encoding: US-ASCII
       string: ''
@@ -1581,6 +1612,7 @@ http_interactions:
       - rest-client/2.0.0.alpha (darwin13.4.0 x86_64) ruby/2.0.0p576
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -1635,6 +1667,6 @@ http_interactions:
           },
           "results": []
         }
-    http_version:
+    http_version: 
   recorded_at: Sat, 28 Mar 2015 00:51:54 GMT
 recorded_with: VCR 2.9.3

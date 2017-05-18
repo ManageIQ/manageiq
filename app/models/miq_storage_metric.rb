@@ -118,15 +118,15 @@ class MiqStorageMetric < ApplicationRecord
   #
 
   def self.purge_window_size
-    VMDB::Config.new("vmdb").config.fetch_path(:storage, :metrics_history, :purge_window_size) || 100
+    ::Settings.storage.metrics_history.purge_window_size
   end
 
   def self.purge_date(type)
-    value = VMDB::Config.new("vmdb").config.fetch_path(:storage, :metrics_history, type.to_sym)
+    value = ::Settings.storage.metrics_history[type]
     return nil if value.nil?
 
     value = value.to_i.days if value.kind_of?(Fixnum) # Default unit is days
-    value = value.to_i_with_method.seconds.ago.utc unless value.nil?
+    value = value.to_i_with_method.seconds.ago.utc
     value
   end
 
@@ -146,9 +146,9 @@ class MiqStorageMetric < ApplicationRecord
   private_class_method :metrics_count_by_date
 
   def self.purge_all_timer
-    purge_derived_metrics_by_date(purge_date(:keep_realtime_metrics) || 4.hours.ago.utc)
-    purge_hourly_metrics_rollups_by_date(purge_date(:keep_hourly_metrics) || 6.months.ago.utc)
-    purge_daily_metrics_rollups_by_date(purge_date(:keep_daily_metrics) || 6.months.ago.utc)
+    purge_derived_metrics_by_date(purge_date(:keep_realtime_metrics))
+    purge_hourly_metrics_rollups_by_date(purge_date(:keep_hourly_metrics))
+    purge_daily_metrics_rollups_by_date(purge_date(:keep_daily_metrics))
   end
 
   def self.purge_derived_metrics_by_date(older_than, window = nil)

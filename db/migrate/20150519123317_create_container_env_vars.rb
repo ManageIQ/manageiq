@@ -1,4 +1,4 @@
-class CreateContainerEnvVars < ActiveRecord::Migration
+class CreateContainerEnvVars < ActiveRecord::Migration[4.2]
   def up
     create_table :container_env_vars do |t|
       t.string     :name

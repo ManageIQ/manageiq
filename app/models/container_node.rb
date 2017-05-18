@@ -1,8 +1,12 @@
 class ContainerNode < ApplicationRecord
+  include SupportsFeatureMixin
   include ComplianceMixin
   include MiqPolicyMixin
   include NewWithTypeStiMixin
   include TenantIdentityMixin
+  include SupportsFeatureMixin
+
+  EXTERNAL_LOGGING_PATH = "/#/discover?_g=()&_a=(columns:!(hostname,level,kubernetes.pod_name,message),filters:!((meta:(disabled:!f,index:'%{index}',key:hostname,negate:!f),%{query})),index:'%{index}',interval:auto,query:(query_string:(analyze_wildcard:!t,query:'*')),sort:!(time,desc))".freeze
 
   # :name, :uid, :creation_timestamp, :resource_version
   belongs_to :ext_management_system, :foreign_key => "ems_id"
@@ -14,6 +18,7 @@ class ContainerNode < ApplicationRecord
   has_many   :container_routes, -> { distinct }, :through => :container_services
   has_many   :container_replicators, -> { distinct }, :through => :container_groups
   has_many   :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
+  has_many   :additional_attributes, -> { where(:section => "additional_attributes") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
   has_one    :computer_system, :as => :managed_entity, :dependent => :destroy
   belongs_to :lives_on, :polymorphic => true
   has_one   :hardware, :through => :computer_system
@@ -22,6 +27,7 @@ class ContainerNode < ApplicationRecord
   has_many :metrics, :as => :resource
   has_many :metric_rollups, :as => :resource
   has_many :vim_performance_states, :as => :resource
+  has_many :miq_alert_statuses, :as => :resource, :dependent => :destroy
 
   virtual_column :ready_condition_status, :type => :string, :uses => :container_conditions
   virtual_column :system_distribution, :type => :string
@@ -48,7 +54,7 @@ class ContainerNode < ApplicationRecord
 
   include EventMixin
   include Metric::CiMixin
-
+  include CustomAttributeMixin
   acts_as_miq_taggable
 
   def event_where_clause(assoc = :ems_events)
@@ -69,11 +75,44 @@ class ContainerNode < ApplicationRecord
     [ext_management_system] unless interval_name == 'realtime'
   end
 
-  def ipaddress
-    labels.find_by_name("kubernetes.io/hostname").try(:value)
+  def kubernetes_hostname
+    labels.find_by(:name => "kubernetes.io/hostname").try(:value)
   end
 
   def cockpit_url
-    URI::HTTP.build(:host => ipaddress, :port => 9090)
+    URI::HTTP.build(:host => kubernetes_hostname, :port => 9090)
+    address = kubernetes_hostname || name
+    miq_server = ext_management_system.nil? ? nil : ext_management_system.zone.remote_cockpit_ws_miq_server
+    if miq_server
+
+    end
+    MiqCockpit::WS.url(miq_server,
+                       MiqCockpitWsWorker.fetch_worker_settings_from_server(miq_server),
+                       address)
+  end
+
+  def evaluate_alert(_alert_id, _event)
+    # currently only EmsEvents from hawkular are tested for node alerts,
+    # and these should automaticaly be translated to alerts.
+    true
+  end
+
+  supports :external_logging do
+    unless ext_management_system.respond_to?(:external_logging_route_name)
+      unsupported_reason_add(:external_logging, _('This provider type does not support External Logging'))
+    end
+  end
+
+  def external_logging_query
+    nil # {}.to_query # TODO
+  end
+
+  def external_logging_path
+    node_hostnames = [kubernetes_hostname || name] # node name cannot be empty, it's an ID
+    node_hostnames.push(node_hostnames.first.split('.').first).compact!
+    node_hostnames_query = node_hostnames.uniq.map { |x| "(term:(hostname:'#{x}'))" }.join(",")
+    query = "bool:(filter:(or:!(#{node_hostnames_query})))"
+    index = ".operations.*"
+    EXTERNAL_LOGGING_PATH % {:index => index, :query => query}
   end
 end

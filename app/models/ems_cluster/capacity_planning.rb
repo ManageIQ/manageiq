@@ -34,22 +34,8 @@ module EmsCluster::CapacityPlanning
     end
   end
 
-  module ClassMethods
-    def capacity_settings
-      VMDB::Config.new('capacity').config
-    end
-  end
-
-  #
-  # Settings methods
-  #
-
-  def capacity_settings
-    @capacity_settings ||= self.class.capacity_settings
-  end
-
   def capacity_profile_settings(profile)
-    capacity_settings.fetch_path(:profile, profile.to_s.to_sym) || {}
+    ::Settings.capacity.profile[profile.to_s] || {}
   end
 
   def capacity_profile_method(profile, resource)
@@ -86,7 +72,7 @@ module EmsCluster::CapacityPlanning
 
   def capacity_failover_rule
     @capacity_failover_rule ||= begin
-      failover_rule = capacity_settings.fetch_path(:failover, :rule).to_s.downcase.strip
+      failover_rule = ::Settings.capacity.failover.rule.downcase
       failover_rule = 'discovered' unless ['none', 'discovered'].include?(failover_rule)
       failover_rule
     end
@@ -130,7 +116,7 @@ module EmsCluster::CapacityPlanning
   def capacity_failover_host_resources(profile, resource)
     return 0 if capacity_failover_rule == 'none' || (capacity_failover_rule == 'discovered' && !self.ha_enabled?)
 
-    if failover_hosts.length > 0
+    if failover_hosts.size > 0
       capacity_failover_host_resources_with_failover_hosts(profile, resource)
     else
       # TODO: Support the other ways to specify failover
@@ -174,7 +160,7 @@ module EmsCluster::CapacityPlanning
   def capacity_resources_per_vm_with_min_max(profile, resource)
     min = capacity_profile_minimum(profile, resource)
     max = capacity_profile_maximum(profile, resource)
-    capacity_resources_per_vm(profile, resource).apply_min_max(min, max)
+    capacity_resources_per_vm(profile, resource).clamp(min, max)
   end
 
   def capacity_available_host_resources(profile, resource)

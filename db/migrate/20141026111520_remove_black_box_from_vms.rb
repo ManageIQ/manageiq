@@ -1,4 +1,4 @@
-class RemoveBlackBoxFromVms < ActiveRecord::Migration
+class RemoveBlackBoxFromVms < ActiveRecord::Migration[4.2]
   def up
     change_table :vms do |t|
       t.remove :blackbox_exists

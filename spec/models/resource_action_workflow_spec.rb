@@ -70,7 +70,7 @@ describe ResourceActionWorkflow do
 
         it "creates requests" do
           EvmSpecHelper.local_miq_server
-          expect(subject).to receive(:create_request).and_call_original
+          expect(subject).to receive(:make_request).and_call_original
           expect(AuditEvent).to receive(:success).with(
             :event        => "service_reconfigure_request_created",
             :target_class => "Service",
@@ -90,7 +90,7 @@ describe ResourceActionWorkflow do
 
         it "calls automate" do
           EvmSpecHelper.local_miq_server
-          expect(subject).not_to receive(:create_request)
+          expect(subject).not_to receive(:make_request)
           expect_any_instance_of(ResourceAction).to receive(:deliver_to_automate_from_dialog).and_call_original
           expect(MiqAeEngine).to receive(:deliver_queue) # calls into automate
           expect(AuditEvent).not_to receive(:success)
@@ -108,11 +108,43 @@ describe ResourceActionWorkflow do
         end
 
         it "calls automate" do
-          expect(subject).not_to receive(:create_request)
+          expect(subject).not_to receive(:make_request)
           expect_any_instance_of(ResourceAction).to receive(:deliver_to_automate_from_dialog)
 
           subject.submit_request
         end
+      end
+    end
+  end
+
+  describe "#initialize #load_dialog" do
+    let(:resource_action) { instance_double("ResourceAction", :id => 123, :dialog => dialog) }
+    let(:dialog) { instance_double("Dialog", :id => 321) }
+    let(:values) { "the values" }
+    let(:options) { {:display_view_only => display_view_only} }
+
+    before do
+      allow(ResourceAction).to receive(:find).and_return(resource_action)
+      allow(dialog).to receive(:init_fields_with_values).with(values)
+      allow(dialog).to receive(:init_fields_with_values_for_request).with(values)
+      allow(dialog).to receive(:target_resource=)
+    end
+
+    context "when the options set display_view_only to true" do
+      let(:display_view_only) { true }
+
+      it "calls init_fields_with_values_for_request" do
+        expect(dialog).to receive(:init_fields_with_values_for_request).with(values)
+        ResourceActionWorkflow.new(values, nil, resource_action, options)
+      end
+    end
+
+    context "when the options set display_view_only to false" do
+      let(:display_view_only) { false }
+
+      it "calls init_fields_with_values" do
+        expect(dialog).to receive(:init_fields_with_values).with(values)
+        ResourceActionWorkflow.new(values, nil, resource_action, options)
       end
     end
   end

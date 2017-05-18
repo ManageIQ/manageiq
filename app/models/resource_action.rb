@@ -1,8 +1,13 @@
 class ResourceAction < ApplicationRecord
   belongs_to :resource, :polymorphic => true
+  belongs_to :configuration_template, :polymorphic => true
   belongs_to :dialog
 
   serialize  :ae_attributes, Hash
+
+  PROVISION   = 'Provision'.freeze
+  RETIREMENT  = 'Retirement'.freeze
+  RECONFIGURE = 'Reconfigure'.freeze
 
   def readonly?
     return true if super

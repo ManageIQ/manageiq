@@ -4,9 +4,25 @@ module Authenticator
       'LDAP'
     end
 
+    def self.authenticates_for
+      super + %w(ldaps)
+    end
+
+    def self.validate_config(config)
+      if config[:ldaphost].blank?
+        [:ldaphost, "ldaphost can't be blank"]
+      else
+        []
+      end
+    end
+
     def lookup_by_identity(username)
       super ||
         find_or_create_by_ldap(username)
+    end
+
+    def user_authorizable_without_authentication?
+      true
     end
 
     private
@@ -76,7 +92,7 @@ module Authenticator
         ldap_bind(username, password)
     end
 
-    def find_external_identity(username)
+    def find_external_identity(username, *_args)
       # Ldap will be used for authentication and role assignment
       _log.info("Bind DN: [#{config[:bind_dn]}]")
       _log.info(" User FQDN: [#{username}]")
@@ -127,11 +143,13 @@ module Authenticator
 
     def update_user_attributes(user, _username, lobj)
       user.userid     = ldap.normalize(ldap.get_attr(lobj, :userprincipalname) || ldap.get_attr(lobj, :dn))
-      user.name       = ldap.get_attr(lobj, :displayname)
       user.first_name = ldap.get_attr(lobj, :givenname)
       user.last_name  = ldap.get_attr(lobj, :sn)
       email           = ldap.get_attr(lobj, :mail)
       user.email      = email unless email.blank?
+      user.name       = ldap.get_attr(lobj, :displayname)
+      user.name       = "#{user.first_name} #{user.last_name}" if user.name.blank?
+      user.name       = user.userid if user.name.blank?
     end
 
     REQUIRED_LDAP_USER_PROXY_KEYS = [:basedn, :bind_dn, :bind_pwd, :ldaphost, :ldapport, :mode]

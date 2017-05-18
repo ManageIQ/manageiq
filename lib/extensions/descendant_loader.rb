@@ -68,10 +68,10 @@ class DescendantLoader
   # and the name of its superclass), given a path to a ruby script file.
   module Parser
     def classes_in(filename)
-      require 'ruby_parser'
+      require 'ripper_ruby_parser'
 
       content = File.read(filename)
-      parsed = RubyParser.for_current_ruby.parse(content)
+      parsed = RipperRubyParser::Parser.new.parse(content)
 
       classes = collect_classes(parsed)
 
@@ -94,7 +94,7 @@ class DescendantLoader
         [search_combos, define_combos, flatten_name(name), flatten_name(sklass)]
       end.compact
 
-    rescue Racc::ParseError
+    rescue RipperRubyParser::SyntaxError
       puts "\nSyntax error in #{filename}\n\n"
       raise
     end

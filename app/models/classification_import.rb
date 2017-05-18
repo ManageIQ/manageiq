@@ -42,7 +42,7 @@ class ClassificationImport
         _log.warn "#{@keys[0].titleize}: #{line[@keys[0]]}: Could not resolve a vm, an entry will be skipped"
         @errors.add(:severalvmsfound4keys, "#{@keys[0].titleize}: #{line[@keys[0]]}: Could not resolve a vm, an entry will be skipped")
       else
-        cat = Classification.find_by_description(line["category"])
+        cat = Classification.find_by(:description => line["category"])
         if cat.nil?
           bad += 1
           _log.warn "#{@keys[0].titleize}: #{line[@keys[0]]}: Unable to find category #{line["category"]}"
@@ -72,9 +72,9 @@ class ClassificationImport
 
     @verified_data.each do|id, data|
       data.each do|category, entries|
-        cat = Classification.find_by_description(category)
+        cat = Classification.find_by(:description => category)
         if cat.single_value && entries.length > 1
-          vm = VmOrTemplate.find_by_id(id)
+          vm = VmOrTemplate.find_by(:id => id)
           while entries.length > 1
             e = entries.shift
             _log.warn "Vm: #{vm.name}, Location: #{vm.location}, Category: #{category}: Multiple values given for single-valued category, value #{e} will be ignored"
@@ -90,10 +90,10 @@ class ClassificationImport
 
   def apply
     @verified_data.each do|id, data|
-      vm = VmOrTemplate.find_by_id(id)
+      vm = VmOrTemplate.find_by(:id => id)
       if vm
         data.each do|category, entries|
-          cat = Classification.find_by_description(category)
+          cat = Classification.find_by(:description => category)
           next unless cat
           entries.each do|ent|
             cat.entries.each do|e|

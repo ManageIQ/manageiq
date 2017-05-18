@@ -32,7 +32,7 @@ describe MiqAlert do
         msg = MiqQueue.get(:role => "notifier")
         expect(msg).not_to be_nil
 
-        alert = MiqAlert.find_by_id(msg.instance_id)
+        alert = MiqAlert.find_by(:id => msg.instance_id)
         expect(alert).not_to be_nil
         expect(alert.description).to eq('VM Guest Windows Event Log Error - NtpClient')
       end
@@ -75,7 +75,7 @@ describe MiqAlert do
 
     context "with a single alert, not evaluated" do
       before(:each) do
-        @alert = MiqAlert.find_by_description("VM Unregistered")
+        @alert = MiqAlert.find_by(:description => "VM Unregistered")
       end
 
       context "with a delay_next_evaluation value of 5 minutes" do
@@ -94,29 +94,133 @@ describe MiqAlert do
 
     context "with a single alert, evaluated to true" do
       before(:each) do
-        @alert = MiqAlert.find_by_description("VM Unregistered")
+        @alert = MiqAlert.find_by(:description => "VM Unregistered")
         allow(@alert).to receive_messages(:eval_expression => true)
-        @alert.evaluate([@vm.class.base_class.name, @vm.id])
       end
 
       it "should have a link from the MiqAlert to the miq alert status" do
+        @alert.evaluate([@vm.class.base_class.name, @vm.id])
         expect(@alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).count).to eq(1)
       end
 
       it "should have a miq alert status for MiqAlert with a result of true" do
+        @alert.evaluate([@vm.class.base_class.name, @vm.id])
         expect(@alert.miq_alert_statuses.find_by(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).result).to be_truthy
       end
 
+      it "should update the existing status on susesquent evaluations" do
+        @alert.evaluate(
+          [@vm.class.base_class.name, @vm.id],
+          :ems_event => FactoryGirl.create(:ems_event)
+        )
+        Timecop.travel 10.minutes do
+          @alert.evaluate(
+            [@vm.class.base_class.name, @vm.id],
+            :ems_event => FactoryGirl.create(:ems_event)
+          )
+          statuses = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id)
+          expect(statuses.length).to eq(1)
+        end
+      end
+
+      it "should update the existing status if event metadata has the same ems_ref" do
+        @alert.evaluate(
+          [@vm.class.base_class.name, @vm.id],
+          :ems_event => FactoryGirl.create(:ems_event, :full_data => {:ems_ref => 'same'})
+        )
+        Timecop.travel 10.minutes do
+          @alert.evaluate(
+            [@vm.class.base_class.name, @vm.id],
+            :ems_event => FactoryGirl.create(:ems_event, :full_data => {:ems_ref => 'same'})
+          )
+          statuses = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id)
+          expect(statuses.length).to eq(1)
+        end
+      end
+
+      it "should create a new status if event metadata has a different ems_ref" do
+        @alert.evaluate(
+          [@vm.class.base_class.name, @vm.id],
+          :ems_event => FactoryGirl.create(:ems_event, :full_data => {:ems_ref => 'same'})
+        )
+        Timecop.travel 10.minutes do
+          @alert.evaluate(
+            [@vm.class.base_class.name, @vm.id],
+            :ems_event => FactoryGirl.create(:ems_event, :full_data => {:ems_ref => 'different'})
+          )
+          statuses = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id)
+          expect(statuses.length).to eq(2)
+        end
+      end
+
+      it "does not explode if evaluate.input = {}" do
+        expect { @alert.evaluate([@vm.class.base_class.name, @vm.id]) }.to_not raise_error
+      end
+
+      it "miq_alert_status.description = miq_alert.description event if overriden by ems_event.description" do
+        @alert.evaluate(
+          [@vm.class.base_class.name, @vm.id],
+          :ems_event => FactoryGirl.create(:ems_event, :message => "oh no!", :type => 'WhateverEvent')
+        )
+        mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
+        expect(mas.description).to eq("VM Unregistered")
+      end
+
+      it "miq_alert_status.description = ems_event.message if present and datawarehouse_alert" do
+        @alert.evaluate(
+          [@vm.class.base_class.name, @vm.id],
+          :ems_event => FactoryGirl.create(:ems_event, :message => "oh no!", :event_type => "datawarehouse_alert")
+        )
+        mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
+        expect(mas.description).to eq("oh no!")
+      end
+
+      it "miq_alert_status.severity = ems_event.full_data.severity if present" do
+        @alert.evaluate(
+          [@vm.class.base_class.name, @vm.id],
+          :ems_event => FactoryGirl.create(:ems_event, :full_data => {:severity => 'warning'})
+        )
+        mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
+        expect(mas.severity).to eq('warning')
+      end
+
+      it "miq_alert_status.severity = nil if  ems_event.full_data.severity not present" do
+        @alert.evaluate([@vm.class.base_class.name, @vm.id])
+        mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
+        expect(mas.severity).to eq(nil)
+      end
+
+      it "miq_alert_status.url = ems_event.full_data.url if present" do
+        @alert.evaluate(
+          [@vm.class.base_class.name, @vm.id],
+          :ems_event => FactoryGirl.create(
+            :ems_event,
+            :full_data => {:url => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'}
+          )
+        )
+        mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
+        expect(mas.url).to eq('https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+      end
+
+      it "miq_alert_status.url = nil if ems_event.full_data.url is not present" do
+        @alert.evaluate([@vm.class.base_class.name, @vm.id])
+        mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
+        expect(mas.url).to eq(nil)
+      end
+
       it "should have a link from the Vm to the miq alert status" do
+        @alert.evaluate([@vm.class.base_class.name, @vm.id])
         expect(@vm.miq_alert_statuses.where(:miq_alert_id => @alert.id).count).to eq(1)
       end
 
       it "should have a miq alert status for Vm with a result of true" do
+        @alert.evaluate([@vm.class.base_class.name, @vm.id])
         expect(@vm.miq_alert_statuses.find_by(:miq_alert_id => @alert.id).result).to be_truthy
       end
 
       context "with the alert now evaluated to false" do
         before(:each)  do
+          @alert.evaluate([@vm.class.base_class.name, @vm.id])
           allow(@alert).to receive_messages(:eval_expression => false)
           @alert.options.store_path(:notifications, :delay_next_evaluation, 0)
           @alert.evaluate([@vm.class.base_class.name, @vm.id])
@@ -141,6 +245,7 @@ describe MiqAlert do
 
       context "with a delay_next_evaluation value of 5 minutes" do
         before(:each) do
+          @alert.evaluate([@vm.class.base_class.name, @vm.id])
           @alert.options ||= {}
           @alert.options.store_path(:notifications, :delay_next_evaluation, 5.minutes)
           @alert.save
@@ -410,6 +515,31 @@ describe MiqAlert do
       )
       status, message, result = msg.deliver
       msg.delivered(status, message, result)
+    end
+  end
+
+  describe '.validate_automate_expressions' do
+    it 'Does not allow creation of dwh_generic miq_alerts with delay_next_evaluation > 0 ' do
+      expect do
+        FactoryGirl.create(
+          :miq_alert,
+          :options    => {:notifications => {:delay_next_evaluation => 600, :evm_event => {}}},
+          :expression => {:eval_method => "dwh_generic"}
+        )
+      end.to raise_error(
+        ActiveRecord::RecordInvalid,
+        'Validation failed: Notifications Datawarehouse alerts must have a 0 notification frequency'
+      )
+    end
+
+    it 'Does allow creation of hawkular_alert miq_alerts with delay_next_evaluation > 0 ' do
+      expect do
+        FactoryGirl.create(
+          :miq_alert,
+          :options    => {:notifications => {:delay_next_evaluation => 600, :evm_event => {}}},
+          :expression => {:eval_method => "mw_heap_used"}
+        )
+      end.to_not raise_error
     end
   end
 end

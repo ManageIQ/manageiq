@@ -1,4 +1,4 @@
-class AddNetworkGroupIdToSecurityGroups < ActiveRecord::Migration
+class AddNetworkGroupIdToSecurityGroups < ActiveRecord::Migration[4.2]
   def change
     add_column :security_groups, :network_group_id, :bigint
 

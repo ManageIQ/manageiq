@@ -1,4 +1,4 @@
-class CreateComputerSystems < ActiveRecord::Migration
+class CreateComputerSystems < ActiveRecord::Migration[4.2]
   def up
     create_table :computer_systems do |t|
       t.belongs_to :managed_entity, :type => :bigint, :polymorphic => true

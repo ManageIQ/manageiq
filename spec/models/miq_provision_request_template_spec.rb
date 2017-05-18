@@ -4,9 +4,9 @@ describe MiqProvisionRequestTemplate do
     FactoryGirl.create(:template_vmware,
                        :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication))
   end
-  let(:parent_svc) { FactoryGirl.create(:service, :guid => MiqUUID.new_guid, :options => {:dialog => {}}) }
+  let(:parent_svc) { FactoryGirl.create(:service, :guid => SecureRandom.uuid, :options => {:dialog => {}}) }
   let(:bundle_parent_svc) do
-    FactoryGirl.create(:service, :guid => MiqUUID.new_guid, :options => {:dialog => {}})
+    FactoryGirl.create(:service, :guid => SecureRandom.uuid, :options => {:dialog => {}})
   end
   let(:service_resource) do
     FactoryGirl.create(:service_resource,
@@ -76,10 +76,10 @@ describe MiqProvisionRequestTemplate do
 
     it 'should create sequenced VM names' do
       task1 = provision_request_template.create_tasks_for_service(service_task, parent_svc).first
-      expect(task1.options[:vm_target_name]).to eq('miq_0001')
+      expect(task1.options[:vm_target_name]).to eq('miq0001')
 
       task2 = provision_request_template.create_tasks_for_service(service_task, parent_svc).first
-      expect(task2.options[:vm_target_name]).to eq('miq_0002')
+      expect(task2.options[:vm_target_name]).to eq('miq0002')
     end
 
     it 'assign task to a request' do

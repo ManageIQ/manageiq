@@ -48,9 +48,15 @@ module MiqServer::WorkerManagement::Monitor
   def sync_workers
     result = {}
     self.class.monitor_class_names.each do |class_name|
-      c = class_name.constantize
-      result[c.name] = c.sync_workers
-      result[c.name][:adds].each { |pid| worker_add(pid) unless pid.nil? }
+      begin
+        c = class_name.constantize
+        result[c.name] = c.sync_workers
+        result[c.name][:adds].each { |pid| worker_add(pid) unless pid.nil? }
+      rescue => error
+        _log.error("Failed to sync_workers for class: #{class_name}")
+        _log.log_backtrace(error)
+        next
+      end
     end
     result
   end
@@ -89,7 +95,7 @@ module MiqServer::WorkerManagement::Monitor
     processed_workers = []
     miq_workers.each do |w|
       next unless class_name.nil? || (w.type == class_name)
-      next unless [:not_responding, :memory_exceeded].include?(worker_get_monitor_reason(w.pid))
+      next unless monitor_reason_not_responding?(w)
       next unless [:waiting_for_stop_before_restart, :waiting_for_stop].include?(worker_get_monitor_status(w.pid))
       processed_workers << w
       worker_not_responding(w)
@@ -97,6 +103,10 @@ module MiqServer::WorkerManagement::Monitor
     end
     miq_workers.delete(*processed_workers) unless processed_workers.empty?
     processed_workers.collect(&:id)
+  end
+
+  def monitor_reason_not_responding?(w)
+    [MiqServer::NOT_RESPONDING, MiqServer::MEMORY_EXCEEDED].include?(worker_get_monitor_reason(w.pid)) || w.stopping_for_too_long?
   end
 
   def do_system_limit_exceeded
@@ -109,7 +119,7 @@ module MiqServer::WorkerManagement::Monitor
       msg = "#{w.format_full_log_msg} is being stopped because system resources exceeded threshold, it will be restarted once memory has freed up"
       _log.warn(msg)
       MiqEvent.raise_evm_event_queue_in_region(w.miq_server, "evm_server_memory_exceeded", :event_details => msg, :type => w.class.name)
-      restart_worker(w, :memory_exceeded)
+      restart_worker(w, MiqServer::MEMORY_EXCEEDED)
       break
     end
   end
@@ -138,7 +148,9 @@ module MiqServer::WorkerManagement::Monitor
       log_role_changes           if roles_changed
       sync_active_roles          if roles_changed
       set_active_role_flags      if roles_changed
+
       stop_apache                if roles_changed && !apache_needed?
+      start_apache               if roles_changed &&  apache_needed?
 
       reset_queue_messages       if config_changed || roles_changed
     end

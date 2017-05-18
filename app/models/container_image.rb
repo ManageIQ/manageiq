@@ -3,9 +3,13 @@ class ContainerImage < ApplicationRecord
   include MiqPolicyMixin
   include ScanningMixin
   include TenantIdentityMixin
-
+  include CustomAttributeMixin
+  include ArchivedMixin
+  include_concern 'Purging'
 
   DOCKER_IMAGE_PREFIX = "docker://"
+  DOCKER_PULLABLE_PREFIX = "docker-pullable://".freeze
+  DOCKER_PREFIXES = [DOCKER_IMAGE_PREFIX, DOCKER_PULLABLE_PREFIX].freeze
 
   belongs_to :container_image_registry
   belongs_to :ext_management_system, :foreign_key => "ems_id"
@@ -18,12 +22,11 @@ class ContainerImage < ApplicationRecord
   has_one :operating_system, :through => :computer_system
   has_one :openscap_result, :dependent => :destroy
   has_many :openscap_rule_results, :through => :openscap_result
+  has_many :labels, -> { where(:section => "labels") }, :class_name => CustomAttribute, :as => :resource, :dependent => :destroy
+  has_many :docker_labels, -> { where(:section => "docker_labels") }, :class_name => CustomAttribute, :as => :resource, :dependent => :destroy
 
   serialize :exposed_ports, Hash
   serialize :environment_variables, Hash
-
-  # Needed for scanning & tagging action
-  delegate :my_zone, :to => :ext_management_system
 
   acts_as_miq_taggable
   virtual_column :display_registry, :type => :string
@@ -31,6 +34,7 @@ class ContainerImage < ApplicationRecord
   after_create :raise_creation_event
 
   def full_name
+    return docker_id if image_ref && image_ref.start_with?(DOCKER_PULLABLE_PREFIX)
     result = ""
     result << "#{container_image_registry.full_name}/" unless container_image_registry.nil?
     result << name
@@ -45,9 +49,10 @@ class ContainerImage < ApplicationRecord
   end
 
   def docker_id
-    if image_ref.start_with?(DOCKER_IMAGE_PREFIX)
-      return image_ref[DOCKER_IMAGE_PREFIX.length..-1]
+    DOCKER_PREFIXES.each do |prefix|
+      return image_ref[prefix.length..-1] if image_ref.start_with?(prefix)
     end
+    nil
   end
 
   # The guid is required by the smart analysis infrastructure
@@ -94,6 +99,17 @@ class ContainerImage < ApplicationRecord
 
   def openscap_failed_rules_summary
     openscap_rule_results.where(:result => "fail").group(:severity).count.symbolize_keys
+  end
+
+  def disconnect_inv
+    return if ems_id.nil?
+    _log.info "Disconnecting Image [#{name}] id [#{id}] from EMS [#{ext_management_system.name}]" \
+    "id [#{ext_management_system.id}] "
+    self.container_image_registry = nil
+    self.old_ems_id = ems_id
+    self.ext_management_system = nil
+    self.deleted_on = Time.now.utc
+    save
   end
 
   alias_method :perform_metadata_sync, :sync_stashed_metadata

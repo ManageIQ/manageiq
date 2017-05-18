@@ -1,7 +1,8 @@
 describe "VM Retirement Management" do
   before(:each) do
     miq_server = EvmSpecHelper.local_miq_server
-    @ems       = FactoryGirl.create(:ems_vmware, :zone => miq_server.zone)
+    @zone = miq_server.zone
+    @ems = FactoryGirl.create(:ems_vmware, :zone => @zone)
     @vm = FactoryGirl.create(:vm_vmware, :ems_id => @ems.id)
   end
 
@@ -34,8 +35,9 @@ describe "VM Retirement Management" do
     event_name = 'request_vm_retire'
     event_hash = {:vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm",
                   :retirement_initiator => "user", :userid => 'freddy'}
+    options = {:zone => @zone.name}
 
-    expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, options).once
 
     @vm.retire_now('freddy')
   end
@@ -44,8 +46,9 @@ describe "VM Retirement Management" do
     event_name = 'request_vm_retire'
     event_hash = {:vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm",
                   :retirement_initiator => "system"}
+    options = {:zone => @zone.name}
 
-    expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, options).once
 
     @vm.retire_now
   end
@@ -62,7 +65,7 @@ describe "VM Retirement Management" do
   it "#retire date" do
     expect(AuditEvent).to receive(:success).once
     options = {}
-    options[:date] = Date.today
+    options[:date] = Time.zone.today
     @vm.retire(options)
     @vm.reload
     expect(@vm.retires_on).to eq(options[:date])
@@ -102,21 +105,21 @@ describe "VM Retirement Management" do
 
   it "#retires_on - today" do
     expect(@vm.retirement_due?).to be_falsey
-    @vm.retires_on = Date.today
+    @vm.retires_on = Time.zone.today
 
     expect(@vm.retirement_due?).to be_truthy
   end
 
   it "#retires_on - tomorrow" do
     expect(@vm.retirement_due?).to be_falsey
-    @vm.retires_on = Date.today + 1
+    @vm.retires_on = Time.zone.today + 1
 
     expect(@vm.retirement_due?).to be_falsey
   end
 
   # it "#retirement_warn" do
   #   expect(@vm.retirement_warn).to be_nil
-  #   @vm.update_attributes(:retirement_last_warn => Date.today)
+  #   @vm.update_attributes(:retirement_last_warn => Time.zone.today)
   #   @vm.retirement_warn = 60
 
   #   expect(@vm.retirement_warn).to eq(60)
@@ -126,15 +129,15 @@ describe "VM Retirement Management" do
   it "#retirement_due?" do
     vm = FactoryGirl.create(:vm_vmware, :ems_id => @ems.id)
     expect(vm.retirement_due?).to be_falsey
-    vm.update_attributes(:retires_on => Date.today + 1.day)
+    vm.update_attributes(:retires_on => Time.zone.today + 1.day)
     expect(vm.retirement_due?).to be_falsey
 
-    vm.retires_on = Date.today
+    vm.retires_on = Time.zone.today
 
-    vm.update_attributes(:retires_on => Date.today)
+    vm.update_attributes(:retires_on => Time.zone.today)
     expect(vm.retirement_due?).to be_truthy
 
-    vm.update_attributes(:retires_on => Date.today - 1.day)
+    vm.update_attributes(:retires_on => Time.zone.today - 1.day)
     expect(vm.retirement_due?).to be_truthy
   end
 
@@ -142,8 +145,9 @@ describe "VM Retirement Management" do
     event_name = 'foo'
     event_hash = {:vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm",
                   :retirement_initiator => "system"}
+    options = {:zone => @vm.my_zone}
 
-    expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, options).once
 
     @vm.raise_retirement_event(event_name)
   end

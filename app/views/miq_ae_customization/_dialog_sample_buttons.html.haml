@@ -1,9 +1,0 @@
--# if dialogs is selected
-#form_buttons_div
-  - if @record.buttons
-    %table{:width => "100%"}
-      %tr
-        %td{:align => "right"}
-          #buttons
-            - @record.buttons.split(',').each do |b|
-              = button_tag("#{b.strip}", :class => "btn btn-default")

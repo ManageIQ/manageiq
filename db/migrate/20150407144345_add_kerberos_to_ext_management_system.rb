@@ -1,4 +1,4 @@
-class AddKerberosToExtManagementSystem < ActiveRecord::Migration
+class AddKerberosToExtManagementSystem < ActiveRecord::Migration[4.2]
   class ExtManagementSystem < ActiveRecord::Base
     self.inheritance_column = :_type_disabled
 

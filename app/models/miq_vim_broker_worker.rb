@@ -31,7 +31,7 @@ class MiqVimBrokerWorker < MiqWorker
 
   def self.available_in_zone?(zone = nil)
     zone ||= MiqServer.zone
-    zone   = Zone.find_by_name(zone) if zone.kind_of?(String)
+    zone   = Zone.find_by(:name => zone) if zone.kind_of?(String)
     return false if zone.nil?
     find_current.any? { |w| w.miq_server && w.miq_server.zone == zone }
   end

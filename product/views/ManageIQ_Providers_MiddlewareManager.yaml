@@ -27,13 +27,9 @@ cols:
 
 # Included tables (joined, has_one, has_many) and columns
 include:
-  zone:
-    columns:
-    - name
 
 # Included tables and columns for query performance
 include_for_find:
-  :zone: {}
   :tags: {}
 
 # Order of columns (from all tables)

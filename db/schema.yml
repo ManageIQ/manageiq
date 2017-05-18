@@ -33,39 +33,18 @@ ar_internal_metadata:
 - value
 - created_at
 - updated_at
-arbitration_profiles:
-- id
-- uid_ems
-- cloud_network_id
-- flavor_id
-- availability_zone_id
-- cloud_subnet_id
-- security_group_id
-- ems_id
-- authentication_id
-- name
-- description
-- default_profile
-- type
-- profile
-- created_at
-- updated_at
-arbitration_rules:
+asset_details:
 - id
 - description
-- operation
-- arbitration_profile_id
-- priority
-- expression
+- contact
+- location
+- room
+- rack_name
+- lowest_rack_unit
+- resource_id
+- resource_type
 - created_at
 - updated_at
-arbitration_settings:
-- id
-- name
-- display_name
-- value
-- created_on
-- updated_on
 assigned_server_roles:
 - id
 - miq_server_id
@@ -83,6 +62,14 @@ audit_events:
 - userid
 - source
 - created_on
+authentication_configuration_script_bases:
+- id
+- authentication_id
+- configuration_script_base_id
+authentication_orchestration_stacks:
+- id
+- authentication_id
+- orchestration_stack_id
 authentications:
 - id
 - name
@@ -131,6 +118,8 @@ authentications:
 - rhsm_sku
 - rhsm_pool_id
 - rhsm_server
+- manager_ref
+- options
 availability_zones:
 - id
 - ems_id
@@ -182,6 +171,13 @@ bottleneck_events:
 - message
 - context_data
 - future
+chargeable_fields:
+- id
+- chargeback_rate_detail_measure_id
+- metric
+- group
+- source
+- description
 chargeback_rate_detail_currencies:
 - id
 - code
@@ -214,6 +210,7 @@ chargeback_rate_details:
 - updated_on
 - chargeback_rate_detail_measure_id
 - chargeback_rate_detail_currency_id
+- chargeable_field_id
 chargeback_rates:
 - id
 - guid
@@ -295,6 +292,8 @@ cloud_object_store_containers:
 - bytes
 - ems_id
 - cloud_tenant_id
+- name
+- type
 cloud_object_store_objects:
 - id
 - ems_ref
@@ -306,6 +305,8 @@ cloud_object_store_objects:
 - ems_id
 - cloud_tenant_id
 - cloud_object_store_container_id
+- name
+- type
 cloud_resource_quotas:
 - id
 - ems_ref
@@ -515,6 +516,23 @@ configuration_profiles_configuration_tags:
 - configuration_profile_id
 - configuration_tag_id
 - id
+configuration_script_sources:
+- id
+- manager_id
+- manager_ref
+- name
+- description
+- created_at
+- updated_at
+- scm_type
+- scm_url
+- scm_branch
+- scm_clean
+- scm_delete_on_update
+- scm_update_on_launch
+- authentication_id
+- type
+- status
 configuration_scripts:
 - id
 - manager_id
@@ -527,6 +545,8 @@ configuration_scripts:
 - survey_spec
 - inventory_root_group_id
 - type
+- parent_id
+- configuration_script_source_id
 configuration_tags:
 - id
 - type
@@ -1150,6 +1170,7 @@ endpoints:
 - security_protocol
 - api_version
 - path
+- certificate_authority
 entitlements:
 - id
 - miq_group_id
@@ -1214,6 +1235,7 @@ event_streams:
 - middleware_server_name
 - middleware_deployment_id
 - middleware_deployment_name
+- generating_ems_id
 ext_management_systems:
 - id
 - name
@@ -1239,6 +1261,7 @@ ext_management_systems:
 - last_metrics_update_date
 - last_metrics_success_date
 - tenant_mapping_enabled
+- enabled
 file_depots:
 - id
 - name
@@ -1290,6 +1313,16 @@ firewall_rules:
 - source_ip_range
 - ems_ref
 - network_protocol
+firmwares:
+- id
+- name
+- build
+- version
+- release_date
+- resource_id
+- resource_type
+- created_at
+- updated_at
 flavors:
 - id
 - ems_id
@@ -1499,6 +1532,7 @@ hosts:
 - availability_zone_id
 - maintenance
 - maintenance_reason
+- physical_server_id
 import_file_uploads:
 - id
 iso_datastores:
@@ -1516,7 +1550,6 @@ jobs:
 - state
 - status
 - message
-- code
 - name
 - userid
 - created_on
@@ -1524,20 +1557,15 @@ jobs:
 - target_id
 - target_class
 - type
-- process
-- agent_id
-- agent_class
-- agent_state
 - agent_message
 - started_on
 - dispatch_status
 - sync_key
 - miq_server_id
 - zone
-- agent_name
-- archive
 - options
 - context
+- miq_task_id
 key_pairs_vms:
 - authentication_id
 - vm_id
@@ -4623,6 +4651,7 @@ middleware_deployments:
 - status
 - feed
 - properties
+- server_group_id
 middleware_domains:
 - id
 - name
@@ -4750,6 +4779,7 @@ miq_ae_methods:
 - updated_on
 - updated_by
 - updated_by_user_id
+- embedded_methods
 miq_ae_namespaces:
 - id
 - parent_id
@@ -4797,6 +4827,15 @@ miq_ae_workspaces:
 - setters
 - created_on
 - updated_on
+miq_alert_status_actions:
+- id
+- action_type
+- user_id
+- comment
+- assignee_id
+- miq_alert_status_id
+- created_at
+- updated_at
 miq_alert_statuses:
 - id
 - miq_alert_id
@@ -4804,6 +4843,14 @@ miq_alert_statuses:
 - resource_type
 - evaluated_on
 - result
+- url
+- severity
+- acknowledged
+- ems_id
+- description
+- resolved
+- event_ems_ref
+- assignee_id
 miq_alerts:
 - id
 - guid
@@ -5219,6 +5266,11 @@ miq_servers:
 - log_file_depot_id
 - proportional_set_size
 - has_active_websocket
+- system_memory_free
+- system_memory_used
+- system_swap_free
+- system_swap_used
+- has_active_cockpit_ws
 miq_sets:
 - id
 - name
@@ -5262,6 +5314,8 @@ miq_tasks:
 - results
 - miq_server_id
 - identifier
+- started_on
+- zone
 miq_user_roles:
 - id
 - name
@@ -5964,6 +6018,8 @@ orchestration_stack_resources:
 - last_updated
 - stack_id
 - ems_ref
+- start_time
+- finish_time
 orchestration_stacks:
 - id
 - name
@@ -5985,6 +6041,11 @@ orchestration_stacks:
 - status_reason
 - cloud_tenant_id
 - resource_group
+- start_time
+- finish_time
+- configuration_script_base_id
+- verbosity
+- hosts
 orchestration_templates:
 - id
 - name
@@ -6054,6 +6115,27 @@ persistent_volume_claims:
 - capacity
 - created_at
 - updated_at
+physical_servers:
+- id
+- ems_id
+- name
+- type
+- uid_ems
+- ems_ref
+- created_at
+- updated_at
+- health_state
+- power_state
+- hostname
+- product_name
+- manufacturer
+- machine_type
+- model
+- serial_number
+- field_replaceable_unit
+- raw_power_state
+- vendor
+- location_led_state
 pictures:
 - id
 - resource_id
@@ -6174,6 +6256,8 @@ resource_actions:
 - ae_instance
 - ae_message
 - ae_attributes
+- configuration_template_id
+- configuration_template_type
 resource_groups:
 - id
 - name
@@ -6352,6 +6436,7 @@ services:
 - retirement_requester
 - tenant_id
 - ancestry
+- initiator
 sessions:
 - id
 - session_id
@@ -6568,7 +6653,6 @@ users:
 - settings
 - lastlogon
 - lastlogoff
-- region
 - current_group_id
 - first_name
 - last_name
@@ -6731,6 +6815,11 @@ vms:
 - resource_group_id
 - deprecated
 - storage_profile_id
+- cpu_hot_add_enabled
+- cpu_hot_remove_enabled
+- memory_hot_add_enabled
+- memory_hot_add_limit
+- memory_hot_add_increment
 volumes:
 - id
 - name

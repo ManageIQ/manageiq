@@ -58,24 +58,71 @@ module SupportsFeatureMixin
   extend ActiveSupport::Concern
 
   QUERYABLE_FEATURES = {
-    :associate_floating_ip    => 'Associate a Floating IP',
-    :control                  => 'Basic control operations', # FIXME: this is just a internal helper and should be refactored
-    :cloud_tenant_mapping     => 'CloudTenant mapping',
-    :cinder_service           => 'Cinder storage service',
-    :delete                   => 'Deletion',
-    :disassociate_floating_ip => 'Disassociate a Floating IP',
-    :discovery                => 'Discovery of Managers for a Provider',
-    :evacuate                 => 'Evacuation',
-    :events                   => 'Query for events',
-    :launch_cockpit           => 'Launch Cockpit UI',
-    :live_migrate             => 'Live Migration',
-    :migrate                  => 'Migration',
-    :provisioning             => 'Provisioning',
-    :reconfigure              => 'Reconfiguration',
-    :regions                  => 'Regions of a Provider',
-    :resize                   => 'Resizing',
-    :retire                   => 'Retirement',
-    :smartstate_analysis      => 'Smartstate Analaysis',
+    :add_host                   => 'Add Host',
+    :add_interface              => 'Add Interface',
+    :associate_floating_ip      => 'Associate a Floating IP',
+    :clone                      => 'Clone',
+    # FIXME: this is just a internal helper and should be refactored
+    :control                    => 'Basic control operations',
+    :cloud_tenant_mapping       => 'CloudTenant mapping',
+    :cloud_object_store_container_create => 'Create Object Store Container',
+    :cloud_object_store_container_clear  => 'Clear Object Store Container',
+    :create                     => 'Creation',
+    :backup_create              => 'CloudVolume backup creation',
+    :backup_restore             => 'CloudVolume backup restore',
+    :cinder_service             => 'Cinder storage service',
+    :create_floating_ip         => 'Floating IP Creation',
+    :create_host_aggregate      => 'Host Aggregate Creation',
+    :create_network_router      => 'Network Router Creation',
+    :create_security_group      => 'Security Group Creation',
+    :console                    => 'Remote Console',
+    :external_logging           => 'Launch External Logging UI',
+    :swift_service              => 'Swift storage service',
+    :delete                     => 'Deletion',
+    :delete_aggregate           => 'Host Aggregate Deletion',
+    :delete_floating_ip         => 'Floating IP Deletion',
+    :delete_network_router      => 'Network Router Deletion',
+    :delete_security_group      => 'Security Group Deletion',
+    :disassociate_floating_ip   => 'Disassociate a Floating IP',
+    :discovery                  => 'Discovery of Managers for a Provider',
+    :evacuate                   => 'Evacuation',
+    :launch_cockpit             => 'Launch Cockpit UI',
+    :live_migrate               => 'Live Migration',
+    :migrate                    => 'Migration',
+    :provisioning               => 'Provisioning',
+    :publish                    => 'Publishing',
+    :quick_stats                => 'Quick Stats',
+    :reboot_guest               => 'Reboot Guest Operation',
+    :reconfigure                => 'Reconfiguration',
+    :reconfigure_disks          => 'Reconfigure Virtual Machines Disks',
+    :refresh_network_interfaces => 'Refresh Network Interfaces for a Host',
+    :refresh_new_target         => 'Refresh non-existing record',
+    :regions                    => 'Regions of a Provider',
+    :remove_all_snapshots       => 'Remove all snapshots',
+    :remove_host                => 'Remove Host',
+    :remove_interface           => 'Remove Interface',
+    :remove_snapshot            => 'Remove Snapshot',
+    :remove_snapshot_by_description  => 'Remove snapshot having a description',
+    :reset                      => 'Reset',
+    :resize                     => 'Resizing',
+    :retire                     => 'Retirement',
+    :revert_to_snapshot         => 'Revert Snapshot Operation',
+    :smartstate_analysis        => 'Smartstate Analysis',
+    :snapshot_create            => 'Create Snapshot',
+    :snapshots                  => 'Snapshots',
+    :shutdown_guest             => 'Shutdown Guest Operation',
+    :start                      => 'Start',
+    :suspend                    => 'Suspending',
+    :terminate                  => 'Terminate a VM',
+    :timeline                   => 'Query for events',
+    :update_aggregate           => 'Host Aggregate Update',
+    :update                     => 'Update',
+    :update_floating_ip         => 'Update Floating IP association',
+    :update_network_router      => 'Network Router Update',
+    :ems_network_new            => 'New EMS Network Provider',
+    :update_security_group      => 'Security Group Update',
+    :block_storage              => 'Block Storage',
+    :object_storage             => 'Object Storage',
   }.freeze
 
   # Whenever this mixin is included we define all features as unsupported by default.
@@ -95,7 +142,7 @@ module SupportsFeatureMixin
   end
 
   def self.reason_or_default(reason)
-    reason.present? ? reason : _("Feature not supported")
+    reason.present? ? reason : _("Feature not available/supported")
   end
 
   # query instance for the reason why the feature is unsupported
@@ -187,7 +234,12 @@ module SupportsFeatureMixin
       define_method(method_name) do
         unsupported.delete(feature)
         if block_given?
-          instance_eval(&block)
+          begin
+            instance_eval(&block)
+          rescue => e
+            _log.log_backtrace(e)
+            unsupported_reason_add(feature, "Internal Error: #{e.message}")
+          end
         else
           unsupported_reason_add(feature, reason) unless is_supported
         end

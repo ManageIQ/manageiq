@@ -3,22 +3,31 @@ class ManageIQ::Providers::Microsoft::InfraManager
     extend ActiveSupport::Concern
 
     module ClassMethods
+      def execute_powershell_json(connection, script)
+        results = run_powershell_script(connection, script)
+        parse_json_results(results.stdout)
+      end
+
       def execute_powershell(connection, script)
         powershell_results_to_hash(run_powershell_script(connection, script))
       end
 
       def run_powershell_script(connection, script)
+        require 'winrm'
         log_header = "MIQ(#{self.class.name}.#{__method__})"
-        File.open(script, "r") do |file|
-          begin
-            results = connection.create_executor { |exec| exec.run_powershell_script(file) }
-            log_dos_error_results(results)
-            results
-          rescue Errno::ECONNREFUSED => err
-            $scvmm_log.error "MIQ(#{log_header} Unable to connect to SCVMM. #{err.message})"
-            raise
+        results = ::WinRM::Output.new
+
+        begin
+          with_winrm_shell(connection) do |shell|
+            results = shell.run(script)
+            log_dos_error_results(results.stderr)
           end
+        rescue Errno::ECONNREFUSED => err
+          $scvmm_log.error "MIQ(#{log_header} Unable to connect to SCVMM: #{err.message})"
+          raise
         end
+
+        results
       end
 
       def powershell_results_to_hash(results)
@@ -67,6 +76,24 @@ class ManageIQ::Providers::Microsoft::InfraManager
           string << element
         end
       end
+
+      def with_winrm_shell(connection, shell_type = :powershell)
+        shell = connection.shell(shell_type)
+        yield shell
+      ensure
+        shell.close
+      end
+    end
+
+    def with_winrm_shell(shell_type = :powershell)
+      with_provider_connection do |connection|
+        begin
+          shell = connection.shell(shell_type)
+          yield shell
+        ensure
+          shell.close
+        end
+      end
     end
 
     def run_dos_command(command)
@@ -75,9 +102,9 @@ class ManageIQ::Providers::Microsoft::InfraManager
       results = []
 
       _result, timings = Benchmark.realtime_block(:execution) do
-        with_provider_connection do |connection|
-          results = connection.run_cmd(command)
-          self.class.log_dos_error_results(results)
+        with_winrm_shell(:cmd) do |shell|
+          results = shell.run(command)
+          self.class.log_dos_error_results(results.stderr)
         end
       end
 
@@ -87,14 +114,15 @@ class ManageIQ::Providers::Microsoft::InfraManager
     end
 
     def run_powershell_script(script)
+      require 'winrm'
       log_header = "MIQ(#{self.class.name}##{__method__})"
       $scvmm_log.debug("#{log_header} Execute Powershell Script...")
-      results = []
+      results = ::WinRM::Output.new
 
       _result, timings = Benchmark.realtime_block(:execution) do
-        with_provider_connection do |connection|
-          results = connection.create_executor { |exec| exec.run_powershell_script(script) }
-          self.class.log_dos_error_results(results)
+        with_winrm_shell do |shell|
+          results = shell.run(script)
+          self.class.log_dos_error_results(results.stderr)
         end
       end
 

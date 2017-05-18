@@ -19,6 +19,7 @@ namespace :evm do
 
     desc "Resync excluded tables"
     task :resync_excludes => :environment do
+      require 'application_record' unless defined?(ApplicationRecord)
       require 'miq_pglogical'
       pgl = MiqPglogical.new
       pgl.refresh_excludes if pgl.provider?

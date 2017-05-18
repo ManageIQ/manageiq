@@ -10,6 +10,10 @@ class MiddlewareServer < ApplicationRecord
 
   include LiveMetricsMixin
 
+  def properties
+    super || {}
+  end
+
   def metrics_capture
     @metrics_capture ||= ManageIQ::Providers::Hawkular::MiddlewareManager::LiveMetricsCapture.new(self)
   end
@@ -30,5 +34,25 @@ class MiddlewareServer < ApplicationRecord
       return true
     end
     false
+  end
+
+  def in_domain?
+    middleware_server_group
+  end
+
+  # Returns whether a server is immutable or not.
+  #
+  # By default, we define all servers as being mutable, so that power
+  # operations are allowed, and it is the provider responsability to
+  # reimplement this method if necessary.
+  def immutable?
+    properties['Immutable'] == 'true'
+  end
+
+  # Returns whether a server is immutable or not.
+  #
+  # Just a convenience method over #immutable.
+  def mutable?
+    !immutable?
   end
 end

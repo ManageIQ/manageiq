@@ -1,7 +1,0 @@
-#snapshots_tree_div
-  - if @record.snapshots.count > 0
-    %fieldset
-      %h3= _('Available Snapshots')
-      = render(:partial => 'shared/tree', :locals => {:tree => @snapshot_tree, :name => @snapshot_tree.name})
-    :javascript
-      miqTreeActivateNodeSilently("#{j_str @snapshot_tree.name}", "#{j_str @snapshot_tree.selected_node}");

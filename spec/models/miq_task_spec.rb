@@ -30,20 +30,6 @@ describe MiqTask do
       expect(@miq_task.state).to eq(state)
       expect(@miq_task.status).to eq(status)
       expect(@miq_task.message).to eq(message)
-
-      expect { @miq_task.update_status("FOO", status, message) }.to raise_error(ActiveRecord::RecordInvalid)
-      expect { @miq_task.update_status(state, "FOO",  message) }.to raise_error(ActiveRecord::RecordInvalid)
-    end
-
-    it "should trim long message to 255" do
-      message = ("So there I was sitting in a rabbit's suit" * 100).freeze
-      @miq_task.message = message
-      expect(@miq_task.message.length).to eq(255)
-      expect(@miq_task.message[252, 3]).to eq("...")
-
-      @miq_task.update_attributes(:message => message)
-      expect(@miq_task.message.length).to eq(255)
-      expect(@miq_task.message[252, 3]).to eq("...")
     end
 
     it "should update context upon request" do
@@ -205,7 +191,7 @@ describe MiqTask do
         :args        => [1, 2, 3]
       }
       tid = MiqTask.generic_action_with_callback(opts, qopts)
-      task = MiqTask.find_by_id(tid)
+      task = MiqTask.find_by(:id => tid)
       expect(task.state).to eq(MiqTask::STATE_QUEUED)
       expect(task.status).to eq(MiqTask::STATUS_OK)
       expect(task.userid).to eq("Flintstone")
@@ -288,6 +274,103 @@ describe MiqTask do
     it 'returns true when status is ok and results are not blank' do
       @miq_task.task_results = 'x'
       expect(@miq_task.results_ready?).to be_truthy
+    end
+  end
+
+  context "before_destroy callback" do
+    it "destroys miq_task record if there is no job associated with it" do
+      expect(MiqTask.count).to eq 0
+      FactoryGirl.create(:miq_task_plain)
+      expect(MiqTask.count).to eq 1
+      MiqTask.first.destroy
+      expect(MiqTask.count).to eq 0
+    end
+
+    it "doesn't destroy miq_task and associated job if job is active" do
+      expect(MiqTask.count).to eq 0
+      job = Job.create_job("VmScan")
+      job.update_attributes!(:state => "active")
+      expect(MiqTask.count).to eq 1
+      MiqTask.first.destroy
+      expect(MiqTask.count).to eq 1
+      expect(Job.count).to eq 1
+    end
+
+    it "destroys miq_task record and job record if job associated with it 'finished'" do
+      expect(MiqTask.count).to eq 0
+      job = Job.create_job("VmScan")
+      job.update_attributes!(:state => "finished")
+      expect(MiqTask.count).to eq 1
+      MiqTask.first.destroy
+      expect(MiqTask.count).to eq 0
+      expect(Job.count).to eq 0
+    end
+
+    it "destroys miq_task record and job record if job associated with it not started yet" do
+      expect(MiqTask.count).to eq 0
+      job = Job.create_job("VmScan")
+      job.update_attributes!(:state => "waiting_to_start")
+      expect(MiqTask.count).to eq 1
+      MiqTask.first.destroy
+      expect(MiqTask.count).to eq 0
+      expect(Job.count).to eq 0
+    end
+  end
+
+  describe "#update_status" do
+    let(:miq_task) { FactoryGirl.create(:miq_task_plain) }
+
+    context "to 'Active' state" do
+      it "sets 'started_on => Time.now.utc' if 'started_on' is nil" do
+        Timecop.freeze do
+          expect(miq_task.started_on).to be nil
+          miq_task.update_status(MiqTask::STATE_ACTIVE, MiqTask::STATUS_OK, "")
+          expect(miq_task.started_on).to eq Time.now.utc
+        end
+      end
+
+      it "does not set 'started_on' if passed state is not 'active'" do
+        miq_task.update_status("Any state", MiqTask::STATUS_OK, "")
+        expect(miq_task.started_on).to be nil
+      end
+
+      it "does not changed 'started_on' if task already has 'started-on' attribute set" do
+        some_time = Time.now.utc - 5.hours
+        miq_task.update_attributes!(:started_on => some_time)
+        miq_task.update_status(MiqTask::STATE_ACTIVE, MiqTask::STATUS_OK, "")
+        expect(miq_task.started_on).to eq some_time
+      end
+
+      it "sets 'miq_server' association" do
+        server = EvmSpecHelper.local_miq_server
+        miq_task.update_status(MiqTask::STATE_ACTIVE, MiqTask::STATUS_OK, "")
+        expect(miq_task.miq_server.id).to eq server.id
+      end
+    end
+  end
+
+  describe "#state_active" do
+    let(:miq_task) { FactoryGirl.create(:miq_task_plain) }
+
+    it "sets 'started_on => Time.now.utc' if 'started_on' is nil" do
+      Timecop.freeze do
+        expect(miq_task.started_on).to be nil
+        miq_task.update_status(MiqTask::STATE_ACTIVE, MiqTask::STATUS_OK, "")
+        expect(miq_task.started_on).to eq Time.now.utc
+      end
+    end
+
+    it "does not changed 'started_on' if task already has 'started-on' attribute set" do
+      some_time = Time.now.utc - 5.hours
+      miq_task.update_attributes!(:started_on => some_time)
+      miq_task.update_status(MiqTask::STATE_ACTIVE, MiqTask::STATUS_OK, "")
+      expect(miq_task.started_on).to eq some_time
+    end
+
+    it "sets 'miq_server' association" do
+      server = EvmSpecHelper.local_miq_server
+      miq_task.update_status(MiqTask::STATE_ACTIVE, MiqTask::STATUS_OK, "")
+      expect(miq_task.miq_server.id).to eq server.id
     end
   end
 end

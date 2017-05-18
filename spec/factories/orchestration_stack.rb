@@ -56,7 +56,13 @@ FactoryGirl.define do
     end
   end
 
+  factory :orchestration_stack_resource, :class => "OrchestrationStackResource" do
+  end
+
   factory :orchestration_stack_resource_openstack_infra, :class => "OrchestrationStackResource" do
+  end
+
+  factory :orchestration_stack_output, :class => "OrchestrationStackOutput" do
   end
 
   factory :orchestration_stack_resource_openstack_infra_compute,
@@ -75,7 +81,10 @@ FactoryGirl.define do
     end
   end
 
-  factory :ansible_tower_job, :class => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job" do
+  factory :ansible_tower_job, :class => "ManageIQ::Providers::AnsibleTower::AutomationManager::Job" do
+  end
+
+  factory :embedded_ansible_job, :class => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job" do
   end
 
   factory :orchestration_stack_vmware_cloud, :parent => :orchestration_stack, :class => "ManageIQ::Providers::Vmware::CloudManager::OrchestrationStack" do

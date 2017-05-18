@@ -13,6 +13,42 @@ module MigrationHelper
   end
 
   #
+  # Batching
+  #
+
+  def say_batch_started(count)
+    say "Processing #{count} rows", :subitem
+    @batch_total_started = Time.now.utc
+    @batch_started = Time.now.utc
+    @batch_total = count
+    @batch_count = 0
+  end
+
+  def say_batch_processed(count)
+    Thread.exclusive do
+      if count > 0
+        @batch_count += count
+
+        progress = @batch_count / @batch_total.to_f * 100
+        timing   = Time.now.utc - @batch_started
+        estimate = estimate_batch_complete(@batch_total_started, progress)
+
+        say "#{count} rows (#{"%.2f" % progress}% - #{@batch_count} total - #{"%.2f" % timing}s - ETA: #{estimate})", :subitem
+      end
+
+      @batch_started = Time.now.utc
+      @batch_count
+    end
+  end
+
+  def estimate_batch_complete(start_time, progress)
+    klass = Class.new { extend ActionView::Helpers::DateHelper }
+    estimated_end_time = start_time + (Time.now.utc - start_time) / (progress / 100.0)
+    klass.distance_of_time_in_words(Time.now.utc, estimated_end_time, :include_seconds => true)
+  end
+  private :estimate_batch_complete
+
+  #
   # Triggers
   #
 

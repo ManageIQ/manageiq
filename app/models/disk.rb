@@ -11,7 +11,9 @@ class Disk < ApplicationRecord
   virtual_column :unallocated_space_percent,   :type => :float,   :uses => :unallocated_space
   virtual_column :used_percent_of_provisioned, :type => :float
   virtual_column :partitions_aligned,          :type => :string,  :uses => {:partitions => :aligned}
-
+  virtual_column :used_disk_storage, :type => :integer, :arel => (lambda do |t|
+    t.grouping(Arel::Nodes::NamedFunction.new('COALESCE', [t[:size_on_disk], t[:size], 0]))
+  end)
   virtual_has_many  :base_storage_extents, :class_name => "CimStorageExtent"
   virtual_has_many  :storage_systems,      :class_name => "CimComputerSystem"
 
@@ -74,5 +76,9 @@ class Disk < ApplicationRecord
 
   def storage_systems
     miq_cim_instance.nil? ? [] : miq_cim_instance.storage_systems
+  end
+
+  def used_disk_storage
+    size_on_disk || size || 0
   end
 end

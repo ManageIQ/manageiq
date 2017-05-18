@@ -1,0 +1,16 @@
+---
+authentications:
+- ldap_id
+- rhsm_pool_id
+cloud_networks:
+- provider_segmentation_id
+container_volumes:
+- common_volume_id
+miq_queue:
+- task_id
+network_ports:
+- binding_host_id
+scan_histories:
+- task_id
+sessions:
+- session_id

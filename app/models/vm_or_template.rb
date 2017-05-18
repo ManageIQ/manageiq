@@ -6,7 +6,6 @@ class VmOrTemplate < ApplicationRecord
   include NewWithTypeStiMixin
   include ScanningMixin
   include SupportsFeatureMixin
-  include VirtualTotalMixin
 
   self.table_name = 'vms'
 
@@ -31,6 +30,7 @@ class VmOrTemplate < ApplicationRecord
   include TenancyMixin
 
   include AvailabilityMixin
+  include ManageIQ::Providers::Inflector::Methods
 
   has_many :ems_custom_attributes, -> { where(:source => 'VC') }, :as => :resource, :dependent => :destroy,
            :class_name => "CustomAttribute"
@@ -51,6 +51,7 @@ class VmOrTemplate < ApplicationRecord
   }
 
   POWER_OPS = %w(start stop suspend reset shutdown_guest standby_guest reboot_guest)
+  REMOTE_REGION_TASKS = POWER_OPS + %w(retire_now)
 
   validates_presence_of     :name, :location
   validates                 :vendor, :inclusion => {:in => VENDOR_TYPES.keys}
@@ -126,6 +127,8 @@ class VmOrTemplate < ApplicationRecord
   has_many                  :service_resources, :as => :resource
   has_many                  :direct_services, :through => :service_resources, :source => :service
   belongs_to                :tenant
+  has_many                  :connected_shares, -> { where(:resource_type => "VmOrTemplate") }, :foreign_key => :resource_id, :class_name => "Share"
+  has_many                  :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
 
   acts_as_miq_taggable
 
@@ -142,11 +145,12 @@ class VmOrTemplate < ApplicationRecord
   virtual_column :v_owning_blue_folder_path,            :type => :string,     :uses => :all_relationships
   virtual_column :v_datastore_path,                     :type => :string,     :uses => :storage
   virtual_column :thin_provisioned,                     :type => :boolean,    :uses => {:hardware => :disks}
-  virtual_column :provisioned_storage,                  :type => :integer,    :uses => [:allocated_disk_storage, :mem_cpu]
   virtual_column :used_storage,                         :type => :integer,    :uses => [:used_disk_storage, :mem_cpu]
   virtual_column :used_storage_by_state,                :type => :integer,    :uses => :used_storage
   virtual_column :uncommitted_storage,                  :type => :integer,    :uses => [:provisioned_storage, :used_storage_by_state]
-  virtual_column :mem_cpu,                              :type => :integer,    :uses => :hardware
+  virtual_delegate :ram_size_in_bytes,                  :to => :hardware, :allow_nil => true, :default => 0
+  virtual_delegate :mem_cpu,                            :to => "hardware.memory_mb", :allow_nil => true, :default => 0
+  virtual_delegate :ram_size,                           :to => "hardware.memory_mb", :allow_nil => true, :default => 0
   virtual_column :ipaddresses,                          :type => :string_set, :uses => {:hardware => :ipaddresses}
   virtual_column :hostnames,                            :type => :string_set, :uses => {:hardware => :hostnames}
   virtual_column :mac_addresses,                        :type => :string_set, :uses => {:hardware => :mac_addresses}
@@ -154,8 +158,7 @@ class VmOrTemplate < ApplicationRecord
   virtual_column :num_hard_disks,                       :type => :integer,    :uses => {:hardware => :hard_disks}
   virtual_column :num_disks,                            :type => :integer,    :uses => {:hardware => :disks}
   virtual_column :num_cpu,                              :type => :integer,    :uses => :hardware
-  virtual_column :cpu_total_cores,                      :type => :integer,    :uses => :hardware
-  virtual_column :cpu_cores_per_socket,                 :type => :integer,    :uses => :hardware
+  virtual_delegate :cpu_total_cores, :cpu_cores_per_socket, :to => :hardware, :allow_nil => true, :default => 0
   virtual_delegate :annotation, :to => :hardware, :prefix => "v", :allow_nil => true
   virtual_column :has_rdm_disk,                         :type => :boolean,    :uses => {:hardware => :disks}
   virtual_column :disks_aligned,                        :type => :string,     :uses => {:hardware => {:hard_disks => :partitions_aligned}}
@@ -163,6 +166,8 @@ class VmOrTemplate < ApplicationRecord
   virtual_has_many   :processes,              :class_name => "OsProcess",    :uses => {:operating_system => :processes}
   virtual_has_many   :event_logs,                                            :uses => {:operating_system => :event_logs}
   virtual_has_many   :lans,                                                  :uses => {:hardware => {:nics => :lan}}
+  virtual_has_many   :child_resources,        :class_name => "VmOrTemplate"
+
   virtual_belongs_to :miq_provision_template, :class_name => "Vm",           :uses => {:miq_provision => :vm_template}
   virtual_belongs_to :parent_resource_pool,   :class_name => "ResourcePool", :uses => :all_relationships
 
@@ -174,6 +179,7 @@ class VmOrTemplate < ApplicationRecord
 
   virtual_has_one   :direct_service,       :class_name => 'Service'
   virtual_has_one   :service,              :class_name => 'Service'
+  virtual_has_one   :parent_resource,      :class_name => "VmOrTemplate"
 
   virtual_delegate :name, :to => :host, :prefix => true, :allow_nil => true
   virtual_delegate :name, :to => :storage, :prefix => true, :allow_nil => true
@@ -183,6 +189,7 @@ class VmOrTemplate < ApplicationRecord
   delegate :connect_lans, :disconnect_lans, :to => :hardware, :allow_nil => true
 
   before_validation :set_tenant_from_group
+  after_save :save_genealogy_information
 
   alias_method :datastores, :storages    # Used by web-services to return datastores as the property name
 
@@ -331,24 +338,7 @@ class VmOrTemplate < ApplicationRecord
   # cb_method:    the MiqQueue callback method along with the parameters that is called
   #               when automate process is done and the event is not prevented to proceed by policy
   def check_policy_prevent(policy_event, *cb_method)
-    cb = {
-      :class_name  => self.class.to_s,
-      :instance_id => id,
-      :method_name => :check_policy_prevent_callback,
-      :args        => [*cb_method],
-      :server_guid => MiqServer.my_guid
-    }
-    enforce_policy(policy_event, {}, :miq_callback => cb) unless policy_event.nil?
-  end
-
-  def check_policy_prevent_callback(*action, _status, _message, result)
-    prevented = false
-    if result.kind_of?(MiqAeEngine::MiqAeWorkspaceRuntime)
-      event = result.get_obj_from_path("/")['event_stream']
-      data  = event.attributes["full_data"]
-      prevented = data.fetch_path(:policy, :prevented) if data
-    end
-    prevented ? _log.info(event.attributes["message"].to_s) : send(*action)
+    enforce_policy(policy_event, {}, {:miq_callback => prevent_callback_settings(*cb_method)}) unless policy_event.nil?
   end
 
   def enforce_policy(event, inputs = {}, options = {})
@@ -380,8 +370,7 @@ class VmOrTemplate < ApplicationRecord
       task.error("#{vm.name}: There is no owning Host for this VM, '#{options[:task]}' is not allowed")
       return false
     end
-    current = VMDB::Config.new("vmdb")      # Get the vmdb configuration settings
-    spid = current.config[:repository_scanning][:defaultsmartproxy]
+    spid = ::Settings.repository_scanning.defaultsmartproxy
     if spid.nil?                          # No repo scanning SmartProxy configured
       task.error("#{vm.name}: No Default Repository SmartProxy is configured, contact your EVM administrator")
       return false
@@ -423,13 +412,13 @@ class VmOrTemplate < ApplicationRecord
     if queue_item.last_exception.kind_of?(MiqException::MiqVimBrokerUnavailable)
       queue_item.requeue(:deliver_on => 1.minute.from_now.utc)
     else
-      task = MiqTask.find_by_id(task_id)
+      task = MiqTask.find_by(:id => task_id)
       task.queue_callback("Finished", status, msg, result) if task
     end
   end
 
   def self.powerops_expiration
-    (VMDB::Config.new('vmdb').config.fetch_path(:management_system, :power_operation_expiration) || 10.minutes).to_i_with_method.seconds.from_now.utc
+    ::Settings.management_system.power_operation_expiration.to_i_with_method.seconds.from_now.utc
   end
 
   # override
@@ -468,12 +457,31 @@ class VmOrTemplate < ApplicationRecord
     )
   end
 
+  def self.action_for_task(task)
+    case task
+    when "retire_now"
+      "retire"
+    else
+      task
+    end
+  end
+
   def scan_data_current?
     !(last_scan_on.nil? || last_scan_on > last_sync_on)
   end
 
   def genealogy_parent
     with_relationship_type("genealogy") { parent }
+  end
+
+  def genealogy_parent=(parent)
+    @genealogy_parent_object = parent
+  end
+
+  def save_genealogy_information
+    if defined?(@genealogy_parent_object) && @genealogy_parent_object
+      with_relationship_type('genealogy') { self.parent = @genealogy_parent_object }
+    end
   end
 
   def os_image_name
@@ -586,7 +594,7 @@ class VmOrTemplate < ApplicationRecord
       vm_hash[:location] = location2uri(path)
     end
     _log.info("vm_hash [#{vm_hash.inspect}]")
-    store = Storage.find_by_name(vm_hash[:name])
+    store = Storage.find_by(:name => vm_hash[:name])
     return nil unless store
     vmobj = VmOrTemplate.find_by(:location => vm_hash[:location], :storage_id => store.id)
   end
@@ -842,26 +850,19 @@ class VmOrTemplate < ApplicationRecord
     self.class.proxy_host_for_repository_scans
   end
 
-  DEFAULT_SCAN_VIA_HOST = true
-  cache_with_timeout(:scan_via_host?, 30.seconds) do
-    via_host = VMDB::Config.new("vmdb").config.fetch_path(:coresident_miqproxy, :scan_via_host)
-    via_host = DEFAULT_SCAN_VIA_HOST unless (via_host.class == TrueClass) || (via_host.class == FalseClass)
-    via_host
-  end
-
   def self.scan_via_ems?
-    !self.scan_via_host?
+    !::Settings.coresident_miqproxy.scan_via_host
   end
 
   delegate :scan_via_ems?, :to => :class
 
   # Cache the proxy host for repository scans because the JobProxyDispatch calls this for each Vm scan job in a loop
   cache_with_timeout(:proxy_host_for_repository_scans, 30.seconds) do
-    defaultsmartproxy = VMDB::Config.new("vmdb").config.fetch_path(:repository_scanning, :defaultsmartproxy)
+    defaultsmartproxy = ::Settings.repository_scanning.defaultsmartproxy
 
     proxy = nil
-    proxy = MiqProxy.find_by_id(defaultsmartproxy.to_i) if defaultsmartproxy
-    proxy ? proxy.host : nil
+    proxy = MiqProxy.find_by(:id => defaultsmartproxy.to_i) if defaultsmartproxy
+    proxy.try(:host)
   end
 
   def my_zone
@@ -870,7 +871,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def my_zone_obj
-    Zone.find_by_name(my_zone)
+    Zone.find_by(:name => my_zone)
   end
 
   #
@@ -878,63 +879,35 @@ class VmOrTemplate < ApplicationRecord
   #
 
   # TODO: Come back to this
-  def proxies4job(job = nil)
+  def proxies4job(_job = nil)
     _log.debug "Enter"
-    proxies = []
-    msg = 'Perform SmartState Analysis on this VM'
-    embedded_msg = nil
-
-    # If we do not get passed an model object assume it is a job guid
-    if job && !job.kind_of?(ActiveRecord::Base)
-      jobid = job
-      job = Job.find_by_guid(jobid)
-    end
 
     all_proxy_list = storage2proxies
-    proxies += storage2active_proxies(all_proxy_list)
+    proxies = storage2active_proxies(all_proxy_list)
     _log.debug "# proxies = #{proxies.length}"
 
-    # If we detect that a MiqServer was in the all_proxies list advise that then host need credentials to use it.
-    if all_proxy_list.any? { |p| (MiqServer === p && p.state == "on") }
-      embedded_msg = "Provide credentials for this VM's Host to perform SmartState Analysis"
-    end
+    msg = if all_proxy_list.empty?
+            "No active SmartProxies found to analyze this VM"
+          elsif proxies.empty?
+            "Provide credentials for this VM's Host to perform SmartState Analysis"
+          else
+            'Perform SmartState Analysis on this VM'
+          end
 
-    if proxies.empty?
-      msg = embedded_msg.nil? ? 'No active SmartProxies found to analyze this VM' : embedded_msg
-    else
-      # Work around for the inability to scan running VMs from a host other than the registered host.
-      proxies.delete_if { |p| Host === p && p != host } if self.scan_on_registered_host_only?
-
-      # If the proxy list is now empty it is because we had to remove all but the registered host above
-      if proxies.empty?
-        if embedded_msg
-          # If we detect that a MiqServer was in the all_proxies list advise that then host need credentials to use it.
-          msg = "Start a SmartProxy or provide credentials for this VM's Host to perform SmartState Analysis"
-        else
-          msg = 'SmartState Analysis is only available through the registered Host for running VM'
-        end
-      end
-    end
-
-    log_proxies(proxies, all_proxy_list, msg, job) if proxies.empty? && job
-
+    log_all_proxies(all_proxy_list, msg) if proxies.empty?
     {:proxies => proxies.flatten, :message => msg}
   end
 
-  def log_proxies(proxy_list = [], all_proxy_list = nil, message = nil, job = nil)
-    log_method = proxy_list.empty? ? :warn : :debug
-    all_proxy_list ||= storage2proxies
-    proxies = all_proxy_list.collect { |a| "[#{log_proxies_format_instance(a.miq_proxy)}]" }
-    job_guid = job.nil? ? "" : job.guid
+  def log_all_proxies(all_proxy_list, message)
+    proxies = all_proxy_list.collect { |a| "[#{log_proxies_format_instance(a)}]" }
     proxies_text = proxies.empty? ? "[none]" : proxies.join(" -- ")
-    method_name = caller[0][/`([^']*)'/, 1]
-    $log.send(log_method, "JOB([#{job_guid}] #{method_name}) Proxies for #{log_proxies_vm_config} : #{proxies_text}")
-    $log.send(log_method, "JOB([#{job_guid}] #{method_name}) Proxies message: #{message}") if message
-  rescue
+    _log.warn("Proxies for #{log_proxies_vm_config} : #{proxies_text}")
+    _log.warn("Proxies message: #{message}")
   end
 
   def log_proxies_vm_config
-    "[#{log_proxies_format_instance(self)}] on host [#{log_proxies_format_instance(host)}] #{ui_lookup(:table => "storages").downcase} [#{storage.name}-#{storage.store_type}]"
+    msg = "[#{log_proxies_format_instance(self)}] on host [#{log_proxies_format_instance(host)}] #{ui_lookup(:table => "storages").downcase} "
+    msg << (storage ? "[#{storage.name}-#{storage.store_type}]" : "No storage")
   end
 
   def log_proxies_format_instance(object)
@@ -985,19 +958,11 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def has_active_proxy?
-    storage2active_proxies.empty? ? false : true
+    storage2active_proxies.any?
   end
 
   def has_proxy?
-    storage2proxies.empty? ? false : true
-  end
-
-  def miq_proxies
-    miqproxies = storage2proxies.collect(&:miq_proxy).compact
-
-    # The UI does not handle getting back non-MiqProxy objects back from this call.
-    # Remove MiqServer elements until we can support different class types.
-    miqproxies.delete_if { |p| p.class == MiqServer }
+    storage2proxies.any?
   end
 
   # Cache the servers because the JobProxyDispatch calls this for each Vm scan job in a loop
@@ -1122,32 +1087,46 @@ class VmOrTemplate < ApplicationRecord
     # Create queue items to do additional process like apply tags and link events
     unless added_vms.empty?
       added_vm_ids = []
-      added_vms.each do |v|
+      added_vms.find_each do |v|
         v.post_create_actions_queue
         added_vm_ids << v.id
       end
 
-      assign_ems_created_on_queue(added_vm_ids) if VMDB::Config.new("vmdb").config.fetch_path(:ems_refresh, :capture_vm_created_on_date)
+      assign_ems_created_on_queue(added_vm_ids) if ::Settings.ems_refresh.capture_vm_created_on_date
     end
 
+    post_refresh_ems_folder_updates(ems, update_start_time, added_vms)
+  end
+
+  def self.post_refresh_ems_folder_updates(ems, update_start_time, added_vms)
     # Collect the updated folder relationships to determine which vms need updated path information
     ems_folders = ems.ems_folders
     MiqPreloader.preload(ems_folders, :all_relationships)
 
-    updated_folders = ems_folders.select do |f|
-      f.created_on >= update_start_time || f.updated_on >= update_start_time || # Has the folder itself changed (e.g. renamed)?
-      f.relationships.any? do |r|                                                  # Or has its relationship rows changed?
-        r.created_at >= update_start_time || r.updated_at >= update_start_time || #   Has the direct relationship changed (e.g. this folder moved under another folder)?
-        r.children.any? do |child_r|                                             #   Or have any of the child relationship rows changed (e.g. vm moved under this folder)?
-          child_r.created_at >= update_start_time || child_r.updated_at >= update_start_time
+    # Find any VMs that were created or moved into a new folder
+    updated_vm_rels = ems_folders.collect do |f|
+      f.relationships.collect do |r|
+        r.children.select do |child_r|
+          child_r.resource_type == "VmOrTemplate" &&
+            (child_r.created_at >= update_start_time || child_r.updated_at >= update_start_time)
         end
       end
+    end.flatten
+
+    # Now find any Folders that were renamed or moved into a new parent folder
+    updated_folders = ems_folders.select do |f|
+      f.created_on >= update_start_time || f.updated_on >= update_start_time ||  # Has the folder itself changed (e.g. renamed)?
+        f.relationships.any? do |r|
+          r.created_at >= update_start_time || r.updated_at >= update_start_time # Has the relationship changed (e.g. this folder moved under another folder)?
+        end
     end
-    unless updated_folders.empty?
-      updated_vms = updated_folders.collect(&:all_vms_and_templates).flatten.uniq - added_vms
-      updated_vms.each(&:classify_with_parent_folder_path_queue)
-    end
+
+    updated_vms  = VmOrTemplate.where(:id => updated_vm_rels.collect(&:resource_id))
+    updated_vms += updated_folders.flat_map(&:all_vms_and_templates)
+    updated_vms  = updated_vms.uniq - added_vms
+    updated_vms.each(&:classify_with_parent_folder_path_queue)
   end
+  private_class_method :post_refresh_ems_folder_updates
 
   def self.assign_ems_created_on_queue(vm_ids)
     MiqQueue.put(
@@ -1221,6 +1200,7 @@ class VmOrTemplate < ApplicationRecord
     when "VMFS"  then "[#{storage.name}] #{location}"
     when "VSAN"  then "[#{storage.name}] #{location}"
     when "NFS"   then "[#{storage.name}] #{location}"
+    when "NFS41" then "[#{storage.name}] #{location}"
     when "NTFS"  then "[#{storage.name}] #{location}"
     when "CSVFS" then "[#{storage.name}] #{location}"
     when "NAS"   then File.join(storage.name, location)
@@ -1243,7 +1223,7 @@ class VmOrTemplate < ApplicationRecord
     # TODO: Review the name of this method such that the return types don't conflict with those of self.repository_parse_path
     storage_name, relative_path = repository_parse_path(path)
 
-    storage = Storage.find_by_name(storage_name)
+    storage = Storage.find_by(:name => storage_name)
     if storage.nil?
       storage_id = nil
       location   = location2uri(relative_path)
@@ -1443,7 +1423,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def miq_provision_template
-    miq_provision ? miq_provision.vm_template : nil
+    miq_provision.try(:vm_template)
   end
 
   def event_threshold?(options = {:time_threshold => 30.minutes, :event_types => ["MigrateVM_Task_Complete"], :freq_threshold => 2})
@@ -1510,16 +1490,14 @@ class VmOrTemplate < ApplicationRecord
   virtual_delegate :allocated_disk_storage, :used_disk_storage,
                    :to => :hardware, :allow_nil => true, :uses => {:hardware => :disks}
 
-  def provisioned_storage
-    allocated_disk_storage.to_i + ram_size_in_bytes
+  virtual_delegate :provisioned_storage, :to => :hardware, :allow_nil => true, :default => 0
+
+  def used_storage
+    used_disk_storage.to_i + ram_size_in_bytes
   end
 
-  def used_storage(include_ram = true, check_state = false)
-    used_disk_storage.to_i + (include_ram ? ram_size_in_bytes(check_state) : 0)
-  end
-
-  def used_storage_by_state(include_ram = true)
-    used_storage(include_ram, true)
+  def used_storage_by_state
+    used_disk_storage.to_i + ram_size_in_bytes_by_state
   end
 
   def uncommitted_storage
@@ -1530,34 +1508,16 @@ class VmOrTemplate < ApplicationRecord
     hardware.nil? ? false : hardware.disks.any? { |d| d.disk_type == 'thin' }
   end
 
-  def ram_size(check_state = false)
-    hardware.nil? || (check_state && state != 'on') ? 0 : hardware.memory_mb
-  end
-
   def ram_size_by_state
-    ram_size(true)
-  end
-
-  def ram_size_in_bytes(check_state = false)
-    ram_size(check_state).to_i * 1.megabyte
+    state == 'on' ? ram_size : 0
   end
 
   def ram_size_in_bytes_by_state
-    ram_size_in_bytes(true)
+    ram_size_by_state * 1.megabyte
   end
-
-  alias_method :mem_cpu, :ram_size
 
   def num_cpu
     hardware.nil? ? 0 : hardware.cpu_sockets
-  end
-
-  def cpu_total_cores
-    hardware.nil? ? 0 : hardware.cpu_total_cores
-  end
-
-  def cpu_cores_per_socket
-    hardware.nil? ? 0 : hardware.cpu_cores_per_socket
   end
 
   def num_disks
@@ -1603,10 +1563,6 @@ class VmOrTemplate < ApplicationRecord
 
   def mac_addresses
     hardware.nil? ? [] : hardware.mac_addresses
-  end
-
-  def hard_disk_storages
-    hardware.nil? ? [] : hardware.hard_disk_storages
   end
 
   def processes
@@ -1663,11 +1619,6 @@ class VmOrTemplate < ApplicationRecord
 
   def service
     direct_service.try(:root_service)
-  end
-
-  def raise_is_available_now_error_message(request_type)
-    msg = send("validate_#{request_type}")[:message]
-    raise MiqException::MiqVmError, msg unless msg.nil?
   end
 
   def has_required_host?
@@ -1728,7 +1679,7 @@ class VmOrTemplate < ApplicationRecord
         vm.add_ems_event(event_type, event_message, event_timestamp)
       end
     when "uid_ems"
-      vm = VmOrTemplate.find_by_uid_ems(value)
+      vm = VmOrTemplate.find_by(:uid_ems => value)
       unless vm.nil?
         vm.add_ems_event(event_type, event_message, event_timestamp)
       end
@@ -1793,19 +1744,7 @@ class VmOrTemplate < ApplicationRecord
     MiqTemplate.where(:id => ids).exists?
   end
 
-  def self.cloneable?(ids)
-    vms = VmOrTemplate.where(:id => ids)
-    return false if vms.blank?
-    vms.all?(&:cloneable?)
-  end
-
-  def cloneable?
-    false
-  end
-
-  def supports_snapshots?
-    false
-  end
+  supports_not :snapshots
 
   def self.batch_operation_supported?(operation, ids)
     VmOrTemplate.where(:id => ids).all? do |vm_or_template|
@@ -1837,10 +1776,28 @@ class VmOrTemplate < ApplicationRecord
      template_tenant_ids, vm_tenant_ids]
   end
 
+  def self.with_ownership
+    includes(:ext_management_system).where(:ext_management_systems => {:tenant_mapping_enabled => [false, nil]})
+  end
+
   def tenant_identity
     user = evm_owner
     user = User.super_admin.tap { |u| u.current_group = miq_group } if user.nil? || !user.miq_group_ids.include?(miq_group_id)
     user
+  end
+
+  supports :console do
+    unless console_supported?('spice') || console_supported?('vnc')
+      unsupported_reason_add(:console, N_("Console not supported"))
+    end
+  end
+
+  def child_resources
+    children
+  end
+
+  def parent_resource
+    parent
   end
 
   private
@@ -1865,9 +1822,17 @@ class VmOrTemplate < ApplicationRecord
     if archived?
       return [false, nil]
     elsif orphaned?
-      return [false, _("#{message_prefix} cannot be performed on orphaned VM.")]
+      return [false, _("%{action} cannot be performed on orphaned VM.") % {:action => message_prefix}]
     end
     [true, nil]
+  end
+
+  def create_notification(type, options)
+    Notification.create!(
+      :type    => type,
+      :subject => self,
+      :options => options
+    )
   end
 
   # this is verbose, helper for generating arel

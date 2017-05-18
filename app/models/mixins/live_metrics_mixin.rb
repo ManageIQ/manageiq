@@ -7,7 +7,7 @@ module LiveMetricsMixin
 
   delegate :fetch_metrics_available, :to => :metrics_capture
   delegate :collect_live_metrics, :to => :metrics_capture
-  delegate :collect_stats_metric, :to => :metrics_capture
+  delegate :collect_stats_metrics, :to => :metrics_capture
 
   included do
     def live_metrics_name

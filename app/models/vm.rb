@@ -2,6 +2,10 @@ class Vm < VmOrTemplate
   default_scope { where(:template => false) }
   has_one :container_deployment, :through => :container_deployment_node
   has_one :container_deployment_node
+
+  extend InterRegionApiMethodRelay
+  include CustomActionsMixin
+
   include_concern 'Operations'
 
   def self.base_model
@@ -27,6 +31,10 @@ class Vm < VmOrTemplate
   def validate_remote_console_vmrc_support
     raise(MiqException::RemoteConsoleNotSupportedError,
           _("VMRC remote console is not supported on %{vendor}.") % {:vendor => vendor})
+  end
+
+  def add_to_service(service)
+    service.add_resource!(self)
   end
 
   def self.find_all_by_mac_address_and_hostname_and_ipaddress(mac_address, hostname, ipaddress)
@@ -70,7 +78,7 @@ class Vm < VmOrTemplate
     end
 
     begin
-      require 'miq-wmi'
+      require 'win32/miq-wmi'
       cred = my_zone_obj.auth_user_pwd(:windows_domain)
       ipaddresses.each do |ipaddr|
         break unless pl.blank?
@@ -87,5 +95,21 @@ class Vm < VmOrTemplate
       _log.log_backtrace(err)
     end
     pl
+  end
+
+  def remote_console_url=(url, user_id)
+    SystemConsole.where(:vm_id => id).each(&:destroy)
+    console = SystemConsole.create!(
+      :vm_id      => id,
+      :user       => User.find_by(:userid => user_id),
+      :protocol   => 'url',
+      :url        => url,
+      :url_secret => SecureRandom.hex
+    )
+    console.id
+  end
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("Vm")
   end
 end

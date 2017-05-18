@@ -22,8 +22,9 @@ class BlacklistedEvent < ApplicationRecord
   end
 
   def self.seed
+    existing = where(:ems_id => nil).pluck(:provider_model, :event_name).group_by(&:first).each_with_object({}) { |(ems, q), res| res[ems] = q.map(&:last) }
     ExtManagementSystem.descendants.each do |ems|
-      missing_events = ems.default_blacklisted_event_names - where(:provider_model => ems.name, :ems_id => nil).pluck(:event_name)
+      missing_events = ems.default_blacklisted_event_names - (existing[ems.name] || [])
       create!(missing_events.collect { |e| {:event_name => e, :provider_model => ems.name, :system => true} })
     end
   end

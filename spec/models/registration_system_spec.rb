@@ -1,4 +1,6 @@
-describe "RegistrationSystem" do
+require "tempfile"
+
+describe RegistrationSystem do
   before do
     EvmSpecHelper.create_guid_miq_server_zone
     @creds       = {:userid => "SomeUser", :password => "SomePass"}
@@ -103,6 +105,132 @@ describe "RegistrationSystem" do
       )
       expect(LinuxAdmin::RegistrationSystem).to receive(:validate_credentials).once.with(:username => "SomeUser", :password => "SomePass", :server_url => "http://abc.net", :registration_type => "sm_hosted", :proxy_address => "1.1.1.1", :proxy_username => "bob", :proxy_password => "pass").and_return(true)
       expect(RegistrationSystem.verify_credentials).to be_truthy
+    end
+  end
+
+  describe ".update_rhsm_conf_queue" do
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+      @proxy_args = {:registration_http_proxy_server   => "192.0.2.0:myport",
+                     :registration_http_proxy_username => "my_dummy_username",
+                     :registration_http_proxy_password => "my_dummy_password"}.freeze
+
+      @miq_region = FactoryGirl.create(:miq_region, :region => 1)
+      allow(MiqRegion).to receive(:my_region).and_return(@miq_region)
+    end
+
+    it "does not modify original arguments" do
+      expect { RegistrationSystem.update_rhsm_conf_queue(@proxy_args) }.to_not raise_error
+    end
+
+    it "validate that a message was queued for each server in the region" do
+      RegistrationSystem.update_rhsm_conf_queue(@proxy_args)
+      MiqRegion.my_region.miq_servers.each do |server|
+        expect(MiqQueue.exists?(:server_guid => server.guid,
+                                :class_name  => "RegistrationSystem",
+                                :method_name => "update_rhsm_conf")).to be_truthy
+      end
+      expect(MiqQueue.count).to eq(2)
+    end
+
+    it "validate that the queue item was created with proper args" do
+      RegistrationSystem.update_rhsm_conf_queue(@proxy_args)
+      MiqRegion.my_region.miq_servers.each do |server|
+        expect(MiqQueue.where(:server_guid => server.guid,
+                              :class_name  => "RegistrationSystem",
+                              :method_name => "update_rhsm_conf").first.args.first)
+          .to include(:registration_http_proxy_server   => "192.0.2.0:myport",
+                      :registration_http_proxy_username => "my_dummy_username",
+                      :registration_http_proxy_password => "v2:{x/Avf/y0mnK5CdhEXjxn05xLp6MQn1l0IMOTDVBvIg8=}")
+      end
+    end
+  end
+
+  describe ".update_rhsm_conf" do
+    let(:original_rhsm_conf) do
+      <<-EOT.strip_heredoc
+        # Set to 1 to disable certificate validation:
+        insecure = 0
+
+        # Set the depth of certs which should be checked
+        # when validating a certificate
+        ssl_verify_depth = 3
+
+        # an http proxy server to use
+        proxy_hostname =
+
+        # port for http proxy server
+        proxy_port =
+
+        # user name for authenticating to an http proxy, if needed
+        proxy_user =
+
+        # password for basic http proxy auth, if needed
+        proxy_password =
+
+      EOT
+    end
+
+    let(:updated_rhsm_conf) do
+      <<-EOT.strip_heredoc
+        # Set to 1 to disable certificate validation:
+        insecure = 0
+
+        # Set the depth of certs which should be checked
+        # when validating a certificate
+        ssl_verify_depth = 3
+
+        # an http proxy server to use
+        proxy_hostname = 192.0.2.0
+
+        # port for http proxy server
+        proxy_port = myport
+
+        # user name for authenticating to an http proxy, if needed
+        proxy_user = my_dummy_username
+
+        # password for basic http proxy auth, if needed
+        proxy_password = my_dummy_password
+
+      EOT
+    end
+
+    let(:rhsm_conf) { Tempfile.new(@spec_name.downcase) }
+
+    before do
+      @proxy_args = {:registration_http_proxy_server   => "192.0.2.0:myport",
+                     :registration_http_proxy_username => "my_dummy_username",
+                     :registration_http_proxy_password => "my_dummy_password"}
+
+      @spec_name = File.basename(__FILE__).split(".rb").first.freeze
+      stub_const("RegistrationSystem::RHSM_CONFIG_FILE", rhsm_conf.path)
+      rhsm_conf.write(original_rhsm_conf)
+      rhsm_conf.close
+    end
+
+    after do
+      FileUtils.rm_f(rhsm_conf)
+      FileUtils.rm_f("#{rhsm_conf.path}.miq_orig")
+    end
+
+    it "will save then update the original config file" do
+      RegistrationSystem.update_rhsm_conf(@proxy_args)
+      expect(File.read("#{rhsm_conf.path}.miq_orig")).to eq(original_rhsm_conf)
+      expect(File.read(rhsm_conf)).to eq(updated_rhsm_conf)
+    end
+
+    it "with no proxy server will not update the rhsm config file" do
+      RegistrationSystem.update_rhsm_conf(:registration_http_proxy_server => nil)
+      expect(File.read(rhsm_conf)).to eq(original_rhsm_conf)
+    end
+
+    it "with no options will use database valuses" do
+      MiqDatabase.seed
+      MiqDatabase.first.update_attributes(
+        :registration_http_proxy_server => "192.0.2.0:myport"
+      )
+      RegistrationSystem.update_rhsm_conf
+      expect(File.read(rhsm_conf)).to include("proxy_hostname = 192.0.2.0", "proxy_port = myport")
     end
   end
 end

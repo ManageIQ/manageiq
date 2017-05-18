@@ -24,6 +24,17 @@ describe OrchestrationTemplateCfn do
       assert_min_max_value(param_hash["SecondaryIPAddressCount"])
       assert_hidden_length_pattern(param_hash["MasterUserPassword"])
     end
+
+    it "parses resources from a template" do
+      resource_types = valid_template.resources.collect(&:type).sort!
+
+      expect(resource_types).to eq(
+        ["AWS::AutoScaling::ScalingPolicy",
+         "AWS::AutoScaling::ScalingPolicy",
+         "AWS::EC2::Instance",
+         "AWS::EC2::SecurityGroup"]
+      )
+    end
   end
 
   def assert_aws_type(parameter)
@@ -34,6 +45,7 @@ describe OrchestrationTemplateCfn do
       :data_type     => "AWS::EC2::KeyPair::KeyName",
       :default_value => nil,
       :hidden        => false,
+      :required      => true,
       :constraints   => [],
     )
   end
@@ -46,6 +58,7 @@ describe OrchestrationTemplateCfn do
       :data_type     => "List<AWS::EC2::Subnet::Id>",
       :default_value => nil,
       :hidden        => false,
+      :required      => true,
       :constraints   => [],
     )
   end
@@ -58,6 +71,7 @@ describe OrchestrationTemplateCfn do
       :data_type     => "List<String>",
       :default_value => nil,
       :hidden        => false,
+      :required      => true,
       :constraints   => [],
     )
   end
@@ -70,6 +84,7 @@ describe OrchestrationTemplateCfn do
       :data_type     => "String",
       :default_value => "m1.small",
       :hidden        => false,
+      :required      => true
     )
     constraints = parameter.constraints
     expect(constraints.size).to eq(1)
@@ -89,6 +104,7 @@ describe OrchestrationTemplateCfn do
       :data_type     => "Number",
       :default_value => "1",
       :hidden        => false,
+      :required      => true,
     )
     constraints = parameter.constraints
     expect(constraints.size).to eq(1)
@@ -109,6 +125,7 @@ describe OrchestrationTemplateCfn do
       :data_type     => "String",
       :default_value => nil,
       :hidden        => true,
+      :required      => true,
     )
     constraints = parameter.constraints
     expect(constraints.size).to eq(2)
@@ -140,5 +157,36 @@ describe OrchestrationTemplateCfn do
       template = OrchestrationTemplateCfn.new(:content => "invalid string")
       expect(template.validate_format).not_to be_nil
     end
+  end
+
+  describe '#deployment_options' do
+    it 'generates deployment options for AWS' do
+      options = subject.deployment_options('ManageIQ::Providers::Amazon::CloudManager')
+      assert_deployment_option(options[0], "tenant_name", :OrchestrationParameterAllowedDynamic, true)
+      assert_deployment_option(options[1], "stack_name", :OrchestrationParameterPattern, true)
+      assert_deployment_option(options[2], "stack_onfailure", :OrchestrationParameterAllowed, false)
+      assert_deployment_option(options[3], "stack_timeout", nil, false, 'integer')
+      assert_deployment_option(options[4], "stack_notifications", nil, false, 'text')
+      assert_deployment_option(options[5], "stack_capabilities", :OrchestrationParameterAllowed, false)
+      assert_deployment_option(options[6], "stack_resource_types", nil, false, 'text')
+      assert_deployment_option(options[7], "stack_role", nil, false)
+      assert_deployment_option(options[8], "stack_tags", nil, false, 'text')
+      assert_deployment_option(options[9], "stack_policy", nil, false, 'text')
+    end
+
+    it 'generates deployment options for OpenStack' do
+      options = subject.deployment_options('ManageIQ::Providers::Openstack::CloudManager')
+      assert_deployment_option(options[0], "tenant_name", :OrchestrationParameterAllowedDynamic, true)
+      assert_deployment_option(options[1], "stack_name", :OrchestrationParameterPattern, true)
+      assert_deployment_option(options[2], "stack_onfailure", :OrchestrationParameterAllowed, false)
+      assert_deployment_option(options[3], "stack_timeout", nil, false, 'integer')
+    end
+  end
+
+  def assert_deployment_option(option, name, constraint_type, required, data_type = 'string')
+    expect(option.name).to eq(name)
+    expect(option.data_type).to eq(data_type)
+    expect(option.required?).to eq(required)
+    expect(option.constraints[0]).to be_kind_of("OrchestrationTemplate::#{constraint_type}".constantize) if constraint_type
   end
 end

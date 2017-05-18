@@ -11,8 +11,7 @@ class EmsFolder < ApplicationRecord
   include RelationshipMixin
   self.default_relationship_type = "ems_metadata"
 
-  include AggregationMixin
-  aggregation_mixin_virtual_columns_use :all_relationships
+  include RelationshipsAggregationMixin
   include MiqPolicyMixin
 
   virtual_has_many :vms_and_templates, :uses => :all_relationships
@@ -39,7 +38,7 @@ class EmsFolder < ApplicationRecord
 
   # Folder relationship methods
   def folders
-    children(:of_type => 'EmsFolder').sort_by { |c| c.name.downcase }
+    children(:of_type => 'EmsFolder')
   end
 
   alias_method :add_folder, :set_child
@@ -59,7 +58,7 @@ class EmsFolder < ApplicationRecord
 
   # Cluster relationship methods
   def clusters
-    children(:of_type => 'EmsCluster').sort_by { |c| c.name.downcase }
+    children(:of_type => 'EmsCluster')
   end
 
   alias_method :add_cluster, :set_child
@@ -72,7 +71,7 @@ class EmsFolder < ApplicationRecord
   # Host relationship methods
   #   all_hosts and all_host_ids included from AggregationMixin
   def hosts
-    children(:of_type => 'Host').sort_by { |c| c.name.downcase }
+    children(:of_type => 'Host')
   end
 
   alias_method :add_host, :set_child
@@ -85,7 +84,7 @@ class EmsFolder < ApplicationRecord
   # Vm relationship methods
   #   all_vms and all_vm_ids included from AggregationMixin
   def vms_and_templates
-    children(:of_type => 'VmOrTemplate').sort_by { |c| c.name.downcase }
+    children(:of_type => 'VmOrTemplate')
   end
 
   def miq_templates
@@ -104,7 +103,7 @@ class EmsFolder < ApplicationRecord
   end
 
   def storages
-    children(:of_type => 'Storage').sort_by { |c| c.name.downcase }
+    children(:of_type => 'Storage')
   end
 
   alias add_storage set_child

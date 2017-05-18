@@ -1,9 +1,9 @@
 class HostAggregate < ApplicationRecord
+  include SupportsFeatureMixin
   include NewWithTypeStiMixin
   include Metric::CiMixin
   include EventMixin
   include ProviderObjectMixin
-  include VirtualTotalMixin
 
   acts_as_miq_taggable
 

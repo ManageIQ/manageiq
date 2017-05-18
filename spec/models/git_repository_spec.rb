@@ -7,6 +7,10 @@ describe GitRepository do
     expect { FactoryGirl.create(:git_repository, :url => "abc") }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
+  it "invalid url, no path" do
+    expect { FactoryGirl.create(:git_repository, :url => "http://example.com") }.to raise_error(ActiveRecord::RecordInvalid)
+  end
+
   it "default dirname" do
     repo = FactoryGirl.create(:git_repository,
                               :url => "http://www.example.com/repos/manageiq")
@@ -16,6 +20,7 @@ describe GitRepository do
   context "repo" do
     let(:gwt) { instance_double('GitWorktree') }
     let(:git_url) { 'http://www.example.com/repo/manageiq' }
+    let(:verify_ssl) { OpenSSL::SSL::VERIFY_PEER }
     let(:branch_list) { %w(b1 b2) }
     let(:tag_list) { %w(t1 t2) }
     let(:info) { {:time => Time.now.utc, :message => "R2D2", :commit_sha => "abcdef"} }
@@ -29,7 +34,50 @@ describe GitRepository do
        't2' => {:time => Time.now.utc + 5, :message => "T2", :commit_sha => "123456"}
       }
     end
-    let(:repo) { FactoryGirl.create(:git_repository, :url => git_url) }
+    let(:repo) { FactoryGirl.create(:git_repository, :url => git_url, :verify_ssl => verify_ssl) }
+    let(:userid) { 'user' }
+    let(:password) { 'password' }
+
+    context "parameter check" do
+      let(:args) do
+        {
+          :url      => git_url,
+          :username => userid,
+          :password => password,
+          :path     => repo.directory_name,
+          :clone    => true
+        }
+      end
+
+      before do
+        allow(MiqServer).to receive(:my_zone).and_return("default")
+        allow(gwt).to receive(:branches).with(anything).and_return(branch_list)
+        allow(gwt).to receive(:tags).with(no_args).and_return(tag_list)
+        allow(gwt).to receive(:branch_info) do |name|
+          branch_info_hash[name]
+        end
+        allow(gwt).to receive(:tag_info) do |name|
+          tag_info_hash[name]
+        end
+      end
+
+      it "userid and password is set" do
+        repo.update_authentication(:default => {:userid => userid, :password => password})
+        expect(GitWorktree).to receive(:new).with(args).and_return(gwt)
+        repo.refresh
+      end
+
+      context "self signed certifcate" do
+        let(:verify_ssl) { OpenSSL::SSL::VERIFY_NONE }
+
+        it "certificate_check is set" do
+          repo.update_authentication(:default => {:userid => userid, :password => password})
+          args[:certificate_check] = repo.method(:self_signed_cert_cb)
+          expect(GitWorktree).to receive(:new).with(args).and_return(gwt)
+          repo.refresh
+        end
+      end
+    end
 
     it "#refresh" do
       expect(GitWorktree).to receive(:new).with(anything).and_return(gwt)
@@ -143,6 +191,31 @@ describe GitRepository do
       expect(repo.git_tags.collect(&:name)).to match_array(tag_list + ['DUMMY'])
       repo.refresh
       expect(repo.git_tags.collect(&:name)).to match_array(tag_list)
+    end
+
+    context "#destroy" do
+      let(:dir_name) { repo.directory_name }
+
+      context "when repo deletion has no errors" do
+        it "deletes the repo and the directory" do
+          expect(FileUtils).to receive(:rm_rf).with(dir_name)
+
+          repo.destroy
+        end
+      end
+
+      context "when repo deletion has errors" do
+        before do
+          allow(repo).to receive(:delete_repo_dir).and_raise(MiqException::Error, "wham")
+        end
+
+        it "does not delete the repo and the directory" do
+          repo_id = repo.id
+
+          expect { repo.destroy }.to raise_exception(MiqException::Error, "wham")
+          expect(GitRepository.find(repo_id)).not_to be_nil
+        end
+      end
     end
   end
 end

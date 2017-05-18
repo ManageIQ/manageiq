@@ -470,4 +470,186 @@ describe Host do
       expect(h.cpu_cores_per_socket).to eq(4)
     end
   end
+
+  context "supported features" do
+    it "does not support refresh_network_interfaces" do
+      host = FactoryGirl.build(:host)
+      expect(host.supports_refresh_network_interfaces?).to be_falsey
+    end
+  end
+
+  describe "#authentication_check_role" do
+    it "returns smartstate" do
+      host = FactoryGirl.build(:host)
+      expect(host.authentication_check_role).to eq('smartstate')
+    end
+  end
+
+  describe "#validate_power_state" do
+    let(:host) do
+      FactoryGirl.create(:host_vmware_esx,
+                         :ext_management_system => FactoryGirl.create(:ems_vmware),
+                         :vmm_vendor            => 'vmware')
+    end
+
+    context "when host power state equal to pstate" do
+      it "returns nil" do
+        expect(host.validate_power_state('on')).to be_nil
+        expect(host.validate_power_state(['on'])).to be_nil
+      end
+    end
+
+    context "when host power state does not equal to pstate" do
+      it "returns available false" do
+        expect(host.validate_power_state('off')).to eq(:available => false,
+                                                       :message   => "The Host is not powered 'off'")
+        expect(host.validate_power_state(['off'])).to eq(:available => false,
+                                                         :message   => "The Host is not powered [\"off\"]")
+      end
+    end
+  end
+
+  context "vmotion validation methods" do
+    let(:host) do
+      FactoryGirl.create(:host_vmware_esx,
+                         :ext_management_system => FactoryGirl.create(:ems_vmware),
+                         :vmm_vendor            => 'vmware')
+    end
+
+    describe "#validate_enable_vmotion" do
+      it "returns available true" do
+        expect(host.validate_enable_vmotion).to eq(:available => true, :message => nil)
+      end
+    end
+
+    describe "#validate_disable_vmotion" do
+      it "returns available true" do
+        expect(host.validate_disable_vmotion).to eq(:available => true, :message => nil)
+      end
+    end
+
+    describe "#validate_vmotion_enabled?" do
+      it "returns available true" do
+        expect(host.validate_vmotion_enabled?).to eq(:available => true, :message => nil)
+      end
+    end
+  end
+
+  describe "#validate_ipmi" do
+    subject { host.validate_ipmi }
+
+    context "host does not have ipmi address" do
+      let(:host) { FactoryGirl.create(:host) }
+
+      it "returns available false" do
+        expect(subject).to eq(:available => false, :message => "The Host is not configured for IPMI")
+      end
+    end
+
+    context "host has ipmi address" do
+      let(:host) { FactoryGirl.create(:host, :ipmi_address => "127.0.0.1") }
+      before do
+        EvmSpecHelper.local_miq_server
+      end
+
+      context "host does not have ipmi credentials" do
+        it "returns available false" do
+          expect(subject).to eq(:available => false, :message => "The Host has no IPMI credentials")
+        end
+      end
+
+      context "host has incorrect ipmi credentials" do
+        it "returns available false" do
+          host.update_authentication(:ipmi => {:password => "a"})
+          expect(subject).to eq(:available => false, :message => "The Host has invalid IPMI credentials")
+        end
+      end
+
+      context "host has correct ipmi credentials" do
+        it "returns available true" do
+          host.update_authentication(:ipmi => {:userid => "a", :password => "a"})
+          expect(subject).to eq(:available => true, :message => nil)
+        end
+      end
+    end
+  end
+
+  context "ipmi validation methods" do
+    let(:host_with_ipmi) { FactoryGirl.create(:host_with_ipmi) }
+    before do
+      EvmSpecHelper.local_miq_server
+    end
+
+    describe "#validate_start" do
+      let(:host_off) { FactoryGirl.create(:host_with_ipmi, :power_state => 'off') }
+
+      it "returns available true" do
+        expect(host_off.validate_start).to eq(:available => true, :message => nil)
+      end
+    end
+
+    describe "#validate_stop" do
+      it "returns available true" do
+        expect(host_with_ipmi.validate_stop).to eq(:available => true, :message => nil)
+      end
+    end
+
+    describe "#supports_reset" do
+      it "returns true for supports_reset?" do
+        expect(host_with_ipmi.supports_reset?).to be_truthy
+      end
+    end
+  end
+
+  describe ".clustered" do
+    let(:host_with_cluster) { FactoryGirl.create(:host, :ems_cluster => FactoryGirl.create(:ems_cluster)) }
+    let(:host) { FactoryGirl.create(:host) }
+
+    it "detects clustered hosts" do
+      host_with_cluster ; host
+
+      expect(Host.clustered).to eq([host_with_cluster])
+    end
+  end
+
+  describe ".non_clustered" do
+    let(:host_with_cluster) { FactoryGirl.create(:host, :ems_cluster => FactoryGirl.create(:ems_cluster)) }
+    let(:host) { FactoryGirl.create(:host) }
+
+    it "detects non_clustered hosts" do
+      host_with_cluster ; host
+
+      expect(Host.non_clustered).to eq([host])
+    end
+  end
+
+  describe "#scan" do
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+      @host = FactoryGirl.create(:host_vmware)
+      FactoryGirl.create(:miq_event_definition, :name => :request_host_scan)
+      # admin user is needed to process Events
+      User.super_admin || FactoryGirl.create(:user_with_group, :userid => "admin")
+    end
+
+    it "policy passes" do
+      expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Host).to receive(:scan_queue)
+
+      allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'sucess', MiqAeEngine::MiqAeWorkspaceRuntime.new])
+      @host.scan
+      status, message, result = MiqQueue.first.deliver
+      MiqQueue.first.delivered(status, message, result)
+    end
+
+    it "policy prevented" do
+      expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Host).to_not receive(:scan_queue)
+
+      event = {:attributes => {"full_data" => {:policy => {:prevented => true}}}}
+      allow_any_instance_of(MiqAeEngine::MiqAeWorkspaceRuntime).to receive(:get_obj_from_path).with("/").and_return(:event_stream => event)
+      allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'sucess', MiqAeEngine::MiqAeWorkspaceRuntime.new])
+      @host.scan
+      status, message, _result = MiqQueue.first.deliver
+      MiqQueue.first.delivered(status, message, MiqAeEngine::MiqAeWorkspaceRuntime.new)
+    end
+  end
 end

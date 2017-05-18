@@ -2,6 +2,8 @@ module CustomAttributeMixin
   extend ActiveSupport::Concern
 
   CUSTOM_ATTRIBUTES_PREFIX = "virtual_custom_attribute_".freeze
+  SECTION_SEPARATOR        = ":SECTION:".freeze
+  DEFAULT_SECTION_NAME     = 'Custom Attribute'.freeze
 
   included do
     has_many   :custom_attributes,     :as => :resource, :dependent => :destroy
@@ -25,7 +27,10 @@ module CustomAttributeMixin
     end
 
     def self.custom_keys
-      CustomAttribute.where(:resource_type => base_class).distinct.pluck(:name)
+      custom_attr_scope = CustomAttribute.where(:resource_type => base_class).where.not(:name => nil).distinct.pluck(:name, :section)
+      custom_attr_scope.map do |x|
+        "#{x[0]}#{x[1] ? SECTION_SEPARATOR + x[1] : ''}"
+      end
     end
 
     def self.load_custom_attributes_for(cols)
@@ -34,13 +39,26 @@ module CustomAttributeMixin
     end
 
     def self.add_custom_attribute(custom_attribute)
+      return if respond_to?(custom_attribute)
+
       virtual_column(custom_attribute.to_sym, :type => :string, :uses => :custom_attributes)
 
       define_method(custom_attribute.to_sym) do
-        custom_attribute_without_prefix = custom_attribute.sub(CUSTOM_ATTRIBUTES_PREFIX, "")
-        custom_attributes.detect { |x| custom_attribute_without_prefix == x.name }.try(:value)
+        custom_attribute_without_prefix           = custom_attribute.sub(CUSTOM_ATTRIBUTES_PREFIX, "")
+        custom_attribute_without_section, section = custom_attribute_without_prefix.split(SECTION_SEPARATOR)
+
+        where_args = {}
+        where_args[:name]    = custom_attribute_without_section
+        where_args[:section] = section if section
+
+        custom_attributes.find_by(where_args).try(:value)
       end
     end
+  end
+
+  def self.to_human(column)
+    col_name, section = column.gsub(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX, '').split(SECTION_SEPARATOR)
+    _("%{section}: %{custom_key}") % { :custom_key => col_name, :section => section.try(:titleize) || DEFAULT_SECTION_NAME}
   end
 
   def self.select_virtual_custom_attributes(cols)

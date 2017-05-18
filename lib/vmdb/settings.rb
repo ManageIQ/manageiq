@@ -86,10 +86,15 @@ module Vmdb
 
     def self.build(resource)
       build_without_local(resource).tap do |settings|
-        local_sources.each { |s| settings.add_source!(s) } if resource.try(:is_local?)
+        local_sources.each { |s| settings.add_source!(s) } if resource_is_local?(resource)
       end
     end
     private_class_method :build
+
+    def self.resource_is_local?(resource)
+      resource == :my_server || resource.try(:is_local?)
+    end
+    private_class_method :resource_is_local?
 
     def self.parent_settings_without_local(resource)
       build_template.tap do |settings|
@@ -109,21 +114,32 @@ module Vmdb
     end
     private_class_method :build_without_local
 
+    def self.template_roots
+      Vmdb::Plugins.instance.vmdb_plugins.each_with_object([Rails.root.join('config')]) do |plugin, roots|
+        roots << plugin.root.join('config')
+      end
+    end
+    private_class_method :template_roots
+
     def self.template_sources
-      [
-        Rails.root.join("config/settings.yml").to_s,
-        Rails.root.join("config/settings/#{Rails.env}.yml").to_s,
-        Rails.root.join("config/environments/#{Rails.env}.yml").to_s
-      ]
+      template_roots.each_with_object([]) do |root, sources|
+        sources.push(
+          root.join("settings.yml").to_s,
+          root.join("settings/#{Rails.env}.yml").to_s,
+          root.join("environments/#{Rails.env}.yml").to_s
+        )
+      end
     end
     private_class_method :template_sources
 
     def self.local_sources
-      [
-        Rails.root.join("config/settings.local.yml").to_s,
-        Rails.root.join("config/settings/#{Rails.env}.local.yml").to_s,
-        Rails.root.join("config/environments/#{Rails.env}.local.yml").to_s
-      ]
+      template_roots.each_with_object([]) do |root, sources|
+        sources.push(
+          root.join("settings.local.yml").to_s,
+          root.join("settings/#{Rails.env}.local.yml").to_s,
+          root.join("environments/#{Rails.env}.local.yml").to_s
+        )
+      end
     end
     private_class_method :local_sources
 

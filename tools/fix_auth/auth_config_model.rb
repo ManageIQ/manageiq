@@ -41,6 +41,10 @@ module FixAuth
 
         symbol_keys ? hash.deep_symbolize_keys! : hash.deep_stringify_keys!
         hash.to_yaml
+      rescue ArgumentError # undefined class/module
+        puts "potentially bad yaml:"
+        puts old_value
+        raise
       end
     end
   end

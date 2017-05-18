@@ -2,69 +2,44 @@
 # For testing REST API via Rspec requests
 #
 
-require 'bcrypt'
-require 'json'
-
 module Spec
   module Support
     module ApiHelper
-      HEADER_ALIASES = {
-        "auth_token" => "HTTP_X_AUTH_TOKEN",
-        "miq_token"  => "HTTP_X_MIQ_TOKEN",
-        "miq_group"  => "HTTP_X_MIQ_GROUP"
-      }
-
-      DEF_HEADERS = {
-        "Content-Type" => "application/json",
-        "Accept"       => "application/json"
-      }
-
-      def update_headers(headers)
-        HEADER_ALIASES.keys.each do |k|
-          if headers.key?(k)
-            headers[HEADER_ALIASES[k]] = headers[k]
-            headers.delete(k)
-          end
-        end
-        headers.merge!("HTTP_AUTHORIZATION" => @http_authorization) if @http_authorization
-        headers.merge(DEF_HEADERS)
+      def headers
+        @headers ||= {}
       end
 
       def run_get(url, options = {})
         headers = options.delete(:headers) || {}
-        get url, :params => options.stringify_keys, :headers => update_headers(headers)
+        get url, :params => options, :headers => self.headers.merge!(headers)
       end
 
       def run_post(url, body = {}, headers = {})
-        post url, :headers => update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
+        post url, :params => body.to_json, :headers => self.headers.merge!(headers)
       end
 
       def run_put(url, body = {}, headers = {})
-        put url, :headers => update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
+        put url, :params => body.to_json, :headers => self.headers.merge!(headers)
       end
 
       def run_patch(url, body = {}, headers = {})
-        patch url, :headers => update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
+        patch url, :params => body.to_json, :headers => self.headers.merge!(headers)
       end
 
       def run_delete(url, headers = {})
-        delete url, :headers => update_headers(headers)
+        delete url, :headers => self.headers.merge!(headers)
       end
 
       def run_options(url, headers = {})
-        options url, update_headers(headers)
+        options url, self.headers.merge!(headers)
       end
 
       def resources_include_suffix?(resources, key, suffix)
         resources.any? { |r| r.key?(key) && r[key].match("#{suffix}$") }
       end
 
-      def resources_include?(resources, key, value)
-        resources.any? { |r| r[key] == value }
-      end
-
       def api_config(param)
-        @api_config = {
+        @api_config ||= {
           :user       => "api_user_id",
           :password   => "api_user_password",
           :user_name  => "API User",
@@ -87,13 +62,10 @@ module Spec
       end
 
       def init_api_spec_env
-        MiqDatabase.seed
-        Vmdb::Application.config.secret_token = MiqDatabase.first.session_secret_token
         @guid, @server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+        @region = FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
 
         define_user
-
-        ApplicationController.handle_exceptions = true
       end
 
       def entrypoint_url
@@ -104,7 +76,7 @@ module Spec
         "#{api_config(:entrypoint)}/auth"
       end
 
-      (Api::Settings.collections.keys - [:auth]).each do |collection|
+      (Api::ApiConfig.collections.keys - [:auth]).each do |collection|
         define_method("#{collection}_url".to_sym) do |id = nil|
           path = "#{api_config(:entrypoint)}/#{collection}"
           id.nil? ? path : "#{path}/#{id}"
@@ -117,23 +89,27 @@ module Spec
       end
 
       def basic_authorize(user, password)
-        @http_authorization = ActionController::HttpAuthentication::Basic.encode_credentials(user, password)
+        headers["HTTP_AUTHORIZATION"] = ActionController::HttpAuthentication::Basic.encode_credentials(user, password)
       end
 
       def update_user_role(role, *identifiers)
         return if identifiers.blank?
-        product_features = identifiers.collect do |identifier|
+        product_features = identifiers.flatten.collect do |identifier|
           MiqProductFeature.find_or_create_by(:identifier => identifier)
         end
         role.update_attributes!(:miq_product_features => product_features)
       end
 
-      def miq_server_guid
-        @miq_server_guid ||= MiqUUID.new_guid
+      def stub_api_action_role(collection, action_type, method, action, identifier)
+        new_action_role = Config::Options.new.merge!("name" => action.to_s, "identifier" => identifier)
+        updated_method = Api::ApiConfig.collections[collection][action_type][method].collect do |method_action|
+          method_action.name == action.to_s ? new_action_role : method_action
+        end
+        allow(Api::ApiConfig.collections[collection][action_type]).to receive(method) { updated_method }
       end
 
       def action_identifier(type, action, selection = :resource_actions, method = :post)
-        Api::Settings.collections[type][selection][method]
+        Api::ApiConfig.collections[type][selection][method]
           .detect { |spec| spec[:name] == action.to_s }[:identifier]
       end
 
@@ -143,7 +119,7 @@ module Spec
 
       def subcollection_action_identifier(type, subtype, action, method = :post)
         subtype_actions = "#{subtype}_subcollection_actions".to_sym
-        if Api::Settings.collections[type][subtype_actions]
+        if Api::ApiConfig.collections[type][subtype_actions]
           action_identifier(type, action, subtype_actions, method)
         else
           action_identifier(subtype, action, :subcollection_actions, method)
@@ -159,10 +135,6 @@ module Spec
           request[data.kind_of?(Array) ? "resources" : "resource"] = data
         end
         request
-      end
-
-      def fetch_value(value)
-        value.kind_of?(Symbol) && respond_to?(value) ? public_send(value) : value
       end
 
       def declare_actions(*names)
@@ -186,8 +158,7 @@ module Spec
 
       def expect_result_resources_to_include_data(collection, data)
         expect(response.parsed_body).to have_key(collection)
-        fetch_value(data).each do |key, value|
-          value_list = fetch_value(value)
+        data.each do |key, value_list|
           expect(response.parsed_body[collection].size).to eq(value_list.size)
           expect(response.parsed_body[collection].collect { |r| r[key] }).to match_array(value_list)
         end
@@ -195,9 +166,8 @@ module Spec
 
       def expect_result_resources_to_include_hrefs(collection, hrefs)
         expect(response.parsed_body).to have_key(collection)
-        href_list = fetch_value(hrefs)
-        expect(response.parsed_body[collection].size).to eq(href_list.size)
-        href_list.each do |href|
+        expect(response.parsed_body[collection].size).to eq(hrefs.size)
+        hrefs.each do |href|
           expect(resources_include_suffix?(response.parsed_body[collection], "href", href)).to be_truthy
         end
       end
@@ -211,13 +181,11 @@ module Spec
       end
 
       def expect_hash_to_have_only_keys(hash, keys)
-        expect(hash.keys).to match_array(fetch_value(keys))
+        expect(hash.keys).to match_array(keys)
       end
 
       def expect_result_to_match_hash(result, attr_hash)
-        attr_hash = fetch_value(attr_hash)
         attr_hash.each do |key, value|
-          value = fetch_value(value)
           attr_hash[key] = (key == "href" || key.ends_with?("_href")) ? a_string_matching(value) : value
         end
         expect(result).to include(attr_hash)
@@ -225,7 +193,7 @@ module Spec
 
       def expect_results_to_match_hash(collection, result_hash)
         expect(response.parsed_body).to have_key(collection)
-        fetch_value(result_hash).zip(response.parsed_body[collection]) do |expected, actual|
+        result_hash.zip(response.parsed_body[collection]) do |expected, actual|
           expect_result_to_match_hash(actual, expected)
         end
       end
@@ -235,7 +203,7 @@ module Spec
       end
 
       def expect_result_resources_to_include_keys(collection, keys)
-        expect(response.parsed_body).to include(collection => all(a_hash_including(*fetch_value(keys))))
+        expect(response.parsed_body).to include(collection => all(a_hash_including(*keys)))
       end
 
       # Primary result construct methods
@@ -247,14 +215,14 @@ module Spec
 
       def expect_query_result(collection, subcount, count = nil)
         expect(response).to have_http_status(:ok)
-        expect(response.parsed_body).to include("name" => collection.to_s, "subcount" => fetch_value(subcount))
-        expect(response.parsed_body["resources"].size).to eq(fetch_value(subcount))
-        expect(response.parsed_body["count"]).to eq(fetch_value(count)) if count.present?
+        expect(response.parsed_body).to include("name" => collection.to_s, "subcount" => subcount)
+        expect(response.parsed_body["resources"].size).to eq(subcount)
+        expect(response.parsed_body["count"]).to eq(count) if count.present?
       end
 
       def expect_single_resource_query(attr_hash)
         expect(response).to have_http_status(:ok)
-        expect_result_to_match_hash(response.parsed_body, fetch_value(attr_hash))
+        expect_result_to_match_hash(response.parsed_body, attr_hash)
       end
 
       def expect_single_action_result(options = {})
@@ -262,9 +230,10 @@ module Spec
         expected = {}
         expected["success"] = options[:success] if options.key?(:success)
         expected["message"] = a_string_matching(options[:message]) if options[:message]
-        expected["href"] = a_string_matching(fetch_value(options[:href])) if options[:href]
+        expected["href"] = a_string_matching(options[:href]) if options[:href]
         expected.merge!(expected_task_response) if options[:task]
         expect(response.parsed_body).to include(expected)
+        expect(response.parsed_body).not_to include("actions")
       end
 
       def expect_multiple_action_result(count, options = {})
@@ -279,9 +248,8 @@ module Spec
         {"task_id" => anything, "task_href" => anything}
       end
 
-      def expect_tagging_result(tagging_results)
+      def expect_tagging_result(tag_results)
         expect(response).to have_http_status(:ok)
-        tag_results = fetch_value(tagging_results)
         expect(response.parsed_body).to have_key("results")
         results = response.parsed_body["results"]
         expect(results.size).to eq(tag_results.size)
@@ -293,6 +261,26 @@ module Spec
             "tag_name"     => tag_result[:tag_name]
           )
         end
+      end
+
+      def expect_options_results(type, data = {})
+        klass = Api::ApiConfig.collections[type].klass.constantize
+        attributes = select_attributes(klass.attribute_names - klass.virtual_attribute_names)
+        reflections = (klass.reflections.keys | klass.virtual_reflections.keys.collect(&:to_s)).sort
+        subcollections = Array(Api::ApiConfig.collections[type].subcollections).collect(&:to_s).sort
+        expected = {
+          'attributes'         => attributes,
+          'virtual_attributes' => select_attributes(klass.virtual_attribute_names),
+          'relationships'      => reflections,
+          'subcollections'     => subcollections,
+          'data'               => data
+        }
+        expect(response.parsed_body).to eq(expected)
+        expect(response.headers['Access-Control-Allow-Methods']).to include('OPTIONS')
+      end
+
+      def select_attributes(attrlist)
+        attrlist.sort.select { |attr| !Api.encrypted_attribute?(attr) }
       end
     end
   end

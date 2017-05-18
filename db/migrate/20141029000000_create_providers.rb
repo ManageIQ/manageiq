@@ -1,4 +1,4 @@
-class CreateProviders < ActiveRecord::Migration
+class CreateProviders < ActiveRecord::Migration[4.2]
   def up
     create_table :providers do |t|
       t.string     :type

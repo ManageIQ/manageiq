@@ -4,6 +4,7 @@ FactoryGirl.define do
     status "ready"
   end
 
+  factory :miq_generic_worker, :class => "MiqGenericWorker", :parent => :miq_worker
   factory :miq_ui_worker, :class => "MiqUiWorker", :parent => :miq_worker
   factory :miq_websocket_worker, :class => "MiqWebsocketWorker", :parent => :miq_worker
 
@@ -16,4 +17,8 @@ FactoryGirl.define do
   factory :ems_refresh_worker_amazon,
           :parent => :miq_ems_refresh_worker,
           :class  => "ManageIQ::Providers::Amazon::CloudManager::RefreshWorker"
+
+  factory :embedded_ansible_worker,
+          :parent => :miq_worker,
+          :class  => "EmbeddedAnsibleWorker"
 end

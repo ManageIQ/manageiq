@@ -1,8 +1,0 @@
-- if TreeBuilder.get_model_for_prefix(@nodetype) == "Service"
-  -# Showing a specific Service
-  #main_div
-    = render :partial => "svcs_show", :locals => {:controller => "service"}
-- else
-  -# Showing a list of VMs
-  #main_div
-    = render :partial => 'layouts/x_gtl'

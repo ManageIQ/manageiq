@@ -197,16 +197,16 @@ describe Vmdb::Settings do
 
       described_class.save!(miq_server,
         :authentication => {
-          :mode          => "amazon",
-          :amazon_key    => "key",
-          :amazon_secret => password,
-          :user_proxies  => [{:bind_pwd => password}]
+          :mode         => "ldap",
+          :ldaphost     => "localhost",
+          :bind_pwd     => password,
+          :user_proxies => [{:bind_pwd => password}]
         }
       )
 
       miq_server.reload
 
-      change = miq_server.settings_changes.find_by(:key => "/authentication/amazon_secret")
+      change = miq_server.settings_changes.find_by(:key => "/authentication/bind_pwd")
       expect(change.value).to eq encrypted
 
       change = miq_server.settings_changes.find_by(:key => "/authentication/user_proxies")
@@ -370,5 +370,14 @@ describe Vmdb::Settings do
       settings = Vmdb::Settings.for_resource(server)
       expect(settings.api.token_ttl).to eq "5.hour"
     end
+  end
+
+  it "with .local file" do
+    stub_local_settings_file(
+      Rails.root.join("config/settings/test.local.yml"),
+      {"api" => {"token_ttl" => "2.minutes"}}.to_yaml
+    )
+
+    expect(::Settings.api.token_ttl).to eq("2.minutes")
   end
 end

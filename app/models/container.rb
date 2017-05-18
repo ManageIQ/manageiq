@@ -1,11 +1,15 @@
 class Container < ApplicationRecord
+  include SupportsFeatureMixin
   include NewWithTypeStiMixin
+  include ArchivedMixin
+  include_concern 'Purging'
 
   has_one    :container_group, :through => :container_definition
   belongs_to :ext_management_system, :foreign_key => :ems_id
   has_one    :container_node, :through => :container_group
   has_one    :container_replicator, :through => :container_group
   has_one    :container_project, :through => :container_group
+  has_one    :old_container_project, :through => :container_group
   belongs_to :container_definition
   belongs_to :container_image
   has_one    :container_image_registry, :through => :container_image
@@ -15,9 +19,6 @@ class Container < ApplicationRecord
   has_many   :metrics, :as => :resource
   has_many   :metric_rollups, :as => :resource
   has_many   :vim_performance_states, :as => :resource
-
-  # Needed for metrics
-  delegate   :my_zone, :to => :ext_management_system
 
   include EventMixin
   include Metric::CiMixin
@@ -43,6 +44,7 @@ class Container < ApplicationRecord
   end
 
   def disconnect_inv
+    return if ems_id.nil?
     _log.info "Disconnecting Container [#{name}] id [#{id}] from EMS "
     self.deleted_on = Time.now.utc
     self.old_ems_id = self.ems_id

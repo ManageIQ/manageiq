@@ -112,6 +112,18 @@ RSpec.describe 'Orchestration Template API' do
       expect(OrchestrationTemplate.exists?(cfn.id)).to be_falsey
     end
 
+    it 'runs callback before_destroy on the model' do
+      api_basic_authorize collection_action_identifier(:orchestration_templates, :delete)
+
+      cfn = FactoryGirl.create(:orchestration_template_vnfd_with_content)
+      api_basic_authorize collection_action_identifier(:orchestration_templates, :delete)
+      expect_any_instance_of(OrchestrationTemplateVnfd).to receive(:raw_destroy).with(no_args) # callback on the model
+      run_delete(orchestration_templates_url(cfn.id))
+
+      expect(response).to have_http_status(:no_content)
+      expect(OrchestrationTemplate.exists?(cfn.id)).to be_falsey
+    end
+
     it 'supports multiple orchestration_template delete' do
       api_basic_authorize collection_action_identifier(:orchestration_templates, :delete)
 
@@ -121,8 +133,100 @@ RSpec.describe 'Orchestration Template API' do
       run_post(orchestration_templates_url,
                gen_request(:delete, [{'id' => cfn.id}, {'id' => hot.id}]))
 
+      expected = {
+        'results' => a_collection_containing_exactly(
+          a_hash_including('success' => true, 'message' => "orchestration_templates id: #{cfn.id} deleting"),
+          a_hash_including('success' => true, 'message' => "orchestration_templates id: #{hot.id} deleting")
+        )
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
       expect(OrchestrationTemplate.exists?(cfn.id)).to be_falsey
       expect(OrchestrationTemplate.exists?(hot.id)).to be_falsey
+    end
+  end
+
+  context 'orchestration template copy' do
+    it 'forbids orchestration template copy without an appropriate role' do
+      api_basic_authorize
+
+      orchestration_template = FactoryGirl.create(:orchestration_template_cfn)
+      new_content            = "{ 'Description': 'Test content 1' }\n"
+
+      run_post(
+        orchestration_templates_url(orchestration_template.id),
+        gen_request(:copy, :content => new_content)
+      )
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'forbids orchestration template copy with no content specified' do
+      api_basic_authorize collection_action_identifier(:orchestration_templates, :copy)
+
+      orchestration_template = FactoryGirl.create(:orchestration_template_cfn)
+
+      run_post(orchestration_templates_url(orchestration_template.id), gen_request(:copy))
+
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'can copy single orchestration template with a different content' do
+      api_basic_authorize collection_action_identifier(:orchestration_templates, :copy)
+
+      orchestration_template = FactoryGirl.create(:orchestration_template_cfn)
+      new_content            = "{ 'Description': 'Test content 1' }\n"
+
+      expected = {
+        'content'     => new_content,
+        'name'        => orchestration_template.name,
+        'description' => orchestration_template.description,
+        'draft'       => orchestration_template.draft,
+        'orderable'   => orchestration_template.orderable
+      }
+
+      expect do
+        run_post(
+          orchestration_templates_url(orchestration_template.id),
+          gen_request(:copy, :content => new_content)
+        )
+      end.to change(OrchestrationTemplateCfn, :count).by(1)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+      expect(response.parsed_body['id']).to_not equal(orchestration_template.id)
+    end
+
+    it 'can copy multiple orchestration templates with a different content' do
+      api_basic_authorize collection_action_identifier(:orchestration_templates, :copy)
+
+      orchestration_template   = FactoryGirl.create(:orchestration_template_cfn)
+      new_content              = "{ 'Description': 'Test content 1' }\n"
+      orchestration_template_2 = FactoryGirl.create(:orchestration_template_cfn)
+      new_content_2            = "{ 'Description': 'Test content 2' }\n"
+
+      expected = {
+        'results' => a_collection_containing_exactly(
+          a_hash_including('content' => new_content),
+          a_hash_including('content' => new_content_2)
+        )
+      }
+
+      expect do
+        run_post(
+          orchestration_templates_url,
+          gen_request(
+            :copy,
+            [
+              {:id => orchestration_template.id, :content => new_content},
+              {:id => orchestration_template_2.id, :content => new_content_2}
+            ]
+          )
+        )
+      end.to change(OrchestrationTemplateCfn, :count).by(2)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
     end
   end
 end

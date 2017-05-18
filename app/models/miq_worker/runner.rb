@@ -57,12 +57,16 @@ class MiqWorker::Runner
   def worker_initialization
     starting_worker_record
     set_process_title
-
     # Sync the config and roles early since heartbeats and logging require the configuration
     sync_active_roles
     sync_config
 
     set_connection_pool_size
+  end
+
+  # More process specific stuff :-(
+  def set_database_application_name
+    ArApplicationName.name = @worker.database_application_name
   end
 
   def set_connection_pool_size
@@ -95,19 +99,21 @@ class MiqWorker::Runner
   end
 
   def worker_monitor_drb
-    raise _("%{log} No MiqServer found to establishing DRb Connection to") % {:log => log_prefix} if server.nil?
-    drb_uri = server.reload.drb_uri
-    if drb_uri.blank?
-      raise _("%{log} Blank DRb_URI for MiqServer with ID=[%{number}], NAME=[%{name}], PID=[%{pid_number}], GUID=[%{guid_number}]") %
-        {:log         => log_prefix,
-         :number      => server.id,
-         :name        => server.name,
-         :pid_number  => server.pid,
-         :guid_number => server.guid}
+    @worker_monitor_drb ||= begin
+      raise _("%{log} No MiqServer found to establishing DRb Connection to") % {:log => log_prefix} if server.nil?
+      drb_uri = server.reload.drb_uri
+      if drb_uri.blank?
+        raise _("%{log} Blank DRb_URI for MiqServer with ID=[%{number}], NAME=[%{name}], PID=[%{pid_number}], GUID=[%{guid_number}]") %
+          {:log         => log_prefix,
+           :number      => server.id,
+           :name        => server.name,
+           :pid_number  => server.pid,
+           :guid_number => server.guid}
+      end
+      _log.info("#{log_prefix} Initializing DRb Connection to MiqServer with ID=[#{server.id}], NAME=[#{server.name}], PID=[#{server.pid}], GUID=[#{server.guid}] DRb URI=[#{drb_uri}]")
+      require 'drb'
+      DRbObject.new(nil, drb_uri)
     end
-    _log.info("#{log_prefix} Initializing DRb Connection to MiqServer with ID=[#{server.id}], NAME=[#{server.name}], PID=[#{server.pid}], GUID=[#{server.guid}] DRb URI=[#{drb_uri}]")
-    require 'drb'
-    DRbObject.new(nil, drb_uri)
   end
 
   ###############################
@@ -142,6 +148,7 @@ class MiqWorker::Runner
   end
 
   def prepare
+    set_database_application_name
     ObjectSpace.garbage_collect
     started_worker_record
     do_wait_for_worker_monitor if self.class.wait_for_worker_monitor?
@@ -162,7 +169,7 @@ class MiqWorker::Runner
   #
 
   def find_worker_record
-    @worker = self.class.corresponding_model.find_by_guid(@cfg[:guid])
+    @worker = self.class.corresponding_model.find_by(:guid => @cfg[:guid])
     do_exit("Unable to find instance for worker GUID [#{@cfg[:guid]}].", 1) if @worker.nil?
   end
 
@@ -328,6 +335,7 @@ class MiqWorker::Runner
   end
 
   def do_work_loop
+    warn_about_heartbeat_skipping if skip_heartbeat?
     loop do
       begin
         heartbeat
@@ -352,11 +360,14 @@ class MiqWorker::Runner
   end
 
   def heartbeat
+    # Disable heartbeat check.  Useful if a worker is running in isolation
+    # without the oversight of MiqServer::WorkerManagement
+    return if skip_heartbeat?
+
     now = Time.now.utc
     # Heartbeats can be expensive, so do them only when needed
     return if @last_hb.kind_of?(Time) && (@last_hb + worker_settings[:heartbeat_freq]) >= now
-    @worker_monitor_drb ||= worker_monitor_drb
-    messages = @worker_monitor_drb.worker_heartbeat(@worker.pid, @worker.class.name, @worker.queue_name)
+    messages = worker_monitor_drb.worker_heartbeat(@worker.pid, @worker.class.name, @worker.queue_name)
     @last_hb = now
     messages.each { |msg, *args| process_message(msg, *args) }
     do_heartbeat_work
@@ -472,12 +483,30 @@ class MiqWorker::Runner
     _log.info("#{log_prefix} Releasing any broker connections for pid: [#{Process.pid}], ERROR: #{err.message}")
   end
 
-  def set_process_title
-    type   = @worker.type.sub(/^ManageIQ::Providers::/, "")
+  def process_title
+    type   = @worker.abbreviated_class_name
     title  = "#{MiqWorker::PROCESS_TITLE_PREFIX} #{type} id: #{@worker.id}"
     title << ", queue: #{@worker.queue_name}" if @worker.queue_name
     title << ", uri: #{@worker.uri}" if @worker.uri
+    title
+  end
 
-    Process.setproctitle(title)
+  def set_process_title
+    Process.setproctitle(process_title)
+  end
+
+  private
+
+  def skip_heartbeat?
+    ENV["DISABLE_MIQ_WORKER_HEARTBEAT"]
+  end
+
+  def warn_about_heartbeat_skipping
+    puts "**************************************************"
+    puts "WARNING:  SKIPPING HEARTBEATING WITH THIS WORKER!"
+    puts "**************************************************"
+    puts ""
+    puts "Remove the `DISABLE_MIQ_WORKER_HEARTBEAT` ENV variable"
+    puts "to reenable heartbeating normally."
   end
 end

@@ -19,6 +19,11 @@ describe VirtualFields do
         create_table :test_classes do |t|
           t.integer :col1
         end
+
+        create_table :test_other_classes do |t|
+          t.integer :ocol1
+          t.string  :ostr
+        end
       end
 
       require 'ostruct'
@@ -492,6 +497,16 @@ describe VirtualFields do
 
         expect(TestClass.attribute_supported_by_sql?(:parent_col1)).to be_truthy
       end
+
+      it "does not support bogus columns" do
+        expect(TestClass.attribute_supported_by_sql?(:bogus_junk)).to be_falsey
+      end
+
+      it "supports on an aaar class" do
+        c = Class.new(ActsAsArModel)
+
+        expect(c.attribute_supported_by_sql?(:col)).to eq(false)
+      end
     end
 
     describe ".virtual_delegate" do
@@ -549,8 +564,50 @@ describe VirtualFields do
         it "delegates to child (sql)" do
           TestClass.virtual_delegate :col1, :prefix => 'child', :to => :ref2
           TestClass.create(:id => 2, :ref2 => child)
-          tcs = TestClass.all.select(:id, :col1, TestClass.arel_attribute(:child_col1).as("x"))
-          expect(tcs.map(&:x)).to match_array([nil, 2])
+          tcs = TestClass.all.select(:id, :col1, :child_col1).to_a
+          expect { expect(tcs.map(&:child_col1)).to match_array([nil, 2]) }.to match_query_limit_of(0)
+        end
+
+        # this may fail in the future as our way of building queries may change
+        # just want to make sure it changed due to intentional changes
+        it "uses table alias for subquery" do
+          TestClass.virtual_delegate :col1, :prefix => 'child', :to => :ref2
+          sql = TestClass.all.select(:id, :col1, :child_col1).to_sql
+          expect(sql).to match(/"test_classes_[^"]*"."col1"/i)
+        end
+      end
+
+      context "with relation in foreign table" do
+        before(:each) do
+          class TestOtherClass < ActiveRecord::Base
+            def self.connection
+              TestClassBase.connection
+            end
+            belongs_to :oref1, :class_name => 'TestClass', :foreign_key => :ocol1
+
+            include VirtualFields
+          end
+        end
+
+        after(:each) do
+          TestOtherClass.remove_connection
+          Object.send(:remove_const, :TestOtherClass)
+        end
+
+        it "delegates to another table" do
+          TestOtherClass.virtual_delegate :col1, :to => :oref1
+          TestOtherClass.create(:id => 4, :oref1 => TestClass.create(:id => 3))
+          TestOtherClass.create(:id => 3, :oref1 => TestClass.create(:id => 2, :col1 => 99))
+          tcs = TestOtherClass.all.select(:id, :ocol1, TestOtherClass.arel_attribute(:col1).as("x"))
+          expect(tcs.map(&:x)).to match_array([nil, 99])
+        end
+
+        # this may fail in the future as our way of building queries may change
+        # just want to make sure it changed due to intentional changes
+        it "delegates to another table without alias" do
+          TestOtherClass.virtual_delegate :col1, :to => :oref1
+          sql = TestOtherClass.all.select(:id, :ocol1, TestOtherClass.arel_attribute(:col1).as("x")).to_sql
+          expect(sql).to match(/"test_classes"."col1"/i)
         end
       end
     end
@@ -590,6 +647,57 @@ describe VirtualFields do
         TestClass.virtual_delegate :col1, :prefix => 'parent', :to => :ref1
 
         expect(TestClass.attribute_supported_by_sql?(:parent_col1)).to be_truthy
+      end
+    end
+
+    describe "#select" do
+      it "supports virtual attributes" do
+        class TestClass
+          virtual_attribute :col2, :integer, :arel => (-> (t) { t.grouping(arel_attribute(:col1)) })
+          def col2
+            if has_attribute?("col2")
+              col2
+            else
+              # typically we'd return col1
+              # but we're testing that virtual columns are working
+              # col1
+              raise "NOPE"
+            end
+          end
+        end
+
+        TestClass.create(:id => 2, :col1 => 20)
+        expect(TestClass.select(:col2).first[:col2]).to eq(20)
+      end
+
+      it "supports virtual attributes with as" do
+        class TestClass
+          virtual_attribute :col2, :integer, :arel => (-> (t) { t.grouping(arel_attribute(:col1)).as("col2") })
+          def col2
+            if has_attribute?("col2")
+              col2
+            else
+              # typically we'd return col1
+              # but we're testing that virtual columns are working
+              # col1
+              raise "NOPE"
+            end
+          end
+        end
+
+        TestClass.create(:id => 2, :col1 => 20)
+        expect(TestClass.select(:col2).first[:col2]).to eq(20)
+      end
+
+      it "supports #includes with #references" do
+        vm           = FactoryGirl.create :vm_vmware
+        table        = Vm.arel_table
+        dash         = Arel::Nodes::SqlLiteral.new("'-'")
+        name_dash_id = Arel::Nodes::NamedFunction.new("CONCAT", [table[:name], dash, table[:id]])
+                                                 .as("name_dash_id")
+        result       = Vm.select(name_dash_id).includes(:tags => {}).references(:tags => {})
+
+        expect(result.first.attributes["name_dash_id"]).to eq("#{vm.name}-#{vm.id}")
       end
     end
 
@@ -636,6 +744,23 @@ describe VirtualFields do
         TestClass.virtual_delegate :col1, :prefix => 'parent', :to => :ref1, :allow_nil => true, :default => "def"
         tc = TestClass.new(:id => 2)
         expect(tc.parent_col1).to eq("def")
+      end
+    end
+
+    describe "#sum" do
+      it "supports virtual attributes" do
+        class TestClass
+          virtual_attribute :col2, :integer, :arel => (-> (t) { t.grouping(arel_attribute(:col1)) })
+          def col2
+            col1
+          end
+        end
+
+        TestClass.create(:id => 1, :col1 => nil)
+        TestClass.create(:id => 2, :col1 => 20)
+        TestClass.create(:id => 3, :col1 => 30)
+
+        expect(TestClass.sum(:col2)).to eq(50)
       end
     end
   end

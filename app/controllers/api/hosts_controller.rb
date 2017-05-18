@@ -1,8 +1,8 @@
 module Api
   class HostsController < BaseController
-    CREDENTIALS_ATTR = "credentials"
-    AUTH_TYPE_ATTR = "auth_type"
-    DEFAULT_AUTH_TYPE = "default"
+    CREDENTIALS_ATTR = "credentials".freeze
+    AUTH_TYPE_ATTR = "auth_type".freeze
+    DEFAULT_AUTH_TYPE = "default".freeze
 
     include Subcollections::Policies
     include Subcollections::PolicyProfiles
@@ -19,6 +19,10 @@ module Api
         end
         host.update_authentication(all_credentials) if all_credentials.present?
       end
+    end
+
+    def options
+      render_options(:hosts, :node_types => Host.node_types)
     end
   end
 end

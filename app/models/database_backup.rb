@@ -31,7 +31,7 @@ class DatabaseBackup < ApplicationRecord
 
     options[:userid] ||= "system"
 
-    depot = FileDepot.find_by_id(options[:file_depot_id])
+    depot = FileDepot.find_by(:id => options[:file_depot_id])
     _backup(:uri => depot.uri, :username => depot.authentication_userid, :password => depot.authentication_password, :remote_file_name => backup_file_name)
 
     if @sch && @sch.adhoc == true

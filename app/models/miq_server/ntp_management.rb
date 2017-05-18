@@ -9,7 +9,7 @@ module MiqServer::NtpManagement
     if server_ntp_settings_blank?(ntp)
       zone.ntp_settings
     else
-      ntp.merge!(:source => :server)
+      ntp[:source] = :server
       ntp
     end
   end
@@ -26,7 +26,8 @@ module MiqServer::NtpManagement
   # Called when zone ntp settings changed... run by the appropriate server
   # Also, called in atStartup of miq_server and on a configuration change for the server
   def ntp_reload(ntp_settings = server_ntp_settings)
-    return unless MiqEnvironment::Command.is_appliance? # matches ntp_reload_queue's guard clause
+    # matches ntp_reload_queue's guard clause
+    return if !MiqEnvironment::Command.is_appliance? || MiqEnvironment::Command.is_container?
 
     if @ntp_settings && @ntp_settings == ntp_settings
       _log.info("Skipping reload of ntp settings since they are unchanged")

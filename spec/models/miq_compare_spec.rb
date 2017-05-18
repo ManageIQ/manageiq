@@ -6,7 +6,7 @@ describe MiqCompare do
 
       MiqReport.seed_report("vms", "compare")
 
-      report = MiqReport.find_by_name("VMs: Compare Template")
+      report = MiqReport.find_by(:name => "VMs: Compare Template")
       compare = MiqCompare.new({:ids => [vm1.id, vm2.id]}, report)
 
       dumped = loaded = nil
@@ -21,7 +21,7 @@ describe MiqCompare do
       MiqRegion.seed
       MiqReport.seed_report("hosts", "compare")
 
-      report = MiqReport.find_by_name("Hosts: Compare Template")
+      report = MiqReport.find_by(:name => "Hosts: Compare Template")
       compare = MiqCompare.new({:ids => [host1.id, host2.id]}, report)
 
       dumped = loaded = nil

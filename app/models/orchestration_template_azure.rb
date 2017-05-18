@@ -16,7 +16,8 @@ class OrchestrationTemplateAzure < OrchestrationTemplate
         :label         => key.titleize,
         :data_type     => val['type'],
         :default_value => val['defaultValue'],
-        :hidden        => val['type'] == 'securestring'
+        :hidden        => val['type'] == 'securestring',
+        :required      => true
       )
 
       add_metadata(parameter, val['metadata'])
@@ -24,6 +25,10 @@ class OrchestrationTemplateAzure < OrchestrationTemplate
 
       parameter
     end
+  end
+
+  def deployment_options(_manager_class = nil)
+    super << resource_group_opt << new_resource_group_opt << mode_opt
   end
 
   def self.eligible_manager_types
@@ -38,6 +43,46 @@ class OrchestrationTemplateAzure < OrchestrationTemplate
   end
 
   private
+
+  def mode_opt
+    description = "Select deployment mode.\n"\
+                  "WARNING: Complete mode will delete all resources from "\
+                  "the group that are not in the template."
+    choices = {'Incremental' => 'Incremental (Default)', 'Complete' => 'Complete (Delete other resources in the group)'}
+    OrchestrationTemplate::OrchestrationParameter.new(
+      :name        => "deploy_mode",
+      :label       => "Mode",
+      :data_type   => "string",
+      :description => description,
+      :constraints => [OrchestrationTemplate::OrchestrationParameterAllowed.new(:allowed_values => choices)]
+    )
+  end
+
+  def resource_group_opt
+    OrchestrationTemplate::OrchestrationParameter.new(
+      :name        => "resource_group",
+      :label       => "Existing Resource Group",
+      :data_type   => "string",
+      :description => "Select an existing resource group for deployment",
+      :constraints => [
+        OrchestrationTemplate::OrchestrationParameterAllowedDynamic.new(
+          :fqname => "/Cloud/Orchestration/Operations/Methods/Available_Resource_Groups"
+        )
+      ]
+    )
+  end
+
+  def new_resource_group_opt
+    OrchestrationTemplate::OrchestrationParameter.new(
+      :name        => "new_resource_group",
+      :label       => "(or) New Resource Group",
+      :data_type   => "string",
+      :description => "Create a new resource group upon deployment",
+      :constraints => [
+        OrchestrationTemplate::OrchestrationParameterPattern.new(:pattern => '^[A-Za-z][A-Za-z0-9\-_]*$')
+      ]
+    )
+  end
 
   def add_metadata(parameter, metadata)
     return unless metadata

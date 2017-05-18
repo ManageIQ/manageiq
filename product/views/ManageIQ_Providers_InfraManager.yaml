@@ -25,6 +25,8 @@ cols:
 - emstype_description
 - port
 - total_hosts
+- total_vcpus
+- total_memory
 - total_storages
 - total_vms
 - total_miq_templates
@@ -38,7 +40,6 @@ include:
 
 # Included tables and columns for query performance
 include_for_find:
-  :zone: {}
   :tags: {}
 
 # Order of columns (from all tables)
@@ -49,10 +50,23 @@ col_order:
 - emstype_description
 - zone.name
 - total_hosts
+- total_vcpus
+- total_memory
 - total_storages
 - total_vms
 - total_miq_templates
 - region_description
+
+# Format of columns
+col_formats:
+-
+-
+-
+-
+-
+-
+-
+- :megabytes_human
 
 # Column titles, in order
 headers:
@@ -62,6 +76,8 @@ headers:
 - Type
 - EVM Zone
 - Hosts
+- VCores
+- Memory
 - Datastores
 - VMs
 - Templates

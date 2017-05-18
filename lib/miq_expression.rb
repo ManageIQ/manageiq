@@ -3,337 +3,14 @@ class MiqExpression
   include Vmdb::Logging
   attr_accessor :exp, :context_type, :preprocess_options
 
-  BASE_TABLES = %w(
-    AuditEvent
-    AvailabilityZone
-    BottleneckEvent
-    ChargebackVm
-    ChargebackContainerProject
-    CloudResourceQuota
-    CloudTenant
-    CloudVolume
-    Compliance
-    ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem
-    ManageIQ::Providers::ConfigurationManager
-    Container
-    ContainerGroup
-    ContainerImage
-    ContainerImageRegistry
-    ContainerNode
-    ContainerProject
-    ContainerReplicator
-    ContainerRoute
-    ContainerService
-    ManageIQ::Providers::CloudManager
-    EmsCluster
-    EmsClusterPerformance
-    EmsEvent
-    ManageIQ::Providers::InfraManager
-    ExtManagementSystem
-    ExtManagementSystemPerformance
-    Flavor
-    Host
-    HostAggregate
-    HostPerformance
-    MiqGroup
-    MiqRegion
-    MiqRequest
-    MiqServer
-    MiqTemplate
-    MiqWorker
-    OntapFileShare
-    OntapLogicalDisk
-    OntapStorageSystem
-    OntapStorageVolume
-    OntapVolumeMetricsRollup
-    OrchestrationStack
-    OrchestrationTemplate
-    PolicyEvent
-    ResourcePool
-    SecurityGroup
-    Service
-    ServiceTemplate
-    Storage
-    StorageFile
-    StoragePerformance
-    Switch
-    ManageIQ::Providers::CloudManager::Template
-    ManageIQ::Providers::InfraManager::Template
-    Tenant
-    User
-    VimPerformanceTrend
-    Vm
-    ManageIQ::Providers::CloudManager::Vm
-    ManageIQ::Providers::InfraManager::Vm
-    VmPerformance
-    Zone
-  )
-
-  INCLUDE_TABLES = %w(
-    advanced_settings
-    audit_events
-    availability_zones
-    cloud_networks
-    cloud_resource_quotas
-    cloud_tenants
-    compliances
-    compliance_details
-    computer_systems
-    configuration_profiles
-    configuration_managers
-    configured_systems
-    containers
-    container_groups
-    container_projects
-    container_images
-    container_nodes
-    customization_scripts
-    customization_script_media
-    customization_script_ptables
-    disks
-    ems_events
-    ems_clusters
-    ems_custom_attributes
-    evm_owners
-    event_logs
-    ext_management_systems
-    filesystem_drivers
-    filesystems
-    firewall_rules
-    flavors
-    groups
-    guest_applications
-    guest_devices
-    hardwares
-    hosts
-    host_aggregates
-    host_services
-    kernel_drivers
-    key_pairs
-    lans
-    last_compliances
-    linux_initprocesses
-    miq_actions
-    miq_approval_stamps
-    miq_custom_attributes
-    miq_policy_sets
-    miq_provisions
-    miq_regions
-    miq_requests
-    miq_scsi_luns
-    miq_servers
-    miq_workers
-    ontap_concrete_extents
-    ontap_file_shares
-    ontap_logical_disks
-    ontap_plex_extents
-    ontap_raid_group_extents
-    ontap_storage_systems
-    ontap_storage_volumes
-    openscap_results
-    openscap_rule_results
-    orchestration_stack_outputs
-    orchestration_stack_parameters
-    orchestration_stack_resources
-    orchestration_templates
-    operating_system_flavors
-    partitions
-    ports
-    processes
-    miq_provision_templates
-    miq_provision_vms
-    miq_templates
-    networks
-    nics
-    operating_systems
-    patches
-    registry_items
-    resource_pools
-    security_groups
-    service_templates
-    services
-    snapshots
-    stacks
-    storages
-    storage_adapters
-    storage_files
-    switches
-    tenant_quotas
-    users
-    vms
-    volumes
-    win32_services
-    zones
-    storage_systems
-    file_systems
-    hosted_file_shares
-    file_shares
-    logical_disks
-    storage_volumes
-    base_storage_extents
-    top_storage_extents
-  )
-
-  EXCLUDE_COLUMNS = %w(
-    ^.*_id$
-    ^id$
-    ^min_derived_storage.*$
-    ^max_derived_storage.*$
-    assoc_ids
-    capture_interval
-    filters
-    icon
-
-    intervals_in_rollup
-
-    max_cpu_ready_delta_summation
-    max_cpu_system_delta_summation
-    max_cpu_used_delta_summation
-    max_cpu_wait_delta_summation
-    max_derived_cpu_available
-    max_derived_cpu_reserved
-    max_derived_memory_available
-    max_derived_memory_reserved
-
-    memory_usage
-
-    min_cpu_ready_delta_summation
-    min_cpu_system_delta_summation
-    min_cpu_used_delta_summation
-    min_cpu_wait_delta_summation
-    min_derived_memory_available
-    min_derived_memory_reserved
-    min_derived_cpu_available
-    min_derived_cpu_reserved
-
-    min_max
-
-    options
-    password
-    policy_settings
-    ^reserved$
-    resource_id
-    settings
-    tag_names
-    v_qualified_desc
-
-    disk_io_cost
-    disk_io_metric
-    net_io_cost
-    net_io_metric
-    fixed_2_cost
-  )
-
-  EXCLUDE_EXCEPTIONS = %w(
-    capacity_profile_1_memory_per_vm_with_min_max
-    capacity_profile_1_vcpu_per_vm_with_min_max
-    capacity_profile_2_memory_per_vm_with_min_max
-    capacity_profile_2_vcpu_per_vm_with_min_max
-    chain_id
-    guid
-    openscap_id
-  )
-
-  TAG_CLASSES = {
-    'ManageIQ::Providers::CloudManager'           => 'ext_management_system',
-    'EmsCluster'                                  => 'ems_cluster',
-    'ManageIQ::Providers::InfraManager'           => 'ext_management_system',
-    'ExtManagementSystem'                         => 'ext_management_system',
-    'Host'                                        => 'host',
-    'MiqGroup'                                    => 'miq_group',
-    'MiqTemplate'                                 => 'miq_template',
-    'ResourcePool'                                => 'resource_pool',
-    'Service'                                     => 'service',
-    'Storage'                                     => 'storage',
-    'ManageIQ::Providers::CloudManager::Template' => 'miq_template',
-    'ManageIQ::Providers::InfraManager::Template' => 'miq_template',
-    'User'                                        => 'user',
-    'Vm'                                          => 'vm',
-    'VmOrTemplate'                                => 'vm',
-    'ManageIQ::Providers::CloudManager::Vm'       => 'vm',
-    'ManageIQ::Providers::InfraManager::Vm'       => 'vm',
-    'ContainerProject'                            => 'container_project'
-  }
-  EXCLUDE_FROM_RELATS = {
-    "ManageIQ::Providers::CloudManager" => ["hosts", "ems_clusters", "resource_pools"]
-  }
-
-  FORMAT_SUB_TYPES = {
-    :boolean     => {
-      :short_name => _("Boolean"),
-      :title      => _("Enter true or false")
-    },
-    :bytes       => {
-      :short_name => _("Bytes"),
-      :title      => _("Enter the number of Bytes"),
-      :units      => [
-        [_("Bytes"), :bytes],
-        [_("KB"), :kilobytes],
-        [_("MB"), :megabytes],
-        [_("GB"), :gigabytes],
-        [_("TB"), :terabytes]
-      ]
-    },
-    :date        => {
-      :short_name => _("Date"),
-      :title      => _("Click to Choose a Date")
-    },
-    :datetime    => {
-      :short_name => _("Date / Time"),
-      :title      => _("Click to Choose a Date / Time")
-    },
-    :float       => {
-      :short_name => _("Number"),
-      :title      => _("Enter a Number (like 12.56)")
-    },
-    :gigabytes   => {
-      :short_name => _("Gigabytes"),
-      :title      => _("Enter the number of Gigabytes")
-    },
-    :integer     => {
-      :short_name => _("Integer"),
-      :title      => _("Enter an Integer")
-    },
-    :kbps        => {
-      :short_name => _("KBps"),
-      :title      => _("Enter the Kilobytes per second")
-    },
-    :kilobytes   => {
-      :short_name => _("Kilobytes"),
-      :title      => _("Enter the number of Kilobytes")
-    },
-    :megabytes   => {
-      :short_name => _("Megabytes"),
-      :title      => _("Enter the number of Megabytes")
-    },
-    :mhz         => {
-      :short_name => _("Mhz"),
-      :title      => _("Enter the number of Megahertz")
-    },
-    :numeric_set => {
-      :short_name => _("Number List"),
-      :title      => _("Enter a list of numbers separated by commas")
-    },
-    :percent     => {
-      :short_name => _("Percent"),
-      :title      => _("Enter a Percent (like 12.5)"),
-    },
-    :regex       => {
-      :short_name => _("Regular Expression"),
-      :title      => _("Enter a Regular Expression")
-    },
-    :string      => {
-      :short_name => _("Text String"),
-      :title      => _("Enter a Text String")
-    },
-    :string_set  => {
-      :short_name => _("String List"),
-      :title      => _("Enter a list of text strings separated by commas")
-    }
-  }
-  FORMAT_SUB_TYPES[:fixnum] = FORMAT_SUB_TYPES[:decimal] = FORMAT_SUB_TYPES[:integer]
-  FORMAT_SUB_TYPES[:mhz_avg] = FORMAT_SUB_TYPES[:mhz]
-  FORMAT_SUB_TYPES[:text] = FORMAT_SUB_TYPES[:string]
+  config = YAML.load(ERB.new(File.read(Rails.root.join("config", "miq_expression.yml"))).result)
+  BASE_TABLES = config[:base_tables]
+  INCLUDE_TABLES = config[:include_tables]
+  EXCLUDE_COLUMNS = config[:exclude_columns]
+  EXCLUDE_EXCEPTIONS = config[:exclude_exceptions]
+  TAG_CLASSES = config[:tag_classes]
+  EXCLUDE_FROM_RELATS = config[:exclude_from_relats]
+  FORMAT_SUB_TYPES = config[:format_sub_types]
   FORMAT_BYTE_SUFFIXES = FORMAT_SUB_TYPES[:bytes][:units].inject({}) { |h, (v, k)| h[k] = v; h }
   BYTE_FORMAT_WHITELIST = Hash[FORMAT_BYTE_SUFFIXES.keys.collect(&:to_s).zip(FORMAT_BYTE_SUFFIXES.keys)]
 
@@ -344,7 +21,7 @@ class MiqExpression
 
   def self.proto?
     return @proto if defined?(@proto)
-    @proto = VMDB::Config.new("vmdb").config.fetch_path(:product, :proto)
+    @proto = ::Settings.product.proto
   end
 
   def self.to_human(exp)
@@ -444,35 +121,36 @@ class MiqExpression
     return exp unless exp.kind_of?(Hash)
 
     operator = exp.keys.first
-    case operator.downcase
+    op_args = exp[operator]
+    col_name = op_args["field"] if op_args.kind_of?(Hash)
+    operator = operator.downcase
+
+    case operator
     when "equal", "=", "<", ">", ">=", "<=", "!="
-      col_type = get_col_type(exp[operator]["field"]) if exp[operator]["field"]
-      operands = operands2rubyvalue(operator, exp[operator], context_type)
+      operands = operands2rubyvalue(operator, op_args, context_type)
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
     when "before"
-      col_type = get_col_type(exp[operator]["field"]) if exp[operator]["field"]
-      col_name = exp[operator]["field"]
+      col_type = get_col_type(col_name) if col_name
       col_ruby, = operands2rubyvalue(operator, {"field" => col_name}, context_type)
-      val = exp[operator]["value"]
+      val = op_args["value"]
       clause = ruby_for_date_compare(col_ruby, col_type, tz, "<", val)
     when "after"
-      col_type = get_col_type(exp[operator]["field"]) if exp[operator]["field"]
-      col_name = exp[operator]["field"]
+      col_type = get_col_type(col_name) if col_name
       col_ruby, = operands2rubyvalue(operator, {"field" => col_name}, context_type)
-      val = exp[operator]["value"]
+      val = op_args["value"]
       clause = ruby_for_date_compare(col_ruby, col_type, tz, nil, nil, ">", val)
     when "includes all"
-      operands = operands2rubyvalue(operator, exp[operator], context_type)
+      operands = operands2rubyvalue(operator, op_args, context_type)
       clause = "(#{operands[0]} & #{operands[1]}) == #{operands[1]}"
     when "includes any"
-      operands = operands2rubyvalue(operator, exp[operator], context_type)
+      operands = operands2rubyvalue(operator, op_args, context_type)
       clause = "(#{operands[1]} - #{operands[0]}) != #{operands[1]}"
     when "includes only", "limited to"
-      operands = operands2rubyvalue(operator, exp[operator], context_type)
+      operands = operands2rubyvalue(operator, op_args, context_type)
       clause = "(#{operands[0]} - #{operands[1]}) == []"
     when "like", "not like", "starts with", "ends with", "includes"
-      operands = operands2rubyvalue(operator, exp[operator], context_type)
-      case operator.downcase
+      operands = operands2rubyvalue(operator, op_args, context_type)
+      case operator
       when "starts with"
         operands[1] = "/^" + re_escape(operands[1].to_s) + "/"
       when "ends with"
@@ -481,57 +159,87 @@ class MiqExpression
         operands[1] = "/" + re_escape(operands[1].to_s) + "/"
       end
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
-      clause = "!(" + clause + ")" if operator.downcase == "not like"
+      clause = "!(" + clause + ")" if operator == "not like"
     when "regular expression matches", "regular expression does not match"
-      operands = operands2rubyvalue(operator, exp[operator], context_type)
-      operands[1] = "/" + operands[1].to_s + "/" unless operands[1].starts_with?("/") && (operands[1].ends_with?("/") || operands[1][-2..-2] == "/")
+      operands = operands2rubyvalue(operator, op_args, context_type)
+
+      # If it looks like a regular expression, sanitize from forward
+      # slashes and interpolation
+      #
+      # Regular expressions with a single option are also supported,
+      # e.g. "/abc/i"
+      #
+      # Otherwise sanitize the whole string and add the delimiters
+      #
+      # TODO: support regexes with more than one option
+      if operands[1].starts_with?("/") && operands[1].ends_with?("/")
+        operands[1][1..-2] = sanitize_regular_expression(operands[1][1..-2])
+      elsif operands[1].starts_with?("/") && operands[1][-2] == "/"
+        operands[1][1..-3] = sanitize_regular_expression(operands[1][1..-3])
+      else
+        operands[1] = "/" + sanitize_regular_expression(operands[1].to_s) + "/"
+      end
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
     when "and", "or"
-      clause = "(" + exp[operator].collect { |operand| _to_ruby(operand, context_type, tz) }.join(" #{normalize_ruby_operator(operator)} ") + ")"
+      clause = "(" + op_args.collect { |operand| _to_ruby(operand, context_type, tz) }.join(" #{normalize_ruby_operator(operator)} ") + ")"
     when "not", "!"
-      clause = normalize_ruby_operator(operator) + "(" + _to_ruby(exp[operator], context_type, tz) + ")"
+      clause = normalize_ruby_operator(operator) + "(" + _to_ruby(op_args, context_type, tz) + ")"
     when "is null", "is not null", "is empty", "is not empty"
-      operands = operands2rubyvalue(operator, exp[operator], context_type)
+      operands = operands2rubyvalue(operator, op_args, context_type)
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
     when "contains"
-      operands = operands2rubyvalue(operator, exp[operator], context_type)
+      op_args["tag"] ||= col_name
+      operands = if context_type != "hash"
+                   ref, val = value2tag(preprocess_managed_tag(op_args["tag"]), op_args["value"])
+                   ["<exist ref=#{ref}>#{val}</exist>"]
+                 elsif context_type == "hash"
+                   # This is only for supporting reporting "display filters"
+                   # In the report object the tag value is actually the description and not the raw tag name.
+                   # So we have to trick it by replacing the value with the description.
+                   description = MiqExpression.get_entry_details(op_args["tag"]).inject("") do |s, t|
+                     break(t.first) if t.last == op_args["value"]
+                     s
+                   end
+                   val = op_args["tag"].split(".").last.split("-").join(".")
+                   fld = "<value type=string>#{val}</value>"
+                   [fld, quote(description, "string")]
+                 end
       clause = operands.join(" #{normalize_operator(operator)} ")
     when "find"
       # FIND Vm.users-name = 'Administrator' CHECKALL Vm.users-enabled = 1
       check = nil
-      check = "checkall" if exp[operator].include?("checkall")
-      check = "checkany" if exp[operator].include?("checkany")
-      if exp[operator].include?("checkcount")
+      check = "checkall" if op_args.include?("checkall")
+      check = "checkany" if op_args.include?("checkany")
+      if op_args.include?("checkcount")
         check = "checkcount"
-        op = exp[operator][check].keys.first
-        exp[operator][check][op]["field"] = "<count>"
+        op = op_args[check].keys.first
+        op_args[check][op]["field"] = "<count>"
       end
       raise _("expression malformed,  must contain one of 'checkall', 'checkany', 'checkcount'") unless check
       check =~ /^check(.*)$/; mode = $1.downcase
-      clause = "<find><search>" + _to_ruby(exp[operator]["search"], context_type, tz) + "</search><check mode=#{mode}>" + _to_ruby(exp[operator][check], context_type, tz) + "</check></find>"
+      clause = "<find><search>" + _to_ruby(op_args["search"], context_type, tz) + "</search>" +
+               "<check mode=#{mode}>" + _to_ruby(op_args[check], context_type, tz) + "</check></find>"
     when "key exists"
-      clause = operands2rubyvalue(operator, exp[operator], context_type)
+      clause = operands2rubyvalue(operator, op_args, context_type)
     when "value exists"
-      clause = operands2rubyvalue(operator, exp[operator], context_type)
+      clause = operands2rubyvalue(operator, op_args, context_type)
     when "is"
-      col_name = exp[operator]["field"]
       col_ruby, dummy = operands2rubyvalue(operator, {"field" => col_name}, context_type)
       col_type = get_col_type(col_name)
-      value = exp[operator]["value"]
+      value = op_args["value"]
       clause = if col_type == :date && !RelativeDatetime.relative?(value)
                  ruby_for_date_compare(col_ruby, col_type, tz, "==", value)
                else
                  ruby_for_date_compare(col_ruby, col_type, tz, ">=", value, "<=", value)
                end
     when "from"
-      col_name = exp[operator]["field"]
       col_ruby, dummy = operands2rubyvalue(operator, {"field" => col_name}, context_type)
       col_type = get_col_type(col_name)
 
-      start_val, end_val = exp[operator]["value"]
+      start_val, end_val = op_args["value"]
       clause = ruby_for_date_compare(col_ruby, col_type, tz, ">=", start_val, "<=", end_val)
     else
-      raise _("operator '%{operator_name}' is not supported") % {:operator_name => operator}
+      raise _("operator '%{operator_name}' is not supported") % {:operator_name => operator.upcase}
     end
 
     # puts "clause: #{clause}"
@@ -611,8 +319,12 @@ class MiqExpression
       # => TODO: support count of child relationship
       return false if exp[operator].key?("count")
 
-      return field_in_sql?(exp[operator]["field"])
+      return field_in_sql?(exp[operator]["field"]) && value_in_sql?(exp[operator]["value"])
     end
+  end
+
+  def value_in_sql?(value)
+    !Field.is_field?(value) || Field.parse(value).attribute_supported_by_sql?
   end
 
   def field_in_sql?(field)
@@ -631,6 +343,7 @@ class MiqExpression
   end
 
   def attribute_supported_by_sql?(field)
+    return false unless col_details[field]
     col_details[field][:sql_support]
   end
 
@@ -671,11 +384,6 @@ class MiqExpression
     end
   end
 
-  def self.merge_includes(*incl_list)
-    return nil if incl_list.blank?
-    incl_list.compact.each_with_object({}) { |i, result| result.deep_merge!(i) }
-  end
-
   def self.get_cols_from_expression(exp, options = {})
     result = {}
     if exp.kind_of?(Hash)
@@ -713,11 +421,6 @@ class MiqExpression
       ref = model.reflection_with_virtual(assoc)
       result[:virtual_reflection] = true if model.virtual_reflection?(assoc)
 
-      unless result[:virtual_reflection]
-        cur_incl[assoc] ||= {}
-        cur_incl = cur_incl[assoc]
-      end
-
       unless ref
         result[:virtual_reflection] = true
         result[:sql_support] = false
@@ -725,13 +428,19 @@ class MiqExpression
         return result
       end
 
+      unless result[:virtual_reflection]
+        cur_incl[assoc] ||= {}
+        cur_incl = cur_incl[assoc]
+      end
+
       model = ref.klass
     end
     if col
-      result[:data_type] = col_type(model, col)
-      result[:format_sub_type] = MiqReport::FORMAT_DEFAULTS_AND_OVERRIDES[:sub_types_by_column][col.to_sym] || result[:data_type]
+      f = Field.new(model, [], col)
+      result[:data_type] = f.column_type
+      result[:format_sub_type] = f.sub_type
       result[:virtual_column] = model.virtual_attribute?(col.to_s)
-      result[:sql_support] = model.attribute_supported_by_sql?(col.to_s)
+      result[:sql_support] = !result[:virtual_reflection] && model.attribute_supported_by_sql?(col.to_s)
       result[:excluded_by_preprocess_options] = self.exclude_col_by_preprocess_options?(col, options)
     end
     result
@@ -863,7 +572,7 @@ class MiqExpression
       dict_col = model.nil? ? col : [model, col].join(".")
       column_human = if col
                        if col.starts_with?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
-                         col.gsub(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX, "")
+                         CustomAttributeMixin.to_human(col)
                        else
                          Dictionary.gettext(dict_col, :type => :column, :notfound => :titleize)
                        end
@@ -876,36 +585,20 @@ class MiqExpression
 
   def self.operands2rubyvalue(operator, ops, context_type)
     # puts "Enter: operands2rubyvalue: operator: #{operator}, ops: #{ops.inspect}"
-    operator = operator.downcase
-    ops["tag"] = ops["field"] if operator == "contains" && !ops["tag"] # process values in contains as tags
 
-    if ops["tag"] && context_type != "hash"
-      ref, val = value2tag(preprocess_managed_tag(ops["tag"]), ops["value"])
-      [ref ? "<exist ref=#{ref}>#{val}</exist>" : "<exist>#{val}</exist>"]
-    elsif ops["tag"] && context_type == "hash"
-      # This is only for supporting reporting "display filters"
-      # In the report object the tag value is actually the description and not the raw tag name.
-      # So we have to trick it by replacing the value with the description.
-      description = MiqExpression.get_entry_details(ops["tag"]).inject("") do|s, t|
-        break(t.first) if t.last == ops["value"]
-        s
-      end
-      val = ops["tag"].split(".").last.split("-").join(".")
-      fld = "<value type=string>#{val}</value>"
-      [fld, quote(description, "string")]
-    elsif ops["field"]
+    if ops["field"]
       if ops["field"] == "<count>"
         ["<count>", quote(ops["value"], "integer")]
       else
+        col_type = get_col_type(ops["field"]) || "string"
         case context_type
         when "hash"
-          ref = nil
           val = ops["field"].split(".").last.split("-").join(".")
+          fld = "<value type=#{col_type}>#{val}</value>"
         else
           ref, val = value2tag(ops["field"])
+          fld = "<value ref=#{ref}, type=#{col_type}>#{val}</value>"
         end
-        col_type = get_col_type(ops["field"]) || "string"
-        fld = ref ? "<value ref=#{ref}, type=#{col_type}>#{val}</value>" : "<value type=#{col_type}>#{val}</value>"
         if ["like", "not like", "starts with", "ends with", "includes", "regular expression matches", "regular expression does not match"].include?(operator)
           [fld, ops["value"]]
         else
@@ -914,7 +607,7 @@ class MiqExpression
       end
     elsif ops["count"]
       ref, count = value2tag(ops["count"])
-      field = ref ? "<count ref=#{ref}>#{count}</count>" : "<count>#{count}</count>"
+      field = "<count ref=#{ref}>#{count}</count>"
       [field, quote(ops["value"], "integer")]
     elsif ops["regkey"]
       if operator == "key exists"
@@ -933,6 +626,11 @@ class MiqExpression
   end
 
   def self.quote(val, typ)
+    if Field.is_field?(val)
+      ref, value = value2tag(val)
+      col_type = get_col_type(val) || "string"
+      return ref ? "<value ref=#{ref}, type=#{col_type}>#{value}</value>" : "<value type=#{col_type}>#{value}</value>"
+    end
     case typ.to_s
     when "string", "text", "boolean", nil
       # escape any embedded single quotes, etc. - needs to be able to handle even values with trailing backslash
@@ -984,8 +682,24 @@ class MiqExpression
     end
   end
 
+  # TODO: update this to use the more nuanced
+  # .sanitize_regular_expression after performing Regexp.escape. The
+  # extra substitution is required because, although the result from
+  # Regexp.escape is fine to pass to Regexp.new, it is not when eval'd
+  # as we do:
+  #
+  # ```ruby
+  # regexp_string = Regexp.escape("/") # => "/"
+  # # ...
+  # eval("/" + regexp_string + "/")
+  # ```
   def self.re_escape(s)
     Regexp.escape(s).gsub(/\//, '\/')
+  end
+
+  # Escape any unescaped forward slashes and/or interpolation
+  def self.sanitize_regular_expression(string)
+    string.gsub(%r{\\*/}, "\\/").gsub(/\\*#/, "\\\#")
   end
 
   def self.preprocess_managed_tag(tag)
@@ -1001,8 +715,19 @@ class MiqExpression
     tag
   end
 
+  def self.escape_virtual_custom_attribute(attribute)
+    if attribute.include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
+      uri_parser = URI::RFC2396_Parser.new
+      [uri_parser.escape(attribute, /[^A-Za-z0-9:\-_]/), true]
+    else
+      [attribute, false]
+    end
+  end
+
   def self.value2tag(tag, val = nil)
+    tag, virtual_custom_attribute = escape_virtual_custom_attribute(tag)
     model, *values = tag.to_s.gsub(/[\.-]/, "/").split("/") # replace model path ".", column name "-" with "/"
+    values.map!{ |x|  URI::RFC2396_Parser.new.unescape(x) } if virtual_custom_attribute
 
     case values.first
     when "user_tag"
@@ -1021,26 +746,25 @@ class MiqExpression
   end
 
   def self.normalize_ruby_operator(str)
-    str = str.upcase
     case str
-    when "EQUAL", "="
+    when "equal", "="
       "=="
-    when "NOT"
+    when "not"
       "!"
-    when "LIKE", "NOT LIKE", "STARTS WITH", "ENDS WITH", "INCLUDES", "REGULAR EXPRESSION MATCHES"
+    when "like", "not like", "starts with", "ends with", "includes", "regular expression matches"
       "=~"
-    when "REGULAR EXPRESSION DOES NOT MATCH"
+    when "regular expression does not match"
       "!~"
-    when "IS NULL", "IS EMPTY"
+    when "is null", "is empty"
       "=="
-    when "IS NOT NULL", "IS NOT EMPTY"
+    when "is not null", "is not empty"
       "!="
-    when "BEFORE"
+    when "before"
       "<"
-    when "AFTER"
+    when "after"
       ">"
     else
-      str.downcase
+      str
     end
   end
 
@@ -1083,7 +807,10 @@ class MiqExpression
 
     result = []
     unless opts[:typ] == "count" || opts[:typ] == "find"
-      result = get_column_details(relats[:columns], model, model, opts).sort! { |a, b| a.to_s <=> b.to_s }
+      @column_cache ||= {}
+      key = "#{model}_#{opts[:interval]}_#{opts[:include_model] || false}"
+      @column_cache[key] ||= get_column_details(relats[:columns], model, model, opts).sort! { |a, b| a.to_s <=> b.to_s }
+      result.concat(@column_cache[key])
 
       unless opts[:disallow_loading_virtual_custom_attributes]
         custom_details = _custom_details_for(model, opts)
@@ -1110,10 +837,11 @@ class MiqExpression
 
     klass.custom_keys.each do |custom_key|
       custom_detail_column = [model, CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX + custom_key].join("-")
-      custom_detail_name = custom_key
+      custom_detail_name = CustomAttributeMixin.to_human(custom_key)
+
       if options[:include_model]
         model_name = Dictionary.gettext(model, :type => :model, :notfound => :titleize)
-        custom_detail_name = [model_name, custom_key].join(" : ")
+        custom_detail_name = [model_name, custom_detail_name].join(" : ")
       end
       custom_attributes_details.push([custom_detail_name, custom_detail_column])
     end
@@ -1178,18 +906,15 @@ class MiqExpression
   def self.reporting_available_fields(model, interval = nil)
     @reporting_available_fields ||= {}
     if model.to_s == "VimPerformanceTrend"
-      @reporting_available_fields[model.to_s] ||= {}
-      @reporting_available_fields[model.to_s][interval.to_s] ||= VimPerformanceTrend.trend_model_details(interval.to_s)
+      VimPerformanceTrend.trend_model_details(interval.to_s)
     elsif model.ends_with?("Performance")
-      @reporting_available_fields[model.to_s] ||= {}
-      @reporting_available_fields[model.to_s][interval.to_s] ||= MiqExpression.model_details(model, :include_model => false, :include_tags => true, :interval => interval)
+      MiqExpression.model_details(model, :include_model => false, :include_tags => true, :interval => interval)
     elsif Chargeback.db_is_chargeback?(model)
       cb_model = Chargeback.report_cb_model(model)
-      @reporting_available_fields[model.to_s] ||=
         MiqExpression.model_details(model, :include_model => false, :include_tags => true).select { |c| c.last.ends_with?(*ReportController::Reports::Editor::CHARGEBACK_ALLOWED_FIELD_SUFFIXES) } +
-        MiqExpression.tag_details(cb_model, model, {})
+        MiqExpression.tag_details(cb_model, model, {}) + _custom_details_for(cb_model, {})
     else
-      @reporting_available_fields[model.to_s] ||= MiqExpression.model_details(model, :include_model => false, :include_tags => true)
+      MiqExpression.model_details(model, :include_model => false, :include_tags => true)
     end
   end
 
@@ -1278,6 +1003,8 @@ class MiqExpression
         next(c) if includes.include?(c)
         c if includes.detect { |incl| c.match(incl) }
       end.compact
+    when base_model.starts_with?("Container")
+      excludes += ["^.*derived_host_count_off$", "^.*derived_host_count_on$", "^.*derived_vm_count_off$", "^.*derived_vm_count_on$", "^.*derived_storage.*$"]
     end
 
     column_names.collect do|c|
@@ -1301,52 +1028,15 @@ class MiqExpression
   end
 
   def self.get_col_type(field)
-    model, parts, col = parse_field(field)
-
-    return :string if model.downcase == "managed" || parts.last == "managed"
-    return nil unless field.include?("-")
-
-    model = determine_model(model, parts)
-    return nil if model.nil?
-
-    col_type(model, col)
+    parse_field_or_tag(field).try(:column_type)
   end
 
-  def self.col_type(model, col)
-    model = model_class(model)
-    model.type_for_attribute(col).type
-  end
-
-  def self.parse_field(field)
-    col = field.split("-").last
-    col = col.split("__").first unless col.nil? # throw away pivot table suffix if it exists before looking up type
-
-    parts = field.split("-").first.split(".")
-    model = parts.shift
-
-    return model, parts, col
-  end
-
-  NUM_OPERATORS     = ["=", "!=", "<", "<=", ">=", ">"].freeze
-  STRING_OPERATORS  = ["=",
-                       "STARTS WITH",
-                       "ENDS WITH",
-                       "INCLUDES",
-                       "IS NULL",
-                       "IS NOT NULL",
-                       "IS EMPTY",
-                       "IS NOT EMPTY",
-                       "REGULAR EXPRESSION MATCHES",
-                       "REGULAR EXPRESSION DOES NOT MATCH"]
-  SET_OPERATORS     = ["INCLUDES ALL",
-                       "INCLUDES ANY",
-                       "LIMITED TO"]
-  REGKEY_OPERATORS  = ["KEY EXISTS",
-                       "VALUE EXISTS"]
-  BOOLEAN_OPERATORS = ["=",
-                       "IS NULL",
-                       "IS NOT NULL"]
-  DATE_TIME_OPERATORS       = ["IS", "BEFORE", "AFTER", "FROM", "IS EMPTY", "IS NOT EMPTY"]
+  NUM_OPERATORS     = config[:num_operators].freeze
+  STRING_OPERATORS  = config[:string_operators]
+  SET_OPERATORS     = config[:set_operators]
+  REGKEY_OPERATORS  = config[:regkey_operators]
+  BOOLEAN_OPERATORS = config[:boolean_operators]
+  DATE_TIME_OPERATORS = config[:date_time_operators]
 
   def self.get_col_operators(field)
     if field == :count || field == :regkey
@@ -1373,7 +1063,7 @@ class MiqExpression
     end
   end
 
-  STYLE_OPERATORS_EXCLUDES = ["REGULAR EXPRESSION MATCHES", "REGULAR EXPRESSION DOES NOT MATCH", "FROM"].freeze
+  STYLE_OPERATORS_EXCLUDES = config[:style_operators_excludes]
   def self.get_col_style_operators(field)
     result = get_col_operators(field) - STYLE_OPERATORS_EXCLUDES
   end
@@ -1539,23 +1229,37 @@ class MiqExpression
     end
   end
 
-  def custom_attribute_columns(expression = nil)
-    return custom_attribute_columns(exp).uniq if expression.nil?
+  def self.create_field(model, associations, field_name)
+    model = model_class(model)
+    Field.new(model, associations, field_name)
+  end
 
+  def self.parse_field_or_tag(str)
+    # managed.location, Model.x.y.managed-location
+    if str =~ /(^|[.])managed[-.]/
+      MiqExpression::Tag.parse(str)
+    else
+      Field.parse(str)
+    end
+  end
+
+  def fields(expression = exp)
     case expression
     when Array
-      expression.flat_map { |x| custom_attribute_columns(x) }
+      expression.flat_map { |x| fields(x) }
     when Hash
-      expression_values = expression.values
+      return [] if expression.empty?
 
-      if expression.keys.first == "field"
-        field = Field.parse(expression_values.first)
-        field.custom_attribute_column? ? [field.column] : []
+      if (val = expression["field"] || expression["count"] || expression["tag"])
+        ret = []
+        tg = self.class.parse_field_or_tag(val)
+        ret << tg if tg
+        tg = self.class.parse_field_or_tag(expression["value"].to_s)
+        ret << tg if tg
+        ret
       else
-        expression.keys.first.casecmp('find').zero? ? [] : custom_attribute_columns(expression_values)
+        fields(expression.values)
       end
-    else
-      []
     end
   end
 
@@ -1581,35 +1285,39 @@ class MiqExpression
 
   def to_arel(exp, tz)
     operator = exp.keys.first
-
     field = Field.parse(exp[operator]["field"]) if exp[operator].kind_of?(Hash) && exp[operator]["field"]
+    if(exp[operator].kind_of?(Hash) && exp[operator]["value"] && Field.is_field?(exp[operator]["value"]))
+      parsed_value = Field.parse(exp[operator]["value"]).arel_attribute
+    elsif exp[operator].kind_of?(Hash)
+      parsed_value = exp[operator]["value"]
+    end
     case operator.downcase
     when "equal", "="
-      field.eq(exp[operator]["value"])
+      field.eq(parsed_value)
     when ">"
-      field.gt(exp[operator]["value"])
+      field.gt(parsed_value)
     when "after"
-      value = RelativeDatetime.normalize(exp[operator]["value"], tz, "end", field.date?)
+      value = RelativeDatetime.normalize(parsed_value, tz, "end", field.date?)
       field.gt(value)
     when ">="
-      field.gteq(exp[operator]["value"])
+      field.gteq(parsed_value)
     when "<"
-      field.lt(exp[operator]["value"])
+      field.lt(parsed_value)
     when "before"
-      value = RelativeDatetime.normalize(exp[operator]["value"], tz, "beginning", field.date?)
+      value = RelativeDatetime.normalize(parsed_value, tz, "beginning", field.date?)
       field.lt(value)
     when "<="
-      field.lteq(exp[operator]["value"])
+      field.lteq(parsed_value)
     when "!="
-      field.not_eq(exp[operator]["value"])
+      field.not_eq(parsed_value)
     when "like", "includes"
-      field.matches("%#{exp[operator]["value"]}%")
+      field.matches("%#{parsed_value}%")
     when "starts with"
-      field.matches("#{exp[operator]["value"]}%")
+      field.matches("#{parsed_value}%")
     when "ends with"
-      field.matches("%#{exp[operator]["value"]}")
+      field.matches("%#{parsed_value}")
     when "not like"
-      field.does_not_match("%#{exp[operator]["value"]}%")
+      field.does_not_match("%#{parsed_value}%")
     when "and"
       operands = exp[operator].each_with_object([]) do |operand, result|
         next if operand.blank?
@@ -1645,12 +1353,12 @@ class MiqExpression
       # Only support for tags of the main model
       if exp[operator].key?("tag")
         tag = Tag.parse(exp[operator]["tag"])
-        tag.contains(exp[operator]["value"])
+        tag.contains(parsed_value)
       else
-        field.contains(exp[operator]["value"])
+        field.contains(parsed_value)
       end
     when "is"
-      value = exp[operator]["value"]
+      value = parsed_value
       start_val = RelativeDatetime.normalize(value, tz, "beginning", field.date?)
       end_val = RelativeDatetime.normalize(value, tz, "end", field.date?)
 
@@ -1660,26 +1368,13 @@ class MiqExpression
         field.eq(start_val)
       end
     when "from"
-      start_val, end_val = exp[operator]["value"]
+      start_val, end_val = parsed_value
       start_val = RelativeDatetime.normalize(start_val, tz, "beginning", field.date?)
       end_val   = RelativeDatetime.normalize(end_val, tz, "end", field.date?)
       field.between(start_val..end_val)
     else
       raise _("operator '%{operator_name}' is not supported") % {:operator_name => operator}
     end
-  end
-
-  def self.determine_model(model, parts)
-    model = model_class(model)
-    return nil if model.nil?
-
-    parts.each do |assoc|
-      ref = model.reflection_with_virtual(assoc.to_sym)
-      return nil if ref.nil?
-      model = ref.klass
-    end
-
-    model
   end
 
   def self.determine_relat_path(ref)

@@ -28,5 +28,15 @@ FactoryGirl.define do
         end
       end
     end
+
+    trait :of_domain do
+      transient do
+        domain nil
+      end
+
+      before(:create) do |ae_class, evaluator|
+        ae_class.namespace_id = FactoryGirl.create(:miq_ae_namespace, :parent => evaluator.domain).id
+      end
+    end
   end
 end

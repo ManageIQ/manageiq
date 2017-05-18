@@ -1,6 +1,9 @@
 module MiqServer::WorkerManagement::Monitor::Reason
   extend ActiveSupport::Concern
 
+  MEMORY_EXCEEDED = :memory_exceeded
+  NOT_RESPONDING  = :not_responding
+
   def worker_set_monitor_reason(pid, reason)
     @workers_lock.synchronize(:EX) do
       @workers[pid][:monitor_reason] = reason if @workers.key?(pid)

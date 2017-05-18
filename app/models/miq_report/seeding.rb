@@ -44,11 +44,7 @@ module MiqReport::Seeding
     end
 
     def sync_from_file(filename, dir, typ)
-      fd = File.open(filename)
-      fd.gets # throw away "--- !ruby/object:MIQ_Report \r\n"
-      yml = YAML.load(fd.read)
-      fd.close
-
+      yml = YAML.load_file(filename)
       rpt = {}
       column_names.each { |c| rpt[c.to_sym] = yml[c] }
       rpt.delete :id

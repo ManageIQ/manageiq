@@ -137,7 +137,7 @@ module Metric::Rollup
     NON_STORAGE_ROLLUP_COLS.include?(col) && !INFREQUENTLY_CHANGING_COLS.include?(col)
   end
 
-  # these columns will pass false for aggregate_only to process_for_column
+  # these columns will pass false for aggregate_only to Aggregation::Process.column
   # this means that when processing the totals for a parent rollup, the total
   # values will be averaged across the number of children
   AVG_VALUE_COLUMNS = [
@@ -225,12 +225,12 @@ module Metric::Rollup
           rollup_burst(col, new_perf[:min_max], rt.timestamp, value)
         end
 
-        Metric::Aggregation.aggregate_for_column(col, nil, new_perf, new_perf_counts, value)
+        Metric::Aggregation::Aggregate.column(col, nil, new_perf, new_perf_counts, value)
       end
     end
 
     new_perf.each_key do |col|
-      Metric::Aggregation.process_for_column(col, nil, new_perf, new_perf_counts)
+      Metric::Aggregation::Process.column(col, nil, new_perf, new_perf_counts)
     end
 
     new_perf[:intervals_in_rollup] = Metric::Helper.max_count(new_perf_counts)
@@ -268,13 +268,13 @@ module Metric::Rollup
         result[c] ||= 0
         counts[c] ||= 0
         value = perf ? perf.send(c) : 0
-        Metric::Aggregation.aggregate_for_column(c, state, result, counts, value, :average)
+        Metric::Aggregation::Aggregate.column(c, state, result, counts, value, :average)
       end
     end
 
     agg_cols.each do |c|
       aggregate_only = !AVG_VALUE_COLUMNS.include?(c)
-      Metric::Aggregation.process_for_column(c, obj.vim_performance_state_for_ts(timestamp), result, counts, aggregate_only, :average)
+      Metric::Aggregation::Process.column(c, obj.vim_performance_state_for_ts(timestamp), result, counts, aggregate_only, :average)
     end
 
     result

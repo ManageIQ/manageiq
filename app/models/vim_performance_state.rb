@@ -22,6 +22,7 @@ class VimPerformanceState < ApplicationRecord
     :reserve_cpu,
     :reserve_mem,
     :vm_allocated_disk_storage,
+    :allocated_disk_types,
     :vm_used_disk_storage
   ].each do |m|
     define_method(m)       { state_data[m] }
@@ -45,32 +46,32 @@ class VimPerformanceState < ApplicationRecord
   def self.capture(obj)
     ts = Time.now.utc
     ts = Time.utc(ts.year, ts.month, ts.day, ts.hour)
-    state = obj.vim_performance_states.find_by_timestamp(ts)
+    state = obj.vim_performance_states.find_by(:timestamp => ts)
     return state unless state.nil?
 
-    state = obj.vim_performance_states.build
-    state.state_data ||= {}
-    state.timestamp = ts
-    state.capture_interval = 3600
-    state.assoc_ids = capture_assoc_ids(obj)
-    state.parent_host_id = capture_parent_host(obj)
-    state.parent_storage_id = capture_parent_storage(obj)
-    state.parent_ems_id = capture_parent_ems(obj)
-    state.parent_ems_cluster_id = capture_parent_cluster(obj)
-    # TODO: This is cpu_total_cores and needs to be renamed, but reports depend on the name :numvcpus
-    state.numvcpus = capture_cpu_total_cores(obj)
-    state.total_cpu = capture_total(obj, :cpu_speed)
-    state.total_mem = capture_total(obj, :memory)
-    state.reserve_cpu = capture_reserve(obj, :cpu_reserve)
-    state.reserve_mem = capture_reserve(obj, :memory_reserve)
-    state.vm_used_disk_storage = capture_vm_disk_storage(obj, :used_disk)
-    state.vm_allocated_disk_storage = capture_vm_disk_storage(obj, :allocated_disk)
-    state.tag_names = capture_tag_names(obj)
-    state.image_tag_names = capture_image_tag_names(obj)
-    state.host_sockets = capture_host_sockets(obj)
+    state = obj.vim_performance_states.build(:timestamp => ts)
+    state.capture
     state.save
 
     state
+  end
+
+  def capture
+    self.state_data ||= {}
+    self.capture_interval = 3600
+    capture_assoc_ids
+    capture_parent_host
+    capture_parent_storage
+    capture_parent_ems
+    capture_parent_cluster
+    capture_cpu_total_cores
+    capture_totals
+    capture_reserve
+    capture_vm_disk_storage
+    capture_disk_types
+    capture_tag_names
+    capture_image_tag_names
+    capture_host_sockets
   end
 
   def vm_count_on
@@ -145,27 +146,36 @@ class VimPerformanceState < ApplicationRecord
     ids.nil? ? [] : ids.uniq.sort
   end
 
-  def self.capture_total(obj, field)
-    return obj.send("aggregate_#{field}") if obj.respond_to?("aggregate_#{field}")
+  private
 
-    if obj.respond_to?(:hardware)
-      hardware = obj.hardware
-    elsif obj.respond_to?(:container_node)
-      hardware = obj.container_node.hardware
-    else
-      return nil
+  def capture_disk_types
+    if hardware
+      self.allocated_disk_types = hardware.disks.each_with_object({}) do |disk, res|
+        next if disk.size.nil?
+        type = disk.backing.try(:volume_type) || 'unclassified'
+        res[type] = (res[type] || 0) + disk.size
+      end
     end
+  end
+
+  def capture_totals
+    self.total_cpu = capture_total(:cpu_speed)
+    self.total_mem = capture_total(:memory)
+  end
+
+  def capture_total(field)
+    return resource.send("aggregate_#{field}") if resource.respond_to?("aggregate_#{field}")
 
     field == :memory ? hardware.try(:memory_mb) : hardware.try(:aggregate_cpu_speed)
   end
 
-  def self.capture_assoc_ids(obj)
+  def capture_assoc_ids
     result = {}
     ASSOCIATIONS.each do |assoc|
       method = assoc
-      method = (obj.kind_of?(EmsCluster) ? :all_vms_and_templates : :vms_and_templates) if assoc == :vms
-      next unless obj.respond_to?(method)
-      assoc_recs = obj.send(method)
+      method = (resource.kind_of?(EmsCluster) ? :all_vms_and_templates : :vms_and_templates) if assoc == :vms
+      next unless resource.respond_to?(method)
+      assoc_recs = resource.send(method)
       has_state = assoc_recs[0] && assoc_recs[0].respond_to?(:state)
 
       r = result[assoc] = {:on => [], :off => []}
@@ -184,61 +194,70 @@ class VimPerformanceState < ApplicationRecord
       r_off.uniq!
       r_off.sort!
     end
-    result.presence
+    self.assoc_ids = result.presence
   end
 
-  def self.capture_parent_cluster(obj)
-    obj.parent_cluster.try(:id) if (obj.kind_of?(Host) || obj.kind_of?(VmOrTemplate))
-  end
-
-  def self.capture_parent_host(obj)
-    obj.host_id if obj.kind_of?(VmOrTemplate)
-  end
-
-  def self.capture_parent_storage(obj)
-    obj.storage_id if obj.kind_of?(VmOrTemplate)
-  end
-
-  def self.capture_parent_ems(obj)
-    obj.try(:ems_id)
-  end
-
-  def self.capture_reserve(obj, field)
-    obj.try(field)
-  end
-
-  def self.capture_tag_names(obj)
-    obj.tag_list(:ns => "/managed").split.join("|")
-  end
-
-  def self.capture_image_tag_names(obj)
-    return '' unless obj.respond_to?(:container_image) && obj.container_image.present?
-    obj.container_image.tag_list(:ns => "/managed").split.join("|")
-  end
-
-  def self.capture_vm_disk_storage(obj, field)
-    obj.send("#{field}_storage") if obj.kind_of?(VmOrTemplate)
-  end
-
-  def self.capture_cpu_total_cores(obj)
-    if obj.respond_to?(:hardware)
-      hardware = obj.hardware
-    elsif obj.respond_to?(:container_node)
-      hardware = obj.container_node.hardware
-    else
-      return nil
+  def capture_parent_cluster
+    if resource.kind_of?(Host) || resource.kind_of?(VmOrTemplate)
+      self.parent_ems_cluster_id = resource.parent_cluster.try(:id)
     end
-
-    hardware.try(:cpu_total_cores)
   end
 
-  def self.capture_host_sockets(obj)
-    if obj.kind_of?(Host)
-      obj.hardware.try(:cpu_sockets)
-    else
-      if obj.respond_to?(:hosts)
-        obj.hosts.includes(:hardware).collect { |h| h.hardware.try(:cpu_sockets) }.compact.sum
+  def capture_parent_host
+    self.parent_host_id = resource.host_id if resource.kind_of?(VmOrTemplate)
+  end
+
+  def capture_parent_storage
+    self.parent_storage_id = resource.storage_id if resource.kind_of?(VmOrTemplate)
+  end
+
+  def capture_parent_ems
+    self.parent_ems_id = resource.try(:ems_id)
+  end
+
+  def capture_reserve
+    self.reserve_cpu = resource.try(:cpu_reserve)
+    self.reserve_mem = resource.try(:memory_reserve)
+  end
+
+  def capture_tag_names
+    self.tag_names = resource.perf_tags
+  end
+
+  def capture_image_tag_names
+    self.image_tag_names = if resource.respond_to?(:container_image) && resource.container_image.present?
+                             resource.container_image.perf_tags
+                           else
+                             ''
+                           end
+  end
+
+  def capture_vm_disk_storage
+    if resource.kind_of?(VmOrTemplate)
+      [:used_disk, :allocated_disk].each do |type|
+        send("vm_#{type}_storage=", resource.send("#{type}_storage"))
       end
+    end
+  end
+
+  def capture_cpu_total_cores
+    # TODO: This is cpu_total_cores and needs to be renamed, but reports depend on the name :numvcpus
+    self.numvcpus = hardware.try(:cpu_total_cores)
+  end
+
+  def capture_host_sockets
+    self.host_sockets = if resource.kind_of?(Host)
+                          resource.hardware.try(:cpu_sockets)
+                        elsif resource.respond_to?(:hosts)
+                          resource.hosts.includes(:hardware).collect { |h| h.hardware.try(:cpu_sockets) }.compact.sum
+                        end
+  end
+
+  def hardware
+    if resource.respond_to?(:hardware)
+      resource.hardware
+    elsif resource.respond_to?(:container_node)
+      resource.container_node.try(:hardware)
     end
   end
 end

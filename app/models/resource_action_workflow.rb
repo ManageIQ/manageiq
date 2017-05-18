@@ -1,5 +1,6 @@
 class ResourceActionWorkflow < MiqRequestWorkflow
   attr_accessor :dialog
+  attr_accessor :request_options
 
   def self.base_model
     ResourceActionWorkflow
@@ -9,7 +10,8 @@ class ResourceActionWorkflow < MiqRequestWorkflow
     @settings        = {}
     @requester       = requester
     @target          = options[:target]
-    @dialog          = load_dialog(resource_action, values)
+    @initiator       = options[:initiator]
+    @dialog          = load_dialog(resource_action, values, options)
 
     @settings[:resource_action_id] = resource_action.id unless resource_action.nil?
     @settings[:dialog_id]          = @dialog.id         unless @dialog.nil?
@@ -46,18 +48,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   end
 
   def generate_request(state, values)
-    create_request(values).tap do |request|
-      process_service_order(request, state) if request
-    end
-  end
-
-  def process_service_order(request, state)
-    case state
-    when ServiceOrder::STATE_ORDERED
-      ServiceOrder.order_immediately(request, @requester)
-    when ServiceOrder::STATE_CART
-      ServiceOrder.add_to_cart(request, @requester)
-    end
+    make_request(nil, values.merge(:cart_state => state))
   end
 
   def validate_dialog
@@ -65,7 +56,10 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   end
 
   def create_values
-    create_values_hash.tap { |value| value[:src_id] = @target.id }
+    create_values_hash.tap do |value|
+      value[:src_id] = @target.id
+      value[:request_options] = request_options unless request_options.blank?
+    end
   end
 
   def request_class
@@ -82,20 +76,21 @@ class ResourceActionWorkflow < MiqRequestWorkflow
 
   def load_resource_action(values = nil)
     if values.nil?
-      ResourceAction.find_by_id(@settings[:resource_action_id])
+      ResourceAction.find_by(:id => @settings[:resource_action_id])
     else
-      ResourceAction.find_by_id(values.fetch_path(:workflow_settings, :resource_action_id))
+      ResourceAction.find_by(:id => values.fetch_path(:workflow_settings, :resource_action_id))
     end
   end
 
   def create_values_hash
     {
       :dialog            => @dialog.automate_values_hash,
-      :workflow_settings => @settings
+      :workflow_settings => @settings,
+      :initiator         => @initiator
     }
   end
 
-  def load_dialog(resource_action, values)
+  def load_dialog(resource_action, values, options)
     if resource_action.nil?
       resource_action = load_resource_action(values)
       @settings[:resource_action_id] = resource_action.id unless resource_action.nil?
@@ -104,7 +99,11 @@ class ResourceActionWorkflow < MiqRequestWorkflow
     dialog = resource_action.dialog unless resource_action.nil?
     unless dialog.nil?
       dialog.target_resource = @target
-      dialog.init_fields_with_values(values)
+      if options[:display_view_only]
+        dialog.init_fields_with_values_for_request(values)
+      else
+        dialog.init_fields_with_values(values)
+      end
     end
     dialog
   end
@@ -135,7 +134,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   end
 
   def validate(_values = nil)
-    @dialog.try(:validate)
+    validate_dialog.blank?
   end
 
   private

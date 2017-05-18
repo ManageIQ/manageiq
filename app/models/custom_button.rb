@@ -45,7 +45,7 @@ class CustomButton < ApplicationRecord
 
   def applies_to
     klass = applies_to_class.constantize
-    applies_to_id.nil? ? klass : klass.find_by_id(applies_to_id)
+    applies_to_id.nil? ? klass : klass.find_by(:id => applies_to_id)
   end
 
   def applies_to=(other)
@@ -64,14 +64,28 @@ class CustomButton < ApplicationRecord
 
   def invoke(target)
     args = resource_action.automate_queue_hash(target, {}, User.current_user)
-    MiqQueue.put(
+    MiqQueue.put(queue_opts(target, args))
+  end
+
+  def queue_opts(target, args)
+    {
       :class_name  => 'MiqAeEngine',
       :method_name => 'deliver',
       :args        => [args],
       :role        => 'automate',
       :zone        => target.try(:my_zone),
       :priority    => MiqQueue::HIGH_PRIORITY,
-    )
+    }
+  end
+
+  def invoke_async(target)
+    task_opts = {
+      :action => "Calling automate for user #{userid}",
+      :userid => User.current_user
+    }
+
+    args = resource_action.automate_queue_hash(target, {}, User.current_user)
+    MiqTask.generic_action_with_callback(task_opts, queue_opts(target, args))
   end
 
   def to_export_xml(_options)
@@ -139,13 +153,13 @@ class CustomButton < ApplicationRecord
   end
 
   def self.get_user(user)
-    user = User.in_region.find_by_userid(user) if user.kind_of?(String)
+    user = User.find_by_userid(user) if user.kind_of?(String)
     raise _("Unable to find user '%{user}'") % {:user => user} if user.nil?
     user
   end
 
   def copy(options = {})
-    options[:guid] = MiqUUID.new_guid
+    options[:guid] = SecureRandom.uuid
     options.each_with_object(dup) { |(k, v), button| button.send("#{k}=", v) }.tap(&:save!)
   end
 end

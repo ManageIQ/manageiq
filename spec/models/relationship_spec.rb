@@ -90,6 +90,17 @@ describe Relationship do
       expect(filtered_results).not_to be_kind_of(Array)
       expect(filtered_results).to match_array(vms + hosts)
     end
+
+    it "uses preloaded data" do
+      vms.map(&:save!)
+      hosts.map(&:save!)
+      storages.map(&:save!)
+      rels = Relationship.all.load
+      filtered_results = Relationship.filter_by_resource_type(rels,
+                                                              :of_type     => %w(Host VmOrTemplate),
+                                                              :except_type => %w(Storage))
+      expect(filtered_results).to be_kind_of(Array)
+    end
   end
 
   describe ".filtered" do

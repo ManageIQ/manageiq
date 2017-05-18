@@ -22,8 +22,6 @@ cols:
 - name
 - description
 - mode
-- created_on
-- updated_on
 
 
 # Included tables (joined, has_one, has_many) and columns

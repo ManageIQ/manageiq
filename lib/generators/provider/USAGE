@@ -1,0 +1,5 @@
+Description:
+    Create or update provider
+
+Example:
+    rails generate provider VendorName

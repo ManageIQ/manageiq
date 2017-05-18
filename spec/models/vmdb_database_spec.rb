@@ -124,4 +124,20 @@ describe VmdbDatabase do
       expect(@db.top_tables_by('wasted_bytes', 3)).to eq([@table_7, @table_6, @table_5])
     end
   end
+
+  describe '#has_perf_data?' do
+    subject { @db.has_perf_data? }
+
+    context 'without metrics' do
+      it { is_expected.to be_falsey }
+    end
+
+    context 'with metrics' do
+      before do
+        @db.vmdb_database_metrics = [FactoryGirl.create(:vmdb_database_metric, :capture_interval_name => 'hourly')]
+      end
+
+      it { is_expected.to be_truthy }
+    end
+  end
 end

@@ -44,6 +44,11 @@ headers:
 - Messaging Type
 - Server
 
+include:
+  middleware_server:
+    columns:
+      - name
+
 # Condition(s) string for the SQL query
 conditions:
 
@@ -56,8 +61,7 @@ sortby:
 - middleware_server.name
 
 # Group rows (y=yes,n=no,c=count)
-group: y
-
+group: n
 
 # Graph type
 #   Bar

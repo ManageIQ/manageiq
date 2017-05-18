@@ -19,7 +19,9 @@ module Metric::Common
     serialize :assoc_ids
     serialize :min_max   # TODO: Move this to MetricRollup
 
-    virtual_column :v_derived_storage_used, :type => :float
+    virtual_column :v_derived_storage_used, :type => :float, :arel => (lambda do |t|
+      t.grouping(t[:derived_storage_total] - t[:derived_storage_free])
+    end)
 
     [
       :cpu_ready_delta_summation,
@@ -50,20 +52,20 @@ module Metric::Common
   end
 
   def min_max_v_derived_storage_used(mode)
-    cond = ["resource_type = ? and resource_id = ? and capture_interval_name = 'hourly' and timestamp >= ? and timestamp < ?",
-            resource_type, resource_id, timestamp.to_date.to_s, (timestamp + 1.day).to_date.to_s]
-    meth = mode == :min ? :first : :last
-    recs = MetricRollup.where(cond)
-    rec = recs.sort { |a, b| (a.v_derived_storage_used && b.v_derived_storage_used) ? (a.v_derived_storage_used <=> b.v_derived_storage_used) : (a.v_derived_storage_used ? 1 : -1) }.send(meth)
-    rec.nil? ? nil : rec.v_derived_storage_used
+    recs = MetricRollup.where(:resource_type => resource_type, :resource_id => resource_id)
+                       .where(:capture_interval_name => 'hourly')
+                       .where('timestamp >= ? and timestamp < ?', # This picks only the first midnight
+                              timestamp.to_date, (timestamp + 1.day).to_date)
+                       .where.not(:derived_storage_total => nil, :derived_storage_free => nil)
+    recs.send(mode, MetricRollup.arel_attribute(:v_derived_storage_used))
   end
 
   def min_v_derived_storage_used
-    @min_v_derived_storage_used ||= min_max_v_derived_storage_used(:min)
+    @min_v_derived_storage_used ||= min_max_v_derived_storage_used(:minimum)
   end
 
   def max_v_derived_storage_used
-    @max_v_derived_storage_used ||= min_max_v_derived_storage_used(:max)
+    @max_v_derived_storage_used ||= min_max_v_derived_storage_used(:maximum)
   end
 
   CHILD_ROLLUP_INTERVAL = {
@@ -173,6 +175,14 @@ module Metric::Common
       else
         none
       end
+    end
+
+    def with_interval_and_time_range(interval, timestamp)
+      where(:capture_interval_name => interval, :timestamp => timestamp)
+    end
+
+    def with_resource
+      where.not(:resource => nil)
     end
   end
 end

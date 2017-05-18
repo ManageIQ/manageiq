@@ -30,8 +30,8 @@ module MiqReport::Search
     end
   end
 
-  def get_cached_page(ids, includes, includes2, options)
-    data         = db_class.where(:id => ids).includes(includes).includes(includes2).to_a
+  def get_cached_page(ids, includes, options)
+    data         = db_class.where(:id => ids).includes(includes).to_a
     targets_hash = data.index_by(&:id) if options[:targets_hash]
     build_table(data, db, options)
     return table, extras[:attrs_for_paging].merge(:paged_read_from_cache => true, :targets_hash => targets_hash)
@@ -76,17 +76,16 @@ module MiqReport::Search
   def paged_view_search(options = {})
     per_page = options.delete(:per_page)
     page     = options.delete(:page) || 1
+    selected_ids = options.delete(:selected_ids)
     limit, offset = self.class.get_limit_offset(page, per_page)
 
     self.display_filter = options.delete(:display_filter_hash)  if options[:display_filter_hash]
     self.display_filter = options.delete(:display_filter_block) if options[:display_filter_block]
 
-    includes1 = get_include_for_find(include)
-    includes = MiqExpression.merge_includes(includes1, include_for_find)
-
+    includes = get_include_for_find
     self.extras ||= {}
     if extras[:target_ids_for_paging] && db_class.column_names.include?('id')
-      return get_cached_page(limited_ids(limit, offset), includes1, include_for_find, options)
+      return get_cached_page(limited_ids(limit, offset), includes, options)
     end
 
     order = get_order_info
@@ -99,7 +98,14 @@ module MiqReport::Search
     else
       targets = db_class
     end
-    search_results, attrs = Rbac.search(search_options.merge(:targets => targets))
+
+    if selected_ids.present?
+      targets = targets.first.kind_of?(Integer) ? targets & selected_ids : targets.where(:id => selected_ids)
+    end
+
+    supported_features_filter = search_options.delete(:supported_features_filter) if search_options[:supported_features_filter]
+    search_results, attrs     = Rbac.search(search_options.merge(:targets => targets))
+    filtered_results          = filter_results(search_results, supported_features_filter)
 
     if order.nil?
       options[:limit]   = limit
@@ -108,17 +114,24 @@ module MiqReport::Search
       options[:no_sort] = true
       self.extras[:target_ids_for_paging] = attrs.delete(:target_ids_for_paging)
     end
-    build_table(search_results, db, options)
+    build_table(filtered_results, db, options)
 
     # build a hash of target objects for UI since we already have them
     if options[:targets_hash]
       attrs[:targets_hash] = {}
-      search_results.each { |obj| attrs[:targets_hash][obj.id] = obj }
+      filtered_results.each { |obj| attrs[:targets_hash][obj.id] = obj }
     end
     attrs[:apply_sortby_in_search] = !!order
     self.extras[:attrs_for_paging] = attrs.merge(:targets_hash => nil) unless self.extras[:target_ids_for_paging].nil?
 
     _log.debug("Attrs: #{attrs.merge(:targets_hash => "...").inspect}")
     return table, attrs
+  end
+
+  private
+
+  def filter_results(results, supported_features_filter)
+    return results if supported_features_filter.nil?
+    results.select { |result| result.send(supported_features_filter) }
   end
 end

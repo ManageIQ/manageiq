@@ -75,15 +75,20 @@ describe ServiceTemplateProvisionTask do
 
     describe "#deliver_to_automate" do
       it "delivers to the queue when the state is not active" do
-        @task_0.state = 'pending'
-        automate_args = {
+        @service              = FactoryGirl.create(:service, :name => 'Test Service')
+        @task_0.destination   = @service
+        @task_0.state         = 'pending'
+        zone                  = FactoryGirl.create(:zone, :name => "special")
+        orchestration_manager = FactoryGirl.create(:ext_management_system, :zone => zone)
+        @task_0.source        = FactoryGirl.create(:service_template_orchestration, :orchestration_manager => orchestration_manager)
+        automate_args         = {
           :object_type      => 'ServiceTemplateProvisionTask',
           :object_id        => @task_0.id,
           :namespace        => 'Service/Provisioning/StateMachines',
           :class_name       => 'ServiceProvision_Template',
           :instance_name    => 'clone_to_service',
           :automate_message => 'create',
-          :attrs            => {'request' => 'clone_to_service'},
+          :attrs            => {'request' => 'clone_to_service', 'Service::Service' => @service.id},
           :user_id          => @admin.id,
           :miq_group_id     => @admin.current_group_id,
           :tenant_id        => @admin.current_tenant.id,
@@ -94,7 +99,7 @@ describe ServiceTemplateProvisionTask do
           :method_name => 'deliver',
           :args        => [automate_args],
           :role        => 'automate',
-          :zone        => nil,
+          :zone        => 'special',
           :task_id     => "service_template_provision_task_#{@task_0.id}")
         @task_0.deliver_to_automate
       end
@@ -114,13 +119,13 @@ describe ServiceTemplateProvisionTask do
           :method_name => :execute_callback
         }
         allow(@request).to receive(:approved?).and_return(true)
-        allow(MiqServer).to receive(:my_zone).and_return(nil)
+        allow(MiqServer).to receive(:my_zone).and_return('a_zone')
         expect(MiqQueue).to receive(:put).with(
           :class_name   => 'ServiceTemplateProvisionTask',
           :instance_id  => @task_0.id,
           :method_name  => 'execute',
           :role         => 'ems_operations',
-          :zone         => nil,
+          :zone         => 'a_zone',
           :task_id      => "service_template_provision_task_#{@task_0.id}",
           :deliver_on   => nil,
           :miq_callback => miq_callback)

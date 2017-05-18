@@ -3,14 +3,39 @@ require 'miq-system'
 module MiqServer::StatusManagement
   extend ActiveSupport::Concern
 
+  def status_update
+    assign_attributes(system_status)
+    assign_attributes(process_status)
+    save!
+  end
+
+  def system_status
+    sys = MiqSystem.memory
+    {
+      :system_memory_free => sys.fetch(:MemFree, 0),
+      :system_memory_used => sys.fetch(:MemTotal, 0) - sys.fetch(:MemFree, 0),
+      :system_swap_free   => sys.fetch(:SwapFree, 0),
+      :system_swap_used   => sys.fetch(:SwapTotal, 0) - sys.fetch(:SwapFree, 0)
+    }
+  end
+
+  def process_status
+    require 'miq-process'
+    pinfo = MiqProcess.processInfo
+    # Ensure the hash only contains the values we want to store in the table
+    pinfo.keep_if { |k, _v| MiqWorker::PROCESS_INFO_FIELDS.include?(k) }
+    pinfo[:os_priority] = pinfo.delete(:priority)
+    pinfo
+  end
+
   module ClassMethods
+    # TODO: Delegate class methods to instance methods.
+    # 1. Create instance methods
+    # 2. Delegate and/or deprecate these class methods
+    # 3. Change callers (app/models/miq_schedule_worker/jobs.rb) to use an instance.
+    # 4. Cleanup any existing queue messages.
     def status_update
-      require 'miq-process'
-      pinfo = MiqProcess.processInfo
-      # Ensure the hash only contains the values we want to store in the table
-      pinfo.keep_if { |k, _v| MiqWorker::PROCESS_INFO_FIELDS.include?(k) }
-      pinfo[:os_priority] = pinfo.delete(:priority)
-      my_server.update_attributes!(pinfo)
+      my_server.status_update
     end
 
     def log_status

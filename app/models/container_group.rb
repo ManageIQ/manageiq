@@ -1,9 +1,12 @@
 class ContainerGroup < ApplicationRecord
+  include SupportsFeatureMixin
   include ComplianceMixin
   include CustomAttributeMixin
   include MiqPolicyMixin
   include NewWithTypeStiMixin
   include TenantIdentityMixin
+  include ArchivedMixin
+  include_concern 'Purging'
 
   # :name, :uid, :creation_timestamp, :resource_version, :namespace
   # :labels, :restart_policy, :dns_policy
@@ -22,7 +25,7 @@ class ContainerGroup < ApplicationRecord
   belongs_to :container_project
   belongs_to :old_container_project, :foreign_key => "old_container_project_id", :class_name => 'ContainerProject'
   belongs_to :container_build_pod
-  has_many :container_volumes, :foreign_key => :parent_id, :dependent => :destroy
+  has_many :container_volumes, :as => :parent, :dependent => :destroy
 
   # Metrics destroy is handled by purger
   has_many :metrics, :as => :resource
@@ -31,9 +34,6 @@ class ContainerGroup < ApplicationRecord
 
   virtual_column :ready_condition_status, :type => :string, :uses => :container_conditions
   virtual_column :running_containers_summary, :type => :string
-
-  # Needed for metrics
-  delegate :my_zone, :to => :ext_management_system
 
   def ready_condition
     container_conditions.find_by(:name => "Ready")
@@ -81,7 +81,8 @@ class ContainerGroup < ApplicationRecord
   end
 
   def disconnect_inv
-    _log.info "Disconnecting Container group [#{name}] id [#{id}] from EMS [#{ext_management_system.name}]" \
+    return if ems_id.nil?
+    _log.info "Disconnecting Pod [#{name}] id [#{id}] from EMS [#{ext_management_system.name}]" \
     "id [#{ext_management_system.id}] "
     self.container_definitions.each(&:disconnect_inv)
     self.old_ems_id = ems_id

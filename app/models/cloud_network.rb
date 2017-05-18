@@ -1,6 +1,7 @@
 class CloudNetwork < ApplicationRecord
   include NewWithTypeStiMixin
-  include VirtualTotalMixin
+  include SupportsFeatureMixin
+  include CloudTenancyMixin
 
   acts_as_miq_taggable
 
@@ -15,6 +16,10 @@ class CloudNetwork < ApplicationRecord
   has_many :floating_ips,  :dependent => :destroy
   has_many :vms, :through => :network_ports, :source => :device, :source_type => 'VmOrTemplate'
 
+  has_many :public_network_vms, -> { distinct }, :through => :public_network_routers, :source => :vms
+  has_many :public_network_routers, :foreign_key => :cloud_network_id, :class_name => NetworkRouter
+  has_many :private_networks, -> { distinct }, :through => :public_network_routers, :source => :cloud_networks
+
   # TODO(lsmola) figure out what this means, like security groups used by VMs in the network? It's not being
   # refreshed, so we can probably delete this association
   has_many   :security_groups
@@ -24,9 +29,10 @@ class CloudNetwork < ApplicationRecord
 
   virtual_column :maximum_transmission_unit, :type => :string
   virtual_column :port_security_enabled,     :type => :string
+  virtual_column :qos_policy_id,             :type => :string
 
   # Define all getters and setters for extra_attributes related virtual columns
-  %i(maximum_transmission_unit port_security_enabled).each do |action|
+  %i(maximum_transmission_unit port_security_enabled qos_policy_id).each do |action|
 	  define_method("#{action}=") do |value|
       extra_attributes_save(action, value)
     end
@@ -37,6 +43,11 @@ class CloudNetwork < ApplicationRecord
   end
 
   virtual_total :total_vms, :vms, :uses => :vms
+
+  def self.class_by_ems(ext_management_system, _external = false)
+    # TODO: A factory on ExtManagementSystem to return class for each provider
+    ext_management_system && ext_management_system.class::CloudNetwork
+  end
 
   private
 

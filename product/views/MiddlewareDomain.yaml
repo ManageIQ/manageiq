@@ -44,6 +44,11 @@ headers:
 - Feed
 - Provider
 
+include:
+  ext_management_system:
+    columns:
+      - name
+
 # Condition(s) string for the SQL query
 conditions:
 
@@ -57,8 +62,7 @@ sortby:
 - ext_management_system.name
 
 # Group rows (y=yes,n=no,c=count)
-group: y
-
+group: n
 
 # Graph type
 #   Bar

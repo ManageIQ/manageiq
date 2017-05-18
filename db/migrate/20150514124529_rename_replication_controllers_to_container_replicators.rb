@@ -1,4 +1,4 @@
-class RenameReplicationControllersToContainerReplicators < ActiveRecord::Migration
+class RenameReplicationControllersToContainerReplicators < ActiveRecord::Migration[4.2]
   def self.up
     rename_table :container_replication_controllers, :container_replicators
   end

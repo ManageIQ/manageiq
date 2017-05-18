@@ -1,4 +1,4 @@
-class AddRetirementToOrchestrationStack < ActiveRecord::Migration
+class AddRetirementToOrchestrationStack < ActiveRecord::Migration[4.2]
   def change
     add_column :orchestration_stacks, :retired,              :boolean
     add_column :orchestration_stacks, :retires_on,           :date

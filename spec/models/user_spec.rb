@@ -19,10 +19,6 @@ describe User do
     it "should save proper email address" do
       expect(FactoryGirl.build(:user, :email => "that.guy@manageiq.com")).to be_valid
     end
-
-    it "should reject invalid characters in email address" do
-      expect(FactoryGirl.build(:user, :email => "{{that.guy}}@manageiq.com")).not_to be_valid
-    end
   end
 
   describe "#change_password" do
@@ -328,20 +324,6 @@ describe User do
     end
   end
 
-  it 'should invalidate email address that contains "\n"' do
-    group = FactoryGirl.create(:miq_group)
-    user = FactoryGirl.create(:user,
-                              :email      => "admin@email.com",
-                              :miq_groups => [group]
-                             )
-    expect(user).to be_valid
-
-    user.email = "admin@email.com
-                  ); INSERT INTO users
-                  (password, userid) VALUES ('bar', 'foo')--"
-    expect(user).not_to be_valid
-  end
-
   context ".authenticate_with_http_basic" do
     let(:user) { FactoryGirl.create(:user, :password => "dummy") }
 
@@ -360,7 +342,7 @@ describe User do
   end
 
   context ".seed" do
-    include_examples(".seed called multiple times", 2)
+    include_examples(".seed called multiple times", 1)
 
     include_examples("seeding users with", [])
 
@@ -521,6 +503,26 @@ describe User do
       FactoryGirl.create(:miq_group, :role => "super_administrator")
       User.seed
       expect(User.super_admin).to be_super_admin_user
+    end
+  end
+
+  context ".admin?" do
+    it "admin? succeeds with admin account" do
+      expect(User.admin?("admin")).to be_truthy
+    end
+
+    it "admin? fails with non-admin account" do
+      expect(User.admin?("regular_user")).to be_falsey
+    end
+  end
+
+  context ".authorize_user" do
+    it "returns nil with blank userid" do
+      expect(User.authorize_user("")).to be_nil
+    end
+
+    it "returns nil with admin userid" do
+      expect(User.authorize_user("admin")).to be_nil
     end
   end
 end

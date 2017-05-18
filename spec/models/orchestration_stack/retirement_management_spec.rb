@@ -35,7 +35,7 @@ describe "Service Retirement Management" do
     event_hash = {:orchestration_stack => @stack, :type => "OrchestrationStack",
                   :retirement_initiator => "user", :userid => "freddy"}
 
-    expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash, {}).once
 
     @stack.retire_now('freddy')
     @stack.reload
@@ -47,7 +47,7 @@ describe "Service Retirement Management" do
     event_hash = {:orchestration_stack => @stack, :type => "OrchestrationStack",
                   :retirement_initiator => "system"}
 
-    expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash, {}).once
 
     @stack.retire_now
     @stack.reload
@@ -65,7 +65,7 @@ describe "Service Retirement Management" do
   it "#retire date" do
     expect(AuditEvent).to receive(:success).once
     options = {}
-    options[:date] = Date.today
+    options[:date] = Time.zone.today
     @stack.retire(options)
     @stack.reload
     expect(@stack.retires_on).to eq(options[:date])
@@ -102,26 +102,26 @@ describe "Service Retirement Management" do
 
   it "#retires_on - today" do
     expect(@stack.retirement_due?).to be_falsey
-    @stack.retires_on = Date.today
+    @stack.retires_on = Time.zone.today
     expect(@stack.retirement_due?).to be_truthy
   end
 
   it "#retires_on - tomorrow" do
     expect(@stack.retirement_due?).to be_falsey
-    @stack.retires_on = Date.today + 1
+    @stack.retires_on = Time.zone.today + 1
     expect(@stack.retirement_due?).to be_falsey
   end
 
   it "#retirement_due?" do
     expect(@stack.retirement_due?).to be_falsey
 
-    @stack.update_attributes(:retires_on => Date.today + 1.day)
+    @stack.update_attributes(:retires_on => Time.zone.today + 1.day)
     expect(@stack.retirement_due?).to be_falsey
 
-    @stack.update_attributes(:retires_on => Date.today)
+    @stack.update_attributes(:retires_on => Time.zone.today)
     expect(@stack.retirement_due?).to be_truthy
 
-    @stack.update_attributes(:retires_on => Date.today - 1.day)
+    @stack.update_attributes(:retires_on => Time.zone.today - 1.day)
     expect(@stack.retirement_due?).to be_truthy
   end
 
@@ -132,7 +132,8 @@ describe "Service Retirement Management" do
       :type                 => "OrchestrationStack",
       :retirement_initiator => "system"
     }
-    expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash)
+
+    expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash, {})
     @stack.raise_retirement_event(event_name)
   end
 

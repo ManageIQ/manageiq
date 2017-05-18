@@ -6,6 +6,7 @@ class MiqAlert < ApplicationRecord
 
   validates_presence_of     :description, :guid
   validates_uniqueness_of   :description, :guid
+  validate :validate_automate_expressions
 
   has_many :miq_alert_statuses, :dependent => :destroy
   before_save :set_responds_to_events
@@ -20,6 +21,7 @@ class MiqAlert < ApplicationRecord
     ExtManagementSystem
     MiqServer
     MiddlewareServer
+    ContainerNode
   )
 
   def self.base_tables
@@ -71,28 +73,38 @@ class MiqAlert < ApplicationRecord
     self.responds_to_events = events unless events.nil?
   end
 
+  def validate_automate_expressions
+    # if always_evaluate = true, delay_next_evaluation must be 0
+    valid = true
+    automate_expression = if expression.kind_of?(Hash) && self.class.expression_by_name(expression[:eval_method])
+                            self.class.expression_by_name(expression[:eval_method])
+                          else
+                            {}
+                          end
+    next_frequency = (options || {}).fetch_path(:notifications, :delay_next_evaluation)
+    if automate_expression[:always_evaluate] && next_frequency != 0
+      valid = false
+      errors.add(:notifications, "Datawarehouse alerts must have a 0 notification frequency")
+    end
+    valid
+  end
+
   def self.assigned_to_target(target, event = nil)
     # Get all assigned, enabled alerts based on target class and event
-    cond = "enabled = ? AND db = ?"
-    args = [true, target.class.base_model.name]
-    key  = "#{target.class.base_model.name}_#{target.id}"
 
-    unless event.nil?
-      cond += " AND responds_to_events LIKE ?"
-      args << "%#{event}%"
-      key += "_#{event}"
-    end
+    # event can be nil, so the compact removes event if it is nil
+    key  = [target.class.base_model.name, target.id, event].compact.join("_")
 
     alert_assignments[key] ||= begin
-      profiles  = MiqAlertSet.assigned_to_target(target, :find_options => {:conditions => ["mode = ?", target.class.base_model.name], :select => "id"})
-      alert_ids = profiles.collect { |p| p.members(:select => "id").collect(&:id) }.flatten.uniq
+      profiles  = MiqAlertSet.assigned_to_target(target)
+      alert_ids = profiles.flat_map { |p| p.members.pluck(:id) }.uniq
 
       if alert_ids.empty?
-        []
+        none
       else
-        cond += " AND id IN (?)"
-        args << alert_ids
-        where(cond, *args).to_a
+        scope = where(:id => alert_ids, :enabled => true, :db => target.class.base_model.name)
+        scope = scope.where("responds_to_events like ?", "%#{event}%") if event
+        scope
       end
     end
   end
@@ -105,7 +117,7 @@ class MiqAlert < ApplicationRecord
     if target.kind_of?(Array)
       klass, id = target
       klass = Object.const_get(klass)
-      target = klass.find_by_id(id)
+      target = klass.find_by(:id => id)
       raise "Unable to find object with class: [#{klass}], Id: [#{id}]" unless target
     end
 
@@ -185,7 +197,7 @@ class MiqAlert < ApplicationRecord
     if target.kind_of?(Array)
       klass, id = target
       klass = Object.const_get(klass)
-      target = klass.find_by_id(id)
+      target = klass.find_by(:id => id)
       raise "Unable to find object with class: [#{klass}], Id: [#{id}]" unless target
     end
 
@@ -198,14 +210,20 @@ class MiqAlert < ApplicationRecord
     # If we are alerting, invoke the alert actions, then add a status so we can limit how often to alert
     # Otherwise, destroy this alert's statuses for our target
     invoke_actions(target, inputs) if result
-    add_status_post_evaluate(target, result)
-
+    add_status_post_evaluate(target, result, inputs[:ems_event])
     result
   end
 
-  def add_status_post_evaluate(target, result)
-    status = miq_alert_statuses.find_or_initialize_by(:resource => target)
+  def add_status_post_evaluate(target, result, event)
+    status_description, severity, url, ems_ref, resolved = event.try(:parse_event_metadata)
+    status = miq_alert_statuses.find_or_initialize_by(:resource => target, :event_ems_ref => ems_ref)
     status.result = result
+    status.ems_id = target.try(:ems_id)
+    status.description = status_description || description
+    status.severity = severity unless severity.blank?
+    status.url = url unless url.blank?
+    status.event_ems_ref = ems_ref unless ems_ref.blank?
+    status.resolved = resolved
     status.evaluated_on = Time.now.utc
     status.save
     miq_alert_statuses << status
@@ -424,21 +442,23 @@ class MiqAlert < ApplicationRecord
           }},
           {:name => :operator, :description => _("Operator"), :values => ["Changed"]}
         ]},
-      {:name => "mw_heap_used", :description => _("JVM Heap Used"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_event",
+      {:name => "mw_heap_used", :description => _("JVM Heap Used"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
         :options => [
           {:name => :value_mw_greater_than, :description => _("> Heap Max (%)"), :numeric => true},
           {:name => :value_mw_less_than, :description => _("< Heap Max (%)"), :numeric => true}
         ]},
-      {:name => "mw_non_heap_used", :description => _("JVM Non Heap Used"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_event",
+      {:name => "mw_non_heap_used", :description => _("JVM Non Heap Used"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
         :options => [
-          {:name => :value_mw_greater_than, :description => _("> Non Heap Max (%)"), :numeric => true},
-          {:name => :value_mw_less_than, :description => _("< Non Heap Max (%)"), :numeric => true}
+          {:name => :value_mw_greater_than, :description => _("> Non Heap Committed (%)"), :numeric => true},
+          {:name => :value_mw_less_than, :description => _("< Non Heap Committed (%)"), :numeric => true}
         ]},
-      {:name => "mw_accumulated_gc_duration", :description => _("JVM Accumulated GC Duration"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_event",
+      {:name => "mw_accumulated_gc_duration", :description => _("JVM Accumulated GC Duration"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
         :options => [
           {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<=", "="]},
           {:name => :value_mw_garbage_collector, :description => _("Duration Per Minute (ms)"), :numeric => true}
-        ]}
+        ]},
+      {:name => "dwh_generic", :description => _("All Datawarehouse alerts"), :db => ["ContainerNode"], :responds_to_events => "datawarehouse_alert",
+        :options => [], :always_evaluate => true}
     ]
   end
 
@@ -500,7 +520,7 @@ class MiqAlert < ApplicationRecord
 
   def self.raw_events
     @raw_events ||= expression_by_name("event_threshold")[:options].find { |h| h[:name] == :event_types }[:values] +
-                    ['hawkular_event']
+                    %w(hawkular_alert datawarehouse_alert)
   end
 
   def self.event_alertable?(event)
@@ -561,6 +581,10 @@ class MiqAlert < ApplicationRecord
   def evaluate_script
     # TODO
     true
+  end
+
+  def evaluate_method_dwh_generic(target, options)
+    target.evaluate_alert(id, options)
   end
 
   def evaluate_middleware(target, options)
@@ -756,7 +780,7 @@ class MiqAlert < ApplicationRecord
 
       alist.each do |alert_hash|
         guid = alert_hash["guid"] || alert_hash[:guid]
-        rec = find_by_guid(guid)
+        rec = find_by(:guid => guid)
         if rec.nil?
           alert_hash[:read_only] = true
           alert = create(alert_hash)
@@ -777,8 +801,7 @@ class MiqAlert < ApplicationRecord
   end
 
   def export_to_yaml
-    a = export_to_array
-    a.to_yaml
+    export_to_array.to_yaml
   end
 
   def self.import_from_hash(alert, options = {})
@@ -786,7 +809,7 @@ class MiqAlert < ApplicationRecord
 
     status = {:class => name, :description => alert["description"], :children => []}
 
-    a = find_by_guid(alert["guid"])
+    a = find_by(:guid => alert["guid"])
     msg_pfx = "Importing Alert: guid=[#{alert["guid"]}] description=[#{alert["description"]}]"
     if a.nil?
       a = new(alert)
@@ -815,14 +838,10 @@ class MiqAlert < ApplicationRecord
   end
 
   def self.import_from_yaml(fd)
-    stats = []
-
     input = YAML.load(fd)
-    input.each do |e|
+    input.collect do |e|
       _a, stat = import_from_hash(e[name])
-      stats.push(stat)
+      stat
     end
-
-    stats
   end
 end

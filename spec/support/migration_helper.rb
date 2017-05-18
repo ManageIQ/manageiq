@@ -9,6 +9,7 @@ module Spec
             end
 
             around do |example|
+              Rails.logger.debug("============================================================")
               clearing_caches(&example)
             end
 
@@ -66,7 +67,9 @@ module Spec
       end
 
       def migrate_under_test
+        Rails.logger.debug("========= migrate start ====================================")
         described_class.migrate(migration_direction)
+        Rails.logger.debug("========= migrate complete =================================")
       end
 
       def migration_direction

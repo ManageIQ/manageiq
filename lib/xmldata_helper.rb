@@ -1,6 +1,4 @@
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/xml")
-
-require 'xml_utils'
+require 'xml/xml_utils'
 
 class XmlData < ActiveRecord::Base
   def self.emsinventory(emsId, data)

@@ -7,11 +7,15 @@ module Rbac
     # 3. Class contains acts_as_miq_taggable
     CLASSES_THAT_PARTICIPATE_IN_RBAC = %w(
       AvailabilityZone
+      CloudNetwork
+      CloudSubnet
       CloudTenant
       CloudVolume
       ConfigurationProfile
       ConfiguredSystem
+      ConfigurationScriptBase
       Container
+      ContainerBuild
       ContainerGroup
       ContainerImage
       ContainerImageRegistry
@@ -20,12 +24,24 @@ module Rbac
       ContainerReplicator
       ContainerRoute
       ContainerService
+      ContainerTemplate
+      ContainerVolume
       EmsCluster
       EmsFolder
       ExtManagementSystem
       Flavor
+      FloatingIp
       Host
+      LoadBalancer
       MiqCimInstance
+      MiddlewareDatasource
+      MiddlewareDeployment
+      MiddlewareDomain
+      MiddlewareMessaging
+      MiddlewareServer
+      MiddlewareServerGroup
+      NetworkPort
+      NetworkRouter
       OrchestrationTemplate
       OrchestrationStack
       ResourcePool
@@ -36,7 +52,7 @@ module Rbac
       VmOrTemplate
     )
 
-    TAGGABLE_FILTER_CLASSES = CLASSES_THAT_PARTICIPATE_IN_RBAC - %w(EmsFolder)
+    TAGGABLE_FILTER_CLASSES = CLASSES_THAT_PARTICIPATE_IN_RBAC - %w(EmsFolder) + %w(MiqGroup User)
 
     BELONGSTO_FILTER_CLASSES = %w(
       VmOrTemplate
@@ -47,6 +63,13 @@ module Rbac
       ResourcePool
       Storage
     )
+
+    # key: MiqUserRole#name - user's role
+    # value:
+    #   array - disallowed roles for the user's role
+    DISALLOWED_ROLES_FOR_USER_ROLE = {
+      'EvmRole-tenant_administrator' => %w(EvmRole-super_administrator EvmRole-administrator)
+    }.freeze
 
     # key: descendant::klass
     # value:
@@ -72,6 +95,9 @@ module Rbac
     #   :descendant_ids
     #   ...
     TENANT_ACCESS_STRATEGY = {
+      'CloudSnapshot'          => :descendant_ids,
+      'CloudTenant'            => :descendant_ids,
+      'CloudVolume'            => :descendant_ids,
       'ExtManagementSystem'    => :ancestor_ids,
       'MiqAeNamespace'         => :ancestor_ids,
       'MiqGroup'               => :descendant_ids,
@@ -173,15 +199,18 @@ module Rbac
 
       if targets.nil?
         scope = apply_scope(klass, scope)
+        scope = apply_select(klass, scope, options[:extra_cols]) if options[:extra_cols]
       elsif targets.kind_of?(Array)
         if targets.first.kind_of?(Numeric)
           target_ids = targets
           # assume klass is passed in
         else
-          target_ids       = targets.collect(&:id)
-          klass            = targets.first.class.base_class unless klass.respond_to?(:find)
+          target_ids  = targets.collect(&:id)
+          klass       = targets.first.class
+          klass       = base_class if !klass.respond_to?(:find) && (base_class = rbac_base_class(klass))
         end
         scope = apply_scope(klass, scope)
+        scope = apply_select(klass, scope, options[:extra_cols]) if options[:extra_cols]
 
         ids_clause = ["#{klass.table_name}.id IN (?)", target_ids] if klass.respond_to?(:table_name)
       else # targets is a class_name, scope, class, or acts_as_ar_model class (VimPerformanceDaily in particular)
@@ -192,8 +221,9 @@ module Rbac
           klass = targets
           klass = klass.klass if klass.respond_to?(:klass)
           # working around MiqAeDomain not being in rbac_class
-          klass = klass.base_class if klass.respond_to?(:base_class) && rbac_class(klass).nil? && rbac_class(klass.base_class)
+          klass = base_class if (base_class = rbac_base_class(klass))
         end
+        scope = apply_select(klass, scope, options[:extra_cols]) if options[:extra_cols]
       end
 
       user_filters['match_via_descendants'] = to_class(options[:match_via_descendants])
@@ -203,11 +233,11 @@ module Rbac
 
       # for belongs_to filters, scope_targets uses scope to make queries. want to remove limits for those.
       # if you note, the limits are put back into scope a few lines down from here
-      scope = scope.except(:offset, :limit)
+      scope = scope.except(:offset, :limit, :order)
       scope = scope_targets(klass, scope, user_filters, user, miq_group)
               .where(conditions).where(sub_filter).where(where_clause).where(exp_sql).where(ids_clause)
               .includes(include_for_find).includes(exp_includes)
-              .order(options[:order])
+              .order(order)
 
       scope = include_references(scope, klass, include_for_find, exp_includes)
       scope = scope.limit(limit).offset(offset) if attrs[:apply_limit_in_sql]
@@ -230,7 +260,7 @@ module Rbac
       end
 
       # Preserve sort order of incoming target_ids
-      if !target_ids.nil? && !options[:order]
+      if !target_ids.nil? && !order
         targets = targets.sort_by { |a| target_ids.index(a.id) }
       end
 
@@ -281,6 +311,10 @@ module Rbac
       klass != VimPerformanceDaily && (klass < MetricRollup || klass < Metric)
     end
 
+    def rbac_base_class(klass)
+      klass.base_class if klass.respond_to?(:base_class) && rbac_class(klass).nil? && rbac_class(klass.base_class)
+    end
+
     def safe_base_class(klass)
       klass = klass.base_class if klass.respond_to?(:base_class)
       klass
@@ -314,7 +348,7 @@ module Rbac
       klass.user_or_group_owned(user, miq_group).except(:order)
     end
 
-    def calc_filtered_ids(scope, user_filters, user, miq_group)
+    def calc_filtered_ids(scope, user_filters, user, miq_group, scope_tenant_filter)
       klass = scope.respond_to?(:klass) ? scope.klass : scope
       u_filtered_ids = pluck_ids(get_self_service_objects(user, miq_group, klass))
       b_filtered_ids = get_belongsto_filter_object_ids(klass, user_filters['belongsto'])
@@ -322,13 +356,12 @@ module Rbac
       d_filtered_ids = pluck_ids(matches_via_descendants(rbac_class(klass), user_filters['match_via_descendants'],
                                                          :user => user, :miq_group => miq_group))
 
-      combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids)
+      combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids, scope_tenant_filter.try(:ids))
     end
-
     #
     # Algorithm: filter = u_filtered_ids UNION (b_filtered_ids INTERSECTION m_filtered_ids)
-    #            filter = filter UNION d_filtered_ids if filter is not nil
-    #
+    #            filter = (filter UNION d_filtered_ids if filter is not nil)
+    #            filter = filter INTERSECTION tenant_filter_ids if tenant_filter_ids is not nil
     # a nil as input for any field means it does not apply
     # a nil as output means there is not filter
     #
@@ -336,9 +369,11 @@ module Rbac
     # @param b_filtered_ids [nil|Array<Integer>] objects that belong to parent
     # @param m_filtered_ids [nil|Array<Integer>] managed filter object ids
     # @param d_filtered_ids [nil|Array<Integer>] ids from descendants
+    # @param tenant_filter_ids [nil|Array<Integer>] ids
     # @return nil if filters do not aply
     # @return [Array<Integer>] target ids for filter
-    def combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids)
+
+    def combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids, tenant_filter_ids)
       filtered_ids =
         if b_filtered_ids.nil?
           m_filtered_ids
@@ -358,7 +393,13 @@ module Rbac
         filtered_ids.uniq!
       end
 
-      filtered_ids
+      if filtered_ids.kind_of?(Array) && tenant_filter_ids
+        filtered_ids & tenant_filter_ids.to_a
+      elsif filtered_ids.nil? && tenant_filter_ids.kind_of?(Array) && tenant_filter_ids.present?
+        tenant_filter_ids
+      else
+        filtered_ids
+      end
     end
 
     # @param parent_class [Class] Class of parent (e.g. Host)
@@ -401,8 +442,32 @@ module Rbac
       klass = scope.respond_to?(:klass) ? scope.klass : scope
       user_or_group = user || miq_group
       tenant_id_clause = klass.tenant_id_clause(user_or_group)
-
       tenant_id_clause ? scope.where(tenant_id_clause) : scope
+    end
+
+    def scope_to_cloud_tenant(scope, user, miq_group)
+      klass = scope.respond_to?(:klass) ? scope.klass : scope
+      user_or_group = user || miq_group
+      tenant_id_clause = klass.tenant_id_clause(user_or_group)
+      klass.tenant_joins_clause(scope).where(tenant_id_clause)
+    end
+
+    def scope_for_user_role_group(klass, scope, miq_group, user, managed_filters)
+      user_or_group = miq_group || user
+
+      if user_or_group.try!(:self_service?) && MiqUserRole != klass
+        scope.where(:id => klass == User ? user.id : miq_group.id)
+      else
+        if user_or_group.disallowed_roles
+          scope = scope.with_allowed_roles_for(user_or_group)
+        end
+
+        if MiqUserRole != klass
+          filtered_ids = pluck_ids(get_managed_filter_object_ids(scope, managed_filters))
+        end
+
+        scope_by_ids(scope, filtered_ids)
+      end
     end
 
     ##
@@ -414,24 +479,26 @@ module Rbac
       # TENANT_ACCESS_STRATEGY are a consolidated list of them.
       if klass.respond_to?(:scope_by_tenant?) && klass.scope_by_tenant?
         scope = scope_to_tenant(scope, user, miq_group)
+      elsif klass.respond_to?(:scope_by_cloud_tenant?) && klass.scope_by_cloud_tenant?
+        scope = scope_to_cloud_tenant(scope, user, miq_group)
       end
 
       if apply_rbac_directly?(klass)
-        filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group)
-        scope = scope_by_ids(scope, filtered_ids)
+        filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group, nil)
+        scope_by_ids(scope, filtered_ids)
       elsif apply_rbac_through_association?(klass)
         # if subclasses of MetricRollup or Metric, use the associated
         # model to derive permissions from
         associated_class = rbac_class(scope)
-        filtered_ids = calc_filtered_ids(associated_class, rbac_filters, user, miq_group)
 
-        scope = scope_by_parent_ids(associated_class, scope, filtered_ids)
-      elsif klass == User && user.try!(:self_service?)
-        # Self service users searching for users only see themselves
-        scope = scope.where(:id => user.id)
-      elsif klass == MiqGroup && miq_group.try!(:self_service?)
-        # Self Service users searching for groups only see their group
-        scope = scope.where(:id => miq_group.id)
+        if associated_class.try(:scope_by_tenant?)
+          scope_tenant_filter = scope_to_tenant(associated_class, user, miq_group)
+        end
+
+        filtered_ids = calc_filtered_ids(associated_class, rbac_filters, user, miq_group, scope_tenant_filter)
+        scope_by_parent_ids(associated_class, scope, filtered_ids)
+      elsif [MiqUserRole, MiqGroup, User].include?(klass)
+        scope_for_user_role_group(klass, scope, miq_group, user, rbac_filters['managed'])
       else
         scope
       end
@@ -451,10 +518,10 @@ module Rbac
         if miq_group_id && (detected_group = user.miq_groups.detect { |g| g.id.to_s == miq_group_id.to_s })
           user.current_group = detected_group
         elsif miq_group_id && user.super_admin_user?
-          user.current_group = miq_group || MiqGroup.find_by_id(miq_group_id)
+          user.current_group = miq_group || MiqGroup.find_by(:id => miq_group_id)
         end
       else
-        miq_group ||= miq_group_id && MiqGroup.find_by_id(miq_group_id)
+        miq_group ||= miq_group_id && MiqGroup.find_by(:id => miq_group_id)
       end
       [user, user.try(:current_group) || miq_group]
     end
@@ -509,8 +576,12 @@ module Rbac
       end
     end
 
+    def apply_select(klass, scope, extra_cols)
+      scope.select(scope.select_values.blank? ? klass.arel_table[Arel.star] : nil).select(extra_cols)
+    end
+
     def get_belongsto_matches(blist, klass)
-      return get_belongsto_matches_for_host(blist) if klass == Host
+      return get_belongsto_matches_for_host(blist) if klass <= Host
       return get_belongsto_matches_for_storage(blist) if klass == Storage
       association_name = klass.base_model.to_s.tableize
 
@@ -520,7 +591,7 @@ module Rbac
         # typically, this is the only one we want:
         vcmeta = vcmeta_list.last
 
-        if vcmeta.kind_of?(Host) && klass <= VmOrTemplate
+        if [ExtManagementSystem, Host].any? { |x| vcmeta.kind_of?(x) } && klass <= VmOrTemplate
           vcmeta.send(association_name).to_a
         else
           vcmeta_list.grep(klass) + vcmeta.descendants.grep(klass)

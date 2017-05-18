@@ -6,6 +6,8 @@ describe EvmServer do
 
     before do
       allow(MiqServer).to receive_messages(:running? => false)
+      allow(server).to receive(:set_database_application_name)
+      allow(server).to receive(:set_process_title)
       allow(PidFile).to receive(:create)
     end
 

@@ -29,18 +29,14 @@ describe VMDB::Config::Validator do
     {:webservices => {:timeout => 123}},   true,
     {:webservices => {:timeout => "xxx"}}, false,
 
-    {:authentication => {:mode => "ldaps"}}, true,
+    {:authentication => {:mode => "ldaps"}}, false,
+    {:authentication => {:mode => "ldaps", :ldaphost => "foo"}}, true,
     {:authentication => {:mode => "xxx"}},   false,
 
     {:authentication => {:mode => "ldap", :ldaphost => "foo"}}, true,
     {:authentication => {:mode => "ldap", :ldaphost => nil}},   false,
     {:authentication => {:mode => "ldap", :ldaphost => ""}},    false,
     {:authentication => {:mode => "ldap"}},                     false,
-
-    {:authentication => {:mode => "amazon", :amazon_key => "foo", :amazon_secret => "bar"}}, true,
-    {:authentication => {:mode => "amazon", :amazon_key => "foo", :amazon_secret => nil}},   false,
-    {:authentication => {:mode => "amazon", :amazon_key => "", :amazon_secret => "bar"}},    false,
-    {:authentication => {:mode => "amazon"}},                                                false,
 
     {:log => {:level => "debug"}}, true,
     {:log => {:level => "xxx"}},   false,

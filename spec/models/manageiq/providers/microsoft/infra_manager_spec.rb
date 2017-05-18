@@ -18,25 +18,25 @@ describe ManageIQ::Providers::Microsoft::InfraManager do
     end
 
     it "defaults" do
-      expect(described_class).to receive(:raw_connect) do |url, protocol, creds|
-        expect(url).to match(/host/)
-        expect(protocol).to eq("ssl")
-        expect(creds[:user]).to eq("user")
-        expect(creds[:pass]).to eq("pass")
+      expect(described_class).to receive(:raw_connect) do |connection|
+        expect(connection[:endpoint]).to match("http://host:5985/wsman")
+        expect(connection[:disable_sspi]).to eq(true)
+        expect(connection[:user]).to eq("user")
+        expect(connection[:password]).to eq("pass")
       end
 
       @e.connect
     end
 
     it "accepts overrides" do
-      expect(described_class).to receive(:raw_connect) do |url, protocol, creds|
-        expect(url).to match(/host2/)
-        expect(protocol).to eq("ssl")
-        expect(creds[:user]).to eq("user2")
-        expect(creds[:pass]).to eq("pass2")
+      expect(described_class).to receive(:raw_connect) do |connection|
+        expect(connection[:endpoint]).to match("http://host2:5985/wsman")
+        expect(connection[:disable_sspi]).to eq(true)
+        expect(connection[:user]).to eq("user2")
+        expect(connection[:password]).to eq("pass2")
       end
 
-      @e.connect(:user => "user2", :pass => "pass2", :hostname => "host2")
+      @e.connect(:user => "user2", :password => "pass2", :hostname => "host2")
     end
   end
 
@@ -47,27 +47,29 @@ describe ManageIQ::Providers::Microsoft::InfraManager do
     end
 
     it "defaults" do
-      expect(described_class).to receive(:raw_connect) do |url, protocol, creds|
-        expect(url).to match(/host/)
-        expect(protocol).to eq("kerberos")
-        expect(creds[:user]).to eq("user")
-        expect(creds[:pass]).to eq("pass")
-        expect(creds[:realm]).to eq("pretendrealm")
+      expect(described_class).to receive(:raw_connect) do |connection|
+        expect(connection[:endpoint]).to match("http://host:5985/wsman")
+        expect(connection[:disable_sspi]).to eq(false)
+        expect(connection[:basic_auth_only]).to eq(false)
+        expect(connection[:user]).to eq("user")
+        expect(connection[:password]).to eq("pass")
+        expect(connection[:realm]).to eq("pretendrealm")
       end
 
       @e.connect
     end
 
     it "accepts overrides" do
-      expect(described_class).to receive(:raw_connect) do |url, protocol, creds|
-        expect(url).to match(/host2/)
-        expect(protocol).to eq("kerberos")
-        expect(creds[:user]).to eq("user2")
-        expect(creds[:pass]).to eq("pass2")
-        expect(creds[:realm]).to eq("pretendrealm")
+      expect(described_class).to receive(:raw_connect) do |connection|
+        expect(connection[:endpoint]).to match("http://host2:5985/wsman")
+        expect(connection[:disable_sspi]).to eq(false)
+        expect(connection[:basic_auth_only]).to eq(false)
+        expect(connection[:user]).to eq("user2")
+        expect(connection[:password]).to eq("pass2")
+        expect(connection[:realm]).to eq("pretendrealm")
       end
 
-      @e.connect(:user => "user2", :pass => "pass2", :hostname => "host2")
+      @e.connect(:user => "user2", :password => "pass2", :hostname => "host2")
     end
   end
 end

@@ -1,4 +1,4 @@
-class TenantCfgNotNil < ActiveRecord::Migration
+class TenantCfgNotNil < ActiveRecord::Migration[4.2]
   class Tenant < ActiveRecord::Base; end
 
   def up

@@ -3,12 +3,13 @@ class Session < ApplicationRecord
   @@interval = 30 # how often to purge in seconds
   @@job ||= nil
 
+  def self.enabled?
+    ::Settings.server.session_store == 'sql'
+  end
+
   def self.check_session_timeout
     $log.debug "Checking session data"
-    ttl = timeout
-    cfg = VMDB::Config.new("vmdb").config[:session]
-    ttl = cfg[:timeout] if cfg[:timeout].to_int != ttl
-    purge(ttl)
+    purge(::Settings.session.timeout)
   end
 
   def self.purge(ttl, batch_size = 100)

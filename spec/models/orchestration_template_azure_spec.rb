@@ -31,6 +31,7 @@ describe OrchestrationTemplateAzure do
       :data_type     => "securestring",
       :default_value => nil,
       :hidden        => true,
+      :required      => true,
       :constraints   => [],
     )
   end
@@ -43,6 +44,7 @@ describe OrchestrationTemplateAzure do
       :data_type     => "string",
       :default_value => nil,
       :hidden        => false,
+      :required      => true,
       :constraints   => [],
     )
   end
@@ -55,6 +57,7 @@ describe OrchestrationTemplateAzure do
       :data_type     => "string",
       :default_value => "Free",
       :hidden        => false,
+      :required      => true,
     )
     constraints = parameter.constraints
     expect(constraints.size).to eq(1)
@@ -80,5 +83,22 @@ describe OrchestrationTemplateAzure do
       template = OrchestrationTemplateAzure.new(:content => "invalid string")
       expect(template.validate_format).not_to be_nil
     end
+  end
+
+  describe '#deployment_options' do
+    it do
+      options = subject.deployment_options
+      assert_deployment_option(options[0], "tenant_name", :OrchestrationParameterAllowedDynamic, true)
+      assert_deployment_option(options[1], "stack_name", :OrchestrationParameterPattern, true)
+      assert_deployment_option(options[2], "resource_group", :OrchestrationParameterAllowedDynamic, false)
+      assert_deployment_option(options[3], "new_resource_group", :OrchestrationParameterPattern, false)
+      assert_deployment_option(options[4], "deploy_mode", :OrchestrationParameterAllowed, false)
+    end
+  end
+
+  def assert_deployment_option(option, name, constraint_type, required)
+    expect(option.name).to eq(name)
+    expect(option.required?).to eq(required)
+    expect(option.constraints[0]).to be_kind_of("OrchestrationTemplate::#{constraint_type}".constantize)
   end
 end

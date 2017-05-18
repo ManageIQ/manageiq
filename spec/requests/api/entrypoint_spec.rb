@@ -44,9 +44,28 @@ RSpec.describe "API entrypoint" do
 
     expect(response.parsed_body).to include(
       "server_info" => a_hash_including(
-        "version"   => Vmdb::Appliance.VERSION,
-        "build"     => Vmdb::Appliance.BUILD,
-        "appliance" => MiqServer.my_server.name
+        "version"     => Vmdb::Appliance.VERSION,
+        "build"       => Vmdb::Appliance.BUILD,
+        "appliance"   => MiqServer.my_server.name,
+        "server_href" => a_string_matching(servers_url(MiqServer.my_server.id)),
+        "zone_href"   => a_string_matching(zones_url(MiqServer.my_server.zone.id)),
+        "region_href" => a_string_matching(regions_url(MiqRegion.my_region.id))
+      )
+    )
+  end
+
+  it "returns product_info" do
+    api_basic_authorize
+
+    run_get entrypoint_url
+
+    expect(response.parsed_body).to include(
+      "product_info" => a_hash_including(
+        "name"                 => I18n.t("product.name"),
+        "name_full"            => I18n.t("product.name_full"),
+        "copyright"            => I18n.t("product.copyright"),
+        "support_website"      => I18n.t("product.support_website"),
+        "support_website_text" => I18n.t("product.support_website_text"),
       )
     )
   end

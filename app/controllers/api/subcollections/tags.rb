@@ -1,6 +1,24 @@
 module Api
   module Subcollections
     module Tags
+      def assign_tags_resource(type, id, data)
+        resource = resource_search(id, type, collection_class(type))
+        data['tags'].collect do |tag|
+          tags_assign_resource(resource, type, tag['id'], tag)
+        end
+      rescue => err
+        action_result(false, err.to_s)
+      end
+
+      def unassign_tags_resource(type, id, data)
+        resource = resource_search(id, type, collection_class(type))
+        data['tags'].collect do |tag|
+          tags_unassign_resource(resource, type, tag['id'], tag)
+        end
+      rescue => err
+        action_result(false, err.to_s)
+      end
+
       def tags_query_resource(object)
         object ? object.tags.where(Tag.arel_table[:name].matches "#{Api::BaseController::TAG_NAMESPACE}%") : {}
       end
@@ -41,7 +59,7 @@ module Api
       private
 
       def destroy_tag_and_classification(tag_id)
-        entry_or_tag = Classification.find_by_tag_id(tag_id) || Tag.find(tag_id)
+        entry_or_tag = Classification.find_by(:tag_id => tag_id) || Tag.find(tag_id)
         entry_or_tag.destroy!
       end
 
@@ -85,7 +103,7 @@ module Api
 
       def parse_tag_from_href(data)
         href = data["href"]
-        tag  = if href && href.match(%r{^.*/tags/#{CID_OR_ID_MATCHER}$})
+        tag  = if href && href.match(%r{^.*/tags/#{BaseController::CID_OR_ID_MATCHER}$})
                  klass = collection_class(:tags)
                  klass.find(from_cid(href.split('/').last))
                end

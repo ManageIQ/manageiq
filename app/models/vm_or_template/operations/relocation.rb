@@ -11,6 +11,22 @@ module VmOrTemplate::Operations::Relocation
     raise NotImplementedError, _("raw_evacuate must be implemented in a subclass")
   end
 
+  def evacuate_queue(userid, options)
+    task_opts = {
+      :action => "evacuating VM for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'evacuate',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :zone        => my_zone,
+      :args        => [options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
   def evacuate(options = {})
     raw_evacuate(options)
   end
@@ -29,6 +45,10 @@ module VmOrTemplate::Operations::Relocation
         raise _("Specified Resource Pool <%{pool_name}> for Host <%{name}> is invalid, unable to migrate VM") %
                 {:pool_name => pool.inspect, :name => host.name}
       end
+    end
+
+    if host_id == host.id
+      raise _("The VM '%{name}' can not be migrated to the same host it is already running on.") % {:name => name}
     end
 
     host_mor = host.ems_ref_obj
@@ -76,9 +96,9 @@ module VmOrTemplate::Operations::Relocation
   end
 
   def migrate_via_ids(host_id, pool_id = nil, priority = "defaultPriority", state = nil)
-    host = Host.find_by_id(host_id)
+    host = Host.find_by(:id => host_id)
     raise _("Host with ID=%{host_id} was not found") % {:host_id => host_id} if host.nil?
-    pool = pool_id.nil? ? nil : ResourcePool.find_by_id(pool_id)
+    pool = pool_id.nil? ? nil : ResourcePool.find_by(:id => pool_id)
     migrate(host, pool, priority, state)
   end
 end

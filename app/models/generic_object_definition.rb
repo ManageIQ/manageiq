@@ -9,6 +9,8 @@ class GenericObjectDefinition < ApplicationRecord
   }.freeze
 
   FEATURES = %w(attribute association method).freeze
+  REG_ATTRIBUTE_NAME = /\A[a-z][a-zA-Z_0-9]*\z/
+  REG_METHOD_NAME    = /\A[a-z][a-zA-Z_0-9]*[!?]?\z/
 
   serialize :properties, Hash
 
@@ -18,7 +20,9 @@ class GenericObjectDefinition < ApplicationRecord
   validates :name, :presence => true, :uniqueness => true
   validate  :validate_property_attributes,
             :validate_property_associations,
-            :validate_property_name_unique
+            :validate_property_methods,
+            :validate_property_name_unique,
+            :validate_supported_property_features
 
   before_validation :set_default_properties
   before_validation :normalize_property_attributes,
@@ -27,19 +31,16 @@ class GenericObjectDefinition < ApplicationRecord
 
   before_destroy    :check_not_in_use
 
-  def create_object(options)
-    GenericObject.create!({:generic_object_definition => self}.merge(options))
-  end
-
   FEATURES.each do |feature|
-    define_method("defined_property_#{feature}s") do
+    define_method("property_#{feature}s") do
       return errors[:properties] if properties_changed? && !valid?
       properties["#{feature}s".to_sym]
     end
 
     define_method("property_#{feature}_defined?") do |attr|
-      return defined_property_methods.include?(attr.to_s) if feature == 'method'
-      send("defined_property_#{feature}s").try(:key?, attr.to_s)
+      attr = attr.to_s
+      return property_methods.include?(attr) if feature == 'method'
+      send("property_#{feature}s").key?(attr)
     end
   end
 
@@ -47,13 +48,38 @@ class GenericObjectDefinition < ApplicationRecord
     property_attribute_defined?(attr) || property_association_defined?(attr) || property_method_defined?(attr)
   end
 
+  def create_object(options)
+    GenericObject.create!({:generic_object_definition => self}.merge(options))
+  end
+
+  # To query based on GenericObject AR attributes and property attributes
+  #   find_objects(:name => "TestLoadBalancer", :uid => '0001', :prop_attr_1 => 10, :prop_attr_2 => true)
+  #
+  # To query based on property associations. The array can be a partial list, but must contain only AR ids.
+  #   find_objects(:vms => [23, 26])
+  #
+  def find_objects(options)
+    dup = options.stringify_keys
+    ar_options   = dup.extract!(*(GenericObject.column_names - ["properties"]))
+    json_options = dup.extract!(*(property_attributes.keys + property_associations.keys))
+
+    unless dup.empty?
+      err_msg = _("[%{attrs}]: not searchable for Generic Object of %{name}") % {:attrs => dup.keys.join(", "),
+                                                                                 :name  => name}
+      _log.error(err_msg)
+      raise err_msg
+    end
+
+    generic_objects.where(ar_options).where("properties @> ?", json_options.to_json)
+  end
+
   def property_getter(attr, val)
     return type_cast(attr, val) if property_attribute_defined?(attr)
-    return get_associations(attr, val) if property_association_defined?(attr)
+    return get_objects_of_association(attr, val) if property_association_defined?(attr)
   end
 
   def type_cast(attr, value)
-    TYPE_MAP.fetch(defined_property_attributes[attr]).cast(value)
+    TYPE_MAP.fetch(property_attributes[attr]).cast(value)
   end
 
   def properties=(props)
@@ -61,10 +87,48 @@ class GenericObjectDefinition < ApplicationRecord
     super
   end
 
+  def add_property_attribute(name, type)
+    properties[:attributes][name.to_s] = type.to_sym
+    save
+  end
+
+  def delete_property_attribute(name)
+    transaction do
+      properties[:attributes].delete(name.to_s)
+      save!
+
+      generic_objects.find_each { |o| o.delete_property(name) }
+    end
+  end
+
+  def add_property_association(name, type)
+    properties[:associations][name.to_s] = type.to_s.classify
+    save
+  end
+
+  def delete_property_association(name)
+    transaction do
+      properties[:associations].delete(name.to_s)
+      save!
+
+      generic_objects.find_each { |o| o.delete_property(name) }
+    end
+  end
+
+  def add_property_method(name)
+    properties[:methods] << name.to_s unless properties[:methods].include?(name.to_s)
+    save
+  end
+
+  def delete_property_method(name)
+    properties[:methods].delete(name.to_s)
+    save
+  end
+
   private
 
-  def get_associations(attr, values)
-    defined_property_associations[attr].constantize.where(:id => values).to_a
+  def get_objects_of_association(attr, values)
+    property_associations[attr].constantize.where(:id => values).to_a
   end
 
   def normalize_property_attributes
@@ -91,6 +155,7 @@ class GenericObjectDefinition < ApplicationRecord
   def validate_property_attributes
     properties[:attributes].each do |name, type|
       errors[:properties] << "attribute [#{name}] is not of a recognized type: [#{type}]" unless TYPE_MAP.key?(type.to_sym)
+      errors[:properties] << "invalid attribute name: [#{name}]" unless REG_ATTRIBUTE_NAME =~ name
     end
   end
 
@@ -101,13 +166,29 @@ class GenericObjectDefinition < ApplicationRecord
       rescue NameError
         errors[:properties] << "association [#{name}] is not of a valid model: [#{klass}]"
       end
+      errors[:properties] << "invalid association name: [#{name}]" unless REG_ATTRIBUTE_NAME =~ name
+    end
+  end
+
+  def validate_property_methods
+    properties[:methods].each do |name|
+      errors[:properties] << "invalid method name: [#{name}]" unless REG_METHOD_NAME =~ name
     end
   end
 
   def validate_property_name_unique
-    all = properties[:attributes].keys + properties[:associations].keys + properties[:methods]
-    common = all.group_by(&:to_s).select { |_k, v| v.size > 1 }.collect(&:first)
+    common = property_keywords.group_by(&:to_s).select { |_k, v| v.size > 1 }.collect(&:first)
     errors[:properties] << "property name has to be unique: [#{common.join(",")}]" unless common.blank?
+  end
+
+  def validate_supported_property_features
+    if properties.keys.any? { |f| !f.to_s.singularize.in?(FEATURES) }
+      errors[:properties] << "only these features are supported: [#{FEATURES.join(", ")}]"
+    end
+  end
+
+  def property_keywords
+    properties[:attributes].keys + properties[:associations].keys + properties[:methods]
   end
 
   def check_not_in_use

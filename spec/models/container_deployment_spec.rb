@@ -73,6 +73,40 @@ variant: openshift-enterprise
     expect(keys[:public_key]).to be_truthy
   end
 
+  context "#cockpit_url" do
+    before(:each) do
+      @csv = <<-CSV.gsub(/^\s+/, "")
+        name,description,max_concurrent,external_failover,role_scope
+        cockpit_ws,Cockpit,1,false,zone
+      CSV
+      allow(ServerRole).to receive(:seed_data).and_return(@csv)
+      ServerRole.seed
+      _, _, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      ems = FactoryGirl.create(:ext_management_system, :zone => @zone)
+      @node = FactoryGirl.create(:container_node, :name => "n", :ext_management_system => ems)
+    end
+
+    it "is direct when no role" do
+      expect(@node.cockpit_url).to eq(URI::HTTP.build(:host => "n", :port => 9090))
+    end
+
+    it "uses hostname label when present" do
+      label = FactoryGirl.build(:custom_attribute,
+                                :name    => "kubernetes.io/hostname",
+                                :value   => "a1.custom.domain",
+                                :section => "labels")
+      @node.labels << label
+      expect(@node.cockpit_url).to eq(URI::HTTP.build(:host => "a1.custom.domain", :port => 9090))
+    end
+
+    it "uses proxied url when cockpit role is active" do
+      server = FactoryGirl.create(:miq_server, :ipaddress => "10.0.0.1", :has_active_cockpit_ws => true, :zone => @zone)
+      server.assign_role('cockpit_ws', 1)
+      server.activate_roles('cockpit_ws')
+      expect(@node.cockpit_url).to eq(URI.parse("https://10.0.0.1/cws/=n"))
+    end
+  end
+
   context "container deployment nodes" do
     it "checks extract_public_ip_or_hostname return correct address" do
       expect(@container_deployment.extract_public_ip_or_hostname(@container_deployment.container_deployment_nodes[0])).to eql("37.142.68.50")

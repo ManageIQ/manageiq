@@ -11,6 +11,10 @@ FactoryGirl.define do
     store_type "NFS"
   end
 
+  factory :storage_redhat, :parent => :storage_nfs do
+    sequence(:ems_ref_obj) { |n| "/api/storagedomains/#{n}" }
+  end
+
   factory :storage_block, :parent => :storage do
     store_type "FCP"
   end

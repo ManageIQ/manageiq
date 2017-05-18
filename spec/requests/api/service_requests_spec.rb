@@ -103,7 +103,7 @@ describe "Service Requests API" do
       run_post(svcreq1_url, gen_request(:approve, :reason => "approve reason"))
 
       expected_msg = "Service request #{svcreq1.id} approved"
-      expect_single_action_result(:success => true, :message => expected_msg, :href => :svcreq1_url)
+      expect_single_action_result(:success => true, :message => expected_msg, :href => svcreq1_url)
     end
 
     it "supports denying a request" do
@@ -112,7 +112,7 @@ describe "Service Requests API" do
       run_post(svcreq2_url, gen_request(:deny, :reason => "deny reason"))
 
       expected_msg = "Service request #{svcreq2.id} denied"
-      expect_single_action_result(:success => true, :message => expected_msg, :href => :svcreq2_url)
+      expect_single_action_result(:success => true, :message => expected_msg, :href => svcreq2_url)
     end
 
     it "supports approving multiple requests" do
@@ -274,6 +274,302 @@ describe "Service Requests API" do
       expected = {
         "id"   => service_request.id,
         "href" => a_string_matching(service_requests_url(service_request.id))
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+  end
+
+  context 'Service requests deletion' do
+    it 'forbids deletion without an appropriate role' do
+      api_basic_authorize
+
+      run_post(service_requests_url(service_request.id), :action => 'delete')
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'can delete a single service request resource' do
+      api_basic_authorize collection_action_identifier(:service_requests, :delete)
+
+      run_post(service_requests_url(service_request.id), :action => 'delete')
+
+      expected = {
+        'success' => true,
+        'message' => "service_requests id: #{service_request.id} deleting"
+      }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'can delete multiple service requests' do
+      service_request_2 = FactoryGirl.create(:service_template_provision_request,
+                                             :requester   => @user,
+                                             :source_id   => template.id,
+                                             :source_type => template.class.name)
+      api_basic_authorize collection_action_identifier(:service_requests, :delete)
+
+      run_post(service_requests_url, :action => 'delete', :resources => [
+                 { :id => service_request.id }, { :id => service_request_2.id }
+               ])
+
+      expected = {
+        'results' => a_collection_including(
+          a_hash_including('success' => true,
+                           'message' => "service_requests id: #{service_request.id} deleting"),
+          a_hash_including('success' => true,
+                           'message' => "service_requests id: #{service_request_2.id} deleting")
+        )
+      }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'can delete a service request via DELETE' do
+      api_basic_authorize collection_action_identifier(:service_requests, :delete)
+
+      run_delete(service_requests_url(service_request.id))
+
+      expect(response).to have_http_status(:no_content)
+    end
+
+    it 'forbids service request DELETE without an appropriate role' do
+      api_basic_authorize
+
+      run_delete(service_requests_url(service_request.id))
+
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
+
+  context 'Add Approver' do
+    it 'can add a single approver' do
+      service_request.miq_approvals << FactoryGirl.create(:miq_approval)
+      user = FactoryGirl.create(:user)
+      api_basic_authorize collection_action_identifier(:service_requests, :add_approver)
+
+      expect do
+        run_post(service_requests_url(service_request.id), :action => 'add_approver', :user_id => user.id)
+      end.to change(MiqApproval, :count).by(1)
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include('id' => service_request.id)
+    end
+
+    it 'can add approvers to multiple service requests' do
+      service_request.miq_approvals << FactoryGirl.create(:miq_approval)
+      user = FactoryGirl.create(:user)
+      service_request_2 = FactoryGirl.create(:service_template_provision_request,
+                                             :requester   => @user,
+                                             :source_id   => template.id,
+                                             :source_type => template.class.name)
+      service_request_2.miq_approvals << FactoryGirl.create(:miq_approval)
+      api_basic_authorize collection_action_identifier(:service_requests, :add_approver)
+
+      expected = {
+        'results' => a_collection_including(
+          a_hash_including('id' => service_request.id),
+          a_hash_including('id' => service_request_2.id)
+        )
+      }
+      expect do
+        run_post(service_requests_url, :action => 'add_approver', :resources => [
+                   { :id => service_request.id, :user_id => user.id },
+                   { :id => service_request_2.id, :user_id => user.id }
+                 ])
+      end.to change(MiqApproval, :count).by(2)
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'forbids adding an approver without an appropriate role' do
+      api_basic_authorize
+
+      run_post(service_requests_url, :action => 'add_approver')
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'supports user reference hash with id' do
+      service_request.miq_approvals << FactoryGirl.create(:miq_approval)
+      user = FactoryGirl.create(:user)
+      api_basic_authorize collection_action_identifier(:service_requests, :add_approver)
+
+      expect do
+        run_post(service_requests_url(service_request.id), :action => 'add_approver', :user => { :id => user.id})
+      end.to change(MiqApproval, :count).by(1)
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include('id' => service_request.id)
+    end
+
+    it 'supports user reference hash with href' do
+      service_request.miq_approvals << FactoryGirl.create(:miq_approval)
+      user = FactoryGirl.create(:user)
+      api_basic_authorize collection_action_identifier(:service_requests, :add_approver)
+
+      expect do
+        run_post(service_requests_url(service_request.id),
+                 :action => 'add_approver', :user => { :href => users_url(user.id)})
+      end.to change(MiqApproval, :count).by(1)
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include('id' => service_request.id)
+    end
+
+    it 'raises an error if no user is supplied' do
+      api_basic_authorize collection_action_identifier(:service_requests, :add_approver)
+
+      expected = {
+        'error' => a_hash_including(
+          'kind'    => 'bad_request',
+          'message' => 'Cannot add approver - Must specify a valid user_id or user'
+        )
+      }
+      run_post(service_requests_url(service_request.id), :action => 'add_approver')
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:bad_request)
+    end
+  end
+
+  context 'Remove Approver' do
+    it 'can remove a single approver' do
+      user = FactoryGirl.create(:user)
+      service_request.miq_approvals << FactoryGirl.create(:miq_approval, :approver => user)
+      api_basic_authorize collection_action_identifier(:service_requests, :add_approver)
+
+      expect do
+        run_post(service_requests_url(service_request.id), :action => 'remove_approver', :user_id => user.id)
+      end.to change(MiqApproval, :count).by(-1)
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include('id' => service_request.id)
+    end
+
+    it 'can remove approvers to multiple service requests' do
+      user = FactoryGirl.create(:user)
+      service_request2 = FactoryGirl.create(:service_template_provision_request,
+                                            :requester   => @user,
+                                            :source_id   => template.id,
+                                            :source_type => template.class.name)
+      service_request.miq_approvals << FactoryGirl.create(:miq_approval, :approver => user)
+      service_request2.miq_approvals << FactoryGirl.create(:miq_approval, :approver => user)
+      api_basic_authorize collection_action_identifier(:service_requests, :add_approver)
+
+      expected = {
+        'results' => a_collection_including(
+          a_hash_including('id' => service_request.id),
+          a_hash_including('id' => service_request2.id)
+        )
+      }
+      expect do
+        run_post(
+          service_requests_url,
+          :action    => 'remove_approver',
+          :resources => [
+            { :id => service_request.id, :user_id => user.id },
+            { :id => service_request2.id, :user_id => user.id }
+          ]
+        )
+      end.to change(MiqApproval, :count).by(-2)
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'forbids adding an approver without an appropriate role' do
+      api_basic_authorize
+
+      run_post(service_requests_url, :action => 'remove_approver')
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'supports user reference hash with href' do
+      user = FactoryGirl.create(:user)
+      service_request.miq_approvals << FactoryGirl.create(:miq_approval, :approver => user)
+      api_basic_authorize collection_action_identifier(:service_requests, :add_approver)
+
+      expect do
+        run_post(service_requests_url(service_request.id),
+                 :action => 'remove_approver',
+                 :user   => { :href => users_url(user.id)})
+      end.to change(MiqApproval, :count).by(-1)
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include('id' => service_request.id)
+    end
+
+    it 'raises an error if no user is supplied' do
+      api_basic_authorize collection_action_identifier(:service_requests, :add_approver)
+
+      expected = {
+        'error' => a_hash_including(
+          'kind'    => 'bad_request',
+          'message' => 'Cannot remove approver - Must specify a valid user_id or user'
+        )
+      }
+      run_post(service_requests_url(service_request.id), :action => 'remove_approver')
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'does not raise error if incorrect user is supplied' do
+      user = FactoryGirl.create(:user)
+      service_request.miq_approvals << FactoryGirl.create(:miq_approval)
+      api_basic_authorize collection_action_identifier(:service_requests, :add_approver)
+
+      run_post(service_requests_url(service_request.id), :action => 'remove_approver', :user_id => user.id)
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include('id' => service_request.id)
+    end
+  end
+
+  context 'service request update' do
+    it 'forbids service request update without an appropriate role' do
+      service_request = FactoryGirl.create(:service_template_provision_request,
+                                           :requester => @user,
+                                           :options   => {:foo => "bar"})
+      api_basic_authorize
+
+      run_post(service_requests_url(service_request.id), :action => "edit", :options => {:baz => "qux"})
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'updates a single service request' do
+      service_request = FactoryGirl.create(:service_template_provision_request,
+                                           :requester => @user,
+                                           :options   => {:foo => "bar"})
+      api_basic_authorize(action_identifier(:service_requests, :edit))
+
+      run_post(service_requests_url(service_request.id), :action => "edit", :options => {:baz => "qux"})
+
+      expected = {
+        "id"      => service_request.id,
+        "options" => a_hash_including("foo" => "bar")
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'updates multiple service requests' do
+      service_request, service_request2 = FactoryGirl.create_list(:service_template_provision_request,
+                                                                  2,
+                                                                  :requester => @user,
+                                                                  :options   => {:foo => "bar"})
+      api_basic_authorize collection_action_identifier(:service_requests, :edit)
+
+      run_post(
+        service_requests_url,
+        :action    => "edit",
+        :resources => [
+          {:id => service_request.id, :options => {:baz => "qux"}},
+          {:id => service_request2.id, :options => {:quux => "quuz"}}
+        ]
+      )
+
+      expected = {
+        "results" => a_collection_including(
+          a_hash_including("options" => a_hash_including("foo" => "bar", "baz" => "qux")),
+          a_hash_including("options" => a_hash_including("foo" => "bar", "quux" => "quuz"))
+        )
       }
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)

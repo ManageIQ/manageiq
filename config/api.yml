@@ -3,12 +3,12 @@
   :module: api
   :name: API
   :description: REST API
-  :version: '2.3.0-pre'
+  :version: '3.0.0-pre'
 :version:
   :regex: !ruby/regexp /^v[0-9]+(?>\\.[0-9a-zA-Z]+)*(-[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?/
   :definitions:
-  - :name: '2.3.0-pre'
-    :ident: 'v2.3.0-pre'
+  - :name: '3.0.0-pre'
+    :ident: 'v3.0.0-pre'
 :verb:
   :names:
   - :get
@@ -42,11 +42,179 @@
     - :subcollection
     :verbs: *g
     :klass: Account
+  :actions:
+    :description: Actions
+    :identifier: action
+    :options:
+    - :collection
+    :verbs: *gpd
+    :klass: MiqAction
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: action_show_list
+      :post:
+      - :name: query
+        :identifier: action_show_list
+      - :name: create
+        :identifier: action_new
+      - :name: edit
+        :identifier: action_edit
+      - :name: delete
+        :identifier: action_delete
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: action_show
+      :post:
+      - :name: edit
+        :identifier: action_edit
+      - :name: delete
+        :identifier: action_delete
+      :delete:
+      - :name: delete
+        :identifier: action_delete
+  :alert_actions:
+     :description: Alert Actions
+     :identifier: alert_action
+     :options:
+     - :subcollection
+     :verbs: *gp
+     :klass: MiqAlertStatusAction
+     :subcollection_actions:
+       :get:
+       - :name: read
+         :identifier: alert_status_action_show_list
+       :post:
+       - :name: create
+         :identifier: alert_status_action_new
+  :alert_definition_profiles:
+    :description: Alert Definition Profiles
+    :identifier: alert_definition_profile
+    :options:
+    - :collection
+    :verbs: *gpd
+    :klass: MiqAlertSet
+    :subcollections:
+    - :alert_definitions
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: alert_definition_profiles_show_list
+      :post:
+      - :name: read
+        :identifier: alert_definition_profile_view
+      - :name: create
+        :identifier: alert_definition_profile_new
+      - :name: edit
+        :identifier: alert_definition_profile_edit
+      - :name: delete
+        :identifier: alert_definition_profile_delete
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: alert_definition_profile_view
+      :post:
+      - :name: edit
+        :identifier: alert_definition_profile_edit
+      - :name: delete
+        :identifier: alert_definition_profile_delete
+      :delete:
+      - :name: delete
+        :identifier: alert_definition_profile_delete
+  :alert_definitions:
+    :description: Alert Definitions
+    :identifier: alert_definition
+    :options:
+    - :collection
+    :verbs: *gpd
+    :klass: MiqAlert
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: alert_definitions_show_list
+      :post:
+      - :name: create
+        :identifier: alert_definition_new
+      - :name: edit
+        :identifier: alert_definition_edit
+      - :name: delete
+        :identifier: alert_definition_delete
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: alert_definition_show
+      :post:
+      - :name: edit
+        :identifier: alert_definition_edit
+      - :name: delete
+        :identifier: alert_definition_delete
+      :delete:
+      - :name: delete
+        :identifier: alert_definition_delete
+  :alerts:
+    :description: Alerts
+    :identifier: alert
+    :options:
+    - :collection
+    :verbs: *g
+    :klass: MiqAlertStatus
+    :subcollections:
+    - :alert_actions
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: alert_status_show_list
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: alert_status_show
   :auth:
     :description: REST API Authentication
     :options:
     - :primary
     :verbs: *gd
+  :authentications:
+    :description: Authentications
+    :options:
+    - :collection
+    - :subcollection
+    :verbs: *gpppd
+    :klass: Authentication
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: embedded_automation_manager_credentials_view
+      :post:
+      - :name: delete
+        :identifier: embedded_automation_manager_credentials_delete
+      - :name: edit
+        :identifier: embedded_automation_manager_credentials_edit
+      - :name: create
+        :identifier: embedded_automation_manager_credentials_add
+      - :name: refresh
+        :identifier: embedded_automation_manager_credentials_refresh
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: embedded_automation_manager_credentials_view
+      :post:
+      - :name: delete
+        :identifier: embedded_automation_manager_credentials_delete
+      - :name: edit
+        :identifier: embedded_automation_manager_credentials_edit
+      - :name: refresh
+        :identifier: embedded_automation_manager_credentials_refresh
+      :delete:
+      - :name: delete
+        :identifier: embedded_automation_manager_credentials_delete
+    :subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: embedded_automation_manager_credentials_view
+      :post:
+      - :name: create
+        :identifier: embedded_automation_manager_credentials_add
   :automate:
     :description: Automate
     :options:
@@ -62,6 +230,28 @@
       :get:
       - :name: read
         :identifier: miq_ae_domain_view
+  :automate_domains:
+    :description: Automate Domains
+    :options:
+    - :collection
+    :verbs: *gp
+    :klass: MiqAeDomain
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: miq_ae_domain_view
+      :post:
+      - :name: query
+        :identifier: miq_ae_domain_view
+      - :name: refresh_from_source
+        :identifier: miq_ae_git_refresh
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: miq_ae_domain_view
+      :post:
+      - :name: refresh_from_source
+        :identifier: miq_ae_git_refresh
   :automation_requests:
     :description: Automation Requests
     :options:
@@ -78,12 +268,16 @@
         :identifier: miq_request_approval
       - :name: deny
         :identifier: miq_request_approval
+      - :name: edit
+        :identifier: miq_request_edit
     :resource_actions:
       :post:
       - :name: approve
         :identifier: miq_request_approval
       - :name: deny
         :identifier: miq_request_approval
+      - :name: edit
+        :identifier: miq_request_edit
   :availability_zones:
     :description: Availability Zones
     :identifier: availability_zone
@@ -125,9 +319,6 @@
         :identifier: blueprint_delete
       - :name: publish
         :identifier: blueprint_publish
-      :delete:
-      - :name: delete
-        :identifier: blueprint_delete
     :resource_actions:
       :get:
       - :name: read
@@ -222,40 +413,74 @@
       :delete:
       - :name: delete
         :identifier: chargeback_rates_delete
-  :container_deployments:
-    :description: Container Provider Deployment
-    :identifier: container_deployment
-    :klass: ContainerDeployment
-    :verbs: *gpppd
+  :cloud_networks:
+    :description: Cloud Networks
+    :identifier: miq_cloud_networks
     :options:
     - :collection
+    - :subcollection
+    :verbs: *gp
+    :klass: CloudNetwork
     :collection_actions:
       :get:
       - :name: read
-        :identifier: container_deployment_show
+        :identifier: miq_cloud_networks_view
       :post:
       - :name: query
-        :identifier: container_deployment_show
-      - :name: create
-        :identifier: container_deployment_create
+        :identifier: miq_cloud_networks_view
+    :subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: miq_cloud_networks_view
+    :subresource_actions:
+      :get:
+      - :name: read
+        :identifier: miq_cloud_networks_view
+  :cloud_tenants:
+    :description: Cloud Tenants
+    :identifier: cloud_tenant
+    :options:
+    - :collection
+    - :subcollection
+    :verbs: *gp
+    :klass: CloudTenant
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: cloud_tenant_show_list
+      :post:
+      - :name: query
+        :identifier: cloud_tenant_show_list
     :resource_actions:
       :get:
       - :name: read
-        :identifier: container_deployment_show
-  :currencies:
-    :description: Currencies
-    :identifier: currency
+        :identifier: cloud_tenant_show
+    :subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: cloud_tenant_show_list
+    :subresource_actions:
+      :get:
+      - :name: read
+        :identifier: cloud_tenant_show
+  :cloud_volumes:
+    :description: Cloud Volumes
+    :identifier: cloud_volume
     :options:
     - :collection
-    :verbs: *g
-    :klass: ChargebackRateDetailCurrency
-  :measures:
-    :description: Measures
-    :identifier: measure
-    :options:
-    - :collection
-    :verbs: *g
-    :klass: ChargebackRateDetailMeasure
+    :verbs: *gp
+    :klass: CloudVolume
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: cloud_volume_show_list
+      :post:
+      - :name: query
+        :identifier: cloud_volume_show_list
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: cloud_volume
   :clusters:
     :description: Clusters
     :identifier: ems_cluster
@@ -308,7 +533,7 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *gp
+    :verbs: *gpd
     :klass: Condition
     :collection_actions:
       :get:
@@ -317,10 +542,131 @@
       :post:
       - :name: query
         :identifier: condition
+      - :name: create
+        :identifier: condition_new
+      - :name: edit
+        :identifier: condition_edit
+      - :name: delete
+        :identifier: condition_delete
     :resource_actions:
       :get:
       - :name: read
         :identifier: condition
+      :post:
+      - :name: edit
+        :identifier: condition_edit
+      - :name: delete
+        :identifier: condition_delete
+      :delete:
+      - :name: delete
+        :identifier: condition_delete
+  :configuration_script_payloads:
+    :description: Configuration Script Payloads
+    :options:
+    - :collection
+    - :subcollection
+    :verbs: *g
+    :klass: ConfigurationScriptPayload
+    :subcollections:
+      - :authentications
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: embedded_configuration_script_payload_view
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: embedded_configuration_script_payload_view
+    :subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: embedded_configuration_script_payload_view
+    :authentications_subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: embedded_automation_manager_credentials_view
+      :post:
+      - :name: create
+        :identifier: embedded_automation_manager_credentials_add
+  :configuration_script_sources:
+    :description: Configuration Script Source
+    :options:
+    - :collection
+    :verbs: *gpppd
+    :klass: ConfigurationScriptSource
+    :subcollections:
+      - :configuration_script_payloads
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: embedded_configuration_script_source_view
+      :post:
+      - :name: edit
+        :identifier: embedded_configuration_script_source_edit
+      - :name: delete
+        :identifier: embedded_configuration_script_source_delete
+      - :name: create
+        :identifier: embedded_configuration_script_source_add
+      - :name: refresh
+        :identifier: embedded_configuration_script_source_refresh
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: embedded_configuration_script_source_view
+      :post:
+      - :name: edit
+        :identifier: embedded_configuration_script_source_edit
+      - :name: delete
+        :identifier: embedded_configuration_script_source_delete
+      - :name: refresh
+        :identifier: embedded_configuration_script_source_refresh
+      :delete:
+      - :name: delete
+        :identifier: embedded_configuration_script_source_delete
+  :container_deployments:
+    :description: Container Provider Deployment
+    :identifier: container_deployment
+    :klass: ContainerDeployment
+    :verbs: *gpppd
+    :options:
+    - :collection
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: container_deployment_show
+      :post:
+      - :name: query
+        :identifier: container_deployment_show
+      - :name: create
+        :identifier: container_deployment_create
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: container_deployment_show
+  :currencies:
+    :description: Currencies
+    :identifier: currency
+    :options:
+    - :collection
+    :verbs: *g
+    :klass: ChargebackRateDetailCurrency
+  :custom_attributes:
+    :description: Custom Attributes
+    :options:
+    - :subcollection
+    :verbs: *gpd
+    :klass: CustomAttribute
+    :subcollection_actions:
+      :post:
+      - :name: add
+      - :name: edit
+      - :name: delete
+    :subresource_actions:
+      :post:
+      - :name: edit
+      - :name: delete
+      :delete:
+      - :name: delete
   :data_stores:
     :description: Datastores
     :identifier: storage
@@ -384,6 +730,25 @@
       :post:
       - :name: assign
       - :name: unassign
+  :firmwares:
+    :description: Firmwares
+    :options:
+    - :collection
+    - :subcollection
+    :verbs: *gp
+    :klass: Firmware
+    :identifier: firmware
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: firmware_show_list
+      :post:
+      - :name: query
+        :identifier: firmware_show_list
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: firmware_show
   :flavors:
     :description: Flavors
     :identifier: flavor
@@ -546,6 +911,9 @@
     :verbs: *gp
     :options:
     - :collection
+    :subcollections:
+    - :load_balancers
+    - :snapshots
     :collection_actions:
       :get:
       - :name: read
@@ -590,6 +958,58 @@
         :identifier: instance_guest_restart
       - :name: reset
         :identifier: instance_reset
+    :snapshots_subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: cloud_volume_snapshot_view
+      :post:
+      - :name: create
+        :identifier: cloud_volume_snapshot_create
+      - :name: delete
+        :identifier: cloud_volume_snapshot_delete
+    :snapshots_subresource_actions:
+      :get:
+      - :name: read
+        :identifier: cloud_volume_snapshot_view
+      :post:
+      - :name: delete
+        :identifier: cloud_volume_snapshot_delete
+      :delete:
+      - :name: delete
+        :identifier: cloud_volume_snapshot_delete
+  :load_balancers:
+    :description: Load Balancers
+    :options:
+    - :collection
+    - :subcollection
+    :verbs: *gp
+    :klass: LoadBalancer
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: load_balancer_show_list
+      :post:
+      - :name: query
+        :identifier: load_balancer_show_list
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: load_balancer_show
+    :subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: load_balancer_show
+    :subresource_actions:
+      :get:
+      - :name: read
+        :identifier: load_balancer_show
+  :measures:
+    :description: Measures
+    :identifier: measure
+    :options:
+    - :collection
+    :verbs: *g
+    :klass: ChargebackRateDetailMeasure
   :notifications:
     :description: "User's past notifications"
     :options:
@@ -604,19 +1024,114 @@
       :post:
       - :name: mark_as_seen
       - :name: delete
+      :delete:
+      - :name: delete
+  :orchestration_stacks:
+    :description: Orchestration Stacks
+    :options:
+    - :subcollection
+    :verbs: *g
+    :klass: OrchestrationStack
+    :subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: orchestration_stack_view
+    :subresource_actions:
+      :get:
+      - :name: read
+        :identifier: orchestration_stack_view
+  :orchestration_templates:
+    :description: Orchestration Template
+    :identifier: orchestration_templates_accord
+    :options:
+    - :collection
+    :verbs: *gpppd
+    :klass: OrchestrationTemplate
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: orchestration_templates_view
+      :post:
+      - :name: create
+        :identifier: orchestration_template_add
+      - :name: edit
+        :identifier: orchestration_template_edit
+      - :name: delete
+        :identifier: orchestration_template_remove
+      - :name: copy
+        :identifier: orchestration_template_copy
+    :resource_actions:
+      :post:
+      - :name: edit
+        :identifier: orchestration_template_edit
+      - :name: delete
+        :identifier: orchestration_template_remove
+      - :name: copy
+        :identifier: orchestration_template_copy
+      :delete:
+      - :name: delete
+        :identifier: orchestration_template_remove
+  :physical_servers:
+    :description: Physical Servers
+    :identifier: physical_server
+    :options:
+    - :collection
+    :verbs: *gp
+    :klass: PhysicalServer
+    :subcollections:
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: physical_server_show_list
+      :post:
+      - :name: query
+        :identifier: physical_server_show_list
+      - :name: power_on
+        :identifier: physical_server_power_on
+      - :name: power_off
+        :identifier: physical_server_power_off
+      - :name: restart
+        :identifier: physical_server_restart
+      - :name: blink_loc_led
+        :identifier: physical_server_blink_loc_led
+      - :name: turn_on_loc_led
+        :identifier: physical_server_turn_on_loc_led
+      - :name: turn_off_loc_led
+        :identifier: physical_server_turn_off_loc_led
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: physical_server_show
+      :post:
+      - :name: power_on
+        :identifier: physical_server_power_on
+      - :name: power_off
+        :identifier: physical_server_power_off
+      - :name: restart
+        :identifier: physical_server_restart
+      - :name: blink_loc_led
+        :identifier: physical_server_blink_loc_led
+      - :name: turn_on_loc_led
+        :identifier: physical_server_turn_on_loc_led
+      - :name: turn_off_loc_led
+        :identifier: physical_server_turn_off_loc_led        
   :pictures:
     :description: Pictures
     :options:
     - :collection
-    :verbs: *g
+    :verbs: *gp
     :klass: Picture
+    :collection_actions:
+      :post:
+      - :name: create
+        :identifier: picture_new
   :policies:
     :description: Policies
     :identifier: policy
     :options:
     - :collection
     - :subcollection
-    :verbs: *gp
+    :verbs: *gpd
     :klass: MiqPolicy
     :subcollections:
     - :conditions
@@ -629,15 +1144,12 @@
       :post:
       - :name: query
         :identifier: policy_view
-      - :name: add
+      - :name: create
         :identifier: policy_new
-        :disabled: true
       - :name: edit
         :identifier: policy_edit
-        :disabled: true
       - :name: delete
         :identifier: policy_delete
-        :disabled: true
     :resource_actions:
       :get:
       - :name: read
@@ -645,11 +1157,11 @@
       :post:
       - :name: edit
         :identifier: policy_edit
-        :disabled: true
+      - :name: delete
+        :identifier: policy_delete
       :delete:
       - :name: delete
         :identifier: policy_delete
-        :disabled: true
     :subcollection_actions:
       :post:
       - :name: assign
@@ -717,15 +1229,19 @@
       - :name: delete
         :identifier: profile_delete
         :disabled: true
-    :subcollection_actions:
+    :policies_subcollection_actions:
       :post:
       - :name: assign
+        :identifier: policy_profile_assign
       - :name: unassign
+        :identifier: policy_profile_assign
       - :name: resolve
-    :subresource_actions:
+    :policies_subresource_actions:
       :post:
       - :name: assign
+        :identifier: policy_profile_assign
       - :name: unassign
+        :identifier: policy_profile_assign
       - :name: resolve
   :providers:
     :description: Providers
@@ -739,6 +1255,9 @@
     - :policies
     - :policy_profiles
     - :cloud_networks
+    - :cloud_tenants
+    - :custom_attributes
+    - :load_balancers
     :collection_actions:
       :get:
       - :name: read
@@ -765,6 +1284,10 @@
         :identifier: ems_infra_refresh
       - :name: delete
         :identifier: ems_infra_delete
+      - :name: import_vm
+        :identifier: ems_infra_import_vm
+        :options:
+        - :validate_action
       :delete:
       - :name: delete
         :identifier: ems_infra_delete
@@ -774,6 +1297,14 @@
         :identifier: ems_infra_tag
       - :name: unassign
         :identifier: ems_infra_tag
+    :custom_attributes_subcollection_actions:
+      :post:
+      - :name: add
+        :identifier: ems_infra_edit
+      - :name: edit
+        :identifier: ems_infra_edit
+      - :name: delete
+        :identifier: ems_infra_edit
     :policies_subcollection_actions:
       :post:
       - :name: assign
@@ -786,10 +1317,6 @@
         :identifier: ems_infra_protect
       - :name: unassign
         :identifier: ems_infra_protect
-    :cloud_networks_subcollection_actions:
-      :get:
-      - :name: show
-      - :identifier: miq_cloud_networks_view
   :provision_dialogs:
     :description: Provisioning Dialogs
     :identifier: miq_ae_customization_explorer
@@ -831,6 +1358,8 @@
         :identifier: miq_request_approval
       - :name: deny
         :identifier: miq_request_approval
+      - :name: edit
+        :identifier: miq_request_edit
     :resource_actions:
       :get:
       - :name: read
@@ -840,6 +1369,42 @@
         :identifier: miq_request_approval
       - :name: deny
         :identifier: miq_request_approval
+      - :name: edit
+        :identifier: miq_request_edit
+  :quotas:
+    :description: TenantQuotas
+    :options:
+    - :subcollection
+    :verbs: *gpppd
+    :klass: TenantQuota
+    :subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: rbac_tenant_manage_quotas
+      :post:
+      - :name: query
+        :identifier: rbac_tenant_manage_quotas
+      - :name: create
+        :identifier: rbac_tenant_manage_quotas
+      - :name: edit
+        :identifier: rbac_tenant_manage_quotas
+      - :name: delete
+        :identifier: rbac_tenant_manage_quotas
+    :subresource_actions:
+      :get:
+      - :name: read
+        :identifier: rbac_tenant_manage_quotas
+      :post:
+      - :name: edit
+        :identifier: rbac_tenant_manage_quotas
+      - :name: delete
+        :identifier: rbac_tenant_manage_quotas
+      :put:
+      - :name: edit
+        :identifier: rbac_tenant_manage_quotas
+      :delete:
+      - :name: delete
+        :identifier: rbac_tenant_manage_quotas
   :rates:
     :description: Chargeback Rates
     :identifier: chargeback_rates
@@ -873,6 +1438,24 @@
       :delete:
       - :name: delete
         :identifier: chargeback_rates_delete
+  :regions:
+    :description: Regions
+    :identifier: region
+    :options:
+    - :collection
+    :verbs: *gp
+    :klass: MiqRegion
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: region
+      :post:
+      - :name: query
+        :identifier: region
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: region
   :reports:
     :description: Reports
     :identifier: miq_report
@@ -913,6 +1496,9 @@
     - :collection
     :verbs: *gp
     :klass: MiqRequest
+    :subcollections:
+    - :request_tasks
+    - :tasks
     :collection_actions:
       :get:
       - :name: read
@@ -920,10 +1506,40 @@
       :post:
       - :name: query
         :identifier: miq_request_show_list
+      - :name: create
+        :identifiers:
+        - :klass: AutomationRequest
+        - :klass: MiqHostProvisionRequest
+          :identifier: host_miq_request_new
+        - :klass: MiqProvisionRequest
+          :identifier: vm_miq_request_new
+        - :klass: MiqProvisionConfiguredSystemRequest
+          :identifier: configured_system_provision
+        - :klass: VmReconfigureRequest
+          :identifier: vm_reconfigure
+        - :klass: VmMigrateRequest
+          :identifier: vm_migrate
+        - :klass: ServiceTemplateProvisionRequest
+          :identifier: svc_catalog_provision
+        - :klass: ServiceReconfigureRequest
+          :identifier: service_reconfigure
+      - :name: edit
+        :identifier: miq_request_edit
+      - :name: approve
+        :identifier: miq_request_approval
+      - :name: deny
+        :identifier: miq_request_approval
     :resource_actions:
       :get:
       - :name: read
         :identifier: miq_request_show
+      :post:
+      - :name: edit
+        :identifier: miq_request_edit
+      - :name: approve
+        :identifier: miq_request_approval
+      - :name: deny
+        :identifier: miq_request_approval
   :resource_actions:
     :description: Resource Actions
     :options:
@@ -995,21 +1611,6 @@
       :get:
       - :name: read
         :identifier: miq_report_view
-  :schedules:
-    :description: Report schedules
-    :identifier: miq_report_reports
-    :options:
-    - :subcollection
-    :verbs: *gp
-    :klass: MiqSchedule
-    :collection_actions:
-      :get:
-      - :name: read
-        :identifier: miq_report_view
-    :subresource_actions:
-      :get:
-      - :name: read
-        :identifier: miq_report_view
   :roles:
     :description: Roles
     :identifier: rbac_role
@@ -1047,6 +1648,21 @@
       :delete:
       - :name: delete
         :identifier: rbac_role_delete
+  :schedules:
+    :description: Report schedules
+    :identifier: miq_report_reports
+    :options:
+    - :subcollection
+    :verbs: *gp
+    :klass: MiqSchedule
+    :subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: miq_report_view
+    :subresource_actions:
+      :get:
+      - :name: read
+        :identifier: miq_report_view
   :security_groups:
     :description: Security Groups
     :identifier: security_group
@@ -1126,6 +1742,12 @@
         :identifier: svc_catalog_provision
       - :name: delete
         :identifier: dialog_delete
+      - :name: create
+        :identifier: dialog_new
+      - :name: edit
+        :identifier: dialog_edit
+      - :name: copy
+        :identifier: dialog_copy
     :resource_actions:
       :get:
       - :name: read
@@ -1135,6 +1757,10 @@
         :identifier: svc_catalog_provision
       - :name: delete
         :identifier: dialog_delete
+      - :name: edit
+        :identifier: dialog_edit
+      - :name: copy
+        :identifier: dialog_copy
       :delete:
       - :name: delete
         :identifier: dialog_delete
@@ -1160,6 +1786,8 @@
         :identifier: svc_catalog_provision
       - :name: delete
         :identifier: svc_catalog_provision
+      - :name: copy
+        :identifier: svc_catalog_provision
     :resource_actions:
       :get:
       - :name: read
@@ -1173,6 +1801,8 @@
         :identifier: svc_catalog_provision
       - :name: order
         :identifier: svc_catalog_provision
+      - :name: copy
+        :identifier: svc_catalog_provision
       :delete:
       - :name: delete
         :identifier: svc_catalog_provision
@@ -1182,7 +1812,7 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *gp
+    :verbs: *gpd
     :klass: ServiceTemplateProvisionRequest
     :subcollections:
     - :request_tasks
@@ -1198,6 +1828,14 @@
         :identifier: miq_request_approval
       - :name: deny
         :identifier: miq_request_approval
+      - :name: delete
+        :identifier: miq_request_delete
+      - :name: add_approver
+        :identifier: miq_request_approval
+      - :name: remove_approver
+        :identifier: miq_request_approval
+      - :name: edit
+        :identifier: miq_request_edit
     :resource_actions:
       :get:
       - :name: read
@@ -1207,6 +1845,17 @@
         :identifier: miq_request_approval
       - :name: deny
         :identifier: miq_request_approval
+      - :name: delete
+        :identifier: miq_request_delete
+      - :name: add_approver
+        :identifier: miq_request_approval
+      - :name: remove_approver
+        :identifier: miq_request_approval
+      - :name: edit
+        :identifier: miq_request_edit
+      :delete:
+      - :name: delete
+        :identifier: miq_request_delete
     :subcollection_actions:
       :get:
       - :name: read
@@ -1249,6 +1898,8 @@
         :identifier: catalogitem_edit
       - :name: delete
         :identifier: catalogitem_delete
+      - :name: create
+        :identifier: atomic_catalogitem_new
     :subcollection_actions:
       :post:
       - :name: edit
@@ -1270,6 +1921,8 @@
       :post:
       - :name: edit
         :identifier: catalogitem_edit
+      - :name: delete
+        :identifier: catalogitem_delete
       :delete:
       - :name: delete
         :identifier: catalogitem_delete
@@ -1308,6 +1961,7 @@
     - :tags
     - :service_dialogs
     - :vms
+    - :orchestration_stacks
     :collection_actions:
       :get:
       - :name: read
@@ -1325,6 +1979,22 @@
         :identifier: service_ownership
       - :name: delete
         :identifier: service_delete
+      - :name: start
+        :identifier: service_admin
+      - :name: stop
+        :identifier: service_admin
+      - :name: suspend
+        :identifier: service_admin
+      - :name: assign_tags
+        :identifier: service_tag
+      - :name: unassign_tags
+        :identifier: service_tag
+      - :name: add_resource
+        :identifier: service_edit
+      - :name: remove_all_resources
+        :identifier: service_edit
+      - :name: remove_resource
+        :identifier: service_edit
     :resource_actions:
       :get:
       - :name: read
@@ -1340,6 +2010,20 @@
         :identifier: service_reconfigure
         :options:
         - :validate_action
+      - :name: start
+        :identifier: service_admin
+      - :name: stop
+        :identifier: service_admin
+      - :name: suspend
+        :identifier: service_admin
+      - :name: delete
+        :identifier: service_delete
+      - :name: add_resource
+        :identifier: service_edit
+      - :name: remove_all_resources
+        :identifier: service_edit
+      - :name: remove_resource
+        :identifier: service_edit
       :delete:
       - :name: delete
         :identifier: service_delete
@@ -1358,6 +2042,7 @@
     :verbs: *g
     :categories:
       - product
+      - prototype
     :collection_actions:
       :get:
       - :name: read
@@ -1366,27 +2051,18 @@
       :get:
       - :name: read
         :identifier: ops_settings
+  :snapshots:
+    :description: Snapshots
+    :options:
+    - :subcollection
+    :verbs: *gpd
+    :klass: Snapshot
   :software:
     :description: Software
     :options:
     - :subcollection
     :verbs: *g
     :klass: GuestApplication
-  :custom_attributes:
-    :description: Custom Attributes
-    :options:
-    - :subcollection
-    :verbs: *gpd
-    :klass: CustomAttribute
-    :subcollection_actions:
-      :post:
-      - :name: add
-      - :name: edit
-      - :name: delete
-    :subresource_actions:
-      :post:
-      - :name: edit
-      - :name: delete
   :tags:
     :description: Tags
     :identifier: ops_settings
@@ -1493,6 +2169,8 @@
         :disabled: true
       - :name: set_ownership
         :identifier: miq_template_ownership
+      - :name: delete
+        :identifier: miq_template_delete
       :delete:
       - :name: delete
         :identifier: miq_template_delete
@@ -1531,10 +2209,10 @@
     :collection_actions:
       :get:
       - :name: read
-        :identifier: rbac_tenant_show_list
+        :identifier: rbac_tenant_view
       :post:
       - :name: query
-        :identifier: rbac_tenant_show_list
+        :identifier: rbac_tenant_view
       - :name: create
         :identifier: rbac_tenant_add
       - :name: edit
@@ -1544,7 +2222,7 @@
     :resource_actions:
       :get:
       - :name: read
-        :identifier: rbac_tenant_show
+        :identifier: rbac_tenant_view
       :post:
       - :name: edit
         :identifier: rbac_tenant_edit
@@ -1568,40 +2246,6 @@
         :identifier: rbac_tenant_manage_quotas
       - :name: edit
         :identifier: rbac_tenant_manage_quotas
-      - :name: delete
-        :identifier: rbac_tenant_manage_quotas
-  :quotas:
-    :description: TenantQuotas
-    :options:
-    - :subcollection
-    :verbs: *gpppd
-    :klass: TenantQuota
-    :subcollection_actions:
-      :get:
-      - :name: read
-        :identifier: rbac_tenant_manage_quotas
-      :post:
-      - :name: query
-        :identifier: rbac_tenant_manage_quotas
-      - :name: create
-        :identifier: rbac_tenant_manage_quotas
-      - :name: edit
-        :identifier: rbac_tenant_manage_quotas
-      - :name: delete
-        :identifier: rbac_tenant_manage_quotas
-    :subresource_actions:
-      :get:
-      - :name: read
-        :identifier: rbac_tenant_manage_quotas
-      :post:
-      - :name: edit
-        :identifier: rbac_tenant_manage_quotas
-      - :name: delete
-        :identifier: rbac_tenant_manage_quotas
-      :put:
-      - :name: edit
-        :identifier: rbac_tenant_manage_quotas
-      :delete:
       - :name: delete
         :identifier: rbac_tenant_manage_quotas
   :users:
@@ -1650,6 +2294,7 @@
     :identifier: vm
     :options:
     - :collection
+    - :custom_actions
     :verbs: *gpd
     :klass: Vm
     :subcollections:
@@ -1659,6 +2304,7 @@
     - :accounts
     - :custom_attributes
     - :software
+    - :snapshots
     :collection_actions:
       :get:
       - :name: read
@@ -1671,7 +2317,6 @@
         :disabled: true
       - :name: edit
         :identifier: vm_edit
-        :disabled: true
       - :name: add_lifecycle_event
         :identifier: vm_edit
       - :name: add_event
@@ -1708,6 +2353,10 @@
         :identifier: vm_scan
       - :name: delete
         :identifier: vm_delete
+      - :name: assign_tags
+        :identifier: vm_tag
+      - :name: unassign_tags
+        :identifier: vm_tag
     :resource_actions:
       :get:
       - :name: read
@@ -1715,7 +2364,6 @@
       :post:
       - :name: edit
         :identifier: vm_edit
-        :disabled: true
       - :name: add_lifecycle_event
         :identifier: vm_edit
       - :name: add_event
@@ -1785,6 +2433,27 @@
         :identifier: vm_protect
       - :name: resolve
         :identifier: vm_policy_sim
+    :snapshots_subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: vm_snapshot_view
+      :post:
+      - :name: create
+        :identifier: vm_snapshot_add
+      - :name: delete
+        :identifier: vm_snapshot_delete
+    :snapshots_subresource_actions:
+      :get:
+      - :name: read
+        :identifier: vm_snapshot_view
+      :post:
+      - :name: revert
+        :identifier: vm_snapshot_revert
+      - :name: delete
+        :identifier: vm_snapshot_delete
+      :delete:
+      - :name: delete
+        :identifier: vm_snapshot_delete
   :zones:
     :description: Zones
     :identifier: zone
@@ -1820,146 +2489,3 @@
       - :name: delete
         :identifier: zone_delete
         :disabled: true
-  :virtual_templates:
-    :description: Virtual Templates
-    :identifier: miq_virtual_template
-    :options:
-    - :collection
-    :verbs: *gp
-    :klass: ManageIQ::Providers::CloudManager::VirtualTemplate
-    :collection_actions:
-      :get:
-      - :name: read
-        :identifier: virtual_template_show
-      :post:
-      - :name: query
-        :identifier: virtual_template_show
-  :arbitration_profiles:
-    :description: Arbitration Profiles
-    :identifier: ems_cloud_admin
-    :options:
-    - :collection
-    :verbs: *gpppd
-    :klass: ArbitrationProfile
-    :collection_actions:
-      :get:
-      - :name: read
-        :identifier: arbitration_profile_show
-      :post:
-      - :name: query
-        :identifier: arbitration_profile_show
-      - :name: create
-        :identifier: arbitration_profile_new
-      - :name: edit
-        :identifier: arbitration_profile_edit
-      - :name: delete
-        :identifier: arbitration_profile_delete
-    :resource_actions:
-      :post:
-      - :name: edit
-        :identifier: arbitration_profile_edit
-      - :name: delete
-        :identifier: arbitration_profile_delete
-      :delete:
-      - :name: delete
-        :identifier: arbitration_profile_delete
-  :cloud_networks:
-    :description: Cloud Networks
-    :identifier: miq_cloud_networks
-    :options:
-    - :collection
-    - :subcollection
-    :verbs: *gp
-    :klass: CloudNetwork
-    :collection_actions:
-      :get:
-      - :name: read
-        :identifier: miq_cloud_networks_view
-      :post:
-      - :name: query
-        :identifier: miq_cloud_networks_view
-  :orchestration_templates:
-    :description: Orchestration Template
-    :identifier: orchestration_templates_accord
-    :options:
-    - :collection
-    :verbs: *gpppd
-    :klass: OrchestrationTemplate
-    :collection_actions:
-      :get:
-      - :name: read
-        :identifier: orchestration_templates_view
-      :post:
-      - :name: create
-        :identifier: orchestration_template_add
-      - :name: edit
-        :identifier: orchestration_template_edit
-      - :name: delete
-        :identifier: orchestration_template_remove
-    :resource_actions:
-      :post:
-      - :name: edit
-        :identifier: orchestration_template_edit
-      - :name: delete
-        :identifier: orchestration_template_remove
-      :delete:
-      - :name: delete
-        :identifier: orchestration_template_remove
-  :arbitration_settings:
-    :description: Arbitration Settings
-    :identifier: miq_arbitration_settings
-    :options:
-    - :collection
-    :verbs: *gpppd
-    :klass: ArbitrationSetting
-    :collection_actions:
-      :get:
-      - :name: read
-        :identifier: show_arbitration_setting
-      :post:
-      - :name: query
-        :identifier: show_arbitration_setting
-      - :name: create
-        :identifier: create_arbitration_setting
-      - :name: edit
-        :identifier: edit_arbitration_setting
-      - :name: delete
-        :identifier: delete_arbitration_setting
-    :resource_actions:
-      :post:
-      - :name: edit
-        :identifier: edit_arbitration_setting
-      - :name: delete
-        :identifier: delete_arbitration_setting
-      :delete:
-      - :name: delete
-        :identifier: delete_arbitration_setting
-  :arbitration_rules:
-    :description: Arbitration Rules
-    :identifier: miq_arbitration_rules
-    :options:
-    - :collection
-    :verbs: *gpppd
-    :klass: ArbitrationRule
-    :collection_actions:
-      :get:
-      - :name: read
-        :identifier: arbitration_rule_show_list
-      :post:
-      - :name: query
-        :identifier: arbitration_rule_show_list
-      - :name: create
-        :identifier: arbitration_rule_new
-      - :name: delete
-        :identifier: arbitration_rule_delete
-      - :name: edit
-        :identifier: arbitration_rule_edit
-    :resource_actions:
-      :post:
-      - :name: edit
-        :identifier: arbitration_rule_edit
-      - :name: delete
-        :identifier: arbitration_rule_delete
-      :delete:
-      - :name: edit
-        :identifier: arbitration_rule_delete

@@ -6,13 +6,12 @@ class Hardware < ApplicationRecord
   belongs_to  :computer_system
 
   has_many    :networks, :dependent => :destroy
+  has_many    :firmwares, :as => :resource, :dependent => :destroy
 
   has_many    :disks, -> { order :location }, :dependent => :destroy
   has_many    :hard_disks, -> { where("device_type != 'floppy' AND device_type NOT LIKE '%cdrom%'").order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
   has_many    :floppies, -> { where("device_type = 'floppy'").order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
   has_many    :cdroms, -> { where("device_type LIKE '%cdrom%'").order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
-
-  has_many    :hard_disk_storages, -> { distinct }, :through => :hard_disks, :source => :storage
 
   has_many    :partitions, :dependent => :destroy
   has_many    :volumes, :dependent => :destroy
@@ -25,11 +24,13 @@ class Hardware < ApplicationRecord
   virtual_column :ipaddresses,   :type => :string_set, :uses => :networks
   virtual_column :hostnames,     :type => :string_set, :uses => :networks
   virtual_column :mac_addresses, :type => :string_set, :uses => :nics
-  virtual_attribute :used_disk_storage,      :integer, :uses => :disks
-  virtual_attribute :allocated_disk_storage, :integer, :uses => :disks
+
+  virtual_aggregate :used_disk_storage,      :disks, :sum, :used_disk_storage
+  virtual_aggregate :allocated_disk_storage, :disks, :sum, :size
+  virtual_attribute :ram_size_in_bytes, :integer, :arel => ->(t) { t.grouping(t[:memory_mb] * 1.megabyte) }
 
   def ipaddresses
-    @ipaddresses ||= networks.collect(&:ipaddress).compact.uniq
+    @ipaddresses ||= networks.collect(&:ipaddress).compact.uniq + networks.collect(&:ipv6address).compact.uniq
   end
 
   def hostnames
@@ -38,6 +39,10 @@ class Hardware < ApplicationRecord
 
   def mac_addresses
     @mac_addresses ||= nics.collect(&:address).compact.uniq
+  end
+
+  def ram_size_in_bytes
+    memory_mb.to_i * 1.megabyte
   end
 
   @@dh = {"type" => "device_name", "devicetype" => "device_type", "id" => "location", "present" => "present",
@@ -118,21 +123,35 @@ class Hardware < ApplicationRecord
       t[:disk_capacity]) * -100 + 100)
   end)
 
-  def allocated_disk_storage
-    if disks.loaded?
-      disks.blank? ? nil : disks.inject(0) { |t, d| t + d.size.to_i }
+  def provisioned_storage
+    if has_attribute?("provisioned_storage")
+      self["provisioned_storage"]
     else
-      disks.sum('coalesce(size, 0)')
+      allocated_disk_storage.to_i + ram_size_in_bytes
     end
   end
 
-  def used_disk_storage
-    if disks.loaded?
-      disks.blank? ? nil : disks.inject(0) { |t, d| t + (d.size_on_disk || d.size).to_i }
-    else
-      disks.sum('coalesce(size_on_disk, size, 0)')
-    end
-  end
+  # added casts because we were overflowing integers
+  # resulting sql:
+  # (
+  #   (COALESCE(
+  #     ((SELECT SUM("disks"."size")
+  #       FROM "disks"
+  #       WHERE "hardwares"."id" = "disks"."hardware_id")),
+  #     0
+  #   )) + (COALESCE(
+  #     (CAST("hardwares"."memory_mb" AS bigint)),
+  #     0
+  #   )) * 1048576
+  # )
+  virtual_attribute :provisioned_storage, :integer, :arel => (lambda do |t|
+    t.grouping(
+      t.grouping(Arel::Nodes::NamedFunction.new('COALESCE', [arel_attribute(:allocated_disk_storage), 0])) +
+      t.grouping(Arel::Nodes::NamedFunction.new(
+                   'COALESCE', [t.grouping(Arel::Nodes::NamedFunction.new('CAST', [t[:memory_mb].as("bigint")])), 0]
+      )) * 1.megabyte
+    )
+  end)
 
   def connect_lans(lans)
     return if lans.blank?

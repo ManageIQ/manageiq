@@ -8,9 +8,7 @@ class ManageIQ::Providers::StorageManager::CinderManager < ManageIQ::Providers::
   require_nested :RefreshWorker
   require_nested :Refresher
 
-  has_many :cloud_volumes,                 :foreign_key => :ems_id, :dependent => :destroy
-  has_many :cloud_volume_snapshots,        :foreign_key => :ems_id, :dependent => :destroy
-  has_many :cloud_volume_backups,          :foreign_key => :ems_id, :dependent => :destroy
+  include ManageIQ::Providers::StorageManager::BlockMixin
 
   # Auth and endpoints delegations, editing of this type of manager must be disabled
   delegate :authentication_check,
@@ -49,6 +47,10 @@ class ManageIQ::Providers::StorageManager::CinderManager < ManageIQ::Providers::
   end
 
   def self.description
+    @description ||= "Cinder ".freeze
+  end
+
+  def description
     @description ||= "Cinder ".freeze
   end
 

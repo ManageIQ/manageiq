@@ -332,7 +332,7 @@ EOS
 
   def vm_fields(type, params)
     options = {}
-    options["customization_template_id"] = CustomizationTemplate.find_by_name("SSH key addition template").id
+    options["customization_template_id"] = CustomizationTemplate.find_by(:name => "SSH key addition template").id
     options["vm_name"] = params["#{type.singularize}_base_name"]
     options["vm_memory"] = params[type + "_vm_memory"] if params[type + "_vm_memory"]
     options["cpu"] = params[type + "_cpu"] if params[type + "_cpu"]
@@ -369,7 +369,7 @@ EOS
   end
 
   def find_or_create_by(tag_name)
-    ent = Tag.find_by_name(tag_name)
+    ent = Tag.find_by(:name => tag_name)
     unless ent
       ent = Tag.new(:name => tag_name)
       ent.save

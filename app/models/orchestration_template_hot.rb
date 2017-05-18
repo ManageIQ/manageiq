@@ -33,8 +33,32 @@ class OrchestrationTemplateHot < OrchestrationTemplate
         :description   => val['description'],
         :hidden        => val['hidden'] == true,
         :constraints   => val.key?('constraints') ? parse_constraints(val['constraints']) : nil,
+        :required      => true
       )
     end
+  end
+
+  def deployment_options(_manager_class = nil)
+    onfailure_opt = OrchestrationTemplate::OrchestrationParameter.new(
+      :name        => "stack_onfailure",
+      :label       => "On Failure",
+      :data_type   => "string",
+      :description => "Select what to do if stack creation failed",
+      :constraints => [
+        OrchestrationTemplate::OrchestrationParameterAllowed.new(
+          :allowed_values => {'ROLLBACK' => 'Rollback', 'DO_NOTHING' => 'Do nothing'}
+        )
+      ]
+    )
+
+    timeout_opt = OrchestrationTemplate::OrchestrationParameter.new(
+      :name        => "stack_timeout",
+      :label       => "Timeout(minutes, optional)",
+      :data_type   => "integer",
+      :description => "Abort the creation if it does not complete in a proper time window",
+    )
+
+    super << onfailure_opt << timeout_opt
   end
 
   def self.eligible_manager_types

@@ -67,6 +67,12 @@ describe DialogImportValidator do
         end
       end
 
+      context "when the 'dialog' is an array instead of a hash" do
+        let(:uploaded_content) { [[1, 2, 3]].to_yaml }
+
+        it_behaves_like "DialogImportValidator#determine_validity parsing non dialog yaml content"
+      end
+
       context "when the 'dialog' does not have dialog tabs'" do
         let(:uploaded_content) { [{"this is not" => "dialog yaml"}].to_yaml }
 
@@ -85,6 +91,21 @@ describe DialogImportValidator do
         end
 
         it_behaves_like "DialogImportValidator#determine_validity parsing non dialog yaml content"
+      end
+    end
+
+    context 'when json does not represent dialogs' do
+      let(:dialog_content) do
+        {
+          'description' => 'Dialog',
+          'label'       => 'a_dialog'
+        }
+      end
+
+      it 'raises a ParsedNonDialogError' do
+        expect do
+          dialog_import_validator.determine_dialog_validity(dialog_content)
+        end.to raise_error(DialogImportValidator::ParsedNonDialogError)
       end
     end
   end

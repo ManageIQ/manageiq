@@ -18,4 +18,10 @@ FactoryGirl.define do
                                 :parent => :cloud_network
   factory :cloud_network_google, :class  => "ManageIQ::Providers::Google::NetworkManager::CloudNetwork",
                                  :parent => :cloud_network
+  factory :cloud_network_vmware_vdc,
+          :class  => "ManageIQ::Providers::Vmware::NetworkManager::CloudNetwork::OrgVdcNet",
+          :parent => :cloud_network
+  factory :cloud_network_vmware_vapp,
+          :class  => "ManageIQ::Providers::Vmware::NetworkManager::CloudNetwork::VappNet",
+          :parent => :cloud_network
 end

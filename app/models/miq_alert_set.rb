@@ -31,8 +31,7 @@ class MiqAlertSet < ApplicationRecord
   end
 
   def export_to_yaml
-    a = export_to_array
-    a.to_yaml
+    export_to_array.to_yaml
   end
 
   def self.import_from_hash(alert_profile, options = {})
@@ -46,7 +45,7 @@ class MiqAlertSet < ApplicationRecord
       alerts.push(alert)
     end
 
-    aset = MiqAlertSet.find_by_guid(alert_profile["guid"])
+    aset = MiqAlertSet.find_by(:guid => alert_profile["guid"])
     msg_pfx = "Importing Alert Profile: guid=[#{alert_profile["guid"]}] description=[#{alert_profile["description"]}]"
     if aset.nil?
       aset = MiqAlertSet.new(alert_profile)
@@ -78,15 +77,10 @@ class MiqAlertSet < ApplicationRecord
   end
 
   def self.import_from_yaml(fd)
-    stats = []
-
     input = YAML.load(fd)
-
-    input.each do |e|
+    input.collect do |e|
       _a, stat = import_from_hash(e["MiqAlertSet"])
-      stats.push(stat)
+      stat
     end
-
-    stats
   end
 end

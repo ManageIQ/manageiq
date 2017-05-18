@@ -57,7 +57,6 @@ module ManageIQ::Providers
     end
 
     def get_subnets
-      @data[:cloud_subnets] = []
       @data[:network_groups].each do |net|
         # filtering out subnets based on the enterprise they are mapped to
         net[:cloud_subnets] = @vsd_client.get_subnets.collect { |s| parse_subnet(s) }.select { |filter| filter[:extra_attributes]['enterprise_name'] == net[:name] }
@@ -65,7 +64,6 @@ module ManageIQ::Providers
         # Lets store also subnets into indexed data, so we can reference them elsewhere
         net[:cloud_subnets].each do |x|
           @data_index.store_path(:cloud_subnets, x[:ems_ref], x)
-          @data[:cloud_subnets] << x
         end
       end
     end
@@ -76,7 +74,7 @@ module ManageIQ::Providers
     end
 
     def to_cidr(netmask)
-      '/' + netmask.split(".").map { |e| e.to_i.to_s(2).rjust(8, "0") }.join.count("1").to_s
+      '/' + netmask.to_s.split(".").map { |e| e.to_i.to_s(2).rjust(8, "0") }.join.count("1").to_s
     end
 
     def parse_network_group(network_group)
@@ -99,7 +97,7 @@ module ManageIQ::Providers
         :type             => self.class.cloud_subnet_type,
         :name             => subnet['name'],
         :ems_ref          => uid,
-        :cidr             => subnet['address'] + to_cidr(subnet['netmask']),
+        :cidr             => subnet['address'].to_s + to_cidr(subnet['netmask']),
         :network_protocol => subnet['IPType'].downcase!,
         :gateway          => subnet['gateway'],
         :dhcp_enabled     => false,

@@ -1,6 +1,0 @@
----
-:values:
-:filter:
-  :instance_name: my_instance_name
-  :instance_resource_group: my_resource_group
-:default:

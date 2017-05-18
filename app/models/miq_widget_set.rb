@@ -36,7 +36,7 @@ class MiqWidgetSet < ApplicationRecord
   def self.sync_from_file(filename)
     attrs = YAML.load_file(filename)
 
-    ws = find_by_name(attrs["name"])
+    ws = find_by(:name => attrs["name"])
 
     if ws.nil? || ws.updated_on.utc < File.mtime(filename).utc
       # Convert widget descriptions to ids in set_data
@@ -44,9 +44,9 @@ class MiqWidgetSet < ApplicationRecord
       attrs["set_data"] = attrs.delete("set_data_by_description").inject({}) do |h, k|
         col, arr = k
         h[col] = arr.collect do |d|
-          w = MiqWidget.find_by_description(d)
+          w = MiqWidget.find_by(:description => d)
           members << w if w
-          w ? w.id : nil
+          w.try(:id)
         end.compact
         h
       end

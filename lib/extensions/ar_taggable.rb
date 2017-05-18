@@ -69,7 +69,7 @@ module ActsAsTaggable
     end
 
     def tags(options = {})
-      options.merge!(:taggable_type => base_class.name)
+      options[:taggable_type] = base_class.name
       options[:ns] = Tag.get_namespace(options)
       Tag.tags(options)
     end
@@ -148,7 +148,7 @@ module ActsAsTaggable
         relationship = "self"
         macro = :has_one
       else
-        macro = subject.class.reflect_on_association(relationship.to_sym).macro
+        macro = subject.class.reflection_with_virtual(relationship.to_sym).macro
       end
       if macro == :has_one || macro == :belongs_to
         value = subject.public_send(relationship).public_send(attr)
@@ -181,25 +181,10 @@ module ActsAsTaggable
   end
 
   def tag_list(options = {})
-    ns = Tag.get_namespace(options)
-    return vtag_list(options) if  ns[0..7] == "/virtual"
-    Tag.filter_ns(tags, ns).join(" ")
+    Tag.list(self, options)
   end
 
-  def vtag_list(options = {})
-    ns = Tag.get_namespace(options)
-
-    predicate = ns.split("/")[2..-1] # throw away /virtual
-
-    # p "ns: [#{ns}]"
-    # p "predicate: [#{predicate.inspect}]"
-
-    begin
-      predicate.inject(self) do |target, method|
-        target.public_send method
-      end
-    rescue NoMethodError => err
-      return ""
-    end
+  def perf_tags
+    tag_list(:ns => '/managed').split.join("|")
   end
 end

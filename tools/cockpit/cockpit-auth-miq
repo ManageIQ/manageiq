@@ -1,0 +1,274 @@
+#!/usr/bin/env ruby
+require "net/http"
+require "json"
+require "uri"
+require 'socket'
+require 'drb/drb'
+require 'time'
+require 'base64'
+require 'securerandom'
+
+MAX_AUTH_SIZE = 64 * 1024
+AUTH_FD = 10
+
+def send_auth_command(challenge, response, data)
+  cmd = { "command" => "authorize" }
+  cmd = cmd.merge(data) unless data.nil?
+
+  unless challenge.nil?
+    timestamp = Time.now.to_i
+    pid = Process.pid
+    cmd["cookie"] = "session#{pid}#{timestamp}"
+    cmd["challenge"] = challenge
+  end
+
+  unless response.nil?
+    cmd["response"] = response
+  end
+
+  text = JSON.dump(cmd)
+  size = text.length + 1
+  $stdout.write "#{size}\n\n#{text}"
+  $stdout.flush
+end
+
+def send_problem_init(problem, message, auth_result)
+  cmd = {
+    "command" => "init",
+    "problem" => problem
+  }
+
+  unless message.nil?
+    cmd["message"] = message
+  end
+
+  unless auth_result.nil?
+    cmd["auth-method-results"] = auth_result
+  end
+
+  text = JSON.dump(cmd)
+  size = text.length + 1
+  $stdout.write "#{size}\n\n#{text}"
+  $stdout.flush
+end
+
+def read_size(io)
+  size = 0
+  seen = 0
+
+  while seen < 8
+    t = io.readpartial(1)
+
+    unless t
+      return 0
+    end
+
+    if t == "\n"
+      break
+    end
+
+    if t.to_i.zero? && t != "0"
+      raise ArgumentError "Invalid frame: invalid size"
+    end
+
+    size = (size * 10) + t.to_i
+    seen += 1
+  end
+
+  if seen == 8
+    raise ArgumentError "Invalid frame: size too long"
+  end
+
+  size
+end
+
+def read_frame(fd)
+  io = IO.for_fd(fd)
+  size = read_size(io)
+
+  data = ""
+  while size > 0
+    d = io.readpartial(1)
+    size -= d.length
+    data += d
+  end
+  data
+end
+
+def read_auth_reply
+  data = read_frame(1)
+  cmd = JSON.parse(data)
+  if cmd["command"] != "authorize" || !cmd["cookie"] || !cmd["response"]
+    raise ArgumentError "Did not receive a valid authorize command"
+  end
+
+  cmd["response"]
+end
+
+def fetch_authorize_token
+  send_auth_command("*", nil, nil)
+  begin
+    data = read_auth_reply
+    parts = data.split(' ', 2)
+    token = parts[1]
+  rescue ArgumentError => e
+    send_problem_init("internal-error", e.to_s, nil)
+    raise
+  rescue JSON::ParserError => e
+    send_problem_init("internal-error", e.to_s, nil)
+    raise
+  end
+  token || ""
+end
+
+def launch_ssh_with_auth_fd(ios, ssh_command, host, user, password, key)
+  s1, s2 = UNIXSocket.socketpair(Socket::SOCK_SEQPACKET)
+  s2.syswrite(key ? key : password)
+
+  trap("CHLD", "IGNORE")
+
+  fork do
+    s1.close
+    loop do
+      begin
+        # Read from cockpit-ssh write to cockpit-ws
+        data, _ad = s2.recvfrom(MAX_AUTH_SIZE)
+        break unless data
+        ios.syswrite(data)
+
+        # Read from cockpit-ws write to cockpit-ssh
+        data = ios.readpartial(MAX_AUTH_SIZE)
+        break unless data
+        s2.send(data, 0)
+      rescue IOError
+        break
+      end
+    end
+
+    # Sockets may already be closed
+    begin
+      ios.close
+    rescue IOError
+    end
+
+    begin
+      s2.close
+    rescue IOError
+    end
+  end
+
+  s2.close
+  host = "#{user}@#{host}"
+  env = {
+    "COCKPIT_SSH_ALLOW_UNKNOWN"            => '1',
+    "COCKPIT_SSH_SUPPORTS_HOST_KEY_PROMPT" => '1',
+    "COCKPIT_AUTH_MESSAGE_TYPE"            => key ? 'private-key' : 'password'
+  }
+
+  exec(env, ssh_command, host,
+       3 => s1, 0 => $stdin, 1 => $stdout, 2 => $stderr)
+end
+
+def launch_ssh_with_authorize_cmd(ssh_command, host, user, password, key)
+  env = {
+    "COCKPIT_SSH_ALLOW_UNKNOWN" => '1'
+  }
+
+  host = "#{user}@#{host}"
+
+  auth_data = 'Basic ' + Base64.encode64("#{user}:#{password}").chomp unless password.nil?
+  auth_data = "host-key #{key}" unless key.nil?
+  send_auth_command(nil, auth_data, nil)
+  exec(env, ssh_command, host, 0 => $stdin, 1 => $stdout, 2 => $stderr)
+end
+
+def prompt_for_data(ios, json_req)
+  if ios.nil?
+    prompt = Base64.encode64(json_req['prompt']).chomp
+    id = SecureRandom.uuid
+    send_auth_command("x-conversation #{id} #{prompt}", nil, json_req)
+    data = read_auth_reply
+    parts = data.split(' ', 3)
+    if parts[0].downcase != "x-conversation" || parts[1] != id || !parts[2]
+      send_error(nil,
+                 "error"   => "internal-error",
+                 "message" => "invalid conversation response")
+    end
+    Base64.decode64(parts[2])
+  else
+    ios.syswrite(JSON.dump(json_req))
+    ios.readpartial(MAX_AUTH_SIZE)
+  end
+end
+
+def send_error(ios, error_json)
+  if ios.nil?
+    send_problem_init(error_json["error"], error_json["message"],
+                      error_json["auth-method-results"])
+  else
+    ios.syswrite(json.dump(error_json))
+  end
+  exit 1
+end
+
+def launch_ssh(ios, ssh_command, host, user, password, key)
+  if ios.nil?
+    launch_ssh_with_authorize_cmd(ssh_command, host, user, password, key)
+  else
+    launch_ssh_with_auth_fd(ios, ssh_command, host, user, password, key)
+  end
+end
+
+# Older cockpit-ws versions use a special auth fd
+# for authentication data. Newer versions use the
+# cockpit protocol on stdin/stdout.
+# We want to support both so try to talk AUTH_FD
+# first if that fails switch to stdin/stdout
+host = ARGV[-1]
+begin
+  ios = IO.for_fd(AUTH_FD)
+rescue Errno::EBADF
+  ios = nil
+end
+
+token = fetch_authorize_token if ios.nil?
+token = ios.readpartial(MAX_AUTH_SIZE) unless ios.nil?
+
+begin
+  cockpit_drb = DRbObject.new_with_uri(ENV["DRB_URI"])
+  results = cockpit_drb.authenticate_for_host(token, host)
+  ssh_command = cockpit_drb.ssh_command
+
+  if !results[:valid]
+    send_error(ios,
+               "error"               => "authentication-failed",
+               "message"             => "Token was not valid",
+               "auth-method-results" => { "password" => "not-tried", "token" => "denied" })
+
+  elsif !results[:known]
+    send_error(ios, "error" => "unknown-host")
+  end
+rescue => err
+  send_error(ios,
+             "error"   => "internal-error",
+             "message" => "Couldn't validate token: #{err}")
+end
+
+user = results[:userid]
+password = results[:password]
+key = results[:key]
+
+# Prompt for user if we didn't get one
+unless user
+  user = prompt_for_data(ios,
+                         'prompt'  => 'Please provide a username:',
+                         'echo'    => 1,
+                         'message' => 'Unable to determine the user to connect as.')
+end
+
+# Prompt for password if we didn't get one
+if !password && !key
+  password = prompt_for_data(ios, 'prompt' => 'Password:')
+end
+
+launch_ssh(ios, ssh_command, host, user, password, key)

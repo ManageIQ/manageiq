@@ -10,8 +10,9 @@ class MiqReportResult < ApplicationRecord
 
   serialize :report
 
-  virtual_column :miq_group_description, :type => :string, :uses => :miq_group
-  virtual_column :status,                :type => :string, :uses => :miq_task
+  virtual_delegate :description, :to => :miq_group, :prefix => true, :allow_nil => true
+  virtual_delegate :state_or_status, :to => "miq_task", :allow_nil => true
+  virtual_attribute :status, :string, :uses => :state_or_status
   virtual_column :status_message,        :type => :string, :uses => :miq_task
 
   virtual_has_one :result_set,           :class_name => "Hash"
@@ -31,15 +32,11 @@ class MiqReportResult < ApplicationRecord
   end
 
   def status
-    miq_task.nil? ? "Unknown" : miq_task.human_status
+    MiqTask.human_status(state_or_status)
   end
 
   def status_message
     miq_task.nil? ? _("Report results are no longer available") : miq_task.message
-  end
-
-  def miq_group_description
-    miq_group.try(:description)
   end
 
   def report_results
@@ -152,7 +149,7 @@ class MiqReportResult < ApplicationRecord
 
     html_string << report_build_html_table(report_results, html_rows.join)  # Build the html report table using all html rows
 
-    PdfGenerator.pdf_from_string(html_string, 'pdf_report')
+    PdfGenerator.pdf_from_string(html_string, "pdf_report.css")
   end
 
   # Generate the header html section for pdfs
@@ -165,9 +162,8 @@ class MiqReportResult < ApplicationRecord
     hdr << "@page{size: #{page_size} landscape}"
     hdr << "@page{margin: 40pt 30pt 40pt 30pt}"
     hdr << "@page{@top{content: '#{title}';color:blue}}"
-    hdr << "@page{@bottom-left{content: url('#{ActionController::Base.helpers.image_path('layout/reportbanner_small1.png')}')}}"
-    hdr << "@page{@bottom-center{font-size: 75%;content: 'Report date: #{run_date}'}}"
-    hdr << "@page{@bottom-right{font-size: 75%;content: 'Page ' counter(page) ' of ' counter(pages)}}"
+    hdr << "@page{@bottom-center{font-size: 75%;content: '" + _("Report date: %{report_date}") % {:report_date => run_date} + "'}}"
+    hdr << "@page{@bottom-right{font-size: 75%;content: '" + _("Page %{page_number} of %{total_pages}") % {:page_number => " ' counter(page) '", :total_pages => " ' counter(pages)}}"}
     hdr << "</style></head>"
   end
 
@@ -187,7 +183,7 @@ class MiqReportResult < ApplicationRecord
     task = MiqTask.new(:name => "Generate Report result [#{result_type}]: '#{report.name}'", :userid => options[:userid])
     task.update_status("Queued", "Ok", "Task has been queued")
 
-    sync = VMDB::Config.new("vmdb").config[:product][:report_sync]
+    sync = ::Settings.product.report_sync
 
     MiqQueue.put(
       :queue_name  => "generic",
@@ -215,7 +211,7 @@ class MiqReportResult < ApplicationRecord
   end
 
   def _async_generate_result(taskid, result_type, options = {})
-    task = MiqTask.find_by_id(taskid)
+    task = MiqTask.find_by(:id => taskid)
     task.update_status("Active", "Ok", "Generating report result [#{result_type}]") if task
 
     user = options[:user] || User.find_by_userid(options[:userid])

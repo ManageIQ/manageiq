@@ -1,8 +1,0 @@
-#main_div
-  - case @lastaction
-  - when "resolve"
-    = render :partial => "resolve"
-  - when "log"
-    = render :partial => "layouts/log_viewer", :locals => {:legend_text => _("Last 1000 lines from the Automation log")}
-  - when "import_export"
-    = render :partial => "import_export"

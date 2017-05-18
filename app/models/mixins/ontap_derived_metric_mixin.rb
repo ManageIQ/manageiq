@@ -23,10 +23,6 @@ module OntapDerivedMetricMixin
       @basedCounterNames  = nil
       @baseCounterNames = nil
       @metadataClass    = (name + "Metadata").constantize
-
-      cfg = VMDB::Config.new("vmdb").config
-      @storageMetricsCollectionInterval = cfg.fetch_path(:storage, :metrics_collection, :collection_interval).to_i_with_method
-      @storageMetricsMaxGapToFill       = cfg.fetch_path(:storage, :metrics_collection, :max_gap_to_fill).to_i_with_method
     end
 
     def metadataClass
@@ -62,12 +58,12 @@ module OntapDerivedMetricMixin
 
       deltaSecs = vinst1.timestamp.to_i - vinst0.timestamp.to_i
 
-      return [] if deltaSecs < 0 || deltaSecs > @storageMetricsMaxGapToFill
+      return [] if deltaSecs < 0 || deltaSecs > ::Settings.storage.metrics_collection.max_gap_to_fill.to_i_with_method
 
       counters0 = vinst0.counters
       counters1 = vinst1.counters
 
-      interval = @storageMetricsCollectionInterval.to_f
+      interval = ::Settings.storage.metrics_collection.collection_interval.to_i_with_method.to_f
       nInterval = (deltaSecs / interval + 0.5).to_i
       _log.info "nIntrval = #{nInterval}"
       deltaSecs /= nInterval

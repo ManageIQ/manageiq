@@ -1,6 +1,5 @@
 class LoadBalancerPoolMember < ApplicationRecord
   include NewWithTypeStiMixin
-  include VirtualTotalMixin
 
   acts_as_miq_taggable
 
@@ -10,9 +9,9 @@ class LoadBalancerPoolMember < ApplicationRecord
   belongs_to :network_port
   belongs_to :vm
 
-  has_many :load_balancer_health_check_members
+  has_many :load_balancer_health_check_members, :dependent => :destroy
   has_many :load_balancer_health_checks, :through => :load_balancer_health_check_members
-  has_many :load_balancer_pool_member_pools
+  has_many :load_balancer_pool_member_pools, :dependent => :destroy
   has_many :load_balancer_pools, :through => :load_balancer_pool_member_pools
 
   has_many :load_balancer_listeners, -> { distinct }, :through => :load_balancer_pools

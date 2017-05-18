@@ -35,6 +35,10 @@ ems_auth_unreachable,Provider Auth Unreachable,Default,auth_validation
 ems_auth_incomplete,Provider Auth Incomplete Credentials,Default,auth_validation
 ems_auth_error,Provider Auth Error,Default,auth_validation
 ems_performance_gap_detected,C & U Collection Gap Detected,Default,ems_operations
+# Compliance event names are derived from lowercased model name.
+extmanagementsystem_compliance_check,Provider Compliance Check,Default,compliance
+extmanagementsystem_compliance_passed,Provider Compliance Passed,Default,compliance
+extmanagementsystem_compliance_failed,Provider Compliance Failed,Default,compliance
 
 #
 # Host operations
@@ -147,6 +151,7 @@ vm_remote_console_connected,VM Remote Console Connected,Default,vm_operational
 #
 request_storage_scan,Datastore Analysis Request,Default,storage_operational
 storage_scan_complete,Datastore Analysis Complete,Default,storage_operational
+db_failover_executed,Database Failover Executed,Default,storage_operational
 
 #
 # Service lifecycle
@@ -159,6 +164,11 @@ request_service_start,Service Start Request,Default,service_process
 service_started,Service Started,Default,service_process
 request_service_stop,Service Stop Request,Default,service_process
 service_stopped,Service Stopped,Default,service_process
+
+#
+# Orchestration
+#
+request_orchestration_stack_retire,Orchestration Stack Retire Request,Default,orchestration_process
 
 #
 # Container Operations
@@ -200,4 +210,3 @@ containerreplicator_successfulcreate,Replicator Successfully Created Pod,Default
 containerreplicator_compliance_check,Replicator Compliance Check,Default,compliance
 containerreplicator_compliance_passed,Replicator Compliance Passed,Default,compliance
 containerreplicator_compliance_failed,Replicator Compliance Failed,Default,compliance
-

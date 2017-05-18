@@ -30,7 +30,7 @@ module Vmdb
     private
 
     def logger
-      Vmdb.logger || Vmdb.null_logger
+      Vmdb.logger
     end
   end
 

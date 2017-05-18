@@ -1,13 +1,25 @@
 module EmsRefresh::SaveInventory
   def save_ems_inventory(ems, hashes, target = nil)
+    if hashes.kind_of?(Array)
+      ManagerRefresh::SaveInventory.save_inventory(ems, hashes)
+      return
+    end
+    if hashes && hashes[:_inventory_collection]
+      hashes.delete(:_inventory_collection)
+      ManagerRefresh::SaveInventory.save_inventory(ems, hashes.values)
+      return
+    end
+
     case ems
     when EmsCloud                                           then save_ems_cloud_inventory(ems, hashes, target)
     when EmsInfra                                           then save_ems_infra_inventory(ems, hashes, target)
+    when EmsPhysicalInfra                                   then save_ems_physical_infra_inventory(ems, hashes, target)
+    when ManageIQ::Providers::AutomationManager             then save_automation_manager_inventory(ems, hashes, target)
     when ManageIQ::Providers::ConfigurationManager          then save_configuration_manager_inventory(ems, hashes, target)
     when ManageIQ::Providers::ContainerManager              then save_ems_container_inventory(ems, hashes, target)
     when ManageIQ::Providers::NetworkManager                then save_ems_network_inventory(ems, hashes, target)
-    when ManageIQ::Providers::StorageManager::CinderManager then save_ems_cinder_inventory(ems, hashes, target)
-    when ManageIQ::Providers::MiddlewareManager             then save_ems_middleware_inventory(ems, hashes, target)
+    when ManageIQ::Providers::StorageManager                then save_ems_storage_inventory(ems, hashes, target)
+    when ManageIQ::Providers::DatawarehouseManager          then save_ems_datawarehouse_inventory(ems, hashes, target)
     end
   end
 
@@ -28,7 +40,7 @@ module EmsRefresh::SaveInventory
                     []
                   end
 
-    child_keys = [:operating_system, :hardware, :custom_attributes, :snapshots, :advanced_settings]
+    child_keys = [:operating_system, :hardware, :custom_attributes, :snapshots, :advanced_settings, :labels, :tags]
     extra_infra_keys = [:host, :ems_cluster, :storage, :storages, :storage_profile, :raw_power_state, :parent_vm]
     extra_cloud_keys = [
       :flavor,
@@ -46,105 +58,108 @@ module EmsRefresh::SaveInventory
     # Query for all of the Vms once across all EMSes, to handle any moving VMs
     vms_uids = hashes.collect { |h| h[:uid_ems] }.compact
     vms = VmOrTemplate.where(:uid_ems => vms_uids).to_a
+    disconnects_index = disconnects.index_by { |vm| vm }
+    vms_by_uid_ems = vms.group_by(&:uid_ems)
     dup_vms_uids = (vms_uids.duplicates + vms.collect(&:uid_ems).duplicates).uniq.sort
     _log.info "#{log_header} Duplicate unique values found: #{dup_vms_uids.inspect}" unless dup_vms_uids.empty?
 
     invalids_found = false
-    hashes.each do |h|
-      # Backup keys that cannot be written directly to the database
-      key_backup = backup_keys(h, remove_keys)
+    # Clear vms, so GC can clean them
+    vms = nil
 
-      h[:ems_id]                 = ems.id
-      h[:host_id]                = key_backup.fetch_path(:host, :id) || key_backup.fetch_path(:host).try(:id)
-      h[:ems_cluster_id]         = key_backup.fetch_path(:ems_cluster, :id) || key_backup.fetch_path(:ems_cluster).try(:id)
-      h[:storage_id]             = key_backup.fetch_path(:storage, :id)
-      h[:storage_profile_id]     = key_backup.fetch_path(:storage_profile, :id)
-      h[:flavor_id]              = key_backup.fetch_path(:flavor, :id)
-      h[:availability_zone_id]   = key_backup.fetch_path(:availability_zone, :id)
-      h[:cloud_network_id]       = key_backup.fetch_path(:cloud_network, :id)
-      h[:cloud_subnet_id]        = key_backup.fetch_path(:cloud_subnet, :id)
-      h[:cloud_tenant_id]        = key_backup.fetch_path(:cloud_tenant, :id)
-      h[:cloud_tenants]          = key_backup.fetch_path(:cloud_tenants).compact.map { |x| x[:_object] } if key_backup.fetch_path(:cloud_tenants, 0, :_object)
-      h[:orchestration_stack_id] = key_backup.fetch_path(:orchestration_stack, :id)
-      begin
-        raise MiqException::MiqIncompleteData if h[:invalid]
+    ActiveRecord::Base.transaction do
+      hashes.each do |h|
+        # Backup keys that cannot be written directly to the database
+        key_backup = backup_keys(h, remove_keys)
 
-        # Find the Vm in the database with the current uid_ems.  In the event
-        #   of duplicates, try to determine which one is correct.
-        found = vms.select { |v| v.uid_ems == h[:uid_ems] }
-        if found.length > 1 || (found.length == 1 && found.first.ems_id)
-          found_dups = found
-          found = found_dups.select { |v| v.ems_id == h[:ems_id] && (v.ems_ref.nil? || v.ems_ref == h[:ems_ref]) }
-          if found.empty?
-            found_dups = found_dups.select { |v| v.ems_id.nil? }
-            found = found_dups.select { |v| v.ems_ref == h[:ems_ref] }
-            found = found_dups if found.empty?
+        h[:ems_id]                 = ems.id
+        h[:host_id]                = key_backup.fetch_path(:host, :id) || key_backup.fetch_path(:host).try(:id)
+        h[:ems_cluster_id]         = key_backup.fetch_path(:ems_cluster, :id) || key_backup.fetch_path(:ems_cluster).try(:id)
+        h[:storage_id]             = key_backup.fetch_path(:storage, :id)
+        h[:storage_profile_id]     = key_backup.fetch_path(:storage_profile, :id)
+        h[:flavor_id]              = key_backup.fetch_path(:flavor, :id)
+        h[:availability_zone_id]   = key_backup.fetch_path(:availability_zone, :id)
+        h[:cloud_network_id]       = key_backup.fetch_path(:cloud_network, :id)
+        h[:cloud_subnet_id]        = key_backup.fetch_path(:cloud_subnet, :id)
+        h[:cloud_tenant_id]        = key_backup.fetch_path(:cloud_tenant, :id)
+        h[:cloud_tenant_ids]       = key_backup.fetch_path(:cloud_tenants).compact.map { |x| x[:id] } if key_backup.fetch_path(:cloud_tenants, 0, :id)
+        h[:orchestration_stack_id] = key_backup.fetch_path(:orchestration_stack, :id)
+        begin
+          raise MiqException::MiqIncompleteData if h[:invalid]
+
+          # Find the Vm in the database with the current uid_ems.  In the event
+          #   of duplicates, try to determine which one is correct.
+          found = vms_by_uid_ems[h[:uid_ems]] || []
+
+          if found.length > 1 || (found.length == 1 && found.first.ems_id)
+            found_dups = found
+            found = found_dups.select { |v| v.ems_id == h[:ems_id] && (v.ems_ref.nil? || v.ems_ref == h[:ems_ref]) }
+            if found.empty?
+              found_dups = found_dups.select { |v| v.ems_id.nil? }
+              found = found_dups.select { |v| v.ems_ref == h[:ems_ref] }
+              found = found_dups if found.empty?
+            end
           end
+          found = found.first
+
+          if found.nil?
+            _log.info("#{log_header} Creating Vm [#{h[:name]}] location: [#{h[:location]}] storage id: [#{h[:storage_id]}] uid_ems: [#{h[:uid_ems]}] ems_ref: [#{h[:ems_ref]}]")
+
+            # Handle the off chance that we are adding an "unknown" Vm to the db
+            h[:location] = "unknown" if h[:location].blank?
+
+            # build a type-specific vm or template
+            found = ems.vms_and_templates.klass.new(h)
+          else
+            vms_by_uid_ems[h[:uid_ems]].delete(found)
+            h.delete(:type)
+
+            _log.info("#{log_header} Updating Vm [#{found.name}] id: [#{found.id}] location: [#{found.location}] storage id: [#{found.storage_id}] uid_ems: [#{found.uid_ems}] ems_ref: [#{h[:ems_ref]}]")
+            found.update_attributes!(h)
+            disconnects_index.delete(found)
+          end
+
+          # Set the raw power state
+          found.raw_power_state = key_backup[:raw_power_state]
+
+          link_habtm(found, key_backup[:storages], :storages, Storage)
+          link_habtm(found, key_backup[:key_pairs], :key_pairs, ManageIQ::Providers::CloudManager::AuthKeyPair)
+          save_child_inventory(found, key_backup, child_keys)
+
+          found.save!
+          h[:id] = found.id
+        rescue => err
+          # If a vm failed to process, mark it as invalid and log an error
+          h[:invalid] = invalids_found = true
+          name = h[:name] || h[:uid_ems] || h[:ems_ref]
+          if err.kind_of?(MiqException::MiqIncompleteData)
+            _log.warn("#{log_header} Processing Vm: [#{name}] failed with error [#{err}]. Skipping Vm.")
+          else
+            raise if EmsRefresh.debug_failures
+            _log.error("#{log_header} Processing Vm: [#{name}] failed with error [#{err}]. Skipping Vm.")
+            _log.log_backtrace(err)
+          end
+        ensure
+          restore_keys(h, remove_keys, key_backup)
         end
-        found = found.first
-
-        if found.nil?
-          _log.info("#{log_header} Creating Vm [#{h[:name]}] location: [#{h[:location]}] storage id: [#{h[:storage_id]}] uid_ems: [#{h[:uid_ems]}] ems_ref: [#{h[:ems_ref]}]")
-
-          # Handle the off chance that we are adding an "unknown" Vm to the db
-          h[:location] = "unknown" if h[:location].blank?
-
-          # build a type-specific vm or template
-          found = ems.vms_and_templates.build(h)
-        else
-          vms.delete(found)
-
-          h.delete(:type)
-
-          _log.info("#{log_header} Updating Vm [#{found.name}] id: [#{found.id}] location: [#{found.location}] storage id: [#{found.storage_id}] uid_ems: [#{found.uid_ems}] ems_ref: [#{h[:ems_ref]}]")
-          found.update_attributes!(h)
-          disconnects.delete(found)
-        end
-
-        # Set the raw power state
-        found.raw_power_state = key_backup[:raw_power_state]
-
-        link_habtm(found, key_backup[:storages], :storages, Storage)
-        link_habtm(found, key_backup[:key_pairs], :key_pairs, ManageIQ::Providers::CloudManager::AuthKeyPair)
-        save_child_inventory(found, key_backup, child_keys)
-
-        found.save!
-        h[:id] = found.id
-        found.reload # reload to clear caches and lower memory usage
-        h[:_object] = found
-      rescue => err
-        # If a vm failed to process, mark it as invalid and log an error
-        h[:invalid] = invalids_found = true
-        name = h[:name] || h[:uid_ems] || h[:ems_ref]
-        if err.kind_of?(MiqException::MiqIncompleteData)
-          _log.warn("#{log_header} Processing Vm: [#{name}] failed with error [#{err}]. Skipping Vm.")
-        else
-          raise if EmsRefresh.debug_failures
-          _log.error("#{log_header} Processing Vm: [#{name}] failed with error [#{err}]. Skipping Vm.")
-          _log.log_backtrace(err)
-        end
-      ensure
-        restore_keys(h, remove_keys, key_backup)
       end
     end
 
     # Handle genealogy link ups
-    vm_ids = hashes.collect { |h| !h[:invalid] && h.has_key_path?(:parent_vm, :id) ? [h[:id], h.fetch_path(:parent_vm, :id)] : nil }.flatten.compact.uniq
+    # TODO: can we use _object
+    vm_ids = hashes.flat_map { |h| !h[:invalid] && h.has_key_path?(:parent_vm, :id) ? [h[:id], h.fetch_path(:parent_vm, :id)] : [] }.uniq
     unless vm_ids.empty?
       _log.info("#{log_header} Updating genealogy connections.")
-      vms = VmOrTemplate.where(:id => vm_ids)
+      vms = VmOrTemplate.where(:id => vm_ids).index_by(&:id)
       hashes.each do |h|
-        child_id = h[:id]
-        parent_id = h.fetch_path(:parent_vm, :id)
-        next if child_id.blank? || parent_id.blank?
+        parent = vms[h.fetch_path(:parent_vm, :id)]
+        child = vms[h[:id]]
 
-        parent = vms.detect { |v| v.id == parent_id }
-        child = vms.detect { |v| v.id == child_id }
-        next if parent.blank? || child.blank?
-
-        parent.with_relationship_type('genealogy') { parent.set_child(child) }
+        child.with_relationship_type('genealogy') { child.parent = parent } if parent && child
       end
     end
+
+    disconnects = disconnects_index.values
 
     unless disconnects.empty?
       if invalids_found
@@ -166,6 +181,26 @@ module EmsRefresh::SaveInventory
     end
   end
 
+  # Convert all mapped hashes into actual tags and associate them with the object.
+  # The collection or collection[:tags] object should be an array of hashes, probably
+  # created by the ContainerLabelTagMapping.map_labels method. Each hash in the array
+  # should have the following basic structure:
+  #
+  # {:category_tag_id=>139, :entry_name=>"foo", :entry_description=>"bar"}
+  #
+  # The +collection+ argument can either be a Hash, in which case the argument
+  # should have a single :tags key, or a simple Array of hashes.
+  #
+  def save_tags_inventory(object, collection, _target = nil)
+    return if collection.blank?
+    tags = collection.kind_of?(Hash) ? collection[:tags] : collection
+    ContainerLabelTagMapping.retag_entity(object, tags)
+  rescue => err
+    raise if EmsRefresh.debug_failures
+    _log.error("Auto-tagging failed on #{object.class} [#{object.name}] with error [#{err}].")
+    _log.log_backtrace(err)
+  end
+
   def save_operating_system_inventory(parent, hash)
     return if hash.nil?
 
@@ -179,7 +214,7 @@ module EmsRefresh::SaveInventory
 
   def save_hardware_inventory(parent, hash)
     return if hash.nil?
-    save_inventory_single(:hardware, parent, hash, [:disks, :guest_devices, :networks])
+    save_inventory_single(:hardware, parent, hash, [:disks, :guest_devices, :networks, :firmwares])
     parent.save!
   end
 
@@ -242,6 +277,16 @@ module EmsRefresh::SaveInventory
     end
   end
 
+  def save_firmwares_inventory(hardware, hashes)
+    return if hashes.nil?
+
+    save_inventory_multi(hardware.firmwares, hashes, :use_association, [:name])
+  end
+
+  def save_computer_system_inventory(parent, hash, _target = nil)
+    save_inventory_single(:computer_system, parent, hash, [:hardware, :operating_system])
+  end
+
   def save_system_services_inventory(parent, hashes, mode = :refresh)
     return if hashes.nil?
 
@@ -300,12 +345,51 @@ module EmsRefresh::SaveInventory
     vm.snapshots.each do |s|
       if s.parent_uid
         parent = vm.snapshots.detect { |s2| s2.uid == s.parent_uid }
-        s.update_attribute(:parent_id, parent ? parent.id : nil)
+        s.update_attribute(:parent_id, parent.try(:id))
       end
     end
   end
 
   def save_event_logs_inventory(os, hashes)
     save_inventory_multi(os.event_logs, hashes, :use_association, [:uid])
+  end
+
+  def save_new_target(ems, target_hash)
+    if target_hash[:vm]
+      vm_hash = target_hash[:vm]
+      existing_vm = VmOrTemplate.find_by(:ems_ref => vm_hash[:ems_ref], :ems_id => target_hash[:ems_id])
+      unless existing_vm.nil?
+        return existing_vm
+      end
+
+      old_cluster = get_cluster(ems, target_hash[:cluster], target_hash[:resource_pools], target_hash[:folders])
+
+      vm_hash[:ems_cluster_id] = old_cluster[:id]
+
+      new_vm = ems.vms_and_templates.create!(vm_hash)
+
+      dc = old_cluster.parent_datacenter
+      vm_folder = dc.children.select { |folder| folder.name == "vm" }[0]
+      vm_folder.add_vm(new_vm)
+      vm_folder.save!
+
+      resource_pool = old_cluster.children.first
+      resource_pool.add_vm(new_vm)
+      resource_pool.save!
+
+      new_vm
+    elsif target_hash[:folder]
+      ems.ems_folders.create!(target_hash[:folder])
+    end
+  end
+
+  #
+  # Storage managers can support many different types of storages. We thus rely
+  # on the supports feature of the manager to choose which parts of the
+  # inventory to save.
+  #
+  def save_ems_storage_inventory(ems, hashes, target = nil)
+    save_ems_block_storage_inventory(ems, hashes, target) if ems.supports?(:block_storage)
+    save_ems_object_storage_inventory(ems, hashes, target) if ems.supports?(:object_storage)
   end
 end

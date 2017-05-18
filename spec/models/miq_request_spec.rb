@@ -59,6 +59,11 @@ describe MiqRequest do
       end
     end
 
+    it ".find_source_id_from_values with :src_ids" do
+      src_id_hash = {:src_ids => [101, 102, 103]}
+      expect(described_class.send(:find_source_id_from_values, src_id_hash)).to eq(101)
+    end
+
     it "#call_automate_event_queue" do
       allow(MiqServer).to receive(:my_zone).and_return("New York")
 
@@ -310,7 +315,12 @@ describe MiqRequest do
   end
 
   context '#workflow' do
-    let(:provision_request) { FactoryGirl.create(:miq_provision_request, :requester => fred, :src_vm_id => template.id) }
+    let(:provision_request) do
+      FactoryGirl.create(:miq_provision_request,
+                         :requester => fred,
+                         :src_vm_id => template.id,
+                         :options => {:src_vm_id => template.id})
+    end
     let(:ems)          { FactoryGirl.create(:ems_vmware) }
     let(:template)     { FactoryGirl.create(:template_vmware, :ext_management_system => ems) }
     let(:host) { double('Host', :id => 1, :name => 'my_host') }
@@ -318,6 +328,20 @@ describe MiqRequest do
     it "calls password_helper when a block is passed in" do
       expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow).to receive(:password_helper).twice
       provision_request.workflow({}, {:allowed_hosts => [host], :skip_dialog_load => true}) { |_x| 'test' }
+    end
+
+    it "returns the allowed tags" do
+      FactoryGirl.create(:miq_dialog,
+                         :name        => "miq_provision_dialogs",
+                         :dialog_type => MiqProvisionWorkflow)
+
+      FactoryGirl.create(:classification_department_with_tags)
+
+      tag = Classification.where(:description => 'Department', :parent_id => 0).includes(:tag).first
+      provision_request.add_tag(tag.name, tag.children.first.name)
+
+      expected = [a_hash_including(:children)]
+      expect(provision_request.v_allowed_tags).to match(expected)
     end
   end
 
@@ -357,6 +381,20 @@ describe MiqRequest do
 
       expect(task.state).to eq('pending')
       expect(request.request_state).to eq('active')
+    end
+  end
+
+  context ".class_from_request_data" do
+    it "with a valid request_type" do
+      expect(described_class.class_from_request_data(:request_type => "template")).to eq(MiqProvisionRequest)
+    end
+
+    it "with a invalid request_type" do
+      expect { described_class.class_from_request_data(:request_type => "abc") }.to raise_error("Invalid request_type")
+    end
+
+    it "without a request_type" do
+      expect { described_class.class_from_request_data({}) }.to raise_error("Invalid request_type")
     end
   end
 end

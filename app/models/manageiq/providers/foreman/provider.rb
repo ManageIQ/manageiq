@@ -20,7 +20,7 @@ class ManageIQ::Providers::Foreman::Provider < ::Provider
 
   delegate :api_cached?, :ensure_api_cached, :to => :connect
 
-  before_validation :ensure_managers
+  before_create :ensure_managers
 
   validates :name, :presence => true, :uniqueness => true
   validates :url,  :presence => true
@@ -49,6 +49,10 @@ class ManageIQ::Providers::Foreman::Provider < ::Provider
   end
 
   def verify_credentials(auth_type = nil, options = {})
+    uri = URI.parse(url) unless url.blank?
+    unless uri.kind_of?(URI::HTTPS)
+      raise "URL has to be HTTPS"
+    end
     with_provider_connection(options.merge(:auth_type => auth_type), &:verify?)
   rescue SocketError,
          Errno::ECONNREFUSED,

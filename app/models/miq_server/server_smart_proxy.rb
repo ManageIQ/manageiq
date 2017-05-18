@@ -1,8 +1,9 @@
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "VixDiskLib")
 require 'yaml'
 
 module MiqServer::ServerSmartProxy
   extend ActiveSupport::Concern
+
+  SMART_ROLES = %w(smartproxy smartstate).freeze
 
   included do
     serialize :capabilities
@@ -12,17 +13,13 @@ module MiqServer::ServerSmartProxy
     # Called from VM scan job as well as scan_sync_vm
 
     def use_broker_for_embedded_proxy?(type = nil)
-      cores_settings = MiqServer.my_server.get_config("vmdb").config[:coresident_miqproxy].dup
-      result = ManageIQ::Providers::Vmware::InfraManager.use_vim_broker? && cores_settings[:use_vim_broker]
+      result = ManageIQ::Providers::Vmware::InfraManager.use_vim_broker? &&
+               ::Settings.coresident_miqproxy[:use_vim_broker]
+      return result if type.blank? || !result
 
       # Check for a specific type (host/ems) if passed
-      unless type.blank?
-        # Default use_vim_broker to true for ems type
-        cores_settings[:use_vim_broker_ems] = true if cores_settings[:use_vim_broker_ems].blank? && cores_settings[:use_vim_broker_ems] != false
-        cores_settings["use_vim_broker_#{type}".to_sym] ||= false
-        result &&= cores_settings["use_vim_broker_#{type}".to_sym]
-      end
-      result
+      # Default use_vim_broker is true for ems type
+      ::Settings.coresident_miqproxy["use_vim_broker_#{type}"] == true
     end
   end
 
@@ -111,7 +108,7 @@ module MiqServer::ServerSmartProxy
   def scan_metadata(ost)
     klass  = ost.target_type.constantize
     target = klass.find(ost.target_id)
-    job    = Job.find_by_guid(ost.taskid)
+    job    = Job.find_by(:guid => ost.taskid)
     _log.debug "#{target.name} (#{target.class.name})"
     begin
       ost.args[1]  = YAML.load(ost.args[1]) # TODO: YAML.dump'd in call_scan - need it be?
@@ -135,7 +132,7 @@ module MiqServer::ServerSmartProxy
   def sync_metadata(ost)
     klass  = ost.target_type.constantize
     target = klass.find(ost.target_id)
-    job    = Job.find_by_guid(ost.taskid)
+    job    = Job.find_by(:guid => ost.taskid)
     _log.debug "#{log_prefix}: #{target.name} (#{target.class.name})"
     begin
       target.perform_metadata_sync(ost)
@@ -157,10 +154,6 @@ module MiqServer::ServerSmartProxy
     errArray.each { |e| $log.error "Error Trace: [#{e}]" }
   end
 
-  def miq_proxy
-    self
-  end
-
   def forceVmScan
     true
   end
@@ -171,7 +164,7 @@ module MiqServer::ServerSmartProxy
     begin
       # This is only available on Linux
       if Sys::Platform::IMPL == :linux
-        require 'VixDiskLib'
+        require 'VixDiskLib/VixDiskLib'
         caps[:vixDisk] = true
       end
     rescue Exception => err

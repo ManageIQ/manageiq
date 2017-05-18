@@ -32,7 +32,7 @@ class Compliance < ApplicationRecord
     if target.kind_of?(Array)
       klass, id = target
       klass = Object.const_get(klass)
-      target = klass.find_by_id(id)
+      target = klass.find_by(:id => id)
       unless target
         raise _("Unable to find object with class: [%{class_name}], Id: [%{number}]") % {:class_name => klass,
                                                                                          :number     => id}
@@ -43,12 +43,11 @@ class Compliance < ApplicationRecord
       raise _("Scan and Compliance check not supported for %{class_name} objects") % {:class_name => target.class.name}
     end
 
-    log_target = "#{target.class.name} name: [#{target.name}], id: [#{target.id}]"
-    _log.info("Requesting scan of #{log_target}")
+    _log.info("Requesting scan of #{target.log_target}")
     begin
       MiqEvent.raise_evm_job_event(target, :type => "scan", :prefix => "request")
     rescue => err
-      _log.error("Error raising request scan event for #{log_target}: #{err.message}")
+      _log.error("Error raising request scan event for #{target.log_target}: #{err.message}")
       return
     end
 
@@ -60,7 +59,7 @@ class Compliance < ApplicationRecord
     if target.kind_of?(Array)
       klass, id = target
       klass = Object.const_get(klass)
-      target = klass.find_by_id(id)
+      target = klass.find_by(:id => id)
       unless target
         raise _("Unable to find object with class: [%{class_name}], Id: [%{number}]") % {:class_name => klass,
                                                                                          :number     => id}

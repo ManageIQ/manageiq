@@ -1,5 +1,5 @@
-require 'MiqVim'
-require 'MiqVimBroker'
+require 'VMwareWebService/MiqVim'
+require 'VMwareWebService/MiqVimBroker'
 
 describe MiqVimBrokerWorker::Runner do
   before(:each) do
@@ -9,7 +9,7 @@ describe MiqVimBrokerWorker::Runner do
     other_ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone)
 
     # General stubbing for testing any worker (methods called during initialize)
-    @worker_guid = MiqUUID.new_guid
+    @worker_guid = SecureRandom.uuid
     @worker_record = FactoryGirl.create(:miq_vim_broker_worker, :guid => @worker_guid, :miq_server_id => server.id)
     @drb_uri = "drb://127.0.0.1:12345"
     allow(DRb).to receive(:uri).and_return(@drb_uri)
@@ -223,8 +223,8 @@ describe MiqVimBrokerWorker::Runner do
           expect(MiqQueue.count).to eq(1)
           q = MiqQueue.first
           expect(q.class_name).to eq("EmsRefresh")
-          expect(q.method_name).to eq("vc_update")
-          expect(q.args).to eq([@ems.id, event])
+          expect(q.method_name).to eq("refresh")
+          expect(q.args).to eq([[[vm.class.name, vm.id]]])
         end
 
         it "will handle queued Host updates properly" do
@@ -245,8 +245,36 @@ describe MiqVimBrokerWorker::Runner do
           expect(MiqQueue.count).to eq(1)
           q = MiqQueue.first
           expect(q.class_name).to eq("EmsRefresh")
-          expect(q.method_name).to eq("vc_update")
-          expect(q.args).to eq([@ems.id, event])
+          expect(q.method_name).to eq("refresh")
+          expect(q.args).to eq([[[host.class.name, host.id]]])
+        end
+
+        it "will handle create events properly" do
+          event = {
+            :server   => @ems.address,
+            :username => @ems.authentication_userid,
+            :objType  => "Folder",
+            :op       => "create",
+            :mor      => "group-v123"
+          }
+
+          expected_folder_hash = {
+            :folder => {
+              :type        => "EmsFolder",
+              :ems_ref     => "group-v123",
+              :ems_ref_obj => "group-v123",
+              :uid_ems     => "group-v123"
+            }
+          }
+
+          @vim_broker_worker.instance_variable_get(:@queue).enq(event.dup)
+
+          @vim_broker_worker.drain_event
+          expect(MiqQueue.count).to eq(1)
+          q = MiqQueue.first
+          expect(q.class_name).to eq("EmsRefresh")
+          expect(q.method_name).to eq("refresh_new_target")
+          expect(q.args).to eq([expected_folder_hash, @ems.id])
         end
 
         it "will ignore updates to unknown properties" do
@@ -316,8 +344,8 @@ describe MiqVimBrokerWorker::Runner do
           expect(MiqQueue.count).to eq(1)
           q = MiqQueue.first
           expect(q.class_name).to eq("EmsRefresh")
-          expect(q.method_name).to eq("vc_update")
-          expect(q.args).to eq([ems2.id, event])
+          expect(q.method_name).to eq("refresh")
+          expect(q.args).to eq([[[vm2.class.name, vm2.id]]])
         end
 
         it "will reconnect to an EMS" do

@@ -1,4 +1,4 @@
-class UpdateCloudVolumeAndCloudVolumeSnapshot < ActiveRecord::Migration
+class UpdateCloudVolumeAndCloudVolumeSnapshot < ActiveRecord::Migration[4.2]
   def up
     change_table :cloud_volumes do |t|
       t.remove     :vm_id

@@ -1,6 +1,7 @@
 module ManageIQ::Providers::Google::CloudManager::Vm::Operations::Power
-  def validate_suspend
-    validate_unsupported(_("Suspend Operation"))
+  extend ActiveSupport::Concern
+  included do
+    supports_not :suspend
   end
 
   def validate_pause

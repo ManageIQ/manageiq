@@ -5,15 +5,29 @@ module Metric::CiMixin::Capture
 
   delegate :perf_collect_metrics, :to => :perf_capture_object
 
-  def queue_name_for_metrics_collection
-    ems = if self.kind_of?(ExtManagementSystem)
-            self
-          elsif self.respond_to?(:ext_management_system)
-            ext_management_system
-          end
-    raise _("Unsupported type %{name} (id: %{number})") % {:name => self.class.name, :number => id} if ems.nil?
-    ems.metrics_collector_queue_name
+  def ems_for_capture_target
+    if self.kind_of?(ExtManagementSystem)
+      self
+    elsif respond_to?(:ext_management_system) && ext_management_system.present?
+      ext_management_system
+    elsif respond_to?(:old_ext_management_system) && old_ext_management_system.present?
+      old_ext_management_system
+    end
   end
+
+  def split_capture_intervals(interval_name, start_time, end_time, threshold = 1.day)
+    raise _("Start time must be earlier than End time") if start_time > end_time
+    # Create an array of ordered pairs from start_time and end_time so that each ordered pair is contained
+    # within the threshold.  Then, reverse it so the newest ordered pair is first:
+    # start_time = 2017/01/01 12:00:00, end_time = 2017/01/04 12:00:00
+    # [[interval_name, 2017-01-03 12:00:00 UTC, 2017-01-04 12:00:00 UTC],
+    #  [interval_name, 2017-01-02 12:00:00 UTC, 2017-01-03 12:00:00 UTC],
+    #  [interval_name, 2017-01-01 12:00:00 UTC, 2017-01-02 12:00:00 UTC]]
+    (start_time.utc..end_time.utc).step_value(threshold).each_cons(2).collect do |s_time, e_time|
+      [interval_name, s_time, e_time]
+    end.reverse
+  end
+  private :split_capture_intervals
 
   def perf_capture_queue(interval_name, options = {})
     start_time = options[:start_time]
@@ -22,31 +36,36 @@ module Metric::CiMixin::Capture
     task_id    = options[:task_id]
     zone       = options[:zone] || my_zone
     zone = zone.name if zone.respond_to?(:name)
+    ems        = ems_for_capture_target
+
     raise ArgumentError, "invalid interval_name '#{interval_name}'" unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
     raise ArgumentError, "end_time cannot be specified if start_time is nil" if start_time.nil? && !end_time.nil?
+    raise ArgumentError, "target does not have an ExtManagementSystem" if ems.nil?
 
     start_time = start_time.utc unless start_time.nil?
     end_time = end_time.utc unless end_time.nil?
 
-    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
-
-    # Determine what items we should be queuing up
-    items = []
+    # Determine the items to queue up
+    # cb is the task used to group cluster realtime metrics
     cb = nil
     if interval_name == 'historical'
       start_time = Metric::Capture.historical_start_time if start_time.nil?
-      end_time = Time.now.utc if end_time.nil?
-
-      start_hour = start_time
-      while start_hour != end_time
-        end_hour = start_hour + 1.day
-        end_hour = end_time if end_hour > end_time
-        items.unshift([interval_name, start_hour, end_hour])
-        start_hour = end_hour
-      end
+      end_time ||= 1.day.from_now.utc.beginning_of_day # Ensure no more than one historical collection is queue up in the same day
+      items = split_capture_intervals(interval_name, start_time, end_time)
     else
-      items << [interval_name]
-      items[0] << start_time << end_time unless start_time.nil?
+      # if last_perf_capture_on is earlier than 4.hour.ago.beginning_of_day,
+      # then create *one* realtime capture for start_time = 4.hours.ago.beginning_of_day (no end_time)
+      # and create historical captures for each day from last_perf_capture_on until 4.hours.ago.beginning_of_day
+      realtime_cut_off = 4.hours.ago.utc.beginning_of_day
+      items =
+        if last_perf_capture_on.nil?
+          [[interval_name, realtime_cut_off]]
+        elsif last_perf_capture_on < realtime_cut_off
+          [[interval_name, realtime_cut_off]] +
+            split_capture_intervals("historical", last_perf_capture_on, realtime_cut_off)
+        else
+          [interval_name]
+        end
 
       cb = {:class_name => self.class.name, :instance_id => id, :method_name => :perf_capture_callback, :args => [[task_id]]} if task_id
     end
@@ -56,7 +75,7 @@ module Metric::CiMixin::Capture
       :class_name  => self.class.name,
       :instance_id => id,
       :role        => 'ems_metrics_collector',
-      :queue_name  => queue_name_for_metrics_collection,
+      :queue_name  => ems.metrics_collector_queue_name,
       :zone        => zone,
       :state       => ['ready', 'dequeue'],
     }
@@ -69,7 +88,9 @@ module Metric::CiMixin::Capture
         if msg.nil?
           qi[:priority] = priority
           qi.delete(:state)
-          qi[:miq_callback] = cb if cb
+          if cb && item_interval == "realtime"
+            qi[:miq_callback] = cb
+          end
           qi
         elsif msg.state == "ready" && (task_id || MiqQueue.higher_priority?(priority, msg.priority))
           qi[:priority] = priority
@@ -77,7 +98,7 @@ module Metric::CiMixin::Capture
           qi.delete(:state)
           if task_id
             existing_tasks = (((msg.miq_callback || {})[:args] || []).first) || []
-            qi[:miq_callback] = cb.merge(:args => [existing_tasks + [task_id]])
+            qi[:miq_callback] = cb.merge(:args => [existing_tasks + [task_id]]) if item_interval == "realtime"
           end
           qi
         else
@@ -112,9 +133,9 @@ module Metric::CiMixin::Capture
     end_time = end_time.utc unless end_time.nil?
 
     log_header = "[#{interval_name}]"
-    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
-    log_target << ", start_time: [#{start_time}]" unless start_time.nil?
-    log_target << ", end_time: [#{end_time}]" unless end_time.nil?
+    log_time = ''
+    log_time << ", start_time: [#{start_time}]" unless start_time.nil?
+    log_time << ", end_time: [#{end_time}]" unless end_time.nil?
 
     # Determine the start_time for capturing if not provided
     if interval_name == 'historical'
@@ -148,7 +169,7 @@ module Metric::CiMixin::Capture
       expected_start_range = expected_start_range.iso8601
     end
 
-    _log.info "#{log_header} Capture for #{log_target}..."
+    _log.info "#{log_header} Capture for #{log_target}#{log_time}..."
 
     start_range = end_range = counters = counter_values = nil
     _, t = Benchmark.realtime_block(:total_time) do
@@ -164,13 +185,15 @@ module Metric::CiMixin::Capture
       end_range   = ts.last
     end
 
-    _log.info "#{log_header} Capture for #{log_target}...Complete - Timings: #{t.inspect}"
+    _log.info "#{log_header} Capture for #{log_target}#{log_time}...Complete - Timings: #{t.inspect}"
 
     if start_range.nil?
-      _log.info "#{log_header} Skipping processing for #{log_target} as no metrics were captured."
+      _log.info "#{log_header} Skipping processing for #{log_target}#{log_time} as no metrics were captured."
+      # Set the last capture on to end_time to prevent forever queueing up the same collection range
+      update_attributes(:last_perf_capture_on => end_time || Time.now.utc) if interval_name == 'realtime'
     else
       if expected_start_range && start_range > expected_start_range
-        _log.warn "#{log_header} For #{log_target}, expected to get data as of [#{expected_start_range}], but got data as of [#{start_range}]."
+        _log.warn "#{log_header} For #{log_target}#{log_time}, expected to get data as of [#{expected_start_range}], but got data as of [#{start_range}]."
 
         # Raise ems_performance_gap_detected alert event to enable notification.
         MiqEvent.raise_evm_alert_event_queue(ext_management_system, "ems_performance_gap_detected",
@@ -218,8 +241,6 @@ module Metric::CiMixin::Capture
 
   def perf_capture_realtime_now
     # For UI to enable refresh of realtime charts on demand
-    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
-
     _log.info "Realtime capture requested for #{log_target}"
 
     perf_capture_queue('realtime', :priority => MiqQueue::HIGH_PRIORITY)

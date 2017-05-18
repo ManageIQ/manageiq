@@ -12,6 +12,10 @@ module ArRegion
     cache_with_timeout(:id_to_miq_region) { Hash.new }
   end
 
+  def self.anonymous_class_with_ar_region
+    @klass_with_ar_region ||= Class.new(ActiveRecord::Base).send(:include, self)
+  end
+
   module ClassMethods
     def inherited(other)
       if other == other.base_class
@@ -52,6 +56,10 @@ module ArRegion
       id.to_i / rails_sequence_factor
     end
 
+    def id_in_region(id, region_number)
+      region_number * rails_sequence_factor + id
+    end
+
     def region_to_range(region_number)
       (region_number * rails_sequence_factor)..(region_number * rails_sequence_factor + rails_sequence_factor - 1)
     end
@@ -83,8 +91,7 @@ module ArRegion
 
     def split_id(id)
       return [my_region_number, nil] if id.nil?
-      id = uncompress_id(id) if compressed_id?(id)
-      id = id.to_i
+      id = uncompress_id(id)
 
       region_number = id_to_region(id)
       short_id      = (region_number == 0) ? id : id % (region_number * rails_sequence_factor)
@@ -97,7 +104,7 @@ module ArRegion
     #
 
     def compressed_id?(id)
-      id.to_s =~ RE_COMPRESSED_ID
+      id.to_s =~ /^#{CID_OR_ID_MATCHER}$/
     end
 
     def compress_id(id)

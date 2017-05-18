@@ -1,4 +1,4 @@
-class AddCloudTenantStiColumn < ActiveRecord::Migration
+class AddCloudTenantStiColumn < ActiveRecord::Migration[4.2]
   class CloudTenant < ActiveRecord::Base
     self.inheritance_column = :_type_disabled # disable STI
   end

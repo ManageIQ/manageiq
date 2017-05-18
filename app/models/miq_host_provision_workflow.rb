@@ -19,12 +19,9 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     false
   end
 
-  def create_request(values, requester, auto_approve = false)
-    super(values, requester, auto_approve) { update_selected_storage_names(values) }
-  end
-
-  def update_request(request, values, requester)
-    super(request, values, requester) { update_selected_storage_names(values) }
+  def make_request(request, values, requester = nil, auto_approve = false)
+    update_selected_storage_names(values)
+    super
   end
 
   def get_source_and_targets(_refresh = false)
@@ -85,7 +82,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
   end
 
   def allowed_clusters(_options = {})
-    ems = ExtManagementSystem.find_by_id(get_value(@values[:placement_ems_name]))
+    ems = ExtManagementSystem.find_by(:id => get_value(@values[:placement_ems_name]))
     result = {}
     return result if ems.nil?
     ems.ems_clusters.each { |c| result[c.id] = "#{c.v_parent_datacenter} / #{c.name}" }
@@ -94,7 +91,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
 
   def allowed_storages(_options = {})
     result = []
-    ems = ExtManagementSystem.find_by_id(get_value(@values[:placement_ems_name]))
+    ems = ExtManagementSystem.find_by(:id => get_value(@values[:placement_ems_name]))
     return result if ems.nil?
     ems.storages.each do |s|
       next unless s.store_type == "NFS"
@@ -200,7 +197,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     match_str = match_str.to_s.downcase
 
     send(allowed_method).detect do |item|
-      ci = item.kind_of?(Array) ? klass.find_by_id(item[0]) : item
+      ci = item.kind_of?(Array) ? klass.find_by(:id => item[0]) : item
       keys.any? do |key|
         value = ci.send(key).to_s.downcase
         # _log.warn "<#{allowed_method}> - comparing <#{value}> to <#{match_str}>"
@@ -244,7 +241,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     values[:ws_ems_custom_attributes] = p.ws_values(options.ems_custom_attributes, :parse_ws_string, :modify_key_name => false)
     values[:ws_miq_custom_attributes] = p.ws_values(options.miq_custom_attributes, :parse_ws_string, :modify_key_name => false)
 
-    p.create_request(values, nil, values[:auto_approve]).tap do |request|
+    p.make_request(nil, values, nil, values[:auto_approve]).tap do |request|
       p.raise_validate_errors if request == false
     end
   rescue => err

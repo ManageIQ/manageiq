@@ -1,4 +1,4 @@
-class AddCloudTenantRefToSecurityGroups < ActiveRecord::Migration
+class AddCloudTenantRefToSecurityGroups < ActiveRecord::Migration[4.2]
   def self.up
     change_table :security_groups do |t|
       t.belongs_to  :cloud_tenant, :type => :bigint

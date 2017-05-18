@@ -1,4 +1,4 @@
-class AddGroupAndUserColumnsToMiqWidgetContents < ActiveRecord::Migration
+class AddGroupAndUserColumnsToMiqWidgetContents < ActiveRecord::Migration[4.2]
   class MiqWidgetContent < ActiveRecord::Base; end
 
   def up

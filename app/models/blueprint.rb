@@ -4,6 +4,7 @@ class Blueprint < ApplicationRecord
 
   virtual_has_one :bundle
   virtual_has_one :content, :class_name => "Hash"
+  virtual_column :in_use?, :type => :boolean
 
   acts_as_miq_taggable
 
@@ -14,6 +15,11 @@ class Blueprint < ApplicationRecord
 
   def published?
     status == 'published'
+  end
+
+  def in_use?
+    return false unless published?
+    bundle.request_class.exists?(:source_id => bundle.id)
   end
 
   def readonly?
@@ -31,7 +37,7 @@ class Blueprint < ApplicationRecord
         new_attributes.reverse_merge(:status => nil).each do |attr, value|
           blueprint.send("#{attr}=", value)
         end
-        copy_service_template(blueprint, bundle, true)
+        copy_service_template(blueprint, bundle, true) if bundle
         blueprint.save!
       end
     end
@@ -47,7 +53,7 @@ class Blueprint < ApplicationRecord
         :service_type => 'composite'
       )
       add_catalog_items(new_bundle, options[:service_templates]) if options.key?(:service_templates)
-      add_entry_points(new_bundle, options[:entry_points], options[:service_dialog])
+      add_entry_points(new_bundle, options[:entry_points], options[:service_dialog], new_bundle[:service_type])
       new_bundle.service_template_catalog = options[:service_catalog]
 
       new_bundle.save!
@@ -82,17 +88,73 @@ class Blueprint < ApplicationRecord
   end
 
   def publish(bundle_name = nil)
-    publish_bundle.tap do
-      the_bundle = bundle
-      the_bundle.name = bundle_name if bundle_name
-      the_bundle.display = true # visible for ordering service
-      the_bundle.save!
+    self.class.transaction do
+      ServiceTemplate.create(
+        :name         => bundle_name || name,
+        :description  => description,
+        :blueprint    => self,
+        :service_type => 'composite'
+      ).tap do |new_bundle|
+        add_catalog_items(new_bundle, parse_catalog_items)
+        new_bundle.service_template_catalog = parse_service_catalog
 
-      update_attributes(:status => 'published')
+        new_dialog = parse_service_dialog.deep_copy(:name => random_dialog_name(name), :blueprint => self).tap(&:save!)
+        # Update ui_properties to reflect the new dialog
+        ui_properties['service_dialog']['id'] = new_dialog.id
+        add_entry_points(new_bundle, parse_entry_points, new_dialog, 'composite')
+
+        new_bundle.display = true # visible for ordering service
+        new_bundle.save!
+
+        copy_tags_to_bundle(new_bundle) # pass tags from a blueprint to its bundle
+
+        update_attributes!(:status => 'published')
+      end
     end
   end
 
   private
+
+  def parse_service_catalog
+    ServiceTemplateCatalog.find_by(:id => ui_properties.fetch_path("service_catalog", "id"))
+  end
+
+  def parse_service_dialog
+    Dialog.find_by(:id => ui_properties.fetch_path("service_dialog", "id"))
+  end
+
+  def parse_entry_points
+    ui_properties["automate_entrypoints"]
+  end
+
+  def parse_catalog_items
+    ui_properties.fetch_path("chart_data_model", "nodes").collect do |node|
+      new_template =
+        if node["id"]
+          service_template = ServiceTemplate.find_by(:id => node["id"])
+          copy_service_template(self, service_template, false)
+        else
+          ServiceTemplate.create!(node.slice('name', 'generic_subtype', 'service_type', 'prov_type'))
+        end
+      if node["tags"]
+        parse_tags(node["tags"]).each { |tag| Classification.classify_by_tag(new_template, tag) }
+      end
+      # Update node to include ID of copied or new ServiceTemplate
+      node['id'] = new_template.id
+      new_template
+    end
+  end
+
+  def parse_tags(id_list)
+    id_list.collect do |id_hash|
+      Tag.find_by(:id => id_hash["id"]).name
+    end
+  end
+
+  def copy_tags_to_bundle(the_bundle)
+    tags = Classification.get_tags_from_object(self)
+    tags.each { |tag| Classification.classify_by_tag(the_bundle, "/managed/#{tag}") }
+  end
 
   # Copy a service template and link its blueprint;
   # It can be used to copy service_templates into a new blueprint
@@ -175,13 +237,13 @@ class Blueprint < ApplicationRecord
     remove_catalog_items(the_bundle, existing_items - catalog_items)
   end
 
-  def add_entry_points(new_bundle, entry_points, dialog)
-    entry_points ||= {
-      'Provision'  => ServiceTemplate.default_provisioning_entry_point,
-      'Retirement' => ServiceTemplate.default_retirement_entry_point
-    }
+  def add_entry_points(new_bundle, entry_points, dialog, service_type)
+    entry_points ||= {}
+    entry_points['Provision'] ||= ServiceTemplate.default_provisioning_entry_point(service_type)
+    entry_points['Retirement'] ||= ServiceTemplate.default_retirement_entry_point
 
     entry_points.each do |key, value|
+      next if value.blank?
       new_bundle.resource_actions.build(:action => key, :fqname => value, :dialog => dialog)
     end
   end

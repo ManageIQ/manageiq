@@ -21,6 +21,13 @@ module EvmSpecHelper
     end
   end
 
+  def self.assign_embedded_ansible_role(miq_server = nil)
+    MiqRegion.seed
+    miq_server ||= local_miq_server
+    FactoryGirl.create(:server_role, :name => 'embedded_ansible', :max_concurrent => 0)
+    miq_server.assign_role('embedded_ansible').update_attributes(:active => true)
+  end
+
   # Clear all EVM caches
   def self.clear_caches
     @settings_loaded = Vmdb::Settings.last_loaded
@@ -31,6 +38,7 @@ module EvmSpecHelper
 
     clear_instance_variables(MiqEnvironment::Command)
     clear_instance_variable(MiqProductFeature, :@feature_cache) if defined?(MiqProductFeature)
+    clear_instance_variable(MiqProductFeature, :@obj_cache) if defined?(MiqProductFeature)
     clear_instance_variable(BottleneckEvent, :@event_definitions) if defined?(BottleneckEvent)
 
     # Clear the thread local variable to prevent test contamination
@@ -71,8 +79,7 @@ module EvmSpecHelper
   def self.remote_miq_server(attrs = {})
     Tenant.root_tenant || Tenant.create!(:use_config_for_attributes => false)
 
-    server = FactoryGirl.create(:miq_server, attrs)
-    server
+    FactoryGirl.create(:miq_server, attrs)
   end
 
   def self.remote_guid_miq_server_zone

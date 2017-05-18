@@ -335,30 +335,6 @@ describe VmOrTemplate do
     end
   end
 
-  describe ".cloneable?" do
-    context "when the vm_or_template does not exist" do
-      it "returns false" do
-        expect(VmOrTemplate.cloneable?(111)).to eq(false)
-      end
-    end
-
-    context "when the vm_or_template does exist but is not cloneable" do
-      let(:vm_or_template) { VmOrTemplate.create(:type => "ManageIQ::Providers::Redhat::InfraManager::Template", :name => "aaa", :location => "bbb", :vendor => "redhat") }
-
-      it "returns false" do
-        expect(VmOrTemplate.cloneable?(vm_or_template.id)).to eq(false)
-      end
-    end
-
-    context "when the vm_or_template exists and is cloneable" do
-      let(:vm_or_template) { ManageIQ::Providers::Redhat::InfraManager::Vm.create(:type => "ManageIQ::Providers::Redhat::InfraManager::Vm", :name => "aaa", :location => "bbb", :vendor   => "redhat") }
-
-      it "returns true" do
-        expect(VmOrTemplate.cloneable?(vm_or_template.id)).to eq(true)
-      end
-    end
-  end
-
   context "#scan_profile_categories" do
     before do
       @vm = FactoryGirl.create(:vm_vmware)
@@ -372,7 +348,7 @@ describe VmOrTemplate do
     it "should produce profile categories from the default profile" do
       item_set = ScanItemSet.new
       allow(item_set).to receive(:members) { [FactoryGirl.build(:scan_item_category_default), FactoryGirl.build(:scan_item_file)] }
-      allow(ScanItemSet).to receive(:find_by_name).with("default") { item_set }
+      allow(ScanItemSet).to receive(:find_by).with(:name => "default") { item_set }
 
       categories = @vm.scan_profile_categories(@vm.scan_profile_list)
       expect(categories).to match_array ["default", "profiles"]
@@ -381,7 +357,7 @@ describe VmOrTemplate do
     it "should produce profile categories from the customer profile" do
       item_set = ScanItemSet.new
       allow(item_set).to receive(:members) { [FactoryGirl.build(:scan_item_category_test), FactoryGirl.build(:scan_item_file)] }
-      allow(ScanItemSet).to receive(:find_by_name).with("test") { item_set }
+      allow(ScanItemSet).to receive(:find_by).with(:name => "test") { item_set }
 
       categories = @vm.scan_profile_categories(ScanItem.get_profile("test"))
       expect(categories).to match_array ["test", "profiles"]
@@ -466,9 +442,42 @@ describe VmOrTemplate do
     end
   end
 
+  context "#supports_terminate?" do
+    let(:ems_does_vm_destroy) { FactoryGirl.create(:ems_vmware) }
+    let(:ems_doesnot_vm_destroy) { FactoryGirl.create(:ems_vmware_cloud) }
+    let(:host) { FactoryGirl.create(:host) }
+
+    it "returns true for a VM not terminated" do
+      vm = FactoryGirl.create(:vm, :host => host, :ext_management_system => ems_does_vm_destroy)
+      allow(vm).to receive_messages(:terminated? => false)
+      expect(vm.supports_terminate?).to eq(true)
+    end
+
+    it "returns false for a terminated VM" do
+      vm = FactoryGirl.create(:vm, :host => host, :ext_management_system => ems_does_vm_destroy)
+      allow(vm).to receive_messages(:terminated? => true)
+      expect(vm.supports_terminate?).to eq(false)
+      expect(vm.unsupported_reason(:terminate)).to eq("The VM is terminated")
+    end
+
+    it "returns false for a provider doesn't support vm_destroy" do
+      vm = FactoryGirl.create(:vm, :host => host, :ext_management_system => ems_doesnot_vm_destroy)
+      allow(vm).to receive_messages(:terminated? => false)
+      expect(vm.supports_terminate?).to eq(false)
+      expect(vm.unsupported_reason(:terminate)).to eq("Provider doesn't support vm_destroy")
+    end
+
+    it "returns false for a WMware VM" do
+      vm = FactoryGirl.create(:vm, :host => host, :ext_management_system => ems_does_vm_destroy)
+      allow(vm).to receive_messages(:terminated? => false)
+      expect(vm.supports_terminate?).to eq(true)
+    end
+  end
+
   context "#self.batch_operation_supported?" do
     let(:ems)     { FactoryGirl.create(:ext_management_system) }
     let(:storage) { FactoryGirl.create(:storage) }
+    let(:host) { FactoryGirl.create(:host) }
 
     it "when the vm_or_template supports migrate,  returns false" do
       vm1 =  FactoryGirl.create(:vm_microsoft)
@@ -480,6 +489,14 @@ describe VmOrTemplate do
       vm1 =  FactoryGirl.create(:vm_vmware, :storage => storage, :ext_management_system => ems)
       vm2 =  FactoryGirl.create(:vm_vmware, :storage => storage, :ext_management_system => ems)
       expect(VmOrTemplate.batch_operation_supported?(:migrate, [vm1.id, vm2.id])).to eq(true)
+    end
+
+    it "when the vm_or_template supports terminate, returns true" do
+      ems_vmware = FactoryGirl.create(:ems_vmware)
+      ems_ms = FactoryGirl.create(:ems_microsoft)
+      vm1 =  FactoryGirl.create(:vm_microsoft, :host => host, :ext_management_system => ems_ms)
+      vm2 =  FactoryGirl.create(:vm_vmware, :host => host, :ext_management_system => ems_vmware)
+      expect(VmOrTemplate.batch_operation_supported?(:terminate, [vm1.id, vm2.id])).to eq(true)
     end
   end
 
@@ -576,6 +593,135 @@ describe VmOrTemplate do
         expect(virtual_column_sql_value(VmOrTemplate, "v_pct_free_disk_space")).to be_nil
         expect(virtual_column_sql_value(VmOrTemplate, "v_pct_used_disk_space")).to be_nil
       end
+    end
+  end
+
+  describe "#provisioned_storage" do
+    context "with no hardware" do
+      let(:vm) { FactoryGirl.create(:vm_vmware) }
+
+      it "calculates in ruby" do
+        expect(vm.provisioned_storage).to eq(0.0)
+      end
+
+      it "uses calculated (inline) attribute" do
+        vm # make sure the record is created
+        vm2 = VmOrTemplate.select(:id, :provisioned_storage).first
+        expect { expect(vm2.provisioned_storage).to eq(0) }.to match_query_limit_of(0)
+      end
+    end
+  end
+
+  describe ".ram_size", ".mem_cpu" do
+    let(:vm) { FactoryGirl.create(:vm_vmware, :hardware => hardware) }
+    let(:hardware) { FactoryGirl.create(:hardware, :memory_mb => 10) }
+
+    it "supports null hardware" do
+      vm = FactoryGirl.create(:vm_vmware)
+      expect(vm.ram_size).to eq(0)
+      expect(vm.mem_cpu).to eq(0)
+    end
+
+    it "calculates in ruby" do
+      expect(vm.ram_size).to eq(10)
+      expect(vm.mem_cpu).to eq(10)
+    end
+
+    it "calculates in the database" do
+      vm.save
+      expect(virtual_column_sql_value(VmOrTemplate, "ram_size")).to eq(10)
+      expect(virtual_column_sql_value(VmOrTemplate, "mem_cpu")).to eq(10)
+    end
+  end
+
+  describe ".ram_size_in_bytes" do
+    let(:vm) { FactoryGirl.create(:vm_vmware, :hardware => hardware) }
+    let(:hardware) { FactoryGirl.create(:hardware, :memory_mb => 10) }
+
+    it "supports null hardware" do
+      vm = FactoryGirl.create(:vm_vmware)
+      expect(vm.ram_size_in_bytes).to eq(0)
+    end
+
+    it "calculates in ruby" do
+      expect(vm.ram_size_in_bytes).to eq(10.megabytes)
+    end
+
+    it "calculates in the database" do
+      vm.save
+      expect(virtual_column_sql_value(VmOrTemplate, "ram_size_in_bytes")).to eq(10.megabytes)
+    end
+  end
+
+  describe ".cpu_usagemhz_rate_average_max_over_time_period (virtual_attribute)" do
+    let(:vm) { FactoryGirl.create :vm_vmware }
+
+    before do
+      EvmSpecHelper.local_miq_server
+      tp_id = TimeProfile.seed.id
+      FactoryGirl.create :metric_rollup_vm_daily,
+                         :with_data,
+                         :time_profile_id => tp_id,
+                         :resource_id     => vm.id
+      FactoryGirl.create :metric_rollup_vm_daily,
+                         :with_data,
+                         :cpu_usagemhz_rate_average => 10.0,
+                         :time_profile_id           => tp_id,
+                         :resource_id               => vm.id
+      FactoryGirl.create :metric_rollup_vm_daily,
+                         :with_data,
+                         :cpu_usagemhz_rate_average => 100.0,
+                         :time_profile_id           => tp_id,
+                         :resource_id               => vm.id
+    end
+
+    it "calculates in ruby" do
+      expect(vm.cpu_usagemhz_rate_average_max_over_time_period).to eq(100.0)
+    end
+
+    it "calculates in the database" do
+      expect(
+        virtual_column_sql_value(
+          VmOrTemplate,
+          "cpu_usagemhz_rate_average_max_over_time_period"
+        )
+      ).to eq(100.0)
+    end
+  end
+
+  describe ".derived_memory_used_max_over_time_period (virtual_attribute)" do
+    let(:vm) { FactoryGirl.create :vm_vmware }
+
+    before do
+      EvmSpecHelper.local_miq_server
+      tp_id = TimeProfile.seed.id
+      FactoryGirl.create :metric_rollup_vm_daily,
+                         :with_data,
+                         :time_profile_id => tp_id,
+                         :resource_id     => vm.id
+      FactoryGirl.create :metric_rollup_vm_daily,
+                         :with_data,
+                         :derived_memory_used => 10.0,
+                         :time_profile_id     => tp_id,
+                         :resource_id         => vm.id
+      FactoryGirl.create :metric_rollup_vm_daily,
+                         :with_data,
+                         :derived_memory_used => 1000.0,
+                         :time_profile_id     => tp_id,
+                         :resource_id         => vm.id
+    end
+
+    it "calculates in ruby" do
+      expect(vm.derived_memory_used_max_over_time_period).to eq(1000.0)
+    end
+
+    it "calculates in the database" do
+      expect(
+        virtual_column_sql_value(
+          VmOrTemplate,
+          "derived_memory_used_max_over_time_period"
+        )
+      ).to eq(1000.0)
     end
   end
 
@@ -723,6 +869,40 @@ describe VmOrTemplate do
     end
   end
 
+  describe ".cpu_total_cores" do
+    let(:vm) { FactoryGirl.create(:vm) }
+    it "handles no hardware" do
+      expect(vm.cpu_total_cores).to eq(0)
+    end
+
+    it "handles hardware" do
+      FactoryGirl.create(:hardware, :vm => vm, :cpu_total_cores => 8)
+      expect(vm.cpu_total_cores).to eq(8)
+    end
+
+    it "calculates in the database" do
+      FactoryGirl.create(:hardware, :vm => vm, :cpu_total_cores => 8)
+      expect(virtual_column_sql_value(VmOrTemplate, "cpu_total_cores")).to eq(8)
+    end
+  end
+
+  describe ".cpu_cores_per_socket" do
+    let(:vm) { FactoryGirl.create(:vm) }
+    it "handles no hardware" do
+      expect(vm.cpu_cores_per_socket).to eq(0)
+    end
+
+    it "handles hardware" do
+      FactoryGirl.create(:hardware, :vm => vm, :cpu_cores_per_socket => 4)
+      expect(vm.cpu_cores_per_socket).to eq(4)
+    end
+
+    it "calculates in the database" do
+      FactoryGirl.create(:hardware, :vm => vm, :cpu_cores_per_socket => 4)
+      expect(virtual_column_sql_value(VmOrTemplate, "cpu_cores_per_socket")).to eq(4)
+    end
+  end
+
   describe "#disconnect_ems" do
     let(:ems) { FactoryGirl.build(:ext_management_system) }
     let(:vm) do
@@ -772,6 +952,157 @@ describe VmOrTemplate do
       FactoryGirl.create(:vm_or_template, :storage => FactoryGirl.create(:storage))
 
       expect(VmOrTemplate.not_archived_nor_orphaned).to eq([vm])
+    end
+  end
+
+  describe ".post_refresh_ems" do
+    let(:folder_blue1)   { EmsFolder.find_by(:name => "blue1") }
+    let(:folder_blue2)   { EmsFolder.find_by(:name => "blue2") }
+    let(:folder_vm_root) { EmsFolder.find_by(:name => "vm") }
+    let(:vm_blue1)       { VmOrTemplate.find_by(:name => "vm_blue1") }
+    let(:vm_blue2)       { VmOrTemplate.find_by(:name => "vm_blue2") }
+
+    let!(:ems) do
+      _, _, zone = EvmSpecHelper.local_guid_miq_server_zone
+      FactoryGirl.create(:ems_vmware, :zone => zone).tap do |ems|
+        build_vmware_folder_structure!(ems)
+        folder_blue1.add_child(FactoryGirl.create(:vm_vmware, :name => "vm_blue1", :ems_id => ems.id))
+        folder_blue2.add_child(FactoryGirl.create(:vm_vmware, :name => "vm_blue2", :ems_id => ems.id))
+      end
+    end
+
+    let!(:start_time) { Time.now.utc }
+
+    it "when a folder is created under a folder" do
+      new_folder = FactoryGirl.create(:vmware_folder_vm, :ems_id => ems.id)
+      new_folder.parent = folder_blue1
+
+      described_class.post_refresh_ems(ems.id, start_time)
+
+      expect(MiqQueue.count).to eq(0)
+    end
+
+    it "when a folder is renamed" do
+      folder_blue1.update_attributes(:name => "new blue1")
+
+      described_class.post_refresh_ems(ems.id, start_time)
+
+      expect(MiqQueue.count).to eq(1)
+      expect(MiqQueue.first).to have_attributes(
+        :class_name  => vm_blue1.class.name,
+        :instance_id => vm_blue1.id,
+        :method_name => "classify_with_parent_folder_path"
+      )
+    end
+
+    it "when a folder is moved" do
+      folder_blue1.parent = folder_blue2
+
+      described_class.post_refresh_ems(ems.id, start_time)
+
+      expect(MiqQueue.count).to eq(1)
+      expect(MiqQueue.first).to have_attributes(
+        :class_name  => vm_blue1.class.name,
+        :instance_id => vm_blue1.id,
+        :method_name => "classify_with_parent_folder_path"
+      )
+    end
+
+    it "when a VM is created under a folder" do
+      new_vm = FactoryGirl.create(:vm_vmware, :ems_id => ems.id)
+      new_vm.with_relationship_type("ems_metadata") { |v| v.parent = folder_blue1 }
+
+      described_class.post_refresh_ems(ems.id, start_time)
+
+      expect(MiqQueue.count).to eq(1)
+      expect(MiqQueue.first).to have_attributes(
+        :class_name  => new_vm.class.name,
+        :instance_id => new_vm.id,
+        :method_name => "post_create_actions"
+      )
+    end
+
+    it "when a VM is moved to another folder" do
+      vm_blue1.with_relationship_type("ems_metadata") { |v| v.parent = folder_blue2 }
+
+      described_class.post_refresh_ems(ems.id, start_time)
+
+      expect(MiqQueue.count).to eq(1)
+      expect(MiqQueue.first).to have_attributes(
+        :class_name  => vm_blue1.class.name,
+        :instance_id => vm_blue1.id,
+        :method_name => "classify_with_parent_folder_path"
+      )
+    end
+
+    it "when a folder is created and a folder is moved under it simultaneously" do
+      new_folder = FactoryGirl.create(:vmware_folder_vm, :ems_id => ems.id)
+      new_folder.parent = folder_vm_root
+      folder_blue1.parent = new_folder
+
+      described_class.post_refresh_ems(ems.id, start_time)
+
+      expect(MiqQueue.count).to eq(1)
+      expect(MiqQueue.first).to have_attributes(
+        :class_name  => vm_blue1.class.name,
+        :instance_id => vm_blue1.id,
+        :method_name => "classify_with_parent_folder_path"
+      )
+    end
+
+    it "when a folder is renamed and a folder is moved under it simultaneously" do
+      folder_blue1.update_attributes(:name => "new blue1")
+      folder_blue2.parent = folder_blue1
+
+      described_class.post_refresh_ems(ems.id, start_time)
+
+      queue_items = MiqQueue.order(:instance_id)
+      expect(queue_items.count).to eq(2)
+      expect(queue_items[0]).to have_attributes(
+        :class_name  => vm_blue1.class.name,
+        :instance_id => vm_blue1.id,
+        :method_name => "classify_with_parent_folder_path"
+      )
+      expect(queue_items[1]).to have_attributes(
+        :class_name  => vm_blue2.class.name,
+        :instance_id => vm_blue2.id,
+        :method_name => "classify_with_parent_folder_path"
+      )
+    end
+
+    it "when a folder is created and a VM is moved under it simultaneously" do
+      new_folder = FactoryGirl.create(:vmware_folder_vm, :ems_id => ems.id)
+      new_folder.parent = folder_vm_root
+      vm_blue1.with_relationship_type("ems_metadata") { |v| v.parent = new_folder }
+
+      described_class.post_refresh_ems(ems.id, start_time)
+
+      expect(MiqQueue.count).to eq(1)
+      expect(MiqQueue.first).to have_attributes(
+        :class_name  => vm_blue1.class.name,
+        :instance_id => vm_blue1.id,
+        :method_name => "classify_with_parent_folder_path"
+      )
+    end
+
+    it "when a folder is renamed and a VM is moved under it simultaneously" do
+      folder_blue2.update_attributes(:name => "new blue2")
+      vm_blue1.with_relationship_type("ems_metadata") { |v| v.parent = folder_blue2 }
+
+      described_class.post_refresh_ems(ems.id, start_time)
+
+      queue_items = MiqQueue.order(:instance_id)
+      expect(queue_items.count).to eq(2)
+      expect(queue_items[0]).to have_attributes(
+        :class_name  => vm_blue1.class.name,
+        :instance_id => vm_blue1.id,
+        :method_name => "classify_with_parent_folder_path"
+      )
+      expect(queue_items[1]).to have_attributes(
+        :class_name  => vm_blue2.class.name,
+        :instance_id => vm_blue2.id,
+        :method_name => "classify_with_parent_folder_path"
+      )
     end
   end
 end

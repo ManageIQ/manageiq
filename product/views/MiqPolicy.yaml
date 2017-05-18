@@ -19,7 +19,6 @@ db: MiqPolicy
 
 # Columns to fetch from the main table
 cols:
-- name
 - description
 - active
 

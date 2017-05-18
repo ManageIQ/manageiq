@@ -11,6 +11,18 @@ describe TimeProfile do
     expect(t.tz).to be_nil
   end
 
+  describe "#default?" do
+    it "with a default profile" do
+      tp = TimeProfile.seed
+      expect(tp).to be_default
+    end
+
+    it "with a non-default profile" do
+      tp = FactoryGirl.create(:time_profile, :tz => "Hawaii")
+      expect(tp).to_not be_default
+    end
+  end
+
   context "will seed the database" do
     before(:each) do
       TimeProfile.seed
@@ -104,7 +116,7 @@ describe TimeProfile do
     end
 
     it "gets time profiles for user and global default timeprofile" do
-      tp = TimeProfile.find_by_description(TimeProfile::DEFAULT_TZ)
+      tp = TimeProfile.find_by(:description => TimeProfile::DEFAULT_TZ)
       tp.profile_type = "global"
       tp.save
       FactoryGirl.create(:time_profile,

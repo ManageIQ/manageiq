@@ -43,6 +43,8 @@ describe ColumnOrdering do
       allow(co).to receive(:table_dump).and_return(data_file_contents("test.sql"))
       allow(co).to receive(:expected_columns).and_return(%w(id uuid data))
 
+      expect(connection).to receive(:begin_db_transaction)
+      expect(connection).to receive(:commit_db_transaction)
       expect(co.current_columns).to eq(%w(id data uuid))
       expect(co.ordering_okay?).to be false
 
@@ -51,10 +53,6 @@ describe ColumnOrdering do
       expect(co.ordering_okay?).to be true
       data = connection.select_rows("SELECT * FROM test")
       expect(data).to eq([[1, "unique", "stuff"], [2, "unique1", "more stuff"]])
-    end
-
-    after do
-      connection.select_value("DROP TABLE test")
     end
   end
 

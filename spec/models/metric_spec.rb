@@ -6,8 +6,6 @@ describe Metric do
   end
 
   context "as vmware" do
-    require Rails.root.join('spec/tools/vim_data/vim_data_test_helper')
-
     before :each do
       @ems_vmware = FactoryGirl.create(:ems_vmware, :zone => @zone)
     end
@@ -59,12 +57,22 @@ describe Metric do
 
       context "executing perf_capture_timer" do
         before(:each) do
-          stub_settings(:performance => {:history => {:initial_capture_days => 7}})
+          stub_settings_merge(:performance => {:history => {:initial_capture_days => 7}})
           Metric::Capture.perf_capture_timer
         end
 
+        let(:expected_queue_items) do
+          {
+            %w(Host perf_capture_realtime)                                            => 3,
+            %w(Host perf_capture_historical)                                          => 24,
+            %w(Storage perf_capture_hourly)                                           => 1,
+            %w(ManageIQ::Providers::Vmware::InfraManager::Vm perf_capture_realtime)   => 2,
+            %w(ManageIQ::Providers::Vmware::InfraManager::Vm perf_capture_historical) => 16,
+          }
+        end
+
         it "should queue up enabled targets" do
-          expect(MiqQueue.count).to eq(47)
+          expect(MiqQueue.group(:class_name, :method_name).count).to eq(expected_queue_items)
           assert_metric_targets
         end
 
@@ -78,7 +86,7 @@ describe Metric do
               expected_hosts = cluster.hosts.select { |h| @expected_targets.include?(h) }
               next if expected_hosts.empty?
 
-              task = MiqTask.find_by_name("Performance rollup for EmsCluster:#{cluster.id}")
+              task = MiqTask.find_by(:name => "Performance rollup for EmsCluster:#{cluster.id}")
               expect(task).not_to be_nil
               expect(task.context_data[:targets]).to match_array(cluster.hosts.collect { |h| "Host:#{h.id}" })
 
@@ -241,137 +249,6 @@ describe Metric do
     context "with a vm" do
       before(:each) do
         @vm = FactoryGirl.create(:vm_perf, :ext_management_system => @ems_vmware)
-      end
-
-      context "and a fake vim handle" do
-        before(:each) do
-          allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive(:connect).and_return(FakeMiqVimHandle.new)
-          allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive(:disconnect).and_return(true)
-        end
-
-        context "collecting vm realtime data" do
-          before(:each) do
-            @counters_by_mor, @counter_values_by_mor_and_ts = @vm.perf_collect_metrics('realtime')
-          end
-
-          it "should have collected counters and values" do
-            expect(@counters_by_mor.length).to eq(1)
-            expect(@counter_values_by_mor_and_ts.length).to eq(1)
-
-            counters = @counters_by_mor[@vm.ems_ref_obj]
-            expect(counters.length).to eq(18)
-
-            expected = [
-              ["realtime", "cpu_ready_delta_summation",           ""],
-              ["realtime", "cpu_ready_delta_summation",           "0"],
-              ["realtime", "cpu_system_delta_summation",          "0"],
-              ["realtime", "cpu_usage_rate_average",              ""],
-              ["realtime", "cpu_usagemhz_rate_average",           ""],
-              ["realtime", "cpu_usagemhz_rate_average",           "0"],
-              ["realtime", "cpu_used_delta_summation",            "0"],
-              ["realtime", "cpu_wait_delta_summation",            "0"],
-              ["realtime", "disk_usage_rate_average",             ""],
-              ["realtime", "mem_swapin_absolute_average",         ""],
-              ["realtime", "mem_swapout_absolute_average",        ""],
-              ["realtime", "mem_swapped_absolute_average",        ""],
-              ["realtime", "mem_swaptarget_absolute_average",     ""],
-              ["realtime", "mem_usage_absolute_average",          ""],
-              ["realtime", "mem_vmmemctl_absolute_average",       ""],
-              ["realtime", "mem_vmmemctltarget_absolute_average", ""],
-              ["realtime", "net_usage_rate_average",              ""],
-              ["realtime", "sys_uptime_absolute_latest",          ""],
-            ]
-
-            selected = counters.values.collect { |c| c.values_at(:capture_interval_name, :counter_key, :instance) }
-            expect(selected).to match_array(expected)
-
-            counter_values = @counter_values_by_mor_and_ts[@vm.ems_ref_obj]
-            timestamps = counter_values.keys.sort
-            expect(timestamps.first).to eq("2011-08-12T20:33:20Z")
-            expect(timestamps.last).to eq("2011-08-12T21:33:00Z")
-
-            # Check every timestamp is present
-            expect(counter_values.length).to eq(180)
-
-            ts = timestamps.first
-            until ts > timestamps.last
-              expect(counter_values.key?(ts)).to be_truthy
-              ts = (Time.parse(ts).utc + 20.seconds).iso8601
-            end
-
-            # Check a few specific values
-
-            # Since the key for each counter value is a vim counter id, we have to
-            #   remove that from the comparison.  The format is:
-            #   [[ts, sorted_values], [ts, sorted_values], ...]
-            expected = [
-              ["2011-08-12T20:33:20Z", [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 7, 8, 8, 8, 16, 16, 30, 39, 40, 40, 41, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 120, 138, 160, 200, 200, 265, 399, 6000, 11612, 19048, 20968, 39496, 49400, 184728, 474416, 523816]],
-              ["2011-08-12T21:03:00Z", [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 6, 8, 8, 8, 16, 16, 51, 54, 100, 100, 160, 164, 169, 169, 181, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 342, 599, 6000, 11216, 18928, 31456, 39976, 47240, 186508, 476576, 523816]],
-              ["2011-08-12T21:33:00Z", [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 7, 10, 10, 10, 15, 15, 40, 40, 42, 45, 100, 100, 100, 100, 100, 100, 109, 150, 160, 200, 200, 200, 200, 200, 200, 286, 599, 6000, 11148, 19028, 31456, 39888, 48968, 188307, 474848, 523816]]
-            ]
-            selected = expected.transpose[0].collect { |k| [k, counter_values[k].values.sort] }
-
-            expect(selected).to match_array(expected)
-          end
-        end
-
-        context "capturing vm realtime data" do
-          before(:each) do
-            @alarm_event = "vm_perf_complete"
-            @vm.perf_capture_realtime
-          end
-
-          it "should have collected performances" do
-            # Check Vm record was updated
-            expect(@vm.last_perf_capture_on.utc.iso8601).to eq("2011-08-12T21:33:00Z")
-
-            # Check performances
-            expect(Metric.count).to eq(180)
-
-            # Check every timestamp is present; performance realtime timestamps
-            #   are to the nearest 20 second interval
-            ts = "2011-08-12T20:33:20Z"
-            Metric.order(:timestamp).each do |p|
-              p_ts = p.timestamp.utc
-              expect(p_ts.iso8601).to eq(ts)
-              ts = (p_ts + 20.seconds).iso8601
-            end
-
-            # Check a few specific values
-            expected = [
-              {"timestamp" => Time.parse("2011-08-12T20:33:20Z").utc, "capture_interval" => 20, "resource_type" => "VmOrTemplate", "mem_swapin_absolute_average" => 0.0, "derived_storage_vm_count_unmanaged" => nil, "derived_storage_vm_count_registered" => nil, "derived_storage_mem_unregistered" => nil, "sys_uptime_absolute_latest" => 184728.0, "disk_usage_rate_average" => 8.0, "derived_vm_used_disk_storage" => nil, "derived_vm_count_on" => 0, "derived_storage_used_registered" => nil, "derived_storage_snapshot_managed" => nil, "derived_storage_disk_unmanaged" => nil, "derived_host_count_off" => 0, "cpu_usagemhz_rate_average" => 41.0, "derived_storage_vm_count_managed" => nil, "intervals_in_rollup" => nil, "derived_vm_count_off" => 0, "derived_vm_allocated_disk_storage" => nil, "derived_storage_disk_unregistered" => nil, "derived_storage_disk_managed" => nil, "derived_cpu_reserved" => nil, "cpu_wait_delta_summation" => 19048.0, "cpu_used_delta_summation" => 265.0, "capture_interval_name" => "realtime", "mem_vmmemctl_absolute_average" => 0.0, "mem_swapped_absolute_average" => 0.0, "derived_memory_available" => nil, "min_max" => nil, "disk_devicelatency_absolute_average" => nil, "derived_storage_used_unregistered" => nil, "derived_storage_used_unmanaged" => nil, "derived_storage_used_managed" => nil, "derived_storage_snapshot_unregistered" => nil, "derived_storage_snapshot_registered" => nil, "derived_memory_used" => nil, "mem_swaptarget_absolute_average" => 0.0, "derived_storage_vm_count_unregistered" => nil, "derived_storage_mem_managed" => nil, "derived_host_count_on" => 0, "tag_names" => "", "mem_swapout_absolute_average" => 0.0, "disk_queuelatency_absolute_average" => nil, "derived_storage_mem_registered" => nil, "assoc_ids" => {:storages => {:off => [], :on => []}}, "resource_name" => "MIQ-WEBSVR1", "net_usage_rate_average" => 0.0, "mem_vmmemctltarget_absolute_average" => 0.0, "disk_kernellatency_absolute_average" => nil, "derived_storage_snapshot_unmanaged" => nil, "derived_memory_reserved" => nil, "mem_usage_absolute_average" => 3.99, "derived_storage_mem_unmanaged" => nil, "derived_storage_free" => nil, "derived_cpu_available" => nil, "cpu_ready_delta_summation" => 40.0, "derived_storage_total" => nil, "derived_storage_disk_registered" => nil, "cpu_usage_rate_average" => 1.38, "cpu_system_delta_summation" => 2.0},
-              {"timestamp" => Time.parse("2011-08-12T21:03:00Z").utc, "capture_interval" => 20, "resource_type" => "VmOrTemplate", "mem_swapin_absolute_average" => 0.0, "derived_storage_vm_count_unmanaged" => nil, "derived_storage_vm_count_registered" => nil, "derived_storage_mem_unregistered" => nil, "sys_uptime_absolute_latest" => 186508.0, "disk_usage_rate_average" => 8.0, "derived_vm_used_disk_storage" => nil, "derived_vm_count_on" => 0, "derived_storage_used_registered" => nil, "derived_storage_snapshot_managed" => nil, "derived_storage_disk_unmanaged" => nil, "derived_host_count_off" => 0, "cpu_usagemhz_rate_average" => 54.0, "derived_storage_vm_count_managed" => nil, "intervals_in_rollup" => nil, "derived_vm_count_off" => 0, "derived_vm_allocated_disk_storage" => nil, "derived_storage_disk_unregistered" => nil, "derived_storage_disk_managed" => nil, "derived_cpu_reserved" => nil, "cpu_wait_delta_summation" => 18928.0, "cpu_used_delta_summation" => 342.0, "capture_interval_name" => "realtime", "mem_vmmemctl_absolute_average" => 0.0, "mem_swapped_absolute_average" => 0.0, "derived_memory_available" => nil, "min_max" => nil, "disk_devicelatency_absolute_average" => nil, "derived_storage_used_unregistered" => nil, "derived_storage_used_unmanaged" => nil, "derived_storage_used_managed" => nil, "derived_storage_snapshot_unregistered" => nil, "derived_storage_snapshot_registered" => nil, "derived_memory_used" => nil, "mem_swaptarget_absolute_average" => 0.0, "derived_storage_vm_count_unregistered" => nil, "derived_storage_mem_managed" => nil, "derived_host_count_on" => 0, "tag_names" => "", "mem_swapout_absolute_average" => 0.0, "disk_queuelatency_absolute_average" => nil, "derived_storage_mem_registered" => nil, "assoc_ids" => {:storages => {:off => [], :on => []}}, "resource_name" => "MIQ-WEBSVR1", "net_usage_rate_average" => 0.0, "mem_vmmemctltarget_absolute_average" => 0.0, "disk_kernellatency_absolute_average" => nil, "derived_storage_snapshot_unmanaged" => nil, "derived_memory_reserved" => nil, "mem_usage_absolute_average" => 5.99, "derived_storage_mem_unmanaged" => nil, "derived_storage_free" => nil, "derived_cpu_available" => nil, "cpu_ready_delta_summation" => 169.0, "derived_storage_total" => nil, "derived_storage_disk_registered" => nil, "cpu_usage_rate_average" => 1.81, "cpu_system_delta_summation" => 2.0},
-              {"timestamp" => Time.parse("2011-08-12T21:33:00Z").utc, "capture_interval" => 20, "resource_type" => "VmOrTemplate", "mem_swapin_absolute_average" => 0.0, "derived_storage_vm_count_unmanaged" => nil, "derived_storage_vm_count_registered" => nil, "derived_storage_mem_unregistered" => nil, "sys_uptime_absolute_latest" => 188307.0, "disk_usage_rate_average" => 10.0, "derived_vm_used_disk_storage" => nil, "derived_vm_count_on" => 0, "derived_storage_used_registered" => nil, "derived_storage_snapshot_managed" => nil, "derived_storage_disk_unmanaged" => nil, "derived_host_count_off" => 0, "cpu_usagemhz_rate_average" => 45.0, "derived_storage_vm_count_managed" => nil, "intervals_in_rollup" => nil, "derived_vm_count_off" => 0, "derived_vm_allocated_disk_storage" => nil, "derived_storage_disk_unregistered" => nil, "derived_storage_disk_managed" => nil, "derived_cpu_reserved" => nil, "cpu_wait_delta_summation" => 19028.0, "cpu_used_delta_summation" => 286.0, "capture_interval_name" => "realtime", "mem_vmmemctl_absolute_average" => 0.0, "mem_swapped_absolute_average" => 0.0, "derived_memory_available" => nil, "min_max" => nil, "disk_devicelatency_absolute_average" => nil, "derived_storage_used_unregistered" => nil, "derived_storage_used_unmanaged" => nil, "derived_storage_used_managed" => nil, "derived_storage_snapshot_unregistered" => nil, "derived_storage_snapshot_registered" => nil, "derived_memory_used" => nil, "mem_swaptarget_absolute_average" => 0.0, "derived_storage_vm_count_unregistered" => nil, "derived_storage_mem_managed" => nil, "derived_host_count_on" => 0, "tag_names" => "", "mem_swapout_absolute_average" => 0.0, "disk_queuelatency_absolute_average" => nil, "derived_storage_mem_registered" => nil, "assoc_ids" => {:storages => {:off => [], :on => []}}, "resource_name" => "MIQ-WEBSVR1", "net_usage_rate_average" => 0.0, "mem_vmmemctltarget_absolute_average" => 0.0, "disk_kernellatency_absolute_average" => nil, "derived_storage_snapshot_unmanaged" => nil, "derived_memory_reserved" => nil, "mem_usage_absolute_average" => 5.99, "derived_storage_mem_unmanaged" => nil, "derived_storage_free" => nil, "derived_cpu_available" => nil, "cpu_ready_delta_summation" => 40.0, "derived_storage_total" => nil, "derived_storage_disk_registered" => nil, "cpu_usage_rate_average" => 1.5, "cpu_system_delta_summation" => 2.0}
-            ]
-
-            selected = Metric.where(:timestamp => ["2011-08-12T20:33:20Z", "2011-08-12T21:03:00Z", "2011-08-12T21:33:00Z"]).order(:timestamp)
-            selected.each_with_index do |p, i|
-              ts = p.timestamp.inspect
-              expected[i].each do |k, v|
-                if v.kind_of?(Float)
-                  expect(p.send(k)).to be_within(0.00001).of(v)
-                else
-                  expect(p.send(k)).to eq(v)
-                end
-              end
-            end
-
-            # perf_rollup is queued unconditionally
-            # evaluate_alerts is queued only if there's an alert defined for "vm_perf_complete"
-            q_all = MiqQueue.order(:id)
-
-            if MiqAlert.alarm_has_alerts?(@alarm_event)
-              expect(MiqQueue.count).to eq(3)
-              q = q_all.shift
-              expect(q.class_name).to eq("MiqAlert")
-              expect(q.method_name).to eq("evaluate_alerts")
-              expect(q.args).to eq([["ManageIQ::Providers::Vmware::InfraManager::Vm", @vm.id], @alarm_event, {}])
-            else
-              expect(MiqQueue.count).to eq(2)
-            end
-            assert_queue_items_are_hourly_rollups(q_all, "2011-08-12T20:00:00Z", @vm.id, "ManageIQ::Providers::Vmware::InfraManager::Vm")
-          end
-        end
       end
 
       context "queueing up realtime rollups to parent" do
@@ -554,6 +431,12 @@ describe Metric do
             expect(perf.abs_min_cpu_usage_rate_average_value).to eq(1.0)
             expect(perf.abs_min_cpu_usage_rate_average_timestamp.utc.iso8601).to eq("2010-04-14T18:00:40Z")
           end
+
+          it "will have created an operating range" do
+            vpors = @vm1.vim_performance_operating_ranges
+            expect(vpors.size).to               eq(1)
+            expect(vpors.first.time_profile).to eq(@time_profile)
+          end
         end
 
         context "calling perf_rollup_range to daily on the Vm" do
@@ -595,58 +478,6 @@ describe Metric do
           it "VimPerformanceDaily.find should return an empty array when a time_profile is not passed" do
             rec = Metric::Helper.find_for_interval_name("daily", "Alaska")
             expect(rec.length).to eq(0)
-          end
-        end
-
-        context "testing operating ranges and right-sizing with Vm daily performances for several days" do
-          before(:each) do
-            Timecop.travel(Time.parse("2010-05-01T00:00:00Z"))
-            cases = [
-              "2010-04-13T21:00:00Z",  9.14, 32.85,
-              "2010-04-14T18:00:00Z", 10.23, 28.76,
-              "2010-04-14T19:00:00Z", 18.92, 39.11,
-              "2010-04-14T20:00:00Z",  7.34, 28.87,
-              "2010-04-14T21:00:00Z",  8.00, 29.99,
-              "2010-04-14T22:00:00Z", 15.00, 41.59,
-              "2010-04-15T21:00:00Z", 27.22, 30.43,
-            ]
-            cases.each_slice(3) do |t, cpu, mem|
-              [@vm1, @vm2].each do |vm|
-                vm.metric_rollups << FactoryGirl.create(:metric_rollup_vm_daily,
-                                                        :timestamp                  => t,
-                                                        :cpu_usage_rate_average     => cpu,
-                                                        :mem_usage_absolute_average => mem,
-                                                        :min_max                    => {
-                                                          :max_cpu_usage_rate_average     => cpu,
-                                                          :max_mem_usage_absolute_average => mem,
-                                                        },
-                                                        :time_profile               => @time_profile
-                                                       )
-              end
-            end
-          end
-
-          after(:each) do
-            Timecop.return
-          end
-
-          it "should calculate the correct normal operating range values" do
-            expect(@vm1.max_cpu_usage_rate_average_avg_over_time_period).to     be_within(0.001).of(13.692)
-            expect(@vm1.max_mem_usage_absolute_average_avg_over_time_period).to be_within(0.001).of(33.085)
-          end
-
-          it "should calculate the correct right-size values" do
-            allow(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:mem_recommendation_minimum).and_return(0)
-
-            expect(@vm1.recommended_vcpus).to eq(1)
-            expect(@vm1.recommended_mem).to eq(4)
-            expect(@vm1.overallocated_vcpus_pct).to eq(0)
-            expect(@vm1.overallocated_mem_pct).to eq(0)
-
-            expect(@vm2.recommended_vcpus).to eq(1)
-            expect(@vm2.recommended_mem).to eq(1356)
-            expect(@vm2.overallocated_vcpus_pct).to be_within(0.01).of(50.0)
-            expect(@vm2.overallocated_mem_pct).to   be_within(0.01).of(66.9)
           end
         end
 
@@ -793,6 +624,63 @@ describe Metric do
               expect(@host1.get_performance_metric(:realtime, :cpu_usage_rate_average, "2010-04-14T20:52:40Z".to_time(:utc), :max)).to eq(100.0)
             end
           end
+        end
+      end
+
+      context "#generate_vim_performance_operating_range" do
+        before do
+          Timecop.travel(Time.parse("2010-05-01T00:00:00Z"))
+          cases = [
+            "2010-04-13T21:00:00Z",  9.14, 32.85,
+            "2010-04-14T18:00:00Z", 10.23, 28.76,
+            "2010-04-14T19:00:00Z", 18.92, 39.11,
+            "2010-04-14T20:00:00Z",  7.34, 28.87,
+            "2010-04-14T21:00:00Z",  8.00, 29.99,
+            "2010-04-14T22:00:00Z", 15.00, 41.59,
+            "2010-04-15T21:00:00Z", 27.22, 30.43,
+          ]
+          cases.each_slice(3) do |t, cpu, mem|
+            [@vm1, @vm2].each do |vm|
+              vm.metric_rollups << FactoryGirl.create(:metric_rollup_vm_daily,
+                                                      :timestamp                  => t,
+                                                      :cpu_usage_rate_average     => cpu,
+                                                      :mem_usage_absolute_average => mem,
+                                                      :min_max                    => {
+                                                        :max_cpu_usage_rate_average     => cpu,
+                                                        :max_mem_usage_absolute_average => mem,
+                                                      },
+                                                      :time_profile               => @time_profile
+                                                     )
+            end
+          end
+        end
+
+        after do
+          Timecop.return
+        end
+
+        it "should calculate the correct normal operating range values" do
+          @vm1.generate_vim_performance_operating_range(@time_profile)
+
+          expect(@vm1.max_cpu_usage_rate_average_avg_over_time_period).to     be_within(0.001).of(13.692)
+          expect(@vm1.max_mem_usage_absolute_average_avg_over_time_period).to be_within(0.001).of(33.085)
+        end
+
+        it "should calculate the correct right-size values" do
+          allow(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:mem_recommendation_minimum).and_return(0)
+
+          @vm1.generate_vim_performance_operating_range(@time_profile)
+          @vm2.generate_vim_performance_operating_range(@time_profile)
+
+          expect(@vm1.recommended_vcpus).to eq(1)
+          expect(@vm1.recommended_mem).to eq(4)
+          expect(@vm1.overallocated_vcpus_pct).to eq(0)
+          expect(@vm1.overallocated_mem_pct).to eq(0)
+
+          expect(@vm2.recommended_vcpus).to eq(1)
+          expect(@vm2.recommended_mem).to eq(1356)
+          expect(@vm2.overallocated_vcpus_pct).to be_within(0.01).of(50.0)
+          expect(@vm2.overallocated_mem_pct).to   be_within(0.01).of(66.9)
         end
       end
     end
@@ -1135,9 +1023,7 @@ describe Metric do
 
         it "should queue up enabled targets" do
           expected_targets = Metric::Targets.capture_targets
-          expected_queue_count = expected_targets.count * 9 # 1 realtime, 8 historical
-          expected_queue_count += 1                         # cleanup task
-          expect(MiqQueue.count).to eq(expected_queue_count)
+          expect(MiqQueue.group(:method_name).count).to eq('perf_capture_realtime' => expected_targets.count, 'perf_capture_historical' => expected_targets.count * 8)
           assert_metric_targets(expected_targets)
         end
       end
@@ -1352,7 +1238,7 @@ describe Metric do
       selected_types << t.class.name
 
       expected_enabled = case t
-                         # Vm's perf_capture_enabled is its availability_zone's perf_capture setting,
+                         # Vm's perf_capture_enabled? is its availability_zone's perf_capture setting,
                          #   or true if it has no availability_zone
                          when Vm then                t.availability_zone ? t.availability_zone.perf_capture_enabled? : true
                          when AvailabilityZone then  t.perf_capture_enabled?

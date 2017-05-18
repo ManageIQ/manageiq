@@ -1,4 +1,4 @@
-class AddNetworkGroupIdToNetworkRouter < ActiveRecord::Migration
+class AddNetworkGroupIdToNetworkRouter < ActiveRecord::Migration[4.2]
   def change
     add_column :network_routers, :network_group_id, :bigint
 

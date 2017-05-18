@@ -101,6 +101,34 @@ describe "Querying" do
       expect_query_result(:vms, 2, 2)
       expect_result_resources_to_match_hash([{"name" => "redhat_vm"}, {"name" => "vmware_vm"}])
     end
+
+    it 'supports sql friendly virtual attributes' do
+      host_foo =  FactoryGirl.create(:host, :name => 'foo')
+      host_bar =  FactoryGirl.create(:host, :name => 'bar')
+      host_zap =  FactoryGirl.create(:host, :name => 'zap')
+      FactoryGirl.create(:vm, :name => 'vm_foo', :host => host_foo)
+      FactoryGirl.create(:vm, :name => 'vm_bar', :host => host_bar)
+      FactoryGirl.create(:vm, :name => 'vm_zap', :host => host_zap)
+
+      run_get vms_url, :sort_by => 'host_name', :sort_order => 'desc', :expand => 'resources'
+
+      expect_query_result(:vms, 3, 3)
+      expect_result_resources_to_match_hash([{'name' => 'vm_zap'}, {'name' => 'vm_foo'}, {'name' => 'vm_bar'}])
+    end
+
+    it 'does not support non sql friendly virtual attributes' do
+      FactoryGirl.create(:vm)
+
+      run_get vms_url, :sort_by => 'aggressive_recommended_mem', :sort_order => 'asc'
+
+      expected = {
+        'error' => a_hash_including(
+          'message' => 'Vm cannot be sorted by aggressive_recommended_mem'
+        )
+      }
+      expect(response).to have_http_status(:bad_request)
+      expect(response.parsed_body).to include(expected)
+    end
   end
 
   describe "Filtering vms" do
@@ -314,6 +342,163 @@ describe "Querying" do
       expect_query_result(:vms, 1, 2)
       expect_result_resources_to_match_hash([{"name" => vm_2.name, "guid" => vm_2.guid}])
     end
+
+    it "supports = with dates mixed with virtual attributes" do
+      _vm_1 = FactoryGirl.create(:vm, :retires_on => "2016-01-01", :vendor => "vmware")
+      vm_2 = FactoryGirl.create(:vm, :retires_on => "2016-01-02", :vendor => "vmware")
+      _vm_3 = FactoryGirl.create(:vm, :retires_on => "2016-01-02", :vendor => "openstack")
+
+      run_get(vms_url, :filter => ["retires_on = 2016-01-02", "vendor_display = VMware"])
+
+      expected = {"resources" => [{"href" => a_string_matching(vms_url(vm_2.id))}]}
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "supports > with dates mixed with virtual attributes" do
+      _vm_1 = FactoryGirl.create(:vm, :retires_on => "2016-01-01", :vendor => "vmware")
+      vm_2 = FactoryGirl.create(:vm, :retires_on => "2016-01-02", :vendor => "vmware")
+      _vm_3 = FactoryGirl.create(:vm, :retires_on => "2016-01-03", :vendor => "openstack")
+
+      run_get(vms_url, :filter => ["retires_on > 2016-01-01", "vendor_display = VMware"])
+
+      expected = {"resources" => [{"href" => a_string_matching(vms_url(vm_2.id))}]}
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "supports > with datetimes mixed with virtual attributes" do
+      _vm_1 = FactoryGirl.create(:vm, :last_scan_on => "2016-01-01T07:59:59Z", :vendor => "vmware")
+      vm_2 = FactoryGirl.create(:vm, :last_scan_on => "2016-01-01T08:00:00Z", :vendor => "vmware")
+      _vm_3 = FactoryGirl.create(:vm, :last_scan_on => "2016-01-01T08:00:00Z", :vendor => "openstack")
+
+      run_get(vms_url, :filter => ["last_scan_on > 2016-01-01T07:59:59Z", "vendor_display = VMware"])
+
+      expected = {"resources" => [{"href" => a_string_matching(vms_url(vm_2.id))}]}
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "supports < with dates mixed with virtual attributes" do
+      _vm_1 = FactoryGirl.create(:vm, :retires_on => "2016-01-01", :vendor => "openstack")
+      vm_2 = FactoryGirl.create(:vm, :retires_on => "2016-01-02", :vendor => "vmware")
+      _vm_3 = FactoryGirl.create(:vm, :retires_on => "2016-01-03", :vendor => "vmware")
+
+      run_get(vms_url, :filter => ["retires_on < 2016-01-03", "vendor_display = VMware"])
+
+      expected = {"resources" => [{"href" => a_string_matching(vms_url(vm_2.id))}]}
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "supports < with datetimes mixed with virtual attributes" do
+      _vm_1 = FactoryGirl.create(:vm, :last_scan_on => "2016-01-01T07:59:59Z", :vendor => "openstack")
+      vm_2 = FactoryGirl.create(:vm, :last_scan_on => "2016-01-01T07:59:59Z", :vendor => "vmware")
+      _vm_3 = FactoryGirl.create(:vm, :last_scan_on => "2016-01-01T08:00:00Z", :vendor => "vmware")
+
+      run_get(vms_url, :filter => ["last_scan_on < 2016-01-01T08:00:00Z", "vendor_display = VMware"])
+
+      expected = {"resources" => [{"href" => a_string_matching(vms_url(vm_2.id))}]}
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "does not support filtering with <= with datetimes" do
+      run_get(vms_url, :filter => ["retires_on <= 2016-01-03"])
+
+      expect(response.parsed_body).to include_error_with_message("Unsupported operator for datetime: <=")
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it "does not support filtering with >= with datetimes" do
+      run_get(vms_url, :filter => ["retires_on >= 2016-01-03"])
+
+      expect(response.parsed_body).to include_error_with_message("Unsupported operator for datetime: >=")
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it "does not support filtering with != with datetimes" do
+      run_get(vms_url, :filter => ["retires_on != 2016-01-03"])
+
+      expect(response.parsed_body).to include_error_with_message("Unsupported operator for datetime: !=")
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it "will handle poorly formed datetimes in the filter" do
+      run_get(vms_url, :filter => ["retires_on > foobar"])
+
+      expect(response.parsed_body).to include_error_with_message("Bad format for datetime: foobar")
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it "does not support filtering vms as a subcollection" do
+      service = FactoryGirl.create(:service)
+      service << FactoryGirl.create(:vm_vmware, :name => "foo")
+      service << FactoryGirl.create(:vm_vmware, :name => "bar")
+
+      run_get("#{services_url(service.id)}/vms", :filter => ["name=foo"])
+
+      expect(response.parsed_body).to include_error_with_message("Filtering is not supported on vms subcollection")
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it "can do fuzzy matching on strings with forward slashes" do
+      tag_1 = FactoryGirl.create(:tag, :name => "/managed/foo")
+      _tag_2 = FactoryGirl.create(:tag, :name => "/managed/bar")
+      api_basic_authorize collection_action_identifier(:tags, :read, :get)
+
+      run_get(tags_url, :filter => ["name='*/foo'"])
+
+      expected = {
+        "count"     => 2,
+        "subcount"  => 1,
+        "resources" => [{"href" => a_string_matching(tags_url(tag_1.id))}]
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "supports filtering by compressed id" do
+      vm1, _vm2 = create_vms_by_name(%w(aa bb))
+
+      run_get vms_url, :expand => "resources",
+                       :filter => ["id = #{ApplicationRecord.compress_id(vm1.id)}"]
+
+      expect_query_result(:vms, 1, 2)
+      expect_result_resources_to_match_hash([{"name" => vm1.name, "guid" => vm1.guid}])
+    end
+
+    it "supports filtering by compressed id as string" do
+      _vm1, vm2 = create_vms_by_name(%w(aa bb))
+
+      run_get vms_url, :expand => "resources",
+                       :filter => ["id = '#{ApplicationRecord.compress_id(vm2.id)}'"]
+
+      expect_query_result(:vms, 1, 2)
+      expect_result_resources_to_match_hash([{"name" => vm2.name, "guid" => vm2.guid}])
+    end
+
+    it "supports filtering by compressed id on *_id named attributes" do
+      zone = FactoryGirl.create(:zone, :name => "api_zone")
+      ems1 = FactoryGirl.create(:ems_vmware, :zone => zone)
+      ems2 = FactoryGirl.create(:ems_vmware, :zone => zone)
+      host = FactoryGirl.create(:host)
+
+      _vm = FactoryGirl.create(:vm_vmware,
+                               :host                  => host,
+                               :ext_management_system => ems1,
+                               :raw_power_state       => "poweredOn")
+      vm2 = FactoryGirl.create(:vm_vmware,
+                               :host                  => host,
+                               :ext_management_system => ems2,
+                               :raw_power_state       => "poweredOff")
+
+      run_get vms_url, :expand => "resources",
+                       :filter => ["ems_id = #{ApplicationRecord.compress_id(ems2.id)}"]
+
+      expect_query_result(:vms, 1, 2)
+      expect_result_resources_to_match_hash([{"name" => vm2.name, "guid" => vm2.guid}])
+    end
   end
 
   describe "Querying vm attributes" do
@@ -321,7 +506,7 @@ describe "Querying" do
       api_basic_authorize collection_action_identifier(:vms, :read, :get)
       vm = create_vms_by_name(%w(aa)).first
 
-      run_get vms_url, :expand => "resources", :attributes => "name,vendor"
+      run_get vms_url, :expand => "resources", :attributes => "href_slug,name,vendor"
 
       expected = {
         "name"      => "vms",
@@ -329,10 +514,11 @@ describe "Querying" do
         "subcount"  => 1,
         "resources" => [
           {
-            "id"     => vm.id,
-            "href"   => a_string_matching(vms_url(vm.id)),
-            "name"   => "aa",
-            "vendor" => anything
+            "id"        => vm.id,
+            "href"      => a_string_matching(vms_url(vm.id)),
+            "href_slug" => "vms/#{vm.id}",
+            "name"      => "aa",
+            "vendor"    => anything
           }
         ]
       }
@@ -415,6 +601,15 @@ describe "Querying" do
       expect_query_result(:vms, 1, 1)
       expect_result_resources_to_include_keys("resources", %w(id href guid name vendor software))
     end
+
+    it "supports suppressing resources" do
+      FactoryGirl.create(:vm)
+
+      run_get(vms_url, :hide => "resources")
+
+      expect(response.parsed_body).not_to include("resources")
+      expect(response).to have_http_status(:ok)
+    end
   end
 
   describe "Querying resources" do
@@ -446,6 +641,66 @@ describe "Querying" do
       actions = response.parsed_body["actions"]
       expect(actions.size).to eq(1)
       expect(actions.first["name"]).to eq("suspend")
+    end
+
+    it 'returns correct actions on a collection' do
+      api_basic_authorize(collection_action_identifier(:vms, :read, :get),
+                          action_identifier(:vms, :start),
+                          action_identifier(:vms, :stop))
+
+      run_get(vms_url)
+
+      actions = response.parsed_body['actions']
+      expect(actions.size).to eq(3)
+      expect(actions.collect { |a| a['name'] }).to match_array(%w(start stop query))
+      expect_result_to_have_keys(%w(name count subcount resources actions))
+    end
+
+    it 'returns correct actions on a subcollection' do
+      api_basic_authorize subcollection_action_identifier(:vms, :snapshots, :read, :get),
+                          subcollection_action_identifier(:vms, :snapshots, :delete, :post),
+                          subcollection_action_identifier(:vms, :snapshots, :create, :post)
+      vm = FactoryGirl.create(:vm)
+      FactoryGirl.create(:snapshot, :vm_or_template => vm)
+
+      run_get("#{vms_url(vm.id)}/snapshots")
+
+      actions = response.parsed_body['actions']
+      expect(actions.size).to eq(2)
+      expect(actions.collect { |a| a['name'] }).to match_array(%w(create delete))
+      expect_result_to_have_keys(%w(name count subcount resources actions))
+    end
+
+    it 'returns the correct actions on a subresource' do
+      api_basic_authorize subcollection_action_identifier(:vms, :snapshots, :delete, :post),
+                          subcollection_action_identifier(:vms, :snapshots, :read, :get),
+                          subcollection_action_identifier(:vms, :snapshots, :create, :post)
+
+      vm = FactoryGirl.create(:vm)
+      snapshot = FactoryGirl.create(:snapshot, :vm_or_template => vm)
+
+      run_get("#{vms_url(vm.id)}/snapshots/#{snapshot.id}")
+
+      actions = response.parsed_body['actions']
+      expect(actions.size).to eq(2)
+      expect(actions.collect { |a| a['name'] }).to match_array(%w(delete delete))
+      expect_result_to_have_keys(%w(href id actions))
+    end
+
+    it 'returns the correct actions on a resource' do
+      api_basic_authorize(action_identifier(:blueprints, :read, :resource_actions, :get),
+                          action_identifier(:blueprints, :delete),
+                          action_identifier(:blueprints, :publish),
+                          action_identifier(:blueprints, :edit))
+
+      blueprint = FactoryGirl.create(:blueprint)
+
+      run_get(blueprints_url(blueprint.id))
+
+      actions = response.parsed_body['actions']
+      expect(actions.size).to eq(4)
+      expect(actions.collect { |a| a['name'] }).to match_array(%w(delete delete publish edit))
+      expect_result_to_have_keys(%w(href id actions))
     end
 
     it "returns multiple actions if authorized as such" do
@@ -500,15 +755,49 @@ describe "Querying" do
   describe 'OPTIONS /api/vms' do
     it 'returns the options information' do
       api_basic_authorize
-      expected = {
-        'attributes'         => (Vm.attribute_names - Vm.virtual_attribute_names).sort.as_json,
-        'virtual_attributes' => Vm.virtual_attribute_names.sort.as_json,
-        'relationships'      => (Vm.reflections.keys | Vm.virtual_reflections.keys.collect(&:to_s)).sort,
-        'data'               => {}
-      }
+
       run_options(vms_url)
-      expect(response.parsed_body).to eq(expected)
-      expect(response.headers['Access-Control-Allow-Methods']).to include('OPTIONS')
+      expect_options_results(:vms)
+    end
+  end
+
+  describe "with optional collection_class" do
+    before { api_basic_authorize collection_action_identifier(:vms, :read, :get) }
+
+    it "fail with invalid collection_class specified" do
+      run_get vms_url, :collection_class => "BogusClass"
+
+      expect_bad_request("Invalid collection_class BogusClass specified for the vms collection")
+    end
+
+    it "succeed with collection_class matching the collection class" do
+      create_vms_by_name(%w(aa bb))
+
+      run_get vms_url, :collection_class => "Vm"
+
+      expect_query_result(:vms, 2, 2)
+    end
+
+    it "succeed with collection_class matching the collection class and returns subclassed resources" do
+      FactoryGirl.create(:vm_vmware, :name => "aa")
+      FactoryGirl.create(:vm_vmware_cloud, :name => "bb")
+      FactoryGirl.create(:vm_vmware_cloud, :name => "cc")
+
+      run_get vms_url, :expand => "resources", :collection_class => "Vm"
+
+      expect_query_result(:vms, 3, 3)
+      expect(response.parsed_body["resources"].collect { |vm| vm["name"] }).to match_array(%w(aa bb cc))
+    end
+
+    it "succeed with collection_class and only returns subclassed resources" do
+      FactoryGirl.create(:vm_vmware, :name => "aa")
+      FactoryGirl.create(:vm_vmware_cloud, :name => "bb")
+      vmcc = FactoryGirl.create(:vm_vmware_cloud, :name => "cc")
+
+      run_get vms_url, :expand => "resources", :collection_class => vmcc.class.name
+
+      expect_query_result(:vms, 2, 2)
+      expect(response.parsed_body["resources"].collect { |vm| vm["name"] }).to match_array(%w(bb cc))
     end
   end
 end

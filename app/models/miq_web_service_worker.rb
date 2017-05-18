@@ -7,7 +7,6 @@ class MiqWebServiceWorker < MiqWorker
   REDIRECTS_CONFIG_FILE      = '/etc/httpd/conf.d/manageiq-redirects-ws'
   STARTING_PORT              = 4000
   PROTOCOL                   = 'http'
-  LB_METHOD                  = :busy
   REDIRECTS                  = ['/api']
   CLUSTER                    = 'evmcluster_ws'
 

@@ -69,7 +69,9 @@ class MiqScheduleWorker::Jobs
   end
 
   def job_proxy_dispatcher_dispatch
-    queue_work_on_each_zone(:class_name  => "JobProxyDispatcher", :method_name => "dispatch", :task_id => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY, :role => "smartstate", :state => "ready")
+    if JobProxyDispatcher.waiting?
+      queue_work_on_each_zone(:class_name => "JobProxyDispatcher", :method_name => "dispatch", :task_id => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY, :role => "smartstate", :state => "ready")
+    end
   end
 
   def ems_refresh_timer(klass)
@@ -98,31 +100,35 @@ class MiqScheduleWorker::Jobs
   end
 
   def metric_purging_purge_realtime_timer
-    zone = MiqServer.my_server(true).zone
-    if zone.role_active?("ems_metrics_processor")
-      queue_work(:class_name => "Metric::Purging", :method_name => "purge_realtime_timer")
-    end
+    queue_work(:class_name => "Metric::Purging", :method_name => "purge_realtime_timer", :zone => nil)
   end
 
   def metric_purging_purge_rollup_timer
-    zone = MiqServer.my_server(true).zone
-    if zone.role_active?("ems_metrics_processor")
-      queue_work(:class_name => "Metric::Purging", :method_name => "purge_rollup_timer")
-    end
+    queue_work(:class_name => "Metric::Purging", :method_name => "purge_rollup_timer", :zone => nil)
   end
 
-  def ems_event_purge_timer
-    zone = MiqServer.my_server(true).zone
-    if zone.role_active?("event")
-      queue_work(:class_name => "EmsEvent", :method_name => "purge_timer")
-    end
+  def drift_state_purge_timer
+    queue_work(:class_name => "DriftState", :method_name => "purge_timer", :zone => nil)
+  end
+
+  def event_stream_purge_timer
+    queue_work(:class_name => "EventStream", :method_name => "purge_timer", :zone => nil)
   end
 
   def policy_event_purge_timer
-    zone = MiqServer.my_server(true).zone
-    if zone.role_active?("event")
-      queue_work(:class_name => "PolicyEvent", :method_name => "purge_timer")
-    end
+    queue_work(:class_name => "PolicyEvent", :method_name => "purge_timer", :zone => nil)
+  end
+
+  def miq_report_result_purge_timer
+    queue_work(:class_name => "MiqReportResult", :method_name => "purge_timer", :zone => nil)
+  end
+
+  def archived_entities_purge_timer
+    queue_work(:class_name => "Container", :method_name => "purge_timer", :zone => nil)
+    queue_work(:class_name => "ContainerGroup", :method_name => "purge_timer", :zone => nil)
+    queue_work(:class_name => "ContainerImage", :method_name => "purge_timer", :zone => nil)
+    queue_work(:class_name => "ContainerProject", :method_name => "purge_timer", :zone => nil)
+    queue_work(:class_name => "ContainerDefinition", :method_name => "purge_timer", :zone => nil)
   end
 
   def storage_refresh_metrics
@@ -215,6 +221,10 @@ class MiqScheduleWorker::Jobs
           end
         end
     end
+  end
+
+  def generate_chargeback_for_service(args = {})
+    queue_work(:class_name => "Service", :method_name => "queue_chargeback_reports", :zone => nil, :args => args)
   end
 
   private

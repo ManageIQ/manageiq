@@ -1,4 +1,4 @@
-class AddTenantDefaultGroup < ActiveRecord::Migration
+class AddTenantDefaultGroup < ActiveRecord::Migration[4.2]
   class Tenant < ActiveRecord::Base; end
 
   def change

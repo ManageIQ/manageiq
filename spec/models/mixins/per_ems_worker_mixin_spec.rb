@@ -15,6 +15,14 @@ describe PerEmsWorkerMixin do
     expect(@worker_class.queue_name_for_ems(@ems)).to eq(@ems_queue_name)
   end
 
+  it ".all_valid_ems_in_zone" do
+    expect(@worker_class.all_valid_ems_in_zone).to be_empty
+
+    @ems.update(:enabled => true)
+    @ems.authentications.first.validation_successful
+    expect(@worker_class.all_valid_ems_in_zone).to eq([@ems])
+  end
+
   it "#worker_options" do
     expect(@worker_record.worker_options).to eq(:guid => @worker_record.guid, :ems_id => @ems.id)
   end

@@ -1,11 +1,11 @@
 module Api
   class NotificationsController < BaseController
     def notifications_search_conditions
-      {:user_id => @auth_user_obj.id}
+      {:user_id => User.current_user.id}
     end
 
     def find_notifications(id)
-      @auth_user_obj.notification_recipients.find(id)
+      User.current_user.notification_recipients.find(id)
     end
 
     def mark_as_seen_resource(type, id = nil, _data = nil)

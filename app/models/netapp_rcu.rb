@@ -85,7 +85,7 @@ class NetappRcu < StorageManager
   end
 
   def get_controller_by_name(name)
-    controllers.find_by_name(name)
+    controllers.find_by(:name => name)
   end
 
   # TODO: Use hostname, not ipaddress
@@ -96,7 +96,7 @@ class NetappRcu < StorageManager
   end
 
   def set_current_controller_by_name(name)
-    @currentController = controllers.find_by_name(name)
+    @currentController = controllers.find_by(:name => name)
     @currentControllerSpec = nil
     @currentController
   end

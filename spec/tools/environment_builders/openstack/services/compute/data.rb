@@ -64,7 +64,7 @@ module Openstack
             :swap      => 0, # MB
           }, {
             :name      => "m1.ems_refresh_spec_private",
-            :is_public => true,
+            :is_public => false,
             :vcpus     => 8,
             :ram       => 16_384, # MB
             :disk      => 160, # GB

@@ -1,12 +1,31 @@
 require 'pg'
+require 'pg/pglogical'
+require 'pg/pglogical/active_record_extension'
 
 class MiqPglogical
+  include Vmdb::Logging
+
   REPLICATION_SET_NAME = 'miq'.freeze
-  SETTINGS_PATH = [:replication].freeze
   NODE_PREFIX = "region_".freeze
+  ALWAYS_EXCLUDED_TABLES = %w(ar_internal_metadata schema_migrations repl_events repl_monitor repl_nodes).freeze
+
+  attr_reader :configured_excludes
 
   def initialize
     @connection = ApplicationRecord.connection
+    self.configured_excludes = provider? ? active_excludes : self.class.default_excludes
+  end
+
+  # Sets the tables that should be used to create the replication set using refresh_excludes
+  def configured_excludes=(new_excludes)
+    @configured_excludes = new_excludes | ALWAYS_EXCLUDED_TABLES
+  end
+
+  # Returns the excluded tables that are currently being used by pglogical
+  # @return Array<String> the table list
+  def active_excludes
+    return [] unless provider?
+    @connection.tables - included_tables
   end
 
   # Returns whether or not this server is configured as a provider node
@@ -41,9 +60,11 @@ class MiqPglogical
   #   node and creating the replication set
   def configure_provider
     return if provider?
-    pglogical.enable
-    create_node unless node?
-    create_replication_set
+    @connection.transaction(:requires_new => true) do
+      pglogical.enable
+      create_node unless node?
+      create_replication_set
+    end
   end
 
   # Removes the replication configuration and pglogical node from the
@@ -52,6 +73,7 @@ class MiqPglogical
     return unless provider?
     pglogical.replication_set_drop(REPLICATION_SET_NAME)
     drop_node
+    pglogical.disable
   end
 
   # Lists the tables currently being replicated by pglogical
@@ -60,28 +82,40 @@ class MiqPglogical
     pglogical.tables_in_replication_set(REPLICATION_SET_NAME)
   end
 
-  # Lists the tables configured to be excluded in the vmdb configuration
-  # @return Array<String> the table list
-  def configured_excludes
-    MiqServer.my_server.get_config.config.fetch_path(*SETTINGS_PATH, :exclude_tables) | %w(ar_internal_metadata schema_migrations)
-  end
-
   # Creates the 'miq' replication set and refreshes the excluded tables
   def create_replication_set
     pglogical.replication_set_create(REPLICATION_SET_NAME)
     refresh_excludes
   end
 
+  def self.refresh_excludes_queue(new_excludes)
+    MiqQueue.put(
+      :class_name  => "MiqPglogical",
+      :method_name => "refresh_excludes",
+      :args        => [new_excludes]
+    )
+  end
+
+  def self.refresh_excludes(new_excludes)
+    pgl = new
+    pgl.configured_excludes = new_excludes
+    pgl.refresh_excludes
+  end
+
   # Aligns the contents of the 'miq' replication set with the currently configured vmdb excludes
   def refresh_excludes
-    # remove newly excluded tables from replication set
-    newly_excluded_tables.each do |table|
-      pglogical.replication_set_remove_table(REPLICATION_SET_NAME, table)
-    end
+    pglogical.with_replication_set_lock(REPLICATION_SET_NAME) do
+      # remove newly excluded tables from replication set
+      newly_excluded_tables.each do |table|
+        _log.info("Removing #{table} from #{REPLICATION_SET_NAME} replication set")
+        pglogical.replication_set_remove_table(REPLICATION_SET_NAME, table)
+      end
 
-    # add tables to the set which are no longer excluded (or new)
-    newly_included_tables.each do |table|
-      pglogical.replication_set_add_table(REPLICATION_SET_NAME, table, true)
+      # add tables to the set which are no longer excluded (or new)
+      newly_included_tables.each do |table|
+        _log.info("Adding #{table} to #{REPLICATION_SET_NAME} replication set")
+        pglogical.replication_set_add_table(REPLICATION_SET_NAME, table, true)
+      end
     end
   end
 
@@ -103,6 +137,10 @@ class MiqPglogical
 
   def self.node_name_to_region(name)
     name.sub(NODE_PREFIX, "").to_i
+  end
+
+  def self.default_excludes
+    YAML.load_file(Rails.root.join("config/default_replication_exclude_tables.yml"))[:exclude_tables] | ALWAYS_EXCLUDED_TABLES
   end
 
   private

@@ -35,7 +35,7 @@ module Vmdb
       fh.info "RAILS Environment: #{Rails.env} version #{Rails.version}"
 
       fh.info "VMDB settings:"
-      VMDBLogger.log_hashes(fh, VMDB::Config.new("vmdb").config, :filter => Vmdb::Settings::PASSWORD_FIELDS)
+      VMDBLogger.log_hashes(fh, ::Settings, :filter => Vmdb::Settings::PASSWORD_FIELDS)
       fh.info "VMDB settings END"
       fh.info "---"
 

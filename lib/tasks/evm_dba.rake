@@ -1,4 +1,5 @@
 require 'awesome_spawn'
+require 'evm_rake_helper'
 
 # TODO: move into DatabaseYml
 # TODO: can we use EvmDatabseOps directly?
@@ -28,34 +29,6 @@ module EvmDba
     require File.expand_path(File.join(Rails.root, 'lib/evm_database_ops'))
     Dir.chdir(Rails.root)
     EvmDatabaseOps.stop
-  end
-
-  # Returns any command ARGV options.
-  #
-  # If ARGV contains the 'end of options' '--' option [1]:
-  # Returns a duplicate of ARGV with all arguments up to and including
-  # the '--' removed.
-  #   [1] http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html
-  #
-  # Otherwise, returns a duplicate of ARGV, since there is no obvious subcommand.
-  #
-  # Example 1:
-  #   bundle exec evm:db:region -- --region 1
-  #
-  # ARGV starts as:
-  #   ["evm:db:region", "--", "--region", "1"]
-  # Returns:
-  #   ["--region", "1"]
-  #
-  # Example 2:
-  #   bundle exec evm:db:region --region 1
-  # ARGV starts as =>
-  #   ["evm:db:region", "--region", "1"]
-  # Returns:
-  #   ["evm:db:region", "--region", "1"]
-  def self.extract_command_options
-    i = ARGV.index("--")
-    i ? ARGV.slice((i + 1)..-1) : ARGV.dup
   end
 end
 
@@ -97,7 +70,7 @@ namespace :evm do
     desc "clean up database"
     task :gc do
       require 'trollop'
-      opts = Trollop.options(EvmDba.extract_command_options) do
+      opts = Trollop.options(EvmRakeHelper.extract_command_options) do
         opt :username,   "Username",         :type => :string
         opt :password,   "Password",         :type => :string
         opt :hostname,   "Hostname",         :type => :string
@@ -146,7 +119,7 @@ namespace :evm do
     desc 'Set the region of the current ManageIQ EVM Database (VMDB)'
     task :region do
       require 'trollop'
-      opts = Trollop.options(EvmDba.extract_command_options) do
+      opts = Trollop.options(EvmRakeHelper.extract_command_options) do
         opt :region, "Region number", :type => :integer, :required => true
       end
 
@@ -202,7 +175,7 @@ namespace :evm do
       desc 'Backup the local ManageIQ EVM Database (VMDB) to a local file'
       task :local do
         require 'trollop'
-        opts = Trollop.options(EvmDba.extract_command_options) do
+        opts = Trollop.options(EvmRakeHelper.extract_command_options) do
           opt :local_file, "Destination file", :type => :string, :required => true
           opt :username,   "Username",         :type => :string
           opt :password,   "Password",         :type => :string
@@ -219,7 +192,7 @@ namespace :evm do
       desc 'Backup the local ManageIQ EVM Database (VMDB) to a remote file'
       task :remote do
         require 'trollop'
-        opts = Trollop.options(EvmDba.extract_command_options) do
+        opts = Trollop.options(EvmRakeHelper.extract_command_options) do
           opt :uri,              "Destination depot URI",       :type => :string, :required => true
           opt :uri_username,     "Destination depot username",  :type => :string
           opt :uri_password,     "Destination depot password",  :type => :string
@@ -248,7 +221,7 @@ namespace :evm do
       desc 'Restore the local ManageIQ EVM Database (VMDB) from a local backup file'
       task :local do
         require 'trollop'
-        opts = Trollop.options(EvmDba.extract_command_options) do
+        opts = Trollop.options(EvmRakeHelper.extract_command_options) do
           opt :local_file, "Destination file", :type => :string, :required => true
           opt :username,   "Username",         :type => :string
           opt :password,   "Password",         :type => :string
@@ -269,7 +242,7 @@ namespace :evm do
       desc 'Restore the local ManageIQ EVM Database (VMDB) from a remote backup file'
       task :remote do
         require 'trollop'
-        opts = Trollop.options(EvmDba.extract_command_options) do
+        opts = Trollop.options(EvmRakeHelper.extract_command_options) do
           opt :uri,              "Destination depot URI",       :type => :string, :required => true
           opt :uri_username,     "Destination depot username",  :type => :string
           opt :uri_password,     "Destination depot password",  :type => :string

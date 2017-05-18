@@ -1,12 +1,11 @@
 require 'digest/md5'
 class OrchestrationTemplate < ApplicationRecord
-  TEMPLATE_DIR = Rails.root.join("product/orchestration_templates")
-
   include NewWithTypeStiMixin
 
   acts_as_miq_taggable
 
   has_many :stacks, :class_name => "OrchestrationStack"
+  has_one :picture, :dependent => :destroy, :as => :resource, :autosave => true
 
   default_value_for :draft, false
   default_value_for :orderable, true
@@ -23,10 +22,12 @@ class OrchestrationTemplate < ApplicationRecord
 
   # Try to create the template if the name is not found in table
   def self.seed
-    Dir.glob(TEMPLATE_DIR.join('*.yml')).each do |file|
-      hash = YAML.load_file(file)
-      next if hash[:type].constantize.find_by(:name => hash[:name])
-      find_or_create_by_contents(hash)
+    Vmdb::Plugins.instance.vmdb_plugins.each do |plugin|
+      Dir.glob(plugin.root.join('content', 'orchestration_templates', '*.{yaml,yml}')).each do |file|
+        hash = YAML.load_file(file)
+        next if hash[:type].constantize.find_by(:name => hash[:name])
+        find_or_create_by_contents(hash)
+      end
     end
   end
 
@@ -97,9 +98,40 @@ class OrchestrationTemplate < ApplicationRecord
     raise NotImplementedError, _("parameter_groups must be implemented in subclass")
   end
 
+  # Basic options for all templates, each subclass should add more type/provider specific deployment options
+  # Return array of OrchestrationParameters. (Deployment options are different from parameters, but they use same class)
+  def deployment_options(_manager_class = nil)
+    tenant_opt = OrchestrationTemplate::OrchestrationParameter.new(
+      :name        => "tenant_name",
+      :label       => "Tenant",
+      :data_type   => "string",
+      :description => "Tenant where the stack will be deployed",
+      :required    => true,
+      :constraints => [
+        OrchestrationTemplate::OrchestrationParameterAllowedDynamic.new(
+          :fqname => "/Cloud/Orchestration/Operations/Methods/Available_Tenants"
+        )
+      ]
+    )
+
+    stack_name_opt = OrchestrationTemplate::OrchestrationParameter.new(
+      :name        => "stack_name",
+      :label       => "Stack Name",
+      :data_type   => "string",
+      :description => "Name of the stack",
+      :required    => true,
+      :constraints => [
+        OrchestrationTemplate::OrchestrationParameterPattern.new(
+          :pattern => '^[A-Za-z][A-Za-z0-9\-]*$'
+        )
+      ]
+    )
+    [tenant_opt, stack_name_opt]
+  end
+
   # List managers that may be able to deploy this template
   def self.eligible_managers
-    ExtManagementSystem.where(:type => eligible_manager_types.collect(&:name))
+    Rbac::Filterer.filtered(ExtManagementSystem, :where_clause => {:type => eligible_manager_types})
   end
 
   delegate :eligible_managers, :to => :class

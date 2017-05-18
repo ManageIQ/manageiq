@@ -142,8 +142,30 @@ class ActsAsArModel
   # Find routines
   #
 
+  # This method is called by QueryRelation upon executing the query.
+  #   Since it will receive non-legacy search options, we need to convert
+  #   them to handle the legacy find.
+  def self.search(mode, options = {})
+    find(mode, to_legacy_options(options))
+  end
+  private_class_method :search
+
+  def self.to_legacy_options(options)
+    {
+      :conditions => options[:where],
+      :include    => options[:includes],
+      :limit      => options[:limit],
+      :order      => options[:order],
+      :offset     => options[:offset],
+      :select     => options[:select],
+      :group      => options[:group],
+    }.delete_blanks
+  end
+  private_class_method :to_legacy_options
+
   def self.all(*args)
-    ActsAsArQuery.new(self, *args)
+    require 'query_relation'
+    QueryRelation.new(self, *args)
   end
 
   def self.first(*args)
@@ -160,13 +182,13 @@ class ActsAsArModel
 
   def self.find_by_id(*id)
     options = id.extract_options!
-    options.merge!(:conditions => {:id => id.first})
+    options[:conditions] = {:id => id.first}
     first(options)
   end
 
   def self.find_all_by_id(*ids)
     options = ids.extract_options!
-    options.merge!(:conditions => {:id => ids.flatten})
+    options[:conditions] = {:id => ids.flatten}
     all(options)
   end
 

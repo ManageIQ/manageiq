@@ -1,4 +1,4 @@
-class RemoveEndpointDataFromEms < ActiveRecord::Migration
+class RemoveEndpointDataFromEms < ActiveRecord::Migration[4.2]
   def up
     remove_column :ext_management_systems, :port
     remove_column :ext_management_systems, :ipaddress

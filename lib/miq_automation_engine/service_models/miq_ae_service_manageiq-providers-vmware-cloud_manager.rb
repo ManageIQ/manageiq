@@ -1,4 +1,0 @@
-module MiqAeMethodService
-  class MiqAeServiceManageIQ_Providers_Vmware_CloudManager < MiqAeServiceManageIQ_Providers_CloudManager
-  end
-end

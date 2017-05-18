@@ -2,6 +2,8 @@
 
 module AssignmentMixin
   extend ActiveSupport::Concern
+  ESCAPED_PREFIX = "escaped".freeze
+
   included do  #:nodoc:
     acts_as_miq_taggable
 
@@ -33,7 +35,7 @@ module AssignmentMixin
     objects.to_miq_a.each do |obj|
       unless obj.kind_of?(ActiveRecord::Base) # obj is the id of a classification entry instance
         id = obj
-        obj = Classification.find_by_id(id)
+        obj = Classification.find_by(:id => id)
         if obj.nil?
           _log.warn("Unable to find classification with id [#{id}], skipping assignment")
           next
@@ -45,9 +47,30 @@ module AssignmentMixin
     reload
   end
 
+  def assign_to_labels(objects, klass)
+    # objects => A single item or array of items
+    #   item  => A classification entry instance or a classification entry id
+    # klass   => The class of the object that self is to be assigned to - (Takes both forms - Host or host, EmsCluster or ems_cluster)
+    objects.to_miq_a.each do |obj|
+      unless obj.kind_of?(ActiveRecord::Base) # obj is the id of a classification entry instance
+        id = obj
+        obj = CustomAttribute.find_by(:id => id)
+        if obj.nil?
+          _log.warn("Unable to find label with id [#{id}], skipping assignment")
+          next
+        end
+      end
+      name = AssignmentMixin.escape(obj.name)
+      value = AssignmentMixin.escape(obj.value)
+      tag = "#{klass.underscore}/label/managed/#{name}/#{value}"
+      tag_add(tag, :ns => namespace)
+    end
+    reload
+  end
+
   def get_assigned_tos
     # Returns: {:objects => [obj, obj, ...], :tags => [[Classification.entry_object, klass], ...]}
-    result = {:objects => [], :tags => []}
+    result = {:objects => [], :tags => [], :labels => []}
     tags = tag_list(:ns => namespace).split
     tags.each do |t|
       parts = t.split("/")
@@ -56,15 +79,42 @@ module AssignmentMixin
       case type.to_sym
       when :id
         model  = Object.const_get(klass.camelize) rescue nil
-        object = model.find_by_id(parts.pop) unless model.nil?
+        object = model.find_by(:id => parts.pop) unless model.nil?
         result[:objects] << object unless object.nil?
       when :tag
-        tag = Tag.find_by_name("/" + parts.join("/"))
-        result[:tags] << [Classification.find_by_tag_id(tag.id), klass] unless tag.nil?
+        tag = Tag.find_by(:name => "/" + parts.join("/"))
+        result[:tags] << [Classification.find_by(:tag_id => tag.id), klass] unless tag.nil?
+      when :label
+        label = if AssignmentMixin.escaped?(parts[1])
+                  name = AssignmentMixin.unescape(parts[1])
+                  value = AssignmentMixin.unescape(parts[2])
+                  CustomAttribute.find_by(:name => name, :value => value)
+                else
+                  CustomAttribute.find_by(:name => parts[1], :value => parts[2])
+                end
+        result[:labels] << [label, klass] unless label.nil?
       end
     end
 
     result
+  end
+
+  # make strings with special characters like '/' safe to put in tags(assignments) by escaping them
+  def self.escape(string)
+    @parser ||= URI::RFC2396_Parser.new
+    escaped_string = @parser.escape(string, /[^A-Za-z0-9]/)
+    "#{ESCAPED_PREFIX}:{#{escaped_string}}" # '/escape/string' --> 'escaped:{%2Fescape%2Fstring}'
+  end
+
+  # return the escaped string back into a normal string
+  def self.unescape(escaped_string)
+    _log.info("not an escaped string: #{escaped_string}") unless escaped?(escaped_string)
+    @parser ||= URI::RFC2396_Parser.new
+    @parser.unescape(escaped_string.slice(ESCAPED_PREFIX.length + 2..-2)) # 'escaped:{%2Fescape%2Fstring}' --> '/escape/string'
+  end
+
+  def self.escaped?(string)
+    string.starts_with?("#{ESCAPED_PREFIX}:{") && string.ends_with?("}")
   end
 
   def remove_all_assigned_tos(cat = nil)
@@ -110,12 +160,10 @@ module AssignmentMixin
     # @option options :parents
     # @option options :tag_list
     def get_assigned_for_target(target, options = {})
-      alist = kind_of?(Class) ? assignments_cached : assignments
       if options[:parents]
         parents = options[:parents]
       else
-        model = kind_of?(Class) ? self : model
-        parents = model::ASSIGNMENT_PARENT_ASSOCIATIONS.flat_map do |rel|
+        parents = self::ASSIGNMENT_PARENT_ASSOCIATIONS.flat_map do |rel|
           (rel == :my_enterprise ? MiqEnterprise.my_enterprise : target.try(rel)) || []
         end
         parents << target
@@ -124,7 +172,7 @@ module AssignmentMixin
       tlist =  parents.collect { |p| "#{p.class.base_model.name.underscore}/id/#{p.id}" } # Assigned directly to parents
       tlist += options[:tag_list] if options[:tag_list]                        # Assigned to target (passed in)
 
-      individually_assigned_resources = tlist.flat_map { |t| alist[t] }.uniq
+      individually_assigned_resources = tlist.flat_map { |t| assignments_cached[t] }.uniq
 
       # look for alert_set running off of tags (not individual tags)
       # TODO: we may need to change taggings-related code to use base_model too
@@ -135,7 +183,7 @@ module AssignmentMixin
         lower_klass = klass == "VmOrTemplate" ? "vm" : klass.underscore
         "#{lower_klass}/tag#{t.tag.name}"
       end
-      tagged_resources = tlist.flat_map { |t| alist[t] }.uniq
+      tagged_resources = tlist.flat_map { |t| assignments_cached[t] }.uniq
       (individually_assigned_resources + tagged_resources).uniq
     end
 

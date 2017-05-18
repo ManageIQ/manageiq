@@ -100,6 +100,37 @@ describe MiqProvisionVirtWorkflow do
     end
   end
 
+  context '#allowed_hosts_obj' do
+    before do
+      @ems    = FactoryGirl.create(:ems_vmware)
+      @host1  = FactoryGirl.create(:host_vmware, :ems_id => @ems.id)
+      @host2  = FactoryGirl.create(:host_vmware, :ems_id => @ems.id)
+      @src_vm = FactoryGirl.create(:vm_vmware, :ems_id => @ems.id)
+      allow(workflow).to receive(:find_all_ems_of_type).and_return([@host1, @host2])
+      allow(Rbac).to receive(:search) do |hash|
+        [Array.wrap(hash[:targets])]
+      end
+      workflow.instance_variable_set(:@target_resource, nil)
+
+      s1 = FactoryGirl.create(:switch, :name => "A")
+      s2 = FactoryGirl.create(:switch, :name => "B")
+      @host1.switches = [s1]
+      @host2.switches = [s2]
+      @lan1 = FactoryGirl.create(:lan, :name => "lan_A", :switch_id => s1.id)
+      @lan2 = FactoryGirl.create(:lan, :name => "lan_B", :switch_id => s2.id)
+    end
+
+    it 'finds all hosts with no selected network' do
+      workflow.instance_variable_set(:@values, :src_vm_id => @src_vm.id)
+      expect(workflow.allowed_hosts_obj).to match_array([@host1, @host2])
+    end
+
+    it 'finds only the hosts that can access the selected network' do
+      workflow.instance_variable_set(:@values, :src_vm_id => @src_vm.id, :vlan => [@lan1.name, @lan1.name])
+      expect(workflow.allowed_hosts_obj).to match_array([@host1])
+    end
+  end
+
   context "#update_requester_from_parameters" do
     let(:user_new) { FactoryGirl.create(:user_with_email) }
     let(:data_new_user) { {:user_name => user_new.name} }
@@ -301,7 +332,7 @@ describe MiqProvisionVirtWorkflow do
     end
   end
 
-  context '#update_request' do
+  context '#make_request (update)' do
     let(:template) do
       FactoryGirl.create(
         :template_vmware,
@@ -309,8 +340,8 @@ describe MiqProvisionVirtWorkflow do
       )
     end
     let(:values)  { {:src_vm_id => [template.id, template.name]} }
-    let(:request) { workflow.create_request(:src_vm_id => [999, 'old_template']) }
-    before { workflow.update_request(request, values) }
+    let(:request) { workflow.make_request(nil, :src_vm_id => [999, 'old_template']) }
+    before { workflow.make_request(request, values) }
 
     it 'updates options' do
       expect(request.options).to include(values)
@@ -318,6 +349,25 @@ describe MiqProvisionVirtWorkflow do
 
     it 'updates soruce_id' do
       expect(request.source_id).to eq(template.id)
+    end
+  end
+
+  context "#allowed_templates" do
+    let(:external_region_id) do
+      remote_region_number = ApplicationRecord.my_region_number + 1
+      ApplicationRecord.region_to_range(remote_region_number).first
+    end
+
+    let(:remote_vmware) { FactoryGirl.create(:ems_vmware_with_authentication, :id => external_region_id) }
+    let(:local_vmware)  { FactoryGirl.create(:ems_vmware_with_authentication) }
+
+    it "only returns records from its region" do
+      EvmSpecHelper.local_guid_miq_server_zone # Because there is no default timezone in settings
+      FactoryGirl.create(:template_vmware, :ext_management_system => remote_vmware, :id => external_region_id)
+      FactoryGirl.create(:template_vmware, :ext_management_system => local_vmware)
+
+      expect(MiqTemplate.count).to eq(2)
+      expect(workflow.allowed_templates.count).to eq(1)
     end
   end
 end

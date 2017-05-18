@@ -70,7 +70,7 @@ class AssetTagImport
 
     @verified_data.each do|id, data|
       if data.length > 1
-        obj = @klass.find_by_id(id)
+        obj = @klass.find_by(:id => id)
         while data.length > 1
           data.shift
           _log.warn "#{@klass.name} #{obj.name}, Multiple lines for the same object, the last line is applied"
@@ -86,7 +86,7 @@ class AssetTagImport
 
   def apply
     @verified_data.each do |id, data|
-      obj = @klass.find_by_id(id)
+      obj = @klass.find_by(:id => id)
       if obj
         attrs = obj.miq_custom_attributes
         new_attrs = []

@@ -55,22 +55,14 @@ module MiqServer::WorkerManagement::Dequeue
     end unless @workers_lock.nil?
   end
 
-  def prefetch_max_per_worker
-    ::Settings.server.prefetch_max_per_worker || 100
-  end
-
-  def prefetch_min_per_worker
-    ::Settings.server.prefetch_min_per_worker || 10
-  end
-
   def prefetch_stale_threshold
-    (::Settings.server.prefetch_stale_threshold || 30.seconds).to_i_with_method
+    ::Settings.server.prefetch_stale_threshold.to_i_with_method
   end
 
   def prefetch_below_threshold?(queue_name, wcount)
     @queue_messages_lock.synchronize(:SH) do
       return false if @queue_messages[queue_name].nil?
-      return (@queue_messages[queue_name][:messages].length <= (prefetch_min_per_worker * wcount))
+      return (@queue_messages[queue_name][:messages].length <= (::Settings.server.prefetch_min_per_worker_dequeue * wcount))
     end
   end
 
@@ -112,7 +104,7 @@ module MiqServer::WorkerManagement::Dequeue
         if prefetch_below_threshold?(queue_name, wcount) || prefetch_stale?(queue_name) || prefetch_has_lower_priority_than_miq_queue?(queue_name)
           @queue_messages[queue_name] ||= {}
           @queue_messages[queue_name][:timestamp] = Time.now.utc
-          @queue_messages[queue_name][:messages]  = peek(queue_name, priority, (prefetch_max_per_worker * wcount)).collect do |q|
+          @queue_messages[queue_name][:messages]  = peek(queue_name, priority, (::Settings.server.prefetch_max_per_worker_dequeue * wcount)).collect do |q|
             {:id => q.id, :lock_version => q.lock_version, :priority => q.priority, :role => q.role}
           end
           _log.info("Fetched #{@queue_messages[queue_name][:messages].length} miq_queue rows for queue_name=#{queue_name}, wcount=#{wcount.inspect}, priority=#{priority.inspect}") if @queue_messages[queue_name][:messages].length > 0

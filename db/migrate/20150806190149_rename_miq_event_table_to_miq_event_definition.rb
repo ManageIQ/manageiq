@@ -1,4 +1,4 @@
-class RenameMiqEventTableToMiqEventDefinition < ActiveRecord::Migration
+class RenameMiqEventTableToMiqEventDefinition < ActiveRecord::Migration[4.2]
   include MigrationHelper
 
   class MiqSet < ActiveRecord::Base; end

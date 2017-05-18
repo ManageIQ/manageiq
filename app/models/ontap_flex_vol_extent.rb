@@ -48,45 +48,26 @@ class OntapFlexVolExtent < CimStorageExtent
     ontap_concrete_extent
   end
 
-  delegate :base_storage_extents, :to => :ontap_logical_disk
-
-  delegate :base_storage_extents_size, :to => :ontap_logical_disk
-
-  delegate :file_system, :to => :ontap_logical_disk
-
-  delegate :file_shares, :to => :ontap_logical_disk
-
-  delegate :file_shares_size, :to => :ontap_logical_disk
-
-  delegate :cim_datastores, :to => :ontap_logical_disk
-
-  delegate :cim_datastores_size, :to => :ontap_logical_disk
-
-  delegate :storages, :to => :ontap_logical_disk
-
-  delegate :storages_size, :to => :ontap_logical_disk
-
-  delegate :cim_virtual_disks, :to => :ontap_logical_disk
-
-  delegate :cim_virtual_disks_size, :to => :ontap_logical_disk
-
-  delegate :virtual_disks, :to => :ontap_logical_disk
-
-  delegate :virtual_disks_size, :to => :ontap_logical_disk
-
-  delegate :cim_vms, :to => :ontap_logical_disk
-
-  delegate :cim_vms_size, :to => :ontap_logical_disk
-
-  delegate :vms, :to => :ontap_logical_disk
-
-  delegate :vms_size, :to => :ontap_logical_disk
-
-  delegate :cim_hosts, :to => :ontap_logical_disk
-
-  delegate :cim_hosts_size, :to => :ontap_logical_disk
-
-  delegate :hosts, :to => :ontap_logical_disk
-
-  delegate :hosts_size, :to => :ontap_logical_disk
+  delegate :base_storage_extents,
+           :base_storage_extents_size,
+           :cim_datastores,
+           :cim_datastores_size,
+           :cim_hosts,
+           :cim_hosts_size,
+           :cim_virtual_disks,
+           :cim_virtual_disks_size,
+           :cim_vms,
+           :cim_vms_size,
+           :file_shares,
+           :file_shares_size,
+           :file_system,
+           :hosts,
+           :hosts_size,
+           :storages,
+           :storages_size,
+           :virtual_disks,
+           :virtual_disks_size,
+           :vms,
+           :vms_size,
+           :to => :ontap_logical_disk
 end

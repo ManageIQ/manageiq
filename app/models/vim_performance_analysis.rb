@@ -273,7 +273,7 @@ module VimPerformanceAnalysis
       options = @options
 
       if VimPerformanceAnalysis.needs_perf_data?(options[:vm_options])
-        perf_cols = [:cpu, :vcpus, :memory, :storage].collect { |t| options.fetch(:vm_options, t, :metric) }.compact
+        perf_cols = [:cpu, :vcpus, :memory, :storage].collect { |t| options.fetch_path(:vm_options, t, :metric) }.compact
       end
 
       vm_perf = VimPerformanceAnalysis.get_daily_perf(@vm, options[:range], options[:ext_options], perf_cols)
@@ -437,7 +437,6 @@ module VimPerformanceAnalysis
                   .where(:timestamp => Metric::Helper.time_range_from_hash(options), :resource => obj)
                   .where(options[:conditions]).order("timestamp")
                   .select(options[:select])
-                  .to_a
   end
 
   # @param obj base object
@@ -526,7 +525,7 @@ module VimPerformanceAnalysis
         result[key][c] ||= 0
         counts[key][c] ||= 0
 
-        Metric::Aggregation.aggregate_for_column(c, nil, result[key], counts[key], p.send(c), :average)
+        Metric::Aggregation::Aggregate.column(c, nil, result[key], counts[key], p.send(c), :average)
       end
     end
 
@@ -543,7 +542,7 @@ module VimPerformanceAnalysis
       ts, v = k
       cols.each do |c|
         next unless v[c].kind_of?(Float)
-        Metric::Aggregation.process_for_column(c, nil, v, counts[k], true, :average)
+        Metric::Aggregation::Process.column(c, nil, v, counts[k], true, :average)
       end
 
       recs.push(perf_klass.new(v))
@@ -552,7 +551,7 @@ module VimPerformanceAnalysis
   end
 
   def self.calc_slope_from_data(recs, x_attr, y_attr)
-    recs = recs.sort { |a, b| a.send(x_attr) <=> b.send(x_attr) } if recs.first.respond_to?(x_attr)
+    recs = recs.sort_by { |r| r.send(x_attr) } if recs.first.respond_to?(x_attr)
 
     y_array, x_array = recs.inject([]) do |arr, r|
       arr[0] ||= []; arr[1] ||= []

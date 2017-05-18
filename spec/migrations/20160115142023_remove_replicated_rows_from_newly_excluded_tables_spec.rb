@@ -7,7 +7,7 @@ describe RemoveReplicatedRowsFromNewlyExcludedTables do
 
   migration_context :up do
     before do
-      allow(ApplicationRecord).to receive(:my_region_number).and_return(99)
+      allow(ArRegion.anonymous_class_with_ar_region).to receive(:my_region_number).and_return(99)
     end
 
     it "removes the rows from the tables" do

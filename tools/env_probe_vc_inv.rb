@@ -1,4 +1,4 @@
-require 'MiqVim'
+require 'VMwareWebService/MiqVim'
 require 'dbi'
 require 'miq-process'
 
@@ -24,9 +24,6 @@ $log.level = VMDBLogger.const_get("DEBUG")
 inv_yml = File.join(LOG_DIR, "env_probe_vc_inv.yml")
 File.delete(inv_yml) if File.exist?(inv_yml)
 $yml_fd = File.open(inv_yml, "w")
-
-require 'MiqVim'
-require 'dbi'
 
 def log(level, msg)
   puts "[#{Time.now.utc}] #{level.to_s.upcase}: #{msg}"

@@ -110,7 +110,7 @@ RSpec.describe "reports API" do
     schedule_1 = FactoryGirl.create(:miq_schedule, :filter => exp)
     schedule_2 = FactoryGirl.create(:miq_schedule, :filter => exp)
 
-    api_basic_authorize collection_action_identifier(:schedules, :read, :get)
+    api_basic_authorize subcollection_action_identifier(:reports, :schedules, :read, :get)
     run_get "/api/reports/#{report.id}/schedules"
 
     expect_result_resources_to_include_hrefs(
@@ -123,6 +123,17 @@ RSpec.describe "reports API" do
     expect(response).to have_http_status(:ok)
   end
 
+  it "will not show the schedules without the appropriate role" do
+    report = FactoryGirl.create(:miq_report)
+    exp = MiqExpression.new("=" => {"field" => "MiqReport-id", "value" => report.id})
+    FactoryGirl.create(:miq_schedule, :filter => exp)
+    api_basic_authorize
+
+    run_get("#{reports_url(report.id)}/schedules")
+
+    expect(response).to have_http_status(:forbidden)
+  end
+
   it "can show a single schedule" do
     report = FactoryGirl.create(:miq_report)
 
@@ -132,7 +143,7 @@ RSpec.describe "reports API" do
 
     schedule = FactoryGirl.create(:miq_schedule, :name => 'unit_test', :filter => exp)
 
-    api_basic_authorize collection_action_identifier(:schedules, :read, :get)
+    api_basic_authorize subcollection_action_identifier(:reports, :schedules, :read, :get)
     run_get "/api/reports/#{report.id}/schedules/#{schedule.id}"
 
     expect_result_to_match_hash(
@@ -142,6 +153,17 @@ RSpec.describe "reports API" do
       "name" => 'unit_test'
     )
     expect(response).to have_http_status(:ok)
+  end
+
+  it "will not show a schedule without the appropriate role" do
+    report = FactoryGirl.create(:miq_report)
+    exp = MiqExpression.new("=" => {"field" => "MiqReport-id", "value" => report.id})
+    schedule = FactoryGirl.create(:miq_schedule, :filter => exp)
+    api_basic_authorize
+
+    run_get("#{reports_url(report.id)}/schedules/#{schedule.id}")
+
+    expect(response).to have_http_status(:forbidden)
   end
 
   it "returns an empty result set if none has been run" do

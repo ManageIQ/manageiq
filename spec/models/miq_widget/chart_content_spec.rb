@@ -1,5 +1,5 @@
 describe "Widget Chart Content" do
-  let(:widget) { MiqWidget.find_by_description("chart_vendor_and_guest_os") }
+  let(:widget) { MiqWidget.find_by(:description => "chart_vendor_and_guest_os") }
   before(:each) do
     _guid, _server, _zone = EvmSpecHelper.create_guid_miq_server_zone
 

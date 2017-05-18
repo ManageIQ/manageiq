@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe CloudService, :type => :model do
   let(:cloud_service) do
     FactoryGirl.create(:cloud_service).tap do |cs|

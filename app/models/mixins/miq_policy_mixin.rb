@@ -28,7 +28,7 @@ module MiqPolicyMixin
     tag_list(:ns => ns, :cat => cat).split.collect do|t|
       klass, id = t.split("/")
       next unless ["miq_policy", "miq_policy_set"].include?(klass)
-      policy = klass.camelize.constantize.find_by_id(id.to_i)
+      policy = klass.camelize.constantize.find_by(:id => id.to_i)
       mode.nil? || policy.mode == mode ? policy : nil
     end.compact
   end
@@ -93,9 +93,31 @@ module MiqPolicyMixin
     MiqEnterprise.my_enterprise
   end
 
+  # cb_method: the MiqQueue callback method along with the parameters that is called
+  #            when automate process is done and the request is not prevented to proceed by policy
+  def prevent_callback_settings(*cb_method)
+    {
+      :class_name  => self.class.to_s,
+      :instance_id => id,
+      :method_name => :check_policy_prevent_callback,
+      :args        => [*cb_method],
+      :server_guid => MiqServer.my_guid
+    }
+  end
+
+  def check_policy_prevent_callback(*action, _status, _message, result)
+    prevented = false
+    if result.kind_of?(MiqAeEngine::MiqAeWorkspaceRuntime)
+      event = result.get_obj_from_path("/")['event_stream']
+      data  = event.attributes["full_data"]
+      prevented = data.fetch_path(:policy, :prevented) if data
+    end
+    prevented ? _log.info(event.attributes["message"]) : send(*action)
+  end
+
   module ClassMethods
     def rsop(event, targets)
-      eventobj = event.kind_of?(String) ? MiqEventDefinition.find_by_name(event) : MiqEventDefinition.extract_objects(event)
+      eventobj = event.kind_of?(String) ? MiqEventDefinition.find_by(:name => event) : MiqEventDefinition.extract_objects(event)
       raise _("No event found for [%{event}]") % {:event => event} if eventobj.nil?
 
       targets = extract_objects(targets)
@@ -117,7 +139,7 @@ module MiqPolicyMixin
     end
 
     def rsop_async(event, targets, userid = nil)
-      eventobj = event.kind_of?(String) ? MiqEventDefinition.find_by_name(event) : MiqEventDefinition.extract_objects(event)
+      eventobj = event.kind_of?(String) ? MiqEventDefinition.find_by(:name => event) : MiqEventDefinition.extract_objects(event)
       raise _("No event found for [%{event}]") % {:event => event} if eventobj.nil?
 
       targets =  targets.first.kind_of?(self) ? targets.collect(&:id) : targets

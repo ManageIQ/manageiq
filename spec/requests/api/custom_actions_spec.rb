@@ -75,7 +75,7 @@ describe "Custom Actions API" do
       run_get services_url(svc1.id)
 
       expect_result_to_have_keys(%w(id href actions))
-      expect(response.parsed_body["actions"].collect { |a| a["name"] }).to match_array(%w(edit))
+      expect(response.parsed_body["actions"].collect { |a| a["name"] }).to match_array(%w(edit add_resource remove_resource remove_all_resources))
     end
   end
 
@@ -91,7 +91,7 @@ describe "Custom Actions API" do
       run_get services_url(svc1.id)
 
       expect_result_to_have_keys(%w(id href actions))
-      expect(response.parsed_body["actions"].collect { |a| a["name"] }).to match_array(%w(edit button1 button2 button3))
+      expect(response.parsed_body["actions"].collect { |a| a["name"] }).to match_array(%w(edit button1 button2 button3 add_resource remove_resource remove_all_resources))
     end
 
     it "supports the custom_actions attribute" do
@@ -171,6 +171,25 @@ describe "Custom Actions API" do
       run_post(services_url(svc1.id), gen_request(:BuTtOn1, "button_key1" => "value", "button_key2" => "value"))
 
       expect_single_action_result(:success => true, :message => /.*/, :href => services_url(svc1.id))
+    end
+  end
+
+  describe "Services with grouped generic custom buttons" do
+    it "accepts a custom action" do
+      button = FactoryGirl.create(
+        :custom_button,
+        :name             => "test button",
+        :applies_to_class => "Service",
+        :resource_action  => FactoryGirl.create(:resource_action)
+      )
+      button_group = FactoryGirl.create(:custom_button_set)
+      button_group.add_member(button)
+      service = FactoryGirl.create(:service, :service_template => FactoryGirl.create(:service_template))
+      api_basic_authorize
+
+      run_post(services_url(service.id), "action" => "test button")
+
+      expect(response.parsed_body).to include("success" => true, "message" => /Invoked custom action test button/)
     end
   end
 

@@ -1,4 +1,4 @@
-class ChangeOptionsInMiqAlert < ActiveRecord::Migration
+class ChangeOptionsInMiqAlert < ActiveRecord::Migration[4.2]
   class MiqAlert < ActiveRecord::Base
     serialize :options
   end

@@ -22,6 +22,7 @@ cols:
 - name
 - description
 - type_display
+- prov_type
 - display
 #- provision_cost
 - created_at
@@ -40,14 +41,16 @@ include:
 
 # Included tables and columns for query performance
 include_for_find:
-  :service_template_catalog: {}
-
+  :picture:
+    :binary_blob: {}
+    
 # Order of columns (from all tables)
 col_order:
 - name
 - description
 - tenant.name
 - type_display
+- prov_type
 - display
 - service_template_catalog.name
 #- provision_cost
@@ -59,6 +62,7 @@ headers:
 - Description
 - Tenant
 - Type
+- Item Type
 - Display in Catalog
 - Catalog
 #- Cost

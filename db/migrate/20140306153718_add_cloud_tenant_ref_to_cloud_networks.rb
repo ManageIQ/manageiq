@@ -1,4 +1,4 @@
-class AddCloudTenantRefToCloudNetworks < ActiveRecord::Migration
+class AddCloudTenantRefToCloudNetworks < ActiveRecord::Migration[4.2]
   def self.up
     change_table :cloud_networks do |t|
       t.belongs_to  :cloud_tenant, :type => :bigint

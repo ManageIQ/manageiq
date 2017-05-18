@@ -29,6 +29,32 @@ describe Blueprint do
     FactoryGirl.create(:service_template, :name => 'Service Template Bundle', :display => true, :blueprint => subject)
   end
 
+  let(:tags) do
+    FactoryGirl.create(:classification_department_with_tags)
+    Classification.categories.first.entries.collect(&:tag)
+  end
+
+  let(:ui_properties) do
+    {
+      "service_catalog"      => {"id" => catalog.id},
+      "service_dialog"       => {"id" => dialog.id},
+      "automate_entrypoints" => {"Reconfigure" => "x/y/z", "Provision" => "a/b/c" },
+      "chart_data_model"     => {
+        "nodes" => [
+          {"id" => catalog_vm_provisioning.id, "tags" => [{"id" => tags[0].id}, {"id" => tags[1].id}]},
+          {
+            "id"              => nil,
+            "name"            => "my new generic vm",
+            "generic_subtype" => "vm",
+            "tags"            => [{"id" => tags[0].id}, {"id" => tags[1].id}],
+            "service_type"    => 'atomic',
+            "prov_type"       => 'generic',
+          }
+        ]
+      }
+    }
+  end
+
   it 'is taggable' do
     expect(subject).to respond_to(:tag_with)
   end
@@ -76,6 +102,12 @@ describe Blueprint do
         expect(new_service_template.custom_buttons).to_not                            include(direct_custom_button)
         expect(new_service_template.custom_button_sets).to_not                        include(custom_button_set)
         expect(new_service_template.custom_button_sets.first.custom_buttons).to_not   include(button_in_a_set)
+      end
+
+      it 'can copy a blueprint that does not have a bundle' do
+        expect do
+          subject.deep_copy
+        end.to change(Blueprint, :count).by(1)
       end
     end
 
@@ -135,7 +167,7 @@ describe Blueprint do
       expect(bundle.dialogs.first).to eq(dialog)
 
       prov = bundle.resource_actions.find_by(:action => 'Provision')
-      expect(prov.ae_uri).to eq(ServiceTemplate.default_provisioning_entry_point)
+      expect(prov.ae_uri).to eq(ServiceTemplate.default_provisioning_entry_point(bundle['service_type']))
 
       retire = bundle.resource_actions.find_by(:action => 'Retirement')
       expect(retire.ae_uri).to eq(ServiceTemplate.default_retirement_entry_point)
@@ -175,6 +207,10 @@ describe Blueprint do
             "ae_namespace" => "x",
             "ae_class"     => "y",
             "ae_instance"  => "z"
+          ),
+          a_hash_including(
+            "action"      => "Retirement",
+            "ae_instance" => "Default"
           )
         )
       }
@@ -251,21 +287,63 @@ describe Blueprint do
   end
 
   describe "#publish" do
-    it "copies resources at publishing" do
-      bundle = subject.create_bundle(:service_templates => [catalog_vm_provisioning],
-                                     :service_dialog    => dialog,
-                                     :service_catalog   => catalog)
+    before do
+      subject.ui_properties = ui_properties
 
-      changes = subject.publish("new bundle name")
+      Classification.classify_by_tag(subject, tags[0].name)
+    end
+
+    it "creates a bundle based on ui_properties" do
+      bundle = subject.publish
       expect(subject.published?).to be_truthy
-      expect(changes["service_templates"]).to include(catalog_vm_provisioning.id)
-      expect(changes["service_dialog"]).to include(dialog.id)
-      expect(bundle.name).to eq("new bundle name")
-      expect(subject.bundle).to eq(bundle)
+      expect(bundle.name).to eq(subject.name)
       expect(Dialog.count).to eq(2)
-      expect(ServiceTemplate.count).to eq(3)
-      expect(ServiceResource.count).to eq(3)
-      expect(ResourceAction.count).to eq(6)
+      expect(bundle.display).to be_truthy
+      expect(bundle.composite?).to be_truthy
+      expect(bundle.tags).to eq([tags[0]])
+      expect(bundle.service_template_catalog).to eq(catalog)
+      expect(bundle.descendants.first.tags).to include(tags[0], tags[1])
+      expect(bundle.descendants.last.name).to eq('my new generic vm')
+      expect(bundle.descendants.last.tags).to include(tags[0], tags[1])
+      expect(bundle.dialogs.first.blueprint).to eq(subject)
+
+      prov = bundle.resource_actions.find_by(:action => 'Provision')
+      expect(prov.ae_uri).to eq('/a/b/c')
+
+      retirement = bundle.resource_actions.find_by(:action => 'Retirement')
+      expect(retirement.ae_uri).to eq(ServiceTemplate.default_retirement_entry_point)
+
+      reconfig = bundle.resource_actions.find_by(:action => 'Reconfigure')
+      expect(reconfig.ae_uri).to eq('/x/y/z')
+      expect(reconfig.dialog).to eq(prov.dialog)
+
+      ui_property_ids = subject.ui_properties.fetch_path('chart_data_model', 'nodes').pluck('id')
+      expect(ui_property_ids).to match_array(bundle.descendants.pluck(:id))
+
+      dialog_id = subject.ui_properties.fetch_path('service_dialog', 'id')
+      expect(dialog_id).to eq(bundle.resource_actions.first.dialog.id)
+    end
+  end
+
+  describe '#in_use?' do
+    it 'returns false if not published' do
+      expect(subject).not_to be_in_use
+    end
+
+    it 'returns false if it is published and has not been ordered' do
+      subject.ui_properties = ui_properties
+      subject.publish
+
+      expect(subject).not_to be_in_use
+    end
+
+    it 'returns true if it is published and has been ordered' do
+      subject.ui_properties = ui_properties
+      subject.publish
+      user = FactoryGirl.create(:user)
+      FactoryGirl.create(:service_template_provision_request, :requester => user, :source => subject.bundle)
+
+      expect(subject).to be_in_use
     end
   end
 end

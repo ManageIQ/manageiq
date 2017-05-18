@@ -20,6 +20,35 @@ describe Rbac::Filterer do
   let(:child_openstack_vm) { FactoryGirl.create(:vm_openstack, :tenant => child_tenant, :miq_group => child_group) }
 
   describe ".search" do
+    context 'with virtual custom attributes' do
+      let(:virtual_custom_attribute_1) { "virtual_custom_attribute_attribute_1" }
+      let(:virtual_custom_attribute_2) { "virtual_custom_attribute_attribute_2" }
+      let!(:vm_1)                { FactoryGirl.create(:vm) }
+      let!(:vm_2)                { FactoryGirl.create(:vm) }
+
+      let!(:custom_attribute_1) do
+        FactoryGirl.create(:custom_attribute, :name => 'attribute_1', :value => vm_1.name, :resource => vm_1)
+      end
+
+      let!(:custom_attribute_2) do
+        FactoryGirl.create(:custom_attribute, :name => 'attribute_2', :value => 'any_value', :resource => vm_1)
+      end
+
+      let(:miq_expression) do
+        exp1 = {'EQUAL' => {'field' => 'Vm-name', 'value' => "Vm-#{virtual_custom_attribute_1}"}}
+        exp2 = {'EQUAL' => {'field' => "Vm-#{virtual_custom_attribute_2}", "value" => 'any_value'}}
+
+        MiqExpression.new("AND" => [exp1, exp2])
+      end
+
+      it 'returns instance of Vm with related condition' do
+        User.with_user(admin_user) do
+          results = described_class.search(:class => Vm, :filter => miq_expression).first
+          expect(results).to match_array [vm_1]
+        end
+      end
+    end
+
     describe "with find_options_for_tenant filtering (basic) all resources" do
       {
         "ExtManagementSystem"    => :ems_vmware,
@@ -37,6 +66,18 @@ describe Rbac::Filterer do
           _other_resource = FactoryGirl.create(factory_name, :tenant => other_tenant)
           results = described_class.filtered(klass, :user => owner_user)
           expect(results).to match_array [owned_resource]
+        end
+      end
+    end
+
+    context 'when class does not participate in RBAC' do
+      let(:miq_ae_domain) { FactoryGirl.create(:miq_ae_domain) }
+
+      it 'returns same class as input' do
+        User.with_user(admin_user) do
+          results = described_class.search(:targets => [miq_ae_domain]).first
+          expect(results.first).to be_an_instance_of(MiqAeDomain)
+          expect(results).to match_array [miq_ae_domain]
         end
       end
     end
@@ -72,6 +113,12 @@ describe Rbac::Filterer do
       it "with :miq_group_id finds Vm" do
         results = described_class.search(:class => "Vm", :miq_group_id => owner_group.id).first
         expect(results).to match_array [owned_vm]
+      end
+
+      it "with :extra_cols finds Service" do
+        FactoryGirl.create :service, :evm_owner => owner_user
+        results = described_class.search(:class => "Service", :extra_cols => [:owned_by_current_user]).first
+        expect(results.first.attributes["owned_by_current_user"]).to be false
       end
 
       it "leaving tenant doesnt find Vm" do
@@ -155,6 +202,53 @@ describe Rbac::Filterer do
         let(:owned_template) { FactoryGirl.create(:template_vmware, :tenant => owner_tenant) }
         let(:child_tenant)   { FactoryGirl.create(:tenant, :divisible => false, :parent => owner_tenant) }
         let(:child_group)    { FactoryGirl.create(:miq_group, :tenant => child_tenant) }
+
+        context 'with Vm as resource of VmPerformance model' do
+          let!(:root_tenant_vm)              { FactoryGirl.create(:vm_vmware, :tenant => Tenant.root_tenant) }
+          let!(:vm_performance_root_tenant)  { FactoryGirl.create(:vm_performance, :resource => root_tenant_vm) }
+          let!(:vm_performance_other_tenant) { FactoryGirl.create(:vm_performance, :resource => other_vm) }
+
+          it 'list only other_user\'s VmPerformances' do
+            results = described_class.search(:class => VmPerformance, :user => other_user).first
+            expect(results).to match_array [vm_performance_other_tenant]
+          end
+
+          it 'list all VmPerformances' do
+            results = described_class.search(:class => VmPerformance, :user => admin_user).first
+            expect(results).to match_array [vm_performance_other_tenant, vm_performance_root_tenant]
+          end
+
+          context 'with tags' do
+            let(:role)         { FactoryGirl.create(:miq_user_role) }
+            let(:tagged_group) { FactoryGirl.create(:miq_group, :tenant => Tenant.root_tenant, :miq_user_role => role) }
+            let(:user)         { FactoryGirl.create(:user, :miq_groups => [tagged_group]) }
+
+            before do
+              tagged_group.entitlement = Entitlement.new
+              tagged_group.entitlement.set_belongsto_filters([])
+              tagged_group.entitlement.set_managed_filters([["/managed/environment/prod"]])
+              tagged_group.save!
+            end
+
+            it 'lists only VmPerformances with tagged resources without any tenant restriction' do
+              root_tenant_vm.tag_with('/managed/environment/prod', :ns => '*')
+
+              results = described_class.search(:class => VmPerformance, :user => user).first
+              expect(results).to match_array [vm_performance_root_tenant]
+            end
+
+            it 'lists only VmPerformances with tagged resources with any tenant restriction' do
+              root_tenant_vm.tag_with('/managed/environment/prod', :ns => '*')
+              other_vm.tag_with('/managed/environment/prod', :ns => '*')
+
+              results = described_class.search(:class => VmPerformance, :user => other_user).first
+              expect(results).to match_array [vm_performance_other_tenant]
+
+              vm_or_template_records = described_class.search(:class => VmOrTemplate, :user => other_user).first
+              expect(results.map(&:resource_id)).to match_array vm_or_template_records.map(&:id)
+            end
+          end
+        end
 
         context "searching MiqTemplate" do
           it "can't see descendant tenant's templates" do
@@ -295,12 +389,81 @@ describe Rbac::Filterer do
       }
     end
 
-    context "with User and Group" do
-      def get_rbac_results_for_and_expect_objects(klass, expected_objects)
-        User.current_user = user
+    def get_rbac_results_for_and_expect_objects(klass, expected_objects)
+      User.current_user = user
 
-        results = described_class.search(:class => klass).first
-        expect(results).to match_array(expected_objects)
+      results = described_class.search(:class => klass).first
+      expect(results).to match_array(expected_objects)
+    end
+
+    context 'with Middleware models' do
+      context 'with tags' do
+        before do
+          group.entitlement = Entitlement.new
+          group.entitlement.set_belongsto_filters([])
+          group.entitlement.set_managed_filters([["/managed/environment/prod"]])
+          group.save!
+        end
+
+        let(:count_of_created_instances) { 2 }
+
+        %w(
+          MiddlewareDatasource
+          MiddlewareDeployment
+          MiddlewareDomain
+          MiddlewareMessaging
+          MiddlewareServer
+          MiddlewareServerGroup
+        ).each do |middleware_model|
+          it "returns tagged instance of #{middleware_model}" do
+            middleware_instances = FactoryGirl.create_list(middleware_model.tableize.singularize.to_sym,
+                                                           count_of_created_instances)
+            middleware_instances[0].tag_with('/managed/environment/prod', :ns => '*')
+            middleware_model_class = middleware_model.constantize
+            expect(middleware_model_class.count).to eq(count_of_created_instances)
+            get_rbac_results_for_and_expect_objects(middleware_model_class, [middleware_instances[0]])
+          end
+        end
+      end
+    end
+
+    context "with User and Group" do
+      context 'with tags' do
+        let!(:tagged_group) { FactoryGirl.create(:miq_group, :tenant => default_tenant) }
+        let!(:user)         { FactoryGirl.create(:user, :miq_groups => [tagged_group]) }
+        let!(:other_user)   { FactoryGirl.create(:user, :miq_groups => [group]) }
+
+        before do
+          tagged_group.entitlement = Entitlement.new
+          tagged_group.entitlement.set_belongsto_filters([])
+          tagged_group.entitlement.set_managed_filters([["/managed/environment/prod"]])
+          tagged_group.save!
+
+          tagged_group.tag_with('/managed/environment/prod', :ns => '*')
+          user.tag_with('/managed/environment/prod', :ns => '*')
+        end
+
+        it 'returns tagged users' do
+          expect(User.count).to eq(2)
+          get_rbac_results_for_and_expect_objects(User, [user])
+        end
+
+        it 'returns tagged groups' do
+          expect(MiqGroup.count).to eq(3)
+          get_rbac_results_for_and_expect_objects(MiqGroup, [tagged_group])
+        end
+
+        let(:tenant_administrator_user_role) do
+          FactoryGirl.create(:miq_user_role, :name => MiqUserRole::DEFAULT_TENANT_ROLE_NAME)
+        end
+
+        it 'returns tagged groups when user\'s role has disallowed other roles' do
+          tagged_group.miq_user_role = tenant_administrator_user_role
+          tagged_group.save!
+
+          expect(MiqGroup.count).to eq(3)
+          get_rbac_results_for_and_expect_objects(MiqGroup, [tagged_group])
+        end
       end
 
       it "returns all users" do
@@ -323,6 +486,47 @@ describe Rbac::Filterer do
 
         it "returns only the current group" do
           get_rbac_results_for_and_expect_objects(MiqGroup, [user.current_group])
+        end
+      end
+
+      context 'with EvmRole-tenant_administrator' do
+        let(:tenant_administrator_user_role) do
+          FactoryGirl.create(:miq_user_role, :name => MiqUserRole::DEFAULT_TENANT_ROLE_NAME)
+        end
+
+        let!(:super_administrator_user_role) do
+          FactoryGirl.create(:miq_user_role, :name => MiqUserRole::SUPER_ADMIN_ROLE_NAME)
+        end
+
+        let!(:administrator_user_role) do
+          FactoryGirl.create(:miq_user_role, :name => MiqUserRole::ADMIN_ROLE_NAME)
+        end
+
+        let(:group) do
+          FactoryGirl.create(:miq_group, :tenant => default_tenant, :miq_user_role => tenant_administrator_user_role)
+        end
+
+        let!(:user) { FactoryGirl.create(:user, :miq_groups => [group]) }
+
+        it 'can see all roles expect to EvmRole-super_administrator' do
+          expect(MiqUserRole.count).to eq(3)
+          get_rbac_results_for_and_expect_objects(MiqUserRole, [tenant_administrator_user_role])
+        end
+
+        it 'can see all groups expect to group with role EvmRole-super_administrator' do
+          expect(MiqUserRole.count).to eq(3)
+          get_rbac_results_for_and_expect_objects(MiqGroup, [group])
+        end
+
+        let(:super_admin_group) do
+          FactoryGirl.create(:miq_group, :tenant => default_tenant, :miq_user_role => super_administrator_user_role)
+        end
+
+        let!(:super_admin_user) { FactoryGirl.create(:user, :miq_groups => [super_admin_group]) }
+
+        it 'can see all users expect to user with group with role EvmRole-super_administrator' do
+          expect(User.count).to eq(2)
+          get_rbac_results_for_and_expect_objects(User, [user])
         end
       end
     end
@@ -590,6 +794,27 @@ describe Rbac::Filterer do
         end
       end
 
+      context "when applying a filter to the provider" do
+        let(:ems_cloud) { FactoryGirl.create(:ems_cloud) }
+
+        let!(:vm_1) do
+          FactoryGirl.create(:vm, :ext_management_system => ems_cloud)
+        end
+
+        let!(:vm_2) do
+          FactoryGirl.create(:vm, :ext_management_system => ems_cloud)
+        end
+
+        it "returns all host's VMs and templates when host filter is set up" do
+          group.entitlement = Entitlement.new
+          group.entitlement.set_managed_filters([])
+          group.entitlement.set_belongsto_filters(["/belongsto/ExtManagementSystem|#{ems_cloud.name}"])
+          group.save!
+
+          expect(described_class.search(:class => Vm, :user => user).first).to match_array([vm_1, vm_2])
+        end
+      end
+
       context "when applying a filter to the host and it's cluster (FB17114)" do
         before(:each) do
           @ems = FactoryGirl.create(:ems_vmware, :name => 'ems')
@@ -703,6 +928,21 @@ describe Rbac::Filterer do
           expect(attrs[:auth_count]).to eq(1)
           expect(results3.length).to eq(1)
         end
+
+        it 'searches Hosts with tag and host & cluster filters' do
+          group.entitlement = Entitlement.new
+          group.entitlement.set_belongsto_filters([@cluster_folder_path])
+          group.entitlement.set_managed_filters([['/managed/environment/prod']])
+          group.save!
+
+          @host_1.tag_with('/managed/environment/prod', :ns => '*')
+
+          results, attrs = described_class.search(:class => "Host", :user => user)
+
+          expect(attrs[:user_filters]).to eq("managed"   => [['/managed/environment/prod']], "belongsto" => [@cluster_folder_path])
+          expect(attrs[:auth_count]).to eq(1)
+          expect(results.length).to eq(1)
+        end
       end
     end
 
@@ -767,6 +1007,98 @@ describe Rbac::Filterer do
         it "works when targets are empty" do
           results = described_class.search(:class => "Service").first
           expect(results.length).to eq(5)
+        end
+      end
+    end
+
+    context 'with ansible ConfigurationScripts' do
+      describe ".search" do
+        let!(:ansible_configuration_script)          { FactoryGirl.create(:ansible_configuration_script) }
+        let!(:ansible_configuration_script_with_tag) { FactoryGirl.create(:ansible_configuration_script) }
+        let!(:ansible_playbook)                      { FactoryGirl.create(:ansible_playbook) }
+        let!(:ansible_playbook_with_tag)             { FactoryGirl.create(:ansible_playbook) }
+
+        it 'works when targets are empty' do
+          User.with_user(user) do
+            results = described_class.search(:class => 'ConfigurationScript').first
+            expect(results).to match_array([ansible_configuration_script, ansible_configuration_script_with_tag])
+
+            results = described_class.search(:class => 'ConfigurationScriptPayload').first
+            expect(results).to match_array([ansible_playbook, ansible_playbook_with_tag])
+          end
+        end
+
+        context 'with tagged ConfigurationScripts' do
+          before do
+            group.entitlement = Entitlement.new
+            group.entitlement.set_managed_filters([['/managed/environment/prod']])
+            group.entitlement.set_belongsto_filters([])
+            group.save!
+
+            ansible_configuration_script_with_tag.tag_with('/managed/environment/prod', :ns => '*')
+            ansible_playbook_with_tag.tag_with('/managed/environment/prod', :ns => '*')
+          end
+
+          it 'lists only tagged ConfigurationScripts' do
+            User.with_user(user) do
+              results = described_class.search(:class => 'ConfigurationScript').first
+              expect(results.length).to eq(1)
+              expect(results.first).to eq(ansible_configuration_script_with_tag)
+            end
+          end
+
+          it 'lists only tagged ConfigurationScriptPayload' do
+            User.with_user(user) do
+              results = described_class.search(:class => 'ConfigurationScriptPayload').first
+              expect(results).to match_array([ansible_playbook_with_tag])
+            end
+          end
+        end
+      end
+    end
+
+    context 'with network models' do
+      NETWORK_MODELS = %w(
+        CloudNetwork
+        CloudSubnet
+        FloatingIp
+        LoadBalancer
+        NetworkPort
+        NetworkRouter
+        SecurityGroup
+      ).freeze
+
+      NETWORK_MODELS.each do |network_model|
+        describe ".search" do
+          let!(:network_object)          { FactoryGirl.create(network_model.underscore) }
+          let!(:network_object_with_tag) { FactoryGirl.create(network_model.underscore) }
+          let(:network_object_ids)       { [network_object.id, network_object_with_tag.id] }
+
+          it 'works when targets are empty' do
+            User.with_user(user) do
+              results = described_class.search(:class => network_model, :targets => network_object_ids).first
+              expect(results).to match_array([network_object, network_object_with_tag])
+            end
+          end
+
+          context "with tagged #{network_model}" do
+            before do
+              group.entitlement = Entitlement.new
+              group.entitlement.set_managed_filters([['/managed/environment/prod']])
+              group.entitlement.set_belongsto_filters([])
+              group.save!
+
+              network_object_with_tag.tag_with('/managed/environment/prod', :ns => '*')
+            end
+
+            it "lists only tagged #{network_model}" do
+              User.with_user(user) do
+                results = described_class.search(:class => network_model).first
+                expect(results.length).to eq(1)
+                expect(results.first).to eq(network_object_with_tag)
+              end
+            end
+          end
         end
       end
     end
@@ -1085,6 +1417,13 @@ describe Rbac::Filterer do
       result = described_class.filtered(Vm.limit(2).order(:location), :filter => filter)
       expect(result.size).to eq(2)
     end
+
+    it "supports order on scopes" do
+      FactoryGirl.create(:vm_vmware, :location => "a")
+      FactoryGirl.create(:vm_vmware, :location => "b")
+      FactoryGirl.create(:vm_vmware, :location => "a")
+      expect(described_class.filtered(Vm.all.order(:location)).map(&:location)).to eq(%w(a a b))
+    end
   end
 
   describe ".filtered_object" do
@@ -1144,7 +1483,7 @@ describe Rbac::Filterer do
 
       it "skips lookup if current_group_id passed" do
         # ensuring same_group is a different object from user1.current_group
-        same_group = MiqGroup.find_by_id(user1.current_group.id)
+        same_group = MiqGroup.find_by(:id => user1.current_group.id)
         expect do
           _, group = filter.send(:lookup_user_group, user1, nil, same_group, nil)
           expect(group).to eq(same_group)
@@ -1218,6 +1557,92 @@ describe Rbac::Filterer do
     end
   end
 
+  describe "cloud_tenant based search" do
+    let(:ems_openstack)         { FactoryGirl.create(:ems_cloud) }
+    let(:project1_tenant)       { FactoryGirl.create(:tenant, :source_type => 'CloudTenant') }
+    let(:project1_cloud_tenant) { FactoryGirl.create(:cloud_tenant, :source_tenant => project1_tenant, :ext_management_system => ems_openstack) }
+    let(:project1_group)        { FactoryGirl.create(:miq_group, :tenant => project1_tenant) }
+    let(:project1_user)         { FactoryGirl.create(:user, :miq_groups => [project1_group]) }
+    let(:project1_volume)       { FactoryGirl.create(:cloud_volume, :ext_management_system => ems_openstack, :cloud_tenant => project1_cloud_tenant) }
+    let(:project1_flavor)       { FactoryGirl.create(:flavor, :ext_management_system => ems_openstack) }
+    let(:project1_c_t_flavor)   { FactoryGirl.create(:cloud_tenant_flavor, :cloud_tenant => project1_cloud_tenant, :flavor => project1_flavor) }
+    let(:project2_tenant)       { FactoryGirl.create(:tenant, :source_type => 'CloudTenant') }
+    let(:project2_cloud_tenant) { FactoryGirl.create(:cloud_tenant, :source_tenant => project2_tenant, :ext_management_system => ems_openstack) }
+    let(:project2_group)        { FactoryGirl.create(:miq_group, :tenant => project2_tenant) }
+    let(:project2_user)         { FactoryGirl.create(:user, :miq_groups => [project2_group]) }
+    let(:project2_volume)       { FactoryGirl.create(:cloud_volume, :ext_management_system => ems_openstack, :cloud_tenant => project2_cloud_tenant) }
+    let(:project2_flavor)       { FactoryGirl.create(:flavor, :ext_management_system => ems_openstack) }
+    let(:project2_c_t_flavor)   { FactoryGirl.create(:cloud_tenant_flavor, :cloud_tenant => project2_cloud_tenant, :flavor => project2_flavor) }
+    let(:ems_other)             { FactoryGirl.create(:ems_cloud, :name => 'ems_other', :tenant_mapping_enabled => false) }
+    let(:volume_other)          { FactoryGirl.create(:cloud_volume, :ext_management_system => ems_other) }
+    let(:tenant_other)          { FactoryGirl.create(:tenant, :source_type => 'CloudTenant') }
+    let(:cloud_tenant_other)    { FactoryGirl.create(:cloud_tenant, :source_tenant => tenant_other, :ext_management_system => ems_other) }
+    let(:flavor_other)          { FactoryGirl.create(:flavor, :ext_management_system => ems_other) }
+    let(:c_t_flavor_other)      { FactoryGirl.create(:cloud_tenant_flavor, :cloud_tenant => cloud_tenant_other, :flavor => flavor_other) }
+    let!(:all_objects)          { [project1_volume, project2_volume, volume_other, cloud_tenant_other, project1_c_t_flavor, project2_c_t_flavor, c_t_flavor_other] }
+
+    it "lists its own project's objects and other objects where tenant_mapping is not enabled" do
+      ems_openstack.tenant_mapping_enabled = true
+      ems_openstack.save!
+      results = described_class.search(:class => CloudVolume, :user => project1_user).first
+      expect(results).to match_array [project1_volume, volume_other]
+
+      results = described_class.search(:class => CloudVolume, :user => project2_user).first
+      expect(results).to match_array [project2_volume, volume_other]
+
+      results = described_class.search(:class => CloudVolume, :user => other_user).first
+      expect(results).to match_array [volume_other]
+
+      results = described_class.search(:class => CloudTenant, :user => project1_user).first
+      expect(results).to match_array [project1_cloud_tenant, cloud_tenant_other]
+
+      results = described_class.search(:class => CloudTenant, :user => project2_user).first
+      expect(results).to match_array [project2_cloud_tenant, cloud_tenant_other]
+
+      results = described_class.search(:class => CloudTenant, :user => other_user).first
+      expect(results).to match_array [cloud_tenant_other]
+
+      results = described_class.search(:class => Flavor, :user => project1_user).first
+      expect(results).to match_array [project1_flavor, flavor_other]
+
+      results = described_class.search(:class => Flavor, :user => project2_user).first
+      expect(results).to match_array [project2_flavor, flavor_other]
+
+      results = described_class.search(:class => Flavor, :user => other_user).first
+      expect(results).to match_array [flavor_other]
+    end
+
+    it "all objects are visible to all users when tenant_mapping is not enabled" do
+      ems_openstack.tenant_mapping_enabled = false
+      ems_openstack.save!
+      results = described_class.search(:class => CloudVolume, :user => project1_user).first
+      expect(results).to match_array [project1_volume, project2_volume, volume_other]
+
+      results = described_class.search(:class => CloudVolume, :user => project2_user).first
+      expect(results).to match_array [project1_volume, project2_volume, volume_other]
+
+      results = described_class.search(:class => CloudVolume, :user => owner_user).first
+      expect(results).to match_array [project1_volume, project2_volume, volume_other]
+
+      results = described_class.search(:class => CloudTenant, :user => project1_user).first
+      expect(results).to match_array [project1_cloud_tenant, project2_cloud_tenant, cloud_tenant_other]
+
+      results = described_class.search(:class => CloudTenant, :user => project2_user).first
+      expect(results).to match_array [project1_cloud_tenant, project2_cloud_tenant, cloud_tenant_other]
+
+      results = described_class.search(:class => CloudTenant, :user => other_user).first
+      expect(results).to match_array [project1_cloud_tenant, project2_cloud_tenant, cloud_tenant_other]
+
+      results = described_class.search(:class => Flavor, :user => project1_user).first
+      expect(results).to match_array [project1_flavor, project2_flavor, flavor_other]
+
+      results = described_class.search(:class => Flavor, :user => project2_user).first
+      expect(results).to match_array [project1_flavor, project2_flavor, flavor_other]
+
+      results = described_class.search(:class => Flavor, :user => other_user).first
+      expect(results).to match_array [project1_flavor, project2_flavor, flavor_other]
+    end
+  end
 
   private
 

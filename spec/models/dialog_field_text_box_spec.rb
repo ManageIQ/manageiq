@@ -1,4 +1,12 @@
 describe DialogFieldTextBox do
+  describe "#initial_values" do
+    let(:dialog_field) { described_class.new }
+
+    it "returns a blank string" do
+      expect(dialog_field.initial_values).to eq("")
+    end
+  end
+
   context "dialog field text box without options hash" do
     before do
       @df = FactoryGirl.build(:dialog_field_text_box, :label => 'test field', :name => 'test field')
@@ -95,13 +103,33 @@ describe DialogFieldTextBox do
         end
 
         it "returns an error when the value doesn't match the regex rule" do
-          df.value = '123'
+          df.value = 123
           expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field is invalid')
         end
 
         it "returns an error when no value is set" do
           df.value = nil
           expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field is required')
+        end
+
+        context "when the validation rule is supposed to match a set of integers" do
+          before do
+            df.validator_rule = '916'
+          end
+
+          context "when the value is a string" do
+            it "returns nil" do
+              df.value = '916'
+              expect(df.validate_field_data(dt, dg)).to be_nil
+            end
+          end
+
+          context "when the value is an integer" do
+            it "returns nil" do
+              df.value = 916
+              expect(df.validate_field_data(dt, dg)).to be_nil
+            end
+          end
         end
       end
 
@@ -122,14 +150,25 @@ describe DialogFieldTextBox do
         context "when data type is integer" do
           before { df.data_type = 'integer' }
 
-          it "returns nil when the value is a number" do
-            df.value = '123'
-            expect(df.validate_field_data(dt, dg)).to be_nil
+          context "when the value is a number string" do
+            it "returns nil" do
+              df.value = '123'
+              expect(df.validate_field_data(dt, dg)).to be_nil
+            end
           end
 
-          it "returns an error when the value is not a number" do
-            df.value = 'a12'
-            expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field must be an integer')
+          context "when the value is not a number string" do
+            it "returns an error" do
+              df.value = 'a12'
+              expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field must be an integer')
+            end
+          end
+
+          context "when the value is an actual integer" do
+            it "returns nil" do
+              df.value = 123
+              expect(df.validate_field_data(dt, dg)).to be_nil
+            end
           end
         end
       end
@@ -283,7 +322,7 @@ describe DialogFieldTextBox do
       it_behaves_like "DialogFieldTextBox#normalize_automate_values"
 
       it "returns the initial values" do
-        expect(dialog_field.normalize_automate_values(automate_hash)).to eq("<None>")
+        expect(dialog_field.normalize_automate_values(automate_hash)).to eq("")
       end
     end
 

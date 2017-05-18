@@ -1,4 +1,4 @@
-class CreateTenantQuota < ActiveRecord::Migration
+class CreateTenantQuota < ActiveRecord::Migration[4.2]
   def change
     create_table :tenant_quotas do |t|
       t.belongs_to :tenant, :type => :bigint

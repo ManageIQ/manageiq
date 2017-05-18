@@ -1,6 +1,6 @@
 module Api
   class ServiceDialogsController < BaseController
-    before_action :set_additional_attributes, :only => [:show]
+    before_action :set_additional_attributes, :only => [:index, :show]
 
     def refresh_dialog_fields_resource(type, id = nil, data = nil)
       raise BadRequestError, "Must specify an id for Reconfiguring a #{type} resource" unless id
@@ -11,6 +11,36 @@ module Api
 
         refresh_dialog_fields_service_dialog(service_dialog, data)
       end
+    end
+
+    def fetch_service_dialogs_content(resource)
+      resource.content(nil, nil, true)
+    end
+
+    def create_resource(_type, _id, data)
+      DialogImportService.new.import(data)
+    rescue => e
+      raise BadRequestError, "Failed to create a new dialog - #{e}"
+    end
+
+    def edit_resource(type, id, data)
+      service_dialog = resource_search(id, type, Dialog)
+      begin
+        service_dialog.update!(data.except('content'))
+        service_dialog.update_tabs(data['content']['dialog_tabs']) if data['content']
+      rescue => err
+        raise BadRequestError, "Failed to update service dialog - #{err}"
+      end
+      service_dialog
+    end
+
+    def copy_resource(type, id, data)
+      service_dialog = resource_search(id, type, Dialog)
+      attributes = data.dup
+      attributes['label'] = "Copy of #{service_dialog.label}" unless attributes.key?('label')
+      service_dialog.deep_copy(attributes).tap(&:save!)
+    rescue => err
+      raise BadRequestError, "Failed to copy service dialog - #{err}"
     end
 
     private

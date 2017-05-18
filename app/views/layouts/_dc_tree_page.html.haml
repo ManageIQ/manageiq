@@ -1,7 +1,0 @@
-.tree_div
-  %table{:style => 'height:100px;'}
-    %tr
-      %td{:width => '55%', :valign => 'top'}
-        = render(:partial => 'shared/tree',
-                 :locals  => {:tree => @datacenter_tree,
-                              :name => @datacenter_tree.name.to_s})

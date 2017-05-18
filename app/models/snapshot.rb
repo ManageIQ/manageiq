@@ -42,12 +42,12 @@ class Snapshot < ApplicationRecord
 
   def self.find_all_evm_snapshots(zone = nil)
     zone ||= MiqServer.my_server.zone
-    require 'MiqVimVm'
+    require 'VMwareWebService/MiqVimVm'
     Snapshot.where(:vm_or_template_id => zone.vm_or_template_ids, :name => MiqVimVm::EVM_SNAPSHOT_NAME).includes(:vm_or_template).to_a
   end
 
   def is_a_type?(stype)
-    require 'MiqVimVm'
+    require 'VMwareWebService/MiqVimVm'
     value = case stype.to_sym
             when :evm_snapshot        then MiqVimVm.const_get("EVM_SNAPSHOT_NAME")
             when :consolidate_helper  then MiqVimVm.const_get("CH_SNAPSHOT_NAME")
@@ -60,7 +60,7 @@ class Snapshot < ApplicationRecord
     if value == :system_snapshot
       return self.is_a_type?(:evm_snapshot) || self.is_a_type?(:consolidate_helper) || self.is_a_type?(:vcb_snapshot)
     elsif value.kind_of?(Regexp)
-      return value =~ name ? true : false
+      return !!(value =~ name)
     else
       return name == value
     end
@@ -86,8 +86,8 @@ class Snapshot < ApplicationRecord
   end
 
   def recently_created?
-    @recent_threshold ||= (VMDB::Config.new("vmdb").config.fetch_path(:ems_refresh, :raise_vm_snapshot_complete_if_created_within).to_i_with_method || 15.minutes)
-    create_time >= @recent_threshold.seconds.ago.utc
+    create_time >= ::Settings.ems_refresh.raise_vm_snapshot_complete_if_created_within.to_i_with_method
+                   .seconds.ago.utc
   end
 
   def not_recently_created?

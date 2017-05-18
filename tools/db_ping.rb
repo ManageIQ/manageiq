@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 total = 0
 5.times do
   ping = EvmDatabase.ping

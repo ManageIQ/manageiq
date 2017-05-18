@@ -3,13 +3,20 @@ class LiveMetric < ActsAsArModel
 
   class LiveMetricError < RuntimeError; end
 
+  # all attributes are virtual
+  # - attributes are dynamically generated and would be too much work to query/declare them all
+  # - returning true gets the column names into the REST query (via :includes)
+  def self.virtual_attribute?(_c)
+    true
+  end
+
   def self.find(*args)
     raw_query = args[1]
     validate_raw_query(raw_query)
     processed = process_conditions(raw_query[:conditions])
     resource = fetch_resource(processed[:resource_type], processed[:resource_id])
     filtered_cols = raw_query[:select] || raw_query[:include].keys.map(&:to_s)
-    if resource.nil?
+    if resource.nil? || (processed[:interval_name] == 'daily' && processed[:start_time] > processed[:end_time])
       []
     else
       filter_and_fetch_metrics(resource, filtered_cols, processed[:start_time],

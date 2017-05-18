@@ -1,4 +1,4 @@
-class AddDirectConfigurationTags < ActiveRecord::Migration
+class AddDirectConfigurationTags < ActiveRecord::Migration[4.2]
   def change
     create_table :direct_configuration_profiles_configuration_tags, :id => false do |t|
       t.belongs_to :configuration_profile, :type => :bigint

@@ -1,7 +1,5 @@
 describe EmsCluster::CapacityPlanning do
   before(:each) do
-    config = VMDB::Config.new('capacity').config
-    allow(EmsCluster).to receive(:capacity_settings).and_return(config.deep_clone)
     @cluster = FactoryGirl.create(:ems_cluster)
   end
 
@@ -28,59 +26,52 @@ describe EmsCluster::CapacityPlanning do
   end
 
   it "#capacity_profile_method_description" do
-    settings_path = [:profile, :"1", :vcpu_method_description]
-    expect(@cluster.capacity_profile_method_description(1, :vcpu))
-      .to eq(EmsCluster.capacity_settings.fetch_path(settings_path))
-    EmsCluster.capacity_settings.store_path(settings_path, "Test Description")
+    stub_settings(:capacity => {:profile => {'1' => {:vcpu_method_description => "Test Description"}}})
     expect(@cluster.capacity_profile_method_description(1, :vcpu)).to eq("Test Description")
   end
 
   context "#capacity_profile_method" do
     it "with invalid values" do
-      EmsCluster.capacity_settings.delete_path(:profile, :"1", :vcpu_method)
+      stub_settings(:capacity => {:profile => {'1' => {:vcpu_method => nil}}})
       expect { @cluster.capacity_profile_method(1, :vcpu) }.to raise_error(RuntimeError, /Invalid vcpu_method/)
-      EmsCluster.capacity_settings.store_path(:profile, :"1", :vcpu_method, "")
+
+      stub_settings(:capacity => {:profile => {'1' => {:vcpu_method => "invalidresource_average"}}})
       expect { @cluster.capacity_profile_method(1, :vcpu) }.to raise_error(RuntimeError, /Invalid vcpu_method/)
-      EmsCluster.capacity_settings.store_path(:profile, :"1", :vcpu_method, "invalidresource_average")
-      expect { @cluster.capacity_profile_method(1, :vcpu) }.to raise_error(RuntimeError, /Invalid vcpu_method/)
-      EmsCluster.capacity_settings.store_path(:profile, :"1", :vcpu_method, "vcpu_invalidalgorithm")
-      expect { @cluster.capacity_profile_method(1, :vcpu) }.to raise_error(RuntimeError, /Invalid vcpu_method/)
-      EmsCluster.capacity_settings.store_path(:profile, :"1", :vcpu_method, "mem_average") # resource does not match profile key
+      # resource does not match profile key
+      stub_settings(:capacity => {:profile => {'1' => {:vcpu_method => "mem_average"}}})
       expect { @cluster.capacity_profile_method(1, :vcpu) }.to raise_error(RuntimeError, /Invalid vcpu_method/)
     end
 
     it "with valid values" do
-      EmsCluster.capacity_settings.store_path(:profile, :"1", :vcpu_method, "vcpu_high_norm")
+      stub_settings(:capacity => {:profile => {'1' => {:vcpu_method => "vcpu_high_norm"}}})
       expect(@cluster.capacity_profile_method(1, :vcpu)).to eq(:vcpu_high_norm)
 
-      EmsCluster.capacity_settings.store_path(:profile, :"1", :memory_method, "mem_average")
+      stub_settings(:capacity => {:profile => {'1' => {:memory_method => "mem_average"}}})
       expect(@cluster.capacity_profile_method(1, :memory)).to eq(:memory_average)
     end
 
     it "with alternate valid values" do
-      EmsCluster.capacity_settings.store_path(:profile, :"1", :vcpu_method, "cpu_average")
+      stub_settings(:capacity => {:profile => {'1' => {:vcpu_method => "cpu_average"}}})
       expect(@cluster.capacity_profile_method(1, :vcpu)).to eq(:vcpu_average)
 
-      EmsCluster.capacity_settings.store_path(:profile, :"1", :memory_method, "memory_high_norm")
+      stub_settings(:capacity => {:profile => {'1' => {:memory_method => "memory_high_norm"}}})
       expect(@cluster.capacity_profile_method(1, :memory)).to eq(:memory_high_norm)
     end
   end
 
   it "#capacity_profile_minimum" do
-    settings_path = [:profile, :"1", :memory_minimum]
-    expect(@cluster.capacity_profile_minimum(1, :memory)).to be_nil
-    EmsCluster.capacity_settings.store_path(settings_path, "123")
+    stub_settings(:capacity => {:profile => {'1' => {:memory_minimum => 123}}})
     expect(@cluster.capacity_profile_minimum(1, :memory)).to eq(123)
-    EmsCluster.capacity_settings.store_path(settings_path, "1.gigabytes")
+
+    stub_settings(:capacity => {:profile => {'1' => {:memory_minimum => "1.gigabytes"}}})
     expect(@cluster.capacity_profile_minimum(1, :memory)).to eq(1.gigabytes.to_i)
   end
 
   it "#capacity_profile_maximum" do
-    settings_path = [:profile, :"1", :memory_maximum]
-    expect(@cluster.capacity_profile_maximum(1, :memory)).to be_nil
-    EmsCluster.capacity_settings.store_path(settings_path, "123")
+    stub_settings(:capacity => {:profile => {'1' => {:memory_maximum => 123}}})
     expect(@cluster.capacity_profile_maximum(1, :memory)).to eq(123)
-    EmsCluster.capacity_settings.store_path(settings_path, "1.gigabytes")
+
+    stub_settings(:capacity => {:profile => {'1' => {:memory_maximum => "1.gigabytes"}}})
     expect(@cluster.capacity_profile_maximum(1, :memory)).to eq(1.gigabytes.to_i)
   end
 
@@ -93,11 +84,7 @@ describe EmsCluster::CapacityPlanning do
     end
 
     it "with missing settings" do
-      EmsCluster.capacity_settings.delete_path(:profile, :"1", :vcpu_commitment_ratio)
-      EmsCluster.capacity_settings.delete_path(:profile, :"1", :memory_commitment_ratio)
-      EmsCluster.capacity_settings.delete_path(:profile, :"2", :vcpu_commitment_ratio)
-      EmsCluster.capacity_settings.delete_path(:profile, :"2", :memory_commitment_ratio)
-
+      stub_settings(:capacity => {:profile => {}})
       expect(@cluster.capacity_commitment_ratio(1, :vcpu)).to eq(1.0)
       expect(@cluster.capacity_commitment_ratio(1, :memory)).to eq(1.0)
       expect(@cluster.capacity_commitment_ratio(2, :vcpu)).to eq(1.0)
@@ -111,17 +98,12 @@ describe EmsCluster::CapacityPlanning do
     end
 
     it "with overridden settings" do
-      EmsCluster.capacity_settings.store_path(:failover, :rule, "none")
+      stub_settings(:capacity => {:failover => {:rule => "none"}})
       expect(@cluster.capacity_failover_rule).to eq("none")
     end
 
-    it "with missing settings" do
-      EmsCluster.capacity_settings.delete_path(:failover, :rule)
-      expect(@cluster.capacity_failover_rule).to eq("discovered")
-    end
-
     it "with invalid settings" do
-      EmsCluster.capacity_settings.store_path(:failover, :rule, "xxx")
+      stub_settings(:capacity => {:failover => {:rule => "xxx"}})
       expect(@cluster.capacity_failover_rule).to eq("discovered")
     end
   end
@@ -195,7 +177,7 @@ describe EmsCluster::CapacityPlanning do
 
   context "#capacity_failover_host_resources" do
     it "with failover rule 'none'" do
-      EmsCluster.capacity_settings.store_path(:failover, :rule, "none")
+      stub_settings(:capacity => {:failover => {:rule => "none"}})
       expect(@cluster.capacity_failover_host_resources(2, :vcpu)).to eq(0)
     end
 
@@ -294,44 +276,41 @@ describe EmsCluster::CapacityPlanning do
 
     context "with min only" do
       it "and min < expected" do
-        EmsCluster.capacity_settings.store_path(:profile, :"2", :vcpu_minimum, 1.0)
+        stub_settings(:capacity => {:profile => {'2' => {:vcpu_minimum => 1.0}}})
         expect(@cluster.capacity_resources_per_vm_with_min_max(2, :vcpu)).to eq(3.530)
       end
 
       it "and expected < min" do
-        EmsCluster.capacity_settings.store_path(:profile, :"2", :vcpu_minimum, 4.0)
+        stub_settings(:capacity => {:profile => {'2' => {:vcpu_minimum => 4.0}}})
         expect(@cluster.capacity_resources_per_vm_with_min_max(2, :vcpu)).to eq(4.0)
       end
     end
 
     context "with max only" do
       it "and max < expected" do
-        EmsCluster.capacity_settings.store_path(:profile, :"2", :vcpu_maximum, 1.0)
+        stub_settings(:capacity => {:profile => {'2' => {:vcpu_maximum => 1.0}}})
         expect(@cluster.capacity_resources_per_vm_with_min_max(2, :vcpu)).to eq(1.0)
       end
 
       it "and expected < max" do
-        EmsCluster.capacity_settings.store_path(:profile, :"2", :vcpu_maximum, 4.0)
+        stub_settings(:capacity => {:profile => {'2' => {:vcpu_maximum => 4.0}}})
         expect(@cluster.capacity_resources_per_vm_with_min_max(2, :vcpu)).to eq(3.530)
       end
     end
 
     context "with min and max" do
       it "and min < max < expected" do
-        EmsCluster.capacity_settings.store_path(:profile, :"2", :vcpu_minimum, 0.1)
-        EmsCluster.capacity_settings.store_path(:profile, :"2", :vcpu_maximum, 1.0)
+        stub_settings(:capacity => {:profile => {'2' => {:vcpu_minimum => 1.0, :vcpu_maximum => 1.0}}})
         expect(@cluster.capacity_resources_per_vm_with_min_max(2, :vcpu)).to eq(1.0)
       end
 
       it "and min < expected < max" do
-        EmsCluster.capacity_settings.store_path(:profile, :"2", :vcpu_minimum, 1.0)
-        EmsCluster.capacity_settings.store_path(:profile, :"2", :vcpu_maximum, 4.0)
+        stub_settings(:capacity => {:profile => {'2' => {:vcpu_minimum => 1.0, :vcpu_maximum => 4.0}}})
         expect(@cluster.capacity_resources_per_vm_with_min_max(2, :vcpu)).to eq(3.530)
       end
 
       it "and expected < min < max" do
-        EmsCluster.capacity_settings.store_path(:profile, :"2", :vcpu_minimum, 4.0)
-        EmsCluster.capacity_settings.store_path(:profile, :"2", :vcpu_maximum, 5.0)
+        stub_settings(:capacity => {:profile => {'2' => {:vcpu_minimum => 4.0, :vcpu_maximum => 5.0}}})
         expect(@cluster.capacity_resources_per_vm_with_min_max(2, :vcpu)).to eq(4.0)
       end
     end

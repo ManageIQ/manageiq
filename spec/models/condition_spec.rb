@@ -1,5 +1,41 @@
 describe Condition do
   describe ".subst" do
+    context "evaluation of virtual custom attributes from left and right side" do
+      let(:custom_attribute_1)         { FactoryGirl.create(:custom_attribute, :name => "attr_1", :value => 20) }
+      let(:custom_attribute_2)         { FactoryGirl.create(:custom_attribute, :name => "attr_2", :value => 30) }
+      let(:name_of_custom_attribute_1) { "VmOrTemplate-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}attr_1" }
+      let(:name_of_custom_attribute_2) { "VmOrTemplate-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}attr_2" }
+      let!(:vm) do
+        FactoryGirl.create(:vm, :memory_reserve => 10, :custom_attributes => [custom_attribute_1, custom_attribute_2])
+      end
+
+      before do
+        @filter_1 = MiqExpression.new(">" => {"field" => name_of_custom_attribute_1,
+                                              "value" => name_of_custom_attribute_2})
+
+        @filter_2 = MiqExpression.new(">" => {"field" => "VmOrTemplate-memory_reserve",
+                                              "value" => name_of_custom_attribute_2})
+
+        @filter_3 = MiqExpression.new(">" => {"field" => name_of_custom_attribute_1,
+                                              "value" => "VmOrTemplate-memory_reserve"})
+      end
+
+      it "evaluates custom attributes on both sides" do
+        condition_to_evaluate = Condition.subst(@filter_1.to_ruby(nil), vm)
+        expect(condition_to_evaluate).to eq('20 > 30')
+      end
+
+      it "evaluates custom attribute on right side and integer column of VmOrTemplate on left side" do
+        condition_to_evaluate = Condition.subst(@filter_2.to_ruby(nil), vm)
+        expect(condition_to_evaluate).to eq('10 > 30')
+      end
+
+      it "evaluates custom attribute on left side and integer column of VmOrTemplate on right side" do
+        condition_to_evaluate = Condition.subst(@filter_3.to_ruby(nil), vm)
+        expect(condition_to_evaluate).to eq('20 > 10')
+      end
+    end
+
     context "expression with <find>" do
       before do
         @cluster = FactoryGirl.create(:ems_cluster)
@@ -75,6 +111,18 @@ describe Condition do
         expr = "<registry>#{@reg_num.name}</registry>"
         expect(Condition.subst(expr, @vm)).to eq('"0"')
       end
+    end
+
+    it "does not change the scope for taggings when passed a Tag" do
+      tag = FactoryGirl.create(:tag, :name => "/managed/foo")
+      vm = FactoryGirl.create(:vm_vmware)
+      expr = "<value ref=tag, type=text>/virtual/name</value> == \"/managed/foo\""
+
+      described_class.subst(expr, tag)
+      vm.tag_add("foo", :ns => "/managed")
+      vm.reload
+
+      expect(vm.tags).to eq([tag])
     end
   end
 

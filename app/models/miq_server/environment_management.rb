@@ -48,14 +48,14 @@ module MiqServer::EnvironmentManagement
         if MiqEnvironment::Command.is_appliance?
           eth0 = LinuxAdmin::NetworkInterface.new("eth0")
 
-          ipaddr      = eth0.address
+          ipaddr      = eth0.address || eth0.address6
           hostname    = LinuxAdmin::Hosts.new.hostname
           mac_address = eth0.mac_address
         else
           require 'MiqSockUtil'
           ipaddr      = MiqSockUtil.getIpAddr
           hostname    = MiqSockUtil.getFullyQualifiedDomainName
-          mac_address = MiqUUID.mac_address.dup
+          mac_address = UUIDTools::UUID.mac_address.dup
         end
       rescue
       end
@@ -71,13 +71,13 @@ module MiqServer::EnvironmentManagement
       _log.info "Database Adapter: [#{ActiveRecord::Base.connection.adapter_name}], detailed version: [#{ActiveRecord::Base.connection.detailed_database_version}]" if ActiveRecord::Base.connection.respond_to?(:detailed_database_version)
     end
 
-    def start_memcached(cfg = VMDB::Config.new('vmdb'))
+    def start_memcached
       # TODO: Need to periodically check the memcached instance to see if it's up, and bounce it and notify the UiWorkers to re-connect
-      return unless cfg.config.fetch_path(:server, :session_store).to_s == 'cache'
+      return unless ::Settings.server.session_store.to_s == 'cache'
       return unless MiqEnvironment::Command.supports_memcached?
       require "#{Rails.root}/lib/miq_memcached" unless Object.const_defined?(:MiqMemcached)
-      svr, port = cfg.config.fetch_path(:session, :memcache_server).to_s.split(":")
-      opts = cfg.config.fetch_path(:session, :memcache_server_opts).to_s
+      _svr, port = ::Settings.session.memcache_server.to_s.split(":")
+      opts = ::Settings.session.memcache_server_opts.to_s
       MiqMemcached::Control.restart!(:port => port, :options => opts)
       _log.info("Status: #{MiqMemcached::Control.status[1]}")
     end
@@ -85,39 +85,36 @@ module MiqServer::EnvironmentManagement
     def prep_apache_proxying
       return unless MiqEnvironment::Command.supports_apache?
 
-      MiqApache::Control.stop
       MiqUiWorker.install_apache_proxy_config
       MiqWebServiceWorker.install_apache_proxy_config
       MiqWebsocketWorker.install_apache_proxy_config
+      MiqCockpitWsWorker.install_apache_proxy_config
+
+      # Because adding balancer members does a validation of the configuration
+      # files and these files try to load the redirect files among others,
+      # we need to add the balancers members after all configuration files have
+      # been written by install_apache_proxy_config.
+      MiqUiWorker.add_apache_balancer_members
+      MiqWebServiceWorker.add_apache_balancer_members
+      MiqWebsocketWorker.add_apache_balancer_members
+
+      MiqApache::Control.restart
     end
   end
 
   #
   # Apache
   #
-  def queue_restart_apache
-    MiqQueue.put_unless_exists(
-      :class_name  => 'MiqServer',
-      :instance_id => id,
-      :method_name => 'restart_apache',
-      :queue_name  => 'miq_server',
-      :zone        => zone.name,
-      :server_guid => guid
-    ) do |msg|
-      _log.info("Server: [#{id}] [#{name}], there is already a prior request to restart apache, skipping...") unless msg.nil?
-    end
-  end
-
-  def restart_apache
-    MiqApache::Control.restart(false)
+  def start_apache
+    MiqApache::Control.start
   end
 
   def stop_apache
-    MiqApache::Control.stop(false)
+    MiqApache::Control.stop
   end
 
   def disk_usage_threshold
-    ::Settings.server.events.disk_usage_gt_percent || 80
+    ::Settings.server.events.disk_usage_gt_percent
   end
 
   def check_disk_usage(disks)
@@ -134,7 +131,7 @@ module MiqServer::EnvironmentManagement
                          when '/var/log/audit'   then 'evm_server_var_log_audit_disk_high_usage'
                          when '/var/www/miq_tmp' then 'evm_server_miq_tmp_disk_high_usage'
                          when '/tmp'             then 'evm_server_tmp_disk_high_usage'
-                         when %r{pgsql/data}     then 'evm_server_db_disk_high_usage'
+                         when %r{lib/pgsql}      then 'evm_server_db_disk_high_usage'
                          end
 
       next unless disk_usage_event

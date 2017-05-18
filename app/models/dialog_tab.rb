@@ -30,6 +30,22 @@ class DialogTab < ApplicationRecord
     end
   end
 
+  def update_dialog_groups(groups)
+    updated_groups = []
+    groups.each do |group|
+      if group.key?('id')
+        DialogGroup.find(group['id']).tap do |dialog_group|
+          dialog_group.update_attributes(group.except('dialog_fields'))
+          dialog_group.update_dialog_fields(group['dialog_fields'])
+          updated_groups << dialog_group
+        end
+      else
+        updated_groups << DialogImportService.new.build_dialog_groups('dialog_groups' => [group]).first
+      end
+    end
+    self.dialog_groups = updated_groups
+  end
+
   def deep_copy
     dup.tap do |new_tab|
       new_tab.dialog_groups = dialog_groups.collect(&:deep_copy)

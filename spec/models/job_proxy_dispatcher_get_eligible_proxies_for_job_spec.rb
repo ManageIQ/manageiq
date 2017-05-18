@@ -19,7 +19,7 @@ describe "JobProxyDispatcherGetEligibleProxiesForJob" do
 
       context "with a vm scan job, " do
         before(:each) do
-          @job = @vm.scan
+          @job = @vm.raw_scan
           @jpd.instance_of?(JobProxyDispatcher) ? @jpd.instance_variable_set(:@vm, @vm) : @jpd.send(:class_variable_set, :@@vm, @vm)
           @jpd.instance_variable_set(:@vm, @vm)
         end

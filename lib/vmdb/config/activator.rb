@@ -32,10 +32,6 @@ module VMDB
         Vmdb::Loggers.apply_config(data)
       end
 
-      def ntp(_data)
-        MiqServer.my_server.ntp_reload_queue unless MiqServer.my_server.nil? rescue nil
-      end
-
       def session(data)
         Session.timeout data.timeout
         Session.interval data.interval
@@ -43,11 +39,6 @@ module VMDB
 
       def server(data)
         MiqServer.my_server.config_activated(data) unless MiqServer.my_server.nil? rescue nil
-      end
-
-      def workers(_data)
-        pgl = MiqPglogical.new
-        pgl.refresh_excludes if pgl.provider?
       end
     end
   end

@@ -101,7 +101,7 @@ describe Compliance do
             :miq_policy_content, :qualifier => 'failure', :failure_sequence => 1, :failure_synchronous => true
           )
         end
-        let(:event_definition) { MiqEventDefinition.find_by_name("vm_compliance_check") }
+        let(:event_definition) { MiqEventDefinition.find_by(:name => "vm_compliance_check") }
         let(:container_policy) do
           FactoryGirl.create(:miq_policy, :mode => 'compliance', :towhat => 'Container Image', :active => true)
         end
@@ -150,7 +150,7 @@ describe Compliance do
                              :active     => true)
         end
         let(:policy_set) { FactoryGirl.create(:miq_policy_set) }
-        let(:event_definition) { MiqEventDefinition.find_by_name("vm_compliance_check") }
+        let(:event_definition) { MiqEventDefinition.find_by(:name => "vm_compliance_check") }
 
         before do
           policy.sync_events([FactoryGirl.create(:miq_event_definition, :name => "vm_compliance_check")])

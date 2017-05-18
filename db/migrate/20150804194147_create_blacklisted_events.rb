@@ -1,4 +1,4 @@
-class CreateBlacklistedEvents < ActiveRecord::Migration
+class CreateBlacklistedEvents < ActiveRecord::Migration[4.2]
   def change
     create_table :blacklisted_events do |t|
       t.string  :event_name

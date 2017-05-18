@@ -19,7 +19,6 @@ db: MiqAction
 
 # Columns to fetch from the main table
 cols:
-- name
 - description
 - action_type_description
 

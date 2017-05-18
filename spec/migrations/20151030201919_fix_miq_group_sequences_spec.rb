@@ -15,7 +15,7 @@ describe FixMiqGroupSequences do
     end
 
     it "assigns guid" do
-      old_guid = MiqUUID.new_guid
+      old_guid = SecureRandom.uuid
       g1 = group_stub.create
       g2 = group_stub.create(:guid => old_guid)
 

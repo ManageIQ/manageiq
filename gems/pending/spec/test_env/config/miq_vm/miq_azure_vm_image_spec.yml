@@ -1,6 +1,0 @@
----
-:values:
-:filter:
-:default:
-  :image_name: test-win2k12
-  :image_uri: https://my-azure-storage-account2.blob.core.windows.net/system/Microsoft.Compute/Images/miq-test-container/test-win2k12-img-osDisk.e17a95b0-f4fb-4196-93c5-0c8be7d5c536.vhd

@@ -15,6 +15,12 @@ describe "AR Regions extension" do
     expect(base_class.id_to_region(25)).to eq(2)
   end
 
+  it ".id_in_region" do
+    expect(base_class.id_in_region(5, 0)).to eq(5)
+    expect(base_class.id_in_region(5, 1)).to eq(15)
+    expect(base_class.id_in_region(5, 2)).to eq(25)
+  end
+
   it ".region_to_range" do
     expect(base_class.region_to_range(0)).to eq(0..9)
     expect(base_class.region_to_range(1)).to eq(10..19)
@@ -22,24 +28,16 @@ describe "AR Regions extension" do
   end
 
   it ".compressed_id?" do
-    expect(base_class.compressed_id?(5)).to     be_falsey
-    expect(base_class.compressed_id?(15)).to    be_falsey
-    expect(base_class.compressed_id?(25)).to    be_falsey
-    expect(base_class.compressed_id?("5")).to   be_falsey
-    expect(base_class.compressed_id?("1r5")).to be_truthy
-    expect(base_class.compressed_id?("2r5")).to be_truthy
-  end
-
-  describe 'CID_OR_ID_MATCHER' do
-    subject { /^#{ArRegion::CID_OR_ID_MATCHER}$/ }
-    it { is_expected.to match('1') }
-    it { is_expected.to match('100023') }
-    it { is_expected.to match('1r23') }
-    it { is_expected.to match('10r10') }
-    it { is_expected.not_to match('hello') }
-    it { is_expected.not_to match('r1') }
-    it { is_expected.not_to match('1r') }
-    it { is_expected.not_to match('1rr1') }
+    expect(base_class.compressed_id?(5)).to        be_truthy
+    expect(base_class.compressed_id?(15)).to       be_truthy
+    expect(base_class.compressed_id?("5")).to      be_truthy
+    expect(base_class.compressed_id?('100023')).to be_truthy
+    expect(base_class.compressed_id?('1r23')).to   be_truthy
+    expect(base_class.compressed_id?('10r10')).to  be_truthy
+    expect(base_class.compressed_id?('hello')).to  be_falsey
+    expect(base_class.compressed_id?('r1')).to     be_falsey
+    expect(base_class.compressed_id?('1r')).to     be_falsey
+    expect(base_class.compressed_id?('1rr1')).to   be_falsey
   end
 
   it ".split_id" do

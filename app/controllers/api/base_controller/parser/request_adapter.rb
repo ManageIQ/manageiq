@@ -31,6 +31,10 @@ module Api
           @api_prefix ||= "#{base}#{prefix}"
         end
 
+        def api_suffix
+          @api_suffix ||= "?provider_class=#{@params['provider_class']}" if @params['provider_class']
+        end
+
         def attributes
           @attributes ||= @params['attributes'].to_s.split(',')
         end
@@ -44,6 +48,14 @@ module Api
         #
         def c_path_parts
           @c_path_parts ||= version_override? ? path.split('/')[3..-1] : path.split('/')[2..-1]
+        end
+
+        def subject
+          subcollection || collection
+        end
+
+        def subject_id
+          subcollection? ? s_id : c_id
         end
 
         def collection
@@ -68,8 +80,17 @@ module Api
           cid?(id) ? from_cid(id) : id
         end
 
+        def subcollection?
+          !!subcollection
+        end
+
         def expand?(what)
           expand_requested.include?(what.to_s)
+        end
+
+        def hide?(thing)
+          @hide ||= @params["hide"].to_s.split(",")
+          @hide.include?(thing)
         end
 
         def json_body
@@ -91,7 +112,7 @@ module Api
           @version ||= if version_override?
                          @params[:version][1..-1] # Switching API Version
                        else
-                         Settings.base[:version] # Default API Version
+                         ApiConfig.base[:version] # Default API Version
                        end
         end
 
@@ -102,7 +123,7 @@ module Api
         end
 
         def version_override?
-          @params[:version] && @params[:version].match(Settings.version[:regex]) # v#.# version signature
+          @params[:version] && @params[:version].match(ApiConfig.version[:regex]) # v#.# version signature
         end
 
         def fullpath

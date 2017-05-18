@@ -27,7 +27,7 @@ item_class: Vm
 search_method:
 limit_to_time:
 limit_to_count:
-orderby: "created_on DESC"
+orderby: "vms.created_on DESC"
 
 # Included tables and columns for query performance
 include:

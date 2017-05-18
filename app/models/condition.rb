@@ -44,12 +44,7 @@ class Condition < ApplicationRecord
     when "script"
       result = eval(expression["expr"].strip)
     when "tag"
-      case expression["include"]
-      when "any"
-        result = false
-      when "all", "none"
-        result = true
-      else
+      unless %w(any all none).include?(expression["include"])
         raise _("condition '%{name}', include value \"%{value}\", is invalid. Should be one of \"any, all or none\"") %
                 {:name => name, :value => expression["include"]}
       end
@@ -91,7 +86,7 @@ class Condition < ApplicationRecord
   end
 
   def self.do_eval(expr)
-    eval(expr) ? true : false
+    !!eval(expr)
   end
 
   def self.subst(expr, rec)
@@ -100,9 +95,6 @@ class Condition < ApplicationRecord
       expr = expr.gsub!(findexp) { |_s| _subst_find(rec, $1.strip) }
       MiqPolicy.logger.debug("MIQ(condition-_subst_find): Find Expression after substitution: [#{expr}]")
     end
-
-    # Make rec class act as miq taggable if not already since the substitution fully relies on virtual tags
-    rec.class.acts_as_miq_taggable unless rec.respond_to?("tag_list") || rec.kind_of?(Hash)
 
     # <mode>/virtual/operating_system/product_name</mode>
     # <mode WE/JWSref=host>/managed/environment/prod</mode>
@@ -124,7 +116,7 @@ class Condition < ApplicationRecord
       if ref.kind_of?(Hash)
         value = ref.fetch(tag, "")
       else
-        ref.nil? ? value = "" : value = ref.tag_list(:ns => tag)
+        value = ref.nil? ? "" : Tag.list(ref, :ns => tag)
       end
       value = MiqExpression.quote(value, ohash[:type] || "string")
     when "count"
@@ -248,10 +240,10 @@ class Condition < ApplicationRecord
     if ohash[:key_exists]
       return ref.registry_items.where("name LIKE ? ESCAPE ''", name + "%").exists?
     elsif ohash[:value_exists]
-      rec = ref.registry_items.find_by_name(name)
-      return rec ? true : false
+      rec = ref.registry_items.find_by(:name => name)
+      return !!rec
     else
-      rec = ref.registry_items.find_by_name(name)
+      rec = ref.registry_items.find_by(:name => name)
     end
     return nil unless rec
 
@@ -266,7 +258,7 @@ class Condition < ApplicationRecord
 
   def self.import_from_hash(condition, options = {})
     status = {:class => name, :description => condition["description"]}
-    c = Condition.find_by_guid(condition["guid"])
+    c = Condition.find_by(:guid => condition["guid"])
     msg_pfx = "Importing Condition: guid=[#{condition["guid"]}] description=[#{condition["description"]}]"
 
     if c.nil?

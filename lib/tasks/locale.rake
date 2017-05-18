@@ -41,7 +41,7 @@ namespace :locale do
   end
 
   desc "Extract strings from various yaml files and store them in a ruby file for gettext:find"
-  task :extract_yaml_strings do
+  task :extract_yaml_strings => :environment do
     def update_output(string, file, output)
       return if string.nil? || string.empty?
       if output.key?(string)
@@ -74,6 +74,9 @@ namespace :locale do
       "db/fixtures/miq_product_features.*" => %w(name description),
       "db/fixtures/miq_report_formats.*"   => %w(description),
       "db/fixtures/notification_types.*"   => %w(message),
+      "product/charts/layouts/*.yaml"      => %w(title),
+      "product/charts/layouts/*/*.yaml"    => %w(title),
+      "product/reports/*/*.*"              => %w(headers menu_name title),
       "product/timelines/miq_reports/*.*"  => %w(title name headers),
       "product/views/*.*"                  => %w(title name headers)
     }
@@ -180,5 +183,33 @@ namespace :locale do
     Dir["#{@engine.root}/locale/**/*.edit.po", "#{@engine.root}/locale/**/*.po.time_stamp"].each do |file|
       File.unlink(file)
     end
+  end
+
+  desc "Convert PO files from all plugins to JS files"
+  task "po_to_json" => :environment do
+    require_relative 'gettext_task_override.rb'
+    require Rails.root.join("lib/vmdb/gettext/domains")
+
+    po_files = {}
+    Vmdb::Gettext::Domains.paths.each do |path|
+      files = ::Pathname.glob(::File.join(path, "**", "*.po"))
+      files.each do |file|
+        locale = file.dirname.basename.to_s
+        po_files[locale] ||= []
+        po_files[locale].push(file)
+      end
+    end
+
+    combined_dir = File.join(Rails.root, "locale/combined")
+    Dir.mkdir(combined_dir, 0700)
+    po_files.keys.each do |locale|
+      dir = File.join(combined_dir, locale)
+      po = File.join(dir, 'manageiq.po')
+      Dir.mkdir(dir, 0700)
+      system "rmsgcat -o #{po} #{po_files[locale].join(' ')}"
+    end
+
+    Rake::Task['gettext:po_to_json'].invoke
+    system "rm -rf #{combined_dir}"
   end
 end

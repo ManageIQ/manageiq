@@ -2,7 +2,6 @@ class MiqUserRole < ApplicationRecord
   SUPER_ADMIN_ROLE_NAME = "EvmRole-super_administrator"
   ADMIN_ROLE_NAME       = "EvmRole-administrator"
   DEFAULT_TENANT_ROLE_NAME = "EvmRole-tenant_administrator"
-  include VirtualTotalMixin
 
   has_many                :entitlements, :dependent => :restrict_with_exception
   has_many                :miq_groups, :through => :entitlements
@@ -67,6 +66,14 @@ class MiqUserRole < ApplicationRecord
     (settings || {}).fetch_path(:restrictions, :vms) == :user
   end
 
+  def disallowed_roles
+    !super_admin_user? && Rbac::Filterer::DISALLOWED_ROLES_FOR_USER_ROLE[name]
+  end
+
+  def self.with_allowed_roles_for(user_or_group)
+    where.not(:name => user_or_group.disallowed_roles)
+  end
+
   def self.seed
     seed_from_array(YAML.load_file(FIXTURE_YAML))
 
@@ -80,7 +87,7 @@ class MiqUserRole < ApplicationRecord
       feature_ids = hash.delete(:miq_product_feature_identifiers)
 
       hash[:miq_product_features] = MiqProductFeature.where(:identifier => feature_ids).to_a
-      role = find_by_name(hash[:name]) || new(hash.except(:id))
+      role = find_by(:name => hash[:name]) || new(hash.except(:id))
       new_role = role.new_record?
       hash[:miq_product_features] &&= role.miq_product_features if !new_role && merge_features
       unless role.settings.nil? # Makse sure existing settings are merged in with the new ones.

@@ -69,7 +69,7 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
   end
 
   def update_field_visibility
-    show_dialog(:customize, :show, "disabled")
+    show_dialog(:customize, :show, "enabled")
     super(:force_platform => 'linux')
   end
 

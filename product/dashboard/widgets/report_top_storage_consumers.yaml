@@ -7,6 +7,7 @@ options:
   - ems_cluster.name
   - used_disk_storage
   :row_count: 10
+  :timezone_matters: false
 visibility:
   :roles:
   - _ALL_

@@ -46,15 +46,27 @@ class EvmApplication
     :no_db if error.message =~ /Connection refused/i
   end
 
-  def self.status
+  def self.status(include_remotes = false)
     puts "Checking EVM status..."
+
     server = MiqServer.my_server(true)
-    if server.nil?
+    servers = Set.new
+    servers << server if server
+    if include_remotes
+      all_servers =
+        MiqServer
+        .order(:zone_id, :status)
+        .includes(:active_roles, :miq_workers, :zone)
+        .all.to_a
+      servers.merge(all_servers)
+    end
+
+    if servers.empty?
       puts "Local EVM Server not Found"
     else
-      output_servers_status([server])
+      output_servers_status(servers)
       puts "\n"
-      output_workers_status(server.miq_workers)
+      output_workers_status(servers)
     end
   end
 
@@ -69,26 +81,32 @@ class EvmApplication
        s.drb_uri,
        s.started_on && s.started_on.iso8601,
        s.last_heartbeat && s.last_heartbeat.iso8601,
-       s.active_role_names.join(':')
+       s.is_master,
+       s.active_role_names.join(':'),
       ]
     end
-    header = ["Zone", "Server Name", "Status", "ID", "PID", "SPID", "URL", "Started On", "Last Heartbeat", "Active Roles"]
+    header = ["Zone", "Server", "Status", "ID", "PID", "SPID", "URL", "Started On", "Last Heartbeat", "Master?", "Active Roles"]
     puts data.unshift(header).tableize
   end
 
-  def self.output_workers_status(workers)
-    data = workers.sort_by(&:type).collect do |w|
-      [w.type,
-       w.status,
-       w.id,
-       w.pid,
-       w.sql_spid,
-       w.queue_name || w.uri,
-       w.started_on && w.started_on.iso8601,
-       w.last_heartbeat && w.last_heartbeat.iso8601
-      ]
+  def self.output_workers_status(servers)
+    data = []
+    servers.each do |s|
+      s.miq_workers.order(:type).each do |w|
+        data <<
+          [w.type,
+           w.status,
+           w.id,
+           w.pid,
+           w.sql_spid,
+           w.miq_server_id,
+           w.queue_name || w.uri,
+           w.started_on && w.started_on.iso8601,
+           w.last_heartbeat && w.last_heartbeat.iso8601]
+      end
     end
-    header = ["Worker Type", "Status", "ID", "PID", "SPID", "Queue Name / URL", "Started On", "Last Heartbeat"]
+
+    header = ["Worker Type", "Status", "ID", "PID", "SPID", "Server id", "Queue Name / URL", "Started On", "Last Heartbeat"]
     puts data.unshift(header).tableize unless data.empty?
   end
 

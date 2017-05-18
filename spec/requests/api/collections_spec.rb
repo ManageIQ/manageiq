@@ -10,7 +10,7 @@ describe "Rest API Collections" do
   end
 
   def test_collection_query(collection, collection_url, klass, attr = :id)
-    if Api::Settings.fetch_path(:collections, collection, :collection_actions, :get)
+    if Api::ApiConfig.fetch_path(:collections, collection, :collection_actions, :get)
       api_basic_authorize collection_action_identifier(collection, :read, :get)
     else
       api_basic_authorize
@@ -27,7 +27,7 @@ describe "Rest API Collections" do
 
     obj = id.nil? ? klass.first : klass.find(id)
     url = send("#{collection}_url", obj.id)
-    attr_list = String(Api::Settings.collections[collection].identifying_attrs).split(",")
+    attr_list = String(Api::ApiConfig.collections[collection].identifying_attrs).split(",")
     attr_list |= %w(guid) if klass.attribute_method?(:guid)
     resources = [{"id" => obj.id}, {"href" => url}]
     attr_list.each { |attr| resources << {attr => obj.public_send(attr)} }
@@ -44,6 +44,11 @@ describe "Rest API Collections" do
   end
 
   context "Collections" do
+    it "query Automate Domains" do
+      FactoryGirl.create(:miq_ae_domain)
+      test_collection_query(:automate_domains, automate_domains_url, MiqAeDomain)
+    end
+
     it "query Automation Requests" do
       FactoryGirl.create(:automation_request)
       test_collection_query(:automation_requests, automation_requests_url, AutomationRequest)
@@ -65,12 +70,12 @@ describe "Rest API Collections" do
     end
 
     it "query Currencies" do
-      FactoryGirl.create(:chargeback_rate_detail_currency_EUR)
+      FactoryGirl.create(:chargeback_rate_detail_currency)
       test_collection_query(:currencies, "/api/currencies", ChargebackRateDetailCurrency)
     end
 
     it "query Measures" do
-      FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
+      FactoryGirl.create(:chargeback_rate_detail_measure)
       test_collection_query(:measures, "/api/measures", ChargebackRateDetailMeasure)
     end
 
@@ -79,9 +84,19 @@ describe "Rest API Collections" do
       test_collection_query(:clusters, clusters_url, EmsCluster)
     end
 
+    it "query CloudVolumes" do
+      FactoryGirl.create(:cloud_volume)
+      test_collection_query(:cloud_volumes, cloud_volumes_url, CloudVolume)
+    end
+
     it "query Conditions" do
       FactoryGirl.create(:condition)
       test_collection_query(:conditions, conditions_url, Condition)
+    end
+
+    it "query Actions" do
+      FactoryGirl.create(:miq_action)
+      test_collection_query(:actions, actions_url, MiqAction)
     end
 
     it "query Data Stores" do
@@ -156,6 +171,11 @@ describe "Rest API Collections" do
     it "query Rates" do
       FactoryGirl.build(:chargeback_rate_detail)
       test_collection_query(:rates, rates_url, ChargebackRateDetail)
+    end
+
+    it "query Regions" do
+      FactoryGirl.create(:miq_region)
+      test_collection_query(:regions, regions_url, MiqRegion)
     end
 
     it "query Reports" do
@@ -239,7 +259,7 @@ describe "Rest API Collections" do
     end
 
     it "query Tenants" do
-      api_basic_authorize "rbac_tenant_show_list"
+      api_basic_authorize "rbac_tenant_view"
       Tenant.seed
       test_collection_query(:tenants, tenants_url, Tenant)
     end
@@ -264,43 +284,41 @@ describe "Rest API Collections" do
       test_collection_query(:container_deployments, container_deployments_url, ContainerDeployment)
     end
 
-    it 'queries ArbitrationProfiles' do
-      ems = FactoryGirl.create(:ext_management_system)
-      FactoryGirl.create(:arbitration_profile, :ems_id => ems.id)
-      test_collection_query(:arbitration_profiles, arbitration_profiles_url, ArbitrationProfile)
-    end
-
     it 'queries CloudNetworks' do
       FactoryGirl.create(:cloud_network)
       test_collection_query(:cloud_networks, cloud_networks_url, CloudNetwork)
     end
 
-    it 'queries ArbitrationSettings' do
-      FactoryGirl.create(:arbitration_setting)
-      test_collection_query(:arbitration_settings, arbitration_settings_url, ArbitrationSetting)
+    it 'queries CloudTenants' do
+      FactoryGirl.create(:cloud_tenant)
+      test_collection_query(:cloud_tenants, cloud_tenants_url, CloudTenant)
     end
 
-    it 'queries ArbitrationRules' do
-      FactoryGirl.create(:arbitration_rule)
-      test_collection_query(:arbitration_rules, arbitration_rules_url, ArbitrationRule)
+    it 'query LoadBalancers' do
+      FactoryGirl.create(:load_balancer)
+      test_collection_query(:load_balancers, load_balancers_url, LoadBalancer)
+    end
+
+    it 'query Alerts' do
+      FactoryGirl.create(:miq_alert_status)
+      test_collection_query(:alerts, alerts_url, MiqAlertStatus)
+    end
+
+    it 'query Firmwares' do
+      FactoryGirl.create(:firmware)
+      test_collection_query(:firmwares, firmwares_url, Firmware)
+    end
+
+    it 'query PhysicalServers' do
+      FactoryGirl.create(:physical_server)
+      test_collection_query(:physical_servers, physical_servers_url, PhysicalServer)
     end
   end
 
   context "Collections Bulk Queries" do
-    it 'bulk query ArbitrationProfiles' do
-      ems = FactoryGirl.create(:ext_management_system)
-      FactoryGirl.create(:arbitration_profile, :ems_id => ems.id)
-      test_collection_bulk_query(:arbitration_profiles, arbitration_profiles_url, ArbitrationProfile)
-    end
-
-    it 'bulk query ArbitrationRules' do
-      FactoryGirl.create(:arbitration_rule)
-      test_collection_bulk_query(:arbitration_rules, arbitration_rules_url, ArbitrationRule)
-    end
-
-    it 'bulk query ArbitrationSettings' do
-      FactoryGirl.create(:arbitration_setting)
-      test_collection_bulk_query(:arbitration_settings, arbitration_settings_url, ArbitrationSetting)
+    it 'bulk query MiqAeDomain' do
+      FactoryGirl.create(:miq_ae_domain)
+      test_collection_bulk_query(:automate_domains, automate_domains_url, MiqAeDomain)
     end
 
     it "bulk query Availability Zones" do
@@ -336,6 +354,11 @@ describe "Rest API Collections" do
     it "bulk query Conditions" do
       FactoryGirl.create(:condition)
       test_collection_bulk_query(:conditions, conditions_url, Condition)
+    end
+
+    it "bulk query Actions" do
+      FactoryGirl.create(:miq_action)
+      test_collection_bulk_query(:actions, actions_url, MiqAction)
     end
 
     it "bulk query ContainerDeployments" do
@@ -399,8 +422,13 @@ describe "Rest API Collections" do
     end
 
     it "bulk query Rates" do
-      FactoryGirl.create(:chargeback_rate_detail)
+      FactoryGirl.create(:chargeback_rate_detail, :chargeable_field => FactoryGirl.build(:chargeable_field))
       test_collection_bulk_query(:rates, rates_url, ChargebackRateDetail)
+    end
+
+    it "bulk query Regions" do
+      FactoryGirl.create(:miq_region)
+      test_collection_bulk_query(:regions, regions_url, MiqRegion)
     end
 
     it "bulk query Report Results" do
@@ -474,7 +502,7 @@ describe "Rest API Collections" do
     end
 
     it "bulk query Tenants" do
-      api_basic_authorize "rbac_tenant_show_list"
+      api_basic_authorize "rbac_tenant_view"
       Tenant.seed
       test_collection_bulk_query(:tenants, tenants_url, Tenant)
     end
@@ -487,6 +515,28 @@ describe "Rest API Collections" do
     it "bulk query Vms" do
       FactoryGirl.create(:vm_vmware)
       test_collection_bulk_query(:vms, vms_url, Vm)
+    end
+
+    it "doing a bulk query renders actions for which the user is authorized" do
+      vm = FactoryGirl.create(:vm_vmware)
+      api_basic_authorize(collection_action_identifier(:vms, :query), action_identifier(:vms, :start))
+
+      run_post(vms_url, gen_request(:query, [{"id" => vm.id, "href" => vms_url(vm.id)}]))
+
+      expected = {
+        "results" => [
+          a_hash_including(
+            "actions" => [
+              a_hash_including(
+                "name"   => "start",
+                "method" => "post",
+                "href"   => a_string_matching(vms_url(vm.id))
+              )
+            ]
+          )
+        ]
+      }
+      expect(response.parsed_body).to include(expected)
     end
 
     it "bulk query Vms with invalid guid fails" do
@@ -502,6 +552,31 @@ describe "Rest API Collections" do
     it "bulk query Zones" do
       FactoryGirl.create(:zone, :name => "api zone")
       test_collection_bulk_query(:zones, zones_url, Zone)
+    end
+
+    it 'bulk query LoadBalancers' do
+      FactoryGirl.create(:load_balancer)
+      test_collection_bulk_query(:load_balancers, load_balancers_url, LoadBalancer)
+    end
+
+    it 'bulk query CloudTenants' do
+      FactoryGirl.create(:cloud_tenant)
+      test_collection_bulk_query(:cloud_tenants, cloud_tenants_url, CloudTenant)
+    end
+
+    it 'bulk query CloudVolumes' do
+      FactoryGirl.create(:cloud_volume)
+      test_collection_bulk_query(:cloud_volumes, cloud_volumes_url, CloudVolume)
+    end
+
+    it 'bulk query Firmwares' do
+      FactoryGirl.create(:firmware)
+      test_collection_bulk_query(:firmwares, firmwares_url, Firmware)
+    end
+
+    it 'bulk query PhysicalServers' do
+      FactoryGirl.create(:physical_server)
+      test_collection_bulk_query(:physical_servers, physical_servers_url, PhysicalServer)
     end
   end
 end

@@ -26,8 +26,6 @@ cols:
 - v_install_date
 - is_valid
 - installed
-- created_on
-- updated_on
 
 # Included tables (joined, has_one, has_many) and columns
 include:

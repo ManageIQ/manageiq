@@ -98,19 +98,17 @@ class MiqQueue < ApplicationRecord
   end
 
   def self.put(options)
-    options = options.reverse_merge(
-      :priority     => NORMAL_PRIORITY,
-      :queue_name   => "generic",
-      :role         => nil,
-      :server_guid  => nil,
-      :msg_timeout  => TIMEOUT,
-      :deliver_on   => nil
-    ).merge(
+    options = options.merge(
       :zone         => Zone.determine_queue_zone(options),
       :state        => STATE_READY,
       :handler_type => nil,
       :handler_id   => nil,
     )
+
+    create_with_options = all.values[:create_with] || {}
+    options[:priority]    ||= create_with_options[:priority] || NORMAL_PRIORITY
+    options[:queue_name]  ||= create_with_options[:queue_name] || "generic"
+    options[:msg_timeout] ||= create_with_options[:msg_timeout] || TIMEOUT
     options[:task_id]      = $_miq_worker_current_msg.try(:task_id) unless options.key?(:task_id)
     options[:role]         = options[:role].to_s unless options[:role].nil?
 
@@ -155,33 +153,24 @@ class MiqQueue < ApplicationRecord
       options[:priority] || MIN_PRIORITY,
     ]
 
-    prefetch_max_per_worker = Settings.server.prefetch_max_per_worker || 10
+    prefetch_max_per_worker = Settings.server.prefetch_max_per_worker
     msgs = MiqQueue.where(cond).order("priority, id").limit(prefetch_max_per_worker)
-    return nil if msgs.empty? # Nothing available in the queue
 
     result = nil
     msgs.each do |msg|
       begin
         _log.info("#{MiqQueue.format_short_log_msg(msg)} previously timed out, retrying...") if msg.state == STATE_TIMEOUT
-        w = MiqWorker.server_scope.find_by(:pid => Process.pid)
-        if w.nil?
-          msg.update_attributes!(:state => STATE_DEQUEUE, :handler => MiqServer.my_server)
-        else
-          msg.update_attributes!(:state => STATE_DEQUEUE, :handler => w)
-        end
-        result = msg
-        break
+        handler = MiqWorker.my_worker || MiqServer.my_server
+        msg.update_attributes!(:state => STATE_DEQUEUE, :handler => handler)
+        _log.info("#{MiqQueue.format_full_log_msg(msg)}, Dequeued in: [#{Time.now.utc - msg.created_on}] seconds")
+        return msg
       rescue ActiveRecord::StaleObjectError
         result = :stale
       rescue => err
         raise _("%{log_message} \"%{error}\" attempting to get next message") % {:log_message => _log.prefix, :error => err}
       end
     end
-    if result == :stale
-      _log.debug("All #{prefetch_max_per_worker} messages stale, returning...")
-    else
-      _log.info("#{MiqQueue.format_full_log_msg(result)}, Dequeued in: [#{Time.now - result.created_on}] seconds")
-    end
+    _log.debug("All #{prefetch_max_per_worker} messages stale, returning...") if result == :stale
     result
   end
 
@@ -224,12 +213,8 @@ class MiqQueue < ApplicationRecord
   #   the record.  If the record was not found, the block's options will be
   #   used to put a new item on the queue.
   #
-  #   The find options may also contain an optional :args_selector proc that
-  #   will allow multiple records found by the find options to further be
-  #   searched against the args column, which is normally not easily searchable.
   def self.put_or_update(find_options)
     find_options  = default_get_options(find_options)
-    args_selector = find_options.delete(:args_selector)
     conds = find_options.dup
 
     # Since args are a serializable field, remove them and manually dump them
@@ -244,17 +229,10 @@ class MiqQueue < ApplicationRecord
 
     msg = nil
     loop do
-      msg = if args_selector
-              where_scope.order("priority, id").detect { |m| args_selector.call(m.args) }
-            else
-              where_scope.order("priority, id").first
-            end
+      msg = where_scope.order("priority, id").first
 
       save_options = block_given? ? yield(msg, find_options) : nil
-      unless save_options.nil?
-        save_options = save_options.dup
-        save_options.delete(:args_selector)
-      end
+      save_options = save_options.dup unless save_options.nil?
 
       # Add a new queue item based on the returned save options, or the find
       #   options if no save options were given.
@@ -357,13 +335,11 @@ class MiqQueue < ApplicationRecord
         _log.error("#{MiqQueue.format_short_log_msg(self)}, #{message}")
         status = STATUS_TIMEOUT
       end
-    rescue SystemExit
-      raise
     rescue MiqException::MiqQueueExpired
       message = "Expired on [#{expires_on}]"
       _log.error("#{MiqQueue.format_short_log_msg(self)}, #{message}")
       status = STATUS_EXPIRED
-    rescue Exception => error
+    rescue StandardError, SyntaxError => error
       _log.error("#{MiqQueue.format_short_log_msg(self)}, Error: [#{error}]")
       _log.log_backtrace(error) unless error.kind_of?(MiqException::Error)
       status = STATUS_ERROR

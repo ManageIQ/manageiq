@@ -42,6 +42,9 @@ module EmsRefresh::SaveInventoryHelper
       deletes.reload
     end
     deletes = deletes.to_a
+    deletes_index = deletes.index_by { |x| x }
+    # Alow GC to clean the AR objects as they are removed from deletes_index
+    deletes = nil
 
     child_keys = Array.wrap(child_keys)
     remove_keys = Array.wrap(extra_keys) + child_keys
@@ -49,16 +52,22 @@ module EmsRefresh::SaveInventoryHelper
     record_index = TypedIndex.new(association, find_key)
 
     new_records = []
-    hashes.each do |h|
-      found = save_inventory_with_findkey(association, h.except(*remove_keys), deletes, new_records, record_index)
-      save_child_inventory(found, h, child_keys)
+
+    ActiveRecord::Base.transaction do
+      hashes.each do |h|
+        found = save_inventory_with_findkey(association, h.except(*remove_keys), deletes_index, new_records, record_index)
+        save_child_inventory(found, h, child_keys)
+      end
     end
 
     # Delete the items no longer found
+    deletes = deletes_index.values
     unless deletes.blank?
-      type = association.proxy_association.reflection.name
-      _log.info("[#{type}] Deleting #{log_format_deletes(deletes)}")
-      disconnect ? deletes.each(&:disconnect_inv) : association.delete(deletes)
+      ActiveRecord::Base.transaction do
+        type = association.proxy_association.reflection.name
+        _log.info("[#{type}] Deleting #{log_format_deletes(deletes)}")
+        disconnect ? deletes.each(&:disconnect_inv) : association.delete(deletes)
+      end
     end
 
     # Add the new items
@@ -75,7 +84,7 @@ module EmsRefresh::SaveInventoryHelper
     child_keys = Array.wrap(child_keys)
     remove_keys = Array.wrap(extra_keys) + child_keys + [:id]
     if child
-      child.update_attributes!(hash.except(:type, *remove_keys))
+      update_attributes!(child, hash, [:type, *remove_keys])
     else
       child = parent.send("create_#{type}!", hash.except(*remove_keys))
     end
@@ -89,10 +98,16 @@ module EmsRefresh::SaveInventoryHelper
       found = association.build(hash.except(:id))
       new_records << found
     else
-      found.update_attributes!(hash.except(:id, :type))
+      update_attributes!(found, hash, [:id, :type])
       deletes.delete(found) unless deletes.blank?
     end
     found
+  end
+
+  def update_attributes!(ar_model, attributes, remove_keys)
+    ar_model.assign_attributes(attributes.except(*remove_keys))
+    # HACK: Avoid empty BEGIN/COMMIT pair until fix is made for https://github.com/rails/rails/issues/17937
+    ar_model.save! if ar_model.changed?
   end
 
   def backup_keys(hash, keys)
@@ -108,12 +123,25 @@ module EmsRefresh::SaveInventoryHelper
   end
 
   def store_ids_for_new_records(records, hashes, keys)
+    return if records.blank?
+
     keys = Array(keys)
-    hashes.each do |h|
-      r = records.detect { |r| keys.all? { |k| r.send(k) == r.class.type_for_attribute(k.to_s).cast(h[k]) } }
-      h[:id]      = r.id
-      h[:_object] = r
+    # Lets first index the hashes based on keys, so we can do O(1) lookups
+    record_index = records.index_by { |record| build_index_from_record(keys, record) }
+    record_class = records.first.class.base_class
+
+    hashes.each do |hash|
+      record = record_index[build_index_from_hash(keys, hash, record_class)]
+      hash[:id] = record.id
     end
+  end
+
+  def build_index_from_hash(keys, hash, record_class)
+    keys.map { |key| record_class.type_for_attribute(key.to_s).cast(hash[key]) }
+  end
+
+  def build_index_from_record(keys, record)
+    keys.map { |key| record.send(key) }
   end
 
   def link_children_references(records)
@@ -148,5 +176,23 @@ module EmsRefresh::SaveInventoryHelper
     top_level = association.proxy_association.options[:dependent] == :destroy
 
     top_level && (target == true || target.nil? || parent == target) ? :use_association : []
+  end
+
+  def get_cluster(ems, cluster_hash, rp_hash, dc_hash)
+    cluster = EmsCluster.find_by(:ems_ref => cluster_hash[:ems_ref], :ems_id => ems.id)
+    if cluster.nil?
+      rp = ems.resource_pools.create!(rp_hash)
+
+      cluster = ems.clusters.create!(cluster_hash)
+
+      cluster.add_resource_pool(rp)
+      cluster.save!
+
+      dc = Datacenter.find_by(:ems_ref => dc_hash[:ems_ref], :ems_id => ems.id)
+      dc.add_cluster(cluster)
+      dc.save!
+    end
+
+    cluster
   end
 end

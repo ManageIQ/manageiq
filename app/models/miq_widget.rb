@@ -39,29 +39,21 @@ class MiqWidget < ApplicationRecord
   end
 
   virtual_column :status,         :type => :string,    :uses => :miq_task
-  virtual_column :status_message, :type => :string,    :uses => :miq_task
-  virtual_column :queued_at,      :type => :datetime,  :uses => :miq_task
+  virtual_delegate :status_message, :to => "miq_task.message", :allow_nil => true, :default => "Unknown"
+  virtual_delegate :queued_at, :to => "miq_task.created_on", :allow_nil => true
   virtual_column :last_run_on,    :type => :datetime,  :uses => :miq_schedule
 
   def row_count(row_count_param = nil)
     row_count_param.try(:to_i) || options.try(:[], :row_count) || DEFAULT_ROW_COUNT
   end
 
-  def name
-    description
-  end
+  alias_attribute :name, :description
 
   def last_run_on
     last_generated_content_on || (miq_schedule && miq_schedule.last_run_on)
   end
 
-  def next_run_on
-    miq_schedule && miq_schedule.next_run_on
-  end
-
-  def queued_at
-    miq_task && miq_task.created_on
-  end
+  delegate :next_run_on, :to => :miq_schedule, :allow_nil => true
 
   def status
     if miq_task.nil?
@@ -69,34 +61,6 @@ class MiqWidget < ApplicationRecord
       return "Complete"
     end
     miq_task.human_status
-  end
-
-  def status_message
-    miq_task.nil? ? "Unknown" : miq_task.message
-  end
-
-  # Returns status, last_run_on, message
-  #   Status: None | Queued | Running | Complete
-  def generation_status
-    miq_task = self.miq_task
-
-    if miq_task.nil?
-      return "None" if last_run_on.nil?
-      return "Complete", last_run_on
-    end
-
-    status =  case miq_task.state
-              when MiqTask::STATE_QUEUED
-                "Queued"
-              when MiqTask::STATE_FINISHED
-                "Complete"
-              when MiqTask::STATE_ACTIVE
-                "Running"
-              else
-                raise "Unknown state=#{miq_task.state.inspect}"
-              end
-
-    return status, last_run_on, miq_task.message
   end
 
   def create_task(num_targets, userid = User.current_userid)
@@ -121,7 +85,7 @@ class MiqWidget < ApplicationRecord
   end
 
   def generate_content_options(group, users)
-    content_option_generator.generate(group, users)
+    content_option_generator.generate(group, users, timezone_matters?)
   end
 
   def timeout_stalled_task
@@ -230,7 +194,7 @@ class MiqWidget < ApplicationRecord
       return
     end
 
-    if VMDB::Config.new("vmdb").config[:product][:report_sync]
+    if ::Settings.product.report_sync
       group_hash.each do |g, u|
         options = generate_content_options(g, u)
         generate_content(*options)
@@ -354,6 +318,7 @@ class MiqWidget < ApplicationRecord
   end
 
   def find_or_build_contents_for_user(group, user, timezone = nil)
+    timezone = "UTC" if timezone && !timezone_matters?
     settings_for_build = {:miq_group_id => group.id}
     settings_for_build[:user_id]  = user.id  if user
     settings_for_build[:timezone] = timezone if timezone
@@ -372,7 +337,7 @@ class MiqWidget < ApplicationRecord
     group ||= user.current_group
 
     options = generate_content_options(group, [user])
-    if VMDB::Config.new("vmdb").config[:product][:report_sync]
+    if ::Settings.product.report_sync
       generate_content(*options)
     else
       timeout_stalled_task
@@ -387,6 +352,7 @@ class MiqWidget < ApplicationRecord
 
   def contents_for_owner(group, user, timezone = nil)
     return unless group
+    timezone = "UTC" if timezone && !timezone_matters?
     conditions = {:miq_group_id => group.id}
     conditions[:user_id]   = user.id if user
     conditions[:timezone] = timezone if timezone
@@ -395,8 +361,9 @@ class MiqWidget < ApplicationRecord
 
   def contents_for_user(user)
     user = self.class.get_user(user)
-    contents = contents_for_owner(user.current_group, user, user.get_timezone)
-    contents ||= contents_for_owner(user.current_group, nil, user.get_timezone)
+    timezone = timezone_matters? ? user.get_timezone : "UTC"
+    contents = contents_for_owner(user.current_group, user, timezone)
+    contents ||= contents_for_owner(user.current_group, nil, timezone)
     contents
   end
 
@@ -423,12 +390,9 @@ class MiqWidget < ApplicationRecord
     end
   end
 
-  def timezones_for_users(users)
-    users.to_miq_a.collect(&:get_timezone).uniq.sort
-  end
-
   def available_for_group?(group)
-    group ? has_visibility?(:roles, group.miq_user_role_name) : false
+    return false unless group
+    has_visibility?(:roles, group.miq_user_role_name) || has_visibility?(:groups, group.description)
   end
 
   def self.available_for_user(user)
@@ -476,9 +440,9 @@ class MiqWidget < ApplicationRecord
 
     case group
     when String
-      group = MiqGroup.in_my_region.find_by_description(group)
+      group = MiqGroup.in_my_region.find_by(:description => group)
     when Fixnum
-      group = MiqGroup.in_my_region.find_by_id(group)
+      group = MiqGroup.in_my_region.find_by(:id => group)
     end
 
     _log.warn("Unable to find group '#{original}'") if group.nil?
@@ -500,13 +464,13 @@ class MiqWidget < ApplicationRecord
     rname = attrs.delete("resource_name")
     if rname && attrs["resource_type"]
       klass = attrs.delete("resource_type").constantize
-      attrs["resource"] = klass.find_by_name(rname)
+      attrs["resource"] = klass.find_by(:name => rname)
       raise _("Unable to find %{class} with name %{name}") % {:class => klass, :name => rname} unless attrs["resource"]
     end
 
     schedule_info = attrs.delete("miq_schedule_options")
 
-    widget = find_by_description(attrs["description"])
+    widget = find_by(:description => attrs["description"])
     if widget
       if filename && widget.updated_at.utc < File.mtime(filename).utc
         $log.info("Widget: [#{widget.description}] file has been updated on disk, synchronizing with model")
@@ -575,10 +539,7 @@ class MiqWidget < ApplicationRecord
   end
 
   def self.seed
-    MiqReport.seed
-    RssFeed.seed
     sync_from_dir
-    MiqWidgetSet.seed
   end
 
   def self.seed_widget(pattern)
@@ -602,6 +563,14 @@ class MiqWidget < ApplicationRecord
 
   def delete_legacy_contents_for_group(group)
     MiqWidgetContent.where(:miq_widget_id => id, :miq_group_id => group.id, :user_id => nil).destroy_all
+  end
+
+  # default: timezone does matter
+  # options[:timezone_matters] == false will skip it
+  # TODO: detect date field in the report?
+  def timezone_matters?
+    return true unless options
+    options.fetch(:timezone_matters, true)
   end
 
   private

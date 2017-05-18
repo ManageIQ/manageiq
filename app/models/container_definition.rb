@@ -1,4 +1,6 @@
 class ContainerDefinition < ApplicationRecord
+  include ArchivedMixin
+  include_concern 'Purging'
   # :name, :image, :image_pull_policy, :memory, :cpu
   belongs_to :container_group
   belongs_to :ext_management_system, :foreign_key => :ems_id
@@ -9,10 +11,10 @@ class ContainerDefinition < ApplicationRecord
   has_one :container_image,         :through => :container
 
   def disconnect_inv
+    return if ems_id.nil?
     _log.info "Disconnecting Container definition [#{name}] id [#{id}]"
     self.container.try(:disconnect_inv)
     self.deleted_on = Time.now.utc
-    self.container_group = nil
     self.old_ems_id = self.ems_id
     self.ems_id = nil
     save

@@ -1,5 +1,3 @@
-require "rails_helper"
-
 RSpec.describe MiqExpression::Field do
   describe ".parse" do
     it "can parse the model name" do
@@ -52,9 +50,44 @@ RSpec.describe MiqExpression::Field do
       expect(described_class.parse(field).associations).to eq(%w(host hardware))
     end
 
+    it "will return nil when given a field with unsupported syntax" do
+      field = "Vm,host+name"
+      expect(described_class.parse(field)).to be_nil
+    end
+
+    it "will return nil when given a tag" do
+      tag = "Vm.managed-name"
+      expect(described_class.parse(tag)).to be_nil
+
+      tag = "Vm.hosts.managed-name"
+      expect(described_class.parse(tag)).to be_nil
+
+      tag = "Vm.user_tag-name"
+      expect(described_class.parse(tag)).to be_nil
+
+      tag = "Vm.hosts.user_tag-name"
+      expect(described_class.parse(tag)).to be_nil
+    end
+
+    it 'parses field with numbers in association' do
+      field = 'Vm.win32_services-dependencies'
+      expect(described_class.parse(field)).to have_attributes(:model        => Vm,
+                                                              :associations => %w(win32_services),
+                                                              :column       => 'dependencies')
+    end
+  end
+
+  describe "#parse!" do
+    it "can parse the model name" do
+      field = "Vm-name"
+      expect(described_class.parse(field).model).to be(Vm)
+    end
+
+    # this calls out to parse, so just needed to make sure one value worked
+
     it "will raise a parse error when given a field with unsupported syntax" do
       field = "Vm,host+name"
-      expect { described_class.parse(field) }.to raise_error(MiqExpression::Field::ParseError)
+      expect { described_class.parse!(field) }.to raise_error(MiqExpression::Field::ParseError)
     end
   end
 
@@ -146,6 +179,79 @@ RSpec.describe MiqExpression::Field do
     it "returns true if the column is on a 'has_and_belongs_to_many' association" do
       field = described_class.new(Vm, ["storages"], "name")
       expect(field).to be_plural
+    end
+  end
+
+  describe "#column_type" do
+    it "detects :string" do
+      field = described_class.new(Vm, [], "name")
+      expect(field.column_type).to eq(:string)
+    end
+
+    it "detects :integer" do
+      field = described_class.new(Vm, [], "id")
+      expect(field.column_type).to eq(:integer)
+    end
+  end
+
+  describe "sql detection" do
+    it "detects if column is supported by sql with custom_attribute" do
+      expect(MiqExpression::Field.parse("Vm-virtual_custom_attribute_example").attribute_supported_by_sql?).to be_falsey
+    end
+
+    it "detects if column is supported by sql with regular column" do
+      expect(MiqExpression::Field.parse("Vm-name").attribute_supported_by_sql?).to be_truthy
+    end
+  end
+
+  describe "#virtual_attribute?" do
+    it "detects non-virtual" do
+      expect(MiqExpression::Field.parse("Vm-name")).not_to be_virtual_attribute
+    end
+
+    it "detects virtual" do
+      expect(MiqExpression::Field.parse("Vm-host_name")).to be_virtual_attribute
+    end
+
+    it "detects non-virtual through a relation" do
+      expect(MiqExpression::Field.parse("Host.vms-name")).not_to be_virtual_attribute
+    end
+
+    it "detects virtual through a relation" do
+      expect(MiqExpression::Field.parse("Host.vms-host_name")).to be_virtual_attribute
+    end
+  end
+
+  describe "#sub_type" do
+    it "detects :string" do
+      field = described_class.new(Vm, [], "name")
+      expect(field.sub_type).to eq(:string)
+    end
+
+    it "detects :integer" do
+      field = described_class.new(Vm, [], "id")
+      expect(field.sub_type).to eq(:integer)
+    end
+  end
+
+  describe "#numeric?" do
+    it "detects integer as numeric" do
+      expect(MiqExpression::Field.parse("Vm-id")).to be_numeric
+    end
+
+    it "detects string as non-numeric" do
+      expect(MiqExpression::Field.parse("Vm-name")).not_to be_numeric
+    end
+  end
+
+  describe "#is_field?" do
+    it "detects a valid field" do
+      expect(MiqExpression::Field.is_field?("Vm-name")).to be_truthy
+    end
+
+    it "does not detect a string to looks like a field but isn't" do
+      expect(MiqExpression::Field.is_field?("NetworkManager-team")).to be_falsey
+      expect(described_class.is_field?("ManageIQ-name")).to be(false)
     end
   end
 end

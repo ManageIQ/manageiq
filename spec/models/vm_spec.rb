@@ -1,5 +1,5 @@
 describe Vm do
-  include_examples "miq ownership"
+  include_examples "OwnershipMixin"
 
   it "#corresponding_model" do
     expect(Vm.corresponding_model).to eq(MiqTemplate)
@@ -114,7 +114,7 @@ describe Vm do
 
   context "#invoke_tasks_local" do
     before(:each) do
-      @guid, @server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.create_guid_miq_server_zone
       @host = FactoryGirl.create(:host)
       @vm = FactoryGirl.create(:vm_vmware, :host => @host)
     end
@@ -190,6 +190,41 @@ describe Vm do
     end
   end
 
+  context "#scan" do
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+      @host = FactoryGirl.create(:host_vmware)
+      @vm = FactoryGirl.create(
+        :vm_vmware,
+        :host      => @host,
+        :miq_group => FactoryGirl.create(:miq_group)
+      )
+      FactoryGirl.create(:miq_event_definition, :name => :request_vm_scan)
+      # admin user is needed to process Events
+      User.super_admin || FactoryGirl.create(:user_with_group, :userid => "admin")
+    end
+
+    it "policy passes" do
+      expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:raw_scan)
+
+      allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'sucess', MiqAeEngine::MiqAeWorkspaceRuntime.new])
+      @vm.scan
+      status, message, result = MiqQueue.first.deliver
+      MiqQueue.first.delivered(status, message, result)
+    end
+
+    it "policy prevented" do
+      expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm).to_not receive(:raw_scan)
+
+      event = {:attributes => {"full_data" => {:policy => {:prevented => true}}}}
+      allow_any_instance_of(MiqAeEngine::MiqAeWorkspaceRuntime).to receive(:get_obj_from_path).with("/").and_return(:event_stream => event)
+      allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'sucess', MiqAeEngine::MiqAeWorkspaceRuntime.new])
+      @vm.scan
+      status, message, _result = MiqQueue.first.deliver
+      MiqQueue.first.delivered(status, message, MiqAeEngine::MiqAeWorkspaceRuntime.new)
+    end
+  end
+
   it "#save_drift_state" do
     # TODO: Beef up with more data
     vm = FactoryGirl.create(:vm_vmware)
@@ -217,5 +252,51 @@ describe Vm do
       :users               => [],
       :win32_services      => [],
     })
+  end
+
+  it '#set_remote_console_url' do
+    vm = FactoryGirl.create(:vm_vmware)
+    vm.send(:remote_console_url=, url = 'http://www.redhat.com', 1)
+
+    console = SystemConsole.find_by(:vm_id => vm.id)
+    expect(console.url).to eq(url)
+    expect(console.url_secret).to be
+  end
+
+  it '#add_to_service' do
+    vm = FactoryGirl.create(:vm_vmware)
+    service = FactoryGirl.create(:service)
+
+    vm.add_to_service(service)
+    service.reload
+    expect(service.vms.count).to eq(1)
+  end
+
+  context "#cockpit_url" do
+    before(:each) do
+      @csv = <<-CSV.gsub(/^\s+/, "")
+        name,description,max_concurrent,external_failover,role_scope
+        cockpit_ws,Cockpit,1,false,zone
+      CSV
+      allow(ServerRole).to receive(:seed_data).and_return(@csv)
+      ServerRole.seed
+      _, _, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      @ems = FactoryGirl.create(:ext_management_system, :zone => @zone)
+    end
+
+    it "is direct when no role" do
+      vm = FactoryGirl.create(:vm_openstack)
+      allow(vm).to receive_messages(:ipaddresses => ["10.0.0.1"])
+      expect(vm.cockpit_url).to eq(URI::HTTP.build(:host => "10.0.0.1", :port => 9090))
+    end
+
+    it "uses dashboard redirect when cockpit role is active" do
+      vm = FactoryGirl.create(:vm_openstack, :ext_management_system => @ems)
+      allow(vm).to receive_messages(:ipaddresses => ["10.0.0.1"])
+      server = FactoryGirl.create(:miq_server, :ipaddress => "10.0.0.2", :has_active_cockpit_ws => true, :zone => @zone)
+      server.assign_role('cockpit_ws', 1)
+      server.activate_roles('cockpit_ws')
+      expect(vm.cockpit_url).to eq(URI.parse("https://10.0.0.2/cws/=10.0.0.1"))
+    end
   end
 end

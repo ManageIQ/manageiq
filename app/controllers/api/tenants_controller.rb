@@ -1,6 +1,6 @@
 module Api
   class TenantsController < BaseController
-    INVALID_TENANT_ATTRS = %w(id href ancestry)
+    INVALID_TENANT_ATTRS = %w(id href ancestry).freeze
 
     include Subcollections::Tags
     include Subcollections::Quotas
@@ -32,7 +32,7 @@ module Api
 
     def parse_set_parent(data)
       parent = parse_fetch_tenant(data.delete("parent"))
-      data.merge!("parent" => parent) if parent
+      data["parent"] = parent if parent
     end
 
     def data_includes_invalid_attrs(data)

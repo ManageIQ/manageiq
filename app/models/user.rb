@@ -1,7 +1,6 @@
 class User < ApplicationRecord
   include RelationshipMixin
   acts_as_miq_taggable
-  include RegionMixin
   has_secure_password
   include CustomAttributeMixin
   include ActiveVmAggregationMixin
@@ -17,14 +16,13 @@ class User < ApplicationRecord
   has_many   :miq_widget_sets, :as => :owner, :dependent => :destroy
   has_many   :miq_reports, :dependent => :nullify
   has_many   :service_orders, :dependent => :nullify
-  has_many   :shares
+  has_many   :owned_shares, :class_name => "Share"
   has_many   :notification_recipients, :dependent => :delete_all
   has_many   :notifications, :through => :notification_recipients
   has_many   :unseen_notification_recipients, -> { unseen }, :class_name => 'NotificationRecipient'
   has_many   :unseen_notifications, :through => :unseen_notification_recipients, :source => :notification
   belongs_to :current_group, :class_name => "MiqGroup"
   has_and_belongs_to_many :miq_groups
-  scope      :admin, -> { where(:userid => "admin") }
   scope      :superadmins, lambda {
     joins(:miq_groups => :miq_user_role).where(:miq_user_roles => {:name => MiqUserRole::SUPER_ADMIN_ROLE_NAME })
   }
@@ -33,13 +31,13 @@ class User < ApplicationRecord
 
   delegate   :miq_user_role, :current_tenant, :get_filters, :has_filters?, :get_managed_filters, :get_belongsto_filters,
              :to => :current_group, :allow_nil => true
-  delegate   :super_admin_user?, :admin_user?, :self_service?, :limited_self_service?,
+  delegate   :super_admin_user?, :admin_user?, :self_service?, :limited_self_service?, :disallowed_roles,
              :to => :miq_user_role, :allow_nil => true
 
-  validates_presence_of   :name, :userid, :region
-  validates_uniqueness_of :userid, :scope => :region
-  validates_format_of     :email, :with => /\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i,
-    :allow_nil => true, :message => "must be a valid email address"
+  validates_presence_of   :name, :userid
+  validates :userid, :unique_within_region => {:match_case => false}
+  validates :email, :format => {:with => MoreCoreExtensions::StringFormats::RE_EMAIL,
+                                :allow_nil => true, :message => "must be a valid email address"}
   validates_inclusion_of  :current_group, :in => proc { |u| u.miq_groups }, :allow_nil => true
 
   # use authenticate_bcrypt rather than .authenticate to avoid confusion
@@ -48,6 +46,10 @@ class User < ApplicationRecord
 
   serialize     :settings, Hash   # Implement settings column as a hash
   default_value_for(:settings) { Hash.new }
+
+  def self.with_allowed_roles_for(user_or_group)
+    includes(:miq_groups => :miq_user_role).where.not(:miq_user_roles => {:name => user_or_group.disallowed_roles})
+  end
 
   def self.scope_by_tenant?
     true
@@ -69,24 +71,16 @@ class User < ApplicationRecord
     {table_name => {:id => users_ids}}
   end
 
-  def self.in_region
-    where(:region => my_region_number)
-  end
-
-  def self.in_my_region
-    where(:id => region_to_range(my_region_number))
-  end
-
   def self.find_by_userid(userid)
-    in_region.find_by(:userid => userid)
+    in_my_region.find_by(:userid => userid)
   end
 
   def self.find_by_userid!(userid)
-    in_region.find_by!(:userid => userid)
+    in_my_region.find_by!(:userid => userid)
   end
 
   def self.find_by_email(email)
-    in_region.find_by(:email => email)
+    in_my_region.find_by(:email => email)
   end
 
   # find a user by lowercase email
@@ -112,7 +106,7 @@ class User < ApplicationRecord
   def current_group_by_description=(group_description)
     if group_description
       desired_group = miq_groups.detect { |g| g.description == group_description }
-      desired_group ||= MiqGroup.find_by_description(group_description) if super_admin_user?
+      desired_group ||= MiqGroup.find_by(:description => group_description) if super_admin_user?
       self.current_group = desired_group if desired_group
     end
   end
@@ -158,7 +152,7 @@ class User < ApplicationRecord
   end
 
   def self.authenticator(username = nil)
-    Authenticator.for(VMDB::Config.new("vmdb").config[:authentication], username)
+    Authenticator.for(::Settings.authentication.to_hash, username)
   end
 
   def self.authenticate(username, password, request = nil, options = {})
@@ -171,6 +165,11 @@ class User < ApplicationRecord
 
   def self.lookup_by_identity(username)
     authenticator(username).lookup_by_identity(username)
+  end
+
+  def self.authorize_user(userid)
+    return if userid.blank? || admin?(userid)
+    authenticator(userid).authorize_user(userid)
   end
 
   def logoff
@@ -204,6 +203,10 @@ class User < ApplicationRecord
   end
 
   def admin?
+    self.class.admin?(userid)
+  end
+
+  def self.admin?(userid)
     userid == "admin"
   end
 
@@ -271,7 +274,7 @@ class User < ApplicationRecord
       _log.info("Creating user with parameters #{log_attrs.inspect}")
 
       group_description = user_attributes.delete(:group)
-      group = MiqGroup.in_my_region.find_by_description(group_description)
+      group = MiqGroup.in_my_region.find_by(:description => group_description)
 
       _log.info("Creating #{user_id} user...")
       user = create(user_attributes)

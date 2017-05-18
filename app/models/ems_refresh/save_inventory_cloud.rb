@@ -46,10 +46,10 @@ module EmsRefresh::SaveInventoryCloud
     end
 
     child_keys = [
+      :cloud_tenants,
       :flavors,
       :availability_zones,
       :host_aggregates,
-      :cloud_tenants,
       :key_pairs,
       :orchestration_templates,
       :orchestration_templates_catalog,
@@ -88,6 +88,10 @@ module EmsRefresh::SaveInventoryCloud
               else
                 []
               end
+
+    hashes.each do |h|
+      h[:cloud_tenant_ids] = (h.delete(:cloud_tenants) || []).compact.map { |x| x[:id] }.uniq
+    end
 
     save_inventory_multi(ems.flavors, hashes, deletes, [:ems_ref])
     store_ids_for_new_records(ems.flavors, hashes, :ems_ref)
@@ -261,7 +265,7 @@ module EmsRefresh::SaveInventoryCloud
     target = ems if target.nil?
 
     ems.cloud_object_store_containers.reset
-    deletes = if (target == ems)
+    deletes = if target == ems
                 :use_association
               else
                 []
@@ -280,7 +284,7 @@ module EmsRefresh::SaveInventoryCloud
     target = ems if target.nil?
 
     ems.cloud_object_store_objects.reset
-    deletes = if (target == ems)
+    deletes = if target == ems
                 :use_association
               else
                 []

@@ -1,7 +1,6 @@
-
 require 'rubygems'
 require 'log4r'
-require 'MiqVim'
+require 'VMwareWebService/MiqVim'
 
 if ARGV.length != 1
   $stderr.puts "Usage: #{$0} ems_name"
@@ -14,7 +13,7 @@ ems_name  = ARGV[0]
 # password  = ARGV[2]
 
 begin
-  ems = ExtManagementSystem.find_by_name(ems_name)
+  ems = ExtManagementSystem.find_by(:name => ems_name)
   username, password = ems.auth_user_pwd(:ws)
 
   puts "Connecting to #{ems.hostname}..."

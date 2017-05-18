@@ -9,10 +9,12 @@ module Spec
       def build_all_atomics(hash)
         hash.each do |name, value|
           next unless value[:type] == "atomic"
+
           item = FactoryGirl.create(:service_template, :name         => name,
                                                        :options      => {:dialog => {}},
                                                        :service_type => 'atomic')
           item.update_attributes(:prov_type => value[:prov_type]) if value[:prov_type].present?
+          next if value[:prov_type] && value[:prov_type].starts_with?("generic")
           options = value[:request]
           options ||= {}
           options[:dialog] = {}
@@ -27,8 +29,37 @@ module Spec
       def build_all_composites(hash)
         hash.each do |name, value|
           next unless value[:type] == "composite"
-          next if ServiceTemplate.find_by_name(name)
+          next if ServiceTemplate.find_by(:name => name)
           build_a_composite(name, hash)
+        end
+      end
+
+      def build_model_from_vms(items)
+        model = {}
+        child_options = {}
+        children = []
+        items.each_with_index do |item, index|
+          key = "vm_service#{index + 1}"
+          model[key] = add_item(item)
+          children.append(key)
+          child_options[key] = {:provision_index => index}
+        end
+
+        model['top'] = { :type          => 'composite',
+                         :children      => children,
+                         :child_options => child_options }
+
+        build_service_template_tree(model)
+      end
+
+      def add_item(item)
+        if item.respond_to?(:prov_type)
+          {:type => 'atomic', :prov_type => item.prov_type}
+        else
+          {:type      => 'atomic',
+           :prov_type => item.vendor,
+           :request   => {:src_vm_id => item.id, :number_of_vms => 1, :requester => @user}
+          }
         end
       end
 
@@ -45,7 +76,7 @@ module Spec
         children = properties[:children]
         child_options = properties.key?(:child_options) ? properties[:child_options] : {}
         children.each do |name|
-          child_item = ServiceTemplate.find_by_name(name) || build_a_composite(name, hash)
+          child_item = ServiceTemplate.find_by(:name => name) || build_a_composite(name, hash)
           add_st_resource(item, child_item, child_options.fetch(name, {}))
         end
       end
@@ -56,7 +87,7 @@ module Spec
       end
 
       def build_service_template_request(root_st_name, user, dialog_options = {})
-        root = ServiceTemplate.find_by_name(root_st_name)
+        root = ServiceTemplate.find_by(:name => root_st_name)
         return nil unless root
         options = {:src_id => root.id, :target_name => "barney"}.merge(dialog_options)
         FactoryGirl.create(:service_template_provision_request,

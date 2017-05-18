@@ -23,7 +23,7 @@
   - Timeline-Current-Hourly:Hourly events on this Cluster
   - Display-Hosts-bytag:Hosts for <cat> that were running
   - Display-VMs-bytag:VMs for <cat> that were running
-q
+
 - :title: Disk I/O (blocks per second)
   :type: Line
   :columns:

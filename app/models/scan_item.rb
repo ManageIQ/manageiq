@@ -83,7 +83,7 @@ class ScanItem < ApplicationRecord
 
   def self.get_profile(set_name)
     profiles = []
-    si = ScanItemSet.find_by_name(set_name)
+    si = ScanItemSet.find_by(:name => set_name)
     if si
       y = si.attributes
       y["definition"] = []
@@ -102,7 +102,7 @@ class ScanItem < ApplicationRecord
 
     el.each_element do |profile|
       guid = profile.attributes['guid']
-      sis = ScanItemSet.find_by_guid(guid)
+      sis = ScanItemSet.find_by(:guid => guid)
       if sis.nil?
         _log.warn "Unable to find ScanItemSet [guid: #{guid}] in the database."
         next
@@ -112,7 +112,7 @@ class ScanItem < ApplicationRecord
         item_type = e.attributes['item_type']
         guid = e.attributes['guid']
 
-        si = ScanItem.find_by_guid(guid)
+        si = ScanItem.find_by(:guid => guid)
         if si.nil?
           _log.warn "Unable to find ScanItem [guid: #{guid} type: #{item_type}] in the database."
           next

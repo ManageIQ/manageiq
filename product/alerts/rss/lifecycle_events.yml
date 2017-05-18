@@ -25,7 +25,8 @@ item_class: LifecycleEvent
 search_method: 
 limit_to_time: 
 limit_to_count: 
-orderby: "created_on DESC"
+orderby:
+  :created_on: :desc
 
 # Included tables and columns for query performance
 include:

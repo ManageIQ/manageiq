@@ -29,6 +29,12 @@ describe Authenticator::Httpd do
     end
   end
 
+  describe '.user_authorizable_without_authentication?' do
+    it "is true" do
+      expect(subject.user_authorizable_without_authentication?).to be_truthy
+    end
+  end
+
   describe '#lookup_by_identity' do
     it "finds existing users" do
       expect(subject.lookup_by_identity('alice')).to eq(alice)
@@ -64,7 +70,7 @@ describe Authenticator::Httpd do
     end
 
     let(:username) { 'alice' }
-    let(:user_groups) { 'wibble:bubble' }
+    let(:user_groups) { 'wibble@fqdn:bubble@fqdn' }
 
     context "with user details" do
       context "using local authorization" do
@@ -288,6 +294,72 @@ describe Authenticator::Httpd do
             expect(task.status).to eq('Error')
             expect(MiqTask.status_error?(task.status)).to be_truthy
           end
+        end
+
+        context "when fullname is blank" do
+          let(:username) { 'betty' }
+          let(:headers) do
+            super().merge('X-Remote-User-FullName'  => '',
+                          'X-Remote-User-FirstName' => 'Betty',
+                          'X-Remote-User-LastName'  => 'Boop',
+                          'X-Remote-User-Email'     => 'betty@example.com')
+          end
+
+          it "creates a new User with name set to FirstName + LastName" do
+            expect(-> { authenticate }).to change { User.where(:name => 'Betty Boop').count }.from(0).to(1)
+          end
+        end
+
+        context "when fullname, firstname and lastname are blank" do
+          let(:username) { 'sam' }
+          let(:headers) do
+            super().merge('X-Remote-User-FullName'  => '',
+                          'X-Remote-User-FirstName' => '',
+                          'X-Remote-User-LastName'  => '',
+                          'X-Remote-User-Email'     => 'sam@example.com')
+          end
+
+          it "creates a new User with name set to the userid" do
+            expect(-> { authenticate }).to change { User.where(:name => 'sam').count }.from(0).to(1)
+          end
+        end
+      end
+
+      describe ".user_attrs_from_external_directory" do
+        before do
+          require "dbus"
+          sysbus = double('sysbus')
+          ifp_service = double('ifp_service')
+          ifp_object  = double('ifp_object')
+          @ifp_interface = double('ifp_interface')
+
+          allow(DBus).to receive(:system_bus).and_return(sysbus)
+          allow(sysbus).to receive(:[]).with("org.freedesktop.sssd.infopipe").and_return(ifp_service)
+          allow(ifp_service).to receive(:object).with("/org/freedesktop/sssd/infopipe").and_return(ifp_object)
+          allow(ifp_object).to receive(:introspect)
+          allow(ifp_object).to receive(:[]).with("org.freedesktop.sssd.infopipe").and_return(@ifp_interface)
+        end
+
+        it "should return nil for unspecified user" do
+          expect(subject.send(:user_attrs_from_external_directory, nil)).to be_nil
+        end
+
+        it "should return user attributes hash for valid user" do
+          requested_attrs = %w(mail givenname sn displayname)
+
+          jdoe_attrs = [{"mail"        => ["jdoe@example.com"],
+                         "givenname"   => ["John"],
+                         "sn"          => ["Doe"],
+                         "displayname" => ["John Doe"]}]
+
+          expected_jdoe_attrs = {"mail"        => "jdoe@example.com",
+                                 "givenname"   => "John",
+                                 "sn"          => "Doe",
+                                 "displayname" => "John Doe"}
+
+          allow(@ifp_interface).to receive(:GetUserAttr).with('jdoe', requested_attrs).and_return(jdoe_attrs)
+
+          expect(subject.send(:user_attrs_from_external_directory, 'jdoe')).to eq(expected_jdoe_attrs)
         end
       end
     end

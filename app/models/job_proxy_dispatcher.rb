@@ -33,7 +33,7 @@ class JobProxyDispatcher
           .includes(:ext_management_system => :zone, :storage => :hosts)
           .order(:id)
         end
-        zone = Zone.find_by_name(@zone)
+        zone = Zone.find_by(:name => @zone)
         concurrent_vm_scans_limit = zone.settings.blank? ? 0 : zone.settings[:concurrent_vm_scans].to_i
 
         jobs_to_dispatch.each do |job|
@@ -79,7 +79,7 @@ class JobProxyDispatcher
 
           if proxy
             # Skip this embedded scan if the host/vc we'd need has already exceeded the limit
-            next if proxy.kind_of?(MiqServer) && self.embedded_resource_limit_exceeded?(job)
+            next if embedded_resource_limit_exceeded?(job)
             _log.info "STARTING job: [#{job.guid}] on proxy: [#{proxy.name}]"
             Benchmark.current_realtime[:start_job_on_proxy_count] += 1
             Benchmark.realtime_block(:start_job_on_proxy) { start_job_on_proxy(job, proxy) }
@@ -165,35 +165,31 @@ class JobProxyDispatcher
 
   def start_job_on_proxy(job, proxy)
     assign_proxy_to_job(proxy, job)
-    _log.info "Job [#{job.guid}] update: userid: [#{job.userid}], name: [#{job.name}], target class: [#{job.target_class}], target id: [#{job.target_id}], process type: [#{job.type}], agent class: [#{job.agent_class}], agent id: [#{job.agent_id}]"
-    job_options = {:args => ["start"], :zone => MiqServer.my_zone}
-    job_options.merge!(:server_guid => proxy.guid, :role => "smartproxy") if proxy.kind_of?(MiqServer)
+    _log.info "Job #{job.attributes_log}"
+    job_options = {:args => ["start"], :zone => MiqServer.my_zone, :server_guid => proxy.guid, :role => "smartproxy"}
     @active_vm_scans_by_zone[MiqServer.my_zone] += 1
     queue_signal(job, job_options)
   end
 
   def assign_proxy_to_job(proxy, job)
-    job.agent_id        = proxy.id
-    job.agent_class     = proxy.class.to_s
-    job.agent_id        = proxy.id
-    job.agent_class     = proxy.class.to_s
-    job.agent_name      = proxy.name
+    job.miq_server_id   = proxy.id
     job.started_on      = Time.now.utc
     job.dispatch_status = "active"
     job.save
 
     # Increment the counts for busy proxies and busy hosts for embedded
-    busy_proxies["#{job.agent_class}_#{job.agent_id}"] ||= 0
-    busy_proxies["#{job.agent_class}_#{job.agent_id}"] += 1
+    busy_proxies["MiqServer_#{job.miq_server_id}"] ||= 0
+    busy_proxies["MiqServer_#{job.miq_server_id}"] += 1
 
     # Track the host/vc resource for embedded scans so we can limit the resource impact
-    if proxy.kind_of?(MiqServer)
-      key = embedded_scan_resource(@vm)
-      if key
-        busy_resources_for_embedded_scanning[key] ||= 0
-        busy_resources_for_embedded_scanning[key] += 1
-      end
+    if (key = embedded_scan_resource(@vm))
+      busy_resources_for_embedded_scanning[key] ||= 0
+      busy_resources_for_embedded_scanning[key] += 1
     end
+  end
+
+  def self.waiting?
+    Job.where(:state => 'waiting_to_start').exists?
   end
 
   def pending_jobs(target_class = VmOrTemplate)
@@ -249,10 +245,10 @@ class JobProxyDispatcher
     @busy_proxies_hash ||= begin
       Job.where(:dispatch_status => "active")
       .where("state != ?", "finished")
-      .select([:agent_id, :agent_class])
+      .select([:miq_server_id])
       .each_with_object({}) do |j, busy_hsh|
-        busy_hsh["#{j.agent_class}_#{j.agent_id}"] ||= 0
-        busy_hsh["#{j.agent_class}_#{j.agent_id}"] += 1
+        busy_hsh["MiqServer_#{j.miq_server_id}"] ||= 0
+        busy_hsh["MiqServer_#{j.miq_server_id}"] += 1
       end
     end
   end
@@ -290,10 +286,9 @@ class JobProxyDispatcher
 
     vms_in_embedded_scanning =
       Job.where(:dispatch_status => "active")
-      .where(:agent_class      => "MiqServer")
       .where(:target_class     => "VmOrTemplate")
       .where("state != ?", "finished")
-      .select("target_id").collect(&:target_id).compact.uniq
+      .pluck(:target_id).compact.uniq
     return @busy_resources_for_embedded_scanning_hash if vms_in_embedded_scanning.blank?
 
     embedded_scans_by_resource = Hash.new { |h, k| h[k] = 0 }
@@ -313,10 +308,6 @@ class JobProxyDispatcher
     end
   end
 
-  cache_with_timeout(:coresident_miqproxy, 30.seconds) do
-    MiqServer.my_server.get_config("vmdb").config.fetch_path(:coresident_miqproxy)
-  end
-
   def embedded_resource_limit_exceeded?(job)
     return false unless job.target_class == "VmOrTemplate"
 
@@ -326,10 +317,10 @@ class JobProxyDispatcher
     end
 
     if @vm.scan_via_ems?
-      count_allowed = self.class.coresident_miqproxy[:concurrent_per_ems].to_i
+      count_allowed = ::Settings.coresident_miqproxy.concurrent_per_ems.to_i
     else
       return false if @vm.host_id.nil?  # e.g. EC2 images do not have hosts
-      count_allowed = self.class.coresident_miqproxy[:concurrent_per_host].to_i
+      count_allowed = ::Settings.coresident_miqproxy.concurrent_per_host.to_i
     end
 
     return false if busy_resources_for_embedded_scanning.blank?
@@ -363,7 +354,7 @@ class JobProxyDispatcher
         queue_signal(job, {:args => [:abort, msg, "error"]})
         return []
       else
-        unless %w(VSAN VMFS NAS NFS ISCSI DIR FCP CSVFS NTFS GLUSTERFS).include?(@vm.storage.store_type)
+        unless %w(VSAN VMFS NAS NFS NFS41 ISCSI DIR FCP CSVFS NTFS GLUSTERFS).include?(@vm.storage.store_type)
           msg = "Vm storage type [#{@vm.storage.store_type}] unsupported [#{job.target_id}], aborting job [#{job.guid}]."
           queue_signal(job, {:args => [:abort, msg, "error"]})
           return []

@@ -22,7 +22,6 @@ cols:
 - name
 - url
 - type
-- zone.name
 - last_refresh_date
 - region_description
 - authentication_status
@@ -33,20 +32,17 @@ include:
   zone:
     columns:
     - name
-  provider:
+  endpoints:
     columns:
-    - name
     - url
 
 # Included tables and columns for query performance
 include_for_find:
-  :zone: {}
-  :provider: {}
 
 # Order of columns (from all tables)
 col_order:
 - name
-- provider.url
+- url
 - type
 - zone.name
 - last_refresh_date

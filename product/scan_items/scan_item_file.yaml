@@ -6,6 +6,7 @@
   - target: c:/windows/system32/msi*.*
   - target: /etc/*.conf
   - target: /etc/hosts
+  - target: /etc/redhat-access-insights/machine-id
   - target: c:/windows/system32/netapi32.dll
 :name: sample_file
 :description: Sample File Scan

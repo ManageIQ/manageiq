@@ -1,21 +1,16 @@
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/xml")
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/win32")
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "metadata/linux")
-
 require 'ostruct'
 require 'MiqSockUtil'
-require 'xml_utils'
+require 'xml/xml_utils'
 require 'cgi'               # Used for URL encoding/decoding
-require 'LinuxUsers'
-require 'LinuxUtils'
-
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "metadata/ScanProfile")
-require 'HostScanProfiles'
+require 'metadata/linux/LinuxUsers'
+require 'metadata/linux/LinuxUtils'
+require 'metadata/ScanProfile/HostScanProfiles'
 
 class Host < ApplicationRecord
+  include SupportsFeatureMixin
   include NewWithTypeStiMixin
-  include VirtualTotalMixin
   include TenantIdentityMixin
+  include DeprecationMixin
 
   VENDOR_TYPES = {
     # DB            Displayed
@@ -25,17 +20,17 @@ class Host < ApplicationRecord
     "openstack_infra" => "OpenStack Infrastructure",
     "unknown"         => "Unknown",
     nil               => "Unknown",
-  }
+  }.freeze
 
   HOST_DISCOVERY_TYPES = {
     'vmware' => 'esx',
     'ipmi'   => 'ipmi'
-  }
+  }.freeze
 
   HOST_CREATE_OS_TYPES = {
     'VMware ESX' => 'linux_generic',
     # 'Microsoft Hyper-V' => 'windows_generic'
-  }
+  }.freeze
 
   validates_presence_of     :name
   validates_uniqueness_of   :name
@@ -96,13 +91,14 @@ class Host < ApplicationRecord
   has_many                  :host_aggregate_hosts, :dependent => :destroy
   has_many                  :host_aggregates, :through => :host_aggregate_hosts
 
+  # Physical server reference
+  belongs_to :physical_server, :inverse_of => :host
 
   serialize :settings, Hash
 
-  # TODO: Remove all callers of address
-  alias_attribute :address, :hostname
-  alias_attribute :state,   :power_state
-  alias_attribute :to_s,    :name
+  deprecate_attribute :address, :hostname
+  alias_attribute     :state,   :power_state
+  alias_attribute     :to_s,    :name
 
   include SerializedEmsRefObjMixin
   include ProviderObjectMixin
@@ -184,8 +180,28 @@ class Host < ApplicationRecord
   before_create :make_smart
   after_save    :process_events
 
+  supports :reset do
+    unsupported_reason_add(:reset, _("The Host is not configured for IPMI")) if ipmi_address.blank?
+    unsupported_reason_add(:reset, _("The Host has no IPMI credentials")) if authentication_type(:ipmi).nil?
+    if authentication_userid(:ipmi).blank? || authentication_password(:ipmi).blank?
+      unsupported_reason_add(:reset, _("The Host has invalid IPMI credentials"))
+    end
+  end
+
   def self.include_descendant_classes_in_expressions?
     true
+  end
+
+  def self.non_clustered
+    where(:ems_cluster_id => nil)
+  end
+
+  def self.clustered
+    where.not(:ems_cluster_id => nil)
+  end
+
+  def self.failover
+    where(:failover => true)
   end
 
   def authentication_check_role
@@ -261,10 +277,6 @@ class Host < ApplicationRecord
     validate_ipmi('on')
   end
 
-  def validate_reset
-    validate_ipmi
-  end
-
   def validate_ipmi(pstate = nil)
     return {:available => false, :message => "The Host is not configured for IPMI"}   if ipmi_address.blank?
     return {:available => false, :message => "The Host has no IPMI credentials"}      if authentication_type(:ipmi).nil?
@@ -315,6 +327,10 @@ class Host < ApplicationRecord
     validate_unsupported("Maintenance mode is unavailable")
   end
 
+  def validate_reset
+    validate_unsupported("Reset is unavailable")
+  end
+
   def validate_unsupported(message_prefix)
     {:available => false, :message => "#{message_prefix} is not available for #{self.class.model_suffix} Host."}
   end
@@ -330,27 +346,11 @@ class Host < ApplicationRecord
     ipmi.send(verb)
   end
 
-  # request:   the event sent to automate for policy resolution
+  # event:   the event sent to automate for policy resolution
   # cb_method: the MiqQueue callback method along with the parameters that is called
   #            when automate process is done and the request is not prevented to proceed by policy
-  def check_policy_prevent(request, *cb_method)
-    cb = {:class_name  => self.class.to_s,
-          :instance_id => id,
-          :method_name => :check_policy_prevent_callback,
-          :args        => [*cb_method],
-          :server_guid => MiqServer.my_guid
-    }
-    MiqEvent.raise_evm_event(self, request, {:host => self}, :miq_callback => cb)
-  end
-
-  def check_policy_prevent_callback(*action, _status, _message, result)
-    prevented = false
-    if result.kind_of?(MiqAeEngine::MiqAeWorkspaceRuntime)
-      event = result.get_obj_from_path("/")['event_stream']
-      data  = event.attributes["full_data"]
-      prevented = data.fetch_path(:policy, :prevented) if data
-    end
-    prevented ? _log.info((event.attributes["message"]).to_s) : send(*action)
+  def check_policy_prevent(event, *cb_method)
+    MiqEvent.raise_evm_event(self, event, {:host => self}, {:miq_callback => prevent_callback_settings(*cb_method)})
   end
 
   def ipmi_power_on
@@ -366,11 +366,10 @@ class Host < ApplicationRecord
   end
 
   def reset
-    msg = validate_reset
-    if msg[:available]
+    if supports_reset?
       check_policy_prevent("request_host_reset", "ipmi_power_reset")
     else
-      _log.warn("Cannot stop because <#{msg[:message]}>")
+      _log.warn("Cannot stop because <#{unsupported_reason(:reset)}>")
     end
   end
 
@@ -691,19 +690,11 @@ class Host < ApplicationRecord
   end
 
   def resource_pools
-    # Look for only the resource_pools at the second depth (default depth + 1)
-    rels = descendant_rels(:of_type => 'ResourcePool')
-    min_depth = rels.collect(&:depth).min
-    rels = rels.select { |r| r.depth == min_depth + 1 }
-    Relationship.resources(rels).sort_by { |r| r.name.downcase }
+    Relationship.resources(grandchild_rels(:of_type => 'ResourcePool'))
   end
 
   def resource_pools_with_default
-    # Look for only the resource_pools up to the second depth (default depth + 1)
-    rels = descendant_rels(:of_type => 'ResourcePool')
-    min_depth = rels.collect(&:depth).min
-    rels = rels.select { |r| r.depth <= min_depth + 1 }
-    Relationship.resources(rels).sort_by { |r| r.name.downcase }
+    Relationship.resources(child_and_grandchild_rels(:of_type => 'ResourcePool'))
   end
 
   # All RPs under this Host and all child RPs
@@ -735,7 +726,7 @@ class Host < ApplicationRecord
 
   def self.save_metadata(id, dataArray)
     _log.info "for host [#{id}]"
-    host = Host.find_by_id(id)
+    host = Host.find_by(:id => id)
     data, data_type = dataArray
     if data_type.include?('yaml')
       data.replace(MIQEncode.decode(data)) if data_type.include?('b64,zlib')
@@ -853,7 +844,7 @@ class Host < ApplicationRecord
     host_start.upto(host_end) do|h|
       ipaddr = network_id + "." + h.to_s
 
-      unless Host.find_by_ipaddress(ipaddr).nil? # skip discover for existing hosts
+      unless Host.find_by(:ipaddress => ipaddr).nil? # skip discover for existing hosts
         _log.info "ipaddress '#{ipaddr}' exists, skipping discovery"
         next
       end
@@ -866,7 +857,7 @@ class Host < ApplicationRecord
       }
 
       # Add Windows domain credentials for HyperV WMI checks
-      default_zone = Zone.find_by_name('default')
+      default_zone = Zone.find_by(:name => 'default')
       if !default_zone.nil? && default_zone.has_authentication_type?(:windows_domain)
         discover_options[:windows_domain] = [default_zone.authentication_userid(:windows_domain), default_zone.authentication_password_encrypted(:windows_domain)]
       end
@@ -1079,7 +1070,7 @@ class Host < ApplicationRecord
     rl_user, rl_password, su_user, su_password, additional_options = ssh_users_and_passwords
     options.merge!(additional_options)
 
-    prompt_delay = VMDB::Config.new("vmdb").config.fetch_path(:ssh, :authentication_prompt_delay)
+    prompt_delay = ::Settings.ssh.try(:authentication_prompt_delay)
     options[:authentication_prompt_delay] = prompt_delay unless prompt_delay.nil?
 
     users = su_user.nil? ? rl_user : "#{rl_user}/#{su_user}"
@@ -1124,8 +1115,7 @@ class Host < ApplicationRecord
           _log.log_backtrace(err)
         end
       end
-    rescue => err
-      # _log.log_backtrace(err)
+    rescue
     end
 
     Patch.refresh_patches(self, patches)
@@ -1284,10 +1274,11 @@ class Host < ApplicationRecord
     hosts.each do |host|
       begin
         if host.ipmi_config_valid?(true) == false
-          errors.add(:"Error -", "Host not available for provisioning. Name: [#{host.name}]")
+          errors.add(:"Error -", _("Host not available for provisioning. Name: [%{host_name}]") % {:host_name => host.name})
         end
       rescue => err
-        errors.add(:error_checking, "Error, '#{err.message}, checking Host for provisioning: Name: [#{host.name}]")
+        errors.add(:error_checking, _("Error, '%{error_message}, checking Host for provisioning: Name: [%{host_name}]") %
+          {:error_message => err.message, :host_name => host.name})
       end
     end
 
@@ -1303,7 +1294,7 @@ class Host < ApplicationRecord
 
   def quickStats
     return @qs if @qs
-    return {} unless is_vmware?
+    return {} unless supports_quick_stats?
 
     begin
       raise _("Host has no EMS, unable to get host statistics") unless ext_management_system
@@ -1342,23 +1333,16 @@ class Host < ApplicationRecord
     Classification.first_cat_entry(name, self)
   end
 
-  # TODO: Rename this to scan_queue and rename scan_from_queue to scan to match
-  #   standard from other places.
-  def scan(userid = "system", _options = {})
-    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
+  def scan(userid = "system", options = {})
+    _log.info("Requesting scan of #{log_target}")
+    check_policy_prevent(:request_host_scan, :scan_queue, userid, options)
+  end
+
+  def scan_queue(userid = 'system', _options = {})
+    _log.info("Queuing scan of #{log_target}")
 
     task = MiqTask.create(:name => "SmartState Analysis for '#{name}' ", :userid => userid)
-
-    _log.info("Requesting scan of #{log_target}")
-    begin
-      MiqEvent.raise_evm_job_event(self, :type => "scan", :prefix => "request")
-    rescue => err
-      _log.warn("Error raising request scan event for #{log_target}: #{err.message}")
-      return
-    end
-
-    _log.info("Queuing scan of #{log_target}")
-    timeout = (VMDB::Config.new("vmdb").config.fetch_path(:host_scan, :queue_timeout) || 20.minutes).to_i_with_method
+    timeout = ::Settings.host_scan.queue_timeout.to_i_with_method
     cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
     MiqQueue.put(
       :class_name   => self.class.name,
@@ -1373,11 +1357,9 @@ class Host < ApplicationRecord
 
   def scan_from_queue(taskid = nil)
     unless taskid.nil?
-      task = MiqTask.find_by_id(taskid)
-      task.state_active  if task
+      task = MiqTask.find_by(:id => taskid)
+      task.state_active if task
     end
-
-    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
 
     _log.info("Scanning #{log_target}...")
 
@@ -1442,6 +1424,12 @@ class Host < ApplicationRecord
             _log.info("Refreshing FS Files for #{log_target}")
             task.update_status("Active", "Ok", "Refreshing FS Files") if task
             Benchmark.realtime_block(:refresh_fs_files) { refresh_fs_files(ssu) }
+
+            if supports?(:refresh_network_interfaces)
+              _log.info("Refreshing network interfaces for #{log_target}")
+              task.update_status("Active", "Ok", "Refreshing network interfaces") if task
+              Benchmark.realtime_block(:refresh_network_interfaces) { refresh_network_interfaces(ssu) }
+            end
 
             # refresh_openstack_services should run after refresh_services and refresh_fs_files
             if respond_to?(:refresh_openstack_services)
@@ -1663,7 +1651,7 @@ class Host < ApplicationRecord
     cores = total_vcpus
     return 0 if cores == 0
 
-    total_vm_vcpus = vms.inject(0) { |t, vm| t += (vm.num_cpu || 0) }
+    total_vm_vcpus = vms.inject(0) { |t, vm| t + (vm.num_cpu || 0) }
     (total_vm_vcpus / cores)
   end
 
@@ -1856,5 +1844,9 @@ class Host < ApplicationRecord
     return 'archived' if archived?
     return power_state unless power_state.nil?
     "unknown"
+  end
+
+  def validate_destroy
+    {:available => true, :message => nil}
   end
 end

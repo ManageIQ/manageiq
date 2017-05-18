@@ -3,18 +3,8 @@ module VMDB
     def self.http_proxy_uri(proxy_config = :default)
       # TODO: (julian) This looks really messy. Need to make it look nicer.
 
-      vmdb_proxy = VMDB::Config.new("vmdb").config[:http_proxy]
-
-      return nil unless vmdb_proxy
-
-      if vmdb_proxy[proxy_config].nil?
-        $log.warn("Could not find proxy setting for #{proxy_config}")
-      end
-
-      proxy = vmdb_proxy[proxy_config] || vmdb_proxy
-
+      proxy = (::Settings.http_proxy[proxy_config] || ::Settings.http_proxy).to_h
       return nil unless proxy[:host]
-      proxy = proxy.dup
 
       user     = proxy.delete(:user)
       user &&= CGI.escape(user)
@@ -107,7 +97,7 @@ module VMDB
     end
 
     def self.zip_logs(zip_filename, dirs, userid = "system")
-      require 'zip/zipfilesystem'
+      require 'zip/filesystem'
 
       zip_dir = Rails.root.join("data", "user", userid)
       FileUtils.mkdir_p(zip_dir) unless File.exist?(zip_dir)
@@ -119,7 +109,7 @@ module VMDB
       zfile = zfile.to_s
 
       _log.info "Creating: [#{zfile_display}]"
-      Zip::ZipFile.open(zfile, Zip::ZipFile::CREATE) do |zip|
+      Zip::File.open(zfile, Zip::File::CREATE) do |zip|
         dirs.each do |dir|
           dir = Rails.root.join(dir) unless Pathname.new(dir).absolute?
           Dir.glob(dir).each do |file|

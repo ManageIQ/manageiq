@@ -1,11 +1,176 @@
 ---
-- :name: vm_powered_off
-  :message: Virtual Machine %{subject} has been powered off
+- :name: host_provisioned
+  :message: Host %{subject} has been provisioned.
+  :expires_in: 7.days
+  :level: :success
+  :audience: tenant
+- :name: automate_service_provisioned
+  :message: Service %{subject} has been provisioned.
+  :expires_in: 7.days
+  :level: :success
+  :audience: tenant
+- :name: service_retired
+  :message: Service %{subject} has been retired.
+  :expires_in: 7.days
+  :level: :success
+  :audience: tenant
+- :name: service_retiring
+  :message: Service %{subject} has started retirement.
+  :expires_in: 7.days
+  :level: :success
+  :audience: tenant
+- :name: automate_vm_provisioned
+  :message: Virtual Machine %{subject} has been provisioned.
+  :expires_in: 7.days
+  :level: :success
+  :audience: tenant
+- :name: vm_retired
+  :message: Virtual Machine %{subject} has been retired.
+  :expires_in: 7.days
+  :level: :success
+  :audience: tenant
+- :name: vm_retiring
+  :message: Virtual Machine %{subject} has started retirement.
+  :expires_in: 7.days
+  :level: :success
+  :audience: tenant
+- :name: request_approved
+  :message: Request %{subject} has been approved.
+  :expires_in: 14.days
+  :level: :success
+  :audience: group
+- :name: request_denied
+  :message: Request %{subject} has been denied.
+  :expires_in: 14.days
+  :level: :warning
+  :audience: group
+- :name: automate_user_success
+  :message: '%{message}'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: user
+- :name: automate_user_error
+  :message: '%{message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: user
+- :name: automate_user_info
+  :message: '%{message}'
+  :expires_in: 24.hours
+  :level: :info
+  :audience: user
+- :name: automate_user_warning
+  :message: '%{message}'
+  :expires_in: 24.hours
+  :level: :warning
+  :audience: user
+- :name: automate_tenant_success
+  :message: '%{message}'
   :expires_in: 24.hours
   :level: :success
   :audience: tenant
-- :name: vm_powered_on
-  :message: Virtual Machine %{subject} has been powered on
+- :name: automate_tenant_error
+  :message: '%{message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: tenant
+- :name: automate_tenant_info
+  :message: '%{message}'
+  :expires_in: 24.hours
+  :level: :info
+  :audience: tenant
+- :name: automate_tenant_warning
+  :message: '%{message}'
+  :expires_in: 24.hours
+  :level: :warning
+  :audience: tenant
+- :name: automate_global_success
+  :message: '%{message}'
   :expires_in: 24.hours
   :level: :success
+  :audience: global
+- :name: automate_global_error
+  :message: '%{message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: automate_global_info
+  :message: '%{message}'
+  :expires_in: 24.hours
+  :level: :info
+  :audience: global
+- :name: automate_global_warning
+  :message: '%{message}'
+  :expires_in: 24.hours
+  :level: :warning
+  :audience: global
+- :name: mw_op_success
+  :message: 'The operation %{op_name} %{op_arg} on %{mw_server} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: mw_op_failure
+  :message: 'The operation %{op_name} %{op_arg} on %{mw_server} has failed to complete. Please check the logs for further details.'
+  :expires_in: 24.hours
+  :level: :warning
+  :audience: global
+- :name: role_activate_success
+  :message: 'The role %{role_name} has been activated on server %{server_name}'
+  :expires_in: 24.hours
+  :level: :info
+  :audience: superadmin
+- :name: role_activate_start
+  :message: 'The role %{role_name} has started activation on server %{server_name}'
+  :expires_in: 24.hours
+  :level: :info
+  :audience: superadmin
+- :name: vm_cloud_live_migrate_success
+  :message: 'Live migrating Instance %{instance_name} completed successfully.'
+  :expires_in: 24.hours
+  :audience: global
+  :level: :success
+- :name: vm_cloud_live_migrate_error
+  :message: 'Live migrating Instance %{instance_name} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: vm_cloud_evacuate_success
+  :message: 'Evacuating Instance %{instance_name} completed successfully.'
+  :expires_in: 24.hours
+  :audience: global
+  :level: :success
+- :name: vm_cloud_evacuate_error
+  :message: 'Evacuating Instance %{instance_name} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: tower_op_success
+  :message: 'The operation %{op_name} %{op_arg} on %{tower} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: tower_op_failure
+  :message: 'The operation %{op_name} %{op_arg} on %{tower} has failed to complete. Please check the logs for further details.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: vm_snapshot_failure
+  :message: 'Failed to %{snapshot_op} snapshot of %{subject}: %{error}'
+  :expires_in: 24.hours
+  :level: :warning
+  :audience: global
+- :name: orchestration_stack_retired
+  :message: Orchestration Stack %{subject} has been retired.
+  :expires_in: 7.days
+  :level: :success
   :audience: tenant
+- :name: provider_operation_success
+  :message: 'The operation %{method} on %{target_name} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: provider_operation_failure
+  :message: 'The operation %{method} on %{target_name} failed: %{error}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global

@@ -41,8 +41,7 @@ class MiqApproval < ApplicationRecord
     user = userid.kind_of?(User) ? userid : User.find_by_userid(userid)
     return false unless user
 
-    return true if user.role_allows?(:identifier => "miq_request_approval")
-    return true if approver.kind_of?(User) && approver == user
+    return true if user.role_allows?(:identifier => "miq_request_approval") || (approver.kind_of?(User) && approver == user)
 
     false
   end

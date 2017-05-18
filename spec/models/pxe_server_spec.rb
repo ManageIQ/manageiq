@@ -110,7 +110,7 @@ label Ubuntu-10.10-Desktop-i386-LIVE_BOOT
    append initrd=ubuntu-10.10-desktop-i386/initrd.lz vga=normal boot=casper netboot=nfs nfsroot=192.168.252.60:/srv/nfsboot/ubuntu-10.10-desktop-i386 -- quiet
 
 PXE
-        image = @pxe_server.pxe_images.find_by_name("Ubuntu-10.10-Desktop-i386-LIVE_BOOT")
+        image = @pxe_server.pxe_images.find_by(:name => "Ubuntu-10.10-Desktop-i386-LIVE_BOOT")
         begin
           @pxe_server.create_provisioning_files(image, "00:19:e3:d7:5b:0e")
           expect(File.exist?(expected_name)).to be_truthy
@@ -129,7 +129,7 @@ PXE
         expected_name = @pxe_server.test_full_path_to("#{@pxe_server.pxe_directory}/#{dashed_mac_address}")
         expected_ks_name = "#{expected_name}.ks.cfg"
 
-        image = @pxe_server.pxe_images.find_by_name("Ubuntu-10.10-Desktop-i386-LIVE_BOOT")
+        image = @pxe_server.pxe_images.find_by(:name => "Ubuntu-10.10-Desktop-i386-LIVE_BOOT")
 
         ks_contents = "FOO"
         kickstart = FactoryGirl.create(:customization_template_kickstart, :script => ks_contents)

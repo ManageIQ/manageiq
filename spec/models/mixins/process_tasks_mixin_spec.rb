@@ -65,31 +65,40 @@ describe ProcessTasksMixin do
   end
 
   describe ".invoke_tasks_remote" do
-    let(:server)           { EvmSpecHelper.local_miq_server(:has_active_webservices => true) }
+    let!(:server)          { EvmSpecHelper.local_miq_server(:has_active_webservices => true) }
     let(:region_seq_start) { ApplicationRecord.rails_sequence_start }
+    let(:request_user)     { "test_user" }
     let(:test_options) do
       {
         :ids          => [region_seq_start, region_seq_start + 1, region_seq_start + 2],
-        :other_option => "some option"
+        :other_option => "some option",
+        :userid       => request_user
       }
     end
 
     before do
-      FactoryGirl.create(:miq_region, :region => server.region_number)
+      FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
     end
 
     context "when the server has an ip address" do
+      let(:api_connection)    { double("ManageIQ::API::Client connection") }
+
       before do
         server.ipaddress = "192.0.2.1"
         server.save!
       end
 
-      it "calls invoke_api_tasks with the server ip and ids" do
-        expect(test_class).to receive(:invoke_api_tasks).with(server.ipaddress, test_options)
+      it "calls invoke_api_tasks with the api connection and options" do
+        expect(InterRegionApiMethodRelay).to receive(:api_client_connection_for_region)
+          .with(ApplicationRecord.my_region_number, request_user)
+          .and_return(api_connection)
+
+        expect(test_class).to receive(:invoke_api_tasks).with(api_connection, test_options)
         test_class.invoke_tasks_remote(test_options)
       end
 
       it "requeues invoke_tasks_remote when invoke_api_tasks fails" do
+        expect(InterRegionApiMethodRelay).to receive(:api_client_connection_for_region)
         expect(test_class).to receive(:invoke_api_tasks).and_raise(RuntimeError)
         test_class.invoke_tasks_remote(test_options)
 
@@ -101,15 +110,94 @@ describe ProcessTasksMixin do
       end
 
       it "does not requeue for a NotImplementedError" do
+        expect(InterRegionApiMethodRelay).to receive(:api_client_connection_for_region)
         expect(test_class).to receive(:invoke_api_tasks).and_raise(NotImplementedError)
         expect(MiqQueue).not_to receive(:put)
         test_class.invoke_tasks_remote(test_options)
       end
     end
 
-    it "does not call invoke_api_tasks if the server does not have an address" do
-      expect(test_class).not_to receive(:invoke_api_tasks)
+    it "requeues if the server does not have an address" do
       test_class.invoke_tasks_remote(test_options)
+
+      expect(MiqQueue.first).to have_attributes(
+        :class_name  => test_class.name,
+        :method_name => "invoke_tasks_remote",
+        :args        => [test_options]
+      )
+    end
+  end
+
+  describe ".invoke_api_tasks" do
+    it "raises NotImplementedError when called on a class with no API collection" do
+      expect { test_class.invoke_api_tasks(double("api_client"), {}) }.to raise_error(NotImplementedError)
+    end
+
+    context "with a valid class name" do
+      let(:collection_name) { :test_class_collection }
+      let(:api_connection)  { double("ManageIQ::API::Client connection") }
+      let(:api_collection)  { double("ManageIQ::API::Client collection") }
+
+      before do
+        api_config = double("Api::CollectionConfig")
+        expect(Api::CollectionConfig).to receive(:new).and_return(api_config)
+        expect(api_config).to receive(:name_for_klass).and_return(collection_name)
+        expect(api_connection).to receive(collection_name).and_return(api_collection)
+      end
+
+      context "when not passed resource ids" do
+        it "calls the action on the collection" do
+          options = {
+            :task => "the_task",
+            :args => {:many => ["arguments"], :go => "here"}
+          }
+          expect(api_collection).to receive(:the_task).with(options[:args])
+
+          test_class.invoke_api_tasks(api_connection, options)
+        end
+
+        it "uses an empty hash for the args if they are not in the options" do
+          options = {
+            :task => "the_task"
+          }
+          expect(api_collection).to receive(:the_task).with({})
+
+          test_class.invoke_api_tasks(api_connection, options)
+        end
+      end
+
+      context "when passed resource ids" do
+        let(:resource0)     { double("resource0", :id => 0) }
+        let(:resource1)     { double("resource1", :id => 1) }
+
+        before do
+          expect(api_collection).to receive(:find).with(0).and_return(resource0)
+          expect(api_collection).to receive(:find).with(1).and_return(resource1)
+        end
+
+        it "executes the task on each resource" do
+          options = {
+            :ids  => [0, 1],
+            :task => "the_task",
+            :args => {:some => "args"}
+          }
+          expect(resource0).to receive(:the_task).with(options[:args])
+          expect(resource1).to receive(:the_task).with(options[:args])
+
+          test_class.invoke_api_tasks(api_connection, options)
+        end
+
+        it "uses an empty hash for the args if they are not in the options" do
+          options = {
+            :ids  => [0, 1],
+            :task => "the_task"
+          }
+          expect(resource0).to receive(:the_task).with({})
+          expect(resource1).to receive(:the_task).with({})
+
+          test_class.invoke_api_tasks(api_connection, options)
+        end
+      end
     end
   end
 end

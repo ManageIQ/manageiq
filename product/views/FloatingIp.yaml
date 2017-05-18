@@ -30,17 +30,19 @@ include:
   vm:
     columns:
     - name
+  network_port:
+    columns:
+    - name
 
 # Included tables and columns for query performance
 include_for_find:
-  :ext_management_system: {}
-  :vm: {}
 
 # Order of columns (from all tables)
 col_order:
 - address
 - fixed_ip_address
 - vm.name
+- network_port.name
 - ext_management_system.name
 
 # Column titles, in order
@@ -48,6 +50,7 @@ headers:
 - Address
 - Fixed Address
 - Instance name
+- Network Port name
 - Network Provider
 
 # Condition(s) string for the SQL query
@@ -58,7 +61,7 @@ order: Ascending
 
 # Columns to sort the report on, in order
 sortby:
-- name
+- address
 
 # Group rows (y=yes,n=no,c=count)
 group: n

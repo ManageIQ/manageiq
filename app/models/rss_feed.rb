@@ -1,24 +1,25 @@
 require 'resource_feeder/common'
 class RssFeed < ApplicationRecord
   include ResourceFeeder
+  include_concern 'ImportExport'
+
   validates_presence_of     :name
   validates_uniqueness_of   :name
 
   attr_accessor :options
 
   acts_as_miq_taggable
-  include_concern 'ImportExport'
 
   YML_DIR = File.join(File.expand_path(Rails.root), "product", "alerts", "rss")
 
   def url(host = nil)
-    proto = VMDB::Config.new("vmdb").config[:webservices][:consume_protocol]
+    proto = ::Settings.webservices.consume_protocol
     host_url = host.nil? ? "#{proto}://localhost:3000" : "#{proto}://" + host
     "#{host_url}#{link}"
   end
 
-  def generate(host = nil, local = false, proto = nil)
-    proto ||= VMDB::Config.new("vmdb").config[:webservices][:consume_protocol]
+  def generate(host = nil, local = false, proto = nil, user_or_group = nil)
+    proto ||= ::Settings.webservices.consume_protocol
     host_url = host.nil? ? "#{proto}://localhost:3000" : "#{proto}://" + host
 
     options = {
@@ -35,7 +36,14 @@ class RssFeed < ApplicationRecord
       }
     }
 
-    feed = Rss.rss_feed_for(find_items, options)
+    rbac_options = {}
+    if user_or_group
+      user_or_group_key = user_or_group.kind_of?(User) ? :user : :miq_group
+      rbac_options[user_or_group_key] = user_or_group
+    end
+
+    filtered_items = Rbac::Filterer.filtered(find_items, rbac_options)
+    feed = Rss.rss_feed_for(filtered_items, options)
     local ? feed : {:text => feed, :content_type => Mime[:rss]}
   end
 
@@ -50,8 +58,8 @@ class RssFeed < ApplicationRecord
       output << '<td>'
       output << i.title
       output << '<br/>'
-      pubDate = (i.pubDate.blank? || i.pubDate == "") ? "" : format_timezone(i.pubDate, options[:tz], "raw")
-      output << "Date : #{pubDate}"
+      pub_date = i.pubDate.blank? ? "" : format_timezone(i.pubDate, options[:tz], "raw")
+      output << "Date : #{pub_date}"
       output << '</td>'
       output << '</tr>'
     end
@@ -124,7 +132,7 @@ class RssFeed < ApplicationRecord
       :yml_file_mtime => File.mtime(file).utc
     }
 
-    rec = find_by_name(rss[:name])
+    rec = find_by(:name => rss[:name])
     if rec
       if rec.yml_file_mtime && rec.yml_file_mtime < rss[:yml_file_mtime]
         _log.info("[#{rec.name}] file has been updated on disk, synchronizing with model")

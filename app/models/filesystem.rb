@@ -1,5 +1,4 @@
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "metadata/linux")
-require 'LinuxUtils'
+require 'metadata/linux/LinuxUtils'
 
 class Filesystem < ApplicationRecord
   belongs_to :resource, :polymorphic => true

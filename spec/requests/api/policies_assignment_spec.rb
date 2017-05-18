@@ -17,7 +17,6 @@
 #
 describe "Policies Assignment API" do
   let(:zone)       { FactoryGirl.create(:zone, :name => "api_zone") }
-  let(:miq_server) { FactoryGirl.create(:miq_server, :guid => miq_server_guid, :zone => zone) }
   let(:provider)   { FactoryGirl.create(:ems_vmware, :zone => zone) }
   let(:host)       { FactoryGirl.create(:host) }
   let(:cluster)    do
@@ -119,9 +118,9 @@ describe "Policies Assignment API" do
     api_basic_authorize subcollection_action_identifier(collection, subcollection, :unassign)
 
     object = options[:object]
-
     [p1, p2, p3].each { |p| object.add_policy(p) }
     run_post(object_policies_url, gen_request(:unassign, [{:guid => p2.guid}, {:guid => p3.guid}]))
+    object.reload
 
     expect_multiple_action_result(2)
     expect(object.get_policies.size).to eq(1)
@@ -138,6 +137,24 @@ describe "Policies Assignment API" do
     expect_multiple_action_result(1)
     expect(object.get_policies.size).to eq(1)
     expect(object.get_policies.first.guid).to eq(ps1.guid)
+  end
+
+  context "Policy profile policies assignment" do
+    let(:policy_profile_url)            { policy_profiles_url(ps2.id) }
+    let(:policy_profile_policies_url)   { "#{policy_profile_url}/policies" }
+
+    it "adds Policies to a Policy Profile" do
+      test_assign_multiple_policies(policy_profile_url,
+                                    policy_profile_policies_url,
+                                    :policy_profiles,
+                                    :policies,
+                                    :object   => ps2,
+                                    :policies => [p1, p2, p3])
+    end
+
+    it "removes Policies from a Policy Profile" do
+      test_unassign_multiple_policies(policy_profile_policies_url, :policy_profiles, :policies, :object => ps2)
+    end
   end
 
   context "Provider policies subcollection assignment" do

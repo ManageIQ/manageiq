@@ -55,7 +55,7 @@ order: Ascending
 
 # Columns to sort the report on, in order
 sortby:
-- name
+- display_name
 
 # Group rows (y=yes,n=no,c=count)
 group: n

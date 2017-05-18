@@ -24,16 +24,17 @@ describe MiqServer do
 
     it "should generate a new GUID and write it out when there is no GUID file" do
       MiqServer.my_guid_cache = nil
-      expect(MiqUUID).to receive(:new_guid).and_return("a-new-guid")
+      test_guid = SecureRandom.uuid
+      expect(SecureRandom).to receive(:uuid).and_return(test_guid)
       expect(File).to receive(:exist?).with(guid_file).and_return(false)
-      expect(File).to receive(:write).with(guid_file, "a-new-guid")
-      expect(File).to receive(:read).with(guid_file).and_return("a-new-guid")
-      expect(MiqServer.my_guid).to eq("a-new-guid")
+      expect(File).to receive(:write).with(guid_file, test_guid)
+      expect(File).to receive(:read).with(guid_file).and_return(test_guid)
+      expect(MiqServer.my_guid).to eq(test_guid)
     end
 
     it "should not generate a new GUID file if new_guid blows up" do # Test for case 10942
       MiqServer.my_guid_cache = nil
-      expect(MiqUUID).to receive(:new_guid).and_raise(StandardError)
+      expect(SecureRandom).to receive(:uuid).and_raise(StandardError)
       expect(File).to receive(:exist?).with(guid_file).and_return(false)
       expect(File).not_to receive(:write)
       expect { MiqServer.my_guid }.to raise_error(StandardError)
@@ -157,6 +158,16 @@ describe MiqServer do
           allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(true)
         end
 
+        it "doesn't sync the settings when running in a container" do
+          allow(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
+
+          @zone.update_attribute(:settings, :ntp => zone_ntp)
+          stub_settings(:ntp => server_ntp)
+
+          expect(LinuxAdmin::Chrony).not_to receive(:new)
+          @miq_server.ntp_reload
+        end
+
         it "syncs with server settings with zone and server configured" do
           @zone.update_attribute(:settings, :ntp => zone_ntp)
           stub_settings(:ntp => server_ntp)
@@ -199,23 +210,6 @@ describe MiqServer do
           expect(chrony).to_not receive(:add_servers)
           @miq_server.ntp_reload
         end
-      end
-    end
-
-    context "enqueueing restart of apache" do
-      before(:each) do
-        @cond = {:method_name => 'restart_apache', :queue_name => "miq_server", :class_name => 'MiqServer', :instance_id => @miq_server.id, :server_guid => @miq_server.guid, :zone => @miq_server.zone.name}
-        @miq_server.queue_restart_apache
-      end
-
-      it "will queue only one restart_apache" do
-        @miq_server.queue_restart_apache
-        expect(MiqQueue.where(@cond).count).to eq(1)
-      end
-
-      it "delivering will restart apache" do
-        expect(MiqApache::Control).to receive(:restart).with(false)
-        @miq_server.process_miq_queue
       end
     end
 

@@ -10,22 +10,28 @@ class MiqTask < ApplicationRecord
   STATUS_ERROR      = 'Error'.freeze
   STATUS_TIMEOUT    = 'Timeout'.freeze
   STATUS_EXPIRED    = 'Expired'.freeze
-  validates_inclusion_of :state,  :in => [STATE_INITIALIZED, STATE_QUEUED, STATE_ACTIVE, STATE_FINISHED]
-  validates_inclusion_of :status, :in => [STATUS_OK, STATUS_WARNING, STATUS_ERROR, STATUS_TIMEOUT]
 
   DEFAULT_MESSAGE   = 'Initialized'.freeze
   DEFAULT_USERID    = 'system'.freeze
 
-  MESSAGE_TASK_COMPLETED_SUCCESSFULLY   = 'Task completed successfully'
-  MESSAGE_TASK_COMPLETED_UNSUCCESSFULLY = 'Task did not complete successfully'
+  MESSAGE_TASK_COMPLETED_SUCCESSFULLY   = 'Task completed successfully'.freeze
+  MESSAGE_TASK_COMPLETED_UNSUCCESSFULLY = 'Task did not complete successfully'.freeze
 
   has_one :log_file, :dependent => :destroy
   has_one :binary_blob, :as => :resource, :dependent => :destroy
   has_one :miq_report_result, :dependent => :destroy
+  has_one :job, :dependent => :destroy
+
+  belongs_to :miq_server
 
   before_validation :initialize_attributes, :on => :create
 
+  before_destroy :check_associations
+
   virtual_has_one :task_results
+  virtual_attribute :state_or_status, :string, :arel => (lambda do |t|
+    t.grouping(Arel::Nodes::Case.new(t[:state]).when(STATE_FINISHED).then(t[:status]).else(t[:state]))
+  end)
 
   def self.status_ok?(status)
     status.casecmp(STATUS_OK) == 0
@@ -40,43 +46,50 @@ class MiqTask < ApplicationRecord
   end
 
   def self.update_status(taskid, state, status, message)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.update_status(state, status, message) unless task.nil?
+  end
+
+  def check_associations
+    if job && job.is_active?
+      _log.warn "Delete not allowed: Task [#{id}] has active job - id: [#{job.id}], guid: [#{job.guid}],"
+      throw :abort
+    end
+    true
   end
 
   def update_status(state, status, message)
     status = STATUS_ERROR if status == STATUS_EXPIRED
     _log.info("Task: [#{id}] [#{state}] [#{status}] [#{message}]")
-    self.update_attributes!(:state => state, :status => status, :message => self.class.trim_message(message))
+    self.status = status
+    self.message = message
+    self.state = state
+    self.started_on ||= Time.now.utc if state == STATE_ACTIVE
+    self.miq_server ||= MiqServer.my_server
+
+    save!
   end
 
   def self.update_message(taskid, message)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.update_message(message) unless task.nil?
   end
 
   def update_message(message)
     _log.info("Task: [#{id}] [#{message}]")
-    self.update_attributes!(:message => self.class.trim_message(message))
+    update_attributes!(:message => message)
   end
 
   def update_context(context)
-    self.update_attributes!(:context_data => context)
-  end
-
-  def self.trim_message(message)
-    # Trim the message to the first 255 bytes
-    msg = message.dup.to_s
-    msg = msg[0..251] + "..." if msg.length > 255
-    msg
+    update_attributes!(:context_data => context)
   end
 
   def message=(message)
-    super(self.class.trim_message(message))
+    super(message)
   end
 
   def self.info(taskid, message, pct_complete)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.info(message, pct_complete) unless task.nil?
   end
 
@@ -89,7 +102,7 @@ class MiqTask < ApplicationRecord
   end
 
   def self.warn(taskid, message)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.warn(message) unless task.nil?
   end
 
@@ -98,12 +111,12 @@ class MiqTask < ApplicationRecord
   end
 
   def self.error(taskid, message)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.error(message) unless task.nil?
   end
 
   def self.state_initialized(taskid)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.state_initialized unless task.nil?
   end
 
@@ -112,7 +125,7 @@ class MiqTask < ApplicationRecord
   end
 
   def self.state_queued(taskid)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.state_queued unless task.nil?
   end
 
@@ -121,16 +134,20 @@ class MiqTask < ApplicationRecord
   end
 
   def self.state_active(taskid)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.state_active unless task.nil?
   end
 
   def state_active
-    update_attributes(:state => STATE_ACTIVE)
+    self.state = STATE_ACTIVE
+    self.started_on ||= Time.now.utc
+    self.miq_server ||= MiqServer.my_server
+
+    save!
   end
 
   def self.state_finished(taskid)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.state_finished unless task.nil?
   end
 
@@ -138,21 +155,12 @@ class MiqTask < ApplicationRecord
     update_attributes(:state => STATE_FINISHED)
   end
 
+  def state_or_status
+    state == STATE_FINISHED ? status : state
+  end
+
   def human_status
-    case state
-    when STATE_INITIALIZED then "Initialized"
-    when STATE_QUEUED      then "Queued"
-    when STATE_ACTIVE      then "Running"
-    when STATE_FINISHED
-      case status
-      when STATUS_OK      then "Complete"
-      when STATUS_WARNING then "Finished with Warnings"
-      when STATUS_ERROR   then "Error"
-      when STATUS_TIMEOUT then "Timed Out"
-      else raise _("Unknown status of: %{task_status}") % {:task_status => status.inspect}
-      end
-    else raise _("Unknown state of: %{task_status}") % {:task_status => state.inspect}
-    end
+    self.class.human_status(state_or_status)
   end
 
   def results_ready?
@@ -184,7 +192,7 @@ class MiqTask < ApplicationRecord
     return miq_report_result.report_results unless miq_report_result.nil?
     unless binary_blob.nil?
       serializer_name = binary_blob.data_type
-      serializer_name = "Marshal" unless serializer_name == "YAML"  # YAML or Marshal, for now
+      serializer_name = "Marshal" unless serializer_name == "YAML" # YAML or Marshal, for now
       serializer = serializer_name.constantize
       return serializer.load(binary_blob.binary)
     end
@@ -192,7 +200,7 @@ class MiqTask < ApplicationRecord
   end
 
   def task_results=(value)
-    self.binary_blob        = BinaryBlob.new(:name => "task_results", :data_type => "YAML")
+    self.binary_blob   = BinaryBlob.new(:name => "task_results", :data_type => "YAML")
     binary_blob.binary = YAML.dump(value)
   end
 
@@ -262,6 +270,7 @@ class MiqTask < ApplicationRecord
   end
 
   def self.delete_by_id(ids)
+    return if ids.empty?
     _log.info("Queuing deletion of tasks with the following ids: #{ids.inspect}")
     MiqQueue.put(
       :class_name  => name,
@@ -269,6 +278,30 @@ class MiqTask < ApplicationRecord
       :args        => [ids],
       :zone        => MiqServer.my_zone
     )
+  end
+
+  def self.human_status(state_or_status)
+    case state_or_status
+    when STATE_INITIALIZED then "Initialized"
+    when STATE_QUEUED      then "Queued"
+    when STATE_ACTIVE      then "Running"
+    # STATE_FINISHED:
+    when STATUS_OK         then "Complete"
+    when STATUS_WARNING    then "Finished with Warnings"
+    when STATUS_ERROR      then "Error"
+    when STATUS_TIMEOUT    then "Timed Out"
+    else "Unknown"
+    end
+  end
+
+  def process_cancel
+    if job
+      job.process_cancel
+      _("The selected Task was cancelled")
+    else
+      _("This task can not be canceled")
+      # TODO: implement 'cancel' operation for task
+    end
   end
 
   private

@@ -1,18 +1,22 @@
+# rubocop:disable ClassLength
 module Api
   class ProvidersController < BaseController
-    TYPE_ATTR         = "type"
-    ZONE_ATTR         = "zone"
-    CREDENTIALS_ATTR  = "credentials"
-    AUTH_TYPE_ATTR    = "auth_type"
-    DEFAULT_AUTH_TYPE = "default"
+    TYPE_ATTR         = "type".freeze
+    ZONE_ATTR         = "zone".freeze
+    CREDENTIALS_ATTR  = "credentials".freeze
+    AUTH_TYPE_ATTR    = "auth_type".freeze
+    DEFAULT_AUTH_TYPE = "default".freeze
     CONNECTION_ATTRS  = %w(connection_configurations).freeze
-    ENDPOINT_ATTRS    = %w(hostname url ipaddress port security_protocol).freeze
-    RESTRICTED_ATTRS  = [TYPE_ATTR, CREDENTIALS_ATTR, ZONE_ATTR, "zone_id"]
+    ENDPOINT_ATTRS    = %w(hostname url ipaddress port security_protocol certificate_authority).freeze
+    RESTRICTED_ATTRS  = [TYPE_ATTR, CREDENTIALS_ATTR, ZONE_ATTR, "zone_id"].freeze
 
     include Subcollections::Policies
     include Subcollections::PolicyProfiles
     include Subcollections::Tags
     include Subcollections::CloudNetworks
+    include Subcollections::CloudTenants
+    include Subcollections::CustomAttributes
+    include Subcollections::LoadBalancers
 
     def create_resource(type, _id, data = {})
       assert_id_not_specified(data, type)
@@ -50,7 +54,51 @@ module Api
       end
     end
 
+    def custom_attributes_edit_resource(object, type, id, data = nil)
+      formatted_data = format_provider_custom_attributes(data)
+      super(object, type, id, formatted_data)
+    end
+
+    def custom_attributes_add_resource(object, type, id, data = nil)
+      formatted_data = format_provider_custom_attributes(data)
+      super(object, type, id, formatted_data)
+    end
+
+    def import_vm_resource(type, id = nil, data = {})
+      raise BadRequestError, "Must specify an id for import of VM to a #{type} resource" unless id
+
+      api_action(type, id) do |klass|
+        provider = resource_search(id, type, klass)
+
+        vm_id = parse_id(data['source'], :vms)
+        # check if user can access the VM
+        resource_search(vm_id, :vms, Vm)
+
+        api_log_info("Importing VM to #{provider_ident(provider)}")
+        target_params = {
+          :name       => data.fetch_path('target', 'name'),
+          :cluster_id => parse_id(data.fetch_path('target', 'cluster'), :clusters),
+          :storage_id => parse_id(data.fetch_path('target', 'data_store'), :data_stores),
+          :sparse     => data.fetch_path('target', 'sparse')
+        }
+        import_vm_to_provider(provider, vm_id, target_params)
+      end
+    end
+
     private
+
+    def format_provider_custom_attributes(attribute)
+      if CustomAttribute::ALLOWED_API_VALUE_TYPES.include? attribute["field_type"]
+        attribute["value"] = attribute.delete("field_type").safe_constantize.parse(attribute["value"])
+      end
+      attribute["section"] ||= "metadata" unless @req.action == "edit"
+      if attribute["section"].present? && !(CustomAttribute::ALLOWED_API_SECTIONS.include? attribute["section"])
+        raise "Invalid attribute section specified: #{attribute["section"]}"
+      end
+      attribute
+    rescue => err
+      raise BadRequestError, "Invalid provider custom attributes specified - #{err}"
+    end
 
     def provider_ident(provider)
       "Provider id:#{provider.id} name:'#{provider.name}'"
@@ -92,8 +140,8 @@ module Api
 
     def refresh_provider(provider)
       desc = "#{provider_ident(provider)} refreshing"
-      provider.refresh_ems
-      action_result(true, desc)
+      task_ids = provider.refresh_ems(:create_task => true)
+      action_result(true, desc, :task_ids => task_ids)
     rescue => err
       action_result(false, err.to_s)
     end
@@ -101,6 +149,16 @@ module Api
     def destroy_provider(provider)
       desc = "#{provider_ident(provider)} deleting"
       task_id = queue_object_action(provider, desc, :method_name => "destroy")
+      action_result(true, desc, :task_id => task_id)
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
+    def import_vm_to_provider(provider, source_vm_id, target_params)
+      desc = "#{provider_ident(provider)} importing vm"
+      task_id = queue_object_action(provider, desc,
+                                    :method_name => 'import_vm',
+                                    :args        => [source_vm_id, target_params])
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -121,8 +179,8 @@ module Api
       auth_type  = creds.delete(AUTH_TYPE_ATTR) || DEFAULT_AUTH_TYPE
       auth_types = provider.respond_to?(:supported_auth_types) ? provider.supported_auth_types : [DEFAULT_AUTH_TYPE]
       unless auth_types.include?(auth_type)
-        raise BadRequestError, format("Unsupported authentication type %s specified, %s supports: %s",
-                                      auth_type, provider.class.name, auth_types.join(", "))
+        raise BadRequestError, "Unsupported authentication type %s specified, %s supports: %s" %
+                               [auth_type, provider.class.name, auth_types.join(", ")]
       end
       [auth_type, creds]
     end
@@ -131,8 +189,8 @@ module Api
       auth_attrs    = provider.supported_auth_attributes
       invalid_attrs = creds.keys - auth_attrs
       return if invalid_attrs.blank?
-      raise BadRequestError, format("Unsupported credential attributes %s specified, %s supports: %s",
-                                    invalid_attrs.join(', '), provider.class.name, auth_attrs.join(", "))
+      raise BadRequestError, "Unsupported credential attributes %s specified, %s supports: %s" %
+                             [invalid_attrs.join(', '), provider.class.name, auth_attrs.join(", ")]
     end
 
     def fetch_provider_data(provider_klass, data, options = {})

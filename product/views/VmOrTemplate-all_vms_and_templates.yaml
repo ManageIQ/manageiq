@@ -38,8 +38,6 @@ include:
 
 # Included tables and columns for query performance
 include_for_find:
-  :host: {}
-  :storage: {}
   :snapshots: {}
   :compliances: {}
   :operating_system: {}

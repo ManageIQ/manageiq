@@ -4,7 +4,7 @@ describe MiqProvision do
     let(:ems)      { FactoryGirl.create(:ems_openstack_with_authentication) }
     let(:flavor)   { FactoryGirl.create(:flavor_openstack, :ems_ref => 24) }
     let(:options)  { {:src_vm_id => template.id, :vm_target_name => "test_vm_1"} }
-    let(:template) { FactoryGirl.create(:template_openstack, :ext_management_system => ems, :ems_ref => MiqUUID.new_guid) }
+    let(:template) { FactoryGirl.create(:template_openstack, :ext_management_system => ems, :ems_ref => SecureRandom.uuid) }
     let(:vm)       { FactoryGirl.create(:vm_openstack, :ext_management_system => ems) }
 
     let(:task) do

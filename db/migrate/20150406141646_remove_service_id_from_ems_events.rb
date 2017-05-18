@@ -1,4 +1,4 @@
-class RemoveServiceIdFromEmsEvents < ActiveRecord::Migration
+class RemoveServiceIdFromEmsEvents < ActiveRecord::Migration[4.2]
   def up
     remove_index  :ems_events, :service_id
     remove_column :ems_events, :service_id

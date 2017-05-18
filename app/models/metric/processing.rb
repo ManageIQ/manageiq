@@ -123,7 +123,10 @@ module Metric::Processing
 
     scope = obj.send(meth).for_time_range(start_time, end_time)
     scope = scope.where(:capture_interval_name => interval_name) if interval_name != "realtime"
+    extrapolate(klass, scope)
+  end
 
+  def self.extrapolate(klass, scope)
     last_perf = {}
     scope.order("timestamp, capture_interval_name").each do |perf|
       interval = interval_name_to_interval(perf.capture_interval_name)
@@ -134,28 +137,36 @@ module Metric::Processing
         next
       end
 
-      new_perf = klass.new(last_perf[interval].attributes)
-      new_perf.timestamp = last_perf[interval].timestamp + interval
-      new_perf.capture_interval = 0
-      Metric::Rollup::ROLLUP_COLS.each do |c|
-        next if new_perf.send(c).nil? || perf.send(c).nil?
-        new_perf.send(c.to_s + "=", (new_perf.send(c) + perf.send(c)) / 2)
-      end
-
-      unless perf.assoc_ids.nil?
-        Metric::Rollup::ASSOC_KEYS.each do |assoc|
-          next if new_perf.assoc_ids.nil? || new_perf.assoc_ids[assoc].blank? || perf.assoc_ids[assoc].blank?
-          new_perf.assoc_ids[assoc][:on] ||= []
-          new_perf.assoc_ids[assoc][:off] ||= []
-          new_perf.assoc_ids[assoc][:on]  = (new_perf.assoc_ids[assoc][:on] + perf.assoc_ids[assoc][:on]).uniq!
-          new_perf.assoc_ids[assoc][:off] = (new_perf.assoc_ids[assoc][:off] + perf.assoc_ids[assoc][:off]).uniq!
-        end
-      end
-      new_perf.save
+      new_perf = create_new_metric(klass, last_perf[interval], perf, interval)
+      new_perf.save!
 
       last_perf[interval] = perf
     end
   end
+
+  def self.create_new_metric(klass, last_perf, perf, interval)
+    attrs = last_perf.attributes
+    attrs.delete('id')
+    attrs['timestamp'] += interval
+    attrs['capture_interval'] = 0
+    new_perf = klass.new(attrs)
+    Metric::Rollup::ROLLUP_COLS.each do |c|
+      next if new_perf.send(c).nil? || perf.send(c).nil?
+      new_perf.send(c.to_s + "=", (new_perf.send(c) + perf.send(c)) / 2)
+    end
+
+    unless perf.assoc_ids.nil?
+      Metric::Rollup::ASSOC_KEYS.each do |assoc|
+        next if new_perf.assoc_ids.nil? || new_perf.assoc_ids[assoc].blank? || perf.assoc_ids[assoc].blank?
+        new_perf.assoc_ids[assoc][:on] ||= []
+        new_perf.assoc_ids[assoc][:off] ||= []
+        new_perf.assoc_ids[assoc][:on]  = (new_perf.assoc_ids[assoc][:on] + perf.assoc_ids[assoc][:on]).uniq!
+        new_perf.assoc_ids[assoc][:off] = (new_perf.assoc_ids[assoc][:off] + perf.assoc_ids[assoc][:off]).uniq!
+      end
+    end
+    new_perf
+  end
+  private_class_method :extrapolate, :create_new_metric
 
   def self.interval_name_to_interval(name)
     case name

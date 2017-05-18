@@ -77,5 +77,16 @@ RSpec.describe "hosts API" do
         expect(response).to have_http_status(:forbidden)
       end
     end
+
+    context 'OPTIONS /api/hosts' do
+      it 'returns hosts node_types' do
+        api_basic_authorize
+
+        expected_data = {"node_types" => Host.node_types.to_s}
+
+        run_options(hosts_url)
+        expect_options_results(:hosts, expected_data)
+      end
+    end
   end
 end

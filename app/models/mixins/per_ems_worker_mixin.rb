@@ -18,7 +18,7 @@ module PerEmsWorkerMixin
     end
 
     def all_valid_ems_in_zone
-      all_ems_in_zone.select(&:authentication_status_ok?)
+      all_ems_in_zone.select {|e| e.enabled && e.authentication_status_ok?}
     end
 
     def desired_queue_names
@@ -108,7 +108,7 @@ module PerEmsWorkerMixin
     end
 
     def ems_from_queue_name(queue_name)
-      ExtManagementSystem.find_by_id(ems_id_from_queue_name(queue_name))
+      ExtManagementSystem.find_by(:id => ems_id_from_queue_name(queue_name))
     end
   end
 

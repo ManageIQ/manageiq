@@ -1,3 +1,5 @@
+require 'resolv'
+
 class MiqServer < ApplicationRecord
   include_concern 'WorkerManagement'
   include_concern 'ServerMonitor'
@@ -51,19 +53,16 @@ class MiqServer < ApplicationRecord
   end
 
   def self.atStartup
-    configuration  = VMDB::Config.new("vmdb")
-    starting_roles = configuration.config.fetch_path(:server, :role)
+    starting_roles = ::Settings.server.role
 
     # Change the database role to database_operations
-    roles = configuration.config.fetch_path(:server, :role)
+    roles = starting_roles.dup
     if roles.gsub!(/\bdatabase\b/, 'database_operations')
-      configuration.config.store_path(:server, :role, roles)
+      MiqServer.my_server.set_config(:server => {:role => roles})
     end
 
-    roles = configuration.config.fetch_path(:server, :role)
-    configuration.save
-
     # Roles Changed!
+    roles = ::Settings.server.role
     if roles != starting_roles
       # tell the server to pick up the role change
       server = MiqServer.my_server
@@ -186,19 +185,18 @@ class MiqServer < ApplicationRecord
     check_migrations_up_to_date
     Vmdb::Settings.activate
 
-    config = VMDB::Config.new("vmdb")
-
     server = my_server(true)
     server_hash = {}
     config_hash = {}
 
     ipaddr, hostname, mac_address = get_network_information
 
-    if ipaddr =~ /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/
+    if ipaddr =~ Regexp.union(Resolv::IPv4::Regex, Resolv::IPv6::Regex).freeze
       server_hash[:ipaddress] = config_hash[:host] = ipaddr
     end
 
     unless hostname.blank?
+      hostname = nil if hostname =~ /.*localhost.*/
       server_hash[:hostname] = config_hash[:hostname] = hostname
     end
 
@@ -245,10 +243,11 @@ class MiqServer < ApplicationRecord
     Vmdb::Appliance.log_config_on_startup
 
     server.ntp_reload
+    server.set_database_application_name
 
     EvmDatabase.seed_last
 
-    start_memcached(config)
+    start_memcached
     prep_apache_proxying
     server.start
     server.monitor_loop
@@ -290,43 +289,43 @@ class MiqServer < ApplicationRecord
   end
 
   def monitor_poll
-    (::Settings.server.monitor_poll || 5.seconds).to_i_with_method
+    ::Settings.server.monitor_poll.to_i_with_method
   end
 
   def stop_poll
-    (::Settings.server.stop_poll || 10.seconds).to_i_with_method
+    ::Settings.server.stop_poll.to_i_with_method
   end
 
   def heartbeat_frequency
-    (::Settings.server.heartbeat_frequency || 30.seconds).to_i_with_method
+    ::Settings.server.heartbeat_frequency.to_i_with_method
   end
 
   def server_dequeue_frequency
-    (::Settings.server.server_dequeue_frequency || 5.seconds).to_i_with_method
+    ::Settings.server.server_dequeue_frequency.to_i_with_method
   end
 
   def server_monitor_frequency
-    (::Settings.server.server_monitor_frequency || 60.seconds).to_i_with_method
+    ::Settings.server.server_monitor_frequency.to_i_with_method
   end
 
   def server_log_frequency
-    (::Settings.server.server_log_frequency || 5.minutes).to_i_with_method
+    ::Settings.server.server_log_frequency.to_i_with_method
   end
 
   def server_log_timings_threshold
-    (::Settings.server.server_log_timings_threshold || 1.second).to_i_with_method
+    ::Settings.server.server_log_timings_threshold.to_i_with_method
   end
 
   def worker_dequeue_frequency
-    (::Settings.server.worker_dequeue_frequency || 3.seconds).to_i_with_method
+    ::Settings.server.worker_dequeue_frequency.to_i_with_method
   end
 
   def worker_messaging_frequency
-    (::Settings.server.worker_messaging_frequency || 5.seconds).to_i_with_method
+    ::Settings.server.worker_messaging_frequency.to_i_with_method
   end
 
   def worker_monitor_frequency
-    (::Settings.server.worker_monitor_frequency || 15.seconds).to_i_with_method
+    ::Settings.server.worker_monitor_frequency.to_i_with_method
   end
 
   def threshold_exceeded?(name, now = Time.now.utc)
@@ -457,6 +456,14 @@ class MiqServer < ApplicationRecord
     @who_am_i ||= "#{name} #{my_zone} #{self.class.name} #{id}"
   end
 
+  def database_application_name
+    "MIQ #{Process.pid} Server[#{compressed_id}], #{zone.name}[#{zone.compressed_id}]".truncate(64)
+  end
+
+  def set_database_application_name
+    ArApplicationName.name = database_application_name
+  end
+
   def is_local?
     guid == MiqServer.my_guid
   end
@@ -506,7 +513,7 @@ class MiqServer < ApplicationRecord
 
   def logon_status
     return :ready if self.started?
-    started_on < (Time.now.utc - get_config("vmdb").config[:server][:startup_timeout]) ? :timed_out_starting : status.to_sym
+    started_on < (Time.now.utc - ::Settings.server.startup_timeout) ? :timed_out_starting : status.to_sym
   end
 
   def logon_status_details
@@ -525,7 +532,7 @@ class MiqServer < ApplicationRecord
   def self.my_guid
     @@my_guid_cache ||= begin
       guid_file = Rails.root.join("GUID")
-      File.write(guid_file, MiqUUID.new_guid) unless File.exist?(guid_file)
+      File.write(guid_file, SecureRandom.uuid) unless File.exist?(guid_file)
       File.read(guid_file).strip
     end
   end
@@ -537,7 +544,7 @@ class MiqServer < ApplicationRecord
   end
 
   def zone_description
-    zone ? zone.description : nil
+    zone.try(:description)
   end
 
   def self.my_roles(force_reload = false)
@@ -602,7 +609,7 @@ class MiqServer < ApplicationRecord
   end
 
   def server_timezone
-    get_config("vmdb").config.fetch_path(:server, :timezone) || "UTC"
+    ::Settings.server.timezone || "UTC"
   end
 
   def tenant_identity

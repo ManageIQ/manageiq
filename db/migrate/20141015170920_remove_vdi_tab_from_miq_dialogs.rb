@@ -1,4 +1,4 @@
-class RemoveVdiTabFromMiqDialogs < ActiveRecord::Migration
+class RemoveVdiTabFromMiqDialogs < ActiveRecord::Migration[4.2]
   class MiqDialog < ActiveRecord::Base
     serialize :content, Hash
   end

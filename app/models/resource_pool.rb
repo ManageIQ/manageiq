@@ -1,5 +1,4 @@
 class ResourcePool < ApplicationRecord
-  include VirtualTotalMixin
   include TenantIdentityMixin
 
   acts_as_miq_taggable
@@ -13,9 +12,7 @@ class ResourcePool < ApplicationRecord
   include RelationshipMixin
   self.default_relationship_type = "ems_metadata"
 
-  include AggregationMixin
-  aggregation_mixin_virtual_columns_use :all_relationships
-
+  include RelationshipsAggregationMixin
   include MiqPolicyMixin
   include AsyncDeleteMixin
 
@@ -43,7 +40,7 @@ class ResourcePool < ApplicationRecord
 
   # Resource Pool relationship methods
   def resource_pools
-    children(:of_type => 'ResourcePool').sort_by { |c| c.name.downcase }
+    children(:of_type => 'ResourcePool')
   end
 
   alias_method :add_resource_pool, :set_child
@@ -60,7 +57,7 @@ class ResourcePool < ApplicationRecord
 
   # VM relationship methods
   def vms_and_templates
-    children(:of_type => 'VmOrTemplate').sort_by { |c| c.name.downcase }
+    children(:of_type => 'VmOrTemplate')
   end
   alias_method :direct_vms_and_templates, :vms_and_templates
 
@@ -115,7 +112,7 @@ class ResourcePool < ApplicationRecord
 
   # All RPs under this RP and all child RPs
   def all_resource_pools
-    descendants(:of_type => 'ResourcePool').sort_by { |r| r.name.downcase }
+    descendants(:of_type => 'ResourcePool')
   end
 
   # Parent relationship methods

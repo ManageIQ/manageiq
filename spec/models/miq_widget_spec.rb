@@ -1,5 +1,8 @@
 describe MiqWidget do
-  include_examples(".seed called multiple times", 10)
+  describe '.seed' do
+    before { [MiqReport, RssFeed].each(&:seed) }
+    include_examples(".seed called multiple times", 21)
+  end
 
   before(:each) do
     EvmSpecHelper.local_miq_server
@@ -286,6 +289,23 @@ describe MiqWidget do
       @widget.queue_generate_content
     end
 
+    it "does not generate content if visibility set to group only and there are no users in that group" do
+      @widget.visibility.delete(:roles)
+      @widget.visibility[:groups] = @group2.description
+      @user2.delete
+
+      expect(@widget).not_to receive(:queue_generate_content_for_users_or_group)
+      @widget.queue_generate_content
+    end
+
+    it "generate content if visibility set to group only with users in that group" do
+      @widget.visibility.delete(:roles)
+      @widget.visibility[:groups] = @group2.description
+
+      expect(@widget).to receive(:queue_generate_content_for_users_or_group).once
+      @widget.queue_generate_content
+    end
+
     it "creates a new task when previous task is finished" do
       @widget.queue_generate_content
       MiqTask.first.state_finished
@@ -407,14 +427,16 @@ describe MiqWidget do
     end
 
     it "with report_sync" do
-      stub_settings(:product => {:report_sync => true})
-
       user_est =  FactoryGirl.create(:user, :userid => 'user_est', :miq_groups => [@group2], :settings => {:display => {:timezone => "Eastern Time (US & Canada)"}})
       expect(user_est.get_timezone).to eq("Eastern Time (US & Canada)")
       ws = FactoryGirl.create(:miq_widget_set, :name => "default", :userid => "user_est", :group_id => @group2.id)
       ws.add_member(@widget)
 
-      expect_any_instance_of(MiqWidget).to receive(:generate_content).with("MiqGroup", @group2.name, nil, ["Eastern Time (US & Canada)", "UTC"])
+      expect_any_instance_of(MiqWidget).to receive(:generate_content).with("MiqGroup", @group2.name, nil,
+                                                                           ["Eastern Time (US & Canada)"])
+
+      stub_settings(:server  => {:timezone => "Eastern Time (US & Canada)"},
+                    :product => {:report_sync => true})
       @widget.queue_generate_content
       expect(MiqQueue.where(@q_options).count).to eq(0)
     end
@@ -468,7 +490,7 @@ describe MiqWidget do
 
     before do
       allow(MiqWidget::ContentOptionGenerator).to receive(:new).and_return(content_option_generator)
-      allow(content_option_generator).to receive(:generate).with(group, users).and_return("content options")
+      allow(content_option_generator).to receive(:generate).with(group, users, true).and_return("content options")
     end
 
     it "returns the content options" do
@@ -541,12 +563,14 @@ describe MiqWidget do
   end
 
   context "multiple groups" do
-    let(:widget) { MiqWidget.find_by_description("chart_vendor_and_guest_os") }
+    let(:widget) { MiqWidget.find_by(:description => "chart_vendor_and_guest_os") }
 
     before do
       MiqReport.seed_report("Vendor and Guest OS")
       MiqWidget.seed_widget("chart_vendor_and_guest_os")
 
+      # tests are written for timezone_matters = true
+      widget.options[:timezone_matters] = true if widget.options
       @role   = FactoryGirl.create(:miq_user_role)
       @group  = FactoryGirl.create(:miq_group, :miq_user_role => @role)
       @user1  = FactoryGirl.create(:user,
@@ -572,14 +596,15 @@ describe MiqWidget do
       before do
         widget.make_memberof(@ws1)
         widget.make_memberof(@ws2)
-        widget.queue_generate_content
       end
 
       it "queued based on group/TZs of User's in the group" do
+        widget.queue_generate_content
         expect(MiqQueue.count).to eq(1)
       end
 
       it "contents created for each timezone of the group" do
+        widget.queue_generate_content
         MiqQueue.first.deliver
         expect(MiqWidgetContent.count).to eq(2)
         MiqWidgetContent.all.each do |content|
@@ -589,7 +614,20 @@ describe MiqWidget do
         end
       end
 
+      it "contents created for one timezone per group with timezone_matters = false" do
+        widget.options = {:timezone_matters => false }
+        widget.queue_generate_content
+        MiqQueue.first.deliver
+        expect(MiqWidgetContent.count).to eq(1)
+        MiqWidgetContent.all.each do |content|
+          expect(content.user_id).to be_nil
+          expect(content.miq_group_id).to eq(@group.id)
+          expect(content.timezone).to eq("UTC")
+        end
+      end
+
       it "when changing to self service group" do
+        widget.queue_generate_content
         MiqQueue.first.deliver
         MiqWidgetContent.all.each do |content|
           expect(content.user_id).to be_nil
@@ -704,6 +742,32 @@ describe MiqWidget do
         @user1.destroy
         expect(MiqWidgetContent.count).to eq(0)
       end
+    end
+  end
+
+  describe "#queued_at" do
+    it "is nil when no task" do
+      widget = FactoryGirl.build(:miq_widget)
+      expect(widget.queued_at).to be_nil
+    end
+
+    it "uses task value" do
+      dt = Time.now.utc
+      widget = FactoryGirl.build(:miq_widget, :miq_task => FactoryGirl.build(:miq_task, :created_on => dt))
+      expect(widget.queued_at).to eq(dt)
+    end
+  end
+
+  describe "#status_message" do
+    it "is nil when no task" do
+      widget = FactoryGirl.build(:miq_widget)
+      expect(widget.status_message).to eq("Unknown")
+    end
+
+    it "uses task value" do
+      dt = Time.now.utc
+      widget = FactoryGirl.build(:miq_widget, :miq_task => FactoryGirl.build(:miq_task, :message => "message"))
+      expect(widget.status_message).to eq("message")
     end
   end
 end

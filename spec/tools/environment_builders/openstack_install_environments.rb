@@ -18,15 +18,20 @@ require_relative 'openstack/services/orchestration/builder'
 
 def usage(s)
   $stderr.puts(s)
-  $stderr.puts("Installs OpenStack on servers using packstack")
+  $stderr.puts("Usage: bundle exec rails r spec/tools/environment_builders/openstack_install_environments.rb --install")
+  $stderr.puts("- installs OpenStack on servers using packstack")
+  $stderr.puts("Usage: bundle exec rails r spec/tools/environment_builders/openstack_install_environments.rb --activate_paginations")
+  $stderr.puts("- activate paginations for OpenStack on servers")
+  $stderr.puts("Usage: bundle exec rails r spec/tools/environment_builders/openstack_install_environments.rb --deactivate_paginations")
+  $stderr.puts("- deactivate paginations for OpenStack on servers")
   $stderr.puts("Filter one with --only-environment")
   $stderr.puts("Options:")
-  $stderr.puts("         [--only-envinronment <name>]  - allowed values #{allowed_enviroments}")
+  $stderr.puts("         [--only-environment <name>]  - allowed values #{allowed_environments}")
   exit(2)
 end
 
-unless File.exist?("openstack_environments.yml")
-  raise ArgumentError, usage("expecting openstack_environments.yml in ManageIQ root dir")
+unless File.exist?(openstack_environment_file)
+  raise ArgumentError, usage("expecting #{openstack_environment_file}")
 end
 
 @only_environment = nil
@@ -36,9 +41,11 @@ loop do
   case option
   when '--only-environment', '-o'
     argv      = ARGV.shift
-    supported = allowed_enviroments
+    supported = allowed_environments
     raise ArgumentError, usage("supported --identity options are #{supported}") unless supported.include?(argv.to_sym)
     @only_environment = argv.to_sym
+  when '--activate-paginations', '--deactivate-paginations', '--install'
+    @method = option
   when /^-/
     usage("Unknown option: #{option}")
   else
@@ -51,6 +58,13 @@ def install_environments
     env_name     = env.keys.first
     env          = env[env_name]
     ssh_user     = env["ssh_user"] || "root"
+
+    @environment = env_name.to_sym
+
+    unless @only_environment.blank?
+      puts "Skipping enviroment #{@environment}"
+      next unless @environment == @only_environment
+    end
 
     cmd = "ssh-copy-id #{ssh_user}@#{env["ip"]}"
     puts "Executing: #{cmd}"
@@ -98,6 +112,11 @@ def install_environments
 
     @environment = env_name.to_sym
 
+    unless @only_environment.blank?
+      puts "Skipping enviroment #{@environment}"
+      next unless @environment == @only_environment
+    end
+
     stackrc_name = 'keystonerc_admin'
     stackrc_name += '_v3' if identity_service == :v3
 
@@ -110,8 +129,79 @@ def install_environments
   end
 
   puts "---------------------------------------------------------------------------------------------------------------"
-  puts "Updating openstack_environments.yml with OpenStack credentials"
+  puts "Updating #{openstack_environment_file} with OpenStack credentials"
   File.open(openstack_environment_file, 'w') { |f| f.write openstack_environments.to_yaml }
 end
 
-install_environments
+def activate_paginations
+  openstack_environments.each do |env|
+    env_name     = env.keys.first
+    env          = env[env_name]
+    ssh_user     = env["ssh_user"] || "root"
+
+    @environment = env_name.to_sym
+
+    unless @only_environment.blank?
+      puts "Skipping enviroment #{@environment}"
+      next unless @environment == @only_environment
+    end
+
+    case @environment
+    when :grizzly
+      puts " We don't support pagination for grizzly"
+      next
+    when :havana
+      file = "openstack-activate-pagination-rhel6"
+    else
+      file = "openstack-activate-pagination"
+    end
+
+    puts "-------------------------------------------------------------------------------------------------------------"
+    puts "Activate paginations in installed OpenStack #{env_name}"
+    cmd = " ssh #{ssh_user}@#{env["ip"]} "\
+          " 'curl http://file.brq.redhat.com/~lsmola/miq/#{file} | bash -x' "
+    puts cmd
+    ` #{cmd} `
+  end
+end
+
+def deactivate_paginations
+  openstack_environments.each do |env|
+    env_name     = env.keys.first
+    env          = env[env_name]
+    ssh_user     = env["ssh_user"] || "root"
+
+    @environment = env_name.to_sym
+
+    unless @only_environment.blank?
+      puts "Skipping enviroment #{@environment}"
+      next unless @environment == @only_environment
+    end
+
+    puts "-------------------------------------------------------------------------------------------------------------"
+    case @environment
+    when :grizzly
+      puts " We don't support pagination for grizzly"
+      next
+    when :havana
+      file = "openstack-deactivate-pagination-rhel6"
+    else
+      file = "openstack-deactivate-pagination"
+    end
+
+    puts "Deactivate paginations in installed OpenStack #{env_name}"
+    cmd = " ssh #{ssh_user}@#{env["ip"]} "\
+          " 'curl http://file.brq.redhat.com/~lsmola/miq/#{file} | bash -x' "
+    puts cmd
+    ` #{cmd} `
+  end
+end
+
+case @method
+when "--install"
+  install_environments
+when "--activate-paginations"
+  activate_paginations
+when "--deactivate-paginations"
+  deactivate_paginations
+end

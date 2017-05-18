@@ -5,7 +5,7 @@ module ActiveRecord
       super
       return if options[:id] == false
 
-      value = ApplicationRecord.rails_sequence_start
+      value = ArRegion.anonymous_class_with_ar_region.rails_sequence_start
       set_pk_sequence!(table_name, value) unless value == 0
     end
   end

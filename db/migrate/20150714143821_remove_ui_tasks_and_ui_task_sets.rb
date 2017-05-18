@@ -1,4 +1,4 @@
-class RemoveUiTasksAndUiTaskSets < ActiveRecord::Migration
+class RemoveUiTasksAndUiTaskSets < ActiveRecord::Migration[4.2]
   class MiqSet < ActiveRecord::Base; end
 
   class Relationship < ActiveRecord::Base; end

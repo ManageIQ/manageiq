@@ -24,6 +24,7 @@ cols:
 - allocated_disk_storage
 - last_scan_on
 - region_description
+- image?
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -47,6 +48,7 @@ include_for_find:
 col_order:
 - name
 - ext_management_system.name
+- image?
 - last_compliance_status
 - allocated_disk_storage
 - hardware.bitness
@@ -59,6 +61,7 @@ col_order:
 headers:
 - Name
 - Provider
+- Type
 - Compliant
 - Allocated Size
 - Architecture
@@ -68,7 +71,7 @@ headers:
 - Region
 
 # Condition(s) string for the SQL query
-conditions: 
+conditions:
 
 # Order string for the SQL query
 order: Ascending
@@ -91,8 +94,8 @@ group: n
 #   StackedColumn
 #   StackedThreedColumn
 
-graph: 
+graph:
 
 # Dimensions of graph (1 or 2)
 #   Note: specifying 2 for a single dimension graph may not return expected results
-dims: 
+dims:

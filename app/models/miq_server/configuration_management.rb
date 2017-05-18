@@ -13,6 +13,7 @@ module MiqServer::ConfigurationManagement
   def set_config(config)
     config = config.config if config.respond_to?(:config)
     add_settings_for_resource(config)
+    ntp_reload_queue
   end
 
   def reload_settings
@@ -34,7 +35,7 @@ module MiqServer::ConfigurationManagement
     end
 
     unless data.zone.nil?
-      self.zone = Zone.find_by(:name => data.zone)
+      self.zone = Zone.in_my_region.find_by(:name => data.zone)
       save
     end
     update_capabilities

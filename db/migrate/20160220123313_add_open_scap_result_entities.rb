@@ -1,4 +1,4 @@
-class AddOpenScapResultEntities < ActiveRecord::Migration
+class AddOpenScapResultEntities < ActiveRecord::Migration[4.2]
   def change
     create_table :openscap_results do |t|
       t.belongs_to :container_image, :type => :bigint

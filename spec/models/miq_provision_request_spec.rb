@@ -27,15 +27,11 @@ describe MiqProvisionRequest do
     let(:vm_template) { FactoryGirl.create(:template_vmware, :name => "template1", :ext_management_system => ems) }
 
     it "should not be created without requester being specified" do
-      expect { FactoryGirl.create(:miq_provision_request) }.to raise_error(ActiveRecord::RecordInvalid)
-    end
-
-    it "should not be created with an invalid userid being specified" do
-      expect { FactoryGirl.create(:miq_provision_request, :userid => 'barney', :src_vm_id => vm_template.id) }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { FactoryGirl.create(:miq_provision_request, :requester => nil) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "should not be created with a valid userid but no vm being specified" do
-      expect { FactoryGirl.create(:miq_provision_request, :requester => user) }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { FactoryGirl.create(:miq_provision_request, :requester => user, :source => nil) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "should be created from either a VM or Template" do

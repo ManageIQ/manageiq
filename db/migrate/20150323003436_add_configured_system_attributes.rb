@@ -1,4 +1,4 @@
-class AddConfiguredSystemAttributes < ActiveRecord::Migration
+class AddConfiguredSystemAttributes < ActiveRecord::Migration[4.2]
   def change
     add_column :configured_systems, :ipaddress, :string
     add_column :configured_systems, :mac_address, :string

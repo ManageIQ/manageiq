@@ -18,6 +18,12 @@ FactoryGirl.define do
       cpu_total_cores      2
     end
 
+    trait(:cpu4x2) do
+      cpu_sockets          4
+      cpu_cores_per_socket 2
+      cpu_total_cores      8
+    end
+
     trait(:ram1GB) { memory_mb 1024 }
   end
 end

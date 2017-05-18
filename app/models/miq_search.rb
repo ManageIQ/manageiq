@@ -4,6 +4,10 @@ class MiqSearch < ApplicationRecord
 
   validates_uniqueness_of :name, :scope => "db"
 
+  # validate if the name of a new filter is unique in Global Filters
+  validates :description, :uniqueness => { :scope => "db", :conditions => -> { where.not(:search_type => 'user') },
+                          :if => proc { |miq_search| miq_search.search_type == 'global' } }
+
   has_many  :miq_schedules
 
   before_destroy :check_schedules_empty_on_destroy
@@ -39,6 +43,21 @@ class MiqSearch < ApplicationRecord
 
   def self.visible_to_all
     where("search_type=? or (search_type=? and (search_key is null or search_key<>?))", "global", "default", "_hidden_")
+  end
+
+  def self.visible_to_current_user
+    where(:search_type => 'user', :search_key => User.current_user.userid)
+  end
+
+  def self.filters_by_type(type)
+    case type
+    when "global" # Global filters
+      visible_to_all
+    when "my"     # My filters
+      visible_to_current_user
+    else
+      raise "Error: #{type} is not a proper filter type!"
+    end
   end
 
   def self.get_expressions_by_model(db)

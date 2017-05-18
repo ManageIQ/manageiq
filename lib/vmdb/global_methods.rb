@@ -28,7 +28,7 @@ module Vmdb
     end
 
     def column_type(model, column)
-      MiqExpression.col_type(model, column)
+      MiqExpression.create_field(model, [], column).column_type
     end
 
     # Had to add timezone methods here, they are being called from models
@@ -93,7 +93,7 @@ module Vmdb
       # table headings
       unless report.headers.nil?
         report.headers.each do |h|
-          html << "<th>" << CGI.escapeHTML(h.to_s) << "</th>"
+          html << "<th>" << CGI.escapeHTML(_(h.to_s)) << "</th>"
         end
         html << "</tr>"
         html << "</thead>"

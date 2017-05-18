@@ -28,11 +28,30 @@ describe DialogGroupSerializer do
     end
 
     before do
-      allow(dialog_field_serializer).to receive(:serialize).with(dialog_field).and_return("serialized_dialog_fields")
+      allow(dialog_field_serializer)
+        .to receive(:serialize).with(dialog_field, boolean).and_return("serialized_dialog_fields")
     end
 
-    it "serializes the dialog_group" do
-      expect(dialog_group_serializer.serialize(dialog_group)).to eq(expected_serialized_values)
+    context 'when wanting the excluded set of attributes' do
+      let(:all_attributes) { false }
+
+      it "serializes the dialog_group" do
+        expect(dialog_group_serializer.serialize(dialog_group, all_attributes)).to eq(expected_serialized_values)
+      end
+    end
+
+    context 'when wanting all attributes' do
+      let(:all_attributes) { true }
+
+      it 'serializes the dialog with all attributes' do
+        expect(dialog_group_serializer.serialize(dialog_group, all_attributes))
+          .to eq(expected_serialized_values.merge(
+                   'created_at'    => nil,
+                   'dialog_tab_id' => nil,
+                   'id'            => nil,
+                   'updated_at'    => nil
+          ))
+      end
     end
   end
 end

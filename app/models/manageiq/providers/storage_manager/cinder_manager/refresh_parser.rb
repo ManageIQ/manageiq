@@ -1,8 +1,8 @@
-#
-#
-#
+
 module ManageIQ::Providers
   class StorageManager::CinderManager::RefreshParser < ManageIQ::Providers::CloudManager::RefreshParser
+    require_nested "CrossLinkers"
+
     include ManageIQ::Providers::StorageManager::CinderManager::RefreshHelperMethods
     include Vmdb::Logging
 
@@ -33,6 +33,8 @@ module ManageIQ::Providers
       $fog_log.info("#{log_header}...Complete")
 
       link_storage_associations
+      CrossLinkers.cross_link(@ems, @data)
+      cleanup
 
       @data
     end
@@ -57,9 +59,12 @@ module ManageIQ::Providers
     end
 
     def parse_backup(backup)
+      _log.debug "backup['size'] = #{backup['size']}"
+      _log.debug "backup['size'].to_i.gigabytes = #{backup['size'].to_i.gigabytes}"
       uid = backup['id']
       new_result = {
         :ems_ref               => uid,
+        # TODO: These classes should not be OpenStack specific, but rather Cinder-specific.
         :type                  => "ManageIQ::Providers::Openstack::CloudManager::CloudVolumeBackup",
         # Supporting both Cinder v1 and Cinder v2
         :name                  => backup['display_name'] || backup['name'],
@@ -71,9 +76,10 @@ module ManageIQ::Providers
         :object_count          => backup['object_count'].to_i,
         :is_incremental        => backup['is_incremental'],
         :has_dependent_backups => backup['has_dependent_backups'],
-        :availability_zone     => @data_index.fetch_path(:availability_zones,
-                                  "volume-" + backup['availability_zone'] || "null_az"),
-        :volume                => @data_index.fetch_path(:cloud_volumes, backup['volume_id'])
+        :volume                => @data_index.fetch_path(:cloud_volumes, backup['volume_id']),
+
+        # Temporarily add the object from the API to the hash - for the cross-linkers.
+        :api_obj               => backup
       }
       return uid, new_result
     end
@@ -82,6 +88,7 @@ module ManageIQ::Providers
       uid = snap['id']
       new_result = {
         :ems_ref       => uid,
+        # TODO: These classes should not be OpenStack specific, but rather Cinder-specific.
         :type          => "ManageIQ::Providers::Openstack::CloudManager::CloudVolumeSnapshot",
         # Supporting both Cinder v1 and Cinder v2
         :name          => snap['display_name'] || snap['name'],
@@ -90,8 +97,10 @@ module ManageIQ::Providers
         # Supporting both Cinder v1 and Cinder v2
         :description   => snap['display_description'] || snap['description'],
         :size          => snap['size'].to_i.gigabytes,
-        :tenant        => @data_index.fetch_path(:cloud_tenants, snap['os-extended-snapshot-attributes:project_id']),
-        :volume        => @data_index.fetch_path(:cloud_volumes, snap['volume_id'])
+        :volume        => @data_index.fetch_path(:cloud_volumes, snap['volume_id']),
+
+        # Temporarily add the object from the API to the hash - for the cross-linkers.
+        :api_obj       => snap
       }
       return uid, new_result
     end
@@ -101,50 +110,22 @@ module ManageIQ::Providers
 
       uid = volume.id
       new_result = {
-        :ems_ref           => uid,
+        :ems_ref       => uid,
         # TODO: has its own CloudVolume?
-        :type              => "ManageIQ::Providers::Openstack::CloudManager::CloudVolume",
-        :name              => volume_name(volume),
-        :status            => volume.status,
-        :bootable          => volume.attributes['bootable'],
-        :creation_time     => volume.created_at,
-        :description       => volume_description(volume),
-        :volume_type       => volume.volume_type,
-        :snapshot_uid      => volume.snapshot_id,
-        :size              => volume.size.to_i.gigabytes,
-        :tenant            => @data_index.fetch_path(:cloud_tenants, volume.tenant_id),
-        :availability_zone => @data_index.fetch_path(:availability_zones,
-                              "volume-" + volume.availability_zone || "null_az"),
+        # TODO: These classes should not be OpenStack specific, but rather Cinder-specific.
+        :type          => "ManageIQ::Providers::Openstack::CloudManager::CloudVolume",
+        :name          => volume_name(volume),
+        :status        => volume.status,
+        :bootable      => volume.attributes['bootable'],
+        :creation_time => volume.created_at,
+        :description   => volume_description(volume),
+        :volume_type   => volume.volume_type,
+        :snapshot_uid  => volume.snapshot_id,
+        :size          => volume.size.to_i.gigabytes,
+
+        # Temporarily add the object from the API to the hash - for the cross-linkers.
+        :api_obj       => volume
       }
-
-      volume.attachments.each do |a|
-        if a['device'].blank?
-          _log.warn "#{log_header}: Volume: #{uid}, is missing a mountpoint, skipping the volume processing"
-          _log.warn "#{log_header}:   EMS: #{@ems.name}, Instance: #{a['server_id']}"
-          next
-        end
-
-        dev = File.basename(a['device'])
-        disks = @data_index.fetch_path(:vms, a['server_id'], :hardware, :disks)
-
-        unless disks
-          _log.warn "#{log_header}: Volume: #{uid}, attached to instance not visible in the scope of this EMS"
-          _log.warn "#{log_header}:   EMS: #{@ems.name}, Instance: #{a['server_id']}"
-          next
-        end
-
-        if (disk = disks.detect { |d| d[:location] == dev })
-          disk[:size] = new_result[:size]
-        else
-          disk = add_instance_disk(disks, new_result[:size], dev, "OpenStack Volume")
-        end
-
-        if disk
-          disk[:backing]      = new_result
-          disk[:backing_type] = 'CloudVolume'
-        end
-      end
-
       return uid, new_result
     end
 
@@ -158,21 +139,6 @@ module ManageIQ::Providers
       volume.respond_to?(:display_description) ? volume.display_description : volume.description
     end
 
-    def add_instance_disk(disks, size, location, name, controller_type)
-      if size >= 0
-        disk = {
-          :device_name     => name,
-          :device_type     => "disk",
-          :controller_type => controller_type,
-          :location        => location,
-          :size            => size
-        }
-        disks << disk
-        return disk
-      end
-      nil
-    end
-
     def link_storage_associations
       @data[:cloud_volumes].each do |cv|
         #
@@ -183,6 +149,12 @@ module ManageIQ::Providers
         base_snapshot = @data_index.fetch_path(:cloud_volume_snapshots, base_snapshot_uid)
         cv[:base_snapshot] = base_snapshot unless base_snapshot.nil?
       end if @data[:cloud_volumes]
+    end
+
+    def cleanup
+      @data[:cloud_volumes].each          { |c| c.delete(:api_obj) }
+      @data[:cloud_volume_snapshots].each { |c| c.delete(:api_obj) }
+      @data[:cloud_volume_backups].each   { |c| c.delete(:api_obj) }
     end
   end
 end

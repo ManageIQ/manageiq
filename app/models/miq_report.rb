@@ -40,6 +40,10 @@ class MiqReport < ApplicationRecord
   belongs_to                :user
   has_many                  :miq_widgets, :as => :resource
 
+  virtual_column  :human_expression, :type => :string
+  virtual_column  :based_on, :type => :string
+
+  alias_attribute :menu_name, :name
   attr_accessor_that_yamls :table, :sub_table, :filter_summary, :extras, :ids, :scoped_association, :html_title, :file_name,
                            :extras, :record_id, :tl_times, :user_categories, :trend_data, :performance, :include_for_find,
                            :report_run_time, :chart
@@ -83,6 +87,19 @@ class MiqReport < ApplicationRecord
     q
   end
 
+  # NOTE: this can by dynamically manipulated
+  def cols
+    self[:cols] ||= (self[:col_order] || []).reject { |x| x.include?(".") }
+  end
+
+  def human_expression
+    conditions.to_human
+  end
+
+  def based_on
+    Dictionary.gettext(db, :type => :model, :notfound => :titleize)
+  end
+
   def view_filter_columns
     col_order.collect { |c| [headers[col_order.index(c)], c] }
   end
@@ -113,35 +130,9 @@ class MiqReport < ApplicationRecord
     {
       :data_type         => data_type,
       :available_formats => get_available_formats(path, data_type),
-      :default_format    => get_default_format(path, data_type),
+      :default_format    => Formats.default_format_for_path(path, data_type),
       :numeric           => [:integer, :decimal, :fixnum, :float].include?(data_type)
     }
-  end
-
-  def self.display_filter_details(cols, mode)
-    # mode => :field || :tag
-    # Only return cols from has_many sub-tables
-    return [] if cols.nil?
-    cols.inject([]) do |r, c|
-      # eg. c = ["Host.Hardware.Disks : File Name", "Host.hardware.disks-filename"]
-      parts = c.last.split(".")
-      parts[-1] = parts.last.split("-").first # Strip off field name from last element
-
-      if parts.last == "managed"
-        next(r) unless mode == :tag
-        parts.pop # Remove "managed" from tail andjust just evaluate relationship
-      else
-        next(r) unless mode == :field
-      end
-
-      model = parts.shift
-      relats = MiqExpression.get_relats(model)
-      # Build relats hash fetch path like: [:reflections, :hardware, :reflections, :disks, :parent, :multivalue]
-      path = parts.inject([]) { |a, p| a << :reflections; a << p.to_sym }
-      path += [:parent, :multivalue]
-      multi = relats.fetch_path(*path)
-      multi == true ? r << c : r
-    end
   end
 
   def list_schedules
@@ -169,7 +160,7 @@ class MiqReport < ApplicationRecord
 
   def contains_records?
     (extras.key?(:total_html_rows) && extras[:total_html_rows] > 0) ||
-      (table && table.data.length > 0)
+      (table && !table.data.empty?)
   end
 
   def to_hash
@@ -199,8 +190,8 @@ class MiqReport < ApplicationRecord
 
   def load_custom_attributes
     klass = db.safe_constantize
-    return unless klass < CustomAttributeMixin
-    cols.concat(conditions.custom_attribute_columns) if conditions.present?
+    return unless klass < CustomAttributeMixin || Chargeback.db_is_chargeback?(db)
+
     klass.load_custom_attributes_for(cols.uniq)
   end
 
@@ -217,5 +208,17 @@ class MiqReport < ApplicationRecord
   def remove_loading_relations_for_virtual_custom_attributes
     vc_attributes = CustomAttributeMixin.select_virtual_custom_attributes(cols).present?
     include.delete(:custom_attributes) if vc_attributes.present? && include && include[:custom_attributes].blank?
+  end
+
+  # determine name column from headers for x-axis in chart
+  def chart_header_column
+    if graph[:column].blank?
+      _log.error("The column for the chart's x-axis must be defined in the report")
+      return
+    end
+
+    chart_column = MiqExpression::Field.parse(graph[:column]).column
+    column_index = col_order.index { |col| col.include?(chart_column) }
+    headers[column_index]
   end
 end

@@ -1,8 +1,8 @@
 class EmsCluster < ApplicationRecord
+  include SupportsFeatureMixin
   include NewWithTypeStiMixin
   include_concern 'CapacityPlanning'
   include EventMixin
-  include VirtualTotalMixin
   include TenantIdentityMixin
 
   acts_as_miq_taggable
@@ -26,14 +26,14 @@ class EmsCluster < ApplicationRecord
   virtual_column :v_parent_datacenter, :type => :string,  :uses => :all_relationships
   virtual_column :v_qualified_desc,    :type => :string,  :uses => :all_relationships
   virtual_column :last_scan_on,        :type => :time,    :uses => :last_drift_state_timestamp
-  virtual_total  :total_vms,           :vms,              :uses => :all_relationships
-  virtual_total  :total_miq_templates, :miq_templates,    :uses => :all_relationships
-  virtual_total  :total_vms_and_templates, :vms_and_templates, :uses => :all_relationships
-  virtual_total  :total_hosts,         :hosts,            :uses => :all_relationships
+  virtual_total  :total_vms,               :vms
+  virtual_total  :total_miq_templates,     :miq_templates
+  virtual_total  :total_vms_and_templates, :vms_and_templates
+  virtual_total  :total_hosts,             :hosts
 
   virtual_has_many :storages,       :uses => {:hosts => :storages}
   virtual_has_many :resource_pools, :uses => :all_relationships
-  virtual_has_many :failover_hosts, :uses => :hosts
+  has_many :failover_hosts, -> { failover }, :class_name => "Host"
 
   virtual_has_many :base_storage_extents, :class_name => "CimStorageExtent"
   virtual_has_many :storage_systems,      :class_name => "CimComputerSystem"
@@ -109,24 +109,6 @@ class EmsCluster < ApplicationRecord
   alias_method :storages,               :all_storages
   alias_method :datastores,             :all_storages    # Used by web-services to return datastores as the property name
 
-  alias_method :all_hosts,              :hosts
-  alias_method :all_host_ids,           :host_ids
-  alias_method :all_vms_and_templates,  :vms_and_templates
-  alias_method :all_vm_or_template_ids, :vm_or_template_ids
-  alias_method :all_vms,                :vms
-  alias_method :all_vm_ids,             :vm_ids
-  alias_method :all_miq_templates,      :miq_templates
-  alias_method :all_miq_template_ids,   :miq_template_ids
-
-  # Host relationship methods
-  def failover_hosts(_options = {})
-    hosts.select(&:failover)
-  end
-
-  def failover_host_ids
-    failover_hosts.collect(&:id)
-  end
-
   # Direct Vm relationship methods
   def direct_vm_rels
     # Look for only the Vms at the second depth (default RP + 1)
@@ -166,19 +148,11 @@ class EmsCluster < ApplicationRecord
   end
 
   def resource_pools
-    # Look for only the resource_pools at the second depth (default depth + 1)
-    rels = descendant_rels(:of_type => 'ResourcePool')
-    min_depth = rels.collect(&:depth).min
-    rels = rels.select { |r| r.depth == min_depth + 1 }
-    Relationship.resources(rels).sort_by { |r| r.name.downcase }
+    Relationship.resources(grandchild_rels(:of_type => 'ResourcePool'))
   end
 
   def resource_pools_with_default
-    # Look for only the resource_pools up to the second depth (default depth + 1)
-    rels = descendant_rels(:of_type => 'ResourcePool')
-    min_depth = rels.collect(&:depth).min
-    rels = rels.select { |r| r.depth <= min_depth + 1 }
-    Relationship.resources(rels).sort_by { |r| r.name.downcase }
+    Relationship.resources(child_and_grandchild_rels(:of_type => 'ResourcePool'))
   end
 
   alias_method :add_resource_pool, :set_child

@@ -1,4 +1,4 @@
-class AddNetworkGroupIdToCloudSubnets < ActiveRecord::Migration
+class AddNetworkGroupIdToCloudSubnets < ActiveRecord::Migration[4.2]
   def change
     add_column :cloud_subnets, :network_group_id, :bigint
 

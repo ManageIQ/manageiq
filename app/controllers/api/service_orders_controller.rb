@@ -11,7 +11,7 @@ module Api
         super
       else
         create_service_order_with_service_requests(service_requests)
-        ServiceOrder.cart_for(@auth_user_obj)
+        ServiceOrder.cart_for(User.current_user)
       end
     end
 
@@ -37,14 +37,21 @@ module Api
 
     def find_service_orders(id)
       if id == USER_CART_ID
-        ServiceOrder.cart_for(@auth_user_obj)
+        ServiceOrder.cart_for(User.current_user)
       else
-        ServiceOrder.find_for_user(@auth_user_obj, id)
+        ServiceOrder.find_for_user(User.current_user, id)
       end
     end
 
     def service_orders_search_conditions
-      {:user => @auth_user_obj, :tenant => @auth_user_obj.current_tenant}
+      {:user => User.current_user, :tenant => User.current_user.current_tenant}
+    end
+
+    def copy_resource(type, id, data)
+      service_order = resource_search(id, type, collection_class(type))
+      service_order.deep_copy(data)
+    rescue => err
+      raise BadRequestError, "Could not copy service order - #{err}"
     end
 
     private
@@ -74,7 +81,7 @@ module Api
         raise BadRequestError, "Must specify a service_template_href for adding a service_request"
       end
       service_template = resource_search(service_template_id, :service_templates, ServiceTemplate)
-      service_template_workflow(service_template, service_request)
+      service_template.provision_workflow(User.current_user, service_request)
     end
 
     def check_validation(validation)

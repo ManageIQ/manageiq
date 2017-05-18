@@ -1,4 +1,4 @@
-class CreateContainerNodeIdentities < ActiveRecord::Migration
+class CreateContainerNodeIdentities < ActiveRecord::Migration[4.2]
   def change
     # identity_infra is the node id assigned by the infrastructure
     add_column :container_nodes, :identity_infra, :string

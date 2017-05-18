@@ -23,12 +23,7 @@ module Api
 
       module ClassMethods
         def rescue_from_api_errors
-          ERROR_MAPPING.each do |error, type|
-            rescue_from error do |e|
-              raise e unless ApplicationController.handle_exceptions?
-              api_exception_type(type, e)
-            end
-          end
+          ERROR_MAPPING.each { |error, type| rescue_from(error) { |e| api_exception_type(type, e) } }
         end
       end
 

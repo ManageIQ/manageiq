@@ -1,4 +1,4 @@
-class CorrectUserCreatedRoleFeatureSets < ActiveRecord::Migration
+class CorrectUserCreatedRoleFeatureSets < ActiveRecord::Migration[4.2]
   class MiqUserRole < ActiveRecord::Base
     has_and_belongs_to_many :miq_product_features, :join_table => :miq_roles_features, :class_name => "CorrectUserCreatedRoleFeatureSets::MiqProductFeature"
   end
@@ -7,12 +7,12 @@ class CorrectUserCreatedRoleFeatureSets < ActiveRecord::Migration
 
   def up
     say_with_time "Correcting user created role feature sets" do
-      vm_cloud_explorer = MiqProductFeature.find_by_identifier("vm_cloud_explorer")
-      vm_infra_explorer = MiqProductFeature.find_by_identifier("vm_infra_explorer")
-      instances         = MiqProductFeature.find_by_identifier("instance")
-      images            = MiqProductFeature.find_by_identifier("image")
-      vms               = MiqProductFeature.find_by_identifier("vm")
-      templates         = MiqProductFeature.find_by_identifier("miq_template")
+      vm_cloud_explorer = MiqProductFeature.find_by(:identifier => "vm_cloud_explorer")
+      vm_infra_explorer = MiqProductFeature.find_by(:identifier => "vm_infra_explorer")
+      instances         = MiqProductFeature.find_by(:identifier => "instance")
+      images            = MiqProductFeature.find_by(:identifier => "image")
+      vms               = MiqProductFeature.find_by(:identifier => "vm")
+      templates         = MiqProductFeature.find_by(:identifier => "miq_template")
 
       affected_user_roles.each do |user_role|
         if user_role.miq_product_features.include?(vm_cloud_explorer)

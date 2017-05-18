@@ -9,6 +9,9 @@ describe ContainerImage do
     reg = ContainerImageRegistry.new(:name => "docker.io", :host => "docker.io", :port => "1234")
     image.container_image_registry = reg
     expect(image.full_name).to eq("docker.io:1234/fedora:v1")
+
+    image.image_ref = "docker-pullable://registry/repo/name@id"
+    expect(image.full_name).to eq("registry/repo/name@id")
   end
 
   it "#display_registry" do
@@ -23,6 +26,9 @@ describe ContainerImage do
   it "#docker_id" do
     image = FactoryGirl.create(:container_image, :image_ref => "docker://id")
     expect(image.docker_id).to eq("id")
+
+    image = FactoryGirl.create(:container_image, :image_ref => "docker-pullable://repo/name@id")
+    expect(image.docker_id).to eq("repo/name@id")
 
     image = FactoryGirl.create(:container_image, :image_ref => "rocket://id")
     expect(image.docker_id).to eq(nil)

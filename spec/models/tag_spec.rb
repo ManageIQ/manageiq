@@ -1,4 +1,43 @@
 describe Tag do
+  describe ".list" do
+    it "returns an empty string for something that is untaggable" do
+      account = FactoryGirl.create(:account)
+      actual = described_class.list(account)
+      expect(actual).to eq("")
+    end
+  end
+
+  describe ".tags" do
+    let!(:account) { FactoryGirl.create(:account) }
+    let!(:tag) { FactoryGirl.create(:tag) }
+
+    it "returns tags with tagged items" do
+      Tagging.create(:taggable => account, :tag => tag)
+
+      expect(Tag.tags).to eq [tag]
+    end
+
+    it "does not return tags without tagged items" do
+      expect(Tag.tags).to eq []
+    end
+
+    it "can be filtered by taggable type" do
+      Tagging.create(:taggable => account, :tag => tag)
+
+      expect(Tag.tags(:taggable_type => 'Account')).to eq [tag]
+      expect(Tag.tags(:taggable_type => 'User')).to eq []
+    end
+
+    context "when filtered by tag namespaces" do
+      it "returns tag names w" do
+        Tagging.create(:taggable => account, :tag => tag)
+
+        expect(Tag.tags(:ns => '/namespace/cat')).to eq [tag.name.split('/').last]
+        expect(Tag.tags(:ns => '/foo/bar')).to eq []
+      end
+    end
+  end
+
   context ".filter_ns" do
     it "normal case" do
       tag1 = double
@@ -41,7 +80,7 @@ describe Tag do
     before(:each) do
       FactoryGirl.create(:classification_department_with_tags)
 
-      @tag            = Tag.find_by_name("/managed/department/finance")
+      @tag            = Tag.find_by(:name => "/managed/department/finance")
       @category       = Classification.find_by_name("department")
       @classification = @tag.classification
     end
@@ -111,6 +150,20 @@ describe Tag do
 
     it "find tag in any region" do
       expect(Tag.find_by_classification_name("test_category", nil)).not_to be_nil
+    end
+  end
+
+  describe "#==" do
+    it "equals only itself" do
+      tag1 = FactoryGirl.build(:tag)
+      tag2 = FactoryGirl.build(:tag)
+      expect(tag1).to eq tag1
+      expect(tag1).not_to eq tag2
+    end
+
+    it "equals its name" do
+      tag1 = FactoryGirl.build(:tag, :name => '/a/b/c')
+      expect(tag1).to eq '/a/b/c'
     end
   end
 

@@ -1,19 +1,22 @@
 FactoryGirl.define do
   factory :chargeback_rate_detail do
-    group   "unknown"
-    source  "unknown"
     chargeback_rate
+    detail_currency { FactoryGirl.create(:chargeback_rate_detail_currency) }
 
-    trait :euro do
-      detail_currency { FactoryGirl.create(:chargeback_rate_detail_currency_EUR) }
-    end
-
-    trait :bytes do
-      detail_measure { FactoryGirl.create(:chargeback_rate_detail_measure_bytes) }
+    transient do
+      tiers_params nil
     end
 
     trait :tiers do
-      chargeback_tiers { [FactoryGirl.create(:chargeback_tier)] }
+      after(:create) do |chargeback_rate_detail, evaluator|
+        if evaluator.tiers_params
+          evaluator.tiers_params.each do |tier|
+            chargeback_rate_detail.chargeback_tiers << FactoryGirl.create(*[:chargeback_tier, tier])
+          end
+        else
+          chargeback_rate_detail.chargeback_tiers << FactoryGirl.create(:chargeback_tier)
+        end
+      end
     end
 
     trait :tiers_with_three_intervals do
@@ -27,91 +30,71 @@ FactoryGirl.define do
     end
   end
 
+  trait :megabytes do
+    per_unit "megabytes"
+  end
+
+  trait :kbps do
+    per_unit "kbps"
+  end
+
+  trait :gigabytes do
+    per_unit "gigabytes"
+  end
+
+  trait :daily do
+    per_time "daily"
+  end
+
+  trait :hourly do
+    per_time "hourly"
+  end
+
   factory :chargeback_rate_detail_cpu_used, :parent => :chargeback_rate_detail do
-    description "Used CPU in MHz"
-    group       "cpu"
-    source      "used"
-    metric      "cpu_usagemhz_rate_average"
     per_unit    "megahertz"
+    chargeable_field { FactoryGirl.build(:chargeable_field_cpu_used) }
   end
 
   factory :chargeback_rate_detail_cpu_cores_used, :parent => :chargeback_rate_detail do
-    description "Used CPU in Cores"
-    group       "cpu_cores"
-    source      "used"
-    metric      "cpu_usage_rate_average"
     per_unit    "cores"
+    chargeable_field { FactoryGirl.build(:chargeable_field_cpu_cores_used) }
   end
 
-  factory :chargeback_rate_detail_cpu_allocated, :parent => :chargeback_rate_detail do
-    description "Allocated CPU Count"
-    group       "cpu"
-    source      "allocated"
-    metric      "derived_vm_numvcpus"
+  factory :chargeback_rate_detail_cpu_allocated, :traits => [:daily],
+                                                 :parent => :chargeback_rate_detail do
     per_unit    "cpu"
-    per_time    "daily"
+    chargeable_field { FactoryGirl.build(:chargeable_field_cpu_allocated) }
   end
 
-  factory :chargeback_rate_detail_memory_allocated, :parent => :chargeback_rate_detail do
-    description "Allocated Memory in MB"
-    group       "memory"
-    source      "allocated"
-    metric      "derived_memory_available"
-    per_unit    "megabytes"
-    per_time    "daily"
+  factory :chargeback_rate_detail_memory_allocated, :traits => [:megabytes, :daily],
+                                                    :parent => :chargeback_rate_detail do
+    chargeable_field { FactoryGirl.build(:chargeable_field_memory_allocated) }
   end
 
-  factory :chargeback_rate_detail_memory_used, :parent => :chargeback_rate_detail do
-    per_unit    "megabytes"
-    per_time    "hourly"
-    description "Used Memory in MB"
-    group       "memory"
-    source      "used"
-    metric      "derived_memory_used"
+  factory :chargeback_rate_detail_memory_used, :traits => [:megabytes, :hourly],
+                                               :parent => :chargeback_rate_detail do
+    chargeable_field { FactoryGirl.build(:chargeable_field_memory_used) }
   end
 
-  factory :chargeback_rate_detail_disk_io_used, :parent => :chargeback_rate_detail do
-    description "Used Disk I/O in KBps"
-    group       "disk_io"
-    source      "used"
-    metric      "disk_usage_rate_average"
-    per_unit    "kbps"
+  factory :chargeback_rate_detail_disk_io_used, :traits => [:kbps], :parent => :chargeback_rate_detail do
+    chargeable_field { FactoryGirl.build(:chargeable_field_disk_io_used) }
   end
 
-  factory :chargeback_rate_detail_net_io_used, :parent => :chargeback_rate_detail do
-    description "Used Network I/O in KBps"
-    group       "net_io"
-    source      "used"
-    metric      "net_usage_rate_average"
-    per_unit    "kbps"
+  factory :chargeback_rate_detail_net_io_used, :traits => [:kbps], :parent => :chargeback_rate_detail do
+    chargeable_field { FactoryGirl.build(:chargeable_field_net_io_used) }
   end
 
-  factory :chargeback_rate_detail_storage_used, :parent => :chargeback_rate_detail do
-    description "Used Disk Storage in Bytes"
-    group       "storage"
-    source      "used"
-    metric      "derived_vm_used_disk_storage"
-    per_unit    "gigabytes"
+  factory :chargeback_rate_detail_storage_used, :traits => [:gigabytes],
+                                                :parent => :chargeback_rate_detail do
+    chargeable_field { FactoryGirl.build(:chargeable_field_storage_used) }
   end
 
-  factory :chargeback_rate_detail_storage_allocated, :parent => :chargeback_rate_detail do
-    description "Allocated Disk Storage in Bytes"
-    group       "storage"
-    source      "allocated"
-    metric      "derived_vm_allocated_disk_storage"
-    per_unit    "gigabytes"
+  factory :chargeback_rate_detail_storage_allocated, :traits => [:gigabytes],
+                                                     :parent => :chargeback_rate_detail do
+    chargeable_field { FactoryGirl.build(:chargeable_field_storage_allocated) }
   end
 
-  factory :chargeback_rate_detail_fixed_compute_cost, :parent => :chargeback_rate_detail do
-    description "Fixed Compute Cost 1"
-    group       "fixed"
-    source      "compute_1"
-    per_time    "daily"
+  factory :chargeback_rate_detail_fixed_compute_cost, :traits => [:daily], :parent => :chargeback_rate_detail do
+    chargeable_field { FactoryGirl.build(:chargeable_field_fixed_compute_1) }
   end
-
-  factory :chargeback_rate_detail_memory_allocated_with_tiers, :parent => :chargeback_rate_detail_memory_allocated,
-                                                               :traits => [:euro, :bytes, :tiers_with_three_intervals]
-
-  factory :chargeback_rate_detail_memory_used_with_tiers, :parent => :chargeback_rate_detail_memory_used,
-                                                          :traits => [:euro, :bytes, :tiers]
 end

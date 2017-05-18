@@ -1,4 +1,4 @@
-class CreateContainerComponentStatuses < ActiveRecord::Migration
+class CreateContainerComponentStatuses < ActiveRecord::Migration[4.2]
   def up
     create_table :container_component_statuses do |t|
       t.belongs_to :ems, :type => :bigint

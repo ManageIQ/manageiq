@@ -1,8 +1,7 @@
 # TODO: Nothing appears to be using xml_utils in this file???
 # Perhaps, it's being required here because lower level code requires xml_utils to be loaded
 # but wrongly doesn't require it itself.
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/xml")
-require 'xml_utils'
+require 'xml/xml_utils'
 
 require 'blackbox/VmBlackBox'
 require 'metadata/MIQExtract/MIQExtract'
@@ -25,7 +24,7 @@ module ScanningMixin
     # Called from Queue
     def save_metadata(target_id, data_array)
       xml_file, data_type = Marshal.load(data_array)
-      target = base_class.find_by_id(target_id)
+      target = base_class.find_by(:id => target_id)
       xml_file = MIQEncode.decode(xml_file) if data_type.include?('b64,zlib')
       begin
         doc = MiqXml.load(xml_file)
@@ -43,7 +42,7 @@ module ScanningMixin
                 rescue
                   "vmscan"
                 end
-        job = Job.find_by_guid(taskid)
+        job = Job.find_by(:guid => taskid)
         raise _("Unable to process data for job with id <%{number}>. Job not found.") % {:number => taskid} if job.nil?
         begin
           job.signal(:data, xml_file)
@@ -211,7 +210,7 @@ module ScanningMixin
     ost.xml_class = XmlHash::Document
 
     _log.debug "Scanning - Initializing scan"
-    update_agent_state(ost, "Scanning", "Initializing scan")
+    update_job_message(ost, "Initializing scan")
     bb, last_err = nil
     xml_summary = ost.xml_class.createDoc(:summary)
     xml_node = xml_node_scan = xml_summary.root.add_element("scanmetadata")
@@ -247,10 +246,10 @@ module ScanningMixin
       _log.debug "categories = [ #{categories.join(', ')} ]"
 
       categories.each do |c|
-        update_agent_state(ost, "Scanning", "Scanning #{c}")
+        update_job_message(ost, "Scanning #{c}")
         _log.info "Scanning [#{c}] information.  TaskId:[#{ost.taskid}]  VM:[#{name}]"
         st = Time.now
-        xml = extractor.extract(c) { |scan_data| update_agent_state(ost, "Scanning", scan_data[:msg]) }
+        xml = extractor.extract(c) { |scan_data| update_job_message(ost, scan_data[:msg]) }
         categories_processed += 1
         _log.info "Scanning [#{c}] information ran for [#{Time.now - st}] seconds.  TaskId:[#{ost.taskid}]  VM:[#{name}]"
         if xml
@@ -278,7 +277,7 @@ module ScanningMixin
       last_err = scanErr
     ensure
       bb.close if bb
-      update_agent_state(ost, "Scanning", "Scanning completed.")
+      update_job_message(ost, "Scanning completed.")
 
       # If we are sent a TaskId transfer a end of job summary xml.
       _log.info "Starting: Sending scan summary to server.  TaskId:[#{ost.taskid}]  VM:[#{name}]"
@@ -328,7 +327,7 @@ module ScanningMixin
       )
       bb = Manageiq::BlackBox.new(guid, ost)
 
-      update_agent_state(ost, "Synchronize", "Synchronization in progress")
+      update_job_message(ost, "Synchronization in progress")
       categories.each do |c|
         c.delete!("\"")
         c.strip!
@@ -369,16 +368,24 @@ module ScanningMixin
       save_metadata_op(xml_summary.miqEncode, "b64,zlib,xml", ost.taskid)
       _log.info "Completed: Sending target summary to server.  TaskId:[#{ost.taskid}]  target:[#{name}]"
 
-      update_agent_state(ost, "Synchronize", "Synchronization complete")
+      update_job_message(ost, "Synchronization complete")
 
       raise syncErr if syncErr
     end
     ost.value = "OK\n"
   end
 
-  def update_agent_state(ost, state, message)
-    ost.agent_state = state
-    ost.agent_message = message
-    agent_job_state_op(ost.taskid, ost.agent_state, ost.agent_message) if ost.taskid && ost.taskid.empty? == false
+  def update_job_message(ost, message)
+    ost.message = message
+    unless ost.taskid.blank?
+      MiqQueue.put(
+        :class_name  => "Job",
+        :method_name => "update_message",
+        :args        => [ost.taskid, message],
+        :task_id     => "job_message_#{Time.now.to_i}",
+        :zone        => MiqServer.my_zone,
+        :role        => "smartstate"
+      )
+    end
   end
 end

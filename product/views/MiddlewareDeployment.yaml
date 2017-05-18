@@ -47,6 +47,12 @@ headers:
 - Server
 - Host Name
 
+include:
+  middleware_server:
+    columns:
+      - name
+      - hostname
+
 # Condition(s) string for the SQL query
 conditions:
 
@@ -60,8 +66,7 @@ sortby:
 - middleware_server.hostname
 
 # Group rows (y=yes,n=no,c=count)
-group: y
-
+group: n
 
 # Graph type
 #   Bar

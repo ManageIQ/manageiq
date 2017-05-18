@@ -46,7 +46,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
       end
       if svc_target_name.blank?
         svc_tmp_id = req_obj.get_option(:src_id)
-        svc_tmp = ServiceTemplate.find_by_id(svc_tmp_id)
+        svc_tmp = ServiceTemplate.find_by(:id => svc_tmp_id)
         svc_target_name = svc_tmp.name
       end
 
@@ -69,7 +69,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
   end
 
   def create_child_tasks
-    parent_svc = Service.find_by_id(options[:parent_service_id])
+    parent_svc = Service.find_by(:id => options[:parent_service_id])
     parent_name = parent_svc.nil? ? 'none' : "#{parent_svc.class.name}:#{parent_svc.id}"
     _log.info "- creating service tasks for service <#{self.class.name}:#{id}> with parent service <#{parent_name}>"
 
@@ -115,6 +115,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
 
     if self.class::AUTOMATE_DRIVES
       dialog_values = options[:dialog] || {}
+      dialog_values["request"] = req_type
 
       args = {
         :object_type      => self.class.name,
@@ -123,7 +124,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
         :class_name       => "ServiceProvision_Template",
         :instance_name    => req_type,
         :automate_message => "create",
-        :attrs            => dialog_values.merge!("request" => req_type)
+        :attrs            => dialog_values
       }
 
       # Automate entry point overrides from the resource_action
@@ -136,16 +137,19 @@ class ServiceTemplateProvisionTask < MiqRequestTask
         args[:automate_message] = ra.ae_message   unless ra.ae_message.blank?
         args[:attrs].merge!(ra.ae_attributes)
       end
+
+      args[:attrs].merge!(MiqAeEngine.create_automation_attributes(destination.class.base_model.name => destination))
       args[:user_id]      = get_user.id
       args[:miq_group_id] = get_user.current_group.id
       args[:tenant_id]    = get_user.current_tenant.id
 
+      zone ||= source.respond_to?(:my_zone) ? source.my_zone : MiqServer.my_zone
       MiqQueue.put(
         :class_name  => 'MiqAeEngine',
         :method_name => 'deliver',
         :args        => [args],
         :role        => 'automate',
-        :zone        => nil,
+        :zone        => options.fetch(:miq_zone, zone),
         :task_id     => "#{self.class.name.underscore}_#{id}"
       )
       update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
@@ -156,7 +160,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
 
   def service_resource
     return nil if options[:service_resource_id].blank?
-    ServiceResource.find_by_id(options[:service_resource_id])
+    ServiceResource.find_by(:id => options[:service_resource_id])
   end
 
   def mark_pending_items_as_finished

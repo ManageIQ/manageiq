@@ -8,40 +8,47 @@ class Tag < ApplicationRecord
 
   before_destroy :remove_from_managed_filters
 
+  def self.list(object, options = {})
+    ns = get_namespace(options)
+    if ns[0..7] == "/virtual"
+      ns.gsub!('/virtual/','')  # throw away /virtual
+      ns, virtual_custom_attribute = MiqExpression.escape_virtual_custom_attribute(ns)
+      predicate = ns.split("/")
+
+      if virtual_custom_attribute
+        predicate.map! { |x| URI::RFC2396_Parser.new.unescape(x) }
+        # it is always array with one string element - name of virtual custom attribute because they are supported only
+        # in direct relations
+        custom_attribute = predicate.first
+        object.class.add_custom_attribute(custom_attribute) if object.class < CustomAttributeMixin
+      end
+
+      begin
+        predicate.inject(object) { |target, method| target.public_send method }
+      rescue NoMethodError
+        ""
+      end
+    else
+      filter_ns(object.try(:tags) || [], ns).join(" ")
+    end
+  end
+
   def self.to_tag(name, options = {})
     File.join(Tag.get_namespace(options), name)
   end
 
   def self.tags(options = {})
-    query = Tag.includes(:taggings)
-    query = query.where(Tagging.arel_table[:taggable_type].eq options[:taggable_type])
-    query = query.where(Tag.arel_table[:name].matches "#{options[:ns]}%") if options[:ns]
-    Tag.filter_ns(query, options[:ns])
-  end
+    query = Tag.joins(:taggings)
 
-  def self.all_tags(options = {})
-    query = Tag.scoped
-    ns    = Tag.get_namespace(options)
-    query = query.where(Tag.arel_table[:name].matches "#{ns}%") unless ns.blank?
-    Tag.filter_ns(query, ns)
-  end
-
-  def self.tag_count(olist, name, options = {})
-    ns  = Tag.get_namespace(options)
-    tag = find_by_name(File.join(ns, name))
-    return 0 if tag.nil?
-
-    if olist.kind_of?(MIQ_Report) # support for ruport
-      klass        = olist.db
-      taggable_ids = olist.table.data.collect { |o| o.data["id"].to_i }
-    else
-      klass        = olist[0].class # assumes all objects in list are of the same class
-      taggable_ids = olist.collect { |o| o.id.to_i }
+    if options[:taggable_type].present?
+      query = query.where(Tagging.arel_table[:taggable_type].eq(options[:taggable_type]))
     end
 
-    Tagging.where(:tag_id        => tag.id,
-                  :taggable_id   => taggable_ids,
-                  :taggable_type => klass.base_class.name).count
+    if options[:ns].present?
+      query = query.where(Tag.arel_table[:name].matches("#{options[:ns]}%"))
+    end
+
+    Tag.filter_ns(query, options[:ns])
   end
 
   def self.parse(list)
@@ -107,13 +114,13 @@ class Tag < ApplicationRecord
 
   def self.find_by_classification_name(name, region_id = Classification.my_region_number,
                                        ns = Classification::DEFAULT_NAMESPACE, parent_id = 0)
-    in_region(region_id).find_by_name(Classification.name2tag(name, parent_id, ns))
+    in_region(region_id).find_by(:name => Classification.name2tag(name, parent_id, ns))
   end
 
   def self.find_or_create_by_classification_name(name, region_id = Classification.my_region_number,
                                                  ns = Classification::DEFAULT_NAMESPACE, parent_id = 0)
     tag_name = Classification.name2tag(name, parent_id, ns)
-    in_region(region_id).find_by_name(tag_name) || create(:name => tag_name)
+    in_region(region_id).find_by(:name => tag_name) || create(:name => tag_name)
   end
 
   def ==(comparison_object)

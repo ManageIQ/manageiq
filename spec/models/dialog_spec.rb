@@ -1,48 +1,37 @@
 describe Dialog do
   describe ".seed" do
     let(:dialog_import_service) { double("DialogImportService") }
-    let(:test_file_path) { Rails.root.join("spec/fixtures/files/dialogs") }
-    let(:all_yaml_files) { test_file_path.join("{,*/**/}*.{yaml,yml}") }
+    let(:test_file_path) { "spec/fixtures/files/dialogs" }
 
     before do
       allow(DialogImportService).to receive(:new).and_return(dialog_import_service)
       allow(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file)
     end
 
-    it "delegates to the dialog import service with a file in the default directory" do
-      Dialog.with_constants(:DIALOG_DIR => test_file_path, :ALL_YAML_FILES => all_yaml_files) do
-        expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
-          test_file_path.join("seed_test.yaml").to_path)
-        expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
-          test_file_path.join("seed_test.yml").to_path)
-        Dialog.seed
-      end
-    end
+    it "seed files from plugins" do
+      mock_engine = double(:root => Rails.root)
+      expect(Vmdb::Plugins.instance).to receive(:vmdb_plugins).and_return([mock_engine])
 
-    it "delegates to the dialog import service with a file in a sub directory" do
-      Dialog.with_constants(:DIALOG_DIR => test_file_path, :ALL_YAML_FILES => all_yaml_files) do
-        expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
-          test_file_path.join("service_dialogs/service_seed_test.yaml").to_path)
-        expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
-          test_file_path.join("service_dialogs/service_seed_test.yml").to_path)
-        Dialog.seed
-      end
-    end
-
-    it "delegates to the dialog import service with a symlinked file" do
-      Dialog.with_constants(:DIALOG_DIR => test_file_path, :ALL_YAML_FILES => all_yaml_files) do
-        expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
-          test_file_path.join("service_dialog_symlink/service_seed_test.yaml").to_path)
-        expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
-          test_file_path.join("service_dialog_symlink/service_seed_test.yml").to_path)
-        Dialog.seed
-      end
+      stub_const('Dialog::DIALOG_DIR_PLUGIN', test_file_path)
+      stub_const('Dialog::DIALOG_DIR_CORE', 'non-existent-dir')
+      expect(dialog_import_service).to receive(:import_all_service_dialogs_from_yaml_file).with(
+        Rails.root.join(test_file_path, "seed_test.yaml").to_path
+      )
+      expect(mock_engine).to receive(:root)
+      described_class.seed
     end
   end
 
   it "#name" do
     dialog = FactoryGirl.create(:dialog, :label => 'dialog')
     expect(dialog.label).to eq(dialog.name)
+  end
+
+  describe "#content" do
+    it "returns the serialized content" do
+      dialog = FactoryGirl.create(:dialog, :description => "foo", :label => "bar")
+      expect(dialog.content).to match([hash_including("description" => "foo", "label" => "bar")])
+    end
   end
 
   describe "#readonly?" do
@@ -75,7 +64,7 @@ describe Dialog do
     it "with same label" do
       expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog') }.to_not raise_error
       expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog') }
-        .to raise_error(ActiveRecord::RecordInvalid, /Label has already been taken/)
+        .to raise_error(ActiveRecord::RecordInvalid, /Label is not unique within region/)
     end
 
     it "with different labels" do
@@ -286,6 +275,79 @@ describe Dialog do
     end
   end
 
+  describe '#update_tabs' do
+    let(:dialog_field) { FactoryGirl.create_list(:dialog_field, 1, :label => 'field') }
+    let(:dialog_group) { FactoryGirl.create_list(:dialog_group, 1, :label => 'group', :dialog_fields => dialog_field) }
+    let(:dialog_tab) { FactoryGirl.create_list(:dialog_tab, 1, :label => 'tab', :dialog_groups => dialog_group) }
+    let(:dialog) { FactoryGirl.create(:dialog, :label => 'dialog', :dialog_tabs => dialog_tab) }
+
+    let(:updated_content) do
+      [
+        {
+          'id'            => dialog_tab.first.id,
+          'label'         => 'updated_label',
+          'dialog_groups' => [
+            { 'id'            => dialog_group.first.id,
+              'dialog_fields' =>
+                                 [{
+                                   'id' => dialog_field.first.id}] },
+            {
+              'label'         => 'group 2',
+              'dialog_fields' => [{
+                'name'  => 'dialog_field',
+                'label' => 'field_label'
+              }]
+            }
+          ]
+        },
+        {
+          'label'         => 'new tab',
+          'dialog_groups' => [
+            {
+              'label'         => 'a new group',
+              'dialog_fields' => [
+                {'name' => 'new field', 'label' => 'field'}
+              ]
+            }
+          ]
+        }
+      ]
+    end
+
+    context 'a collection of dialog tabs containing one with an id and one without an id' do
+      it 'updates the dialog_tab with an id' do
+        dialog.update_tabs(updated_content)
+        expect(dialog.reload.dialog_tabs.collect(&:label)).to match_array(['updated_label', 'new tab'])
+      end
+
+      it 'creates the dialog tab from the dialog tabs without an id' do
+        dialog.update_tabs(updated_content)
+        expect(dialog.reload.dialog_tabs.count).to eq(2)
+      end
+    end
+
+    context 'with a dialog tab removed from the dialog tabs collection' do
+      let(:updated_content) do
+        [
+          'id'            => dialog_tab.first.id,
+          'dialog_groups' => [
+            { 'id' => dialog_group.first.id, 'dialog_fields' => [{ 'id' => dialog_field.first.id }] }
+          ]
+        ]
+      end
+
+      before do
+        dialog.dialog_tabs << FactoryGirl.create(:dialog_tab)
+      end
+
+      it 'deletes the removed dialog_tab' do
+        expect do
+          dialog.update_tabs(updated_content)
+        end.to change(dialog.reload.dialog_tabs, :count).by(-1)
+      end
+    end
+  end
+
   context "#dialog_fields" do
     before(:each) do
       @dialog        = FactoryGirl.create(:dialog, :label => 'dialog')
@@ -353,6 +415,29 @@ describe Dialog do
       expect(DialogGroup.count).to eq(num_groups * 2)
       expect(DialogField.count).to eq(num_fields * 2)
       expect(ResourceAction.count).to eq(num_actions * 2)
+    end
+  end
+
+  describe "#init_fields_with_values_for_request" do
+    let(:dialog) { described_class.new(:dialog_tabs => [dialog_tab]) }
+    let(:dialog_tab) { DialogTab.new(:dialog_groups => [dialog_group]) }
+    let(:dialog_group) { DialogGroup.new(:dialog_fields => [dialog_field1]) }
+    let(:dialog_field1) { DialogField.new(:value => "123", :name => "field1") }
+
+    context "when the values use the automate key name" do
+      it "initializes the fields with the given values" do
+        values = {"dialog_field1" => "field 1 new value"}
+        dialog.init_fields_with_values_for_request(values)
+        expect(dialog_field1.value).to eq("field 1 new value")
+      end
+    end
+
+    context "when the values use the regular name" do
+      it "initializes the fields with the given values" do
+        values = {"field1" => "field 1 new value"}
+        dialog.init_fields_with_values_for_request(values)
+        expect(dialog_field1.value).to eq("field 1 new value")
+      end
     end
   end
 end

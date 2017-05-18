@@ -20,7 +20,6 @@ db: MiqReportResult
 # Columns to fetch from the main table
 cols:
 - created_on
-- name
 - last_run_on
 - report_source
 - userid

@@ -1,8 +1,0 @@
-#results_tree_div
-  - if @results
-    %br
-    #treebox{:style => "width: auto;"}
-    = render(:partial => 'shared/tree', :locals => {:tree => @ae_simulation_tree, :name => @ae_simulation_tree.name})
-  - else
-    = render :partial => 'layouts/info_msg',
-      :locals => {:message => _("Enter Automation Simulation options on the left and press Submit.")}

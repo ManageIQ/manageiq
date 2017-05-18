@@ -14,7 +14,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     if initial_pass == true
       src_vm_id = get_value(@values[:src_vm_id])
       unless src_vm_id.blank?
-        vm = VmOrTemplate.find_by_id(src_vm_id)
+        vm = VmOrTemplate.find_by(:id => src_vm_id)
         @values[:src_vm_id] = [vm.id, vm.name] unless vm.blank?
       end
     end
@@ -49,19 +49,18 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     super(message, [:request_type, :source_type, :target_type], extra_attrs)
   end
 
-  def create_request(values, _requester = nil, auto_approve = false)
+  def make_request(request, values, requester = nil, auto_approve = false)
     if @running_pre_dialog == true
       continue_request(values)
       password_helper(values, true)
       return nil
-    else
-      super
     end
-  end
 
-  def update_request(request, values, _requester = nil)
-    request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
-    request.src_vm_id = get_value(values[:src_vm_id])
+    if request
+      request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
+      request.src_vm_id = get_value(values[:src_vm_id])
+    end
+
     super
   end
 
@@ -101,7 +100,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def custom_sysprep_timezone(field, data_value)
     set_value_from_list(:sysprep_timezone, field, "%03d" % data_value, @timezones)
-    @values[:sysprep_timezone].reverse!
   end
 
   def custom_sysprep_domain_name(field, data_value)
@@ -120,8 +118,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
        :placement_rp_name,
        :linked_clone,
        :snapshot,
-       :placement_dc_name,
-       :placement_storage_profile]
+       :placement_dc_name]
     )
 
     if vm.nil?
@@ -188,6 +185,15 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     fields(:hardware) { |fn, f, _dn, _d| f[:read_only] = true if options[:read_only_fields].include?(fn) }
   end
 
+  def allowed_hosts_obj(options = {})
+    all_hosts = super
+    vlan_name = get_value(@values[:vlan])
+    return all_hosts unless vlan_name
+
+    _log.info "Filtering hosts with the following network: <#{vlan_name}>"
+    all_hosts.reject { |h| !h.lans.pluck(:name).include?(vlan_name) }
+  end
+
   #
   # Methods for populating lists of allowed values for a field
   # => Input  - A hash containing options specific to the called method
@@ -220,7 +226,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       # TODO: Use Active Record to preload this data?
       MiqPreloader.preload(hosts, :switches => :lans)
       hosts.each do |h|
-        h.lans.each { |l| vlans[l.name] = l.name if @vlan_options[:dvs] || !l.switch.shared? }
+        h.lans.each { |l| vlans[l.name] = l.name unless l.switch.shared? }
       end
       rails_logger('allowed_vlans', 1)
     end
@@ -280,7 +286,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   def allowed_templates(options = {})
     # Return pre-selected VM if we are called for cloning
     if [:clone_to_vm, :clone_to_template].include?(request_type)
-      vm_or_template = VmOrTemplate.find_by_id(get_value(@values[:src_vm_id]))
+      vm_or_template = VmOrTemplate.find_by(:id => get_value(@values[:src_vm_id]))
       return [create_hash_struct_from_vm_or_template(vm_or_template, options)].compact
     end
 
@@ -290,7 +296,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
 
     rails_logger('allowed_templates', 0)
-    vms = VmOrTemplate.all
+    vms = VmOrTemplate.in_my_region.all
     condition = allowed_template_condition
 
     unless options[:tag_filters].blank?
@@ -311,7 +317,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
       unless tag_conditions.blank?
         _log.info "Filtering VM templates with the following tag_filters: <#{tag_conditions.inspect}>"
-        vms = MiqTemplate.where(condition).find_tags_by_grouping(tag_conditions, :ns => "/managed")
+        vms = MiqTemplate.in_my_region.where(condition).find_tags_by_grouping(tag_conditions, :ns => "/managed")
       end
     end
 
@@ -328,7 +334,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       end
     end
 
-    MiqPreloader.preload(allowed_templates_list, [:operating_system, :ext_management_system, {:hardware => :disks}])
+    MiqPreloader.preload(allowed_templates_list, [:snapshots, :operating_system, :ext_management_system, {:hardware => :disks}])
     @allowed_templates_cache = allowed_templates_list.collect do |template|
       create_hash_struct_from_vm_or_template(template, options)
     end
@@ -357,6 +363,16 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     vm.snapshots.each { |ss| result[ss.id.to_s] = ss.current? ? "#{ss.name} (Active)" : ss.name }
     result["__CURRENT__"] = _(" Use the snapshot that is active at time of provisioning") unless result.blank?
     result
+  end
+
+  def allowed_tags(options = {})
+    return {} if (source = load_ar_obj(get_source_vm)).blank?
+    super(options.merge(:region_number => source.region_number))
+  end
+
+  def allowed_pxe_servers(_options = {})
+    return {} if (source = load_ar_obj(get_source_vm)).blank?
+    PxeServer.in_region(source.region_number).each_with_object({}) { |p, h| h[p.id] = p.name }
   end
 
   def get_source_vm
@@ -420,7 +436,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     case src[:vm].platform
     when 'windows' then result.merge!("fields" => "Specification", "file"  => "Sysprep Answer File")
-    when 'linux'   then result.merge!("fields" => "Specification")
+    when 'linux'   then result["fields"] = "Specification"
     end
 
     result
@@ -733,7 +749,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       raise _("Provision failed for the following reasons:\n%{errors}") % {:errors => errors.join("\n")}
     end
 
-    p.create_request(values, nil, auto_approve)
+    p.make_request(nil, values, nil, auto_approve)
   end
 
   def ws_template_fields(values, fields, ws_values)
@@ -935,7 +951,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     values[:ws_ems_custom_attributes] = p.ws_values(options.ems_custom_attributes, :parse_ws_string, :modify_key_name => false)
     values[:ws_miq_custom_attributes] = p.ws_values(options.miq_custom_attributes, :parse_ws_string, :modify_key_name => false)
 
-    p.create_request(values, nil, values[:auto_approve]).tap do |request|
+    p.make_request(nil, values, nil, values[:auto_approve]).tap do |request|
       p.raise_validate_errors if request == false
     end
   rescue => err

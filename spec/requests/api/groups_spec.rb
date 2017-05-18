@@ -98,7 +98,7 @@ describe "Groups API" do
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       result = response.parsed_body["results"].first
-      created_group = MiqGroup.find_by_id(result["id"])
+      created_group = MiqGroup.find_by(:id => result["id"])
 
       expect(created_group).to be_present
       expect(created_group.entitlement.miq_user_role).to eq(role3)
@@ -257,6 +257,63 @@ describe "Groups API" do
       expect_result_resources_to_include_hrefs("results", [g1_url, g2_url])
       expect(MiqGroup.exists?(g1_id)).to be_falsey
       expect(MiqGroup.exists?(g2_id)).to be_falsey
+    end
+  end
+
+  describe "tags subcollection" do
+    it "can list a group's tags" do
+      group = FactoryGirl.create(:miq_group)
+      FactoryGirl.create(:classification_department_with_tags)
+      Classification.classify(group, "department", "finance")
+      api_basic_authorize
+
+      run_get("#{groups_url(group.id)}/tags")
+
+      expect(response.parsed_body).to include("subcount" => 1)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "can assign a tag to a group" do
+      group = FactoryGirl.create(:miq_group)
+      FactoryGirl.create(:classification_department_with_tags)
+      api_basic_authorize(subcollection_action_identifier(:groups, :tags, :assign))
+
+      run_post("#{groups_url(group.id)}/tags", :action => "assign", :category => "department", :name => "finance")
+
+      expected = {
+        "results" => [
+          a_hash_including(
+            "success"      => true,
+            "message"      => a_string_matching(/assigning tag/i),
+            "tag_category" => "department",
+            "tag_name"     => "finance"
+          )
+        ]
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "can unassign a tag from a group" do
+      group = FactoryGirl.create(:miq_group)
+      FactoryGirl.create(:classification_department_with_tags)
+      Classification.classify(group, "department", "finance")
+      api_basic_authorize(subcollection_action_identifier(:groups, :tags, :unassign))
+
+      run_post("#{groups_url(group.id)}/tags", :action => "unassign", :category => "department", :name => "finance")
+
+      expected = {
+        "results" => [
+          a_hash_including(
+            "success"      => true,
+            "message"      => a_string_matching(/unassigning tag/i),
+            "tag_category" => "department",
+            "tag_name"     => "finance"
+          )
+        ]
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
     end
   end
 end

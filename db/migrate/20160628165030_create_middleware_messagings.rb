@@ -1,4 +1,4 @@
-class CreateMiddlewareMessagings < ActiveRecord::Migration
+class CreateMiddlewareMessagings < ActiveRecord::Migration[4.2]
   def change
     create_table :middleware_messagings do |t|
       t.string :name # name of the messaging

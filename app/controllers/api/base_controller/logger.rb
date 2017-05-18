@@ -14,16 +14,16 @@ module Api
         return unless api_log_info?
         if @miq_token_hash
           auth_type = "system"
-          log_request("System Auth", {:x_miq_token => request.headers['X-MIQ-Token']}.merge(@miq_token_hash))
+          log_request("System Auth", {:x_miq_token => request.headers[HttpHeaders::MIQ_TOKEN]}.merge(@miq_token_hash))
         else
           auth_type = @auth_token.blank? ? "basic" : "token"
         end
         log_request("Authentication", :type        => auth_type,
                                       :token       => @auth_token,
-                                      :x_miq_group => request.headers['X-MIQ-Group'],
+                                      :x_miq_group => request.headers[HttpHeaders::MIQ_GROUP],
                                       :user        => @auth_user)
-        if @auth_user_obj
-          group = @auth_user_obj.current_group
+        if User.current_user
+          group = User.current_user.current_group
           log_request("Authorization", :user   => @auth_user,
                                        :group  => group.description,
                                        :role   => group.miq_user_role_name,
@@ -35,7 +35,10 @@ module Api
         @parameter_filter ||= ActionDispatch::Http::ParameterFilter.new(Rails.application.config.filter_parameters)
         return unless api_log_info?
         log_request("Request", @req.to_hash)
-        log_request("Parameters", @parameter_filter.filter(params))
+        unfiltered_params = request.query_parameters
+                                   .merge(params.permit(:action, :controller, :format).to_h)
+                                   .merge("body" => @req.json_body)
+        log_request("Parameters", @parameter_filter.filter(unfiltered_params))
         log_request_body
       end
 
@@ -57,7 +60,7 @@ module Api
       end
 
       def api_get_method_name(call_stack, method)
-        match  = /`(?<mname>[^']*)'/.match(call_stack)
+        match = /`(?<mname>[^']*)'/.match(call_stack)
         (match ? match[:mname] : method).sub(/block .*in /, "")
       end
 
@@ -65,7 +68,7 @@ module Api
         method = api_get_method_name(caller.first, __method__)
         log_prefix = "MIQ(#{self.class.name}.#{method})"
 
-        $api_log.error("#{log_prefix} #{Settings.base.name} Error")
+        $api_log.error("#{log_prefix} #{ApiConfig.base.name} Error")
         msg.split("\n").each { |l| $api_log.error("#{log_prefix} #{l}") }
       end
 

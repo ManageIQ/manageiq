@@ -1,5 +1,0 @@
----
-:values:
-:filter:
-:default:
-  :blob_uri: https://my-azure-storage-account4.blob.core.windows.net/vhds/miq-test-rhel12016218112243.vhd

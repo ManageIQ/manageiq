@@ -7,7 +7,7 @@
   - mw_heap_committed
   - mw_heap_max
 
-- :title: Non Heap Usage (Bytes)
+- :title: JVM Non Heap Usage (Bytes)
   :type: Line
   :columns:
   - mw_non_heap_used

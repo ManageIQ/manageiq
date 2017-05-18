@@ -84,9 +84,9 @@ describe MiqReportResult do
 
       @report_theme = 'miq'
       @show_title   = true
-      @options = MiqReport.graph_options(600, 400)
+      @options = MiqReport.graph_options({ :title => "CPU (Mhz)", :type => "Line", :columns => ["col"] })
 
-      allow(Charting).to receive(:detect_available_plugin).and_return(JqplotCharting)
+      allow(Charting).to receive(:detect_available_plugin).and_return(C3Charting)
     end
 
     it "should save the original report metadata and the generated table as a binary blob" do
@@ -108,7 +108,7 @@ describe MiqReportResult do
     context "for miq_report_result is used different miq_group_id than user's current id" do
       before(:each) do
         MiqUserRole.seed
-        role = MiqUserRole.find_by_name("EvmRole-operator")
+        role = MiqUserRole.find_by(:name => "EvmRole-operator")
         @miq_group = FactoryGirl.create(:miq_group, :miq_user_role => role, :description => "Group1")
         MiqReport.seed_report(@name_of_report = "Vendor and Guest OS")
       end

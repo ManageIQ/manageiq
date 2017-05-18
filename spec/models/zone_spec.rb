@@ -38,7 +38,7 @@ describe Zone do
 
   context "when dealing with clouds" do
     before :each do
-      guid, server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      _, _, @zone = EvmSpecHelper.create_guid_miq_server_zone
     end
 
     it "returns the set of ems_clouds" do
@@ -59,6 +59,34 @@ describe Zone do
       3.times { azs << FactoryGirl.create(:availability_zone, :ems_id => openstack.id) }
 
       expect(@zone.availability_zones).to match_array(azs)
+    end
+  end
+
+  describe "#clustered_hosts" do
+    let(:zone) { FactoryGirl.create(:zone) }
+    let(:ems) { FactoryGirl.create(:ems_vmware, :zone => zone) }
+    let(:cluster) { FactoryGirl.create(:ems_cluster, :ext_management_system => ems)}
+    let(:host_with_cluster) { FactoryGirl.create(:host, :ext_management_system => ems, :ems_cluster => cluster) }
+    let(:host) { FactoryGirl.create(:host, :ext_management_system => ems) }
+
+    it "returns clustered hosts" do
+      host ; host_with_cluster
+
+      expect(zone.clustered_hosts).to eq([host_with_cluster])
+    end
+  end
+
+  describe "#non_clustered_hosts" do
+    let(:zone) { FactoryGirl.create(:zone) }
+    let(:ems) { FactoryGirl.create(:ems_vmware, :zone => zone) }
+    let(:cluster) { FactoryGirl.create(:ems_cluster, :ext_management_system => ems)}
+    let(:host_with_cluster) { FactoryGirl.create(:host, :ext_management_system => ems, :ems_cluster => cluster) }
+    let(:host) { FactoryGirl.create(:host, :ext_management_system => ems) }
+
+    it "returns clustered hosts" do
+      host ; host_with_cluster
+
+      expect(zone.non_clustered_hosts).to eq([host])
     end
   end
 
@@ -189,6 +217,31 @@ describe Zone do
         message = MiqQueue.first
         expect(message.instance_id).to eq(started_server.id)
         expect(message.method_name).to eq("reload_settings")
+      end
+    end
+  end
+
+  context "ConfigurationManagementMixin" do
+    describe "#remote_cockpit_ws_miq_server" do
+      before(:each) do
+        @csv = <<-CSV.gsub(/^\s+/, "")
+          name,description,max_concurrent,external_failover,role_scope
+          cockpit_ws,Cockpit,1,false,zone
+        CSV
+        allow(ServerRole).to receive(:seed_data).and_return(@csv)
+        ServerRole.seed
+        _, _, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      end
+
+      it "none when not enabled" do
+        expect(@zone.remote_cockpit_ws_miq_server).to eq(nil)
+      end
+
+      it "server when enabled" do
+        server = FactoryGirl.create(:miq_server, :has_active_cockpit_ws => true, :zone => @zone)
+        server.assign_role('cockpit_ws', 1)
+        server.activate_roles('cockpit_ws')
+        expect(@zone.remote_cockpit_ws_miq_server).to eq(server)
       end
     end
   end

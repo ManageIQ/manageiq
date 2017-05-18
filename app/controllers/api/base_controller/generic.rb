@@ -5,24 +5,33 @@ module Api
       # Primary Methods
       #
 
+      def index
+        klass = collection_class(@req.subject)
+        res = collection_search(@req.subcollection?, @req.subject, klass)
+        opts = {
+          :name             => @req.subject,
+          :is_subcollection => @req.subcollection?,
+          :expand_actions   => true,
+          :count            => klass.count,
+          :expand_resources => @req.expand?(:resources),
+          :subcount         => res.length
+        }
+
+        render_collection(@req.subject, res, opts)
+      end
+
       def show
-        if @req.subcollection
-          render_collection_type @req.subcollection.to_sym, @req.s_id, true
-        else
-          render_collection_type @req.collection.to_sym, @req.c_id
-        end
+        klass = collection_class(@req.subject)
+        opts  = {:name => @req.subject, :is_subcollection => @req.subcollection?, :expand_actions => true}
+        render_resource(@req.subject, resource_search(@req.subject_id, @req.subject, klass), opts)
       end
 
       def update
-        if @req.subcollection
-          render_normal_update @req.collection.to_sym, update_collection(@req.subcollection.to_sym, @req.s_id, true)
-        else
-          render_normal_update @req.collection.to_sym, update_collection(@req.collection.to_sym, @req.c_id)
-        end
+        render_normal_update @req.collection.to_sym, update_collection(@req.subject.to_sym, @req.subject_id)
       end
 
       def destroy
-        if @req.subcollection
+        if @req.subcollection?
           delete_subcollection_resource @req.subcollection.to_sym, @req.s_id
         else
           delete_resource(@req.collection.to_sym, @req.c_id)
@@ -52,13 +61,13 @@ module Api
             data.delete(sc.to_s)
           end
         end
-        rsc = klass.create(data)
-        if rsc.id.nil?
-          raise BadRequestError, "Failed to add a new #{type} resource - #{rsc.errors.full_messages.join(', ')}"
+        resource = klass.new(data)
+        if resource.save
+          add_subcollection_data_to_resource(resource, type, subcollection_data)
+          resource
+        else
+          raise BadRequestError, "Failed to add a new #{type} resource - #{resource.errors.full_messages.join(', ')}"
         end
-        rsc.save
-        add_subcollection_data_to_resource(rsc, type, subcollection_data)
-        klass.find(rsc.id)
       end
 
       alias_method :create_resource, :add_resource
@@ -72,8 +81,8 @@ module Api
         opts = {
           :name             => type.to_s,
           :is_subcollection => false,
-          :resource_actions => "resource_actions_#{type}",
-          :expand_resources => true
+          :expand_resources => true,
+          :expand_actions   => true
         }
         resource_to_jbuilder(type, type, resource, opts).attributes!
       end
@@ -89,8 +98,6 @@ module Api
         klass = collection_class(type)
         id ||= @req.c_id
         raise BadRequestError, "Must specify an id for deleting a #{type} resource" unless id
-        api_log_info("Deleting #{type} id #{id}")
-        resource_search(id, type, klass)
         delete_resource_action(klass, type, id)
       end
 
@@ -175,11 +182,13 @@ module Api
       end
 
       def delete_resource_action(klass, type, id)
+        api_log_info("Deleting #{type} id #{id}")
+        resource = resource_search(id, type, klass)
         result = begin
-                   klass.destroy(id)
+                   resource.destroy!
                    action_result(true, "#{type} id: #{id} deleting")
                  rescue => err
-                   action_result(false, err.to_s)
+                   action_result(false, "#{err} - #{resource.errors.full_messages.join(', ')}")
                  end
         add_href_to_result(result, type, id)
         log_result(result)
@@ -218,7 +227,7 @@ module Api
       end
 
       def submit_custom_action_dialog(resource, custom_button, data)
-        wf = ResourceActionWorkflow.new({}, @auth_user_obj, custom_button.resource_action, :target => resource)
+        wf = ResourceActionWorkflow.new({}, User.current_user, custom_button.resource_action, :target => resource)
         data.each { |key, value| wf.set_value(key, value) } if data.present?
         wf_result = wf.submit_request
         raise StandardError, Array(wf_result[:errors]).join(", ") if wf_result[:errors].present?
@@ -240,13 +249,6 @@ module Api
         end
       rescue => err
         action_result(false, err.to_s)
-      end
-
-      def service_template_workflow(service_template, service_request)
-        resource_action = service_template.resource_actions.find_by_action("Provision")
-        workflow = ResourceActionWorkflow.new({}, @auth_user_obj, resource_action, :target => service_template)
-        service_request.each { |key, value| workflow.set_value(key, value) } if service_request.present?
-        workflow
       end
 
       def validate_id(id, klass)

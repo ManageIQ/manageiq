@@ -1,8 +1,0 @@
-= render :partial => "layouts/flash_msg"
-.row
-  .col-md-12.col-lg-6
-    = render :partial => "shared/summary/textual", :locals => {:title => _("Properties"), :items => textual_configuration_profile_group_properties}
-    = render :partial => "shared/summary/textual", :locals => {:title => _("Environment"), :items => textual_configuration_profile_group_environment}
-    = render :partial => "shared/summary/textual", :locals => {:title => _("Operating System"), :items => textual_configuration_profile_group_os}
-  .col-md-12.col-lg-6
-    = render :partial => "shared/summary/textual", :locals => {:title => _("Tenancy"), :items => textual_configuration_profile_group_tenancy}

@@ -3,6 +3,7 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   belongs_to :flavor
   belongs_to :orchestration_stack
   belongs_to :cloud_tenant
+  belongs_to :resource_group
 
   has_many :network_ports, :as => :device
   has_many :cloud_subnets, -> { distinct }, :through => :network_ports
@@ -29,7 +30,9 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
 
   default_value_for :cloud, true
 
-  virtual_column :ipaddresses,   :type => :string_set, :uses => {:network_ports => :ipaddresses}
+  virtual_column :ipaddresses, :type => :string_set, :uses => {:network_ports => :ipaddresses}
+  virtual_column :floating_ip_addresses, :type => :string_set, :uses => {:network_ports => :floating_ip_addresses}
+  virtual_column :fixed_ip_addresses, :type => :string_set, :uses => {:network_ports => :fixed_ip_addresses}
   virtual_column :mac_addresses, :type => :string_set, :uses => :network_ports
   virtual_column :load_balancer_health_check_state,
                  :type => :string,
@@ -66,6 +69,14 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     @ipaddresses ||= network_ports.collect(&:ipaddresses).flatten.compact.uniq
   end
 
+  def floating_ip_addresses
+    @floating_ip_addresses ||= network_ports.collect(&:floating_ip_addresses).flatten.compact.uniq
+  end
+
+  def fixed_ip_addresses
+    @fixed_ip_addresses ||= network_ports.collect(&:fixed_ip_addresses).flatten.compact.uniq
+  end
+
   def cloud_network
     # NetworkProvider Backwards compatibility layer with simplified architecture where VM has only one network.
     cloud_networks.first
@@ -97,7 +108,26 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     true
   end
 
-  def resize(new_flavor)
+  def resize_queue(userid, new_flavor)
+    task_opts = {
+      :action => "resizing Instance for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'resize',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :zone        => my_zone,
+      :args        => [new_flavor.id]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def resize(new_flavor_id)
+    raise ArgumentError, _("new_flavor_id cannot be nil") if new_flavor_id.nil?
+    new_flavor = Flavor.find(new_flavor_id)
+    raise ArgumentError, _("flavor cannot be found") if new_flavor.nil? 
     raw_resize(new_flavor)
   end
 
@@ -109,10 +139,6 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     raw_resize_revert
   end
 
-  def validate_timeline
-    {:available => true, :message => nil}
-  end
-
   def disconnect_ems(e = nil)
     self.availability_zone = nil if e.nil? || ext_management_system == e
     super
@@ -120,6 +146,22 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
 
   def raw_associate_floating_ip(_ip_address)
     raise NotImplementedError, _("raw_associate_floating_ip must be implemented in a subclass")
+  end
+
+  def associate_floating_ip_queue(userid, ip_address)
+    task_opts = {
+      :action => "associating floating IP with Instance for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'associate_floating_ip',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :zone        => my_zone,
+      :args        => [ip_address]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
   def associate_floating_ip(ip_address)
@@ -130,8 +172,74 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     raise NotImplementedError, _("raw_disassociate_floating_ip must be implemented in a subclass")
   end
 
+  def disassociate_floating_ip_queue(userid, ip_address)
+    task_opts = {
+      :action => "disassociating floating IP with Instance for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'disassociate_floating_ip',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :zone        => my_zone,
+      :args        => [ip_address]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
   def disassociate_floating_ip(ip_address)
     raw_disassociate_floating_ip(ip_address)
+  end
+
+  def service
+    super || orchestration_stack.try(:service)
+  end
+
+  def direct_service
+    super || orchestration_stack.try(:direct_service)
+  end
+
+  def self.live_migrate_queue(userid, vm, options = {})
+    task_opts = {
+      :action => "migrating Instance for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => vm.class,
+      :method_name => 'live_migrate',
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :zone        => vm.my_zone,
+      :args        => [vm.id, options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def self.evacuate_queue(userid, vm, options = {})
+    task_opts = {
+      :action => "evacuating Instance for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => vm.class,
+      :method_name => 'evacuate',
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :zone        => vm.my_zone,
+      :args        => [vm.id, options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def self.live_migrate(vm_id, options)
+    vm = find(vm_id)
+    vm.live_migrate(options)
+  end
+
+  def self.evacuate(vm_id, options)
+    vm = find(vm_id)
+    vm.evacuate(options)
   end
 
   private

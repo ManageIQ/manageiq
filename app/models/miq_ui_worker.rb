@@ -17,7 +17,6 @@ class MiqUiWorker < MiqWorker
   REDIRECTS_CONFIG_FILE      = '/etc/httpd/conf.d/manageiq-redirects-ui'
   STARTING_PORT              = 3000
   PROTOCOL                   = 'http'
-  LB_METHOD                  = :busy
   REDIRECTS                  = '/'
   CLUSTER                    = 'evmcluster_ui'
 

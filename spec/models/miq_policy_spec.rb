@@ -40,49 +40,6 @@ describe MiqPolicy do
     end
   end
 
-  describe "#seed" do
-    let(:miq_policy_instance) { FactoryGirl.create(:miq_policy) }
-
-    context "when fields(towhat, active, mode) are not yet set in database" do
-      it "should be filled up by default values" do
-        miq_policy_instance.towhat = nil
-        miq_policy_instance.active = nil
-        miq_policy_instance.mode = nil
-        miq_policy_instance.save
-
-        MiqPolicy.seed
-
-        updated_miq_policy = MiqPolicy.find(miq_policy_instance.id)
-
-        expect(updated_miq_policy.towhat).to eq("Vm")
-        expect(updated_miq_policy.active).to eq(true)
-        expect(updated_miq_policy.mode).to eq("control")
-      end
-    end
-
-    context "when fields(towhat, active, mode) are already set in database" do
-      it "should not be filled up by default values" do
-        miq_policy_instance.towhat = "Host"
-        miq_policy_instance.active = false
-        miq_policy_instance.mode = "compliance"
-        miq_policy_instance.save
-
-        MiqPolicy.seed
-
-        miq_policy = MiqPolicy.find(miq_policy_instance.id)
-
-        expect(miq_policy.towhat).not_to eq("Vm")
-        expect(miq_policy.active).not_to eq(true)
-        expect(miq_policy.mode).not_to eq("control")
-
-        # testing that our values stayed untouched
-        expect(miq_policy.towhat).to eq("Host")
-        expect(miq_policy.active).to eq(false)
-        expect(miq_policy.mode).to eq("compliance")
-      end
-    end
-  end
-
   context "instance methods" do
     let(:event)  { FactoryGirl.create(:miq_event_definition) }
     let(:action) { FactoryGirl.create(:miq_action) }
@@ -136,12 +93,6 @@ describe MiqPolicy do
       it "replaces actions for an event" do
         policy.replace_actions_for_event(event, [[new_action, {:qualifier => :success}]])
         expect(policy.actions_for_event(event, :success)).to eq([new_action])
-      end
-    end
-
-    describe "#action_result_for_event" do
-      it "finds the action result to be true or false" do
-        expect(policy.action_result_for_event(action, event)).to be true
       end
     end
 
@@ -320,6 +271,26 @@ describe MiqPolicy do
       expect(subject[:result]).to be true
       expect(subject[:actions].size).to eq(0)
       expect(subject[:details].first["name"]).to eq("(Built-in) Prevent Retired Instance from Starting")
+    end
+  end
+
+  context '.default_value_for' do
+    it 'sets defaults' do
+      expect(described_class.create!(:description => 'x')).to have_attributes(
+        :towhat => "Vm",
+        :active => true,
+        :mode   => "control",
+      )
+    end
+
+    it 'allows override of defaults' do
+      expect(described_class.create!(
+        :towhat => "Host", :mode => "compliance", :active => false, :description => 'x',
+      )).to have_attributes(
+        :towhat => "Host",
+        :active => false,
+        :mode   => "compliance",
+      )
     end
   end
 end

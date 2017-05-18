@@ -39,7 +39,7 @@ module EmsRefresh::SaveInventoryInfra
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
     # Check if the data coming in reflects a complete removal from the ems
-    if hashes.blank? || (hashes[:hosts].blank? && hashes[:vms].blank? && hashes[:storages].blank?)
+    if hashes.blank? || (hashes[:hosts].blank? && hashes[:vms].blank? && hashes[:storages].blank? && hashes[:folders].blank?)
       target.disconnect_inv
       return
     end
@@ -193,7 +193,6 @@ module EmsRefresh::SaveInventoryInfra
 
         found.save!
         h[:id] = found.id
-        h[:_object] = found
       rescue => err
         # If a host failed to process, mark it as invalid and log an error
         h[:invalid] = invalids_found = true

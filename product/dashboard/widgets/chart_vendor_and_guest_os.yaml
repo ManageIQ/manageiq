@@ -2,6 +2,7 @@ description: chart_vendor_and_guest_os
 title: Vendor and Guest OS Chart
 content_type: chart   
 options:
+  :timezone_matters: false
 visibility:
   :roles:
   - _ALL_
@@ -14,4 +15,4 @@ miq_schedule_options:
       :value: "1"
       :unit: daily
 enabled: true        
-read_only: true  
+read_only: true

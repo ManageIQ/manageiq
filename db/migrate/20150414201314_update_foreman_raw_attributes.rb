@@ -1,4 +1,4 @@
-class UpdateForemanRawAttributes < ActiveRecord::Migration
+class UpdateForemanRawAttributes < ActiveRecord::Migration[4.2]
   def change
     rename_column :configured_systems, :operating_system_flavor_id,     :direct_operating_system_flavor_id
     rename_column :configured_systems, :customization_script_medium_id, :direct_customization_script_medium_id

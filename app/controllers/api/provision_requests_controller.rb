@@ -15,8 +15,14 @@ module Api
       ems_custom_attrs  = hash_fetch(data, "ems_custom_attributes")
       miq_custom_attrs  = hash_fetch(data, "miq_custom_attributes")
 
-      MiqProvisionVirtWorkflow.from_ws(version_str, @auth_user_obj, template_fields, vm_fields, requester, tags,
+      MiqProvisionVirtWorkflow.from_ws(version_str, User.current_user, template_fields, vm_fields, requester, tags,
                                        additional_values, ems_custom_attrs, miq_custom_attrs)
+    end
+
+    def edit_resource(type, id, data)
+      req = resource_search(id, type, collection_class(:provision_requests))
+      RequestEditor.edit(req, data)
+      req
     end
 
     def deny_resource(type, id, data)

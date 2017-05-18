@@ -5,7 +5,6 @@
 #
 describe "Service Dialogs API" do
   let(:zone)       { FactoryGirl.create(:zone, :name => "api_zone") }
-  let(:miq_server) { FactoryGirl.create(:miq_server, :guid => miq_server_guid, :zone => zone) }
   let(:ems)        { FactoryGirl.create(:ems_vmware, :zone => zone) }
   let(:host)       { FactoryGirl.create(:host) }
 
@@ -105,6 +104,147 @@ describe "Service Dialogs API" do
         expect(response).to have_http_status(:ok)
       end
     end
+
+    context 'Edit Service Dialogs' do
+      let(:dialog) { FactoryGirl.create(:dialog_with_tab_and_group_and_field) }
+
+      it 'POST /api/service_dialogs/:id rejects a request without appropriate role' do
+        api_basic_authorize
+
+        run_post(service_dialogs_url(dialog.id), gen_request(:edit, :label => 'updated label'))
+
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'POST /api/service_dialogs/:id updates a service dialog' do
+        api_basic_authorize collection_action_identifier(:service_dialogs, :edit)
+        dialog_tab = dialog.dialog_tabs.first
+        dialog_group = dialog_tab.dialog_groups.first
+        dialog_field = dialog_group.dialog_fields.first
+
+        updated_dialog = {
+          'label'   => 'updated label',
+          'content' => {
+            'dialog_tabs' => [
+              'id'            => dialog_tab.id,
+              'label'         => 'updated tab label',
+              'dialog_groups' => [
+                {
+                  'id'            => dialog_group.id,
+                  'dialog_fields' => [
+                    { 'id' => dialog_field.id }
+                  ]
+                }
+              ]
+            ]
+          }
+        }
+
+        expected = {
+          'href'  => a_string_including(service_dialogs_url(dialog.id)),
+          'id'    => dialog.id,
+          'label' => 'updated label'
+        }
+
+        expect do
+          run_post(service_dialogs_url(dialog.id), gen_request(:edit, updated_dialog))
+          dialog.reload
+        end.to change(dialog, :content)
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body).to include(expected)
+      end
+
+      it 'POST /api/service_dialogs updates multiple service dialog' do
+        dialog2 = FactoryGirl.create(:dialog_with_tab_and_group_and_field)
+
+        api_basic_authorize collection_action_identifier(:service_dialogs, :edit)
+
+        run_post(service_dialogs_url, :action => 'edit', :resources => [{:id => dialog.id, 'label' => 'foo bar'},
+                                                                        {:id => dialog2.id, :label => 'bar'}
+        ])
+
+        expected = {
+          'results' => a_collection_containing_exactly(
+            a_hash_including(
+              'id'    => dialog.id,
+              'label' => 'foo bar'
+            ),
+            a_hash_including(
+              'id'    => dialog2.id,
+              'label' => 'bar'
+            )
+          )
+        }
+
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'Service Dialogs Copy' do
+      it 'forbids blueprint copy without an appropriate role' do
+        dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field)
+        api_basic_authorize
+
+        run_post(service_dialogs_url(dialog.id), :action => 'copy')
+
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'Can copy multiple service dialogs' do
+        dialog1 = FactoryGirl.create(:dialog_with_tab_and_group_and_field, :label => 'foo')
+        dialog2 = FactoryGirl.create(:dialog_with_tab_and_group_and_field, :label => 'bar')
+        api_basic_authorize collection_action_identifier(:service_dialogs, :copy)
+
+        expected = {
+          'results' => a_collection_containing_exactly(
+            a_hash_including(
+              'label' => "Copy of foo"
+            ),
+            a_hash_including(
+              'label' => "Copy of bar"
+            )
+          )
+        }
+
+        expect do
+          run_post(service_dialogs_url, :action => 'copy', :resources => [{:id => dialog1.id},
+                                                                          {:id => dialog2.id}])
+        end.to change(Dialog, :count).by(2)
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'Can copy a single service dialog' do
+        dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field, :label => 'foo')
+        api_basic_authorize collection_action_identifier(:service_dialogs, :copy)
+
+        expected = {
+          'label' => "Copy of foo"
+        }
+
+        expect do
+          run_post(service_dialogs_url(dialog.id), :action => 'copy')
+        end.to change(Dialog, :count).by(1)
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'Can copy a service dialog with a new label' do
+        dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field, :label => 'bar')
+        api_basic_authorize collection_action_identifier(:service_dialogs, :copy)
+
+        expected = {
+          'label' => 'foo'
+        }
+
+        expect do
+          run_post(service_dialogs_url(dialog.id), :action => 'copy', 'label' => 'foo')
+        end.to change(Dialog, :count).by(1)
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
+      end
+    end
   end
 
   context "Service Dialogs subcollection" do
@@ -131,12 +271,15 @@ describe "Service Dialogs API" do
       expect_result_resources_to_include_data("resources", "label" => dialogs.pluck(:label))
     end
 
-    it "queries service dialogs content with the template and related resource action specified" do
-      expect_any_instance_of(Dialog).to receive(:content).with(template, ra1)
-
+    it "queries service dialogs content with the template and related resource action specified and returns IDs" do
       run_get "#{service_templates_url(template.id)}/service_dialogs/#{dialog1.id}", :attributes => "content"
+      expected = {
+        'content' => a_collection_including(
+          a_hash_including('id' => dialog1.id)
+        )}
 
       expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
     end
   end
 
@@ -190,6 +333,157 @@ describe "Service Dialogs API" do
         "href"    => a_string_matching(service_dialogs_url(dialog1.id)),
         "result"  => hash_including("text1")
       )
+    end
+  end
+
+  context 'Creates service dialogs' do
+    let(:dialog_request) do
+      {
+        :description => 'Dialog',
+        :label       => 'dialog_label',
+        :dialog_tabs => [
+          {
+            :description   => 'Dialog tab',
+            :position      => 0,
+            :label         => 'dialog_tab_label',
+            :dialog_groups => [
+              {
+                :description   => 'Dialog group',
+                :label         => 'group_label',
+                :dialog_fields => [
+                  {
+                    :name  => 'A dialog field',
+                    :label => 'dialog_field_label'
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    end
+
+    it 'rejects service dialog creation without appropriate role' do
+      api_basic_authorize
+
+      run_post(service_dialogs_url, dialog_request)
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'rejects service dialog creation with an href specified' do
+      api_basic_authorize collection_action_identifier(:service_dialogs, :create)
+
+      run_post(service_dialogs_url, dialog_request.merge!("href" => service_dialogs_url(123)))
+      expected = {
+        "error" => a_hash_including(
+          "kind"    => "bad_request",
+          "message" => a_string_matching(/id or href should not be specified/)
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'rejects service dialog creation with an id specified' do
+      api_basic_authorize collection_action_identifier(:service_dialogs, :create)
+
+      run_post(service_dialogs_url, dialog_request.merge!("id" => 123))
+      expected = {
+        "error" => a_hash_including(
+          "kind"    => "bad_request",
+          "message" => a_string_matching(/id or href should not be specified/)
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'supports single service dialog creation' do
+      api_basic_authorize collection_action_identifier(:service_dialogs, :create)
+
+      expected = {
+        "results" => [
+          a_hash_including(
+            "description" => "Dialog",
+            "label"       => "dialog_label"
+          )
+        ]
+      }
+
+      expect do
+        run_post(service_dialogs_url, dialog_request)
+      end.to change(Dialog, :count).by(1)
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'supports multiple service dialog creation' do
+      api_basic_authorize collection_action_identifier(:service_dialogs, :create)
+      dialog_request_2 = {
+        :description => 'Dialog 2',
+        :label       => 'dialog_2_label',
+        :dialog_tabs => [
+          {
+            :description   => 'Dialog 2 tab',
+            :position      => 0,
+            :label         => 'dialog_2_label',
+            :dialog_groups => [
+              {
+                :description   => 'a new dialog group',
+                :label         => 'dialog_2_group_label',
+                :dialog_fields => [
+                  {
+                    :name  => 'a new dialog field',
+                    :label => 'dialog_field_label'
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+
+      expected = {
+        "results" => [
+          a_hash_including(
+            "description" => "Dialog",
+            "label"       => "dialog_label"
+          ),
+          a_hash_including(
+            "description" => "Dialog 2",
+            "label"       => "dialog_2_label"
+          )
+        ]
+      }
+
+      expect do
+        run_post(service_dialogs_url, gen_request(:create, [dialog_request, dialog_request_2]))
+      end.to change(Dialog, :count).by(2)
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'returns dialog import service errors' do
+      api_basic_authorize collection_action_identifier(:service_dialogs, :create)
+      invalid_request = {
+        'description' => 'Dialog',
+        'label'       => 'a_dialog'
+      }
+
+      expected = {
+        'error' => a_hash_including(
+          'kind'    => 'bad_request',
+          'message' => a_string_including('Failed to create a new dialog'),
+          'klass'   => 'Api::BadRequestError'
+        )
+      }
+
+      expect do
+        run_post(service_dialogs_url, invalid_request)
+      end.to change(Dialog, :count).by(0)
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:bad_request)
     end
   end
 end

@@ -32,22 +32,31 @@ class ExtManagementSystem < ApplicationRecord
   has_many :endpoints, :as => :resource, :dependent => :destroy, :autosave => true
 
   has_many :hosts, :foreign_key => "ems_id", :dependent => :nullify, :inverse_of => :ext_management_system
+  has_many :non_clustered_hosts, -> { non_clustered }, :class_name => "Host", :foreign_key => "ems_id"
+  has_many :clustered_hosts, -> { clustered }, :class_name => "Host", :foreign_key => "ems_id"
   has_many :vms_and_templates, :foreign_key => "ems_id", :dependent => :nullify,
            :class_name => "VmOrTemplate", :inverse_of => :ext_management_system
   has_many :miq_templates,     :foreign_key => :ems_id, :inverse_of => :ext_management_system
   has_many :vms,               :foreign_key => :ems_id, :inverse_of => :ext_management_system
+  has_many :hardwares,         :through => :vms_and_templates
+  has_many :networks,          :through => :hardwares
+  has_many :disks,             :through => :hardwares
 
+  has_many :storages,       -> { distinct },          :through => :hosts
   has_many :ems_events,     -> { order "timestamp" }, :class_name => "EmsEvent",    :foreign_key => "ems_id",
                                                       :inverse_of => :ext_management_system
+  has_many :generated_events, -> { order "timestamp" }, :class_name => "EmsEvent", :foreign_key => "generating_ems_id",
+                                                          :inverse_of => :generating_ems
   has_many :policy_events,  -> { order "timestamp" }, :class_name => "PolicyEvent", :foreign_key => "ems_id"
 
   has_many :blacklisted_events, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :miq_alert_statuses, :foreign_key => "ems_id"
   has_many :ems_folders,    :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :ems_clusters,   :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :resource_pools, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
-
   has_many :customization_specs, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :storage_profiles,    :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :physical_servers,    :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
 
   has_one  :iso_datastore, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
 
@@ -66,10 +75,11 @@ class ExtManagementSystem < ApplicationRecord
   def hostname_uniqueness_valid?
     return unless hostname_required?
     return unless hostname.present? # Presence is checked elsewhere
+    # check uniqueness per provider type
 
-    existing_hostnames = Endpoint.where.not(:resource_id => id).pluck(:hostname).compact.map(&:downcase)
+    existing_hostnames = (self.class.all - [self]).map(&:hostname).compact.map(&:downcase)
 
-    errors.add(:hostname, "has already been taken") if existing_hostnames.include?(hostname.downcase)
+    errors.add(:hostname, N_("has to be unique per provider type")) if existing_hostnames.include?(hostname.downcase)
   end
 
   include NewWithTypeStiMixin
@@ -78,6 +88,8 @@ class ExtManagementSystem < ApplicationRecord
   include TenancyMixin
   include AvailabilityMixin
   include SupportsFeatureMixin
+  include ComplianceMixin
+  include CustomAttributeMixin
 
   after_destroy { |record| $log.info "MIQ(ExtManagementSystem.after_destroy) Removed EMS [#{record.name}] id [#{record.id}]" }
 
@@ -94,7 +106,6 @@ class ExtManagementSystem < ApplicationRecord
   include AuthenticationMixin
   include Metric::CiMixin
   include AsyncDeleteMixin
-  include VirtualTotalMixin
 
   delegate :ipaddress,
            :ipaddress=,
@@ -104,6 +115,8 @@ class ExtManagementSystem < ApplicationRecord
            :port=,
            :security_protocol,
            :security_protocol=,
+           :certificate_authority,
+           :certificate_authority=,
            :to => :default_endpoint,
            :allow_nil => true
 
@@ -121,7 +134,7 @@ class ExtManagementSystem < ApplicationRecord
   virtual_total  :total_vms,               :vms
   virtual_total  :total_miq_templates,     :miq_templates
   virtual_total  :total_hosts,             :hosts
-  virtual_column :total_storages,          :type => :integer
+  virtual_total  :total_storages,          :storages
   virtual_total  :total_clusters,          :clusters
   virtual_column :zone_name,               :type => :string, :uses => :zone
   virtual_column :total_vms_on,            :type => :integer
@@ -131,8 +144,15 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :total_vms_suspended,     :type => :integer
   virtual_total  :total_subnets,           :cloud_subnets
 
+  virtual_aggregate :total_vcpus, :hosts, :sum, :total_vcpus
+  virtual_aggregate :total_memory, :hosts, :sum, :ram_size
+  virtual_aggregate :total_cloud_vcpus, :vms, :sum, :cpu_total_cores
+  virtual_aggregate :total_cloud_memory, :vms, :sum, :ram_size
+
   alias_method :clusters, :ems_clusters # Used by web-services to return clusters as the property name
   alias_attribute :to_s, :name
+
+  default_value_for :enabled, true
 
   def self.with_ipaddress(ipaddress)
     joins(:endpoints).where(:endpoints => {:ipaddress => ipaddress})
@@ -228,10 +248,6 @@ class ExtManagementSystem < ApplicationRecord
 
   def self.provision_workflow_class
     self::ProvisionWorkflow
-  end
-
-  def self.default_blacklisted_event_names
-    []
   end
 
   # UI methods for determining availability of fields
@@ -382,18 +398,28 @@ class ExtManagementSystem < ApplicationRecord
     end
   end
 
-  def refresh_ems
+  def refresh_ems(opts = {})
     if missing_credentials?
       raise _("no %{table} credentials defined") % {:table => ui_lookup(:table => "ext_management_systems")}
     end
     unless authentication_status_ok?
       raise _("%{table} failed last authentication check") % {:table => ui_lookup(:table => "ext_management_systems")}
     end
-    EmsRefresh.queue_refresh(self)
+    EmsRefresh.queue_refresh(self, nil, opts)
   end
 
   def self.ems_infra_discovery_types
     @ems_infra_discovery_types ||= %w(virtualcenter scvmm rhevm)
+  end
+
+  def disable!
+    _log.info "Disabling EMS [#{name}] id [#{id}]."
+    update!(:enabled => false)
+  end
+
+  def enable!
+    _log.info "Enabling EMS [#{name}] id [#{id}]."
+    update!(:enabled => true)
   end
 
   def disconnect_inv
@@ -412,25 +438,8 @@ class ExtManagementSystem < ApplicationRecord
     MiqEvent.raise_evm_event(target, event, inputs)
   end
 
-  def non_clustered_hosts
-    hosts.where(:ems_cluster_id => nil)
-  end
-
-  def clustered_hosts
-    hosts.where.not(:ems_cluster_id => nil)
-  end
-
-  alias_method :storages,               :all_storages
-  alias_method :datastores,             :all_storages # Used by web-services to return datastores as the property name
-
-  alias_method :all_hosts,              :hosts
-  alias_method :all_host_ids,           :host_ids
-  alias_method :all_vms_and_templates,  :vms_and_templates
-  alias_method :all_vm_or_template_ids, :vm_or_template_ids
-  alias_method :all_vms,                :vms
-  alias_method :all_vm_ids,             :vm_ids
-  alias_method :all_miq_templates,      :miq_templates
-  alias_method :all_miq_template_ids,   :miq_template_ids
+  alias_method :all_storages,           :storages
+  alias_method :datastores,             :storages # Used by web-services to return datastores as the property name
 
   #
   # Relationship methods
@@ -475,10 +484,6 @@ class ExtManagementSystem < ApplicationRecord
     ["#{events_table_name(assoc)}.ems_id = ?", id]
   end
 
-  def total_storages
-    HostStorage.where(:host_id => host_ids).count("DISTINCT storage_id")
-  end
-
   def vm_count_by_state(state)
     vms.inject(0) { |t, vm| vm.power_state == state ? t + 1 : t }
   end
@@ -520,13 +525,12 @@ class ExtManagementSystem < ApplicationRecord
     [MiqRegion.my_region].compact unless interval_name == 'realtime'
   end
 
-  def perf_capture_enabled
+  def perf_capture_enabled?
     return @perf_capture_enabled unless @perf_capture_enabled.nil?
-    return @perf_capture_enabled = true if ems_clusters.any?(&:perf_capture_enabled?)
-    return @perf_capture_enabled = true if hosts.any?(&:perf_capture_enabled?)
-    @perf_capture_enabled = false
+    @perf_capture_enabled = ems_clusters.any?(&:perf_capture_enabled?) || host.any?(&:perf_capture_enabled?)
   end
-  alias_method :perf_capture_enabled?, :perf_capture_enabled
+  alias_method :perf_capture_enabled, :perf_capture_enabled?
+  Vmdb::Deprecation.deprecate_methods(self, :perf_capture_enabled => :perf_capture_enabled?)
 
   ###################################
   # Event Monitor

@@ -101,13 +101,14 @@ describe MiqServer do
     end
 
     it "#current_log_patterns" do
-      allow(@miq_server).to receive_messages(:current_log_pattern_configuration => %w(/var/log/syslog*))
+      stub_settings(:log => {:collection => {:current => {:pattern => %w(/var/log/syslog*)}}})
       allow(@miq_server).to receive_messages(:pg_log_patterns => %w(/var/lib/pgsql/data/*.conf))
       expect(@miq_server.current_log_patterns).to match_array %w(/var/log/syslog* /var/lib/pgsql/data/*.conf)
     end
 
     it "#current_log_patterns with pg_logs duplicated in current_log_pattern_configuration" do
-      allow(@miq_server).to receive_messages(:current_log_pattern_configuration => %w(/var/log/syslog* /var/lib/pgsql/data/*.conf))
+      stub_settings(
+        :log => {:collection => {:current => {:pattern => %w(/var/log/syslog* /var/lib/pgsql/data/*.conf)}}})
       allow(@miq_server).to receive_messages(:pg_log_patterns => %w(/var/lib/pgsql/data/*.conf))
       expect(@miq_server.current_log_patterns).to match_array %w(/var/log/syslog* /var/lib/pgsql/data/*.conf)
     end
@@ -163,19 +164,6 @@ describe MiqServer do
       context "Zone" do
         include_examples "post_[type_of_log]_logs", "Zone", :current
       end
-    end
-    def post_logs(options)
-      taskid = options[:taskid]
-      task = MiqTask.find(taskid)
-      context_log_depot = log_depot(options[:context])
-
-      # the current queue item and task must be errored out on exceptions so re-raise any caught errors
-      raise "Log depot settings not configured" unless context_log_depot
-      context_log_depot.update_attributes(:support_case => options[:support_case].presence)
-
-      post_historical_logs(taskid, context_log_depot) unless options[:only_current]
-      post_current_logs(taskid, context_log_depot)
-      task.update_status("Finished", "Ok", "Log files were successfully collected")
     end
 
     describe "#post_logs" do

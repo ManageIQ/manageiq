@@ -2,12 +2,14 @@ class GitRepository < ApplicationRecord
   include AuthenticationMixin
 
   validates :url, :format => URI::regexp(%w(http https)), :allow_nil => false
+  validate  :check_path
 
   default_value_for :verify_ssl, OpenSSL::SSL::VERIFY_PEER
   validates :verify_ssl, :inclusion => {:in => [OpenSSL::SSL::VERIFY_NONE, OpenSSL::SSL::VERIFY_PEER]}
 
   has_many :git_branches, :dependent => :destroy
   has_many :git_tags, :dependent => :destroy
+  after_destroy :delete_repo_dir
 
   INFO_KEYS = %w(commit_sha commit_message commit_time name).freeze
 
@@ -37,6 +39,10 @@ class GitRepository < ApplicationRecord
     parsed = URI.parse(url)
     raise "Invalid URL missing path" if parsed.path.blank?
     File.join(MiqAeDatastore::GIT_REPO_DIRECTORY, parsed.path)
+  end
+
+  def self_signed_cert_cb(_valid, _host)
+    true
   end
 
   private
@@ -73,19 +79,14 @@ class GitRepository < ApplicationRecord
 
   def init_repo
     repo_block do
-      params = {:clone => true, :url => url, :path => directory_name}
-      params[:ssl_no_verify] = (verify_ssl == OpenSSL::SSL::VERIFY_NONE)
-      if authentications.any?
-        params[:username] = authentications.first.userid
-        params[:password] = authentications.first.password
-      end
+      params = {:clone => true, :url => url}.merge(repo_params)
       GitWorktree.new(params)
     end
   end
 
   def update_repo
     repo_block do
-      GitWorktree.new(:path => directory_name).tap do |repo|
+      GitWorktree.new(repo_params).tap do |repo|
         repo.send(:fetch_and_merge)
       end
     end
@@ -97,5 +98,25 @@ class GitRepository < ApplicationRecord
     raise MiqException::MiqUnreachableError, err.message
   rescue => err
     raise MiqException::Error, err.message
+  end
+
+  def repo_params
+    params = {:path => directory_name}
+    params[:certificate_check] = method(:self_signed_cert_cb) if verify_ssl == OpenSSL::SSL::VERIFY_NONE
+    if authentications.any?
+      params[:username] = authentications.first.userid
+      params[:password] = authentications.first.password
+    end
+    params
+  end
+
+  def delete_repo_dir
+    FileUtils.rm_rf(directory_name)
+  end
+
+  def check_path
+    return unless url
+    parsed = URI.parse(url)
+    errors.add(:url, "missing path component e.g. https://www.example.com/path") if parsed.path.blank?
   end
 end

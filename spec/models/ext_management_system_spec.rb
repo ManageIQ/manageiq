@@ -18,29 +18,34 @@ describe ExtManagementSystem do
 
   let(:all_types_and_descriptions) do
     {
-      "ansible_tower_configuration" => "Ansible Tower Configuration",
+      "ansible_tower_automation"    => "Ansible Tower Automation",
       "azure"                       => "Azure",
       "azure_network"               => "Azure Network",
       "ec2"                         => "Amazon EC2",
       "ec2_network"                 => "Amazon EC2 Network",
+      "ec2_ebs_storage"             => "Amazon EBS",
+      "embedded_ansible_automation" => "Embedded Ansible Automation",
+      "s3"                          => "Amazon S3",
       "foreman_configuration"       => "Foreman Configuration",
       "foreman_provisioning"        => "Foreman Provisioning",
       "gce"                         => "Google Compute Engine",
       "gce_network"                 => "Google Network",
       "hawkular"                    => "Hawkular",
+      "hawkular_datawarehouse"      => "Hawkular Datawarehouse",
       "kubernetes"                  => "Kubernetes",
-      "openshift"                   => "OpenShift Origin",
-      "openshift_enterprise"        => "OpenShift Container Platform",
+      "openshift"                   => "OpenShift",
       "openstack"                   => "OpenStack",
       "openstack_infra"             => "OpenStack Platform Director",
       "openstack_network"           => "OpenStack Network",
+      "lenovo_ph_infra"             => "Lenovo XClarity",
       "nuage_network"               => "Nuage Network Manager",
-      "rhevm"                       => "Red Hat Enterprise Virtualization Manager",
+      "rhevm"                       => "Red Hat Virtualization",
       "scvmm"                       => "Microsoft System Center VMM",
       "vmwarews"                    => "VMware vCenter",
       "vmware_cloud"                => "VMware vCloud",
       "vmware_cloud_network"        => "VMware Cloud Network",
       "cinder"                      => "Cinder ",
+      "swift"                       => "Swift ",
     }
   end
 
@@ -255,7 +260,36 @@ describe ExtManagementSystem do
   context "with virtual totals" do
     before(:each) do
       @ems = FactoryGirl.create(:ems_vmware)
-      (1..2).each { |i| FactoryGirl.create(:vm_vmware, :ext_management_system => @ems, :name => "vm_#{i}") }
+      2.times do
+        FactoryGirl.create(:vm_vmware,
+                           :ext_management_system => @ems,
+                           :hardware              => FactoryGirl.create(:hardware,
+                                                                        :cpu1x2,
+                                                                        :ram1GB))
+      end
+      2.times do
+        FactoryGirl.create(:host,
+                           :ext_management_system => @ems,
+                           :hardware              => FactoryGirl.create(:hardware,
+                                                                        :cpu2x2,
+                                                                        :ram1GB))
+      end
+    end
+
+    it "#total_cloud_vcpus" do
+      expect(@ems.total_cloud_vcpus).to eq(4)
+    end
+
+    it "#total_cloud_memory" do
+      expect(@ems.total_cloud_memory).to eq(2048)
+    end
+
+    it "#total_vcpus" do
+      expect(@ems.total_vcpus).to eq(8)
+    end
+
+    it "#total_memory" do
+      expect(@ems.total_memory).to eq(2048)
     end
 
     it "#total_vms_on" do
@@ -325,99 +359,6 @@ describe ExtManagementSystem do
   end
 
   context "validates" do
-    before do
-      Zone.seed
-    end
-
-    context "within the same sub-classes" do
-      described_class.leaf_subclasses.each do |ems|
-        next if ems == ManageIQ::Providers::Amazon::CloudManager # Amazon is tested in ems_amazon_spec.rb
-        # TODO(lsmola) NetworkManager, test this if NetworkManager becomes not dependent on cloud manager
-        next if [ManageIQ::Providers::Openstack::NetworkManager,
-                 ManageIQ::Providers::Amazon::NetworkManager,
-                 ManageIQ::Providers::Azure::NetworkManager,
-                 ManageIQ::Providers::Google::NetworkManager,
-                 ManageIQ::Providers::StorageManager::CinderManager].include? ems
-        t = ems.name.underscore
-
-        context t do
-          it "duplicate name" do
-            expect { FactoryGirl.create(t, :name => "ems_1") }.to_not raise_error
-            expect { FactoryGirl.create(t, :name => "ems_1") }.to     raise_error(ActiveRecord::RecordInvalid)
-          end
-
-          if ems.new.hostname_required?
-            it "duplicate hostname" do
-              expect { FactoryGirl.create(t, :hostname => "ems_1") }.to_not raise_error
-              expect { FactoryGirl.create(t, :hostname => "ems_1") }.to     raise_error(ActiveRecord::RecordInvalid)
-              expect { FactoryGirl.create(t, :hostname => "EMS_1") }.to     raise_error(ActiveRecord::RecordInvalid)
-            end
-
-            it "blank hostname" do
-              expect { FactoryGirl.create(t, :hostname => "") }.to raise_error(ActiveRecord::RecordInvalid)
-            end
-
-            it "nil hostname" do
-              expect { FactoryGirl.create(t, :hostname => nil) }.to raise_error(ActiveRecord::RecordInvalid)
-            end
-          end
-
-          if ems.new.supports_port?
-            it "numeric port" do
-              expect { FactoryGirl.create(t, :port => "555") }.to_not raise_error
-            end
-
-            it "non-numeric port" do
-              expect { FactoryGirl.create(t, :port => "g55") }.to raise_error(ActiveRecord::RecordInvalid)
-            end
-
-            it "greater than 0 port" do
-              expect { FactoryGirl.create(t, :port => "-1") }.to raise_error(ActiveRecord::RecordInvalid)
-              expect { FactoryGirl.create(t, :port => "0") }.to raise_error(ActiveRecord::RecordInvalid)
-            end
-
-            it "nil port" do
-              expect { FactoryGirl.create(t, :port => nil) }.to_not raise_error
-            end
-          end
-        end
-      end
-    end
-
-    context "across sub-classes, from vmware to" do
-      before do
-        @ems_vmware = FactoryGirl.create(:ems_vmware)
-      end
-
-      described_class.leaf_subclasses.collect do |ems|
-        t = ems.name.underscore
-        # TODO(lsmola) NetworkManager, test this when we have a standalone NetworkManager
-        next if [ManageIQ::Providers::Openstack::NetworkManager,
-                 ManageIQ::Providers::Amazon::NetworkManager,
-                 ManageIQ::Providers::Azure::NetworkManager,
-                 ManageIQ::Providers::Google::NetworkManager,
-                 ManageIQ::Providers::StorageManager::CinderManager].include? ems
-
-        context t do
-          it "duplicate name" do
-            expect do
-              FactoryGirl.create(t, :name => @ems_vmware.name)
-            end.to raise_error(ActiveRecord::RecordInvalid)
-          end
-
-          it "duplicate hostname" do
-            manager = FactoryGirl.build(t, :hostname => @ems_vmware.hostname)
-
-            if manager.hostname_required?
-              expect { manager.save! }.to raise_error(ActiveRecord::RecordInvalid)
-            else
-              expect { manager.save! }.to_not raise_error
-            end
-          end
-        end
-      end
-    end
-
     context "across tenants" do
       before do
         tenant1  = Tenant.seed
@@ -431,10 +372,15 @@ describe ExtManagementSystem do
         end.to_not raise_error
       end
 
-      it "not allowing duplicate hostname" do
+      it "not allowing duplicate hostname for same type provider" do
         expect do
           FactoryGirl.create(:ems_vmware, :hostname => @ems.hostname, :tenant => @tenant2)
         end.to raise_error(ActiveRecord::RecordInvalid)
+      end
+
+      it "allowing duplicate hostname for different type providers" do
+        FactoryGirl.create(:ems_microsoft, :hostname => @ems.hostname, :tenant => @tenant2)
+        expect(ExtManagementSystem.count).to eq(2)
       end
     end
   end

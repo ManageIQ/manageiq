@@ -33,8 +33,6 @@ include:
 
 # Included tables and columns for query performance
 include_for_find:
-  :container_group: {}
-  :container_image: {}
 
 # Order of columns (from all tables)
 col_order: 

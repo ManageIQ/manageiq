@@ -2,16 +2,16 @@
 # REST API Request Tests - /api/automate
 #
 describe "Automate API" do
-  before(:each) do
-    MiqAeDatastore.reset
-    FactoryGirl.create(:miq_ae_domain, :name => "ManageIQ", :tenant_id => @group.tenant.id)
-    FactoryGirl.create(:miq_ae_domain, :name => "Custom",   :tenant_id => @group.tenant.id)
-    system_class = FactoryGirl.create(:miq_ae_class, :name => "System", :namespace => "Custom")
-    FactoryGirl.create(:miq_ae_field, :name    => "on_entry", :class_id => system_class.id,
-                                      :aetype  => "state",    :datatype => "string")
-  end
-
   context "Automate Queries" do
+    before(:each) do
+      MiqAeDatastore.reset
+      FactoryGirl.create(:miq_ae_domain, :name => "ManageIQ", :tenant_id => @group.tenant.id)
+      FactoryGirl.create(:miq_ae_domain, :name => "Custom",   :tenant_id => @group.tenant.id)
+      system_class = FactoryGirl.create(:miq_ae_class, :name => "System", :namespace => "Custom")
+      FactoryGirl.create(:miq_ae_field, :name    => "on_entry", :class_id => system_class.id,
+                                        :aetype  => "state",    :datatype => "string")
+    end
+
     it "returns domains by default" do
       api_basic_authorize action_identifier(:automate, :read, :collection_actions, :get)
 

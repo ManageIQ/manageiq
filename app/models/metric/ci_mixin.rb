@@ -21,12 +21,9 @@ module Metric::CiMixin
     end
   end
 
-  def has_perf_data?(interval_name = "hourly")
-    @has_perf_data ||= {}
-    unless @has_perf_data.key?(interval_name) # memoize boolean
-      @has_perf_data[interval_name] = associated_metrics(interval_name).exists?
-    end
-    @has_perf_data[interval_name]
+  def has_perf_data?
+    return @has_perf_data unless @has_perf_data.nil?
+    @has_perf_data = associated_metrics('hourly').exists?
   end
 
   def associated_metrics(interval_name)
@@ -215,5 +212,9 @@ module Metric::CiMixin
   def get_daily_time_profile_in_my_region_from_tz(tz)
     return if tz.nil?
     TimeProfile.in_region(region_id).rollup_daily_metrics.find_all_with_entire_tz.detect { |p| p.tz_or_default == tz }
+  end
+
+  def log_target
+    "#{self.class.name} name: [#{name}], id: [#{id}]"
   end
 end

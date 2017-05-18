@@ -1,4 +1,4 @@
-class FixHostStorageReplicationOnUpgrade < ActiveRecord::Migration
+class FixHostStorageReplicationOnUpgrade < ActiveRecord::Migration[4.2]
   include MigrationHelper
 
   class MiqRegion < ActiveRecord::Base; end

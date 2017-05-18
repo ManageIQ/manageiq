@@ -1,6 +1,7 @@
 class NetworkRouter < ApplicationRecord
   include NewWithTypeStiMixin
-  include VirtualTotalMixin
+  include SupportsFeatureMixin
+  include CloudTenancyMixin
 
   acts_as_miq_taggable
 
@@ -39,6 +40,11 @@ class NetworkRouter < ApplicationRecord
   end
 
   virtual_total :total_vms, :vms
+
+  def self.class_by_ems(ext_management_system)
+    # TODO: use a factory on ExtManagementSystem side to return correct class for each provider
+    ext_management_system && ext_management_system.class::NetworkRouter
+  end
 
   private
 

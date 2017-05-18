@@ -329,7 +329,7 @@ class Classification < ApplicationRecord
 
   def self.find_by_name(name, region_id = my_region_number, ns = DEFAULT_NAMESPACE, parent_id = 0)
     tag = Tag.find_by_classification_name(name, region_id, ns, parent_id)
-    find_by_tag_id(tag.id) if tag
+    find_by(:tag_id => tag.id) if tag
   end
 
   def self.find_by_names(names, region_id = my_region_number, ns = DEFAULT_NAMESPACE)
@@ -380,8 +380,7 @@ class Classification < ApplicationRecord
   end
 
   def self.export_to_yaml
-    a = export_to_array
-    a.to_yaml
+    export_to_array.to_yaml
   end
 
   def export_to_array
@@ -397,8 +396,7 @@ class Classification < ApplicationRecord
   end
 
   def export_to_yaml
-    a = export_to_array
-    a.to_yaml
+    export_to_array.to_yaml
   end
 
   def self.import_from_hash(classification, parent = nil)
