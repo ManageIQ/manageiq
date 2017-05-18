@@ -84,19 +84,20 @@ module MiqServer::LogManagement
 
   def _post_my_logs(options)
     # Make the request to the MiqServer whose logs are needed
-    MiqQueue.put_or_update(
+    MiqQueue.create_with(
+      :miq_callback => options.delete(:callback),
+      :msg_timeout  => options.delete(:timeout),
+      :priority     => MiqQueue::HIGH_PRIORITY,
+      :args         => [options]
+    ).put_unless_exists(
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "post_logs",
       :server_guid => guid,
       :zone        => my_zone,
-    ) do |msg, item|
+    ) do |msg|
       _log.info("Previous adhoc log collection is still running, skipping...Resource: [#{self.class.name}], id: [#{id}]") unless msg.nil?
-      item.merge(
-        :miq_callback => options.delete(:callback),
-        :msg_timeout  => options.delete(:timeout),
-        :priority     => MiqQueue::HIGH_PRIORITY,
-        :args         => [options])
+      nil
     end
   end
 
