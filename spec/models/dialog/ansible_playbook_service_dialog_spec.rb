@@ -1,13 +1,13 @@
 describe Dialog::AnsiblePlaybookServiceDialog do
-  let(:playbook) { FactoryGirl.create(:configuration_script, :variables => nil) }
-
   describe "#create_dialog" do
     it "creates a dialog for a playbook with variables" do
-      allow(playbook).to receive(:variables).and_return('some_extra_var'  => 'blah',
-                                                        'other_extra_var' => {'name' => 'some_value'},
-                                                        'array_extra_var' => [{'name' => 'some_value'}])
+      extra_vars = {
+        'some_extra_var'  => {:default => 'blah'},
+        'other_extra_var' => {:default => {'name' => 'some_value'}},
+        'array_extra_var' => {:default => [{'name' => 'some_value'}]}
+      }
 
-      dialog = subject.create_dialog("mydialog1", playbook)
+      dialog = subject.create_dialog("mydialog1", extra_vars)
       expect(dialog).to have_attributes(:label => 'mydialog1', :buttons => "submit,cancel")
 
       tabs = dialog.dialog_tabs
@@ -16,7 +16,7 @@ describe Dialog::AnsiblePlaybookServiceDialog do
     end
 
     it "creates a dialog for a playbook with no variables" do
-      dialog = described_class.create_dialog("mydialog2", playbook)
+      dialog = described_class.create_dialog("mydialog2", {})
       expect(dialog.dialog_tabs[0].dialog_groups.size).to eq(1)
     end
   end

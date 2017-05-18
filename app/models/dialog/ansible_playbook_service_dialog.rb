@@ -1,17 +1,17 @@
 class Dialog
   class AnsiblePlaybookServiceDialog
-    def self.create_dialog(label, job_template, hosts = 'localhost')
-      new.create_dialog(label, job_template, hosts)
+    def self.create_dialog(label, extra_vars, hosts = 'localhost')
+      new.create_dialog(label, extra_vars, hosts)
     end
 
     # This dialog is to be used by a playbook service
     # The job_template contains the playbook
-    def create_dialog(label, job_template, hosts = 'localhost')
+    def create_dialog(label, extra_vars, hosts = 'localhost')
       Dialog.new(:label => label, :buttons => "submit,cancel").tap do |dialog|
         tab = dialog.dialog_tabs.build(:display => "edit", :label => "Basic Information", :position => 0)
         add_options_group(tab, 0, hosts)
-        unless job_template.variables.blank?
-          add_variables_group(tab, 1, job_template)
+        unless extra_vars.blank?
+          add_variables_group(tab, 1, extra_vars)
         end
         dialog.save!
       end
@@ -65,13 +65,13 @@ class Dialog
       )
     end
 
-    def add_variables_group(tab, position, template)
+    def add_variables_group(tab, position, extra_vars)
       tab.dialog_groups.build(
         :display  => "edit",
         :label    => "Variables",
         :position => position
       ).tap do |dialog_group|
-        template.variables.each_with_index do |(key, value), index|
+        extra_vars.transform_values { |val| val[:default] }.each_with_index do |(key, value), index|
           value = value.to_json if [Hash, Array].include?(value.class)
           add_variable_field(key, value, dialog_group, index)
         end

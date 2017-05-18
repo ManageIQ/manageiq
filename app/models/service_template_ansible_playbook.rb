@@ -55,8 +55,8 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     end
   end
 
-  def create_new_dialog(dialog_name, job_template, hosts)
-    Dialog::AnsiblePlaybookServiceDialog.create_dialog(dialog_name, job_template, hosts)
+  def create_new_dialog(dialog_name, extra_vars, hosts)
+    Dialog::AnsiblePlaybookServiceDialog.create_dialog(dialog_name, extra_vars, hosts)
   end
   private :create_new_dialog
 
@@ -185,7 +185,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     [:provision, :retirement, :reconfigure].each_with_object({}) do |action, hash|
       info = config_info[action]
       next unless new_dialog_required?(info)
-      hash[action] = {:dialog_id => create_new_dialog(info[:new_dialog_name], info[:configuration_template], info[:hosts]).id}
+      hash[action] = {:dialog_id => create_new_dialog(info[:new_dialog_name], info[:extra_vars], info[:hosts]).id}
     end
   end
 
