@@ -16,13 +16,14 @@ module ManageIQ::Providers
         @subscription_id = ems.subscription
 
         # TODO(lsmola) NetworkManager, remove network endpoints once this is entirely moved under NetworkManager
-        @nis               = ::Azure::Armrest::Network::NetworkInterfaceService.new(@config)
-        @ips               = ::Azure::Armrest::Network::IpAddressService.new(@config)
-        @vmm               = ::Azure::Armrest::VirtualMachineService.new(@config)
-        @asm               = ::Azure::Armrest::AvailabilitySetService.new(@config)
-        @tds               = ::Azure::Armrest::TemplateDeploymentService.new(@config)
-        @rgs               = ::Azure::Armrest::ResourceGroupService.new(@config)
-        @sas               = ::Azure::Armrest::StorageAccountService.new(@config)
+        @nis = network_interface_service(@config)
+        @ips = ip_address_service(@config)
+        @vmm = virtual_machine_service(@config)
+        @asm = availability_set_service(@config)
+        @tds = template_deployment_service(@config)
+        @rgs = resource_group_service(@config)
+        @sas = storage_account_service(@config)
+
         @options           = options || {}
         @data              = {}
         @data_index        = {}
