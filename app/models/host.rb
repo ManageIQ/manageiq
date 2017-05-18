@@ -1151,7 +1151,7 @@ class Host < ApplicationRecord
 
   def refresh_linux_packages(ssu)
     pkg_xml = MiqXml.createDoc(:miq).root.add_element(:software).add_element(:applications)
-    rpm_list = ssu.shell_exec("rpm -qa --queryformat '%{NAME}|%{VERSION}|%{ARCH}|%{GROUP}|%{RELEASE}|%{SUMMARY}\n'")
+    rpm_list = ssu.shell_exec("rpm -qa --queryformat '%{NAME}|%{VERSION}|%{ARCH}|%{GROUP}|%{RELEASE}|%{SUMMARY}\n'").force_encoding("utf-8")
     rpm_list.each_line do |line|
       l = line.split('|')
       pkg_xml.add_element(:application, 'name' => l[0], 'version' => l[1], 'arch' => l[2], 'typename' => l[3], 'release' => l[4], 'description' => l[5])
