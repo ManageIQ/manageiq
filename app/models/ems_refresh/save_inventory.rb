@@ -4,11 +4,6 @@ module EmsRefresh::SaveInventory
       ManagerRefresh::SaveInventory.save_inventory(ems, hashes)
       return
     end
-    if hashes && hashes[:_inventory_collection]
-      hashes.delete(:_inventory_collection)
-      ManagerRefresh::SaveInventory.save_inventory(ems, hashes.values)
-      return
-    end
 
     case ems
     when EmsCloud                                           then save_ems_cloud_inventory(ems, hashes, target)
