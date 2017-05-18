@@ -1,0 +1,217 @@
+---
+- description: Transform VM
+  buttons: submit,cancel
+  label: Transform VM
+  blueprint_id:
+  dialog_tabs:
+  - description:
+    display: edit
+    label: Main
+    display_method:
+    display_method_options:
+    position: 0
+    dialog_groups:
+    - description: Import given virtual machine to another infrastructure provider
+      display: edit
+      label: Transform Virtual Machine
+      display_method:
+      display_method_options:
+      position: 0
+      dialog_fields:
+      - name: name
+        description: Name of the newly created virtual machine
+        data_type:
+        notes:
+        notes_display:
+        display: edit
+        display_method:
+        display_method_options: {}
+        required: true
+        required_method:
+        required_method_options: {}
+        default_value: ''
+        values:
+        values_method:
+        values_method_options: {}
+        options:
+          :protected: false
+        label: Name
+        position: 0
+        validator_type:
+        validator_rule:
+        reconfigurable:
+        dynamic: false
+        show_refresh_button:
+        load_values_on_init:
+        read_only:
+        auto_refresh:
+        trigger_auto_refresh:
+        visible: true
+        type: DialogFieldTextBox
+        resource_action:
+          action:
+          resource_type: DialogField
+          ae_namespace:
+          ae_class:
+          ae_instance:
+          ae_message:
+          ae_attributes: {}
+      - name: provider
+        description: Target infrastructure provider to which this virtual machine
+          should be imported.
+        data_type: string
+        notes:
+        notes_display:
+        display: edit
+        display_method:
+        display_method_options: {}
+        required: true
+        required_method:
+        required_method_options: {}
+        default_value: ''
+        values: []
+        values_method:
+        values_method_options: {}
+        options:
+          :sort_by: :value
+        label: Provider
+        position: 1
+        validator_type:
+        validator_rule:
+        reconfigurable:
+        dynamic: true
+        show_refresh_button:
+        load_values_on_init:
+        read_only:
+        auto_refresh:
+        trigger_auto_refresh: true
+        visible: true
+        type: DialogFieldDropDownList
+        resource_action:
+          action:
+          resource_type: DialogField
+          ae_namespace: Infrastructure/VM/Transform
+          ae_class: Import
+          ae_instance: list_infra_providers
+          ae_message:
+          ae_attributes: {}
+      - name: cluster
+        description: Target cluster
+        data_type: string
+        notes:
+        notes_display:
+        display: edit
+        display_method:
+        display_method_options: {}
+        required: true
+        required_method:
+        required_method_options: {}
+        default_value: ''
+        values: []
+        values_method:
+        values_method_options: {}
+        options:
+          :sort_by: :value
+        label: Cluster
+        position: 2
+        validator_type:
+        validator_rule:
+        reconfigurable: false
+        dynamic: true
+        show_refresh_button: false
+        load_values_on_init: false
+        read_only:
+        auto_refresh: true
+        trigger_auto_refresh: true
+        visible: true
+        type: DialogFieldDropDownList
+        resource_action:
+          action:
+          resource_type: DialogField
+          ae_namespace: Infrastructure/VM/Transform
+          ae_class: Import
+          ae_instance: list_clusters
+          ae_message:
+          ae_attributes: {}
+      - name: storage
+        description: Target storage
+        data_type: string
+        notes:
+        notes_display:
+        display: edit
+        display_method:
+        display_method_options: {}
+        required: true
+        required_method:
+        required_method_options: {}
+        default_value: ''
+        values: []
+        values_method:
+        values_method_options: {}
+        options:
+          :sort_by: :value
+        label: Storage
+        position: 3
+        validator_type:
+        validator_rule:
+        reconfigurable:
+        dynamic: true
+        show_refresh_button: false
+        load_values_on_init: true
+        read_only:
+        auto_refresh: true
+        trigger_auto_refresh: false
+        visible: true
+        type: DialogFieldDropDownList
+        resource_action:
+          action:
+          resource_type: DialogField
+          ae_namespace: Infrastructure/VM/Transform
+          ae_class: Import
+          ae_instance: list_storages
+          ae_message:
+          ae_attributes: {}
+      - name: sparse
+        description: Use thin allocation for virtual disks
+        data_type:
+        notes:
+        notes_display:
+        display: edit
+        display_method:
+        display_method_options: {}
+        required: false
+        required_method:
+        required_method_options: {}
+        default_value: f
+        values:
+        values_method:
+        values_method_options: {}
+        options: {}
+        label: Thin provisioning
+        position: 4
+        validator_type:
+        validator_rule:
+        reconfigurable:
+        dynamic:
+        show_refresh_button:
+        load_values_on_init:
+        read_only:
+        auto_refresh:
+        trigger_auto_refresh:
+        visible: true
+        type: DialogFieldCheckBox
+        resource_action:
+          action:
+          resource_type: DialogField
+          ae_namespace:
+          ae_class:
+          ae_instance:
+          ae_message:
+          ae_attributes: {}
+  resource_actions:
+    - action:
+      ae_namespace: SYSTEM
+      ae_class: REQUEST
+      ae_instance: import_vm
+      ae_message:
+      ae_attributes:

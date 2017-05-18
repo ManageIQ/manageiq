@@ -30,6 +30,13 @@ module ManageIQ::Providers::Redhat::InfraManager::VmImport
     )
   end
 
+  def submit_import_vm(userid, source_vm_id, target_params)
+    task_id = queue_import_vm(userid, source_vm_id, target_params)
+    task = MiqTask.wait_for_taskid(task_id)
+
+    task.task_results
+  end
+
   def validate_import_vm
     highest_supported_api_version && highest_supported_api_version >= '4'
   end
@@ -45,9 +52,31 @@ module ManageIQ::Providers::Redhat::InfraManager::VmImport
     end
   end
 
+  def queue_import_vm(userid, source_vm_id, target_params)
+    task_options = {
+      :action => 'Import VM',
+      :userid => userid
+    }
+
+    queue_options = {
+      :task_id     => nil, # run this task concurrently,
+      # since this is called by an (automate) task without this the task_id would be inherited from it
+      # and cause a deadlock in subsequent waiting on this task from synchronous context
+      :zone        => my_zone,
+      :class_name  => self.class.name,
+      :method_name => 'import_vm',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :args        => [source_vm_id, target_params]
+    }
+
+    _log.info("Queueing import of VM ID: #{source_vm_id} by user #{userid}")
+    MiqTask.generic_action_with_callback(task_options, queue_options)
+  end
+
   def perform_vmware_to_ovirt_import(params)
     with_provider_connection :version => 4 do |conn|
-      conn.system_service.external_vm_imports_service.add(
+      import = conn.system_service.external_vm_imports_service.add(
         OvirtSDK4::ExternalVmImport.new(
           :name           => params[:source_vm_name],
           :vm             => { :name => params[:target_vm_name] || params[:source_vm_name] },
@@ -60,6 +89,7 @@ module ManageIQ::Providers::Redhat::InfraManager::VmImport
           :sparse         => params[:sparse],
         )
       )
+      self.class.make_ems_ref(import.vm.href)
     end
   end
 

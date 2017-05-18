@@ -10,7 +10,17 @@ describe ManageIQ::Providers::Redhat::InfraManager::VmImport do
   let(:cluster_path)          { 'Folder1/Folder @#$*2/Compute 3/Folder4/Cluster 5' }
   let(:cluster_path_escaped)  { 'Folder1%2FFolder%20%40%23%24*2%2FCompute%203%2FFolder4%2FCluster%205' }
 
-  let(:new_name) { 'created-vm' }
+  let(:new_name)  { 'created-vm' }
+  let(:new_vm_id) { '6820ad2a-a8c0-4b4e-baf2-3482357ba352' }
+
+  let(:vm_import_response) do
+    OvirtSDK4::ExternalVmImport.new(
+      :vm => OvirtSDK4::Vm.new(
+        :id   => new_vm_id,
+        :href => "/ovirt-engine/api/vms/#{new_vm_id}"
+      )
+    )
+  end
 
   context 'import url encoding' do
     describe '#escape_cluster' do
@@ -44,14 +54,15 @@ describe ManageIQ::Providers::Redhat::InfraManager::VmImport do
         :storage_domain => { :id => storage.ems_ref_obj.split('/').last },
         :sparse         => true
       )
-      expect_any_instance_of(OvirtSDK4::ExternalVmImportsService).to receive(:add).with(eq(import_params))
-      target_ems.import_vm(
+      expect_any_instance_of(OvirtSDK4::ExternalVmImportsService).to receive(:add).with(eq(import_params)).and_return(vm_import_response)
+      new_ems_ref = target_ems.import_vm(
         source_vm.id,
         :name       => new_name,
         :cluster_id => cluster.id,
         :storage_id => storage.id,
         :sparse     => true
       )
+      expect(new_ems_ref).to eq("/api/vms/#{new_vm_id}")
     end
   end
 
