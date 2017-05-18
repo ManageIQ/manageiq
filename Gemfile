@@ -14,7 +14,11 @@ gem "rubywbem",            :require => false, :git => "https://github.com/Manage
 # when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared
 def manageiq_plugin(plugin_name)
   unless dependencies.detect { |d| d.name == plugin_name }
-    gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :branch => "master"
+    if plugin_name == 'manageiq-providers-prometheus'
+      gem plugin_name, :git => "https://github.com/moolitayer/#{plugin_name}", :branch => "master"
+    else
+      gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :branch => "master"
+    end
   end
 end
 
@@ -29,6 +33,7 @@ manageiq_plugin "manageiq-providers-openshift"
 manageiq_plugin "manageiq-providers-openstack"
 manageiq_plugin "manageiq-providers-ovirt"
 manageiq_plugin "manageiq-providers-vmware"
+manageiq_plugin "manageiq-providers-prometheus"
 manageiq_plugin "manageiq-ui-classic"
 
 # Unmodified gems
