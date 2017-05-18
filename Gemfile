@@ -74,7 +74,6 @@ gem "query_relation",                 "~>0.1.0",       :require => false
 gem "rails",                          "~>5.0.2"
 gem "rails-controller-testing",                        :require => false
 gem "rails-i18n",                     "~>5.x"
-gem "recursive-open-struct",          "~>1.0.0"
 gem "responders",                     "~>2.0"
 gem "ripper_ruby_parser",                              :require => false
 gem "ruby-dbus" # For external auth
