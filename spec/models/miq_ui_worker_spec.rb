@@ -27,10 +27,6 @@ describe MiqUiWorker do
     end
   end
 
-  it ".port_range" do
-    expect(described_class.port_range.to_a).to eq((3000..3009).to_a)
-  end
-
   describe ".reserve_port" do
     it "returns next free port" do
       ports = (3000..3001).to_a

@@ -81,25 +81,6 @@ module MiqServer::EnvironmentManagement
       MiqMemcached::Control.restart!(:port => port, :options => opts)
       _log.info("Status: #{MiqMemcached::Control.status[1]}")
     end
-
-    def prep_apache_proxying
-      return unless MiqEnvironment::Command.supports_apache?
-
-      MiqUiWorker.install_apache_proxy_config
-      MiqWebServiceWorker.install_apache_proxy_config
-      MiqWebsocketWorker.install_apache_proxy_config
-      MiqCockpitWsWorker.install_apache_proxy_config
-
-      # Because adding balancer members does a validation of the configuration
-      # files and these files try to load the redirect files among others,
-      # we need to add the balancers members after all configuration files have
-      # been written by install_apache_proxy_config.
-      MiqUiWorker.add_apache_balancer_members
-      MiqWebServiceWorker.add_apache_balancer_members
-      MiqWebsocketWorker.add_apache_balancer_members
-
-      MiqApache::Control.restart
-    end
   end
 
   #

@@ -2,7 +2,6 @@ class MiqCockpitWsWorker < MiqWorker
   require_nested :Runner
   require_nested :Authenticator
 
-  APACHE_CONF_FILE = '/etc/httpd/conf.d/manageiq-redirects-cockpit'.freeze
   self.required_roles = ['cockpit_ws']
   self.maximum_workers_count = 1
 
@@ -20,22 +19,8 @@ class MiqCockpitWsWorker < MiqWorker
   end
 
   def self.sync_workers
-    install_apache_proxy_config if MiqEnvironment::Command.supports_apache?
     @workers = should_start_worker? ? 1 : 0
     super
-  end
-
-  def self.install_apache_proxy_config
-    config_status = has_required_role?
-
-    # Only restart apache if status has changed
-    return if @config_status == config_status
-    @config_status = config_status
-    if config_status
-      MiqCockpit::ApacheConfig.new(MiqCockpitWsWorker.worker_settings).save(APACHE_CONF_FILE)
-    elsif File.exist?(APACHE_CONF_FILE)
-      File.truncate(APACHE_CONF_FILE, 0)
-    end
   end
 
   def kill
