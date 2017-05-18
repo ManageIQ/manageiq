@@ -1322,7 +1322,6 @@
       :performance_rollup_purging_start_delay: 5.minutes
       :policy_events_purge_interval: 1.day
       :poll: 15.seconds
-      :resync_rhn_mirror: 12.hours
       :report_result_purge_interval: 1.week
       :server_log_stats_interval: 5.minutes
       :server_stats_interval: 60.seconds

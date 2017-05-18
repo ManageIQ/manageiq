@@ -57,19 +57,11 @@ describe MiqServer do
     end
   end
 
-  context "#update_registration_status" do
-    it "rhn_client" do
-      @server.update_attribute(:rhn_mirror, true)
-      expect(@server).to receive(:check_updates).once
+  it "#update_registration_status" do
+    expect(@server).to receive(:attempt_registration).once
+    expect(@server).to receive(:check_updates).once
 
-      @server.update_registration_status
-    end
-    it "not rhn_client" do
-      expect(@server).to receive(:attempt_registration).once
-      expect(@server).to receive(:check_updates).once
-
-      @server.update_registration_status
-    end
+    @server.update_registration_status
   end
 
   context "#attempt_registration" do

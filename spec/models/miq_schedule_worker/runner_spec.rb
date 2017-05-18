@@ -419,13 +419,11 @@ describe MiqScheduleWorker::Runner do
             context "#do_work appliance_specific" do
               it "on an appliance" do
                 allow(MiqEnvironment::Command).to receive_messages(:is_appliance? => true)
-                expect_any_instance_of(MiqServer).to receive(:has_assigned_role?).with("rhn_mirror").and_return(true)
 
                 Timecop.freeze(@start_time) do
                   @schedule_worker.schedules_for_all_roles
 
                   expect(@system.jobs(:tag => :server_updates).first.next_time).to eq(@start_time + 1.minute)
-                  expect(@system.jobs(:tag => :rhn_mirror).first.next_time).to eq(@start_time + 1.minute)
                 end
               end
 
@@ -436,7 +434,6 @@ describe MiqScheduleWorker::Runner do
                   @schedule_worker.schedules_for_all_roles
 
                   expect(@system.jobs(:tag => :server_updates).first).to be_nil
-                  expect(@system.jobs(:tag => :rhn_mirror).first).to be_nil
                 end
               end
             end

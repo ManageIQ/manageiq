@@ -123,16 +123,6 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       ) { enqueue :miq_server_queue_update_registration_status }
     end
 
-    # Schedule - Periodic resync of RHN Mirror
-    if MiqEnvironment::Command.is_appliance? && MiqServer.my_server.has_assigned_role?("rhn_mirror")
-      interval = worker_settings[:resync_rhn_mirror]
-      scheduler.schedule_every(
-        interval,
-        :first_in => 1.minute,
-        :tags     => [:rhn_mirror, schedule_category]
-      ) { enqueue :miq_server_resync_rhn_mirror }
-    end
-
     @schedules[:all]
   end
 
