@@ -408,24 +408,28 @@ describe ManagerRefresh::SaveInventory do
 
         @data[:vms] = ::ManagerRefresh::InventoryCollection.new(
           :model_class => ManageIQ::Providers::CloudManager::Vm,
-          :arel        => @ems.vms.where(:ems_ref => vm_refs)
+          :arel        => @ems.vms.where(:ems_ref => vm_refs),
+          :name        => :vms
         )
         @data[:hardwares] = ::ManagerRefresh::InventoryCollection.new(
           :model_class => Hardware,
           :arel        => @ems.hardwares.joins(:vm_or_template).where(:vms => {:ems_ref => vm_refs}),
-          :manager_ref => [:vm_or_template]
+          :manager_ref => [:vm_or_template],
+          :name        => :hardwares
         )
         @data[:disks] = ::ManagerRefresh::InventoryCollection.new(
           :model_class => Disk,
           :arel        => @ems.disks.joins(:hardware => :vm_or_template).where('hardware' => {'vms' => {'ems_ref' => vm_refs}}),
-          :manager_ref => [:hardware, :device_name]
+          :manager_ref => [:hardware, :device_name],
+          :name        => :disks,
         )
         @data[:image_hardwares] = ::ManagerRefresh::InventoryCollection.new(
           :model_class         => Hardware,
           :arel                => @ems.hardwares,
           :manager_ref         => [:vm_or_template],
           :strategy            => :local_db_cache_all,
-          :custom_manager_uuid => ->(hardware) { [hardware.vm_or_template.try(:ems_ref)] }
+          :custom_manager_uuid => ->(hardware) { [hardware.vm_or_template.try(:ems_ref)] },
+          :name                => :image_hardwares,
         )
 
         @vm_data_3 = vm_data(3).merge(
