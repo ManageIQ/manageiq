@@ -4,7 +4,7 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
       attributes = {
         :model_class => ::CloudSubnetNetworkPort,
         :manager_ref => [:address, :cloud_subnet, :network_port],
-        :association => :cloud_subnet_network_ports,
+        :association => :cloud_subnet_network_ports
       }
 
       attributes.merge!(extra_attributes)
@@ -12,8 +12,11 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
 
     def network_ports(extra_attributes = {})
       attributes = {
-        :model_class => ::NetworkPort,
-        :association => :network_ports,
+        :model_class    => ::NetworkPort,
+        :association    => :network_ports,
+        :builder_params => {
+          :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
+        }
       }
 
       attributes.merge!(extra_attributes)
@@ -21,8 +24,11 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
 
     def floating_ips(extra_attributes = {})
       attributes = {
-        :model_class => ::FloatingIp,
-        :association => :floating_ips,
+        :model_class    => ::FloatingIp,
+        :association    => :floating_ips,
+        :builder_params => {
+          :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
+        }
       }
 
       attributes.merge!(extra_attributes)
@@ -30,8 +36,11 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
 
     def cloud_subnets(extra_attributes = {})
       attributes = {
-        :model_class => ::CloudSubnet,
-        :association => :cloud_subnets,
+        :model_class    => ::CloudSubnet,
+        :association    => :cloud_subnets,
+        :builder_params => {
+          :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
+        }
       }
 
       attributes.merge!(extra_attributes)
@@ -39,8 +48,11 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
 
     def cloud_networks(extra_attributes = {})
       attributes = {
-        :model_class => ::CloudNetwork,
-        :association => :cloud_networks,
+        :model_class    => ::CloudNetwork,
+        :association    => :cloud_networks,
+        :builder_params => {
+          :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
+        }
       }
 
       attributes.merge!(extra_attributes)
@@ -48,8 +60,11 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
 
     def security_groups(extra_attributes = {})
       attributes = {
-        :model_class => ::SecurityGroup,
-        :association => :security_groups,
+        :model_class    => ::SecurityGroup,
+        :association    => :security_groups,
+        :builder_params => {
+          :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
+        }
       }
 
       attributes.merge!(extra_attributes)
@@ -59,7 +74,7 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
       attributes = {
         :model_class => ::FirewallRule,
         :manager_ref => [:resource, :source_security_group, :direction, :host_protocol, :port, :end_port, :source_ip_range],
-        :association => :firewall_rules,
+        :association => :firewall_rules
       }
 
       attributes.merge!(extra_attributes)
@@ -67,8 +82,11 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
 
     def load_balancers(extra_attributes = {})
       attributes = {
-        :model_class => ::LoadBalancer,
-        :association => :load_balancers,
+        :model_class    => ::LoadBalancer,
+        :association    => :load_balancers,
+        :builder_params => {
+          :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
+        }
       }
 
       attributes.merge!(extra_attributes)
@@ -76,8 +94,11 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
 
     def load_balancer_pools(extra_attributes = {})
       attributes = {
-        :model_class => ::LoadBalancerPool,
-        :association => :load_balancer_pools,
+        :model_class    => ::LoadBalancerPool,
+        :association    => :load_balancer_pools,
+        :builder_params => {
+          :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
+        }
       }
 
       attributes.merge!(extra_attributes)
@@ -85,8 +106,11 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
 
     def load_balancer_pool_members(extra_attributes = {})
       attributes = {
-        :model_class => ::LoadBalancerPoolMember,
-        :association => :load_balancer_pool_members,
+        :model_class    => ::LoadBalancerPoolMember,
+        :association    => :load_balancer_pool_members,
+        :builder_params => {
+          :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
+        }
       }
 
       attributes.merge!(extra_attributes)
@@ -96,7 +120,7 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
       attributes = {
         :model_class => ::LoadBalancerPoolMemberPool,
         :manager_ref => [:load_balancer_pool, :load_balancer_pool_member],
-        :association => :load_balancer_pool_member_pools,
+        :association => :load_balancer_pool_member_pools
       }
 
       attributes.merge!(extra_attributes)
@@ -104,8 +128,11 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
 
     def load_balancer_listeners(extra_attributes = {})
       attributes = {
-        :model_class => ::LoadBalancerListener,
-        :association => :load_balancer_listeners,
+        :model_class    => ::LoadBalancerListener,
+        :association    => :load_balancer_listeners,
+        :builder_params => {
+          :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
+        }
       }
 
       attributes.merge!(extra_attributes)
@@ -115,7 +142,7 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
       attributes = {
         :model_class => ::LoadBalancerListenerPool,
         :manager_ref => [:load_balancer_listener, :load_balancer_pool],
-        :association => :load_balancer_listener_pools,
+        :association => :load_balancer_listener_pools
       }
 
       attributes.merge!(extra_attributes)
@@ -123,8 +150,11 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
 
     def load_balancer_health_checks(extra_attributes = {})
       attributes = {
-        :model_class => ::LoadBalancerHealthCheck,
-        :association => :load_balancer_health_checks,
+        :model_class    => ::LoadBalancerHealthCheck,
+        :association    => :load_balancer_health_checks,
+        :builder_params => {
+          :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
+        }
       }
 
       attributes.merge!(extra_attributes)
@@ -134,7 +164,7 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
       attributes = {
         :model_class => ::LoadBalancerHealthCheckMember,
         :manager_ref => [:load_balancer_health_check, :load_balancer_pool_member],
-        :association => :load_balancer_health_check_members,
+        :association => :load_balancer_health_check_members
       }
 
       attributes.merge!(extra_attributes)
