@@ -2716,7 +2716,7 @@ describe MiqExpression do
         end
 
         it "returns false if field belongs to virtual_has_many association" do
-          field = "ManageIQ::Providers::InfraManager::Vm.file_shares-type"
+          field = "ManageIQ::Providers::InfraManager::Vm.processes-type"
           expression = {"CONTAINS" => {"field" => field, "value" => "abc"}}
           expect(described_class.new(nil).sql_supports_atom?(expression)).to eq(false)
         end

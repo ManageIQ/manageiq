@@ -122,8 +122,6 @@ class VmOrTemplate < ApplicationRecord
 
   has_many                  :miq_alert_statuses, :dependent => :destroy, :as => :resource
 
-  has_one                   :miq_cim_instance, :as => :vmdb_obj, :dependent => :destroy
-
   has_many                  :service_resources, :as => :resource
   has_many                  :direct_services, :through => :service_resources, :source => :service
   belongs_to                :tenant
@@ -170,12 +168,6 @@ class VmOrTemplate < ApplicationRecord
 
   virtual_belongs_to :miq_provision_template, :class_name => "Vm",           :uses => {:miq_provision => :vm_template}
   virtual_belongs_to :parent_resource_pool,   :class_name => "ResourcePool", :uses => :all_relationships
-
-  virtual_has_many  :base_storage_extents, :class_name => "CimStorageExtent"
-  virtual_has_many  :storage_systems,      :class_name => "CimComputerSystem"
-  virtual_has_many  :file_shares,          :class_name => 'SniaFileShare'
-  virtual_has_many  :storage_volumes,      :class_name => 'CimStorageVolume'
-  virtual_has_many  :logical_disks,        :class_name => 'CimLogicalDisk'
 
   virtual_has_one   :direct_service,       :class_name => 'Service'
   virtual_has_one   :service,              :class_name => 'Service'
@@ -1571,46 +1563,6 @@ class VmOrTemplate < ApplicationRecord
 
   def event_logs
     operating_system.nil? ? [] : operating_system.event_logs
-  end
-
-  def base_storage_extents
-    miq_cim_instance.nil? ? [] : miq_cim_instance.base_storage_extents
-  end
-
-  def base_storage_extents_size
-    miq_cim_instance.nil? ? 0 : miq_cim_instance.base_storage_extents_size
-  end
-
-  def storage_systems
-    miq_cim_instance.nil? ? [] : miq_cim_instance.storage_systems
-  end
-
-  def storage_systems_size
-    miq_cim_instance.nil? ? 0 : miq_cim_instance.storage_systems_size
-  end
-
-  def storage_volumes
-    miq_cim_instance.nil? ? [] : miq_cim_instance.storage_volumes
-  end
-
-  def storage_volumes_size
-    miq_cim_instance.nil? ? 0 : miq_cim_instance.storage_volumes_size
-  end
-
-  def file_shares
-    miq_cim_instance.nil? ? [] : miq_cim_instance.file_shares
-  end
-
-  def file_shares_size
-    miq_cim_instance.nil? ? 0 : miq_cim_instance.file_shares_size
-  end
-
-  def logical_disks
-    miq_cim_instance.nil? ? [] : miq_cim_instance.logical_disks
-  end
-
-  def logical_disks_size
-    miq_cim_instance.nil? ? 0 : miq_cim_instance.logical_disks_size
   end
 
   def direct_service

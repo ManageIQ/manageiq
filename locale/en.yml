@@ -687,7 +687,6 @@ en:
       ChargebackVm:             Chargeback for Vms
       ChargebackContainerProject: Chargeback for Projects
       ChargebackRate:           Chargeback Rate
-      CimStorageExtent:         Storage - Extent
       Classification:           Category
       CloudNetwork:             Cloud Network
       CloudSubnet:              Cloud Subnet
@@ -872,23 +871,13 @@ en:
       MiqSchedule:              Schedule
       MiqSearch:                Search
       MiqServer:                Server
-      MiqSmisAgent:             SMI-S Agent
       MiqTask:                  Task
       MiqTemplate:              VM Template and Image
       MiqUserRole:              Role
       MiqWidget:                Widget
       MiqWorker:                EVM Worker
-      NetappRemoteService:      NetApp Remote Service
       NetworkPort:              Network Port
       NetworkRouter:            Network Router
-      OntapConcreteExtent:      Storage - Aggregate
-      OntapFileShare:           Storage - File Share
-      OntapLogicalDisk:         Storage - Volume
-      OntapPlexExtent:          Storage - Plex
-      OntapRaidGroupExtent:     Storage - Raid Group
-      OntapStorageSystem:       Storage - Filer
-      OntapStorageVolume:       Storage - LUN
-      OntapVolumeMetricsRollup: Storage Performance - Volumes
       OrchestrationStack:       Orchestration Stack
       OrchestrationTemplate:    Orchestration Template
       OrchestrationTemplateCfn: CloudFormation Template
@@ -911,10 +900,8 @@ en:
       ServiceTemplate:          Service Catalog Item
       ServiceTemplateCatalog:   Catalog
       Snapshot:                 Snapshot
-      SniaLocalFileSystem:      Storage - Local File System
       Storage:                  Datastore
       StorageFile:              Datastore File
-      StorageManager:           Storage Manager
       StoragePerformance:       Performance - Datastore
       TimeProfile:              Time Profile
       User:                     EVM User
@@ -936,7 +923,6 @@ en:
       base_snapshot:               Base Snapshot
       based_volumes:               Cloud Volumes Based on Snapshot
       cdroms:                      CD/DVD Drives
-      cim_base_storage_extent:     Base Extents
       cloud_object_store_container: Cloud Object Store Container
       cloud_object_store_object:   Cloud Object Store Object
       cloud_network:               Cloud Network
@@ -1068,18 +1054,6 @@ en:
       miq_workers:                 EVM Workers
       miq_zone:                    Zone
       nics:                        Network Adapters
-      ontap_concrete_extents:      Storage - Aggregates
-      ontap_file_share:            File Shares
-      ontap_file_shares:           Storage - File Shares
-      ontap_logical_disk:          Volumes
-      ontap_logical_disks:         Storage - Volumes
-      ontap_plex_extents:          Storage - Plexes
-      ontap_raid_group_extents:    Storage - Raid Groups
-      ontap_storage_system:        Filers
-      ontap_storage_systems:       Storage - Filers
-      ontap_storage_volume:        LUNs
-      ontap_storage_volumes:       Storage - LUNs
-      ontap_volume_metrics_rollup: Storage Performance - Volumes
       orchestration_stack:         Stack
       orchestration_template:      Orchestration Template
       operating_system:            OS
@@ -1091,11 +1065,9 @@ en:
       server_builds:               EVM Builds
       service_template:            Catalog Item
       service_template_catalog:    Catalog
-      snia_local_file_system:      Storage - Local File Systems
       storage:                     Datastore
       storage_file:                Datastore File
       storage_files:               Datastore Files
-      storage_managers:            Storage Managers
       storages:                    Datastores
       switches:                    vSwitches
       template_cloud:              Image

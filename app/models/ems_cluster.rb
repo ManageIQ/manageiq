@@ -35,11 +35,6 @@ class EmsCluster < ApplicationRecord
   virtual_has_many :resource_pools, :uses => :all_relationships
   has_many :failover_hosts, -> { failover }, :class_name => "Host"
 
-  virtual_has_many :base_storage_extents, :class_name => "CimStorageExtent"
-  virtual_has_many :storage_systems,      :class_name => "CimComputerSystem"
-  virtual_has_many :file_shares,          :class_name => 'SniaFileShare'
-  virtual_has_many :storage_volumes,      :class_name => 'CimStorageVolume'
-
   include SerializedEmsRefObjMixin
   include ProviderObjectMixin
 
@@ -181,22 +176,6 @@ class EmsCluster < ApplicationRecord
 
   def parent_datacenter
     detect_ancestor(:of_type => 'EmsFolder') { |a| a.kind_of?(Datacenter) }
-  end
-
-  def base_storage_extents
-    all_hosts.collect(&:base_storage_extents).flatten.uniq
-  end
-
-  def storage_systems
-    all_hosts.collect(&:storage_systems).flatten.uniq
-  end
-
-  def storage_volumes
-    all_hosts.collect(&:storage_volumes).flatten.uniq
-  end
-
-  def file_shares
-    all_hosts.collect(&:file_shares).flatten.uniq
   end
 
   def event_where_clause(assoc = :ems_events)

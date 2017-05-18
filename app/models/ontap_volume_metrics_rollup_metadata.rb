@@ -1,2 +1,0 @@
-class OntapVolumeMetricsRollupMetadata < StorageMetricsMetadata
-end

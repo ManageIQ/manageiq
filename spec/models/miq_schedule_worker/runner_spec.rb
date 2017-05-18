@@ -267,19 +267,6 @@ describe MiqScheduleWorker::Runner do
           end
         end
 
-        context "Storage Metrics Coordinator Role" do
-          describe "#schedules_for_storage_metrics_coordinator_role" do
-            it "adds jobs to the storage metrics coordinator" do
-              @schedule_worker.instance_variable_set(:@active_roles, ["storage_metrics_coordinator"])
-
-              @schedule_worker.schedules_for_storage_metrics_coordinator_role
-
-              jobs = @schedule_worker.instance_variable_get(:@schedules)[:storage_metrics_coordinator]
-              expect(jobs).to be_all { |job| job.kind_of?(Rufus::Scheduler::Job) }
-            end
-          end
-        end
-
         context "Database operations role" do
           before(:each) do
             stub_server_configuration(Hash.new(5.minutes))

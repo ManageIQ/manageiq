@@ -1,2 +1,0 @@
-class OntapAggregateDerivedMetricMetadata < StorageMetricsMetadata
-end
