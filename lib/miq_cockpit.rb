@@ -159,36 +159,5 @@ END_OF_CONFIG
     def self.url_root
       "/#{URL_ROOT}/"
     end
-
-    def initialize(opts = {})
-      @opts = opts || {}
-      update
-    end
-
-    def save(fname)
-      File.write(fname, @config)
-    end
-
-    def update
-      url = URI::HTTP.build(:host => "localhost",
-                            :port => @opts[:port] || WS::DEFAULT_PORT,
-                            :path => MiqCockpit::ApacheConfig.url_root)
-      http_url = url.to_s
-      url.scheme = "ws"
-      ws_url = url.to_s
-
-      @config = <<-END_OF_CONFIG
-    ProxyPreserveHost on
-    RequestHeader unset X-Forwarded-Proto
-    RequestHeader set X-Forwarded-Proto 'https' env=HTTPS
-
-    <LocationMatch "^#{MiqCockpit::ApacheConfig.url_root}cockpi(t[^/]+|t)?/socket$">
-        ProxyPassMatch "#{ws_url}cockpi$1/socket"
-    </LocationMatch>
-
-    ProxyPass #{ApacheConfig.url_root} #{http_url}
-END_OF_CONFIG
-      @config
-    end
   end
 end

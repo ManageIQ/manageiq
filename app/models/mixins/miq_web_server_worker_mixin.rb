@@ -100,27 +100,8 @@ module MiqWebServerWorkerMixin
       Rails.root.join("tmp/pids/rails_server.#{port}.pid")
     end
 
-    def install_apache_proxy_config
-      options = {
-        :member_file    => self::BALANCE_MEMBER_CONFIG_FILE,
-        :redirects_file => self::REDIRECTS_CONFIG_FILE,
-        :redirects      => self::REDIRECTS,
-        :cluster        => self::CLUSTER,
-        :protocol       => self::PROTOCOL
-      }
-
-      _log.info("[#{options.inspect}")
-      MiqApache::Conf.install_default_config(options)
-    end
-
     def port_range
       self::STARTING_PORT...(self::STARTING_PORT + maximum_workers_count)
-    end
-
-    def add_apache_balancer_members
-      conf = MiqApache::Conf.new(self::BALANCE_MEMBER_CONFIG_FILE)
-      conf.add_ports(port_range.to_a, self::PROTOCOL)
-      conf.save
     end
 
     def reserve_port(ports)

@@ -248,7 +248,7 @@ class MiqServer < ApplicationRecord
     EvmDatabase.seed_last
 
     start_memcached
-    prep_apache_proxying
+    MiqApache::Control.restart if MiqEnvironment::Command.supports_apache?
     server.start
     server.monitor_loop
   end
