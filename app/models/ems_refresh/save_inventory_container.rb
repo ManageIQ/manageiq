@@ -3,8 +3,9 @@ module EmsRefresh::SaveInventoryContainer
     target = ems if target.nil?
 
     graph_keys = [:container_projects, :container_quotas, :container_nodes,
+                  :container_image_registries,
                  ]
-    child_keys = [:container_image_registries, :container_images, :container_replicators, :container_groups,
+    child_keys = [:container_images, :container_replicators, :container_groups,
                   :container_services, :container_routes, :container_component_statuses, :container_templates,
                   # things moved to end - if they work here, nothing depended on their ids
                   :container_limits, :container_builds, :container_build_pods,
@@ -20,7 +21,7 @@ module EmsRefresh::SaveInventoryContainer
     graph_keys.each do |k|
       association = ems.send(k)
       association.reset
-      store_ids_for_new_records(association, hashes[k], :ems_ref)
+      store_ids_for_new_records(association, hashes[k], @inv_collections[k].manager_ref)
     end
 
     # Save and link other subsections
@@ -97,6 +98,15 @@ module EmsRefresh::SaveInventoryContainer
         :arel => OperatingSystem.joins(:computer_system => :container_node)
                                 .where(:container_nodes => {:ems_id => ems.id}),
         :manager_ref => [:computer_system],
+      )
+
+    @inv_collections[:container_image_registries] =
+      ::ManagerRefresh::InventoryCollection.new(
+        :model_class => ContainerImageRegistry,
+        :parent => ems,
+        :builder_params => {:ems_id => ems.id},
+        :association => :container_image_registries,
+        :manager_ref => [:host, :port],
       )
   end
 
@@ -390,19 +400,10 @@ module EmsRefresh::SaveInventoryContainer
                               [:image_ref, :container_image_registry_id])
   end
 
-  def save_container_image_registries_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-    target = ems if target.nil?
-
-    ems.container_image_registries.reset
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
-
-    save_inventory_multi(ems.container_image_registries, hashes, deletes, [:host, :port])
-    store_ids_for_new_records(ems.container_image_registries, hashes, [:host, :port])
+  def graph_container_image_registries_inventory(ems, hashes)
+    hashes.to_a.each do |h|
+      @inv_collections[:container_image_registries].build(h)
+    end
   end
 
   def save_container_component_statuses_inventory(ems, hashes, target = nil)
