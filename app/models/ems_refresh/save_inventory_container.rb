@@ -13,7 +13,7 @@ module EmsRefresh::SaveInventoryContainer
 
     initialize_inventory_collections(ems)
     graph_keys.each do |k|
-      send("graph_#{k}_inventory", ems, hashes[k], target)
+      send("graph_#{k}_inventory", ems, hashes[k])
     end
     ManagerRefresh::SaveInventory.save_inventory(ems, @inv_collections.values)
 
@@ -100,9 +100,7 @@ module EmsRefresh::SaveInventoryContainer
       )
   end
 
-  def graph_container_projects_inventory(ems, hashes, target = nil)
-    target = ems if target.nil?  # TODO deletes - partial vs full ?
-
+  def graph_container_projects_inventory(ems, hashes)
     hashes.to_a.each do |h|
       @inv_collections[:container_projects].build(h)
     end
@@ -146,7 +144,7 @@ module EmsRefresh::SaveInventoryContainer
     store_ids_for_new_records(ems.persistent_volume_claims, hashes, :ems_ref)
   end
 
-  def graph_container_quotas_inventory(ems, hashes, target = nil)
+  def graph_container_quotas_inventory(ems, hashes)
     hashes.to_a.each do |h|
       h = h.merge(
         :container_project =>  @inv_collections[:container_projects].lazy_find(h.delete(:project)[:ems_ref])
@@ -157,7 +155,7 @@ module EmsRefresh::SaveInventoryContainer
     end
   end
 
-  def graph_container_quota_items_inventory(container_quota, hashes, target = nil)
+  def graph_container_quota_items_inventory(container_quota, hashes)
     hashes.to_a.each do |h|
       h = h.merge(
         :container_quota => @inv_collections[:container_quotas].lazy_find(container_quota[:ems_ref]),
@@ -217,7 +215,7 @@ module EmsRefresh::SaveInventoryContainer
     store_ids_for_new_records(ems.container_routes, hashes, :ems_ref)
   end
 
-  def graph_container_nodes_inventory(ems, hashes, target = nil)
+  def graph_container_nodes_inventory(ems, hashes)
     hashes.to_a.each do |h|
       h = h.except(:labels, :tags, :additional_attributes) # TODO children
       h = h.except(:namespace)
@@ -228,7 +226,7 @@ module EmsRefresh::SaveInventoryContainer
     end
   end
 
-  def graph_computer_system_inventory(parent, hash, _target = nil)
+  def graph_computer_system_inventory(parent, hash)
     return if hash.nil?
     hash = hash.merge(:managed_entity => parent)
     # TODO: there is probably is shorter way to link them?
