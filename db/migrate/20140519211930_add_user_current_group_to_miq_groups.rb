@@ -1,4 +1,4 @@
-class AddUserCurrentGroupToMiqGroups < ActiveRecord::Migration
+class AddUserCurrentGroupToMiqGroups < ActiveRecord::Migration[4.2]
   class User < ActiveRecord::Base
     belongs_to :current_group, :class_name => "AddUserCurrentGroupToMiqGroups::MiqGroup"
     has_and_belongs_to_many :miq_groups, :class_name => "AddUserCurrentGroupToMiqGroups::MiqGroup"

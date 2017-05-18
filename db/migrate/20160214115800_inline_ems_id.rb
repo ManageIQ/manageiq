@@ -1,4 +1,4 @@
-class InlineEmsId < ActiveRecord::Migration
+class InlineEmsId < ActiveRecord::Migration[4.2]
   class ContainerDefinition < ActiveRecord::Base; end
 
   class ContainerGroup < ActiveRecord::Base
@@ -28,7 +28,7 @@ class InlineEmsId < ActiveRecord::Migration
 
   def update_columns
     say_with_time("Inline ems_id in containers") do
-      Container.includes(:container_definitions => :container_group).all.each do |container|
+      Container.includes(:container_definition => :container_group).all.each do |container|
         container.update_attribute(:ems_id, container.container_group.ems_id)
       end
     end

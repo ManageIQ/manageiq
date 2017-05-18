@@ -7,7 +7,7 @@ module UuidMixin
   private
 
   def set_guid
-    self.guid ||= MiqUUID.new_guid if self.respond_to?(:guid) && self.respond_to?(:guid=)
+    self.guid ||= SecureRandom.uuid if self.respond_to?(:guid) && self.respond_to?(:guid=)
   end
 
   def default_name_to_guid

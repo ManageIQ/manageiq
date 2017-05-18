@@ -1,4 +1,4 @@
-class MigrateProvisioningManagerToEms < ActiveRecord::Migration
+class MigrateProvisioningManagerToEms < ActiveRecord::Migration[4.2]
   class ExtManagementSystem < ActiveRecord::Base
     include UuidMixin
     self.inheritance_column = :_type_disabled

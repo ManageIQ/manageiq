@@ -1,4 +1,4 @@
-class RemoveVdiModels < ActiveRecord::Migration
+class RemoveVdiModels < ActiveRecord::Migration[4.2]
   def up
     change_table "ems_events" do |t|
       t.remove "vdi_endpoint_device_id"

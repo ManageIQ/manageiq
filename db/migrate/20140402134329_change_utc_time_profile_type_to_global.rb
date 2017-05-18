@@ -1,4 +1,4 @@
-class ChangeUtcTimeProfileTypeToGlobal < ActiveRecord::Migration
+class ChangeUtcTimeProfileTypeToGlobal < ActiveRecord::Migration[4.2]
   class TimeProfile < ActiveRecord::Base; end
 
   def up

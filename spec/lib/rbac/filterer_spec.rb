@@ -217,6 +217,37 @@ describe Rbac::Filterer do
             results = described_class.search(:class => VmPerformance, :user => admin_user).first
             expect(results).to match_array [vm_performance_other_tenant, vm_performance_root_tenant]
           end
+
+          context 'with tags' do
+            let(:role)         { FactoryGirl.create(:miq_user_role) }
+            let(:tagged_group) { FactoryGirl.create(:miq_group, :tenant => Tenant.root_tenant, :miq_user_role => role) }
+            let(:user)         { FactoryGirl.create(:user, :miq_groups => [tagged_group]) }
+
+            before do
+              tagged_group.entitlement = Entitlement.new
+              tagged_group.entitlement.set_belongsto_filters([])
+              tagged_group.entitlement.set_managed_filters([["/managed/environment/prod"]])
+              tagged_group.save!
+            end
+
+            it 'lists only VmPerformances with tagged resources without any tenant restriction' do
+              root_tenant_vm.tag_with('/managed/environment/prod', :ns => '*')
+
+              results = described_class.search(:class => VmPerformance, :user => user).first
+              expect(results).to match_array [vm_performance_root_tenant]
+            end
+
+            it 'lists only VmPerformances with tagged resources with any tenant restriction' do
+              root_tenant_vm.tag_with('/managed/environment/prod', :ns => '*')
+              other_vm.tag_with('/managed/environment/prod', :ns => '*')
+
+              results = described_class.search(:class => VmPerformance, :user => other_user).first
+              expect(results).to match_array [vm_performance_other_tenant]
+
+              vm_or_template_records = described_class.search(:class => VmOrTemplate, :user => other_user).first
+              expect(results.map(&:resource_id)).to match_array vm_or_template_records.map(&:id)
+            end
+          end
         end
 
         context "searching MiqTemplate" do
@@ -358,14 +389,45 @@ describe Rbac::Filterer do
       }
     end
 
-    context "with User and Group" do
-      def get_rbac_results_for_and_expect_objects(klass, expected_objects)
-        User.current_user = user
+    def get_rbac_results_for_and_expect_objects(klass, expected_objects)
+      User.current_user = user
 
-        results = described_class.search(:class => klass).first
-        expect(results).to match_array(expected_objects)
+      results = described_class.search(:class => klass).first
+      expect(results).to match_array(expected_objects)
+    end
+
+    context 'with Middleware models' do
+      context 'with tags' do
+        before do
+          group.entitlement = Entitlement.new
+          group.entitlement.set_belongsto_filters([])
+          group.entitlement.set_managed_filters([["/managed/environment/prod"]])
+          group.save!
+        end
+
+        let(:count_of_created_instances) { 2 }
+
+        %w(
+          MiddlewareDatasource
+          MiddlewareDeployment
+          MiddlewareDomain
+          MiddlewareMessaging
+          MiddlewareServer
+          MiddlewareServerGroup
+        ).each do |middleware_model|
+          it "returns tagged instance of #{middleware_model}" do
+            middleware_instances = FactoryGirl.create_list(middleware_model.tableize.singularize.to_sym,
+                                                           count_of_created_instances)
+            middleware_instances[0].tag_with('/managed/environment/prod', :ns => '*')
+            middleware_model_class = middleware_model.constantize
+            expect(middleware_model_class.count).to eq(count_of_created_instances)
+            get_rbac_results_for_and_expect_objects(middleware_model_class, [middleware_instances[0]])
+          end
+        end
       end
+    end
 
+    context "with User and Group" do
       context 'with tags' do
         let!(:tagged_group) { FactoryGirl.create(:miq_group, :tenant => default_tenant) }
         let!(:user)         { FactoryGirl.create(:user, :miq_groups => [tagged_group]) }

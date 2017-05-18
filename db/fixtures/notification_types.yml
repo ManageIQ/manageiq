@@ -164,4 +164,13 @@
   :expires_in: 7.days
   :level: :success
   :audience: tenant
-
+- :name: provider_operation_success
+  :message: 'The operation %{method} on %{target_name} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: provider_operation_failure
+  :message: 'The operation %{method} on %{target_name} failed: %{error}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global

@@ -1,4 +1,4 @@
-class CreateContainerImages < ActiveRecord::Migration
+class CreateContainerImages < ActiveRecord::Migration[4.2]
   def up
     create_table :container_images do |t|
       t.string     :tag

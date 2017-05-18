@@ -1,4 +1,4 @@
-class CreateCloudDatabases < ActiveRecord::Migration
+class CreateCloudDatabases < ActiveRecord::Migration[4.2]
   def change
     create_table :cloud_database_flavors do |t|
       t.string  :name

@@ -5,13 +5,13 @@ describe MoveRepoDataFromDatabaseToSettings do
   let(:database_stub) { migration_stub(:MiqDatabase) }
   let(:settings_stub) { migration_stub(:SettingsChange) }
 
-  let(:region_number) { ApplicationRecord.my_region_number }
+  let(:region_number) { ArRegion.anonymous_class_with_ar_region.my_region_number }
   let(:region)        { region_stub.find_by_region(region_number) }
   let(:repo_string)   { "my-repo my-other-repo" }
   let(:repo_list)     { %w(my-repo my-other-repo) }
 
   before do
-    region_id = ApplicationRecord.region_to_range(region_number).first
+    region_id = ArRegion.anonymous_class_with_ar_region.rails_sequence_start
     region_stub.create(:id => region_id, :region => region_number)
   end
 
@@ -29,7 +29,7 @@ describe MoveRepoDataFromDatabaseToSettings do
       setting_change = settings_stub.where(
         :key           => described_class::SETTING_KEY,
         :resource_id   => region.id,
-        :resource_type => MiqRegion
+        :resource_type => "MiqRegion"
       ).first
       expect(setting_change.value).to eq(repo_list)
     end
@@ -47,7 +47,7 @@ describe MoveRepoDataFromDatabaseToSettings do
         :key           => described_class::SETTING_KEY,
         :value         => repo_list,
         :resource_id   => region.id,
-        :resource_type => MiqRegion
+        :resource_type => "MiqRegion"
       )
 
       migrate

@@ -1,4 +1,4 @@
-class SplitWidgetSetNameToThreeColumns < ActiveRecord::Migration
+class SplitWidgetSetNameToThreeColumns < ActiveRecord::Migration[4.2]
   class MiqSet < ActiveRecord::Base; end
 
   def up

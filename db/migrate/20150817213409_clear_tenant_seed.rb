@@ -1,4 +1,4 @@
-class ClearTenantSeed < ActiveRecord::Migration
+class ClearTenantSeed < ActiveRecord::Migration[4.2]
   class Tenant < ActiveRecord::Base; end
 
   def up

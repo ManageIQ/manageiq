@@ -64,21 +64,19 @@ class Job < ApplicationRecord
     true
   end
 
-  def self.agent_message_update_queue(jobid, message)
-    job = Job.where("guid = ?", jobid).select("id, state, guid").first
-    unless job.nil?
-      job.agent_message_update(message)
+  def self.update_message(job_guid, message)
+    job = Job.find_by(:guid => job_guid)
+    if job
+      job.update_message(message)
     else
-      _log.warn "jobid: [#{jobid}] not found"
+      _log.warn "jobs.guid: [#{jobid}] not found"
     end
-  rescue => err
-    _log.warn "Error '#{err.message}', updating jobid: [#{jobid}]"
-    _log.log_backtrace(err)
   end
 
-  def agent_message_update(agent_message)
-    $log.info("JOB([#{guid}] Agent message update: [#{agent_message}]")
-    update_attributes(:agent_message => agent_message)
+  def update_message(message)
+    $log.info("JOB([#{guid}] Message update: [#{message}]")
+    self.message = message
+    save
 
     return unless self.is_active?
 
@@ -205,18 +203,6 @@ class Job < ApplicationRecord
     (timestamp >= job_not_found_delay.seconds.ago)
   end
 
-  def self.extend_timeout(_host_id, jobs)
-    jobs = Marshal.load(jobs)
-    job_guids = jobs.collect { |j| j[:taskid] }
-    unless job_guids.empty?
-      Job.where(:guid => job_guids).where.not(:state => 'finished').each do |job|
-        _log.debug("Job: guid: [#{job.guid}], job timeout extended due to work pending.")
-        job.updated_on = Time.now.utc
-        job.save
-      end
-    end
-  end
-
   def is_active?
     !["finished", "waiting_to_start"].include?(state)
   end
@@ -240,7 +226,7 @@ class Job < ApplicationRecord
 
   def attributes_for_task
     {:status        => status.try(:capitalize),
-     :state         => state.try(:capitalize),
+     :state         => state == "waiting_to_start" ? MiqTask::STATE_QUEUED : state.try(:capitalize),
      :name          => name,
      :message       => message,
      :userid        => userid,

@@ -1,4 +1,4 @@
-class AddContainerEntitiesType < ActiveRecord::Migration
+class AddContainerEntitiesType < ActiveRecord::Migration[4.2]
   class ContainerNode < ActiveRecord::Base
     self.inheritance_column = :_type_disabled # disable STI
   end

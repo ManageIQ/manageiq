@@ -1,4 +1,4 @@
-class AddMissingFieldsAndIndexesToCloudNetworks < ActiveRecord::Migration
+class AddMissingFieldsAndIndexesToCloudNetworks < ActiveRecord::Migration[4.2]
   def change
     add_column :cloud_networks, :provider_physical_network, :string
     add_column :cloud_networks, :provider_network_type,     :string

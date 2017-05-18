@@ -1,4 +1,4 @@
-class AddVmRawPowerState < ActiveRecord::Migration
+class AddVmRawPowerState < ActiveRecord::Migration[4.2]
   def up
     add_column :vms, :raw_power_state, :string
   end

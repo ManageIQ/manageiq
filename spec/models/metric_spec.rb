@@ -61,8 +61,18 @@ describe Metric do
           Metric::Capture.perf_capture_timer
         end
 
+        let(:expected_queue_items) do
+          {
+            %w(Host perf_capture_realtime)                                            => 3,
+            %w(Host perf_capture_historical)                                          => 24,
+            %w(Storage perf_capture_hourly)                                           => 1,
+            %w(ManageIQ::Providers::Vmware::InfraManager::Vm perf_capture_realtime)   => 2,
+            %w(ManageIQ::Providers::Vmware::InfraManager::Vm perf_capture_historical) => 16,
+          }
+        end
+
         it "should queue up enabled targets" do
-          expect(MiqQueue.count).to eq(47)
+          expect(MiqQueue.group(:class_name, :method_name).count).to eq(expected_queue_items)
           assert_metric_targets
         end
 
@@ -1013,9 +1023,7 @@ describe Metric do
 
         it "should queue up enabled targets" do
           expected_targets = Metric::Targets.capture_targets
-          expected_queue_count = expected_targets.count * 9 # 1 realtime, 8 historical
-          expected_queue_count += 1                         # cleanup task
-          expect(MiqQueue.count).to eq(expected_queue_count)
+          expect(MiqQueue.group(:method_name).count).to eq('perf_capture_realtime' => expected_targets.count, 'perf_capture_historical' => expected_targets.count * 8)
           assert_metric_targets(expected_targets)
         end
       end

@@ -1,4 +1,4 @@
-class AddTenantIdToMiqAeNamespaces < ActiveRecord::Migration
+class AddTenantIdToMiqAeNamespaces < ActiveRecord::Migration[4.2]
   include MigrationHelper
 
   def change

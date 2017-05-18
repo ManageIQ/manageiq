@@ -1,4 +1,4 @@
-class AddCloudTenantRefToFloatingIps < ActiveRecord::Migration
+class AddCloudTenantRefToFloatingIps < ActiveRecord::Migration[4.2]
   def self.up
     change_table :floating_ips do |t|
       t.belongs_to  :cloud_tenant, :type => :bigint

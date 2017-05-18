@@ -1,4 +1,4 @@
-class RenameContainerNodeConditionsToContainerConditions < ActiveRecord::Migration
+class RenameContainerNodeConditionsToContainerConditions < ActiveRecord::Migration[4.2]
   class ContainerCondition < ActiveRecord::Base; end
 
   def up

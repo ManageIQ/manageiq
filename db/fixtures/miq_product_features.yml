@@ -2570,20 +2570,12 @@
     :feature_type: view
     :identifier: tasks_view
     :children:
-    - :name: All VM and Container Analysis Tasks
-      :description: Display Lists of All VM and Container Analysis Tasks
-      :feature_type: view
-      :identifier: job_all_smartproxy
-    - :name: All Other Tasks
-      :description: Display Lists of All UI Tasks
+    - :name: All Tasks
+      :description: Display Lists of All Tasks
       :feature_type: view
       :identifier: miq_task_all_ui
-    - :name: VM and Container Analysis Tasks
-      :description: Display Lists of VM and Container Analysis Tasks
-      :feature_type: view
-      :identifier: job_my_smartproxy
-    - :name: Other UI Tasks
-      :description: Display Lists of UI Tasks
+    - :name: My Tasks
+      :description: Display Lists of My Tasks
       :feature_type: view
       :identifier: miq_task_my_ui
   - :name: Modify
@@ -6083,27 +6075,6 @@
         :description: Edit EVM Server Relationship
         :feature_type: admin
         :identifier: miq_template_evm_relationship
-    - :name: Virtual Templates
-      :description: Everything for Virtual Templates
-      :feature_type: admin
-      :identifier: miq_virtual_template
-      :children:
-      - :name: Show Virtual Templates
-        :description: Show Virtual Templates
-        :feature_type: admin
-        :identifier: virtual_template_show
-      - :name: Edit Virtual Templates
-        :description: Edit Virtual Template
-        :feature_type: admin
-        :identifier: edit_virtual_template
-      - :name: Delete Virtual Template
-        :description: Delete Virtual Template
-        :feature_type: admin
-        :identifier: delete_virtual_template
-      - :name: Provision Virtual Template
-        :description: Provision Virtual Template
-        :feature_type: admin
-        :identifier: provision_virtual_template
     - :name: Snapshots
       :description: Everything for Template Snapshots
       :feature_type: node

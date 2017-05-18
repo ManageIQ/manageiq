@@ -1,4 +1,4 @@
-class SetMiqGroupsGroupType < ActiveRecord::Migration
+class SetMiqGroupsGroupType < ActiveRecord::Migration[4.2]
   class MiqGroup < ActiveRecord::Base
     USER_GROUP = "user"
   end

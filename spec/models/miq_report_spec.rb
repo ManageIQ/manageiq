@@ -903,6 +903,7 @@ describe MiqReport do
                                                        :tag_names     => "")
         ChargebackRate.set_assignments(:compute, [{ :cb_rate => chargeback_rate, :label => [label, "container_image"] }])
         rpt = report.generate_table(:userid => "admin")
+        expect(rpt.keys).to contain_exactly(project_name, :_total_)
         row = rpt[project_name][:row]
         expect(row[label_report_column]).to eq(label_value)
       end

@@ -1,4 +1,4 @@
-class RenameTenantOwnerId < ActiveRecord::Migration
+class RenameTenantOwnerId < ActiveRecord::Migration[4.2]
   def change
     rename_column :ext_management_systems, :tenant_owner_id, :tenant_id
     rename_column :miq_groups, :tenant_owner_id, :tenant_id

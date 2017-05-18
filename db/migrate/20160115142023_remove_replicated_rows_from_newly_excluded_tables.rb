@@ -1,4 +1,4 @@
-class RemoveReplicatedRowsFromNewlyExcludedTables < ActiveRecord::Migration
+class RemoveReplicatedRowsFromNewlyExcludedTables < ActiveRecord::Migration[4.2]
   class MiqEventDefinition < ActiveRecord::Base; end
 
   class ScanItem < ActiveRecord::Base; end

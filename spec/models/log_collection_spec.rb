@@ -1,5 +1,3 @@
-require "models/shared_examples/log_collection"
-
 describe "LogCollection" do
   before do
     _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone

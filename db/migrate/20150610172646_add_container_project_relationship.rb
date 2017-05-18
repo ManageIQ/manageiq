@@ -1,4 +1,4 @@
-class AddContainerProjectRelationship < ActiveRecord::Migration
+class AddContainerProjectRelationship < ActiveRecord::Migration[4.2]
   def change
     add_column :container_groups, :container_project_id, :bigint
     add_column :container_routes, :container_project_id, :bigint

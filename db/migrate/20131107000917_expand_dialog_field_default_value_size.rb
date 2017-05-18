@@ -1,4 +1,4 @@
-class ExpandDialogFieldDefaultValueSize < ActiveRecord::Migration
+class ExpandDialogFieldDefaultValueSize < ActiveRecord::Migration[4.2]
   class DialogField < ActiveRecord::Base
     self.inheritance_column = :_type_disabled
 

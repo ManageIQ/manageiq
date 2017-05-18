@@ -1,4 +1,4 @@
-class ConvertShowRefreshButtonAndLoadValuesOnInitToRealColumnsForDialogFields < ActiveRecord::Migration
+class ConvertShowRefreshButtonAndLoadValuesOnInitToRealColumnsForDialogFields < ActiveRecord::Migration[4.2]
   class DialogField < ActiveRecord::Base
     serialize :options, Hash
     self.inheritance_column = :_type_disabled

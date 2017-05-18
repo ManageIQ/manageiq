@@ -1,4 +1,4 @@
-class ConvertConfigurationsToSettingsChanges < ActiveRecord::Migration
+class ConvertConfigurationsToSettingsChanges < ActiveRecord::Migration[4.2]
   class Configuration < ActiveRecord::Base
     serialize :settings
   end

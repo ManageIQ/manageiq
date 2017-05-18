@@ -1,4 +1,4 @@
-class EncryptMiqDatabaseRegistrationHttpProxyPasswordField < ActiveRecord::Migration
+class EncryptMiqDatabaseRegistrationHttpProxyPasswordField < ActiveRecord::Migration[4.2]
   class MiqDatabase < ActiveRecord::Base; end
 
   def up

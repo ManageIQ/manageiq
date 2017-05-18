@@ -1,4 +1,4 @@
-class MigrateOldConfigurationSettings < ActiveRecord::Migration
+class MigrateOldConfigurationSettings < ActiveRecord::Migration[4.2]
   class Configuration < ActiveRecord::Base
     serialize :settings, Hash
   end

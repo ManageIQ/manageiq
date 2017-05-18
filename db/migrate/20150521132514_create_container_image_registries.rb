@@ -1,4 +1,4 @@
-class CreateContainerImageRegistries < ActiveRecord::Migration
+class CreateContainerImageRegistries < ActiveRecord::Migration[4.2]
   def up
     create_table :container_image_registries do |t|
       t.string     :name  # Never used but all entities are assumed to have a name.

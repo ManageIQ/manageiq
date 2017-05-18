@@ -1,4 +1,4 @@
-class CreateChargebackTiers < ActiveRecord::Migration
+class CreateChargebackTiers < ActiveRecord::Migration[4.2]
   def change
     create_table :chargeback_tiers do |t|
       t.bigint :chargeback_rate_detail_id

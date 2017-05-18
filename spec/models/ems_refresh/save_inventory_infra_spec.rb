@@ -4,7 +4,7 @@ describe EmsRefresh::SaveInventoryInfra do
       include EmsRefresh::SaveInventoryInfra
 
       def _log
-        @logger ||= Vmdb.null_logger
+        @logger ||= Vmdb.logger
       end
     end.new
   end

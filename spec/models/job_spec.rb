@@ -346,9 +346,10 @@ describe Job do
   end
 
   context "belongs_to task" do
-    before(:each) do
-      @job = Job.create_job("VmScan", :name => "Hello, World!")
-      @task = MiqTask.find_by(:name => "Hello, World!")
+    let(:job_name) { "Hello, World!" }
+    before do
+      @job = Job.create_job("VmScan", :name => job_name)
+      @task = MiqTask.find_by(:name => job_name)
     end
 
     describe ".create_job" do
@@ -360,15 +361,15 @@ describe Job do
     describe "#attributes_for_task" do
       it "returns hash with job's attributes to use for syncronization with linked task" do
         expect(@job.attributes_for_task).to include(
-          :status        => @job.status.try(:capitalize),
-          :state         => @job.state.try(:capitalize),
-          :name          => @job.name,
-          :message       => @job.message,
-          :userid        => @job.userid,
-          :miq_server_id => @job.miq_server_id,
-          :context_data  => @job.context,
-          :zone          => @job.zone,
-          :started_on    => @job.started_on
+          :status        => "Ok",
+          :state         => "Queued",
+          :name          => job_name,
+          :message       => "process initiated",
+          :userid        => "system",
+          :miq_server_id => nil,
+          :context_data  => {},
+          :zone          => nil,
+          :started_on    => nil
         )
       end
     end
@@ -412,6 +413,26 @@ describe Job do
           expect(@task.reload.state).to eq "Any status to trigger state update"
         end
       end
+    end
+  end
+
+  describe "#update_message" do
+    let(:message) { "Very Interesting Message" }
+
+    it "updates 'jobs.message' column" do
+      Job.create_job("VmScan").update_message(message)
+      expect(Job.first.message).to eq message
+    end
+  end
+
+  describe ".update_message" do
+    let(:message) { "Very Interesting Message" }
+    let(:guid) { "qwerty" }
+
+    it "finds job by passed guid and updates 'message' column for found record" do
+      Job.create_job("VmScan", :guid => guid)
+      Job.update_message(guid, message)
+      expect(Job.find_by(:guid => guid).message).to eq message
     end
   end
 

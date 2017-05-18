@@ -1,4 +1,4 @@
-class ImportProvisionDialogs < ActiveRecord::Migration
+class ImportProvisionDialogs < ActiveRecord::Migration[4.2]
   class MiqDialog < ActiveRecord::Base
     serialize :content
   end

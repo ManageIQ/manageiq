@@ -36,7 +36,7 @@ gem "activerecord-session_store",     "~>1.0.0"
 gem "acts_as_list",                   "~>0.7.2"
 gem "acts_as_tree",                   "~>2.1.0" # acts_as_tree needs to be required so that it loads before ancestry
 gem "ancestry",                       "~>2.2.1",       :require => false
-gem "ansible_tower_client",           "~>0.12.0",      :require => false
+gem "ansible_tower_client",           "~>0.12.2",      :require => false
 gem "bundler",                        ">=1.11.1",      :require => false
 gem "color",                          "~>1.8"
 gem "config",                         "~>1.3.0",       :require => false
@@ -74,7 +74,6 @@ gem "query_relation",                 "~>0.1.0",       :require => false
 gem "rails",                          "~>5.0.2"
 gem "rails-controller-testing",                        :require => false
 gem "rails-i18n",                     "~>5.x"
-gem "recursive-open-struct",          "~>1.0.0"
 gem "responders",                     "~>2.0"
 gem "ripper_ruby_parser",                              :require => false
 gem "ruby-dbus" # For external auth
@@ -122,14 +121,14 @@ unless ENV["APPLIANCE"]
     gem "factory_girl",     "~>4.5.0",  :require => false
     gem "sqlite3",                      :require => false
     gem "timecop",          "~>0.7.3",  :require => false
-    gem "vcr",              "~>3.0.0",  :require => false
-    gem "webmock",          "~>1.12",   :require => false
+    gem "vcr",              "~>3.0.2",  :require => false
+    gem "webmock",          "~>2.3.1",  :require => false
   end
 
   group :development, :test do
     gem "good_migrations"
     gem "parallel_tests"
-    gem "rspec-rails",      "~>3.5.0"
+    gem "rspec-rails",      "~>3.6.0"
   end
 end
 
@@ -148,7 +147,7 @@ def override_gem(name, *args)
 
     calling_file = caller_locations.detect { |loc| !loc.path.include?("lib/bundler") }.path
     gem(name, *args).tap do
-      Bundler::UI::Shell.new.warn "** override_gem: #{name}, #{args.inspect}, caller: #{calling_file}" unless ENV["RAILS_ENV"] == "production"
+      warn "** override_gem: #{name}, #{args.inspect}, caller: #{calling_file}" unless ENV["RAILS_ENV"] == "production"
     end
   end
 end

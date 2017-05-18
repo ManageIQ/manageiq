@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/config
+    uri: https://dev-ansible-tower3.example.com/api/v1/config
     body:
       encoding: US-ASCII
       string: ''
@@ -13,6 +13,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 301
@@ -35,7 +36,7 @@ http_interactions:
   recorded_at: Tue, 11 Apr 2017 14:53:08 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/config/
+    uri: https://dev-ansible-tower3.example.com/api/v1/config/
     body:
       encoding: US-ASCII
       string: ''
@@ -46,6 +47,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -68,229 +70,12 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        eyJldWxhIjoiQU5TSUJMRSBUT1dFUiBCWSBSRUQgSEFUIEVORCBVU0VSIExJ
-        Q0VOU0UgQUdSRUVNRU5UXG5cblRoaXMgZW5kIHVzZXIgbGljZW5zZSBhZ3Jl
-        ZW1lbnQgKOKAnEVVTEHigJ0pIGdvdmVybnMgdGhlIHVzZSBvZiB0aGUgQW5z
-        aWJsZSBUb3dlciBzb2Z0d2FyZSBhbmQgYW55IHJlbGF0ZWQgdXBkYXRlcywg
-        dXBncmFkZXMsIHZlcnNpb25zLCBhcHBlYXJhbmNlLCBzdHJ1Y3R1cmUgYW5k
-        IG9yZ2FuaXphdGlvbiAodGhlIOKAnEFuc2libGUgVG93ZXIgU29mdHdhcmXi
-        gJ0pLCByZWdhcmRsZXNzIG9mIHRoZSBkZWxpdmVyeSBtZWNoYW5pc20uICBc
-        blxuMS4gIExpY2Vuc2UgR3JhbnQuICBTdWJqZWN0IHRvIHRoZSB0ZXJtcyBv
-        ZiB0aGlzIEVVTEEsIFJlZCBIYXQsIEluYy4gYW5kIGl0cyBhZmZpbGlhdGVz
-        ICjigJxSZWQgSGF04oCdKSBncmFudCB0byB5b3UgKOKAnFlvdeKAnSkgYSBu
-        b24tdHJhbnNmZXJhYmxlLCBub24tZXhjbHVzaXZlLCB3b3JsZHdpZGUsIG5v
-        bi1zdWJsaWNlbnNhYmxlLCBsaW1pdGVkLCByZXZvY2FibGUgbGljZW5zZSB0
-        byB1c2UgdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgZm9yIHRoZSB0ZXJt
-        IG9mIHRoZSBhc3NvY2lhdGVkIFJlZCBIYXQgU29mdHdhcmUgU3Vic2NyaXB0
-        aW9uKHMpIGFuZCBpbiBhIHF1YW50aXR5IGVxdWFsIHRvIHRoZSBudW1iZXIg
-        b2YgUmVkIEhhdCBTb2Z0d2FyZSBTdWJzY3JpcHRpb25zIHB1cmNoYXNlZCBm
-        cm9tIFJlZCBIYXQgZm9yIHRoZSBBbnNpYmxlIFRvd2VyIFNvZnR3YXJlICji
-        gJxMaWNlbnNl4oCdKSwgZWFjaCBhcyBzZXQgZm9ydGggb24gdGhlIGFwcGxp
-        Y2FibGUgUmVkIEhhdCBvcmRlcmluZyBkb2N1bWVudC4gIFlvdSBhY3F1aXJl
-        IG9ubHkgdGhlIHJpZ2h0IHRvIHVzZSB0aGUgQW5zaWJsZSBUb3dlciBTb2Z0
-        d2FyZSBhbmQgZG8gbm90IGFjcXVpcmUgYW55IHJpZ2h0cyBvZiBvd25lcnNo
-        aXAuIFJlZCBIYXQgcmVzZXJ2ZXMgYWxsIHJpZ2h0cyB0byB0aGUgQW5zaWJs
-        ZSBUb3dlciBTb2Z0d2FyZSBub3QgZXhwcmVzc2x5IGdyYW50ZWQgdG8gWW91
-        LiAgVGhpcyBMaWNlbnNlIGdyYW50IHBlcnRhaW5zIHNvbGVseSB0byBZb3Vy
-        IHVzZSBvZiB0aGUgQW5zaWJsZSBUb3dlciBTb2Z0d2FyZSBhbmQgaXMgbm90
-        IGludGVuZGVkIHRvIGxpbWl0IFlvdXIgcmlnaHRzIHVuZGVyLCBvciBncmFu
-        dCBZb3UgcmlnaHRzIHRoYXQgc3VwZXJzZWRlLCB0aGUgbGljZW5zZSB0ZXJt
-        cyBvZiBhbnkgc29mdHdhcmUgcGFja2FnZXMgd2hpY2ggbWF5IGJlIG1hZGUg
-        YXZhaWxhYmxlIHdpdGggdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgdGhh
-        dCBhcmUgc3ViamVjdCB0byBhbiBvcGVuIHNvdXJjZSBzb2Z0d2FyZSBsaWNl
-        bnNlLiAgXG4gXG4yLiAgSW50ZWxsZWN0dWFsIFByb3BlcnR5IFJpZ2h0cy4g
-        IFRpdGxlIHRvIHRoZSBBbnNpYmxlIFRvd2VyIFNvZnR3YXJlIGFuZCBlYWNo
-        IGNvbXBvbmVudCwgY29weSBhbmQgbW9kaWZpY2F0aW9uLCBpbmNsdWRpbmcg
-        YWxsIGRlcml2YXRpdmUgd29ya3Mgd2hldGhlciBtYWRlIGJ5IFJlZCBIYXQs
-        IFlvdSBvciBvbiBSZWQgSGF0J3MgYmVoYWxmLCBpbmNsdWRpbmcgdGhvc2Ug
-        bWFkZSBhdCBZb3VyIHN1Z2dlc3Rpb24gYW5kIGFsbCBhc3NvY2lhdGVkIGlu
-        dGVsbGVjdHVhbCBwcm9wZXJ0eSByaWdodHMsIGFyZSBhbmQgc2hhbGwgcmVt
-        YWluIHRoZSBzb2xlIGFuZCBleGNsdXNpdmUgcHJvcGVydHkgb2YgUmVkIEhh
-        dCBhbmQvb3IgaXQgbGljZW5zb3JzLiAgVGhlIExpY2Vuc2UgZG9lcyBub3Qg
-        YXV0aG9yaXplIFlvdSAobm9yIG1heSBZb3UgYWxsb3cgYW55IHRoaXJkIHBh
-        cnR5LCBzcGVjaWZpY2FsbHkgbm9uLWVtcGxveWVlcyBvZiBZb3VycykgdG86
-        IChhKSBjb3B5LCBkaXN0cmlidXRlLCByZXByb2R1Y2UsIHVzZSBvciBhbGxv
-        dyB0aGlyZCBwYXJ0eSBhY2Nlc3MgdG8gdGhlIEFuc2libGUgVG93ZXIgU29m
-        dHdhcmUgZXhjZXB0IGFzIGV4cHJlc3NseSBhdXRob3JpemVkIGhlcmV1bmRl
-        cjsgKGIpIGRlY29tcGlsZSwgZGlzYXNzZW1ibGUsIHJldmVyc2UgZW5naW5l
-        ZXIsIHRyYW5zbGF0ZSwgbW9kaWZ5LCBjb252ZXJ0IG9yIGFwcGx5IGFueSBw
-        cm9jZWR1cmUgb3IgcHJvY2VzcyB0byB0aGUgQW5zaWJsZSBUb3dlciBTb2Z0
-        d2FyZSBpbiBvcmRlciB0byBhc2NlcnRhaW4sIGRlcml2ZSwgYW5kL29yIGFw
-        cHJvcHJpYXRlIGZvciBhbnkgcmVhc29uIG9yIHB1cnBvc2UsIGluY2x1ZGlu
-        ZyB0aGUgQW5zaWJsZSBUb3dlciBTb2Z0d2FyZSBzb3VyY2UgY29kZSBvciBz
-        b3VyY2UgbGlzdGluZ3Mgb3IgYW55IHRyYWRlIHNlY3JldCBpbmZvcm1hdGlv
-        biBvciBwcm9jZXNzIGNvbnRhaW5lZCBpbiB0aGUgQW5zaWJsZSBUb3dlciBT
-        b2Z0d2FyZSAoZXhjZXB0IGFzIHBlcm1pdHRlZCB1bmRlciBhcHBsaWNhYmxl
-        IGxhdyk7IChjKSBleGVjdXRlIG9yIGluY29ycG9yYXRlIG90aGVyIHNvZnR3
-        YXJlIChleGNlcHQgZm9yIGFwcHJvdmVkIHNvZnR3YXJlIGFzIGFwcGVhcnMg
-        aW4gdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgZG9jdW1lbnRhdGlvbiBv
-        ciBzcGVjaWZpY2FsbHkgYXBwcm92ZWQgYnkgUmVkIEhhdCBpbiB3cml0aW5n
-        KSBpbnRvIEFuc2libGUgVG93ZXIgU29mdHdhcmUsIG9yIGNyZWF0ZSBhIGRl
-        cml2YXRpdmUgd29yayBvZiBhbnkgcGFydCBvZiB0aGUgQW5zaWJsZSBUb3dl
-        ciBTb2Z0d2FyZTsgKGQpIHJlbW92ZSBhbnkgdHJhZGVtYXJrcywgdHJhZGUg
-        bmFtZXMgb3IgdGl0bGVzLCBjb3B5cmlnaHRzIGxlZ2VuZHMgb3IgYW55IG90
-        aGVyIHByb3ByaWV0YXJ5IG1hcmtpbmcgb24gdGhlIEFuc2libGUgVG93ZXIg
-        U29mdHdhcmU7IChlKSBkaXNjbG9zZSB0aGUgcmVzdWx0cyBvZiBhbnkgYmVu
-        Y2htYXJraW5nIG9mIHRoZSBBbnNpYmxlIFRvd2VyIFNvZnR3YXJlICh3aGV0
-        aGVyIG9yIG5vdCBvYnRhaW5lZCB3aXRoIFJlZCBIYXTigJlzIGFzc2lzdGFu
-        Y2UpIHRvIGFueSB0aGlyZCBwYXJ0eTsgKGYpIGF0dGVtcHQgdG8gY2lyY3Vt
-        dmVudCBhbnkgdXNlciBsaW1pdHMgb3Igb3RoZXIgbGljZW5zZSwgdGltaW5n
-        IG9yIHVzZSByZXN0cmljdGlvbnMgdGhhdCBhcmUgYnVpbHQgaW50bywgZGVm
-        aW5lZCBvciBhZ3JlZWQgdXBvbiwgcmVnYXJkaW5nIHRoZSBBbnNpYmxlIFRv
-        d2VyIFNvZnR3YXJlLiBZb3UgYXJlIGhlcmVieSBub3RpZmllZCB0aGF0IHRo
-        ZSBBbnNpYmxlIFRvd2VyIFNvZnR3YXJlIG1heSBjb250YWluIHRpbWUtb3V0
-        IGRldmljZXMsIGNvdW50ZXIgZGV2aWNlcywgYW5kL29yIG90aGVyIGRldmlj
-        ZXMgaW50ZW5kZWQgdG8gZW5zdXJlIHRoZSBsaW1pdHMgb2YgdGhlIExpY2Vu
-        c2Ugd2lsbCBub3QgYmUgZXhjZWVkZWQgKOKAnExpbWl0aW5nIERldmljZXPi
-        gJ0pLiAgSWYgdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgY29udGFpbnMg
-        TGltaXRpbmcgRGV2aWNlcywgUmVkIEhhdCB3aWxsIHByb3ZpZGUgWW91IG1h
-        dGVyaWFscyBuZWNlc3NhcnkgdG8gdXNlIHRoZSBBbnNpYmxlIFRvd2VyIFNv
-        ZnR3YXJlIHRvIHRoZSBleHRlbnQgcGVybWl0dGVkLiAgWW91IG1heSBub3Qg
-        dGFtcGVyIHdpdGggb3Igb3RoZXJ3aXNlIHRha2UgYW55IGFjdGlvbiB0byBk
-        ZWZlYXQgb3IgY2lyY3VtdmVudCBhIExpbWl0aW5nIERldmljZSBvciBvdGhl
-        ciBjb250cm9sIG1lYXN1cmUsIGluY2x1ZGluZyBidXQgbm90IGxpbWl0ZWQg
-        dG8sIHJlc2V0dGluZyB0aGUgdW5pdCBhbW91bnQgb3IgdXNpbmcgZmFsc2Ug
-        aG9zdCBpZGVudGlmaWNhdGlvbiBudW1iZXIgZm9yIHRoZSBwdXJwb3NlIG9m
-        IGV4dGVuZGluZyBhbnkgdGVybSBvZiB0aGUgTGljZW5zZS4gXG5cbjMuICBF
-        dmFsdWF0aW9uIExpY2Vuc2VzLiBVbmxlc3MgWW91IGhhdmUgcHVyY2hhc2Vk
-        IEFuc2libGUgVG93ZXIgU29mdHdhcmUgU3Vic2NyaXB0aW9ucyBmcm9tIFJl
-        ZCBIYXQgb3IgYW4gYXV0aG9yaXplZCByZXNlbGxlciB1bmRlciB0aGUgdGVy
-        bXMgb2YgYSBjb21tZXJjaWFsIGFncmVlbWVudCB3aXRoIFJlZCBIYXQsIGFs
-        bCB1c2Ugb2YgdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgc2hhbGwgYmUg
-        bGltaXRlZCB0byB0ZXN0aW5nIHB1cnBvc2VzIGFuZCBub3QgZm9yIHByb2R1
-        Y3Rpb24gdXNlICjigJxFdmFsdWF0aW9u4oCdKS4gVW5sZXNzIG90aGVyd2lz
-        ZSBhZ3JlZWQgYnkgUmVkIEhhdCwgRXZhbHVhdGlvbiBvZiB0aGUgQW5zaWJs
-        ZSBUb3dlciBTb2Z0d2FyZSBzaGFsbCBiZSBsaW1pdGVkIHRvIGFuIGV2YWx1
-        YXRpb24gZW52aXJvbm1lbnQgYW5kIHRoZSBBbnNpYmxlIFRvd2VyIFNvZnR3
-        YXJlIHNoYWxsIG5vdCBiZSB1c2VkIHRvIG1hbmFnZSBhbnkgc3lzdGVtcyBv
-        ciB2aXJ0dWFsIG1hY2hpbmVzIG9uIG5ldHdvcmtzIGJlaW5nIHVzZWQgaW4g
-        dGhlIG9wZXJhdGlvbiBvZiBZb3VyIGJ1c2luZXNzIG9yIGFueSBvdGhlciBu
-        b24tZXZhbHVhdGlvbiBwdXJwb3NlLiAgVW5sZXNzIG90aGVyd2lzZSBhZ3Jl
-        ZWQgYnkgUmVkIEhhdCwgWW91IHNoYWxsIGxpbWl0IGFsbCBFdmFsdWF0aW9u
-        IHVzZSB0byBhIHNpbmdsZSAzMCBkYXkgZXZhbHVhdGlvbiBwZXJpb2QgYW5k
-        IHNoYWxsIG5vdCBkb3dubG9hZCBvciBvdGhlcndpc2Ugb2J0YWluIGFkZGl0
-        aW9uYWwgY29waWVzIG9mIHRoZSBBbnNpYmxlIFRvd2VyIFNvZnR3YXJlIG9y
-        IGxpY2Vuc2Uga2V5cyBmb3IgRXZhbHVhdGlvbi5cblxuNC4gIExpbWl0ZWQg
-        V2FycmFudHkuICBFeGNlcHQgYXMgc3BlY2lmaWNhbGx5IHN0YXRlZCBpbiB0
-        aGlzIFNlY3Rpb24gNCwgdG8gdGhlIG1heGltdW0gZXh0ZW50IHBlcm1pdHRl
-        ZCB1bmRlciBhcHBsaWNhYmxlIGxhdywgdGhlIEFuc2libGUgVG93ZXIgU29m
-        dHdhcmUgYW5kIHRoZSBjb21wb25lbnRzIGFyZSBwcm92aWRlZCBhbmQgbGlj
-        ZW5zZWQg4oCcYXMgaXPigJ0gd2l0aG91dCB3YXJyYW50eSBvZiBhbnkga2lu
-        ZCwgZXhwcmVzc2VkIG9yIGltcGxpZWQsIGluY2x1ZGluZyB0aGUgaW1wbGll
-        ZCB3YXJyYW50aWVzIG9mIG1lcmNoYW50YWJpbGl0eSwgbm9uLWluZnJpbmdl
-        bWVudCBvciBmaXRuZXNzIGZvciBhIHBhcnRpY3VsYXIgcHVycG9zZS4gIFJl
-        ZCBIYXQgd2FycmFudHMgc29sZWx5IHRvIFlvdSB0aGF0IHRoZSBtZWRpYSBv
-        biB3aGljaCB0aGUgQW5zaWJsZSBUb3dlciBTb2Z0d2FyZSBtYXkgYmUgZnVy
-        bmlzaGVkIHdpbGwgYmUgZnJlZSBmcm9tIGRlZmVjdHMgaW4gbWF0ZXJpYWxz
-        IGFuZCBtYW51ZmFjdHVyZSB1bmRlciBub3JtYWwgdXNlIGZvciBhIHBlcmlv
-        ZCBvZiB0aGlydHkgKDMwKSBkYXlzIGZyb20gdGhlIGRhdGUgb2YgZGVsaXZl
-        cnkgdG8gWW91LiAgUmVkIEhhdCBkb2VzIG5vdCB3YXJyYW50IHRoYXQgdGhl
-        IGZ1bmN0aW9ucyBjb250YWluZWQgaW4gdGhlIEFuc2libGUgVG93ZXIgU29m
-        dHdhcmUgd2lsbCBtZWV0IFlvdXIgcmVxdWlyZW1lbnRzIG9yIHRoYXQgdGhl
-        IG9wZXJhdGlvbiBvZiB0aGUgQW5zaWJsZSBUb3dlciBTb2Z0d2FyZSB3aWxs
-        IGJlIGVudGlyZWx5IGVycm9yIGZyZWUsIGFwcGVhciBwcmVjaXNlbHkgYXMg
-        ZGVzY3JpYmVkIGluIHRoZSBhY2NvbXBhbnlpbmcgZG9jdW1lbnRhdGlvbiwg
-        b3IgY29tcGx5IHdpdGggcmVndWxhdG9yeSByZXF1aXJlbWVudHMuIFxuXG41
-        LiAgTGltaXRhdGlvbiBvZiBSZW1lZGllcyBhbmQgTGlhYmlsaXR5LiBUbyB0
-        aGUgbWF4aW11bSBleHRlbnQgcGVybWl0dGVkIGJ5IGFwcGxpY2FibGUgbGF3
-        LCBZb3VyIGV4Y2x1c2l2ZSByZW1lZHkgdW5kZXIgdGhpcyBFVUxBIGlzIHRv
-        IHJldHVybiBhbnkgZGVmZWN0aXZlIG1lZGlhIHdpdGhpbiB0aGlydHkgKDMw
-        KSBkYXlzIG9mIGRlbGl2ZXJ5IGFsb25nIHdpdGggYSBjb3B5IG9mIFlvdXIg
-        cGF5bWVudCByZWNlaXB0IGFuZCBSZWQgSGF0LCBhdCBpdHMgb3B0aW9uLCB3
-        aWxsIHJlcGxhY2UgaXQgb3IgcmVmdW5kIHRoZSBtb25leSBwYWlkIGJ5IFlv
-        dSBmb3IgdGhlIG1lZGlhLiAgVG8gdGhlIG1heGltdW0gZXh0ZW50IHBlcm1p
-        dHRlZCB1bmRlciBhcHBsaWNhYmxlIGxhdywgbmVpdGhlciBSZWQgSGF0IG5v
-        ciBhbnkgUmVkIEhhdCBhdXRob3JpemVkIGRpc3RyaWJ1dG9yIHdpbGwgYmUg
-        bGlhYmxlIHRvIFlvdSBmb3IgYW55IGluY2lkZW50YWwgb3IgY29uc2VxdWVu
-        dGlhbCBkYW1hZ2VzLCBpbmNsdWRpbmcgbG9zdCBwcm9maXRzIG9yIGxvc3Qg
-        c2F2aW5ncyBhcmlzaW5nIG91dCBvZiB0aGUgdXNlIG9yIGluYWJpbGl0eSB0
-        byB1c2UgdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgb3IgYW55IGNvbXBv
-        bmVudCwgZXZlbiBpZiBSZWQgSGF0IG9yIHRoZSBhdXRob3JpemVkIGRpc3Ry
-        aWJ1dG9yIGhhcyBiZWVuIGFkdmlzZWQgb2YgdGhlIHBvc3NpYmlsaXR5IG9m
-        IHN1Y2ggZGFtYWdlcy4gIEluIG5vIGV2ZW50IHNoYWxsIFJlZCBIYXQncyBs
-        aWFiaWxpdHkgb3IgYW4gYXV0aG9yaXplZCBkaXN0cmlidXRvcuKAmXMgbGlh
-        YmlsaXR5IGV4Y2VlZCB0aGUgYW1vdW50IHRoYXQgWW91IHBhaWQgdG8gUmVk
-        IEhhdCBmb3IgdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgZHVyaW5nIHRo
-        ZSB0d2VsdmUgbW9udGhzIHByZWNlZGluZyB0aGUgZmlyc3QgZXZlbnQgZ2l2
-        aW5nIHJpc2UgdG8gbGlhYmlsaXR5LlxuXG42LiAgRXhwb3J0IENvbnRyb2wu
-        ICBJbiBhY2NvcmRhbmNlIHdpdGggdGhlIGxhd3Mgb2YgdGhlIFVuaXRlZCBT
-        dGF0ZXMgYW5kIG90aGVyIGNvdW50cmllcywgWW91IHJlcHJlc2VudCBhbmQg
-        d2FycmFudCB0aGF0IFlvdTogKGEpIHVuZGVyc3RhbmQgdGhhdCB0aGUgQW5z
-        aWJsZSBUb3dlciBTb2Z0d2FyZSBhbmQgaXRzIGNvbXBvbmVudHMgbWF5IGJl
-        IHN1YmplY3QgdG8gZXhwb3J0IGNvbnRyb2xzIHVuZGVyIHRoZSBVLlMuIENv
-        bW1lcmNlIERlcGFydG1lbnTigJlzIEV4cG9ydCBBZG1pbmlzdHJhdGlvbiBS
-        ZWd1bGF0aW9ucyAo4oCcRUFS4oCdKTsgKGIpIGFyZSBub3QgbG9jYXRlZCBp
-        biBhbnkgY291bnRyeSBsaXN0ZWQgaW4gQ291bnRyeSBHcm91cCBFOjEgaW4g
-        U3VwcGxlbWVudCBOby4gMSB0byBwYXJ0IDc0MCBvZiB0aGUgRUFSOyAoYykg
-        d2lsbCBub3QgZXhwb3J0LCByZS1leHBvcnQsIG9yIHRyYW5zZmVyIHRoZSBB
-        bnNpYmxlIFRvd2VyIFNvZnR3YXJlIHRvIGFueSBwcm9oaWJpdGVkIGRlc3Rp
-        bmF0aW9uIG9yIHRvIGFueSBlbmQgdXNlciB3aG8gaGFzIGJlZW4gcHJvaGli
-        aXRlZCBmcm9tIHBhcnRpY2lwYXRpbmcgaW4gVVMgZXhwb3J0IHRyYW5zYWN0
-        aW9ucyBieSBhbnkgZmVkZXJhbCBhZ2VuY3kgb2YgdGhlIFVTIGdvdmVybm1l
-        bnQ7ICAoZCkgd2lsbCBub3QgdXNlIG9yIHRyYW5zZmVyIHRoZSBBbnNpYmxl
-        IFRvd2VyIFNvZnR3YXJlIGZvciB1c2UgaW4gY29ubmVjdGlvbiB3aXRoIHRo
-        ZSBkZXNpZ24sIGRldmVsb3BtZW50IG9yIHByb2R1Y3Rpb24gb2YgbnVjbGVh
-        ciwgY2hlbWljYWwgb3IgYmlvbG9naWNhbCB3ZWFwb25zLCBvciByb2NrZXQg
-        c3lzdGVtcywgc3BhY2UgbGF1bmNoIHZlaGljbGVzLCBvciBzb3VuZGluZyBy
-        b2NrZXRzIG9yIHVubWFubmVkIGFpciB2ZWhpY2xlIHN5c3RlbXM7IChlKSB1
-        bmRlcnN0YW5kIGFuZCBhZ3JlZSB0aGF0IGlmIHlvdSBhcmUgaW4gdGhlIFVu
-        aXRlZCBTdGF0ZXMgYW5kIHlvdSBleHBvcnQgb3IgdHJhbnNmZXIgdGhlIEFu
-        c2libGUgVG93ZXIgU29mdHdhcmUgdG8gZWxpZ2libGUgZW5kIHVzZXJzLCB5
-        b3Ugd2lsbCwgdG8gdGhlIGV4dGVudCByZXF1aXJlZCBieSBFQVIgU2VjdGlv
-        biA3NDAuMTcgb2J0YWluIGEgbGljZW5zZSBmb3Igc3VjaCBleHBvcnQgb3Ig
-        dHJhbnNmZXIgYW5kIHdpbGwgc3VibWl0IHNlbWktYW5udWFsIHJlcG9ydHMg
-        dG8gdGhlIENvbW1lcmNlIERlcGFydG1lbnTigJlzIEJ1cmVhdSBvZiBJbmR1
-        c3RyeSBhbmQgU2VjdXJpdHksIHdoaWNoIGluY2x1ZGUgdGhlIG5hbWUgYW5k
-        IGFkZHJlc3MgKGluY2x1ZGluZyBjb3VudHJ5KSBvZiBlYWNoIHRyYW5zZmVy
-        ZWU7IGFuZCAoZikgdW5kZXJzdGFuZCB0aGF0IGNvdW50cmllcyBpbmNsdWRp
-        bmcgdGhlIFVuaXRlZCBTdGF0ZXMgbWF5IHJlc3RyaWN0IHRoZSBpbXBvcnQs
-        IHVzZSwgb3IgZXhwb3J0IG9mIGVuY3J5cHRpb24gcHJvZHVjdHMgKHdoaWNo
-        IG1heSBpbmNsdWRlIHRoZSBBbnNpYmxlIFRvd2VyIFNvZnR3YXJlKSBhbmQg
-        YWdyZWUgdGhhdCB5b3Ugc2hhbGwgYmUgc29sZWx5IHJlc3BvbnNpYmxlIGZv
-        ciBjb21wbGlhbmNlIHdpdGggYW55IHN1Y2ggaW1wb3J0LCB1c2UsIG9yIGV4
-        cG9ydCByZXN0cmljdGlvbnMuXG5cbjcuICBHZW5lcmFsLiAgSWYgYW55IHBy
-        b3Zpc2lvbiBvZiB0aGlzIEVVTEEgaXMgaGVsZCB0byBiZSB1bmVuZm9yY2Vh
-        YmxlLCB0aGF0IHNoYWxsIG5vdCBhZmZlY3QgdGhlIGVuZm9yY2VhYmlsaXR5
-        IG9mIHRoZSByZW1haW5pbmcgcHJvdmlzaW9ucy4gIFRoaXMgYWdyZWVtZW50
-        IHNoYWxsIGJlIGdvdmVybmVkIGJ5IHRoZSBsYXdzIG9mIHRoZSBTdGF0ZSBv
-        ZiBOZXcgWW9yayBhbmQgb2YgdGhlIFVuaXRlZCBTdGF0ZXMsIHdpdGhvdXQg
-        cmVnYXJkIHRvIGFueSBjb25mbGljdCBvZiBsYXdzIHByb3Zpc2lvbnMuIFRo
-        ZSByaWdodHMgYW5kIG9ibGlnYXRpb25zIG9mIHRoZSBwYXJ0aWVzIHRvIHRo
-        aXMgRVVMQSBzaGFsbCBub3QgYmUgZ292ZXJuZWQgYnkgdGhlIFVuaXRlZCBO
-        YXRpb25zIENvbnZlbnRpb24gb24gdGhlIEludGVybmF0aW9uYWwgU2FsZSBv
-        ZiBHb29kcy4gXG5cbkNvcHlyaWdodCDCqSAyMDE1IFJlZCBIYXQsIEluYy4g
-        IEFsbCByaWdodHMgcmVzZXJ2ZWQuICBcIlJlZCBIYXRcIiBhbmQg4oCcQW5z
-        aWJsZSBUb3dlcuKAnSBhcmUgcmVnaXN0ZXJlZCB0cmFkZW1hcmtzIG9mIFJl
-        ZCBIYXQsIEluYy4gIEFsbCBvdGhlciB0cmFkZW1hcmtzIGFyZSB0aGUgcHJv
-        cGVydHkgb2YgdGhlaXIgcmVzcGVjdGl2ZSBvd25lcnMuXG4iLCJsaWNlbnNl
-        X2luZm8iOnsiZGVwbG95bWVudF9pZCI6IjE1YmViMDE2MmNlNmQ3YTNiMzVm
-        NzVjZjYxMDY0ZjJmMDM2Mjk3MDgiLCJzdWJzY3JpcHRpb25fbmFtZSI6IkFu
-        c2libGUgVG93ZXIgYnkgUmVkIEhhdCwgU3RhbmRhcmQgKDEwMDAwIE1hbmFn
-        ZWQgTm9kZXMpIiwiY3VycmVudF9pbnN0YW5jZXMiOjg3LCJmZWF0dXJlcyI6
-        eyJzdXJ2ZXlzIjp0cnVlLCJtdWx0aXBsZV9vcmdhbml6YXRpb25zIjp0cnVl
-        LCJzeXN0ZW1fdHJhY2tpbmciOnRydWUsImVudGVycHJpc2VfYXV0aCI6dHJ1
-        ZSwicmVicmFuZGluZyI6dHJ1ZSwiYWN0aXZpdHlfc3RyZWFtcyI6dHJ1ZSwi
-        bGRhcCI6dHJ1ZSwiaGEiOnRydWV9LCJkYXRlX2V4cGlyZWQiOmZhbHNlLCJh
-        dmFpbGFibGVfaW5zdGFuY2VzIjoxMDAwMCwiaG9zdG5hbWUiOiIxMjk0ZGQ2
-        MzAxMjY0NDIxOGI1MmExN2I2YmM0MzBlZCIsImZyZWVfaW5zdGFuY2VzIjo5
-        OTEzLCJpbnN0YW5jZV9jb3VudCI6MTAwMDAsInRpbWVfcmVtYWluaW5nIjoy
-        Njc4NzcxNCwiY29tcGxpYW50Ijp0cnVlLCJncmFjZV9wZXJpb2RfcmVtYWlu
-        aW5nIjoyOTM3OTcxNCwiY29udGFjdF9lbWFpbCI6ImpvZXNtaXRAcmVkaGF0
-        LmNvbSIsImNvbXBhbnlfbmFtZSI6IlJlZCBIYXQsIEluYy4iLCJkYXRlX3dh
-        cm5pbmciOmZhbHNlLCJsaWNlbnNlX3R5cGUiOiJlbnRlcnByaXNlIiwiY29u
-        dGFjdF9uYW1lIjoiSm9lICBTbWl0aCIsImxpY2Vuc2VfZGF0ZSI6MTUxODcx
-        MDEwMiwibGljZW5zZV9rZXkiOiIwM2NiYzNlNzM3OWViM2Y3ZTFmZDEzOWVj
-        NjkyZDg1YjliNmRhNDNkOWNiY2IwY2JiMmQ0MzYzOTliOWQ2OThjIiwidmFs
-        aWRfa2V5Ijp0cnVlfSwiYW5hbHl0aWNzX3N0YXR1cyI6ImRldGFpbGVkIiwi
-        dmVyc2lvbiI6IjMuMC4xIiwicHJvamVjdF9iYXNlX2RpciI6Ii92YXIvbGli
-        L2F3eC9wcm9qZWN0cyIsInRpbWVfem9uZSI6IkFtZXJpY2EvTmV3X1lvcmsi
-        LCJhbnNpYmxlX3ZlcnNpb24iOiIyLjEuMC4wIiwicHJvamVjdF9sb2NhbF9w
-        YXRocyI6W119
+        eyJldWxhIjoiQU5TSUJMRSBUT1dFUiBCWSBSRUQgSEFUIEVORCBVU0VSIExJQ0VOU0UgQUdSRUVNRU5UXG5cblRoaXMgZW5kIHVzZXIgbGljZW5zZSBhZ3JlZW1lbnQgKOKAnEVVTEHigJ0pIGdvdmVybnMgdGhlIHVzZSBvZiB0aGUgQW5zaWJsZSBUb3dlciBzb2Z0d2FyZSBhbmQgYW55IHJlbGF0ZWQgdXBkYXRlcywgdXBncmFkZXMsIHZlcnNpb25zLCBhcHBlYXJhbmNlLCBzdHJ1Y3R1cmUgYW5kIG9yZ2FuaXphdGlvbiAodGhlIOKAnEFuc2libGUgVG93ZXIgU29mdHdhcmXigJ0pLCByZWdhcmRsZXNzIG9mIHRoZSBkZWxpdmVyeSBtZWNoYW5pc20uICBcblxuMS4gIExpY2Vuc2UgR3JhbnQuICBTdWJqZWN0IHRvIHRoZSB0ZXJtcyBvZiB0aGlzIEVVTEEsIFJlZCBIYXQsIEluYy4gYW5kIGl0cyBhZmZpbGlhdGVzICjigJxSZWQgSGF04oCdKSBncmFudCB0byB5b3UgKOKAnFlvdeKAnSkgYSBub24tdHJhbnNmZXJhYmxlLCBub24tZXhjbHVzaXZlLCB3b3JsZHdpZGUsIG5vbi1zdWJsaWNlbnNhYmxlLCBsaW1pdGVkLCByZXZvY2FibGUgbGljZW5zZSB0byB1c2UgdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgZm9yIHRoZSB0ZXJtIG9mIHRoZSBhc3NvY2lhdGVkIFJlZCBIYXQgU29mdHdhcmUgU3Vic2NyaXB0aW9uKHMpIGFuZCBpbiBhIHF1YW50aXR5IGVxdWFsIHRvIHRoZSBudW1iZXIgb2YgUmVkIEhhdCBTb2Z0d2FyZSBTdWJzY3JpcHRpb25zIHB1cmNoYXNlZCBmcm9tIFJlZCBIYXQgZm9yIHRoZSBBbnNpYmxlIFRvd2VyIFNvZnR3YXJlICjigJxMaWNlbnNl4oCdKSwgZWFjaCBhcyBzZXQgZm9ydGggb24gdGhlIGFwcGxpY2FibGUgUmVkIEhhdCBvcmRlcmluZyBkb2N1bWVudC4gIFlvdSBhY3F1aXJlIG9ubHkgdGhlIHJpZ2h0IHRvIHVzZSB0aGUgQW5zaWJsZSBUb3dlciBTb2Z0d2FyZSBhbmQgZG8gbm90IGFjcXVpcmUgYW55IHJpZ2h0cyBvZiBvd25lcnNoaXAuIFJlZCBIYXQgcmVzZXJ2ZXMgYWxsIHJpZ2h0cyB0byB0aGUgQW5zaWJsZSBUb3dlciBTb2Z0d2FyZSBub3QgZXhwcmVzc2x5IGdyYW50ZWQgdG8gWW91LiAgVGhpcyBMaWNlbnNlIGdyYW50IHBlcnRhaW5zIHNvbGVseSB0byBZb3VyIHVzZSBvZiB0aGUgQW5zaWJsZSBUb3dlciBTb2Z0d2FyZSBhbmQgaXMgbm90IGludGVuZGVkIHRvIGxpbWl0IFlvdXIgcmlnaHRzIHVuZGVyLCBvciBncmFudCBZb3UgcmlnaHRzIHRoYXQgc3VwZXJzZWRlLCB0aGUgbGljZW5zZSB0ZXJtcyBvZiBhbnkgc29mdHdhcmUgcGFja2FnZXMgd2hpY2ggbWF5IGJlIG1hZGUgYXZhaWxhYmxlIHdpdGggdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgdGhhdCBhcmUgc3ViamVjdCB0byBhbiBvcGVuIHNvdXJjZSBzb2Z0d2FyZSBsaWNlbnNlLiAgXG4gXG4yLiAgSW50ZWxsZWN0dWFsIFByb3BlcnR5IFJpZ2h0cy4gIFRpdGxlIHRvIHRoZSBBbnNpYmxlIFRvd2VyIFNvZnR3YXJlIGFuZCBlYWNoIGNvbXBvbmVudCwgY29weSBhbmQgbW9kaWZpY2F0aW9uLCBpbmNsdWRpbmcgYWxsIGRlcml2YXRpdmUgd29ya3Mgd2hldGhlciBtYWRlIGJ5IFJlZCBIYXQsIFlvdSBvciBvbiBSZWQgSGF0J3MgYmVoYWxmLCBpbmNsdWRpbmcgdGhvc2UgbWFkZSBhdCBZb3VyIHN1Z2dlc3Rpb24gYW5kIGFsbCBhc3NvY2lhdGVkIGludGVsbGVjdHVhbCBwcm9wZXJ0eSByaWdodHMsIGFyZSBhbmQgc2hhbGwgcmVtYWluIHRoZSBzb2xlIGFuZCBleGNsdXNpdmUgcHJvcGVydHkgb2YgUmVkIEhhdCBhbmQvb3IgaXQgbGljZW5zb3JzLiAgVGhlIExpY2Vuc2UgZG9lcyBub3QgYXV0aG9yaXplIFlvdSAobm9yIG1heSBZb3UgYWxsb3cgYW55IHRoaXJkIHBhcnR5LCBzcGVjaWZpY2FsbHkgbm9uLWVtcGxveWVlcyBvZiBZb3VycykgdG86IChhKSBjb3B5LCBkaXN0cmlidXRlLCByZXByb2R1Y2UsIHVzZSBvciBhbGxvdyB0aGlyZCBwYXJ0eSBhY2Nlc3MgdG8gdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgZXhjZXB0IGFzIGV4cHJlc3NseSBhdXRob3JpemVkIGhlcmV1bmRlcjsgKGIpIGRlY29tcGlsZSwgZGlzYXNzZW1ibGUsIHJldmVyc2UgZW5naW5lZXIsIHRyYW5zbGF0ZSwgbW9kaWZ5LCBjb252ZXJ0IG9yIGFwcGx5IGFueSBwcm9jZWR1cmUgb3IgcHJvY2VzcyB0byB0aGUgQW5zaWJsZSBUb3dlciBTb2Z0d2FyZSBpbiBvcmRlciB0byBhc2NlcnRhaW4sIGRlcml2ZSwgYW5kL29yIGFwcHJvcHJpYXRlIGZvciBhbnkgcmVhc29uIG9yIHB1cnBvc2UsIGluY2x1ZGluZyB0aGUgQW5zaWJsZSBUb3dlciBTb2Z0d2FyZSBzb3VyY2UgY29kZSBvciBzb3VyY2UgbGlzdGluZ3Mgb3IgYW55IHRyYWRlIHNlY3JldCBpbmZvcm1hdGlvbiBvciBwcm9jZXNzIGNvbnRhaW5lZCBpbiB0aGUgQW5zaWJsZSBUb3dlciBTb2Z0d2FyZSAoZXhjZXB0IGFzIHBlcm1pdHRlZCB1bmRlciBhcHBsaWNhYmxlIGxhdyk7IChjKSBleGVjdXRlIG9yIGluY29ycG9yYXRlIG90aGVyIHNvZnR3YXJlIChleGNlcHQgZm9yIGFwcHJvdmVkIHNvZnR3YXJlIGFzIGFwcGVhcnMgaW4gdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgZG9jdW1lbnRhdGlvbiBvciBzcGVjaWZpY2FsbHkgYXBwcm92ZWQgYnkgUmVkIEhhdCBpbiB3cml0aW5nKSBpbnRvIEFuc2libGUgVG93ZXIgU29mdHdhcmUsIG9yIGNyZWF0ZSBhIGRlcml2YXRpdmUgd29yayBvZiBhbnkgcGFydCBvZiB0aGUgQW5zaWJsZSBUb3dlciBTb2Z0d2FyZTsgKGQpIHJlbW92ZSBhbnkgdHJhZGVtYXJrcywgdHJhZGUgbmFtZXMgb3IgdGl0bGVzLCBjb3B5cmlnaHRzIGxlZ2VuZHMgb3IgYW55IG90aGVyIHByb3ByaWV0YXJ5IG1hcmtpbmcgb24gdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmU7IChlKSBkaXNjbG9zZSB0aGUgcmVzdWx0cyBvZiBhbnkgYmVuY2htYXJraW5nIG9mIHRoZSBBbnNpYmxlIFRvd2VyIFNvZnR3YXJlICh3aGV0aGVyIG9yIG5vdCBvYnRhaW5lZCB3aXRoIFJlZCBIYXTigJlzIGFzc2lzdGFuY2UpIHRvIGFueSB0aGlyZCBwYXJ0eTsgKGYpIGF0dGVtcHQgdG8gY2lyY3VtdmVudCBhbnkgdXNlciBsaW1pdHMgb3Igb3RoZXIgbGljZW5zZSwgdGltaW5nIG9yIHVzZSByZXN0cmljdGlvbnMgdGhhdCBhcmUgYnVpbHQgaW50bywgZGVmaW5lZCBvciBhZ3JlZWQgdXBvbiwgcmVnYXJkaW5nIHRoZSBBbnNpYmxlIFRvd2VyIFNvZnR3YXJlLiBZb3UgYXJlIGhlcmVieSBub3RpZmllZCB0aGF0IHRoZSBBbnNpYmxlIFRvd2VyIFNvZnR3YXJlIG1heSBjb250YWluIHRpbWUtb3V0IGRldmljZXMsIGNvdW50ZXIgZGV2aWNlcywgYW5kL29yIG90aGVyIGRldmljZXMgaW50ZW5kZWQgdG8gZW5zdXJlIHRoZSBsaW1pdHMgb2YgdGhlIExpY2Vuc2Ugd2lsbCBub3QgYmUgZXhjZWVkZWQgKOKAnExpbWl0aW5nIERldmljZXPigJ0pLiAgSWYgdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgY29udGFpbnMgTGltaXRpbmcgRGV2aWNlcywgUmVkIEhhdCB3aWxsIHByb3ZpZGUgWW91IG1hdGVyaWFscyBuZWNlc3NhcnkgdG8gdXNlIHRoZSBBbnNpYmxlIFRvd2VyIFNvZnR3YXJlIHRvIHRoZSBleHRlbnQgcGVybWl0dGVkLiAgWW91IG1heSBub3QgdGFtcGVyIHdpdGggb3Igb3RoZXJ3aXNlIHRha2UgYW55IGFjdGlvbiB0byBkZWZlYXQgb3IgY2lyY3VtdmVudCBhIExpbWl0aW5nIERldmljZSBvciBvdGhlciBjb250cm9sIG1lYXN1cmUsIGluY2x1ZGluZyBidXQgbm90IGxpbWl0ZWQgdG8sIHJlc2V0dGluZyB0aGUgdW5pdCBhbW91bnQgb3IgdXNpbmcgZmFsc2UgaG9zdCBpZGVudGlmaWNhdGlvbiBudW1iZXIgZm9yIHRoZSBwdXJwb3NlIG9mIGV4dGVuZGluZyBhbnkgdGVybSBvZiB0aGUgTGljZW5zZS4gXG5cbjMuICBFdmFsdWF0aW9uIExpY2Vuc2VzLiBVbmxlc3MgWW91IGhhdmUgcHVyY2hhc2VkIEFuc2libGUgVG93ZXIgU29mdHdhcmUgU3Vic2NyaXB0aW9ucyBmcm9tIFJlZCBIYXQgb3IgYW4gYXV0aG9yaXplZCByZXNlbGxlciB1bmRlciB0aGUgdGVybXMgb2YgYSBjb21tZXJjaWFsIGFncmVlbWVudCB3aXRoIFJlZCBIYXQsIGFsbCB1c2Ugb2YgdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgc2hhbGwgYmUgbGltaXRlZCB0byB0ZXN0aW5nIHB1cnBvc2VzIGFuZCBub3QgZm9yIHByb2R1Y3Rpb24gdXNlICjigJxFdmFsdWF0aW9u4oCdKS4gVW5sZXNzIG90aGVyd2lzZSBhZ3JlZWQgYnkgUmVkIEhhdCwgRXZhbHVhdGlvbiBvZiB0aGUgQW5zaWJsZSBUb3dlciBTb2Z0d2FyZSBzaGFsbCBiZSBsaW1pdGVkIHRvIGFuIGV2YWx1YXRpb24gZW52aXJvbm1lbnQgYW5kIHRoZSBBbnNpYmxlIFRvd2VyIFNvZnR3YXJlIHNoYWxsIG5vdCBiZSB1c2VkIHRvIG1hbmFnZSBhbnkgc3lzdGVtcyBvciB2aXJ0dWFsIG1hY2hpbmVzIG9uIG5ldHdvcmtzIGJlaW5nIHVzZWQgaW4gdGhlIG9wZXJhdGlvbiBvZiBZb3VyIGJ1c2luZXNzIG9yIGFueSBvdGhlciBub24tZXZhbHVhdGlvbiBwdXJwb3NlLiAgVW5sZXNzIG90aGVyd2lzZSBhZ3JlZWQgYnkgUmVkIEhhdCwgWW91IHNoYWxsIGxpbWl0IGFsbCBFdmFsdWF0aW9uIHVzZSB0byBhIHNpbmdsZSAzMCBkYXkgZXZhbHVhdGlvbiBwZXJpb2QgYW5kIHNoYWxsIG5vdCBkb3dubG9hZCBvciBvdGhlcndpc2Ugb2J0YWluIGFkZGl0aW9uYWwgY29waWVzIG9mIHRoZSBBbnNpYmxlIFRvd2VyIFNvZnR3YXJlIG9yIGxpY2Vuc2Uga2V5cyBmb3IgRXZhbHVhdGlvbi5cblxuNC4gIExpbWl0ZWQgV2FycmFudHkuICBFeGNlcHQgYXMgc3BlY2lmaWNhbGx5IHN0YXRlZCBpbiB0aGlzIFNlY3Rpb24gNCwgdG8gdGhlIG1heGltdW0gZXh0ZW50IHBlcm1pdHRlZCB1bmRlciBhcHBsaWNhYmxlIGxhdywgdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgYW5kIHRoZSBjb21wb25lbnRzIGFyZSBwcm92aWRlZCBhbmQgbGljZW5zZWQg4oCcYXMgaXPigJ0gd2l0aG91dCB3YXJyYW50eSBvZiBhbnkga2luZCwgZXhwcmVzc2VkIG9yIGltcGxpZWQsIGluY2x1ZGluZyB0aGUgaW1wbGllZCB3YXJyYW50aWVzIG9mIG1lcmNoYW50YWJpbGl0eSwgbm9uLWluZnJpbmdlbWVudCBvciBmaXRuZXNzIGZvciBhIHBhcnRpY3VsYXIgcHVycG9zZS4gIFJlZCBIYXQgd2FycmFudHMgc29sZWx5IHRvIFlvdSB0aGF0IHRoZSBtZWRpYSBvbiB3aGljaCB0aGUgQW5zaWJsZSBUb3dlciBTb2Z0d2FyZSBtYXkgYmUgZnVybmlzaGVkIHdpbGwgYmUgZnJlZSBmcm9tIGRlZmVjdHMgaW4gbWF0ZXJpYWxzIGFuZCBtYW51ZmFjdHVyZSB1bmRlciBub3JtYWwgdXNlIGZvciBhIHBlcmlvZCBvZiB0aGlydHkgKDMwKSBkYXlzIGZyb20gdGhlIGRhdGUgb2YgZGVsaXZlcnkgdG8gWW91LiAgUmVkIEhhdCBkb2VzIG5vdCB3YXJyYW50IHRoYXQgdGhlIGZ1bmN0aW9ucyBjb250YWluZWQgaW4gdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgd2lsbCBtZWV0IFlvdXIgcmVxdWlyZW1lbnRzIG9yIHRoYXQgdGhlIG9wZXJhdGlvbiBvZiB0aGUgQW5zaWJsZSBUb3dlciBTb2Z0d2FyZSB3aWxsIGJlIGVudGlyZWx5IGVycm9yIGZyZWUsIGFwcGVhciBwcmVjaXNlbHkgYXMgZGVzY3JpYmVkIGluIHRoZSBhY2NvbXBhbnlpbmcgZG9jdW1lbnRhdGlvbiwgb3IgY29tcGx5IHdpdGggcmVndWxhdG9yeSByZXF1aXJlbWVudHMuIFxuXG41LiAgTGltaXRhdGlvbiBvZiBSZW1lZGllcyBhbmQgTGlhYmlsaXR5LiBUbyB0aGUgbWF4aW11bSBleHRlbnQgcGVybWl0dGVkIGJ5IGFwcGxpY2FibGUgbGF3LCBZb3VyIGV4Y2x1c2l2ZSByZW1lZHkgdW5kZXIgdGhpcyBFVUxBIGlzIHRvIHJldHVybiBhbnkgZGVmZWN0aXZlIG1lZGlhIHdpdGhpbiB0aGlydHkgKDMwKSBkYXlzIG9mIGRlbGl2ZXJ5IGFsb25nIHdpdGggYSBjb3B5IG9mIFlvdXIgcGF5bWVudCByZWNlaXB0IGFuZCBSZWQgSGF0LCBhdCBpdHMgb3B0aW9uLCB3aWxsIHJlcGxhY2UgaXQgb3IgcmVmdW5kIHRoZSBtb25leSBwYWlkIGJ5IFlvdSBmb3IgdGhlIG1lZGlhLiAgVG8gdGhlIG1heGltdW0gZXh0ZW50IHBlcm1pdHRlZCB1bmRlciBhcHBsaWNhYmxlIGxhdywgbmVpdGhlciBSZWQgSGF0IG5vciBhbnkgUmVkIEhhdCBhdXRob3JpemVkIGRpc3RyaWJ1dG9yIHdpbGwgYmUgbGlhYmxlIHRvIFlvdSBmb3IgYW55IGluY2lkZW50YWwgb3IgY29uc2VxdWVudGlhbCBkYW1hZ2VzLCBpbmNsdWRpbmcgbG9zdCBwcm9maXRzIG9yIGxvc3Qgc2F2aW5ncyBhcmlzaW5nIG91dCBvZiB0aGUgdXNlIG9yIGluYWJpbGl0eSB0byB1c2UgdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgb3IgYW55IGNvbXBvbmVudCwgZXZlbiBpZiBSZWQgSGF0IG9yIHRoZSBhdXRob3JpemVkIGRpc3RyaWJ1dG9yIGhhcyBiZWVuIGFkdmlzZWQgb2YgdGhlIHBvc3NpYmlsaXR5IG9mIHN1Y2ggZGFtYWdlcy4gIEluIG5vIGV2ZW50IHNoYWxsIFJlZCBIYXQncyBsaWFiaWxpdHkgb3IgYW4gYXV0aG9yaXplZCBkaXN0cmlidXRvcuKAmXMgbGlhYmlsaXR5IGV4Y2VlZCB0aGUgYW1vdW50IHRoYXQgWW91IHBhaWQgdG8gUmVkIEhhdCBmb3IgdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgZHVyaW5nIHRoZSB0d2VsdmUgbW9udGhzIHByZWNlZGluZyB0aGUgZmlyc3QgZXZlbnQgZ2l2aW5nIHJpc2UgdG8gbGlhYmlsaXR5LlxuXG42LiAgRXhwb3J0IENvbnRyb2wuICBJbiBhY2NvcmRhbmNlIHdpdGggdGhlIGxhd3Mgb2YgdGhlIFVuaXRlZCBTdGF0ZXMgYW5kIG90aGVyIGNvdW50cmllcywgWW91IHJlcHJlc2VudCBhbmQgd2FycmFudCB0aGF0IFlvdTogKGEpIHVuZGVyc3RhbmQgdGhhdCB0aGUgQW5zaWJsZSBUb3dlciBTb2Z0d2FyZSBhbmQgaXRzIGNvbXBvbmVudHMgbWF5IGJlIHN1YmplY3QgdG8gZXhwb3J0IGNvbnRyb2xzIHVuZGVyIHRoZSBVLlMuIENvbW1lcmNlIERlcGFydG1lbnTigJlzIEV4cG9ydCBBZG1pbmlzdHJhdGlvbiBSZWd1bGF0aW9ucyAo4oCcRUFS4oCdKTsgKGIpIGFyZSBub3QgbG9jYXRlZCBpbiBhbnkgY291bnRyeSBsaXN0ZWQgaW4gQ291bnRyeSBHcm91cCBFOjEgaW4gU3VwcGxlbWVudCBOby4gMSB0byBwYXJ0IDc0MCBvZiB0aGUgRUFSOyAoYykgd2lsbCBub3QgZXhwb3J0LCByZS1leHBvcnQsIG9yIHRyYW5zZmVyIHRoZSBBbnNpYmxlIFRvd2VyIFNvZnR3YXJlIHRvIGFueSBwcm9oaWJpdGVkIGRlc3RpbmF0aW9uIG9yIHRvIGFueSBlbmQgdXNlciB3aG8gaGFzIGJlZW4gcHJvaGliaXRlZCBmcm9tIHBhcnRpY2lwYXRpbmcgaW4gVVMgZXhwb3J0IHRyYW5zYWN0aW9ucyBieSBhbnkgZmVkZXJhbCBhZ2VuY3kgb2YgdGhlIFVTIGdvdmVybm1lbnQ7ICAoZCkgd2lsbCBub3QgdXNlIG9yIHRyYW5zZmVyIHRoZSBBbnNpYmxlIFRvd2VyIFNvZnR3YXJlIGZvciB1c2UgaW4gY29ubmVjdGlvbiB3aXRoIHRoZSBkZXNpZ24sIGRldmVsb3BtZW50IG9yIHByb2R1Y3Rpb24gb2YgbnVjbGVhciwgY2hlbWljYWwgb3IgYmlvbG9naWNhbCB3ZWFwb25zLCBvciByb2NrZXQgc3lzdGVtcywgc3BhY2UgbGF1bmNoIHZlaGljbGVzLCBvciBzb3VuZGluZyByb2NrZXRzIG9yIHVubWFubmVkIGFpciB2ZWhpY2xlIHN5c3RlbXM7IChlKSB1bmRlcnN0YW5kIGFuZCBhZ3JlZSB0aGF0IGlmIHlvdSBhcmUgaW4gdGhlIFVuaXRlZCBTdGF0ZXMgYW5kIHlvdSBleHBvcnQgb3IgdHJhbnNmZXIgdGhlIEFuc2libGUgVG93ZXIgU29mdHdhcmUgdG8gZWxpZ2libGUgZW5kIHVzZXJzLCB5b3Ugd2lsbCwgdG8gdGhlIGV4dGVudCByZXF1aXJlZCBieSBFQVIgU2VjdGlvbiA3NDAuMTcgb2J0YWluIGEgbGljZW5zZSBmb3Igc3VjaCBleHBvcnQgb3IgdHJhbnNmZXIgYW5kIHdpbGwgc3VibWl0IHNlbWktYW5udWFsIHJlcG9ydHMgdG8gdGhlIENvbW1lcmNlIERlcGFydG1lbnTigJlzIEJ1cmVhdSBvZiBJbmR1c3RyeSBhbmQgU2VjdXJpdHksIHdoaWNoIGluY2x1ZGUgdGhlIG5hbWUgYW5kIGFkZHJlc3MgKGluY2x1ZGluZyBjb3VudHJ5KSBvZiBlYWNoIHRyYW5zZmVyZWU7IGFuZCAoZikgdW5kZXJzdGFuZCB0aGF0IGNvdW50cmllcyBpbmNsdWRpbmcgdGhlIFVuaXRlZCBTdGF0ZXMgbWF5IHJlc3RyaWN0IHRoZSBpbXBvcnQsIHVzZSwgb3IgZXhwb3J0IG9mIGVuY3J5cHRpb24gcHJvZHVjdHMgKHdoaWNoIG1heSBpbmNsdWRlIHRoZSBBbnNpYmxlIFRvd2VyIFNvZnR3YXJlKSBhbmQgYWdyZWUgdGhhdCB5b3Ugc2hhbGwgYmUgc29sZWx5IHJlc3BvbnNpYmxlIGZvciBjb21wbGlhbmNlIHdpdGggYW55IHN1Y2ggaW1wb3J0LCB1c2UsIG9yIGV4cG9ydCByZXN0cmljdGlvbnMuXG5cbjcuICBHZW5lcmFsLiAgSWYgYW55IHByb3Zpc2lvbiBvZiB0aGlzIEVVTEEgaXMgaGVsZCB0byBiZSB1bmVuZm9yY2VhYmxlLCB0aGF0IHNoYWxsIG5vdCBhZmZlY3QgdGhlIGVuZm9yY2VhYmlsaXR5IG9mIHRoZSByZW1haW5pbmcgcHJvdmlzaW9ucy4gIFRoaXMgYWdyZWVtZW50IHNoYWxsIGJlIGdvdmVybmVkIGJ5IHRoZSBsYXdzIG9mIHRoZSBTdGF0ZSBvZiBOZXcgWW9yayBhbmQgb2YgdGhlIFVuaXRlZCBTdGF0ZXMsIHdpdGhvdXQgcmVnYXJkIHRvIGFueSBjb25mbGljdCBvZiBsYXdzIHByb3Zpc2lvbnMuIFRoZSByaWdodHMgYW5kIG9ibGlnYXRpb25zIG9mIHRoZSBwYXJ0aWVzIHRvIHRoaXMgRVVMQSBzaGFsbCBub3QgYmUgZ292ZXJuZWQgYnkgdGhlIFVuaXRlZCBOYXRpb25zIENvbnZlbnRpb24gb24gdGhlIEludGVybmF0aW9uYWwgU2FsZSBvZiBHb29kcy4gXG5cbkNvcHlyaWdodCDCqSAyMDE1IFJlZCBIYXQsIEluYy4gIEFsbCByaWdodHMgcmVzZXJ2ZWQuICBcIlJlZCBIYXRcIiBhbmQg4oCcQW5zaWJsZSBUb3dlcuKAnSBhcmUgcmVnaXN0ZXJlZCB0cmFkZW1hcmtzIG9mIFJlZCBIYXQsIEluYy4gIEFsbCBvdGhlciB0cmFkZW1hcmtzIGFyZSB0aGUgcHJvcGVydHkgb2YgdGhlaXIgcmVzcGVjdGl2ZSBvd25lcnMuXG4iLCJsaWNlbnNlX2luZm8iOnsiZGVwbG95bWVudF9pZCI6IjE1YmViMDE2MmNlNmQ3YTNiMzVmNzVjZjYxMDY0ZjJmMDM2Mjk3MDgiLCJzdWJzY3JpcHRpb25fbmFtZSI6IkFuc2libGUgVG93ZXIgYnkgUmVkIEhhdCwgU3RhbmRhcmQgKDEwMDAwIE1hbmFnZWQgTm9kZXMpIiwiY3VycmVudF9pbnN0YW5jZXMiOjg3LCJmZWF0dXJlcyI6eyJzdXJ2ZXlzIjp0cnVlLCJtdWx0aXBsZV9vcmdhbml6YXRpb25zIjp0cnVlLCJzeXN0ZW1fdHJhY2tpbmciOnRydWUsImVudGVycHJpc2VfYXV0aCI6dHJ1ZSwicmVicmFuZGluZyI6dHJ1ZSwiYWN0aXZpdHlfc3RyZWFtcyI6dHJ1ZSwibGRhcCI6dHJ1ZSwiaGEiOnRydWV9LCJkYXRlX2V4cGlyZWQiOmZhbHNlLCJhdmFpbGFibGVfaW5zdGFuY2VzIjoxMDAwMCwiaG9zdG5hbWUiOiIxMjk0ZGQ2MzAxMjY0NDIxOGI1MmExN2I2YmM0MzBlZCIsImZyZWVfaW5zdGFuY2VzIjo5OTEzLCJpbnN0YW5jZV9jb3VudCI6MTAwMDAsInRpbWVfcmVtYWluaW5nIjoyNjc4NzcxNCwiY29tcGxpYW50Ijp0cnVlLCJncmFjZV9wZXJpb2RfcmVtYWluaW5nIjoyOTM3OTcxNCwiY29udGFjdF9lbWFpbCI6ImpvZXNtaXRAcmVkaGF0LmNvbSIsImNvbXBhbnlfbmFtZSI6IlJlZCBIYXQsIEluYy4iLCJkYXRlX3dhcm5pbmciOmZhbHNlLCJsaWNlbnNlX3R5cGUiOiJlbnRlcnByaXNlIiwiY29udGFjdF9uYW1lIjoiSm9lICBTbWl0aCIsImxpY2Vuc2VfZGF0ZSI6MTUxODcxMDEwMiwibGljZW5zZV9rZXkiOiIwM2NiYzNlNzM3OWViM2Y3ZTFmZDEzOWVjNjkyZDg1YjliNmRhNDNkOWNiY2IwY2JiMmQ0MzYzOTliOWQ2OThjIiwidmFsaWRfa2V5Ijp0cnVlfSwiYW5hbHl0aWNzX3N0YXR1cyI6ImRldGFpbGVkIiwidmVyc2lvbiI6IjMuMC4xIiwicHJvamVjdF9iYXNlX2RpciI6Ii92YXIvbGliL2F3eC9wcm9qZWN0cyIsInRpbWVfem9uZSI6IkFtZXJpY2EvTmV3X1lvcmsiLCJhbnNpYmxlX3ZlcnNpb24iOiIyLjEuMC4wIiwicHJvamVjdF9sb2NhbF9wYXRocyI6W119
     http_version: 
   recorded_at: Tue, 11 Apr 2017 14:53:08 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/472/
+    uri: https://dev-ansible-tower3.example.com/api/v1/projects/472/
     body:
       encoding: US-ASCII
       string: ''
@@ -301,6 +86,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -331,7 +117,7 @@ http_interactions:
   recorded_at: Tue, 11 Apr 2017 14:53:09 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/472/update/
+    uri: https://dev-ansible-tower3.example.com/api/v1/projects/472/update/
     body:
       encoding: US-ASCII
       string: ''
@@ -342,6 +128,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -368,7 +155,7 @@ http_interactions:
   recorded_at: Tue, 11 Apr 2017 14:53:10 GMT
 - request:
     method: post
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/472/update/
+    uri: https://dev-ansible-tower3.example.com/api/v1/projects/472/update/
     body:
       encoding: UTF-8
       string: ''
@@ -381,6 +168,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 202
@@ -409,7 +197,7 @@ http_interactions:
   recorded_at: Tue, 11 Apr 2017 14:53:10 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/project_updates/641/
+    uri: https://dev-ansible-tower3.example.com/api/v1/project_updates/641/
     body:
       encoding: US-ASCII
       string: ''
@@ -420,6 +208,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -447,7 +236,7 @@ http_interactions:
   recorded_at: Tue, 11 Apr 2017 14:53:11 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/project_updates/641/
+    uri: https://dev-ansible-tower3.example.com/api/v1/project_updates/641/
     body:
       encoding: US-ASCII
       string: ''
@@ -458,6 +247,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -490,7 +280,7 @@ http_interactions:
   recorded_at: Tue, 11 Apr 2017 14:53:11 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/project_updates/641/
+    uri: https://dev-ansible-tower3.example.com/api/v1/project_updates/641/
     body:
       encoding: US-ASCII
       string: ''
@@ -501,6 +291,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -539,7 +330,7 @@ http_interactions:
   recorded_at: Tue, 11 Apr 2017 14:53:12 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/project_updates/641/
+    uri: https://dev-ansible-tower3.example.com/api/v1/project_updates/641/
     body:
       encoding: US-ASCII
       string: ''
@@ -550,6 +341,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -588,7 +380,7 @@ http_interactions:
   recorded_at: Tue, 11 Apr 2017 14:53:13 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/project_updates/641/
+    uri: https://dev-ansible-tower3.example.com/api/v1/project_updates/641/
     body:
       encoding: US-ASCII
       string: ''
@@ -599,6 +391,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -637,7 +430,7 @@ http_interactions:
   recorded_at: Tue, 11 Apr 2017 14:53:13 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/project_updates/641/
+    uri: https://dev-ansible-tower3.example.com/api/v1/project_updates/641/
     body:
       encoding: US-ASCII
       string: ''
@@ -648,6 +441,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -689,7 +483,7 @@ http_interactions:
   recorded_at: Tue, 11 Apr 2017 14:53:14 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/project_updates/641/
+    uri: https://dev-ansible-tower3.example.com/api/v1/project_updates/641/
     body:
       encoding: US-ASCII
       string: ''
@@ -700,6 +494,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -752,7 +547,7 @@ http_interactions:
   recorded_at: Tue, 11 Apr 2017 14:53:14 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/472/
+    uri: https://dev-ansible-tower3.example.com/api/v1/projects/472/
     body:
       encoding: US-ASCII
       string: ''
@@ -763,6 +558,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -793,7 +589,7 @@ http_interactions:
   recorded_at: Tue, 11 Apr 2017 14:53:15 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/472/playbooks/
+    uri: https://dev-ansible-tower3.example.com/api/v1/projects/472/playbooks/
     body:
       encoding: US-ASCII
       string: ''
@@ -804,6 +600,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -830,7 +627,7 @@ http_interactions:
   recorded_at: Tue, 11 Apr 2017 14:53:16 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/credentials/3/
+    uri: https://dev-ansible-tower3.example.com/api/v1/credentials/3/
     body:
       encoding: US-ASCII
       string: ''
@@ -841,6 +638,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200
@@ -870,7 +668,7 @@ http_interactions:
   recorded_at: Tue, 11 Apr 2017 14:53:16 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/472/
+    uri: https://dev-ansible-tower3.example.com/api/v1/projects/472/
     body:
       encoding: US-ASCII
       string: ''
@@ -881,6 +679,7 @@ http_interactions:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
       - "*/*"
+      Authorization: Basic <%= Base64.encode64("testuser:secret").chomp %>
   response:
     status:
       code: 200

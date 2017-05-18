@@ -1,4 +1,4 @@
-class CreateContainerResourceQuota < ActiveRecord::Migration
+class CreateContainerResourceQuota < ActiveRecord::Migration[4.2]
   def change
     create_table :container_quotas do |t|
       t.string     :name

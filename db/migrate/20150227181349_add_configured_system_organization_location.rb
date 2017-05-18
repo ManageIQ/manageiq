@@ -1,4 +1,4 @@
-class AddConfiguredSystemOrganizationLocation < ActiveRecord::Migration
+class AddConfiguredSystemOrganizationLocation < ActiveRecord::Migration[4.2]
   def change
     create_table :configuration_organizations do |t|
       t.string     :type

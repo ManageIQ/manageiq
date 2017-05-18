@@ -206,7 +206,7 @@ module Api
         return unless attr_accessible?(resource, attr)
         virtattr_accessor = virtual_attribute_accessor(type, attr)
         value = virtattr_accessor.nil? ? resource.public_send(attr) : send(virtattr_accessor, resource)
-        result = {attr => normalize_virtual(nil, attr, value, :ignore_nil => true)}
+        result = {attr => normalize_attr(attr, value)}
         # set nil vtype above to "#{type}/#{resource.id}/#{attr}" to support id normalization
         [value, result]
       end
@@ -215,7 +215,7 @@ module Api
         query_related_objects(base, resource, object_hash)
         return unless attr_accessible?(object_hash[base], attr)
         value = object_hash[base].public_send(attr)
-        result = {attr => normalize_virtual(nil, attr, value, :ignore_nil => true)}
+        result = {attr => normalize_attr(attr, value)}
         # set nil vtype above to "#{type}/#{resource.id}/#{base.tr('.', '/')}/#{attr}" to support id normalization
         base.split(".").reverse_each { |level| result = {level => result} }
         [value, result]
@@ -285,14 +285,14 @@ module Api
       def expand_actions(resource, json, type, opts)
         return unless render_actions(resource)
 
-        href   = json.attributes!["href"]
+        href = json.attributes!["href"]
         cspec = collection_config[type]
         aspecs = gen_action_spec_for_resources(cspec, opts[:is_subcollection], href, resource) if cspec
         add_actions(json, aspecs, type)
       end
 
       def add_actions(json, aspecs, type)
-        if aspecs && aspecs.size > 0
+        if aspecs && aspecs.any?
           json.actions do |js|
             aspecs.each { |action_spec| add_child js, normalize_hash(type, action_spec) }
           end

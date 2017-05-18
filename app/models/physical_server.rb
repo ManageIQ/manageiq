@@ -12,6 +12,8 @@ class PhysicalServer < ApplicationRecord
 
   has_one :host, :inverse_of => :physical_server
 
+  has_one :asset_details, :as => :resource, :dependent => :destroy
+
   VENDOR_TYPES = {
     # DB        Displayed
     "lenovo"  => "lenovo",

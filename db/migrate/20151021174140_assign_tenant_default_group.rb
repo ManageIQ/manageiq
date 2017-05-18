@@ -1,4 +1,4 @@
-class AssignTenantDefaultGroup < ActiveRecord::Migration
+class AssignTenantDefaultGroup < ActiveRecord::Migration[4.2]
   class Tenant < ActiveRecord::Base
     def add_default_miq_group
       tenant_group = ::AssignTenantDefaultGroup::MiqGroup.create_tenant_group(self)
@@ -30,7 +30,7 @@ class AssignTenantDefaultGroup < ActiveRecord::Migration
         :description      => "Tenant #{tenant.name} #{tenant.id} access",
         :group_type       => TENANT_GROUP,
         :sequence         => 1,
-        :guid             => MiqUUID.new_guid,
+        :guid             => SecureRandom.uuid,
         :miq_user_role_id => role.try(:id)
       ).find_or_create_by!(:tenant_id => tenant.id)
     end

@@ -1,4 +1,4 @@
-class AddContainerDefinitionSecurityContexts < ActiveRecord::Migration
+class AddContainerDefinitionSecurityContexts < ActiveRecord::Migration[4.2]
   def change
     add_column    :container_definitions, :privileged, :boolean
     add_column    :container_definitions, :run_as_user, :bigint

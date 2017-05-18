@@ -1,4 +1,4 @@
-class AddContainerImageDigest < ActiveRecord::Migration
+class AddContainerImageDigest < ActiveRecord::Migration[4.2]
   # https://github.com/docker/distribution/blob/v2.1.1/digest/digester.go#L15-L17
   SUPPORTED_DIGESTS = 'sha256', 'sha384', 'sha512'
 

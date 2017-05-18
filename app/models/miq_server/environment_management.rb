@@ -55,7 +55,7 @@ module MiqServer::EnvironmentManagement
           require 'MiqSockUtil'
           ipaddr      = MiqSockUtil.getIpAddr
           hostname    = MiqSockUtil.getFullyQualifiedDomainName
-          mac_address = MiqUUID.mac_address.dup
+          mac_address = UUIDTools::UUID.mac_address.dup
         end
       rescue
       end
@@ -88,6 +88,7 @@ module MiqServer::EnvironmentManagement
       MiqUiWorker.install_apache_proxy_config
       MiqWebServiceWorker.install_apache_proxy_config
       MiqWebsocketWorker.install_apache_proxy_config
+      MiqCockpitWsWorker.install_apache_proxy_config
 
       # Because adding balancer members does a validation of the configuration
       # files and these files try to load the redirect files among others,
@@ -104,25 +105,12 @@ module MiqServer::EnvironmentManagement
   #
   # Apache
   #
-  def queue_restart_apache
-    MiqQueue.put_unless_exists(
-      :class_name  => 'MiqServer',
-      :instance_id => id,
-      :method_name => 'restart_apache',
-      :queue_name  => 'miq_server',
-      :zone        => zone.name,
-      :server_guid => guid
-    ) do |msg|
-      _log.info("Server: [#{id}] [#{name}], there is already a prior request to restart apache, skipping...") unless msg.nil?
-    end
-  end
-
-  def restart_apache
-    MiqApache::Control.restart(false)
+  def start_apache
+    MiqApache::Control.start
   end
 
   def stop_apache
-    MiqApache::Control.stop(false)
+    MiqApache::Control.stop
   end
 
   def disk_usage_threshold

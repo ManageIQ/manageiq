@@ -1,4 +1,4 @@
-class RemoveConfigurations < ActiveRecord::Migration
+class RemoveConfigurations < ActiveRecord::Migration[4.2]
   def up
     drop_table :configurations
   end

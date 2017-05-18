@@ -1,4 +1,4 @@
-class AddOpenstackFieldsToCloudNetworks < ActiveRecord::Migration
+class AddOpenstackFieldsToCloudNetworks < ActiveRecord::Migration[4.2]
   def change
     add_column :cloud_networks, :status, :string
     add_column :cloud_networks, :enabled, :boolean

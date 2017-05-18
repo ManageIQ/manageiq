@@ -1,4 +1,4 @@
-class CreateResourceGroups < ActiveRecord::Migration
+class CreateResourceGroups < ActiveRecord::Migration[4.2]
   def up
     create_table :resource_groups do |t|
       t.string :name

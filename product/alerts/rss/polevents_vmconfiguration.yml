@@ -29,7 +29,8 @@ search_method:
 search_conditions: "event_type = 'vm_create' OR event_type = 'vm_clone' OR event_type = 'vm_clone_start' OR event_type = 'vm_template' OR event_type = 'vm_reconfigure' OR event_type = 'request_vm_destroy'"
 limit_to_time:
 limit_to_count: 
-orderby: "timestamp DESC"
+orderby:
+  :timestamp: :desc
 
 # tags_include: any or all
 tag_ns: 

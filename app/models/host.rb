@@ -1334,13 +1334,11 @@ class Host < ApplicationRecord
   end
 
   def scan(userid = "system", options = {})
-    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
     _log.info("Requesting scan of #{log_target}")
     check_policy_prevent(:request_host_scan, :scan_queue, userid, options)
   end
 
   def scan_queue(userid = 'system', _options = {})
-    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
     _log.info("Queuing scan of #{log_target}")
 
     task = MiqTask.create(:name => "SmartState Analysis for '#{name}' ", :userid => userid)
@@ -1362,8 +1360,6 @@ class Host < ApplicationRecord
       task = MiqTask.find_by(:id => taskid)
       task.state_active if task
     end
-
-    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
 
     _log.info("Scanning #{log_target}...")
 

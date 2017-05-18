@@ -4,7 +4,7 @@ describe MiqScheduleWorker::Runner do
       @miq_server = EvmSpecHelper.local_miq_server(:is_master => true)
       @zone = @miq_server.zone
 
-      worker_guid = MiqUUID.new_guid
+      worker_guid = SecureRandom.uuid
       @worker = FactoryGirl.create(:miq_schedule_worker, :guid => worker_guid, :miq_server_id => @miq_server.id)
 
       allow_any_instance_of(MiqScheduleWorker::Runner).to receive(:initialize_rufus)

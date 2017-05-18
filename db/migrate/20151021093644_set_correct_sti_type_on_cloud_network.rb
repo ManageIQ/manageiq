@@ -1,4 +1,4 @@
-class SetCorrectStiTypeOnCloudNetwork < ActiveRecord::Migration
+class SetCorrectStiTypeOnCloudNetwork < ActiveRecord::Migration[4.2]
   CLOUD_TEMPLATE_CLASS = "ManageIQ::Providers::Openstack::CloudManager::Template".freeze
   CLOUD_PUBLIC_CLASS   = "ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public".freeze
   CLOUD_PRIVATE_CLASS  = "ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Private".freeze

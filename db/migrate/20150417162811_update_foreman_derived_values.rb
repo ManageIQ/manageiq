@@ -1,4 +1,4 @@
-class UpdateForemanDerivedValues < ActiveRecord::Migration
+class UpdateForemanDerivedValues < ActiveRecord::Migration[4.2]
   def change
     add_column :configured_systems, :operating_system_flavor_id,     :bigint
     add_column :configured_systems, :customization_script_medium_id, :bigint

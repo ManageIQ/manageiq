@@ -16,11 +16,11 @@ class PrincePdfGenerator < PdfGenerator
   def pdf_from_string(html_string, stylesheet)
     options = {
       :params  => {
-        :input    => "html",
-        :style    => stylesheet,
-        :log      => Rails.root.join("log/prince.log"),
-        :output   => "-", # Write to stdout
-        "-"       => nil  # Read from stdin
+        :input  => "html",
+        :style  => stylesheet,
+        :log    => Rails.root.join("log", "prince.log"),
+        :output => "-", # Write to stdout
+        "-"     => nil  # Read from stdin
       },
       :in_data => html_string
     }

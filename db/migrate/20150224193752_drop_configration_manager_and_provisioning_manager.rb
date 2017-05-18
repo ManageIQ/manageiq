@@ -1,4 +1,4 @@
-class DropConfigrationManagerAndProvisioningManager < ActiveRecord::Migration
+class DropConfigrationManagerAndProvisioningManager < ActiveRecord::Migration[4.2]
   def up
     remove_index :configuration_managers, :provider_id
     drop_table   :configuration_managers

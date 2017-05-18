@@ -1,4 +1,4 @@
-class DefaultProviderVerifySsl < ActiveRecord::Migration
+class DefaultProviderVerifySsl < ActiveRecord::Migration[4.2]
   class Provider < ActiveRecord::Base
     self.inheritance_column = :_type_disabled
   end

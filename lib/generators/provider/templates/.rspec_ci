@@ -3,3 +3,4 @@
 --color
 --order random
 --profile 25
+--exclude-pattern "spec/manageiq/**/*_spec.rb"

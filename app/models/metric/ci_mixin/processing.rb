@@ -5,7 +5,6 @@ module Metric::CiMixin::Processing
     end
 
     log_header = "[#{interval_name}]"
-    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
 
     interval_orig = interval_name
     interval_name = 'hourly' if interval_name == 'historical'

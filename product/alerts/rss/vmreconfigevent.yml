@@ -20,9 +20,11 @@ search_method:
 search_conditions: "event_type = 'ReconfigVM_Task_Complete'"
 limit_to_time: 
 limit_to_count: 
-orderby: "created_on DESC"
 
 # tags_include: any or all
 tag_ns: 
 tags_include: 
 tags: 
+orderby:
+  :created_on: :desc
+

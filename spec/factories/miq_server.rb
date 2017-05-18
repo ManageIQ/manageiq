@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :miq_server do
-    guid            { MiqUUID.new_guid }
+    guid            { SecureRandom.uuid }
     zone            { FactoryGirl.build(:zone) }
     sequence(:name) { |n| "miq_server_#{seq_padded_for_sorting(n)}" }
     last_heartbeat  { Time.now.utc }

@@ -62,8 +62,6 @@
   - infra_topology
   - host
   - infra_networking
-  - job_all_smartproxy
-  - job_my_smartproxy
   - miq_ae_class_explorer
   - miq_ae_customization_explorer
   - miq_ae_class_import_export
@@ -142,7 +140,6 @@
   - host_perf
   - host_tag
   - host_timeline
-  - job_my_smartproxy
   - storage_manager_new
   - storage_manager_edit
   - storage_manager_refresh_inventory
@@ -257,7 +254,6 @@
   - host_perf
   - host_tag
   - host_timeline
-  - job_my_smartproxy
   - storage_manager_new
   - storage_manager_edit
   - storage_manager_refresh_inventory
@@ -445,7 +441,6 @@
   - host_perf
   - host_tag
   - host_timeline
-  - job_my_smartproxy
   - storage_manager_new
   - storage_manager_edit
   - storage_manager_refresh_inventory
@@ -569,7 +564,6 @@
   - host_perf
   - host_tag
   - host_timeline
-  - job_my_smartproxy
   - storage_manager_show
   - storage_manager_show_list
   - my_settings_default_views
@@ -670,7 +664,6 @@
   - host_perf
   - host_tag
   - host_timeline
-  - job_my_smartproxy
   - storage_manager_show
   - storage_manager_show_list
   - miq_task_my_ui
@@ -768,7 +761,6 @@
   - host_perf
   - host_tag
   - host_timeline
-  - job_my_smartproxy
   - storage_manager_show
   - storage_manager_show_list
   - miq_task_my_ui
@@ -1029,8 +1021,6 @@
   - ems_infra
   - ems_physical_infra
   - host
-  - job_all_smartproxy
-  - job_my_smartproxy
   - load_balancer
   - miq_ae_class_explorer
   - miq_ae_customization_explorer
@@ -1099,8 +1089,6 @@
   - ems_infra
   - ems_physical_infra
   - host
-  - job_all_smartproxy
-  - job_my_smartproxy
   - miq_ae_class_explorer
   - miq_ae_customization_explorer
   - miq_ae_class_import_export

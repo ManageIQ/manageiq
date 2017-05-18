@@ -1,4 +1,4 @@
-class AddResourceGroupIdToVms < ActiveRecord::Migration
+class AddResourceGroupIdToVms < ActiveRecord::Migration[4.2]
   def up
     add_column :vms, :resource_group_id, :bigint
   end

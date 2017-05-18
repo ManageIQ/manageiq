@@ -6,7 +6,7 @@ module ManagerRefresh
                 :internal_attributes, :delete_method, :data, :data_index, :dependency_attributes, :manager_ref,
                 :association, :complete, :update_only, :transitive_dependency_attributes, :custom_manager_uuid,
                 :custom_db_finder, :check_changed, :arel, :builder_params, :loaded_references, :db_data_index,
-                :inventory_object_attributes
+                :inventory_object_attributes, :name
 
     delegate :each, :size, :to => :to_a
 
@@ -280,11 +280,13 @@ module ManagerRefresh
     #             inventory_object[:label] = inventory_object[:name]
     #           So by using inventory_object_attributes, we will be guarding the allowed attributes and will have an
     #           explicit list of allowed attributes, that can be used also for documentation purposes.
+    # @param name [Symbol] A unique name of the InventoryCollection under a Persister. If not provided, the :association
+    #        attribute is used. Providing either :name or :association is mandatory.
     def initialize(model_class: nil, manager_ref: nil, association: nil, parent: nil, strategy: nil, saved: nil,
                    custom_save_block: nil, delete_method: nil, data_index: nil, data: nil, dependency_attributes: nil,
                    attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil,
                    check_changed: nil, custom_manager_uuid: nil, custom_db_finder: nil, arel: nil, builder_params: {},
-                   inventory_object_attributes: nil)
+                   inventory_object_attributes: nil, name: nil)
       @model_class           = model_class
       @manager_ref           = manager_ref || [:ems_ref]
       @custom_manager_uuid   = custom_manager_uuid
@@ -304,6 +306,10 @@ module ManagerRefresh
       @complete              = complete.nil? ? true : complete
       @update_only           = update_only.nil? ? false : update_only
       @builder_params        = builder_params
+      @name                  = name || association
+
+      raise "You have to pass either :name or :association argument to .new of #{self}" if @name.blank?
+
       @inventory_object_attributes = inventory_object_attributes
 
       @attributes_blacklist             = Set.new
@@ -327,6 +333,49 @@ module ManagerRefresh
 
     def to_hash
       data_index
+    end
+
+    def from_raw_data(inventory_objects_data, available_inventory_collections)
+      inventory_objects_data.each do |inventory_object_data|
+        hash = inventory_object_data.each_with_object({}) do |(key, value), result|
+          result[key.to_sym] = if value.kind_of?(Array)
+                                 value.map { |x| from_raw_value(x, available_inventory_collections) }
+                               else
+                                 from_raw_value(value, available_inventory_collections)
+                               end
+        end
+        build(hash)
+      end
+    end
+
+    def from_raw_value(value, available_inventory_collections)
+      if value.kind_of?(Hash) && (value['type'] || value[:type]) == "ManagerRefresh::InventoryObjectLazy"
+        value.transform_keys!(&:to_s)
+      end
+
+      if value.kind_of?(Hash) && value['type'] == "ManagerRefresh::InventoryObjectLazy"
+        inventory_collection = available_inventory_collections[value['inventory_collection_name'].try(:to_sym)]
+        raise "Couldn't build lazy_link #{value} the inventory_collection_name was not found" if inventory_collection.blank?
+        inventory_collection.lazy_find(value['ems_ref'], :key => value['key'], :default => value['default'])
+      else
+        value
+      end
+    end
+
+    def to_raw_data
+      data.map do |inventory_object|
+        inventory_object.data.transform_values do |value|
+          if inventory_object_lazy?(value)
+            value.to_raw_lazy_relation
+          elsif value.kind_of?(Array) && (inventory_object_lazy?(value.compact.first) || inventory_object?(value.compact.first))
+            value.compact.map(&:to_raw_lazy_relation)
+          elsif inventory_object?(value)
+            value.to_raw_lazy_relation
+          else
+            value
+          end
+        end
+      end
     end
 
     def process_strategy(strategy_name)
@@ -376,6 +425,11 @@ module ManagerRefresh
 
     def data_collection_finalized?
       data_collection_finalized
+    end
+
+    def supports_sti?
+      @supports_sti_cache = model_class.column_names.include?("type") if @supports_sti_cache.nil?
+      @supports_sti_cache
     end
 
     def <<(inventory_object)
@@ -474,8 +528,15 @@ module ManagerRefresh
     end
 
     def build(hash)
-      hash = hash.merge(builder_params)
+      hash = builder_params.merge(hash)
       inventory_object = new_inventory_object(hash)
+
+      uuid = inventory_object.manager_uuid
+      # Each InventoryObject must be able to build an UUID, return nil if it can't
+      return nil if uuid.blank?
+      # Return existing InventoryObject if we have it
+      return data_index[uuid] if data_index[uuid]
+      # Store new InventoryObject and return it
       push(inventory_object)
       inventory_object
     end

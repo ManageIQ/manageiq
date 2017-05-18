@@ -1,4 +1,4 @@
-class MigrateMiqDatabaseRegistrationOrganizationDisplayNameOutOfReserves < ActiveRecord::Migration
+class MigrateMiqDatabaseRegistrationOrganizationDisplayNameOutOfReserves < ActiveRecord::Migration[4.2]
   class MiqDatabase < ActiveRecord::Base
     include ReservedMixin
     include MigrationStubHelper # NOTE: Must be included after other mixins

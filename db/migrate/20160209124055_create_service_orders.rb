@@ -1,4 +1,4 @@
-class CreateServiceOrders < ActiveRecord::Migration
+class CreateServiceOrders < ActiveRecord::Migration[4.2]
   def change
     create_table :service_orders do |t|
       t.string   :name

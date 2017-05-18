@@ -586,11 +586,11 @@ describe ServiceTemplate do
           :instance_type           => [flavor.id, flavor.name],
           :src_ems_id              => [ems.id, ems.name],
           :provision               => {
-            :fqname    => ra1.fqname,
+            :fqname    => 'a1/b1/c1',
             :dialog_id => nil
           },
           :reconfigure             => {
-            :fqname    => ra3.fqname,
+            :fqname    => 'x1/y1/z1',
             :dialog_id => service_dialog.id
           }
         }
@@ -608,7 +608,9 @@ describe ServiceTemplate do
       # Removes Retirement / Adds Reconfigure
       expect(updated.resource_actions.pluck(:action)).to match_array(%w(Provision Reconfigure))
       expect(updated.resource_actions.first.dialog_id).to be_nil # Removes the dialog from Provision
+      expect(updated.resource_actions.first.fqname).to eq('/a1/b1/c1')
       expect(updated.resource_actions.last.dialog).to eq(service_dialog)
+      expect(updated.resource_actions.last.fqname).to eq('/x1/y1/z1')
       expect(updated.name).to eq('Updated Template Name')
       expect(updated.service_resources.first.resource.source_id).to eq(new_vm.id) # Validate request update
       expect(updated.config_info).to eq(updated_catalog_item_options[:config_info])
@@ -644,22 +646,35 @@ describe ServiceTemplate do
     end
   end
 
-  describe "#provision_request" do
-    it "provision's a service template " do
-      user = FactoryGirl.create(:user, :userid => "barney")
-      resource_action = FactoryGirl.create(:resource_action, :action => "Provision")
-      service_template = FactoryGirl.create(:service_template,
-                                            :resource_actions => [resource_action])
-      hash = {:target => service_template, :initiator => 'control'}
-      workflow = instance_double(ResourceActionWorkflow)
+  context "#provision_request" do
+    let(:user) { FactoryGirl.create(:user, :userid => "barney") }
+    let(:resource_action) { FactoryGirl.create(:resource_action, :action => "Provision") }
+    let(:service_template) { FactoryGirl.create(:service_template, :resource_actions => [resource_action]) }
+    let(:hash) { {:target => service_template, :initiator => 'control'} }
+    let(:workflow) { instance_double(ResourceActionWorkflow) }
+    let(:miq_request) { FactoryGirl.create(:service_template_provision_request) }
+    let(:good_result) { { :errors => [], :request => miq_request } }
+    let(:bad_result) { { :errors => %w(Error1 Error2), :request => miq_request } }
+    let(:arg1) { {'ordered_by' => 'fred'} }
+    let(:arg2) { {:initiator => 'control'} }
+
+    it "provision's a service template without errors" do
       expect(ResourceActionWorkflow).to(receive(:new)
         .with({}, user, resource_action, hash).and_return(workflow))
-      expect(workflow).to receive(:submit_request)
+      expect(workflow).to receive(:submit_request).and_return(good_result)
       expect(workflow).to receive(:set_value).with('ordered_by', 'fred')
       expect(workflow).to receive(:request_options=).with(:initiator => 'control')
 
-      service_template.provision_request(user, {'ordered_by' => 'fred'},
-                                         {:initiator => 'control'})
+      expect(service_template.provision_request(user, arg1, arg2)).to eq(miq_request)
+    end
+
+    it "provision's a service template with errors" do
+      expect(ResourceActionWorkflow).to(receive(:new)
+        .with({}, user, resource_action, hash).and_return(workflow))
+      expect(workflow).to receive(:submit_request).and_return(bad_result)
+      expect(workflow).to receive(:set_value).with('ordered_by', 'fred')
+      expect(workflow).to receive(:request_options=).with(:initiator => 'control')
+      expect { service_template.provision_request(user, arg1, arg2) }.to raise_error(RuntimeError)
     end
   end
 end

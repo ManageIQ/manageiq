@@ -20,7 +20,7 @@ when 'vm'
 
   descs = []
   vms.each do
-    descs << "Snapshot for scan job: #{MiqUUID.new_guid}, EVM Server build: #{Vmdb::Appliance.BUILD}  Server Time: #{Time.now.utc.iso8601}"
+    descs << "Snapshot for scan job: #{SecureRandom.uuid}, EVM Server build: #{Vmdb::Appliance.BUILD}  Server Time: #{Time.now.utc.iso8601}"
   end
 when 'job'
   jobs = Job.where(:id => ids)

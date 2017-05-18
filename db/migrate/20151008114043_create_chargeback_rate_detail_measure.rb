@@ -1,4 +1,4 @@
-class CreateChargebackRateDetailMeasure < ActiveRecord::Migration
+class CreateChargebackRateDetailMeasure < ActiveRecord::Migration[4.2]
   def change
     create_table :chargeback_rate_detail_measures do |t|
       t.string :name

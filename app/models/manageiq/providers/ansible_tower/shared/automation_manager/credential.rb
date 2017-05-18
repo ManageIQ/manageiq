@@ -16,9 +16,11 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Credential
       params
     end
 
-    def hide_secrets(params)
-      params.each_with_object({}) do |attr, h|
-        h[attr.first] = self::API_ATTRIBUTES[attr.first] && self::API_ATTRIBUTES[attr.first][:type] == :password ? '******' : attr.second
+    def process_secrets(params, decrypt = false)
+      if decrypt
+        Vmdb::Settings.decrypt_passwords!(params)
+      else
+        Vmdb::Settings.encrypt_passwords!(params)
       end
     end
   end
@@ -30,4 +32,6 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Credential
   COMMON_ATTRIBUTES = {}.freeze
   EXTRA_ATTRIBUTES = {}.freeze
   API_ATTRIBUTES = COMMON_ATTRIBUTES.merge(EXTRA_ATTRIBUTES).freeze
+
+  FRIENDLY_NAME = 'Ansible Tower Credential'.freeze
 end

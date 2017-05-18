@@ -1,4 +1,4 @@
-class CreateCloudTenants < ActiveRecord::Migration
+class CreateCloudTenants < ActiveRecord::Migration[4.2]
   def change
     create_table :cloud_tenants do |t|
       t.string  :name

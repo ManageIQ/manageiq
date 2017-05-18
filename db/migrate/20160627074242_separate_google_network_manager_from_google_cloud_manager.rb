@@ -41,7 +41,7 @@ class SeparateGoogleNetworkManagerFromGoogleCloudManager < ActiveRecord::Migrati
         :type          => 'ManageIQ::Providers::Google::NetworkManager',
         :name          => "#{cloud_manager.name} Network Manager",
         :parent_ems_id => cloud_manager.id,
-        :guid          => MiqUUID.new_guid)
+        :guid          => SecureRandom.uuid)
 
       affected_classes.each do |network_model_class|
         network_model_class

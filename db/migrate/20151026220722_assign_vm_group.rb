@@ -1,4 +1,4 @@
-class AssignVmGroup < ActiveRecord::Migration
+class AssignVmGroup < ActiveRecord::Migration[4.2]
   class Tenant < ActiveRecord::Base
     def self.root_tenant
       where(:ancestry => nil).first

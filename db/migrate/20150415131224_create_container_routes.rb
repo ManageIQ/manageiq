@@ -1,4 +1,4 @@
-class CreateContainerRoutes < ActiveRecord::Migration
+class CreateContainerRoutes < ActiveRecord::Migration[4.2]
   def up
     create_table :container_routes do |t|
       t.string     :ems_ref

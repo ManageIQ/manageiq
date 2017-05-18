@@ -1,4 +1,4 @@
-class ConfirmAllClassRenames < ActiveRecord::Migration
+class ConfirmAllClassRenames < ActiveRecord::Migration[4.2]
   include MigrationHelper
 
   NAME_MAP = Hash[*%w(

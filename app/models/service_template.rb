@@ -26,6 +26,7 @@ class ServiceTemplate < ApplicationRecord
 
   RESOURCE_ACTION_UPDATE_ATTRS = [:dialog,
                                   :dialog_id,
+                                  :fqname,
                                   :configuration_template,
                                   :configuration_template_id,
                                   :configuration_template_type].freeze
@@ -375,7 +376,9 @@ class ServiceTemplate < ApplicationRecord
   private_class_method :create_from_options
 
   def provision_request(user, options = nil, request_options = nil)
-    provision_workflow(user, options, request_options).submit_request
+    result = provision_workflow(user, options, request_options).submit_request
+    raise result[:errors].join(", ") if result[:errors].any?
+    result[:request]
   end
 
   def provision_workflow(user, dialog_options = nil, request_options = nil)
