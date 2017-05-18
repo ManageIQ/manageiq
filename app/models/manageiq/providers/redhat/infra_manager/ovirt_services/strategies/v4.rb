@@ -248,6 +248,28 @@ module ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies
       _log.info("#{log_header} Completed.")
     end
 
+    def advertised_images
+      ext_management_system.with_provider_connection(VERSION_HASH) do |ems_service|
+        query = { :search => "status=#{OvirtSDK4::DataCenterStatus::UP}" }
+        data_centers = ems_service.system_service.data_centers_service.list(:query => query)
+        iso_sd = nil
+        data_centers.each do |dc|
+          iso_sd = ems_service.follow_link(dc.storage_domains).detect do |sd|
+            sd.type == OvirtSDK4::StorageDomainType::ISO && sd.status == OvirtSDK4::StorageDomainStatus::ACTIVE
+          end
+          break iso_sd if iso_sd
+        end
+        return [] unless iso_sd
+        sd_service = ems_service.system_service.storage_domains_service.storage_domain_service(iso_sd.id)
+        iso_images = sd_service.files_service.list
+        iso_images.collect(&:name)
+      end
+    rescue OvirtSDK4::Error => err
+      name = ext_management_system.try(:name)
+      _log.error("Error Getting ISO Images on ISO Datastore on Management System <#{name}>: #{err.class.name}: #{err}")
+      raise ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Error, err
+    end
+
     class VmProxyDecorator < SimpleDelegator
       attr_reader :service
       def initialize(vm, service)

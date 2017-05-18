@@ -107,10 +107,10 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     @rhevm_inventory ||= connect(:service => "Inventory")
   end
 
-  def ovirt_services
+  def ovirt_services(args = {})
     @ovirt_services ||= begin
                           ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Builder.new(self)
-                                                                                           .build.new(:ems => self)
+                                                                                           .build(args).new(:ems => self)
                         end
   end
 

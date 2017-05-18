@@ -190,6 +190,16 @@ module ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies
       _log.info("#{log_header} Completed.")
     end
 
+    def advertised_images
+      ext_management_system.with_provider_connection do |rhevm|
+        rhevm.iso_images.collect { |image| image[:name] }
+      end
+    rescue Ovirt::Error => err
+      name = ext_management_system.try(:name)
+      _log.error("Error Getting ISO Images on ISO Datastore on Management System <#{name}>: #{err.class.name}: #{err}")
+      raise ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Error, err
+    end
+
     class NicsDecorator < SimpleDelegator
       def name
         self[:name]
