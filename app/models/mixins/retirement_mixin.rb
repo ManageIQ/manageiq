@@ -11,7 +11,7 @@ module RetirementMixin
         object = find_by(:id => id)
         object.retire(options) if object.respond_to?(:retire)
       end
-      MiqQueue.put(:class_name => base_model.name, :method_name => "retirement_check")
+      MiqQueue.put_simple(:class_name => base_model.name, :method_name => "retirement_check")
     end
   end
 

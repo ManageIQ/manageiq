@@ -109,7 +109,7 @@ module ScanningMixin
   end
 
   def scan_queue(userid = "system", options = {})
-    MiqQueue.put(
+    MiqQueue.put_simple(
       :class_name  => self.class.base_class.name,
       :instance_id => id,
       :method_name => "scan",

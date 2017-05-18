@@ -180,6 +180,13 @@ class MiqQueue < ApplicationRecord
     put(*args)
   end
 
+  # The work can be done without restrictions on role, zone, server
+  # Needs to be run right away, no delay and no expiry
+  # There are also no callbacks, fire and forget
+  def self.put_simple(*args)
+    put(*args)
+  end
+
   def unget(options = {})
     update_attributes!(options.merge(:state => STATE_READY, :handler => nil))
     @delivered_on = nil
