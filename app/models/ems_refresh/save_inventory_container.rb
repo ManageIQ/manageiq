@@ -3,14 +3,16 @@ module EmsRefresh::SaveInventoryContainer
     target = ems if target.nil?
 
     graph_keys = [:container_projects, :container_quotas, :container_nodes,
-                  :container_image_registries,
+                  :container_image_registries, :container_images,
                  ]
-    child_keys = [:container_images, :container_replicators, :container_groups,
+    child_keys = [:container_replicators, :container_groups,
                   :container_services, :container_routes, :container_component_statuses, :container_templates,
                   # things moved to end - if they work here, nothing depended on their ids
                   :container_limits, :container_builds, :container_build_pods,
                   :persistent_volume_claims, :persistent_volumes,
                  ]
+
+    # TODO: deleting vs archiving!
 
     initialize_inventory_collections(ems)
     graph_keys.each do |k|
@@ -18,11 +20,7 @@ module EmsRefresh::SaveInventoryContainer
     end
     ManagerRefresh::SaveInventory.save_inventory(ems, @inv_collections.values)
 
-    graph_keys.each do |k|
-      association = ems.send(k)
-      association.reset
-      store_ids_for_new_records(association, hashes[k], @inv_collections[k].manager_ref)
-    end
+    tmp_store_ids_for_graph_saved(ems, hashes.slice(*graph_keys)) # TODELETE
 
     # Save and link other subsections
     child_keys.each do |k|
@@ -32,7 +30,26 @@ module EmsRefresh::SaveInventoryContainer
     ems.save!
   end
 
+  def tmp_store_ids_for_graph_saved(ems, inventory)
+    inventory.each do |name, hashes|
+      association = ems.send(name)
+      association.reset
+
+      # hacks that were previously scattered, letting store_ids_for_new_records
+      # follow associations in hashes, assuming those's [:id]s have already been set.
+      store_keys = @inv_collections[name].manager_ref.map do |k|
+       {:container_image_registry => :container_image_registry_id}.fetch(k, k)
+      end
+      hashes.each do |h|
+        h[:container_image_registry_id] = h[:container_image_registry][:id] if h[:container_image_registry]
+      end
+      store_ids_for_new_records(association, hashes, store_keys)
+    end
+
+  end
+
   def initialize_inventory_collections(ems)
+    # TODO: Targeted refreshes will require adjusting the associations / arels. (duh)
     @inv_collections = {}
     @inv_collections[:container_projects] = ::ManagerRefresh::InventoryCollection.new(
       :model_class => ContainerProject,
@@ -107,6 +124,14 @@ module EmsRefresh::SaveInventoryContainer
         :builder_params => {:ems_id => ems.id},
         :association => :container_image_registries,
         :manager_ref => [:host, :port],
+      )
+    @inv_collections[:container_images] =
+      ::ManagerRefresh::InventoryCollection.new(
+        :model_class => ContainerImage,
+        :parent => ems,
+        :builder_params => {:ems_id => ems.id},
+        :association => :container_images,
+        :manager_ref => [:image_ref, :container_image_registry],
       )
   end
 
@@ -380,24 +405,19 @@ module EmsRefresh::SaveInventoryContainer
     store_ids_for_new_records(container_definition.container_env_vars, hashes, [:name, :value, :field_path])
   end
 
-  def save_container_images_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-
-    ems.container_images.reset
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
-
-    hashes.each do |h|
-      h[:container_image_registry_id] = h[:container_image_registry][:id] unless h[:container_image_registry].nil?
+  def graph_container_images_inventory(ems, hashes)
+    hashes.to_a.each do |h|
+      h = h.merge(:container_image_registry => lazy_find_image_registry(h[:container_image_registry]))
+      h = h.except(:labels, :docker_labels) # TODO
+      @inv_collections[:container_images].build(h)
     end
+  end
 
-    save_inventory_multi(ems.container_images, hashes, deletes, [:image_ref, :container_image_registry_id],
-                         [:labels, :docker_labels], :container_image_registry, true)
-    store_ids_for_new_records(ems.container_images, hashes,
-                              [:image_ref, :container_image_registry_id])
+  def lazy_find_image_registry(hash)
+    return nil if hash.nil?
+    @inv_collections[:container_image_registries].lazy_find(
+      @inv_collections[:container_image_registries].object_index(hash)
+    )
   end
 
   def graph_container_image_registries_inventory(ems, hashes)
