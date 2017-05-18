@@ -4,8 +4,9 @@ module EmsRefresh::SaveInventoryContainer
 
     graph_keys = [:container_projects, :container_quotas, :container_nodes,
                   :container_image_registries, :container_images,
+                  :container_groups,
                  ]
-    child_keys = [:container_replicators, :container_groups,
+    child_keys = [:container_replicators,
                   :container_services, :container_routes, :container_component_statuses, :container_templates,
                   # things moved to end - if they work here, nothing depended on their ids
                   :container_limits, :container_builds, :container_build_pods,
@@ -37,13 +38,13 @@ module EmsRefresh::SaveInventoryContainer
 
       # hacks that were previously scattered, letting store_ids_for_new_records
       # follow associations in hashes, assuming those's [:id]s have already been set.
-      store_keys = @inv_collections[name].manager_ref.map do |k|
+      find_keys = @inv_collections[name].manager_ref.map do |k|
        {:container_image_registry => :container_image_registry_id}.fetch(k, k)
       end
       hashes.each do |h|
         h[:container_image_registry_id] = h[:container_image_registry][:id] if h[:container_image_registry]
       end
-      store_ids_for_new_records(association, hashes, store_keys)
+      store_ids_for_new_records(association, hashes, find_keys)
     end
 
   end
@@ -89,8 +90,8 @@ module EmsRefresh::SaveInventoryContainer
       :manager_ref => [:container_entity, :name],
     )
 
-    # polymorphic child of ContainerNode & ContainerImage
-    # TODO these are dumb, find way to share same InventoryCollections via both.
+    # polymorphic child of ContainerNode & ContainerImage,
+    # but refresh only sets it on nodes.
     @inv_collections[:container_node_computer_systems] =
       ::ManagerRefresh::InventoryCollection.new(
         :model_class => ComputerSystem,
@@ -132,6 +133,28 @@ module EmsRefresh::SaveInventoryContainer
         :builder_params => {:ems_id => ems.id},
         :association => :container_images,
         :manager_ref => [:image_ref, :container_image_registry],
+      )
+
+    @inv_collections[:container_groups] =
+      ::ManagerRefresh::InventoryCollection.new(
+        :model_class => ContainerGroup,
+        :parent => ems,
+        :builder_params => {:ems_id => ems.id},
+        :association => :container_groups,
+      )
+    @inv_collections[:container_definitions] =
+      ::ManagerRefresh::InventoryCollection.new(
+        :model_class => ContainerDefinition,
+        :parent => ems,
+        :builder_params => {:ems_id => ems.id},
+        :association => :container_definitions,
+      )
+    @inv_collections[:containers] =
+      ::ManagerRefresh::InventoryCollection.new(
+        :model_class => Container,
+        :parent => ems,
+        :builder_params => {:ems_id => ems.id},
+        :association => :containers,
       )
   end
 
@@ -318,51 +341,33 @@ module EmsRefresh::SaveInventoryContainer
     store_ids_for_new_records(ems.container_services, hashes, :ems_ref)
   end
 
-  def save_container_groups_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-    target = ems if target.nil?
-
-    ems.container_groups.reset
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
-
-    hashes.each do |h|
+  def graph_container_groups_inventory(ems, hashes)
+    hashes.to_a.each do |h|
+      children = h.extract!(  # TODO save all
+        :container_definitions, :containers, :labels, :tags,
+        :node_selector_parts, :container_conditions, :container_volumes,
+      )
+      h = h.except(  # TODO extra_keys but need links?
+        :container_node, :container_replicator, :project, :namespace, :build_pod_name)
+      cg = @inv_collections[:container_groups].build(h)
+      graph_container_definitions_inventory(cg, children[:container_definitions])
+      # TODO
       h[:container_node_id] = h.fetch_path(:container_node, :id)
       h[:container_replicator_id] = h.fetch_path(:container_replicator, :id)
       h[:container_project_id] = h.fetch_path(:project, :id)
       h[:container_build_pod_id] = ems.container_build_pods.find_by(:name =>
         h[:build_pod_name]).try(:id)
     end
-
-    save_inventory_multi(ems.container_groups, hashes, deletes, [:ems_ref],
-                         [:container_definitions, :containers, :labels, :tags,
-                          :node_selector_parts, :container_conditions, :container_volumes],
-                         [:container_node, :container_replicator, :project, :namespace, :build_pod_name],
-                         true)
-    store_ids_for_new_records(ems.container_groups, hashes, :ems_ref)
   end
 
-  def save_container_definitions_inventory(container_group, hashes, target = nil)
-    return if hashes.nil?
-
-    container_group.container_definitions.reset
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
-
-    hashes.each do |h|
+  def graph_container_definitions_inventory(container_group, hashes)
+    hashes.to_a.each do |h|
+      h = h.except(  # TODO children
+        :container_port_configs, :container_env_vars, :security_context, :container
+      )
       h[:ems_id] = container_group[:ems_id]
+      @inv_collections[:container_definitions].build(h.merge(:container_group => container_group))
     end
-
-    save_inventory_multi(container_group.container_definitions, hashes, deletes, [:ems_ref],
-                         [:container_port_configs, :container_env_vars, :security_context, :container],
-                         [], true)
-    store_ids_for_new_records(container_group.container_definitions, hashes, :ems_ref)
   end
 
   def save_container_port_configs_inventory(container_definition, hashes, target = nil)
