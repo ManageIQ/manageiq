@@ -19,6 +19,10 @@ opt_parser = OptionParser.new do |opts|
     options[:heartbeat] = val
   end
 
+  opts.on("-d", "--[no-]dry-run", "Dry run (don't create/start worker)") do |val|
+    options[:dry_run] = val
+  end
+
   opts.on("-h", "--help", "Displays this help") do
     puts opts
     exit
@@ -46,10 +50,12 @@ ENV["DISABLE_MIQ_WORKER_HEARTBEAT"] ||= options[:heartbeat] ? nil : '1'
 require File.expand_path("../../../config/environment", __dir__)
 
 worker_class = worker_class.constantize
-worker = worker_class.create_worker_record
 worker_class.before_fork
-begin
-  worker.class::Runner.start_worker(:guid => worker.guid)
-ensure
-  worker.delete
+unless options[:dry_run]
+  worker = worker_class.create_worker_record
+  begin
+    worker.class::Runner.start_worker(:guid => worker.guid)
+  ensure
+    worker.delete
+  end
 end
