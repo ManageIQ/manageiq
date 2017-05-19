@@ -12,7 +12,6 @@ class MiqServer < ApplicationRecord
   include_concern 'RoleManagement'
   include_concern 'StatusManagement'
   include_concern 'UpdateManagement'
-  include_concern 'RhnMirror'
 
   include UuidMixin
   include MiqPolicyMixin
@@ -27,8 +26,6 @@ class MiqServer < ApplicationRecord
   cattr_accessor          :my_guid_cache
 
   before_destroy          :validate_is_deleteable
-
-  default_value_for       :rhn_mirror, false
 
   virtual_column :zone_description, :type => :string
 

@@ -13,7 +13,6 @@ event,Event Monitor,1,false,zone
 git_owner,Git Repositories Owner,1,false,zone
 notifier,Notifier,1,false,region
 reporting,Reporting,0,false,region
-rhn_mirror,RHN Mirror,0,false,region
 scheduler,Scheduler,1,false,region
 smartproxy,SmartProxy,0,false,zone
 smartstate,SmartState Analysis,0,false,zone

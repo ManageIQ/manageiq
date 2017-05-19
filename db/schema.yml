@@ -5262,7 +5262,6 @@ miq_servers:
 - rh_subscribed
 - last_update_check
 - updates_available
-- rhn_mirror
 - log_file_depot_id
 - proportional_set_size
 - has_active_websocket

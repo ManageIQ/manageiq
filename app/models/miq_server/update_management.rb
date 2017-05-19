@@ -52,7 +52,7 @@ module MiqServer::UpdateManagement
   end
 
   def update_registration_status
-    attempt_registration unless rhn_mirror?
+    attempt_registration
 
     check_updates
   end
