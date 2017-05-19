@@ -9,6 +9,69 @@ The ManageIQ organization is continuously adding new smaller repositories.  The 
 - [manageiq-providers-vmware CHANGELOG](https://github.com/ManageIQ/manageiq-providers-vmware/blob/master/CHANGELOG.md)
 - [manageiq-ui-classic CHANGELOG](https://github.com/ManageIQ/manageiq-ui-classic/blob/master/CHANGELOG.md)
 
+## Unreleased - as of Sprint 61 end 2017-05-22
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+61+Ending+May+22%2C+2017%22+label%3Aenhancement)
+
+- Automate: Add delete method for Cloud Subnet [(#15087)](https://github.com/ManageIQ/manageiq/pull/15087)
+
+- Providers
+  - Adding helper for unique index columns to inventory collection [(#15141)](https://github.com/ManageIQ/manageiq/pull/15141)
+  - Minor inventory collection enhancements [(#15108)](https://github.com/ManageIQ/manageiq/pull/15108)
+  - Physical Infrastructure: Method to save asset details  [(#14827)](https://github.com/ManageIQ/manageiq/pull/14827)
+  - Pluggability
+    - Blacklisted event names in settings.yml [(#14647)](https://github.com/ManageIQ/manageiq/pull/14647)
+    - Allow Vmdb::Plugins to work through code reloads in development. [(#15057)](https://github.com/ManageIQ/manageiq/pull/15057)
+  - Red Hat Virtualization: Reduce the default oVirt open timeout to 1 minute [(#15099)](https://github.com/ManageIQ/manageiq/pull/15099)
+
+- REST API
+  - Add support for Cloud Volume Delete action [(#15097)](https://github.com/ManageIQ/manageiq/pull/15097)
+  - Configuration_script_sources subcollection [(#15070)](https://github.com/ManageIQ/manageiq/pull/15070)
+
+- SmartState: Fix sometimes host analysis cannot get the linux packages info [(#15140)](https://github.com/ManageIQ/manageiq/pull/15140)
+
+###  [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+61+Ending+May+22%2C+2017%22+label%3Aenhancement)
+
+- Performance
+  - Do not schedule Session.purge if this Session is not used [(#15064)](https://github.com/ManageIQ/manageiq/pull/15064)
+  - Do not queue no-op destroy action [(#15080)](https://github.com/ManageIQ/manageiq/pull/15080)
+  - Do not schedule smartstate dispatch unless it is needed [(#15067)](https://github.com/ManageIQ/manageiq/pull/15067)
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+61+Ending+May+22%2C+2017%22+label%3Abug)
+
+- Automate
+  - Retirement: Change retire_now to pass zone_name to raise_retirement_event. [(#15026)](https://github.com/ManageIQ/manageiq/pull/15026)
+  - Services: Use extra_vars to create a new dialog when editing Ansible playbook service template. [(#15120)](https://github.com/ManageIQ/manageiq/pull/15120)
+
+- Platform
+  - Ensure order is qualified by table name for rss feeds [(#15112)](https://github.com/ManageIQ/manageiq/pull/15112)
+  - Do not queue e-mails unless there is a notifier in the region [(#14801)](https://github.com/ManageIQ/manageiq/pull/14801)
+  - Fixed logging for proxy when storage not defined  [(#15028)](https://github.com/ManageIQ/manageiq/pull/15028)
+  - Fix broken stylesheet path for PDFs [(#14793)](https://github.com/ManageIQ/manageiq/pull/14793)
+  - Start Apache if roles were changed and it is needed by the current roles [(#15078)](https://github.com/ManageIQ/manageiq/pull/15078)
+  - RBAC
+    - Fix tag filtering for indirect RBAC [(#15088)](https://github.com/ManageIQ/manageiq/pull/15088)
+    - Add middleware models to direct RBAC [(#15011)](https://github.com/ManageIQ/manageiq/pull/15011)
+
+- Providers
+  - Ansible Tower
+    - Check that the Embedded Ansible role is on [(#15045)](https://github.com/ManageIQ/manageiq/pull/15045)
+    - Encrypt secrets before enqueue Tower CU operations [(#15084)](https://github.com/ManageIQ/manageiq/pull/15084)
+    - Hint to UI that scm_credential private_key field should have multiple-line [(#15109)](https://github.com/ManageIQ/manageiq/pull/15109)
+  - Containers: Add default filters for the container page [(#14893)](https://github.com/ManageIQ/manageiq/pull/14893)
+  - Foreman: Added a check that URL is a type of HTTPS uri. [(#14965)](https://github.com/ManageIQ/manageiq/pull/14965)
+  - Microsoft Infrastructure
+    - [SCVMM] Remove -All from Get-SCVMTemplate call [(#15106)](https://github.com/ManageIQ/manageiq/pull/15106)
+    - Refactor start_clone method and break up powershell functions [(#14842)](https://github.com/ManageIQ/manageiq/pull/14842)
+
+- REST API
+  - Request members should allow access to users with admin role [(#15163)](https://github.com/ManageIQ/manageiq/pull/15163)
+  - Make TokenManager#token_ttl callable (evaluated at call time) [(#15124)](https://github.com/ManageIQ/manageiq/pull/15124)
+  - Requests should allow access to users with admin role [(#15151)](https://github.com/ManageIQ/manageiq/pull/15151)
+
+- User Interface
+  - Removed grouping from all Middleware* views [(#15042)](https://github.com/ManageIQ/manageiq/pull/15042)
+
 ## Unreleased - as of Sprint 60 end 2017-05-08
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+60+Ending+May+8%2C+2017%22+label%3Aenhancement)
@@ -32,7 +95,7 @@ The ManageIQ organization is continuously adding new smaller repositories.  The 
  - API support for adding/removing Policies to/from Policy Profiles [(#14575)](https://github.com/ManageIQ/manageiq/pull/14575)
  - Enable custom actions for Vms API [(#14817)](https://github.com/ManageIQ/manageiq/pull/14817)
 
-### Fixed
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+60+Ending+May+8%2C+2017%22+label%3Abug)
 
 - Automate
   - Retirement
@@ -223,7 +286,7 @@ The ManageIQ organization is continuously adding new smaller repositories.  The 
   - Return correct resource hrefs [(#14549)](https://github.com/ManageIQ/manageiq/pull/14549)
   - Removing ems_events from config/api.yml [(#14699)](https://github.com/ManageIQ/manageiq/pull/14699)
 
-# Fine Beta-2
+# Fine-1
 
 ## Added
 
