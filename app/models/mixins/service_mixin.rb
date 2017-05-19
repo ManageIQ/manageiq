@@ -31,10 +31,10 @@ module ServiceMixin
       if circular_reference?(rsc)
         raise MiqException::MiqServiceCircularReferenceError,
               _("Adding resource <%{resource_name}> to Service <%{name}> will create a circular reference") %
-                {:resource_name => rsc.name, :name => name}
+              {:resource_name => rsc.name, :name => name}
       else
-        sr = service_resources.new(nh.merge(:resource => rsc))
-        set_service_type if self.respond_to?(:set_service_type)
+        service_resources.new(nh.merge(:resource => rsc))
+        set_service_type if respond_to?(:set_service_type)
         # Create link between services
         rsc.update_attributes(:parent => self) if self.class == Service && rsc.kind_of?(Service)
       end
@@ -47,14 +47,11 @@ module ServiceMixin
   end
 
   def add_resource!(rsc, options = {})
-    sr = add_resource(rsc, options)
-    self.save!
-    sr
+    add_resource(rsc, options).tap { save! }
   end
 
   def remove_resource(rsc)
-    sr = service_resources.find_by(:resource_type => rsc.class.base_class.name, :resource_id => rsc.id)
-    sr.try(:destroy)
+    service_resources.find_by(:resource_type => rsc.class.base_class.name, :resource_id => rsc.id).try(:destroy)
   end
 
   def remove_all_resources
@@ -116,7 +113,7 @@ module ServiceMixin
 
     (current_idx + direction).send(method, target) do |i|
       next if i == current_idx
-      return(i) if self.group_has_resources?(i)
+      return(i) if group_has_resources?(i)
     end
 
     nil
