@@ -37,5 +37,20 @@ describe DropMiqServerRhnMirror do
         expect(change.value).to_not include(role_name)
       end
     end
+
+    it "cleans up external files on an appliance" do
+      expect(Rails.env).to receive(:production?).and_return(true)
+      expect(File).to receive(:exist?).with('/var/www/miq/vmdb').and_return(true)
+
+      mock_fstab_lines = ["/dev/sda / xfs defaults 0 0", "/dev/sdb /repo xfs defaults 0 0"]
+      expect(File).to receive(:read).with("/etc/fstab").and_return(mock_fstab_lines.join("\n"))
+      expect(File).to receive(:write).with("/etc/fstab", "/dev/sda     / xfs defaults        0        0 \n")
+
+      expect(FileUtils).to receive(:rm_f).with("/etc/httpd/conf.d/manageiq-https-mirror.conf")
+      expect(FileUtils).to receive(:rm_f).with("/etc/yum.repos.d/manageiq-mirror.repo")
+      expect(FileUtils).to receive(:rm_rf).with([])
+
+      migrate
+    end
   end
 end
