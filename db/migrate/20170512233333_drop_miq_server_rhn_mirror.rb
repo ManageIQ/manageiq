@@ -24,5 +24,19 @@ class DropMiqServerRhnMirror < ActiveRecord::Migration[5.0]
         change.save!
       end
     end
+
+    if Rails.env.production? && File.exist?('/var/www/miq/vmdb')
+      say_with_time("Removing files created by RHN Mirror role") do
+        require 'fileutils'
+        require 'linux_admin'
+
+        LinuxAdmin::FSTab.instance.entries.delete_if { |e| e.mount_point == "/repo" }
+        LinuxAdmin::FSTab.instance.write!
+
+        FileUtils.rm_f("/etc/httpd/conf.d/manageiq-https-mirror.conf")
+        FileUtils.rm_f("/etc/yum.repos.d/manageiq-mirror.repo")
+        FileUtils.rm_rf(Dir.glob("/repo/*"))
+      end
+    end
   end
 end
