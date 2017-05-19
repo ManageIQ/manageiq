@@ -1,5 +1,3 @@
-require 'recursive-open-struct'
-
 describe OpenscapResult do
   let(:openscap_result) { described_class.new(:id => 17) }
   context "#html" do
