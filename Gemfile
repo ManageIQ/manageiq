@@ -80,6 +80,7 @@ gem "simple-rss",                     "~>1.3.1",       :require => false
 gem "snmp",                           "~>1.2.0",       :require => false
 gem "sshkey",                         "~>1.8.0",       :require => false
 gem "thin",                           "~>1.7.0",       :require => false
+gem "vmware_web_service",             "~>0.1.1",       :require => false
 gem "websocket-driver",               "~>0.6.3"
 
 # Modified gems (forked on Github)
