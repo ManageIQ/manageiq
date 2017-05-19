@@ -234,7 +234,7 @@ module Metric::Capture
   private_class_method :perf_target_to_interval_name
 
   def self.minutes_ago(value)
-    if value.kind_of?(Fixnum) # Default unit is minutes
+    if value.kind_of?(Integer) # Default unit is minutes
       value.minutes.ago.utc
     elsif value.nil?
       nil
