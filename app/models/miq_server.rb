@@ -369,6 +369,13 @@ class MiqServer < ApplicationRecord
       _log.info "Server Monitoring Complete - Timings: #{timings.inspect}" unless timings[:total_time] < server_log_timings_threshold
       sleep monitor_poll
     end
+  rescue Interrupt => e
+    _log.info("Received #{e.message} signal, killing server")
+    self.class.kill
+    exit 1
+  rescue SignalException => e
+    _log.info("Received #{e.message} signal, shutting down server")
+    shutdown_and_exit
   end
 
   def stop(sync = false)
