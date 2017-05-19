@@ -15,7 +15,7 @@ module Api
       when 'api', 'ui' # The default API token and UI token share the same TokenStore
         @token_mgr['api'] ||= new_token_mgr(base_config[:module], base_config[:name], api_config)
       when 'ws'
-        @token_mgr['ws'] ||= TokenManager.new('ws', :token_ttl => ::Settings.session.timeout)
+        @token_mgr['ws'] ||= TokenManager.new('ws', :token_ttl => -> { ::Settings.session.timeout })
       end
     end
 
@@ -55,7 +55,7 @@ module Api
       token_ttl = api_config[:token_ttl]
 
       options                = {}
-      options[:token_ttl]    = token_ttl.to_i_with_method if token_ttl
+      options[:token_ttl]    = -> { token_ttl.to_i_with_method } if token_ttl
 
       log_init(mod, name, options) if @svc_options[:log_init]
       TokenManager.new(mod, options)
