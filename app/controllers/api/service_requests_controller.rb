@@ -38,7 +38,7 @@ module Api
     end
 
     def service_requests_search_conditions
-      return {} if User.current_user.admin?
+      return {} if User.current_user.admin_user?
       {:requester => User.current_user}
     end
 
