@@ -12,11 +12,13 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     @subscription_id = Rails.application.secrets.azure.try(:[], 'subscription_id') || 'AZURE_SUBSCRIPTION_ID'
 
     @resource_group = 'miq-azure-test1'
+    @managed_vm     = 'miqazure-linux-managed'
     @device_name    = 'miq-test-rhel1' # Make sure this is running if generating a new cassette.
-    @ip_address     = '40.71.219.195'  # This will change if you had to restart the @device_name.
-    @mismatch_ip    = '52.168.161.193' # This will change if you had to restart the 'miqmismatch' VM.
-    @template = nil
-    @avail_zone = nil
+    @ip_address     = '13.82.190.130'  # This will change if you had to restart the @device_name.
+    @mismatch_ip    = '13.82.184.89'   # This will change if you had to restart the 'miqmismatch' VM.
+    @managed_disk   = "miqazure-linux-managed_OsDisk_1_7b2bdf790a7d4379ace2846d307730cd"
+    @template       = nil
+    @avail_zone     = nil
 
     cred = {
       :userid   => @client_id,
@@ -94,6 +96,8 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       assert_specific_load_balancers
       assert_specific_load_balancer_listeners
       assert_specific_load_balancer_health_checks
+      assert_specific_vm_with_managed_disk
+      assert_specific_managed_disk
     end
   end
 
@@ -462,6 +466,20 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     )
   end
 
+  def assert_specific_vm_with_managed_disk
+    vm = Vm.find_by(:name => @managed_vm)
+
+    expect(vm.disks.size).to be > 0
+    expect(vm.disks.first.device_name).to eql(@managed_disk)
+  end
+
+  def assert_specific_managed_disk
+    disk = Disk.find_by(:device_name => @managed_disk)
+
+    expect(disk.location).to be_nil
+    expect(disk.size).to eql(1023.megabyte)
+  end
+
   def assert_specific_vm_powered_off
     vm_name = 'miqazure-centos1'
 
@@ -596,9 +614,11 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     expect(@orch_template).to have_attributes(
       :md5 => "521a0cf7ec949c106980d9da173ea21d"
     )
+
+    content_string = "{\n  \"$schema\": \"http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json\""
+
     expect(@orch_template.description).to eql('contentVersion: 1.0.0.0')
-    expect(@orch_template.content).to start_with("{\n  \"$schema\": \"http://schema.management.azure.com"\
-      "/schemas/2015-01-01/deploymentTemplate.json\"")
+    expect(@orch_template.content).to start_with(content_string)
   end
 
   def assert_specific_orchestration_stack

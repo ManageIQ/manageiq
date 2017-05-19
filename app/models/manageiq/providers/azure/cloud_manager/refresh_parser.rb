@@ -23,6 +23,7 @@ module ManageIQ::Providers
         @tds = template_deployment_service(@config)
         @rgs = resource_group_service(@config)
         @sas = storage_account_service(@config)
+        @mis = managed_image_service(@config)
 
         @options           = options || {}
         @data              = {}
@@ -158,10 +159,15 @@ module ManageIQ::Providers
       #
       def get_images
         images = gather_data_for_this_region(@sas, 'list_all_private_images')
-      rescue Azure::Armrest::ApiException => err
+      rescue ::Azure::Armrest::ApiException => err
         _log.warn("Unable to collect Azure private images for: [#{@ems.name}] - [#{@ems.id}]: #{err.message}")
       else
         process_collection(images, :vms) { |image| parse_image(image) }
+      end
+
+      def get_managed_images
+        images = gather_data_for_this_region(@mis)
+        process_collection(images, :vms) { |image| parse_managed_image(image) }
       end
 
       def parse_resource_group(resource_group)
@@ -464,6 +470,32 @@ module ManageIQ::Providers
           :last_updated           => resource.properties.timestamp
         }
         uid = resource_uid(@subscription_id, group.downcase, new_result[:resource_category].downcase, new_result[:name])
+        return uid, new_result
+      end
+
+      def parse_managed_image(image)
+        uid = image.id.downcase
+
+        os = image.properties.storage_profile.try(:os_disk).try(:os_type) || 'unknown'
+
+        new_result = {
+          :type               => ManageIQ::Providers::Azure::CloudManager::Template.name,
+          :uid_ems            => uid,
+          :ems_ref            => uid,
+          :name               => image.name,
+          :description        => "#{image.resource_group}\\#{image.name}",
+          :location           => @ems.provider_region,
+          :vendor             => 'azure',
+          :raw_power_state    => 'never',
+          :template           => true,
+          :publicly_available => false,
+          :operating_system   => process_os(image),
+          :hardware           => {
+            :bitness  => 64,
+            :guest_os => OperatingSystem.normalize_os_name(os)
+          }
+        }
+
         return uid, new_result
       end
 

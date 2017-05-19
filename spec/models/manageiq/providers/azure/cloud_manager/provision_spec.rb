@@ -72,43 +72,60 @@ describe ManageIQ::Providers::Azure::CloudManager::Provision do
       end
     end
 
-    context "#prepare_for_clone_task" do
-      before do
-        allow(subject).to receive(:instance_type).and_return(flavor)
-        allow(subject).to receive(:dest_name).and_return(vm.name)
-        allow(subject).to receive(:cloud_subnet).and_return(subnet)
+    shared_examples 'prepare_for_clone_task' do |ems_ref|
+      context "#prepare_for_clone_task" do
+        let(:os) do
+          Class.new do
+            def product_name
+              'Linux'
+            end
+          end.new
+        end
+
+        before do
+          allow(subject).to receive(:instance_type).and_return(flavor)
+          allow(subject).to receive(:dest_name).and_return(vm.name)
+          allow(subject).to receive(:cloud_subnet).and_return(subnet)
+          allow(template).to receive(:ems_ref).and_return(ems_ref)
+          allow(template).to receive(:operating_system).and_return(os)
+        end
+
+        context "nic settings" do
+          it "use existing floating_ip and assign to network profile" do
+            allow(subject).to receive(:floating_ip).and_return(floating_ip)
+            floating_ip.network_port = network_port
+            expect(subject.prepare_for_clone_task[:properties][:networkProfile][:networkInterfaces][0][:id]).to eq(network_port.ems_ref)
+          end
+
+          it "without floating_ip create new nic and assign to network profile" do
+            allow(floating_ip).to receive(:floating_ip).and_return(nil)
+            expect(subject.prepare_for_clone_task[:properties][:networkProfile][:networkInterfaces][0][:id]).to eq(nic_id)
+          end
+
+          it "with floating_ip without network_port create new nic and assign to network profile" do
+            allow(subject).to receive(:floating_ip).and_return(floating_ip)
+            floating_ip.network_port = nil
+            expect(subject.prepare_for_clone_task[:properties][:networkProfile][:networkInterfaces][0][:id]).to eq(nic_id)
+          end
+        end
+
+        context "security group" do
+          it "with security group" do
+            allow(subject).to receive(:security_group).and_return(sec_group)
+            expect(subject.build_nic_options("ip")[:properties][:networkSecurityGroup][:id]).to eq(sec_group.ems_ref)
+          end
+
+          it "without security group" do
+            allow(subject).to receive(:security_group).and_return(nil)
+            expect(subject.build_nic_options("ip")[:properties]).not_to have_key(:networkSecurityGroup)
+          end
+        end
       end
+    end
 
-      context "nic settings" do
-        it "use existing floating_ip and assign to network profile" do
-          allow(subject).to receive(:floating_ip).and_return(floating_ip)
-          floating_ip.network_port = network_port
-          expect(subject.prepare_for_clone_task[:properties][:networkProfile][:networkInterfaces][0][:id]).to eq(network_port.ems_ref)
-        end
-
-        it "without floating_ip create new nic and assign to network profile" do
-          allow(floating_ip).to receive(:floating_ip).and_return(nil)
-          expect(subject.prepare_for_clone_task[:properties][:networkProfile][:networkInterfaces][0][:id]).to eq(nic_id)
-        end
-
-        it "with floating_ip without network_port create new nic and assign to network profile" do
-          allow(subject).to receive(:floating_ip).and_return(floating_ip)
-          floating_ip.network_port = nil
-          expect(subject.prepare_for_clone_task[:properties][:networkProfile][:networkInterfaces][0][:id]).to eq(nic_id)
-        end
-      end
-
-      context "security group" do
-        it "with security group" do
-          allow(subject).to receive(:security_group).and_return(sec_group)
-          expect(subject.build_nic_options("ip")[:properties][:networkSecurityGroup][:id]).to eq(sec_group.ems_ref)
-        end
-
-        it "without security group" do
-          allow(subject).to receive(:security_group).and_return(nil)
-          expect(subject.build_nic_options("ip")[:properties]).not_to have_key(:networkSecurityGroup)
-        end
-      end
+    context "clone vm" do
+      include_examples 'prepare_for_clone_task', 'abc/123'                # Unmanaged
+      include_examples 'prepare_for_clone_task', '/subscriptions/abc/123' # Managed
     end
 
     it "#workflow" do
