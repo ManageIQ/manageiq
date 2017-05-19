@@ -49,4 +49,8 @@ unless worker_list.include?(worker_class)
 end
 
 worker = ARGV[0].constantize.create_worker_record
+at_exit do
+  puts "\nGracefully stopping worker... Deleting server record..."
+  worker.delete
+end
 worker.class::Runner.new(:guid => worker.guid).do_work_loop
