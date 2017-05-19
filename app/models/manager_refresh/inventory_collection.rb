@@ -280,7 +280,7 @@ module ManagerRefresh
     #             inventory_object[:label] = inventory_object[:name]
     #           So by using inventory_object_attributes, we will be guarding the allowed attributes and will have an
     #           explicit list of allowed attributes, that can be used also for documentation purposes.
-    # @param unique_index_columns [Array] Array of symbols identifying a columns of a DB unique index we will be using.
+    # @param unique_index_columns [Array] Array of symbols identifying columns of a DB unique index, we will be using.
     #        If there is only 1 unique index, this will be auto-discovered, otherwise we need to specify the correct
     #        one.
     # @param name [Symbol] A unique name of the InventoryCollection under a Persister. If not provided, the :association
@@ -439,7 +439,7 @@ module ManagerRefresh
     def unique_index_columns
       return @unique_index_columns if @unique_index_columns
 
-      unique_indexes = model_class.connection.indexes(model_class.table_name).select { |x| x.unique }
+      unique_indexes = model_class.connection.indexes(model_class.table_name).select(&:unique)
       if unique_indexes.count > 1
         raise "Cannot infer unique index automatically, since the table #{model_class.table_name}"\
               " of the #{self} contains more than 1 unique index: '#{unique_indexes.collect(&:name)}'. Please define"\
