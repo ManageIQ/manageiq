@@ -1457,7 +1457,7 @@ module ReportController::Reports::Editor
     rpt.col_order.each_with_index do |col, idx|
       if col.starts_with?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
         field_key = rpt.db + "-" + col
-        field_value =_("Labels: %{name}") % { :name => col.gsub(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX, "") }
+        field_value = CustomAttributeMixin.to_human(col)
       elsif !col.include?(".")  # Main table field
         field_key = rpt.db + "-" + col
         field_value = friendly_model_name(rpt.db) +

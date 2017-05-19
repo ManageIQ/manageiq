@@ -4,7 +4,7 @@ class MiqExpression::Field
 \.?(?<associations>[a-z_\.]+)*
 -
 (?:
-  (?<virtual_custom_column>#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}[a-z]+[_\-.\/[:alnum:]]*)|
+  (?<virtual_custom_column>#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}[a-z]+[:_\-.\/[:alnum:]]*)|
   (?<column>[a-z]+(_[[:alnum:]]+)*)
 )
 /x

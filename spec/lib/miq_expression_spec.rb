@@ -1458,16 +1458,34 @@ describe MiqExpression do
   end
 
   context "._custom_details_for" do
-    let(:klass)        { Vm }
-    let(:vm)           { FactoryGirl.create(:vm) }
-    let(:custom_attr1) { FactoryGirl.create(:custom_attribute, :resource => vm, :name => "CATTR_1", :value => "Value 1") }
-    let(:custom_attr2) { FactoryGirl.create(:custom_attribute, :resource => vm, :name => nil,       :value => "Value 2") }
+    let(:klass)         { Vm }
+    let(:vm)            { FactoryGirl.create(:vm) }
+    let!(:custom_attr1) { FactoryGirl.create(:custom_attribute, :resource => vm, :name => "CATTR_1", :value => "Value 1") }
+    let!(:custom_attr2) { FactoryGirl.create(:custom_attribute, :resource => vm, :name => nil,       :value => "Value 2") }
 
     it "ignores custom_attibutes with a nil name" do
-      custom_attr1
-      custom_attr2
+      expect(MiqExpression._custom_details_for("Vm", {})).to eq([["Custom Attribute: CATTR_1", "Vm-virtual_custom_attribute_CATTR_1"]])
+    end
 
-      expect(MiqExpression._custom_details_for("Vm", {})).to eq([["Labels: CATTR_1", "Vm-virtual_custom_attribute_CATTR_1"]])
+    let(:conatiner_image) { FactoryGirl.create(:container_image) }
+
+    let!(:custom_attribute_with_section_1) do
+      FactoryGirl.create(:custom_attribute, :resource => conatiner_image, :name => 'CATTR_3', :value => "Value 3",
+                         :section => 'section_3')
+    end
+
+    let!(:custom_attribute_with_section_2) do
+      FactoryGirl.create(:custom_attribute, :resource => conatiner_image, :name => 'CATTR_3', :value => "Value 3",
+                         :section => 'docker_labels')
+    end
+
+    it "returns human names of custom attributes with sections" do
+      expected_result = [
+        ['Docker Labels: CATTR_3', 'ContainerImage-virtual_custom_attribute_CATTR_3:SECTION:docker_labels'],
+        ['Section 3: CATTR_3', 'ContainerImage-virtual_custom_attribute_CATTR_3:SECTION:section_3']
+      ]
+
+      expect(MiqExpression._custom_details_for("ContainerImage", {})).to match_array(expected_result)
     end
   end
 

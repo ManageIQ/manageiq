@@ -119,6 +119,55 @@ describe MiqReport do
       )
     end
 
+    context 'with container images' do
+      let(:report) do
+        MiqReport.new(
+          :name => "Custom VM report", :title => "Custom VM report", :rpt_group => "Custom", :rpt_type => "Custom",
+            :db        => "ContainerImage",
+            :cols      => ['name',
+                           "virtual_custom_attribute_CATTR#{CustomAttributeMixin::SECTION_SEPARATOR}docker_labels",
+                           "virtual_custom_attribute_CATTR#{CustomAttributeMixin::SECTION_SEPARATOR}labels"],
+            :include   => {:custom_attributes => {}},
+            :col_order => %w(name CATTR),
+            :headers   => ["Name", custom_column_key_1, custom_column_key_1],
+            :order     => "Ascending"
+        )
+      end
+
+      let!(:container_image) do
+        FactoryGirl.create(:container_image, :name => "test_container_images")
+      end
+
+      let!(:custom_attribute_1) do
+        FactoryGirl.create(:custom_attribute, :resource => container_image, :name => 'CATTR', :value => 'any_value',
+                           :section => 'docker_labels')
+      end
+
+      let!(:custom_attribute_2) do
+        FactoryGirl.create(:custom_attribute, :resource => container_image, :name => 'CATTR', :value => 'other_value',
+                           :section => 'labels')
+      end
+
+      it "generates report with dynamic custom attributes" do
+        report.queue_generate_table(:userid => user.userid)
+        report._async_generate_table(miq_task.id, :userid => user.userid, :mode => "async",
+                                     :report_source => "Requested by user")
+
+        report_result = report.table.data.map do |x|
+          x.data.delete("id")
+          x.data
+        end
+
+        expected_results = [
+          {"name"                                                                                  => "test_container_images",
+           "virtual_custom_attribute_CATTR#{CustomAttributeMixin::SECTION_SEPARATOR}docker_labels" => "any_value",
+           "virtual_custom_attribute_CATTR#{CustomAttributeMixin::SECTION_SEPARATOR}labels"        => "other_value"}
+        ]
+
+        expect(report_result).to match_array(expected_results)
+      end
+    end
+
     it "generates report with dynamic custom attributes" do
       report.queue_generate_table(:userid => user.userid)
       report._async_generate_table(miq_task.id, :userid => user.userid, :mode => "async",
