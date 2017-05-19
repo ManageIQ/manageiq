@@ -20,33 +20,26 @@ opt_parser = OptionParser.new do |opts|
     exit
   end
 end
-
 opt_parser.parse!
+worker_class = ARGV[0]
+
+require File.expand_path("../miq_worker_types", __dir__)
+
 if options[:list]
-  # Hack to make this faster
-  module MiqServer; module WorkerManagement; module Monitor;
-  end; end; end;
-
-  require 'active_support/concern'
-  require File.expand_path("../../../app/models/miq_server/worker_management/monitor/class_names", __dir__)
-
-  puts MiqServer::WorkerManagement::Monitor::ClassNames::MONITOR_CLASS_NAMES
+  puts ::MIQ_WORKER_TYPES
   exit
 end
-opt_parser.abort(opt_parser.help) if ARGV.empty?
+opt_parser.abort(opt_parser.help) unless worker_class
+
+unless ::MIQ_WORKER_TYPES.include?(worker_class)
+  puts "ERR:  `#{worker_class}` WORKER CLASS NOT FOUND!  Please run with `-l` to see possible worker class names."
+  exit 1
+end
 
 # Skip heartbeating with single worker
 ENV["DISABLE_MIQ_WORKER_HEARTBEAT"] ||= '1'
 
 require File.expand_path("../../../config/environment", __dir__)
-
-worker_list  = MiqServer::WorkerManagement::Monitor::ClassNames::MONITOR_CLASS_NAMES
-worker_class = ARGV[0]
-
-unless worker_list.include?(worker_class)
-  puts "ERR:  `#{worker_class}` WORKER CLASS NOT FOUND!  Please run with `-l` to see possible worker class names."
-  exit 1
-end
 
 worker_class = worker_class.constantize
 worker = worker_class.create_worker_record
