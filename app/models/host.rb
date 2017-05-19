@@ -729,11 +729,7 @@ class Host < ApplicationRecord
     host = Host.find_by(:id => id)
     data, data_type = dataArray
     data.replace(MIQEncode.decode(data)) if data_type.include?('b64,zlib')
-    if data_type.include?('yaml')
-      doc = YAML.load(data)
-    else
-      doc = MiqXml.load(data)
-    end
+    doc = data_type.include?('yaml') ? YAML.load(data) : MiqXml.load(data)
     host.add_elements(doc)
     host.save!
     _log.info "for host [#{id}] host saved"
