@@ -47,7 +47,14 @@ end
 # Skip heartbeating with single worker
 ENV["DISABLE_MIQ_WORKER_HEARTBEAT"] ||= options[:heartbeat] ? nil : '1'
 
-require File.expand_path("../../../config/environment", __dir__)
+require File.expand_path("../boot/base", __dir__)
+worker_booter_file = File.expand_path("../boot/#{worker_class.underscore}.rb", __dir__)
+
+if File.exists?(worker_booter_file)
+  require worker_booter_file
+else
+  require File.expand_path("../boot/default", __dir__)
+end
 
 worker_class = worker_class.constantize
 
