@@ -261,7 +261,7 @@ describe "Service Requests API" do
     end
 
     it "an admin can see another user's request" do
-      allow_any_instance_of(User).to receive(:admin?).and_return(true)
+      @group.miq_user_role = @role = FactoryGirl.create(:miq_user_role, :role => "administrator")
       other_user = FactoryGirl.create(:user)
       service_request = FactoryGirl.create(:service_template_provision_request,
                                            :requester   => other_user,
