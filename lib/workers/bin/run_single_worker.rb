@@ -15,6 +15,10 @@ opt_parser = OptionParser.new do |opts|
     options[:list] = val
   end
 
+  opts.on("-b", "--[no-]heartbeat", "Toggle heartbeating with worker monitor (DRB)") do |val|
+    options[:heartbeat] = val
+  end
+
   opts.on("-h", "--help", "Displays this help") do
     puts opts
     exit
@@ -37,7 +41,7 @@ unless ::MIQ_WORKER_TYPES.include?(worker_class)
 end
 
 # Skip heartbeating with single worker
-ENV["DISABLE_MIQ_WORKER_HEARTBEAT"] ||= '1'
+ENV["DISABLE_MIQ_WORKER_HEARTBEAT"] ||= options[:heartbeat] ? nil : '1'
 
 require File.expand_path("../../../config/environment", __dir__)
 
