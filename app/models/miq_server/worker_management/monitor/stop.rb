@@ -11,7 +11,7 @@ module MiqServer::WorkerManagement::Monitor::Stop
   end
 
   def stop_worker_queue(worker, monitor_status = :waiting_for_stop, monitor_reason = nil)
-    MiqQueue.put(
+    MiqQueue.put_deprecated(
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => 'stop_worker',
