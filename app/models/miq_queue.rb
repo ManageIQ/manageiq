@@ -119,9 +119,13 @@ class MiqQueue < ApplicationRecord
       raise ArgumentError, "MiqQueue.put(:class_name => #{options[:class_name]}, :method => #{options[:method_name]}) does not support args with #{arg.class.name} objects"
     end
 
-    msg = MiqQueue.create!(options)
-    _log.info(MiqQueue.format_full_log_msg(msg))
-    msg
+    if options.delete(:use_miq)
+      msg = MiqQueue.create!(options)
+      _log.info(MiqQueue.format_full_log_msg(msg))
+      msg
+    else
+      MiqCatchAllWorker.perform_async(options)
+    end
   end
 
   MIQ_QUEUE_GET = <<-EOL
@@ -239,7 +243,7 @@ class MiqQueue < ApplicationRecord
       if msg.nil?
         put_options = save_options || find_options
         put_options.delete(:state)
-        msg = MiqQueue.put(put_options)
+        msg = MiqQueue.put(put_options.merge(:use_miq => true))
         break
       end
 
@@ -273,11 +277,13 @@ class MiqQueue < ApplicationRecord
   #   changed, and will be yielded to an optional block, generally for logging
   #   purposes.
   def self.put_unless_exists(find_options)
-    put_or_update(find_options) do |msg, item_hash|
-      ret = yield(msg, item_hash) if block_given?
-      # create the record if the original message did not exist, don't change otherwise
-      ret if msg.nil?
-    end
+    yield(nil, find_options) if block_given? # handle create_with
+    put(find_options)
+    #put_or_update(find_options) do |msg, item_hash|
+    #  ret = yield(msg, item_hash) if block_given?
+    #  # create the record if the original message did not exist, don't change otherwise
+    #  ret if msg.nil?
+    #end
   end
 
   def self.unqueue(options)
@@ -319,6 +325,7 @@ class MiqQueue < ApplicationRecord
         status = STATUS_OK
         message = "Message delivered successfully"
         Timeout.timeout(msg_timeout) do
+          _log.info("DEBUGG: method_name(#{method_name}), target_id(#{target_id}), args(#{args.inspect})")
           if obj.kind_of?(Class) && !target_id.nil?
             result = obj.send(method_name, target_id, *args)
           else
@@ -404,7 +411,7 @@ class MiqQueue < ApplicationRecord
 
   def requeue(options = {})
     options.reverse_merge!(attributes.symbolize_keys)
-    MiqQueue.put(options.slice(*MiqQueue.columns_for_requeue))
+    MiqQueue.put(options.slice(*MiqQueue.columns_for_requeue).merge(:use_miq => true))
   end
 
   def check_for_timeout(log_prefix = "MIQ(MiqQueue.check_for_timeout)", grace = 10.seconds, timeout = msg_timeout.seconds)

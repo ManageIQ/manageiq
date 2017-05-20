@@ -184,7 +184,10 @@ class MiqReportResult < ApplicationRecord
     task.update_status("Queued", "Ok", "Task has been queued")
 
     sync = ::Settings.product.report_sync
-
+    # Queue Pattern, Back ground job
+    # Queue_name should have been reporting
+    # High_Priority Initiated from UI
+    # Task ID Pattern
     MiqQueue.put(
       :queue_name  => "generic",
       :role        => "reporting",
@@ -296,6 +299,8 @@ class MiqReportResult < ApplicationRecord
   def self.delete_by_userid(userids)
     userids = userids.to_miq_a
     _log.info("Queuing deletion of report results for the following user ids: #{userids.inspect}")
+    # Embedded Conditional in args
+    # Is this coming from the UI
     MiqQueue.put(
       :class_name  => name,
       :method_name => "destroy_all",

@@ -58,7 +58,7 @@ module MiqServer::QueueManagement
     # matches ntp_reload's guard clause
     return if !MiqEnvironment::Command.is_appliance? || MiqEnvironment::Command.is_container?
 
-    MiqQueue.put(
+    MiqQueue.put_with_guid(
       :class_name  => "MiqServer",
       :instance_id => id,
       :method_name => "ntp_reload",

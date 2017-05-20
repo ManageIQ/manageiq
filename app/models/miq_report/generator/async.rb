@@ -6,7 +6,7 @@ module MiqReport::Generator::Async
       sync = ::Settings.product.report_sync
 
       task = MiqTask.create(:name => "Generate Reports: #{options[:reports].collect(&:name).inspect}")
-      MiqQueue.put(
+      MiqQueue.put_with_queue(
         :queue_name  => "generic",
         :role        => "reporting",
         :class_name  => to_s,
@@ -54,7 +54,7 @@ module MiqReport::Generator::Async
     unless sync # Only queued if sync reporting disabled (default)
       cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
       unless self.new_record?
-        MiqQueue.put(
+        MiqQueue.put_with_queue(
           :queue_name   => "generic",
           :role         => "reporting",
           :class_name   => self.class.to_s,
@@ -66,7 +66,7 @@ module MiqReport::Generator::Async
           :msg_timeout  => queue_timeout
         )
       else
-        MiqQueue.put(
+        MiqQueue.put_with_queue(
           :queue_name   => "generic",
           :role         => "reporting",
           :class_name   => self.class.to_s,

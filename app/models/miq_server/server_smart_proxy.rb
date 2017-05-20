@@ -89,7 +89,7 @@ module MiqServer::ServerSmartProxy
       end
       $log.debug "#{log_prefix}: queuing call to #{self.class.name}##{ost.method_name}"
       # Queue call to scan_metadata or sync_metadata.
-      MiqQueue.put(
+      MiqQueue.put_with_guid(
         :class_name  => self.class.name,
         :instance_id => id,
         :method_name => ost.method_name,

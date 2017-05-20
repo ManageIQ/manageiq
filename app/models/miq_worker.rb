@@ -300,7 +300,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def send_message_to_worker_monitor(message, *args)
-    MiqQueue.put(
+    MiqQueue.put_with_guid(
       :class_name  => 'MiqServer',
       :instance_id => miq_server.id,
       :method_name => 'message_for_worker',

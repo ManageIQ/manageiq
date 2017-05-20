@@ -213,7 +213,7 @@ module Authenticator
       task = MiqTask.create(:name => "#{self.class.proper_name} User Authorization of '#{username}'", :userid => username)
       if authorize_queue?
         encrypt_ldap_password(config) if MiqLdap.using_ldap?
-        MiqQueue.put(
+        MiqQueue.put_with_guid(
           :queue_name   => "generic",
           :class_name   => self.class.to_s,
           :method_name  => "authorize",

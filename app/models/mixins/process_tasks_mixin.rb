@@ -17,7 +17,7 @@ module ProcessTasksMixin
     end
 
     def invoke_tasks_queue(options)
-      MiqQueue.put(:class_name => name, :method_name => "invoke_tasks", :args => [options])
+      MiqQueue.put_simple(:class_name => name, :method_name => "invoke_tasks", :args => [options])
     end
 
     # Performs tasks received from the UI via the queue
@@ -70,7 +70,7 @@ module ProcessTasksMixin
 
           $log.error("An error occurred while invoking remote tasks...Requeueing for 1 minute from now.")
           $log.log_backtrace(err)
-          MiqQueue.put(
+          MiqQueue.put_with_delay(
             :class_name  => name,
             :method_name => 'invoke_tasks_remote',
             :args        => [remote_options],
@@ -134,7 +134,7 @@ module ProcessTasksMixin
         :args        => ["Finished"]
       } if task
 
-      MiqQueue.put(
+      MiqQueue.put_with_status(
         :class_name   => name,
         :instance_id  => instance.id,
         :method_name  => options[:task],
