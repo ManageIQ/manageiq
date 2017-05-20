@@ -1249,8 +1249,7 @@ class Host < ApplicationRecord
   end
 
   def ipmi_config_valid?(include_mac_addr = false)
-    return false if ipmi_address.blank?
-    return false unless has_credentials?(:ipmi)
+    return false unless (ipmi_address.present? && has_credentials?(:ipmi))
     return true  unless include_mac_addr == true
     if mac_address.blank?
       return false
