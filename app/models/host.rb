@@ -1250,8 +1250,7 @@ class Host < ApplicationRecord
 
   def ipmi_config_valid?(include_mac_addr = false)
     return false unless (ipmi_address.present? && has_credentials?(:ipmi))
-    return true  unless include_mac_addr == true
-    mac_address.present?
+    include_mac_addr == true ? mac_address.present? : true
   end
   alias_method :ipmi_enabled, :ipmi_config_valid?
 
