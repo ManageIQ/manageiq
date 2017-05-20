@@ -39,4 +39,8 @@ class DropMiqServerRhnMirror < ActiveRecord::Migration[5.0]
       end
     end
   end
+
+  def down
+    add_column :miq_servers, :rhn_mirror, :boolean
+  end
 end
