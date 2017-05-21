@@ -148,6 +148,7 @@ module EmsRefresh::SaveInventoryContainer
         :parent => ems,
         :builder_params => {:ems_id => ems.id},
         :association => :container_definitions,
+        # parser sets :ems_ref => "#{pod_id}_#{container_def.name}_#{container_def.image}"
       )
     @inv_collections[:containers] =
       ::ManagerRefresh::InventoryCollection.new(
@@ -155,6 +156,7 @@ module EmsRefresh::SaveInventoryContainer
         :parent => ems,
         :builder_params => {:ems_id => ems.id},
         :association => :containers,
+        # parser sets :ems_ref => "#{pod_id}_#{container.name}_#{container.image}"
       )
   end
 
@@ -362,11 +364,13 @@ module EmsRefresh::SaveInventoryContainer
 
   def graph_container_definitions_inventory(container_group, hashes)
     hashes.to_a.each do |h|
-      h = h.except(  # TODO children
+      h = h.merge(:container_group => container_group)
+      children = h.extract!(  # TODO children
         :container_port_configs, :container_env_vars, :security_context, :container
       )
       h[:ems_id] = container_group[:ems_id]
-      @inv_collections[:container_definitions].build(h.merge(:container_group => container_group))
+      cd = @inv_collections[:container_definitions].build(h)
+      graph_container_inventory(cd, children[:container])
     end
   end
 
@@ -410,6 +414,13 @@ module EmsRefresh::SaveInventoryContainer
     store_ids_for_new_records(container_definition.container_env_vars, hashes, [:name, :value, :field_path])
   end
 
+  def lazy_find_image(hash)
+    return nil if hash.nil?
+    @inv_collections[:container_images].lazy_find(
+      @inv_collections[:container_images].object_index(hash)
+    )
+  end
+
   def graph_container_images_inventory(ems, hashes)
     hashes.to_a.each do |h|
       h = h.merge(:container_image_registry => lazy_find_image_registry(h[:container_image_registry]))
@@ -445,13 +456,16 @@ module EmsRefresh::SaveInventoryContainer
     store_ids_for_new_records(ems.container_component_statuses, hashes, :name)
   end
 
-  def save_container_inventory(container_definition, hash, _target = nil)
+  def graph_container_inventory(container_definition, hash)
+    # TODO: understand below comment & test :-)
     # The hash could be nil when the container is in transition (still downloading
-    # the image, or stuck in Pending, or unable to fetch the image). Passing nil to
-    # save_inventory_single is used to delete any pre-existing entity in containers,
-    hash[:container_image_id] = hash[:container_image][:id] unless hash.nil?
-    hash[:ems_id] = container_definition[:ems_id] unless hash.nil?
-    save_inventory_single(:container, container_definition, hash, [], :container_image, true)
+    # the image, or stuck in Pending, or unable to fetch the image),
+    # in which case should delete any pre-existing entity in containers.
+    if hash
+      hash = hash.merge(:container_definition => container_definition)
+      hash[:container_image] = lazy_find_image(hash[:container_image])
+      @inv_collections[:containers].build(hash)
+    end
   end
 
   def graph_container_node_conditions_inventory(parent, hashes)
