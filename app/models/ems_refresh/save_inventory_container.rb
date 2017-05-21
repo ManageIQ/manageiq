@@ -103,7 +103,7 @@ module EmsRefresh::SaveInventoryContainer
       ::ManagerRefresh::InventoryCollection.new(
         :model_class => Hardware,
         :parent => ems,
-        # can't nest has_many through
+        # can't nest has_many through ?
         :arel => Hardware.joins(:computer_system => :container_node)
                          .where(:container_nodes => {:ems_id => ems.id}),
         :manager_ref => [:computer_system],
@@ -157,6 +157,13 @@ module EmsRefresh::SaveInventoryContainer
         :builder_params => {:ems_id => ems.id},
         :association => :containers,
         # parser sets :ems_ref => "#{pod_id}_#{container.name}_#{container.image}"
+      )
+    @inv_collections[:container_port_configs] =
+      ::ManagerRefresh::InventoryCollection.new(
+        :model_class => ContainerPortConfig,
+        :parent => ems,
+        :association => :container_port_configs,
+        # parser sets :ems_ref => "#{pod_id}_#{container_name}_#{port_config.containerPort}_#{port_config.hostPort}_#{port_config.protocol}"
       )
   end
 
@@ -371,21 +378,16 @@ module EmsRefresh::SaveInventoryContainer
       h[:ems_id] = container_group[:ems_id]
       cd = @inv_collections[:container_definitions].build(h)
       graph_container_inventory(cd, children[:container])
+      graph_container_port_configs_inventory(cd, children[:container_port_configs])
+      graph_container_env_vars_inventory(cd, children[:container_env_vars])
     end
   end
 
-  def save_container_port_configs_inventory(container_definition, hashes, target = nil)
-    return if hashes.nil?
-
-    container_definition.container_port_configs.reset
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
-
-    save_inventory_multi(container_definition.container_port_configs, hashes, deletes, [:ems_ref])
-    store_ids_for_new_records(container_definition.container_port_configs, hashes, :ems_ref)
+  def graph_container_port_configs_inventory(container_definition, hashes)
+    hashes.to_a.each do |h|
+      h = h.merge(:container_definition => container_definition)
+      @inv_collections[:container_port_configs].build(h)
+    end
   end
 
   def save_container_service_port_configs_inventory(container_service, hashes, target = nil)

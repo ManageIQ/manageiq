@@ -26,6 +26,7 @@ module ManageIQ::Providers
     has_many :computer_systems, :through => :container_nodes
     has_many :container_node_computer_systems, :through => :container_nodes, :source => :computer_system
     has_many :container_definitions, :through => :container_groups
+    has_many :container_port_configs, :through => :container_definitions
 
     virtual_column :port_show, :type => :string
 
