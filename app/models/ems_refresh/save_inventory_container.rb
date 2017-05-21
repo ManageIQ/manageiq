@@ -165,6 +165,14 @@ module EmsRefresh::SaveInventoryContainer
         :association => :container_port_configs,
         # parser sets :ems_ref => "#{pod_id}_#{container_name}_#{port_config.containerPort}_#{port_config.hostPort}_#{port_config.protocol}"
       )
+    @inv_collections[:container_env_vars] =
+      ::ManagerRefresh::InventoryCollection.new(
+        :model_class => ContainerEnvVar,
+        :parent => ems,
+        :association => :container_env_vars,
+        # TODO: old save matches on all :name, :value, :field_path - does this matter?
+        :manager_ref => [:container_definition, :name],
+      )
   end
 
   def graph_container_projects_inventory(ems, hashes)
@@ -404,16 +412,11 @@ module EmsRefresh::SaveInventoryContainer
     store_ids_for_new_records(container_service.container_service_port_configs, hashes, :ems_ref)
   end
 
-  def save_container_env_vars_inventory(container_definition, hashes, target = nil)
-    return if hashes.nil?
-    container_definition.container_env_vars.reset
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
-    save_inventory_multi(container_definition.container_env_vars, hashes, deletes, [:name, :value, :field_path])
-    store_ids_for_new_records(container_definition.container_env_vars, hashes, [:name, :value, :field_path])
+  def graph_container_env_vars_inventory(container_definition, hashes)
+    hashes.to_a.each do |h|
+      h = h.merge(:container_definition => container_definition)
+      @inv_collections[:container_env_vars].build(h)
+    end
   end
 
   def lazy_find_image(hash)
