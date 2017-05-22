@@ -367,18 +367,21 @@ module EmsRefresh::SaveInventoryContainer
 
   def graph_container_groups_inventory(ems, hashes)
     hashes.to_a.each do |h|
+      h = h.except(  # TODO extra_keys but need links?
+        :container_replicator, :namespace, :build_pod_name)
+      h = h.merge(
+        :container_node => @inv_collections[:container_nodes].lazy_find(h[:container_node][:ems_ref]),
+        :container_project => @inv_collections[:container_projects].lazy_find(h.delete(:project)[:ems_ref]),
+        #:container_replicator => @inv_collections[:container_replicators].lazy_find(h[:container_replicators][:ems_ref]),
+      )
       children = h.extract!(  # TODO save all
         :container_definitions, :containers, :labels, :tags,
         :node_selector_parts, :container_conditions, :container_volumes,
       )
-      h = h.except(  # TODO extra_keys but need links?
-        :container_node, :container_replicator, :project, :namespace, :build_pod_name)
       cg = @inv_collections[:container_groups].build(h)
       graph_container_definitions_inventory(cg, children[:container_definitions])
       # TODO
-      h[:container_node_id] = h.fetch_path(:container_node, :id)
       h[:container_replicator_id] = h.fetch_path(:container_replicator, :id)
-      h[:container_project_id] = h.fetch_path(:project, :id)
       h[:container_build_pod_id] = ems.container_build_pods.find_by(:name =>
         h[:build_pod_name]).try(:id)
     end
