@@ -20,6 +20,7 @@ db: MiqTask
 # Columns to fetch from the main table
 cols:
 - updated_on
+- started_on
 - created_on
 - state
 - message
@@ -29,28 +30,31 @@ cols:
 
 # Included tables (joined, has_one, has_many) and columns
 include:
-  job:
+  miq_server:
     columns:
-    - target_class
-    - target_id
+    - name
 
 # Order of columns (from all tables)
 col_order:
 - updated_on
+- started_on
 - created_on
 - state
 - message
 - name
 - userid
+- miq_server.name
 
 # Column titles, in order
 headers:
 - Updated
 - Started
+- Queued
 - State
 - Message
 - Task Name
 - User
+- Server
 
 # Condition(s) string for the SQL query
 conditions: {}
