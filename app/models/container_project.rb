@@ -72,38 +72,32 @@ class ContainerProject < ApplicationRecord
   end
 
   def add_role_to_user(user_name, role_name)
-    if role_name.empty?
-      raise MiqException::MiqProvisionError, "When adding a role to a user the role cannot be empty."
-    end
-
-    role_binding = get_resource_by_name(role_name, 'RoleBinding', name)
-
+    role_binding = get_resource_by_name(role_name, 'RoleBinding', name).to_h
     # If the particular binding doesn't exist or it doesn't have a userNames
     # attribute, create a new binding.
     if role_binding.nil? || !role_binding.key?(:userNames)
-      new_role_binding = Kubeclient::Resource.new
-      new_role_binding.kind = 'RoleBinding'
-      new_role_binding.apiVersion = 'v1'
-      new_role_binding.metadata = {}
-      new_role_binding.metadata.namespace = name
-      new_role_binding.metadata.name = role_name
-      new_role_binding.roleRef = {}
-      new_role_binding.roleRef.name = role_name
-      new_role_binding.userNames = [user_name]
+
     end
 
     if role_binding.nil?
+      new_role_binding = Kubeclient::Resource.new(:kind       => 'RoleBinding',
+                                                  :apiVersion => 'v1',
+                                                  :metadata   => {:namespace => name,
+                                                                  :name      => role_name},
+                                                  :roleRef    => {:name => role_name},
+                                                  :userNames  => [user_name])
       create_resource(new_role_binding.to_h)
     elsif !role_binding.key?(:userNames)
-      update_in_provider(new_role_binding.to_h)
-    else
       role_binding[:userNames] = [user_name]
+      update_in_provider(role_binding.to_h)
+    else
+      role_binding[:userNames] = (role_binding[:userNames] + [user_name]).uniq
       update_in_provider(role_binding.to_h)
     end
   end
 
   def subjects_with_role(role_name)
-    role_binding = get_resource_by_name(role_name, 'RoleBinding', name)
+    role_binding = get_resource_by_name(role_name, 'RoleBinding', name).to_h
     if role_binding.nil? || !role_binding.key?(:subjects)
       return nil
     end

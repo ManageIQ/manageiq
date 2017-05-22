@@ -2,6 +2,7 @@
 # resources.
 module ContainerResourceMixin
   extend ActiveSupport::Concern
+  include ManageIQ::Providers::Kubernetes::ContainerManager::EntitiesMapping
 
   def spec
     resource = provider_definition
@@ -29,10 +30,6 @@ module ContainerResourceMixin
     resource[:metadata][:annotations][annotation.to_sym]
   end
 
-  def kind_in_provider
-    MIQ_CLASS_MAPPING[self.class.name]
-  end
-
   # Provides the name of the enclosing namesapce
   def namespace
     container_project.name
@@ -41,7 +38,7 @@ module ContainerResourceMixin
   end
 
   def delete_from_provider
-    method = "delete_#{kind_in_provider.underscore}"
+    method = "delete_#{provider_name(self.class.name)}"
     api_version = container_project.ext_management_system.api_version
     client = container_project.ext_management_system.connect_client(api_version, method)
     response = client.send(method, name, namespace)
@@ -65,21 +62,8 @@ module ContainerResourceMixin
 
   private
 
-  MIQ_CLASS_MAPPING = {
-    "ContainerBuild"        => "BuildConfig",
-    "ContainerBuildPod"     => "Build",
-    "ContainerGroup"        => "Pod",
-    "ContainerLimit"        => "LimitRange",
-    "ContainerQuota"        => "ResourceQuota",
-    "ContainerReplicator"   => "ReplicationController",
-    "ContainerRoute"        => "Route",
-    "PersistentVolumeClaim" => "PersistentVolumeClaim",
-    "ContainerImage"        => "Image",
-    "ContainerService"      => "Service",
-  }.freeze
-
   def provider_definition
-    method = "get_#{kind_in_provider.underscore}"
+    method = "get_#{provider_name(self.class.name)}"
     api_version = container_project.ext_management_system.api_version
     client = container_project.ext_management_system.connect_client(api_version, method)
     response = client.send(method, name, namespace)
@@ -93,7 +77,7 @@ module ContainerResourceMixin
   end
 
   def update_in_provider(resource)
-    method = "update_#{kind_in_provider.underscore}"
+    method = "update_#{provider_name(self.class.name)}"
     api_version = container_project.ext_management_system.api_version
     client = container_project.ext_management_system.connect_client(api_version, method)
     client.send(method, resource)

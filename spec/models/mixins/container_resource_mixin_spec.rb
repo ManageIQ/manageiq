@@ -37,11 +37,6 @@ describe ContainerResourceMixin do
       @test_delete_service = FactoryGirl.create(:container_service, :name => 'mysql2', :container_project => @test_project)
     end
 
-    it "returns kind known to provider" do
-      expect(@test_replicator.kind_in_provider).to eq("ReplicationController")
-      expect(@test_service.kind_in_provider).to eq("Service")
-    end
-
     it "returns correct namespace" do
       expect(@test_replicator.namespace).to eq("testproject")
     end

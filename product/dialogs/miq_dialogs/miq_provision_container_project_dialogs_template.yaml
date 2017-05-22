@@ -1,0 +1,115 @@
+---
+:name: miq_provision_container_project_dialogs_template
+:description: Sample Container Project Provisioning Dialog
+:dialog_type: MiqProvisionWorkflow
+:content:
+  :buttons:
+  - :submit
+  - :cancel
+  :dialogs:
+    :requester:
+      :description: Request
+      :fields:
+        :owner_phone:
+          :description: Phone
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_country:
+          :description: Country/Region
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_phone_mobile:
+          :description: Mobile
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_title:
+          :description: Title
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_first_name:
+          :description: First Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :owner_manager:
+          :description: Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :owner_address:
+          :description: Address
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_company:
+          :description: Company
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_last_name:
+          :description: Last Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :owner_manager_mail:
+          :description: E-Mail
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_city:
+          :description: City
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_department:
+          :description: Department
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_load_ldap:
+          :pressed:
+            :method: :retrieve_ldap
+          :description: Look Up LDAP Email
+          :required: false
+          :display: :show
+          :data_type: :button
+        :owner_manager_phone:
+          :description: Phone
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_state:
+          :description: State
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_office:
+          :description: Office
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_zip:
+          :description: Zip code
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_email:
+          :description: E-Mail
+          :required_method: :validate_regex
+          :required_regex: !ruby/regexp /\A[\w!#$\%&'*+\/=?`\{|\}~^-]+(?:\.[\w!#$\%&'*+\/=?`\{|\}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\Z/i
+          :required: true
+          :display: :edit
+          :data_type: :string
+        :request_notes:
+          :description: Notes
+          :required: false
+          :display: :edit
+          :data_type: :string
+      :display: :show
+      :field_order:
+  :dialog_order:
+  - :requester
