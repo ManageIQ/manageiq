@@ -806,11 +806,9 @@ module OpsController::OpsRbac
                       get_view(MiqUserRole)
                     when "tenant"
                       view, pages = get_view(Tenant, :named_scope => :in_my_region)
-                      unless User.current_user.super_admin_user?
-                        view.table.data.map! do |x|
-                          x['parent_name'] = '' unless allowed_tenant_names.include?(x['parent_name'])
-                          x
-                        end
+                      view.table.data.map! do |x|
+                        x['parent_name'] = '' unless allowed_tenant_names.include?(x['parent_name'])
+                        x
                       end
                       [view, pages]
                     end
