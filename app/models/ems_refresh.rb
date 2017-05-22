@@ -177,16 +177,18 @@ module EmsRefresh
                   task.id
                 end
 
-      item.merge(
-        :args         => [targets],
-        :task_id      => task_id,
-        :msg_timeout  => queue_timeout,
-        :miq_callback => {
+      unless task_id.nil?
+        item[:miq_callback] = {
           :class_name  => 'MiqTask',
           :method_name => :queue_callback,
           :instance_id => task_id,
           :args        => ['Finished']
         }
+      end
+      item.merge(
+        :args        => [targets],
+        :task_id     => task_id,
+        :msg_timeout => queue_timeout
       )
     end
 
