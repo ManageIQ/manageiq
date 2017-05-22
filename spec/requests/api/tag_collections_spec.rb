@@ -543,9 +543,11 @@ describe "Tag Collections API" do
       expected = {
         'results' => [
           a_hash_including('success'      => true,
+                           'href'         => a_string_including(vms_url(vm1.id)),
                            'tag_category' => tag1[:category],
                            'tag_name'     => tag1[:name]),
           a_hash_including('success'      => true,
+                           'href'         => a_string_including(vms_url(vm2.id)),
                            'tag_category' => tag2[:category],
                            'tag_name'     => tag2[:name])
         ]
@@ -573,9 +575,11 @@ describe "Tag Collections API" do
         'results' => [
           a_hash_including('success' => false, 'message' => a_string_including("Couldn't find Vm")),
           a_hash_including('success'      => false,
+                           'href'         => a_string_including(vms_url(vm2.id)),
                            'tag_category' => bad_tag[:category],
                            'tag_name'     => bad_tag[:name]),
           a_hash_including('success'      => true,
+                           'href'         => a_string_including(vms_url(vm2.id)),
                            'tag_category' => tag1[:category],
                            'tag_name'     => tag1[:name])
         ]
@@ -607,9 +611,11 @@ describe "Tag Collections API" do
       expected = {
         'results' => [
           a_hash_including('success'      => true,
+                           'href'         => a_string_including(vms_url(vm1.id)),
                            'tag_category' => tag1[:category],
                            'tag_name'     => tag1[:name]),
           a_hash_including('success'      => true,
+                           'href'         => a_string_including(vms_url(vm2.id)),
                            'tag_category' => tag2[:category],
                            'tag_name'     => tag2[:name])
         ]
@@ -818,9 +824,11 @@ describe "Tag Collections API" do
       expected = {
         'results' => [
           a_hash_including('success'      => true,
+                           'href'         => a_string_including(services_url(service1.id)),
                            'tag_category' => tag1[:category],
                            'tag_name'     => tag1[:name]),
           a_hash_including('success'      => true,
+                           'href'         => a_string_including(services_url(service2.id)),
                            'tag_category' => tag2[:category],
                            'tag_name'     => tag2[:name])
         ]
@@ -844,9 +852,11 @@ describe "Tag Collections API" do
       expected = {
         'results' => [
           a_hash_including('success'      => true,
+                           'href'         => a_string_including(services_url(service1.id)),
                            'tag_category' => tag1[:category],
                            'tag_name'     => tag1[:name]),
           a_hash_including('success'      => true,
+                           'href'         => a_string_including(services_url(service2.id)),
                            'tag_category' => tag2[:category],
                            'tag_name'     => tag2[:name])
         ]
