@@ -1015,6 +1015,7 @@
   :maindb: ExtManagementSystem
   :container_deployment_wizard: false
   :datawarehouse_manager: false
+  :physical_infrastructure: false
 :prototype:
   :monitoring: false
 :recommendations:
