@@ -81,8 +81,6 @@ class Host < ApplicationRecord
 
   has_many                  :miq_alert_statuses, :dependent => :destroy, :as => :resource
 
-  has_one                   :miq_cim_instance, :as => :vmdb_obj, :dependent => :destroy
-
   has_many                  :host_service_groups, :dependent => :destroy
 
   has_many                  :cloud_services, :dependent => :nullify
@@ -144,12 +142,6 @@ class Host < ApplicationRecord
   virtual_has_many   :processes,       :class_name => "OsProcess",  :uses => {:operating_system => :processes}
   virtual_has_many   :event_logs,                                   :uses => {:operating_system => :event_logs}
   virtual_has_many   :firewall_rules,                               :uses => {:operating_system => :firewall_rules}
-
-  virtual_has_many  :base_storage_extents, :class_name => "CimStorageExtent"
-  virtual_has_many  :storage_systems,      :class_name => "CimComputerSystem"
-  virtual_has_many  :file_shares,          :class_name => 'SniaFileShare'
-  virtual_has_many  :storage_volumes,      :class_name => 'CimStorageVolume'
-  virtual_has_many  :logical_disks,        :class_name => 'CimLogicalDisk'
 
   virtual_total :v_total_storages, :storages
   virtual_total :v_total_vms, :vms
@@ -1643,46 +1635,6 @@ class Host < ApplicationRecord
     names = hostname.to_s.split(',').first.to_s.split('.')
     return names[1..-1].join('.') unless names.blank?
     nil
-  end
-
-  def base_storage_extents
-    miq_cim_instance.try(:base_storage_extents) || []
-  end
-
-  def base_storage_extents_size
-    miq_cim_instance.try(:base_storage_extents_size) || 0
-  end
-
-  def storage_systems
-    miq_cim_instance.try(:storage_systems) || []
-  end
-
-  def storage_systems_size
-    miq_cim_instance.try(:storage_systems_size) || 0
-  end
-
-  def storage_volumes
-    miq_cim_instance.try(:storage_volumes) || []
-  end
-
-  def storage_volumes_size
-    miq_cim_instance.try(:storage_volumes_size) || 0
-  end
-
-  def file_shares
-    miq_cim_instance.try(:file_shares) || []
-  end
-
-  def file_shares_size
-    miq_cim_instance.try(:file_shares_size) || 0
-  end
-
-  def logical_disks
-    miq_cim_instance.try(:logical_disks) || []
-  end
-
-  def logical_disks_size
-    miq_cim_instance.try(:logical_disks_size) || 0
   end
 
   #

@@ -181,12 +181,7 @@ module MiqServer::RoleManagement
   end
 
   def licensed_roles
-    roles = ServerRole.all.to_a
-    unless ::Settings.product.storage
-      roles.delete_if { |r| r.name.starts_with?('storage_') }
-      roles.delete_if { |r| r.name == 'vmdb_storage_bridge' }
-    end
-    roles
+    ServerRole.all.to_a # TODO: The UI calls delete_if on this method, so it needs to be an Array
   end
 
   def licensed_role_names

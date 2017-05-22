@@ -53,16 +53,10 @@ _("VMs & Templates Accordion")
 # TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
 # TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Parent-Host.yaml
 # TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Storage.yaml
-# TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-vms.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Vm.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_PhysicalInfraManager.yaml
-# TRANSLATORS: file: product/views/OntapFileShare.yaml
-# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
-# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
-# TRANSLATORS: file: product/views/SniaLocalFileSystem.yaml
 # TRANSLATORS: file: product/views/Vm-VmReconfigureRequest.yaml
 # TRANSLATORS: file: product/views/Vm-all_vms.yaml
 # TRANSLATORS: file: product/views/Vm.yaml
@@ -828,14 +822,8 @@ _("Modify Resource Pools")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Remove Resource Pools")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-# TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_PhysicalInfraManager.yaml
-# TRANSLATORS: file: product/views/OntapFileShare.yaml
-# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
-# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
-# TRANSLATORS: file: product/views/SniaLocalFileSystem.yaml
 _("Datastores")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Everything under Datastores")
@@ -1708,8 +1696,6 @@ _("About")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Storage Systems")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("CIM Storage Systems")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("View Storage Systems")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Display Lists of Storage Systems")
@@ -1728,8 +1714,6 @@ _("Edit Storage Systems Tags")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Storage Volumes")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("CIM Storage Volumes")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("View Storage Volumes")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Display Lists of Storage Volumes")
@@ -1743,8 +1727,6 @@ _("Perform Operations on Storage Volumes")
 _("Edit Storage Volumes Tags")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Logical Disks")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("CIM Logical Disks")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("View Logical Disks")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -1764,8 +1746,6 @@ _("Edit Logical Disks Tags")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Base Storage Extents")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("CIM Base Storage Extents")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("View Base Storage Extents")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Display Lists of Storage Extents")
@@ -1779,8 +1759,6 @@ _("Perform Operations on Base Storage Extents")
 _("Edit Storage Extents Tags")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("File Shares")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("SNIA File Shares")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("View File Shares")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -1800,8 +1778,6 @@ _("Edit File Shares Tags")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Local File System")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("SNIA Local File Systems")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("View Local File Systems")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Display Lists of Local File Systems")
@@ -1813,34 +1789,6 @@ _("Display Local File Systems Utilization")
 _("Perform Operations on Local File Systems")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Local File Systems Tags")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Storage Managers")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Everything under Storage Managers")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("View Storage Managers")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Display Lists of Storage Managers")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Display Individual Storage Managers")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Perform Operations on SMI-S Agents")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Refresh Inventory")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Refresh Inventory and power states for all items related of Storage Managers")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Refresh Status")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Refresh Status for all items related of Storage Managers")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Modify Storage Managers")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Add an Storage Manager")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Storage Managers")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Edit an Storage Manager")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("PXE")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -3670,17 +3618,11 @@ _("Network I/O (KBps)")
 # TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/EmsCluster.yaml
 # TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
 # TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Storage.yaml
-# TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
 # TRANSLATORS: file: product/views/EmsCluster.yaml
 # TRANSLATORS: file: product/views/Host-hosts.yaml
 # TRANSLATORS: file: product/views/Host.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_PhysicalInfraManager.yaml
-# TRANSLATORS: file: product/views/OntapFileShare.yaml
-# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
-# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
-# TRANSLATORS: file: product/views/SniaLocalFileSystem.yaml
 _("Hosts")
 # TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Container.yaml
 # TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerGroup.yaml
@@ -3771,24 +3713,6 @@ _("Network I/O (datagrams per second)")
 # TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareMessaging_jms_topic.yaml
 # TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareMessaging_jms_topic.yaml
 _("Subscribers")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/OntapLogicalDisk.yaml
-_("Average Disk Latency (microseconds)")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/OntapLogicalDisk.yaml
-_("Disk Read Latency (microseconds)")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/OntapLogicalDisk.yaml
-_("Disk Write Latency (microseconds)")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/OntapLogicalDisk.yaml
-_("I/O Operations (per second)")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/OntapLogicalDisk.yaml
-_("Read Data (bytes per second)")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/OntapLogicalDisk.yaml
-_("Write Data (bytes per second)")
 # TRANSLATORS: file: product/charts/layouts/daily_perf_charts/VmdbTable.yaml
 # TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/VmdbTable.yaml
 # TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/025_Location and Size.yaml
@@ -3949,8 +3873,6 @@ _("Cluster Relationships")
 # TRANSLATORS: file: product/views/Account-users.yaml
 # TRANSLATORS: file: product/views/AdvancedSetting.yaml
 # TRANSLATORS: file: product/views/AvailabilityZone.yaml
-# TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
-# TRANSLATORS: file: product/views/CimStorageExtent.yaml
 # TRANSLATORS: file: product/views/CloudNetwork.yaml
 # TRANSLATORS: file: product/views/CloudService.yaml
 # TRANSLATORS: file: product/views/CloudSubnet.yaml
@@ -4021,10 +3943,6 @@ _("Cluster Relationships")
 # TRANSLATORS: file: product/views/MiqWorker.yaml
 # TRANSLATORS: file: product/views/NetworkPort.yaml
 # TRANSLATORS: file: product/views/NetworkRouter.yaml
-# TRANSLATORS: file: product/views/OntapFileShare.yaml
-# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
-# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
 # TRANSLATORS: file: product/views/OpenscapRuleResult.yaml
 # TRANSLATORS: file: product/views/OrchestrationStack.yaml
 # TRANSLATORS: file: product/views/OrchestrationStackParameter.yaml
@@ -4048,7 +3966,6 @@ _("Cluster Relationships")
 # TRANSLATORS: file: product/views/ServiceCatalog.yaml
 # TRANSLATORS: file: product/views/ServiceTemplate.yaml
 # TRANSLATORS: file: product/views/ServiceTemplateCatalog.yaml
-# TRANSLATORS: file: product/views/SniaLocalFileSystem.yaml
 # TRANSLATORS: file: product/views/Storage.yaml
 # TRANSLATORS: file: product/views/StorageCluster.yaml
 # TRANSLATORS: file: product/views/StorageFile-debris_files.yaml
@@ -4057,7 +3974,6 @@ _("Cluster Relationships")
 # TRANSLATORS: file: product/views/StorageFile-snapshot_files.yaml
 # TRANSLATORS: file: product/views/StorageFile-vm_misc_files.yaml
 # TRANSLATORS: file: product/views/StorageFile-vm_ram_files.yaml
-# TRANSLATORS: file: product/views/StorageManager.yaml
 # TRANSLATORS: file: product/views/Switch.yaml
 # TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
 # TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
@@ -4373,7 +4289,6 @@ _("Number of  VMs")
 # TRANSLATORS: file: product/views/PhysicalServer.yaml
 # TRANSLATORS: file: product/views/ScanItemSet.yaml
 # TRANSLATORS: file: product/views/ServiceTemplate.yaml
-# TRANSLATORS: file: product/views/StorageManager.yaml
 # TRANSLATORS: file: product/views/Tenant.yaml
 # TRANSLATORS: file: product/views/ems_block_storage.yaml
 # TRANSLATORS: file: product/views/ems_object_storage.yaml
@@ -4725,7 +4640,6 @@ _("Host vLANs and vSwitches")
 # TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_PhysicalInfraManager.yaml
 # TRANSLATORS: file: product/views/MiqServer.yaml
-# TRANSLATORS: file: product/views/StorageManager.yaml
 _("Hostname")
 # TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/090_vLANs and vSwitches.yaml
 _("vLAN Name")
@@ -5613,8 +5527,6 @@ _("Provider Type")
 # TRANSLATORS: file: product/reports/120_Configuration Management - Providers/040_Monthly Host Count per Provider.yaml
 # TRANSLATORS: file: product/reports/120_Configuration Management - Providers/050_Monthly Vm Count per Provider.yaml
 # TRANSLATORS: file: product/views/AutomationRequest.yaml
-# TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
-# TRANSLATORS: file: product/views/CimStorageExtent.yaml
 # TRANSLATORS: file: product/views/ConfigurationProfile.yaml
 # TRANSLATORS: file: product/views/EmsCluster.yaml
 # TRANSLATORS: file: product/views/Host-hosts.yaml
@@ -5631,15 +5543,9 @@ _("Provider Type")
 # TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
 # TRANSLATORS: file: product/views/MiqRequest.yaml
 # TRANSLATORS: file: product/views/MiqServer.yaml
-# TRANSLATORS: file: product/views/OntapFileShare.yaml
-# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
-# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
 # TRANSLATORS: file: product/views/ResourcePool.yaml
-# TRANSLATORS: file: product/views/SniaLocalFileSystem.yaml
 # TRANSLATORS: file: product/views/Storage.yaml
 # TRANSLATORS: file: product/views/StorageCluster.yaml
-# TRANSLATORS: file: product/views/StorageManager.yaml
 # TRANSLATORS: file: product/views/VmOrTemplate.yaml
 # TRANSLATORS: file: product/views/ems_block_storage.yaml
 # TRANSLATORS: file: product/views/ems_object_storage.yaml
@@ -5733,7 +5639,6 @@ _("Power Off Date")
 _("Last Analysis Time")
 # TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/059_Guest OS Information (any OS).yaml
 # TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
-# TRANSLATORS: file: product/views/CimStorageExtent.yaml
 # TRANSLATORS: file: product/views/GuestApplication.yaml
 # TRANSLATORS: file: product/views/Patch.yaml
 _("Vendor")
@@ -6165,8 +6070,6 @@ _("Active Snapshot (0/1)")
 # TRANSLATORS: file: product/views/AdvancedSetting.yaml
 # TRANSLATORS: file: product/views/AutomationRequest.yaml
 # TRANSLATORS: file: product/views/ChargebackRate.yaml
-# TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
-# TRANSLATORS: file: product/views/CimStorageExtent.yaml
 # TRANSLATORS: file: product/views/Condition.yaml
 # TRANSLATORS: file: product/views/ConditionSet.yaml
 # TRANSLATORS: file: product/views/ConfigurationProfile.yaml
@@ -6191,9 +6094,6 @@ _("Active Snapshot (0/1)")
 # TRANSLATORS: file: product/views/MiqProvision.yaml
 # TRANSLATORS: file: product/views/MiqRequest.yaml
 # TRANSLATORS: file: product/views/MiqSchedule.yaml
-# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
-# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
 # TRANSLATORS: file: product/views/OrchestrationStackOutput.yaml
 # TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
 # TRANSLATORS: file: product/views/OrchestrationTemplateAzure.yaml
@@ -6470,27 +6370,6 @@ _("Clusters")
 _("All VMs")
 # TRANSLATORS: file: product/views/EmsCluster.yaml
 _("All Templates")
-# TRANSLATORS: file: product/views/SniaLocalFileSystem.yaml
-_("Snia Local File System")
-# TRANSLATORS: file: product/views/SniaLocalFileSystem.yaml
-_("SniaLocalFileSystems")
-# TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
-# TRANSLATORS: file: product/views/CimStorageExtent.yaml
-# TRANSLATORS: file: product/views/OntapFileShare.yaml
-# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
-# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
-# TRANSLATORS: file: product/views/SniaLocalFileSystem.yaml
-_("Operational Status")
-# TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
-# TRANSLATORS: file: product/views/CimStorageExtent.yaml
-# TRANSLATORS: file: product/views/OntapFileShare.yaml
-# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
-# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
-# TRANSLATORS: file: product/views/SniaLocalFileSystem.yaml
-# TRANSLATORS: file: product/views/StorageManager.yaml
-_("Last Update Status")
 # TRANSLATORS: file: product/views/ConditionSet.yaml
 _("Condition Sets")
 # TRANSLATORS: file: product/views/ConditionSet.yaml
@@ -6545,15 +6424,6 @@ _("Minimum")
 _("Maximum")
 # TRANSLATORS: file: product/views/VmdbDatabaseSetting.yaml
 _("Unit")
-# TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
-_("Cim Base Storage Extent")
-# TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
-_("CimBaseStorageExtents")
-# TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
-# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
-# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
-_("Health Status")
 # TRANSLATORS: file: product/views/Account-groups.yaml
 # TRANSLATORS: file: product/views/Account-users.yaml
 _("Account ID")
@@ -6641,7 +6511,6 @@ _("EmsCloud")
 # TRANSLATORS: file: product/views/ManageIQ_Providers_PhysicalInfraManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
 # TRANSLATORS: file: product/views/MiqSchedule.yaml
-# TRANSLATORS: file: product/views/StorageManager.yaml
 # TRANSLATORS: file: product/views/ems_block_storage.yaml
 # TRANSLATORS: file: product/views/ems_object_storage.yaml
 _("EVM Zone")
@@ -6804,19 +6673,12 @@ _("Date Installed")
 _("Valid")
 # TRANSLATORS: file: product/views/Patch.yaml
 _("Installed")
-# TRANSLATORS: file: product/views/StorageManager.yaml
-_("Storage Manager")
-# TRANSLATORS: file: product/views/StorageManager.yaml
-_("IPAddress")
 # TRANSLATORS: file: product/views/ContainerImageRegistry.yaml
 # TRANSLATORS: file: product/views/FirewallRule.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
-# TRANSLATORS: file: product/views/StorageManager.yaml
 _("Port")
-# TRANSLATORS: file: product/views/StorageManager.yaml
-_("Created At")
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-all_vms_and_templates.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-vms.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm.yaml
@@ -6843,15 +6705,6 @@ _("Outputs")
 # TRANSLATORS: file: product/views/CloudObjectStoreObject.yaml
 # TRANSLATORS: file: product/views/OrchestrationStackOutput.yaml
 _("Key")
-# TRANSLATORS: file: product/views/OntapFileShare.yaml
-_("Snia File Share")
-# TRANSLATORS: file: product/views/OntapFileShare.yaml
-_("OntapFileShares")
-# TRANSLATORS: file: product/views/OntapFileShare.yaml
-# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
-# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
-_("Element Name")
 # TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
 _("EmsInfra")
 # TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
@@ -7162,10 +7015,6 @@ _("Address")
 _("Fixed Address")
 # TRANSLATORS: file: product/views/FloatingIp.yaml
 _("Instance name")
-# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
-_("Cim Storage Volume")
-# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
-_("OntapStorageVolumes")
 # TRANSLATORS: file: product/views/MiqEvent.yaml
 _("Event")
 # TRANSLATORS: file: product/views/MiqProvision.yaml
@@ -7375,18 +7224,10 @@ _("Service Account")
 _("Output")
 # TRANSLATORS: file: product/views/ContainerBuild.yaml
 _("Completion Deadline")
-# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
-_("Cim Logical Disk")
-# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
-_("OntapLogicalDisks")
 # TRANSLATORS: file: product/views/ContainerTemplate.yaml
 _("Container Templates")
 # TRANSLATORS: file: product/views/ContainerTemplate.yaml
 _("ContainerTemplate")
-# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
-_("NetApp Filers")
-# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
-_("OntapStorageSystems")
 # TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
 _("File System Drivers")
 # TRANSLATORS: file: product/views/ContainerRoute.yaml
@@ -7515,9 +7356,3 @@ _("ActionSet")
 _("Middleware Deployments")
 # TRANSLATORS: file: product/views/MiddlewareDeployment.yaml
 _("Deployment Name")
-# TRANSLATORS: file: product/views/CimStorageExtent.yaml
-_("Cim Storage Extent")
-# TRANSLATORS: file: product/views/CimStorageExtent.yaml
-_("CimStorageExtents")
-# TRANSLATORS: file: product/views/CimStorageExtent.yaml
-_("Health State")

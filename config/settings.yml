@@ -1126,22 +1126,8 @@
       - vmtx
       - vswp
       - "%redo%"
-  :inventory:
-    :full_refresh_schedule: "38 * * * *"
   :max_parallel_scans_per_host: 1
   :max_qitems_per_scan_request: 0
-  :metrics_collection:
-    :collection_schedule: "0,15,30,45  * * * *"
-    :hourly_rollup_schedule: "8 * * * *"
-    :daily_rollup_schedule: "23 0 * * *"
-    :collection_interval: 15.minutes
-    :max_gap_to_fill: 6.hours
-  :metrics_history:
-    :purge_schedule: "50 * * * *"
-    :keep_daily_metrics: 6.months
-    :keep_hourly_metrics: 6.months
-    :keep_realtime_metrics: 4.hours
-    :purge_window_size: 100
   :watchdog_interval: 1.minute
 :ui:
   :mark_translated_strings: false
@@ -1265,12 +1251,6 @@
         :nice_delta: 7
       :generic_worker:
         :count: 2
-      :netapp_refresh_worker:
-        :memory_threshold: 2.gigabytes
-        :nice_delta: 7
-        :poll: 10.seconds
-        :poll_method: :normal
-        :queue_timeout: 60.minutes
       :priority_worker:
         :memory_threshold: 600.megabytes
         :count: 2
@@ -1284,16 +1264,6 @@
         :memory_threshold: 600.megabytes
         :queue_timeout: 20.minutes
         :restart_interval: 2.hours
-      :storage_metrics_collector_worker:
-        :count: 2
-        :nice_delta: 3
-        :poll_method: :escalate
-      :vmdb_storage_bridge_worker:
-        :memory_threshold: 2.gigabytes
-        :nice_delta: 7
-        :poll: 10.seconds
-        :poll_method: :normal
-        :queue_timeout: 120.minutes
     :schedule_worker:
       :container_entities_purge_interval: 1.day
       :authentication_check_interval: 1.hour
@@ -1331,13 +1301,6 @@
       :storage_file_collection_time_utc: 21600
       :vm_retired_interval: 10.minutes
       :yum_update_check: 12.hours
-    :smis_refresh_worker:
-      :memory_threshold: 1.gigabytes
-      :nice_delta: 3
-      :poll: 15.seconds
-      :smis_update_period: 1.hours
-      :stats_update_period: 10.minutes
-      :status_update_period: 5.minutes
     :ui_worker:
       :connection_pool_size: 8
       :memory_threshold: 1.gigabytes

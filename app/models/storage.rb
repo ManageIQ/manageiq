@@ -22,13 +22,6 @@ class Storage < ApplicationRecord
 
   has_many :miq_events, :as => :target, :dependent => :destroy
 
-  has_one  :miq_cim_instance, :as => :vmdb_obj, :dependent => :destroy
-
-  virtual_has_many  :base_storage_extents, :class_name => "CimStorageExtent"
-  virtual_has_many  :storage_systems,      :class_name => "CimComputerSystem"
-  virtual_has_one   :file_share,           :class_name => 'SniaFileShare'
-  virtual_has_many  :storage_volumes,      :class_name => 'CimStorageVolume'
-  virtual_has_one   :logical_disk,         :class_name => 'CimLogicalDisk'
   virtual_has_many  :storage_clusters
 
   validates_presence_of     :name
@@ -670,38 +663,6 @@ class Storage < ApplicationRecord
 
   def v_provisioned_percent_of_total
     total_space.to_f == 0 ? 0.0 : (v_total_provisioned.to_f / total_space.to_f * 1000.0).round / 10.0
-  end
-
-  def base_storage_extents
-    miq_cim_instance.nil? ? [] : miq_cim_instance.base_storage_extents
-  end
-
-  def base_storage_extents_size
-    miq_cim_instance.nil? ? 0 : miq_cim_instance.base_storage_extents_size
-  end
-
-  def storage_systems
-    miq_cim_instance.nil? ? [] : miq_cim_instance.storage_systems
-  end
-
-  def storage_systems_size
-    miq_cim_instance.nil? ? 0 : miq_cim_instance.storage_systems_size
-  end
-
-  def storage_volumes
-    miq_cim_instance.nil? ? [] : miq_cim_instance.storage_volumes
-  end
-
-  def storage_volumes_size
-    miq_cim_instance.nil? ? 0 : miq_cim_instance.storage_volumes_size
-  end
-
-  def file_share
-    miq_cim_instance.nil? ? nil : miq_cim_instance.file_share
-  end
-
-  def logical_disk
-    miq_cim_instance.nil? ? [] : miq_cim_instance.logical_disk
   end
 
   #

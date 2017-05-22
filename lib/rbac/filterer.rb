@@ -33,7 +33,6 @@ module Rbac
       FloatingIp
       Host
       LoadBalancer
-      MiqCimInstance
       MiddlewareDatasource
       MiddlewareDeployment
       MiddlewareDomain

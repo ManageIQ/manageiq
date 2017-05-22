@@ -1,2 +1,0 @@
-class OntapLunMetricsRollupMetadata < StorageMetricsMetadata
-end

@@ -1274,10 +1274,6 @@ _("Chargeback for Projects")
 _("Chargeback Rate")
 # TRANSLATORS: en.yml key: dictionary.model.ChargebackRate (plural form)
 _("Chargeback Rates")
-# TRANSLATORS: en.yml key: dictionary.model.CimStorageExtent
-_("Storage - Extent")
-# TRANSLATORS: en.yml key: dictionary.model.CimStorageExtent (plural form)
-_("Storage - Extents")
 # TRANSLATORS: en.yml key: dictionary.model.Classification
 _("Category")
 # TRANSLATORS: en.yml key: dictionary.model.Classification (plural form)
@@ -1980,10 +1976,6 @@ _("Searches")
 _("Server")
 # TRANSLATORS: en.yml key: dictionary.model.MiqServer (plural form)
 _("Servers")
-# TRANSLATORS: en.yml key: dictionary.model.MiqSmisAgent
-_("SMI-S Agent")
-# TRANSLATORS: en.yml key: dictionary.model.MiqSmisAgent (plural form)
-_("SMI-S Agents")
 # TRANSLATORS: en.yml key: dictionary.model.MiqTask
 _("Task")
 # TRANSLATORS: en.yml key: dictionary.model.MiqTask (plural form)
@@ -2004,10 +1996,6 @@ _("Widgets")
 _("EVM Worker")
 # TRANSLATORS: en.yml key: dictionary.model.MiqWorker (plural form)
 _("EVM Workers")
-# TRANSLATORS: en.yml key: dictionary.model.NetappRemoteService
-_("NetApp Remote Service")
-# TRANSLATORS: en.yml key: dictionary.model.NetappRemoteService (plural form)
-_("NetApp Remote Services")
 # TRANSLATORS: en.yml key: dictionary.model.NetworkPort
 _("Network Port")
 # TRANSLATORS: en.yml key: dictionary.model.NetworkPort (plural form)
@@ -2016,36 +2004,6 @@ _("Network Ports")
 _("Network Router")
 # TRANSLATORS: en.yml key: dictionary.model.NetworkRouter (plural form)
 _("Network Routers")
-# TRANSLATORS: en.yml key: dictionary.model.OntapConcreteExtent
-_("Storage - Aggregate")
-# TRANSLATORS: en.yml key: dictionary.model.OntapConcreteExtent (plural form)
-_("Storage - Aggregates")
-# TRANSLATORS: en.yml key: dictionary.model.OntapFileShare
-_("Storage - File Share")
-# TRANSLATORS: en.yml key: dictionary.model.OntapFileShare (plural form)
-_("Storage - File Shares")
-# TRANSLATORS: en.yml key: dictionary.model.OntapLogicalDisk
-_("Storage - Volume")
-# TRANSLATORS: en.yml key: dictionary.model.OntapLogicalDisk (plural form)
-_("Storage - Volumes")
-# TRANSLATORS: en.yml key: dictionary.model.OntapPlexExtent
-_("Storage - Plex")
-# TRANSLATORS: en.yml key: dictionary.model.OntapPlexExtent (plural form)
-_("Storage - Plexes")
-# TRANSLATORS: en.yml key: dictionary.model.OntapRaidGroupExtent
-_("Storage - Raid Group")
-# TRANSLATORS: en.yml key: dictionary.model.OntapRaidGroupExtent (plural form)
-_("Storage - Raid Groups")
-# TRANSLATORS: en.yml key: dictionary.model.OntapStorageSystem
-_("Storage - Filer")
-# TRANSLATORS: en.yml key: dictionary.model.OntapStorageSystem (plural form)
-_("Storage - Filers")
-# TRANSLATORS: en.yml key: dictionary.model.OntapStorageVolume
-_("Storage - LUN")
-# TRANSLATORS: en.yml key: dictionary.model.OntapStorageVolume (plural form)
-_("Storage - LUNs")
-# TRANSLATORS: en.yml key: dictionary.model.OntapVolumeMetricsRollup
-_("Storage Performance - Volumes")
 # TRANSLATORS: en.yml key: dictionary.model.OrchestrationStack
 _("Orchestration Stack")
 # TRANSLATORS: en.yml key: dictionary.model.OrchestrationStack (plural form)
@@ -2134,10 +2092,6 @@ _("Catalogs")
 _("Snapshot")
 # TRANSLATORS: en.yml key: dictionary.model.Snapshot (plural form)
 _("Snapshots")
-# TRANSLATORS: en.yml key: dictionary.model.SniaLocalFileSystem
-_("Storage - Local File System")
-# TRANSLATORS: en.yml key: dictionary.model.SniaLocalFileSystem (plural form)
-_("Storage - Local File Systems")
 # TRANSLATORS: en.yml key: dictionary.model.Storage
 _("Datastore")
 # TRANSLATORS: en.yml key: dictionary.model.Storage (plural form)
@@ -2146,10 +2100,6 @@ _("Datastores")
 _("Datastore File")
 # TRANSLATORS: en.yml key: dictionary.model.StorageFile (plural form)
 _("Datastore Files")
-# TRANSLATORS: en.yml key: dictionary.model.StorageManager
-_("Storage Manager")
-# TRANSLATORS: en.yml key: dictionary.model.StorageManager (plural form)
-_("Storage Managers")
 # TRANSLATORS: en.yml key: dictionary.model.StoragePerformance
 _("Performance - Datastore")
 # TRANSLATORS: en.yml key: dictionary.model.StoragePerformance (plural form)
@@ -2222,8 +2172,6 @@ _("Cloud Volumes Based on Snapshot")
 _("Cloud Volumes Based on Snapshots")
 # TRANSLATORS: en.yml key: dictionary.table.cdroms
 _("CD/DVD Drives")
-# TRANSLATORS: en.yml key: dictionary.table.cim_base_storage_extent
-_("Base Extents")
 # TRANSLATORS: en.yml key: dictionary.table.cloud_object_store_container
 _("Cloud Object Store Container")
 # TRANSLATORS: en.yml key: dictionary.table.cloud_object_store_container (plural form)
@@ -2632,30 +2580,6 @@ _("Zone")
 _("Zones")
 # TRANSLATORS: en.yml key: dictionary.table.nics
 _("Network Adapters")
-# TRANSLATORS: en.yml key: dictionary.table.ontap_concrete_extents
-_("Storage - Aggregates")
-# TRANSLATORS: en.yml key: dictionary.table.ontap_file_share
-_("File Shares")
-# TRANSLATORS: en.yml key: dictionary.table.ontap_file_shares
-_("Storage - File Shares")
-# TRANSLATORS: en.yml key: dictionary.table.ontap_logical_disk
-_("Volumes")
-# TRANSLATORS: en.yml key: dictionary.table.ontap_logical_disks
-_("Storage - Volumes")
-# TRANSLATORS: en.yml key: dictionary.table.ontap_plex_extents
-_("Storage - Plexes")
-# TRANSLATORS: en.yml key: dictionary.table.ontap_raid_group_extents
-_("Storage - Raid Groups")
-# TRANSLATORS: en.yml key: dictionary.table.ontap_storage_system
-_("Filers")
-# TRANSLATORS: en.yml key: dictionary.table.ontap_storage_systems
-_("Storage - Filers")
-# TRANSLATORS: en.yml key: dictionary.table.ontap_storage_volume
-_("LUNs")
-# TRANSLATORS: en.yml key: dictionary.table.ontap_storage_volumes
-_("Storage - LUNs")
-# TRANSLATORS: en.yml key: dictionary.table.ontap_volume_metrics_rollup
-_("Storage Performance - Volumes")
 # TRANSLATORS: en.yml key: dictionary.table.orchestration_stack
 _("Stack")
 # TRANSLATORS: en.yml key: dictionary.table.orchestration_stack (plural form)
@@ -2694,8 +2618,6 @@ _("Catalog Items")
 _("Catalog")
 # TRANSLATORS: en.yml key: dictionary.table.service_template_catalog (plural form)
 _("Catalogs")
-# TRANSLATORS: en.yml key: dictionary.table.snia_local_file_system
-_("Storage - Local File Systems")
 # TRANSLATORS: en.yml key: dictionary.table.storage
 _("Datastore")
 # TRANSLATORS: en.yml key: dictionary.table.storage (plural form)

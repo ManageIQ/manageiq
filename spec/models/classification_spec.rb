@@ -45,7 +45,7 @@ describe Classification do
         Classification.find_by_name("test_category").entries.each { |ent| ent.assign_entry_to(host) }
       end
     end
-    let(:sti_inst) { FactoryGirl.create(:cim_storage_extent) }
+    let(:sti_inst) { FactoryGirl.create(:template_vmware) }
 
     before do
       parent = FactoryGirl.create(:classification, :name => "test_category")
@@ -283,11 +283,11 @@ describe Classification do
       ent2 = cat.entries[1]
 
       ent1.assign_entry_to(sti_inst)
-      expect(any_tagged_with(CimStorageExtent, ent1.name, ent1.parent.name)).to_not be_empty
+      expect(any_tagged_with(MiqTemplate, ent1.name, ent1.parent.name)).to_not be_empty
 
       ent2.assign_entry_to(sti_inst)
-      expect(any_tagged_with(CimStorageExtent, ent2.name, ent2.parent.name)).to_not be_empty
-      expect(any_tagged_with(CimStorageExtent, ent1.name, ent1.parent.name)).to     be_empty
+      expect(any_tagged_with(MiqTemplate, ent2.name, ent2.parent.name)).to_not be_empty
+      expect(any_tagged_with(MiqTemplate, ent1.name, ent1.parent.name)).to     be_empty
     end
 
     it "should test find by entry for an STI instance" do
@@ -295,7 +295,7 @@ describe Classification do
       ent1 = cat.entries[0]
 
       ent1.assign_entry_to(sti_inst)
-      expect(ent1.find_by_entry("CimStorageExtent")[0]).to eq(sti_inst)
+      expect(ent1.find_by_entry("MiqTemplate")[0]).to eq(sti_inst)
     end
 
     it "should test remove entry from an STI instance" do
@@ -305,11 +305,11 @@ describe Classification do
 
       ent1.assign_entry_to(sti_inst)
       ent2.assign_entry_to(sti_inst)
-      expect(all_tagged_with(CimStorageExtent, "#{ent1.name} #{ent2.name}", ent1.parent.name)).to_not be_empty
+      expect(all_tagged_with(MiqTemplate, "#{ent1.name} #{ent2.name}", ent1.parent.name)).to_not be_empty
 
       ent1.remove_entry_from(sti_inst)
-      expect(any_tagged_with(CimStorageExtent, ent2.name, ent2.parent.name)).to_not be_empty
-      expect(any_tagged_with(CimStorageExtent, ent1.name, ent1.parent.name)).to be_empty
+      expect(any_tagged_with(MiqTemplate, ent2.name, ent2.parent.name)).to_not be_empty
+      expect(any_tagged_with(MiqTemplate, ent1.name, ent1.parent.name)).to be_empty
     end
 
     context "#bulk_assignemnt" do
