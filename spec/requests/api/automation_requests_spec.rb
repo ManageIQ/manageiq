@@ -26,6 +26,72 @@ describe "Automation Requests API" do
       {"approval_state" => "approved", "type" => "AutomationRequest", "request_type" => "automation", "status" => "Ok"}
     end
 
+    it "filters the list of automation requests by requester" do
+      other_user = FactoryGirl.create(:user)
+      _automation_request1 = FactoryGirl.create(:automation_request, :requester => other_user)
+      automation_request2 = FactoryGirl.create(:automation_request, :requester => @user)
+      api_basic_authorize collection_action_identifier(:automation_requests, :read, :get)
+
+      run_get automation_requests_url
+
+      expected = {
+        "count"     => 2,
+        "subcount"  => 1,
+        "resources" => a_collection_containing_exactly(
+          "href" => a_string_matching(automation_requests_url(automation_request2.id)),
+        )
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it "lists all the automation requests if you are admin" do
+      @group.miq_user_role = @role = FactoryGirl.create(:miq_user_role, :role => "administrator")
+      other_user = FactoryGirl.create(:user)
+      automation_request1 = FactoryGirl.create(:automation_request, :requester => other_user)
+      automation_request2 = FactoryGirl.create(:automation_request, :requester => @user)
+      api_basic_authorize collection_action_identifier(:automation_requests, :read, :get)
+
+      run_get automation_requests_url
+
+      expected = {
+        "count"     => 2,
+        "subcount"  => 2,
+        "resources" => a_collection_containing_exactly(
+          {"href" => a_string_matching(automation_requests_url(automation_request1.id))},
+          {"href" => a_string_matching(automation_requests_url(automation_request2.id))},
+        )
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it "restricts access to automation requests to requester" do
+      other_user = FactoryGirl.create(:user)
+      automation_request = FactoryGirl.create(:automation_request, :requester => other_user)
+      api_basic_authorize action_identifier(:automation_requests, :read, :resource_actions, :get)
+
+      run_get automation_requests_url(automation_request.id)
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "an admin can see another user's request" do
+      @group.miq_user_role = @role = FactoryGirl.create(:miq_user_role, :role => "administrator")
+      other_user = FactoryGirl.create(:user)
+      automation_request = FactoryGirl.create(:automation_request, :requester => other_user)
+      api_basic_authorize action_identifier(:automation_requests, :read, :resource_actions, :get)
+
+      run_get automation_requests_url(automation_request.id)
+
+      expected = {
+        "id"   => automation_request.id,
+        "href" => a_string_matching(automation_requests_url(automation_request.id))
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
     it "supports single request with normal post" do
       api_basic_authorize
 
