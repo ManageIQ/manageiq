@@ -1,7 +1,7 @@
 
 namespace :config do
-  role_list = ["automate", "database_owner", "ems_metrics_coordinator", "ems_metrics_collector", "ems_metrics_processor", "database_operations", "event", "git_owner", "notifier", "ems_inventory", "ems_operations", "rhn_mirror", "reporting", "scheduler", "smartproxy", "smartstate", "user_interface", "web_services", "websocket"]
-
+  
+  role_list = %w(automate database_owner ems_metrics_coordinator ems_metrics_collector ems_metrics_processor database_operations event git_owner notifier ems_inventory ems_operations rhn_mirror reporting scheduler smartproxy smartstate user_interface web_services websocket)
   desc "Usage information regarding available tasks"
   task :usage do
     puts "The following configuration tasks are available, arguments between [] are optional:"
@@ -16,16 +16,16 @@ namespace :config do
   end
 
   desc "List all roles available"
-  task :list_roles  do
+  task :list_roles do
     puts role_list.to_json
   end
 
   desc "List appliance active roles"
   task :list_active_roles => [:environment] do
-    unless ENV['APPLIANCE_ID'].blank?
-      puts MiqServer.find(ENV['APPLIANCE_ID']).role.split(",").to_json
-    else
+    if ENV['APPLIANCE_ID'].blank?
       puts MiqServer.my_server.active_role_names.to_json
+    else
+      puts MiqServer.find(ENV['APPLIANCE_ID']).role.split(",").to_json
     end
   end
 
@@ -35,12 +35,12 @@ namespace :config do
       raise "You must specify a valid list of server foles" if ENV['SERVER_ROLES'].blank?
       server_roles = JSON.parse(ENV['SERVER_ROLES'])
       server_roles.each do |role|
-        raise "Role #{role} not available" if not role_list.include? role
+        raise "Role #{role} not available" unless role_list.include? role
       end
-      unless ENV['APPLIANCE_ID'].blank?
-        MiqServer.find(ENV['APPLIANCE_ID']).set_config(:server => {:role => server_roles.join(",")})
-      else
+      if ENV['APPLIANCE_ID'].blank?
         MiqServer.my_server.set_config(:server => {:role => server_roles.join(",")})
+      else
+        MiqServer.find(ENV['APPLIANCE_ID']).set_config(:server => {:role => server_roles.join(",")})
       end
     rescue => err
       STDERR.puts err.message
@@ -61,8 +61,8 @@ namespace :config do
   desc "Create zone"
   task :create_zone => [:environment] do
     begin
-      raise "You must specify zone name and zone description" if ENV['NAME'].blank? or ENV['DESCRIPTION'].blank?
-      zone = Zone.new({'name' => ENV['NAME'], 'description' => ENV['DESCRIPTION']})
+      raise "You must specify zone name and zone description" if ENV['NAME'].blank? || ENV['DESCRIPTION'].blank?
+      zone = Zone.new({'name': ENV['NAME'], 'description': ENV['DESCRIPTION']})
       zone.save
     rescue => err
       STDERR.puts err.message
@@ -73,10 +73,10 @@ namespace :config do
   desc "Modify appliance zone"
   task :modify_zone => [:environment] do
     begin
-      raise "You must specify a existent zone name and appliance name" if ENV['APPLIANCE_ID'].blank? or ENV['ZONE_NAME'].blank?
+      raise "You must specify a existent zone name and appliance name" if ENV['APPLIANCE_ID'].blank? || ENV['ZONE_NAME'].blank?
       appliance = MiqServer.find(ENV['APPLIANCE_ID'])
-      zone = Zone.find_by_name(ENV['ZONE_NAME'])
-      if zone.nil? or appliance.nil?
+      zone = Zone.find_by(name: ENV['ZONE_NAME'])
+      if zone.nil? || appliance.nil?
         raise "Zone or appliance not found"
       end
       appliance.zone = zone
@@ -108,5 +108,4 @@ namespace :config do
     end
     puts arr.to_json
   end
-
 end
