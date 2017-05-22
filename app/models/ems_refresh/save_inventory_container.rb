@@ -173,6 +173,13 @@ module EmsRefresh::SaveInventoryContainer
         # TODO: old save matches on all :name, :value, :field_path - does this matter?
         :manager_ref => [:container_definition, :name],
       )
+    @inv_collections[:security_contexts] =
+      ::ManagerRefresh::InventoryCollection.new(
+        :model_class => SecurityContext,
+        :parent => ems,
+        :association => :security_contexts,
+        :manager_ref => [:resource],
+      )
   end
 
   def graph_container_projects_inventory(ems, hashes)
@@ -380,14 +387,15 @@ module EmsRefresh::SaveInventoryContainer
   def graph_container_definitions_inventory(container_group, hashes)
     hashes.to_a.each do |h|
       h = h.merge(:container_group => container_group)
-      children = h.extract!(  # TODO children
+      children = h.extract!(
         :container_port_configs, :container_env_vars, :security_context, :container
       )
       h[:ems_id] = container_group[:ems_id]
       cd = @inv_collections[:container_definitions].build(h)
-      graph_container_inventory(cd, children[:container])
       graph_container_port_configs_inventory(cd, children[:container_port_configs])
       graph_container_env_vars_inventory(cd, children[:container_env_vars])
+      graph_security_context_inventory(cd, children[:security_context])
+      graph_container_inventory(cd, children[:container])
     end
   end
 
@@ -495,8 +503,10 @@ module EmsRefresh::SaveInventoryContainer
     store_ids_for_new_records(container_entity.container_conditions, hashes, :name)
   end
 
-  def save_security_context_inventory(container_definition, hash, _target = nil)
-    save_inventory_single(:security_context, container_definition, hash)
+  def graph_security_context_inventory(resource, hash)
+    return if hash.nil?
+    hash = hash.merge(:resource => resource)
+    @inv_collections[:security_contexts].build(hash)
   end
 
   def save_container_volumes_inventory(container_group, hashes, target = nil)
