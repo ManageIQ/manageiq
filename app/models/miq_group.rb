@@ -220,6 +220,12 @@ class MiqGroup < ApplicationRecord
     current_user.admin_user? ? all : where(:id => current_user.miq_group_ids)
   end
 
+  def single_group_users?
+    group_user_ids = user_ids
+    return false if group_user_ids.empty?
+    users.includes(:miq_groups).where(:id => group_user_ids).where.not(:miq_groups => {:id => id}).count != group_user_ids.size
+  end
+
   private
 
   # if this tenant is changing, make sure this is not a default group
@@ -230,14 +236,13 @@ class MiqGroup < ApplicationRecord
     end
   end
 
-  def own_users
-    own_users = []
-    users.each { |user| own_users << user if user.miq_groups.count == 1 }
-    own_users
+  def current_user_group?
+    id == current_user_group.try(:id)
   end
 
   def ensure_can_be_destroyed
-    raise _("Still has users assigned.") unless own_users.empty?
+    raise _("The login group cannot be deleted") if current_user_group?
+    raise _("The group has users assigned that do not belong to any other group") if single_group_users?
     raise _("A tenant default group can not be deleted") if tenant_group? && referenced_by_tenant?
     raise _("A read only group cannot be deleted.") if system_group?
   end
