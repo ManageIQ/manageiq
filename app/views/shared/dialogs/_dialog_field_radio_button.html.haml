@@ -21,20 +21,14 @@
 
 - if field.dynamic
   - if field.auto_refresh
-    :javascript
-      dialogFieldRefresh.listenForAutoRefreshMessages(JSON.parse("#{j(auto_refresh_options.to_json)}"), function() {
-        var checkedValue = $('input:radio[name="#{field.name}"]:checked').val();
+    - javascript_locals = {:auto_refresh_options     => auto_refresh_options,
+                           :refresh_field_parameters => {:type => field.type,
+                                                         :name => field.name,
+                                                         :id   => field.id,
+                                                         :url  => url,
+                                                         :auto_refresh_options => auto_refresh_options}}
 
-        dialogFieldRefresh.refreshRadioList("#{field.name}",
-                                            "#{field.id}",
-                                            checkedValue,
-                                            "#{url}",
-                                            JSON.parse('#{j(auto_refresh_options.to_json)}'), function() {
-          dialogFieldRefresh.triggerAutoRefresh(
-            JSON.parse('#{j(auto_refresh_listening_options(auto_refresh_options, true).to_json)}')
-          );
-        });
-      });
+    = render(:partial => "shared/dialogs/auto_refresh_javascript", :locals => javascript_locals)
 
   - if field.show_refresh_button?
     = button_tag(_('Refresh'), :id => "refresh-dynamic-field-#{field.id}", :class => "btn btn-default")
@@ -48,6 +42,9 @@
                                           checkedValue,
                                           "#{url}",
                                           JSON.parse('#{j(auto_refresh_options.to_json)}'), function() {
-        dialogFieldRefresh.triggerAutoRefresh(JSON.parse('#{j(auto_refresh_options.to_json)}'));
+        var jsonOptions = JSON.parse('#{j(auto_refresh_options.to_json)}');
+        jsonOptions.initialTrigger = true;
+
+        dialogFieldRefresh.triggerAutoRefresh(jsonOptions);
       });
     });

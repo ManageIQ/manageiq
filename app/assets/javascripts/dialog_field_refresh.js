@@ -15,7 +15,7 @@ var dialogFieldRefresh = {
 
     $(document).on('dialog::autoRefresh', function(_event, data) {
       if (thisIsTheFieldToUpdate(data)) {
-        callbackFunction.call();
+        callbackFunction.call(null, data.initializingIndex);
       }
     });
   },
@@ -27,6 +27,7 @@ var dialogFieldRefresh = {
     }
 
     miqSelectPickerEvent(fieldName, url, {callback: function() {
+      autoRefreshOptions.initial_trigger = true;
       dialogFieldRefresh.triggerAutoRefresh(autoRefreshOptions);
       return true;
     }});
@@ -48,6 +49,29 @@ var dialogFieldRefresh = {
       complete: true,
       done: callback
     });
+  },
+
+  refreshField: function(options, callback) {
+    var fieldType = options.type;
+
+    if (fieldType === "DialogFieldCheckBox") {
+      dialogFieldRefresh.refreshCheckbox(options.name, options.id, callback);
+    } else if (fieldType === "DialogFieldTextBox") {
+      dialogFieldRefresh.refreshTextBox(options.name, options.id, callback);
+    } else if (fieldType === "DialogFieldTextAreaBox") {
+      dialogFieldRefresh.refreshTextAreaBox(options.name, options.id, callback);
+    } else if (fieldType === "DialogFieldDropDownList") {
+      var selectedValue = $('select[name="' + options.name + '"]').val();
+      dialogFieldRefresh.refreshDropDownList(options.name, options.id, selectedValue, callback);
+    } else if (fieldType === "DialogFieldRadioButton") {
+      var checkedValue = $('input:radio[name="' + options.name + '"]:checked').val();
+
+      dialogFieldRefresh.refreshRadioList(options.name, options.id, checkedValue, options.url, options.auto_refresh_options, callback);
+    } else if (fieldType === "DialogFieldDateControl" || fieldType === "DialogFieldDateTimeControl") {
+      dialogFieldRefresh.refreshDateTime(options.name, options.id, callback);
+    } else {
+      add_flash(__("Field type is not a supported type!"), 'error');
+    }
   },
 
   refreshCheckbox: function(fieldName, fieldId, callback) {
@@ -176,10 +200,18 @@ var dialogFieldRefresh = {
   triggerAutoRefresh: function(autoRefreshOptions) {
     if (Boolean(autoRefreshOptions.trigger) === true) {
       var autoRefreshableIndicies = autoRefreshOptions.auto_refreshable_field_indicies;
-      var currentIndex = autoRefreshOptions.current_index;
+      var currentIndex, initializingIndex;
+
+      if (autoRefreshOptions.initial_trigger === true) {
+        currentIndex = 0;
+        initializingIndex = autoRefreshOptions.current_index;
+      } else {
+        currentIndex = autoRefreshOptions.current_index;
+        initializingIndex = autoRefreshOptions.initializingIndex;
+      }
 
       var nextAvailable = $.grep(autoRefreshableIndicies, function(potential, potentialsIndex) {
-        return (potential.auto_refresh === true && potentialsIndex > currentIndex);
+        return (potential.auto_refresh === true && potentialsIndex > currentIndex && potentialsIndex !== initializingIndex);
       });
 
       nextAvailable = nextAvailable[0];
@@ -189,6 +221,7 @@ var dialogFieldRefresh = {
           tabIndex: nextAvailable.tab_index,
           groupIndex: nextAvailable.group_index,
           fieldIndex: nextAvailable.field_index,
+          initializingIndex: initializingIndex
         });
       }
     }

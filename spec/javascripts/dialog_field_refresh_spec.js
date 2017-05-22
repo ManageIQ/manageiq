@@ -16,11 +16,11 @@ describe('dialogFieldRefresh', function() {
 
       context('when the tab index, group index, and field index match the corresponding field', function() {
         beforeEach(function() {
-          $(document).trigger('dialog::autoRefresh', {tabIndex: 1, groupIndex: 2, fieldIndex: 3});
+          $(document).trigger('dialog::autoRefresh', {tabIndex: 1, groupIndex: 2, fieldIndex: 3, initializingIndex: 6});
         });
 
         it('executes the callback', function() {
-          expect(callback.call).toHaveBeenCalled();
+          expect(callback.call).toHaveBeenCalledWith(null, 6);
         });
       });
 
@@ -140,6 +140,119 @@ describe('dialogFieldRefresh', function() {
       it('hides the element', function() {
         dialogFieldRefresh.setVisible($('#text-test'), false);
         expect($('#text-test').is(":visible")).toBe(false);
+      });
+    });
+  });
+
+  describe('#refreshField', function() {
+    var options = {name: 'name', id: '123'};
+    var callback = function() { return 'the callback'; };
+
+    context('when the field type is DialogFieldCheckBox', function() {
+      beforeEach(function() {
+        options.type = 'DialogFieldCheckBox';
+        spyOn(dialogFieldRefresh, 'refreshCheckbox');
+      });
+
+      it('calls refreshCheckbox', function() {
+        dialogFieldRefresh.refreshField(options, callback);
+        expect(dialogFieldRefresh.refreshCheckbox).toHaveBeenCalledWith('name', '123', callback);
+      });
+    });
+
+    context('when the field type is DialogFieldTextBox', function() {
+      beforeEach(function() {
+        options.type = 'DialogFieldTextBox';
+        spyOn(dialogFieldRefresh, 'refreshTextBox');
+      });
+
+      it('calls refreshTextBox', function() {
+        dialogFieldRefresh.refreshField(options, callback);
+        expect(dialogFieldRefresh.refreshTextBox).toHaveBeenCalledWith('name', '123', callback);
+      });
+    });
+
+    context('when the field type is DialogFieldTextAreaBox', function() {
+      beforeEach(function() {
+        options.type = 'DialogFieldTextAreaBox';
+        spyOn(dialogFieldRefresh, 'refreshTextAreaBox');
+      });
+
+      it('calls refreshTextAreaBox', function() {
+        dialogFieldRefresh.refreshField(options, callback);
+        expect(dialogFieldRefresh.refreshTextAreaBox).toHaveBeenCalledWith('name', '123', callback);
+      });
+    });
+
+    context('when the field type is DialogFieldDropDownList', function() {
+      beforeEach(function() {
+        var html = '';
+        html += '<select name="name"><option selected="selected" value="1">One</option></select>';
+        setFixtures(html);
+
+        options.type = 'DialogFieldDropDownList';
+        spyOn(dialogFieldRefresh, 'refreshDropDownList');
+      });
+
+      it('calls refreshDropDownList', function() {
+        dialogFieldRefresh.refreshField(options, callback);
+        expect(dialogFieldRefresh.refreshDropDownList).toHaveBeenCalledWith('name', '123', '1', callback);
+      });
+    });
+
+    context('when the field type is DialogFieldRadioButton', function() {
+      beforeEach(function() {
+        var html = '';
+        html += '<input type="radio" name="name" value="1" checked /><input type="radio" name="name" value="2" />';
+        setFixtures(html);
+
+        options.type = 'DialogFieldRadioButton';
+        options.url = 'url';
+        options.auto_refresh_options = 'auto_refresh_options';
+        spyOn(dialogFieldRefresh, 'refreshRadioList');
+      });
+
+      it('calls refreshRadioList', function() {
+        dialogFieldRefresh.refreshField(options, callback);
+        expect(dialogFieldRefresh.refreshRadioList).toHaveBeenCalledWith(
+          'name', '123', '1', 'url', 'auto_refresh_options', callback
+        );
+      });
+    });
+
+    context('when the field type is DialogFieldDateControl', function() {
+      beforeEach(function() {
+        options.type = 'DialogFieldDateControl';
+        spyOn(dialogFieldRefresh, 'refreshDateTime');
+      });
+
+      it('calls refreshDateControl', function() {
+        dialogFieldRefresh.refreshField(options, callback);
+        expect(dialogFieldRefresh.refreshDateTime).toHaveBeenCalledWith('name', '123', callback);
+      });
+    });
+
+    context('when the field type is DialogFieldDateTimeControl', function() {
+      beforeEach(function() {
+        options.type = 'DialogFieldDateTimeControl';
+        spyOn(dialogFieldRefresh, 'refreshDateTime');
+      });
+
+      it('calls refreshDateTimeControl', function() {
+        dialogFieldRefresh.refreshField(options, callback);
+        expect(dialogFieldRefresh.refreshDateTime).toHaveBeenCalledWith('name', '123', callback);
+      });
+    });
+
+    context('when the field type is not supported', function() {
+      beforeEach(function() {
+        options.type = 'wrong';
+        spyOn(window, 'add_flash');
+      });
+
+      it('adds a flash message', function() {
+        dialogFieldRefresh.refreshField(options, callback);
+        expect(window.add_flash).toHaveBeenCalledWith(__("Field type is not a supported type!"), 'error');
       });
     });
   });
@@ -536,7 +649,7 @@ describe('dialogFieldRefresh', function() {
       fieldName = 'fieldName';
       selectedValue = 'selectedValue';
       url = 'url';
-      autoRefreshOptions = 'autoRefreshOptions';
+      autoRefreshOptions = {pretend: 'options'};
 
       var html = "";
       html += '<select id=fieldName class="dynamic-drop-down-193 selectpicker">';
@@ -569,7 +682,7 @@ describe('dialogFieldRefresh', function() {
 
     it('triggers autorefresh with true only when triggerAutoRefresh arg is true', function() {
       dialogFieldRefresh.initializeDialogSelectPicker(fieldName, selectedValue, url, autoRefreshOptions);
-      expect(dialogFieldRefresh.triggerAutoRefresh).toHaveBeenCalledWith('autoRefreshOptions');
+      expect(dialogFieldRefresh.triggerAutoRefresh).toHaveBeenCalledWith({pretend: 'options', initial_trigger: true});
     });
   });
 
@@ -641,67 +754,171 @@ describe('dialogFieldRefresh', function() {
     });
 
     context('when the trigger passed in is the string "true"', function() {
-      context('when the next auto refreshable field does not exist', function() {
-        beforeEach(function() {
-          dialogFieldRefresh.triggerAutoRefresh({
-            current_index: 0,
-            auto_refreshable_field_indicies: [{tab_index: 1, group_index: 1, field_index: 1}],
-            trigger: "true"
+      context('when we are triggering for the initial trigger', function() {
+        context('when there are auto refreshable fields other than ourselves', function() {
+          beforeEach(function() {
+            dialogFieldRefresh.triggerAutoRefresh({
+              current_index: 2,
+              auto_refreshable_field_indicies: [
+                {tab_index: 1, group_index: 1, field_index: 1},
+                {tab_index: 1, group_index: 1, field_index: 2, auto_refresh: true},
+                {tab_index: 1, group_index: 1, field_index: 3, auto_refresh: true}
+              ],
+              trigger: "true",
+              initial_trigger: true
+            });
+          });
+
+          it('triggers a refresh on the first available auto refreshable element', function() {
+            expect($.fn.trigger).toHaveBeenCalledWith('dialog::autoRefresh', {
+              tabIndex: 1, groupIndex: 1, fieldIndex: 2, initializingIndex: 2
+            });
           });
         });
 
-        it('does not post a message', function() {
-          expect($.fn.trigger).not.toHaveBeenCalled();
+        context('when there are not auto refreshable fields other than ourselves', function() {
+          beforeEach(function() {
+            dialogFieldRefresh.triggerAutoRefresh({
+              current_index: 1,
+              auto_refreshable_field_indicies: [
+                {tab_index: 1, group_index: 1, field_index: 1},
+                {tab_index: 1, group_index: 1, field_index: 2, auto_refresh: true}
+              ],
+              trigger: "true",
+              initial_trigger: true
+            });
+          });
+
+          it('does not trigger anything', function() {
+            expect($.fn.trigger).not.toHaveBeenCalled();
+          });
         });
       });
 
-      context('when the next auto refreshable field exists', function() {
-        beforeEach(function() {
-          dialogFieldRefresh.triggerAutoRefresh({
-            current_index: 0,
-            auto_refreshable_field_indicies: [
-              {tab_index: 1, group_index: 1, field_index: 1},
-              {tab_index: 1, group_index: 1, field_index: 2, auto_refresh: true}
-            ],
-            trigger: "true"
+      context('when it is not the initial trigger', function() {
+        context('when fields are available other than the field that initialized the triggering process', function() {
+          beforeEach(function() {
+            dialogFieldRefresh.triggerAutoRefresh({
+              current_index: 1,
+              auto_refreshable_field_indicies: [
+                {tab_index: 1, group_index: 1, field_index: 1},
+                {tab_index: 1, group_index: 1, field_index: 2, auto_refresh: true},
+                {tab_index: 1, group_index: 1, field_index: 3},
+                {tab_index: 1, group_index: 1, field_index: 4, auto_refresh: true}
+              ],
+              trigger: "true",
+              initializingIndex: 0
+            });
+          });
+
+          it('triggers a refresh on the next available auto refreshable element', function() {
+            expect($.fn.trigger).toHaveBeenCalledWith('dialog::autoRefresh', {
+              tabIndex: 1, groupIndex: 1, fieldIndex: 4, initializingIndex: 0
+            });
           });
         });
 
-        it('posts a message', function() {
-          expect($.fn.trigger).toHaveBeenCalledWith('dialog::autoRefresh', {tabIndex: 1, groupIndex: 1, fieldIndex: 2});
+        context('when there are no fields available other than the field that initialized the triggering process', function() {
+          beforeEach(function() {
+            dialogFieldRefresh.triggerAutoRefresh({
+              current_index: 0,
+              auto_refreshable_field_indicies: [
+                {tab_index: 1, group_index: 1, field_index: 1},
+                {tab_index: 1, group_index: 1, field_index: 2, auto_refresh: true}
+              ],
+              trigger: "true",
+              initializingIndex: 1
+            });
+          });
+
+          it('does not trigger anything', function() {
+            expect($.fn.trigger).not.toHaveBeenCalled();
+          });
         });
       });
     });
 
     context('when the trigger passed in is true', function() {
-      context('when the next auto refreshable field does not exist', function() {
-        beforeEach(function() {
-          dialogFieldRefresh.triggerAutoRefresh({
-            current_index: 0,
-            auto_refreshable_field_indicies: [{tab_index: 1, group_index: 1, field_index: 1}],
-            trigger: true
+      context('when we are triggering for the initial trigger', function() {
+        context('when there are auto refreshable fields other than ourselves', function() {
+          beforeEach(function() {
+            dialogFieldRefresh.triggerAutoRefresh({
+              current_index: 2,
+              auto_refreshable_field_indicies: [
+                {tab_index: 1, group_index: 1, field_index: 1},
+                {tab_index: 1, group_index: 1, field_index: 2, auto_refresh: true},
+                {tab_index: 1, group_index: 1, field_index: 3, auto_refresh: true}
+              ],
+              trigger: true,
+              initial_trigger: true
+            });
+          });
+
+          it('triggers a refresh on the first available auto refreshable element', function() {
+            expect($.fn.trigger).toHaveBeenCalledWith('dialog::autoRefresh', {
+              tabIndex: 1, groupIndex: 1, fieldIndex: 2, initializingIndex: 2
+            });
           });
         });
 
-        it('does not post a message', function() {
-          expect($.fn.trigger).not.toHaveBeenCalled();
+        context('when there are not auto refreshable fields other than ourselves', function() {
+          beforeEach(function() {
+            dialogFieldRefresh.triggerAutoRefresh({
+              current_index: 1,
+              auto_refreshable_field_indicies: [
+                {tab_index: 1, group_index: 1, field_index: 1},
+                {tab_index: 1, group_index: 1, field_index: 2, auto_refresh: true}
+              ],
+              trigger: true,
+              initial_trigger: true
+            });
+          });
+
+          it('does not trigger anything', function() {
+            expect($.fn.trigger).not.toHaveBeenCalled();
+          });
         });
       });
 
-      context('when the next auto refreshable field exists', function() {
-        beforeEach(function() {
-          dialogFieldRefresh.triggerAutoRefresh({
-            current_index: 0,
-            auto_refreshable_field_indicies: [
-              {tab_index: 1, group_index: 1, field_index: 1},
-              {tab_index: 1, group_index: 1, field_index: 2, auto_refresh: true}
-            ],
-            trigger: true
+      context('when it is not the initial trigger', function() {
+        context('when fields are available other than the field that initialized the triggering process', function() {
+          beforeEach(function() {
+            dialogFieldRefresh.triggerAutoRefresh({
+              current_index: 1,
+              auto_refreshable_field_indicies: [
+                {tab_index: 1, group_index: 1, field_index: 1},
+                {tab_index: 1, group_index: 1, field_index: 2, auto_refresh: true},
+                {tab_index: 1, group_index: 1, field_index: 3},
+                {tab_index: 1, group_index: 1, field_index: 4, auto_refresh: true}
+              ],
+              trigger: true,
+              initializingIndex: 0
+            });
+          });
+
+          it('triggers a refresh on the next available auto refreshable element', function() {
+            expect($.fn.trigger).toHaveBeenCalledWith('dialog::autoRefresh', {
+              tabIndex: 1, groupIndex: 1, fieldIndex: 4, initializingIndex: 0
+            });
           });
         });
 
-        it('posts a message', function() {
-          expect($.fn.trigger).toHaveBeenCalledWith('dialog::autoRefresh', {tabIndex: 1, groupIndex: 1, fieldIndex: 2});
+        context('when there are no fields available other than the field that initialized the triggering process', function() {
+          beforeEach(function() {
+            dialogFieldRefresh.triggerAutoRefresh({
+              current_index: 0,
+              auto_refreshable_field_indicies: [
+                {tab_index: 1, group_index: 1, field_index: 1},
+                {tab_index: 1, group_index: 1, field_index: 2, auto_refresh: true}
+              ],
+              trigger: true,
+              initializingIndex: 1
+            });
+          });
+
+          it('does not trigger anything', function() {
+            expect($.fn.trigger).not.toHaveBeenCalled();
+          });
         });
       });
     });

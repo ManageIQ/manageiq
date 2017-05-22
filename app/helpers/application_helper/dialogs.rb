@@ -165,7 +165,8 @@ module ApplicationHelper::Dialogs
         :field_index                     => auto_refresh_options_hash[:field_index],
         :auto_refreshable_field_indicies => auto_refresh_options_hash[:auto_refreshable_field_indicies],
         :current_index                   => auto_refresh_options_hash[:current_index],
-        :trigger                         => auto_refresh_options_hash[:trigger]
+        :trigger                         => auto_refresh_options_hash[:trigger],
+        :initial_trigger                 => auto_refresh_options_hash[:initial_trigger]
       }
     else
       {}

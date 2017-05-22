@@ -2,14 +2,12 @@
 
 - if field.dynamic
   - if field.auto_refresh
-    :javascript
-      dialogFieldRefresh.listenForAutoRefreshMessages(JSON.parse("#{j(auto_refresh_options.to_json)}"), function() {
-        dialogFieldRefresh.refreshCheckbox("#{field.name}", "#{field.id}", function() {
-          dialogFieldRefresh.triggerAutoRefresh(
-            JSON.parse('#{j(auto_refresh_listening_options(auto_refresh_options, true).to_json)}')
-          );
-        });
-      });
+    - javascript_locals = {:auto_refresh_options     => auto_refresh_options,
+                           :refresh_field_parameters => {:type => field.type,
+                                                         :name => field.name,
+                                                         :id   => field.id}}
+
+    = render(:partial => "shared/dialogs/auto_refresh_javascript", :locals => javascript_locals)
 
   - if field.show_refresh_button?
     = button_tag(_('Refresh'), :id => "refresh-dynamic-checkbox-#{field.id}", :class => "btn btn-default")
@@ -17,6 +15,9 @@
   :javascript
     $('#refresh-dynamic-checkbox-#{field.id}').click(function() {
       dialogFieldRefresh.refreshCheckbox("#{field.name}", "#{field.id}", function() {
-        dialogFieldRefresh.triggerAutoRefresh(JSON.parse('#{j(auto_refresh_options.to_json)}'));
+        var jsonOptions = JSON.parse('#{j(auto_refresh_options.to_json)}');
+        jsonOptions.initialTrigger = true;
+
+        dialogFieldRefresh.triggerAutoRefresh(jsonOptions);
       });
     });

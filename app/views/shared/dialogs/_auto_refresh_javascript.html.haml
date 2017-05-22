@@ -1,0 +1,9 @@
+:javascript
+  dialogFieldRefresh.listenForAutoRefreshMessages(JSON.parse("#{j(auto_refresh_options.to_json)}"), function(initializingIndex) {
+    dialogFieldRefresh.refreshField(JSON.parse("#{j(refresh_field_parameters.to_json)}"), function() {
+      var jsonOptions = JSON.parse('#{j(auto_refresh_listening_options(auto_refresh_options, true).to_json)}');
+      jsonOptions.initializingIndex = initializingIndex;
+
+      dialogFieldRefresh.triggerAutoRefresh(jsonOptions);
+    });
+  });
