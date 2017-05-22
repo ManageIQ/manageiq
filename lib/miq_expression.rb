@@ -190,7 +190,7 @@ class MiqExpression
     when "contains"
       op_args["tag"] ||= col_name
       operands = if context_type != "hash"
-                   ref, val = value2tag(preprocess_managed_tag(op_args["tag"]), op_args["value"])
+                   ref, val = value2tag(op_args["tag"], op_args["value"])
                    ["<exist ref=#{ref}>#{val}</exist>"]
                  elsif context_type == "hash"
                    # This is only for supporting reporting "display filters"
@@ -702,19 +702,6 @@ class MiqExpression
     string.gsub(%r{\\*/}, "\\/").gsub(/\\*#/, "\\\#")
   end
 
-  def self.preprocess_managed_tag(tag)
-    path, val = tag.split("-")
-    path_arr = path.split(".")
-    if path_arr.include?("managed") || path_arr.include?("user_tag")
-      name = nil
-      while path_arr.first != "managed" && path_arr.first != "user_tag"
-        name = path_arr.shift
-      end
-      return [name].concat(path_arr).join(".") + "-" + val
-    end
-    tag
-  end
-
   def self.escape_virtual_custom_attribute(attribute)
     if attribute.include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
       uri_parser = URI::RFC2396_Parser.new
@@ -725,24 +712,8 @@ class MiqExpression
   end
 
   def self.value2tag(tag, val = nil)
-    tag, virtual_custom_attribute = escape_virtual_custom_attribute(tag)
-    model, *values = tag.to_s.gsub(/[\.-]/, "/").split("/") # replace model path ".", column name "-" with "/"
-    values.map!{ |x|  URI::RFC2396_Parser.new.unescape(x) } if virtual_custom_attribute
-
-    case values.first
-    when "user_tag"
-      values[0] = "user"
-    when "managed", "user"
-      # Keep as-is
-    else
-      values.unshift("virtual") # add in tag designation
-    end
-
-    unless val.nil?
-      values << val.to_s.gsub(/\//, "%2f") # encode embedded / characters in values since / is used as a tag seperator
-    end
-
-    [model.downcase, "/#{values.join('/')}"]
+    target = parse_field_or_tag(tag)
+    [target.model.to_s.downcase, target.tag_path_with(val)]
   end
 
   def self.normalize_ruby_operator(str)
@@ -1236,11 +1207,7 @@ class MiqExpression
 
   def self.parse_field_or_tag(str)
     # managed.location, Model.x.y.managed-location
-    if str =~ /(^|[.])managed[-.]/
-      MiqExpression::Tag.parse(str)
-    else
-      Field.parse(str)
-    end
+    MiqExpression::Field.parse(str) || MiqExpression::CountField.parse(str) || MiqExpression::Tag.parse(str)
   end
 
   def fields(expression = exp)

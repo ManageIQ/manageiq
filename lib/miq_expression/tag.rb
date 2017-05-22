@@ -42,4 +42,10 @@ class MiqExpression::Tag < MiqExpression::Target
   def attribute_supported_by_sql?
     false
   end
+
+  private
+
+  def tag_path
+    @namespace
+  end
 end
