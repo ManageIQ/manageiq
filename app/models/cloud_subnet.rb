@@ -57,7 +57,7 @@ class CloudSubnet < ApplicationRecord
   end
 
   def raw_delete_cloud_subnet
-    raise NotImplementedError, _("raw_delete_subnet must be implemented in a subclass")
+    raise NotImplementedError, _("raw_delete_cloud_subnet must be implemented in a subclass")
   end
 
   private
