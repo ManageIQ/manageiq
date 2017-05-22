@@ -25,7 +25,7 @@ class MiqAeClassController < ApplicationController
     when "instances"
       div_suffix = "_class_instances"
     when "methods"
-      div_suffix = "_class_methods"
+      div_suffix = ""
     when "props"
       div_suffix = "_class_props"
     when "schema"
@@ -827,7 +827,7 @@ class MiqAeClassController < ApplicationController
     render :update do |page|
       page << javascript_prologue
       page << "if (miqDomElementExists('cls_method_data')){"
-      page.replace("flash_msg_div_class_methods", :partial => "layouts/flash_msg", :locals => {:div_num => "_class_methods"})
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page << "var ta = document.getElementById('cls_method_data');"
       page << "} else {"
       page.replace("flash_msg_div_method_inputs", :partial => "layouts/flash_msg", :locals => {:div_num => "_method_inputs"})
@@ -1180,7 +1180,7 @@ class MiqAeClassController < ApplicationController
         render :update do |page|
           page << javascript_prologue
           if @sb[:row_selected]
-            page.replace("flash_msg_div_class_methods", :partial => "layouts/flash_msg", :locals => {:div_num => "_class_methods"})
+            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
           else
             page.replace("flash_msg_div_method_inputs", :partial => "layouts/flash_msg", :locals => {:div_num => "_method_inputs"})
           end
@@ -1291,7 +1291,7 @@ class MiqAeClassController < ApplicationController
         @in_a_form = true
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div_class_methods", :partial => "layouts/flash_msg", :locals => {:div_num => "_class_methods"})
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
         add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "MiqAeMethod"), :name => add_aemethod.name})
