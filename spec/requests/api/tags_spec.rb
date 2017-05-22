@@ -36,7 +36,7 @@ describe "Tags API" do
         tag = Tag.find(result["id"])
         tag_category = Category.find(tag.category.id)
         expect(tag_category).to eq(category)
-        expect(result["href"]).to include("/api/results/#{tag.id}")
+        expect(result["href"]).to include(tags_url(tag.id))
         expect(response).to have_http_status(:ok)
       end
 

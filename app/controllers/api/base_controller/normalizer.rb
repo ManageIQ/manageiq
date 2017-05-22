@@ -28,7 +28,7 @@ module Api
       def normalize_attr(attr, value)
         return if value.nil?
         if value.kind_of?(Array) || value.kind_of?(ActiveRecord::Relation)
-          normalize_array(attr, value)
+          normalize_array(value)
         elsif value.respond_to?(:attributes) || value.respond_to?(:keys)
           normalize_hash(attr, value)
         elsif Api.time_attribute?(attr)
@@ -109,8 +109,8 @@ module Api
         end
       end
 
-      def normalize_array(name, obj)
-        obj.collect { |item| normalize_attr(name, item) }
+      def normalize_array(obj)
+        obj.collect { |item| normalize_attr(@req.subcollection || @req.collection, item) }
       end
 
       def new_href(type, current_id, current_href)

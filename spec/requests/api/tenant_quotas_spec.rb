@@ -45,7 +45,7 @@ describe "tenant quotas API" do
 
       expected = {
         'results' => [
-          a_hash_including('href' => a_string_including('api/results/'))
+          a_hash_including('href' => a_string_including("#{tenants_url(tenant.id)}/quotas/"))
         ]
       }
       expect do
