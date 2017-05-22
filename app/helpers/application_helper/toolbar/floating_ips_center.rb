@@ -12,7 +12,9 @@ class ApplicationHelper::Toolbar::FloatingIpsCenter < ApplicationHelper::Toolbar
             :floating_ip_new,
             'pficon pficon-add-circle-o fa-lg',
             t = N_('Add a new Floating IP'),
-            t),
+            t,
+            :klass => ApplicationHelper::Button::FloatingIpNew
+          ),
           separator,
           # TODO: Uncomment until cross controllers show_list issue fully in place
           # https://github.com/ManageIQ/manageiq/pull/12551
