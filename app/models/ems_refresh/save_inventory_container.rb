@@ -432,6 +432,7 @@ module EmsRefresh::SaveInventoryContainer
 
   def lazy_find_image(hash)
     return nil if hash.nil?
+    hash = hash.merge(:container_image_registry => lazy_find_image_registry(hash[:container_image_registry]))
     @inv_collections[:container_images].lazy_find(
       @inv_collections[:container_images].object_index(hash)
     )
