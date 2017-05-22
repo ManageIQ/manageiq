@@ -525,6 +525,12 @@ describe VirtualFields do
         expect(tc.parent_col1).to be_nil
       end
 
+      it "delegates to nil parent and returns default" do
+        TestClass.virtual_delegate :col1, :prefix => 'parent', :to => :ref1, :allow_nil => true, :default => 0
+        tc = TestClass.new(:id => 2)
+        expect(tc.parent_col1).to eq(0)
+      end
+
       it "defines parent virtual attribute" do
         TestClass.virtual_delegate :col1, :prefix => 'parent', :to => :ref1
         expect(TestClass.virtual_attribute_names).to include("parent_col1")
@@ -535,6 +541,13 @@ describe VirtualFields do
         TestClass.create(:id => 2, :ref1 => parent)
         tcs = TestClass.all.select(:id, :col1, TestClass.arel_attribute(:parent_col1).as("x"))
         expect(tcs.map(&:x)).to match_array([nil, 4])
+      end
+
+      it "delegates to parent (sql) and returns default (number)" do
+        TestClass.virtual_delegate :col1, :prefix => 'parent', :to => :ref1, :default => 42
+        TestClass.create(:id => 2, :ref1 => parent)
+        tcs = TestClass.all.select(:id, :col1, TestClass.arel_attribute(:parent_col1).as("x"))
+        expect(tcs.map(&:x)).to match_array([42, 4])
       end
 
       context "with has_one :parent" do
@@ -600,6 +613,27 @@ describe VirtualFields do
           TestOtherClass.create(:id => 3, :oref1 => TestClass.create(:id => 2, :col1 => 99))
           tcs = TestOtherClass.all.select(:id, :ocol1, TestOtherClass.arel_attribute(:col1).as("x"))
           expect(tcs.map(&:x)).to match_array([nil, 99])
+        end
+
+        it "delegates to another table with integer default over belongs_to" do
+          TestOtherClass.virtual_delegate :col1, :to => :oref1, :default => 55
+          TestOtherClass.create(:id => 4, :oref1 => TestClass.create(:id => 3))
+          TestOtherClass.create(:id => 3, :oref1 => TestClass.create(:id => 2, :col1 => 99))
+          tcs = TestOtherClass.all.select(:id, :ocol1, TestOtherClass.arel_attribute(:col1).as("x"))
+          # use pure sql representation (similar to pluck)
+          expect(tcs.map(&:x)).to match_array([55, 99])
+          # use getter method
+          expect(tcs.map(&:col1)).to match_array([55, 99])
+        end
+
+        it "delegates to another table with string default over has_one" do
+          TestClass.has_one :oref, :class_name => 'TestOtherClass', :foreign_key => :ocol1
+          TestClass.virtual_delegate :ostr, :to => :oref, :default => "default"
+
+          TestOtherClass.create(:id => 4, :oref1 => TestClass.create(:id => 3))
+          TestOtherClass.create(:id => 3, :oref1 => TestClass.create(:id => 2), :ostr => "given")
+          tcs = TestClass.all.select(:id, :ostr, TestClass.arel_attribute(:ostr).as("x"))
+          expect(tcs.map(&:x)).to match_array(%w(default given))
         end
 
         # this may fail in the future as our way of building queries may change
