@@ -278,11 +278,10 @@ describe MiqTask do
   end
 
   context "before_destroy callback" do
-    it "destroys miq_task record if there is no job associated with it" do
-      expect(MiqTask.count).to eq 0
-      FactoryGirl.create(:miq_task_plain)
-      expect(MiqTask.count).to eq 1
-      MiqTask.first.destroy
+    it "destroys miq_task record if there is no job associated with it and Task is not active" do
+      miq_task = FactoryGirl.create(:miq_task_plain)
+      miq_task.update_attributes!(:state => MiqTask::STATE_QUEUED)
+      miq_task.destroy
       expect(MiqTask.count).to eq 0
     end
 
@@ -294,6 +293,15 @@ describe MiqTask do
       MiqTask.first.destroy
       expect(MiqTask.count).to eq 1
       expect(Job.count).to eq 1
+    end
+
+    it "doesn't destroy miq_task if task is active" do
+      expect(MiqTask.count).to eq 0
+      miq_task = FactoryGirl.create(:miq_task_plain)
+      expect(MiqTask.count).to eq 1
+      miq_task.update_attributes!(:state => MiqTask::STATE_ACTIVE)
+      MiqTask.first.destroy
+      expect(MiqTask.count).to eq 1
     end
 
     it "destroys miq_task record and job record if job associated with it 'finished'" do

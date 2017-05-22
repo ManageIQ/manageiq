@@ -26,12 +26,25 @@ class MiqTask < ApplicationRecord
 
   before_validation :initialize_attributes, :on => :create
 
-  before_destroy :check_associations
+  before_destroy :check_active, :check_associations
 
   virtual_has_one :task_results
   virtual_attribute :state_or_status, :string, :arel => (lambda do |t|
     t.grouping(Arel::Nodes::Case.new(t[:state]).when(STATE_FINISHED).then(t[:status]).else(t[:state]))
   end)
+
+  def active?
+    ![STATE_QUEUED, STATE_FINISHED].include?(state)
+  end
+
+  def check_active
+    if active?
+      _log.warn "Task is active, delete not allowed; id: [#{id}]"
+      throw :abort
+    end
+    _log.info "Task deleted; id: [#{id}]"
+    true
+  end
 
   def self.status_ok?(status)
     status.casecmp(STATUS_OK) == 0
