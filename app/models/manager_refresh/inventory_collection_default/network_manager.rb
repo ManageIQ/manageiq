@@ -2,10 +2,18 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
   class << self
     def cloud_subnet_network_ports(extra_attributes = {})
       attributes = {
-        :model_class => ::CloudSubnetNetworkPort,
-        :manager_ref => [:address, :cloud_subnet, :network_port],
-        :association => :cloud_subnet_network_ports
+        :model_class                  => ::CloudSubnetNetworkPort,
+        :manager_ref                  => [:address, :cloud_subnet, :network_port],
+        :association                  => :cloud_subnet_network_ports,
+        :parent_inventory_collections => [:vms, :network_ports, :load_balancers],
       }
+
+      extra_attributes[:targeted_arel] = lambda do |inventory_collection|
+        manager_uuids = inventory_collection.parent_inventory_collections.collect(&:manager_uuids).map(&:to_a).flatten
+        inventory_collection.parent.cloud_subnet_network_ports.references(:network_ports).where(
+          :network_ports => {:ems_ref => manager_uuids}
+        )
+      end
 
       attributes.merge!(extra_attributes)
     end
@@ -72,10 +80,18 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
 
     def firewall_rules(extra_attributes = {})
       attributes = {
-        :model_class => ::FirewallRule,
-        :manager_ref => [:resource, :source_security_group, :direction, :host_protocol, :port, :end_port, :source_ip_range],
-        :association => :firewall_rules
+        :model_class                  => ::FirewallRule,
+        :manager_ref                  => [:resource, :source_security_group, :direction, :host_protocol, :port, :end_port, :source_ip_range],
+        :association                  => :firewall_rules,
+        :parent_inventory_collections => [:security_groups],
       }
+
+      extra_attributes[:targeted_arel] = lambda do |inventory_collection|
+        manager_uuids = inventory_collection.parent_inventory_collections.collect(&:manager_uuids).map(&:to_a).flatten
+        inventory_collection.parent.firewall_rules.references(:security_groups).where(
+          :security_groups => {:ems_ref => manager_uuids}
+        )
+      end
 
       attributes.merge!(extra_attributes)
     end
@@ -94,78 +110,132 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
 
     def load_balancer_pools(extra_attributes = {})
       attributes = {
-        :model_class    => ::LoadBalancerPool,
-        :association    => :load_balancer_pools,
-        :builder_params => {
-          :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
+        :model_class                  => ::LoadBalancerPool,
+        :association                  => :load_balancer_pools,
+        :parent_inventory_collections => [:load_balancers],
+        :builder_params               => {
+          :ems_id => ->(persister) {persister.manager.try(:network_manager).try(:id) || persister.manager.id},
         }
       }
+
+      extra_attributes[:targeted_arel] = lambda do |inventory_collection|
+        manager_uuids = inventory_collection.parent_inventory_collections.collect(&:manager_uuids).map(&:to_a).flatten
+        inventory_collection.parent.load_balancer_pools.where(:ems_ref => manager_uuids)
+      end
 
       attributes.merge!(extra_attributes)
     end
 
     def load_balancer_pool_members(extra_attributes = {})
       attributes = {
-        :model_class    => ::LoadBalancerPoolMember,
-        :association    => :load_balancer_pool_members,
-        :builder_params => {
-          :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
+        :model_class                  => ::LoadBalancerPoolMember,
+        :association                  => :load_balancer_pool_members,
+        :parent_inventory_collections => [:load_balancers],
+        :builder_params               => {
+          :ems_id => ->(persister) {persister.manager.try(:network_manager).try(:id) || persister.manager.id},
         }
       }
+
+      extra_attributes[:targeted_arel] = lambda do |inventory_collection|
+        manager_uuids = inventory_collection.parent_inventory_collections.collect(&:manager_uuids).map(&:to_a).flatten
+        inventory_collection.parent.load_balancer_pool_members
+          .joins(:load_balancer_pool_member_pools => :load_balancer_pool)
+          .where(:load_balancer_pool_member_pools => {'load_balancer_pools' => {:ems_ref => manager_uuids}})
+          .distinct
+      end
 
       attributes.merge!(extra_attributes)
     end
 
     def load_balancer_pool_member_pools(extra_attributes = {})
       attributes = {
-        :model_class => ::LoadBalancerPoolMemberPool,
-        :manager_ref => [:load_balancer_pool, :load_balancer_pool_member],
-        :association => :load_balancer_pool_member_pools
+        :model_class                  => ::LoadBalancerPoolMemberPool,
+        :manager_ref                  => [:load_balancer_pool, :load_balancer_pool_member],
+        :association                  => :load_balancer_pool_member_pools,
+        :parent_inventory_collections => [:load_balancers]
       }
+
+      extra_attributes[:targeted_arel] = lambda do |inventory_collection|
+        manager_uuids = inventory_collection.parent_inventory_collections.collect(&:manager_uuids).map(&:to_a).flatten
+        inventory_collection.parent.load_balancer_pool_member_pools
+          .references(:load_balancer_pools)
+          .where(:load_balancer_pools => {:ems_ref => manager_uuids})
+          .distinct
+      end
 
       attributes.merge!(extra_attributes)
     end
 
     def load_balancer_listeners(extra_attributes = {})
       attributes = {
-        :model_class    => ::LoadBalancerListener,
-        :association    => :load_balancer_listeners,
-        :builder_params => {
-          :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
+        :model_class                  => ::LoadBalancerListener,
+        :association                  => :load_balancer_listeners,
+        :parent_inventory_collections => [:load_balancers],
+        :builder_params               => {
+          :ems_id => ->(persister) {persister.manager.try(:network_manager).try(:id) || persister.manager.id},
         }
       }
+
+      extra_attributes[:targeted_arel] = lambda do |inventory_collection|
+        manager_uuids = inventory_collection.parent_inventory_collections.collect(&:manager_uuids).map(&:to_a).flatten
+        inventory_collection.parent.load_balancer_listeners.joins(:load_balancer).where(
+          :load_balancers => {:ems_ref => manager_uuids}
+        )
+      end
 
       attributes.merge!(extra_attributes)
     end
 
     def load_balancer_listener_pools(extra_attributes = {})
       attributes = {
-        :model_class => ::LoadBalancerListenerPool,
-        :manager_ref => [:load_balancer_listener, :load_balancer_pool],
-        :association => :load_balancer_listener_pools
+        :model_class                  => ::LoadBalancerListenerPool,
+        :manager_ref                  => [:load_balancer_listener, :load_balancer_pool],
+        :association                  => :load_balancer_listener_pools,
+        :parent_inventory_collections => [:load_balancers]
       }
+
+      extra_attributes[:targeted_arel] = lambda do |inventory_collection|
+        manager_uuids = inventory_collection.parent_inventory_collections.collect(&:manager_uuids).map(&:to_a).flatten
+        inventory_collection.parent.load_balancer_listener_pools.joins(:load_balancer_pool).where(
+          :load_balancer_pools => {:ems_ref => manager_uuids}
+        )
+      end
 
       attributes.merge!(extra_attributes)
     end
 
     def load_balancer_health_checks(extra_attributes = {})
       attributes = {
-        :model_class    => ::LoadBalancerHealthCheck,
-        :association    => :load_balancer_health_checks,
-        :builder_params => {
-          :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
+        :model_class                  => ::LoadBalancerHealthCheck,
+        :association                  => :load_balancer_health_checks,
+        :parent_inventory_collections => [:load_balancers],
+        :builder_params               => {
+          :ems_id => ->(persister) {persister.manager.try(:network_manager).try(:id) || persister.manager.id},
         }
       }
+
+      extra_attributes[:targeted_arel] = lambda do |inventory_collection|
+        manager_uuids = inventory_collection.parent_inventory_collections.collect(&:manager_uuids).map(&:to_a).flatten
+        inventory_collection.parent.load_balancer_health_checks.where(:ems_ref => manager_uuids)
+      end
 
       attributes.merge!(extra_attributes)
     end
 
     def load_balancer_health_check_members(extra_attributes = {})
       attributes = {
-        :model_class => ::LoadBalancerHealthCheckMember,
-        :manager_ref => [:load_balancer_health_check, :load_balancer_pool_member],
-        :association => :load_balancer_health_check_members
+        :model_class                  => ::LoadBalancerHealthCheckMember,
+        :manager_ref                  => [:load_balancer_health_check, :load_balancer_pool_member],
+        :association                  => :load_balancer_health_check_members,
+        :parent_inventory_collections => [:load_balancers],
       }
+
+      extra_attributes[:targeted_arel] = lambda do |inventory_collection|
+        manager_uuids = inventory_collection.parent_inventory_collections.collect(&:manager_uuids).map(&:to_a).flatten
+        inventory_collection.parent.load_balancer_health_check_members.references(:load_balancer_health_checks).where(
+          :load_balancer_health_checks => {:ems_ref => manager_uuids}
+        )
+      end
 
       attributes.merge!(extra_attributes)
     end
