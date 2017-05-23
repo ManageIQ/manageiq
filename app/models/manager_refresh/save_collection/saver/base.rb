@@ -7,6 +7,10 @@ module ManagerRefresh::SaveCollection
 
       def initialize(inventory_collection)
         @inventory_collection = inventory_collection
+
+        # Private attrs
+        @unique_index_keys      = inventory_collection.manager_ref_to_cols
+        @unique_db_primary_keys = Set.new
       end
 
       def save_inventory_collection!
@@ -18,6 +22,28 @@ module ManagerRefresh::SaveCollection
         association = inventory_collection.db_collection_for_comparison
 
         save!(inventory_collection, association)
+      end
+
+      private
+
+      attr_reader :unique_index_keys, :unique_db_primary_keys
+
+      def assert_distinct_relation(record)
+        if unique_db_primary_keys.include?(record.id) # Include on Set is O(1)
+          # Change the InventoryCollection's :association or :arel parameter to return distinct results. The :through
+          # relations can return the same record multiple times. We don't want to do SELECT DISTINCT by default, since
+          # it can be very slow.
+          if Rails.env.production?
+            _log.warn("Please update :association or :arel for #{inventory_collection} to return a DISTINCT result. "\
+                        " The duplicate value is being ignored.")
+            return false
+          else
+            raise("Please update :association or :arel for #{inventory_collection} to return a DISTINCT result. ")
+          end
+        else
+          unique_db_primary_keys << record.id
+        end
+        true
       end
     end
   end
