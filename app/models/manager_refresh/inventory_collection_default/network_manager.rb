@@ -114,7 +114,7 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
         :association                  => :load_balancer_pools,
         :parent_inventory_collections => [:load_balancers],
         :builder_params               => {
-          :ems_id => ->(persister) {persister.manager.try(:network_manager).try(:id) || persister.manager.id},
+          :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
         }
       }
 
@@ -132,16 +132,16 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
         :association                  => :load_balancer_pool_members,
         :parent_inventory_collections => [:load_balancers],
         :builder_params               => {
-          :ems_id => ->(persister) {persister.manager.try(:network_manager).try(:id) || persister.manager.id},
+          :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
         }
       }
 
       extra_attributes[:targeted_arel] = lambda do |inventory_collection|
         manager_uuids = inventory_collection.parent_inventory_collections.collect(&:manager_uuids).map(&:to_a).flatten
         inventory_collection.parent.load_balancer_pool_members
-          .joins(:load_balancer_pool_member_pools => :load_balancer_pool)
-          .where(:load_balancer_pool_member_pools => {'load_balancer_pools' => {:ems_ref => manager_uuids}})
-          .distinct
+                            .joins(:load_balancer_pool_member_pools => :load_balancer_pool)
+                            .where(:load_balancer_pool_member_pools => {'load_balancer_pools' => {:ems_ref => manager_uuids}})
+                            .distinct
       end
 
       attributes.merge!(extra_attributes)
@@ -158,9 +158,9 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
       extra_attributes[:targeted_arel] = lambda do |inventory_collection|
         manager_uuids = inventory_collection.parent_inventory_collections.collect(&:manager_uuids).map(&:to_a).flatten
         inventory_collection.parent.load_balancer_pool_member_pools
-          .references(:load_balancer_pools)
-          .where(:load_balancer_pools => {:ems_ref => manager_uuids})
-          .distinct
+                            .references(:load_balancer_pools)
+                            .where(:load_balancer_pools => {:ems_ref => manager_uuids})
+                            .distinct
       end
 
       attributes.merge!(extra_attributes)
@@ -172,7 +172,7 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
         :association                  => :load_balancer_listeners,
         :parent_inventory_collections => [:load_balancers],
         :builder_params               => {
-          :ems_id => ->(persister) {persister.manager.try(:network_manager).try(:id) || persister.manager.id},
+          :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
         }
       }
 
@@ -210,7 +210,7 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
         :association                  => :load_balancer_health_checks,
         :parent_inventory_collections => [:load_balancers],
         :builder_params               => {
-          :ems_id => ->(persister) {persister.manager.try(:network_manager).try(:id) || persister.manager.id},
+          :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
         }
       }
 

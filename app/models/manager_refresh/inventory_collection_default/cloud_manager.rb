@@ -87,8 +87,8 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
 
       attributes[:custom_db_finder] = lambda do |inventory_collection, selection, _projection|
         relation = inventory_collection.parent.send(inventory_collection.association)
-                     .includes(:vm_or_template)
-                     .references(:vm_or_template)
+                                       .includes(:vm_or_template)
+                                       .references(:vm_or_template)
         relation = relation.where(:vms => {:ems_ref => selection[:vm_or_template]}) unless selection.blank?
         relation
       end
@@ -249,12 +249,12 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
         model_class = stacks_inventory_collection.model_class
 
         stacks_parents_indexed = model_class
-                                   .select([:id, :ancestry])
-                                   .where(:id => stacks_parents.values).find_each.index_by(&:id)
+                                 .select([:id, :ancestry])
+                                 .where(:id => stacks_parents.values).find_each.index_by(&:id)
 
         ActiveRecord::Base.transaction do
           model_class.select([:id, :ancestry])
-            .where(:id => stacks_parents.keys).find_each do |stack|
+                     .where(:id => stacks_parents.keys).find_each do |stack|
             parent = stacks_parents_indexed[stacks_parents[stack.id]]
             stack.update_attribute(:parent, parent)
           end
@@ -293,11 +293,11 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
         ActiveRecord::Base.transaction do
           # associate parent templates to child instances
           parent_miq_templates = miq_templates_inventory_collection.model_class
-                                   .select([:id])
-                                   .where(:id => vms_genealogy_parents.values).find_each.index_by(&:id)
+                                                                   .select([:id])
+                                                                   .where(:id => vms_genealogy_parents.values).find_each.index_by(&:id)
           vms_inventory_collection.model_class
-            .select([:id])
-            .where(:id => vms_genealogy_parents.keys).find_each do |vm|
+                                  .select([:id])
+                                  .where(:id => vms_genealogy_parents.keys).find_each do |vm|
             parent = parent_miq_templates[vms_genealogy_parents[vm.id]]
             vm.with_relationship_type('genealogy') { vm.parent = parent }
           end
@@ -306,11 +306,11 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
         ActiveRecord::Base.transaction do
           # associate parent instances to child templates
           parent_vms = vms_inventory_collection.model_class
-                         .select([:id])
-                         .where(:id => miq_template_genealogy_parents.values).find_each.index_by(&:id)
+                                               .select([:id])
+                                               .where(:id => miq_template_genealogy_parents.values).find_each.index_by(&:id)
           miq_templates_inventory_collection.model_class
-            .select([:id])
-            .where(:id => miq_template_genealogy_parents.keys).find_each do |miq_template|
+                                            .select([:id])
+                                            .where(:id => miq_template_genealogy_parents.keys).find_each do |miq_template|
             parent = parent_vms[miq_template_genealogy_parents[miq_template.id]]
             miq_template.with_relationship_type('genealogy') { miq_template.parent = parent }
           end
