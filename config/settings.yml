@@ -123,8 +123,6 @@
   :foreman_provisioning:
     :refresh_interval: 1.hour
   :full_refresh_threshold: 100
-  :hawkular:
-    :refresh_interval: 15.minutes
   :kubernetes:
     :refresh_interval: 15.minutes
   :openshift:
@@ -220,18 +218,6 @@
       - VmBeingDeployedEvent
       :name: Creation/Addition
     :application:
-      :critical:
-      - hawkular_datasource.error
-      - hawkular_datasource_remove.error
-      - hawkular_deployment.error
-      - hawkular_deployment_remove.error
-      - hawkular_event.critical
-      :detail:
-      - hawkular_datasource.ok
-      - hawkular_datasource_remove.ok
-      - hawkular_deployment.ok
-      - hawkular_deployment_remove.ok
-      - hawkular_event
       :name: Application
     :configuration:
       :critical:
@@ -981,8 +967,6 @@
   :level_lenovo_in_evm: error
   :level_mw: info
   :level_mw_in_evm: error
-  :level_datawarehouse: info
-  :level_datawarehouse_in_evm: error
   :level_kube: info
   :level_kube_in_evm: error
   :level_api: info
@@ -1035,7 +1019,6 @@
 :product:
   :maindb: ExtManagementSystem
   :container_deployment_wizard: false
-  :datawarehouse_manager: false
 :prototype:
   :monitoring: false
 :recommendations:
@@ -1217,11 +1200,6 @@
         :poll: 20.seconds
       :event_catcher_redhat:
         :poll: 15.seconds
-      :event_catcher_hawkular:
-        :poll: 10.seconds
-      :event_catcher_hawkular_datawarehouse:
-        :alertable_tenants: ['_system', '_ops']
-        :poll: 1.minute
       :event_catcher_google:
         :poll: 15.seconds
       :event_catcher_kubernetes:
@@ -1272,7 +1250,6 @@
         :ems_refresh_worker_foreman_provisioning: {}
         :ems_refresh_worker_google: {}
         :ems_refresh_worker_google_network: {}
-        :ems_refresh_worker_hawkular: {}
         :ems_refresh_worker_kubernetes: {}
         :ems_refresh_worker_lenovo_physical_infra: {}
         :ems_refresh_worker_microsoft: {}
