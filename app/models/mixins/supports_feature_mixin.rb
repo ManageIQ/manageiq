@@ -88,6 +88,7 @@ module SupportsFeatureMixin
     :evacuate                   => 'Evacuation',
     :launch_cockpit             => 'Launch Cockpit UI',
     :live_migrate               => 'Live Migration',
+    :metrics                    => 'Metrics',
     :migrate                    => 'Migration',
     :provisioning               => 'Provisioning',
     :publish                    => 'Publishing',
