@@ -46,6 +46,23 @@ describe MiqServer do
       @guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
     end
 
+    describe "#monitor_loop" do
+      it "calls shutdown_and_exit if SIGTERM is raised" do
+        expect(@miq_server).to receive(:monitor).and_raise(SignalException, "SIGTERM")
+        expect(@miq_server).to receive(:shutdown_and_exit)
+
+        @miq_server.monitor_loop
+      end
+
+      it "kills the server and exits if SIGINT is raised" do
+        expect(@miq_server).to receive(:monitor).and_raise(Interrupt)
+        expect(MiqServer).to receive(:kill)
+        expect(@miq_server).to receive(:exit).with(1)
+
+        @miq_server.monitor_loop
+      end
+    end
+
     it "should have proper guid" do
       expect(@miq_server.guid).to eq(@guid)
     end
