@@ -345,7 +345,7 @@ class MiqServer < ApplicationRecord
     Benchmark.realtime_block(:log_active_servers)      { log_active_servers }               if threshold_exceeded?(:server_log_frequency, now)
     Benchmark.realtime_block(:worker_monitor)          { monitor_workers }                  if threshold_exceeded?(:worker_monitor_frequency, now)
     Benchmark.realtime_block(:worker_dequeue)          { populate_queue_messages }          if threshold_exceeded?(:worker_dequeue_frequency, now)
-  rescue SystemExit
+  rescue SystemExit, SignalException
     # TODO: We're rescuing Exception below. WHY? :bomb:
     # A SystemExit would be caught below, so we need to explicitly rescue/raise.
     raise
@@ -369,6 +369,13 @@ class MiqServer < ApplicationRecord
       _log.info "Server Monitoring Complete - Timings: #{timings.inspect}" unless timings[:total_time] < server_log_timings_threshold
       sleep monitor_poll
     end
+  rescue Interrupt => e
+    _log.info("Received #{e.message} signal, killing server")
+    self.class.kill
+    exit 1
+  rescue SignalException => e
+    _log.info("Received #{e.message} signal, shutting down server")
+    shutdown_and_exit
   end
 
   def stop(sync = false)
