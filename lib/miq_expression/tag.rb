@@ -12,6 +12,7 @@ class MiqExpression::Tag < MiqExpression::Target
   attr_reader :namespace
 
   def self.parse(field)
+    return unless field.include?('managed') || field.include?('user_tag')
     parsed_params = parse_params(field) || return
     managed = parsed_params[:namespace] == self::MANAGED_NAMESPACE
     new(parsed_params[:model_name], parsed_params[:associations], parsed_params[:column], managed)
