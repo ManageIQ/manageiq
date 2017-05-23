@@ -1122,7 +1122,7 @@
       - :name: turn_on_loc_led
         :identifier: physical_server_turn_on_loc_led
       - :name: turn_off_loc_led
-        :identifier: physical_server_turn_off_loc_led        
+        :identifier: physical_server_turn_off_loc_led
   :pictures:
     :description: Pictures
     :options:
