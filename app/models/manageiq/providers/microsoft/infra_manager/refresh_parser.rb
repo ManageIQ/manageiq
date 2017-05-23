@@ -136,6 +136,7 @@ module ManageIQ::Providers::Microsoft
         :vmm_version      => host['HyperVVersionString'],
         :vmm_product      => host_platform,
         :power_state      => lookup_power_state(host['HyperVStateString']),
+        :maintenance      => lookup_overall_state(host['OverallState']),
         :connection_state => lookup_connected_state(host['CommunicationStateString']),
         :operating_system => process_os(host),
         :hardware         => process_host_hardware(host),
@@ -571,6 +572,10 @@ module ManageIQ::Providers::Microsoft
       else
         adapter['IPAddresses'].split.first # Avoid IPv6 text if present
       end
+    end
+
+    def lookup_overall_state(overall_state)
+      overall_state.to_s.downcase != 'ok'
     end
 
     def lookup_power_state(power_state_input)
