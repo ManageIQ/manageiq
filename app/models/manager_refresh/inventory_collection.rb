@@ -6,7 +6,7 @@ module ManagerRefresh
                 :internal_attributes, :delete_method, :data, :data_index, :dependency_attributes, :manager_ref,
                 :association, :complete, :update_only, :transitive_dependency_attributes, :custom_manager_uuid,
                 :custom_db_finder, :check_changed, :arel, :builder_params, :loaded_references, :db_data_index,
-                :inventory_object_attributes, :name
+                :inventory_object_attributes, :name, :manager_ref_allowed_nil
 
     delegate :each, :size, :to => :to_a
 
@@ -204,7 +204,7 @@ module ManagerRefresh
     # @param custom_db_finder [Proc] A custom way of getting the InventoryCollection out of the DB in a case of any DB
     #        based strategy. This should be used in a case of complex query needed for e.g. targeted refresh or as an
     #        optimization for :custom_manager_uuid.
-
+    #
     #        Example, we solve N+1 issue from Example <param :custom_manager_uuid> as well as a selection used for
     #        targeted refresh getting Hardware object from the DB instead of the API:
     #          Having InventoryCollection.new({
@@ -285,11 +285,16 @@ module ManagerRefresh
     #        one.
     # @param name [Symbol] A unique name of the InventoryCollection under a Persister. If not provided, the :association
     #        attribute is used. Providing either :name or :association is mandatory.
+    # @param manager_ref_allowed_nil [Array] Array of symbols having manager_ref columns, that are a foreign key an can
+    #        be nil. Given the table are shared by many providers, it can happen, that the table is used only partially.
+    #        Then it can happen we want to allow certain foreign keys to be nil, while being sure the referential
+    #        integrity is not broken. Of course the DB Foreign Key can't be created in this case, so we should try to
+    #        avoid this usecase by a proper modeling.
     def initialize(model_class: nil, manager_ref: nil, association: nil, parent: nil, strategy: nil, saved: nil,
                    custom_save_block: nil, delete_method: nil, data_index: nil, data: nil, dependency_attributes: nil,
                    attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil,
                    check_changed: nil, custom_manager_uuid: nil, custom_db_finder: nil, arel: nil, builder_params: {},
-                   inventory_object_attributes: nil, unique_index_columns: nil, name: nil)
+                   inventory_object_attributes: nil, unique_index_columns: nil, name: nil, manager_ref_allowed_nil: nil)
       @model_class           = model_class
       @manager_ref           = manager_ref || [:ems_ref]
       @custom_manager_uuid   = custom_manager_uuid
@@ -311,6 +316,8 @@ module ManagerRefresh
       @builder_params        = builder_params
       @unique_index_columns  = unique_index_columns
       @name                  = name || association
+
+      @manager_ref_allowed_nil = manager_ref_allowed_nil || []
 
       raise "You have to pass either :name or :association argument to .new of #{self}" if @name.blank?
 
@@ -682,6 +689,23 @@ module ManagerRefresh
       @association_to_base_class_mapping ||= model_class.reflect_on_all_associations.each_with_object({}) do |x, obj|
         obj[x.name] = x.klass.base_class.name unless x.polymorphic?
       end
+    end
+
+    def foreign_keys
+      return [] unless model_class
+
+      @foreign_keys_cache ||= belongs_to_associations.map { |x| x.foreign_key }
+    end
+
+    def fixed_foreign_keys
+      # Foreign keys that are part of a manager_ref must be present, otherwise the record would get lost. This is a
+      # minimum check we can do to not break a referential integrity.
+      return @fixed_foreign_keys_cache unless @fixed_foreign_keys_cache.nil?
+
+      manager_ref_set = (manager_ref - manager_ref_allowed_nil)
+      @fixed_foreign_keys_cache = manager_ref_set.map { |x| association_to_foreign_key_mapping[x] }.compact
+      @fixed_foreign_keys_cache += foreign_keys & manager_ref
+      @fixed_foreign_keys_cache
     end
 
     def base_class_name
