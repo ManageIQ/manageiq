@@ -27,7 +27,7 @@ class EmsEvent < EventStream
   def self.event_groups
     core_event_groups = ::Settings.event_handling.event_groups.to_hash
     Settings.ems.each_with_object(core_event_groups) do |(_provider_type, provider_settings), event_groups|
-      provider_event_groups = provider_settings.fetch_path(:event_handling, :event_groups)
+      provider_event_groups = provider_settings.try(:fetch_path, :event_handling, :event_groups)
       next unless provider_event_groups
       DeepMerge.deep_merge!(
         provider_event_groups.to_hash, event_groups,
