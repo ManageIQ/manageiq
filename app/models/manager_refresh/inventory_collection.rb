@@ -6,7 +6,8 @@ module ManagerRefresh
                 :internal_attributes, :delete_method, :data, :data_index, :dependency_attributes, :manager_ref,
                 :association, :complete, :update_only, :transitive_dependency_attributes, :custom_manager_uuid,
                 :custom_db_finder, :check_changed, :arel, :builder_params, :loaded_references, :db_data_index,
-                :inventory_object_attributes, :name, :manager_ref_allowed_nil
+                :inventory_object_attributes, :name, :parent_inventory_collections, :manager_uuids,
+                :skeletal_manager_uuids, :targeted_arel, :targeted, :manager_ref_allowed_nil
 
     delegate :each, :size, :to => :to_a
 
@@ -285,6 +286,34 @@ module ManagerRefresh
     #        one.
     # @param name [Symbol] A unique name of the InventoryCollection under a Persister. If not provided, the :association
     #        attribute is used. Providing either :name or :association is mandatory.
+    # @param parent_inventory_collections [Array] Array of symbols having a name of the
+    #        ManagerRefresh::InventoryCollection objects, that serve as parents to this InventoryCollection. Then this
+    #        InventoryCollection completeness will be encapsulated by the parent_inventory_collections :manager_uuids
+    #        instead of this InventoryCollection :manager_uuids.
+    # @param manager_uuids [Array] Array of manager_uuids of the InventoryObjects we want to create/update/delete. Using
+    #        this attribute, the db_collection_for_comparison will be automatically limited by the manager_uuids, in a
+    #        case of a simple relation. In a case of a complex relation, we can leverage :manager_uuids in a
+    #        custom :targeted_arel.
+    # @param targeted_arel [Proc] A callable block that receives this InventoryCollection as a first argument. In there
+    #        we can leverage a :parent_inventory_collections or :manager_uuids to limit the query based on the
+    #        manager_uuids available.
+    #        Example:
+    #          targeted_arel = lambda do |inventory_collection|
+    #            # Getting ems_refs of parent :vms and :miq_templates
+    #            manager_uuids = inventory_collection.parent_inventory_collections.collect(&:manager_uuids).flatten
+    #            inventory_collection.db_collection_for_comparison.hardwares.joins(:vm_or_template).where(
+    #              'vms' => {:ems_ref => manager_uuids}
+    #            )
+    #          end
+    #
+    #          inventory_collection = InventoryCollection.new({
+    #                                   :model_class                 => ::Hardware,
+    #                                   :association                 => :hardwares,
+    #                                   :parent_inventory_collection => [:vms, :miq_templates],
+    #                                   :targeted_arel               => targeted_arel,
+    #                                 })
+    # @param targeted [Boolean] True if the collection is targeted, in that case it will be leveraging :manager_uuids
+    #        :parent_inventory_collections and :targeted_arel to save a subgraph of a data.
     # @param manager_ref_allowed_nil [Array] Array of symbols having manager_ref columns, that are a foreign key an can
     #        be nil. Given the table are shared by many providers, it can happen, that the table is used only partially.
     #        Then it can happen we want to allow certain foreign keys to be nil, while being sure the referential
@@ -294,7 +323,9 @@ module ManagerRefresh
                    custom_save_block: nil, delete_method: nil, data_index: nil, data: nil, dependency_attributes: nil,
                    attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil,
                    check_changed: nil, custom_manager_uuid: nil, custom_db_finder: nil, arel: nil, builder_params: {},
-                   inventory_object_attributes: nil, unique_index_columns: nil, name: nil, manager_ref_allowed_nil: nil)
+                   inventory_object_attributes: nil, unique_index_columns: nil, name: nil,
+                   parent_inventory_collections: nil, manager_uuids: [], targeted_arel: nil, targeted: nil,
+                   manager_ref_allowed_nil: nil)
       @model_class           = model_class
       @manager_ref           = manager_ref || [:ems_ref]
       @custom_manager_uuid   = custom_manager_uuid
@@ -318,6 +349,13 @@ module ManagerRefresh
       @name                  = name || association
 
       @manager_ref_allowed_nil = manager_ref_allowed_nil || []
+
+      # Targeted mode related attributes
+      @manager_uuids                = Set.new.merge(manager_uuids)
+      @parent_inventory_collections = parent_inventory_collections
+      @skeletal_manager_uuids       = Set.new
+      @targeted_arel                = targeted_arel
+      @targeted                     = !!targeted
 
       raise "You have to pass either :name or :association argument to .new of #{self}" if @name.blank?
 
@@ -441,6 +479,10 @@ module ManagerRefresh
     def supports_sti?
       @supports_sti_cache = model_class.column_names.include?("type") if @supports_sti_cache.nil?
       @supports_sti_cache
+    end
+
+    def targeted?
+      targeted
     end
 
     def unique_index_columns
@@ -729,20 +771,41 @@ module ManagerRefresh
       to_s
     end
 
-    def scan!
+    def scan!(indexed_inventory_collections)
       data.each do |inventory_object|
         scan_inventory_object!(inventory_object)
+      end
+
+      if parent_inventory_collections.present?
+        self.parent_inventory_collections = parent_inventory_collections.map do |inventory_collection_index|
+          inventory_collection = indexed_inventory_collections[inventory_collection_index]
+          raise "Cannot find inventory collection #{inventory_collection_index} from #{self}" unless inventory_collection
+          inventory_collection
+        end
       end
     end
 
     def db_collection_for_comparison
+      if targeted?
+        if targeted_arel.respond_to?(:call)
+          targeted_arel.call(self)
+        else
+          raise "Can't build :targeted_arel for #{self}, please provide it as an argument." if manager_ref.count > 1
+          full_collection_for_comparison.where(manager_ref.first => (manager_uuids + skeletal_manager_uuids).to_a.flatten.compact)
+        end
+      else
+        full_collection_for_comparison
+      end
+    end
+
+    def full_collection_for_comparison
       return arel unless arel.nil?
       parent.send(association)
     end
 
     private
 
-    attr_writer :attributes_blacklist, :attributes_whitelist, :db_data_index
+    attr_writer :attributes_blacklist, :attributes_whitelist, :db_data_index, :parent_inventory_collections
 
     # Finds manager_uuid in the DB. Using a configured strategy we cache obtained data in the db_data_index, so the
     # same find will not hit database twice. Also if we use lazy_links and this is called when
