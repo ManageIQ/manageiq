@@ -70,4 +70,111 @@ describe ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies::V
       end
     end
   end
+
+  describe "#vm_reconfigure" do
+    before do
+      _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
+      @ems  = FactoryGirl.create(:ems_redhat_with_authentication, :zone => zone)
+      @hw   = FactoryGirl.create(:hardware, :memory_mb => 1024, :cpu_sockets => 2, :cpu_cores_per_socket => 1)
+      @vm   = FactoryGirl.create(:vm_redhat, :ext_management_system => @ems)
+      @cores_per_socket = 2
+      @num_of_sockets   = 3
+      @vm_proxy = double("OvirtSDK4::Vm.new")
+      @vm_service = double("OvirtSDK4::Vm")
+      allow(@ems).to receive(:highest_supported_api_version).and_return(4)
+      allow(@vm).to receive(:with_provider_object).and_yield(@vm_service)
+      allow(@vm_service).to receive(:get).and_return(@vm_proxy)
+    end
+
+    it 'cpu_topology' do
+      spec = {
+        "numCPUs"           => @cores_per_socket * @num_of_sockets,
+        "numCoresPerSocket" => @cores_per_socket
+      }
+
+      expect(@vm_service).to receive(:update)
+        .with(OvirtSDK4::Vm.new(
+                :cpu => {
+                  :topology => {
+                    :cores   => @cores_per_socket,
+                    :sockets => @num_of_sockets
+                  }
+                }
+        ))
+      @ems.vm_reconfigure(@vm, :spec => spec)
+    end
+
+    describe "memory" do
+      before do
+        @memory_policy = double("memory_policy")
+        allow(@memory_policy).to receive(:guaranteed).and_return(2.gigabytes)
+        allow(@vm_proxy).to receive(:status).and_return(vm_status)
+        allow(@vm_proxy).to receive(:memory).and_return(0)
+        allow(@vm_proxy).to receive(:memory_policy).and_return(@memory_policy)
+        allow(@vm_proxy).to receive(:name).and_return("vm_name")
+        @memory_spec = { :memory => memory, :memory_policy => { :guaranteed => guaranteed } }
+      end
+
+      subject(:reconfigure_vm) { @ems.vm_reconfigure(@vm, :spec => spec) }
+      let(:spec) { { 'memoryMB' => 8.gigabytes / 1.megabyte } }
+      let(:memory) { 8.gigabytes }
+      let(:guaranteed) { 2.gigabytes }
+      context "vm is up" do
+        let(:vm_status) { OvirtSDK4::VmStatus::UP }
+        it 'updates the current and persistent configuration if the VM is up' do
+          expect(@vm_service).to receive(:update).with(OvirtSDK4::Vm.new(@memory_spec), :next_run => true)
+          expect(@vm_service).to receive(:update).with(OvirtSDK4::Vm.new(:memory => 8.gigabytes))
+          reconfigure_vm
+        end
+
+        context "memory is bigger than vms memory should be rounded up by 256" do
+          let(:spec) { { 'memoryMB' => 8.gigabytes / 1.megabyte + 1 } }
+          let(:memory) { 8.gigabytes + 256.megabytes }
+          it 'adjusts the increased memory to the next 256 MiB multiple if the VM is up' do
+            expect(@vm_service).to receive(:update).with(OvirtSDK4::Vm.new(@memory_spec), :next_run => true)
+            expect(@vm_service).to receive(:update).with(OvirtSDK4::Vm.new(:memory => memory))
+            reconfigure_vm
+          end
+        end
+
+        context "memory is less than vms memory should be rounded up" do
+          let(:spec) { { 'memoryMB' => 8.gigabytes / 1.megabyte - 1 } }
+          it 'adjusts reduced memory to the next 256 MiB multiple if the VM is up' do
+            expect(@vm_service).to receive(:update).with(OvirtSDK4::Vm.new(@memory_spec), :next_run => true)
+            expect(@vm_service).to receive(:update).with(OvirtSDK4::Vm.new(:memory => memory))
+            reconfigure_vm
+          end
+        end
+
+        context "guaranteed memory is bigger than vms" do
+          let(:spec) { { 'memoryMB' => 1.gigabyte / 1.megabyte } }
+          let(:memory) { 1.gigabyte }
+          it 'adjusts the guaranteed memory if it is larger than the virtual memory if the VM is up' do
+            mod_memory_spec = { :memory => memory, :memory_policy => { :guaranteed => 1.gigabyte } }
+            expect(@vm_service).to receive(:update).with(OvirtSDK4::Vm.new(mod_memory_spec), :next_run => true)
+            expect(@vm_service).to receive(:update).with(OvirtSDK4::Vm.new(:memory => memory))
+            reconfigure_vm
+          end
+        end
+      end
+
+      context "vm is down" do
+        let(:vm_status) { OvirtSDK4::VmStatus::DOWN }
+        it 'updates only the persistent configuration when the VM is down' do
+          expect(@vm_service).to receive(:update).with(OvirtSDK4::Vm.new(@memory_spec))
+          reconfigure_vm
+        end
+
+        context "guaranteed memory is bigger than vms" do
+          let(:spec) { { 'memoryMB' => 1.gigabyte / 1.megabyte } }
+          let(:memory) { 1.gigabyte }
+          it 'adjusts the guaranteed memory if it is larger than the virtual memory if the VM is up' do
+            mod_memory_spec = { :memory => memory, :memory_policy => { :guaranteed => 1.gigabyte } }
+            expect(@vm_service).to receive(:update).with(OvirtSDK4::Vm.new(mod_memory_spec))
+            reconfigure_vm
+          end
+        end
+      end
+    end
+  end
 end

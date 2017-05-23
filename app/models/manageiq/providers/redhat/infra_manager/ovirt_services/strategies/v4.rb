@@ -218,6 +218,7 @@ module ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies
 
       vm.with_provider_object(VERSION_HASH) do |vm_service|
         # Retrieve the current representation of the virtual machine:
+        # TODO: no need to retreive vm here, only if memory is updated
         vm = vm_service.get
 
         # Update the memory:

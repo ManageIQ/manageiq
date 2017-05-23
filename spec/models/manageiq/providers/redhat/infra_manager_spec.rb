@@ -43,97 +43,133 @@ describe ManageIQ::Providers::Redhat::InfraManager do
   end
 
   context "#vm_reconfigure" do
-    before do
-      _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
-      @ems  = FactoryGirl.create(:ems_redhat_with_authentication, :zone => zone)
-      @hw   = FactoryGirl.create(:hardware, :memory_mb => 1024, :cpu_sockets => 2, :cpu_cores_per_socket => 1)
-      @vm   = FactoryGirl.create(:vm_redhat, :ext_management_system => @ems)
+    context "version 4" do
+      context "#vm_reconfigure" do
+        before do
+          _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
+          @ems  = FactoryGirl.create(:ems_redhat_with_authentication, :zone => zone)
+          @vm   = FactoryGirl.create(:vm_redhat, :ext_management_system => @ems)
 
-      @cores_per_socket = 2
-      @num_of_sockets   = 3
+          @rhevm_vm_attrs = double('rhevm_vm_attrs')
+          allow(@ems).to receive(:highest_supported_api_version).and_return(4)
+          stub_settings_merge(:ems => { :ems_redhat => { :use_ovirt_engine_sdk => use_ovirt_engine_sdk } })
+          @v4_strategy_instance = instance_double(ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies::V4)
+          allow(ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies::V4)
+            .to receive(:new)
+            .and_return(@v4_strategy_instance)
+        end
 
-      @rhevm_vm_attrs = double('rhevm_vm_attrs')
-      allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:name).and_return('myvm')
-      allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:memory).and_return(4.gigabytes)
-      allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:memory_policy, :guaranteed).and_return(2.gigabytes)
-      allow(@ems).to receive(:highest_allowed_api_version).and_return(3)
-      # TODO: Add tests for when the highest_supported_api_version is 4
-      allow(@ems).to receive(:highest_supported_api_version).and_return(3)
-      @rhevm_vm = double('rhevm_vm')
-      allow(@rhevm_vm).to receive(:attributes).and_return(@rhevm_vm_attrs)
-      allow(@vm).to receive(:with_provider_object).and_yield(@rhevm_vm)
+        context "use_ovirt_engine_sdk is set to true" do
+          let(:use_ovirt_engine_sdk) { true }
+          it 'sends vm_reconfigure to the right ovirt_services' do
+            expect(@v4_strategy_instance).to receive(:vm_reconfigure).with(@vm, {})
+            @ems.vm_reconfigure(@vm)
+          end
+        end
+
+        context "use_ovirt_engine_sdk is set to false" do
+          let(:use_ovirt_engine_sdk) { false }
+          it 'sends vm_reconfigure to the right ovirt_services' do
+            expect(@v4_strategy_instance).to receive(:vm_reconfigure).with(@vm, {})
+            @ems.vm_reconfigure(@vm)
+          end
+        end
+      end
     end
 
-    it "cpu_topology=" do
-      spec = {
-        "numCPUs"           => @cores_per_socket * @num_of_sockets,
-        "numCoresPerSocket" => @cores_per_socket
-      }
+    context "version 3" do
+      before do
+        _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
+        @ems  = FactoryGirl.create(:ems_redhat_with_authentication, :zone => zone)
+        @hw   = FactoryGirl.create(:hardware, :memory_mb => 1024, :cpu_sockets => 2, :cpu_cores_per_socket => 1)
+        @vm   = FactoryGirl.create(:vm_redhat, :ext_management_system => @ems)
 
-      expect(@rhevm_vm).to receive(:cpu_topology=).with(:cores => @cores_per_socket, :sockets => @num_of_sockets)
-      @ems.vm_reconfigure(@vm, :spec => spec)
-    end
+        @cores_per_socket = 2
+        @num_of_sockets   = 3
 
-    it 'updates the current and persistent configuration if the VM is up' do
-      spec = {
-        'memoryMB' => 8.gigabytes / 1.megabyte
-      }
-      allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:status, :state).and_return('up')
-      expect(@rhevm_vm).to receive(:update_memory).with(8.gigabytes, 2.gigabytes, :next_run => true)
-      expect(@rhevm_vm).to receive(:update_memory).with(8.gigabytes, nil)
-      @ems.vm_reconfigure(@vm, :spec => spec)
-    end
+        @rhevm_vm_attrs = double('rhevm_vm_attrs')
+        allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:name).and_return('myvm')
+        allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:memory).and_return(4.gigabytes)
+        allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:memory_policy, :guaranteed).and_return(2.gigabytes)
+        allow(@ems).to receive(:highest_allowed_api_version).and_return(3)
+        # TODO: Add tests for when the highest_supported_api_version is 4
+        allow(@ems).to receive(:highest_supported_api_version).and_return(3)
+        @rhevm_vm = double('rhevm_vm')
+        allow(@rhevm_vm).to receive(:attributes).and_return(@rhevm_vm_attrs)
+        allow(@vm).to receive(:with_provider_object).and_yield(@rhevm_vm)
+      end
 
-    it 'updates only the persistent configuration when the VM is down' do
-      spec = {
-        'memoryMB' => 8.gigabytes / 1.megabyte
-      }
-      allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:status, :state).and_return('down')
-      expect(@rhevm_vm).to receive(:update_memory).with(8.gigabytes, 2.gigabytes)
-      @ems.vm_reconfigure(@vm, :spec => spec)
-    end
+      it "cpu_topology=" do
+        spec = {
+          "numCPUs"           => @cores_per_socket * @num_of_sockets,
+          "numCoresPerSocket" => @cores_per_socket
+        }
 
-    it 'adjusts the increased memory to the next 256 MiB multiple if the VM is up' do
-      spec = {
-        'memoryMB' => 8.gigabytes / 1.megabyte + 1
-      }
-      adjusted = 8.gigabytes + 256.megabytes
-      allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:status, :state).and_return('up')
-      expect(@rhevm_vm).to receive(:update_memory).with(adjusted, 2.gigabytes, :next_run => true)
-      expect(@rhevm_vm).to receive(:update_memory).with(adjusted, nil)
-      @ems.vm_reconfigure(@vm, :spec => spec)
-    end
+        expect(@rhevm_vm).to receive(:cpu_topology=).with(:cores => @cores_per_socket, :sockets => @num_of_sockets)
+        @ems.vm_reconfigure(@vm, :spec => spec)
+      end
 
-    it 'adjusts reduced memory to the next 256 MiB multiple if the VM is up' do
-      spec = {
-        'memoryMB' => 8.gigabytes / 1.megabyte - 1
-      }
-      adjusted = 8.gigabytes
-      allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:status, :state).and_return('up')
-      expect(@rhevm_vm).to receive(:update_memory).with(adjusted, 2.gigabytes, :next_run => true)
-      expect(@rhevm_vm).to receive(:update_memory).with(adjusted, nil)
-      @ems.vm_reconfigure(@vm, :spec => spec)
-    end
+      it 'updates the current and persistent configuration if the VM is up' do
+        spec = {
+          'memoryMB' => 8.gigabytes / 1.megabyte
+        }
+        allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:status, :state).and_return('up')
+        expect(@rhevm_vm).to receive(:update_memory).with(8.gigabytes, 2.gigabytes, :next_run => true)
+        expect(@rhevm_vm).to receive(:update_memory).with(8.gigabytes, nil)
+        @ems.vm_reconfigure(@vm, :spec => spec)
+      end
 
-    it 'adjusts the guaranteed memory if it is larger than the virtual memory if the VM is up' do
-      spec = {
-        'memoryMB' => 1.gigabyte / 1.megabyte
-      }
-      adjusted = 1.gigabyte
-      allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:status, :state).and_return('up')
-      expect(@rhevm_vm).to receive(:update_memory).with(1.gigabyte, adjusted, :next_run => true)
-      expect(@rhevm_vm).to receive(:update_memory).with(1.gigabyte, nil)
-      @ems.vm_reconfigure(@vm, :spec => spec)
-    end
+      it 'updates only the persistent configuration when the VM is down' do
+        spec = {
+          'memoryMB' => 8.gigabytes / 1.megabyte
+        }
+        allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:status, :state).and_return('down')
+        expect(@rhevm_vm).to receive(:update_memory).with(8.gigabytes, 2.gigabytes)
+        @ems.vm_reconfigure(@vm, :spec => spec)
+      end
 
-    it 'adjusts the guaranteed memory if it is larger than the virtual memory if the VM is down' do
-      spec = {
-        'memoryMB' => 1.gigabyte / 1.megabyte
-      }
-      adjusted = 1.gigabyte
-      allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:status, :state).and_return('down')
-      expect(@rhevm_vm).to receive(:update_memory).with(1.gigabyte, adjusted)
-      @ems.vm_reconfigure(@vm, :spec => spec)
+      it 'adjusts the increased memory to the next 256 MiB multiple if the VM is up' do
+        spec = {
+          'memoryMB' => 8.gigabytes / 1.megabyte + 1
+        }
+        adjusted = 8.gigabytes + 256.megabytes
+        allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:status, :state).and_return('up')
+        expect(@rhevm_vm).to receive(:update_memory).with(adjusted, 2.gigabytes, :next_run => true)
+        expect(@rhevm_vm).to receive(:update_memory).with(adjusted, nil)
+        @ems.vm_reconfigure(@vm, :spec => spec)
+      end
+
+      it 'adjusts reduced memory to the next 256 MiB multiple if the VM is up' do
+        spec = {
+          'memoryMB' => 8.gigabytes / 1.megabyte - 1
+        }
+        adjusted = 8.gigabytes
+        allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:status, :state).and_return('up')
+        expect(@rhevm_vm).to receive(:update_memory).with(adjusted, 2.gigabytes, :next_run => true)
+        expect(@rhevm_vm).to receive(:update_memory).with(adjusted, nil)
+        @ems.vm_reconfigure(@vm, :spec => spec)
+      end
+
+      it 'adjusts the guaranteed memory if it is larger than the virtual memory if the VM is up' do
+        spec = {
+          'memoryMB' => 1.gigabyte / 1.megabyte
+        }
+        adjusted = 1.gigabyte
+        allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:status, :state).and_return('up')
+        expect(@rhevm_vm).to receive(:update_memory).with(1.gigabyte, adjusted, :next_run => true)
+        expect(@rhevm_vm).to receive(:update_memory).with(1.gigabyte, nil)
+        @ems.vm_reconfigure(@vm, :spec => spec)
+      end
+
+      it 'adjusts the guaranteed memory if it is larger than the virtual memory if the VM is down' do
+        spec = {
+          'memoryMB' => 1.gigabyte / 1.megabyte
+        }
+        adjusted = 1.gigabyte
+        allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:status, :state).and_return('down')
+        expect(@rhevm_vm).to receive(:update_memory).with(1.gigabyte, adjusted)
+        @ems.vm_reconfigure(@vm, :spec => spec)
+      end
     end
   end
 
