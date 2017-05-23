@@ -153,7 +153,6 @@ describe "Provision Requests API" do
     let(:provreq2)      { FactoryGirl.create(:miq_provision_request, provreqbody) }
     let(:provreq1_url)  { provision_requests_url(provreq1.id) }
     let(:provreq2_url)  { provision_requests_url(provreq2.id) }
-    let(:provreqs_list) { [provreq1_url, provreq2_url] }
 
     it "supports approving a request" do
       api_basic_authorize collection_action_identifier(:provision_requests, :approve)

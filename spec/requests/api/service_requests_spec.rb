@@ -95,7 +95,6 @@ describe "Service Requests API" do
     end
     let(:svcreq1_url)  { service_requests_url(svcreq1.id) }
     let(:svcreq2_url)  { service_requests_url(svcreq2.id) }
-    let(:svcreqs_list) { [svcreq1_url, svcreq2_url] }
 
     it "supports approving a request" do
       api_basic_authorize collection_action_identifier(:service_requests, :approve)
