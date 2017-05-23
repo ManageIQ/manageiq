@@ -5,7 +5,13 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
         :model_class          => ::ManageIQ::Providers::CloudManager::Vm,
         :association          => :vms,
         :delete_method        => :disconnect_inv,
-        :attributes_blacklist => [:genealogy_parent]
+        :attributes_blacklist => [:genealogy_parent],
+        :unique_index_columns => [:ems_id, :ems_ref],
+        :builder_params       => {
+          :ems_id   => ->(persister) { persister.manager.id },
+          :name     => "unknown",
+          :location => "unknown",
+        }
       }
 
       attributes.merge!(extra_attributes)
@@ -16,7 +22,14 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
         :model_class          => ::ManageIQ::Providers::CloudManager::Template,
         :association          => :miq_templates,
         :delete_method        => :disconnect_inv,
-        :attributes_blacklist => [:genealogy_parent]
+        :attributes_blacklist => [:genealogy_parent],
+        :unique_index_columns => [:ems_id, :ems_ref],
+        :builder_params       => {
+          :ems_id   => ->(persister) { persister.manager.id },
+          :name     => "unknown",
+          :location => "unknown",
+          :template => true
+        }
       }
 
       attributes.merge!(extra_attributes)
@@ -24,8 +37,11 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
 
     def availability_zones(extra_attributes = {})
       attributes = {
-        :model_class => ::AvailabilityZone,
-        :association => :availability_zones,
+        :model_class    => ::AvailabilityZone,
+        :association    => :availability_zones,
+        :builder_params => {
+          :ems_id => ->(persister) { persister.manager.id },
+        }
       }
 
       attributes.merge!(extra_attributes)
@@ -33,8 +49,11 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
 
     def flavors(extra_attributes = {})
       attributes = {
-        :model_class => ::Flavor,
-        :association => :flavors,
+        :model_class    => ::Flavor,
+        :association    => :flavors,
+        :builder_params => {
+          :ems_id => ->(persister) { persister.manager.id },
+        }
       }
 
       attributes.merge!(extra_attributes)
@@ -42,9 +61,13 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
 
     def key_pairs(extra_attributes = {})
       attributes = {
-        :model_class => ::ManageIQ::Providers::CloudManager::AuthKeyPair,
-        :manager_ref => [:name],
-        :association => :key_pairs
+        :model_class    => ::ManageIQ::Providers::CloudManager::AuthKeyPair,
+        :manager_ref    => [:name],
+        :association    => :key_pairs,
+        :builder_params => {
+          :resource_id   => ->(persister) { persister.manager.id },
+          :resource_type => ->(persister) { persister.manager.class.base_class },
+        }
       }
 
       attributes.merge!(extra_attributes)
@@ -108,7 +131,10 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
       attributes = {
         :model_class          => ::ManageIQ::Providers::CloudManager::OrchestrationStack,
         :association          => :orchestration_stacks,
-        :attributes_blacklist => [:parent]
+        :attributes_blacklist => [:parent],
+        :builder_params       => {
+          :ems_id => ->(persister) { persister.manager.id },
+        }
       }
 
       attributes.merge!(extra_attributes)
@@ -126,7 +152,7 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
     def orchestration_stacks_outputs(extra_attributes = {})
       attributes = {
         :model_class => ::OrchestrationStackOutput,
-        :association => :orchestration_stacks_outputs,
+        :association => :orchestration_stacks_outputs
       }
 
       attributes.merge!(extra_attributes)
@@ -135,7 +161,7 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
     def orchestration_stacks_parameters(extra_attributes = {})
       attributes = {
         :model_class => ::OrchestrationStackParameter,
-        :association => :orchestration_stacks_parameters,
+        :association => :orchestration_stacks_parameters
       }
 
       attributes.merge!(extra_attributes)
@@ -168,7 +194,7 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
         return if stacks_inventory_collection.blank?
 
         stacks_parents = stacks_inventory_collection.data.each_with_object({}) do |x, obj|
-          parent_id = x.data[:parent].load.try(:id)
+          parent_id = x.data[:parent].try(:load).try(:id)
           obj[x.id] = parent_id if parent_id
         end
 
@@ -195,7 +221,7 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
 
     def vm_and_miq_template_ancestry(extra_attributes = {})
       vm_and_miq_template_ancestry_save_block = lambda do |_ems, inventory_collection|
-        vms_inventory_collection = inventory_collection.dependency_attributes[:vms].try(:first)
+        vms_inventory_collection           = inventory_collection.dependency_attributes[:vms].try(:first)
         miq_templates_inventory_collection = inventory_collection.dependency_attributes[:miq_templates].try(:first)
 
         return if vms_inventory_collection.blank? || miq_templates_inventory_collection.blank?
