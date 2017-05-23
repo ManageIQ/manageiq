@@ -24,7 +24,7 @@ module Metric::Targets
   # this logic into capture_host_targets
   def self.only_enabled(hosts)
     hosts.select do |host|
-      host.ems_cluster ? host.ems_cluster.perf_capture_enabled? : host.perf_capture_enabled?
+      host.supports_capture? && (host.ems_cluster ? host.ems_cluster.perf_capture_enabled? : host.perf_capture_enabled?)
     end
   end
 
@@ -123,7 +123,7 @@ module Metric::Targets
   # @param [Host] hosts that are enabled or cluster enabled
   def self.capture_vm_targets(hosts)
     hosts.select(&:perf_capture_enabled?)
-         .flat_map { |t| t.vms.select { |v| v.ext_management_system && v.state == 'on' } }
+         .flat_map { |t| t.vms.select { |v| v.ext_management_system && v.state == 'on' && v.supports_capture? } }
   end
 
   # If a Cluster, standalone Host, or Storage is not enabled, skip it.
