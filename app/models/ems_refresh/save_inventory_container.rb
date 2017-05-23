@@ -4,9 +4,9 @@ module EmsRefresh::SaveInventoryContainer
 
     graph_keys = [:container_projects, :container_quotas, :container_nodes,
                   :container_image_registries, :container_images,
-                  :container_groups,
+                  :container_groups, :container_replicators,
                  ]
-    child_keys = [:container_replicators,
+    child_keys = [
                   :container_services, :container_routes, :container_component_statuses, :container_templates,
                   # things moved to end - if they work here, nothing depended on their ids
                   :container_limits, :container_builds, :container_build_pods,
@@ -180,6 +180,18 @@ module EmsRefresh::SaveInventoryContainer
         :association => :security_contexts,
         :manager_ref => [:resource],
       )
+
+    @inv_collections[:container_replicators] =
+      ::ManagerRefresh::InventoryCollection.new(
+        :model_class => ContainerReplicator,
+        :parent => ems,
+        :builder_params => {:ems_id => ems.id},
+        :association => :container_replicators,
+      )
+  end
+
+  def lazy_find_project(hash)
+    @inv_collections[:container_projects].lazy_find(hash[:ems_ref])
   end
 
   def graph_container_projects_inventory(ems, hashes)
@@ -229,7 +241,7 @@ module EmsRefresh::SaveInventoryContainer
   def graph_container_quotas_inventory(ems, hashes)
     hashes.to_a.each do |h|
       h = h.merge(
-        :container_project =>  @inv_collections[:container_projects].lazy_find(h.delete(:project)[:ems_ref])
+        :container_project =>  lazy_find_project(h.delete(:project))
       )
       items = h.delete(:container_quota_items)
       graph_container_quota_items_inventory(h, items)
@@ -321,24 +333,13 @@ module EmsRefresh::SaveInventoryContainer
     @inv_collections[:container_node_computer_system_operating_systems].build(os.merge(:computer_system => cs))
   end
 
-  def save_container_replicators_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-    target = ems if target.nil?
-
-    ems.container_replicators.reset
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
-
+  def graph_container_replicators_inventory(ems, hashes)
     hashes.each do |h|
-      h[:container_project_id] = h.fetch_path(:project, :id)
+      h = h.except(:labels, :tags, :selector_parts) # TODO children
+      h = h.merge(:container_project => lazy_find_project(h.delete(:project)))
+      h.delete(:namespace)
+      @inv_collections[:container_replicators].build(h)
     end
-
-    save_inventory_multi(ems.container_replicators, hashes, deletes, [:ems_ref],
-                         [:labels, :tags, :selector_parts], [:project, :namespace])
-    store_ids_for_new_records(ems.container_replicators, hashes, :ems_ref)
   end
 
   def save_container_services_inventory(ems, hashes, target = nil)
@@ -368,11 +369,11 @@ module EmsRefresh::SaveInventoryContainer
   def graph_container_groups_inventory(ems, hashes)
     hashes.to_a.each do |h|
       h = h.except(  # TODO extra_keys but need links?
-        :container_replicator, :namespace, :build_pod_name)
+        :namespace, :build_pod_name)
       h = h.merge(
         :container_node => @inv_collections[:container_nodes].lazy_find(h[:container_node][:ems_ref]),
         :container_project => @inv_collections[:container_projects].lazy_find(h.delete(:project)[:ems_ref]),
-        #:container_replicator => @inv_collections[:container_replicators].lazy_find(h[:container_replicators][:ems_ref]),
+        :container_replicator => @inv_collections[:container_replicators].lazy_find(h[:container_replicator][:ems_ref]),
       )
       children = h.extract!(  # TODO save all
         :container_definitions, :containers, :labels, :tags,
@@ -381,7 +382,6 @@ module EmsRefresh::SaveInventoryContainer
       cg = @inv_collections[:container_groups].build(h)
       graph_container_definitions_inventory(cg, children[:container_definitions])
       # TODO
-      h[:container_replicator_id] = h.fetch_path(:container_replicator, :id)
       h[:container_build_pod_id] = ems.container_build_pods.find_by(:name =>
         h[:build_pod_name]).try(:id)
     end
