@@ -164,7 +164,7 @@ module MiqServer::ServerSmartProxy
     begin
       # This is only available on Linux
       if Sys::Platform::IMPL == :linux
-        require 'VixDiskLib/VixDiskLib'
+        require 'VMwareWebService/VixDiskLib/VixDiskLib'
         caps[:vixDisk] = true
       end
     rescue Exception => err
