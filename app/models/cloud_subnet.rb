@@ -52,6 +52,14 @@ class CloudSubnet < ApplicationRecord
     ext_management_system && ext_management_system.class::CloudSubnet
   end
 
+  def update_cloud_subnet(options = {})
+    raw_update_cloud_subnet
+  end
+
+  def raw_update_cloud_subnet(_options = {})
+    raise NotImplementedError, _("raw_update_cloud_subnet must be implemented in a subclass")
+  end
+
   def delete_cloud_subnet
     raw_delete_cloud_subnet
   end
