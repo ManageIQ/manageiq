@@ -14,9 +14,7 @@ module ManagerRefresh::SaveCollection
           inventory_objects_index[index] = inventory_object
         end
 
-        unique_index_keys      = inventory_collection.manager_ref_to_cols
         unique_db_indexes      = Set.new
-        unique_db_primary_keys = Set.new
 
         inventory_collection_size = inventory_collection.size
         deleted_counter           = 0
@@ -25,27 +23,19 @@ module ManagerRefresh::SaveCollection
         # Records that are in the DB, we will be updating or deleting them.
         ActiveRecord::Base.transaction do
           association.find_each do |record|
+            next unless assert_distinct_relation(record)
+
             index = inventory_collection.object_index_with_keys(unique_index_keys, record)
-            if unique_db_primary_keys.include?(record.id) # Include on Set is O(1)
-              # Change the InventoryCollection's :association or :arel parameter to return distinct results. The :through
-              # relations can return the same record multiple times. We don't want to do SELECT DISTINCT by default, since
-              # it can be very slow.
-              if Rails.env.production?
-                _log.warn("Please update :association or :arel for #{inventory_collection} to return a DISTINCT result. "\
-                        " The duplicate value is being ignored.")
-                next
-              else
-                raise("Please update :association or :arel for #{inventory_collection} to return a DISTINCT result. ")
-              end
-            elsif unique_db_indexes.include?(index) # Include on Set is O(1)
+
+            # TODO(lsmola) can go away once we indexed our DB with unique indexes
+            if unique_db_indexes.include?(index) # Include on Set is O(1)
               # We have a duplicate in the DB, destroy it. A find_each method does automatically .order(:id => :asc)
               # so we always keep the oldest record in the case of duplicates.
-              _log.warn("A duplicate record was detected and destroyed, inventory_collection: '#{inventory_collection}', "\
-                      "record: '#{record}', duplicate_index: '#{index}'")
+              _log.warn("A duplicate record was detected and destroyed, inventory_collection: "\
+                        "'#{inventory_collection}', record: '#{record}', duplicate_index: '#{index}'")
               record.destroy
             else
               unique_db_indexes << index
-              unique_db_primary_keys << record.id
             end
 
             inventory_object = inventory_objects_index.delete(index)
@@ -73,7 +63,7 @@ module ManagerRefresh::SaveCollection
           end
         end
         _log.info("*************** PROCESSED #{inventory_collection}, created=#{created_counter}, "\
-                "updated=#{inventory_collection_size - created_counter}, deleted=#{deleted_counter} *************")
+                  "updated=#{inventory_collection_size - created_counter}, deleted=#{deleted_counter} *************")
       end
 
       def delete_record!(inventory_collection, record)
