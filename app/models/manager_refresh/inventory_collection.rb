@@ -736,7 +736,7 @@ module ManagerRefresh
     def foreign_keys
       return [] unless model_class
 
-      @foreign_keys_cache ||= belongs_to_associations.map { |x| x.foreign_key }
+      @foreign_keys_cache ||= belongs_to_associations.map(&:foreign_key)
     end
 
     def fixed_foreign_keys
