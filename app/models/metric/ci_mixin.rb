@@ -19,6 +19,12 @@ module Metric::CiMixin
     Metric::LongTermAverages::AVG_METHODS_WITHOUT_OVERHEAD.each do |vcol|
       virtual_column vcol, :type => :float, :uses => :vim_performance_operating_ranges
     end
+
+    supports :capture do
+      unless self.class.parent::MetricsCapture.instance_methods.include?(:perf_collect_metrics)
+        unsupported_reason_add(:metrics, _('This provider does not support metrics collection'))
+      end
+    end
   end
 
   def has_perf_data?
