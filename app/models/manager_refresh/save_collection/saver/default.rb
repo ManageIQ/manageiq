@@ -80,6 +80,8 @@ module ManagerRefresh::SaveCollection
       end
 
       def create_record!(inventory_collection, hash, inventory_object)
+        return unless assert_referential_integrity(hash, inventory_object)
+
         record = inventory_collection.model_class.create!(hash.except(:id))
 
         inventory_object.id = record.id
