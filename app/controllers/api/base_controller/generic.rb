@@ -70,7 +70,7 @@ module Api
         end
       end
 
-      alias_method :create_resource, :add_resource
+      alias create_resource add_resource
 
       def query_resource(type, id, data)
         unless id
@@ -169,14 +169,13 @@ module Api
           typed_target = "#{sc}_assign_resource"
           raise BadRequestError, "Cannot assign #{sc} to a #{type} resource" unless respond_to?(typed_target)
           sc_data.each do |sr|
-            unless sr.blank?
-              collection, rid = parse_href(sr["href"])
-              if collection == sc && rid
-                sr.delete("id")
-                sr.delete("href")
-              end
-              send(typed_target, resource, type, rid.to_i, sr)
+            next if sr.blank?
+            collection, rid = parse_href(sr["href"])
+            if collection == sc && rid
+              sr.delete("id")
+              sr.delete("href")
             end
+            send(typed_target, resource, type, rid.to_i, sr)
           end
         end
       end
