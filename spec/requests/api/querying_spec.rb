@@ -136,14 +136,18 @@ describe "Querying" do
       expect(response.parsed_body['pages']).to eq(2)
 
       run_get vms_url, :offset => 0, :limit => 4
+      expect(response.parsed_body['subquery_count']).to be_nil
+      expect(response.parsed_body['pages']).to eq(1)
 
+      run_get vms_url, :offset => 0, :limit => 4, :filter => ["name='aa'", "or name='bb'"]
+      expect(response.parsed_body['subquery_count']).to eq(2)
       expect(response.parsed_body['pages']).to eq(1)
     end
 
     it "returns the correct pages if filters are specified" do
       create_vms_by_name %w(aa bb cc)
 
-      run_get vms_url,:sort_by => "name", :filter => ["name='aa'", "or name='bb'"], :expand => "resources", :offset => 0, :limit => 1
+      run_get vms_url, :sort_by => "name", :filter => ["name='aa'", "or name='bb'"], :expand => "resources", :offset => 0, :limit => 1
 
       expect_query_result(:vms, 1, 3)
       expect_result_resources_to_match_hash([{"name" => "aa"}])

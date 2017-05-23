@@ -3,7 +3,6 @@ module Api
     module Parser
       def parse_api_request
         @req = RequestAdapter.new(request, params)
-        @paging = Paging.new(params, @req.url)
       end
 
       def validate_api_request

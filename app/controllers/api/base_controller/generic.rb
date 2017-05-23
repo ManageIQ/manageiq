@@ -7,18 +7,18 @@ module Api
 
       def index
         klass = collection_class(@req.subject)
-        res = collection_search(@req.subcollection?, @req.subject, klass)
-
-        @paging.count = klass.count
-        @paging.subcount = res.count
-
+        res, subquery_count = collection_search(@req.subcollection?, @req.subject, klass)
         opts = {
           :name             => @req.subject,
           :is_subcollection => @req.subcollection?,
           :expand_actions   => true,
           :expand_resources => @req.expand?(:resources),
+          :counts           => {
+            :count          => klass.count,
+            :subcount       => res.count,
+            :subquery_count => subquery_count
+          }
         }
-
         render_collection(@req.subject, res, opts)
       end
 

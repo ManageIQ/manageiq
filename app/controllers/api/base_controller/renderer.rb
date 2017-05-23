@@ -28,11 +28,18 @@ module Api
       # Given a resource, return its serialized flavor using Jbuilder
       #
       def collection_to_jbuilder(type, reftype, resources, opts = {})
+        link_builder = Api::LinkBuilder.new(params, @req.url, opts[:counts])
         Jbuilder.new do |json|
           json.ignore_nil!
           json.set! 'name', opts[:name] if opts[:name]
 
-          @paging.collection_counts(json)
+          if opts[:counts]
+            opts[:counts].each do |count, value|
+              json.set! count, value
+            end
+          end
+
+          json.set! 'pages', link_builder.pages if link_builder.links?
 
           unless @req.hide?("resources")
             json.resources resources.collect do |resource|
@@ -47,7 +54,13 @@ module Api
           aspecs = gen_action_spec_for_collections(type, cspec, opts[:is_subcollection], reftype) if cspec
           add_actions(json, aspecs, reftype)
 
-          @paging.paging_links(json)
+          if link_builder.links?
+            json.links do
+              link_builder.links.each do |k, v|
+                json.set! k, v
+              end
+            end
+          end
         end
       end
 
@@ -153,23 +166,22 @@ module Api
           sql, _, attrs = miq_expression.to_sql
           res = res.where(sql) if attrs[:supported_by_sql]
         end
+
         sort_options = sort_params(klass) if res.respond_to?(:reorder)
         res = res.reorder(sort_options) if sort_options.present?
 
         options = {:user => User.current_user}
         options[:order] = sort_options if sort_options.present?
-
-        @paging.options(options)
-
         options[:filter] = miq_expression if miq_expression
+        options[:offset] = params['offset'] if params['offset']
+        options[:limit] = params['limit'] if params['limit']
 
-        miq_expression.present? ? subquery_search(res, options) : Rbac.filtered(res, options)
+        miq_expression.present? ? subquery_search(res, options) : [Rbac.filtered(res, options)]
       end
 
       def subquery_search(res, options)
         subquery_res = Rbac.search(:targets => res, :skip_counts => true)
-        @paging.subquery_count = subquery_res.count
-        Rbac.filtered(res, options)
+        [Rbac.filtered(res, options), subquery_res.count]
       end
 
       def virtual_attribute_search(resource, attribute)
