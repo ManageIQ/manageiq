@@ -21,14 +21,7 @@ class IsoDatastore < ApplicationRecord
   def advertised_images
     return [] unless ext_management_system.kind_of?(ManageIQ::Providers::Redhat::InfraManager)
 
-    begin
-      ext_management_system.with_provider_connection do |rhevm|
-        rhevm.iso_images.collect { |image| image[:name] }
-      end
-    rescue Ovirt::Error => err
-      _log.error("Error Getting ISO Images on ISO Datastore on Management System <#{name}>: #{err.class.name}: #{err}")
-      raise
-    end
+    ext_management_system.ovirt_services(:use_highest_supported_version => true).advertised_images
   end
 
   def synchronize_advertised_images
@@ -49,6 +42,6 @@ class IsoDatastore < ApplicationRecord
     clear_association_cache
     update_attribute(:last_refresh_on, Time.now.utc)
     _log.info("Synchronizing images on #{log_for}...Complete")
-  rescue Ovirt::Error
+  rescue ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Error
   end
 end
