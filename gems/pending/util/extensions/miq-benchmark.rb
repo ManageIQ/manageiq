@@ -34,20 +34,26 @@ module Benchmark
     end
   end
 
+  def self.thread_unique_identifier
+    # Forks inherit the @@realtime_by_tid and parent/child Thread.current.object_id
+    # are equal, so we need to index into the hash with the pid too.
+    "#{Process.pid}-#{Thread.current.object_id}"
+  end
+
   def self.in_realtime_block?
-    @@realtime_by_tid.key?(Thread.current.object_id)
+    @@realtime_by_tid.key?(thread_unique_identifier)
   end
 
   def self.current_realtime
-    @@realtime_by_tid[Thread.current.object_id] || Hash.new(0)
+    @@realtime_by_tid[thread_unique_identifier] || Hash.new(0)
   end
 
   def self.current_realtime=(hash)
-    @@realtime_by_tid[Thread.current.object_id] = hash
+    @@realtime_by_tid[thread_unique_identifier] = hash
   end
 
   def self.delete_current_realtime
-    @@realtime_by_tid.delete(Thread.current.object_id)
+    @@realtime_by_tid.delete(thread_unique_identifier)
   end
 
   @@realtime_by_tid = {}
