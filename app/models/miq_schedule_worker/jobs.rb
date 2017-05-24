@@ -148,15 +148,13 @@ class MiqScheduleWorker::Jobs
   end
 
   def check_for_stuck_dispatch(threshold_seconds)
-    class_n = "JobProxyDispatcher"
-    method_n = "dispatch"
     Zone.in_my_region.each do |z|
       zone = z.name
       threshold = threshold_seconds.seconds.ago.utc
       MiqQueue
         .in_my_region
         .includes(:handler)
-        .where(:class_name => class_n, :method_name => method_n, :state => 'dequeue', :zone => zone)
+        .where(:class_name => "JobProxyDispatcher", :method_name => "dispatch", :state => 'dequeue', :zone => zone)
         .where("updated_on < ?", threshold)
         .each do |msg|
           if msg.handler.respond_to?(:is_current?) && msg.handler.is_current?

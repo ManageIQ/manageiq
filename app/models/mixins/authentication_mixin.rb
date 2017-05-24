@@ -223,7 +223,6 @@ module AuthenticationMixin
   end
 
   def authentication_check_attributes(types, method_options)
-    role = authentication_check_role if self.respond_to?(:authentication_check_role)
     zone = my_zone if self.respond_to?(:my_zone)
 
     # FIXME: Via schedule, a message is created with args = [], so all authentications will be checked,
@@ -234,10 +233,10 @@ module AuthenticationMixin
       :instance_id => id,
       :method_name => 'authentication_check_types',
       :args        => [types.to_miq_a, method_options],
-      :deliver_on  => authentication_check_retry_deliver_on(method_options[:attempt])
+      :deliver_on  => authentication_check_retry_deliver_on(method_options[:attempt]),
+      :role        => try(:authentication_check_role),
     }
 
-    options[:role] = role if role
     options[:zone] = zone if zone
     options
   end
