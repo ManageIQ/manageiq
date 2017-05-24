@@ -35,11 +35,11 @@ class Storage < ApplicationRecord
 
   include SerializedEmsRefObjMixin
   include FilterableMixin
+  include SupportsFeatureMixin
   include Metric::CiMixin
   include StorageMixin
   include AsyncDeleteMixin
   include AvailabilityMixin
-  include SupportsFeatureMixin
   include TenantIdentityMixin
 
   virtual_column :v_used_space,                   :type => :integer

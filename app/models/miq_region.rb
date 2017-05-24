@@ -26,6 +26,7 @@ class MiqRegion < ApplicationRecord
   include ConfigurationManagementMixin
 
   include MiqPolicyMixin
+  include SupportsFeatureMixin
   include Metric::CiMixin
 
   alias_method :all_storages,           :storages
