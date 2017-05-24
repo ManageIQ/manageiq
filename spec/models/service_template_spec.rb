@@ -519,7 +519,6 @@ describe ServiceTemplate do
   let(:user) { FactoryGirl.create(:user_with_group) }
   let(:ra1) { FactoryGirl.create(:resource_action, :action => 'Provision') }
   let(:ra2) { FactoryGirl.create(:resource_action, :action => 'Retirement') }
-  let(:ra3) { FactoryGirl.create(:resource_action, :action => 'Reconfigure') }
   let(:ems) { FactoryGirl.create(:ems_amazon) }
   let(:vm) { FactoryGirl.create(:vm_amazon, :ext_management_system => ems) }
   let(:flavor) { FactoryGirl.create(:flavor_amazon) }

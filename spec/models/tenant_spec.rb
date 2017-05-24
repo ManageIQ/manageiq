@@ -261,8 +261,6 @@ describe Tenant do
 
   context "#admins" do
     let(:self_service_role) { FactoryGirl.create(:miq_user_role, :settings => {:restrictions => {:vms => :user}}) }
-
-    let(:brand_feature) { FactoryGirl.create(:miq_product_feature, :identifier => "edit-brand") }
     let(:admin_with_brand) { FactoryGirl.create(:miq_user_role, :name => "tenant_admin-brand-master") }
 
     let(:tenant1) { FactoryGirl.create(:tenant) }

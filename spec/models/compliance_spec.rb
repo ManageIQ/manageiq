@@ -102,9 +102,6 @@ describe Compliance do
           )
         end
         let(:event_definition) { MiqEventDefinition.find_by(:name => "vm_compliance_check") }
-        let(:container_policy) do
-          FactoryGirl.create(:miq_policy, :mode => 'compliance', :towhat => 'Container Image', :active => true)
-        end
 
         before do
           policy.sync_events([FactoryGirl.create(:miq_event_definition, :name => "vm_compliance_check")])

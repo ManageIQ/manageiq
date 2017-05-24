@@ -23,7 +23,6 @@ describe Metric::Purging do
     context "with data" do
       let(:vm1) { FactoryGirl.create(:vm_vmware) }
       let(:vm2) { FactoryGirl.create(:vm_vmware) }
-      let(:host) { FactoryGirl.create(:host) }
       let(:settings) do
         {
           :performance => {
