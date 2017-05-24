@@ -776,7 +776,7 @@ module ManagerRefresh
         scan_inventory_object!(inventory_object)
       end
 
-      if parent_inventory_collections.present?
+      if targeted? && parent_inventory_collections.present?
         self.parent_inventory_collections = parent_inventory_collections.map do |inventory_collection_index|
           inventory_collection = indexed_inventory_collections[inventory_collection_index]
           raise "Cannot find inventory collection #{inventory_collection_index} from #{self}" unless inventory_collection
