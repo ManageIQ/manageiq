@@ -82,6 +82,12 @@ module ManageIQ::Providers::Azure::RefreshHelperMethods
     end
   end
 
+  def managed_image_service(config)
+    ::Azure::Armrest::Storage::ImageService.new(config).tap do |service|
+      service.api_version = Settings.ems.ems_azure.api_versions.managed_image.to_s
+    end
+  end
+
   def network_interface_service(config)
     ::Azure::Armrest::Network::NetworkInterfaceService.new(config).tap do |service|
       service.api_version = Settings.ems.ems_azure.api_versions.network_interface.to_s

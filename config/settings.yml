@@ -113,6 +113,7 @@
       :availability_set: 2017-03-30
       :ip_address: 2017-03-01
       :load_balancer: 2017-03-01
+      :managed_image: 2017-03-30
       :network_interface: 2017-03-01
       :network_security_group: 2016-12-01
       :resource_group: 2016-09-01

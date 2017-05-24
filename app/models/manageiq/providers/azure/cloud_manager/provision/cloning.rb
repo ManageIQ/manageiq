@@ -49,7 +49,13 @@ module ManageIQ::Providers::Azure::CloudManager::Provision::Cloning
   def prepare_for_clone_task
     nic_id = associated_nic || create_nic
 
-    target_uri, source_uri, os = gather_storage_account_properties
+    # TODO: Ideally this would be a check against source.storage or source.disks
+    if source.ems_ref.starts_with?('/subscriptions')
+      os = source.operating_system.product_name
+      target_uri, source_uri = nil
+    else
+      target_uri, source_uri, os = gather_storage_account_properties
+    end
 
     cloud_options =
     {
@@ -68,10 +74,7 @@ module ManageIQ::Providers::Azure::CloudManager::Provision::Cloning
           :osDisk        => {
             :createOption => 'FromImage',
             :caching      => 'ReadWrite',
-            :name         => dest_name + SecureRandom.uuid + '.vhd',
-            :osType       => os,
-            :image        => {:uri => source_uri},
-            :vhd          => {:uri => target_uri},
+            :osType       => os
           }
         },
         :networkProfile  => {
@@ -79,6 +82,17 @@ module ManageIQ::Providers::Azure::CloudManager::Provision::Cloning
         }
       }
     }
+
+    if target_uri
+      cloud_options[:properties][:storageProfile][:osDisk][:name]  = dest_name + SecureRandom.uuid + '.vhd'
+      cloud_options[:properties][:storageProfile][:osDisk][:image] = {:uri => source_uri}
+      cloud_options[:properties][:storageProfile][:osDisk][:vhd]   = {:uri => target_uri}
+    else
+      # Default to a storage account type of "Standard_LRS" for managed images for now.
+      cloud_options[:properties][:storageProfile][:osDisk][:managedDisk] = {:storageAccountType => 'Standard_LRS'}
+      cloud_options[:properties][:storageProfile][:imageReference] = {:id => source.ems_ref}
+    end
+
     cloud_options[:properties][:osProfile][:customData] = custom_data unless userdata_payload.nil?
     cloud_options
   end
