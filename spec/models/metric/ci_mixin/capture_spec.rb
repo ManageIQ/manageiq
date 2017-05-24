@@ -32,10 +32,9 @@ describe Metric::CiMixin::Capture do
     def capture_data(second_collection_period_start, collection_overlap_period)
       # 1.collection period, save all metrics
       allow(metering).to receive(:get_statistics) do |name, _options|
-        first_collection_period = filter_statistics(mock_stats_data.get_statistics(name,
-                                                                                   "multiple_collection_periods"),
-                                                                                   '<=',
-                                                                                   second_collection_period_start)
+        first_collection_period = filter_statistics(mock_stats_data.get_statistics(name, "multiple_collection_periods"),
+                                                    '<=',
+                                                    second_collection_period_start)
 
         OpenstackApiResult.new(first_collection_period)
       end
@@ -45,11 +44,10 @@ describe Metric::CiMixin::Capture do
 
       # 2.collection period, save all metrics
       allow(metering).to receive(:get_statistics) do |name, _options|
-        second_collection_period = filter_statistics(mock_stats_data.get_statistics(name,
-                                                                                    "multiple_collection_periods"),
-                                                                                    '>',
-                                                                                    second_collection_period_start,
-                                                                                    collection_overlap_period)
+        second_collection_period = filter_statistics(mock_stats_data.get_statistics(name, "multiple_collection_periods"),
+                                                     '>',
+                                                     second_collection_period_start,
+                                                     collection_overlap_period)
 
         OpenstackApiResult.new(second_collection_period)
       end
