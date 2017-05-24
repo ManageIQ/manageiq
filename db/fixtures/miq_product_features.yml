@@ -5674,6 +5674,10 @@
         :description: Edit a VM
         :feature_type: admin
         :identifier: vm_edit
+      - :name: Transform
+        :description: Transform VM
+        :feature_type: admin
+        :identifier: vm_transform
       - :name: Edit EVM Server Relationship
         :description: Edit EVM Server Relationship
         :feature_type: admin
