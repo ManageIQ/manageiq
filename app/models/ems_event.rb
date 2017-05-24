@@ -60,10 +60,9 @@ class EmsEvent < EventStream
 
   def self.add_queue(meth, ems_id, event)
     MiqQueue.put(
-      :target_id   => ems_id,
       :class_name  => "EmsEvent",
       :method_name => meth,
-      :args        => [event],
+      :args        => [ems_id, event],
       :queue_name  => "ems",
       :role        => "event"
     )

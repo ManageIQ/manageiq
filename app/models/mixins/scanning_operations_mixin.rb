@@ -11,10 +11,10 @@ module ScanningOperationsMixin
         _log.info "target [#{guid}],  job [#{jobid}] enter"
         _log.info "target [#{guid}] found target object id [#{id}], job [#{jobid}]"
         MiqQueue.put(
-          :target_id   => id,
           :class_name  => self.class.base_class.name,
           :method_name => "save_metadata",
           :data        => Marshal.dump([xmlFile, type]),
+          :args        => [id],
           :task_id     => jobid,
           :zone        => my_zone,
           :role        => "smartstate"
