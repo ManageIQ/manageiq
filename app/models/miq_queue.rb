@@ -98,6 +98,7 @@ class MiqQueue < ApplicationRecord
   end
 
   def self.put(options)
+    options.delete(:zone) if zone == :ignore
     options = options.merge(
       :zone         => Zone.determine_queue_zone(options),
       :state        => STATE_READY,

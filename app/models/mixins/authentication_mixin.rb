@@ -223,22 +223,18 @@ module AuthenticationMixin
   end
 
   def authentication_check_attributes(types, method_options)
-    zone = my_zone if self.respond_to?(:my_zone)
-
     # FIXME: Via schedule, a message is created with args = [], so all authentications will be checked,
     # while an authentication change will create a message with args [:default] or whatever
     # authentication is changed, so you can end up with two messages for the same ci
-    options = {
+    {
       :class_name  => self.class.base_class.name,
       :instance_id => id,
       :method_name => 'authentication_check_types',
       :args        => [types.to_miq_a, method_options],
       :deliver_on  => authentication_check_retry_deliver_on(method_options[:attempt]),
       :role        => try(:authentication_check_role),
+      :zone        => try(:my_zone) || :ignore,
     }
-
-    options[:zone] = zone if zone
-    options
   end
 
   def put_authentication_check(options, force)

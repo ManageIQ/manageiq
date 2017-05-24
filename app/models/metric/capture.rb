@@ -68,16 +68,14 @@ module Metric::Capture
   end
 
   def self.perf_capture_gap_queue(start_time, end_time, zone = nil)
-    item = {
-      :class_name  => name,
+    MiqQueue.put(
+      :class_name  => self.name,
       :method_name => "perf_capture_gap",
       :role        => "ems_metrics_coordinator",
       :priority    => MiqQueue::HIGH_PRIORITY,
-      :args        => [start_time, end_time, zone.try(:id)]
-    }
-    item[:zone] = zone.name if zone
-
-    MiqQueue.put(item)
+      :args        => [start_time, end_time, zone.try(:id)],
+      :zone        => zone.try(:name) || :ignore,
+    )
   end
 
   def self.filter_perf_capture_now(targets, target_options)
