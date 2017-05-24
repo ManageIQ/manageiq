@@ -34,7 +34,7 @@ Dir.mkdir(dir) unless File.directory?(dir)
 puts "Output in #{dir}"
 
 begin
-  require 'miq_fault_tolerant_vim'
+  require 'VMwareWebService/miq_fault_tolerant_vim'
 
   selector_class = opts[:bypass] ? MiqVimInventory : MiqVimBroker
   selector_class.setSelector(MiqEmsRefreshWorker::VC_VIM_SELECTOR_SPEC)
