@@ -790,11 +790,10 @@ module ManageIQ::Providers::Kubernetes
 
       [
         {
-          :name          => image_parts[:name],
-          :tag           => image_parts[:tag],
-          :digest        => digest,
-          :image_ref     => image_ref,
-          :registered_on => Time.now.utc
+          :name      => image_parts[:name],
+          :tag       => image_parts[:tag],
+          :digest    => digest,
+          :image_ref => image_ref,
         },
         hostname && {
           :name => hostname,
