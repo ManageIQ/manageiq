@@ -78,17 +78,6 @@ module EmsRefresh::SaveInventoryContainer
       :builder_params => {:ems_id => ems.id},
       :association => :container_nodes,
     )
-    # ContainerCondition is polymorphic child of ContainerNode & ContainerGroup
-    @inv_collections[:container_node_conditions] = ::ManagerRefresh::InventoryCollection.new(
-      :model_class => ContainerCondition,
-      :parent => ems,
-      :association => :container_node_conditions,
-      #:arel => ContainerCondition.joins(
-      #  'INNER JOIN "container_nodes" ON "container_conditions"."container_entity_id" = "container_nodes"."id"'
-      #).where(:container_entity_type => 'ContainerNode',
-      #        :container_nodes => {:ems_id => ems.id}),
-      :manager_ref => [:container_entity, :name],
-    )
 
     # polymorphic child of ContainerNode & ContainerImage,
     # but refresh only sets it on nodes.
@@ -188,6 +177,25 @@ module EmsRefresh::SaveInventoryContainer
         :builder_params => {:ems_id => ems.id},
         :association => :container_replicators,
       )
+  end
+
+  # ContainerCondition is polymorphic child of ContainerNode & ContainerGroup
+  def container_conditions_query_for(relation)
+    #:arel => ContainerCondition.joins(
+    #  'INNER JOIN "container_nodes" ON "container_conditions"."container_entity_id" = "container_nodes"."id"'
+    #).where(:container_entity_type => 'ContainerNode', :container_nodes => {:ems_id => ems.id}),
+
+    # Nested SELECT, dunno if better than JOIN but upside is "structurally compatible" for .or()
+    ContainerCondition.where(:container_entity_type => relation.model.name, :container_entity_id => relation)
+  end
+
+  def container_conditions_for(relation)
+    @inv_collections[[:container_conditions_for, relation.model]] ||= ::ManagerRefresh::InventoryCollection.new(
+      :model_class => ContainerCondition,
+      #:parent => ems,
+      :arel => container_conditions_query_for(relation),
+      :manager_ref => [:container_entity, :name],
+    )
   end
 
   def lazy_find_project(hash)
@@ -314,7 +322,7 @@ module EmsRefresh::SaveInventoryContainer
       h = h.except(:labels, :tags, :additional_attributes) # TODO children
       h = h.except(:namespace)
       node = @inv_collections[:container_nodes].lazy_find(h[:ems_ref])
-      graph_container_node_conditions_inventory(node, h.delete(:container_conditions))
+      graph_container_conditions_inventory(ems.container_nodes, node, h.delete(:container_conditions))
       graph_computer_system_inventory(node, h.delete(:computer_system))
       @inv_collections[:container_nodes].build(h)
     end
@@ -487,10 +495,10 @@ module EmsRefresh::SaveInventoryContainer
     end
   end
 
-  def graph_container_node_conditions_inventory(parent, hashes)
+  def graph_container_conditions_inventory(relation, parent, hashes)
     hashes.to_a.each do |h|
       h = h.merge(:container_entity => parent)
-      @inv_collections[:container_node_conditions].build(h)
+      container_conditions_for(relation).build(h)
     end
   end
 
