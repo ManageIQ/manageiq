@@ -106,13 +106,14 @@ class LogFile < ApplicationRecord
       options = options.merge(:taskid => task.id, :klass => server.class.name, :id => server.id)
 
       MiqQueue.put(
-        :class_name   => name,
+        :class_name   => self.name,
         :method_name  => "_request_logs",
         :args         => [options],
-        :zone         => zone,
+        :zone         => zone, # server guid?
         :miq_callback => cb,
         :msg_timeout  => LOG_REQUEST_TIMEOUT,
-        :priority     => MiqQueue::HIGH_PRIORITY
+        :priority     => MiqQueue::HIGH_PRIORITY,
+        :category     => "self dispatch, obscure, status, affinity?, deprecated"
       )
     rescue => err
       task.queue_callback_on_exceptions('Finished', 'error', err.to_s, nil) if task

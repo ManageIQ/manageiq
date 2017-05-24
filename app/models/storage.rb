@@ -190,7 +190,8 @@ class Storage < ApplicationRecord
       :msg_timeout  => self.class.scan_collection_timeout,
       :miq_callback => cb,
       :zone         => my_zone,
-      :role         => 'ems_operations'
+      :role         => 'ems_operations',
+      :category     => "self dispatch, ems affinity, status+ pre/post event"
     )
   end
 
@@ -255,7 +256,8 @@ class Storage < ApplicationRecord
       :method_name => 'scan_watchdog',
       :args        => [miq_task_id],
       :zone        => MiqServer.my_zone,
-      :deliver_on  => scan_watchdog_deliver_on
+      :deliver_on  => scan_watchdog_deliver_on,
+      :category    => "supervisor (with status)"
     )
   end
 

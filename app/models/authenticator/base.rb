@@ -217,7 +217,7 @@ module Authenticator
           :class_name   => self.class.name,
           :method_name  => "authorize",
           :args         => [config, task.id, username, *args],
-          :server_guid  => MiqServer.my_guid,
+          :server_guid  => MiqServer.my_guid, # why?
           :priority     => MiqQueue::HIGH_PRIORITY,
           :miq_callback => {
             :class_name  => task.class.name,
@@ -225,6 +225,7 @@ module Authenticator
             :method_name => :queue_callback_on_exceptions,
             :args        => ['Finished']
           },
+          :category      => "self dispatch, obscure, status, affinity?",
         )
       else
         authorize(task.id, username, *args)

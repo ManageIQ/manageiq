@@ -40,6 +40,7 @@ module Metric::Purging
       :class_name  => name,
       :method_name => "purge_#{interval}",
       :args        => [ts],
+      :category    => "simple dispatch, scheduled, double queue"
     )
   end
 

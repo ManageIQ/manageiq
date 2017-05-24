@@ -26,6 +26,7 @@ module Api
           :args        => options[:args] || [],
           :role        => options[:role] || nil,
           :zone        => %w(ems_operations smartstate).include?(options[:role]) ? object.my_zone : :ignore,
+          :category    => "affinity"
         }
 
         MiqTask.generic_action_with_callback(task_options, queue_options)

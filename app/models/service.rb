@@ -277,6 +277,7 @@ class Service < ApplicationRecord
       :args        => [action, group_idx, direction],
       :deliver_on  => deliver_delay > 0 ? deliver_delay.seconds.from_now.utc : nil,
       :zone        => my_zone || :ignore,
+      :category    => "self delayed job"
     )
     true
   end
@@ -382,7 +383,8 @@ class Service < ApplicationRecord
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "generate_chargeback_report",
-      :args        => options
+      :args        => options,
+      :category    => "self dispatch"
     )
     _log.info "Added to queue: generate_chargeback_report for service #{name}"
   end

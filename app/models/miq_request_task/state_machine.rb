@@ -57,6 +57,7 @@ module MiqRequestTask::StateMachine
       :zone        => my_zone,
       :role        => my_role,
       :task_id     => my_task_id,
+      :category    => "self calling reactor? affinity?"
     )
   end
 
@@ -78,7 +79,8 @@ module MiqRequestTask::StateMachine
       :zone         => my_zone,
       :role         => my_role,
       :task_id      => my_task_id,
-      :miq_callback => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
+      :miq_callback => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback},
+      :category     => "self dispatch, delay, automate affinity, state machine",
     )
   end
 

@@ -90,9 +90,10 @@ class MiqPglogical
 
   def self.refresh_excludes_queue(new_excludes)
     MiqQueue.put(
-      :class_name  => "MiqPglogical",
+      :class_name  => self.name,
       :method_name => "refresh_excludes",
-      :args        => [new_excludes]
+      :args        => [new_excludes],
+      :category    => "self dispatch"
     )
   end
 

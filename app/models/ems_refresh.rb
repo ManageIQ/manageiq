@@ -66,13 +66,14 @@ module EmsRefresh
   def self.queue_refresh_new_target(target_hash, ems)
     MiqQueue.put(
       :queue_name  => MiqEmsRefreshWorker.queue_name_for_ems(ems),
-      :class_name  => name,
+      :class_name  => self.name,
       :method_name => 'refresh_new_target',
-      :role        => "ems_inventory",
-      :zone        => ems.my_zone,
+      :role        => "ems_inventory", # needed?
+      :zone        => ems.my_zone,     # unneeded
       :args        => [target_hash, ems.id],
       :msg_timeout => queue_timeout,
-      :task_id     => nil
+      :task_id     => nil,
+      :category    => "self dispatch, ems affinity",
     )
   end
 

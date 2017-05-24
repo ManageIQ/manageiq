@@ -157,7 +157,8 @@ module MiqReport::Generator
         :instance_id => id,
         :method_name => "_async_generate_table",
         :args        => [task.id, options],
-        :msg_timeout => queue_timeout
+        :msg_timeout => queue_timeout,
+        :category    => "self dispatch status"
       )
     end
 
@@ -751,7 +752,8 @@ module MiqReport::Generator
       :instance_id => id,
       :method_name => "build_report_result",
       :msg_timeout => queue_timeout,
-      :args        => [task.id, options, res_opts]
+      :args        => [task.id, options, res_opts],
+      :category    => "self dispatch status"
     )
     AuditEvent.success(:event => "generate_table", :target_class => self.class.base_class.name, :target_id => id, :userid => options[:userid], :message => "#{task.name}, successfully initiated")
     task.update_status("Queued", "Ok", "Task has been queued")

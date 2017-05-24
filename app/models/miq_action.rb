@@ -761,7 +761,8 @@ class MiqAction < ApplicationRecord
         :instance_id => rec.id,
         :priority    => MiqQueue::HIGH_PRIORITY,
         :zone        => rec.my_zone,
-        :role        => "ems_operations"
+        :role        => "ems_operations",
+        :category    => "another system, affinity?"
       )
     end
   end
@@ -790,6 +791,7 @@ class MiqAction < ApplicationRecord
         :priority    => MiqQueue::HIGH_PRIORITY,
         :zone        => rec.my_zone,
         :role        => "smartstate",
+        :category    => "another system dispatch, affinity", 
       )
     end
   end
@@ -1023,6 +1025,7 @@ class MiqAction < ApplicationRecord
         :priority    => MiqQueue::HIGH_PRIORITY,
         :instance_id => static ? nil : target.id,
         :zone        => zone,
+        :category    => "either",
       )
     end
   end

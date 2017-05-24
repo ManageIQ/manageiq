@@ -134,7 +134,9 @@ module VmOrTemplate::Operations::Snapshot
                    :args        => [description, refresh, retry_time],
                    :deliver_on  => Time.now.utc + retry_time,
                    :role        => "smartstate",
-                   :zone        => my_zone)
+                   :zone        => my_zone,
+                   :category    => "self dispatch delayed retry, ems affinity",
+      )
     end
   end
 

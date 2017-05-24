@@ -75,6 +75,7 @@ module Metric::Capture
       :priority    => MiqQueue::HIGH_PRIORITY,
       :args        => [start_time, end_time, zone.try(:id)],
       :zone        => zone.try(:name) || :ignore,
+      :category    => "self calling/job"
     )
   end
 

@@ -6,12 +6,13 @@ class MiqAutomate
       task.update_status("Finished", "Error", "No Server has Automate Role enabled")
     else
       MiqQueue.put(
-        :class_name  => to_s,
+        :class_name  => self.name,
         :method_name => "_async_datastore_reset",
         :args        => [task.id],
         :priority    => MiqQueue::HIGH_PRIORITY,
         :msg_timeout => 3600,
-        :role        => "automate"
+        :role        => "automate",
+        :category    => "self dispatch status",
       )
       task.update_status("Queued", "Ok", "Task has been queued")
     end

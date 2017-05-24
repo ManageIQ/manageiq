@@ -286,10 +286,11 @@ class MiqTask < ApplicationRecord
     return if ids.empty?
     _log.info("Queuing deletion of tasks with the following ids: #{ids.inspect}")
     MiqQueue.put(
-      :class_name  => name,
+      :class_name  => self.name,
       :method_name => "destroy",
-      :args        => [ids],
-      :zone        => MiqServer.my_zone
+      :args        => [ids], # keenan unhappy
+      :zone        => MiqServer.my_zone,
+      :category    => "self dispatch"
     )
   end
 

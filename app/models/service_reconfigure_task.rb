@@ -43,7 +43,8 @@ class ServiceReconfigureTask < MiqRequestTask
         :args        => [args],
         :role        => 'automate',
         :zone        => zone,
-        :task_id     => "#{self.class.name.underscore}_#{id}"
+        :task_id     => "#{self.class.name.underscore}_#{id}", #?
+        :category    => "another system affinity?"
       )
       update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
     else

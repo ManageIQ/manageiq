@@ -234,6 +234,7 @@ module AuthenticationMixin
       :deliver_on  => authentication_check_retry_deliver_on(method_options[:attempt]),
       :role        => try(:authentication_check_role),
       :zone        => try(:my_zone) || :ignore,
+      :category    => "self job"
     }
   end
 

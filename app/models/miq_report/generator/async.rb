@@ -13,7 +13,8 @@ module MiqReport::Generator::Async
         :method_name => "_async_generate_tables",
         :args        => [task.id, options],
         :priority    => MiqQueue::HIGH_PRIORITY,
-        :msg_timeout => default_queue_timeout.to_i_with_method
+        :msg_timeout => default_queue_timeout.to_i_with_method,
+        :category    => "self dispatch status"
       ) unless sync # Only queued if sync reporting disabled (default)
       AuditEvent.success(:event => "generate_tables", :target_class => base_class.name, :userid => options[:userid], :message => "#{task.name}, successfully initiated")
       task.update_status("Queued", "Ok", "Task has been queued")
@@ -63,7 +64,8 @@ module MiqReport::Generator::Async
           :args         => [task.id, options],
           :priority     => MiqQueue::HIGH_PRIORITY,
           :miq_callback => cb,
-          :msg_timeout  => queue_timeout
+          :msg_timeout  => queue_timeout,
+          :category     => "self dispatch status",
         )
       else
         MiqQueue.put(
@@ -74,7 +76,8 @@ module MiqReport::Generator::Async
           :args         => [task.id, self, options],
           :priority     => MiqQueue::HIGH_PRIORITY,
           :miq_callback => cb,
-          :msg_timeout  => queue_timeout
+          :msg_timeout  => queue_timeout,
+          :category     => "self dispatch status, AR on queue",
         )
       end
     end

@@ -112,12 +112,13 @@ class TimeProfile < ApplicationRecord
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => 'rebuild_daily_metrics',
-      :msg_timeout => 1.hour
+      :msg_timeout => 1.hour,
+      :category    => "self dispatch, long running",
     )
   end
 
   def destroy_metric_rollups
-    metric_rollups.destroy_all
+    metric_rollups.destroy_all # can we use delete_all?
   end
 
   def destroy_metric_rollups_queue
@@ -125,7 +126,8 @@ class TimeProfile < ApplicationRecord
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => 'destroy_metric_rollups',
-      :msg_timeout => 1.hour
+      :msg_timeout => 1.hour,
+      :category    => "self dispatch, long running",
     )
   end
 

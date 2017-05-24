@@ -70,10 +70,11 @@ class MiqVimBrokerWorker < MiqWorker
     deliver_on = Time.now.utc + (worker_settings[:reconnect_retry_interval] || 5.minutes)
     _log.info "Queueing reconnect for EMS name: [#{ems.name}], id: [#{ems.id}] at [#{deliver_on}]"
     MiqQueue.put(
-      :class_name  => name,
+      :class_name  => self.name,
       :method_name => "reconnect_ems",
       :args        => [ems.id],
-      :deliver_on  => deliver_on
+      :deliver_on  => deliver_on,
+      :category    => "self scheduled job, needs affinity?", # connection pool refresh
     )
   end
 

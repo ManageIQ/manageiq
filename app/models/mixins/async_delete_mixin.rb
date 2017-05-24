@@ -4,10 +4,11 @@ module AsyncDeleteMixin
     def self._queue_task(task, ids)
       ids.each do |id|
         MiqQueue.put(
-          :class_name  => name,
+          :class_name  => self.name,
           :instance_id => id,
           :msg_timeout => 3600,
-          :method_name => task.to_s
+          :method_name => task.to_s,
+          :category    => "self dispatch",
         )
       end
     end

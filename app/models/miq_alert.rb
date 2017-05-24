@@ -170,7 +170,8 @@ class MiqAlert < ApplicationRecord
         :instance_id => id,
         :method_name => "evaluate",
         :args        => [[target.class.name, target.id], inputs],
-        :zone        => zone
+        :zone        => zone,
+        :category    => "self dispatch singleton?"
       )
     end
   end
@@ -277,7 +278,8 @@ class MiqAlert < ApplicationRecord
       :args        => [event, [target.class.name, target.id], inputs],
       :role        => 'automate',
       :priority    => MiqQueue::HIGH_PRIORITY,
-      :zone        => target.respond_to?(:my_zone) ? target.my_zone : MiqServer.my_zone
+      :zone        => target.respond_to?(:my_zone) ? target.my_zone : MiqServer.my_zone,
+      :category    => "another system, event stream",
     )
   end
 

@@ -111,7 +111,8 @@ module ScanningMixin
       :class_name  => self.class.base_class.name,
       :instance_id => id,
       :method_name => "scan",
-      :args        => [userid, options]
+      :args        => [userid, options],
+      :category    => "self dispatch, double queue?"
     )
   end
 
@@ -132,7 +133,7 @@ module ScanningMixin
       "vm_guid"     => guid # TODO: target_guid
     }.merge(options)
     ost = OpenStruct.new(options)
-    host.queue_call(ost)
+    host.queue_call(ost) # move queue call into here
   rescue => err
     _log.log_backtrace(err)
   end
@@ -383,9 +384,10 @@ module ScanningMixin
         :class_name  => "Job",
         :method_name => "update_message",
         :args        => [ost.taskid, message],
-        :task_id     => "job_message_#{Time.now.to_i}",
+        :task_id     => "job_message_#{Time.now.to_i}", # why?
         :zone        => MiqServer.my_zone,
-        :role        => "smartstate"
+        :role        => "smartstate",
+        :category    => "obscure record update", # can we tear out?
       )
     end
   end

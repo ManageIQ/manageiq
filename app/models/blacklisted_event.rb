@@ -46,7 +46,8 @@ class BlacklistedEvent < ApplicationRecord
         :method_name => "sync_blacklisted_event_names",
         :server_guid => s.guid,
         :priority    => MiqQueue::HIGH_PRIORITY,
-        :queue_name  => 'miq_server'
+        :queue_name  => 'miq_server',
+        :category    => "event, settings/configuration update signal, deprecated?"
       )
     end
   end

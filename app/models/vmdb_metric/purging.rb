@@ -32,7 +32,8 @@ module VmdbMetric::Purging
       MiqQueue.put(
         :class_name  => name,
         :method_name => "purge_#{interval}",
-        :args        => [value]
+        :args        => [value],
+        :category    => "simple dispatch, scheduled, double queue"
       )
     end
 

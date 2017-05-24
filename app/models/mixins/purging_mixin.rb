@@ -53,9 +53,10 @@ module PurgingMixin
 
     def purge_queue(mode, value)
       MiqQueue.put(
-        :class_name  => name,
+        :class_name  => self.name, # TODO: self.base_class.name
         :method_name => "purge_by_#{mode}",
-        :args        => [value]
+        :args        => [value],
+        :category    => "simple dispatch, scheduled, double queue?",
       )
     end
 

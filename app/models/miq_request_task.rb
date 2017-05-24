@@ -145,7 +145,8 @@ class MiqRequestTask < ApplicationRecord
         :args        => [args],
         :role        => 'automate',
         :zone        => options.fetch(:miq_zone, zone),
-        :task_id     => my_task_id,
+        :task_id     => my_task_id, # ?
+        :category    => "subsystem affinity, task logging?"
       )
       update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
     else
@@ -173,7 +174,8 @@ class MiqRequestTask < ApplicationRecord
       :role         => miq_request.my_role,
       :task_id      => my_task_id,
       :deliver_on   => deliver_on,
-      :miq_callback => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
+      :miq_callback => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback},
+      :category     => "remote system dispatch delayed?, affinity?"
     )
     MiqQueue.put(queue_options)
 
