@@ -71,21 +71,21 @@ namespace :locale do
     end
 
     yamls = {
-      "db/fixtures/miq_product_features.*" => %w(name description),
-      "db/fixtures/miq_report_formats.*"   => %w(description),
-      "db/fixtures/notification_types.*"   => %w(message),
-      "product/charts/layouts/*.yaml"      => %w(title),
-      "product/charts/layouts/*/*.yaml"    => %w(title),
-      "product/reports/*/*.*"              => %w(headers menu_name title),
-      "product/timelines/miq_reports/*.*"  => %w(title name headers),
-      "product/views/*.*"                  => %w(title name headers)
+      Rails.root.join("db/fixtures/miq_product_features.*")        => %w(name description),
+      Rails.root.join("db/fixtures/miq_report_formats.*")          => %w(description),
+      Rails.root.join("db/fixtures/notification_types.*")          => %w(message),
+      Rails.root.join("product/charts/layouts/*.yaml")             => %w(title),
+      Rails.root.join("product/charts/layouts/*/*.yaml")           => %w(title),
+      Rails.root.join("product/reports/*/*.*")                     => %w(headers menu_name title),
+      Rails.root.join("product/timelines/miq_reports/*.*")         => %w(title name headers),
+      ManageIQ::UI::Classic::Engine.root.join('product/views/*.*') => %w(title name headers)
     }
 
     output = {}
 
     yamls.keys.each do |yaml_glob|
       Dir.glob(yaml_glob).each do |file|
-        yml = YAML.load_file(Rails.root.join(file))
+        yml = YAML.load_file(file)
         parse_object(yml, yamls[yaml_glob], file, output)
       end
     end
