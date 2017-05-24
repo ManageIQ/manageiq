@@ -12,6 +12,9 @@ describe Metric::CiMixin::Capture do
   let(:ems_openstack) { FactoryGirl.create(:ems_openstack, :zone => zone) }
   let(:vm) { FactoryGirl.create(:vm_perf_openstack, :ext_management_system => ems_openstack) }
 
+  let(:expected_stats_period_start) { parse_datetime('2013-08-28T11:01:20Z') }
+  let(:expected_stats_period_end)   { parse_datetime('2013-08-28T12:41:40Z') }
+
   # TODO: Don't hack this log stuff. This is difficult right now as some assertions
   # below are actually emitted by the provider. Not worth fixing right now.
   before do
@@ -22,14 +25,6 @@ describe Metric::CiMixin::Capture do
 
   after do
     $log = @orig_log
-  end
-
-  def expected_stats_period_start
-    parse_datetime('2013-08-28T11:01:20Z')
-  end
-
-  def expected_stats_period_end
-    parse_datetime('2013-08-28T12:41:40Z')
   end
 
   context "#perf_capture_queue('realtime')" do
