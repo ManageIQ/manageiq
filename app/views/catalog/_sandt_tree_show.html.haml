@@ -76,7 +76,9 @@
               = h(@sb[entry_points_op[1]])
         .form-group
           .col-md-9
-            = render textual_group_render_options(:smart_management)
+            = render :partial => "shared/summary/textual_tags",
+              :locals => {:title => ("Smart Management"),
+                          :items => textual_group_smart_management}
       %hr
       %h3
         = _('Custom Image')
