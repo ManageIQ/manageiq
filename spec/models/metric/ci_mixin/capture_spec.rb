@@ -85,6 +85,7 @@ describe Metric::CiMixin::Capture do
       datetime << "Z" if datetime.size == 19
       Time.parse(datetime).utc
     end
+
     context "2 collection periods total, end of 1. period has complete stats" do
       it "checks that saved metrics are correct" do
         capture_data('2013-08-28T12:06:00Z', 20.minutes)
@@ -128,7 +129,7 @@ describe Metric::CiMixin::Capture do
     end
   end
 
-  context "#perf_capture_queue('realtime')" do
+  describe "#perf_capture_queue('realtime')" do
     def verify_realtime_queue_item(queue_item, expected_start_time = nil)
       expect(queue_item.method_name).to eq "perf_capture_realtime"
       if expected_start_time
@@ -214,7 +215,7 @@ describe Metric::CiMixin::Capture do
     end
   end
 
-  context "#perf_capture_queue('historical')" do
+  describe "#perf_capture_queue('historical')" do
     context "with capture days > 0 and multiple attempts" do
       def verify_perf_capture_queue_historical(last_perf_capture_on, total_queue_items)
         vm.last_perf_capture_on = last_perf_capture_on
@@ -267,10 +268,6 @@ describe Metric::CiMixin::Capture do
   end
 
   context "2 collection periods total, end of 1. period has incomplete stat" do
-    ###################################################################################################################
-    # DESCRIPTION FOR: net_usage_rate_average
-    # MAIN SCENARIOS :
-
     it "checks that saved metrics are correct" do
       capture_data('2013-08-28T12:02:00Z', 20.minutes)
 
