@@ -21,7 +21,11 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
         kubernetes_version,
         :ssl_options    => { :verify_ssl => verify_ssl_mode },
         :auth_options   => kubernetes_auth_options(options),
-        :http_proxy_uri => VMDB::Util.http_proxy_uri
+        :http_proxy_uri => VMDB::Util.http_proxy_uri,
+        :timeouts       => {
+          :open => Settings.ems.ems_kubernetes.open_timeout.to_f_with_method,
+          :read => Settings.ems.ems_kubernetes.read_timeout.to_f_with_method
+        }
       )
     end
 

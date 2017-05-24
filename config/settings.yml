@@ -104,6 +104,8 @@
       :read_timeout: 1.hour
   :ems_kubernetes:
     :miq_namespace: management-infra
+    :open_timeout: 60.seconds
+    :read_timeout: 60.seconds
   :ems_amazon:
     :disabled_regions: []
     :additional_regions: {}
