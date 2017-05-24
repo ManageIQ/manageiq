@@ -12,9 +12,6 @@ describe Metric::CiMixin::Capture do
   let(:ems_openstack) { FactoryGirl.create(:ems_openstack, :zone => zone) }
   let(:vm) { FactoryGirl.create(:vm_perf_openstack, :ext_management_system => ems_openstack) }
 
-  let(:expected_stats_period_start) { parse_datetime('2013-08-28T11:01:20Z') }
-  let(:expected_stats_period_end)   { parse_datetime('2013-08-28T12:41:40Z') }
-
   # TODO: Don't hack this log stuff. This is difficult right now as some assertions
   # below are actually emitted by the provider. Not worth fixing right now.
   before do
@@ -28,6 +25,10 @@ describe Metric::CiMixin::Capture do
   end
 
   describe "#perf_capture_realtime" do
+    let(:expected_stats_period_start) { parse_datetime('2013-08-28T11:01:20Z') }
+    let(:expected_stats_period_end)   { parse_datetime('2013-08-28T12:41:40Z') }
+    let(:expected_timestamps)         { (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds) }
+
     def capture_data(second_collection_period_start, collection_overlap_period)
       # 1.collection period, save all metrics
       allow(metering).to receive(:get_statistics) do |name, _options|
@@ -98,17 +99,17 @@ describe Metric::CiMixin::Capture do
         expect(stats_period_end).to eq expected_stats_period_end
 
         # check that 20s block is not interrupted between start and end time for net_usage_rate_average
-        (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds).each do |timestamp|
+        expected_timestamps.each do |timestamp|
           expect(@metrics_by_ts[timestamp.iso8601].try(:net_usage_rate_average)).not_to eq nil
         end
 
         # check that 20s block is not interrupted between start and end time for disk_usage_rate_average
-        (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds).each do |timestamp|
+        expected_timestamps.each do |timestamp|
           expect(@metrics_by_ts[timestamp.iso8601].try(:disk_usage_rate_average)).not_to eq nil
         end
 
         # check that 20s block is not interrupted between start and end time for cpu_usage_rate_average
-        (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds).each do |timestamp|
+        expected_timestamps.each do |timestamp|
           expect(@metrics_by_ts[timestamp.iso8601].try(:cpu_usage_rate_average)).not_to eq nil
         end
       end
@@ -140,17 +141,17 @@ describe Metric::CiMixin::Capture do
         expect(stats_period_end).to eq expected_stats_period_end
 
         # check that 20s block is not interrupted between start and end time for net_usage_rate_average
-        (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds).each do |timestamp|
+        expected_timestamps.each do |timestamp|
           expect(@metrics_by_ts[timestamp.iso8601].try(:net_usage_rate_average)).not_to eq nil
         end
 
         # check that 20s block is not interrupted between start and end time for disk_usage_rate_average
-        (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds).each do |timestamp|
+        expected_timestamps.each do |timestamp|
           expect(@metrics_by_ts[timestamp.iso8601].try(:disk_usage_rate_average)).not_to eq nil
         end
 
         # check that 20s block is not interrupted between start and end time for cpu_usage_rate_average
-        (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds).each do |timestamp|
+        expected_timestamps.each do |timestamp|
           expect(@metrics_by_ts[timestamp.iso8601].try(:cpu_usage_rate_average)).not_to eq nil
         end
       end
