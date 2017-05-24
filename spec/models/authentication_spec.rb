@@ -22,7 +22,6 @@ describe Authentication do
 
   context "with an authentication" do
     let(:pwd_plain) { "smartvm" }
-    let(:pwd_encrypt) { MiqPassword.encrypt(pwd_plain) }
     let(:auth) { FactoryGirl.create(:authentication, :password => pwd_plain) }
 
     it "should return decrypted password" do

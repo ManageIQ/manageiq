@@ -10,7 +10,6 @@ shared_examples_for "ansible configuration_script_source" do
   context "create through API" do
     let(:projects) { double("AnsibleTowerClient::Collection", :create! => project) }
     let(:project)  { AnsibleTowerClient::Project.new(nil, project_json) }
-    let(:css)      { store_new_project(project, manager) }
 
     let(:project_json) do
       params.merge(

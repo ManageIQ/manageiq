@@ -3,9 +3,6 @@ RSpec.describe VimPerformanceAnalysis do
   let(:tag_good) { FactoryGirl.create(:tag, :name => "/managed/#{tag_text}") }
   let(:tag_bad)  { FactoryGirl.create(:tag, :name => "/managed/operations/bad") }
   let(:time_profile) { FactoryGirl.create(:time_profile_with_rollup, :profile => {:tz => "UTC"}) }
-
-  let(:user) { FactoryGirl.create(:user_admin) }
-
   let(:ems) { FactoryGirl.create(:ems_vmware) }
 
   let(:good_day) { DateTime.current - 2.day }

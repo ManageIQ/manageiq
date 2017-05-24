@@ -3,7 +3,6 @@ describe ChargebackVm do
   let(:start_of_all_intervals) { Time.parse('2007-01-01 00:00:00Z').utc } # 0hours, Monday, 1st of month
   let(:consumed_hours) { 17 }
   let(:midle_of_the_first_day) { start_of_all_intervals + consumed_hours.hours } # it is a Monday
-  let(:ts) { midle_of_the_first_day.in_time_zone(Metric::Helper.get_time_zone(opt[:ext_options])) }
   let(:report_run_time) { midle_of_the_first_day }
 
   let(:opt) do
