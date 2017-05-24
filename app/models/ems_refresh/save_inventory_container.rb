@@ -373,8 +373,10 @@ module EmsRefresh::SaveInventoryContainer
       h = h.merge(
         :container_node => @inv_collections[:container_nodes].lazy_find(h[:container_node][:ems_ref]),
         :container_project => @inv_collections[:container_projects].lazy_find(h.delete(:project)[:ems_ref]),
-        :container_replicator => @inv_collections[:container_replicators].lazy_find(h[:container_replicator][:ems_ref]),
       )
+      # might not have a replicator.
+      # TODO review all lazy_find links, probably most are optional!
+      h[:container_replicator] &&= @inv_collections[:container_replicators].lazy_find(h[:container_replicator][:ems_ref])
       children = h.extract!(  # TODO save all
         :container_definitions, :containers, :labels, :tags,
         :node_selector_parts, :container_conditions, :container_volumes,
