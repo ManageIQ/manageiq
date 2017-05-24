@@ -127,6 +127,34 @@ describe Metric::CiMixin::Capture do
         capture_data('2013-08-28T11:56:00Z', nil)
       end
     end
+
+    context "2 collection periods total, end of 1. period has incomplete stat" do
+      it "checks that saved metrics are correct" do
+        capture_data('2013-08-28T12:02:00Z', 20.minutes)
+
+        stats_period_start = [api_time_as_utc(@read_bytes.first), api_time_as_utc(@write_bytes.first)].min
+        stats_period_end = [api_time_as_utc(@read_bytes.last), api_time_as_utc(@write_bytes.last)].min
+
+        # check start date and end date
+        expect(stats_period_start).to eq expected_stats_period_start
+        expect(stats_period_end).to eq expected_stats_period_end
+
+        # check that 20s block is not interrupted between start and end time for net_usage_rate_average
+        (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds).each do |timestamp|
+          expect(@metrics_by_ts[timestamp.iso8601].try(:net_usage_rate_average)).not_to eq nil
+        end
+
+        # check that 20s block is not interrupted between start and end time for disk_usage_rate_average
+        (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds).each do |timestamp|
+          expect(@metrics_by_ts[timestamp.iso8601].try(:disk_usage_rate_average)).not_to eq nil
+        end
+
+        # check that 20s block is not interrupted between start and end time for cpu_usage_rate_average
+        (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds).each do |timestamp|
+          expect(@metrics_by_ts[timestamp.iso8601].try(:cpu_usage_rate_average)).not_to eq nil
+        end
+      end
+    end
   end
 
   describe "#perf_capture_queue('realtime')" do
@@ -263,34 +291,6 @@ describe Metric::CiMixin::Capture do
           Timecop.travel(current_time + 20.minutes)
           verify_perf_capture_queue_historical(last_capture_on, 8)
         end
-      end
-    end
-  end
-
-  context "2 collection periods total, end of 1. period has incomplete stat" do
-    it "checks that saved metrics are correct" do
-      capture_data('2013-08-28T12:02:00Z', 20.minutes)
-
-      stats_period_start = [api_time_as_utc(@read_bytes.first), api_time_as_utc(@write_bytes.first)].min
-      stats_period_end = [api_time_as_utc(@read_bytes.last), api_time_as_utc(@write_bytes.last)].min
-
-      # check start date and end date
-      expect(stats_period_start).to eq expected_stats_period_start
-      expect(stats_period_end).to eq expected_stats_period_end
-
-      # check that 20s block is not interrupted between start and end time for net_usage_rate_average
-      (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds).each do |timestamp|
-        expect(@metrics_by_ts[timestamp.iso8601].try(:net_usage_rate_average)).not_to eq nil
-      end
-
-      # check that 20s block is not interrupted between start and end time for disk_usage_rate_average
-      (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds).each do |timestamp|
-        expect(@metrics_by_ts[timestamp.iso8601].try(:disk_usage_rate_average)).not_to eq nil
-      end
-
-      # check that 20s block is not interrupted between start and end time for cpu_usage_rate_average
-      (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds).each do |timestamp|
-        expect(@metrics_by_ts[timestamp.iso8601].try(:cpu_usage_rate_average)).not_to eq nil
       end
     end
   end
