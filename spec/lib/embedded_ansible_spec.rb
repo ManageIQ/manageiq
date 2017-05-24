@@ -86,6 +86,34 @@ describe EmbeddedAnsible do
         described_class.disable
       end
     end
+
+    describe ".start when configured" do
+      before do
+        stub_const("EmbeddedAnsible::WAIT_FOR_ANSIBLE_SLEEP", 0)
+
+        expect(EmbeddedAnsible).to receive(:configured?).and_return true
+
+        expect(nginx_service).to receive(:start).and_return(nginx_service)
+        expect(supervisord_service).to receive(:start).and_return(supervisord_service)
+        expect(rabbitmq_service).to receive(:start).and_return(rabbitmq_service)
+
+        expect(nginx_service).to receive(:enable).and_return(nginx_service)
+        expect(supervisord_service).to receive(:enable).and_return(supervisord_service)
+        expect(rabbitmq_service).to receive(:enable).and_return(rabbitmq_service)
+      end
+
+      it "waits for Ansible to respond" do
+        expect(described_class).to receive(:alive?).exactly(3).times.and_return(false, false, true)
+
+        described_class.start
+      end
+
+      it "raises if Ansible doesn't respond" do
+        expect(described_class).to receive(:alive?).exactly(5).times.and_return(false)
+
+        expect { described_class.start }.to raise_error(RuntimeError)
+      end
+    end
   end
 
   context "with an miq_databases row" do
@@ -224,10 +252,11 @@ describe EmbeddedAnsible do
       end
     end
 
-    describe ".configure" do
+    describe ".start when not configured" do
       before do
+        expect(described_class).to receive(:configured?).and_return(false)
         expect(described_class).to receive(:configure_secret_key)
-        expect(described_class).to receive(:stop)
+        expect(described_class).to receive(:alive?).and_return(true)
       end
 
       it "generates new passwords with no passwords set" do
@@ -239,7 +268,7 @@ describe EmbeddedAnsible do
           expect(script_path).to eq("ansible-tower-setup")
           expect(params["--"]).to be_nil
           expect(params[:extra_vars=]).to eq(extra_vars)
-          expect(params[:skip_tags=]).to eq("packages,migrations,firewall,supervisor")
+          expect(params[:skip_tags=]).to eq("packages,migrations,firewall")
 
           new_admin_auth  = miq_database.ansible_admin_authentication
           new_rabbit_auth = miq_database.ansible_rabbitmq_authentication
@@ -251,7 +280,7 @@ describe EmbeddedAnsible do
           expect(inventory_file_contents).to include("pg_password='databasepassword'")
         end
 
-        described_class.configure
+        described_class.start
       end
 
       it "uses the existing passwords when they are set in the database" do
@@ -259,37 +288,6 @@ describe EmbeddedAnsible do
         miq_database.set_ansible_rabbitmq_authentication(:userid => "rabbituser", :password => "rabbitpassword")
         miq_database.set_ansible_database_authentication(:userid => "databaseuser", :password => "databasepassword")
 
-        expect(AwesomeSpawn).to receive(:run!) do |script_path, options|
-          params                  = options[:params]
-          inventory_file_contents = File.read(params[:inventory=])
-
-          expect(script_path).to eq("ansible-tower-setup")
-          expect(params["--"]).to be_nil
-          expect(params[:extra_vars=]).to eq(extra_vars)
-          expect(params[:skip_tags=]).to eq("packages,migrations,firewall,supervisor")
-
-          expect(inventory_file_contents).to include("admin_password='adminpassword'")
-          expect(inventory_file_contents).to include("rabbitmq_username='rabbituser'")
-          expect(inventory_file_contents).to include("rabbitmq_password='rabbitpassword'")
-          expect(inventory_file_contents).to include("pg_username='databaseuser'")
-          expect(inventory_file_contents).to include("pg_password='databasepassword'")
-        end
-
-        described_class.configure
-      end
-    end
-
-    describe ".start" do
-      before do
-        miq_database.set_ansible_admin_authentication(:password => "adminpassword")
-        miq_database.set_ansible_rabbitmq_authentication(:userid => "rabbituser", :password => "rabbitpassword")
-        miq_database.set_ansible_database_authentication(:userid => "databaseuser", :password => "databasepassword")
-
-        expect(described_class).to receive(:configure_secret_key)
-        stub_const("EmbeddedAnsible::WAIT_FOR_ANSIBLE_SLEEP", 0)
-      end
-
-      it "runs the setup script with the correct args" do
         expect(AwesomeSpawn).to receive(:run!) do |script_path, options|
           params                  = options[:params]
           inventory_file_contents = File.read(params[:inventory=])
@@ -305,25 +303,8 @@ describe EmbeddedAnsible do
           expect(inventory_file_contents).to include("pg_username='databaseuser'")
           expect(inventory_file_contents).to include("pg_password='databasepassword'")
         end
-        expect(described_class).to receive(:alive?).and_return(true)
 
         described_class.start
-      end
-
-      it "waits for Ansible to respond" do
-        expect(AwesomeSpawn).to receive(:run!)
-
-        expect(described_class).to receive(:alive?).exactly(3).times.and_return(false, false, true)
-
-        described_class.start
-      end
-
-      it "raises if Ansible doesn't respond" do
-        expect(AwesomeSpawn).to receive(:run!)
-
-        expect(described_class).to receive(:alive?).exactly(5).times.and_return(false)
-
-        expect { described_class.start }.to raise_error(RuntimeError)
       end
     end
 
