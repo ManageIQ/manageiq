@@ -1,22 +1,19 @@
 describe Metric::CiMixin::Capture do
   require File.expand_path(File.join(File.dirname(__FILE__),
                                      %w(.. .. .. tools openstack_data openstack_data_test_helper)))
+  let(:zone) { EvmSpecHelper.create_guid_miq_server_zone[2] }
+  let(:mock_meter_list) { OpenstackMeterListData.new }
+  let(:mock_stats_data) { OpenstackMetricStatsData.new }
+  let(:metering) do
+    double(:metering,
+           :list_meters => OpenstackApiResult.new((mock_meter_list.list_meters("resource_counters") +
+                              mock_meter_list.list_meters("metadata_counters"))))
+  end
+  let(:ems_openstack) { FactoryGirl.create(:ems_openstack, :zone => zone) }
+  let(:vm) { FactoryGirl.create(:vm_perf_openstack, :ext_management_system => ems_openstack) }
 
   before :each do
-    _guid, _server, @zone = EvmSpecHelper.create_guid_miq_server_zone
-
-    @mock_meter_list = OpenstackMeterListData.new
-    @mock_stats_data = OpenstackMetricStatsData.new
-
-    @metering = double(:metering)
-    allow(@metering).to receive(:list_meters).and_return(
-      OpenstackApiResult.new((@mock_meter_list.list_meters("resource_counters") +
-                              @mock_meter_list.list_meters("metadata_counters"))))
-
-    @ems_openstack = FactoryGirl.create(:ems_openstack, :zone => @zone)
-    allow(@ems_openstack).to receive(:connect).with(:service => "Metering").and_return(@metering)
-
-    @vm = FactoryGirl.create(:vm_perf_openstack, :ext_management_system => @ems_openstack)
+    allow(ems_openstack).to receive(:connect).with(:service => "Metering").and_return(metering)
   end
 
   before do
@@ -54,8 +51,8 @@ describe Metric::CiMixin::Capture do
 
     def verify_perf_capture_queue(last_perf_capture_on, total_queue_items)
       Timecop.freeze do
-        @vm.last_perf_capture_on = last_perf_capture_on
-        @vm.perf_capture_queue("realtime")
+        vm.last_perf_capture_on = last_perf_capture_on
+        vm.perf_capture_queue("realtime")
         expect(MiqQueue.count).to eq total_queue_items
 
         # make sure the queue items are in the correct order
@@ -68,7 +65,7 @@ describe Metric::CiMixin::Capture do
 
         # rest of the queue items should be historical
         if queue_items.any? && realtime_start_time
-          interval_start_time = @vm.last_perf_capture_on
+          interval_start_time = vm.last_perf_capture_on
           interval_end_time   = interval_start_time + 1.day
           queue_items.reverse.each do |q_item|
             verify_historical_queue_item(q_item, interval_start_time, interval_end_time)
@@ -124,8 +121,8 @@ describe Metric::CiMixin::Capture do
 
   context "historical with capture days > 0 and multiple attempts" do
     def verify_perf_capture_queue_historical(last_perf_capture_on, total_queue_items)
-      @vm.last_perf_capture_on = last_perf_capture_on
-      @vm.perf_capture_queue("historical")
+      vm.last_perf_capture_on = last_perf_capture_on
+      vm.perf_capture_queue("historical")
       expect(MiqQueue.count).to eq total_queue_items
     end
 
@@ -264,8 +261,8 @@ describe Metric::CiMixin::Capture do
 
   def capture_data(second_collection_period_start, collection_overlap_period)
     # 1.collection period, save all metrics
-    allow(@metering).to receive(:get_statistics) do |name, _options|
-      first_collection_period = filter_statistics(@mock_stats_data.get_statistics(name,
+    allow(metering).to receive(:get_statistics) do |name, _options|
+      first_collection_period = filter_statistics(mock_stats_data.get_statistics(name,
                                                                                   "multiple_collection_periods"),
                                                   '<=',
                                                   second_collection_period_start)
@@ -273,12 +270,12 @@ describe Metric::CiMixin::Capture do
       OpenstackApiResult.new(first_collection_period)
     end
 
-    allow(@vm).to receive(:state_changed_on).and_return(second_collection_period_start)
-    @vm.perf_capture_realtime(Time.parse('2013-08-28T11:01:40Z').utc, Time.parse(second_collection_period_start).utc)
+    allow(vm).to receive(:state_changed_on).and_return(second_collection_period_start)
+    vm.perf_capture_realtime(Time.parse('2013-08-28T11:01:40Z').utc, Time.parse(second_collection_period_start).utc)
 
     # 2.collection period, save all metrics
-    allow(@metering).to receive(:get_statistics) do |name, _options|
-      second_collection_period = filter_statistics(@mock_stats_data.get_statistics(name,
+    allow(metering).to receive(:get_statistics) do |name, _options|
+      second_collection_period = filter_statistics(mock_stats_data.get_statistics(name,
                                                                                    "multiple_collection_periods"),
                                                    '>',
                                                    second_collection_period_start,
@@ -287,20 +284,20 @@ describe Metric::CiMixin::Capture do
       OpenstackApiResult.new(second_collection_period)
     end
 
-    allow(@vm).to receive(:state_changed_on).and_return(second_collection_period_start)
-    @vm.perf_capture_realtime(Time.parse(second_collection_period_start).utc, Time.parse('2013-08-28T14:02:00Z').utc)
+    allow(vm).to receive(:state_changed_on).and_return(second_collection_period_start)
+    vm.perf_capture_realtime(Time.parse(second_collection_period_start).utc, Time.parse('2013-08-28T14:02:00Z').utc)
 
     @metrics_by_ts = {}
-    @vm.metrics.each do |x|
+    vm.metrics.each do |x|
       @metrics_by_ts[x.timestamp.iso8601] = x
     end
 
     # grab read bytes and write bytes data, these values are pulled directly from
     # spec/tools/openstack_data/openstack_perf_data/multiple_collection_periods.yml
-    @read_bytes = @mock_stats_data.get_statistics("network.incoming.bytes",
+    @read_bytes = mock_stats_data.get_statistics("network.incoming.bytes",
                                                   "multiple_collection_periods")
 
-    @write_bytes = @mock_stats_data.get_statistics("network.outgoing.bytes",
+    @write_bytes = mock_stats_data.get_statistics("network.outgoing.bytes",
                                                    "multiple_collection_periods")
   end
 
