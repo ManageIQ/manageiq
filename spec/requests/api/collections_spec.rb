@@ -4,7 +4,6 @@
 describe "Rest API Collections" do
   let(:zone)       { FactoryGirl.create(:zone, :name => "api_zone") }
   let(:miq_server) { FactoryGirl.create(:miq_server, :zone => zone) }
-  let(:ems) { FactoryGirl.create(:ext_management_system) }
   let(:template) do
     FactoryGirl.create(:miq_template, :name => "template 1", :vendor => "vmware", :location => "template1.vmtx")
   end
