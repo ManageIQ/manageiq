@@ -16,7 +16,8 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
     let(:image_from_openshift) do
       RecursiveOpenStruct.new(
         :metadata             => {
-          :name => image_digest
+          :name              => image_digest,
+          :creationTimestamp => '2015-08-17T09:16:46Z'
         },
         :dockerImageReference => "#{image_registry}:#{image_registry_port}/#{image_name}@#{image_digest}",
         :dockerImageManifest  => '{"name": "%s", "tag": "%s"}' % [image_name, image_tag],
@@ -46,7 +47,8 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
     let(:image_without_dockerConfig) do
       RecursiveOpenStruct.new(
         :metadata            => {
-          :name => image_digest
+          :name              => image_digest,
+          :creationTimestamp => '2015-08-17T09:17:46Z'
         },
         :dockerImageMetadata => {
         }
@@ -56,19 +58,20 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
     let(:image_without_environment_variables) do
       RecursiveOpenStruct.new(
         :metadata            => {
-          :name => image_digest
+          :name              => image_digest,
+          :creationTimestamp => '2015-08-17T09:18:46Z'
         },
         :dockerImageMetadata => {
-          :Config => {
-          }
+          :Config => {}
         }
       )
     end
 
     it "collects data from openshift images correctly" do
       expect(parser.send(:parse_openshift_image,
-                         image_from_openshift).except(:registered_on)).to eq(
+                         image_from_openshift)).to eq(
                            :name                     => image_name,
+                           :registered_on            => Time.parse('2015-08-17T09:16:46Z').utc,
                            :digest                   => image_digest,
                            :image_ref                => image_ref,
                            :tag                      => image_tag,
@@ -108,11 +111,12 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
 
     it "handles openshift image without dockerConfig" do
       expect(parser.send(:parse_openshift_image,
-                         image_without_dockerConfig).except(:registered_on)).to eq(
+                         image_without_dockerConfig)).to eq(
                            :container_image_registry => nil,
                            :digest                   => nil,
                            :image_ref                => "docker-pullable://sha256:abcdefg",
                            :name                     => "sha256",
+                           :registered_on            => Time.parse('2015-08-17T09:17:46Z').utc,
                            :tag                      => "abcdefg",
                            :architecture             => nil,
                            :author                   => nil,
@@ -125,11 +129,12 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
     # check https://bugzilla.redhat.com/show_bug.cgi?id=1414508
     it "handles openshift image without environment variables" do
       expect(parser.send(:parse_openshift_image,
-                         image_without_environment_variables).except(:registered_on)).to eq(
+                         image_without_environment_variables)).to eq(
                            :container_image_registry => nil,
                            :digest                   => nil,
                            :image_ref                => "docker-pullable://sha256:abcdefg",
                            :name                     => "sha256",
+                           :registered_on            => Time.parse('2015-08-17T09:18:46Z').utc,
                            :tag                      => "abcdefg",
                            :architecture             => nil,
                            :author                   => nil,
@@ -146,11 +151,10 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
 
     it "doesn't add duplicated images" do
       parser.instance_variable_get('@data')[:container_images] = [{
-        :name          => image_name,
-        :tag           => image_tag,
-        :digest        => image_digest,
-        :image_ref     => image_ref,
-        :registered_on => Time.now.utc - 2.minutes
+        :name      => image_name,
+        :tag       => image_tag,
+        :digest    => image_digest,
+        :image_ref => image_ref
       },]
       parser.instance_variable_get('@data_index').store_path(
         :container_image,
@@ -172,11 +176,10 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
       FIRST_TAG = "first_tag".freeze
       FIRST_REF = "first_ref".freeze
       parser.instance_variable_get('@data')[:container_images] = [{
-        :name          => FIRST_NAME,
-        :tag           => FIRST_TAG,
-        :digest        => image_digest,
-        :image_ref     => FIRST_REF,
-        :registered_on => Time.now.utc - 2.minutes
+        :name      => FIRST_NAME,
+        :tag       => FIRST_TAG,
+        :digest    => image_digest,
+        :image_ref => FIRST_REF
       },]
       parser.instance_variable_get('@data_index').store_path(
         :container_image,

@@ -201,6 +201,12 @@ module ManageIQ::Providers
             )
           end
         end
+
+        openshift_metadata = openshift_image[:metadata]
+        new_result[:registered_on] = if openshift_metadata && openshift_metadata[:creationTimestamp]
+                                       Time.parse(openshift_metadata[:creationTimestamp]).utc
+                                     end
+
         new_result
       end
     end
