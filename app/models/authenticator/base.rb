@@ -215,7 +215,7 @@ module Authenticator
         encrypt_ldap_password(config) if MiqLdap.using_ldap?
         MiqQueue.put(
           :queue_name   => "generic",
-          :class_name   => self.class.to_s,
+          :class_name   => self.class.name,
           :method_name  => "authorize",
           :args         => [config, task.id, username, *args],
           :server_guid  => MiqServer.my_guid,

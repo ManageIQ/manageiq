@@ -208,7 +208,12 @@ class EmsCluster < ApplicationRecord
 
   def scan
     zone = ext_management_system ? ext_management_system.my_zone : nil
-    MiqQueue.put(:class_name => self.class.to_s, :method_name => "save_drift_state", :instance_id => id, :zone => zone, :role => "smartstate")
+    MiqQueue.put(:class_name  => self.class.name,
+                 :method_name => "save_drift_state",
+                 :instance_id => id,
+                 :zone        => zone,
+                 :role        => "smartstate"
+    )
   end
 
   def get_reserve(field)

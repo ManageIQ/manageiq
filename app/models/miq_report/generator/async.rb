@@ -9,7 +9,7 @@ module MiqReport::Generator::Async
       MiqQueue.put(
         :queue_name  => "generic",
         :role        => "reporting",
-        :class_name  => to_s,
+        :class_name  => self.name,
         :method_name => "_async_generate_tables",
         :args        => [task.id, options],
         :priority    => MiqQueue::HIGH_PRIORITY,
@@ -57,7 +57,7 @@ module MiqReport::Generator::Async
         MiqQueue.put(
           :queue_name   => "generic",
           :role         => "reporting",
-          :class_name   => self.class.to_s,
+          :class_name   => self.class.name,
           :instance_id  => id,
           :method_name  => "_async_generate_table",
           :args         => [task.id, options],
@@ -69,7 +69,7 @@ module MiqReport::Generator::Async
         MiqQueue.put(
           :queue_name   => "generic",
           :role         => "reporting",
-          :class_name   => self.class.to_s,
+          :class_name   => self.class.name,
           :method_name  => "_async_generate_table",
           :args         => [task.id, self, options],
           :priority     => MiqQueue::HIGH_PRIORITY,
