@@ -104,6 +104,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
 
     begin
       $_miq_worker_current_msg = msg
+      Thread.current[:tracking_label] = msg.tracking_label || msg.task_id
       status, message, result = msg.deliver
 
       if status == MiqQueue::STATUS_TIMEOUT
@@ -122,6 +123,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
       msg.unget
     ensure
       $_miq_worker_current_msg = nil # to avoid log messages inadvertantly prefixed by previous task_id
+      Thread.current[:tracking_label] = nil
       #
       # This tells the broker to release any memory being held on behalf of this process
       # and reset the global broker handle ($vim_broker_client).
