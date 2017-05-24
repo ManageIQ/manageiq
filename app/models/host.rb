@@ -849,7 +849,12 @@ class Host < ApplicationRecord
         discover_options[:windows_domain] = [default_zone.authentication_userid(:windows_domain), default_zone.authentication_password_encrypted(:windows_domain)]
       end
 
-      MiqQueue.put(:class_name => "Host", :method_name => "discoverHost", :data => Marshal.dump(discover_options), :server_guid => MiqServer.my_guid)
+      MiqQueue.put(:class_name  => "Host", #self.name
+                   :method_name => "discoverHost",
+                   :data        => Marshal.dump(discover_options),
+                   :server_guid => MiqServer.my_guid, # => ems zone?
+                   :category    => "self dispatch, affinity?, use args"
+      )
     end
   end
 
@@ -1327,7 +1332,8 @@ class Host < ApplicationRecord
       :method_name  => "scan_from_queue",
       :miq_callback => cb,
       :msg_timeout  => timeout,
-      :zone         => my_zone
+      :zone         => my_zone,
+      :category     => "self dispatch status, ems affinity"
     )
   end
 

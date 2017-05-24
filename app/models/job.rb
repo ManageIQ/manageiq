@@ -216,11 +216,12 @@ class Job < ApplicationRecord
   def self.delete_by_id(ids)
     _log.info("Queuing deletion of jobs with the following ids: #{ids.inspect}")
     MiqQueue.put(
-      :class_name  => name,
       :method_name => "destroy",
+      :class_name  => self.name,
       :priority    => MiqQueue::HIGH_PRIORITY,
       :args        => [ids],
-      :zone        => MiqServer.my_zone
+      :zone        => MiqServer.my_zone,
+      :category    => "self dispatch",
     )
   end
 
