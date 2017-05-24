@@ -372,7 +372,7 @@ module EmsRefresh::SaveInventoryContainer
         :namespace, :build_pod_name)
       h = h.merge(
         :container_node => @inv_collections[:container_nodes].lazy_find(h[:container_node][:ems_ref]),
-        :container_project => @inv_collections[:container_projects].lazy_find(h.delete(:project)[:ems_ref]),
+        :container_project => lazy_find_project(h.delete(:project)),
       )
       # might not have a replicator.
       # TODO review all lazy_find links, probably most are optional!
