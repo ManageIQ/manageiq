@@ -30,7 +30,7 @@ describe MiqWidgetSet do
     end
 
     it "the belong to group is being deleted" do
-      expect { group.destroy }.to raise_error(RuntimeError, /Still has users assigned/)
+      expect { group.destroy }.to raise_error(RuntimeError, /The group has users assigned that do not belong to any other group/)
       expect(MiqWidgetSet.count).to eq(2)
     end
 
