@@ -7,7 +7,7 @@ module MiqReport::Generator::Async
 
       task = MiqTask.create(:name => "Generate Reports: #{options[:reports].collect(&:name).inspect}")
       MiqQueue.put(
-        :queue_name  => "generic",
+        :queue_name  => "reporting",
         :role        => "reporting",
         :class_name  => self.name,
         :method_name => "_async_generate_tables",
@@ -55,7 +55,7 @@ module MiqReport::Generator::Async
       cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
       unless self.new_record?
         MiqQueue.put(
-          :queue_name   => "generic",
+          :queue_name   => "reporting",
           :role         => "reporting",
           :class_name   => self.class.name,
           :instance_id  => id,
@@ -67,7 +67,7 @@ module MiqReport::Generator::Async
         )
       else
         MiqQueue.put(
-          :queue_name   => "generic",
+          :queue_name   => "reporting",
           :role         => "reporting",
           :class_name   => self.class.name,
           :method_name  => "_async_generate_table",

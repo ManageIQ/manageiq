@@ -186,7 +186,6 @@ class MiqReportResult < ApplicationRecord
     sync = ::Settings.product.report_sync
 
     MiqQueue.put(
-      :queue_name  => "generic",
       :role        => "reporting",
       :class_name  => self.class.name,
       :instance_id => id,

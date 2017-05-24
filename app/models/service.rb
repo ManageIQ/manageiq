@@ -383,7 +383,6 @@ class Service < ApplicationRecord
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "generate_chargeback_report",
-      :priority    => MiqQueue::NORMAL_PRIORITY,
       :args        => options
     )
     _log.info "Added to queue: generate_chargeback_report for service #{name}"
