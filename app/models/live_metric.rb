@@ -3,6 +3,13 @@ class LiveMetric < ActsAsArModel
 
   class LiveMetricError < RuntimeError; end
 
+  # all attributes are virtual
+  # - attributes are dynamically generated and would be too much work to query/declare them all
+  # - returning true gets the column names into the REST query (via :includes)
+  def self.virtual_attribute?(_c)
+    true
+  end
+
   def self.find(*args)
     raw_query = args[1]
     validate_raw_query(raw_query)
