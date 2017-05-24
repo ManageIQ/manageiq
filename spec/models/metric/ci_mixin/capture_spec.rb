@@ -12,11 +12,10 @@ describe Metric::CiMixin::Capture do
   let(:ems_openstack) { FactoryGirl.create(:ems_openstack, :zone => zone) }
   let(:vm) { FactoryGirl.create(:vm_perf_openstack, :ext_management_system => ems_openstack) }
 
-  before :each do
-    allow(ems_openstack).to receive(:connect).with(:service => "Metering").and_return(metering)
-  end
-
+  # TODO: Don't hack this log stuff. This is difficult right now as some assertions
+  # below are actually emitted by the provider. Not worth fixing right now.
   before do
+    allow(ems_openstack).to receive(:connect).with(:service => "Metering").and_return(metering)
     @orig_log = $log
     $log = double.as_null_object
   end
