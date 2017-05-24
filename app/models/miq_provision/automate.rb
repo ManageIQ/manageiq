@@ -111,48 +111,6 @@ module MiqProvision::Automate
     nil
   end
 
-  def do_pre_provision
-    event_name = 'vm_provision_preprocessing'
-    ws = call_automate_event(event_name, false)
-    reload
-    if ws.nil?
-      update_and_notify_parent(:state => "finished", :status => "Error", :message => "Automation Error in processing Event #{event_name}")
-      return false
-    end
-
-    ae_result  = ws.root['ae_result']
-    ae_message = ws.root['ae_message']
-
-    unless ae_result.nil?
-      return false if ae_result.casecmp("error").zero?
-
-      if ae_result.casecmp("retry").zero?
-        interval, unit = ae_message.split(".")
-        interval = interval.to_i
-        interval *= 60                     if unit == "minute" || unit == "minutes"
-        interval = interval * 60 * 60      if unit == "hour" || unit == "hours"
-        interval = interval * 60 * 60 * 24 if unit == "day" || unit == "days"
-
-        MiqQueue.put(
-          :class_name  => self.class.name,
-          :instance_id => id,
-          :method_name => "execute",
-          :zone        => my_zone,
-          :role        => my_role,
-          :task_id     => my_task_id,
-          :msg_timeout => MiqProvision::CLONE_SYNCHRONOUS ? MiqProvision::CLONE_TIME_LIMIT : MiqQueue::TIMEOUT,
-          :deliver_on  => Time.now.utc + interval
-        )
-        message = "Request [#{ae_message}] has been re-queued for processing in #{interval} seconds"
-        _log.info(message)
-        update_and_notify_parent(:state => "queued", :status => "Ok", :message => message)
-        return false
-      end
-    end
-
-    true
-  end
-
   def automate_attributes(message, objects = [get_user])
     MiqAeEngine.set_automation_attributes_from_objects(
       objects, 'request' => 'UI_PROVISION_INFO', 'message' => message)
