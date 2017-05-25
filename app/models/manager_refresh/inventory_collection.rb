@@ -505,6 +505,27 @@ module ManagerRefresh
       data_collection_finalized
     end
 
+    def noop?
+      # If this InventoryCollection doesn't do anything. it can easily happen for targeted/batched strategies.
+      if targeted?
+        if parent_inventory_collections.nil? && manager_uuids.blank? && skeletal_manager_uuids.blank? &&
+           all_manager_uuids.nil? && parent_inventory_collections.blank? && custom_save_block.nil?
+          # It's a noop Parent targeted InventoryCollection
+          true
+        elsif !parent_inventory_collections.nil? && parent_inventory_collections.all? { |x| x.manager_uuids.blank? }
+          # It's a noop Child targeted InventoryCollection
+          true
+        else
+          false
+        end
+      elsif inventory_collection.data.blank? && !inventory_collection.delete_allowed?
+        # If we have no data to save and delete is not allowed, we can just skip
+        true
+      else
+        false
+      end
+    end
+
     def supports_sti?
       @supports_sti_cache = model_class.column_names.include?("type") if @supports_sti_cache.nil?
       @supports_sti_cache
