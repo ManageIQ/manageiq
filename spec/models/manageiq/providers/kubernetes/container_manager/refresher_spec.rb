@@ -147,9 +147,9 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       :dns_policy     => "ClusterFirst",
       :phase          => "Running",
     )
-    #expect(@containergroup.labels).to contain_exactly(
-    #  label_with_name_value("name", "heapster")
-    #)
+    expect(@containergroup.labels).to contain_exactly(
+      label_with_name_value("name", "heapster")
+    )
     #expect(@containergroup.tags).to contain_exactly(
     #  tag_in_category_with_description(@name_category, "heapster")
     #)
@@ -174,9 +174,9 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     expect(@containergroup.container_replicator).to eq(
       ContainerReplicator.find_by(:name => "monitoring-heapster-controller")
     )
-    #expect(@containergroup.container_replicator.labels).to contain_exactly(
-    #  label_with_name_value("name", "heapster")
-    #)
+    expect(@containergroup.container_replicator.labels).to contain_exactly(
+      label_with_name_value("name", "heapster")
+    )
     expect(@containergroup.ext_management_system).to eq(@ems)
 
     # Check pod condition name is "Ready" with status "True"
@@ -206,9 +206,9 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       :status => "True"
     )
 
-    #expect(@containernode.labels).to contain_exactly(
-    #  label_with_name_value("kubernetes.io/hostname", "10.35.0.169")
-    #)
+    expect(@containernode.labels).to contain_exactly(
+      label_with_name_value("kubernetes.io/hostname", "10.35.0.169")
+    )
 
     expect(@containernode.computer_system.operating_system).to have_attributes(
       :distribution   => "Fedora 20 (Heisenbug)",
@@ -287,9 +287,9 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     expect(@replicator.labels).to contain_exactly(
       label_with_name_value("name", "influxGrafana")
     )
-    expect(@replicator.tags).to contain_exactly(
-      tag_in_category_with_description(@name_category, "influxGrafana")
-    )
+    #expect(@replicator.tags).to contain_exactly(
+    #  tag_in_category_with_description(@name_category, "influxGrafana")
+    #)
     expect(@replicator.selector_parts.count).to eq(1)
 
     @group = ContainerGroup.where(:name => "monitoring-influx-grafana-controller-22icy").first

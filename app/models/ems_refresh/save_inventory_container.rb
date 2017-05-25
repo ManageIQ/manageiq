@@ -192,11 +192,24 @@ module EmsRefresh::SaveInventoryContainer
   def container_conditions_for(relation)
     # TODO: what if last parent disappears, will this ||= never happen
     #   and the ContainerConditions won't be deleted?
-    @inv_collections[[:container_conditions_for, relation.model]] ||= ::ManagerRefresh::InventoryCollection.new(
+    @inv_collections[[:container_conditions_for, relation.model.name]] ||= ::ManagerRefresh::InventoryCollection.new(
       :model_class => ContainerCondition,
-      #:parent => ems,
       :arel => container_conditions_query_for(relation),
       :manager_ref => [:container_entity, :name],
+    )
+  end
+
+  def custom_attributes_query_for(relation, section)
+    CustomAttribute.where(:resource_type => relation.model.name,
+                          :resource_id => relation,
+                          :section => section)
+  end
+
+  def custom_attributes_for(relation, section)
+    @inv_collections[[:custom_attributes_for, relation.model.name, section]] ||= ::ManagerRefresh::InventoryCollection.new(
+      :model_class => CustomAttribute,
+      :arel => custom_attributes_query_for(relation, section),
+      :manager_ref => [:resource, :section, :name],
     )
   end
 
@@ -251,6 +264,7 @@ module EmsRefresh::SaveInventoryContainer
   def graph_container_quotas_inventory(ems, hashes)
     hashes.to_a.each do |h|
       h = h.merge(
+        # TODO: rename :project to :container_project in parser?
         :container_project =>  lazy_find_project(h.delete(:project))
       )
       items = h.delete(:container_quota_items)
@@ -321,12 +335,14 @@ module EmsRefresh::SaveInventoryContainer
 
   def graph_container_nodes_inventory(ems, hashes)
     hashes.to_a.each do |h|
-      h = h.except(:labels, :tags, :additional_attributes) # TODO children
       h = h.except(:namespace)
-      node = @inv_collections[:container_nodes].lazy_find(h[:ems_ref])
-      graph_container_conditions_inventory(ems.container_nodes, node, h.delete(:container_conditions))
-      graph_computer_system_inventory(node, h.delete(:computer_system))
-      @inv_collections[:container_nodes].build(h)
+      custom_attrs = h.extract!(:labels, :additional_attributes)
+      children = h.extract!(:container_conditions, :computer_system, :tags) # TODO children
+
+      node = @inv_collections[:container_nodes].build(h)
+      graph_container_conditions_inventory(ems.container_nodes, node, children[:container_conditions])
+      graph_computer_system_inventory(node, children[:computer_system])
+      graph_custom_attributes_multi(ems.container_nodes, node, custom_attrs)
     end
   end
 
@@ -345,10 +361,18 @@ module EmsRefresh::SaveInventoryContainer
 
   def graph_container_replicators_inventory(ems, hashes)
     hashes.each do |h|
-      h = h.except(:labels, :tags, :selector_parts) # TODO children
       h = h.merge(:container_project => lazy_find_project(h.delete(:project)))
+      custom_attrs = h.extract!(:labels, :selector_parts)
+      h = h.except(:tags) # TODO children
       h.delete(:namespace)
-      @inv_collections[:container_replicators].build(h)
+
+      replicator = @inv_collections[:container_replicators].build(h)
+      graph_custom_attributes_inventory(ems.container_replicators, replicator,
+                                        :labels, custom_attrs[:labels])
+      # TODO: rename in parser?  can't because the scope is called replicator.selector_parts.
+      # could do something like .send(association_name), prefer explicit section.
+      graph_custom_attributes_inventory(ems.container_replicators, replicator,
+                                        :selectors, custom_attrs[:selector_parts])
     end
   end
 
@@ -387,13 +411,15 @@ module EmsRefresh::SaveInventoryContainer
       # might not have a replicator.
       # TODO review all lazy_find links, probably most are optional!
       h[:container_replicator] &&= @inv_collections[:container_replicators].lazy_find(h[:container_replicator][:ems_ref])
+      custom_attrs = h.extract!(:labels, :node_selector_parts)
       children = h.extract!(  # TODO save all
-        :container_definitions, :containers, :labels, :tags,
-        :node_selector_parts, :container_conditions, :container_volumes,
+        :container_definitions, :containers, :tags, :container_conditions, :container_volumes,
       )
+
       cg = @inv_collections[:container_groups].build(h)
       graph_container_definitions_inventory(cg, children[:container_definitions])
       graph_container_conditions_inventory(ems.container_groups, cg, children[:container_conditions])
+      graph_custom_attributes_multi(ems.container_groups, cg, custom_attrs)
       # TODO
       h[:container_build_pod_id] = ems.container_build_pods.find_by(:name =>
         h[:build_pod_name]).try(:id)
@@ -454,8 +480,10 @@ module EmsRefresh::SaveInventoryContainer
   def graph_container_images_inventory(ems, hashes)
     hashes.to_a.each do |h|
       h = h.merge(:container_image_registry => lazy_find_image_registry(h[:container_image_registry]))
-      h = h.except(:labels, :docker_labels) # TODO
-      @inv_collections[:container_images].build(h)
+      custom_attrs = h.extract!(:labels, :docker_labels)
+
+      image = @inv_collections[:container_images].build(h)
+      graph_custom_attributes_multi(ems.container_images, image, custom_attrs)
     end
   end
 
@@ -542,6 +570,20 @@ module EmsRefresh::SaveInventoryContainer
 
     save_inventory_multi(container_group.container_volumes, hashes, deletes, [:name], [], [:persistent_volume_claim])
     store_ids_for_new_records(container_group.container_volumes, hashes, :name)
+  end
+
+  # TODO: use keyword args, don't repeat save_inventory_multi
+  def graph_custom_attributes_multi(relation, parent, hashes_by_section)
+    hashes_by_section.each do |section, hashes|
+      graph_custom_attributes_inventory(relation, parent, section, hashes)
+    end
+  end
+
+  def graph_custom_attributes_inventory(relation, parent, section, hashes)
+    hashes.to_a.each do |h|
+      h = h.merge(:resource => parent)
+      custom_attributes_for(relation, section).build(h)
+    end
   end
 
   def save_additional_attributes_inventory(entity, hashes, target = nil)

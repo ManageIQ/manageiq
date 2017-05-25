@@ -269,13 +269,13 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
 
     expect(@container_image.ext_management_system).to eq(@ems)
     expect(@container_image.environment_variables.count).to eq(10)
-    #expect(@container_image.labels.count).to eq(1)
-    #expect(@container_image.docker_labels.count).to eq(15)
+    expect(@container_image.labels.count).to eq(1)
+    expect(@container_image.docker_labels.count).to eq(15)
   end
 
   def assert_container_node_with_no_hawk_attributes
     containernode = ContainerNode.first
-    #expect(containernode.custom_attributes.count).to eq(5)
+    expect(containernode.custom_attributes.count).to eq(5)
     expect(CustomAttribute.find_by(:name => "test_attr")).to be nil
   end
 end
