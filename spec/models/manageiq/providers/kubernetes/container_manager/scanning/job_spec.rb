@@ -74,26 +74,30 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
     context "#initialize" do
       it "Creates a new scan job" do
         image = FactoryGirl.create(:container_image, :ext_management_system => @ems)
+        User.current_user = FactoryGirl.create(:user, :userid => "bob")
         job = @ems.raw_scan_job_create(image.class, image.id)
         expect(job).to have_attributes(
           :dispatch_status => "pending",
           :state           => "waiting_to_start",
           :status          => "ok",
           :message         => "process initiated",
-          :target_class    => "ContainerImage"
+          :target_class    => "ContainerImage",
+          :userid          => "bob"
         )
       end
 
       it "Is backward compatible with #13722" do
         # https://github.com/ManageIQ/manageiq/pull/13722
         image = FactoryGirl.create(:container_image, :ext_management_system => @ems)
+        User.current_user = FactoryGirl.create(:user, :userid => "bob")
         job = @ems.raw_scan_job_create(image)
         expect(job).to have_attributes(
           :dispatch_status => "pending",
           :state           => "waiting_to_start",
           :status          => "ok",
           :message         => "process initiated",
-          :target_class    => "ContainerImage"
+          :target_class    => "ContainerImage",
+          :userid          => "bob"
         )
       end
     end
@@ -127,6 +131,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
         @job.signal(:data, '<summary><syncmetadata></syncmetadata></summary>')
       end
 
+      User.current_user = FactoryGirl.create(:user)
       @job = @ems.raw_scan_job_create(@image.class, @image.id)
       allow(MiqQueue).to receive(:put_unless_exists) do |args|
         @job.signal(*args[:args])
