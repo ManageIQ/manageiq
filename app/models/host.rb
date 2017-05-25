@@ -944,11 +944,11 @@ class Host < ApplicationRecord
   end
 
   def rediscover(ipaddr, discover_types = [:esx])
-    require 'discovery/MiqDiscovery'
+    require 'manageiq-network_discovery'
     ost = OpenStruct.new(:usePing => true, :discover_types => discover_types, :ipaddr => ipaddr)
     _log.info "Rediscovering Host: #{ipaddr} with types: #{discover_types.inspect}"
     begin
-      MiqDiscovery.scanHost(ost)
+      ManageIQ::NetworkDiscovery.scanHost(ost)
       _log.info "Rediscovering Host: #{ipaddr} raw results: #{self.class.ost_inspect(ost)}"
 
       unless ost.hypervisor.empty?
@@ -964,11 +964,11 @@ class Host < ApplicationRecord
   end
 
   def self.discoverHost(options)
-    require 'discovery/MiqDiscovery'
+    require 'manageiq-network_discovery'
     ost = OpenStruct.new(Marshal.load(options))
     _log.info "Discovering Host: #{ost_inspect(ost)}"
     begin
-      MiqDiscovery.scanHost(ost)
+      ManageIQ::NetworkDiscovery.scanHost(ost)
 
       unless ost.hypervisor.empty?
         _log.info "Discovered: #{ost_inspect(ost)}"
