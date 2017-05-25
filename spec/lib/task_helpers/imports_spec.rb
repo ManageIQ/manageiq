@@ -25,15 +25,15 @@ describe TaskHelpers::Imports do
     end
 
     it 'is a directory not readable' do
-      File.chmod(0300, @import_dir)
+      File.chmod(0o300, @import_dir)
       expect(TaskHelpers::Imports.validate_source(@import_dir)).to eq('Import source is not readable')
-      File.chmod(0700, @import_dir)
+      File.chmod(0o700, @import_dir)
     end
 
     it 'is a file not readable' do
-      File.chmod(0200, @import_file)
+      File.chmod(0o200, @import_file)
       expect(TaskHelpers::Imports.validate_source(@import_file)).to eq('Import source is not readable')
-      File.chmod(0600, @import_file)
+      File.chmod(0o600, @import_file)
     end
   end
 end

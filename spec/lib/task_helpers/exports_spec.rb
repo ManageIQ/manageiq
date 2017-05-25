@@ -62,7 +62,7 @@ describe TaskHelpers::Exports do
     end
 
     it 'is not writable' do
-      File.chmod(0500, @export_dir)
+      File.chmod(0o500, @export_dir)
       expect(TaskHelpers::Exports.validate_directory(@export_dir)).to eq('Destination directory must be writable')
     end
   end
