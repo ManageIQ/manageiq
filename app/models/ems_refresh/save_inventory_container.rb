@@ -190,6 +190,8 @@ module EmsRefresh::SaveInventoryContainer
   end
 
   def container_conditions_for(relation)
+    # TODO: what if last parent disappears, will this ||= never happen
+    #   and the ContainerConditions won't be deleted?
     @inv_collections[[:container_conditions_for, relation.model]] ||= ::ManagerRefresh::InventoryCollection.new(
       :model_class => ContainerCondition,
       #:parent => ems,
@@ -391,6 +393,7 @@ module EmsRefresh::SaveInventoryContainer
       )
       cg = @inv_collections[:container_groups].build(h)
       graph_container_definitions_inventory(cg, children[:container_definitions])
+      graph_container_conditions_inventory(ems.container_groups, cg, children[:container_conditions])
       # TODO
       h[:container_build_pod_id] = ems.container_build_pods.find_by(:name =>
         h[:build_pod_name]).try(:id)
