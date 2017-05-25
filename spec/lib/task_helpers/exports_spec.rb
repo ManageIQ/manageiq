@@ -61,11 +61,9 @@ describe TaskHelpers::Exports do
       expect(TaskHelpers::Exports.validate_directory(export_dir2)).to eq('Destination directory must exist')
     end
 
-    # rubocop:disable Style/NumericLiteralPrefix
     it 'is not writable' do
       File.chmod(0500, @export_dir)
       expect(TaskHelpers::Exports.validate_directory(@export_dir)).to eq('Destination directory must be writable')
     end
-    # rubocop:enable Style/NumericLiteralPrefix
   end
 end
