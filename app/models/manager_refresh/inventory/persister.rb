@@ -155,12 +155,13 @@ class ManagerRefresh::Inventory::Persister
 
   def to_raw_data
     collections_data = collections.map do |key, collection|
-      next if collection.data.blank?
+      next if collection.data.blank? && collection.manager_uuids.blank? && collection.all_manager_uuids.nil?
 
       {
-        :name          => key,
-        :manager_uuids => collection.manager_uuids,
-        :data          => collection.to_raw_data
+        :name              => key,
+        :manager_uuids     => collection.manager_uuids,
+        :all_manager_uuids => collection.all_manager_uuids,
+        :data              => collection.to_raw_data
       }
     end.compact
 
@@ -193,6 +194,7 @@ class ManagerRefresh::Inventory::Persister
         raise "Unrecognized InventoryCollection name: #{inventory_collection}" if inventory_collection.blank?
 
         inventory_collection.manager_uuids.merge(collection['manager_uuids'] || [])
+        inventory_collection.all_manager_uuids = collection['all_manager_uuids']
         inventory_collection.from_raw_data(collection['data'], persister.collections)
       end
       persister
