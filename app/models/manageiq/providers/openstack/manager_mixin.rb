@@ -104,6 +104,10 @@ module ManageIQ::Providers::Openstack::ManagerMixin
     false
   end
 
+  def sync_event_monitor_available?
+    event_monitor_options[:events_monitor] == :ceilometer ? authentication_status_ok? : event_monitor_available?
+  end
+
   def stop_event_monitor_queue_on_change
     if event_monitor_class && !self.new_record? && (authentications.detect{ |x| x.previous_changes.present? } ||
                                                     endpoints.detect{ |x| x.previous_changes.present? })
