@@ -1,0 +1,5 @@
+---
+- :name: "Showback::CPU"
+  :description: "Calculate CPU Showback"
+  :measure: "CPU"
+  :types: ["average", "number"]
