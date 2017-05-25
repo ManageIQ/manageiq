@@ -460,15 +460,18 @@ describe MiqScheduleWorker::Runner do
           end
         end
 
-        context "Chargeback reports for Services" do
+        context "schedule for 'scheduler' role" do
           before do
             allow(@schedule_worker).to receive(:heartbeat)
             @schedule_worker.instance_variable_set(:@active_roles, ["scheduler"])
-            allow(@schedule_worker).to receive(:worker_settings).and_return(:chargeback_generation_interval => 1.day)
             @schedule_worker.instance_variable_set(:@schedules, :scheduler => [])
           end
 
           describe "#schedule_chargeback_report_for_service_daily" do
+            before do
+              allow(@schedule_worker).to receive(:worker_settings).and_return(:chargeback_generation_interval => 1.day)
+            end
+
             it "queues daily generation of Chargeback report for each service" do
               job = @schedule_worker.schedule_chargeback_report_for_service_daily[0]
               expect(job).to be_kind_of(Rufus::Scheduler::EveryJob)
@@ -480,6 +483,24 @@ describe MiqScheduleWorker::Runner do
               expect(queue.method_name).to eq "queue_chargeback_reports"
               expect(queue.class_name).to eq "Service"
               expect(queue.args[0][:report_source]).to eq "Daily scheduler"
+              MiqQueue.delete_all
+              job.unschedule
+            end
+          end
+
+          describe "#schedule_check_for_task_timeout" do
+            let(:interval) { 1.hour }
+            before do
+              allow(@schedule_worker).to receive(:worker_settings).and_return(:task_timeout_check_frequency => interval)
+            end
+
+            it "queues check for timed out tasks" do
+              job = @schedule_worker.schedule_check_for_task_timeout[0]
+              job.call
+              @schedule_worker.do_work
+              queue = MiqQueue.first
+              expect(queue.method_name).to eq "update_status_for_timed_out_active_tasks"
+              expect(queue.class_name).to eq "MiqTask"
               MiqQueue.delete_all
               job.unschedule
             end
