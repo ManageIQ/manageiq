@@ -71,26 +71,7 @@ describe EmbeddedAnsibleWorker::Runner do
         NotificationType.seed
       end
 
-      it "configures EmbeddedAnsible if it is not configured" do
-        expect(EmbeddedAnsible).to receive(:start)
-
-        expect(EmbeddedAnsible).to receive(:configured?).and_return(false)
-        expect(EmbeddedAnsible).to receive(:configure)
-
-        runner.setup_ansible
-      end
-
-      it "doesn't call configure if EmbeddedAnsible is already configured" do
-        expect(EmbeddedAnsible).to receive(:start)
-
-        expect(EmbeddedAnsible).to receive(:configured?).and_return(true)
-        expect(EmbeddedAnsible).not_to receive(:configure)
-
-        runner.setup_ansible
-      end
-
       it "creates a notification to inform the user that the service has started" do
-        expect(EmbeddedAnsible).to receive(:configured?).and_return(true)
         expect(EmbeddedAnsible).to receive(:start)
 
         runner.setup_ansible

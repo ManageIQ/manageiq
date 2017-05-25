@@ -30,9 +30,6 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
   end
 
   def setup_ansible
-    _log.info("calling EmbeddedAnsible.configure")
-    EmbeddedAnsible.configure unless EmbeddedAnsible.configured?
-
     _log.info("calling EmbeddedAnsible.start")
     EmbeddedAnsible.start
     _log.info("calling EmbeddedAnsible.start finished")
