@@ -64,7 +64,7 @@ module Api
         edit_resource(type, id, patched_attrs)
       end
 
-      def delete_subcollection_resource(type, id = nil)
+      def delete_subcollection_resource(type, id)
         raise BadRequestError,
               "Must specify an id for destroying a #{type} subcollection resource" if id.nil?
 
