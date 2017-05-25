@@ -395,20 +395,15 @@ class TreeNodeBuilder
 
   def miq_action_node
     if options[:tree] != :action_tree
-      if options[:tree] == :policy_profile_tree
-        policy_id = parent_id.split('-')[2].split('_').first
-        event_id  = parent_id.split('-').last
-      else
-        policy_id = parent_id.split('_')[2].split('-').last
-        event_id  = parent_id.split('_').last.split('-').last
-      end
-      p  = MiqPolicy.find_by_id(ApplicationRecord.uncompress_id(policy_id))
-      ev = MiqEventDefinition.find_by_id(ApplicationRecord.uncompress_id(event_id))
-      image = p.action_result_for_event(object, ev) ? "check" : "x"
+      image = flag_of(object) == :success ? "check" : "x"
     else
       image = object.action_type == "default" ? "miq_action" : "miq_action_#{object.action_type}"
     end
     generic_node(object.description, "#{image}.png")
+  end
+
+  def flag_of(object)
+    object.instance_variable_get(:@flag)
   end
 
   def miq_region_node
