@@ -65,9 +65,6 @@ module Api
       end
 
       def delete_subcollection_resource(type, id)
-        raise BadRequestError,
-              "Must specify an id for destroying a #{type} subcollection resource" if id.nil?
-
         parent_resource = parent_resource_obj
         typed_target    = "delete_resource_#{type}"
         raise BadRequestError,
