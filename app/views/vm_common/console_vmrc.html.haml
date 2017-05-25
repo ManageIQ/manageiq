@@ -322,7 +322,7 @@
         }
         console.debug("VMRC: is ready to start.");
 
-        isIE = #{is_browser_ie?};
+        var isIE = #{is_browser_ie?};
         if (isIE) {
           vmrc.attachEvent("onScreenSizeChange", onSizeChanged);
           vmrc.attachEvent("onConnectionStateChange", onConnectionStateChanged);
