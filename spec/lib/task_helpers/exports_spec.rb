@@ -1,54 +1,52 @@
 describe TaskHelpers::Exports do
   describe '.safe_filename' do
-    context 'with filename' do
-      it 'should return a filename without spaces' do
-        filename = TaskHelpers::Exports.safe_filename('filename without spaces')
-        expect(filename).to eq('filename_without_spaces')
-      end
+    it 'should return a filename without spaces' do
+      filename = TaskHelpers::Exports.safe_filename('filename without spaces')
+      expect(filename).to eq('filename_without_spaces')
+    end
 
-      it 'should return a filename with spaces' do
-        filename = TaskHelpers::Exports.safe_filename('filename without spaces', true)
-        expect(filename).to eq('filename without spaces')
-      end
+    it 'should return a filename with spaces' do
+      filename = TaskHelpers::Exports.safe_filename('filename without spaces', true)
+      expect(filename).to eq('filename without spaces')
+    end
 
-      it 'should return a filename without / or spaces' do
-        filename = TaskHelpers::Exports.safe_filename('filename with / removed')
-        expect(filename).to eq('filename_with_slash_removed')
-      end
+    it 'should return a filename without / or spaces' do
+      filename = TaskHelpers::Exports.safe_filename('filename with / removed')
+      expect(filename).to eq('filename_with_slash_removed')
+    end
 
-      it 'should return a filename without / and with spaces' do
-        filename = TaskHelpers::Exports.safe_filename('filename with / removed', true)
-        expect(filename).to eq('filename with slash removed')
-      end
+    it 'should return a filename without / and with spaces' do
+      filename = TaskHelpers::Exports.safe_filename('filename with / removed', true)
+      expect(filename).to eq('filename with slash removed')
+    end
 
-      it 'should return a filename without | or spaces' do
-        filename = TaskHelpers::Exports.safe_filename('filename with | removed')
-        expect(filename).to eq('filename_with_pipe_removed')
-      end
+    it 'should return a filename without | or spaces' do
+      filename = TaskHelpers::Exports.safe_filename('filename with | removed')
+      expect(filename).to eq('filename_with_pipe_removed')
+    end
 
-      it 'should return a filename without | and with spaces' do
-        filename = TaskHelpers::Exports.safe_filename('filename with | removed', true)
-        expect(filename).to eq('filename with pipe removed')
-      end
+    it 'should return a filename without | and with spaces' do
+      filename = TaskHelpers::Exports.safe_filename('filename with | removed', true)
+      expect(filename).to eq('filename with pipe removed')
+    end
 
-      it 'should return a filename without /,  | or spaces' do
-        filename = TaskHelpers::Exports.safe_filename('filename with / and | removed')
-        expect(filename).to eq('filename_with_slash_and_pipe_removed')
-      end
+    it 'should return a filename without /,  | or spaces' do
+      filename = TaskHelpers::Exports.safe_filename('filename with / and | removed')
+      expect(filename).to eq('filename_with_slash_and_pipe_removed')
+    end
 
-      it 'should not create duplicate filenames' do
-        filename1 = TaskHelpers::Exports.safe_filename('filename with / removed')
-        filename2 = TaskHelpers::Exports.safe_filename('filename with | removed')
-        expect(filename1).not_to eq(filename2)
-      end
+    it 'should not create duplicate filenames' do
+      filename1 = TaskHelpers::Exports.safe_filename('filename with / removed')
+      filename2 = TaskHelpers::Exports.safe_filename('filename with | removed')
+      expect(filename1).not_to eq(filename2)
     end
   end
 
   describe '.validate_directory' do
+    let(:export_dir2) { Dir.tmpdir + "/thisdoesntexist" }
+
     before(:each) do
       @export_dir = Dir.mktmpdir('miq_exp_dir')
-      @export_dir2 = Dir.mktmpdir('miq_exp_dir')
-      FileUtils.remove_entry @export_dir2
     end
 
     after(:each) do
@@ -60,7 +58,7 @@ describe TaskHelpers::Exports do
     end
 
     it 'does not exist' do
-      expect(TaskHelpers::Exports.validate_directory(@export_dir2)).to eq('Destination directory must exist')
+      expect(TaskHelpers::Exports.validate_directory(export_dir2)).to eq('Destination directory must exist')
     end
 
     # rubocop:disable Style/NumericLiteralPrefix
