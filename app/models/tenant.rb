@@ -217,7 +217,11 @@ class Tenant < ApplicationRecord
   #
   # @return [Tenant] the root tenant
   def self.root_tenant
-    @root_tenant ||= in_my_region.roots.first
+    @root_tenant ||= root_tenant_without_cache
+  end
+
+  def self.root_tenant_without_cache
+    in_my_region.roots.first
   end
 
   # NOTE: returns the root tenant
@@ -303,7 +307,7 @@ class Tenant < ApplicationRecord
   # validates that there is only one tree
   def validate_only_one_root
     unless parent_id || parent
-      root = self.class.root_tenant
+      root = self.class.root_tenant_without_cache
       errors.add(:parent, "required") if root && root != self
     end
   end
