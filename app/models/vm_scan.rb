@@ -52,18 +52,10 @@ class VmScan < Job
         }
       }
       inputs = {:vm => vm, :host => vm.host}
-      if !MiqEvent.raise_evm_job_event(vm, {:type => "scan", :suffix => "start"}, inputs, :miq_callback => cb)
-        msg = "Aborted policy resolution - scan event was not raised to automate."
-        _log.error(msg)
-        signal(:abort, msg, "error")
-      end
+      MiqEvent.raise_evm_job_event(vm, {:type => "scan", :suffix => "start"}, inputs, q_options)
     rescue => err
       _log.log_backtrace(err)
       signal(:abort, err.message, "error")
-    rescue Timeout::Error
-      msg = "Request to check policy timed out"
-      _log.error(msg)
-      signal(:abort, msg, "error")
     end
   end
 
