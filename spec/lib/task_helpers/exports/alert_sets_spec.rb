@@ -5,7 +5,7 @@ describe TaskHelpers::Exports::AlertSets do
     [
       {
         "MiqAlertSet" => {
-          "name"        => "alert_profile_0000000000001",
+          "name"        => "eca41687-5ca9-40f2-93f7-3fe1ef08e16e",
           "description" => "Alert Set Export Test",
           "set_type"    => "MiqAlertSet",
           "guid"        => "eca41687-5ca9-40f2-93f7-3fe1ef08e16e",
@@ -26,6 +26,7 @@ describe TaskHelpers::Exports::AlertSets do
     {
       :description => "Alert Set Export Test",
       :guid        => guid,
+      :name        => guid
     }
   end
 
