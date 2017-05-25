@@ -52,6 +52,10 @@ class ServiceTemplateAnsibleTower < ServiceTemplate
     config_info
   end
 
+  def my_zone
+    job_template.manager.try(:my_zone)
+  end
+
   private
 
   def update_service_resources(config_info, _auth_user = nil)
