@@ -16,6 +16,11 @@ module ManagerRefresh::SaveCollection
       def save_inventory_collection!
         # If we have not data to save and delete is not allowed, we can just skip
         return if inventory_collection.data.blank? && !inventory_collection.delete_allowed?
+        # If we have a targeted InventoryCollection that wouldn't do anything
+        return if inventory_collection.targeted? && inventory_collection.manager_uuids.blank? &&
+                  inventory_collection.skeletal_manager_uuids.blank? &&
+                  inventory_collection.parent_inventory_collections.blank? &&
+                  inventory_collection.custom_save_block.nil?
 
         # TODO(lsmola) do I need to reload every time? Also it should be enough to clear the associations.
         inventory_collection.parent.reload if inventory_collection.parent
