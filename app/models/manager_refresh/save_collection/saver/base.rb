@@ -16,6 +16,8 @@ module ManagerRefresh::SaveCollection
       def save_inventory_collection!
         # If we have not data to save and delete is not allowed, we can just skip
         return if inventory_collection.data.blank? && !inventory_collection.delete_allowed?
+        # If we want to use delete_complement strategy using :all_manager_uuids attribute
+        return delete_complement(inventory_collection) if inventory_collection.all_manager_uuids.present?
         # If we have a targeted InventoryCollection that wouldn't do anything
         return if inventory_collection.targeted? && inventory_collection.manager_uuids.blank? &&
                   inventory_collection.skeletal_manager_uuids.blank? &&
@@ -32,6 +34,30 @@ module ManagerRefresh::SaveCollection
       private
 
       attr_reader :unique_index_keys, :unique_db_primary_keys
+
+      def delete_complement(inventory_collection)
+        return unless inventory_collection.delete_allowed?
+
+        all_manager_uuids_size = inventory_collection.all_manager_uuids.size
+
+        _log.info("*************** PROCESSING :delete_complement of #{inventory_collection} of size "\
+                  "#{all_manager_uuids_size} *************")
+        deleted_counter = 0
+
+        inventory_collection.db_collection_for_comparison_for_complement_of(
+          inventory_collection.all_manager_uuids
+        ).find_in_batches do |batch|
+          ActiveRecord::Base.transaction do
+            batch.each do |record|
+              record.public_send(inventory_collection.delete_method)
+              deleted_counter += 1
+            end
+          end
+        end
+
+        _log.info("*************** PROCESSED :delete_complement of #{inventory_collection} of size "\
+                  "#{all_manager_uuids_size}, deleted=#{deleted_counter} *************")
+      end
 
       def assert_distinct_relation(record)
         if unique_db_primary_keys.include?(record.id) # Include on Set is O(1)
