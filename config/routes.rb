@@ -47,6 +47,12 @@ Vmdb::Application.routes.draw do
             when :get
               root :action => :index
               get "/:c_id", :action => :show
+            when :put
+              put "/:c_id", :action => :update
+            when :patch
+              patch "/:c_id", :action => :update
+            when :delete
+              delete "/:c_id", :action => :destroy
             else
               match "(/:c_id)", :action => API_ACTIONS[verb], :via => verb
             end
@@ -59,6 +65,12 @@ Vmdb::Application.routes.draw do
             when :get
               get "/:c_id/#{subcollection_name}", :action => :index
               get "/:c_id/#{subcollection_name}/:s_id", :action => :show
+            when :put
+              put "/:c_id/#{subcollection_name}/:s_id", :action => :update
+            when :patch
+              patch "/:c_id/#{subcollection_name}/:s_id", :action => :update
+            when :delete
+              delete "/:c_id/#{subcollection_name}/:s_id", :action => :destroy
             else
               match("/:c_id/#{subcollection_name}(/:s_id)", :action => API_ACTIONS[verb], :via => verb)
             end
