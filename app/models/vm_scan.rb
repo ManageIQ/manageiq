@@ -43,11 +43,13 @@ class VmScan < Job
     begin
       vm = VmOrTemplate.find(target_id)
 
-      cb = {
-        :class_name  => self.class.to_s,
-        :instance_id => id,
-        :method_name => :check_policy_complete,
-        :server_guid => MiqServer.my_guid
+      q_options = {
+        :miq_callback => {
+          :class_name  => self.class.to_s,
+          :instance_id => id,
+          :method_name => :check_policy_complete,
+          :args        => [MiqServer.my_zone] # Store the zone where the scan job was initiated.
+        }
       }
       inputs = {:vm => vm, :host => vm.host}
       if !MiqEvent.raise_evm_job_event(vm, {:type => "scan", :suffix => "start"}, inputs, :miq_callback => cb)
@@ -65,7 +67,7 @@ class VmScan < Job
     end
   end
 
-  def check_policy_complete(status, message, result)
+  def check_policy_complete(from_zone, status, message, result)
     unless status == 'ok'
       _log.error("Status = #{status}, message = #{message}")
       signal(:abort, message, "error")
@@ -82,7 +84,15 @@ class VmScan < Job
         options[:scan_profiles] = scan_profiles unless scan_profiles.blank?
       end
     end
-    signal(:start_snapshot)
+
+    MiqQueue.put(
+      :class_name  => self.class.to_s,
+      :instance_id => id,
+      :method_name => "signal",
+      :args        => [:start_snapshot],
+      :zone        => from_zone,
+      :role        => "smartstate"
+    )
   end
 
   def call_snapshot_create
