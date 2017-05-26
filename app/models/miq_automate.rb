@@ -5,13 +5,13 @@ class MiqAutomate
     if MiqServer.find_all_started_servers.detect { |s| s.has_active_role?("automate") }.nil?
       task.update_status("Finished", "Error", "No Server has Automate Role enabled")
     else
-      MiqQueue.put(
+      MiqQueue.submit_job(
+        :service     => "automate",
         :class_name  => to_s,
         :method_name => "_async_datastore_reset",
         :args        => [task.id],
         :priority    => MiqQueue::HIGH_PRIORITY,
         :msg_timeout => 3600,
-        :role        => "automate"
       )
       task.update_status("Queued", "Ok", "Task has been queued")
     end

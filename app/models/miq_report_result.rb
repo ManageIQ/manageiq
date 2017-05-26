@@ -187,9 +187,8 @@ class MiqReportResult < ApplicationRecord
 
     sync = ::Settings.product.report_sync
 
-    MiqQueue.put(
-      :queue_name  => "generic",
-      :role        => "reporting",
+    MiqQueue.submit_job(
+      :service     => "reporting",
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "_async_generate_result",
@@ -298,12 +297,11 @@ class MiqReportResult < ApplicationRecord
   def self.delete_by_userid(userids)
     userids = userids.to_miq_a
     _log.info("Queuing deletion of report results for the following user ids: #{userids.inspect}")
-    MiqQueue.put(
+    MiqQueue.submit_job(
       :class_name  => name,
       :method_name => "destroy_all",
       :priority    => MiqQueue::HIGH_PRIORITY,
       :args        => [["userid IN (?)", userids]],
-      :zone        => MiqServer.my_zone
     )
   end
 

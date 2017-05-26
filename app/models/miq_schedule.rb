@@ -73,7 +73,7 @@ class MiqSchedule < ApplicationRecord
       return
     end
 
-    msg = MiqQueue.put(
+    msg = MiqQueue.submit_job(
       :class_name  => name,
       :instance_id => sched.id,
       :method_name => "invoke_actions",

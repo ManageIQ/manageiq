@@ -29,7 +29,7 @@ module VmdbMetric::Purging
     end
 
     def purge_timer(value, interval)
-      MiqQueue.put(
+      MiqQueue.submit_job(
         :class_name  => name,
         :method_name => "purge_#{interval}",
         :args        => [value],

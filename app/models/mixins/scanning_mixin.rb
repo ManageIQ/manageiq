@@ -107,7 +107,7 @@ module ScanningMixin
   end
 
   def scan_queue(userid = "system", options = {})
-    MiqQueue.put(
+    MiqQueue.submit_job(
       :class_name  => self.class.base_class.name,
       :instance_id => id,
       :method_name => "scan",
@@ -378,14 +378,13 @@ module ScanningMixin
 
   def update_job_message(ost, message)
     ost.message = message
-    unless ost.taskid.blank?
-      MiqQueue.put(
+    if ost.taskid.present?
+      MiqQueue.submit_job(
+        :service     => "smartstate",
         :class_name  => "Job",
         :method_name => "update_message",
         :args        => [ost.taskid, message],
         :task_id     => "job_message_#{Time.now.to_i}",
-        :zone        => MiqServer.my_zone,
-        :role        => "smartstate"
       )
     end
   end

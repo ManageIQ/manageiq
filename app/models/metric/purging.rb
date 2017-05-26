@@ -36,7 +36,7 @@ module Metric::Purging
   end
 
   def self.purge_timer(ts, interval)
-    MiqQueue.put(
+    MiqQueue.submit_job(
       :class_name  => name,
       :method_name => "purge_#{interval}",
       :args        => [ts],

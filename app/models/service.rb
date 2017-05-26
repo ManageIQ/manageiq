@@ -379,12 +379,11 @@ class Service < ApplicationRecord
   end
 
   def queue_chargeback_report_generation(options = {})
-    MiqQueue.put(
-      :role        => "reporting",
+    MiqQueue.submit_job(
+      :service     => "reporting",
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "generate_chargeback_report",
-      :priority    => MiqQueue::NORMAL_PRIORITY,
       :args        => options
     )
     _log.info "Added to queue: generate_chargeback_report for service #{name}"
