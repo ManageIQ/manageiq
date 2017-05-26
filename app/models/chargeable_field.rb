@@ -72,7 +72,8 @@ class ChargeableField < ApplicationRecord
       if rec.nil?
         create(f)
       else
-        rec.update_attributes!(f)
+        rec.attributes = f
+        rec.save! if rec.changed?
       end
     end
   end
