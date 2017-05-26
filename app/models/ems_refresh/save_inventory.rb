@@ -29,20 +29,25 @@ module EmsRefresh::SaveInventory
   end
 
   def queue_save_ems_inventory(ems, hashes, target = nil)
-    args = [[ems.class.name, ems.id], hashes]
+    args = [[ems.class.name, ems.id]]
     args << [target.class.name, target.id] unless target.nil?
 
     queue_opts = {
       :queue_name  => 'inventory',
       :class_name  => name,
-      :method_name => 'save_ems_inventory',
+      :method_name => 'save_ems_inventory_from_queue',
       :role        => 'ems_inventory',
       :zone        => ems.my_zone,
       :args        => args,
+      :data        => hashes,
       :msg_timeout => queue_timeout
     }
 
     MiqQueue.put(queue_opts)
+  end
+
+  def save_ems_inventory_from_queue(ems, target, hashes)
+    save_ems_inventory(ems, hashes, target)
   end
 
   #
