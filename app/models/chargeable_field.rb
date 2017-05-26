@@ -61,11 +61,12 @@ class ChargeableField < ApplicationRecord
   end
 
   def self.seed
+    measures = ChargebackRateDetailMeasure.all.index_by(&:name)
     seed_data.each do |f|
       rec = ChargeableField.find_by(:metric => f[:metric])
       measure = f.delete(:measure)
       if measure
-        f[:chargeback_rate_detail_measure_id] = ChargebackRateDetailMeasure.find_by!(:name => measure).id
+        f[:chargeback_rate_detail_measure_id] = measures[measure].id
       end
       if rec.nil?
         create(f)
