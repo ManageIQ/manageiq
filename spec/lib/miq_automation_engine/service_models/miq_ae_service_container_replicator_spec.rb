@@ -12,10 +12,6 @@ module MiqAeServiceContainerSpec
       expect(described_class.instance_methods).to include(:container_project)
     end
 
-    it "#labels" do
-      expect(described_class.instance_methods).to include(:labels)
-    end
-
     it "#selector_parts" do
       expect(described_class.instance_methods).to include(:selector_parts)
     end
@@ -26,10 +22,6 @@ module MiqAeServiceContainerSpec
 
     it "#metrics" do
       expect(described_class.instance_methods).to include(:metrics)
-    end
-
-    it "#metric_zones" do
-      expect(described_class.instance_methods).to include(:metric_zones)
     end
   end
 end

@@ -8,7 +8,6 @@ module MiqAeMethodService
     expose :container_services,       :association => true
     expose :container_routes,         :association => true
     expose :container_replicators,    :association => true
-    expose :labels,                   :association => true
     expose :computer_system,          :association => true
     expose :lives_on,                 :association => true
     expose :hardware,                 :association => true
