@@ -53,6 +53,7 @@ gem "inifile",                        "~>3.0",         :require => false
 gem "jbuilder",                       "~>2.5.0" # For the REST API
 gem "manageiq-api-client",            "~>0.1.0",       :require => false
 gem "manageiq-network_discovery",     "~>0.1.1",       :require => false
+gem "manageiq-smartstate",            "~>0.1.1",       :require => false
 gem "mime-types",                     "~>2.6.1",       :require => "mime/types/columnar"
 gem "more_core_extensions",           "~>3.2"
 gem "nakayoshi_fork",                 "~>0.0.3"  # provides a more CoW friendly fork (GC a few times before fork)
