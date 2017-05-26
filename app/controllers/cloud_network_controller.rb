@@ -182,7 +182,7 @@ class CloudNetworkController < ApplicationController
     @network = CloudNetwork.new
     @in_a_form = true
     @network_ems_provider_choices = {}
-    ManageIQ::Providers::Openstack::NetworkManager.find_each do |ems|
+    Rbac::Filterer.filtered(ManageIQ::Providers::Openstack::NetworkManager).find_each do |ems|
       @network_ems_provider_choices[ems.name] = ems.id
     end
     @network_provider_network_type_choices = PROVIDERS_NETWORK_TYPES
