@@ -682,7 +682,7 @@ module ApplicationController::Filter
         @edit[@expkey][:selected] = @edit[@expkey][:exp_last_loaded] = {:id => s.id, :name => s.name, :description => s.description, :typ => s.search_type}       # Save the last search loaded
         @edit[:search_type] = s[:search_type] == 'global' ? 'global' : nil
       elsif @edit[@expkey][:exp_chosen_report]
-        r = MiqReport.find(@edit[@expkey][:exp_chosen_report].to_s)
+        r = MiqReport.for_user(current_user).find(@edit[@expkey][:exp_chosen_report].to_s)
         @edit[:new][@expkey] = r.conditions.exp
         @edit[@expkey][:exp_last_loaded] = nil                                # Clear the last search loaded
         @edit[:adv_search_report] = r.name                          # Save the report name
@@ -837,7 +837,7 @@ module ApplicationController::Filter
         @edit[@expkey][:exp_chosen_report] = nil
       else
         @edit[@expkey][:exp_chosen_report] = params[:chosen_report].to_i
-        @exp_to_load = exp_build_table(MiqReport.find(params[:chosen_report]).conditions.exp)
+        @exp_to_load = exp_build_table(MiqReport.for_user(current_user).find(params[:chosen_report]).conditions.exp)
       end
     end
     render :update do |page|

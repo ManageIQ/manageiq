@@ -503,7 +503,7 @@ module ReportController::Widgets
       end
       @edit[:new][:subfilter] = params[:subfilter_typ] if params[:subfilter_typ]
       if params[:repfilter_typ] && params[:repfilter_typ] != "<Choose>"
-        @edit[:rpt] = MiqReport.find(params[:repfilter_typ].to_i)
+        @edit[:rpt] = MiqReport.for_user(current_user).find(params[:repfilter_typ].to_i)
         @edit[:new][:repfilter] = @edit[:rpt].id
       elsif params[:repfilter_typ] && params[:repfilter_typ] == "<Choose>"
         @edit[:new][:repfilter] = nil
@@ -512,7 +512,7 @@ module ReportController::Widgets
       @edit[:new][:subfilter] = "" if @edit[:new][:subfilter] == "<Choose>"
     elsif @sb[:wtype] == "c"
       if params[:repfilter_typ] && params[:repfilter_typ] != "<Choose>"
-        @edit[:rpt] = MiqReport.find(params[:repfilter_typ].to_i)
+        @edit[:rpt] = MiqReport.for_user(current_user).find(params[:repfilter_typ].to_i)
         @edit[:new][:repfilter] = @edit[:rpt].id
       end
       @edit[:new][:repfilter] = "" if params[:repfilter_typ] == "<Choose>"

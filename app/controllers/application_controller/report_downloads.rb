@@ -28,9 +28,9 @@ module ApplicationController::ReportDownloads
     end
 
     # Use rr frorm paging, if present
-    rr ||= MiqReportResult.find(@sb[:pages][:rr_id]) if @sb[:pages]
+    rr ||= MiqReportResult.for_user(current_user).find(@sb[:pages][:rr_id]) if @sb[:pages]
     # Use report_result_id in session, if present
-    rr ||= MiqReportResult.find(session[:report_result_id]) if session[:report_result_id]
+    rr ||= MiqReportResult.for_user(current_user).find(session[:report_result_id]) if session[:report_result_id]
 
     filename = filename_timestamp(rr.report.title)
     disable_client_cache
@@ -51,7 +51,7 @@ module ApplicationController::ReportDownloads
     unless params[:task_id] # First time thru, kick off the report generate task
       if render_type
         @sb[:render_type] = render_type
-        rr = MiqReportResult.find(session[:report_result_id]) # Get report task id from the session
+        rr = MiqReportResult.for_user(current_user).find(session[:report_result_id]) # Get report task id from the session
         task_id = rr.async_generate_result(@sb[:render_type], :userid     => session[:userid],
                                                               :session_id => request.session_options[:id])
         initiate_wait_for_task(:task_id => task_id)
@@ -88,7 +88,7 @@ module ApplicationController::ReportDownloads
   # Send rendered report data
   def send_report_data
     if @sb[:render_rr_id]
-      rr = MiqReportResult.find(@sb[:render_rr_id])
+      rr = MiqReportResult.for_user(current_user).find(@sb[:render_rr_id])
       filename = filename_timestamp(rr.report.title, 'export_filename')
       disable_client_cache
       generated_result = rr.get_generated_result(@sb[:render_type])
@@ -143,7 +143,7 @@ module ApplicationController::ReportDownloads
       miq_task = MiqTask.find(session[:rpt_task_id])
       miq_task.task_results
     elsif session[:report_result_id]
-      rr = MiqReportResult.find(session[:report_result_id])
+      rr = MiqReportResult.for_user(current_user).find(session[:report_result_id])
       report = rr.report_results
       report.report_run_time = rr.last_run_on
       report

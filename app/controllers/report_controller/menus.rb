@@ -259,11 +259,10 @@ module ReportController::Menus
 
   def edit_reports
     @edit[:selected_reports] = []
-    @edit[:available_reports] = []
     current_group_id = current_user.current_group.try(:id).to_i
     id = session[:node_selected].split('__')
     @selected = id[1].split(':')
-    all = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
+    all = MiqReport.for_user(current_user).sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
     @all_reports = []
     all.each do |r|
       next if r.template_type != "report" && !r.template_type.blank?
@@ -271,7 +270,6 @@ module ReportController::Menus
     end
 
     @selected_reports = []
-    @available_reports = []
     @assigned_reports = []
 
     # calculating selected reports for selected folder
@@ -318,12 +316,7 @@ module ReportController::Menus
       end
     end
 
-    @all_reports.each do |rep|
-      unless @assigned_reports.include?(rep)
-        r = MiqReport.find_by_name(rep.strip)
-        @available_reports.push(rep) if @edit[:user_typ] || r.miq_group_id.to_i == current_group_id
-      end
-    end
+    @available_reports = @all_reports.reject { |r| @assigned_reports.include?(r) }
 
     @edit[:old_selected_reports] = @selected_reports.dup
     @edit[:old_available_reports] = @available_reports.dup

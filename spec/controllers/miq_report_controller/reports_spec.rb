@@ -1,13 +1,14 @@
 describe ReportController, "::Reports" do
   describe "#miq_report_delete" do
+    let(:user) { FactoryGirl.create(:user, :features => :miq_report_delete) }
     before do
       EvmSpecHelper.local_miq_server # timezone stuff
-      login_as FactoryGirl.create(:user, :features => :miq_report_delete)
+      login_as user
     end
 
     it "deletes the report" do
       FactoryGirl.create(:miq_report)
-      report = FactoryGirl.create(:miq_report, :rpt_type => "Custom")
+      report = FactoryGirl.create(:miq_report, :rpt_type => "Custom", :miq_group => user.current_group)
       session['sandboxes'] = {
         controller.controller_name => { :active_tree => 'report_1',
                       :trees => {'report_1' => {:active_node => "xx-0_xx-0-0_rep-#{report.id}"}}

@@ -370,7 +370,7 @@ class ChargebackController < ApplicationController
   end
 
   def cb_rpts_fetch_saved_report(id)
-    rr = MiqReportResult.find_by_id(from_cid(id.split('-').last))
+    rr = MiqReportResult.for_user(current_user).find_by_id(from_cid(id.split('-').last))
     if rr.nil?  # Saved report no longer exists
       @report = nil
       return
@@ -458,7 +458,8 @@ class ChargebackController < ApplicationController
         # On a saved report node
         cb_rpts_show_saved_report
         if @report
-          s = MiqReportResult.find_by_id(from_cid(nodes.last.split('-').last))
+          s = MiqReportResult.for_user(current_user).find_by_id(from_cid(nodes.last.split('-').last))
+
           @right_cell_div = "reports_list_div"
           @right_cell_text = _("Saved Chargeback Report \"%{last_run_on}\"") % {:last_run_on => format_timezone(s.last_run_on, Time.zone, "gtl")}
         else
@@ -473,7 +474,7 @@ class ChargebackController < ApplicationController
         unless @saved_reports.empty?
           @sb[:sel_saved_rep_id] = nodes[1]
           @right_cell_div = "reports_list_div"
-          miq_report = MiqReport.find(@sb[:miq_report_id])
+          miq_report = MiqReport.for_user(current_user).find(@sb[:miq_report_id])
           @right_cell_text = _("Saved Chargeback Reports \"%{report_name}\"") % {:report_name => miq_report.name}
           @sb[:parent_reports] = nil  unless @sb[:saved_reports].blank?    # setting it to nil so saved reports can be displayed, unless all saved reports were deleted
         else
@@ -497,7 +498,7 @@ class ChargebackController < ApplicationController
   def cb_rpts_get_all_reps(nodeid)
     return [] if nodeid.blank?
     @sb[:miq_report_id] = from_cid(nodeid)
-    miq_report = MiqReport.find(@sb[:miq_report_id])
+    miq_report = MiqReport.for_user(current_user).find(@sb[:miq_report_id])
     saved_reports = miq_report.miq_report_results.with_current_user_groups
                               .select("id, miq_report_id, name, last_run_on, report_source")
                               .order(:last_run_on => :desc)

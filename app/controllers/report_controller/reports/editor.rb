@@ -28,7 +28,7 @@ module ReportController::Reports::Editor
       build_edit_screen
     else
       @sb[:miq_tab] = "edit_1"
-      @rpt          = MiqReport.find(params[:id])
+      @rpt          = MiqReport.for_user(current_user).find(params[:id])
       @rpt.id       = nil # Treat as a new report
       set_form_vars
       build_edit_screen
@@ -98,13 +98,13 @@ module ReportController::Reports::Editor
       @in_a_form = true
       @report = nil     # Clear any saved report object
       if params[:tab] # Came in to change the tab
-        @rpt = @edit[:rpt_id] ? MiqReport.find(@edit[:rpt_id]) :
+        @rpt = @edit[:rpt_id] ? MiqReport.for_user(current_user).find(@edit[:rpt_id]) :
             MiqReport.new
         check_tabs
         build_edit_screen
       else
         @sb[:miq_tab] = "edit_1"
-        @rpt = params[:id] && params[:id] != "new" ? MiqReport.find(params[:id]) :
+        @rpt = params[:id] && params[:id] != "new" ? MiqReport.for_user(current_user).find(params[:id]) :
                 MiqReport.new
         if @rpt.rpt_type == "Default"
           flash = "Default reports can not be edited"
