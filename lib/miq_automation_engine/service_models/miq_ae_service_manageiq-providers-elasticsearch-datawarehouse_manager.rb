@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_Elasticsearch_DatawarehouseManager < MiqAeServiceModelBase
+  end
+end
