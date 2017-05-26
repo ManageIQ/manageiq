@@ -187,7 +187,7 @@ class CloudNetworkController < ApplicationController
     end
     @network_provider_network_type_choices = PROVIDERS_NETWORK_TYPES
     @cloud_tenant_choices = {}
-    CloudTenant.all.each { |tenant| @cloud_tenant_choices[tenant.name] = tenant.id }
+    Rbac::Filterer.filtered(CloudTenant).each { |tenant| @cloud_tenant_choices[tenant.name] = tenant.id }
 
     drop_breadcrumb(:name => _("Add New Cloud Network"), :url => "/cloud_network/new")
   end
