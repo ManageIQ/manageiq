@@ -38,7 +38,7 @@ module ContainerResourceMixin
   end
 
   def delete_from_provider
-    method = "delete_#{provider_name(self.class.name)}"
+    method = "delete_#{entity_by_resource(self.class.name)}"
     api_version = container_project.ext_management_system.api_version
     client = container_project.ext_management_system.connect_client(api_version, method)
     response = client.send(method, name, namespace)
@@ -63,7 +63,7 @@ module ContainerResourceMixin
   private
 
   def provider_definition
-    method = "get_#{provider_name(self.class.name)}"
+    method = "get_#{entity_by_resource(self.class.name)}"
     api_version = container_project.ext_management_system.api_version
     client = container_project.ext_management_system.connect_client(api_version, method)
     response = client.send(method, name, namespace)
@@ -77,7 +77,7 @@ module ContainerResourceMixin
   end
 
   def update_in_provider(resource)
-    method = "update_#{provider_name(self.class.name)}"
+    method = "update_#{entity_by_resource(self.class.name)}"
     api_version = container_project.ext_management_system.api_version
     client = container_project.ext_management_system.connect_client(api_version, method)
     client.send(method, resource)
