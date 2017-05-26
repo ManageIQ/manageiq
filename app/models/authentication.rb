@@ -27,6 +27,8 @@ class Authentication < ApplicationRecord
 
   has_many :configuration_script_sources
 
+  virtual_column :label, :type => :string
+
   before_save :set_credentials_changed_on
   after_save :after_authentication_changed
 
@@ -55,6 +57,8 @@ class Authentication < ApplicationRecord
     :embedded_ansible_credential_types => 'ManageIQ::Providers::EmbeddedAutomationManager::Authentication'
   }.freeze
 
+  LABEL = N_('Authentication').freeze
+
   # FIXME: To address problem with url resolution when displayed as a quadicon,
   # but it's not *really* the db_name. Might be more proper to override `to_partial_path`
   def self.db_name
@@ -71,6 +75,10 @@ class Authentication < ApplicationRecord
 
   def authentication_type
     authtype.nil? ? :default : authtype.to_sym
+  end
+
+  def label
+    self.class::LABEL
   end
 
   def available?

@@ -53,9 +53,10 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::MachineCred
   }.freeze
 
   API_ATTRIBUTES = COMMON_ATTRIBUTES.merge(EXTRA_ATTRIBUTES).freeze
+  LABEL = N_('Machine')
 
   API_OPTIONS = {
-    :label      => N_('Machine'),
+    :label      => LABEL,
     :type       => 'machine',
     :attributes => API_ATTRIBUTES
   }.freeze

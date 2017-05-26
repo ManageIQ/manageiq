@@ -29,9 +29,10 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::ScmCredenti
   }.freeze
 
   API_ATTRIBUTES = COMMON_ATTRIBUTES.merge(EXTRA_ATTRIBUTES).freeze
+  LABEL = N_('Scm')
 
   API_OPTIONS = {
-    :label      => N_('Scm'),
+    :label      => LABEL,
     :type       => 'scm',
     :attributes => API_ATTRIBUTES
   }.freeze
