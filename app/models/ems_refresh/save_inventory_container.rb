@@ -8,10 +8,9 @@ module EmsRefresh::SaveInventoryContainer
                   :container_groups, :container_replicators,
                   :container_services, :container_routes,
                   :container_component_statuses, :container_templates,
-                  :container_builds,
+                  :container_builds, :container_build_pods,
                  ]
     child_keys = [# things moved to end - if they work here, nothing depended on their ids
-                  :container_build_pods,
                   :persistent_volume_claims, :persistent_volumes,
                  ]
 
@@ -239,6 +238,13 @@ module EmsRefresh::SaveInventoryContainer
         :parent => ems,
         :builder_params => {:ems_id => ems.id},
         :association => :container_builds,
+      )
+    @inv_collections[:container_build_pods] =
+      ::ManagerRefresh::InventoryCollection.new(
+        :model_class => ContainerBuildPod,
+        :parent => ems,
+        :builder_params => {:ems_id => ems.id},
+        :association => :container_build_pods,
       )
   end
 
@@ -681,6 +687,10 @@ module EmsRefresh::SaveInventoryContainer
     store_ids_for_new_records(entity.node_selector_parts, hashes, [:section, :name])
   end
 
+  def lazy_find_build(hash)
+    @inv_collections[:container_builds].lazy_find(hash[:ems_ref])
+  end
+
   def graph_container_builds_inventory(ems, hashes)
     hashes.to_a.each do |h|
       h = h.dup
@@ -694,20 +704,15 @@ module EmsRefresh::SaveInventoryContainer
     end
   end
 
-  def save_container_build_pods_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-    target = ems if target.nil?
+  def graph_container_build_pods_inventory(ems, hashes)
+    hashes.to_a.each do |h|
+      h = h.dup
+      h[:container_build] = lazy_find_build(h.delete(:build_config))
+      custom_attrs = h.extract!(:labels)
 
-    ems.container_build_pods.reset
-    deletes = target.kind_of?(ExtManagementSystem) ? :use_association : []
-
-    hashes.each do |h|
-      h[:container_build_id] = h.fetch_path(:build_config, :id)
+      build_pod = @inv_collections[:container_build_pods].build(h)
+      graph_custom_attributes_multi(ems.container_build_pods, build_pod, custom_attrs)
     end
-
-    save_inventory_multi(ems.container_build_pods, hashes, deletes, [:ems_ref], [:labels,],
-                         [:build_config])
-    store_ids_for_new_records(ems.container_build_pods, hashes, :ems_ref)
   end
 
   def graph_container_templates_inventory(ems, hashes)
