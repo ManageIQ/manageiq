@@ -5,9 +5,9 @@ module EmsRefresh::SaveInventoryContainer
     graph_keys = [:container_projects, :container_quotas, :container_nodes,
                   :container_image_registries, :container_images,
                   :container_groups, :container_replicators,
+                  :container_services,
                  ]
-    child_keys = [
-                  :container_services, :container_routes, :container_component_statuses, :container_templates,
+    child_keys = [:container_routes, :container_component_statuses, :container_templates,
                   # things moved to end - if they work here, nothing depended on their ids
                   :container_limits, :container_builds, :container_build_pods,
                   :persistent_volume_claims, :persistent_volumes,
@@ -176,6 +176,19 @@ module EmsRefresh::SaveInventoryContainer
         :parent => ems,
         :builder_params => {:ems_id => ems.id},
         :association => :container_replicators,
+      )
+    @inv_collections[:container_services] =
+      ::ManagerRefresh::InventoryCollection.new(
+        :model_class => ContainerService,
+        :parent => ems,
+        :builder_params => {:ems_id => ems.id},
+        :association => :container_services,
+      )
+    @inv_collections[:container_service_port_configs] =
+      ::ManagerRefresh::InventoryCollection.new(
+        :model_class => ContainerServicePortConfig,
+        :parent => ems,
+        :association => :container_service_port_configs,
       )
   end
 
@@ -376,28 +389,24 @@ module EmsRefresh::SaveInventoryContainer
     end
   end
 
-  def save_container_services_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-    target = ems if target.nil?
+  def graph_container_services_inventory(ems, hashes)
+    hashes.to_a.each do |h|
+      h = h.dup
+      h[:container_project] = lazy_find_project(h.delete(:project))
+      h.delete(:namespace)
+      h[:container_image_registry] = lazy_find_image_registry(h[:container_image_registry])
+      h[:container_groups] = h[:container_groups].collect { |g| lazy_find_container_group(g) }
+      custom_attrs = h.extract!(:labels, :selector_parts)
+      children = h.extract!(:tags, :container_service_port_configs)  # TODO tags
 
-    ems.container_services.reset
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
-
-    hashes.each do |h|
-      h[:container_group_ids] = h[:container_groups].map { |x| x[:id] }
-      h[:container_project_id] = h.fetch_path(:project, :id)
-      h[:container_image_registry_id] = h.fetch_path(:container_image_registry, :id)
+      service = @inv_collections[:container_services].build(h)
+      graph_custom_attributes_multi(ems.container_services, service, custom_attrs)
+      graph_container_service_port_configs_inventory(service, children[:container_service_port_configs])
     end
+  end
 
-    save_inventory_multi(ems.container_services, hashes, deletes, [:ems_ref],
-                         [:labels, :tags, :selector_parts, :container_service_port_configs],
-                         [:container_groups, :project, :container_image_registry, :namespace])
-
-    store_ids_for_new_records(ems.container_services, hashes, :ems_ref)
+  def lazy_find_container_group(hash)
+    @inv_collections[:container_groups].lazy_find(hash[:ems_ref])
   end
 
   def graph_container_groups_inventory(ems, hashes)
@@ -432,7 +441,6 @@ module EmsRefresh::SaveInventoryContainer
       children = h.extract!(
         :container_port_configs, :container_env_vars, :security_context, :container
       )
-      h[:ems_id] = container_group[:ems_id]
       cd = @inv_collections[:container_definitions].build(h)
       graph_container_port_configs_inventory(cd, children[:container_port_configs])
       graph_container_env_vars_inventory(cd, children[:container_env_vars])
@@ -448,18 +456,11 @@ module EmsRefresh::SaveInventoryContainer
     end
   end
 
-  def save_container_service_port_configs_inventory(container_service, hashes, target = nil)
-    return if hashes.nil?
-
-    container_service.container_service_port_configs.reset
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
-
-    save_inventory_multi(container_service.container_service_port_configs, hashes, deletes, [:ems_ref])
-    store_ids_for_new_records(container_service.container_service_port_configs, hashes, :ems_ref)
+  def graph_container_service_port_configs_inventory(container_service, hashes)
+    hashes.to_a.each do |h|
+      h = h.merge(:container_service => container_service)
+      @inv_collections[:container_service_port_configs].build(h)
+    end
   end
 
   def graph_container_env_vars_inventory(container_definition, hashes)
