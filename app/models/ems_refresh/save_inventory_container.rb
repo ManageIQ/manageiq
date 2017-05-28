@@ -6,8 +6,9 @@ module EmsRefresh::SaveInventoryContainer
                   :container_image_registries, :container_images,
                   :container_groups, :container_replicators,
                   :container_services, :container_routes,
+                  :container_component_statuses,
                  ]
-    child_keys = [:container_component_statuses, :container_templates,
+    child_keys = [:container_templates,
                   # things moved to end - if they work here, nothing depended on their ids
                   :container_limits, :container_builds, :container_build_pods,
                   :persistent_volume_claims, :persistent_volumes,
@@ -196,6 +197,14 @@ module EmsRefresh::SaveInventoryContainer
         :parent => ems,
         :builder_params => {:ems_id => ems.id},
         :association => :container_routes,
+      )
+    @inv_collections[:container_component_statuses] =
+      ::ManagerRefresh::InventoryCollection.new(
+        :model_class => ContainerComponentStatus,
+        :parent => ems,
+        :builder_params => {:ems_id => ems.id},
+        :association => :container_component_statuses,
+        :manager_ref => [:name],
       )
   end
 
@@ -505,18 +514,10 @@ module EmsRefresh::SaveInventoryContainer
     end
   end
 
-  def save_container_component_statuses_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-
-    ems.container_component_statuses.reset
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
-
-    save_inventory_multi(ems.container_component_statuses, hashes, deletes, [:name])
-    store_ids_for_new_records(ems.container_component_statuses, hashes, :name)
+  def graph_container_component_statuses_inventory(ems, hashes)
+    hashes.to_a.each do |h|
+      @inv_collections[:container_component_statuses].build(h)
+    end
   end
 
   def graph_container_inventory(container_definition, hash)
