@@ -5,9 +5,9 @@ module EmsRefresh::SaveInventoryContainer
     graph_keys = [:container_projects, :container_quotas, :container_nodes,
                   :container_image_registries, :container_images,
                   :container_groups, :container_replicators,
-                  :container_services,
+                  :container_services, :container_routes,
                  ]
-    child_keys = [:container_routes, :container_component_statuses, :container_templates,
+    child_keys = [:container_component_statuses, :container_templates,
                   # things moved to end - if they work here, nothing depended on their ids
                   :container_limits, :container_builds, :container_build_pods,
                   :persistent_volume_claims, :persistent_volumes,
@@ -190,6 +190,13 @@ module EmsRefresh::SaveInventoryContainer
         :parent => ems,
         :association => :container_service_port_configs,
       )
+    @inv_collections[:container_routes] =
+      ::ManagerRefresh::InventoryCollection.new(
+        :model_class => ContainerRoute,
+        :parent => ems,
+        :builder_params => {:ems_id => ems.id},
+        :association => :container_routes,
+      )
   end
 
   # ContainerCondition is polymorphic child of ContainerNode & ContainerGroup
@@ -325,25 +332,18 @@ module EmsRefresh::SaveInventoryContainer
     store_ids_for_new_records(container_limit.container_limit_items, hashes, [:resource, :item_type])
   end
 
-  def save_container_routes_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-    target = ems if target.nil?
+  def graph_container_routes_inventory(ems, hashes)
+    hashes.to_a.each do |h|
+      h = h.dup
+      h[:container_project] = lazy_find_project(h.delete(:project))
+      h.delete(:namespace)
+      h[:container_service] = lazy_find_container_service(h[:container_service])
+      custom_attrs = h.extract!(:labels)
+      h.delete(:tags) # TODO
 
-    ems.container_routes.reset
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
-
-    hashes.each do |h|
-      h[:container_project_id] = h.fetch_path(:project, :id)
-      h[:container_service_id] = h.fetch_path(:container_service, :id)
+      route = @inv_collections[:container_routes].build(h)
+      graph_custom_attributes_multi(ems.container_routes, route, custom_attrs)
     end
-
-    save_inventory_multi(ems.container_routes, hashes, deletes, [:ems_ref],
-                         [:labels, :tags], [:container_service, :project, :namespace])
-    store_ids_for_new_records(ems.container_routes, hashes, :ems_ref)
   end
 
   def graph_container_nodes_inventory(ems, hashes)
@@ -375,9 +375,9 @@ module EmsRefresh::SaveInventoryContainer
   def graph_container_replicators_inventory(ems, hashes)
     hashes.each do |h|
       h = h.merge(:container_project => lazy_find_project(h.delete(:project)))
+      h.delete(:namespace)
       custom_attrs = h.extract!(:labels, :selector_parts)
       h = h.except(:tags) # TODO children
-      h.delete(:namespace)
 
       replicator = @inv_collections[:container_replicators].build(h)
       graph_custom_attributes_inventory(ems.container_replicators, replicator,
@@ -387,6 +387,10 @@ module EmsRefresh::SaveInventoryContainer
       graph_custom_attributes_inventory(ems.container_replicators, replicator,
                                         :selectors, custom_attrs[:selector_parts])
     end
+  end
+
+  def lazy_find_container_service(hash)
+    @inv_collections[:container_services].lazy_find(hash[:ems_ref])
   end
 
   def graph_container_services_inventory(ems, hashes)

@@ -30,6 +30,7 @@ module ManageIQ::Providers
     has_many :container_env_vars, :through => :container_definitions
     has_many :security_contexts, :through => :container_definitions
     has_many :container_service_port_configs, :through => :container_services
+    has_many :container_routes, :through => :container_services
 
     virtual_column :port_show, :type => :string
 
