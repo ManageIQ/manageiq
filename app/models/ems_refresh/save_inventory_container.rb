@@ -8,10 +8,10 @@ module EmsRefresh::SaveInventoryContainer
                   :container_groups, :container_replicators,
                   :container_services, :container_routes,
                   :container_component_statuses, :container_templates,
-
+                  :container_builds,
                  ]
     child_keys = [# things moved to end - if they work here, nothing depended on their ids
-                  :container_builds, :container_build_pods,
+                  :container_build_pods,
                   :persistent_volume_claims, :persistent_volumes,
                  ]
 
@@ -232,6 +232,13 @@ module EmsRefresh::SaveInventoryContainer
         :parent => ems,
         :association => :container_template_parameters,
         :manager_ref => [:container_template, :name],
+      )
+    @inv_collections[:container_builds] =
+      ::ManagerRefresh::InventoryCollection.new(
+        :model_class => ContainerBuild,
+        :parent => ems,
+        :builder_params => {:ems_id => ems.id},
+        :association => :container_builds,
       )
   end
 
@@ -674,19 +681,17 @@ module EmsRefresh::SaveInventoryContainer
     store_ids_for_new_records(entity.node_selector_parts, hashes, [:section, :name])
   end
 
-  def save_container_builds_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-    target = ems if target.nil?
+  def graph_container_builds_inventory(ems, hashes)
+    hashes.to_a.each do |h|
+      h = h.dup
+      h[:container_project] = lazy_find_project(h.delete(:project))
+      h.except!(:namespace, :resources)
+      h.except!(:tags) # TODO
+      custom_attrs = h.extract!(:labels)
 
-    ems.container_builds.reset
-    deletes = target.kind_of?(ExtManagementSystem) ? :use_association : []
-
-    hashes.each do |h|
-      h[:container_project_id] = h.fetch_path(:project, :id)
+      build = @inv_collections[:container_builds].build(h)
+      graph_custom_attributes_multi(ems.container_builds, build, custom_attrs)
     end
-    save_inventory_multi(ems.container_builds, hashes, deletes, [:ems_ref], [:labels, :tags],
-                         [:project, :resources])
-    store_ids_for_new_records(ems.container_builds, hashes, :ems_ref)
   end
 
   def save_container_build_pods_inventory(ems, hashes, target = nil)
