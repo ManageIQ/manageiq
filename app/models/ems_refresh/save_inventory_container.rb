@@ -6,10 +6,9 @@ module EmsRefresh::SaveInventoryContainer
                   :container_image_registries, :container_images,
                   :container_groups, :container_replicators,
                   :container_services, :container_routes,
-                  :container_component_statuses,
+                  :container_component_statuses, :container_templates,
                  ]
-    child_keys = [:container_templates,
-                  # things moved to end - if they work here, nothing depended on their ids
+    child_keys = [# things moved to end - if they work here, nothing depended on their ids
                   :container_limits, :container_builds, :container_build_pods,
                   :persistent_volume_claims, :persistent_volumes,
                  ]
@@ -205,6 +204,20 @@ module EmsRefresh::SaveInventoryContainer
         :builder_params => {:ems_id => ems.id},
         :association => :container_component_statuses,
         :manager_ref => [:name],
+      )
+    @inv_collections[:container_templates] =
+      ::ManagerRefresh::InventoryCollection.new(
+        :model_class => ContainerTemplate,
+        :parent => ems,
+        :builder_params => {:ems_id => ems.id},
+        :association => :container_templates,
+      )
+    @inv_collections[:container_template_parameters] =
+      ::ManagerRefresh::InventoryCollection.new(
+        :model_class => ContainerTemplateParameter,
+        :parent => ems,
+        :association => :container_template_parameters,
+        :manager_ref => [:container_template, :name],
       )
   end
 
@@ -689,29 +702,24 @@ module EmsRefresh::SaveInventoryContainer
     store_ids_for_new_records(ems.container_build_pods, hashes, :ems_ref)
   end
 
-  def save_container_templates_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-    target = ems if target.nil?
+  def graph_container_templates_inventory(ems, hashes)
+    hashes.to_a.each do |h|
+      h = h.dup
+      h[:container_project] = lazy_find_project(h.delete(:container_project))
+      h.delete(:namespace)
+      custom_attrs = h.extract!(:labels)
+      children = h.extract!(:container_template_parameters) # TODO save
 
-    ems.container_templates.reset
-    deletes = target.kind_of?(ExtManagementSystem) ? :use_association : []
-
-    hashes.each do |h|
-      h[:container_project_id] = h.fetch_path(:container_project, :id)
+      template = @inv_collections[:container_templates].build(h)
+      graph_custom_attributes_multi(ems.container_templates, template, custom_attrs)
+      graph_container_template_parameters_inventory(template, children[:container_template_parameters])
     end
-
-    save_inventory_multi(ems.container_templates, hashes, deletes, [:ems_ref],
-                         [:container_template_parameters, :labels], [:container_project, :namespace])
-    store_ids_for_new_records(ems.container_templates, hashes, :ems_ref)
   end
 
-  def save_container_template_parameters_inventory(container_template, hashes, target = nil)
-    return if hashes.nil?
-
-    container_template.container_template_parameters.reset
-    deletes = target.kind_of?(ExtManagementSystem) ? :use_association : []
-
-    save_inventory_multi(container_template.container_template_parameters, hashes, deletes, [:name], [], [])
-    store_ids_for_new_records(container_template.container_template_parameters, hashes, :name)
+  def graph_container_template_parameters_inventory(container_template, hashes)
+    hashes.to_a.each do |h|
+      h = h.merge(:container_template => container_template)
+      @inv_collections[:container_template_parameters].build(h)
+    end
   end
 end
