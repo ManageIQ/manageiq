@@ -48,7 +48,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
       assert_specific_container_build_pod
       assert_specific_container_template
       assert_specific_container_image
-      #assert_specific_container_node_custom_attributes
+      assert_specific_container_node_custom_attributes
     end
   end
 

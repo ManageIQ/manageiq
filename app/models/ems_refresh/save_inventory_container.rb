@@ -384,7 +384,8 @@ module EmsRefresh::SaveInventoryContainer
     hashes.to_a.each do |h|
       h = h.except(:namespace)
       custom_attrs = h.extract!(:labels, :additional_attributes)
-      children = h.extract!(:container_conditions, :computer_system, :tags) # TODO children
+      children = h.extract!(:container_conditions, :computer_system)
+      h.except!(:tags) # TODO
 
       node = @inv_collections[:container_nodes].build(h)
       graph_container_conditions_inventory(ems.container_nodes, node, children[:container_conditions])
@@ -396,14 +397,14 @@ module EmsRefresh::SaveInventoryContainer
   def graph_computer_system_inventory(parent, hash)
     return if hash.nil?
     hash = hash.merge(:managed_entity => parent)
-    # TODO: there is probably is shorter way to link them?
-    # I've done this in other places by giving the children a lazy_find for the parent.
-    # But that's also silly, if I'm building the parent here too.
-    hw = hash.delete(:hardware)
-    os = hash.delete(:operating_system)
+    children = hash.extract!(:hardware, :operating_system)
     cs = @inv_collections[:container_node_computer_systems].build(hash)
-    @inv_collections[:container_node_computer_system_hardwares].build(hw.merge(:computer_system => cs))
-    @inv_collections[:container_node_computer_system_operating_systems].build(os.merge(:computer_system => cs))
+    @inv_collections[:container_node_computer_system_hardwares].build(
+      children[:hardware].merge(:computer_system => cs)
+    )
+    @inv_collections[:container_node_computer_system_operating_systems].build(
+      children[:operating_system].merge(:computer_system => cs)
+    )
   end
 
   def graph_container_replicators_inventory(ems, hashes)
@@ -411,7 +412,7 @@ module EmsRefresh::SaveInventoryContainer
       h = h.merge(:container_project => lazy_find_project(h.delete(:project)))
       h.delete(:namespace)
       custom_attrs = h.extract!(:labels, :selector_parts)
-      h = h.except(:tags) # TODO children
+      h = h.except(:tags) # TODO
 
       replicator = @inv_collections[:container_replicators].build(h)
       graph_custom_attributes_inventory(ems.container_replicators, replicator,
@@ -435,7 +436,8 @@ module EmsRefresh::SaveInventoryContainer
       h[:container_image_registry] = lazy_find_image_registry(h[:container_image_registry])
       h[:container_groups] = h[:container_groups].collect { |g| lazy_find_container_group(g) }
       custom_attrs = h.extract!(:labels, :selector_parts)
-      children = h.extract!(:tags, :container_service_port_configs)  # TODO tags
+      h.except!(:tags) # TODO
+      children = h.extract!(:container_service_port_configs)
 
       service = @inv_collections[:container_services].build(h)
       graph_custom_attributes_multi(ems.container_services, service, custom_attrs)
