@@ -6,7 +6,7 @@ module ManagerRefresh
                 :internal_attributes, :delete_method, :data, :data_index, :dependency_attributes, :manager_ref,
                 :association, :complete, :update_only, :transitive_dependency_attributes, :custom_manager_uuid,
                 :custom_db_finder, :check_changed, :arel, :builder_params, :loaded_references, :db_data_index,
-                :inventory_object_attributes, :name, :parent_inventory_collections, :manager_uuids,
+                :inventory_object_attributes, :name, :saver_strategy, :parent_inventory_collections, :manager_uuids,
                 :skeletal_manager_uuids, :targeted_arel, :targeted, :manager_ref_allowed_nil
 
     delegate :each, :size, :to => :to_a
@@ -286,6 +286,15 @@ module ManagerRefresh
     #        one.
     # @param name [Symbol] A unique name of the InventoryCollection under a Persister. If not provided, the :association
     #        attribute is used. Providing either :name or :association is mandatory.
+    # @param saver_strategy [Symbol] A strategy that will be used for InventoryCollection persisting into the DB.
+    #        Allowed saver strategies are:
+    #          - :default => Using Rails saving methods, this way is not safe to run in multiple workers concurrently,
+    #            since it will lead to non consistent data.
+    #          - :concurrent_safe => This method is designed for concurrent saving. It uses atomic upsert to avoid
+    #            data duplication and it uses timestamp based atomic checks to avoid new data being overwritten by the
+    #            the old data.
+    #          - :concurrent_safe_batch => Same as :concurrent_safe, but the upsert/update queries are executed as
+    #            batched SQL queries, instead of sending 1 query per record.
     # @param parent_inventory_collections [Array] Array of symbols having a name of the
     #        ManagerRefresh::InventoryCollection objects, that serve as parents to this InventoryCollection. Then this
     #        InventoryCollection completeness will be encapsulated by the parent_inventory_collections :manager_uuids
@@ -323,7 +332,7 @@ module ManagerRefresh
                    custom_save_block: nil, delete_method: nil, data_index: nil, data: nil, dependency_attributes: nil,
                    attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil,
                    check_changed: nil, custom_manager_uuid: nil, custom_db_finder: nil, arel: nil, builder_params: {},
-                   inventory_object_attributes: nil, unique_index_columns: nil, name: nil,
+                   inventory_object_attributes: nil, unique_index_columns: nil, name: nil, saver_strategy: nil,
                    parent_inventory_collections: nil, manager_uuids: [], targeted_arel: nil, targeted: nil,
                    manager_ref_allowed_nil: nil)
       @model_class           = model_class
@@ -347,13 +356,14 @@ module ManagerRefresh
       @builder_params        = builder_params
       @unique_index_columns  = unique_index_columns
       @name                  = name || association
+      @saver_strategy        = process_saver_strategy(saver_strategy)
 
       @manager_ref_allowed_nil = manager_ref_allowed_nil || []
 
       # Targeted mode related attributes
       @manager_uuids                = Set.new.merge(manager_uuids)
       @parent_inventory_collections = parent_inventory_collections
-      @skeletal_manager_uuids       = Set.new
+      @skeletal_manager_uuids       = Set.new.merge(manager_uuids)
       @targeted_arel                = targeted_arel
       @targeted                     = !!targeted
 
@@ -427,6 +437,18 @@ module ManagerRefresh
       end
     end
 
+    def process_saver_strategy(saver_strategy)
+      return :default unless saver_strategy
+
+      case saver_strategy
+      when :default, :concurrent_safe, :concurrent_safe_batch
+        saver_strategy
+      else
+        raise "Unknown InventoryCollection saver strategy: :#{saver_strategy}, allowed strategies are "\
+              ":default,  :concurrent_safe and :concurrent_safe_batch"
+      end
+    end
+
     def process_strategy(strategy_name)
       return unless strategy_name
 
@@ -496,8 +518,8 @@ module ManagerRefresh
       end
 
       if unique_indexes.blank?
-        raise "#{self} and its table #{model_class.table_name} must have a unique index defined, in order to use"\
-              " strategy :stream_data."
+        raise "#{self} and its table #{model_class.table_name} must have a unique index defined, in order to use "\
+              "saver_strategy :concurrent_safe or :concurrent_safe_batch."
       end
       @unique_index_columns = unique_indexes.first.columns
     end
@@ -774,6 +796,11 @@ module ManagerRefresh
     def scan!(indexed_inventory_collections)
       data.each do |inventory_object|
         scan_inventory_object!(inventory_object)
+
+        if targeted? && inventory_object.inventory_collection.parent_inventory_collections.blank?
+          # We want to track what manager_uuids we should query from a db, for the targeted refresh
+          manager_uuids << inventory_object.manager_uuid
+        end
       end
 
       if targeted? && parent_inventory_collections.present?
@@ -944,6 +971,24 @@ module ManagerRefresh
 
       # Storing attributes and their dependencies
       (dependency_attributes[key] ||= Set.new) << value.inventory_collection if value.dependency?
+
+      # For concurent safe strategies, we want to pre-build the relations using the lazy_link data, so we can fill up
+      # the foreign key in first pass.
+      if [:concurrent_safe, :concurrent_safe_batch].include?(saver_strategy)
+        if value.inventory_collection.manager_ref.size == 1 && inventory_object_lazy?(value) &&
+           !value.ems_ref.blank? && value.key.nil? && value.dependency?
+          # Instead of loading the reference from the DB, we'll add the dummy InventoryObject (having only ems_ref and
+          # info from the builder_params) to the correct InventoryCollection. Which will either be found in the DB or
+          # created as a small dummy object. The refresh of the object will then fill the rest of the data, while not
+          # touching the reference.
+
+          # TODO(lsmola) solve the :key, since that requires data from the actual reference. At best our DB should be
+          # designed the way, we don't duplicate the data, but rather get them with a join. (3NF!)
+
+          value.inventory_collection.find_or_build(value.ems_ref)
+          value.inventory_collection.skeletal_manager_uuids
+        end
+      end
 
       # Storing a reference in the target inventory_collection, then each IC knows about all the references and can
       # e.g. load all the referenced uuids from a DB

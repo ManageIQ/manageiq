@@ -18,7 +18,8 @@ module ManagerRefresh::SaveCollection
       private
 
       def save_inventory(inventory_collection)
-        ManagerRefresh::SaveCollection::Saver::Default.new(inventory_collection).save_inventory_collection!
+        saver_class = "ManagerRefresh::SaveCollection::Saver::#{inventory_collection.saver_strategy.to_s.camelize}"
+        saver_class.constantize.new(inventory_collection).save_inventory_collection!
       end
     end
   end

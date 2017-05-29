@@ -158,9 +158,9 @@ class ManagerRefresh::Inventory::Persister
       next if collection.data.blank?
 
       {
-        :name         => key,
-        :unique_uuids => [], # TODO(lsmola) allow to set a scope, so we can say it's a complete set of data
-        :data         => collection.to_raw_data
+        :name          => key,
+        :manager_uuids => collection.manager_uuids,
+        :data          => collection.to_raw_data
       }
     end.compact
 
@@ -192,6 +192,7 @@ class ManagerRefresh::Inventory::Persister
         inventory_collection = persister.collections[collection['name'].try(:to_sym)]
         raise "Unrecognized InventoryCollection name: #{inventory_collection}" if inventory_collection.blank?
 
+        inventory_collection.manager_uuids.merge(collection['manager_uuids'] || [])
         inventory_collection.from_raw_data(collection['data'], persister.collections)
       end
       persister
