@@ -241,6 +241,10 @@ module EmsRefresh::SaveInventoryContainer
         :parent => ems,
         :builder_params => {:ems_id => ems.id},
         :association => :container_build_pods,
+        # TODO is this unique?  build pods do have uid that becomes ems_ref,
+        # but we need lazy_find by name for lookup from container_group
+        # TODO replace namespace with container_project_id column?
+        :manager_ref => [:namespace, :name],
       )
     @inv_collections[:persistent_volumes] =
       ::ManagerRefresh::InventoryCollection.new(
@@ -380,6 +384,10 @@ module EmsRefresh::SaveInventoryContainer
     end
   end
 
+  def lazy_find_node(hash)
+    @inv_collections[:container_nodes].lazy_find(hash[:ems_ref])
+  end
+
   def graph_container_nodes_inventory(ems, hashes)
     hashes.to_a.each do |h|
       h = h.except(:namespace)
@@ -405,6 +413,10 @@ module EmsRefresh::SaveInventoryContainer
     @inv_collections[:container_node_computer_system_operating_systems].build(
       children[:operating_system].merge(:computer_system => cs)
     )
+  end
+
+  def lazy_find_replicator(hash)
+    @inv_collections[:container_replicators].lazy_find(hash[:ems_ref])
   end
 
   def graph_container_replicators_inventory(ems, hashes)
@@ -451,19 +463,23 @@ module EmsRefresh::SaveInventoryContainer
 
   def graph_container_groups_inventory(ems, hashes)
     hashes.to_a.each do |h|
-      h = h.except(  # TODO extra_keys but need links?
-        :namespace, :build_pod_name)
-      h = h.merge(
-        :container_node => @inv_collections[:container_nodes].lazy_find(h[:container_node][:ems_ref]),
-        :container_project => lazy_find_project(h.delete(:project)),
+      h = h.dup
+      h[:container_node] = lazy_find_node(h[:container_node])
+      project = h.delete(:project)
+      h[:container_project] = lazy_find_project(project)
+      h.delete(:namespace)
+      h[:container_build_pod] = lazy_find_build_pod(
+        :namespace => project[:name],
+        :name      => h.delete(:build_pod_name)
       )
       # might not have a replicator.
       # TODO review all lazy_find links, probably most are optional!
-      h[:container_replicator] &&= @inv_collections[:container_replicators].lazy_find(h[:container_replicator][:ems_ref])
+      h[:container_replicator] &&= lazy_find_replicator(h[:container_replicator])
+
       custom_attrs = h.extract!(:labels, :node_selector_parts)
       h.except!(:tags) # TODO
       children = h.extract!(
-        :container_definitions, :containers, :tags, :container_conditions, :container_volumes,
+        :container_definitions, :containers, :container_conditions, :container_volumes,
       )
 
       cg = @inv_collections[:container_groups].build(h)
@@ -471,9 +487,6 @@ module EmsRefresh::SaveInventoryContainer
       graph_container_conditions_inventory(ems.container_groups, cg, children[:container_conditions])
       graph_container_volumes_inventory(cg, children[:container_volumes])
       graph_custom_attributes_multi(ems.container_groups, cg, custom_attrs)
-      # TODO
-      h[:container_build_pod_id] = ems.container_build_pods.find_by(:name =>
-        h[:build_pod_name]).try(:id)
     end
   end
 
@@ -679,6 +692,12 @@ module EmsRefresh::SaveInventoryContainer
       build = @inv_collections[:container_builds].build(h)
       graph_custom_attributes_multi(ems.container_builds, build, custom_attrs)
     end
+  end
+
+  def lazy_find_build_pod(hash)
+    @inv_collections[:container_build_pods].lazy_find(
+      @inv_collections[:container_build_pods].object_index(hash)
+    )
   end
 
   def graph_container_build_pods_inventory(ems, hashes)
