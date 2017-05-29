@@ -141,6 +141,13 @@ module EmsRefresh::SaveInventoryContainer
         :association => :container_definitions,
         # parser sets :ems_ref => "#{pod_id}_#{container_def.name}_#{container_def.image}"
       )
+    @inv_collections[:container_volumes] =
+      ::ManagerRefresh::InventoryCollection.new(
+        :model_class => ContainerVolume,
+        :parent => ems,
+        :association => :container_volumes,
+        :manager_ref => [:parent, :name],
+      )
     @inv_collections[:containers] =
       ::ManagerRefresh::InventoryCollection.new(
         :model_class => Container,
@@ -452,13 +459,15 @@ module EmsRefresh::SaveInventoryContainer
       # TODO review all lazy_find links, probably most are optional!
       h[:container_replicator] &&= @inv_collections[:container_replicators].lazy_find(h[:container_replicator][:ems_ref])
       custom_attrs = h.extract!(:labels, :node_selector_parts)
-      children = h.extract!(  # TODO save all
+      h.except!(:tags) # TODO
+      children = h.extract!(
         :container_definitions, :containers, :tags, :container_conditions, :container_volumes,
       )
 
       cg = @inv_collections[:container_groups].build(h)
       graph_container_definitions_inventory(cg, children[:container_definitions])
       graph_container_conditions_inventory(ems.container_groups, cg, children[:container_conditions])
+      graph_container_volumes_inventory(cg, children[:container_volumes])
       graph_custom_attributes_multi(ems.container_groups, cg, custom_attrs)
       # TODO
       h[:container_build_pod_id] = ems.container_build_pods.find_by(:name =>
@@ -557,43 +566,19 @@ module EmsRefresh::SaveInventoryContainer
     end
   end
 
-  # still used for pods
-  def save_container_conditions_inventory(container_entity, hashes, target = nil)
-    return if hashes.nil?
-
-    container_entity.container_conditions.reset
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
-
-    save_inventory_multi(container_entity.container_conditions, hashes, deletes, [:name])
-    store_ids_for_new_records(container_entity.container_conditions, hashes, :name)
-  end
-
   def graph_security_context_inventory(resource, hash)
     return if hash.nil?
     hash = hash.merge(:resource => resource)
     @inv_collections[:security_contexts].build(hash)
   end
 
-  def save_container_volumes_inventory(container_group, hashes, target = nil)
-    return if hashes.nil?
-
-    container_group.container_volumes.reset
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
-
-    hashes.each do |h|
-      h[:persistent_volume_claim_id] = h.fetch_path(:persistent_volume_claim, :id)
+  def graph_container_volumes_inventory(parent, hashes)
+    hashes.to_a.each do |h|
+      h = h.dup
+      h[:parent] = parent
+      h[:persistent_volume_claim] = lazy_find_pvc(h[:persistent_volume_claim])
+      @inv_collections[:container_volumes].build(h)
     end
-
-    save_inventory_multi(container_group.container_volumes, hashes, deletes, [:name], [], [:persistent_volume_claim])
-    store_ids_for_new_records(container_group.container_volumes, hashes, :name)
   end
 
   # TODO: use keyword args, don't repeat save_inventory_multi
@@ -638,6 +623,7 @@ module EmsRefresh::SaveInventoryContainer
     save_custom_attribute_attribute_inventory(entity, :docker_labels, hashes, target)
   end
 
+  # TODO
   def save_tags_inventory(entity, hashes, _target = nil)
     return if hashes.nil?
 
