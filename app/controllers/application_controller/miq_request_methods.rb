@@ -832,7 +832,7 @@ module ApplicationController::MiqRequestMethods
       if @edit[:new][:schedule_time]
         @edit[:new][:schedule_time] = format_timezone(@edit[:new][:schedule_time], Time.zone, "raw")
         @edit[:new][:start_date] = "#{@edit[:new][:schedule_time].month}/#{@edit[:new][:schedule_time].day}/#{@edit[:new][:schedule_time].year}" # Set the start date
-        if params[:id]
+        if params[:req_id]
           @edit[:new][:start_hour] = @edit[:new][:schedule_time].hour.to_s
           @edit[:new][:start_min] = @edit[:new][:schedule_time].min.to_s
         else
