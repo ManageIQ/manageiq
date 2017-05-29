@@ -285,7 +285,7 @@ module ManagerRefresh
     #        If there is only 1 unique index, this will be auto-discovered, otherwise we need to specify the correct
     #        one.
     # @param name [Symbol] A unique name of the InventoryCollection under a Persister. If not provided, the :association
-    #        attribute is used. Providing either :name or :association is mandatory.
+    #        attribute is used. If :association is nil as well, the :name will be inferred from the :model_class.
     # @param saver_strategy [Symbol] A strategy that will be used for InventoryCollection persisting into the DB.
     #        Allowed saver strategies are:
     #          - :default => Using Rails saving methods, this way is not safe to run in multiple workers concurrently,
@@ -355,7 +355,7 @@ module ManagerRefresh
       @update_only           = update_only.nil? ? false : update_only
       @builder_params        = builder_params
       @unique_index_columns  = unique_index_columns
-      @name                  = name || association
+      @name                  = name || association || model_class.to_s.demodulize.tableize
       @saver_strategy        = process_saver_strategy(saver_strategy)
 
       @manager_ref_allowed_nil = manager_ref_allowed_nil || []
@@ -366,8 +366,6 @@ module ManagerRefresh
       @skeletal_manager_uuids       = Set.new.merge(manager_uuids)
       @targeted_arel                = targeted_arel
       @targeted                     = !!targeted
-
-      raise "You have to pass either :name or :association argument to .new of #{self}" if @name.blank?
 
       @inventory_object_attributes = inventory_object_attributes
 
