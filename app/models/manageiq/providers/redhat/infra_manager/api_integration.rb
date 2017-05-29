@@ -88,6 +88,9 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
   end
 
   def supports_the_api_version?(version)
+    if supported_api_versions.empty?
+      raise MiqException::MiqUnreachableError, "Not able to connect to the server."
+    end
     supported_api_versions.map(&:to_s).include?(version.to_s)
   end
 
