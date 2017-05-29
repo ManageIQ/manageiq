@@ -11,8 +11,6 @@ module EmsRefresh::SaveInventoryContainer
                   :container_builds, :container_build_pods,
                   :persistent_volume_claims, :persistent_volumes,
                  ]
-    child_keys = [# things moved to end - if they work here, nothing depended on their ids
-                 ]
 
     # TODO: deleting vs archiving!
 
@@ -21,15 +19,6 @@ module EmsRefresh::SaveInventoryContainer
       send("graph_#{k}_inventory", ems, hashes[k])
     end
     ManagerRefresh::SaveInventory.save_inventory(ems, @inv_collections.values)
-
-    tmp_store_ids_for_graph_saved(ems, hashes.slice(*graph_keys)) # TODELETE
-
-    # Save and link other subsections
-    child_keys.each do |k|
-      send("save_#{k}_inventory", ems, hashes[k], target)
-    end
-
-    ems.save!
   end
 
   def tmp_store_ids_for_graph_saved(ems, inventory)
