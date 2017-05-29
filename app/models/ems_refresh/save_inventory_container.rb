@@ -9,9 +9,9 @@ module EmsRefresh::SaveInventoryContainer
                   :container_services, :container_routes,
                   :container_component_statuses, :container_templates,
                   :container_builds, :container_build_pods,
+                  :persistent_volume_claims, :persistent_volumes,
                  ]
     child_keys = [# things moved to end - if they work here, nothing depended on their ids
-                  :persistent_volume_claims, :persistent_volumes,
                  ]
 
     # TODO: deleting vs archiving!
@@ -246,6 +246,20 @@ module EmsRefresh::SaveInventoryContainer
         :builder_params => {:ems_id => ems.id},
         :association => :container_build_pods,
       )
+    @inv_collections[:persistent_volumes] =
+      ::ManagerRefresh::InventoryCollection.new(
+        :model_class => PersistentVolume,
+        :parent => ems,
+        :builder_params => {:parent => ems},
+        :association => :persistent_volumes,
+      )
+    @inv_collections[:persistent_volume_claims] =
+      ::ManagerRefresh::InventoryCollection.new(
+        :model_class => PersistentVolumeClaim,
+        :parent => ems,
+        :builder_params => {:ems_id => ems.id},
+        :association => :persistent_volume_claims,
+      )
   end
 
   # ContainerCondition is polymorphic child of ContainerNode & ContainerGroup
@@ -294,40 +308,26 @@ module EmsRefresh::SaveInventoryContainer
     # TODO children [:labels, :tags], [], true)
   end
 
-  def save_persistent_volumes_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-    target = ems if target.nil?
-
-    ems.persistent_volumes.reset
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
-
-    hashes.each do |h|
-      h[:persistent_volume_claim_id] = h.fetch_path(:persistent_volume_claim, :id)
+  def graph_persistent_volumes_inventory(ems, hashes)
+    hashes.to_a.each do |h|
+      h = h.dup
+      h.except!(:namespace)
+      h[:persistent_volume_claim] = lazy_find_pvc(h[:persistent_volume_claim])
+      @inv_collections[:persistent_volumes].build(h)
     end
-
-    save_inventory_multi(ems.persistent_volumes, hashes, deletes,
-                         [:ems_ref], [], [:persistent_volume_claim, :namespace])
-    store_ids_for_new_records(ems.persistent_volumes, hashes, :ems_ref)
   end
 
-  def save_persistent_volume_claims_inventory(ems, hashes, target = nil)
-    return if hashes.nil?
-    target = ems if target.nil?
+  def lazy_find_pvc(hash)
+    return nil if hash.nil?  # TODO in every lazy_find_*?
+    @inv_collections[:persistent_volume_claims].lazy_find(hash[:ems_ref])
+  end
 
-    ems.persistent_volume_claims.reset
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
-
-    save_inventory_multi(ems.persistent_volume_claims, hashes, deletes,
-                         [:ems_ref], [], [:namespace])
-    store_ids_for_new_records(ems.persistent_volume_claims, hashes, :ems_ref)
+  def graph_persistent_volume_claims_inventory(ems, hashes)
+    hashes.to_a.each do |h|
+      h = h.dup
+      h.except!(:namespace)
+      @inv_collections[:persistent_volume_claims].build(h)
+    end
   end
 
   def graph_container_quotas_inventory(ems, hashes)
