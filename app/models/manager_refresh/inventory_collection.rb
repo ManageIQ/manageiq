@@ -1023,7 +1023,7 @@ module ManagerRefresh
           # designed the way, we don't duplicate the data, but rather get them with a join. (3NF!)
 
           value.inventory_collection.find_or_build(value.ems_ref)
-          value.inventory_collection.skeletal_manager_uuids
+          value.inventory_collection.skeletal_manager_uuids << value.ems_ref
         end
       end
 
