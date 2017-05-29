@@ -518,7 +518,7 @@ module ManagerRefresh
         else
           false
         end
-      elsif inventory_collection.data.blank? && !inventory_collection.delete_allowed?
+      elsif data.blank? && !delete_allowed?
         # If we have no data to save and delete is not allowed, we can just skip
         true
       else
