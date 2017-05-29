@@ -610,34 +610,6 @@ module EmsRefresh::SaveInventoryContainer
     end
   end
 
-  def save_additional_attributes_inventory(entity, hashes, target = nil)
-    save_custom_attribute_attribute_inventory(entity, :additional_attributes, hashes, target)
-  end
-
-  def save_custom_attribute_attribute_inventory(entity, attribute_name, hashes, target = nil)
-    return if hashes.nil?
-
-    entity.send(attribute_name).reset
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
-
-    save_inventory_multi(entity.send(attribute_name),
-                         hashes, deletes, [:section, :name])
-    store_ids_for_new_records(entity.send(attribute_name),
-                              hashes, [:section, :name])
-  end
-
-  def save_labels_inventory(entity, hashes, target = nil)
-    save_custom_attribute_attribute_inventory(entity, :labels, hashes, target)
-  end
-
-  def save_docker_labels_inventory(entity, hashes, target = nil)
-    save_custom_attribute_attribute_inventory(entity, :docker_labels, hashes, target)
-  end
-
   # TODO
   def save_tags_inventory(entity, hashes, _target = nil)
     return if hashes.nil?
@@ -647,34 +619,6 @@ module EmsRefresh::SaveInventoryContainer
     raise if EmsRefresh.debug_failures
     _log.error("Auto-tagging failed on #{entity.class} [#{entity.name}] with error [#{err}].")
     _log.log_backtrace(err)
-  end
-
-  def save_selector_parts_inventory(entity, hashes, target = nil)
-    return if hashes.nil?
-
-    entity.selector_parts.reset
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
-
-    save_inventory_multi(entity.selector_parts, hashes, deletes, [:section, :name])
-    store_ids_for_new_records(entity.selector_parts, hashes, [:section, :name])
-  end
-
-  def save_node_selector_parts_inventory(entity, hashes, target = nil)
-    return if hashes.nil?
-
-    entity.node_selector_parts.reset
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
-
-    save_inventory_multi(entity.node_selector_parts, hashes, deletes, [:section, :name])
-    store_ids_for_new_records(entity.node_selector_parts, hashes, [:section, :name])
   end
 
   def lazy_find_build(hash)
