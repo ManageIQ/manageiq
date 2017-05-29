@@ -13,6 +13,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
       ems.with_provider_connection(VERSION_HASH) do |connection|
         @connection = connection
         res = {}
+        res[:cluster] = collect_cluster(get_uuid_from_target(target.ems_cluster))
         res[:host] = collect_host(get_uuid_from_target(target))
         res[:network] = collect_networks
         res
@@ -58,6 +59,10 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
 
     def collect_clusters
       connection.system_service.clusters_service.list
+    end
+
+    def collect_cluster(uuid)
+      Array(connection.system_service.clusters_service.cluster_service(uuid).get)
     end
 
     def collect_storages
