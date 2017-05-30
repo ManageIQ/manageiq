@@ -1,0 +1,2 @@
+:server:
+  :session_store: memory
