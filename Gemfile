@@ -17,6 +17,7 @@ def manageiq_plugin(plugin_name)
   end
 end
 
+manageiq_plugin "font-fabulous" # FIXME: this is just a temporary solution and it'll go to the ui-classic later
 manageiq_plugin "manageiq-automation_engine"
 manageiq_plugin "manageiq-content"
 manageiq_plugin "manageiq-providers-amazon"
