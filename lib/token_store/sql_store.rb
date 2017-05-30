@@ -6,14 +6,14 @@ class TokenStore
 
     def write(token, data, _options = nil)
       record = Session.find_or_create_by(:session_id => session_key(token))
-      record.data = Base64.encode64(Marshal.dump(data))
+      record.raw_data = data
       record.save!
     end
 
     def read(token, _options = nil)
       record = Session.find_by(:session_id => session_key(token))
       return nil unless record
-      data = Marshal.load(Base64.decode64(record.data))
+      data = record.raw_data
       if data[:expires_on] > Time.zone.now
         data
       else
