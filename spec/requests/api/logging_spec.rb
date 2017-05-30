@@ -3,7 +3,13 @@
 #
 describe "Logging" do
   describe "Successful Requests logging" do
-    before { allow($api_log).to receive(:info) }
+    before do
+      @log = StringIO.new
+      $api_log.reopen(@log)
+      allow($api_log).to receive(:info)
+    end
+
+    after { $api_log.reopen(Rails.root.join("log", "api.log")) }
 
     it "logs hashed details about the request" do
       api_basic_authorize collection_action_identifier(:users, :read, :get)
