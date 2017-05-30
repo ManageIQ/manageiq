@@ -2,6 +2,9 @@ module ArchivedMixin
   extend ActiveSupport::Concern
 
   included do
+    scope :deleted, -> { where(:deleted => true) }
+    scope :not_deleted, -> { where(:deleted => false) }
+
     belongs_to :old_ext_management_system, :foreign_key => :old_ems_id, :class_name => 'ExtManagementSystem'
   end
 
