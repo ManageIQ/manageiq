@@ -23,6 +23,10 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Credential
         Vmdb::Settings.encrypt_passwords!(params)
       end
     end
+
+    def notify_on_provider_interaction?
+      true
+    end
   end
 
   def provider_object(connection = nil)

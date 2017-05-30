@@ -15,14 +15,14 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
     rescue AnsibleTowerClient::ClientError, ActiveRecord::RecordNotFound => error
       raise
     ensure
-      notify('creation', manager.id, params, error.nil?)
+      notify('creation', manager.id, params, error.nil?) if try(:notify_on_provider_interaction?)
     end
 
-    def create_in_provider_queue(manager_id, params)
+    def create_in_provider_queue(manager_id, params, auth_user = nil)
       process_secrets(params) if respond_to?(:process_secrets)
       manager = ExtManagementSystem.find(manager_id)
       action = "Creating #{self::FRIENDLY_NAME} (name=#{params[:name]})"
-      queue(manager.my_zone, nil, "create_in_provider", [manager_id, params], action)
+      queue(manager.my_zone, nil, "create_in_provider", [manager_id, params], action, auth_user)
     end
 
     private
@@ -46,10 +46,10 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
       task_ids.each { |tid| MiqTask.wait_for_taskid(tid) }
     end
 
-    def queue(zone, instance_id, method_name, args, action)
+    def queue(zone, instance_id, method_name, args, action, auth_user)
       task_opts = {
         :action => action,
-        :userid => "system"
+        :userid => auth_user || "system"
       }
 
       queue_opts = {
@@ -80,13 +80,15 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
   rescue AnsibleTowerClient::ClientError => error
     raise
   ensure
-    self.class.send('notify', 'update', manager.id, params, error.nil?)
+    if self.class.try(:notify_on_provider_interaction?)
+      self.class.send('notify', 'update', manager.id, params, error.nil?)
+    end
   end
 
-  def update_in_provider_queue(params)
+  def update_in_provider_queue(params, auth_user = nil)
     self.class.process_secrets(params) if self.class.respond_to?(:process_secrets)
     action = "Updating #{self.class::FRIENDLY_NAME} (Tower internal reference=#{manager_ref})"
-    self.class.send('queue', manager.my_zone, id, "update_in_provider", [params], action)
+    self.class.send('queue', manager.my_zone, id, "update_in_provider", [params], action, auth_user)
   end
 
   def delete_in_provider
@@ -95,11 +97,13 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
   rescue AnsibleTowerClient::ClientError => error
     raise
   ensure
-    self.class.send('notify', 'deletion', manager.id, {:manager_ref => manager_ref}, error.nil?)
+    if self.class.try(:notify_on_provider_interaction?)
+      self.class.send('notify', 'deletion', manager.id, {:manager_ref => manager_ref}, error.nil?)
+    end
   end
 
-  def delete_in_provider_queue
+  def delete_in_provider_queue(auth_user = nil)
     action = "Deleting #{self.class::FRIENDLY_NAME} (Tower internal reference=#{manager_ref})"
-    self.class.send('queue', manager.my_zone, id, "delete_in_provider", [], action)
+    self.class.send('queue', manager.my_zone, id, "delete_in_provider", [], action, auth_user)
   end
 end

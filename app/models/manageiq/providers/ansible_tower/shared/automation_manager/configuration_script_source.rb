@@ -18,6 +18,10 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Configurati
       end
     end
 
+    def notify_on_provider_interaction?
+      true
+    end
+
     def refresh_in_provider(project, id = nil)
       return unless project.can_update?
 
