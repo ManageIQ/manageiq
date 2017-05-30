@@ -295,6 +295,11 @@ describe "Rest API Collections" do
       test_collection_query(:cloud_networks, cloud_networks_url, CloudNetwork)
     end
 
+    it 'queries CloudSubnets' do
+      FactoryGirl.create(:cloud_subnet)
+      test_collection_query(:cloud_subnets, cloud_subnets_url, CloudSubnet)
+    end
+
     it 'queries CloudTenants' do
       FactoryGirl.create(:cloud_tenant)
       test_collection_query(:cloud_tenants, cloud_tenants_url, CloudTenant)
@@ -579,6 +584,11 @@ describe "Rest API Collections" do
     it 'bulk query LoadBalancers' do
       FactoryGirl.create(:load_balancer)
       test_collection_bulk_query(:load_balancers, load_balancers_url, LoadBalancer)
+    end
+
+    it "bulk query CloudSubnets" do
+      FactoryGirl.create(:cloud_subnet)
+      test_collection_bulk_query(:cloud_subnets, cloud_subnets_url, CloudSubnet)
     end
 
     it 'bulk query CloudTenants' do
