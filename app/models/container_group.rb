@@ -85,8 +85,6 @@ class ContainerGroup < ApplicationRecord
     _log.info "Disconnecting Pod [#{name}] id [#{id}] from EMS [#{ext_management_system.name}]" \
     "id [#{ext_management_system.id}] "
     self.container_definitions.each(&:disconnect_inv)
-    self.old_ems_id = ems_id
-    self.ext_management_system = nil
     self.container_node_id = nil
     self.container_services = []
     self.container_replicator_id = nil
@@ -94,6 +92,7 @@ class ContainerGroup < ApplicationRecord
     self.old_container_project_id = self.container_project_id
     self.container_project_id = nil
     self.deleted_on = Time.now.utc
+    self.deleted = true
     save
   end
 end

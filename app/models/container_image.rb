@@ -106,9 +106,8 @@ class ContainerImage < ApplicationRecord
     _log.info "Disconnecting Image [#{name}] id [#{id}] from EMS [#{ext_management_system.name}]" \
     "id [#{ext_management_system.id}] "
     self.container_image_registry = nil
-    self.old_ems_id = ems_id
-    self.ext_management_system = nil
     self.deleted_on = Time.now.utc
+    self.deleted = true
     save
   end
 
