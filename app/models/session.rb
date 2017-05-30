@@ -28,7 +28,7 @@ class Session < ApplicationRecord
     sessions = where("updated_at <= ?", ttl.seconds.ago.utc).limit(batch_size)
     return 0 if sessions.size.zero?
     sessions = sessions.reject do |s|
-      expires_on = Marshal.load(Base64.decode64(s.data.split("\n").join))[:expires_on] rescue nil
+      expires_on = s.raw_data[:expires_on] rescue nil
       expires_on && expires_on >= Time.zone.now
     end
 
@@ -40,7 +40,7 @@ class Session < ApplicationRecord
     # Log off the users associated with the sessions that are eligible for deletion
     userids = sessions.each_with_object([]) do |s, a|
       begin
-        a << Marshal.load(Base64.decode64(s.data.split("\n").join))[:userid]
+        a << s.raw_data[:userid]
       rescue => err
         _log.warn("Error '#{err.message}', attempting to load session with id [#{s.id}]")
       end
