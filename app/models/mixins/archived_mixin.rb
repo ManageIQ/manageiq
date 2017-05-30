@@ -9,7 +9,7 @@ module ArchivedMixin
   end
 
   def archived?
-    ems_id.nil?
+    deleted?
   end
 
   # Needed for metrics
