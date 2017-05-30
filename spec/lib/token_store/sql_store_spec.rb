@@ -20,12 +20,12 @@ RSpec.describe TokenStore::SqlStore do
       session = FactoryGirl.create(
         :session,
         :session_id => "TEST:#{token}",
-        :data       => serialize_data(:expires_on => 1.second.from_now)
+        :raw_data   => {:expires_on => 1.second.from_now}
       )
 
       store.write(token, :expires_on => 1.hour.from_now)
 
-      expect(deserialize_data(session.reload.data)[:expires_on]).to eq(1.hour.from_now)
+      expect(session.reload.raw_data[:expires_on]).to eq(1.hour.from_now)
     end
   end
 
@@ -36,7 +36,7 @@ RSpec.describe TokenStore::SqlStore do
       FactoryGirl.create(
         :session,
         :session_id => "TEST:#{token}",
-        :data       => serialize_data(:userid => "alice", :expires_on => 1.second.from_now)
+        :raw_data   => {:userid => "alice", :expires_on => 1.second.from_now}
       )
 
       data = store.read(token)
@@ -50,7 +50,7 @@ RSpec.describe TokenStore::SqlStore do
       FactoryGirl.create(
         :session,
         :session_id => "TEST:#{token}",
-        :data       => serialize_data(:userid => "alice", :expires_on => 1.second.ago)
+        :raw_data   => {:userid => "alice", :expires_on => 1.second.ago}
       )
 
       data = store.read(token)
@@ -75,19 +75,11 @@ RSpec.describe TokenStore::SqlStore do
       FactoryGirl.create(
         :session,
         :session_id => "TEST:#{token}",
-        :data       => serialize_data(:userid => "alice", :expires_on => 1.hour.from_now)
+        :raw_data   => {:userid => "alice", :expires_on => 1.hour.from_now}
       )
 
       expect { store.delete(token) }.to change(Session, :count).by(-1)
     end
-  end
-
-  def serialize_data(data)
-    Base64.encode64(Marshal.dump(data))
-  end
-
-  def deserialize_data(data)
-    Marshal.load(Base64.decode64(data))
   end
 
   def build_sql_store(namespace = "FOO")
