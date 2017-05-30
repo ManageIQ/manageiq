@@ -16,12 +16,9 @@ describe "Logging" do
       run_get users_url
 
       @log.rewind
-      expect(@log.readlines).to include(a_string_matching(/Request:/)
-                                         .and(matching(%r{:path=>"/api/users"}))
-                                         .and(matching(/:collection=>"users"/))
-                                         .and(matching(/:c_id=>nil/))
-                                         .and(matching(/:subcollection=>nil/))
-                                         .and(matching(/:s_id=>nil/)))
+      request_log_line = @log.readlines.detect { |l| l =~ /MIQ\(.*\) Request:/ }
+      expect(request_log_line).to include(':path=>"/api/users"', ':collection=>"users"', ":c_id=>nil",
+                                          ":subcollection=>nil", ":s_id=>nil")
     end
 
     it "logs all hash entries about the request" do
