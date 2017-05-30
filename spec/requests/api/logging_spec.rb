@@ -30,11 +30,10 @@ describe "Logging" do
       run_get entrypoint_url
 
       @log.rewind
-      expect(@log.readlines).to include(
-        a_string_matching(
-          ":method.*:action.*:fullpath.*url.*:base.*:path.*:prefix.*:version.*:api_prefix.*:collection.*:c_suffix.*" \
-          ":c_id.*:subcollection.*:s_id"
-        )
+      request_log_line = @log.readlines.detect { |l| l =~ /MIQ\(.*\) Request:/ }
+      expect(request_log_line).to match(
+        ":method.*:action.*:fullpath.*url.*:base.*:path.*:prefix.*:version.*:api_prefix.*:collection.*:c_suffix.*" \
+        ":c_id.*:subcollection.*:s_id"
       )
     end
 
