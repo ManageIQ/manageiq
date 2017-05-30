@@ -31,10 +31,9 @@ describe "Logging" do
 
       @log.rewind
       request_log_line = @log.readlines.detect { |l| l =~ /MIQ\(.*\) Request:/ }
-      expect(request_log_line).to match(
-        ":method.*:action.*:fullpath.*url.*:base.*:path.*:prefix.*:version.*:api_prefix.*:collection.*:c_suffix.*" \
-        ":c_id.*:subcollection.*:s_id"
-      )
+      expect(request_log_line).to include(":method", ":action", ":fullpath", ":url", ":base", ":path", ":prefix",
+                                          ":version", ":api_prefix", ":collection", ":c_suffix", ":c_id",
+                                          ":subcollection", ":s_id")
     end
 
     it "filters password attributes in nested parameters" do
