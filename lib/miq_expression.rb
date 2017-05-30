@@ -875,7 +875,6 @@ class MiqExpression
   end
 
   def self.reporting_available_fields(model, interval = nil)
-    @reporting_available_fields ||= {}
     if model.to_s == "VimPerformanceTrend"
       VimPerformanceTrend.trend_model_details(interval.to_s)
     elsif model.ends_with?("Performance")
