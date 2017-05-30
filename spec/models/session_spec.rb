@@ -1,4 +1,29 @@
 describe Session do
+  describe "#raw_data" do
+    it "returns the unmarshaled data" do
+      session = FactoryGirl.build(:session, :data => "BAh7BjoLdXNlcmlkSSIKYWRtaW4GOgZFVA==\n")
+
+      expect(session.raw_data).to eq(:userid => "admin")
+    end
+
+    it "can handle newlines" do
+      session = FactoryGirl.build(
+        :session,
+        :data => "BAh7CDoIZm9vSSIIYmFyBjoGRVQ6CGJhekkiCHF1eAY7BlQ6CXF1dXhJIglx\ndXV6BjsGVA==\n"
+      )
+
+      expect(session.raw_data).to eq(:foo => "bar", :baz => "qux", :quux => "quuz")
+    end
+  end
+
+  describe "#raw_data=" do
+    it "marshals the data" do
+      session = FactoryGirl.build(:session, :raw_data => {:userid => "admin"})
+
+      expect(session.data).to eq("BAh7BjoLdXNlcmlkSSIKYWRtaW4GOgZFVA==\n")
+    end
+  end
+
   describe ".purge" do
     before do
       2.times do

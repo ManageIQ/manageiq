@@ -62,4 +62,12 @@ class Session < ApplicationRecord
     @@interval = int unless int.nil?
     @@interval
   end
+
+  def raw_data
+    Marshal.load(Base64.decode64(data.split("\n").join))
+  end
+
+  def raw_data=(d)
+    self.data = Base64.encode64(Marshal.dump(d))
+  end
 end
