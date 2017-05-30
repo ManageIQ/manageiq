@@ -15,8 +15,7 @@ class ContainerDefinition < ApplicationRecord
     _log.info "Disconnecting Container definition [#{name}] id [#{id}]"
     self.container.try(:disconnect_inv)
     self.deleted_on = Time.now.utc
-    self.old_ems_id = self.ems_id
-    self.ems_id = nil
+    self.deleted = true
     save
   end
 end
