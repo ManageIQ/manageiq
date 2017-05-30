@@ -2,6 +2,7 @@ module ManagerRefresh::SaveCollection
   module Saver
     class Base
       include Vmdb::Logging
+      include ManagerRefresh::SaveCollection::Saver::SqlHelper
 
       attr_reader :inventory_collection
 
