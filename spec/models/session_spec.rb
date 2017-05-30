@@ -27,10 +27,7 @@ describe Session do
   describe ".purge" do
     before do
       2.times do
-        FactoryGirl.create(:session,
-                           :updated_at => 1.year.ago,
-                           :data       => Base64.encode64(Marshal.dump(:userid=>"admin"))
-                          )
+        FactoryGirl.create(:session, :updated_at => 1.year.ago, :raw_data => {:userid=>"admin"})
       end
     end
 
@@ -74,12 +71,7 @@ describe Session do
       around { |example| Timecop.freeze { example.run } }
 
       it "will purge an expired token" do
-        FactoryGirl.create(
-          :session,
-          :data => serialize_data(
-            :expires_on => 1.second.ago,
-          )
-        )
+        FactoryGirl.create(:session, :raw_data => {:expires_on => 1.second.ago})
 
         described_class.purge(0)
 
@@ -87,20 +79,11 @@ describe Session do
       end
 
       it "won't purge an unexpired token" do
-        FactoryGirl.create(
-          :session,
-          :data => serialize_data(
-            :expires_on => 1.second.from_now,
-          )
-        )
+        FactoryGirl.create(:session, :raw_data => {:expires_on => 1.second.from_now})
 
         described_class.purge(0)
 
         expect(described_class.count).to eq(1)
-      end
-
-      def serialize_data(data)
-        Base64.encode64(Marshal.dump(data))
       end
     end
   end
