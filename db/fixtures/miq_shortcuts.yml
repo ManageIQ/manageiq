@@ -489,3 +489,8 @@
   :url: /alerts_most_recent
   :rbac_feature_name: monitor_alerts_most_recent
   :startup: true
+- :name: redhat_access_insights
+  :description: Red Hat Access Insights
+  :url: /dashboard/iframe?sid=accessInsights
+  :rbac_feature_name: redhat_access_insights
+  :startup: true
