@@ -32,6 +32,10 @@ module ManagerRefresh::SaveCollection
 
       attr_reader :unique_index_keys, :unique_db_primary_keys
 
+      def batch_size
+        1000
+      end
+
       def delete_complement(inventory_collection)
         return unless inventory_collection.delete_allowed?
 
