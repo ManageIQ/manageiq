@@ -44,14 +44,20 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     config_info  = validate_config_info(options[:config_info])
 
     enhanced_config = config_info.deep_merge(create_job_templates(service_name, description, config_info, auth_user))
+    manager_id = enhanced_config.fetch_path(:provision, :configuration_template)[:manager_id]
 
-    transaction do
-      create_from_options(options).tap do |service_template|
-        dialog_ids = service_template.send(:create_dialogs, enhanced_config)
-        enhanced_config.deep_merge!(dialog_ids)
-        service_template.options[:config_info].deep_merge!(dialog_ids)
-        service_template.create_resource_actions(enhanced_config)
+    begin
+      transaction do
+        create_from_options(options).tap do |service_template|
+          dialog_ids = service_template.send(:create_dialogs, enhanced_config)
+          enhanced_config.deep_merge!(dialog_ids)
+          service_template.options[:config_info].deep_merge!(dialog_ids)
+          service_template.create_resource_actions(enhanced_config)
+        end
       end
+    rescue
+      rollback_job_templates(config_info, service_name, manager_id)
+      raise
     end
   end
 
@@ -207,6 +213,15 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     info && info.key?(:playbook_id) && service_template.job_template(action).nil?
   end
   private_class_method :new_job_template_required?
+
+  def self.rollback_job_templates(config_info, name, manager_id)
+    auth_user = User.current_userid || 'system'
+    config_info.keys.each do |action|
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript
+        .delete_in_provider_queue(manager_id, { :name => build_name(name, action) }, auth_user)
+    end
+  end
+  private_class_method :rollback_job_templates
 
   def update_job_templates(name, description, config_info, auth_user)
     [:provision, :retirement, :reconfigure].each do |action|

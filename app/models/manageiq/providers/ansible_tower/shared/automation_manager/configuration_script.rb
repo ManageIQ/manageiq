@@ -43,7 +43,11 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Configurati
     def delete_in_provider(manager_id, params)
       manager = ExtManagementSystem.find(manager_id)
       manager.with_provider_connection do |connection|
-        connection.api.job_templates.find(params[:manager_ref]).destroy!
+        if params[:name]
+          connection.api.job_templates.all(:search => params[:name]).first.destroy!
+        else
+          connection.api.job_templates.find(params[:manager_ref]).destroy!
+        end
       end
 
       # Get the record in our database

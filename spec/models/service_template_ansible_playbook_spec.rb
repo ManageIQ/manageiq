@@ -73,6 +73,20 @@ describe ServiceTemplateAnsiblePlaybook do
     catalog_item_options.deep_merge(changed_items)
   end
 
+  let(:catalog_item_options_bad) do
+    {
+      :name                        => 'test_ansible_catalog_item',
+      :description                 => 'test ansible',
+      :service_template_catalog_id => service_template_catalog.id,
+      :display                     => true,
+      :config_info                 => {
+        :provision => {
+          :configuration_template => { :manager_id => rand }
+        },
+      }
+    }
+  end
+
   describe 'building_job_templates' do
     it '#create_job_templates' do
       expect(described_class).to receive(:create_job_template).exactly(2).times.and_return(job_template)
@@ -161,6 +175,11 @@ describe ServiceTemplateAnsiblePlaybook do
 
       saved_options = catalog_item_options_two[:config_info].deep_merge(:provision => {:dialog_id => service_template.dialogs.first.id})
       expect(service_template.options[:config_info]).to include(saved_options)
+    end
+
+    it 'rolls back the job_template on an exception' do
+      expect(described_class).to receive(:rollback_job_templates)
+      expect { described_class.create_catalog_item(catalog_item_options_bad, user) }.to raise_exception(NoMethodError)
     end
   end
 
