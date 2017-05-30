@@ -75,12 +75,11 @@ module ManagerRefresh::SaveCollection
 
       def assert_referential_integrity(hash, inventory_object)
         inventory_object.inventory_collection.fixed_foreign_keys.each do |x|
-          if hash[x].blank?
-            _log.info("Ignoring #{inventory_object} because of missing foreign key #{x} for "\
-                      "#{inventory_object.inventory_collection.parent.class.name}:"\
-                      "#{inventory_object.inventory_collection.parent.id}")
-            return false
-          end
+          next unless hash[x].blank?
+          _log.info("Ignoring #{inventory_object} because of missing foreign key #{x} for "\
+                    "#{inventory_object.inventory_collection.parent.class.name}:"\
+                    "#{inventory_object.inventory_collection.parent.id}")
+          return false
         end
         true
       end
