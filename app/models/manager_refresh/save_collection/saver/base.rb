@@ -60,6 +60,12 @@ module ManagerRefresh::SaveCollection
                   "#{all_manager_uuids_size}, deleted=#{deleted_counter} *************")
       end
 
+      def delete_record!(inventory_collection, record)
+        return false unless inventory_collection.delete_allowed?
+        record.public_send(inventory_collection.delete_method)
+        true
+      end
+
       def assert_distinct_relation(record)
         if unique_db_primary_keys.include?(record.id) # Include on Set is O(1)
           # Change the InventoryCollection's :association or :arel parameter to return distinct results. The :through
