@@ -15,11 +15,15 @@ describe Share do
 
   it "does something" do
     EvmSpecHelper.seed_specific_product_features(%w(host))
+
     tenant = FactoryGirl.create(:tenant)
     group = FactoryGirl.create(:miq_group, :role => "user", :features => "host", :tenant => tenant)
+
     other_tenant = FactoryGirl.create(:tenant)
-    other_group = FactoryGirl.create(:miq_group, :tenant => other_tenant)
+    other_group = FactoryGirl.create(:miq_group, :role => "otheruser", :features => "host", :tenant => other_tenant)
+
     user = FactoryGirl.create(:user, :miq_groups => [group])
+
     resource_to_be_shared = FactoryGirl.create(:miq_template, :tenant => tenant)
     features = [MiqProductFeature.find_by(:identifier => "host")]
     share = create_share(user, resource_to_be_shared, features)
