@@ -186,20 +186,6 @@
       - VmCreatedEvent
       - VmDeployedEvent
       - VmRegisteredEvent
-      - aggregate.addhost.end
-      - aggregate.create.end
-      - aggregate.removehost.end
-      - aggregate.updateprop.end
-      - aggregate.updatemetadata.end
-      - identity.project.created
-      - identity.project.deleted
-      - identity.project.updated
-      - image.update
-      - image.create
-      - image.upload
-      - orchestration.stack.create.end
-      - orchestration.stack.create.error
-      - servergroup.create
       :detail:
       - CloneVM_Task
       - CloneVM_Task_Complete
@@ -268,18 +254,6 @@
       - VmReconfiguredEvent
       - VmResourcePoolMovedEvent
       - VmToTemplate
-      - compute.instance.rebuild.end
-      - compute.instance.resize.end
-      - orchestration.stack.update.end
-      - orchestration.stack.update.error
-      - orchestration.stack.suspend.end
-      - orchestration.stack.suspend.error
-      - orchestration.stack.resume.end
-      - orchestration.stack.resume.error
-      - orchestration.autoscaling.end
-      - orchestration.autoscaling.error
-      - servergroup.update
-      - servergroup.addmemeber
       :detail:
       - EnterMaintenanceMode_Task
       - ExitMaintenanceMode_Task
@@ -324,11 +298,6 @@
       - GceOperationDone_compute.instances.delete
       - VmDisconnectedEvent
       - VmRemovedEvent
-      - aggregate.delete.end
-      - image.delete
-      - orchestration.stack.delete.end
-      - orchestration.stack.delete.error
-      - servergroup.delete
       :detail:
       - Destroy_Task
       - Destroy_Task_Complete
@@ -471,7 +440,6 @@
       - VM_SET_TO_UNKNOWN_STATUS
       - VM_WAS_SET_DOWN_DUE_TO_HOST_REBOOT_OR_MANUAL_FENCE
       - VM_RENAMED
-      - hardware.ipmi.metrics.update
       :detail: []
       :name: General Activity
     :import_export:
@@ -596,27 +564,6 @@
       - NETWORK_UPDATE_TEMPLATE_INTERFACE_FAILED
       - NETWORK_UPDATE_VM_INTERFACE
       - NETWORK_UPDATE_VM_INTERFACE_FAILED
-      - floatingip.create.end
-      - floatingip.delete.end
-      - floatingip.update.end
-      - network.create.end
-      - network.delete.end
-      - network.floating_ip.allocate
-      - network.floating_ip.deallocate
-      - network.floating_ip.associate
-      - network.floating_ip.disassociate
-      - network.update.end
-      - router.create.end
-      - router.delete.end
-      - router.interface.create
-      - router.interface.delete
-      - router.update.end
-      - security_group.create.end
-      - security_group.delete.end
-      - security_group.update.end
-      - subnet.create.end
-      - subnet.delete.end
-      - subnet.update.end
       :detail: []
       :name: Network
     :power:
@@ -685,22 +632,6 @@
       - VmStartedOnEvent
       - VmStoppedEvent
       - VmSuspendedEvent
-      - compute.instance.create.end
-      - compute.instance.create.error
-      - compute.instance.shutdown.end
-      - compute.instance.shutdown.error
-      - compute.instance.delete.end
-      - compute.instance.power_off.end
-      - compute.instance.power_on.end
-      - compute.instance.soft_delete.end
-      - compute.instance.reboot.end
-      - compute.instance.suspend
-      - compute.instance.resume
-      - compute.instance.pause.end
-      - compute.instance.unpause.end
-      - compute.instance.shelve.end
-      - compute.instance.unshelve.end
-      - compute.instance.shelve_offload.end
       :detail:
       - PowerOffVM_Task
       - PowerOffVM_Task_Complete
@@ -739,7 +670,6 @@
       - USER_TRY_BACK_TO_SNAPSHOT
       - USER_TRY_BACK_TO_SNAPSHOT_FINISH_FAILURE
       - USER_TRY_BACK_TO_SNAPSHOT_FINISH_SUCCESS
-      - compute.instance.snapshot.end
       :detail: []
       :name: Snapshot Activity
     :status:
@@ -833,16 +763,6 @@
       - USER_UPDATE_STORAGE_DOMAIN_FAILED
       - USER_UPDATE_STORAGE_POOL
       - USER_UPDATE_STORAGE_POOL_FAILED
-      - backup.create.start
-      - backup.create.end
-      - backup.restore.start
-      - backup.restore.end
-      - snapshot.create.start
-      - snapshot.create.end
-      - snapshot.delete.end
-      - snapshot.update.end
-      - volume.create.end
-      - volume.delete.end
       :detail: []
       :name: Storage
   :task_final_events:
