@@ -1187,6 +1187,8 @@
       :event_catcher_hawkular_datawarehouse:
         :alertable_tenants: ['_system', '_ops']
         :poll: 1.minute
+      :event_catcher_prometheus_datawarehouse:
+        :poll: 1.minute
       :event_catcher_google:
         :poll: 15.seconds
       :event_catcher_kubernetes:
