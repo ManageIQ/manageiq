@@ -11,6 +11,29 @@ The ManageIQ organization is continuously adding new smaller repositories.  The 
 - [manageiq-ui-classic CHANGELOG](https://github.com/ManageIQ/manageiq-ui-classic/blob/fine/CHANGELOG.md)
 - [manageiq-ui-service CHANGELOG](https://github.com/ManageIQ/manageiq-ui-service/blob/master/CHANGELOG.md)
 
+# Fine-2
+
+## Added
+
+- REST API
+  - Enable custom actions for Vms API [(#14817)](https://github.com/ManageIQ/manageiq/pull/14817)
+
+## Fixed
+
+- Providers
+  - Ansible Tower
+    - Check that the Embedded Ansible role is on [(#15045)](https://github.com/ManageIQ/manageiq/pull/15045)
+    - Encrypt secrets before enqueue Tower CU operations [(#15084)](https://github.com/ManageIQ/manageiq/pull/15084)
+    - Hint to UI that scm_credential private_key field should have multiple-line [(#15109)](https://github.com/ManageIQ/manageiq/pull/15109)
+    - Only run the setup playbook the first time we start embedded ansible [(#15225)](https://github.com/ManageIQ/manageiq/pull/15225)
+
+- Platform
+  - Fix tag filtering for indirect RBAC [(#15088)](https://github.com/ManageIQ/manageiq/pull/15088)
+  - Ensure order is qualified by table name for rss feeds [(#15112)](https://github.com/ManageIQ/manageiq/pull/15112)
+
+- REST API
+  - Ensure grouped generic custom buttons can be invoked [(#14845)](https://github.com/ManageIQ/manageiq/pull/14845)
+
 # Fine-1
 
 ## Added
