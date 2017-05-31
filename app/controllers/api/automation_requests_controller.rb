@@ -1,7 +1,6 @@
 module Api
   class AutomationRequestsController < BaseController
     include Subcollections::RequestTasks
-    include Subcollections::Tasks
 
     def create_resource(type, _id, data)
       assert_id_not_specified(data, type)
