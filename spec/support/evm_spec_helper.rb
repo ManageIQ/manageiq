@@ -123,12 +123,6 @@ module EvmSpecHelper
     end
   end
 
-  def self.stub_amqp_support
-    require 'openstack/events/openstack_rabbit_event_monitor'
-    allow(OpenstackRabbitEventMonitor).to receive(:available?).and_return(true)
-    allow(OpenstackRabbitEventMonitor).to receive(:test_connection).and_return(true)
-  end
-
   def self.import_yaml_model(dirname, domain, attrs = {})
     options = {'import_dir' => dirname, 'preview' => false, 'domain' => domain}
     yaml_import(domain, options, attrs)
