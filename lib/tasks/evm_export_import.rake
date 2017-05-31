@@ -50,7 +50,7 @@ namespace :evm do
       TaskHelpers::Imports::AlertSets.new.import(options)
 
       exit # exit so that parameters to the first rake task are not run as rake tasks
-      end
+    end
 
     desc 'Imports all policies from individual YAML files'
     task :policies => :environment do

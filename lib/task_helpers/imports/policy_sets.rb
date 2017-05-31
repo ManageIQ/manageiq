@@ -20,7 +20,7 @@ module TaskHelpers
       def import_policysets(policysets)
         MiqPolicySet.transaction do
           policysets.each do |policyset|
-            MiqPolicySet.import_from_hash(policyset['MiqPolicySet'], {:save => true})
+            MiqPolicySet.import_from_hash(policyset['MiqPolicySet'], :save => true)
           end
         end
       end

@@ -7,7 +7,7 @@ module TaskHelpers
         policies = if options[:all]
                      MiqPolicy.order(:id).all
                    else
-                     MiqPolicy.order(:id).where(:read_only => [false,nil])
+                     MiqPolicy.order(:id).where(:read_only => [false, nil])
                    end
 
         policies.each do |p|

@@ -1,5 +1,5 @@
 describe TaskHelpers::Imports::Policies do
-  let(:data_dir)       { File.join(File.expand_path(__dir__), 'data', 'policies') }
+  let(:data_dir)        { File.join(File.expand_path(__dir__), 'data', 'policies') }
   let(:policy_file)     { 'Policy_Import_Test.yaml' }
   let(:bad_policy_file) { 'Bad_Policy_Import_Test.yml' }
   let(:policy_one_guid) { "7562ca69-a00d-4017-be8f-d31d39a07deb" }
