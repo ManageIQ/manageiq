@@ -93,6 +93,14 @@ module ManageIQ
       run_rake_task("log:clear tmp:clear")
     end
 
+    def self.clear_obsolete
+      return unless Dir.exist? APP_ROOT.join('vendor', 'assets', 'bower_components')
+      puts "\n== Removing obsolete bower install =="
+      Dir.chdir APP_ROOT do
+        system("rm -rf vendor/assets/bower_components/")
+      end
+    end
+
     def self.write_region_file(region_number = 1)
       File.write(APP_ROOT.join("REGION"), region_number.to_s)
     end
