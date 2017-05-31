@@ -13,23 +13,24 @@ describe Share do
     expect { share.reload }.to raise_error(ActiveRecord::RecordNotFound)
   end
 
-  xit "does something" do
-    EvmSpecHelper.seed_specific_product_features(%w(host service))
-    user = FactoryGirl.create(:user, :role => "user", :features => "service")
-    resource_to_be_shared = FactoryGirl.create(:miq_template)
+  it "does something" do
+    EvmSpecHelper.seed_specific_product_features(%w(host))
+    tenant = FactoryGirl.create(:tenant)
+    group = FactoryGirl.create(:miq_group, :role => "user", :features => "host", :tenant => tenant)
+    other_tenant = FactoryGirl.create(:tenant)
+    other_group = FactoryGirl.create(:miq_group, :tenant => other_tenant)
+    user = FactoryGirl.create(:user, :miq_groups => [group])
+    resource_to_be_shared = FactoryGirl.create(:miq_template, :tenant => tenant)
+    features = [MiqProductFeature.find_by(:identifier => "host")]
+    share = create_share(user, resource_to_be_shared, features)
 
     expect(Rbac::Filterer.filtered_object(resource_to_be_shared, :user => user)).to be_present
 
-    # do something
+    user.miq_groups = [other_group]
 
     expect(Rbac::Filterer.filtered_object(resource_to_be_shared, :user => user)).not_to be_present
 
-    # features = [MiqProductFeature.find_by(:identifier => "service")]
-    # share = create_share(user, resource_to_be_shared, features)
-
-    # replace_user_features(user, "host")
-
-    # expect { share.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    expect { share.reload }.to raise_error(ActiveRecord::RecordNotFound)
   end
 
   def create_share(user, resource, features)
