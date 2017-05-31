@@ -33,8 +33,10 @@ describe Session do
 
     it "logs out users before destroying stale sessions" do
       FactoryGirl.create(:session, :updated_at => 1.year.ago, :raw_data => {:userid => "admin"})
-      expect(User).to receive(:where).and_return([User.new]).exactly(1).times
+      user = instance_double(User, :lastlogoff => 2.days.ago, :lastlogon => 1.day.ago)
+      allow(User).to receive(:where).with(:userid => ["admin"]).and_return([user])
 
+      expect(user).to receive(:logoff)
       expect { described_class.purge(0) }.to change { described_class.count }.from(1).to(0)
     end
 
