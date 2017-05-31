@@ -25,11 +25,8 @@ describe Session do
   end
 
   describe ".purge" do
-    before do
-      FactoryGirl.create_list(:session, 2, :updated_at => 1.year.ago, :raw_data => {:userid => "admin"})
-    end
-
     it "purges an old session" do
+      FactoryGirl.create_list(:session, 2, :updated_at => 1.year.ago, :raw_data => {:userid => "admin"})
       expect(described_class.count).to eq(2)
 
       described_class.purge(0, 1)
@@ -38,6 +35,7 @@ describe Session do
     end
 
     it "purges one batch" do
+      FactoryGirl.create_list(:session, 2, :updated_at => 1.year.ago, :raw_data => {:userid => "admin"})
       expect(described_class.count).to eq(2)
 
       expect(described_class.purge_one_batch(0, 1)).to eq 1
@@ -46,6 +44,7 @@ describe Session do
     end
 
     it "logs out users before destroying stale sessions" do
+      FactoryGirl.create_list(:session, 2, :updated_at => 1.year.ago, :raw_data => {:userid => "admin"})
       expect(described_class.count).to eq(2)
       expect(User).to receive(:where).and_return([User.new]).exactly(1).times
 
@@ -55,6 +54,7 @@ describe Session do
     end
 
     it "handles a session with bad data" do
+      FactoryGirl.create_list(:session, 2, :updated_at => 1.year.ago, :raw_data => {:userid => "admin"})
       FactoryGirl.create(:session,
                          :updated_at => 1.year.ago,
                          :data       => "Data that can't be marshaled"
@@ -69,6 +69,7 @@ describe Session do
       around { |example| Timecop.freeze { example.run } }
 
       it "will purge an expired token" do
+        FactoryGirl.create_list(:session, 2, :updated_at => 1.year.ago, :raw_data => {:userid => "admin"})
         FactoryGirl.create(:session, :raw_data => {:expires_on => 1.second.ago})
 
         described_class.purge(0)
@@ -77,6 +78,7 @@ describe Session do
       end
 
       it "won't purge an unexpired token" do
+        FactoryGirl.create_list(:session, 2, :updated_at => 1.year.ago, :raw_data => {:userid => "admin"})
         FactoryGirl.create(:session, :raw_data => {:expires_on => 1.second.from_now})
 
         described_class.purge(0)
