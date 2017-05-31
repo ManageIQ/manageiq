@@ -13,7 +13,7 @@ describe Share do
     expect { share.reload }.to raise_error(ActiveRecord::RecordNotFound)
   end
 
-  it "does something" do
+  xit "does something" do
     EvmSpecHelper.seed_specific_product_features(%w(host service))
     user = FactoryGirl.create(:user, :role => "user", :features => "service")
     resource_to_be_shared = FactoryGirl.create(:miq_template)
