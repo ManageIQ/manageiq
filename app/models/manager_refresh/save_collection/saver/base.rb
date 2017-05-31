@@ -14,13 +14,11 @@ module ManagerRefresh::SaveCollection
       end
 
       def save_inventory_collection!
-        # If we have not data to save and delete is not allowed, we can just skip
-        return if inventory_collection.data.blank? && !inventory_collection.delete_allowed?
-        # If we have a targeted InventoryCollection that wouldn't do anything
-        return if inventory_collection.targeted? && inventory_collection.manager_uuids.blank? &&
-                  inventory_collection.skeletal_manager_uuids.blank? &&
-                  inventory_collection.parent_inventory_collections.blank? &&
-                  inventory_collection.custom_save_block.nil?
+        # If we have a targeted InventoryCollection that wouldn't do anything, quickly skip it
+        return if inventory_collection.noop?
+        # If we want to use delete_complement strategy using :all_manager_uuids attribute, we are skipping any other
+        # job. We want to do 1 :delete_complement job at 1 time, to keep to memory down.
+        return delete_complement(inventory_collection) if inventory_collection.all_manager_uuids.present?
 
         # TODO(lsmola) do I need to reload every time? Also it should be enough to clear the associations.
         inventory_collection.parent.reload if inventory_collection.parent
@@ -32,6 +30,30 @@ module ManagerRefresh::SaveCollection
       private
 
       attr_reader :unique_index_keys, :unique_db_primary_keys
+
+      def delete_complement(inventory_collection)
+        return unless inventory_collection.delete_allowed?
+
+        all_manager_uuids_size = inventory_collection.all_manager_uuids.size
+
+        _log.info("*************** PROCESSING :delete_complement of #{inventory_collection} of size "\
+                  "#{all_manager_uuids_size} *************")
+        deleted_counter = 0
+
+        inventory_collection.db_collection_for_comparison_for_complement_of(
+          inventory_collection.all_manager_uuids
+        ).find_in_batches do |batch|
+          ActiveRecord::Base.transaction do
+            batch.each do |record|
+              record.public_send(inventory_collection.delete_method)
+              deleted_counter += 1
+            end
+          end
+        end
+
+        _log.info("*************** PROCESSED :delete_complement of #{inventory_collection} of size "\
+                  "#{all_manager_uuids_size}, deleted=#{deleted_counter} *************")
+      end
 
       def assert_distinct_relation(record)
         if unique_db_primary_keys.include?(record.id) # Include on Set is O(1)
@@ -53,7 +75,7 @@ module ManagerRefresh::SaveCollection
 
       def assert_referential_integrity(hash, inventory_object)
         inventory_object.inventory_collection.fixed_foreign_keys.each do |x|
-          if hash[x.to_s].blank?
+          if hash[x].blank?
             _log.info("Ignoring #{inventory_object} because of missing foreign key #{x} for "\
                       "#{inventory_object.inventory_collection.parent.class.name}:"\
                       "#{inventory_object.inventory_collection.parent.id}")

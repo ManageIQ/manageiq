@@ -1,6 +1,6 @@
 module ManagerRefresh
   class InventoryCollection
-    attr_accessor :saved, :references, :attribute_references, :data_collection_finalized
+    attr_accessor :saved, :references, :attribute_references, :data_collection_finalized, :all_manager_uuids
 
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
                 :internal_attributes, :delete_method, :data, :data_index, :dependency_attributes, :manager_ref,
@@ -303,6 +303,12 @@ module ManagerRefresh
     #        this attribute, the db_collection_for_comparison will be automatically limited by the manager_uuids, in a
     #        case of a simple relation. In a case of a complex relation, we can leverage :manager_uuids in a
     #        custom :targeted_arel.
+    # @param all_manager_uuids [Array] Array of all manager_uuids of the InventoryObjects. With the :targeted true,
+    #        having this parameter defined will invoke only :delete_method on a complement of this set, making sure
+    #        the DB has only this set of data after. This :attribute serves for deleting of top level
+    #        InventoryCollections, i.e. InventoryCollections having parent_inventory_collections nil. The deleting of
+    #        child collections is already handled by the scope of the parent_inventory_collections and using Rails
+    #        :dependent => :destroy,
     # @param targeted_arel [Proc] A callable block that receives this InventoryCollection as a first argument. In there
     #        we can leverage a :parent_inventory_collections or :manager_uuids to limit the query based on the
     #        manager_uuids available.
@@ -333,8 +339,8 @@ module ManagerRefresh
                    attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil,
                    check_changed: nil, custom_manager_uuid: nil, custom_db_finder: nil, arel: nil, builder_params: {},
                    inventory_object_attributes: nil, unique_index_columns: nil, name: nil, saver_strategy: nil,
-                   parent_inventory_collections: nil, manager_uuids: [], targeted_arel: nil, targeted: nil,
-                   manager_ref_allowed_nil: nil)
+                   parent_inventory_collections: nil, manager_uuids: [], all_manager_uuids: nil, targeted_arel: nil,
+                   targeted: nil, manager_ref_allowed_nil: nil)
       @model_class           = model_class
       @manager_ref           = manager_ref || [:ems_ref]
       @custom_manager_uuid   = custom_manager_uuid
@@ -362,6 +368,7 @@ module ManagerRefresh
 
       # Targeted mode related attributes
       @manager_uuids                = Set.new.merge(manager_uuids)
+      @all_manager_uuids            = all_manager_uuids
       @parent_inventory_collections = parent_inventory_collections
       @skeletal_manager_uuids       = Set.new.merge(manager_uuids)
       @targeted_arel                = targeted_arel
@@ -498,6 +505,27 @@ module ManagerRefresh
       data_collection_finalized
     end
 
+    def noop?
+      # If this InventoryCollection doesn't do anything. it can easily happen for targeted/batched strategies.
+      if targeted?
+        if parent_inventory_collections.nil? && manager_uuids.blank? && skeletal_manager_uuids.blank? &&
+           all_manager_uuids.nil? && parent_inventory_collections.blank? && custom_save_block.nil?
+          # It's a noop Parent targeted InventoryCollection
+          true
+        elsif !parent_inventory_collections.nil? && parent_inventory_collections.all? { |x| x.manager_uuids.blank? }
+          # It's a noop Child targeted InventoryCollection
+          true
+        else
+          false
+        end
+      elsif data.blank? && !delete_allowed?
+        # If we have no data to save and delete is not allowed, we can just skip
+        true
+      else
+        false
+      end
+    end
+
     def supports_sti?
       @supports_sti_cache = model_class.column_names.include?("type") if @supports_sti_cache.nil?
       @supports_sti_cache
@@ -521,7 +549,7 @@ module ManagerRefresh
         raise "#{self} and its table #{model_class.table_name} must have a unique index defined, in order to use "\
               "saver_strategy :concurrent_safe or :concurrent_safe_batch."
       end
-      @unique_index_columns = unique_indexes.first.columns
+      @unique_index_columns = unique_indexes.first.columns.map(&:to_sym)
     end
 
     def <<(inventory_object)
@@ -758,7 +786,7 @@ module ManagerRefresh
     def foreign_keys
       return [] unless model_class
 
-      @foreign_keys_cache ||= belongs_to_associations.map(&:foreign_key)
+      @foreign_keys_cache ||= belongs_to_associations.map(&:foreign_key).map!(&:to_sym)
     end
 
     def fixed_foreign_keys
@@ -769,6 +797,7 @@ module ManagerRefresh
       manager_ref_set = (manager_ref - manager_ref_allowed_nil)
       @fixed_foreign_keys_cache = manager_ref_set.map { |x| association_to_foreign_key_mapping[x] }.compact
       @fixed_foreign_keys_cache += foreign_keys & manager_ref
+      @fixed_foreign_keys_cache.map!(&:to_sym)
       @fixed_foreign_keys_cache
     end
 
@@ -818,11 +847,19 @@ module ManagerRefresh
           targeted_arel.call(self)
         else
           raise "Can't build :targeted_arel for #{self}, please provide it as an argument." if manager_ref.count > 1
-          full_collection_for_comparison.where(manager_ref.first => (manager_uuids + skeletal_manager_uuids).to_a.flatten.compact)
+          db_collection_for_comparison_for((manager_uuids + skeletal_manager_uuids).to_a.flatten.compact)
         end
       else
         full_collection_for_comparison
       end
+    end
+
+    def db_collection_for_comparison_for(manager_uuids_set)
+      full_collection_for_comparison.where(manager_ref.first => manager_uuids_set)
+    end
+
+    def db_collection_for_comparison_for_complement_of(manager_uuids_set)
+      full_collection_for_comparison.where.not(manager_ref.first => manager_uuids_set)
     end
 
     def full_collection_for_comparison
@@ -986,7 +1023,7 @@ module ManagerRefresh
           # designed the way, we don't duplicate the data, but rather get them with a join. (3NF!)
 
           value.inventory_collection.find_or_build(value.ems_ref)
-          value.inventory_collection.skeletal_manager_uuids
+          value.inventory_collection.skeletal_manager_uuids << value.ems_ref
         end
       end
 

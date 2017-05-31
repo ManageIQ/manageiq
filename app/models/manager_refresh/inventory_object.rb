@@ -74,7 +74,7 @@ module ManagerRefresh
         end
       end
 
-      attributes_for_saving
+      attributes_for_saving.symbolize_keys
     end
 
     def assign_attributes(attributes)
