@@ -2357,6 +2357,8 @@
         :identifier: vm_edit
       - :name: set_ownership
         :identifier: vm_ownership
+      - :name: set_miq_server
+        :identifier: vm_edit
       - :name: scan
         :identifier: vm_scan
       - :name: delete
@@ -2406,6 +2408,8 @@
         :identifier: vm_edit
       - :name: set_ownership
         :identifier: vm_ownership
+      - :name: set_miq_server
+        :identifier: vm_edit
       - :name: scan
         :identifier: vm_scan
       :delete:
