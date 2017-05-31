@@ -53,8 +53,8 @@ Vmdb::Application.routes.draw do
               patch "/:c_id", :action => :update
             when :delete
               delete "/:c_id", :action => :destroy
-            else
-              match "(/:c_id)", :action => API_ACTIONS[verb], :via => verb
+            when :post
+              post "(/:c_id)", :action => :update
             end
           end
         end
@@ -71,8 +71,8 @@ Vmdb::Application.routes.draw do
               patch "/:c_id/#{subcollection_name}/:s_id", :action => :update
             when :delete
               delete "/:c_id/#{subcollection_name}/:s_id", :action => :destroy
-            else
-              match("/:c_id/#{subcollection_name}(/:s_id)", :action => API_ACTIONS[verb], :via => verb)
+            when :post
+              post "/:c_id/#{subcollection_name}(/:s_id)", :action => :update
             end
           end
         end
