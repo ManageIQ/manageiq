@@ -37,7 +37,8 @@ describe Session do
       allow(User).to receive(:where).with(:userid => ["admin"]).and_return([user])
 
       expect(user).to receive(:logoff)
-      expect { described_class.purge(0) }.to change { described_class.count }.from(1).to(0)
+
+      described_class.purge(0)
     end
 
     it "handles a session with bad data" do
