@@ -15,6 +15,7 @@ module MiqAeMethodService
     expose :tenant,               :association => true
     expose :miq_templates,        :association => true
     expose :customization_specs,  :association => true
+    expose :iso_datastore,        :association => true
     expose :to_s
     expose :authentication_userid
     expose :authentication_password
