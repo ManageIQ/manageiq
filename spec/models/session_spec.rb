@@ -45,10 +45,7 @@ describe Session do
     end
 
     it "handles a session with bad data" do
-      FactoryGirl.create(:session,
-                         :updated_at => 1.year.ago,
-                         :data       => "Data that can't be marshaled"
-                        )
+      FactoryGirl.create(:session, :updated_at => 1.year.ago, :data => "Data that can't be marshaled")
 
       described_class.purge(0)
 
