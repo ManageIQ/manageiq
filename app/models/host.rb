@@ -466,7 +466,7 @@ class Host < ApplicationRecord
   def vmotion_enabled?
     msg = validate_vmotion_enabled?
     if msg[:available] && respond_to?(:vim_vmotion_enabled?)
-      check_policy_prevent("request_host_vmotion_enabled", "vim_vmotion_enabled?")
+      vim_vmotion_enabled?
     else
       _log.warn("Cannot check if vmotion is enabled because <#{msg[:message]}>")
     end
