@@ -126,4 +126,23 @@ describe ServiceTemplateAnsibleTower do
       expect(service_template.config_info).to eq(expected_config_info)
     end
   end
+
+  describe '#my_zone' do
+    let(:manager) { FactoryGirl.create(:automation_manager_ansible_tower, :provider) }
+    let(:job_template) { FactoryGirl.create(:configuration_script, :manager => manager) }
+    let(:service_template) { FactoryGirl.create(:service_template_ansible_tower, :job_template => job_template) }
+
+    context "with job template manager" do
+      it "takes the zone from job_template manager" do
+        expect(service_template.my_zone).to eq(manager.my_zone)
+      end
+    end
+
+    context 'without job template manager' do
+      it "returns nil if job_template manager is not valid" do
+        service_template.job_template.manager = nil
+        expect(service_template.my_zone).to eq(nil)
+      end
+    end
+  end
 end
