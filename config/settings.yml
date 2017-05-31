@@ -1170,6 +1170,8 @@
     :keep_realtime_metrics: 4.hours
     :purge_window_size: 100
   :watchdog_interval: 1.minute
+:task:
+  :active_task_timeout: 6.hours
 :ui:
   :mark_translated_strings: false
 :webservices:
@@ -1405,6 +1407,7 @@
       :session_timeout_interval: 30.seconds
       :storage_file_collection_interval: 1.days
       :storage_file_collection_time_utc: 21600
+      :task_timeout_check_frequency: 1.hour
       :vm_retired_interval: 10.minutes
       :yum_update_check: 12.hours
     :smis_refresh_worker:

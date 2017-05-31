@@ -225,6 +225,10 @@ class MiqScheduleWorker::Jobs
     queue_work(:class_name => "Service", :method_name => "queue_chargeback_reports", :zone => nil, :args => args)
   end
 
+  def check_for_timed_out_active_tasks
+    queue_work(:class_name => "MiqTask", :method_name => "update_status_for_timed_out_active_tasks", :zone => nil)
+  end
+
   private
 
   def queue_work(options)

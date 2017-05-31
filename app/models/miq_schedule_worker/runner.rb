@@ -244,9 +244,20 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       end
     end
 
-    # run run chargeback generation every day at specific time
+    # run chargeback generation every day at specific time
     schedule_chargeback_report_for_service_daily
+
+    schedule_check_for_task_timeout
+
     @schedules[:scheduler]
+  end
+
+  def schedule_check_for_task_timeout
+    every = worker_settings[:task_timeout_check_frequency]
+    scheduler = scheduler_for(:scheduler)
+    scheduler.schedule_every(every, :first_at => Time.current + 1.minute) do
+      enqueue :check_for_timed_out_active_tasks
+    end
   end
 
   def schedule_chargeback_report_for_service_daily
