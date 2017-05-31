@@ -121,8 +121,6 @@ class MiqUserRole < ApplicationRecord
   private
 
   def revalidate_shares(_feature)
-    Share.joins(:user => :miq_groups).where(:miq_groups => {:id => miq_groups}).each do |share|
-      share.destroy unless ResourceSharer.valid_share?(share)
-    end
+    ShareRevalidator.revalidate(self)
   end
 end
