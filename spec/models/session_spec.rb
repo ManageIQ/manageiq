@@ -26,9 +26,7 @@ describe Session do
 
   describe ".purge" do
     before do
-      2.times do
-        FactoryGirl.create(:session, :updated_at => 1.year.ago, :raw_data => {:userid=>"admin"})
-      end
+      FactoryGirl.create_list(:session, 2, :updated_at => 1.year.ago, :raw_data => {:userid=>"admin"})
     end
 
     it "purges an old session" do
