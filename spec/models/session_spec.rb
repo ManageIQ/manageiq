@@ -54,7 +54,6 @@ describe Session do
     end
 
     it "handles a session with bad data" do
-      FactoryGirl.create_list(:session, 2, :updated_at => 1.year.ago, :raw_data => {:userid => "admin"})
       FactoryGirl.create(:session,
                          :updated_at => 1.year.ago,
                          :data       => "Data that can't be marshaled"
@@ -69,7 +68,6 @@ describe Session do
       around { |example| Timecop.freeze { example.run } }
 
       it "will purge an expired token" do
-        FactoryGirl.create_list(:session, 2, :updated_at => 1.year.ago, :raw_data => {:userid => "admin"})
         FactoryGirl.create(:session, :raw_data => {:expires_on => 1.second.ago})
 
         described_class.purge(0)
@@ -78,7 +76,6 @@ describe Session do
       end
 
       it "won't purge an unexpired token" do
-        FactoryGirl.create_list(:session, 2, :updated_at => 1.year.ago, :raw_data => {:userid => "admin"})
         FactoryGirl.create(:session, :raw_data => {:expires_on => 1.second.from_now})
 
         described_class.purge(0)
