@@ -33,6 +33,17 @@ class MiqTask < ApplicationRecord
     t.grouping(Arel::Nodes::Case.new(t[:state]).when(STATE_FINISHED).then(t[:status]).else(t[:state]))
   end)
 
+  scope :active,            -> { where(:state => STATE_ACTIVE) }
+  scope :no_associated_job, -> { where.not("id IN (SELECT miq_task_id from jobs)") }
+  scope :timed_out,         -> { where("updated_on < ?", Time.now.utc - ::Settings.task.active_task_timeout.to_i_with_method) }
+
+  def self.update_status_for_timed_out_active_tasks
+    MiqTask.active.timed_out.no_associated_job.find_each do |task|
+      task.update_status(STATE_FINISHED, STATUS_ERROR,
+                         "Task [#{task.id}] timed out - not active for more than #{::Settings.task.active_task_timeout}")
+    end
+  end
+
   def active?
     ![STATE_QUEUED, STATE_FINISHED].include?(state)
   end
