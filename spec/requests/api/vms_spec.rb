@@ -1520,4 +1520,66 @@ describe "Vms API" do
       expect(response.parsed_body).to include(expected)
     end
   end
+
+  describe "set_miq_server action" do
+    let(:server) { FactoryGirl.create(:miq_server) }
+    let(:server2) { FactoryGirl.create(:miq_server) }
+
+    it "does not allow setting an miq_server without an appropriate role" do
+      api_basic_authorize
+
+      run_post(vms_url(vm.id), :action => 'set_miq_server')
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "sets an miq server" do
+      api_basic_authorize action_identifier(:vms, :set_miq_server)
+
+      run_post(vms_url(vm.id), :action => 'set_miq_server', :miq_server => { :href => servers_url(server.id)})
+
+      expected = {
+        'success' => true,
+        'message' => "Set miq_server id:#{server.id} for VM id:#{vm.id} name:'#{vm.name}'"
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to eq(expected)
+      expect(vm.reload.miq_server).to eq(server)
+    end
+
+    it "can set multiple miq servers" do
+      api_basic_authorize collection_action_identifier(:vms, :set_miq_server)
+
+      run_post(vms_url, :action    => 'set_miq_server',
+                        :resources => [
+                          { :id => vm.id, :miq_server => { :href => servers_url(server.id) } },
+                          { :id => vm1.id, :miq_server => { :id => server2.id }}
+                        ])
+
+      expected = {
+        'results' => [
+          { 'success' => true, 'message' => "Set miq_server id:#{server.id} for VM id:#{vm.id} name:'#{vm.name}'" },
+          { 'success' => true, 'message' => "Set miq_server id:#{server2.id} for VM id:#{vm1.id} name:'#{vm1.name}'" }
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to eq(expected)
+      expect(vm.reload.miq_server).to eq(server)
+      expect(vm1.reload.miq_server).to eq(server2)
+    end
+
+    it "raises an error unless a valid miq_server reference is specified" do
+      api_basic_authorize action_identifier(:vms, :set_miq_server)
+
+      run_post(vms_url(vm.id), :action => 'set_miq_server', :miq_server => { :href => vms_url(1) })
+
+      expected = { 'success' => false, 'message' => 'Failed to set miq_server - Must specify a valid miq_server href or id' }
+      expect(response.parsed_body).to eq(expected)
+      expect(response).to have_http_status(:ok)
+
+      run_post(vms_url(vm.id), :action => 'set_miq_server', :miq_server => { :id => nil })
+      expect(response.parsed_body).to eq(expected)
+      expect(response).to have_http_status(:ok)
+    end
+  end
 end
