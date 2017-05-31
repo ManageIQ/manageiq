@@ -6,7 +6,7 @@ class MiqUserRole < ApplicationRecord
   has_many                :entitlements, :dependent => :restrict_with_exception
   has_many                :miq_groups, :through => :entitlements
   has_and_belongs_to_many :miq_product_features, :join_table => :miq_roles_features,
-                                                 :after_remove => :revalidate_shares
+                                                 :after_remove => ->(r, _f) { ShareRevalidator.revalidate(r) }
 
   virtual_column :vm_restriction,                   :type => :string
 
@@ -116,11 +116,5 @@ class MiqUserRole < ApplicationRecord
 
   def self.default_tenant_role
     find_by(:name => DEFAULT_TENANT_ROLE_NAME)
-  end
-
-  private
-
-  def revalidate_shares(_feature)
-    ShareRevalidator.revalidate(self)
   end
 end
