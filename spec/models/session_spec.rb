@@ -34,15 +34,6 @@ describe Session do
       expect(described_class.count).to be_zero
     end
 
-    it "purges one batch" do
-      FactoryGirl.create_list(:session, 2, :updated_at => 1.year.ago, :raw_data => {:userid => "admin"})
-      expect(described_class.count).to eq(2)
-
-      expect(described_class.purge_one_batch(0, 1)).to eq 1
-
-      expect(described_class.count).to eq 1
-    end
-
     it "logs out users before destroying stale sessions" do
       FactoryGirl.create_list(:session, 2, :updated_at => 1.year.ago, :raw_data => {:userid => "admin"})
       expect(described_class.count).to eq(2)
@@ -81,6 +72,17 @@ describe Session do
         described_class.purge(0)
 
         expect(described_class.count).to eq(1)
+      end
+    end
+
+    describe ".purge_one_batch" do
+      it "purges one batch" do
+        FactoryGirl.create_list(:session, 2, :updated_at => 1.year.ago, :raw_data => {:userid => "admin"})
+        expect(described_class.count).to eq(2)
+
+        expect(described_class.purge_one_batch(0, 1)).to eq 1
+
+        expect(described_class.count).to eq 1
       end
     end
   end
