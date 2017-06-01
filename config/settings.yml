@@ -1282,7 +1282,7 @@
       :vm_retired_interval: 10.minutes
       :yum_update_check: 12.hours
     :ui_worker:
-      :connection_pool_size: 8
+      :connection_pool_size: 12
       :memory_threshold: 1.gigabytes
       :nice_delta: 1
     :vim_broker_worker:
