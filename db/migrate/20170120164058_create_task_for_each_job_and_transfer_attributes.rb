@@ -13,7 +13,7 @@ class CreateTaskForEachJobAndTransferAttributes < ActiveRecord::Migration[5.0]
       Job.find_each do |job|
         job.create_miq_task(:status        => job.status.try(:capitalize),
                             :name          => job.name,
-                            :message       => job.message,
+                            :message       => job.message.try(:truncate, 255),
                             :state         => job.state.try(:capitalize),
                             :userid        => job.userid,
                             :miq_server_id => job.miq_server_id,
