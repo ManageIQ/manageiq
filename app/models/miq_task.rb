@@ -30,6 +30,16 @@ class MiqTask < ApplicationRecord
     t.grouping(Arel::Nodes::Case.new(t[:state]).when(STATE_FINISHED).then(t[:status]).else(t[:state]))
   end)
 
+  scope :active,            -> { where(:state => STATE_ACTIVE) }
+  scope :timed_out,         -> { where("updated_on < ?", Time.now.utc - ::Settings.task.active_task_timeout.to_i_with_method) }
+
+  def self.update_status_for_timed_out_active_tasks
+    MiqTask.active.timed_out.find_each do |task|
+      task.update_status(STATE_FINISHED, STATUS_ERROR,
+                         "Task [#{task.id}] timed out - not active for more than #{::Settings.task.active_task_timeout}")
+    end
+  end
+
   def self.status_ok?(status)
     status.casecmp(STATUS_OK) == 0
   end
