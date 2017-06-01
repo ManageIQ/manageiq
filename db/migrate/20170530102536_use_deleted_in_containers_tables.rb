@@ -48,23 +48,23 @@ class UseDeletedInContainersTables < ActiveRecord::Migration[5.0]
   end
 
   def down
-    say_with_time("Change :deleted => false to :ems_id => nil for ContainerDefinition") do
+    say_with_time("Change :deleted => true to :ems_id => nil for ContainerDefinition") do
       soft_delete_to_disconnect(ContainerDefinition)
     end
 
-    say_with_time("Change :deleted => false to :ems_id => nil for ContainerGroup") do
+    say_with_time("Change :deleted => true to :ems_id => nil for ContainerGroup") do
       soft_delete_to_disconnect(ContainerGroup)
     end
 
-    say_with_time("Change :deleted => false to :ems_id => nil for ContainerImages") do
+    say_with_time("Change :deleted => true to :ems_id => nil for ContainerImages") do
       soft_delete_to_disconnect(ContainerImage)
     end
 
-    say_with_time("Change :deleted => false to :ems_id => nil for ContainerProject") do
+    say_with_time("Change :deleted => true to :ems_id => nil for ContainerProject") do
       soft_delete_to_disconnect(ContainerProject)
     end
 
-    say_with_time("Change :deleted => false to :ems_id => nil for Container") do
+    say_with_time("Change :deleted => true to :ems_id => nil for Container") do
       soft_delete_to_disconnect(Container)
     end
   end
