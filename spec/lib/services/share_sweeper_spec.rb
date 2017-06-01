@@ -1,7 +1,7 @@
 RSpec.describe ShareSweeper do
   before { allow(User).to receive(:server_timezone).and_return("UTC") }
 
-  specify "the share is destroyed when the sharee is no longer has the features that were shared" do
+  example "the share is destroyed when the sharee is no longer has the features that were shared" do
     EvmSpecHelper.seed_specific_product_features(%w(host service))
     user = FactoryGirl.create(:user, :role => "user", :features => "service")
     resource_to_be_shared = FactoryGirl.create(:miq_template)
@@ -13,7 +13,7 @@ RSpec.describe ShareSweeper do
     expect { share.reload }.to raise_error(ActiveRecord::RecordNotFound)
   end
 
-  specify "the share is destroyed when the entitlement filters no longer cover the tags on the resource" do
+  example "the share is destroyed when the entitlement filters no longer cover the tags on the resource" do
     EvmSpecHelper.seed_specific_product_features(%w(host))
     group = FactoryGirl.create(:miq_group, :role => "user", :features => "host")
     group.entitlement.set_managed_filters([["/managed/environment/prod"]])
