@@ -232,6 +232,7 @@
     :min_cpu_usagemhz_rate_average: :mhz_avg
     :trend_cpu_usagemhz_rate_average: :mhz_avg
     :trend_max_cpu_usagemhz_rate_average: :mhz_avg
+    :trend_max_cpu_usage_rate_average: :percent
 
     :max_sys_uptime_absolute_latest: :elapsed_time
     :min_sys_uptime_absolute_latest: :elapsed_time
