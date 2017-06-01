@@ -290,4 +290,50 @@ describe MiqTask do
       expect(@miq_task.results_ready?).to be_truthy
     end
   end
+
+  describe ".update_status_for_timed_out_active_tasks" do
+    let(:timeout) { "1.hour" }
+    let(:miq_task) { FactoryGirl.create(:miq_task_plain) }
+    before do
+      stub_settings(:task => {:active_task_timeout => timeout})
+    end
+
+    context "task is active" do
+      before do
+        miq_task.update_attributes(:state => MiqTask::STATE_ACTIVE)
+      end
+
+      it "updates status to 'Error' for timed out task" do
+        miq_task.update_attributes(:updated_on => miq_task.updated_on - timeout.to_i_with_method)
+        expect(miq_task.status).not_to eq MiqTask::STATUS_ERROR
+        MiqTask.update_status_for_timed_out_active_tasks
+        miq_task.reload
+        expect(miq_task.status).to eq MiqTask::STATUS_ERROR
+      end
+
+      it "does not update status if task not timed out" do
+        MiqTask.update_status_for_timed_out_active_tasks
+        miq_task.reload
+        expect(miq_task.status).not_to eq MiqTask::STATUS_ERROR
+      end
+    end
+
+    context "task is not active" do
+      it "does not update status to 'Error' if task state is 'Finished'" do
+        miq_task.update_attributes(:state      => MiqTask::STATE_FINISHED,
+                                   :updated_on => miq_task.updated_on - timeout.to_i_with_method)
+        MiqTask.update_status_for_timed_out_active_tasks
+        miq_task.reload
+        expect(miq_task.status).not_to eq MiqTask::STATUS_ERROR
+      end
+
+      it "does not update status to 'Error' if task state is 'Queued'" do
+        miq_task.update_attributes(:state      => MiqTask::STATE_QUEUED,
+                                   :updated_on => miq_task.updated_on - timeout.to_i_with_method)
+        MiqTask.update_status_for_timed_out_active_tasks
+        miq_task.reload
+        expect(miq_task.status).not_to eq MiqTask::STATUS_ERROR
+      end
+    end
+  end
 end
