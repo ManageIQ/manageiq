@@ -8,8 +8,8 @@ end
 
 db = VmdbDatabase.includes(:vmdb_tables => :vmdb_indexes).first
 puts "VmdbDatabase"
-print_records(db.vmdb_tables.where(:table_type => "vmdb"))
+print_records(db.vmdb_tables.where(:type => "VmdbTableEvm"))
 
 puts
 puts "Toast Tables"
-print_records(db.vmdb_tables.where(:table_type => "text"), '  ')
+print_records(db.vmdb_tables.where(:type => "VmdbTableText"), '  ')
