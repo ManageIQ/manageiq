@@ -18,10 +18,7 @@ class ShareSweeper
   end
 
   def sweep_after_change_to_Entitlement(entitlement)
-    Share
-      .joins(:user => {:miq_groups => :entitlement})
-      .where(:user => {:miq_groups => {"entitlements" => {:id => entitlement}}})
-      .each(&method(:sweep_share))
+    Share.joins(:user => :miq_groups).where(:miq_groups => {:id => entitlement.miq_group}).each(&method(:sweep_share))
   end
 
   private
