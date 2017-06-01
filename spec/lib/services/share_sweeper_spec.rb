@@ -13,7 +13,7 @@ RSpec.describe ShareSweeper do
     expect { share.reload }.to raise_error(ActiveRecord::RecordNotFound)
   end
 
-  it "does something" do
+  specify "the share is destroyed if the entitlement filters to not cover the tags on the resource" do
     EvmSpecHelper.seed_specific_product_features(%w(host))
     group = FactoryGirl.create(:miq_group, :role => "user", :features => "host")
     group.entitlement.set_managed_filters([["/managed/environment/prod"]])
