@@ -2,11 +2,12 @@ describe MiqReport::ImportExport do
   before do
     @user       = FactoryGirl.create(:user_admin)
     @old_report = FactoryGirl.create(:miq_report,
-                                     :name      => "Test Report",
-                                     :rpt_type  => "Custom",
-                                     :tz        => "Eastern Time (US & Canada)",
-                                     :col_order => ["name", "boot_time", "disks_aligned"],
-                                     :cols      => ["name", "boot_time", "disks_aligned"]
+                                     :name       => "Test Report",
+                                     :rpt_type   => "Custom",
+                                     :tz         => "Eastern Time (US & Canada)",
+                                     :col_order  => ["name", "boot_time", "disks_aligned"],
+                                     :cols       => ["name", "boot_time", "disks_aligned"],
+                                     :db_options => {:rpt_type => "ChargebackContainerProject"}
                                     )
   end
 
@@ -14,6 +15,7 @@ describe MiqReport::ImportExport do
     before do
       report_string = MiqReport.export_to_yaml([@old_report.id], MiqReport)
       @new_report   = YAML.load(report_string).first
+      @from_json    = JSON.parse(@new_report.to_json)
       @options      = {
         :overwrite => true,
         :user      => @user
@@ -37,6 +39,14 @@ describe MiqReport::ImportExport do
         _, result = subject
         expect(result[:status]).to eq(:add)
         expect(MiqReport.count).to eq(1)
+      end
+
+      it "imports from json and preserves symbolized keys in serialized columns" do
+        @options[:save] = true
+        MiqReport.import_from_hash(@from_json, @options)
+
+        report = MiqReport.last
+        expect(report.db_options[:rpt_type]).to_not be_nil
       end
     end
 
