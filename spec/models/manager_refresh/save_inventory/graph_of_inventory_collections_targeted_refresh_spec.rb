@@ -409,19 +409,16 @@ describe ManagerRefresh::SaveInventory do
         @data[:vms] = ::ManagerRefresh::InventoryCollection.new(
           :model_class => ManageIQ::Providers::CloudManager::Vm,
           :arel        => @ems.vms.where(:ems_ref => vm_refs),
-          :name        => :vms
         )
         @data[:hardwares] = ::ManagerRefresh::InventoryCollection.new(
           :model_class => Hardware,
           :arel        => @ems.hardwares.joins(:vm_or_template).where(:vms => {:ems_ref => vm_refs}),
           :manager_ref => [:vm_or_template],
-          :name        => :hardwares
         )
         @data[:disks] = ::ManagerRefresh::InventoryCollection.new(
           :model_class => Disk,
           :arel        => @ems.disks.joins(:hardware => :vm_or_template).where('hardware' => {'vms' => {'ems_ref' => vm_refs}}),
           :manager_ref => [:hardware, :device_name],
-          :name        => :disks,
         )
         @data[:image_hardwares] = ::ManagerRefresh::InventoryCollection.new(
           :model_class         => Hardware,
