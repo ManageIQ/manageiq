@@ -6,7 +6,7 @@ class MiqUserRole < ApplicationRecord
   has_many                :entitlements, :dependent => :restrict_with_exception
   has_many                :miq_groups, :through => :entitlements
   has_and_belongs_to_many :miq_product_features, :join_table => :miq_roles_features,
-                                                 :after_remove => ->(r, _f) { ShareRevalidator.revalidate(r) }
+                                                 :after_remove => ->(r, _) { ShareSweeper.sweep(r) }
 
   virtual_column :vm_restriction,                   :type => :string
 
