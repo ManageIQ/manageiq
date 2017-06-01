@@ -84,6 +84,7 @@ module Rbac
       "VmOrTemplate::ResourcePool"             => :resource_pool,
       "ConfiguredSystem::ExtManagementSystem"  => :ext_management_system,
       "ConfiguredSystem::ConfigurationProfile" => [:id, :configuration_profile_id],
+      "ExtManagementSystem::CloudNetwork"      => [:ems_id, :id]
     }
 
     # These classes should accept any of the relationship_mixin methods including:
