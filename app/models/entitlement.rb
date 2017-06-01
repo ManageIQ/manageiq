@@ -4,6 +4,8 @@ class Entitlement < ApplicationRecord
 
   serialize :filters
 
+  after_save ->(e) { ShareSweeper.sweep(e) }
+
   def self.valid_filters?(filters_hash)
     return true  unless filters_hash                  # nil ok
     return false unless filters_hash.kind_of?(Hash)   # must be Hash
