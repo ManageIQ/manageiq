@@ -11,7 +11,7 @@ class FixVporTimeProfileIds < ActiveRecord::Migration[5.0]
 
     def self.default
       @default ||= begin
-        ar_region_class = ArRegion.anonymous_class_with_ar_region
+        ar_region_class = ActiveRecord::IdRegions::Migration.anonymous_class_with_id_regions
         region_cond = ar_region_class.region_to_conditions(ar_region_class.my_region_number)
 
         where(region_cond)

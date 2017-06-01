@@ -5,13 +5,13 @@ describe MoveRepoDataFromDatabaseToSettings do
   let(:database_stub) { migration_stub(:MiqDatabase) }
   let(:settings_stub) { migration_stub(:SettingsChange) }
 
-  let(:region_number) { ArRegion.anonymous_class_with_ar_region.my_region_number }
+  let(:region_number) { anonymous_class_with_id_regions.my_region_number }
   let(:region)        { region_stub.find_by_region(region_number) }
   let(:repo_string)   { "my-repo my-other-repo" }
   let(:repo_list)     { %w(my-repo my-other-repo) }
 
   before do
-    region_id = ArRegion.anonymous_class_with_ar_region.rails_sequence_start
+    region_id = anonymous_class_with_id_regions.rails_sequence_start
     region_stub.create(:id => region_id, :region => region_number)
   end
 

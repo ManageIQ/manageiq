@@ -60,8 +60,10 @@ RSpec.configure do |config|
   config.include Spec::Support::AuthHelper, :type => :controller
 
   config.extend  Spec::Support::MigrationHelper::DSL
-  config.include Spec::Support::MigrationHelper, :migrations => :up
-  config.include Spec::Support::MigrationHelper, :migrations => :down
+  config.include Spec::Support::MigrationHelper,          :migrations => :up
+  config.include Spec::Support::MigrationIdRegionsHelper, :migrations => :up
+  config.include Spec::Support::MigrationHelper,          :migrations => :down
+  config.include Spec::Support::MigrationIdRegionsHelper, :migrations => :down
 
   config.include Spec::Support::ApiHelper, :rest_api => true
   config.include Spec::Support::AuthRequestHelper, :type => :request
