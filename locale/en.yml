@@ -843,6 +843,7 @@ en:
       ManageIQ::Providers::Redhat::InfraManager::Host:                      Host (Redhat)
       ManageIQ::Providers::Vmware::InfraManager::Host:                      Host (Vmware)
       ManageIQ::Providers::Vmware::InfraManager::HostEsx:                   Host (Vmware)
+      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalServer:    Physical Server (Lenovo)
       MiddlewareDatasource:     Middleware Datasource
       MiddlewareDomain:         Middleware Domain
       MiddlewareMessaging:      Middleware Messaging
@@ -1057,6 +1058,8 @@ en:
       orchestration_stack:         Stack
       orchestration_template:      Orchestration Template
       operating_system:            OS
+      physical_server:             Physical Server
+      physical_servers:            Physical Servers
       registry_items:              Registry
       repository:                  Repository
       resource_pool:               Resource Pool
