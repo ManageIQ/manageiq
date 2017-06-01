@@ -125,6 +125,35 @@ describe MiqReportResult do
     end
   end
 
+  describe "#status" do
+    let(:report_name) { "Vendor and Guest OS" }
+    let(:task) { FactoryGirl.create(:miq_task) }
+    let(:miq_report_result) do
+      MiqReport.seed_report(report_name)
+      report = MiqReport.where(:name => report_name).last
+      report.generate_table(:userid => "test")
+      task.miq_report_result = report.build_create_results({:userid => "test"}, task.id)
+      MiqReportResult.find_by(:miq_task_id => task.id)
+    end
+
+    it "returns 'Running' if associated task exists and report not ready" do
+      expect(miq_report_result.status).to eq "Running"
+    end
+
+    it "returns 'Complete' if report generated and associated task exists" do
+      task.update_status("Finished", "Ok", "Generate Report result")
+      expect(miq_report_result.status).to eq "Complete"
+    end
+
+    it "returns 'Complete' if task ssociated with report deleted" do
+      expect(miq_report_result.status).to eq "Running"
+      task.update_status("Finished", "Ok", "Generate Report result")
+      task.destroy
+      miq_report_result.reload
+      expect(miq_report_result.status).to eq "Complete"
+    end
+  end
+
   describe "serializing and deserializing report results" do
     it "can serialize and deserialize an MiqReport" do
       report = FactoryGirl.build(:miq_report)
