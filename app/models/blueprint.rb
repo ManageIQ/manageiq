@@ -29,6 +29,10 @@ class Blueprint < ApplicationRecord
     published? unless status_changed?
   end
 
+  def archived?
+    status == 'archived'
+  end
+
   # The new blueprint is saved before returning
   def deep_copy(new_attributes = {})
     self.class.transaction do
@@ -111,6 +115,10 @@ class Blueprint < ApplicationRecord
         update_attributes!(:status => 'published')
       end
     end
+  end
+
+  def archive!
+    update_attributes(:status => 'archived')
   end
 
   private

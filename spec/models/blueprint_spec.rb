@@ -346,6 +346,13 @@ describe Blueprint do
       expect(subject).to be_in_use
     end
   end
+
+  describe '#archive!' do
+    it 'sets the status to archived' do
+      subject.archive!
+      expect(subject.archived?).to be_truthy
+    end
+  end
 end
 
 def add_and_save_service(p, c)
