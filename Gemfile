@@ -24,6 +24,7 @@ manageiq_plugin "manageiq-providers-ansible_tower"
 manageiq_plugin "manageiq-providers-azure"
 manageiq_plugin "manageiq-providers-foreman"
 manageiq_plugin "manageiq-providers-hawkular"
+manageiq_plugin "manageiq-providers-google"
 manageiq_plugin "manageiq-providers-kubernetes"
 manageiq_plugin "manageiq-providers-lenovo"
 manageiq_plugin "manageiq-providers-scvmm"
@@ -45,10 +46,8 @@ gem "dalli",                          "~>2.7.4",       :require => false
 gem "default_value_for",              "~>3.0.2"
 gem "elif",                           "=0.1.0",        :require => false
 gem "fast_gettext",                   "~>1.2.0"
-gem "fog-google",                     ">=0.5.2",       :require => false
 gem "gettext_i18n_rails",             "~>1.7.2"
 gem "gettext_i18n_rails_js",          "~>1.1.0"
-gem "google-api-client",              "~>0.8.6",       :require => false
 gem "hamlit",                         "~>2.7.0"
 gem "hashie",                         "~>3.4.6",       :require => false
 gem "htauth",                         "2.0.0",         :require => false
