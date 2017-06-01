@@ -896,7 +896,7 @@ describe MiqReport do
         container = FactoryGirl.create(:kubernetes_container, :container_group => group, :container_image => image)
         container.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                        :with_data,
-                                                       :timestamp     => 1.day.ago,
+                                                       :timestamp     => 1.day.ago.beginning_of_day,
                                                        :resource_id   => container.id,
                                                        :resource_name => container.name,
                                                        :parent_ems_id => ems.id,
