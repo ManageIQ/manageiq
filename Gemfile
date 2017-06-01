@@ -17,11 +17,9 @@ def manageiq_plugin(plugin_name)
   end
 end
 
-manageiq_plugin "font-fabulous" # FIXME: this is just a temporary solution and it'll go to the ui-classic later
 manageiq_plugin "manageiq-automation_engine"
 manageiq_plugin "manageiq-content"
 manageiq_plugin "manageiq-providers-amazon"
-manageiq_plugin "amazon_ssa_support" # Temporary dependency to be moved to manageiq-providers-amazon when officially released
 manageiq_plugin "manageiq-providers-azure"
 manageiq_plugin "manageiq-providers-hawkular"
 manageiq_plugin "manageiq-providers-kubernetes"
@@ -88,6 +86,7 @@ gem "vmware_web_service",             "~>0.1.1",       :require => false
 gem "websocket-driver",               "~>0.6.3"
 
 # Modified gems (forked on Github)
+gem "amazon_ssa_support",                          :require => false, :git => "https://github.com/ManageIQ/amazon_ssa_support.git", :branch => "master" # Temporary dependency to be moved to manageiq-providers-amazon when officially release
 gem "foreman_api_client",             ">=0.1.0",   :require => false, :git => "https://github.com/ManageIQ/foreman_api_client.git", :branch => "master"
 gem "ruport",                         "=1.7.0",                       :git => "https://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-3"
 
@@ -99,6 +98,7 @@ gem "american_date"
 
 group :ui_dependencies do # Added to Bundler.require in config/application.rb
   # Modified gems (forked on Github)
+  gem "font-fabulous",                                                :git => "https://github.com/ManageIQ/font-fabulous.git", :branch => "master" # FIXME: this is just a temporary solution and it'll go to the ui-classic later
   gem "jquery-rjs",                   "=0.1.1",                       :git => "https://github.com/ManageIQ/jquery-rjs.git", :tag => "v0.1.1-1"
 end
 
