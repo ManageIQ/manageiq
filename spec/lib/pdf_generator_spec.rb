@@ -1,5 +1,9 @@
 describe PdfGenerator do
-  context ".new" do
+  let(:generator) do
+    double("PdfGenerator subclass", :available? => true, :pdf_from_string => "pdf-data")
+  end
+
+  describe ".new" do
     it "will return the detected subclass" do
       expect(PdfGenerator.new.class).to_not eq PdfGenerator
     end
@@ -9,27 +13,29 @@ describe PdfGenerator do
     end
   end
 
-  def stub_generator_instance
-    generator = double("PdfGenerator subclass", :available? => true, :pdf_from_string => "pdf-data")
-    allow(PdfGenerator).to receive_messages(:instance => generator)
-    generator
-  end
+  describe "availablity" do
+    subject { PdfGenerator }
 
-  context ".available?" do
-    it "when available" do
-      stub_generator_instance
-      expect(PdfGenerator).to be_available
+    before do
+      expect(PdfGenerator).to receive_messages(:instance => generator)
     end
 
-    it "when not available" do
-      generator = stub_generator_instance
-      allow(generator).to receive_messages(:available? => false)
-      expect(PdfGenerator).to_not be_available
+    context "when available" do
+      it { is_expected.to be_available }
+    end
+
+    context "when not available" do
+      before do
+        expect(PdfGenerator.instance).to receive(:available?).and_return(false)
+      end
+
+      it { is_expected.to_not be_available }
     end
   end
 
-  it ".pdf_from_string" do
-    stub_generator_instance
-    expect(PdfGenerator.pdf_from_string("html", "css")).to eq "pdf-data"
+  describe ".pdf_from_string" do
+    subject { generator.pdf_from_string("html", "pdf_report.css") }
+
+    it { is_expected.to eq "pdf-data" }
   end
 end
