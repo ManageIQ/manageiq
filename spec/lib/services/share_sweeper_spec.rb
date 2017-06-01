@@ -13,32 +13,6 @@ RSpec.describe ShareSweeper do
     expect { share.reload }.to raise_error(ActiveRecord::RecordNotFound)
   end
 
-  # it "is invalidated when the sharee is no longer in the group associated with the same tenant as the resource" do
-  #   EvmSpecHelper.seed_specific_product_features(%w(host))
-
-  #   tenant = FactoryGirl.create(:tenant)
-  #   group = FactoryGirl.create(:miq_group, :role => "user", :features => "host", :tenant => tenant)
-
-  #   other_tenant = FactoryGirl.create(:tenant)
-  #   other_group = FactoryGirl.create(:miq_group, :role => "otheruser", :features => "host", :tenant => other_tenant)
-
-  #   user = FactoryGirl.create(:user, :miq_groups => [group])
-
-  #   resource_to_be_shared = FactoryGirl.create(:miq_template, :tenant => tenant)
-  #   features = [MiqProductFeature.find_by(:identifier => "host")]
-  #   share = create_share(user, resource_to_be_shared, features)
-
-  #   expect(Rbac::Filterer.filtered_object(resource_to_be_shared, :user => user)).to be_present
-
-  #   user.miq_groups.destroy(group)
-  #   user.miq_groups << other_group
-  #   # require 'pry'; binding.pry
-
-  #   expect(Rbac::Filterer.filtered_object(resource_to_be_shared, :user => user)).not_to be_present
-
-  #   expect { share.reload }.to raise_error(ActiveRecord::RecordNotFound)
-  # end
-
   it "does something" do
     EvmSpecHelper.seed_specific_product_features(%w(host))
     group = FactoryGirl.create(:miq_group, :role => "user", :features => "host")

@@ -22,7 +22,7 @@ class User < ApplicationRecord
   has_many   :unseen_notification_recipients, -> { unseen }, :class_name => 'NotificationRecipient'
   has_many   :unseen_notifications, :through => :unseen_notification_recipients, :source => :notification
   belongs_to :current_group, :class_name => "MiqGroup"
-  has_and_belongs_to_many :miq_groups, :after_remove => ->(u, _) { ShareSweeper.sweep(u) }
+  has_and_belongs_to_many :miq_groups
   scope      :superadmins, lambda {
     joins(:miq_groups => :miq_user_role).where(:miq_user_roles => {:name => MiqUserRole::SUPER_ADMIN_ROLE_NAME })
   }

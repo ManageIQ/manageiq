@@ -17,10 +17,4 @@ class ShareSweeper
       share.destroy unless ResourceSharer.valid_share?(share)
     end
   end
-
-  def self.sweep_after_change_to_User(user)
-    Share.joins(:user).where(:user => user).each do |share|
-      share.destroy unless ResourceSharer.valid_share?(share)
-    end
-  end
 end
