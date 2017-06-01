@@ -1,4 +1,6 @@
 class Blueprint < ApplicationRecord
+  has_many :versions, :class_name => 'Blueprint',
+           :foreign_key => :original_blueprint_id, :primary_key => :original_blueprint_id
   has_many :service_templates
   private  :service_templates, :service_templates=
 
@@ -7,6 +9,9 @@ class Blueprint < ApplicationRecord
   virtual_column :in_use?, :type => :boolean
 
   acts_as_miq_taggable
+
+  after_save :update_versions
+  default_value_for :active_version, true
 
   # the top of the service_templates, a bundle that contains child items
   def bundle
@@ -114,6 +119,12 @@ class Blueprint < ApplicationRecord
   end
 
   private
+
+  def update_versions
+    update_attributes!(:original_blueprint_id => id) unless original_blueprint_id
+    # Latest edited version will be set as the active version
+    versions.where.not(:id => id).update_all(:active_version => false)
+  end
 
   def parse_service_catalog
     ServiceTemplateCatalog.find_by(:id => ui_properties.fetch_path("service_catalog", "id"))

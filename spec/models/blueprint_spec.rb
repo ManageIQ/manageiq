@@ -346,6 +346,33 @@ describe Blueprint do
       expect(subject).to be_in_use
     end
   end
+
+  describe '#versions' do
+    it 'returns all the versions of a blueprint' do
+      subject.save!
+      blueprint_2 = FactoryGirl.create(:blueprint, :original_blueprint_id => subject.id)
+
+      expect(subject.versions).to include(subject, blueprint_2)
+      expect(blueprint_2.versions).to include(subject, blueprint_2)
+    end
+  end
+
+  describe '#active_version' do
+    before do
+      subject.save!
+    end
+
+    it 'defaults to true' do
+      expect(subject.active_version).to be_truthy
+    end
+
+    it 'will set latest saved blueprint to the active_version' do
+      blueprint_2 = FactoryGirl.create(:blueprint, :original_blueprint_id => subject.id)
+
+      expect(blueprint_2.active_version).to be_truthy
+      expect(subject.reload.active_version).to be_falsey
+    end
+  end
 end
 
 def add_and_save_service(p, c)
