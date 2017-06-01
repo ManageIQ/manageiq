@@ -284,7 +284,7 @@ class MiqQueue < ApplicationRecord
     find_options = default_get_options(find_options)
     conds = find_options.dup
 
-    task = MiqTask.where(:state => [MiqTask::STATE_INITIALIZED, MiqTask::STATE_QUEUED]).find_by(:identifier => conds.hash.to_s)
+    task = MiqTask.find_by(:identifier => conds.hash.to_s)
 
     save_options = block_given? ? yield(task, find_options) : nil
     save_options = save_options.dup unless save_options.nil?
@@ -304,7 +304,7 @@ class MiqQueue < ApplicationRecord
         :message    => 'Queued'
       )
 
-      MiqQueue.put(put_options)
+      MiqQueue.put(put_options.merge(:miq_callback => {:class_name => MiqTask.class.name, :instance_id => task.id, :method_name => :destroy}))
     end
     task.id
   end
