@@ -117,6 +117,10 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Ne
   end
 
   context "#get_mac_address_of_nic_on_requested_vlan" do
+    before do
+      stub_settings_merge(:ems => { :ems_redhat => { :use_ovirt_engine_sdk => false } })
+    end
+
     it "NIC found" do
       expect(@task.get_mac_address_of_nic_on_requested_vlan).to eq(mac_address)
     end

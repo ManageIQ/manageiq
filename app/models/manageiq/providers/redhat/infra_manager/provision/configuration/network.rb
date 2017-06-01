@@ -24,10 +24,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Netw
     network = find_network_in_cluster(get_option(:vlan))
     return nil if network.nil?
 
-    nic = find_nic_on_network(network)
-    return nil if nic.nil?
-
-    nic[:mac][:address]
+    find_mac_address_on_network(network)
   end
 
   private
@@ -48,11 +45,8 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Netw
     destination.ext_management_system.ovirt_services.nics_for_vm(destination)
   end
 
-  def find_nic_on_network(network)
-    nic = nics.detect { |n| n.network.try(:id) == network[:id] }
-
-    _log.warn "Cannot find NIC with network id=#{network[:id].inspect}" if nic.nil?
-    nic
+  def find_mac_address_on_network(network)
+    destination.ext_management_system.ovirt_services.find_mac_address_on_network(nics, network, _log)
   end
 
   def configure_dialog_nic

@@ -229,6 +229,12 @@ module ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies
       end
     end
 
+    def find_mac_address_on_network(nics, network, log)
+      nic = nics.detect { |n| n.network.try(:id) == network[:id] }
+      log.warn "Cannot find NIC with network id=#{network[:id].inspect}" if nic.nil?
+      nic && nic[:mac] && nic[:mac][:address]
+    end
+
     private
 
     #
