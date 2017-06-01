@@ -14,17 +14,19 @@ class ShareSweeper
   end
 
   def sweep_after_change_to_MiqUserRole(role)
-    Share.joins(:user => :miq_groups).where(:miq_groups => {:id => role.miq_groups}).each do |share|
-      share.destroy unless ResourceSharer.valid_share?(share)
-    end
+    Share.joins(:user => :miq_groups).where(:miq_groups => {:id => role.miq_groups}).each(&method(:sweep_share))
   end
 
   def sweep_after_change_to_Entitlement(entitlement)
     shares = Share
       .joins(:user => {:miq_groups => :entitlement})
       .where(:user => {:miq_groups => {"entitlements" => {:id => entitlement}}})
-    shares.each do |share|
-      share.destroy unless ResourceSharer.valid_share?(share)
-    end
+    shares.each(&method(:sweep_share))
+  end
+
+  private
+
+  def sweep_share(share)
+    share.destroy unless ResourceSharer.valid_share?(share)
   end
 end
