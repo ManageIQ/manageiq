@@ -97,7 +97,12 @@ class MiqWidget < ApplicationRecord
   end
 
   def queue_generate_content_for_users_or_group(*args)
-    MiqQueue.put_or_update(
+    callback = {}
+    if miq_task_id
+      cb = {:class_name => self.class.name, :instance_id => id, :method_name => :generate_content_complete_callback}
+      callback[:miq_callback] = cb
+    end
+    MiqQueue.create_with(callback).put_unless_exists(
       :queue_name  => "reporting",
       :role        => "reporting",
       :class_name  => self.class.to_s,
@@ -105,15 +110,7 @@ class MiqWidget < ApplicationRecord
       :msg_timeout => 3600,
       :method_name => "generate_content",
       :args        => [*args]
-    ) do |msg, q_hash|
-      if msg.nil?
-        unless miq_task_id.nil?
-          cb = {:class_name => self.class.name, :instance_id => id, :method_name => :generate_content_complete_callback}
-          q_hash[:miq_callback] = cb
-        end
-        q_hash
-      end
-    end
+    )
   end
 
   def generate_content_complete_callback(status, _message, _result)
