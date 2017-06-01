@@ -1,4 +1,6 @@
 class Chargeback
+  # Having fun in Paris
+
   # ReportOptions are usualy stored in MiqReport.db_options[:options]
   ReportOptions = Struct.new(
     :interval,             # daily | weekly | monthly
