@@ -84,6 +84,7 @@ module Rbac
       "VmOrTemplate::ResourcePool"             => :resource_pool,
       "ConfiguredSystem::ExtManagementSystem"  => :ext_management_system,
       "ConfiguredSystem::ConfigurationProfile" => [:id, :configuration_profile_id],
+      "ExtManagementSystem::CloudNetwork"      => [:ems_id, :id]
     }
 
     # These classes should accept any of the relationship_mixin methods including:
@@ -359,7 +360,7 @@ module Rbac
     end
     #
     # Algorithm: filter = u_filtered_ids UNION (b_filtered_ids INTERSECTION m_filtered_ids)
-    #            filter = (filter UNION d_filtered_ids if filter is not nil)
+    #            filter = (filter UNION d_filtered_ids)
     #            filter = filter INTERSECTION tenant_filter_ids if tenant_filter_ids is not nil
     # a nil as input for any field means it does not apply
     # a nil as output means there is not filter
@@ -390,6 +391,8 @@ module Rbac
       if filtered_ids.kind_of?(Array)
         filtered_ids += d_filtered_ids if d_filtered_ids.kind_of?(Array)
         filtered_ids.uniq!
+      elsif d_filtered_ids.kind_of?(Array) && d_filtered_ids.present?
+        filtered_ids = d_filtered_ids
       end
 
       if filtered_ids.kind_of?(Array) && tenant_filter_ids
