@@ -4,7 +4,7 @@ describe AddNotificationTablesToReplicationExcludes do
   let(:settings_change_stub) { migration_stub(:SettingsChange) }
 
   def next_miq_server_id
-    @miq_server_id ||= ArRegion.anonymous_class_with_ar_region.rails_sequence_start
+    @miq_server_id ||= anonymous_class_with_id_regions.rails_sequence_start
     @miq_server_id += 1
   end
 

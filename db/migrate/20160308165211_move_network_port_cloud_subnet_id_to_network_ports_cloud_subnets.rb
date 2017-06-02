@@ -1,6 +1,6 @@
 class MoveNetworkPortCloudSubnetIdToNetworkPortsCloudSubnets < ActiveRecord::Migration[5.0]
   class NetworkPort < ActiveRecord::Base
-    include ArRegion
+    include ActiveRecord::IdRegions
 
     self.inheritance_column = :_type_disabled
   end
