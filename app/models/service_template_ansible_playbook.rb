@@ -93,6 +93,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
       :playbook                 => playbook.name,
       :inventory                => tower.provider.default_inventory,
       :become_enabled           => info[:become_enabled].present?,
+      :verbosity                => info[:verbosity].presence || 0,
       :ask_variables_on_launch  => true,
       :ask_limit_on_launch      => true,
       :ask_inventory_on_launch  => true,
