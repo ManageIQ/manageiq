@@ -1581,5 +1581,16 @@ describe "Vms API" do
       expect(response.parsed_body).to eq(expected)
       expect(response).to have_http_status(:ok)
     end
+
+    it "can unassign a server if an empty hash is passed" do
+      vm.miq_server = server
+      api_basic_authorize action_identifier(:vms, :set_miq_server)
+
+      run_post(vms_url(vm.id), :action => 'set_miq_server', :miq_server => {})
+
+      expected = {'success' => true, 'message' => "Removed miq_server for VM id:#{vm.id} name:'#{vm.name}'"}
+      expect(response.parsed_body).to eq(expected)
+      expect(vm.reload.miq_server).to be_nil
+    end
   end
 end
