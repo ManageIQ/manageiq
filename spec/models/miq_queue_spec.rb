@@ -514,19 +514,21 @@ describe MiqQueue do
     end
 
     it "should put a unique message on the queue if method_name is different" do
-      msg1 = MiqQueue.put(
+      options1 = {
         :class_name  => 'MyClass',
         :method_name => 'method1',
         :args        => [1, 2]
-      )
-      msg2 = MiqQueue.put_unless_exists(
+      }
+      options2 = {
         :class_name  => 'MyClass',
         :method_name => 'method2',
         :args        => [1, 2]
-      )
+      }
+      MiqQueue.put(options1)
+      MiqQueue.put_unless_exists(options2)
 
-      expect(MiqQueue.get).to eq(msg1)
-      expect(MiqQueue.get).to eq(msg2)
+      expect(MiqQueue.get).to have_attributes(options1)
+      expect(MiqQueue.get).to have_attributes(options2)
       expect(MiqQueue.get).to eq(nil)
     end
 
@@ -560,19 +562,15 @@ describe MiqQueue do
     end
 
     it "should not put duplicate messages on the queue" do
-      msg1 = MiqQueue.put_unless_exists(
+      options = {
         :class_name  => 'MyClass',
         :method_name => 'method2',
         :args        => [1, 2]
-      )
+      }
+      MiqQueue.put_unless_exists(options)
+      MiqQueue.put_unless_exists(options)
 
-      MiqQueue.put_unless_exists(
-        :class_name  => 'MyClass',
-        :method_name => 'method2',
-        :args        => [1, 2]
-      )
-
-      expect(MiqQueue.get).to eq(msg1)
+      expect(MiqQueue.get).to have_attributes(options)
       expect(MiqQueue.get).to eq(nil)
     end
 

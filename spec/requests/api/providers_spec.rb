@@ -616,11 +616,11 @@ describe "Providers API" do
 
         it "schedules a new credentials check if endpoint change" do
           api_basic_authorize collection_action_identifier(:providers, :edit)
-
           provider = FactoryGirl.create(:ext_management_system, sample_containers_multi_end_point)
           MiqQueue.where(:method_name => "authentication_check_types",
                          :class_name  => "ExtManagementSystem",
                          :instance_id => provider.id).delete_all
+          MiqTask.where.not(:identifier => nil).delete_all
 
           run_post(providers_url(provider.id), gen_request(:edit,
                                                            "connection_configurations" => [updated_connection,

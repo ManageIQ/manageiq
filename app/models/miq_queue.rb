@@ -282,9 +282,9 @@ class MiqQueue < ApplicationRecord
   # Return task.id
   def self.put_unless_exists(find_options)
     find_options = default_get_options(find_options)
-    conds = find_options.dup
-    conds.delete(:state)
-    identifier = conds.hash.to_s
+    options = find_options.dup
+    options.delete(:state)
+    identifier = options.hash.to_s
 
     task = MiqTask.find_by(:identifier => identifier)
 
@@ -297,7 +297,7 @@ class MiqQueue < ApplicationRecord
         :message    => 'Queued'
       ).id
 
-      put(conds.merge(:miq_callback => {:class_name => MiqTask.class.name, :instance_id => task_id, :method_name => :destroy}))
+      put(options.merge(:miq_callback => {:class_name => MiqTask.class.name, :instance_id => task_id, :method_name => :destroy}))
     end
 
     yield(task, find_options) if block_given? # the block expects to see task to be nil if not already exist
