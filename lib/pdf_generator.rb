@@ -42,8 +42,10 @@ class PdfGenerator
   end
   private_class_method :sanitize_html
 
+  # Find stylesheet asset with short path and return filesystem path
+  #
   def self.stylesheet_file_path(stylesheet)
-    Rails.root.join(*%W(app assets stylesheets #{stylesheet})).to_s
+    Rails.application.assets.find_asset(stylesheet).try(:pathname).try(:to_s)
   end
 
   private_class_method :stylesheet_file_path
