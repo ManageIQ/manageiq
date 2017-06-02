@@ -4,7 +4,7 @@ LinuxAdmin.logger = $log
 module MiqServer::UpdateManagement
   extend ActiveSupport::Concern
 
-  UPDATE_FILE = Rails.root.join("tmp/miq_update").freeze
+  UPDATE_FILE = Miq.root.join("tmp/miq_update").freeze
 
   module ClassMethods
     def queue_update_registration_status(*ids)

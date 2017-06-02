@@ -44,7 +44,7 @@ class MiqWorker::Runner
     @cfg = cfg
     @cfg[:guid] ||= ENV['MIQ_GUID']
 
-    $log ||= Rails.logger
+    $log ||= defined?(Rails) ? Rails.logger : ActiveRecord::Base.logger
 
     @server = MiqServer.my_server(true)
 

@@ -19,7 +19,7 @@ module Vmdb
     private
 
     def self.default_behavior
-      [proc_for_default_log].tap { |a| a << ActiveSupport::Deprecation::DEFAULT_BEHAVIORS[:stderr] unless Rails.env.production? }
+      [proc_for_default_log].tap { |a| a << ActiveSupport::Deprecation::DEFAULT_BEHAVIORS[:stderr] unless Miq.env.production? }
     end
     private_class_method :default_behavior
 

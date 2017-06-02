@@ -1,3 +1,6 @@
+require "vmdb/config/activator"
+require "vmdb/config/validator"
+
 module VMDB
   class Config
     include Vmdb::Logging

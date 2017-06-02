@@ -1,3 +1,5 @@
+require "more_core_extensions/core_ext/shared/nested"
+
 module ConfigDecryptPasswords
   def reload!
     Vmdb::Settings.decrypt_passwords!(super).tap do

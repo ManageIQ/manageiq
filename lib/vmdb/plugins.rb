@@ -15,9 +15,11 @@ module Vmdb
     end
 
     def register_vmdb_plugins
-      Rails.application.railties.each do |railtie|
-        next unless railtie.class.name.start_with?("ManageIQ::Providers::") || railtie.try(:vmdb_plugin?)
-        register_vmdb_plugin(railtie)
+      if defined? Rails
+        Rails.application.railties.each do |railtie|
+          next unless railtie.class.name.start_with?("ManageIQ::Providers::") || railtie.try(:vmdb_plugin?)
+          register_vmdb_plugin(railtie)
+        end
       end
 
       @vmdb_plugins
