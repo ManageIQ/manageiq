@@ -252,7 +252,7 @@ module ScanningMixin
         xml = extractor.extract(c) { |scan_data| update_job_message(ost, scan_data[:msg]) }
         categories_processed += 1
         _log.info "Scanning [#{c}] information ran for [#{Time.now - st}] seconds.  TaskId:[#{ost.taskid}]  VM:[#{name}]"
-        if xml
+        if xml && xml.root
           xml.root.add_attributes("created_on" => ost.scanTime.to_i, "display_time" => ost.scanTime.iso8601)
           _log.debug "Writing scanned data to XML for [#{c}] to blackbox."
           bb.saveXmlData(xml, c)
