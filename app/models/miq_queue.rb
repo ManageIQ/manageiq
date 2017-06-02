@@ -283,30 +283,26 @@ class MiqQueue < ApplicationRecord
   def self.put_unless_exists(find_options)
     find_options = default_get_options(find_options)
     conds = find_options.dup
+    conds.delete(:state)
+    identifier = conds.hash.to_s
 
-    task = MiqTask.find_by(:identifier => conds.hash.to_s)
+    task = MiqTask.find_by(:identifier => identifier)
 
-    save_options = block_given? ? yield(task, find_options) : nil
-    save_options = save_options.dup unless save_options.nil?
-
-    # Add a new queue item based on the returned save options, or the find
-    #   options if no save options were given.
     if task.nil?
-      put_options = save_options || find_options
-      put_options.delete(:state)
-
-      task = MiqTask.create(
+      task_id = MiqTask.create!(
         :name       => 'put_unless_exists',
-        :userid     => 'admin',
         :state      => MiqTask::STATE_QUEUED,
         :status     => MiqTask::STATUS_OK,
-        :identifier => conds.hash.to_s,
+        :identifier => identifier,
         :message    => 'Queued'
-      )
+      ).id
 
-      MiqQueue.put(put_options.merge(:miq_callback => {:class_name => MiqTask.class.name, :instance_id => task.id, :method_name => :destroy}))
+      put(conds.merge(:miq_callback => {:class_name => MiqTask.class.name, :instance_id => task_id, :method_name => :destroy}))
     end
-    task.id
+
+    yield(task, find_options) if block_given? # the block expects to see task to be nil if not already exist
+
+    task.try(:id) || task_id
   end
 
   def self.unqueue(options)
