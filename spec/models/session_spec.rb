@@ -25,46 +25,26 @@ describe Session do
   end
 
   describe ".purge" do
-    before do
-      2.times do
-        FactoryGirl.create(:session, :updated_at => 1.year.ago, :raw_data => {:userid=>"admin"})
-      end
-    end
-
     it "purges an old session" do
-      expect(described_class.count).to eq(2)
+      FactoryGirl.create(:session, :updated_at => 1.year.ago, :raw_data => {:userid => "admin"})
 
-      described_class.purge(0, 1)
-
-      expect(described_class.count).to be_zero
-    end
-
-    it "purges one batch" do
-      expect(described_class.count).to eq(2)
-
-      expect(described_class.purge_one_batch(0, 1)).to eq 1
-
-      expect(described_class.count).to eq 1
+      expect { described_class.purge(0, 1) }.to change { described_class.count }.from(1).to(0)
     end
 
     it "logs out users before destroying stale sessions" do
-      expect(described_class.count).to eq(2)
-      expect(User).to receive(:where).and_return([User.new]).exactly(1).times
+      FactoryGirl.create(:session, :updated_at => 1.year.ago, :raw_data => {:userid => "admin"})
+      user = instance_double(User, :lastlogoff => 2.days.ago, :lastlogon => 1.day.ago)
+      allow(User).to receive(:where).with(:userid => ["admin"]).and_return([user])
+
+      expect(user).to receive(:logoff)
 
       described_class.purge(0)
-
-      expect(described_class.count).to eq 0
     end
 
     it "handles a session with bad data" do
-      FactoryGirl.create(:session,
-                         :updated_at => 1.year.ago,
-                         :data       => "Data that can't be marshaled"
-                        )
+      FactoryGirl.create(:session, :updated_at => 1.year.ago, :data => "Data that can't be marshaled")
 
-      described_class.purge(0)
-
-      expect(described_class.count).to eq 0
+      expect { described_class.purge(0) }.to change { described_class.count }.from(1).to(0)
     end
 
     context "given some token store data" do
@@ -73,17 +53,23 @@ describe Session do
       it "will purge an expired token" do
         FactoryGirl.create(:session, :raw_data => {:expires_on => 1.second.ago})
 
-        described_class.purge(0)
-
-        expect(described_class.count).to eq(0)
+        expect { described_class.purge(0) }.to change { described_class.count }.from(1).to(0)
       end
 
       it "won't purge an unexpired token" do
         FactoryGirl.create(:session, :raw_data => {:expires_on => 1.second.from_now})
 
-        described_class.purge(0)
+        expect { described_class.purge(0) }.not_to change { described_class.count }
+      end
+    end
 
-        expect(described_class.count).to eq(1)
+    describe ".purge_one_batch" do
+      it "purges one batch" do
+        FactoryGirl.create_list(:session, 2, :updated_at => 1.year.ago, :raw_data => {:userid => "admin"})
+
+        expect do
+          expect(described_class.purge_one_batch(0, 1)).to eq 1
+        end.to change { described_class.count }.from(2).to(1)
       end
     end
   end
