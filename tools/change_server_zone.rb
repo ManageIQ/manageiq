@@ -2,7 +2,7 @@
 require File.expand_path("../config/environment", __dir__)
 
 if ARGV.empty?
-  puts "USAGE: #{__FILE__} server_id zone_name"
+  puts "USAGE: #{__FILE__} serverid zone_name"
   exit 0
 end
 

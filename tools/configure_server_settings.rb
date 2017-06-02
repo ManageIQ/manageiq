@@ -1,33 +1,38 @@
 #!/usr/bin/env ruby
 require File.expand_path("../config/environment", __dir__)
+require 'trollop'
 
-if ARGV.empty?
-  puts "USAGE:   #{__FILE__} server_id settings_path_separated_by_a_/ value [settings_path_separated_by_a_/ value]"
-  puts "Example: #{__FILE__} 2 smtp/authentication plain smtp/host gt123"
+opts = Trollop.options(ARGV) do
+  banner "USAGE:   #{__FILE__} -s <server id> -p <settings path separated by a /> -v <new value>\n" \
+         "Example: #{__FILE__} -d -s 1 -p reporting/history/keep_reports -v 42"
 
-  exit 0
+  opt :dry_run,  "Dry Run",                            :short => "d"
+  opt :serverid, "Server Id",                          :short => "s", :default => 0
+  opt :path,     "Path within advanced settings hash", :short => "p", :default => ""
+  opt :value,    "New value for setting",              :short => "v", :default => ""
 end
 
-server_id = ARGV[0]
-new_settings = ARGV[1..-1]
+puts opts.inspect
 
-server = MiqServer.where(:id => server_id).take
+Trollop.die :serverid, "is required" unless opts[:serverid_given]
+Trollop.die :path,     "is required" unless opts[:path_given]
+Trollop.die :value,    "is required" unless opts[:value_given]
+
+server = MiqServer.where(:id => opts[:serverid]).take
 unless server
-  puts "Unable to find server with id [#{server_id}]"
+  puts "Unable to find server with id [#{opts[:serverid]}]"
   exit 1
 end
 
 settings = server.get_config("vmdb")
 
-new_settings.each_slice(2) do |k, v|
-  path = settings.config
-  keys = k.split("/")
-  key = keys.pop.to_sym
-  keys.each { |p| path = path[p.to_sym] }
+path = settings.config
+keys = opts[:path].split("/")
+key = keys.pop.to_sym
+keys.each { |p| path = path[p.to_sym] }
 
-  puts "Setting [#{k}], old value: [#{path[key]}], new value: [#{v}]"
-  path[key] = v
-end
+puts "Setting [#{opts[:path]}], old value: [#{path[key]}], new value: [#{opts[:value]}]"
+path[key] = opts[:value]
 
 valid, errors = VMDB::Config::Validator.new(settings).validate
 unless valid
@@ -36,7 +41,11 @@ unless valid
   exit 1
 end
 
-server.set_config(settings)
-server.save!
+if opts[:dry_run]
+  puts "Dry run, no updates have been made"
+else
+  server.set_config(settings)
+  server.save!
 
-puts "Done"
+  puts "Done"
+end
