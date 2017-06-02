@@ -85,7 +85,6 @@ describe EmbeddedAnsibleWorker::Runner do
       end
 
       it "creates a notification to inform the user that the role has been assigned" do
-        expect(EmbeddedAnsible).to receive(:configured?).and_return(true)
         expect(EmbeddedAnsible).to receive(:start)
 
         runner.setup_ansible
