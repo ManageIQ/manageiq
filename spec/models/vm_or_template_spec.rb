@@ -335,6 +335,19 @@ describe VmOrTemplate do
     end
   end
 
+  context "#resource_group" do
+    before do
+      @resource_group = FactoryGirl.create(:resource_group)
+      @vm_with_rg     = FactoryGirl.create(:vm_amazon, :resource_group => @resource_group)
+      @vm_without_rg  = FactoryGirl.create(:vm_amazon)
+    end
+
+    it "has a has_one association with resource groups" do
+      expect(@vm_with_rg.resource_group).to eql(@resource_group)
+      expect(@vm_without_rg.resource_group).to be_nil
+    end
+  end
+
   context "#scan_profile_categories" do
     before do
       @vm = FactoryGirl.create(:vm_vmware)

@@ -3,7 +3,6 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   belongs_to :flavor
   belongs_to :orchestration_stack
   belongs_to :cloud_tenant
-  belongs_to :resource_group
 
   has_many :network_ports, :as => :device
   has_many :cloud_subnets, -> { distinct }, :through => :network_ports
@@ -127,7 +126,7 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   def resize(new_flavor_id)
     raise ArgumentError, _("new_flavor_id cannot be nil") if new_flavor_id.nil?
     new_flavor = Flavor.find(new_flavor_id)
-    raise ArgumentError, _("flavor cannot be found") if new_flavor.nil? 
+    raise ArgumentError, _("flavor cannot be found") if new_flavor.nil?
     raw_resize(new_flavor)
   end
 
