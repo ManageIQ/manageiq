@@ -411,10 +411,6 @@ class VmOrTemplate < ApplicationRecord
     end
   end
 
-  def self.powerops_expiration
-    ::Settings.management_system.power_operation_expiration.to_i_with_method.seconds.from_now.utc
-  end
-
   # override
   def self.invoke_task_local(task, vm, options, args)
     cb = nil
@@ -447,7 +443,6 @@ class VmOrTemplate < ApplicationRecord
       :miq_callback => cb,
       :zone         => vm.my_zone,
       :role         => role,
-      :expires_on   => POWER_OPS.include?(options[:task]) ? powerops_expiration : nil
     )
   end
 

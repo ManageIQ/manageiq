@@ -86,7 +86,6 @@ class MiqQueue < ApplicationRecord
   STATUS_WARN    = STATE_WARN
   STATUS_ERROR   = STATE_ERROR
   STATUS_TIMEOUT = STATE_TIMEOUT
-  STATUS_EXPIRED = STATE_EXPIRED
   DEFAULT_QUEUE  = "generic"
 
   def data
@@ -296,8 +295,6 @@ class MiqQueue < ApplicationRecord
     _log.info("#{MiqQueue.format_short_log_msg(self)}, Delivering...")
 
     begin
-      raise MiqException::MiqQueueExpired if expires_on && (Time.now.utc > expires_on)
-
       raise _("class_name cannot be nil") if class_name.nil?
 
       obj = class_name.constantize
@@ -341,10 +338,6 @@ class MiqQueue < ApplicationRecord
         _log.error("#{MiqQueue.format_short_log_msg(self)}, #{message}")
         status = STATUS_TIMEOUT
       end
-    rescue MiqException::MiqQueueExpired
-      message = "Expired on [#{expires_on}]"
-      _log.error("#{MiqQueue.format_short_log_msg(self)}, #{message}")
-      status = STATUS_EXPIRED
     rescue StandardError, SyntaxError => error
       _log.error("#{MiqQueue.format_short_log_msg(self)}, Error: [#{error}]")
       _log.log_backtrace(error) unless error.kind_of?(MiqException::Error)
