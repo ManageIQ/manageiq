@@ -20,6 +20,11 @@ module ManageIQ::Providers
     has_many :container_templates, :foreign_key => :ems_id, :dependent => :destroy
     has_one :container_deployment, :foreign_key => :deployed_ems_id, :inverse_of => :deployed_ems
 
+    # Archived entities to destroy when the container manager is deleted
+    has_many :old_container_groups, :foreign_key => :old_ems_id, :dependent => :destroy, :class_name => "ContainerGroup"
+    has_many :old_container_projects, :foreign_key => :old_ems_id, :dependent => :destroy, :class_name => "ContainerProject"
+    has_many :old_container_images, :foreign_key => :old_ems_id, :dependent => :destroy, :class_name => "ContainerImage"
+
     virtual_column :port_show, :type => :string
 
     # required by aggregate_hardware
