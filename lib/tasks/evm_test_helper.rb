@@ -1,7 +1,4 @@
 module EvmTestHelper
-  VMDB_EXCLUDED_SPEC_DIRECTORIES = %w(migrations).freeze
-  MIGRATION_SPECS = FileList['spec/migrations/**/*_spec.rb'].sort
-
   def self.init_rspec_task(t, rspec_opts = [])
     if ENV['CI']
       rspec_ci = defined?(ENGINE_ROOT) ? File.join(ENGINE_ROOT, ".rspec_ci") : Rails.root.join(".rspec_ci")
@@ -11,29 +8,15 @@ module EvmTestHelper
     t.verbose = false
   end
 
-  def self.run_rake_via_shell(rake_command, env = {})
-    cmd = "bundle exec rake #{rake_command}"
-    cmd << " --trace" if Rake.application.options.trace
-    _pid, status = Process.wait2(Kernel.spawn(env, cmd, :chdir => Rails.root))
-    exit(status.exitstatus) if status.exitstatus != 0
-  end
-
   def self.vmdb_spec_directories
     # TODO: Clean up this thing
-    #
-    # Within the spec directory, find:
-    #  * directories
-    #  * that aren't excluded directories
-    #  * that contain *_spec.rb files
     #
     # This is required because parallel_tests takes directories
     # RSpec will sort out the parsing of _spec.rb's within them, too!
     #
     # Output: %w(./spec/controllers ./spec/helpers ./spec/initializers ..)
     Dir.glob("./spec/*").select do |d|
-      File.directory?(d) &&
-        !EvmTestHelper::VMDB_EXCLUDED_SPEC_DIRECTORIES.include?(File.basename(d)) &&
-        !Dir.glob("#{d}/**/*_spec.rb").empty?
+      File.directory?(d) && !Dir.glob("#{d}/**/*_spec.rb").empty?
     end
   end
 end

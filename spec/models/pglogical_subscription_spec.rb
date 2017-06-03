@@ -168,17 +168,17 @@ describe PglogicalSubscription do
   end
 
   def with_valid_schemas
-    allow(EvmDatabase).to receive(:check_schema).and_return(nil)
+    allow(ManageIQ::Schema::Checker).to receive(:check_schema).and_return(nil)
   end
 
   def with_an_invalid_local_schema
-    allow(EvmDatabase).to receive(:check_schema).with(no_args).and_return("Different local schema")
+    allow(ManageIQ::Schema::Checker).to receive(:check_schema).with(no_args).and_return("Different local schema")
   end
 
   def with_an_invalid_remote_schema
     connection = double(:connection)
     allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(connection)
-    allow(EvmDatabase).to receive(:check_schema).and_return(nil, "Different remote schema")
+    allow(ManageIQ::Schema::Checker).to receive(:check_schema).and_return(nil, "Different remote schema")
   end
 
   describe "#save!" do

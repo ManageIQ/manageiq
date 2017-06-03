@@ -33,6 +33,7 @@ manageiq_plugin "manageiq-providers-openshift"
 manageiq_plugin "manageiq-providers-openstack"
 manageiq_plugin "manageiq-providers-ovirt"
 manageiq_plugin "manageiq-providers-vmware"
+manageiq_plugin "manageiq-schema"
 manageiq_plugin "manageiq-ui-classic"
 
 # Unmodified gems
@@ -131,7 +132,6 @@ unless ENV["APPLIANCE"]
   end
 
   group :development, :test do
-    gem "good_migrations"
     gem "parallel_tests"
     gem "rspec-rails",      "~>3.6.0"
   end

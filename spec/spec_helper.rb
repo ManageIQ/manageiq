@@ -59,12 +59,6 @@ RSpec.configure do |config|
   config.include UiConstants,          :type => :controller
   config.include Spec::Support::AuthHelper, :type => :controller
 
-  config.extend  Spec::Support::MigrationHelper::DSL
-  config.include Spec::Support::MigrationHelper,          :migrations => :up
-  config.include Spec::Support::MigrationIdRegionsHelper, :migrations => :up
-  config.include Spec::Support::MigrationHelper,          :migrations => :down
-  config.include Spec::Support::MigrationIdRegionsHelper, :migrations => :down
-
   config.include Spec::Support::ApiHelper, :rest_api => true
   config.include Spec::Support::AuthRequestHelper, :type => :request
   config.define_derived_metadata(:file_path => /spec\/requests\/api/) do |metadata|
@@ -94,7 +88,7 @@ RSpec.configure do |config|
   # end
 
   config.before(:each) do |example|
-    EmsRefresh.try(:debug_failures=, true) if example.metadata[:migrations].blank?
+    EmsRefresh.try(:debug_failures=, true)
     ApplicationController.handle_exceptions = false if %w(controller requests).include?(example.metadata[:type])
   end
 

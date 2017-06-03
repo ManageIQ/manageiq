@@ -220,11 +220,11 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def assert_valid_schemas!
-    local_errors = EvmDatabase.check_schema
+    local_errors = ManageIQ::Schema::Checker.check_schema
     raise local_errors if local_errors
     find_password if password.nil?
     with_remote_connection do |conn|
-      remote_errors = EvmDatabase.check_schema(conn)
+      remote_errors = ManageIQ::Schema::Checker.check_schema(conn)
       raise remote_errors if remote_errors
     end
   end

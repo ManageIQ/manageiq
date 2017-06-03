@@ -73,9 +73,6 @@ public/pictures/
 public/ui/
 /public/packs
 
-# spec/
-spec/replication/util/data/*_migrations
-
 # tmp/
 tmp/*
 
