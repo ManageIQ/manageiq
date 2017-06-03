@@ -1,7 +1,12 @@
+require 'securerandom'
+
 class MigrateConfigurationManagerToEms < ActiveRecord::Migration[4.2]
   class ExtManagementSystem < ActiveRecord::Base
-    include UuidMixin
     self.inheritance_column = :_type_disabled
+
+    before_create do
+      self.guid ||= SecureRandom.uuid
+    end
   end
 
   class ConfigurationManager < ActiveRecord::Base
