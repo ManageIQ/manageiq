@@ -887,6 +887,7 @@ en:
       OrchestrationTemplateVnfd: VNF Template
       ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate: vApp Template
       PersistentVolume:         Persistent Volume
+      PhysicalServer:           Physical Server
       ProductUpdate:            Product Update
       PxeCustomizationTemplate: Customization Template
       PxeImage:                 PXE Image
