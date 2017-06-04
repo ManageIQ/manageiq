@@ -236,8 +236,10 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
   end
 
   def assert_specific_container_build_pod
+    # TODO: record 2 builds of same name in different projects
     @container_build_pod = ContainerBuildPod.find_by(:name => "python-project-1")
     expect(@container_build_pod).to have_attributes(
+      :namespace                     => "python-project",
       :name                          => "python-project-1",
       :phase                         => "Complete",
       :reason                        => nil,
@@ -247,6 +249,11 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     expect(@container_build_pod.container_build).to eq(
       ContainerBuild.find_by(:name => "python-project")
     )
+
+    expect(@container_build_pod.container_group).to eq(
+      ContainerGroup.find_by(:name => "python-project-1-build")
+    )
+    expect(@container_build_pod.container_group.container_build_pod).to eq(@container_build_pod)
   end
 
   def assert_specific_container_template
