@@ -1,7 +1,7 @@
 describe EmsEvent do
   context "model" do
     let(:ems1) { FactoryGirl.create(:ems_kubernetes) }
-    let(:ems2) { FactoryGirl.create(:ems_hawkular_datawarehouse) }
+    let(:ems2) { FactoryGirl.create(:ems_hawkular_monitoring) }
 
     it "Find ems events and generated events for ext management systems" do
       generated_event = FactoryGirl.create(:ems_event, :ext_management_system => ems1, :generating_ems => ems2)

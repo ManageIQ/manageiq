@@ -2348,10 +2348,6 @@ _("Containers Provider")
 _("Containers Providers")
 # TRANSLATORS: en.yml key: dictionary.table.ems_containers
 _("Containers Providers")
-# TRANSLATORS: en.yml key: dictionary.table.ems_datawarehouse
-_("Datawarehouse Provider")
-# TRANSLATORS: en.yml key: dictionary.table.ems_datawarehouse (plural form)
-_("Datawarehouse Providers")
 # TRANSLATORS: en.yml key: dictionary.table.ems_middleware
 _("Middleware Provider")
 # TRANSLATORS: en.yml key: dictionary.table.ems_middleware (plural form)

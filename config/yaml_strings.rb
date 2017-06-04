@@ -2215,32 +2215,6 @@ _("Perform Operations on Middleware Messaging")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Tags of Middleware Messaging")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Everything under Datawarehouse Providers")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("View Datawarehouse Providers")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Display Lists of Datawarehouse Providers")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Display Individual Datawarehouse Providers")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Display Timelines for Datawarehouse Providers")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Perform Operations on Datawarehouse Providers")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Refresh Datawarehouse Providers")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Re-check Authentication Status of Datawarehouse Providers")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Edit Tags of Datawarehouse Providers")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Modify Datawarehouse Providers")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Datawarehouse Providers")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Edit a Datawarehouse Provider")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Add a Datawarehouse Provider")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_NetworkManager.yaml
 _("Network Providers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -3918,7 +3892,6 @@ _("Cluster Relationships")
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-vms.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAnsible_AutomationManager_Playbook.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAutomationManager_Authentication.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAutomationManager_ConfigurationScriptSource.yaml
@@ -4273,7 +4246,6 @@ _("Number of  VMs")
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAutomationManager_Authentication.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager_ConfiguredSystem.yaml
@@ -4634,7 +4606,6 @@ _("Host vLANs and vSwitches")
 # TRANSLATORS: file: product/views/ConfiguredSystem.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_AutomationManager_ConfiguredSystem.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager_ConfiguredSystem.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
@@ -4667,7 +4638,6 @@ _("Host Summary for VMs")
 # TRANSLATORS: file: product/views/Host-hosts.yaml
 # TRANSLATORS: file: product/views/Host.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
 # TRANSLATORS: file: product/views/MiqServer.yaml
 _("IP Address")
@@ -6676,7 +6646,6 @@ _("Installed")
 # TRANSLATORS: file: product/views/ContainerImageRegistry.yaml
 # TRANSLATORS: file: product/views/FirewallRule.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
 _("Port")
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-all_vms_and_templates.yaml
@@ -6719,10 +6688,6 @@ _("E-mail")
 # TRANSLATORS: file: product/views/MiqGroup.yaml
 # TRANSLATORS: file: product/views/User.yaml
 _("Role")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
-_("Datawarehouse Providers")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
-_("EmsDatawarehouse")
 # TRANSLATORS: file: product/views/ServiceCatalog.yaml
 # TRANSLATORS: file: product/views/ServiceTemplate.yaml
 # TRANSLATORS: file: product/views/ServiceTemplateCatalog.yaml

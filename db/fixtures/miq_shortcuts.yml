@@ -339,11 +339,6 @@
   :url: /middleware_topology
   :rbac_feature_name: middleware_topology_view
   :startup: true
-- :name: ems_datawarehouse
-  :description: Datawarehouse / Providers
-  :url: /ems_datawarehouse
-  :rbac_feature_name: ems_datawarehouse_show_list
-  :startup: true
 - :name: ems_block_storage
   :description: Storage / Block Storage / Managers
   :url: /ems_block_storage/show_list

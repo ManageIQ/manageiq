@@ -166,10 +166,10 @@ describe MiqAlert do
         expect(mas.description).to eq("VM Unregistered")
       end
 
-      it "miq_alert_status.description = ems_event.message if present and datawarehouse_alert" do
+      it "miq_alert_status.description = ems_event.message if present and monitoring_alert" do
         @alert.evaluate(
           [@vm.class.base_class.name, @vm.id],
-          :ems_event => FactoryGirl.create(:ems_event, :message => "oh no!", :event_type => "datawarehouse_alert")
+          :ems_event => FactoryGirl.create(:ems_event, :message => "oh no!", :event_type => "monitoring_alert")
         )
         mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
         expect(mas.description).to eq("oh no!")
@@ -528,7 +528,7 @@ describe MiqAlert do
         )
       end.to raise_error(
         ActiveRecord::RecordInvalid,
-        'Validation failed: Notifications Datawarehouse alerts must have a 0 notification frequency'
+        'Validation failed: Notifications Monitoring alerts must have a 0 notification frequency'
       )
     end
 

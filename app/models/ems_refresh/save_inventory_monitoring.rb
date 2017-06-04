@@ -1,5 +1,5 @@
-module EmsRefresh::SaveInventoryDatawarehouse
-  def save_ems_datawarehouse_inventory(ems, hashes, target = nil)
+module EmsRefresh::SaveInventoryMonitoring
+  def save_ems_monitoring_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
     child_keys = []

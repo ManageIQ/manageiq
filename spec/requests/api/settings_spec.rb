@@ -46,7 +46,7 @@ describe "Settings API" do
         "product": {
           "maindb": "ExtManagementSystem",
           "container_deployment_wizard": false,
-          "datawarehouse_manager": false
+          "monitoring_manager": false
         },
         "server": {
           "role": "database_operations,event,reporting,scheduler,smartstate,ems_operations,ems_inventory,user_interface,websocket,web_services,automate",
