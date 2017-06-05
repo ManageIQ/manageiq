@@ -107,7 +107,6 @@ class ContainerImage < ApplicationRecord
     "id [#{ext_management_system.id}] "
     self.container_image_registry = nil
     self.deleted_on = Time.now.utc
-    self.deleted = true
     save
   end
 
