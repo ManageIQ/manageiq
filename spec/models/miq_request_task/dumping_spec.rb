@@ -31,6 +31,7 @@ describe MiqRequestTask do
           vh.capacityInKB = 100
         end
         expect(MiqRequestTask).to receive(:dump_hash)
+        expect(STDOUT).to receive(:puts).with(" (VimHash) xsiType: <VirtualDisk>  vimType: <>")
         task.dump_obj(data)
       end
 
@@ -46,6 +47,7 @@ describe MiqRequestTask do
           end
         end
         expect(MiqRequestTask).to receive(:dump_array)
+        expect(STDOUT).to receive(:puts).with(" (VimArray) xsiType: <ArrayOfHostInternetScsiHbaStaticTarget>  vimType: <>")
         task.dump_obj(array)
       end
     end
