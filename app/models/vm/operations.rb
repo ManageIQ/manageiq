@@ -18,7 +18,11 @@ module Vm::Operations
   end
 
   def ipv4_address
-    ipaddresses.find { |ip| (IPAddr.new ip).ipv4? }
+    %w(amazon google).include?(vendor) ? public_address : ipaddresses.find { |ip| (IPAddr.new ip).ipv4? }
+  end
+
+  def public_address
+    ipaddresses.find { |ip| !Addrinfo.tcp(ip, 80).ipv4_private? }
   end
 
   def validate_collect_running_processes
