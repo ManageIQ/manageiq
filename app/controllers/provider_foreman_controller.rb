@@ -245,15 +245,11 @@ class ProviderForemanController < ApplicationController
     @display = params[:display] || "main"
     @lastaction = "show"
     @showtype = "config"
-    @record = if configuration_profile_record?
-                find_record(ConfigurationProfile, id || params[:id])
-              elsif inventory_group_record?
-                find_record(ManageIQ::Providers::ConfigurationManager::InventoryGroup, id || params[:id])
-              else
-                find_record(ConfiguredSystem, id || params[:id])
-              end
-    return if record_no_longer_exists?(@record)
+    type, _id = parse_nodetype_and_id(x_node)
+    klass = TreeBuilder.get_model_for_prefix(type).constantize if type
+    @record = find_record(klass, params[:id])
 
+    return if record_no_longer_exists?(@record)
     @explorer = true if request.xml_http_request? # Ajax request means in explorer
 
     @gtl_url = "/show"
@@ -396,7 +392,7 @@ class ProviderForemanController < ApplicationController
   def configuration_scripts_tree_rec
     nodes = x_node.split('-')
     case nodes.first
-    when "root", "at"
+    when "root", "at", "cf"
       find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript, params[:id])
     end
   end
