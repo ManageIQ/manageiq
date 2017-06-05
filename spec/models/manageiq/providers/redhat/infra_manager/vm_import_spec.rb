@@ -10,8 +10,14 @@ describe ManageIQ::Providers::Redhat::InfraManager::VmImport do
   let(:cluster_path)          { 'Folder1/Folder @#$*2/Compute 3/Folder4/Cluster 5' }
   let(:cluster_path_escaped)  { 'Folder1%2FFolder%20%40%23%24*2%2FCompute%203%2FFolder4%2FCluster%205' }
 
+  let(:cluster_guid) { cluster.uid_ems }
+  let(:storage_guid) { storage.ems_ref_obj.split('/').last }
+
   let(:new_name)  { 'created-vm' }
   let(:new_vm_id) { '6820ad2a-a8c0-4b4e-baf2-3482357ba352' }
+  let(:vcenter)   { source_ems.endpoints.first.hostname }
+  let(:url)       { "vpx://testuser@#{vcenter}/#{cluster_path_escaped}/#{source_host.ipaddress}?no_verify=1" }
+  let(:iso_name)  { 'RHEV-toolsSetup_4.1_5.iso' }
 
   let(:vm_import_response) do
     OvirtSDK4::ExternalVmImport.new(
@@ -40,29 +46,58 @@ describe ManageIQ::Providers::Redhat::InfraManager::VmImport do
       allow(OvirtSDK4::Probe).to receive(:probe).and_return([OvirtSDK4::ProbeResult.new(:version => '4')])
     end
 
-    it 'passes the proper params to oVirt API' do
-      vcenter = source_ems.endpoints.first.hostname
-      url = "vpx://testuser@#{vcenter}/#{cluster_path_escaped}/#{source_host.ipaddress}?no_verify=1"
-      import_params = OvirtSDK4::ExternalVmImport.new(
-        :name           => source_vm.name,
-        :vm             => { :name => new_name },
-        :provider       => OvirtSDK4::ExternalVmProviderType::VMWARE,
-        :username       => 'testuser',
-        :password       => 'secret',
-        :url            => url,
-        :cluster        => { :id => cluster.uid_ems },
-        :storage_domain => { :id => storage.ems_ref_obj.split('/').last },
-        :sparse         => true
-      )
-      expect_any_instance_of(OvirtSDK4::ExternalVmImportsService).to receive(:add).with(eq(import_params)).and_return(vm_import_response)
-      new_ems_ref = target_ems.import_vm(
-        source_vm.id,
-        :name       => new_name,
-        :cluster_id => cluster.id,
-        :storage_id => storage.id,
-        :sparse     => true
-      )
+    def expect_import(params, expected_request)
+      expect_any_instance_of(OvirtSDK4::ExternalVmImportsService).to receive(:add).with(eq(expected_request)).and_return(vm_import_response)
+      new_ems_ref = target_ems.import_vm(source_vm.id, params)
       expect(new_ems_ref).to eq("/api/vms/#{new_vm_id}")
+    end
+
+    context 'when called without ISO drivers' do
+      it 'passes the proper params to oVirt API' do
+        params = {
+          :name       => new_name,
+          :cluster_id => cluster.id,
+          :storage_id => storage.id,
+          :sparse     => true
+        }
+        import = OvirtSDK4::ExternalVmImport.new(
+          :name           => source_vm.name,
+          :vm             => { :name => new_name },
+          :provider       => OvirtSDK4::ExternalVmProviderType::VMWARE,
+          :username       => 'testuser',
+          :password       => 'secret',
+          :url            => url,
+          :cluster        => { :id => cluster_guid },
+          :storage_domain => { :id => storage_guid },
+          :sparse         => true
+        )
+        expect_import(params, import)
+      end
+    end
+
+    context 'when called with ISO drivers' do
+      it 'passes the proper params to oVirt API' do
+        params = {
+          :name        => new_name,
+          :cluster_id  => cluster.id,
+          :storage_id  => storage.id,
+          :sparse      => true,
+          :drivers_iso => iso_name
+        }
+        import = OvirtSDK4::ExternalVmImport.new(
+          :name           => source_vm.name,
+          :vm             => { :name => new_name },
+          :provider       => OvirtSDK4::ExternalVmProviderType::VMWARE,
+          :username       => 'testuser',
+          :password       => 'secret',
+          :url            => url,
+          :cluster        => { :id => cluster_guid },
+          :storage_domain => { :id => storage_guid },
+          :sparse         => true,
+          :drivers_iso    => OvirtSDK4::File.new(:id => iso_name)
+        )
+        expect_import(params, import)
+      end
     end
   end
 

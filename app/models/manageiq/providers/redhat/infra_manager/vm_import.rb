@@ -10,6 +10,7 @@ module ManageIQ::Providers::Redhat::InfraManager::VmImport
   #   cluster_id
   #   storage_id
   #   sparse
+  #   drivers_iso
   # }
   def import_vm(source_vm_id, target_params)
     vm = Vm.includes(:ext_management_system).find(source_vm_id)
@@ -26,7 +27,8 @@ module ManageIQ::Providers::Redhat::InfraManager::VmImport
       :url               => vmware_import_url(source_provider, vm),
       :cluster_id        => EmsCluster.find(target_params[:cluster_id]).uid_ems,
       :storage_domain_id => Storage.find(target_params[:storage_id]).ems_ref_obj.split('/').last,
-      :sparse            => target_params[:sparse]
+      :sparse            => target_params[:sparse],
+      :drivers_iso       => target_params[:drivers_iso]
     )
   end
 
@@ -87,6 +89,7 @@ module ManageIQ::Providers::Redhat::InfraManager::VmImport
           :cluster        => { :id => params[:cluster_id] },
           :storage_domain => { :id => params[:storage_domain_id] },
           :sparse         => params[:sparse],
+          :drivers_iso    => params[:drivers_iso].try { |iso| OvirtSDK4::File.new(:id => iso) }
         )
       )
       self.class.make_ems_ref(import.vm.href)

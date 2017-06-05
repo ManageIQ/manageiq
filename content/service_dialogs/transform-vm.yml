@@ -208,6 +208,82 @@
           ae_instance:
           ae_message:
           ae_attributes: {}
+      - name: install_drivers
+        description: Install necessary drivers as a part of the conversion process
+        data_type:
+        notes:
+        notes_display:
+        display: edit
+        display_method:
+        display_method_options: {}
+        required: false
+        required_method:
+        required_method_options: {}
+        default_value: f
+        values:
+        values_method:
+        values_method_options: {}
+        options: {}
+        label: Install Drivers
+        position: 5
+        validator_type:
+        validator_rule:
+        reconfigurable:
+        dynamic: false
+        show_refresh_button:
+        load_values_on_init:
+        read_only: false
+        auto_refresh:
+        trigger_auto_refresh: true
+        visible: true
+        type: DialogFieldCheckBox
+        resource_action:
+          action:
+          resource_type: DialogField
+          ae_namespace:
+          ae_class:
+          ae_instance:
+          ae_message:
+          ae_attributes: {}
+      - name: drivers_iso
+        description: ISO where the drivers are located
+        data_type: string
+        notes:
+        notes_display:
+        display: edit
+        display_method:
+        display_method_options: {}
+        required: true
+        required_method:
+        required_method_options: {}
+        default_value:
+        values:
+        values_method:
+        values_method_options: {}
+        options:
+          :force_multi_value: false
+          :sort_by: :description
+        label: Drivers ISO
+        position: 6
+        validator_type:
+        validator_rule:
+        reconfigurable:
+        dynamic: true
+        show_refresh_button:
+        load_values_on_init:
+        read_only: false
+        auto_refresh: true
+        trigger_auto_refresh:
+        visible:
+        type: DialogFieldDropDownList
+        resource_action:
+          action:
+          resource_type: DialogField
+          ae_namespace: Infrastructure/VM/Transform
+          ae_class: Import
+          ae_instance: list_driver_isos
+          ae_message:
+          ae_attributes: {}
   resource_actions:
     - action:
       ae_namespace: SYSTEM
