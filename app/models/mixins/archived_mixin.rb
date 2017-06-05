@@ -2,14 +2,18 @@ module ArchivedMixin
   extend ActiveSupport::Concern
 
   included do
-    scope :deleted, -> { where(:deleted => true) }
-    scope :not_deleted, -> { where(:deleted => false) }
+    scope :archived, -> { where.not(:deleted_on => nil) }
+    scope :active, -> { where(:deleted_on => nil) }
 
     belongs_to :old_ext_management_system, :foreign_key => :old_ems_id, :class_name => 'ExtManagementSystem'
   end
 
   def archived?
-    deleted?
+    !active?
+  end
+
+  def active?
+    deleted_on.nil?
   end
 
   # Needed for metrics

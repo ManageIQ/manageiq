@@ -4,16 +4,16 @@ module ManageIQ::Providers
     include SupportsFeatureMixin
 
     has_many :container_nodes, :foreign_key => :ems_id, :dependent => :destroy
-    has_many :container_groups, -> { where(:deleted => false) }, :foreign_key => :ems_id, :dependent => :destroy
+    has_many :container_groups, -> { active }, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_services, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_replicators, :foreign_key => :ems_id, :dependent => :destroy
-    has_many :containers, -> { where(:deleted => false) }, :foreign_key => :ems_id
-    has_many :container_definitions, -> { where(:deleted => false) }, :foreign_key => :ems_id
-    has_many :container_projects, -> { where(:deleted => false) }, :foreign_key => :ems_id, :dependent => :destroy
+    has_many :containers, -> { active }, :foreign_key => :ems_id
+    has_many :container_definitions, -> { active }, :foreign_key => :ems_id
+    has_many :container_projects, -> { active }, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_quotas, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_limits, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_image_registries, :foreign_key => :ems_id, :dependent => :destroy
-    has_many :container_images, -> { where(:deleted => false) }, :foreign_key => :ems_id, :dependent => :destroy
+    has_many :container_images, -> { active }, :foreign_key => :ems_id, :dependent => :destroy
     has_many :persistent_volumes, :as => :parent, :dependent => :destroy
     has_many :persistent_volume_claims, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_component_statuses, :foreign_key => :ems_id, :dependent => :destroy
