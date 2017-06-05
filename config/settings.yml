@@ -81,6 +81,7 @@
   :use_vim_broker: true
   :use_vim_broker_ems: true
 :container_scanning:
+  :scanning_job_timeout: 20.minutes
   :concurrent_per_ems: 3
 :database:
   :metrics_collection:
@@ -105,10 +106,6 @@
     :service:
       :read_timeout: 1.hour
       :open_timeout: 1.minute
-  :ems_kubernetes:
-    :miq_namespace: management-infra
-    :image_inspector_registry: docker.io
-    :image_inspector_repository: openshift/image-inspector
 :event_streams:
   :history:
     :keep_events: 6.months
@@ -125,8 +122,6 @@
   :foreman_provisioning:
     :refresh_interval: 1.hour
   :full_refresh_threshold: 100
-  :kubernetes:
-    :refresh_interval: 15.minutes
   :raise_vm_snapshot_complete_if_created_within: 15.minutes
   :refresh_interval: 24.hours
   :scvmm:
@@ -1086,8 +1081,6 @@
         :poll: 15.seconds
       :event_catcher_google:
         :poll: 15.seconds
-      :event_catcher_kubernetes:
-        :poll: 1.seconds
       :event_catcher_lenovo:
         :poll: 4.minutes
       :event_catcher_cinder:
@@ -1108,9 +1101,6 @@
           :nice_delta: 3
           :poll_method: :escalate
         :ems_metrics_collector_worker_google: {}
-        :ems_metrics_collector_worker_kubernetes:
-          :metrics_port: 5000
-          :metrics_path: "/hawkular/metrics"
         :ems_metrics_collector_worker_redhat: {}
       :ems_metrics_processor_worker:
         :count: 2
@@ -1131,7 +1121,6 @@
         :ems_refresh_worker_foreman_provisioning: {}
         :ems_refresh_worker_google: {}
         :ems_refresh_worker_google_network: {}
-        :ems_refresh_worker_kubernetes: {}
         :ems_refresh_worker_lenovo_physical_infra: {}
         :ems_refresh_worker_microsoft: {}
         :ems_refresh_worker_nuage_network: {}
