@@ -232,6 +232,12 @@ describe EmbeddedAnsible do
 
           expect(described_class.configured?).to be false
         end
+
+        it "returns false when the file doesn't exist and there is a value in the database" do
+          key_file.unlink
+          miq_database.ansible_secret_key = "password"
+          expect(described_class.configured?).to be false
+        end
       end
 
       describe ".configure_secret_key (private)" do

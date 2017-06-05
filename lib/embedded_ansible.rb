@@ -28,6 +28,7 @@ class EmbeddedAnsible
   end
 
   def self.configured?
+    return false unless File.exist?(SECRET_KEY_FILE)
     key = miq_database.ansible_secret_key
     key.present? && key == File.read(SECRET_KEY_FILE)
   end
