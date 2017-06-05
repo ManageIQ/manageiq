@@ -1,4 +1,4 @@
-module MiqServer::QueueManagement
+module MiqServerQueueManagement
   extend ActiveSupport::Concern
 
   def clear_miq_queue_for_this_server

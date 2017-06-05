@@ -1,4 +1,7 @@
 require 'resolv'
+require 'miq_server/base_constants'
+require 'miq_server/base_methods'
+require 'miq_server/queue_management'
 
 class MiqServer < ApplicationRecord
   include_concern 'WorkerManagement'
@@ -8,7 +11,6 @@ class MiqServer < ApplicationRecord
   include_concern 'EnvironmentManagement'
   include_concern 'LogManagement'
   include_concern 'NtpManagement'
-  include_concern 'QueueManagement'
   include_concern 'RoleManagement'
   include_concern 'StatusManagement'
   include_concern 'UpdateManagement'
@@ -23,27 +25,13 @@ class MiqServer < ApplicationRecord
   has_many                :messages,  :as => :handler, :class_name => 'MiqQueue'
   has_many                :miq_events, :as => :target, :dependent => :destroy
 
-  cattr_accessor          :my_guid_cache
-
   before_destroy          :validate_is_deleteable
 
   virtual_column :zone_description, :type => :string
 
-  RUN_AT_STARTUP  = %w( MiqRegion MiqWorker MiqQueue MiqReportResult )
-
-  STATUS_STARTING       = 'starting'.freeze
-  STATUS_STARTED        = 'started'.freeze
-  STATUS_RESTARTING     = 'restarting'.freeze
-  STATUS_STOPPED        = 'stopped'.freeze
-  STATUS_QUIESCE        = 'quiesce'.freeze
-  STATUS_NOT_RESPONDING = 'not responding'.freeze
-  STATUS_KILLED         = 'killed'.freeze
-
-  STATUSES_STOPPED = [STATUS_STOPPED, STATUS_KILLED]
-  STATUSES_ACTIVE  = [STATUS_STARTING, STATUS_STARTED]
-  STATUSES_ALIVE   = STATUSES_ACTIVE + [STATUS_RESTARTING, STATUS_QUIESCE]
-
-  RESTART_EXIT_STATUS = 123
+  include MiqServerBaseConstants
+  include MiqServerBaseMethods
+  include MiqServerQueueManagement
 
   def self.active_miq_servers
     where(:status => STATUSES_ACTIVE)
@@ -99,15 +87,6 @@ class MiqServer < ApplicationRecord
     # create root data directory
     data_dir = File.join(File.expand_path(Rails.root), "data")
     Dir.mkdir data_dir unless File.exist?(data_dir)
-  end
-
-  def self.pidfile
-    @pidfile ||= "#{Rails.root}/tmp/pids/evm.pid"
-  end
-
-  def self.running?
-    p = PidFile.new(pidfile)
-    p.running? ? p.pid : false
   end
 
   def start
@@ -378,43 +357,6 @@ class MiqServer < ApplicationRecord
     shutdown_and_exit
   end
 
-  def stop(sync = false)
-    return if self.stopped?
-
-    shutdown_and_exit_queue
-    wait_for_stopped if sync
-  end
-
-  def wait_for_stopped
-    loop do
-      reload
-      break if self.stopped?
-      sleep stop_poll
-    end
-  end
-
-  def self.stop(sync = false)
-    svr = my_server(true) rescue nil
-    svr.stop(sync) unless svr.nil?
-    PidFile.new(pidfile).remove
-  end
-
-  def kill
-    # Kill all the workers of this server
-    kill_all_workers
-
-    # Then kill this server
-    _log.info("initiated for #{format_full_log_msg}")
-    update_attributes(:stopped_on => Time.now.utc, :status => "killed", :is_master => false)
-    (pid == Process.pid) ? shutdown_and_exit : Process.kill(9, pid)
-  end
-
-  def self.kill
-    svr = my_server(true)
-    svr.kill unless svr.nil?
-    PidFile.new(pidfile).remove
-  end
-
   def shutdown
     _log.info("initiated for #{format_full_log_msg}")
     MiqEvent.raise_evm_event(self, "evm_server_stop")
@@ -468,14 +410,6 @@ class MiqServer < ApplicationRecord
     ArApplicationName.name = database_application_name
   end
 
-  def is_local?
-    guid == MiqServer.my_guid
-  end
-
-  def is_remote?
-    !is_local?
-  end
-
   def is_recently_active?
     last_heartbeat && (last_heartbeat >= 10.minutes.ago.utc)
   end
@@ -503,10 +437,6 @@ class MiqServer < ApplicationRecord
     status == "started"
   end
 
-  def stopped?
-    STATUSES_STOPPED.include?(status)
-  end
-
   def active?
     STATUSES_ACTIVE.include?(status)
   end
@@ -529,19 +459,6 @@ class MiqServer < ApplicationRecord
     message = "Waiting for #{wcnt} #{workers} to start"
     result.merge(:message => message)
   end
-
-  #
-  # Zone and Role methods
-  #
-  def self.my_guid
-    @@my_guid_cache ||= begin
-      guid_file = Rails.root.join("GUID")
-      File.write(guid_file, SecureRandom.uuid) unless File.exist?(guid_file)
-      File.read(guid_file).strip
-    end
-  end
-
-  cache_with_timeout(:my_server) { find_by(:guid => my_guid) }
 
   def self.my_zone(force_reload = false)
     my_server(force_reload).my_zone
