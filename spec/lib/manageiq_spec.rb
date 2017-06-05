@@ -1,7 +1,7 @@
-# This tests are done in a way that assume the Rails environment for ManageIQ are
+# These tests are done in a way that assume the Rails environment for ManageIQ are
 # loaded, and that Rails is present to do the comparisons.  Tests that confirm
-# that this works when rails is not present us a subprocess to run the
-# `lib/miq.rb` file in isolation.
+# that this works when rails is not present use a subprocess to run the
+# `lib/manageiq.rb` file in isolation.
 #
 # If tests are not passing, check to see if the spec/spec_helper.rb is being
 # loaded properly and initailizing the Vmdb::Application.

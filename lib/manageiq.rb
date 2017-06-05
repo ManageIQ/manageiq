@@ -3,7 +3,7 @@ require 'active_support/core_ext/object/blank'
 require 'active_support/string_inquirer'
 
 module ManageIQ
-  # Defined in the same fasion
+  # Defined in the same fashion as Rails.env
   def self.env
     @_env ||= begin
       if defined?(Rails)
