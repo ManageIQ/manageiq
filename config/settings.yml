@@ -92,6 +92,7 @@
     :keep_hourly_metrics: 6.months
     :purge_schedule: "50 * * * *"
     :purge_window_size: 10000
+    :queue_timeout: 20.minutes
 :drift_states:
   :history:
     :keep_drift_states: 6.months
@@ -895,6 +896,7 @@
     :keep_hourly_performances: 6.months
     :keep_realtime_performances: 4.hours
     :purge_window_size: 1000
+    :queue_timeout: 20.minutes
   :host_overhead:
     :memory: 2.01.percent
     :cpu: 0.15.percent
