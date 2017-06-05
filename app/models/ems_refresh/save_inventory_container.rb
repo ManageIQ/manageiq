@@ -87,25 +87,21 @@ module EmsRefresh::SaveInventoryContainer
       ::ManagerRefresh::InventoryCollection.new(
         :model_class => ComputerSystem,
         :parent => ems,
-        :association => :container_node_computer_systems,
+        :association => :computer_systems,
         :manager_ref => [:managed_entity],
       )
     @inv_collections[:container_node_computer_system_hardwares] =
       ::ManagerRefresh::InventoryCollection.new(
         :model_class => Hardware,
         :parent => ems,
-        # can't nest has_many through ?
-        :arel => Hardware.joins(:computer_system => :container_node)
-                         .where(:container_nodes => {:ems_id => ems.id}),
+        :association => :computer_system_hardwares,
         :manager_ref => [:computer_system],
       )
     @inv_collections[:container_node_computer_system_operating_systems] =
       ::ManagerRefresh::InventoryCollection.new(
         :model_class => OperatingSystem,
         :parent => ems,
-        # can't nest has_many through
-        :arel => OperatingSystem.joins(:computer_system => :container_node)
-                                .where(:container_nodes => {:ems_id => ems.id}),
+        :association => :computer_system_operating_systems,
         :manager_ref => [:computer_system],
       )
 

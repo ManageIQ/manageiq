@@ -4,14 +4,12 @@ module ManageIQ::Providers
     include SupportsFeatureMixin
 
     has_many :container_nodes, :foreign_key => :ems_id, :dependent => :destroy
-    has_many :container_node_conditions, :through => :container_nodes, :source => :container_conditions
     has_many :container_groups, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_services, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_replicators, :foreign_key => :ems_id, :dependent => :destroy
     has_many :containers, :foreign_key => :ems_id
     has_many :container_projects, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_quotas, :foreign_key => :ems_id, :dependent => :destroy
-    has_many :container_quota_items, :through => :container_quotas
     has_many :container_limits, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_image_registries, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_images, :foreign_key => :ems_id, :dependent => :destroy
@@ -23,16 +21,19 @@ module ManageIQ::Providers
     has_many :container_templates, :foreign_key => :ems_id, :dependent => :destroy
     has_one :container_deployment, :foreign_key => :deployed_ems_id, :inverse_of => :deployed_ems
 
-    has_many :container_limit_items, :through => :container_limits
+    # Shortcuts to chained joins, mostly used by refresh.
     has_many :computer_systems, :through => :container_nodes
-    has_many :container_node_computer_systems, :through => :container_nodes, :source => :computer_system
-    has_many :container_definitions, :through => :container_groups
+    has_many :computer_system_hardwares, :through => :computer_systems, :source => :hardware
+    has_many :computer_system_operating_systems, :through => :computer_systems, :source => :operating_system
     has_many :container_volumes, :through => :container_groups
+    has_many :container_definitions, :through => :container_groups
     has_many :container_port_configs, :through => :container_definitions
     has_many :container_env_vars, :through => :container_definitions
     has_many :security_contexts, :through => :container_definitions
     has_many :container_service_port_configs, :through => :container_services
     has_many :container_routes, :through => :container_services
+    has_many :container_quota_items, :through => :container_quotas
+    has_many :container_limit_items, :through => :container_limits
     has_many :container_template_parameters, :through => :container_templates
 
     virtual_column :port_show, :type => :string
