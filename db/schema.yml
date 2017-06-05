@@ -4863,6 +4863,7 @@ miq_alerts:
 - responds_to_events
 - enabled
 - read_only
+- hawkular_keys
 miq_approvals:
 - id
 - description

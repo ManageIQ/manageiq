@@ -12,7 +12,8 @@ describe TaskHelpers::Exports::Alerts do
           "expression"         => nil,
           "responds_to_events" => nil,
           "enabled"            => true,
-          "read_only"          => nil
+          "read_only"          => nil,
+          "hawkular_keys"      => nil
         }
       }
     ]
