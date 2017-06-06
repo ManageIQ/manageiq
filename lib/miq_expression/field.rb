@@ -77,6 +77,10 @@ class MiqExpression::Field < MiqExpression::Target
     target.arel_attribute(column)
   end
 
+  def report_column
+    (associations + [column]).join('.')
+  end
+
   private
 
   def custom_attribute_column_name

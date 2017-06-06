@@ -19,7 +19,8 @@ class MiqExpression::Tag < MiqExpression::Target
 
   def initialize(model, associations, column, managed = true)
     super(model, associations, column)
-    @namespace = "/#{managed ? MANAGED_NAMESPACE : USER_NAMESPACE}/#{column}"
+    @base_namespace = managed ? MANAGED_NAMESPACE : USER_NAMESPACE
+    @namespace = "/#{@base_namespace}/#{column}"
   end
 
   def contains(value)
@@ -41,5 +42,9 @@ class MiqExpression::Tag < MiqExpression::Target
 
   def attribute_supported_by_sql?
     false
+  end
+
+  def report_column
+    "#{@base_namespace}.#{column}"
   end
 end
