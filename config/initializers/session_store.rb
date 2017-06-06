@@ -17,7 +17,7 @@ else
   if session_store == :mem_cache_store
     require 'dalli'
     session_options = session_options.merge(
-      :cache        => Dalli::Client.new(Settings.session.memcache_server, :namespace => "MIQ:VMDB", :value_max_bytes => 10.megabytes),
+      :cache        => Dalli::Client.new(MiqMemcached.server_address, :namespace => "MIQ:VMDB", :value_max_bytes => 10.megabytes),
       :expire_after => 24.hours,
       :key          => "_vmdb_session",
     )
