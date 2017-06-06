@@ -12,7 +12,6 @@ class ChargebackVm < Chargeback
     :cpu_used_cost            => :float,
     :cpu_used_metric          => :float,
     :cpu_cost                 => :float,
-    :cpu_metric               => :float,
     :disk_io_used_cost        => :float,
     :disk_io_used_metric      => :float,
     :fixed_compute_1_cost     => :float,
@@ -24,7 +23,6 @@ class ChargebackVm < Chargeback
     :memory_used_cost         => :float,
     :memory_used_metric       => :float,
     :memory_cost              => :float,
-    :memory_metric            => :float,
     :net_io_used_cost         => :float,
     :net_io_used_metric       => :float,
     :storage_allocated_cost   => :float,
@@ -32,7 +30,6 @@ class ChargebackVm < Chargeback
     :storage_used_cost        => :float,
     :storage_used_metric      => :float,
     :storage_cost             => :float,
-    :storage_metric           => :float,
     :total_cost               => :float,
   )
 
@@ -76,7 +73,6 @@ class ChargebackVm < Chargeback
       "cpu_allocated_cost"       => {:grouping => [:total]},
       "cpu_allocated_metric"     => {:grouping => [:total]},
       "cpu_cost"                 => {:grouping => [:total]},
-      "cpu_metric"               => {:grouping => [:total]},
       "cpu_used_cost"            => {:grouping => [:total]},
       "cpu_used_metric"          => {:grouping => [:total]},
       "disk_io_used_cost"        => {:grouping => [:total]},
@@ -90,7 +86,6 @@ class ChargebackVm < Chargeback
       "memory_allocated_cost"    => {:grouping => [:total]},
       "memory_allocated_metric"  => {:grouping => [:total]},
       "memory_cost"              => {:grouping => [:total]},
-      "memory_metric"            => {:grouping => [:total]},
       "memory_used_cost"         => {:grouping => [:total]},
       "memory_used_metric"       => {:grouping => [:total]},
       "net_io_used_cost"         => {:grouping => [:total]},
@@ -98,7 +93,6 @@ class ChargebackVm < Chargeback
       "storage_allocated_cost"   => {:grouping => [:total]},
       "storage_allocated_metric" => {:grouping => [:total]},
       "storage_cost"             => {:grouping => [:total]},
-      "storage_metric"           => {:grouping => [:total]},
       "storage_used_cost"        => {:grouping => [:total]},
       "storage_used_metric"      => {:grouping => [:total]},
       "total_cost"               => {:grouping => [:total]}
