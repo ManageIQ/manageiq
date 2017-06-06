@@ -157,13 +157,8 @@ class CloudVolumeController < ApplicationController
     params[:id] = checked_item_id unless params[:id].present?
     assert_privileges("cloud_volume_attach")
     @vm_choices = {}
-<<<<<<< HEAD
-    @volume = find_by_id_filtered(CloudVolume, params[:id])
-    @volume.cloud_tenant.vms.each { |vm| @vm_choices[vm.name] = vm.id }
-=======
     @volume = find_record_with_rbac(CloudVolume, params[:id])
     @volume.available_vms.each { |vm| @vm_choices[vm.name] = vm.id }
->>>>>>> dad3455... Renamed method 'find_by_id_filtered' methods name to 'find_record_with_rbac'
 
     @in_a_form = true
     drop_breadcrumb(
@@ -222,28 +217,7 @@ class CloudVolumeController < ApplicationController
       session[:edit] = nil
       session[:flash_msgs] = @flash_array.dup if @flash_array
 
-<<<<<<< HEAD
       javascript_redirect previous_breadcrumb_url
-=======
-  def attach_finished
-    task_id = session[:async][:params][:task_id]
-    volume_id = session[:async][:params][:id]
-    volume_name = session[:async][:params][:name]
-    vm_id = session[:async][:params][:vm_id]
-    vm = find_record_with_rbac(VmCloud, vm_id)
-    task = MiqTask.find(task_id)
-    if MiqTask.status_ok?(task.status)
-      add_flash(_("Attaching Cloud Volume \"%{volume_name}\" to %{vm_name} finished") % {
-        :volume_name => volume_name,
-        :vm_name     => vm.name
-      })
-    else
-      add_flash(_("Unable to attach Cloud Volume \"%{volume_name}\" to %{vm_name}: %{details}") % {
-        :volume_name => volume_name,
-        :vm_name     => vm.name,
-        :details     => task.message
-      }, :error)
->>>>>>> dad3455... Renamed method 'find_by_id_filtered' methods name to 'find_record_with_rbac'
     end
   end
 
@@ -281,28 +255,7 @@ class CloudVolumeController < ApplicationController
       session[:edit] = nil
       session[:flash_msgs] = @flash_array.dup if @flash_array
 
-<<<<<<< HEAD
       javascript_redirect previous_breadcrumb_url
-=======
-  def detach_finished
-    task_id = session[:async][:params][:task_id]
-    volume_id = session[:async][:params][:id]
-    volume_name = session[:async][:params][:name]
-    vm_id = session[:async][:params][:vm_id]
-    vm = find_record_with_rbac(VmCloud, vm_id)
-    task = MiqTask.find(task_id)
-    if MiqTask.status_ok?(task.status)
-      add_flash(_("Detaching Cloud Volume \"%{volume_name}\" from %{vm_name} finished") % {
-        :volume_name => volume_name,
-        :vm_name     => vm.name
-      })
-    else
-      add_flash(_("Unable to detach Cloud Volume \"%{volume_name}\" from %{vm_name}: %{details}") % {
-        :volume_name => volume_name,
-        :vm_name     => vm.name,
-        :details     => task.message
-      }, :error)
->>>>>>> dad3455... Renamed method 'find_by_id_filtered' methods name to 'find_record_with_rbac'
     end
   end
 
@@ -698,38 +651,6 @@ class CloudVolumeController < ApplicationController
     options[:cloud_tenant_id] = params[:cloud_tenant_id] if params[:cloud_tenant_id]
     options[:vm_id] = params[:vm_id] if params[:vm_id]
     options[:device_path] = params[:device_path] if params[:device_path]
-<<<<<<< HEAD
-=======
-    options[:volume_type] = params[:aws_volume_type] if params[:aws_volume_type]
-    # Only set IOPS if io1 (provisioned IOPS) and IOPS available
-    options[:iops] = params[:aws_iops] if options[:volume_type] == 'io1' && params[:aws_iops]
-    options
-  end
-
-  def form_params_create
-    options = {}
-    options[:name] = params[:name] if params[:name]
-    options[:size] = params[:size].to_i if params[:size]
-
-    # Depending on the storage manager type, collect required form params.
-    case params[:emstype]
-    when "ManageIQ::Providers::StorageManager::CinderManager"
-      cloud_tenant_id = params[:cloud_tenant_id] if params[:cloud_tenant_id]
-      cloud_tenant = find_record_with_rbac(CloudTenant, cloud_tenant_id)
-      options[:cloud_tenant] = cloud_tenant
-      options[:ems] = cloud_tenant.ext_management_system
-    when "ManageIQ::Providers::Amazon::StorageManager::Ebs"
-      options[:volume_type] = params[:aws_volume_type] if params[:aws_volume_type]
-      # Only set IOPS if io1 (provisioned IOPS) and IOPS available
-      options[:iops] = params[:aws_iops] if options[:volume_type] == 'io1' && params[:aws_iops]
-      options[:availability_zone] = params[:aws_availability_zone_id] if params[:aws_availability_zone_id]
-      options[:encrypted] = params[:aws_encryption]
-
-      # Get the storage manager.
-      storage_manager_id = params[:storage_manager_id] if params[:storage_manager_id]
-      options[:ems] = find_record_with_rbac(ExtManagementSystem, storage_manager_id)
-    end
->>>>>>> dad3455... Renamed method 'find_by_id_filtered' methods name to 'find_record_with_rbac'
     options
   end
 
