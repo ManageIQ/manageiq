@@ -1169,7 +1169,7 @@
       :orchestration_stack_retired_interval: 10.minutes
       :performance_collection_interval: 3.minutes
       :performance_collection_start_delay: 5.minutes
-      :performance_realtime_purging_interval: 15.minutes
+      :performance_realtime_purging_interval: 21.minutes
       :performance_realtime_purging_start_delay: 5.minutes
       :performance_rollup_purging_interval: 4.hours
       :performance_rollup_purging_start_delay: 5.minutes
