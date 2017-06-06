@@ -222,8 +222,7 @@ module OpsController::Settings::Schedules
           else
             _("The selected Schedules were disabled")
           end
-
-    schedules = find_checked_items
+    schedules = find_records_with_rbac(MiqSchedule, checked_or_params).map(&:id)
     if schedules.empty?
       add_flash(msg, :error)
       javascript_flash
