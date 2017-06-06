@@ -418,8 +418,8 @@
               :dvs: true
               :vlans: true
             :method: :allowed_vlans
-          :description: vLan
-          :required: true
+          :description: Network
+          :required: false
           :display: :edit
           :data_type: :string
         :mac_address:
