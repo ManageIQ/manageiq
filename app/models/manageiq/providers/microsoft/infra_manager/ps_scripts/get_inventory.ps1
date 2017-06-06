@@ -22,7 +22,8 @@ $vms = Get-SCVirtualMachine -VMMServer localhost -All |
 $hosts = Get-SCVMHost -VMMServer localhost |
   Select -Property CommunicationStateString,CoresPerCPU,DiskVolumes,DVDDriveList,
     HyperVStateString,ID,LogicalProcessorCount,Name,OperatingSystem,OverallState,PhysicalCPUCount,
-    ProcessorFamily,ProcessorManufacturer,ProcessorModel,ProcessorSpeed,TotalMemory,
+    ProcessorFamily,ProcessorManufacturer,ProcessorModel,ProcessorSpeed,
+    RegisteredStorageFileShares, TotalMemory,
     @{name='HyperVVersionString';expression={$_.HyperVVersion -As [string]}},
     @{name='OperatingSystemVersionString';expression={$_.OperatingSystemVersion -As [string]}},
     @{name='VirtualizationPlatformString';expression={$_.VirtualizationPlatform -As [string]}}

@@ -30,6 +30,7 @@ module ManageIQ::Providers::Microsoft
 
       get_ems
       get_datastores
+      get_storage_fileshares
       get_hosts
       get_clusters
       get_vms
@@ -50,6 +51,11 @@ module ManageIQ::Providers::Microsoft
       datastores = @inventory['hosts'].collect{ |host| host['DiskVolumes'] }.flatten
       datastores.reject! { |e| e['VolumeLabel'] == 'System Reserved' }
       process_collection(datastores, :storages) { |ds| parse_datastore(ds) }
+    end
+
+    def get_storage_fileshares
+      fileshares = @inventory['hosts'].collect{ |host| host['RegisteredStorageFileShares'] }.flatten
+      process_collection(fileshares, :storages) { |fs| parse_storage_fileshare(fs) }
     end
 
     def get_hosts
@@ -78,6 +84,23 @@ module ManageIQ::Providers::Microsoft
     def get_images
       images = @inventory['images']
       process_collection(images, :vms) { |image| parse_image(image) }
+    end
+
+    def parse_storage_fileshare(volume)
+      uid = volume['ID']
+
+      new_result = {
+        :ems_ref                     => uid,
+        :name                        => File.path_to_uri(volume['SharePath']),
+        :store_type                  => 'StorageFileShare',
+        :total_space                 => volume['Capacity'],
+        :free_space                  => volume['FreeSpace'],
+        :multiplehostaccess          => true,
+        :thin_provisioning_supported => true,
+        :location                    => uid,
+      }
+
+      return uid, new_result
     end
 
     def parse_datastore(volume)
