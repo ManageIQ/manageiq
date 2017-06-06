@@ -174,8 +174,9 @@ module RetirementMixin
   end
 
   def raise_retirement_event(event_name, requester = nil)
-    $log.info("Raising Retirement Event for [#{name}]")
-    MiqEvent.raise_evm_event(self, event_name, setup_event_hash(requester), retire_queue_options)
+    q_options = retire_queue_options
+    $log.info("Raising Retirement Event for [#{name}] with queue options: #{q_options.inspect}")
+    MiqEvent.raise_evm_event(self, event_name, setup_event_hash(requester), q_options)
   end
 
   def raise_audit_event(event_name, message)
