@@ -257,7 +257,6 @@ describe MiqServer do
       it "quiesce_workers do mini-monitor_workers loop" do
         expect(@miq_server).to receive(:heartbeat)
         expect(@miq_server).to receive(:quiesce_workers_loop_timeout?).never
-        expect(@miq_server).to receive(:kill_timed_out_worker_quiesce).never
         allow_any_instance_of(MiqWorker).to receive(:is_stopped?).and_return(true, false)
         @miq_server.workers_quiesced?
       end
@@ -277,24 +276,6 @@ describe MiqServer do
         @miq_server.instance_variable_set(:@quiesce_loop_timeout, 10.minutes)
         expect_any_instance_of(MiqWorker).to receive(:kill).never
         expect(@miq_server.quiesce_workers_loop_timeout?).not_to be_truthy
-      end
-
-      it "will not kill workers if their quiesce timeout is not reached" do
-        @miq_server.instance_variable_set(:@quiesce_started_on, Time.now.utc)
-        allow_any_instance_of(MiqWorker).to receive(:quiesce_time_allowance).and_return(10.minutes)
-        expect_any_instance_of(MiqWorker).to receive(:kill).never
-        @miq_server.kill_timed_out_worker_quiesce
-      end
-
-      it "will kill workers if their quiesce timeout is reached" do
-        @miq_server.instance_variable_set(:@quiesce_started_on, Time.now.utc)
-        allow_any_instance_of(MiqWorker).to receive(:quiesce_time_allowance).and_return(10.minutes)
-        @miq_server.kill_timed_out_worker_quiesce
-
-        Timecop.travel 10.minutes do
-          expect_any_instance_of(MiqWorker).to receive(:kill).once
-          @miq_server.kill_timed_out_worker_quiesce
-        end
       end
 
       context "with an active messsage and a second server" do

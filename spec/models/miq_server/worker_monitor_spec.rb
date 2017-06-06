@@ -72,16 +72,6 @@ describe "MiqWorker Monitor" do
         end
       end
 
-      it "quiesce time allowance will use message timeout" do
-        allow(@worker).to receive(:current_timeout).and_return(2.minutes)
-        expect(@worker.quiesce_time_allowance).to eq(2.minutes)
-      end
-
-      it "quiesce time allowance will use default of 5 minutes if no message timeout" do
-        allow(@worker).to receive(:current_timeout).and_return(nil)
-        expect(@worker.quiesce_time_allowance).to eq(5.minutes)
-      end
-
       context "with 1 message" do
         before(:each) do
           @message = FactoryGirl.create(:miq_queue, :state => 'dequeue', :handler => @worker)

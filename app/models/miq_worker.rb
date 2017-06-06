@@ -380,11 +380,6 @@ class MiqWorker < ApplicationRecord
     destroy
   end
 
-  def quiesce_time_allowance
-    allowance = self.class.worker_settings[:quiesce_time_allowance]
-    @quiesce_time_allowance ||= allowance || current_timeout || 5.minutes
-  end
-
   def is_current?
     STATUSES_CURRENT.include?(status)
   end
