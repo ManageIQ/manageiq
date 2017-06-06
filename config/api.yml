@@ -36,6 +36,86 @@
     - :patch
     - :delete
 :collections:
+  :container_builds:
+    :description: Container Builds
+    :identifier: container_builds
+    :options:
+    - :collection
+    - :subcollection
+    :verbs: *70174834086080
+    :klass: ContainerBuild
+  :container_deployments:
+    :description: Container Deployments
+    :identifier: container_deployments
+    :options:
+    - :collection
+    - :subcollection
+    :verbs: *70174834086080
+    :klass: ContainerDeployment
+  :container_pods:
+    :description: Container Pods
+    :identifier: container_pods
+    :options:
+    - :collection
+    - :subcollection
+    :verbs: *70174834086080
+    :klass: ContainerGroup
+  :container_images:
+    :description: Container images
+    :identifier: container_images
+    :options:
+    - :collection
+    - :subcollection
+    :verbs: *70174834086080
+    :klass: ContainerImage
+  :container_nodes:
+    :description: Container Node
+    :identifier: container_nodes
+    :options:
+    - :collection
+    - :subcollection
+    :verbs: *70174834086080
+    :klass: ContainerNode
+  :container_projects:
+    :description: Container Projects
+    :identifier: container_projects
+    :options:
+    - :collection
+    - :subcollection
+    :verbs: *70174834086080
+    :klass: ContainerProject
+  :container_replicators:
+    :description: Container Replicators
+    :identifier: container_replicators
+    :options:
+    - :collection
+    - :subcollection
+    :verbs: *70174834086080
+    :klass: ContainerReplicator
+  :container_services:
+    :description: Container Services
+    :identifier: container_services
+    :options:
+    - :collection
+    - :subcollection
+    :verbs: *70174834086080
+    :klass: ContainerService
+  :container_volumes:
+    :description: Container Volumes
+    :identifier: container_volumes
+    :options:
+    - :collection
+    - :subcollection
+    :verbs: *70174834086080
+    :klass: ContainerVolume
+  :containers:
+    :description: Containers
+    :identifier: containers
+    :options:
+    - :collection
+    - :subcollection
+    :verbs: *70174834086080
+    :klass: Container
   :accounts:
     :description: Accounts
     :options:
