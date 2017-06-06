@@ -1,4 +1,22 @@
 describe Metric::Purging do
+  let(:settings) do
+    {
+      :performance => {
+        :history => {
+          :keep_daily_performance    => "6.months",
+          :keep_hourly_performance   => "6.months",
+          :keep_realtime_performance => "4.hours",
+          :purge_window_size         => 1000,
+          :queue_timeout             => "20.minutes"
+        }
+      }
+    }
+  end
+
+  before do
+    stub_settings(settings)
+  end
+
   context "::Purging" do
     it "#purge_all_timer" do
       EvmSpecHelper.create_guid_miq_server_zone
@@ -12,6 +30,7 @@ describe Metric::Purging do
         q.each do |qi|
           expect(qi).to have_attributes(
             :class_name  => described_class.name,
+            :msg_timeout => 1200
           )
         end
 
@@ -23,22 +42,8 @@ describe Metric::Purging do
     context "with data" do
       let(:vm1) { FactoryGirl.create(:vm_vmware) }
       let(:vm2) { FactoryGirl.create(:vm_vmware) }
-      let(:settings) do
-        {
-          :performance => {
-            :history => {
-              :keep_daily_performance    => "6.months",
-              :keep_hourly_performance   => "6.months",
-              :keep_realtime_performance => "4.hours",
-              :purge_window_size         => 1000
-            }
-          }
-        }
-      end
 
       before do
-        stub_settings(settings)
-
         @metrics1 = [
           FactoryGirl.create(:metric_rollup_vm_hr, :resource_id => vm1.id, :timestamp => (6.months + 1.days).ago.utc),
           FactoryGirl.create(:metric_rollup_vm_hr, :resource_id => vm1.id, :timestamp => (6.months - 1.days).ago.utc)
