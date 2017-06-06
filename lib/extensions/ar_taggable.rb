@@ -192,7 +192,13 @@ module ActsAsTaggable
     ns.gsub!('/virtual/','')  # throw away /virtual
     ns, virtual_custom_attribute = MiqExpression.escape_virtual_custom_attribute(ns)
     predicate = ns.split('/')
-    predicate.map!{ |x| URI::RFC2396_Parser.new.unescape(x) } if virtual_custom_attribute
+    if virtual_custom_attribute
+      predicate.map!{ |x| URI::RFC2396_Parser.new.unescape(x) }
+      # it is always array with one string element - name of virtual custom attribute because they are supported only
+      # in direct relations
+      custom_attribute = predicate.first
+      self.class.add_custom_attribute(custom_attribute) if self.class < CustomAttributeMixin
+    end
 
     # p "ns: [#{ns}]"
     # p "predicate: [#{predicate.inspect}]"
