@@ -6,5 +6,7 @@
   = render :partial => "#{controller}/main_configuration_profile"
 - elsif @record.kind_of?(ManageIQ::Providers::ConfigurationManager::InventoryGroup)
   = render :partial => "#{controller}/main_inventory_group"
+- elsif @record.kind_of?(ConfigurationScript)
+  = render :partial => "#{controller}/configuration_script"
 - else
   = render :partial => "#{controller}/main"

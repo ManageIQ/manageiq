@@ -359,7 +359,7 @@ module ApplicationHelper
       action = "diagnostics_worker_selected"
     when "OrchestrationStackOutput", "OrchestrationStackParameter", "OrchestrationStackResource",
         "ManageIQ::Providers::CloudManager::OrchestrationStack",
-        "ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job"
+        "ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job", "ConfigurationScript"
       controller = request.parameters[:controller]
     when "ContainerVolume"
       controller = "persistent_volume"
