@@ -3,6 +3,7 @@ describe OpsController do
     let(:user) { FactoryGirl.create(:user, :features => %w(schedule_enable schedule_disable)) }
     before do
       login_as user
+      allow(User).to receive(:server_timezone).and_return("UTC")
     end
 
     context "no schedules selected" do
