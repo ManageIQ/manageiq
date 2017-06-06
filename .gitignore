@@ -72,7 +72,7 @@ public/pictures/
 public/ui/
 
 # spec/
-spec/replication/util/data/euwe_migrations
+spec/replication/util/data/*_migrations
 
 # tmp/
 tmp/*
