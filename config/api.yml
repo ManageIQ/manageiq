@@ -2087,6 +2087,11 @@
       :get:
       - :name: read
         :identifier: ops_settings
+  :shared_vms:
+    :description: Shared VMs
+    :verbs: *g
+    :options:
+    - :collection
   :snapshots:
     :description: Snapshots
     :options:
