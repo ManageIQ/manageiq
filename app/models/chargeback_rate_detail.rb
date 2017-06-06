@@ -12,7 +12,7 @@ class ChargebackRateDetail < ApplicationRecord
 
   delegate :rate_type, :to => :chargeback_rate, :allow_nil => true
 
-  delegate :metric_keys, :cost_keys, :to => :chargeable_field
+  delegate :metric_key, :cost_keys, :to => :chargeable_field
 
   FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric chargeable_field_id).freeze
   PER_TIME_TYPES = {
@@ -25,13 +25,13 @@ class ChargebackRateDetail < ApplicationRecord
 
   def charge(relevant_fields, consumption)
     result = {}
-    if (relevant_fields & [metric_keys[0], cost_keys[0]]).present?
+    if (relevant_fields & [metric_key, cost_keys[0]]).present?
       metric_value, cost = metric_and_cost_by(consumption)
       if !consumption.chargeback_fields_present && chargeable_field.fixed?
         cost = 0
       end
-      metric_keys.each { |field| result[field] = metric_value }
-      cost_keys.each   { |field| result[field] = cost }
+      result[metric_key] = metric_value
+      cost_keys.each { |field| result[field] = cost }
     end
     result
   end
@@ -85,7 +85,7 @@ class ChargebackRateDetail < ApplicationRecord
   end
 
   def affects_report_fields(report_cols)
-    (metric_keys.to_set & report_cols).present? || ((cost_keys.to_set & report_cols).present? && !gratis?)
+    ([metric_key].to_set & report_cols).present? || ((cost_keys.to_set & report_cols).present? && !gratis?)
   end
 
   def friendly_rate
