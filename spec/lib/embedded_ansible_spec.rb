@@ -232,6 +232,12 @@ describe EmbeddedAnsible do
 
           expect(described_class.configured?).to be false
         end
+
+        it "returns false when the file doesn't exist and there is a value in the database" do
+          key_file.unlink
+          miq_database.ansible_secret_key = "password"
+          expect(described_class.configured?).to be false
+        end
       end
 
       describe ".configure_secret_key (private)" do
@@ -256,10 +262,10 @@ describe EmbeddedAnsible do
       before do
         expect(described_class).to receive(:configured?).and_return(false)
         expect(described_class).to receive(:configure_secret_key)
-        expect(described_class).to receive(:alive?).and_return(true)
       end
 
       it "generates new passwords with no passwords set" do
+        expect(described_class).to receive(:alive?).and_return(true)
         expect(described_class).to receive(:generate_database_authentication).and_return(double(:userid => "awx", :password => "databasepassword"))
         expect(AwesomeSpawn).to receive(:run!) do |script_path, options|
           params                  = options[:params]
@@ -284,6 +290,7 @@ describe EmbeddedAnsible do
       end
 
       it "uses the existing passwords when they are set in the database" do
+        expect(described_class).to receive(:alive?).and_return(true)
         miq_database.set_ansible_admin_authentication(:password => "adminpassword")
         miq_database.set_ansible_rabbitmq_authentication(:userid => "rabbituser", :password => "rabbitpassword")
         miq_database.set_ansible_database_authentication(:userid => "databaseuser", :password => "databasepassword")
@@ -305,6 +312,15 @@ describe EmbeddedAnsible do
         end
 
         described_class.start
+      end
+
+      it "removes the secret key from the database when setup fails" do
+        miq_database.ansible_secret_key = "supersecretkey"
+        expect(described_class).to receive(:generate_database_authentication).and_return(double(:userid => "awx", :password => "databasepassword"))
+
+        expect(AwesomeSpawn).to receive(:run!).and_raise(AwesomeSpawn::CommandResultError.new("error", 1))
+        expect { described_class.start }.to raise_error(AwesomeSpawn::CommandResultError)
+        expect(miq_database.reload.ansible_secret_key).not_to be_present
       end
     end
 
