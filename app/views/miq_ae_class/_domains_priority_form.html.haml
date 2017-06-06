@@ -1,25 +1,17 @@
 = render :partial => "layouts/flash_msg", :locals => {:div_num => "_domains_priority"}
 #domains_list
-  %table#formtest.form{:width => '50%'}
-    %tr
-      %td.widthed{:align => "left"}= _("Domains:")
-      %td
-    %tr
-      %td{:align => "left", :valign => "top"}
-        = select_tag('seq_fields[]',
-          options_for_select(@edit[:new][:domain_order], @selected),
-          :multiple => true, :style => "width: 450px", :size => 20, :id => "seq_fields")
-      %td{:width => "30", :align => "left", :valign => "middle"}
-        = link_image_if(:cond => (@edit[:new][:domain_order].length < 2),
-          :image              => image_path('toolbars/up.png'),
-          :opts_true          => {:class  => "dimmed small"},
-          :opts_false         => {:class  => "rollover small", :alt => t = _("Move selected fields up")},
-          :link               => {:action => 'priority_form_field_changed', :button => 'up', :id => "priority__edit"},
-          :opts_link          => {:remote => true, 'data-method' => :post, "data-submit" => "domains_list", :title => t})
-        = link_image_if(:cond => (@edit[:new][:domain_order].length < 2),
-          :image              => image_path('toolbars/down.png'),
-          :opts_true          => {:class => "dimmed small"},
-          :opts_false         => {:class => "rollover small", :alt => (t = _("Move selected fields down"))},
-          :link               => {:action => 'priority_form_field_changed', :button => 'down', :id => "priority__edit"},
-          :opts_link          => {:remote => true, 'data-method' => :post, "data-submit" => "domains_list", :title => t})
-  #div.note= _('* Select one or more consecutive groups to move up or down.')
+  .row
+    .col-md-7.col-sm-10.col-xs-10
+      = _("Domains:")
+      = select_tag('seq_fields[]',
+        options_for_select(@edit[:new][:domain_order], @selected),
+        :multiple => true, :class  => "form-control", :style => "overflow-x: scroll;", :size => 20, :id => "seq_fields")
+      %small= _('* Select one or more consecutive groups to move up or down.')
+
+    - button_params = @edit[:new][:domain_order].length >= 2 ? [[_("Move selected fields up"),   'domains_list', 'up',    'fa-angle-up'],
+                                                                [_("Move selected fields down"), 'domains_list', 'down',  'fa-angle-down']] : []
+    = render :partial => "shared/views/seq_selector_buttons",
+             :locals  => {:fields_count  => @edit[:new][:domain_order].length,
+                          :button_params => button_params,
+                          :button_action => 'priority_form_field_changed',
+                          :id            => 'priority__edit'}

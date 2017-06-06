@@ -18,7 +18,8 @@
                 = text_field_tag("description", @edit[:new][:description],
                   :maxlength         => MAX_DESC_LEN,
                   "data-miq_observe" => observe_with_interval,
-                  :class             => "form-control")
+                  :class             => "form-control",
+                  :style             => "overflow-x: scroll;")
                 = javascript_tag(javascript_focus('description'))
               - else
                 %p.form-control-static= h(@alert_profile.description)
@@ -34,83 +35,72 @@
               - @alert_profile_alerts.each do |a|
                 %tr{:title => _("View this Alert"),
                   :onclick => "miqTreeActivateNode('#{x_active_tree}', '#{x_node}_al-#{to_cid(a.id)}');"}
-                  %td.narrow
-                    %img{:src => image_path('100/miq_alert.png')}
+                  %td.table-view-pf-select
+                    %i.pficon.pficon-warning-triangle-o
                   %td
                     = h(a.description)
         %hr
       - elsif @edit
         %h3= _('Alert Selection')
-        %table#formtest.form
-          %tr
-            %td{:align => "left"}= _("Available %{model} Alerts:") % {:model => ui_lookup(:model => @edit[:new][:mode])}
-            %td
-            %td.widthed{:align => "left"}= _("Profile Alerts:")
-          %tr
-            %td.widthed{:align => "left", :valign => "top"}
-              %span#choices_chosen_div
-                = select_tag('choices_chosen[]', options_for_select(@edit[:choices].sort),
-                  :multiple => true,
-                  :class    => "widthed",
-                  :size     => 8,
-                  :id       => "choices_chosen")
-            %td{:width => "20", :valign => "middle"}
-              = link_to(image_tag(image_path('toolbars/right.png'), :border => "0", :class  => "rollover small", :alt => (t = _("Move selected Alerts into this Profile"))),
-                {:action => 'alert_profile_edit',
-                 :button => 'move_right',
-                 :id     => @alert_profile},
-                "data-miq_sparkle_on"  => true,
-                "data-miq_sparkle_off" => true,
-                "data-submit"          => 'choices_chosen_div',
-                "data-method"          => :post,
-                :remote                => true,
-                :title                 => t)
+        .col-md-5
+          = _("Available %{model} Alerts:") % {:model => ui_lookup(:model => @edit[:new][:mode])}
 
-              = link_to(image_tag(image_path('toolbars/allleft.png'), :border => "0", :class  => "rollover small", :alt => (t = _("Remove all Alerts from this Profile"))),
-                {:action => 'alert_profile_edit',
-                 :button => 'move_allleft',
-                 :id     => @alert_profile},
-                "data-miq_sparkle_on"  => true,
-                "data-miq_sparkle_off" => true,
-                "data-method"          => :post,
-                :remote                => true,
-                :title                 => t)
+          %span#choices_chosen_div
+            = select_tag('choices_chosen[]', options_for_select(@edit[:choices].sort),
+              :multiple => true,
+              :size     => 15,
+              :class    => "form-control",
+              :style    => "overflow-x: scroll;",
+              :id       => "choices_chosen")
 
-              = link_to(image_tag(image_path('toolbars/left.png'), :border => "0", :class  => "rollover small", :alt => (t = _("Remove selected Alerts from this Profile"))),
-                {:action => 'alert_profile_edit',
-                 :button => 'move_left',
-                 :id     => @alert_profile},
-                "data-miq_sparkle_on"  => true,
-                "data-miq_sparkle_off" => true,
-                "data-submit"          => 'members_chosen_div',
-                "data-method"          => :post,
-                :remote                => true,
-                :title                 => t)
+        .col-md-1{:style => "padding: 10px"}
+          .spacer
+          .spacer
+          - [[_("Move selected Alerts into this Profile"),   'choices_chosen_div', 'move_right',   'fa-angle-right'],
+             [_("Remove all Alerts from this Profile"),      nil,                  'move_allleft', 'fa-angle-double-left'],
+             [_("Remove selected Alerts from this Profile"), 'members_chosen_div', 'move_left',    'fa-angle-left']].each do |title, chosen_div, action, arrow_style|
+            %button.btn.btn-default.btn-block{:title => title,
+                                    :remote => true,
+                                    "data-submit" => chosen_div,
+                                    "data-method" => :post,
+                                    "data-miq_sparkle_on"  => true,
+                                    "data-miq_sparkle_off" => true,
+                                    "data-click_url" => {:url => url_for_only_path(:action => 'alert_profile_edit',
+                                                                         :button => action,
+                                                                         :id     => @alert_profile)}.to_json}
+              %i.fa.fa-lg.hidden-xs.hidden-sm{:class => arrow_style}
+              %i.fa.fa-lg.fa-rotate-90.hidden-md.hidden-lg{:class => arrow_style}
 
-            %td{:align => "right", :valign => "top"}
-              %span#members_chosen_div
-                = select_tag('members_chosen[]', options_for_select(@edit[:new][:alerts].sort),
-                  :multiple => true,
-                  :class    => "widthed",
-                  :size     => 8,
-                  :id       => "members_chosen")
-        %hr
+          .spacer
+
+        .col-md-5
+          = _("Profile Alerts:")
+          %span#members_chosen_div
+            = select_tag('members_chosen[]', options_for_select(@edit[:new][:alerts].sort),
+              :multiple => true,
+              :size     => 15,
+              :class    => "form-control",
+              :id       => "members_chosen")
+
 
       -# Notes field
       - if @edit
-        %h3
-          = _("Notes")
-          (
-          %span#notes_count
-            = @edit[:new][:notes] ? @edit[:new][:notes].length : 0
-          \/ 512)
-        = text_area_tag("notes", @edit[:new][:notes],
-          :rows => 4,
-          :maxlength                  => "512",
-          :counter                    => "notes_count",
-          "data-miq_check_max_length" => true,
-          "data-miq_observe"          => observe_with_interval)
-        %hr
+        .row
+          .col-md-12
+            %hr
+            %h3
+              = _("Notes")
+              (
+              %span#notes_count
+                = @edit[:new][:notes] ? @edit[:new][:notes].length : 0
+              \/ 512)
+            = text_area_tag("notes", @edit[:new][:notes],
+              :rows => 4,
+              :maxlength                  => "512",
+              :counter                    => "notes_count",
+              "data-miq_check_max_length" => true,
+              "data-miq_observe"          => observe_with_interval)
+            %hr
       - else
         %h3
           = _('Notes')

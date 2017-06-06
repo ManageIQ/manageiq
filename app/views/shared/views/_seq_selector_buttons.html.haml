@@ -1,0 +1,21 @@
+.col-md-1.col-sm-2.col-xs-2{:style => "padding: 10px"}
+  .spacer
+  .spacer
+  - if fields_count < 2
+    %button.btn.btn-block.disabled
+      %i.fa.fa-angle-up.fa-lg
+    %button.btn.btn-block.disabled
+      %i.fa.fa-angle-down.fa-lg
+  - else
+    - button_params.each do |title, chosen_div, action, arrow_style|
+      %button.btn.btn-default.btn-block{:title                 => title,
+                                        :remote                => true,
+                                        "data-submit"          => chosen_div,
+                                        "data-method"          => :post,
+                                        "data-miq_sparkle_on"  => true,
+                                        "data-miq_sparkle_off" => true,
+                                        "data-click_url"       => {:url => url_for_only_path(:action => button_action,
+                                                                                             :button => action,
+                                                                                             :id     => id)}.to_json}
+        %i.fa.fa-lg{:class => arrow_style}
+  .spacer
