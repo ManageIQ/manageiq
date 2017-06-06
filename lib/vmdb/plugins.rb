@@ -3,10 +3,12 @@ module Vmdb
     include Singleton
 
     attr_reader :registered_automate_domains
+    attr_reader :registered_ui_plugins
 
     def initialize
       @registered_automate_domains = []
       @registered_provider_plugin_map = {}
+      @registered_ui_plugins = []
       @vmdb_plugins = []
     end
 
@@ -28,6 +30,7 @@ module Vmdb
 
       register_automate_domains(engine)
       register_provider_plugin(engine)
+      register_ui_plugin(engine)
 
       # make sure STI models are recognized
       DescendantLoader.instance.descendants_paths << engine.root.join('app')
@@ -58,6 +61,10 @@ module Vmdb
       Dir.glob(engine.root.join("content", "automate", "*")).each do |domain_directory|
         @registered_automate_domains << AutomateDomain.new(domain_directory)
       end
+    end
+
+    def register_ui_plugin(engine)
+      @registered_ui_plugins << engine if engine.try(:ui_plugin)
     end
   end
 end
