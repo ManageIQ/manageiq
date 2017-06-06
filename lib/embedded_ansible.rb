@@ -99,6 +99,10 @@ class EmbeddedAnsible
       }
       AwesomeSpawn.run!(SETUP_SCRIPT, :params => params)
     end
+  rescue AwesomeSpawn::CommandResultError => e
+    _log.error("EmbeddedAnsible setup script failed with: #{e.message}")
+    miq_database.ansible_secret_key = nil
+    raise
   end
   private_class_method :run_setup_script
 
