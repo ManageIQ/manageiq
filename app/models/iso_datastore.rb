@@ -9,7 +9,7 @@ class IsoDatastore < ApplicationRecord
   end
 
   def synchronize_advertised_images_queue
-    MiqQueue.put_unless_exists(
+    MiqQueue.put(
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "synchronize_advertised_images",
