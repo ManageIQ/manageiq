@@ -14,6 +14,13 @@ module Api
       blueprint
     end
 
+    def new_version_resource(type, id, data)
+      blueprint = resource_search(id, type, Blueprint)
+      blueprint.new_version(data)
+    rescue => err
+      raise BadRequestError, "Failed to create a new version - #{err}"
+    end
+
     private
 
     def set_additional_attributes
