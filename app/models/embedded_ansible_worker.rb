@@ -17,6 +17,7 @@ class EmbeddedAnsibleWorker < MiqWorker
         Thread.exit
       end
     end
+    nil # return no pid
   end
 
   def kill

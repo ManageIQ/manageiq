@@ -335,6 +335,10 @@ class MiqWorker < ApplicationRecord
   end
 
   def start_runner
+    ENV['MIQ_SPAWN_WORKERS'] ? start_runner_via_spawn : start_runner_via_fork
+  end
+
+  def start_runner_via_fork
     self.class.before_fork
     pid = fork(:cow_friendly => true) do
       self.class.after_fork
@@ -342,6 +346,23 @@ class MiqWorker < ApplicationRecord
       exit!
     end
 
+    Process.detach(pid)
+    pid
+  end
+
+  def self.build_command_line(guid)
+    command_line = "#{Gem.ruby} #{runner_script} --heartbeat --guid=#{guid} #{name}"
+    ENV['APPLIANCE'] ? "nice #{nice_increment} #{command_line}" : command_line
+  end
+
+  def self.runner_script
+    script = ManageIQ.root.join("lib/workers/bin/run_single_worker.rb")
+    raise "script not found: #{script}" unless File.exist?(script)
+    script
+  end
+
+  def start_runner_via_spawn
+    pid = Kernel.spawn(self.class.build_command_line(guid), :out => "/dev/null", :err => [Rails.root.join("log", "evm.log"), "a"])
     Process.detach(pid)
     pid
   end
