@@ -2333,6 +2333,7 @@
     - :custom_actions
     :verbs: *gpd
     :klass: Vm
+    :identifying_attrs: ems_ref
     :subcollections:
     - :tags
     - :policies
