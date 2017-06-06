@@ -27,7 +27,7 @@ describe Rbac::Filterer do
       let!(:vm_2)                { FactoryGirl.create(:vm) }
 
       let!(:custom_attribute_1) do
-        FactoryGirl.create(:custom_attribute, :name => 'attribute_1', :value => vm_1.name, :resource => vm_1)
+        FactoryGirl.create(:custom_attribute, :name => 'attribute_1', :value => 'other_value', :resource => vm_1)
       end
 
       let!(:custom_attribute_2) do
@@ -35,17 +35,15 @@ describe Rbac::Filterer do
       end
 
       let(:miq_expression) do
-        exp1 = {'EQUAL' => {'field' => 'Vm-name', 'value' => "Vm-#{virtual_custom_attribute_1}"}}
+        exp1 = {'EQUAL' => {'field' => "Vm-#{virtual_custom_attribute_1}", 'value' => 'other_value'}}
         exp2 = {'EQUAL' => {'field' => "Vm-#{virtual_custom_attribute_2}", "value" => 'any_value'}}
 
         MiqExpression.new("AND" => [exp1, exp2])
       end
 
       it 'returns instance of Vm with related condition' do
-        User.with_user(admin_user) do
-          results = described_class.search(:class => Vm, :filter => miq_expression).first
-          expect(results).to match_array [vm_1]
-        end
+        results = described_class.search(:class => Vm, :filter => miq_expression, :user => admin_user).first
+        expect(results).to match_array [vm_1]
       end
     end
 
