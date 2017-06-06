@@ -9,6 +9,13 @@ Vmdb::Application.routes.draw do
   # Semantic Versioning Regex for API, i.e. vMajor.minor.patch[-pre]
   API_VERSION_REGEX = /v[\d]+(\.[\da-zA-Z]+)*(\-[\da-zA-Z]+)?/ unless defined?(API_VERSION_REGEX)
 
+  namespace :api, :path => "metrics", :defaults => {:format => "json"} do
+    root :to => "metrics#index"
+    match "/", :to => "metrics#options", :via => :options
+    get "/metrics", :to => "metrics#metrics"
+    post "/gauges/raw/query", :to => "metrics#gauges"
+  end
+
   namespace :api, :path => "api(/:version)", :version => API_VERSION_REGEX, :defaults => {:format => "json"} do
     root :to => "api#index"
     match "/", :to => "api#options", :via => :options
