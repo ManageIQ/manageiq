@@ -1,6 +1,5 @@
 #class_instances_div
   - if !@in_a_form
-    = render :partial => "layouts/flash_msg", :locals => {:div_num => "_class_instances"}
     %h3= _('Instances')
     - if @record.ae_instances.present?
       %table#class_instances_grid.table.table-striped.table-bordered.table-hover.table-clickable.table-checkable
@@ -30,6 +29,5 @@
       = render :partial => "layouts/info_msg",
                :locals  => {:message => _("No instances found")}
   - elsif @edit[:new][:ae_inst]
-    #form_div
-      = render :partial => "layouts/flash_msg", :locals => {:div_num => "_class_instances"}
+    .form_div
       = render :partial => "instance_form", :locals => {:prefix => "cls_"}

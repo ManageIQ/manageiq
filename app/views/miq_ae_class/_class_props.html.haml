@@ -1,7 +1,6 @@
 #class_props_div
   - if x_node.split('-')[0] == "aec" || params[:pressed] || ["field_select","field_accept","field_delete"].include?(params[:action]) || (x_node.split('-')[0] == "aen" && params[:button] == "reset")
     - if !@in_a_form_props
-      = render :partial => "layouts/flash_msg", :locals  => {:div_num => "_class_props"}
       %h3= _('Properties')
       %table.table.table-striped.table-bordered
         %tbody
@@ -32,7 +31,6 @@
               = h(@ae_class.ae_instances.length)
       = render :partial => "domain_overrides", :locals  => {:node_prefix => "aec", :model => "Class"}
     - else
-      #form_div
+      .form_div
         %div{:style => "padding-top: 10px;"}
-        = render :partial => "layouts/flash_msg", :locals  => {:div_num => "_class_props"}
         = render :partial => "class_form"

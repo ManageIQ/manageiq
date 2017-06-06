@@ -2,7 +2,6 @@
   - if x_node.split('-')[0] == "aec" || params[:pressed] || %w(field_select field_accept field_delete).include?(params[:action])
     - if !@in_a_form_fields
       / Show Schema
-      = render :partial => "layouts/flash_msg", :locals  => {:div_num => "_class_fields"}
       %h3= _('Schema')
       - if @ae_class.ae_fields.present?
         %table.table.table-striped.table-bordered
@@ -46,8 +45,7 @@
       - url = url_for(:action => 'fields_form_field_changed', :id => "#{@ae_class.id || 'new'}")
       - obs = {:interval => '.5', :url => url}.to_json
       / Edit Schema
-      #form_div
-        = render :partial => "layouts/flash_msg", :locals  => {:div_num => "_class_fields"}
+      .form_div
         %h3= _('Schema')
         %table.table.table-striped.table-bordered
           %thead
@@ -76,7 +74,7 @@
                       - combo_name = "fields_#{fname}#{i}"
                       - combo_options  = (fname == "aetype" ? @combo_xml : @dtype_combo_xml)
                       - combo_url  = "/miq_ae_class/fields_form_field_changed/#{@ae_class.id || 'new'}"
-                      #form-group
+                      .form-group
                         = select_tag(combo_name,
                           options_for_select(combo_options, field[fname]),
                           "title" => "Choose",
@@ -122,7 +120,7 @@
                     - combo_name = "field_#{fname}"
                     - combo_options  = @edit[:new]["#{fname}s".to_sym]
                     - combo_url  = "/miq_ae_class/fields_form_field_changed/#{@ae_class.id || 'new'}"
-                    #form-group
+                    .form-group
                       = select_tag(combo_name,
                           options_for_select(combo_options, session[:field_data][fname]),
                           "title" => "Choose",
