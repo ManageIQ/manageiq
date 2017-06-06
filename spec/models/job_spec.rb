@@ -287,6 +287,8 @@ describe Job do
         @queue_item = MiqQueue.put(:task_id => @job.guid)
       end
 
+      after { Timecop.return }
+
       context "job timed out" do
         it "calls 'job#timeout!' if server was not assigned to job" do
           Timecop.travel 5.minutes
