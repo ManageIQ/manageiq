@@ -187,6 +187,14 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def allowed_hosts_obj(options = {})
     all_hosts = super
+    filter_allowed_hosts(all_hosts)
+  end
+
+  def filter_allowed_hosts(all_hosts)
+    filter_hosts_by_vlan_name(all_hosts)
+  end
+
+  def filter_hosts_by_vlan_name(all_hosts)
     vlan_name = get_value(@values[:vlan])
     return all_hosts unless vlan_name
 
@@ -225,13 +233,21 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       rails_logger('allowed_vlans', 0)
       # TODO: Use Active Record to preload this data?
       MiqPreloader.preload(hosts, :switches => :lans)
-      hosts.each do |h|
-        h.lans.each { |l| vlans[l.name] = l.name unless l.switch.shared? }
-      end
+      load_allowed_vlans(hosts, vlans)
       rails_logger('allowed_vlans', 1)
     end
 
     return vlans, hosts
+  end
+
+  def load_allowed_vlans(hosts, vlans)
+    load_hosts_vlans(hosts, vlans)
+  end
+
+  def load_hosts_vlans(hosts, vlans)
+    hosts.each do |h|
+      h.lans.each { |l| vlans[l.name] = l.name unless l.switch.shared? }
+    end
   end
 
   def filter_by_tags(target, options)
