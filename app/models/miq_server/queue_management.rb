@@ -65,7 +65,8 @@ module MiqServer::QueueManagement
       :server_guid => guid,
       :priority    => MiqQueue::HIGH_PRIORITY,
       :args => [server_ntp_settings],
-      :zone        => my_zone
+      :zone        => my_zone,
+      :category    => "deprecated",
     )
   end
 end

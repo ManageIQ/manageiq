@@ -270,15 +270,15 @@ class Service < ApplicationRecord
   end
 
   def queue_group_action(action, group_idx, direction, deliver_delay)
-    nh = {
+    MiqQueue.put(
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "process_group_action",
-      :args        => [action, group_idx, direction]
-    }
-    nh[:deliver_on] = deliver_delay.seconds.from_now.utc if deliver_delay > 0
-    nh[:zone] = my_zone if my_zone
-    MiqQueue.put(nh)
+      :args        => [action, group_idx, direction],
+      :deliver_on  => deliver_delay > 0 ? deliver_delay.seconds.from_now.utc : nil,
+      :zone        => my_zone || :ignore,
+      :category    => "self delayed job"
+    )
     true
   end
 
@@ -383,8 +383,8 @@ class Service < ApplicationRecord
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "generate_chargeback_report",
-      :priority    => MiqQueue::NORMAL_PRIORITY,
-      :args        => options
+      :args        => options,
+      :category    => "self dispatch"
     )
     _log.info "Added to queue: generate_chargeback_report for service #{name}"
   end

@@ -26,6 +26,7 @@ module MiqRequestTask::PostInstallCallback
       :zone        => my_zone,
       :role        => my_role,
       :task_id     => my_task_id,
+      :category    => "self dispatch task_id?, affinity, state_machine, double queue?",
     )
   end
 

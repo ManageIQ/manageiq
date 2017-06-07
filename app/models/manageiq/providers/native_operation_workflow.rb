@@ -68,23 +68,22 @@ class ManageIQ::Providers::NativeOperationWorkflow < Job
     queue_signal(:finish, message, status)
   end
 
-  def queue_signal(*args, deliver_on: nil)
+  def queue_signal(*args, deliver_on: nil) #madhu HATES this
     role     = options[:role] || "ems_operations"
     priority = options[:priority] || MiqQueue::NORMAL_PRIORITY
 
-    queue_options = {
+    MiqQueue.put(
       :class_name  => self.class.name,
       :method_name => "signal",
       :instance_id => id,
       :priority    => priority,
-      :role        => role,
-      :zone        => zone,
-      :task_id     => guid,
+      :role        => role, # needed?
+      :zone        => zone, # needed?
+      :task_id     => guid, # needed?
       :args        => args,
-      :deliver_on  => deliver_on
-    }
-
-    MiqQueue.put(queue_options)
+      :deliver_on  => deliver_on,
+      :category    => "self delayed? call/reactor "
+    )
   end
 
   alias initializing dispatch_start

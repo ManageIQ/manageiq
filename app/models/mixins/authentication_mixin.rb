@@ -223,36 +223,31 @@ module AuthenticationMixin
   end
 
   def authentication_check_attributes(types, method_options)
-    role = authentication_check_role if self.respond_to?(:authentication_check_role)
-    zone = my_zone if self.respond_to?(:my_zone)
-
     # FIXME: Via schedule, a message is created with args = [], so all authentications will be checked,
     # while an authentication change will create a message with args [:default] or whatever
     # authentication is changed, so you can end up with two messages for the same ci
-    options = {
+    {
       :class_name  => self.class.base_class.name,
       :instance_id => id,
       :method_name => 'authentication_check_types',
       :args        => [types.to_miq_a, method_options],
-      :deliver_on  => authentication_check_retry_deliver_on(method_options[:attempt])
+      :deliver_on  => authentication_check_retry_deliver_on(method_options[:attempt]),
+      :role        => try(:authentication_check_role),
+      :zone        => try(:my_zone) || :ignore,
+      :category    => "self job"
     }
-
-    options[:role] = role if role
-    options[:zone] = zone if zone
-    options
   end
 
   def put_authentication_check(options, force)
     if force
       MiqQueue.put(options)
     else
-      MiqQueue.put_unless_exists(options.except(:args, :deliver_on)) do |msg|
+      MiqQueue.create_with(options.slice(:args, :deliver_on)).put_unless_exists(options.except(:args, :deliver_on)) do |msg|
         # TODO: Refactor the help in this and the ScheduleWorker#queue_work method into the merge method
         help = "Check for a running server"
         help << " in zone: [#{options[:zone]}]"   if options[:zone]
         help << " with role: [#{options[:role]}]" if options[:role]
         _log.warn("Previous authentication_check_types for [#{name}] [#{id}] with opts: [#{options[:args].inspect}] is still running, skipping...#{help}") unless msg.nil?
-        options
       end
     end
   end

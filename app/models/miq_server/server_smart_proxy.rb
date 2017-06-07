@@ -97,7 +97,8 @@ module MiqServer::ServerSmartProxy
         :server_guid => guid,
         :role        => "smartproxy",
         :queue_name  => "smartproxy",
-        :msg_timeout => worker_setting[:queue_timeout] * timeout_adj
+        :msg_timeout => worker_setting[:queue_timeout] * timeout_adj,
+        :category    => "self dispatch, obscure, affinity",
       )
     else
       _log.error "Unsupported method [#{ost.method_name}]"

@@ -56,7 +56,8 @@ class GenericMailer < ActionMailer::Base
       :method_name => 'deliver',
       :role        => 'notifier',
       :args        => [method, options],
-      :zone        => nil
+      :zone        => nil,
+      :category    => "self dispatch" # method = name of email to use.
     )
   end
 

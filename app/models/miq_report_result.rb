@@ -188,14 +188,14 @@ class MiqReportResult < ApplicationRecord
     sync = ::Settings.product.report_sync
 
     MiqQueue.put(
-      :queue_name  => "generic",
       :role        => "reporting",
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "_async_generate_result",
       :msg_timeout => report.queue_timeout,
       :args        => [task.id, result_type.to_sym, options],
-      :priority    => MiqQueue::HIGH_PRIORITY
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :category    => "self dispatch with status"
     ) unless sync
     _async_generate_result(task.id, result_type.to_sym, options) if sync
 
@@ -303,7 +303,8 @@ class MiqReportResult < ApplicationRecord
       :method_name => "destroy_all",
       :priority    => MiqQueue::HIGH_PRIORITY,
       :args        => [["userid IN (?)", userids]],
-      :zone        => MiqServer.my_zone
+      :zone        => MiqServer.my_zone,
+      :category    => "self dispatch" # want to delete this
     )
   end
 

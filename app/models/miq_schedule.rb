@@ -74,11 +74,12 @@ class MiqSchedule < ApplicationRecord
     end
 
     msg = MiqQueue.put(
-      :class_name  => name,
+      :class_name  => self.name,
       :instance_id => sched.id,
       :method_name => "invoke_actions",
       :args        => [action, at],
-      :msg_timeout => 1200
+      :msg_timeout => 1200,
+      :category    => "obscure self? dispatch/scheduled"
     )
 
     _log.info("Queueing start of schedule id: [#{id}] [#{sched.name}] [#{sched.towhat}] [#{method}]...complete")

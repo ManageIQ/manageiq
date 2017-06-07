@@ -447,7 +447,8 @@ class VmOrTemplate < ApplicationRecord
       :miq_callback => cb,
       :zone         => vm.my_zone,
       :role         => role,
-      :expires_on   => POWER_OPS.include?(options[:task]) ? powerops_expiration : nil
+#      :expires_on   => POWER_OPS.include?(options[:task]) ? powerops_expiration : nil, # needed?
+      :category     => "self? dispatch obscure affinity",
     )
   end
 
@@ -1124,10 +1125,11 @@ class VmOrTemplate < ApplicationRecord
 
   def self.assign_ems_created_on_queue(vm_ids)
     MiqQueue.put(
-      :class_name  => name,
+      :class_name  => self.name,
       :method_name => 'assign_ems_created_on',
       :args        => [vm_ids],
-      :priority    => MiqQueue::MIN_PRIORITY
+      :priority    => MiqQueue::MIN_PRIORITY,
+      :category    => "self dispatch",
     )
   end
 
@@ -1165,7 +1167,8 @@ class VmOrTemplate < ApplicationRecord
     MiqQueue.put(
       :class_name  => self.class.name,
       :instance_id => id,
-      :method_name => 'post_create_actions'
+      :method_name => 'post_create_actions',
+      :category    => "self delegate, state machine",
     )
   end
 
@@ -1318,7 +1321,8 @@ class VmOrTemplate < ApplicationRecord
       :instance_id => id,
       :method_name => 'classify_with_parent_folder_path',
       :args        => [add],
-      :priority    => MiqQueue::MIN_PRIORITY
+      :priority    => MiqQueue::MIN_PRIORITY,
+      :category    => "self dispatch",
     )
   end
 

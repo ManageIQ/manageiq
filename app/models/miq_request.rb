@@ -146,8 +146,9 @@ class MiqRequest < ApplicationRecord
       :instance_id => id,
       :method_name => "call_automate_event",
       :args        => [event_name],
-      :zone        => options.fetch(:miq_zone, my_zone),
-      :msg_timeout => 3600
+      :zone        => options.fetch(:miq_zone, my_zone), # AUTOMATE - tear out
+      :msg_timeout => 3600,
+      :category    => "self dispatch, double queueing"
     )
   end
 
@@ -397,7 +398,8 @@ class MiqRequest < ApplicationRecord
       :role        => my_role,
       :task_id     => "#{self.class.name.underscore}_#{id}",
       :msg_timeout => 3600,
-      :deliver_on  => deliver_on
+      :deliver_on  => deliver_on,
+      :category    => "self dispatch delayed?, task?, automate affinity?",
     )
   end
 

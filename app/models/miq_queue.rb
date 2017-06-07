@@ -98,6 +98,8 @@ class MiqQueue < ApplicationRecord
   end
 
   def self.put(options)
+    options.delete(:category)
+    options.delete(:zone) if zone == :ignore
     options = options.merge(
       :zone         => Zone.determine_queue_zone(options),
       :state        => STATE_READY,
@@ -112,7 +114,7 @@ class MiqQueue < ApplicationRecord
     options[:task_id]      = $_miq_worker_current_msg.try(:task_id) unless options.key?(:task_id)
     options[:role]         = options[:role].to_s unless options[:role].nil?
 
-    options[:args] = [options[:args]] if options[:args] && !options[:args].kind_of?(Array)
+    options[:args] = [options[:args]] if options[:args] && !options[:args].kind_of?(Array) # DELETE ME PLEASE
 
     if !Rails.env.production? && options[:args] &&
        (arg = options[:args].detect { |a| a.kind_of?(ActiveRecord::Base) && !a.new_record? })
@@ -122,6 +124,18 @@ class MiqQueue < ApplicationRecord
     msg = MiqQueue.create!(options)
     _log.info(MiqQueue.format_full_log_msg(msg))
     msg
+  end
+
+  def self.put_job() # background job
+  end
+
+  def self.put_with_status() #MiqTask.generic_action_with_callback
+  end
+
+  def self.put_event()
+  end
+
+  def self.put_system() # another system (is this event?)
   end
 
   MIQ_QUEUE_GET = <<-EOL
@@ -176,8 +190,8 @@ class MiqQueue < ApplicationRecord
 
   # This are the queue calls related to worker management which
   # might not be needed once we use kubernetes for worker/pod management
-  def self.put_deprecated(*args)
-    put(*args)
+  def self.put_deprecated(*options)
+    put(*options)
   end
 
   def unget(options = {})
@@ -319,7 +333,8 @@ class MiqQueue < ApplicationRecord
       end
 
       data = self.data
-      args.push(data) if data
+      args.push(data) if data # tack on to the end
+      # Maybe: args.unshift(target_id) if target_id && instance_id.nil?
 
       begin
         status = STATUS_OK

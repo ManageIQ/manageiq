@@ -73,8 +73,9 @@ class CustomButton < ApplicationRecord
       :method_name => 'deliver',
       :args        => [args],
       :role        => 'automate',
-      :zone        => target.try(:my_zone),
-      :priority    => MiqQueue::HIGH_PRIORITY,
+      :zone        => target.try(:my_zone), # || :ignore
+      :priority    => MiqQueue::HIGH_PRIORITY, # ?
+      :category    => "custom dispatch",
     }
   end
 

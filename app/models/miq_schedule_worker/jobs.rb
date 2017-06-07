@@ -147,20 +147,18 @@ class MiqScheduleWorker::Jobs
     end
   end
 
-  def check_for_stuck_dispatch(threshold_seconds)
-    class_n = "JobProxyDispatcher"
-    method_n = "dispatch"
-    Zone.in_my_region.each do |z|
+  def check_for_stuck_dispatch(threshold_seconds) # deprecated
+    Zone.in_my_region.each do |z| # remove?
       zone = z.name
       threshold = threshold_seconds.seconds.ago.utc
       MiqQueue
         .in_my_region
         .includes(:handler)
-        .where(:class_name => class_n, :method_name => method_n, :state => 'dequeue', :zone => zone)
+        .where(:class_name => "JobProxyDispatcher", :method_name => "dispatch", :state => 'dequeue', :zone => zone)
         .where("updated_on < ?", threshold)
-        .each do |msg|
+        .each do |msg| # each_in_batches
           if msg.handler.respond_to?(:is_current?) && msg.handler.is_current?
-            msg.check_for_timeout("MIQ(MiqQueue.check_for_timeout)", 10.seconds, threshold_seconds * 3)
+            msg.check_for_timeout("MIQ(MiqQueue.check_for_timeout)", 10.seconds, threshold_seconds * 3) # kill old jobs
           else
             msg.check_for_timeout("MIQ(MiqQueue.check_for_timeout)", 10.seconds, threshold_seconds)
           end
@@ -182,7 +180,7 @@ class MiqScheduleWorker::Jobs
     return if options.nil?
     options = {:zone => MiqServer.my_zone, :priority => MiqScheduleWorker::Runner::SCHEDULE_MEDIUM_PRIORITY}.merge(options)
     # always has class_name, method_name, zone, priority [often has role]
-    MiqQueue.put_unless_exists(options)
+    MiqQueue.put_unless_exists(options) # dispatch to another system
   end
 
   def queue_work_on_each_zone(options)

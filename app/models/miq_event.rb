@@ -104,7 +104,8 @@ class MiqEvent < EventStream
       :zone        => nil,
       :class_name  => name,
       :method_name => 'raise_evm_event',
-      :args        => [[target.class.name, target.id], raw_event, inputs]
+      :args        => [[target.class.name, target.id], raw_event, inputs],
+      :category    => "self dispatch, double queue?"
     )
   end
 
@@ -112,7 +113,8 @@ class MiqEvent < EventStream
     MiqQueue.put(
       :class_name  => name,
       :method_name => 'raise_evm_event',
-      :args        => [[target.class.name, target.id], raw_event, inputs]
+      :args        => [[target.class.name, target.id], raw_event, inputs],
+      :category    => "self dispatch, double queue?"
     )
   end
 
@@ -120,7 +122,8 @@ class MiqEvent < EventStream
     MiqQueue.put_unless_exists(
       :class_name  => "MiqAlert",
       :method_name => 'evaluate_alerts',
-      :args        => [[target.class.name, target.id], raw_event, inputs]
+      :args        => [[target.class.name, target.id], raw_event, inputs],
+      :category    => "trigger event"
     ) if MiqAlert.alarm_has_alerts?(raw_event)
   end
 

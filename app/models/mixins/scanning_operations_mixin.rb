@@ -5,19 +5,20 @@ module ScanningOperationsMixin
   include Vmdb::Logging
   WS_TIMEOUT = 60
 
-  def save_metadata_op(xmlFile, type, jobid = nil)
+  def save_metadata_op(xmlFile, type, jobid = nil) # aka save_metadata_queue
     begin
       Timeout.timeout(WS_TIMEOUT) do # TODO: do we need this timeout?
         _log.info "target [#{guid}],  job [#{jobid}] enter"
         _log.info "target [#{guid}] found target object id [#{id}], job [#{jobid}]"
         MiqQueue.put(
-          :target_id   => id,
           :class_name  => self.class.base_class.name,
           :method_name => "save_metadata",
           :data        => Marshal.dump([xmlFile, type]),
+          :args        => [id],
           :task_id     => jobid,
           :zone        => my_zone,
-          :role        => "smartstate"
+          :role        => "smartstate",
+          :category    => "self dispatch obscure, affinity?, data?, target_id?"
         )
         _log.info "target [#{guid}] data put on queue, job [#{jobid}]"
       end

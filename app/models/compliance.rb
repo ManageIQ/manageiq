@@ -7,7 +7,8 @@ class Compliance < ApplicationRecord
       MiqQueue.put(
         :class_name  => name,
         :method_name => 'check_compliance',
-        :args        => [[target.class.name, target.id], inputs]
+        :args        => [[target.class.name, target.id], inputs],
+        :category    => "self dispatch"
       )
     end
   end
@@ -21,8 +22,9 @@ class Compliance < ApplicationRecord
           :method_name => 'scan_and_check_compliance',
           :args        => [[target.class.name, target.id], inputs],
           :task_id     => 'vc-refresher',
-          :role        => "ems_inventory",
-          :zone        => target.ext_management_system.try(:my_zone)
+          :role        => "ems_inventory", # "ems_operation"
+          :zone        => target.ext_management_system.try(:my_zone),
+          :category    => "self dispatch, task_id, ems affinity",
         )
       end
     end
