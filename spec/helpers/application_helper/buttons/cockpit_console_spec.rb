@@ -15,5 +15,17 @@ describe ApplicationHelper::Button::CockpitConsole do
         expect(button[:disabled?]).to be_nil
       end
     end
+    context "when platform is 'windows'" do
+      it "returns true" do
+        allow(@record).to receive(:platform).and_return('windows')
+        expect(button[:disabled?]).to be_nil
+      end
+    end
+    context "when platform is 'linux'" do
+      it "returns false" do
+        allow(@record).to receive(:platform).and_return('linux')
+        expect(button[:disabled?]).to be_falsey
+      end
+    end
   end
 end
