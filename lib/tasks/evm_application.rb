@@ -102,11 +102,12 @@ class EvmApplication
            w.miq_server_id,
            w.queue_name || w.uri,
            w.started_on && w.started_on.iso8601,
-           w.last_heartbeat && w.last_heartbeat.iso8601]
+           w.last_heartbeat && w.last_heartbeat.iso8601,
+           (mem = (w.proportional_set_size || w.memory_usage)).nil? ? "" : mem / 1.megabyte]
       end
     end
 
-    header = ["Worker Type", "Status", "ID", "PID", "SPID", "Server id", "Queue Name / URL", "Started On", "Last Heartbeat"]
+    header = ["Worker Type", "Status", "ID", "PID", "SPID", "Server id", "Queue Name / URL", "Started On", "Last Heartbeat", "MB Usage"]
     puts data.unshift(header).tableize unless data.empty?
   end
 
