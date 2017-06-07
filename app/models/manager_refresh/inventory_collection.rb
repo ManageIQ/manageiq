@@ -938,7 +938,7 @@ module ManagerRefresh
                    rel
                  end
 
-      relation || []
+      relation || model_class.none
     end
 
     # Extracting references to a relation friendly format, or a format processable by a custom_db_finder
