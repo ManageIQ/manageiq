@@ -487,8 +487,8 @@ class Classification < ApplicationRecord
   end
 
   def validate_format_of_name
-    unless (name =~ /[^a-z0-9_:]/).nil?
-      errors.add("name", "must be lowercase alphanumeric characters, colons and underscores without spaces")
+    unless (name =~ /[^a-z0-9_:\-]/).nil?
+      errors.add("name", "must be lowercase alphanumeric characters, colons, hyphens and underscores without spaces")
     end
   end
 

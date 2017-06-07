@@ -22,6 +22,53 @@ module EmsRefresh::SaveInventory
   # Shared between Cloud and Infra
   #
 
+  # Takes an array of resource objects and creates the necessary entries within
+  # the classifications, tags and taggings database. The +klass+ should be the
+  # model type, e.g. VmOrTemplate.
+  #
+  # Note that this method should only be called after process_collection in
+  # order to ensure that the resource already exists in the database locally,
+  # otherwise the Tagging cannot be set.
+  #
+  def save_tags_for_objects(array, klass)
+    vendor = array.first[:vendor].to_s.downcase
+    category_tag = Tag.find_or_create_by_classification_name(vendor.to_s)
+
+    # Use the lowercase vendor name as the category
+    parent_category = Category.find_or_create_by(:description => vendor.capitalize) do |cat|
+      cat.tag          = category_tag
+      cat.example_text = "Tags for #{vendor.capitalize} resources"
+    end
+
+    array.each do |hash|
+      object = klass.find_by(:ems_ref => hash[:ems_ref])
+
+      if object.blank? || hash[:tags].blank?
+        if object.blank?
+          _log.warn("Unable to find object to tag for ems_ref: #{hash[:ems_ref]} using class #{klass}. Skipping.")
+        end
+        next
+      end
+
+      hash[:tags].each do |tags|
+        tags.each do |key, value|
+          name = File.join(category_tag.name, "#{key.downcase}:#{value.downcase}")
+          tag  = Tag.find_or_create_by(:name => name)
+
+          Category.find_or_create_by(:description => "#{key.downcase}: #{value.downcase}") do |cat|
+            cat.parent = parent_category
+            cat.tag    = tag
+          end
+
+          Tagging.find_or_create_by(:tag => tag) do |tagging|
+            tagging.taggable_type = klass
+            tagging.taggable = object
+          end
+        end
+      end
+    end
+  end
+
   def save_vms_inventory(ems, hashes, target = nil)
     return if hashes.nil?
     target = ems if target.nil?
@@ -62,6 +109,8 @@ module EmsRefresh::SaveInventory
     invalids_found = false
     # Clear vms, so GC can clean them
     vms = nil
+
+    save_tags_for_objects(hashes, VmOrTemplate)
 
     ActiveRecord::Base.transaction do
       hashes.each do |h|
