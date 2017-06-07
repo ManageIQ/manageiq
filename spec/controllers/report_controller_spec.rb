@@ -1235,7 +1235,6 @@ describe ReportController do
                                                       :controller => "report", :action => "explorer")
           controller.instance_variable_set(:@sb, :last_savedreports_id => nil)
           allow(controller).to receive(:get_all_reps)
-          allow_any_instance_of(MiqReportResult).to receive(:status).and_return("running")
           controller.send(:show_saved_report)
           fetched_report_result = controller.instance_variable_get(:@report_result)
           expect(fetched_report_result.id).to eq(@rpt.miq_report_results.first.id)
