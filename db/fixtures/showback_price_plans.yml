@@ -1,0 +1,5 @@
+---
+- :name: "Enterprise"
+  :description: "Enterprise price plan"
+  :resource_name: "Enterprise"
+  :resource_type: "MiqEnterprise"

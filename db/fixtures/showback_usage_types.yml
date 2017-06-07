@@ -1,0 +1,17 @@
+---
+- :category: "Vm"
+  :description: "Calculate CPU Showback of VM"
+  :measure: "CPU"
+  :dimensions: ["average", "number", "max_number_of_cpu"]
+- :category: "Vm"
+  :description: "Calculate MEM Showback of VM"
+  :measure: "MEM"
+  :dimensions: ["total_mem"]
+- :category: "Container"
+  :description: "Calculate CPU Showback of Container"
+  :measure: "CPU"
+  :dimensions: ["max_number_of_cpu"]
+- :category: "Container"
+  :description: "Calculate MEM Showback of Container"
+  :measure: "MEM"
+  :dimensions: ["total_mem"]
