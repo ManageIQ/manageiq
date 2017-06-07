@@ -554,7 +554,7 @@ module ManageIQ::Providers
     #
     def run_generic_operation(operation_name, ems_ref, parameters = {})
       the_operation = {
-        :operationName => operation_name,
+        :operationName => operation_name.to_s,
         :resourcePath  => ems_ref.to_s,
         :parameters    => parameters
       }
