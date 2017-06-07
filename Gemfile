@@ -32,6 +32,8 @@ manageiq_plugin "manageiq-providers-scvmm"
 manageiq_plugin "manageiq-providers-openshift"
 manageiq_plugin "manageiq-providers-openstack"
 manageiq_plugin "manageiq-providers-ovirt"
+# manageiq_plugin "manageiq-providers-scvmm"
+gem "manageiq-providers-scvmm", :git => "https://github.com/juliancheal/manageiq-providers-scvmm", :branch => "master"
 manageiq_plugin "manageiq-providers-vmware"
 manageiq_plugin "manageiq-ui-classic"
 
