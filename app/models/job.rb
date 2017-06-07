@@ -176,6 +176,11 @@ class Job < ApplicationRecord
   def timeout_adjustment
     timeout_adjustment = 1
     target = target_entity
+    ems_settings = target.try(:ext_management_system).try(:custom_attributes)
+    if ems_settings && ems_settings.find_by(:name => "job_timeout_adjustment")
+      return ems_settings.find_by(:name => "job_timeout_adjustment").value.to_i
+    end
+    return ::Settings.container_scanning.scanning_job_timeout_adjustment if target.kind_of?(ContainerImage)
     if target.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm) ||
        target.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Template)
       timeout_adjustment = 4

@@ -83,6 +83,7 @@
 :container_scanning:
   :scanning_job_timeout: 20.minutes
   :concurrent_per_ems: 3
+  :scanning_job_timeout_adjustment: 3
 :database:
   :metrics_collection:
     :collection_schedule: "1 * * * *"

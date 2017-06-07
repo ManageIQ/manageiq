@@ -269,7 +269,16 @@ describe Job do
       context "#timeout_adjustment" do
         it "returns the correct adjusment" do
           expect(@job.timeout_adjustment).to eq(1)
-          expect(@image_scan_job.timeout_adjustment).to eq(1)
+        end
+
+        it "checks ems for job_timeout_adjustment custom_attribute" do
+          @ems_k8s.custom_attributes.create(:name => "job_timeout_adjustment", :value => "7")
+          expect(@image_scan_job.timeout_adjustment).to eq(7)
+        end
+
+        it "checks settings for container image timeout_adjustment" do
+          stub_settings_merge(:container_scanning => {:scanning_job_timeout_adjustment => 6})
+          expect(@image_scan_job.timeout_adjustment).to eq(6)
         end
       end
     end
