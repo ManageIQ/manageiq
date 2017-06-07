@@ -182,12 +182,12 @@ class CloudNetworkController < ApplicationController
     @network = CloudNetwork.new
     @in_a_form = true
     @network_ems_provider_choices = {}
-    ExtManagementSystem.where(:type => "ManageIQ::Providers::Openstack::NetworkManager").find_each do |ems|
+    Rbac::Filterer.filtered(ManageIQ::Providers::Openstack::NetworkManager).find_each do |ems|
       @network_ems_provider_choices[ems.name] = ems.id
     end
     @network_provider_network_type_choices = PROVIDERS_NETWORK_TYPES
     @cloud_tenant_choices = {}
-    CloudTenant.all.each { |tenant| @cloud_tenant_choices[tenant.name] = tenant.id }
+    Rbac::Filterer.filtered(CloudTenant).each { |tenant| @cloud_tenant_choices[tenant.name] = tenant.id }
 
     drop_breadcrumb(:name => _("Add New Cloud Network"), :url => "/cloud_network/new")
   end
