@@ -89,6 +89,7 @@ module SupportsFeatureMixin
     :launch_cockpit             => 'Launch Cockpit UI',
     :live_migrate               => 'Live Migration',
     :migrate                    => 'Migration',
+    :capture                    => 'Capture of Capacity & Utilization Metrics',
     :provisioning               => 'Provisioning',
     :publish                    => 'Publishing',
     :quick_stats                => 'Quick Stats',
