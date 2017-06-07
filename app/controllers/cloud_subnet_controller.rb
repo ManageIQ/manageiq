@@ -261,7 +261,7 @@ class CloudSubnetController < ApplicationController
     options[:ip_version] = params[:ip_version]
     options[:cloud_tenant] = find_by_id_filtered(CloudTenant, params[:cloud_tenant_id]) if params[:cloud_tenant_id]
     options[:network_id] = params[:network_id] if params[:network_id]
-    options[:enable_dhcp] = params[:dhcp_enabled]
+    options[:enable_dhcp] = switch_to_bol(params[:dhcp_enabled])
     # TODO: Add extra fields
     options[:availability_zone_id] = params[:availability_zone_id] if params[:availability_zone_id]
     if params[:ipv6_router_advertisement_mode]
