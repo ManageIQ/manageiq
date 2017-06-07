@@ -55,6 +55,17 @@ describe ServiceOrchestration do
     end
   end
 
+  describe "#my_zone" do
+    it "takes the zone from ext_management_system" do
+      deployed_stack.ext_management_system = manager_by_setter
+      expect(deployed_stack.my_zone).to eq(manager_by_setter.my_zone)
+    end
+
+    it "returns nil if ext_management_system is not valid" do
+      expect(deployed_stack.my_zone).to eq(nil)
+    end
+  end
+
   describe "#stack_options" do
     before do
       allow_any_instance_of(ManageIQ::Providers::Amazon::CloudManager::OrchestrationServiceOptionConverter).to(
