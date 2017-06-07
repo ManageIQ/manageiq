@@ -264,7 +264,7 @@ class CloudVolumeController < ApplicationController
     @volume = CloudVolume.new
     @in_a_form = true
     @cloud_tenant_choices = {}
-    Rbac.filtered(CloudTenant).each { |tenant| @cloud_tenant_choices[tenant.name] = tenant.id }
+    Rbac.filtered(CloudTenant).each { |tenant| @cloud_tenant_choices["#{tenant.ext_management_system.name} - #{tenant.name}"] = tenant.id }
     drop_breadcrumb(
       :name => _("Add New %{model}") % {:model => ui_lookup(:table => 'cloud_volume')},
       :url  => "/cloud_volume/new"
