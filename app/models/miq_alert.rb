@@ -126,7 +126,7 @@ class MiqAlert < ApplicationRecord
     _log.info("#{log_header} #{log_target}")
 
     assigned_to_target(target, event).each do |a|
-      next if a.postpone_evaluation?(target)
+      next if a.postpone_evaluation?(target, inputs[:ems_event])
       _log.info("#{log_header} #{log_target} Queuing evaluation of Alert: [#{a.description}]")
       a.evaluate_queue(target, inputs)
     end
@@ -175,8 +175,8 @@ class MiqAlert < ApplicationRecord
     end
   end
 
-  def postpone_evaluation?(target)
-    # TODO: Are there some alerts that we always want to evaluate?
+  def postpone_evaluation?(target, event)
+    return false if event.try(:always_evaluate_alerts?)
 
     # If a miq alert status exists for our resource and alert, and it has not been delay_next_evaluation seconds since
     # it was evaluated, return true so we can skip evaluation
@@ -201,7 +201,7 @@ class MiqAlert < ApplicationRecord
       raise "Unable to find object with class: [#{klass}], Id: [#{id}]" unless target
     end
 
-    return if self.postpone_evaluation?(target)
+    return if self.postpone_evaluation?(target, inputs[:ems_event])
 
     _log.info("Evaluating Alert [#{description}] for target: [#{target.name}]...")
     result = eval_expression(target, inputs)
