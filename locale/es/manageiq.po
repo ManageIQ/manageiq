@@ -5654,19 +5654,19 @@ msgstr "Tamaño"
 msgid "ContainerImage|Tag"
 msgstr "Etiqueta"
 
-msgid "ContainerLabelTagMapping|Label name"
+msgid "ResourceLabelTagMapping|Label name"
 msgstr "Nombre de la etiqueta"
 
-msgid "ContainerLabelTagMapping|Label value"
+msgid "ResourceLabelTagMapping|Label value"
 msgstr "Valor de la etiqueta"
 
-msgid "ContainerLabelTagMapping|Labeled resource type"
+msgid "ResourceLabelTagMapping|Labeled resource type"
 msgstr "Tipo de recurso etiquetado"
 
-msgid "ContainerLabelTagMapping|Region description"
+msgid "ResourceLabelTagMapping|Region description"
 msgstr "Descripción de la región"
 
-msgid "ContainerLabelTagMapping|Region number"
+msgid "ResourceLabelTagMapping|Region number"
 msgstr "Número de región"
 
 msgid "ContainerLimitItem|Default"

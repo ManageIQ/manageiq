@@ -181,7 +181,7 @@ module EmsRefresh::SaveInventory
 
   # Convert all mapped hashes into actual tags and associate them with the object.
   # The collection or collection[:tags] object should be an array of hashes, probably
-  # created by the ContainerLabelTagMapping.map_labels method. Each hash in the array
+  # created by the ResourceLabelTagMapping.map_labels method. Each hash in the array
   # should have the following basic structure:
   #
   # {:category_tag_id=>139, :entry_name=>"foo", :entry_description=>"bar"}
@@ -192,7 +192,7 @@ module EmsRefresh::SaveInventory
   def save_tags_inventory(object, collection, _target = nil)
     return if collection.blank?
     tags = collection.kind_of?(Hash) ? collection[:tags] : collection
-    ContainerLabelTagMapping.retag_entity(object, tags)
+    ResourceLabelTagMapping.retag_entity(object, tags)
   rescue => err
     raise if EmsRefresh.debug_failures
     _log.error("Auto-tagging failed on #{object.class} [#{object.name}] with error [#{err}].")

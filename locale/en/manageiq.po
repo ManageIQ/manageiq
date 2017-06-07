@@ -5642,19 +5642,19 @@ msgstr ""
 msgid "ContainerImage|Tag"
 msgstr ""
 
-msgid "ContainerLabelTagMapping|Label name"
+msgid "ResourceLabelTagMapping|Label name"
 msgstr ""
 
-msgid "ContainerLabelTagMapping|Label value"
+msgid "ResourceLabelTagMapping|Label value"
 msgstr ""
 
-msgid "ContainerLabelTagMapping|Labeled resource type"
+msgid "ResourceLabelTagMapping|Labeled resource type"
 msgstr ""
 
-msgid "ContainerLabelTagMapping|Region description"
+msgid "ResourceLabelTagMapping|Region description"
 msgstr ""
 
-msgid "ContainerLabelTagMapping|Region number"
+msgid "ResourceLabelTagMapping|Region number"
 msgstr ""
 
 msgid "ContainerLimitItem|Default"
