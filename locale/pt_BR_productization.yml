@@ -1,0 +1,7 @@
+pt-BR:
+  product:
+    name: CFME
+    name_full: Red Hat CloudForms Management Engine
+    copyright: "Copyright (c) 2016 Red Hat Inc."
+    support_website: "https://access.redhat.com/"
+    support_website_text: "Red Hat Customer Portal"
