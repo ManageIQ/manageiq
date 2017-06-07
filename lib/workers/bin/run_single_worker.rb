@@ -51,4 +51,8 @@ end
 worker_class = worker_class.constantize
 worker = worker_class.create_worker_record
 worker_class.before_fork
-worker_class::Runner.start_worker(:guid => worker.guid)
+begin
+  worker.class::Runner.start_worker(:guid => worker.guid)
+ensure
+  worker.delete
+end
