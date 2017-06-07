@@ -86,5 +86,9 @@ module ManageIQ::Providers
     def port_show
       port.to_s
     end
+
+    def displayed_custom_attribute_sections
+      ['metadata']
+    end
   end
 end
