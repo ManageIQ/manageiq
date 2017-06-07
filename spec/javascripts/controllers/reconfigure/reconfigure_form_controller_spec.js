@@ -33,7 +33,8 @@ describe('reconfigureFormController', function() {
                                    memory_type:            'MB',
                                    cb_cpu:                 'on',
                                    socket_count:           '2',
-                                   cores_per_socket_count: '3'};
+                                   cores_per_socket_count: '3',
+                                   disks:                 [{hdFilename: "test_disk.vmdk", hdType: "thick", hdMode: "persistent", hdSize: "0", hdUnit: "MB", add_remove: ""}]};
     $httpBackend.whenGET('reconfigure_form_fields/1000000000003,1000000000001,1000000000002').respond(reconfigureFormResponse);
     $httpBackend.flush();
   }));
@@ -58,6 +59,10 @@ describe('reconfigureFormController', function() {
 
     it('sets the total socket count to the value calculated from the http request data', function() {
       expect($scope.reconfigureModel.total_cpus).toEqual('6');
+    });
+
+    it('initializes the delete_backing flag to false if not retrived', function() {
+      expect($scope.reconfigureModel.vmdisks).toEqual([{hdFilename: "test_disk.vmdk", hdType: "thick", hdMode: "persistent", hdSize: "0", hdUnit: "MB", add_remove: "", delete_backing: false}]);
     });
   });
 
