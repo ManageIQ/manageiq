@@ -8,6 +8,7 @@ require 'action_mailer/railtie'
 require 'active_job/railtie'
 require 'sprockets/railtie'
 require 'action_cable/engine'
+require_relative '../lib/workers/miq_worker_types' unless defined? MIQ_DEFAULT_BUNDLER_GROUPS
 
 # We use bundler groups to select which dependencies to require in our different processes.
 #  * Anything not in a group are in bundler's 'default' group, and are required all the time
@@ -18,26 +19,7 @@ require 'action_cable/engine'
 #  This variable should be a comma separated list of groups.
 #  The default BUNDLER_GROUPS below includes all bundler groups not in the Rails.groups.
 #
-ENV['BUNDLER_GROUPS'] ||= %w(
-  amazon
-  ansible
-  azure
-  foreman
-  google
-  hawkular
-  kubernetes
-  lenovo
-  openshift
-  openstack
-  ovirt
-  scvmm
-  vmware
-  replication
-  rest_api
-  ui_dependencies
-  web_server
-  web_socket
-).join(",")
+ENV['BUNDLER_GROUPS'] ||= MIQ_DEFAULT_BUNDLER_GROUPS.join(",")
 
 if defined?(Bundler)
   groups = ENV['BUNDLER_GROUPS'].split(",").collect(&:to_sym)

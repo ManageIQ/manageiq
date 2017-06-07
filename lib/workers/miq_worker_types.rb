@@ -1,6 +1,27 @@
 # TODO:  Consider putting this in a module namespace instead of poluting the
 # global namespace
 
+MIQ_DEFAULT_BUNDLER_GROUPS = %w(
+  amazon
+  ansible
+  azure
+  foreman
+  google
+  hawkular
+  kubernetes
+  lenovo
+  openshift
+  openstack
+  ovirt
+  scvmm
+  vmware
+  replication
+  rest_api
+  ui_dependencies
+  web_server
+  web_socket
+)
+
 MIQ_WORKER_TYPES = %w(
   ManageIQ::Providers::Azure::CloudManager::MetricsCollectorWorker
   ManageIQ::Providers::Amazon::CloudManager::MetricsCollectorWorker
