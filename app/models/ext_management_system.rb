@@ -422,6 +422,46 @@ class ExtManagementSystem < ApplicationRecord
     update!(:enabled => true)
   end
 
+  def self.destroy_queue(ids)
+    ids = Array.wrap(ids)
+    _log.info("Queuing destroy of #{name} with the following ids: #{ids.inspect}")
+    ids.each do |id|
+      schedule_destroy_queue(id)
+    end
+  end
+
+  # override destroy_queue from AsyncDeleteMixin
+  def destroy_queue
+    self.class.schedule_destroy_queue(id)
+  end
+
+  def self.schedule_destroy_queue(id, deliver_on = nil)
+    MiqQueue.put(
+      :class_name  => name,
+      :instance_id => id,
+      :method_name => "orchestrate_destroy",
+      :deliver_on  => deliver_on,
+    )
+  end
+
+  # Wait until all associated workers are dead to destroy this ems
+  def orchestrate_destroy
+    disable! if enabled?
+
+    if self.destroy == false
+      _log.info("Cant #{self.class.name} with id: #{id}, workers still in progress. Requeuing destroy...")
+      schedule_destroy_queue(id, :deliver_on => 15.seconds.from_now)
+    else
+      _log.info("#{self.class.name} with id: #{id} destroyed")
+    end
+  end
+
+  before_destroy :assert_no_queues_present
+
+  def assert_no_queues_present
+    throw(:abort) if MiqWorker.find_alive.where(:queue_name => queue_name).any?
+  end
+
   def disconnect_inv
     hosts.each { |h| h.disconnect_ems(self) }
     vms.each   { |v| v.disconnect_ems(self) }

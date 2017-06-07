@@ -33,9 +33,9 @@ describe AsyncDeleteMixin do
     end
   end
 
-  def self.should_queue_destroy_on_instance
+  def self.should_queue_destroy_on_instance(queue_method = "destroy")
     it "should queue up destroy on instance" do
-      cond = ["class_name = ? AND instance_id = ? AND method_name = ?", @obj.class.name, @obj.id, "destroy"]
+      cond = ["class_name = ? AND instance_id = ? AND method_name = ?", @obj.class.name, @obj.id, queue_method]
 
       expect { @obj.destroy_queue }.not_to raise_error
       expect(MiqQueue.where(cond).count).to eq(1)
@@ -48,10 +48,10 @@ describe AsyncDeleteMixin do
     end
   end
 
-  def self.should_queue_destroy_on_class_with_many_ids
+  def self.should_queue_destroy_on_class_with_many_ids(queue_method = "destroy")
     it "should queue up destroy on class method with many ids" do
       ids = @objects.collect(&:id)
-      cond = ["class_name = ? AND instance_id in (?) AND method_name = ?", @obj.class.name, ids, "destroy"]
+      cond = ["class_name = ? AND instance_id in (?) AND method_name = ?", @obj.class.name, ids, queue_method]
 
       expect { @obj.class.destroy_queue(ids) }.not_to raise_error
       expect(MiqQueue.where(cond).count).to eq(ids.length)
@@ -129,8 +129,8 @@ describe AsyncDeleteMixin do
 
       should_define_destroy_queue_instance_method
       should_define_destroy_queue_class_method
-      should_queue_destroy_on_instance
-      should_queue_destroy_on_class_with_many_ids
+      should_queue_destroy_on_instance("orchestrate_destroy")
+      should_queue_destroy_on_class_with_many_ids("orchestrate_destroy")
 
       should_define_delete_queue_instance_method
       should_define_delete_queue_class_method
