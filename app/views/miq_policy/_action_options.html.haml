@@ -66,7 +66,13 @@
     .form-horizontal
       .form-group
         .col-md-8
-          = render(:partial => 'shared/tree', :locals => {:tree => @category_tree, :name => @category_tree.name})
+          #action_tags_treebox.treeview-pf-hover.treeview-pf-select
+          = render(:partial => "layouts/tree",
+            :locals         => {:tree_id   => "action_tags_treebox",
+              :tree_name                   => "action_tags_tree",
+              :bs_tree                     => @cat_tree,
+              :click_url                   => "/miq_policy/action_tag_pressed/",
+              :onclick                     => "miqOnClickTagCat"})
   - when "create_snapshot"
     %h3
       = _("Snapshot Settings")
@@ -159,7 +165,7 @@
                                             "data-method"          => :post,
                                             "data-miq_sparkle_on"  => true,
                                             "data-miq_sparkle_off" => true,
-                                            "data-click_url"       => {:url => url_for_only_path(:action => 'action_edit',
+                                            "data-click_url"       => {:url => url_for(:action => 'action_edit',
                                                                                                  :button => action,
                                                                                                  :id     => @action.id || 'new')}.to_json}
             %i.fa.fa-lg.hidden-xs.hidden-sm{:class => arrow_style}

@@ -1,3 +1,4 @@
+
 #column_lists
   - if x_active_tree == :ab_tree
     .col-md-5
@@ -23,7 +24,7 @@
                                 :remote          => true,
                                 "data-submit"    => 'column_lists',
                                 "data-method"    => :post,
-                                "data-click_url" => {:url => url_for_only_path(:action => 'group_form_field_changed',
+                                "data-click_url" => {:url => url_for(:action => 'group_form_field_changed',
                                                                      :button => 'right',
                                                                      :id     => @custom_button_set.id || 'new')}.to_json}
           %i.fa.fa-angle-right.fa-lg.hidden-xs.hidden-sm
@@ -38,7 +39,7 @@
                                 :remote          => true,
                                 "data-submit"    => 'column_lists',
                                 "data-method"    => :post,
-                                "data-click_url" => {:url => url_for_only_path(:action => 'group_form_field_changed',
+                                "data-click_url" => {:url => url_for(:action => 'group_form_field_changed',
                                                                      :button => 'left',
                                                                      :id     => @custom_button_set.id || 'new')}.to_json}
           %i.fa.fa-angle-left.fa-lg.hidden-xs.hidden-sm
@@ -67,7 +68,7 @@
                                 :remote          => true,
                                 "data-submit"    => 'column_lists',
                                 "data-method"    => :post,
-                                "data-click_url" => {:url => url_for_only_path(:action => 'group_form_field_changed',
+                                "data-click_url" => {:url => url_for(:action => 'group_form_field_changed',
                                                                      :button => 'top',
                                                                      :id     => @custom_button_set.id || 'new')}.to_json}
           %i.fa.fa-angle-double-up.fa-lg
@@ -80,7 +81,7 @@
                                 :remote          => true,
                                 "data-submit"    => 'column_lists',
                                 "data-method"    => :post,
-                                "data-click_url" => {:url => url_for_only_path(:action => 'group_form_field_changed',
+                                "data-click_url" => {:url => url_for(:action => 'group_form_field_changed',
                                                                      :button => 'up',
                                                                      :id     => @custom_button_set.id || 'new')}.to_json}
           %i.fa.fa-angle-up.fa-lg
@@ -93,7 +94,7 @@
                                 :remote          => true,
                                 "data-submit"    => 'column_lists',
                                 "data-method"    => :post,
-                                "data-click_url" => {:url => url_for_only_path(:action => 'group_form_field_changed',
+                                "data-click_url" => {:url => url_for(:action => 'group_form_field_changed',
                                                                      :button => 'down',
                                                                      :id     => @custom_button_set.id || 'new')}.to_json}
           %i.fa.fa-angle-down.fa-lg
@@ -106,7 +107,7 @@
                                 :remote          => true,
                                 "data-submit"    => 'column_lists',
                                 "data-method"    => :post,
-                                "data-click_url" => {:url => url_for_only_path(:action => 'group_form_field_changed',
+                                "data-click_url" => {:url => url_for(:action => 'group_form_field_changed',
                                                                      :button => 'bottom',
                                                                      :id     => @custom_button_set.id || 'new')}.to_json}
           %i.fa.fa-angle-double-down

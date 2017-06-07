@@ -65,7 +65,7 @@
                                     "data-method" => :post,
                                     "data-miq_sparkle_on"  => true,
                                     "data-miq_sparkle_off" => true,
-                                    "data-click_url" => {:url => url_for_only_path(:action => 'alert_profile_edit',
+                                    "data-click_url" => {:url => url_for(:action => 'alert_profile_edit',
                                                                          :button => action,
                                                                          :id     => @alert_profile)}.to_json}
               %i.fa.fa-lg.hidden-xs.hidden-sm{:class => arrow_style}

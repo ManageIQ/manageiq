@@ -14,7 +14,7 @@
                                         "data-method"          => :post,
                                         "data-miq_sparkle_on"  => true,
                                         "data-miq_sparkle_off" => true,
-                                        "data-click_url"       => {:url => url_for_only_path(:action => button_action,
+                                        "data-click_url"       => {:url => url_for(:action => button_action,
                                                                                              :button => action,
                                                                                              :id     => id)}.to_json}
         %i.fa.fa-lg{:class => arrow_style}

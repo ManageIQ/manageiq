@@ -49,7 +49,7 @@
                                             "data-method"          => :post,
                                             "data-miq_sparkle_on"  => true,
                                             "data-miq_sparkle_off" => true,
-                                            "data-click_url"       => {:url => url_for_only_path(:action => 'profile_edit',
+                                            "data-click_url"       => {:url => url_for(:action => 'profile_edit',
                                                                                                  :button => action,
                                                                                                  :id => @profile)}.to_json}
             %i.fa.fa-lg.hidden-xs.hidden-sm{:class => arrow_style}
@@ -78,8 +78,8 @@
             - @profile_policies.each do |p|
               %tr{:title => _("View this %{model} Policy") % {:model => ui_lookup(:model => p.towhat)},
                 :onclick => "miqTreeActivateNode('#{x_active_tree}', '#{x_node}_p-#{to_cid(p.id)}');"}
-                %td.table-view-pf-select
-                  %i{:class => p.decorate.fonticon}
+                %td.narrow
+                  %img{:src => image_path("100/miq_policy_#{p.towhat.downcase + (p.active ? '' : '_inactive')}.png")}
                 %td
                   %b
                     #{ui_lookup(:model => p.towhat)} #{p.mode.capitalize}:
