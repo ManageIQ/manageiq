@@ -29,7 +29,7 @@ Dir.chdir ManageIQ::Environment::APP_ROOT do
 
   puts '== Installing dependencies =='
   ManageIQ::Environment.install_bundler
-  ManageIQ::Environment.bundle_install
+  ManageIQ::Environment.bundle_update
 
   ManageIQ::Environment.while_updating_bower do
     if options[:do_db]
