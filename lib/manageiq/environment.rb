@@ -6,8 +6,11 @@ module ManageIQ
     APP_ROOT = Pathname.new(__dir__).join("../..")
 
     def self.manageiq_plugin_setup
+      # determine plugin root dir. Assume we are called from a 'bin/setup' script in the plugin root
+      plugin_root = Pathname.new(caller_locations.last.absolute_path).dirname.parent
+
       install_bundler
-      bundle_install
+      bundle_install(plugin_root)
 
       ensure_config_files
 
@@ -50,8 +53,8 @@ module ManageIQ
       system!("gem install bundler -v '#{bundler_version}' --conservative")
     end
 
-    def self.bundle_install
-      system('bundle check') || system!('bundle install')
+    def self.bundle_install(root = APP_ROOT)
+      system('bundle check', :chdir => root) || system('bundle install', :chdir => root)
     end
 
     def self.bundle_update
