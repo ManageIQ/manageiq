@@ -73,8 +73,8 @@ module VmOrTemplate::Operations::Configuration
 
   def raw_add_disk(disk_name, disk_size_mb, options = {})
     raise _("VM has no EMS, unable to add disk") unless ext_management_system
-    if options[:datastore]
-      datastore = Storage.find_by(:name => options[:datastore])
+    if options[:datastore] || options[:datastore_id]
+      datastore = Storage.search_by_id_or_name(options[:datastore_id], options[:datastore])
       raise _("Data Store does not exist, unable to add disk") unless datastore
     end
 

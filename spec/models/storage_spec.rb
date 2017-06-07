@@ -543,4 +543,63 @@ describe Storage do
       expect(storage.tenant_identity.current_tenant).to eq(Tenant.root_tenant)
     end
   end
+
+  context "#search_by_id_or_name" do
+    let(:storage_name) { "test_storage" }
+    let(:storage_id) { 123 }
+
+    context "when storage exists" do
+      let(:storage) { FactoryGirl.create(:storage, :name => storage_name, :id => storage_id) }
+
+      it "searches for a storage by specifying only the ID" do
+        allow(Storage).to receive(:find_by).with(:id => storage_id).and_return(storage)
+
+        expect(Storage).not_to receive(:find_by).with(:name => storage_name)
+        expect(Storage.search_by_id_or_name(storage_id, nil)).to eq(storage)
+      end
+
+      it "searches for a storage by specifying only the name" do
+        allow(Storage).to receive(:find_by).with(:name => storage_name).and_return(storage)
+
+        expect(Storage).not_to receive(:find_by).with(:id => storage_id)
+        expect(Storage.search_by_id_or_name(nil, storage_name)).to eq(storage)
+      end
+
+      it "searches for a storage both by its ID and name" do
+        allow(Storage).to receive(:find_by).with(:id => storage_id).and_return(storage)
+
+        expect(Storage).not_to receive(:find_by).with(:name => storage_name)
+        expect(Storage.search_by_id_or_name(storage_id, storage_name)).to eq(storage)
+      end
+    end
+
+    context "when storage does not exist" do
+      it "searches for a storage by specifying only the ID" do
+        allow(Storage).to receive(:find_by).with(:id => storage_id).and_return(nil)
+
+        expect(Storage).not_to receive(:find_by).with(:name => storage_name)
+        expect(Storage.search_by_id_or_name(storage_id, nil)).to eq(nil)
+      end
+
+      it "searches for a storage by specifying only the name" do
+        allow(Storage).to receive(:find_by).with(:name => storage_name).and_return(nil)
+
+        expect(Storage).not_to receive(:find_by).with(:id => storage_id)
+        expect(Storage.search_by_id_or_name(nil, storage_name)).to eq(nil)
+      end
+
+      it "searches for a storage both by its ID and name" do
+        allow(Storage).to receive(:find_by).with(:id => storage_id).and_return(nil)
+
+        expect(Storage).not_to receive(:find_by).with(:name => storage_name)
+        expect(Storage.search_by_id_or_name(storage_id, storage_name)).to eq(nil)
+      end
+
+      it "searches for a storage without specifying ID or name" do
+        expect(Storage).not_to receive(:find_by).with(:id => storage_id)
+        expect(Storage).not_to receive(:find_by).with(:name => storage_name)
+        expect(Storage.search_by_id_or_name(nil, nil)).to eq(nil)
+      end
+    end
+  end
 end
