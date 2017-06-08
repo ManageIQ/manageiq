@@ -132,7 +132,7 @@ module ManagerRefresh::SaveCollection
       def map_ids_to_inventory_objects(inventory_collection, indexed_inventory_objects, hashes)
         inventory_collection.model_class.where(
           build_multi_selection_query(inventory_collection, hashes)
-        ).find_each do |inserted_record|
+        ).each do |inserted_record|
           inventory_object = indexed_inventory_objects[inventory_collection.unique_index_columns.map { |x| inserted_record.public_send(x) }]
           inventory_object.id = inserted_record.id if inventory_object
         end
