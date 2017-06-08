@@ -97,6 +97,10 @@ class OrchestrationStack < ApplicationRecord
     raise NotImplementedError, _("raw_update_stack must be implemented in a subclass")
   end
 
+  def my_zone
+    ext_management_system.try(:my_zone)
+  end
+
   def update_stack_queue(userid, template, options = {})
     task_opts = {
       :action => "updating Orchestration Stack for user #{userid}",
