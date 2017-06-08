@@ -160,6 +160,15 @@ describe "Querying" do
 
       expect(response.parsed_body["links"].keys).to eq(%w(self previous first))
     end
+
+    it "returns the correct subquery_count" do
+      create_vms_by_name %w(aa bb cc dd)
+
+      run_get vms_url, :sort_by => "name", :filter => ["name='aa'", "or name='bb'", "or name='dd'"], :expand => "resources", :offset => 0, :limit => 1
+
+      expect(response.parsed_body["subquery_count"]).to eq(3)
+      expect_query_result(:vms, 1, 4)
+    end
   end
 
   describe "Sorting vms by attribute" do

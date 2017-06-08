@@ -13,11 +13,7 @@ module Api
           :is_subcollection => @req.subcollection?,
           :expand_actions   => true,
           :expand_resources => @req.expand?(:resources),
-          :counts           => {
-            :count          => klass.count,
-            :subcount       => res.count,
-            :subquery_count => subquery_count
-          }
+          :counts           => Api::QueryCounts.new(klass.count, res.count, subquery_count)
         }
         render_collection(@req.subject, res, opts)
       end

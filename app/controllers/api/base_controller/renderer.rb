@@ -28,13 +28,13 @@ module Api
       # Given a resource, return its serialized flavor using Jbuilder
       #
       def collection_to_jbuilder(type, reftype, resources, opts = {})
-        link_builder = Api::LinkBuilder.new(params, @req.url, opts[:counts])
+        link_builder = Api::LinksBuilder.new(params, @req.url, opts[:counts])
         Jbuilder.new do |json|
           json.ignore_nil!
           json.set! 'name', opts[:name] if opts[:name]
 
           if opts[:counts]
-            opts[:counts].each do |count, value|
+            opts[:counts].counts.each do |count, value|
               json.set! count, value
             end
           end
@@ -56,8 +56,8 @@ module Api
 
           if link_builder.links?
             json.links do
-              link_builder.links.each do |k, v|
-                json.set! k, v
+              link_builder.links.each do |link_name, link_href|
+                json.set! link_name, link_href
               end
             end
           end
@@ -176,12 +176,14 @@ module Api
         options[:offset] = params['offset'] if params['offset']
         options[:limit] = params['limit'] if params['limit']
 
-        miq_expression.present? ? subquery_search(res, options) : [Rbac.filtered(res, options)]
+        miq_expression.present? ? filter_results_for_paging(res, options) : [Rbac.filtered(res, options)]
       end
 
-      def subquery_search(res, options)
+      # If a filter is present, first get the count for the filtered result,
+      # Then apply Rbac filter for paging
+      def filter_results_for_paging(res, options)
         subquery_res = Rbac.search(:targets => res, :skip_counts => true)
-        [Rbac.filtered(res, options), subquery_res.count]
+        [Rbac.filtered(res, options), subquery_res.first.count]
       end
 
       def virtual_attribute_search(resource, attribute)
@@ -381,7 +383,7 @@ module Api
       def expand_subcollection(json, sc, sctype, subresources)
         if collection_config.show_as_collection?(sc)
           copts = {
-            :count            => subresources.length,
+            :counts           => Api::QueryCounts.new(subresources.length),
             :is_subcollection => true,
             :expand_resources => @req.expand?(sc)
           }
