@@ -27,7 +27,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Foreman::ConfigurationManager::RefreshWorker
     ManageIQ::Providers::Foreman::ProvisioningManager::RefreshWorker
     ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshWorker
-    ManageIQ::Providers::Hawkular::DatawarehouseManager::RefreshWorker
+    ManageIQ::Providers::Hawkular::MonitoringManager::RefreshWorker
     ManageIQ::Providers::Kubernetes::ContainerManager::RefreshWorker
     ManageIQ::Providers::Openshift::ContainerManager::RefreshWorker
     ManageIQ::Providers::Microsoft::InfraManager::RefreshWorker
@@ -47,7 +47,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::EmbeddedAnsible::AutomationManager::EventCatcher
     ManageIQ::Providers::Azure::CloudManager::EventCatcher
     ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher
-    ManageIQ::Providers::Hawkular::DatawarehouseManager::EventCatcher
+    ManageIQ::Providers::Hawkular::MonitoringManager::EventCatcher
     ManageIQ::Providers::Google::CloudManager::EventCatcher
     ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcher
     ManageIQ::Providers::Openshift::ContainerManager::EventCatcher
@@ -103,7 +103,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Foreman::ConfigurationManager::RefreshWorker
     ManageIQ::Providers::Foreman::ProvisioningManager::RefreshWorker
     ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshWorker
-    ManageIQ::Providers::Hawkular::DatawarehouseManager::RefreshWorker
+    ManageIQ::Providers::Hawkular::MonitoringManager::RefreshWorker
     ManageIQ::Providers::Kubernetes::ContainerManager::RefreshWorker
     ManageIQ::Providers::Lenovo::PhysicalInfraManager::RefreshWorker
     ManageIQ::Providers::Openshift::ContainerManager::RefreshWorker
@@ -135,7 +135,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::AnsibleTower::AutomationManager::EventCatcher
     ManageIQ::Providers::EmbeddedAnsible::AutomationManager::EventCatcher
     ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher
-    ManageIQ::Providers::Hawkular::DatawarehouseManager::EventCatcher
+    ManageIQ::Providers::Hawkular::MonitoringManager::EventCatcher
     ManageIQ::Providers::Google::CloudManager::EventCatcher
     ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcher
     ManageIQ::Providers::Openshift::ContainerManager::EventCatcher

@@ -84,7 +84,7 @@ class MiqAlert < ApplicationRecord
     next_frequency = (options || {}).fetch_path(:notifications, :delay_next_evaluation)
     if automate_expression[:always_evaluate] && next_frequency != 0
       valid = false
-      errors.add(:notifications, "Datawarehouse alerts must have a 0 notification frequency")
+      errors.add(:notifications, "External alerts must have a 0 notification frequency")
     end
     valid
   end
@@ -457,7 +457,7 @@ class MiqAlert < ApplicationRecord
           {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<=", "="]},
           {:name => :value_mw_garbage_collector, :description => _("Duration Per Minute (ms)"), :numeric => true}
         ]},
-      {:name => "dwh_generic", :description => _("All Datawarehouse alerts"), :db => ["ContainerNode"], :responds_to_events => "datawarehouse_alert",
+      {:name => "dwh_generic", :description => _("All External alerts"), :db => ["ContainerNode"], :responds_to_events => "external_alert",
         :options => [], :always_evaluate => true}
     ]
   end
@@ -520,7 +520,7 @@ class MiqAlert < ApplicationRecord
 
   def self.raw_events
     @raw_events ||= expression_by_name("event_threshold")[:options].find { |h| h[:name] == :event_types }[:values] +
-                    %w(hawkular_alert datawarehouse_alert)
+                    %w(hawkular_alert external_alert)
   end
 
   def self.event_alertable?(event)

@@ -176,7 +176,7 @@ class EmsEvent < EventStream
   def parse_event_metadata
     data = full_data || {}
     [
-      event_type == "datawarehouse_alert" ? message : nil,
+      event_type == "monitoring_alert" ? message : nil,
       data[:severity],
       data[:url],
       data[:ems_ref],
@@ -216,7 +216,7 @@ class EmsEvent < EventStream
     target_type = "src_vm_or_template"  if target_type == "src_vm"
     target_type = "dest_vm_or_template" if target_type == "dest_vm"
     target_type = "middleware_server"   if event.event_type == "hawkular_alert"
-    target_type = "container_node"      if event.event_type == "datawarehouse_alert"
+    target_type = "container_node"      if event.event_type == "monitoring_alert"
 
     event.send(target_type)
   end

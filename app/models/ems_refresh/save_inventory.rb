@@ -14,7 +14,7 @@ module EmsRefresh::SaveInventory
     when ManageIQ::Providers::ContainerManager              then save_ems_container_inventory(ems, hashes, target)
     when ManageIQ::Providers::NetworkManager                then save_ems_network_inventory(ems, hashes, target)
     when ManageIQ::Providers::StorageManager                then save_ems_storage_inventory(ems, hashes, target)
-    when ManageIQ::Providers::DatawarehouseManager          then save_ems_datawarehouse_inventory(ems, hashes, target)
+    when ManageIQ::Providers::MonitoringManager             then save_ems_monitoring_inventory(ems, hashes, target)
     end
   end
 
