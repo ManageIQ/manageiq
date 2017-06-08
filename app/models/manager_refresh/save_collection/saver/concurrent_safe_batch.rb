@@ -64,7 +64,7 @@ module ManagerRefresh::SaveCollection
 
           # Destroy in batches
           if records_for_destroy.size >= batch_size
-            destroy_records(records)
+            destroy_records(records_for_destroy)
             records_for_destroy = []
           end
         end
