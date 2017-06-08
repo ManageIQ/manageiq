@@ -1,7 +1,18 @@
 module ManageIQ::Providers
   class Kubernetes::ContainerManager::MetricsCapture < BaseManager::MetricsCapture
     class CollectionFailure < RuntimeError; end
-    class TargetValidationError < RuntimeError; end
+
+    class TargetValidationError < RuntimeError
+      def log_severity
+        :error
+      end
+    end
+
+    class TargetValidationWarning < RuntimeError
+      def log_severity
+        :warn
+      end
+    end
 
     require_nested :CaptureContext
 
@@ -47,10 +58,11 @@ module ManageIQ::Providers
 
       begin
         context = CaptureContext.new(target, start_time, end_time, INTERVAL)
-      rescue TargetValidationError => e
-        _log.error("#{target_name} is not valid: #{e.message}")
-        ems.update_attributes(:last_metrics_error       => :invalid,
-                              :last_metrics_update_date => Time.now.utc) if ems
+      rescue TargetValidationError, TargetValidationWarning => e
+        _log.send(e.log_severity, "[#{target_name}] #{e.message}")
+        ems.try(:update_attributes,
+                :last_metrics_error       => :invalid,
+                :last_metrics_update_date => Time.now.utc)
         return [{}, {}]
       end
 

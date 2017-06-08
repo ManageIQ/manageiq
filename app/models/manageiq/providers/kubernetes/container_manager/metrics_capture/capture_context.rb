@@ -12,14 +12,14 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
       @ts_values = Hash.new { |h, k| h[k] = {} }
       @metrics = []
 
-      if @target.respond_to?(:hardware)
-        hardware = @target.hardware
-      else
-        hardware = @target.try(:container_node).try(:hardware)
-      end
+      @node_hardware = if @target.respond_to?(:hardware)
+                         @target.hardware
+                       else
+                         @target.try(:container_node).try(:hardware)
+                       end
 
-      @node_cores = hardware.try(:cpu_total_cores)
-      @node_memory = hardware.try(:memory_mb)
+      @node_cores = @node_hardware.try(:cpu_total_cores)
+      @node_memory = @node_hardware.try(:memory_mb)
 
       validate_target
     end
@@ -29,7 +29,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
       when ContainerNode  then collect_node_metrics
       when Container      then collect_container_metrics
       when ContainerGroup then collect_group_metrics
-      else raise TargetValidationError, "Validation error: unknown target"
+      else raise TargetValidationError, "unknown target"
       end
     end
 
@@ -49,9 +49,11 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
     end
 
     def validate_target
-      raise TargetValidationError, "Validation error: ems not defined"    unless @ext_management_system
-      raise TargetValidationError, "Validation error: cores not defined"  unless @node_cores.to_i > 0
-      raise TargetValidationError, "Validation error: memory not defined" unless @node_memory.to_i > 0
+      raise TargetValidationError,   "ems not defined"    unless @ext_management_system
+      raise TargetValidationWarning, "no associated node" unless @node_hardware
+
+      raise TargetValidationError, "cores not defined"  unless @node_cores.to_i > 0
+      raise TargetValidationError, "memory not defined" unless @node_memory.to_i > 0
     end
 
     def collect_node_metrics
