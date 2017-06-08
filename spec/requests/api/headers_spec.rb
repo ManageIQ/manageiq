@@ -64,4 +64,30 @@ RSpec.describe "Headers" do
       expect(response).to have_http_status(:ok)
     end
   end
+
+  describe "Response Headers" do
+    it "returns some headers related to security" do
+      api_basic_authorize
+
+      run_get(entrypoint_url)
+
+      expected = {
+        "X-Content-Type-Options"            => "nosniff",
+        "X-Download-Options"                => "noopen",
+        "X-Frame-Options"                   => "SAMEORIGIN",
+        "X-Permitted-Cross-Domain-Policies" => "none",
+        "X-XSS-Protection"                  => "1; mode=block"
+      }
+      expect(response.headers.to_h).to include(expected)
+      expect(content_security_policy_for("default-src")).to include("'self'")
+      expect(content_security_policy_for("connect-src")).to include("'self'")
+      expect(content_security_policy_for("frame-src")).to include("'self'")
+      expect(content_security_policy_for("script-src")).to include("'unsafe-eval'", "'unsafe-inline'", "'self'")
+      expect(content_security_policy_for("style-src")).to include("'unsafe-inline'", "'self'")
+    end
+
+    def content_security_policy_for(src)
+      response.headers["Content-Security-Policy"].split(/\s*;\s*/).detect { |p| p.start_with?(src) }
+    end
+  end
 end

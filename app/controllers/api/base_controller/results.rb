@@ -9,6 +9,7 @@ module Api
         res[:result]  = options[:result] unless options[:result].nil?
         add_task_to_result(res, options[:task_id]) if options[:task_id].present?
         add_tasks_to_result(res, options[:task_ids]) if options[:task_ids].present?
+        add_parent_href_to_result(res, options[:parent_id]) if options[:parent_id].present?
         res
       end
 
@@ -17,8 +18,9 @@ module Api
         hash
       end
 
-      def add_parent_href_to_result(hash)
-        hash[:href] = "#{@req.api_prefix}/#{@req.collection}/#{@req.c_id}"
+      def add_parent_href_to_result(hash, parent_id = nil)
+        return if hash[:href].present?
+        hash[:href] = "#{@req.api_prefix}/#{@req.collection}/#{parent_id ? parent_id : @req.c_id}"
         hash
       end
 

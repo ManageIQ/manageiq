@@ -15,7 +15,7 @@ module VimConnectMixin
     options[:vim_broker_drb_port] ||= MiqVimBrokerWorker.method(:drb_port) if options[:use_broker]
 
     # The following require pulls in both MiqFaultTolerantVim and MiqVim
-    require 'miq_fault_tolerant_vim'
+    require 'VMwareWebService/miq_fault_tolerant_vim'
 
     if options[:fault_tolerant]
       options[:ems] = self

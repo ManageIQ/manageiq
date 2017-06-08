@@ -32,9 +32,6 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
   def setup_ansible
     raise_role_notification(:role_activate_start)
 
-    _log.info("calling EmbeddedAnsible.configure")
-    EmbeddedAnsible.configure unless EmbeddedAnsible.configured?
-
     _log.info("calling EmbeddedAnsible.start")
     EmbeddedAnsible.start
     _log.info("calling EmbeddedAnsible.start finished")

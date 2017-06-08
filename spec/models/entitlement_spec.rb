@@ -2,9 +2,6 @@ describe Entitlement do
   describe "::remove_tag_from_all_managed_filters" do
     let!(:entitlement1) { FactoryGirl.create(:entitlement) }
     let!(:entitlement2) { FactoryGirl.create(:entitlement) }
-    let(:filters) do
-      [["/managed/prov_max_memory/test", "/managed/prov_max_memory/1024"], ["/managed/my_name/test"]]
-    end
 
     before do
       entitlement1.set_managed_filters([["/managed/prov_max_memory/test", "/managed/prov_max_memory/1024"],

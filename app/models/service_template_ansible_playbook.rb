@@ -55,8 +55,8 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     end
   end
 
-  def create_new_dialog(dialog_name, job_template, hosts)
-    Dialog::AnsiblePlaybookServiceDialog.create_dialog(dialog_name, job_template, hosts)
+  def create_new_dialog(dialog_name, extra_vars, hosts)
+    Dialog::AnsiblePlaybookServiceDialog.create_dialog(dialog_name, extra_vars, hosts)
   end
   private :create_new_dialog
 
@@ -93,6 +93,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
       :playbook                 => playbook.name,
       :inventory                => tower.provider.default_inventory,
       :become_enabled           => info[:become_enabled].present?,
+      :verbosity                => info[:verbosity].presence || 0,
       :ask_variables_on_launch  => true,
       :ask_limit_on_launch      => true,
       :ask_inventory_on_launch  => true,
@@ -185,15 +186,14 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     [:provision, :retirement, :reconfigure].each_with_object({}) do |action, hash|
       info = config_info[action]
       next unless new_dialog_required?(info)
-      hash[action] = {:dialog_id => create_new_dialog(info[:new_dialog_name], info[:configuration_template], info[:hosts]).id}
+      hash[action] = {:dialog_id => create_new_dialog(info[:new_dialog_name], info[:extra_vars], info[:hosts]).id}
     end
   end
 
   def delete_job_templates(job_templates, action = nil)
     auth_user = User.current_userid || 'system'
     job_templates.each do |job_template|
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript
-        .delete_in_provider_queue(job_template.manager.id, { :manager_ref => job_template.manager_ref }, auth_user)
+      job_template.delete_in_provider_queue(auth_user)
       resource_actions.find_by(:action => action.capitalize).update_attributes(:configuration_template => nil) if action
     end
   end
@@ -212,13 +212,11 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     [:provision, :retirement, :reconfigure].each do |action|
       info = config_info[action]
       next unless info
-
       job_template = job_template(action)
       next unless job_template
       if info.key?(:playbook_id)
-        tower, params = self.class.send(:build_parameter_list, self.class.send(:build_name, name, action), description, info)
-        params[:manager_ref] = job_template(action).manager_ref
-        ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript.update_in_provider_queue(tower.id, params, auth_user)
+        _tower, params = self.class.send(:build_parameter_list, self.class.send(:build_name, name, action), description, info)
+        job_template.update_in_provider_queue(params)
       else
         delete_job_templates([job_template], action)
       end

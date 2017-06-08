@@ -5,7 +5,13 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
         :model_class          => ::ManageIQ::Providers::CloudManager::Vm,
         :association          => :vms,
         :delete_method        => :disconnect_inv,
-        :attributes_blacklist => [:genealogy_parent]
+        :attributes_blacklist => [:genealogy_parent],
+        :unique_index_columns => [:ems_id, :ems_ref],
+        :builder_params       => {
+          :ems_id   => ->(persister) { persister.manager.id },
+          :name     => "unknown",
+          :location => "unknown",
+        }
       }
 
       attributes.merge!(extra_attributes)
@@ -16,7 +22,14 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
         :model_class          => ::ManageIQ::Providers::CloudManager::Template,
         :association          => :miq_templates,
         :delete_method        => :disconnect_inv,
-        :attributes_blacklist => [:genealogy_parent]
+        :attributes_blacklist => [:genealogy_parent],
+        :unique_index_columns => [:ems_id, :ems_ref],
+        :builder_params       => {
+          :ems_id   => ->(persister) { persister.manager.id },
+          :name     => "unknown",
+          :location => "unknown",
+          :template => true
+        }
       }
 
       attributes.merge!(extra_attributes)
@@ -24,8 +37,11 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
 
     def availability_zones(extra_attributes = {})
       attributes = {
-        :model_class => ::AvailabilityZone,
-        :association => :availability_zones,
+        :model_class    => ::AvailabilityZone,
+        :association    => :availability_zones,
+        :builder_params => {
+          :ems_id => ->(persister) { persister.manager.id },
+        }
       }
 
       attributes.merge!(extra_attributes)
@@ -33,8 +49,11 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
 
     def flavors(extra_attributes = {})
       attributes = {
-        :model_class => ::Flavor,
-        :association => :flavors,
+        :model_class    => ::Flavor,
+        :association    => :flavors,
+        :builder_params => {
+          :ems_id => ->(persister) { persister.manager.id },
+        }
       }
 
       attributes.merge!(extra_attributes)
@@ -42,9 +61,13 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
 
     def key_pairs(extra_attributes = {})
       attributes = {
-        :model_class => ::ManageIQ::Providers::CloudManager::AuthKeyPair,
-        :manager_ref => [:name],
-        :association => :key_pairs
+        :model_class    => ::ManageIQ::Providers::CloudManager::AuthKeyPair,
+        :manager_ref    => [:name],
+        :association    => :key_pairs,
+        :builder_params => {
+          :resource_id   => ->(persister) { persister.manager.id },
+          :resource_type => ->(persister) { persister.manager.class.base_class },
+        }
       }
 
       attributes.merge!(extra_attributes)
@@ -52,9 +75,10 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
 
     def hardwares(extra_attributes = {})
       attributes = {
-        :model_class => ::Hardware,
-        :manager_ref => [:vm_or_template],
-        :association => :hardwares
+        :model_class                  => ::Hardware,
+        :manager_ref                  => [:vm_or_template],
+        :association                  => :hardwares,
+        :parent_inventory_collections => [:vms, :miq_templates],
       }
 
       attributes[:custom_manager_uuid] = lambda do |hardware|
@@ -69,14 +93,22 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
         relation
       end
 
+      attributes[:targeted_arel] = lambda do |inventory_collection|
+        manager_uuids = inventory_collection.parent_inventory_collections.flat_map { |c| c.manager_uuids.to_a }
+        inventory_collection.parent.hardwares.joins(:vm_or_template).where(
+          'vms' => {:ems_ref => manager_uuids}
+        )
+      end
+
       attributes.merge!(extra_attributes)
     end
 
     def disks(extra_attributes = {})
       attributes = {
-        :model_class => ::Disk,
-        :manager_ref => [:hardware, :device_name],
-        :association => :disks
+        :model_class                  => ::Disk,
+        :manager_ref                  => [:hardware, :device_name],
+        :association                  => :disks,
+        :parent_inventory_collections => [:vms],
       }
 
       if extra_attributes[:strategy] == :local_db_cache_all
@@ -85,20 +117,35 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
         end
       end
 
+      attributes[:targeted_arel] = lambda do |inventory_collection|
+        manager_uuids = inventory_collection.parent_inventory_collections.flat_map { |c| c.manager_uuids.to_a }
+        inventory_collection.parent.disks.joins(:hardware => :vm_or_template).where(
+          :hardware => {'vms' => {:ems_ref => manager_uuids}}
+        )
+      end
+
       attributes.merge!(extra_attributes)
     end
 
     def networks(extra_attributes = {})
       attributes = {
-        :model_class => ::Network,
-        :manager_ref => [:hardware, :description],
-        :association => :networks
+        :model_class                  => ::Network,
+        :manager_ref                  => [:hardware, :description],
+        :association                  => :networks,
+        :parent_inventory_collections => [:vms],
       }
 
       if extra_attributes[:strategy] == :local_db_cache_all
         attributes[:custom_manager_uuid] = lambda do |network|
           [network.hardware.vm_or_template.ems_ref, network.description]
         end
+      end
+
+      extra_attributes[:targeted_arel] = lambda do |inventory_collection|
+        manager_uuids = inventory_collection.parent_inventory_collections.flat_map { |c| c.manager_uuids.to_a }
+        inventory_collection.parent.networks.joins(:hardware => :vm_or_template).where(
+          :hardware => {'vms' => {:ems_ref => manager_uuids}}
+        )
       end
 
       attributes.merge!(extra_attributes)
@@ -108,7 +155,10 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
       attributes = {
         :model_class          => ::ManageIQ::Providers::CloudManager::OrchestrationStack,
         :association          => :orchestration_stacks,
-        :attributes_blacklist => [:parent]
+        :attributes_blacklist => [:parent],
+        :builder_params       => {
+          :ems_id => ->(persister) { persister.manager.id },
+        }
       }
 
       attributes.merge!(extra_attributes)
@@ -116,27 +166,51 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
 
     def orchestration_stacks_resources(extra_attributes = {})
       attributes = {
-        :model_class => ::OrchestrationStackResource,
-        :association => :orchestration_stacks_resources,
+        :model_class                  => ::OrchestrationStackResource,
+        :association                  => :orchestration_stacks_resources,
+        :parent_inventory_collections => [:orchestration_stacks]
       }
+
+      extra_attributes[:targeted_arel] = lambda do |inventory_collection|
+        manager_uuids = inventory_collection.parent_inventory_collections.flat_map { |c| c.manager_uuids.to_a }
+        inventory_collection.parent.orchestration_stacks_resources.references(:orchestration_stacks).where(
+          :orchestration_stacks => {:ems_ref => manager_uuids}
+        )
+      end
 
       attributes.merge!(extra_attributes)
     end
 
     def orchestration_stacks_outputs(extra_attributes = {})
       attributes = {
-        :model_class => ::OrchestrationStackOutput,
-        :association => :orchestration_stacks_outputs,
+        :model_class                  => ::OrchestrationStackOutput,
+        :association                  => :orchestration_stacks_outputs,
+        :parent_inventory_collections => [:orchestration_stacks],
       }
+
+      extra_attributes[:targeted_arel] = lambda do |inventory_collection|
+        manager_uuids = inventory_collection.parent_inventory_collections.flat_map { |c| c.manager_uuids.to_a }
+        inventory_collection.parent.orchestration_stacks_outputs.references(:orchestration_stacks).where(
+          :orchestration_stacks => {:ems_ref => manager_uuids}
+        )
+      end
 
       attributes.merge!(extra_attributes)
     end
 
     def orchestration_stacks_parameters(extra_attributes = {})
       attributes = {
-        :model_class => ::OrchestrationStackParameter,
-        :association => :orchestration_stacks_parameters,
+        :model_class                  => ::OrchestrationStackParameter,
+        :association                  => :orchestration_stacks_parameters,
+        :parent_inventory_collections => [:orchestration_stacks],
       }
+
+      extra_attributes[:targeted_arel] = lambda do |inventory_collection|
+        manager_uuids = inventory_collection.parent_inventory_collections.flat_map { |c| c.manager_uuids.to_a }
+        inventory_collection.parent.orchestration_stacks_parameters.references(:orchestration_stacks).where(
+          :orchestration_stacks => {:ems_ref => manager_uuids}
+        )
+      end
 
       attributes.merge!(extra_attributes)
     end
@@ -168,7 +242,7 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
         return if stacks_inventory_collection.blank?
 
         stacks_parents = stacks_inventory_collection.data.each_with_object({}) do |x, obj|
-          parent_id = x.data[:parent].load.try(:id)
+          parent_id = x.data[:parent].try(:load).try(:id)
           obj[x.id] = parent_id if parent_id
         end
 
@@ -178,11 +252,12 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
                                  .select([:id, :ancestry])
                                  .where(:id => stacks_parents.values).find_each.index_by(&:id)
 
-        model_class
-          .select([:id, :ancestry])
-          .where(:id => stacks_parents.keys).find_each do |stack|
-          parent = stacks_parents_indexed[stacks_parents[stack.id]]
-          stack.update_attribute(:parent, parent)
+        ActiveRecord::Base.transaction do
+          model_class.select([:id, :ancestry])
+                     .where(:id => stacks_parents.keys).find_each do |stack|
+            parent = stacks_parents_indexed[stacks_parents[stack.id]]
+            stack.update_attribute(:parent, parent)
+          end
         end
       end
 
@@ -195,7 +270,7 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
 
     def vm_and_miq_template_ancestry(extra_attributes = {})
       vm_and_miq_template_ancestry_save_block = lambda do |_ems, inventory_collection|
-        vms_inventory_collection = inventory_collection.dependency_attributes[:vms].try(:first)
+        vms_inventory_collection           = inventory_collection.dependency_attributes[:vms].try(:first)
         miq_templates_inventory_collection = inventory_collection.dependency_attributes[:miq_templates].try(:first)
 
         return if vms_inventory_collection.blank? || miq_templates_inventory_collection.blank?
@@ -215,25 +290,30 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
           end
         end
 
-        # associate parent templates to child instances
-        parent_miq_templates = miq_templates_inventory_collection.model_class
-                                                                 .select([:id])
-                                                                 .where(:id => vms_genealogy_parents.values).find_each.index_by(&:id)
-        vms_inventory_collection.model_class
-                                .select([:id])
-                                .where(:id => vms_genealogy_parents.keys).find_each do |vm|
-          parent = parent_miq_templates[vms_genealogy_parents[vm.id]]
-          vm.with_relationship_type('genealogy') { vm.parent = parent }
+        ActiveRecord::Base.transaction do
+          # associate parent templates to child instances
+          parent_miq_templates = miq_templates_inventory_collection.model_class
+                                                                   .select([:id])
+                                                                   .where(:id => vms_genealogy_parents.values).find_each.index_by(&:id)
+          vms_inventory_collection.model_class
+                                  .select([:id])
+                                  .where(:id => vms_genealogy_parents.keys).find_each do |vm|
+            parent = parent_miq_templates[vms_genealogy_parents[vm.id]]
+            vm.with_relationship_type('genealogy') { vm.parent = parent }
+          end
         end
-        # associate parent instances to child templates
-        parent_vms = vms_inventory_collection.model_class
-                                             .select([:id])
-                                             .where(:id => miq_template_genealogy_parents.values).find_each.index_by(&:id)
-        miq_templates_inventory_collection.model_class
-                                          .select([:id])
-                                          .where(:id => miq_template_genealogy_parents.keys).find_each do |miq_template|
-          parent = parent_vms[miq_template_genealogy_parents[miq_template.id]]
-          miq_template.with_relationship_type('genealogy') { miq_template.parent = parent }
+
+        ActiveRecord::Base.transaction do
+          # associate parent instances to child templates
+          parent_vms = vms_inventory_collection.model_class
+                                               .select([:id])
+                                               .where(:id => miq_template_genealogy_parents.values).find_each.index_by(&:id)
+          miq_templates_inventory_collection.model_class
+                                            .select([:id])
+                                            .where(:id => miq_template_genealogy_parents.keys).find_each do |miq_template|
+            parent = parent_vms[miq_template_genealogy_parents[miq_template.id]]
+            miq_template.with_relationship_type('genealogy') { miq_template.parent = parent }
+          end
         end
       end
 

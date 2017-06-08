@@ -95,11 +95,7 @@ class EvmDatabase
   end
 
   def self.host
-    if defined?(Rails)
-      Rails.configuration.database_configuration[Rails.env]['host']
-    else
-      ActiveRecord::Base.configurations[ENV['RAILS_ENV']]['host']
-    end
+    ActiveRecord::Base.configurations.fetch_path(ENV['RAILS_ENV'], 'host')
   end
 
   def self.local?

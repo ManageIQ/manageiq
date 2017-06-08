@@ -652,4 +652,45 @@ describe Host do
       MiqQueue.first.delivered(status, message, MiqAeEngine::MiqAeWorkspaceRuntime.new)
     end
   end
+
+  context "#refresh_linux_packages" do
+    it "with utf-8 characters (like trademark)" do
+      rpm_list = "iwl3945-firmware|15.32.2.9|noarch|System Environment/Kernel|43.el7|Firmware for Intel® PRO/Wireless 3945 A/B/G network adaptors"
+      mock_ssu = double("SSU", :shell_exec => rpm_list)
+
+      expect(GuestApplication).to receive(:add_elements) do |_host, xml|
+        require 'nokogiri'
+        expect(Nokogiri::Slop(xml.to_s).miq.software.applications.children.first.attributes["description"].value).to eq(
+          "Firmware for Intel® PRO/Wireless 3945 A/B/G network adaptors"
+        )
+      end
+
+      described_class.new.refresh_linux_packages(mock_ssu)
+    end
+  end
+
+  context "#ipmi_config_valid?" do
+    it "false if no IPMI address" do
+      expect(described_class.new.ipmi_config_valid?).to eq(false)
+    end
+
+    it "false if address but no ipmi credentials" do
+      expect(described_class.new(:ipmi_address => "127.0.0.1").ipmi_config_valid?).to eq(false)
+    end
+
+    it "true with address and credentials but not including mac_addr" do
+      EvmSpecHelper.local_miq_server # because of the authentication change
+      expect(FactoryGirl.create(:host_with_ipmi).ipmi_config_valid?).to eq(true)
+    end
+
+    it "false with address, credentials and include_mac_addr with blank address" do
+      EvmSpecHelper.local_miq_server # because of the authentication change
+      expect(FactoryGirl.create(:host_with_ipmi, :mac_address => nil).ipmi_config_valid?(true)).to eq(false)
+    end
+
+    it "true with address, credentials and include_mac_addr with blank address" do
+      EvmSpecHelper.local_miq_server # because of the authentication change
+      expect(FactoryGirl.create(:host_with_ipmi).ipmi_config_valid?(true)).to eq(true)
+    end
+  end
 end

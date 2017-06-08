@@ -24,10 +24,6 @@ class MiqScheduleWorker::Jobs
     queue_work(:class_name  => "MiqServer", :method_name => "queue_update_registration_status", :server_guid => MiqServer.my_guid)
   end
 
-  def miq_server_resync_rhn_mirror
-    queue_work(:class_name  => "MiqServer", :instance_id => MiqServer.my_server.id, :method_name => "resync_rhn_mirror", :server_guid => MiqServer.my_guid, :msg_timeout => 60.minutes, :task_id => "resync_rhn_mirror")
-  end
-
   def job_check_jobs_for_timeout
     queue_work_on_each_zone(:class_name  => "Job", :method_name => "check_jobs_for_timeout")
   end
@@ -54,10 +50,6 @@ class MiqScheduleWorker::Jobs
 
   def ems_authentication_check_schedule
     queue_work_on_each_zone(:class_name  => "ExtManagementSystem", :method_name => "authentication_check_schedule")
-  end
-
-  def storage_authentication_check_schedule
-    queue_work_on_each_zone(:class_name  => "StorageManager",      :method_name => "authentication_check_schedule")
   end
 
   def session_check_session_timeout
@@ -131,53 +123,6 @@ class MiqScheduleWorker::Jobs
     queue_work(:class_name => "ContainerDefinition", :method_name => "purge_timer", :zone => nil)
   end
 
-  def storage_refresh_metrics
-    queue_work(
-      :class_name  => "StorageManager",
-      :method_name => "refresh_metrics",
-      :priority    => MiqQueue::HIGH_PRIORITY,
-      :state       => ["ready", "dequeue"]
-    )
-  end
-
-  def storage_metrics_rollup_hourly
-    queue_work(
-      :class_name  => "StorageManager",
-      :method_name => "metrics_rollup_hourly",
-      :priority    => MiqQueue::HIGH_PRIORITY,
-      :state       => ["ready", "dequeue"]
-    )
-  end
-
-  def storage_metrics_rollup_daily(time_profile_id)
-    queue_work(
-      :class_name  => "StorageManager",
-      :method_name => "metrics_rollup_daily",
-      :priority    => MiqQueue::HIGH_PRIORITY,
-      :state       => ["ready", "dequeue"],
-      :args        => [time_profile_id]
-    )
-  end
-
-  def miq_storage_metric_purge_all_timer
-    queue_work(
-      :queue_name  => "storage_metrics_collector",
-      :class_name  => "MiqStorageMetric",
-      :method_name => "purge_all_timer",
-      :priority    => MiqQueue::HIGH_PRIORITY,
-      :state       => ["ready", "dequeue"]
-    )
-  end
-
-  def storage_refresh_inventory
-    queue_work(
-      :class_name  => "StorageManager",
-      :method_name => "refresh_inventory",
-      :priority    => MiqQueue::HIGH_PRIORITY,
-      :state       => ["ready", "dequeue"]
-    )
-  end
-
   def miq_schedule_queue_scheduled_work(schedule_id, rufus_job)
     MiqSchedule.queue_scheduled_work(schedule_id, rufus_job.job_id, rufus_job.next_time.to_i, rufus_job.opts)
   end
@@ -225,6 +170,10 @@ class MiqScheduleWorker::Jobs
 
   def generate_chargeback_for_service(args = {})
     queue_work(:class_name => "Service", :method_name => "queue_chargeback_reports", :zone => nil, :args => args)
+  end
+
+  def check_for_timed_out_active_tasks
+    queue_work(:class_name => "MiqTask", :method_name => "update_status_for_timed_out_active_tasks", :zone => nil)
   end
 
   private

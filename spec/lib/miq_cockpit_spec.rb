@@ -147,31 +147,9 @@ describe MiqCockpit::WS do
 end
 
 describe MiqCockpit::ApacheConfig do
-  describe '#url_root' do
-    context "always" do
-      it "returns" do
-        expect(MiqCockpit::ApacheConfig.url_root).to eq("/cws/")
-      end
-    end
-  end
-
-  describe 'update' do
-    context "when using defaults" do
-      it "it uses http and ws" do
-        ins = MiqCockpit::ApacheConfig.new(nil)
-        config = ins.update
-        expect(config).to include("ProxyPass /cws/ http://localhost:9002/cws/")
-        expect(config).to include('ProxyPassMatch "ws://localhost:9002/cws/cockpi$1/socket"')
-      end
-    end
-
-    context "when using custom port" do
-      it "it uses custom port" do
-        ins = MiqCockpit::ApacheConfig.new(:port => 9001)
-        config = ins.update
-        expect(config).to include("ProxyPass /cws/ http://localhost:9001/cws/")
-        expect(config).to include('ProxyPassMatch "ws://localhost:9001/cws/cockpi$1/socket"')
-      end
+  describe '#url_root ' do
+    it "returns the correct URL path" do
+      expect(MiqCockpit::ApacheConfig.url_root).to eq("/cws/")
     end
   end
 end

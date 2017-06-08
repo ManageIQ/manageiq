@@ -217,18 +217,27 @@ describe MiqGroup do
     it "fails if referenced by user#current_group" do
       FactoryGirl.create(:user, :miq_groups => [group])
 
-      expect {
-        expect { group.destroy }.to raise_error(RuntimeError, /Still has users assigned/)
-      }.to_not change { MiqGroup.count }
+      expect { expect { group.destroy }.to raise_error(RuntimeError, /The group has users assigned that do not belong to any other group/) }.to_not change { MiqGroup.count }
     end
 
-    it "fails if referenced by user#miq_groups" do
+    it "succeeds if referenced by multiple user#miq_groups" do
       group2 = FactoryGirl.create(:miq_group)
       FactoryGirl.create(:user, :miq_groups => [group, group2], :current_group => group2)
+      expect { group.destroy }.not_to raise_error
+    end
 
-      expect {
-        expect { group.destroy }.to raise_error(RuntimeError, /Still has users assigned/)
-      }.to_not change { MiqGroup.count }
+    it "fails if trying to delete the current user's group" do
+      group2 = FactoryGirl.create(:miq_group)
+      user = FactoryGirl.create(:user, :miq_groups => [group, group2], :current_group => group)
+      User.current_user = user
+      expect { expect { group.destroy }.to raise_error(RuntimeError, /The login group cannot be deleted/) }.to_not change { MiqGroup.count }
+    end
+
+    it "fails if one user in the group does not belong to any other group" do
+      group2 = FactoryGirl.create(:miq_group)
+      FactoryGirl.create(:user, :miq_groups => [group, group2], :current_group => group2)
+      FactoryGirl.create(:user, :miq_groups => [group], :current_group => group)
+      expect { expect { group.destroy }.to raise_error(RuntimeError, /The group has users assigned that do not belong to any other group/) }.to_not change { MiqGroup.count }
     end
 
     it "fails if referenced by a tenant#default_miq_group" do
@@ -456,6 +465,37 @@ describe MiqGroup do
       group = FactoryGirl.create(:miq_group)
       FactoryGirl.create_list(:user, 2, :miq_groups =>[group])
       expect(group.user_count).to eq(2)
+    end
+  end
+
+  describe "#single_group_users?" do
+    it "returns false if all users in the group belong to an additional group" do
+      testgroup1 = FactoryGirl.create(:miq_group)
+      testgroup2 = FactoryGirl.create(:miq_group)
+      testgroup3 = FactoryGirl.create(:miq_group)
+      FactoryGirl.create(:user, :miq_groups => [testgroup1, testgroup2])
+      FactoryGirl.create(:user, :miq_groups => [testgroup1, testgroup3])
+      expect(testgroup1.single_group_users?).to eq(false)
+    end
+
+    it "returns false if the group has no users" do
+      testgroup1 = FactoryGirl.create(:miq_group)
+      expect(testgroup1.single_group_users?).to eq(false)
+    end
+
+    it "returns true if all users in a group do not belong to any other group" do
+      testgroup1 = FactoryGirl.create(:miq_group)
+      FactoryGirl.create(:user, :miq_groups => [testgroup1])
+      FactoryGirl.create(:user, :miq_groups => [testgroup1])
+      expect(testgroup1.single_group_users?).to eq(true)
+    end
+
+    it "returns true if any user in a group does not belong to another group" do
+      testgroup1 = FactoryGirl.create(:miq_group)
+      testgroup2 = FactoryGirl.create(:miq_group)
+      FactoryGirl.create(:user, :miq_groups => [testgroup1])
+      FactoryGirl.create(:user, :miq_groups => [testgroup1, testgroup2])
+      expect(testgroup1.single_group_users?).to eq(true)
     end
   end
 end

@@ -97,7 +97,7 @@ module PerEmsWorkerMixin
       return "generic" if ems.kind_of?(Host) && ems.acts_as_ems?
 
       return ems unless ems.kind_of?(ExtManagementSystem)
-      "ems_#{ems.id}"
+      ems.queue_name
     end
 
     def ems_id_from_queue_name(queue_name)

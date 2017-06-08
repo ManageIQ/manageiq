@@ -8,7 +8,6 @@ describe FixAuth::AuthConfigModel do
   let(:v1_key)  { MiqPassword.generate_symmetric }
   let(:pass)    { "password" }
   let(:enc_v1)  { MiqPassword.new.encrypt(pass, "v1", v1_key) }
-  let(:bad_v2)  { "v2:{5555555555555555555555==}" }
 
   before do
     MiqPassword.add_legacy_key(v1_key, :v1)

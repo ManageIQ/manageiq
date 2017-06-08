@@ -77,6 +77,13 @@ RSpec.describe MiqExpression::Field do
     end
   end
 
+  describe '#report_column' do
+    it 'returns the correct format for a field' do
+      field = MiqExpression::Field.parse('Vm.miq_provision.miq_request-requester_name')
+      expect(field.report_column).to eq('miq_provision.miq_request.requester_name')
+    end
+  end
+
   describe "#parse!" do
     it "can parse the model name" do
       field = "Vm-name"

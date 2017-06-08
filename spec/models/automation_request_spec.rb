@@ -192,7 +192,6 @@ describe AutomationRequest do
   end
 
   describe "#make_request" do
-    let(:alt_user) { FactoryGirl.create(:user_with_group) }
     it "creates and update a request" do
       expect(AuditEvent).not_to receive(:success)
       values = {}

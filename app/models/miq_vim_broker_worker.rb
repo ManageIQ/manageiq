@@ -7,7 +7,6 @@ class MiqVimBrokerWorker < MiqWorker
     ems_operations
     smartproxy
     smartstate
-    vmdb_storage_bridge
   )
   self.check_for_minimal_role = false
   self.workers                = lambda {

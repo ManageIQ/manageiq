@@ -247,6 +247,7 @@ describe Job do
 
     context "where scan jobs exist for both vms and container images" do
       before(:each) do
+        User.current_user = FactoryGirl.create(:user)
         @ems_k8s = FactoryGirl.create(
           :ems_kubernetes, :hostname => "test.com", :zone => @zone, :port => 8443,
           :authentications => [AuthToken.new(:name => "test", :type => 'AuthToken', :auth_key => "a secret")]
@@ -285,6 +286,8 @@ describe Job do
         @job.update_attributes(:state => "active")
         @queue_item = MiqQueue.put(:task_id => @job.guid)
       end
+
+      after { Timecop.return }
 
       context "job timed out" do
         it "calls 'job#timeout!' if server was not assigned to job" do

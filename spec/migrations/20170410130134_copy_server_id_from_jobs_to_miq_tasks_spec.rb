@@ -4,7 +4,7 @@ describe CopyServerIdFromJobsToMiqTasks do
   let(:task_name) { "Hello Test Task" }
   let(:task_stub) { migration_stub(:MiqTask) }
   let(:job_stub) { migration_stub(:Job) }
-  let(:server_id) { ArRegion.anonymous_class_with_ar_region.rails_sequence_start }
+  let(:server_id) { anonymous_class_with_id_regions.rails_sequence_start }
 
   migration_context :up do
     it "copies data from 'jobs.miq_server_id' to 'miq_tasks.miq_server_id'" do

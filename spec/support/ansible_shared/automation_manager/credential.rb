@@ -30,15 +30,6 @@ shared_examples_for "ansible credential" do
         :kind        => described_class::TOWER_KIND
       }
     end
-    let(:expected_notify_params) do
-      {
-        :description => "Description",
-        :name        => "My Credential",
-        :related     => {},
-        :username    => "john",
-        :kind        => described_class::TOWER_KIND
-      }
-    end
     let(:expected_notify) do
       {
         :type    => :tower_op_success,

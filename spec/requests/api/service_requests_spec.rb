@@ -95,7 +95,6 @@ describe "Service Requests API" do
     end
     let(:svcreq1_url)  { service_requests_url(svcreq1.id) }
     let(:svcreq2_url)  { service_requests_url(svcreq2.id) }
-    let(:svcreqs_list) { [svcreq1_url, svcreq2_url] }
 
     it "supports approving a request" do
       api_basic_authorize collection_action_identifier(:service_requests, :approve)
@@ -234,7 +233,7 @@ describe "Service Requests API" do
     end
 
     it "lists all the service requests if you are admin" do
-      allow_any_instance_of(User).to receive(:admin?).and_return(true)
+      @group.miq_user_role = @role = FactoryGirl.create(:miq_user_role, :role => "administrator")
       other_user = FactoryGirl.create(:user)
       service_request_1 = FactoryGirl.create(:service_template_provision_request,
                                              :requester   => other_user,
@@ -261,7 +260,7 @@ describe "Service Requests API" do
     end
 
     it "an admin can see another user's request" do
-      allow_any_instance_of(User).to receive(:admin?).and_return(true)
+      @group.miq_user_role = @role = FactoryGirl.create(:miq_user_role, :role => "administrator")
       other_user = FactoryGirl.create(:user)
       service_request = FactoryGirl.create(:service_template_provision_request,
                                            :requester   => other_user,

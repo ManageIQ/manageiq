@@ -198,4 +198,12 @@ module Metric::Helper
 
     start_time..timestamp
   end
+
+  def self.latest_metrics(resource_type, since_timestamp, resource_ids = nil)
+    metrics = Metric.where(:resource_type => resource_type)
+    metrics = metrics.where(:resource_id => resource_ids) if resource_ids
+    metrics = metrics.order(:resource_id, :timestamp => :desc)
+    metrics = metrics.where('timestamp > ?', since_timestamp)
+    metrics.select('DISTINCT ON (metrics.resource_id) metrics.*')
+  end
 end

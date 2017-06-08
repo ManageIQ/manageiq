@@ -18,7 +18,11 @@ module Vm::Operations
     miq_server = ext_management_system.nil? ? nil : ext_management_system.zone.remote_cockpit_ws_miq_server
     MiqCockpit::WS.url(miq_server,
                        MiqCockpitWsWorker.fetch_worker_settings_from_server(miq_server),
-                       ipaddresses.first)
+                       ipv4_address || ipaddresses.first)
+  end
+
+  def ipv4_address
+    ipaddresses.find { |ip| (IPAddr.new ip).ipv4? }
   end
 
   def validate_collect_running_processes

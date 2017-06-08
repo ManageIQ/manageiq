@@ -58,12 +58,12 @@ module Api
 
     def find_requests(id)
       klass = collection_class(:requests)
-      return klass.find(id) if User.current_user.admin?
+      return klass.find(id) if User.current_user.admin_user?
       klass.find_by!(:requester => User.current_user, :id => id)
     end
 
     def requests_search_conditions
-      return {} if User.current_user.admin?
+      return {} if User.current_user.admin_user?
       {:requester => User.current_user}
     end
 

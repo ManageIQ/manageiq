@@ -2,10 +2,6 @@
 # REST API Request Tests - /api/tags
 #
 describe "Tags API" do
-  let(:zone)         { FactoryGirl.create(:zone, :name => "api_zone") }
-  let(:ems)          { FactoryGirl.create(:ems_vmware, :zone => zone) }
-  let(:host)         { FactoryGirl.create(:host) }
-
   let(:tag1)         { {:category => "department", :name => "finance", :path => "/managed/department/finance"} }
   let(:tag2)         { {:category => "cc",         :name => "001",     :path => "/managed/cc/001"} }
   let(:invalid_tag_url) { tags_url(999_999) }

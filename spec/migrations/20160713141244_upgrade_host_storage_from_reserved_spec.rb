@@ -27,8 +27,8 @@ describe UpgradeHostStorageFromReserved do
   migration_context :down do
     it "Migrates ems_ref in HostStorage to Reserves table" do
       hs = host_storage_stub.create!(
-        :host_id    => ArRegion.anonymous_class_with_ar_region.rails_sequence_start,
-        :storage_id => ArRegion.anonymous_class_with_ar_region.rails_sequence_start,
+        :host_id    => anonymous_class_with_id_regions.rails_sequence_start,
+        :storage_id => anonymous_class_with_id_regions.rails_sequence_start,
         :ems_ref    => "datastore-1"
       )
 

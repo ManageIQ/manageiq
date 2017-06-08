@@ -1,6 +1,5 @@
 describe MiqAlertStatus do
   let(:ems)                    { FactoryGirl.create(:ems_vmware, :name => 'ems') }
-  let(:alert_definition)       { FactoryGirl.create(:miq_alert) }
   let(:alert)                  { FactoryGirl.create(:miq_alert_status) }
   let(:user1)                  { FactoryGirl.create(:user, :name => 'user1') }
   let(:user2)                  { FactoryGirl.create(:user, :name => 'user2') }

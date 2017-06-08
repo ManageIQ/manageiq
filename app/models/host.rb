@@ -81,8 +81,6 @@ class Host < ApplicationRecord
 
   has_many                  :miq_alert_statuses, :dependent => :destroy, :as => :resource
 
-  has_one                   :miq_cim_instance, :as => :vmdb_obj, :dependent => :destroy
-
   has_many                  :host_service_groups, :dependent => :destroy
 
   has_many                  :cloud_services, :dependent => :nullify
@@ -144,12 +142,6 @@ class Host < ApplicationRecord
   virtual_has_many   :processes,       :class_name => "OsProcess",  :uses => {:operating_system => :processes}
   virtual_has_many   :event_logs,                                   :uses => {:operating_system => :event_logs}
   virtual_has_many   :firewall_rules,                               :uses => {:operating_system => :firewall_rules}
-
-  virtual_has_many  :base_storage_extents, :class_name => "CimStorageExtent"
-  virtual_has_many  :storage_systems,      :class_name => "CimComputerSystem"
-  virtual_has_many  :file_shares,          :class_name => 'SniaFileShare'
-  virtual_has_many  :storage_volumes,      :class_name => 'CimStorageVolume'
-  virtual_has_many  :logical_disks,        :class_name => 'CimLogicalDisk'
 
   virtual_total :v_total_storages, :storages
   virtual_total :v_total_vms, :vms
@@ -474,7 +466,7 @@ class Host < ApplicationRecord
   def vmotion_enabled?
     msg = validate_vmotion_enabled?
     if msg[:available] && respond_to?(:vim_vmotion_enabled?)
-      check_policy_prevent("request_host_vmotion_enabled", "vim_vmotion_enabled?")
+      vim_vmotion_enabled?
     else
       _log.warn("Cannot check if vmotion is enabled because <#{msg[:message]}>")
     end
@@ -728,13 +720,8 @@ class Host < ApplicationRecord
     _log.info "for host [#{id}]"
     host = Host.find_by(:id => id)
     data, data_type = dataArray
-    if data_type.include?('yaml')
-      data.replace(MIQEncode.decode(data)) if data_type.include?('b64,zlib')
-      doc = YAML.load(data)
-    else
-      data.replace(MIQEncode.decode(data)) if data_type.include?('b64,zlib')
-      doc = MiqXml.load(data)
-    end
+    data.replace(MIQEncode.decode(data)) if data_type.include?('b64,zlib')
+    doc = data_type.include?('yaml') ? YAML.load(data) : MiqXml.load(data)
     host.add_elements(doc)
     host.save!
     _log.info "for host [#{id}] host saved"
@@ -957,11 +944,11 @@ class Host < ApplicationRecord
   end
 
   def rediscover(ipaddr, discover_types = [:esx])
-    require 'discovery/MiqDiscovery'
+    require 'manageiq-network_discovery'
     ost = OpenStruct.new(:usePing => true, :discover_types => discover_types, :ipaddr => ipaddr)
     _log.info "Rediscovering Host: #{ipaddr} with types: #{discover_types.inspect}"
     begin
-      MiqDiscovery.scanHost(ost)
+      ManageIQ::NetworkDiscovery.scanHost(ost)
       _log.info "Rediscovering Host: #{ipaddr} raw results: #{self.class.ost_inspect(ost)}"
 
       unless ost.hypervisor.empty?
@@ -977,11 +964,11 @@ class Host < ApplicationRecord
   end
 
   def self.discoverHost(options)
-    require 'discovery/MiqDiscovery'
+    require 'manageiq-network_discovery'
     ost = OpenStruct.new(Marshal.load(options))
     _log.info "Discovering Host: #{ost_inspect(ost)}"
     begin
-      MiqDiscovery.scanHost(ost)
+      ManageIQ::NetworkDiscovery.scanHost(ost)
 
       unless ost.hypervisor.empty?
         _log.info "Discovered: #{ost_inspect(ost)}"
@@ -1151,7 +1138,7 @@ class Host < ApplicationRecord
 
   def refresh_linux_packages(ssu)
     pkg_xml = MiqXml.createDoc(:miq).root.add_element(:software).add_element(:applications)
-    rpm_list = ssu.shell_exec("rpm -qa --queryformat '%{NAME}|%{VERSION}|%{ARCH}|%{GROUP}|%{RELEASE}|%{SUMMARY}\n'")
+    rpm_list = ssu.shell_exec("rpm -qa --queryformat '%{NAME}|%{VERSION}|%{ARCH}|%{GROUP}|%{RELEASE}|%{SUMMARY}\n'").force_encoding("utf-8")
     rpm_list.each_line do |line|
       l = line.split('|')
       pkg_xml.add_element(:application, 'name' => l[0], 'version' => l[1], 'arch' => l[2], 'typename' => l[3], 'release' => l[4], 'description' => l[5])
@@ -1249,19 +1236,8 @@ class Host < ApplicationRecord
   end
 
   def ipmi_config_valid?(include_mac_addr = false)
-    if has_credentials?(:ipmi) && !ipmi_address.blank?
-      if include_mac_addr == true
-        if mac_address.blank?
-          return false
-        else
-          return true
-        end
-      else
-        return true
-      end
-    else
-      return false
-    end
+    return false unless (ipmi_address.present? && has_credentials?(:ipmi))
+    include_mac_addr == true ? mac_address.present? : true
   end
   alias_method :ipmi_enabled, :ipmi_config_valid?
 
@@ -1659,46 +1635,6 @@ class Host < ApplicationRecord
     names = hostname.to_s.split(',').first.to_s.split('.')
     return names[1..-1].join('.') unless names.blank?
     nil
-  end
-
-  def base_storage_extents
-    miq_cim_instance.try(:base_storage_extents) || []
-  end
-
-  def base_storage_extents_size
-    miq_cim_instance.try(:base_storage_extents_size) || 0
-  end
-
-  def storage_systems
-    miq_cim_instance.try(:storage_systems) || []
-  end
-
-  def storage_systems_size
-    miq_cim_instance.try(:storage_systems_size) || 0
-  end
-
-  def storage_volumes
-    miq_cim_instance.try(:storage_volumes) || []
-  end
-
-  def storage_volumes_size
-    miq_cim_instance.try(:storage_volumes_size) || 0
-  end
-
-  def file_shares
-    miq_cim_instance.try(:file_shares) || []
-  end
-
-  def file_shares_size
-    miq_cim_instance.try(:file_shares_size) || 0
-  end
-
-  def logical_disks
-    miq_cim_instance.try(:logical_disks) || []
-  end
-
-  def logical_disks_size
-    miq_cim_instance.try(:logical_disks_size) || 0
   end
 
   #

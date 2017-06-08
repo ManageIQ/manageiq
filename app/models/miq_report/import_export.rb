@@ -2,7 +2,7 @@ module MiqReport::ImportExport
   extend ActiveSupport::Concern
 
   module ClassMethods
-    VIEWS_FOLDER = File.join(Rails.root, "product/views")
+    VIEWS_FOLDER = File.join(ManageIQ::UI::Classic::Engine.root, "product/views")
     def import_from_hash(report, options = nil)
       raise _("No Report to Import") if report.nil?
 
@@ -10,6 +10,9 @@ module MiqReport::ImportExport
       if !report["menu_name"] || !report["col_order"] || !report["cols"] || report["rpt_type"] != "Custom"
         raise _("Incorrect format, only policy records can be imported.")
       end
+
+      # Ensure that all columns serialized as hashes in the report have keys that are symbols
+      self.column_names.each { |k| report[k].deep_symbolize_keys! if report[k].kind_of?(Hash) }
 
       user = options[:user] || User.find_by_userid(options[:userid])
       report.merge!("miq_group_id" => user.current_group_id, "user_id" => user.id)

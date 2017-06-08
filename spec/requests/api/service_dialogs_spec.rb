@@ -4,10 +4,6 @@
 # - Refresh dialog fields       /api/service_dialogs/:id "refresh_dialog_fields"
 #
 describe "Service Dialogs API" do
-  let(:zone)       { FactoryGirl.create(:zone, :name => "api_zone") }
-  let(:ems)        { FactoryGirl.create(:ems_vmware, :zone => zone) }
-  let(:host)       { FactoryGirl.create(:host) }
-
   let(:dialog1)    { FactoryGirl.create(:dialog, :label => "ServiceDialog1") }
   let(:dialog2)    { FactoryGirl.create(:dialog, :label => "ServiceDialog2") }
 

@@ -16,7 +16,7 @@ describe ServiceTemplateAnsiblePlaybook do
   end
 
   let(:job_template) do
-    FactoryGirl.create(:configuration_script,
+    FactoryGirl.create(:embedded_ansible_configuration_script,
                        :variables => catalog_item_options.fetch_path(:config_info, :provision, :extra_vars),
                        :manager   => ems)
   end
@@ -32,6 +32,7 @@ describe ServiceTemplateAnsiblePlaybook do
           :new_dialog_name       => 'test_dialog',
           :hosts                 => 'many',
           :become_enabled        => true,
+          :verbosity             => 3,
           :credential_id         => auth_one.id,
           :network_credential_id => auth_two.id,
           :playbook_id           => playbook.id
@@ -64,6 +65,7 @@ describe ServiceTemplateAnsiblePlaybook do
                         :provision => {
                           :new_dialog_name => 'test_dialog_updated',
                           :become_enabled  => false,
+                          :verbosity       => 0,
                           :extra_vars      => {
                             'key1' => {:default => 'updated_val1'},
                             'key2' => {:default => 'updated_val2'}
@@ -130,6 +132,7 @@ describe ServiceTemplateAnsiblePlaybook do
         :name               => name,
         :description        => description,
         :become_enabled     => true,
+        :verbosity          => 3,
         :credential         => '6',
         :network_credential => '10'
       )
@@ -210,7 +213,7 @@ describe ServiceTemplateAnsiblePlaybook do
       new_dialog_label = catalog_item_options_three
                          .fetch_path(:config_info, :provision, :new_dialog_name)
       expect(Dialog.where(:label => new_dialog_label)).to be_empty
-      expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript).to receive(:update_in_provider_queue).once
+      expect(job_template).to receive(:update_in_provider_queue).once
       service_template.update_catalog_item(catalog_item_options_three, user)
 
       expect(service_template.name).to eq(catalog_item_options_three[:name])
@@ -219,7 +222,10 @@ describe ServiceTemplateAnsiblePlaybook do
         'key1' => {:default => 'updated_val1'},
         'key2' => {:default => 'updated_val2'}
       )
-      expect(service_template.options.fetch_path(:config_info, :provision, :become_enabled)).to be false
+      expect(service_template.options.fetch_path(:config_info, :provision)).to have_attributes(
+        :become_enabled => false,
+        :verbosity      => 0
+      )
       new_dialog_record = Dialog.where(:label => new_dialog_label).first
       expect(new_dialog_record).to be_truthy
       expect(service_template.resource_actions.first.dialog.id).to eq new_dialog_record.id
@@ -232,8 +238,7 @@ describe ServiceTemplateAnsiblePlaybook do
 
       expect(service_template.dialogs.first.id).to eq info[:dialog_id]
       expect(described_class).to receive(:create_new_dialog).never
-      expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript).to receive(:update_in_provider_queue).once
-
+      expect(job_template).to receive(:update_in_provider_queue).once
       service_template.update_catalog_item(catalog_item_options_three, user)
       service_template.reload
 
@@ -242,17 +247,18 @@ describe ServiceTemplateAnsiblePlaybook do
   end
 
   describe '#update_job_templates' do
-    let(:service_template) { prebuild_service_template(:job_template => false) }
+    let(:service_template) { prebuild_service_template(:job_template => true) }
 
     it 'does not update a job_template if the there is no playbook_id' do
-      expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript)
-        .to receive(:update_in_provider_queue).never
-      service_template.send(:update_job_templates, 'blah', 'blah', catalog_item_options, user)
+      [:provision, :retirement, :reconfigure].each do |action|
+        catalog_item_options.delete_path(:config_info, action, :playbook_id)
+      end
+      service_template.send(:update_job_templates, 'blah', 'blah', catalog_item_options[:config_info], user)
+      expect(job_template).to receive(:update_in_provider_queue).never
     end
 
     it 'does update a job_template if a playbook_id is included' do
-      expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript)
-        .to receive(:update_in_provider_queue)
+      expect(job_template).to receive(:update_in_provider_queue).once
       service_template.send(:update_job_templates, 'blah', 'blah', catalog_item_options[:config_info], user)
     end
 
@@ -261,7 +267,7 @@ describe ServiceTemplateAnsiblePlaybook do
         next unless catalog_item_options[:config_info][action]
         catalog_item_options[:config_info][action].delete(:playbook_id)
       end
-      expect(service_template).to receive(:delete_job_templates)
+      expect(job_template).to receive(:delete_in_provider_queue)
 
       service_template.send(:update_job_templates, 'blah', 'blah', catalog_item_options[:config_info], user)
     end
@@ -274,8 +280,7 @@ describe ServiceTemplateAnsiblePlaybook do
       service_template = prebuild_service_template(:job_template => false)
       adjust_resource_actions(service_template, job_template.id)
 
-      expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript)
-        .to receive(:delete_in_provider_queue)
+      expect(job_template).to receive(:delete_in_provider_queue)
       service_template.send(:delete_job_templates, [job_template])
     end
 

@@ -3,8 +3,6 @@ module Api
     module Manager
       def update_collection(type, id)
         if @req.method == :put || @req.method == :patch
-          raise BadRequestError,
-                "Must specify a resource id for the #{@req.method} HTTP method" if id.blank?
           return send("#{@req.method}_resource", type, id)
         end
 
@@ -66,10 +64,7 @@ module Api
         edit_resource(type, id, patched_attrs)
       end
 
-      def delete_subcollection_resource(type, id = nil)
-        raise BadRequestError,
-              "Must specify an id for destroying a #{type} subcollection resource" if id.nil?
-
+      def delete_subcollection_resource(type, id)
         parent_resource = parent_resource_obj
         typed_target    = "delete_resource_#{type}"
         raise BadRequestError,

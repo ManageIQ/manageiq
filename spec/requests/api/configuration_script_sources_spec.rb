@@ -473,7 +473,7 @@ RSpec.describe 'Configuration Script Sources API' do
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)
 
-      run_get url, :filter => ["region_number=foo"]
+      run_get url, :filter => ["region_number=#{payload.region_number + 1}"]
 
       expected = {
         'subcount'  => 0,

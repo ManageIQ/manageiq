@@ -64,6 +64,7 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
                    gdbm-devel              \
                    cronie                  \
                    logrotate               \
+                   http-parser             \
                    &&                      \
     yum clean all
 

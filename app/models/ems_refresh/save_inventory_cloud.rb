@@ -46,6 +46,7 @@ module EmsRefresh::SaveInventoryCloud
     end
 
     child_keys = [
+      :resource_groups,
       :cloud_tenants,
       :flavors,
       :availability_zones,
@@ -61,7 +62,6 @@ module EmsRefresh::SaveInventoryCloud
       :cloud_resource_quotas,
       :cloud_object_store_containers,
       :cloud_object_store_objects,
-      :resource_groups,
       :cloud_services,
     ]
 

@@ -54,7 +54,6 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     schedules_for_database_operations_role
     schedules_for_ems_metrics_coordinator_role
     schedules_for_event_role
-    schedules_for_storage_metrics_coordinator_role
     schedules_for_ldap_synchronization_role
   end
 
@@ -123,16 +122,6 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       ) { enqueue :miq_server_queue_update_registration_status }
     end
 
-    # Schedule - Periodic resync of RHN Mirror
-    if MiqEnvironment::Command.is_appliance? && MiqServer.my_server.has_assigned_role?("rhn_mirror")
-      interval = worker_settings[:resync_rhn_mirror]
-      scheduler.schedule_every(
-        interval,
-        :first_in => 1.minute,
-        :tags     => [:rhn_mirror, schedule_category]
-      ) { enqueue :miq_server_resync_rhn_mirror }
-    end
-
     @schedules[:all]
   end
 
@@ -176,7 +165,6 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       # Queue authentication checks for CIs with credentials
       enqueue :host_authentication_check_schedule
       enqueue :ems_authentication_check_schedule
-      enqueue :storage_authentication_check_schedule
     end
 
     every = worker_settings[:drift_state_purge_interval]
@@ -246,9 +234,20 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       end
     end
 
-    # run run chargeback generation every day at specific time
+    # run chargeback generation every day at specific time
     schedule_chargeback_report_for_service_daily
+
+    schedule_check_for_task_timeout
+
     @schedules[:scheduler]
+  end
+
+  def schedule_check_for_task_timeout
+    every = worker_settings[:task_timeout_check_frequency]
+    scheduler = scheduler_for(:scheduler)
+    scheduler.schedule_every(every, :first_at => Time.current + 1.minute) do
+      enqueue :check_for_timed_out_active_tasks
+    end
   end
 
   def schedule_chargeback_report_for_service_daily
@@ -360,43 +359,6 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     ) { enqueue :policy_event_purge_timer }
 
     @schedules[:event]
-  end
-
-  def schedules_for_storage_metrics_coordinator_role
-    # These schedules need to run by the servers with the coordinator role
-    return unless schedule_enabled?(:storage_metrics_coordinator)
-    scheduler = scheduler_for(:storage_metrics_coordinator)
-
-    # Schedule - Storage metrics collection
-    sched = ::Settings.storage.metrics_collection.collection_schedule
-    _log.info("storage_metrics_collection_schedule: #{sched}")
-    scheduler.schedule_cron(sched) { enqueue :storage_refresh_metrics }
-
-    # Schedule - Storage metrics hourly rollup
-    sched = ::Settings.storage.metrics_collection.hourly_rollup_schedule
-    _log.info("storage_metrics_hourly_rollup_schedule: #{sched}")
-    scheduler.schedule_cron(sched) { enqueue :storage_metrics_rollup_hourly }
-
-    # Schedule - Storage metrics daily rollup
-    base_sched = ::Settings.storage.metrics_collection.daily_rollup_schedule
-    TimeProfile.rollup_daily_metrics.each do |tp|
-      tz = ActiveSupport::TimeZone::MAPPING[tp.tz]
-      sched = "#{base_sched} #{tz}"
-      _log.info("storage_metrics_daily_rollup_schedule: #{sched}")
-      scheduler.schedule_cron(sched) { enqueue [:storage_metrics_rollup_daily, tp.id] }
-    end
-
-    # Schedule - Storage metrics purge
-    sched = ::Settings.storage.metrics_history.purge_schedule
-    _log.info("storage_metrics_purge_schedule: #{sched}")
-    scheduler.schedule_cron(sched) { enqueue :miq_storage_metric_purge_all_timer }
-
-    # Schedule - Storage inventory collection
-    sched = ::Settings.storage.inventory.full_refresh_schedule
-    _log.info("storage_inventory_full_refresh_schedule: #{sched}")
-    scheduler.schedule_cron(sched) { enqueue :storage_refresh_inventory }
-
-    @schedules[:storage_metrics_coordinator]
   end
 
   def sync_all_user_schedules

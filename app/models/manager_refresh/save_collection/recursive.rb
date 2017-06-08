@@ -1,7 +1,5 @@
 module ManagerRefresh::SaveCollection
-  class Recursive
-    extend ManagerRefresh::SaveCollection::Helper
-
+  class Recursive < ManagerRefresh::SaveCollection::Base
     class << self
       def save_collections(ems, inventory_collections)
         graph = ManagerRefresh::InventoryCollection::Graph.new(inventory_collections)

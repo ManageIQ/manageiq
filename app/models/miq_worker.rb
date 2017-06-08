@@ -300,7 +300,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def send_message_to_worker_monitor(message, *args)
-    MiqQueue.put(
+    MiqQueue.put_deprecated(
       :class_name  => 'MiqServer',
       :instance_id => miq_server.id,
       :method_name => 'message_for_worker',
@@ -378,11 +378,6 @@ class MiqWorker < ApplicationRecord
 
     # ActiveRecord::Base.connection.kill(self.sql_spid)
     destroy
-  end
-
-  def quiesce_time_allowance
-    allowance = self.class.worker_settings[:quiesce_time_allowance]
-    @quiesce_time_allowance ||= allowance || current_timeout || 5.minutes
   end
 
   def is_current?

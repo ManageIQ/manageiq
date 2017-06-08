@@ -35,9 +35,8 @@ class ChargeableField < ApplicationRecord
     UNITS[metric] ? detail_measure.adjust(target_unit, UNITS[metric]) : 1
   end
 
-  def metric_keys
-    ["#{rate_name}_metric", # metric value (e.g. Storage [Used|Allocated|Fixed])
-     "#{group}_metric"]     # total of metric's group (e.g. Storage Total)
+  def metric_key
+    "#{rate_name}_metric" # metric value (e.g. Storage [Used|Allocated|Fixed])
   end
 
   def cost_keys
@@ -61,16 +60,19 @@ class ChargeableField < ApplicationRecord
   end
 
   def self.seed
+    measures = ChargebackRateDetailMeasure.all.index_by(&:name)
+    existing = ChargeableField.all.index_by(&:metric)
     seed_data.each do |f|
-      rec = ChargeableField.find_by(:metric => f[:metric])
       measure = f.delete(:measure)
       if measure
-        f[:chargeback_rate_detail_measure_id] = ChargebackRateDetailMeasure.find_by!(:name => measure).id
+        f[:chargeback_rate_detail_measure_id] = measures[measure].id
       end
+      rec = existing[f[:metric]]
       if rec.nil?
         create(f)
       else
-        rec.update_attributes!(f)
+        rec.attributes = f
+        rec.save! if rec.changed?
       end
     end
   end

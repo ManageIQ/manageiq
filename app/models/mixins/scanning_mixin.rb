@@ -3,8 +3,6 @@
 # but wrongly doesn't require it itself.
 require 'xml/xml_utils'
 
-require 'blackbox/VmBlackBox'
-require 'metadata/MIQExtract/MIQExtract'
 require 'scanning_operations_mixin'
 
 module ScanningMixin
@@ -231,10 +229,12 @@ module ScanningMixin
     )
 
     begin
+      require 'metadata/MIQExtract/MIQExtract'
       _log.debug "instantiating MIQExtract"
       extractor = MIQExtract.new(miqVm, ost)
       _log.debug "instantiated MIQExtract"
 
+      require 'blackbox/VmBlackBox'
       _log.debug "instantiating BlackBox"
       bb = Manageiq::BlackBox.new(guid, ost) # TODO: target must have GUID
       _log.debug "instantiated BlackBox"
@@ -296,7 +296,7 @@ module ScanningMixin
         "status_code" => status_code.to_s,
         "message"     => scan_message
       )
-      save_metadata_op(xml_summary.to_xml.miqEncode, "b64,zlib,xml", ost.taskid)
+      save_metadata_op(MIQEncode.encode(xml_summary.to_xml.to_s), "b64,zlib,xml", ost.taskid)
       _log.info "Completed: Sending scan summary to server.  TaskId:[#{ost.taskid}]  target:[#{name}]"
     end
   end
@@ -325,6 +325,7 @@ module ScanningMixin
         :dataDir            => data_dir,
         :forceFleeceDefault => false
       )
+      require 'blackbox/VmBlackBox'
       bb = Manageiq::BlackBox.new(guid, ost)
 
       update_job_message(ost, "Synchronization in progress")
@@ -338,7 +339,7 @@ module ScanningMixin
         xml_node << ost.xml_class.load(ret.xml.root.shallow_copy.to_xml.to_s).root
         items_total     = ret.xml.root.attributes["items_total"].to_i
         items_selected  = ret.xml.root.attributes["items_selected"].to_i
-        data = ret.xml.miqEncode
+        data = MIQEncode.encode(ret.xml.to_s)
 
         # Verify that we have data to send
         if !items_selected.zero?
@@ -365,7 +366,7 @@ module ScanningMixin
 
       _log.info "Starting:  Sending target summary to server.  TaskId:[#{ost.taskid}]  target:[#{name}]"
       _log.debug "xml_summary2 = #{xml_summary.class.name}"
-      save_metadata_op(xml_summary.miqEncode, "b64,zlib,xml", ost.taskid)
+      save_metadata_op(MIQEncode.encode(xml_summary.to_s), "b64,zlib,xml", ost.taskid)
       _log.info "Completed: Sending target summary to server.  TaskId:[#{ost.taskid}]  target:[#{name}]"
 
       update_job_message(ost, "Synchronization complete")

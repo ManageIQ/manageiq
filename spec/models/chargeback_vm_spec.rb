@@ -158,7 +158,6 @@ describe ChargebackVm do
         expect(subject.memory_allocated_metric).to eq(memory_available)
         used_metric = used_average_for(:derived_memory_used, hours_in_day, @vm1)
         expect(subject.memory_used_metric).to eq(used_metric)
-        expect(subject.memory_metric).to eq(subject.memory_allocated_metric + subject.memory_used_metric)
 
         expect(subject.memory_allocated_cost).to eq(memory_available * hourly_rate * hours_in_day)
         expect(subject.memory_used_cost).to eq(used_metric * hourly_rate * hours_in_day)
@@ -186,7 +185,6 @@ describe ChargebackVm do
         storage_allocated_cost = vm_allocated_disk_storage * count_hourly_rate * hours_in_day
         expect(subject.storage_allocated_cost).to eq(storage_allocated_cost)
 
-        expect(subject.storage_metric).to eq(subject.storage_allocated_metric + subject.storage_used_metric)
         expect(subject.storage_cost).to eq(subject.storage_allocated_cost + subject.storage_used_cost)
       end
 
@@ -204,7 +202,6 @@ describe ChargebackVm do
           expect(subject.storage_allocated_metric).to eq(vm_allocated_disk_storage.gigabytes)
           used_metric = used_average_for(:derived_vm_used_disk_storage, hours_in_day, @vm1)
           expect(subject.storage_used_metric).to eq(used_metric)
-          expect(subject.storage_metric).to eq(subject.storage_allocated_metric + subject.storage_used_metric)
 
           expected_value = hourly_fixed_rate * hours_in_day
           expect(subject.storage_allocated_cost).to be_within(0.01).of(expected_value)
@@ -280,7 +277,6 @@ describe ChargebackVm do
         expect(subject.memory_allocated_metric).to eq(memory_available)
         used_metric = used_average_for(:derived_memory_used, hours_in_month, @vm1)
         expect(subject.memory_used_metric).to be_within(0.01).of(used_metric)
-        expect(subject.memory_metric).to eq(subject.memory_allocated_metric + subject.memory_used_metric)
 
         memory_allocated_cost = memory_available * hourly_rate * hours_in_month
         expect(subject.memory_allocated_cost).to be_within(0.01).of(memory_allocated_cost)
@@ -315,7 +311,6 @@ describe ChargebackVm do
           expect(subject.storage_allocated_metric).to eq(vm_allocated_disk_storage.gigabytes)
           used_metric = used_average_for(:derived_vm_used_disk_storage, hours_in_month, @vm1)
           expect(subject.storage_used_metric).to be_within(0.01).of(used_metric)
-          expect(subject.storage_metric).to eq(subject.storage_allocated_metric + subject.storage_used_metric)
 
           expected_value = hourly_fixed_rate * hours_in_month
           expect(subject.storage_allocated_cost).to be_within(0.01).of(expected_value)
@@ -330,7 +325,6 @@ describe ChargebackVm do
         expect(subject.storage_allocated_metric).to eq(vm_allocated_disk_storage.gigabytes)
         used_metric = used_average_for(:derived_vm_used_disk_storage, hours_in_month, @vm1)
         expect(subject.storage_used_metric).to be_within(0.01).of(used_metric)
-        expect(subject.storage_metric).to eq(subject.storage_allocated_metric + subject.storage_used_metric)
 
         expected_value = vm_allocated_disk_storage * count_hourly_rate * hours_in_month
         expect(subject.storage_allocated_cost).to be_within(0.01).of(expected_value)

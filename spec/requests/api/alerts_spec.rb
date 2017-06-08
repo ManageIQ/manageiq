@@ -1,6 +1,4 @@
 describe "Alerts API" do
-  let(:alert_definition) { FactoryGirl.create(:miq_alert, :severity => "info") }
-
   it "forbids access to alerts list without an appropriate role" do
     api_basic_authorize
     run_get(alerts_url)

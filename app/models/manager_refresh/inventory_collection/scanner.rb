@@ -8,9 +8,11 @@ module ManagerRefresh
         #
         # @param inventory_collections [Array] Array fo
         def scan!(inventory_collections)
+          indexed_inventory_collections = inventory_collections.index_by(&:name)
+
           inventory_collections.each do |inventory_collection|
             inventory_collection.data_collection_finalized = true
-            inventory_collection.scan!
+            inventory_collection.scan!(indexed_inventory_collections)
           end
         end
       end

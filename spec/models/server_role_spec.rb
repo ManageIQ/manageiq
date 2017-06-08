@@ -44,7 +44,6 @@ describe ServerRole do
         scheduler,Scheduler,1,false,region
         smartproxy,SmartProxy,0,false,zone
         smartstate,SmartState Analysis,0,false,zone
-        storage_inventory,Storage Inventory,1,false,zone
         user_interface,User Interface,0,false,region
         websocket,Websocket,0,false,region
         web_services,Web Services,0,false,region

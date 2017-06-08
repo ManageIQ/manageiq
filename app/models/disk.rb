@@ -4,7 +4,6 @@ class Disk < ApplicationRecord
   belongs_to :storage_profile
   belongs_to :backing, :polymorphic => true
   has_many :partitions
-  has_one :miq_cim_instance, :as => :vmdb_obj, :dependent => :destroy
   virtual_column :allocated_space,             :type => :integer, :uses => :partitions
   virtual_column :allocated_space_percent,     :type => :float,   :uses => :allocated_space
   virtual_column :unallocated_space,           :type => :integer, :uses => :allocated_space
@@ -14,8 +13,6 @@ class Disk < ApplicationRecord
   virtual_column :used_disk_storage, :type => :integer, :arel => (lambda do |t|
     t.grouping(Arel::Nodes::NamedFunction.new('COALESCE', [t[:size_on_disk], t[:size], 0]))
   end)
-  virtual_has_many  :base_storage_extents, :class_name => "CimStorageExtent"
-  virtual_has_many  :storage_systems,      :class_name => "CimComputerSystem"
 
   def self.find_hard_disks
     where("device_type != 'floppy' AND device_type NOT LIKE '%cdrom%'").to_a
@@ -68,14 +65,6 @@ class Disk < ApplicationRecord
     return "True"    if plist.all?(&:aligned?)
     return "False"   if plist.any? { |p| p.aligned? == false }
     "Unknown"
-  end
-
-  def base_storage_extents
-    miq_cim_instance.nil? ? [] : miq_cim_instance.base_storage_extents
-  end
-
-  def storage_systems
-    miq_cim_instance.nil? ? [] : miq_cim_instance.storage_systems
   end
 
   def used_disk_storage

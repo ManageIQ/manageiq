@@ -1350,15 +1350,9 @@ describe Rbac::Filterer do
   end
 
   describe ".filtered" do
-    let(:vm_location_filter) do
-      MiqExpression.new("=" => {"field" => "Vm-location", "value" => "good"})
-    end
-
     let(:matched_vms) { FactoryGirl.create_list(:vm_vmware, 2, :location => "good") }
     let(:other_vms)   { FactoryGirl.create_list(:vm_vmware, 1, :location => "other") }
     let(:all_vms)     { matched_vms + other_vms }
-    let(:partial_matched_vms) { [matched_vms.first] }
-    let(:partial_vms) { partial_matched_vms + other_vms }
 
     it "skips rbac on empty empty arrays" do
       all_vms

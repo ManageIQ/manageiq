@@ -20,6 +20,9 @@ FactoryGirl.define do
     end
   end
   factory :miq_provision_vmware_via_pxe, :parent => :miq_provision_vmware, :class => "ManageIQ::Providers::Vmware::InfraManager::ProvisionViaPxe"
+  factory :vm_migrate_task,              :parent => :miq_request_task,     :class => "VmMigrateTask" do
+    request_type "vm_migrate"
+  end
 
   # Cloud
   factory :miq_provision_cloud,     :parent => :miq_provision,       :class => "ManageIQ::Providers::CloudManager::Provision"

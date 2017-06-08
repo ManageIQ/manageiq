@@ -1,6 +1,5 @@
 describe PurgingMixin do
   let(:example_class) { PolicyEvent }
-  let(:example_associated_class) { PolicyEventContent }
   let(:purge_date) { 2.weeks.ago }
 
   describe ".purge_date" do

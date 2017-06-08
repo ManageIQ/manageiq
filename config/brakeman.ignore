@@ -101,6 +101,6 @@
       "note": "Temporarily skipped, found in new brakeman version"
     }
   ],
-  "updated": "2017-02-01 08:54:32 -0500",
-  "brakeman_version": "3.5.0"
+  "updated": "2017-05-30 16:04:08 -0700",
+  "brakeman_version": "3.6.2"
 }

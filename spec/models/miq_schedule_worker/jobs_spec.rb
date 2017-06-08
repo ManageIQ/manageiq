@@ -49,4 +49,15 @@ describe MiqScheduleWorker::Jobs do
       )
     end
   end
+
+  describe "#check_for_timed_out_active_tasks" do
+    it "enqueues update_status_for_timed_out_active_tasks" do
+      allow(MiqServer).to receive(:my_zone)
+      described_class.new.check_for_timed_out_active_tasks
+      expect(MiqQueue.first).to have_attributes(
+        :class_name  => "MiqTask",
+        :method_name => "update_status_for_timed_out_active_tasks"
+      )
+    end
+  end
 end

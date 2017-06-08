@@ -244,7 +244,28 @@ module Api
       end
     end
 
+    def set_miq_server_resource(type, id, data)
+      vm = resource_search(id, type, collection_class(type))
+
+      miq_server = if data['miq_server'].empty?
+                     nil
+                   else
+                     miq_server_id = parse_id(data['miq_server'], :servers)
+                     raise 'Must specify a valid miq_server href or id' unless miq_server_id
+                     resource_search(miq_server_id, :servers, collection_class(:servers))
+                   end
+
+      vm.miq_server = miq_server
+      action_result(true, "#{miq_server_message(miq_server)} for #{vm_ident(vm)}")
+    rescue => err
+      action_result(false, "Failed to set miq_server - #{err}")
+    end
+
     private
+
+    def miq_server_message(miq_server)
+      miq_server ? "Set miq_server id:#{miq_server.id}" : "Removed miq_server"
+    end
 
     def validate_edit_data(data)
       invalid_keys = data.keys - VALID_EDIT_ATTRS - valid_custom_attrs

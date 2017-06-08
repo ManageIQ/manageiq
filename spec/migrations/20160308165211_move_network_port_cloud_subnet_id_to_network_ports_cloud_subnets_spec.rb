@@ -77,8 +77,8 @@ describe MoveNetworkPortCloudSubnetIdToNetworkPortsCloudSubnets do
   end
 
   let(:remote_region_start) do
-    ArRegion.anonymous_class_with_ar_region.rails_sequence_start +
-      ArRegion.anonymous_class_with_ar_region.rails_sequence_factor
+    anonymous_class_with_id_regions.rails_sequence_start +
+      anonymous_class_with_id_regions.rails_sequence_factor
   end
 
   migration_context :up do

@@ -12,7 +12,6 @@ class MiqServer < ApplicationRecord
   include_concern 'RoleManagement'
   include_concern 'StatusManagement'
   include_concern 'UpdateManagement'
-  include_concern 'RhnMirror'
 
   include UuidMixin
   include MiqPolicyMixin
@@ -27,8 +26,6 @@ class MiqServer < ApplicationRecord
   cattr_accessor          :my_guid_cache
 
   before_destroy          :validate_is_deleteable
-
-  default_value_for       :rhn_mirror, false
 
   virtual_column :zone_description, :type => :string
 
@@ -248,7 +245,7 @@ class MiqServer < ApplicationRecord
     EvmDatabase.seed_last
 
     start_memcached
-    prep_apache_proxying
+    MiqApache::Control.restart if MiqEnvironment::Command.supports_apache?
     server.start
     server.monitor_loop
   end
@@ -348,7 +345,7 @@ class MiqServer < ApplicationRecord
     Benchmark.realtime_block(:log_active_servers)      { log_active_servers }               if threshold_exceeded?(:server_log_frequency, now)
     Benchmark.realtime_block(:worker_monitor)          { monitor_workers }                  if threshold_exceeded?(:worker_monitor_frequency, now)
     Benchmark.realtime_block(:worker_dequeue)          { populate_queue_messages }          if threshold_exceeded?(:worker_dequeue_frequency, now)
-  rescue SystemExit
+  rescue SystemExit, SignalException
     # TODO: We're rescuing Exception below. WHY? :bomb:
     # A SystemExit would be caught below, so we need to explicitly rescue/raise.
     raise
@@ -372,6 +369,13 @@ class MiqServer < ApplicationRecord
       _log.info "Server Monitoring Complete - Timings: #{timings.inspect}" unless timings[:total_time] < server_log_timings_threshold
       sleep monitor_poll
     end
+  rescue Interrupt => e
+    _log.info("Received #{e.message} signal, killing server")
+    self.class.kill
+    exit 1
+  rescue SignalException => e
+    _log.info("Received #{e.message} signal, shutting down server")
+    shutdown_and_exit
   end
 
   def stop(sync = false)

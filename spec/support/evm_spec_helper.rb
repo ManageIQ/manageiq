@@ -40,6 +40,7 @@ module EvmSpecHelper
     clear_instance_variable(MiqProductFeature, :@feature_cache) if defined?(MiqProductFeature)
     clear_instance_variable(MiqProductFeature, :@obj_cache) if defined?(MiqProductFeature)
     clear_instance_variable(BottleneckEvent, :@event_definitions) if defined?(BottleneckEvent)
+    clear_instance_variable(Tenant, :@root_tenant) if defined?(Tenant)
 
     # Clear the thread local variable to prevent test contamination
     User.current_user = nil if defined?(User) && User.respond_to?(:current_user=)
@@ -121,12 +122,6 @@ module EvmSpecHelper
       types = ruby_object_usage
       puts("Ruby Object Usage: #{types.sort_by { |_klass, h| h[:count] }.reverse[0, top].inspect}")
     end
-  end
-
-  def self.stub_amqp_support
-    require 'openstack/events/openstack_rabbit_event_monitor'
-    allow(OpenstackRabbitEventMonitor).to receive(:available?).and_return(true)
-    allow(OpenstackRabbitEventMonitor).to receive(:test_connection).and_return(true)
   end
 
   def self.import_yaml_model(dirname, domain, attrs = {})

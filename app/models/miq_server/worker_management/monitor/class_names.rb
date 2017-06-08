@@ -62,17 +62,13 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     EmbeddedAnsibleWorker
     MiqEventHandler
     MiqGenericWorker
-    MiqNetappRefreshWorker
     MiqPriorityWorker
     MiqReportingWorker
     MiqScheduleWorker
     MiqSmartProxyWorker
-    MiqSmisRefreshWorker
-    MiqStorageMetricsCollectorWorker
     MiqWebsocketWorker
     MiqUiWorker
     MiqVimBrokerWorker
-    MiqVmdbStorageBridgeWorker
     MiqWebServiceWorker
     MiqCockpitWsWorker
   ).freeze
@@ -94,10 +90,6 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     MiqSmartProxyWorker
     MiqGenericWorker
     MiqEventHandler
-    MiqSmisRefreshWorker
-    MiqNetappRefreshWorker
-    MiqVmdbStorageBridgeWorker
-    MiqStorageMetricsCollectorWorker
     ManageIQ::Providers::Azure::CloudManager::RefreshWorker
     ManageIQ::Providers::Azure::NetworkManager::RefreshWorker
     ManageIQ::Providers::Amazon::CloudManager::RefreshWorker

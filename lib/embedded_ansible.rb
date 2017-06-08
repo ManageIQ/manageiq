@@ -4,14 +4,13 @@ require "linux_admin"
 require "ansible_tower_client"
 
 class EmbeddedAnsible
-  ANSIBLE_ROLE                = "embedded_ansible".freeze
-  SETUP_SCRIPT                = "ansible-tower-setup".freeze
-  SECRET_KEY_FILE             = "/etc/tower/SECRET_KEY".freeze
-  CONFIGURE_EXCLUDE_TAGS      = "packages,migrations,firewall,supervisor".freeze
-  START_EXCLUDE_TAGS          = "packages,migrations,firewall".freeze
-  HTTP_PORT                   = 54_321
-  HTTPS_PORT                  = 54_322
-  WAIT_FOR_ANSIBLE_SLEEP      = 1.second
+  ANSIBLE_ROLE           = "embedded_ansible".freeze
+  SETUP_SCRIPT           = "ansible-tower-setup".freeze
+  SECRET_KEY_FILE        = "/etc/tower/SECRET_KEY".freeze
+  EXCLUDE_TAGS           = "packages,migrations,firewall".freeze
+  HTTP_PORT              = 54_321
+  HTTPS_PORT             = 54_322
+  WAIT_FOR_ANSIBLE_SLEEP = 1.second
 
   def self.available?
     return false unless MiqEnvironment::Command.is_appliance?
@@ -29,6 +28,7 @@ class EmbeddedAnsible
   end
 
   def self.configured?
+    return false unless File.exist?(SECRET_KEY_FILE)
     key = miq_database.ansible_secret_key
     key.present? && key == File.read(SECRET_KEY_FILE)
   end
@@ -43,15 +43,13 @@ class EmbeddedAnsible
     true
   end
 
-  def self.configure
-    configure_secret_key
-    run_setup_script(CONFIGURE_EXCLUDE_TAGS)
-    stop
-  end
-
   def self.start
-    configure_secret_key
-    run_setup_script(START_EXCLUDE_TAGS)
+    if configured?
+      services.each { |service| LinuxAdmin::Service.new(service).start.enable }
+    else
+      configure_secret_key
+      run_setup_script(EXCLUDE_TAGS)
+    end
 
     5.times do
       return if alive?
@@ -101,6 +99,10 @@ class EmbeddedAnsible
       }
       AwesomeSpawn.run!(SETUP_SCRIPT, :params => params)
     end
+  rescue AwesomeSpawn::CommandResultError => e
+    _log.error("EmbeddedAnsible setup script failed with: #{e.message}")
+    miq_database.ansible_secret_key = nil
+    raise
   end
   private_class_method :run_setup_script
 

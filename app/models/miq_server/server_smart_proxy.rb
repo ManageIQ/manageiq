@@ -113,6 +113,7 @@ module MiqServer::ServerSmartProxy
     begin
       ost.args[1]  = YAML.load(ost.args[1]) # TODO: YAML.dump'd in call_scan - need it be?
       ost.scanData = ost.args[1].kind_of?(Hash) ? ost.args[1] : {}
+      ost.jobid    = job.id
       ost.config = OpenStruct.new(
         :vmdb               => true,
         :forceFleeceDefault => true,
@@ -164,7 +165,7 @@ module MiqServer::ServerSmartProxy
     begin
       # This is only available on Linux
       if Sys::Platform::IMPL == :linux
-        require 'VixDiskLib/VixDiskLib'
+        require 'VMwareWebService/VixDiskLib/VixDiskLib'
         caps[:vixDisk] = true
       end
     rescue Exception => err

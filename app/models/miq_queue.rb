@@ -174,6 +174,12 @@ class MiqQueue < ApplicationRecord
     result
   end
 
+  # This are the queue calls related to worker management which
+  # might not be needed once we use kubernetes for worker/pod management
+  def self.put_deprecated(*args)
+    put(*args)
+  end
+
   def unget(options = {})
     update_attributes!(options.merge(:state => STATE_READY, :handler => nil))
     @delivered_on = nil

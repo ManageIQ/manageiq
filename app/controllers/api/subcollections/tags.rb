@@ -73,8 +73,7 @@ module Api
         else
           result = action_result(false, "Missing tag category or name")
         end
-
-        add_parent_href_to_result(result)
+        add_parent_href_to_result(result) unless tag_spec[:href]
         add_tag_to_result(result, tag_spec)
         log_result(result)
         result
@@ -125,7 +124,7 @@ module Api
           Classification.classify(ci, tag_spec[:category], tag_spec[:name])
           success = ci_is_tagged_with?(ci, tag_spec)
         end
-        action_result(success, desc)
+        action_result(success, desc, :parent_id => ci.id)
       rescue => err
         action_result(false, err.to_s)
       end
@@ -139,7 +138,7 @@ module Api
           desc = "Not tagged with #{tag_ident(tag_spec)}"
           success = true
         end
-        action_result(success, desc)
+        action_result(success, desc, :parent_id => ci.id)
       rescue => err
         action_result(false, err.to_s)
       end

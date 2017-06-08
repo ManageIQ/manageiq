@@ -5,21 +5,20 @@ class PhysicalServer < ApplicationRecord
 
   acts_as_miq_taggable
 
+  VENDOR_TYPES = {
+    # DB        Displayed
+    "lenovo"  => "Lenovo",
+    "unknown" => "Unknown",
+    nil       => "Unknown",
+  }.freeze
+
+  validates :vendor, :inclusion =>{:in => VENDOR_TYPES}
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::PhysicalInfraManager"
 
   has_one :computer_system, :as => :managed_entity, :dependent => :destroy
   has_one :hardware, :through => :computer_system
-
   has_one :host, :inverse_of => :physical_server
-
   has_one :asset_details, :as => :resource, :dependent => :destroy
-
-  VENDOR_TYPES = {
-    # DB        Displayed
-    "lenovo"  => "lenovo",
-    "unknown" => "Unknown",
-    nil       => "Unknown",
-  }.freeze
 
   def name_with_details
     details % {
@@ -33,7 +32,7 @@ class PhysicalServer < ApplicationRecord
   end
 
   def label_for_vendor
-    VENDOR_TYPES[vendor.downcase]
+    VENDOR_TYPES[vendor]
   end
 
   def is_refreshable?
