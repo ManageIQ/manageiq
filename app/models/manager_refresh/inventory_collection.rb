@@ -1,6 +1,7 @@
 module ManagerRefresh
   class InventoryCollection
-    attr_accessor :saved, :references, :attribute_references, :data_collection_finalized, :all_manager_uuids
+    attr_accessor :saved, :references, :attribute_references, :data_collection_finalized, :all_manager_uuids,
+                  :dependees
 
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
                 :internal_attributes, :delete_method, :data, :data_index, :dependency_attributes, :manager_ref,
@@ -379,6 +380,7 @@ module ManagerRefresh
       @attributes_blacklist             = Set.new
       @attributes_whitelist             = Set.new
       @transitive_dependency_attributes = Set.new
+      @dependees                        = Set.new
       @references                       = Set.new
       @attribute_references             = Set.new
       @loaded_references                = Set.new
