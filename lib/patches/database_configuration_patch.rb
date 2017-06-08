@@ -1,4 +1,4 @@
-require "manageiq"
+require_relative "../manageiq.rb"
 
 module DatabaseConfigurationPatch
   def database_configuration
