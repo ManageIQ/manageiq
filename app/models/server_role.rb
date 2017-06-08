@@ -5,6 +5,9 @@ class ServerRole < ApplicationRecord
   validates_presence_of     :name
   validates_uniqueness_of   :name
 
+  cache_with_timeout(:region_scoped_roles, 5.minutes) { where(:role_scope => 'region').order(:name).to_a }
+  cache_with_timeout(:zone_scoped_roles, 5.minutes) { where(:role_scope => 'zone').order(:name).to_a }
+
   def self.seed
     CSV.foreach(fixture_path, :headers => true, :skip_lines => /^#/).each do |csv_row|
       action = csv_row.to_hash
@@ -21,7 +24,6 @@ class ServerRole < ApplicationRecord
         end
       end
     end
-    @zone_scoped_roles = @region_scoped_roles = nil
   end
 
   def self.fixture_path
@@ -45,14 +47,6 @@ class ServerRole < ApplicationRecord
 
   def self.database_scoped_role_names
     where(:role_scope => 'database').order(:name).pluck(:name)
-  end
-
-  def self.region_scoped_roles
-    @region_scoped_roles ||= where(:role_scope => 'region').order(:name).to_a
-  end
-
-  def self.zone_scoped_roles
-    @zone_scoped_roles ||= where(:role_scope => 'zone').order(:name).to_a
   end
 
   def self.regional_role?(role)
