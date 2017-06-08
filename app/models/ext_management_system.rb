@@ -449,8 +449,8 @@ class ExtManagementSystem < ApplicationRecord
     disable! if enabled?
 
     if self.destroy == false
-      _log.info("Cant #{self.class.name} with id: #{id}, workers still in progress. Requeuing destroy...")
-      schedule_destroy_queue(id, :deliver_on => 15.seconds.from_now)
+      _log.info("Cannot destroy #{self.class.name} with id: #{id}, workers still in progress. Requeuing destroy...")
+      self.class.schedule_destroy_queue(id, 15.seconds.from_now)
     else
       _log.info("#{self.class.name} with id: #{id} destroyed")
     end
