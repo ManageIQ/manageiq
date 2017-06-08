@@ -3,7 +3,7 @@ module MiqAeMethodService
     def statemachine_task_status
       ar_method do
         if ['finished', 'migrated'].include?(@object.state)
-          'ok'
+          @object.status.to_s.downcase == 'error' ? 'error' : 'ok'
         else
           'retry'
         end

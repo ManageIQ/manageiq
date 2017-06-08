@@ -190,6 +190,56 @@ module MiqAeServiceManageIQ_Providers_Vmware_InfraManager_ProvisionSpec
       end
     end
 
+    context "vm_migrate_task.statemachine_task_status" do
+      let(:ae_svc_prov) { MiqAeMethodService::MiqAeServiceVmMigrateTask.find(miq_provision.id) }
+
+      shared_examples_for "#statemachine_task_status" do
+        it "runs successfully" do
+          expect(ae_svc_prov.statemachine_task_status).to eq(return_status)
+        end
+      end
+
+      context "returns ok for finished/ok" do
+        let(:return_status) { "ok" }
+        let(:miq_provision) do
+          FactoryGirl.create(:vm_migrate_task, :status => "Ok", :state => "finished")
+        end
+        it_behaves_like "#statemachine_task_status"
+      end
+
+      context "returns error for finished/error" do
+        let(:return_status) { "error" }
+        let(:miq_provision) do
+          FactoryGirl.create(:vm_migrate_task, :status => "Error", :state => "finished")
+        end
+        it_behaves_like "#statemachine_task_status"
+      end
+
+      context "returns ok for migrated/ok" do
+        let(:return_status) { "ok" }
+        let(:miq_provision) do
+          FactoryGirl.create(:vm_migrate_task, :status => "Ok", :state => "migrated")
+        end
+        it_behaves_like "#statemachine_task_status"
+      end
+
+      context "returns error for migrated/error" do
+        let(:return_status) { "error" }
+        let(:miq_provision) do
+          FactoryGirl.create(:vm_migrate_task, :status => "Error", :state => "migrated")
+        end
+        it_behaves_like "#statemachine_task_status"
+      end
+
+      context "returns retry for pending" do
+        let(:return_status) { "retry" }
+        let(:miq_provision) do
+          FactoryGirl.create(:vm_migrate_task, :state => "pending")
+        end
+        it_behaves_like "#statemachine_task_status"
+      end
+    end
+
     context "subclassing" do
       before do
         method = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision']"
