@@ -273,7 +273,7 @@ module Service::Aggregation
   end
 
   def aggregate_all_vm_cpus
-    if has_attribute?("aggregate_all_vm_cpus")
+    if attribute_present?("aggregate_all_vm_cpus")
       self["aggregate_all_vm_cpus"]
     else
       all_vms.inject(0) { |aggregate, vm| aggregate + vm.cpu_total_cores.to_i }
@@ -281,7 +281,7 @@ module Service::Aggregation
   end
 
   def aggregate_all_vm_memory
-    if has_attribute?("aggregate_all_vm_memory")
+    if attribute_present?("aggregate_all_vm_memory")
       self["aggregate_all_vm_memory"]
     else
       all_vms.inject(0) { |aggregate, vm| aggregate + vm.ram_size.to_i }
@@ -289,7 +289,7 @@ module Service::Aggregation
   end
 
   def aggregate_all_vm_disk_count
-    if has_attribute?("aggregate_all_vm_disk_count")
+    if attribute_present?("aggregate_all_vm_disk_count")
       self["aggregate_all_vm_disk_count"]
     else
       all_vms.inject(0) { |aggregate, vm| aggregate + vm.num_disks.to_i }
@@ -297,7 +297,7 @@ module Service::Aggregation
   end
 
   def aggregate_all_vm_disk_space_allocated
-    if has_attribute?("aggregate_all_vm_disk_space_allocated")
+    if attribute_present?("aggregate_all_vm_disk_space_allocated")
       self["aggregate_all_vm_disk_space_allocated"]
     else
       all_vms.inject(0) { |aggregate, vm| aggregate + vm.allocated_disk_storage.to_i }
@@ -305,7 +305,7 @@ module Service::Aggregation
   end
 
   def aggregate_all_vm_disk_space_used
-    if has_attribute?("aggregate_all_vm_disk_space_used")
+    if attribute_present?("aggregate_all_vm_disk_space_used")
       self["aggregate_all_vm_disk_space_used"]
     else
       all_vms.inject(0) { |aggregate, vm| aggregate + vm.used_disk_storage.to_i }
@@ -313,7 +313,7 @@ module Service::Aggregation
   end
 
   def aggregate_all_vm_memory_on_disk
-    if has_attribute?("aggregate_all_vm_memory_on_disk")
+    if attribute_present?("aggregate_all_vm_memory_on_disk")
       # Avoids (poorly) "ERROR:  integer out of range" in postgres
       self["aggregate_all_vm_memory_on_disk"].try(:*, 1.megabyte)
     else
