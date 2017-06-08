@@ -123,8 +123,10 @@ module ManagerRefresh::SaveCollection
         ActiveRecord::Base.connection.execute(
           build_insert_query(inventory_collection, all_attribute_keys, hashes)
         )
-        # TODO(lsmola) we need to do the mapping only if this IC has dependents/dependees
-        map_ids_to_inventory_objects(inventory_collection, indexed_inventory_objects, hashes)
+        if inventory_collection.dependees.present?
+          # We need to get primary keys of the created objects, but only if there are dependees that would use them
+          map_ids_to_inventory_objects(inventory_collection, indexed_inventory_objects, hashes)
+        end
       end
 
       def map_ids_to_inventory_objects(inventory_collection, indexed_inventory_objects, hashes)
