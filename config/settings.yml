@@ -112,6 +112,8 @@
     :miq_namespace: management-infra
     :image_inspector_registry: docker.io
     :image_inspector_repository: openshift/image-inspector
+    :open_timeout: 60.seconds
+    :read_timeout: 60.seconds
 :event_streams:
   :history:
     :keep_events: 6.months
