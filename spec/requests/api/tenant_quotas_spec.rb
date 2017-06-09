@@ -43,10 +43,15 @@ describe "tenant quotas API" do
     it "can create a quota from a tenant" do
       api_basic_authorize action_identifier(:quotas, :create, :subcollection_actions, :post)
 
+      expected = {
+        'results' => [
+          a_hash_including('href' => a_string_including("#{tenants_url(tenant.id)}/quotas/"))
+        ]
+      }
       expect do
         run_post "/api/tenants/#{tenant.id}/quotas/", :name => :cpu_allocated, :value => 1
       end.to change(TenantQuota, :count).by(1)
-
+      expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)
     end
 

@@ -28,10 +28,11 @@ describe "Tags API" do
 
         expect { run_post tags_url, options }.to change(Tag, :count).by(1)
 
-        tag = Tag.find(response.parsed_body["results"].first["id"])
+        result = response.parsed_body["results"].first
+        tag = Tag.find(result["id"])
         tag_category = Category.find(tag.category.id)
         expect(tag_category).to eq(category)
-
+        expect(result["href"]).to include(tags_url(tag.id))
         expect(response).to have_http_status(:ok)
       end
 
