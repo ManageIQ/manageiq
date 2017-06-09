@@ -363,7 +363,8 @@ module Rbac
     # Algorithm: b_intersection_m = (b_filtered_ids INTERSECTION m_filtered_ids)
     #            u_union_d_union_b_and_m = u_filtered_ids UNION d_filtered_ids UNION b_intersection_m
     #            filter = u_union_d_union_b_and_m INTERSECTION tenant_filter_ids
-    # a nil as input for any field means it does not apply
+    #
+    # a nil as input for any field means it DOES NOT apply the operation(INTERSECTION, UNION)
     # a nil as output means there is not filter
     #
     # @param u_filtered_ids [nil|Array<Integer>] self service user owned objects
@@ -371,7 +372,7 @@ module Rbac
     # @param m_filtered_ids [nil|Array<Integer>] managed filter object ids
     # @param d_filtered_ids [nil|Array<Integer>] ids from descendants
     # @param tenant_filter_ids [nil|Array<Integer>] ids
-    # @return nil if filters do not aply
+    # @return nil if filters do not apply
     # @return [Array<Integer>] target ids for filter
 
     def combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids, tenant_filter_ids)
