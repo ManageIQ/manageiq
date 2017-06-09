@@ -381,6 +381,7 @@ module Rbac
 
       b_intersectionn_m = intersection.call(b_filtered_ids, m_filtered_ids)
       u_union_d_union_b_intersection_m = union.call(u_filtered_ids, d_filtered_ids, b_intersectionn_m)
+      intersection.call(u_union_d_union_b_intersection_m, tenant_filter_ids)
     end
 
     # @param parent_class [Class] Class of parent (e.g. Host)
