@@ -25,12 +25,12 @@ namespace :evm do
   end
 
   desc "Report Status of the ManageIQ EVM Application"
-  task :status => :environment do
+  task :status => :evm_connect do
     EvmApplication.status
   end
 
   desc "Report Status of the ManageIQ EVM Application"
-  task :status_full => :environment do
+  task :status_full => :evm_connect do
     EvmApplication.status(true)
   end
 
@@ -83,5 +83,12 @@ namespace :evm do
       opt :event, "Server Event", :type => :string, :required => true
     end
     EvmDatabase.raise_server_event(opts[:event])
+  end
+
+  # Connects to the MIQ db
+  task :evm_connect do
+    db_config = ManageIQ::ActiveRecordConnector::ConnectionConfig[ManageIQ.env]
+    log_path  = ManageIQ.root.join "log", "evm.log"
+    ManageIQ::ActiveRecordConnector.establish_connection_if_needed db_config, log_path
   end
 end
