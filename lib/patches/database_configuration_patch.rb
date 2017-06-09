@@ -27,7 +27,7 @@ module DatabaseConfigurationPatch
         raise e, "Cannot load `Rails.application.database_configuration`:\n#{e.message}", e.backtrace
       end
 
-      Vmdb::Settings.decrypt_passwords!(data)
+      Vmdb::Settings::Walker.decrypt_passwords!(data)
     else
       super
     end
