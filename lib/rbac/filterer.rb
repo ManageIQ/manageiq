@@ -358,8 +358,10 @@ module Rbac
 
       combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids, scope_tenant_filter.try(:ids))
     end
+
     #
-    # Algorithm: filter = u_filtered_ids UNION (b_filtered_ids INTERSECTION m_filtered_ids)
+    # Algorithm: b_intersection_m = (b_filtered_ids INTERSECTION m_filtered_ids)
+    #            filter = u_filtered_ids UNION b_intersection_m
     #            filter = (filter UNION d_filtered_ids)
     #            filter = filter INTERSECTION tenant_filter_ids
     # a nil as input for any field means it does not apply
