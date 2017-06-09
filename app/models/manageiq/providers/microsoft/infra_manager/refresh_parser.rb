@@ -290,9 +290,15 @@ module ManageIQ::Providers::Microsoft
     end
 
     def process_host_storages(properties)
-      properties['DiskVolumes'].collect do |dv|
+      disk_volumes = properties['DiskVolumes'].collect do |dv|
         @data_index.fetch_path(:storages, dv['ID'])
       end.compact
+
+      file_shares = properties['RegisteredStorageFileShares'].collect do |fs|
+        @data_index.fetch_path(:storages, fs['ID'])
+      end.compact
+
+      disk_volumes + file_shares
     end
 
     def map_mount_point_to_datastore(properties)

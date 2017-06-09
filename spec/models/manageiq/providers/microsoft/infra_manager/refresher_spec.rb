@@ -71,7 +71,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
     expect(@ems.ems_clusters.size).to eq(1)
     expect(@ems.resource_pools.size).to eq(0)
 
-    expect(@ems.storages.size).to eq(11)
+    expect(@ems.storages.size).to eq(13)
     expect(@ems.hosts.size).to eq(3)
     expect(@ems.vms_and_templates.size).to eq(71)
     expect(@ems.vms.size).to eq(46)
