@@ -22,7 +22,7 @@ module Api
       private
 
       def policy_ident(ctype, policy)
-        cdesc = (ctype == :policies) ? "Policy" : "Policy Profile"
+        cdesc = ctype == :policies ? "Policy" : "Policy Profile"
         "#{cdesc}: id:'#{policy.id}' description:'#{policy.description}' guid:'#{policy.guid}'"
       end
 
@@ -87,7 +87,7 @@ module Api
       end
 
       def policy_resolve(object, ctype, policy)
-        res = (ctype == :policies) ? object.resolve_policies([policy.name]) : object.resolve_profiles([policy.id])
+        res = ctype == :policies ? object.resolve_policies([policy.name]) : object.resolve_profiles([policy.id])
         action_result(true, "Resolving #{policy_ident(ctype, policy)}", :result => res)
       rescue => err
         action_result(false, err.to_s)
