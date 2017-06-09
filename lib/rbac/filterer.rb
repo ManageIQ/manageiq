@@ -361,8 +361,7 @@ module Rbac
 
     #
     # Algorithm: b_intersection_m = (b_filtered_ids INTERSECTION m_filtered_ids)
-    #            filter = u_filtered_ids UNION b_intersection_m
-    #            filter = (filter UNION d_filtered_ids)
+    #            filter = u_filtered_ids UNION d_filtered_ids UNION b_intersection_m
     #            filter = filter INTERSECTION tenant_filter_ids
     # a nil as input for any field means it does not apply
     # a nil as output means there is not filter
