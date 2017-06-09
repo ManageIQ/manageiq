@@ -141,7 +141,7 @@ module ReportController::Schedules
                    [_("No %{schedules} were selected to be disabled"),
                     _("The selected %{schedules} were disabled")]
                  end
-    scheds = find_records_with_rbac(MiqSchedule, checked_or_params).map(&:id)
+    scheds = find_records_with_rbac(MiqSchedule, checked_or_params)
     if scheds.empty?
       add_flash(msg1 % {:schedules => "#{ui_lookup(:model => "MiqReport")} #{ui_lookup(:models => "MiqSchedule")}"},
                 :error)
