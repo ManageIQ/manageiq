@@ -378,35 +378,6 @@ module Rbac
     def combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids, tenant_filter_ids)
       intersection = ->(operand1, operand2) { [operand1, operand2].compact.reduce(&:&) }
       union        = ->(operand1, operand2) { [operand1, operand2].compact.reduce(&:|) }
-
-      filtered_ids =
-        if b_filtered_ids.nil?
-          m_filtered_ids
-        elsif m_filtered_ids.nil?
-          b_filtered_ids
-        else
-          b_filtered_ids & m_filtered_ids
-        end
-
-      if u_filtered_ids.kind_of?(Array)
-        filtered_ids ||= []
-        filtered_ids += u_filtered_ids
-      end
-
-      if filtered_ids.kind_of?(Array)
-        filtered_ids += d_filtered_ids if d_filtered_ids.kind_of?(Array)
-        filtered_ids.uniq!
-      elsif d_filtered_ids.kind_of?(Array) && d_filtered_ids.present?
-        filtered_ids = d_filtered_ids
-      end
-
-      if filtered_ids.kind_of?(Array) && tenant_filter_ids
-        filtered_ids & tenant_filter_ids.to_a
-      elsif filtered_ids.nil? && tenant_filter_ids.kind_of?(Array) && tenant_filter_ids.present?
-        tenant_filter_ids
-      else
-        filtered_ids
-      end
     end
 
     # @param parent_class [Class] Class of parent (e.g. Host)
