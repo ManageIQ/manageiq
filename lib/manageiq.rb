@@ -23,4 +23,10 @@ module ManageIQ
       end
     end
   end
+
+  def self.my_guid
+    guid_file = root.join("GUID")
+    File.write(guid_file, SecureRandom.uuid) unless File.exist?(guid_file)
+    File.read(guid_file).strip
+  end
 end

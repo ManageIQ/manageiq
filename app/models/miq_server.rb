@@ -534,11 +534,7 @@ class MiqServer < ApplicationRecord
   # Zone and Role methods
   #
   def self.my_guid
-    @@my_guid_cache ||= begin
-      guid_file = Rails.root.join("GUID")
-      File.write(guid_file, SecureRandom.uuid) unless File.exist?(guid_file)
-      File.read(guid_file).strip
-    end
+    @@my_guid_cache ||= ManageIQ.my_guid
   end
 
   cache_with_timeout(:my_server) { find_by(:guid => my_guid) }
