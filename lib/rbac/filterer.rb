@@ -378,6 +378,8 @@ module Rbac
     def combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids, tenant_filter_ids)
       intersection = ->(operand1, operand2) { [operand1, operand2].compact.reduce(&:&) }
       union        = ->(operand1, operand2) { [operand1, operand2].compact.reduce(&:|) }
+
+      b_intersectionn_m = intersection.call(b_filtered_ids, m_filtered_ids)
     end
 
     # @param parent_class [Class] Class of parent (e.g. Host)
