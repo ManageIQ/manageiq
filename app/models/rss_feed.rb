@@ -1,6 +1,4 @@
-require 'resource_feeder/common'
 class RssFeed < ApplicationRecord
-  include ResourceFeeder
   include_concern 'ImportExport'
 
   validates_presence_of     :name
@@ -19,6 +17,8 @@ class RssFeed < ApplicationRecord
   end
 
   def generate(host = nil, local = false, proto = nil, user_or_group = nil)
+    require 'resource_feeder/lib/resource_feeder'
+
     proto ||= ::Settings.webservices.consume_protocol
     host_url = host.nil? ? "#{proto}://localhost:3000" : "#{proto}://" + host
 
@@ -43,7 +43,7 @@ class RssFeed < ApplicationRecord
     end
 
     filtered_items = Rbac::Filterer.filtered(find_items, rbac_options)
-    feed = Rss.rss_feed_for(filtered_items, options)
+    feed = ResourceFeeder::Rss.rss_feed_for(filtered_items, options)
     local ? feed : {:text => feed, :content_type => Mime[:rss]}
   end
 
