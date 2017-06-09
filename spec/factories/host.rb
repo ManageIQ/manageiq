@@ -26,7 +26,7 @@ FactoryGirl.define do
   end
 
   # Factories for perf_capture_timer and perf_capture_gap testing
-  factory :host_target_vmware, :parent => :host do
+  factory :host_target_vmware, :parent => :host, :class => 'ManageIQ::Providers::Vmware::InfraManager::Host' do
     after(:create) do |x|
       x.perf_capture_enabled = toggle_on_name_seq(x)
       2.times { x.vms << FactoryGirl.create(:vm_target_vmware, :ext_management_system => x.ext_management_system) }

@@ -36,22 +36,22 @@ describe Metric do
       context "executing capture_targets" do
         it "should find enabled targets" do
           targets = Metric::Targets.capture_targets
-          assert_infra_targets_enabled targets, %w(ManageIQ::Providers::Vmware::InfraManager::Vm Host Host ManageIQ::Providers::Vmware::InfraManager::Vm Host Storage)
+          assert_infra_targets_enabled targets, %w(ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host Storage)
         end
 
         it "should find enabled targets excluding storages" do
           targets = Metric::Targets.capture_targets(nil, :exclude_storages => true)
-          assert_infra_targets_enabled targets, %w(ManageIQ::Providers::Vmware::InfraManager::Vm Host Host ManageIQ::Providers::Vmware::InfraManager::Vm Host)
+          assert_infra_targets_enabled targets, %w(ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host)
         end
 
         it "should find enabled targets excluding vms" do
           targets = Metric::Targets.capture_targets(nil, :exclude_vms => true)
-          assert_infra_targets_enabled targets, %w(Host Host Host Storage)
+          assert_infra_targets_enabled targets, %w(ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host Storage)
         end
 
         it "should find enabled targets excluding vms and storages" do
           targets = Metric::Targets.capture_targets(nil, :exclude_storages => true, :exclude_vms => true)
-          assert_infra_targets_enabled targets, %w(Host Host Host)
+          assert_infra_targets_enabled targets, %w(ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host)
         end
       end
 
@@ -63,11 +63,11 @@ describe Metric do
 
         let(:expected_queue_items) do
           {
-            %w(Host perf_capture_realtime)                                            => 3,
-            %w(Host perf_capture_historical)                                          => 24,
-            %w(Storage perf_capture_hourly)                                           => 1,
-            %w(ManageIQ::Providers::Vmware::InfraManager::Vm perf_capture_realtime)   => 2,
-            %w(ManageIQ::Providers::Vmware::InfraManager::Vm perf_capture_historical) => 16,
+            %w(ManageIQ::Providers::Vmware::InfraManager::Host perf_capture_realtime)   => 3,
+            %w(ManageIQ::Providers::Vmware::InfraManager::Host perf_capture_historical) => 24,
+            %w(Storage perf_capture_hourly)                                             => 1,
+            %w(ManageIQ::Providers::Vmware::InfraManager::Vm perf_capture_realtime)     => 2,
+            %w(ManageIQ::Providers::Vmware::InfraManager::Vm perf_capture_historical)   => 16,
           }
         end
 
@@ -88,10 +88,10 @@ describe Metric do
 
               task = MiqTask.find_by(:name => "Performance rollup for EmsCluster:#{cluster.id}")
               expect(task).not_to be_nil
-              expect(task.context_data[:targets]).to match_array(cluster.hosts.collect { |h| "Host:#{h.id}" })
+              expect(task.context_data[:targets]).to match_array(cluster.hosts.collect { |h| "ManageIQ::Providers::Vmware::InfraManager::Host:#{h.id}" })
 
               expected_hosts.each do |host|
-                messages = MiqQueue.where(:class_name  => "Host",
+                messages = MiqQueue.where(:class_name  => 'ManageIQ::Providers::Vmware::InfraManager::Host',
                                           :instance_id => host.id,
                                           :method_name => "perf_capture_realtime")
                 expect(messages.size).to eq(1)
@@ -122,13 +122,13 @@ describe Metric do
               tasks = MiqTask.where(:name => "Performance rollup for EmsCluster:#{cluster.id}").order("id DESC")
               expect(tasks.length).to eq(2)
               tasks.each do |task|
-                expect(task.context_data[:targets]).to match_array(cluster.hosts.collect { |h| "Host:#{h.id}" })
+                expect(task.context_data[:targets]).to match_array(cluster.hosts.collect { |h| "ManageIQ::Providers::Vmware::InfraManager::Host:#{h.id}" })
               end
 
               task_ids = tasks.collect(&:id)
 
               expected_hosts.each do |host|
-                messages = MiqQueue.where(:class_name  => "Host",
+                messages = MiqQueue.where(:class_name  => 'ManageIQ::Providers::Vmware::InfraManager::Host',
                                           :instance_id => host.id,
                                           :method_name => "perf_capture_realtime")
                 expect(messages.size).to eq(1)
