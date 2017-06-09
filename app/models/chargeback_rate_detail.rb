@@ -218,8 +218,7 @@ class ChargebackRateDetail < ApplicationRecord
   private
 
   def metric_keys
-    ["#{rate_name}_metric", # metric value (e.g. Storage [Used|Allocated|Fixed])
-     "#{group}_metric"]     # total of metric's group (e.g. Storage Total)
+    ["#{rate_name}_metric"] # metric value (e.g. Storage [Used|Allocated|Fixed])
   end
 
   def cost_keys
