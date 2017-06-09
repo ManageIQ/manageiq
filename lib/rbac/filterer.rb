@@ -360,9 +360,9 @@ module Rbac
     end
 
     #
-    # Algorithm: b_intersection_m = (b_filtered_ids INTERSECTION m_filtered_ids)
+    # Algorithm: b_intersection_m        = (b_filtered_ids INTERSECTION m_filtered_ids)
     #            u_union_d_union_b_and_m = u_filtered_ids UNION d_filtered_ids UNION b_intersection_m
-    #            filter = u_union_d_union_b_and_m INTERSECTION tenant_filter_ids
+    #            filter                  = u_union_d_union_b_and_m INTERSECTION tenant_filter_ids
     #
     # a nil as input for any field means it DOES NOT apply the operation(INTERSECTION, UNION)
     # a nil as output means there is not filter
@@ -379,8 +379,9 @@ module Rbac
       intersection = ->(operand1, operand2) { [operand1, operand2].compact.reduce(&:&) }
       union        = ->(operand1, operand2, operand3 = nil) { [operand1, operand2, operand3].compact.reduce(&:|) }
 
-      b_intersectionn_m = intersection.call(b_filtered_ids, m_filtered_ids)
-      u_union_d_union_b_intersection_m = union.call(u_filtered_ids, d_filtered_ids, b_intersectionn_m)
+      b_intersection_m                 = intersection.call(b_filtered_ids, m_filtered_ids)
+      u_union_d_union_b_intersection_m = union.call(u_filtered_ids, d_filtered_ids, b_intersection_m)
+
       intersection.call(u_union_d_union_b_intersection_m, tenant_filter_ids)
     end
 
