@@ -128,32 +128,33 @@ module Metric::Capture
   end
   private_class_method :perf_capture_health_check
 
+  # Collect realtime targets and group them by their rollup parent
+  #
+  # 1. Only display rollups for Hosts
+  # 2. Since perf_target_to_interval_name(Host) == "realtime", no need to filtering on interval_name == "realtime"
+  # 3. Some Hosts have an EmsCluster as a parent, others have none.
+  #
+  # @returns Hash<String,Array<Host>>
+  #   e.g.: {"EmsCluster:4"=>[Host:4], "EmsCluster:5"=>[Host:1, Host:2]}
   def self.calc_targets_by_rollup_parent(targets)
-    # Collect realtime targets and group them by their rollup parent, e.g. {"EmsCluster:4"=>[Host:4], "EmsCluster:5"=>[Host:1, Host:2]}
-    targets_by_rollup_parent = targets.inject({}) do |h, target|
-      next(h) unless target.kind_of?(Host) && perf_capture_now?(target)
-
-      interval_name = perf_target_to_interval_name(target)
-      next unless interval_name == "realtime"
-
-      target.perf_rollup_parents(interval_name).to_a.compact.each do |parent|
+    targets.select { |target| target.kind_of?(Host) && perf_capture_now?(target) }.each_with_object({}) do |target, h|
+      target.perf_rollup_parents("realtime").to_a.compact.each do |parent|
         pkey = "#{parent.class}:#{parent.id}"
         h[pkey] ||= []
         h[pkey] << "#{target.class}:#{target.id}"
       end
-
-      h
     end
-    targets_by_rollup_parent
   end
   private_class_method :calc_targets_by_rollup_parent
 
+  # Create task for ems host cluster rollups
+  # {"EmsCluster:4" => Task{1}, "EmsCluster:5" => Task{2} }
   def self.calc_tasks_by_rollup_parent(targets_by_rollup_parent)
     task_end_time           = Time.now.utc.iso8601
     default_task_start_time = 1.hour.ago.utc.iso8601
 
     # Create a new task for each rollup parent
-    tasks_by_rollup_parent = targets_by_rollup_parent.keys.inject({}) do |h, pkey|
+    targets_by_rollup_parent.keys.each_with_object({}) do |pkey, h|
       name = "Performance rollup for #{pkey}"
       prev_task = MiqTask.where(:identifier => pkey).order("id DESC").first
       task_start_time = prev_task ? prev_task.context_data[:end] : default_task_start_time
@@ -175,10 +176,7 @@ module Metric::Capture
       )
       _log.info "Created task id: [#{task.id}] for: [#{pkey}] with targets: #{targets_by_rollup_parent[pkey].inspect} for time range: [#{task_start_time} - #{task_end_time}]"
       h[pkey] = task
-      h
     end
-
-    tasks_by_rollup_parent
   end
   private_class_method :calc_tasks_by_rollup_parent
 
@@ -192,7 +190,6 @@ module Metric::Capture
           pkey = "#{parent.class}:#{parent.id}"
           tkey = "#{target.class}:#{target.id}"
           if targets_by_rollup_parent[pkey].include?(tkey)
-            # FIXME: check that this is still correct
             options[:task_id] = tasks_by_rollup_parent[pkey].id
             options[:force]   = true # Force collection since we've already verified that capture should be done now
           end
