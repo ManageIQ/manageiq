@@ -31,8 +31,7 @@ module Api
                                  :description => data.delete("description"),
                                  :towhat      => data.delete("towhat"),
                                  :mode        => data.delete("mode"),
-                                 :active      => true
-                                )
+                                 :active      => true)
       add_policies_content(data, policy)
       policy.conditions = Condition.where(:id => data.delete("conditions_ids")) if data["conditions_ids"]
       policy

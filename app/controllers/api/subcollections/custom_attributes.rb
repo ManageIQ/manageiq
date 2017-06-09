@@ -66,7 +66,7 @@ module Api
 
       def find_custom_attribute(object, id, data)
         if object.respond_to?(:custom_attributes)
-          (id.present? && id > 0) ? object.custom_attributes.find(id) : find_custom_attribute_by_data(object, data)
+          id.present? && id > 0 ? object.custom_attributes.find(id) : find_custom_attribute_by_data(object, data)
         else
           raise BadRequestError, "#{object.class.name} does not support management of custom attributes"
         end
@@ -84,8 +84,7 @@ module Api
         CustomAttribute.new(:name    => name,
                             :value   => data["value"],
                             :source  => data["source"].blank? ? "EVM" : data["source"],
-                            :section => data["section"]
-                           )
+                            :section => data["section"])
       end
     end
   end

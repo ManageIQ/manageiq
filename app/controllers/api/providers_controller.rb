@@ -1,4 +1,3 @@
-# rubocop:disable ClassLength
 module Api
   class ProvidersController < BaseController
     TYPE_ATTR         = "type".freeze

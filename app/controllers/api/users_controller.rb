@@ -35,7 +35,7 @@ module Api
     end
 
     def edit_resource(type, id, data)
-      (id == User.current_user.id) ? validate_self_user_data(data) : validate_user_data(data)
+      id == User.current_user.id ? validate_self_user_data(data) : validate_user_data(data)
       parse_set_group(data)
       parse_set_settings(data, resource_search(id, type, collection_class(type)))
       super
