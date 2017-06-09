@@ -1,7 +1,5 @@
 require 'util/vmdb-logger'
 
-Dir.glob(File.join(File.dirname(__FILE__), "loggers", "*")).each { |f| require f }
-
 module Vmdb
   def self.logger
     $log
@@ -85,3 +83,5 @@ module Vmdb
     end
   end
 end
+
+Dir.glob(File.join(File.dirname(__FILE__), "loggers", "*")).each { |f| require f }
