@@ -376,6 +376,9 @@ module Rbac
     # @return [Array<Integer>] target ids for filter
 
     def combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids, tenant_filter_ids)
+      intersection = ->(operand1, operand2) { [operand1, operand2].compact.reduce(&:&) }
+      union        = ->(operand1, operand2) { [operand1, operand2].compact.reduce(&:|) }
+
       filtered_ids =
         if b_filtered_ids.nil?
           m_filtered_ids
