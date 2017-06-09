@@ -98,23 +98,13 @@ module ReportController::Schedules
 
   def miq_report_schedule_run_now
     assert_privileges("miq_report_schedule_run_now")
-    scheds = find_checked_ids_with_rbac(MiqSchedule)
-    if scheds.empty? && params[:id].nil?
-      add_flash(_("No Report Schedules were selected to be Run now"), :error)
-      javascript_flash
-    elsif params[:id]
-      if MiqSchedule.exists?(from_cid(params[:id]))
-        scheds.push(from_cid(params[:id]))
-      else
-        add_flash(_("%{model} no longer exists") % {:model => ui_lookup(:model => "MiqSchedule")}, :error)
-      end
-    end
-    MiqSchedule.where(:id => scheds).order("lower(name)").each do |sched|
-      MiqSchedule.queue_scheduled_work(sched.id, nil, Time.now.utc.to_i, nil)
+    schedules = find_records_with_rbac(MiqSchedule, checked_or_params)
+    schedules.sort_by { |e| e.name.downcase}.each do |schedule|
+      MiqSchedule.queue_scheduled_work(schedule.id, nil, Time.now.utc.to_i, nil)
       audit = {
         :event        => "queue_scheduled_work",
-        :message      => "Schedule [#{sched.name}] queued to run from the UI by user #{current_user.name}",
-        :target_id    => sched.id,
+        :message      => "Schedule [#{schedule.name}] queued to run from the UI by user #{current_user.name}",
+        :target_id    => schedule.id,
         :target_class => "MiqSchedule",
         :userid       => session[:userid]
       }
