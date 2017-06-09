@@ -10,7 +10,7 @@ ManageIQ.angular.app.controller('cloudSubnetFormController', ['$http', '$scope',
   if (cloudSubnetFormId == 'new') {
     $scope.cloudSubnetModel.name = "";
     $scope.cloudSubnetModel.dhcp_enabled = true;
-    $scope.cloudSubnetModel.ip_version = '4';
+    $scope.cloudSubnetModel.network_protocol = '4';
     $scope.newRecord = true;
   } else {
     miqService.sparkleOn();
@@ -21,7 +21,7 @@ ManageIQ.angular.app.controller('cloudSubnetFormController', ['$http', '$scope',
       $scope.cloudSubnetModel.dhcp_enabled = data.dhcp_enabled;
       $scope.cloudSubnetModel.cidr = data.cidr;
       $scope.cloudSubnetModel.gateway = data.gateway;
-      $scope.cloudSubnetModel.ip_version = data.ip_version;
+      $scope.cloudSubnetModel.network_protocol = data.network_protocol;
 
       $scope.modelCopy = angular.copy( $scope.cloudSubnetModel );
       miqService.sparkleOff();

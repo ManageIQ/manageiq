@@ -36,9 +36,9 @@
       %label.col-md-2.control-label
         = _('IP Version')
       .col-md-8
-        = select_tag("ip_version",
+        = select_tag("network_protocol",
                       options_for_select([4, 6]),
-                      "ng-model"                    => "cloudSubnetModel.ip_version",
+                      "ng-model"                    => "cloudSubnetModel.network_protocol",
                       "required"                    => "",
                       :miqrequired                  => true,
                       :checkchange                  => true,
