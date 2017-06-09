@@ -12,7 +12,7 @@ class EvmApplication
   def self.start
     if server_state == :no_db
       puts "EVM has no Database connection"
-      File.open(Rails.root.join("tmp", "pids", "evm.pid"), "w") { |f| f.write("no_db") }
+      File.open(ManageIQ.root.join("tmp", "pids", "evm.pid"), "w") { |f| f.write("no_db") }
       exit
     end
 
@@ -25,12 +25,12 @@ class EvmApplication
     _log.info("EVM Startup initiated")
 
     MiqServer.kill_all_workers
-    command_line = "#{Gem.ruby} #{Rails.root.join(*%w(lib workers bin evm_server.rb)).expand_path}"
+    command_line = "#{Gem.ruby} #{ManageIQ.root.join(*%w(lib workers bin evm_server.rb)).expand_path}"
 
     env_options = {}
     env_options["EVMSERVER"] = "true" if MiqEnvironment::Command.is_appliance?
     puts "Running EVM in background..."
-    pid = Kernel.spawn(env_options, command_line, :pgroup => true, [:out, :err] => [Rails.root.join("log/evm.log"), "a"])
+    pid = Kernel.spawn(env_options, command_line, :pgroup => true, [:out, :err] => [ManageIQ.root.join("log/evm.log"), "a"])
     Process.detach(pid)
   end
 
@@ -47,7 +47,7 @@ class EvmApplication
   end
 
   def self.server_state
-    MiqServer.my_server.status
+    my_server.status
   rescue => error
     :no_db if error.message =~ /Connection refused/i
   end
@@ -111,7 +111,7 @@ class EvmApplication
 
   def self.update_start
     require 'fileutils'
-    filename = MiqServer.pidfile
+    filename = miq_server_pidfile
     tempfile = "#{filename}.yum"
     FileUtils.mkdir_p(File.dirname(filename))
     File.write(filename, "no_db") if File.file?(tempfile)
@@ -122,7 +122,7 @@ class EvmApplication
     return if MiqServer.my_server.status != "started"
 
     require 'fileutils'
-    tempfile = "#{MiqServer.pidfile}.yum"
+    tempfile = "#{miq_server_pidfile}.yum"
     FileUtils.mkdir_p(File.dirname(tempfile))
     File.write(tempfile, " ")
     stop
@@ -135,6 +135,10 @@ class EvmApplication
 
     _log.info("Changing REGION file from [#{old_region}] to [#{new_region}]. Restart to use the new region.")
     region_file.write(new_region)
+  end
+
+  def self.miq_server_pidfile
+    "#{ManageIQ.root}/tmp/pids/evm.pid"
   end
 
   def self.my_server

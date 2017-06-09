@@ -4,7 +4,7 @@ require 'evm_rake_helper'
 
 namespace :evm do
   desc "Start the ManageIQ EVM Application"
-  task :start => :environment do
+  task :start => :evm_connect do
     EvmApplication.start
   end
 

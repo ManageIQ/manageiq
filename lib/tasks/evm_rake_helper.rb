@@ -1,6 +1,10 @@
 module EvmRakeHelper
 
   EVM_APPLIANCE_TASKS = %w[
+    evm:start
+    evm:restart
+    evm:stop
+    evm:kill
     evm:status
     evm:status_full
   ]
