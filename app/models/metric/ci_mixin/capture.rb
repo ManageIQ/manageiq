@@ -80,10 +80,12 @@ module Metric::CiMixin::Capture
       :state       => ['ready', 'dequeue'],
     }
 
+    messages = MiqQueue.where.not(:method_name => 'perf_capture_realtime').where(queue_item).index_by(&:args)
     items.each do |item_interval, *start_and_end_time|
       # Should both interval name and args (dates) be part of uniqueness query?
       queue_item_options = queue_item.merge(:method_name => "perf_capture_#{item_interval}")
       queue_item_options[:args] = start_and_end_time if start_and_end_time.present?
+      next if item_interval != 'realtime' && messages[start_and_end_time].try(:priority) == priority
       MiqQueue.put_or_update(queue_item_options) do |msg, qi|
         if msg.nil?
           qi[:priority] = priority
