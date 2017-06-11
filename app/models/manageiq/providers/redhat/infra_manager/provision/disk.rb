@@ -36,14 +36,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Disk
   end
 
   def prepare_disk_for_add(disk_spec)
-    storage_name = disk_spec[:datastore]
-    raise MiqException::MiqProvisionError, "Storage is required for disk: <#{disk_spec.inspect}>" if storage_name.blank?
-
-    storage = Storage.find_by(:name => storage_name)
-    if storage.nil?
-      raise MiqException::MiqProvisionError, "Unable to find storage: <#{storage_name}> for disk: <#{disk_spec.inspect}>"
-    end
-
+    storage = find_storage!(disk_spec)
     da_options = {
       :size_in_mb       => disk_spec[:sizeInMB],
       :storage          => storage,
@@ -55,5 +48,23 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Disk
 
     disk_attachment_builder = ManageIQ::Providers::Redhat::InfraManager::DiskAttachmentBuilder.new(da_options)
     disk_attachment_builder.disk_attachment
+  end
+
+  def find_storage!(disk_spec)
+    storage_name = disk_spec[:datastore]
+    if storage_name.blank?
+      raise MiqException::MiqProvisionError, "Storage is required for disk: <#{disk_spec.inspect}>"
+    end
+
+    storage = ext_management_system.hosts.collect do |h|
+      h.writable_storages.find_by(:name => storage_name)
+    end.uniq.compact.first
+
+    if storage.nil?
+      error = "Unable to find storage: <#{storage_name}> for disk: <#{disk_spec.inspect}>"
+      raise MiqException::MiqProvisionError, error
+    end
+
+    storage
   end
 end

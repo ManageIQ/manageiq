@@ -7,17 +7,26 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine do
   let(:rhevm_vm) { double("RHEVM VM") }
   let(:task)     { request.tap(&:create_request_tasks).miq_request_tasks.first }
   let(:template) { FactoryGirl.create(:template_redhat, :ext_management_system => ems) }
+  let(:storages) { double("storages") }
+  let(:storage_name) { "abc" }
+  let(:host) { double("hostgig", :writable_storages => storages) }
+  let(:hosts) { [host] }
   let(:vm) do
     FactoryGirl.create(:vm_redhat, :ext_management_system => ems, :raw_power_state => "on").tap do |v|
       allow(v).to receive(:with_provider_object).and_yield(rhevm_vm)
       allow(ems).to receive(:with_disk_attachments_service).with(v).and_return(disk_attachments_service)
       allow(ems).to receive(:with_provider_connection).and_return(false)
+      allow(ems).to receive(:storages).and_return(storages)
+      allow(storages).to receive(:find_by).with(:name => storage_name).and_return(storage)
+      allow(ems).to receive(:hosts).and_return(hosts)
       # TODO: (inventory) write for v4
       allow(ems).to receive(:supported_api_versions).and_return([3])
     end
   end
 
-  let(:storage) { FactoryGirl.create(:storage_nfs, :ems_ref => "http://example.com/storages/XYZ") }
+  let(:storage) do
+    FactoryGirl.create(:storage_nfs, :ems_ref => "http://example.com/storages/XYZ", :name => storage_name)
+  end
 
   let(:options) do
     {

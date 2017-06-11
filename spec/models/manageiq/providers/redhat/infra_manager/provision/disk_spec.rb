@@ -57,6 +57,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::Disk do
 
   context "#configure_dialog_disks" do
     it "adds disks spec as specified in the request" do
+      allow(@task).to receive(:find_storage!).and_return(storage)
       @task.configure_dialog_disks
 
       expect(@task.options[:disks_add]).to eq(expected_requested_disks)
@@ -96,6 +97,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::Disk do
 
   context "#configure_disks" do
     it "adds disks as specified in the request" do
+      allow(@task).to receive(:find_storage!).and_return(storage)
       expect(@task).to receive(:add_disks).with(expected_requested_disks).once
       expect(@task).to receive(:poll_add_disks_complete).once
 
@@ -162,6 +164,42 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::Disk do
       expect(@task).to receive(:requeue_phase)
 
       @task.poll_add_disks_complete
+    end
+  end
+
+  context "#find_storage!" do
+    let(:storage_name) { "test_storage" }
+    let(:storages) { double("storages") }
+    let(:host) { double("host", :writable_storages => storages) }
+    let(:hosts) { [host] }
+
+    before do
+      allow(ems).to receive(:hosts).and_return(hosts)
+    end
+
+    context "when storage exists" do
+      let(:storage) { FactoryGirl.create(:storage_nfs, :name => storage_name) }
+
+      # storage = ext_management_system.hosts.detect { |h| h.writable_storages.find_by(:name => storage_name) }
+      it "finds a storage by its name" do
+        allow(storages).to receive(:find_by).with(:name => storage_name).and_return(storage)
+        disk_spec = { :datastore => storage_name }
+
+        expect(@task.send(:find_storage!, disk_spec)).to eq(storage)
+      end
+    end
+
+    context "when storage does not exist" do
+      it "raises an exception when doesn't find storage by its name" do
+        allow(storages).to receive(:find_by).with(:name => storage_name).and_return(nil)
+        disk_spec = { :datastore => storage_name }
+
+        expect { @task.send(:find_storage!, disk_spec) }.to raise_error(MiqException::MiqProvisionError)
+      end
+
+      it "raises an exception when doesn't find storage without specifying name" do
+        expect { @task.send(:find_storage!, {}) }.to raise_error(MiqException::MiqProvisionError)
+      end
     end
   end
 end
