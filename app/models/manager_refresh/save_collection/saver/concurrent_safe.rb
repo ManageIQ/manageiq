@@ -19,38 +19,32 @@ module ManagerRefresh::SaveCollection
         created_counter           = 0
         _log.info("*************** PROCESSING #{inventory_collection} of size #{inventory_collection_size} *************")
         # Records that are in the DB, we will be updating or deleting them.
-        association.find_in_batches do |batch|
-          ActiveRecord::Base.transaction do
-            batch.each do |record|
-              next unless assert_distinct_relation(record)
+        ActiveRecord::Base.transaction do
+          association.find_each do |record|
+            next unless assert_distinct_relation(record)
 
-              index = inventory_collection.object_index_with_keys(unique_index_keys, record)
+            index = inventory_collection.object_index_with_keys(unique_index_keys, record)
 
-              inventory_object = inventory_objects_index.delete(index)
-              hash             = attributes_index.delete(index)
+            inventory_object = inventory_objects_index.delete(index)
+            hash             = attributes_index.delete(index)
 
-              if inventory_object.nil?
-                # Record was found in the DB but not sent for saving, that means it doesn't exist anymore and we should
-                # delete it from the DB.
-                # TODO(lsmola) do a transaction for a batches of deletion
-                deleted_counter += 1 if delete_record!(inventory_collection, record)
-              else
-                # Record was found in the DB and sent for saving, we will be updating the DB.
-                update_record!(inventory_collection, record, hash, inventory_object)
-              end
+            if inventory_object.nil?
+              # Record was found in the DB but not sent for saving, that means it doesn't exist anymore and we should
+              # delete it from the DB.
+              deleted_counter += 1 if delete_record!(inventory_collection, record)
+            else
+              # Record was found in the DB and sent for saving, we will be updating the DB.
+              update_record!(inventory_collection, record, hash, inventory_object)
             end
           end
         end
 
         # Records that were not found in the DB but sent for saving, we will be creating these in the DB.
         if inventory_collection.create_allowed?
-          inventory_objects_index.each_slice(1000) do |batch|
-            ActiveRecord::Base.transaction do
-              batch.each do |index, inventory_object|
-                hash = attributes_index.delete(index)
-                create_record!(inventory_collection, hash, inventory_object)
-                created_counter += 1
-              end
+          ActiveRecord::Base.transaction do
+            inventory_objects_index.each do |index, inventory_object|
+              create_record!(inventory_collection, attributes_index.delete(index), inventory_object)
+              created_counter += 1
             end
           end
         end
@@ -58,19 +52,8 @@ module ManagerRefresh::SaveCollection
                   "updated=#{inventory_collection_size - created_counter}, deleted=#{deleted_counter} *************")
       end
 
-      def delete_record!(inventory_collection, record)
-        return false unless inventory_collection.delete_allowed?
-        record.public_send(inventory_collection.delete_method)
-        true
-      end
-
       def update_record!(inventory_collection, record, hash, inventory_object)
         record.assign_attributes(hash.except(:id, :type))
-
-        # TODO(lsmola) ignore all N:M relations, since we use pure SQL, all N:M needs to be modeled as a separate IC, or
-        # can we process those automatically? Using a convention? But still, it needs to be a separate IC, to have
-        # efficient saving.
-        hash.reject! { |_key, value| value.kind_of?(Array) }
 
         if !inventory_object.inventory_collection.check_changed? || record.changed?
           update_query = inventory_object.inventory_collection.model_class.where(:id => record.id)
@@ -88,31 +71,12 @@ module ManagerRefresh::SaveCollection
       def create_record!(inventory_collection, hash, inventory_object)
         return unless assert_referential_integrity(hash, inventory_object)
 
-        hash[:type]  = inventory_collection.model_class.name if inventory_collection.supports_sti? && hash[:type].blank?
-        table_name   = inventory_object.inventory_collection.model_class.table_name
-        insert_query = %{
-        INSERT INTO #{table_name} (#{hash.keys.join(", ")})
-          VALUES
-            (
-              #{hash.values.map { |x| ActiveRecord::Base.connection.quote(x) }.join(", ")}
-            )
-          ON CONFLICT (#{inventory_object.inventory_collection.unique_index_columns.join(", ")})
-            DO
-              UPDATE
-                SET #{hash.keys.map { |x| "#{x} = EXCLUDED.#{x}" }.join(", ")}
-        }
-        # TODO(lsmola) do we want to exclude the ems_id from the UPDATE clause? Otherwise it might be difficult to change
-        # the ems_id as a cross manager migration, since ems_id should be there as part of the insert. The attempt of
-        # changing ems_id could lead to putting it back by a refresh.
+        all_attribute_keys = hash.keys
+        hash               = inventory_collection.model_class.new(hash).attributes.symbolize_keys
 
-        # This conditional will avoid rewriting new data by old data. But we want it only when remote_data_timestamp is a
-        # part of the data, since for the fake records, we just want to update ems_ref.
-        if hash[:remote_data_timestamp].present?
-          insert_query += %{
-          WHERE EXCLUDED.remote_data_timestamp IS NULL OR (EXCLUDED.remote_data_timestamp > #{table_name}.remote_data_timestamp)
-        }
-        end
-        result_id           = ActiveRecord::Base.connection.insert_sql(insert_query)
+        result_id = ActiveRecord::Base.connection.insert_sql(
+          build_insert_query(inventory_collection, all_attribute_keys, [hash])
+        )
         inventory_object.id = result_id
       end
     end

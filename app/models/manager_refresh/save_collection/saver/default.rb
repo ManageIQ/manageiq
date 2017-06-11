@@ -14,7 +14,7 @@ module ManagerRefresh::SaveCollection
           inventory_objects_index[index] = inventory_object
         end
 
-        unique_db_indexes      = Set.new
+        unique_db_indexes = Set.new
 
         inventory_collection_size = inventory_collection.size
         deleted_counter           = 0
@@ -64,12 +64,6 @@ module ManagerRefresh::SaveCollection
         end
         _log.info("*************** PROCESSED #{inventory_collection}, created=#{created_counter}, "\
                   "updated=#{inventory_collection_size - created_counter}, deleted=#{deleted_counter} *************")
-      end
-
-      def delete_record!(inventory_collection, record)
-        return false unless inventory_collection.delete_allowed?
-        record.public_send(inventory_collection.delete_method)
-        true
       end
 
       def update_record!(inventory_collection, record, hash, inventory_object)

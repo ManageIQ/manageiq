@@ -2,6 +2,7 @@ module ManagerRefresh::SaveCollection
   module Saver
     class Base
       include Vmdb::Logging
+      include ManagerRefresh::SaveCollection::Saver::SqlHelper
 
       attr_reader :inventory_collection
 
@@ -31,6 +32,10 @@ module ManagerRefresh::SaveCollection
 
       attr_reader :unique_index_keys, :unique_db_primary_keys
 
+      def batch_size
+        1000
+      end
+
       def delete_complement(inventory_collection)
         return unless inventory_collection.delete_allowed?
 
@@ -55,6 +60,12 @@ module ManagerRefresh::SaveCollection
                   "#{all_manager_uuids_size}, deleted=#{deleted_counter} *************")
       end
 
+      def delete_record!(inventory_collection, record)
+        return false unless inventory_collection.delete_allowed?
+        record.public_send(inventory_collection.delete_method)
+        true
+      end
+
       def assert_distinct_relation(record)
         if unique_db_primary_keys.include?(record.id) # Include on Set is O(1)
           # Change the InventoryCollection's :association or :arel parameter to return distinct results. The :through
@@ -75,12 +86,11 @@ module ManagerRefresh::SaveCollection
 
       def assert_referential_integrity(hash, inventory_object)
         inventory_object.inventory_collection.fixed_foreign_keys.each do |x|
-          if hash[x].blank?
-            _log.info("Ignoring #{inventory_object} because of missing foreign key #{x} for "\
-                      "#{inventory_object.inventory_collection.parent.class.name}:"\
-                      "#{inventory_object.inventory_collection.parent.id}")
-            return false
-          end
+          next unless hash[x].blank?
+          _log.info("Ignoring #{inventory_object} because of missing foreign key #{x} for "\
+                    "#{inventory_object.inventory_collection.parent.class.name}:"\
+                    "#{inventory_object.inventory_collection.parent.id}")
+          return false
         end
         true
       end
