@@ -278,12 +278,31 @@ class MiqQueue < ApplicationRecord
   #   puts a new item on the queue.  If the item was found, it will not be
   #   changed, and will be yielded to an optional block, generally for logging
   #   purposes.
+
+  # Return task.id
   def self.put_unless_exists(find_options)
-    put_or_update(find_options) do |msg, item_hash|
-      ret = yield(msg, item_hash) if block_given?
-      # create the record if the original message did not exist, don't change otherwise
-      ret if msg.nil?
+    find_options = default_get_options(find_options)
+    options = find_options.dup
+    options.delete(:state)
+    identifier = options.hash.to_s
+
+    task = MiqTask.find_by(:identifier => identifier)
+
+    if task.nil?
+      task_id = MiqTask.create!(
+        :name       => 'put_unless_exists',
+        :state      => MiqTask::STATE_QUEUED,
+        :status     => MiqTask::STATUS_OK,
+        :identifier => identifier,
+        :message    => 'Queued'
+      ).id
+
+      put(options.merge(:miq_callback => {:class_name => MiqTask.class.name, :instance_id => task_id, :method_name => :destroy}))
     end
+
+    yield(task, find_options) if block_given? # the block expects to see task to be nil if not already exist
+
+    task.try(:id) || task_id
   end
 
   def self.unqueue(options)

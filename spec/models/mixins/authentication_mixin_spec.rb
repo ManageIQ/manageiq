@@ -137,7 +137,10 @@ describe AuthenticationMixin do
   context "#retry_scheduled_authentication_check" do
     let(:host) do
       EvmSpecHelper.local_miq_server
-      FactoryGirl.create(:host_with_authentication).tap { MiqQueue.destroy_all }
+      FactoryGirl.create(:host_with_authentication).tap do
+        MiqQueue.destroy_all
+        MiqTask.destroy_all
+      end
     end
 
     it "works" do
@@ -177,6 +180,7 @@ describe AuthenticationMixin do
 
         # Destroy any queued auth checks from creating the new CI's with authentications
         MiqQueue.destroy_all
+        MiqTask.destroy_all
       end
 
       context ".authentication_check_schedule" do
@@ -264,6 +268,7 @@ describe AuthenticationMixin do
         @host_no_auth = FactoryGirl.create(:host_vmware_esx)
         @ems          = FactoryGirl.create(:ems_vmware_with_authentication)
         MiqQueue.destroy_all
+        MiqTask.destroy_all
         @auth = @ems.authentication_type(:default)
         @orig_ems_user, @orig_ems_pwd = @ems.auth_user_pwd(:default)
       end

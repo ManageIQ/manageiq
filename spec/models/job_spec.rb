@@ -34,6 +34,7 @@ describe Job do
           @msg = MiqQueue.get(:role => "smartstate", :zone => @zone.name)
           status, message, result = @msg.deliver
           @msg.delivered(status, message, result)
+          MiqTask.where.not(:identifier => nil).delete_all
 
           @job.reload
         end
@@ -56,6 +57,7 @@ describe Job do
 
       it "should queue a timeout job if one is there, but it is failed" do
         MiqQueue.first.update_attributes(:state => MiqQueue::STATE_ERROR)
+        MiqTask.where.not(:identifier => nil).delete_all
         expect { @job.timeout! }.to change { MiqQueue.count }.by(1)
       end
     end

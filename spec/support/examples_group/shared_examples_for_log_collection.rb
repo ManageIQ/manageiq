@@ -36,7 +36,7 @@ end
 
 shared_examples_for "Log Collection should create 0 tasks and 0 queue items" do
   it "should create 0 unfinished tasks" do
-    expect(MiqTask.where("state != ?", "Finished").count).to eq(0)
+    expect(MiqTask.where("state != ?", "Finished").where(:identifier => nil).count).to eq(0)
   end
 
   it "should create 0 queue messages" do

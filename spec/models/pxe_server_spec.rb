@@ -6,11 +6,8 @@ describe PxeServer do
 
   context "#sync_images_queue" do
     it "should create a queue entry with the correct parameters" do
-      msg = @pxe_server.sync_images_queue
-      expect(msg.method_name).to eq("sync_images")
-      expect(msg.priority).to eq(100)
-      expect(msg.queue_name).to eq("generic")
-      expect(msg.class_name).to eq("PxeServer")
+      task = @pxe_server.sync_images_queue
+      expect(MiqTask.find(task).identifier).not_to be_nil
     end
 
     it "should not create a new queue entry when one already exists" do
