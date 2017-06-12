@@ -886,6 +886,9 @@ module ManagerRefresh
         references << manager_uuid unless references.include?(manager_uuid) # O(1) since references is Set
       end
 
+      # Put our existing data keys into loaded references
+      loaded_references.merge(data_index.keys)
+      # Load the rest of the references from the DB
       populate_db_data_index!
 
       db_data_index[manager_uuid]
