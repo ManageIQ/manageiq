@@ -27,6 +27,7 @@ module ManageIQ::Providers::Microsoft
 
       get_ems
       get_datastores
+      get_storage_fileshares
       get_hosts
       get_clusters
       get_vms
@@ -50,6 +51,11 @@ module ManageIQ::Providers::Microsoft
       process_collection(datastores, :storages) { |ds| parse_datastore(ds) }
     end
 
+    def get_storage_fileshares
+      fileshares = @inventory[:sharevols]
+      process_collection(fileshares, :storages) { |fs| parse_storage_fileshare(fs) }
+    end
+
     def get_hosts
       hosts = @inventory[:hosts]
       process_collection(hosts, :hosts) { |host| parse_host(host) }
@@ -68,6 +74,24 @@ module ManageIQ::Providers::Microsoft
     def get_images
       images = @inventory[:images]
       process_collection(images, :vms) { |image| parse_image(image) }
+    end
+
+    def parse_storage_fileshare(datastore)
+      volume = datastore[:Props]
+      uid = volume[:ID]
+
+      new_result = {
+        :ems_ref                     => uid,
+        :name                        => File.path_to_uri(volume[:SharePath]),
+        :store_type                  => 'StorageFileShare',
+        :total_space                 => volume[:Capacity],
+        :free_space                  => volume[:FreeSpace],
+        :multiplehostaccess          => true,
+        :thin_provisioning_supported => true,
+        :location                    => uid,
+      }
+
+      return uid, new_result
     end
 
     def parse_datastore(datastore)
@@ -255,9 +279,15 @@ module ManageIQ::Providers::Microsoft
     end
 
     def process_host_storages(properties)
-      properties[:DiskVolumes].collect do |dv|
+      disk_volumes = properties[:DiskVolumes].collect do |dv|
         @data_index.fetch_path(:storages, dv[:Props][:ID])
       end.compact
+
+      file_shares = properties[:RegisteredStorageFileShares].collect do |fs|
+        @data_index.fetch_path(:storages, fs[:Props][:ID])
+      end.compact
+
+      disk_volumes + file_shares
     end
 
     def map_mount_point_to_datastore(properties)
