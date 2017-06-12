@@ -841,6 +841,10 @@ module ManagerRefresh
       end
     end
 
+    def batch_size
+      1000
+    end
+
     def db_collection_for_comparison
       if targeted?
         if targeted_arel.respond_to?(:call)
