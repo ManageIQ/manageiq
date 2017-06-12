@@ -2,6 +2,23 @@ module MiqReport::ImportExport
   extend ActiveSupport::Concern
 
   module ClassMethods
+    def view_paths
+      @view_paths ||= (
+        Vmdb::Plugins.instance.vmdb_plugins.map do |engine|
+          directory = File.join(engine.root, 'product/views')
+          directory if File.directory?(directory)
+        end.compact
+      )
+    end
+
+    def resolve_view_path(file_name)
+      view_paths.each do |path|
+        full_path = File.join(path, file_name)
+        return full_path if File.exist?(full_path)
+      end
+      nil
+    end
+
     VIEWS_FOLDER = File.join(ManageIQ::UI::Classic::Engine.root, "product/views")
     def import_from_hash(report, options = nil)
       raise _("No Report to Import") if report.nil?
@@ -77,7 +94,7 @@ module MiqReport::ImportExport
       if %w(ManageIQ::Providers::CloudManager::Template ManageIQ::Providers::InfraManager::Template
             ManageIQ::Providers::CloudManager::Vm ManageIQ::Providers::InfraManager::Vm VmOrTemplate).include?(db)
         if role && role.settings && role.settings.fetch_path(:restrictions, :vms)
-          viewfilerestricted = "#{VIEWS_FOLDER}/Vm__restricted.yaml"
+          viewfilerestricted = resolve_view_path('Vm__restricted.yaml')
         end
       end
 
@@ -85,22 +102,12 @@ module MiqReport::ImportExport
 
       role = role.name.split("-").last if role.try(:read_only?)
 
-      # Build the view file name
-      if suffix
-        viewfile = "#{VIEWS_FOLDER}/#{db}-#{suffix}.yaml"
-        viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{suffix}-#{role}.yaml"
-      else
-        viewfile = "#{VIEWS_FOLDER}/#{db}.yaml"
-        viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{role}.yaml"
-      end
+      suffix = suffix ? "-#{suffix}" : ''
 
-      if viewfilerestricted && File.exist?(viewfilerestricted)
-        viewfilerestricted
-      elsif File.exist?(viewfilebyrole)
-        viewfilebyrole
-      else
-        viewfile
-      end
+      viewfile = resolve_view_path("#{db}#{suffix}.yaml")
+      viewfilebyrole = resolve_view_path("#{db}#{suffix}-#{role}.yaml")
+
+      viewfilerestricted || viewfilebyrole || viewfile
     end
   end
 
