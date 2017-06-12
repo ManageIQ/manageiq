@@ -157,5 +157,32 @@ module MiqAeServiceMethodsSpec
       ct.reload
       expect(ct.entries.collect(&:name).include?('fred')).to be_truthy
     end
+
+    context "#create_service_provision_request" do
+      let(:options) { {:fred => :flintstone} }
+      let(:svc_options) { {:dialog_style => "medium"} }
+      let(:user) { FactoryGirl.create(:user_with_group) }
+      let(:template) { FactoryGirl.create(:service_template_ansible_playbook) }
+      let(:miq_request) { FactoryGirl.create(:service_template_provision_request) }
+      let(:svc_template) do
+        MiqAeMethodService::MiqAeServiceServiceTemplate.find(template.id)
+      end
+      let(:workspace) do
+        double("MiqAeEngine::MiqAeWorkspaceRuntime",
+               :root               => options,
+               :persist_state_hash => {},
+               :ae_user            => user)
+      end
+      let(:miq_ae_service) { MiqAeMethodService::MiqAeService.new(workspace) }
+
+      it "create service request" do
+        allow(workspace).to receive(:disable_rbac)
+        allow(ServiceTemplate).to receive(:find).with(template.id).and_return(template)
+        expect(template).to receive(:provision_request).with(user, svc_options).and_return(miq_request)
+
+        result = miq_ae_service.execute(:create_service_provision_request, svc_template, svc_options)
+        expect(result).to be_kind_of(MiqAeMethodService::MiqAeServiceMiqRequest)
+      end
+    end
   end
 end
