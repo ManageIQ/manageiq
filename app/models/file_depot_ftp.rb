@@ -63,7 +63,7 @@ class FileDepotFtp < FileDepot
   end
 
   def connect(cred_hash = nil)
-    host       = URI.split(URI.encode(uri))[2]
+    host = URI(uri).hostname
 
     begin
       _log.info("Connecting to #{self.class.name}: #{name} host: #{host}...")
