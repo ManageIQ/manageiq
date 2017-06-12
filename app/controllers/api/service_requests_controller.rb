@@ -1,7 +1,6 @@
 module Api
   class ServiceRequestsController < BaseController
     include Subcollections::RequestTasks
-    include Subcollections::Tasks
 
     def approve_resource(type, id, data)
       raise "Must specify a reason for approving a service request" unless data["reason"].present?
