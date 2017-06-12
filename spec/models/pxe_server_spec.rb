@@ -12,14 +12,6 @@ describe PxeServer do
       expect(msg.queue_name).to eq("generic")
       expect(msg.class_name).to eq("PxeServer")
     end
-
-    it "should not create a new queue entry when one already exists" do
-      @pxe_server.sync_images_queue
-      expect(MiqQueue.count).to eq(1)
-
-      @pxe_server.sync_images_queue
-      expect(MiqQueue.count).to eq(1)
-    end
   end
 
   context "pxelinux depot" do

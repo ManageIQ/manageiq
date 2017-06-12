@@ -606,7 +606,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def stop_event_monitor_queue
-    MiqQueue.put_unless_exists(
+    MiqQueue.put(
       :class_name  => self.class.name,
       :method_name => "stop_event_monitor",
       :instance_id => id,

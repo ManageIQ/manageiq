@@ -147,7 +147,7 @@ class CloudTenant < ApplicationRecord
   def self.post_refresh_ems(ems_id, _)
     ems = ExtManagementSystem.find(ems_id)
 
-    MiqQueue.put_unless_exists(
+    MiqQueue.put(
       :class_name  => ems.class,
       :instance_id => ems_id,
       :method_name => 'sync_cloud_tenants_with_tenants',
