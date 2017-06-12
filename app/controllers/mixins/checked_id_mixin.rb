@@ -135,6 +135,37 @@ module Mixins
         Rbac.filtered(Array(id), :class => klass).first
       end
     end
+
+    # Find a record by model and id and test it with RBAC
+    # Params:
+    #   klass   - class of accessed objects
+    #   ids     - accessed object ids
+    #   options - :named_scope :
+    #
+    # Returns:
+    #   Array of selected class instances. If user does not have rights for it,
+    #   either sets flash or raises exception
+    #
+    def find_records_with_rbac(klass, ids, options = {})
+      filtered = Rbac.filtered(klass.where(:id => ids),
+                               :user        => current_user,
+                               :named_scope => options[:named_scope])
+      raise(_("Can't access selected records")) unless ids.length == filtered.length
+      filtered
+    end
+
+    # Tries to load checked items from params.
+    # If there are none, takes the id sent in params[:id]
+    #
+    # Returns:
+    #   Array of ids of the items as a Fixnum
+    #
+    def checked_or_params
+      objs = (checked = find_checked_items).blank? && params[:id].present? ? Array(params[:id]) : checked
+      objs.map! { |compressed| from_cid(compressed) } if objs.present?
+      objs
+    end
+
   end
 
   # Tries to load a single checked item on from params.
