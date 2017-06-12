@@ -112,7 +112,8 @@ module EmsRefresh::SaveInventoryContainer
 
     save_inventory_multi(ems.container_nodes, hashes, :use_association, [:ems_ref],
                          [:labels, :tags, :computer_system, :container_conditions,
-                          :additional_attributes], [:namespace])
+                          :additional_attributes], [:namespace], true)
+
     store_ids_for_new_records(ems.container_nodes, hashes, :ems_ref)
   end
 
