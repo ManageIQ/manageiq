@@ -1,4 +1,59 @@
 describe Rbac::Filterer do
+  describe '.combine_filtered_ids' do
+    # Algorithm (from Rbac::Filterer.combine_filtered_ids):
+    # b_intersection_m        = (belongsto_filtered_ids INTERSECTION managed_filtered_ids)
+    # u_union_d_union_b_and_m = user_filtered_ids UNION descendant_filtered_ids UNION belongsto_filtered_ids
+    # filter                  = u_union_d_union_b_and_m INTERSECTION tenant_filter_ids
+
+    def combine_filtered_ids(user_filtered_ids, belongsto_filtered_ids, managed_filtered_ids, descendant_filtered_ids, tenant_filter_ids)
+      Rbac::Filterer.new.send(:combine_filtered_ids, user_filtered_ids, belongsto_filtered_ids, managed_filtered_ids, descendant_filtered_ids, tenant_filter_ids)
+    end
+
+    it 'only user filter(self service user)' do
+      expect(combine_filtered_ids([1, 2], nil, nil, nil, nil)).to match_array([1, 2])
+    end
+
+    it 'only belongs to filter(Host & Cluster filter)' do
+      expect(combine_filtered_ids(nil, [1, 2], nil, nil, nil)).to match_array([1, 2])
+    end
+
+    it 'only managed filter(tags)' do
+      expect(combine_filtered_ids(nil, nil, [1, 2], nil, nil)).to match_array([1, 2])
+    end
+
+    it 'only descendants filter' do
+      expect(combine_filtered_ids(nil, nil, nil, [1, 2], nil)).to match_array([1, 2])
+    end
+
+    it 'only tenant filter' do
+      expect(combine_filtered_ids(nil, nil, nil, nil, [1, 2])).to match_array([1, 2])
+    end
+
+    it 'belongs to and tenant filter' do
+      expect(combine_filtered_ids(nil, [1, 2], nil, nil, [2, 3])).to match_array([2])
+    end
+
+    it 'belongs to and managed filters(Host & Cluster filter and tags)' do
+      expect(combine_filtered_ids(nil, [1, 2], [2, 3], nil, nil)).to match_array([2])
+    end
+
+    it 'user filter, belongs to and managed filters(self service user, Host & Cluster filter and tags)' do
+      expect(combine_filtered_ids([1], [2, 3], [3, 4], nil, nil)).to match_array([1, 3])
+    end
+
+    it 'user filter, belongs to, managed filters and descendants filter(self service user, Host & Cluster filter and tags)' do
+      expect(combine_filtered_ids([1], [2, 3], [3, 4], [5, 6], nil)).to match_array([1, 3, 5, 6])
+    end
+
+    it 'user filter, belongs to managed filters, descendants filter and tenant filter(self service user, Host & Cluster filter and tags)' do
+      expect(combine_filtered_ids([1], [2, 3], [3, 4], [5, 6], [1, 6])).to match_array([1, 6])
+    end
+
+    it 'belongs to managed filters, descendants filter and tenant filter(self service user, Host & Cluster filter and tags)' do
+      expect(combine_filtered_ids(nil, [2, 3], [3, 4], [5, 6], [1, 6])).to match_array([6])
+    end
+  end
+
   before { allow(User).to receive_messages(:server_timezone => "UTC") }
 
   let(:default_tenant)     { Tenant.seed }
