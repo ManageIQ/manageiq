@@ -5,7 +5,6 @@ module MiqAeMethodService
     expose :container_service,        :association => true
     expose :container_nodes,          :association => true
     expose :container_groups,         :association => true
-    expose :labels,                   :association => true
     expose :is_tagged_with?
     expose :tags
   end

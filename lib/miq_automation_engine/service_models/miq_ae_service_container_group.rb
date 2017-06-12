@@ -4,7 +4,6 @@ module MiqAeMethodService
     expose :container_definitions,  :association => true
     expose :container_images,       :association => true
     expose :ext_management_system,  :association => true
-    expose :labels,                 :association => true
     expose :node_selector_parts,    :association => true
     expose :container_node,         :association => true
     expose :container_services,     :association => true

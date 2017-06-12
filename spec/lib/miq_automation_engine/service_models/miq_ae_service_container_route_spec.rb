@@ -19,9 +19,5 @@ module MiqAeServiceContainerSpec
     it "#container_groups" do
       expect(described_class.instance_methods).to include(:container_groups)
     end
-
-    it "#labels" do
-      expect(described_class.instance_methods).to include(:labels)
-    end
   end
 end

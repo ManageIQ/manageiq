@@ -16,10 +16,6 @@ module MiqAeServiceContainerSpec
       expect(described_class.instance_methods).to include(:ext_management_system)
     end
 
-    it "#labels" do
-      expect(described_class.instance_methods).to include(:labels)
-    end
-
     it "#node_selector_parts" do
       expect(described_class.instance_methods).to include(:node_selector_parts)
     end

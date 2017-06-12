@@ -32,10 +32,6 @@ module MiqAeServiceContainerSpec
       expect(described_class.instance_methods).to include(:container_replicators)
     end
 
-    it "#labels" do
-      expect(described_class.instance_methods).to include(:labels)
-    end
-
     it "#computer_system" do
       expect(described_class.instance_methods).to include(:computer_system)
     end

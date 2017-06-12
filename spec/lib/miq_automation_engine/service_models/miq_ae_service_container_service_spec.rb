@@ -20,10 +20,6 @@ module MiqAeServiceContainerSpec
       expect(described_class.instance_methods).to include(:container_project)
     end
 
-    it "#labels" do
-      expect(described_class.instance_methods).to include(:labels)
-    end
-
     it "#selector_parts" do
       expect(described_class.instance_methods).to include(:selector_parts)
     end

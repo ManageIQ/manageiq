@@ -5,7 +5,6 @@ module MiqAeMethodService
     expose :container_routes,               :association => true
     expose :container_service_port_configs, :association => true
     expose :container_project,              :association => true
-    expose :labels,                         :association => true
     expose :selector_parts,                 :association => true
     expose :container_nodes,                :association => true
     expose :container_image_registry,       :association => true
