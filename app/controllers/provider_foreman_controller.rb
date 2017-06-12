@@ -111,8 +111,8 @@ class ProviderForemanController < ApplicationController
   def provision
     assert_privileges("provider_foreman_configured_system_provision") if x_active_accord == :configuration_manager_providers
     assert_privileges("configured_system_provision") if x_active_accord == :cs_filter
-    provisioning_ids = find_checked_items
-    provisioning_ids.push(params[:id]) if provisioning_ids.empty?
+    provisioning_ids = find_checked_ids_with_rbac(ConfiguredSystem)
+    provisioning_ids.push(find_id_with_rbac(ConfiguredSystem, params[:id])) if provisioning_ids.empty?
 
     unless ConfiguredSystem.provisionable?(provisioning_ids)
       add_flash(_("Provisioning is not supported for at least one of the selected systems"), :error)
