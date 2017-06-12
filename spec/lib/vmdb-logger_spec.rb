@@ -1,4 +1,4 @@
-require 'util/vmdb-logger'
+require 'vmdb-logger'
 require 'util/miq-password'
 
 describe VMDBLogger do

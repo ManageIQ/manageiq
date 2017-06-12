@@ -1,4 +1,4 @@
-require 'util/vmdb-logger'
+require 'vmdb-logger'
 
 Dir.glob(File.join(File.dirname(__FILE__), "loggers", "*")).each { |f| require f }
 
