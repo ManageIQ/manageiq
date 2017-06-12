@@ -147,7 +147,7 @@ class CloudVolumeController < ApplicationController
 
   def cloud_volume_form_fields
     assert_privileges("cloud_volume_edit")
-    volume = find_by_id_filtered(CloudVolume, params[:id])
+    volume = find_record_with_rbac(CloudVolume, params[:id])
     render :json => {
       :name => volume.name
     }
@@ -281,7 +281,7 @@ class CloudVolumeController < ApplicationController
     when "add"
       @volume = CloudVolume.new
       options = form_params
-      cloud_tenant = find_by_id_filtered(CloudTenant, options[:cloud_tenant_id])
+      cloud_tenant = find_record_with_rbac(CloudTenant, options[:cloud_tenant_id])
       options[:cloud_tenant] = cloud_tenant
       valid_action, action_details = CloudVolume.validate_create_volume(cloud_tenant.ext_management_system)
       if valid_action

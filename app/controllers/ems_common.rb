@@ -40,7 +40,7 @@ module EmsCommon
   def show_timeline
     @showtype = "timeline"
     session[:tl_record_id] = params[:id] if params[:id]
-    @record = find_by_id_filtered(model, session[:tl_record_id])
+    @record = find_record_with_rbac(model, session[:tl_record_id])
     @timeline = @timeline_filter = true
     @lastaction = "show_timeline"
     tl_build_timeline # Create the timeline report
@@ -599,7 +599,7 @@ module EmsCommon
   def arbitration_profile_edit
     assert_privileges("arbitration_profile_edit")
     id = params[:show] ? params[:show] : find_checked_items.first
-    @arbitration_profile = id ? find_by_id_filtered(ArbitrationProfile, from_cid(id)) : ArbitrationProfile.new
+    @arbitration_profile = id ? find_record_with_rbac(ArbitrationProfile, from_cid(id)) : ArbitrationProfile.new
     @refresh_partial = "arbitration_profile_edit"
     @redirect_id = @arbitration_profile.try(:id) || nil
     @in_a_form = true
