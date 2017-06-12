@@ -47,10 +47,7 @@ module ManagerRefresh::SaveCollection
               next unless assert_referential_integrity(hash, inventory_object)
               inventory_object.id = record.id
 
-              record.assign_attributes(hash.except(:id, :type))
-              if !inventory_collection.check_changed? || record.changed?
-                hashes_for_update << record.attributes.symbolize_keys
-              end
+              hashes_for_update << hash.symbolize_keys.except(:id, :type)
             end
           end
 
@@ -110,7 +107,8 @@ module ManagerRefresh::SaveCollection
         indexed_inventory_objects = {}
         hashes = []
         batch.each do |index, inventory_object|
-          hash = inventory_collection.model_class.new(attributes_index.delete(index)).attributes.symbolize_keys
+          hash = attributes_index.delete(index).symbolize_keys
+          hash[:type] = inventory_collection.model_class.name if inventory_collection.supports_sti? && hash[:type].blank?
           next unless assert_referential_integrity(hash, inventory_object)
 
           hashes << hash
