@@ -61,6 +61,11 @@ Vmdb::Application.routes.draw do
 
         Array(collection.subcollections).each do |subcollection_name|
           Api::ApiConfig.collections[subcollection_name].verbs.each do |verb|
+            if subcollection_name == :tasks && verb == :get
+              get "/:c_id/#{subcollection_name}", :to => redirect { |path_params, _req| "/api/#{collection_name}/#{path_params[:c_id]}/request_tasks" }
+              get "/:c_id/#{subcollection_name}/:s_id", :to => redirect { |path_params, _req| "/api/#{collection_name}/#{path_params[:c_id]}/request_tasks/#{path_params[:s_id]}" }
+            end
+
             case verb
             when :get
               get "/:c_id/#{subcollection_name}", :action => :index

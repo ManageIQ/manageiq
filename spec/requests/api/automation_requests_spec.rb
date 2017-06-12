@@ -192,4 +192,40 @@ describe "Automation Requests API" do
       expect(response).to have_http_status(:ok)
     end
   end
+
+  context 'Tasks subcollection' do
+    let(:automation_request) { FactoryGirl.create(:automation_request) }
+
+    it 'redirects to request_tasks subcollection' do
+      task = FactoryGirl.create(:miq_request_task, :miq_request_id => automation_request.id)
+      api_basic_authorize
+
+      run_get("#{automation_requests_url(automation_request.id)}/tasks")
+
+      expect(response).to have_http_status(:moved_permanently)
+      expect(response.redirect?).to be_truthy
+      expect(response.redirect_url).to include("#{automation_requests_url(automation_request.id)}/request_tasks")
+
+      run_get response.redirect_url, :expand => :resources
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body['resources'].first['id']).to eq(task.id)
+    end
+
+    it 'redirects to request_tasks subresources' do
+      task = FactoryGirl.create(:miq_request_task, :miq_request_id => automation_request.id)
+      api_basic_authorize
+
+      run_get("#{automation_requests_url(automation_request.id)}/tasks/#{task.id}")
+
+      expect(response).to have_http_status(:moved_permanently)
+      expect(response.redirect?).to be_truthy
+      expect(response.redirect_url).to include("#{automation_requests_url(automation_request.id)}/request_tasks/#{task.id}")
+
+      run_get response.redirect_url
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body['id']).to eq(task.id)
+    end
+  end
 end
