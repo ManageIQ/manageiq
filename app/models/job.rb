@@ -135,17 +135,16 @@ class Job < ApplicationRecord
   end
 
   def timeout!
-    MiqQueue.put_unless_exists(
+    message = "job timed out after #{Time.now - updated_on} seconds of inactivity.  Inactivity threshold [#{current_job_timeout} seconds]"
+    _log.warn("Job: guid: [#{guid}], #{message}, aborting")
+    attributes = { :args => [message, "error"] }
+    MiqQueue.create_with(attributes).put_unless_exists(
       :class_name  => self.class.base_class.name,
       :instance_id => id,
       :method_name => "signal_abort",
       :role        => "smartstate",
       :zone        => MiqServer.my_zone
-    ) do |_msg, find_options|
-      message = "job timed out after #{Time.now - updated_on} seconds of inactivity.  Inactivity threshold [#{current_job_timeout} seconds]"
-      _log.warn("Job: guid: [#{guid}], #{message}, aborting")
-      find_options.merge(:args => [message, "error"])
-    end
+    )
   end
 
   def target_entity
