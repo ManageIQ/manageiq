@@ -67,12 +67,23 @@ headers:
 conditions: !ruby/object:MiqExpression 
   exp: 
     and:
-    - "STARTS WITH": 
-        field: EmsEvent-event_type
-        value: VmPowered
-    - "ENDS WITH": 
-        field: EmsEvent-event_type
-        value: Event
+    - "OR":
+      - "STARTS WITH":
+          field: EmsEvent-event_type
+          value: VmPowered
+      - "STARTS WITH":
+          field: EmsEvent-event_type
+          value: virtualMachines_powerOff
+      - "STARTS WITH":
+          field: EmsEvent-event_type
+          value: virtualMachines_start
+    - "OR":
+      - "ENDS WITH":
+          field: EmsEvent-event_type
+          value: Event
+      - "ENDS WITH":
+          field: EmsEvent-event_type
+          value: Request
     - "IS":
         field: EmsEvent-timestamp
         value: Last Week
