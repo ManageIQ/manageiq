@@ -1,5 +1,6 @@
 import-module virtualmachinemanager
 $diskvols = @{}
+$sharevols = @{}
 
 function get_vms($vms){
   $results = @{}
@@ -45,6 +46,9 @@ function get_host_inventory($hosts) {
     $_.DiskVolumes | where-object VolumeLabel -ne "System Reserved" | ForEach {
       $diskvols[$_.ID]=$_
     }
+    $_.RegisteredStorageFileShares | ForEach {
+      $sharevols[$_.ID]=$_
+    }
   }
 
   return $results
@@ -73,6 +77,7 @@ $r["images"] = get_images($i)
 $h = Get-SCVMHost -VMMServer "localhost"
 $r["hosts"] = get_host_inventory($h)
 $r["datastores"] = $diskvols
+$r["sharevols"] = $sharevols
 
 $c = Get-SCVMHostCluster -VMMServer "localhost"
 $r["clusters"] = get_clusters($c)
