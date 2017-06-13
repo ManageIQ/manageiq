@@ -308,6 +308,7 @@ module EmsRefresh::SaveInventoryContainer
 
     hashes.each do |h|
       h[:container_image_registry_id] = h[:container_image_registry][:id] unless h[:container_image_registry].nil?
+      h[:type] ||= 'ContainerImage'
     end
 
     save_inventory_multi(ems.container_images, hashes, deletes, [:image_ref, :container_image_registry_id],
