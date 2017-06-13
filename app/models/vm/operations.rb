@@ -14,7 +14,15 @@ module Vm::Operations
   end
 
   def cockpit_url
-    URI::HTTP.build(:host => ipaddresses.first, :port => 9090).to_s
+    URI::HTTP.build(:host => ipv4_address || ipaddresses.first, :port => 9090).to_s
+  end
+
+  def ipv4_address
+    %w(amazon google).include?(vendor) ? public_address : ipaddresses.find { |ip| (IPAddr.new ip).ipv4? }
+  end
+
+  def public_address
+    ipaddresses.find { |ip| !Addrinfo.tcp(ip, 80).ipv4_private? }
   end
 
   def validate_collect_running_processes
