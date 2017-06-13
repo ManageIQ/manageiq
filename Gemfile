@@ -103,6 +103,9 @@ gem "ruport",                         "=1.7.0",                       :git => "h
 # https://github.com/jeremyevans/ruby-american_date
 gem "american_date"
 
+# Speed up boot time
+gem "bootsnap"
+
 group :ui_dependencies do # Added to Bundler.require in config/application.rb
   # Modified gems (forked on Github)
   gem "font-fabulous",                                                :git => "https://github.com/ManageIQ/font-fabulous.git", :branch => "master" # FIXME: this is just a temporary solution and it'll go to the ui-classic later
