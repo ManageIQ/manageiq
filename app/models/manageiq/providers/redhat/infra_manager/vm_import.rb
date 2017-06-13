@@ -32,8 +32,21 @@ module ManageIQ::Providers::Redhat::InfraManager::VmImport
     )
   end
 
+  def configure_imported_vm_networks(vm_id)
+    _log.info("Configuring networks for VM: #{vm_id}")
+
+    vm = Vm.find(vm_id)
+    dc = vm.ems_cluster.parent_datacenter
+
+    with_provider_connection :version => 4 do |conn|
+      vm_network_id = first_vm_network_id(conn, dc.uid_ems)
+      vnic_profile_id = vnic_profile_id_by_network_id(conn, vm_network_id)
+      set_all_vm_nics_to_profile_id(conn, vm.uid_ems, vnic_profile_id)
+    end
+  end
+
   def submit_import_vm(userid, source_vm_id, target_params)
-    task_id = queue_import_vm(userid, source_vm_id, target_params)
+    task_id = queue_self_method_call(userid, 'Import VM', 'import_vm', source_vm_id, target_params)
     task = MiqTask.wait_for_taskid(task_id)
 
     task.task_results
@@ -41,6 +54,13 @@ module ManageIQ::Providers::Redhat::InfraManager::VmImport
 
   def validate_import_vm
     highest_supported_api_version && highest_supported_api_version >= '4'
+  end
+
+  def submit_configure_imported_vm_networks(userid, vm_id)
+    task_id = queue_self_method_call(userid, "Configure imported VM's networks", 'configure_imported_vm_networks', vm_id)
+    task = MiqTask.wait_for_taskid(task_id)
+
+    task.task_results
   end
 
   private
@@ -54,9 +74,9 @@ module ManageIQ::Providers::Redhat::InfraManager::VmImport
     end
   end
 
-  def queue_import_vm(userid, source_vm_id, target_params)
+  def queue_self_method_call(userid, action, method_name, *args)
     task_options = {
-      :action => 'Import VM',
+      :action => action,
       :userid => userid
     }
 
@@ -66,13 +86,13 @@ module ManageIQ::Providers::Redhat::InfraManager::VmImport
       # and cause a deadlock in subsequent waiting on this task from synchronous context
       :zone        => my_zone,
       :class_name  => self.class.name,
-      :method_name => 'import_vm',
+      :method_name => method_name,
       :instance_id => id,
       :role        => 'ems_operations',
-      :args        => [source_vm_id, target_params]
+      :args        => args
     }
 
-    _log.info("Queueing import of VM ID: #{source_vm_id} by user #{userid}")
+    _log.info("Queueing '#{method_name}' with args #{args} by user #{userid}")
     MiqTask.generic_action_with_callback(task_options, queue_options)
   end
 
@@ -118,5 +138,21 @@ module ManageIQ::Providers::Redhat::InfraManager::VmImport
 
   def password_auth(provider)
     provider.authentication_userid_passwords.first
+  end
+
+  def first_vm_network_id(conn, dc_id)
+    conn.system_service.data_centers_service.data_center_service(dc_id)
+        .networks_service.list.select { |net| net.usages.include? OvirtSDK4::NetworkUsage::VM }.min_by(&:name).id
+  end
+
+  def vnic_profile_id_by_network_id(conn, network_id)
+    conn.system_service.networks_service.network_service(network_id).vnic_profiles_service.list.min_by(&:name).id
+  end
+
+  def set_all_vm_nics_to_profile_id(conn, vm_id, profile_id)
+    vm_nics_service = conn.system_service.vms_service.vm_service(vm_id).nics_service
+    vm_nics_service.list.each do |nic|
+      vm_nics_service.nic_service(nic.id).update(:vnic_profile => {:id => profile_id})
+    end
   end
 end
