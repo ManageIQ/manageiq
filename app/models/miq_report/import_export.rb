@@ -19,7 +19,6 @@ module MiqReport::ImportExport
       nil
     end
 
-    VIEWS_FOLDER = File.join(ManageIQ::UI::Classic::Engine.root, "product/views")
     def import_from_hash(report, options = nil)
       raise _("No Report to Import") if report.nil?
 
