@@ -260,7 +260,6 @@
     :klass: AutomationRequest
     :subcollections:
     - :request_tasks
-    - :tasks
     :collection_actions:
       :post:
       - :name: create
@@ -1380,7 +1379,6 @@
     :klass: MiqProvisionRequest
     :subcollections:
     - :request_tasks
-    - :tasks
     :collection_actions:
       :get:
       - :name: read
@@ -1534,7 +1532,6 @@
     :klass: MiqRequest
     :subcollections:
     - :request_tasks
-    - :tasks
     :collection_actions:
       :get:
       - :name: read
@@ -1852,7 +1849,6 @@
     :klass: ServiceTemplateProvisionRequest
     :subcollections:
     - :request_tasks
-    - :tasks
     :collection_actions:
       :get:
       - :name: read
@@ -2150,7 +2146,6 @@
     :identifier: tasks
     :options:
     - :collection
-    - :subcollection
     :verbs: *gp
     :klass: MiqTask
     :collection_actions:

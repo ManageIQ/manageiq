@@ -577,19 +577,13 @@ describe "Service Requests API" do
 
   context 'Tasks subcollection' do
     it 'redirects to request_tasks subcollection' do
-      task = FactoryGirl.create(:miq_request_task, :miq_request_id => service_request.id)
+      FactoryGirl.create(:miq_request_task, :miq_request_id => service_request.id)
       api_basic_authorize collection_action_identifier(:service_requests, :read, :get)
 
       run_get("#{service_requests_url(service_request.id)}/tasks")
 
       expect(response).to have_http_status(:moved_permanently)
-      expect(response.redirect?).to be_truthy
       expect(response.redirect_url).to include("#{service_requests_url(service_request.id)}/request_tasks")
-
-      run_get response.redirect_url, :expand => :resources
-
-      expect(response).to have_http_status(:ok)
-      expect(response.parsed_body["resources"].first["id"]).to eq(task.id)
     end
 
     it 'redirects to request_tasks subresources' do
@@ -599,13 +593,7 @@ describe "Service Requests API" do
       run_get("#{service_requests_url(service_request.id)}/tasks/#{task.id}")
 
       expect(response).to have_http_status(:moved_permanently)
-      expect(response.redirect?).to be_truthy
       expect(response.redirect_url).to include("#{service_requests_url(service_request.id)}/request_tasks/#{task.id}")
-
-      run_get response.redirect_url
-
-      expect(response).to have_http_status(:ok)
-      expect(response.parsed_body['id']).to eq(task.id)
     end
   end
 end

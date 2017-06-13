@@ -218,4 +218,28 @@ describe "Provision Requests API" do
       expect(response).to have_http_status(:ok)
     end
   end
+
+  context 'Tasks subcollection' do
+    let(:provision_request) { FactoryGirl.create(:miq_provision_request) }
+
+    it 'redirects to request_tasks subcollection' do
+      FactoryGirl.create(:miq_request_task, :miq_request_id => provision_request.id)
+      api_basic_authorize collection_action_identifier(:service_requests, :read, :get)
+
+      run_get("#{provision_requests_url(provision_request.id)}/tasks")
+
+      expect(response).to have_http_status(:moved_permanently)
+      expect(response.redirect_url).to include("#{provision_requests_url(provision_request.id)}/request_tasks")
+    end
+
+    it 'redirects to request_tasks subresources' do
+      task = FactoryGirl.create(:miq_request_task, :miq_request_id => provision_request.id)
+      api_basic_authorize action_identifier(:services, :read, :resource_actions, :get)
+
+      run_get("#{provision_requests_url(provision_request.id)}/tasks/#{task.id}")
+
+      expect(response).to have_http_status(:moved_permanently)
+      expect(response.redirect_url).to include("#{provision_requests_url(provision_request.id)}/request_tasks/#{task.id}")
+    end
+  end
 end

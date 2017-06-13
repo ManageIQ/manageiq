@@ -473,4 +473,33 @@ RSpec.describe "Requests API" do
       expect(response.parsed_body['resources']).to match_array(expected)
     end
   end
+
+  context 'Tasks subcollection' do
+    let(:request) do
+      FactoryGirl.create(:service_template_provision_request,
+                         :requester   => @user,
+                         :source_id   => template.id,
+                         :source_type => template.class.name)
+    end
+
+    it 'redirects to request_tasks subcollection' do
+      FactoryGirl.create(:miq_request_task, :miq_request_id => request.id)
+      api_basic_authorize collection_action_identifier(:service_requests, :read, :get)
+
+      run_get("#{requests_url(request.id)}/tasks")
+
+      expect(response).to have_http_status(:moved_permanently)
+      expect(response.redirect_url).to include("#{requests_url(request.id)}/request_tasks")
+    end
+
+    it 'redirects to request_tasks subresources' do
+      task = FactoryGirl.create(:miq_request_task, :miq_request_id => request.id)
+      api_basic_authorize action_identifier(:services, :read, :resource_actions, :get)
+
+      run_get("#{requests_url(request.id)}/tasks/#{task.id}")
+
+      expect(response).to have_http_status(:moved_permanently)
+      expect(response.redirect_url).to include("#{requests_url(request.id)}/request_tasks/#{task.id}")
+    end
+  end
 end

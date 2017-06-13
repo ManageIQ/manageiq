@@ -24,6 +24,12 @@ Vmdb::Application.routes.draw do
       }.freeze
     end
 
+    # Redirect of /tasks subcollections to /request_tasks
+    [:automation_requests, :provision_requests, :requests, :service_requests].each do |collection_name|
+      get "/#{collection_name}/:c_id/tasks", :to => redirect { |path_params, _req| "/api/#{collection_name}/#{path_params[:c_id]}/request_tasks" }
+      get "/#{collection_name}/:c_id/tasks/:s_id", :to => redirect { |path_params, _req| "/api/#{collection_name}/#{path_params[:c_id]}/request_tasks/#{path_params[:s_id]}" }
+    end
+
     Api::ApiConfig.collections.each do |collection_name, collection|
       # OPTIONS action for each collection
       match collection_name.to_s, :controller => collection_name, :action => :options, :via => :options
@@ -61,11 +67,6 @@ Vmdb::Application.routes.draw do
 
         Array(collection.subcollections).each do |subcollection_name|
           Api::ApiConfig.collections[subcollection_name].verbs.each do |verb|
-            if subcollection_name == :tasks && verb == :get
-              get "/:c_id/#{subcollection_name}", :to => redirect { |path_params, _req| "/api/#{collection_name}/#{path_params[:c_id]}/request_tasks" }
-              get "/:c_id/#{subcollection_name}/:s_id", :to => redirect { |path_params, _req| "/api/#{collection_name}/#{path_params[:c_id]}/request_tasks/#{path_params[:s_id]}" }
-            end
-
             case verb
             when :get
               get "/:c_id/#{subcollection_name}", :action => :index
