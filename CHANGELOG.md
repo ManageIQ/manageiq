@@ -9,6 +9,76 @@ The ManageIQ organization is continuously adding new smaller repositories.  The 
 - [manageiq-providers-vmware CHANGELOG](https://github.com/ManageIQ/manageiq-providers-vmware/blob/master/CHANGELOG.md)
 - [manageiq-ui-classic CHANGELOG](https://github.com/ManageIQ/manageiq-ui-classic/blob/master/CHANGELOG.md)
 
+## Unreleased - as of Sprint 66 end 2017-06-05
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+62+Ending+Jun+5%2C+2017%22+label%3Aenhancement)
+
+- Automate
+  -  Ansible Tower Services: Add Enhanced Debug level support [(#15288)](https://github.com/ManageIQ/manageiq/pull/15288)
+  - Provisioning: Ovirt-networking: using profiles [(#14991)](https://github.com/ManageIQ/manageiq/pull/14991)
+
+- Platform
+  - Allow deletion of groups with users belonging to other groups [(#15041)](https://github.com/ManageIQ/manageiq/pull/15041)
+  - Add rake script to export/import miq alerts and alert profiles [(#14126)](https://github.com/ManageIQ/manageiq/pull/14126)
+  - Adds MiqHelper [(#15020)](https://github.com/ManageIQ/manageiq/pull/15020)
+  - Move ResourceGroup relationship into VmOrTemplate model [(#14948)](https://github.com/ManageIQ/manageiq/pull/14948)
+
+- Providers
+  - Add important asserts to the default save inventory [(#15197)](https://github.com/ManageIQ/manageiq/pull/15197)
+  Delete complement strategy for deleting top level entities using batches [(#15229)](https://github.com/ManageIQ/manageiq/pull/15229)
+  First version of targeted concurrent safe Persistor strategy [(#15227)](https://github.com/ManageIQ/manageiq/pull/15227)
+  Generalize targeted inventory collection saving [(#15198)](https://github.com/ManageIQ/manageiq/pull/15198)
+  - Containers: Add Report: Images by Failed Openscap Rule Results [(#15210)](https://github.com/ManageIQ/manageiq/pull/15210)
+  - Physical Infrastructure: Add constraint to vendor in Physical Server [(#15128)](https://github.com/ManageIQ/manageiq/pull/15128)
+
+- REST API
+  - Add SQL store option to token store [(#14947)](https://github.com/ManageIQ/manageiq/pull/14947)
+  - Add cloud subnet REST API [(#15248)](https://github.com/ManageIQ/manageiq/pull/15248)
+  - Set_miq_server Action [(#15262)](https://github.com/ManageIQ/manageiq/pull/15262)
+
+- User Interface
+  - Add entries for Physical Server [(#15275)](https://github.com/ManageIQ/manageiq/pull/15275)
+  - Add pretty model name for physical server [(#15283)](https://github.com/ManageIQ/manageiq/pull/15283)
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+62+Ending+Jun+5%2C+2017%22+label%3Aenhancement)
+
+- Performance
+  - Performance: evmserver start-up: Improve ChargeableField.seed [(#15236)](https://github.com/ManageIQ/manageiq/pull/15236)
+  - Memoize root tenant [(#15191)](https://github.com/ManageIQ/manageiq/pull/15191)
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+62+Ending+Jun+5%2C+2017%22+label%3Abug)
+
+- Automate
+  - Add my_zone to ansible tower service template. [(#15233)](https://github.com/ManageIQ/manageiq/pull/15233)
+  - Control: Remove the policy checking for request_host_vmotion_enabled. [(#14429)](https://github.com/ManageIQ/manageiq/pull/14429)
+
+- Platform
+  - Workaround Rails.configuration.database_configuration being {} [(#15269)](https://github.com/ManageIQ/manageiq/pull/15269)
+  - Check for timed out active tasks [(#15231)](https://github.com/ManageIQ/manageiq/pull/15231)
+  - Do not delete report if task associated with this report deleted [(#15134)](https://github.com/ManageIQ/manageiq/pull/15134)
+  - Move signal handling into the MiqServer object [(#15206)](https://github.com/ManageIQ/manageiq/pull/15206)
+  - Chargeback
+    - Do not calculate useless group metrics [(#15260)](https://github.com/ManageIQ/manageiq/pull/15260)
+    - Do not offer report columns that are useless [(#15261)](https://github.com/ManageIQ/manageiq/pull/15261)
+  - RBAC
+    - Allow matching via descendants for CloudNetworks (via network manager) [(#15271)](https://github.com/ManageIQ/manageiq/pull/15271)
+    - Add vm_transform product feature [(#15214)](https://github.com/ManageIQ/manageiq/pull/15214)
+  - Reporting
+    - Ensure report columns serialized as hashes have symbolized keys before importing [(#15273)](https://github.com/ManageIQ/manageiq/pull/15273)
+    - Changed report name to be consistent with actual produced report. [(#14646)](https://github.com/ManageIQ/manageiq/pull/14646)
+    - Correct field names for reports [(#14905)](https://github.com/ManageIQ/manageiq/pull/14905)
+    - Format trend max cpu usage rate with percent [(#15272)](https://github.com/ManageIQ/manageiq/pull/15272)
+
+- Providers
+  - Ansible Tower: Only run the setup playbook the first time we start embedded ansible [(#15225)](https://github.com/ManageIQ/manageiq/pull/15225)
+  - Containers
+    - Delete archived entities when a container manager is deleted [(#14359)](https://github.com/ManageIQ/manageiq/pull/14359)
+    - Fix Containers dashboard heatmaps [(#14857)](https://github.com/ManageIQ/manageiq/pull/14857)
+  - Microsoft Infrastructure: Set maintenance column for SCVMM hosts. [(#15202)](https://github.com/ManageIQ/manageiq/pull/15202)
+  - Physical Infrastructure: Fix the hosts key in method which save physical server [(#15199)](https://github.com/ManageIQ/manageiq/pull/15199)
+
+- SmartState: Queue the VM scan command after vm_scan_start event is handled by automate. [(#15228)](https://github.com/ManageIQ/manageiq/pull/15228)
+
 ## Unreleased - as of Sprint 61 end 2017-05-22
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+61+Ending+May+22%2C+2017%22+label%3Aenhancement)
