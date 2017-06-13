@@ -236,10 +236,16 @@ module EmsRefresh::SaveInventory
         hardware.save! if hardware.id.nil?
         h[:network][:hardware_id] = hardware.id
       end
+
+      if h[:guest_devices]
+        # Save the hardware to force an id if not found
+        hardware.save! if hardware.id.nil?
+        h[:guest_devices][0][:hardware_id] = hardware.id
+      end
     end
 
     deletes = hardware.guest_devices.where(:device_type => ["ethernet", "storage"])
-    save_inventory_multi(hardware.guest_devices, hashes, deletes, [:device_type, :uid_ems], [:network, :miq_scsi_targets], [:switch, :lan])
+    save_inventory_multi(hardware.guest_devices, hashes, deletes, [:device_type, :uid_ems], [:network, :miq_scsi_targets, :firmwares, :guest_devices], [:switch, :lan])
     store_ids_for_new_records(hardware.guest_devices, hashes, [:device_type, :uid_ems])
   end
 
