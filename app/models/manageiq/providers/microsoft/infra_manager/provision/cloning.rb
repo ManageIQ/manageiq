@@ -1,5 +1,5 @@
 module ManageIQ::Providers::Microsoft::InfraManager::Provision::Cloning
-  MT_POINT_REGEX = %r{file://.*/([A-Z][:].*)}i
+  MT_POINT_REGEX = %r{file://.*?/(.*)}i
 
   def log_clone_options(clone_options)
     _log.info("Provisioning [#{source.name}] to [#{clone_options[:name]}]")

@@ -12,6 +12,25 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Provision do
     )
   end
 
+  let(:regex) { ManageIQ::Providers::Microsoft::InfraManager::Provision::Cloning::MT_POINT_REGEX }
+
+  context "MT_POINT_REGEX" do
+    it "matches a storage name with a drive letter" do
+      string = "file://foo.cfme-qe.redhat.com/J:/"
+      expect(string.scan(regex).flatten.first).to eql("J:/")
+    end
+
+    it "matches a storage name with a drive letter and path" do
+      string = "file://foo.cfme-qe.redhat.com/C:/ClusterStorage/netapp_crud_vol"
+      expect(string.scan(regex).flatten.first).to eql("C:/ClusterStorage/netapp_crud_vol")
+    end
+
+    it "matches a storage name without a drive letter" do
+      string = "file://foo123.redhat.com///clusterstore.xx-yy-redhat.com/cdrive"
+      expect(string.scan(regex).flatten.first).to eql("//clusterstore.xx-yy-redhat.com/cdrive")
+    end
+  end
+
   context "A new provision request," do
     before(:each) do
       @os = OperatingSystem.new(:product_name => 'Microsoft Windows')
