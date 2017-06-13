@@ -17,6 +17,10 @@ module ManagerRefresh::SaveCollection
           all_attribute_keys.merge(attributes_index[index].keys)
         end
 
+        all_attribute_keys << :last_sync_on if inventory_collection.supports_last_sync_on?
+        all_attribute_keys += [:created_on, :updated_on] if inventory_collection.supports_timestamps_on_variant?
+        all_attribute_keys += [:created_at, :updated_at] if inventory_collection.supports_timestamps_at_variant?
+
         inventory_collection_size = inventory_collection.size
         deleted_counter           = 0
         created_counter           = 0
@@ -27,6 +31,7 @@ module ManagerRefresh::SaveCollection
 
         # Records that are in the DB, we will be updating or deleting them.
         association.find_in_batches do |batch|
+          update_time = time_now
           batch.each do |record|
             next unless assert_distinct_relation(record)
 
@@ -47,7 +52,12 @@ module ManagerRefresh::SaveCollection
               next unless assert_referential_integrity(hash, inventory_object)
               inventory_object.id = record.id
 
-              hashes_for_update << hash.symbolize_keys.except(:id, :type)
+              hash_for_update = hash.symbolize_keys.except(:id, :type)
+              hash_for_update[:updated_on] = update_time if inventory_collection.supports_timestamps_on_variant?
+              hash_for_update[:updated_at] = update_time if inventory_collection.supports_timestamps_at_variant?
+              hash_for_update[:last_sync_on] = update_time if inventory_collection.supports_last_sync_on?
+
+              hashes_for_update << hash_for_update
             end
           end
 
@@ -106,9 +116,13 @@ module ManagerRefresh::SaveCollection
       def create_records!(inventory_collection, all_attribute_keys, batch, attributes_index)
         indexed_inventory_objects = {}
         hashes = []
+        create_time = time_now
         batch.each do |index, inventory_object|
           hash = attributes_index.delete(index).symbolize_keys
           hash[:type] = inventory_collection.model_class.name if inventory_collection.supports_sti? && hash[:type].blank?
+          hash[:created_on] = create_time if inventory_collection.supports_timestamps_on_variant?
+          hash[:created_at] = create_time if inventory_collection.supports_timestamps_at_variant?
+          hash[:last_sync_on] = create_time if inventory_collection.supports_last_sync_on?
           next unless assert_referential_integrity(hash, inventory_object)
 
           hashes << hash

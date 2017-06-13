@@ -94,6 +94,15 @@ module ManagerRefresh::SaveCollection
         end
         true
       end
+
+      def time_now
+        # A rails friendly time getting config from ActiveRecord::Base.default_timezone (can be :local or :utc)
+        if ActiveRecord::Base.default_timezone == :utc
+          Time.now.utc
+        else
+          Time.now.localtime
+        end
+      end
     end
   end
 end
