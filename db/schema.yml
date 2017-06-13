@@ -405,6 +405,7 @@ cloud_volume_snapshots:
 - creation_time
 - size
 - cloud_tenant_id
+- encrypted
 cloud_volumes:
 - id
 - type
