@@ -4642,6 +4642,7 @@ middleware_datasources:
 - created_at
 - updated_at
 - feed
+- type
 middleware_deployments:
 - id
 - name
@@ -4655,6 +4656,7 @@ middleware_deployments:
 - feed
 - properties
 - server_group_id
+- type
 middleware_domains:
 - id
 - name
@@ -4667,6 +4669,7 @@ middleware_domains:
 - ems_id
 - created_at
 - updated_at
+- type
 middleware_messagings:
 - id
 - name
@@ -4679,6 +4682,7 @@ middleware_messagings:
 - messaging_type
 - created_at
 - updated_at
+- type
 middleware_server_groups:
 - id
 - name
@@ -4691,6 +4695,7 @@ middleware_server_groups:
 - domain_id
 - created_at
 - updated_at
+- type
 middleware_servers:
 - id
 - name
@@ -4707,6 +4712,7 @@ middleware_servers:
 - lives_on_type
 - lives_on_id
 - server_group_id
+- type
 miq_actions:
 - id
 - name

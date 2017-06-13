@@ -27,18 +27,8 @@ describe MiddlewareServer do
   end
 
   describe '#immutable?' do
-    it 'is true if "Immutable" is set as true' do
-      subject.properties = { 'Immutable' => 'true' }
-      expect(subject).to be_immutable
-    end
-
-    it 'is false if "Immutable" is set as false' do
-      subject.properties = { 'Immutable' => 'false' }
-      expect(subject).not_to be_immutable
-    end
-
-    it 'is false if no keys are defined' do
-      expect(subject).not_to be_immutable
+    it 'is always true' do
+      expect(server).to be_immutable
     end
   end
 
