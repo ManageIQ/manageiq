@@ -6,6 +6,7 @@ module Rbac
     # 2. Tagging has been enabled in the UI
     # 3. Class contains acts_as_miq_taggable
     CLASSES_THAT_PARTICIPATE_IN_RBAC = %w(
+      Authentication
       AvailabilityZone
       CloudNetwork
       CloudSubnet
