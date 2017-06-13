@@ -209,3 +209,10 @@ containerreplicator_successfulcreate,Replicator Successfully Created Pod,Default
 containerreplicator_compliance_check,Replicator Compliance Check,Default,compliance
 containerreplicator_compliance_passed,Replicator Compliance Passed,Default,compliance
 containerreplicator_compliance_failed,Replicator Compliance Failed,Default,compliance
+
+#
+# Physical Server Operations
+#
+physical_server_shutdown,Physical Server Shutdown,Default,physical_server_operations
+physical_server_start,Physical Server Start,Default,physical_server_operations
+physical_server_reset,Physical Server Reset,Default,physical_server_operations
