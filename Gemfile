@@ -36,7 +36,7 @@ manageiq_plugin "manageiq-providers-vmware"
 manageiq_plugin "manageiq-ui-classic"
 
 # Unmodified gems
-gem "activerecord-id_regions",        "~>0.1.0"
+gem "activerecord-id_regions",        "~>0.2.0"
 gem "activerecord-session_store",     "~>1.0.0"
 gem "acts_as_tree",                   "~>2.1.0" # acts_as_tree needs to be required so that it loads before ancestry
 gem "ancestry",                       "~>2.2.1",       :require => false

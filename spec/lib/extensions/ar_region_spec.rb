@@ -23,4 +23,17 @@ describe ArRegion do
       end.to match_query_limit_of(2)
     end
   end
+
+  context "#region_description" do
+    it "when the region exists" do
+      MiqRegion.seed
+      vm = FactoryGirl.create(:vm)
+      expect(vm.region_description).to eq(MiqRegion.first.description)
+    end
+
+    it "when the region does not exist" do
+      vm = FactoryGirl.create(:vm)
+      expect(vm.region_description).to be_nil
+    end
+  end
 end
