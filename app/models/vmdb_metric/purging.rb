@@ -32,12 +32,17 @@ module VmdbMetric::Purging
       MiqQueue.put(
         :class_name  => name,
         :method_name => "purge_#{interval}",
-        :args        => [value]
+        :args        => [value],
+        :msg_timeout => msg_timeout
       )
     end
 
     def purge_window_size
       ::Settings.database.metrics_history.purge_window_size
+    end
+
+    def msg_timeout
+      ::Settings.database.metrics_history.queue_timeout.to_i_with_method
     end
 
     def purge_count(mode, value, interval)
