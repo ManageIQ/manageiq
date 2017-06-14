@@ -76,7 +76,7 @@ module Api
         collection, c_id    = path_array[cidx..cidx + 1]
         subcollection, s_id = path_array[cidx + 2..cidx + 3]
 
-        subcollection ? [subcollection.to_sym, from_cid(s_id)] : [collection.to_sym, from_cid(c_id)]
+        subcollection ? [subcollection.to_sym, ApplicationRecord.uncompress_id(s_id)] : [collection.to_sym, ApplicationRecord.uncompress_id(c_id)]
       end
 
       def parse_id(resource, collection)
@@ -88,14 +88,14 @@ module Api
           href_id
         when resource["id"].kind_of?(Integer)
           resource["id"]
-        when cid?(resource["id"])
-          from_cid(resource["id"])
+        when ApplicationRecord.compressed_id?(resource["id"])
+          ApplicationRecord.uncompress_id(resource["id"])
         end
       end
 
       def href_id(href, collection)
-        if href.present? && href.match(%r{^.*/#{collection}/(#{BaseController::CID_OR_ID_MATCHER})$})
-          from_cid(Regexp.last_match(1))
+        if href.present? && href.match(%r{^.*/#{collection}/(#{ApplicationRecord::CID_OR_ID_MATCHER})$})
+          ApplicationRecord.uncompress_id(Regexp.last_match(1))
         end
       end
 

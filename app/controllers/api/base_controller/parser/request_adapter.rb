@@ -2,8 +2,6 @@ module Api
   class BaseController
     module Parser
       class RequestAdapter
-        include CompressedIds
-
         def initialize(req, params)
           @request = req
           @params = params
@@ -68,7 +66,7 @@ module Api
 
         def c_id
           id = @params[:c_id] || c_path_parts[1]
-          cid?(id) ? from_cid(id) : id
+          ApplicationRecord.compressed_id?(id) ? ApplicationRecord.uncompress_id(id) : id
         end
 
         def subcollection
@@ -77,7 +75,7 @@ module Api
 
         def s_id
           id = @params[:s_id] || c_path_parts[3]
-          cid?(id) ? from_cid(id) : id
+          ApplicationRecord.compressed_id?(id) ? ApplicationRecord.uncompress_id(id) : id
         end
 
         def subcollection?
