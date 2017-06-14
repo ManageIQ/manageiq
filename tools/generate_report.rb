@@ -29,7 +29,8 @@ report.queue_generate_table(:userid => USER_ID)
 def report_run
   if defined?(ManageIQPerformance)
     ManageIQPerformance.profile('generate_report') do
-      yield
+      total_report_time = Benchmark.measure { yield }
+      puts "Total report time: #{total_report_time.utime} (user)  #{total_report_time.stime} (system)  #{total_report_time.real} (real)  #{total_report_time.total} (total)"
     end
   else
     yield
