@@ -75,6 +75,27 @@ describe Rbac::Filterer do
   let(:child_openstack_vm) { FactoryGirl.create(:vm_openstack, :tenant => child_tenant, :miq_group => child_group) }
 
   describe ".search" do
+    context 'searching for instances of AuthKeyPair with tags' do
+      let(:role)                       { FactoryGirl.create(:miq_user_role) }
+      let(:tagged_group)               { FactoryGirl.create(:miq_group, :tenant => Tenant.root_tenant, :miq_user_role => role) }
+      let(:user)                       { FactoryGirl.create(:user, :miq_groups => [tagged_group]) }
+      let!(:auth_key_pair_cloud) { FactoryGirl.create_list(:auth_key_pair_cloud, 2).first }
+
+      before do
+        tagged_group.entitlement = Entitlement.new
+        tagged_group.entitlement.set_belongsto_filters([])
+        tagged_group.entitlement.set_managed_filters([["/managed/environment/prod"]])
+        tagged_group.save!
+      end
+
+      it 'lists only tagged AuthKeyPairs' do
+        auth_key_pair_cloud.tag_with('/managed/environment/prod', :ns => '*')
+
+        results = described_class.search(:class => ManageIQ::Providers::CloudManager::AuthKeyPair, :user => user).first
+        expect(results).to match_array [auth_key_pair_cloud]
+      end
+    end
+
     context 'with virtual custom attributes' do
       let(:virtual_custom_attribute_1) { "virtual_custom_attribute_attribute_1" }
       let(:virtual_custom_attribute_2) { "virtual_custom_attribute_attribute_2" }
