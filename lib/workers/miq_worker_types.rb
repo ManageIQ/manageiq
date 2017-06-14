@@ -1,97 +1,76 @@
 # TODO:  Consider putting this in a module namespace instead of poluting the
 # global namespace
 
-MIQ_DEFAULT_BUNDLER_GROUPS = %w(
-  amazon
-  ansible
-  azure
-  foreman
-  google
-  hawkular
-  kubernetes
-  lenovo
-  openshift
-  openstack
-  ovirt
-  scvmm
-  vmware
-  replication
-  rest_api
-  ui_dependencies
-  web_server
-  web_socket
-)
-
 MIQ_WORKER_TYPES = {
-  "ManageIQ::Providers::Azure::CloudManager::MetricsCollectorWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Amazon::CloudManager::MetricsCollectorWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Redhat::InfraManager::MetricsCollectorWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCollectorWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Openshift::ContainerManager::MetricsCollectorWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Google::CloudManager::MetricsCollectorWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Vmware::InfraManager::MetricsCollectorWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Openstack::CloudManager::MetricsCollectorWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Openstack::NetworkManager::MetricsCollectorWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Openstack::InfraManager::MetricsCollectorWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "MiqEmsMetricsProcessorWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "MiqEmsRefreshCoreWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Azure::CloudManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Azure::NetworkManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Amazon::CloudManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Amazon::NetworkManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Amazon::StorageManager::Ebs::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Amazon::StorageManager::S3::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Google::CloudManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Google::NetworkManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::AnsibleTower::AutomationManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Foreman::ConfigurationManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Foreman::ProvisioningManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Hawkular::DatawarehouseManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Kubernetes::ContainerManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Openshift::ContainerManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Microsoft::InfraManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Redhat::InfraManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Openstack::CloudManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Openstack::NetworkManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Openstack::InfraManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::StorageManager::CinderManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::StorageManager::SwiftManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Vmware::CloudManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Vmware::NetworkManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Vmware::InfraManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Nuage::NetworkManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Lenovo::PhysicalInfraManager::RefreshWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Amazon::CloudManager::EventCatcher" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::AnsibleTower::AutomationManager::EventCatcher" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::EventCatcher" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Azure::CloudManager::EventCatcher" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Hawkular::DatawarehouseManager::EventCatcher" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Google::CloudManager::EventCatcher" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcher" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Openshift::ContainerManager::EventCatcher" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Redhat::InfraManager::EventCatcher" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Openstack::CloudManager::EventCatcher" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Openstack::NetworkManager::EventCatcher" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Openstack::InfraManager::EventCatcher" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::StorageManager::CinderManager::EventCatcher" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Vmware::InfraManager::EventCatcher" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Vmware::CloudManager::EventCatcher" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "ManageIQ::Providers::Lenovo::PhysicalInfraManager::EventCatcher" => MIQ_DEFAULT_BUNDLER_GROUPS,
-  "EmbeddedAnsibleWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
+  "ManageIQ::Providers::Azure::CloudManager::MetricsCollectorWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Amazon::CloudManager::MetricsCollectorWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Redhat::InfraManager::MetricsCollectorWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCollectorWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Openshift::ContainerManager::MetricsCollectorWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Google::CloudManager::MetricsCollectorWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Vmware::InfraManager::MetricsCollectorWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Openstack::CloudManager::MetricsCollectorWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Openstack::NetworkManager::MetricsCollectorWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Openstack::InfraManager::MetricsCollectorWorker" => [:manageiq_default],
+  "MiqEmsMetricsProcessorWorker" => [:manageiq_default],
+  "MiqEmsRefreshCoreWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Azure::CloudManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Azure::NetworkManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Amazon::CloudManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Amazon::NetworkManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Amazon::StorageManager::Ebs::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Amazon::StorageManager::S3::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Google::CloudManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Google::NetworkManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::AnsibleTower::AutomationManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Foreman::ConfigurationManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Foreman::ProvisioningManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Hawkular::DatawarehouseManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Kubernetes::ContainerManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Openshift::ContainerManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Microsoft::InfraManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Redhat::InfraManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Openstack::CloudManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Openstack::NetworkManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Openstack::InfraManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::StorageManager::CinderManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::StorageManager::SwiftManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Vmware::CloudManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Vmware::NetworkManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Vmware::InfraManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Nuage::NetworkManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Lenovo::PhysicalInfraManager::RefreshWorker" => [:manageiq_default],
+  "ManageIQ::Providers::Amazon::CloudManager::EventCatcher" => [:manageiq_default],
+  "ManageIQ::Providers::AnsibleTower::AutomationManager::EventCatcher" => [:manageiq_default],
+  "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::EventCatcher" => [:manageiq_default],
+  "ManageIQ::Providers::Azure::CloudManager::EventCatcher" => [:manageiq_default],
+  "ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher" => [:manageiq_default],
+  "ManageIQ::Providers::Hawkular::DatawarehouseManager::EventCatcher" => [:manageiq_default],
+  "ManageIQ::Providers::Google::CloudManager::EventCatcher" => [:manageiq_default],
+  "ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcher" => [:manageiq_default],
+  "ManageIQ::Providers::Openshift::ContainerManager::EventCatcher" => [:manageiq_default],
+  "ManageIQ::Providers::Redhat::InfraManager::EventCatcher" => [:manageiq_default],
+  "ManageIQ::Providers::Openstack::CloudManager::EventCatcher" => [:manageiq_default],
+  "ManageIQ::Providers::Openstack::NetworkManager::EventCatcher" => [:manageiq_default],
+  "ManageIQ::Providers::Openstack::InfraManager::EventCatcher" => [:manageiq_default],
+  "ManageIQ::Providers::StorageManager::CinderManager::EventCatcher" => [:manageiq_default],
+  "ManageIQ::Providers::Vmware::InfraManager::EventCatcher" => [:manageiq_default],
+  "ManageIQ::Providers::Vmware::CloudManager::EventCatcher" => [:manageiq_default],
+  "ManageIQ::Providers::Lenovo::PhysicalInfraManager::EventCatcher" => [:manageiq_default],
+  "EmbeddedAnsibleWorker" => [:manageiq_default],
   "MiqEventHandler" => [],
   "MiqGenericWorker" => [],
   "MiqPriorityWorker" => [],
   "MiqReportingWorker" => [],
   "MiqScheduleWorker" => [],
-  "MiqSmartProxyWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
+  "MiqSmartProxyWorker" => [:manageiq_default],
   "MiqWebsocketWorker" => %w(ui_dependencies web_server web_socket),
   "MiqUiWorker" => %w(web_server ui_dependencies),
-  "MiqVimBrokerWorker" => MIQ_DEFAULT_BUNDLER_GROUPS,
+  "MiqVimBrokerWorker" => [:manageiq_default],
   "MiqWebServiceWorker" => %w(web_server ui_dependencies),
-  "MiqCockpitWsWorker" => MIQ_DEFAULT_BUNDLER_GROUPS
+  "MiqCockpitWsWorker" => [:manageiq_default]
 }.freeze
 
 MIQ_WORKER_TYPES_IN_KILL_ORDER = %w(

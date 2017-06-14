@@ -72,89 +72,92 @@ gem "ruport",                         "=1.7.0",                       :git => "h
 # https://github.com/jeremyevans/ruby-american_date
 gem "american_date"
 
+# Make sure to tag your new bundler group with the manageiq_default group in addition to your specific bundler group name.
+# This default is used to automatically require all of our gems in processes that don't specify which bundler groups they want.
+#
 ### providers
-group :amazon do
+group :amazon, :manageiq_default do
   manageiq_plugin "manageiq-providers-amazon"
 end
 
-group :ansible do
+group :ansible, :manageiq_default do
   gem "ansible_tower_client",           "~>0.12.2",      :require => false
 end
 
-group :azure do
+group :azure, :manageiq_default do
   manageiq_plugin "manageiq-providers-azure"
 end
 
-group :foreman do
+group :foreman, :manageiq_default do
   manageiq_plugin "manageiq-providers-foreman"
   gem "foreman_api_client",             ">=0.1.0",   :require => false, :git => "https://github.com/ManageIQ/foreman_api_client.git", :branch => "master"
 end
 
-group :google do
+group :google, :manageiq_default do
   manageiq_plugin "manageiq-providers-google"
   gem "fog-google",                     ">=0.5.2",       :require => false
   gem "google-api-client",              "~>0.8.6",       :require => false
 end
 
-group :hawkular do
+group :hawkular, :manageiq_default do
   manageiq_plugin "manageiq-providers-hawkular"
 end
 
-group :kubernetes, :openshift do
+group :kubernetes, :openshift, :manageiq_default do
   manageiq_plugin "manageiq-providers-kubernetes"
 end
 
-group :lenovo do
+group :lenovo, :manageiq_default do
   manageiq_plugin "manageiq-providers-lenovo"
 end
 
-group :openshift do
+group :openshift, :manageiq_default do
   manageiq_plugin "manageiq-providers-openshift"
   gem "htauth",                         "2.0.0",         :require => false # used by container deployment
 end
 
-group :openstack do
+group :openstack, :manageiq_default do
   manageiq_plugin "manageiq-providers-openstack"
 end
 
-group :ovirt do
+group :ovirt, :manageiq_default do
   manageiq_plugin "manageiq-providers-ovirt"
   gem "ovirt-engine-sdk",               "~>4.1.4",       :require => false # Required by the oVirt provider
   gem "ovirt_metrics",                  "~>1.4.1",       :require => false
 end
 
-group :scvmm do
+group :scvmm, :manageiq_default do
   manageiq_plugin "manageiq-providers-scvmm"
 end
 
-group :vmware do
+group :vmware, :manageiq_default do
   manageiq_plugin "manageiq-providers-vmware"
   gem "vmware_web_service",             "~>0.1.1",       :require => false
 end
 
 ### shared dependencies
-group :google, :openshift do
+group :google, :openshift, :manageiq_default do
   gem "sshkey",                         "~>1.8.0",       :require => false
 end
 
 ### end of provider bundler groups
 
-group :replication do
+group :replication, :manageiq_default do
   gem "pg-pglogical",                   "~>1.1.0",       :require => false
 end
 
-group :rest_api do
+group :rest_api, :manageiq_default do
   gem "jbuilder",                       "~>2.5.0" # For the REST API
 end
 
-group :ui_dependencies do # Added to Bundler.require in config/application.rb
+group :ui_dependencies, :manageiq_default do # Added to Bundler.require in config/application.rb
   manageiq_plugin "manageiq-ui-classic"
   # Modified gems (forked on Github)
   gem "font-fabulous",                                                :git => "https://github.com/ManageIQ/font-fabulous.git", :branch => "master" # FIXME: this is just a temporary solution and it'll go to the ui-classic later
   gem "jquery-rjs",                   "=0.1.1",                       :git => "https://github.com/ManageIQ/jquery-rjs.git", :tag => "v0.1.1-1"
 end
 
-group :web_server do
+group :web_server, :manageiq_default do
   gem "puma",                           "~>3.3.0"
   gem "responders",                     "~>2.0"
   gem "ruby-dbus" # For external auth
@@ -162,7 +165,7 @@ group :web_server do
   gem "secure_headers",                 "~>3.0.0"
 end
 
-group :web_socket do
+group :web_socket, :manageiq_default do
   gem "websocket-driver",               "~>0.6.3"
 end
 
