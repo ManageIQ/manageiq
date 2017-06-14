@@ -137,6 +137,53 @@ describe "Providers API" do
     have_attributes(h)
   end
 
+  context 'Provider\'s virtual attributes(= direct or indirect associations) with RBAC' do
+    let(:ems_openstack)  { FactoryGirl.create(:ems_openstack, :tenant_mapping_enabled => true) }
+    let(:ems_cinder)     { FactoryGirl.create(:ems_cinder, :parent_manager => ems_openstack) }
+    let(:ems_cinder_url) { providers_url(ems_cinder.id) }
+
+    let(:tenant) { FactoryGirl.create(:tenant, :source_type => 'CloudTenant') }
+    let!(:cloud_tenant_1) { FactoryGirl.create(:cloud_tenant, :source_tenant => tenant, :ext_management_system => ems_openstack) }
+    let!(:cloud_tenant_2) { FactoryGirl.create(:cloud_tenant, :source_tenant => Tenant.root_tenant, :ext_management_system => ems_openstack) }
+
+    let(:role)   { FactoryGirl.create(:miq_user_role) }
+    let!(:group) { FactoryGirl.create(:miq_group, :tenant => tenant, :miq_user_role => role) }
+    let!(:vm)    { FactoryGirl.create(:vm_openstack, :ext_management_system => ems_cinder, :miq_group => group) }
+    let!(:vm_1)  { FactoryGirl.create(:vm_openstack, :ext_management_system => ems_cinder) }
+
+    context 'with restricted user' do
+      let(:user) do
+        FactoryGirl.create(:user, :miq_groups => [group], :password => api_config(:password), :userid => api_config(:user), :name => api_config(:user_name))
+      end
+
+      def define_user
+        @role = role
+        user
+      end
+
+      it 'lists only CloudTenant for the restricted user(indirect association)' do
+        api_basic_authorize action_identifier(:providers, :read, :resource_actions, :get)
+        run_get(ems_cinder_url, :attributes => 'parent_manager.cloud_tenants')
+        cloud_tenant_ids = response.parsed_body['parent_manager']['cloud_tenants'].map { |x| x['id'] }
+        expect([cloud_tenant_1.id]).to match_array(cloud_tenant_ids)
+      end
+
+      it 'lists only CloudTenant for the restricted user(direct association)' do
+        api_basic_authorize action_identifier(:providers, :read, :resource_actions, :get)
+        run_get(ems_cinder_url, :attributes => 'vms')
+        vm_ids = response.parsed_body['vms'].map { |x| x['id'] }
+        expect([vm.id]).to match_array(vm_ids)
+      end
+    end
+
+    it 'lists all CloudTenants' do
+      api_basic_authorize action_identifier(:providers, :read, :resource_actions, :get)
+      run_get(ems_cinder_url, :attributes => 'parent_manager.cloud_tenants')
+      cloud_tenant_ids = response.parsed_body['parent_manager']['cloud_tenants'].map { |x| x['id'] }
+      expect([cloud_tenant_1.id, cloud_tenant_2.id]).to match_array(cloud_tenant_ids)
+    end
+  end
+
   context "Provider custom_attributes" do
     let(:provider) { FactoryGirl.create(:ext_management_system, sample_rhevm) }
     let(:provider_url) { providers_url(provider.id) }
