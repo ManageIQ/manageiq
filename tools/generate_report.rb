@@ -26,7 +26,19 @@ end
 puts "Generating report... #{report.name}"
 
 report.queue_generate_table(:userid => USER_ID)
-report._async_generate_table(MiqTask.last.id, REPORT_PARAMS)
+def report_run
+  if defined?(ManageIQPerformance)
+    ManageIQPerformance.profile('generate_report') do
+      yield
+    end
+  else
+    yield
+  end
+end
+
+report_run do
+  report._async_generate_table(MiqTask.last.id, REPORT_PARAMS)
+end
 
 default_url_options[:host] = "localhost"
 default_url_options[:port] = 3000
