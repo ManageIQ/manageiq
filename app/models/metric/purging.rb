@@ -40,11 +40,16 @@ module Metric::Purging
       :class_name  => name,
       :method_name => "purge_#{interval}",
       :args        => [ts],
+      :msg_timeout => msg_timeout
     )
   end
 
   def self.purge_window_size
     ::Settings.performance.history.purge_window_size
+  end
+
+  def self.msg_timeout
+    ::Settings.performance.history.queue_timeout.to_i_with_method
   end
 
   def self.purge_scope(older_than, interval)
