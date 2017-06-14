@@ -1435,7 +1435,7 @@ guest_devices:
 - uid_ems
 - chap_auth_enabled
 - manufacturer
-- fru
+- field_replaceable_unit
 - guest_device_id
 hardwares:
 - id
