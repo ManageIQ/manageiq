@@ -1066,6 +1066,20 @@
       - :name: delete
       :delete:
       - :name: delete
+  :object_definitions:
+    :description: Object Definitions
+    :options:
+    - :collection
+    :verbs: *g
+    :klass: GenericObjectDefinition
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: generic_object_explorer
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: generic_object_explorer
   :orchestration_stacks:
     :description: Orchestration Stacks
     :options:
