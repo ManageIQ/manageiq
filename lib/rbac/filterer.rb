@@ -378,7 +378,7 @@ module Rbac
       intersection = ->(operand1, operand2, operand3 = nil) { [operand1, operand2, operand3].compact.reduce(&:&) }
       union        = ->(operand1, operand2) { [operand1, operand2].compact.reduce(&:|) }
 
-      b_intersection_m                 = intersection.call(b_filtered_ids, m_filtered_ids)
+      b_intersection_m         = intersection.call(b_filtered_ids, m_filtered_ids)
       d_union_b_intersection_m = union.call(d_filtered_ids, b_intersection_m)
 
       intersection.call(d_union_b_intersection_m, tenant_filter_ids, u_filtered_ids)
