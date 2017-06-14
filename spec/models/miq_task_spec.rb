@@ -402,6 +402,7 @@ describe MiqTask do
           MiqTask.update_status_for_timed_out_active_tasks
           miq_task.reload
           expect(miq_task.status).to eq MiqTask::STATUS_ERROR
+          expect(miq_task.message).to include("not active for more than 3600 seconds")
         end
 
         it "does not update status if task not timed out" do
