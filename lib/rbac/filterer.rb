@@ -358,11 +358,13 @@ module Rbac
 
       combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids, scope_tenant_filter.try(:ids))
     end
+
     #
-    # Algorithm: filter = u_filtered_ids UNION (b_filtered_ids INTERSECTION m_filtered_ids)
-    #            filter = (filter UNION d_filtered_ids)
-    #            filter = filter INTERSECTION tenant_filter_ids if tenant_filter_ids is not nil
-    # a nil as input for any field means it does not apply
+    # Algorithm: b_intersection_m        = (b_filtered_ids INTERSECTION m_filtered_ids)
+    #            u_union_d_union_b_and_m = u_filtered_ids UNION d_filtered_ids UNION b_intersection_m
+    #            filter                  = u_union_d_union_b_and_m INTERSECTION tenant_filter_ids
+    #
+    # a nil as input for any field means it DOES NOT apply the operation(INTERSECTION, UNION)
     # a nil as output means there is not filter
     #
     # @param u_filtered_ids [nil|Array<Integer>] self service user owned objects
@@ -370,38 +372,17 @@ module Rbac
     # @param m_filtered_ids [nil|Array<Integer>] managed filter object ids
     # @param d_filtered_ids [nil|Array<Integer>] ids from descendants
     # @param tenant_filter_ids [nil|Array<Integer>] ids
-    # @return nil if filters do not aply
+    # @return nil if filters do not apply
     # @return [Array<Integer>] target ids for filter
 
     def combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids, tenant_filter_ids)
-      filtered_ids =
-        if b_filtered_ids.nil?
-          m_filtered_ids
-        elsif m_filtered_ids.nil?
-          b_filtered_ids
-        else
-          b_filtered_ids & m_filtered_ids
-        end
+      intersection = ->(operand1, operand2) { [operand1, operand2].compact.reduce(&:&) }
+      union        = ->(operand1, operand2, operand3 = nil) { [operand1, operand2, operand3].compact.reduce(&:|) }
 
-      if u_filtered_ids.kind_of?(Array)
-        filtered_ids ||= []
-        filtered_ids += u_filtered_ids
-      end
+      b_intersection_m                 = intersection.call(b_filtered_ids, m_filtered_ids)
+      u_union_d_union_b_intersection_m = union.call(u_filtered_ids, d_filtered_ids, b_intersection_m)
 
-      if filtered_ids.kind_of?(Array)
-        filtered_ids += d_filtered_ids if d_filtered_ids.kind_of?(Array)
-        filtered_ids.uniq!
-      elsif d_filtered_ids.kind_of?(Array) && d_filtered_ids.present?
-        filtered_ids = d_filtered_ids
-      end
-
-      if filtered_ids.kind_of?(Array) && tenant_filter_ids
-        filtered_ids & tenant_filter_ids.to_a
-      elsif filtered_ids.nil? && tenant_filter_ids.kind_of?(Array) && tenant_filter_ids.present?
-        tenant_filter_ids
-      else
-        filtered_ids
-      end
+      intersection.call(u_union_d_union_b_intersection_m, tenant_filter_ids)
     end
 
     # @param parent_class [Class] Class of parent (e.g. Host)
