@@ -1,5 +1,6 @@
 require 'miq-process'
 require 'thread'
+require 'fileutils'
 
 class MiqWorker::Runner
   class TemporaryFailure < RuntimeError
@@ -360,6 +361,15 @@ class MiqWorker::Runner
   end
 
   def heartbeat
+    ENV["WORKER_HEARTBEAT_METHOD"] == "file" ? heartbeat_to_file : heartbeat_to_drb
+    do_heartbeat_work
+  rescue SystemExit, SignalException
+    raise
+  rescue Exception => err
+    do_exit("Error heartbeating because #{err.class.name}: #{err.message}\n#{err.backtrace.join('\n')}", 1)
+  end
+
+  def heartbeat_to_drb
     # Disable heartbeat check.  Useful if a worker is running in isolation
     # without the oversight of MiqServer::WorkerManagement
     return if skip_heartbeat?
@@ -370,13 +380,12 @@ class MiqWorker::Runner
     messages = worker_monitor_drb.worker_heartbeat(@worker.pid, @worker.class.name, @worker.queue_name)
     @last_hb = now
     messages.each { |msg, *args| process_message(msg, *args) }
-    do_heartbeat_work
   rescue DRb::DRbError => err
     do_exit("Error heartbeating to MiqServer because #{err.class.name}: #{err.message}", 1)
-  rescue SystemExit, SignalException
-    raise
-  rescue Exception => err
-    do_exit("Error heartbeating because #{err.class.name}: #{err.message}\n#{err.backtrace.join('\n')}", 1)
+  end
+
+  def heartbeat_to_file
+    FileUtils.touch(@worker.heartbeat_file)
   end
 
   def do_gc
