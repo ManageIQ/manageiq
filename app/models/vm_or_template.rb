@@ -188,6 +188,8 @@ class VmOrTemplate < ApplicationRecord
   before_validation :set_tenant_from_group
   after_save :save_genealogy_information
 
+  scope :active, -> { where.not(:ems_id => nil) }
+
   alias_method :datastores, :storages    # Used by web-services to return datastores as the property name
 
   alias_method :parent_cluster, :ems_cluster
