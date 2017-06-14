@@ -18,7 +18,6 @@ module Api
     include_concern 'Results'
     include_concern 'Generic'
     include_concern 'Authentication'
-    include CompressedIds
     include ActionController::HttpAuthentication::Basic::ControllerMethods
     extend ErrorHandler::ClassMethods
 

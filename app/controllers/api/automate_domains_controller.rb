@@ -34,7 +34,7 @@ module Api
     end
 
     def resource_search(id, type, klass)
-      if cid?(id)
+      if ApplicationRecord.compressed_id?(id)
         super
       else
         begin
