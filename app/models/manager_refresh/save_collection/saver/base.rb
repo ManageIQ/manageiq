@@ -33,7 +33,7 @@ module ManagerRefresh::SaveCollection
       attr_reader :unique_index_keys, :unique_db_primary_keys
 
       def batch_size
-        1000
+        inventory_collection.batch_size
       end
 
       def delete_complement(inventory_collection)

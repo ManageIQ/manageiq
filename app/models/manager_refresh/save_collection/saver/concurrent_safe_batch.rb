@@ -47,10 +47,7 @@ module ManagerRefresh::SaveCollection
               next unless assert_referential_integrity(hash, inventory_object)
               inventory_object.id = record.id
 
-              record.assign_attributes(hash.except(:id, :type))
-              if !inventory_collection.check_changed? || record.changed?
-                hashes_for_update << record.attributes.symbolize_keys
-              end
+              hashes_for_update << hash.symbolize_keys.except(:id, :type)
             end
           end
 
@@ -64,7 +61,7 @@ module ManagerRefresh::SaveCollection
 
           # Destroy in batches
           if records_for_destroy.size >= batch_size
-            destroy_records(records)
+            destroy_records(records_for_destroy)
             records_for_destroy = []
           end
         end
@@ -110,7 +107,8 @@ module ManagerRefresh::SaveCollection
         indexed_inventory_objects = {}
         hashes = []
         batch.each do |index, inventory_object|
-          hash = inventory_collection.model_class.new(attributes_index.delete(index)).attributes.symbolize_keys
+          hash = attributes_index.delete(index).symbolize_keys
+          hash[:type] = inventory_collection.model_class.name if inventory_collection.supports_sti? && hash[:type].blank?
           next unless assert_referential_integrity(hash, inventory_object)
 
           hashes << hash
@@ -123,14 +121,16 @@ module ManagerRefresh::SaveCollection
         ActiveRecord::Base.connection.execute(
           build_insert_query(inventory_collection, all_attribute_keys, hashes)
         )
-        # TODO(lsmola) we need to do the mapping only if this IC has dependents/dependees
-        map_ids_to_inventory_objects(inventory_collection, indexed_inventory_objects, hashes)
+        if inventory_collection.dependees.present?
+          # We need to get primary keys of the created objects, but only if there are dependees that would use them
+          map_ids_to_inventory_objects(inventory_collection, indexed_inventory_objects, hashes)
+        end
       end
 
       def map_ids_to_inventory_objects(inventory_collection, indexed_inventory_objects, hashes)
         inventory_collection.model_class.where(
           build_multi_selection_query(inventory_collection, hashes)
-        ).find_each do |inserted_record|
+        ).select(inventory_collection.unique_index_columns + [:id]).each do |inserted_record|
           inventory_object = indexed_inventory_objects[inventory_collection.unique_index_columns.map { |x| inserted_record.public_send(x) }]
           inventory_object.id = inserted_record.id if inventory_object
         end

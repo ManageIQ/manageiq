@@ -3,21 +3,26 @@ module ManagerRefresh::SaveCollection
     module SqlHelper
       # TODO(lsmola) all below methods should be rewritten to arel, but we need to first extend arel to be able to do
       # this
+      def build_insert_set_cols(key)
+        "#{ActiveRecord::Base.connection.quote_column_name(key)} = EXCLUDED.#{ActiveRecord::Base.connection.quote_column_name(key)}"
+      end
+
       def build_insert_query(inventory_collection, all_attribute_keys, hashes)
         all_attribute_keys_array = all_attribute_keys.to_a
         table_name               = inventory_collection.model_class.table_name
         values                   = hashes.map do |hash|
           "(#{all_attribute_keys_array.map { |x| ActiveRecord::Base.connection.quote(hash[x]) }.join(",")})"
         end.join(",")
+        col_names = all_attribute_keys_array.map { |x| ActiveRecord::Base.connection.quote_column_name(x) }.join(",")
 
         insert_query = %{
-          INSERT INTO #{table_name} (#{all_attribute_keys_array.join(",")})
+          INSERT INTO #{table_name} (#{col_names})
             VALUES
               #{values}
           ON CONFLICT (#{inventory_collection.unique_index_columns.join(",")})
             DO
               UPDATE
-                SET #{all_attribute_keys_array.map { |x| "#{x} = EXCLUDED.#{x}" }.join(", ")}
+                SET #{all_attribute_keys_array.map { |key| build_insert_set_cols(key) }.join(", ")}
         }
 
         # TODO(lsmola) do we want to exclude the ems_id from the UPDATE clause? Otherwise it might be difficult to change
@@ -36,6 +41,10 @@ module ManagerRefresh::SaveCollection
         insert_query
       end
 
+      def build_update_set_cols(key)
+        "#{ActiveRecord::Base.connection.quote_column_name(key)} = updated_values.#{ActiveRecord::Base.connection.quote_column_name(key)}"
+      end
+
       def build_update_query(inventory_collection, all_attribute_keys, hashes)
         all_attribute_keys_array = all_attribute_keys.to_a
         table_name               = inventory_collection.model_class.table_name
@@ -49,7 +58,7 @@ module ManagerRefresh::SaveCollection
         update_query = %{
           UPDATE #{table_name}
             SET
-              #{all_attribute_keys_array.map { |key| "#{key} = updated_values.#{key}" }.join(",")}
+              #{all_attribute_keys_array.map { |key| build_update_set_cols(key) }.join(",")}
           FROM (
             VALUES
               #{values}

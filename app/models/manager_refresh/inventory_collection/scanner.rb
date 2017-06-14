@@ -14,6 +14,12 @@ module ManagerRefresh
             inventory_collection.data_collection_finalized = true
             inventory_collection.scan!(indexed_inventory_collections)
           end
+
+          inventory_collections.each do |inventory_collection|
+            inventory_collection.dependencies.each do |dependency|
+              dependency.dependees << inventory_collection
+            end
+          end
         end
       end
     end
