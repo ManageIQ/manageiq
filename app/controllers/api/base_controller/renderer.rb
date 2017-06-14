@@ -54,18 +54,16 @@ module Api
         json    = Jbuilder.new
         json.ignore_nil!
 
-        pas = physical_attribute_selection(resource)
-        normalize_options[:render_attributes] = pas if pas.present?
+        physical_attrs, virtual_attrs = validate_attr_selection(resource)
+        normalize_options[:render_attributes] = physical_attrs if physical_attrs.present?
 
-        add_hash json, normalize_hash(reftype, resource, normalize_options), :render_resource_attr, resource
+        add_hash json, normalize_hash(reftype, resource, normalize_options)
 
-        if resource.respond_to?(:attributes)
-          expand_virtual_attributes(json, type, resource)
-          expand_subcollections(json, type, resource)
-        end
+        expand_virtual_attributes(json, type, resource, virtual_attrs) unless virtual_attrs.empty?
+        expand_subcollections(json, type, resource) if resource.respond_to?(:attributes)
 
-        expand_actions(resource, json, type, opts) if opts[:expand_actions]
-        expand_resource_custom_actions(resource, json, type)
+        expand_actions(resource, json, type, opts, physical_attrs) if opts[:expand_actions]
+        expand_resource_custom_actions(resource, json, type, physical_attrs)
         json
       end
 
@@ -92,10 +90,10 @@ module Api
       #
       # Common proc for adding a hash directly to the Jbuilder
       #
-      def add_hash(json, hash, render_attr_proc = nil, resource = nil)
+      def add_hash(json, hash)
         return if hash.blank?
         hash.each do |attr, value|
-          json.set! attr, value if render_attr_proc.nil? || send(render_attr_proc, resource, attr)
+          json.set! attr, value
         end
       end
 
@@ -199,10 +197,10 @@ module Api
       # Let's expand virtual attributes and related objects if asked for
       # Supporting [<related_object>]*.<virtual_attribute>
       #
-      def expand_virtual_attributes(json, type, resource)
+      def expand_virtual_attributes(json, type, resource, virtual_attrs)
         result = {}
         object_hash = {}
-        virtual_attributes_list(resource).each do |vattr|
+        virtual_attrs.each do |vattr|
           attr_name, attr_base = split_virtual_attribute(vattr)
           value, value_result = if attr_base.blank?
                                   fetch_direct_virtual_attribute(type, resource, attr_name)
@@ -249,16 +247,6 @@ module Api
         end
       end
 
-      #
-      # Let's get a list of virtual attributes applicable to the resource.
-      #
-      def virtual_attributes_list(resource)
-        return [] if attribute_selection == "all"
-        attribute_selection.collect do |requested_attr|
-          requested_attr if attr_virtual?(resource, requested_attr)
-        end.compact
-      end
-
       def split_virtual_attribute(attr)
         attr_parts = attr_split(attr)
         return [attr_parts.first, ""] if attr_parts.length == 1
@@ -294,8 +282,8 @@ module Api
       #
       # Let's expand actions
       #
-      def expand_actions(resource, json, type, opts)
-        return unless render_actions(resource)
+      def expand_actions(resource, json, type, opts, physical_attrs)
+        return unless render_actions(physical_attrs)
 
         href = json.attributes!["href"]
         cspec = collection_config[type]
@@ -311,8 +299,8 @@ module Api
         end
       end
 
-      def expand_resource_custom_actions(resource, json, type)
-        return unless render_actions(resource) && collection_config.custom_actions?(type)
+      def expand_resource_custom_actions(resource, json, type, physical_attrs)
+        return unless render_actions(physical_attrs) && collection_config.custom_actions?(type)
 
         href = json.attributes!["href"]
         json.actions do |js|
@@ -327,15 +315,23 @@ module Api
         Array(resource.custom_action_buttons).collect(&:name).collect(&:downcase)
       end
 
-      def render_resource_attr(resource, attr)
-        pas = physical_attribute_selection(resource)
-        pas.blank? || pas.include?(attr)
-      end
+      def validate_attr_selection(resource)
+        physical_attrs, virtual_attrs = [], []
+        attrs = attribute_selection
+        return [physical_attrs, virtual_attrs] if resource.kind_of?(Hash) || attrs == 'all'
 
-      def physical_attribute_selection(resource)
-        return [] if resource.kind_of?(Hash)
-        physical_attributes = @req.attributes.select { |attr| attr_physical?(resource, attr) }
-        physical_attributes.present? ? ID_ATTRS | physical_attributes : []
+        attrs.each do |attr|
+          if attr_physical?(resource, attr) || attr == 'actions'
+            physical_attrs.push(attr)
+          elsif attr_virtual?(resource, attr) || @additional_attributes.try(:include?, attr)
+            virtual_attrs.push(attr)
+          end
+        end
+
+        attrs = attrs - physical_attrs - virtual_attrs
+        raise BadRequestError, "Invalid attributes specified: #{attrs.join(',')}" unless attrs.empty?
+
+        [(physical_attrs - ID_ATTRS).empty? ? [] : physical_attrs, virtual_attrs]
       end
 
       #
@@ -416,8 +412,8 @@ module Api
         Array(action_identifier).any? { |identifier| User.current_user.role_allows?(:identifier => identifier) }
       end
 
-      def render_actions(resource)
-        render_attr("actions") || physical_attribute_selection(resource).blank?
+      def render_actions(physical_attrs)
+        render_attr("actions") || physical_attrs.blank?
       end
 
       def action_validated?(resource, action_spec)

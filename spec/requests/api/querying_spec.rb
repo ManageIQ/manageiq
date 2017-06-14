@@ -60,6 +60,21 @@ describe "Querying" do
       expect_query_result(:vms, 1, 5)
       expect_result_resources_to_match_hash([{"name" => "ee"}])
     end
+
+    it 'raises a BadRequestError for attributes that do not exist' do
+      api_basic_authorize action_identifier(:vms, :read, :resource_actions, :get)
+
+      run_get(vms_url(vm1.id), :attributes => 'not_an_attribute')
+
+      expected = {
+        'error' => a_hash_including(
+          'kind'    => 'bad_request',
+          'message' => "Invalid attributes specified: not_an_attribute"
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:bad_request)
+    end
   end
 
   describe "Sorting vms by attribute" do
@@ -524,15 +539,6 @@ describe "Querying" do
       }
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)
-    end
-
-    it "skips requests of invalid attributes" do
-      api_basic_authorize action_identifier(:vms, :read, :resource_actions, :get)
-
-      run_get vms_url(vm1.id), :attributes => "bogus"
-
-      expect(response).to have_http_status(:ok)
-      expect_result_to_have_keys(%w(id href name vendor))
     end
   end
 
