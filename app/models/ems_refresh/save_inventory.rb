@@ -235,9 +235,7 @@ module EmsRefresh::SaveInventory
         # Save the hardware to force an id if not found
         hardware.save! if hardware.id.nil?
         h[:network][:hardware_id] = hardware.id
-      end
-
-      if h[:guest_devices]
+      elsif h[:guest_devices]
         # Save the hardware to force an id if not found
         hardware.save! if hardware.id.nil?
         h[:guest_devices][0][:hardware_id] = hardware.id
