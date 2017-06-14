@@ -40,6 +40,7 @@ module ManageIQ::Providers
         get_availability_zones
         get_stacks
         get_instances
+        get_managed_images
         get_images
         _log.info("#{log_header}...Complete")
 
