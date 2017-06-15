@@ -103,6 +103,10 @@ module ManagerRefresh::SaveCollection
           Time.now.localtime
         end
       end
+
+      def supports_remote_data_timestamp?(all_attribute_keys)
+        all_attribute_keys.include?(:remote_data_timestamp) # include? on Set is O(1)
+      end
     end
   end
 end
