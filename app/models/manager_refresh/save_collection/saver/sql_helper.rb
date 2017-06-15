@@ -33,7 +33,7 @@ module ManagerRefresh::SaveCollection
 
         # This conditional will avoid rewriting new data by old data. But we want it only when remote_data_timestamp is a
         # part of the data, since for the fake records, we just want to update ems_ref.
-        if all_attribute_keys.include?(:remote_data_timestamp) # include? on Set is O(1)
+        if supports_remote_data_timestamp?(all_attribute_keys)
           insert_query += %{
             WHERE EXCLUDED.remote_data_timestamp IS NULL OR (EXCLUDED.remote_data_timestamp > #{table_name}.remote_data_timestamp)
           }
@@ -72,7 +72,7 @@ module ManagerRefresh::SaveCollection
 
         # This conditional will avoid rewriting new data by old data. But we want it only when remote_data_timestamp is a
         # part of the data, since for the fake records, we just want to update ems_ref.
-        if all_attribute_keys.include?(:remote_data_timestamp) # include? on Set is O(1)
+        if supports_remote_data_timestamp?(all_attribute_keys)
           update_query += %{
             AND (updated_values.remote_data_timestamp IS NULL OR (updated_values.remote_data_timestamp > #{table_name}.remote_data_timestamp))
           }
