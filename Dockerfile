@@ -65,6 +65,8 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
                    cronie                  \
                    logrotate               \
                    http-parser             \
+                   openssh-clients         \
+                   openssh-server          \
                    &&                      \
     yum clean all
 
@@ -80,6 +82,16 @@ RUN (cd /lib/systemd/system/sysinit.target.wants && for i in *; do [ $i == syste
     rm -vf /lib/systemd/system/sockets.target.wants/*initctl* && \
     rm -vf /lib/systemd/system/basic.target.wants/* && \
     rm -vf /lib/systemd/system/anaconda.target.wants/*
+
+# Initialize SSH
+RUN ssh-keygen -q -t dsa -N '' -f /etc/ssh/ssh_host_dsa_key && \
+    ssh-keygen -q -t rsa -N '' -f /etc/ssh/ssh_host_rsa_key && \
+    ssh-keygen -q -t rsa -N '' -f /root/.ssh/id_rsa && \
+    cp /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys && \
+    for key in /etc/ssh/ssh_host_*_key.pub; do echo "localhost $(cat ${key})" >> /root/.ssh/known_hosts; done && \
+    echo "root:smartvm" | chpasswd && \
+    chmod 700 /root/.ssh && \
+    chmod 600 /root/.ssh/*
 
 # Download chruby and chruby-install, install, setup environment, clean all
 RUN curl -sL https://github.com/postmodern/chruby/archive/v0.3.9.tar.gz | tar xz && \
@@ -156,10 +168,10 @@ COPY docker-assets/appliance-initialize.sh /bin
 RUN ln -s /var/www/miq/vmdb/docker-assets/docker_initdb /usr/bin
 
 ## Enable services on systemd
-RUN systemctl enable memcached appliance-initialize evmserverd evminit evm-watchdog miqvmstat miqtop crond
+RUN systemctl enable memcached appliance-initialize evmserverd evminit evm-watchdog miqvmstat miqtop crond sshd
 
 ## Expose required container ports
-EXPOSE 80 443
+EXPOSE 80 443 22
 
 ## Atomic Labels
 # The UNINSTALL label by DEFAULT will attempt to delete a container (rm) and image (rmi) if the container NAME is the same as the actual IMAGE
