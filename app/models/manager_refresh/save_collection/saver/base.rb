@@ -107,6 +107,19 @@ module ManagerRefresh::SaveCollection
       def supports_remote_data_timestamp?(all_attribute_keys)
         all_attribute_keys.include?(:remote_data_timestamp) # include? on Set is O(1)
       end
+
+      def assign_attributes_for_update!(hash, inventory_collection, update_time)
+        hash[:last_sync_on] = time if inventory_collection.supports_last_sync_on?
+        hash[:updated_on]   = update_time if inventory_collection.supports_timestamps_on_variant?
+        hash[:updated_at]   = update_time if inventory_collection.supports_timestamps_at_variant?
+      end
+
+      def assign_attributes_for_create!(hash, inventory_collection, create_time)
+        hash[:type]         = inventory_collection.model_class.name if inventory_collection.supports_sti? && hash[:type].blank?
+        hash[:last_sync_on] = time if inventory_collection.supports_last_sync_on?
+        hash[:created_on]   = create_time if inventory_collection.supports_timestamps_on_variant?
+        hash[:created_at]   = create_time if inventory_collection.supports_timestamps_at_variant?
+      end
     end
   end
 end

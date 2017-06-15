@@ -53,6 +53,7 @@ module ManagerRefresh::SaveCollection
       end
 
       def update_record!(inventory_collection, record, hash, inventory_object)
+        assign_attributes_for_update!(hash, inventory_collection, time_now)
         record.assign_attributes(hash.except(:id, :type))
 
         if !inventory_object.inventory_collection.check_changed? || record.changed?
@@ -73,6 +74,7 @@ module ManagerRefresh::SaveCollection
 
         all_attribute_keys = hash.keys
         hash               = inventory_collection.model_class.new(hash).attributes.symbolize_keys
+        assign_attributes_for_create!(hash, inventory_collection, time_now)
 
         result_id = ActiveRecord::Base.connection.insert_sql(
           build_insert_query(inventory_collection, all_attribute_keys, [hash])

@@ -53,9 +53,7 @@ module ManagerRefresh::SaveCollection
               inventory_object.id = record.id
 
               hash_for_update = hash.symbolize_keys.except(:id, :type)
-              hash_for_update[:updated_on] = update_time if inventory_collection.supports_timestamps_on_variant?
-              hash_for_update[:updated_at] = update_time if inventory_collection.supports_timestamps_at_variant?
-              hash_for_update[:last_sync_on] = update_time if inventory_collection.supports_last_sync_on?
+              assign_attributes_for_update!(hash_for_update, inventory_collection, update_time)
 
               hashes_for_update << hash_for_update
             end
@@ -119,10 +117,8 @@ module ManagerRefresh::SaveCollection
         create_time = time_now
         batch.each do |index, inventory_object|
           hash = attributes_index.delete(index).symbolize_keys
-          hash[:type] = inventory_collection.model_class.name if inventory_collection.supports_sti? && hash[:type].blank?
-          hash[:created_on] = create_time if inventory_collection.supports_timestamps_on_variant?
-          hash[:created_at] = create_time if inventory_collection.supports_timestamps_at_variant?
-          hash[:last_sync_on] = create_time if inventory_collection.supports_last_sync_on?
+          assign_attributes_for_create!(hash, inventory_collection, create_time)
+
           next unless assert_referential_integrity(hash, inventory_object)
 
           hashes << hash
