@@ -1,4 +1,3 @@
-require 'xmldata_helper'
 require 'yaml'
 
 # TODO: Determine if this file can be removed.

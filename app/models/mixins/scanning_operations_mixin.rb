@@ -1,4 +1,3 @@
-require 'xmldata_helper'
 require 'yaml'
 
 module ScanningOperationsMixin
