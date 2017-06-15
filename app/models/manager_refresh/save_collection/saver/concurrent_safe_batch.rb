@@ -118,21 +118,35 @@ module ManagerRefresh::SaveCollection
 
         return if hashes.blank?
 
-        ActiveRecord::Base.connection.execute(
+        result = ActiveRecord::Base.connection.execute(
           build_insert_query(inventory_collection, all_attribute_keys, hashes)
         )
         if inventory_collection.dependees.present?
           # We need to get primary keys of the created objects, but only if there are dependees that would use them
-          map_ids_to_inventory_objects(inventory_collection, indexed_inventory_objects, hashes)
+          map_ids_to_inventory_objects(inventory_collection, indexed_inventory_objects, all_attribute_keys, hashes, result)
         end
       end
 
-      def map_ids_to_inventory_objects(inventory_collection, indexed_inventory_objects, hashes)
-        inventory_collection.model_class.where(
-          build_multi_selection_query(inventory_collection, hashes)
-        ).select(inventory_collection.unique_index_columns + [:id]).each do |inserted_record|
-          inventory_object = indexed_inventory_objects[inventory_collection.unique_index_columns.map { |x| inserted_record.public_send(x) }]
-          inventory_object.id = inserted_record.id if inventory_object
+      def map_ids_to_inventory_objects(inventory_collection, indexed_inventory_objects, all_attribute_keys, hashes, result)
+        # The remote_data_timestamp is adding a WHERE condition to ON CONFLICT UPDATE. As a result, the RETURNING
+        # clause is not guaranteed to return all ids of the inserted/updated records in the result. In that case
+        # we test if the number of results matches the expected batch size. Then if the counts do not match, the only
+        # safe option is to query all the data from the DB, using the unique_indexes. The batch size will also not match
+        # for every remainders(a last batch in a stream of batches)
+        if !supports_remote_data_timestamp?(all_attribute_keys) || result.count == batch_size
+          result.each do |inserted_record|
+            key                 = inventory_collection.unique_index_columns.map { |x| inserted_record[x.to_s] }
+            inventory_object    = indexed_inventory_objects[key]
+            inventory_object.id = inserted_record["id"] if inventory_object
+          end
+        else
+          inventory_collection.model_class.where(
+            build_multi_selection_query(inventory_collection, hashes)
+          ).select(inventory_collection.unique_index_columns + [:id]).each do |inserted_record|
+            key                 = inventory_collection.unique_index_columns.map { |x| inserted_record.public_send(x) }
+            inventory_object    = indexed_inventory_objects[key]
+            inventory_object.id = inserted_record.id if inventory_object
+          end
         end
       end
     end
