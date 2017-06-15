@@ -38,6 +38,13 @@ module ManagerRefresh::SaveCollection
             WHERE EXCLUDED.remote_data_timestamp IS NULL OR (EXCLUDED.remote_data_timestamp > #{table_name}.remote_data_timestamp)
           }
         end
+
+        if inventory_collection.dependees.present?
+          insert_query += %{
+            RETURNING id,#{inventory_collection.unique_index_columns.join(",")}
+          }
+        end
+
         insert_query
       end
 
