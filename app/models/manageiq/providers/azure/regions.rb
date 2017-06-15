@@ -2,7 +2,7 @@ module ManageIQ
   module Providers::Azure
     module Regions
       REGIONS = {
-        "australiaeast" => {
+        "australiaeast"      => {
           :name        => "australiaeast",
           :description => _("Australia East"),
         },
@@ -10,103 +10,119 @@ module ManageIQ
           :name        => "australiasoutheast",
           :description => _("Australia Southeast"),
         },
-        "brazilsouth" => {
+        "brazilsouth"        => {
           :name        => "brazilsouth",
           :description => _("Brazil South"),
         },
-        "canadacentral" => {
+        "canadacentral"      => {
           :name        => "canadacentral",
           :description => _("Canada Central"),
         },
-        "canadaeast" => {
+        "canadaeast"         => {
           :name        => "canadaeast",
           :description => _("Canada East"),
         },
-        "centralindia" => {
+        "centralindia"       => {
           :name        => "centralindia",
           :description => _("Central India"),
         },
-        "centralus" => {
+        "centralus"          => {
           :name        => "centralus",
           :description => _("Central US"),
         },
-        "eastasia" => {
+        "eastasia"           => {
           :name        => "eastasia",
           :description => _("East Asia"),
         },
-        "eastus" => {
+        "eastus"             => {
           :name        => "eastus",
           :description => _("East US"),
         },
-        "eastus2" => {
+        "eastus2"            => {
           :name        => "eastus2",
           :description => _("East US 2"),
         },
-        "japaneast" => {
+        "japaneast"          => {
           :name        => "japaneast",
           :description => _("Japan East"),
         },
-        "japanwest" => {
+        "japanwest"          => {
           :name        => "japanwest",
           :description => _("Japan West"),
         },
-        "northcentralus" => {
+        "koreacentral"       => {
+          :name        => "koreacentral",
+          :description => _("Korea Central"),
+        },
+        "koreasouth"         => {
+          :name        => "koreasouth",
+          :description => _("Korea South"),
+        },
+        "northcentralus"     => {
           :name        => "northcentralus",
           :description => _("North Central US"),
         },
-        "northeurope" => {
+        "northeurope"        => {
           :name        => "northeurope",
           :description => _("North Europe"),
         },
-        "southcentralus" => {
+        "southcentralus"     => {
           :name        => "southcentralus",
           :description => _("South Central US"),
         },
-        "southeastasia" => {
+        "southeastasia"      => {
           :name        => "southeastasia",
           :description => _("South East Asia"),
         },
-        "southindia" => {
+        "southindia"         => {
           :name        => "southindia",
           :description => _("South India"),
         },
-        "usgovarizona" => {
+        "uksouth"            => {
+          :name        => "uksouth",
+          :description => _("UK South"),
+        },
+        "ukwest"             => {
+          :name        => "ukwest",
+          :description => _("UK West"),
+        },
+        "usgovarizona"       => {
           :name        => "usgovarizona",
           :description => _("US Gov Arizona"),
         },
-        "usgoviowa" => {
+        "usgoviowa"          => {
           :name        => "usgoviowa",
           :description => _("US Gov Iowa"),
         },
-        "usgovtexas" => {
+        "usgovtexas"         => {
           :name        => "usgovtexas",
           :description => _("US Gov Texas"),
         },
-        "usgovvirginia" => {
+        "usgovvirginia"      => {
           :name        => "usgovvirginia",
           :description => _("US Gov Virginia"),
         },
-        "westeurope" => {
+        "westeurope"         => {
           :name        => "westeurope",
           :description => _("West Europe"),
         },
-        "westindia" => {
+        "westindia"          => {
           :name        => "westindia",
           :description => _("West India"),
         },
-        "westcentralus" => {
+        "westcentralus"      => {
           :name        => "westcentralus",
           :description => _("West Central US"),
         },
-        "westus" => {
+        "westus"             => {
           :name        => "westus",
           :description => _("West US"),
         },
-        "westus2" => {
+        "westus2"            => {
           :name        => "westus2",
           :description => _("West US 2"),
         },
-      }
+      }.freeze
 
       def self.regions
         REGIONS.except(*Array(Settings.ems.ems_azure.try!(:disabled_regions)))
