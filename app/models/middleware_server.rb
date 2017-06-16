@@ -11,6 +11,8 @@ class MiddlewareServer < ApplicationRecord
   serialize :properties
   acts_as_miq_taggable
 
+  validates :feed, :presence => true
+
   def properties
     super || {}
   end
