@@ -27,20 +27,6 @@ describe MiqQueue do
       expect(msg.handler).to be_nil
     end
 
-    it "works with expires_on" do
-      allow(MiqServer).to receive(:foobar).and_return(0)
-
-      expires_on = 1.minute.from_now.utc
-      msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'MiqServer', :method_name => 'foobar', :expires_on => expires_on)
-      status, message, result = msg.deliver
-      expect(status).to eq(MiqQueue::STATUS_OK)
-
-      expires_on = 1.minute.ago.utc
-      msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'MiqServer', :method_name => 'foobar', :expires_on => expires_on)
-      status, message, result = msg.deliver
-      expect(status).to eq(MiqQueue::STATUS_EXPIRED)
-    end
-
     it "sets last_exception on raised Exception" do
       allow(MiqServer).to receive(:foobar).and_raise(StandardError)
       msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'MiqServer', :method_name => 'foobar')
