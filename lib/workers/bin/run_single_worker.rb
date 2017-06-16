@@ -23,6 +23,10 @@ opt_parser = OptionParser.new do |opts|
     options[:dry_run] = val
   end
 
+  opts.on("-g=GUID", "--guid=GUID", "Find an existing worker record instead of creating") do |val|
+    options[:guid] = val
+  end
+
   opts.on("-h", "--help", "Displays this help") do
     puts opts
     exit
@@ -52,7 +56,12 @@ require File.expand_path("../../../config/environment", __dir__)
 worker_class = worker_class.constantize
 worker_class.before_fork
 unless options[:dry_run]
-  worker = worker_class.create_worker_record
+  worker = if options[:guid]
+             worker_class.find_by!(:guid => options[:guid])
+           else
+             worker_class.create_worker_record
+           end
+
   begin
     worker.class::Runner.start_worker(:guid => worker.guid)
   ensure
