@@ -1,4 +1,5 @@
 require 'util/miq-password'
+require 'manageiq/active_record_connector'
 
 module FixAuth
   class FixAuth
@@ -51,21 +52,13 @@ module FixAuth
     end
 
     def fix_database_passwords
-      begin
-        ActiveRecord::Base.connection_config
-      rescue ActiveRecord::ConnectionNotEstablished
-        # not configured, lets try again
-        ActiveRecord::Base.logger = Logger.new("#{options[:root]}/log/fix_auth.log")
-        please_establish_connection = true
-      end
+      log_path = "#{options[:root]}/log/fix_auth.log"
       databases.each do |database|
-        begin
-          ActiveRecord::Base.establish_connection(db_attributes(database)) if please_establish_connection
+        db_config = db_attributes(database)
+        ManageIQ::ActiveRecordConnector.establish_connection_if_needed(db_config, log_path) do
           models.each do |model|
             model.run(run_options)
           end
-        ensure
-          ActiveRecord::Base.clear_active_connections! if please_establish_connection
         end
       end
     end
