@@ -307,11 +307,12 @@ class MiqWidget < ApplicationRecord
 
   def generate_report_result(rpt, owner, timezone = nil)
     name = owner.respond_to?(:userid) ? owner.userid : owner.name
+    group = owner.kind_of?(MiqGroup) ? owner : owner.try(:current_group)
 
     userid_for_result = "widget_id_#{id}|#{name}|schedule"
     MiqReportResult.purge_for_user(:userid => userid_for_result)
 
-    rpt.build_create_results(:userid => userid_for_result, :report_source => "Generated for widget", :timezone => timezone)
+    rpt.build_create_results(:userid => userid_for_result, :report_source => "Generated for widget", :timezone => timezone, :miq_group_id => group.id)
   end
 
   def find_or_build_contents_for_user(group, user, timezone = nil)
