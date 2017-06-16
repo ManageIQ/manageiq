@@ -34,13 +34,13 @@
 #
 
 module EmsRefresh::SaveInventoryInfra
-  def save_ems_infra_inventory(ems, hashes, target = nil)
+  def save_ems_infra_inventory(ems, hashes, target = nil, disconnect = true)
     target = ems if target.nil?
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
     # Check if the data coming in reflects a complete removal from the ems
     if hashes.blank? || (hashes[:hosts].blank? && hashes[:vms].blank? && hashes[:storages].blank? && hashes[:folders].blank?)
-      target.disconnect_inv
+      target.disconnect_inv if disconnect
       return
     end
 
@@ -66,7 +66,7 @@ module EmsRefresh::SaveInventoryInfra
     ]
 
     # Save and link other subsections
-    save_child_inventory(ems, hashes, child_keys, target)
+    save_child_inventory(ems, hashes, child_keys, target, disconnect)
 
     link_floating_ips_to_network_ports(hashes[:floating_ips]) if hashes.key?(:floating_ips)
     link_cloud_subnets_to_network_routers(hashes[:cloud_subnets]) if hashes.key?(:cloud_subnets)
@@ -83,7 +83,7 @@ module EmsRefresh::SaveInventoryInfra
     ems
   end
 
-  def save_storages_inventory(ems, hashes, target = nil)
+  def save_storages_inventory(ems, hashes, target = nil, _disconnect = true)
     target = ems if target.nil?
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
@@ -113,8 +113,8 @@ module EmsRefresh::SaveInventoryInfra
     end
   end
 
-  def save_hosts_inventory(ems, hashes, target = nil)
-    target = ems if target.nil?
+  def save_hosts_inventory(ems, hashes, target = nil, disconnect = true)
+    target = ems if target.nil? && disconnect
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
     disconnects = if (target == ems)
@@ -219,7 +219,7 @@ module EmsRefresh::SaveInventoryInfra
     end
   end
 
-  def save_host_storages_inventory(host, hashes, target = nil)
+  def save_host_storages_inventory(host, hashes, target = nil, disconnect = true)
     target = host if target.nil?
 
     # Update the associated ids
@@ -229,48 +229,39 @@ module EmsRefresh::SaveInventoryInfra
     end
 
     host.host_storages(true)
-    deletes =
-      if target == host
-        host.host_storages.dup
-      else
-        []
-      end
+    deletes = if disconnect && target == host
+                host.host_storages.dup
+              else
+                []
+              end
 
     save_inventory_multi(host.host_storages, hashes, deletes, [:host_id, :storage_id], nil, [:storage])
   end
 
-  def save_folders_inventory(ems, hashes, target = nil)
+  def save_folders_inventory(ems, hashes, target = nil, disconnect = true)
     target = ems if target.nil?
 
     ems.ems_folders.reset
-    deletes = if (target == ems)
-                :use_association
-              else
-                []
-              end
+    deletes = determine_deletes_using_association(ems, target, disconnect)
 
     save_inventory_multi(ems.ems_folders, hashes, deletes, [:uid_ems], nil, :ems_children)
     store_ids_for_new_records(ems.ems_folders, hashes, :uid_ems)
   end
   alias_method :save_ems_folders_inventory, :save_folders_inventory
 
-  def save_clusters_inventory(ems, hashes, target = nil)
+  def save_clusters_inventory(ems, hashes, target = nil, disconnect = true)
     target = ems if target.nil?
 
     ems.ems_clusters.reset
-    deletes = if (target == ems)
-                :use_association
-              else
-                []
-              end
+    deletes = determine_deletes_using_association(ems, target, disconnect)
 
     save_inventory_multi(ems.ems_clusters, hashes, deletes, [:uid_ems], nil, :ems_children)
     store_ids_for_new_records(ems.ems_clusters, hashes, :uid_ems)
   end
   alias_method :save_ems_clusters_inventory, :save_clusters_inventory
 
-  def save_resource_pools_inventory(ems, hashes, target = nil)
-    target = ems if target.nil?
+  def save_resource_pools_inventory(ems, hashes, target = nil, disconnect = true)
+    target = ems if target.nil? && disconnect
 
     ems.resource_pools.reset
     deletes = if (target == ems)
@@ -285,16 +276,11 @@ module EmsRefresh::SaveInventoryInfra
     store_ids_for_new_records(ems.resource_pools, hashes, :uid_ems)
   end
 
-  def save_storage_profiles_inventory(ems, hashes, target = nil)
+  def save_storage_profiles_inventory(ems, hashes, target = nil, disconnect = true)
     target = ems if target.nil?
 
     ems.storage_profiles.reset
-    deletes =
-      if target == ems
-        :use_association
-      else
-        []
-      end
+    deletes = determine_deletes_using_association(ems, target, disconnect)
 
     save_inventory_multi(ems.storage_profiles, hashes, deletes, [:ems_ref], [:storage_profile_storages])
     store_ids_for_new_records(ems.storage_profiles, hashes, [:ems_ref])
@@ -312,8 +298,11 @@ module EmsRefresh::SaveInventoryInfra
                          [], [:storage_profile_id, :storage_id])
   end
 
-  def save_customization_specs_inventory(ems, hashes, _target = nil)
-    save_inventory_multi(ems.customization_specs, hashes, :use_association, [:name])
+  def save_customization_specs_inventory(ems, hashes, target = nil, disconnect = true)
+    target = ems if target.nil?
+
+    deletes = determine_deletes_using_association(ems, target, disconnect)
+    save_inventory_multi(ems.customization_specs, hashes, deletes, [:name])
   end
 
   def save_miq_scsi_targets_inventory(guest_device, hashes)

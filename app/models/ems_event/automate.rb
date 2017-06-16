@@ -27,9 +27,9 @@ class EmsEvent
       ems = ext_management_system
       if ems.supports_refresh_new_target?
         ep_class = ems.class::EventParser
-        target_hash = ep_class.parse_new_target(full_data, message, ems, event_type)
+        target_hash, target_class, target_find = ep_class.parse_new_target(full_data, message, ems, event_type)
 
-        EmsRefresh.queue_refresh_new_target(target_hash, ems)
+        EmsRefresh.queue_refresh_new_target(ems, target_hash, target_class, target_find)
       else
         EmsRefresh.queue_refresh(ems)
       end

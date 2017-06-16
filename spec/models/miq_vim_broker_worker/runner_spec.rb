@@ -250,20 +250,24 @@ describe MiqVimBrokerWorker::Runner do
         end
 
         it "will handle create events properly" do
+          mor       = "group-v123"
+          klass     = "EmsFolder"
+          find_opts = {:uid_ems => mor}
+
           event = {
             :server   => @ems.address,
             :username => @ems.authentication_userid,
             :objType  => "Folder",
             :op       => "create",
-            :mor      => "group-v123"
+            :mor      => mor
           }
 
           expected_folder_hash = {
             :folder => {
-              :type        => "EmsFolder",
-              :ems_ref     => "group-v123",
-              :ems_ref_obj => "group-v123",
-              :uid_ems     => "group-v123"
+              :type        => klass,
+              :ems_ref     => mor,
+              :ems_ref_obj => mor,
+              :uid_ems     => mor
             }
           }
 
@@ -274,7 +278,7 @@ describe MiqVimBrokerWorker::Runner do
           q = MiqQueue.first
           expect(q.class_name).to eq("EmsRefresh")
           expect(q.method_name).to eq("refresh_new_target")
-          expect(q.args).to eq([expected_folder_hash, @ems.id])
+          expect(q.args).to eq([@ems.id, expected_folder_hash, klass, find_opts])
         end
 
         it "will ignore updates to unknown properties" do

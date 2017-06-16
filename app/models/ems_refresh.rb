@@ -63,14 +63,14 @@ module EmsRefresh
     return task_ids if opts[:create_task]
   end
 
-  def self.queue_refresh_new_target(target_hash, ems)
+  def self.queue_refresh_new_target(ems, target_hash, target_class, target_find)
     MiqQueue.put(
       :queue_name  => MiqEmsRefreshWorker.queue_name_for_ems(ems),
       :class_name  => name,
       :method_name => 'refresh_new_target',
       :role        => "ems_inventory",
       :zone        => ems.my_zone,
-      :args        => [target_hash, ems.id],
+      :args        => [ems.id, target_hash, target_class, target_find],
       :msg_timeout => queue_timeout,
       :task_id     => nil
     )
@@ -98,16 +98,21 @@ module EmsRefresh
     end
   end
 
-  def self.refresh_new_target(target_hash, ems_id)
+  def self.refresh_new_target(ems_id, target_hash, target_class, target_find)
     ems = ExtManagementSystem.find(ems_id)
+    target_class = target_class.constantize if target_class.kind_of? String
 
-    target = save_new_target(ems, target_hash)
+    save_ems_inventory_no_disconnect(ems, target_hash)
+
+    target = target_class.find_by(target_find)
     if target.nil?
       _log.warn "Unknown target for event data: #{target_hash}."
       return
     end
 
     ems.refresher.refresh(get_target_objects(target))
+
+    target
   end
 
   def self.get_target_objects(target, single_id = nil)

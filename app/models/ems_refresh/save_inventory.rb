@@ -1,13 +1,13 @@
 module EmsRefresh::SaveInventory
-  def save_ems_inventory(ems, hashes, target = nil)
+  def save_ems_inventory(ems, hashes, target = nil, disconnect = true)
     if hashes.kind_of?(Array)
       ManagerRefresh::SaveInventory.save_inventory(ems, hashes)
       return
     end
 
     case ems
-    when EmsCloud                                           then save_ems_cloud_inventory(ems, hashes, target)
-    when EmsInfra                                           then save_ems_infra_inventory(ems, hashes, target)
+    when EmsCloud                                           then save_ems_cloud_inventory(ems, hashes, target, disconnect)
+    when EmsInfra                                           then save_ems_infra_inventory(ems, hashes, target, disconnect)
     when EmsPhysicalInfra                                   then save_ems_physical_infra_inventory(ems, hashes, target)
     when ManageIQ::Providers::AutomationManager             then save_automation_manager_inventory(ems, hashes, target)
     when ManageIQ::Providers::ConfigurationManager          then save_configuration_manager_inventory(ems, hashes, target)
@@ -18,13 +18,17 @@ module EmsRefresh::SaveInventory
     end
   end
 
+  def save_ems_inventory_no_disconnect(ems, hashes, target = nil)
+    save_ems_inventory(ems, hashes, target, false)
+  end
+
   #
   # Shared between Cloud and Infra
   #
 
-  def save_vms_inventory(ems, hashes, target = nil)
+  def save_vms_inventory(ems, hashes, target = nil, disconnect = true)
     return if hashes.nil?
-    target = ems if target.nil?
+    target = ems if target.nil? && disconnect
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
     disconnects = if target.kind_of?(ExtManagementSystem) || target.kind_of?(Host)
@@ -350,35 +354,6 @@ module EmsRefresh::SaveInventory
 
   def save_event_logs_inventory(os, hashes)
     save_inventory_multi(os.event_logs, hashes, :use_association, [:uid])
-  end
-
-  def save_new_target(ems, target_hash)
-    if target_hash[:vm]
-      vm_hash = target_hash[:vm]
-      existing_vm = VmOrTemplate.find_by(:ems_ref => vm_hash[:ems_ref], :ems_id => target_hash[:ems_id])
-      unless existing_vm.nil?
-        return existing_vm
-      end
-
-      old_cluster = get_cluster(ems, target_hash[:cluster], target_hash[:resource_pools], target_hash[:folders])
-
-      vm_hash[:ems_cluster_id] = old_cluster[:id]
-
-      new_vm = ems.vms_and_templates.create!(vm_hash)
-
-      dc = old_cluster.parent_datacenter
-      vm_folder = dc.children.select { |folder| folder.name == "vm" }[0]
-      vm_folder.add_vm(new_vm)
-      vm_folder.save!
-
-      resource_pool = old_cluster.children.first
-      resource_pool.add_vm(new_vm)
-      resource_pool.save!
-
-      new_vm
-    elsif target_hash[:folder]
-      ems.ems_folders.create!(target_hash[:folder])
-    end
   end
 
   #

@@ -5,9 +5,10 @@ module EmsRefresh::MetadataRelats
   # TODO: Replace with more efficient lookup methods using new relationships
 
   def vmdb_relats(target, relats = nil)
-    _log.info "Getting VMDB relationships for #{target.class} [#{target.name}] id: [#{target.id}]..."
-
     relats ||= default_relats_hash
+    return relats if target.nil?
+
+    _log.info "Getting VMDB relationships for #{target.class} [#{target.name}] id: [#{target.id}]..."
     if target.kind_of?(ExtManagementSystem)
       vmdb_relats_ems(target, relats)
     else
