@@ -36,7 +36,7 @@ class MiqTask < ApplicationRecord
   def self.update_status_for_timed_out_active_tasks
     MiqTask.active.timed_out.find_each do |task|
       task.update_status(STATE_FINISHED, STATUS_ERROR,
-                         "Task [#{task.id}] timed out - not active for more than #{::Settings.task.active_task_timeout}")
+                         "Task [#{task.id}] timed out - not active for more than #{::Settings.task.active_task_timeout.to_i_with_method} seconds")
     end
   end
 
