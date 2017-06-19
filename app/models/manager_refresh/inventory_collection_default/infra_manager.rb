@@ -9,6 +9,15 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
       attributes.merge!(extra_attributes)
     end
 
+    def miq_templates(extra_attributes = {})
+      attributes = {
+        :model_class => ::ManageIQ::Providers::InfraManager::Template,
+        :association => :miq_templates,
+      }
+
+      attributes.merge!(extra_attributes)
+    end
+
     def disks(extra_attributes = {})
       attributes = {
         :model_class => ::Disk,
