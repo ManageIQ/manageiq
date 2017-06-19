@@ -65,11 +65,11 @@ MIQ_WORKER_TYPES = {
   "MiqPriorityWorker" => [],
   "MiqReportingWorker" => [],
   "MiqScheduleWorker" => [],
-  "MiqSmartProxyWorker" => [:manageiq_default],
+  "MiqSmartProxyWorker" => [:smartstate],
   "MiqWebsocketWorker" => %w(ui_dependencies web_server web_socket),
-  "MiqUiWorker" => %w(web_server ui_dependencies),
+  "MiqUiWorker" => %w(ui_dependencies web_server),
   "MiqVimBrokerWorker" => [:manageiq_default],
-  "MiqWebServiceWorker" => %w(web_server ui_dependencies),
+  "MiqWebServiceWorker" => %w(rest_api ui_dependencies web_server),
   "MiqCockpitWsWorker" => [:manageiq_default]
 }.freeze
 

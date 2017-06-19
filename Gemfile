@@ -17,10 +17,7 @@ def manageiq_plugin(plugin_name)
   end
 end
 
-manageiq_plugin "manageiq-automation_engine"
-manageiq_plugin "manageiq-content"
 manageiq_plugin "manageiq-providers-ansible_tower" # can't move this down yet, because we can't autoload ManageIQ::Providers::AnsibleTower::Shared
-manageiq_plugin "manageiq-providers-nuage"
 manageiq_plugin "manageiq-schema"
 
 # Unmodified gems
@@ -41,14 +38,12 @@ gem "hamlit",                         "~>2.7.0"
 gem "inifile",                        "~>3.0",         :require => false
 gem "manageiq-api-client",            "~>0.1.0",       :require => false
 gem "manageiq-network_discovery",     "~>0.1.1",       :require => false
-gem "manageiq-smartstate",            "~>0.1.1",       :require => false
 gem "mime-types",                     "~>2.6.1",       :path => "mime-types-redirector"
 gem "more_core_extensions",           "~>3.2"
 gem "nakayoshi_fork",                 "~>0.0.3"  # provides a more CoW friendly fork (GC a few times before fork)
 gem "net-ldap",                       "~>0.14.0",      :require => false
 gem "net-ping",                       "~>1.7.4",       :require => false
 gem "net-ssh",                        "=3.2.0",        :require => false
-gem "open4",                          "~>1.3.0",       :require => false
 gem "openscap",                       "~>0.4.3",       :require => false
 gem "query_relation",                 "~>0.1.0",       :require => false
 gem "rails",                          "~>5.0.2"
@@ -111,6 +106,10 @@ group :lenovo, :manageiq_default do
   manageiq_plugin "manageiq-providers-lenovo"
 end
 
+group :nuage, :manageiq_default do
+  manageiq_plugin "manageiq-providers-nuage"
+end
+
 group :openshift, :manageiq_default do
   manageiq_plugin "manageiq-providers-openshift"
   gem "htauth",                         "2.0.0",         :require => false # used by container deployment
@@ -140,7 +139,15 @@ group :google, :openshift, :manageiq_default do
   gem "sshkey",                         "~>1.8.0",       :require => false
 end
 
+group :automate, :cockpit, :manageiq_default do
+  gem "open4",                          "~>1.3.0",       :require => false
+end
+
 ### end of provider bundler groups
+
+group :automate, :manageiq_default do
+  manageiq_plugin "manageiq-automation_engine"
+end
 
 group :replication, :manageiq_default do
   gem "pg-pglogical",                   "~>1.1.0",       :require => false
@@ -148,6 +155,14 @@ end
 
 group :rest_api, :manageiq_default do
   gem "jbuilder",                       "~>2.5.0" # For the REST API
+end
+
+group :seed, :manageiq_default do
+  manageiq_plugin "manageiq-content"
+end
+
+group :smartstate, :manageiq_default do
+  gem "manageiq-smartstate",            "~>0.1.1",       :require => false
 end
 
 group :ui_dependencies, :manageiq_default do # Added to Bundler.require in config/application.rb
