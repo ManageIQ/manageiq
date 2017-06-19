@@ -100,7 +100,7 @@ module ManagerRefresh::SaveCollection
         if ActiveRecord::Base.default_timezone == :utc
           Time.now.utc
         else
-          Time.now.localtime
+          Time.zone.now
         end
       end
 
