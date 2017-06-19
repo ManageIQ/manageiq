@@ -72,7 +72,7 @@ class ManageIQ::Providers::NativeOperationWorkflow < Job
     role     = options[:role] || "ems_operations"
     priority = options[:priority] || MiqQueue::NORMAL_PRIORITY
 
-    queue_options = {
+    MiqQueue.put(
       :class_name  => self.class.name,
       :method_name => "signal",
       :instance_id => id,
@@ -82,9 +82,7 @@ class ManageIQ::Providers::NativeOperationWorkflow < Job
       :task_id     => guid,
       :args        => args,
       :deliver_on  => deliver_on
-    }
-
-    MiqQueue.put(queue_options)
+    )
   end
 
   alias initializing dispatch_start

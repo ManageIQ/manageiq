@@ -1016,16 +1016,15 @@ class MiqAction < ApplicationRecord
       target.send(target_method, *target_args)
     else
       MiqPolicy.logger.info("#{log_prefix} Queueing #{log_suffix}")
-      args = {
+      MiqQueue.put(
         :class_name  => static ? target.name : target.class.name,
         :method_name => target_method,
+        :instance_id => static ? nil : target.id,
         :args        => target_args,
         :role        => role,
         :priority    => MiqQueue::HIGH_PRIORITY,
         :zone        => zone
-      }
-      args[:instance_id] = target.id unless static
-      MiqQueue.put(args)
+      )
     end
   end
 

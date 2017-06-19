@@ -44,6 +44,7 @@ describe MiqAction do
       q_options = {
         :class_name  => 'MiqAeEngine',
         :method_name => 'deliver',
+        :instance_id => nil,
         :args        => [@args],
         :role        => 'automate',
         :zone        => nil,
@@ -120,6 +121,7 @@ describe MiqAction do
       q_options = {
         :class_name  => "MiqAeEvent",
         :method_name => "raise_synthetic_event",
+        :instance_id => nil,
         :args        => [@vm, @event.name, @aevent],
         :priority    => MiqQueue::HIGH_PRIORITY,
         :zone        => "vm_zone",
@@ -378,6 +380,7 @@ describe MiqAction do
       q_options = {
         :class_name  => "MiqAction",
         :method_name => "queue_email",
+        :instance_id => nil,
         :args        => [{:to => nil, :from => "cfadmin@cfserver.com"}],
         :role        => "notifier",
         :priority    => 20,
