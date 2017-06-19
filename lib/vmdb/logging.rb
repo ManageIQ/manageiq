@@ -4,8 +4,15 @@ module Vmdb
   class LogProxy < Struct.new(:klass, :separator)
     LEVELS = [:debug, :info, :warn, :error]
 
-    delegate *LEVELS.map { |level| :"#{level}?" },
-             :log_backtrace, :level, :to => :logger
+    # def debug?
+    # def info?
+    # def warn?
+    # def error?
+    # def log_backtrace
+    # def level
+    (LEVELS.map { |l| :"#{l}?" } + [:log_backtrace, :level]).each do |method|
+      define_method(method) { |*args| logger.send(method, *args) }
+    end
 
     LEVELS.each do |level|
       define_method(level) do |msg = nil, &blk|

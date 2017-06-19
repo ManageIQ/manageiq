@@ -1,6 +1,5 @@
+require 'manageiq'
 require 'util/vmdb-logger'
-
-Dir.glob(File.join(File.dirname(__FILE__), "loggers", "*")).each { |f| require f }
 
 module Vmdb
   def self.logger
@@ -38,10 +37,10 @@ module Vmdb
     private
 
     def self.create_loggers
-      path_dir = Rails.root.join("log")
+      path_dir = ManageIQ.root.join("log")
 
       $log               = VMDBLogger.new(path_dir.join("evm.log"))
-      $rails_log         = VMDBLogger.new(path_dir.join("#{Rails.env}.log"))
+      $rails_log         = VMDBLogger.new(path_dir.join("#{ManageIQ.env}.log"))
       $audit_log         = AuditLogger.new(path_dir.join("audit.log"))
       $fog_log           = FogLogger.new(path_dir.join("fog.log"))
       $policy_log        = VMDBLogger.new(path_dir.join("policy.log"))
@@ -80,3 +79,5 @@ module Vmdb
     end
   end
 end
+
+Dir.glob(File.join(File.dirname(__FILE__), "loggers", "*")).each { |f| require f }
