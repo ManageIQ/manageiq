@@ -72,6 +72,8 @@ class ExtManagementSystem < ApplicationRecord
   validates :hostname, :presence => true, :if => :hostname_required?
   validate :hostname_uniqueness_valid?, :if => :hostname_required?
 
+  serialize :options
+
   def hostname_uniqueness_valid?
     return unless hostname_required?
     return unless hostname.present? # Presence is checked elsewhere
