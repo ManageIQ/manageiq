@@ -113,8 +113,11 @@ module VMDB
         dirs.each do |dir|
           dir = Rails.root.join(dir) unless Pathname.new(dir).absolute?
           Dir.glob(dir).each do |file|
-            entry, mtime = add_zip_entry(zip, file, zfile)
-            _log.info "Adding file: [#{entry}], size: [#{File.size(file)}], mtime: [#{mtime}]"
+            begin
+              entry, _mtime = add_zip_entry(zip, file, zfile)
+            rescue => e
+              _log.error "Failed to add file: [#{entry}]. Error information: #{e.message}"
+            end
           end
         end
         zip.close
@@ -131,9 +134,13 @@ module VMDB
       ztime = Zip::DOSTime.at(mtime.to_i)
       if File.directory?(file_path)
         zip.mkdir(entry)
+      elsif File.symlink?(file_path)
+        zip_entry = Zip::Entry.new(zfile, entry, nil, nil, nil, nil, nil, nil, ztime)
+        zip.add(zip_entry, File.realpath(file_path))
       else
         zip_entry = Zip::Entry.new(zfile, entry, nil, nil, nil, nil, nil, nil, ztime)
         zip.add(zip_entry, file_path)
+        _log.info "Adding file: [#{entry}], size: [#{File.size(file_path)}], mtime: [#{mtime}]"
       end
       return entry, mtime
     end
