@@ -30,4 +30,23 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Vm do
       expect(@proxies[:proxies].first).to eq('default')
     end
   end
+
+  context "reset" do
+    let(:vm) { ManageIQ::Providers::Microsoft::InfraManager::Vm.new }
+    let(:powered_on) { "Running" }
+    let(:powered_off) { "PowerOff" }
+
+    it "is available when powered on" do
+      vm.update_attributes(:raw_power_state => powered_on)
+      expect(vm.current_state).to eql('on')
+      expect(vm.supports_reset?).to be_truthy
+    end
+
+    it "is not available when powered off" do
+      vm.update_attributes(:raw_power_state => powered_off)
+      expect(vm.current_state).to eql('off')
+      expect(vm.supports_reset?).to be_falsy
+      expect(vm.unsupported_reason(:reset)).to eql('The VM is not powered on')
+    end
+  end
 end
