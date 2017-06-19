@@ -358,6 +358,28 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
                                    ]
                                   )
     end
+
+    # check https://bugzilla.redhat.com/show_bug.cgi?id=1461785
+    it "handles template without objects" do
+      expect(parser.send(:parse_template,
+                         RecursiveOpenStruct.new(
+                           :metadata => {
+                             :name              => 'template-without-objects',
+                             :namespace         => 'namespace',
+                             :uid               => '22309c35-8f70-11e5-a806-001a4a231321',
+                             :resourceVersion   => '242359',
+                             :creationTimestamp => '2017-06-17T09:18:42Z',
+                           }
+                         ))).to eq(:name                          => 'template-without-objects',
+                                   :ems_ref                       => '22309c35-8f70-11e5-a806-001a4a231321',
+                                   :namespace                     => 'namespace',
+                                   :ems_created_on                => '2017-06-17T09:18:42Z',
+                                   :resource_version              => '242359',
+                                   :labels                        => [],
+                                   :objects                       => [],
+                                   :container_project             => nil,
+                                   :container_template_parameters => [])
+    end
   end
 
   describe "parse_project" do
