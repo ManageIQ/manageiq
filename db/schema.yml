@@ -5956,9 +5956,9 @@ showback_price_plans:
 - updated_at
 showback_rates:
 - id
-- fixed_rate_subunit
+- fixed_rate_subunits
 - fixed_rate_currency
-- variable_rate_subunit
+- variable_rate_subunits
 - variable_rate_currency
 - calculation
 - category
