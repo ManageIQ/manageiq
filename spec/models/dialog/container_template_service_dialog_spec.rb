@@ -32,13 +32,22 @@ describe Dialog::ContainerTemplateServiceDialog do
     assert_tab_attributes(tab)
 
     groups = tab.dialog_groups
-    expect(groups.size).to eq(1)
+    expect(groups.size).to eq(2)
 
-    assert_parameters_group(groups[0])
+    assert_options_group(groups[0])
+    assert_parameters_group(groups[1])
   end
 
   def assert_tab_attributes(tab)
     expect(tab).to have_attributes(:label => "Basic Information", :display => "edit")
+  end
+
+  def assert_options_group(group)
+    expect(group).to have_attributes(:label => "Options", :display => "edit")
+    fields = group.dialog_fields
+    expect(fields.size).to eq(2)
+    assert_field(fields[0], DialogFieldDropDownList, :label => "Add To Existing Project", :name => "existing_project_name", :dynamic => true)
+    assert_field(fields[1], DialogFieldTextBox, :label => "(or) Add To New Project", :name => "new_project_name", :data_type => 'string')
   end
 
   def assert_field(field, clss, attributes)
