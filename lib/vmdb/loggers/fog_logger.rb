@@ -1,11 +1,5 @@
-require 'vmdb/loggers/mirrored_logger'
-
 module Vmdb::Loggers
-  class FogLogger < MirroredLogger
-    def initialize(path)
-      super(path, "<Fog> ")
-    end
-
+  class FogLogger < VMDBLogger
     # To be used as Excon's request logger, the logger must respond to
     #   #instrument as in ActiveSupport::Notifications.
     #   Implementation derived from Excon::StandardInstrumentor

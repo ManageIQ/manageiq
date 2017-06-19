@@ -21,18 +21,18 @@ module Vmdb
     def self.apply_config(config)
       apply_config_value(config, $log,               :level)
       apply_config_value(config, $rails_log,         :level_rails)
-      apply_config_value(config, $vim_log,           :level_vim,           :level_vim_in_evm)
-      apply_config_value(config, $rhevm_log,         :level_rhevm,         :level_rhevm_in_evm)
-      apply_config_value(config, $aws_log,           :level_aws,           :level_aws_in_evm)
-      apply_config_value(config, $kube_log,          :level_kube,          :level_kube_in_evm)
-      apply_config_value(config, $mw_log,            :level_mw,            :level_mw_in_evm)
-      apply_config_value(config, $datawarehouse_log, :level_datawarehouse, :level_datawarehouse_in_evm)
-      apply_config_value(config, $scvmm_log,         :level_scvmm,         :level_scvmm_in_evm)
-      apply_config_value(config, $api_log,           :level_api,           :level_api_in_evm)
-      apply_config_value(config, $fog_log,           :level_fog,           :level_fog_in_evm)
-      apply_config_value(config, $azure_log,         :level_azure,         :level_azure_in_evm)
-      apply_config_value(config, $lenovo_log,        :level_lenovo,        :level_lenovo_in_evm)
-      apply_config_value(config, $websocket_log,     :level_websocket,     :level_websocket_in_evm)
+      apply_config_value(config, $vim_log,           :level_vim)
+      apply_config_value(config, $rhevm_log,         :level_rhevm)
+      apply_config_value(config, $aws_log,           :level_aws)
+      apply_config_value(config, $kube_log,          :level_kube)
+      apply_config_value(config, $mw_log,            :level_mw)
+      apply_config_value(config, $datawarehouse_log, :level_datawarehouse)
+      apply_config_value(config, $scvmm_log,         :level_scvmm)
+      apply_config_value(config, $api_log,           :level_api)
+      apply_config_value(config, $fog_log,           :level_fog)
+      apply_config_value(config, $azure_log,         :level_azure)
+      apply_config_value(config, $lenovo_log,        :level_lenovo)
+      apply_config_value(config, $websocket_log,     :level_websocket)
     end
 
     private
@@ -44,20 +44,19 @@ module Vmdb
       $rails_log         = VMDBLogger.new(path_dir.join("#{Rails.env}.log"))
       $audit_log         = AuditLogger.new(path_dir.join("audit.log"))
       $fog_log           = FogLogger.new(path_dir.join("fog.log"))
-      $policy_log        = MirroredLogger.new(path_dir.join("policy.log"),        "<PolicyEngine> ")
-      $vim_log           = MirroredLogger.new(path_dir.join("vim.log"),           "<VIM> ")
-      $rhevm_log         = MirroredLogger.new(path_dir.join("rhevm.log"),         "<RHEVM> ")
-      $aws_log           = MirroredLogger.new(path_dir.join("aws.log"),           "<AWS> ")
-      $lenovo_log        = MirroredLogger.new(path_dir.join("lenovo.log"),        "<LENOVO> ")
-      $kube_log          = MirroredLogger.new(path_dir.join("kubernetes.log"),    "<KUBERNETES> ")
-      $mw_log            = MirroredLogger.new(path_dir.join("middleware.log"),    "<MIDDLEWARE> ")
-      $datawarehouse_log = MirroredLogger.new(path_dir.join("datawarehouse.log"), "<DATAWAREHOUSE> ")
-      $scvmm_log         = MirroredLogger.new(path_dir.join("scvmm.log"),         "<SCVMM> ")
-      $azure_log         = MirroredLogger.new(path_dir.join("azure.log"),         "<AZURE> ")
-      $api_log           = MirroredLogger.new(path_dir.join("api.log"),           "<API> ")
-      $websocket_log     = MirroredLogger.new(path_dir.join("websocket.log"),     "<WEBSOCKET> ")
-      $miq_ae_logger     = MirroredLogger.new(path_dir.join("automation.log"),    "<AutomationEngine> ")
-      $miq_ae_logger.mirror_level = VMDBLogger::INFO
+      $policy_log        = VMDBLogger.new(path_dir.join("policy.log"))
+      $vim_log           = VMDBLogger.new(path_dir.join("vim.log"))
+      $rhevm_log         = VMDBLogger.new(path_dir.join("rhevm.log"))
+      $aws_log           = VMDBLogger.new(path_dir.join("aws.log"))
+      $lenovo_log        = VMDBLogger.new(path_dir.join("lenovo.log"))
+      $kube_log          = VMDBLogger.new(path_dir.join("kubernetes.log"))
+      $mw_log            = VMDBLogger.new(path_dir.join("middleware.log"))
+      $datawarehouse_log = VMDBLogger.new(path_dir.join("datawarehouse.log"))
+      $scvmm_log         = VMDBLogger.new(path_dir.join("scvmm.log"))
+      $azure_log         = VMDBLogger.new(path_dir.join("azure.log"))
+      $api_log           = VMDBLogger.new(path_dir.join("api.log"))
+      $websocket_log     = VMDBLogger.new(path_dir.join("websocket.log"))
+      $miq_ae_logger     = VMDBLogger.new(path_dir.join("automation.log"))
 
       configure_external_loggers
     end
@@ -69,18 +68,14 @@ module Vmdb
 
     private_class_method :configure_external_loggers
 
-    def self.apply_config_value(config, logger, key, mirror_key = nil)
-      apply_config_value_logged(config, logger, :level, key)
-      apply_config_value_logged(config, logger, :mirror_level, mirror_key) if mirror_key
-    end
 
-    def self.apply_config_value_logged(config, logger, level_method, key)
-      old_level      = logger.send(level_method)
+    def self.apply_config_value(config, logger, key)
+      old_level      = logger.level
       new_level_name = (config[key] || "INFO").to_s.upcase
       new_level      = VMDBLogger.const_get(new_level_name)
       if old_level != new_level
         $log.info("MIQ(#{name}.apply_config) Log level for #{File.basename(logger.filename)} has been changed to [#{new_level_name}]")
-        logger.send("#{level_method}=", new_level)
+        logger.level = new_level
       end
     end
   end

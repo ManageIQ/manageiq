@@ -856,23 +856,14 @@
   :level: info
   :level_rails: info
   :level_lenovo: info
-  :level_lenovo_in_evm: error
   :level_mw: info
-  :level_mw_in_evm: error
   :level_kube: info
-  :level_kube_in_evm: error
   :level_api: info
-  :level_api_in_evm: error
   :level_fog: info
-  :level_fog_in_evm: error
   :level_rhevm: info
-  :level_rhevm_in_evm: error
   :level_scvmm: info
-  :level_scvmm_in_evm: error
   :level_vim: warn
-  :level_vim_in_evm: error
   :level_websocket: info
-  :level_websocket_in_evm: error
 :performance:
   :capture_threshold:
     :default: 10.minutes
