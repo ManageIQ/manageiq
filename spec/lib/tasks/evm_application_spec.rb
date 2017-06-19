@@ -94,4 +94,26 @@ describe EvmApplication do
       end
     end
   end
+
+  describe ".deployment_status" do
+    it "returns new_deployment if the database is not migrated" do
+      expect(ActiveRecord::Migrator).to receive(:current_version).and_return(0)
+      expect(described_class.deployment_status).to eq("new_deployment")
+    end
+
+    it "returns new_replica if the current server is not seeded" do
+      expect(described_class.deployment_status).to eq("new_replica")
+    end
+
+    it "returns upgrade if we need to migrate the database" do
+      EvmSpecHelper.local_miq_server
+      expect(ActiveRecord::Migrator).to receive(:needs_migration?).and_return(true)
+      expect(described_class.deployment_status).to eq("upgrade")
+    end
+
+    it "returns redeployment otherwise" do
+      EvmSpecHelper.local_miq_server
+      expect(described_class.deployment_status).to eq("redeployment")
+    end
+  end
 end

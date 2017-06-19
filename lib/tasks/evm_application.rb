@@ -138,4 +138,11 @@ class EvmApplication
     _log.info("Changing REGION file from [#{old_region}] to [#{new_region}]. Restart to use the new region.")
     region_file.write(new_region)
   end
+
+  def self.deployment_status
+    return "new_deployment" if ActiveRecord::Migrator.current_version.zero?
+    return "new_replica"    if MiqServer.my_server.nil?
+    return "upgrade"        if ActiveRecord::Migrator.needs_migration?
+    "redeployment"
+  end
 end

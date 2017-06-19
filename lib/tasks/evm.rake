@@ -55,6 +55,19 @@ namespace :evm do
     EvmApplication.update_stop
   end
 
+  desc "Determine the deployment scenario"
+  task :deployment_status => :environment do
+    status_to_code = {
+      "new_deployment" => 0,
+      "new_replica"    => 1,
+      "redeployment"   => 2,
+      "upgrade"        => 3
+    }
+    status = EvmApplication.deployment_status
+    puts "Deployment status is #{status}"
+    exit status_to_code[status]
+  end
+
   task :compile_assets => 'evm:assets:compile'
   namespace :assets do
     desc "Compile assets (clobber and precompile)"
