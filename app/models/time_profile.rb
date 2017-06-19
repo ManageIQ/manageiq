@@ -33,6 +33,19 @@ class TimeProfile < ApplicationRecord
     end
   end
 
+  def self.with_cached_time_profile_ids(profile = nil)
+    ids = begin
+            profile ||= TimeProfile.default_time_profile(nil)
+            profile.profile_for_each_region.pluck(:id)
+          rescue NoMethodError
+            nil
+          end
+    Thread.current[:default_time_profile_ids_cache] = ids
+    result = yield if block_given?
+    Thread.current[:default_time_profile_ids_cache] = nil
+    result
+  end
+
   def global?
     profile_type == "global"
   end
