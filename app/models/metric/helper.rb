@@ -144,19 +144,6 @@ module Metric::Helper
     end
   end
 
-  def self.normalize_value(value, counter)
-    return counter[:rollup] == 'latest' ? nil : 0 if value < 0
-    value = value.to_f * counter[:precision]
-
-    message = nil
-    percent_norm = 100.0
-    if counter[:unit_key] == "percent" && value > percent_norm
-      message = "percent value #{value} is out of range, resetting to #{percent_norm}"
-      value = percent_norm
-    end
-    return value, message
-  end
-
   def self.max_count(counts)
     counts.values.max rescue 0
   end
