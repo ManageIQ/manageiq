@@ -64,7 +64,7 @@ unless options[:dry_run]
            end
 
   begin
-    worker.class::Runner.start_worker(worker.guid)
+    worker.class::Runner.start_worker(:guid => worker.guid)
   ensure
     worker.delete
   end
