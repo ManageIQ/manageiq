@@ -1,9 +1,10 @@
 require 'manageiq/active_record_connector'
 
 describe ManageIQ::ActiveRecordConnector do
-  def without_rails(rb_cmd)
-    file = Rails.root.join("lib", "manageiq", "active_record_connector")
-    `#{Gem.ruby} -e "require '#{file}'; #{rb_cmd}"`.chomp
+  def without_rails(rb_cmd, env = nil)
+    file    = Rails.root.join("lib", "manageiq", "active_record_connector")
+    env_out = env.map { |k, v| "#{k}=#{v}" }.join(" ") if env && env.kind_of?(Hash)
+    `#{env_out} #{Gem.ruby} -e "require '#{file}'; #{rb_cmd}"`.chomp
   end
 
   describe ".connection_exists" do
@@ -66,6 +67,27 @@ describe ManageIQ::ActiveRecordConnector do
 
       expected_output = "true\n#{ManageIQ.root.join "log", "foobar.log"}"
       expect(without_rails(cmd)).to eq(expected_output)
+    end
+
+    it "favors DATABASE_URL over database.yml" do
+      env = {"DATABASE_URL" => "postgres://root@localhost:12345/test"}
+      cmd = [
+        "ActiveRecord::Base.logger = Logger.new '#{ManageIQ.root.join "log", "foobar.log"}'",
+        "config = #{described_class}::ConnectionConfig.database_configuration",
+        "#{described_class}.establish_connection_if_needed(config)",
+        "puts ActiveRecord::Base.connection_config.to_json"
+      ].join("; ")
+
+      expected_config = config.stringify_keys.merge(
+        "adapter"  => "postgresql",
+        "username" => "root",
+        "host"     => "localhost",
+        "port"     => 12_345,
+        "database" => "test"
+      )
+
+      result = without_rails(cmd, env)
+      expect(JSON.parse(result)).to eq(expected_config)
     end
 
     context "with a block passed" do

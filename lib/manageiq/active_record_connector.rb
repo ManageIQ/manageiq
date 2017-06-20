@@ -41,7 +41,8 @@ module ManageIQ
 
       unless existing_connection
         ActiveRecord::Base.logger ||= get_logger_from log_path
-        ActiveRecord::Base.establish_connection(db_config)
+        ActiveRecord::Base.configurations = connection_configurations_from db_config
+        ActiveRecord::Base.establish_connection
       end
 
       if block_given?
@@ -56,6 +57,18 @@ module ManageIQ
     def self.get_logger_from(log_path)
       log_path ||= ManageIQ.root.join("log", "#{ManageIQ.env}.log")
       Logger.new(log_path)
+    end
+
+    class << self
+      private
+
+      def connection_configurations_from(config)
+        if config[ManageIQ.env]
+          config
+        else
+          { ManageIQ.env => config }
+        end
+      end
     end
   end
 end
