@@ -16,6 +16,7 @@ module ManagerRefresh::SaveCollection
           inventory_objects_index[index] = inventory_object
           all_attribute_keys.merge(attributes_index[index].keys)
         end
+        all_attribute_keys << :type if inventory_collection.supports_sti?
 
         inventory_collection_size = inventory_collection.size
         deleted_counter           = 0
@@ -47,7 +48,9 @@ module ManagerRefresh::SaveCollection
               next unless assert_referential_integrity(hash, inventory_object)
               inventory_object.id = record.id
 
-              hashes_for_update << hash.symbolize_keys.except(:id, :type)
+              hash_for_update = hash.symbolize_keys.except(:id)
+              hash_for_update[:type] = inventory_collection.model_class.name if inventory_collection.supports_sti? && hash_for_update[:type].blank?
+              hashes_for_update << hash_for_update
             end
           end
 
@@ -75,7 +78,6 @@ module ManagerRefresh::SaveCollection
         destroy_records(records_for_destroy)
         records_for_destroy = [] # Cleanup so GC can release it sooner
 
-        all_attribute_keys << :type if inventory_collection.supports_sti?
         # Records that were not found in the DB but sent for saving, we will be creating these in the DB.
         if inventory_collection.create_allowed?
           inventory_objects_index.each_slice(batch_size) do |batch|
