@@ -178,7 +178,7 @@
           :description: Security Groups
           :required: false
           :display: :edit
-          :data_type: :integer
+          :data_type: :array_integer
         :floating_ip_address:
           :values_from:
             :method: :allowed_floating_ip_addresses

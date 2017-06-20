@@ -512,6 +512,14 @@ describe MiqRequestWorkflow do
       expect(workflow.cast_value(1, :button)).to      eq(1)
     end
 
+    it 'array_integer' do
+      good_array = ["23", "2", 2, 10]
+      bad_array = ["sdf", "#", 2, 10]
+
+      expect(workflow.cast_value(good_array, :array_integer)).to eq([23, 2, 2, 10])
+      expect(workflow.cast_value(bad_array, :array_integer)).to eq([0, 0, 2, 10])
+    end
+
     it 'other' do
       expect(workflow.cast_value('data', :other)).to eq('data')
       expect(workflow.cast_value(1, :other)).to      eq(1)
