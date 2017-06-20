@@ -14,8 +14,9 @@ module ManageIQ
       if ENV["CI"]
         write_region_file
         create_database_user
-        setup_test_environment
       end
+
+      setup_test_environment
     end
 
     def self.ensure_config_files
