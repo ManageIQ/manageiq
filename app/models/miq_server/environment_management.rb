@@ -76,7 +76,7 @@ module MiqServer::EnvironmentManagement
       return unless ::Settings.server.session_store.to_s == 'cache'
       return unless MiqEnvironment::Command.supports_memcached?
       require "#{Rails.root}/lib/miq_memcached" unless Object.const_defined?(:MiqMemcached)
-      _svr, port = ::Settings.session.memcache_server.to_s.split(":")
+      _svr, port = MiqMemcached.server_address.to_s.split(":")
       opts = ::Settings.session.memcache_server_opts.to_s
       MiqMemcached::Control.restart!(:port => port, :options => opts)
       _log.info("Status: #{MiqMemcached::Control.status[1]}")

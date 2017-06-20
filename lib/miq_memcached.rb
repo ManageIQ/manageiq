@@ -2,6 +2,10 @@ require 'runcmd'
 require 'linux_admin'
 
 module MiqMemcached
+  def self.server_address
+    ENV["MEMCACHED_SERVER"] || ::Settings.session.memcache_server
+  end
+
   class Error < RuntimeError; end
   class ControlError < Error; end
 
