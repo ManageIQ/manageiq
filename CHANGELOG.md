@@ -9,7 +9,75 @@ The ManageIQ organization is continuously adding new smaller repositories.  The 
 - [manageiq-providers-vmware CHANGELOG](https://github.com/ManageIQ/manageiq-providers-vmware/blob/master/CHANGELOG.md)
 - [manageiq-ui-classic CHANGELOG](https://github.com/ManageIQ/manageiq-ui-classic/blob/master/CHANGELOG.md)
 
-## Unreleased - as of Sprint 66 end 2017-06-05
+## Unreleased - as of Sprint 63 end 2017-06-19
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+63+Ending+Jun+19%2C+2017%22+label%3Aenhancement)
+
+- Automate
+  - Support array of objects for custom button support [(#14930)](https://github.com/ManageIQ/manageiq/pull/14930)
+  - Services
+    - Log zone(q_options) when raising retirement event. [(#15317)](https://github.com/ManageIQ/manageiq/pull/15317)
+    - Add configuration_script reference to service [(#14232)](https://github.com/ManageIQ/manageiq/pull/14232)
+    - Add ServiceTemplateContainerTemplate. [(#15356)](https://github.com/ManageIQ/manageiq/pull/15356)
+    - Add project option to container template service dialog. [(#15340)](https://github.com/ManageIQ/manageiq/pull/15340)
+
+- Platform
+  - Rails scripts for setting a server's zone and configuration settings from a command line [(#11204)](https://github.com/ManageIQ/manageiq/pull/11204)
+
+- Providers
+  - Batch saving strategy should populate the right timestamps [(#15394)](https://github.com/ManageIQ/manageiq/pull/15394)
+  - Add power off/on events to automate control and the foreign key to events physical server [(#15138)](https://github.com/ManageIQ/manageiq/pull/15138)
+  - Search for "product/views" in all plugins [(#15353)](https://github.com/ManageIQ/manageiq/pull/15353)
+  - Save resource group information [(#15187)](https://github.com/ManageIQ/manageiq/pull/15187)
+  - Add new class Dialog::ContainerTemplateServiceDialog. [(#15216)](https://github.com/ManageIQ/manageiq/pull/15216)
+  - Concurent safe batch saver [(#15247)](https://github.com/ManageIQ/manageiq/pull/15247)
+  - Removed SCVMM Data as moved to manageiq-providers-scvmm [(#15314)](https://github.com/ManageIQ/manageiq/pull/15314)
+  - Middleware: Validate presence of feed on middleware servers [(#15390)](https://github.com/ManageIQ/manageiq/pull/15390)
+
+- REST API
+  - Return BadRequestError when invalid attributes are specified [(#15040)](https://github.com/ManageIQ/manageiq/pull/15040)
+  - Return href on create [(#15005)](https://github.com/ManageIQ/manageiq/pull/15005)
+  - Remove miq_server [(#15284)](https://github.com/ManageIQ/manageiq/pull/15284)
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+63+Ending+Jun+19%2C+2017%22+label%3Aenhancement)
+
+- Performance
+  - Do not queue C&U for things that aren't supported [(#15195)](https://github.com/ManageIQ/manageiq/pull/15195)
+  - Add memory usage to worker status in rake evm:status and status_full [(#15375)](https://github.com/ManageIQ/manageiq/pull/15375)
+  - Inventory collection default for infra manager [(#15082)](https://github.com/ManageIQ/manageiq/pull/15082)
+  - Cache node_types instead of calling on every request [(#14922)](https://github.com/ManageIQ/manageiq/pull/14922)
+  - Introduce: supports :capture [(#15194)](https://github.com/ManageIQ/manageiq/pull/15194)
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+63+Ending+Jun+19%2C+2017%22+label%3Abug)
+
+- Automate
+  - Provisioning: Select datastore by its association with the provider [(#15245)](https://github.com/ManageIQ/manageiq/pull/15245)
+  - Services: Add orchestration stack my_zone. [(#15334)](https://github.com/ManageIQ/manageiq/pull/15334)
+
+
+- Platform
+  - Add vm_migrate_task factory. [(#15332)](https://github.com/ManageIQ/manageiq/pull/15332)
+  - FileDepotFtp: FTP.nlst cannot distinguish empty from non-existent dir [(#9127)](https://github.com/ManageIQ/manageiq/pull/9127)
+  - Put back region_description method that was accidentally extracted [(#15372)](https://github.com/ManageIQ/manageiq/pull/15372)
+  - Format time interval for log message [(#15370)](https://github.com/ManageIQ/manageiq/pull/15370)
+  - Increase timeout for metric purging [(#15312)](https://github.com/ManageIQ/manageiq/pull/15312)
+  - Handle setup playbook failure better [(#15313)](https://github.com/ManageIQ/manageiq/pull/15313)
+  - RBAC
+    - Make user filter as restriction in RBAC [(#15367)](https://github.com/ManageIQ/manageiq/pull/15367)
+    - Add AuthKeyPair to RBAC [(#15359)](https://github.com/ManageIQ/manageiq/pull/15359)
+  - Reporting: Include cloud instances in Powered On/Off Report [(#15333)](https://github.com/ManageIQ/manageiq/pull/15333)
+
+- Providers
+  - Limit CloudTenants' related VMs to the non-archived ones [(#15329)](https://github.com/ManageIQ/manageiq/pull/15329)
+  - Fix orchestrated destroy [(#15339)](https://github.com/ManageIQ/manageiq/pull/15339)
+  - Wait for ems workers to finish before destroying the ems [(#14848)](https://github.com/ManageIQ/manageiq/pull/14848)
+  - Return an empty relation instead of an array from db_relation() [(#15325)](https://github.com/ManageIQ/manageiq/pull/15325)
+
+- REST API
+  - Redirect tasks subcollection to request_tasks  [(#15357)](https://github.com/ManageIQ/manageiq/pull/15357)
+  - Add RBAC for virtual attributes in API [(#15145)](https://github.com/ManageIQ/manageiq/pull/15145)
+
+## Unreleased - as of Sprint 62 end 2017-06-05
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+62+Ending+Jun+5%2C+2017%22+label%3Aenhancement)
 
