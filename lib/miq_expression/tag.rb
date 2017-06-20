@@ -23,11 +23,6 @@ class MiqExpression::Tag < MiqExpression::Target
     @namespace = "/#{@base_namespace}/#{column}"
   end
 
-  def contains(value)
-    ids = model.find_tagged_with(:any => value, :ns => namespace).pluck(:id)
-    model.arel_attribute(:id).in(ids)
-  end
-
   def numeric?
     false
   end
