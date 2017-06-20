@@ -185,7 +185,6 @@ class MiqQueue < ApplicationRecord
     put_unless_exists(*args)
   end
 
-
   def unget(options = {})
     update_attributes!(options.merge(:state => STATE_READY, :handler => nil))
     @delivered_on = nil
