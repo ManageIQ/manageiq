@@ -179,6 +179,13 @@ class MiqQueue < ApplicationRecord
     put(*args)
   end
 
+  # Place holder for deprecated put_unless_exists call
+  # which might not be needed in the new architecture
+  def self.put_unless_exists_deprecated(*args)
+    put_unless_exists(*args)
+  end
+
+
   def unget(options = {})
     update_attributes!(options.merge(:state => STATE_READY, :handler => nil))
     @delivered_on = nil

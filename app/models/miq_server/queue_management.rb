@@ -32,7 +32,7 @@ module MiqServer::QueueManagement
   end
 
   def enqueue_for_server(method_name)
-    MiqQueue.put_unless_exists(
+    MiqQueue.put_unless_exists_deprecated(
       :class_name  => self.class.name,
       :instance_id => id,
       :queue_name  => 'miq_server',
