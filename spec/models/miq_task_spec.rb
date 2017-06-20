@@ -232,7 +232,7 @@ describe MiqTask do
     it "should queue up proper deletes when calling MiqTask.delete_older" do
       Timecop.travel(10.minutes.ago) { @miq_task2.state_queued }
       Timecop.travel(12.minutes.ago) { @miq_task3.state_queued }
-      date_5_minutes_ago =  5.minutes.ago.utc
+      date_5_minutes_ago = 5.minutes.ago.utc
       condition = "name LIKE 'name LIKE 'Performance rollup for %''"
       MiqTask.delete_older(date_5_minutes_ago, condition)
 
@@ -449,6 +449,35 @@ describe MiqTask do
         miq_task.reload
         expect(miq_task.status).not_to eq MiqTask::STATUS_ERROR
       end
+    end
+  end
+
+  describe ".destroy_older_by_condition" do
+    before do
+      create_test_task("Task1", MiqTask::STATUS_OK, 10.minutes.ago)
+      create_test_task("Task12", MiqTask::STATUS_ERROR, 20.minutes.ago)
+      create_test_task("Task3", MiqTask::STATUS_ERROR, 30.minutes.ago)
+      create_test_task("Task4", MiqTask::STATUS_WARNING, 40.minutes.ago)
+    end
+
+    it "destroys task older than passed date and nil as filtering condition" do
+      MiqTask.destroy_older_by_condition(15.minutes.ago, nil)
+      expect(MiqTask.count).to eq 1
+    end
+
+    it "destroys task filtered by passed condition and older than passed date" do
+      MiqTask.destroy_older_by_condition(15.minutes.ago, ["status=? AND name LIKE ?", MiqTask::STATUS_ERROR, "Task1%"])
+      expect(MiqTask.count).to eq 3
+    end
+  end
+
+  private
+
+  def create_test_task(name, status, updated)
+    Timecop.travel(updated) do
+      FactoryGirl.create(:miq_task_plain).update_attributes(:state  => MiqTask::STATE_FINISHED,
+                                                            :status => status,
+                                                            :name   => name)
     end
   end
 end
