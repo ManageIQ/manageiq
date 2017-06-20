@@ -58,10 +58,10 @@ namespace :evm do
   desc "Determine the deployment scenario"
   task :deployment_status => :environment do
     status_to_code = {
-      "new_deployment" => 0,
-      "new_replica"    => 1,
-      "redeployment"   => 2,
-      "upgrade"        => 3
+      "new_deployment" => 3,
+      "new_replica"    => 4,
+      "redeployment"   => 5,
+      "upgrade"        => 6
     }
     status = EvmApplication.deployment_status
     puts "Deployment status is #{status}"
