@@ -317,16 +317,13 @@ class MiqQueue < ApplicationRecord
 
       data = self.data
       args.push(data) if data
+      args.unshift(target_id) if obj.kind_of?(Class) && target_id
 
       begin
         status = STATUS_OK
         message = "Message delivered successfully"
         Timeout.timeout(msg_timeout) do
-          if obj.kind_of?(Class) && !target_id.nil?
-            result = obj.send(method_name, target_id, *args)
-          else
-            result = obj.send(method_name, *args)
-          end
+          result = obj.send(method_name, *args)
         end
       rescue MiqException::MiqQueueRetryLater => err
         unget(err.options)
