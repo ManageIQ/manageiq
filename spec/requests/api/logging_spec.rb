@@ -38,13 +38,10 @@ describe "Logging" do
 
       run_post(services_url, gen_request(:create, "name" => "new_service_1", "options" => { "password" => "SECRET" }))
 
-      @log.rewind
-      expect(@log.readlines).to include(
-        a_string_matching(
-          'Parameters:     {"action"=>"update", "controller"=>"api/services", "format"=>"json", ' \
-          '"body"=>{"action"=>"create", "resource"=>{"name"=>"new_service_1", ' \
-          '"options"=>{"password"=>"\[FILTERED\]"}}}}'
-        )
+      expect(@log.string).to include(
+        'Parameters:     {"action"=>"update", "controller"=>"api/services", "format"=>"json", ' \
+        '"body"=>{"action"=>"create", "resource"=>{"name"=>"new_service_1", ' \
+        '"options"=>{"password"=>"[FILTERED]"}}}}'
       )
     end
 
@@ -58,15 +55,10 @@ describe "Logging" do
 
         run_get entrypoint_url, :headers => {Api::HttpHeaders::MIQ_TOKEN => miq_token}
 
-        @log.rewind
-        expect(@log.readlines).to include(
-          a_string_matching(
-            "System Auth:    {:x_miq_token=>\"#{Regexp.escape(miq_token)}\", :server_guid=>\"#{server_guid}\", " \
-            ":userid=>\"api_user_id\", :timestamp=>2017-01-01 00:00:00 UTC}"
-          ),
-          a_string_matching(
-            'Authentication: {:type=>"system", :token=>nil, :x_miq_group=>nil, :user=>"api_user_id"}'
-          )
+        expect(@log.string).to include(
+          "System Auth:    {:x_miq_token=>\"#{miq_token}\", :server_guid=>\"#{server_guid}\", " \
+          ":userid=>\"api_user_id\", :timestamp=>2017-01-01 00:00:00 UTC}",
+          'Authentication: {:type=>"system", :token=>nil, :x_miq_group=>nil, :user=>"api_user_id"}'
         )
       end
     end
