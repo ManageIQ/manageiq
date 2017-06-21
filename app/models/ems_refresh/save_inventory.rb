@@ -228,7 +228,6 @@ module EmsRefresh::SaveInventory
 
     # Update the associated ids
     hashes.each do |h|
-
       h[:switch_id] = h.fetch_path(:switch, :id)
       h[:lan_id] = h.fetch_path(:lan, :id)
 
