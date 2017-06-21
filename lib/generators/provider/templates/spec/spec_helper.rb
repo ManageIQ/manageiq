@@ -10,3 +10,4 @@ end
 # end
 
 Dir[Rails.root.join("spec/shared/**/*.rb")].each { |f| require f }
+Dir[ManageIQ::Providers::<%= class_name %>::Engine.root.join("spec/support/**/*.rb")].each { |f| require f }

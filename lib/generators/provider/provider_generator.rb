@@ -49,6 +49,7 @@ class ProviderGenerator < Rails::Generators::NamedBase
     template "lib/tasks_private/spec.rake"
     empty_directory "spec/factories"
     empty_directory "spec/models/manageiq/providers/#{provider_name}"
+    empty_directory "spec/support"
     template "spec/spec_helper.rb"
   end
 
