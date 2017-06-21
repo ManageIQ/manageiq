@@ -26,9 +26,41 @@ describe EmbeddedAnsible do
       end
     end
 
+    it "returns true unconditionally in a container" do
+      allow(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
+      expect(described_class.available?).to be_truthy
+    end
+
     it "returns false outside of an appliance" do
       allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
       expect(described_class.available?).to be_falsey
+    end
+  end
+
+  describe ".running?" do
+    it "always returns true when in a container" do
+      expect(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
+      expect(LinuxAdmin::Service).not_to receive(:new)
+
+      expect(described_class.running?).to be_truthy
+    end
+  end
+
+  describe ".stop" do
+    it "doesn't attempt to stop services if running in a container" do
+      expect(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
+      expect(LinuxAdmin::Service).not_to receive(:new)
+
+      described_class.stop
+    end
+  end
+
+  describe ".disable" do
+    it "doesn't attempt to disable services if running in a container" do
+      expect(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
+      expect(LinuxAdmin::Service).not_to receive(:new)
+
+      described_class.disable
     end
   end
 
@@ -237,6 +269,12 @@ describe EmbeddedAnsible do
           key_file.unlink
           miq_database.ansible_secret_key = "password"
           expect(described_class.configured?).to be false
+        end
+
+        it "returns true when the file doesn't exist and we are running in a container" do
+          expect(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
+          key_file.unlink
+          expect(described_class.configured?).to be true
         end
       end
 

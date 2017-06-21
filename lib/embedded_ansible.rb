@@ -13,6 +13,7 @@ class EmbeddedAnsible
   WAIT_FOR_ANSIBLE_SLEEP = 1.second
 
   def self.available?
+    return true if MiqEnvironment::Command.is_container?
     return false unless MiqEnvironment::Command.is_appliance?
 
     required_rpms = Set["ansible-tower-server", "ansible-tower-setup"]
@@ -24,10 +25,12 @@ class EmbeddedAnsible
   end
 
   def self.running?
+    return true if MiqEnvironment::Command.is_container?
     services.all? { |service| LinuxAdmin::Service.new(service).running? }
   end
 
   def self.configured?
+    return true if MiqEnvironment::Command.is_container?
     return false unless File.exist?(SECRET_KEY_FILE)
     key = miq_database.ansible_secret_key
     key.present? && key == File.read(SECRET_KEY_FILE)
@@ -62,10 +65,12 @@ class EmbeddedAnsible
   end
 
   def self.stop
+    return if MiqEnvironment::Command.is_container?
     services.each { |service| LinuxAdmin::Service.new(service).stop }
   end
 
   def self.disable
+    return if MiqEnvironment::Command.is_container?
     services.each { |service| LinuxAdmin::Service.new(service).stop.disable }
   end
 
