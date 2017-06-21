@@ -232,30 +232,35 @@ describe MiqTask do
     it "should queue up proper deletes when calling MiqTask.delete_older" do
       Timecop.travel(10.minutes.ago) { @miq_task2.state_queued }
       Timecop.travel(12.minutes.ago) { @miq_task3.state_queued }
-      MiqTask.delete_older(5.minutes.ago.utc, nil)
+      date_5_minutes_ago = 5.minutes.ago.utc
+      condition = "name LIKE 'name LIKE 'Performance rollup for %''"
+      MiqTask.delete_older(date_5_minutes_ago, condition)
 
       expect(MiqQueue.count).to eq(1)
       message = MiqQueue.first
 
       expect(message.class_name).to eq("MiqTask")
-      expect(message.method_name).to eq("destroy")
+      expect(message.method_name).to eq("destroy_older_by_condition")
       expect(message.args).to        be_kind_of(Array)
-      expect(message.args.length).to eq(1)
-      expect(message.args.first).to match_array([@miq_task2.id, @miq_task3.id])
+      expect(message.args.length).to eq(2)
+      expect(message.args.first).to eq(date_5_minutes_ago)
+      expect(message.args.second).to eq(condition)
       expect(message.zone).to eq(@zone)
 
       message.destroy
 
-      MiqTask.delete_older(11.minutes.ago.utc, nil)
+      date_11_minutes_ago = 11.minutes.ago.utc
+      MiqTask.delete_older(date_11_minutes_ago, nil)
 
       expect(MiqQueue.count).to eq(1)
       message = MiqQueue.first
 
       expect(message.class_name).to eq("MiqTask")
-      expect(message.method_name).to eq("destroy")
+      expect(message.method_name).to eq("destroy_older_by_condition")
       expect(message.args).to        be_kind_of(Array)
-      expect(message.args.length).to eq(1)
-      expect(message.args.first).to eq([@miq_task3.id])
+      expect(message.args.length).to eq(2)
+      expect(message.args.first).to eq(date_11_minutes_ago)
+      expect(message.args.second).to be nil
       expect(message.zone).to eq(@zone)
     end
   end
@@ -379,6 +384,35 @@ describe MiqTask do
         miq_task.reload
         expect(miq_task.status).not_to eq MiqTask::STATUS_ERROR
       end
+    end
+  end
+
+  describe ".destroy_older_by_condition" do
+    before do
+      create_test_task("Task1", MiqTask::STATUS_OK, 10.minutes.ago)
+      create_test_task("Task12", MiqTask::STATUS_ERROR, 20.minutes.ago)
+      create_test_task("Task3", MiqTask::STATUS_ERROR, 30.minutes.ago)
+      create_test_task("Task4", MiqTask::STATUS_WARNING, 40.minutes.ago)
+    end
+
+    it "destroys task older than passed date and nil as filtering condition" do
+      MiqTask.destroy_older_by_condition(15.minutes.ago, nil)
+      expect(MiqTask.count).to eq 1
+    end
+
+    it "destroys task filtered by passed condition and older than passed date" do
+      MiqTask.destroy_older_by_condition(15.minutes.ago, ["status=? AND name LIKE ?", MiqTask::STATUS_ERROR, "Task1%"])
+      expect(MiqTask.count).to eq 3
+    end
+  end
+
+  private
+
+  def create_test_task(name, status, updated)
+    Timecop.travel(updated) do
+      FactoryGirl.create(:miq_task_plain).update_attributes(:state  => MiqTask::STATE_FINISHED,
+                                                            :status => status,
+                                                            :name   => name)
     end
   end
 end

@@ -267,9 +267,18 @@ class MiqTask < ApplicationRecord
   end
 
   def self.delete_older(ts, condition)
-    _log.info("Queuing deletion of tasks older than: #{ts}")
-    ids = where("updated_on < ?", ts).where(condition).pluck("id")
-    delete_by_id(ids)
+    _log.info("Queuing deletion of tasks older than #{ts} and with condition: #{condition}")
+    MiqQueue.put(
+      :class_name  => name,
+      :method_name => "destroy_older_by_condition",
+      :args        => [ts, condition],
+      :zone        => MiqServer.my_zone
+    )
+  end
+
+  def self.destroy_older_by_condition(ts, condition)
+    _log.info("Executing destroy_all for records older than #{ts} and with condition: #{condition}")
+    MiqTask.where("updated_on < ?", ts).where(condition).destroy_all
   end
 
   def self.delete_by_id(ids)
