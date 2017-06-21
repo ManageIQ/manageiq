@@ -1,8 +1,8 @@
 module Vmdb
-  class Settings
-    module Walker
-      PASSWORD_FIELDS = %i(bind_pwd password amazon_secret ssh_key_data ssh_key_unlock become_password vault_password security_token).to_set.freeze
+  module SettingsWalker
+    PASSWORD_FIELDS = %i(bind_pwd password amazon_secret ssh_key_data ssh_key_unlock become_password vault_password security_token).to_set.freeze
 
+    module ClassMethods
       # Walks the settings and yields each value along the way
       #
       # @param settings [Config::Options, Hash] The settings to walk.
@@ -15,7 +15,7 @@ module Vmdb
       #   Array, this will include the index in the Array.
       # @yieldparam owner [Config::Options, Hash] The settings object
       #   that owns the current key
-      def self.walk(settings, path = [], &block)
+      def walk(settings, path = [], &block)
         settings.each do |key, value|
           key_path = path.dup << key
 
@@ -36,7 +36,7 @@ module Vmdb
       # Walks the settings and yields only each password value along the way
       #
       # @param settings (see .walk)
-      def self.walk_passwords(settings)
+      def walk_passwords(settings)
         walk(settings) do |key, value, _path, owner|
           yield(key, value, owner) if value.present? && PASSWORD_FIELDS.include?(key.to_sym)
         end
@@ -45,23 +45,25 @@ module Vmdb
       # Walks the settings and masks out passwords it finds
       #
       # @param settings (see .walk)
-      def self.mask_passwords!(settings)
+      def mask_passwords!(settings)
         walk_passwords(settings) { |k, _v, h| h[k] = "********" }
       end
 
       # Walks the settings and decrypts passwords it finds
       #
       # @param settings (see .walk)
-      def self.decrypt_passwords!(settings)
+      def decrypt_passwords!(settings)
         walk_passwords(settings) { |k, v, h| h[k] = MiqPassword.try_decrypt(v) }
       end
 
       # Walks the settings and encrypts passwords it finds
       #
       # @param settings (see .walk)
-      def self.encrypt_passwords!(settings)
+      def encrypt_passwords!(settings)
         walk_passwords(settings) { |k, v, h| h[k] = MiqPassword.try_encrypt(v) }
       end
     end
+
+    extend ClassMethods
   end
 end

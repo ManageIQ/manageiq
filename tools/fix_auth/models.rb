@@ -85,7 +85,7 @@ module FixAuth
     serialize :value
 
     def self.contenders
-      query = Vmdb::Settings::Walker::PASSWORD_FIELDS.collect do |field|
+      query = Vmdb::SettingsWalker::PASSWORD_FIELDS.collect do |field|
         "(key LIKE '%/#{field}')"
       end.join(" OR ")
 

@@ -6,7 +6,9 @@ require_dependency 'vmdb/settings_walker'
 
 module Vmdb
   class Settings
-    PASSWORD_FIELDS = Vmdb::Settings::Walker::PASSWORD_FIELDS
+    extend Vmdb::SettingsWalker::ClassMethods
+
+    PASSWORD_FIELDS = Vmdb::SettingsWalker::PASSWORD_FIELDS
     DUMP_LOG_FILE   = Rails.root.join("log/last_settings.txt").freeze
 
     cattr_accessor :last_loaded
@@ -28,7 +30,7 @@ module Vmdb
     end
 
     def self.walk(settings = ::Settings, path = [], &block)
-      Walker.walk(settings, path, &block)
+      super(settings, path, &block)
     end
 
     def self.activate
@@ -59,18 +61,6 @@ module Vmdb
 
     def self.template_settings
       build_template.load!
-    end
-
-    def self.mask_passwords!(settings)
-      Walker.mask_passwords!(settings)
-    end
-
-    def self.decrypt_passwords!(settings)
-      Walker.decrypt_passwords!(settings)
-    end
-
-    def self.encrypt_passwords!(settings)
-      Walker.encrypt_passwords!(settings)
     end
 
     def self.dump_to_log_directory(settings)
