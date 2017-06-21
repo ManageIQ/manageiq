@@ -2,7 +2,7 @@ require 'config'
 require_dependency 'patches/config_patch'
 require_dependency 'vmdb/settings/database_source'
 require_dependency 'vmdb/settings/hash_differ'
-require_dependency 'vmdb/settings/walker'
+require_dependency 'vmdb/settings_walker'
 
 module Vmdb
   class Settings
