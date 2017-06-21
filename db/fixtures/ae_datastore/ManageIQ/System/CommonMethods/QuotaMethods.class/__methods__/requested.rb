@@ -9,7 +9,7 @@ def request_info
 end
 
 def cloud?(prov_type)
-  %w(amazon openstack google).include?(prov_type)
+  %w(amazon openstack google azure).include?(prov_type)
 end
 
 def calculate_requested(options_hash = {})
@@ -170,39 +170,40 @@ def provision_type(resource)
   end
 end
 
-def cloud_storage(flavor, dialog_array, resource)
-  return unless flavor
-
-  storage = if provision_type(resource) == 'google'
-              get_option_value(resource, :boot_disk_size).gigabytes
+def cloud_storage(args_hash)
+  flavor = args_hash[:flavor]
+  storage = if provision_type(args_hash[:resource]) == 'google'
+              get_option_value(args_hash[:resource], :boot_disk_size).gigabytes
             else
               flavor.root_disk_size.to_i + flavor.ephemeral_disk_size.to_i + flavor.swap_disk_size.to_i
             end
-  default_option(storage, dialog_array)
+  $evm.log(:info, "Retrieving cloud storage #{storage}")
+  default_option((storage * args_hash[:number_of_vms]), args_hash[:options_array])
 end
 
-def cloud_number_of_cpus(flavor, dialog_array)
-  return unless flavor
+def cloud_number_of_cpus(args_hash)
+  flavor = args_hash[:flavor]
   $evm.log(:info, "Retrieving cloud flavor #{flavor.name} cpus => #{flavor.cpus}")
-  default_option(flavor.cpus, dialog_array)
+  default_option((flavor.cpus * args_hash[:number_of_vms]), args_hash[:options_array])
 end
 
-def cloud_vm_memory(flavor, dialog_array)
-  return unless flavor
+def cloud_vm_memory(args_hash)
+  flavor = args_hash[:flavor]
   $evm.log(:info, "Retrieving flavor #{flavor.name} memory => #{flavor.memory}")
-  default_option(flavor.memory, dialog_array)
+  default_option((flavor.memory * args_hash[:number_of_vms]), args_hash[:options_array])
 end
 
 def cloud_value(args_hash)
   return false unless args_hash[:cloud]
+  return false unless args_hash[:flavor]
 
   case args_hash[:prov_option]
   when :number_of_cpus
-    cloud_number_of_cpus(args_hash[:flavor], args_hash[:options_array])
+    cloud_number_of_cpus(args_hash)
   when :vm_memory
-    cloud_vm_memory(args_hash[:flavor], args_hash[:options_array])
+    cloud_vm_memory(args_hash)
   when :storage
-    cloud_storage(args_hash[:flavor], args_hash[:options_array], args_hash[:resource])
+    cloud_storage(args_hash)
   end
 end
 
