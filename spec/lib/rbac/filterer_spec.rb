@@ -76,9 +76,9 @@ describe Rbac::Filterer do
 
   describe ".search" do
     context 'with tags' do
-      let(:role)                       { FactoryGirl.create(:miq_user_role) }
-      let(:tagged_group)               { FactoryGirl.create(:miq_group, :tenant => Tenant.root_tenant, :miq_user_role => role) }
-      let(:user)                       { FactoryGirl.create(:user, :miq_groups => [tagged_group]) }
+      let(:role)         { FactoryGirl.create(:miq_user_role) }
+      let(:tagged_group) { FactoryGirl.create(:miq_group, :tenant => Tenant.root_tenant, :miq_user_role => role) }
+      let(:user)         { FactoryGirl.create(:user, :miq_groups => [tagged_group]) }
 
       before do
         tagged_group.entitlement = Entitlement.new
@@ -95,6 +95,17 @@ describe Rbac::Filterer do
 
           results = described_class.search(:class => ManageIQ::Providers::CloudManager::AuthKeyPair, :user => user).first
           expect(results).to match_array [auth_key_pair_cloud]
+        end
+      end
+
+      context 'searching for instances of HostAggregate' do
+        let!(:host_aggregate) { FactoryGirl.create_list(:host_aggregate, 2).first }
+
+        it 'lists only tagged HostAggregates' do
+          host_aggregate.tag_with('/managed/environment/prod', :ns => '*')
+
+          results = described_class.search(:class => HostAggregate, :user => user).first
+          expect(results).to match_array [host_aggregate]
         end
       end
     end
