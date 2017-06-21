@@ -79,11 +79,20 @@ class EmbeddedAnsible
   end
 
   def self.api_connection
+    if MiqEnvironment::Command.is_container?
+      host = ENV["ANSIBLE_SERVICE_NAME"]
+      port = 80
+    else
+      host = "localhost"
+      port = HTTP_PORT
+    end
+
     admin_auth = miq_database.ansible_admin_authentication
     AnsibleTowerClient::Connection.new(
-      :base_url => URI::HTTP.build(:host => "localhost", :path => "/api/v1", :port => HTTP_PORT).to_s,
-      :username => admin_auth.userid,
-      :password => admin_auth.password
+      :base_url   => URI::HTTP.build(:host => host, :path => "/api/v1", :port => port).to_s,
+      :username   => admin_auth.userid,
+      :password   => admin_auth.password,
+      :verify_ssl => 0
     )
   end
 

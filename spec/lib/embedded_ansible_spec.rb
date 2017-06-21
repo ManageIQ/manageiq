@@ -165,6 +165,29 @@ describe EmbeddedAnsible do
       EvmSpecHelper.create_guid_miq_server_zone
     end
 
+    describe ".api_connection" do
+      around do |example|
+        old_env = ENV["ANSIBLE_SERVICE_NAME"]
+        ENV["ANSIBLE_SERVICE_NAME"] = "ansible-service"
+        example.run
+        ENV["ANSIBLE_SERVICE_NAME"] = old_env
+      end
+
+      it "connects to the ansible service when running in a container" do
+        miq_database.set_ansible_admin_authentication(:password => "adminpassword")
+        expect(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
+
+        expect(AnsibleTowerClient::Connection).to receive(:new).with(
+          :base_url   => "http://ansible-service/api/v1",
+          :username   => "admin",
+          :password   => "adminpassword",
+          :verify_ssl => 0
+        )
+
+        described_class.api_connection
+      end
+    end
+
     describe ".alive?" do
       it "returns false if the service is not configured" do
         expect(described_class).to receive(:configured?).and_return false
@@ -188,9 +211,10 @@ describe EmbeddedAnsible do
           miq_database.set_ansible_admin_authentication(:password => "adminpassword")
 
           expect(AnsibleTowerClient::Connection).to receive(:new).with(
-            :base_url => "http://localhost:54321/api/v1",
-            :username => "admin",
-            :password => "adminpassword"
+            :base_url   => "http://localhost:54321/api/v1",
+            :username   => "admin",
+            :password   => "adminpassword",
+            :verify_ssl => 0
           ).and_return(api_conn)
           expect(api_conn).to receive(:api).and_return(api)
         end
