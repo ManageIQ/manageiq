@@ -14,7 +14,7 @@ class ChargebackRateDetail < ApplicationRecord
 
   delegate :metric_key, :cost_keys, :to => :chargeable_field
 
-  FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric chargeable_field_id).freeze
+  FORM_ATTRIBUTES = %i(per_time per_unit chargeable_field_id).freeze
   PER_TIME_TYPES = {
     "hourly"  => _("Hourly"),
     "daily"   => _("Daily"),
@@ -209,6 +209,6 @@ class ChargebackRateDetail < ApplicationRecord
       end
     end
 
-    rate_details.sort_by { |rd| [rd[:group], rd[:description]] }
+    rate_details.sort_by { |rd| [rd.chargeable_field.group, rd.chargeable_field.description] }
   end
 end
