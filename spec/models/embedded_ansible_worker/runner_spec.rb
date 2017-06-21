@@ -63,6 +63,34 @@ describe EmbeddedAnsibleWorker::Runner do
         expect(provider.zone).to eq(new_zone)
         expect(provider.default_endpoint.url).to eq("https://boringserver/ansibleapi/v1")
       end
+
+      context "in a container" do
+        before do
+          expect(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
+        end
+
+        around do |example|
+          old_env = ENV["ANSIBLE_SERVICE_NAME"]
+          ENV["ANSIBLE_SERVICE_NAME"] = "ansible-service"
+          example.run
+          ENV["ANSIBLE_SERVICE_NAME"] = old_env
+        end
+
+        it "creates the provider with the service name for the URL" do
+          expect(worker).to receive(:remove_demo_data).with(api_connection)
+          expect(worker).to receive(:ensure_initial_objects)
+            .with(instance_of(ManageIQ::Providers::EmbeddedAnsible::Provider), api_connection)
+
+          runner.update_embedded_ansible_provider
+
+          provider = ManageIQ::Providers::EmbeddedAnsible::Provider.first
+          expect(provider.zone).to eq(miq_server.zone)
+          expect(provider.default_endpoint.url).to eq("https://ansible-service/api/v1")
+          userid, password = provider.auth_user_pwd
+          expect(userid).to eq("admin")
+          expect(password).to eq("secret")
+        end
+      end
     end
 
     context "#setup_ansible" do
