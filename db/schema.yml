@@ -5015,8 +5015,6 @@ miq_queue:
 - msg_timeout
 - handler_id
 - handler_type
-- for_user
-- for_user_id
 - expires_on
 miq_regions:
 - id
