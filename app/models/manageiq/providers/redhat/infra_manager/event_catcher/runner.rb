@@ -1,7 +1,7 @@
 class ManageIQ::Providers::Redhat::InfraManager::EventCatcher::Runner < ManageIQ::Providers::BaseManager::EventCatcher::Runner
   def event_monitor_handle
     require 'ovirt_provider/events/ovirt_event_monitor'
-    @event_monitor_handle ||= OvirtEventMonitor.new(event_monitor_options)
+    @event_monitor_handle ||= OvirtEventMonitor.new(:ems => @ems)
   end
 
   def event_monitor_options
@@ -40,12 +40,13 @@ class ManageIQ::Providers::Redhat::InfraManager::EventCatcher::Runner < ManageIQ
   end
 
   def queue_event(event)
-    _log.info "#{log_prefix} Caught event [#{event[:name]}]"
-    event_hash = ManageIQ::Providers::Redhat::InfraManager::EventParser.event_to_hash(event.to_hash, @cfg[:ems_id])
+    _log.info "#{log_prefix} Caught event [#{event.name}]"
+    parser = ManageIQ::Providers::Redhat::InfraManager::EventParsing::Builder.new(@ems).build
+    event_hash = parser.event_to_hash(event, @cfg[:ems_id])
     EmsEvent.add_queue('add', @cfg[:ems_id], event_hash)
   end
 
   def filtered?(event)
-    filtered_events.include?(event[:name])
+    filtered_events.include?(event.name)
   end
 end

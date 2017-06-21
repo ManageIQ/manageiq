@@ -1,4 +1,7 @@
 module ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies
+  require 'ovirt'
+  require 'ovirt_provider/events/ovirt_event_monitor'
+
   class V3
     include Vmdb::Logging
 
@@ -198,6 +201,36 @@ module ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies
       name = ext_management_system.try(:name)
       _log.error("Error Getting ISO Images on ISO Datastore on Management System <#{name}>: #{err.class.name}: #{err}")
       raise ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Error, err
+    end
+
+    def event_fetcher
+      EventFetcher.new(ext_management_system)
+    end
+
+    class EventFetcher
+      def initialize(ems)
+        @ext_management_system = ems
+        ::Ovirt.logger = $rhevm_log if $rhevm_log
+      end
+
+      def inventory
+        require 'ovirt'
+        require 'ovirt_provider/inventory/ovirt_inventory'
+        Ovirt.logger = $rhevm_log if $rhevm_log
+        @inventory ||= OvirtInventory.new(event_monitor_options)
+      end
+
+      delegate :events, :to => :inventory
+
+      def event_monitor_options
+        {
+          :server     => @ext_management_system.hostname,
+          :port       => @ext_management_system.port.blank? ? nil : @ext_management_system.port.to_i,
+          :username   => @ext_management_system.authentication_userid,
+          :password   => @ext_management_system.authentication_password,
+          :verify_ssl => false
+        }
+      end
     end
 
     class NicsDecorator < SimpleDelegator
