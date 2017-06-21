@@ -68,6 +68,7 @@ describe Metric do
             %w(Storage perf_capture_hourly)                                             => 1,
             %w(ManageIQ::Providers::Vmware::InfraManager::Vm perf_capture_realtime)     => 2,
             %w(ManageIQ::Providers::Vmware::InfraManager::Vm perf_capture_historical)   => 16,
+            %w(MiqTask destroy_older_by_condition)                                      => 1
           }
         end
 
@@ -1023,7 +1024,9 @@ describe Metric do
 
         it "should queue up enabled targets" do
           expected_targets = Metric::Targets.capture_targets
-          expect(MiqQueue.group(:method_name).count).to eq('perf_capture_realtime' => expected_targets.count, 'perf_capture_historical' => expected_targets.count * 8)
+          expect(MiqQueue.group(:method_name).count).to eq('perf_capture_realtime'      => expected_targets.count,
+                                                           'perf_capture_historical'    => expected_targets.count * 8,
+                                                           'destroy_older_by_condition' => 1)
           assert_metric_targets(expected_targets)
         end
       end
