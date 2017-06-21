@@ -1436,7 +1436,7 @@ guest_devices:
 - chap_auth_enabled
 - manufacturer
 - field_replaceable_unit
-- guest_device_id
+- parent_device_id
 hardwares:
 - id
 - config_version
