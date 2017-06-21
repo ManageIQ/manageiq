@@ -386,6 +386,23 @@ describe EmbeddedAnsible do
       end
     end
 
+    describe ".start when in a container" do
+      around do |example|
+        old_env = ENV["ANSIBLE_ADMIN_PASSWORD"]
+        ENV["ANSIBLE_ADMIN_PASSWORD"] = "thepassword"
+        example.run
+        ENV["ANSIBLE_ADMIN_PASSWORD"] = old_env
+      end
+
+      it "sets the admin password using the environment variable and waits for the service to respond" do
+        expect(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
+        expect(described_class).to receive(:alive?).and_return(true)
+
+        described_class.start
+        expect(miq_database.reload.ansible_admin_authentication.password).to eq("thepassword")
+      end
+    end
+
     describe ".generate_database_authentication (private)" do
       let(:password)        { "secretpassword" }
       let(:quoted_password) { ActiveRecord::Base.connection.quote(password) }

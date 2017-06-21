@@ -47,21 +47,11 @@ class EmbeddedAnsible
   end
 
   def self.start
-    if configured?
-      services.each { |service| LinuxAdmin::Service.new(service).start.enable }
+    if MiqEnvironment::Command.is_container?
+      container_start
     else
-      configure_secret_key
-      run_setup_script(EXCLUDE_TAGS)
+      appliance_start
     end
-
-    5.times do
-      return if alive?
-
-      _log.info("Waiting for EmbeddedAnsible to respond")
-      sleep WAIT_FOR_ANSIBLE_SLEEP
-    end
-
-    raise "EmbeddedAnsible service is not responding after setup"
   end
 
   def self.stop
@@ -95,6 +85,37 @@ class EmbeddedAnsible
       :verify_ssl => 0
     )
   end
+
+  def self.appliance_start
+    if configured?
+      services.each { |service| LinuxAdmin::Service.new(service).start.enable }
+    else
+      configure_secret_key
+      run_setup_script(EXCLUDE_TAGS)
+    end
+
+    5.times do
+      return if alive?
+
+      _log.info("Waiting for EmbeddedAnsible to respond")
+      sleep WAIT_FOR_ANSIBLE_SLEEP
+    end
+
+    raise "EmbeddedAnsible service is not responding after setup"
+  end
+  private_class_method :appliance_start
+
+  def self.container_start
+    miq_database.set_ansible_admin_authentication(:password => ENV["ANSIBLE_ADMIN_PASSWORD"])
+
+    loop do
+      return if alive?
+
+      _log.info("Waiting for Ansible container to respond")
+      sleep WAIT_FOR_ANSIBLE_SLEEP
+    end
+  end
+  private_class_method :container_start
 
   def self.run_setup_script(exclude_tags)
     json_extra_vars = {
