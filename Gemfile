@@ -52,7 +52,6 @@ gem "rest-client",                    "~>2.0.0",       :require => false
 gem "ripper_ruby_parser",                              :require => false
 gem "ruby-progressbar",               "~>1.7.0",       :require => false
 gem "rubyzip",                        "~>1.2.1",       :require => false
-gem "rufus-scheduler",                "~>3.1.3",       :require => false
 gem "rugged",                         "~>0.25.0",      :require => false
 gem "simple-rss",                     "~>1.3.1",       :require => false
 gem "snmp",                           "~>1.2.0",       :require => false
@@ -145,7 +144,7 @@ end
 
 ### end of provider bundler groups
 
-group :automate, :manageiq_default do
+group :automate, :seed, :manageiq_default do
   manageiq_plugin "manageiq-automation_engine"
 end
 
@@ -155,6 +154,10 @@ end
 
 group :rest_api, :manageiq_default do
   gem "jbuilder",                       "~>2.5.0" # For the REST API
+end
+
+group :scheduler, :manageiq_default do
+  gem "rufus-scheduler",                "~>3.1.3",       :require => false
 end
 
 group :seed, :manageiq_default do
