@@ -42,7 +42,7 @@ module ManageIQ
       unless existing_connection
         ActiveRecord::Base.logger ||= get_logger_from log_path
         ActiveRecord::Base.configurations = connection_configurations_from db_config
-        ActiveRecord::Base.establish_connection
+        ActiveRecord::Base.establish_connection connection_config
       end
 
       if block_given?
@@ -67,6 +67,22 @@ module ManageIQ
           config
         else
           { ManageIQ.env => config }
+        end
+      end
+
+      # If using this with ActiveRecord, and Rails isn't defined, there is a
+      # chance that the configuration you are trying to use doesn't exist when
+      # calling establish_connection because Rails.env, or falling back to the
+      # ENV variables, is used to determine the environment.
+      #
+      # Because if this doesn't exists, to ensure the proper environment is
+      # selected, provide a spec to establish_connection only if we know that
+      # it won't be able to determine the correct config from the
+      # configurations.  Returning `nil` will just use the existing mechanisms
+      # in establish_connection to determine the config.
+      def connection_config
+        unless defined?(Rails) || ENV["RAILS_ENV"].presence || ENV["RACK_ENV"].presence
+          ActiveRecord::Base.configurations[ManageIQ.env]
         end
       end
     end

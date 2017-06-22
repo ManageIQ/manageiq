@@ -90,6 +90,23 @@ describe ManageIQ::ActiveRecordConnector do
       expect(JSON.parse(result)).to eq(expected_config)
     end
 
+    it "defaults to dev environment properly if Rails.env is not available" do
+      env = {
+        "RAILS_ENV" => nil,
+        "RACK_ENV"  => nil
+      }
+      cmd = [
+        "ActiveRecord::Base.logger = Logger.new '#{ManageIQ.root.join "log", "foobar.log"}'",
+        "config = #{described_class}::ConnectionConfig.database_configuration",
+        "#{described_class}.establish_connection_if_needed(config)",
+        "puts ActiveRecord::Base.connection_config.to_json"
+      ].join("; ")
+
+      expected_config = ActiveRecord::Base.configurations["development"]
+      result = without_rails(cmd, env)
+      expect(JSON.parse(result)).to eq(expected_config)
+    end
+
     context "with a block passed" do
       let!(:vm) { FactoryGirl.create(:vm) }
       let(:query) do
