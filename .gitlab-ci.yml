@@ -18,11 +18,6 @@ test:vmdb:
     - bundle exec rake update:bower
     - bundle exec rake test:vmdb:setup
     - bundle exec rake test:vmdb
-test:migrations:
-  script:
-    - bundle update
-    - bundle exec rake test:migrations:setup
-    - bundle exec rake test:migrations
 test:brakeman:
   script:
     - bundle update

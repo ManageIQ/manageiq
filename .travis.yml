@@ -12,7 +12,6 @@ env:
   - PARALLEL_TEST_PROCESSORS=2
   matrix:
   - TEST_SUITE=vmdb PARALLEL=true
-  - TEST_SUITE=migrations
   - TEST_SUITE=brakeman
 matrix:
   fast_finish: true
