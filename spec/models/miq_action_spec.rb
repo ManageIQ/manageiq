@@ -218,6 +218,32 @@ describe MiqAction do
     end
   end
 
+  context "#action_container_image_annotate_deny_execution" do
+    let(:action) { FactoryGirl.create(:miq_action, :name => "container_image_annotate_deny_execution") }
+    let(:ems) { FactoryGirl.create(:ems_openshift) }
+    let(:event) { FactoryGirl.create(:miq_event_definition, :name => "whatever") }
+
+    it "annotates openshift images" do
+      image = FactoryGirl.create(:container_image, :ems_ref => "123", :ext_management_system => ems)
+      expect(image).to receive(:annotate_deny_execution)
+      action.action_container_image_annotate_deny_execution(action,
+                                                            image,
+                                                            :policy => FactoryGirl.create(:miq_policy),
+                                                            :event => event,
+                                                            :synchronous => true)
+    end
+
+    it "doesn't annotates non provider images" do
+      image = FactoryGirl.create(:container_image, :ext_management_system => ems)
+      expect(image).not_to receive(:annotate_deny_execution)
+      action.action_container_image_annotate_deny_execution(action,
+                                                            image,
+                                                            :policy => FactoryGirl.create(:miq_policy),
+                                                            :event => event,
+                                                            :synchronous => true)
+    end
+  end
+
   context '.create_default_actions' do
     context 'seeding default actions from a file with 3 csv rows and some comments' do
       before do

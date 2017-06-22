@@ -749,6 +749,7 @@ container_images:
 - created_on
 - old_ems_id
 - deleted_on
+- ems_ref
 container_label_tag_mappings:
 - id
 - labeled_resource_type

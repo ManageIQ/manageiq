@@ -742,7 +742,7 @@ class MiqAction < ApplicationRecord
       return
     end
 
-    unless rec.digest.present?
+    unless !rec.ems_ref.blank?
       MiqPolicy.logger.error("#{error_prefix} ContainerImage is not linked with an OpenShift image")
       return
     end
