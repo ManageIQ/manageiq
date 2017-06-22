@@ -87,4 +87,8 @@ module CustomAttributeMixin
   def miq_custom_delete(key)
     miq_custom_attributes.find_by(:name => key.to_s).try(:delete)
   end
+
+  def miq_custom_visible
+    miq_custom_attributes.where(:visible => true)
+  end
 end
