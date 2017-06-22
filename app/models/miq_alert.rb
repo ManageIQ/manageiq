@@ -3,6 +3,7 @@ class MiqAlert < ApplicationRecord
 
   serialize :expression
   serialize :options
+  serialize :hawkular_keys
 
   validates_presence_of     :description, :guid
   validates_uniqueness_of   :description, :guid
@@ -843,5 +844,24 @@ class MiqAlert < ApplicationRecord
       _a, stat = import_from_hash(e[name])
       stat
     end
+  end
+
+  def hawkular_keys
+    aux = super
+
+    unless aux
+      aux = {}
+      self.hawkular_keys = aux
+    end
+
+    aux
+  end
+
+  def hawkular_key_for_ems(ems_id, hawkular_key = nil)
+    if hawkular_key
+      hawkular_keys["ems_#{ems_id}"] = hawkular_key
+    end
+
+    hawkular_keys["ems_#{ems_id}"]
   end
 end
