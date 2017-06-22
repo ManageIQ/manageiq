@@ -1327,6 +1327,7 @@ firmwares:
 - resource_type
 - created_at
 - updated_at
+- guest_device_id
 flavors:
 - id
 - ems_id
@@ -1437,6 +1438,9 @@ guest_devices:
 - auto_detect
 - uid_ems
 - chap_auth_enabled
+- manufacturer
+- field_replaceable_unit
+- parent_device_id
 hardwares:
 - id
 - config_version
