@@ -482,7 +482,7 @@ RSpec.describe "Instances API" do
       run_get("#{instances_url(@vm.id)}/load_balancers/#{@load_balancer.id}")
 
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body).to include('id' => @load_balancer.id)
+      expect(response.parsed_body).to include('id' => @load_balancer.compressed_id)
     end
 
     it "will not show an instance's load balancer without the appropriate role" do

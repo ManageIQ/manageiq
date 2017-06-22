@@ -70,7 +70,7 @@ describe "Groups API" do
       expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
-      group_id = response.parsed_body["results"].first["id"]
+      group_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
       expect(MiqGroup.exists?(group_id)).to be_truthy
     end
 
@@ -82,7 +82,7 @@ describe "Groups API" do
       expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
-      group_id = response.parsed_body["results"].first["id"]
+      group_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
       expect(MiqGroup.exists?(group_id)).to be_truthy
     end
 
@@ -98,14 +98,14 @@ describe "Groups API" do
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       result = response.parsed_body["results"].first
-      created_group = MiqGroup.find_by(:id => result["id"])
+      created_group = MiqGroup.find_by(:id => ApplicationRecord.uncompress_id(result["id"]))
 
       expect(created_group).to be_present
       expect(created_group.entitlement.miq_user_role).to eq(role3)
 
       expect_result_to_match_hash(result,
-                                  "description"      => "sample_group3",
-                                  "tenant_id"        => tenant3.id)
+                                  "description" => "sample_group3",
+                                  "tenant_id"   => tenant3.compressed_id)
     end
 
     it "supports single group creation with filters specified" do
@@ -123,7 +123,7 @@ describe "Groups API" do
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       group_id = response.parsed_body["results"][0]["id"]
-      expected_group = MiqGroup.find_by(:id => group_id)
+      expected_group = MiqGroup.find_by(:id => ApplicationRecord.uncompress_id(group_id))
       expect(expected_group).to be_present
       expect(expected_group.description).to eq(sample_group["description"])
       expect(expected_group.entitlement).to be_present
@@ -139,8 +139,8 @@ describe "Groups API" do
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       results = response.parsed_body["results"]
-      group1_id = results.first["id"]
-      group2_id = results.second["id"]
+      group1_id = ApplicationRecord.uncompress_id(results.first["id"])
+      group2_id = ApplicationRecord.uncompress_id(results.second["id"])
       expect(MiqGroup.exists?(group1_id)).to be_truthy
       expect(MiqGroup.exists?(group2_id)).to be_truthy
     end
@@ -169,7 +169,7 @@ describe "Groups API" do
 
       run_post(groups_url(group1.id), gen_request(:edit, "description" => "updated_group"))
 
-      expect_single_resource_query("id"          => group1.id,
+      expect_single_resource_query("id"          => group1.compressed_id,
                                    "description" => "updated_group")
       expect(group1.reload.description).to eq("updated_group")
     end
@@ -182,8 +182,8 @@ describe "Groups API" do
                                         {"href" => groups_url(group2.id), "description" => "updated_group2"}]))
 
       expect_results_to_match_hash("results",
-                                   [{"id" => group1.id, "description" => "updated_group1"},
-                                    {"id" => group2.id, "description" => "updated_group2"}])
+                                   [{"id" => group1.compressed_id, "description" => "updated_group1"},
+                                    {"id" => group2.compressed_id, "description" => "updated_group2"}])
 
       expect(group1.reload.name).to eq("updated_group1")
       expect(group2.reload.name).to eq("updated_group2")

@@ -120,7 +120,7 @@ describe "Services API" do
 
       run_post(services_url(svc.id), gen_request(:edit, "name" => "updated svc1"))
 
-      expect_single_resource_query("id" => svc.id, "href" => services_url(svc.id), "name" => "updated svc1")
+      expect_single_resource_query("id" => svc.compressed_id, "href" => services_url(svc.id), "name" => "updated svc1")
       expect(svc.reload.name).to eq("updated svc1")
     end
 
@@ -138,7 +138,7 @@ describe "Services API" do
       run_post(services_url(svc_orchestration.id), resource)
 
       expected = {
-        'id'       => svc_orchestration.id,
+        'id'       => svc_orchestration.compressed_id,
         'ancestry' => svc1.id.to_s
       }
       expect(response.parsed_body).to include(expected)
@@ -162,7 +162,7 @@ describe "Services API" do
       run_post(services_url(svc_orchestration.id), resource)
 
       expected = {
-        'id'       => svc_orchestration.id,
+        'id'       => svc_orchestration.compressed_id,
         'ancestry' => svc1.id.to_s
       }
       expect(response.parsed_body).to include(expected)
@@ -177,7 +177,7 @@ describe "Services API" do
 
       run_put(services_url(svc.id), "name" => "updated svc1")
 
-      expect_single_resource_query("id" => svc.id, "href" => services_url(svc.id), "name" => "updated svc1")
+      expect_single_resource_query("id" => svc.compressed_id, "href" => services_url(svc.id), "name" => "updated svc1")
       expect(svc.reload.name).to eq("updated svc1")
     end
 
@@ -188,7 +188,7 @@ describe "Services API" do
                                        {"action" => "remove", "path" => "description"},
                                        {"action" => "add",    "path" => "display",     "value" => true}])
 
-      expect_single_resource_query("id" => svc.id, "name" => "updated svc1", "display" => true)
+      expect_single_resource_query("id" => svc.compressed_id, "name" => "updated svc1", "display" => true)
       expect(svc.reload.name).to eq("updated svc1")
       expect(svc.description).to be_nil
       expect(svc.display).to be_truthy
@@ -203,8 +203,8 @@ describe "Services API" do
 
       expect(response).to have_http_status(:ok)
       expect_results_to_match_hash("results",
-                                   [{"id" => svc1.id, "name" => "updated svc1"},
-                                    {"id" => svc2.id, "name" => "updated svc2"}])
+                                   [{"id" => svc1.compressed_id, "name" => "updated svc1"},
+                                    {"id" => svc2.compressed_id, "name" => "updated svc2"}])
       expect(svc1.reload.name).to eq("updated svc1")
       expect(svc2.reload.name).to eq("updated svc2")
     end
@@ -314,7 +314,7 @@ describe "Services API" do
 
       run_post(services_url(svc.id), gen_request(:retire))
 
-      expect_single_resource_query("id" => svc.id, "href" => services_url(svc.id))
+      expect_single_resource_query("id" => svc.compressed_id, "href" => services_url(svc.id))
     end
 
     it "supports single service retirement in future" do
@@ -324,7 +324,7 @@ describe "Services API" do
 
       run_post(services_url(svc.id), gen_request(:retire, "date" => ret_date, "warn" => 2))
 
-      expect_single_resource_query("id" => svc.id, "retires_on" => ret_date, "retirement_warn" => 2)
+      expect_single_resource_query("id" => svc.compressed_id, "retires_on" => ret_date, "retirement_warn" => 2)
       expect(format_retirement_date(svc.reload.retires_on)).to eq(ret_date)
       expect(svc.retirement_warn).to eq(2)
     end
@@ -338,7 +338,7 @@ describe "Services API" do
                                          [{"href" => services_url(svc1.id)},
                                           {"href" => services_url(svc2.id)}]))
 
-      expect_results_to_match_hash("results", [{"id" => svc1.id}, {"id" => svc2.id}])
+      expect_results_to_match_hash("results", [{"id" => svc1.compressed_id}, {"id" => svc2.compressed_id}])
     end
 
     it "supports multiple service retirement in future" do
@@ -351,8 +351,8 @@ describe "Services API" do
                                           {"href" => services_url(svc2.id), "date" => ret_date, "warn" => 5}]))
 
       expect_results_to_match_hash("results",
-                                   [{"id" => svc1.id, "retires_on" => ret_date, "retirement_warn" => 3},
-                                    {"id" => svc2.id, "retires_on" => ret_date, "retirement_warn" => 5}])
+                                   [{"id" => svc1.compressed_id, "retires_on" => ret_date, "retirement_warn" => 3},
+                                    {"id" => svc2.compressed_id, "retires_on" => ret_date, "retirement_warn" => 5}])
       expect(format_retirement_date(svc1.reload.retires_on)).to eq(ret_date)
       expect(svc1.retirement_warn).to eq(3)
       expect(format_retirement_date(svc2.reload.retires_on)).to eq(ret_date)
@@ -455,16 +455,16 @@ describe "Services API" do
       run_get services_url(svc1.id), :expand => "vms", :attributes => "vms.cpu_total_cores"
 
       expect_svc_with_vms
-      expect_results_to_match_hash("vms", [{"id" => vm1.id, "cpu_total_cores" => 2},
-                                           {"id" => vm2.id, "cpu_total_cores" => 4}])
+      expect_results_to_match_hash("vms", [{"id" => vm1.compressed_id, "cpu_total_cores" => 2},
+                                           {"id" => vm2.compressed_id, "cpu_total_cores" => 4}])
     end
 
     it "can query vms as subcollection via decorators with additional decorators" do
       run_get services_url(svc1.id), :expand => "vms", :attributes => "", :decorators => "vms.supports_console?"
 
       expect_svc_with_vms
-      expect_results_to_match_hash("vms", [{"id" => vm1.id, "supports_console?" => true},
-                                           {"id" => vm2.id, "supports_console?" => true}])
+      expect_results_to_match_hash("vms", [{"id" => vm1.compressed_id, "supports_console?" => true},
+                                           {"id" => vm2.compressed_id, "supports_console?" => true}])
     end
 
     it "cannot query vms via both virtual attribute and subcollection" do
@@ -640,7 +640,7 @@ describe "Services API" do
 
       expected = {
         'resources' => [
-          a_hash_including('id' => os.id)
+          a_hash_including('id' => os.compressed_id)
         ]
       }
       expect(response).to have_http_status(:ok)
@@ -652,9 +652,7 @@ describe "Services API" do
 
       run_get("#{services_url(svc.id)}/orchestration_stacks/#{os.id}")
 
-      expected = {
-        'id' => os.id
-      }
+      expected = {'id' => os.compressed_id}
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)
     end
@@ -666,7 +664,7 @@ describe "Services API" do
       run_get("#{services_url(svc.id)}/orchestration_stacks/#{os.id}", :attributes => "stdout")
 
       expected = {
-        'id'     => os.id,
+        'id'     => os.compressed_id,
         'stdout' => "default text stdout"
       }
       expect(response).to have_http_status(:ok)
@@ -680,7 +678,7 @@ describe "Services API" do
       run_get("#{services_url(svc.id)}/orchestration_stacks/#{os.id}", :attributes => "stdout", :format_attributes => "stdout=json")
 
       expected = {
-        'id'     => os.id,
+        'id'     => os.compressed_id,
         'stdout' => "json stdout"
       }
       expect(response).to have_http_status(:ok)

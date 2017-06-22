@@ -27,8 +27,8 @@ describe "Pictures" do
     expect_result_to_match_hash(response.parsed_body, "id" => source_id)
     expect_result_to_have_keys(%w(id href picture))
     expect_result_to_match_hash(response.parsed_body["picture"],
-                                "id"          => picture.id,
-                                "resource_id" => template.id,
+                                "id"          => picture.compressed_id,
+                                "resource_id" => template.compressed_id,
                                 "image_href"  => /^http:.*#{picture.image_href}$/)
   end
 
@@ -38,7 +38,7 @@ describe "Pictures" do
 
       run_get service_templates_url(template.id), :attributes => "picture,picture.image_href"
 
-      expect_result_to_include_picture_href(template.id)
+      expect_result_to_include_picture_href(template.compressed_id)
     end
   end
 
@@ -48,7 +48,7 @@ describe "Pictures" do
 
       run_get services_url(service.id), :attributes => "picture,picture.image_href"
 
-      expect_result_to_include_picture_href(service.id)
+      expect_result_to_include_picture_href(service.compressed_id)
     end
   end
 
@@ -58,7 +58,7 @@ describe "Pictures" do
 
       run_get service_requests_url(service_request.id), :attributes => "picture,picture.image_href"
 
-      expect_result_to_include_picture_href(service_request.id)
+      expect_result_to_include_picture_href(service_request.compressed_id)
     end
   end
 

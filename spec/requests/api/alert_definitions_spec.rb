@@ -47,7 +47,7 @@ describe "Alerts Definitions API" do
     expect(response).to have_http_status(:ok)
     expect(response.parsed_body).to include(
       "href"        => a_string_matching(alert_definitions_url(alert_definition.id)),
-      "id"          => alert_definition.id,
+      "id"          => alert_definition.compressed_id,
       "description" => alert_definition.description,
       "guid"        => alert_definition.guid
     )
@@ -74,7 +74,7 @@ describe "Alerts Definitions API" do
     api_basic_authorize collection_action_identifier(:alert_definitions, :create)
     run_post(alert_definitions_url, sample_alert_definition)
     expect(response).to have_http_status(:ok)
-    alert_definition = MiqAlert.find(response.parsed_body["results"].first["id"])
+    alert_definition = MiqAlert.find(ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"]))
     expect(alert_definition).to be_truthy
     expect(alert_definition.expression.class).to eq(MiqExpression)
     expect(alert_definition.expression.exp).to eq(sample_alert_definition["expression"])
@@ -227,7 +227,8 @@ describe "Alerts Definition Profiles API" do
     run_post(alert_definition_profiles_url, sample_alert_definition_profile)
 
     expect(response).to have_http_status(:ok)
-    alert_definition_profile = MiqAlertSet.find(response.parsed_body["results"].first["id"])
+    id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
+    alert_definition_profile = MiqAlertSet.find(id)
     expect(alert_definition_profile).to be_truthy
     expect(response.parsed_body["results"].first).to include(
       "description" => sample_alert_definition_profile["description"],

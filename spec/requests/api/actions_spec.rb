@@ -27,7 +27,7 @@ describe "Actions API" do
 
       expect(response).to have_http_status(:ok)
 
-      action_id = response.parsed_body["results"].first["id"]
+      action_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
 
       expect(MiqAction.exists?(action_id)).to be_truthy
     end

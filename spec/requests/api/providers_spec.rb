@@ -165,14 +165,14 @@ describe "Providers API" do
         api_basic_authorize action_identifier(:providers, :read, :resource_actions, :get)
         run_get(ems_cinder_url, :attributes => 'parent_manager.cloud_tenants')
         cloud_tenant_ids = response.parsed_body['parent_manager']['cloud_tenants'].map { |x| x['id'] }
-        expect([cloud_tenant_1.id]).to match_array(cloud_tenant_ids)
+        expect([cloud_tenant_1.compressed_id]).to match_array(cloud_tenant_ids)
       end
 
       it 'lists only CloudTenant for the restricted user(direct association)' do
         api_basic_authorize action_identifier(:providers, :read, :resource_actions, :get)
         run_get(ems_cinder_url, :attributes => 'vms')
         vm_ids = response.parsed_body['vms'].map { |x| x['id'] }
-        expect([vm.id]).to match_array(vm_ids)
+        expect([vm.compressed_id]).to match_array(vm_ids)
       end
     end
 
@@ -180,7 +180,7 @@ describe "Providers API" do
       api_basic_authorize action_identifier(:providers, :read, :resource_actions, :get)
       run_get(ems_cinder_url, :attributes => 'parent_manager.cloud_tenants')
       cloud_tenant_ids = response.parsed_body['parent_manager']['cloud_tenants'].map { |x| x['id'] }
-      expect([cloud_tenant_1.id, cloud_tenant_2.id]).to match_array(cloud_tenant_ids)
+      expect([cloud_tenant_1.compressed_id, cloud_tenant_2.compressed_id]).to match_array(cloud_tenant_ids)
     end
   end
 
@@ -358,7 +358,7 @@ describe "Providers API" do
 
       expect(response).to have_http_status(:ok)
 
-      provider_id = response.parsed_body["results"].first["id"]
+      provider_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
       expect(foreman_type.exists?(provider_id)).to be_truthy
       provider = foreman_type.find(provider_id)
       [:name, :type, :url].each do |item|
@@ -431,12 +431,12 @@ describe "Providers API" do
       expect(response).to have_http_status(:ok)
       expected = {
         "results" => [
-          a_hash_including({"id" => kind_of(Integer)}.merge(sample_rhevm.except(*ENDPOINT_ATTRS)))
+          a_hash_including({"id" => kind_of(String)}.merge(sample_rhevm.except(*ENDPOINT_ATTRS)))
         ]
       }
       expect(response.parsed_body).to include(expected)
 
-      provider_id = response.parsed_body["results"].first["id"]
+      provider_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
       expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
       endpoint = ExtManagementSystem.find(provider_id).default_endpoint
       expect(endpoint).to have_endpoint_attributes(sample_rhevm)
@@ -454,12 +454,12 @@ describe "Providers API" do
           expect(response).to have_http_status(:ok)
           expected = {
             "results" => [
-              a_hash_including({"id" => kind_of(Integer)}.merge(sample_containers.except(*ENDPOINT_ATTRS)))
+              a_hash_including({"id" => kind_of(String)}.merge(sample_containers.except(*ENDPOINT_ATTRS)))
             ]
           }
           expect(response.parsed_body).to include(expected)
 
-          provider_id = response.parsed_body["results"].first["id"]
+          provider_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
           expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
           ems = ExtManagementSystem.find(provider_id)
           expect(ems.authentications.size).to eq(1)
@@ -476,12 +476,12 @@ describe "Providers API" do
       expect(response).to have_http_status(:ok)
       expected = {
         "results" => [
-          a_hash_including({"id" => kind_of(Integer)}.merge(sample_rhevm.except(*ENDPOINT_ATTRS)))
+          a_hash_including({"id" => kind_of(String)}.merge(sample_rhevm.except(*ENDPOINT_ATTRS)))
         ]
       }
       expect(response.parsed_body).to include(expected)
 
-      provider_id = response.parsed_body["results"].first["id"]
+      provider_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
       expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
     end
 
@@ -493,12 +493,12 @@ describe "Providers API" do
       expect(response).to have_http_status(:ok)
       expected = {
         "results" => [
-          a_hash_including({"id" => kind_of(Integer)}.merge(sample_vmware.except(*ENDPOINT_ATTRS)))
+          a_hash_including({"id" => kind_of(String)}.merge(sample_vmware.except(*ENDPOINT_ATTRS)))
         ]
       }
       expect(response.parsed_body).to include(expected)
 
-      provider_id = response.parsed_body["results"].first["id"]
+      provider_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
       expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
       provider = ExtManagementSystem.find(provider_id)
       expect(provider.authentication_userid).to eq(default_credentials["userid"])
@@ -513,12 +513,12 @@ describe "Providers API" do
       expect(response).to have_http_status(:ok)
       expected = {
         "results" => [
-          a_hash_including({"id" => kind_of(Integer)}.merge(sample_rhevm.except(*ENDPOINT_ATTRS)))
+          a_hash_including({"id" => kind_of(String)}.merge(sample_rhevm.except(*ENDPOINT_ATTRS)))
         ]
       }
       expect(response.parsed_body).to include(expected)
 
-      provider_id = response.parsed_body["results"].first["id"]
+      provider_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
       expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
       provider = ExtManagementSystem.find(provider_id)
       expect(provider.authentication_userid(:default)).to eq(default_credentials["userid"])
@@ -535,14 +535,15 @@ describe "Providers API" do
       expect(response).to have_http_status(:ok)
       expected = {
         "results" => a_collection_containing_exactly(
-          a_hash_including({"id" => kind_of(Integer)}.merge(sample_vmware.except(*ENDPOINT_ATTRS))),
-          a_hash_including({"id" => kind_of(Integer)}.merge(sample_rhevm.except(*ENDPOINT_ATTRS)))
+          a_hash_including({"id" => kind_of(String)}.merge(sample_vmware.except(*ENDPOINT_ATTRS))),
+          a_hash_including({"id" => kind_of(String)}.merge(sample_rhevm.except(*ENDPOINT_ATTRS)))
         )
       }
       expect(response.parsed_body).to include(expected)
 
       results = response.parsed_body["results"]
-      p1_id, p2_id = results.first["id"], results.second["id"]
+      p1_id = ApplicationRecord.uncompress_id(results.first["id"])
+      p2_id = ApplicationRecord.uncompress_id(results.second["id"])
       expect(ExtManagementSystem.exists?(p1_id)).to be_truthy
       expect(ExtManagementSystem.exists?(p2_id)).to be_truthy
     end
@@ -561,13 +562,13 @@ describe "Providers API" do
           run_post(providers_url, gen_request(:create, sample_containers_multi_end_point))
 
           expect(response).to have_http_status(:ok)
-          expected = {"id"   => a_kind_of(Integer),
+          expected = {"id"   => a_kind_of(String),
                       "type" => containers_class,
                       "name" => "sample containers provider with multiple endpoints"}
           results = response.parsed_body["results"]
           expect(results.first).to include(expected)
 
-          provider_id = results.first["id"]
+          provider_id = ApplicationRecord.uncompress_id(results.first["id"])
           expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
           provider = ExtManagementSystem.find(provider_id)
           expect(provider).to have_endpoint_attributes(default_connection["endpoint"])
@@ -606,7 +607,7 @@ describe "Providers API" do
 
       run_post(providers_url(provider.id), gen_request(:edit, "name" => "updated provider", "port" => "8080"))
 
-      expect_single_resource_query("id" => provider.id, "name" => "updated provider")
+      expect_single_resource_query("id" => provider.compressed_id, "name" => "updated provider")
       expect(provider.reload.name).to eq("updated provider")
       expect(provider.port).to eq(8080)
     end
@@ -633,7 +634,7 @@ describe "Providers API" do
                                                        "name"        => "updated vmware",
                                                        "credentials" => {"userid" => "superadmin"}))
 
-      expect_single_resource_query("id" => provider.id, "name" => "updated vmware")
+      expect_single_resource_query("id" => provider.compressed_id, "name" => "updated vmware")
       expect(provider.reload.name).to eq("updated vmware")
       expect(provider.authentication_userid).to eq("superadmin")
     end
@@ -696,7 +697,7 @@ describe "Providers API" do
                                                        "name"        => "updated rhevm",
                                                        "credentials" => [metrics_credentials]))
 
-      expect_single_resource_query("id" => provider.id, "name" => "updated rhevm")
+      expect_single_resource_query("id" => provider.compressed_id, "name" => "updated rhevm")
       expect(provider.reload.name).to eq("updated rhevm")
       expect(provider.authentication_userid).to eq(default_credentials["userid"])
       expect(provider.authentication_userid(:metrics)).to eq(metrics_credentials["userid"])
@@ -713,8 +714,8 @@ describe "Providers API" do
                                            {"href" => providers_url(p2.id), "name" => "updated name2"}]))
 
       expect_results_to_match_hash("results",
-                                   [{"id" => p1.id, "name" => "updated name1"},
-                                    {"id" => p2.id, "name" => "updated name2"}])
+                                   [{"id" => p1.compressed_id, "name" => "updated name1"},
+                                    {"id" => p2.compressed_id, "name" => "updated name2"}])
 
       expect(p1.reload.name).to eq("updated name1")
       expect(p2.reload.name).to eq("updated name2")
@@ -866,10 +867,10 @@ describe "Providers API" do
         "success"   => true,
         "message"   => a_string_matching("Provider .* refreshing"),
         "href"      => a_string_matching(providers_url(provider.id)),
-        "task_id"   => a_kind_of(Numeric),
+        "task_id"   => a_kind_of(String),
         "task_href" => a_string_matching(tasks_url),
-        "tasks"     => [a_hash_including("id" => a_kind_of(Numeric), "href" => a_string_matching(tasks_url)),
-                        a_hash_including("id" => a_kind_of(Numeric), "href" => a_string_matching(tasks_url))]
+        "tasks"     => [a_hash_including("id" => a_kind_of(String), "href" => a_string_matching(tasks_url)),
+                        a_hash_including("id" => a_kind_of(String), "href" => a_string_matching(tasks_url))]
       }
 
       expect(response).to have_http_status(:ok)
@@ -987,7 +988,7 @@ describe "Providers API" do
       run_get("#{providers_url(@provider.id)}/load_balancers/#{@load_balancer.id}")
 
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body).to include('id' => @load_balancer.id)
+      expect(response.parsed_body).to include('id' => @load_balancer.compressed_id)
     end
 
     it "will not show a provider's load balancer without the appropriate role" do
@@ -1034,7 +1035,7 @@ describe "Providers API" do
       run_get("#{providers_url(@provider.id)}/cloud_subnets/#{@cloud_subnet.id}")
 
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body).to include('id' => @cloud_subnet.id)
+      expect(response.parsed_body).to include('id' => @cloud_subnet.compressed_id)
     end
 
     it "will not show a provider's cloud subnet without the appropriate role" do
@@ -1081,7 +1082,7 @@ describe "Providers API" do
       run_get("#{providers_url(@provider.id)}/cloud_tenants/#{@cloud_tenant.id}")
 
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body).to include('id' => @cloud_tenant.id)
+      expect(response.parsed_body).to include('id' => @cloud_tenant.compressed_id)
     end
 
     it "will not show a provider's cloud tenant without the appropriate role" do

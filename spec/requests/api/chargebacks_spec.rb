@@ -24,7 +24,7 @@ RSpec.describe "chargebacks API" do
       response.parsed_body,
       "description" => chargeback_rate.description,
       "guid"        => chargeback_rate.guid,
-      "id"          => chargeback_rate.id,
+      "id"          => chargeback_rate.compressed_id,
       "href"        => chargebacks_url(chargeback_rate.id)
     )
     expect(response).to have_http_status(:ok)
@@ -63,9 +63,9 @@ RSpec.describe "chargebacks API" do
 
     expect_result_to_match_hash(
       response.parsed_body,
-      "chargeback_rate_id" => chargeback_rate.id,
+      "chargeback_rate_id" => chargeback_rate.compressed_id,
       "href"               => "#{chargebacks_url(chargeback_rate.id)}/rates/#{chargeback_rate_detail.to_param}",
-      "id"                 => chargeback_rate_detail.id,
+      "id"                 => chargeback_rate_detail.compressed_id,
       "description"        => "rate_1"
     )
     expect(response).to have_http_status(:ok)
@@ -93,7 +93,7 @@ RSpec.describe "chargebacks API" do
     expect_result_to_match_hash(
       response.parsed_body,
       "name" => currency.name,
-      "id"   => currency.id,
+      "id"   => currency.compressed_id,
       "href" => "/api/currencies/#{currency.id}"
     )
     expect(response).to have_http_status(:ok)
@@ -121,7 +121,7 @@ RSpec.describe "chargebacks API" do
     expect_result_to_match_hash(
       response.parsed_body,
       "name" => measure.name,
-      "id"   => measure.id,
+      "id"   => measure.compressed_id,
       "href" => "/api/measures/#{measure.id}",
     )
     expect(response).to have_http_status(:ok)

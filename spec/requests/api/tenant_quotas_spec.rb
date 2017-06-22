@@ -31,8 +31,8 @@ describe "tenant quotas API" do
       expect_result_to_match_hash(
         response.parsed_body,
         "href"      => "/api/tenants/#{tenant.id}/quotas/#{quota.id}",
-        "id"        => quota.id,
-        "tenant_id" => tenant.id,
+        "id"        => quota.compressed_id,
+        "tenant_id" => tenant.compressed_id,
         "name"      => "cpu_allocated",
         "unit"      => "fixnum",
         "value"     => 1.0
@@ -100,8 +100,8 @@ describe "tenant quotas API" do
       expect(response).to have_http_status(:ok)
       expect_results_to_match_hash(
         "results",
-        [{"id" => quota_1.id, "value" => 3},
-         {"id" => quota_2.id, "value" => 4}]
+        [{"id" => quota_1.compressed_id, "value" => 3},
+         {"id" => quota_2.compressed_id, "value" => 4}]
       )
       expect(quota_1.reload.value).to eq(3)
       expect(quota_2.reload.value).to eq(4)

@@ -39,7 +39,7 @@ describe "Alerts API" do
     expect(response).to have_http_status(:ok)
     expect(response.parsed_body).to include(
       "href" => a_string_matching(alerts_url(alert_status.id)),
-      "id"   => alert_status.id
+      "id"   => alert_status.compressed_id
     )
   end
 
@@ -50,7 +50,7 @@ describe "Alerts API" do
     let(:expected_assignee) do
       {
         'results' => a_collection_containing_exactly(
-          a_hash_including("assignee_id" => assignee.id)
+          a_hash_including("assignee_id" => assignee.compressed_id)
         )
       }
     end
@@ -125,7 +125,7 @@ describe "Alerts API" do
       expect(response).to have_http_status(:ok)
       expected = {
         "results" => [
-          a_hash_including(attributes.merge("user_id" => User.current_user.id))
+          a_hash_including(attributes.merge("user_id" => User.current_user.compressed_id))
         ]
       }
       expect(response.parsed_body).to include(expected)
@@ -135,7 +135,7 @@ describe "Alerts API" do
     it "create an assignment alert action reference by id" do
       attributes = {
         "action_type" => "assign",
-        "assignee"    => { "id" => assignee.id }
+        "assignee"    => { "id" => assignee.compressed_id }
       }
       api_basic_authorize subcollection_action_identifier(:alerts, :alert_actions, :create, :post)
       run_post(actions_subcollection_url, attributes)
@@ -178,9 +178,9 @@ describe "Alerts API" do
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(
         "href"        => a_string_matching("#{alerts_url(alert.id)}/alert_actions/#{alert_action.id}"),
-        "id"          => alert_action.id,
+        "id"          => alert_action.compressed_id,
         "action_type" => alert_action.action_type,
-        "user_id"     => user.id,
+        "user_id"     => user.compressed_id,
         "comment"     => alert_action.comment,
       )
     end

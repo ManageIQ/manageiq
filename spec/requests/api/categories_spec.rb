@@ -41,7 +41,7 @@ RSpec.describe "categories API" do
       response.parsed_body,
       "description" => category.description,
       "href"        => categories_url(category.id),
-      "id"          => category.id
+      "id"          => category.compressed_id
     )
     expect(response).to have_http_status(:ok)
   end
@@ -97,7 +97,7 @@ RSpec.describe "categories API" do
       api_basic_authorize collection_action_identifier(:categories, :create)
 
       run_post categories_url, :name => "test", :description => "Test"
-      category = Category.find(response.parsed_body["results"].first["id"])
+      category = Category.find(ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"]))
 
       expect(category.tag.name).to eq("/managed/test")
     end

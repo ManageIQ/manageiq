@@ -72,7 +72,7 @@ describe "Conditions API" do
 
       expect(response).to have_http_status(:ok)
 
-      condition_id = response.parsed_body["results"].first["id"]
+      condition_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
 
       expect(Condition.exists?(condition_id)).to be_truthy
       expect(Condition.find(condition_id).expression.class).to eq(MiqExpression)

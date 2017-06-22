@@ -69,7 +69,7 @@ RSpec.describe 'Authentications API' do
           a_hash_including(
             'success' => true,
             'message' => a_string_including('Deleting Authentication'),
-            'task_id' => a_kind_of(Numeric)
+            'task_id' => a_kind_of(String)
           )
         ]
       }
@@ -105,12 +105,12 @@ RSpec.describe 'Authentications API' do
           a_hash_including(
             'success' => true,
             'message' => a_string_including('Deleting Authentication'),
-            'task_id' => a_kind_of(Numeric)
+            'task_id' => a_kind_of(String)
           ),
           a_hash_including(
             'success' => true,
             'message' => a_string_including('Deleting Authentication'),
-            'task_id' => a_kind_of(Numeric)
+            'task_id' => a_kind_of(String)
           )
         ]
       }
@@ -138,7 +138,7 @@ RSpec.describe 'Authentications API' do
           a_hash_including(
             'success' => true,
             'message' => a_string_including('Updating Authentication'),
-            'task_id' => a_kind_of(Numeric)
+            'task_id' => a_kind_of(String)
           )
         ]
       }
@@ -157,12 +157,12 @@ RSpec.describe 'Authentications API' do
           a_hash_including(
             'success' => true,
             'message' => a_string_including('Updating Authentication'),
-            'task_id' => a_kind_of(Numeric)
+            'task_id' => a_kind_of(String)
           ),
           a_hash_including(
             'success' => true,
             'message' => a_string_including('Updating Authentication'),
-            'task_id' => a_kind_of(Numeric)
+            'task_id' => a_kind_of(String)
           )
         ]
       }
@@ -224,7 +224,7 @@ RSpec.describe 'Authentications API' do
         'results' => [a_hash_including(
           'success' => true,
           'message' => 'Creating Authentication',
-          'task_id' => a_kind_of(Numeric)
+          'task_id' => a_kind_of(String)
         )]
       }
       run_post(authentications_url, create_params)
@@ -241,12 +241,12 @@ RSpec.describe 'Authentications API' do
           a_hash_including(
             'success' => true,
             'message' => 'Creating Authentication',
-            'task_id' => a_kind_of(Numeric)
+            'task_id' => a_kind_of(String)
           ),
           a_hash_including(
             'success' => true,
             'message' => 'Creating Authentication',
-            'task_id' => a_kind_of(Numeric)
+            'task_id' => a_kind_of(String)
           )
         ]
       }
@@ -292,16 +292,16 @@ RSpec.describe 'Authentications API' do
           a_hash_including(
             'success'   => true,
             'message'   => a_string_including("Refreshing Authentication id:#{auth.id}"),
-            'task_id'   => a_kind_of(Numeric),
+            'task_id'   => a_kind_of(String),
             'task_href' => /task/,
-            'tasks'     => [a_hash_including('id' => a_kind_of(Numeric), 'href' => /task/)]
+            'tasks'     => [a_hash_including('id' => a_kind_of(String), 'href' => /task/)]
           ),
           a_hash_including(
             'success'   => true,
             'message'   => a_string_including("Refreshing Authentication id:#{auth_2.id}"),
-            'task_id'   => a_kind_of(Numeric),
+            'task_id'   => a_kind_of(String),
             'task_href' => /task/,
-            'tasks'     => [a_hash_including('id' => a_kind_of(Numeric), 'href' => /task/)]
+            'tasks'     => [a_hash_including('id' => a_kind_of(String), 'href' => /task/)]
           )
         ]
       }
@@ -326,7 +326,7 @@ RSpec.describe 'Authentications API' do
       expected = {
         'success' => true,
         'message' => a_string_including('Updating Authentication'),
-        'task_id' => a_kind_of(Numeric)
+        'task_id' => a_kind_of(String)
       }
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)
@@ -350,7 +350,7 @@ RSpec.describe 'Authentications API' do
       expected = {
         'success' => true,
         'message' => a_string_including('Updating Authentication'),
-        'task_id' => a_kind_of(Numeric)
+        'task_id' => a_kind_of(String)
       }
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)
@@ -373,7 +373,7 @@ RSpec.describe 'Authentications API' do
       expected = {
         'success' => true,
         'message' => a_string_including('Deleting Authentication'),
-        'task_id' => a_kind_of(Numeric)
+        'task_id' => a_kind_of(String)
       }
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)
@@ -395,7 +395,7 @@ RSpec.describe 'Authentications API' do
       expected = {
         'success' => true,
         'message' => a_string_including('Updating Authentication'),
-        'task_id' => a_kind_of(Numeric)
+        'task_id' => a_kind_of(String)
       }
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)
@@ -439,9 +439,9 @@ RSpec.describe 'Authentications API' do
       expected = {
         'success'   => true,
         'message'   => /Refreshing Authentication/,
-        'task_id'   => a_kind_of(Numeric),
+        'task_id'   => a_kind_of(String),
         'task_href' => /task/,
-        'tasks'     => [a_hash_including('id' => a_kind_of(Numeric), 'href' => /tasks/)]
+        'tasks'     => [a_hash_including('id' => a_kind_of(String), 'href' => /tasks/)]
       }
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)
