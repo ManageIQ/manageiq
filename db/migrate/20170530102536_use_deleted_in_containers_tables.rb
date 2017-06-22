@@ -14,11 +14,11 @@ class UseDeletedInContainersTables < ActiveRecord::Migration[5.0]
   end
 
   def disconnect_to_soft_delete(model)
-    model.where(:ems_id => nil).update_all("ems_id = old_ems_id, deleted = 't'")
+    model.where.not(:deleted_on => nil).update_all("ems_id = old_ems_id")
   end
 
   def soft_delete_to_disconnect(model)
-    model.where(:deleted => true).update_all(:ems_id => nil, :deleted => false)
+    model.where.not(:deleted_on => nil).update_all(:ems_id => nil)
   end
 
   def up
