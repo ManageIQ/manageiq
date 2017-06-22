@@ -39,23 +39,24 @@ module Vmdb
     def self.create_loggers
       path_dir = ManageIQ.root.join("log")
 
-      $log               = VMDBLogger.new(path_dir.join("evm.log"))
-      $rails_log         = VMDBLogger.new(path_dir.join("#{ManageIQ.env}.log"))
       $audit_log         = AuditLogger.new(path_dir.join("audit.log"))
-      $fog_log           = FogLogger.new(path_dir.join("fog.log"))
-      $policy_log        = VMDBLogger.new(path_dir.join("policy.log"))
-      $vim_log           = VMDBLogger.new(path_dir.join("vim.log"))
-      $rhevm_log         = VMDBLogger.new(path_dir.join("rhevm.log"))
-      $aws_log           = VMDBLogger.new(path_dir.join("aws.log"))
-      $lenovo_log        = VMDBLogger.new(path_dir.join("lenovo.log"))
-      $kube_log          = VMDBLogger.new(path_dir.join("kubernetes.log"))
-      $mw_log            = VMDBLogger.new(path_dir.join("middleware.log"))
-      $datawarehouse_log = VMDBLogger.new(path_dir.join("datawarehouse.log"))
-      $scvmm_log         = VMDBLogger.new(path_dir.join("scvmm.log"))
-      $azure_log         = VMDBLogger.new(path_dir.join("azure.log"))
-      $api_log           = VMDBLogger.new(path_dir.join("api.log"))
-      $websocket_log     = VMDBLogger.new(path_dir.join("websocket.log"))
-      $miq_ae_logger     = VMDBLogger.new(path_dir.join("automation.log"))
+      $container_log     = ContainerLogger.new
+      $log               = MulticastLogger.new(VMDBLogger.new(path_dir.join("evm.log"))).tap           { |l| l.loggers << $container_log if ENV["CONTAINER"] }
+      $rails_log         = MulticastLogger.new(VMDBLogger.new(path_dir.join("#{Rails.env}.log"))).tap  { |l| l.loggers << $container_log if ENV["CONTAINER"] }
+      $fog_log           = MulticastLogger.new(FogLogger.new(path_dir.join("fog.log"))).tap            { |l| l.loggers << $container_log if ENV["CONTAINER"] }
+      $policy_log        = MulticastLogger.new(VMDBLogger.new(path_dir.join("policy.log"))).tap        { |l| l.loggers << $container_log if ENV["CONTAINER"] }
+      $vim_log           = MulticastLogger.new(VMDBLogger.new(path_dir.join("vim.log"))).tap           { |l| l.loggers << $container_log if ENV["CONTAINER"] }
+      $rhevm_log         = MulticastLogger.new(VMDBLogger.new(path_dir.join("rhevm.log"))).tap         { |l| l.loggers << $container_log if ENV["CONTAINER"] }
+      $aws_log           = MulticastLogger.new(VMDBLogger.new(path_dir.join("aws.log"))).tap           { |l| l.loggers << $container_log if ENV["CONTAINER"] }
+      $lenovo_log        = MulticastLogger.new(VMDBLogger.new(path_dir.join("lenovo.log"))).tap        { |l| l.loggers << $container_log if ENV["CONTAINER"] }
+      $kube_log          = MulticastLogger.new(VMDBLogger.new(path_dir.join("kubernetes.log"))).tap    { |l| l.loggers << $container_log if ENV["CONTAINER"] }
+      $mw_log            = MulticastLogger.new(VMDBLogger.new(path_dir.join("middleware.log"))).tap    { |l| l.loggers << $container_log if ENV["CONTAINER"] }
+      $datawarehouse_log = MulticastLogger.new(VMDBLogger.new(path_dir.join("datawarehouse.log"))).tap { |l| l.loggers << $container_log if ENV["CONTAINER"] }
+      $scvmm_log         = MulticastLogger.new(VMDBLogger.new(path_dir.join("scvmm.log"))).tap         { |l| l.loggers << $container_log if ENV["CONTAINER"] }
+      $azure_log         = MulticastLogger.new(VMDBLogger.new(path_dir.join("azure.log"))).tap         { |l| l.loggers << $container_log if ENV["CONTAINER"] }
+      $api_log           = MulticastLogger.new(VMDBLogger.new(path_dir.join("api.log"))).tap           { |l| l.loggers << $container_log if ENV["CONTAINER"] }
+      $websocket_log     = MulticastLogger.new(VMDBLogger.new(path_dir.join("websocket.log"))).tap     { |l| l.loggers << $container_log if ENV["CONTAINER"] }
+      $miq_ae_logger     = MulticastLogger.new(VMDBLogger.new(path_dir.join("automation.log"))).tap    { |l| l.loggers << $container_log if ENV["CONTAINER"] }
 
       configure_external_loggers
     end
