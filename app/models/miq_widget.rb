@@ -170,6 +170,7 @@ class MiqWidget < ApplicationRecord
   end
 
   def queue_generate_content
+    return if content_type == "menu"
     # Called from schedule
     unless self.enabled?
       _log.info("#{log_prefix} is disabled, content will NOT be generated")
@@ -213,6 +214,7 @@ class MiqWidget < ApplicationRecord
   end
 
   def generate_content(klass, group_description, userids, timezones = nil)
+    return if content_type == "menu"
     miq_task.state_active if miq_task
     content_generator.generate(self, klass, group_description, userids, timezones)
   end

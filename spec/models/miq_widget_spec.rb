@@ -298,6 +298,12 @@ describe MiqWidget do
       @widget.queue_generate_content
     end
 
+    it "does not generate content if content_type of widget is 'menu'" do
+      @widget.update_attributes(:content_type => "menu")
+      expect(@widget).not_to receive(:queue_generate_content_for_users_or_group)
+      @widget.queue_generate_content
+    end
+
     it "generate content if visibility set to group only with users in that group" do
       @widget.visibility.delete(:roles)
       @widget.visibility[:groups] = @group2.description
@@ -499,7 +505,7 @@ describe MiqWidget do
   end
 
   context "#generate_content" do
-    let(:widget) { described_class.new(:miq_task => miq_task) }
+    let(:widget) { described_class.new(:miq_task => miq_task, :content_type => "report") }
     let(:content_generator) { double("MiqWidget::ContentGenerator") }
     let(:klass) { "klass" }
     let(:userids) { "userids" }
@@ -535,6 +541,17 @@ describe MiqWidget do
 
       it "does not attempt to call state_active on nil" do
         expect { widget.generate_content(klass, group_description, nil, timezones) }.to_not raise_error
+      end
+
+      it "does not generate content if content_type of widget is 'menu'" do
+        widget.update_attributes(:content_type => "menu")
+        expect(content_generator).not_to receive(:generate)
+        widget.generate_content(klass, group_description, nil, timezones)
+      end
+
+      it "does not generate content if content_type of widget is not 'menu'" do
+        expect(content_generator).to receive(:generate)
+        widget.generate_content(klass, group_description, nil, timezones)
       end
     end
   end
