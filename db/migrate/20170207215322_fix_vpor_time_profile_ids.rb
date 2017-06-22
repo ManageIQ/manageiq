@@ -33,7 +33,7 @@ class FixVporTimeProfileIds < ActiveRecord::Migration[5.0]
       say_with_time("Removing old VimPerformanceOperatingRanges") do
         VimPerformanceOperatingRange.where(:time_profile_id => nil).delete_all
       end
-    elsif TimeProfile.any?
+    elsif TimeProfile.any? && TimeProfile.default
       # User has not used an old version where TimeProfiles were corrected,
       # so the TimeProfile-less records just need to be updated to the default TP
       say_with_time("Updating old VimPerformanceOperatingRanges to the default TimeProfile") do
