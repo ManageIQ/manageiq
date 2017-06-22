@@ -1,10 +1,11 @@
 class WebsocketProxy
   attr_reader :env, :url, :error
 
-  def initialize(env, console)
+  def initialize(env, console, logger)
     @env = env
     @id = SecureRandom.uuid
     @console = console
+    @logger = logger
 
     secure = Rack::Request.new(env).ssl?
     scheme = secure ? 'wss:' : 'ws:'
@@ -17,7 +18,8 @@ class WebsocketProxy
       # Set up the socket client for the proxy
       @sock = TCPSocket.open(@console.host_name, @console.port)
       init_ssl if @console.ssl
-    rescue
+    rescue => ex
+      @logger.error(ex)
       @error = true
     end
 
