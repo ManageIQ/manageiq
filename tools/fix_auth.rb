@@ -16,7 +16,7 @@ require 'active_support/concern'
 # serializes a drb object into a configuration hash
 require 'drb'
 require 'manageiq-gems-pending'
-require_relative '../lib/vmdb/settings/walker'
+require_relative '../lib/vmdb/settings_walker'
 require 'fix_auth/auth_model'
 require 'fix_auth/auth_config_model'
 require 'fix_auth/models'

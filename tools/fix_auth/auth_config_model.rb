@@ -35,7 +35,7 @@ module FixAuth
       def recrypt(old_value, options = {})
         hash = YAML.load(old_value)
 
-        Vmdb::Settings::Walker.walk(hash) do |key, value, _path, owning|
+        Vmdb::SettingsWalker.walk(hash) do |key, value, _path, owning|
           owning[key] = super(value, options) if password_field?(key) && value.present?
         end
 
