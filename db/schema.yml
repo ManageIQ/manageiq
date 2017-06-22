@@ -661,6 +661,10 @@ container_definitions:
 - deleted_on
 - ems_id
 - old_ems_id
+- request_cpu
+- request_memory
+- limit_cpu
+- limit_memory
 container_deployment_nodes:
 - id
 - address
