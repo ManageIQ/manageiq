@@ -1,6 +1,8 @@
 module Vmdb
   module SettingsWalker
-    PASSWORD_FIELDS = %i(bind_pwd password amazon_secret ssh_key_data ssh_key_unlock become_password vault_password security_token).to_set.freeze
+    unless defined?(PASSWORD_FIELDS)
+      PASSWORD_FIELDS = %i(bind_pwd password amazon_secret ssh_key_data ssh_key_unlock become_password vault_password security_token).to_set.freeze
+    end
 
     module ClassMethods
       # Walks the settings and yields each value along the way

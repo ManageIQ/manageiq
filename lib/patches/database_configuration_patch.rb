@@ -1,4 +1,5 @@
 require_relative "../manageiq.rb"
+require_relative "../vmdb/settings_walker.rb"
 
 module DatabaseConfigurationPatch
   def database_configuration
@@ -27,7 +28,7 @@ module DatabaseConfigurationPatch
         raise e, "Cannot load `Rails.application.database_configuration`:\n#{e.message}", e.backtrace
       end
 
-      Vmdb::Settings.decrypt_passwords!(data)
+      Vmdb::SettingsWalker.decrypt_passwords!(data)
     else
       super
     end
