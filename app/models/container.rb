@@ -47,7 +47,6 @@ class Container < ApplicationRecord
     return if ems_id.nil?
     _log.info "Disconnecting Container [#{name}] id [#{id}] from EMS "
     self.deleted_on = Time.now.utc
-    self.deleted = true
     save
   end
 end

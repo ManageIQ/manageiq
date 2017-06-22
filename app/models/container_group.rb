@@ -92,7 +92,6 @@ class ContainerGroup < ApplicationRecord
     self.old_container_project_id = self.container_project_id
     self.container_project_id = nil
     self.deleted_on = Time.now.utc
-    self.deleted = true
     save
   end
 end
