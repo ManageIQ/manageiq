@@ -46,7 +46,7 @@ module ManagerRefresh::SaveCollection
       end
 
       def build_update_query(inventory_collection, all_attribute_keys, hashes)
-        all_attribute_keys_array = all_attribute_keys.to_a
+        all_attribute_keys_array = all_attribute_keys.to_a.delete_if { |x| %i(type).include?(x) }
         table_name               = inventory_collection.model_class.table_name
         values = hashes.map do |hash|
           "(#{all_attribute_keys_array.map { |x| quote(hash[x], x, inventory_collection) }.join(",")})"
