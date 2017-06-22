@@ -62,7 +62,7 @@ class MiqScheduleWorker::Jobs
 
   def job_proxy_dispatcher_dispatch
     if JobProxyDispatcher.waiting?
-      queue_work_on_each_zone(:class_name => "JobProxyDispatcher", :method_name => "dispatch", :task_id => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY, :role => "smartstate", :state => "ready")
+      queue_work_on_each_zone(:class_name => "JobProxyDispatcher", :method_name => "dispatch", :task_id => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY, :role => "smartstate")
     end
   end
 
