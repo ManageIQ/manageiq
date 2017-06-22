@@ -11,11 +11,11 @@ describe FixSerializedReportsForRailsFour do
   end
 
   let(:report_result_stub)  { migration_stub(:MiqReportResult) }
-  let(:binary_blob)  { migration_stub(:BinaryBlob) }
+  let(:binary_blob_stub)  { migration_stub(:BinaryBlob) }
   let(:data_dir) { File.expand_path(File.join("data", File.basename(__FILE__, '.rb')), __dir__) }
 
   migration_context :up do
-    before(:each) do
+    before do
       @raw_report   = File.read(File.join(data_dir, 'miq_report_obj.yaml'))
       @raw_blob     = File.read(File.join(data_dir, 'binary_blob_obj.yaml'))
       @raw_blob_csv = File.read(File.join(data_dir, 'binary_blob_csv.yaml'))
@@ -38,7 +38,7 @@ describe FixSerializedReportsForRailsFour do
     end
 
     it "migrates existing binary blobs serialized as MiqReport objects to Hashes" do
-      bb = binary_blob.create!(
+      bb = binary_blob_stub.create!(
         :resource_type => "MiqReportResult",
         :md5           => "b540c6aec8a7726c1154d71c06017150",
         :size          => 67_124,
@@ -57,7 +57,7 @@ describe FixSerializedReportsForRailsFour do
     end
 
     it "skips existing binary blobs serialized as CSV" do
-      bb = binary_blob.create!(
+      bb = binary_blob_stub.create!(
         :resource_type => "MiqReportResult",
         :md5           => "b540c6aec8a7726c1154d71c06017150",
         :size          => 67_124,
@@ -100,7 +100,7 @@ describe FixSerializedReportsForRailsFour do
     end
 
     it "migrates existing binary blobs serialized as Hashes objects to MiqReports" do
-      bb = binary_blob.create!(
+      bb = binary_blob_stub.create!(
         :resource_type => "MiqReportResult",
         :md5           => "b540c6aec8a7726c1154d71c06017150",
         :size          => 67_124,
@@ -119,7 +119,7 @@ describe FixSerializedReportsForRailsFour do
     end
 
     it "skips existing binary blobs serialized as CSV" do
-      bb = binary_blob.create!(
+      bb = binary_blob_stub.create!(
         :resource_type => "MiqReportResult",
         :md5           => "b540c6aec8a7726c1154d71c06017150",
         :size          => 67_124,
