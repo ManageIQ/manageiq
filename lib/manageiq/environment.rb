@@ -74,7 +74,7 @@ module ManageIQ
 
     def self.seed_database
       puts "\n== Seeding database =="
-      run_rake_task("db:seed GOOD_MIGRATIONS=skip")
+      run_rake_task("db:seed")
     end
 
     def self.setup_test_environment
