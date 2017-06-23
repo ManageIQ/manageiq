@@ -64,8 +64,6 @@ gem "nakayoshi_fork",                 "~>0.0.3"  # provides a more CoW friendly 
 gem "net-ldap",                       "~>0.14.0",      :require => false
 gem "net-ping",                       "~>1.7.4",       :require => false
 gem "net-ssh",                        "=3.2.0",        :require => false
-gem "omniauth",                       "~>1.3.1",       :require => false
-gem "omniauth-google-oauth2",         "~>0.2.6"
 gem "open4",                          "~>1.3.0",       :require => false
 gem "openscap",                       "~>0.4.3",       :require => false
 gem "ovirt-engine-sdk",               "~>4.1.4",       :require => false # Required by the oVirt provider
