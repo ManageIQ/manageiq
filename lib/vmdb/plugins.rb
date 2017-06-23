@@ -51,8 +51,13 @@ module Vmdb
     end
 
     def build_plugin_registry
-      require_relative "plugins/registry/rails.rb"
-      Vmdb::Plugins::Registry::Rails.instance
+      if defined?(Rails)
+        require_relative "plugins/registry/rails.rb"
+        Vmdb::Plugins::Registry::Rails.instance
+      else
+        require_relative "plugins/registry/bundler.rb"
+        Vmdb::Plugins::Registry::Bundler.instance
+      end
     end
 
     def register_provider_plugin(plugin)
