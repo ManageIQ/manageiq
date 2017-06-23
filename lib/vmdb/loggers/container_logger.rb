@@ -33,7 +33,7 @@ module Vmdb::Loggers
           :level      => translate_error(severity),
           :message    => prefix_task_id(msg2str(msg)),
           :pid        => $PROCESS_ID,
-          :tid        => Thread.current.object_id,
+          :tid        => thread_id,
           :service    => progname,
           # :tags => "tags string",
         }.to_json << "\n"
@@ -43,6 +43,10 @@ module Vmdb::Loggers
 
       def hostname
         @hostname ||= ENV["HOSTNAME"]
+      end
+
+      def thread_id
+        Thread.current.object_id.to_s(16)
       end
 
       def translate_error(level)
