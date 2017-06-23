@@ -81,7 +81,7 @@ module MiqServer::WorkerManagement::Heartbeat
 
   # Get the latest heartbeat between the SQL and memory (updated via DRb)
   def validate_heartbeat(w)
-    last_heartbeat = workers_last_heartbeat(w.pid)
+    last_heartbeat = workers_last_heartbeat(w)
 
     if w.last_heartbeat.nil?
       last_heartbeat ||= Time.now.utc
@@ -91,11 +91,23 @@ module MiqServer::WorkerManagement::Heartbeat
     end
   end
 
+  def clean_heartbeat_files
+    Dir.glob(Rails.root.join("tmp", "*.hb")).each { |f| File.delete(f) }
+  end
+
   private
 
-  def workers_last_heartbeat(pid)
+  def workers_last_heartbeat(w)
+    ENV["WORKER_HEARTBEAT_METHOD"] == "file" ? workers_last_heartbeat_to_file(w) : workers_last_heartbeat_to_drb(w)
+  end
+
+  def workers_last_heartbeat_to_drb(w)
     @workers_lock.synchronize(:SH) do
-      @workers.fetch_path(pid, :last_heartbeat)
+      @workers.fetch_path(w.pid, :last_heartbeat)
     end
+  end
+
+  def workers_last_heartbeat_to_file(w)
+    File.exist?(w.heartbeat_file) ? File.mtime(w.heartbeat_file).utc : Time.now.utc
   end
 end

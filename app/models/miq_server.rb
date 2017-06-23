@@ -152,6 +152,7 @@ class MiqServer < ApplicationRecord
     #############################################################
     # Start all the configured workers
     #############################################################
+    clean_heartbeat_files
     sync_config
     start_drb_server
     sync_workers

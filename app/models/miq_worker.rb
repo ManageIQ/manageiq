@@ -219,6 +219,10 @@ class MiqWorker < ApplicationRecord
     self.class.fetch_worker_settings_from_server(miq_server, options)
   end
 
+  def heartbeat_file
+    @heartbeat_file ||= ENV["WORKER_HEARTBEAT_FILE"] || Rails.root.join("tmp", "#{guid}.hb")
+  end
+
   def self.worker_settings(options = {})
     fetch_worker_settings_from_server(MiqServer.my_server, options)
   end
