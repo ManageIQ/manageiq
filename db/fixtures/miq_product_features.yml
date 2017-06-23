@@ -4920,9 +4920,9 @@
       :identifier: provider_foreman_control
       :children:
         - :name: Edit Tags
-          :description: Edit Configured Systems Tags
+          :description: Edit Tags of Foreman Provider
           :feature_type: control
-          :identifier: provider_foreman_configured_system_tag
+          :identifier: configuration_manager_provider_tag
         - :name: Provision Configured Systems
           :description: Provision Configured Systems
           :feature_type: control
@@ -5108,9 +5108,9 @@
       :identifier: automation_manager_providers_control
       :children:
         - :name: Edit Tags
-          :description: Edit Configured Systems Tags
+          :description: Edit Tags of Ansible Tower Provider
           :feature_type: control
-          :identifier: automation_manager_provider_configured_system_tag
+          :identifier: automation_manager_provider_tag
         - :name: Refresh Providers
           :description: Refresh relationships for all items related of Provider
           :feature_type: control
