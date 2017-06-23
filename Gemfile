@@ -52,7 +52,6 @@ gem "fast_gettext",                   "~>1.2.0"
 gem "gettext_i18n_rails",             "~>1.7.2"
 gem "gettext_i18n_rails_js",          "~>1.1.0"
 gem "hamlit",                         "~>2.7.0"
-gem "hashie",                         "~>3.4.6",       :require => false
 gem "htauth",                         "2.0.0",         :require => false
 gem "inifile",                        "~>3.0",         :require => false
 gem "jbuilder",                       "~>2.5.0" # For the REST API
