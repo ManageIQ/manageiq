@@ -81,10 +81,7 @@ module ManagerRefresh::SaveCollection
       end
 
       def build_multi_selection_query(inventory_collection, hashes)
-        cond = hashes.map do |hash|
-          "(#{inventory_collection.unique_index_columns.map { |x| ActiveRecord::Base.connection.quote(hash[x]) }.join(",")})"
-        end.join(",")
-        "(#{inventory_collection.unique_index_columns.join(",")}) IN (#{cond})"
+        inventory_collection.build_multi_selection_condition(hashes, inventory_collection.unique_index_columns)
       end
 
       def quote(value, name = nil, inventory_collection = nil)
