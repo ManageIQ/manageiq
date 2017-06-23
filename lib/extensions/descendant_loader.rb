@@ -63,6 +63,13 @@ class DescendantLoader
     io.puts
   end
 
+  def self.setup
+    return if @setup_complete
+    ActiveRecord::Base.singleton_class.send(:prepend, DescendantLoader::ArDescendantsWithLoader)
+    ActiveSupport::Dependencies.send(:prepend, DescendantLoader::AsDependenciesClearWithLoader)
+    @setup_complete = true
+  end
+
   # Extract class definitions (namely: a list of which scopes it might
   # be defined in [depending on runtime details], the name of the class,
   # and the name of its superclass), given a path to a ruby script file.
@@ -266,9 +273,7 @@ class DescendantLoader
   end
 end
 
-ActiveRecord::Base.singleton_class.send(:prepend, DescendantLoader::ArDescendantsWithLoader)
-ActiveSupport::Dependencies.send(:prepend, DescendantLoader::AsDependenciesClearWithLoader)
-ActsAsArModel.singleton_class.send(:prepend, DescendantLoader::ArDescendantsWithLoader)
+DescendantLoader.setup
 
 at_exit do
   DescendantLoader.instance.save_cache!
