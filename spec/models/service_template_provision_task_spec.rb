@@ -95,12 +95,12 @@ describe ServiceTemplateProvisionTask do
         }
         allow(@request).to receive(:approved?).and_return(true)
         expect(MiqQueue).to receive(:put).with(
-          :class_name  => 'MiqAeEngine',
-          :method_name => 'deliver',
-          :args        => [automate_args],
-          :role        => 'automate',
-          :zone        => 'special',
-          :task_id     => "service_template_provision_task_#{@task_0.id}")
+          :class_name     => 'MiqAeEngine',
+          :method_name    => 'deliver',
+          :args           => [automate_args],
+          :role           => 'automate',
+          :zone           => 'special',
+          :tracking_label => "service_template_provision_task_#{@task_0.id}")
         @task_0.deliver_to_automate
       end
 

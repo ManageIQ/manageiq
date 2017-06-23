@@ -140,12 +140,12 @@ class MiqRequestTask < ApplicationRecord
 
       zone ||= source.respond_to?(:my_zone) ? source.my_zone : MiqServer.my_zone
       MiqQueue.put(
-        :class_name  => 'MiqAeEngine',
-        :method_name => 'deliver',
-        :args        => [args],
-        :role        => 'automate',
-        :zone        => options.fetch(:miq_zone, zone),
-        :task_id     => my_task_id,
+        :class_name     => 'MiqAeEngine',
+        :method_name    => 'deliver',
+        :args           => [args],
+        :role           => 'automate',
+        :zone           => options.fetch(:miq_zone, zone),
+        :tracking_label => my_task_id,
       )
       update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
     else
@@ -166,14 +166,14 @@ class MiqRequestTask < ApplicationRecord
     zone = source.respond_to?(:my_zone) ? source.my_zone : MiqServer.my_zone
 
     queue_options.reverse_merge!(
-      :class_name   => self.class.name,
-      :instance_id  => id,
-      :method_name  => "execute",
-      :zone         => options.fetch(:miq_zone, zone),
-      :role         => miq_request.my_role,
-      :task_id      => my_task_id,
-      :deliver_on   => deliver_on,
-      :miq_callback => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
+      :class_name     => self.class.name,
+      :instance_id    => id,
+      :method_name    => "execute",
+      :zone           => options.fetch(:miq_zone, zone),
+      :role           => miq_request.my_role,
+      :tracking_label => my_task_id,
+      :deliver_on     => deliver_on,
+      :miq_callback   => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
     )
     MiqQueue.put(queue_options)
 
