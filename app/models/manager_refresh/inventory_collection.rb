@@ -868,12 +868,26 @@ module ManagerRefresh
       1000
     end
 
+    def build_multi_selection_condition(hashes, keys = nil)
+      keys       ||= manager_ref
+      table_name = model_class.table_name
+      cond_data  = hashes.map do |hash|
+        "(#{keys.map { |x| ActiveRecord::Base.connection.quote(hash[x]) }.join(",")})"
+      end.join(",")
+      column_names = keys.map { |key| "#{table_name}.#{ActiveRecord::Base.connection.quote_column_name(key)}" }.join(",")
+
+      "(#{column_names}) IN (#{cond_data})"
+    end
+
     def db_collection_for_comparison
       if targeted?
         if targeted_arel.respond_to?(:call)
           targeted_arel.call(self)
+        elsif manager_ref.count > 1
+          # TODO(lsmola) optimize with ApplicationRecordIterator
+          hashes = extract_references(manager_uuids + skeletal_manager_uuids)
+          full_collection_for_comparison.where(build_multi_selection_condition(hashes))
         else
-          raise "Can't build :targeted_arel for #{self}, please provide it as an argument." if manager_ref.count > 1
           ManagerRefresh::ApplicationRecordIterator.new(
             :inventory_collection => self,
             :manager_uuids_set    => (manager_uuids + skeletal_manager_uuids).to_a.flatten.compact
@@ -968,7 +982,7 @@ module ManagerRefresh
                          elsif !arel.nil?
                            arel
                          end
-                   rel = rel.where(selection) if rel && selection
+                   rel = rel.where(build_multi_selection_condition(selection)) if rel && selection
                    rel = rel.select(projection) if rel && projection
                    rel
                  end
@@ -980,22 +994,16 @@ module ManagerRefresh
     #
     # @param new_references [Array] array of manager_uuids of the InventoryObjects
     def extract_references(new_references = [])
-      # We collect what manager_uuids of this IC were referenced and we load only those
-      # TODO(lsmola) maybe in can be obj[x] = Set.new, since rails will do a query "col1 IN [a,b,b] AND col2 IN [e,f,e]"
-      # which is equivalent to "col1 IN [a,b] AND col2 IN [e,f]". The best would be to forcing rails to query
-      # "(col1, col2) IN [(a,e), (b,f), (b,e)]" which would load exactly what we need. Postgree supports this, but rails
-      # doesn't seem to. So for now, we can load a bit more from the DB than we need, in case of manager_ref.count > 1
-      hash_uuids_by_ref = manager_ref.each_with_object({}) { |x, obj| obj[x] = [] }
+      hash_uuids_by_ref = []
 
-      # TODO(lsmola) hm, if we call find in the parser code, not all references will be here, so this will really work
-      # only for lazy_find. So if we want to call find, I suppose we can cache all, possibly we could optimize this to
-      # set references upfront?
-      new_references.each do |reference|
-        refs = reference.split(stringify_joiner)
+      new_references.each do |manager_uuid|
+        uuids = manager_uuid.split(stringify_joiner)
 
-        refs.each_with_index do |ref, index|
-          hash_uuids_by_ref[manager_ref[index]] << ref
+        reference = {}
+        manager_ref.each_with_index do |ref, index|
+          reference[ref] = uuids[index]
         end
+        hash_uuids_by_ref << reference
       end
       hash_uuids_by_ref
     end
