@@ -8,7 +8,7 @@ module ManagerRefresh
                 :association, :complete, :update_only, :transitive_dependency_attributes, :custom_manager_uuid,
                 :custom_db_finder, :check_changed, :arel, :builder_params, :loaded_references, :db_data_index,
                 :inventory_object_attributes, :name, :saver_strategy, :parent_inventory_collections, :manager_uuids,
-                :skeletal_manager_uuids, :targeted_arel, :targeted, :manager_ref_allowed_nil,
+                :skeletal_manager_uuids, :targeted_arel, :targeted, :manager_ref_allowed_nil, :use_ar_object,
                 :secondary_refs, :secondary_indexes
 
     delegate :each, :size, :to => :to_a
@@ -336,13 +336,16 @@ module ManagerRefresh
     #        Then it can happen we want to allow certain foreign keys to be nil, while being sure the referential
     #        integrity is not broken. Of course the DB Foreign Key can't be created in this case, so we should try to
     #        avoid this usecase by a proper modeling.
+    # @param use_ar_object [Boolean] True or False. Whether we need to initialize AR object as part of the saving
+    #        it's needed if the model have special setters, serialize of columns, etc. This setting is relevant only
+    #        for the batch saver strategy.
     def initialize(model_class: nil, manager_ref: nil, association: nil, parent: nil, strategy: nil, saved: nil,
                    custom_save_block: nil, delete_method: nil, data_index: nil, data: nil, dependency_attributes: nil,
                    attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil,
                    check_changed: nil, custom_manager_uuid: nil, custom_db_finder: nil, arel: nil, builder_params: {},
                    inventory_object_attributes: nil, unique_index_columns: nil, name: nil, saver_strategy: nil,
                    parent_inventory_collections: nil, manager_uuids: [], all_manager_uuids: nil, targeted_arel: nil,
-                   targeted: nil, manager_ref_allowed_nil: nil, secondary_refs: {})
+                   targeted: nil, manager_ref_allowed_nil: nil, secondary_refs: {}, use_ar_object: nil)
       @model_class           = model_class
       @manager_ref           = manager_ref || [:ems_ref]
       @secondary_refs        = secondary_refs
@@ -367,6 +370,7 @@ module ManagerRefresh
       @unique_index_columns  = unique_index_columns
       @name                  = name || association || model_class.to_s.demodulize.tableize
       @saver_strategy        = process_saver_strategy(saver_strategy)
+      @use_ar_object         = use_ar_object || false
 
       @manager_ref_allowed_nil = manager_ref_allowed_nil || []
 
@@ -478,6 +482,10 @@ module ManagerRefresh
 
     def check_changed?
       check_changed
+    end
+
+    def use_ar_object?
+      use_ar_object
     end
 
     def complete?

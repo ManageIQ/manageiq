@@ -52,8 +52,14 @@ module ManagerRefresh::SaveCollection
               next unless assert_referential_integrity(hash, inventory_object)
               inventory_object.id = record.id
 
-              hash_for_update = hash.symbolize_keys.except(:id, :type)
-              assign_attributes_for_update!(hash_for_update, inventory_collection, update_time)
+              if inventory_collection.use_ar_object?
+                record.assign_attributes(hash.except(:id, :type))
+                hash_for_update = record.instance_eval("@attributes").map(&:value_for_database)
+                                    .instance_eval("@attributes").symbolize_keys.except(:id, :type)
+              else
+                hash_for_update = hash.symbolize_keys.except(:id, :type)
+                assign_attributes_for_update!(hash_for_update, inventory_collection, update_time)
+              end
 
               hashes_for_update << hash_for_update
             end
@@ -116,7 +122,13 @@ module ManagerRefresh::SaveCollection
         hashes = []
         create_time = time_now
         batch.each do |index, inventory_object|
-          hash = attributes_index.delete(index).symbolize_keys
+          hash = if inventory_collection.use_ar_object?
+                   inventory_collection.model_class.new(attributes_index.delete(index))
+                     .instance_eval("@attributes").map(&:value_for_database).instance_eval("@attributes").symbolize_keys
+                 else
+                   attributes_index.delete(index).symbolize_keys
+                 end
+
           assign_attributes_for_create!(hash, inventory_collection, create_time)
 
           next unless assert_referential_integrity(hash, inventory_object)
