@@ -30,9 +30,9 @@ module ManageIQ::Providers
     has_many :computer_system_hardwares, :through => :computer_systems, :source => :hardware
     has_many :computer_system_operating_systems, :through => :computer_systems, :source => :operating_system
     has_many :container_volumes, :through => :container_groups
-    has_many :container_port_configs, :through => :container_definitions
-    has_many :container_env_vars, :through => :container_definitions
-    has_many :security_contexts, :through => :container_definitions
+    has_many :container_port_configs, :through => :containers
+    has_many :container_env_vars, :through => :containers
+    has_many :security_contexts, :through => :containers
     has_many :container_service_port_configs, :through => :container_services
     has_many :container_routes, :through => :container_services
     has_many :container_quota_items, :through => :container_quotas

@@ -4,16 +4,17 @@ class Container < ApplicationRecord
   include ArchivedMixin
   include_concern 'Purging'
 
-  has_one    :container_group, :through => :container_definition
+  belongs_to :container_group
   belongs_to :ext_management_system, :foreign_key => :ems_id
   has_one    :container_node, :through => :container_group
   has_one    :container_replicator, :through => :container_group
   has_one    :container_project, :through => :container_group
   has_one    :old_container_project, :through => :container_group
-  belongs_to :container_definition
   belongs_to :container_image
+  has_many   :container_port_configs, :dependent => :destroy
+  has_many   :container_env_vars, :dependent => :destroy
   has_one    :container_image_registry, :through => :container_image
-  has_one    :security_context, :through => :container_definition
+  has_one    :security_context, :as => :resource, :dependent => :destroy
 
   # Metrics destroy are handled by the purger
   has_many   :metrics, :as => :resource
