@@ -378,6 +378,8 @@ module Rbac
       if filtered_ids.kind_of?(Array)
         filtered_ids += d_filtered_ids if d_filtered_ids.kind_of?(Array)
         filtered_ids.uniq!
+      elsif d_filtered_ids.kind_of?(Array) && d_filtered_ids.present?
+        filtered_ids = d_filtered_ids
       end
 
       if filtered_ids.kind_of?(Array) && tenant_filter_ids
