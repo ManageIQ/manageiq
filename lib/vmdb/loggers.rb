@@ -39,32 +39,39 @@ module Vmdb
     def self.create_loggers
       path_dir = ManageIQ.root.join("log")
 
-      $log               = VMDBLogger.new(path_dir.join("evm.log"))
-      $rails_log         = VMDBLogger.new(path_dir.join("#{ManageIQ.env}.log"))
       $audit_log         = AuditLogger.new(path_dir.join("audit.log"))
-      $fog_log           = FogLogger.new(path_dir.join("fog.log"))
-      $policy_log        = VMDBLogger.new(path_dir.join("policy.log"))
-      $vim_log           = VMDBLogger.new(path_dir.join("vim.log"))
-      $rhevm_log         = VMDBLogger.new(path_dir.join("rhevm.log"))
-      $aws_log           = VMDBLogger.new(path_dir.join("aws.log"))
-      $lenovo_log        = VMDBLogger.new(path_dir.join("lenovo.log"))
-      $kube_log          = VMDBLogger.new(path_dir.join("kubernetes.log"))
-      $mw_log            = VMDBLogger.new(path_dir.join("middleware.log"))
-      $datawarehouse_log = VMDBLogger.new(path_dir.join("datawarehouse.log"))
-      $scvmm_log         = VMDBLogger.new(path_dir.join("scvmm.log"))
-      $azure_log         = VMDBLogger.new(path_dir.join("azure.log"))
-      $api_log           = VMDBLogger.new(path_dir.join("api.log"))
-      $websocket_log     = VMDBLogger.new(path_dir.join("websocket.log"))
-      $miq_ae_logger     = VMDBLogger.new(path_dir.join("automation.log"))
+      $container_log     = ContainerLogger.new
+      $log               = create_multicast_logger(path_dir.join("evm.log"))
+      $rails_log         = create_multicast_logger(path_dir.join("#{Rails.env}.log"))
+      $fog_log           = create_multicast_logger(path_dir.join("fog.log"), FogLogger)
+      $policy_log        = create_multicast_logger(path_dir.join("policy.log"))
+      $vim_log           = create_multicast_logger(path_dir.join("vim.log"))
+      $rhevm_log         = create_multicast_logger(path_dir.join("rhevm.log"))
+      $aws_log           = create_multicast_logger(path_dir.join("aws.log"))
+      $lenovo_log        = create_multicast_logger(path_dir.join("lenovo.log"))
+      $kube_log          = create_multicast_logger(path_dir.join("kubernetes.log"))
+      $mw_log            = create_multicast_logger(path_dir.join("middleware.log"))
+      $datawarehouse_log = create_multicast_logger(path_dir.join("datawarehouse.log"))
+      $scvmm_log         = create_multicast_logger(path_dir.join("scvmm.log"))
+      $azure_log         = create_multicast_logger(path_dir.join("azure.log"))
+      $api_log           = create_multicast_logger(path_dir.join("api.log"))
+      $websocket_log     = create_multicast_logger(path_dir.join("websocket.log"))
+      $miq_ae_logger     = create_multicast_logger(path_dir.join("automation.log"))
 
       configure_external_loggers
     end
+
+    def self.create_multicast_logger(log_file_path, logger_class = VMDBLogger)
+      MulticastLogger.new(logger_class.new(log_file_path)).tap do |l|
+        l.loggers << $container_log if ENV["CONTAINER"]
+      end
+    end
+    private_class_method :create_multicast_logger
 
     def self.configure_external_loggers
       require 'awesome_spawn'
       AwesomeSpawn.logger = $log
     end
-
     private_class_method :configure_external_loggers
 
 
