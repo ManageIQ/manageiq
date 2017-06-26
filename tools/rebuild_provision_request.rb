@@ -72,6 +72,8 @@ end
 class Tab
   attr_reader :output, :log
 
+  ARRAY_FIELD_NAMES = [:security_groups].freeze
+
   def initialize(dialog_content, provision_options, quiet)
     @dialog_content = dialog_content
     @provision_options = provision_options
@@ -116,7 +118,7 @@ class Tab
   def dialog_field_values(dialog_tab)
     dialog_tab[:fields].keys.each do |field|
       value = @provision_options[field]
-      value = value.first if value.kind_of?(Array)
+      value = process_list_values(field, value)
       yield(field.to_s, value) if value.present?
       @provision_options.delete(field)
     end
@@ -180,6 +182,18 @@ class Tab
       @provision_options[:schedule_time] = @provision_options[:schedule_time].to_s
     end
     general_tab(tab, dialog_tab)
+  end
+
+  private
+
+  def process_list_values(key, value)
+    if ARRAY_FIELD_NAMES.include?(key)
+      value
+    elsif value.kind_of?(Array)
+      value.first
+    else
+      value
+    end
   end
 end
 
