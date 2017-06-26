@@ -109,7 +109,7 @@ class EmbeddedAnsible
     miq_database.set_ansible_admin_authentication(:password => ENV["ANSIBLE_ADMIN_PASSWORD"])
 
     loop do
-      return if alive?
+      break if alive?
 
       _log.info("Waiting for Ansible container to respond")
       sleep WAIT_FOR_ANSIBLE_SLEEP
