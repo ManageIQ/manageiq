@@ -180,6 +180,11 @@ module ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies
     rescue OvirtSDK4::Error
     end
 
+    def reboot_guest(operation)
+      operation.with_provider_object(VERSION_HASH, &:reboot)
+    rescue OvirtSDK4::Error
+    end
+
     def start_clone(source, clone_options, phase_context)
       source.with_provider_object(VERSION_HASH) do |rhevm_template|
         vm = rhevm_template.create_vm(clone_options)

@@ -151,6 +151,11 @@ module ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies
     rescue Ovirt::VmIsNotRunning
     end
 
+    def reboot_guest(operation)
+      operation.with_provider_object(&:reboot)
+    rescue Ovirt::VmIsNotRunning
+    end
+
     def start_clone(source, clone_options, phase_context)
       source.with_provider_object do |rhevm_template|
         vm = rhevm_template.create_vm(clone_options)

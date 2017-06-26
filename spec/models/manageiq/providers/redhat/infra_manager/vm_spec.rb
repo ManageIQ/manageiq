@@ -40,7 +40,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Vm do
 
     context("with :reboot_guest") do
       let(:state) { :reboot_guest }
-      include_examples "Vm operation is not available"
+      include_examples 'Vm operation is available when powered on'
     end
 
     context("with :reset") do
