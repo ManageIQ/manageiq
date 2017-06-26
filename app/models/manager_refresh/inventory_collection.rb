@@ -8,7 +8,8 @@ module ManagerRefresh
                 :association, :complete, :update_only, :transitive_dependency_attributes, :custom_manager_uuid,
                 :custom_db_finder, :check_changed, :arel, :builder_params, :loaded_references, :db_data_index,
                 :inventory_object_attributes, :name, :saver_strategy, :parent_inventory_collections, :manager_uuids,
-                :skeletal_manager_uuids, :targeted_arel, :targeted, :manager_ref_allowed_nil
+                :skeletal_manager_uuids, :targeted_arel, :targeted, :manager_ref_allowed_nil,
+                :secondary_refs, :secondary_indexes
 
     delegate :each, :size, :to => :to_a
 
@@ -341,9 +342,10 @@ module ManagerRefresh
                    check_changed: nil, custom_manager_uuid: nil, custom_db_finder: nil, arel: nil, builder_params: {},
                    inventory_object_attributes: nil, unique_index_columns: nil, name: nil, saver_strategy: nil,
                    parent_inventory_collections: nil, manager_uuids: [], all_manager_uuids: nil, targeted_arel: nil,
-                   targeted: nil, manager_ref_allowed_nil: nil)
+                   targeted: nil, manager_ref_allowed_nil: nil, secondary_refs: {})
       @model_class           = model_class
       @manager_ref           = manager_ref || [:ems_ref]
+      @secondary_refs        = secondary_refs
       @custom_manager_uuid   = custom_manager_uuid
       @custom_db_finder      = custom_db_finder
       @association           = association || []
@@ -352,6 +354,7 @@ module ManagerRefresh
       @dependency_attributes = dependency_attributes || {}
       @data                  = data || []
       @data_index            = data_index || {}
+      @secondary_indexes     = secondary_refs.map {|name, keys| [name, {}] }.to_h
       @saved                 = saved || false
       @strategy              = process_strategy(strategy)
       @delete_method         = delete_method || :destroy
@@ -578,14 +581,26 @@ module ManagerRefresh
     def <<(inventory_object)
       unless data_index[inventory_object.manager_uuid]
         data_index[inventory_object.manager_uuid] = inventory_object
+        secondary_refs.each do |name, keys|
+          secondary_indexes[name][inventory_object.id_with_keys(keys)] = inventory_object
+        end
         data << inventory_object
       end
       self
     end
     alias push <<
 
-    def object_index(object)
-      index_array = manager_ref.map do |attribute|
+    def named_ref(ref)
+      ref == :manager_ref ? manager_ref : secondary_refs[ref]
+    end
+
+    def named_index(ref)
+      ref == :manager_ref ? data_index : secondary_indexes[ref]
+    end
+
+    # TODO: use object_index_with_keys instead of adding ref?
+    def object_index(object, ref: :manager_ref)
+      index_array = named_ref(ref).map do |attribute|
         if object.respond_to?(:[])
           object[attribute].to_s
         else
@@ -630,27 +645,36 @@ module ManagerRefresh
       data_index[object_index(manager_uuid_hash)] || build(manager_uuid_hash)
     end
 
-    def find(manager_uuid)
+    def find(manager_uuid, ref: :manager_ref)
       return if manager_uuid.nil?
+      # TODO `ref` handling is partial
       case strategy
       when :local_db_find_references, :local_db_cache_all
         find_in_db(manager_uuid)
       when :local_db_find_missing_references
-        data_index[manager_uuid] || find_in_db(manager_uuid)
+        named_index(ref)[manager_uuid] || find_in_db(manager_uuid)
       else
-        manager_uuid.kind_of?(Hash) ? find_by(manager_uuid) : data_index[manager_uuid]
+        # TODO: find(hash) code path apparently exists for lazy_find(hash) ?  Consider deprecating.
+        # Better have lazy_find_by that computes string uuid ahead of time.
+        manager_uuid.kind_of?(Hash) ? find_by(manager_uuid, :ref => ref) : named_index(ref)[manager_uuid]
       end
     end
 
-    def find_by(manager_uuid_hash)
-      if !manager_uuid_hash.keys.all? { |x| manager_ref.include?(x) } || manager_uuid_hash.keys.size != manager_ref.size
-        raise "Allowed find_by keys are #{manager_ref}"
+    def find_by(manager_uuid_hash, ref: :manager_ref)
+      keys = named_ref(ref)
+      if !manager_uuid_hash.keys.all? { |x| keys.include?(x) } || manager_uuid_hash.keys.size != keys.size
+        raise "Allowed find_by ref=#{ref} keys are #{keys}"
       end
-      find(object_index(manager_uuid_hash))
+      find(object_index(manager_uuid_hash, :ref => ref))
     end
 
-    def lazy_find(manager_uuid, key: nil, default: nil)
-      ::ManagerRefresh::InventoryObjectLazy.new(self, manager_uuid, :key => key, :default => default)
+    def lazy_find_by(manager_uuid_hash, ref: :manager_ref, key: nil, default: nil)
+      # TODO raise for missing keys like `find_by`
+      lazy_find(object_index(manager_uuid_hash, :ref => ref), :ref => ref, :key => key, :default => default)
+    end
+
+    def lazy_find(manager_uuid, ref: :manager_ref, key: nil, default: nil)
+      ::ManagerRefresh::InventoryObjectLazy.new(self, manager_uuid, :ref => ref, :key => key, :default => default)
     end
 
     def inventory_object_class

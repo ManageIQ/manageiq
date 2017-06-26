@@ -15,7 +15,11 @@ module ManagerRefresh
     end
 
     def manager_uuid
-      manager_ref.map { |attribute| data[attribute].try(:id) || data[attribute].to_s }.join("__")
+      id_with_keys(manager_ref)
+    end
+
+    def id_with_keys(keys)
+      keys.map { |attribute| data[attribute].try(:id) || data[attribute].to_s }.join("__")
     end
 
     def to_raw_lazy_relation
