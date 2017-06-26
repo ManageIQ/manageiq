@@ -70,10 +70,9 @@ describe EmbeddedAnsibleWorker::Runner do
         end
 
         around do |example|
-          old_env = ENV["ANSIBLE_SERVICE_NAME"]
           ENV["ANSIBLE_SERVICE_NAME"] = "ansible-service"
           example.run
-          ENV["ANSIBLE_SERVICE_NAME"] = old_env
+          ENV.delete("ANSIBLE_SERVICE_NAME")
         end
 
         it "creates the provider with the service name for the URL" do

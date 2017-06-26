@@ -167,10 +167,9 @@ describe EmbeddedAnsible do
 
     describe ".api_connection" do
       around do |example|
-        old_env = ENV["ANSIBLE_SERVICE_NAME"]
         ENV["ANSIBLE_SERVICE_NAME"] = "ansible-service"
         example.run
-        ENV["ANSIBLE_SERVICE_NAME"] = old_env
+        ENV.delete("ANSIBLE_SERVICE_NAME")
       end
 
       it "connects to the ansible service when running in a container" do
@@ -388,10 +387,9 @@ describe EmbeddedAnsible do
 
     describe ".start when in a container" do
       around do |example|
-        old_env = ENV["ANSIBLE_ADMIN_PASSWORD"]
         ENV["ANSIBLE_ADMIN_PASSWORD"] = "thepassword"
         example.run
-        ENV["ANSIBLE_ADMIN_PASSWORD"] = old_env
+        ENV.delete("ANSIBLE_ADMIN_PASSWORD")
       end
 
       it "sets the admin password using the environment variable and waits for the service to respond" do
