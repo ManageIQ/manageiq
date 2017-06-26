@@ -502,6 +502,8 @@ class MiqWorker < ApplicationRecord
   end
 
   def status_update
+    return if MiqEnvironment::Command.is_container?
+
     begin
       pinfo = MiqProcess.processInfo(pid)
     rescue Errno::ESRCH

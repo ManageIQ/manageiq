@@ -9,11 +9,13 @@ module MiqServer::WorkerManagement::Monitor::SystemLimits
   }
 
   def kill_workers_due_to_resources_exhausted?
+    return false if MiqEnvironment::Command.is_container?
     options = worker_monitor_settings[:kill_algorithm].merge(:type => :kill)
     invoke_algorithm(options)
   end
 
   def enough_resource_to_start_worker?(worker_class)
+    return true if MiqEnvironment::Command.is_container?
     # HACK, sync_config is done in the server, while this method is called from miq_worker
     # This method should move to the worker and the server should pass the settings.
     sync_config if worker_monitor_settings.nil? || child_worker_settings.nil?

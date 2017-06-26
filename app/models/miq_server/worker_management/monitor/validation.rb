@@ -2,6 +2,7 @@ module MiqServer::WorkerManagement::Monitor::Validation
   extend ActiveSupport::Concern
 
   def validate_worker(w)
+    return true if MiqEnvironment::Command.is_container?
     time_threshold   = get_time_threshold(w)
     restart_interval = get_restart_interval(w)
     memory_threshold = get_memory_threshold(w)
