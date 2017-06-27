@@ -445,6 +445,18 @@ describe "Services API" do
       expect_result_resources_to_include_hrefs("resources", @svc1_vm_list)
     end
 
+    it "supports expansion of virtual attributes" do
+      run_get services_url, :expand => "resources", :attributes => "power_states"
+
+      expected = {
+        "resources" => [
+          a_hash_including("power_states" => svc1.power_states)
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
     it "can query vms as subcollection via expand" do
       run_get services_url(svc1.id), :expand => "vms"
 
