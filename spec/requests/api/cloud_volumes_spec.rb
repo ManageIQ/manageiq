@@ -37,7 +37,7 @@ describe "Cloud Volumes API" do
     expect(response).to have_http_status(:ok)
     expect(response.parsed_body).to include(
       "href" => a_string_matching(cloud_volumes_url(cloud_volume.id)),
-      "id"   => cloud_volume.id
+      "id"   => cloud_volume.compressed_id
     )
   end
 
@@ -62,7 +62,7 @@ describe "Cloud Volumes API" do
     expected = {
       'message' => 'Deleting Cloud Volume CloudVolume1',
       'success' => true,
-      'task_id' => a_kind_of(Numeric)
+      'task_id' => a_kind_of(String)
     }
 
     expect(response.parsed_body).to include(expected)
@@ -106,12 +106,12 @@ describe "Cloud Volumes API" do
         a_hash_including(
           'success' => true,
           'message' => a_string_including('Deleting Cloud Volume CloudVolume1'),
-          'task_id' => a_kind_of(Numeric)
+          'task_id' => a_kind_of(String)
         ),
         a_hash_including(
           'success' => true,
           'message' => a_string_including('Deleting Cloud Volume CloudVolume2'),
-          'task_id' => a_kind_of(Numeric)
+          'task_id' => a_kind_of(String)
         )
       )
     }

@@ -26,7 +26,7 @@ RSpec.describe "reports API" do
     expect_result_to_match_hash(
       response.parsed_body,
       "href"  => reports_url(report.id),
-      "id"    => report.id,
+      "id"    => report.compressed_id,
       "name"  => report.name,
       "title" => report.title
     )
@@ -149,7 +149,7 @@ RSpec.describe "reports API" do
     expect_result_to_match_hash(
       response.parsed_body,
       "href" => "/api/reports/#{report.id}/schedules/#{schedule.id}",
-      "id"   => schedule.id,
+      "id"   => schedule.compressed_id,
       "name" => 'unit_test'
     )
     expect(response).to have_http_status(:ok)

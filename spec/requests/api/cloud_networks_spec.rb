@@ -25,7 +25,7 @@ RSpec.describe 'Cloud Networks API' do
     let(:providers_cloud_networks_url) { "#{provider_url}/cloud_networks" }
 
     it 'queries Providers cloud_networks' do
-      cloud_network_ids = provider.cloud_networks.pluck(:id)
+      cloud_network_ids = provider.cloud_networks.select(:id).collect(&:compressed_id)
       api_basic_authorize subcollection_action_identifier(:providers, :cloud_networks, :read, :get)
 
       run_get providers_cloud_networks_url, :expand => 'resources'
@@ -49,7 +49,7 @@ RSpec.describe 'Cloud Networks API' do
 
       run_get cloud_network_url
 
-      expect_single_resource_query('name' => network.name, 'id' => network.id, 'ems_ref' => network.ems_ref)
+      expect_single_resource_query('name' => network.name, 'id' => network.compressed_id, 'ems_ref' => network.ems_ref)
     end
 
     it "will not show the cloud network of a provider without the appropriate role" do

@@ -153,7 +153,7 @@ RSpec.describe "users API" do
       expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
-      user_id = response.parsed_body["results"].first["id"]
+      user_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
       expect(User.exists?(user_id)).to be_truthy
     end
 
@@ -165,7 +165,7 @@ RSpec.describe "users API" do
       expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
-      user_id = response.parsed_body["results"].first["id"]
+      user_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
       expect(User.exists?(user_id)).to be_truthy
     end
 
@@ -179,10 +179,10 @@ RSpec.describe "users API" do
 
       results = response.parsed_body["results"]
       user1_hash, user2_hash = results.first, results.second
-      expect(User.exists?(user1_hash["id"])).to be_truthy
-      expect(User.exists?(user2_hash["id"])).to be_truthy
-      expect(user1_hash["current_group_id"]).to eq(group1.id)
-      expect(user2_hash["current_group_id"]).to eq(group2.id)
+      expect(User.exists?(ApplicationRecord.uncompress_id(user1_hash["id"]))).to be_truthy
+      expect(User.exists?(ApplicationRecord.uncompress_id(user2_hash["id"]))).to be_truthy
+      expect(user1_hash["current_group_id"]).to eq(group1.compressed_id)
+      expect(user2_hash["current_group_id"]).to eq(group2.compressed_id)
     end
   end
 
@@ -208,7 +208,7 @@ RSpec.describe "users API" do
 
       run_post(users_url(user1.id), gen_request(:edit, "name" => "updated name"))
 
-      expect_single_resource_query("id" => user1.id, "name" => "updated name")
+      expect_single_resource_query("id" => user1.compressed_id, "name" => "updated name")
       expect(user1.reload.name).to eq("updated name")
     end
 
@@ -219,7 +219,7 @@ RSpec.describe "users API" do
                                                 "email" => "user1@email.com",
                                                 "group" => {"description" => group2.description}))
 
-      expect_single_resource_query("id" => user1.id, "email" => "user1@email.com", "current_group_id" => group2.id)
+      expect_single_resource_query("id" => user1.compressed_id, "email" => "user1@email.com", "current_group_id" => group2.compressed_id)
       expect(user1.reload.email).to eq("user1@email.com")
       expect(user1.reload.current_group_id).to eq(group2.id)
     end
@@ -232,8 +232,8 @@ RSpec.describe "users API" do
                                        {"href" => users_url(user2.id), "first_name" => "Jane"}]))
 
       expect_results_to_match_hash("results",
-                                   [{"id" => user1.id, "first_name" => "John"},
-                                    {"id" => user2.id, "first_name" => "Jane"}])
+                                   [{"id" => user1.compressed_id, "first_name" => "John"},
+                                    {"id" => user2.compressed_id, "first_name" => "Jane"}])
 
       expect(user1.reload.first_name).to eq("John")
       expect(user2.reload.first_name).to eq("Jane")

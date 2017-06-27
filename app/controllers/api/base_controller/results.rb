@@ -25,7 +25,7 @@ module Api
       end
 
       def add_task_to_result(hash, task_id)
-        hash[:task_id]   = task_id
+        hash[:task_id]   = ApplicationRecord.compress_id(task_id)
         hash[:task_href] = task_href(task_id)
         hash
       end
@@ -33,7 +33,7 @@ module Api
       def add_tasks_to_result(hash, task_ids)
         add_task_to_result(hash, task_ids.first)
         hash[:tasks] = task_ids.collect do |task_id|
-          { :id => task_id, :href => task_href(task_id) }
+          { :id => ApplicationRecord.compress_id(task_id), :href => task_href(task_id) }
         end
       end
 

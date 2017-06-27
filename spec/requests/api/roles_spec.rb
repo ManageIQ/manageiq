@@ -107,7 +107,7 @@ describe "Roles API" do
       expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
-      role_id = response.parsed_body["results"].first["id"]
+      role_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
 
       run_get "#{roles_url}/#{role_id}/", :expand => "features"
 
@@ -127,7 +127,7 @@ describe "Roles API" do
       expect(response).to have_http_status(:ok)
       expect_result_resources_to_include_keys("results", expected_attributes)
 
-      role_id = response.parsed_body["results"].first["id"]
+      role_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
       expect(MiqUserRole.exists?(role_id)).to be_truthy
       role = MiqUserRole.find(role_id)
       sample_role1['features'].each do |feature|
@@ -144,8 +144,8 @@ describe "Roles API" do
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       results = response.parsed_body["results"]
-      r1_id = results.first["id"]
-      r2_id = results.second["id"]
+      r1_id = ApplicationRecord.uncompress_id(results.first["id"])
+      r2_id = ApplicationRecord.uncompress_id(results.second["id"])
       expect(MiqUserRole.exists?(r1_id)).to be_truthy
       expect(MiqUserRole.exists?(r2_id)).to be_truthy
 
@@ -186,7 +186,7 @@ describe "Roles API" do
       run_post(roles_url(role.id), gen_request(:edit, "name"     => "updated role",
                                                       "settings" => {"restrictions"  => {"vms" => "user_or_group"}}))
 
-      expect_single_resource_query("id"       => role.id,
+      expect_single_resource_query("id"       => role.compressed_id,
                                    "name"     => "updated role",
                                    "settings" => {"restrictions" => {"vms" => "user_or_group"}})
       expect(role.reload.name).to eq("updated role")
@@ -204,8 +204,8 @@ describe "Roles API" do
                                        {"href" => roles_url(r2.id), "name" => "updated role2"}]))
 
       expect_results_to_match_hash("results",
-                                   [{"id" => r1.id, "name" => "updated role1"},
-                                    {"id" => r2.id, "name" => "updated role2"}])
+                                   [{"id" => r1.compressed_id, "name" => "updated role1"},
+                                    {"id" => r2.compressed_id, "name" => "updated role2"}])
 
       expect(r1.reload.name).to eq("updated role1")
       expect(r2.reload.name).to eq("updated role2")

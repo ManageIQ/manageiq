@@ -157,11 +157,11 @@ RSpec.describe "Blueprints API" do
       expected = {
         "results" => a_collection_containing_exactly(
           a_hash_including(
-            "id"   => blueprint1.id,
+            "id"   => blueprint1.compressed_id,
             "name" => "baz"
           ),
           a_hash_including(
-            "id"   => blueprint2.id,
+            "id"   => blueprint2.compressed_id,
             "name" => "qux"
           )
         )
@@ -222,8 +222,8 @@ RSpec.describe "Blueprints API" do
 
       expected = {
         "results" => a_collection_containing_exactly(
-          a_hash_including("id" => blueprint1.id, "status" => "published"),
-          a_hash_including("id" => blueprint2.id, "status" => "published")
+          a_hash_including("id" => blueprint1.compressed_id, "status" => "published"),
+          a_hash_including("id" => blueprint2.compressed_id, "status" => "published")
         )
       }
 
@@ -281,7 +281,7 @@ RSpec.describe "Blueprints API" do
       run_post(blueprints_url(blueprint.id), :action => "publish")
 
       expected = {
-        "id"     => blueprint.id,
+        "id"     => blueprint.compressed_id,
         "status" => "published"
       }
       expect(response.parsed_body).to include(expected)

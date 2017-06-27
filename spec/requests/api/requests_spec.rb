@@ -66,7 +66,7 @@ RSpec.describe "Requests API" do
       run_get requests_url(service_request.id)
 
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body).to include("id"   => service_request.id,
+      expect(response.parsed_body).to include("id"   => service_request.compressed_id,
                                               "href" => a_string_matching(requests_url(service_request.id)))
     end
 
@@ -109,7 +109,7 @@ RSpec.describe "Requests API" do
       run_get requests_url(service_request.id)
 
       expected = {
-        "id"   => service_request.id,
+        "id"   => service_request.compressed_id,
         "href" => a_string_matching(requests_url(service_request.id))
       }
       expect(response).to have_http_status(:ok)
@@ -192,7 +192,7 @@ RSpec.describe "Requests API" do
             "approval_state" => "pending_approval",
             "type"           => "ServiceReconfigureRequest",
             "requester_name" => api_config(:user_name),
-            "options"        => a_hash_including("src_id" => service.id)
+            "options"        => a_hash_including("src_id" => service.compressed_id)
           )
         ]
       }
@@ -221,7 +221,7 @@ RSpec.describe "Requests API" do
             "approval_state" => "approved",
             "type"           => "ServiceReconfigureRequest",
             "requester_name" => approver.name,
-            "options"        => a_hash_including("src_id" => service.id, "other_attr" => "other value")
+            "options"        => a_hash_including("src_id" => service.compressed_id, "other_attr" => "other value")
           )
         ]
       }
@@ -249,7 +249,7 @@ RSpec.describe "Requests API" do
       run_get requests_url(request.id), :attributes => "workflow,v_allowed_tags,v_workflow_class"
 
       expected_response = a_hash_including(
-        "id"               => request.id,
+        "id"               => request.compressed_id,
         "workflow"         => a_hash_including("values"),
         "v_allowed_tags"   => [a_hash_including("children")],
         "v_workflow_class" => a_hash_including(
@@ -280,7 +280,7 @@ RSpec.describe "Requests API" do
       run_get requests_url(request.id), :attributes => "workflow.values"
 
       expected_response = a_hash_including(
-        "id"       => request.id,
+        "id"       => request.compressed_id,
         "workflow" => a_hash_including("values")
       )
 
@@ -300,7 +300,7 @@ RSpec.describe "Requests API" do
       run_get requests_url(request.id), :attributes => "workflow,v_allowed_tags,v_workflow_class"
 
       expected_response = a_hash_including(
-        "id"               => request.id,
+        "id"               => request.compressed_id,
         "v_workflow_class" => {}
       )
 
@@ -343,7 +343,7 @@ RSpec.describe "Requests API" do
       run_post(requests_url(request.id), gen_request(:edit, :options => { :some_option => "some_value" }))
 
       expected = {
-        "id"      => request.id,
+        "id"      => request.compressed_id,
         "options" => a_hash_including("some_option" => "some_value")
       }
 

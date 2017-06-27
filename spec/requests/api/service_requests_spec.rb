@@ -228,7 +228,7 @@ describe "Service Requests API" do
       run_get service_requests_url(service_request.id)
 
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body).to include("id"   => service_request.id,
+      expect(response.parsed_body).to include("id"   => service_request.compressed_id,
                                        "href" => a_string_matching(service_requests_url(service_request.id)))
     end
 
@@ -271,7 +271,7 @@ describe "Service Requests API" do
       run_get service_requests_url(service_request.id)
 
       expected = {
-        "id"   => service_request.id,
+        "id"   => service_request.compressed_id,
         "href" => a_string_matching(service_requests_url(service_request.id))
       }
       expect(response).to have_http_status(:ok)
@@ -353,7 +353,7 @@ describe "Service Requests API" do
         run_post(service_requests_url(service_request.id), :action => 'add_approver', :user_id => user.id)
       end.to change(MiqApproval, :count).by(1)
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body).to include('id' => service_request.id)
+      expect(response.parsed_body).to include('id' => service_request.compressed_id)
     end
 
     it 'can add approvers to multiple service requests' do
@@ -368,8 +368,8 @@ describe "Service Requests API" do
 
       expected = {
         'results' => a_collection_including(
-          a_hash_including('id' => service_request.id),
-          a_hash_including('id' => service_request_2.id)
+          a_hash_including('id' => service_request.compressed_id),
+          a_hash_including('id' => service_request_2.compressed_id)
         )
       }
       expect do
@@ -399,7 +399,7 @@ describe "Service Requests API" do
         run_post(service_requests_url(service_request.id), :action => 'add_approver', :user => { :id => user.id})
       end.to change(MiqApproval, :count).by(1)
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body).to include('id' => service_request.id)
+      expect(response.parsed_body).to include('id' => service_request.compressed_id)
     end
 
     it 'supports user reference hash with href' do
@@ -412,7 +412,7 @@ describe "Service Requests API" do
                  :action => 'add_approver', :user => { :href => users_url(user.id)})
       end.to change(MiqApproval, :count).by(1)
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body).to include('id' => service_request.id)
+      expect(response.parsed_body).to include('id' => service_request.compressed_id)
     end
 
     it 'raises an error if no user is supplied' do
@@ -440,7 +440,7 @@ describe "Service Requests API" do
         run_post(service_requests_url(service_request.id), :action => 'remove_approver', :user_id => user.id)
       end.to change(MiqApproval, :count).by(-1)
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body).to include('id' => service_request.id)
+      expect(response.parsed_body).to include('id' => service_request.compressed_id)
     end
 
     it 'can remove approvers to multiple service requests' do
@@ -455,8 +455,8 @@ describe "Service Requests API" do
 
       expected = {
         'results' => a_collection_including(
-          a_hash_including('id' => service_request.id),
-          a_hash_including('id' => service_request2.id)
+          a_hash_including('id' => service_request.compressed_id),
+          a_hash_including('id' => service_request2.compressed_id)
         )
       }
       expect do
@@ -492,7 +492,7 @@ describe "Service Requests API" do
                  :user   => { :href => users_url(user.id)})
       end.to change(MiqApproval, :count).by(-1)
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body).to include('id' => service_request.id)
+      expect(response.parsed_body).to include('id' => service_request.compressed_id)
     end
 
     it 'raises an error if no user is supplied' do
@@ -516,7 +516,7 @@ describe "Service Requests API" do
 
       run_post(service_requests_url(service_request.id), :action => 'remove_approver', :user_id => user.id)
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body).to include('id' => service_request.id)
+      expect(response.parsed_body).to include('id' => service_request.compressed_id)
     end
   end
 
@@ -541,7 +541,7 @@ describe "Service Requests API" do
       run_post(service_requests_url(service_request.id), :action => "edit", :options => {:baz => "qux"})
 
       expected = {
-        "id"      => service_request.id,
+        "id"      => service_request.compressed_id,
         "options" => a_hash_including("foo" => "bar")
       }
       expect(response).to have_http_status(:ok)

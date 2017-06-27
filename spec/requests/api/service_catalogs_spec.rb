@@ -58,14 +58,14 @@ describe "Service Catalogs API" do
       expected = {
         "results" => [
           a_hash_including(
-            "id"   => kind_of(Integer),
+            "id"   => kind_of(String),
             "name" => "sample service catalog"
           )
         ]
       }
       expect(response.parsed_body).to include(expected)
 
-      sc_id = response.parsed_body["results"].first["id"]
+      sc_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
 
       expect(ServiceTemplateCatalog.find(sc_id)).to be_truthy
     end
@@ -79,14 +79,14 @@ describe "Service Catalogs API" do
       expected = {
         "results" => [
           a_hash_including(
-            "id"   => kind_of(Integer),
+            "id"   => kind_of(String),
             "name" => "sample service catalog"
           )
         ]
       }
       expect(response.parsed_body).to include(expected)
 
-      sc_id = response.parsed_body["results"].first["id"]
+      sc_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
 
       expect(ServiceTemplateCatalog.find(sc_id)).to be_truthy
     end
@@ -99,14 +99,15 @@ describe "Service Catalogs API" do
       expect(response).to have_http_status(:ok)
       expected = {
         "results" => a_collection_containing_exactly(
-          a_hash_including("id" => kind_of(Integer), "name" => "sc1"),
-          a_hash_including("id" => kind_of(Integer), "name" => "sc2")
+          a_hash_including("id" => kind_of(String), "name" => "sc1"),
+          a_hash_including("id" => kind_of(String), "name" => "sc2")
         )
       }
       expect(response.parsed_body).to include(expected)
 
       results = response.parsed_body["results"]
-      sc_id1, sc_id2 = results.first["id"], results.second["id"]
+      sc_id1 = ApplicationRecord.uncompress_id(results.first["id"])
+      sc_id2 = ApplicationRecord.uncompress_id(results.second["id"])
       expect(ServiceTemplateCatalog.find(sc_id1)).to be_truthy
       expect(ServiceTemplateCatalog.find(sc_id2)).to be_truthy
     end
@@ -128,7 +129,7 @@ describe "Service Catalogs API" do
       expect(response).to have_http_status(:ok)
       expect_results_to_match_hash("results", [{"name" => "sc", "description" => "sc description"}])
 
-      sc_id = response.parsed_body["results"].first["id"]
+      sc_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
 
       expect(ServiceTemplateCatalog.find(sc_id)).to be_truthy
       expect(ServiceTemplateCatalog.find(sc_id).service_templates.pluck(:id)).to match_array([st1.id, st2.id])
@@ -174,7 +175,7 @@ describe "Service Catalogs API" do
         )
       }
       expect(response.parsed_body).to include(expected)
-      expect_single_resource_query("id" => sc.id, "name" => "sc", "description" => "updated sc description")
+      expect_single_resource_query("id" => sc.compressed_id, "name" => "sc", "description" => "updated sc description")
       expect(sc.reload.description).to eq("updated sc description")
     end
 
@@ -189,8 +190,8 @@ describe "Service Catalogs API" do
                                                   {"href" => service_catalogs_url(sc2.id), "name" => "sc2 updated"}]))
 
       expect_results_to_match_hash("results",
-                                   [{"id" => sc1.id, "name" => "sc1 updated", "description" => "sc1 description"},
-                                    {"id" => sc2.id, "name" => "sc2 updated", "description" => "sc2 description"}])
+                                   [{"id" => sc1.compressed_id, "name" => "sc1 updated", "description" => "sc1 description"},
+                                    {"id" => sc2.compressed_id, "name" => "sc2 updated", "description" => "sc2 description"}])
 
       expect(sc1.reload.name).to eq("sc1 updated")
       expect(sc2.reload.name).to eq("sc2 updated")
@@ -300,7 +301,7 @@ describe "Service Catalogs API" do
       expect(response).to have_http_status(:ok)
       expect_results_to_match_hash("results", [{"success"               => true,
                                                 "href"                  => service_catalogs_url(sc.id),
-                                                "service_template_id"   => st.id,
+                                                "service_template_id"   => st.compressed_id,
                                                 "service_template_href" => /^.*#{service_templates_url(st.id)}$/,
                                                 "message"               => /assigning/i}])
       expect(sc.reload.service_templates.pluck(:id)).to eq([st.id])
@@ -319,7 +320,7 @@ describe "Service Catalogs API" do
       expect(response).to have_http_status(:ok)
       expect_results_to_match_hash("results", [{"success"               => true,
                                                 "href"                  => service_catalogs_url(sc.id),
-                                                "service_template_id"   => st1.id,
+                                                "service_template_id"   => st1.compressed_id,
                                                 "service_template_href" => /^.*#{service_templates_url(st1.id)}$/,
                                                 "message"               => /unassigning/i}])
       expect(sc.reload.service_templates.pluck(:id)).to eq([st2.id])

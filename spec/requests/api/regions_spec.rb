@@ -37,7 +37,7 @@ describe "Regions API" do
     expect(response).to have_http_status(:ok)
     expect(response.parsed_body).to include(
       "href" => a_string_matching(regions_url(region.id)),
-      "id"   => region.id
+      "id"   => region.compressed_id
     )
   end
 end

@@ -59,7 +59,7 @@ RSpec.describe 'Configuration Script Payloads API' do
 
       expected = {
         'resources' => [
-          a_hash_including('id' => authentication.id)
+          a_hash_including('id' => authentication.compressed_id)
         ]
       }
       expect(response).to have_http_status(:ok)
@@ -104,7 +104,7 @@ RSpec.describe 'Configuration Script Payloads API' do
         'results' => [a_hash_including(
           'success' => true,
           'message' => 'Creating Authentication',
-          'task_id' => a_kind_of(Numeric)
+          'task_id' => a_kind_of(String)
         )]
       }
       expect(response).to have_http_status(:ok)
@@ -121,12 +121,12 @@ RSpec.describe 'Configuration Script Payloads API' do
           a_hash_including(
             'success' => true,
             'message' => 'Creating Authentication',
-            'task_id' => a_kind_of(Numeric)
+            'task_id' => a_kind_of(String)
           ),
           a_hash_including(
             'success' => true,
             'message' => 'Creating Authentication',
-            'task_id' => a_kind_of(Numeric)
+            'task_id' => a_kind_of(String)
           )
         ]
       }
@@ -152,7 +152,7 @@ RSpec.describe 'Configuration Script Payloads API' do
       run_get("#{configuration_script_payloads_url(playbook.id)}/authentications/#{authentication.id}")
 
       expected = {
-        'id' => authentication.id
+        'id' => authentication.compressed_id
       }
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)

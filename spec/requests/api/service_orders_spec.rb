@@ -83,7 +83,7 @@ RSpec.describe "service orders API" do
     run_get service_orders_url("cart")
 
     expect(response).to have_http_status(:ok)
-    expect(response.parsed_body).to include("id"   => shopping_cart.id,
+    expect(response.parsed_body).to include("id"   => shopping_cart.compressed_id,
                                      "href" => a_string_matching(service_orders_url(shopping_cart.id)))
   end
 
@@ -180,7 +180,7 @@ RSpec.describe "service orders API" do
         run_get url
 
         expect(response).to have_http_status(:ok)
-        expect(response.parsed_body).to include("id" => service_request.id, "href" => a_string_matching(url))
+        expect(response.parsed_body).to include("id" => service_request.compressed_id, "href" => a_string_matching(url))
       end
 
       it "can add a service request to a shopping cart" do
@@ -204,7 +204,7 @@ RSpec.describe "service orders API" do
             a_hash_including(
               "success"              => true,
               "message"              => /Adding service_request/,
-              "service_request_id"   => actual_requests.first.id,
+              "service_request_id"   => actual_requests.first.compressed_id,
               "service_request_href" => a_string_matching(service_requests_url(actual_requests.first.id))
             )
           ]
@@ -244,13 +244,13 @@ RSpec.describe "service orders API" do
             a_hash_including(
               "success"              => true,
               "message"              => /Adding service_request/,
-              "service_request_id"   => actual_requests.first.id,
+              "service_request_id"   => actual_requests.first.compressed_id,
               "service_request_href" => a_string_matching(service_requests_url(actual_requests.first.id))
             ),
             a_hash_including(
               "success"              => true,
               "message"              => /Adding service_request/,
-              "service_request_id"   => actual_requests.second.id,
+              "service_request_id"   => actual_requests.second.compressed_id,
               "service_request_href" => a_string_matching(service_requests_url(actual_requests.second.id))
             )
           )
@@ -270,7 +270,7 @@ RSpec.describe "service orders API" do
           "success"              => true,
           "message"              => a_string_starting_with("Removing Service Request id:#{service_request.id}"),
           "service_request_href" => a_string_matching(service_requests_url(service_request.id)),
-          "service_request_id"   => service_request.id
+          "service_request_id"   => service_request.compressed_id
         }
         expect(response).to have_http_status(:ok)
         expect(response.parsed_body).to include(expected)
@@ -301,13 +301,13 @@ RSpec.describe "service orders API" do
               "success"              => true,
               "message"              => a_string_starting_with("Removing Service Request id:#{service_request_1.id}"),
               "service_request_href" => a_string_matching(service_requests_url(service_request_1.id)),
-              "service_request_id"   => service_request_1.id
+              "service_request_id"   => service_request_1.compressed_id
             ),
             a_hash_including(
               "success"              => true,
               "message"              => a_string_starting_with("Removing Service Request id:#{service_request_2.id}"),
               "service_request_href" => a_string_matching(service_requests_url(service_request_2.id)),
-              "service_request_id"   => service_request_2.id
+              "service_request_id"   => service_request_2.compressed_id
             )
           )
         }
@@ -340,13 +340,13 @@ RSpec.describe "service orders API" do
               "success"              => true,
               "message"              => a_string_starting_with("Removing Service Request id:#{service_request_1.id}"),
               "service_request_href" => a_string_matching(service_requests_url(service_request_1.id)),
-              "service_request_id"   => service_request_1.id
+              "service_request_id"   => service_request_1.compressed_id
             ),
             a_hash_including(
               "success"              => true,
               "message"              => a_string_starting_with("Removing Service Request id:#{service_request_2.id}"),
               "service_request_href" => a_string_matching(service_requests_url(service_request_2.id)),
-              "service_request_id"   => service_request_2.id
+              "service_request_id"   => service_request_2.compressed_id
             )
           )
         }
@@ -368,7 +368,7 @@ RSpec.describe "service orders API" do
 
         expected = {
           "href" => a_string_matching(service_orders_url(shopping_cart.id)),
-          "id"   => shopping_cart.id
+          "id"   => shopping_cart.compressed_id
         }
         expect(response).to have_http_status(:ok)
         expect(response.parsed_body).to include(expected)

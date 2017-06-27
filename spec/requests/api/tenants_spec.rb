@@ -34,7 +34,7 @@ RSpec.describe "tenants API" do
     expect_result_to_match_hash(
       response.parsed_body,
       "href"        => tenants_url(tenant.id),
-      "id"          => tenant.id,
+      "id"          => tenant.compressed_id,
       "name"        => "Test Tenant",
       "description" => "Tenant for this test"
     )
@@ -112,7 +112,7 @@ RSpec.describe "tenants API" do
 
         expect_result_to_match_hash(response.parsed_body,
                                     "href" => tenants_url(root_tenant.id),
-                                    "id"   => root_tenant.id,
+                                    "id"   => root_tenant.compressed_id,
                                     "name" => ::Settings.server.company,
                                    )
         expect(response).to have_http_status(:ok)
@@ -141,8 +141,8 @@ RSpec.describe "tenants API" do
       expect(response).to have_http_status(:ok)
       expect_results_to_match_hash(
         "results",
-        [{"id" => tenant_1.id, "name" => "Updated Test Tenant 1"},
-         {"id" => tenant_2.id, "name" => "Updated Test Tenant 2"}]
+        [{"id" => tenant_1.compressed_id, "name" => "Updated Test Tenant 1"},
+         {"id" => tenant_2.compressed_id, "name" => "Updated Test Tenant 2"}]
       )
       expect(tenant_1.reload.name).to eq("Updated Test Tenant 1")
       expect(tenant_2.reload.name).to eq("Updated Test Tenant 2")

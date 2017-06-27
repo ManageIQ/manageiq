@@ -44,8 +44,8 @@ RSpec.describe "Snapshots API" do
         expected = {
           "create_time"       => create_time.iso8601,
           "href"              => a_string_matching("#{vms_url(vm.id)}/snapshots/#{snapshot.id}"),
-          "id"                => snapshot.id,
-          "vm_or_template_id" => vm.id
+          "id"                => snapshot.compressed_id,
+          "vm_or_template_id" => vm.compressed_id
         }
         expect(response.parsed_body).to include(expected)
         expect(response).to have_http_status(:ok)
@@ -332,8 +332,8 @@ RSpec.describe "Snapshots API" do
         expected = {
           "create_time"       => create_time.iso8601,
           "href"              => a_string_matching("#{instances_url(instance.id)}/snapshots/#{snapshot.id}"),
-          "id"                => snapshot.id,
-          "vm_or_template_id" => instance.id
+          "id"                => snapshot.compressed_id,
+          "vm_or_template_id" => instance.compressed_id
         }
         expect(response.parsed_body).to include(expected)
         expect(response).to have_http_status(:ok)

@@ -31,6 +31,8 @@ module Api
           normalize_array(value)
         elsif value.respond_to?(:attributes) || value.respond_to?(:keys)
           normalize_hash(attr, value)
+        elsif attr == "id" || attr.to_s.ends_with?("_id")
+          ApplicationRecord.compress_id(value)
         elsif Api.time_attribute?(attr)
           normalize_time(value)
         elsif Api.url_attribute?(attr)

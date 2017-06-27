@@ -60,7 +60,7 @@ describe "Provision Requests API" do
       expect_result_resources_to_include_keys("results", expected_attributes)
       expect_results_to_match_hash("results", [expected_hash])
 
-      task_id = response.parsed_body["results"].first["id"]
+      task_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
       expect(MiqProvisionRequest.exists?(task_id)).to be_truthy
     end
 
@@ -74,7 +74,7 @@ describe "Provision Requests API" do
       expect_result_resources_to_include_keys("results", expected_attributes)
       expect_results_to_match_hash("results", [expected_hash])
 
-      task_id = response.parsed_body["results"].first["id"]
+      task_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
       expect(MiqProvisionRequest.exists?(task_id)).to be_truthy
     end
 
@@ -88,7 +88,7 @@ describe "Provision Requests API" do
       expect_result_resources_to_include_keys("results", expected_attributes)
       expect_results_to_match_hash("results", [expected_hash, expected_hash])
 
-      task_id1, task_id2 = response.parsed_body["results"].collect { |r| r["id"] }
+      task_id1, task_id2 = response.parsed_body["results"].collect { |r| ApplicationRecord.uncompress_id(r["id"]) }
       expect(MiqProvisionRequest.exists?(task_id1)).to be_truthy
       expect(MiqProvisionRequest.exists?(task_id2)).to be_truthy
     end
@@ -110,7 +110,7 @@ describe "Provision Requests API" do
         run_post(provision_requests_url(provision_request.id), :action => "edit", :options => {:baz => "qux"})
 
         expected = {
-          "id"      => provision_request.id,
+          "id"      => provision_request.compressed_id,
           "options" => a_hash_including("foo" => "bar", "baz" => "qux")
         }
         expect(response).to have_http_status(:ok)

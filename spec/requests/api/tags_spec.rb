@@ -29,7 +29,7 @@ describe "Tags API" do
         expect { run_post tags_url, options }.to change(Tag, :count).by(1)
 
         result = response.parsed_body["results"].first
-        tag = Tag.find(result["id"])
+        tag = Tag.find(ApplicationRecord.uncompress_id(result["id"]))
         tag_category = Category.find(tag.category.id)
         expect(tag_category).to eq(category)
         expect(result["href"]).to include(tags_url(tag.id))
@@ -44,7 +44,7 @@ describe "Tags API" do
           run_post tags_url, :name => "test_tag", :description => "Test Tag", :category => {:id => category.id}
         end.to change(Tag, :count).by(1)
 
-        tag = Tag.find(response.parsed_body["results"].first["id"])
+        tag = Tag.find(ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"]))
         tag_category = Category.find(tag.category.id)
         expect(tag_category).to eq(category)
 
@@ -59,7 +59,7 @@ describe "Tags API" do
           run_post tags_url, :name => "test_tag", :description => "Test Tag", :category => {:name => category.name}
         end.to change(Tag, :count).by(1)
 
-        tag = Tag.find(response.parsed_body["results"].first["id"])
+        tag = Tag.find(ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"]))
         tag_category = Category.find(tag.category.id)
         expect(tag_category).to eq(category)
 
@@ -73,7 +73,7 @@ describe "Tags API" do
         expect do
           run_post "#{categories_url(category.id)}/tags", :name => "test_tag", :description => "Test Tag"
         end.to change(Tag, :count).by(1)
-        tag = Tag.find(response.parsed_body["results"].first["id"])
+        tag = Tag.find(ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"]))
         tag_category = Category.find(tag.category.id)
         expect(tag_category).to eq(category)
 
@@ -271,7 +271,7 @@ describe "Tags API" do
 
       expect_single_resource_query(
         "href"           => tags_url(tag.id),
-        "id"             => tag.id,
+        "id"             => tag.compressed_id,
         "name"           => tag.name,
         "category"       => {"name" => tag.category.name,       "description" => tag.category.description},
         "classification" => {"name" => tag.classification.name, "description" => tag.classification.description}
@@ -286,7 +286,7 @@ describe "Tags API" do
 
       expect_single_resource_query(
         "href"           => tags_url(tag.id),
-        "id"             => tag.id,
+        "id"             => tag.compressed_id,
         "name"           => tag.name,
         "categorization" => {
           "name"         => tag.classification.name,
