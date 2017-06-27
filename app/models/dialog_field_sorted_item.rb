@@ -102,7 +102,7 @@ class DialogFieldSortedItem < DialogField
   end
 
   def default_value_included_in_raw_values?
-    @raw_values.collect { |value_pair| value_pair[0] }.include?(default_value.send(value_modifier))
+    @raw_values.collect { |value_pair| value_pair[0].send(value_modifier) }.include?(default_value.send(value_modifier))
   end
 
   def static_raw_values

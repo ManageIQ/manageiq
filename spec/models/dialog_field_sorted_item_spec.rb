@@ -189,8 +189,40 @@ describe DialogFieldSortedItem do
       end
 
       context "when the field is not required" do
-        it "returns the values with the first option being a nil 'None' option" do
-          expect(dialog_field.values).to eq([[nil, "<None>"], %w(test test), %w(abc abc)])
+        context "when the data type is an integer" do
+          let(:data_type) { "integer" }
+
+          before do
+            dialog_field.data_type = data_type
+          end
+
+          context "when there is a default value that matches a value in the values list" do
+            let(:default_value) { "2" }
+            let(:values) { [%w(1 1), %w(2 2), %w(3 3)] }
+
+            it "sets the default value to the matching value" do
+              dialog_field.values
+              expect(dialog_field.default_value).to eq("2")
+            end
+
+            it "returns the values with the first option being a nil 'None' option" do
+              expect(dialog_field.values).to eq([[nil, "<None>"], %w(1 1), %w(2 2), %w(3 3)])
+            end
+          end
+
+          context "when there is a default value that does not match a value in the values list" do
+            let(:default_value) { "4" }
+            let(:values) { [%w(1 1), %w(2 2), %w(3 3)] }
+
+            it "sets the default value to nil" do
+              dialog_field.values
+              expect(dialog_field.default_value).to eq(nil)
+            end
+
+            it "returns the values with the first option being a nil 'None' option" do
+              expect(dialog_field.values).to eq([[nil, "<None>"], %w(1 1), %w(2 2), %w(3 3)])
+            end
+          end
         end
       end
     end
