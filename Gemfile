@@ -72,7 +72,6 @@ gem "pg-pglogical",                   "~>1.1.0",       :require => false
 gem "puma",                           "~>3.3.0"
 gem "query_relation",                 "~>0.1.0",       :require => false
 gem "rails",                          "~>5.0.2"
-gem "rails-controller-testing",                        :require => false
 gem "rails-i18n",                     "~>5.x"
 gem "responders",                     "~>2.0"
 gem "rest-client",                    "~>2.0.0",       :require => false
@@ -122,6 +121,7 @@ unless ENV["APPLIANCE"]
     gem "capybara",         "~>2.5.0",  :require => false
     gem "coveralls",                    :require => false
     gem "factory_girl",     "~>4.5.0",  :require => false
+    gem "rails-controller-testing",     :require => false
     gem "sqlite3",                      :require => false
     gem "timecop",          "~>0.7.3",  :require => false
     gem "vcr",              "~>3.0.2",  :require => false
