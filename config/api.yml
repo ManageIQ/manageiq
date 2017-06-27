@@ -1050,6 +1050,33 @@
     - :collection
     :verbs: *g
     :klass: ChargebackRateDetailMeasure
+  :network_routers:
+    :description: Network_Routers
+    :identifier: network_router
+    :options:
+    - :collection
+    - :subcollection
+    :verbs: *gp
+    :klass: NetworkRouter
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: network_router_show_list
+      :post:
+      - :name: query
+        :identifier: network_router_show_list
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: network_router_show
+    :subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: cloud_tenant_show_list
+    :subresource_actions:
+      :get:
+      - :name: read
+        :identifier: cloud_tenant_show
   :notifications:
     :description: "User's past notifications"
     :options:
