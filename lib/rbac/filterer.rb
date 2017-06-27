@@ -51,8 +51,6 @@ module Rbac
       VmOrTemplate
     )
 
-    TAGGABLE_FILTER_CLASSES = CLASSES_THAT_PARTICIPATE_IN_RBAC - %w(EmsFolder) + %w(MiqGroup User)
-
     BELONGSTO_FILTER_CLASSES = %w(
       VmOrTemplate
       Host
@@ -417,7 +415,7 @@ module Rbac
 
     def get_managed_filter_object_ids(scope, filter)
       klass = scope.respond_to?(:klass) ? scope.klass : scope
-      return nil if !TAGGABLE_FILTER_CLASSES.include?(safe_base_class(klass).name) || filter.blank?
+      return nil if !klass.include?(ActsAsTaggable) || filter.blank?
       scope.find_tags_by_grouping(filter, :ns => '*').reorder(nil)
     end
 
