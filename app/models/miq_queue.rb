@@ -184,6 +184,73 @@ class MiqQueue < ApplicationRecord
     put(options)
   end
 
+  # options:
+  #   :class_name
+  #   :method_name
+  #   :instance_id (optional)
+  #   :args        (optional)
+  #   :expires_on  (optional, timestamp in second)
+  #   :deliver_on  (optional, timestamp in second)
+  #   :priority    (optional, 0 - 9)
+  #   :service
+  #   :resource    (optional)
+  def self.put_background_job(options)
+    options = options.dup
+
+    resource = options.delete(:resource) || 'none'
+    address = "queue/#{options.delete(:service)}.#{resource}"
+
+    headers = {:"destination-type" => "ANYCAST"}
+    headers[:expires] = options.delete(:expires_on).to_i * 1000 if options[:expires_on]
+    headers[:AMQ_SCHEDULED_TIME] = options.delete(:deliver_on).to_i * 1000 if options[:deliver_on]
+    headers[:priority] = options.delete(:priority) if options[:priority]
+
+    client = ActiveMqClient.open
+    client.publish(address, options.to_yaml, headers)
+    _log.info("Address(#{address}), msg(#{options.inspect}), headers(#{headers.inspect})")
+
+    client.close
+  end
+
+  # options:
+  #   :service
+  #   :resource (optional)
+  def self.subscribe_background_job(worker, options)
+    options = options.dup
+    resource = options.delete(:resource) || 'none'
+    queue_name = "queue/#{options.delete(:service)}.#{resource}"
+
+    headers = {:"subscription-type" => 'ANYCAST', :ack => 'client'}
+
+    worker.subscribe(queue_name, headers) do |msg|
+      begin
+        msg_options = YAML.safe_load(msg.body).with_indifferent_access
+
+        # TODO: refactor after MiqQueue.put and table miq_queues are deprecated
+        dequeue = MiqQueue.new(msg_options)
+
+        status, _message, result = dequeue.deliver(MiqServer.my_server || MiqServer.seed)
+      rescue => err
+        _log.error("Error delivering #{dequeue.inspect}, reason: #{err}")
+      end
+
+      if status == "timeout"
+        begin
+          _log.info("Reconnecting to DB after timeout error during queue deliver")
+          ActiveRecord::Base.connection.reconnect!
+        rescue => err
+          _log.error("Error encountered during <ActiveRecord::Base.connection.reconnect!> error:#{err.class.name}: #{err.message}")
+        end
+      end
+      # pp result
+
+      # No call back support yet
+      # queue.delivered(status, message, result) unless status == 'retry'
+
+      worker.ack(msg)
+    end
+  end
+
   MIQ_QUEUE_GET = <<-EOL
     state = 'ready'
     AND (zone IS NULL OR zone = ?)
