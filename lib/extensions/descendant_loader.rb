@@ -47,6 +47,7 @@
 #
 
 require "active_record"
+require_relative "../manageiq"
 
 class DescendantLoader
   CACHE_VERSION = 2
@@ -169,7 +170,7 @@ class DescendantLoader
   # RubyParser is slow, so wrap it in a simple mtime-based cache.
   module Cache
     def cache_path
-      Rails.root.join('tmp/cache/sti_loader.yml')
+      ManageIQ.root.join('tmp/cache/sti_loader.yml')
     end
 
     def load_cache
@@ -209,7 +210,7 @@ class DescendantLoader
 
   module Mapper
     def descendants_paths
-      @descendants_paths ||= [Rails.root.join("app/models")]
+      @descendants_paths ||= [ManageIQ.root.join("app/models")]
     end
 
     def class_inheritance_relationships
