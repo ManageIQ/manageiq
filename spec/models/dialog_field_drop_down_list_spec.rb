@@ -221,9 +221,9 @@ describe DialogFieldDropDownList do
               expect(dialog_field.values).to eq([[0, "zero"], [10, "ten"], [5, "five"]])
             end
 
-            it "sets the value to the first value" do
+            it "sets the value to the default value as a string" do
               dialog_field.values
-              expect(dialog_field.value).to eq("0")
+              expect(dialog_field.value).to eq("5")
             end
           end
         end
