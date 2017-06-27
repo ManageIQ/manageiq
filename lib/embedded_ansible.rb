@@ -13,6 +13,7 @@ class EmbeddedAnsible
   WAIT_FOR_ANSIBLE_SLEEP = 1.second
 
   def self.available?
+    return true if MiqEnvironment::Command.is_container?
     return false unless MiqEnvironment::Command.is_appliance?
 
     required_rpms = Set["ansible-tower-server", "ansible-tower-setup"]
@@ -24,10 +25,12 @@ class EmbeddedAnsible
   end
 
   def self.running?
+    return true if MiqEnvironment::Command.is_container?
     services.all? { |service| LinuxAdmin::Service.new(service).running? }
   end
 
   def self.configured?
+    return true if MiqEnvironment::Command.is_container?
     return false unless File.exist?(SECRET_KEY_FILE)
     key = miq_database.ansible_secret_key
     key.present? && key == File.read(SECRET_KEY_FILE)
@@ -44,6 +47,46 @@ class EmbeddedAnsible
   end
 
   def self.start
+    if MiqEnvironment::Command.is_container?
+      container_start
+    else
+      appliance_start
+    end
+  end
+
+  def self.stop
+    return if MiqEnvironment::Command.is_container?
+    services.each { |service| LinuxAdmin::Service.new(service).stop }
+  end
+
+  def self.disable
+    return if MiqEnvironment::Command.is_container?
+    services.each { |service| LinuxAdmin::Service.new(service).stop.disable }
+  end
+
+  def self.services
+    AwesomeSpawn.run!("source /etc/sysconfig/ansible-tower; echo $TOWER_SERVICES").output.split
+  end
+
+  def self.api_connection
+    if MiqEnvironment::Command.is_container?
+      host = ENV["ANSIBLE_SERVICE_NAME"]
+      port = 80
+    else
+      host = "localhost"
+      port = HTTP_PORT
+    end
+
+    admin_auth = miq_database.ansible_admin_authentication
+    AnsibleTowerClient::Connection.new(
+      :base_url   => URI::HTTP.build(:host => host, :path => "/api/v1", :port => port).to_s,
+      :username   => admin_auth.userid,
+      :password   => admin_auth.password,
+      :verify_ssl => 0
+    )
+  end
+
+  def self.appliance_start
     if configured?
       services.each { |service| LinuxAdmin::Service.new(service).start.enable }
     else
@@ -60,27 +103,19 @@ class EmbeddedAnsible
 
     raise "EmbeddedAnsible service is not responding after setup"
   end
+  private_class_method :appliance_start
 
-  def self.stop
-    services.each { |service| LinuxAdmin::Service.new(service).stop }
-  end
+  def self.container_start
+    miq_database.set_ansible_admin_authentication(:password => ENV["ANSIBLE_ADMIN_PASSWORD"])
 
-  def self.disable
-    services.each { |service| LinuxAdmin::Service.new(service).stop.disable }
-  end
+    loop do
+      break if alive?
 
-  def self.services
-    AwesomeSpawn.run!("source /etc/sysconfig/ansible-tower; echo $TOWER_SERVICES").output.split
+      _log.info("Waiting for Ansible container to respond")
+      sleep WAIT_FOR_ANSIBLE_SLEEP
+    end
   end
-
-  def self.api_connection
-    admin_auth = miq_database.ansible_admin_authentication
-    AnsibleTowerClient::Connection.new(
-      :base_url => URI::HTTP.build(:host => "localhost", :path => "/api/v1", :port => HTTP_PORT).to_s,
-      :username => admin_auth.userid,
-      :password => admin_auth.password
-    )
-  end
+  private_class_method :container_start
 
   def self.run_setup_script(exclude_tags)
     json_extra_vars = {

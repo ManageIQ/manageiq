@@ -26,9 +26,41 @@ describe EmbeddedAnsible do
       end
     end
 
+    it "returns true unconditionally in a container" do
+      allow(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
+      expect(described_class.available?).to be_truthy
+    end
+
     it "returns false outside of an appliance" do
       allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
       expect(described_class.available?).to be_falsey
+    end
+  end
+
+  describe ".running?" do
+    it "always returns true when in a container" do
+      expect(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
+      expect(LinuxAdmin::Service).not_to receive(:new)
+
+      expect(described_class.running?).to be_truthy
+    end
+  end
+
+  describe ".stop" do
+    it "doesn't attempt to stop services if running in a container" do
+      expect(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
+      expect(LinuxAdmin::Service).not_to receive(:new)
+
+      described_class.stop
+    end
+  end
+
+  describe ".disable" do
+    it "doesn't attempt to disable services if running in a container" do
+      expect(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
+      expect(LinuxAdmin::Service).not_to receive(:new)
+
+      described_class.disable
     end
   end
 
@@ -133,6 +165,28 @@ describe EmbeddedAnsible do
       EvmSpecHelper.create_guid_miq_server_zone
     end
 
+    describe ".api_connection" do
+      around do |example|
+        ENV["ANSIBLE_SERVICE_NAME"] = "ansible-service"
+        example.run
+        ENV.delete("ANSIBLE_SERVICE_NAME")
+      end
+
+      it "connects to the ansible service when running in a container" do
+        miq_database.set_ansible_admin_authentication(:password => "adminpassword")
+        expect(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
+
+        expect(AnsibleTowerClient::Connection).to receive(:new).with(
+          :base_url   => "http://ansible-service/api/v1",
+          :username   => "admin",
+          :password   => "adminpassword",
+          :verify_ssl => 0
+        )
+
+        described_class.api_connection
+      end
+    end
+
     describe ".alive?" do
       it "returns false if the service is not configured" do
         expect(described_class).to receive(:configured?).and_return false
@@ -156,9 +210,10 @@ describe EmbeddedAnsible do
           miq_database.set_ansible_admin_authentication(:password => "adminpassword")
 
           expect(AnsibleTowerClient::Connection).to receive(:new).with(
-            :base_url => "http://localhost:54321/api/v1",
-            :username => "admin",
-            :password => "adminpassword"
+            :base_url   => "http://localhost:54321/api/v1",
+            :username   => "admin",
+            :password   => "adminpassword",
+            :verify_ssl => 0
           ).and_return(api_conn)
           expect(api_conn).to receive(:api).and_return(api)
         end
@@ -237,6 +292,12 @@ describe EmbeddedAnsible do
           key_file.unlink
           miq_database.ansible_secret_key = "password"
           expect(described_class.configured?).to be false
+        end
+
+        it "returns true when the file doesn't exist and we are running in a container" do
+          expect(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
+          key_file.unlink
+          expect(described_class.configured?).to be true
         end
       end
 
@@ -321,6 +382,22 @@ describe EmbeddedAnsible do
         expect(AwesomeSpawn).to receive(:run!).and_raise(AwesomeSpawn::CommandResultError.new("error", 1))
         expect { described_class.start }.to raise_error(AwesomeSpawn::CommandResultError)
         expect(miq_database.reload.ansible_secret_key).not_to be_present
+      end
+    end
+
+    describe ".start when in a container" do
+      around do |example|
+        ENV["ANSIBLE_ADMIN_PASSWORD"] = "thepassword"
+        example.run
+        ENV.delete("ANSIBLE_ADMIN_PASSWORD")
+      end
+
+      it "sets the admin password using the environment variable and waits for the service to respond" do
+        expect(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
+        expect(described_class).to receive(:alive?).and_return(true)
+
+        described_class.start
+        expect(miq_database.reload.ansible_admin_authentication.password).to eq("thepassword")
       end
     end
 

@@ -45,7 +45,7 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
 
     provider.name = "Embedded Ansible"
     provider.zone = server.zone
-    provider.url  = URI::HTTPS.build(:host => server.hostname || server.ipaddress, :path => "/ansibleapi/v1").to_s
+    provider.url  = provider_url
     provider.verify_ssl = 0
 
     provider.save!
@@ -68,6 +68,20 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
   def message_sync_config(*_args); end
 
   private
+
+  def provider_url
+    server = MiqServer.my_server(true)
+
+    if MiqEnvironment::Command.is_container?
+      host = ENV["ANSIBLE_SERVICE_NAME"]
+      path = "/api/v1"
+    else
+      host = server.hostname || server.ipaddress
+      path = "/ansibleapi/v1"
+    end
+
+    URI::HTTPS.build(:host => host, :path => path).to_s
+  end
 
   def raise_role_notification(notification_type)
     notification_options = {
