@@ -151,3 +151,46 @@
           action_type: default
           options: {}
       Condition: []
+- MiqPolicySet:
+    name: 3872a0e8-50bc-11e0-880e-00505688000a
+    description: 'Analysis: On VM Reconfiguration'
+    set_type: MiqPolicySet
+    guid: 3872a0e8-50bc-11e0-880e-00505688000a
+    read_only:
+    set_data:
+      :notes: Triggers a VM analysis when a VM is reconfigured
+    mode: control
+    owner_type:
+    owner_id:
+    userid:
+    group_id:
+    MiqPolicy:
+    - name: 2f2a1a1c-4806-11df-badc-005056a7121f
+      description: 'Analysis: VM Reconfiguration'
+      expression:
+      towhat: Vm
+      guid: 2f2a1a1c-4806-11df-badc-005056a7121f
+      created_by: admin
+      updated_by: admin
+      notes: Performs an analysis on any vm that has been reconfigured
+      active: true
+      mode: control
+      read_only:
+      MiqPolicyContent:
+      - qualifier: success
+        success_sequence: 1
+        MiqEventDefinition:
+          name: vm_reconfigure
+          description: VM Settings Change
+          guid: 07367e62-449a-11de-bd4f-005056a83e5d
+          event_type: Default
+          definition:
+          default:
+          enabled:
+        MiqAction:
+          name: vm_analyze
+          description: Initiate SmartState Analysis for VM
+          guid: 5cbe1082-ce35-11de-a117-005056b0503e
+          action_type: default
+          options: {}
+      Condition: []
