@@ -334,7 +334,7 @@ class MiqExpression
       :short_name => _("Percent"),
       :title      => _("Enter a Percent (like 12.5)"),
     },
-    :regex       => {
+    :regexp      => {
       :short_name => _("Regular Expression"),
       :title      => _("Enter a Regular Expression")
     },
