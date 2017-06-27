@@ -358,7 +358,7 @@ class ManageIQ::Providers::Azure::NetworkManager::RefreshParser
 
   def parse_cloud_subnet_network_port(network_port)
     {
-      :address      => network_port.properties.private_ip_address,
+      :address      => network_port.properties.try(:private_ip_address),
       :cloud_subnet => @data_index.fetch_path(:cloud_subnets, network_port.properties.subnet.id)
     }
   end
