@@ -45,6 +45,9 @@
 #   When Active Record calls `Bbb.descendants` to construct the `type`
 #   condition, `Ccc` is automatically loaded.
 #
+
+require "active_record"
+
 class DescendantLoader
   CACHE_VERSION = 2
 
