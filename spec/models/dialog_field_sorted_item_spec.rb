@@ -178,49 +178,76 @@ describe DialogFieldSortedItem do
 
     context "when the field is not dynamic" do
       let(:dynamic) { false }
-      let(:default_value) { "abc" }
 
-      context "when the field is required" do
-        let(:required) { true }
+      context "when the data type is not integer" do
+        context "when the default_value is set" do
+          let(:default_value) { "abc" }
 
-        it "returns the values with the first option being a nil 'Choose' option" do
-          expect(dialog_field.values).to eq([[nil, "<Choose>"], %w(test test), %w(abc abc)])
+          context "when the field is required" do
+            let(:required) { true }
+
+            it "returns the values without the first option being a nil option" do
+              expect(dialog_field.values).to eq([%w(test test), %w(abc abc)])
+            end
+          end
+
+          context "when the field is not required" do
+            it "returns the values with the first option being a nil 'None' option" do
+              expect(dialog_field.values).to eq([[nil, "<None>"], %w(test test), %w(abc abc)])
+            end
+          end
         end
       end
 
-      context "when the field is not required" do
-        context "when the data type is an integer" do
-          let(:data_type) { "integer" }
+      context "when the data type is an integer" do
+        let(:data_type) { "integer" }
 
-          before do
-            dialog_field.data_type = data_type
+        before do
+          dialog_field.data_type = data_type
+        end
+
+        context "when there is a default value that matches a value in the values list" do
+          let(:default_value) { "2" }
+          let(:values) { [%w(1 1), %w(2 2), %w(3 3)] }
+
+          it "sets the default value to the matching value" do
+            dialog_field.values
+            expect(dialog_field.default_value).to eq("2")
           end
 
-          context "when there is a default value that matches a value in the values list" do
-            let(:default_value) { "2" }
-            let(:values) { [%w(1 1), %w(2 2), %w(3 3)] }
+          it "returns the values with the first option being a nil 'None' option" do
+            expect(dialog_field.values).to eq([[nil, "<None>"], %w(1 1), %w(2 2), %w(3 3)])
+          end
+        end
 
-            it "sets the default value to the matching value" do
-              dialog_field.values
-              expect(dialog_field.default_value).to eq("2")
-            end
+        context "when there is a default value that does not match a value in the values list" do
+          let(:default_value) { "4" }
+          let(:values) { [%w(1 1), %w(2 2), %w(3 3)] }
 
-            it "returns the values with the first option being a nil 'None' option" do
-              expect(dialog_field.values).to eq([[nil, "<None>"], %w(1 1), %w(2 2), %w(3 3)])
+          it "sets the default value to nil" do
+            dialog_field.values
+            expect(dialog_field.default_value).to eq(nil)
+          end
+
+          it "returns the values with the first option being a nil 'None' option" do
+            expect(dialog_field.values).to eq([[nil, "<None>"], %w(1 1), %w(2 2), %w(3 3)])
+          end
+        end
+
+        context "when the default value is nil" do
+          let(:default_value) { nil }
+
+          context "when the field is required" do
+            let(:required) { true }
+
+            it "returns the values with the first option being a nil 'Choose' option" do
+              expect(dialog_field.values).to eq([[nil, "<Choose>"], %w(test test), %w(abc abc)])
             end
           end
 
-          context "when there is a default value that does not match a value in the values list" do
-            let(:default_value) { "4" }
-            let(:values) { [%w(1 1), %w(2 2), %w(3 3)] }
-
-            it "sets the default value to nil" do
-              dialog_field.values
-              expect(dialog_field.default_value).to eq(nil)
-            end
-
+          context "when the field is not required" do
             it "returns the values with the first option being a nil 'None' option" do
-              expect(dialog_field.values).to eq([[nil, "<None>"], %w(1 1), %w(2 2), %w(3 3)])
+              expect(dialog_field.values).to eq([[nil, "<None>"], %w(test test), %w(abc abc)])
             end
           end
         end
