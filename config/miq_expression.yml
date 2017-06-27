@@ -63,6 +63,7 @@
   - User
   - VimPerformanceTrend
   - Vm
+  - VmCloud
   - ManageIQ::Providers::CloudManager::Vm
   - ManageIQ::Providers::InfraManager::Vm
   - VmPerformance
