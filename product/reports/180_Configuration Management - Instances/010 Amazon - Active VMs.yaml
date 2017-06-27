@@ -79,6 +79,4 @@ rpt_options:
   :queue_timeout:
   :summary:
     :hide_detail_rows: false
-miq_group_id: 10000000000002
-user_id: 10000000000001
 menu_name: Amazon - Active VMs
