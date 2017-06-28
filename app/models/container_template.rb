@@ -36,7 +36,7 @@ class ContainerTemplate < ApplicationRecord
                                           :objects    => objects,
                                           :parameters => params)
     create_objects(processed_template['objects'], project)
-    @created_objects.each { |obj| obj[:kind] = MIQ_ENTITY_MAPPING[obj[:kind]] }
+    @created_objects.each { |obj| obj[:miq_class] = MIQ_ENTITY_MAPPING[obj[:kind]] }
   end
 
   def process_template(client, template)
