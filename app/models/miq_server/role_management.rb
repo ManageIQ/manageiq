@@ -50,7 +50,7 @@ module MiqServer::RoleManagement
     save
   end
 
-  def set_assigned_roles
+  def sync_assigned_roles
     self.role = ::Settings.server.role
   end
 

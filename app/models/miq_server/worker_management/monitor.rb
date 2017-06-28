@@ -144,7 +144,7 @@ module MiqServer::WorkerManagement::Monitor
       end
 
       sync_config                if config_changed
-      set_assigned_roles         if config_changed
+      sync_assigned_roles        if config_changed
       log_role_changes           if roles_changed
       sync_active_roles          if roles_changed
       set_active_role_flags      if roles_changed

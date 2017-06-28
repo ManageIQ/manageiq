@@ -63,7 +63,7 @@ class MiqServer < ApplicationRecord
     if roles != starting_roles
       # tell the server to pick up the role change
       server = MiqServer.my_server
-      server.set_assigned_roles
+      server.sync_assigned_roles
       server.sync_active_roles
       server.set_active_role_flags
     end

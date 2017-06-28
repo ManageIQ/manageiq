@@ -52,7 +52,6 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
           context "'smartproxy' server and roles deactivated" do
             before(:each) do
               # Overwrite so that we set our own assigned roles instead of from config file
-              allow_any_instance_of(MiqServer).to receive(:set_assigned_roles).and_return(nil)
               allow_any_instance_of(MiqServer).to receive(:sync_workers).and_return(nil)
               allow_any_instance_of(MiqServer).to receive(:sync_log_level).and_return(nil)
               allow_any_instance_of(MiqServer).to receive(:wait_for_started_workers).and_return(nil)
