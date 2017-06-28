@@ -16,6 +16,9 @@ module EmsRefresh::SaveInventory
     when ManageIQ::Providers::StorageManager                then save_ems_storage_inventory(ems, hashes, target)
     when ManageIQ::Providers::DatawarehouseManager          then save_ems_datawarehouse_inventory(ems, hashes, target)
     end
+
+    # Handle updates to the ext_management_system
+    update_attributes!(ems, hashes[:ems], [:type]) unless hashes[:ems].nil?
   end
 
   def save_ems_inventory_no_disconnect(ems, hashes, target = nil)
