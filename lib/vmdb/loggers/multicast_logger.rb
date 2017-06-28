@@ -16,16 +16,20 @@ class MulticastLogger < Logger
     loggers.first.filename
   end
 
-  [:log_backtrace, :log_hashes].each do |method|
-    define_method(method) do |*args|
-      loggers.map { |l| l.send(method, *args) }.first
-    end
-  end
-
   def add(*args, &block)
     severity = args.first || UNKNOWN
     return true if severity < @level
     loggers.each { |l| l.send(:add, *args, &block) }
     true
+  end
+
+  private
+
+  def method_missing(*args, &block)
+    loggers.map { |l| l.send(*args, &block) }.first
+  end
+
+  def respond_to_missing?(meth, _)
+    loggers.first.respond_to?(meth)
   end
 end
