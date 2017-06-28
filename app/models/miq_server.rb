@@ -118,18 +118,17 @@ class MiqServer < ApplicationRecord
     puts "** #{msg}"
 
     starting_server_record
+    ensure_default_roles
 
     #############################################################
     # Server Role Assignment
     #
-    # 1. Deactivate all roles from last time
-    # 2. Set assigned roles from configuration
-    # 3. Assert database_owner role - based on vmdb being local
-    # 4. Role activation should happen inside monitor_servers
-    # 5. Synchronize active roles to monitor for role changes
+    # - Deactivate all roles from last time
+    # - Assert database_owner role - based on vmdb being local
+    # - Role activation should happen inside monitor_servers
+    # - Synchronize active roles to monitor for role changes
     #############################################################
     deactivate_all_roles
-    set_assigned_roles
     set_database_owner_role(EvmDatabase.local?)
     monitor_servers
     monitor_server_roles if self.is_master?

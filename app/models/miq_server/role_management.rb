@@ -54,6 +54,10 @@ module MiqServer::RoleManagement
     self.role = ::Settings.server.role
   end
 
+  def ensure_default_roles
+    self.role = (ENV["DEFAULT_ROLES"] || ::Settings.server.role) if role.blank?
+  end
+
   def deactivate_all_roles
     deactivate_roles("*")
   end
