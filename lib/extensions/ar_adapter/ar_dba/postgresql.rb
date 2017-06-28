@@ -851,7 +851,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
     start_time = select_value(<<-SQL, "Select last start date/time")
                                  SELECT pg_postmaster_start_time()
                               SQL
-    ActiveRecord::Type::Time.new.deserialize(start_time)
+    ActiveRecord::Type::DateTime.new.deserialize(start_time)
   end
 
   def analyze_table(table)
