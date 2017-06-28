@@ -22,14 +22,14 @@ describe "Alerts Definitions API" do
       "name"      => "alert_definitions",
       "count"     => 2,
       "subcount"  => 2,
-      "resources" => [
+      "resources" => a_collection_containing_exactly(
         {
           "href" => a_string_matching(alert_definitions_url(alert_definitions[0].id))
         },
         {
           "href" => a_string_matching(alert_definitions_url(alert_definitions[1].id))
         }
-      ]
+      )
     )
   end
 
