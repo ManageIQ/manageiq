@@ -74,7 +74,7 @@ class Dialog
         :name          => "param_#{param.name}",
         :data_type     => "string",
         :display       => "edit",
-        :required      => param.required,
+        :required      => param.required && param.generate.blank?,
         :default_value => param.value,
         :label         => param.name.tr("_", " ").titleize,
         :description   => param.description,
