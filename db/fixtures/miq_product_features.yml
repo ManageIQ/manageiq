@@ -2312,11 +2312,21 @@
         :feature_type: admin
         :hidden: true
         :identifier: dialog_new
+      - :name: Add
+        :description: Add Dialog in the Dialog Editor
+        :feature_type: admin
+        :hidden: true
+        :identifier: dialog_new_editor
       - :name: Edit
         :description: Edit Dialog
         :feature_type: admin
         :hidden: true
         :identifier: dialog_edit
+      - :name: Edit
+        :description: Edit Dialog in the Dialog Editor
+        :feature_type: admin
+        :hidden: true
+        :identifier: dialog_edit_editor
       - :name: Copy
         :description: Copy Dialog
         :feature_type: admin
@@ -6153,11 +6163,11 @@
     - :name: Turn On Server
       :description: Turn On Server
       :feature_type: control
-      :identifier: physical_server_power_on        
+      :identifier: physical_server_power_on
     - :name: Turn Off Server
       :description: Turn Off Server
       :feature_type: control
-      :identifier: physical_server_power_off  
+      :identifier: physical_server_power_off
     - :name: Restart Server
       :description: Restart Server
       :feature_type: control
@@ -6181,7 +6191,7 @@
 
 # Firmwares
 - :name: Firmwares
-  :description: Everything under Firmware 
+  :description: Everything under Firmware
   :feature_type: node
   :identifier: firmware
   :children:
