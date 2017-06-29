@@ -57,45 +57,26 @@ module Metric::CiMixin::Processing
         end
       end
 
-      # Read all the existing perfs for this time range to speed up lookups
-      obj_perfs, = Benchmark.realtime_block(:db_find_prev_perfs) do
-        Metric::Finders.hash_by_capture_interval_name_and_timestamp(self, start_time, end_time, interval_name)
-      end
+      ActiveMetrics::Base.connection.write_multiple(
+        rt_rows.flat_map do |ts, rt|
+          rt.merge!(Metric::Processing.process_derived_columns(self, rt, interval_name == 'realtime' ? Metric::Helper.nearest_hourly_timestamp(ts) : nil))
+          rt.delete_nils
+          rt_tags   = rt.slice(*%i(capture_interval_name capture_interval resource_name)).symbolize_keys
+          rt_fields = rt.except(*%i(capture_interval_name capture_interval resource_name timestamp instance_id class_name resource_type resource_id))
 
-      klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
-
-      # Create or update the performance rows from the hashes
-      _log.info("#{log_header} Processing #{rt_rows.length} performance rows...")
-      a = u = 0
-      rt_rows.each do |ts, v|
-        perf = nil
-
-        Benchmark.realtime_block(:process_perfs) do
-          perf = obj_perfs.fetch_path(interval_name, ts)
-          perf ||= obj_perfs.store_path(interval_name, ts, send(meth).build(:resource_name => name))
-          perf.new_record? ? a += 1 : u += 1
-
-          v.reverse_merge!(perf.attributes.symbolize_keys)
-          v.delete("id") # Remove protected attributes
-          v.merge!(Metric::Processing.process_derived_columns(self, v, interval_name == 'realtime' ? Metric::Helper.nearest_hourly_timestamp(ts) : nil))
+          rt_fields.map do |k, v|
+            {
+              :timestamp   => Time.parse(ts),
+              :metric_name => k,
+              :value       => v,
+              :resource    => self,
+              :tags        => rt_tags
+            }
+          end
         end
-
-        # TODO: Should we change this into a single metrics.push like we do in ems_refresh?
-        Benchmark.realtime_block(:process_perfs_db) { perf.update_attributes(v) }
-
-        if interval_name == 'hourly'
-          Benchmark.realtime_block(:process_perfs_tag) { VimPerformanceTagValue.build_from_performance_record(perf) }
-        end
-      end
+      )
 
       update_attribute(:last_perf_capture_on, end_time) if last_perf_capture_on.nil? || last_perf_capture_on.utc.iso8601 < end_time
-      _log.info("#{log_header} Processing #{rt_rows.length} performance rows...Complete - Added #{a} / Updated #{u}")
-
-      if interval_name == 'hourly'
-        _log.info("#{log_header} Adding missing timestamp intervals...")
-        Benchmark.realtime_block(:add_missing_intervals) { Metric::Processing.add_missing_intervals(self, "hourly", start_time, end_time) }
-        _log.info("#{log_header} Adding missing timestamp intervals...Complete")
-      end
 
       # Raise <class>_perf_complete alert event if realtime so alerts can be evaluated.
       MiqEvent.raise_evm_alert_event_queue(self, MiqEvent.event_name_for_target(self, "perf_complete"))
