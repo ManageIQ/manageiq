@@ -2,4 +2,6 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScript
 
   include ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::ConfigurationScript
+
+  FRIENDLY_NAME = "Ansible Automation Inside Job Template".freeze
 end
