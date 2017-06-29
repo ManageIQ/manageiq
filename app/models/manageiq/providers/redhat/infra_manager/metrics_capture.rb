@@ -31,8 +31,13 @@ class ManageIQ::Providers::Redhat::InfraManager::MetricsCapture < ManageIQ::Prov
   #
 
   def perf_collect_metrics(interval_name, start_time = nil, end_time = nil)
-    log_header = "[#{interval_name}] for: [#{target.class.name}], [#{target.id}], [#{target.name}]"
+    target_description = "[#{target.class.name}], [#{target.id}], [#{target.name}]"
+    unless target.ext_management_system.has_authentication_type?(:metrics)
+      _log.warn("No C&U credentials defined for: #{target_description} returning empty stats")
+      return {}, {}
+    end
 
+    log_header = "[#{interval_name}] for: #{target_description}"
     start_time ||= Metric::Capture.historical_start_time
 
     begin

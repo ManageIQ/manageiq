@@ -12,5 +12,12 @@ describe ManageIQ::Providers::Redhat::InfraManager::MetricsCapture do
       expect(OvirtMetrics).to receive(:host_realtime).with(host.uid_ems, start_time, nil)
       host.perf_collect_metrics("realtime")
     end
+
+    context 'ems has no metrics authentication' do
+      let(:ems) { FactoryGirl.create(:ems_redhat) }
+      it 'returns empty results when no credentials are defined' do
+        expect(host.perf_collect_metrics("realtime")).to eq([{}, {}])
+      end
+    end
   end
 end
