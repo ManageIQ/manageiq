@@ -190,6 +190,15 @@ describe MiqAlert do
         expect(mas.severity).to eq(nil)
       end
 
+      it "raises an exception when miq_alert_status creation fails" do
+        expect do
+          @alert.evaluate(
+            [@vm.class.base_class.name, @vm.id],
+            :ems_event => FactoryGirl.create(:ems_event, :full_data => {:severity => 'undefined'})
+          )
+        end.to raise_error(ActiveRecord::RecordInvalid)
+      end
+
       it "miq_alert_status.url = ems_event.full_data.url if present" do
         @alert.evaluate(
           [@vm.class.base_class.name, @vm.id],
