@@ -9,6 +9,8 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential < Mana
   include ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Credential
   include ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
 
+  FRIENDLY_NAME = "Ansible Automation Inside Credential".freeze
+
   def self.provider_params(params)
     super.merge(:organization => ManageIQ::Providers::EmbeddedAnsible::AutomationManager.first.provider.default_organization)
   end
