@@ -55,7 +55,8 @@ module MiqServer::RoleManagement
   end
 
   def ensure_default_roles
-    self.role = (ENV["DEFAULT_ROLES"] || ::Settings.server.role) if role.blank?
+    MiqServer.my_server.add_settings_for_resource(:server => {:role => ENV["DEFAULT_ROLES"]}) if role.blank? && ENV["DEFAULT_ROLES"].present?
+    sync_assigned_roles
   end
 
   def deactivate_all_roles
