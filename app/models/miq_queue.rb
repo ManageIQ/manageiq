@@ -188,43 +188,39 @@ class MiqQueue < ApplicationRecord
   #   :class_name
   #   :method_name
   #   :instance_id (optional)
-  #   :args        (optional)
+  #   :args        (optional, an array)
   #   :expires_on  (optional, timestamp in second)
   #   :deliver_on  (optional, timestamp in second)
   #   :priority    (optional, 0 - 9)
   #   :service
   #   :resource    (optional)
-  def self.put_background_job(options)
+  def self.put_background_job(client = nil, options)
+    assert_options(options, [:class_name, :method_name, :service])
+
     options = options.dup
+    address, headers = queue_for_publish(options)
 
-    resource = options.delete(:resource) || 'none'
-    address = "queue/#{options.delete(:service)}.#{resource}"
-
-    headers = {:"destination-type" => "ANYCAST"}
-    headers[:expires] = options.delete(:expires_on).to_i * 1000 if options[:expires_on]
-    headers[:AMQ_SCHEDULED_TIME] = options.delete(:deliver_on).to_i * 1000 if options[:deliver_on]
-    headers[:priority] = options.delete(:priority) if options[:priority]
-
-    client = ActiveMqClient.open
+    unless client
+      client = ActiveMqClient.open
+      close_on_exit = true
+    end
     client.publish(address, options.to_yaml, headers)
     _log.info("Address(#{address}), msg(#{options.inspect}), headers(#{headers.inspect})")
-
-    client.close
+    client.close if close_on_exit
   end
 
   # options:
   #   :service
   #   :resource (optional)
-  def self.subscribe_background_job(worker, options)
+  def self.subscribe_background_job(client, options)
+    assert_options(options, [:service])
+
     options = options.dup
-    resource = options.delete(:resource) || 'none'
-    queue_name = "queue/#{options.delete(:service)}.#{resource}"
+    queue_name, headers = queue_for_subscribe(options)
 
-    headers = {:"subscription-type" => 'ANYCAST', :ack => 'client'}
-
-    worker.subscribe(queue_name, headers) do |msg|
+    client.subscribe(queue_name, headers) do |msg|
       begin
-        msg_options = YAML.safe_load(msg.body).with_indifferent_access
+        msg_options = YAML.load(msg.body).with_indifferent_access
 
         # TODO: refactor after MiqQueue.put and table miq_queues are deprecated
         dequeue = MiqQueue.new(msg_options)
@@ -247,9 +243,87 @@ class MiqQueue < ApplicationRecord
       # No call back support yet
       # queue.delivered(status, message, result) unless status == 'retry'
 
-      worker.ack(msg)
+      client.ack(msg)
     end
   end
+
+  # options:
+  #   :message
+  #   :sender (optional)
+  #   :message_type (optional)
+  #   :service
+  #   :resource (optional)
+  #   :other keys same as put_background_job
+  def self.put_job(client = nil, options)
+    assert_options(options, [:message, :service])
+
+    options = options.dup
+    address, headers = queue_for_publish(options)
+    headers[:sender] = options.delete(:sender) if options[:sender]
+    headers[:message_type] = options.delete(:message_type) if options[:message_type]
+
+    unless client
+      client = ActiveMqClient.open
+      close_on_exit = true
+    end
+    client.publish(address, options[:message].to_yaml, headers)
+    _log.info("Address(#{address}), msg(#{options[:message].inspect}), headers(#{headers.inspect})")
+    client.close if close_on_exit
+  end
+
+  # options:
+  #   :service
+  #   :resource (optional)
+  def self.subscribe_job(client, options)
+    assert_options(options, [:service])
+
+    options = options.dup
+    queue_name, headers = queue_for_subscribe(options)
+
+    client.subscribe(queue_name, headers) do |msg|
+      begin
+        sender = msg.headers['sender']
+        message_type = msg.headers['message_type']
+        message_body = YAML.load(msg.body)
+        yield sender, message_type, message_body
+        _log.info("Message processed: queue(#{queue_name}), msg(#{message_body}), headers(#{msg.headers})")
+      rescue => err
+        _log.error("Error delivering #{msg.inspect}, reason: #{err}")
+      end
+
+      client.ack(msg)
+    end
+  end
+
+  def self.queue_for_publish(options)
+    resource = options.delete(:resource) || 'none'
+    address = "queue/#{options.delete(:service)}.#{resource}"
+
+    headers = {:"destination-type" => "ANYCAST"}
+    headers[:expires] = options.delete(:expires_on).to_i * 1000 if options[:expires_on]
+    headers[:AMQ_SCHEDULED_TIME] = options.delete(:deliver_on).to_i * 1000 if options[:deliver_on]
+    headers[:priority] = options.delete(:priority) if options[:priority]
+
+    [address, headers]
+  end
+  private_class_method :queue_for_publish
+
+  def self.queue_for_subscribe(options)
+    resource = options.delete(:resource) || 'none'
+    queue_name = "queue/#{options.delete(:service)}.#{resource}"
+
+    headers = {:"subscription-type" => 'ANYCAST', :ack => 'client'}
+
+    [queue_name, headers]
+  end
+  private_class_method :queue_for_subscribe
+
+  def self.assert_options(options, keys)
+    keys.each do |key|
+      raise "options must contains key #{key}" if options[key].nil?
+    end
+  end
+  private_class_method :assert_options
 
   MIQ_QUEUE_GET = <<-EOL
     state = 'ready'
