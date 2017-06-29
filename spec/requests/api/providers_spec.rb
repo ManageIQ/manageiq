@@ -359,7 +359,6 @@ describe "Providers API" do
       expect(response).to have_http_status(:ok)
 
       provider_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
-      expect(foreman_type.exists?(provider_id)).to be_truthy
       provider = foreman_type.find(provider_id)
       [:name, :type, :url].each do |item|
         expect(provider.send(item)).to eq(sample_foreman[item])
@@ -437,7 +436,6 @@ describe "Providers API" do
       expect(response.parsed_body).to include(expected)
 
       provider_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
-      expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
       endpoint = ExtManagementSystem.find(provider_id).default_endpoint
       expect(endpoint).to have_endpoint_attributes(sample_rhevm)
     end
@@ -460,7 +458,6 @@ describe "Providers API" do
           expect(response.parsed_body).to include(expected)
 
           provider_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
-          expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
           ems = ExtManagementSystem.find(provider_id)
           expect(ems.authentications.size).to eq(1)
           expect(ems).to have_endpoint_attributes(sample_containers)
@@ -499,7 +496,6 @@ describe "Providers API" do
       expect(response.parsed_body).to include(expected)
 
       provider_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
-      expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
       provider = ExtManagementSystem.find(provider_id)
       expect(provider.authentication_userid).to eq(default_credentials["userid"])
       expect(provider.authentication_password).to eq(default_credentials["password"])
@@ -519,7 +515,6 @@ describe "Providers API" do
       expect(response.parsed_body).to include(expected)
 
       provider_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
-      expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
       provider = ExtManagementSystem.find(provider_id)
       expect(provider.authentication_userid(:default)).to eq(default_credentials["userid"])
       expect(provider.authentication_password(:default)).to eq(default_credentials["password"])
@@ -569,7 +564,6 @@ describe "Providers API" do
           expect(results.first).to include(expected)
 
           provider_id = ApplicationRecord.uncompress_id(results.first["id"])
-          expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
           provider = ExtManagementSystem.find(provider_id)
           expect(provider).to have_endpoint_attributes(default_connection["endpoint"])
           expect(provider.authentication_token).to eq(token(default_connection))
