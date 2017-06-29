@@ -108,6 +108,6 @@ module MiqServer::WorkerManagement::Heartbeat
   end
 
   def workers_last_heartbeat_to_file(w)
-    File.exist?(w.heartbeat_file) ? File.mtime(w.heartbeat_file).utc : Time.now.utc
+    File.mtime(w.heartbeat_file).utc if File.exist?(w.heartbeat_file)
   end
 end
