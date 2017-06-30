@@ -1148,7 +1148,7 @@ class MiqExpression
 
   def self.model_class(model)
     # TODO: the temporary cache should be removed after widget refactoring
-    @@model_class ||= Hash.new do |h, m|
+    @model_class ||= Hash.new do |h, m|
       h[m] = if m.kind_of?(Class)
                m
              else
@@ -1159,7 +1159,7 @@ class MiqExpression
                end
              end
     end
-    @@model_class[model]
+    @model_class[model]
   end
 
   def self.integer?(n)
