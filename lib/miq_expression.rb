@@ -84,7 +84,8 @@ class MiqExpression
       check = "checkany" if exp[operator].include?("checkany")
       check = "checkcount" if exp[operator].include?("checkcount")
       raise _("expression malformed,  must contain one of 'checkall', 'checkany', 'checkcount'") unless check
-      check =~ /^check(.*)$/; mode = $1.upcase
+      check =~ /^check(.*)$/
+      mode = $1.upcase
       clause = "FIND" + " " + _to_human(exp[operator]["search"]) + " CHECK " + mode + " " + _to_human(exp[operator][check], :include_table => false).strip
     when "key exists"
       clause = "KEY EXISTS #{exp[operator]['regkey']}"
@@ -216,8 +217,8 @@ class MiqExpression
         op_args[check][op]["field"] = "<count>"
       end
       raise _("expression malformed,  must contain one of 'checkall', 'checkany', 'checkcount'") unless check
-      check =~ /^check(.*)$/; mode = $1.downcase
-      clause = "<find><search>" + _to_ruby(op_args["search"], context_type, tz) + "</search>" +
+      check =~ /^check(.*)$/
+      mode = $1.downcase
                "<check mode=#{mode}>" + _to_ruby(op_args[check], context_type, tz) + "</check></find>"
     when "key exists"
       clause = operands2rubyvalue(operator, op_args, context_type)
@@ -666,7 +667,7 @@ class MiqExpression
     when "integer", "decimal", "fixnum", "float"
       return val.to_i unless val.to_s.number_with_method? || typ.to_s == "float"
       if val =~ /^([0-9\.,]+)\.([a-z]+)$/
-        val = $1; sfx = $2
+        val, sfx = $1, $2
         if sfx.ends_with?("bytes") && FORMAT_BYTE_SUFFIXES.key?(sfx.to_sym)
           return "#{val} #{FORMAT_BYTE_SUFFIXES[sfx.to_sym]}"
         else
