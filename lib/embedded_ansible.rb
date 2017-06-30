@@ -11,6 +11,7 @@ class EmbeddedAnsible
   HTTP_PORT              = 54_321
   HTTPS_PORT             = 54_322
   WAIT_FOR_ANSIBLE_SLEEP = 1.second
+  TOWER_VERSION_FILE     = "/var/lib/awx/.tower_version".freeze
 
   def self.available?
     return false unless MiqEnvironment::Command.is_appliance?
@@ -33,6 +34,10 @@ class EmbeddedAnsible
     key.present? && key == File.read(SECRET_KEY_FILE)
   end
 
+  def self.upgrade?
+    local_tower_version != tower_rpm_version
+  end
+
   def self.alive?
     return false unless configured? && running?
     begin
@@ -44,7 +49,7 @@ class EmbeddedAnsible
   end
 
   def self.start
-    if configured?
+    if configured? && !upgrade?
       services.each { |service| LinuxAdmin::Service.new(service).start.enable }
     else
       configure_secret_key
@@ -194,4 +199,14 @@ class EmbeddedAnsible
     ActiveRecord::Base.connection
   end
   private_class_method :database_connection
+
+  def self.local_tower_version
+    File.read(TOWER_VERSION_FILE).strip
+  end
+  private_class_method :local_tower_version
+
+  def self.tower_rpm_version
+    LinuxAdmin::Rpm.info("ansible-tower-server")["version"]
+  end
+  private_class_method :tower_rpm_version
 end
