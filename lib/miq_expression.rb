@@ -930,15 +930,14 @@ class MiqExpression
       new_parent[:multivalue] = [:has_many, :has_and_belongs_to_many].include?(new_parent[:macro])
 
       seen_key = [model.name, assoc].join("_")
-      unless seen.include?(seen_key) ||
-             assoc_class == parent[:root] ||
-             parent[:assoc_path].include?(assoc.to_s) ||
-             parent[:assoc_path].include?(assoc.to_s.singularize) ||
-             parent[:direction] == :up ||
-             parent[:multivalue]
-        seen.push(seen_key)
-        result[:reflections][assoc] = build_relats(assoc_class, new_parent, seen)
-      end
+      next if seen.include?(seen_key) ||
+              assoc_class == parent[:root] ||
+              parent[:assoc_path].include?(assoc.to_s) ||
+              parent[:assoc_path].include?(assoc.to_s.singularize) ||
+              parent[:direction] == :up ||
+              parent[:multivalue]
+      seen.push(seen_key)
+      result[:reflections][assoc] = build_relats(assoc_class, new_parent, seen)
     end
     result
   end
@@ -990,11 +989,10 @@ class MiqExpression
           break
         end
       end unless EXCLUDE_EXCEPTIONS.include?(c)
-      if col
-        field_class_path = "#{class_path}-#{col}"
-        field_assoc_path = "#{assoc_path}-#{col}"
-        [value2human(field_class_path, :include_model => include_model), field_assoc_path]
-      end
+      next unless col
+      field_class_path = "#{class_path}-#{col}"
+      field_assoc_path = "#{assoc_path}-#{col}"
+      [value2human(field_class_path, :include_model => include_model), field_assoc_path]
     end.compact
   end
 
