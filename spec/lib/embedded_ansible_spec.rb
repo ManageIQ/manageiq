@@ -119,8 +119,15 @@ describe EmbeddedAnsible do
       end
     end
 
-    describe ".start when configured" do
+    describe ".start when configured and not upgrading" do
+      let(:version_file) { Tempfile.new("tower_version") }
+
       before do
+        version_file.write("3.1.3\n")
+        version_file.close
+        stub_const("EmbeddedAnsible::TOWER_VERSION_FILE", version_file.path)
+        expect(LinuxAdmin::Rpm).to receive(:info).with("ansible-tower-server").and_return("version" => "3.1.3")
+
         stub_const("EmbeddedAnsible::WAIT_FOR_ANSIBLE_SLEEP", 0)
 
         expect(EmbeddedAnsible).to receive(:configured?).and_return true
@@ -316,6 +323,31 @@ describe EmbeddedAnsible do
           described_class.send(:configure_secret_key)
           expect(File.read(key_file.path)).to eq("supasecret")
         end
+      end
+    end
+
+    describe ".start when configured and upgrading" do
+      let(:version_file) { Tempfile.new("tower_version") }
+
+      before do
+        version_file.write("3.1.2\n")
+        version_file.close
+        stub_const("EmbeddedAnsible::TOWER_VERSION_FILE", version_file.path)
+        expect(LinuxAdmin::Rpm).to receive(:info).with("ansible-tower-server").and_return("version" => "3.1.3")
+
+        expect(described_class).to receive(:configured?).and_return(true)
+        expect(described_class).to receive(:configure_secret_key)
+      end
+
+      it "runs the setup playbook" do
+        expect(described_class).to receive(:alive?).and_return(true)
+        miq_database.set_ansible_admin_authentication(:password => "adminpassword")
+        miq_database.set_ansible_rabbitmq_authentication(:userid => "rabbituser", :password => "rabbitpassword")
+        miq_database.set_ansible_database_authentication(:userid => "databaseuser", :password => "databasepassword")
+
+        expect(AwesomeSpawn).to receive(:run!).with("ansible-tower-setup", anything)
+
+        described_class.start
       end
     end
 
