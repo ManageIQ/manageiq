@@ -472,9 +472,9 @@ class MiqExpression
     exp["result"] = new(exp).evaluate(obj)
 
     operators = exp.keys
-    operators.each do|k|
+    operators.each do |k|
       if ["and", "or"].include?(k.to_s.downcase)      # and/or atom is an array of atoms
-        exp[k].each do|atom|
+        exp[k].each do |atom|
           evaluate_atoms(atom, obj)
         end
       elsif ["not", "!"].include?(k.to_s.downcase)    # not atom is a hash expression
@@ -492,7 +492,7 @@ class MiqExpression
     if ops["tag"]
       v = nil
       ret.push(ops["alias"] || value2human(ops["tag"], options))
-      MiqExpression.get_entry_details(ops["tag"]).each do|t|
+      MiqExpression.get_entry_details(ops["tag"]).each do |t|
         v = "'" + t.first + "'" if t.last == ops["value"]
       end
       if ops["value"] == :user_input
@@ -543,7 +543,7 @@ class MiqExpression
     val_is_a_tag = false
     ret = ""
     if options[:include_table] == true
-      friendly = tables.split(".").collect do|t|
+      friendly = tables.split(".").collect do |t|
         if t.downcase == "managed"
           val_is_a_tag = true
           "#{Tenant.root_tenant.name} Tags"
@@ -822,7 +822,7 @@ class MiqExpression
 
   def self._model_details(relats, opts)
     result = []
-    relats[:reflections].each do|_assoc, ref|
+    relats[:reflections].each do |_assoc, ref|
       parent = ref[:parent]
       case opts[:typ]
       when "count"
@@ -843,7 +843,7 @@ class MiqExpression
     return [] unless TAG_CLASSES.include?(model)
     result = []
     @classifications ||= get_categories
-    @classifications.each do|name, cat|
+    @classifications.each do |name, cat|
       prefix = path.nil? ? "managed" : [path, "managed"].join(".")
       field = [prefix, name].join("-")
       result.push([value2human(field, opts.merge(:classification => cat)), field])
@@ -977,13 +977,13 @@ class MiqExpression
       excludes += ["^.*derived_host_count_off$", "^.*derived_host_count_on$", "^.*derived_vm_count_off$", "^.*derived_vm_count_on$", "^.*derived_storage.*$"]
     end
 
-    column_names.collect do|c|
+    column_names.collect do |c|
       # check for direct match first
       next if excludes.include?(c) && !EXCLUDE_EXCEPTIONS.include?(c)
 
       # check for regexp match if no direct match
       col = c
-      excludes.each do|excl|
+      excludes.each do |excl|
         if c.match(excl)
           col = nil
           break
