@@ -1037,7 +1037,7 @@ class MiqExpression
 
   STYLE_OPERATORS_EXCLUDES = config[:style_operators_excludes]
   def self.get_col_style_operators(field)
-    result = get_col_operators(field) - STYLE_OPERATORS_EXCLUDES
+    get_col_operators(field) - STYLE_OPERATORS_EXCLUDES
   end
 
   def self.get_entry_details(field)
