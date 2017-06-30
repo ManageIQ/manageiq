@@ -11,7 +11,7 @@ class MiqExpression
   TAG_CLASSES = config[:tag_classes]
   EXCLUDE_FROM_RELATS = config[:exclude_from_relats]
   FORMAT_SUB_TYPES = config[:format_sub_types]
-  FORMAT_BYTE_SUFFIXES = FORMAT_SUB_TYPES[:bytes][:units].inject({}) { |h, (v, k)| h[k] = v; h }
+  FORMAT_BYTE_SUFFIXES = FORMAT_SUB_TYPES[:bytes][:units].to_h.invert
   BYTE_FORMAT_WHITELIST = Hash[FORMAT_BYTE_SUFFIXES.keys.collect(&:to_s).zip(FORMAT_BYTE_SUFFIXES.keys)]
 
   def initialize(exp, ctype = nil)
