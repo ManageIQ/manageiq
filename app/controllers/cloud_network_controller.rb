@@ -22,6 +22,10 @@ class CloudNetworkController < ApplicationController
     %w(instances cloud_networks network_routers cloud_subnets)
   end
 
+  def show_list
+    process_show_list(:match_via_descendants => ManageIQ::Providers::NetworkManager)
+  end
+
   def button
     @edit = session[:edit] # Restore @edit for adv search box
     params[:display] = @display if %w(vms instances images).include?(@display)

@@ -78,6 +78,7 @@ module Rbac
       "VmOrTemplate::ResourcePool"             => :resource_pool,
       "ConfiguredSystem::ExtManagementSystem"  => :ext_management_system,
       "ConfiguredSystem::ConfigurationProfile" => [:id, :configuration_profile_id],
+      "ExtManagementSystem::CloudNetwork"      => [:ems_id, :id]
     }
 
     # These classes should accept any of the relationship_mixin methods including:
@@ -379,6 +380,8 @@ module Rbac
       if filtered_ids.kind_of?(Array)
         filtered_ids += d_filtered_ids if d_filtered_ids.kind_of?(Array)
         filtered_ids.uniq!
+      elsif d_filtered_ids.kind_of?(Array) && d_filtered_ids.present?
+        filtered_ids = d_filtered_ids
       end
 
       if filtered_ids.kind_of?(Array) && tenant_filter_ids
