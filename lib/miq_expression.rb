@@ -474,11 +474,11 @@ class MiqExpression
 
     operators = exp.keys
     operators.each do |k|
-      if ["and", "or"].include?(k.to_s.downcase) # and/or atom is an array of atoms
+      if %w(and or).include?(k.to_s.downcase) # and/or atom is an array of atoms
         exp[k].each do |atom|
           evaluate_atoms(atom, obj)
         end
-      elsif ["not", "!"].include?(k.to_s.downcase) # not atom is a hash expression
+      elsif %w(not !).include?(k.to_s.downcase) # not atom is a hash expression
         evaluate_atoms(exp[k], obj)
       else
         next
