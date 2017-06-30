@@ -17,5 +17,10 @@ module Workers
     def self.stopping_timeout
       STOPPING_TIMEOUT
     end
+
+    def self.heartbeat_file(guid = nil)
+      guid ||= "miq_worker"
+      ENV["WORKER_HEARTBEAT_FILE"] || File.expand_path("../../../tmp/#{guid}.hb", __FILE__)
+    end
   end
 end

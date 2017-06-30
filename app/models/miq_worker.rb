@@ -224,7 +224,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def heartbeat_file
-    @heartbeat_file ||= ENV["WORKER_HEARTBEAT_FILE"] || Rails.root.join("tmp", "#{guid}.hb")
+    @heartbeat_file ||= Workers::MiqDefaults.heartbeat_file(guid)
   end
 
   def self.worker_settings(options = {})
