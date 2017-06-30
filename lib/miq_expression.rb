@@ -331,11 +331,11 @@ class MiqExpression
 
   def field_in_sql?(field)
     # => false if operand is from a virtual reflection
-    return false if self.field_from_virtual_reflection?(field)
+    return false if field_from_virtual_reflection?(field)
     return false unless attribute_supported_by_sql?(field)
 
     # => false if excluded by special case defined in preprocess options
-    return false if self.field_excluded_by_preprocess_options?(field)
+    return false if field_excluded_by_preprocess_options?(field)
 
     true
   end
@@ -441,7 +441,7 @@ class MiqExpression
       result[:format_sub_type] = f.sub_type
       result[:virtual_column] = model.virtual_attribute?(col.to_s)
       result[:sql_support] = !result[:virtual_reflection] && model.attribute_supported_by_sql?(col.to_s)
-      result[:excluded_by_preprocess_options] = self.exclude_col_by_preprocess_options?(col, options)
+      result[:excluded_by_preprocess_options] = exclude_col_by_preprocess_options?(col, options)
     end
     result
   end
@@ -1180,7 +1180,7 @@ class MiqExpression
   # Is an MiqExpression or an expression hash a quick_search
   def self.quick_search?(exp)
     return exp.quick_search? if exp.kind_of?(self)
-    self._quick_search?(exp)
+    _quick_search?(exp)
   end
 
   def quick_search?
