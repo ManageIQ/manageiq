@@ -843,7 +843,7 @@ class MiqExpression
   def self.tag_details(model, path, opts)
     return [] unless TAG_CLASSES.include?(model)
     result = []
-    @classifications ||= get_categories
+    @classifications ||= categories
     @classifications.each do |name, cat|
       prefix = path.nil? ? "managed" : [path, "managed"].join(".")
       field = [prefix, name].join("-")
@@ -1128,7 +1128,7 @@ class MiqExpression
                                                                    :format_type => FORMAT_SUB_TYPES[dt][:short_name]}
   end
 
-  def self.get_categories
+  def self.categories
     classifications = Classification.in_my_region.hash_all_by_type_and_name(:show => true)
     categories_with_entries = classifications.reject { |_k, v| !v.key?(:entry) }
     categories_with_entries.each_with_object({}) do |(name, hash), categories|
