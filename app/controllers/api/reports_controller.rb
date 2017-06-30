@@ -7,8 +7,16 @@ module Api
 
     before_action :set_additional_attributes, :only => [:index, :show]
 
-    def run_resource(_type, id, _data)
-      report = MiqReport.find(id)
+    def reports_search_conditions
+      MiqReport.for_user(User.current_user).where_clause.ast unless User.current_user.admin?
+    end
+
+    def find_reports(id)
+      MiqReport.for_user(User.current_user).find(id)
+    end
+
+    def run_resource(type, id, _data)
+      report = resource_search(id, type, MiqReport)
       report_result = MiqReportResult.find(report.queue_generate_table)
       run_report_result(true,
                         "running report #{report.id}",
