@@ -1665,7 +1665,7 @@ class MiqExpression
     operator = exp.keys.first
     field = Field.parse(exp[operator]["field"]) if exp[operator].kind_of?(Hash) && exp[operator]["field"]
     arel_attribute = field && field.target.arel_attribute(field.column)
-    if(exp[operator].kind_of?(Hash) && exp[operator]["value"] && Field.is_field?(exp[operator]["value"]))
+    if exp[operator].kind_of?(Hash) && exp[operator]["value"] && Field.is_field?(exp[operator]["value"])
       field_value = Field.parse(exp[operator]["value"])
       parsed_value = field_value.target.arel_attribute(field_value.column)
     elsif exp[operator].kind_of?(Hash)
