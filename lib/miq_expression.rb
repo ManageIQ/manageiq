@@ -649,7 +649,13 @@ class MiqExpression
     when "numeric_set"
       val = val.split(",") if val.kind_of?(String)
       v_arr = val.to_miq_a.flat_map do |v|
-        v = eval(v) rescue nil if v.kind_of?(String)
+        if v.kind_of?(String)
+          v = begin
+                eval(v)
+              rescue
+                nil
+              end
+        end
         v.kind_of?(Range) ? v.to_a : v
       end.compact.uniq.sort
       "[#{v_arr.join(",")}]"
@@ -1098,7 +1104,11 @@ class MiqExpression
 
       values_converted = values.collect do |v|
         return _("Date/Time value must not be blank") if value.blank?
-        v_cvt = RelativeDatetime.normalize(v, "UTC") rescue nil
+        v_cvt = begin
+                  RelativeDatetime.normalize(v, "UTC")
+                rescue
+                  nil
+                end
         return _("Value '%{value}' is not valid") % {:value => v} if v_cvt.nil?
         v_cvt
       end
@@ -1138,7 +1148,17 @@ class MiqExpression
 
   def self.model_class(model)
     # TODO: the temporary cache should be removed after widget refactoring
-    @@model_class ||= Hash.new { |h, m| h[m] = m.kind_of?(Class) ? m : m.to_s.singularize.camelize.constantize rescue nil }
+    @@model_class ||= Hash.new do |h, m|
+      h[m] = if m.kind_of?(Class)
+               m
+             else
+               begin
+                 m.to_s.singularize.camelize.constantize
+               rescue
+                 nil
+               end
+             end
+    end
     @@model_class[model]
   end
 
