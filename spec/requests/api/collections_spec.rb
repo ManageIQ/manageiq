@@ -184,7 +184,7 @@ describe "Rest API Collections" do
     end
 
     it "query Report Results" do
-      FactoryGirl.create(:miq_report_result)
+      FactoryGirl.create(:miq_report_result, :miq_group => @user.current_group)
       test_collection_query(:results, results_url, MiqReportResult)
     end
 
@@ -454,7 +454,7 @@ describe "Rest API Collections" do
     end
 
     it "bulk query Report Results" do
-      FactoryGirl.create(:miq_report_result)
+      FactoryGirl.create(:miq_report_result, :miq_group => @user.current_group)
       test_collection_bulk_query(:results, results_url, MiqReportResult)
     end
 
