@@ -564,7 +564,7 @@ class MiqExpression
     end
     if val_is_a_tag
       if col
-        classification = options[:classification] || Classification.find_by_name(col)
+        classification = options[:classification] || Classification.find_by_name(col) # rubocop:disable Rails/DynamicFindBy
         ret << (classification ? classification.description : col)
       end
     else
@@ -1044,7 +1044,7 @@ class MiqExpression
 
     if ns == "managed"
       cat = field.split("-").last
-      catobj = Classification.find_by_name(cat)
+      catobj = Classification.find_by_name(cat) # rubocop:disable Rails/DynamicFindBy
       return catobj ? catobj.entries.collect { |e| [e.description, e.name] } : []
     elsif ns == "user_tag" || ns == "user"
       cat = field.split("-").last
