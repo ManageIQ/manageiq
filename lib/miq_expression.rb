@@ -375,7 +375,7 @@ class MiqExpression
       expand_conditional_clause(MiqReport, s)
     end.compact
 
-    if list.size == 0
+    if list.empty?
       nil
     elsif list.size == 1
       list.first
