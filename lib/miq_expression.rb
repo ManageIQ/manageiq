@@ -151,14 +151,15 @@ class MiqExpression
       clause = "(#{operands[0]} - #{operands[1]}) == []"
     when "like", "not like", "starts with", "ends with", "includes"
       operands = operands2rubyvalue(operator, op_args, context_type)
-      case operator
-      when "starts with"
-        operands[1] = "/^" + re_escape(operands[1].to_s) + "/"
-      when "ends with"
-        operands[1] = "/" + re_escape(operands[1].to_s) + "$/"
-      else
-        operands[1] = "/" + re_escape(operands[1].to_s) + "/"
-      end
+      operands[1] =
+        case operator
+        when "starts with"
+          "/^" + re_escape(operands[1].to_s) + "/"
+        when "ends with"
+          "/" + re_escape(operands[1].to_s) + "$/"
+        else
+          "/" + re_escape(operands[1].to_s) + "/"
+        end
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
       clause = "!(" + clause + ")" if operator == "not like"
     when "regular expression matches", "regular expression does not match"
@@ -1010,11 +1011,12 @@ class MiqExpression
   DATE_TIME_OPERATORS = config[:date_time_operators]
 
   def self.get_col_operators(field)
-    if field == :count || field == :regkey
-      col_type = field
-    else
-      col_type = get_col_type(field.to_s) || :string
-    end
+    col_type =
+      if field == :count || field == :regkey
+        field
+      else
+        get_col_type(field.to_s) || :string
+      end
 
     case col_type.to_s.downcase.to_sym
     when :string
