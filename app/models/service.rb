@@ -38,6 +38,7 @@ class Service < ApplicationRecord
   virtual_has_many   :all_vms
   virtual_has_many   :power_states, :uses => :all_vms
   virtual_has_many   :orchestration_stacks
+  virtual_has_many   :generic_objects
   virtual_total      :v_total_vms, :vms
 
   virtual_has_one    :custom_actions
@@ -201,6 +202,10 @@ class Service < ApplicationRecord
 
   def orchestration_stacks
     service_resources.where(:resource_type => 'OrchestrationStack').collect(&:resource)
+  end
+
+  def generic_objects
+    service_resources.where(:resource_type => 'GenericObject').includes(:resource).collect(&:resource)
   end
 
   def group_resource_actions(action_name)

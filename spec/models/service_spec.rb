@@ -685,6 +685,18 @@ describe Service do
     end
   end
 
+  describe '#generic_objects' do
+    let(:service) { FactoryGirl.create(:service) }
+    let(:go_def)  { FactoryGirl.create(:generic_object_definition, :properties => {:attributes => {:limit => :integer}}) }
+    let(:generic_object) { FactoryGirl.create(:generic_object, :generic_object_definition => go_def).tap { |g| g.property_attributes = {"limit" => 1} } }
+
+    before { service.add_resource!(generic_object) }
+
+    it 'returns the generic_objects ' do
+      expect(service.generic_objects).to eq([generic_object])
+    end
+  end
+
   describe '#my_zone' do
     let(:service) { FactoryGirl.create(:service) }
 
