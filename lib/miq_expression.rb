@@ -474,11 +474,11 @@ class MiqExpression
 
     operators = exp.keys
     operators.each do |k|
-      if ["and", "or"].include?(k.to_s.downcase)      # and/or atom is an array of atoms
+      if ["and", "or"].include?(k.to_s.downcase) # and/or atom is an array of atoms
         exp[k].each do |atom|
           evaluate_atoms(atom, obj)
         end
-      elsif ["not", "!"].include?(k.to_s.downcase)    # not atom is a hash expression
+      elsif ["not", "!"].include?(k.to_s.downcase) # not atom is a hash expression
         evaluate_atoms(exp[k], obj)
       else
         next
@@ -882,7 +882,7 @@ class MiqExpression
       MiqExpression.model_details(model, :include_model => false, :include_tags => true, :interval => interval)
     elsif Chargeback.db_is_chargeback?(model)
       cb_model = Chargeback.report_cb_model(model)
-        MiqExpression.model_details(model, :include_model => false, :include_tags => true).select { |c| c.last.ends_with?(*ReportController::Reports::Editor::CHARGEBACK_ALLOWED_FIELD_SUFFIXES) } +
+      MiqExpression.model_details(model, :include_model => false, :include_tags => true).select { |c| c.last.ends_with?(*ReportController::Reports::Editor::CHARGEBACK_ALLOWED_FIELD_SUFFIXES) } +
         MiqExpression.tag_details(cb_model, model, {}) + _custom_details_for(cb_model, {})
     else
       MiqExpression.model_details(model, :include_model => false, :include_tags => true)
@@ -951,7 +951,7 @@ class MiqExpression
     include_model = opts[:include_model]
     base_model = class_path.split(".").first
 
-    excludes =  EXCLUDE_COLUMNS
+    excludes = EXCLUDE_COLUMNS
     # special case for C&U ad-hoc reporting
     if opts[:interval] && opts[:interval] != "daily" && base_model.ends_with?("Performance") && !class_path.include?(".")
       excludes += ["^min_.*$", "^max_.*$", "^.*derived_storage_.*$", "created_on"]
@@ -1185,7 +1185,7 @@ class MiqExpression
   end
 
   def quick_search?
-    self.class._quick_search?(exp)  # Pass the exp hash
+    self.class._quick_search?(exp) # Pass the exp hash
   end
 
   # Is an expression hash a quick search?
