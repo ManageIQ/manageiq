@@ -2393,8 +2393,8 @@ describe MiqExpression do
     end
   end
 
-  context ".determine_relat_path" do
-    subject { described_class.determine_relat_path(@ref) }
+  describe ".determine_relat_path (private)" do
+    subject { described_class.send(:determine_relat_path, @ref) }
 
     it "when association name is same as class name" do
       @ref = Vm.reflect_on_association(:miq_group)

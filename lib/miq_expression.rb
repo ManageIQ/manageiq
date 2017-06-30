@@ -1249,6 +1249,7 @@ class MiqExpression
       op2 ? "#{val_with_cast} #{op2} #{quote(val2, col_type)}" : nil,
     ].compact.join(" && ")
   end
+  private_class_method :ruby_for_date_compare
 
   def to_arel(exp, tz)
     operator = exp.keys.first
@@ -1392,4 +1393,5 @@ class MiqExpression
     end
     last_path
   end
+  private_class_method :determine_relat_path
 end # class MiqExpression
