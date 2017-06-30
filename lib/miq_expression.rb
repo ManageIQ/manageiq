@@ -989,12 +989,14 @@ class MiqExpression
 
       # check for regexp match if no direct match
       col = c
-      excludes.each do |excl|
-        if c.match(excl)
-          col = nil
-          break
+      unless EXCLUDE_EXCEPTIONS.include?(c)
+        excludes.each do |excl|
+          if c.match(excl)
+            col = nil
+            break
+          end
         end
-      end unless EXCLUDE_EXCEPTIONS.include?(c)
+      end
       next unless col
       field_class_path = "#{class_path}-#{col}"
       field_assoc_path = "#{assoc_path}-#{col}"
