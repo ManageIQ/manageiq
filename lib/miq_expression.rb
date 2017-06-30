@@ -27,30 +27,28 @@ class MiqExpression
   def self.to_human(exp)
     if exp.kind_of?(self)
       exp.to_human
-    else
-      if exp.kind_of?(Hash)
-        case exp["mode"]
-        when "tag_expr"
-          exp["expr"]
-        when "tag"
-          tag = [exp["ns"], exp["tag"]].join("/")
-          if exp["include"] == "none"
-            return "Not Tagged With #{tag}"
-          else
-            return "Tagged With #{tag}"
-          end
-        when "script"
-          if exp["expr"] == "true"
-            "Always True"
-          else
-            exp["expr"]
-          end
+    elsif exp.kind_of?(Hash)
+      case exp["mode"]
+      when "tag_expr"
+        exp["expr"]
+      when "tag"
+        tag = [exp["ns"], exp["tag"]].join("/")
+        if exp["include"] == "none"
+          return "Not Tagged With #{tag}"
         else
-          new(exp).to_human
+          return "Tagged With #{tag}"
+        end
+      when "script"
+        if exp["expr"] == "true"
+          "Always True"
+        else
+          exp["expr"]
         end
       else
-        exp.inspect
+        new(exp).to_human
       end
+    else
+      exp.inspect
     end
   end
 
@@ -550,14 +548,12 @@ class MiqExpression
           "#{Tenant.root_tenant.name} Tags"
         elsif t.downcase == "user_tag"
           "My Tags"
+        elsif first
+          first = nil
+          next unless options[:include_model] == true
+          Dictionary.gettext(t, :type => :model, :notfound => :titleize)
         else
-          if first
-            first = nil
-            next unless options[:include_model] == true
-            Dictionary.gettext(t, :type => :model, :notfound => :titleize)
-          else
-            Dictionary.gettext(t, :type => :table, :notfound => :titleize)
-          end
+          Dictionary.gettext(t, :type => :table, :notfound => :titleize)
         end
       end.compact
       ret = friendly.join(".")
