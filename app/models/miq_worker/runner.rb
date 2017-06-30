@@ -1,6 +1,5 @@
 require 'miq-process'
 require 'thread'
-require 'fileutils'
 
 class MiqWorker::Runner
   class TemporaryFailure < RuntimeError
@@ -386,7 +385,8 @@ class MiqWorker::Runner
   end
 
   def heartbeat_to_file
-    FileUtils.touch(@worker.heartbeat_file)
+    timeout = worker_settings[:heartbeat_timeout] || Workers::MiqDefaults.heartbeat_timeout
+    File.write(@worker.heartbeat_file, (Time.now.utc + timeout).to_s)
   end
 
   def do_gc
