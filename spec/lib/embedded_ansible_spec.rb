@@ -46,24 +46,6 @@ describe EmbeddedAnsible do
     end
   end
 
-  describe ".stop" do
-    it "doesn't attempt to stop services if running in a container" do
-      expect(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
-      expect(LinuxAdmin::Service).not_to receive(:new)
-
-      described_class.stop
-    end
-  end
-
-  describe ".disable" do
-    it "doesn't attempt to disable services if running in a container" do
-      expect(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
-      expect(LinuxAdmin::Service).not_to receive(:new)
-
-      described_class.disable
-    end
-  end
-
   context "with services" do
     let(:nginx_service)       { double("nginx service") }
     let(:supervisord_service) { double("supervisord service") }
@@ -417,19 +399,50 @@ describe EmbeddedAnsible do
       end
     end
 
-    describe ".start when in a container" do
-      around do |example|
-        ENV["ANSIBLE_ADMIN_PASSWORD"] = "thepassword"
-        example.run
-        ENV.delete("ANSIBLE_ADMIN_PASSWORD")
+    context "when in a container" do
+      before do
+        expect(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
       end
 
-      it "sets the admin password using the environment variable and waits for the service to respond" do
-        expect(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
-        expect(described_class).to receive(:alive?).and_return(true)
+      describe ".stop" do
+        it "scales the ansible pod to 0 replicas" do
+          orch = double("ContainerOrchestrator")
+          expect(ContainerOrchestrator).to receive(:new).and_return(orch)
 
-        described_class.start
-        expect(miq_database.reload.ansible_admin_authentication.password).to eq("thepassword")
+          expect(orch).to receive(:scale).with("manageiq-ansible", 0)
+
+          described_class.stop
+        end
+      end
+
+      describe ".disable" do
+        it "scales the ansible pod to 0 replicas" do
+          orch = double("ContainerOrchestrator")
+          expect(ContainerOrchestrator).to receive(:new).and_return(orch)
+
+          expect(orch).to receive(:scale).with("manageiq-ansible", 0)
+
+          described_class.disable
+        end
+      end
+
+      describe ".start" do
+        around do |example|
+          ENV["ANSIBLE_ADMIN_PASSWORD"] = "thepassword"
+          example.run
+          ENV.delete("ANSIBLE_ADMIN_PASSWORD")
+        end
+
+        it "sets the admin password using the environment variable and waits for the service to respond" do
+          orch = double("ContainerOrchestrator")
+          expect(ContainerOrchestrator).to receive(:new).and_return(orch)
+
+          expect(orch).to receive(:scale).with("manageiq-ansible", 1)
+          expect(described_class).to receive(:alive?).and_return(true)
+
+          described_class.start
+          expect(miq_database.reload.ansible_admin_authentication.password).to eq("thepassword")
+        end
       end
     end
 
