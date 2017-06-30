@@ -1083,7 +1083,7 @@ class MiqExpression
     when :string, :text
       return false
     when :integer, :fixnum, :decimal, :float
-      return false if send((dt == :float ? :is_numeric? : :is_integer?), value)
+      return false if send((dt == :float ? :numeric? : :integer?), value)
 
       dt_human = dt == :float ? "Number" : "Integer"
       return _("%{value_name} value must not be blank") % {:value_name => dt_human} if value.delete(',').blank?
@@ -1162,7 +1162,7 @@ class MiqExpression
     @@model_class[model]
   end
 
-  def self.is_integer?(n)
+  def self.integer?(n)
     n = n.to_s
     n2 = n.delete(',') # strip out commas
     begin
@@ -1179,7 +1179,7 @@ class MiqExpression
     end
   end
 
-  def self.is_numeric?(n)
+  def self.numeric?(n)
     n = n.to_s
     n2 = n.delete(',') # strip out commas
     begin

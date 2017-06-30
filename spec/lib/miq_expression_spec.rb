@@ -1792,29 +1792,29 @@ describe MiqExpression do
     end
   end
 
-  describe ".is_numeric?" do
+  describe ".numeric?" do
     it "should return true if digits separated by comma and false if another separator used" do
-      expect(MiqExpression.is_numeric?('10000.55')).to be_truthy
-      expect(MiqExpression.is_numeric?('10,000.55')).to be_truthy
-      expect(MiqExpression.is_numeric?('10 000.55')).to be_falsey
+      expect(MiqExpression.numeric?('10000.55')).to be_truthy
+      expect(MiqExpression.numeric?('10,000.55')).to be_truthy
+      expect(MiqExpression.numeric?('10 000.55')).to be_falsey
     end
 
     it "should return true if there is method attached to number" do
-      expect(MiqExpression.is_numeric?('2,555.hello')).to eq(false)
-      expect(MiqExpression.is_numeric?('2,555.kilobytes')).to eq(true)
-      expect(MiqExpression.is_numeric?('2,555.55.megabytes')).to eq(true)
+      expect(MiqExpression.numeric?('2,555.hello')).to eq(false)
+      expect(MiqExpression.numeric?('2,555.kilobytes')).to eq(true)
+      expect(MiqExpression.numeric?('2,555.55.megabytes')).to eq(true)
     end
   end
 
-  describe ".is_integer?" do
+  describe ".integer?" do
     it "should return true if digits separated by comma and false if another separator used" do
-      expect(MiqExpression.is_integer?('2,555')).to eq(true)
-      expect(MiqExpression.is_integer?('2 555')).to eq(false)
+      expect(MiqExpression.integer?('2,555')).to eq(true)
+      expect(MiqExpression.integer?('2 555')).to eq(false)
     end
 
     it "should return true if there is method attached to number" do
-      expect(MiqExpression.is_integer?('2,555.kilobytes')).to eq(true)
-      expect(MiqExpression.is_integer?('2,555.hello')).to eq(false)
+      expect(MiqExpression.integer?('2,555.kilobytes')).to eq(true)
+      expect(MiqExpression.integer?('2,555.hello')).to eq(false)
     end
   end
 
