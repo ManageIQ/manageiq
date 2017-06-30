@@ -367,9 +367,7 @@ class MiqExpression
     cond = klass.predicate_builder.resolve_column_aliases(cond)
     cond = klass.send(:expand_hash_conditions_for_aggregates, cond)
 
-    klass.predicate_builder.build_from_hash(cond).map { |b|
-      klass.connection.visitor.compile b
-    }.join(' AND ')
+    klass.predicate_builder.build_from_hash(cond).map { |b| klass.connection.visitor.compile b }.join(' AND ')
   end
 
   def self.merge_where_clauses(*list)
