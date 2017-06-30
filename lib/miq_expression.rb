@@ -31,7 +31,7 @@ class MiqExpression
       if exp.kind_of?(Hash)
         case exp["mode"]
         when "tag_expr"
-          return exp["expr"]
+          exp["expr"]
         when "tag"
           tag = [exp["ns"], exp["tag"]].join("/")
           if exp["include"] == "none"
@@ -41,15 +41,15 @@ class MiqExpression
           end
         when "script"
           if exp["expr"] == "true"
-            return "Always True"
+            "Always True"
           else
-            return exp["expr"]
+            exp["expr"]
           end
         else
-          return new(exp).to_human
+          new(exp).to_human
         end
       else
-        return exp.inspect
+        exp.inspect
       end
     end
   end
@@ -669,17 +669,17 @@ class MiqExpression
       if val =~ /^([0-9\.,]+)\.([a-z]+)$/
         val, sfx = $1, $2
         if sfx.ends_with?("bytes") && FORMAT_BYTE_SUFFIXES.key?(sfx.to_sym)
-          return "#{val} #{FORMAT_BYTE_SUFFIXES[sfx.to_sym]}"
+          "#{val} #{FORMAT_BYTE_SUFFIXES[sfx.to_sym]}"
         else
-          return "#{val} #{sfx.titleize}"
+          "#{val} #{sfx.titleize}"
         end
       else
-        return val
+        val
       end
     when "string", "date", "datetime"
-      return "\"#{val}\""
+      "\"#{val}\""
     else
-      return quote(val, typ)
+      quote(val, typ)
     end
   end
 
