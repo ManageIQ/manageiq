@@ -21,7 +21,7 @@ class PidFile
   end
 
   def remove
-    FileUtils.rm(@fname) if File.file?(@fname)
+    FileUtils.rm(@fname) if pid == Process.pid
   end
 
   def create(remove_on_exit = true)
