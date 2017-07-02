@@ -60,6 +60,10 @@ module ManageIQ::Providers::Redhat::InfraManager::Vm::Operations::Snapshot
     return _("Revert is not allowed for a snapshot that is the active one") if active
   end
 
+  def remove_snapshot_denied_message(active = false)
+    return _("Delete is not allowed for a snapshot that is the active one") if active
+  end
+
   def snapshotting_memory_allowed?
     current_state == 'on'
   end
