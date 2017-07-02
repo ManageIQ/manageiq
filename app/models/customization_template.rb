@@ -5,7 +5,7 @@ class CustomizationTemplate < ApplicationRecord
   has_many   :pxe_images, :through => :pxe_image_type
 
   validates :pxe_image_type, :presence => true, :unless => :system?
-  # validates :name,           :uniqueness => { :scope => :pxe_image_type }
+  validates :name,           :uniqueness => { :scope => :pxe_image_type }, :unique_within_region => true
 
   def self.seed_file_name
     @seed_file_name ||= Rails.root.join("db", "fixtures", "#{table_name}.yml")
