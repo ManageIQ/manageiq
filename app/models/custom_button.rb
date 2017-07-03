@@ -3,6 +3,7 @@ class CustomButton < ApplicationRecord
 
   serialize :options
   serialize :applies_to_exp
+  serialize :enablement_expression
   serialize :visibility
 
   validates :applies_to_class, :presence => true
