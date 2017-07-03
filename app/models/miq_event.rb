@@ -109,7 +109,7 @@ class MiqEvent < EventStream
   end
 
   def self.raise_evm_event_queue(target, raw_event, inputs = {})
-    MiqQueue.put(
+    MiqQueue.put_simple(
       :class_name  => name,
       :method_name => 'raise_evm_event',
       :args        => [[target.class.name, target.id], raw_event, inputs]

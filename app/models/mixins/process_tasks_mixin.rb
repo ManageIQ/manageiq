@@ -17,7 +17,7 @@ module ProcessTasksMixin
     end
 
     def invoke_tasks_queue(options)
-      MiqQueue.put(:class_name => name, :method_name => "invoke_tasks", :args => [options])
+      MiqQueue.put_simple(:class_name => name, :method_name => "invoke_tasks", :args => [options])
     end
 
     # Performs tasks received from the UI via the queue
