@@ -1,0 +1,125 @@
+---
+__domain__.yaml:
+  classes: 1
+  instances: 6
+  created_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &1 2017-05-16 14:47:55.810357000 Z
+    zone: &2 !ruby/object:ActiveSupport::TimeZone
+      name: Etc/UTC
+    time: *1
+  updated_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &3 2017-07-03 14:28:36.854989000 Z
+    zone: *2
+    time: *3
+  size: 204
+  sha1: ioFlk17s0U0RmXYGSxV81r9fECI=
+MIQ/System/__namespace__.yaml:
+  created_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &4 2017-05-16 14:48:40.425249000 Z
+    zone: *2
+    time: *4
+  updated_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &5 2017-05-16 14:48:40.425249000 Z
+    zone: *2
+    time: *5
+  size: 145
+  sha1: rs4yeLg3wssLEk0drD1PflXqfCo=
+MIQ/System/Event/__namespace__.yaml:
+  created_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &6 2017-05-16 14:48:40.433687000 Z
+    zone: *2
+    time: *6
+  updated_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &7 2017-05-16 14:48:40.433687000 Z
+    zone: *2
+    time: *7
+  size: 144
+  sha1: GeNzYDyU01maSjplxLq/0xoTyNk=
+MIQ/System/Event/EmsEvent/__namespace__.yaml:
+  created_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &8 2017-05-16 14:48:40.436014000 Z
+    zone: *2
+    time: *8
+  updated_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &9 2017-05-16 14:48:40.436014000 Z
+    zone: *2
+    time: *9
+  size: 147
+  sha1: EKkpvA4G/Zj3zJ4wyTB2ddpaq4g=
+MIQ/System/Event/EmsEvent/Amazon.class/__class__.yaml:
+  created_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &10 2017-05-16 14:48:40.442044000 Z
+    zone: *2
+    time: *10
+  updated_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &11 2017-05-16 14:48:40.525419000 Z
+    zone: *2
+    time: *11
+  size: 7960
+  sha1: Oheds9FHT5xT9/IB0Nbd0VgLDXY=
+MIQ/System/Event/EmsEvent/Amazon.class/AttachVolume.yaml:
+  created_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &12 2017-06-30 16:10:09.317651000 Z
+    zone: *2
+    time: *12
+  updated_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &13 2017-07-03 14:14:52.549251000 Z
+    zone: *2
+    time: *13
+  size: 226
+  sha1: 1t4x20KlDp5r3ICct6laRSMil6M=
+MIQ/System/Event/EmsEvent/Amazon.class/CopySnapshot.yaml:
+  created_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &14 2017-06-30 16:19:30.007713000 Z
+    zone: *2
+    time: *14
+  updated_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &15 2017-07-03 14:19:13.925714000 Z
+    zone: *2
+    time: *15
+  size: 226
+  sha1: BkboCvSBlBqZFkhnq0FzGXZLOyc=
+MIQ/System/Event/EmsEvent/Amazon.class/CreateSnapshot.yaml:
+  created_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &16 2017-06-30 15:22:31.515422000 Z
+    zone: *2
+    time: *16
+  updated_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &17 2017-07-03 14:19:21.226894000 Z
+    zone: *2
+    time: *17
+  size: 228
+  sha1: fjtzkUzZYETGEQ/qe7t0I4n9OPg=
+MIQ/System/Event/EmsEvent/Amazon.class/CreateVolume.yaml:
+  created_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &18 2017-06-30 16:09:28.421141000 Z
+    zone: *2
+    time: *18
+  updated_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &19 2017-07-03 13:45:35.544336000 Z
+    zone: *2
+    time: *19
+  size: 226
+  sha1: xn5/xX5xTz4YijF5+oZSRShkPDM=
+MIQ/System/Event/EmsEvent/Amazon.class/DeleteSnapshot.yaml:
+  created_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &20 2017-06-30 16:06:44.458199000 Z
+    zone: *2
+    time: *20
+  updated_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &21 2017-07-03 14:19:28.587929000 Z
+    zone: *2
+    time: *21
+  size: 228
+  sha1: a6p4LwfQno/3lLDZXYhbgatd5rg=
+MIQ/System/Event/EmsEvent/Amazon.class/DeleteVolume.yaml:
+  created_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &22 2017-06-30 16:07:54.034745000 Z
+    zone: *2
+    time: *22
+  updated_on: !ruby/object:ActiveSupport::TimeWithZone
+    utc: &23 2017-07-03 13:45:50.504910000 Z
+    zone: *2
+    time: *23
+  size: 226
+  sha1: lNBzkQuzeuG1tezj/3QeuQeQn5E=
