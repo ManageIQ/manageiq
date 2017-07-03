@@ -289,11 +289,10 @@ class MiqTask < ApplicationRecord
 
   def self.delete_older(ts, condition)
     _log.info("Queuing deletion of tasks older than #{ts} and with condition: #{condition}")
-    MiqQueue.put(
+    MiqQueue.submit_job(
       :class_name  => name,
       :method_name => "destroy_older_by_condition",
       :args        => [ts, condition],
-      :zone        => MiqServer.my_zone
     )
   end
 
@@ -305,11 +304,10 @@ class MiqTask < ApplicationRecord
   def self.delete_by_id(ids)
     return if ids.empty?
     _log.info("Queuing deletion of tasks with the following ids: #{ids.inspect}")
-    MiqQueue.put(
+    MiqQueue.submit_job(
       :class_name  => name,
       :method_name => "destroy",
       :args        => [ids],
-      :zone        => MiqServer.my_zone
     )
   end
 

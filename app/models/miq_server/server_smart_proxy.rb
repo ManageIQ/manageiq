@@ -89,14 +89,13 @@ module MiqServer::ServerSmartProxy
       end
       $log.debug "#{log_prefix}: queuing call to #{self.class.name}##{ost.method_name}"
       # Queue call to scan_metadata or sync_metadata.
-      MiqQueue.put(
+      MiqQueue.submit_job(
+        :service     => "smartproxy",
         :class_name  => self.class.name,
         :instance_id => id,
         :method_name => ost.method_name,
         :args        => ost,
-        :server_guid => guid,
-        :role        => "smartproxy",
-        :queue_name  => "smartproxy",
+        :server_guid => guid, # this should be derived in service. fix this
         :msg_timeout => worker_setting[:queue_timeout] * timeout_adj
       )
     else

@@ -9,14 +9,14 @@ module ScanningOperationsMixin
       Timeout.timeout(WS_TIMEOUT) do # TODO: do we need this timeout?
         _log.info "target [#{guid}],  job [#{jobid}] enter"
         _log.info "target [#{guid}] found target object id [#{id}], job [#{jobid}]"
-        MiqQueue.put(
+        MiqQueue.submit_job(
+          :service     => "smartstate",
+          :affinity    => ext_management_system,
           :target_id   => id,
           :class_name  => self.class.base_class.name,
           :method_name => "save_metadata",
           :data        => Marshal.dump([xmlFile, type]),
           :task_id     => jobid,
-          :zone        => my_zone,
-          :role        => "smartstate"
         )
         _log.info "target [#{guid}] data put on queue, job [#{jobid}]"
       end

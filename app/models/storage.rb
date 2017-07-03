@@ -182,15 +182,15 @@ class Storage < ApplicationRecord
     MiqEvent.raise_evm_job_event(self, :type => "scan", :prefix => "request")
     _log.info "Queueing SmartState Analysis for Storage ID: [#{id}], MiqTask ID: [#{miq_task_id}]"
     cb = {:class_name => self.class.name, :instance_id => id, :method_name => :scan_complete_callback, :args => [miq_task_id]}
-    MiqQueue.put(
+    MiqQueue.submit_job(
+      :service      => "ems_operations",
+      :affinity     => ext_management_system,
       :class_name   => self.class.name,
       :instance_id  => id,
       :method_name  => 'smartstate_analysis',
       :args         => [miq_task_id],
       :msg_timeout  => self.class.scan_collection_timeout,
       :miq_callback => cb,
-      :zone         => my_zone,
-      :role         => 'ems_operations'
     )
   end
 

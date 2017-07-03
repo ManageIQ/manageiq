@@ -52,7 +52,7 @@ module PurgingMixin
     end
 
     def purge_queue(mode, value)
-      MiqQueue.put(
+      MiqQueue.submit_job(
         :class_name  => name,
         :method_name => "purge_by_#{mode}",
         :args        => [value]

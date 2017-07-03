@@ -124,6 +124,66 @@ class MiqQueue < ApplicationRecord
     msg
   end
 
+  # Trigger a background job
+  #
+  # target_worker:
+  #
+  # @options options [String] :class
+  # @options options [String] :instance
+  # @options options [String] :method
+  # @options options [String] :args
+  # @options options [String] :target_id (deprecated)
+  # @options options [String] :data (deprecated)
+  #
+  # execution parameters:
+  #
+  # @options options [String] :expires_on
+  # @options options [String] :ttl
+  # @options options [String] :task_id (deprecated)
+  #
+  # routing:
+  #
+  # @options options [String] :service name of the service. Similar to previous role or queue name derives
+  #                                    queue_name, role, and zone.
+  # @options options [ExtManagementSystem|Nil|Array<Class,id>] :affinity resource for affinity. Typically an ems
+  # @options options [String] :miq_zone this overrides the auto derived zone.
+  #
+  def self.submit_job(options)
+    service = options.delete(:service) || "generic"
+    resource = options.delete(:affinity)
+    case service
+    when "automate"
+      # options[:queue_name] = "generic"
+      options[:role] = service
+    when "ems_inventory"
+      options[:queue_name] = MiqEmsRefreshWorker.queue_name_for_ems(resource)
+      options[:role]       = service
+      options[:zone]       = resource.my_zone
+    when "ems_operations", "smartstate"
+      # ems_operations, refresh is class method
+      # some smartstate just want MiqServer.my_zone and pass in no resource
+      # options[:queue_name] = "generic"
+      options[:role] = service
+      options[:zone] = resource.try(:my_zone) || MiqServer.my_zone
+    when "event"
+      options[:queue_name] = "ems"
+      options[:role] = service
+    when "generic"
+      raise ArgumentError, "generic job should have no resource" if resource
+      # TODO: can we transition to zone = nil
+    when "notifier"
+      options[:role] = service
+      options[:zone] = nil # any zone
+    when "reporting"
+      options[:queue_name] = "generic"
+      options[:role] = service
+    when "smartproxy"
+      options[:queue_name] = "smartproxy"
+      options[:role] = "smartproxy"
+    end
+    put(options)
+  end
+
   MIQ_QUEUE_GET = <<-EOL
     state = 'ready'
     AND (zone IS NULL OR zone = ?)

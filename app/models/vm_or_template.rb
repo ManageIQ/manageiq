@@ -435,17 +435,25 @@ class VmOrTemplate < ApplicationRecord
         end
     end
 
-    role = options[:invoke_by] == :job ? "smartstate" : "ems_operations"
-    role = nil if options[:task] == "destroy"
-    MiqQueue.put(
-      :class_name   => base_class.name,
-      :instance_id  => vm.id,
-      :method_name  => options[:task],
-      :args         => args,
-      :miq_callback => cb,
-      :zone         => vm.my_zone,
-      :role         => role,
-    )
+    if options[:task] == "destroy"
+      MiqQueue.submit_job(
+        :class_name   => base_class.name,
+        :instance_id  => vm.id,
+        :method_name  => options[:task],
+        :args         => args,
+        :miq_callback => cb,
+      )
+    else
+      MiqQueue.submit_job(
+        :service      => options[:invoke_by] == :job ? "smartstate" : "ems_operations",
+        :affinity     => vm.ext_management_system,
+        :class_name   => base_class.name,
+        :instance_id  => vm.id,
+        :method_name  => options[:task],
+        :args         => args,
+        :miq_callback => cb,
+      )
+    end
   end
 
   def self.action_for_task(task)
@@ -1120,7 +1128,7 @@ class VmOrTemplate < ApplicationRecord
   private_class_method :post_refresh_ems_folder_updates
 
   def self.assign_ems_created_on_queue(vm_ids)
-    MiqQueue.put(
+    MiqQueue.submit_job(
       :class_name  => name,
       :method_name => 'assign_ems_created_on',
       :args        => [vm_ids],
@@ -1159,7 +1167,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def post_create_actions_queue
-    MiqQueue.put(
+    MiqQueue.submit_job(
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => 'post_create_actions'
@@ -1310,7 +1318,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def classify_with_parent_folder_path_queue(add = true)
-    MiqQueue.put(
+    MiqQueue.submit_job(
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => 'classify_with_parent_folder_path',

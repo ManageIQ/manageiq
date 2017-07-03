@@ -4,7 +4,7 @@ class Compliance < ApplicationRecord
 
   def self.check_compliance_queue(targets, inputs = {})
     targets.to_miq_a.each do |target|
-      MiqQueue.put(
+      MiqQueue.submit_job(
         :class_name  => name,
         :method_name => 'check_compliance',
         :args        => [[target.class.name, target.id], inputs]
