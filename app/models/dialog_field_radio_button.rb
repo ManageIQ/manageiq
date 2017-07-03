@@ -11,7 +11,7 @@ class DialogFieldRadioButton < DialogFieldSortedItem
 
   def raw_values
     @raw_values ||= dynamic ? values_from_automate : static_raw_values
-    self.value ||= default_value if default_value_included_in_raw_values?
+    self.value ||= default_value if default_value_included?(@raw_values)
 
     @raw_values
   end
