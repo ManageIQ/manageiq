@@ -4862,6 +4862,10 @@
       :feature_type: admin
       :identifier: container_admin
       :children:
+      - :name: Create Service Dialog from Container Template
+        :description: Create Service Dialog from Container Template
+        :identifier: service_dialog_from_ct
+        :feature_type: admin
       - :name: Utilization
         :description: Show Capacity & Utilization data of Containers
         :feature_type: view
