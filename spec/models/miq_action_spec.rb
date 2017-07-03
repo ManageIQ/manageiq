@@ -218,6 +218,17 @@ describe MiqAction do
     end
   end
 
+  context "#action_container_image_annotate_deny_execution" do
+    let(:container_image) { FactoryGirl.create(:container_image) }
+    let(:event) { FactoryGirl.create(:miq_event_definition, :name => "whatever") }
+    let(:action) { FactoryGirl.create(:miq_action, :name => "container_image_annotate_deny_execution") }
+
+    it "will not annotate if the method is unavailable" do
+      expect(MiqQueue).to receive(:put).exactly(0).times
+      action.action_container_image_annotate_deny_execution(action, container_image, :event => event)
+    end
+  end
+
   context '.create_default_actions' do
     context 'seeding default actions from a file with 3 csv rows and some comments' do
       before do

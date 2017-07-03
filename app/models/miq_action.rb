@@ -737,12 +737,7 @@ class MiqAction < ApplicationRecord
       return
     end
 
-    unless rec.try(:ext_management_system).kind_of?(ManageIQ::Providers::Openshift::ContainerManagerMixin)
-      MiqPolicy.logger.error("#{error_prefix} only applicable for OpenShift Providers")
-      return
-    end
-
-    unless rec.digest.present?
+    unless rec.respond_to?(:annotate_deny_execution)
       MiqPolicy.logger.error("#{error_prefix} ContainerImage is not linked with an OpenShift image")
       return
     end
