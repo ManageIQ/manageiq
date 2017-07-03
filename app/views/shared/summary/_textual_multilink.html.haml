@@ -9,7 +9,8 @@
         %tr{:class => 'no-hover'}
           %td{:class => 'hover'}
             - if item[:image]
-              %img{:src => image_path("100/#{item[:image]}.png")}
+              -# %img{:src => image_path("100/#{item[:image]}.png")}
+              = encodable_image_tag("100/#{item[:image]}.png")
             = item[:value]
           - item[:sub_items].each do |sub_item|
             %td{:class => sub_item[:link] ? 'hover' : '',
@@ -17,5 +18,6 @@
                 :title => sub_item[:title],
                 :onclick => sub_item[:link] ? "DoNav('#{sub_item[:link]}');" : ""}
               - unless sub_item[:image].blank?
-                %img{:src => image_path("100/#{sub_item[:image]}.png")}
+                -# %img{:src => image_path("100/#{sub_item[:image]}.png")}
+                = encodable_image_tag("100/#{sub_item[:image]}.png")
               = sub_item[:value]

@@ -1,5 +1,6 @@
 describe "layouts/listnav/_security_group.html.haml" do
-  helper(QuadiconHelper)
+  helper ImageEncodeHelper
+  helper QuadiconHelper
 
   before :each do
     set_controller_for_view("security_group")

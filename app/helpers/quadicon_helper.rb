@@ -333,7 +333,7 @@ module QuadiconHelper
       :height => size
     }.merge(options)
 
-    image_tag(image_path(path), options)
+    encodable_image_tag(path, options)
   end
 
   CLASSLY_NAMED_ITEMS = %w(
@@ -398,8 +398,7 @@ module QuadiconHelper
     image ||= "#{size}/base-single.png"
 
     content_tag(:div, :class => "flobj #{cls}") do
-      tag(:img, :border => 0, :src => ActionController::Base.helpers.image_path(image),
-          :width => size, :height => size)
+      encodable_image_tag(image, :size => size, :border => 0)
     end
   end
 
@@ -481,7 +480,7 @@ module QuadiconHelper
     if options[:typ] == :listnav
       # Listnav, no href needed
       output << content_tag(:div, :class => 'flobj') do
-        tag(:img, :src => ActionController::Base.helpers.image_path("#{options[:size]}/reflection.png"), :border => 0)
+        quadicon_reflection_img(:size => size)
       end
     else
       href = if quadicon_show_links?

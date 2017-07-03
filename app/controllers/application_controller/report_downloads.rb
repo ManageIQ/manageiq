@@ -21,6 +21,8 @@ module ApplicationController::ReportDownloads
 
   # Send the current report in pdf format
   def render_pdf(report = nil)
+    pdf_image_setup
+
     report ||= report_for_rendering
     if report
       userid = "#{session[:userid]}|#{request.session_options[:id]}|adhoc"
@@ -155,6 +157,8 @@ module ApplicationController::ReportDownloads
   end
 
   def set_summary_pdf_data
+    pdf_image_setup
+
     @report_only = true
     @showtype    = @display
     run_time     = Time.now
@@ -190,5 +194,14 @@ module ApplicationController::ReportDownloads
                 :filename => filename_timestamp("#{klass}_#{@record.name}_summary") + '.pdf'
                )
     end
+  end
+
+  def pdf_image_setup
+    # do not build quadicon links
+    @embedded = true
+    @showlinks = false
+
+    # encode images and embed in HTML that is sent to Prince
+    @base64_encode_images = true
   end
 end

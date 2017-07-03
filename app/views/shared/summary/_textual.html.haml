@@ -22,5 +22,6 @@
             = item[:label]
           %td
             - if item[:image]
-              %img{:src => image_path("100/#{item[:image]}#{File.extname(item[:image]).blank? ? '.png' : ''}")}
+              -# %img{:src => image_path("100/#{item[:image]}#{File.extname(item[:image]).blank? ? '.png' : ''}")}
+              = encodable_image_tag("100/#{item[:image]}#{File.extname(item[:image]).blank? ? '.png' : ''}")
             = !item[:value].kind_of?(Array) ? item[:value] : render(:partial => "shared/summary/textual_multivalue", :locals => {:items => item[:value]})
