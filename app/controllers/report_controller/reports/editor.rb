@@ -440,7 +440,7 @@ module ReportController::Reports::Editor
     f = @edit[:new][:field_order][f_idx]  # Get the field element
     field_sub_type = MiqExpression.get_col_info(f.last)[:format_sub_type]
     field_data_type = MiqExpression.get_col_info(f.last)[:data_type]
-    field_name = f.last.include?(".") ? f.last.split(".").last.tr("-", ".") : f.last.split("-").last
+    field_name = MiqExpression.parse_field_or_tag(f.last).report_column
     case parm
     when "style"  # New CSS class chosen
       if value.blank?

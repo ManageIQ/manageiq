@@ -18,7 +18,7 @@
     %tbody
       - @edit[:new][:field_order].each_with_index do |f, f_idx|
         - field_type = MiqExpression.get_col_info(f.last.split("__").first)[:format_sub_type]
-        - col_name = f.last.include?(".") ? f.last.split(".").last.gsub("-", ".") : f.last.split("-").last
+        - col_name = MiqExpression.parse_field_or_tag(f.last).report_column
         - styles = @edit.fetch_path(:new, :col_options, col_name, :style) || []
         %tr
           %td
