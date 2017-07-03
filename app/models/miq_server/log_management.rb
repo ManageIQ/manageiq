@@ -89,7 +89,7 @@ module MiqServer::LogManagement
       :msg_timeout  => options.delete(:timeout),
       :priority     => MiqQueue::HIGH_PRIORITY,
       :args         => [options]
-    ).put_unless_exists(
+    ).put_unless_exists_deprecated(
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "post_logs",
@@ -201,7 +201,7 @@ module MiqServer::LogManagement
   end
 
   def delete_active_log_collections_queue
-    MiqQueue.create_with(:priority => MiqQueue::HIGH_PRIORITY).put_unless_exists(
+    MiqQueue.create_with(:priority => MiqQueue::HIGH_PRIORITY).put_unless_exists_deprecated(
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "delete_active_log_collections",
