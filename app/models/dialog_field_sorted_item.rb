@@ -91,7 +91,7 @@ class DialogFieldSortedItem < DialogField
 
   def raw_values
     @raw_values ||= dynamic ? values_from_automate : static_raw_values
-    use_first_value_as_default unless default_value_included_in_raw_values?
+    use_first_value_as_default unless default_value_included?(@raw_values)
     self.value ||= default_value.send(value_modifier)
 
     @raw_values
@@ -101,17 +101,30 @@ class DialogFieldSortedItem < DialogField
     self.default_value = sort_data(@raw_values).first.try(:first)
   end
 
-  def default_value_included_in_raw_values?
-    @raw_values.collect { |value_pair| value_pair[0].send(value_modifier) }.include?(default_value.send(value_modifier))
+  def default_value_included?(values_list)
+    values_list.collect { |value_pair| value_pair[0].send(value_modifier) }.include?(default_value.send(value_modifier))
   end
 
   def static_raw_values
-    first_values = required? ? [[nil, "<Choose>"]] : initial_values
-    first_values + self[:values].to_miq_a.reject { |value| value[0].nil? }
+    self[:values].to_miq_a.reject { |value| value[0].nil? }.unshift(nil_option).reject(&:empty?)
   end
 
   def initial_values
     [[nil, "<None>"]]
+  end
+
+  def initial_required_values
+    [nil, "<Choose>"]
+  end
+
+  def nil_option
+    if !required?
+      initial_values.flatten
+    elsif default_value.blank? || !default_value_included?(self[:values])
+      initial_required_values
+    else
+      []
+    end
   end
 
   def load_values_on_init?
