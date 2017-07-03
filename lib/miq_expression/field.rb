@@ -12,7 +12,7 @@ class MiqExpression::Field
   ParseError = Class.new(StandardError)
 
   def self.parse(field)
-    match = FIELD_REGEX.match(field) or raise ParseError, field
+    (match = FIELD_REGEX.match(field)) || raise(ParseError, field)
     new(match[:model_name].constantize, match[:associations].to_s.split("."), match[:virtual_custom_column] ||
         match[:column])
   end
@@ -93,6 +93,10 @@ class MiqExpression::Field
     else
       target.type_for_attribute(column).type
     end
+  end
+
+  def report_column
+    (associations + [column]).join('.')
   end
 
   private
