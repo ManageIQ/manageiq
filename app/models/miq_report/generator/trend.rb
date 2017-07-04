@@ -45,7 +45,7 @@ module MiqReport::Generator::Trend
     klass = db.kind_of?(Class) ? db : Object.const_get(db)
     self.title = klass.report_title(db_options)
     self.cols, self.headers = klass.report_cols(db_options)
-    options[:only] ||= (cols + build_cols_from_include(include) + ['id']).uniq
+    options[:only] ||= cols_for_report
 
     # Build and filter trend data from performance data
     build_apply_time_profile(results)
