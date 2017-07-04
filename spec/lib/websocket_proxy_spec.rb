@@ -2,9 +2,10 @@ describe WebsocketProxy do
   let(:console) { FactoryGirl.create(:system_console) }
   let(:host) { '127.0.0.1:8080' }
   let(:uri) { '/ws/console/123456789' }
+  let(:logger) { double }
   let(:env) { {'HTTP_HOST' => host, 'REQUEST_URI' => uri, 'rack.hijack' => -> {}} }
 
-  subject { described_class.new(env, console) }
+  subject { described_class.new(env, console, logger) }
 
   describe '#initialize' do
     it 'sets the URL' do
