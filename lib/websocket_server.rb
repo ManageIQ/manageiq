@@ -62,7 +62,7 @@ class WebsocketServer
 
   def init_proxy(env, url)
     console = SystemConsole.find_by!(:url_secret => url)
-    proxy = WebsocketProxy.new(env, console)
+    proxy = WebsocketProxy.new(env, console, logger)
     return proxy.cleanup if proxy.error
     logger.info("Starting websocket proxy for VM #{console.vm_id}")
     proxy.start
