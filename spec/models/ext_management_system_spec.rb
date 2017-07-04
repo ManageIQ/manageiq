@@ -33,8 +33,9 @@ describe ExtManagementSystem do
       "hawkular"                    => "Hawkular",
       "hawkular_datawarehouse"      => "Hawkular Datawarehouse",
       "kubernetes"                  => "Kubernetes",
+      "kubernetes_monitor"          => "Kubernetes Monitor",
       "openshift"                   => "OpenShift",
-      "monitoring"                  => "Monitoring Manager", # removed in https://github.com/ManageIQ/manageiq/pull/15506
+      "openshift_monitor"           => "Openshift Monitor",
       "openstack"                   => "OpenStack",
       "openstack_infra"             => "OpenStack Platform Director",
       "openstack_network"           => "OpenStack Network",
