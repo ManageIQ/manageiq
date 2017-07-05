@@ -24,9 +24,6 @@ module MiqWebServerWorkerMixin
     end
 
     def preload_for_worker_role
-      # Make these constants globally available
-      ::UiConstants
-
       configure_secret_token
     end
 

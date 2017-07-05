@@ -38,18 +38,19 @@ worker_class = ARGV[0]
 require File.expand_path("../miq_worker_types", __dir__)
 
 if options[:list]
-  puts ::MIQ_WORKER_TYPES
+  puts ::MIQ_WORKER_TYPES.keys
   exit
 end
 opt_parser.abort(opt_parser.help) unless worker_class
 
-unless ::MIQ_WORKER_TYPES.include?(worker_class)
+unless ::MIQ_WORKER_TYPES.keys.include?(worker_class)
   puts "ERR:  `#{worker_class}` WORKER CLASS NOT FOUND!  Please run with `-l` to see possible worker class names."
   exit 1
 end
 
 # Skip heartbeating with single worker
 ENV["DISABLE_MIQ_WORKER_HEARTBEAT"] ||= options[:heartbeat] ? nil : '1'
+ENV["BUNDLER_GROUPS"] = MIQ_WORKER_TYPES[worker_class].join(',')
 
 require File.expand_path("../../../config/environment", __dir__)
 
