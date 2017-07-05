@@ -79,8 +79,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
     context "#initialize" do
       it "Creates a new scan job" do
         image = FactoryGirl.create(:container_image, :ext_management_system => @ems)
-        User.current_user = FactoryGirl.create(:user, :userid => "bob")
-        job = @ems.raw_scan_job_create(image.class, image.id)
+        job = @ems.raw_scan_job_create(image.class, image.id, "bob")
         expect(job).to have_attributes(
           :dispatch_status => "pending",
           :state           => "waiting_to_start",
@@ -96,6 +95,21 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
         image = FactoryGirl.create(:container_image, :ext_management_system => @ems)
         User.current_user = FactoryGirl.create(:user, :userid => "bob")
         job = @ems.raw_scan_job_create(image)
+        expect(job).to have_attributes(
+          :dispatch_status => "pending",
+          :state           => "waiting_to_start",
+          :status          => "ok",
+          :message         => "process initiated",
+          :target_class    => "ContainerImage",
+          :userid          => "bob"
+        )
+      end
+
+      it "Is backward compatible with #54" do
+        # https://github.com/ManageIQ/manageiq-providers-kubernetes/pull/54/files
+        image = FactoryGirl.create(:container_image, :ext_management_system => @ems)
+        User.current_user = FactoryGirl.create(:user, :userid => "bob")
+        job = @ems.raw_scan_job_create(image.class, image.id)
         expect(job).to have_attributes(
           :dispatch_status => "pending",
           :state           => "waiting_to_start",
