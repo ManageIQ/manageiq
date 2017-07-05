@@ -11,12 +11,12 @@ describe "Logging" do
 
     after { $api_log.loggers.delete(@logger) }
 
-    it "formats the log line as '[LOG LEVEL] -- : MIQ([Class].[method])'" do
+    it "formats the log line as '[LOG LEVEL] -- : MIQ([method])'" do
       api_basic_authorize
 
       run_get(entrypoint_url)
 
-      expect(@log.string).to include("INFO -- : MIQ(Api::ApiController.log_request_initiated)")
+      expect(@log.string).to include("INFO -- : MIQ(log_request_initiated)")
     end
 
     it "logs hashed details about the request" do
