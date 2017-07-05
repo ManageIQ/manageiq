@@ -37,7 +37,7 @@ module Api
       raise "Must specify a reason for approving a request" if data["reason"].blank?
       api_action(type, id) do |klass|
         request = resource_search(id, type, klass)
-        request.approve(@auth_user, data["reason"])
+        request.approve(User.current_user.userid, data["reason"])
         action_result(true, "Request #{id} approved")
       end
     rescue => err
@@ -48,7 +48,7 @@ module Api
       raise "Must specify a reason for denying a request" if data["reason"].blank?
       api_action(type, id) do |klass|
         request = resource_search(id, type, klass)
-        request.deny(@auth_user, data["reason"])
+        request.deny(User.current_user.userid, data["reason"])
         action_result(true, "Request #{id} denied")
       end
     rescue => err

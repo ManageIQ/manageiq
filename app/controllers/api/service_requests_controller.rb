@@ -6,7 +6,7 @@ module Api
       raise "Must specify a reason for approving a service request" unless data["reason"].present?
       api_action(type, id) do |klass|
         provreq = resource_search(id, type, klass)
-        provreq.approve(@auth_user, data['reason'])
+        provreq.approve(User.current_user.userid, data['reason'])
         action_result(true, "Service request #{id} approved")
       end
     rescue => err
@@ -17,7 +17,7 @@ module Api
       raise "Must specify a reason for denying a service request" unless data["reason"].present?
       api_action(type, id) do |klass|
         provreq = resource_search(id, type, klass)
-        provreq.deny(@auth_user, data['reason'])
+        provreq.deny(User.current_user.userid, data['reason'])
         action_result(true, "Service request #{id} denied")
       end
     rescue => err
