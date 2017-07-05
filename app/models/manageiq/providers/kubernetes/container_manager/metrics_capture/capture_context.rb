@@ -4,8 +4,8 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
 
     def initialize(target, start_time, end_time, interval)
       @target = target
-      @start_time = start_time || 15.minutes.ago.beginning_of_minute.utc
-      @end_time = end_time
+      @starts = start_time.to_i.in_milliseconds
+      @ends = end_time.to_i.in_milliseconds if end_time
       @interval = interval
       @tenant = target.try(:container_project).try(:name) || '_system'
       @ext_management_system = @target.ext_management_system || @target.try(:old_ext_management_system)
@@ -107,7 +107,8 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
       sort_and_normalize(
         hawkular_client.counters.get_data(
           resource,
-          :starts         => (@start_time - @interval).to_i.in_milliseconds,
+          :starts         => @starts - @interval.to_i.in_milliseconds,
+          :ends           => @ends,
           :bucketDuration => "#{@interval}s"))
     rescue SystemCallError, SocketError, OpenSSL::SSL::SSLError => e
       raise CollectionFailure, e.message
@@ -117,7 +118,8 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
       sort_and_normalize(
         hawkular_client.gauges.get_data(
           resource,
-          :starts         => @start_time.to_i.in_milliseconds,
+          :starts         => @starts,
+          :ends           => @ends,
           :bucketDuration => "#{@interval}s"))
     rescue SystemCallError, SocketError, OpenSSL::SSL::SSLError => e
       raise CollectionFailure, e.message

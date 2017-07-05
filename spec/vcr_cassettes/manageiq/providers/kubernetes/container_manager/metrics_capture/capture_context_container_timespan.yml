@@ -37,16 +37,16 @@ http_interactions:
       Content-Length:
       - '154'
       Date:
-      - Thu, 22 Jun 2017 18:57:28 GMT
+      - Thu, 22 Jun 2017 18:57:52 GMT
     body:
       encoding: ASCII-8BIT
       string: !binary |-
         H4sIAAAAAAAAAA3MvQ7CIBiF4XthFsJfK3Fr1aqDizTulH5NSIA2QF2M9y7TWZ7zftETSnI2a0gfZwGdkB6713i9oAN6hM1DgFhMcWvEb0i5biWU8JYwMrhofHX97nzBQ1oDvrmC9b1jFclmYlJZJSTMLadMLawRlgumjpOUojUgOVUL1MDZ5GzinEy97Rv6/QHfcrqrlgAAAA==
     http_version: 
-  recorded_at: Thu, 22 Jun 2017 18:57:28 GMT
+  recorded_at: Thu, 22 Jun 2017 18:57:52 GMT
 - request:
     method: get
-    uri: https://capture.context.com/hawkular/metrics/counters/registry%2F476e8b1a-3a1a-11e7-a3eb-001a4a2314d7%2Fcpu%2Fusage/stats/?bucketDuration=20s&start=1498156822000
+    uri: https://capture.context.com/hawkular/metrics/counters/registry%2F476e8b1a-3a1a-11e7-a3eb-001a4a2314d7%2Fcpu%2Fusage/stats/?bucketDuration=20s&end=1498156842000&start=1498156522000
     body:
       encoding: US-ASCII
       string: ''
@@ -79,15 +79,15 @@ http_interactions:
       Content-Type:
       - application/json
       Content-Length:
-      - '1040'
+      - '416'
       Date:
-      - Thu, 22 Jun 2017 18:57:29 GMT
+      - Thu, 22 Jun 2017 18:57:53 GMT
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        H4sIAAAAAAAAAI2ZXYtTMRRF/0ufB8nnOYnv/grxoeAoghVxRlHE/270Jmbv3gMefFu0w1rc3aTF1z8vT8/XL8+Xl7H0Fqu0lEIID5fHT283Kwe7ffg02IvcRaXFpq/6w+X67f2J3R7ffrieX3q7fj+xp6+3M7vePn98fBp8aNw+P/+4vHx3/fj0+OvhJFsMWSHZIll7ijmCLLEty/iQJTZlmfllxZBtkx3vfP7y1XpjO7+xB67sWUJOoWElMqgkPCuRrUpi7solRrKJZGuV2FVJltiWZXzIEpuyzPyyxth7cTySbgyv8/AkSOgqgsMjtisZH5XEZiUzf6UxvN5YtmoZ+9SEsshAlvCURbZkifllz2PXEP7/SPaL8I08PA05Bh2fXqgktisZH5XEZiUzb+U/MZLlU1Zzrqo9Z5RFBrKEpyyyJUvML3seuwbxPJLz8MZHlCvHJylGqRgJCBqRzkRAqxCRP9DYXOQDtpXSVLPg0yC2TRkfqsSmKzO3bDR2HpPjaURjc5E310OuKWXaHLFdyfioJDYrmfkrjc1FPmB7aTGmgVEWGcgSnrLIliwxv6yx8+i42feL4I2JhzfO+/E5EsVPCDGoJDwrka1KYu7KZAwv4QGbXoQ0gnII5Z/sHVuy9/iP7B37K3vP/LLG2JPjZt8vwjcKVzYdj672jpXIoJLwrES2Kon5K43hpUayMWrRlvCJINqqRA9TRFOUkN/T2Hn2XOrZ2FzmzUXJvRTpFQuRQSLh2YhsRRJzV2Zjc7mQbIolBFXFx0FsyzI+ZIlNWWZ+WWPn2XOpZ2NzmTeXak+9jCMcK5FBJeFZiWxVEvNXGsMrgWRz0FoCfk+/Y1uW8SFLbMoyc8sWY+zFc7MXY3iFh5drLBozPhFE0Ih0JgJahYj8gcbmCp+tY8t9fMOJKEpsmzI+VIlNV2Z+WWPnxXOpF2NzlTdXSpVSYs1YiQwqCc9KZKuSmLuyGpurfMDWUER7EDyziG1ZxocssSnLzC9r7Lx6LvVqDK/y8Gr+81NOpGElMqgkPCuRrUpi/kpjeJUPWAmx9TC+PoIssS3L+JAlNmWZ+WWNsYvnZhdjeMLDkzL+1ZTxZicGlYRnJbJVScxdKcbwhA9YURl/OJErIFBFOk0BLVFEfk9j5+K51MXYnPDmNEUd28TJIdqBRI9ARDOQkD/QmJvy2apjWuMXWRYURQamhKcqsuVKzC2rxsTVc5+rMTflubXcY2u14N6I7UrGRyWxWcnMX2lsTvlsbT230FLCr1jEQJbwlEW2ZIn5ZY2dq+dSV2N4jYfXUxkfo4q/ChHtRqJHIqJZSMgd2IzNNT5Wu9bcVDs+DWJgSniqIluuxPyyxs6b5z43/t9Hm3HOvfkNCPXxtN8aAAA=
+        H4sIAAAAAAAAAI2UQWrDMBBF7+J1CNJIGknZ5xSlC0PcEohDiJ3SUnr3OrWE59sqaPuIyHvMxy/fzTC297E5aBuDduyIlFK7prueFmZn1p+vzSHulfXaeNbHsGvaj/c16rvTud38sG8/12h49BvU9rdLN0z/PBn0t/GrOby1l6H72W08bcGTwZMpMrnIwlOixRPo7ClR8gRU78kFz5DY/HK8P0oPw/YhKxGo94qCJ03xGFMgohy4os9ARH+BK1QdmJ3Ak9CTYyBtmaSoZMIUcFKVLLsCq5ctrJttxTW4MDdmqNTasH6OWVQCWyoRz5XAUiWy+srC5jigrIsxOiOnI5FQlTSZCpRFJar3LEzcq4pr+MLmPG6OlHPOWBVEIbAlEfHcCCxFIquu9IXNeYuy3k0fQGvldIAJWcBJVrIsC6xetrBzzzUnKWzO4+aMYucjWScqgS2ViOdKYKkSWX1lYXgBv63GaW+IyUpZyYQs4CQrWZYFVi0bCmMPVHGSUBhewOGZOB0u6OBlpWSiEnCqlCxXAvuv8vUX6rV2AXkIAAA=
     http_version: 
-  recorded_at: Thu, 22 Jun 2017 18:57:29 GMT
+  recorded_at: Thu, 22 Jun 2017 18:57:53 GMT
 - request:
     method: get
     uri: https://capture.context.com/hawkular/metrics/status
@@ -125,16 +125,16 @@ http_interactions:
       Content-Length:
       - '154'
       Date:
-      - Thu, 22 Jun 2017 18:57:29 GMT
+      - Thu, 22 Jun 2017 18:57:54 GMT
     body:
       encoding: ASCII-8BIT
       string: !binary |-
         H4sIAAAAAAAAAA3MvQ7CIBiF4XthFsJfK3Fr1aqDizTulH5NSIA2QF2M9y7TWZ7zftETSnI2a0gfZwGdkB6713i9oAN6hM1DgFhMcWvEb0i5biWU8JYwMrhofHX97nzBQ1oDvrmC9b1jFclmYlJZJSTMLadMLawRlgumjpOUojUgOVUL1MDZ5GzinEy97Rv6/QHfcrqrlgAAAA==
     http_version: 
-  recorded_at: Thu, 22 Jun 2017 18:57:30 GMT
+  recorded_at: Thu, 22 Jun 2017 18:57:54 GMT
 - request:
     method: get
-    uri: https://capture.context.com/hawkular/metrics/gauges/registry%2F476e8b1a-3a1a-11e7-a3eb-001a4a2314d7%2Fmemory%2Fusage/stats/?bucketDuration=20s&start=1498156842000
+    uri: https://capture.context.com/hawkular/metrics/gauges/registry%2F476e8b1a-3a1a-11e7-a3eb-001a4a2314d7%2Fmemory%2Fusage/stats/?bucketDuration=20s&end=1498156842000&start=1498156542000
     body:
       encoding: US-ASCII
       string: ''
@@ -167,13 +167,13 @@ http_interactions:
       Content-Type:
       - application/json
       Content-Length:
-      - '748'
+      - '310'
       Date:
-      - Thu, 22 Jun 2017 18:57:30 GMT
+      - Thu, 22 Jun 2017 18:57:55 GMT
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        H4sIAAAAAAAAAM2Zy2obQRBF/2XWwvSj+uV9viJkMWAlGDzGWHJICPn3KNF0PXoKUlppljpMo3ubQ9UIff41nc7z+3l69NCqT7lCcM4dpuPrE7F8Zcvz6/QYHpqPUKF+Kodp/v5tIMvx6XkeH1vmHwM5fSwjmZe3l+Pp8qWXL1/ezj+nx6/zy+n4+7CJmJWIdWXXk+f3D+1g3R5sblfdehwRMYwRawOQETsRERFixE4oIhJ7xKBEBMP1N0WtxtWKDyW14it1E6R3k/BvN0H+dZPE3k1Rq9V9RdxKXJz7//XTQ/xgkN2y86HyaghYM2JrMQS9FwFrLUwi0sFu0m3VLS5bLn0rVHF1rNWgBNmrE1EMITbrhKohsXdThPJORKwRckk8IiMUkcNrREbWiJyYI3pFXR8M1+8VqzwM3ZLjE18Q3o1g74YEuxGxd1PU8nlfERWJvWHh0kPsYBjVSsC3mSCiG/BtJgh1g1u3GcYREcMYsbkh4QpEwM4w3wooXgf2dIq/wbBr6SF+cLQqRx+z6IWEFyPYmyHBakTs3RSrghyNNZeaxMhnhEVkcI1IpEdkxB5R8Tdadm1UrIqDVblebkBoRYR3I9i7IcFuRMzdoqJWhH1FVCSOlq0bFbXiqNaduylqgdtVRFAkBsvWBUUt2KiVxTsPAdEsizceAtQr3/q+A4pVMIzGy++w6sVoJMLzEewBkWBCIvaIir9gWbigWJVGqxo0L68eieiGELt1Qt2QmLslxao0jsbWnJNjH4mIiBAjdkIRkdgjKv4my9ZNilppo9Z9uylqpXE03jmiInG2bN2sqJUHtYqLXr7MEWHdGFy7EendGDF3y4paGcaIcjL2zyKenIv9M0W7dSpmRd1s2bVZESoPQhXvQxPjlAhvRbD3QoLNiNi7KUIVt6uIRVG3WHZtUYQqo1B37qaoVfK+IioSF8vCLYpadV9qVUWtOk7FO0dUJK6Whav8W1GqMrW+/AFCRjlq6BgAAA==
+        H4sIAAAAAAAAAM2SQWrDMBBF76K1KfLYGo297ylKF4K4JRCFEDulpeTuCdiWRvIUtKu3Dwu/N/y3XzVO7jqpvm47qg2aFrTWlRrOh8hwZv54Vj28EDSNBXq1lXJfnxnxw+Ho8s+8+87IePM5cf5yGsbnT58/95fpR/Uf7jQO92qjiIIiLWx+OV1v0kPaPkSdtFlTAzXA2hiJbRzObYwsbZwUt606iSIkip0mgx0yRUaiIoezIiOLIifliiAotgXnR2FaiPtqE6aFlCl2DRElioFwxQhXxUCCYiTlisKIrS44vxWmZfNp/W+bFaZl21SxBjDJQAJggpEtfgGsehGU2wn7tVhyeWFVlnaTJQyK9F7sSFgtQcHRSdgSbbaEmHetJAkLMJStJKYF8lfb+wMGsQ64bQcAAA==
     http_version: 
-  recorded_at: Thu, 22 Jun 2017 18:57:30 GMT
+  recorded_at: Thu, 22 Jun 2017 18:57:55 GMT
 recorded_with: VCR 3.0.3

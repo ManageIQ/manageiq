@@ -12,7 +12,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
       Hawkular-Tenant:
       - default
       Authorization:
@@ -24,6 +24,10 @@ http_interactions:
       code: 200
       message: OK
     headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
       X-Powered-By:
       - Undertow/1
       Server:
@@ -31,22 +35,18 @@ http_interactions:
       Content-Type:
       - application/json
       Content-Length:
-      - '133'
+      - '154'
       Date:
-      - Thu, 22 Dec 2016 07:42:26 GMT
-      Set-Cookie:
-      - f5489604a2df0d7b0e8c7b7b0a17e360=eba450abe5a9ff4df0d24483d1024dfa; path=/;
-        HttpOnly; Secure
-      Cache-Control:
-      - private
+      - Thu, 22 Jun 2017 18:57:21 GMT
     body:
-      encoding: UTF-8
-      string: '{"MetricsService":"STARTED","Implementation-Version":"0.21.5.Final","Built-From-Git-SHA1":"e779588593f13224225356a94f1d8642fbccb30f"}'
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAA3MvQ7CIBiF4XthFsJfK3Fr1aqDizTulH5NSIA2QF2M9y7TWZ7zftETSnI2a0gfZwGdkB6713i9oAN6hM1DgFhMcWvEb0i5biWU8JYwMrhofHX97nzBQ1oDvrmC9b1jFclmYlJZJSTMLadMLawRlgumjpOUojUgOVUL1MDZ5GzinEy97Rv6/QHfcrqrlgAAAA==
     http_version: 
-  recorded_at: Thu, 22 Dec 2016 07:42:26 GMT
+  recorded_at: Thu, 22 Jun 2017 18:57:21 GMT
 - request:
     method: get
-    uri: https://capture.context.com/hawkular/metrics/counters/registry%2F8a36ac1d-bb99-11e6-8a18-001a4a2314d5%2Fcpu%2Fusage/stats/?bucketDuration=20s&start=1482306053000
+    uri: https://capture.context.com/hawkular/metrics/counters/registry%2F476e8b1a-3a1a-11e7-a3eb-001a4a2314d7%2Fcpu%2Fusage/stats/?bucketDuration=20s&start=1498156822000
     body:
       encoding: US-ASCII
       string: ''
@@ -56,7 +56,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
       Hawkular-Tenant:
       - default
       Authorization:
@@ -68,26 +68,26 @@ http_interactions:
       code: 200
       message: OK
     headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
-      Transfer-Encoding:
-      - chunked
       Content-Type:
       - application/json
+      Content-Length:
+      - '1040'
       Date:
-      - Thu, 22 Dec 2016 07:42:27 GMT
-      Set-Cookie:
-      - f5489604a2df0d7b0e8c7b7b0a17e360=eba450abe5a9ff4df0d24483d1024dfa; path=/;
-        HttpOnly; Secure
-      Cache-Control:
-      - private
+      - Thu, 22 Jun 2017 18:57:22 GMT
     body:
-      encoding: UTF-8
-      string: '[{"start":1482306053000,"end":1482306073000,"min":3.076499063124E12,"avg":3.076522023415E12,"median":3.076499063124E12,"max":3.076544983706E12,"sum":6.15304404683E12,"samples":2,"empty":false},{"start":1482392533000,"end":1482392553000,"min":3.286007338232E12,"avg":3.286007338232E12,"median":3.286007338232E12,"max":3.286007338232E12,"sum":3.286007338232E12,"samples":1,"empty":false}]'
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAI2ZXYtTMRRF/0ufB8nnOYnv/grxoeAoghVxRlHE/270Jmbv3gMefFu0w1rc3aTF1z8vT8/XL8+Xl7H0Fqu0lEIID5fHT283Kwe7ffg02IvcRaXFpq/6w+X67f2J3R7ffrieX3q7fj+xp6+3M7vePn98fBp8aNw+P/+4vHx3/fj0+OvhJFsMWSHZIll7ijmCLLEty/iQJTZlmfllxZBtkx3vfP7y1XpjO7+xB67sWUJOoWElMqgkPCuRrUpi7solRrKJZGuV2FVJltiWZXzIEpuyzPyyxth7cTySbgyv8/AkSOgqgsMjtisZH5XEZiUzf6UxvN5YtmoZ+9SEsshAlvCURbZkifllz2PXEP7/SPaL8I08PA05Bh2fXqgktisZH5XEZiUzb+U/MZLlU1Zzrqo9Z5RFBrKEpyyyJUvML3seuwbxPJLz8MZHlCvHJylGqRgJCBqRzkRAqxCRP9DYXOQDtpXSVLPg0yC2TRkfqsSmKzO3bDR2HpPjaURjc5E310OuKWXaHLFdyfioJDYrmfkrjc1FPmB7aTGmgVEWGcgSnrLIliwxv6yx8+i42feL4I2JhzfO+/E5EsVPCDGoJDwrka1KYu7KZAwv4QGbXoQ0gnII5Z/sHVuy9/iP7B37K3vP/LLG2JPjZt8vwjcKVzYdj672jpXIoJLwrES2Kon5K43hpUayMWrRlvCJINqqRA9TRFOUkN/T2Hn2XOrZ2FzmzUXJvRTpFQuRQSLh2YhsRRJzV2Zjc7mQbIolBFXFx0FsyzI+ZIlNWWZ+WWPn2XOpZ2NzmTeXak+9jCMcK5FBJeFZiWxVEvNXGsMrgWRz0FoCfk+/Y1uW8SFLbMoyc8sWY+zFc7MXY3iFh5drLBozPhFE0Ih0JgJahYj8gcbmCp+tY8t9fMOJKEpsmzI+VIlNV2Z+WWPnxXOpF2NzlTdXSpVSYs1YiQwqCc9KZKuSmLuyGpurfMDWUER7EDyziG1ZxocssSnLzC9r7Lx6LvVqDK/y8Gr+81NOpGElMqgkPCuRrUpi/kpjeJUPWAmx9TC+PoIssS3L+JAlNmWZ+WWNsYvnZhdjeMLDkzL+1ZTxZicGlYRnJbJVScxdKcbwhA9YURl/OJErIFBFOk0BLVFEfk9j5+K51MXYnPDmNEUd28TJIdqBRI9ARDOQkD/QmJvy2apjWuMXWRYURQamhKcqsuVKzC2rxsTVc5+rMTflubXcY2u14N6I7UrGRyWxWcnMX2lsTvlsbT230FLCr1jEQJbwlEW2ZIn5ZY2dq+dSV2N4jYfXUxkfo4q/ChHtRqJHIqJZSMgd2IzNNT5Wu9bcVDs+DWJgSniqIluuxPyyxs6b5z43/t9Hm3HOvfkNCPXxtN8aAAA=
     http_version: 
-  recorded_at: Thu, 22 Dec 2016 07:42:27 GMT
+  recorded_at: Thu, 22 Jun 2017 18:57:22 GMT
 - request:
     method: get
     uri: https://capture.context.com/hawkular/metrics/status
@@ -100,7 +100,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
       Hawkular-Tenant:
       - default
       Authorization:
@@ -112,6 +112,10 @@ http_interactions:
       code: 200
       message: OK
     headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
       X-Powered-By:
       - Undertow/1
       Server:
@@ -119,22 +123,18 @@ http_interactions:
       Content-Type:
       - application/json
       Content-Length:
-      - '133'
+      - '154'
       Date:
-      - Thu, 22 Dec 2016 07:42:27 GMT
-      Set-Cookie:
-      - f5489604a2df0d7b0e8c7b7b0a17e360=eba450abe5a9ff4df0d24483d1024dfa; path=/;
-        HttpOnly; Secure
-      Cache-Control:
-      - private
+      - Thu, 22 Jun 2017 18:57:23 GMT
     body:
-      encoding: UTF-8
-      string: '{"MetricsService":"STARTED","Implementation-Version":"0.21.5.Final","Built-From-Git-SHA1":"e779588593f13224225356a94f1d8642fbccb30f"}'
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAA3MvQ7CIBiF4XthFsJfK3Fr1aqDizTulH5NSIA2QF2M9y7TWZ7zftETSnI2a0gfZwGdkB6713i9oAN6hM1DgFhMcWvEb0i5biWU8JYwMrhofHX97nzBQ1oDvrmC9b1jFclmYlJZJSTMLadMLawRlgumjpOUojUgOVUL1MDZ5GzinEy97Rv6/QHfcrqrlgAAAA==
     http_version: 
-  recorded_at: Thu, 22 Dec 2016 07:42:27 GMT
+  recorded_at: Thu, 22 Jun 2017 18:57:23 GMT
 - request:
     method: get
-    uri: https://capture.context.com/hawkular/metrics/gauges/registry%2F8a36ac1d-bb99-11e6-8a18-001a4a2314d5%2Fmemory%2Fusage/stats/?bucketDuration=20s&start=1482306073000
+    uri: https://capture.context.com/hawkular/metrics/gauges/registry%2F476e8b1a-3a1a-11e7-a3eb-001a4a2314d7%2Fmemory%2Fusage/stats/?bucketDuration=20s&start=1498156842000
     body:
       encoding: US-ASCII
       string: ''
@@ -144,7 +144,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
       Hawkular-Tenant:
       - default
       Authorization:
@@ -156,26 +156,26 @@ http_interactions:
       code: 200
       message: OK
     headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
-      Transfer-Encoding:
-      - chunked
       Content-Type:
       - application/json
+      Content-Length:
+      - '748'
       Date:
-      - Thu, 22 Dec 2016 07:42:28 GMT
-      Set-Cookie:
-      - f5489604a2df0d7b0e8c7b7b0a17e360=eba450abe5a9ff4df0d24483d1024dfa; path=/;
-        HttpOnly; Secure
-      Cache-Control:
-      - private
+      - Thu, 22 Jun 2017 18:57:23 GMT
     body:
-      encoding: UTF-8
-      string: '[{"start":1482306073000,"end":1482306093000,"min":1.645568E8,"avg":1.645568E8,"median":1.645568E8,"max":1.645568E8,"sum":3.291136E8,"samples":2,"empty":false},{"start":1482392533000,"end":1482392553000,"min":1.62152448E8,"avg":1.62152448E8,"median":1.62152448E8,"max":1.62152448E8,"sum":1.62152448E8,"samples":1,"empty":false}]'
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAM2Zy2obQRBF/2XWwvSj+uV9viJkMWAlGDzGWHJICPn3KNF0PXoKUlppljpMo3ubQ9UIff41nc7z+3l69NCqT7lCcM4dpuPrE7F8Zcvz6/QYHpqPUKF+Kodp/v5tIMvx6XkeH1vmHwM5fSwjmZe3l+Pp8qWXL1/ezj+nx6/zy+n4+7CJmJWIdWXXk+f3D+1g3R5sblfdehwRMYwRawOQETsRERFixE4oIhJ7xKBEBMP1N0WtxtWKDyW14it1E6R3k/BvN0H+dZPE3k1Rq9V9RdxKXJz7//XTQ/xgkN2y86HyaghYM2JrMQS9FwFrLUwi0sFu0m3VLS5bLn0rVHF1rNWgBNmrE1EMITbrhKohsXdThPJORKwRckk8IiMUkcNrREbWiJyYI3pFXR8M1+8VqzwM3ZLjE18Q3o1g74YEuxGxd1PU8nlfERWJvWHh0kPsYBjVSsC3mSCiG/BtJgh1g1u3GcYREcMYsbkh4QpEwM4w3wooXgf2dIq/wbBr6SF+cLQqRx+z6IWEFyPYmyHBakTs3RSrghyNNZeaxMhnhEVkcI1IpEdkxB5R8Tdadm1UrIqDVblebkBoRYR3I9i7IcFuRMzdoqJWhH1FVCSOlq0bFbXiqNaduylqgdtVRFAkBsvWBUUt2KiVxTsPAdEsizceAtQr3/q+A4pVMIzGy++w6sVoJMLzEewBkWBCIvaIir9gWbigWJVGqxo0L68eieiGELt1Qt2QmLslxao0jsbWnJNjH4mIiBAjdkIRkdgjKv4my9ZNilppo9Z9uylqpXE03jmiInG2bN2sqJUHtYqLXr7MEWHdGFy7EendGDF3y4paGcaIcjL2zyKenIv9M0W7dSpmRd1s2bVZESoPQhXvQxPjlAhvRbD3QoLNiNi7KUIVt6uIRVG3WHZtUYQqo1B37qaoVfK+IioSF8vCLYpadV9qVUWtOk7FO0dUJK6Whav8W1GqMrW+/AFCRjlq6BgAAA==
     http_version: 
-  recorded_at: Thu, 22 Dec 2016 07:42:28 GMT
+  recorded_at: Thu, 22 Jun 2017 18:57:23 GMT
 - request:
     method: get
     uri: https://capture.context.com/hawkular/metrics/status
@@ -188,7 +188,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
       Hawkular-Tenant:
       - default
       Authorization:
@@ -200,6 +200,10 @@ http_interactions:
       code: 200
       message: OK
     headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
       X-Powered-By:
       - Undertow/1
       Server:
@@ -207,22 +211,18 @@ http_interactions:
       Content-Type:
       - application/json
       Content-Length:
-      - '133'
+      - '154'
       Date:
-      - Thu, 22 Dec 2016 07:42:28 GMT
-      Set-Cookie:
-      - f5489604a2df0d7b0e8c7b7b0a17e360=eba450abe5a9ff4df0d24483d1024dfa; path=/;
-        HttpOnly; Secure
-      Cache-Control:
-      - private
+      - Thu, 22 Jun 2017 18:57:24 GMT
     body:
-      encoding: UTF-8
-      string: '{"MetricsService":"STARTED","Implementation-Version":"0.21.5.Final","Built-From-Git-SHA1":"e779588593f13224225356a94f1d8642fbccb30f"}'
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAA3MvQ7CIBiF4XthFsJfK3Fr1aqDizTulH5NSIA2QF2M9y7TWZ7zftETSnI2a0gfZwGdkB6713i9oAN6hM1DgFhMcWvEb0i5biWU8JYwMrhofHX97nzBQ1oDvrmC9b1jFclmYlJZJSTMLadMLawRlgumjpOUojUgOVUL1MDZ5GzinEy97Rv6/QHfcrqrlgAAAA==
     http_version: 
-  recorded_at: Thu, 22 Dec 2016 07:42:28 GMT
+  recorded_at: Thu, 22 Jun 2017 18:57:24 GMT
 - request:
     method: get
-    uri: https://capture.context.com/hawkular/metrics/counters/pod%2F8a36ac1d-bb99-11e6-8a18-001a4a2314d5%2Fnetwork%2Ftx/stats/?bucketDuration=20s&start=1482306053000
+    uri: https://capture.context.com/hawkular/metrics/counters/pod%2F476e8b1a-3a1a-11e7-a3eb-001a4a2314d7%2Fnetwork%2Ftx/stats/?bucketDuration=20s&start=1498156822000
     body:
       encoding: US-ASCII
       string: ''
@@ -232,7 +232,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
       Hawkular-Tenant:
       - default
       Authorization:
@@ -244,26 +244,26 @@ http_interactions:
       code: 200
       message: OK
     headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
-      Transfer-Encoding:
-      - chunked
       Content-Type:
       - application/json
+      Content-Length:
+      - '967'
       Date:
-      - Thu, 22 Dec 2016 07:42:30 GMT
-      Set-Cookie:
-      - f5489604a2df0d7b0e8c7b7b0a17e360=eba450abe5a9ff4df0d24483d1024dfa; path=/;
-        HttpOnly; Secure
-      Cache-Control:
-      - private
+      - Thu, 22 Jun 2017 18:57:25 GMT
     body:
-      encoding: UTF-8
-      string: '[{"start":1482306053000,"end":1482306073000,"min":1.243865635E9,"avg":1.243872246E9,"median":1.243865635E9,"max":1.243878857E9,"sum":2.487744492E9,"samples":2,"empty":false},{"start":1482392533000,"end":1482392553000,"min":1.301566029E9,"avg":1.301566029E9,"median":1.301566029E9,"max":1.301566029E9,"sum":1.301566029E9,"samples":1,"empty":false}]'
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAI2Y2WobURBE/0XPJtx98a+EPAisBINljJeQEPLvGfW1qnpQQ/rxNDPo1Lh8W6Ovfw5v78fX98N9LHPE2kZKIYS7w+n5gbOyZufH58N9qaHU9mXD488fGs+nh8fj7oLz8ZfGt4/zDo/nl6fT2/Yp26edX95/H+6/H5/eTn/vbpyK4dS0Uw8hZToB4cSJOAGXE9Hv1Ayn8Tlbd76/flg3jtsbZ9BhxqglMAwQYTiRMMAVhugOc/38nVNSTjX0WCKciFcnNbk4EcVJod/JKOIsjgc8jbZM3ZaaalcNJiIMJxIGuMIQ/WGMtsyhnUqJUzkB4cSJOAGXE9HvdFvEy//Bfx8wL9I37trS0miqLUCE4UTCAFcYojcMPn/npI+tOmJplU5AOHEiTsDlRPQ73Raxh+Z5wLdt6UG3pW1XRB4RxGsYNbmEIUoYhf4wRluiPrZa3E4RPmAinDgRJ+ByIrqdolHEmBwPOBptibotLfcUBsMAEYYTCQNcYYj+MEZboj62Wm15qD86EE6ciBNwORH9TkYRo2PJ8SJ1Y9q1pZc6C8MAEYYTCQNcYYjuMMloS9LHVptz5E4nIJw4ESfgciL6nYwiJseS40X6Rt2WreNFfYsgXsOoySUMUcIo9Icx2pL0sdXz9lWOS44IJ07ECbiciH4no4jZs+Sy0Zas29JLzjUxDBBhOJEwwBWG6A6TjbZkfWz1NrbvJnQCwokTcQIuJ6LfyShi9iy5bLQl79oyWm+TYYAIw4mEAa4wRH8Yoy1FH1sjpqz2AvHqpCYXJ6I4KXQ7FaOIxbPkitGWotsyctwCMwwQYTiRMMAVhugPY7Sl6GNr1LC9v9AJCCdOxAm4nIh+J6OIxbPkitGWumtLy6moMECE4UTCAFcYojtMNdpS9bE1xgiJi5cIJ07ECbiciH4no4jVs+Sq0Zaq2zJD2N6sEIZ4DaMmlzBECaPQH8ZoS9XH1kwhD778EOHEiTgBlxPR72QUsXmWXDPa0nRbZim984cVIsJwImGAKwzRHaYZbWn62JqtZPX6ToQTJ+IEXE5Ev5NRxOZZcs1oS9u1ZXux0g0GIgwnEga4whD9YYy2dH1szbm9v3DxEuHEiTgBlxPR7dSNInbPkutGW7puSwyxjMmVrfgaR48ueRRLIM3+REZletuJ5TlzVWJginG0xMCfYmS/mFHJ7ll33ejNCLtEdfuCoxOBmYijlQj8mYjsTjSM8oy0E+sxzqDEwBTjaImBP8XIfjGjnMOz+IwfvPswzptv/wAeEtoVvxcAAA==
     http_version: 
-  recorded_at: Thu, 22 Dec 2016 07:42:30 GMT
+  recorded_at: Thu, 22 Jun 2017 18:57:25 GMT
 - request:
     method: get
     uri: https://capture.context.com/hawkular/metrics/status
@@ -276,7 +276,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
       Hawkular-Tenant:
       - default
       Authorization:
@@ -288,6 +288,10 @@ http_interactions:
       code: 200
       message: OK
     headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
       X-Powered-By:
       - Undertow/1
       Server:
@@ -295,22 +299,18 @@ http_interactions:
       Content-Type:
       - application/json
       Content-Length:
-      - '133'
+      - '154'
       Date:
-      - Thu, 22 Dec 2016 07:42:30 GMT
-      Set-Cookie:
-      - f5489604a2df0d7b0e8c7b7b0a17e360=eba450abe5a9ff4df0d24483d1024dfa; path=/;
-        HttpOnly; Secure
-      Cache-Control:
-      - private
+      - Thu, 22 Jun 2017 18:57:26 GMT
     body:
-      encoding: UTF-8
-      string: '{"MetricsService":"STARTED","Implementation-Version":"0.21.5.Final","Built-From-Git-SHA1":"e779588593f13224225356a94f1d8642fbccb30f"}'
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAA3MvQ7CIBiF4XthFsJfK3Fr1aqDizTulH5NSIA2QF2M9y7TWZ7zftETSnI2a0gfZwGdkB6713i9oAN6hM1DgFhMcWvEb0i5biWU8JYwMrhofHX97nzBQ1oDvrmC9b1jFclmYlJZJSTMLadMLawRlgumjpOUojUgOVUL1MDZ5GzinEy97Rv6/QHfcrqrlgAAAA==
     http_version: 
-  recorded_at: Thu, 22 Dec 2016 07:42:30 GMT
+  recorded_at: Thu, 22 Jun 2017 18:57:26 GMT
 - request:
     method: get
-    uri: https://capture.context.com/hawkular/metrics/counters/pod%2F8a36ac1d-bb99-11e6-8a18-001a4a2314d5%2Fnetwork%2Frx/stats/?bucketDuration=20s&start=1482306053000
+    uri: https://capture.context.com/hawkular/metrics/counters/pod%2F476e8b1a-3a1a-11e7-a3eb-001a4a2314d7%2Fnetwork%2Frx/stats/?bucketDuration=20s&start=1498156822000
     body:
       encoding: US-ASCII
       string: ''
@@ -320,7 +320,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      - rest-client/2.0.2 (linux-gnu x86_64) ruby/2.4.1p111
       Hawkular-Tenant:
       - default
       Authorization:
@@ -332,24 +332,24 @@ http_interactions:
       code: 200
       message: OK
     headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
-      Transfer-Encoding:
-      - chunked
       Content-Type:
       - application/json
+      Content-Length:
+      - '955'
       Date:
-      - Thu, 22 Dec 2016 07:42:31 GMT
-      Set-Cookie:
-      - f5489604a2df0d7b0e8c7b7b0a17e360=eba450abe5a9ff4df0d24483d1024dfa; path=/;
-        HttpOnly; Secure
-      Cache-Control:
-      - private
+      - Thu, 22 Jun 2017 18:57:27 GMT
     body:
-      encoding: UTF-8
-      string: '[{"start":1482306053000,"end":1482306073000,"min":1.361938934E9,"avg":1.36194202E9,"median":1.361938934E9,"max":1.361945106E9,"sum":2.72388404E9,"samples":2,"empty":false},{"start":1482392533000,"end":1482392553000,"min":1.389449398E9,"avg":1.389449398E9,"median":1.389449398E9,"max":1.389449398E9,"sum":1.389449398E9,"samples":1,"empty":false}]'
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAI2Y22rcQBBE/2WfQ5j7jPwrIQ8LcYLBa4wvISHk3yNPr6p62Ib042kkdEqq7TH+8uf0+nZ+eTvdxbKNWNtIKYTw6XT/9I2zIrPLw9PpLqVWSvq84/nnD42X+28P5+WCy/mXxtf3y4Lny/Pj/ev+lP1pl+e336e77+fH1/u/n26ciuHUtFNuY2t0AsKJk+kEFCei36kZTuM6kzvfXt6tG8ftjVvQYUodRYUBIgwnMwxQwhDdYY7nL05JO9Uah/roQDhxMp2A4kT0OxlF3IrjBW9GW7alLa3UFBgGiDCczDBACUP0hzHasg3t1POo6qMD4cTJdAKKE9HvdFvEHsL/XzAv0jcubRk5NBUGiDCczDBACUP0hsHzF6dlbW2ptEEnIJw4mU5AcSL6nW6L2EPzvODbtvSg25JDaarBxCOMmnyEIc4wCv1hjLZEvbZyjC1GOgHhxMl0AooT0e0UjSLG5HjB0WhL1G3JKeRQGQaIMJzMMEAJQ/SHMdoS9drKOaSiXjAQTpxMJ6A4Ef1ORhGj45DjRerGtLQljxG6CnMgw2AiYQ68hgG6wySjLUmvrVxj25QTEE6cTCegOBH9TkYRk+OQ40X6xqUtdYQtqzAHMgwmEubAaxigP4zRlrSsrR6i/uhAOHEynYDiRPQ7GUXMnkMuG23JS1t6rkG9YCDDYCJhDryGAbrDZKMteVlbo+Ww0QkIJ06mE1CciH4no4jZc8hloy15actWQ1QvGIgwnMwwQAlD9Icx2lL02ir7MbhxBxMPJzX5cCJOJ4Vup2IUsXgOuWK0pei2lNiH2ndEhOFkhgFKGKI/jNGWotdW2X+w6pAjwomT6QQUJ6LfyShi8RxyxWhLXdqSS1Z/EhERhpMZBihhiO4w1WhL1WurlNY7/7IhwomT6QQUJ6LfyShi9Rxy1WhLXdpS9/WjGgxEGE5mGKCEIfrDGG2pem2Vtm829dGBcOJkOgHFieh3MorYPIdcM9rSlrb0mgcPFCLCcDLDACUM0R2mGW1py9oatQ/10YFw4mQ6AcWJ6Hcyitg8h1wz2tKWtowtRh3mQIbBRMIceA0D9Icx2tL12tp3SFa/KuLhpCYfTsTppNDt1I0ids8h1422dN2WGmPqKgwQYTiZYYAShugPY7Sl67VVUwmBK4IIJ06mE1CciH4no4jdc8h1oy1jaUtO+4xhgAjDyQwDlDBEd5hhtGWkxWkbPSunA+mEiTgdeHUC+p2MIg7PIWf8c7sPY7d8/QcwC+QBqxcAAA==
     http_version: 
-  recorded_at: Thu, 22 Dec 2016 07:42:31 GMT
+  recorded_at: Thu, 22 Jun 2017 18:57:27 GMT
 recorded_with: VCR 3.0.3
