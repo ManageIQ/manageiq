@@ -261,6 +261,9 @@
     :subcollections:
     - :request_tasks
     :collection_actions:
+      :get:
+      - :name: read
+        :identifier: miq_request_show_list
       :post:
       - :name: create
       - :name: approve
@@ -270,6 +273,9 @@
       - :name: edit
         :identifier: miq_request_edit
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: miq_request_show
       :post:
       - :name: approve
         :identifier: miq_request_approval

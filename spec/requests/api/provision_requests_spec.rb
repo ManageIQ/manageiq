@@ -42,6 +42,72 @@ describe "Provision Requests API" do
       }
     end
 
+    it "filters the list of provision requests by requester" do
+      other_user = FactoryGirl.create(:user)
+      _provision_request1 = FactoryGirl.create(:miq_provision_request, :requester => other_user)
+      provision_request2 = FactoryGirl.create(:miq_provision_request, :requester => @user)
+      api_basic_authorize collection_action_identifier(:provision_requests, :read, :get)
+
+      run_get provision_requests_url
+
+      expected = {
+        "count"     => 2,
+        "subcount"  => 1,
+        "resources" => a_collection_containing_exactly(
+          "href" => a_string_matching(provision_requests_url(provision_request2.id)),
+        )
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it "lists all the provision requests if you are admin" do
+      @group.miq_user_role = @role = FactoryGirl.create(:miq_user_role, :role => "administrator")
+      other_user = FactoryGirl.create(:user)
+      provision_request1 = FactoryGirl.create(:miq_provision_request, :requester => other_user)
+      provision_request2 = FactoryGirl.create(:miq_provision_request, :requester => @user)
+      api_basic_authorize collection_action_identifier(:provision_requests, :read, :get)
+
+      run_get provision_requests_url
+
+      expected = {
+        "count"     => 2,
+        "subcount"  => 2,
+        "resources" => a_collection_containing_exactly(
+          {"href" => a_string_matching(provision_requests_url(provision_request1.id))},
+          {"href" => a_string_matching(provision_requests_url(provision_request2.id))},
+        )
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it "restricts access to provision requests to requester" do
+      other_user = FactoryGirl.create(:user)
+      provision_request = FactoryGirl.create(:miq_provision_request, :requester => other_user)
+      api_basic_authorize action_identifier(:provision_requests, :read, :resource_actions, :get)
+
+      run_get provision_requests_url(provision_request.id)
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "an admin can see another user's request" do
+      @group.miq_user_role = @role = FactoryGirl.create(:miq_user_role, :role => "administrator")
+      other_user = FactoryGirl.create(:user)
+      provision_request = FactoryGirl.create(:miq_provision_request, :requester => other_user)
+      api_basic_authorize action_identifier(:provision_requests, :read, :resource_actions, :get)
+
+      run_get provision_requests_url(provision_request.id)
+
+      expected = {
+        "id"   => provision_request.id,
+        "href" => a_string_matching(provision_requests_url(provision_request.id))
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
     it "rejects requests without appropriate role" do
       api_basic_authorize
 
@@ -153,6 +219,10 @@ describe "Provision Requests API" do
     let(:provreq2)      { FactoryGirl.create(:miq_provision_request, provreqbody) }
     let(:provreq1_url)  { provision_requests_url(provreq1.id) }
     let(:provreq2_url)  { provision_requests_url(provreq2.id) }
+
+    before do
+      @group.miq_user_role = @role = FactoryGirl.create(:miq_user_role, :role => "administrator")
+    end
 
     it "supports approving a request" do
       api_basic_authorize collection_action_identifier(:provision_requests, :approve)

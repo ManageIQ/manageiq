@@ -50,7 +50,7 @@ describe "Rest API Collections" do
     end
 
     it "query Automation Requests" do
-      FactoryGirl.create(:automation_request)
+      FactoryGirl.create(:automation_request, :requester => @user)
       test_collection_query(:automation_requests, automation_requests_url, AutomationRequest)
     end
 

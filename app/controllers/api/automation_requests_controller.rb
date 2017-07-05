@@ -40,5 +40,16 @@ module Api
     rescue => err
       action_result(false, err.to_s)
     end
+
+    def find_automation_requests(id)
+      klass = collection_class(:requests)
+      return klass.find(id) if User.current_user.admin_user?
+      klass.find_by!(:requester => User.current_user, :id => id)
+    end
+
+    def automation_requests_search_conditions
+      return {} if User.current_user.admin_user?
+      {:requester => User.current_user}
+    end
   end
 end
