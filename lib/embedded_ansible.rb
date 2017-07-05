@@ -64,7 +64,7 @@ class EmbeddedAnsible
     if MiqEnvironment::Command.is_container?
       container_stop
     else
-      services.each { |service| LinuxAdmin::Service.new(service).stop }
+      appliance_stop
     end
   end
 
@@ -72,7 +72,7 @@ class EmbeddedAnsible
     if MiqEnvironment::Command.is_container?
       container_stop
     else
-      services.each { |service| LinuxAdmin::Service.new(service).stop.disable }
+      appliance_disable
     end
   end
 
@@ -116,6 +116,16 @@ class EmbeddedAnsible
     raise "EmbeddedAnsible service is not responding after setup"
   end
   private_class_method :appliance_start
+
+  def self.appliance_stop
+    services.each { |service| LinuxAdmin::Service.new(service).stop }
+  end
+  private_class_method :appliance_stop
+
+  def self.appliance_disable
+    services.each { |service| LinuxAdmin::Service.new(service).stop.disable }
+  end
+  private_class_method :appliance_disable
 
   def self.container_start
     miq_database.set_ansible_admin_authentication(:password => ENV["ANSIBLE_ADMIN_PASSWORD"])
