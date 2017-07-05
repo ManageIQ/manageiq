@@ -36,6 +36,7 @@ gem "gettext_i18n_rails",             "~>1.7.2"
 gem "gettext_i18n_rails_js",          "~>1.1.0"
 gem "hamlit",                         "~>2.7.0"
 gem "inifile",                        "~>3.0",         :require => false
+gem "kubeclient",                     "~>2.4.0",       :require => false # For scaling pods at runtime
 gem "manageiq-api-client",            "~>0.1.0",       :require => false
 gem "manageiq-network_discovery",     "~>0.1.1",       :require => false
 gem "mime-types",                     "~>2.6.1",       :path => "mime-types-redirector"

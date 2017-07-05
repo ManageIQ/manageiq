@@ -12,6 +12,7 @@ class EmbeddedAnsible
   HTTPS_PORT             = 54_322
   WAIT_FOR_ANSIBLE_SLEEP = 1.second
   TOWER_VERSION_FILE     = "/var/lib/awx/.tower_version".freeze
+  ANSIBLE_DC_NAME        = "manageiq-ansible".freeze
 
   def self.available?
     return true if MiqEnvironment::Command.is_container?
@@ -52,21 +53,15 @@ class EmbeddedAnsible
   end
 
   def self.start
-    if MiqEnvironment::Command.is_container?
-      container_start
-    else
-      appliance_start
-    end
+    MiqEnvironment::Command.is_container? ? container_start : appliance_start
   end
 
   def self.stop
-    return if MiqEnvironment::Command.is_container?
-    services.each { |service| LinuxAdmin::Service.new(service).stop }
+    MiqEnvironment::Command.is_container? ? container_stop : appliance_stop
   end
 
   def self.disable
-    return if MiqEnvironment::Command.is_container?
-    services.each { |service| LinuxAdmin::Service.new(service).stop.disable }
+    MiqEnvironment::Command.is_container? ? container_stop : appliance_disable
   end
 
   def self.services
@@ -110,8 +105,19 @@ class EmbeddedAnsible
   end
   private_class_method :appliance_start
 
+  def self.appliance_stop
+    services.each { |service| LinuxAdmin::Service.new(service).stop }
+  end
+  private_class_method :appliance_stop
+
+  def self.appliance_disable
+    services.each { |service| LinuxAdmin::Service.new(service).stop.disable }
+  end
+  private_class_method :appliance_disable
+
   def self.container_start
     miq_database.set_ansible_admin_authentication(:password => ENV["ANSIBLE_ADMIN_PASSWORD"])
+    ContainerOrchestrator.new.scale(ANSIBLE_DC_NAME, 1)
 
     loop do
       break if alive?
@@ -121,6 +127,10 @@ class EmbeddedAnsible
     end
   end
   private_class_method :container_start
+
+  def self.container_stop
+    ContainerOrchestrator.new.scale(ANSIBLE_DC_NAME, 0)
+  end
 
   def self.run_setup_script(exclude_tags)
     json_extra_vars = {
