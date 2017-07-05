@@ -23,14 +23,16 @@ module Api
       end
 
       def delete_resource_snapshots(parent, type, id, _data)
-        raise parent.unsupported_reason(:remove_snapshot) unless parent.supports_remove_snapshot?
         snapshot = resource_search(id, type, collection_class(type))
+        begin
+          raise parent.unsupported_reason(:remove_snapshot) unless parent.supports_remove_snapshot?
 
-        message = "Deleting snapshot #{snapshot.name} for #{snapshot_ident(parent)}"
-        task_id = queue_object_action(parent, message, :method_name => "remove_snapshot", :args => [id])
-        action_result(true, message, :task_id => task_id)
-      rescue => e
-        action_result(false, e.to_s)
+          message = "Deleting snapshot #{snapshot.name} for #{snapshot_ident(parent)}"
+          task_id = queue_object_action(parent, message, :method_name => "remove_snapshot", :args => [id])
+          action_result(true, message, :task_id => task_id)
+        rescue => e
+          action_result(false, e.to_s)
+        end
       end
       alias snapshots_delete_resource delete_resource_snapshots
 
