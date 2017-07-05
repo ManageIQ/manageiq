@@ -274,7 +274,7 @@ module MiqProvisionQuotaMixin
     prov_ids = []
     MiqQueue
       .where(:method_name => 'deliver', :state => %w(ready dequeue), :class_name => 'MiqAeEngine')
-      .where("task_id like ?", '%miq_provision_%')
+      .where("tracking_label like ?", '%miq_provision_%')
       .each do |q|
         if q.args
           args = q.args.first

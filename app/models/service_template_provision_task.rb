@@ -94,12 +94,12 @@ class ServiceTemplateProvisionTask < MiqRequestTask
 
   def queue_post_provision
     MiqQueue.put(
-      :class_name   => self.class.name,
-      :instance_id  => id,
-      :method_name  => "do_post_provision",
-      :deliver_on   => 1.minutes.from_now.utc,
-      :task_id      => "#{self.class.name.underscore}_#{id}",
-      :miq_callback => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
+      :class_name     => self.class.name,
+      :instance_id    => id,
+      :method_name    => "do_post_provision",
+      :deliver_on     => 1.minutes.from_now.utc,
+      :tracking_label => "#{self.class.name.underscore}_#{id}",
+      :miq_callback   => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
     )
   end
 
@@ -145,12 +145,12 @@ class ServiceTemplateProvisionTask < MiqRequestTask
 
       zone ||= source.respond_to?(:my_zone) ? source.my_zone : MiqServer.my_zone
       MiqQueue.put(
-        :class_name  => 'MiqAeEngine',
-        :method_name => 'deliver',
-        :args        => [args],
-        :role        => 'automate',
-        :zone        => options.fetch(:miq_zone, zone),
-        :task_id     => "#{self.class.name.underscore}_#{id}"
+        :class_name     => 'MiqAeEngine',
+        :method_name    => 'deliver',
+        :args           => [args],
+        :role           => 'automate',
+        :zone           => options.fetch(:miq_zone, zone),
+        :tracking_label => "#{self.class.name.underscore}_#{id}"
       )
       update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
     else

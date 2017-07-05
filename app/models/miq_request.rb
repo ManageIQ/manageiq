@@ -390,14 +390,14 @@ class MiqRequest < ApplicationRecord
 
     # self.create_request_tasks
     MiqQueue.put(
-      :class_name  => self.class.name,
-      :instance_id => id,
-      :method_name => "create_request_tasks",
-      :zone        => options.fetch(:miq_zone, my_zone),
-      :role        => my_role,
-      :task_id     => "#{self.class.name.underscore}_#{id}",
-      :msg_timeout => 3600,
-      :deliver_on  => deliver_on
+      :class_name     => self.class.name,
+      :instance_id    => id,
+      :method_name    => "create_request_tasks",
+      :zone           => options.fetch(:miq_zone, my_zone),
+      :role           => my_role,
+      :tracking_label => "#{self.class.name.underscore}_#{id}",
+      :msg_timeout    => 3600,
+      :deliver_on     => deliver_on
     )
   end
 
