@@ -111,7 +111,6 @@ describe "Roles API" do
 
       run_get "#{roles_url}/#{role_id}/", :expand => "features"
 
-      expect(MiqUserRole.exists?(role_id)).to be_truthy
       role = MiqUserRole.find(role_id)
 
       sample_role1['features'].each do |feature|
@@ -128,7 +127,6 @@ describe "Roles API" do
       expect_result_resources_to_include_keys("results", expected_attributes)
 
       role_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
-      expect(MiqUserRole.exists?(role_id)).to be_truthy
       role = MiqUserRole.find(role_id)
       sample_role1['features'].each do |feature|
         expect(role.allows?(feature)).to be_truthy
@@ -146,8 +144,6 @@ describe "Roles API" do
       results = response.parsed_body["results"]
       r1_id = ApplicationRecord.uncompress_id(results.first["id"])
       r2_id = ApplicationRecord.uncompress_id(results.second["id"])
-      expect(MiqUserRole.exists?(r1_id)).to be_truthy
-      expect(MiqUserRole.exists?(r2_id)).to be_truthy
 
       role1 = MiqUserRole.find(r1_id)
       role2 = MiqUserRole.find(r2_id)

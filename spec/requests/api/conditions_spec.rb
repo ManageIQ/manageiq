@@ -74,7 +74,6 @@ describe "Conditions API" do
 
       condition_id = ApplicationRecord.uncompress_id(response.parsed_body["results"].first["id"])
 
-      expect(Condition.exists?(condition_id)).to be_truthy
       expect(Condition.find(condition_id).expression.class).to eq(MiqExpression)
     end
 
