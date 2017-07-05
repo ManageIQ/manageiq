@@ -1,4 +1,3 @@
-
 shared_examples_for "ansible refresher" do |ansible_provider, manager_class, ems_type, cassette_path|
   # To re-record cassettes or to add cassettes you can add another inner `VCR.use_cassette` block to the
   # 'will perform a full refresh' example. When running specs, new requests are recorded to the innermost cassette and
