@@ -12,8 +12,8 @@ class MiqScheduleWorker::Jobs
   end
 
   def miq_server_worker_log_status
-    queue_work(:class_name  => "MiqServer", :method_name => "log_status", :tracking_label => "log_status", :server_guid => MiqServer.my_guid, :priority => MiqQueue::HIGH_PRIORITY)
-    queue_work(:class_name  => "MiqWorker", :method_name => "log_status_all", :tracking_label => "log_status", :server_guid => MiqServer.my_guid, :priority => MiqQueue::HIGH_PRIORITY)
+    queue_work(:class_name  => "MiqServer", :method_name => "log_status",     :task_id => "log_status", :server_guid => MiqServer.my_guid, :priority => MiqQueue::HIGH_PRIORITY)
+    queue_work(:class_name  => "MiqWorker", :method_name => "log_status_all", :task_id => "log_status", :server_guid => MiqServer.my_guid, :priority => MiqQueue::HIGH_PRIORITY)
   end
 
   def vmdb_database_connection_log_statistics
@@ -62,7 +62,7 @@ class MiqScheduleWorker::Jobs
 
   def job_proxy_dispatcher_dispatch
     if JobProxyDispatcher.waiting?
-      queue_work_on_each_zone(:class_name => "JobProxyDispatcher", :method_name => "dispatch", :tracking_label => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY, :role => "smartstate")
+      queue_work_on_each_zone(:class_name => "JobProxyDispatcher", :method_name => "dispatch", :task_id => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY, :role => "smartstate")
     end
   end
 
