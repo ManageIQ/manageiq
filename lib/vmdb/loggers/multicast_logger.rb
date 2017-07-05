@@ -23,6 +23,10 @@ class MulticastLogger < Logger
     true
   end
 
+  def reopen(_logdev = nil)
+    raise NotImplementedError, "#{self.class.name} should not be reopened since it is backed by multiple loggers."
+  end
+
   private
 
   def method_missing(*args, &block)
