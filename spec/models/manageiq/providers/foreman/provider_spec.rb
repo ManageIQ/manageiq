@@ -52,4 +52,15 @@ describe ManageIQ::Providers::Foreman::Provider do
       expect(CustomizationScript.count).to   eq(0)
     end
   end
+
+  describe "#save" do
+    it "will update the name for the manager" do
+      provider = FactoryGirl.create(:provider_foreman, :zone => FactoryGirl.create(:zone), :name => 'Old Name')
+      expect(provider.configuration_manager.name).to eq('Old Name Configuration Manager')
+
+      provider.update(:name => 'New Name')
+      expect(provider.configuration_manager.name).to eq('New Name Configuration Manager')
+      expect(provider.provisioning_manager.name).to eq('New Name Provisioning Manager')
+    end
+  end
 end
