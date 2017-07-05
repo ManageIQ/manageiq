@@ -2381,7 +2381,7 @@
       - :name: reset
         :identifier: vm_reset
       - :name: retire
-        :identifier: vm_retire
+        :identifier: vm_retire_now
       - :name: set_owner
         :identifier: vm_edit
       - :name: set_ownership
@@ -2430,7 +2430,7 @@
       - :name: reset
         :identifier: vm_reset
       - :name: retire
-        :identifier: vm_retire
+        :identifier: vm_retire_now
       - :name: delete
         :identifier: vm_delete
       - :name: set_owner
