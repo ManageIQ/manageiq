@@ -53,27 +53,15 @@ class EmbeddedAnsible
   end
 
   def self.start
-    if MiqEnvironment::Command.is_container?
-      container_start
-    else
-      appliance_start
-    end
+    MiqEnvironment::Command.is_container? ? container_start : appliance_start
   end
 
   def self.stop
-    if MiqEnvironment::Command.is_container?
-      container_stop
-    else
-      appliance_stop
-    end
+    MiqEnvironment::Command.is_container? ? container_stop : appliance_stop
   end
 
   def self.disable
-    if MiqEnvironment::Command.is_container?
-      container_stop
-    else
-      appliance_disable
-    end
+    MiqEnvironment::Command.is_container? ? container_stop : appliance_disable
   end
 
   def self.services
