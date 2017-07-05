@@ -185,15 +185,17 @@ class MiqQueue < ApplicationRecord
   end
 
   # options:
+  #   :service
+  #   :affinity    (optional)
+  #   :expires_on  (optional, timestamp in second)
+  #   :deliver_on  (optional, timestamp in second)
+  #   :priority    (optional, 0 - 9)
   #   :class_name
   #   :method_name
   #   :instance_id (optional)
   #   :args        (optional, an array)
-  #   :expires_on  (optional, timestamp in second)
-  #   :deliver_on  (optional, timestamp in second)
-  #   :priority    (optional, 0 - 9)
-  #   :service
-  #   :resource    (optional)
+  #
+  # service is used to decide queue name.
   def self.put_background_job(client = nil, options)
     assert_options(options, [:class_name, :method_name, :service])
 
@@ -211,7 +213,7 @@ class MiqQueue < ApplicationRecord
 
   # options:
   #   :service
-  #   :resource (optional)
+  #   :affinity (optional)
   def self.subscribe_background_job(client, options)
     assert_options(options, [:service])
 
@@ -248,12 +250,15 @@ class MiqQueue < ApplicationRecord
   end
 
   # options:
+  #   :service
+  #   :affinity (optional)
   #   :message
   #   :sender (optional)
   #   :message_type (optional)
-  #   :service
-  #   :resource (optional)
-  #   :other keys same as put_background_job
+  #   :other keys (expiires_on, deliver_on, priority) same as put_background_job
+  #
+  # service is used to decide the queue name.
+  # message can be any object to be serialized through yaml.
   def self.put_job(client = nil, options)
     assert_options(options, [:message, :service])
 
@@ -273,7 +278,9 @@ class MiqQueue < ApplicationRecord
 
   # options:
   #   :service
-  #   :resource (optional)
+  #   :affinity (optional)
+  #
+  # A call back block needs to be provided to process the message body, with is already deserialized from a yaml string.
   def self.subscribe_job(client, options)
     assert_options(options, [:service])
 
@@ -295,9 +302,68 @@ class MiqQueue < ApplicationRecord
     end
   end
 
+  # options:
+  #   :service
+  #   :event
+  #   :sender (optional)
+  #   :event_type (optional)
+  #   :other keys (expires_on, deliver_on, priority) same as put_background_job
+  #
+  # service is used to decide the queue name.
+  # event can be any object to be serialized through yaml.
+  # options should not contain affinity; it is ignored if it ever exists
+  def self.put_event(client = nil, options)
+    assert_options(options, [:event, :service])
+
+    options = options.dup
+    address, headers = topic_for_publish(options)
+    headers[:sender] = options.delete(:sender) if options[:sender]
+    headers[:message_type] = options.delete(:event_type) if options[:event_type]
+
+    unless client
+      client = ActiveMqClient.open
+      close_on_exit = true
+    end
+    client.publish(address, options[:event].to_yaml, headers)
+    _log.info("Address(#{address}), msg(#{options[:event].inspect}), headers(#{headers.inspect})")
+    client.close if close_on_exit
+  end
+
+  # options
+  #   service
+  #   persist_id (optional, client needs to have a client id)
+  #
+  # In order to resume all messages missed during the period client is offline, the subscriber needs to reconnect
+  # with the same client_id and persist_id.
+  #
+  # client_id and persist_id are configured separately because the same client can be used to subscribe to
+  # multiple queues.
+  #
+  # A call back block needs to be provided to process the event body, with is already deserialized from a yaml string.
+  def self.subscribe_event(client, options)
+    assert_options(options, [:service])
+
+    options = options.dup
+    queue_name, headers = topic_for_subscribe(options)
+
+    client.subscribe(queue_name, headers) do |event|
+      begin
+        sender = event.headers['sender']
+        event_type = event.headers['event_type']
+        event_body = YAML.load(event.body)
+        yield sender, event_type, event_body
+        _log.info("Event processed: queue(#{queue_name}), event(#{event_body}), headers(#{event.headers})")
+      rescue => err
+        _log.error("Error delivering #{event.inspect}, reason: #{err}")
+      end
+
+      client.ack(event)
+    end
+  end
+
   def self.queue_for_publish(options)
-    resource = options.delete(:resource) || 'none'
-    address = "queue/#{options.delete(:service)}.#{resource}"
+    affinity = options.delete(:affinity) || 'none'
+    address = "queue/#{options.delete(:service)}.#{affinity}"
 
     headers = {:"destination-type" => "ANYCAST"}
     headers[:expires] = options.delete(:expires_on).to_i * 1000 if options[:expires_on]
@@ -309,10 +375,34 @@ class MiqQueue < ApplicationRecord
   private_class_method :queue_for_publish
 
   def self.queue_for_subscribe(options)
-    resource = options.delete(:resource) || 'none'
-    queue_name = "queue/#{options.delete(:service)}.#{resource}"
+    affinity = options.delete(:affinity) || 'none'
+    queue_name = "queue/#{options.delete(:service)}.#{affinity}"
 
     headers = {:"subscription-type" => 'ANYCAST', :ack => 'client'}
+
+    [queue_name, headers]
+  end
+  private_class_method :queue_for_subscribe
+
+  def self.topic_for_publish(options)
+    options.delete(:resource)
+    address = "topic/#{options.delete(:service)}"
+
+    headers = {:"destination-type" => "MULTICAST"}
+    headers[:expires] = options.delete(:expires_on).to_i * 1000 if options[:expires_on]
+    headers[:AMQ_SCHEDULED_TIME] = options.delete(:deliver_on).to_i * 1000 if options[:deliver_on]
+    headers[:priority] = options.delete(:priority) if options[:priority]
+
+    [address, headers]
+  end
+  private_class_method :queue_for_publish
+
+  def self.topic_for_subscribe(options)
+    options.delete(:resource)
+    queue_name = "topic/#{options.delete(:service)}"
+
+    headers = {:"subscription-type" => 'MULTICAST', :ack => 'client'}
+    headers[:"durable-subscription-name"] = options.delete(:persist_id) if options[:persist_id]
 
     [queue_name, headers]
   end
