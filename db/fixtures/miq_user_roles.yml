@@ -833,6 +833,7 @@
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
+  - catalog_items_view
   - compute
   - miq_request_admin
   - miq_request_view
@@ -876,6 +877,7 @@
   - all_vm_rules
   - automation_manager
   - embedded_automation_manager
+  - catalog_items_view
   - compute
   - miq_template_clone
   - miq_template_drift
