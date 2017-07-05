@@ -1,4 +1,3 @@
-
 shared_examples_for 'record without latest derived metrics' do |message|
   it message.to_s do
     allow(@record).to receive_messages(:latest_derived_metrics => false)

@@ -1,4 +1,3 @@
-
 # LiveMetrics configuration file
 #
 #   It defines the live metrics supported in a model that includes a LiveMetricsMixin.

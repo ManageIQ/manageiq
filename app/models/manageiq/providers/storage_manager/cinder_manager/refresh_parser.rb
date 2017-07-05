@@ -1,4 +1,3 @@
-
 module ManageIQ::Providers
   class StorageManager::CinderManager::RefreshParser < ManageIQ::Providers::CloudManager::RefreshParser
     require_nested "CrossLinkers"
