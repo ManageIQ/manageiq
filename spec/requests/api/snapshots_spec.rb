@@ -223,11 +223,28 @@ RSpec.describe "Snapshots API" do
 
         expect(response).to have_http_status(:forbidden)
       end
+
+      it "raises a 404 with proper message if the resource isn't found" do
+        api_basic_authorize(action_identifier(:vms, :delete, :snapshots_subresource_actions, :post))
+        vm = FactoryGirl.create(:vm_vmware)
+
+        run_post("#{vms_url(vm.id)}/snapshots/0", :action => "delete")
+
+        expected = {
+          "error" => a_hash_including(
+            "kind"    => "not_found",
+            "message" => "Couldn't find Snapshot with 'id'=0",
+            "klass"   => "ActiveRecord::RecordNotFound"
+          )
+        }
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:not_found)
+      end
     end
 
     describe "POST /api/vms/:c_id/snapshots with delete action" do
       it "can queue multiple snapshots for deletion" do
-        api_basic_authorize(action_identifier(:vms, :delete, :snapshots_subresource_actions, :delete))
+        api_basic_authorize(action_identifier(:vms, :delete, :snapshots_subcollection_actions, :post))
         ems = FactoryGirl.create(:ext_management_system)
         host = FactoryGirl.create(:host, :ext_management_system => ems)
         vm = FactoryGirl.create(:vm_vmware, :name => "Alice and Bob's VM", :host => host, :ext_management_system => ems)
@@ -262,6 +279,29 @@ RSpec.describe "Snapshots API" do
         expect(response.parsed_body).to include(expected)
         expect(response).to have_http_status(:ok)
       end
+
+      it "raises a 404 with proper message if a resource isn't found" do
+        api_basic_authorize(action_identifier(:vms, :delete, :snapshots_subcollection_actions, :post))
+        vm = FactoryGirl.create(:vm_vmware)
+
+        run_post(
+          "#{vms_url(vm.id)}/snapshots",
+          :action    => "delete",
+          :resources => [
+            {:href => "#{vms_url(vm.id)}/snapshots/0"}
+          ]
+        )
+
+        expected = {
+          "error" => a_hash_including(
+            "kind"    => "not_found",
+            "message" => "Couldn't find Snapshot with 'id'=0",
+            "klass"   => "ActiveRecord::RecordNotFound"
+          )
+        }
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:not_found)
+      end
     end
 
     describe "DELETE /api/vms/:c_id/snapshots/:s_id" do
@@ -283,6 +323,23 @@ RSpec.describe "Snapshots API" do
         run_delete("#{vms_url(vm.id)}/snapshots/#{snapshot.id}")
 
         expect(response).to have_http_status(:forbidden)
+      end
+
+      it "raises a 404 with proper message if the resource isn't found" do
+        api_basic_authorize(action_identifier(:vms, :delete, :snapshots_subresource_actions, :delete))
+        vm = FactoryGirl.create(:vm_vmware)
+
+        run_delete("#{vms_url(vm.id)}/snapshots/0", :action => "delete")
+
+        expected = {
+          "error" => a_hash_including(
+            "kind"    => "not_found",
+            "message" => "Couldn't find Snapshot with 'id'=0",
+            "klass"   => "ActiveRecord::RecordNotFound"
+          )
+        }
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:not_found)
       end
     end
   end
