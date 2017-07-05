@@ -85,7 +85,7 @@ describe "Automation Requests API" do
       run_get automation_requests_url(automation_request.id)
 
       expected = {
-        "id"   => automation_request.id,
+        "id"   => automation_request.compressed_id,
         "href" => a_string_matching(automation_requests_url(automation_request.id))
       }
       expect(response).to have_http_status(:ok)

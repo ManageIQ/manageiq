@@ -5,10 +5,11 @@ describe "Logging" do
   describe "Successful Requests logging" do
     before do
       @log = StringIO.new
-      $api_log.reopen(@log)
+      @logger = Logger.new(@log)
+      $api_log.loggers << @logger
     end
 
-    after { $api_log.reopen(Rails.root.join("log", "api.log")) }
+    after { $api_log.loggers.delete(@logger) }
 
     it "logs hashed details about the request" do
       api_basic_authorize collection_action_identifier(:users, :read, :get)

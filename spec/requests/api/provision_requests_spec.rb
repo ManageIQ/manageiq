@@ -101,7 +101,7 @@ describe "Provision Requests API" do
       run_get provision_requests_url(provision_request.id)
 
       expected = {
-        "id"   => provision_request.id,
+        "id"   => provision_request.compressed_id,
         "href" => a_string_matching(provision_requests_url(provision_request.id))
       }
       expect(response).to have_http_status(:ok)
