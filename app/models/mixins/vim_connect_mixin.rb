@@ -21,7 +21,7 @@ module VimConnectMixin
       options[:ems] = self
       MiqFaultTolerantVim.new(options)
     else
-      ip   = options[:ip] || address
+      ip   = options[:ip] || hostname
       user = options[:user] || authentication_userid(options[:auth_type])
       pass = options[:pass] || authentication_password(options[:auth_type])
       MiqVim.new(ip, user, pass)

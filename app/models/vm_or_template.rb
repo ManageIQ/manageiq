@@ -789,7 +789,6 @@ class VmOrTemplate < ApplicationRecord
     [ext_management_system, "ems", host, "host"].each_slice(2) do |ems, type|
       if ems
         params[type] = {
-          :address    => ems.address,
           :hostname   => ems.hostname,
           :ipaddress  => ems.ipaddress,
           :username   => ems.authentication_userid,
