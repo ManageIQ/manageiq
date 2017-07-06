@@ -57,7 +57,7 @@ module Api
 
       api_action(type, id) do |klass|
         svc = resource_search(id, type, klass)
-        api_log_info("Reconfiguring #{service_ident(svc)}")
+        $api_log.info("Reconfiguring #{service_ident(svc)}")
 
         result = validate_service_for_action(svc, "reconfigure")
         result = invoke_reconfigure_dialog(type, svc, data) if result[:success]
@@ -70,7 +70,7 @@ module Api
 
       api_action(type, id) do |klass|
         service = resource_search(id, type, klass)
-        api_log_info("Starting #{service_ident(service)}")
+        $api_log.info("Starting #{service_ident(service)}")
 
         begin
           description = "#{service_ident(service)} starting"
@@ -87,7 +87,7 @@ module Api
 
       api_action(type, id) do |klass|
         service = resource_search(id, type, klass)
-        api_log_info("Stopping #{service_ident(service)}")
+        $api_log.info("Stopping #{service_ident(service)}")
 
         begin
           description = "#{service_ident(service)} stopping"
@@ -104,7 +104,7 @@ module Api
 
       api_action(type, id) do |klass|
         service = resource_search(id, type, klass)
-        api_log_info("Suspending #{service_ident(service)}")
+        $api_log.info("Suspending #{service_ident(service)}")
 
         begin
           description = "#{service_ident(service)} suspending"

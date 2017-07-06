@@ -10,7 +10,7 @@ module Api
         raise BadRequestError, "Must specify an id for Assigning a #{type} resource" unless id
 
         service_template_subcollection_action(type, id) do |st|
-          api_log_info("Assigning #{service_template_ident(st)}")
+          $api_log.info("Assigning #{service_template_ident(st)}")
 
           assign_service_template(object, st)
         end
@@ -20,7 +20,7 @@ module Api
         raise BadRequestError, "Must specify an id for Unassigning a #{type} resource" unless id
 
         service_template_subcollection_action(type, id) do |st|
-          api_log_info("Unassigning #{service_template_ident(st)}")
+          $api_log.info("Unassigning #{service_template_ident(st)}")
 
           unassign_service_template(object, st)
         end
@@ -42,7 +42,7 @@ module Api
         raise BadRequestError, "Must specify an id for Refreshing dialog fields of a #{type} resource" unless id
 
         service_template_subcollection_action(type, id) do |st|
-          api_log_info("Refreshing dialog fields for #{service_template_ident(st)}")
+          $api_log.info("Refreshing dialog fields for #{service_template_ident(st)}")
 
           refresh_dialog_fields_service_template(object, st, data)
         end

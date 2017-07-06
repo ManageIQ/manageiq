@@ -50,11 +50,11 @@ module Api
           path   = patch_cmd["path"]
           value  = patch_cmd["value"]
           if action.nil?
-            api_log_info("Must specify an attribute action for each path command for the resource #{type}/#{id}")
+            $api_log.info("Must specify an attribute action for each path command for the resource #{type}/#{id}")
           elsif path.nil?
-            api_log_info("Must specify an attribute path for each patch method action for the resource #{type}/#{id}")
+            $api_log.info("Must specify an attribute path for each patch method action for the resource #{type}/#{id}")
           elsif path.split('/').size > 1
-            api_log_info("Can only patch attributes of the resource #{type}/#{id}")
+            $api_log.info("Can only patch attributes of the resource #{type}/#{id}")
           else
             attr = path.split('/')[0]
             patched_attrs[attr] = value if %w(edit add).include?(action)

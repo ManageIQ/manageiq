@@ -22,7 +22,7 @@ module Api
 
       def service_requests_remove_resource(target, type, id, _data)
         service_request_subcollection_action(type, id) do |service_request|
-          api_log_info("Removing #{service_request_ident(service_request)}")
+          $api_log.info("Removing #{service_request_ident(service_request)}")
           remove_service_request(target, service_request)
         end
       end

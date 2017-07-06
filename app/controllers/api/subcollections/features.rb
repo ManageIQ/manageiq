@@ -30,7 +30,7 @@ module Api
         existing_features.concat(new_features)
 
         object.update_attribute(:miq_product_features, existing_features)
-        api_log_info("Modified role #{object.name}: assigned features: #{new_features.collect(&:identifier)}")
+        $api_log.info("Modified role #{object.name}: assigned features: #{new_features.collect(&:identifier)}")
         object
       end
 
@@ -56,7 +56,7 @@ module Api
         end
 
         object.update_attribute(:miq_product_features, existing_features)
-        api_log_info("Modified role #{object.name}: un-assigned features: #{existing_features.collect(&:identifier)}")
+        $api_log.info("Modified role #{object.name}: un-assigned features: #{existing_features.collect(&:identifier)}")
         object
       end
 

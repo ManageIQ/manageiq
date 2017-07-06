@@ -15,7 +15,7 @@ module Api
       get_settings_and_features(data)
 
       role = role_klass.create!(data.except(*ID_ATTRS))
-      api_log_info("Created new role #{role.name}")
+      $api_log.info("Created new role #{role.name}")
       role
     rescue => err
       role.destroy if role
@@ -42,7 +42,7 @@ module Api
       get_settings_and_features(data)
 
       role.update_attributes!(data.except(*ID_ATTRS))
-      api_log_info("Modified role #{role.name}")
+      $api_log.info("Modified role #{role.name}")
       role
     end
 

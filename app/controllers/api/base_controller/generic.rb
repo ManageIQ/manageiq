@@ -111,11 +111,11 @@ module Api
             opts[:date] = data["date"]
             opts[:warn] = data["warn"] if data["warn"]
             msg << " on: #{opts}"
-            api_log_info(msg)
+            $api_log.info(msg)
             resource.retire(opts)
           else
             msg << " immediately."
-            api_log_info(msg)
+            $api_log.info(msg)
             resource.retire_now
           end
           resource
@@ -132,7 +132,7 @@ module Api
           raise BadRequestError, "Must specify an id for invoking the custom action #{action} on a #{type} resource"
         end
 
-        api_log_info("Invoking #{action} on #{type} id #{id}")
+        $api_log.info("Invoking #{action} on #{type} id #{id}")
         resource = resource_search(id, type, collection_class(type))
         unless resource_custom_action_names(resource).include?(action)
           raise BadRequestError, "Unsupported Custom Action #{action} for the #{type} resource specified"
@@ -146,7 +146,7 @@ module Api
 
         api_action(type, id) do |klass|
           resource_search(id, type, klass)
-          api_log_info("Setting ownership to #{type} #{id}")
+          $api_log.info("Setting ownership to #{type} #{id}")
           ownership = parse_ownership(data)
           set_ownership_action(klass, type, id, ownership)
         end
@@ -181,7 +181,7 @@ module Api
       end
 
       def delete_resource_action(klass, type, id)
-        api_log_info("Deleting #{type} id #{id}")
+        $api_log.info("Deleting #{type} id #{id}")
         resource = resource_search(id, type, klass)
         result = begin
                    resource.destroy!
