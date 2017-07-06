@@ -10,7 +10,7 @@ module ManageIQ
       plugin_root = Pathname.new(caller_locations.last.absolute_path).dirname.parent
 
       install_bundler
-      bundle_install(plugin_root)
+      bundle_update(plugin_root)
 
       ensure_config_files
 
@@ -58,8 +58,8 @@ module ManageIQ
       system('bundle check', :chdir => root) || system!('bundle install', :chdir => root)
     end
 
-    def self.bundle_update
-      system!('bundle update')
+    def self.bundle_update(root = APP_ROOT)
+      system!('bundle update', :chdir => root)
     end
 
     def self.create_database
