@@ -108,7 +108,7 @@ module OpsController::Settings
       @edit[:new][:authentication][:user_proxies].delete_at(0)
     else
       @edit[:new][:authentication][:user_proxies].each do |f|
-        if f[:ldaphost] == @ldap_info[:ldaphost] && session[:entry][:ldaphost] != @ldap_info[:ldaphost]   # check to make sure ldaphost already doesn't exist and ignore if existing record is being edited.
+        if f[:ldaphost] == @ldap_info[:ldaphost] && session[:entry] == 'new' # check to make sure ldaphost already doesn't exist and ignore if existing record is being edited.
           no_changes = false
           add_flash(_("LDAP Host should be unique"), :error)
           break

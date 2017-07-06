@@ -136,12 +136,12 @@ describe OpsController do
 
   render_views
   context "OpsController::Settings" do
-    let(:user) { FactoryGirl.create(:user, :features => %w(zone_edit zone_new)) }
-    before do
-      login_as user
-    end
-
     context "zone addition" do
+      let(:user) { FactoryGirl.create(:user, :features => %w(zone_edit zone_new)) }
+      before do
+        login_as user
+      end
+
       it "#does not allow duplicate names when adding" do
         miq_server = EvmSpecHelper.local_miq_server
         MiqRegion.seed
@@ -165,6 +165,60 @@ describe OpsController do
 
         expect(controller.send(:flash_errors?)).to be_truthy
         expect(assigns(:flash_array).first[:message]).to include("Name has already been taken")
+      end
+    end
+
+    context '#forest_accept' do
+      context 'adding an LDAP Trusted Forest' do
+        before(:each) do
+          EvmSpecHelper.create_guid_miq_server_zone
+          @user_proxies = {:ldaphost => 'ldap.manageiq1.org',
+                           :ldapport => '389',
+                           :mode     => 'ldap',
+                           :basedn   => 'cn=groups,cn=accounts,dc=miq',
+                           :bind_dn  => 'uid=admin,cn=users,cn=accounts,dc=miq,dc=e',
+                           :bind_pwd => '******'}
+          @vmdb = VMDB::Config.new('vmdb')
+          expect(controller).to receive(:render)
+        end
+
+        after(:each) { expect(response.status).to eq(200) }
+
+        it 'is a new record' do
+          session[:edit] = {:current => @vmdb, :new => {:authentication => {:user_proxies => []}}}
+          session[:entry] = 'new'
+          controller.send(:forest_accept)
+        end
+
+        it 'is an existing record' do
+          controller.instance_variable_set(:@_params, :user_proxies_mode => '', :user_proxies => @user_proxies)
+          session[:edit] = {:current => @vmdb, :new => {:authentication => {:user_proxies => [@user_proxies]}}}
+          session[:entry] = @user_proxies
+          controller.send(:forest_accept)
+        end
+
+        it 'LDAP Host exists' do
+          @user_proxies[:ldaphost] = ''
+          controller.instance_variable_set(:@_params, :user_proxies_mode => '', :user_proxies => @user_proxies)
+          session[:edit] = {:current => @vmdb, :new => {:authentication => {:user_proxies => [@user_proxies]}}}
+          session[:entry] = @user_proxies
+
+          controller.send(:forest_accept)
+
+          flash_messages = controller.instance_variable_get(:@flash_array)
+          expect(flash_messages.first).to eq(:message => 'LDAP Host is required', :level => :error)
+        end
+
+        it 'LDAP Host is unique' do
+          controller.instance_variable_set(:@_params, :user_proxies_mode => '', :user_proxies => @user_proxies)
+          session[:edit] = {:current => @vmdb, :new => {:authentication => {:user_proxies => [@user_proxies, @user_proxies]}}}
+          session[:entry] = 'new'
+
+          controller.send(:forest_accept)
+
+          flash_messages = controller.instance_variable_get(:@flash_array)
+          expect(flash_messages.first).to eq(:message => 'LDAP Host should be unique', :level => :error)
+        end
       end
     end
   end
