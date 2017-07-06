@@ -1,5 +1,6 @@
 class JobProxyDispatcher
   include Vmdb::Logging
+
   def self.dispatch
     new.dispatch
   end
@@ -91,6 +92,10 @@ class JobProxyDispatcher
       end
     end
     _log.info "Complete - Timings: #{t.inspect}"
+  end
+
+  def container_image_classes
+    ContainerImage.descendants.append(ContainerImage)
   end
 
   def dispatch_container_scan_jobs
@@ -193,12 +198,11 @@ class JobProxyDispatcher
   end
 
   def pending_jobs(target_class = VmOrTemplate)
-    class_name = target_class.base_class.name
     @zone = MiqServer.my_zone
     Job.order(:id)
        .where(:state           => "waiting_to_start")
        .where(:dispatch_status => "pending")
-       .where(:target_class    => class_name)
+       .where(:target_class    => target_class)
        .where("zone is null or zone = ?", @zone)
        .where("sync_key is NULL or
          sync_key not in (
@@ -210,7 +214,7 @@ class JobProxyDispatcher
   end
 
   def pending_container_jobs
-    pending_jobs(ContainerImage).each_with_object(Hash.new { |h, k| h[k] = [] }) do |job, h|
+    pending_jobs(container_image_classes).each_with_object(Hash.new { |h, k| h[k] = [] }) do |job, h|
       h[job.options[:ems_id]] << job
     end
   end
@@ -254,9 +258,8 @@ class JobProxyDispatcher
   end
 
   def active_scans_by_zone(target_class, count = true)
-    class_name = target_class.base_class.name
     actives = Hash.new(0)
-    jobs = Job.where(:zone => @zone, :dispatch_status => "active", :target_class => class_name)
+    jobs = Job.where(:zone => @zone, :dispatch_status => "active", :target_class => target_class)
               .where.not(:state => "finished")
     actives[@zone] = count ? jobs.count : jobs
     actives
@@ -271,7 +274,7 @@ class JobProxyDispatcher
       memo = Hash.new do |h, k|
         h[k] = Hash.new(0)
       end
-      active_scans_by_zone(ContainerImage, false)[@zone].each do |job|
+      active_scans_by_zone(container_image_classes, false)[@zone].each do |job|
         memo[@zone][job.options[:ems_id]] += 1
       end
       memo
