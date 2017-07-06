@@ -28,6 +28,15 @@ describe "Automate API" do
       )
     end
 
+    it 'returns only the requested attributes' do
+      api_basic_authorize action_identifier(:automate, :read, :collection_actions, :get)
+
+      run_get automate_url, :expand => 'resources', :attributes => 'name'
+
+      expect(response).to have_http_status(:ok)
+      response.parsed_body['resources'].each { |res| expect_hash_to_have_only_keys(res, %w(fqname name)) }
+    end
+
     it "default to depth 0 for non-root queries" do
       api_basic_authorize action_identifier(:automate, :read, :collection_actions, :get)
 
