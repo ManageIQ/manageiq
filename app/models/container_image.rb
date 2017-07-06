@@ -5,6 +5,7 @@ class ContainerImage < ApplicationRecord
   include TenantIdentityMixin
   include CustomAttributeMixin
   include ArchivedMixin
+  include NewWithTypeStiMixin
   include_concern 'Purging'
 
   DOCKER_IMAGE_PREFIX = "docker://"
