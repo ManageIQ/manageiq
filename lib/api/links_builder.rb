@@ -50,7 +50,7 @@ module Api
     def previous_href
       return if offset.zero?
       prev_offset = offset - limit
-      return if prev_offset < 0
+      return first_href if prev_offset < 0
       format_href(prev_offset)
     end
 

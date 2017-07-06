@@ -44,6 +44,15 @@ RSpec.describe Api::LinksBuilder do
       expect(links.keys).to eq([:self])
       expect(links[:self]).to eq(create_href(offsets))
     end
+
+    it "previous link is equal to first link if previous offset would be 0" do
+      offsets = { "offset" => 10, "limit" => 12 }
+      counts = Api::QueryCounts.new(22, 22, 22)
+      link_builder = Api::LinksBuilder.new(offsets, create_href(offsets), counts)
+      links = link_builder.links
+
+      expect(links[:previous]).to eq(links[:first])
+    end
   end
 
   describe "#pages" do
