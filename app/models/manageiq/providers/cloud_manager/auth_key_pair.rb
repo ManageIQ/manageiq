@@ -36,7 +36,8 @@ class ManageIQ::Providers::CloudManager::AuthKeyPair < ::AuthPrivateKey
     klass.create(
       :name        => created_key_pair.name,
       :fingerprint => created_key_pair.fingerprint,
-      :resource    => ext_management_system
+      :resource    => ext_management_system,
+      :auth_key    => created_key_pair.private_key
     )
   end
 
