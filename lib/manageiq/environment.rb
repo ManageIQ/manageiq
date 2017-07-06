@@ -10,7 +10,7 @@ module ManageIQ
       plugin_root = Pathname.new(caller_locations.last.absolute_path).dirname.parent
 
       install_bundler
-      bundle_install(plugin_root)
+      bundle_update(plugin_root)
 
       ensure_config_files
 
@@ -19,7 +19,7 @@ module ManageIQ
         create_database_user
       end
 
-      setup_test_environment
+      setup_test_environment(:task_prefix => 'app:', :root => plugin_root)
     end
 
     def self.ensure_config_files
@@ -55,11 +55,11 @@ module ManageIQ
     end
 
     def self.bundle_install(root = APP_ROOT)
-      system('bundle check', :chdir => root) || system('bundle install', :chdir => root)
+      system('bundle check', :chdir => root) || system!('bundle install', :chdir => root)
     end
 
-    def self.bundle_update
-      system!('bundle update')
+    def self.bundle_update(root = APP_ROOT)
+      system!('bundle update', :chdir => root)
     end
 
     def self.create_database
@@ -77,9 +77,9 @@ module ManageIQ
       run_rake_task("db:seed")
     end
 
-    def self.setup_test_environment
+    def self.setup_test_environment(task_prefix: '', root: APP_ROOT)
       puts "\n== Resetting tests =="
-      run_rake_task("test:vmdb:setup")
+      run_rake_task("#{task_prefix}test:vmdb:setup", :root => root)
     end
 
     def self.reset_automate_domain
@@ -122,12 +122,14 @@ module ManageIQ
       File.read(gemfile).match(/gem\s+['"]bundler['"],\s+['"](.+?)['"]/)[1]
     end
 
-    def self.run_rake_task(task)
-      system!("#{APP_ROOT.join("bin/rails")} #{task}")
+    def self.run_rake_task(task, root: APP_ROOT)
+      system!("bin/rails #{task}", :chdir => root)
     end
 
     def self.system!(*args)
-      system(*args, :chdir => APP_ROOT) || abort("\n== Command #{args} failed ==")
+      options = args.last.kind_of?(Hash) ? args.pop : {}
+      options[:chdir] ||= APP_ROOT
+      system(*args, options) || abort("\n== Command #{args} failed in #{options[:chdir]} ==")
     end
   end
 end
