@@ -22,7 +22,7 @@ describe Authenticator do
 
     it 'Updates the user groups when no matching groups' do
       expect(authenticator).to receive(:find_external_identity)
-        .and_return([{:username => user.userid, :fullname => user.name}, []])
+        .and_return([{:username => user.userid, :fullname => user.name, :domain => "example.com"}, []])
 
       authenticator.authorize(task.id, user.userid)
       expect(user.reload.miq_groups).to be_empty
@@ -30,7 +30,7 @@ describe Authenticator do
 
     it 'Updates the user groups' do
       expect(authenticator).to receive(:find_external_identity)
-        .and_return([{:username => user.userid, :fullname => user.name}, groups.collect(&:name)])
+        .and_return([{:username => user.userid, :fullname => user.name, :domain => "example.com"}, groups.collect(&:name)])
 
       authenticator.authorize(task.id, user.userid)
       expect(user.reload.miq_groups).to match_array(groups)
