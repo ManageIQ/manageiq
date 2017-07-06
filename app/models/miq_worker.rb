@@ -61,16 +61,18 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.has_minimal_env_option?
-    return false if MiqServer.minimal_env_options.empty? || required_roles.blank?
+    roles = if required_roles.kind_of?(Proc)
+              required_roles.call
+            else
+              required_roles
+            end
 
-    case required_roles
-    when String
-      MiqServer.minimal_env_options.include?(required_roles)
-    when Array
-      required_roles.any? { |role| MiqServer.minimal_env_options.include?(role) }
-    else
-      raise _("Unexpected type: <self.required_roles.class.name>")
-    end
+    return false if MiqServer.minimal_env_options.empty? || roles.blank?
+
+    roles = Array(roles) if roles.kind_of?(String)
+    raise _("Unexpected type: <self.required_roles.class.name>") unless roles.kind_of?(Array)
+
+    roles.any? { |role| MiqServer.minimal_env_options.include?(role) }
   end
 
   class_attribute :check_for_minimal_role, :default_queue_name, :required_roles, :maximum_workers_count, :include_stopping_workers_on_synchronize
@@ -121,16 +123,18 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.has_required_role?
-    return true if required_roles.blank?
+    roles = if required_roles.kind_of?(Proc)
+              required_roles.call
+            else
+              required_roles
+            end
 
-    case required_roles
-    when String
-      MiqServer.my_server.has_active_role?(required_roles)
-    when Array
-      required_roles.any? { |role| MiqServer.my_server.has_active_role?(role) }
-    else
-      raise _("Unexpected type: <self.required_roles.class.name>")
-    end
+    return true if roles.blank?
+
+    roles = Array(roles) if roles.kind_of?(String)
+    raise _("Unexpected type: <self.required_roles.class.name>") unless roles.kind_of?(Array)
+
+    roles.any? { |role| MiqServer.my_server.has_active_role?(role) }
   end
 
   def self.enough_resource_to_start_worker?

@@ -117,6 +117,20 @@ describe MiqWorker do
         check_has_required_role(["bah"], false)
       end
     end
+
+    context "when worker roles is a lambda" do
+      it "that is empty" do
+        check_has_required_role(-> { [] }, true)
+      end
+
+      it "that is a subset of server roles" do
+        check_has_required_role(-> { ["foo"] }, true)
+      end
+
+      it "that is not a subset of server roles" do
+        check_has_required_role(-> { ["bah"] }, false)
+      end
+    end
   end
 
   context ".workers_configured_count" do
