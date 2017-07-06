@@ -270,7 +270,13 @@ module MiqApache
 
       ports = Array(ports).sort.reverse
       ports.each do |port|
-        @raw_lines.insert(index + 1, "BalancerMember #{protocol}://0.0.0.0:#{port}\n")
+        # Temporarily disable the connection reuse for WebSockets for httpd version < 2.4.25
+        # https://bugzilla.redhat.com/show_bug.cgi?id=1404354
+        if protocol == 'ws'
+          @raw_lines.insert(index + 1, "BalancerMember #{protocol}://0.0.0.0:#{port} disablereuse=on\n")
+        else
+          @raw_lines.insert(index + 1, "BalancerMember #{protocol}://0.0.0.0:#{port}\n")
+        end
       end
       ports
     end
@@ -278,7 +284,7 @@ module MiqApache
     def remove_ports(ports, protocol)
       ports = Array(ports)
       ports.each do |port|
-        @raw_lines.delete_if { |line| line =~ /BalancerMember\s+#{protocol}:\/\/0\.0\.0\.0:#{port}$/ }
+        @raw_lines.delete_if { |line| line =~ /BalancerMember\s+#{protocol}:\/\/0\.0\.0\.0:#{port}( disablereuse=on)?$/ }
       end
       ports
     end

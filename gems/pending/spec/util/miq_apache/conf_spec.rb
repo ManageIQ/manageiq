@@ -90,10 +90,33 @@ describe MiqApache::Conf do
       @conf = MiqApache::Conf.new(@conf_file)
     end
 
+    context "with http as the protocol" do
+      it 'remove_ports should remove the line' do
+        before = @conf.raw_lines.dup
+        @conf.raw_lines = ["<Proxy balancer://evmcluster/ lbmethod=byrequests>\n", "BalancerMember http://0.0.0.0:3000\n", "</Proxy>\n"]
+        @conf.remove_ports(3000, "http")
+        expect(@conf.raw_lines).to eq(before)
+      end
+    end
+
     context "with other protocol than http" do
       it "add_ports should add the port with the given protocol" do
+        @conf.add_ports(3000, "xx")
+        expect(@conf.raw_lines).to eq(["<Proxy balancer://evmcluster/ lbmethod=byrequests>\n", "BalancerMember xx://0.0.0.0:3000\n", "</Proxy>\n"])
+      end
+    end
+
+    context "with websocket as protocol" do
+      it 'add_ports should add the disablereuse=on suffix' do
         @conf.add_ports(3000, "ws")
-        expect(@conf.raw_lines).to eq(["<Proxy balancer://evmcluster/ lbmethod=byrequests>\n", "BalancerMember ws://0.0.0.0:3000\n", "</Proxy>\n"])
+        expect(@conf.raw_lines).to eq(["<Proxy balancer://evmcluster/ lbmethod=byrequests>\n", "BalancerMember ws://0.0.0.0:3000 disablereuse=on\n", "</Proxy>\n"])
+      end
+
+      it 'remove_ports should remove the line with a suffix' do
+        before = @conf.raw_lines.dup
+        @conf.raw_lines = ["<Proxy balancer://evmcluster/ lbmethod=byrequests>\n", "BalancerMember ws://0.0.0.0:3000 disablereuse=on\n", "</Proxy>\n"]
+        @conf.remove_ports(3000, "ws")
+        expect(@conf.raw_lines).to eq(before)
       end
     end
 
