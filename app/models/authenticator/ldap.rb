@@ -48,7 +48,7 @@ module Authenticator
     def autocreate_user(username)
       # when default group for ldap users is enabled, create the user
       return unless config[:default_group_for_users]
-      default_group = MiqGroup.find_by(:description => config[:default_group_for_users])
+      default_group = MiqGroup.in_my_region.find_by(:description => config[:default_group_for_users])
       return unless default_group
       create_user_from_ldap(username) { [default_group] }
     end

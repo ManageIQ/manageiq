@@ -126,7 +126,7 @@ module Authenticator
 
           matching_groups = match_groups(groups_for(identity))
           userid = userid_for(identity, username)
-          user   = User.find_or_initialize_by(:userid => userid)
+          user   = User.in_my_region.find_or_initialize_by(:userid => userid)
           update_user_attributes(user, username, identity)
           user.miq_groups = matching_groups
 
