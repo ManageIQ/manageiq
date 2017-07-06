@@ -1,11 +1,11 @@
 RSpec.describe Api::LinksBuilder do
   describe "#links" do
-    it "returns only self, next, and last links when it is the first page" do
+    it "returns self, first, next, and last links when it is the first page" do
       offsets = { "offset" => 0, "limit" => 2 }
       counts = Api::QueryCounts.new(7, 2)
       link_builder = Api::LinksBuilder.new(offsets, create_href(offsets), counts)
       links = link_builder.links
-      expect(links.keys).to eq([:self, :next, :last])
+      expect(links.keys).to match_array([:self, :first, :next, :last])
       expect(links[:self]).to eq(create_href(offsets))
       expect(links[:next]).to eq(create_href("offset" => 2, "limit" => 2))
       expect(links[:last]).to eq(create_href("offset" => 6, "limit" => 2))
@@ -17,7 +17,7 @@ RSpec.describe Api::LinksBuilder do
       link_builder = Api::LinksBuilder.new(offsets, create_href(offsets), counts)
       links = link_builder.links
 
-      expect(links.keys).to eq([:self, :next, :previous, :first, :last])
+      expect(links.keys).to match_array([:self, :next, :previous, :first, :last])
       expect(links[:self]).to eq(create_href(offsets))
       expect(links[:next]).to eq(create_href("offset" => 4, "limit" => 2))
       expect(links[:previous]).to eq(create_href("offset" => 0, "limit" => 2))
@@ -25,23 +25,25 @@ RSpec.describe Api::LinksBuilder do
       expect(links[:last]).to eq(create_href("offset" => 6, "limit" => 2))
     end
 
-    it "returns only self, previous, and first if it is the last page" do
+    it "returns self, previous, first, last if it is the last page" do
       offsets = { "offset" => 3, "limit" => 2 }
       counts = Api::QueryCounts.new(7, 2, 3)
       link_builder = Api::LinksBuilder.new(offsets, create_href(offsets), counts)
       links = link_builder.links
-      expect(links.keys).to eq([:self, :previous, :first])
+      expect(links.keys).to eq([:self, :previous, :first, :last])
       expect(links[:self]).to eq(create_href(offsets))
       expect(links[:previous]).to eq(create_href("offset" => 1, "limit" => 2))
       expect(links[:first]).to eq(create_href("offset" => 0, "limit" => 2))
+      expect(links[:last]).to eq(create_href("offset" => 2, "limit" => 2))
     end
 
-    it "returns only self it is the only page" do
+    it "always returns self, first, and last" do
       offsets = { "offset" => 0, "limit" => 3 }
       counts = Api::QueryCounts.new(7, 3, 3)
       link_builder = Api::LinksBuilder.new(offsets, create_href(offsets), counts)
       links = link_builder.links
-      expect(links.keys).to eq([:self])
+
+      expect(links.keys).to match_array([:self, :first, :last])
       expect(links[:self]).to eq(create_href(offsets))
     end
 

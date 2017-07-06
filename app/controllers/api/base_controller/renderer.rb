@@ -176,14 +176,18 @@ module Api
         options[:offset] = params['offset'] if params['offset']
         options[:limit] = params['limit'] if params['limit']
 
-        miq_expression.present? ? filter_results_for_paging(res, options) : [Rbac.filtered(res, options)]
+        if miq_expression.present? && options.key?(:limit) && options.key?(:offset)
+          filter_results_for_paging(res, options)
+        else
+          [Rbac.filtered(res, options)]
+        end
       end
 
       # If a filter is present, first get the count for the filtered result,
       # Then apply Rbac filter for paging
       def filter_results_for_paging(res, options)
-        subquery_res = Rbac.search(:targets => res, :skip_counts => true)
-        [Rbac.filtered(res, options), subquery_res.first.count]
+        subquery_res = Rbac.filtered(res, options.except(:offset, :limit))
+        [Rbac.filtered(res, options), subquery_res.count]
       end
 
       def virtual_attribute_search(resource, attribute)

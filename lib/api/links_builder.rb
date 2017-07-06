@@ -34,7 +34,7 @@ module Api
     end
 
     def format_href(new_offset)
-      href.sub "offset=#{offset}", "offset=#{new_offset}"
+      href.sub("offset=#{offset}", "offset=#{new_offset}")
     end
 
     def paging_count
@@ -55,12 +55,10 @@ module Api
     end
 
     def first_href
-      return if offset.zero?
       format_href(0)
     end
 
     def last_href
-      return if (offset + limit) >= paging_count
       last_offset = paging_count - (paging_count % limit)
       format_href(last_offset)
     end

@@ -83,7 +83,7 @@ describe "Querying" do
 
       expect_query_result(:vms, 2, 7)
       expect_result_resources_to_match_hash([{"name" => "aa"}, {"name" => "bb"}])
-      expect(response.parsed_body["links"].keys).to eq(%w(self next last))
+      expect(response.parsed_body["links"].keys).to match_array(%w(self first next last))
       links = response.parsed_body["links"]
 
       run_get(links["self"])
@@ -95,14 +95,14 @@ describe "Querying" do
 
       expect_query_result(:vms, 2, 7)
       expect_result_resources_to_match_hash([{"name" => "cc"}, {"name" => "dd"}])
-      expect(response.parsed_body["links"].keys).to eq(%w(self next previous first last))
+      expect(response.parsed_body["links"].keys).to match_array(%w(self next previous first last))
 
       run_get(links["last"])
 
       expect_query_result(:vms, 1, 7)
       expect_result_resources_to_match_hash([{"name" => "gg"}])
       previous = response.parsed_body["links"]["previous"]
-      expect(response.parsed_body["links"].keys).to eq(%w(self previous first))
+      expect(response.parsed_body["links"].keys).to match_array(%w(self previous first last))
 
       run_get(previous)
 
@@ -113,7 +113,7 @@ describe "Querying" do
 
       expect_query_result(:vms, 3, 7)
       expect_result_resources_to_match_hash([{"name" => "ee"}, {"name" => "ff"}, {"name" => "gg"}])
-      expect(response.parsed_body["links"].keys).to eq(%w(self previous first))
+      expect(response.parsed_body["links"].keys).to match_array(%w(self previous first last))
     end
 
     it "only returns paging links if both offset and limit are specified" do
@@ -151,14 +151,14 @@ describe "Querying" do
 
       expect_query_result(:vms, 1, 3)
       expect_result_resources_to_match_hash([{"name" => "aa"}])
-      expect(response.parsed_body["links"].keys).to eq(%w(self next last))
+      expect(response.parsed_body["links"].keys).to match_array(%w(self next first last))
 
       run_get response.parsed_body["links"]["next"]
 
       expect_query_result(:vms, 1, 3)
       expect_result_resources_to_match_hash([{"name" => "bb"}])
 
-      expect(response.parsed_body["links"].keys).to eq(%w(self previous first))
+      expect(response.parsed_body["links"].keys).to match_array(%w(self previous first last))
     end
 
     it "returns the correct subquery_count" do
@@ -406,6 +406,19 @@ describe "Querying" do
 
       run_get vms_url, :expand => "resources",
                        :filter => ["host.name='foo'"]
+
+      expect_query_result(:vms, 1, 2)
+      expect_result_resources_to_match_hash([{"name" => vm1.name, "guid" => vm1.guid}])
+    end
+
+    it "supports filtering by attributes of associations with paging" do
+      host1 = FactoryGirl.create(:host, :name => "foo")
+      host2 = FactoryGirl.create(:host, :name => "bar")
+      vm1 = FactoryGirl.create(:vm_vmware, :name => "baz", :host => host1)
+      _vm2 = FactoryGirl.create(:vm_vmware, :name => "qux", :host => host2)
+
+      run_get vms_url, :expand => "resources",
+              :filter => ["host.name='foo'"], :offset => 0, :limit => 1
 
       expect_query_result(:vms, 1, 2)
       expect_result_resources_to_match_hash([{"name" => vm1.name, "guid" => vm1.guid}])
