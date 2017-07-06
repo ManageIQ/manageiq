@@ -225,7 +225,7 @@ class MiqAlert < ApplicationRecord
     status.event_ems_ref = ems_ref unless ems_ref.blank?
     status.resolved = resolved
     status.evaluated_on = Time.now.utc
-    status.save
+    status.save!
     miq_alert_statuses << status
   end
 
