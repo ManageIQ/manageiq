@@ -8,14 +8,16 @@ module MiqAeEngine
       true
     end
 
-    def initialize_state_maxima_metadata
+    def initialize_state_maxima_metadata(field)
       @workspace.root['ae_state_started'] = Time.zone.now.utc.to_s  if @workspace.root['ae_state_started'].blank?
       @workspace.root['ae_state_retries'] = 0                  if @workspace.root['ae_state_retries'].blank?
+      @workspace.root['ae_state_max_retries'] = field['max_retries'].to_i if @workspace.root['ae_state_max_retries'].to_i.zero?
     end
 
     def reset_state_maxima_metadata
       @workspace.root['ae_state_started'] = ''
       @workspace.root['ae_state_retries'] = 0
+      @workspace.root['ae_state_max_retries'] = 0
     end
 
     def increment_state_retries
@@ -67,7 +69,7 @@ module MiqAeEngine
         return unless state_runnable?(f)
 
         # Ensure the metadata to deal with retries and timeouts is initialized
-        initialize_state_maxima_metadata
+        initialize_state_maxima_metadata(f)
 
         # Process on_entry method
         process_state_step_with_error_handling(f, 'on_entry') { process_state_method(f, 'on_entry') }

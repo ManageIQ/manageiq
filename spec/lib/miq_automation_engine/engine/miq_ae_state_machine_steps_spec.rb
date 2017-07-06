@@ -91,9 +91,9 @@ describe "MiqAeStateMachineSteps" do
     all_steps = {'on_entry' => "common_state_method",
                  'on_exit'  => "common_state_method",
                  'on_error' => "common_state_method"}
-    ae_fields = {'state1' => {:aetype => 'state', :datatype => 'string', :priority => 1},
-                 'state2' => {:aetype => 'state', :datatype => 'string', :priority => 2},
-                 'state3' => {:aetype => 'state', :datatype => 'string', :priority => 3}}
+    ae_fields = {'state1' => {:aetype => 'state', :datatype => 'string', :priority => 1, :max_retries => 100},
+                 'state2' => {:aetype => 'state', :datatype => 'string', :priority => 2, :max_retries => 100},
+                 'state3' => {:aetype => 'state', :datatype => 'string', :priority => 3, :max_retries => 100}}
     state1_value = "/#{@domain}/#{@namespace}/#{@method_class}/#{@instance1}"
     state2_value = "/#{@domain}/#{@namespace}/#{@method_class}/#{@instance2}"
     state3_value = "/#{@domain}/#{@namespace}/#{@method_class}/#{@instance3}"
@@ -297,6 +297,7 @@ describe "MiqAeStateMachineSteps" do
     expect(ws.root.attributes['step_on_exit']).to match_array(%w(state1 state2))
     expect(ws.root.attributes['step_on_error']).to be_nil
     expect(ws.root.attributes['ae_state_retries']).to eq(1)
+    expect(ws.root.attributes['ae_state_max_retries']).to eq(100)
   end
 
   it "allow for retry to be set on on_exit method" do
@@ -308,6 +309,7 @@ describe "MiqAeStateMachineSteps" do
     expect(ws.root.attributes['step_on_exit']).to match_array(%w(state1 state2))
     expect(ws.root.attributes['step_on_error']).to be_nil
     expect(ws.root.attributes['ae_state_retries']).to eq(1)
+    expect(ws.root.attributes['ae_state_max_retries']).to eq(100)
   end
 
   it "non existent on_error method" do
