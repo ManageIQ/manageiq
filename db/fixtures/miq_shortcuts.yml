@@ -230,7 +230,7 @@
   :startup: true
 - :name: container_containers
   :description: Containers / Explorer
-  :url: /container/explorer
+  :url: /container/show_list
   :rbac_feature_name: containers
   :startup: true
 - :name: control_explorer
