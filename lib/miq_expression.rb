@@ -95,13 +95,13 @@ class MiqExpression
     when "between dates", "between times"
       col_name = exp[operator]["field"]
       col_type = get_col_type(col_name)
-      col_human, _ = operands2humanvalue(exp[operator], options)
+      col_human, _value = operands2humanvalue(exp[operator], options)
       vals_human = exp[operator]["value"].collect { |v| quote_human(v, col_type) }
       clause = "#{col_human} #{operator} #{vals_human.first} AND #{vals_human.last}"
     when "from"
       col_name = exp[operator]["field"]
       col_type = get_col_type(col_name)
-      col_human, _ = operands2humanvalue(exp[operator], options)
+      col_human, _value = operands2humanvalue(exp[operator], options)
       vals_human = exp[operator]["value"].collect { |v| quote_human(v, col_type) }
       clause = "#{col_human} #{operator} #{vals_human.first} THROUGH #{vals_human.last}"
     end
@@ -130,12 +130,12 @@ class MiqExpression
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
     when "before"
       col_type = get_col_type(col_name) if col_name
-      col_ruby, _ = operands2rubyvalue(operator, {"field" => col_name}, context_type)
+      col_ruby, _value = operands2rubyvalue(operator, {"field" => col_name}, context_type)
       val = op_args["value"]
       clause = ruby_for_date_compare(col_ruby, col_type, tz, "<", val)
     when "after"
       col_type = get_col_type(col_name) if col_name
-      col_ruby, _ = operands2rubyvalue(operator, {"field" => col_name}, context_type)
+      col_ruby, _value = operands2rubyvalue(operator, {"field" => col_name}, context_type)
       val = op_args["value"]
       clause = ruby_for_date_compare(col_ruby, col_type, tz, nil, nil, ">", val)
     when "includes all"
@@ -225,7 +225,7 @@ class MiqExpression
     when "value exists"
       clause = operands2rubyvalue(operator, op_args, context_type)
     when "is"
-      col_ruby, _ = operands2rubyvalue(operator, {"field" => col_name}, context_type)
+      col_ruby, _value = operands2rubyvalue(operator, {"field" => col_name}, context_type)
       col_type = get_col_type(col_name)
       value = op_args["value"]
       clause = if col_type == :date && !RelativeDatetime.relative?(value)
@@ -234,7 +234,7 @@ class MiqExpression
                  ruby_for_date_compare(col_ruby, col_type, tz, ">=", value, "<=", value)
                end
     when "from"
-      col_ruby, _ = operands2rubyvalue(operator, {"field" => col_name}, context_type)
+      col_ruby, _value = operands2rubyvalue(operator, {"field" => col_name}, context_type)
       col_type = get_col_type(col_name)
 
       start_val, end_val = op_args["value"]
@@ -291,7 +291,7 @@ class MiqExpression
         return true
       elsif exp[operator].keys.include?("field") && exp[operator]["field"].split(".").length == 2
         db, field = exp[operator]["field"].split(".")
-        assoc, _ = field.split("-")
+        assoc, _column = field.split("-")
         ref = db.constantize.reflect_on_association(assoc.to_sym)
         return false unless ref
         return false unless ref.macro == :has_many || ref.macro == :has_one
