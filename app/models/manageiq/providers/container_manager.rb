@@ -1,6 +1,7 @@
 module ManageIQ::Providers
   class ContainerManager < BaseManager
     include AvailabilityMixin
+    include HasMonitoringManagerMixin
     include SupportsFeatureMixin
 
     has_many :container_nodes, :foreign_key => :ems_id, :dependent => :destroy
