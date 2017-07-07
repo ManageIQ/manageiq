@@ -9,9 +9,7 @@ namespace :test do
   end
 
   task :verify_no_db_access_loading_rails_environment do
-    # If this gets merged, we can use the attr_reader:
-    # https://github.com/ruby/rake/pull/93
-    if Rake::Task['environment'].instance_variable_get(:@already_invoked)
+    if Rake::Task['environment'].already_invoked
       raise "Failed to verify database access when loading rails because the 'environment' rake task has already been invoked!"
     end
 
