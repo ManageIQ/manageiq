@@ -10,9 +10,9 @@ namespace :test do
       app_prefix = rake_task.name.chomp('test:vmdb:setup')
       if ENV['PARALLEL']
         database_config = Pathname.new(__dir__).expand_path + "../../config/database.yml"
-        if File.readlines(database_config).grep(/TEST_ENV_NUMBER/).size > 0
+        if File.readlines(database_config).grep(/\A\s+database:.+TEST_ENV_NUMBER/).size > 0
           require 'parallel_tests'
-          ParallelTests::CLI.new.run(["--type", "rspec"] + ["-e", "bin/rails #{app_prefix}evm:db:reset"])
+          ParallelTests::CLI.new.run(["--type", "rspec"] + ["-e", "bin/rake #{app_prefix}test:setup_db"])
         else
           puts "Oops! Your database.yml doesn't appear to support parallel tests!"
           puts "Update your config/database.yml with TEST_ENV_NUMBER as seen in the example (database.pg.yml), then try again."

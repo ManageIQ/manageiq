@@ -25,12 +25,10 @@ namespace :test do
   end
 
   task :setup_db => :initialize do
-    puts "** Preparing database"
-    if !defined?(ENGINE_ROOT)
-      Rake::Task['evm:db:reset'].invoke
-    else
-      Rake::Task['app:evm:db:reset'].invoke
-    end
+    ENV["REGION"] ||= (rand(99) + 1).to_s # Ensure we have a random, non-0, region
+    puts "** Preparing database with REGION #{ENV["REGION"]}"
+    reset_task = defined?(ENGINE_ROOT) ? 'app:evm:db:reset' : 'evm:db:reset'
+    Rake::Task[reset_task].invoke
   end
 end
 

@@ -14,10 +14,7 @@ module ManageIQ
 
       ensure_config_files
 
-      if ENV["CI"]
-        write_region_file
-        create_database_user
-      end
+      create_database_user if ENV["CI"]
 
       setup_test_environment(:task_prefix => 'app:', :root => plugin_root)
     end
@@ -103,10 +100,6 @@ module ManageIQ
       Dir.chdir APP_ROOT do
         system("rm -rf vendor/assets/bower_components/")
       end
-    end
-
-    def self.write_region_file(region_number = 1)
-      File.write(APP_ROOT.join("REGION"), region_number.to_s)
     end
 
     def self.create_database_user
