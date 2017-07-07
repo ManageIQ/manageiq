@@ -1,4 +1,6 @@
 describe "shared/views/ems_common/show" do
+  helper ImageEncodeHelper
+
   TestSetup = Struct.new(:ems_type, :helper)
   [
     TestSetup.new(:ems_openstack, EmsCloudHelper::TextualSummary),

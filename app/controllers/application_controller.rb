@@ -31,6 +31,7 @@ class ApplicationController < ActionController::Base
   helper ToolbarHelper
   helper JsHelper
   helper QuadiconHelper
+  helper ImageEncodeHelper
 
   helper CloudResourceQuotaHelper
 

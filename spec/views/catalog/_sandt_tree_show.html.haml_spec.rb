@@ -1,4 +1,6 @@
 describe "catalog/_sandt_tree_show.html.haml" do
+  helper ImageEncodeHelper
+
   before do
     set_controller_for_view("catalog")
     set_controller_for_view_to_be_nonrestful
