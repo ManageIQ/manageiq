@@ -352,6 +352,10 @@ class MiqExpression
     @context_type = ctype
   end
 
+  def self.parse_field_or_tag(str)
+    MiqExpression::Field.parse(str) || MiqExpression::CountField.parse(str) || MiqExpression::Tag.parse(str)
+  end
+
   def self.proto?
     return @proto if defined?(@proto)
     @proto = VMDB::Config.new("vmdb").config.fetch_path(:product, :proto)
