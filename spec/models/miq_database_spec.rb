@@ -135,8 +135,10 @@ describe MiqDatabase do
   end
 
   if ENV.key?("CI")
-    it "uses region 1 on travis" do
-      expect(MiqDatabase.seed.my_region_number).to eq(1)
+    it "uses a random, non-zero, region number on Travis" do
+      db = MiqDatabase.seed
+      expect(db.region_number).to be > 0
+      expect(db.region_number).to eq(MiqRegion.my_region_number)
     end
   end
 end
