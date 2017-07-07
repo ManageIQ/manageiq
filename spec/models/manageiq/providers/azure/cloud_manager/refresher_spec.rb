@@ -51,6 +51,21 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     @ems.reload
   end
 
+  context "template deployments" do
+    let(:template_deployment_service) { double }
+
+    before do
+      allow(template_deployment_service).to receive(:api_version=)
+      allow(Azure::Armrest::TemplateDeploymentService).to receive(:new).and_return(template_deployment_service)
+    end
+
+    it "orchestration stack parsing handles an empty list of template deployments" do
+      allow(template_deployment_service).to receive(:list).and_return([])
+      setup_ems_and_cassette
+      expect(OrchestrationStack.count).to eql(0)
+    end
+  end
+
   context "proxy support" do
     let(:proxy) { URI::HTTP.build(:host => 'localhost', :port => 8080) }
 

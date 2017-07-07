@@ -533,7 +533,7 @@ module ManageIQ::Providers
 
       # Remap from children to parent
       def update_nested_stack_relations
-        @data[:orchestration_stacks].each do |stack|
+        Array(@data[:orchestration_stacks]).each do |stack|
           stack[:children].each do |child_stack_id|
             child_stack = @data_index.fetch_path(:orchestration_stacks, child_stack_id)
             child_stack[:parent] = stack if child_stack
