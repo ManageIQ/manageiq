@@ -17,6 +17,7 @@ class Host < ApplicationRecord
     # DB            Displayed
     "microsoft"       => "Microsoft",
     "redhat"          => "RedHat",
+    "kubevirt"        => "KubeVirt",
     "vmware"          => "VMware",
     "openstack_infra" => "OpenStack Infrastructure",
     "unknown"         => "Unknown",

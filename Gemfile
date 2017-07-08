@@ -109,6 +109,10 @@ group :kubernetes, :openshift, :manageiq_default do
   manageiq_plugin "manageiq-providers-kubernetes"
 end
 
+group :kubevirt, :manageiq_default do
+  manageiq_plugin "manageiq-providers-kubevirt"
+end
+
 group :lenovo, :manageiq_default do
   manageiq_plugin "manageiq-providers-lenovo"
 end
