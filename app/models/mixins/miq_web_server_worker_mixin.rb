@@ -134,7 +134,6 @@ module MiqWebServerWorkerMixin
 
   def start
     delete_pid_file
-    ENV['PORT'] = port.to_s
     ENV['MIQ_GUID'] = guid
     super
   end
