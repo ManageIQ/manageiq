@@ -1,38 +1,21 @@
 #column_lists
   = render :partial => "layouts/flash_msg"
-  %table#formtest.form{:width => "50%"}
-    %tr
-      %td.widthed{:align => "left"}
-        = _('Dashboards:')
-      %td
-    %tr
-      %td.left{:valign => "top"}
-        = select_tag('seq_fields[]',
-          options_for_select(@edit[:new][:dashboard_order], @selected),
-          :multiple => true,
-          :style    => "width: 450px",
-          :size     => 20,
-          :id       => "seq_fields")
-      %td{:width => "30", :align => "left", :valign => "middle"}
-        - if @edit[:new][:dashboard_order].length < 2
-          = image_tag(image_path('toolbars/up.png'), :class => "dimmed small")
-        - else
-          - t = _("Move selected fields up")
-          = link_to(image_tag(image_path('toolbars/up.png'), :class => "rollover small", :alt => t),
-            {:action => 'db_form_field_changed', :button => 'up', :id => "seq"},
-            "data-submit" => "column_lists",
-            :remote       => true,
-            "data-method" => :post,
-            :title        => t)
-        - if @edit[:new][:dashboard_order].length < 2
-          = image_tag(image_path('toolbars/down.png'), :class => "dimmed small")
-        - else
-          - t = _("Move selected fields down")
-          = link_to(image_tag(image_path('toolbars/down.png'), :class => "rollover small", :alt => t),
-            {:action => 'db_form_field_changed', :button => 'down', :id => "seq"},
-            "data-submit" => "column_lists",
-            :remote       => true,
-            "data-method" => :post,
-            :title        => t)
-    .note
-      = _('* Select one or more consecutive groups to move up or down.')
+  .col-md-7.col-sm-10.col-xs-10
+    = _('Dashboards:')
+    = select_tag('seq_fields[]',
+      options_for_select(@edit[:new][:dashboard_order], @selected),
+      :multiple => true,
+      :class    => "form-control",
+      :style    => "overflow-x: scroll;",
+      :size     => 20,
+      :id       => "seq_fields")
+    %small= _('* Select one or more consecutive groups to move up or down.')
+
+  - button_params = @edit[:new][:dashboard_order].length >= 2 ? [[_("Move selected fields up"),   'column_lists', 'up',    'fa-angle-up'],
+                                                                 [_("Move selected fields down"), 'column_lists', 'down',  'fa-angle-down']] : []
+  = render :partial => "shared/views/seq_selector_buttons",
+           :locals  => {:fields_count  => @edit[:new][:dashboard_order].length,
+                        :button_params => button_params,
+                        :button_action => 'db_form_field_changed',
+                        :id            => 'seq'}
+

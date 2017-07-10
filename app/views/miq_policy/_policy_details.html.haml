@@ -74,46 +74,50 @@
       - if @edit
         - if @edit[:typ] == "conditions"
           %h3= _("Condition Selection")
-          %table#formtest.form{:width => "100%"}
-            %tr
-              %td{:align => "left"}= _("Available %{model} Conditions:") % {:model => ui_lookup(:model => @edit[:new][:towhat])}
-              %td
-              %td.widthed{:align => "left"}= _("Policy Conditions:")
-            %tr
-              %td.widthed{:align => "left", :valign => "top"}
-                %span#choices_chosen_div
-                  = select_tag('choices_chosen[]',
-                    options_for_select(@edit[:choices].sort),
-                    :multiple => true,
-                    :class    => "widthed",
-                    :size     => 8,
-                    :id       => "choices_chosen")
-                %p
-              %td{:width => "20", :valign => "middle"}
-                .btn-group-vertical
-                  - [[_("Move selected Conditions into this Policy"),   'choices_chosen_div', 'move_right',   'fa-angle-right'],
-                     [_("Remove all Conditions from this Policy"),      nil,                  'move_allleft', 'fa-angle-double-left'],
-                     [_("Remove selected Conditions from this Policy"), 'members_chosen_div', 'move_left',    'fa-angle-left']].each do |title, chosen_div, action, arrow_style|
-                    %button.btn.btn-default{:title => title,
-                                            :remote => true,
-                                            "data-submit" => chosen_div,
-                                            "data-method" => :post,
-                                            "data-miq_sparkle_on"  => true,
-                                            "data-miq_sparkle_off" => true,
-                                            "data-click_url" => {:url => url_for(:action => 'policy_edit',
-                                                                                 :button => action,
-                                                                                 :id => @policy)}.to_json}
-                      %i.fa.fa-lg{:class => arrow_style}
-              %td{:align => "right", :valign => "top"}
-                %span#members_chosen_div
-                  = select_tag('members_chosen[]',
-                    options_for_select(@edit[:new][:conditions].sort),
-                    :multiple => true,
-                    :class    => "widthed",
-                    :size     => 8,
-                    :id       => "members_chosen")
-          %strong
-            = _("* If all Conditions are removed from a Policy, it will be unconditional and always evaluate to true.")
+          .col-md-5
+            = _("Available %{model} Conditions:") % {:model => ui_lookup(:model => @edit[:new][:towhat])}
+            %span#choices_chosen_div
+              = select_tag('choices_chosen[]',
+                options_for_select(@edit[:choices].sort),
+                :multiple => true,
+                :size     => 15,
+                :class    => "form-control",
+                :style    => "overflow-x: scroll;",
+                :id       => "choices_chosen")
+            %small
+              = _("* If all Conditions are removed from a Policy, it will be unconditional and always evaluate to true.")
+
+          .col-md-1{:style => "padding: 10px"}
+            .spacer
+            .spacer
+            - [[_("Move selected Conditions into this Policy"),   'choices_chosen_div', 'move_right',   'fa-angle-right'],
+               [_("Remove all Conditions from this Policy"),      nil,                  'move_allleft', 'fa-angle-double-left'],
+               [_("Remove selected Conditions from this Policy"), 'members_chosen_div', 'move_left',    'fa-angle-left']].each do |title, chosen_div, action, arrow_style|
+              %button.btn.btn-default.btn-block{:title => title,
+                                      :remote => true,
+                                      "data-submit" => chosen_div,
+                                      "data-method" => :post,
+                                      "data-miq_sparkle_on"  => true,
+                                      "data-miq_sparkle_off" => true,
+                                      "data-click_url" => {:url => url_for(:action => 'policy_edit',
+                                                                           :button => action,
+                                                                           :id => @policy)}.to_json}           
+                %i.fa.fa-lg.hidden-xs.hidden-sm{:class => arrow_style}
+                %i.fa.fa-lg.fa-rotate-90.hidden-md.hidden-lg{:class => arrow_style}
+            .spacer
+
+          .col-md-5
+            = _("Policy Conditions:")
+            %br
+            %span#members_chosen_div
+              = select_tag('members_chosen[]',
+                options_for_select(@edit[:new][:conditions].sort),
+                :multiple => true,
+                :size     => 15,
+                :class    => "form-control",
+                :style    => "overflow-x: scroll;",
+                :id       => "members_chosen")
+
       - else
         %h3= _("Conditions")
         - if @policy_conditions.empty?
@@ -122,17 +126,15 @@
           %table.table.table-striped.table-bordered.table-hover
             %thead
               %tr
-                %th.narrow
+                %th.table-view-pf-select
                 %th= _("Description")
                 %th= _("Scopes / Expressions")
             %tbody
               - @policy_conditions.each do |c|
                 %tr{:title => _("View this Condition"),
                   :onclick => "miqTreeActivateNode('#{x_active_tree}', '#{x_node}_co-#{to_cid(c.id)}');"}
-                  %td.narrow
-                    %ul.icons.list-unstyled
-                      %li
-                        %span{:class => "product product-miq_condition"}
+                  %td.table-view-pf-select
+                    %i{:class => "product product-miq_condition"}
                   %td
                     = c.description
                   %td
@@ -170,15 +172,15 @@
           %table.table.table-striped.table-bordered.table-hover
             %thead
               %tr
-                %th.narrow
+                %th.table-view-pf-select
                 %th= _("Description")
                 %th= _("Actions")
             %tbody
               - @policy_events.each do |e|
                 %tr
-                  %td.narrow{:title => _("View this Policy Event"),
+                  %td.table-view-pf-select{:title => _("View this Policy Event"),
                     :onclick => "miqTreeActivateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}');"}
-                    %img{:src => image_path("100/event-#{e.name}.png")}
+                    %i{:class => e.decorate.try(:fonticon)}
                   %td{:title => _("View this Policy Event"),
                     :onclick => "miqTreeActivateNode('#{x_active_tree}', '#{x_node}_ev-#{to_cid(e.id)}');"}
                     = h(e.description)
@@ -242,7 +244,7 @@
                   - id = "pp-#{to_cid(pp.id)}"
                   %tr{:title => _("View this Profile"),
                     :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=policy_profile")}
-                    %td.narrow
+                    %td.table-view-pf-select
                       %img{:src => image_path("100/policy_profile#{pp.active? ? '' : '_inactive'}.png")}
                     %td
                       = pp.description

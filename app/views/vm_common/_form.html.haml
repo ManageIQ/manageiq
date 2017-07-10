@@ -52,55 +52,58 @@
 
   %hr
   %h3= _('Child VM Selection')
-  %table#child-vm-select
-    %tr
-      %td.widthed{:align => "left"}= _('Child VMs:')
-      %td
-      %td{:align => "left"}= _('Available VMs:')
-    %tr
-      %td{:align => "right", :valign => "top"}
-        %div{:style => "overflow: auto; width: 400px; border: 1px solid #999999;"}
-          = select_tag('kids_chosen[]',
-            options_for_select(@edit[:new][:kids].sort),
-            :multiple => true,
-            :size => 15,
-            :style => "width: 400px",
-            :id => "kids_chosen")
-      %td.text-center{:width => "40"}
-        .btn-group-vertical
-          %button.btn.btn-default{:title => _("Move selected VMs to right"),
-            "data-submit"         => 'main_div',
-            "data-miq_sparkle_on" => true,
-            :remote               => true,
-            "data-method"         => :post,
-            'data-click_url' => {:url => "#{url}?button=right"}.to_json,
-            :id     => @record.id || "new"}
-            %i.fa.fa-angle-right.fa-lg
-          %button.btn.btn-default{:title => _("Move all VMs to right"),
-            "data-submit"         => 'main_div',
-            "data-miq_sparkle_on" => true,
-            :remote               => true,
-            "data-method"         => :post,
-            'data-click_url' => {:url => "#{url}?button=allright"}.to_json,
-            :id     => @record.id || "new"}
-            %i.fa.fa-angle-double-right.fa-lg
-          %button.btn.btn-default{:title => _("Move selected VMs to left"),
-            "data-submit"         => 'main_div',
-            "data-miq_sparkle_on" => true,
-            :remote               => true,
-            "data-method"         => :post,
-            'data-click_url' => {:url => "#{url}?button=left"}.to_json,
-            :id     => @record.id || "new"}
-            %i.fa.fa-angle-left.fa-lg
+  #child-vm-select
+    .col-md-5
+      = _('Child VMs:')
+      = select_tag('kids_chosen[]',
+        options_for_select(@edit[:new][:kids].sort),
+        :multiple => true,
+        :size     => 15,
+        :class    => "form-control",
+        :style    => "overflow-x: scroll;",
+        :id       => "kids_chosen")
 
-      %td{:align => "left", :valign => "top"}
-        %div{:style => "overflow: auto; width: 400px; border: 1px solid #999999;"}
-          = select_tag('choices_chosen[]',
-            options_for_select(@edit[:choices].sort),
-            :multiple => true,
-            :style => "width: 400px; min-width:375px; border: 0px;",
-            :size => 15,
-            :id => "choices_chosen")
+    .col-md-1{:style => "padding: 10px"}
+      .spacer
+      .spacer
+      %button.btn.btn-default.btn-block{:title => _("Move selected VMs to right"),
+        "data-submit"         => 'main_div',
+        "data-miq_sparkle_on" => true,
+        :remote               => true,
+        "data-method"         => :post,
+        'data-click_url' => {:url => "#{url}?button=right"}.to_json,
+        :id     => @record.id || "new"}
+        %i.fa.fa-angle-right.fa-lg.hidden-xs.hidden-sm
+        %i.fa.fa-angle-right.fa-lg.fa-rotate-90.hidden-md.hidden-lg
+      %button.btn.btn-default.btn-block{:title => _("Move all VMs to right"),
+        "data-submit"         => 'main_div',
+        "data-miq_sparkle_on" => true,
+        :remote               => true,
+        "data-method"         => :post,
+        'data-click_url' => {:url => "#{url}?button=allright"}.to_json,
+        :id     => @record.id || "new"}
+        %i.fa.fa-angle-double-right.fa-lg.hidden-xs.hidden-sm
+        %i.fa.fa-angle-double-right.fa-lg.fa-rotate-90.hidden-md.hidden-lg
+      %button.btn.btn-default.btn-block{:title => _("Move selected VMs to left"),
+        "data-submit"         => 'main_div',
+        "data-miq_sparkle_on" => true,
+        :remote               => true,
+        "data-method"         => :post,
+        'data-click_url' => {:url => "#{url}?button=left"}.to_json,
+        :id     => @record.id || "new"}
+        %i.fa.fa-angle-left.fa-lg.hidden-xs.hidden-sm
+        %i.fa.fa-angle-left.fa-lg.fa-rotate-90.hidden-md.hidden-lg
+      .spacer
+
+    .col-md-5
+      = _('Available VMs:')
+      = select_tag('choices_chosen[]',
+        options_for_select(@edit[:choices].sort),
+        :multiple => true,
+        :size     => 15,
+        :class    => "form-control",
+        :style    => "overflow-x: scroll;",
+        :id       => "choices_chosen")
 
   - unless @edit[:explorer]
     = render(:partial => '/layouts/edit_form_buttons', :locals  => {:action_url => "edit_vm", :ajax_buttons => true, :record_id => @record.id})
