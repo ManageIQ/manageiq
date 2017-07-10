@@ -47,6 +47,14 @@ module ManageIQ::Providers
 
     private
 
+    def get_inventory_collection(collection_type)
+      if @ems.kind_of?(ManageIQ::Providers::Openstack::CloudManager) && ::Settings.ems.ems_openstack.refresh.is_admin
+        @network_service.handled_list(collection_type, {}, true)
+      else
+        @network_service.handled_list(collection_type)
+      end
+    end
+
     def parent_manager_fetch_path(collection, ems_ref)
       @parent_manager_data ||= {}
       return @parent_manager_data.fetch_path(collection, ems_ref) if @parent_manager_data.has_key_path?(collection, ems_ref)
@@ -64,23 +72,23 @@ module ManageIQ::Providers
     end
 
     def security_groups
-      @security_groups ||= @network_service.handled_list(:security_groups)
+      @security_groups ||= get_inventory_collection(:security_groups)
     end
 
     def networks
-      @networks ||= @network_service.handled_list(:networks)
+      @networks ||= get_inventory_collection(:networks)
     end
 
     def network_ports
-      @network_ports ||= @network_service.handled_list(:ports)
+      @network_ports ||= get_inventory_collection(:ports)
     end
 
     def network_routers
-      @network_routers ||= @network_service.handled_list(:routers)
+      @network_routers ||= get_inventory_collection(:routers)
     end
 
     def floating_ips
-      @network_service.handled_list(:floating_ips)
+      @floating_ips ||= get_inventory_collection(:floating_ips)
     end
 
     def get_networks
@@ -295,7 +303,7 @@ module ManageIQ::Providers
         :network_protocol      => rule.ethertype.to_s.upcase,
         :port                  => rule.port_range_min,
         :end_port              => rule.port_range_max,
-        :source_security_group => rule.remote_group_id,
+        :source_security_group => @data_index.fetch_path(:security_groups, rule.remote_group_id),
         :source_ip_range       => rule.remote_ip_prefix,
       }
     end

@@ -102,6 +102,10 @@
     :excon:
       :omit_default_port: true
       :read_timeout: 60
+    :refresh:
+      :is_admin: false
+      :heat:
+        :is_global_admin: false
   :ems_redhat:
     :use_ovirt_engine_sdk: false
     :resolve_ip_addresses: true
