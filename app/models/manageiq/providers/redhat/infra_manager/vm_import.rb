@@ -28,7 +28,7 @@ module ManageIQ::Providers::Redhat::InfraManager::VmImport
       :cluster_id        => EmsCluster.find(target_params[:cluster_id]).uid_ems,
       :storage_domain_id => Storage.find(target_params[:storage_id]).ems_ref_obj.split('/').last,
       :sparse            => target_params[:sparse],
-      :drivers_iso       => target_params[:drivers_iso]
+      :drivers_iso       => target_params[:drivers_iso] != '' ? target_params[:drivers_iso] : nil
     )
   end
 
