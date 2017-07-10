@@ -346,5 +346,14 @@ RSpec.describe Api::Filter do
       expected = {"=" => {"field" => "Vm-ems_id", "value" => 1_000_000_000_123}}
       expect(actual.exp).to eq(expected)
     end
+
+    it "can handle operator characters on the right hand side" do
+      filters = ["name=Vms with free space > 50 percent"]
+
+      actual = described_class.parse(filters, MiqReport)
+
+      expected = {"=" => {"field" => "MiqReport-name", "value" => "Vms with free space > 50 percent"}}
+      expect(actual.exp).to eq(expected)
+    end
   end
 end
