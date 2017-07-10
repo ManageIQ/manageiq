@@ -36,4 +36,20 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
       assert_with_skips
     end
   end
+
+  context "when using an admin account for fast refresh" do
+    it "will perform a fast full legacy refresh against RHOS #{@environment}" do
+      ::Settings.ems.ems_openstack.refresh.is_admin = true
+      2.times do
+        with_cassette("#{@environment}_legacy_fast_refresh", @ems) do
+          EmsRefresh.refresh(@ems)
+          EmsRefresh.refresh(@ems.network_manager)
+          EmsRefresh.refresh(@ems.cinder_manager)
+          EmsRefresh.refresh(@ems.swift_manager)
+        end
+        assert_common
+      end
+      ::Settings.ems.ems_openstack.refresh.is_admin = false
+    end
+  end
 end

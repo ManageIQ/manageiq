@@ -96,6 +96,10 @@
     :excon:
       :omit_default_port: true
       :read_timeout: 60
+    :refresh:
+      :is_admin: false
+      :heat:
+        :is_global_admin: false
   :ems_redhat:
     :resolve_ip_addresses: true
     :inventory:
