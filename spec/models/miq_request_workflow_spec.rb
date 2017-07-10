@@ -358,6 +358,22 @@ describe MiqRequestWorkflow do
     end
   end
 
+  context "#validate_blacklist" do
+    let(:blacklist) { {:blacklist => ['foo', 'bar']} }
+
+    it "returns nil if the value is not blacklisted" do
+      expect(workflow.validate_blacklist(nil, {}, {}, blacklist, 'test')).to be_nil
+    end
+
+    it "returns a formatted message when the value is blacklisted" do
+      expect(workflow.validate_blacklist(nil, {}, {}, blacklist, 'foo')).to eq("'/' may not contain blacklisted value")
+    end
+
+    it "returns an error when no value exists" do
+      expect(workflow.validate_blacklist(nil, {}, {}, blacklist, '')).to eq "'/' is required"
+    end
+  end
+
   context "#validate regex" do
     let(:regex) { {:required_regex => "^n@test.com$"} }
     let(:regex_two) { {:required_regex => "^n$"} }
