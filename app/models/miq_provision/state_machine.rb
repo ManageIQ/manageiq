@@ -43,7 +43,10 @@ module MiqProvision::StateMachine
 
   def poll_destination_in_vmdb
     update_and_notify_parent(:message => "Validating New #{destination_type}")
-
+    # fill vm_name field if is not given
+    if dest_name && phase_context[:new_vm_ems_ref] && phase_context[:new_vm_ems_ref][:vm_name].nil?
+       phase_context[:new_vm_ems_ref][:vm_name] = dest_name
+    end
     self.destination = find_destination_in_vmdb(phase_context[:new_vm_ems_ref])
     if destination
       phase_context.delete(:new_vm_ems_ref)
