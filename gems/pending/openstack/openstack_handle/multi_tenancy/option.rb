@@ -4,7 +4,7 @@ module OpenstackHandle
   module MultiTenancy
     class Option < OpenstackHandle::MultiTenancy::Base
       def list
-        @service.pagination_handle(@collection_type, @options.merge(:all_tenants => 'True'), @method)
+        @service.pagination_handle(@collection_type, @options.merge(:all_tenants => 'True'), @method).list
       end
     end
   end

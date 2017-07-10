@@ -3,10 +3,11 @@ require 'openstack/openstack_handle/pagination/page_number'
 require 'openstack/openstack_handle/pagination/none'
 
 require 'openstack/openstack_handle/multi_tenancy/loop'
+require 'openstack/openstack_handle/multi_tenancy/option'
 
 module OpenstackHandle
   module HandledList
-    def handled_list(collection_type, options = {})
+    def handled_list(collection_type, options = {}, all_tenants = nil)
       # Will automatically handle multi-tenancy and pagination of all Fog list methods, so we always get all openstack
       # entities back. The exceptions of each service and collection type will be solved in <service_name>)_delegate
       # classes by defining multi_tenancy_type and pagination_type methods base on collection_type
@@ -15,6 +16,11 @@ module OpenstackHandle
       # @orchestration_service.handled_list(:resources, :stack => stack)
       # By default, it calls :all method on the Fog collection, that has unified interface in all list methods in Fog
       # and always returns detailed list.
+      multi_tenancy_class = if all_tenants
+                              OpenstackHandle::MultiTenancy::Option
+                            else
+                              default_multi_tenancy_class
+                            end
       multi_tenancy_class.new(self, @os_handle, self.class::SERVICE_NAME, collection_type, options,
                               :all).list
     rescue Excon::Errors::Forbidden => err
@@ -76,7 +82,7 @@ module OpenstackHandle
       OpenstackHandle::Pagination::Marker
     end
 
-    def multi_tenancy_class
+    def default_multi_tenancy_class
       # Using method, so we can e.g set multi_tenancy_type type per method name, e.g. when attribute all_tenants is
       # broken on some collections, so it's better to rather sent API request per tenant
       # Allowed values  OpenstackHandle::MultiTenancy::Loop,  OpenstackHandle::MultiTenancy::Option,
