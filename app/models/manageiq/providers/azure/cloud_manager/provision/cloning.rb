@@ -11,7 +11,7 @@ module ManageIQ::Providers::Azure::CloudManager::Provision::Cloning
 
   def find_destination_in_vmdb(vm_uid_hash)
     ems_ref = vm_uid_hash.values.join("\\")
-    ManageIQ::Providers::Azure::CloudManager::Vm.find_by(:ems_ref => ems_ref.downcase)
+    ManageIQ::Providers::Azure::CloudManager::Vm.find_by("lower(ems_ref) = ?", ems_ref.downcase)
   end
 
   def gather_storage_account_properties
