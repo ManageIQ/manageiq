@@ -4,6 +4,7 @@ class Classification < ApplicationRecord
   belongs_to :tag
 
   virtual_column :name, :type => :string
+  virtual_column :ns, :type => :string
 
   before_save    :save_tag
   before_destroy :delete_tags_and_entries
