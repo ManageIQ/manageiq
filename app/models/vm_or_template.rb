@@ -669,6 +669,7 @@ class VmOrTemplate < ApplicationRecord
       self.ext_management_system = nil
       self.ems_cluster = nil
       self.raw_power_state = "unknown"
+      self.ems_id = nil
       save
     end
   end
