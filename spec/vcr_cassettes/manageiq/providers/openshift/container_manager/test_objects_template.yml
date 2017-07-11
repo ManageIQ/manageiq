@@ -1,0 +1,205 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: template-test
+  annotations:
+    description: "Description" 
+    iconClass: "Icon" 
+    tags: "database,nosql" 
+objects:   
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    name: my-pod-${INDEX}
+    labels:
+      key-pod-label: "value-pod-label"
+  spec:
+    containers:
+    - env:
+      image: registry.access.redhat.com/jboss-decisionserver-6/decisionserver63-openshift
+      name: my-container
+      ports:
+      - containerPort: 6379
+        protocol: TCP
+      securityContext:
+        privileged: true
+        seLinuxOptions:
+          level: "s0:c123,c456"
+          user: "username"
+          role: "admin"
+          type: "default"
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: my-route-${INDEX}
+    labels:
+      key-route-label: "value-route-label"
+  spec:
+    to:
+      kind: Service
+      name: service-name
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: my-service-${INDEX}
+  spec:
+    selector:                  
+      docker-registry: default  
+    ports:
+    - nodePort: 0
+      port: 5000               
+      protocol: TCP
+      targetPort: 5000
+- apiVersion: v1
+  kind: "BuildConfig"
+  metadata:
+    name: my-build-config-${INDEX}
+  spec:
+    runPolicy: "Serial" 
+    triggers: 
+      -
+        type: "GitHub"
+        github:
+          secret: "secret101"
+      - type: "Generic"
+        generic:
+          secret: "secret101"
+      -
+        type: "ImageChange"
+    source: 
+      git:
+        uri: "https://github.com/openshift/ruby-hello-world"
+    strategy: 
+      sourceStrategy:
+        from:
+          kind: "ImageStreamTag"
+          name: "ruby-20-centos7:latest"
+    output: 
+      to:
+        kind: "ImageStreamTag"
+        name: "origin-ruby-sample:latest"
+    postCommit: 
+        script: "bundle exec rake test"
+- apiVersion: v1
+  kind: "Build"
+  metadata:
+    name: my-build-${INDEX}
+  spec:
+    runPolicy: "Serial"
+    triggers:
+      -
+        type: "GitHub"
+        github:
+          secret: "secret101"
+      - type: "Generic"
+        generic:
+          secret: "secret101"
+      -
+        type: "ImageChange"
+    source:
+      git:
+        uri: "https://github.com/openshift/ruby-hello-world"
+    strategy:
+      sourceStrategy:
+        from:
+          kind: "ImageStreamTag"
+          name: "ruby-20-centos7:latest"
+    output:
+      to:
+        kind: "ImageStreamTag"
+        name: "origin-ruby-sample:latest"
+    postCommit:
+        script: "bundle exec rake test"
+- apiVersion: "v1"
+  kind: "LimitRange"
+  metadata:
+    name: my-limit-range-${INDEX}
+  spec:
+    limits:
+      - type: "Pod"
+        max:
+          cpu: "2" 
+          memory: "1Gi" 
+        min:
+          cpu: "200m" 
+          memory: "6Mi" 
+      - type: "Container"
+        max:
+          cpu: "2" 
+          memory: "1Gi" 
+        min:
+          cpu: "100m" 
+          memory: "4Mi" 
+        default:
+          cpu: "300m" 
+          memory: "200Mi" 
+        defaultRequest:
+          cpu: "200m" 
+          memory: "100Mi" 
+        maxLimitRequestRatio:
+          cpu: "10"
+- apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    name: my-replicationcontroller-${INDEX}
+  spec:
+    replicas: 0
+    selector:
+      app: nginx
+    template:
+      metadata:
+        name: nginx
+        labels:
+          app: nginx
+      spec:
+        containers:
+        - name: nginx
+          image: nginx
+          ports:
+          - containerPort: 80
+- apiVersion: v1
+  kind: ResourceQuota
+  metadata:
+    name: my-resource-quota-${INDEX}
+  spec:
+    hard:
+      configmaps: "10"
+      persistentvolumeclaims: "4"
+      replicationcontrollers: "20"
+      secrets: "10"
+      services: "10"
+- apiVersion: v1
+  kind: Template
+  metadata:
+    name: my-template-${INDEX}
+    annotations:
+      description: "Description"
+      iconClass: "icon"
+      tags: "database,nosql"
+  objects:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: my-persistentvolumeclaim
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 8Gi
+  parameters:
+  - name: MYPARAM
+    value: my-value 
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: my-persistentvolumeclaim-${INDEX}
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 8Gi
+parameters:
+- name: INDEX
+  value: "0"
