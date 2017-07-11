@@ -312,7 +312,7 @@ module EmsRefresh::SaveInventoryContainer
     end
 
     save_inventory_multi(ems.container_images, hashes, deletes, [:image_ref, :container_image_registry_id],
-                         [:labels, :docker_labels], :container_image_registry, true)
+                         [:labels, :docker_labels, :annotations], :container_image_registry, true)
     store_ids_for_new_records(ems.container_images, hashes,
                               [:image_ref, :container_image_registry_id])
   end
@@ -413,6 +413,10 @@ module EmsRefresh::SaveInventoryContainer
 
   def save_labels_inventory(entity, hashes, target = nil)
     save_custom_attribute_attribute_inventory(entity, :labels, hashes, target)
+  end
+
+  def save_annotations_inventory(entity, hashes, target = nil)
+    save_custom_attribute_attribute_inventory(entity, :annotations, hashes, target)
   end
 
   def save_docker_labels_inventory(entity, hashes, target = nil)
