@@ -151,5 +151,20 @@ describe MiqProvision do
         template.reload.with_relationship_type("genealogy")  { |v| expect(v.children).to eq([vm]) }
       end
     end
+
+    context "#poll_destination_in_vmdb" do
+      before do
+        allow(task).to receive(:update_and_notify_parent)
+      end
+
+      it "fill vm_name with dest_name if not exist" do
+        expect(task.phase_context[:new_vm_ems_ref][:vm_name]).to be_nil
+
+        expect(task).to receive(:signal).with(:poll_destination_in_vmdb)
+        expect(task.phase_context[:new_vm_ems_ref][:vm_name]).to eq(
+          options[:vm_target_name]
+        )
+      end
+    end
   end
 end
