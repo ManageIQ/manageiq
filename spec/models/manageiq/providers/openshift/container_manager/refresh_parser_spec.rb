@@ -281,40 +281,99 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
   end
 
   describe "parse_build_pod" do
+    let (:basic_build_pod) do
+      {
+        :metadata => {
+          :name              => 'ruby-sample-build-1',
+          :uid               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+          :resourceVersion   => '165339',
+          :creationTimestamp => '2015-08-17T09:16:46Z',
+        },
+        :status   => {
+          :message                    => 'we come in peace',
+          :phase                      => 'set to stun',
+          :reason                     => 'this is a reason',
+          :duration                   => '33',
+          :completionTimestamp        => '50',
+          :startTimestamp             => '17',
+          :outputDockerImageReference => 'host:port/path/to/image',
+          :config                     => {
+            :name => 'ruby-sample-build',
+          },
+        }
+      }
+    end
+
+    let (:basic_build_config) do
+      {
+        :metadata => {
+          :name              => 'ruby-sample-build',
+          :uid               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+          :resourceVersion   => '165339',
+          :creationTimestamp => '2015-08-17T09:16:46Z',
+        },
+        :spec     => {
+          :serviceAccount            => 'service_account_name',
+          :completionDeadlineSeconds => '11',
+          :output                    => {
+            :to => {
+              :name => 'spec_output_to_name',
+            },
+          },
+          :source                    => {
+            :type => 'Git',
+            :git  => {
+              :uri => 'http://my/git/repo.git',
+            }
+          },
+        }
+      }
+    end
+
     it "handles simple data" do
+      build_pod = basic_build_pod.deep_dup
+      build_pod[:metadata][:namespace] = 'test-namespace'
       expect(parser.send(:parse_build_pod,
-                         RecursiveOpenStruct.new(
-                           :metadata => {
-                             :name              => 'ruby-sample-build-1',
-                             :namespace         => 'test-namespace',
-                             :uid               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
-                             :resourceVersion   => '165339',
-                             :creationTimestamp => '2015-08-17T09:16:46Z',
-                           },
-                           :status   => {
-                             :message                    => 'we come in peace',
-                             :phase                      => 'set to stun',
-                             :reason                     => 'this is a reason',
-                             :duration                   => '33',
-                             :completionTimestamp        => '50',
-                             :startTimestamp             => '17',
-                             :outputDockerImageReference => 'host:port/path/to/image'
-                           }
-                         ))).to eq(:name                          => 'ruby-sample-build-1',
-                                   :ems_ref                       => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
-                                   :namespace                     => 'test-namespace',
-                                   :ems_created_on                => '2015-08-17T09:16:46Z',
-                                   :resource_version              => '165339',
-                                   :message                       => 'we come in peace',
-                                   :phase                         => 'set to stun',
-                                   :reason                        => 'this is a reason',
-                                   :duration                      => '33',
-                                   :completion_timestamp          => '50',
-                                   :start_timestamp               => '17',
-                                   :labels                        => [],
-                                   :build_config                  => nil,
-                                   :output_docker_image_reference => 'host:port/path/to/image'
-                                  )
+                         RecursiveOpenStruct.new(build_pod)
+                         )).to eq(:name                          => 'ruby-sample-build-1',
+                                  :ems_ref                       => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+                                  :namespace                     => 'test-namespace',
+                                  :ems_created_on                => '2015-08-17T09:16:46Z',
+                                  :resource_version              => '165339',
+                                  :message                       => 'we come in peace',
+                                  :phase                         => 'set to stun',
+                                  :reason                        => 'this is a reason',
+                                  :duration                      => '33',
+                                  :completion_timestamp          => '50',
+                                  :start_timestamp               => '17',
+                                  :labels                        => [],
+                                  :build_config                  => nil,
+                                  :output_docker_image_reference => 'host:port/path/to/image'
+                                 )
+    end
+
+    context "build config and pods linking" do
+      def parse_entities(namespace_pod, namespace_config)
+        build_pod = basic_build_pod.deep_dup
+        build_pod[:metadata][:namespace] = namespace_pod
+        build_pod[:status][:config][:namespace] = namespace_pod
+        build_config = basic_build_config.deep_dup
+        build_config[:metadata][:namespace] = namespace_config
+        parser.get_builds(RecursiveOpenStruct.new({"build_config" => [RecursiveOpenStruct.new(build_config),]}))
+        parser.get_build_pods(RecursiveOpenStruct.new({"build" => [RecursiveOpenStruct.new(build_pod),]}))
+      end
+
+      it "links correct build pods to build configurations in same namespace" do
+        parse_entities('namespace_1', 'namespace_1')
+        expect(parser.instance_variable_get('@data')[:container_build_pods].first[:build_config]).to eq(
+          parser.instance_variable_get('@data')[:container_builds].first
+        )
+      end
+
+      it "doesn't link build pods to build configurations in other namespace" do
+        parse_entities('namespace_1', 'namespace_2')
+        expect(parser.instance_variable_get('@data')[:container_build_pods].first[:build_config]).to eq(nil)
+      end
     end
   end
 
