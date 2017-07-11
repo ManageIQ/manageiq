@@ -35,7 +35,7 @@ class MiqAeMethod < ApplicationRecord
 
   # Validate the syntax of the passed in inline ruby code
   def self.validate_syntax(code_text)
-    result = MiqSyntaxChecker.check(code_text)
+    result = ManageIQ::AutomationEngine::SyntaxChecker.check(code_text)
     return nil if result.valid?
     [[result.error_line, result.error_text]] # Array of arrays for future multi-line support
   end
