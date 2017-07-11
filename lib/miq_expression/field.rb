@@ -29,6 +29,10 @@ class MiqExpression::Field < MiqExpression::Target
     "#{[model, *associations].join(".")}-#{column}"
   end
 
+  def valid?
+    target.column_names.include?(column) || virtual_attribute? || custom_attribute_column?
+  end
+
   def attribute_supported_by_sql?
     !custom_attribute_column? && target.attribute_supported_by_sql?(column)
   end

@@ -110,6 +110,28 @@ RSpec.describe MiqExpression::Field do
     end
   end
 
+  describe "#valid?" do
+    it "returns true when the column belongs to the set of column names" do
+      field = described_class.new(Vm, [], "name")
+      expect(field).to be_valid
+    end
+
+    it "returns true when the column belongs to the set of virtual attributes" do
+      field = described_class.new(Vm, [], "platform")
+      expect(field).to be_valid
+    end
+
+    it "returns true when the column is a custom attribute" do
+      field = described_class.new(Vm, [], "VmOrTemplate-virtual_custom_attribute_foo")
+      expect(field).to be_valid
+    end
+
+    it "returns false for non-attribute public methods" do
+      field = described_class.new(Vm, [], "destroy")
+      expect(field).not_to be_valid
+    end
+  end
+
   describe "#reflections" do
     it "returns an empty array if there are no associations" do
       field = described_class.new(Vm, [], "name")

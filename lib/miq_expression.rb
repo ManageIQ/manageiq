@@ -19,6 +19,30 @@ class MiqExpression
     @context_type = ctype
   end
 
+  def valid?(component = exp)
+    operator = component.keys.first
+    case operator.downcase
+    when "and", "or"
+      component[operator].all?(&method(:valid?))
+    when "not", "!"
+      valid?(component[operator])
+    when "find"
+      validate_set = Set.new(%w(checkall checkany checkcount search))
+      validate_keys = component[operator].keys.select { |k| validate_set.include?(k) }
+      validate_keys.all? { |k| valid?(component[operator][k]) }
+    else
+      if component[operator].key?("field")
+        field = Field.parse(component[operator]["field"])
+        return false if field && !field.valid?
+      end
+      if Field.is_field?(component[operator]["value"])
+        field = Field.parse(component[operator]["value"])
+        return false unless field && field.valid?
+      end
+      true
+    end
+  end
+
   def self.proto?
     return @proto if defined?(@proto)
     @proto = ::Settings.product.proto
@@ -111,6 +135,7 @@ class MiqExpression
   end
 
   def to_ruby(tz = nil)
+    return "" unless valid?
     tz ||= "UTC"
     @ruby ||= self.class._to_ruby(@exp.deep_clone, @context_type, tz)
     @ruby.dup
