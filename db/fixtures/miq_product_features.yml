@@ -6331,3 +6331,14 @@
       :description: Show Most Recent Alerts
       :feature_type: view
       :identifier: monitor_alerts_most_recent
+
+# Metrics
+- :name: Metrics
+  :description: Everything under Metrics
+  :feature_type: node
+  :identifier: metrics
+  :children:
+  - :name: View
+    :description: View Metrics
+    :feature_type: view
+    :identifier: metrics_view
