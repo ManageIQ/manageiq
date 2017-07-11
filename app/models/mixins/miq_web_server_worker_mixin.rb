@@ -1,4 +1,3 @@
-require 'miq_apache'
 class NoFreePortError < StandardError; end
 
 module MiqWebServerWorkerMixin
