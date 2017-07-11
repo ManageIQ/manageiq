@@ -397,4 +397,109 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
   def tag_in_category_with_description(category, description)
     satisfy { |tag| tag.category == category && tag.classification.description == description }
   end
+
+  context "when refreshing an empty DB" do
+    # Recreation steps for the VCR cassettes can be found here:
+    # spec/models/manageiq/providers/openshift/container_manager/refresher_spec.rb
+
+    before(:each) do
+      VCR.use_cassette("#{described_class.name.underscore}_before_deletions",
+                       :allow_unused_http_interactions => true,
+                       :match_requests_on              => [:path,]) do # , :record => :new_episodes) do
+        EmsRefresh.refresh(@ems)
+      end
+    end
+
+    it "saves the objects in the DB" do
+      expect(ContainerGroup.count).to eq(10)
+      expect(Container.count).to eq(10)
+      expect(ContainerDefinition.count).to eq(10)
+      expect(ContainerService.count).to eq(11)
+      expect(ContainerQuota.count).to eq(3)
+      expect(ContainerQuotaItem.count).to eq(15)
+      expect(ContainerLimit.count).to eq(3)
+      expect(ContainerLimitItem.count).to eq(12)
+      expect(PersistentVolumeClaim.count).to eq(4)
+    end
+
+    context "when refreshing non empty DB" do
+      # After deleting resources in the cluster:
+      # "my-project-0" - The whole project
+      # "my-project-1" - All resources inside the project
+      # "my-project-2" - "my-pod-2", label of "my-route-2", parameters of "my-template-2"
+
+      before(:each) do
+        VCR.use_cassette("#{described_class.name.underscore}_after_deletions",
+                         :allow_unused_http_interactions => true,
+                         :match_requests_on              => [:path,]) do # , :record => :new_episodes) do
+          EmsRefresh.refresh(@ems)
+        end
+      end
+
+      it "archives objects" do
+        expect(ContainerGroup.count).to eq(10)
+        expect(ContainerGroup.where(:deleted_on => nil).count).to eq(7)
+        expect(Container.count).to eq(10)
+        expect(Container.where(:deleted_on => nil).count).to eq(7)
+        expect(ContainerDefinition.count).to eq(10)
+        expect(ContainerDefinition.where(:deleted_on => nil).count).to eq(7)
+      end
+
+      it "removes the deleted objects from the DB" do
+        expect(ContainerService.count).to eq(9)
+        expect(ContainerQuota.count).to eq(1)
+        expect(ContainerQuotaItem.count).to eq(5)
+        expect(ContainerLimit.count).to eq(1)
+        expect(ContainerLimitItem.count).to eq(4)
+        expect(PersistentVolumeClaim.count).to eq(2)
+
+        expect(ContainerService.find_by(:name => "my-service-0")).to be_nil
+        expect(ContainerService.find_by(:name => "my-service-1")).to be_nil
+
+        expect(ContainerQuota.find_by(:name => "my-resource-quota-0")).to be_nil
+        expect(ContainerQuota.find_by(:name => "my-resource-quota-1")).to be_nil
+
+        expect(ContainerLimit.find_by(:name => "my-limit-range-0")).to be_nil
+        expect(ContainerLimit.find_by(:name => "my-limit-range-1")).to be_nil
+
+        expect(PersistentVolumeClaim.find_by(:name => "my-persistentvolumeclaim-0")).to be_nil
+        expect(PersistentVolumeClaim.find_by(:name => "my-persistentvolumeclaim-1")).to be_nil
+      end
+
+      it "disconnects objects" do
+        pod0 = ContainerGroup.find_by(:name => "my-pod-0")
+        pod1 = ContainerGroup.find_by(:name => "my-pod-1")
+
+        [pod0, pod1].each do |pod|
+          assert_disconnected(pod)
+          expect(pod.container_project).to be_nil
+          expect(pod.containers.count).to eq(1)
+          expect(pod.container_definitions.count).to eq(1)
+        end
+
+        container_def0 = ContainerDefinition.find_by(:name => "my-container", :container_group => pod0)
+        container_def1 = ContainerDefinition.find_by(:name => "my-container", :container_group => pod1)
+
+        [container_def0, container_def1].each do |container_def|
+          assert_disconnected(container_def)
+          expect(container_def.container).not_to be_nil
+        end
+
+        container0 = Container.find_by(:name => "my-container", :container_definition => container_def0)
+        container1 = Container.find_by(:name => "my-container", :container_definition => container_def1)
+
+        [container0, container1].each do |container|
+          assert_disconnected(container)
+          expect(container.container_project).to be_nil
+        end
+      end
+    end
+  end
+
+  def assert_disconnected(object)
+    expect(object).not_to be_nil
+    expect(object.deleted_on).not_to be_nil
+    expect(object.ext_management_system).to be_nil
+    expect(object.old_ems_id).to eq(@ems.id)
+  end
 end
