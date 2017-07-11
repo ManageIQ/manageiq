@@ -1,6 +1,10 @@
 class Flavor < ApplicationRecord
   include NewWithTypeStiMixin
   include CloudTenancyMixin
+  include SupportsFeatureMixin
+
+  supports :create
+  supports :delete
 
   acts_as_miq_taggable
 
@@ -37,5 +41,66 @@ class Flavor < ApplicationRecord
 
   def self.tenant_joins_clause(scope)
     scope.includes(:cloud_tenants => "source_tenant").includes(:ext_management_system)
+  end
+  def delete_flavor_queue(userid)
+    task_opts = {
+      :action => "Deleting flavor for user #{userid}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => 'Flavor',
+      :method_name => 'delete_flavor',
+      :role        => 'ems operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => [ext_management_system.id, options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def raw_delete_flavor
+    raise NotImplementedError, _("raw_delete_flavor must be implemented in a subclass")
+  end
+
+  def validate_delete_flavor
+    validate_unsupported(_("Delete Flavor Operation"))
+  end
+
+  def delete_flavor
+    raw_delete_flavor
+  end
+
+  def delete_flavor_queue(userid)
+    task_opts = {
+      :action => "Deleting flavor for user #{userid}",
+      :userid => userid
+    }
+    binding.pry
+    queue_opts = {
+      :class_name  => 'Flavor',
+      :method_name => 'delete_flavor',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => []
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def raw_delete_flavor
+    raise NotImplementedError, _("raw_delete_flavor must be implemented in a subclass")
+  end
+
+  def validate_delete_flavor
+    validate_unsupported(_("Delete Flavor Operation"))
+  end
+
+  def delete_flavor
+    raw_delete_flavor
+  end
+
+  def validate_unsupported(message_prefix)
+    {:available => false,
+     :message   => _("%<message>s is not available for %<name>s.") % {:message => message_prefix, :name => name}}
   end
 end
