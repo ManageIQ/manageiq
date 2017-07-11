@@ -83,6 +83,10 @@ class ServiceOrchestration < Service
     assign_vms_owner
   end
 
+  def my_zone
+    orchestration_manager.try(:my_zone) || super
+  end
+
   private
 
   def add_stack_to_resource
