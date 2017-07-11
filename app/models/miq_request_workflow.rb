@@ -200,6 +200,10 @@ class MiqRequestWorkflow
           # TODO: do we need validation for boolean
         when :button
           # Ignore
+        when :array_integer
+          unless value.kind_of?(Array)
+            fld[:error] = msg; valid = false
+          end
         else
           data_type = Object.const_get(fld[:data_type].to_s.camelize)
           unless value.kind_of?(data_type)
@@ -1223,11 +1227,13 @@ class MiqRequestWorkflow
         result = if field_values.first.kind_of?(MiqHashStruct)
                    found = field_values.detect { |v| v.id == set_value }
                    [found.id, found.name] if found
+                 elsif data_type == :array_integer
+                   field_values.keys & set_value
                  else
                    [set_value, field_values[set_value]] if field_values.key?(set_value)
                  end
 
-        set_value = [result.first, result.last] unless result.nil?
+        set_value = apply_result(result, data_type)
       end
     end
 
@@ -1238,11 +1244,12 @@ class MiqRequestWorkflow
 
   def cast_value(value, data_type)
     case data_type
-    when :integer then value.to_i_with_method
-    when :float   then value.to_f
-    when :boolean then value.to_s.downcase.in?(%w(true t))
-    when :time    then Time.zone.parse(value)
-    when :button  then value # Ignore
+    when :integer         then value.to_i_with_method
+    when :float           then value.to_f
+    when :boolean         then value.to_s.downcase.in?(%w(true t))
+    when :time            then Time.zone.parse(value)
+    when :button          then value # Ignore
+    when :array_integer   then value.to_miq_a.map!(&:to_i)
     else value # Ignore
     end
   end
@@ -1443,6 +1450,11 @@ class MiqRequestWorkflow
   end
 
   private
+
+  def apply_result(result, data_type)
+    return result if data_type == :array_integer
+    [result.first, result.last] unless result.nil?
+  end
 
   def default_ci_to_hash_struct(ci)
     attributes = []
