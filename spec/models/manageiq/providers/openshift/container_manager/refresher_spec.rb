@@ -83,6 +83,115 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     assert_container_node_with_no_hawk_attributes
   end
 
+  context "when refreshing an empty DB" do
+    # CREATING FIRST VCR
+    # To recreate the tested objects in OpenShift use the template file:
+    # spec/vcr_cassettes/manageiq/providers/openshift/container_manager/test_objects_template.yml
+    # and the following commands for 3 projects my-project-X (X=0/1/2):
+    # oc new-project my-project-X
+    # oc process -f template.yml -v INDEX=X | oc create -f -
+
+    before(:each) do
+      VCR.use_cassette("#{described_class.name.underscore}_before_openshift_deletions",
+                       :match_requests_on => [:path,]) do # , :record => :new_episodes) do
+        EmsRefresh.refresh(@ems)
+      end
+    end
+
+    it "saves the objects in the DB" do
+      expect(ContainerProject.count).to eq(8)
+      expect(ContainerImage.count).to eq(44)
+      expect(ContainerRoute.count).to eq(6)
+      expect(ContainerTemplate.count).to eq(30)
+      expect(ContainerReplicator.count).to eq(10)
+      expect(ContainerBuild.count).to eq(3)
+      expect(ContainerBuildPod.count).to eq(3)
+      expect(CustomAttribute.count).to eq(532)
+      expect(ContainerTemplateParameter.count).to eq(264)
+      expect(ContainerRoute.find_by(:name => "my-route-2").labels.count).to eq(1)
+      expect(ContainerTemplate.find_by(:name => "my-template-2").container_template_parameters.count).to eq(1)
+    end
+
+    context "when refreshing non empty DB" do
+      # CREATING SECOND VCR
+      # To delete the tested objects in OpenShift use the following commands:
+      # oc delete project my-project-0
+      # oc project my-project-1
+      # oc delete pod my-pod-1
+      # oc delete service my-service-1
+      # oc delete route my-route-1
+      # oc delete resourceQuota my-resource-quota-1
+      # oc delete limitRange my-limit-range-1
+      # oc delete persistentVolumeClaim my-persistentvolumeclaim-1
+      # oc delete template my-template-1
+      # oc delete build my-build-1
+      # oc delete buildconfig my-build-config-1
+      # oc project my-project-2
+      # oc label route my-route-2 key-route-label-
+      # oc edit template my-template-2 # remove the template parameters from the file and save it
+      # oc delete pod my-pod-2
+
+      before(:each) do
+        VCR.use_cassette("#{described_class.name.underscore}_after_openshift_deletions",
+                         :match_requests_on => [:path,]) do # , :record => :new_episodes) do
+          EmsRefresh.refresh(@ems)
+        end
+      end
+
+      it "archives objects" do
+        expect(ContainerProject.count).to eq(8)
+        expect(ContainerProject.where(:deleted_on => nil).count).to eq(7)
+        expect(ContainerImage.count).to eq(43) # should be 44
+        expect(ContainerImage.where(:deleted_on => nil).count).to eq(43) # should be 44
+      end
+
+      it "removes the deleted objects from the DB" do
+        expect(ContainerRoute.count).to eq(4)
+        expect(ContainerTemplate.count).to eq(28)
+        expect(ContainerReplicator.count).to eq(8)
+        expect(ContainerBuild.count).to eq(1)
+        expect(ContainerBuildPod.count).to eq(1)
+        expect(CustomAttribute.count).to eq(523)
+        expect(ContainerTemplateParameter.count).to eq(261)
+
+        expect(ContainerTemplate.find_by(:name => "my-template-0")).to be_nil
+        expect(ContainerTemplate.find_by(:name => "my-template-1")).to be_nil
+
+        expect(ContainerRoute.find_by(:name => "my-route-0")).to be_nil
+        expect(ContainerRoute.find_by(:name => "my-route-1")).to be_nil
+
+        expect(ContainerReplicator.find_by(:name => "my-replicationcontroller-0")).to be_nil
+        expect(ContainerReplicator.find_by(:name => "my-replicationcontroller-1")).to be_nil
+
+        expect(ContainerBuildPod.find_by(:name => "my-build-0")).to be_nil
+        expect(ContainerBuildPod.find_by(:name => "my-build-1")).to be_nil
+
+        expect(ContainerBuild.find_by(:name => "my-build-config-0")).to be_nil
+        expect(ContainerBuild.find_by(:name => "my-build-config-1")).to be_nil
+
+        expect(ContainerRoute.find_by(:name => "my-route-2").labels.count).to eq(0)
+        expect(ContainerTemplate.find_by(:name => "my-template-2").container_template_parameters.count).to eq(0)
+      end
+
+      it "disconnects container projects" do
+        project0 = ContainerProject.find_by(:name => "my-project-0")
+        project1 = ContainerProject.find_by(:name => "my-project-1")
+
+        expect(project0).not_to be_nil
+        expect(project0.deleted_on).not_to be_nil
+        expect(project0.ext_management_system).to be_nil
+        expect(project0.old_ems_id).to eq(@ems.id)
+        expect(project0.container_groups.count).to eq(0)
+        expect(project0.containers.count).to eq(0)
+        expect(project0.container_definitions.count).to eq(0)
+
+        expect(project1.container_groups.count).to eq(0)
+        expect(project1.containers.count).to eq(0)
+        expect(project1.container_definitions.count).to eq(0)
+      end
+    end
+  end
+
   def assert_table_counts
     expect(ContainerGroup.count).to eq(20)
     expect(ContainerNode.count).to eq(2)
