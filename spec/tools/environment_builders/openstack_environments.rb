@@ -39,6 +39,9 @@ def load_environments
 
     file_name = File.join(vcr_base_dir, "refresher_rhos_#{env_name}.yml")
     change_file(file_name, OBFUSCATED_PASSWORD, env["password"], OBFUSCATED_IP, env["ip"])
+
+    file_name = File.join(vcr_base_dir, "refresher_rhos_#{env_name}_legacy_fast_refresh.yml")
+    change_file(file_name, OBFUSCATED_PASSWORD, env["password"], OBFUSCATED_IP, env["ip"])
   end
 end
 
@@ -56,6 +59,9 @@ def obfuscate_environments
     change_file(file_name, env["password"], OBFUSCATED_PASSWORD, env["ip"], OBFUSCATED_IP)
 
     file_name = File.join(vcr_base_dir, "refresher_rhos_#{env_name}.yml")
+    change_file(file_name, env["password"], OBFUSCATED_PASSWORD, env["ip"], OBFUSCATED_IP)
+
+    file_name = File.join(vcr_base_dir, "refresher_rhos_#{env_name}_legacy_fast_refresh.yml")
     change_file(file_name, env["password"], OBFUSCATED_PASSWORD, env["ip"], OBFUSCATED_IP)
   end
 end
