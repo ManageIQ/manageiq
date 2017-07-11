@@ -1,4 +1,3 @@
-require 'miq_apache'
 require 'linux_admin'
 
 module MiqServer::EnvironmentManagement
