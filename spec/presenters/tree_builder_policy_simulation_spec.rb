@@ -101,10 +101,10 @@ describe TreeBuilderPolicySimulation do
       parent_two = @policy_simulation_tree.send(:x_get_tree_hash_kids, grand_parent_two, false).first
       kid_one = @policy_simulation_tree.send(:x_get_tree_hash_kids, parent_one, false).first
       kid_two = @policy_simulation_tree.send(:x_get_tree_hash_kids, parent_two, false).first
-      expect(kid_one[:text]).to eq("<b>Scope: </b> <font color=red>FIND VM and Instance.Files : Name INCLUDES \"nb\" CHECK COUNT >= 1</font>")
+      expect(kid_one[:text]).to eq("<b>Scope: </b> <font color=\"red\">FIND VM and Instance.Files : Name INCLUDES &quot;nb&quot; CHECK COUNT &gt;= 1</font>")
       expect(kid_one[:image]).to eq('na')
       expect(kid_one[:tip]).to eq("FIND VM and Instance.Files : Name INCLUDES \"nb\" CHECK COUNT >= 1")
-      expect(kid_two[:text]).to eq("<b>Expression: </b> <font color=red>FIND VM and Instance.Files : Name INCLUDES \"nb\" CHECK COUNT >= 1</font>")
+      expect(kid_two[:text]).to eq("<b>Expression: </b> <font color=\"red\">FIND VM and Instance.Files : Name INCLUDES &quot;nb&quot; CHECK COUNT &gt;= 1</font>")
       expect(kid_two[:image]).to eq('na')
       expect(kid_two[:tip]).to eq("FIND VM and Instance.Files : Name INCLUDES \"nb\" CHECK COUNT >= 1")
     end

@@ -2,6 +2,10 @@
 class TreeBuilderPolicySimulation < TreeBuilder
   # exp_build_string method needed
   include ApplicationController::ExpressionHtml
+  include ActionView::Context
+  include ActionView::Helpers::TagHelper
+  include ActionView::Helpers::TextHelper
+  include ActionView::Helpers::CaptureHelper
 
   has_kids_for Hash, [:x_get_tree_hash_kids]
 
