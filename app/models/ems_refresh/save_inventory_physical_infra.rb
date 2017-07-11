@@ -27,6 +27,7 @@ module EmsRefresh::SaveInventoryPhysicalInfra
 
     # Save and link other subsections
     save_child_inventory(ems, hashes, child_keys, target)
+    discover_ip_physical_infra(ems)
 
     ems.save!
     hashes[:id] = ems.id
@@ -57,5 +58,19 @@ module EmsRefresh::SaveInventoryPhysicalInfra
   def save_asset_details_inventory(parent, hash)
     return if hash.nil?
     save_inventory_single(:asset_details, parent, hash)
+  end
+
+  def resolve_ip_address(hostname, ems)
+    ems.ipaddress = Resolv.getaddress(hostname)
+    _log.info "EMS ID: #{ems.id}" + " Resolved ip address successfuly."
+  rescue => err
+    _log.warn "EMS ID: #{ems.id}" + " It's not possible resolve ip address of the physical infra, #{err}."
+  end
+
+  def discover_ip_physical_infra(ems)
+    if ems.ipaddress.blank?
+      hostname = URI.parse(ems.hostname).host || URI.parse(ems.hostname).path
+      resolve_ip_address(hostname, ems)
+    end
   end
 end
