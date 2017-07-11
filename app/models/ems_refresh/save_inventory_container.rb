@@ -396,22 +396,21 @@ module EmsRefresh::SaveInventoryContainer
   end
 
   def save_custom_attribute_attribute_inventory(entity, attribute_name, hashes, target = nil)
+    # This serves the AWS labels refresh also.
+
     return if hashes.nil?
 
     entity.send(attribute_name).reset
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
 
     save_inventory_multi(entity.send(attribute_name),
-                         hashes, deletes, [:section, :name])
+                         hashes, :use_association, [:section, :name])
     store_ids_for_new_records(entity.send(attribute_name),
                               hashes, [:section, :name])
   end
 
   def save_labels_inventory(entity, hashes, target = nil)
+    # This serves the AWS labels refresh also.
+
     save_custom_attribute_attribute_inventory(entity, :labels, hashes, target)
   end
 
