@@ -357,9 +357,24 @@
           :required: true
           :display: :edit
           :data_type: :string
+          :required_method: :validate_blacklist
+          :blacklist: [
+            '1', '123', 'a', 'actuser', 'adm', 'admin', 'admin1', 'admin2',
+            'administrator', 'aspnet', 'backup', 'console', 'david', 'guest',
+            'john', 'owner', 'root', 'server', 'sql', 'support', 'support_388945a0',
+            'sys', 'test', 'test1', 'test2', 'test3', 'user', 'user1', 'user2',
+            'user3', 'user4', 'user5'
+          ]
+          :max_length: 20
         :root_password:
           :description: Password
-          :required_method: :validate_regex
+          :required_method:
+            - :validate_blacklist
+            - :validate_regex
+          :blacklist: [
+            'abc@123', 'P@$$w0rd', 'P@ssw0rd', 'P@ssword123', 'Pa$$word',
+            'pass@word1', 'Password!', 'Password1', 'Password22', 'iloveyou!'
+          ]
           :required_regex: !ruby/regexp /(?=.{12,72})((?=.*\d)(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[a-zA-Z])(?=.*[\W_])|(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_])).*/
           :required_regex_fail_details: The password must be 12-72 characters, and have 3 of the following - one lowercase character, one uppercase character, one number and one special character.
           :required: true
