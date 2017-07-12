@@ -27,7 +27,6 @@ class Hardware < ApplicationRecord
 
   virtual_aggregate :used_disk_storage,      :disks, :sum, :used_disk_storage
   virtual_aggregate :allocated_disk_storage, :disks, :sum, :size
-  virtual_attribute :ram_size_in_bytes, :integer, :arel => ->(t) { t.grouping(t[:memory_mb] * 1.megabyte) }
 
   def ipaddresses
     @ipaddresses ||= networks.collect(&:ipaddress).compact.uniq + networks.collect(&:ipv6address).compact.uniq
@@ -44,6 +43,11 @@ class Hardware < ApplicationRecord
   def ram_size_in_bytes
     memory_mb.to_i * 1.megabyte
   end
+  # resulting sql: "(CAST("hardwares"."memory_mb" AS bigint) * 1048576)"
+  virtual_attribute :ram_size_in_bytes, :integer, :arel => (lambda do |t|
+    t.grouping(Arel::Nodes::Multiplication.new(Arel::Nodes::NamedFunction.new("CAST", [t[:memory_mb].as("bigint")]),
+                                               1.megabyte))
+  end)
 
   @@dh = {"type" => "device_name", "devicetype" => "device_type", "id" => "location", "present" => "present",
     "filename" => "filename", "startconnected" => "start_connected", "autodetect" => "auto_detect", "mode" => "mode",
