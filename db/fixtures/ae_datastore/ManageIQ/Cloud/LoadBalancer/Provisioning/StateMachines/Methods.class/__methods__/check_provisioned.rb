@@ -1,0 +1,69 @@
+#
+# Description: This method checks to see if the load_balancer has been provisioned
+#   and whether the refresh has completed
+#
+
+def refresh_provider(service)
+  provider = service.load_balancer_manager
+
+  $evm.log("info", "Refreshing provider #{provider.name}")
+  $evm.set_state_var('provider_last_refresh', provider.last_refresh_date.to_i)
+  provider.refresh
+end
+
+def refresh_may_have_completed?(service)
+  provider = service.load_balancer_manager
+  provider.last_refresh_date.to_i > $evm.get_state_var('provider_last_refresh')
+end
+
+def check_deployed(service)
+  $evm.log("info", "Check load_balancer deployed")
+  # check whether the load_balancer deployment completed
+  status, reason = service.load_balancer_status
+  case status.downcase
+  when 'create_complete'
+    $evm.root['ae_result'] = 'ok'
+  when 'rollback_complete', 'delete_complete', /failed$/, /canceled$/
+    $evm.root['ae_result'] = 'error'
+    $evm.root['ae_reason'] = reason
+  else
+    # deployment not done yet in provider
+    $evm.root['ae_result']         = 'retry'
+    $evm.root['ae_retry_interval'] = '1.minute'
+    return
+  end
+
+  $evm.log("info", "LoadBalancer deployment finished. Status: #{$evm.root['ae_result']}, reason: #{$evm.root['ae_reason']}")
+  $evm.log("info", "Please examine load_balancer resources for more details") if $evm.root['ae_result'] == 'error'
+
+  return unless service.load_balancer
+  $evm.set_state_var('deploy_result', $evm.root['ae_result'])
+  $evm.set_state_var('deploy_reason', $evm.root['ae_reason'])
+
+  refresh_provider(service)
+
+  $evm.root['ae_result']         = 'retry'
+  $evm.root['ae_retry_interval'] = '30.seconds'
+end
+
+def check_refreshed(service)
+  $evm.log("info", "Check refresh status of load_balancer (#{service.load_balancer_name})")
+
+  if refresh_may_have_completed?(service)
+    $evm.root['ae_result'] = $evm.get_state_var('deploy_result')
+    $evm.root['ae_reason'] = $evm.get_state_var('deploy_reason')
+    $evm.log("info", "Refresh completed.")
+  else
+    $evm.root['ae_result']         = 'retry'
+    $evm.root['ae_retry_interval'] = '30.seconds'
+  end
+end
+
+task = $evm.root["service_template_provision_task"]
+service = task.destination
+if $evm.state_var_exist?('provider_last_refresh')
+  check_refreshed(service)
+else
+  check_deployed(service)
+end
+task.miq_request.user_message = $evm.root['ae_reason'].truncate(255) unless $evm.root['ae_reason'].blank?
