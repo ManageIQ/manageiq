@@ -431,10 +431,10 @@ class MiqWorker < ApplicationRecord
 
   def start
     self.pid = start_runner
-    save
+    save unless containerized_worker?
 
     msg = "Worker started: ID [#{id}], PID [#{pid}], GUID [#{guid}]"
-    MiqEvent.raise_evm_event_queue(miq_server, "evm_worker_start", :event_details => msg, :type => self.class.name)
+    MiqEvent.raise_evm_event_queue(miq_server || MiqServer.my_server, "evm_worker_start", :event_details => msg, :type => self.class.name)
 
     _log.info(msg)
     self
