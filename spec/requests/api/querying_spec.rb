@@ -557,6 +557,25 @@ describe "Querying" do
       expect_query_result(:vms, 2, 3)
       expect_result_resources_to_include_data("resources", "name" => [vm1.name, vm3.name])
     end
+
+    it "supports multiple comma separated tags" do
+      api_basic_authorize collection_action_identifier(:vms, :read, :get)
+      vm1, _vm2, vm3 = create_vms_by_name(%w(aa bb cc))
+
+      dept = FactoryGirl.create(:classification_department)
+      cc = FactoryGirl.create(:classification_cost_center)
+      FactoryGirl.create(:classification_tag, :name => "finance", :description => "Finance", :parent => dept)
+      FactoryGirl.create(:classification_tag, :name => "cc01", :description => "Cost Center 1", :parent => cc)
+
+      Classification.classify(vm1, "department", "finance")
+      Classification.classify(vm1, "cc", "cc01")
+      Classification.classify(vm3, "department", "finance")
+
+      run_get vms_url, :expand => "resources", :by_tag => "/department/finance,/cc/cc01"
+
+      expect_query_result(:vms, 1, 3)
+      expect_result_resources_to_include_data("resources", "name" => [vm1.name])
+    end
   end
 
   describe "Querying vms" do

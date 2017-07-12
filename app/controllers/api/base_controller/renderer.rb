@@ -134,7 +134,7 @@ module Api
           if is_subcollection
             send("#{type}_query_resource", parent_resource_obj)
           elsif by_tag_param
-            klass.find_tagged_with(:all => by_tag_param, :ns => TAG_NAMESPACE)
+            klass.find_tagged_with(:all => by_tag_param, :ns => TAG_NAMESPACE, :separator => ',')
           else
             klass.all
           end
