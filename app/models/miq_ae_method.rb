@@ -1,4 +1,4 @@
-require 'miq-syntax-checker'
+require 'manageiq/automation_engine/syntax_checker'
 
 class MiqAeMethod < ApplicationRecord
   include MiqAeSetUserInfoMixin
