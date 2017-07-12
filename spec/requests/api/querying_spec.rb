@@ -144,6 +144,20 @@ describe "Querying" do
       expect(response).to have_http_status(:bad_request)
       expect(response.parsed_body).to include(expected)
     end
+
+    it 'allows sorting by asc when other filters are applied' do
+      api_basic_authorize collection_action_identifier(:services, :read, :get)
+      svc1, _svc2 = FactoryGirl.create_list(:service, 2)
+      dept = FactoryGirl.create(:classification_department)
+      FactoryGirl.create(:classification_tag, :name => 'finance', :parent => dept)
+      Classification.classify(svc1, 'department', 'finance')
+
+      run_get services_url, :sort_by => 'created_at', :filter => ['tags.name=/managed/department/finance'],
+              :sort_order => 'asc', :limit => 20, :offset => 0
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body['subcount']).to eq(1)
+    end
   end
 
   describe "Filtering vms" do
