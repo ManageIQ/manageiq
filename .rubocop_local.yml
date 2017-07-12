@@ -40,6 +40,12 @@ FileName:
 Metrics/LineLength:
   Exclude:
     - Gemfile
+Rails/Exit:
+  Exclude:
+    - lib/workers/bin/*
+Rails/Output:
+  Exclude:
+    - lib/workers/bin/*
 Style/ExtraSpacing:
   Exclude:
     - Gemfile
