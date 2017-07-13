@@ -90,6 +90,9 @@ module Api
         if order
           arel = arel.lower if options.map(&:downcase).include?("ignore_case")
           arel = arel.desc if order.downcase == "desc"
+          arel = arel.asc if order.downcase == "asc"
+        else
+          arel = arel.asc
         end
         arel
       end
