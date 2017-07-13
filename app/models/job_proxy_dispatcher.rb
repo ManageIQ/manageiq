@@ -94,8 +94,8 @@ class JobProxyDispatcher
     _log.info "Complete - Timings: #{t.inspect}"
   end
 
-  def container_image_classes
-    ContainerImage.descendants.append(ContainerImage)
+  def container_image_scan_class
+    ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job
   end
 
   def dispatch_container_scan_jobs
@@ -197,24 +197,23 @@ class JobProxyDispatcher
     Job.where(:state => 'waiting_to_start').exists?
   end
 
-  def pending_jobs(target_class = VmOrTemplate)
+  def pending_jobs(job_class = VmScan)
     @zone = MiqServer.my_zone
-    Job.order(:id)
-       .where(:state           => "waiting_to_start")
-       .where(:dispatch_status => "pending")
-       .where(:target_class    => target_class)
-       .where("zone is null or zone = ?", @zone)
-       .where("sync_key is NULL or
-         sync_key not in (
-           select sync_key from jobs where
-             dispatch_status = 'active' and
-             state != 'finished' and
-             (zone is null or zone = ?) and
-             sync_key is not NULL)", @zone)
+    job_class.order(:id)
+             .where(:state           => "waiting_to_start")
+             .where(:dispatch_status => "pending")
+             .where("zone is null or zone = ?", @zone)
+             .where("sync_key is NULL or
+                sync_key not in (
+                  select sync_key from jobs where
+                    dispatch_status = 'active' and
+                    state != 'finished' and
+                    (zone is null or zone = ?) and
+                    sync_key is not NULL)", @zone)
   end
 
   def pending_container_jobs
-    pending_jobs(container_image_classes).each_with_object(Hash.new { |h, k| h[k] = [] }) do |job, h|
+    pending_jobs(container_image_scan_class).each_with_object(Hash.new { |h, k| h[k] = [] }) do |job, h|
       h[job.options[:ems_id]] << job
     end
   end
@@ -257,16 +256,16 @@ class JobProxyDispatcher
     end
   end
 
-  def active_scans_by_zone(target_class, count = true)
+  def active_scans_by_zone(job_class, count = true)
     actives = Hash.new(0)
-    jobs = Job.where(:zone => @zone, :dispatch_status => "active", :target_class => target_class)
+    jobs = job_class.where(:zone => @zone, :dispatch_status => "active")
               .where.not(:state => "finished")
     actives[@zone] = count ? jobs.count : jobs
     actives
   end
 
   def active_vm_scans_by_zone
-    @active_vm_scans_by_zone ||= active_scans_by_zone(VmOrTemplate)
+    @active_vm_scans_by_zone ||= active_scans_by_zone(VmScan)
   end
 
   def active_container_scans_by_zone_and_ems
@@ -274,7 +273,7 @@ class JobProxyDispatcher
       memo = Hash.new do |h, k|
         h[k] = Hash.new(0)
       end
-      active_scans_by_zone(container_image_classes, false)[@zone].each do |job|
+      active_scans_by_zone(container_image_scan_class, false)[@zone].each do |job|
         memo[@zone][job.options[:ems_id]] += 1
       end
       memo

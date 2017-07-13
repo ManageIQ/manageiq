@@ -192,7 +192,7 @@ describe JobProxyDispatcher do
         end
 
         it "returns only container images jobs when requested" do
-          jobs = dispatcher.pending_jobs(dispatcher.container_image_classes)
+          jobs = dispatcher.pending_jobs(dispatcher.container_image_scan_class)
           expect(jobs.count).to eq(@container_images.count)
           jobs.each do |x|
             expect(container_image_classes).to include x.target_class
