@@ -6,6 +6,7 @@ module Metric::CiMixin::Targets
     when ManageIQ::Providers::Kubernetes::ContainerManager::Container then true
     when ManageIQ::Providers::Kubernetes::ContainerManager::ContainerGroup then true
     when ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode then true
+    when Service then true
     # going to treat an availability_zone like a host wrt perf_capture settings
     when Host, EmsCluster, AvailabilityZone, HostAggregate then Metric::Targets.perf_capture_always[:host_and_cluster]
     when Storage then                            Metric::Targets.perf_capture_always[:storage]

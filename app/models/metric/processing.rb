@@ -34,7 +34,8 @@ module Metric::Processing
     EmsCluster,
     ExtManagementSystem,
     MiqRegion,
-    MiqEnterprise
+    MiqEnterprise,
+    Service
   ]
 
   def self.process_derived_columns(obj, attrs, ts = nil)
@@ -54,6 +55,7 @@ module Metric::Processing
 
     DERIVED_COLS.each do |col|
       dummy, group, typ, mode = col.to_s.split("_")
+      next if group == "vm" && obj.kind_of?(Service) && typ != "count"
       case typ
       when "available"
         # Do not derive "available" values if there haven't been any usage
