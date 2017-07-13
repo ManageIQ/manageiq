@@ -60,17 +60,34 @@ module EmsRefresh::SaveInventoryPhysicalInfra
     save_inventory_single(:asset_details, parent, hash)
   end
 
+  def ipaddress?(hostname)
+    IPAddr.new(hostname)
+    return true
+  rescue
+    return false
+  end
+
+  def resolve_hostname(ipaddress, ems)
+    ems.hostname = "https://#{Resolv.getname(ipaddress)}/"
+    _log.info("EMS ID: #{ems.id}" + " Resolved hostname successfully.")
+  rescue => err
+    _log.warn("EMS ID: #{ems.id}" + " It's not possible resolve hostname of the physical infra, #{err}.")
+  end
+
   def resolve_ip_address(hostname, ems)
     ems.ipaddress = Resolv.getaddress(hostname)
-    _log.info "EMS ID: #{ems.id}" + " Resolved ip address successfuly."
+    _log.info("EMS ID: #{ems.id}" + " Resolved ip address successfully.")
   rescue => err
-    _log.warn "EMS ID: #{ems.id}" + " It's not possible resolve ip address of the physical infra, #{err}."
+    _log.warn("EMS ID: #{ems.id}" + " It's not possible resolve ip address of the physical infra, #{err}.")
   end
 
   def discover_ip_physical_infra(ems)
+    hostname = URI.parse(ems.hostname).host || URI.parse(ems.hostname).path
     if ems.ipaddress.blank?
-      hostname = URI.parse(ems.hostname).host || URI.parse(ems.hostname).path
       resolve_ip_address(hostname, ems)
+    end
+    if ipaddress?(hostname)
+      resolve_hostname(hostname, ems)
     end
   end
 end
