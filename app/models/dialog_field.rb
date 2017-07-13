@@ -6,6 +6,22 @@ class DialogField < ApplicationRecord
   belongs_to :dialog_group
   has_one :resource_action, :as => :resource, :dependent => :destroy
 
+  has_many :dialog_field_associations,
+           :foreign_key => :trigger_id,
+           :class_name  => :DialogFieldAssociation,
+           :dependent   => :destroy
+  has_many :reverse_dialog_field_associations,
+           :foreign_key => :respond_id,
+           :class_name  => :DialogFieldAssociation,
+           :dependent   => :destroy
+
+  has_many :dialog_field_responders,
+           :source  => :respond,
+           :through => :dialog_field_associations
+  has_many :dialog_field_triggers,
+           :source  => :trigger,
+           :through => :reverse_dialog_field_associations
+
   alias_attribute :order, :position
 
   validates_presence_of   :name
