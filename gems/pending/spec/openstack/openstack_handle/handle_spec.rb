@@ -55,7 +55,8 @@ describe OpenstackHandle::Handle do
                                            "Compute",
                                            {:openstack_tenant       => "admin",
                                             :openstack_project_name => "admin",
-                                            :openstack_domain_id    => nil,
+                                            :openstack_project_domain_id => nil,
+                                            :openstack_user_domain_id    => nil,
                                             :openstack_region       => nil,
                                             :connection_options     => {:ssl_verify_peer => false}})
                                            .once do |_, _, address|
@@ -77,7 +78,8 @@ describe OpenstackHandle::Handle do
                                            "Compute",
                                            {:openstack_tenant       => "admin",
                                             :openstack_project_name => "admin",
-                                            :openstack_domain_id    => nil,
+                                            :openstack_project_domain_id => nil,
+                                            :openstack_user_domain_id    => nil,
                                             :openstack_region       => nil,
                                             :connection_options     => {}})
                                            .once do |_, _, address|
@@ -99,7 +101,8 @@ describe OpenstackHandle::Handle do
                                            "Compute",
                                            {:openstack_tenant       => "admin",
                                             :openstack_project_name => "admin",
-                                            :openstack_domain_id    => nil,
+                                            :openstack_project_domain_id => nil,
+                                            :openstack_user_domain_id    => nil,
                                             :openstack_region       => nil,
                                             :connection_options     => {:ssl_verify_peer => false}}) do |_, _, address|
         expect(address).to eq(auth_url_ssl)
@@ -121,7 +124,8 @@ describe OpenstackHandle::Handle do
                                            "Compute",
                                            {:openstack_tenant       => "admin",
                                             :openstack_project_name => "admin",
-                                            :openstack_domain_id    => nil,
+                                            :openstack_project_domain_id => nil,
+                                            :openstack_user_domain_id    => nil,
                                             :openstack_region       => nil,
                                             :connection_options     => {:ssl_verify_peer => true}}) do |_, _, address|
         expect(address).to eq(auth_url_ssl)
@@ -141,7 +145,8 @@ describe OpenstackHandle::Handle do
 
       expected_options = {:openstack_tenant       => "admin",
                           :openstack_project_name => "admin",
-                          :openstack_domain_id    => nil,
+                          :openstack_project_domain_id => nil,
+                          :openstack_user_domain_id    => nil,
                           :openstack_region       => nil,
                           :connection_options     => {:ssl_verify_peer => true,
                                                       :ssl_ca_file     => "file",
@@ -179,7 +184,8 @@ describe OpenstackHandle::Handle do
         "Compute",
         :openstack_tenant       => "admin",
         :openstack_project_name => "admin",
-        :openstack_domain_id    => nil,
+        :openstack_project_domain_id => nil,
+        :openstack_user_domain_id    => nil,
         :openstack_region       => 'RegionOne',
         :connection_options     => {}).once do |_, _, address|
           expect(address).to eq(auth_url)

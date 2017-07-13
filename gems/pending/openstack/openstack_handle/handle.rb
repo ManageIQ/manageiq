@@ -187,8 +187,9 @@ module OpenstackHandle
         opts[:openstack_project_name] = @project_name = tenant
       end
 
-      opts[:openstack_domain_id] = domain
-      opts[:openstack_region]    = region
+      opts[:openstack_project_domain_id] = domain
+      opts[:openstack_user_domain_id]    = domain
+      opts[:openstack_region]            = region
 
       svc_cache = (@connection_cache[service] ||= {})
       svc_cache[tenant] ||= begin
