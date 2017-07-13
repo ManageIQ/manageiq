@@ -1,4 +1,54 @@
 describe Rbac::Filterer do
+  describe "using expressions as managed filters" do
+    it "supports OR conditions across categories" do
+      filter = MiqExpression.new(
+        "OR" => [
+          {"CONTAINS" => {"tag" => "managed-environment", "value" => "prod"}},
+          {"CONTAINS" => {"tag" => "managed-location", "value" => "ny"}}
+        ]
+      )
+      group = create_group_with_expression(filter)
+      user = FactoryGirl.create(:user, :miq_groups => [group])
+      vm1, vm2, _vm3 = FactoryGirl.create_list(:vm_vmware, 3)
+      vm1.tag_with("/managed/environment/prod", :ns => "*")
+      vm2.tag_with("/managed/location/ny", :ns => "*")
+
+      actual, = Rbac::Filterer.search(:targets => Vm, :user => user)
+
+      expected = [vm1, vm2]
+      expect(actual).to match(expected)
+    end
+
+    it "supports AND conditions within categories" do
+      filter = MiqExpression.new(
+        "AND" => [
+          {"CONTAINS" => {"tag" => "managed-environment", "value" => "prod"}},
+          {"CONTAINS" => {"tag" => "managed-environment", "value" => "test"}}
+        ]
+      )
+      group = create_group_with_expression(filter)
+      user = FactoryGirl.create(:user, :miq_groups => [group])
+      vm1, vm2, vm3 = FactoryGirl.create_list(:vm_vmware, 3)
+      vm1.tag_with("/managed/environment/prod /managed/environment/test", :ns => "*")
+      vm2.tag_with("/managed/environment/prod", :ns => "*")
+      vm3.tag_with("/managed/environment/test", :ns => "*")
+
+      actual, = Rbac::Filterer.search(:targets => Vm, :user => user)
+
+      expected = [vm1]
+      expect(actual).to match(expected)
+    end
+
+    def create_group_with_expression(expression)
+      role = FactoryGirl.create(:miq_user_role)
+      group = FactoryGirl.create(:miq_group, :tenant => Tenant.root_tenant, :miq_user_role => role)
+      group.entitlement = Entitlement.new
+      group.entitlement.filter_expression = expression
+      group.save!
+      group
+    end
+  end
+
   describe '.combine_filtered_ids' do
     # Algorithm (from Rbac::Filterer.combine_filtered_ids):
     # Algorithm: b_intersection_m = (b_filtered_ids INTERSECTION m_filtered_ids)
