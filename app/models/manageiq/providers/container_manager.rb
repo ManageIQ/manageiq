@@ -1,5 +1,7 @@
 module ManageIQ::Providers
   class ContainerManager < BaseManager
+    require_nested :OrchestrationStack
+
     include AvailabilityMixin
     include HasMonitoringManagerMixin
     include SupportsFeatureMixin
