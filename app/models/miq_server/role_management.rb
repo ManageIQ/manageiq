@@ -98,7 +98,7 @@ module MiqServer::RoleManagement
   def is_master_for_role?(server_role)
     server_role = ServerRole.to_role(server_role)
     assigned    = assigned_server_roles.find_by(:server_role_id => server_role.id)
-    returned false if assigned.nil?
+    return false if assigned.nil?
     assigned.priority == 1
   end
 
