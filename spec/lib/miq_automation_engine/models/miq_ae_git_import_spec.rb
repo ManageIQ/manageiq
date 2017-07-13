@@ -5,12 +5,13 @@ describe MiqAeGitImport do
     let(:tag_name) { "SomeTag1" }
     let(:domain_name) { "BB8" }
     let(:url) { "http://www.example.com/x/y" }
+    let(:verify_ssl_disabled) { 0 }
     let(:domain) do
       FactoryGirl.create(:miq_ae_git_domain,
                          :tenant => user.current_tenant,
                          :name   => domain_name)
     end
-    let(:repo) { FactoryGirl.create(:git_repository, :url => url) }
+    let(:repo) { FactoryGirl.create(:git_repository, :url => url, :verify_ssl => verify_ssl_disabled) }
     let(:user) { FactoryGirl.create(:user_with_group) }
     let(:branch_hash) do
       {'ref' => branch_name, 'ref_type' => MiqAeGitImport::BRANCH}
@@ -167,6 +168,14 @@ describe MiqAeGitImport do
           expect(dom.attributes).to have_attributes(branch_hash)
           expect(repo.authentications.first.userid).to eq('fred')
           expect(repo.authentications.first.password).to eq('secret')
+        end
+
+        it "doesn't overwrite verify_ssl" do
+          expect(MiqAeYamlImportGitfs).to receive(:new).with(domain_name, import_options)
+            .and_return(miq_ae_yaml_import_gitfs)
+          allow(miq_ae_yaml_import_gitfs).to receive(:import).and_return(domain)
+          miq_ae_git_import.import
+          expect(repo.verify_ssl).to eq(verify_ssl_disabled)
         end
       end
     end
