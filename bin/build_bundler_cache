@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+
+require_relative "../config/boot"
+
+# Builds the bundler load_path cache
+File.open(".bundler.loadpath_cache", "w") do |f|
+  $LOAD_PATH.each do |path_entry|
+    f.puts path_entry
+  end
+end
+
+# Load things that aren't loaded via bundler require
+require "rails"
+require 'active_record/railtie'
+require 'action_controller/railtie'
+require 'action_view/railtie'
+require 'action_mailer/railtie'
+require 'active_job/railtie'
+require 'sprockets/railtie'
+require 'action_cable/engine'
+
+# Patch Kernel.require to write it's successful requires to a file
+module Kernel
+  alias original_require require
+end
+
+Kernel.define_singleton_method(:require) do |file|
+  original_require(file) # if this breaks, the next part shouldn't get run
+  # puts "requiring - #{file}"
+  File.write(BUNDLER_REQUIRE_CACHE, "#{file}\n", :mode => "a")
+end
+
+# Builds the Bundler.require cache
+BUNDLER_REQUIRE_CACHE = ".bundler.require_cache"
+File.write(BUNDLER_REQUIRE_CACHE, "") # Clear the file before writing
+Bundler.require(:default, "development")
