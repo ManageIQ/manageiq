@@ -1,5 +1,5 @@
 module MiqAeMethodService
-  class MiqAeServiceContainerPortConfig < MiqAeServiceModelBase
+  class MiqAeServiceContainerServicePortConfig < MiqAeServiceModelBase
     expose :container_definition, :association => true
   end
 end
