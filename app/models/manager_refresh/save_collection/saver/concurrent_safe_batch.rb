@@ -52,16 +52,17 @@ module ManagerRefresh::SaveCollection
               next unless assert_referential_integrity(hash, inventory_object)
               inventory_object.id = record.id
 
-              if inventory_collection.use_ar_object?
-                record.assign_attributes(hash.except(:id, :type))
-                hash_for_update = record.instance_eval("@attributes").map(&:value_for_database)
-                                    .instance_eval("@attributes").symbolize_keys.except(:id, :type)
-              else
-                hash_for_update = hash.symbolize_keys.except(:id, :type)
-                assign_attributes_for_update!(hash_for_update, inventory_collection, update_time)
-              end
+              hash_for_update = if inventory_collection.use_ar_object?
+                                  record.assign_attributes(hash.except(:id, :type))
+                                  values_for_database(inventory_collection.model_class,
+                                                      all_attribute_keys,
+                                                      record.attributes)
+                                else
+                                  hash.symbolize_keys
+                                end
+              assign_attributes_for_update!(hash_for_update, inventory_collection, update_time)
 
-              hashes_for_update << hash_for_update
+              hashes_for_update << hash_for_update.except(:id, :type)
             end
           end
 
@@ -123,8 +124,10 @@ module ManagerRefresh::SaveCollection
         create_time = time_now
         batch.each do |index, inventory_object|
           hash = if inventory_collection.use_ar_object?
-                   inventory_collection.model_class.new(attributes_index.delete(index))
-                     .instance_eval("@attributes").map(&:value_for_database).instance_eval("@attributes").symbolize_keys
+                   record = inventory_collection.model_class.new(attributes_index.delete(index))
+                   values_for_database(inventory_collection.model_class,
+                                       all_attribute_keys,
+                                       record.attributes)
                  else
                    attributes_index.delete(index).symbolize_keys
                  end
@@ -146,6 +149,14 @@ module ManagerRefresh::SaveCollection
         if inventory_collection.dependees.present?
           # We need to get primary keys of the created objects, but only if there are dependees that would use them
           map_ids_to_inventory_objects(inventory_collection, indexed_inventory_objects, all_attribute_keys, hashes, result)
+        end
+      end
+
+      def values_for_database(model_class, all_attribute_keys, attributes)
+        all_attribute_keys.each_with_object({}) do |attribute_name, db_values|
+          type = model_class.type_for_attribute(attribute_name.to_s)
+          raw_val = attributes[attribute_name.to_s]
+          db_values[attribute_name] = type.type == :boolean ? type.cast(raw_val) : type.serialize(raw_val)
         end
       end
 
