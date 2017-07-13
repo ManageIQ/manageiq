@@ -384,8 +384,8 @@ class MiqWorker::Runner
     do_exit("Error heartbeating to MiqServer because #{err.class.name}: #{err.message}", 1)
   end
 
-  def heartbeat_to_file
-    timeout = worker_settings[:heartbeat_timeout] || Workers::MiqDefaults.heartbeat_timeout
+  def heartbeat_to_file(timeout = nil)
+    timeout ||= worker_settings[:heartbeat_timeout] || Workers::MiqDefaults.heartbeat_timeout
     File.write(@worker.heartbeat_file, (Time.now.utc + timeout).to_s)
   end
 
