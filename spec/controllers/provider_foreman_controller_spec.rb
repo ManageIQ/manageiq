@@ -149,7 +149,7 @@ describe ProviderForemanController do
       allow(controller).to receive(:x_tree).and_return(:type => :filter)
       controller.instance_variable_set(:@_params, :id => "cs_filter")
       allow(controller).to receive(:replace_right_cell)
-      controller.instance_variable_set(:@_params, :id => @config_ans2.id)
+      controller.instance_variable_set(:@_params, :id => @ans_configured_system2a.id)
       controller.send(:provision)
       expect(controller.send(:flash_errors?)).to be_truthy
       expect(assigns(:flash_array).first[:message]).to include("Provisioning is not supported for at least one of the selected systems")
