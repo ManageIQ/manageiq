@@ -46,4 +46,12 @@ RSpec.describe 'FloatingIp API' do
       expect(response).to have_http_status(:forbidden)
     end
   end
+
+  describe 'POST /api/floating_ips' do
+    it 'forbids access to floating ips without an appropriate role' do
+      api_basic_authorize
+      run_post(floating_ips_url, gen_request(:query, ""))
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
 end

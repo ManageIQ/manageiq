@@ -812,7 +812,6 @@
     :identifier: floating_ip
     :options:
     - :collection
-    - :subcollection
     :verbs: *gp
     :klass: FloatingIp
     :collection_actions:
@@ -826,14 +825,6 @@
       :get:
       - :name: read
         :identifier: floating_ip_show
-    :subcollection_actions:
-      :get:
-      - :name: read
-        :identifier: cloud_tenant_show_list
-    :subresource_actions:
-      :get:
-      - :name: read
-        :identifier: cloud_tenant_show
   :groups:
     :description: Groups
     :identifier: rbac_group

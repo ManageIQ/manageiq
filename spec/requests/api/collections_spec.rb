@@ -387,6 +387,11 @@ describe "Rest API Collections" do
       test_collection_bulk_query(:flavors, flavors_url, Flavor)
     end
 
+    it "bulk query FloatingIps" do
+      FactoryGirl.create(:floating_ip)
+      test_collection_bulk_query(:floating_ips, floating_ips_url, FloatingIp)
+    end
+
     it "bulk query Groups" do
       group = FactoryGirl.create(:miq_group)
       test_collection_bulk_query(:groups, groups_url, MiqGroup, group.id)
