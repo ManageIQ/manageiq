@@ -284,7 +284,7 @@ module MiqProvisionQuotaMixin
 
   def quota_find_active_prov_request(_options)
     prov_req_ids = MiqQueue.where(
-      :class_name  => 'MiqProvisionRequest',
+      :class_name  => %w(MiqProvisionRequest ServiceTemplateProvisionRequest),
       :method_name => 'create_request_tasks',
       :state       => 'dequeue'
     ).pluck(:instance_id)
@@ -292,16 +292,49 @@ module MiqProvisionQuotaMixin
     prov_ids = []
     MiqQueue
       .where(:method_name => 'deliver', :state => %w(ready dequeue), :class_name => 'MiqAeEngine')
-      .where("tracking_label like ?", '%miq_provision_%')
+      .where("task_id like ?", '%_provision_%')
       .each do |q|
         if q.args
           args = q.args.first
           prov_ids << args[:object_id] if args[:object_type].include?('Provision') && !args[:object_id].blank?
         end
       end
-    prov_req_ids += MiqProvision.where(:id => prov_ids).pluck("miq_request_id")
+    prov_req_ids += MiqRequestTask.where(:id => prov_ids).pluck("miq_request_id")
 
-    MiqProvisionRequest.where(:id => prov_req_ids.compact.uniq)
+    MiqRequest.where(:id => prov_req_ids.compact.uniq)
+  end
+
+  def vm_quota_values(pr, result)
+    num_vms_for_request = number_of_vms(pr)
+    return if num_vms_for_request.zero?
+    flavor_obj = flavor(pr)
+    result[:count] += num_vms_for_request
+    result[:memory] += memory(pr, cloud?(pr), vendor(pr), flavor_obj) * num_vms_for_request
+    result[:cpu] += number_of_cpus(pr, cloud?(pr), flavor_obj) * num_vms_for_request
+    result[:storage] += storage(pr, cloud?(pr), vendor(pr), flavor_obj) * num_vms_for_request
+    result[:ids] << pr.id
+
+    pr.miq_request_tasks.each do |p|
+      next unless p.state == 'Active'
+      host_id, storage_id = p.get_option(:dest_host).to_i, p.get_option(:dest_storage).to_i
+      active = result[:active]
+      active[:memory_by_host_id][host_id] += memory(p, cloud?(pr), vendor(pr), flavor_obj)
+      active[:cpu_by_host_id][host_id] += number_of_cpus(p, cloud?(pr), flavor_obj)
+      active[:storage_by_id][storage_id] += storage(p, cloud?(pr), vendor(pr), flavor_obj)
+      active[:vms_by_storage_id][storage_id] << p.id
+      active[:ids] << p.id
+    end
+  end
+
+  def service_quota_values(request, result)
+    request.service_template.service_resources.each do |sr|
+      if request.service_template.service_type == 'composite'
+        # "will deal with this later"
+      else
+        next if request.service_template.prov_type.starts_with?("generic")
+        vm_quota_values(sr.resource, result)
+      end
+    end
   end
 
   def quota_provision_stats(prov_method, options)
@@ -314,25 +347,7 @@ module MiqProvisionQuotaMixin
              }
 
     send(prov_method, options).each do |pr|
-      num_vms_for_request = number_of_vms(pr)
-      next if num_vms_for_request.zero?
-      flavor_obj = flavor(pr)
-      result[:count] += num_vms_for_request
-      result[:memory] += memory(pr, cloud?(pr), vendor(pr), flavor_obj) * num_vms_for_request
-      result[:cpu] += number_of_cpus(pr, cloud?(pr), flavor_obj) * num_vms_for_request
-      result[:storage] += storage(pr, cloud?(pr), vendor(pr), flavor_obj) * num_vms_for_request
-      result[:ids] << pr.id
-
-      pr.miq_request_tasks.each do |p|
-        next unless p.state == 'Active'
-        host_id, storage_id = p.get_option(:dest_host).to_i, p.get_option(:dest_storage).to_i
-        active = result[:active]
-        active[:memory_by_host_id][host_id] += memory(p, cloud?(pr), vendor(pr), flavor_obj)
-        active[:cpu_by_host_id][host_id] += number_of_cpus(p, cloud?(pr), flavor_obj)
-        active[:storage_by_id][storage_id] += storage(p, cloud?(pr), vendor(pr), flavor_obj)
-        active[:vms_by_storage_id][storage_id] << p.id
-        active[:ids] << p.id
-      end
+      pr.type == "ServiceTemplateProvisionRequest" ? service_quota_values(pr, result) : vm_quota_values(pr, result)
     end
     result
   end
