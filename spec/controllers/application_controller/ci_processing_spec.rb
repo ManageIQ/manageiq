@@ -437,6 +437,7 @@ describe ServiceController do
                                       :ext_management_system => FactoryGirl.create(:ems_openstack_infra),
                                       :storage               => FactoryGirl.create(:storage))
         controller.instance_variable_set(:@_params,
+                                         :controller      => 'miq_template',
                                          :miq_grid_checks => template.id.to_s,
                                          :pressed         => 'miq_template_set_ownership')
         expect(controller).to receive(:javascript_redirect).with(:controller => "miq_template",
