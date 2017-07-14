@@ -397,6 +397,11 @@ describe "Rest API Collections" do
       test_collection_bulk_query(:hosts, hosts_url, Host)
     end
 
+    it 'bulk query NetworkRouters' do
+      FactoryGirl.create(:network_router)
+      test_collection_bulk_query(:network_routers, network_routers_url, NetworkRouter)
+    end
+
     it "bulk query Policies" do
       FactoryGirl.create(:miq_policy)
       test_collection_bulk_query(:policies, policies_url, MiqPolicy)
