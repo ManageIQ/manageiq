@@ -758,6 +758,25 @@
       :get:
       - :name: read
         :identifier: event
+  :event_streams:
+    :description: Event Streams
+    :identifier: event_stream
+    :options:
+    - :collection
+    - :subcollection
+    :verbs: *gp
+    :klass: EventStream
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: event_stream_show_list
+      :post:
+      - :name: query
+        :identifier: event_stream_show_list
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: event_stream
   :features:
     :description: Product Features
     :options:
