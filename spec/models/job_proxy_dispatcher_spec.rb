@@ -206,8 +206,8 @@ describe JobProxyDispatcher do
           jobs_by_ems, = dispatcher.pending_container_jobs
           expect(jobs_by_ems.keys).to match_array(@container_providers.map(&:id))
 
-          expect(jobs_by_ems[@container_providers.first.id].count).to eq(1)
-          expect(jobs_by_ems[@container_providers.second.id].count).to eq(2)
+          expect(jobs_by_ems[@container_providers.first.id].count).to eq(1 * container_image_classes.count)
+          expect(jobs_by_ems[@container_providers.second.id].count).to eq(2 * container_image_classes.count)
         end
       end
 
@@ -227,30 +227,36 @@ describe JobProxyDispatcher do
         it "dispatches jobs until reaching limit" do
           stub_settings(:container_scanning => {:concurrent_per_ems => 1})
           dispatcher.dispatch_container_scan_jobs
-          expect(Job.where(:target_class => container_image_classes, :dispatch_status => "pending").count).to eq(1)
-          # 1 per ems, one ems has 1 job and the other 2
+          expect(Job.where(:target_class => container_image_classes, :dispatch_status => "pending").count).to eq(
+            (3 * container_image_classes.count) - 2)
+          # 1 per ems, one ems has 1* job and the other 2*
+          # initial number of images per ems is multiplied by container_image_classes.count
         end
 
         it "does not dispach if limit is already reached" do
           stub_settings(:container_scanning => {:concurrent_per_ems => 1})
           dispatcher.dispatch_container_scan_jobs
-          expect(Job.where(:target_class => container_image_classes, :dispatch_status => "pending").count).to eq(1)
+          expect(Job.where(:target_class => container_image_classes, :dispatch_status => "pending").count).to eq(
+            (3 * container_image_classes.count) - 2)
           dispatcher.dispatch_container_scan_jobs
-          expect(Job.where(:target_class => container_image_classes, :dispatch_status => "pending").count).to eq(1)
+          expect(Job.where(:target_class => container_image_classes, :dispatch_status => "pending").count).to eq(
+            (3 * container_image_classes.count) - 2)
         end
 
         it "does not apply limit when concurrent_per_ems is 0" do
           stub_settings(:container_scanning => {:concurrent_per_ems => 0})
           dispatcher.dispatch_container_scan_jobs
           expect(Job.where(:target_class => container_image_classes, :dispatch_status => "pending").count).to eq(0)
-          # 1 per ems, one ems has 1 job and the other 2
+          # 1 per ems, one ems has 1* job and the other 2*
+          # initial number of images per ems is multiplied by container_image_classes.count
         end
 
         it "does not apply limit when concurrent_per_ems is -1" do
           stub_settings(:container_scanning => {:concurrent_per_ems => -1})
           dispatcher.dispatch_container_scan_jobs
           expect(Job.where(:target_class => container_image_classes, :dispatch_status => "pending").count).to eq(0)
-          # 1 per ems, one ems has 1 job and the other 2
+          # 1 per ems, one ems has 1* job and the other 2*
+          # initial number of images per ems is multiplied by container_image_classes.count
         end
       end
     end
