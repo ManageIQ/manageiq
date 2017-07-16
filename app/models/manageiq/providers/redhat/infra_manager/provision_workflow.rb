@@ -92,4 +92,36 @@ class ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow < MiqProvisio
 
     result.select { |s| s.storage_domain_type == "data" }
   end
+
+  def source_ems
+    src = get_source_and_targets
+    load_ar_obj(src[:ems])
+  end
+
+  def set_or_default_hardware_field_values(vm)
+    unless source_ems.use_ovirt_sdk?
+      vm.memory_limit = nil
+    end
+    super(vm)
+  end
+
+  def validate_memory_limit(_field, values, dlg, fld, _value)
+    limited = get_value(values[:memory_limit])
+    return nil if limited.nil? || limited.zero?
+
+    ems = source_ems
+    return nil if ems.blank?
+    unless ems.use_ovirt_sdk?
+      return _("Memory Limit is supported only when using ovirt-engine-sdk (To enable, set: ':use_ovirt_engine_sdk: true' in settings.yml).")
+    end
+
+    unless ems.version_higher_than?("4.1")
+      return _("Memory Limit is supported for RHV 4.1 and above. Current provider version is #{ems.api_version}.")
+    end
+
+    allocated = get_value(values[:vm_memory]).to_i
+    if allocated > limited.to_i
+      _("%{description} VM Memory is larger than Memory Limit") % {:description => required_description(dlg, fld)}
+    end
+  end
 end

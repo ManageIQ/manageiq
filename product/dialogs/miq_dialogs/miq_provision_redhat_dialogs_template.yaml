@@ -483,6 +483,14 @@
           :display: :edit
           :data_type: :integer
           :validation_method: :validate_memory_reservation
+        :memory_limit:
+          :description: Memory (MB)
+          :required: false
+          :notes: (Max limit is determined by Operating System type and Architecture)
+          :display: :edit
+          :data_type: :integer
+          :notes_display: :show
+          :validation_method: :validate_memory_limit
         :network_adapters:
           :values:
             1: "1"

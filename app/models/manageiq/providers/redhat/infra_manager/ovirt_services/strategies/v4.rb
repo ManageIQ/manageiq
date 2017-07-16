@@ -296,9 +296,10 @@ module ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies
         update(vm)
       end
 
-      def update_memory!(memory)
+      def update_memory!(memory, limit)
         vm = get
-        vm.memory = memory
+        vm.memory = memory unless memory.zero?
+        vm.memory_policy.max = limit unless limit.zero?
         update(vm)
       end
 
