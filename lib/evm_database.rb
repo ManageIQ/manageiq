@@ -63,10 +63,9 @@ class EvmDatabase
     classes ||= PRIMORDIAL_CLASSES + (seedable_model_class_names - PRIMORDIAL_CLASSES)
     classes -= exclude_list
 
+    lock_timeout = (ENV["SEEDING_LOCK_TIMEOUT"].presence || 10.minutes).to_i
     # Only 1 machine can go through this at a time
-    # Populating the DB takes 20 seconds
-    # Not populating the db takes 3 seconds
-    MiqDatabase.with_lock(10.minutes) do
+    MiqDatabase.with_lock(lock_timeout) do
       classes.each do |klass|
         begin
           klass = klass.constantize if klass.kind_of?(String)
@@ -90,6 +89,9 @@ class EvmDatabase
     end
 
     _log.info("Seeding... Complete")
+  rescue Timeout::Error
+    _log.error("Timed out seeding database (#{lock_timeout} seconds).")
+    raise
   end
 
   def self.host
