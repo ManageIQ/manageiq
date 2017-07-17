@@ -37,7 +37,7 @@ module ManageIQ
     def self.while_updating_bower
       # Run bower in a thread and continue to do the non-js stuff
       puts "Updating bower assets in parallel..."
-      bower_thread = Thread.new { update_bower }
+      bower_thread = Thread.new { update_ui }
       bower_thread.abort_on_exception = true
 
       yield
@@ -106,8 +106,8 @@ module ManageIQ
       system!(%q(psql -c "CREATE USER root SUPERUSER PASSWORD 'smartvm';" -U postgres))
     end
 
-    def self.update_bower
-      system!("bundle exec rake update:bower")
+    def self.update_ui
+      system!("bundle exec rake update:ui")
     end
 
     def self.bundler_version
