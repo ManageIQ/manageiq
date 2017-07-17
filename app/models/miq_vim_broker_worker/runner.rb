@@ -45,8 +45,12 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
     end
   end
 
+  def has_ems_inventory_role?
+    @active_roles.include?("ems_inventory") && !Settings.prototype.ems_vmware.update_driven_refresh
+  end
+
   def reset_broker_update_notification
-    @active_roles.include?("ems_inventory") ? enable_broker_update_notification : disable_broker_update_notification
+    has_ems_inventory_role? ? enable_broker_update_notification : disable_broker_update_notification
   end
 
   def enable_broker_update_notification
@@ -91,7 +95,7 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
   end
 
   def expected_broker_cache_scope
-    @active_roles.include?("ems_inventory") ? :cache_scope_ems_refresh : :cache_scope_core
+    has_ems_inventory_role? ? :cache_scope_ems_refresh : :cache_scope_core
   end
 
   def ems_ids_for_notify(address, userid)
@@ -112,7 +116,7 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
   end
 
   def do_before_work_loop
-    if @active_roles.include?("ems_inventory") && @initial_emses_to_monitor.length > 0
+    if has_ems_inventory_role? && @initial_emses_to_monitor.length > 0
       _log.info("#{log_prefix} Queueing initial refresh for EMS.")
       EmsRefresh.queue_refresh(@initial_emses_to_monitor)
     end
