@@ -59,11 +59,13 @@ module ManagerRefresh::SaveCollection
       def build_update_query(inventory_collection, all_attribute_keys, hashes)
         all_attribute_keys_array = all_attribute_keys.to_a.delete_if { |x| %i(type).include?(x) }
         table_name               = inventory_collection.model_class.table_name
+        used_unique_index_keys   = inventory_collection.unique_index_columns & all_attribute_keys.to_a
+
         values = hashes.map do |hash|
           "(#{all_attribute_keys_array.map { |x| quote(hash[x], x, inventory_collection) }.join(",")})"
         end.join(",")
 
-        where_cond = inventory_collection.unique_index_columns.map do |x|
+        where_cond = used_unique_index_keys.map do |x|
           "updated_values.#{quote_column_name(x)} = #{table_name}.#{quote_column_name(x)}"
         end.join(" AND ")
 
