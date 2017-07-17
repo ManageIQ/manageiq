@@ -22,7 +22,7 @@ module Vm::Operations
   end
 
   def ipv4_address
-    ipaddresses.find { |ip| (IPAddr.new ip).ipv4? }
+    ipaddresses.find { |ip| IPAddr.new(ip).ipv4? }
   end
 
   def validate_collect_running_processes
