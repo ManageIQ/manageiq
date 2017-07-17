@@ -4,7 +4,7 @@ module ManagerRefresh::SaveCollection
       # TODO(lsmola) all below methods should be rewritten to arel, but we need to first extend arel to be able to do
       # this
       def build_insert_set_cols(key)
-        "#{ActiveRecord::Base.connection.quote_column_name(key)} = EXCLUDED.#{ActiveRecord::Base.connection.quote_column_name(key)}"
+        "#{quote_column_name(key)} = EXCLUDED.#{quote_column_name(key)}"
       end
 
       def build_insert_query(inventory_collection, all_attribute_keys, hashes)
@@ -13,13 +13,13 @@ module ManagerRefresh::SaveCollection
         values                   = hashes.map do |hash|
           "(#{all_attribute_keys_array.map { |x| ActiveRecord::Base.connection.quote(hash[x]) }.join(",")})"
         end.join(",")
-        col_names = all_attribute_keys_array.map { |x| ActiveRecord::Base.connection.quote_column_name(x) }.join(",")
+        col_names = all_attribute_keys_array.map { |x| quote_column_name(x) }.join(",")
 
         insert_query = %{
           INSERT INTO #{table_name} (#{col_names})
             VALUES
               #{values}
-          ON CONFLICT (#{inventory_collection.unique_index_columns.join(",")})
+          ON CONFLICT (#{inventory_collection.unique_index_columns.map { |x| quote_column_name(x) }.join(",")})
             DO
               UPDATE
                 SET #{all_attribute_keys_array.map { |key| build_insert_set_cols(key) }.join(", ")}
@@ -41,7 +41,7 @@ module ManagerRefresh::SaveCollection
 
         if inventory_collection.dependees.present?
           insert_query += %{
-            RETURNING id,#{inventory_collection.unique_index_columns.join(",")}
+            RETURNING id,#{inventory_collection.unique_index_columns.map { |x| quote_column_name(x) }.join(",")}
           }
         end
 
@@ -49,7 +49,11 @@ module ManagerRefresh::SaveCollection
       end
 
       def build_update_set_cols(key)
-        "#{ActiveRecord::Base.connection.quote_column_name(key)} = updated_values.#{ActiveRecord::Base.connection.quote_column_name(key)}"
+        "#{quote_column_name(key)} = updated_values.#{quote_column_name(key)}"
+      end
+
+      def quote_column_name(key)
+        ActiveRecord::Base.connection.quote_column_name(key)
       end
 
       def build_update_query(inventory_collection, all_attribute_keys, hashes)
@@ -58,8 +62,9 @@ module ManagerRefresh::SaveCollection
         values = hashes.map do |hash|
           "(#{all_attribute_keys_array.map { |x| quote(hash[x], x, inventory_collection) }.join(",")})"
         end.join(",")
-        cond = inventory_collection.unique_index_columns.map do |x|
-          "updated_values.#{x} = #{table_name}.#{x}"
+
+        where_cond = inventory_collection.unique_index_columns.map do |x|
+          "updated_values.#{quote_column_name(x)} = #{table_name}.#{quote_column_name(x)}"
         end.join(" AND ")
 
         update_query = %{
@@ -69,8 +74,8 @@ module ManagerRefresh::SaveCollection
           FROM (
             VALUES
               #{values}
-          ) AS updated_values (#{all_attribute_keys_array.join(",")})
-          WHERE #{cond}
+          ) AS updated_values (#{all_attribute_keys_array.map { |x| quote_column_name(x) }.join(",")})
+          WHERE #{where_cond}
         }
 
         # TODO(lsmola) do we want to exclude the ems_id from the UPDATE clause? Otherwise it might be difficult to change
