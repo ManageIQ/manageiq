@@ -138,7 +138,7 @@ RUN source /etc/default/evm && \
     npm install bower yarn -g && \
     gem install bundler --conservative && \
     bundle install && \
-    rake update:bower && \
+    rake update:ui && \
     bin/rails log:clear tmp:clear && \
     rake evm:compile_assets && \
     rake evm:compile_sti_loader && \
