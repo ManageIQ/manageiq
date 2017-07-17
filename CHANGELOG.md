@@ -9,6 +9,80 @@ The ManageIQ organization is continuously adding new smaller repositories.  The 
 - [manageiq-providers-vmware CHANGELOG](https://github.com/ManageIQ/manageiq-providers-vmware/blob/master/CHANGELOG.md)
 - [manageiq-ui-classic CHANGELOG](https://github.com/ManageIQ/manageiq-ui-classic/blob/master/CHANGELOG.md)
 
+## Unreleased - as of Sprint 64 end 2017-07-10
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+64+Ending+Jul+10%2C+2017%22+label%3Aenhancement)
+
+- Automate
+  - Provisioning: Add validate_blacklist method for VM pre-provisioning [(#15513)](https://github.com/ManageIQ/manageiq/pull/15513)
+
+- Platform
+  - Make namespace into a virtual attribute [(#15532)](https://github.com/ManageIQ/manageiq/pull/15532)
+  - Use OpenShift API to control the Ansible container [(#15492)](https://github.com/ManageIQ/manageiq/pull/15492)
+  - Allow MiqWorker.required_roles to be a lambda [(#15522)](https://github.com/ManageIQ/manageiq/pull/15522)
+  - MulticastLogger#reopen shouldn't be used because it's backed by other loggers [(#15512)](https://github.com/ManageIQ/manageiq/pull/15512)
+  - Add the evm:deployment_status rake task [(#15402)](https://github.com/ManageIQ/manageiq/pull/15402)
+  - Set default server roles from env [(#15470)](https://github.com/ManageIQ/manageiq/pull/15470)
+  - Logging to STDOUT in JSON format for containers [(#15392)](https://github.com/ManageIQ/manageiq/pull/15392)
+  - Allow overriding memcache server setting by environment variable [(#15326)](https://github.com/ManageIQ/manageiq/pull/15326)
+- Reporting: Add Amazon report to standard set of reports [(#15445)](https://github.com/ManageIQ/manageiq/pull/15445)
+- Queue
+  - Changed task_id to tracking_label [(#15443)](https://github.com/ManageIQ/manageiq/pull/15443)
+  - Add MiqQueue#tracking_label [(#15224)](https://github.com/ManageIQ/manageiq/pull/15224)
+- Workers
+  - Support  worker heartbeat to a local file instead of Drb. [(#15377)](https://github.com/ManageIQ/manageiq/pull/15377)
+  - Use the Ansible service in containers rather than starting it locally [(#15423)](https://github.com/ManageIQ/manageiq/pull/15423)
+  - Default to spawn automatically if fork isn't supported [(#15425)](https://github.com/ManageIQ/manageiq/pull/15425)
+
+- Providers
+  - Add monitoring manager [(#15354)](https://github.com/ManageIQ/manageiq/pull/15354)
+  - Containers
+    - Adding sti mixin to container_image base class [(#15505)](https://github.com/ManageIQ/manageiq/pull/15505)
+    - Container Template: Add :miq_class for each object [(#15475)](https://github.com/ManageIQ/manageiq/pull/15475)
+    - Adding ContainerImage subclasses [(#15386)](https://github.com/ManageIQ/manageiq/pull/15386)
+    - Change the criteria for a required field of ContainerTemplateServiceDialog. [(#15469)](https://github.com/ManageIQ/manageiq/pull/15469)
+  - Inventory
+    - Support find and lazy_find by other fields than manager_ref [(#15447)](https://github.com/ManageIQ/manageiq/pull/15447)
+    - Add MiqTemplate to InfraManager InventoryCollection [(#15400)](https://github.com/ManageIQ/manageiq/pull/15400)
+    - Optimize insert query loading [(#15404)](https://github.com/ManageIQ/manageiq/pull/15404)
+
+- REST API
+  - Render ids in compressed form in API responses [(#15430)](https://github.com/ManageIQ/manageiq/pull/15430)
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+64+Ending+Jul+10%2C+2017%22+label%3Abug)
+
+- Automate
+  - Provisioning
+    - Checks PXE customization templates for unique names [(#15495)](https://github.com/ManageIQ/manageiq/pull/15495)
+    - Rebuild Provision Requests with arrays [(#15410)](https://github.com/ManageIQ/manageiq/pull/15410)
+
+- Platform
+  - Refactor MiqTask.delete_older to queue condition instead of array of IDs [(#15415)](https://github.com/ManageIQ/manageiq/pull/15415)
+  - Run the setup playbook if we see that an upgrade has happened [(#15482)](https://github.com/ManageIQ/manageiq/pull/15482)
+  - Alerts: Fail explicitly for MAS validation failure [(#15473)](https://github.com/ManageIQ/manageiq/pull/15473)
+  - Authentication: Check the current region when creating a new user [(#15516)](https://github.com/ManageIQ/manageiq/pull/15516)
+  - Reporting: Fix key for regexp in miq_expression.yaml [(#15452)](https://github.com/ManageIQ/manageiq/pull/15452)
+  - Workers
+    - Fix pseudo heartbeating when HB file missing [(#15483)](https://github.com/ManageIQ/manageiq/pull/15483)
+    - Only remove my process' pidfile. [(#15491)](https://github.com/ManageIQ/manageiq/pull/15491)
+    - Add UiConstants back to the web server worker mixin [(#15518)](https://github.com/ManageIQ/manageiq/pull/15518)
+
+- Providers
+  - Add explicit capture threshold for container [(#15311)](https://github.com/ManageIQ/manageiq/pull/15311)
+  - Save key pairs in Authentication table [(#15485)](https://github.com/ManageIQ/manageiq/pull/15485)
+  - Lower the report level of routine http errors in the Fog log [(#15363)](https://github.com/ManageIQ/manageiq/pull/15363)
+
+- REST API
+  - Fix virtual attribute selection [(#15387)](https://github.com/ManageIQ/manageiq/pull/15387)
+  - Make request APIs consistent by restricting access to automation/provision requests to admin/requester [(#15186)](https://github.com/ManageIQ/manageiq/pull/15186)
+  - Render ids in compressed form in API responses [(#15430)](https://github.com/ManageIQ/manageiq/pull/15430)
+  - Use correct identifier for VM Retirement [(#15509)](https://github.com/ManageIQ/manageiq/pull/15509)
+  - Return only requested attributes [(#14734)](https://github.com/ManageIQ/manageiq/pull/14734)
+  - Return Not Found on Snapshots Delete actions  [(#15489)](https://github.com/ManageIQ/manageiq/pull/15489)
+
+- UI (Classic)
+  - Fix URL to Compute/Containers/Containers in miq_shortcuts [(#15497)](https://github.com/ManageIQ/manageiq/pull/15497)
+
 ## Unreleased - as of Sprint 63 end 2017-06-19
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+63+Ending+Jun+19%2C+2017%22+label%3Aenhancement)
@@ -53,7 +127,6 @@ The ManageIQ organization is continuously adding new smaller repositories.  The 
 - Automate
   - Provisioning: Select datastore by its association with the provider [(#15245)](https://github.com/ManageIQ/manageiq/pull/15245)
   - Services: Add orchestration stack my_zone. [(#15334)](https://github.com/ManageIQ/manageiq/pull/15334)
-
 
 - Platform
   - Add vm_migrate_task factory. [(#15332)](https://github.com/ManageIQ/manageiq/pull/15332)
