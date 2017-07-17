@@ -110,22 +110,18 @@ module ManagerRefresh::SaveCollection
       def quote_and_pg_type_cast(value, name, inventory_collection)
         pg_type_cast(
           ActiveRecord::Base.connection.quote(value),
-          inventory_collection.model_class.columns_hash[name.to_s].type
+          inventory_collection.model_class.columns_hash[name.to_s]
+            .try(:sql_type_metadata)
+            .try(:instance_values)
+            .try(:[], "sql_type")
         )
       end
 
-      def pg_type_cast(value, type)
-        case type
-        when :string, :text        then value
-        when :integer              then value
-        when :float                then value
-        when :decimal              then value
-        when :datetime, :timestamp then "#{value}::timestamp"
-        when :time                 then "#{value}::time"
-        when :date                 then "#{value}::date"
-        when :binary               then "#{value}::binary"
-        when :boolean              then "#{value}::boolean"
-        else value
+      def pg_type_cast(value, sql_type)
+        if sql_type.blank?
+          value
+        else
+          "#{value}::#{sql_type}"
         end
       end
     end
