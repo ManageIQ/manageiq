@@ -222,19 +222,21 @@ describe CustomButton do
     let(:test_button) { described_class.new(:resource_action => resource_action) }
     let(:expected_hash) do
       {
-        "id"                => nil,
-        "guid"              => nil,
-        "description"       => nil,
-        "applies_to_class"  => nil,
-        "applies_to_exp"    => nil,
-        "options"           => nil,
-        "userid"            => nil,
-        "wait_for_complete" => nil,
-        "created_on"        => nil,
-        "updated_on"        => nil,
-        "name"              => nil,
-        "visibility"        => nil,
-        "applies_to_id"     => nil
+        "id"                    => nil,
+        "guid"                  => nil,
+        "description"           => nil,
+        "disabled_text"         => nil,
+        "enablement_expression" => nil,
+        "applies_to_class"      => nil,
+        "options"               => nil,
+        "userid"                => nil,
+        "wait_for_complete"     => nil,
+        "created_on"            => nil,
+        "updated_on"            => nil,
+        "name"                  => nil,
+        "visibility"            => nil,
+        "visibility_expression" => nil,
+        "applies_to_id"         => nil
       }
     end
 
