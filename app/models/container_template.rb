@@ -34,9 +34,21 @@ class ContainerTemplate < ApplicationRecord
                                             :namespace => project
                                           },
                                           :objects    => objects,
-                                          :parameters => params)
+                                          :parameters => params_to_hashes(params))
     create_objects(processed_template['objects'], project)
     @created_objects.each { |obj| obj[:miq_class] = MIQ_ENTITY_MAPPING[obj[:kind]] }
+  end
+
+  def params_to_hashes(params)
+    params.collect do |param|
+      {
+        :name     => param.name,
+        :value    => param.value,
+        :generate => param.generate,
+        :from     => param.from,
+        :required => param.required
+      }
+    end
   end
 
   def process_template(client, template)
