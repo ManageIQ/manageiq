@@ -457,7 +457,7 @@ class MiqServer < ApplicationRecord
   end
 
   def database_application_name
-    "MIQ #{Process.pid} Server[#{compressed_id}], #{zone.name}[#{zone.compressed_id}]".truncate(64)
+    "MIQ|#{Process.pid}|#{compressed_id}|-|#{zone.compressed_id}|Server|#{zone.name}".truncate(64)
   end
 
   def set_database_application_name
