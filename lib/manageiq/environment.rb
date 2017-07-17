@@ -52,12 +52,18 @@ module ManageIQ
     end
 
     def self.bundle_install(root = APP_ROOT)
-      system('bundle check', :chdir => root) || system!('bundle install', :chdir => root)
+      system("bundle check", :chdir => root) ||
+        system!("bundle install #{bundle_params}", :chdir => root)
     end
 
     def self.bundle_update(root = APP_ROOT)
-      system!('bundle update', :chdir => root)
+      system!("bundle update #{bundle_params}", :chdir => root)
     end
+
+    def self.bundle_params
+      "--jobs=3 --retry=3 --path=${BUNDLE_PATH:-vendor/bundle}" if ENV['CI']
+    end
+    private_class_method :bundle_params
 
     def self.create_database
       puts "\n== Updating database =="
