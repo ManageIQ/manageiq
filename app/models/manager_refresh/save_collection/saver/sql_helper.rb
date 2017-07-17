@@ -102,6 +102,9 @@ module ManagerRefresh::SaveCollection
       def quote(value, name = nil, inventory_collection = nil)
         # TODO(lsmola) needed only because UPDATE FROM VALUES needs a specific PG typecasting, remove when fixed in PG
         name.nil? ? ActiveRecord::Base.connection.quote(value) : quote_and_pg_type_cast(value, name, inventory_collection)
+      rescue TypeError => e
+        _log.error("Can't quote value: #{value}, of #{name} and #{inventory_collection}")
+        raise e
       end
 
       def quote_and_pg_type_cast(value, name, inventory_collection)
