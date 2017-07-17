@@ -69,7 +69,7 @@ module MiqReport::Formatting
     # Chargeback Reports: Add the selected currency in the assigned rate to options
     if Chargeback.db_is_chargeback?(db)
       @rates_cache ||= Chargeback::RatesCache.new
-      options[:unit] = @rates_cache.currency_for_report
+      options[:unit] = @rates_cache.currency_for_report if @rates_cache.currency_for_report
     end
 
     format.merge!(options) if format # Merge additional options that were passed in as overrides
