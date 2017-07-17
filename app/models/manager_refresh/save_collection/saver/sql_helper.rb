@@ -57,7 +57,8 @@ module ManagerRefresh::SaveCollection
       end
 
       def build_update_query(inventory_collection, all_attribute_keys, hashes)
-        all_attribute_keys_array = all_attribute_keys.to_a.delete_if { |x| %i(type).include?(x) }
+        # We want to ignore type and create timestamps when updating
+        all_attribute_keys_array = all_attribute_keys.to_a.delete_if { |x| %i(type created_at created_on).include?(x) }
         table_name               = inventory_collection.model_class.table_name
         used_unique_index_keys   = inventory_collection.unique_index_columns & all_attribute_keys.to_a
 
