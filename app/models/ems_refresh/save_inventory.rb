@@ -254,7 +254,7 @@ module EmsRefresh::SaveInventory
     return if hashes.nil?
 
     deletes = guest_device.child_devices.where(:device_type => ["ethernet", "storage"])
-    save_inventory_multi(guest_device.child_devices, hashes, deletes, [:device_type, :uid_ems], [:network, :miq_scsi_targets, :firmwares], [:switch, :lan])
+    save_inventory_multi(guest_device.child_devices, hashes, deletes, [:device_type, :uid_ems], [:network, :miq_scsi_targets], [:switch, :lan])
     store_ids_for_new_records(guest_device.child_devices, hashes, [:device_type, :uid_ems])
   end
 
