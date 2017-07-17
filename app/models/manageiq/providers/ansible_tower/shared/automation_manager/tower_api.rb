@@ -35,7 +35,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
         :options => {
           :op_name => "#{self::FRIENDLY_NAME} #{op}",
           :op_arg  => "(#{op_arg})",
-          :tower   => "Tower(manager_id=#{manager_id})"
+          :tower   => "EMS(manager_id=#{manager_id})"
         }
       )
     end

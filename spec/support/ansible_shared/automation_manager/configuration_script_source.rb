@@ -34,7 +34,7 @@ shared_examples_for "ansible configuration_script_source" do
         :options => {
           :op_name => "#{described_class::FRIENDLY_NAME} creation",
           :op_arg  => "(name=My Project)",
-          :tower   => "Tower(manager_id=#{manager.id})"
+          :tower   => "EMS(manager_id=#{manager.id})"
         }
       }
     end
@@ -107,7 +107,7 @@ shared_examples_for "ansible configuration_script_source" do
         :options => {
           :op_name => "#{described_class::FRIENDLY_NAME} deletion",
           :op_arg  => "(manager_ref=#{tower_project.id})",
-          :tower   => "Tower(manager_id=#{manager.id})"
+          :tower   => "EMS(manager_id=#{manager.id})"
         }
       }
     end
@@ -153,7 +153,7 @@ shared_examples_for "ansible configuration_script_source" do
         :options => {
           :op_name => "#{described_class::FRIENDLY_NAME} update",
           :op_arg  => "()",
-          :tower   => "Tower(manager_id=#{manager.id})"
+          :tower   => "EMS(manager_id=#{manager.id})"
         }
       }
     end
