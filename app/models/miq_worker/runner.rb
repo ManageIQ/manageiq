@@ -267,17 +267,15 @@ class MiqWorker::Runner
     # just consume the restarted message
   end
 
-  def message_sync_active_roles(*args)
-    _log.info("#{log_prefix} Synchronizing active roles...")
-    opts = args.extract_options!
-    sync_active_roles(opts[:roles])
-    _log.info("#{log_prefix} Synchronizing active roles complete...")
-  end
-
   def message_sync_config(*_args)
     _log.info("#{log_prefix} Synchronizing configuration...")
     sync_config
     _log.info("#{log_prefix} Synchronizing configuration complete...")
+
+    _log.info("#{log_prefix} Synchronizing active roles...")
+    opts = _args.extract_options!
+    sync_active_roles(opts[:roles])
+    _log.info("#{log_prefix} Synchronizing active roles complete...")
   end
 
   def sync_config

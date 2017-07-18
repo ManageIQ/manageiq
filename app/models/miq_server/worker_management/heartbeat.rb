@@ -35,6 +35,7 @@ module MiqServer::WorkerManagement::Heartbeat
     messages.collect do |message, *args|
       case message
       when "sync_active_roles"
+# TODO - need to deal with this
         [message, {:roles => @active_role_names}]
       else
         [message, *args]
@@ -43,13 +44,6 @@ module MiqServer::WorkerManagement::Heartbeat
   end
 
   def worker_set_message(w, message, *args)
-    # Special process for this compound message, by breaking it up into 2 simpler messages
-    if message == 'sync_active_roles_and_config'
-      worker_set_message(w, 'sync_active_roles')
-      worker_set_message(w, 'sync_config')
-      return
-    end
-
     _log.info("#{w.format_full_log_msg} is being requested to #{message}")
     @workers_lock.synchronize(:EX) do
       worker_add_message(w.pid, [message, *args]) if @workers.key?(w.pid)

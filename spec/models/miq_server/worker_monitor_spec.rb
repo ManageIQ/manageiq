@@ -288,37 +288,6 @@ describe "MiqWorker Monitor" do
           end
         end
 
-        context "when server has a single sync_active_roles message" do
-          before(:each) do
-            @miq_server.message_for_worker(@worker1.id, "sync_active_roles")
-          end
-
-          it "should return proper message on heartbeat via drb" do
-            expect(@miq_server.worker_heartbeat(@worker1.pid)).to eq([['sync_active_roles', {:roles => nil}]])
-          end
-        end
-
-        context "#stop_worker followed by a single sync_active_roles_and_config message" do
-          before(:each) do
-            @miq_server.stop_worker(@worker1)
-            @miq_server.message_for_worker(@worker1.id, "sync_active_roles_and_config")
-          end
-
-          it "exit message followed by active_roles and config" do
-            expect(@miq_server.worker_heartbeat(@worker1.pid)).to eq([['exit'], ['sync_active_roles', {:roles => nil}], ['sync_config']])
-          end
-        end
-
-        context "when server has a single sync_active_roles_and_config message" do
-          before(:each) do
-            @miq_server.message_for_worker(@worker1.id, "sync_active_roles_and_config")
-          end
-
-          it "should return proper message on heartbeat via drb" do
-            expect(@miq_server.worker_heartbeat(@worker1.pid)).to eq([['sync_active_roles', {:roles => nil}], ['sync_config']])
-          end
-        end
-
         context "when server has a single reconnect_ems message with a parameter" do
           before(:each) do
             @ems_id = 7
