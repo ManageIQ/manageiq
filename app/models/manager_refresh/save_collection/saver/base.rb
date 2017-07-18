@@ -87,9 +87,9 @@ module ManagerRefresh::SaveCollection
       def assert_referential_integrity(hash, inventory_object)
         inventory_object.inventory_collection.fixed_foreign_keys.each do |x|
           next unless hash[x].blank?
-          _log.info("Ignoring #{inventory_object} because of missing foreign key #{x} for "\
+          _log.info("Ignoring #{inventory_object} of #{inventory_object.inventory_collection} because of missing foreign key #{x} for "\
                     "#{inventory_object.inventory_collection.parent.class.name}:"\
-                    "#{inventory_object.inventory_collection.parent.id}")
+                    "#{inventory_object.inventory_collection.parent.try(:id)}")
           return false
         end
         true
@@ -116,9 +116,9 @@ module ManagerRefresh::SaveCollection
 
       def assign_attributes_for_create!(hash, inventory_collection, create_time)
         hash[:type]         = inventory_collection.model_class.name if inventory_collection.supports_sti? && hash[:type].blank?
-        hash[:last_sync_on] = create_time if inventory_collection.supports_last_sync_on?
         hash[:created_on]   = create_time if inventory_collection.supports_timestamps_on_variant?
         hash[:created_at]   = create_time if inventory_collection.supports_timestamps_at_variant?
+        assign_attributes_for_update!(hash, inventory_collection, create_time)
       end
     end
   end

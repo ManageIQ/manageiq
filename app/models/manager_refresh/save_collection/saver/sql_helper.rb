@@ -4,7 +4,7 @@ module ManagerRefresh::SaveCollection
       # TODO(lsmola) all below methods should be rewritten to arel, but we need to first extend arel to be able to do
       # this
       def build_insert_set_cols(key)
-        "#{ActiveRecord::Base.connection.quote_column_name(key)} = EXCLUDED.#{ActiveRecord::Base.connection.quote_column_name(key)}"
+        "#{quote_column_name(key)} = EXCLUDED.#{quote_column_name(key)}"
       end
 
       def build_insert_query(inventory_collection, all_attribute_keys, hashes)
@@ -13,13 +13,13 @@ module ManagerRefresh::SaveCollection
         values                   = hashes.map do |hash|
           "(#{all_attribute_keys_array.map { |x| ActiveRecord::Base.connection.quote(hash[x]) }.join(",")})"
         end.join(",")
-        col_names = all_attribute_keys_array.map { |x| ActiveRecord::Base.connection.quote_column_name(x) }.join(",")
+        col_names = all_attribute_keys_array.map { |x| quote_column_name(x) }.join(",")
 
         insert_query = %{
           INSERT INTO #{table_name} (#{col_names})
             VALUES
               #{values}
-          ON CONFLICT (#{inventory_collection.unique_index_columns.join(",")})
+          ON CONFLICT (#{inventory_collection.unique_index_columns.map { |x| quote_column_name(x) }.join(",")})
             DO
               UPDATE
                 SET #{all_attribute_keys_array.map { |key| build_insert_set_cols(key) }.join(", ")}
@@ -41,7 +41,7 @@ module ManagerRefresh::SaveCollection
 
         if inventory_collection.dependees.present?
           insert_query += %{
-            RETURNING id,#{inventory_collection.unique_index_columns.join(",")}
+            RETURNING id,#{inventory_collection.unique_index_columns.map { |x| quote_column_name(x) }.join(",")}
           }
         end
 
@@ -49,17 +49,25 @@ module ManagerRefresh::SaveCollection
       end
 
       def build_update_set_cols(key)
-        "#{ActiveRecord::Base.connection.quote_column_name(key)} = updated_values.#{ActiveRecord::Base.connection.quote_column_name(key)}"
+        "#{quote_column_name(key)} = updated_values.#{quote_column_name(key)}"
+      end
+
+      def quote_column_name(key)
+        ActiveRecord::Base.connection.quote_column_name(key)
       end
 
       def build_update_query(inventory_collection, all_attribute_keys, hashes)
-        all_attribute_keys_array = all_attribute_keys.to_a.delete_if { |x| %i(type).include?(x) }
+        # We want to ignore type and create timestamps when updating
+        all_attribute_keys_array = all_attribute_keys.to_a.delete_if { |x| %i(type created_at created_on).include?(x) }
         table_name               = inventory_collection.model_class.table_name
+        used_unique_index_keys   = inventory_collection.unique_index_columns & all_attribute_keys.to_a
+
         values = hashes.map do |hash|
           "(#{all_attribute_keys_array.map { |x| quote(hash[x], x, inventory_collection) }.join(",")})"
         end.join(",")
-        cond = inventory_collection.unique_index_columns.map do |x|
-          "updated_values.#{x} = #{table_name}.#{x}"
+
+        where_cond = used_unique_index_keys.map do |x|
+          "updated_values.#{quote_column_name(x)} = #{table_name}.#{quote_column_name(x)}"
         end.join(" AND ")
 
         update_query = %{
@@ -69,8 +77,8 @@ module ManagerRefresh::SaveCollection
           FROM (
             VALUES
               #{values}
-          ) AS updated_values (#{all_attribute_keys_array.join(",")})
-          WHERE #{cond}
+          ) AS updated_values (#{all_attribute_keys_array.map { |x| quote_column_name(x) }.join(",")})
+          WHERE #{where_cond}
         }
 
         # TODO(lsmola) do we want to exclude the ems_id from the UPDATE clause? Otherwise it might be difficult to change
@@ -94,27 +102,26 @@ module ManagerRefresh::SaveCollection
       def quote(value, name = nil, inventory_collection = nil)
         # TODO(lsmola) needed only because UPDATE FROM VALUES needs a specific PG typecasting, remove when fixed in PG
         name.nil? ? ActiveRecord::Base.connection.quote(value) : quote_and_pg_type_cast(value, name, inventory_collection)
+      rescue TypeError => e
+        _log.error("Can't quote value: #{value}, of #{name} and #{inventory_collection}")
+        raise e
       end
 
       def quote_and_pg_type_cast(value, name, inventory_collection)
         pg_type_cast(
           ActiveRecord::Base.connection.quote(value),
-          inventory_collection.model_class.columns_hash[name.to_s].type
+          inventory_collection.model_class.columns_hash[name.to_s]
+            .try(:sql_type_metadata)
+            .try(:instance_values)
+            .try(:[], "sql_type")
         )
       end
 
-      def pg_type_cast(value, type)
-        case type
-        when :string, :text        then value
-        when :integer              then value
-        when :float                then value
-        when :decimal              then value
-        when :datetime, :timestamp then "#{value}::timestamp"
-        when :time                 then "#{value}::time"
-        when :date                 then "#{value}::date"
-        when :binary               then "#{value}::binary"
-        when :boolean              then "#{value}::boolean"
-        else value
+      def pg_type_cast(value, sql_type)
+        if sql_type.blank?
+          value
+        else
+          "#{value}::#{sql_type}"
         end
       end
     end
