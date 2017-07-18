@@ -5,9 +5,9 @@ module ManageIQ
   module Environment
     APP_ROOT = Pathname.new(__dir__).join("../..")
 
-    def self.manageiq_plugin_setup
+    def self.manageiq_plugin_setup(plugin_root = nil)
       # determine plugin root dir. Assume we are called from a 'bin/setup' script in the plugin root
-      plugin_root = Pathname.new(caller_locations.last.absolute_path).dirname.parent
+      plugin_root ||= Pathname.new(caller_locations.last.absolute_path).dirname.parent
 
       install_bundler
       bundle_install(plugin_root)
@@ -19,9 +19,9 @@ module ManageIQ
       setup_test_environment(:task_prefix => 'app:', :root => plugin_root)
     end
 
-    def self.manageiq_plugin_update
+    def self.manageiq_plugin_update(plugin_root = nil)
       # determine plugin root dir. Assume we are called from a 'bin/setup' script in the plugin root
-      plugin_root = Pathname.new(caller_locations.last.absolute_path).dirname.parent
+      plugin_root ||= Pathname.new(caller_locations.last.absolute_path).dirname.parent
 
       bundle_update(plugin_root)
 
