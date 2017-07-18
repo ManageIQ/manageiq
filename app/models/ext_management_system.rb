@@ -432,16 +432,14 @@ class ExtManagementSystem < ApplicationRecord
     update!(:enabled => true)
   end
 
+  # override destroy_queue from AsyncDeleteMixin
   def self.destroy_queue(ids)
-    ids = Array.wrap(ids)
-    _log.info("Queuing destroy of #{name} with the following ids: #{ids.inspect}")
-    ids.each do |id|
-      schedule_destroy_queue(id)
-    end
+    find(Array.wrap(ids)).each(&:destroy_queue)
   end
 
-  # override destroy_queue from AsyncDeleteMixin
   def destroy_queue
+    _log.info("Queuing destroy of #{self.class.name} with id: #{id}")
+    child_managers.each(&:destroy_queue)
     self.class.schedule_destroy_queue(id)
   end
 

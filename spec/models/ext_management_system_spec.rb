@@ -408,6 +408,14 @@ describe ExtManagementSystem do
       ems.destroy
       expect(ExtManagementSystem.count).to eq(1)
     end
+
+    it "queues up destroy for child_managers" do
+      child_manager = FactoryGirl.create(:ext_management_system)
+      ems = FactoryGirl.create(:ext_management_system, :child_managers => [child_manager])
+      expect(described_class).to receive(:schedule_destroy_queue).with(ems.id)
+      expect(described_class).to receive(:schedule_destroy_queue).with(child_manager.id)
+      described_class.destroy_queue(ems.id)
+    end
   end
 
   context "virtual column :supports_block_storage" do
