@@ -10,11 +10,20 @@ module ManageIQ
       plugin_root = Pathname.new(caller_locations.last.absolute_path).dirname.parent
 
       install_bundler
-      bundle_update(plugin_root)
+      bundle_install(plugin_root)
 
       ensure_config_files
 
       create_database_user if ENV["CI"]
+
+      setup_test_environment(:task_prefix => 'app:', :root => plugin_root)
+    end
+
+    def self.manageiq_plugin_update
+      # determine plugin root dir. Assume we are called from a 'bin/setup' script in the plugin root
+      plugin_root = Pathname.new(caller_locations.last.absolute_path).dirname.parent
+
+      bundle_update(plugin_root)
 
       setup_test_environment(:task_prefix => 'app:', :root => plugin_root)
     end
@@ -57,7 +66,7 @@ module ManageIQ
     end
 
     def self.bundle_update(root = APP_ROOT)
-      system!("bundle update #{bundle_params}", :chdir => root)
+      system!("bundle update", :chdir => root)
     end
 
     def self.bundle_params
