@@ -14,7 +14,6 @@
   - embedded_automation_manager
   - availability_zone
   - host_aggregate
-  - compute
   - flavor
   - floating_ip
   - bottlenecks
@@ -25,7 +24,6 @@
   - cloud_object_store_object
   - control_explorer
   - dashboard
-  - datacenter
   - storage
   - storage_pod
   - ems_cloud
@@ -79,7 +77,6 @@
   - security_group
   - service
   - timeline
-  - usage
   - utilization
   - vm_explorer
   - vm
@@ -92,7 +89,6 @@
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
-  - compute
   - chargeback
   - chargeback_reports
   - customization_template_view
@@ -152,7 +148,6 @@
   - storage_perf
   - storage_tag
   - timeline
-  - usage
   - vm_check_compliance
   - vm_console
   - vm_webmks_console
@@ -185,7 +180,6 @@
   - automation_manager
   - embedded_automation_manager
   - bottlenecks
-  - compute
   - chargeback
   - chargeback_reports
   - customization_template_view
@@ -245,7 +239,6 @@
   - storage_pod_show
   - storage_pod_show_list
   - timeline
-  - usage
   - utilization
   - vm_check_compliance
   - vm_console
@@ -275,7 +268,6 @@
   - about
   - all_vm_rules
   - automation_manager
-  - compute
   - dashboard
   - ems_physical_infra
   - miq_request_admin
@@ -287,7 +279,6 @@
   - miq_template_refresh
   - miq_template_miq_request_new
   - miq_template_perf
-  - miq_template_publish
   - miq_template_show
   - miq_template_show_list
   - miq_template_timeline
@@ -323,8 +314,6 @@
   - vm_stop
   - vm_suspend
   - vm_pause
-  - vm_shelve
-  - vm_shelve_offload
   - vm_timeline
   - vm_chargeback
   - sui_services_view
@@ -344,12 +333,9 @@
   - all_vm_rules
   - automation_manager
   - embedded_automation_manager
-  - compute
   - chargeback
   - chargeback_reports
   - dashboard
-  - datastore
-  - ems_cluster_analyze
   - ems_cluster_compare
   - ems_cluster_drift
   - ems_cluster_show
@@ -377,7 +363,6 @@
   - ems_physical_infra_view
   - physical_server_timeline
   - host_new
-  - host_analyze
   - host_compare
   - host_discover
   - host_drift
@@ -396,7 +381,6 @@
   - miq_report_schedules
   - miq_report_view
   - miq_task_my_ui
-  - miq_template_analyze
   - miq_template_check_compliance
   - miq_template_compare
   - miq_template_drift
@@ -406,7 +390,6 @@
   - miq_template_show
   - miq_template_show_list
   - miq_template_snapshot
-  - miq_template_sync
   - miq_template_tag
   - miq_template_timeline
   - pxe
@@ -423,8 +406,6 @@
   - storage_perf
   - storage_tag
   - timeline
-  - usage
-  - vm_analyze
   - vm_check_compliance
   - vm_collect_running_processes
   - vm_compare
@@ -450,9 +431,6 @@
   - vm_stop
   - vm_suspend
   - vm_pause
-  - vm_shelve
-  - vm_shelve_offload
-  - vm_sync
   - vm_tag
   - vm_timeline
   - vm_chargeback
@@ -470,12 +448,10 @@
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
-  - compute
   - chargeback
   - chargeback_reports
   - control_explorer
   - dashboard
-  - datastore
   - ems_cluster_show
   - ems_cluster_show_list
   - ems_cluster_perf
@@ -526,7 +502,6 @@
   - storage_perf
   - storage_tag
   - timeline
-  - usage
   - vm_check_compliance
   - vm_compare
   - vm_drift
@@ -555,12 +530,10 @@
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
-  - compute
   - chargeback
   - chargeback_reports
   - control_explorer
   - dashboard
-  - datastore
   - ems_cluster_show
   - ems_cluster_show_list
   - ems_cluster_perf
@@ -610,7 +583,6 @@
   - storage_perf
   - storage_tag
   - timeline
-  - usage
   - vm_check_compliance
   - vm_collect_running_processes
   - vm_console
@@ -642,11 +614,9 @@
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
-  - compute
   - chargeback
   - chargeback_reports
   - dashboard
-  - datastore
   - ems_cluster_show
   - ems_cluster_show_list
   - ems_cluster_perf
@@ -697,7 +667,6 @@
   - storage_perf
   - storage_tag
   - timeline
-  - usage
   - vm_check_compliance
   - vm_console
   - vm_webmks_console
@@ -733,7 +702,6 @@
   - about
   - all_vm_rules
   - catalog_items_view
-  - compute
   - miq_request_admin
   - miq_request_view
   - my_settings_default_views
@@ -747,7 +715,6 @@
   - svc_catalog_provision
   - vm_clone
   - vm_cloud_explorer
-  - vm_filter_accord
   - vm_guest_restart
   - vm_guest_shutdown
   - vm_infra_explorer
@@ -762,8 +729,6 @@
   - vm_stop
   - vm_suspend
   - vm_pause
-  - vm_shelve
-  - vm_shelve_offload
   - vm_tag
   - sui_core
   - sui_services
@@ -785,7 +750,6 @@
   - embedded_automation_manager
   - ems_physical_infra_console
   - catalog_items_view
-  - compute
   - miq_template_clone
   - miq_template_drift
   - miq_template_edit
@@ -794,7 +758,6 @@
   - miq_template_show
   - miq_template_show_list
   - miq_template_snapshot
-  - miq_template_sync
   - miq_template_tag
   - miq_template_timeline
   - my_settings_default_views
@@ -817,7 +780,6 @@
   - vm_webmks_console
   - vm_drift
   - vm_edit
-  - vm_filter_accord
   - vm_guest_restart
   - vm_guest_shutdown
   - vm_infra_explorer
@@ -834,9 +796,6 @@
   - vm_stop
   - vm_suspend
   - vm_pause
-  - vm_shelve
-  - vm_shelve_offload
-  - vm_sync
   - vm_tag
   - vm_timeline
   - vm_chargeback
@@ -852,10 +811,8 @@
   - all_vm_rules
   - automation_manager
   - embedded_automation_manager
-  - compute
   - miq_request_admin
   - miq_request_view
-  - miq_template_analyze
   - miq_template_check_compliance
   - miq_template_clone
   - miq_template_drift
@@ -864,13 +821,11 @@
   - miq_template_show
   - miq_template_show_list
   - miq_template_snapshot
-  - miq_template_sync
   - miq_template_tag
   - miq_template_timeline
   - my_settings_default_views
   - my_settings_visuals
   - provider_foreman_explorer
-  - vm_analyze
   - vm_check_compliance
   - vm_clone
   - vm_cloud_explorer
@@ -897,9 +852,6 @@
   - vm_stop
   - vm_suspend
   - vm_pause
-  - vm_shelve
-  - vm_shelve_offload
-  - vm_sync
   - vm_tag
   - vm_timeline
   - vm_chargeback
@@ -926,7 +878,6 @@
   - availability_zone
   - host_aggregate
   - all_vm_rules
-  - compute
   - cloud_network
   - cloud_subnet
   - flavor
@@ -937,7 +888,6 @@
   - cloud_tenant
   - control_explorer
   - dashboard
-  - datacenter
   - storage
   - ems_cloud
   - ems_network
@@ -975,7 +925,6 @@
   - security_group
   - service
   - timeline
-  - usage
   - utilization
   - vm_explorer
   - vm
@@ -994,13 +943,11 @@
   - all_vm_rules
   - flavor
   - bottlenecks
-  - compute
   - chargeback
   - catalog
   - cloud_tenant
   - control_explorer
   - dashboard
-  - datacenter
   - storage
   - ems_cloud
   - ems_cluster
@@ -1032,7 +979,6 @@
   - security_group
   - service
   - timeline
-  - usage
   - utilization
   - vm_explorer
   - vm
@@ -1085,11 +1031,7 @@
   - instance_view
   - vm_view
   - miq_cloud_networks
-  - miq_arbitration_settings
-  - miq_arbitration_rules
-  - redhat_access_insights_admin
   - ems_container_ad_hoc_metrics
-  - monitor
   - monitor_alerts
   - alert_status
   - alert_action
@@ -1134,7 +1076,6 @@
   - instance_view
   - vm_view
   - ems_container_ad_hoc_metrics
-  - monitor
   - monitor_alerts
   - alert_status
   - alert_action
@@ -1227,7 +1168,6 @@
   - rbac_role_view
   - rbac_tenant_view
   - rbac_user_view
-  - redhat_access_insights_overview
   - resource_pool_view
   - rss
   - security_group_view
@@ -1237,7 +1177,6 @@
   - tasks
   - timeline
   - utilization
-  - virtual_template_show
   - vm_cloud_explorer
   - vm_explorer
   - vm_infra_explorer
