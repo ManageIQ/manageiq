@@ -63,7 +63,8 @@ module ManagerRefresh
             if (foreign_type = inventory_collection_scope.association_to_foreign_type_mapping[key])
               # If we have a polymorphic association, we need to also fill a base class name, but we want to nullify it
               # if record_id is missing
-              attributes_for_saving[foreign_type] = record_id ? data[key].base_class_name : nil
+              base_class = data[key].try(:base_class_name) || data[key].class.try(:base_class).try(:name)
+              attributes_for_saving[foreign_type] = record_id ? base_class : nil
             end
           elsif data[key].kind_of?(::ManagerRefresh::InventoryObject)
             # We have an association to fill but not an Activerecord association, so e.g. Ancestry, lets just load
