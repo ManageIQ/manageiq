@@ -3531,6 +3531,14 @@
       :description: Refresh Containers Providers
       :feature_type: control
       :identifier: ems_container_refresh
+    - :name: Resume
+      :description: Enable Containers Providers
+      :feature_type: control
+      :identifier: ems_container_resume
+    - :name: Pause
+      :description: Disable Containers Providers
+      :feature_type: control
+      :identifier: ems_container_pause
     - :name: Edit Tags
       :description: Edit Tags of Containers Providers
       :feature_type: control
@@ -4862,10 +4870,6 @@
       :feature_type: admin
       :identifier: container_admin
       :children:
-      - :name: Create Service Dialog from Container Template
-        :description: Create Service Dialog from Container Template
-        :identifier: service_dialog_from_ct
-        :feature_type: admin
       - :name: Utilization
         :description: Show Capacity & Utilization data of Containers
         :feature_type: view
