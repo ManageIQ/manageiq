@@ -20,6 +20,7 @@ module DMiqVimSync
 end # module DMiqVimSync
 
 class DRb::DRbMessage
+  EXPECTED_MARSHAL_VERSION = [Marshal::MAJOR_VERSION, Marshal::MINOR_VERSION].freeze
   alias_method :dump_original, :dump
 
   #
@@ -32,9 +33,33 @@ class DRb::DRbMessage
     #
     obj.holdBrokerObj if obj.respond_to?(:holdBrokerObj)
 
-    return(dump_original(obj, error)) unless obj.kind_of?(MiqDrbReturn)
+    obj_to_dump = obj.kind_of?(MiqDrbReturn) ? obj.obj : obj
+
+    result = dump_original(obj_to_dump, error)
+
+    valid = true
+    size = result[0..3].unpack("N")[0]
+    if @load_limit < size
+      $vim_log.error("DRb packet size too large: #{size}")
+      valid = false
+    end
+
+    marshal_version = result[4, 2].unpack("C2")
+    if marshal_version != EXPECTED_MARSHAL_VERSION
+      $vim_log.error("Marshal version mismatch: expected: #{EXPECTED_MARSHAL_VERSION} got: #{marshal_version}")
+      valid = false
+    end
+
+    unless valid
+      $vim_log.error("object: #{obj.inspect}")
+      $vim_log.error("buffer:\n#{result[0, 1024].hex_dump}")
+      $vim_log.error("caller:\n#{caller.join("\n")}")
+    end
+
+    return result unless obj.kind_of?(MiqDrbReturn)
+
     begin
-      return(dump_original(obj.obj, error))
+      return result
     ensure
       if obj.lock && obj.lock.sync_locked?
         $vim_log.debug "DRb::DRbMessage.dump: UNLOCKING [#{Thread.current.object_id}] <#{obj.obj.object_id}>" if $vim_log.debug?
