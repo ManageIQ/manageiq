@@ -32,6 +32,10 @@ Dir[Rails.root.join("spec/shared/**/*.rb")].each { |f| require f }
 # include the manageiq-gems-pending matchers
 Dir[ManageIQ::Gems::Pending.root.join("spec/support/custom_matchers/*.rb")].each { |f| require f }
 
+# To be extracted with embedded_ansible
+require ManageIQ::Providers::AnsibleTower::Engine.root.join("spec/support/vcr_helper.rb").to_s
+Dir[ManageIQ::Providers::AnsibleTower::Engine.root.join("spec/support/ansible_shared/**/*.rb")].each { |f| require f }
+
 RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
