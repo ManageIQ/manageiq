@@ -1,4 +1,4 @@
-describe MulticastLogger do
+describe Vmdb::Loggers::MulticastLogger do
   let(:logger1) { Logger.new(StringIO.new) }
   let(:logger2) { Logger.new(StringIO.new) }
   subject { described_class.new(logger1, logger2) }
