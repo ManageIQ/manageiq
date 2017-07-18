@@ -96,7 +96,8 @@ class MiqUserRole < ApplicationRecord
         new_settings = hash.delete(:settings) || {}
         role.settings.merge!(new_settings)
       end
-      role.update_attributes(hash.except(:id))
+      role.attributes = hash.except(:id)
+      role.save if role.changed?
     end
   end
 
