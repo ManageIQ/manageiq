@@ -491,6 +491,60 @@ describe MiqRequestWorkflow do
     end
   end
 
+  describe '#validate_data_types?' do
+    %w(array_integer integer float array).each do |name|
+      let("fld_#{name}".to_sym) { {:error => nil, :data_type => name.to_sym} }
+    end
+
+    it 'valid with no error if integer and is an integer' do
+      results = workflow.validate_data_types(3, fld_integer, '', true)
+      expect(results).to include true
+      expect(results[1][:error]).to be_falsey
+    end
+
+    it 'invalid with an error message if integer and is not an integer' do
+      results = workflow.validate_data_types('a', fld_integer, 'bad data', true)
+      expect(results).to include false
+      expect(results[1][:error]).to eql 'bad data'
+    end
+
+    it 'valid with no error if float and is an float' do
+      results = workflow.validate_data_types(3.23, fld_float, '', true)
+      expect(results).to include true
+      expect(results[1][:error]).to be_falsey
+    end
+
+    it 'invalid with an error message if float and is not a float' do
+      results = workflow.validate_data_types('a.aa', fld_float, 'bad data', true)
+      expect(results).to include false
+      expect(results[1][:error]).to eql 'bad data'
+    end
+
+    it 'valid with no error if array_integer and is an array' do
+      results = workflow.validate_data_types([1, 2, 3], fld_array_integer, '', true)
+      expect(results).to include true
+      expect(results[1][:error]).to be_falsey
+    end
+
+    it 'invalid with an error message if array_integer is not an array' do
+      results = workflow.validate_data_types(3, fld_array_integer, 'bad data', true)
+      expect(results).to include false
+      expect(results[1][:error]).to eql 'bad data'
+    end
+
+    it 'valid with no error if array and is an array' do
+      results = workflow.validate_data_types([1, 'test'], fld_array, '', true)
+      expect(results).to include true
+      expect(results[1][:error]).to be_falsey
+    end
+
+    it 'invalid with an error message if array is not an array' do
+      results = workflow.validate_data_types(3, fld_array, 'bad data', true)
+      expect(results).to include false
+      expect(results[1][:error]).to eql 'bad data'
+    end
+  end
+
   describe '#cast_value' do
     it 'integer' do
       expect(workflow.cast_value(1,   :integer)).to eq(1)

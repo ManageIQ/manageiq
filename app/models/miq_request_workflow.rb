@@ -143,8 +143,7 @@ class MiqRequestWorkflow
 
         # Check the disabled flag here so we reset the "error" value on each field
         next if dialog_disabled || fld[:display] == :hide
-
-        value = get_value(values[f])
+        value = fld[:data_type] =~ /array_/ ? values[f] : get_value(values[f])
 
         if fld[:required] == true
           # If :required_method is defined let it determine if the field is value
@@ -187,33 +186,38 @@ class MiqRequestWorkflow
         next if value.blank?
 
         msg = "'#{fld[:description]}' in dialog #{dlg[:description]} must be of type #{fld[:data_type]}"
-        case fld[:data_type]
-        when :integer
-          unless is_integer?(value)
-            fld[:error] = msg; valid = false
-          end
-        when :float
-          unless is_numeric?(value)
-            fld[:error] = msg; valid = false
-          end
-        when :boolean
-          # TODO: do we need validation for boolean
-        when :button
-          # Ignore
-        when :array_integer
-          unless value.kind_of?(Array)
-            fld[:error] = msg; valid = false
-          end
-        else
-          data_type = Object.const_get(fld[:data_type].to_s.camelize)
-          unless value.kind_of?(data_type)
-            fld[:error] = msg; valid = false
-          end
-        end
+        validate_data_types(value, fld, msg, valid)
       end
     end
 
     valid
+  end
+
+  def validate_data_types(value, fld, msg, valid)
+    case fld[:data_type]
+    when :integer
+      unless is_integer?(value)
+        fld[:error] = msg; valid = false
+      end
+    when :float
+      unless is_numeric?(value)
+        fld[:error] = msg; valid = false
+      end
+    when :boolean
+      # TODO: do we need validation for boolean
+    when :button
+      # Ignore
+    when :array_integer
+      unless value.kind_of?(Array)
+        fld[:error] = msg; valid = false
+      end
+    else
+      data_type = Object.const_get(fld[:data_type].to_s.camelize)
+      unless value.kind_of?(data_type)
+        fld[:error] = msg; valid = false
+      end
+    end
+    [valid, fld]
   end
 
   def get_dialog_order
