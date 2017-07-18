@@ -79,7 +79,7 @@ class ContainerGroup < ApplicationRecord
   end
 
   def disconnect_inv
-    return if ems_id.nil?
+    return if archived?
     _log.info "Disconnecting Pod [#{name}] id [#{id}] from EMS [#{ext_management_system.name}]" \
     "id [#{ext_management_system.id}] "
     self.containers.each(&:disconnect_inv)
