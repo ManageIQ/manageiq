@@ -36,7 +36,7 @@ shared_examples_for "ansible credential" do
         :options => {
           :op_name => "#{described_class::FRIENDLY_NAME} creation",
           :op_arg  => "(name=My Credential)",
-          :tower   => "Tower(manager_id=#{manager.id})"
+          :tower   => "EMS(manager_id=#{manager.id})"
         }
       }
     end
@@ -98,7 +98,7 @@ shared_examples_for "ansible credential" do
         :options => {
           :op_name => "#{described_class::FRIENDLY_NAME} deletion",
           :op_arg  => "(manager_ref=#{credential.id})",
-          :tower   => "Tower(manager_id=#{manager.id})"
+          :tower   => "EMS(manager_id=#{manager.id})"
         }
       }
     end
@@ -145,7 +145,7 @@ shared_examples_for "ansible credential" do
         :options => {
           :op_name => "#{described_class::FRIENDLY_NAME} update",
           :op_arg  => "()",
-          :tower   => "Tower(manager_id=#{manager.id})"
+          :tower   => "EMS(manager_id=#{manager.id})"
         }
       }
     end
