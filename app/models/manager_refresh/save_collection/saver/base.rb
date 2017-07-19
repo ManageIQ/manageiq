@@ -12,6 +12,7 @@ module ManagerRefresh::SaveCollection
         # Private attrs
         @unique_index_keys      = inventory_collection.manager_ref_to_cols
         @unique_db_primary_keys = Set.new
+        @unique_db_indexes      = Set.new
       end
 
       def save_inventory_collection!
@@ -30,7 +31,57 @@ module ManagerRefresh::SaveCollection
 
       private
 
-      attr_reader :unique_index_keys, :unique_db_primary_keys
+      attr_reader :unique_index_keys, :unique_db_primary_keys, :unique_db_indexes
+
+      def save!(inventory_collection, association)
+        attributes_index        = {}
+        inventory_objects_index = {}
+        inventory_collection.each do |inventory_object|
+          attributes = inventory_object.attributes(inventory_collection)
+          index      = inventory_object.manager_uuid
+
+          attributes_index[index]        = attributes
+          inventory_objects_index[index] = inventory_object
+        end
+
+        _log.info("*************** PROCESSING #{inventory_collection} of size #{inventory_collection.size} *************")
+        # Records that are in the DB, we will be updating or deleting them.
+        ActiveRecord::Base.transaction do
+          association.find_each do |record|
+            index = inventory_collection.object_index_with_keys(unique_index_keys, record)
+
+            next unless assert_distinct_relation(record)
+            next unless assert_unique_record(record, index)
+
+            inventory_object = inventory_objects_index.delete(index)
+            hash             = attributes_index.delete(index)
+
+            if inventory_object.nil?
+              # Record was found in the DB but not sent for saving, that means it doesn't exist anymore and we should
+              # delete it from the DB.
+              delete_record!(inventory_collection, record) if inventory_collection.delete_allowed?
+            else
+              # Record was found in the DB and sent for saving, we will be updating the DB.
+              update_record!(inventory_collection, record, hash, inventory_object) if assert_referential_integrity(hash, inventory_object)
+            end
+          end
+        end
+
+        # Records that were not found in the DB but sent for saving, we will be creating these in the DB.
+        if inventory_collection.create_allowed?
+          ActiveRecord::Base.transaction do
+            inventory_objects_index.each do |index, inventory_object|
+              hash = attributes_index.delete(index)
+
+              create_record!(inventory_collection, hash, inventory_object) if assert_referential_integrity(hash, inventory_object)
+            end
+          end
+        end
+        _log.info("*************** PROCESSED #{inventory_collection}, "\
+                  "created=#{inventory_collection.created_records.count}, "\
+                  "updated=#{inventory_collection.updated_records.count}, "\
+                  "deleted=#{inventory_collection.deleted_records.count} *************")
+      end
 
       def batch_size
         inventory_collection.batch_size
@@ -61,8 +112,12 @@ module ManagerRefresh::SaveCollection
       end
 
       def delete_record!(inventory_collection, record)
-        return false unless inventory_collection.delete_allowed?
         record.public_send(inventory_collection.delete_method)
+        inventory_collection.store_deleted_records(record)
+      end
+
+      def assert_unique_record(_record, _index)
+        # TODO(lsmola) can go away once we indexed our DB with unique indexes
         true
       end
 
