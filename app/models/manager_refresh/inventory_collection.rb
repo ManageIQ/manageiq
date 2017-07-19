@@ -9,7 +9,7 @@ module ManagerRefresh
                 :custom_db_finder, :check_changed, :arel, :builder_params, :loaded_references, :db_data_index,
                 :inventory_object_attributes, :name, :saver_strategy, :parent_inventory_collections, :manager_uuids,
                 :skeletal_manager_uuids, :targeted_arel, :targeted, :manager_ref_allowed_nil, :use_ar_object,
-                :secondary_refs, :secondary_indexes
+                :secondary_refs, :secondary_indexes, :created_records, :updated_records, :deleted_records
 
     delegate :each, :size, :to => :to_a
 
@@ -394,10 +394,26 @@ module ManagerRefresh
       @db_data_index                    = nil
       @data_collection_finalized        = false
 
+      @created_records = []
+      @updated_records = []
+      @deleted_records = []
+
       blacklist_attributes!(attributes_blacklist) if attributes_blacklist.present?
       whitelist_attributes!(attributes_whitelist) if attributes_whitelist.present?
 
       validate_inventory_collection!
+    end
+
+    def store_created_records(records)
+      @created_records += records_identities(records)
+    end
+
+    def store_updated_records(records)
+      @updated_records += records_identities(records)
+    end
+
+    def store_deleted_records(records)
+      @deleted_records += records_identities(records)
     end
 
     def to_a
@@ -946,6 +962,19 @@ module ManagerRefresh
     private
 
     attr_writer :attributes_blacklist, :attributes_whitelist, :db_data_index, :parent_inventory_collections
+
+    # Returns array of records identities
+    def records_identities(records)
+      records = [records] unless records.kind_of?(Array)
+      records.map { |record| record_identity(record) }
+    end
+
+    # Returns a hash with a simple record identity
+    def record_identity(record)
+      {
+        :id => record.try(:[], :id) || record.try(:id)
+      }
+    end
 
     # Finds manager_uuid in the DB. Using a configured strategy we cache obtained data in the db_data_index, so the
     # same find will not hit database twice. Also if we use lazy_links and this is called when
