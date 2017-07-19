@@ -56,6 +56,7 @@ module ManagerRefresh::SaveCollection
                                   hash.symbolize_keys
                                 end
               assign_attributes_for_update!(hash_for_update, inventory_collection, update_time)
+              inventory_collection.store_updated_records(record)
 
               hashes_for_update << hash_for_update.except(:id, :type)
             end
@@ -64,7 +65,6 @@ module ManagerRefresh::SaveCollection
           # Update in batches
           if hashes_for_update.size >= batch_size
             update_records!(inventory_collection, all_attribute_keys, hashes_for_update)
-            inventory_collection.store_updated_records(hashes_for_update)
 
             hashes_for_update = []
           end
@@ -83,6 +83,7 @@ module ManagerRefresh::SaveCollection
 
         # Destroy the last batch
         destroy_records(records_for_destroy)
+        inventory_collection.store_deleted_records(records_for_destroy)
         records_for_destroy = [] # Cleanup so GC can release it sooner
 
         all_attribute_keys << :type if inventory_collection.supports_sti?
