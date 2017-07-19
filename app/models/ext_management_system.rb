@@ -143,7 +143,7 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :total_vms_never,         :type => :integer
   virtual_column :total_vms_suspended,     :type => :integer
   virtual_total  :total_subnets,           :cloud_subnets
-  virtual_column :v_supports_block_storage, :type => :boolean
+  virtual_column :supports_block_storage,  :type => :boolean
 
   virtual_aggregate :total_vcpus, :hosts, :sum, :total_vcpus
   virtual_aggregate :total_memory, :hosts, :sum, :ram_size
@@ -543,7 +543,7 @@ class ExtManagementSystem < ApplicationRecord
 
   def total_vms_suspended; vm_count_by_state("suspended"); end
 
-  def v_supports_block_storage
+  def supports_block_storage
     supports_block_storage?
   end
 

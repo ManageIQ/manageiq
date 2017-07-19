@@ -409,10 +409,10 @@ describe ExtManagementSystem do
     end
   end
 
-  context "#v_supports_block_storage" do
+  context "virtual column :supports_block_storage" do
     it "returns true for Amazon EBS" do
       ems_amz_ebs = FactoryGirl.create(:ems_amazon_storage_manager_ebs)
-      expect(ems_amz_ebs.v_supports_block_storage).to eq(true)
+      expect(ems_amz_ebs.supports_block_storage).to eq(true)
     end
   end
 end
