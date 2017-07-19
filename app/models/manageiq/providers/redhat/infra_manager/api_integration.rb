@@ -285,6 +285,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
       # values, so we need to check the value passed and make a list only if it won't be empty. If it will be empty then
       # we should just pass 'nil'.
       ca_certs = options[:ca_certs]
+      ca_certs = nil if ca_certs.blank?
       ca_certs = [ca_certs] if ca_certs
 
       url = URI::Generic.build(
@@ -311,6 +312,11 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
       require 'ovirt_provider/inventory/ovirt_inventory'
       Ovirt.logger = $rhevm_log
 
+      # If 'ca_certs' is an empty string then the 'ovirt' gem will trust nothing, but we want it to trust the system CA
+      # certificates. To get that behaviour we need to pass 'nil' instead of the empty string.
+      ca_certs = options[:ca_certs]
+      ca_certs = nil if ca_certs.blank?
+
       params = {
         :server     => options[:server],
         :port       => options[:port].presence && options[:port].to_i,
@@ -318,7 +324,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
         :username   => options[:username],
         :password   => options[:password],
         :verify_ssl => options[:verify_ssl],
-        :ca_certs   => options[:ca_certs]
+        :ca_certs   => ca_certs
       }
 
       read_timeout, open_timeout = ems_timeouts(:ems_redhat, options[:service])
