@@ -13,7 +13,8 @@ class DialogFieldSerializer < Serializer
     serialized_resource_action = @resource_action_serializer.serialize(dialog_field.resource_action)
 
     extra_attributes = {
-      "resource_action" => serialized_resource_action
+      "resource_action"      => serialized_resource_action,
+      "trigger_associations" => dialog_field.trigger_associations.map(&:name)
     }
 
     if dialog_field.dynamic?
