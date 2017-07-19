@@ -131,7 +131,6 @@ module ManagerRefresh::SaveCollection
           assign_attributes_for_create!(hash, inventory_collection, create_time)
 
           next unless assert_referential_integrity(hash, inventory_object)
-          inventory_collection.store_created_records(hash)
 
           hashes << hash
           # Index on Unique Columns values, so we can easily fill in the :id later
@@ -143,6 +142,7 @@ module ManagerRefresh::SaveCollection
         result = ActiveRecord::Base.connection.execute(
           build_insert_query(inventory_collection, all_attribute_keys, hashes)
         )
+        inventory_collection.store_created_records(result)
         if inventory_collection.dependees.present?
           # We need to get primary keys of the created objects, but only if there are dependees that would use them
           map_ids_to_inventory_objects(inventory_collection, indexed_inventory_objects, all_attribute_keys, hashes, result)
