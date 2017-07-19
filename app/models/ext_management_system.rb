@@ -144,6 +144,7 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :total_vms_suspended,     :type => :integer
   virtual_total  :total_subnets,           :cloud_subnets
   virtual_column :supports_block_storage,  :type => :boolean
+  virtual_column :supports_cloud_object_store_container_create, :type => :boolean
 
   virtual_aggregate :total_vcpus, :hosts, :sum, :total_vcpus
   virtual_aggregate :total_memory, :hosts, :sum, :ram_size
@@ -545,6 +546,10 @@ class ExtManagementSystem < ApplicationRecord
 
   def supports_block_storage
     supports_block_storage?
+  end
+
+  def supports_cloud_object_store_container_create
+    supports_cloud_object_store_container_create?
   end
 
   def get_reserve(field)
