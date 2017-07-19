@@ -117,19 +117,26 @@ module ManageIQ::Providers::Microsoft::InfraManager::Provision::Cloning
 
   def build_ps_script
     <<-PS_SCRIPT
-      Import-Module VirtualMachineManager | Out-Null; \
-      Get-SCVMMServer localhost | Out-Null;\
+    Import-Module VirtualMachineManager | Out-Null; \
+      $template = Get-SCVMTemplate -Name '#{source.name}'; \
+      $vmconfig = New-SCVMConfiguration -VMTemplate $template -Name 'ManageIQConfig-#{dest_name}'; \
+      $vmhost   = Get-SCVMHost -ComputerName '#{dest_host}'; \
 
-      $vm = New-SCVirtualMachine \
-        -Name '#{dest_name}' \
-        -VMHost '#{dest_host}' \
-        -Path '#{dest_mount_point}' \
-        -VMTemplate #{template_ps_script}; \
+      Set-SCVMConfiguration \
+        -VMConfiguration $vmconfig \
+        -VMHost $vmhost \
+        -VMLocation '#{dest_mount_point}' | Out-Null; \
+
+      Update-SCVMConfiguration -VMConfiguration $vmconfig | Out-Null; \
+      $vm = New-SCVirtualMachine -Name '#{dest_name}' -VMConfiguration $vmconfig; \
+
       Set-SCVirtualMachine -VM $vm \
         #{cpu_ps_script} \
-        #{memory_ps_script} | Out-Null;  \
-      #{network_adapter_ps_script} \
-      $vm | Select-Object ID | ConvertTo-Json
+        #{memory_ps_script} | Out-Null; \
+
+      #{network_adapter_ps_script}; \
+
+      $vm | Select-Object ID | ConvertTo-Json -Compress
     PS_SCRIPT
   end
 
