@@ -5,7 +5,12 @@ class EmbeddedAnsibleWorker < MiqWorker
   self.required_roles = ['embedded_ansible']
 
   def start_runner
-    Thread.new do
+    start_monitor_thread
+    nil # return no pid
+  end
+
+  def start_monitor_thread
+    t = Thread.new do
       begin
         self.class::Runner.start_worker(worker_options)
         # TODO: return supervisord pid
@@ -17,11 +22,34 @@ class EmbeddedAnsibleWorker < MiqWorker
         Thread.exit
       end
     end
+
+    t[:worker_class] = self.class.name
+    t[:worker_id]    = id
+    t
   end
 
   def kill
-    stop
+    thread = find_worker_thread_object
+
+    if thread == Thread.main
+      _log.warn("Cowardly refusing to kill the main thread.")
+    elsif thread.nil?
+      _log.info("The monitor thread for worker id: #{id} was not found, it must have already exited.")
+    else
+      _log.info("Exiting monitor thread...")
+      thread.exit
+    end
+    destroy
   end
+
+  def find_worker_thread_object
+    Thread.list.detect do |t|
+      t[:worker_id] == id && t[:worker_class] == self.class.name
+    end
+  end
+
+  alias terminate kill
+  alias stop kill
 
   def status_update
     # don't monitor the memory/cpu usage of this process yet
