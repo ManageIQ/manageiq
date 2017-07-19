@@ -6089,6 +6089,10 @@
     :feature_type: control
     :identifier: ems_physical_infra_control
     :children:
+    - :name: Discover
+      :description: Discover Physical Infrastructure Providers
+      :feature_type: control
+      :identifier: ems_physical_infra_discover
     - :name: Edit Tags
       :description: Edit Tags of Physical Infrastructure Providers
       :feature_type: control
