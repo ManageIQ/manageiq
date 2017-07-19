@@ -410,16 +410,18 @@ describe ExtManagementSystem do
   end
 
   context "virtual column :supports_block_storage" do
-    it "returns true for Amazon EBS" do
-      ems_amz_ebs = FactoryGirl.create(:ems_amazon_storage_manager_ebs)
-      expect(ems_amz_ebs.supports_block_storage).to eq(true)
+    it "returns true if block storage is supported" do
+      ems = FactoryGirl.create(:ext_management_system)
+      allow(ems).to receive(:supports_block_storage).and_return(true)
+      expect(ems.supports_block_storage).to eq(true)
     end
   end
 
   context "virtual column :supports_cloud_object_store_container_create" do
-    it "returns true for Amazon S3" do
-      ems_amz_s3 = FactoryGirl.create(:ems_amazon_storage_manager_s3)
-      expect(ems_amz_s3.supports_cloud_object_store_container_create).to eq(true)
+    it "returns true if cloud_object_store_container_create is supported" do
+      ems = FactoryGirl.create(:ext_management_system)
+      allow(ems).to receive(:supports_cloud_object_store_container_create).and_return(true)
+      expect(ems.supports_cloud_object_store_container_create).to eq(true)
     end
   end
 end
