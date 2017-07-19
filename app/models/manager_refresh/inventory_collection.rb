@@ -9,7 +9,8 @@ module ManagerRefresh
                 :custom_db_finder, :check_changed, :arel, :builder_params, :loaded_references, :db_data_index,
                 :inventory_object_attributes, :name, :saver_strategy, :parent_inventory_collections, :manager_uuids,
                 :skeletal_manager_uuids, :targeted_arel, :targeted, :manager_ref_allowed_nil, :use_ar_object,
-                :secondary_refs, :secondary_indexes, :created_records, :updated_records, :deleted_records
+                :secondary_refs, :secondary_indexes, :created_records, :updated_records, :deleted_records,
+                :custom_reconnect_block
 
     delegate :each, :size, :to => :to_a
 
@@ -142,6 +143,34 @@ module ManagerRefresh
     #                stack.update_attribute(:parent, parent)
     #              end
     #            end
+    # @param custom_reconnect_block [Proc] A custom lambda for reconnect logic of previously disconnected records
+    #
+    #        Example - Reconnect disconnected Vms
+    #            ManagerRefresh::InventoryCollection.new({
+    #              :association            => :orchestration_stack_ancestry,
+    #              :custom_reconnect_block => vms_custom_reconnect_block,
+    #            })
+    #
+    #          And the labmda is defined as:
+    #            vms_custom_reconnect_block = lambda do |inventory_collection, inventory_objects_index, attributes_index|
+    #              inventory_objects_index.each_slice(1000) do |batch|
+    #                Vm.where(:ems_ref => batch.map(&:second).map(&:manager_uuid)).each do |record|
+    #                  index = inventory_collection.object_index_with_keys(inventory_collection.manager_ref_to_cols, record)
+    #
+    #                  # We need to delete the record from the inventory_objects_index and attributes_index, otherwise it
+    #                  # would be sent for create.
+    #                  inventory_object = inventory_objects_index.delete(index)
+    #                  hash             = attributes_index.delete(index)
+    #
+    #                  record.assign_attributes(hash.except(:id, :type))
+    #                  if !inventory_collection.check_changed? || record.changed?
+    #                    record.save!
+    #                    inventory_collection.store_updated_records(record)
+    #                  end
+    #
+    #                  inventory_object.id = record.id
+    #                end
+    #              end
     # @param delete_method [Symbol] A delete method that will be used for deleting of the InventoryObject, if the
     #        object is marked for deletion. A default is :destroy, the instance method must be defined on the
     #        :model_class.
@@ -345,32 +374,34 @@ module ManagerRefresh
                    check_changed: nil, custom_manager_uuid: nil, custom_db_finder: nil, arel: nil, builder_params: {},
                    inventory_object_attributes: nil, unique_index_columns: nil, name: nil, saver_strategy: nil,
                    parent_inventory_collections: nil, manager_uuids: [], all_manager_uuids: nil, targeted_arel: nil,
-                   targeted: nil, manager_ref_allowed_nil: nil, secondary_refs: {}, use_ar_object: nil)
-      @model_class           = model_class
-      @manager_ref           = manager_ref || [:ems_ref]
-      @secondary_refs        = secondary_refs
-      @custom_manager_uuid   = custom_manager_uuid
-      @custom_db_finder      = custom_db_finder
-      @association           = association || []
-      @parent                = parent || nil
-      @arel                  = arel
-      @dependency_attributes = dependency_attributes || {}
-      @data                  = data || []
-      @data_index            = data_index || {}
-      @secondary_indexes     = secondary_refs.map {|name, keys| [name, {}] }.to_h
-      @saved                 = saved || false
-      @strategy              = process_strategy(strategy)
-      @delete_method         = delete_method || :destroy
-      @custom_save_block     = custom_save_block
-      @check_changed         = check_changed.nil? ? true : check_changed
-      @internal_attributes   = [:__feedback_edge_set_parent]
-      @complete              = complete.nil? ? true : complete
-      @update_only           = update_only.nil? ? false : update_only
-      @builder_params        = builder_params
-      @unique_index_columns  = unique_index_columns
-      @name                  = name || association || model_class.to_s.demodulize.tableize
-      @saver_strategy        = process_saver_strategy(saver_strategy)
-      @use_ar_object         = use_ar_object || false
+                   targeted: nil, manager_ref_allowed_nil: nil, secondary_refs: {}, use_ar_object: nil,
+                   custom_reconnect_block: nil)
+      @model_class            = model_class
+      @manager_ref            = manager_ref || [:ems_ref]
+      @secondary_refs         = secondary_refs
+      @custom_manager_uuid    = custom_manager_uuid
+      @custom_db_finder       = custom_db_finder
+      @association            = association || []
+      @parent                 = parent || nil
+      @arel                   = arel
+      @dependency_attributes  = dependency_attributes || {}
+      @data                   = data || []
+      @data_index             = data_index || {}
+      @secondary_indexes      = secondary_refs.map {|name, keys| [name, {}]}.to_h
+      @saved                  = saved || false
+      @strategy               = process_strategy(strategy)
+      @delete_method          = delete_method || :destroy
+      @custom_save_block      = custom_save_block
+      @custom_reconnect_block = custom_reconnect_block
+      @check_changed          = check_changed.nil? ? true : check_changed
+      @internal_attributes    = [:__feedback_edge_set_parent]
+      @complete               = complete.nil? ? true : complete
+      @update_only            = update_only.nil? ? false : update_only
+      @builder_params         = builder_params
+      @unique_index_columns   = unique_index_columns
+      @name                   = name || association || model_class.to_s.demodulize.tableize
+      @saver_strategy         = process_saver_strategy(saver_strategy)
+      @use_ar_object          = use_ar_object || false
 
       @manager_ref_allowed_nil = manager_ref_allowed_nil || []
 
