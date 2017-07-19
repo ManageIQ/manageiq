@@ -9529,7 +9529,7 @@ http_interactions:
         "", "last_name": ""}}, "created": "2015-12-17T16:55:29.495Z", "modified":
         "2015-12-17T21:27:48.511Z", "name": "Openstack", "description": "RHOS in NC",
         "user": 2, "team": null, "kind": "openstack", "cloud": true, "host": "http://10.8.96.4:5000/v2.0",
-        "username": "admin", "password": "$encrypted$", "security_token": "", "project":
+        "username": "admin", "password": "$encrypted$", "security_token": "", "domain": "d.com", "project":
         "admin", "ssh_key_data": "", "ssh_key_unlock": "", "become_method": "", "become_username":
         "", "become_password": "", "vault_password": ""}, {"id": 3, "type": "credential",
         "url": "/api/v1/credentials/3/", "related": {"created_by": "/api/v1/users/1/",
