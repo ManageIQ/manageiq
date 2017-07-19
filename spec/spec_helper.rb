@@ -32,6 +32,10 @@ Dir[Rails.root.join("spec/shared/**/*.rb")].each { |f| require f }
 # include the manageiq-gems-pending matchers
 Dir[ManageIQ::Gems::Pending.root.join("spec/support/custom_matchers/*.rb")].each { |f| require f }
 
+# For embedded ansible to use external ansible tower's specs
+external_tower_gem_dir = Gem::Specification.find_by_name("manageiq-providers-ansible_tower").gem_dir
+Dir[File.join(external_tower_gem_dir, 'spec/support/**/*.rb')].each { |f| require f }
+
 RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
@@ -113,7 +117,7 @@ RSpec.configure do |config|
 end
 
 VCR.configure do |c|
-  c.cassette_library_dir = Rails.root.join('spec/vcr_cassettes')
+  c.cassette_library_dir = File.join(external_tower_gem_dir, 'spec/vcr_cassettes')
   c.hook_into :webmock
 
   c.allow_http_connections_when_no_cassette = false
