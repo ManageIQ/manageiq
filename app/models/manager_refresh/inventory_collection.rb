@@ -971,8 +971,10 @@ module ManagerRefresh
 
     # Returns a hash with a simple record identity
     def record_identity(record)
+      identity = record.try(:[], :id) || record.try(:[], "id") || record.try(:id)
+      raise "Cannot obtain identity of the #{record}" if identity.blank?
       {
-        :id => record.try(:[], :id) || record.try(:id)
+        :id => identity
       }
     end
 
