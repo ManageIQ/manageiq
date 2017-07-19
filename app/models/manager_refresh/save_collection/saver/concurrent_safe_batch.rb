@@ -21,11 +21,7 @@ module ManagerRefresh::SaveCollection
         all_attribute_keys += [:created_on, :updated_on] if inventory_collection.supports_timestamps_on_variant?
         all_attribute_keys += [:created_at, :updated_at] if inventory_collection.supports_timestamps_at_variant?
 
-        inventory_collection_size = inventory_collection.size
-        deleted_counter           = 0
-        created_counter           = 0
-        updated_counter           = 0
-        _log.info("*************** PROCESSING #{inventory_collection} of size #{inventory_collection_size} *************")
+        _log.info("*************** PROCESSING #{inventory_collection} of size #{inventory_collection.size} *************")
         hashes_for_update = []
         records_for_destroy = []
 
@@ -45,7 +41,6 @@ module ManagerRefresh::SaveCollection
               # delete it from the DB.
               if inventory_collection.delete_allowed?
                 records_for_destroy << record
-                deleted_counter += 1
               end
             else
               # Record was found in the DB and sent for saving, we will be updating the DB.
@@ -61,6 +56,7 @@ module ManagerRefresh::SaveCollection
                                   hash.symbolize_keys
                                 end
               assign_attributes_for_update!(hash_for_update, inventory_collection, update_time)
+              inventory_collection.store_updated_records(record)
 
               hashes_for_update << hash_for_update.except(:id, :type)
             end
@@ -69,7 +65,6 @@ module ManagerRefresh::SaveCollection
           # Update in batches
           if hashes_for_update.size >= batch_size
             update_records!(inventory_collection, all_attribute_keys, hashes_for_update)
-            updated_counter += hashes_for_update.count
 
             hashes_for_update = []
           end
@@ -77,17 +72,18 @@ module ManagerRefresh::SaveCollection
           # Destroy in batches
           if records_for_destroy.size >= batch_size
             destroy_records(records_for_destroy)
+            inventory_collection.store_deleted_records(records_for_destroy)
             records_for_destroy = []
           end
         end
 
         # Update the last batch
         update_records!(inventory_collection, all_attribute_keys, hashes_for_update)
-        updated_counter += hashes_for_update.count
         hashes_for_update = [] # Cleanup so GC can release it sooner
 
         # Destroy the last batch
         destroy_records(records_for_destroy)
+        inventory_collection.store_deleted_records(records_for_destroy)
         records_for_destroy = [] # Cleanup so GC can release it sooner
 
         all_attribute_keys << :type if inventory_collection.supports_sti?
@@ -95,11 +91,12 @@ module ManagerRefresh::SaveCollection
         if inventory_collection.create_allowed?
           inventory_objects_index.each_slice(batch_size) do |batch|
             create_records!(inventory_collection, all_attribute_keys, batch, attributes_index)
-            created_counter += batch.size
           end
         end
-        _log.info("*************** PROCESSED #{inventory_collection}, created=#{created_counter}, "\
-                  "updated=#{updated_counter}, deleted=#{deleted_counter} *************")
+        _log.info("*************** PROCESSED #{inventory_collection}, "\
+                  "created=#{inventory_collection.created_records.count}, "\
+                  "updated=#{inventory_collection.updated_records.count}, "\
+                  "deleted=#{inventory_collection.deleted_records.count} *************")
       end
 
       def destroy_records(records)
@@ -146,6 +143,7 @@ module ManagerRefresh::SaveCollection
         result = ActiveRecord::Base.connection.execute(
           build_insert_query(inventory_collection, all_attribute_keys, hashes)
         )
+        inventory_collection.store_created_records(result)
         if inventory_collection.dependees.present?
           # We need to get primary keys of the created objects, but only if there are dependees that would use them
           map_ids_to_inventory_objects(inventory_collection, indexed_inventory_objects, all_attribute_keys, hashes, result)

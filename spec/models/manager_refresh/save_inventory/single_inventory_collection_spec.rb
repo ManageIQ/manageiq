@@ -132,10 +132,37 @@ describe ManagerRefresh::SaveInventory do
             # Invoke the InventoryCollections saving
             ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
+            # Check the InventoryCollection result matches what was created/deleted/updated
+            expect(@data[:vms].created_records).to match_array([])
+            expect(@data[:vms].updated_records).to match_array([{:id => @vm1.id}, {:id => @vm2.id}])
+            expect(@data[:vms].deleted_records).to match_array([])
+
             # Assert that saved data have the updated values, checking id to make sure the original records are updated
             assert_all_records_match_hashes(
               [Vm.all, @ems.vms],
               {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
+              {:id => @vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_changed_name_2", :location => "vm_location_2"}
+            )
+          end
+
+          it 'updates 1 existing VM' do
+            # Fill the InventoryCollections with data, that have a modified name
+            add_data_to_inventory_collection(@data[:vms],
+                                             vm_data(1),
+                                             vm_data(2).merge(:name => "vm_changed_name_2"))
+
+            # Invoke the InventoryCollections saving
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
+
+            # Check the InventoryCollection result matches what was created/deleted/updated
+            expect(@data[:vms].created_records).to match_array([])
+            expect(@data[:vms].updated_records).to match_array([{:id => @vm2.id}])
+            expect(@data[:vms].deleted_records).to match_array([])
+
+            # Assert that saved data have the updated values, checking id to make sure the original records are updated
+            assert_all_records_match_hashes(
+              [Vm.all, @ems.vms],
+              {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_name_1", :location => "vm_location_1"},
               {:id => @vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_changed_name_2", :location => "vm_location_2"}
             )
           end
@@ -149,6 +176,12 @@ describe ManagerRefresh::SaveInventory do
 
             # Invoke the InventoryCollections saving
             ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
+
+            # Check the InventoryCollection result matches what was created/deleted/updated
+            @vm3 = Vm.find_by(:ems_ref => "vm_ems_ref_3")
+            expect(@data[:vms].created_records).to match_array([{:id => @vm3.id}])
+            expect(@data[:vms].updated_records).to match_array([{:id => @vm1.id}, {:id => @vm2.id}])
+            expect(@data[:vms].deleted_records).to match_array([])
 
             # Assert that saved data contain the new VM
             assert_all_records_match_hashes(
@@ -167,6 +200,11 @@ describe ManagerRefresh::SaveInventory do
             # Invoke the InventoryCollections saving
             ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
+            # Check the InventoryCollection result matches what was created/deleted/updated
+            expect(@data[:vms].created_records).to match_array([])
+            expect(@data[:vms].updated_records).to match_array([{:id => @vm1.id}])
+            expect(@data[:vms].deleted_records).to match_array([{:id => @vm2.id}])
+
             # Assert that saved data do miss the deleted VM
             assert_all_records_match_hashes(
               [Vm.all, @ems.vms],
@@ -182,6 +220,12 @@ describe ManagerRefresh::SaveInventory do
 
             # Invoke the InventoryCollections saving
             ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
+
+            # Check the InventoryCollection result matches what was created/deleted/updated
+            @vm3 = Vm.find_by(:ems_ref => "vm_ems_ref_3")
+            expect(@data[:vms].created_records).to match_array([{:id => @vm3.id}])
+            expect(@data[:vms].updated_records).to match_array([{:id => @vm1.id}])
+            expect(@data[:vms].deleted_records).to match_array([{:id => @vm2.id}])
 
             # Assert that saved data have the new VM and miss the deleted VM
             assert_all_records_match_hashes(
