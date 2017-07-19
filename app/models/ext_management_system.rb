@@ -543,7 +543,9 @@ class ExtManagementSystem < ApplicationRecord
 
   def total_vms_suspended; vm_count_by_state("suspended"); end
 
-  def v_supports_block_storage; supports_block_storage?; end
+  def v_supports_block_storage
+    supports_block_storage?
+  end
 
   def get_reserve(field)
     (hosts + ems_clusters).inject(0) { |v, obj| v + (obj.send(field) || 0) }
