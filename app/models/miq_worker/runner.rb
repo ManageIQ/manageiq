@@ -59,7 +59,6 @@ class MiqWorker::Runner
     starting_worker_record
     set_process_title
     # Sync the config and roles early since heartbeats and logging require the configuration
-    sync_active_roles
     sync_config
 
     set_connection_pool_size
@@ -271,24 +270,26 @@ class MiqWorker::Runner
     _log.info("#{log_prefix} Synchronizing configuration...")
     sync_config
     _log.info("#{log_prefix} Synchronizing configuration complete...")
-
-    _log.info("#{log_prefix} Synchronizing active roles...")
-    opts = _args.extract_options!
-    sync_active_roles(opts[:roles])
-    _log.info("#{log_prefix} Synchronizing active roles complete...")
   end
 
   def sync_config
+    # Sync roles
+    @active_roles = MiqServer.my_active_roles(true)
+    after_sync_active_roles
+
+    # Sync settings
     Vmdb::Settings.reload!
     @my_zone ||= MiqServer.my_zone
     sync_log_level
     sync_worker_settings
     sync_blacklisted_events
-    _log.info("ID [#{@worker.id}], PID [#{@worker.pid}], GUID [#{@worker.guid}], Zone [#{@my_zone}], Active Roles [#{@active_roles.join(',')}], Assigned Roles [#{MiqServer.my_role}], Configuration:")
+    after_sync_config
+
+    _log.info("ID [#{@worker.id}], PID [#{Process.pid}], GUID [#{@worker.guid}], Zone [#{@my_zone}], Active Roles [#{@active_roles.join(',')}], Assigned Roles [#{MiqServer.my_role}], Configuration:")
     $log.log_hashes(@worker_settings)
     $log.info("---")
     $log.log_hashes(@cfg)
-    after_sync_config
+
     @worker.release_db_connection if @worker.respond_to?(:release_db_connection)
   end
 
@@ -301,11 +302,6 @@ class MiqWorker::Runner
     @worker_settings = self.class.corresponding_model.worker_settings(:config => ::Settings.to_hash)
     @poll = @worker_settings[:poll]
     poll_method
-  end
-
-  def sync_active_roles(role_names = nil)
-    @active_roles = role_names || MiqServer.my_active_roles(true)
-    after_sync_active_roles
   end
 
   #

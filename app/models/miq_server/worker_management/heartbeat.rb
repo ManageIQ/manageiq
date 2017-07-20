@@ -31,16 +31,7 @@ module MiqServer::WorkerManagement::Heartbeat
       h[:queue_name] ||= queue_name
     end unless @workers_lock.nil?
 
-    # Special process the sync_ messages to send the current values of what to synchronize
-    messages.collect do |message, *args|
-      case message
-      when "sync_active_roles"
-# TODO - need to deal with this
-        [message, {:roles => @active_role_names}]
-      else
-        [message, *args]
-      end
-    end
+    messages
   end
 
   def worker_set_message(w, message, *args)
