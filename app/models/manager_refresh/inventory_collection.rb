@@ -321,6 +321,8 @@ module ManagerRefresh
     #        Allowed saver strategies are:
     #          - :default => Using Rails saving methods, this way is not safe to run in multiple workers concurrently,
     #            since it will lead to non consistent data.
+    #          - :default_batch => Using batch SQL queries, this way is not safe to run in multiple workers
+    #            concurrently, since it will lead to non consistent data.
     #          - :concurrent_safe => This method is designed for concurrent saving. It uses atomic upsert to avoid
     #            data duplication and it uses timestamp based atomic checks to avoid new data being overwritten by the
     #            the old data.
@@ -502,11 +504,11 @@ module ManagerRefresh
       return :default unless saver_strategy
 
       case saver_strategy
-      when :default, :concurrent_safe, :concurrent_safe_batch
+      when :default, :default_batch, :concurrent_safe, :concurrent_safe_batch
         saver_strategy
       else
         raise "Unknown InventoryCollection saver strategy: :#{saver_strategy}, allowed strategies are "\
-              ":default,  :concurrent_safe and :concurrent_safe_batch"
+              ":default, :default_batch, :concurrent_safe and :concurrent_safe_batch"
       end
     end
 
@@ -996,7 +998,7 @@ module ManagerRefresh
 
     # Returns array of records identities
     def records_identities(records)
-      records = [records] unless records.kind_of?(Array)
+      records = [records] unless records.respond_to?(:map)
       records.map { |record| record_identity(record) }
     end
 
