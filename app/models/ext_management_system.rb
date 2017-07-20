@@ -412,6 +412,10 @@ class ExtManagementSystem < ApplicationRecord
     @ems_infra_discovery_types ||= %w(virtualcenter scvmm rhevm)
   end
 
+  def self.ems_physical_infra_discovery_types
+    @ems_physical_infra_discovery_types ||= %w(lxca)
+  end
+
   def disable!
     _log.info "Disabling EMS [#{name}] id [#{id}]."
     update!(:enabled => false)
