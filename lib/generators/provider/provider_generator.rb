@@ -7,6 +7,9 @@ class ProviderGenerator < Rails::Generators::NamedBase
   class_option :path, :type => :string, :default => 'plugins',
                :desc => "Create provider at given path"
 
+  class_option :vcr, :type => :boolean, :default => false,
+               :desc => "Enable VCR cassettes (default off)"
+
   alias provider_name file_name
 
   def initialize(*args)
