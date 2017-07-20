@@ -34,7 +34,7 @@ class DialogTab < ApplicationRecord
     updated_groups = []
     groups.each do |group|
       if group.key?('id')
-        DialogGroup.find(group['id']).tap do |dialog_group|
+        DialogGroup.find(self.class.uncompress_id(group['id'])).tap do |dialog_group|
           dialog_group.update_attributes(group.except('dialog_fields'))
           dialog_group.update_dialog_fields(group['dialog_fields'])
           updated_groups << dialog_group

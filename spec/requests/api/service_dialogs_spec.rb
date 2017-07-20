@@ -122,13 +122,13 @@ describe "Service Dialogs API" do
           'label'   => 'updated label',
           'content' => {
             'dialog_tabs' => [
-              'id'            => dialog_tab.id,
+              'id'            => dialog_tab.compressed_id,
               'label'         => 'updated tab label',
               'dialog_groups' => [
                 {
-                  'id'            => dialog_group.id,
+                  'id'            => dialog_group.compressed_id,
                   'dialog_fields' => [
-                    { 'id' => dialog_field.id }
+                    { 'id' => dialog_field.compressed_id }
                   ]
                 }
               ]

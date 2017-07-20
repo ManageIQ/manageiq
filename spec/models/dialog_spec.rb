@@ -346,6 +346,37 @@ describe Dialog do
         end.to change(dialog.reload.dialog_tabs, :count).by(-1)
       end
     end
+
+    context 'compresssed ids' do
+      let(:updated_content) do
+        [
+          {
+            'id'            => dialog_tab.first.id,
+            'label'         => 'updated_label_foo',
+            'dialog_groups' => [
+              { 'id'            => dialog_group.first.compressed_id,
+                'label'         => 'updated_label_bar',
+                'dialog_fields' =>
+                                   [{'id' => dialog_field.first.compressed_id, 'label' => 'updated_label_baz'}]}
+            ]
+          }
+        ]
+      end
+
+      before do
+        dialog.dialog_tabs << FactoryGirl.create(:dialog_tab)
+      end
+
+      it 'updates the content' do
+        dialog.update_tabs(updated_content)
+
+        tab = dialog.dialog_tabs.first
+        group = tab.dialog_groups.first
+        expect(tab.label).to eq('updated_label_foo')
+        expect(group.label).to eq('updated_label_bar')
+        expect(group.dialog_fields.first.label).to eq('updated_label_baz')
+      end
+    end
   end
 
   context "#dialog_fields" do
