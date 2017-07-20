@@ -63,7 +63,9 @@ module ApplicationController::ExpressionHtml
       fcolor = calculate_font_color(exp["result"])
       temp_exp = copy_hash(exp)
       temp_exp.delete("result")
-      exp_string << "<font color=#{fcolor}>" << MiqExpression.to_human(temp_exp) << "</font>"
+      exp_string = content_tag(:font, :color => fcolor) do
+        MiqExpression.to_human(temp_exp)
+      end
       exp_tooltip << MiqExpression.to_human(temp_exp)
     end
     return exp_string, exp_tooltip
