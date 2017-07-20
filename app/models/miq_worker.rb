@@ -224,7 +224,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def heartbeat_file
-    @heartbeat_file ||= ENV["WORKER_HEARTBEAT_FILE"] || Rails.root.join("tmp", "#{guid}.hb")
+    @heartbeat_file ||= Workers::MiqDefaults.heartbeat_file(guid)
   end
 
   def self.worker_settings(options = {})
@@ -441,7 +441,7 @@ class MiqWorker < ApplicationRecord
     # Note, a 'stopping' worker heartbeats in DRb but NOT to
     # the database, so we can see how long it's been
     # 'stopping' by checking the last_heartbeat.
-    stopping_timeout = self.class.worker_settings[:stopping_timeout] || 10.minutes
+    stopping_timeout = self.class.worker_settings[:stopping_timeout] || Workers::MiqDefaults.stopping_timeout
     status == MiqWorker::STATUS_STOPPING && last_heartbeat < stopping_timeout.seconds.ago
   end
 

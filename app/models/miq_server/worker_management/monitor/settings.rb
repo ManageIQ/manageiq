@@ -30,8 +30,8 @@ module MiqServer::WorkerManagement::Monitor::Settings
   def get_time_threshold(worker)
     settings = @child_worker_settings[worker.class.settings_name]
 
-    heartbeat_timeout  = settings[:heartbeat_timeout] || 2.minutes
-    starting_timeout   = settings[:starting_timeout] || 10.minutes
+    heartbeat_timeout  = settings[:heartbeat_timeout] || Workers::MiqDefaults.heartbeat_timeout
+    starting_timeout   = settings[:starting_timeout] || Workers::MiqDefaults.starting_timeout
 
     return starting_timeout if MiqWorker::STATUSES_STARTING.include?(worker.status)
 

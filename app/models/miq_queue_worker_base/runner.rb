@@ -105,6 +105,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
     begin
       $_miq_worker_current_msg = msg
       Thread.current[:tracking_label] = msg.tracking_label || msg.task_id
+      heartbeat_message_timeout(msg)
       status, message, result = msg.deliver
 
       if status == MiqQueue::STATUS_TIMEOUT
@@ -153,6 +154,16 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
       msg = get_message
       break if msg.nil?
       deliver_message(msg)
+    end
+  end
+
+  private
+
+  # Only for file based heartbeating
+  def heartbeat_message_timeout(message)
+    if ENV["WORKER_HEARTBEAT_METHOD"] == "file" && message.msg_timeout
+      timeout = worker_settings[:poll] + message.msg_timeout
+      heartbeat_to_file(timeout)
     end
   end
 end
