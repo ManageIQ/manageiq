@@ -23,10 +23,10 @@ class ChargebackRateDetail < ApplicationRecord
     'yearly'  => _('Yearly')
   }.freeze
 
-  def charge(relevant_fields, consumption)
+  def charge(relevant_fields, consumption, options)
     result = {}
     if (relevant_fields & [metric_key, cost_keys[0]]).present?
-      metric_value, cost = metric_and_cost_by(consumption)
+      metric_value, cost = metric_and_cost_by(consumption, options)
       if !consumption.chargeback_fields_present && chargeable_field.fixed?
         cost = 0
       end
@@ -162,8 +162,8 @@ class ChargebackRateDetail < ApplicationRecord
     chargeback_tiers.all?(&:gratis?)
   end
 
-  def metric_and_cost_by(consumption)
-    metric_value = chargeable_field.measure(consumption)
+  def metric_and_cost_by(consumption, options)
+    metric_value = chargeable_field.measure(consumption, options)
     [metric_value, hourly_cost(metric_value, consumption) * consumption.consumed_hours_in_interval]
   end
 
