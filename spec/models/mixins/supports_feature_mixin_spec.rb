@@ -279,7 +279,7 @@ describe SupportsFeatureMixin do
 
   context "for active record classes" do
     it "adds a virtual attribute for each supported feature" do
-      expect(Vm.attribute_names.include?('supports_start?')).to be_truthy
+      expect(Vm.attribute_names.include?('supports_start')).to be_truthy
     end
   end
 end
