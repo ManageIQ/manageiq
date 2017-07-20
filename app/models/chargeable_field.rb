@@ -22,7 +22,7 @@ class ChargeableField < ApplicationRecord
   def measure(consumption, options)
     return 1.0 if fixed?
     return 0 if consumption.none?(metric)
-    return consumption.max(metric) if allocated?
+    return consumption.send(options.method_for_allocated_metrics, metric) if allocated?
     return consumption.avg(metric) if used?
   end
 
