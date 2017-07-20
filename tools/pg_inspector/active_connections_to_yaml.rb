@@ -11,10 +11,12 @@ module PgInspector
       self.options = Trollop.options(args) do
         opt(:pg_host, "PostgreSQL host name or address",
             :type => :string, :short => "s", :default => "127.0.0.1")
-        opt(:user, "PostgreSQL user",
-            :type => :string, :short => "u", :default => "postgres")
         opt(:port, "PostgreSQL server port",
             :short => "p", :default => 5432)
+        opt(:user, "PostgreSQL user",
+            :type => :string, :short => "u", :default => "postgres")
+        opt(:database, "Database to output stat activity, with `-m' to only output activity for this Database",
+            :type => :string, :short => "d", :default => "postgres")
         opt(:output, "Output file",
             :type => :string, :short => "o", :default => "active_connections.yml")
         opt(:ignore_error, "Ignore incomplete application name column",
@@ -27,9 +29,11 @@ module PgInspector
     def run
       Util.dump_to_yml_file(
         filter_by_application_name(
-          pg_stat_activity_rows_to_array(
-            rows_in_pg_stat_activity(
-              connect_pg_server
+          filter_by_database_name(
+            pg_stat_activity_rows_to_array(
+              rows_in_pg_stat_activity(
+                connect_pg_server
+              )
             )
           )
         ), "active connections", options[:output]
@@ -42,7 +46,7 @@ module PgInspector
 
     def connect_pg_server
       conn_options = {
-        :dbname => 'vmdb_production',
+        :dbname => options[:database],
         :host   => options[:pg_host],
         :port   => options[:port]
       }
@@ -78,7 +82,7 @@ SQL
     end
 
     def filter_by_application_name(rows_array)
-      unless options[:all_rows]
+      if options[:only_miq_rows]
         rows_array = rows_array.select { |row| row["application_name"].start_with?('MIQ') }
       end
 
@@ -92,6 +96,13 @@ SQL
         end
       end
 
+      rows_array
+    end
+
+    def filter_by_database_name(rows_array)
+      if options[:only_miq_rows]
+        rows_array = rows_array.select { |row| row["datname"] == options[:database] }
+      end
       rows_array
     end
   end
