@@ -131,6 +131,7 @@ module SupportsFeatureMixin
   included do
     QUERYABLE_FEATURES.keys.each do |feature|
       supports_not(feature)
+      virtual_column("supports_#{feature}?", :type => :boolean) if respond_to?(:virtual_column)
     end
   end
 
