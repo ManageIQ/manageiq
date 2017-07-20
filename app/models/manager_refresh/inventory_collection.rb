@@ -387,7 +387,7 @@ module ManagerRefresh
       @dependency_attributes  = dependency_attributes || {}
       @data                   = data || []
       @data_index             = data_index || {}
-      @secondary_indexes      = secondary_refs.map {|name, keys| [name, {}]}.to_h
+      @secondary_indexes      = secondary_refs.map { |n, _k| [n, {}] }.to_h
       @saved                  = saved || false
       @strategy               = process_strategy(strategy)
       @delete_method          = delete_method || :destroy
