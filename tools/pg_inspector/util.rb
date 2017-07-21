@@ -24,5 +24,11 @@ module PgInspector
       $stderr.puts e_msg
       exit(exit_code)
     end
+
+    def self.readfile(filename)
+      File.read(filename)
+    rescue => e
+      error_exit(e)
+    end
   end
 end
