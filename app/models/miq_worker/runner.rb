@@ -176,7 +176,6 @@ class MiqWorker::Runner
 
   def starting_worker_record
     find_worker_record
-    @worker.pid            = Process.pid
     @worker.status         = "starting"
     @worker.started_on     = Time.now.utc
     @worker.last_heartbeat = Time.now.utc
@@ -190,7 +189,7 @@ class MiqWorker::Runner
     @worker.last_heartbeat = Time.now.utc
     @worker.update_spid
     @worker.save
-    $log.info("#{self.class.name} started. ID [#{@worker.id}], PID [#{Process.pid}], GUID [#{@worker.guid}], Zone [#{MiqServer.my_zone}], Role [#{MiqServer.my_role}]")
+    $log.info("#{self.class.name} started. ID [#{@worker.id}], PID [#{@worker.pid}], GUID [#{@worker.guid}], Zone [#{MiqServer.my_zone}], Role [#{MiqServer.my_role}]")
   end
 
   def reload_worker_record
@@ -293,7 +292,7 @@ class MiqWorker::Runner
     sync_log_level
     sync_worker_settings
     sync_blacklisted_events
-    _log.info("ID [#{@worker.id}], PID [#{Process.pid}], GUID [#{@worker.guid}], Zone [#{@my_zone}], Active Roles [#{@active_roles.join(',')}], Assigned Roles [#{MiqServer.my_role}], Configuration:")
+    _log.info("ID [#{@worker.id}], PID [#{@worker.pid}], GUID [#{@worker.guid}], Zone [#{@my_zone}], Active Roles [#{@active_roles.join(',')}], Assigned Roles [#{MiqServer.my_role}], Configuration:")
     $log.log_hashes(@worker_settings)
     $log.info("---")
     $log.log_hashes(@cfg)
