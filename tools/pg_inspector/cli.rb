@@ -1,12 +1,14 @@
 require 'trollop'
 require 'pg_inspector/util'
 require 'pg_inspector/active_connections_to_yaml'
+require 'pg_inspector/servers_to_yaml'
 
 module PgInspector
   class Cli
     attr_accessor :cmd
     SUB_COMMANDS = {
-      :active_connections => ::PgInspector::ActiveConnectionsYAML
+      :active_connections => ::PgInspector::ActiveConnectionsYAML,
+      :servers            => ::PgInspector::ServersYAML
     }.freeze
 
     def self.run(args)
@@ -32,9 +34,9 @@ pg_inspector is a tool to inspect ManageIQ process caused deadlock in PostgreSQL
 BANNER
         stop_on(SUB_COMMANDS.keys.map(&:to_s))
       end
-      current_operation = SUB_COMMANDS[args.shift.to_sym]
-      if current_operation
-        self.cmd = current_operation.new
+      current_operation = args.shift
+      if current_operation && SUB_COMMANDS[current_operation.to_sym]
+        self.cmd = SUB_COMMANDS[current_operation.to_sym].new
       else
         Trollop.educate
       end
