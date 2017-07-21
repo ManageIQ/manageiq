@@ -6,7 +6,7 @@ module ManagerRefresh::SaveCollection
       def save!(inventory_collection, association)
         attributes_index        = {}
         inventory_objects_index = {}
-        all_attribute_keys      = Set.new
+        all_attribute_keys      = Set.new + inventory_collection.batch_extra_attributes
 
         inventory_collection.each do |inventory_object|
           attributes = inventory_object.attributes(inventory_collection)
