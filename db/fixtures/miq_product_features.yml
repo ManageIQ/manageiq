@@ -2465,24 +2465,92 @@
           :hidden: true
           :identifier: ab_button_simulate
 
-# Automate Generic Objects
-- :name: Generic Object
-  :description: Generic Objects
+# Automate Generic Object Classes
+- :name: Generic Object Classes
+  :description: Everything under Generic Object Classes
   :feature_type: node
-  :identifier: generic_object_explorer
+  :identifier: generic_object_definition
   :children:
-    - :name: Generic Object Definition Create
-      :description: Generic Object Definition Create
-      :feature_type: node
-      :identifier: generic_object_definition_create
-    - :name: Generic Object Definition Edit
-      :description: Generic Object Definition Edit
-      :feature_type: node
-      :identifier: generic_object_definition_edit
-    - :name: Generic Object Definition Delete
-      :description: Generic Object Definition Delete
-      :feature_type: node
+  - :name: View
+    :description: View Generic Object Classes
+    :feature_type: view
+    :identifier: generic_object_definition_view
+    :children:
+    - :name: List
+      :description: Display Lists of Generic Object Classes
+      :feature_type: view
+      :identifier: generic_object_definition_show_list
+    - :name: Show
+      :description: Display Individual Generic Object Classes
+      :feature_type: view
+      :identifier: generic_object_definition_show
+  - :name: Modify
+    :description: Modify Generic Object Classes
+    :feature_type: admin
+    :identifier: generic_object_definition_admin
+    :children:
+    - :name: Remove
+      :description: Remove Generic Object Classes
+      :feature_type: admin
       :identifier: generic_object_definition_delete
+    - :name: Edit
+      :description: Edit a Generic Object Class
+      :feature_type: admin
+      :identifier: generic_object_definition_edit
+    - :name: Add
+      :description: Add a Generic Object Class
+      :feature_type: admin
+      :identifier: generic_object_definition_new
+
+# Automate Generic Objects
+- :name: Generic Objects
+  :description: Everything under Generic Objects
+  :feature_type: node
+  :identifier: generic_object
+  :children:
+  - :name: View
+    :description: View Generic Objects
+    :feature_type: view
+    :identifier: generic_object_view
+    :children:
+    - :name: List
+      :description: Display Lists of Generic Objects
+      :feature_type: view
+      :identifier: generic_object_show_list
+    - :name: Show
+      :description: Display Individual Generic Objects
+      :feature_type: view
+      :identifier: generic_object_show
+  - :name: Operate
+    :description: Perform Operations on Generic Objects
+    :feature_type: control
+    :identifier: generic_object_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Generic Objects
+      :feature_type: control
+      :identifier: generic_object_tag
+    - :name: Manage Policies
+      :description: Manage Policies of Generic Objects
+      :feature_type: control
+      :identifier: generic_object_protect
+  - :name: Modify
+    :description: Modify Generic Objects
+    :feature_type: admin
+    :identifier: generic_object_admin
+    :children:
+    - :name: Remove
+      :description: Remove Generic Objects
+      :feature_type: admin
+      :identifier: generic_object_delete
+    - :name: Edit
+      :description: Edit Generic Object
+      :feature_type: admin
+      :identifier: generic_object_edit
+    - :name: Add
+      :description: Add a Generic Object
+      :feature_type: admin
+      :identifier: generic_object_new
 
 # Automate Import/Export
 - :name: Import/Export

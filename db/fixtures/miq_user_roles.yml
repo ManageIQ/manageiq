@@ -991,7 +991,8 @@
   - chargeback
   - pictures
   - control_explorer
-  - generic_object_explorer
+  - generic_object
+  - generic_object_definition
   - my_settings
   - tasks
   - about
