@@ -10,7 +10,7 @@ module ManagerRefresh
                 :inventory_object_attributes, :name, :saver_strategy, :parent_inventory_collections, :manager_uuids,
                 :skeletal_manager_uuids, :targeted_arel, :targeted, :manager_ref_allowed_nil, :use_ar_object,
                 :secondary_refs, :secondary_indexes, :created_records, :updated_records, :deleted_records,
-                :custom_reconnect_block
+                :custom_reconnect_block, :batch_extra_attributes
 
     delegate :each, :size, :to => :to_a
 
@@ -370,6 +370,10 @@ module ManagerRefresh
     # @param use_ar_object [Boolean] True or False. Whether we need to initialize AR object as part of the saving
     #        it's needed if the model have special setters, serialize of columns, etc. This setting is relevant only
     #        for the batch saver strategy.
+    # @param batch_extra_attributes [Array] Array of symbols marking which extra attributes we want to store into the
+    #        db. These extra attributes might be a product of :use_ar_object assignment and we need to specify them
+    #        manually, if we want to use a batch saving strategy and we have models that populate attributes as a side
+    #        effect.
     def initialize(model_class: nil, manager_ref: nil, association: nil, parent: nil, strategy: nil, saved: nil,
                    custom_save_block: nil, delete_method: nil, data_index: nil, data: nil, dependency_attributes: nil,
                    attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil,
@@ -377,7 +381,7 @@ module ManagerRefresh
                    inventory_object_attributes: nil, unique_index_columns: nil, name: nil, saver_strategy: nil,
                    parent_inventory_collections: nil, manager_uuids: [], all_manager_uuids: nil, targeted_arel: nil,
                    targeted: nil, manager_ref_allowed_nil: nil, secondary_refs: {}, use_ar_object: nil,
-                   custom_reconnect_block: nil)
+                   custom_reconnect_block: nil, batch_extra_attributes: [])
       @model_class            = model_class
       @manager_ref            = manager_ref || [:ems_ref]
       @secondary_refs         = secondary_refs
@@ -404,6 +408,7 @@ module ManagerRefresh
       @name                   = name || association || model_class.to_s.demodulize.tableize
       @saver_strategy         = process_saver_strategy(saver_strategy)
       @use_ar_object          = use_ar_object || false
+      @batch_extra_attributes = batch_extra_attributes
 
       @manager_ref_allowed_nil = manager_ref_allowed_nil || []
 
