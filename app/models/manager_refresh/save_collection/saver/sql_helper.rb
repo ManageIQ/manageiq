@@ -52,11 +52,9 @@ module ManagerRefresh::SaveCollection
           }
         end
 
-        if inventory_collection.dependees.present?
-          insert_query += %{
-            RETURNING id,#{unique_index_columns.map { |x| quote_column_name(x) }.join(",")}
-          }
-        end
+        insert_query += %{
+          RETURNING "id",#{unique_index_columns.map { |x| quote_column_name(x) }.join(",")}
+        }
 
         insert_query
       end
