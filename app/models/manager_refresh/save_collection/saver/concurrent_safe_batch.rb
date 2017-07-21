@@ -72,7 +72,6 @@ module ManagerRefresh::SaveCollection
           # Destroy in batches
           if records_for_destroy.size >= batch_size
             destroy_records(records_for_destroy)
-            inventory_collection.store_deleted_records(records_for_destroy)
             records_for_destroy = []
           end
         end
@@ -83,7 +82,6 @@ module ManagerRefresh::SaveCollection
 
         # Destroy the last batch
         destroy_records(records_for_destroy)
-        inventory_collection.store_deleted_records(records_for_destroy)
         records_for_destroy = [] # Cleanup so GC can release it sooner
 
         all_attribute_keys << :type if inventory_collection.supports_sti?
