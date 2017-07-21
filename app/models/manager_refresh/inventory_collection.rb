@@ -321,7 +321,7 @@ module ManagerRefresh
     #        Allowed saver strategies are:
     #          - :default => Using Rails saving methods, this way is not safe to run in multiple workers concurrently,
     #            since it will lead to non consistent data.
-    #          - :default_batch => Using batch SQL queries, this way is not safe to run in multiple workers
+    #          - :batch => Using batch SQL queries, this way is not safe to run in multiple workers
     #            concurrently, since it will lead to non consistent data.
     #          - :concurrent_safe => This method is designed for concurrent saving. It uses atomic upsert to avoid
     #            data duplication and it uses timestamp based atomic checks to avoid new data being overwritten by the
@@ -509,11 +509,11 @@ module ManagerRefresh
       return :default unless saver_strategy
 
       case saver_strategy
-      when :default, :default_batch, :concurrent_safe, :concurrent_safe_batch
+      when :default, :batch, :concurrent_safe, :concurrent_safe_batch
         saver_strategy
       else
         raise "Unknown InventoryCollection saver strategy: :#{saver_strategy}, allowed strategies are "\
-              ":default, :default_batch, :concurrent_safe and :concurrent_safe_batch"
+              ":default, :batch, :concurrent_safe and :concurrent_safe_batch"
       end
     end
 
