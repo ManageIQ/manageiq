@@ -135,7 +135,7 @@ module ManagerRefresh::SaveCollection
 
           hashes << hash
           # Index on Unique Columns values, so we can easily fill in the :id later
-          indexed_inventory_objects[inventory_collection.unique_index_columns.map { |x| hash[x] }] = inventory_object
+          indexed_inventory_objects[unique_index_columns.map { |x| hash[x] }] = inventory_object
         end
 
         return if hashes.blank?
@@ -166,15 +166,15 @@ module ManagerRefresh::SaveCollection
         # for every remainders(a last batch in a stream of batches)
         if !supports_remote_data_timestamp?(all_attribute_keys) || result.count == batch_size
           result.each do |inserted_record|
-            key                 = inventory_collection.unique_index_columns.map { |x| inserted_record[x.to_s] }
+            key                 = unique_index_columns.map { |x| inserted_record[x.to_s] }
             inventory_object    = indexed_inventory_objects[key]
             inventory_object.id = inserted_record["id"] if inventory_object
           end
         else
           inventory_collection.model_class.where(
             build_multi_selection_query(inventory_collection, hashes)
-          ).select(inventory_collection.unique_index_columns + [:id]).each do |inserted_record|
-            key                 = inventory_collection.unique_index_columns.map { |x| inserted_record.public_send(x) }
+          ).select(unique_index_columns + [:id]).each do |inserted_record|
+            key                 = unique_index_columns.map { |x| inserted_record.public_send(x) }
             inventory_object    = indexed_inventory_objects[key]
             inventory_object.id = inserted_record.id if inventory_object
           end
