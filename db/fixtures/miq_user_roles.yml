@@ -34,7 +34,7 @@
   - ems_infra
   - ems_physical_infra
   - event_stream_show_list
-  - event_stream
+  - event_stream_show
   - container_dashboard
   - ems_container
   - ems_container_deployment
@@ -116,7 +116,7 @@
   - ems_physical_infra_tag
   - ems_physical_infra_timeline
   - event_stream_show_list
-  - event_stream
+  - event_stream_show
   - host_show
   - host_show_list
   - host_perf
@@ -205,7 +205,7 @@
   - ems_physical_infra_tag
   - ems_physical_infra_timeline
   - event_stream_show_list
-  - event_stream
+  - event_stream_show
   - host_show
   - host_show_list
   - host_perf
@@ -360,7 +360,7 @@
   - ems_physical_infra_tag
   - ems_physical_infra_timeline
   - event_stream_show_list
-  - event_stream
+  - event_stream_show
   - host_new
   - host_analyze
   - host_compare
@@ -468,7 +468,7 @@
   - ems_physical_infra_tag
   - ems_physical_infra_timeline
   - event_stream_show_list
-  - event_stream
+  - event_stream_show
   - host_show
   - host_show_list
   - host_perf
@@ -552,7 +552,7 @@
   - ems_physical_infra_tag
   - ems_physical_infra_timeline
   - event_stream_show_list
-  - event_stream
+  - event_stream_show
   - host_show
   - host_show_list
   - host_perf
@@ -635,7 +635,7 @@
   - ems_physical_infra_tag
   - ems_physical_infra_timeline
   - event_stream_show_list
-  - event_stream
+  - event_stream_show
   - host_show
   - host_show_list
   - host_perf
@@ -893,7 +893,7 @@
   - ems_infra
   - ems_physical_infra
   - event_stream_show_list
-  - event_stream
+  - event_stream_show
   - host
   - load_balancer
   - miq_ae_class_explorer

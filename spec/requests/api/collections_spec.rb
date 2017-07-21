@@ -108,7 +108,7 @@ describe "Rest API Collections" do
       FactoryGirl.create(:miq_event_definition)
       test_collection_query(:events, events_url, MiqEventDefinition)
     end
-    
+
     it "query Event Streams" do
       FactoryGirl.create(:event_stream)
       test_collection_query(:event_streams, event_streams_url, EventStream)
@@ -386,7 +386,7 @@ describe "Rest API Collections" do
       FactoryGirl.create(:miq_event_definition)
       test_collection_bulk_query(:events, events_url, MiqEventDefinition)
     end
-    
+
     it "bulk query Event Streams" do
       FactoryGirl.create(:event_stream)
       test_collection_bulk_query(:event_streams, event_streams_url, EventStream)

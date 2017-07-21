@@ -1840,6 +1840,7 @@
         :description: Edit Event
         :feature_type: admin
         :hidden: true
+        :identifier: event_edit
   - :name: Event Streams
     :description: Endpoint event data
     :protected: true
@@ -1858,7 +1859,8 @@
         :identifier: event_stream_show_list
       - :name: Show
         :description: Display Individual Event
-        :feature_type: event_stream_show
+        :feature_type: view
+        :identifier: event_stream_show
   - :name: Actions
     :description: Everything under Policy Actions Accordion
     :protected: true
