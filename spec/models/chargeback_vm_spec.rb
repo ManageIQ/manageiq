@@ -235,6 +235,27 @@ describe ChargebackVm do
     end
 
     context "Monthly" do
+      context "calculation of allocated metrics by average" do
+        let(:start_time)  { report_run_time - 17.hours }
+        let(:finish_time) { report_run_time - 14.hours }
+        let(:options) { base_options.merge(:interval => 'monthly', :method_for_allocated_metrics => :avg) }
+
+        before do
+          mid_point = month_beginning + 10.days
+          add_metric_rollups_for(@vm1, month_beginning...mid_point, 1.hour, metric_rollup_params)
+          add_metric_rollups_for(@vm1, mid_point...month_end, 1.hour, metric_rollup_params.merge!(:derived_vm_numvcpus => 2))
+        end
+
+        subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
+
+        it "calculates cpu allocated metric" do
+          expect(subject.cpu_allocated_metric).to eq(1.6666666666666667)
+          expect(subject.cpu_allocated_cost).to eq(1200) # ?
+        end
+      end
+    end
+
+    context "Monthly" do
       let(:options) { base_options.merge(:interval => 'monthly') }
       before do
         add_metric_rollups_for(@vm1, month_beginning...month_end, 12.hours, metric_rollup_params)

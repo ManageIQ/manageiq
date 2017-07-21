@@ -19,10 +19,10 @@ class ChargeableField < ApplicationRecord
   validates :metric, :uniqueness => true, :presence => true
   validates :group, :source, :presence => true
 
-  def measure(consumption)
+  def measure(consumption, options)
     return 1.0 if fixed?
     return 0 if consumption.none?(metric)
-    return consumption.max(metric) if allocated?
+    return consumption.send(options.method_for_allocated_metrics, metric) if allocated?
     return consumption.avg(metric) if used?
   end
 

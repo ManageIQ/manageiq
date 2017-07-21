@@ -16,9 +16,22 @@ class Chargeback
     :userid,
     :ext_options,
     :include_metrics,      # enable charging allocated resources with C & U
+    :method_for_allocated_metrics
   ) do
     def self.new_from_h(hash)
       new(*hash.values_at(*members))
+    end
+
+    ALLOCATED_METHODS_WHITELIST = %i(max avg).freeze
+
+    def method_for_allocated_metrics
+      method = self[:method_for_allocated_metrics] || :max
+
+      unless ALLOCATED_METHODS_WHITELIST.include?(method)
+        raise "Invalid method for allocated calculations #{method}"
+      end
+
+      method
     end
 
     # include_metrics = nil is default value(true)
