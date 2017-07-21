@@ -6,11 +6,7 @@
 #
 #
 describe "Events API" do
-  let(:event_stream_list) { EventStream.pluck(:id) }
-
-  def create_events(count)
-    count.times { FactoryGirl.create(:event_stream) }
-  end
+  let(:event_stream_list) { EventStream.pluck(:source) }
 
   context "Event Stream collection" do
     it "query invalid event_stream" do
@@ -31,7 +27,7 @@ describe "Events API" do
 
     it "query event_streams" do
       api_basic_authorize collection_action_identifier(:event_streams, :read, :get)
-      create_events(3)
+      FactoryGirl.create_list(:event_stream, 3)
 
       run_get event_streams_url
 
@@ -42,11 +38,12 @@ describe "Events API" do
 
     it "query event_streams in expanded form" do
       api_basic_authorize collection_action_identifier(:event_streams, :read, :get)
-      create_events(3)
+      FactoryGirl.create_list(:event_stream, 1)
 
       run_get event_streams_url, :expand => "resources"
 
-      expect_query_result(:event_streams, 3, 3)
+      expect_query_result(:event_streams, 1, 1)
+      expect_result_resources_to_include_data("resources", "source" => event_stream_list)
     end
   end
 end
