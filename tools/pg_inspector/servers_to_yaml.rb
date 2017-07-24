@@ -54,12 +54,12 @@ BANNER
         conn_options[:user] = options[:user]
       end
       if options[:password_file]
-        conn_options[:password] = Util.readfile(options[:password_file]).strip
+        conn_options[:password] = File.read(options[:password_file]).strip
       elsif ENV["PGPASSWORD"]
         conn_options[:password] = ENV["PGPASSWORD"]
       end
       PG::Connection.open(conn_options)
-    rescue PG::Error => e
+    rescue => e
       Util.error_exit(e)
     end
 
