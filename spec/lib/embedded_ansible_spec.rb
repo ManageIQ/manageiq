@@ -205,10 +205,12 @@ describe EmbeddedAnsible do
     end
 
     context "with a key file" do
-      let(:key_file) { Tempfile.new("SECRET_KEY") }
+      let(:key_file)      { Tempfile.new("SECRET_KEY") }
+      let(:complete_file) { Tempfile.new("embedded_ansible_setup_complete") }
 
       before do
         stub_const("EmbeddedAnsible::SECRET_KEY_FILE", key_file.path)
+        allow(described_class).to receive(:setup_complete_file).and_return(complete_file.path)
       end
 
       after do
@@ -223,6 +225,17 @@ describe EmbeddedAnsible do
           miq_database.ansible_secret_key = key
 
           expect(described_class.configured?).to be true
+        end
+
+        it "returns false when the key is configured but the complete file is missing" do
+          key = "verysecret"
+          key_file.write(key)
+          key_file.close
+          miq_database.ansible_secret_key = key
+
+          complete_file.unlink
+
+          expect(described_class.configured?).to be false
         end
 
         it "returns false when there is no key in the database" do
