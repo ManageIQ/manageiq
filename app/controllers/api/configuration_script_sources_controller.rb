@@ -25,9 +25,12 @@ module Api
       manager_id = parse_id(data['manager_resource'], :providers)
       raise 'Must specify a valid manager_resource href or id' unless manager_id
       manager = resource_search(manager_id, :providers, collection_class(:providers))
-      type = ConfigurationScriptSource.class_for_manager(manager)
-      raise "ConfigurationScriptSource cannot be added to #{manager_ident(manager)}" unless type.respond_to?(:create_in_provider_queue)
-      task_id = type.create_in_provider_queue(manager.id, data.except('manager_resource').deep_symbolize_keys)
+
+      type = "#{manager.type}::ConfigurationScriptSource"
+      klass = ConfigurationScriptSource.descendant_get(type)
+      raise "ConfigurationScriptSource cannot be added to #{manager_ident(manager)}" unless klass.respond_to?(:create_in_provider_queue)
+
+      task_id = klass.create_in_provider_queue(manager.id, data.except('manager_resource'))
       action_result(true, "Creating ConfigurationScriptSource for #{manager_ident(manager)}", :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
