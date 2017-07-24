@@ -50,7 +50,7 @@ module ManageIQ::Providers::Openstack
           tenants = []
           # Add tenants with access to the private flavor
           unparsed_tenants = safe_list { @connection.list_tenants_with_flavor_access(flavor.id) }
-          flavor_access = unparsed_tenants.data[:body]["flavor_access"]
+          flavor_access = unparsed_tenants.try(:data).try(:[], :body).try(:[], "flavor_access") || []
           unless flavor_access.blank?
             tenants += flavor_access.map { |x| @data_index.fetch_path(:cloud_tenants, x['tenant_id']) }
           end
