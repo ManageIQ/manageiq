@@ -35,11 +35,12 @@
 - ems-type:gce_network
 - ems-type:hawkular
 - ems-type:hawkular_datawarehouse
-- ems-type:monitoring # removed in https://github.com/ManageIQ/manageiq/pull/15506
 - ems-type:kubernetes
+- ems-type:kubernetes_monitor
 - ems-type:lenovo_ph_infra
 - ems-type:nuage_network
 - ems-type:openshift
+- ems-type:openshift_monitor
 - ems-type:openstack
 - ems-type:openstack_infra
 - ems-type:openstack_network
