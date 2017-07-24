@@ -67,6 +67,10 @@ module ManagerRefresh::SaveCollection
           end
         end
 
+        unless inventory_collection.custom_reconnect_block.nil?
+          inventory_collection.custom_reconnect_block.call(inventory_collection, inventory_objects_index, attributes_index)
+        end
+
         # Records that were not found in the DB but sent for saving, we will be creating these in the DB.
         if inventory_collection.create_allowed?
           ActiveRecord::Base.transaction do
