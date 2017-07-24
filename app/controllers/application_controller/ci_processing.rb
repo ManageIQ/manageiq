@@ -1882,7 +1882,7 @@ module ApplicationController::CiProcessing
     klass = get_rec_cls
     # Either a list or coming from a different controller (eg from host screen, go to its selected_items)
     if @lastaction == "show_list" ||
-       !%w(orchestration_stack service vm_cloud vm_infra vm miq_template vm_or_template).include?(
+       !%w(service vm_cloud vm_infra vm miq_template vm_or_template).include?(
          request.parameters["controller"]) # showing a list
 
       # FIXME retrieving vms from DB two times
@@ -1944,7 +1944,7 @@ module ApplicationController::CiProcessing
     when "miq_template"
       return MiqTemplate
     when "orchestration_stack"
-      return OrchestrationStack
+      params[:display] == "instances" ? VmOrTemplate : OrchestrationStack
     when "service"
       return Service
     else
