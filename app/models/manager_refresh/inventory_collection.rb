@@ -405,15 +405,15 @@ module ManagerRefresh
     end
 
     def store_created_records(records)
-      @created_records += records_identities(records)
+      @created_records.concat(records_identities(records))
     end
 
     def store_updated_records(records)
-      @updated_records += records_identities(records)
+      @updated_records.concat(records_identities(records))
     end
 
     def store_deleted_records(records)
-      @deleted_records += records_identities(records)
+      @deleted_records.concat(records_identities(records))
     end
 
     def to_a
