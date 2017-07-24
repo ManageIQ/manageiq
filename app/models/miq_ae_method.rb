@@ -34,7 +34,7 @@ class MiqAeMethod < ApplicationRecord
   end
 
   def self.available_expression_objects
-    Rbac::Filterer::CLASSES_THAT_PARTICIPATE_IN_RBAC
+    MiqExpression.base_tables
   end
 
   # Validate the syntax of the passed in inline ruby code
