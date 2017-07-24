@@ -2,6 +2,7 @@ require "securerandom"
 require "awesome_spawn"
 require "linux_admin"
 require "ansible_tower_client"
+require "fileutils"
 
 class EmbeddedAnsible
   ANSIBLE_ROLE           = "embedded_ansible".freeze
@@ -33,7 +34,10 @@ class EmbeddedAnsible
 
   def self.configured?
     return true if MiqEnvironment::Command.is_container?
+
     return false unless File.exist?(SECRET_KEY_FILE)
+    return false unless setup_completed?
+
     key = miq_database.ansible_secret_key
     key.present? && key == File.read(SECRET_KEY_FILE)
   end
@@ -149,9 +153,11 @@ class EmbeddedAnsible
       }
       AwesomeSpawn.run!(SETUP_SCRIPT, :params => params)
     end
+    write_setup_complete_file
   rescue AwesomeSpawn::CommandResultError => e
     _log.error("EmbeddedAnsible setup script failed with: #{e.message}")
     miq_database.ansible_secret_key = nil
+    FileUtils.rm_f(setup_complete_file)
     raise
   end
   private_class_method :run_setup_script
@@ -254,4 +260,19 @@ class EmbeddedAnsible
     LinuxAdmin::Rpm.info("ansible-tower-server")["version"]
   end
   private_class_method :tower_rpm_version
+
+  def self.write_setup_complete_file
+    FileUtils.touch(setup_complete_file)
+  end
+  private_class_method :write_setup_complete_file
+
+  def self.setup_completed?
+    File.exist?(setup_complete_file)
+  end
+  private_class_method :setup_completed?
+
+  def self.setup_complete_file
+    Rails.root.join("tmp", "embedded_ansible_setup_complete")
+  end
+  private_class_method :setup_complete_file
 end
