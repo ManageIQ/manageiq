@@ -94,7 +94,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::Inventory::Parser::AutomationM
                                 else "#{provider_module}::AutomationManager::Credential"
                                 end
       inventory_object.options = inventory_object.type.constantize::EXTRA_ATTRIBUTES.keys.each_with_object({}) do |k, h|
-        h[k] = credential.public_send(k)
+        h[k] = credential.try(k)
       end
     end
   end
