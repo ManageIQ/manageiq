@@ -2,6 +2,9 @@ class EmbeddedAnsibleWorker < MiqWorker
   require_nested :Runner
   include_concern 'ObjectManagement'
 
+  # Don't allow multiple ansible monitor workers to run at once
+  self.include_stopping_workers_on_synchronize = true
+
   self.required_roles = ['embedded_ansible']
 
   def start_runner
@@ -47,9 +50,6 @@ class EmbeddedAnsibleWorker < MiqWorker
       t[:worker_id] == id && t[:worker_class] == self.class.name
     end
   end
-
-  alias terminate kill
-  alias stop kill
 
   def status_update
     # don't monitor the memory/cpu usage of this process yet
