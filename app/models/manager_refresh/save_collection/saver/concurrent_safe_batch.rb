@@ -58,7 +58,8 @@ module ManagerRefresh::SaveCollection
               assign_attributes_for_update!(hash_for_update, inventory_collection, update_time)
               inventory_collection.store_updated_records(record)
 
-              hashes_for_update << hash_for_update.except(:id, :type)
+              hash_for_update[:id] = record.id
+              hashes_for_update << hash_for_update.except(:type)
             end
           end
 

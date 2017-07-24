@@ -70,16 +70,12 @@ module ManagerRefresh::SaveCollection
       def build_update_query(inventory_collection, all_attribute_keys, hashes)
         # We want to ignore type and create timestamps when updating
         all_attribute_keys_array = all_attribute_keys.to_a.delete_if { |x| %i(type created_at created_on).include?(x) }
+        all_attribute_keys_array << :id
         table_name               = inventory_collection.model_class.table_name
-        used_unique_index_keys   = unique_index_columns & all_attribute_keys.to_a
 
         values = hashes.map do |hash|
           "(#{all_attribute_keys_array.map { |x| quote(hash[x], x, inventory_collection) }.join(",")})"
         end.join(",")
-
-        where_cond = used_unique_index_keys.map do |x|
-          "updated_values.#{quote_column_name(x)} = #{table_name}.#{quote_column_name(x)}"
-        end.join(" AND ")
 
         update_query = %{
           UPDATE #{table_name}
@@ -89,7 +85,7 @@ module ManagerRefresh::SaveCollection
             VALUES
               #{values}
           ) AS updated_values (#{all_attribute_keys_array.map { |x| quote_column_name(x) }.join(",")})
-          WHERE #{where_cond}
+          WHERE updated_values.id = #{table_name}.id
         }
 
         # TODO(lsmola) do we want to exclude the ems_id from the UPDATE clause? Otherwise it might be difficult to change
