@@ -161,27 +161,25 @@ describe EmbeddedAnsibleWorker do
       end
     end
 
-    %w(kill stop terminate).each do |stop_method|
-      describe "##{stop_method}" do
-        it "exits the monitoring thread and destroys the worker row" do
-          thread_double = double
-          expect(thread_double).to receive(:exit)
-          allow(subject).to receive(:find_worker_thread_object).and_return(thread_double)
-          subject.public_send(stop_method)
-          expect { subject.reload }.to raise_error(ActiveRecord::RecordNotFound)
-        end
+    describe "#kill" do
+      it "exits the monitoring thread and destroys the worker row" do
+        thread_double = double
+        expect(thread_double).to receive(:exit)
+        allow(subject).to receive(:find_worker_thread_object).and_return(thread_double)
+        subject.kill
+        expect { subject.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
 
-        it "destroys the worker row but refuses to kill the main thread" do
-          allow(subject).to receive(:find_worker_thread_object).and_return(Thread.main)
-          subject.public_send(stop_method)
-          expect { subject.reload }.to raise_error(ActiveRecord::RecordNotFound)
-        end
+      it "destroys the worker row but refuses to kill the main thread" do
+        allow(subject).to receive(:find_worker_thread_object).and_return(Thread.main)
+        subject.kill
+        expect { subject.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
 
-        it "destroys the worker row if the monitor thread is not found" do
-          allow(subject).to receive(:find_worker_thread_object).and_return(nil)
-          subject.public_send(stop_method)
-          expect { subject.reload }.to raise_error(ActiveRecord::RecordNotFound)
-        end
+      it "destroys the worker row if the monitor thread is not found" do
+        allow(subject).to receive(:find_worker_thread_object).and_return(nil)
+        subject.kill
+        expect { subject.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
   end
