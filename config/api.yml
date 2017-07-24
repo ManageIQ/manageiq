@@ -807,6 +807,24 @@
       :get:
       - :name: read
         :identifier: flavor_show
+  :floating_ips:
+    :description: Floating IPs
+    :identifier: floating_ip
+    :options:
+    - :collection
+    :verbs: *gp
+    :klass: FloatingIp
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: floating_ip_show_list
+      :post:
+      - :name: query
+        :identifier: floating_ip_show_list
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: floating_ip_show
   :groups:
     :description: Groups
     :identifier: rbac_group
