@@ -47,10 +47,15 @@ describe ServiceTemplateProvisionRequest do
         end
       end
 
-      # def create_service_bundle(user, items)
-      #   build_model_from_vms(items)
-      #   build_service_template_request("top", user, :dialog => {"test" => "dialog"})
-      # end
+      def create_service_bundle(user, items, options = {})
+        build_model_from_vms(items)
+        request = build_service_template_request("top", user, :dialog => {"test" => "dialog"})
+        #byebug
+        res = request.service_template.service_resources.first.resource.service_resources.first.resource
+        res.options.merge!(options)
+        res.save
+        request
+      end
 
       let(:vmware_tasks) do
         ems = FactoryGirl.create(:ems_vmware)
@@ -67,12 +72,17 @@ describe ServiceTemplateProvisionRequest do
         @vm_template = @vmware_template
 
         @user = @vmware_user1
-        2.times { requests << build_vmware_service_item }
+        requests << build_vmware_service_item
         create_task(@user, requests.first)
 
+        requests << create_service_bundle(@user, [@vmware_template], @vmware_prov_options)
+
         @user = @vmware_user2
-        2.times { requests << build_vmware_service_item }
+        requests << build_vmware_service_item
         create_task(@user, requests.last)
+
+        requests << create_service_bundle(@user, [@vmware_template], @vmware_prov_options)
+
         requests.each { |r| r.update_attributes(:tenant_id => @user.current_tenant.id) }
         requests
       end
@@ -97,19 +107,23 @@ describe ServiceTemplateProvisionRequest do
         @google_template = FactoryGirl.create(:template_google, :ext_management_system => ems)
         flavor = FactoryGirl.create(:flavor_google, :ems_id => ems.id,
                                     :cpus => 4, :cpu_cores => 1, :memory => 1024)
-        @google_prov_options = {:number_of_vms => 1, :src_vm_id => @google_template.id, :boot_disk_size => ["10.GB", "10 GB"],
+        @google_prov_options = {:number_of_vms => [1, '1'], :src_vm_id => @google_template.id, :boot_disk_size => ["10.GB", "10 GB"],
                         :placement_auto => [true, 1], :instance_type => [flavor.id, flavor.name]}
         requests = []
 
         @vm_template = @google_template
 
         @user = @google_user1
-        2.times { requests << build_google_service_item }
+        requests << build_google_service_item
         create_task(@user, requests.first)
 
+        requests << create_service_bundle(@user, [@google_template], @google_prov_options)
+
         @user = @google_user2
-        2.times { requests << build_google_service_item }
+        requests << build_google_service_item
         create_task(@user, requests.last)
+
+        requests << create_service_bundle(@user, [@google_template], @google_prov_options)
 
         requests.each { |r| r.update_attributes(:tenant_id => @user.current_tenant.id) }
         requests
@@ -127,7 +141,7 @@ describe ServiceTemplateProvisionRequest do
         let(:load_queue) { queue(vmware_tasks) }
         let(:request) { create_test_task(@vmware_user1, @vmware_template) }
         let(:counts_hash) do
-          { :count => 4, :memory => 4.gigabytes, :cpu => 16, :storage => 2.gigabytes }
+          { :count => 6, :memory => 6.gigabytes, :cpu => 16, :storage => 3.gigabytes }
         end
 
         context "active_provisions_by_tenant," do
@@ -143,7 +157,7 @@ describe ServiceTemplateProvisionRequest do
         context "active_provisions_by_user," do
           let(:quota_method) { :active_provisions_by_user }
           let(:counts_hash) do
-            { :count => 2, :memory => 2.gigabytes, :cpu => 8, :storage => 1.gigabytes }
+            { :count => 3, :memory => 3.gigabytes, :cpu => 8, :storage => 1_610_612_736 }
           end
           it_behaves_like "check_quota"
         end

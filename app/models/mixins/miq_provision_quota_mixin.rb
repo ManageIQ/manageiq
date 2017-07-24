@@ -329,11 +329,18 @@ module MiqProvisionQuotaMixin
   def service_quota_values(request, result)
     request.service_template.service_resources.each do |sr|
       if request.service_template.service_type == 'composite'
-        # "will deal with this later"
+        bundle_quota_values(sr, result)
       else
         next if request.service_template.prov_type.starts_with?("generic")
         vm_quota_values(sr.resource, result)
       end
+    end
+  end
+
+  def bundle_quota_values(service_resource, result)
+    return if service_resource.resource.prov_type.starts_with?('generic')
+    service_resource.resource.service_resources.each do |sr|
+      vm_quota_values(sr.resource, result)
     end
   end
 
