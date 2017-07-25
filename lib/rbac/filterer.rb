@@ -32,6 +32,7 @@ module Rbac
       Flavor
       FloatingIp
       Host
+      HostAggregate
       LoadBalancer
       MiddlewareDatasource
       MiddlewareDeployment

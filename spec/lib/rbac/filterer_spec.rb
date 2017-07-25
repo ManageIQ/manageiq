@@ -75,11 +75,10 @@ describe Rbac::Filterer do
   let(:child_openstack_vm) { FactoryGirl.create(:vm_openstack, :tenant => child_tenant, :miq_group => child_group) }
 
   describe ".search" do
-    context 'searching for instances of AuthKeyPair with tags' do
-      let(:role)                       { FactoryGirl.create(:miq_user_role) }
-      let(:tagged_group)               { FactoryGirl.create(:miq_group, :tenant => Tenant.root_tenant, :miq_user_role => role) }
-      let(:user)                       { FactoryGirl.create(:user, :miq_groups => [tagged_group]) }
-      let!(:auth_key_pair_cloud) { FactoryGirl.create_list(:auth_key_pair_cloud, 2).first }
+    context 'with tags' do
+      let(:role)         { FactoryGirl.create(:miq_user_role) }
+      let(:tagged_group) { FactoryGirl.create(:miq_group, :tenant => Tenant.root_tenant, :miq_user_role => role) }
+      let(:user)         { FactoryGirl.create(:user, :miq_groups => [tagged_group]) }
 
       before do
         tagged_group.entitlement = Entitlement.new
@@ -88,11 +87,26 @@ describe Rbac::Filterer do
         tagged_group.save!
       end
 
-      it 'lists only tagged AuthKeyPairs' do
-        auth_key_pair_cloud.tag_with('/managed/environment/prod', :ns => '*')
+      context 'searching for instances of AuthKeyPair' do
+        let!(:auth_key_pair_cloud) { FactoryGirl.create_list(:auth_key_pair_cloud, 2).first }
 
-        results = described_class.search(:class => ManageIQ::Providers::CloudManager::AuthKeyPair, :user => user).first
-        expect(results).to match_array [auth_key_pair_cloud]
+        it 'lists only tagged AuthKeyPairs' do
+          auth_key_pair_cloud.tag_with('/managed/environment/prod', :ns => '*')
+
+          results = described_class.search(:class => ManageIQ::Providers::CloudManager::AuthKeyPair, :user => user).first
+          expect(results).to match_array [auth_key_pair_cloud]
+        end
+      end
+
+      context 'searching for instances of HostAggregate' do
+        let!(:host_aggregate) { FactoryGirl.create_list(:host_aggregate, 2).first }
+
+        it 'lists only tagged HostAggregates' do
+          host_aggregate.tag_with('/managed/environment/prod', :ns => '*')
+
+          results = described_class.search(:class => HostAggregate, :user => user).first
+          expect(results).to match_array [host_aggregate]
+        end
       end
     end
 
