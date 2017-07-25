@@ -9,6 +9,68 @@ The ManageIQ organization is continuously adding new smaller repositories.  The 
 - [manageiq-providers-vmware CHANGELOG](https://github.com/ManageIQ/manageiq-providers-vmware/blob/master/CHANGELOG.md)
 - [manageiq-ui-classic CHANGELOG](https://github.com/ManageIQ/manageiq-ui-classic/blob/master/CHANGELOG.md)
 
+## Unreleased - as of Sprint 65 end 2017-07-24
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+65+Ending+Jul+24%2C+2017%22+label%3Aenhancement)
+
+- Platform
+  - Chargeback: Add average calculation for allocated costs and metrics optionally in chargeback [(#15565)](https://github.com/ManageIQ/manageiq/pull/15565)
+  - Workers: Add heartbeat_check script for file-based worker process heartbeating [(#15494)](https://github.com/ManageIQ/manageiq/pull/15494)
+
+- Providers
+  - Adapt manageiq to new managers [(#15506)](https://github.com/ManageIQ/manageiq/pull/15506)
+  - Ansible Tower: Azure Classic Credential added for embedded Ansible [(#15626)](https://github.com/ManageIQ/manageiq/pull/15626)
+  - Containers: Add new class ServiceContainerTemplate. [(#15429)](https://github.com/ManageIQ/manageiq/pull/15429)
+  - Inventory
+    - Custom reconnect block [(#15605)](https://github.com/ManageIQ/manageiq/pull/15605)
+    - Deal with special AR setters [(#15439)](https://github.com/ManageIQ/manageiq/pull/15439)
+    - Store created updated and deleted records [(#15603)](https://github.com/ManageIQ/manageiq/pull/15603)
+    - Use proper multi select condition [(#15436)](https://github.com/ManageIQ/manageiq/pull/15436)
+- Network: Generic CRUD for network routers [(#15451)](https://github.com/ManageIQ/manageiq/pull/15451)
+- Physical Infrastructure: Add physical infra types for discovery [(#15621)](https://github.com/ManageIQ/manageiq/pull/15621)
+
+- REST API
+  - Query by multiple tags [(#15557)](https://github.com/ManageIQ/manageiq/pull/15557)
+  - Floating IPs: Initial API [(#15524)](https://github.com/ManageIQ/manageiq/pull/15524)
+  - Network Routers REST API [(#15450)](https://github.com/ManageIQ/manageiq/pull/15450)
+
+- User Interface
+  - Features for Generic Object Classes and Instances [(#15611)](https://github.com/ManageIQ/manageiq/pull/15611)
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+65+Ending+Jul+24%2C+2017%22+label%3Aenhancement)
+
+- Performance: Use concat for better performance [(#15635)](https://github.com/ManageIQ/manageiq/pull/15635)
+- Platform: Move MiqApache from manageiq-gems-pending [(#15548)](https://github.com/ManageIQ/manageiq/pull/15548)
+- User Interface: Use update:ui rake task instead of update:bower [(#15578)](https://github.com/ManageIQ/manageiq/pull/15578)
+
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+65+Ending+Jul+24%2C+2017%22+label%3Abug)
+
+- Automate
+  - Fixed path for including miq-syntax-checker [(#15551)](https://github.com/ManageIQ/manageiq/pull/15551)
+  - Provisioning: Validate if we have an array of integers [(#15572)](https://github.com/ManageIQ/manageiq/pull/15572)
+  - Services: Add my_zone to Service Orchestration. [(#15533)](https://github.com/ManageIQ/manageiq/pull/15533)
+
+- Platform
+  - Add a marker file for determining when the ansible setup has been run [(#15642)](https://github.com/ManageIQ/manageiq/pull/15642)
+  - Fix CI after adding new columns to custom_buttons table [(#15581)](https://github.com/ManageIQ/manageiq/pull/15581)
+  - Check for messages key in prefetch_below_threshold? [(#15620)](https://github.com/ManageIQ/manageiq/pull/15620)
+  - Track and kill embedded ansible monitoring thread [(#15612)](https://github.com/ManageIQ/manageiq/pull/15612)
+  - Reporting
+    - Fix chargeback report with unassigned rates [(#15580)](https://github.com/ManageIQ/manageiq/pull/15580)
+    - Cast virtual attribute 'Hardware#ram_size_in_bytes' to bigint [(#15554)](https://github.com/ManageIQ/manageiq/pull/15554)
+
+- Providers
+  - Ansible Tower: Let ansible worker gracefully stop [(#15643)](https://github.com/ManageIQ/manageiq/pull/15643)
+  - Containers: Save inventory container: remove target option [(#15182)](https://github.com/ManageIQ/manageiq/pull/15182)
+  - Pluggability: change ManageIQ::Environment to run bundle install on plugin_setup [(#15589)](https://github.com/ManageIQ/manageiq/pull/15589)
+
+- REST API
+  - Force ascending order [(#15559)](https://github.com/ManageIQ/manageiq/pull/15559)
+  - Allow compressed ids when updating a service dialog [(#15619)](https://github.com/ManageIQ/manageiq/pull/15619)
+
+
+
 ## Unreleased - as of Sprint 64 end 2017-07-10
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+64+Ending+Jul+10%2C+2017%22+label%3Aenhancement)
