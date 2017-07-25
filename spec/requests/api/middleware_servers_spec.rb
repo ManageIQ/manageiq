@@ -7,6 +7,10 @@ describe 'Middleware Servers API' do
     "http://www.example.com#{middleware_servers_url(server.id)}"
   end
 
+  def match_id
+    eq ApplicationRecord.compress_id(server.id).to_s
+  end
+
   describe '/' do
     it 'forbids access without an appropriate role' do
       api_basic_authorize
@@ -56,9 +60,9 @@ describe 'Middleware Servers API' do
       run_get middleware_servers_url(server.id)
 
       expect(response).to have_http_status(:ok)
+      expect(response.parsed_body['id']).to match_id
       expect(response.parsed_body).to include(
         'href'       => server_url,
-        'id'         => server.id.to_s,
         'name'       => server.name,
         'feed'       => server.feed,
         'properties' => server.properties,

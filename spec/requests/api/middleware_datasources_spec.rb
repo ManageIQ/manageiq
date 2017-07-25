@@ -7,6 +7,10 @@ describe 'Middleware Datasources API' do
     "http://www.example.com#{middleware_datasources_url(datasource.id)}"
   end
 
+  def match_id
+    eq ApplicationRecord.compress_id(datasource.id).to_s
+  end
+
   describe '/' do
     it 'forbids access without an appropriate role' do
       api_basic_authorize
@@ -56,10 +60,8 @@ describe 'Middleware Datasources API' do
       run_get middleware_datasources_url(datasource.id)
 
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body).to include(
-        'href' => datasource_url,
-        'id'   => datasource.id.to_s,
-      )
+      expect(response.parsed_body['id']).to match_id
+      expect(response.parsed_body).to include('href' => datasource_url)
     end
   end
 end

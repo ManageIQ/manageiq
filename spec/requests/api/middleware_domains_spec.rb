@@ -7,6 +7,10 @@ describe 'Middleware Domains API' do
     "http://www.example.com#{middleware_domains_url(domain.id)}"
   end
 
+  def match_id
+    eq ApplicationRecord.compress_id(domain.id).to_s
+  end
+
   describe '/' do
     it 'forbids access without an appropriate role' do
       api_basic_authorize
@@ -56,9 +60,9 @@ describe 'Middleware Domains API' do
       run_get middleware_domains_url(domain.id)
 
       expect(response).to have_http_status(:ok)
+      expect(response.parsed_body['id']).to match_id
       expect(response.parsed_body).to include(
         'href' => domain_url,
-        'id'   => domain.id.to_s,
         'name' => domain.name
       )
     end
