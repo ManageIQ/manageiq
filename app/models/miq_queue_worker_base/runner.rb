@@ -92,11 +92,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
   end
 
   def message_delivery_suspended?
-    if self.class.require_vim_broker?
-      return true unless MiqVimBrokerWorker.available?
-    end
-
-    false
+    self.class.delay_queue_delivery_for_vim_broker? && !MiqVimBrokerWorker.available?
   end
 
   def deliver_queue_message(msg)

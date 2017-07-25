@@ -83,21 +83,6 @@ class MiqWorker::Runner
   # Worker Monitor Methods
   ###############################
 
-  def self.wait_for_worker_monitor?
-    !!@wait_for_worker_monitor
-  end
-
-  class << self
-    attr_writer :wait_for_worker_monitor
-  end
-
-  def my_monitor_started?
-    return @monitor_started unless @monitor_started.nil?
-    return false if     server.nil?
-    return false unless server.reload.started?
-    @monitor_started = true
-  end
-
   def worker_monitor_drb
     @worker_monitor_drb ||= begin
       raise _("%{log} No MiqServer found to establishing DRb Connection to") % {:log => log_prefix} if server.nil?
@@ -120,13 +105,23 @@ class MiqWorker::Runner
   # VimBrokerWorker Methods
   ###############################
 
-  def self.require_vim_broker?
-    @require_vim_broker = false if @require_vim_broker.nil?
-    @require_vim_broker
+  def self.delay_startup_for_vim_broker?
+    !!@delay_startup_for_vim_broker
   end
 
   class << self
-    attr_writer :require_vim_broker
+    attr_writer :delay_startup_for_vim_broker
+  end
+
+  def self.delay_queue_delivery_for_vim_broker?
+    !!@delay_queue_delivery_for_vim_broker
+  end
+
+  class << self
+    attr_writer :delay_queue_delivery_for_vim_broker
+
+    alias require_vim_broker? delay_queue_delivery_for_vim_broker?
+    alias require_vim_broker= delay_queue_delivery_for_vim_broker=
   end
 
   def start
@@ -151,7 +146,7 @@ class MiqWorker::Runner
     set_database_application_name
     ObjectSpace.garbage_collect
     started_worker_record
-    do_wait_for_worker_monitor if self.class.wait_for_worker_monitor?
+    do_delay_startup_for_vim_broker if self.class.delay_startup_for_vim_broker? && MiqVimBrokerWorker.workers > 0
     do_before_work_loop
     self
   end
@@ -323,14 +318,14 @@ class MiqWorker::Runner
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
-  def do_wait_for_worker_monitor
-    _log.info("#{log_prefix} Checking that worker monitor has started before doing work")
+  def do_delay_startup_for_vim_broker
+    _log.info("#{log_prefix} Checking that VIM Broker has started before doing work")
     loop do
-      break if self.my_monitor_started?
+      break if MiqVimBrokerWorker.available?
       heartbeat
       sleep 3
     end
-    _log.info("#{log_prefix} Starting work since worker monitor has started")
+    _log.info("#{log_prefix} Starting work since VIM Broker has started")
   end
 
   def do_work_loop
