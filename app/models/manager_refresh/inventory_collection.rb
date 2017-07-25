@@ -689,7 +689,8 @@ module ManagerRefresh
       if !manager_uuid_hash.keys.all? { |x| keys.include?(x) } || manager_uuid_hash.keys.size != keys.size
         raise "Allowed find_by ref=#{ref} keys are #{keys}"
       end
-      find(object_index(manager_uuid_hash, :ref => ref))
+      manager_uuid = object_index(manager_uuid_hash, :ref => ref)
+      find(manager_uuid, :ref => ref)
     end
 
     def lazy_find_by(manager_uuid_hash, ref: :manager_ref, key: nil, default: nil)
