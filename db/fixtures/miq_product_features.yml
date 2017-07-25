@@ -4800,6 +4800,10 @@
       :description: Edit Tags of Container Template
       :feature_type: control
       :identifier: container_template_tag
+    - :name: Create Service Dialog from Container Template
+      :description: Create Service Dialog from Container Template
+      :identifier: service_dialog_from_ct
+      :feature_type: admin
 
 # ContainerService
 - :name: Services
