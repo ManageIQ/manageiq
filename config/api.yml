@@ -66,6 +66,16 @@
       :get:
         - :name: read
           :identifier: middleware_datasource_show_list
+  :middleware_messagings:
+    :description: Middleware Messagings
+    :klass: MiddlewareMessaging
+    :options:
+      - :collection
+    :verbs: *g
+    :collection_actions:
+      :get:
+        - :name: read
+          :identifier: middleware_messaging_show_list
   :accounts:
     :description: Accounts
     :options:
