@@ -18,7 +18,7 @@ class WaitForCompletion
     case status
     when 'transient'
       @handle.root['ae_result'] = 'retry'
-      @handle.root['ae_retry_limit'] = 1.minute
+      @handle.root['ae_retry_interval'] = 1.minute
     when 'failed', 'create_canceled'
       @handle.root['ae_result'] = 'error'
       @handle.log(:error, "Job failed for #{job.id} Ansible ID: #{job.ems_ref} reason #{reason}")
