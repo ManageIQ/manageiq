@@ -1,6 +1,14 @@
 module ManagerRefresh::SaveCollection
   module Saver
     module SqlHelper
+      def unique_index_columns
+        inventory_collection.unique_index_columns
+      end
+
+      def on_conflict_update
+        true
+      end
+
       # TODO(lsmola) all below methods should be rewritten to arel, but we need to first extend arel to be able to do
       # this
       def build_insert_set_cols(key)
@@ -19,11 +27,16 @@ module ManagerRefresh::SaveCollection
           INSERT INTO #{table_name} (#{col_names})
             VALUES
               #{values}
-          ON CONFLICT (#{inventory_collection.unique_index_columns.map { |x| quote_column_name(x) }.join(",")})
-            DO
-              UPDATE
-                SET #{all_attribute_keys_array.map { |key| build_insert_set_cols(key) }.join(", ")}
         }
+
+        if on_conflict_update
+          insert_query += %{
+            ON CONFLICT (#{unique_index_columns.map { |x| quote_column_name(x) }.join(",")})
+              DO
+                UPDATE
+                  SET #{all_attribute_keys_array.map { |key| build_insert_set_cols(key) }.join(", ")}
+          }
+        end
 
         # TODO(lsmola) do we want to exclude the ems_id from the UPDATE clause? Otherwise it might be difficult to change
         # the ems_id as a cross manager migration, since ems_id should be there as part of the insert. The attempt of
@@ -39,11 +52,9 @@ module ManagerRefresh::SaveCollection
           }
         end
 
-        if inventory_collection.dependees.present?
-          insert_query += %{
-            RETURNING id,#{inventory_collection.unique_index_columns.map { |x| quote_column_name(x) }.join(",")}
-          }
-        end
+        insert_query += %{
+          RETURNING "id",#{unique_index_columns.map { |x| quote_column_name(x) }.join(",")}
+        }
 
         insert_query
       end
@@ -59,16 +70,12 @@ module ManagerRefresh::SaveCollection
       def build_update_query(inventory_collection, all_attribute_keys, hashes)
         # We want to ignore type and create timestamps when updating
         all_attribute_keys_array = all_attribute_keys.to_a.delete_if { |x| %i(type created_at created_on).include?(x) }
+        all_attribute_keys_array << :id
         table_name               = inventory_collection.model_class.table_name
-        used_unique_index_keys   = inventory_collection.unique_index_columns & all_attribute_keys.to_a
 
         values = hashes.map do |hash|
           "(#{all_attribute_keys_array.map { |x| quote(hash[x], x, inventory_collection) }.join(",")})"
         end.join(",")
-
-        where_cond = used_unique_index_keys.map do |x|
-          "updated_values.#{quote_column_name(x)} = #{table_name}.#{quote_column_name(x)}"
-        end.join(" AND ")
 
         update_query = %{
           UPDATE #{table_name}
@@ -78,7 +85,7 @@ module ManagerRefresh::SaveCollection
             VALUES
               #{values}
           ) AS updated_values (#{all_attribute_keys_array.map { |x| quote_column_name(x) }.join(",")})
-          WHERE #{where_cond}
+          WHERE updated_values.id = #{table_name}.id
         }
 
         # TODO(lsmola) do we want to exclude the ems_id from the UPDATE clause? Otherwise it might be difficult to change
@@ -96,7 +103,7 @@ module ManagerRefresh::SaveCollection
       end
 
       def build_multi_selection_query(inventory_collection, hashes)
-        inventory_collection.build_multi_selection_condition(hashes, inventory_collection.unique_index_columns)
+        inventory_collection.build_multi_selection_condition(hashes, unique_index_columns)
       end
 
       def quote(value, name = nil, inventory_collection = nil)

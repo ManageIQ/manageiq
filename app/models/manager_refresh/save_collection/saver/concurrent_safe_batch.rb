@@ -6,7 +6,7 @@ module ManagerRefresh::SaveCollection
       def save!(inventory_collection, association)
         attributes_index        = {}
         inventory_objects_index = {}
-        all_attribute_keys      = Set.new
+        all_attribute_keys      = Set.new + inventory_collection.batch_extra_attributes
 
         inventory_collection.each do |inventory_object|
           attributes = inventory_object.attributes(inventory_collection)
@@ -58,7 +58,8 @@ module ManagerRefresh::SaveCollection
               assign_attributes_for_update!(hash_for_update, inventory_collection, update_time)
               inventory_collection.store_updated_records(record)
 
-              hashes_for_update << hash_for_update.except(:id, :type)
+              hash_for_update[:id] = record.id
+              hashes_for_update << hash_for_update.except(:type)
             end
           end
 
@@ -72,7 +73,6 @@ module ManagerRefresh::SaveCollection
           # Destroy in batches
           if records_for_destroy.size >= batch_size
             destroy_records(records_for_destroy)
-            inventory_collection.store_deleted_records(records_for_destroy)
             records_for_destroy = []
           end
         end
@@ -83,7 +83,6 @@ module ManagerRefresh::SaveCollection
 
         # Destroy the last batch
         destroy_records(records_for_destroy)
-        inventory_collection.store_deleted_records(records_for_destroy)
         records_for_destroy = [] # Cleanup so GC can release it sooner
 
         all_attribute_keys << :type if inventory_collection.supports_sti?
@@ -135,7 +134,7 @@ module ManagerRefresh::SaveCollection
 
           hashes << hash
           # Index on Unique Columns values, so we can easily fill in the :id later
-          indexed_inventory_objects[inventory_collection.unique_index_columns.map { |x| hash[x] }] = inventory_object
+          indexed_inventory_objects[unique_index_columns.map { |x| hash[x] }] = inventory_object
         end
 
         return if hashes.blank?
@@ -166,15 +165,15 @@ module ManagerRefresh::SaveCollection
         # for every remainders(a last batch in a stream of batches)
         if !supports_remote_data_timestamp?(all_attribute_keys) || result.count == batch_size
           result.each do |inserted_record|
-            key                 = inventory_collection.unique_index_columns.map { |x| inserted_record[x.to_s] }
+            key                 = unique_index_columns.map { |x| inserted_record[x.to_s] }
             inventory_object    = indexed_inventory_objects[key]
             inventory_object.id = inserted_record["id"] if inventory_object
           end
         else
           inventory_collection.model_class.where(
             build_multi_selection_query(inventory_collection, hashes)
-          ).select(inventory_collection.unique_index_columns + [:id]).each do |inserted_record|
-            key                 = inventory_collection.unique_index_columns.map { |x| inserted_record.public_send(x) }
+          ).select(unique_index_columns + [:id]).each do |inserted_record|
+            key                 = unique_index_columns.map { |x| inserted_record.public_send(x) }
             inventory_object    = indexed_inventory_objects[key]
             inventory_object.id = inserted_record.id if inventory_object
           end
