@@ -55,7 +55,17 @@
     :collection_actions:
       :get:
         - :name: read
-          :identifier: middleware_server_show_list
+          :identifier: middleware_domain_show_list
+  :middleware_datasources:
+    :description: Middleware Datasources
+    :klass: MiddlewareDatasource
+    :options:
+      - :collection
+    :verbs: *g
+    :collection_actions:
+      :get:
+        - :name: read
+          :identifier: middleware_datasource_show_list
   :accounts:
     :description: Accounts
     :options:
