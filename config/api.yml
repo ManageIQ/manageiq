@@ -76,6 +76,16 @@
       :get:
         - :name: read
           :identifier: middleware_messaging_show_list
+  :middleware_deployments:
+    :description: Middleware Deployments
+    :klass: MiddlewareDeployment
+    :options:
+      - :collection
+    :verbs: *g
+    :collection_actions:
+      :get:
+        - :name: read
+          :identifier: middleware_deployment_show_list
   :accounts:
     :description: Accounts
     :options:
