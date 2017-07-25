@@ -3,6 +3,8 @@ class ManageIQ::Providers::BaseManager::RefreshWorker::Runner < ::MiqQueueWorker
     [:ems_id, 'EMS Instance ID', String],
   ]
 
+  self.wait_for_worker_monitor = true # NOTE: Really means wait for broker for ems_inventory role, TODO: only for VMware
+
   def log_prefix
     @log_prefix ||= "EMS [#{@ems.hostname}] as [#{@ems.authentication_userid}]"
   end

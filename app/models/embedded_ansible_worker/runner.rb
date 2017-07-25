@@ -1,6 +1,4 @@
 class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
-  self.wait_for_worker_monitor = false
-
   def prepare
     ObjectSpace.garbage_collect
     # Overriding prepare so we can set started when we're ready

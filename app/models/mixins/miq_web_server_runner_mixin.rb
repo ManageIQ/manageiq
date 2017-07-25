@@ -1,10 +1,6 @@
 module MiqWebServerRunnerMixin
   extend ActiveSupport::Concern
 
-  included do
-    self.wait_for_worker_monitor = false
-  end
-
   def do_work
   end
 
