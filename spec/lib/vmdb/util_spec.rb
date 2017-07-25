@@ -144,14 +144,14 @@ describe VMDB::Util do
     it "entry is a symlink to origin file, origin file is added with symlink's name" do
       entry = 'ROOT' + symlink_level_1
       zip_entry = Zip::Entry.new(zip, entry, nil, nil, nil, nil, nil, nil, ztime)
-      expect(zip).to receive(:add).with(zip_entry, origin_file.path)
+      expect(zip).to receive(:add).with(zip_entry, File.realpath(origin_file.path))
       expect(described_class.send(:add_zip_entry, zip, symlink_level_1, zip_file)).to eq([entry, mtime])
     end
 
     it "entry is a symlink to symlink to origin file, origin file is added with symlink's name" do
       entry = 'ROOT' + symlink_level_2
       zip_entry = Zip::Entry.new(zip, entry, nil, nil, nil, nil, nil, nil, ztime)
-      expect(zip).to receive(:add).with(zip_entry, origin_file.path)
+      expect(zip).to receive(:add).with(zip_entry, File.realpath(origin_file.path))
       expect(described_class.send(:add_zip_entry, zip, symlink_level_2, zip_file)).to eq([entry, mtime])
     end
 
