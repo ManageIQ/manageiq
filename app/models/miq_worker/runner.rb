@@ -84,8 +84,7 @@ class MiqWorker::Runner
   ###############################
 
   def self.wait_for_worker_monitor?
-    @wait_for_worker_monitor = true if @wait_for_worker_monitor.nil?
-    @wait_for_worker_monitor
+    !!@wait_for_worker_monitor
   end
 
   class << self

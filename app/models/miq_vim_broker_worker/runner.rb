@@ -1,6 +1,4 @@
 class MiqVimBrokerWorker::Runner < MiqWorker::Runner
-  self.wait_for_worker_monitor = false
-
   def after_initialize
     require 'thread'
 
