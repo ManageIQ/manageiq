@@ -106,7 +106,7 @@ module PxeController::PxeCustomizationTemplates
       replace_right_cell(x_node)
     elsif ["add", "save"].include?(params[:button])
       if params[:id]
-        ct = find_by_id_filtered(CustomizationTemplate, params[:id])
+        ct = find_record_with_rbac(CustomizationTemplate, params[:id])
       else
         ct = @edit[:new][:typ] == "CustomizationTemplateKickstart" ?
             CustomizationTemplateKickstart.new : CustomizationTemplateSysprep.new

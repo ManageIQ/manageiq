@@ -333,12 +333,12 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
   end
 
   def vm_attach_volume(vm, volume_id, device = nil)
-    volume = find_by_id_filtered(CloudVolume, volume_id)
+    volume = find_record_with_rbac(CloudVolume, volume_id)
     volume.raw_attach_volume(vm.ems_ref, device)
   end
 
   def vm_detach_volume(vm, volume_id)
-    volume = find_by_id_filtered(CloudVolume, volume_id)
+    volume = find_record_with_rbac(CloudVolume, volume_id)
     volume.raw_detach_volume(vm.ems_ref)
   end
 

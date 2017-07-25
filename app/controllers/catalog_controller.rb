@@ -65,25 +65,19 @@ class CatalogController < ApplicationController
   end
 
   def servicetemplate_edit
-    assert_privileges(params[:pressed]) if params[:pressed]
-    checked = find_checked_items
+    assert_privileges(params[:pressed]) if params[:pressed].present?
+    checked_id = find_checked_items.first || params[:id]
     @sb[:cached_waypoint_ids] = MiqAeClass.waypoint_ids_for_state_machines
-    checked[0] = params[:id] if checked.blank? && params[:id]
-    @record = checked[0] ? find_by_id_filtered(ServiceTemplate, checked[0]) : ServiceTemplate.new
+    @record = checked_id.present? ? find_record_with_rbac(ServiceTemplate, checked_id) : ServiceTemplate.new
     @sb[:st_form_active_tab] = "basic"
-    if checked[0]
-      if @record.service_type == "composite"
-        st_edit
-      else
-        atomic_st_edit
-      end
+    composite_type = @record.service_type == "composite"
+    new_atomic_item = params[:pressed] == "atomic_catalogitem_new" ||
+      (params[:button].present? &&
+       session[:edit][:new][:service_type] == "atomic")
+    if checked_id.present? && composite_type || checked_id.nil? && !new_atomic_item
+      st_edit
     else
-      # check for service_type incase add/cancel button was pressed to direct to correct method
-      if params[:pressed] == "atomic_catalogitem_new" || (params[:button] && session[:edit][:new][:service_type] == "atomic")
-        atomic_st_edit
-      else
-        st_edit
-      end
+      atomic_st_edit
     end
   end
 
@@ -300,7 +294,7 @@ class CatalogController < ApplicationController
         {:record => ui_lookup(:table => "service_template")}) if @flash_array.nil?
       self.x_node = "root"
     else # showing 1 element, delete it
-      elements = find_checked_items
+      elements = find_checked_ids_with_rbac(ServiceTemplate)
       if elements.empty?
         add_flash(_("No %{model} were selected for deletion") %
           {:model => ui_lookup(:tables => "service_template")}, :error)
@@ -546,7 +540,7 @@ class CatalogController < ApplicationController
     assert_privileges("svc_catalog_provision")
     checked = find_checked_items
     checked[0] = params[:id] if checked.blank? && params[:id]
-    st = find_by_id_filtered(ServiceTemplate, checked[0])
+    st = find_record_with_rbac(ServiceTemplate, checked[0])
     @right_cell_text = _("Order %{model} \"%{name}\"") % {:name  => st.name,
                                                           :model => ui_lookup(:model => "Service")}
     ra = nil
@@ -672,7 +666,7 @@ class CatalogController < ApplicationController
     assert_privileges("orchestration_template_edit")
     checked = find_checked_items
     checked[0] = params[:id] if checked.blank? && params[:id]
-    @record = find_by_id_filtered(OrchestrationTemplate, checked[0])
+    @record = find_record_with_rbac(OrchestrationTemplate, checked[0])
     if @record.in_use?
       add_flash(_("Orchestration template \"%{name}\" is read-only and cannot be edited.") %
         {:name => @record.name}, :error)
@@ -728,7 +722,7 @@ class CatalogController < ApplicationController
     assert_privileges("orchestration_template_remove")
     checked = find_checked_items
     checked[0] = params[:id] if checked.blank? && params[:id]
-    elements = OrchestrationTemplate.where(:id => checked)
+    elements = find_checked_records_with_rbac(OrchestrationTemplate, checked)
     elements.each do |ot|
       if ot.in_use?
         add_flash(_("Orchestration template \"%{name}\" is read-only and cannot be deleted.") %
@@ -972,7 +966,7 @@ class CatalogController < ApplicationController
   def ot_edit_set_form_vars(right_cell_text)
     checked = find_checked_items
     checked[0] = params[:id] if checked.blank? && params[:id]
-    @record = checked[0] ? find_by_id_filtered(OrchestrationTemplate, checked[0]) : OrchestrationTemplate.new
+    @record = checked[0] ? find_record_with_rbac(OrchestrationTemplate, checked[0]) : OrchestrationTemplate.new
     @edit = {:current => {:name        => @record.name,
                           :description => @record.description,
                           :content     => @record.content,
@@ -1174,7 +1168,7 @@ class CatalogController < ApplicationController
     checked = find_checked_items
     checked[0] = params[:id] if checked.blank? && params[:id]
 
-    @record = checked[0] ? find_by_id_filtered(ServiceTemplateCatalog, checked[0]) : ServiceTemplateCatalog.new
+    @record = checked[0] ? find_record_with_rbac(ServiceTemplateCatalog, checked[0]) : ServiceTemplateCatalog.new
     @right_cell_text = @record.id ?
         _("Editing %{model} \"%{name}\"") % {:name => @record.name, :model => ui_lookup(:model => "ServiceTemplateCatalog")} :
         _("Adding a new %{model}") % {:model => ui_lookup(:model => "ServiceTemplateCatalog")}

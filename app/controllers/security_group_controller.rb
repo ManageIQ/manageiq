@@ -4,7 +4,6 @@ class SecurityGroupController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
-  include Mixins::CheckedIdMixin
   include Mixins::GenericButtonMixin
   include Mixins::GenericListMixin
   include Mixins::GenericSessionMixin
@@ -50,7 +49,7 @@ class SecurityGroupController < ApplicationController
 
   def security_group_form_fields
     assert_privileges("security_group_edit")
-    security_group = find_by_id_filtered(SecurityGroup, params[:id])
+    security_group = find_record_with_rbac(SecurityGroup, params[:id])
     render :json => {
       :name              => security_group.name,
       :description       => security_group.description,
@@ -113,9 +112,9 @@ class SecurityGroupController < ApplicationController
     assert_privileges("security_group_delete")
 
     security_groups = if @lastaction == "show_list" || (@lastaction == "show" && @layout != "security_group")
-                        find_checked_items
+                        find_checked_records_with_rbac(SecurityGroup)
                       else
-                        [params[:id]]
+                        [find_record_with_rbac(SecurityGroup, params[:id])]
                       end
 
     if security_groups.empty?
@@ -123,8 +122,7 @@ class SecurityGroupController < ApplicationController
     end
 
     security_groups_to_delete = []
-    security_groups.each do |s|
-      security_group = SecurityGroup.find(s)
+    security_groups.each do |security_group|
       if security_group.nil?
         add_flash(_("Security Group no longer exists."), :error)
       elsif security_group.supports_delete?
@@ -154,7 +152,7 @@ class SecurityGroupController < ApplicationController
 
   def edit
     assert_privileges("security_group_edit")
-    @security_group = find_by_id_filtered(SecurityGroup, params[:id])
+    @security_group = find_record_with_rbac(SecurityGroup, params[:id])
     @in_a_form = true
     drop_breadcrumb(
       :name => _("Edit Security Group \"%{name}\"") % { :name  => @security_group.name},
@@ -179,7 +177,7 @@ class SecurityGroupController < ApplicationController
 
   def update
     assert_privileges("security_group_edit")
-    @security_group = find_by_id_filtered(SecurityGroup, params[:id])
+    @security_group = find_record_with_rbac(SecurityGroup, params[:id])
     options = form_params
     case params[:button]
     when "cancel"
@@ -234,7 +232,7 @@ class SecurityGroupController < ApplicationController
     options[:name] = params[:name] if params[:name]
     options[:description] = params[:description] if params[:description]
     options[:ems_id] = params[:ems_id] if params[:ems_id]
-    options[:cloud_tenant] = find_by_id_filtered(CloudTenant, params[:cloud_tenant_id]) if params[:cloud_tenant_id]
+    options[:cloud_tenant] = find_record_with_rbac(CloudTenant, params[:cloud_tenant_id]) if params[:cloud_tenant_id]
     options
   end
 

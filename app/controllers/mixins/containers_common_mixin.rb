@@ -166,7 +166,7 @@ module ContainersCommonMixin
   def scan_images
     assert_privileges("image_scan")
     showlist = @lastaction == "show_list"
-    ids = showlist ? find_checked_items : find_current_item(ContainerImage)
+    ids = showlist ? find_checked_ids_with_rbac(ContainerImage) : find_current_item(ContainerImage)
 
     if ids.empty?
       add_flash(_("No %{model} were selected for Analysis") % {:model => ui_lookup(:tables => "container_image")},
@@ -182,7 +182,7 @@ module ContainersCommonMixin
   def check_compliance(model)
     assert_privileges("#{model.name.underscore}_check_compliance")
     showlist = @lastaction == "show_list"
-    ids = showlist ? find_checked_items : find_current_item(model)
+    ids = showlist ? find_checked_ids_with_rbac(model) : find_current_item(model)
 
     if ids.empty?
       add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:models => model.to_s),
@@ -200,7 +200,7 @@ module ContainersCommonMixin
       add_flash(_("%{model} no longer exists") % {:model => ui_lookup(:model => model.to_s)}, :error)
       []
     else
-      [params[:id].to_i]
+      [find_id_with_rbac(model, params[:id].to_i)]
     end
   end
 

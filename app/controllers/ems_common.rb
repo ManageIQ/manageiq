@@ -40,7 +40,7 @@ module EmsCommon
   def show_timeline
     @showtype = "timeline"
     session[:tl_record_id] = params[:id] if params[:id]
-    @record = find_by_id_filtered(model, session[:tl_record_id])
+    @record = find_record_with_rbac(model, session[:tl_record_id])
     @timeline = @timeline_filter = true
     @lastaction = "show_timeline"
     tl_build_timeline # Create the timeline report
@@ -230,7 +230,7 @@ module EmsCommon
     @doc_url = provider_documentation_url
     assert_privileges("#{permission_prefix}_edit")
     begin
-      @ems = find_by_id_filtered(model, params[:id])
+      @ems = find_record_with_rbac(model, params[:id])
     rescue => err
       return redirect_to(:action      => @lastaction || "show_list",
                          :flash_msg   => err.message,
@@ -320,7 +320,7 @@ module EmsCommon
 
   def update_button_save
     changed = edit_changed?
-    update_ems = find_by_id_filtered(model, params[:id])
+    update_ems = find_record_with_rbac(model, params[:id])
     set_record_vars(update_ems)
     if valid_record?(update_ems) && update_ems.save
       update_ems.reload
@@ -366,7 +366,7 @@ module EmsCommon
   private :update_button_reset
 
   def update_button_validate
-    verify_ems = find_by_id_filtered(model, params[:id])
+    verify_ems = find_record_with_rbac(model, params[:id])
     validate_credentials verify_ems
   end
   private :update_button_validate
@@ -503,7 +503,7 @@ module EmsCommon
       edit_record if params[:pressed] == "#{@table_name}_edit"
       if params[:pressed] == "#{@table_name}_timeline"
         @showtype = "timeline"
-        @record = find_by_id_filtered(model, params[:id])
+        @record = find_record_with_rbac(model, params[:id])
         @timeline = @timeline_filter = true
         @lastaction = "show_timeline"
         tl_build_timeline                       # Create the timeline report
@@ -514,7 +514,7 @@ module EmsCommon
       end
       if params[:pressed] == "#{@table_name}_perf"
         @showtype = "performance"
-        @record = find_by_id_filtered(model, params[:id])
+        @record = find_record_with_rbac(model, params[:id])
         drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @record.name},
                         :url  => show_link(@record, :refresh => "n", :display => "performance"))
         perf_gen_init_options # Intialize options, charts are generated async
@@ -580,13 +580,13 @@ module EmsCommon
   end
 
   def recheck_authentication(id = nil)
-    @record = find_by_id_filtered(model, id || params[:id])
+    @record = find_record_with_rbac(model, id || params[:id])
     @record.authentication_check_types_queue(@record.authentication_for_summary.pluck(:authtype), :save => true)
   end
 
   def check_compliance(model)
     showlist = @lastaction == "show_list"
-    ids = showlist ? find_checked_items : ([params[:id]] if model.find(params[:id]))
+    ids = showlist ? find_checked_ids_with_rbac(model) : find_id_with_rbac(model, [params[:id]])
     if ids.blank?
       add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:models => model.to_s),
                                                               :task  => "Compliance Check"}, :error)
@@ -599,7 +599,7 @@ module EmsCommon
   def arbitration_profile_edit
     assert_privileges("arbitration_profile_edit")
     id = params[:show] ? params[:show] : find_checked_items.first
-    @arbitration_profile = id ? find_by_id_filtered(ArbitrationProfile, from_cid(id)) : ArbitrationProfile.new
+    @arbitration_profile = id ? find_record_with_rbac(ArbitrationProfile, from_cid(id)) : ArbitrationProfile.new
     @refresh_partial = "arbitration_profile_edit"
     @redirect_id = @arbitration_profile.try(:id) || nil
     @in_a_form = true
@@ -1003,7 +1003,9 @@ module EmsCommon
   end
 
   def process_emss(emss, task)
-    emss, emss_out_region = filter_ids_in_region(emss, "Provider")
+    emss, _emss_out_region = filter_ids_in_region(emss, "Provider")
+    assert_rbac(model, emss)
+
     return if emss.empty?
 
     if task == "refresh_ems"
@@ -1148,44 +1150,36 @@ module EmsCommon
     end
   end
 
+  def call_ems_refresh(emss)
+    process_emss(emss, "refresh_ems") unless emss.empty?
+    return if @flash_array.present?
+
+    add_flash(n_("Refresh initiated for %{count} %{model} from the %{product} Database",
+                 "Refresh initiated for %{count} %{models} from the %{product} Database", emss.length) %
+      {:count   => emss.length,
+       :product => I18n.t('product.name'),
+       :model   => ui_lookup(:table => @table_name),
+       :models  => ui_lookup(:tables => @table_name)})
+  end
+
   # Refresh VM states for all selected or single displayed ems(s)
   def refreshemss
     assert_privileges(params[:pressed])
-    emss = []
-    if @lastaction == "show_list" # showing a list, scan all selected emss
+    if @lastaction == "show_list"
       emss = find_checked_items
       if emss.empty?
         add_flash(_("No %{model} were selected for refresh") % {:model => ui_lookup(:table => @table_name)}, :error)
       end
-      process_emss(emss, "refresh_ems") unless emss.empty?
-      add_flash(n_("Refresh initiated for %{count} %{model} from the %{product} Database",
-                   "Refresh initiated for %{count} %{models} from the %{product} Database", emss.length) %
-        {:count   => emss.length,
-         :product => I18n.t('product.name'),
-         :model   => ui_lookup(:table => @table_name),
-         :models  => ui_lookup(:tables => @table_name)}) if @flash_array.nil?
+      call_ems_refresh(emss)
       show_list
       @refresh_partial = "layouts/gtl"
-    else # showing 1 ems, scan it
+    else
       if params[:id].nil? || model.find_by_id(params[:id]).nil?
         add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => @table_name)}, :error)
       else
-        emss.push(params[:id])
+        call_ems_refresh([params[:id]])
       end
-      process_emss(emss, "refresh_ems") unless emss.empty?
-      add_flash(n_("Refresh initiated for %{count} %{model} from the %{product} Database",
-                   "Refresh initiated for %{count} %{models} from the %{product} Database", emss.length) %
-        {:count   => emss.length,
-         :product => I18n.t('product.name'),
-         :model   => ui_lookup(:table => @table_name),
-         :models  => ui_lookup(:tables => @table_name)}) if @flash_array.nil?
       params[:display] = @display
-      show
-      if ["vms", "hosts", "storages"].include?(@display)
-        @refresh_partial = "layouts/gtl"
-      else
-        @refresh_partial = "main"
-      end
     end
   end
 

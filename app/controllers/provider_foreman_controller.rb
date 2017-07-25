@@ -79,7 +79,7 @@ class ProviderForemanController < ApplicationController
     assert_privileges("provider_foreman_delete_provider") # TODO: Privelege name should match generic ways from Infra and Cloud
     checked_items = find_checked_items # TODO: Checked items are managers, not providers.  Make them providers
     checked_items.push(params[:id]) if checked_items.empty? && params[:id]
-    providers = ManageIQ::Providers::ConfigurationManager.where(:id => checked_items).includes(:provider).collect(&:provider)
+    providers = Rbac.filtered(ManageIQ::Providers::ConfigurationManager.where(:id => checked_items).includes(:provider).collect(&:provider))
     if providers.empty?
       add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "providers"), :task => "deletion"}, :error)
     else
@@ -111,8 +111,8 @@ class ProviderForemanController < ApplicationController
   def provision
     assert_privileges("provider_foreman_configured_system_provision") if x_active_accord == :configuration_manager_providers
     assert_privileges("configured_system_provision") if x_active_accord == :cs_filter
-    provisioning_ids = find_checked_items
-    provisioning_ids.push(params[:id]) if provisioning_ids.empty?
+    provisioning_ids = find_checked_ids_with_rbac(ConfiguredSystem)
+    provisioning_ids.push(find_id_with_rbac(ConfiguredSystem, params[:id])) if provisioning_ids.empty?
 
     unless ConfiguredSystem.provisionable?(provisioning_ids)
       add_flash(_("Provisioning is not supported for at least one of the selected systems"), :error)
@@ -1163,7 +1163,7 @@ class ProviderForemanController < ApplicationController
   def find_record(model, id)
     raise _("Invalid input") unless is_integer?(from_cid(id))
     begin
-      record = model.where(:id => from_cid(id)).first
+      record = Rbac.filtered(model.where(:id => from_cid(id))).first
     rescue ActiveRecord::RecordNotFound, StandardError => ex
       if @explorer
         self.x_node = "root"

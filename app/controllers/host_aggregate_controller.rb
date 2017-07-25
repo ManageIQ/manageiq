@@ -60,7 +60,7 @@ class HostAggregateController < ApplicationController
     when "timeline"
       @showtype = "timeline"
       session[:tl_record_id] = params[:id] if params[:id]
-      @record = find_by_id_filtered(HostAggregate, session[:tl_record_id])
+      @record = find_record_with_rbac(HostAggregate, session[:tl_record_id])
       @timeline = @timeline_filter = true
       @lastaction = "show_timeline"
       tl_build_timeline # Create the timeline report
@@ -90,7 +90,7 @@ class HostAggregateController < ApplicationController
 
   def host_aggregate_form_fields
     assert_privileges("host_aggregate_edit")
-    host_aggregate = find_by_id_filtered(HostAggregate, params[:id])
+    host_aggregate = find_record_with_rbac(HostAggregate, params[:id])
     render :json => {
       :name    => host_aggregate.name,
       :ems_id  => host_aggregate.ems_id
@@ -202,7 +202,7 @@ class HostAggregateController < ApplicationController
     when "add"
       @host_aggregate = HostAggregate.new
       options = form_params(params)
-      ext_management_system = find_by_id_filtered(ManageIQ::Providers::CloudManager,
+      ext_management_system = find_record_with_rbac(ManageIQ::Providers::CloudManager,
                                                   options[:ems_id])
       if ext_management_system.supports?(:create_host_aggregate)
         task_id = ext_management_system.create_host_aggregate_queue(session[:userid], options)
@@ -250,7 +250,7 @@ class HostAggregateController < ApplicationController
 
   def edit
     assert_privileges("host_aggregate_edit")
-    @host_aggregate = find_by_id_filtered(HostAggregate, params[:id])
+    @host_aggregate = find_record_with_rbac(HostAggregate, params[:id])
     @in_a_form = true
     drop_breadcrumb(
       :name => _("Edit %{model} \"%{name}\"") % {:model => ui_lookup(:table => 'host_aggregate'),
@@ -261,7 +261,7 @@ class HostAggregateController < ApplicationController
 
   def update
     assert_privileges("host_aggregate_edit")
-    @host_aggregate = find_by_id_filtered(HostAggregate, params[:id])
+    @host_aggregate = find_record_with_rbac(HostAggregate, params[:id])
 
     case params[:button]
     when "cancel"
@@ -371,7 +371,7 @@ class HostAggregateController < ApplicationController
 
   def add_host_select
     assert_privileges("host_aggregate_add_host")
-    @host_aggregate = find_by_id_filtered(HostAggregate, params[:id])
+    @host_aggregate = find_record_with_rbac(HostAggregate, params[:id])
     @in_a_form = true
     @host_choices = {}
     ems_clusters = @host_aggregate.ext_management_system.provider.try(:infra_ems).try(:ems_clusters)
@@ -406,7 +406,7 @@ class HostAggregateController < ApplicationController
 
   def add_host
     assert_privileges("host_aggregate_add_host")
-    @host_aggregate = find_by_id_filtered(HostAggregate, params[:id])
+    @host_aggregate = find_record_with_rbac(HostAggregate, params[:id])
 
     case params[:button]
     when "cancel"
@@ -417,7 +417,7 @@ class HostAggregateController < ApplicationController
 
     when "addHost"
       options = form_params(params)
-      host = find_by_id_filtered(Host, options[:host_id])
+      host = find_record_with_rbac(Host, options[:host_id])
 
       if @host_aggregate.supports?(:add_host)
         task_id = @host_aggregate.add_host_queue(session[:userid], host)
@@ -478,7 +478,7 @@ class HostAggregateController < ApplicationController
 
   def remove_host_select
     assert_privileges("host_aggregate_remove_host")
-    @host_aggregate = find_by_id_filtered(HostAggregate, params[:id])
+    @host_aggregate = find_record_with_rbac(HostAggregate, params[:id])
     @in_a_form = true
     @host_choices = {}
     @host_aggregate.hosts.each do |host|
@@ -508,7 +508,7 @@ class HostAggregateController < ApplicationController
 
   def remove_host
     assert_privileges("host_aggregate_remove_host")
-    @host_aggregate = find_by_id_filtered(HostAggregate, params[:id])
+    @host_aggregate = find_record_with_rbac(HostAggregate, params[:id])
 
     case params[:button]
     when "cancel"
@@ -519,7 +519,7 @@ class HostAggregateController < ApplicationController
 
     when "removeHost"
       options = form_params(params)
-      host = find_by_id_filtered(Host, options[:host_id])
+      host = find_record_with_rbac(Host, options[:host_id])
 
       if @host_aggregate.supports?(:remove_host)
         task_id = @host_aggregate.remove_host_queue(session[:userid], host)

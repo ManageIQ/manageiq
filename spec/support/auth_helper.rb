@@ -30,6 +30,7 @@ module Spec
                       EOS
                     end
         allow(controller).to receive(:check_privileges).and_return(stub_bool)
+        allow(controller).to receive(:assert_rbac).and_return(stub_bool)
         allow(Rbac).to receive(:role_allows?).and_return(stub_bool)
 
         login_as user

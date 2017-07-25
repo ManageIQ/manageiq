@@ -498,7 +498,7 @@ describe EmsCloudController do
 
       # Change from ceilometer to amqp
       ems_openstack = EmsCloud.where(:name => "openstack_cloud").first
-      allow(controller).to receive(:find_by_id_filtered).and_return(ems_openstack)
+      allow(controller).to receive(:find_record_with_rbac).and_return(ems_openstack)
       expect(ems_openstack).to receive(:stop_event_monitor_queue).once
 
       post :update, :params => {
@@ -523,7 +523,7 @@ describe EmsCloudController do
 
       # Change of all endpoints and credentials
       ems_openstack = EmsCloud.where(:name => "openstack_cloud").first
-      allow(controller).to receive(:find_by_id_filtered).and_return(ems_openstack)
+      allow(controller).to receive(:find_record_with_rbac).and_return(ems_openstack)
       # This is a bug in ems saving mechanism, there are 3 saves now, 2 for each auth and one for ems. We need to fix
       # that, then stop_event_monitor_queue should be called once
       expect(ems_openstack).to receive(:stop_event_monitor_queue).exactly(3).times
@@ -550,7 +550,7 @@ describe EmsCloudController do
 
       # Change from amqp to ceilometer
       ems_openstack = EmsCloud.where(:name => "openstack_cloud").first
-      allow(controller).to receive(:find_by_id_filtered).and_return(ems_openstack)
+      allow(controller).to receive(:find_record_with_rbac).and_return(ems_openstack)
       expect(ems_openstack).to receive(:stop_event_monitor_queue).once
 
       post :update, :params => {

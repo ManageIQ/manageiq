@@ -50,7 +50,7 @@ class CloudVolumeController < ApplicationController
       javascript_redirect :action => "attach", :id => checked_volume_id
     elsif params[:pressed] == "cloud_volume_detach"
       checked_volume_id = get_checked_volume_id(params)
-      @volume = find_by_id_filtered(CloudVolume, checked_volume_id)
+      @volume = find_record_with_rbac(CloudVolume, checked_volume_id)
       if @volume.attachments.empty?
         render_flash(_("%{volume} \"%{volume_name}\" is not attached to any %{instances}") % {
                      :volume      => ui_lookup(:table => 'cloud_volume'),
@@ -147,7 +147,7 @@ class CloudVolumeController < ApplicationController
 
   def cloud_volume_form_fields
     assert_privileges("cloud_volume_edit")
-    volume = find_by_id_filtered(CloudVolume, params[:id])
+    volume = find_record_with_rbac(CloudVolume, params[:id])
     render :json => {
       :name => volume.name
     }
@@ -157,8 +157,8 @@ class CloudVolumeController < ApplicationController
     params[:id] = checked_item_id unless params[:id].present?
     assert_privileges("cloud_volume_attach")
     @vm_choices = {}
-    @volume = find_by_id_filtered(CloudVolume, params[:id])
-    @volume.cloud_tenant.vms.each { |vm| @vm_choices[vm.name] = vm.id }
+    @volume = find_record_with_rbac(CloudVolume, params[:id])
+    @volume.available_vms.each { |vm| @vm_choices[vm.name] = vm.id }
 
     @in_a_form = true
     drop_breadcrumb(
@@ -172,7 +172,7 @@ class CloudVolumeController < ApplicationController
   def detach
     params[:id] = checked_item_id unless params[:id].present?
     assert_privileges("cloud_volume_detach")
-    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @volume = find_record_with_rbac(CloudVolume, params[:id])
     @vm_choices = @volume.vms.each_with_object({}) { |vm, hash| hash[vm.name] = vm.id }
 
     @in_a_form = true
@@ -187,7 +187,7 @@ class CloudVolumeController < ApplicationController
   def attach_volume
     assert_privileges("cloud_volume_attach")
 
-    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @volume = find_record_with_rbac(CloudVolume, params[:id])
     case params[:button]
     when "cancel"
       cancel_action(_("Attaching %{model} \"%{name}\" was cancelled by the user") % {
@@ -196,7 +196,7 @@ class CloudVolumeController < ApplicationController
       })
     when "attach"
       options = form_params
-      vm = find_by_id_filtered(VmCloud, options[:vm_id])
+      vm = find_record_with_rbac(VmCloud, options[:vm_id])
       if @volume.is_available?(:attach_volume)
         begin
           @volume.raw_attach_volume(vm.ems_ref, options['device_path'])
@@ -224,7 +224,7 @@ class CloudVolumeController < ApplicationController
   def detach_volume
     assert_privileges("cloud_volume_detach")
 
-    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @volume = find_record_with_rbac(CloudVolume, params[:id])
     case params[:button]
     when "cancel"
       cancel_action(_("Detaching %{model} \"%{name}\" was cancelled by the user") % {
@@ -234,7 +234,7 @@ class CloudVolumeController < ApplicationController
 
     when "detach"
       options = form_params
-      vm = find_by_id_filtered(VmCloud, options[:vm_id])
+      vm = find_record_with_rbac(VmCloud, options[:vm_id])
       if @volume.is_available?(:detach_volume)
         begin
           @volume.raw_detach_volume(vm.ems_ref)
@@ -281,7 +281,7 @@ class CloudVolumeController < ApplicationController
     when "add"
       @volume = CloudVolume.new
       options = form_params
-      cloud_tenant = find_by_id_filtered(CloudTenant, options[:cloud_tenant_id])
+      cloud_tenant = find_record_with_rbac(CloudTenant, options[:cloud_tenant_id])
       options[:cloud_tenant] = cloud_tenant
       valid_action, action_details = CloudVolume.validate_create_volume(cloud_tenant.ext_management_system)
       if valid_action
@@ -312,7 +312,7 @@ class CloudVolumeController < ApplicationController
     when "validate"
       @in_a_form = true
       options = form_params
-      cloud_tenant = find_by_id_filtered(CloudTenant, options[:cloud_tenant_id])
+      cloud_tenant = find_record_with_rbac(CloudTenant, options[:cloud_tenant_id])
       valid_action, action_details = CloudVolume.validate_create_volume(cloud_tenant.ext_management_system)
       if valid_action
         add_flash(_("Validation successful"))
@@ -326,7 +326,7 @@ class CloudVolumeController < ApplicationController
   def edit
     params[:id] = get_checked_volume_id(params) unless params[:id].present?
     assert_privileges("cloud_volume_edit")
-    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @volume = find_record_with_rbac(CloudVolume, params[:id])
     @in_a_form = true
     drop_breadcrumb(
       :name => _("Edit %{model} \"%{name}\"") % {:model => ui_lookup(:table => 'cloud_volume'), :name => @volume.name},
@@ -336,7 +336,7 @@ class CloudVolumeController < ApplicationController
 
   def update
     assert_privileges("cloud_volume_edit")
-    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @volume = find_record_with_rbac(CloudVolume, params[:id])
 
     case params[:button]
     when "cancel"
@@ -373,7 +373,7 @@ class CloudVolumeController < ApplicationController
     when "validate"
       @in_a_form = true
       options = form_params
-      cloud_tenant = find_by_id_filtered(CloudTenant, options[:cloud_tenant_id])
+      cloud_tenant = find_record_with_rbac(CloudTenant, options[:cloud_tenant_id])
       valid_action, action_details = CloudVolume.validate_create_volume(cloud_tenant.ext_management_system)
       if valid_action
         add_flash(_("Validation successful"))
@@ -388,11 +388,11 @@ class CloudVolumeController < ApplicationController
   def delete_volumes
     assert_privileges("cloud_volume_delete")
     volumes = if @lastaction == "show_list" || (@lastaction == "show" && @layout != "cloud_volume")
-                find_checked_items
+                find_checked_ids_with_rbac(CloudVolume)
               elsif params[:id].present?
                 [params[:id]]
               else
-                find_checked_items
+                find_checked_ids_with_rbac(CloudVolume)
               end
 
     if volumes.empty?
@@ -451,7 +451,7 @@ class CloudVolumeController < ApplicationController
 
   def backup_new
     assert_privileges("cloud_volume_backup_create")
-    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @volume = find_record_with_rbac(CloudVolume, params[:id])
     @in_a_form = true
     drop_breadcrumb(
       :name => _("Create Backup for %{model} \"%{name}\"") % {
@@ -464,7 +464,7 @@ class CloudVolumeController < ApplicationController
 
   def backup_create
     assert_privileges("cloud_volume_backup_create")
-    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @volume = find_record_with_rbac(CloudVolume, params[:id])
 
     case params[:button]
     when "cancel"
@@ -500,7 +500,7 @@ class CloudVolumeController < ApplicationController
     task_id = session[:async][:params][:task_id]
     volume_id = session[:async][:params][:id]
     task = MiqTask.find(task_id)
-    @volume = find_by_id_filtered(CloudVolume, volume_id)
+    @volume = find_record_with_rbac(CloudVolume, volume_id)
     if task.results_ready?
       add_flash(_("Backup for %{model} \"%{name}\" created") % {
         :model => ui_lookup(:table => 'cloud_volume'),
@@ -522,7 +522,7 @@ class CloudVolumeController < ApplicationController
 
   def backup_select
     assert_privileges("cloud_volume_backup_restore")
-    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @volume = find_record_with_rbac(CloudVolume, params[:id])
     @backup_choices = {}
     @volume.cloud_volume_backups.each do |backup|
       @backup_choices[backup.name] = backup.id
@@ -539,7 +539,7 @@ class CloudVolumeController < ApplicationController
 
   def backup_restore
     assert_privileges("cloud_volume_backup_restore")
-    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @volume = find_record_with_rbac(CloudVolume, params[:id])
 
     case params[:button]
     when "cancel"
@@ -549,7 +549,7 @@ class CloudVolumeController < ApplicationController
       })
 
     when "restore"
-      @backup = find_by_id_filtered(CloudVolumeBackup, params[:backup_id])
+      @backup = find_record_with_rbac(CloudVolumeBackup, params[:backup_id])
       task_id = @volume.backup_restore_queue(session[:userid], @backup.ems_ref)
 
       add_flash(_("Cloud volume restore failed: Task start failed: ID [%{id}]") %
@@ -567,7 +567,7 @@ class CloudVolumeController < ApplicationController
     task_id = session[:async][:params][:task_id]
     volume_id = session[:async][:params][:id]
     task = MiqTask.find(task_id)
-    @volume = find_by_id_filtered(CloudVolume, volume_id)
+    @volume = find_record_with_rbac(CloudVolume, volume_id)
     if task.results_ready?
       add_flash(_("Restoring %{model} \"%{name}\" from backup") % {
         :model => ui_lookup(:table => 'cloud_volume'),
@@ -589,7 +589,7 @@ class CloudVolumeController < ApplicationController
 
   def snapshot_new
     assert_privileges("cloud_volume_snapshot_create")
-    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @volume = find_record_with_rbac(CloudVolume, params[:id])
     @in_a_form = true
     drop_breadcrumb(
       :name => _("Create Snapshot for Cloud Volume \"%{name}\"") % {
@@ -601,7 +601,7 @@ class CloudVolumeController < ApplicationController
 
   def snapshot_create
     assert_privileges("cloud_volume_snapshot_create")
-    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @volume = find_record_with_rbac(CloudVolume, params[:id])
     case params[:button]
     when "cancel"
       cancel_action(_("Snapshot of Cloud Volume \"%{name}\" was cancelled by the user") % {
@@ -625,7 +625,7 @@ class CloudVolumeController < ApplicationController
     task_id = session[:async][:params][:task_id]
     volume_id = session[:async][:params][:id]
     task = MiqTask.find(task_id)
-    @volume = find_by_id_filtered(CloudVolume, volume_id)
+    @volume = find_record_with_rbac(CloudVolume, volume_id)
     if task.results_ready?
       add_flash(_("Snapshot for Cloud Volume \"%{name}\" created") % {
         :name => @volume.name

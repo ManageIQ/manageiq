@@ -28,6 +28,8 @@ class ApplicationController < ActionController::Base
   include ApplicationHelper
   include JsHelper
   include Mixins::TimeHelper
+  include Mixins::CheckedIdMixin
+
   helper ToolbarHelper
   helper JsHelper
   helper QuadiconHelper
@@ -344,7 +346,7 @@ class ApplicationController < ActionController::Base
 
     @display = "show_statistics"
     session[:stats_record_id] = params[:id] if params[:id]
-    @record = find_by_id_filtered(db, session[:stats_record_id])
+    @record = find_record_with_rbac(db, session[:stats_record_id])
 
     # Need to use paged_view_search code, once the relationship is working. Following is workaround for the demo
     @stats = @record.derived_metrics
@@ -584,7 +586,8 @@ class ApplicationController < ActionController::Base
 
   # Common method enable/disable schedules
   def schedule_enable_disable(schedules, enabled)
-    MiqSchedule.where(:id => schedules, :enabled => !enabled).order("lower(name)").each do |schedule|
+    schedules.select { |schedule| schedule.enabled != enabled }
+             .sort_by { |e| e.name.downcase}.each do |schedule|
       schedule.enabled = enabled
       schedule.save!
     end
@@ -1377,23 +1380,6 @@ class ApplicationController < ActionController::Base
     end
   end # set_config
 
-  # Common routine to find checked items on a page (checkbox ids are "check_xxx" where xxx is the item id or index)
-  def find_checked_items(prefix = nil)
-    if !params[:miq_grid_checks].blank?
-      return params[:miq_grid_checks].split(",").collect { |c| from_cid(c) }
-    else
-      prefix = "check" if prefix.nil?
-      items = []
-      params.each do |var, val|
-        vars = var.to_s.split("_")
-        if vars[0] == prefix && val == "1"
-          ids = vars[1..-1].collect { |v| v = from_cid(v) }  # Decompress any compressed ids
-          items.push(ids.join("_"))
-        end
-      end
-      return items
-    end
-  end
 
   # Common Saved Reports button handler routines
   def process_saved_reports(saved_reports, task)
@@ -1813,14 +1799,13 @@ class ApplicationController < ActionController::Base
   end
 
   def task_supported?(typ)
-    vm_ids = find_checked_items.map(&:to_i).uniq
+    vms = find_checked_records_with_rbac(VmOrTemplate)
 
-    if %w(migrate publish).include?(typ) && VmOrTemplate.includes_template?(vm_ids)
+    if %w(migrate publish).include?(typ) && vms.any?(&:template?)
       render_flash_not_applicable_to_model(typ, ui_lookup(:table => "miq_template"))
       return
     end
 
-    vms = VmOrTemplate.where(:id => vm_ids)
     if typ == "migrate"
       # if one of the providers in question cannot support simultaneous migration of his subset of
       # the selected VMs, we abort
@@ -1854,11 +1839,12 @@ class ApplicationController < ActionController::Base
     @in_a_form = true
     if request.parameters[:pressed].starts_with?("host_")       # need host id for host prov
       @org_controller = "host"                                  # request originated from controller
+      klass = Host
       @refresh_partial = "prov_edit"
       if params[:id]
-        @prov_id = params[:id]
+        @prov_id = find_id_with_rbac(Host, params[:id])
       else
-        @prov_id = find_checked_items.map(&:to_i).uniq
+        @prov_id = find_checked_ids_with_rbac(Host).map(&:to_i).uniq
         res = Host.ready_for_provisioning?(@prov_id)
         if res != true
           res.each do |field, msg|
@@ -1870,19 +1856,19 @@ class ApplicationController < ActionController::Base
       end
     else
       @org_controller = "vm"                                      # request originated from controller
+      klass = VmOrTemplate
       @refresh_partial = typ ? "prov_edit" : "pre_prov"
     end
     if typ
-      vms = find_checked_items
+      vms = find_checked_ids_with_rbac(klass)
+      @prov_id = vms.empty? ? find_id_with_rbac(klass, params[:id]) : vms[0]
       case typ
       when "clone"
-        @prov_id = !vms.empty? ? vms[0] : params[:id]
         @prov_type = "clone_to_vm"
       when "migrate"
-        @prov_id = !vms.empty? ? vms : [params[:id]]
+        @prov_id = [@prov_id]
         @prov_type = "migrate"
       when "publish"
-        @prov_id = !vms.empty? ? vms[0] : params[:id]
         @prov_type = "clone_to_template"
       end
       @_params[:prov_id] = @prov_id
@@ -1897,14 +1883,13 @@ class ApplicationController < ActionController::Base
         if %w(image_miq_request_new miq_template_miq_request_new).include?(params[:pressed])
           # skip pre prov grid
           set_pre_prov_vars
-          templates = find_checked_items
-          templates = [params[:id]] if templates.blank?
+          template = find_checked_records_with_rbac(VmOrTemplate).first
+          template = find_record_with_rbac(VmOrTemplate, params[:id]) if template.nil?
 
-          template = VmOrTemplate.find_by_id(from_cid(templates.first))
           render_flash_not_applicable_to_model("provisioning") unless template.supports_provisioning?
           return if performed?
 
-          @edit[:src_vm_id] = templates.first
+          @edit[:src_vm_id] = template
           session[:edit] = @edit
           @_params[:button] = "continue"
         end
@@ -2276,23 +2261,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # Following 3 methods moved here to ensure they are loaded at the right time and will be available to all controllers
-  def find_by_id_filtered(db, id, options = {})
-    raise _("Invalid input") unless is_integer?(id)
-
-    db_obj = db.find_by(:id => from_cid(id))
-    if db_obj.nil?
-      msg = _("Selected %{model_name} no longer exists") % {:model_name => ui_lookup(:model => db.to_s)}
-      raise msg
-    end
-
-    Rbac.filtered_object(db_obj, :user => current_user, :named_scope => options[:named_scope]) ||
-      raise(_("User '%{user_id}' is not authorized to access '%{model}' record id '%{record_id}'") %
-              {:user_id   => current_userid,
-               :record_id => id,
-               :model     => ui_lookup(:model => db.to_s)})
-  end
-
   def find_filtered(db)
     user     = current_user
     mfilters = user ? user.get_managed_filters : []
@@ -2338,26 +2306,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # Find a record by model name and ID, set flash errors for not found/not authorized
-  def find_by_model_and_id_check_rbac(model, id, resource_name = nil)
-    rec = model.constantize.find_by_id(id)
-    if rec
-      begin
-        authrec = find_by_id_filtered(model.constantize, id)
-      rescue ActiveRecord::RecordNotFound
-      rescue StandardError => @bang
-      end
-    end
-    if rec.nil?
-      record_name = resource_name ? "#{ui_lookup(:model => model)} '#{resource_name}'" : "The selected record"
-      add_flash(_("%{record_name} no longer exists in the database") % {:record_name => record_name}, :error)
-    elsif authrec.nil?
-      add_flash(_("You are not authorized to view %{model_name} '%{resource_name}'") %
-        {:model_name => ui_lookup(:model => rec.class.base_model.to_s), :resource_name => resource_name}, :error)
-    end
-    rec
-  end
-
   def get_record_display_name(record)
     return record.label                      if record.respond_to?("label")
     return record.description                if record.respond_to?("description") && !record.description.nil?
@@ -2376,8 +2324,16 @@ class ApplicationController < ActionController::Base
           _("The user is not authorized for this task or item.") unless role_allows?(:feature => feature)
   end
 
-  def assert_rbac(user, klass, ids)
-    filtered, _ = Rbac.search(:targets => ids.map(&:to_i), :user => user, :class => klass, :results_format => :ids)
+  # Method tests, whether the user has rights to access records sent in request
+  # Params:
+  #   klass - class of accessed objects
+  #   ids   - array of accessed object ids
+  def assert_rbac(klass, ids)
+    filtered, _ = Rbac.search(
+      :targets => ids.map(&:to_i),
+      :user => current_user,
+      :class => klass,
+      :results_format => :ids)
     raise _("Unauthorized object or action") unless ids.length == filtered.length
   end
 

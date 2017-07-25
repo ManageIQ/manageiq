@@ -75,7 +75,7 @@ module ReportController::Schedules
   # Delete all selected or single displayed action(s)
   def miq_report_schedule_delete
     assert_privileges("miq_report_schedule_delete")
-    scheds = find_checked_items
+    scheds = find_checked_records_with_rbac(MiqSchedule)
     if params[:id]
       if MiqSchedule.exists?(from_cid(params[:id]))
         scheds.push(from_cid(params[:id]))
@@ -83,7 +83,7 @@ module ReportController::Schedules
         add_flash(_("%{model} no longer exists") % {:model => ui_lookup(:model => "MiqSchedule")}, :error)
       end
     end
-    single_name = MiqSchedule.find(scheds).first.name if scheds.length == 1
+    single_name = scheds.first.name if scheds.length == 1
     process_schedules(scheds, "destroy") unless scheds.empty?
     unless flash_errors?
       if single_name
@@ -98,23 +98,14 @@ module ReportController::Schedules
 
   def miq_report_schedule_run_now
     assert_privileges("miq_report_schedule_run_now")
-    scheds = find_checked_items
-    if scheds.empty? && params[:id].nil?
-      add_flash(_("No Report Schedules were selected to be Run now"), :error)
-      javascript_flash
-    elsif params[:id]
-      if MiqSchedule.exists?(from_cid(params[:id]))
-        scheds.push(from_cid(params[:id]))
-      else
-        add_flash(_("%{model} no longer exists") % {:model => ui_lookup(:model => "MiqSchedule")}, :error)
-      end
-    end
-    MiqSchedule.where(:id => scheds).order("lower(name)").each do |sched|
-      MiqSchedule.queue_scheduled_work(sched.id, nil, Time.now.utc.to_i, nil)
+    schedules = find_records_with_rbac(MiqSchedule, checked_or_params)
+    schedules.sort_by { |e| e.name.downcase}.each do |schedule|
+      MiqSchedule.queue_scheduled_work(schedule.id, nil, Time.now.utc.to_i, nil)
       audit = {
         :event        => "queue_scheduled_work",
-        :message      => "Schedule [#{sched.name}] queued to run from the UI by user #{current_user.name}",
-        :target_id    => sched.id,
+        :message      => _("Schedule [%{schedule}] queued to run from the UI by user %{user}") %
+                          { :schedule => schedule.name, :user => current_user.name },
+        :target_id    => schedule.id,
         :target_class => "MiqSchedule",
         :userid       => session[:userid]
       }
@@ -141,7 +132,7 @@ module ReportController::Schedules
                    [_("No %{schedules} were selected to be disabled"),
                     _("The selected %{schedules} were disabled")]
                  end
-    scheds = find_checked_items
+    scheds = find_records_with_rbac(MiqSchedule, checked_or_params)
     if scheds.empty?
       add_flash(msg1 % {:schedules => "#{ui_lookup(:model => "MiqReport")} #{ui_lookup(:models => "MiqSchedule")}"},
                 :error)
@@ -272,7 +263,7 @@ module ReportController::Schedules
       add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
       if x_active_tree != :reports_tree
         # dont set these if new schedule is being added from a report show screen
-        obj = find_checked_items
+        obj = find_checked_ids_with_rbac(MiqSchedule)
         obj[0] = params[:id] if obj.blank? && params[:id]
         @schedule = obj[0] && params[:id] != "new" ? MiqSchedule.find(obj[0]) :
             MiqSchedule.new(:userid => session[:userid])  # Get existing or new record

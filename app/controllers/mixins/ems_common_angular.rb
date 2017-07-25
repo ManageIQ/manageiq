@@ -16,7 +16,7 @@ module Mixins
     end
 
     def update_ems_button_cancel
-      update_ems = find_by_id_filtered(model, params[:id])
+      update_ems = find_record_with_rbac(model, params[:id])
       model_name = model.to_s
       flash_msg = _("Edit of %{model} \"%{name}\" was cancelled by the user") %
                   {:model => ui_lookup(:model => model_name),
@@ -33,7 +33,7 @@ module Mixins
     end
 
     def update_ems_button_save
-      update_ems = find_by_id_filtered(model, params[:id])
+      update_ems = find_record_with_rbac(model, params[:id])
       set_ems_record_vars(update_ems)
       if update_ems.save
         update_ems.reload
@@ -59,7 +59,7 @@ module Mixins
     end
 
     def update_ems_button_validate(verify_ems = nil)
-      verify_ems ||= find_by_id_filtered(model, params[:id])
+      verify_ems ||= find_record_with_rbac(model, params[:id])
       set_ems_record_vars(verify_ems, :validate)
       @in_a_form = true
       result, details = verify_ems.authentication_check(params[:cred_type],
@@ -123,7 +123,7 @@ module Mixins
     def ems_form_fields
       assert_privileges("#{permission_prefix}_edit")
       @ems = model.new if params[:id] == 'new'
-      @ems = find_by_id_filtered(model, params[:id]) if params[:id] != 'new'
+      @ems = find_record_with_rbac(model, params[:id]) if params[:id] != 'new'
       default_security_protocol = @ems.default_endpoint.security_protocol ? @ems.default_endpoint.security_protocol : 'ssl'
 
       if @ems.zone.nil? || @ems.my_zone == ""

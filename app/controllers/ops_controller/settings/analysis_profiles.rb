@@ -289,7 +289,7 @@ module OpsController::Settings::AnalysisProfiles
           end
         end
       when "reset", nil
-        @obj = find_checked_items
+        @obj = find_checked_ids_with_rbac(ScanItemSet)
         @obj[0] = params[:id] if @obj.blank? && params[:id] && (params[:button] == "reset" || ["ap_copy", "ap_edit"].include?(@sb[:action]))
         if !params[:tab] && params[:typ] != "copy" # if tab was not changed
           if !params[:typ] || params[:button] == "reset"
@@ -377,7 +377,7 @@ module OpsController::Settings::AnalysisProfiles
     assert_privileges("ap_delete")
     scanitemsets = []
     if !params[:id] # showing a list
-      scanitemsets = find_checked_items
+      scanitemsets = find_checked_ids_with_rbac(ScanItemSet)
       if scanitemsets.empty?
         add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:models => "ScanItemSet"), :task => "deletion"}, :error)
       else

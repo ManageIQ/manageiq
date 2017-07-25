@@ -71,7 +71,7 @@ module VmCommon
     db = get_rec_cls
     @display = "timeline"
     session[:tl_record_id] = params[:id] if params[:id]
-    @record = find_by_id_filtered(db, from_cid(session[:tl_record_id]))
+    @record = find_record_with_rbac(db, from_cid(session[:tl_record_id]))
     @timeline = @timeline_filter = true
     @lastaction = "show_timeline"
     tl_build_timeline                       # Create the timeline report
@@ -734,7 +734,7 @@ module VmCommon
   end
 
   def evm_relationship
-    @record = find_by_id_filtered(VmOrTemplate, params[:id])  # Set the VM object
+    @record = find_record_with_rbac(VmOrTemplate, params[:id])  # Set the VM object
     @edit = {}
     @edit[:vm_id] = @record.id
     @edit[:key] = "evm_relationship_edit__new"
@@ -821,7 +821,7 @@ module VmCommon
   end
 
   def destroy
-    find_by_id_filtered(VmOrTemplate, params[:id]).destroy
+    find_record_with_rbac(VmOrTemplate, params[:id]).destroy
     redirect_to :action => 'list'
   end
 
@@ -857,7 +857,7 @@ module VmCommon
   end
 
   def add_to_service
-    @record = find_by_id_filtered(Vm, params[:id])
+    @record = find_record_with_rbac(Vm, params[:id])
     @svcs = {}
     Service.all.each { |s| @svcs[s.name] = s.id }
     drop_breadcrumb(:name => _("Add VM to a Service"), :url => "/vm/add_to_service")
@@ -865,7 +865,7 @@ module VmCommon
   end
 
   def add_vm_to_service
-    @record = find_by_id_filtered(Vm, params[:id])
+    @record = find_record_with_rbac(Vm, params[:id])
     if params["cancel.x"]
       flash = _("Add VM \"%{name}\" to a Service was cancelled by the user") % {:name => @record.name}
       redirect_to :action => @lastaction, :id => @record.id, :flash_msg => flash
@@ -883,7 +883,7 @@ module VmCommon
 
   def remove_service
     assert_privileges(params[:pressed])
-    @record = find_by_id_filtered(Vm, params[:id])
+    @record = find_record_with_rbac(Vm, params[:id])
     begin
       @vervice_name = Service.find_by_name(@record.location).name
       @record.remove_from_vsc(@vervice_name)
@@ -895,7 +895,7 @@ module VmCommon
   end
 
   def edit
-    @record = find_by_id_filtered(VmOrTemplate, params[:id])  # Set the VM object
+    @record = find_record_with_rbac(VmOrTemplate, params[:id])  # Set the VM object
     set_form_vars
     build_edit_screen
     session[:changed] = false
@@ -1629,7 +1629,11 @@ module VmCommon
     @edit[:current][:custom_1] = @edit[:new][:custom_1] = @record.custom_1.to_s
     @edit[:current][:description] = @edit[:new][:description] = @record.description.to_s
     @edit[:pchoices] = {}                                 # Build a hash for the parent choices box
-    VmOrTemplate.all.each { |vm| @edit[:pchoices][vm.name + " -- #{vm.location}"] =  vm.id unless vm.id == @record.id }   # Build a hash for the parents to choose from, not matching current VM
+    parent_item_scope = Rbac.filtered(VmOrTemplate.where.not(:id => @record.id))
+    @edit[:pchoices] = parent_item_scope.pluck(:name, :location, :id).each_with_object({}) do |vm, memo|
+      memo[vm[0] + " -- #{vm[1]}"] = vm[2]
+    end
+
     @edit[:pchoices]['"no parent"'] = -1                        # Add "no parent" entry
     if @record.parents.length == 0                                            # Set the currently selected parent
       @edit[:new][:parent] = -1
@@ -1642,7 +1646,20 @@ module VmCommon
     vms.each { |vm| @edit[:new][:kids][vm.name + " -- #{vm.location}"] = vm.id }      # Build a hash for the kids list box
 
     @edit[:choices] = {}
-    VmOrTemplate.all.each { |vm| @edit[:choices][vm.name + " -- #{vm.location}"] =  vm.id if vm.parents.length == 0 }   # Build a hash for the VMs to choose from, only if they have no parent
+    # items with parents
+    ids_with_parents = Relationship.filtered(VmOrTemplate, nil)
+                                   .where.not(:ancestry => ['', nil])
+                                   .in_relationship('genealogy')
+                                   .pluck(:resource_id)
+
+    # Build a hash for the VMs to choose from, only if they have no parent
+    available_item_scope = VmOrTemplate.where.not(:id => ids_with_parents)
+    @edit[:choices] = Rbac.filtered(available_item_scope)
+                          .pluck(:name, :location, :id)
+                          .each_with_object({}) do |vm, memo|
+                            memo[vm[0] + " -- #{vm[1]}"] = vm[2]
+                          end
+
     @edit[:new][:kids].each_key { |key| @edit[:choices].delete(key) }   # Remove any VMs that are in the kids list box from the choices
 
     @edit[:choices].delete(@record.name + " -- #{@record.location}")                                    # Remove the current VM from the choices list

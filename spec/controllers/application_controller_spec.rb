@@ -5,7 +5,7 @@ describe ApplicationController do
     expect(CimBaseStorageExtentController.model).to eq CimBaseStorageExtent
   end
 
-  context "#find_by_id_filtered" do
+  context "#find_record_with_rbac" do
     before do
       EvmSpecHelper.create_guid_miq_server_zone
       controller.instance_variable_set(:@sb, {})
@@ -16,16 +16,16 @@ describe ApplicationController do
     end
 
     it "Verify Invalid input flash error message when invalid id is passed in" do
-      expect { controller.send(:find_by_id_filtered, ExtManagementSystem, "invalid") }.to raise_error(RuntimeError, "Invalid input")
+      expect { controller.send(:find_record_with_rbac, ExtManagementSystem, "invalid") }.to raise_error(RuntimeError, "Invalid input")
     end
 
     it "Verify flash error message when passed in id no longer exists in database" do
-      expect { controller.send(:find_by_id_filtered, ExtManagementSystem, "1") }.to raise_error(RuntimeError, "Selected Provider no longer exists")
+      expect { controller.send(:find_record_with_rbac, ExtManagementSystem, "1") }.to raise_error(RuntimeError, match(/User 'user[0-9]+' is not authorized to access 'Provider' record id '1'/))
     end
 
     it "Verify record gets set when valid id is passed in" do
       ems = FactoryGirl.create(:ext_management_system)
-      expect(controller.send(:find_by_id_filtered, ExtManagementSystem, ems.id)).to eq(ems)
+      expect(controller.send(:find_record_with_rbac, ExtManagementSystem, ems.id)).to eq(ems)
     end
   end
 
@@ -139,8 +139,10 @@ describe ApplicationController do
   end
 
   context "#prov_redirect" do
+    let(:user) { FactoryGirl.create(:user, :features => "vm_migrate") }
     before do
-      login_as FactoryGirl.create(:user, :features => "vm_migrate")
+      allow(User).to receive(:server_timezone).and_return("UTC")
+      login_as user
       controller.request.parameters[:pressed] = "vm_migrate"
     end
 

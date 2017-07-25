@@ -142,7 +142,7 @@ module OpsController::OpsRbac
     when "reset", nil # Reset or first time in
       obj = find_checked_items
       obj[0] = params[:id] if obj.blank? && params[:id]
-      @tenant = params[:typ] == "new" ? Tenant.new : Tenant.find(obj[0])          # Get existing or new record
+      @tenant = params[:typ] == "new" ? Tenant.new : find_checked_records_with_rbac(Tenant, obj).first # Get existing or new record
 
       # This is only because ops_controller tries to set form locals, otherwise we should not use the @edit variable
       @edit = {:tenant_id => @tenant.id}
@@ -211,7 +211,7 @@ module OpsController::OpsRbac
     when "reset", nil # Reset or first time in
       obj = find_checked_items
       obj[0] = params[:id] if obj.blank? && params[:id]
-      @tenant = Tenant.find(obj[0])          # Get existing or new record
+      @tenant = find_checked_records_with_rbac(Tenant, obj).first # Get existing or new record
       # This is only because ops_controller tries to set form locals, otherwise we should not use the @edit variable
       @edit = {:tenant_id => @tenant.id}
       session[:edit] = {:key => "tenant_manage_quotas__#{@tenant.id}"}
@@ -311,11 +311,7 @@ module OpsController::OpsRbac
       roles = MiqUserRole.where(:id => ids)
       process_roles(roles, "destroy") unless roles.empty?
     else # showing 1 role, delete it
-      if params[:id].nil? || MiqUserRole.find_by_id(params[:id]).nil?
-        add_flash(_("Role no longer exists"), :error)
-      else
-        roles.push(params[:id])
-      end
+      roles.push(params[:id])
       process_roles(roles, "destroy") unless roles.empty?
       self.x_node  = "xx-ur" if MiqUserRole.find_by_id(params[:id]).nil? # reset node to show list
     end
@@ -350,15 +346,10 @@ module OpsController::OpsRbac
         t.parent.nil?
       end
     else # showing 1 tenant, delete it
-      if params[:id].nil? || Tenant.find_by_id(params[:id]).nil?
-        add_flash(_("Tenant no longer exists"), :error)
-      else
-        tenants.push(params[:id])
-      end
+      tenants.push(params[:id])
       parent_id = Tenant.find_by_id(params[:id]).parent.id
       self.x_node = "tn-#{to_cid(parent_id)}"
     end
-
     process_tenants(tenants, "destroy") unless tenants.empty?
     get_node_info(x_node)
     replace_right_cell(x_node, [:rbac])
@@ -373,11 +364,7 @@ module OpsController::OpsRbac
       process_groups(groups, "destroy") unless groups.empty?
       self.x_node  = "xx-g"  # reset node to show list
     else # showing 1 group, delete it
-      if params[:id].nil? || MiqGroup.find_by_id(params[:id]).nil?
-        add_flash(_("MiqGroup no longer exists"), :error)
-      else
-        groups.push(params[:id])
-      end
+      groups.push(params[:id])
       process_groups(groups, "destroy") unless groups.empty?
       self.x_node  = "xx-g" if MiqGroup.find_by_id(params[:id]).nil? # reset node to show list
     end
@@ -589,7 +576,7 @@ module OpsController::OpsRbac
   end
 
   def rbac_edit_tags_reset(tagging)
-    @object_ids = find_checked_items
+    @object_ids = find_checked_ids_with_rbac(tagging.constantize)
     if params[:button] == "reset"
       id = params[:id] if params[:id]
       return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", "replace_cell__explorer")
@@ -666,15 +653,15 @@ module OpsController::OpsRbac
   def rbac_edit_reset(operation, what, klass)
     @sb[:active_rbac_group_tab] ||= "rbac_customer_tags"
     key = what.to_sym
-    obj = find_checked_items
-    obj[0] = params[:id] if obj.blank? && params[:id]
-    record = klass.find_by_id(from_cid(obj[0])) if obj[0]
-
-    if [:group, :role].include?(key) && record && record.read_only && operation != 'copy'
-      add_flash(_("Read Only %{model} \"%{name}\" can not be edited") % {:model => key == :role ? ui_lookup(:model => "MiqUserRole") : ui_lookup(:model => "MiqGroup"), :name => key == :role ? record.name : record.description}, :warning)
-      javascript_flash
-      return
+    if (operation != "new")
+      record = find_record_with_rbac(klass, checked_or_params_id)
+      if [:group, :role].include?(key) && record && record.read_only && operation != 'copy'
+        add_flash(_("Read Only %{model} \"%{name}\" can not be edited") % {:model => key == :role ? ui_lookup(:model => "MiqUserRole") : ui_lookup(:model => "MiqGroup"), :name => key == :role ? record.name : record.description}, :warning)
+        javascript_flash
+        return
+      end
     end
+
     case operation
     when "new"
       # create new record
@@ -699,12 +686,14 @@ module OpsController::OpsRbac
       @record = record
     end
     @sb[:typ] = operation
+
     # set form fields according to what is copied
     case key
     when :user  then rbac_user_set_form_vars
     when :group then rbac_group_set_form_vars
     when :role  then rbac_role_set_form_vars
     end
+
     @in_a_form = true
     session[:changed] = false
     add_flash(_("All changes have been reset"), :warning)  if params[:button] == "reset"

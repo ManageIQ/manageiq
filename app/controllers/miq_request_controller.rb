@@ -482,10 +482,10 @@ class MiqRequestController < ApplicationController
     opts[:reason_text] = nil
     opts[:types] = request_types_for_dropdown
 
-    opts[:users] = MiqRequest.where(
+    opts[:users] = Rbac::Filterer.filtered(MiqRequest.where(
       :type       => request_types_for_model.keys,
       :created_on => (30.days.ago.utc)..(Time.now.utc)
-    ).each_with_object({}) do |r, h|
+    )).each_with_object({}) do |r, h|
       h[r.requester_id] =  if r.requester.nil?
                              (_("%{name} (no longer exists)") % {:name => r.requester_name})
                            else

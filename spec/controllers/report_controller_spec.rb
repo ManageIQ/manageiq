@@ -727,6 +727,7 @@ describe ReportController do
       @current_user = login_as FactoryGirl.create(:user, :features => %w(miq_report_schedule_enable
                                                                          miq_report_schedule_disable
                                                                          miq_report_schedule_edit))
+      allow(User).to receive(:server_timezone).and_return("UTC")
     end
 
     context "no schedules selected" do
@@ -760,7 +761,7 @@ describe ReportController do
 
         @sch = FactoryGirl.create(:miq_schedule, :enabled => true, :updated_at => 1.hour.ago.utc)
 
-        allow(controller).to receive(:find_checked_items).and_return([@sch])
+        allow(controller).to receive(:find_records_with_rbac).and_return([@sch])
         expect(controller).to receive(:render).never
         expect(controller).to receive(:schedule_get_all)
         expect(controller).to receive(:replace_right_cell)

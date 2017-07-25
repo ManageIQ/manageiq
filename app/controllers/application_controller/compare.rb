@@ -471,15 +471,15 @@ module ApplicationController::Compare
     begin
       db = @sb[:compare_db].constantize
       if @sb[:compare_db] == "Host"
-        @record = @host = @drift_obj = find_by_id_filtered(db, params[:id])
+        @record = @host = @drift_obj = find_record_with_rbac(db, params[:id])
       elsif @sb[:compare_db] == "MiqTemplate"
-        @record = @miq_templates = @drift_obj = find_by_id_filtered(db, params[:id])
+        @record = @miq_templates = @drift_obj = find_record_with_rbac(db, params[:id])
       elsif @sb[:compare_db] == "Vm"
-        @record = @vm = @drift_obj = find_by_id_filtered(db, params[:id])
+        @record = @vm = @drift_obj = find_record_with_rbac(db, params[:id])
       elsif @sb[:compare_db] == "EmsCluster"
-        @record = @ems_cluster = @drift_obj = find_by_id_filtered(db, params[:id])
+        @record = @ems_cluster = @drift_obj = find_record_with_rbac(db, params[:id])
       else
-        @record = @drift_obj = find_by_id_filtered(db, params[:id])
+        @record = @drift_obj = find_record_with_rbac(db, params[:id])
       end
     rescue ActiveRecord::RecordNotFound
       return
@@ -852,44 +852,47 @@ module ApplicationController::Compare
   end
   ####### End of compare & drift related methods
 
-  # Compare selected VMs
+  # Compare selected items
   def comparemiq
     assert_privileges(params[:pressed])
-    vms = []
+    items = []
     if !session[:checked_items].nil? && @lastaction == "set_checked_items"
-      vms = session[:checked_items]
+      items = session[:checked_items]
     else
-      vms = find_checked_items
+      items = find_checked_items
     end
 
-    case request.parameters["controller"].downcase
-    when "ems_cluster"
-      title = _("Clusters")
-    when "vm"
-      title = _("Virtual Machines")
-    when "miq_template"
-      title = _("VM Templates")
-    else
-      title = request.parameters["controller"].pluralize.titleize
-    end
-    if vms.length < 2
+    title = case request.parameters["controller"].downcase
+            when "ems_cluster"
+              _("Clusters")
+            when "vm"
+              _("Virtual Machines")
+            when "miq_template"
+              _("VM Templates")
+            else
+              request.parameters["controller"].pluralize.titleize
+            end
+
+    if items.length < 2
       add_flash(_("At least 2 %{model} must be selected for Compare") % {:model => title}, :error)
       if @layout == "vm" # In vm controller, refresh show_list, else let the other controller handle it
         show_list
         @refresh_partial = "layouts/gtl"
       end
-    elsif vms.length > 32
+    elsif items.length > 32
       add_flash(_("No more than 32 %{model} can be selected for Compare") % {:model => title}, :error)
       if @layout == "vm" # In vm controller, refresh show_list, else let the other controller handle it
         show_list
         @refresh_partial = "layouts/gtl"
       end
     else
-      session[:miq_selected] = vms        # save the selected vms array for the redirect to compare_miq
       if params[:pressed]
         model, = pressed2model_action(params[:pressed])
-        @sb[:compare_db] = compare_db(model)
+        klass_name = compare_db(model)
+        @sb[:compare_db] = klass_name
+        assert_rbac(klass_name.constantize, items)
       end
+      session[:miq_selected] = items        # save the selected items array for the redirect to compare_miq
       if @explorer
         compare_miq(@sb[:compare_db])
       else
@@ -920,7 +923,7 @@ module ApplicationController::Compare
     assert_privileges("common_drift")
     controller_name = @sb[:compare_db].underscore
     identify_obj
-    tss = find_checked_items                                        # Get the indexes of the checked timestamps
+    tss = find_checked_items                                        # Get the indexes of the checked timestamps, not db IDs
     if tss.length < 2
       add_flash(_("At least 2 Analyses must be selected for Drift"), :error)
       @refresh_div = "flash_msg_div"
