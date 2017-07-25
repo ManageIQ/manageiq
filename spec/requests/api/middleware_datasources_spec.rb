@@ -57,8 +57,8 @@ describe 'Middleware Datasources API' do
 
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(
-        'href'       => datasource_url,
-        'id'         => datasource.id.to_s,
+        'href' => datasource_url,
+        'id'   => datasource.id.to_s,
       )
     end
   end

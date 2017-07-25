@@ -57,9 +57,9 @@ describe 'Middleware Domains API' do
 
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(
-        'href'       => domain_url,
-        'id'         => domain.id.to_s,
-        'name'       => domain.name
+        'href' => domain_url,
+        'id'   => domain.id.to_s,
+        'name' => domain.name
       )
     end
   end

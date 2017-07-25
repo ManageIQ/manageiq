@@ -57,8 +57,8 @@ describe 'Middleware Messagings API' do
 
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(
-        'href'       => messaging_url,
-        'id'         => messaging.id.to_s,
+        'href' => messaging_url,
+        'id'   => messaging.id.to_s,
       )
     end
   end
