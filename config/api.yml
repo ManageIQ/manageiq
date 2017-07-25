@@ -46,6 +46,16 @@
       :get:
         - :name: read
           :identifier: middleware_server_show_list
+  :middleware_domains:
+    :description: Middleware Domains
+    :klass: MiddlewareDomain
+    :options:
+      - :collection
+    :verbs: *g
+    :collection_actions:
+      :get:
+        - :name: read
+          :identifier: middleware_server_show_list
   :accounts:
     :description: Accounts
     :options:
