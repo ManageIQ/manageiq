@@ -161,35 +161,36 @@ module EmsRefresh::SaveInventoryContainer
     end
 
     save_inventory_multi(ems.container_groups, hashes, :use_association, [:ems_ref],
-                         [:container_definitions, :containers, :labels, :tags,
+                         [:containers, :labels, :tags,
                           :node_selector_parts, :container_conditions, :container_volumes],
                          [:container_node, :container_replicator, :project, :namespace, :build_pod_name],
                          true)
     store_ids_for_new_records(ems.container_groups, hashes, :ems_ref)
   end
 
-  def save_container_definitions_inventory(container_group, hashes)
+  def save_containers_inventory(container_group, hashes)
     return if hashes.nil?
 
-    container_group.container_definitions.reset
+    container_group.containers.reset
 
     hashes.each do |h|
       h[:ems_id] = container_group[:ems_id]
+      h[:container_image_id] = h[:container_image][:id]
     end
 
-    save_inventory_multi(container_group.container_definitions, hashes, :use_association, [:ems_ref],
-                         [:container_port_configs, :container_env_vars, :security_context, :container],
-                         [], true)
-    store_ids_for_new_records(container_group.container_definitions, hashes, :ems_ref)
+    save_inventory_multi(container_group.containers, hashes, :use_association, [:ems_ref],
+                         [:container_port_configs, :container_env_vars, :security_context],
+                         [:container_image], true)
+    store_ids_for_new_records(container_group.containers, hashes, :ems_ref)
   end
 
-  def save_container_port_configs_inventory(container_definition, hashes)
+  def save_container_port_configs_inventory(container, hashes)
     return if hashes.nil?
 
-    container_definition.container_port_configs.reset
+    container.container_port_configs.reset
 
-    save_inventory_multi(container_definition.container_port_configs, hashes, :use_association, [:ems_ref])
-    store_ids_for_new_records(container_definition.container_port_configs, hashes, :ems_ref)
+    save_inventory_multi(container.container_port_configs, hashes, :use_association, [:ems_ref])
+    store_ids_for_new_records(container.container_port_configs, hashes, :ems_ref)
   end
 
   def save_container_service_port_configs_inventory(container_service, hashes)
@@ -201,12 +202,12 @@ module EmsRefresh::SaveInventoryContainer
     store_ids_for_new_records(container_service.container_service_port_configs, hashes, :ems_ref)
   end
 
-  def save_container_env_vars_inventory(container_definition, hashes)
+  def save_container_env_vars_inventory(container, hashes)
     return if hashes.nil?
-    container_definition.container_env_vars.reset
+    container.container_env_vars.reset
 
-    save_inventory_multi(container_definition.container_env_vars, hashes, :use_association, [:name, :value, :field_path])
-    store_ids_for_new_records(container_definition.container_env_vars, hashes, [:name, :value, :field_path])
+    save_inventory_multi(container.container_env_vars, hashes, :use_association, [:name, :value, :field_path])
+    store_ids_for_new_records(container.container_env_vars, hashes, [:name, :value, :field_path])
   end
 
   def save_container_images_inventory(ems, hashes)
@@ -243,15 +244,6 @@ module EmsRefresh::SaveInventoryContainer
     store_ids_for_new_records(ems.container_component_statuses, hashes, :name)
   end
 
-  def save_container_inventory(container_definition, hash)
-    # The hash could be nil when the container is in transition (still downloading
-    # the image, or stuck in Pending, or unable to fetch the image). Passing nil to
-    # save_inventory_single is used to delete any pre-existing entity in containers,
-    hash[:container_image_id] = hash[:container_image][:id] unless hash.nil?
-    hash[:ems_id] = container_definition[:ems_id] unless hash.nil?
-    save_inventory_single(:container, container_definition, hash, [], :container_image, true)
-  end
-
   def save_container_conditions_inventory(container_entity, hashes)
     return if hashes.nil?
 
@@ -261,8 +253,8 @@ module EmsRefresh::SaveInventoryContainer
     store_ids_for_new_records(container_entity.container_conditions, hashes, :name)
   end
 
-  def save_security_context_inventory(container_definition, hash)
-    save_inventory_single(:security_context, container_definition, hash)
+  def save_security_context_inventory(container, hash)
+    save_inventory_single(:security_context, container, hash)
   end
 
   def save_container_volumes_inventory(container_group, hashes)
