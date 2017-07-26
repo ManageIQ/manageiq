@@ -29,10 +29,12 @@ class TreeBuilderConfigurationManagerConfigurationScripts < TreeBuilder
 
     objects.push(:id          => "global",
                  :text        => _("Global Filters"),
+                 :image       => "folder",
                  :tip         => _("Global Shared Filters"),
                  :cfmeNoClick => true)
     objects.push(:id          => "my",
                  :text        => _("My Filters"),
+                 :image       => "folder",
                  :tip         => _("My Personal Filters"),
                  :cfmeNoClick => true)
     count_only_or_objects(count_only, objects)
