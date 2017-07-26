@@ -320,10 +320,14 @@ describe ProviderForemanController do
   end
 
   it "builds ansible tower child tree" do
+    config_ans = ManageIQ::Providers::AnsibleTower::ConfigurationManager.find_by(:provider_id => @provider_ans.id)
+    config_ans2 = ManageIQ::Providers::AnsibleTower::ConfigurationManager.find_by(:provider_id => @provider_ans2.id)
+    user = login_as user_with_feature(%w(configuration_manager_providers providers_accord configured_systems_filter_accord configuration_scripts_accord))
+    allow(User).to receive(:current_user).and_return(user)
     controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
     tree_builder = TreeBuilderConfigurationManager.new("root", "", {})
     objects = tree_builder.send(:x_get_tree_custom_kids, {:id => "at"}, false, {})
-    expected_objects = [@config_ans, @config_ans2]
+    expected_objects = [config_ans, config_ans2]
     expect(objects).to match_array(expected_objects)
   end
 
@@ -350,21 +354,24 @@ describe ProviderForemanController do
   end
 
   it "builds ansible tower job templates tree" do
+    user = login_as user_with_feature(%w(configuration_manager_providers providers_accord configured_systems_filter_accord configuration_scripts_accord))
+    allow(User).to receive(:current_user).and_return(user)
     controller.send(:build_configuration_manager_tree, :configuration_scripts, :configuration_scripts_tree)
     tree_builder = TreeBuilderConfigurationManagerConfigurationScripts.new("root", "", {})
     objects = tree_builder.send(:x_get_tree_roots, false, {})
-    expected_objects = [@config_ans, @config_ans2]
-    expect(objects).to match_array(expected_objects)
+    expect(objects).to include(@config_ans)
+    expect(objects).to include(@config_ans2)
   end
 
   it "constructs the ansible tower job templates tree node" do
-    login_as user_with_feature(%w(providers_accord configured_systems_filter_accord configuration_scripts_accord))
+    user = login_as user_with_feature(%w(providers_accord configured_systems_filter_accord configuration_scripts_accord))
+    allow(User).to receive(:current_user).and_return(user)
     controller.send(:build_configuration_manager_tree, :configuration_scripts, :configuration_scripts_tree)
     tree_builder = TreeBuilderConfigurationManagerConfigurationScripts.new("root", "", {})
-    objects = tree_builder.send(:x_get_tree_roots, false, {})
-    objects = tree_builder.send(:x_get_tree_cmat_kids, objects[0], false)
-    expected_objects = [@ans_job_template1, @ans_job_template3]
-    expect(objects).to match_array(expected_objects)
+    root_objects = tree_builder.send(:x_get_tree_roots, false, {})
+    objects = tree_builder.send(:x_get_tree_cmat_kids, root_objects[1], false)
+    expect(objects).to include(@ans_job_template1)
+    expect(objects).to include(@ans_job_template3)
   end
 
   context "renders tree_select" do
