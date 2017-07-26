@@ -41,6 +41,21 @@ class MiqSearch < ApplicationRecord
     where("search_type=? or (search_type=? and (search_key is null or search_key<>?))", "global", "default", "_hidden_")
   end
 
+  def self.visible_to_current_user
+    where(:search_type => 'user', :search_key => User.current_user.userid)
+  end
+
+  def self.filters_by_type(type)
+    case type
+    when "global" # Global filters
+      visible_to_all
+    when "my"     # My filters
+      visible_to_current_user
+    else
+      raise "Error: #{type} is not a proper filter type!"
+    end
+  end
+
   def self.get_expressions_by_model(db)
     get_expressions(:db => db.to_s)
   end
