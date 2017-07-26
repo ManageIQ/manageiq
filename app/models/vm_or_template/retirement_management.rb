@@ -1,6 +1,5 @@
 module VmOrTemplate::RetirementManagement
   extend ActiveSupport::Concern
-  include RetirementMixin
 
   def retired_validated?
     ['off', 'never'].include?(state)

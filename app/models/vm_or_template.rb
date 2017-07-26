@@ -4,6 +4,7 @@ require 'uri'
 
 class VmOrTemplate < ApplicationRecord
   include NewWithTypeStiMixin
+  include RetirementMixin
   include ScanningMixin
   include SupportsFeatureMixin
 

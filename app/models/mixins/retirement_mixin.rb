@@ -5,6 +5,10 @@ module RetirementMixin
   RETIRING = 'retiring'
   ERROR_RETIRING = 'error'
 
+  included do
+    scope :not_scheduled_for_retirement, -> { where(arel_table[:retires_on].not_eq(nil).or(arel_table[:retired].not_eq(true))) }
+  end
+
   module ClassMethods
     def retire(ids, options = {})
       ids.each do |id|
