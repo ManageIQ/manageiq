@@ -7,7 +7,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
                               :ipaddress => "192.168.24.1", :port => 5000, :api_version => 'v2',
                               :security_protocol => 'no-ssl')
     @ems.update_authentication(
-      :default => {:userid => "admin", :password => "b83387e3b93a015a57f23a9262e799db5d0a22f6"})
+      :default => {:userid => "admin", :password => "password_2WpEraURh"})
   end
 
   it "will perform a full refresh" do
@@ -137,13 +137,13 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     expect(@host.ems_cluster).not_to be nil
 
     expect(@host).to have_attributes(
-      :ipmi_address       => nil,
+      :ipmi_address       => "10.0.1.7",
       :vmm_vendor         => "redhat",
       :vmm_version        => nil,
       :vmm_product        => "rhel (No hypervisor, Host Type is Controller)",
       :power_state        => "on",
       :connection_state   => "connected",
-      :service_tag        => nil,
+      :service_tag        => "1fdaea0b-6281-5917-edf6-a61151e93387",
       :maintenance        => false,
       :maintenance_reason => nil,
     )
@@ -167,15 +167,15 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
       #:bios                 => "seabios-1.7.5-11.el7",
       :memory_mb            => 8192,
       :memory_console       => nil,
-      :disk_capacity        => 49,
-      :cpu_sockets          => 1,
-      :cpu_total_cores      => 1,
+      :disk_capacity        => 79,
+      :cpu_sockets          => 4,
+      :cpu_total_cores      => 4,
       :cpu_cores_per_socket => 1,
       :guest_os             => nil,
       :guest_os_full_name   => nil,
       :cpu_usage            => nil,
       :memory_usage         => nil,
-      :number_of_nics       => 1,
+      :number_of_nics       => 7,
     )
 
     # TODO(tzumainn) Introspection no longer finds disk attributes, may be
