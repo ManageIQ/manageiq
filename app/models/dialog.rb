@@ -123,19 +123,21 @@ class Dialog < ApplicationRecord
   # Creates a new item without an ID,
   # Removes any items not passed in the content.
   def update_tabs(tabs)
-    updated_tabs = []
-    tabs.each do |dialog_tab|
-      if dialog_tab.key?('id')
-        DialogTab.find(self.class.uncompress_id(dialog_tab['id'])).tap do |tab|
-          tab.update_attributes(dialog_tab.except('dialog_groups'))
-          tab.update_dialog_groups(dialog_tab['dialog_groups'])
-          updated_tabs << tab
+    transaction do
+      updated_tabs = []
+      tabs.each do |dialog_tab|
+        if dialog_tab.key?('id')
+          DialogTab.find(self.class.uncompress_id(dialog_tab['id'])).tap do |tab|
+            tab.update_attributes(dialog_tab.except('id', 'href', 'dialog_id', 'dialog_groups'))
+            tab.update_dialog_groups(dialog_tab['dialog_groups'])
+            updated_tabs << tab
+          end
+        else
+          updated_tabs << DialogImportService.new.build_dialog_tabs('dialog_tabs' => [dialog_tab]).first
         end
-      else
-        updated_tabs << DialogImportService.new.build_dialog_tabs('dialog_tabs' => [dialog_tab]).first
       end
+      self.dialog_tabs = updated_tabs
     end
-    self.dialog_tabs = updated_tabs
   end
 
   def deep_copy(new_attributes = {})
