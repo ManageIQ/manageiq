@@ -25,12 +25,12 @@ module ManageIQ::Providers
       physical_servers.inject(0) { |t, physical_server| physical_server.host.nil? ? t : t + 1 }
     end
 
-    def total_hosts; count_physical_servers_with_host; end
+    alias total_hosts count_physical_servers_with_host
 
     def count_vms
       physical_servers.inject(0) { |t, physical_server| physical_server.host.nil? ? t : t + physical_server.host.vms.size }
     end
 
-    def total_vms; count_vms; end
+    alias total_vms count_vms
   end
 end
