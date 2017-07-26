@@ -2,16 +2,14 @@ class MiqVimBrokerWorker < MiqWorker
   require_nested :Runner
 
   self.required_roles         = lambda {
-    roles = %w(
+    %w(
       ems_metrics_collector
       ems_operations
       smartproxy
       smartstate
-    )
-
-    roles << 'ems_inventory' unless Settings.prototype.ems_vmware.update_driven_refresh
-
-    roles
+    ).tap do |roles|
+      roles << 'ems_inventory' unless Settings.prototype.try(:ems_vmware).try(:update_driven_refresh)
+    end
   }
 
   self.check_for_minimal_role = false
