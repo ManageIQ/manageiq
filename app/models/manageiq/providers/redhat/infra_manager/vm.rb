@@ -48,25 +48,25 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
   alias ems_cluster parent_cluster
 
   def disconnect_storage(_s = nil)
-    unless active?
-      return
-    end
-    vm_disks = collect_disks
+    return unless active?
 
-    if vm_disks.blank?
-      storage = nil
-    else
-      vm_storages = ([storage] + storages).compact.uniq
-      storage = vm_storages.select { |store| !vm_disks.include?(store.ems_ref) }
-    end
+    vm_storages = ([storage] + storages).compact.uniq
+    return if vm_storages.empty?
+
+    vm_disks = collect_disks
+    storage = vm_disks.blank? ? nil : vm_storages.select { |store| !vm_disks.include?(store.ems_ref) }
 
     super(storage)
   end
 
   def collect_disks
     return [] if hardware.nil?
-    disks = hardware.disks.map { |disk| "#{disk.storage.ems_ref}/disks/#{disk.filename}" }
-    ext_management_system.ovirt_services.collect_disks_by_hrefs(disks)
+    disks = hardware.disks.map do |disk|
+      unless disk.storage.nil?
+        "#{disk.storage.ems_ref}/disks/#{disk.filename}"
+      end
+    end
+    ext_management_system.ovirt_services.collect_disks_by_hrefs(disks.compact)
   end
 
   def disconnect_inv
