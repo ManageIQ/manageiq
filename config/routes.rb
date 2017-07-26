@@ -89,8 +89,6 @@ Vmdb::Application.routes.draw do
   # ping response for load balancing
   get '/ping' => 'ping#index'
 
-  match "/auth/:provider/callback" => "sessions#create", :via => :get
-
   if Rails.env.development? && defined?(Rails::Server)
     logger = Logger.new(STDOUT)
     logger.level = Logger.const_get(::Settings.log.level_websocket.upcase)
