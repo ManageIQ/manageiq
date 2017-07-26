@@ -5,7 +5,7 @@ class OrchestrationStack < ApplicationRecord
   include NewWithTypeStiMixin
   include AsyncDeleteMixin
   include ProcessTasksMixin
-  include_concern 'RetirementManagement'
+  include RetirementMixin
   include TenantIdentityMixin
 
   acts_as_miq_taggable
