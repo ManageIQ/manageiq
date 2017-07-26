@@ -103,8 +103,22 @@ module Authenticator
     end
 
     def userprincipal_for(username)
+      return find_user_in_db(username) unless authorize?
+
       lobj = find_external_identity(username)
       User.find_by_userid(userid_for(lobj, username))
+    end
+
+    def find_user_in_db(username)
+      user = User.find_by_userid(username)
+      return user unless user.nil?
+
+      User.find_by_userid(plain_username_from_dn_or_upn(username))
+    end
+
+    def plain_username_from_dn_or_upn(username)
+      return username.split("@").first if username.include?("@")
+      username[/=(.*?),/m, 1]
     end
 
     def userid_for(lobj, username)

@@ -129,8 +129,18 @@ describe Authenticator::Ldap do
   end
 
   describe '#lookup_by_identity' do
-    it "finds existing users" do
-      expect(subject.lookup_by_identity('alice')).to eq(alice)
+    context "finds existing users" do
+      it "when username is simple format" do
+        expect(subject.lookup_by_identity('alice')).to eq(alice)
+      end
+
+      it "when username is UPN format" do
+        expect(subject.lookup_by_identity('alice@example.com')).to eq(alice)
+      end
+
+      it "when username is dn" do
+        expect(subject.lookup_by_identity('cn=alice,ou=prod,dc=example,dc=com')).to eq(alice)
+      end
     end
 
     it "normalizes usernames" do
