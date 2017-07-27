@@ -19,6 +19,8 @@ module PgInspector
             :type => :string, :short => "d", :default => "postgres")
         opt(:output, "Output file",
             :type => :string, :short => "o", :default => "active_connections.yml")
+        opt(:output_locks, "Output lock file",
+            :type => :string, :short => "l", :default => "locks.yml")
         opt(:ignore_error, "Ignore incomplete application name column",
             :short => "i")
         opt(:only_miq_rows, "Get only ManageIQ Server/Worker rows",
@@ -27,16 +29,24 @@ module PgInspector
     end
 
     def run
+      conn = connect_pg_server
       Util.dump_to_yml_file(
         filter_by_application_name(
           filter_by_database_name(
-            pg_stat_activity_rows_to_array(
-              rows_in_pg_stat_activity(
-                connect_pg_server
+            pg_rows_to_array(
+              rows_in_table(
+                conn, "pg_stat_activity", "application_name"
               )
             )
           )
         ), "active connections", options[:output]
+      )
+      Util.dump_to_yml_file(
+        pg_rows_to_array(
+          rows_in_table(
+            conn, "pg_locks"
+          )
+        ), "locks information", options[:output_locks]
       )
     rescue Error::ApplicationNameIncompleteError => e
       Util.error_exit(e)
@@ -64,18 +74,18 @@ module PgInspector
       Util.error_exit(e)
     end
 
-    def rows_in_pg_stat_activity(conn)
+    def rows_in_table(conn, table_name, order_by = nil)
       query = <<-SQL
 SELECT *
-FROM pg_stat_activity
-ORDER BY application_name;
+FROM #{table_name}
+#{"ORDER BY #{order_by}" if order_by}
 SQL
       conn.exec_params(query)
     rescue PG::Error => e
       Util.error_exit(e)
     end
 
-    def pg_stat_activity_rows_to_array(rows)
+    def pg_rows_to_array(rows)
       result = []
       rows.each { |row| result << row }
       result
