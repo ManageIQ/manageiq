@@ -1,6 +1,6 @@
 describe MiqUserRole do
   before do
-    @expected_user_role_count = 15
+    @expected_user_role_count = 16
   end
 
   context ".seed" do

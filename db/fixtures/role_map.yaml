@@ -14,3 +14,4 @@
   EvmGroup-tenant_administrator: tenant_administrator
   EvmGroup-tenant_quota_administrator: tenant_quota_administrator
   EvmGroup-consumption_administrator: consumption_administrator
+  EvmGroup-reader: reader 
