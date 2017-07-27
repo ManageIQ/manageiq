@@ -346,6 +346,7 @@
   - ems_infra_timeline
   - ems_physical_infra_new
   - ems_physical_infra_delete
+  - ems_physical_infra_discover
   - ems_physical_infra_edit
   - ems_physical_infra_refresh
   - ems_physical_infra_show
