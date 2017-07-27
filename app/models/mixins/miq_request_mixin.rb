@@ -31,7 +31,9 @@ module MiqRequestMixin
   end
 
   def get_user
-    @user ||= User.find_by_userid(userid)
+    @user ||= User.find_by(:userid => userid).tap do |u|
+      u.current_group_by_description = options[:requester_group] if options[:requester_group]
+    end
   end
   alias_method :tenant_identity, :get_user
 
