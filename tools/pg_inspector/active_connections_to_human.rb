@@ -6,7 +6,7 @@ require 'pg_inspector/util'
 
 module PgInspector
   class ActiveConnectionsHumanYAML < PgInspectorOperation
-    HELP_MSG_SHORT = "DUMP active connections to human readable YAML file".freeze
+    HELP_MSG_SHORT = "Dump active connections to human readable YAML file".freeze
     def parse_options(args)
       self.options = Trollop.options(args) do
         opt(:connections, "Active connections file",
