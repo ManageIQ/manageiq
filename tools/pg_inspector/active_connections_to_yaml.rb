@@ -19,7 +19,7 @@ module PgInspector
             :type => :string, :short => "d", :default => "postgres")
         opt(:output, "Output file",
             :type => :string, :short => "o", :default => "active_connections.yml")
-        opt(:output_locks, "Outpul lock file",
+        opt(:output_locks, "Output lock file",
             :type => :string, :short => "l", :default => "locks.yml")
         opt(:ignore_error, "Ignore incomplete application name column",
             :short => "i")
