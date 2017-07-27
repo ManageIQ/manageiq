@@ -89,7 +89,7 @@ class ContainerImage < ApplicationRecord
   end
 
   def disconnect_inv
-    return if ems_id.nil?
+    return if archived?
     _log.info "Disconnecting Image [#{name}] id [#{id}] from EMS [#{ext_management_system.name}]" \
     "id [#{ext_management_system.id}] "
     self.container_image_registry = nil
