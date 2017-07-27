@@ -1539,7 +1539,7 @@ class VmOrTemplate < ApplicationRecord
                    :to => :hardware, :allow_nil => true, :uses => {:hardware => :disks}
 
   def provisioned_storage
-    allocated_disk_storage.to_i + ram_size_in_bytes
+    allocated_disk_storage.to_i + ram_size_in_bytes.to_i
   end
 
   def used_storage
@@ -1559,7 +1559,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def ram_size_by_state
-    state == 'on' ? ram_size : 0
+    state == 'on' ? ram_size.to_i : 0
   end
 
   def ram_size_in_bytes_by_state
