@@ -34,6 +34,7 @@ REGION
 SyntaxCheck
 xfer_*.xml
 Thumbs.db
+Procfile
 
 # bin/
 bin/*
