@@ -2,13 +2,15 @@ require 'trollop'
 require 'pg_inspector/util'
 require 'pg_inspector/active_connections_to_yaml'
 require 'pg_inspector/servers_to_yaml'
+require 'pg_inspector/active_connections_to_human'
 
 module PgInspector
   class Cli
     attr_accessor :cmd
     SUB_COMMANDS = {
       :active_connections => ActiveConnectionsYAML,
-      :servers            => ServersYAML
+      :servers            => ServersYAML,
+      :human              => ActiveConnectionsHumanYAML
     }.freeze
 
     def self.run(args)
