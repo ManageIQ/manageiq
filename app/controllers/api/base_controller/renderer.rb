@@ -28,11 +28,19 @@ module Api
       # Given a resource, return its serialized flavor using Jbuilder
       #
       def collection_to_jbuilder(type, reftype, resources, opts = {})
+        link_builder = Api::LinksBuilder.new(params, @req.url, opts[:counts])
         Jbuilder.new do |json|
           json.ignore_nil!
-          [:name, :count, :subcount].each do |opt_name|
-            json.set! opt_name.to_s, opts[opt_name] if opts[opt_name]
+          json.set! 'name', opts[:name] if opts[:name]
+
+          if opts[:counts]
+            opts[:counts].counts.each do |count, value|
+              json.set! count, value
+            end
           end
+
+          json.set! 'pages', link_builder.pages if link_builder.links?
+
           unless @req.hide?("resources")
             json.resources resources.collect do |resource|
               if opts[:expand_resources]
@@ -45,6 +53,14 @@ module Api
           cspec = collection_config[type]
           aspecs = gen_action_spec_for_collections(type, cspec, opts[:is_subcollection], reftype) if cspec
           add_actions(json, aspecs, reftype)
+
+          if link_builder.links?
+            json.links do
+              link_builder.links.each do |link_name, link_href|
+                json.set! link_name, link_href
+              end
+            end
+          end
         end
       end
 
@@ -156,10 +172,22 @@ module Api
 
         options = {:user => User.current_user}
         options[:order] = sort_options if sort_options.present?
-        options[:offset], options[:limit] = expand_paginate_params if paginate_params?
         options[:filter] = miq_expression if miq_expression
+        options[:offset] = params['offset'] if params['offset']
+        options[:limit] = params['limit'] if params['limit']
 
-        Rbac.filtered(res, options)
+        if miq_expression.present? && options.key?(:limit) && options.key?(:offset)
+          filter_results_for_paging(res, options)
+        else
+          [Rbac.filtered(res, options)]
+        end
+      end
+
+      # If a filter is present, first get the count for the filtered result,
+      # Then apply Rbac filter for paging
+      def filter_results_for_paging(res, options)
+        subquery_res = Rbac.filtered(res, options.except(:offset, :limit))
+        [Rbac.filtered(res, options), subquery_res.count]
       end
 
       def virtual_attribute_search(resource, attribute)
@@ -359,7 +387,7 @@ module Api
       def expand_subcollection(json, sc, sctype, subresources)
         if collection_config.show_as_collection?(sc)
           copts = {
-            :count            => subresources.length,
+            :counts           => Api::QueryCounts.new(subresources.length),
             :is_subcollection => true,
             :expand_resources => @req.expand?(sc)
           }

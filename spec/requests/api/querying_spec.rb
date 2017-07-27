@@ -75,6 +75,100 @@ describe "Querying" do
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:bad_request)
     end
+
+    it "returns correct paging links" do
+      create_vms_by_name %w(bb ff aa cc ee gg dd)
+
+      run_get vms_url, :offset => 0, :limit => 2, :sort_by => "name", :expand => "resources"
+
+      expect_query_result(:vms, 2, 7)
+      expect_result_resources_to_match_hash([{"name" => "aa"}, {"name" => "bb"}])
+      expect(response.parsed_body["links"].keys).to match_array(%w(self first next last))
+      links = response.parsed_body["links"]
+
+      run_get(links["self"])
+
+      expect_query_result(:vms, 2, 7)
+      expect_result_resources_to_match_hash([{"name" => "aa"}, {"name" => "bb"}])
+
+      run_get(links["next"])
+
+      expect_query_result(:vms, 2, 7)
+      expect_result_resources_to_match_hash([{"name" => "cc"}, {"name" => "dd"}])
+      expect(response.parsed_body["links"].keys).to match_array(%w(self next previous first last))
+
+      run_get(links["last"])
+
+      expect_query_result(:vms, 1, 7)
+      expect_result_resources_to_match_hash([{"name" => "gg"}])
+      previous = response.parsed_body["links"]["previous"]
+      expect(response.parsed_body["links"].keys).to match_array(%w(self previous first last))
+
+      run_get(previous)
+
+      expect_query_result(:vms, 2, 7)
+      expect_result_resources_to_match_hash([{"name" => "ee"}, {"name" => "ff"}])
+
+      run_get vms_url, :offset => 4, :limit => 3, :sort_by => "name", :expand => "resources"
+
+      expect_query_result(:vms, 3, 7)
+      expect_result_resources_to_match_hash([{"name" => "ee"}, {"name" => "ff"}, {"name" => "gg"}])
+      expect(response.parsed_body["links"].keys).to match_array(%w(self previous first last))
+    end
+
+    it "only returns paging links if both offset and limit are specified" do
+      create_vms_by_name %w(aa bb)
+
+      run_get vms_url, :offset => 0, :expand => :resources
+
+      expect(response.parsed_body.keys).to eq(%w(name count subcount resources actions))
+    end
+
+    it "returns the correct page count" do
+      create_vms_by_name %w(aa bb cc dd)
+
+      run_get vms_url, :offset => 0, :limit => 2
+
+      expect(response.parsed_body['pages']).to eq(2)
+
+      run_get vms_url, :offset => 0, :limit => 3
+
+      expect(response.parsed_body['pages']).to eq(2)
+
+      run_get vms_url, :offset => 0, :limit => 4
+      expect(response.parsed_body['subquery_count']).to be_nil
+      expect(response.parsed_body['pages']).to eq(1)
+
+      run_get vms_url, :offset => 0, :limit => 4, :filter => ["name='aa'", "or name='bb'"]
+      expect(response.parsed_body['subquery_count']).to eq(2)
+      expect(response.parsed_body['pages']).to eq(1)
+    end
+
+    it "returns the correct pages if filters are specified" do
+      create_vms_by_name %w(aa bb cc)
+
+      run_get vms_url, :sort_by => "name", :filter => ["name='aa'", "or name='bb'"], :expand => "resources", :offset => 0, :limit => 1
+
+      expect_query_result(:vms, 1, 3)
+      expect_result_resources_to_match_hash([{"name" => "aa"}])
+      expect(response.parsed_body["links"].keys).to match_array(%w(self next first last))
+
+      run_get response.parsed_body["links"]["next"]
+
+      expect_query_result(:vms, 1, 3)
+      expect_result_resources_to_match_hash([{"name" => "bb"}])
+
+      expect(response.parsed_body["links"].keys).to match_array(%w(self previous first last))
+    end
+
+    it "returns the correct subquery_count" do
+      create_vms_by_name %w(aa bb cc dd)
+
+      run_get vms_url, :sort_by => "name", :filter => ["name='aa'", "or name='bb'", "or name='dd'"], :expand => "resources", :offset => 0, :limit => 1
+
+      expect(response.parsed_body["subquery_count"]).to eq(3)
+      expect_query_result(:vms, 1, 4)
+    end
   end
 
   describe "Sorting vms by attribute" do
@@ -312,6 +406,19 @@ describe "Querying" do
 
       run_get vms_url, :expand => "resources",
                        :filter => ["host.name='foo'"]
+
+      expect_query_result(:vms, 1, 2)
+      expect_result_resources_to_match_hash([{"name" => vm1.name, "guid" => vm1.guid}])
+    end
+
+    it "supports filtering by attributes of associations with paging" do
+      host1 = FactoryGirl.create(:host, :name => "foo")
+      host2 = FactoryGirl.create(:host, :name => "bar")
+      vm1 = FactoryGirl.create(:vm_vmware, :name => "baz", :host => host1)
+      _vm2 = FactoryGirl.create(:vm_vmware, :name => "qux", :host => host2)
+
+      run_get vms_url, :expand => "resources",
+              :filter => ["host.name='foo'"], :offset => 0, :limit => 1
 
       expect_query_result(:vms, 1, 2)
       expect_result_resources_to_match_hash([{"name" => vm1.name, "guid" => vm1.guid}])

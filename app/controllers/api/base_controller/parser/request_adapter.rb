@@ -114,6 +114,10 @@ module Api
                        end
         end
 
+        def url
+          @request.original_url # http://target/api/...
+        end
+
         private
 
         def expand_requested
@@ -131,10 +135,6 @@ module Api
         def prefix
           prefix = "/#{path.split('/')[1]}" # /api
           version_override? ? "#{prefix}/#{@params[:version]}" : prefix
-        end
-
-        def url
-          @request.original_url # http://target/api/...
         end
       end
     end
