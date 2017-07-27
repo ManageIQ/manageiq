@@ -57,14 +57,22 @@ require File.expand_path("../../../config/environment", __dir__)
 worker_class = worker_class.constantize
 worker_class.before_fork
 unless options[:dry_run]
+  create_options = {}
+  runner_options = {}
+
+  if ENV["QUEUE"]
+    create_options[:queue_name] = ENV["QUEUE"]
+    runner_options[:ems_id] = worker_class.ems_id_from_queue_name(ENV["QUEUE"]) if worker_class.respond_to?(:ems_id_from_queue_name)
+  end
+
   worker = if options[:guid]
              worker_class.find_by!(:guid => options[:guid])
            else
-             worker_class.create_worker_record
+             worker_class.create_worker_record(create_options)
            end
 
   begin
-    worker.class::Runner.start_worker(:guid => worker.guid)
+    worker.class::Runner.start_worker(runner_options.merge(:guid => worker.guid))
   ensure
     worker.delete
   end
