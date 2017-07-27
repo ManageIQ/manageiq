@@ -409,4 +409,20 @@ describe ExtManagementSystem do
       expect(ExtManagementSystem.count).to eq(1)
     end
   end
+
+  context "virtual column :supports_block_storage" do
+    it "returns true if block storage is supported" do
+      ems = FactoryGirl.create(:ext_management_system)
+      allow(ems).to receive(:supports_block_storage).and_return(true)
+      expect(ems.supports_block_storage).to eq(true)
+    end
+  end
+
+  context "virtual column :supports_cloud_object_store_container_create" do
+    it "returns true if cloud_object_store_container_create is supported" do
+      ems = FactoryGirl.create(:ext_management_system)
+      allow(ems).to receive(:supports_cloud_object_store_container_create).and_return(true)
+      expect(ems.supports_cloud_object_store_container_create).to eq(true)
+    end
+  end
 end
