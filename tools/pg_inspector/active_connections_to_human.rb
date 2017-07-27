@@ -1,5 +1,4 @@
 require 'trollop'
-require 'pg'
 require 'activerecord-id_regions'
 require 'pg_inspector/error'
 require 'pg_inspector/pg_inspector_operation'
