@@ -284,13 +284,16 @@ describe Dialog do
     let(:updated_content) do
       [
         {
-          'id'            => dialog_tab.first.id,
+          'id'            => dialog_tab.first.compressed_id,
           'label'         => 'updated_label',
           'dialog_groups' => [
-            { 'id'            => dialog_group.first.id,
+            { 'id'            => dialog_group.first.compressed_id,
+              'dialog_tab_id' => dialog_tab.first.compressed_id,
               'dialog_fields' =>
                                  [{
-                                   'id' => dialog_field.first.id}] },
+                                   'id'              => dialog_field.first.id,
+                                   'dialog_group_id' => dialog_group.first.compressed_id
+                                 }] },
             {
               'label'         => 'group 2',
               'dialog_fields' => [{
