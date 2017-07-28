@@ -98,7 +98,7 @@ class ColumnOrdering
 
     pg_dump_result = AwesomeSpawn.run("pg_dump", :params => params)
 
-    raise ColumnOrderingError <<-ERROR.gsub!(/^ +/, "") if pg_dump_result.failure?
+    raise ColumnOrderingError(<<-ERROR.gsub!(/^ +/, "")) if pg_dump_result.failure?
       '#{pg_dump_result.command_line}' failed with #{pg_dump_result.exit_status}:
 
       stdout: #{pg_dump_result.output}
@@ -211,7 +211,7 @@ class ColumnOrdering
 
   def assert_column_list_sizes_match!
     return if current_columns.length == expected_columns.length
-    raise ColumnOrderingError <<-ERROR.gsub!(/^ +/, "")
+    raise ColumnOrderingError(<<-ERROR.gsub!(/^ +/, ""))
       Current and expected column arrays are of different size for table #{table}
 
       expected: #{expected_columns.inspect}
@@ -221,7 +221,7 @@ class ColumnOrdering
 
   def assert_column_list_contents_match!
     return if current_columns.sort == expected_columns.sort
-    raise ColumnOrderingError <<-ERROR.gsub!(/^ +/, "")
+    raise ColumnOrderingError(<<-ERROR.gsub!(/^ +/, ""))
       Current and expected column arrays have different contents for #{table}
 
       expected: #{expected_columns.inspect}

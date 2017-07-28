@@ -66,7 +66,7 @@ module EmsRefresh::SaveInventory
     disconnects_index = disconnects.index_by { |vm| vm }
     vms_by_uid_ems = vms.group_by(&:uid_ems)
     dup_vms_uids = (vms_uids.duplicates + vms.collect(&:uid_ems).duplicates).uniq.sort
-    _log.info "#{log_header} Duplicate unique values found: #{dup_vms_uids.inspect}" unless dup_vms_uids.empty?
+    _log.info("#{log_header} Duplicate unique values found: #{dup_vms_uids.inspect}") unless dup_vms_uids.empty?
 
     invalids_found = false
     # Clear vms, so GC can clean them

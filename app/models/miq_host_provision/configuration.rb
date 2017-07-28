@@ -13,11 +13,11 @@ module MiqHostProvision::Configuration
   def set_maintenance_mode_vmware
     destination.with_provider_object(:connection_source => host) do |vim_host|
       if vim_host.inMaintenanceMode?
-        _log.info "Host is already Maintenance Mode"
+        _log.info("Host is already Maintenance Mode")
       else
-        _log.info "Putting host into Maintenance Mode..."
+        _log.info("Putting host into Maintenance Mode...")
         vim_host.enterMaintenanceMode
-        _log.info "Putting host into Maintenance Mode...complete"
+        _log.info("Putting host into Maintenance Mode...complete")
       end
     end
   end
@@ -27,14 +27,14 @@ module MiqHostProvision::Configuration
     if destination.is_vmware?
       set_maintenance_mode_vmware
     else
-      _log.warn "VMM Vendor [#{destination.vmm_vendor_display}] is not supported"
+      _log.warn("VMM Vendor [#{destination.vmm_vendor_display}] is not supported")
     end
   end
 
   # TODO: Subclass
   def add_storage_vmware
     if destination.ext_management_system.nil?
-      _log.error "Host has no External Management System"
+      _log.error("Host has no External Management System")
       return
     end
 
@@ -43,11 +43,11 @@ module MiqHostProvision::Configuration
       storages_to_attach.each do |storage|
         case storage.store_type
         when 'NFS'
-          _log.info "Adding datastore: [#{storage.name}]"
+          _log.info("Adding datastore: [#{storage.name}]")
           vim_dss.addNasDatastoreByName(storage.name)
-          _log.info "Adding datastore: [#{storage.name}]...Complete"
+          _log.info("Adding datastore: [#{storage.name}]...Complete")
         else
-          _log.warn "Storage Type [#{storage.store_type}] is not supported"
+          _log.warn("Storage Type [#{storage.store_type}] is not supported")
         end
       end
     end
@@ -58,7 +58,7 @@ module MiqHostProvision::Configuration
     if destination.is_vmware?
       add_storage_vmware
     else
-      _log.warn "VMM Vendor [#{destination.vmm_vendor_display}] is not supported"
+      _log.warn("VMM Vendor [#{destination.vmm_vendor_display}] is not supported")
     end
   end
 end

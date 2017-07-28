@@ -77,7 +77,7 @@ module Authenticator
         end
 
       rescue MiqException::MiqEVMLoginError => err
-        _log.warn err.message
+        _log.warn(err.message)
         raise
       rescue Exception => err
         _log.log_backtrace(err)

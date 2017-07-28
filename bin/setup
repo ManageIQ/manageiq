@@ -14,7 +14,7 @@ EOS
   exit 1
 end
 
-Dir.chdir ManageIQ::Environment::APP_ROOT do
+Dir.chdir(ManageIQ::Environment::APP_ROOT) do
   ManageIQ::Environment.ensure_config_files
 
   puts '== Installing dependencies =='

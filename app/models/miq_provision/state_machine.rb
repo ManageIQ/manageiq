@@ -82,7 +82,7 @@ module MiqProvision::StateMachine
   end
 
   def post_create_destination
-    _log.info "Destination #{destination.class.base_model.name} ID=#{destination.id}, Name=#{destination.name}"
+    _log.info("Destination #{destination.class.base_model.name} ID=#{destination.id}, Name=#{destination.name}")
 
     set_description(destination, get_option(:vm_description))
     set_ownership(destination, get_owner || get_user)

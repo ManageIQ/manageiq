@@ -28,9 +28,9 @@ class Classification < ApplicationRecord
   validates :syntax, :inclusion => {:in      => %w( string integer boolean ),
                                     :message => "should be one of 'string', 'integer' or 'boolean'"}
 
-  scope :visible,    -> { where :show => true }
-  scope :read_only,  -> { where :read_only => true }
-  scope :writeable,  -> { where :read_only => false }
+  scope :visible,    -> { where(:show => true) }
+  scope :read_only,  -> { where(:read_only => true) }
+  scope :writeable,  -> { where(:read_only => false) }
 
   DEFAULT_NAMESPACE = "/managed"
 
@@ -56,7 +56,7 @@ class Classification < ApplicationRecord
   end
 
   def self.parent_ids(parent_ids)
-    where :parent_id => parent_ids
+    where(:parent_id => parent_ids)
   end
 
   def self.tags_arel
@@ -376,7 +376,7 @@ class Classification < ApplicationRecord
 
   def self.export_to_array
     categories.inject([]) do |a, c|
-      a.concat c.export_to_array
+      a.concat(c.export_to_array)
     end
   end
 

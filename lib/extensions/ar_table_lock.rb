@@ -13,14 +13,14 @@ module ArTableLock
     lock = "SHARE ROW EXCLUSIVE"
 
     transaction do
-      _log.debug "Acquiring lock on #{name} (table: #{table_name}..."
+      _log.debug("Acquiring lock on #{name} (table: #{table_name}...")
       connection.execute("LOCK TABLE #{table_name} in #{lock} MODE")
-      _log.debug "Acquired lock on #{name} (table: #{table_name}..."
+      _log.debug("Acquired lock on #{name} (table: #{table_name}...")
 
       begin
         Timeout.timeout(timeout) { yield }
       ensure
-        _log.debug "Releasing lock on #{name} (table: #{table_name}..."
+        _log.debug("Releasing lock on #{name} (table: #{table_name}...")
       end
     end
   end

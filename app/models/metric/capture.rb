@@ -39,7 +39,7 @@ module Metric::Capture
   end
 
   def self.perf_capture_timer(zone = nil)
-    _log.info "Queueing performance capture..."
+    _log.info("Queueing performance capture...")
 
     zone ||= MiqServer.my_server.zone
     perf_capture_health_check(zone)
@@ -53,17 +53,17 @@ module Metric::Capture
     # Purge tasks older than 4 hours
     MiqTask.delete_older(4.hours.ago.utc, "name LIKE 'Performance rollup for %'")
 
-    _log.info "Queueing performance capture...Complete"
+    _log.info("Queueing performance capture...Complete")
   end
 
   def self.perf_capture_gap(start_time, end_time, zone_id = nil)
-    _log.info "Queueing performance capture for range: [#{start_time} - #{end_time}]..."
+    _log.info("Queueing performance capture for range: [#{start_time} - #{end_time}]...")
 
     zone = Zone.find(zone_id) if zone_id
     targets = Metric::Targets.capture_targets(zone, :exclude_storages => true)
     targets.each { |target| target.perf_capture_queue('historical', :start_time => start_time, :end_time => end_time, :zone => zone) }
 
-    _log.info "Queueing performance capture for range: [#{start_time} - #{end_time}]...Complete"
+    _log.info("Queueing performance capture for range: [#{start_time} - #{end_time}]...Complete")
   end
 
   def self.perf_capture_gap_queue(start_time, end_time, zone = nil)
@@ -180,7 +180,7 @@ module Metric::Capture
           :interval => "realtime"
         }
       )
-      _log.info "Created task id: [#{task.id}] for: [#{pkey}] with targets: #{targets_by_rollup_parent[pkey].inspect} for time range: [#{task_start_time} - #{task_end_time}]"
+      _log.info("Created task id: [#{task.id}] for: [#{pkey}] with targets: #{targets_by_rollup_parent[pkey].inspect} for time range: [#{task_start_time} - #{task_end_time}]")
       targets.each do |target|
         h[target] = {
           :task_id => task.id,

@@ -36,10 +36,10 @@ module ManageIQ::Providers::StorageManager::CinderManager::RefreshParser::CrossL
     def link_volume_to_tenant(volume_hash, api_obj)
       tenant = @parent_ems.cloud_tenants.detect { |t| t.ems_ref == api_obj.tenant_id }
       unless tenant
-        _log.info "EMS: #{@parent_ems.name}, tenant not found: #{api_obj.tenant_id}"
+        _log.info("EMS: #{@parent_ems.name}, tenant not found: #{api_obj.tenant_id}")
         return
       end
-      _log.debug "Found tenant: #{api_obj.tenant_id}, id = #{tenant.id}"
+      _log.debug("Found tenant: #{api_obj.tenant_id}, id = #{tenant.id}")
 
       volume_hash[:cloud_tenant_id] = tenant.id
     end
@@ -48,10 +48,10 @@ module ManageIQ::Providers::StorageManager::CinderManager::RefreshParser::CrossL
       az_ref = api_obj.availability_zone ? api_obj.availability_zone : "null_az"
       availability_zone = @parent_ems.availability_zones.detect { |az| az.ems_ref == az_ref }
       unless availability_zone
-        _log.info "EMS: #{@parent_ems.name}, availability zone not found: #{az_ref}"
+        _log.info("EMS: #{@parent_ems.name}, availability zone not found: #{az_ref}")
         return
       end
-      _log.debug "Found availability zone: #{az_ref}, id = #{availability_zone.id}"
+      _log.debug("Found availability zone: #{az_ref}, id = #{availability_zone.id}")
 
       volume_hash[:availability_zone_id] = availability_zone.id
     end
@@ -60,10 +60,10 @@ module ManageIQ::Providers::StorageManager::CinderManager::RefreshParser::CrossL
       tenant_ref = api_obj['os-extended-snapshot-attributes:project_id']
       tenant = @parent_ems.cloud_tenants.detect { |t| t.ems_ref == tenant_ref }
       unless tenant
-        _log.info "EMS: #{@parent_ems.name}, tenant not found: #{tenant_ref}"
+        _log.info("EMS: #{@parent_ems.name}, tenant not found: #{tenant_ref}")
         return
       end
-      _log.debug "Found tenant: #{tenant_ref}, id = #{tenant.id}"
+      _log.debug("Found tenant: #{tenant_ref}, id = #{tenant.id}")
 
       snapshot_hash[:cloud_tenant_id] = tenant.id
     end
@@ -72,10 +72,10 @@ module ManageIQ::Providers::StorageManager::CinderManager::RefreshParser::CrossL
       az_ref = api_obj['availability_zone'] ? api_obj['availability_zone'] : "null_az"
       availability_zone = @parent_ems.availability_zones.detect { |az| az.ems_ref == az_ref }
       unless availability_zone
-        _log.info "EMS: #{@parent_ems.name}, availability zone not found: #{az_ref}"
+        _log.info("EMS: #{@parent_ems.name}, availability zone not found: #{az_ref}")
         return
       end
-      _log.debug "Found availability zone: #{az_ref}, id = #{availability_zone.id}"
+      _log.debug("Found availability zone: #{az_ref}, id = #{availability_zone.id}")
 
       backup_hash[:availability_zone_id] = availability_zone.id
     end
@@ -85,8 +85,8 @@ module ManageIQ::Providers::StorageManager::CinderManager::RefreshParser::CrossL
 
       api_obj.attachments.each do |a|
         if a['device'].blank?
-          _log.warn "#{log_header}: Volume: #{uid}, is missing a mountpoint, skipping the volume processing"
-          _log.warn "#{log_header}:   EMS: #{@ems.name}, Instance: #{a['server_id']}"
+          _log.warn("#{log_header}: Volume: #{uid}, is missing a mountpoint, skipping the volume processing")
+          _log.warn("#{log_header}:   EMS: #{@ems.name}, Instance: #{a['server_id']}")
           next
         end
 
@@ -94,7 +94,7 @@ module ManageIQ::Providers::StorageManager::CinderManager::RefreshParser::CrossL
 
         vm = @parent_ems.vms.detect { |v| v.ems_ref == a['server_id'] }
         unless vm
-          _log.warn "VM referenced by backing volume not found."
+          _log.warn("VM referenced by backing volume not found.")
           next
         end
 
@@ -102,8 +102,8 @@ module ManageIQ::Providers::StorageManager::CinderManager::RefreshParser::CrossL
         disks = hardware.disks
 
         unless disks
-          _log.warn "#{log_header}: Volume: #{uid}, attached to instance not visible in the scope of this EMS"
-          _log.warn "#{log_header}:   EMS: #{@ems.name}, Instance: #{a['server_id']}"
+          _log.warn("#{log_header}: Volume: #{uid}, attached to instance not visible in the scope of this EMS")
+          _log.warn("#{log_header}:   EMS: #{@ems.name}, Instance: #{a['server_id']}")
           next
         end
 

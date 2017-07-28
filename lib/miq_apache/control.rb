@@ -45,7 +45,7 @@ module MiqApache
       if ENV["CONTAINER"]
         system("/usr/sbin/httpd -DFOREGROUND &")
       else
-        run_apache_cmd 'start'
+        run_apache_cmd('start')
       end
     end
 
@@ -54,7 +54,7 @@ module MiqApache
         pid = `pgrep -P 1 httpd`.chomp.to_i
         system("kill -WINCH #{pid}") if pid > 0
       else
-        run_apache_cmd 'stop'
+        run_apache_cmd('stop')
       end
     end
 

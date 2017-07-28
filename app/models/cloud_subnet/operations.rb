@@ -1,6 +1,6 @@
 module CloudSubnet::Operations
   def self.included(base)
-    base.send :include, InstanceMethods
+    base.send(:include, InstanceMethods)
     base.extend ClassMethods
   end
 

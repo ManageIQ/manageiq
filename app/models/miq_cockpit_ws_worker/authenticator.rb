@@ -25,7 +25,7 @@ module MiqCockpitWsWorker::Authenticator
   def find_container_node_creds(user_obj, host_or_ip)
     raise "Looking up container nodes requires a valid user" unless user_obj
     cdn_table = ContainerDeploymentNode.arel_table
-    cond = cdn_table[:name].eq(host_or_ip).or(cdn_table[:address].eq host_or_ip)
+    cond = cdn_table[:name].eq(host_or_ip).or(cdn_table[:address].eq(host_or_ip))
     deployment = ContainerDeployment.joins(:container_deployment_nodes).find_by(cond)
 
     if deployment

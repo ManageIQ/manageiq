@@ -76,7 +76,7 @@ class MiqWidget < ApplicationRecord
       :context_data => context_data
     )
 
-    _log.info "Created MiqTask ID: [#{miq_task.id}], Name: [#{miq_task.name}] for: [#{num_targets}] groups"
+    _log.info("Created MiqTask ID: [#{miq_task.id}], Name: [#{miq_task.name}] for: [#{num_targets}] groups")
 
     self.miq_task_id = miq_task.id
     self.save!
@@ -114,7 +114,7 @@ class MiqWidget < ApplicationRecord
   end
 
   def generate_content_complete_callback(status, _message, _result)
-    _log.info "Widget ID: [#{id}], MiqTask ID: [#{miq_task_id}], Status: [#{status}]"
+    _log.info("Widget ID: [#{id}], MiqTask ID: [#{miq_task_id}], Status: [#{status}]")
 
     miq_task.lock(:exclusive) do |locked_miq_task|
       if MiqTask.status_error?(status)
@@ -263,7 +263,7 @@ class MiqWidget < ApplicationRecord
 
     timezone = user.get_timezone
     if timezone.nil?
-      _log.warn "#{log_prefix} No timezone provided for #{userid}! UTC will be used."
+      _log.warn("#{log_prefix} No timezone provided for #{userid}! UTC will be used.")
       timezone = "UTC"
     end
 
@@ -459,7 +459,7 @@ class MiqWidget < ApplicationRecord
   end
 
   def self.sync_from_hash(attrs)
-    attrs.delete "id"
+    attrs.delete("id")
     filename = attrs.delete("filename")
     rname = attrs.delete("resource_name")
     if rname && attrs["resource_type"]
@@ -532,8 +532,8 @@ class MiqWidget < ApplicationRecord
     self.miq_schedule = sched
     self.save!
 
-    _log.info  "Created schedule for Widget: [#{title}]"
-    _log.debug "Widget: [#{title}] created schedule: [#{sched.inspect}]"
+    _log.info("Created schedule for Widget: [#{title}]")
+    _log.debug("Widget: [#{title}] created schedule: [#{sched.inspect}]")
 
     sched
   end

@@ -150,7 +150,7 @@ class EmsEvent < EventStream
     process_object_in_event!(AvailabilityZone, event, options)
     if event[:availability_zone_id].nil? && event[:vm_or_template_id]
       vm = VmOrTemplate.find(event[:vm_or_template_id])
-      if vm.respond_to? :availability_zone
+      if vm.respond_to?(:availability_zone)
         availability_zone = vm.availability_zone
         unless availability_zone.nil?
           event[:availability_zone_id]     = availability_zone.id

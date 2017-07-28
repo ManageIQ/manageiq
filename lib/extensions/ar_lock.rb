@@ -22,14 +22,14 @@ module ArLock
            end
 
     transaction do
-      _log.debug "Acquiring lock on #{self.class.name}::#{id}..."
+      _log.debug("Acquiring lock on #{self.class.name}::#{id}...")
       lock!(lock)
-      _log.debug "Acquired lock"
+      _log.debug("Acquired lock")
 
       begin
         Timeout.timeout(timeout) { yield self }
       ensure
-        _log.debug "Releasing lock"
+        _log.debug("Releasing lock")
       end
     end
   end

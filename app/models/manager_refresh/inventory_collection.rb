@@ -777,7 +777,7 @@ module ManagerRefresh
 
     def fixed_attributes
       if model_class
-        presence_validators = model_class.validators.detect { |x| x.kind_of? ActiveRecord::Validations::PresenceValidator }
+        presence_validators = model_class.validators.detect { |x| x.kind_of?(ActiveRecord::Validations::PresenceValidator) }
       end
       # Attributes that has to be always on the entity, so attributes making unique index of the record + attributes
       # that have presence validation
@@ -845,7 +845,7 @@ module ManagerRefresh
     end
 
     def belongs_to_associations
-      model_class.reflect_on_all_associations.select { |x| x.kind_of? ActiveRecord::Reflection::BelongsToReflection }
+      model_class.reflect_on_all_associations.select { |x| x.kind_of?(ActiveRecord::Reflection::BelongsToReflection) }
     end
 
     def association_to_foreign_key_mapping

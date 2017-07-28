@@ -10,7 +10,7 @@ module Vm::Operations
   included do
     supports :launch_cockpit do
       if ipaddresses.blank?
-        unsupported_reason_add :launch_cockpit, 'Launching of Cockpit requires an IP address for the VM.'
+        unsupported_reason_add(:launch_cockpit, 'Launching of Cockpit requires an IP address for the VM.')
       end
     end
   end

@@ -87,7 +87,7 @@ module MiqServer::ServerSmartProxy
           timeout_adj = 8
         end
       end
-      $log.debug "#{log_prefix}: queuing call to #{self.class.name}##{ost.method_name}"
+      $log.debug("#{log_prefix}: queuing call to #{self.class.name}##{ost.method_name}")
       # Queue call to scan_metadata or sync_metadata.
       MiqQueue.submit_job(
         :service     => "smartproxy",
@@ -99,7 +99,7 @@ module MiqServer::ServerSmartProxy
         :msg_timeout => worker_setting[:queue_timeout] * timeout_adj
       )
     else
-      _log.error "Unsupported method [#{ost.method_name}]"
+      _log.error("Unsupported method [#{ost.method_name}]")
     end
   end
 
@@ -108,7 +108,7 @@ module MiqServer::ServerSmartProxy
     klass  = ost.target_type.constantize
     target = klass.find(ost.target_id)
     job    = Job.find_by(:guid => ost.taskid)
-    _log.debug "#{target.name} (#{target.class.name})"
+    _log.debug("#{target.name} (#{target.class.name})")
     begin
       ost.args[1]  = YAML.load(ost.args[1]) # TODO: YAML.dump'd in call_scan - need it be?
       ost.scanData = ost.args[1].kind_of?(Hash) ? ost.args[1] : {}
@@ -121,8 +121,8 @@ module MiqServer::ServerSmartProxy
 
       target.perform_metadata_scan(ost)
     rescue Exception => err
-      _log.error err.to_s
-      _log.debug err.backtrace.join("\n")
+      _log.error(err.to_s)
+      _log.debug(err.backtrace.join("\n"))
       job.signal(:abort_retry, err.to_s, "error", true)
       return
     end
@@ -133,12 +133,12 @@ module MiqServer::ServerSmartProxy
     klass  = ost.target_type.constantize
     target = klass.find(ost.target_id)
     job    = Job.find_by(:guid => ost.taskid)
-    _log.debug "#{log_prefix}: #{target.name} (#{target.class.name})"
+    _log.debug("#{log_prefix}: #{target.name} (#{target.class.name})")
     begin
       target.perform_metadata_sync(ost)
     rescue Exception => err
-      _log.error err.to_s
-      _log.debug err.backtrace.join("\n")
+      _log.error(err.to_s)
+      _log.debug(err.backtrace.join("\n"))
       job.signal(:abort_retry, err.to_s, "error", true)
       return
     end
@@ -151,7 +151,7 @@ module MiqServer::ServerSmartProxy
     errArray = errArray[0, 2] if $log.level > 1
 
     # Print the stack trace to debug logging level
-    errArray.each { |e| $log.error "Error Trace: [#{e}]" }
+    errArray.each { |e| $log.error("Error Trace: [#{e}]") }
   end
 
   def forceVmScan

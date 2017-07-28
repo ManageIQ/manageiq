@@ -38,7 +38,7 @@ class VmScan < Job
   end
 
   def call_check_policy
-    _log.info "Enter"
+    _log.info("Enter")
 
     begin
       vm = VmOrTemplate.find(target_id)
@@ -88,7 +88,7 @@ class VmScan < Job
   end
 
   def call_snapshot_create
-    _log.info "Enter"
+    _log.info("Enter")
 
     begin
       vm = VmOrTemplate.find(target_id)
@@ -143,12 +143,12 @@ class VmScan < Job
   end
 
   def wait_for_vim_broker
-    _log.info "Enter"
+    _log.info("Enter")
     i = 0
     loop do
       set_status("Waiting for VimBroker to become available (#{i += 1})")
       sleep(60)
-      _log.info "Checking VimBroker connection status.  Count=[#{i}]"
+      _log.info("Checking VimBroker connection status.  Count=[#{i}]")
       break if MiqVimBrokerWorker.available?
     end
 
@@ -156,7 +156,7 @@ class VmScan < Job
   end
 
   def call_scan
-    _log.info "Enter"
+    _log.info("Enter")
 
     begin
       host = MiqServer.find(miq_server_id)
@@ -176,8 +176,8 @@ class VmScan < Job
         end
       end
       if ems_list[scan_ci_type]
-        _log.info "[#{host.name}] communicates with [#{scan_ci_type}:#{ems_list[scan_ci_type][:hostname]}"\
-                  "(#{ems_list[scan_ci_type][:address]})] to scan vm [#{vm.name}]"
+        _log.info("[#{host.name}] communicates with [#{scan_ci_type}:#{ems_list[scan_ci_type][:hostname]}"\
+                  "(#{ems_list[scan_ci_type][:address]})] to scan vm [#{vm.name}]")
       end
       vm.scan_metadata(options[:categories], "taskid" => jobid, "host" => host, "args" => [YAML.dump(scan_args)])
     rescue Timeout::Error
@@ -223,7 +223,7 @@ class VmScan < Job
   end
 
   def call_snapshot_delete
-    _log.info "Enter"
+    _log.info("Enter")
 
     # TODO: remove snapshot here if Vm was running
     vm = VmOrTemplate.find(target_id)
@@ -275,7 +275,7 @@ class VmScan < Job
   end
 
   def call_synchronize
-    _log.info "Enter"
+    _log.info("Enter")
 
     begin
       host = MiqServer.find(miq_server_id)
@@ -300,22 +300,22 @@ class VmScan < Job
   end
 
   def synchronizing
-    _log.info "."
+    _log.info(".")
   end
 
   def scanning
-    _log.info "." if context[:scan_attempted]
+    _log.info(".") if context[:scan_attempted]
     context[:scan_attempted] = true
   end
 
   def process_data(*args)
-    _log.info "starting..."
+    _log.info("starting...")
 
     data = args.first
     set_status("Processing VM data")
 
     doc = MiqXml.load(data)
-    _log.info "Document=#{doc.root.name.downcase}"
+    _log.info("Document=#{doc.root.name.downcase}")
 
     if doc.root.name.downcase == "summary"
       doc.root.each_element do |s|
@@ -401,7 +401,7 @@ class VmScan < Job
         end
       rescue => err
         _log.error(err.message)
-        _log.debug err.backtrace.join("\n")
+        _log.debug(err.backtrace.join("\n"))
       end
     else
       end_user_event_message(vm)
@@ -463,7 +463,7 @@ class VmScan < Job
   def process_cancel(*args)
     options = args.first || {}
 
-    _log.info "job canceling, #{options[:message]}"
+    _log.info("job canceling, #{options[:message]}")
 
     begin
       delete_snapshot(context[:snapshot_mor])
@@ -594,7 +594,7 @@ class VmScan < Job
       begin
         vm.ext_management_system.vm_log_user_event(vm, user_event)
       rescue => err
-        _log.warn "Failed to log user event with EMS.  Error: [#{err.class.name}]: #{err} Event message [#{user_event}]"
+        _log.warn("Failed to log user event with EMS.  Error: [#{err.class.name}]: #{err} Event message [#{user_event}]")
       end
     end
   end

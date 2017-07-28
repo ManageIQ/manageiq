@@ -47,7 +47,7 @@ module MiqReport::Seeding
       yml = YAML.load_file(filename)
       rpt = {}
       column_names.each { |c| rpt[c.to_sym] = yml[c] }
-      rpt.delete :id
+      rpt.delete(:id)
       rpt[:name] = yml["menu_name"].strip
       rpt[:rpt_group] = File.basename(File.dirname(filename)).split("_").last
       rpt[:rpt_type] = "Default"

@@ -19,7 +19,7 @@ module ManageIQ
       if defined?(Rails)
         Rails.root
       else
-        Pathname.new File.expand_path("../..", __FILE__)
+        Pathname.new(File.expand_path("../..", __FILE__))
       end
     end
   end

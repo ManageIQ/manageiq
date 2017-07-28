@@ -32,8 +32,8 @@ class MiqCockpitWsWorker::Runner < MiqWorker::Runner
       rescue EOFError
         _log.info("#{log_prefix} got EOF process exiting")
       end
-      outbuf.split("\n").each { |msg| $log.info  "cockpit-ws: #{msg.rstrip}" } if outbuf
-      errbuf.split("\n").each { |msg| $log.error "cockpit-ws: #{msg.rstrip}" } if errbuf
+      outbuf.split("\n").each { |msg| $log.info("cockpit-ws: #{msg.rstrip}") } if outbuf
+      errbuf.split("\n").each { |msg| $log.error("cockpit-ws: #{msg.rstrip}") } if errbuf
     else
       _log.info("#{log_prefix} Cockpit-ws Process gone. Restarting...")
       start_cockpit_ws

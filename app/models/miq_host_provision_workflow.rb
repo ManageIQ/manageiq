@@ -108,7 +108,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
 
   def ws_template_fields(_values, fields)
     data = parse_ws_string(fields)
-    _log.info "data:<#{data.inspect}>"
+    _log.info("data:<#{data.inspect}>")
 
     name         =     data[:name].blank? ? nil : data[:name].downcase
     mac_address  =     data[:mac_address].blank? ? nil : data[:mac_address].downcase
@@ -118,9 +118,9 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
       raise _("No host search criteria values were passed.  input data:<%{data}>") % {:data => data.inspect}
     end
 
-    _log.info "Host Passed  : <#{name}> <#{mac_address}> <#{ipmi_address}>"
+    _log.info("Host Passed  : <#{name}> <#{mac_address}> <#{ipmi_address}>")
     srcs = allowed_ws_hosts(:include_datacenter => true).find_all do |v|
-      _log.info "Host Detected: <#{v.name.downcase}> <#{v.mac_address}> <#{v.ipmi_address}>"
+      _log.info("Host Detected: <#{v.name.downcase}> <#{v.mac_address}> <#{v.ipmi_address}>")
       (name.nil? || name == v.name.downcase) && (mac_address.nil? || mac_address == v.mac_address.to_s.downcase) && (ipmi_address.nil? || ipmi_address == v.ipmi_address.to_s)
     end
     if srcs.length > 1
@@ -129,21 +129,21 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     src = srcs.first
 
     raise _("No target host was found from input data:<%{data}>") % {:data => data.inspect} if src.nil?
-    _log.info "Host Found: <#{src.name}> MAC:<#{src.mac_address}> IPMI:<#{src.ipmi_address}>"
+    _log.info("Host Found: <#{src.name}> MAC:<#{src.mac_address}> IPMI:<#{src.ipmi_address}>")
     src
   end
 
   def ws_host_fields(values, fields)
     data = parse_ws_string(fields)
 
-    _log.info "data:<#{data.inspect}>"
+    _log.info("data:<#{data.inspect}>")
     ws_service_fields(values, fields, data)
     ws_environment_fields(values, fields, data)
     refresh_field_values(values)
     ws_customize_fields(values, fields, data)
     ws_schedule_fields(values, fields, data)
 
-    data.each { |k, v| _log.warn "Unprocessed key <#{k}> with value <#{v.inspect}>" }
+    data.each { |k, v| _log.warn("Unprocessed key <#{k}> with value <#{v.inspect}>") }
   end
 
   def ws_service_fields(values, _fields, data)
@@ -216,13 +216,13 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
 
   def self.from_ws_ver_1_x(version, user, template_fields, vm_fields, requester, tags, options)
     options = MiqHashStruct.new if options.nil?
-    _log.warn "Web-service host provisioning starting with interface version <#{version}> by requester <#{user.userid}>"
+    _log.warn("Web-service host provisioning starting with interface version <#{version}> by requester <#{user.userid}>")
 
     init_options = {:use_pre_dialog => false, :request_type => request_type(parse_ws_string(template_fields)[:request_type])}
     data = parse_ws_string(requester)
     unless data[:user_name].blank?
       user = User.find_by_userid!(data[:user_name])
-      _log.warn "Web-service requester changed to <#{user.userid}>"
+      _log.warn("Web-service requester changed to <#{user.userid}>")
     end
 
     p = new(values = {}, user, init_options)
@@ -245,7 +245,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
       p.raise_validate_errors if request == false
     end
   rescue => err
-    _log.error "<#{err}>"
+    _log.error("<#{err}>")
     raise err
   end
 end # class MiqHostProvisionWorkflow

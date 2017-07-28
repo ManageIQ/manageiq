@@ -49,7 +49,7 @@ module EmsRefresh::SaveInventoryInfra
     _log.info("#{log_header} Saving EMS Inventory...")
     if debug_trace
       require 'yaml'
-      _log.debug "#{log_header} hashes:\n#{YAML.dump(hashes)}"
+      _log.debug("#{log_header} hashes:\n#{YAML.dump(hashes)}")
     end
 
     child_keys = [
@@ -357,18 +357,18 @@ module EmsRefresh::SaveInventoryInfra
   def find_host(h, ems_id)
     found = nil
     if h[:ems_ref]
-      _log.debug "EMS ID: #{ems_id} Host database lookup - ems_ref: [#{h[:ems_ref]}] ems_id: [#{ems_id}]"
+      _log.debug("EMS ID: #{ems_id} Host database lookup - ems_ref: [#{h[:ems_ref]}] ems_id: [#{ems_id}]")
       found = Host.find_by(:ems_ref => h[:ems_ref], :ems_id => ems_id)
     end
 
     if found.nil?
       if h[:hostname].nil? && h[:ipaddress].nil?
-        _log.debug "EMS ID: #{ems_id} Host database lookup - name [#{h[:name]}]"
+        _log.debug("EMS ID: #{ems_id} Host database lookup - name [#{h[:name]}]")
         found = Host.where(:ems_id => ems_id).detect { |e| e.name.downcase == h[:name].downcase }
       elsif ["localhost", "localhost.localdomain", "127.0.0.1"].include_none?(h[:hostname], h[:ipaddress])
         # host = Host.find_by_hostname(hostname) has a risk of creating duplicate hosts
         # allow a deleted EMS to be re-added an pick up old orphaned hosts
-        _log.debug "EMS ID: #{ems_id} Host database lookup - hostname: [#{h[:hostname]}] IP: [#{h[:ipaddress]}] ems_ref: [#{h[:ems_ref]}]"
+        _log.debug("EMS ID: #{ems_id} Host database lookup - hostname: [#{h[:hostname]}] IP: [#{h[:ipaddress]}] ems_ref: [#{h[:ems_ref]}]")
         found = look_up_host(h[:hostname], h[:ipaddress], :ems_ref => h[:ems_ref])
       end
     end

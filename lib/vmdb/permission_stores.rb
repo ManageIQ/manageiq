@@ -9,7 +9,7 @@ module Vmdb
       end
 
       def create
-        PermissionStores.create self
+        PermissionStores.create(self)
       end
 
       def load

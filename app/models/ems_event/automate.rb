@@ -120,7 +120,7 @@ class EmsEvent
     def parse_policy_source(target, param)
       param.blank? ? ext_management_system : target.send(param)
     rescue => err
-      _log.warn "Error: #{err.message}, getting policy source, skipping policy evaluation"
+      _log.warn("Error: #{err.message}, getting policy source, skipping policy evaluation")
     end
 
     def call(target_str, method, options = {})
@@ -128,7 +128,7 @@ class EmsEvent
 
       target = target_original = get_target(target_str)
       if target.nil?
-        _log.info "Unable to find target [#{target_str}].  Performing refresh."
+        _log.info("Unable to find target [#{target_str}].  Performing refresh.")
         return refresh(target_str)
       end
 

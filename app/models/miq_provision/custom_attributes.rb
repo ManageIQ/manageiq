@@ -10,7 +10,7 @@ module MiqProvision::CustomAttributes
       end
       vm.custom_attributes.create(attrs)
     rescue => err
-      _log.warn "Failed to set EVM Custom Attributes #{custom_attrs.inspect}.  Reason:<#{err}>"
+      _log.warn("Failed to set EVM Custom Attributes #{custom_attrs.inspect}.  Reason:<#{err}>")
     end
   end
 
@@ -22,7 +22,7 @@ module MiqProvision::CustomAttributes
         _log.info("Setting EMS Custom Attribute key=#{k.to_s.inspect}, value=#{v.to_s.inspect}")
         vm.set_custom_field(k.to_s, v.to_s)
       rescue => err
-        _log.warn "Failed to set EMS Custom Attribute <#{k}> to <#{v}>.  Reason:<#{err}>"
+        _log.warn("Failed to set EMS Custom Attribute <#{k}> to <#{v}>.  Reason:<#{err}>")
       end
     end
   end

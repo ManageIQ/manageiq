@@ -12,7 +12,7 @@ class AutomationRequest < MiqRequest
   # parameters: var1=vvvvv|var2=wwww|var3=xxxxx
   ##############################################
   def self.create_from_ws(version, user, uri_parts, parameters, requester)
-    _log.info "Starting with interface version=<#{version}> for user=<#{user.userid}> with uri_parts=<#{uri_parts.inspect}>, parameters=<#{parameters.inspect}> and requester=<#{requester.inspect}>"
+    _log.info("Starting with interface version=<#{version}> for user=<#{user.userid}> with uri_parts=<#{uri_parts.inspect}>, parameters=<#{parameters.inspect}> and requester=<#{requester.inspect}>")
 
     options = {}
     requester_options = MiqRequestWorkflow.parse_ws_string(requester)
@@ -22,7 +22,7 @@ class AutomationRequest < MiqRequest
 
     uri_options = MiqRequestWorkflow.parse_ws_string(uri_parts)
     [:namespace, :class, :instance, :message].each { |key| options[key] = uri_options.delete(key) if uri_options.key?(key) }
-    uri_options.keys.each { |key| _log.warn "invalid keyword <#{key}> specified in uri_parts" }
+    uri_options.keys.each { |key| _log.warn("invalid keyword <#{key}> specified in uri_parts") }
     options[:namespace]     = (options.delete(:namespace) || DEFAULT_NAMESPACE).strip.gsub(/(^\/|\/$)/, "")  # Strip blanks and slashes from beginning and end of string
     options[:class_name]    = (options.delete(:class) || DEFAULT_CLASS).strip.gsub(/(^\/|\/$)/, "")
     options[:instance_name] = (options.delete(:instance) || DEFAULT_INSTANCE).strip

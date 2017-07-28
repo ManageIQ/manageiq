@@ -77,7 +77,7 @@ class MiqServer < ApplicationRecord
   def self.setup_data_directory
     # create root data directory
     data_dir = File.join(File.expand_path(Rails.root), "data")
-    Dir.mkdir data_dir unless File.exist?(data_dir)
+    Dir.mkdir(data_dir) unless File.exist?(data_dir)
   end
 
   def self.pidfile
@@ -189,7 +189,7 @@ class MiqServer < ApplicationRecord
     if server.vm_id.nil?
       vms = Vm.find_all_by_mac_address_and_hostname_and_ipaddress(mac_address, hostname, ipaddr)
       if vms.length > 1
-        _log.warn "Found multiple Vms that may represent this MiqServer: #{vms.collect(&:id).sort.inspect}"
+        _log.warn("Found multiple Vms that may represent this MiqServer: #{vms.collect(&:id).sort.inspect}")
       elsif vms.length == 1
         server_hash[:vm_id] = vms.first.id
       end
@@ -209,12 +209,12 @@ class MiqServer < ApplicationRecord
     _log.info("Server IP Address: #{server.ipaddress}")    unless server.ipaddress.blank?
     _log.info("Server Hostname: #{server.hostname}")       unless server.hostname.blank?
     _log.info("Server MAC Address: #{server.mac_address}") unless server.mac_address.blank?
-    _log.info "Server GUID: #{my_guid}"
-    _log.info "Server Zone: #{my_zone}"
-    _log.info "Server Role: #{my_role}"
+    _log.info("Server GUID: #{my_guid}")
+    _log.info("Server Zone: #{my_zone}")
+    _log.info("Server Role: #{my_role}")
     region = MiqRegion.my_region
-    _log.info "Server Region number: #{region.region}, name: #{region.name}" unless region.nil?
-    _log.info "Database Latency: #{EvmDatabase.ping(connection)} ms"
+    _log.info("Server Region number: #{region.region}, name: #{region.name}") unless region.nil?
+    _log.info("Database Latency: #{EvmDatabase.ping(connection)} ms")
 
     Vmdb::Appliance.log_config_on_startup
 
@@ -260,7 +260,7 @@ class MiqServer < ApplicationRecord
     MiqRegion.my_region.active_miq_servers.sort_by { |s| [s.my_zone, s.name] }.each do |s|
       local  = s.is_local? ? 'Y' : 'N'
       master = s.is_master? ? 'Y' : 'N'
-      $log.info "MiqServer: local=#{local}, master=#{master}, status=#{'%08s' % s.status}, id=#{'%05d' % s.id}, pid=#{'%05d' % s.pid}, guid=#{s.guid}, name=#{s.name}, zone=#{s.my_zone}, hostname=#{s.hostname}, ipaddress=#{s.ipaddress}, version=#{s.version}, build=#{s.build}, active roles=#{s.active_role_names.join(':')}"
+      $log.info("MiqServer: local=#{local}, master=#{master}, status=#{'%08s' % s.status}, id=#{'%05d' % s.id}, pid=#{'%05d' % s.pid}, guid=#{s.guid}, name=#{s.name}, zone=#{s.my_zone}, hostname=#{s.hostname}, ipaddress=#{s.ipaddress}, version=#{s.version}, build=#{s.build}, active roles=#{s.active_role_names.join(':')}")
     end
   end
 
@@ -345,7 +345,7 @@ class MiqServer < ApplicationRecord
   def monitor_loop
     loop do
       _dummy, timings = Benchmark.realtime_block(:total_time) { monitor }
-      _log.info "Server Monitoring Complete - Timings: #{timings.inspect}" unless timings[:total_time] < server_log_timings_threshold
+      _log.info("Server Monitoring Complete - Timings: #{timings.inspect}") unless timings[:total_time] < server_log_timings_threshold
       sleep monitor_poll
     end
   rescue Interrupt => e

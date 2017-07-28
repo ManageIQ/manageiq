@@ -254,7 +254,7 @@ class AutomateHash
 
   def run_it
     print "\nRE Running the Rest API POST to request_id: #{@options[:request_id]}\n\n" unless @quiet
-    result = RestClient.post build_url, output.to_json
+    result = RestClient.post(build_url, output.to_json)
     print "#{result}\n"
   end
 

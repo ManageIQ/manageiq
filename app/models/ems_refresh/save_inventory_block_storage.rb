@@ -21,7 +21,7 @@ module EmsRefresh::SaveInventoryBlockStorage
     _log.info("#{log_header} Saving EMS Inventory...")
     if debug_trace
       require 'yaml'
-      _log.debug "#{log_header} hashes:\n#{YAML.dump(hashes)}"
+      _log.debug("#{log_header} hashes:\n#{YAML.dump(hashes)}")
     end
 
     child_keys = [
@@ -111,7 +111,7 @@ module EmsRefresh::SaveInventoryBlockStorage
       # Existing disk, update attributes.
       if dh.key?(:id)
         unless (disk = Disk.where(:id => dh[:id]).first)
-          _log.warn "Expected disk not found, id = #{dh[:id]}"
+          _log.warn("Expected disk not found, id = #{dh[:id]}")
           next
         end
         disk.update(dh.except(:id, :backing_volume))

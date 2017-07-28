@@ -2,14 +2,14 @@ require 'csv'
 
 module MiqBulkImport
   def self.upload(fd, tags, keys)
-    _log.info "Uploading CSV file"
+    _log.info("Uploading CSV file")
     data = fd.read
     raise _("File is empty") if data.empty?
     data.gsub!(/\r/, "\n")
     begin
       reader = CSV.parse(data)
     rescue CSV::IllegalFormatError
-      _log.error "CSV file is invalid"
+      _log.error("CSV file is invalid")
       raise "CSV file is invalid"
     end
     header = reader.shift
@@ -20,7 +20,7 @@ module MiqBulkImport
     if verified_tags.empty?
       raise "No valid columns were found in the csv file. One of the following fields is required: (#{tags.join(" ")})."
     else
-      _log.info "The following columns are verified in the csv file: #{verified_tags.join(" and ")}"
+      _log.info("The following columns are verified in the csv file: #{verified_tags.join(" and ")}")
     end
 
     matched_keys = []
@@ -32,7 +32,7 @@ module MiqBulkImport
     end
 
     if matched_keys.empty?
-      _log.error "The following required columns used for matching are missing: #{keys.join(" or ")}"
+      _log.error("The following required columns used for matching are missing: #{keys.join(" or ")}")
       raise "The following required columns used for matching are missing: #{keys.join(" or ")}"
     end
 

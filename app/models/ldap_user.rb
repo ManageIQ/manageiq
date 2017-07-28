@@ -42,7 +42,7 @@ class LdapUser < ApplicationRecord
 
     db_users = {}
     ldap_server.ldap_users.select([:id, :dn]).find_each { |u| db_users[u[:dn]] = u[:id] }
-    _log.info "#{log_header} Initial DB User count: #{db_users.length}"
+    _log.info("#{log_header} Initial DB User count: #{db_users.length}")
 
     user_count = creates = updates = 0
 
@@ -64,7 +64,7 @@ class LdapUser < ApplicationRecord
       user_count += 1
       if user_count.remainder(1000).zero?
         ldap_server.save
-        _log.info "#{log_header} Processed <#{user_count}> LDAP Users.  New User count: <#{creates}>  Updates: <#{updates}>"
+        _log.info("#{log_header} Processed <#{user_count}> LDAP Users.  New User count: <#{creates}>  Updates: <#{updates}>")
       end
 
       ldap_server.save if creates.remainder(1000).zero?
@@ -74,9 +74,9 @@ class LdapUser < ApplicationRecord
     # Remaining Users are deletes
     deletes = db_users
 
-    _log.info "#{log_header} Creates: #{creates}"
-    _log.info "#{log_header} Updates: #{updates}"
-    _log.info "#{log_header} Deletes: #{deletes.length}"
+    _log.info("#{log_header} Creates: #{creates}")
+    _log.info("#{log_header} Updates: #{updates}")
+    _log.info("#{log_header} Deletes: #{deletes.length}")
 
     delete_ids = deletes.collect { |_dn, id| id }
     LdapUser.destroy(delete_ids)
@@ -85,17 +85,17 @@ class LdapUser < ApplicationRecord
     # or only ones that have changed since the last time.
     last_sync = ldap_server.last_user_sync
     if last_sync.nil?
-      _log.info "#{log_header} Initiating full LDAP user sync.  Last User Sync: #{last_sync.inspect}"
+      _log.info("#{log_header} Initiating full LDAP user sync.  Last User Sync: #{last_sync.inspect}")
       LdapUser.full_sync(ldap_server)
     else
-      _log.info "#{log_header} Syncing LDAP User data from: #{last_sync.inspect}"
+      _log.info("#{log_header} Syncing LDAP User data from: #{last_sync.inspect}")
       LdapUser.update_records_since(ldap_server, last_sync)
     end
   end
 
   def self.full_sync(ldap_server)
     log_header = "LDAP Server #{ldap_server.id} : <#{ldap_server.name}>"
-    _log.info "#{log_header} Starting full LDAP User sync"
+    _log.info("#{log_header} Starting full LDAP User sync")
     opts = {:return_result => false, :scope => :sub, :filter => Net::LDAP::Filter.eq("objectCategory", "Person")}
 
     rec_count = 0
@@ -106,7 +106,7 @@ class LdapUser < ApplicationRecord
       ldap_server.search(options) { |entry| rec.update_record(entry) }
     end
 
-    _log.info "#{log_header} Completed LDAP User sync for <#{rec_count}> records"
+    _log.info("#{log_header} Completed LDAP User sync for <#{rec_count}> records")
     rec_count
   end
 
@@ -117,7 +117,7 @@ class LdapUser < ApplicationRecord
     # LDAP whenchanged format example: "20121214170416.0Z"
     when_changed = updates_since.utc.iso8601(1).gsub(/[-:T]/, '')
 
-    _log.info "#{log_header} Checking for updated records since <#{when_changed}>"
+    _log.info("#{log_header} Checking for updated records since <#{when_changed}>")
     opts[:filter] = opts[:filter] & Net::LDAP::Filter.ge("whenchanged", when_changed)
 
     rec_count = 0
@@ -127,7 +127,7 @@ class LdapUser < ApplicationRecord
       rec = find_by_dn(dn)
     end
 
-    _log.info "#{log_header} Completed LDAP User sync for <#{rec_count}> records updated since <#{when_changed}>"
+    _log.info("#{log_header} Completed LDAP User sync for <#{rec_count}> records updated since <#{when_changed}>")
     rec_count
   end
 

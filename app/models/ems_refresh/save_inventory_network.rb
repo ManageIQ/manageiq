@@ -32,7 +32,7 @@ module EmsRefresh::SaveInventoryNetwork
     _log.info("#{log_header} Saving EMS Network Inventory...")
     if debug_trace
       require 'yaml'
-      _log.debug "#{log_header} hashes:\n#{YAML.dump(hashes)}"
+      _log.debug("#{log_header} hashes:\n#{YAML.dump(hashes)}")
     end
 
     child_keys = [

@@ -17,12 +17,12 @@ module EmsRefresh
           ems_refresh_start_time = Time.now
 
           begin
-            _log.info "Refreshing all targets..."
+            _log.info("Refreshing all targets...")
             log_ems_target = format_ems_for_logging(ems)
-            _log.info "#{log_ems_target} Refreshing targets for EMS..."
-            targets.each { |t| _log.info "#{log_ems_target}   #{t.class} [#{t.name}] id [#{t.id}]" }
+            _log.info("#{log_ems_target} Refreshing targets for EMS...")
+            targets.each { |t| _log.info("#{log_ems_target}   #{t.class} [#{t.name}] id [#{t.id}]") }
             _, timings = Benchmark.realtime_block(:ems_refresh) { refresh_targets_for_ems(ems, targets) }
-            _log.info "#{log_ems_target} Refreshing targets for EMS...Complete - Timings #{timings.inspect}"
+            _log.info("#{log_ems_target} Refreshing targets for EMS...Complete - Timings #{timings.inspect}")
           rescue => e
             raise if EmsRefresh.debug_failures
 
@@ -46,7 +46,7 @@ module EmsRefresh
           post_refresh(ems, ems_refresh_start_time)
         end
 
-        _log.info "Refreshing all targets...Complete"
+        _log.info("Refreshing all targets...Complete")
         raise PartialRefreshError, partial_refresh_errors.join(', ') if partial_refresh_errors.any?
       end
 
@@ -59,10 +59,10 @@ module EmsRefresh
           ems_in_list = targets.any? { |t| t.kind_of?(ExtManagementSystem) }
 
           if ems_in_list
-            _log.info "Defaulting to full refresh for EMS: [#{ems.name}], id: [#{ems.id}]." if targets.length > 1
+            _log.info("Defaulting to full refresh for EMS: [#{ems.name}], id: [#{ems.id}].") if targets.length > 1
             targets.clear << ems
           elsif targets.length >= @full_refresh_threshold
-            _log.info "Escalating to full refresh for EMS: [#{ems.name}], id: [#{ems.id}]."
+            _log.info("Escalating to full refresh for EMS: [#{ems.name}], id: [#{ems.id}].")
             targets.clear << ems
           end
         end
@@ -83,7 +83,7 @@ module EmsRefresh
         until targets_with_inventory.empty?
           target, inventory = targets_with_inventory.shift
 
-          _log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]..."
+          _log.info("#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]...")
           parsed, _ = Benchmark.realtime_block(:parse_targeted_inventory) do
             parse_targeted_inventory(ems, target, inventory)
           end
@@ -93,10 +93,10 @@ module EmsRefresh
           _log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]...Complete"
 
           if parsed.kind_of?(Array)
-            _log.info "#{log_header} ManagerRefresh Post Processing #{target.class} [#{target.name}] id [#{target.id}]..."
+            _log.info("#{log_header} ManagerRefresh Post Processing #{target.class} [#{target.name}] id [#{target.id}]...")
             # We have array of InventoryCollection, we want to use that data for post refresh
             Benchmark.realtime_block(:manager_refresh_post_processing) { manager_refresh_post_processing(ems, target, parsed) }
-            _log.info "#{log_header} ManagerRefresh Post Processing #{target.class} [#{target.name}] id [#{target.id}]...Complete"
+            _log.info("#{log_header} ManagerRefresh Post Processing #{target.class} [#{target.name}] id [#{target.id}]...Complete")
           end
         end
       end
@@ -126,9 +126,9 @@ module EmsRefresh
           log_header = format_ems_for_logging(ems)
           targets_to_collectors.map do |target, collector_class|
             log_msg = "#{log_header} Inventory Collector for #{target.class} [#{target.try(:name)}] id: [#{target.id}]"
-            _log.info "#{log_msg}..."
+            _log.info("#{log_msg}...")
             collector = collector_class.new(ems, target)
-            _log.info "#{log_msg}...Complete"
+            _log.info("#{log_msg}...Complete")
             [target, collector]
           end
         else
@@ -142,9 +142,9 @@ module EmsRefresh
         # new refreshers should override this method to parse inventory
         # TODO: remove this call after all refreshers support retrieving
         # inventory separate from parsing
-        if collector.kind_of? ManagerRefresh::Inventory::Collector
+        if collector.kind_of?(ManagerRefresh::Inventory::Collector)
           log_header = format_ems_for_logging(ems)
-          _log.debug "#{log_header} Parsing inventory..."
+          _log.debug("#{log_header} Parsing inventory...")
           inventory_collections, = Benchmark.realtime_block(:parse_inventory) do
             persister = ManagerRefresh::Inventory.persister_class_for(target.class).new(ems, target)
             parser = ManagerRefresh::Inventory.parser_class_for(target.class).new
@@ -152,7 +152,7 @@ module EmsRefresh
             i = ManagerRefresh::Inventory.new(persister, collector, parser)
             i.inventory_collections
           end
-          _log.debug "#{log_header} Parsing inventory...Complete"
+          _log.debug("#{log_header} Parsing inventory...Complete")
           inventory_collections
         else
           parsed, _ = Benchmark.realtime_block(:parse_legacy_inventory) { parse_legacy_inventory(ems) }
@@ -177,10 +177,10 @@ module EmsRefresh
         log_ems_target = "EMS: [#{ems.name}], id: [#{ems.id}]"
         # Do any post-operations for this EMS
         post_process_refresh_classes.each do |klass|
-          next unless klass.respond_to? :post_refresh_ems
-          _log.info "#{log_ems_target} Performing post-refresh operations for #{klass} instances..."
+          next unless klass.respond_to?(:post_refresh_ems)
+          _log.info("#{log_ems_target} Performing post-refresh operations for #{klass} instances...")
           klass.post_refresh_ems(ems.id, ems_refresh_start_time)
-          _log.info "#{log_ems_target} Performing post-refresh operations for #{klass} instances...Complete"
+          _log.info("#{log_ems_target} Performing post-refresh operations for #{klass} instances...Complete")
         end
       end
     end

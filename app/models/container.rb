@@ -46,7 +46,7 @@ class Container < ApplicationRecord
 
   def disconnect_inv
     return if archived?
-    _log.info "Disconnecting Container [#{name}] id [#{id}] from EMS "
+    _log.info("Disconnecting Container [#{name}] id [#{id}] from EMS")
     self.deleted_on = Time.now.utc
     save
   end

@@ -6,7 +6,7 @@ class MiqAeMethod < ApplicationRecord
   default_value_for :embedded_methods, []
 
   belongs_to :ae_class, :class_name => "MiqAeClass", :foreign_key => :class_id
-  has_many   :inputs,   -> { order :priority }, :class_name => "MiqAeField", :foreign_key => :method_id,
+  has_many   :inputs,   -> { order(:priority) }, :class_name => "MiqAeField", :foreign_key => :method_id,
                         :dependent => :destroy, :autosave => true
 
   validates_presence_of   :name, :scope

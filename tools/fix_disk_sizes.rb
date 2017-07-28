@@ -16,19 +16,19 @@ def getDinfo(vim)
 end
 
 log_header = "MIQ(#{__FILE__})"
-$log.info "#{log_header} Correcting Disk Sizes..."
+$log.info("#{log_header} Correcting Disk Sizes...")
 
 disks_by_filename = Disk.all.inject({}) { |h, d| h[d.filename] = d; h }
 changed_disks = {}
 
 ExtManagementSystem.all.each do |e|
-  $log.info "#{log_header} Correcting Disk Sizes for disks under ExtManagementSystem name: [#{e.name}], id: [#{e.id}]..."
+  $log.info("#{log_header} Correcting Disk Sizes for disks under ExtManagementSystem name: [#{e.name}], id: [#{e.id}]...")
 
   begin
     vim = e.connect
     dinfo = getDinfo(vim)
   rescue => err
-    $log.error "#{log_header} Error during Correcting Disk Sizes for disks under ExtManagementSystem name: [#{e.name}], id: [#{e.id}]...Skipping"
+    $log.error("#{log_header} Error during Correcting Disk Sizes for disks under ExtManagementSystem name: [#{e.name}], id: [#{e.id}]...Skipping")
     $log.log_backtrace(err)
     next
   ensure
@@ -52,8 +52,8 @@ ExtManagementSystem.all.each do |e|
     end
   end
 
-  $log.info "#{log_header} Collecting Disk Sizes for disks under ExtManagementSystem name: [#{e.name}], id: [#{e.id}]...Complete"
+  $log.info("#{log_header} Collecting Disk Sizes for disks under ExtManagementSystem name: [#{e.name}], id: [#{e.id}]...Complete")
 end
 
-$log.info "#{log_header} Changed disks: #{changed_disks.inspect}"
-$log.info "#{log_header} Correcting Disk Sizes...Complete"
+$log.info("#{log_header} Changed disks: #{changed_disks.inspect}")
+$log.info("#{log_header} Correcting Disk Sizes...Complete")

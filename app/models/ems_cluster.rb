@@ -17,7 +17,7 @@ class EmsCluster < ApplicationRecord
   has_many    :metric_rollups,         :as => :resource  # Destroy will be handled by purger
   has_many    :vim_performance_states, :as => :resource  # Destroy will be handled by purger
 
-  has_many    :policy_events, -> { order "timestamp" }
+  has_many    :policy_events, -> { order("timestamp") }
   has_many    :miq_events,         :as => :target,   :dependent => :destroy
   has_many    :miq_alert_statuses, :as => :resource, :dependent => :destroy
 
@@ -291,7 +291,7 @@ class EmsCluster < ApplicationRecord
 
     with_provider_object do |vim_cluster|
       begin
-        _log.info "Invoking addHost with options: address => #{network_address}, #{userid}"
+        _log.info("Invoking addHost with options: address => #{network_address}, #{userid}")
         host_mor = vim_cluster.addHost(network_address, userid, password)
       rescue VimFault => verr
         fault = verr.vimFaultInfo.fault
@@ -299,7 +299,7 @@ class EmsCluster < ApplicationRecord
         raise unless fault.xsiType == "SSLVerifyFault"
 
         ssl_thumbprint = fault.thumbprint
-        _log.info "Invoking addHost with options: address => #{network_address}, userid => #{userid}, sslThumbprint => #{ssl_thumbprint}"
+        _log.info("Invoking addHost with options: address => #{network_address}, userid => #{userid}, sslThumbprint => #{ssl_thumbprint}")
         host_mor = vim_cluster.addHost(network_address, userid, password, :sslThumbprint => ssl_thumbprint)
       end
 

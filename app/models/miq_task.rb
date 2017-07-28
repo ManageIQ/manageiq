@@ -50,10 +50,10 @@ class MiqTask < ApplicationRecord
 
   def check_active
     if active?
-      _log.warn "Task is active, delete not allowed; id: [#{id}]"
+      _log.warn("Task is active, delete not allowed; id: [#{id}]")
       throw :abort
     end
-    _log.info "Task deleted; id: [#{id}]"
+    _log.info("Task deleted; id: [#{id}]")
     true
   end
 
@@ -76,7 +76,7 @@ class MiqTask < ApplicationRecord
 
   def check_associations
     if job && job.is_active?
-      _log.warn "Delete not allowed: Task [#{id}] has active job - id: [#{job.id}], guid: [#{job.guid}],"
+      _log.warn("Delete not allowed: Task [#{id}] has active job - id: [#{job.id}], guid: [#{job.guid}],")
       throw :abort
     end
     true

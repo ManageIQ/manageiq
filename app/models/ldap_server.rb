@@ -27,6 +27,6 @@ class LdapServer < ApplicationRecord
 
   def self.sync_data_from_timer(timestamp = Time.now)
     # Stub for now
-    _log.info "time: #{timestamp}"
+    _log.info("time: #{timestamp}")
   end
 end

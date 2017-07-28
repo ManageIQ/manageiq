@@ -89,14 +89,14 @@ class VmOrTemplate < ApplicationRecord
 
   # System Services - Win32_Services, Kernel drivers, Filesystem drivers
   has_many                  :system_services, :dependent => :destroy
-  has_many                  :win32_services, -> { where "typename = 'win32_service'" }, :class_name => "SystemService"
-  has_many                  :kernel_drivers, -> { where "typename = 'kernel' OR typename = 'misc'" }, :class_name => "SystemService"
-  has_many                  :filesystem_drivers, -> { where "typename = 'filesystem'" },  :class_name => "SystemService"
-  has_many                  :linux_initprocesses, -> { where "typename = 'linux_initprocess' OR typename = 'linux_systemd'" }, :class_name => "SystemService"
+  has_many                  :win32_services, -> { where("typename = 'win32_service'") }, :class_name => "SystemService"
+  has_many                  :kernel_drivers, -> { where("typename = 'kernel' OR typename = 'misc'") }, :class_name => "SystemService"
+  has_many                  :filesystem_drivers, -> { where("typename = 'filesystem'") },  :class_name => "SystemService"
+  has_many                  :linux_initprocesses, -> { where("typename = 'linux_initprocess' OR typename = 'linux_systemd'") }, :class_name => "SystemService"
 
   has_many                  :filesystems, :as => :resource, :dependent => :destroy
-  has_many                  :directories, -> { where "rsc_type = 'dir'" }, :as => :resource, :class_name => "Filesystem"
-  has_many                  :files, -> { where "rsc_type = 'file'" },       :as => :resource, :class_name => "Filesystem"
+  has_many                  :directories, -> { where("rsc_type = 'dir'") }, :as => :resource, :class_name => "Filesystem"
+  has_many                  :files, -> { where("rsc_type = 'file'") },       :as => :resource, :class_name => "Filesystem"
 
   has_many                  :scan_histories,    :dependent => :destroy
   has_many                  :lifecycle_events,  :class_name => "LifecycleEvent"
@@ -110,7 +110,7 @@ class VmOrTemplate < ApplicationRecord
   has_many                  :vim_performance_states, :as => :resource  # Destroy will be handled by purger
 
   has_many                  :storage_files, :dependent => :destroy
-  has_many                  :storage_files_files, -> { where "rsc_type = 'file'" }, :class_name => "StorageFile"
+  has_many                  :storage_files_files, -> { where("rsc_type = 'file'") }, :class_name => "StorageFile"
 
   # EMS Events
   has_many                  :ems_events, ->(vmt) { where(["vm_or_template_id = ? OR dest_vm_or_template_id = ?", vmt.id, vmt.id]).order(:timestamp) },
@@ -608,13 +608,13 @@ class VmOrTemplate < ApplicationRecord
     #it's empty string for local type
     storage_name = ""
                     # NAS
-    relative_path = if path.starts_with? "//"
+    relative_path = if path.starts_with?("//")
                       raise _("path, '%{path}', is malformed") % {:path => path} unless path =~ %r{^//[^/].*/.+$}
                       # path is a UNC
                       storage_name = path.split("/")[0..3].join("/")
                       path.split("/")[4..path.length].join("/") if path.length > 4
                     #VMFS
-                    elsif path.starts_with? "["
+                    elsif path.starts_with?("[")
                       raise _("path, '%{path}', is malformed") % {:path => path} unless path =~ /^\[[^\]].+\].*$/
                       # path is a VMWare storage name
                       /^\[(.*)\](.*)$/ =~ path
@@ -652,7 +652,7 @@ class VmOrTemplate < ApplicationRecord
     return if stack && stack != orchestration_stack
 
     log_text = " from stack [#{orchestration_stack.name}] id [#{orchestration_stack.id}]"
-    _log.info "Disconnecting Vm [#{name}] id [#{id}]#{log_text}"
+    _log.info("Disconnecting Vm [#{name}] id [#{id}]#{log_text}")
 
     self.orchestration_stack = nil
     save
@@ -660,7 +660,7 @@ class VmOrTemplate < ApplicationRecord
 
   def connect_ems(e)
     unless ext_management_system == e
-      _log.debug "Connecting Vm [#{name}] id [#{id}] to EMS [#{e.name}] id [#{e.id}]"
+      _log.debug("Connecting Vm [#{name}] id [#{id}] to EMS [#{e.name}] id [#{e.id}]")
       self.ext_management_system = e
       save
     end
@@ -669,7 +669,7 @@ class VmOrTemplate < ApplicationRecord
   def disconnect_ems(e = nil)
     if e.nil? || ext_management_system == e
       log_text = " from EMS [#{ext_management_system.name}] id [#{ext_management_system.id}]" unless ext_management_system.nil?
-      _log.info "Disconnecting Vm [#{name}] id [#{id}]#{log_text}"
+      _log.info("Disconnecting Vm [#{name}] id [#{id}]#{log_text}")
 
       self.ext_management_system = nil
       self.ems_cluster = nil
@@ -680,7 +680,7 @@ class VmOrTemplate < ApplicationRecord
 
   def connect_host(h)
     unless host == h
-      _log.debug "Connecting Vm [#{name}] id [#{id}] to Host [#{h.name}] id [#{h.id}]"
+      _log.debug("Connecting Vm [#{name}] id [#{id}] to Host [#{h.name}] id [#{h.id}]")
       self.host = h
       save
 
@@ -692,7 +692,7 @@ class VmOrTemplate < ApplicationRecord
   def disconnect_host(h = nil)
     if h.nil? || host == h
       log_text = " from Host [#{host.name}] id [#{host.id}]" unless host.nil?
-      _log.info "Disconnecting Vm [#{name}] id [#{id}]#{log_text}"
+      _log.info("Disconnecting Vm [#{name}] id [#{id}]#{log_text}")
 
       self.host = nil
       save
@@ -704,7 +704,7 @@ class VmOrTemplate < ApplicationRecord
 
   def connect_storage(s)
     unless storage == s
-      _log.debug "Connecting Vm [#{name}] id [#{id}] to #{ui_lookup(:table => "storages")} [#{s.name}] id [#{s.id}]"
+      _log.debug("Connecting Vm [#{name}] id [#{id}] to #{ui_lookup(:table => "storages")} [#{s.name}] id [#{s.id}]")
       self.storage = s
       save
     end
@@ -714,7 +714,7 @@ class VmOrTemplate < ApplicationRecord
     if s.nil? || storage == s || storages.include?(s)
       stores = s.nil? ? ([storage] + storages).compact.uniq : [s]
       log_text = stores.collect { |x| "#{ui_lookup(:table => "storages")} [#{x.name}] id [#{x.id}]" }.join(", ")
-      _log.info "Disconnecting Vm [#{name}] id [#{id}] from #{log_text}"
+      _log.info("Disconnecting Vm [#{name}] id [#{id}] from #{log_text}")
 
       if s.nil?
         self.storage = nil
@@ -883,11 +883,11 @@ class VmOrTemplate < ApplicationRecord
 
   # TODO: Come back to this
   def proxies4job(_job = nil)
-    _log.debug "Enter"
+    _log.debug("Enter")
 
     all_proxy_list = storage2proxies
     proxies = storage2active_proxies(all_proxy_list)
-    _log.debug "# proxies = #{proxies.length}"
+    _log.debug("# proxies = #{proxies.length}")
 
     msg = if all_proxy_list.empty?
             "No active SmartProxies found to analyze this VM"
@@ -947,15 +947,15 @@ class VmOrTemplate < ApplicationRecord
 
   def storage2active_proxies(all_proxy_list = nil)
     all_proxy_list ||= storage2proxies
-    _log.debug "all_proxy_list.length = #{all_proxy_list.length}"
+    _log.debug("all_proxy_list.length = #{all_proxy_list.length}")
     proxies = all_proxy_list.select(&:is_proxy_active?)
-    _log.debug "proxies1.length = #{proxies.length}"
+    _log.debug("proxies1.length = #{proxies.length}")
 
     # MiqServer coresident proxy needs to contact the host and provide credentials.
     # Remove any MiqServer instances if we do not have credentials
     rsc = self.scan_via_ems? ? ext_management_system : host
     proxies.delete_if { |p| MiqServer === p } if rsc && !rsc.authentication_status_ok?
-    _log.debug "proxies2.length = #{proxies.length}"
+    _log.debug("proxies2.length = #{proxies.length}")
 
     proxies
   end
@@ -981,34 +981,34 @@ class VmOrTemplate < ApplicationRecord
     when 'microsoft'
       return [] if storage_id.blank?
     else
-      _log.debug "else"
+      _log.debug("else")
       return []
     end
 
     host_server_ids = host ? host.vm_scan_affinity.collect(&:id) : []
-    _log.debug "host_server_ids.length = #{host_server_ids.length}"
+    _log.debug("host_server_ids.length = #{host_server_ids.length}")
 
     storage_server_ids = storages.collect { |s| s.vm_scan_affinity.collect(&:id) }.reject(&:blank?)
-    _log.debug "storage_server_ids.length = #{storage_server_ids.length}"
+    _log.debug("storage_server_ids.length = #{storage_server_ids.length}")
 
     all_storage_server_ids = storage_server_ids.inject(:&) || []
-    _log.debug "all_storage_server_ids.length = #{all_storage_server_ids.length}"
+    _log.debug("all_storage_server_ids.length = #{all_storage_server_ids.length}")
 
     srs = self.class.miq_servers_for_scan
-    _log.debug "srs.length = #{srs.length}"
+    _log.debug("srs.length = #{srs.length}")
 
     miq_servers = srs.select do |svr|
       (svr.vm_scan_host_affinity? ? host_server_ids.detect { |id| id == svr.id } : host_server_ids.empty?) &&
       (svr.vm_scan_storage_affinity? ? all_storage_server_ids.detect { |id| id == svr.id } : storage_server_ids.empty?)
     end
-    _log.debug "miq_servers1.length = #{miq_servers.length}"
+    _log.debug("miq_servers1.length = #{miq_servers.length}")
 
     miq_servers.select! do |svr|
       result = svr.status == "started" && svr.has_zone?(my_zone)
       result &&= svr.is_vix_disk? if vendor == 'vmware'
       result
     end
-    _log.debug "miq_servers2.length = #{miq_servers.length}"
+    _log.debug("miq_servers2.length = #{miq_servers.length}")
     miq_servers
   end
 
@@ -1244,7 +1244,7 @@ class VmOrTemplate < ApplicationRecord
     begin
       storage_id, location = parse_path(path)
     rescue
-      _log.warn "Invalid path specified [#{path}]"
+      _log.warn("Invalid path specified [#{path}]")
       return nil
     end
     VmOrTemplate.find_by(:storage_id => storage_id, :location => location)
@@ -1618,12 +1618,12 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def self.scan_by_property(property, value, _options = {})
-    _log.info "scan_vm_by_property called with property:[#{property}] value:[#{value}]"
+    _log.info("scan_vm_by_property called with property:[#{property}] value:[#{value}]")
     case property
     when "ipaddress"
       vms_by_ipaddress(value) do |vm|
         if vm.state == "on"
-          _log.info "Initiating VM scan for [#{vm.id}:#{vm.name}]"
+          _log.info("Initiating VM scan for [#{vm.id}:#{vm.name}]")
           vm.scan
         end
       end
@@ -1633,7 +1633,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def self.event_by_property(property, value, event_type, event_message, event_time = nil, _options = {})
-    _log.info "event_vm_by_property called with property:[#{property}] value:[#{value}] type:[#{event_type}] message:[#{event_message}] event_time:[#{event_time}]"
+    _log.info("event_vm_by_property called with property:[#{property}] value:[#{value}] type:[#{event_type}] message:[#{event_message}] event_time:[#{event_time}]")
     event_timestamp = event_time.blank? ? Time.now.utc : event_time.to_time(:utc)
 
     case property

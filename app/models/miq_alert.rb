@@ -271,7 +271,7 @@ class MiqAlert < ApplicationRecord
     _log.error("Aborting action invocation [#{err.message}]")
     raise
   rescue MiqException::PolicyPreventAction => err
-    _log.info "[#{err}]"
+    _log.info("[#{err}]")
     raise
   end
 
@@ -559,7 +559,7 @@ class MiqAlert < ApplicationRecord
   end
 
   def substitute(str)
-    eval "result = \"#{str}\""
+    eval("result = \"#{str}\"")
   end
 
   def evaluate_in_automate(target, inputs = {})

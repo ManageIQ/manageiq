@@ -401,7 +401,7 @@ class MiqExpression
     cond = klass.predicate_builder.resolve_column_aliases(cond)
     cond = klass.send(:expand_hash_conditions_for_aggregates, cond)
 
-    klass.predicate_builder.build_from_hash(cond).map { |b| klass.connection.visitor.compile b }.join(' AND ')
+    klass.predicate_builder.build_from_hash(cond).map { |b| klass.connection.visitor.compile(b) }.join(' AND ')
   end
 
   def self.merge_where_clauses(*list)
@@ -1210,7 +1210,7 @@ class MiqExpression
     n = n.to_s
     n2 = n.delete(',') # strip out commas
     begin
-      Integer n2
+      Integer(n2)
       return true
     rescue
       return false unless n.number_with_method?
@@ -1227,7 +1227,7 @@ class MiqExpression
     n = n.to_s
     n2 = n.delete(',') # strip out commas
     begin
-      Float n2
+      Float(n2)
       return true
     rescue
       return false unless n.number_with_method?
@@ -1426,7 +1426,7 @@ class MiqExpression
   end
 
   def extract_where_values(klass, scope)
-    relation = ActiveRecord::Relation.new klass, klass.arel_table, klass.predicate_builder
+    relation = ActiveRecord::Relation.new(klass, klass.arel_table, klass.predicate_builder)
     relation = relation.instance_eval(&scope)
 
     begin
@@ -1434,7 +1434,7 @@ class MiqExpression
       # custom visitor instance
 
       connection = klass.connection
-      visitor    = WhereExtractionVisitor.new connection
+      visitor    = WhereExtractionVisitor.new(connection)
 
       arel  = relation.arel
       binds = relation.bound_attributes

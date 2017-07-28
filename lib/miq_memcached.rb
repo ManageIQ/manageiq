@@ -21,7 +21,7 @@ module MiqMemcached
     end
 
     def save(fname)
-      File.open(fname, "w") { |f| f.write @config }
+      File.open(fname, "w") { |f| f.write(@config) }
     end
 
     def update(opts = {})

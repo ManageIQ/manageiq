@@ -220,7 +220,7 @@ module MiqProvisionMixin
         self.options.keys.each do |key|
           v_old = self.options[key]
           v_new = options[key]
-          _log.info "option <#{key}> was changed from <#{v_old.inspect}> to <#{v_new.inspect}>" unless v_old == v_new
+          _log.info("option <#{key}> was changed from <#{v_old.inspect}> to <#{v_new.inspect}>") unless v_old == v_new
         end
 
         update_attribute(:options, options)

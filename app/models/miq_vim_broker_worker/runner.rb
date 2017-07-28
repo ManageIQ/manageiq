@@ -72,7 +72,7 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
 
     # Set notify method at the class level for new connections, and at the
     #   instance level for existing connections.
-    MiqVimBroker.notifyMethod = @vim_broker_server.notifyMethod = ->(h) { @queue.enq h }
+    MiqVimBroker.notifyMethod = @vim_broker_server.notifyMethod = ->(h) { @queue.enq(h) }
 
     @notification_enabled = true
   end
@@ -208,12 +208,12 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
 
     ems = ManageIQ::Providers::Vmware::InfraManager.find(ems_id)
     if ems.nil?
-      _log.error "#{log_prefix} Unable to find EMS with address: [#{event[:server]}]"
+      _log.error("#{log_prefix} Unable to find EMS with address: [#{event[:server]}]")
       return
     end
 
     unless self.class.emses_and_hosts_to_monitor.include?(ems)
-      _log.info "#{log_prefix} Not reconnecting inactive connection to #{event[:server]}"
+      _log.info("#{log_prefix} Not reconnecting inactive connection to #{event[:server]}")
       return
     end
 
@@ -325,7 +325,7 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
 
     ems = ManageIQ::Providers::Vmware::InfraManager.find_by(:id => ems_id)
     if ems.nil?
-      _log.error "#{log_prefix} Unable to find EMS with id: [#{ems_id}]"
+      _log.error("#{log_prefix} Unable to find EMS with id: [#{ems_id}]")
       return
     end
 

@@ -24,7 +24,7 @@ class Tag < ApplicationRecord
       end
 
       begin
-        predicate.inject(object) { |target, method| target.public_send method }
+        predicate.inject(object) { |target, method| target.public_send(method) }
       rescue NoMethodError
         ""
       end
@@ -52,7 +52,7 @@ class Tag < ApplicationRecord
   end
 
   def self.parse(list)
-    if list.kind_of? Array
+    if list.kind_of?(Array)
       tag_names = list.collect { |tag| tag.nil? ? nil : tag.to_s }
       return tag_names.compact
     else
@@ -68,7 +68,7 @@ class Tag < ApplicationRecord
       list.tr!(',', " ")
 
       # then, get whatever's left
-      tag_names.concat list.split(/\s/)
+      tag_names.concat(list.split(/\s/))
 
       # strip whitespace from the names
       tag_names = tag_names.map(&:strip)

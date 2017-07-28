@@ -100,13 +100,13 @@ module EmsRefresh
 
   def self.refresh_new_target(ems_id, target_hash, target_class, target_find)
     ems = ExtManagementSystem.find(ems_id)
-    target_class = target_class.constantize if target_class.kind_of? String
+    target_class = target_class.constantize if target_class.kind_of?(String)
 
     save_ems_inventory_no_disconnect(ems, target_hash)
 
     target = target_class.find_by(target_find)
     if target.nil?
-      _log.warn "Unknown target for event data: #{target_hash}."
+      _log.warn("Unknown target for event data: #{target_hash}.")
       return
     end
 
@@ -128,7 +128,7 @@ module EmsRefresh
 
       if ManagerRefresh::Inventory.persister_class_for(target_class).blank? &&
          [VmOrTemplate, Host, ExtManagementSystem, ManagerRefresh::Target].none? { |k| target_class <= k }
-        _log.warn "Unknown target type: [#{target_class}]."
+        _log.warn("Unknown target type: [#{target_class}].")
         next
       end
 
@@ -149,7 +149,7 @@ module EmsRefresh
 
       if recs.length != ids.length
         missing = ids - recs.collect(&:id)
-        _log.warn "Unable to find a record for [#{target_class}] ids: #{missing.inspect}."
+        _log.warn("Unable to find a record for [#{target_class}] ids: #{missing.inspect}.")
       end
 
       target_objects.concat(recs)
@@ -225,9 +225,9 @@ module EmsRefresh
 
     inv.each do |k, v|
       if depth == 1
-        $log.debug "#{log_header} #{k.inspect}=>#{v.inspect}"
+        $log.debug("#{log_header} #{k.inspect}=>#{v.inspect}")
       else
-        $log.debug "#{log_header} #{k.inspect}=>"
+        $log.debug("#{log_header} #{k.inspect}=>")
         log_inv_debug_trace(v, "#{log_header}  ", depth - 1)
       end
     end

@@ -97,7 +97,7 @@ class OrchestrationTemplateAzure < OrchestrationTemplate
   end
 
   def add_pattern(parameter, val)
-    return unless val.key? 'AllowedPattern'
+    return unless val.key?('AllowedPattern')
 
     constraint = OrchestrationTemplate::OrchestrationParameterPattern.new(:pattern => val['AllowedPattern'])
     parameter.constraints << constraint

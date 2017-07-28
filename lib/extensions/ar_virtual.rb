@@ -125,7 +125,7 @@ module VirtualDelegates
       type = to_ref.klass.type_for_attribute(col)
       raise "unknown attribute #{to}##{col} referenced in #{name}" unless type
       arel = virtual_delegate_arel(col, to_ref)
-      define_virtual_attribute method_name, type, :uses => (options[:uses] || to), :arel => arel
+      define_virtual_attribute(method_name, type, :uses => (options[:uses] || to), :arel => arel)
     end
 
     # see activesupport module/delegation.rb
@@ -171,7 +171,7 @@ module VirtualDelegates
           end
         METHOD
       end
-      method_def = method_def.split("\n").map(&:strip).join ';'
+      method_def = method_def.split("\n").map(&:strip).join(';')
       module_eval(method_def, file, line)
     end
 
@@ -413,8 +413,8 @@ module VirtualAttributes
 
     def define_virtual_attribute(name, cast_type, uses: nil, arel: nil)
       attribute_types[name] = cast_type
-      define_virtual_include name, uses if uses
-      define_virtual_arel name, arel if arel
+      define_virtual_include(name, uses) if uses
+      define_virtual_arel(name, arel) if arel
     end
   end
 end
@@ -430,7 +430,7 @@ module VirtualReflections
     #
 
     def virtual_has_one(name, options = {})
-      uses = options.delete :uses
+      uses = options.delete(:uses)
       reflection = ActiveRecord::Associations::Builder::HasOne.build(self, name, nil, options)
       add_virtual_reflection(reflection, name, uses, options)
     end
@@ -440,13 +440,13 @@ module VirtualReflections
         records = send(name)
         records.respond_to?(:ids) ? records.ids : records.collect(&:id)
       end
-      uses = options.delete :uses
+      uses = options.delete(:uses)
       reflection = ActiveRecord::Associations::Builder::HasMany.build(self, name, nil, options)
       add_virtual_reflection(reflection, name, uses, options)
     end
 
     def virtual_belongs_to(name, options = {})
-      uses = options.delete :uses
+      uses = options.delete(:uses)
       reflection = ActiveRecord::Associations::Builder::BelongsTo.build(self, name, nil, options)
       add_virtual_reflection(reflection, name, uses, options)
     end
@@ -464,7 +464,7 @@ module VirtualReflections
     #
 
     def virtual_reflections
-      (virtual_fields_base? ? {} : superclass.virtual_reflections).merge _virtual_reflections
+      (virtual_fields_base? ? {} : superclass.virtual_reflections).merge(_virtual_reflections)
     end
 
     def reflections_with_virtual
@@ -585,12 +585,12 @@ module ActiveRecord
 
           loaders = klass_map.keys.group_by { |klass| klass.virtual_includes(association) }.flat_map do |virtuals, klasses|
             subset = klasses.flat_map { |klass| klass_map[klass] }
-            preload subset, virtuals
+            preload(subset, virtuals)
           end
 
           records_with_association = klass_map.select { |k, rs| k.reflect_on_association(association) }.flat_map { |k, rs| rs }
           if records_with_association.any?
-            loaders.concat super(association, records_with_association, scope)
+            loaders.concat(super(association, records_with_association, scope))
           end
 
           loaders
@@ -618,7 +618,7 @@ module ActiveRecord
 
         model_cache = Hash.new { |h,klass| h[klass] = {} }
         parents = model_cache[join_root]
-        column_aliases = aliases.column_aliases join_root
+        column_aliases = aliases.column_aliases(join_root)
 
         # New Code
         #

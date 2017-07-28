@@ -1,5 +1,5 @@
 if ENV['RAILS_USE_MEMORY_STORE'] || (!Rails.env.development? && !Rails.env.production?)
-  Vmdb::Application.config.session_store :memory_store
+  Vmdb::Application.config.session_store(:memory_store)
 else
   session_store =
     case Settings.server.session_store
@@ -40,7 +40,7 @@ else
     }
   end
 
-  Vmdb::Application.config.session_store session_store, session_options
+  Vmdb::Application.config.session_store(session_store, session_options)
   msg = "Using session_store: #{Vmdb::Application.config.session_store}"
   $log.info("MIQ(SessionStore) #{msg}")
   puts "** #{msg}" unless Rails.env.production?

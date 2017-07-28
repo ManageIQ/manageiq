@@ -31,8 +31,8 @@ module Vmdb
     def self.proc_for_default_log
       return unless default_log
       proc do |message, callstack|
-        default_log.warn message
-        default_log.debug callstack.join("\n  ") if default_log.debug?
+        default_log.warn(message)
+        default_log.debug(callstack.join("\n  ")) if default_log.debug?
       end
     end
     private_class_method :proc_for_default_log

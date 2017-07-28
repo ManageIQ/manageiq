@@ -284,10 +284,10 @@ class ServiceTemplate < ApplicationRecord
     return if user.nil?
     service.evm_owner = user
     if user.current_group
-      $log.info "Setting Service Owning User to Name=#{user.name}, ID=#{user.id}, Group to Name=#{user.current_group.name}, ID=#{user.current_group.id}"
+      $log.info("Setting Service Owning User to Name=#{user.name}, ID=#{user.id}, Group to Name=#{user.current_group.name}, ID=#{user.current_group.id}")
       service.miq_group = user.current_group
     else
-      $log.info "Setting Service Owning User to Name=#{user.name}, ID=#{user.id}"
+      $log.info("Setting Service Owning User to Name=#{user.name}, ID=#{user.id}")
     end
     service.save
   end

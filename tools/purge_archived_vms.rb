@@ -10,12 +10,12 @@ $log.level = Logger::INFO
 query = Vm.where("updated_on < ? or updated_on IS NULL", ARCHIVE_CUTOFF)
 archived = 0
 
-$log.info "Searching for archived VMs older than #{ARCHIVE_CUTOFF} UTC."
-$log.info "Expecting to prune #{query.all_archived.count} of the #{query.count} older vms"
+$log.info("Searching for archived VMs older than #{ARCHIVE_CUTOFF} UTC.")
+$log.info("Expecting to prune #{query.all_archived.count} of the #{query.count} older vms")
 if REPORT_ONLY
-  $log.info "Reporting only; no rows will be deleted."
+  $log.info("Reporting only; no rows will be deleted.")
 else
-  $log.warn "Will delete any matching records."
+  $log.warn("Will delete any matching records.")
 end
 
 query.all_archived.find_in_batches do |vms|
@@ -23,7 +23,7 @@ query.all_archived.find_in_batches do |vms|
     begin
       archived += 1
       unless REPORT_ONLY
-        $log.info "Deleting archived VM '#{vm.name}' (id #{vm.id})"
+        $log.info("Deleting archived VM '#{vm.name}' (id #{vm.id})")
         vm.destroy
       end
     rescue => err
@@ -32,7 +32,7 @@ query.all_archived.find_in_batches do |vms|
   end
 end
 
-$log.info "Completed purging archived VMs. #{REPORT_ONLY ? 'Found' : 'Purged'} #{archived} archived VMs."
+$log.info("Completed purging archived VMs. #{REPORT_ONLY ? 'Found' : 'Purged'} #{archived} archived VMs.")
 
 $log.close
 $log = old_logger
