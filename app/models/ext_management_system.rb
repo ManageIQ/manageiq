@@ -417,7 +417,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def self.ems_physical_infra_discovery_types
-    @ems_physical_infra_discovery_types ||= %w(lxca)
+    @ems_physical_infra_discovery_types ||= %w(lenovo_ph_infra)
   end
 
   def disable!
