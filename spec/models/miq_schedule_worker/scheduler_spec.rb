@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'rufus/scheduler'
 
 describe MiqScheduleWorker::Scheduler do
