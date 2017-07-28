@@ -3,6 +3,7 @@ class Entitlement < ApplicationRecord
   belongs_to :miq_user_role
 
   serialize :filters
+  serialize :filter_expression
 
   def self.valid_filters?(filters_hash)
     return true  unless filters_hash                  # nil ok
