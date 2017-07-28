@@ -35,20 +35,105 @@ module PgInspector
       result = {
         "servers"         => [],
         "workers"         => [],
+        "connections"     => [],
         "other_processes" => []
       }
       stat_activities.each do |activity|
         if server_activity?(activity)
-          result["servers"] << process_miq_activity(activity)
+          current_activity = process_miq_activity(activity)
+          push_new_server(result, current_activity)
+          push_connection(result, current_activity)
         elsif worker_activity?(activity)
-          result["workers"] << process_miq_activity(activity)
+          current_activity = process_miq_activity(activity) # need revise
+          push_new_worker(result, current_activity)
+          push_connection(result, current_activity)
         else
-          result["other_processes"] << activity
+          push_other_process(result, process_other_process(activity))
         end
       end
       result
     rescue => e
       Util.error_exit(e)
+    end
+
+    def push_new_server(result, activity)
+      result["servers"].each do |server|
+        if activity["server_compressed_id"] == server["server_compressed_id"]
+          return result
+        end
+      end
+      result["servers"] << filter_activity_for_server(activity)
+      result
+    end
+
+    def filter_activity_for_server(activity)
+      activity.select do |k, _v|
+        %w(server_compressed_id
+           name
+           pid
+           zone_compressed_id
+           zone_name)
+          .include?(k)
+      end
+    end
+
+    def push_new_worker(result, activity)
+      result["workers"].each do |worker|
+        if activity["worker_compressed_id"] == worker["worker_compressed_id"]
+          return result
+        end
+      end
+      result["workers"] << filter_activity_for_worker(activity)
+      result
+    end
+
+    def filter_activity_for_worker(activity)
+      activity.select do |k, _v|
+        %w(worker_compressed_id
+           server_compressed_id
+           class_name
+           pid)
+          .include?(k)
+      end
+    end
+
+    def push_connection(result, activity)
+      result["connections"] << filter_activity_for_connection(activity)
+      result
+    end
+
+    def filter_activity_for_connection(activity)
+      activity.select do |k, _v|
+        %w(worker_compressed_id
+           server_compressed_id
+           datid
+           datname
+           spid
+           usesysid
+           usename
+           client_port
+           backend_start
+           xact_start
+           query_start
+           state_change
+           waiting
+           state
+           backend_xid
+           backend_xmin
+           query)
+          .include?(k)
+      end
+    end
+
+    def process_other_process(activity)
+      activity["spid"] = activity["pid"].to_i
+      activity.delete("pid")
+      activity
+    end
+
+    def push_other_process(result, activity)
+      result["other_processes"] << activity
+      result
     end
 
     def server_activity?(activity)
@@ -65,7 +150,8 @@ module PgInspector
 
     def process_miq_activity(activity)
       activity["datid"] = activity["datid"].to_i
-      activity["pid"] = activity["pid"].to_i
+      activity["spid"] = activity["pid"].to_i
+      activity.delete("pid")
       activity["usesysid"] = activity["usesysid"].to_i
       process_miq_activity_application_name(activity)
     end
@@ -77,7 +163,7 @@ module PgInspector
         $stderr.puts("Warning: the application_name #{activity["application_name"]} is incomplete.")
       end
       _, pid, server_id, worker_id, zone_id, class_name, zone_name = activity["application_name"].split("|")
-      activity["spid"] = pid.to_i
+      activity["pid"] = pid.to_i
       activity["class_name"] = class_name
       activity["server_compressed_id"] = server_id
       activity["worker_compressed_id"] = worker_id if worker_id != "-"
@@ -97,7 +183,12 @@ module PgInspector
 
     def process_miq_server(server)
       server["server_compressed_id"] = compress_id(server["id"])
-      server.select { |k, _v| %w(server_compressed_id hostname ipaddress).include?(k) }
+      server.select do |k, _v|
+        %w(server_compressed_id
+           hostname
+           ipaddress)
+          .include?(k)
+      end
     end
 
     def compress_id(id)
@@ -105,9 +196,12 @@ module PgInspector
     end
 
     def merge_activity_and_server_info(stat_activities, servers)
-      server_activities = array_of_hash_to_hash(stat_activities["servers"], "server_compressed_id")
+      server_activities = array_of_hash_to_hash(
+        stat_activities["servers"], "server_compressed_id"
+      )
       servers.each do |server|
-        server_activities[server["server_compressed_id"]] = server_activities[server["server_compressed_id"]].merge(server)
+        server_activities[server["server_compressed_id"]] =
+          server_activities[server["server_compressed_id"]].merge(server)
       end
       stat_activities["servers"] = hash_val_array(server_activities)
       stat_activities
