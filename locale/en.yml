@@ -726,6 +726,7 @@ en:
       Filesystem:               File
       Flavor:                   Flavor
       FloatingIp:               Floating IP
+      GenericObjectDefinition:  Generic Object Class
       Host:                     Host / Node
       HostPerformance:          Performance - Host
       IsoDatastore:             ISO Datastore
