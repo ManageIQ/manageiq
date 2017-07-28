@@ -20,10 +20,10 @@ class Snapshot < ApplicationRecord
     all_nh = xml_to_hashes(xmlNode, parentObj.id)
     return if all_nh.nil?
 
-    unless parentObj.ems_id.nil?
-      add_snapshot_size_for_ems(parentObj, all_nh)
-    else
+    if parentObj.ems_id.nil?
       EmsRefresh.save_snapshots_inventory(parentObj, all_nh)
+    else
+      add_snapshot_size_for_ems(parentObj, all_nh)
     end
   end
 

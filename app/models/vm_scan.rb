@@ -325,11 +325,7 @@ class VmScan < Job
             request_docs << e.attributes['original_filename'] if e.attributes['items_total'] && e.attributes['items_total'].to_i.zero?
             all_docs << e.attributes['original_filename']
           end
-          unless request_docs.empty? || (request_docs.length != all_docs.length)
-            message = "scan operation yielded no data. aborting"
-            _log.error(message)
-            signal(:abort, message, "error")
-          else
+          if request_docs.empty? || (request_docs.length != all_docs.length)
             _log.info("sending :finish")
             vm = VmOrTemplate.find_by(:id => target_id)
 
@@ -362,6 +358,10 @@ class VmScan < Job
             rescue => err
               _log.warn("#{err.message}, unable to raise policy event: [vm_scan_complete]")
             end
+          else
+            message = "scan operation yielded no data. aborting"
+            _log.error(message)
+            signal(:abort, message, "error")
           end
         when "scanmetadata"
           _log.info("sending :synchronize")

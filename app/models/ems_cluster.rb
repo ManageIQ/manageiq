@@ -258,10 +258,10 @@ class EmsCluster < ApplicationRecord
 
     cl_hash.each do |_k, v|
       hosts = hosts_by_id.values_at(*v[:ho_ids]).compact
-      unless hosts.empty?
-        v[:ho_enabled], v[:ho_disabled] = hosts.partition(&:perf_capture_enabled?)
-      else
+      if hosts.empty?
         v[:ho_enabled] = v[:ho_disabled] = []
+      else
+        v[:ho_enabled], v[:ho_disabled] = hosts.partition(&:perf_capture_enabled?)
       end
     end
 

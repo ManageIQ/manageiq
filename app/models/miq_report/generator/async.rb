@@ -52,13 +52,13 @@ module MiqReport::Generator::Async
     task = MiqTask.create(:name => _("Generate Report: '%{name}'") % {:name => name})
     unless sync # Only queued if sync reporting disabled (default)
       cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
-      unless self.new_record?
+      if self.new_record?
         MiqQueue.submit_job(
           :service      => "reporting",
+          :role         => "reporting",
           :class_name   => self.class.to_s,
-          :instance_id  => id,
           :method_name  => "_async_generate_table",
-          :args         => [task.id, options],
+          :args         => [task.id, self, options],
           :priority     => MiqQueue::HIGH_PRIORITY,
           :miq_callback => cb,
           :msg_timeout  => queue_timeout
@@ -66,10 +66,10 @@ module MiqReport::Generator::Async
       else
         MiqQueue.submit_job(
           :service      => "reporting",
-          :role         => "reporting",
           :class_name   => self.class.to_s,
+          :instance_id  => id,
           :method_name  => "_async_generate_table",
-          :args         => [task.id, self, options],
+          :args         => [task.id, options],
           :priority     => MiqQueue::HIGH_PRIORITY,
           :miq_callback => cb,
           :msg_timeout  => queue_timeout

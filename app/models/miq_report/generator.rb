@@ -450,13 +450,13 @@ module MiqReport::Generator
   end
 
   def generate_col_from_data(col_def, data)
-    unless col_def.kind_of?(Hash)
-      return col_def
-    else
+    if col_def.kind_of?(Hash)
       unless data.key?(col_def[:col_name])
         raise _("Column '%{name} does not exist in data") % {:name => col_def[:col_name]}
       end
       return col_def.key?(:function) ? apply_col_function(col_def, data) : data[col_def[:col_name]]
+    else
+      return col_def
     end
   end
 
@@ -484,11 +484,11 @@ module MiqReport::Generator
         tag = tc[(c.length + 1)..-1]
         if tc.starts_with?(c)
           unless tags2desc.key?(tag)
-            unless tag == "_none_"
+            if tag == "_none_"
+              tags2desc[tag] = "[None]"
+            else
               entry = Classification.find_by_name([performance[:group_by_category], tag].join("/"))
               tags2desc[tag] = entry.nil? ? tag.titleize : entry.description
-            else
-              tags2desc[tag] = "[None]"
             end
           end
           a << [tc, tags2desc[tag]]
@@ -731,10 +731,10 @@ module MiqReport::Generator
           data_records << existing_record
         else
           association_objects.each do |obj|
-            unless association == "categories" || association == "managed"
-              association_records = build_reportable_data(obj, assoc_options, full_path)
-            else
+            if association == "categories" || association == "managed"
               association_records = [obj]
+            else
+              association_records = build_reportable_data(obj, assoc_options, full_path)
             end
             association_records.each do |assoc_record|
               data_records << existing_record.merge(assoc_record)

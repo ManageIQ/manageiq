@@ -52,7 +52,10 @@ class Tag < ApplicationRecord
   end
 
   def self.parse(list)
-    unless list.kind_of? Array
+    if list.kind_of? Array
+      tag_names = list.collect { |tag| tag.nil? ? nil : tag.to_s }
+      return tag_names.compact
+    else
       tag_names = []
 
       # don't mangle the caller's copy
@@ -74,9 +77,6 @@ class Tag < ApplicationRecord
       tag_names = tag_names.delete_if(&:empty?)
 
       return tag_names.uniq
-    else
-      tag_names = list.collect { |tag| tag.nil? ? nil : tag.to_s }
-      return tag_names.compact
     end
   end
 

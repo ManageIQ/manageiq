@@ -144,11 +144,11 @@ module ActsAsTaggable
         raise "unable to evaluate tag, '#{tag}', because it contains multi-value reference, '#{part}' that is not the last reference" if subject.kind_of?(Array)
       end
       relationship = parts.pop
-      unless relationship
+      if relationship
+        macro = subject.class.reflection_with_virtual(relationship.to_sym).macro
+      else
         relationship = "self"
         macro = :has_one
-      else
-        macro = subject.class.reflection_with_virtual(relationship.to_sym).macro
       end
       if macro == :has_one || macro == :belongs_to
         value = subject.public_send(relationship).public_send(attr)

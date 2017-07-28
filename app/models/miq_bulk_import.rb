@@ -17,10 +17,10 @@ module MiqBulkImport
     tags = (header - keys).collect(&:dup) if tags.nil?
 
     verified_tags = tags.collect { |t| t if header.include?(t) }.compact
-    unless verified_tags.empty?
-      _log.info "The following columns are verified in the csv file: #{verified_tags.join(" and ")}"
-    else
+    if verified_tags.empty?
       raise "No valid columns were found in the csv file. One of the following fields is required: (#{tags.join(" ")})."
+    else
+      _log.info "The following columns are verified in the csv file: #{verified_tags.join(" and ")}"
     end
 
     matched_keys = []
