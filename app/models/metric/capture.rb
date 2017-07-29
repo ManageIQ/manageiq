@@ -138,8 +138,8 @@ module Metric::Capture
   def self.calc_targets_by_rollup_parent(targets)
     realtime_targets = targets.select do |target|
       target.kind_of?(Host) &&
-      perf_target_to_interval_name(target) == "realtime" &&
-      perf_capture_now?(target)
+        perf_target_to_interval_name(target) == "realtime" &&
+        perf_capture_now?(target)
     end
     realtime_targets.each_with_object({}) do |target, h|
       target.perf_rollup_parents("realtime").to_a.compact.each do |parent|
@@ -160,7 +160,7 @@ module Metric::Capture
     target_options = Hash.new { |h, k| h[k] = {:zone => zone} }
     # Create a new task for each rollup parent
     # mark each target with the rollup parent
-    targets_by_rollup_parent.keys.each_with_object(target_options) do |pkey, h|
+    targets_by_rollup_parent.each_with_object(target_options) do |(pkey, targets), h|
       name = "Performance rollup for #{pkey}"
       prev_task = MiqTask.where(:identifier => pkey).order("id DESC").first
       task_start_time = prev_task ? prev_task.context_data[:end] : default_task_start_time
@@ -175,13 +175,13 @@ module Metric::Capture
           :start    => task_start_time,
           :end      => task_end_time,
           :parent   => pkey,
-          :targets  => targets_by_rollup_parent[pkey].map { |target| "#{target.class}:#{target.id}" },
+          :targets  => targets.map { |target| "#{target.class}:#{target.id}" },
           :complete => [],
           :interval => "realtime"
         }
       )
       _log.info "Created task id: [#{task.id}] for: [#{pkey}] with targets: #{targets_by_rollup_parent[pkey].inspect} for time range: [#{task_start_time} - #{task_end_time}]"
-      targets_by_rollup_parent[pkey].each do |target|
+      targets.each do |target|
         h[target] = {
           :task_id => task.id,
           :force   => true, # Force collection since we've already verified that capture should be done now
