@@ -9,7 +9,112 @@ The ManageIQ organization is continuously adding new smaller repositories.  The 
 - [manageiq-providers-azure CHANGELOG](https://github.com/ManageIQ/manageiq-providers-azure/blob/fine/CHANGELOG.md)
 - [manageiq-providers-vmware CHANGELOG](https://github.com/ManageIQ/manageiq-providers-vmware/blob/fine/CHANGELOG.md)
 - [manageiq-ui-classic CHANGELOG](https://github.com/ManageIQ/manageiq-ui-classic/blob/fine/CHANGELOG.md)
-- [manageiq-ui-service CHANGELOG](https://github.com/ManageIQ/manageiq-ui-service/blob/master/CHANGELOG.md)
+
+# Fine-3
+
+## Added
+
+- Automate
+  - Ansible Tower Services: Add Enhanced Debug level support [(#15288)](https://github.com/ManageIQ/manageiq/pull/15288)
+  - Add vmware reconfigure model to quota helper. [(#14756)](https://github.com/ManageIQ/manageiq/pull/14756)
+  - Services
+    - Log zone(q_options) when raising retirement event. [(#15317)](https://github.com/ManageIQ/manageiq/pull/15317)
+
+- Platform
+  - Generate virtual custom attributes with sections [(#14837)](https://github.com/ManageIQ/manageiq/pull/14837)
+  - Set database application name in workers and server [(#13856)](https://github.com/ManageIQ/manageiq/pull/13856)
+  - Add a notification for when the embedded ansible role is activated [(#14867)](https://github.com/ManageIQ/manageiq/pull/14867)
+  - Allow reports to be generated based on GuestApplication [(#14939)](https://github.com/ManageIQ/manageiq/pull/14939)
+  - Allow deletion of groups with users belonging to other groups [(#15041)](https://github.com/ManageIQ/manageiq/pull/15041)
+
+- Providers
+  - Ansible Tower
+    - Add status column to Repositories list [(#14855)](https://github.com/ManageIQ/manageiq/pull/14855)
+  - Containers
+    - Add purge timer for archived entities [(#14322)](https://github.com/ManageIQ/manageiq/pull/14322)
+    - Delete archived entities when a container manager is deleted [(#14359)](https://github.com/ManageIQ/manageiq/pull/14359)
+    - Use $log.log_hashes to filter out sensitive data. [(#14878)](https://github.com/ManageIQ/manageiq/pull/14878)
+  - Red Hat Virtualization: Reduce the default oVirt open timeout to 1 minute [(#15099)](https://github.com/ManageIQ/manageiq/pull/15099)
+  - Virtual Infrastructure: Add a method to InfraManager to retrieve Hosts without EmsCluster [(#14884)](https://github.com/ManageIQ/manageiq/pull/14884)
+
+- REST API
+  - Add cloud tenants to API [(#14731)](https://github.com/ManageIQ/manageiq/pull/14731)
+  - Add SQL store option to token store [(#14947)](https://github.com/ManageIQ/manageiq/pull/14947)
+
+## Changed
+
+- Performance
+  - Memoize root tenant [(#15191)](https://github.com/ManageIQ/manageiq/pull/15191)
+
+## Fixed
+
+- Automate
+  - Expose SecurityContext to automate. [(#15121)](https://github.com/ManageIQ/manageiq/pull/15121)
+  - Add my_zone to ansible tower service template. [(#15233)](https://github.com/ManageIQ/manageiq/pull/15233)
+  - Control: Remove the policy checking for request_host_vmotion_enabled. [(#14429)](https://github.com/ManageIQ/manageiq/pull/14429)
+  - Provisioning
+    - Filter out the hosts with the selected network. [(#14946)](https://github.com/ManageIQ/manageiq/pull/14946)
+    - Add :sort_by: :none to GCE Boot Disk Size dialog field. [(#14981)](https://github.com/ManageIQ/manageiq/pull/14981)
+    - Select datastore by its association with the provider [(#15245)](https://github.com/ManageIQ/manageiq/pull/15245)
+  - Services
+    - Use extra_vars to create a new dialog when editing Ansible playbook service template. [(#15120)](https://github.com/ManageIQ/manageiq/pull/15120)
+    - Add orchestration stack my_zone. [(#15334)](https://github.com/ManageIQ/manageiq/pull/15334)
+
+- Platform
+  - Run setup playbook on ansible rpm upgrade [(#15487)](https://github.com/ManageIQ/manageiq/pull/15487)
+  - Add a marker file for determining when the ansible setup has been run [(#15642)](https://github.com/ManageIQ/manageiq/pull/15642)
+  - Track and kill embedded ansible monitoring thread [(#15612)](https://github.com/ManageIQ/manageiq/pull/15612)
+  - Authentication: Check the current region when creating a new user [(#15516)](https://github.com/ManageIQ/manageiq/pull/15516)
+  - Format time interval for log message [(#15370)](https://github.com/ManageIQ/manageiq/pull/15370)
+  - Increase timeout for metric purging [(#15312)](https://github.com/ManageIQ/manageiq/pull/15312)
+  - Handle setup playbook failure better [(#15313)](https://github.com/ManageIQ/manageiq/pull/15313)
+  - Fix startup shortcut YAML setting for Configuration Management [(#14506)](https://github.com/ManageIQ/manageiq/pull/14506)
+  - Chargeback
+    - Do not calculate useless group metrics [(#15260)](https://github.com/ManageIQ/manageiq/pull/15260)
+    - Do not offer report columns that are useless [(#15261)](https://github.com/ManageIQ/manageiq/pull/15261)
+  - RBAC
+    - Add vm_transform product feature [(#15214)](https://github.com/ManageIQ/manageiq/pull/15214)
+    - Allow matching via descendants for CloudNetworks (via network manager) [(#15271)](https://github.com/ManageIQ/manageiq/pull/15271)
+  - Reporting
+    - Fix chargeback report with unassigned rates [(#15580)](https://github.com/ManageIQ/manageiq/pull/15580)
+    - Include cloud instances in Powered On/Off Report [(#15333)](https://github.com/ManageIQ/manageiq/pull/15333)
+    - Changed report name to be consistent with actual produced report. [(#14646)](https://github.com/ManageIQ/manageiq/pull/14646)
+    - Correct field names for reports [(#14905)](https://github.com/ManageIQ/manageiq/pull/14905)
+    - Ensure report columns serialized as hashes have symbolized keys before importing [(#15273)](https://github.com/ManageIQ/manageiq/pull/15273)
+  - Set the db application_name after the server row is created [(#14904)](https://github.com/ManageIQ/manageiq/pull/14904)
+  - Start Apache if roles were changed and it is needed by the current roles [(#15078)](https://github.com/ManageIQ/manageiq/pull/15078)
+  - Do not delete report if task associated with this report deleted [(#15134)](https://github.com/ManageIQ/manageiq/pull/15134)
+  - Check for timed out active tasks [(#15231)](https://github.com/ManageIQ/manageiq/pull/15231)
+
+- Providers
+  - Ansible Tower: Let ansible worker gracefully stop [(#15643)](https://github.com/ManageIQ/manageiq/pull/15643)
+  - Limit CloudTenants' related VMs to the non-archived ones [(#15329)](https://github.com/ManageIQ/manageiq/pull/15329)
+  - Containers
+    - Fix Containers dashboard heatmaps [(#14857)](https://github.com/ManageIQ/manageiq/pull/14857)
+    - Add default filters for the container page [(#14893)](https://github.com/ManageIQ/manageiq/pull/14893)
+    - Save inventory container: remove target option [(#15182)](https://github.com/ManageIQ/manageiq/pull/15182)
+  - Microsoft Infrastructure
+    - [SCVMM] Remove -All from Get-SCVMTemplate call [(#15106)](https://github.com/ManageIQ/manageiq/pull/15106)
+    - Set maintenance column for SCVMM hosts. [(#15202)](https://github.com/ManageIQ/manageiq/pull/15202)
+  - Networks
+    - Fix network_ports relation of a LB [(#14969)](https://github.com/ManageIQ/manageiq/pull/14969)
+  - Red Hat Virtualization: Fix location of the v2v transform VM dialog [(#15496)](https://github.com/ManageIQ/manageiq/pull/15496)
+
+- REST
+  - Fix virtual attribute selection [(#15387)](https://github.com/ManageIQ/manageiq/pull/15387)
+  - Make TokenManager#token_ttl callable (evaluated at call time) [(#15124)](https://github.com/ManageIQ/manageiq/pull/15124)
+  - Do not delete report if task associated with this report deleted [(#15134)](https://github.com/ManageIQ/manageiq/pull/15134)
+
+- SmartState
+  - Fixed bug: one call to Job#set_status from \`VmScan#call_snapshot_delete' has one extra parameter [(#14964)](https://github.com/ManageIQ/manageiq/pull/14964)
+  - Queue the VM scan command after vm_scan_start event is handled by automate. [(#15228)](https://github.com/ManageIQ/manageiq/pull/15228)
+
+- User Interface (Classic)
+  - Fix URL to Compute/Containers/Containers in miq_shortcuts [(#15497)](https://github.com/ManageIQ/manageiq/pull/15497)
+  - Add missing units on VMDB Utilization page for disk size [(#14921)](https://github.com/ManageIQ/manageiq/pull/14921)
+  - Add Memory chart for Availability Zones [(#14938)](https://github.com/ManageIQ/manageiq/pull/14938)
+  - Show Network Port name in Floating IP list [(#14970)](https://github.com/ManageIQ/manageiq/pull/14970)
+  - Removed grouping from all Middleware* views [(#15042)](https://github.com/ManageIQ/manageiq/pull/15042)
 
 # Fine-2
 
