@@ -50,7 +50,6 @@ describe ServiceTemplateProvisionRequest do
       def create_service_bundle(user, items, options = {})
         build_model_from_vms(items)
         request = build_service_template_request("top", user, :dialog => {"test" => "dialog"})
-        #byebug
         res = request.service_template.service_resources.first.resource.service_resources.first.resource
         res.options.merge!(options)
         res.save
