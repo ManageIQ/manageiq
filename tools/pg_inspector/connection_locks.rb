@@ -34,7 +34,7 @@ module PgInspector
 
     def merge_lock_and_connection(connections)
       connections["connections"].each do |conn|
-        conn["blocking"] = lock_by_spid(conn["spid"])
+        conn["blocked_by"] = find_lock_blocking_spid(conn["spid"])
       end
     end
 
@@ -46,16 +46,19 @@ module PgInspector
       locks.each do |lock|
         lock["spid"] = lock["pid"].to_i
         lock.delete("pid")
-        lock["blocking"] = blocking_lock(lock)
       end
+      locks.each { |lock| lock["blocked_by"] = blocking_lock(lock) }
+      locks
     end
 
     def blocking_lock(lock)
-      return unless lock["granted"] == "t"
-      blocking_lock_relation(lock).select do |l|
+      return if lock["granted"] == "t"
+      blocking_locks = blocking_lock_relation(lock).select do |l|
         lock["spid"] != l["spid"] &&
           l["granted"] == "t"
       end
+      spids = blocking_locks.collect { |l| l["spid"]}
+      spids & spids
     end
 
     def blocking_lock_relation(lock)
@@ -77,8 +80,12 @@ module PgInspector
       locks.select { |l| args.all? { |field| l[field] == lock[field] } }
     end
 
-    def lock_by_spid(spid)
-      locks.select { |l| l["spid"] == spid} [0]
+    def locks_owned_by_spid(spid)
+      locks.select { |l| l["spid"] == spid }
+    end
+
+    def find_lock_blocking_spid(spid)
+      locks_owned_by_spid(spid).inject([]) { |result, lock| result & lock["blocked_by"] }
     end
   end
 end
