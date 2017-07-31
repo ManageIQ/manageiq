@@ -50,7 +50,7 @@ module ManagerRefresh
           data[key] = value.compact.map(&:load).compact
           # We can use built in _ids methods to assign array of ids into has_many relations. So e.g. the :key_pairs=
           # relation setter will become :key_pair_ids=
-          attributes_for_saving[key.to_s.singularize + "_ids"] = data[key].map(&:id).compact
+          attributes_for_saving[key.to_s.singularize + "_ids"] = data[key].map(&:id).compact.uniq
         elsif loadable?(value) || inventory_collection_scope.association_to_foreign_key_mapping[key]
           # Lets fill also the original data, so other InventoryObject referring to this attribute gets the right
           # result

@@ -778,6 +778,7 @@ describe ManagerRefresh::SaveInventory do
       :flavor           => @data[:flavors].lazy_find(flavor_data(1)[:name]),
       :genealogy_parent => @data[:miq_templates].lazy_find(image_data(1)[:ems_ref]),
       :key_pairs        => [@data[:key_pairs].lazy_find(key_pair_data(1)[:name]),
+                            @data[:key_pairs].lazy_find(key_pair_data(1)[:name]),
                             @data[:key_pairs].lazy_find(key_pair_data(12)[:name])],
       :location         => @data[:networks].lazy_find("#{vm_data(1)[:ems_ref]}__public",
                                                       :key     => :hostname,
