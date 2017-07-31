@@ -3973,7 +3973,7 @@
       :identifier: middleware_domain_tag
     - :name: Stop Middleware Domain
       :description: Stop Middleware Domain
-      :feature_type: admin
+      :feature_type: control
       :identifier: middleware_domain_stop
 
 # Middleware Server Group
