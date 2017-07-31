@@ -10,22 +10,23 @@ describe EmsRefresh::MetadataRelats do
       @template    = FactoryGirl.create(:template_vmware,    :ext_management_system => @ems)
       @rp          = FactoryGirl.create(:resource_pool,      :ext_management_system => @ems)
       @host_folder = FactoryGirl.create(:vmware_folder_host, :ext_management_system => @ems)
-      @vm_folder   = FactoryGirl.create(:vmware_folder_vm,   :ext_management_system => @ems)
+      @vm_folder_1 = FactoryGirl.create(:vmware_folder_vm,   :ext_management_system => @ems, :name => "folder1")
+      @vm_folder_2 = FactoryGirl.create(:vmware_folder_vm,   :ext_management_system => @ems, :name => "folder2")
 
       @host_folder.add_cluster(@cluster)
       @cluster.add_resource_pool(@rp)
       @rp.add_vm(@vm)
 
-      @vm_folder.add_vm(@vm)
-      @vm_folder.add_vm(@template)
+      @vm_folder_1.add_vm(@vm)
+      @vm_folder_2.add_vm(@template)
 
-      [@ems, @host_folder, @vm_folder, @cluster, @rp, @host, @vm, @template].each(&:reload)
+      [@ems, @host_folder, @vm_folder_1, @vm_folder_2, @cluster, @rp, @host, @vm, @template].each(&:reload)
       MiqQueue.delete_all
     end
 
     it "with a Vm" do
       expect(EmsRefresh.vmdb_relats(@vm)).to eq(:folders_to_clusters        => {@host_folder.id  => [@cluster.id]},
-                                                :folders_to_vms             => {@vm_folder.id    => [@vm.id]},
+                                                :folders_to_vms             => {@vm_folder_1.id  => [@vm.id]},
                                                 :clusters_to_resource_pools => {@cluster.id      => [@rp.id]},
                                                 :resource_pools_to_vms      => {@rp.id           => [@vm.id]})
     end
@@ -36,7 +37,8 @@ describe EmsRefresh::MetadataRelats do
 
     it "with an EMS" do
       expect(EmsRefresh.vmdb_relats(@ems)).to eq(:folders_to_clusters        => {@host_folder.id  => [@cluster.id]},
-                                                 :folders_to_vms             => {@vm_folder.id    => [@template.id, @vm.id]},
+                                                 :folders_to_vms             => {@vm_folder_1.id  => [@vm.id],
+                                                                                 @vm_folder_2.id  => [@template.id]},
                                                  :clusters_to_resource_pools => {@cluster.id      => [@rp.id]},
                                                  :resource_pools_to_vms      => {@rp.id           => [@vm.id]})
     end
@@ -53,7 +55,8 @@ describe EmsRefresh::MetadataRelats do
 
       it "with an EMS" do
         expect(EmsRefresh.vmdb_relats(@ems)).to eq(:folders_to_hosts           => {@host_folder.id  => [@host.id]},
-                                                   :folders_to_vms             => {@vm_folder.id    => [@template.id, @vm.id]},
+                                                   :folders_to_vms             => {@vm_folder_1.id  => [@vm.id],
+                                                                                   @vm_folder_2.id  => [@template.id]},
                                                    :folders_to_clusters        => {@host_folder.id  => [@cluster.id]},
                                                    :clusters_to_resource_pools => {@cluster.id => [@rp.id]},
                                                    :hosts_to_resource_pools    => {@host.id    => [@rp2.id]},
