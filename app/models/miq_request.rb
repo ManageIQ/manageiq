@@ -2,6 +2,7 @@ class MiqRequest < ApplicationRecord
   extend InterRegionApiMethodRelay
 
   ACTIVE_STATES = %w(active queued)
+  REQUEST_UNIQUE_KEYS = %w(id state status created_on updated_on type).freeze
 
   belongs_to :source,            :polymorphic => true
   belongs_to :destination,       :polymorphic => true
@@ -433,9 +434,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def create_request_task(idx)
-    req_task_attribs = attributes.dup
-    (req_task_attribs.keys - MiqRequestTask.column_names + %w(id state created_on updated_on type)).each { |key| req_task_attribs.delete(key) }
-    _log.debug("#{self.class.name} Attributes: [#{req_task_attribs.inspect}]...")
+    req_task_attribs = clean_up_keys_for_request_task
 
     customize_request_task_attributes(req_task_attribs, idx)
     req_task = self.class.new_request_task(req_task_attribs)
@@ -557,6 +556,15 @@ class MiqRequest < ApplicationRecord
   end
 
   private
+
+  def clean_up_keys_for_request_task
+    req_task_attributes = attributes.dup
+    (req_task_attributes.keys - MiqRequestTask.column_names + REQUEST_UNIQUE_KEYS).each { |key| req_task_attributes.delete(key) }
+
+    _log.debug("#{self.class.name} Attributes: [#{req_task_attributes.inspect}]...")
+
+    req_task_attributes
+  end
 
   def default_description
   end
