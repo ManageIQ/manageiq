@@ -960,7 +960,7 @@ module OpsController::Settings::Common
       @sb[:new_to] = nil
       @sb[:newrole] = false
       session[:server_zones] = []
-      zones = Zone.all
+      zones = Zone.in_my_region
       zones.each do |zone|
         session[:server_zones].push(zone.name)
       end
