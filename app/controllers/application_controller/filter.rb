@@ -966,7 +966,7 @@ module ApplicationController::Filter
     @edit[@expkey][:selected] = @edit[@expkey][:pre_qs_selected]                # Restore previous selected search
     @edit[:adv_search_applied] = @edit[:qs_prev_adv_search_applied]             # Restore previous adv search
     @edit[:adv_search_applied] = nil unless @edit.fetch_path(:adv_search_applied, :exp) # Remove adv search if no prev expression
-    self.x_node = @edit[:qs_prev_x_node] if @edit[:in_explorer]                   # Restore previous exp tree node
+    self.x_node = @edit[:qs_prev_x_node] if @edit[:in_explorer] && @edit[@expkey][:exp_value] != :user_input # Restore previous exp tree node
     session[:adv_search] ||= {}
     session[:adv_search][@edit[@expkey][:exp_model]] = copy_hash(@edit) # Save by model name in settings
 

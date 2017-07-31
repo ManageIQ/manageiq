@@ -123,4 +123,48 @@ describe ApplicationController, "::Filter" do
       ]
     end
   end
+
+  describe "#quick_search_cancel_click" do
+    let(:edit) do
+      {:expression                 => {:selected        => {},
+                                       :pre_qs_selected => {},
+                                       :exp_value       => nil},
+       :qs_prev_adv_search_applied => {},
+       :adv_search_applied         => {},
+       :qs_prev_x_node             => nil}
+    end
+
+    before :each do
+      controller.instance_variable_set(:@expkey, :expression)
+      controller.instance_variable_set(:@edit, edit)
+      allow(controller).to receive(:render)
+    end
+
+    it "is in explorer screen and exp value is :user_input" do
+      edit[:in_explorer] = true
+      edit[:expression][:exp_value] = :user_input
+      controller.x_node = "root"
+
+      controller.send(:quick_search_cancel_click)
+      expect(controller.x_node).to eq("root")
+    end
+
+    it "is in explorer screen and exp value is NOT :user_input" do
+      edit[:in_explorer] = true
+      edit[:expression][:exp_value] = nil
+      controller.x_node = "root"
+
+      controller.send(:quick_search_cancel_click)
+      expect(controller.x_node).to eq(edit[:qs_prev_x_node])
+    end
+
+    it "is in non explorer screen" do
+      edit[:in_explorer] = false
+      edit[:expression][:exp_value] = nil
+      controller.x_node = nil
+
+      controller.send(:quick_search_cancel_click)
+      expect(controller.x_node).to be_nil
+    end
+  end
 end
