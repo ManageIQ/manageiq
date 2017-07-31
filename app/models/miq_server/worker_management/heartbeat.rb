@@ -19,7 +19,6 @@ module MiqServer::WorkerManagement::Heartbeat
   def worker_heartbeat(worker_pid, worker_class = nil, queue_name = nil)
     # Set the heartbeat in memory and consume a message
     worker_class = worker_class.constantize if worker_class.kind_of?(String)
-
     messages = []
     @workers_lock.synchronize(:EX) do
       worker_add(worker_pid)
@@ -29,6 +28,9 @@ module MiqServer::WorkerManagement::Heartbeat
       h[:message]        = nil
       h[:class] ||= worker_class
       h[:queue_name] ||= queue_name
+      # @gregB The problem here is the only queue_names are of queues with workers
+      # so network manager and storage manager are in the queue table, but don't show up here.
+      _log.info("YOLO heartbeat hq name #{h[:queue_name].inspect} q name #{queue_name}")
     end unless @workers_lock.nil?
 
     messages
@@ -43,6 +45,7 @@ module MiqServer::WorkerManagement::Heartbeat
 
   def message_for_worker(wid, message, *args)
     w = MiqWorker.find_by(:id => wid)
+    _log.info("YOLO message for wkr #{message.inspect}")
     worker_set_message(w, message, *args) unless w.nil?
   end
 

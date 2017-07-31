@@ -1,7 +1,8 @@
 class ManageIQ::Providers::BaseManager::RefreshWorker < MiqQueueWorkerBase
   require_nested :Runner
 
-  include PerEmsWorkerMixin
+  # @gregB Ideally this would include both styles of workers shared and individual?
+  include SharedEmsWorkerMixin
 
   self.required_roles = "ems_inventory"
 
