@@ -800,7 +800,7 @@ module ApplicationHelper
        ems_container vm miq_template offline retired templates
        host service storage ems_cloud ems_cluster flavor
        ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
-       load_balancer provider_foreman
+       load_balancer provider_foreman configuration_scripts
        ems_storage cloud_volume cloud_object_store_container
        resource_pool ems_infra ontap_storage_system ontap_storage_volume
        ontap_file_share snia_local_file_system ontap_logical_disk
