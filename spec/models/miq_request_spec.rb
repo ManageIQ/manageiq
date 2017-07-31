@@ -293,6 +293,13 @@ describe MiqRequest do
         expect(request.description).to_not eq(description)
       end
 
+      it 'with 1 task having a Denied status reset to ok for the resulting request_task' do
+        request.options[:src_vm_id] = template.id
+        request.status = 'Denied'
+        new_request = request.create_request_task(template.id)
+        expect(new_request.status).to eq 'Ok'
+      end
+
       it 'with 0 tasks' do
         allow(request).to receive(:requested_task_idx).and_return([])
         request.post_create_request_tasks
@@ -303,6 +310,14 @@ describe MiqRequest do
         allow(request).to receive(:requested_task_idx).and_return([1, 2])
         request.post_create_request_tasks
         expect(request.description).to eq(description)
+      end
+
+      it '#clean_up_keys_for_request_task' do
+        # The db stores 'state' as 'request_state' Pulling out that value to allow the raw arrays to match
+        removable_keys = MiqRequest::REQUEST_UNIQUE_KEYS - ['state']
+        expect(request.attributes.keys & removable_keys).to match_array removable_keys
+        cleaned_attribs = request.send(:clean_up_keys_for_request_task)
+        expect(cleaned_attribs).to_not match_array(removable_keys)
       end
     end
 
