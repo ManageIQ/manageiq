@@ -1065,11 +1065,16 @@ module ManageIQ::Providers
           device_type << (backing['fileName'].nil? ? "-raw" : "-image") if device_type == 'cdrom'
 
           controller = inv.detect { |d| d['key'] == device['controllerKey'] }
-          controller_type = case controller.xsiType
-                            when /IDE/ then 'ide'
-                            when /SIO/ then 'sio'
-                            else 'scsi'
-                            end
+          controller_type =
+            if controller
+              case controller.xsiType
+              when /IDE/ then 'ide'
+              when /SIO/ then 'sio'
+              else 'scsi'
+              end
+            else
+              'unknown'
+            end
 
           storage_mor = backing['datastore']
 
@@ -1079,7 +1084,7 @@ module ManageIQ::Providers
             :controller_type => controller_type,
             :present         => true,
             :filename        => backing['fileName'] || backing['deviceName'],
-            :location        => "#{controller['busNumber']}:#{device['unitNumber']}",
+            :location        => controller ? "#{controller['busNumber']}:#{device['unitNumber']}" : nil
           }
 
           if device_type == 'disk'

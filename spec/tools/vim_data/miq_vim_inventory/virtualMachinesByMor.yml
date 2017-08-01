@@ -77108,15 +77108,7 @@
             str: "3145729"
             "@vimType": 
             "@xsiType": :"SOAP::SOAPLong"
-          unitNumber: !str:VimString 
-            str: "1"
-            "@vimType": 
-            "@xsiType": :"SOAP::SOAPInt"
-          controllerKey: !str:VimString 
-            str: "1000"
-            "@vimType": 
-            "@xsiType": :"SOAP::SOAPInt"
-          deviceInfo: !map:VimHash 
+          deviceInfo: !map:VimHash
             label: !str:VimString 
               str: Hard disk 2
               "@vimType": 

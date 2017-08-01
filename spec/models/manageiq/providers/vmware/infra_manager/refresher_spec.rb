@@ -634,6 +634,21 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     )
     expect(disk.storage).to eq(@storage)
 
+    # test the case when a disk has no controller https://bugzilla.redhat.com/show_bug.cgi?id=1465761
+    disk = v.hardware.disks.find_by_device_name("Hard disk 2")
+    expect(disk).to have_attributes(
+      :device_name     => "Hard disk 2",
+      :device_type     => "disk",
+      :controller_type => "unknown",
+      :present         => true,
+      :filename        => "[StarM1-Prod1 (1)] JoeF 4.0.1/JoeF 4.0.1_1.vmdk",
+      :location        => nil,
+      :size            => 3_221_226_496,
+      :mode            => "persistent",
+      :disk_type       => "thin",
+      :start_connected => true
+    )
+
     expect(v.hardware.guest_devices.size).to eq(1)
     nic = v.hardware.nics.first
     expect(nic).to have_attributes(
