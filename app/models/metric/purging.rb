@@ -40,10 +40,15 @@ module Metric::Purging
       :class_name  => name,
       :method_name => "purge_#{interval}",
       :role        => "ems_metrics_processor",
-      :queue_name  => "ems_metrics_processor"
+      :queue_name  => "ems_metrics_processor",
+      :msg_timeout => msg_timeout
     ) do |_msg, find_options|
       find_options.merge(:args => [ts])
     end
+  end
+
+  def self.msg_timeout
+    ::Settings.performance.history.queue_timeout.to_i_with_method
   end
 
   def self.purge_window_size
