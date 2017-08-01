@@ -1,5 +1,6 @@
 require 'trollop'
 require 'yaml'
+require 'time'
 require 'activerecord-id_regions'
 require 'pg_inspector/error'
 require 'pg_inspector/pg_inspector_operation'
@@ -44,7 +45,7 @@ module PgInspector
           push_new_server(result, current_activity)
           push_connection(result, current_activity)
         elsif worker_activity?(activity)
-          current_activity = process_miq_activity(activity) # need revise
+          current_activity = process_miq_activity(activity)
           push_new_worker(result, current_activity)
           push_connection(result, current_activity)
         else
@@ -58,7 +59,7 @@ module PgInspector
 
     def push_new_server(result, activity)
       result["servers"].each do |server|
-        if activity["server_compressed_id"] == server["server_compressed_id"]
+        if activity["server_id"] == server["server_id"]
           return result
         end
       end
@@ -68,10 +69,10 @@ module PgInspector
 
     def filter_activity_for_server(activity)
       activity.select do |k, _v|
-        %w(server_compressed_id
+        %w(server_id
            name
            pid
-           zone_compressed_id
+           zone_id
            zone_name)
           .include?(k)
       end
@@ -79,7 +80,7 @@ module PgInspector
 
     def push_new_worker(result, activity)
       result["workers"].each do |worker|
-        if activity["worker_compressed_id"] == worker["worker_compressed_id"]
+        if activity["worker_id"] == worker["worker_id"]
           return result
         end
       end
@@ -89,8 +90,8 @@ module PgInspector
 
     def filter_activity_for_worker(activity)
       activity.select do |k, _v|
-        %w(worker_compressed_id
-           server_compressed_id
+        %w(worker_id
+           server_id
            class_name
            pid)
           .include?(k)
@@ -104,8 +105,8 @@ module PgInspector
 
     def filter_activity_for_connection(activity)
       activity.select do |k, _v|
-        %w(worker_compressed_id
-           server_compressed_id
+        %w(worker_id
+           server_id
            datid
            datname
            spid
@@ -153,7 +154,16 @@ module PgInspector
       activity["spid"] = activity["pid"].to_i
       activity.delete("pid")
       activity["usesysid"] = activity["usesysid"].to_i
+      activity["client_port"] = activity["client_port"].to_i
+      activity["backend_start"] = to_utc(activity["backend_start"])
+      activity["xact_start"] = to_utc(activity["xact_start"])
+      activity["query_start"] = to_utc(activity["query_start"])
+      activity["state_change"] = to_utc(activity["state_change"])
       process_miq_activity_application_name(activity)
+    end
+
+    def to_utc(time_str)
+      return Time.parse(time_str).utc.to_s if time_str
     end
 
     def process_miq_activity_application_name(activity)
@@ -165,9 +175,9 @@ module PgInspector
       _, pid, server_id, worker_id, zone_id, class_name, zone_name = activity["application_name"].split("|")
       activity["pid"] = pid.to_i
       activity["class_name"] = class_name
-      activity["server_compressed_id"] = server_id
-      activity["worker_compressed_id"] = worker_id if worker_id != "-"
-      activity["zone_compressed_id"] = zone_id
+      activity["server_id"] = uncompress_id(server_id)
+      activity["worker_id"] = uncompress_id(worker_id) if worker_id != "-"
+      activity["zone_id"] = uncompress_id(zone_id)
       activity["zone_name"] = zone_name
       activity
     end
@@ -182,9 +192,9 @@ module PgInspector
     end
 
     def process_miq_server(server)
-      server["server_compressed_id"] = compress_id(server["id"])
+      server["server_id"] = server["id"].to_i
       server.select do |k, _v|
-        %w(server_compressed_id
+        %w(server_id
            hostname
            ipaddress)
           .include?(k)
@@ -195,13 +205,17 @@ module PgInspector
       Class.new.include(ActiveRecord::IdRegions).compress_id(id)
     end
 
+    def uncompress_id(id)
+      Class.new.include(ActiveRecord::IdRegions).uncompress_id(id)
+    end
+
     def merge_activity_and_server_info(stat_activities, servers)
       server_activities = array_of_hash_to_hash(
-        stat_activities["servers"], "server_compressed_id"
+        stat_activities["servers"], "server_id"
       )
       servers.each do |server|
-        server_activities[server["server_compressed_id"]] =
-          server_activities[server["server_compressed_id"]].merge(server)
+        server_activities[server["server_id"]] =
+          server_activities[server["server_id"]].merge(server)
       end
       stat_activities["servers"] = hash_val_array(server_activities)
       stat_activities
