@@ -75,6 +75,12 @@ class ContainerImage < ApplicationRecord
     scan_via_miq_vm(miq_cnt_group, ost)
   end
 
+  def self.raise_creation_events(container_image_ids)
+    where(:id => container_image_ids).find_each do |record|
+      MiqEvent.raise_evm_event(record, 'containerimage_created', {})
+    end
+  end
+
   def raise_creation_event
     MiqEvent.raise_evm_event(self, 'containerimage_created', {})
   end
