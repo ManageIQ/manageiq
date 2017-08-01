@@ -373,6 +373,10 @@ class MiqWorker < ApplicationRecord
     MiqEnvironment::Command.is_container? && supports_container?
   end
 
+  def containerized_worker?
+    self.class.containerized_worker?
+  end
+
   def start_runner
     if ENV['MIQ_SPAWN_WORKERS'] || !Process.respond_to?(:fork)
       start_runner_via_spawn

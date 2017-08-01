@@ -37,7 +37,9 @@ module MiqServer::WorkerManagement::Monitor::Stop
     worker_set_monitor_status(w.pid, monitor_status)
     worker_set_monitor_reason(w.pid, monitor_reason)
 
-    if w.respond_to?(:terminate)
+    if w.containerized_worker?
+      w.stop_container
+    elsif w.respond_to?(:terminate)
       w.terminate
     else
       w.update_attributes(:status => MiqWorker::STATUS_STOPPING)
