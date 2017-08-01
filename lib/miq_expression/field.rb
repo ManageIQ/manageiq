@@ -25,6 +25,10 @@ class MiqExpression::Field < MiqExpression::Target
     !!(model < ApplicationRecord)
   end
 
+  def to_s
+    "#{[model, *associations].join(".")}-#{column}"
+  end
+
   def attribute_supported_by_sql?
     !custom_attribute_column? && target.attribute_supported_by_sql?(column)
   end

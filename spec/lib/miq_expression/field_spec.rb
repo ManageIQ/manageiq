@@ -77,6 +77,18 @@ RSpec.describe MiqExpression::Field do
     end
   end
 
+  describe "#to_s" do
+    it "renders fields in string form" do
+      field = described_class.new("Vm", [], "name")
+      expect(field.to_s).to eq("Vm-name")
+    end
+
+    it "can handle associations" do
+      field = described_class.new("Vm", ["host"], "name")
+      expect(field.to_s).to eq("Vm.host-name")
+    end
+  end
+
   describe '#report_column' do
     it 'returns the correct format for a field' do
       field = MiqExpression::Field.parse('Vm.miq_provision.miq_request-requester_name')
