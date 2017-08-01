@@ -56,78 +56,6 @@ describe ServiceTemplateProvisionRequest do
         request
       end
 
-      let(:vmware_tasks) do
-        ems = FactoryGirl.create(:ems_vmware)
-        vmware_tenant = FactoryGirl.create(:tenant)
-        group = FactoryGirl.create(:miq_group, :tenant => vmware_tenant)
-        @vmware_user1 = FactoryGirl.create(:user, :miq_groups => [group])
-        @vmware_user2 = FactoryGirl.create(:user, :miq_groups => [group])
-        @vmware_template = FactoryGirl.create(:template_vmware,
-                                              :ext_management_system => ems,
-                                              :hardware              => FactoryGirl.create(:hardware, :cpu1x2, :memory_mb => 512))
-        @vmware_prov_options = {:number_of_vms => [2, '2'], :vm_memory => [1024, '1024'], :number_of_cpus => [2, '2']}
-        requests = []
-
-        @vm_template = @vmware_template
-
-        @user = @vmware_user1
-        requests << build_vmware_service_item
-        create_task(@user, requests.first)
-
-        requests << create_service_bundle(@user, [@vmware_template], @vmware_prov_options)
-
-        @user = @vmware_user2
-        requests << build_vmware_service_item
-        create_task(@user, requests.last)
-
-        requests << create_service_bundle(@user, [@vmware_template], @vmware_prov_options)
-
-        requests.each { |r| r.update_attributes(:tenant_id => @user.current_tenant.id) }
-        requests
-      end
-
-      def build_google_service_item
-        options = {:requester => @user}.merge(@google_prov_options)
-        model = {"google_service_item" => {:type      => 'atomic',
-                                           :prov_type => 'google',
-                                           :request   => options}}
-        build_service_template_tree(model)
-        @service_request = build_service_template_request("google_service_item", @user, :dialog => {"test" => "dialog"})
-      end
-
-      let(:google_tasks) do
-        ems = FactoryGirl.create(:ems_google_with_authentication,
-                                 :availability_zones => [FactoryGirl.create(:availability_zone_google)])
-        google_tenant = FactoryGirl.create(:tenant)
-        group = FactoryGirl.create(:miq_group, :tenant => google_tenant)
-        @google_user1 = FactoryGirl.create(:user, :miq_groups => [group])
-        @google_user2 = FactoryGirl.create(:user, :miq_groups => [group])
-
-        @google_template = FactoryGirl.create(:template_google, :ext_management_system => ems)
-        flavor = FactoryGirl.create(:flavor_google, :ems_id => ems.id,
-                                    :cpus => 4, :cpu_cores => 1, :memory => 1024)
-        @google_prov_options = {:number_of_vms => [1, '1'], :src_vm_id => @google_template.id, :boot_disk_size => ["10.GB", "10 GB"],
-                        :placement_auto => [true, 1], :instance_type => [flavor.id, flavor.name]}
-        requests = []
-
-        @vm_template = @google_template
-
-        @user = @google_user1
-        requests << build_google_service_item
-        create_task(@user, requests.first)
-
-        requests << create_service_bundle(@user, [@google_template], @google_prov_options)
-
-        @user = @google_user2
-        requests << build_google_service_item
-        create_task(@user, requests.last)
-
-        requests << create_service_bundle(@user, [@google_template], @google_prov_options)
-
-        requests.each { |r| r.update_attributes(:tenant_id => @user.current_tenant.id) }
-        requests
-      end
-
       shared_examples_for "check_quota" do
         it "check" do
           load_queue
@@ -137,6 +65,35 @@ describe ServiceTemplateProvisionRequest do
       end
 
       context "infra," do
+        let(:vmware_tasks) do
+          ems = FactoryGirl.create(:ems_vmware)
+          group = FactoryGirl.create(:miq_group, :tenant => FactoryGirl.create(:tenant))
+          @vmware_user1 = FactoryGirl.create(:user, :miq_groups => [group])
+          @vmware_user2 = FactoryGirl.create(:user, :miq_groups => [group])
+          @vmware_template = FactoryGirl.create(:template_vmware,
+                                                :ext_management_system => ems,
+                                                :hardware              => FactoryGirl.create(:hardware, :cpu1x2, :memory_mb => 512))
+          @vmware_prov_options = {:number_of_vms => [2, '2'], :vm_memory => [1024, '1024'], :number_of_cpus => [2, '2']}
+          requests = []
+
+          @vm_template = @vmware_template
+
+          @user = @vmware_user1
+          requests << build_vmware_service_item
+
+          requests << create_service_bundle(@user, [@vmware_template], @vmware_prov_options)
+          create_task(@user, requests.last)
+
+          @user = @vmware_user2
+          requests << build_vmware_service_item
+          create_task(@user, requests.last)
+
+          requests << create_service_bundle(@user, [@vmware_template], @vmware_prov_options)
+
+          requests.each { |r| r.update_attributes(:tenant_id => @user.current_tenant.id) }
+          requests
+        end
+
         let(:load_queue) { queue(vmware_tasks) }
         let(:request) { create_test_task(@vmware_user1, @vmware_template) }
         let(:counts_hash) do
@@ -163,6 +120,47 @@ describe ServiceTemplateProvisionRequest do
       end
 
       context "cloud," do
+        def build_google_service_item
+          options = {:requester => @user}.merge(@google_prov_options)
+          model = {"google_service_item" => {:type      => 'atomic',
+                                             :prov_type => 'google',
+                                             :request   => options}}
+          build_service_template_tree(model)
+          @service_request = build_service_template_request("google_service_item", @user, :dialog => {"test" => "dialog"})
+        end
+
+        let(:google_tasks) do
+          ems = FactoryGirl.create(:ems_google_with_authentication,
+                                   :availability_zones => [FactoryGirl.create(:availability_zone_google)])
+          group = FactoryGirl.create(:miq_group, :tenant => FactoryGirl.create(:tenant))
+          @google_user1 = FactoryGirl.create(:user, :miq_groups => [group])
+          @google_user2 = FactoryGirl.create(:user, :miq_groups => [group])
+
+          @google_template = FactoryGirl.create(:template_google, :ext_management_system => ems)
+          flavor = FactoryGirl.create(:flavor_google, :ems_id => ems.id,
+                                      :cpus => 4, :cpu_cores => 1, :memory => 1024)
+          @google_prov_options = {:number_of_vms => [1, '1'], :src_vm_id => @google_template.id, :boot_disk_size => ["10.GB", "10 GB"],
+                          :placement_auto => [true, 1], :instance_type => [flavor.id, flavor.name]}
+          requests = []
+
+          @vm_template = @google_template
+
+          @user = @google_user1
+          requests << build_google_service_item
+
+          requests << create_service_bundle(@user, [@google_template], @google_prov_options)
+          create_task(@user, requests.last)
+
+          @user = @google_user2
+          requests << build_google_service_item
+          create_task(@user, requests.last)
+
+          requests << create_service_bundle(@user, [@google_template], @google_prov_options)
+
+          requests.each { |r| r.update_attributes(:tenant_id => @user.current_tenant.id) }
+          requests
+        end
+
         let(:load_queue) { queue(google_tasks) }
         let(:request) { create_test_task(@google_user1, @google_template) }
         let(:counts_hash) do
