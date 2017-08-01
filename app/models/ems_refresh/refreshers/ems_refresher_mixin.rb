@@ -69,10 +69,11 @@ module EmsRefresh
       end
 
       def refresh_targets_for_ems(ems, targets)
-        # handle a 3-part inventory refresh process
+        # handle a 4-part inventory refresh process
         # 1. collect inventory
         # 2. parse inventory
         # 3. save inventory
+        # 4. post process inventory (only when using InventoryCollections)
         log_header = format_ems_for_logging(ems)
 
         targets_with_inventory, _ = Benchmark.realtime_block(:collect_inventory_for_targets) do
@@ -90,7 +91,18 @@ module EmsRefresh
 
           Benchmark.realtime_block(:save_inventory) { save_inventory(ems, target, hashes) }
           _log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]...Complete"
+
+          if hashes.kind_of?(Array)
+            _log.info "#{log_header} ManagerRefresh Post Processing #{target.class} [#{target.name}] id [#{target.id}]..."
+            # We have array of InventoryCollection, we want to use that data for post refresh
+            Benchmark.realtime_block(:manager_refresh_post_processing) { manager_refresh_post_processing(ems, target, hashes) }
+            _log.info "#{log_header} ManagerRefresh Post Processing #{target.class} [#{target.name}] id [#{target.id}]...Complete"
+          end
         end
+      end
+
+      def manager_refresh_post_processing(_ems, _target, _inventory_collections)
+        # Implement post refresh actions in a specific refresher
       end
 
       def collect_inventory_for_targets(ems, targets)
