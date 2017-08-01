@@ -63,6 +63,23 @@ RSpec.describe MiqExpression::Tag do
     end
   end
 
+  describe "#to_s" do
+    it "renders tags in string form" do
+      tag = described_class.new("Vm", [], "environment")
+      expect(tag.to_s).to eq("Vm.managed-environment")
+    end
+
+    it "can handle model-less tags" do
+      tag = described_class.new(nil, [], "environment")
+      expect(tag.to_s).to eq("managed-environment")
+    end
+
+    it "can handle associations" do
+      tag = described_class.new("Vm", ["host"], "environment")
+      expect(tag.to_s).to eq("Vm.host.managed-environment")
+    end
+  end
+
   describe '#report_column' do
     it 'returns the correct format for a tag' do
       tag = MiqExpression::Tag.parse('Vm.managed-environment')
