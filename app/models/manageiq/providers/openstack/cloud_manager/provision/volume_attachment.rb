@@ -25,7 +25,7 @@ module ManageIQ::Providers::Openstack::CloudManager::Provision::VolumeAttachment
     source.ext_management_system.with_provider_connection(:service => "volume") do |service|
       volumes_refs.each do |volume_attrs|
         next unless volume_attrs[:source_type] == "volume"
-        status = service.volumes.get(volume_attrs[:uuid]).status
+        status = service.volumes.get(volume_attrs[:uuid]).try(:status)
         return false, status unless status == "available"
       end
     end
