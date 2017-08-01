@@ -596,7 +596,7 @@ describe ManagerRefresh::SaveInventory do
             :model_class => Hardware,
             :parent      => @ems,
             :association => :hardwares,
-            :manager_ref => [:vm_or_template]
+            :manager_ref => [:virtualization_type]
           )
         end
 
@@ -615,8 +615,9 @@ describe ManagerRefresh::SaveInventory do
           ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
           # Assert saved data
-          vm1 = Vm.find_by(:ems_ref => "vm_ems_ref_1")
-          expect(vm1.hardware).to eq(nil)
+          vm1 = Vm.find_by!(:ems_ref => "vm_ems_ref_1")
+          hardware1 = Hardware.find_by!(:virtualization_type => "virtualization_type_1")
+          expect(hardware1.vm_or_template).to eq(nil)
         end
 
         it "has a relation using find and loading data in a right order" do
@@ -634,8 +635,9 @@ describe ManagerRefresh::SaveInventory do
           ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
           # Assert saved data
-          vm1 = Vm.find_by(:ems_ref => "vm_ems_ref_1")
-          expect(vm1.hardware.virtualization_type).to eq("virtualization_type_1")
+          vm1 = Vm.find_by!(:ems_ref => "vm_ems_ref_1")
+          hardware1 = Hardware.find_by!(:virtualization_type => "virtualization_type_1")
+          expect(hardware1.vm_or_template).to eq(vm1)
         end
 
         it "has a relation using lazy_find and loading data in a wrong order" do
@@ -653,8 +655,9 @@ describe ManagerRefresh::SaveInventory do
           ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
           # Assert saved data
-          vm1 = Vm.find_by(:ems_ref => "vm_ems_ref_1")
-          expect(vm1.hardware.virtualization_type).to eq("virtualization_type_1")
+          vm1 = Vm.find_by!(:ems_ref => "vm_ems_ref_1")
+          hardware1 = Hardware.find_by!(:virtualization_type => "virtualization_type_1")
+          expect(hardware1.vm_or_template).to eq(vm1)
         end
       end
     end
