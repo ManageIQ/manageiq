@@ -121,7 +121,7 @@ module MiqWebServerWorkerMixin
       :server      => self.class.rails_server
     }
 
-    params[:Port] = port.kind_of?(Numeric) ? port : 3000
+    params[:Port] = port.kind_of?(Numeric) ? port : ENV["PORT"] || 3000
     params[:pid]  = self.class.pid_file(params[:Port]).to_s
 
     params
