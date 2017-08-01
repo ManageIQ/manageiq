@@ -81,11 +81,12 @@ class EvmApplication
        s.drb_uri,
        s.started_on && s.started_on.iso8601,
        s.last_heartbeat && s.last_heartbeat.iso8601,
+       (mem = (s.proportional_set_size || s.memory_usage)).nil? ? "" : mem / 1.megabyte,
        s.is_master,
        s.active_role_names.join(':'),
       ]
     end
-    header = ["Zone", "Server", "Status", "ID", "PID", "SPID", "URL", "Started On", "Last Heartbeat", "Master?", "Active Roles"]
+    header = ["Zone", "Server", "Status", "ID", "PID", "SPID", "URL", "Started On", "Last Heartbeat", "MB Usage", "Master?", "Active Roles"]
     puts data.unshift(header).tableize
   end
 
