@@ -96,6 +96,10 @@ module ManagerRefresh::SaveCollection
                   "created=#{inventory_collection.created_records.count}, "\
                   "updated=#{inventory_collection.updated_records.count}, "\
                   "deleted=#{inventory_collection.deleted_records.count} *************")
+      rescue => e
+        _log.error("Error when saving #{inventory_collection} with "\
+                   "#{inventory_collection_details(inventory_collection)}. Message: #{e.message}")
+        raise e
       end
 
       def destroy_records(records)
