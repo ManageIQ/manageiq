@@ -60,15 +60,18 @@ class MiqGroup < ApplicationRecord
     ldap_to_filters = filter_map_file.exist? ? YAML.load_file(filter_map_file) : {}
     root_tenant = Tenant.root_tenant
 
+    groups = where(:group_type => SYSTEM_GROUP).includes(:entitlement).index_by(&:description)
+    roles  = MiqUserRole.where("name like 'EvmRole-%'").index_by(&:name)
+
     role_map.each_with_index do |(group_name, role_name), index|
-      group = find_by(:description => group_name) || new(:description => group_name)
-      user_role = MiqUserRole.find_by(:name => "EvmRole-#{role_name}")
+      group = groups[group_name] || new(:description => group_name)
+      user_role = roles["EvmRole-#{role_name}"]
       if user_role.nil?
         raise StandardError,
               _("Unable to find user_role 'EvmRole-%{role_name}' for group '%{group_name}'") %
                 {:role_name => role_name, :group_name => group_name}
       end
-      group.miq_user_role       = user_role
+      group.miq_user_role       = user_role if group.entitlement.try(:miq_user_role_id) != user_role.id
       group.sequence            = index + 1
       group.entitlement.filters = ldap_to_filters[group_name]
       group.group_type          = SYSTEM_GROUP
