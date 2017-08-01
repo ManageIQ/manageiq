@@ -7,8 +7,8 @@ module FixAuth
     def parse(args, env = {})
       args.shift if args.first == "--" # Handle when called through script/runner
       self.options = Trollop.options(args) do
-        banner "Usage: ruby #{$PROGRAM_NAME} [options] [database1] [database2] [...]\n" \
-               "       ruby #{$PROGRAM_NAME} [options] -P new_password [database1] [...] to replace all passwords"
+        banner "Usage: ruby #{$PROGRAM_NAME} [options] database [...]\n" \
+               "       ruby #{$PROGRAM_NAME} [options] -P new_password database [...] to replace all passwords"
 
         opt :verbose,  "Verbose",           :short => "v"
         opt :dry_run,  "Dry Run",           :short => "d"
@@ -26,7 +26,7 @@ module FixAuth
         opt :legacy_key, "Legacy Key",      :type => :string, :short => "K"
       end
 
-      options[:databases] = args.presence || %w(vmdb_production)
+      options[:database] = args.first || "vmdb_production"
       # default to updating the db
       options[:db] = true if !options[:key] && !options[:databaseyml]
       self.options = options.delete_if { |_n, v| v.blank? }
