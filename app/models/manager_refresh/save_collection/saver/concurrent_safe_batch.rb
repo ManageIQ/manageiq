@@ -32,7 +32,6 @@ module ManagerRefresh::SaveCollection
             next unless assert_distinct_relation(record)
 
             index = inventory_collection.object_index_with_keys(unique_index_keys, record)
-
             inventory_object = inventory_objects_index.delete(index)
             hash             = attributes_index.delete(index)
 
@@ -51,7 +50,11 @@ module ManagerRefresh::SaveCollection
                                   record.assign_attributes(hash.except(:id, :type))
                                   values_for_database(inventory_collection.model_class,
                                                       all_attribute_keys,
-                                                      record.attributes)
+                                                      record.attributes.symbolize_keys)
+                                elsif inventory_collection.serializable_keys?(all_attribute_keys)
+                                  values_for_database(inventory_collection.model_class,
+                                                      all_attribute_keys,
+                                                      hash.symbolize_keys)
                                 else
                                   hash.symbolize_keys
                                 end
@@ -59,7 +62,7 @@ module ManagerRefresh::SaveCollection
               inventory_collection.store_updated_records(record)
 
               hash_for_update[:id] = record.id
-              hashes_for_update << hash_for_update.except(:type)
+              hashes_for_update << hash_for_update
             end
           end
 
@@ -136,7 +139,11 @@ module ManagerRefresh::SaveCollection
                    record = inventory_collection.model_class.new(attributes_index.delete(index))
                    values_for_database(inventory_collection.model_class,
                                        all_attribute_keys,
-                                       record.attributes)
+                                       record.attributes.symbolize_keys)
+                 elsif inventory_collection.serializable_keys?(all_attribute_keys)
+                   values_for_database(inventory_collection.model_class,
+                                       all_attribute_keys,
+                                       attributes_index.delete(index).symbolize_keys)
                  else
                    attributes_index.delete(index).symbolize_keys
                  end
@@ -165,7 +172,7 @@ module ManagerRefresh::SaveCollection
       def values_for_database(model_class, all_attribute_keys, attributes)
         all_attribute_keys.each_with_object({}) do |attribute_name, db_values|
           type = model_class.type_for_attribute(attribute_name.to_s)
-          raw_val = attributes[attribute_name.to_s]
+          raw_val = attributes[attribute_name]
           db_values[attribute_name] = type.type == :boolean ? type.cast(raw_val) : type.serialize(raw_val)
         end
       end
