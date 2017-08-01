@@ -18,7 +18,8 @@ class MiqExpression::Target
     parsed_params
   end
 
-  attr_reader :model, :associations, :column
+  attr_reader :column
+  attr_accessor :model, :associations
 
   def initialize(model, associations, column)
     @model = model
