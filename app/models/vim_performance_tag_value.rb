@@ -38,7 +38,8 @@ class VimPerformanceTagValue < ApplicationRecord
     "ContainerGroup"      => [],
     "ContainerProject"    => [],
     "ContainerService"    => [],
-    "ContainerReplicator" => []
+    "ContainerReplicator" => [],
+    "Service"             => [:vms]
   }
 
   def self.build_from_performance_record(parent_perf, options = {:save => true})

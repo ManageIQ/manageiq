@@ -292,6 +292,22 @@ describe Metric do
           assert_perf_capture_now @vm, :with_alerts
         end
       end
+
+      context "services" do
+        let(:service) { FactoryGirl.create(:service) }
+
+        before do
+          service.add_resource(@vm)
+          service.save
+          MiqQueue.delete_all
+        end
+
+        it "queues service rollups" do
+          @vm.perf_rollup_to_parents("hourly", "2010-04-14T21:51:10Z", "2010-04-14T22:50:50Z")
+
+          expect(MiqQueue.all.pluck(:class_name).uniq).to eq(%w(Service))
+        end
+      end
     end
 
     context "with a small environment and time_profile" do
