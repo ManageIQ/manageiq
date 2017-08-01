@@ -12,6 +12,7 @@ class MiqExpression::Field < MiqExpression::Target
 
   def self.parse(field)
     parsed_params = parse_params(field) || return
+    return unless parsed_params[:model_name]
     new(parsed_params[:model_name], parsed_params[:associations], parsed_params[:column] ||
         parsed_params[:virtual_custom_column])
   end

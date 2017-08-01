@@ -47,9 +47,11 @@ RSpec.describe MiqExpression::Tag do
       expect(described_class.parse(tag)).to be_nil
     end
 
-    it "returns nil with invalid case managed-tag" do
+    it "supports managed-tag (no model)" do
       tag = "managed-service_level"
-      expect(described_class.parse(tag)).to be_nil
+      expect(described_class.parse(tag)).to have_attributes(:model        => nil,
+                                                            :associations => [],
+                                                            :namespace    => "/managed/service_level")
     end
 
     it "returns nil with invalid case managed" do
