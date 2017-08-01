@@ -135,13 +135,7 @@ module MiqServer::WorkerManagement::Monitor
 
     if resync_needed
       @last_sync = Time.now.utc
-      if (config_changed && roles_changed) || sync_interval_reached
-        sync_message = "sync_active_roles_and_config"
-      elsif config_changed
-        sync_message = "sync_config"
-      else
-        sync_message = "sync_active_roles"
-      end
+      sync_message = "sync_config"
 
       sync_config                if config_changed
       sync_assigned_roles        if config_changed

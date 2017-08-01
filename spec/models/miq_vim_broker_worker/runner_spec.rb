@@ -13,7 +13,6 @@ describe MiqVimBrokerWorker::Runner do
     @worker_record = FactoryGirl.create(:miq_vim_broker_worker, :guid => @worker_guid, :miq_server_id => server.id)
     @drb_uri = "drb://127.0.0.1:12345"
     allow(DRb).to receive(:uri).and_return(@drb_uri)
-    allow_any_instance_of(described_class).to receive(:sync_active_roles)
     allow_any_instance_of(described_class).to receive(:sync_config)
     allow_any_instance_of(described_class).to receive(:set_connection_pool_size)
     allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive(:authentication_check).and_return([true, ""])

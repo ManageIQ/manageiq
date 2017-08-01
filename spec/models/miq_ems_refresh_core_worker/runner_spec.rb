@@ -5,7 +5,6 @@ describe MiqEmsRefreshCoreWorker::Runner do
 
     # General stubbing for testing any worker (methods called during initialize)
     @worker_record = FactoryGirl.create(:miq_ems_refresh_core_worker, :queue_name => "ems_#{@ems.id}", :miq_server => server)
-    allow_any_instance_of(described_class).to receive(:sync_active_roles)
     allow_any_instance_of(described_class).to receive(:sync_config)
     allow_any_instance_of(described_class).to receive(:set_connection_pool_size)
     allow_any_instance_of(described_class).to receive(:heartbeat_using_drb?).and_return(false)
