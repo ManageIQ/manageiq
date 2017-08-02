@@ -3,6 +3,7 @@ require 'pg_inspector/util'
 require 'pg_inspector/active_connections_to_yaml'
 require 'pg_inspector/servers_to_yaml'
 require 'pg_inspector/active_connections_to_human'
+require 'pg_inspector/connection_locks'
 
 module PgInspector
   class Cli
@@ -10,7 +11,8 @@ module PgInspector
     SUB_COMMANDS = {
       :active_connections => ActiveConnectionsYAML,
       :servers            => ServersYAML,
-      :human              => ActiveConnectionsHumanYAML
+      :human              => ActiveConnectionsHumanYAML,
+      :locks              => LockConnectionYAML
     }.freeze
 
     def self.run(args)

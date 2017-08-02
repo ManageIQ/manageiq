@@ -36,6 +36,7 @@ module PgInspector
       connections["connections"].each do |conn|
         conn["blocked_by"] = find_lock_blocking_spid(conn["spid"])
       end
+      connections
     end
 
     def load_lock_file
@@ -57,22 +58,24 @@ module PgInspector
         lock["spid"] != l["spid"] &&
           l["granted"] == "t"
       end
-      spids = blocking_locks.collect { |l| l["spid"]}
-      spids & spids
+      p blocking_locks
+      spids = blocking_locks.collect { |l| l["spid"] }
+      p spids
+      (spids & spids) if spids
     end
 
     def blocking_lock_relation(lock)
       case lock["locktype"]
       when "relation"
         select_lock(lock, "relation", "database")
-      when "advisory"
-        select_lock(lock, "classid", "objid", "objsubid")
       when "virtualxid"
         select_lock(lock, "virtualxid")
       when "transactionid"
         select_lock(lock, "transationid")
       when "tuple"
-        select_lock(lock, "database", "relation", "page", "tuple")
+        p select_lock(lock, "database", "relation", "page", "tuple")
+      else
+        $stderr.puts("Warning: unexpected lock type #{lock["locktype"]} encountered.")
       end
     end
 
@@ -85,7 +88,9 @@ module PgInspector
     end
 
     def find_lock_blocking_spid(spid)
-      locks_owned_by_spid(spid).inject([]) { |result, lock| result & lock["blocked_by"] }
+      locks_blocking_spid = locks_owned_by_spid(spid).collect { |lock| lock["blocked_by"]}
+      locks_blocking_spid = locks_blocking_spid.flatten
+      locks_blocking_spid & locks_blocking_spid
     end
   end
 end
