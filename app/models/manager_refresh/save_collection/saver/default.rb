@@ -3,7 +3,7 @@ module ManagerRefresh::SaveCollection
     class Default < ManagerRefresh::SaveCollection::Saver::Base
       private
 
-      def update_record!(inventory_collection, record, hash, inventory_object)
+      def update_record!(record, hash, inventory_object)
         record.assign_attributes(hash.except(:id, :type))
         if !inventory_collection.check_changed? || record.changed?
           record.save
@@ -13,7 +13,7 @@ module ManagerRefresh::SaveCollection
         inventory_object.id = record.id
       end
 
-      def create_record!(inventory_collection, hash, inventory_object)
+      def create_record!(hash, inventory_object)
         record = inventory_collection.model_class.create!(hash.except(:id))
         inventory_collection.store_created_records(record)
 

@@ -15,7 +15,7 @@ module ManagerRefresh::SaveCollection
         "#{quote_column_name(key)} = EXCLUDED.#{quote_column_name(key)}"
       end
 
-      def build_insert_query(inventory_collection, all_attribute_keys, hashes)
+      def build_insert_query(all_attribute_keys, hashes)
         all_attribute_keys_array = all_attribute_keys.to_a
         table_name               = inventory_collection.model_class.table_name
         values                   = hashes.map do |hash|
@@ -67,7 +67,7 @@ module ManagerRefresh::SaveCollection
         ActiveRecord::Base.connection.quote_column_name(key)
       end
 
-      def build_update_query(inventory_collection, all_attribute_keys, hashes)
+      def build_update_query(all_attribute_keys, hashes)
         # We want to ignore type and create timestamps when updating
         all_attribute_keys_array = all_attribute_keys.to_a.delete_if { |x| %i(type created_at created_on).include?(x) }
         all_attribute_keys_array << :id
@@ -102,7 +102,7 @@ module ManagerRefresh::SaveCollection
         update_query
       end
 
-      def build_multi_selection_query(inventory_collection, hashes)
+      def build_multi_selection_query(hashes)
         inventory_collection.build_multi_selection_condition(hashes, unique_index_columns)
       end
 

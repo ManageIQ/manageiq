@@ -3,8 +3,8 @@ module ManagerRefresh::SaveCollection
     class ConcurrentSafe < ManagerRefresh::SaveCollection::Saver::Base
       private
 
-      def update_record!(inventory_collection, record, hash, inventory_object)
-        assign_attributes_for_update!(hash, inventory_collection, time_now)
+      def update_record!(record, hash, inventory_object)
+        assign_attributes_for_update!(hash, time_now)
         record.assign_attributes(hash.except(:id, :type))
 
         if !inventory_object.inventory_collection.check_changed? || record.changed?
@@ -21,13 +21,13 @@ module ManagerRefresh::SaveCollection
         inventory_object.id = record.id
       end
 
-      def create_record!(inventory_collection, hash, inventory_object)
+      def create_record!(hash, inventory_object)
         all_attribute_keys = hash.keys
         hash               = inventory_collection.model_class.new(hash).attributes.symbolize_keys
-        assign_attributes_for_create!(hash, inventory_collection, time_now)
+        assign_attributes_for_create!(hash, time_now)
 
         result_id = ActiveRecord::Base.connection.insert_sql(
-          build_insert_query(inventory_collection, all_attribute_keys, [hash])
+          build_insert_query(all_attribute_keys, [hash])
         )
         inventory_object.id = result_id
         inventory_collection.store_created_records(inventory_object)

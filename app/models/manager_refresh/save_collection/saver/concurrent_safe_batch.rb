@@ -3,7 +3,7 @@ module ManagerRefresh::SaveCollection
     class ConcurrentSafeBatch < ManagerRefresh::SaveCollection::Saver::Base
       private
 
-      def save!(inventory_collection, association)
+      def save!(association)
         attributes_index        = {}
         inventory_objects_index = {}
         all_attribute_keys      = Set.new + inventory_collection.batch_extra_attributes
@@ -55,7 +55,7 @@ module ManagerRefresh::SaveCollection
                                 else
                                   hash.symbolize_keys
                                 end
-              assign_attributes_for_update!(hash_for_update, inventory_collection, update_time)
+              assign_attributes_for_update!(hash_for_update, update_time)
               inventory_collection.store_updated_records(record)
 
               hash_for_update[:id] = record.id
@@ -65,7 +65,7 @@ module ManagerRefresh::SaveCollection
 
           # Update in batches
           if hashes_for_update.size >= batch_size
-            update_records!(inventory_collection, all_attribute_keys, hashes_for_update)
+            update_records!(all_attribute_keys, hashes_for_update)
 
             hashes_for_update = []
           end
@@ -78,7 +78,7 @@ module ManagerRefresh::SaveCollection
         end
 
         # Update the last batch
-        update_records!(inventory_collection, all_attribute_keys, hashes_for_update)
+        update_records!(all_attribute_keys, hashes_for_update)
         hashes_for_update = [] # Cleanup so GC can release it sooner
 
         # Destroy the last batch
@@ -89,7 +89,7 @@ module ManagerRefresh::SaveCollection
         # Records that were not found in the DB but sent for saving, we will be creating these in the DB.
         if inventory_collection.create_allowed?
           inventory_objects_index.each_slice(batch_size) do |batch|
-            create_records!(inventory_collection, all_attribute_keys, batch, attributes_index)
+            create_records!(all_attribute_keys, batch, attributes_index)
           end
         end
         _log.info("*************** PROCESSED #{inventory_collection}, "\
@@ -97,7 +97,7 @@ module ManagerRefresh::SaveCollection
                   "updated=#{inventory_collection.updated_records.count}, "\
                   "deleted=#{inventory_collection.deleted_records.count} *************")
       rescue => e
-        _log.error("Error when saving #{inventory_collection} with #{inventory_collection_details(inventory_collection)}. Message: #{e.message}")
+        _log.error("Error when saving #{inventory_collection} with #{inventory_collection_details}. Message: #{e.message}")
         raise e
       end
 
@@ -115,19 +115,19 @@ module ManagerRefresh::SaveCollection
           # Note: The standard :destroy and :delete rails method can't be batched because of the hooks and cascade destroy
           ActiveRecord::Base.transaction do
             records.each do |record|
-              delete_record!(inventory_collection, record)
+              delete_record!(record)
             end
           end
         end
       end
 
-      def update_records!(inventory_collection, all_attribute_keys, hashes)
+      def update_records!(all_attribute_keys, hashes)
         return if hashes.blank?
 
-        ActiveRecord::Base.connection.execute(build_update_query(inventory_collection, all_attribute_keys, hashes))
+        ActiveRecord::Base.connection.execute(build_update_query(all_attribute_keys, hashes))
       end
 
-      def create_records!(inventory_collection, all_attribute_keys, batch, attributes_index)
+      def create_records!(all_attribute_keys, batch, attributes_index)
         indexed_inventory_objects = {}
         hashes = []
         create_time = time_now
@@ -141,7 +141,7 @@ module ManagerRefresh::SaveCollection
                    attributes_index.delete(index).symbolize_keys
                  end
 
-          assign_attributes_for_create!(hash, inventory_collection, create_time)
+          assign_attributes_for_create!(hash, create_time)
 
           next unless assert_referential_integrity(hash, inventory_object)
 
@@ -153,12 +153,12 @@ module ManagerRefresh::SaveCollection
         return if hashes.blank?
 
         result = ActiveRecord::Base.connection.execute(
-          build_insert_query(inventory_collection, all_attribute_keys, hashes)
+          build_insert_query(all_attribute_keys, hashes)
         )
         inventory_collection.store_created_records(result)
         if inventory_collection.dependees.present?
           # We need to get primary keys of the created objects, but only if there are dependees that would use them
-          map_ids_to_inventory_objects(inventory_collection, indexed_inventory_objects, all_attribute_keys, hashes, result)
+          map_ids_to_inventory_objects(indexed_inventory_objects, all_attribute_keys, hashes, result)
         end
       end
 
@@ -170,7 +170,7 @@ module ManagerRefresh::SaveCollection
         end
       end
 
-      def map_ids_to_inventory_objects(inventory_collection, indexed_inventory_objects, all_attribute_keys, hashes, result)
+      def map_ids_to_inventory_objects(indexed_inventory_objects, all_attribute_keys, hashes, result)
         # The remote_data_timestamp is adding a WHERE condition to ON CONFLICT UPDATE. As a result, the RETURNING
         # clause is not guaranteed to return all ids of the inserted/updated records in the result. In that case
         # we test if the number of results matches the expected batch size. Then if the counts do not match, the only
@@ -184,7 +184,7 @@ module ManagerRefresh::SaveCollection
           end
         else
           inventory_collection.model_class.where(
-            build_multi_selection_query(inventory_collection, hashes)
+            build_multi_selection_query(hashes)
           ).select(unique_index_columns + [:id]).each do |inserted_record|
             key                 = unique_index_columns.map { |x| inserted_record.public_send(x) }
             inventory_object    = indexed_inventory_objects[key]

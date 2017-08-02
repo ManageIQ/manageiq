@@ -20,20 +20,20 @@ module ManagerRefresh::SaveCollection
         return if inventory_collection.noop?
         # If we want to use delete_complement strategy using :all_manager_uuids attribute, we are skipping any other
         # job. We want to do 1 :delete_complement job at 1 time, to keep to memory down.
-        return delete_complement(inventory_collection) if inventory_collection.all_manager_uuids.present?
+        return delete_complement if inventory_collection.all_manager_uuids.present?
 
         # TODO(lsmola) do I need to reload every time? Also it should be enough to clear the associations.
         inventory_collection.parent.reload if inventory_collection.parent
         association = inventory_collection.db_collection_for_comparison
 
-        save!(inventory_collection, association)
+        save!(association)
       end
 
       private
 
       attr_reader :unique_index_keys, :unique_db_primary_keys, :unique_db_indexes
 
-      def save!(inventory_collection, association)
+      def save!(association)
         attributes_index        = {}
         inventory_objects_index = {}
         inventory_collection.each do |inventory_object|
@@ -59,10 +59,10 @@ module ManagerRefresh::SaveCollection
             if inventory_object.nil?
               # Record was found in the DB but not sent for saving, that means it doesn't exist anymore and we should
               # delete it from the DB.
-              delete_record!(inventory_collection, record) if inventory_collection.delete_allowed?
+              delete_record!(record) if inventory_collection.delete_allowed?
             else
               # Record was found in the DB and sent for saving, we will be updating the DB.
-              update_record!(inventory_collection, record, hash, inventory_object) if assert_referential_integrity(hash, inventory_object)
+              update_record!(record, hash, inventory_object) if assert_referential_integrity(hash, inventory_object)
             end
           end
         end
@@ -77,7 +77,7 @@ module ManagerRefresh::SaveCollection
             inventory_objects_index.each do |index, inventory_object|
               hash = attributes_index.delete(index)
 
-              create_record!(inventory_collection, hash, inventory_object) if assert_referential_integrity(hash, inventory_object)
+              create_record!(hash, inventory_object) if assert_referential_integrity(hash, inventory_object)
             end
           end
         end
@@ -86,11 +86,11 @@ module ManagerRefresh::SaveCollection
                   "updated=#{inventory_collection.updated_records.count}, "\
                   "deleted=#{inventory_collection.deleted_records.count} *************")
       rescue => e
-        _log.error("Error when saving #{inventory_collection} with #{inventory_collection_details(inventory_collection)}. Message: #{e.message}")
+        _log.error("Error when saving #{inventory_collection} with #{inventory_collection_details}. Message: #{e.message}")
         raise e
       end
 
-      def inventory_collection_details(inventory_collection)
+      def inventory_collection_details
         "strategy: #{inventory_collection.strategy}, saver_strategy: #{inventory_collection.saver_strategy}, targeted: #{inventory_collection.targeted?}"
       end
 
@@ -98,7 +98,7 @@ module ManagerRefresh::SaveCollection
         inventory_collection.batch_size
       end
 
-      def delete_complement(inventory_collection)
+      def delete_complement
         return unless inventory_collection.delete_allowed?
 
         all_manager_uuids_size = inventory_collection.all_manager_uuids.size
@@ -122,7 +122,7 @@ module ManagerRefresh::SaveCollection
                   "#{all_manager_uuids_size}, deleted=#{deleted_counter} *************")
       end
 
-      def delete_record!(inventory_collection, record)
+      def delete_record!(record)
         record.public_send(inventory_collection.delete_method)
         inventory_collection.store_deleted_records(record)
       end
@@ -174,17 +174,17 @@ module ManagerRefresh::SaveCollection
         all_attribute_keys.include?(:remote_data_timestamp) # include? on Set is O(1)
       end
 
-      def assign_attributes_for_update!(hash, inventory_collection, update_time)
+      def assign_attributes_for_update!(hash, update_time)
         hash[:last_sync_on] = update_time if inventory_collection.supports_last_sync_on?
         hash[:updated_on]   = update_time if inventory_collection.supports_timestamps_on_variant?
         hash[:updated_at]   = update_time if inventory_collection.supports_timestamps_at_variant?
       end
 
-      def assign_attributes_for_create!(hash, inventory_collection, create_time)
+      def assign_attributes_for_create!(hash, create_time)
         hash[:type]         = inventory_collection.model_class.name if inventory_collection.supports_sti? && hash[:type].blank?
         hash[:created_on]   = create_time if inventory_collection.supports_timestamps_on_variant?
         hash[:created_at]   = create_time if inventory_collection.supports_timestamps_at_variant?
-        assign_attributes_for_update!(hash, inventory_collection, create_time)
+        assign_attributes_for_update!(hash, create_time)
       end
     end
   end
