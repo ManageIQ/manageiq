@@ -34,7 +34,6 @@ class ServiceTemplate < ApplicationRecord
 
   include CustomActionsMixin
   include ServiceMixin
-  include OwnershipMixin
   include NewWithTypeStiMixin
   include TenancyMixin
   include_concern 'Filter'
