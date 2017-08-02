@@ -34,6 +34,7 @@ module VmdbMetric::Purging
         :method_name => "purge_#{interval}",
         :role        => "database_operations",
         :queue_name  => "generic",
+        :msg_timeout => msg_timeout,
       ) do |_msg, find_options|
         find_options.merge(:args => [value])
       end
@@ -85,6 +86,10 @@ module VmdbMetric::Purging
 
       _log.info("Purging #{interval} metrics older than [#{older_than}]...Complete - Deleted #{total} records")
       total
+    end
+
+    def msg_timeout
+      ::Settings.database.metrics_history.queue_timeout.to_i_with_method
     end
   end
 end
