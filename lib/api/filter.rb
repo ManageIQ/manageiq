@@ -41,7 +41,9 @@ module Api
 
       and_part = and_expressions.one? ? and_expressions.first : {"AND" => and_expressions}
       composite_expression = or_expressions.empty? ? and_part : {"OR" => [and_part, *or_expressions]}
-      MiqExpression.new(composite_expression)
+      MiqExpression.new(composite_expression).tap do |expression|
+        raise BadRequestError, "Must filter on valid attributes for resource" unless expression.valid?
+      end
     end
 
     private

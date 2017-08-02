@@ -1,4 +1,143 @@
 describe MiqExpression do
+  describe "#valid?" do
+    it "returns true for a valid flat expression" do
+      expression = described_class.new("=" => {"field" => "Vm-name", "value" => "foo"})
+      expect(expression).to be_valid
+    end
+
+    it "returns false for an invalid flat expression" do
+      expression = described_class.new("=" => {"field" => "Vm-destroy", "value" => true})
+      expect(expression).not_to be_valid
+    end
+
+    it "returns true if all the subexressions in an 'AND' expression are valid" do
+      expression = described_class.new(
+        "AND" => [
+          {"=" => {"field" => "Vm-name", "value" => "foo"}},
+          {"=" => {"field" => "Vm-description", "value" => "bar"}}
+        ]
+      )
+      expect(expression).to be_valid
+    end
+
+    it "returns false if one of the subexressions in an 'AND' expression is invalid" do
+      expression = described_class.new(
+        "AND" => [
+          {"=" => {"field" => "Vm-destroy", "value" => true}},
+          {"=" => {"field" => "Vm-description", "value" => "bar"}}
+        ]
+      )
+      expect(expression).not_to be_valid
+    end
+
+    it "returns true if all the subexressions in an 'OR' expression are valid" do
+      expression = described_class.new(
+        "OR" => [
+          {"=" => {"field" => "Vm-name", "value" => "foo"}},
+          {"=" => {"field" => "Vm-description", "value" => "bar"}}
+        ]
+      )
+      expect(expression).to be_valid
+    end
+
+    it "returns false if one of the subexressions in an 'OR' expression is invalid" do
+      expression = described_class.new(
+        "OR" => [
+          {"=" => {"field" => "Vm-destroy", "value" => true}},
+          {"=" => {"field" => "Vm-description", "value" => "bar"}}
+        ]
+      )
+      expect(expression).not_to be_valid
+    end
+
+    it "returns true if the subexression in a 'NOT' expression is valid" do
+      expression1 = described_class.new("NOT" => {"=" => {"field" => "Vm-name", "value" => "foo"}})
+      expression2 = described_class.new("!" => {"=" => {"field" => "Vm-name", "value" => "foo"}})
+      expect([expression1, expression2]).to all(be_valid)
+    end
+
+    it "returns false if the subexression in a 'NOT' expression is invalid" do
+      expression1 = described_class.new("NOT" => {"=" => {"field" => "Vm-destroy", "value" => true}})
+      expression2 = described_class.new("!" => {"=" => {"field" => "Vm-destroy", "value" => true}})
+      expect(expression1).not_to be_valid
+      expect(expression2).not_to be_valid
+    end
+
+    it "returns true if the subexpressions in a 'FIND'/'checkall' expression are all valid" do
+      expression = described_class.new(
+        "FIND" => {
+          "search"   => {"=" => {"field" => "Host.filesystems-name", "value" => "/etc/passwd"}},
+          "checkall" => {"=" => {"field" => "Host.filesystems-permissions", "value" => "0644"}}
+        }
+      )
+      expect(expression).to be_valid
+    end
+
+    it "returns false if a subexpression in a 'FIND'/'checkall' expression is invalid" do
+      expression1 = described_class.new(
+        "FIND" => {
+          "search"   => {"=" => {"field" => "Host.filesystems-destroy", "value" => true}},
+          "checkall" => {"=" => {"field" => "Host.filesystems-permissions", "value" => "0644"}}
+        }
+      )
+      expression2 = described_class.new(
+        "FIND" => {
+          "search"   => {"=" => {"field" => "Host.filesystems-name", "value" => "/etc/passwd"}},
+          "checkall" => {"=" => {"field" => "Host.filesystems-destroy", "value" => true}}
+        }
+      )
+      expect(expression1).not_to be_valid
+      expect(expression2).not_to be_valid
+    end
+
+    it "returns true if the subexpressions in a 'FIND'/'checkany' expression are all valid" do
+      expression = described_class.new(
+        "FIND" => {
+          "search"   => {"=" => {"field" => "Host.filesystems-name", "value" => "/etc/passwd"}},
+          "checkany" => {"=" => {"field" => "Host.filesystems-permissions", "value" => "0644"}}
+        }
+      )
+      expect(expression).to be_valid
+    end
+
+    it "returns false if a subexpression in a 'FIND'/'checkany' expression is invalid" do
+      expression1 = described_class.new(
+        "FIND" => {
+          "search"   => {"=" => {"field" => "Host.filesystems-destroy", "value" => true}},
+          "checkany" => {"=" => {"field" => "Host.filesystems-permissions", "value" => "0644"}}
+        }
+      )
+      expression2 = described_class.new(
+        "FIND" => {
+          "search"   => {"=" => {"field" => "Host.filesystems-name", "value" => "/etc/passwd"}},
+          "checkany" => {"=" => {"field" => "Host.filesystems-destroy", "value" => true}}
+        }
+      )
+      expect(expression1).not_to be_valid
+      expect(expression2).not_to be_valid
+    end
+
+    it "returns true if the subexpressions in a 'FIND'/'checkcount' expression are all valid" do
+      expression = described_class.new(
+        "FIND" => {
+          "search"     => {"IS NOT EMPTY" => {"field" => "Vm.snapshots-name"}},
+          "checkcount" => {">" => {"field" => "<count>", "value" => 0}}
+        }
+      )
+      expect(expression).to be_valid
+    end
+
+    it "returns false if a subexpression in a 'FIND'/'checkcount' expression is invalid" do
+      expression = described_class.new(
+        "FIND" => {
+          "search"     => {"=" => {"field" => "Vm.snapshots-destroy"}},
+          "checkcount" => {">" => {"field" => "<count>", "value" => 0}}
+        }
+      )
+      expect(expression).not_to be_valid
+    end
+  end
+
   describe "#to_sql" do
     it "generates the SQL for an EQUAL expression" do
       sql, * = MiqExpression.new("EQUAL" => {"field" => "Vm-name", "value" => "foo"}).to_sql
@@ -660,6 +799,14 @@ describe MiqExpression do
         )
         result = Host.all.to_a.select { |rec| filter.lenient_evaluate(rec) }
         expect(result).to eq([host2])
+      end
+
+      it "cannot execute non-attribute methods on target objects" do
+        vm = FactoryGirl.create(:vm_vmware)
+
+        expect do
+          described_class.new("=" => {"field" => "Vm-destroy", "value" => true}).lenient_evaluate(vm)
+        end.not_to change(Vm, :count)
       end
     end
   end

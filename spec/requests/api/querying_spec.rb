@@ -635,6 +635,19 @@ describe "Querying" do
       expect_query_result(:vms, 1, 2)
       expect_result_resources_to_match_hash([{"name" => vm2.name, "guid" => vm2.guid}])
     end
+
+    it "returns a bad request if trying to filter on invalid attributes" do
+      run_get(vms_url, :filter => ["destroy=true"])
+
+      expected = {
+        "error" => a_hash_including(
+          "kind"    => "bad_request",
+          "message" => "Must filter on valid attributes for resource"
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:bad_request)
+    end
   end
 
   describe "Querying vm attributes" do
