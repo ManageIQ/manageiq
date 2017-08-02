@@ -126,7 +126,7 @@ module Authenticator
 
           matching_groups = match_groups(groups_for(identity))
           userid = userid_for(identity, username)
-          user   = User.in_my_region.find_or_initialize_by(:userid => userid)
+          user   = find_or_initialize_user(userid)
           update_user_attributes(user, username, identity)
           user.miq_groups = matching_groups
 
@@ -153,6 +153,12 @@ module Authenticator
           raise
         end
       end
+    end
+
+    def find_or_initialize_user(userid)
+      user   = User.find_by_userid(userid)
+      user ||= User.in_my_region.where('lower(userid) = ?', userid).order(:lastlogon).last
+      user ||  User.new(:userid => userid)
     end
 
     def authenticate_with_http_basic(username, password, request = nil, options = {})
@@ -278,7 +284,7 @@ module Authenticator
     end
 
     def normalize_username(username)
-      username
+      username.downcase
     end
   end
 end
