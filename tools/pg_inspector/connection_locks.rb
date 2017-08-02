@@ -58,9 +58,7 @@ module PgInspector
         lock["spid"] != l["spid"] &&
           l["granted"] == "t"
       end
-      p blocking_locks
       spids = blocking_locks.collect { |l| l["spid"] }
-      p spids
       (spids & spids) if spids
     end
 
@@ -73,7 +71,7 @@ module PgInspector
       when "transactionid"
         select_lock(lock, "transationid")
       when "tuple"
-        p select_lock(lock, "database", "relation", "page", "tuple")
+        select_lock(lock, "database", "relation", "page", "tuple")
       else
         $stderr.puts("Warning: unexpected lock type #{lock["locktype"]} encountered.")
       end
