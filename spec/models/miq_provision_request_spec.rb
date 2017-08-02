@@ -130,30 +130,18 @@ describe MiqProvisionRequest do
           expect(stats.fetch_path(:active, :class_name)).to eq("MiqProvision")
         end
 
-        it "should return stats from quota methods" do
-          prov_options = {:number_of_vms => [2, '2'], :owner_email => 'tester@miq.com', :vm_memory => [1024, '1024'], :number_of_cpus => [2, '2']}
-          @pr2 = FactoryGirl.create(:miq_provision_request, :requester => user, :src_vm_id => vm_template.id, :options => prov_options)
-
-          stats = @pr.check_quota(:requests_by_owner)
-          expect(stats).to be_kind_of(Hash)
-          expect(stats[:class_name]).to eq("MiqProvisionRequest")
-          expect(stats[:count]).to eq(2)
-          expect(stats[:memory]).to eq(2.gigabytes)
-          expect(stats[:cpu]).to eq(4)
-          expect(stats.fetch_path(:active, :class_name)).to eq("MiqProvision")
-        end
-
         context "for cloud and infra providers," do
           def create_task(user, request)
             FactoryGirl.create(:miq_request_task, :miq_request => request, :miq_request_id => request.id, :type => 'MiqProvision', :description => "task", :tenant => user.current_tenant)
           end
 
           def create_request(user, vm_template, prov_options)
-            FactoryGirl.create(:miq_provision_request, :requester => user, :description => "request",
-                                                                           :tenant => user.current_tenant,
-                                                                           :source => vm_template,
-                                                                           :src_vm_id => vm_template.id,
-                                                                           :options => prov_options)
+            FactoryGirl.create(:miq_provision_request, :requester   => user,
+                                                       :description => "request",
+                                                       :tenant      => user.current_tenant,
+                                                       :source      => vm_template,
+                                                       :src_vm_id   => vm_template.id,
+                                                       :options     => prov_options)
           end
 
           def request_queue_entry(request)
@@ -166,11 +154,11 @@ describe MiqProvisionRequest do
 
           def task_queue_entry(task)
             FactoryGirl.create(:miq_queue,
-                               :state       => MiqQueue::STATE_DEQUEUE,
-                               :args        => [{:object_type => "Provision", :object_id => task.id}],
-                               :task_id     => 'miq_provision_task',
-                               :class_name  => 'MiqAeEngine',
-                               :method_name => 'deliver')
+                               :state          => MiqQueue::STATE_DEQUEUE,
+                               :args           => [{:object_type => "Provision", :object_id => task.id}],
+                               :tracking_label => 'miq_provision_task',
+                               :class_name     => 'MiqAeEngine',
+                               :method_name    => 'deliver')
           end
 
           def create_test_task(user, template)
@@ -239,7 +227,7 @@ describe MiqProvisionRequest do
             let(:request) { create_test_task(@vmware_user1, @vmware_template) }
             let(:quota_method) { :active_provisions }
             let(:counts_hash) do
-              { :count => 12, :memory => 8_589_938_688, :cpu => 32, :storage => 44.gigabytes }
+              {:count => 12, :memory => 8_589_938_688, :cpu => 32, :storage => 44.gigabytes}
             end
             it_behaves_like "check_quota"
           end
@@ -248,7 +236,7 @@ describe MiqProvisionRequest do
             let(:load_queue) { queue(vmware_tasks | google_tasks) }
             let(:request) { create_test_task(@vmware_user1, @vmware_template) }
             let(:counts_hash) do
-              { :count => 8, :memory => 8.gigabytes, :cpu => 16, :storage => 4.gigabytes }
+              {:count => 8, :memory => 8.gigabytes, :cpu => 16, :storage => 4.gigabytes}
             end
 
             context "active_provisions_by_tenant," do
@@ -264,7 +252,7 @@ describe MiqProvisionRequest do
             context "active_provisions_by_user," do
               let(:quota_method) { :active_provisions_by_user }
               let(:counts_hash) do
-                { :count => 4, :memory => 4.gigabytes, :cpu => 8, :storage => 2.gigabytes }
+                {:count => 4, :memory => 4.gigabytes, :cpu => 8, :storage => 2.gigabytes}
               end
               it_behaves_like "check_quota"
             end
@@ -274,7 +262,7 @@ describe MiqProvisionRequest do
             let(:load_queue) { queue(vmware_tasks | google_tasks) }
             let(:request) { create_test_task(@google_user1, @google_template) }
             let(:counts_hash) do
-              { :count => 4, :memory => 4096, :cpu => 16, :storage => 40.gigabytes }
+              {:count => 4, :memory => 4096, :cpu => 16, :storage => 40.gigabytes}
             end
 
             context "active_provisions_by_tenant," do
@@ -290,7 +278,7 @@ describe MiqProvisionRequest do
             context "active_provisions_by_user," do
               let(:quota_method) { :active_provisions_by_user }
               let(:counts_hash) do
-                { :count => 2, :memory => 2048, :cpu => 8, :storage => 20.gigabytes }
+                {:count => 2, :memory => 2048, :cpu => 8, :storage => 20.gigabytes}
               end
               it_behaves_like "check_quota"
             end

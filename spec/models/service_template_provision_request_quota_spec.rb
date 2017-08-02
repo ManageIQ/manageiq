@@ -10,12 +10,13 @@ describe ServiceTemplateProvisionRequest do
       end
 
       def create_request(user, template, prov_options = {})
-        FactoryGirl.create(:service_template_provision_request, :requester => user, :description => "request",
-                                                                       :tenant_id => user.current_tenant.id,
-                                                                       :source_type => "ServiceTemplate",
-                                                                       :source_id => template.id,
-                                                                       :process => true,
-                                                                       :options => prov_options)
+        FactoryGirl.create(:service_template_provision_request, :requester   => user,
+                                                                :description => "request",
+                                                                :tenant_id   => user.current_tenant.id,
+                                                                :source_type => "ServiceTemplate",
+                                                                :source_id   => template.id,
+                                                                :process     => true,
+                                                                :options     => prov_options)
       end
 
       def request_queue_entry(request)
@@ -28,11 +29,11 @@ describe ServiceTemplateProvisionRequest do
 
       def task_queue_entry(task)
         FactoryGirl.create(:miq_queue,
-                           :state       => MiqQueue::STATE_DEQUEUE,
-                           :args        => [{:object_type => "ServiceTemplateProvisionRequest", :object_id => task.id}],
-                           :task_id     => 'service_template_provision_task',
-                           :class_name  => 'MiqAeEngine',
-                           :method_name => 'deliver')
+                           :state          => MiqQueue::STATE_DEQUEUE,
+                           :args           => [{:object_type => "ServiceTemplateProvisionRequest", :object_id => task.id}],
+                           :tracking_label => 'service_template_provision_task',
+                           :class_name     => 'MiqAeEngine',
+                           :method_name    => 'deliver')
       end
 
       def create_test_task(user, service_template)
@@ -97,7 +98,7 @@ describe ServiceTemplateProvisionRequest do
         let(:load_queue) { queue(vmware_tasks) }
         let(:request) { create_test_task(@vmware_user1, @vmware_template) }
         let(:counts_hash) do
-          { :count => 6, :memory => 6.gigabytes, :cpu => 16, :storage => 3.gigabytes }
+          {:count => 6, :memory => 6.gigabytes, :cpu => 16, :storage => 3.gigabytes}
         end
 
         context "active_provisions_by_tenant," do
@@ -113,7 +114,7 @@ describe ServiceTemplateProvisionRequest do
         context "active_provisions_by_user," do
           let(:quota_method) { :active_provisions_by_user }
           let(:counts_hash) do
-            { :count => 3, :memory => 3.gigabytes, :cpu => 8, :storage => 1_610_612_736 }
+            {:count => 3, :memory => 3.gigabytes, :cpu => 8, :storage => 1_610_612_736}
           end
           it_behaves_like "check_quota"
         end
@@ -164,7 +165,7 @@ describe ServiceTemplateProvisionRequest do
         let(:load_queue) { queue(google_tasks) }
         let(:request) { create_test_task(@google_user1, @google_template) }
         let(:counts_hash) do
-          { :count => 4, :memory => 4096, :cpu => 16, :storage => 40.gigabytes }
+          {:count => 4, :memory => 4096, :cpu => 16, :storage => 40.gigabytes}
         end
 
         context "active_provisions_by_tenant," do
@@ -180,7 +181,7 @@ describe ServiceTemplateProvisionRequest do
         context "active_provisions_by_user," do
           let(:quota_method) { :active_provisions_by_user }
           let(:counts_hash) do
-            { :count => 2, :memory => 2048, :cpu => 8, :storage => 20.gigabytes }
+            {:count => 2, :memory => 2048, :cpu => 8, :storage => 20.gigabytes}
           end
           it_behaves_like "check_quota"
         end

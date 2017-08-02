@@ -262,24 +262,18 @@ module MiqProvisionQuotaMixin
   end
 
   def quota_find_active_prov_request_by_user(options)
-    quota_find_active_prov_request(options).select do |p|
-      miq_request.requester.userid == p.userid
-    end
+    quota_find_active_prov_request(options).where(:userid => miq_request.requester.userid)
   end
 
   def quota_find_active_prov_request_by_group(options)
     prov_request_group = miq_request.requester.current_group
-    prov_requests = quota_find_active_prov_request(options).select do |p|
-      prov_request_group == p.miq_request.requester.current_group
+    quota_find_active_prov_request(options).select do |r|
+      prov_request_group == r.requester.current_group
     end
-    prov_requests
   end
 
   def quota_find_active_prov_request_by_tenant(options)
-    prov_requests = quota_find_active_prov_request(options).select do |p|
-      miq_request.tenant == p.tenant
-    end
-    prov_requests
+    quota_find_active_prov_request(options).where(:tenant => miq_request.tenant)
   end
 
   def quota_find_active_prov_request(_options)
@@ -292,7 +286,7 @@ module MiqProvisionQuotaMixin
     prov_ids = []
     MiqQueue
       .where(:method_name => 'deliver', :state => %w(ready dequeue), :class_name => 'MiqAeEngine')
-      .where("task_id like ?", '%_provision_%')
+      .where("tracking_label like ?", '%_provision_%')
       .each do |q|
         if q.args
           args = q.args.first
@@ -362,8 +356,7 @@ module MiqProvisionQuotaMixin
   def number_of_vms(request)
     num_vms_for_request = request.get_option(:number_of_vms).to_i
     if options[:nil_vm_id_only] == true && request.miq_request_tasks.length == num_vms_for_request
-      no_vm = request.miq_request_tasks.find_all { |p| p.destination_id.nil? && p.state != 'finished' }
-      num_vms_for_request = no_vm
+      num_vms_for_request = request.miq_request_tasks.where(:destination_id => nil).where.not(:state => 'finished').count
     end
     num_vms_for_request
   end
@@ -377,18 +370,14 @@ module MiqProvisionQuotaMixin
   end
 
   def flavor(request)
-    Flavor.find_by(:id => request.get_option(:instance_type)) if cloud?(request)
+    Flavor.find(request.get_option(:instance_type)) if cloud?(request)
   end
 
   def number_of_cpus(prov, cloud, flavor_obj)
-    if cloud
-      return nil unless flavor_obj
-      flavor_obj.cpus
-    else
-      request = prov.kind_of?(MiqRequest) ? prov : prov.miq_request
-      num_cpus = request.get_option(:number_of_sockets).to_i * request.get_option(:cores_per_socket).to_i
-      num_cpus.zero? ? request.get_option(:number_of_cpus).to_i : num_cpus
-    end
+    return flavor_obj.try(:cpus) if cloud
+    request = prov.kind_of?(MiqRequest) ? prov : prov.miq_request
+    num_cpus = request.get_option(:number_of_sockets).to_i * request.get_option(:cores_per_socket).to_i
+    num_cpus.zero? ? request.get_option(:number_of_cpus).to_i : num_cpus
   end
 
   def storage(prov, cloud, vendor, flavor_obj = nil)
@@ -404,12 +393,9 @@ module MiqProvisionQuotaMixin
   end
 
   def memory(prov, cloud, vendor, flavor_obj = nil)
-    if cloud
-      return nil unless flavor_obj
-      flavor_obj.memory
-    else
-      memory = prov.kind_of?(MiqRequest) ? prov.get_option(:vm_memory).to_i : prov.miq_request.get_option(:vm_memory).to_i
-      memory.megabytes if %w(amazon openstack google).exclude?(vendor)
-    end
+    return flavor_obj.try(:memory) if cloud
+    request = prov.kind_of?(MiqRequest) ? prov : prov.miq_request
+    memory = request.get_option(:vm_memory).to_i
+    %w(amazon openstack google).include?(vendor) ? memory : memory.megabytes
   end
 end
