@@ -127,9 +127,7 @@ module PgInspector
     end
 
     def process_other_process(activity)
-      activity["spid"] = activity["pid"].to_i
-      activity.delete("pid")
-      activity
+      process_activity_shared(activity)
     end
 
     def push_other_process(result, activity)
@@ -149,7 +147,7 @@ module PgInspector
       activity["application_name"].start_with?("MIQ")
     end
 
-    def process_miq_activity(activity)
+    def process_activity_shared(activity)
       activity["datid"] = activity["datid"].to_i
       activity["spid"] = activity["pid"].to_i
       activity.delete("pid")
@@ -159,6 +157,11 @@ module PgInspector
       activity["xact_start"] = to_utc(activity["xact_start"])
       activity["query_start"] = to_utc(activity["query_start"])
       activity["state_change"] = to_utc(activity["state_change"])
+      activity
+    end
+
+    def process_miq_activity(activity)
+      process_activity_shared(activity)
       process_miq_activity_application_name(activity)
     end
 
