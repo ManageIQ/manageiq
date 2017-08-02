@@ -66,7 +66,7 @@ module Metric::CiMixin::Processing
 
           rt_fields.map do |k, v|
             {
-              :timestamp   => Time.parse(ts),
+              :timestamp   => ts,
               :metric_name => k,
               :value       => v,
               :resource    => self,
