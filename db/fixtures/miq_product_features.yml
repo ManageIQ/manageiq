@@ -3971,6 +3971,10 @@
       :description: Edit Tags of Middleware Domains
       :feature_type: control
       :identifier: middleware_domain_tag
+    - :name: Stop Middleware Domain
+      :description: Stop Middleware Domain
+      :feature_type: control
+      :identifier: middleware_domain_stop
 
 # Middleware Server Group
 - :name: Middleware Server Group
