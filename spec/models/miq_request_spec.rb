@@ -393,4 +393,24 @@ describe MiqRequest do
       expect { described_class.class_from_request_data({}) }.to raise_error("Invalid request_type")
     end
   end
+
+  context "#get_user" do
+    let(:root_tenant) { Tenant.seed }
+    let(:tenant1)     { FactoryGirl.create(:tenant, :parent => root_tenant) }
+    let(:group1)      { FactoryGirl.create(:miq_group, :description => 'Group 1', :tenant => root_tenant) }
+    let(:group2)      { FactoryGirl.create(:miq_group, :description => 'Group 2', :tenant => tenant1) }
+    let(:user)        { FactoryGirl.create(:user, :miq_groups => [group1, group2], :current_group => group1) }
+
+    it "takes the requester group" do
+      request = FactoryGirl.create(:miq_provision_request, :requester => user, :options => {:requester_group => group2.description})
+      expect(user.current_group).to eq(group1)
+      expect(request.get_user.current_group).to eq(group2)
+    end
+
+    it "stays with user's current group" do
+      request = FactoryGirl.create(:miq_provision_request, :requester => user)
+      expect(user.current_group).to eq(group1)
+      expect(request.get_user.current_group).to eq(group1)
+    end
+  end
 end
