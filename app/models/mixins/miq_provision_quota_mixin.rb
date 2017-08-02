@@ -264,12 +264,11 @@ module MiqProvisionQuotaMixin
   end
 
   def quota_find_active_prov_request(_options)
-    prov_req_ids = []
-    MiqQueue
-      .where(:method_name => 'create_provision_instances', :state => 'dequeue', :class_name => 'MiqProvisionRequest')
-      .each do |q|
-        prov_req_ids << q.instance_id
-      end
+    prov_req_ids = MiqQueue.where(
+      :class_name  => 'MiqProvisionRequest',
+      :method_name => 'create_provision_instances',
+      :state       => 'dequeue'
+    ).pluck(:instance_id)
 
     prov_ids = []
     MiqQueue
