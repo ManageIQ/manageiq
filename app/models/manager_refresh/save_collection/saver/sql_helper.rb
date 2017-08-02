@@ -19,7 +19,7 @@ module ManagerRefresh::SaveCollection
         all_attribute_keys_array = all_attribute_keys.to_a
         table_name               = inventory_collection.model_class.table_name
         values                   = hashes.map do |hash|
-          "(#{all_attribute_keys_array.map { |x| ActiveRecord::Base.connection.quote(hash[x]) }.join(",")})"
+          "(#{all_attribute_keys_array.map { |x| quote(hash[x], x) }.join(",")})"
         end.join(",")
         col_names = all_attribute_keys_array.map { |x| quote_column_name(x) }.join(",")
 
@@ -106,18 +106,22 @@ module ManagerRefresh::SaveCollection
         inventory_collection.build_multi_selection_condition(hashes, unique_index_columns)
       end
 
-      def quote(value, name = nil, inventory_collection = nil)
+      def quote(value, name = nil, used_inventory_collection = nil)
         # TODO(lsmola) needed only because UPDATE FROM VALUES needs a specific PG typecasting, remove when fixed in PG
-        name.nil? ? ActiveRecord::Base.connection.quote(value) : quote_and_pg_type_cast(value, name, inventory_collection)
+        if used_inventory_collection.nil?
+          ActiveRecord::Base.connection.quote(value)
+        else
+          quote_and_pg_type_cast(value, name, used_inventory_collection)
+        end
       rescue TypeError => e
-        _log.error("Can't quote value: #{value}, of #{name} and #{inventory_collection}")
+        _log.error("Can't quote value: #{value}, of :#{name} and #{inventory_collection}")
         raise e
       end
 
-      def quote_and_pg_type_cast(value, name, inventory_collection)
+      def quote_and_pg_type_cast(value, name, used_inventory_collection)
         pg_type_cast(
           ActiveRecord::Base.connection.quote(value),
-          inventory_collection.model_class.columns_hash[name.to_s]
+          used_inventory_collection.model_class.columns_hash[name.to_s]
             .try(:sql_type_metadata)
             .try(:instance_values)
             .try(:[], "sql_type")
