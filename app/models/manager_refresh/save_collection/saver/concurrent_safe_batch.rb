@@ -102,11 +102,21 @@ module ManagerRefresh::SaveCollection
       end
 
       def destroy_records(records)
-        # TODO(lsmola) we need at least batch disconnect. Batch destroy won't be probably possible because of the
-        # :dependent => :destroy.
-        ActiveRecord::Base.transaction do
-          records.each do |record|
-            delete_record!(inventory_collection, record)
+        return false unless inventory_collection.delete_allowed?
+        return if records.blank?
+
+        # Is the delete_method rails standard deleting method?
+        rails_delete = %i(destroy delete).include?(inventory_collection.delete_method)
+        if !rails_delete && inventory_collection.model_class.respond_to?(inventory_collection.delete_method)
+          # We have custom delete method defined on a class, that means it supports batch destroy
+          inventory_collection.model_class.public_send(inventory_collection.delete_method, records.map(&:id))
+        else
+          # We have either standard :destroy and :delete rails method, or custom instance level delete method
+          # Note: The standard :destroy and :delete rails method can't be batched because of the hooks and cascade destroy
+          ActiveRecord::Base.transaction do
+            records.each do |record|
+              delete_record!(inventory_collection, record)
+            end
           end
         end
       end
