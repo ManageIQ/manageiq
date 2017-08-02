@@ -153,6 +153,8 @@ module PgInspector
       activity.delete("pid")
       activity["usesysid"] = activity["usesysid"].to_i
       activity["client_port"] = activity["client_port"].to_i
+      activity["backend_xid"] = activity["backend_xid"].to_i if activity["backend_xid"]
+      activity["backend_xmin"] = activity["backend_xmin"].to_i if activity["backend_xmin"]
       activity["backend_start"] = to_utc(activity["backend_start"])
       activity["xact_start"] = to_utc(activity["xact_start"])
       activity["query_start"] = to_utc(activity["query_start"])
