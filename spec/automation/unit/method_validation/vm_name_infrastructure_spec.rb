@@ -3,6 +3,7 @@ require Rails.root.join(
 ).to_s
 
 describe VmName do
+  let(:template) { FactoryGirl.create(:template) }
   let(:provision) { MiqProvision.new }
   let(:root_object) { Spec::Support::MiqAeMockObject.new.tap { |ro| ro["miq_provision"] = provision } }
   let(:service) { Spec::Support::MiqAeMockService.new(root_object).tap { |s| s.object = {'vm_prefix' => "abc"} } }
@@ -17,8 +18,12 @@ describe VmName do
   let(:tag2) { FactoryGirl.create(:tag, :name => "/managed/environment/production") }
 
   context "#main" do
+    before do
+      allow(provision).to receive(:get_source).and_return(template)
+    end
+
     it "no vm name from dialog" do
-      provision.update_attributes(:options => {:number_of_vms => 200})
+      provision.update_attributes!(:options => {:number_of_vms => 200})
 
       described_class.new(service).main
 
@@ -26,7 +31,7 @@ describe VmName do
     end
 
     it "vm name from dialog" do
-      provision.update_attributes(:options => {:number_of_vms => 200, :vm_name => "drew"})
+      provision.update_attributes!(:options => {:number_of_vms => 200, :vm_name => "drew"})
 
       described_class.new(service).main
 
@@ -34,7 +39,7 @@ describe VmName do
     end
 
     it "use model and environment tag" do
-      provision.update_attributes(:options => {:number_of_vms => 200, :vm_tags => [classification2.id]})
+      provision.update_attributes!(:options => {:number_of_vms => 200, :vm_tags => [classification2.id]})
 
       described_class.new(service).main
 
@@ -42,7 +47,7 @@ describe VmName do
     end
 
     it "provisions single vm" do
-      provision.update_attributes(:options => {:number_of_vms => 1})
+      provision.update_attributes!(:options => {:number_of_vms => 1})
 
       described_class.new(service).main
 
