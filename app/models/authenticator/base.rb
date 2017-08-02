@@ -270,7 +270,7 @@ module Authenticator
     end
 
     def normalize_username(username)
-      username
+      username.downcase
     end
   end
 end

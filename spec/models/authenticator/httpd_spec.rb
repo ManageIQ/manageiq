@@ -190,8 +190,8 @@ describe Authenticator::Httpd do
       end
     end
 
-    context "with unknown username" do
-      let(:username) { 'bob' }
+    context "with unknown username in mixed case" do
+      let(:username) { 'bOb' }
       let(:headers) do
         super().merge('X-Remote-User-FullName' => 'Bob Builderson',
                       'X-Remote-User-Email'    => 'bob@example.com')
@@ -205,12 +205,12 @@ describe Authenticator::Httpd do
         it "records one successful and one failing audit entry" do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
-            :userid  => 'bob',
+            :userid  => 'bOb',
             :message => "User bob successfully validated by External httpd",
           )
           expect(AuditEvent).to receive(:failure).with(
             :event   => 'authenticate_httpd',
-            :userid  => 'bob',
+            :userid  => 'bOb',
             :message => "User bob authenticated but not defined in EVM",
           )
           authenticate rescue nil
@@ -233,12 +233,12 @@ describe Authenticator::Httpd do
         it "records two successful audit entries" do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
-            :userid  => 'bob',
+            :userid  => 'bOb',
             :message => "User bob successfully validated by External httpd",
           )
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
-            :userid  => 'bob',
+            :userid  => 'bOb',
             :message => "Authentication successful for user bob",
           )
           expect(AuditEvent).not_to receive(:failure)
@@ -268,12 +268,12 @@ describe Authenticator::Httpd do
           it "records two successful audit entries plus one failure" do
             expect(AuditEvent).to receive(:success).with(
               :event   => 'authenticate_httpd',
-              :userid  => 'bob',
+              :userid  => 'bOb',
               :message => "User bob successfully validated by External httpd",
             )
             expect(AuditEvent).to receive(:success).with(
               :event   => 'authenticate_httpd',
-              :userid  => 'bob',
+              :userid  => 'bOb',
               :message => "Authentication successful for user bob",
             )
             expect(AuditEvent).to receive(:failure).with(
