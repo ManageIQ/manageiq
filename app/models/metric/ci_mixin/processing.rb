@@ -61,8 +61,15 @@ module Metric::CiMixin::Processing
         rt_rows.flat_map do |ts, rt|
           rt.merge!(Metric::Processing.process_derived_columns(self, rt, interval_name == 'realtime' ? Metric::Helper.nearest_hourly_timestamp(ts) : nil))
           rt.delete_nils
-          rt_tags   = rt.slice(*%i(capture_interval_name capture_interval resource_name)).symbolize_keys
-          rt_fields = rt.except(*%i(capture_interval_name capture_interval resource_name timestamp instance_id class_name resource_type resource_id))
+          rt_tags   = rt.slice(:capture_interval_name, :capture_interval, :resource_name).symbolize_keys
+          rt_fields = rt.except(:capture_interval_name,
+                                :capture_interval,
+                                :resource_name,
+                                :timestamp,
+                                :instance_id,
+                                :class_name,
+                                :resource_type,
+                                :resource_id)
 
           rt_fields.map do |k, v|
             {
