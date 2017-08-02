@@ -22,6 +22,7 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
       attributes = {
         :model_class    => ::NetworkPort,
         :association    => :network_ports,
+        :use_ar_object  => true,
         :builder_params => {
           :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
         }
@@ -171,6 +172,7 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
         :model_class                  => ::LoadBalancerListener,
         :association                  => :load_balancer_listeners,
         :parent_inventory_collections => [:load_balancers],
+        :use_ar_object                => true,
         :builder_params               => {
           :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
         }
