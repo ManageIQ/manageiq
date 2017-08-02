@@ -103,5 +103,10 @@ class ContainerImage < ApplicationRecord
     save
   end
 
+  def self.disconnect_inv(ids)
+    _log.info "Disconnecting Images [#{ids}]"
+    where(:id => ids).update_all(:container_image_registry_id => nil, :deleted_on => Time.now.utc)
+  end
+
   alias_method :perform_metadata_sync, :sync_stashed_metadata
 end
