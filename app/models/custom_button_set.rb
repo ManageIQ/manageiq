@@ -26,6 +26,41 @@ class CustomButtonSet < ApplicationRecord
     applies_to_class(class_name).where("set_data not like ?", "%:applies_to_id%")
   end
 
+  # Params:
+  #   custom_button_sets: <Array>CustomButtonSet
+  #   object: for this object are evaluated visibility_expression of CustomButtons
+  #           one CustomButtonSet contains any CustomButtons,
+  #           CustomButtonSet has stored this ids of CustomButtons in array CustomButton#set_data[:button_order]
+  # Returns:
+  #   <Array>CustomButtonSet
+  #
+  # example:
+  # let's have:
+  # custom_buttons_set =
+  #   <Array> [<CustomButtonSet> id: 10000000000075,
+  #     set_data:
+  #       {:button_order=> [1, 2]}, list ids of custom buttons in custom button set (group of buttons in UI)
+  # ... ]
+  # object = Vm.first
+  #
+  # then CustomButtonSet.filter_with_visibility_expression(custom_button_sets, object) returns:
+  #  - same custom_button_sets array when all visibility expressions are not populated(CustomButton#visibility_expression = nil)
+  #  - same custom_button_sets array but with filtered list custom buttons ids in each custom button set from
+  #    custom_button_sets when any visibility expression is evaluated to true
+  #    - ids of custom buttons with visibility expression which are evaluated to false are removed from CustomButtonSet#set_data[:button_order]
+  #  - filtered custom_button_sets array when all visibilty expression custom buttons have been evaluated to false
+  def self.filter_with_visibility_expression(custom_button_sets, object)
+    custom_button_sets.each_with_object([]) do |custom_button_set, ret|
+      custom_button_from_set = CustomButton.where(:id => custom_button_set.set_data[:button_order]).select(:id, :visibility_expression)
+      filtered_ids = custom_button_from_set.select { |x| x.evaluate_visibility_expression_for(object) }.pluck(:id)
+      if filtered_ids.present?
+        custom_button_set.set_data[:button_order] = filtered_ids
+        ret << custom_button_set
+      end
+      ret
+    end
+  end
+
   def deep_copy(options)
     raise ArgumentError, "options[:owner] is required" if options[:owner].blank?
 
