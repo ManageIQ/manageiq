@@ -86,7 +86,7 @@ module PgInspector
     end
 
     def find_lock_blocking_spid(spid)
-      locks_blocking_spid = locks_owned_by_spid(spid).collect { |lock| lock["blocked_by"]}
+      locks_blocking_spid = locks_owned_by_spid(spid).collect { |lock| lock["blocked_by"] }
       locks_blocking_spid = locks_blocking_spid.flatten
       locks_blocking_spid & locks_blocking_spid
     end
