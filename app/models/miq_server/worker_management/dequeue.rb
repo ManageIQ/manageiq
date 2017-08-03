@@ -2,9 +2,6 @@ module MiqServer::WorkerManagement::Dequeue
   extend ActiveSupport::Concern
 
   def peek(queue_name, priority, limit)
-    # @gregB The problem here is the only queue_names are of queues with workers
-    # so network manager and storage manager are in the queue table, but don't show up here.
-    _log.info("YOLO peak #{queue_name}")
     MiqQueue.peek(
       :conditions => {:queue_name => queue_name, :priority => priority, :role => @active_role_names},
       :select     => "id, lock_version, priority, role",
