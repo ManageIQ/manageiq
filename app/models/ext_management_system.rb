@@ -480,17 +480,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def queue_name
-    # @GregB This basically creates worker queues like this:
-    # ems_1   # parent aka amazon cloud manager
-    # ems_1_2 # child aka amazon storage manager
-    # This would be extracted to the provider
-    puts "EMS Q Name parent_ems_id ems_#{parent_ems_id}, id ems_#{id}"
-    if parent_ems_id
-      "ems_#{parent_ems_id}_#{id}"
-    else
-      "ems_#{id}"
-    end
-    # "ems_#{id}"
+    "ems_#{id}"
   end
 
   def enforce_policy(target, event)
