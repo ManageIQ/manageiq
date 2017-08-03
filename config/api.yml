@@ -801,12 +801,19 @@
       - :name: read
         :identifier: flavor_show_list
       :post:
+      - :name: delete
+        :identifier: flavor_delete
       - :name: query
         :identifier: flavor_show_list
+      - :name: create
+        :identifier: flavor_create
     :resource_actions:
       :get:
       - :name: read
         :identifier: flavor_show
+      :delete:
+      - :name: delete
+        :identifier: flavor_delete
   :floating_ips:
     :description: Floating IPs
     :identifier: floating_ip
@@ -826,6 +833,7 @@
       - :name: read
         :identifier: floating_ip_show
   :groups:
+
     :description: Groups
     :identifier: rbac_group
     :options:
