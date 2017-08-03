@@ -52,12 +52,21 @@ module Api
 
     def parse_filter(filter)
       logical_or = filter.gsub!(/^or /i, '').present?
-      operator, methods = OPERATORS.find { |op, _methods| filter.partition(op).second == op }
+
+      operator = nil
+      operators_from_longest_to_shortest = OPERATORS.keys.sort_by(&:size).reverse
+      filter.size.times do |i|
+        operator = operators_from_longest_to_shortest.detect do |o|
+          o == filter[(i..(i + o.size - 1))]
+        end
+        break if operator
+      end
 
       if operator.blank?
         raise BadRequestError, "Unknown operator specified in filter #{filter}"
       end
 
+      methods = OPERATORS[operator]
       filter_attr, _, filter_value = filter.partition(operator)
       filter_attr.strip!
       filter_value.strip!
