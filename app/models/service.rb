@@ -201,7 +201,7 @@ class Service < ApplicationRecord
   end
 
   def orchestration_stacks
-    service_resources.where(:resource_type => 'OrchestrationStack').collect(&:resource)
+    service_resources.where(:resource_type => 'OrchestrationStack').includes(:resource).collect(&:resource)
   end
 
   def generic_objects
