@@ -205,7 +205,7 @@ class MiqQueue < ApplicationRecord
   EOL
 
   def self.get(options = {})
-    sql_for_get = MIQ_QUEUE_GET + self.where_queue_name(options[:queue_name].is_a? Array)
+    sql_for_get = MIQ_QUEUE_GET + where_queue_name(options[:queue_name].kind_of?(Array))
     cond = [
       sql_for_get,
       options[:zone] || MiqServer.my_server.zone.name,
@@ -262,7 +262,7 @@ class MiqQueue < ApplicationRecord
   def self.peek(options = {})
     conditions, select, limit = options.values_at(:conditions, :select, :limit)
 
-    sql_for_peek = MIQ_QUEUE_PEEK + self.where_queue_name(conditions[:queue_name].is_a? Array)
+    sql_for_peek = MIQ_QUEUE_PEEK + where_queue_name(conditions[:queue_name].kind_of?(Array))
     cond = [
       sql_for_peek,
       conditions[:zone] || MiqServer.my_server.zone.name,
@@ -284,14 +284,14 @@ class MiqQueue < ApplicationRecord
   #   used to put a new item on the queue.
   #
   def self.put_or_update(find_options)
-    find_options  = default_get_options(find_options)
+    find_options = default_get_options(find_options)
     conds = find_options.dup
 
     # Since args are a serializable field, remove them and manually dump them
     #   for proper comparison.  NOTE: hashes may not compare correctly due to
     #   it's unordered nature.
     where_scope = if conds.key?(:args)
-                    args = YAML.dump conds.delete(:args)
+                    args = YAML.dump(conds.delete(:args))
                     MiqQueue.where(conds).where(['args = ?', args])
                   else
                     MiqQueue.where(conds)
@@ -372,10 +372,10 @@ class MiqQueue < ApplicationRecord
             obj = obj.find(instance_id)
           end
         rescue ActiveRecord::RecordNotFound => err
-          _log.warn  "#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}"
+          _log.warn("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}")
           return STATUS_WARN, nil, nil
         rescue => err
-          _log.error "#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}"
+          _log.error("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}")
           return STATUS_ERROR, err.message, nil
         end
       end
@@ -396,7 +396,7 @@ class MiqQueue < ApplicationRecord
         _log.error("#{MiqQueue.format_short_log_msg(self)}, #{message}")
         status = STATUS_RETRY
       rescue Timeout::Error
-        message = "timed out after #{Time.now - delivered_on} seconds.  Timeout threshold [#{msg_timeout}]"
+        message = "timed out after #{Time.now.utc - delivered_on} seconds.  Timeout threshold [#{msg_timeout}]"
         _log.error("#{MiqQueue.format_short_log_msg(self)}, #{message}")
         status = STATUS_TIMEOUT
       end
@@ -418,7 +418,7 @@ class MiqQueue < ApplicationRecord
 
   def delivered(state, msg, result)
     self.state = state
-    _log.info("#{MiqQueue.format_short_log_msg(self)}, State: [#{state}], Delivered in [#{Time.now - delivered_on}] seconds")
+    _log.info("#{MiqQueue.format_short_log_msg(self)}, State: [#{state}], Delivered in [#{Time.now.utc - delivered_on}] seconds")
     m_callback(msg, result) unless miq_callback.blank?
   rescue => err
     _log.error("#{MiqQueue.format_short_log_msg(self)}, #{err.message}")
@@ -427,7 +427,7 @@ class MiqQueue < ApplicationRecord
   end
 
   def delivered_on
-    @delivered_on ||= Time.now
+    @delivered_on ||= Time.now.utc
   end
 
   def m_callback(msg, result)
@@ -444,7 +444,7 @@ class MiqQueue < ApplicationRecord
           miq_callback[:args] ||= []
 
           log_args = result.inspect
-          log_args = "#{log_args[0, 500]}..." if log_args.length > 500  # Trim long results
+          log_args = "#{log_args[0, 500]}..." if log_args.length > 500 # Trim long results
           log_args = miq_callback[:args] + [state, msg, log_args]
           _log.info("#{MiqQueue.format_short_log_msg(self)}, Invoking Callback with args: #{log_args.inspect}") unless obj.nil?
 
@@ -459,7 +459,7 @@ class MiqQueue < ApplicationRecord
         _log.error("backtrace: #{err.backtrace.join("\n")}")
       end
     else
-      _log.warn "#{MiqQueue.format_short_log_msg(self)}, Callback is not well-defined, skipping"
+      _log.warn("#{MiqQueue.format_short_log_msg(self)}, Callback is not well-defined, skipping")
     end
   end
 
