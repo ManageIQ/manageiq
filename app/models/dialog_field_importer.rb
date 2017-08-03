@@ -10,6 +10,7 @@ class DialogFieldImporter
     if DialogField::DIALOG_FIELD_TYPES.include?(dialog_field_attributes["type"])
       dialog_field_type_class = dialog_field_attributes["type"].constantize
       resource_action_attributes = dialog_field_attributes.delete("resource_action")
+      dialog_field_attributes.delete("dialog_field_responders")
       resource_action = ResourceAction.new(resource_action_attributes)
       dialog_field = dialog_field_type_class.new(dialog_field_attributes.merge("resource_action" => resource_action))
       if dialog_field_attributes["type"] == "DialogFieldTagControl"
