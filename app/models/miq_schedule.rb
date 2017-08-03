@@ -417,10 +417,10 @@ class MiqSchedule < ApplicationRecord
 
     slist.each do |sched|
       rec = find_by(:name => sched[:attributes][:name])
-      unless rec
-        create(sched[:attributes])
-      else
+      if rec
         rec.update_attributes(sched[:attributes])
+      else
+        create(sched[:attributes])
       end
     end
     _log.info("Preloading sample schedules... Done")

@@ -971,7 +971,9 @@ class Host < ApplicationRecord
     begin
       ManageIQ::NetworkDiscovery.scanHost(ost)
 
-      unless ost.hypervisor.empty?
+      if ost.hypervisor.empty?
+        _log.info "NOT Discovered: #{ost_inspect(ost)}"
+      else
         _log.info "Discovered: #{ost_inspect(ost)}"
 
         if [:virtualcenter, :scvmm, :rhevm].any? { |ems_type| ost.hypervisor.include?(ems_type) }
@@ -992,16 +994,7 @@ class Host < ApplicationRecord
           # It may have been added by someone else while we were discovering
           host.save!
 
-          unless ost.hypervisor.include?(:ipmi)
-            # Try to convert IP address to hostname and update host data
-            netHostName = Host.get_hostname(ost.ipaddr)
-            host.name = netHostName if netHostName
-
-            EmsRefresh.save_operating_system_inventory(host, :product_name => os_name, :product_type => os_type) unless os_name.nil?
-            EmsRefresh.save_hardware_inventory(host, {:cpu_type => "intel"})
-
-            host.save!
-          else
+          if ost.hypervisor.include?(:ipmi)
             # IPMI - Check if credentials were passed and try to scan host
             cred = (ost.credentials || {})[:ipmi]
             unless cred.nil? || cred[:userid].blank?
@@ -1014,13 +1007,20 @@ class Host < ApplicationRecord
                 _log.warn "IPMI did not connect to Host:<#{host.ipmi_address}> with User:<#{cred[:userid]}>"
               end
             end
+          else
+            # Try to convert IP address to hostname and update host data
+            netHostName = Host.get_hostname(ost.ipaddr)
+            host.name = netHostName if netHostName
+
+            EmsRefresh.save_operating_system_inventory(host, :product_name => os_name, :product_type => os_type) unless os_name.nil?
+            EmsRefresh.save_hardware_inventory(host, {:cpu_type => "intel"})
+
+            host.save!
           end
 
           _log.info "#{host.name} created"
           AuditEvent.success(:event => "host_created", :target_id => host.id, :target_class => "Host", :message => "#{host.name} created")
         end
-      else
-        _log.info "NOT Discovered: #{ost_inspect(ost)}"
       end
     rescue => err
       _log.log_backtrace(err)

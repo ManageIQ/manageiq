@@ -874,12 +874,12 @@ class MiqAction < ApplicationRecord
   def action_assign_scan_profile(action, _rec, _inputs)
     ScanItem  # Cause the ScanItemSet class to load, if not already loaded
     profile = ScanItemSet.find_by(:name => action.options[:scan_item_set_name])
-    unless profile
-      MiqPolicy.logger.warn("MIQ(action_assign_scan_profile): Unable to perform action [#{action.description}], unable to find analysis profile: [#{action.options[:scan_item_set_name]}]")
-      return
-    else
+    if profile
       MiqPolicy.logger.info("MIQ(action_assign_scan_profile): Action [#{action.description}], using analysis profile: [#{profile.description}]")
       return ScanItem.get_profile(profile.name)
+    else
+      MiqPolicy.logger.warn("MIQ(action_assign_scan_profile): Unable to perform action [#{action.description}], unable to find analysis profile: [#{action.options[:scan_item_set_name]}]")
+      return
     end
   end
 
@@ -920,11 +920,11 @@ class MiqAction < ApplicationRecord
 
     msg = "#{msg_pfx}, Status: #{status[:status]}"
     msg += ", Messages: #{status[:messages].join(",")}" if status[:messages]
-    unless options[:preview] == true
+    if options[:preview] == true
+      MiqPolicy.logger.info("[PREVIEW] #{msg}")
+    else
       MiqPolicy.logger.info(msg)
       a.save!
-    else
-      MiqPolicy.logger.info("[PREVIEW] #{msg}")
     end
 
     return a, status

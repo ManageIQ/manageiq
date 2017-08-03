@@ -198,15 +198,15 @@ module VimPerformanceAnalysis
           chash = nh[cluster.id][:count][type]
           hhash = v[:count][type]
 
-          unless type == :storage
-            chash[:total] += hhash[:total] unless hhash[:total].nil?
-          else
+          if type == :storage
             # build up array of storage details unique by storage Id
             chash[:details] ||= []
             hhash[:details].each do |h|
               id, = h.to_a.flatten
               chash[:details] << h unless chash[:details].find { |i| i.keys.first == id }
             end
+          else
+            chash[:total] += hhash[:total] unless hhash[:total].nil?
           end
         end
       end

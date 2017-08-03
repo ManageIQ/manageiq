@@ -65,12 +65,12 @@ class MiqAlertSet < ApplicationRecord
 
     msg = "#{msg_pfx}, Status: #{status[:status]}"
     msg += ", Messages: #{status[:messages].join(",")}" if status[:messages]
-    unless options[:preview] == true
+    if options[:preview] == true
+      MiqPolicy.logger.info("[PREVIEW] #{msg}")
+    else
       MiqPolicy.logger.info(msg)
       aset.save!
       alerts.each { |a| aset.add_member(a) }
-    else
-      MiqPolicy.logger.info("[PREVIEW] #{msg}")
     end
 
     return aset, status

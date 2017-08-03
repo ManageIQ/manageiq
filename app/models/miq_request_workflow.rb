@@ -147,18 +147,7 @@ class MiqRequestWorkflow
 
         if fld[:required] == true
           # If :required_method is defined let it determine if the field is value
-          unless fld[:required_method].nil?
-            Array.wrap(fld[:required_method]).each do |method|
-              fld[:error] = send(method, f, values, dlg, fld, value)
-              # Bail out early if we see an error
-              break unless fld[:error].nil?
-            end
-
-            unless fld[:error].nil?
-              valid = false
-              next
-            end
-          else
+          if fld[:required_method].nil?
             default_require_method = "default_require_#{f}".to_sym
             if self.respond_to?(default_require_method)
               fld[:error] = send(default_require_method, f, values, dlg, fld, value)
@@ -172,6 +161,17 @@ class MiqRequestWorkflow
                 valid = false
                 next
               end
+            end
+          else
+            Array.wrap(fld[:required_method]).each do |method|
+              fld[:error] = send(method, f, values, dlg, fld, value)
+              # Bail out early if we see an error
+              break unless fld[:error].nil?
+            end
+
+            unless fld[:error].nil?
+              valid = false
+              next
             end
           end
         end
@@ -1276,12 +1276,12 @@ class MiqRequestWorkflow
                    field_values.detect { |_k, v| v.to_s.downcase == find_value }
                  end
 
-        unless result.nil?
+        if result.nil?
+          _log.warn "Unable to set key <#{dialog_name}:#{key}(#{data_type})> to value <#{find_value.inspect}>.  No matching item found."
+        else
           set_value = [result.first, result.last]
           _log.info "setting key <#{dialog_name}:#{key}(#{data_type})> to value <#{set_value.inspect}>"
           values[key] = set_value
-        else
-          _log.warn "Unable to set key <#{dialog_name}:#{key}(#{data_type})> to value <#{find_value.inspect}>.  No matching item found."
         end
       end
     end
