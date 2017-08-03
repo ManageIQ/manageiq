@@ -184,6 +184,10 @@ class MiqQueue < ApplicationRecord
     put(options)
   end
 
+  def self.where_queue_name(is_array)
+    is_array ? "AND queue_name in (?)" : "AND queue_name = ?"
+  end
+
   MIQ_QUEUE_GET = <<-EOL
     state = 'ready'
     AND (zone IS NULL OR zone = ?)
@@ -194,7 +198,6 @@ class MiqQueue < ApplicationRecord
         AND (zone IS NULL OR zone = ?)
         AND task_id IS NOT NULL
     ))
-    AND queue_name = ?
     AND (role IS NULL OR role IN (?))
     AND (server_guid IS NULL OR server_guid = ?)
     AND (deliver_on IS NULL OR deliver_on <= ?)
@@ -202,15 +205,16 @@ class MiqQueue < ApplicationRecord
   EOL
 
   def self.get(options = {})
+    sql_for_get = MIQ_QUEUE_GET + self.where_queue_name(options[:queue_name].is_a? Array)
     cond = [
-      MIQ_QUEUE_GET,
+      sql_for_get,
       options[:zone] || MiqServer.my_server.zone.name,
       options[:zone] || MiqServer.my_server.zone.name,
-      options[:queue_name] || "generic",
       options[:role] || MiqServer.my_server.active_role_names,
       MiqServer.my_guid,
       Time.now.utc,
       options[:priority] || MIN_PRIORITY,
+      options[:queue_name] || "generic",
     ]
 
     prefetch_max_per_worker = Settings.server.prefetch_max_per_worker
@@ -249,7 +253,6 @@ class MiqQueue < ApplicationRecord
   MIQ_QUEUE_PEEK = <<-EOL
     state = 'ready'
     AND (zone IS NULL OR zone = ?)
-    AND queue_name = ?
     AND (role IS NULL OR role IN (?))
     AND (server_guid IS NULL OR server_guid = ?)
     AND (deliver_on IS NULL OR deliver_on <= ?)
@@ -259,14 +262,15 @@ class MiqQueue < ApplicationRecord
   def self.peek(options = {})
     conditions, select, limit = options.values_at(:conditions, :select, :limit)
 
+    sql_for_peek = MIQ_QUEUE_PEEK + self.where_queue_name(conditions[:queue_name].is_a? Array)
     cond = [
-      MIQ_QUEUE_PEEK,
+      sql_for_peek,
       conditions[:zone] || MiqServer.my_server.zone.name,
-      conditions[:queue_name] || "generic",
       conditions[:role] || MiqServer.my_server.active_role_names,
       MiqServer.my_guid,
       Time.now.utc,
       conditions[:priority] || MIN_PRIORITY,
+      conditions[:queue_name] || "generic",
     ]
 
     result = MiqQueue.where(cond).order(:priority, :id).limit(limit || 1)
