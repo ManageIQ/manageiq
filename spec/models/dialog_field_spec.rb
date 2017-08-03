@@ -178,4 +178,35 @@ describe DialogField do
   it "does not use attr_accessor for default_value" do
     expect(described_class.new(:default_value => "test")[:default_value]).to eq("test")
   end
+
+  describe "#update_dialog_field_responders" do
+    let(:dialog_field) { described_class.create(:name => "field1", :label => "field1") }
+    let(:dialog_field2) { described_class.create(:name => "field2", :label => "field2") }
+    let(:dialog_field3) { described_class.create(:name => "field3", :label => "field3") }
+
+    before do
+      dialog_field.dialog_field_responders = [dialog_field3]
+    end
+
+    context "when the given list is not empty" do
+      it "rebuilds the responder list based on the compressed IDs" do
+        dialog_field.update_dialog_field_responders([dialog_field2.compressed_id])
+        expect(dialog_field.dialog_field_responders).to eq([dialog_field2])
+      end
+    end
+
+    context "when the given list is empty" do
+      it "destroys the responders" do
+        dialog_field.update_dialog_field_responders([])
+        expect(dialog_field.dialog_field_responders).to eq([])
+      end
+    end
+
+    context "when the given list is nil" do
+      it "destroys the responders without crashing" do
+        dialog_field.update_dialog_field_responders(nil)
+        expect(dialog_field.dialog_field_responders).to eq([])
+      end
+    end
+  end
 end

@@ -73,9 +73,10 @@ describe DialogFieldSerializer do
         it 'serializes the dialog_field with all attributes' do
           expect(dialog_field_serializer.serialize(dialog_field, all_attributes))
             .to include(expected_serialized_values.merge(
-                          'id'              => dialog_field.id,
-                          'resource_action' => 'serialized resource action',
-                          'values'          => 'dynamic values'
+                          'id'                      => dialog_field.id,
+                          'resource_action'         => 'serialized resource action',
+                          'dialog_field_responders' => [],
+                          'values'                  => 'dynamic values'
             ))
         end
       end
@@ -102,8 +103,9 @@ describe DialogFieldSerializer do
         it 'serializes the dialog_field with all attributes' do
           expect(dialog_field_serializer.serialize(dialog_field, all_attributes))
             .to include(expected_serialized_values.merge(
-                          'id'              => dialog_field.id,
-                          'resource_action' => 'serialized resource action',
+                          'id'                      => dialog_field.id,
+                          'resource_action'         => 'serialized resource action',
+                          'dialog_field_responders' => [],
             ))
         end
 

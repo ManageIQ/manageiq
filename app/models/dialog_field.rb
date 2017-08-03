@@ -125,6 +125,12 @@ class DialogField < ApplicationRecord
     DialogFieldSerializer.serialize(self)
   end
 
+  def update_dialog_field_responders(id_list)
+    dialog_field_responders.destroy_all
+
+    self.dialog_field_responders = available_dialog_field_responders(id_list) unless id_list.blank?
+  end
+
   def deep_copy
     dup.tap do |new_field|
       new_field.resource_action = resource_action.dup
@@ -132,6 +138,10 @@ class DialogField < ApplicationRecord
   end
 
   private
+
+  def available_dialog_field_responders(id_list)
+    DialogField.find(id_list.collect { |id| self.class.uncompress_id(id) })
+  end
 
   def default_resource_action
     build_resource_action if resource_action.nil?
