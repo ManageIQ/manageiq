@@ -142,7 +142,7 @@ class CustomButton < ApplicationRecord
 
   def evaluate_visibility_expression_for(object)
     return true unless visibility_expression
-    return false if enablement_expression && !object # list
+    return false if visibility_expression && !object # object == nil, method is called for list of objects
     visibility_expression.lenient_evaluate(object)
   end
 
