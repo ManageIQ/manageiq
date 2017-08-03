@@ -18,9 +18,9 @@ module PgInspector
         opt(:database, "Database to output stat activity, with `-m' to only output activity for this Database",
             :type => :string, :short => "d", :default => "postgres")
         opt(:output, "Output file",
-            :type => :string, :short => "o", :default => "active_connections.yml")
+            :type => :string, :short => "o", :default => DEFAULT_OUTPUT_PATH + "active_connections.yml")
         opt(:output_locks, "Output lock file",
-            :type => :string, :short => "l", :default => "locks.yml")
+            :type => :string, :short => "l", :default => DEFAULT_OUTPUT_PATH + "locks.yml")
         opt(:ignore_error, "Ignore incomplete application name column",
             :short => "i")
         opt(:only_miq_rows, "Get only ManageIQ Server/Worker rows",

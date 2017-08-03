@@ -12,11 +12,11 @@ module PgInspector
     def parse_options(args)
       self.options = Trollop.options(args) do
         opt(:connections, "Active connections file",
-            :type => :string, :short => "c", :default => "active_connections.yml")
+            :type => :string, :short => "c", :default => DEFAULT_OUTPUT_PATH + "active_connections.yml")
         opt(:servers, "Servers information file",
-            :type => :string, :short => "s", :default => "server.yml")
+            :type => :string, :short => "s", :default => DEFAULT_OUTPUT_PATH + "server.yml")
         opt(:output, "Output file",
-            :type => :string, :short => "o", :default => "human.yml")
+            :type => :string, :short => "o", :default => DEFAULT_OUTPUT_PATH + "human.yml")
       end
     end
 
@@ -181,7 +181,7 @@ module PgInspector
       activity["pid"] = pid.to_i
       activity["class_name"] = class_name
       activity["server_id"] = uncompress_id(server_id)
-      activity["worker_id"] = uncompress_id(worker_id) if worker_id != "-"
+      activity["worker_id"] = uncompress_id(worker_id)
       activity["zone_id"] = uncompress_id(zone_id)
       activity["zone_name"] = zone_name
       activity

@@ -12,11 +12,11 @@ module PgInspector
     def parse_options(args)
       self.options = Trollop.options(args) do
         opt(:locks, "Lock file",
-            :type => :string, :short => "l", :default => "locks.yml")
+            :type => :string, :short => "l", :default => DEFAULT_OUTPUT_PATH + "locks.yml")
         opt(:connections, "Human readable active connections file",
-            :type => :string, :short => "c")
+            :type => :string, :short => "c", :default => DEFAULT_OUTPUT_PATH + "human.yml")
         opt(:output, "Output file",
-            :type => :string, :short => "o", :default => "locks_output.yml")
+            :type => :string, :short => "o", :default => DEFAULT_OUTPUT_PATH + "locks_output.yml")
       end
     end
 
@@ -33,8 +33,16 @@ module PgInspector
     private
 
     def merge_lock_and_connection(connections)
+      some_connection_blocked = false
       connections["connections"].each do |conn|
         conn["blocked_by"] = find_lock_blocking_spid(conn["spid"])
+        unless conn["blocked_by"].empty?
+          some_connection_blocked = true
+          puts "Connection #{conn["spid"]} is blocked by #{conn["blocked_by"]}."
+        end
+      end
+      unless some_connection_blocked
+        puts "Every connection is OK and not blocked. No need to generate lock graph."
       end
       connections
     end

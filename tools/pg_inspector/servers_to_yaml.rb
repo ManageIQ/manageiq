@@ -1,3 +1,4 @@
+require 'fileutils'
 require 'trollop'
 require 'pg'
 require 'pg_inspector/error'
@@ -27,6 +28,8 @@ BANNER
             :type => :string, :short => "u", :default => "postgres")
         opt(:database, "ManageIQ Database to output server information",
             :type => :string, :short => "d", :default => "vmdb_production")
+        opt(:output_path, "Output file path",
+            :type => :string, :default => DEFAULT_OUTPUT_PATH)
         opt(:output, "Output file prefix",
             :type => :string, :short => "o", :default => "server")
         opt(:password_file, "File content to use as password",
@@ -35,11 +38,13 @@ BANNER
     end
 
     def run
+      output_file_name = make_output_file_name
       Util.dump_to_yml_file(
         table_from_db_conn(
           connect_pg_server, "miq_servers"
-        ), "ManageIQ server information", make_output_file_name(options[:output])
+        ), "ManageIQ server information", output_file_name
       )
+      update_output_file_link(output_file_name)
     end
 
     private
@@ -78,9 +83,18 @@ SQL
       Util.error_exit(e)
     end
 
-    def make_output_file_name(base_name)
+    def make_output_file_name
       timestamp = Time.new.getlocal.strftime("%m-%d-%Y_%H:%M:%S")
-      "#{base_name}_#{timestamp}.yml"
+      "#{options[:output_path]}#{options[:output]}_#{timestamp}.yml"
+    end
+
+    def link_file_name
+      "#{options[:output_path]}#{options[:output]}.yml"
+    end
+
+    def update_output_file_link(output_file_name)
+      FileUtils.rm(link_file_name) if File.exist?(link_file_name)
+      FileUtils.ln_s(output_file_name, link_file_name)
     end
   end
 end
