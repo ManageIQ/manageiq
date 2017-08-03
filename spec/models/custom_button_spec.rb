@@ -7,6 +7,34 @@ describe CustomButton do
       @user = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
     end
 
+    describe '#evaluate_enablement_expression_for' do
+      let(:miq_expression) { MiqExpression.new('EQUAL' => {'field' => 'Vm-name', 'value' => 'vm_1'}) }
+      let(:vm)             { FactoryGirl.create(:vm_vmware, :name => 'vm_1') }
+      let(:custom_button) do
+        FactoryGirl.create(:custom_button, :applies_to => vm.class, :name => "foo", :description => "foo foo")
+      end
+
+      it 'evaluates enablement expression when expression is not set' do
+        expect(custom_button.evaluate_enablement_expression_for(vm)).to be_truthy
+      end
+
+      it 'evaluates enablement expression when expression is set and method is called for list' do
+        custom_button.enablement_expression = miq_expression
+        expect(custom_button.evaluate_enablement_expression_for(nil)).to be_falsey
+      end
+
+      it 'evaluates enablement expression when expression is set and evaluated to true' do
+        custom_button.enablement_expression = miq_expression
+        expect(custom_button.evaluate_enablement_expression_for(vm)).to be_truthy
+      end
+
+      it 'evaluates enablement expression when expression is set and evaluated to false' do
+        custom_button.enablement_expression = miq_expression
+        vm.name = 'XXX'
+        expect(custom_button.evaluate_enablement_expression_for(vm)).to be_falsey
+      end
+    end
+
     it "should validate there are no buttons" do
       expect(described_class.count).to eq(0)
     end
