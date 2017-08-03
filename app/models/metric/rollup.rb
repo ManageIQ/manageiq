@@ -205,6 +205,7 @@ module Metric::Rollup
     new_perf.reverse_merge!(orig_perf)
     new_perf.merge!(Metric::Processing.process_derived_columns(obj, new_perf, hour)) unless DERIVED_COLS_EXCLUDED_CLASSES.include?(obj.class.base_class.name)
     new_perf.merge!(Metric::Statistic.calculate_stat_columns(obj, hour))
+    new_perf.merge!(Metric::ContainerStorage.fill_allocated_container_storage(obj))
 
     new_perf
   end
