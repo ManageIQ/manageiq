@@ -8,26 +8,30 @@ module Metric::Processing
   TYPE_NUMVCPUS  = "numvcpus".freeze
   TYPE_SOCKETS   = "sockets".freeze
 
-  DERIVED_COLS = [
-    :derived_cpu_available,
-    :derived_cpu_reserved,
-    :derived_host_count_off,
-    :derived_host_count_on,
-    :derived_host_count_total,
-    :derived_memory_available,
-    :derived_memory_reserved,
-    :derived_memory_used,
-    :derived_host_sockets,
-    :derived_vm_allocated_disk_storage,
-    :derived_vm_count_off,
-    :derived_vm_count_on,
-    :derived_vm_count_total,
-    :derived_vm_numvcpus, # TODO: This is cpu_total_cores and needs to be renamed, but reports depend on the name :numvcpus
+  DERIVED_COLS = {
+    :derived_cpu_available             => [nil, "cpu", TYPE_AVAILABLE],
+    :derived_cpu_reserved              => [:reserve_cpu, "cpu", TYPE_RESERVED],
+    :derived_host_count_off            => [:host_count_off, "host", TYPE_COUNT],
+    :derived_host_count_on             => [:host_count_on, "host", TYPE_COUNT],
+    :derived_host_count_total          => [:host_count_total, "host", TYPE_COUNT],
+    :derived_memory_available          => [nil, "memory", TYPE_AVAILABLE],
+    :derived_memory_reserved           => [:reserve_mem, "memory", TYPE_RESERVED],
+    :derived_memory_used               => [nil, "memory", TYPE_USED],
+    :derived_host_sockets              => [nil, "host", TYPE_SOCKETS],
+    :derived_vm_allocated_disk_storage => [:vm_allocated_disk_storage, "vm", TYPE_ALLOCATED],
+    :derived_vm_count_off              => [:vm_count_off, "vm", TYPE_COUNT],
+    :derived_vm_count_on               => [:vm_count_on, "vm", TYPE_COUNT],
+    :derived_vm_count_total            => [:vm_count_total, "vm", TYPE_COUNT],
+    # TODO: This is cpu_total_cores and needs to be renamed, but reports depend on the name :numvcpus
+    :derived_vm_numvcpus               => [nil, "vm", TYPE_NUMVCPUS],
     # See also #TODO on VimPerformanceState.capture
-    :derived_vm_used_disk_storage,
+    :derived_vm_used_disk_storage      => [:vm_used_disk_storage, "vm", TYPE_USED],
     # TODO(lsmola) as described below, this field should be named derived_cpu_used
-    :cpu_usagemhz_rate_average
-  ]
+    # FIXME(nicklamuro) FYI: This doesn't really follow the convention of those
+    # above it (see above), so I just tried to follow the pattern the others
+    # have of [method, group, type]
+    :cpu_usagemhz_rate_average         => [nil, "cpu", TYPE_RATE]
+  }.freeze
 
   VALID_PROCESS_TARGETS = [
     VmOrTemplate,
@@ -62,8 +66,8 @@ module Metric::Processing
     have_cpu_metrics = attrs[:cpu_usage_rate_average] || attrs[:cpu_usagemhz_rate_average]
     have_mem_metrics = attrs[:mem_usage_absolute_average] || attrs[:derived_memory_used]
 
-    DERIVED_COLS.each do |col|
-      dummy, group, typ, mode = col.to_s.split("_")
+    DERIVED_COLS.each do |col, val|
+      method, group, typ = val
       next if group == "vm" && obj.kind_of?(Service) && typ != "count"
       case typ
       when TYPE_AVAILABLE
@@ -75,7 +79,6 @@ module Metric::Processing
           result[col] = total_mem if have_mem_metrics && total_mem > 0
         end
       when TYPE_ALLOCATED
-        method = col.to_s.split("_")[1..-1].join("_")
         result[col] = state.send(method) if state.respond_to?(method)
       when TYPE_USED
         if group == "cpu"
@@ -95,7 +98,6 @@ module Metric::Processing
             result[col] = (attrs[:mem_usage_absolute_average] / 100 * total_mem) unless total_mem == 0 || attrs[:mem_usage_absolute_average].nil?
           end
         else
-          method = col.to_s.split("_")[1..-1].join("_")
           result[col] = state.send(method) if state.respond_to?(method)
         end
       when TYPE_RATE
@@ -106,10 +108,8 @@ module Metric::Processing
           result[col] = (attrs[:cpu_usage_rate_average] / 100 * total_cpu) unless total_cpu == 0 || attrs[:cpu_usage_rate_average].nil?
         end
       when TYPE_RESERVED
-        method = group == "cpu" ? :reserve_cpu : :reserve_mem
         result[col] = state.send(method)
       when TYPE_COUNT
-        method = [group, typ, mode].join("_")
         result[col] = state.send(method)
       when TYPE_NUMVCPUS # This is actually logical cpus.  See note above.
         # Do not derive "available" values if there haven't been any usage
