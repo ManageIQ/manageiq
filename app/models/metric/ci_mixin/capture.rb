@@ -152,6 +152,14 @@ module Metric::CiMixin::Capture
         start_time = 4.hours.ago.utc
       end
 
+      # If the start time of a realtime capture request is many days old, (i.e.: lots of stale captures on the queue)
+      # then drop this in favor of re-queueing a split historical gap collection to prevent overloading the number of
+      # performance rows to process
+      if !start_time.nil? && start_time < Metric::Capture.realtime_delayed_capture_limit
+        _log.info "#{log_header} Skipping processing for #{log_target}#{log_time} as the start time is too long ago."
+        return
+      end
+
       interval_name_for_capture = interval_name
     end
 

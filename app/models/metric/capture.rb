@@ -20,6 +20,14 @@ module Metric::Capture
     historical_days.days.ago.utc.beginning_of_day
   end
 
+  def self.realtime_delayed_capture_limit_days
+    Settings.performance.realtime.delayed_capture_limit_days.to_i
+  end
+
+  def self.realtime_delayed_capture_limit
+    realtime_delayed_capture_limit_days.days.ago.utc.beginning_of_day
+  end
+
   def self.concurrent_requests(interval_name)
     requests = ::Settings.performance.concurrent_requests[interval_name]
     requests = 20 if requests < 20 && interval_name == 'realtime'
