@@ -100,5 +100,16 @@ RSpec.describe Api::Utils do
 
       expect(actual).to eq(nil)
     end
+
+    it "can interpret slugs with compressed ids" do
+      owner_tenant = FactoryGirl.create(:tenant)
+      owner_group  = FactoryGirl.create(:miq_group, :tenant => owner_tenant)
+      owner        = FactoryGirl.create(:user, :miq_groups => [owner_group])
+      vm = FactoryGirl.create(:vm_vmware, :tenant => owner_tenant)
+
+      actual = described_class.resource_search_by_href_slug("vms/#{vm.compressed_id}", owner)
+
+      expect(actual).to eq(vm)
+    end
   end
 end
