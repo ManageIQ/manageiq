@@ -90,7 +90,7 @@ module ApplicationController::ReportDownloads
   # Send rendered report data
   def send_report_data
     if @sb[:render_rr_id]
-      rr = MiqReportResult.for_user(current_user).find(@sb[:render_rr_id])
+      rr = MiqReportResult.find(@sb[:render_rr_id])
       filename = filename_timestamp(rr.report.title, 'export_filename')
       disable_client_cache
       generated_result = rr.get_generated_result(@sb[:render_type])
