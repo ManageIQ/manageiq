@@ -23,6 +23,7 @@ FactoryGirl.definition_file_paths << 'spec/manageiq/spec/factories'
 
 ENGINE_NAMESPACES_FOR_LOADING_FACTORIES = %w(
   ManageIQ::Providers
+  ManageIQ::Consumption
 ).freeze
 
 # also add factories from provider gems until miq codebase does not use any provider specific factories anymore
