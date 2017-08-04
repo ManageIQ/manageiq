@@ -363,5 +363,33 @@ describe Authenticator::Httpd do
         end
       end
     end
+
+    context "with a userid record in mixed case" do
+      let!(:testuser_mixedcase) { FactoryGirl.create(:user, :userid => 'TestUser') }
+      let(:username) { 'testuser' }
+      let(:headers) do
+        super().merge('X-Remote-User-FullName' => 'Test User',
+                      'X-Remote-User-Email'    => 'testuser@example.com')
+      end
+
+      context "using external authorization" do
+        let(:config) { {:httpd_role => true} }
+
+        it "records two successful audit entries" do
+          expect(AuditEvent).to receive(:success).with(
+            :event   => 'authenticate_httpd',
+            :userid  => 'testuser',
+            :message => "User testuser successfully validated by External httpd",
+          )
+          expect(AuditEvent).to receive(:success).with(
+            :event   => 'authenticate_httpd',
+            :userid  => 'testuser',
+            :message => "Authentication successful for user testuser",
+          )
+          expect(AuditEvent).not_to receive(:failure)
+          authenticate
+        end
+      end
+    end
   end
 end
