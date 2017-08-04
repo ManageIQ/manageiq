@@ -38,8 +38,10 @@ describe "Events API" do
       run_get events_url
 
       expect_query_result(:events, 3, 3)
-      expect_result_resources_to_include_hrefs("resources",
-                                               MiqEventDefinition.pluck(:id).collect { |id| /^.*#{events_url(id)}$/ })
+      expect_result_resources_to_include_hrefs(
+        "resources",
+        MiqEventDefinition.select(:id).collect { |med| /^.*#{events_url(med.compressed_id)}$/ }
+      )
     end
 
     it "query events in expanded form" do

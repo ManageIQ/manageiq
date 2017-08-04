@@ -81,7 +81,7 @@ describe "Policies Assignment API" do
     expect_multiple_action_result(policies.size)
     sc_prefix = subcollection.to_s.singularize
     results_hash = policies.collect do |policy|
-      {"success" => true, "href" => object_url, "#{sc_prefix}_href" => %r{/api/#{subcollection}/#{policy.id}}}
+      {"success" => true, "href" => object_url, "#{sc_prefix}_href" => %r{/api/#{subcollection}/#{policy.compressed_id}}}
     end
     expect_results_to_match_hash("results", results_hash)
     expect(object.get_policies.size).to eq(policies.size)
@@ -144,7 +144,7 @@ describe "Policies Assignment API" do
     let(:policy_profile_policies_url)   { "#{policy_profile_url}/policies" }
 
     it "adds Policies to a Policy Profile" do
-      test_assign_multiple_policies(policy_profile_url,
+      test_assign_multiple_policies(policy_profiles_url(ps2.compressed_id),
                                     policy_profile_policies_url,
                                     :policy_profiles,
                                     :policies,
@@ -171,11 +171,11 @@ describe "Policies Assignment API" do
     end
 
     it "assign Provider policy with invalid guid" do
-      test_policy_assign_invalid_policy_guid(provider_url, provider_policies_url, :providers, :policies)
+      test_policy_assign_invalid_policy_guid(providers_url(provider.compressed_id), provider_policies_url, :providers, :policies)
     end
 
     it "assign Provider multiple policies" do
-      test_assign_multiple_policies(provider_url,
+      test_assign_multiple_policies(providers_url(provider.compressed_id),
                                     provider_policies_url,
                                     :providers,
                                     :policies,
@@ -192,7 +192,7 @@ describe "Policies Assignment API" do
     end
 
     it "unassign Provider policy with invalid guid" do
-      test_policy_unassign_invalid_policy_guid(provider_url, provider_policies_url, :providers, :policies)
+      test_policy_unassign_invalid_policy_guid(providers_url(provider.compressed_id), provider_policies_url, :providers, :policies)
     end
 
     it "unassign Provider multiple policies" do
@@ -214,11 +214,11 @@ describe "Policies Assignment API" do
     end
 
     it "assign Provider policy profile with invalid guid" do
-      test_policy_assign_invalid_policy_guid(provider_url, provider_policy_profiles_url, :providers, :policy_profiles)
+      test_policy_assign_invalid_policy_guid(providers_url(provider.compressed_id), provider_policy_profiles_url, :providers, :policy_profiles)
     end
 
     it "assign Provider multiple policy profiles" do
-      test_assign_multiple_policies(provider_url,
+      test_assign_multiple_policies(providers_url(provider.compressed_id),
                                     provider_policy_profiles_url,
                                     :providers,
                                     :policy_profiles,
@@ -235,7 +235,7 @@ describe "Policies Assignment API" do
     end
 
     it "unassign Provider policy profile with invalid guid" do
-      test_policy_unassign_invalid_policy_guid(provider_url,
+      test_policy_unassign_invalid_policy_guid(providers_url(provider.compressed_id),
                                                provider_policy_profiles_url,
                                                :providers,
                                                :policy_profiles)
@@ -263,11 +263,11 @@ describe "Policies Assignment API" do
     end
 
     it "assign Host policy with invalid guid" do
-      test_policy_assign_invalid_policy_guid(host_url, host_policies_url, :hosts, :policies)
+      test_policy_assign_invalid_policy_guid(hosts_url(host.compressed_id), host_policies_url, :hosts, :policies)
     end
 
     it "assign Host multiple policies" do
-      test_assign_multiple_policies(host_url,
+      test_assign_multiple_policies(hosts_url(host.compressed_id),
                                     host_policies_url,
                                     :hosts,
                                     :policies,
@@ -284,7 +284,7 @@ describe "Policies Assignment API" do
     end
 
     it "unassign Host policy with invalid guid" do
-      test_policy_unassign_invalid_policy_guid(host_url, host_policies_url, :hosts, :policies)
+      test_policy_unassign_invalid_policy_guid(hosts_url(host.compressed_id), host_policies_url, :hosts, :policies)
     end
 
     it "unassign Host multiple policies" do
@@ -306,11 +306,11 @@ describe "Policies Assignment API" do
     end
 
     it "assign Host policy profile with invalid guid" do
-      test_policy_assign_invalid_policy_guid(host_url, host_policy_profiles_url, :hosts, :policy_profiles)
+      test_policy_assign_invalid_policy_guid(hosts_url(host.compressed_id), host_policy_profiles_url, :hosts, :policy_profiles)
     end
 
     it "assign Host multiple policy profiles" do
-      test_assign_multiple_policies(host_url,
+      test_assign_multiple_policies(hosts_url(host.compressed_id),
                                     host_policy_profiles_url,
                                     :hosts,
                                     :policy_profiles,
@@ -327,7 +327,7 @@ describe "Policies Assignment API" do
     end
 
     it "unassign Host policy profile with invalid guid" do
-      test_policy_unassign_invalid_policy_guid(host_url,
+      test_policy_unassign_invalid_policy_guid(hosts_url(host.compressed_id),
                                                host_policy_profiles_url,
                                                :hosts,
                                                :policy_profiles)
@@ -355,11 +355,11 @@ describe "Policies Assignment API" do
     end
 
     it "assign Resource Pool policy with invalid guid" do
-      test_policy_assign_invalid_policy_guid(rp_url, rp_policies_url, :resource_pools, :policies)
+      test_policy_assign_invalid_policy_guid(resource_pools_url(rp.compressed_id), rp_policies_url, :resource_pools, :policies)
     end
 
     it "assign Resource Pool multiple policies" do
-      test_assign_multiple_policies(rp_url,
+      test_assign_multiple_policies(resource_pools_url(rp.compressed_id),
                                     rp_policies_url,
                                     :resource_pools,
                                     :policies,
@@ -376,7 +376,7 @@ describe "Policies Assignment API" do
     end
 
     it "unassign Resource Pool policy with invalid guid" do
-      test_policy_unassign_invalid_policy_guid(rp_url, rp_policies_url, :resource_pools, :policies)
+      test_policy_unassign_invalid_policy_guid(resource_pools_url(rp.compressed_id), rp_policies_url, :resource_pools, :policies)
     end
 
     it "unassign Resource Pool multiple policies" do
@@ -398,11 +398,11 @@ describe "Policies Assignment API" do
     end
 
     it "assign Resource Pool policy profile with invalid guid" do
-      test_policy_assign_invalid_policy_guid(rp_url, rp_policy_profiles_url, :resource_pools, :policy_profiles)
+      test_policy_assign_invalid_policy_guid(resource_pools_url(rp.compressed_id), rp_policy_profiles_url, :resource_pools, :policy_profiles)
     end
 
     it "assign Resource Pool multiple policy profiles" do
-      test_assign_multiple_policies(rp_url,
+      test_assign_multiple_policies(resource_pools_url(rp.compressed_id),
                                     rp_policy_profiles_url,
                                     :resource_pools,
                                     :policy_profiles,
@@ -419,7 +419,7 @@ describe "Policies Assignment API" do
     end
 
     it "unassign Resource Pool policy profile with invalid guid" do
-      test_policy_unassign_invalid_policy_guid(rp_url,
+      test_policy_unassign_invalid_policy_guid(resource_pools_url(rp.compressed_id),
                                                rp_policy_profiles_url,
                                                :resource_pools,
                                                :policy_profiles)
@@ -447,11 +447,11 @@ describe "Policies Assignment API" do
     end
 
     it "assign Cluster policy with invalid guid" do
-      test_policy_assign_invalid_policy_guid(cluster_url, cluster_policies_url, :clusters, :policies)
+      test_policy_assign_invalid_policy_guid(clusters_url(cluster.compressed_id), cluster_policies_url, :clusters, :policies)
     end
 
     it "assign Cluster multiple policies" do
-      test_assign_multiple_policies(cluster_url,
+      test_assign_multiple_policies(clusters_url(cluster.compressed_id),
                                     cluster_policies_url,
                                     :clusters,
                                     :policies,
@@ -468,7 +468,7 @@ describe "Policies Assignment API" do
     end
 
     it "unassign Cluster policy with invalid guid" do
-      test_policy_unassign_invalid_policy_guid(cluster_url, cluster_policies_url, :clusters, :policies)
+      test_policy_unassign_invalid_policy_guid(clusters_url(cluster.compressed_id), cluster_policies_url, :clusters, :policies)
     end
 
     it "unassign Cluster multiple policies" do
@@ -490,11 +490,11 @@ describe "Policies Assignment API" do
     end
 
     it "assign Cluster policy profile with invalid guid" do
-      test_policy_assign_invalid_policy_guid(cluster_url, cluster_policy_profiles_url, :clusters, :policy_profiles)
+      test_policy_assign_invalid_policy_guid(clusters_url(cluster.compressed_id), cluster_policy_profiles_url, :clusters, :policy_profiles)
     end
 
     it "assign Cluster multiple policy profiles" do
-      test_assign_multiple_policies(cluster_url,
+      test_assign_multiple_policies(clusters_url(cluster.compressed_id),
                                     cluster_policy_profiles_url,
                                     :clusters,
                                     :policy_profiles,
@@ -511,7 +511,7 @@ describe "Policies Assignment API" do
     end
 
     it "unassign Cluster policy profile with invalid guid" do
-      test_policy_unassign_invalid_policy_guid(cluster_url,
+      test_policy_unassign_invalid_policy_guid(clusters_url(cluster.compressed_id),
                                                cluster_policy_profiles_url,
                                                :clusters,
                                                :policy_profiles)
@@ -539,11 +539,11 @@ describe "Policies Assignment API" do
     end
 
     it "assign Vm policy with invalid guid" do
-      test_policy_assign_invalid_policy_guid(vm_url, vm_policies_url, :vms, :policies)
+      test_policy_assign_invalid_policy_guid(vms_url(vm.compressed_id), vm_policies_url, :vms, :policies)
     end
 
     it "assign Vm multiple policies" do
-      test_assign_multiple_policies(vm_url,
+      test_assign_multiple_policies(vms_url(vm.compressed_id),
                                     vm_policies_url,
                                     :vms,
                                     :policies,
@@ -560,7 +560,7 @@ describe "Policies Assignment API" do
     end
 
     it "unassign Vm policy with invalid guid" do
-      test_policy_unassign_invalid_policy_guid(vm_url, vm_policies_url, :vms, :policies)
+      test_policy_unassign_invalid_policy_guid(vms_url(vm.compressed_id), vm_policies_url, :vms, :policies)
     end
 
     it "unassign Vm multiple policies" do
@@ -582,11 +582,11 @@ describe "Policies Assignment API" do
     end
 
     it "assign Vm policy profile with invalid guid" do
-      test_policy_assign_invalid_policy_guid(vm_url, vm_policy_profiles_url, :vms, :policy_profiles)
+      test_policy_assign_invalid_policy_guid(vms_url(vm.compressed_id), vm_policy_profiles_url, :vms, :policy_profiles)
     end
 
     it "assign Vm multiple policy profiles" do
-      test_assign_multiple_policies(vm_url,
+      test_assign_multiple_policies(vms_url(vm.compressed_id),
                                     vm_policy_profiles_url,
                                     :vms,
                                     :policy_profiles,
@@ -603,7 +603,7 @@ describe "Policies Assignment API" do
     end
 
     it "unassign Vm policy profile with invalid guid" do
-      test_policy_unassign_invalid_policy_guid(vm_url,
+      test_policy_unassign_invalid_policy_guid(vms_url(vm.compressed_id),
                                                vm_policy_profiles_url,
                                                :vms,
                                                :policy_profiles)
@@ -631,11 +631,11 @@ describe "Policies Assignment API" do
     end
 
     it "assign Template policy with invalid guid" do
-      test_policy_assign_invalid_policy_guid(template_url, template_policies_url, :templates, :policies)
+      test_policy_assign_invalid_policy_guid(templates_url(template.compressed_id), template_policies_url, :templates, :policies)
     end
 
     it "assign Template multiple policies" do
-      test_assign_multiple_policies(template_url,
+      test_assign_multiple_policies(templates_url(template.compressed_id),
                                     template_policies_url,
                                     :templates,
                                     :policies,
@@ -652,7 +652,7 @@ describe "Policies Assignment API" do
     end
 
     it "unassign Template policy with invalid guid" do
-      test_policy_unassign_invalid_policy_guid(template_url, template_policies_url, :templates, :policies)
+      test_policy_unassign_invalid_policy_guid(templates_url(template.compressed_id), template_policies_url, :templates, :policies)
     end
 
     it "unassign Template multiple policies" do
@@ -674,11 +674,11 @@ describe "Policies Assignment API" do
     end
 
     it "assign Template policy profile with invalid guid" do
-      test_policy_assign_invalid_policy_guid(template_url, template_policy_profiles_url, :templates, :policy_profiles)
+      test_policy_assign_invalid_policy_guid(templates_url(template.compressed_id), template_policy_profiles_url, :templates, :policy_profiles)
     end
 
     it "assign Template multiple policy profiles" do
-      test_assign_multiple_policies(template_url,
+      test_assign_multiple_policies(templates_url(template.compressed_id),
                                     template_policy_profiles_url,
                                     :templates,
                                     :policy_profiles,
@@ -695,7 +695,7 @@ describe "Policies Assignment API" do
     end
 
     it "unassign Template policy profile with invalid guid" do
-      test_policy_unassign_invalid_policy_guid(template_url,
+      test_policy_unassign_invalid_policy_guid(templates_url(template.compressed_id),
                                                template_policy_profiles_url,
                                                :templates,
                                                :policy_profiles)

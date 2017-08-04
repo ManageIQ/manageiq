@@ -46,7 +46,7 @@ module Api
               if opts[:expand_resources]
                 add_hash json, resource_to_jbuilder(type, reftype, resource, opts).attributes!
               else
-                json.href normalize_href(reftype, resource["id"])
+                json.href normalize_href(compress_path(reftype), ApplicationRecord.compress_id(resource["id"]))
               end
             end
           end
@@ -398,7 +398,7 @@ module Api
               if @req.expand?(sc) || scr["id"].nil?
                 add_child js, normalize_hash(sctype, scr)
               else
-                js.child! { |jsc| jsc.href normalize_href(sctype, scr["id"]) }
+                js.child! { |jsc| jsc.href normalize_href(sctype, ApplicationRecord.compress_id(scr["id"])) }
               end
             end
           end
@@ -474,6 +474,22 @@ module Api
       def render_options(resource, data = {})
         klass = collection_class(resource)
         render :json => OptionsSerializer.new(klass, data).serialize
+      end
+
+      def compress_path(path)
+        if path.to_s.split("/").size > 1
+          path.to_s.split("/").tap { |e| e[1] = ApplicationRecord.compress_id(e[1]) if e[1] =~ /\A[0-9]+\z/ }.join("/")
+        else
+          path
+        end
+      end
+
+      def compress_if_numeric_id(id)
+        if id.to_s =~ /\A[0-9]+\z/
+          ApplicationRecord.compress_id(id)
+        else
+          id
+        end
       end
     end
   end

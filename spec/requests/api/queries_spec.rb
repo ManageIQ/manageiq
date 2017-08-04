@@ -9,7 +9,7 @@ describe "Queries API" do
   let(:vm1)        { FactoryGirl.create(:vm_vmware, :host => host, :ems_id => ems.id, :raw_power_state => "poweredOn") }
   let(:vm1_url)    { vms_url(vm1.id) }
 
-  let(:vm_href_pattern) { %r{^http://.*/api/vms/[0-9]+$} }
+  let(:vm_href_pattern) { %r{^http://.*/api/vms/[0-9r]+$} }
 
   def create_vms(count)
     count.times { FactoryGirl.create(:vm_vmware) }
@@ -48,7 +48,7 @@ describe "Queries API" do
       run_get vms_url, :expand => "resources", :attributes => "guid"
 
       expect_query_result(:vms, 1, 1)
-      expect_result_resources_to_match_hash([{"id" => vm1.compressed_id, "href" => vm1_url, "guid" => vm1.guid}])
+      expect_result_resources_to_match_hash([{"id" => vm1.compressed_id, "href" => vms_url(vm1.compressed_id), "guid" => vm1.guid}])
     end
   end
 
@@ -59,7 +59,7 @@ describe "Queries API" do
 
       run_get vm1_url
 
-      expect_single_resource_query("id" => vm1.compressed_id, "href" => vm1_url, "guid" => vm1.guid)
+      expect_single_resource_query("id" => vm1.compressed_id, "href" => vms_url(vm1.compressed_id), "guid" => vm1.guid)
     end
 
     it 'supports compressed ids' do
@@ -67,7 +67,7 @@ describe "Queries API" do
 
       run_get vms_url(ApplicationRecord.compress_id(vm1.id))
 
-      expect_single_resource_query("id" => vm1.compressed_id, "href" => vm1_url, "guid" => vm1.guid)
+      expect_single_resource_query("id" => vm1.compressed_id, "href" => vms_url(vm1.compressed_id), "guid" => vm1.guid)
     end
 
     it 'returns 404 on url with trailing garbage' do
@@ -97,7 +97,9 @@ describe "Queries API" do
       run_get vm1_accounts_url
 
       expect_query_result(:accounts, 2)
-      expect_result_resources_to_include_hrefs("resources", vm1_accounts_url_list)
+      expect_result_resources_to_include_hrefs("resources",
+                                               ["#{vms_url(vm1.compressed_id)}/accounts/#{acct1.compressed_id}",
+                                                "#{vms_url(vm1.compressed_id)}/accounts/#{acct2.compressed_id}"])
     end
 
     it "includes both id and href when getting a single resource" do
@@ -105,7 +107,11 @@ describe "Queries API" do
 
       run_get acct1_url
 
-      expect_single_resource_query("id" => acct1.compressed_id, "href" => acct1_url, "name" => acct1.name)
+      expect_single_resource_query(
+        "id"   => acct1.compressed_id,
+        "href" => "#{vms_url(vm1.compressed_id)}/accounts/#{acct1.compressed_id}",
+        "name" => acct1.name
+      )
     end
 
     it "includes both id and href when expanded" do
@@ -118,7 +124,9 @@ describe "Queries API" do
 
       expect_query_result(:accounts, 2)
       expect_result_resources_to_include_keys("resources", %w(id href))
-      expect_result_resources_to_include_hrefs("resources", vm1_accounts_url_list)
+      expect_result_resources_to_include_hrefs("resources",
+                                               ["#{vms_url(vm1.compressed_id)}/accounts/#{acct1.compressed_id}",
+                                                "#{vms_url(vm1.compressed_id)}/accounts/#{acct2.compressed_id}"])
       expect_result_resources_to_include_data("resources", "id" => [acct1.compressed_id, acct2.compressed_id])
     end
 
@@ -127,7 +135,7 @@ describe "Queries API" do
 
       run_get vms_url(ApplicationRecord.compress_id(vm1.id)) + "/accounts/#{acct1.id}"
 
-      expect_single_resource_query("id" => acct1.compressed_id, "href" => acct1_url, "name" => acct1.name)
+      expect_single_resource_query("id" => acct1.compressed_id, "href" => vms_url(vm1.compressed_id) + "/accounts/#{acct1.compressed_id}", "name" => acct1.name)
     end
 
     it 'returns 404 on url with trailing garbage' do

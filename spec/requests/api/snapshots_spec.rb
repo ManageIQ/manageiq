@@ -14,7 +14,7 @@ RSpec.describe "Snapshots API" do
           "name"      => "snapshots",
           "subcount"  => 1,
           "resources" => [
-            {"href" => a_string_matching("#{vms_url(vm.id)}/snapshots/#{snapshot.id}")}
+            {"href" => a_string_matching("#{vms_url(vm.compressed_id)}/snapshots/#{snapshot.compressed_id}")}
           ]
         }
         expect(response.parsed_body).to include(expected)
@@ -43,7 +43,7 @@ RSpec.describe "Snapshots API" do
 
         expected = {
           "create_time"       => create_time.iso8601,
-          "href"              => a_string_matching("#{vms_url(vm.id)}/snapshots/#{snapshot.id}"),
+          "href"              => a_string_matching("#{vms_url(vm.compressed_id)}/snapshots/#{snapshot.compressed_id}"),
           "id"                => snapshot.compressed_id,
           "vm_or_template_id" => vm.compressed_id
         }
@@ -359,7 +359,7 @@ RSpec.describe "Snapshots API" do
           "name"      => "snapshots",
           "subcount"  => 1,
           "resources" => [
-            {"href" => a_string_matching("#{instances_url(instance.id)}/snapshots/#{snapshot.id}")}
+            {"href" => a_string_matching("#{instances_url(instance.compressed_id)}/snapshots/#{snapshot.compressed_id}")}
           ]
         }
         expect(response.parsed_body).to include(expected)
@@ -388,7 +388,7 @@ RSpec.describe "Snapshots API" do
 
         expected = {
           "create_time"       => create_time.iso8601,
-          "href"              => a_string_matching("#{instances_url(instance.id)}/snapshots/#{snapshot.id}"),
+          "href"              => a_string_matching("#{instances_url(instance.compressed_id)}/snapshots/#{snapshot.compressed_id}"),
           "id"                => snapshot.compressed_id,
           "vm_or_template_id" => instance.compressed_id
         }

@@ -194,7 +194,7 @@ module Api
                rescue => err
                  action_result(false, err.to_s)
                end
-      add_href_to_result(result, type, svc.id)
+      add_href_to_result(result, type, svc.compressed_id)
       log_result(result)
       result
     end

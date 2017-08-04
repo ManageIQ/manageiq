@@ -74,8 +74,8 @@ describe "Services API" do
           'type'                   => 'ServiceOrchestration',
           'name'                   => 'svc_new',
           'parent_service'         => { 'href' => services_url(svc1.id)},
-          'orchestration_template' => { 'href' => orchestration_templates_url(orchestration_template.id) },
-          'orchestration_manager'  => { 'href' => providers_url(ems.id) }
+          'orchestration_template' => { 'href' => orchestration_templates_url(orchestration_template.compressed_id) },
+          'orchestration_manager'  => { 'href' => providers_url(ems.compressed_id) }
         }
       }
       expect do
@@ -120,7 +120,7 @@ describe "Services API" do
 
       run_post(services_url(svc.id), gen_request(:edit, "name" => "updated svc1"))
 
-      expect_single_resource_query("id" => svc.compressed_id, "href" => services_url(svc.id), "name" => "updated svc1")
+      expect_single_resource_query("id" => svc.compressed_id, "href" => services_url(svc.compressed_id), "name" => "updated svc1")
       expect(svc.reload.name).to eq("updated svc1")
     end
 
@@ -131,8 +131,8 @@ describe "Services API" do
         'action'   => 'edit',
         'resource' => {
           'parent_service'         => { 'href' => services_url(svc1.id) },
-          'orchestration_template' => { 'href' => orchestration_templates_url(orchestration_template.id) },
-          'orchestration_manager'  => { 'href' => providers_url(ems.id) }
+          'orchestration_template' => { 'href' => orchestration_templates_url(orchestration_template.compressed_id) },
+          'orchestration_manager'  => { 'href' => providers_url(ems.compressed_id) }
         }
       }
       run_post(services_url(svc_orchestration.id), resource)
@@ -177,7 +177,7 @@ describe "Services API" do
 
       run_put(services_url(svc.id), "name" => "updated svc1")
 
-      expect_single_resource_query("id" => svc.compressed_id, "href" => services_url(svc.id), "name" => "updated svc1")
+      expect_single_resource_query("id" => svc.compressed_id, "href" => services_url(svc.compressed_id), "name" => "updated svc1")
       expect(svc.reload.name).to eq("updated svc1")
     end
 
@@ -255,7 +255,7 @@ describe "Services API" do
       expected = {
         "success" => true,
         "message" => "services id: #{service.id} deleting",
-        "href"    => a_string_matching(services_url(service.id))
+        "href"    => a_string_matching(services_url(service.compressed_id))
       }
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)
@@ -280,7 +280,7 @@ describe "Services API" do
                                           {"href" => services_url(svc2.id)}]))
       expect_multiple_action_result(2)
       expect_result_resources_to_include_hrefs("results",
-                                               [services_url(svc1.id), services_url(svc2.id)])
+                                               [services_url(svc1.compressed_id), services_url(svc2.compressed_id)])
       expect { svc1.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect { svc2.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
@@ -314,7 +314,7 @@ describe "Services API" do
 
       run_post(services_url(svc.id), gen_request(:retire))
 
-      expect_single_resource_query("id" => svc.compressed_id, "href" => services_url(svc.id))
+      expect_single_resource_query("id" => svc.compressed_id, "href" => services_url(svc.compressed_id))
     end
 
     it "supports single service retirement in future" do
@@ -412,7 +412,7 @@ describe "Services API" do
 
       run_post(services_url(svc1.id), gen_request(:reconfigure, "text1" => "updated_text"))
 
-      expect_single_action_result(:success => true, :message => /reconfiguring/i, :href => services_url(svc1.id))
+      expect_single_action_result(:success => true, :message => /reconfiguring/i, :href => services_url(svc1.compressed_id))
     end
   end
 
@@ -429,20 +429,21 @@ describe "Services API" do
       svc1 << vm1
       svc1 << vm2
       svc1.save
-
-      @svc1_vm_list = ["#{services_url(svc1.id)}/vms/#{vm1.id}", "#{services_url(svc1.id)}/vms/#{vm2.id}"]
     end
 
     def expect_svc_with_vms
-      expect_single_resource_query("href" => services_url(svc1.id))
-      expect_result_resources_to_include_hrefs("vms", @svc1_vm_list)
+      expect_single_resource_query("href" => services_url(svc1.compressed_id))
+      expect_result_resources_to_include_hrefs("vms",
+                                               ["#{services_url(svc1.compressed_id)}/vms/#{vm1.compressed_id}", "#{services_url(svc1.compressed_id)}/vms/#{vm2.compressed_id}"])
     end
 
     it "can query vms as subcollection" do
       run_get "#{services_url(svc1.id)}/vms"
 
       expect_query_result(:vms, 2, 2)
-      expect_result_resources_to_include_hrefs("resources", @svc1_vm_list)
+      expect_result_resources_to_include_hrefs("resources",
+                                               ["#{services_url(svc1.compressed_id)}/vms/#{vm1.compressed_id}",
+                                                "#{services_url(svc1.compressed_id)}/vms/#{vm2.compressed_id}"])
     end
 
     it "supports expansion of virtual attributes" do
@@ -495,7 +496,7 @@ describe "Services API" do
         run_post(services_url(service.id), :action => "start")
 
         expected = {
-          "href"    => a_string_matching(services_url(service.id)),
+          "href"    => a_string_matching(services_url(service.compressed_id)),
           "success" => true,
           "message" => a_string_matching("starting")
         }
@@ -515,12 +516,12 @@ describe "Services API" do
                              "message"   => a_string_matching("starting"),
                              "task_id"   => anything,
                              "task_href" => anything,
-                             "href"      => a_string_matching(services_url(service_1.id))),
+                             "href"      => a_string_matching(services_url(service_1.compressed_id))),
             a_hash_including("success"   => true,
                              "message"   => a_string_matching("starting"),
                              "task_id"   => anything,
                              "task_href" => anything,
-                             "href"      => a_string_matching(services_url(service_2.id))),
+                             "href"      => a_string_matching(services_url(service_2.compressed_id))),
           )
         }
         expect(response.parsed_body).to include(expected)
@@ -545,7 +546,7 @@ describe "Services API" do
         run_post(services_url(service.id), :action => "stop")
 
         expected = {
-          "href"    => a_string_matching(services_url(service.id)),
+          "href"    => a_string_matching(services_url(service.compressed_id)),
           "success" => true,
           "message" => a_string_matching("stopping")
         }
@@ -565,12 +566,12 @@ describe "Services API" do
                              "message"   => a_string_matching("stopping"),
                              "task_id"   => anything,
                              "task_href" => anything,
-                             "href"      => a_string_matching(services_url(service_1.id))),
+                             "href"      => a_string_matching(services_url(service_1.compressed_id))),
             a_hash_including("success"   => true,
                              "message"   => a_string_matching("stopping"),
                              "task_id"   => anything,
                              "task_href" => anything,
-                             "href"      => a_string_matching(services_url(service_2.id))),
+                             "href"      => a_string_matching(services_url(service_2.compressed_id))),
           )
         }
         expect(response.parsed_body).to include(expected)
@@ -595,7 +596,7 @@ describe "Services API" do
         run_post(services_url(service.id), :action => "suspend")
 
         expected = {
-          "href"    => a_string_matching(services_url(service.id)),
+          "href"    => a_string_matching(services_url(service.compressed_id)),
           "success" => true,
           "message" => a_string_matching("suspending")
         }
@@ -615,12 +616,12 @@ describe "Services API" do
                              "message"   => a_string_matching("suspending"),
                              "task_id"   => anything,
                              "task_href" => anything,
-                             "href"      => a_string_matching(services_url(service_1.id))),
+                             "href"      => a_string_matching(services_url(service_1.compressed_id))),
             a_hash_including("success"   => true,
                              "message"   => a_string_matching("suspending"),
                              "task_id"   => anything,
                              "task_href" => anything,
-                             "href"      => a_string_matching(services_url(service_2.id))),
+                             "href"      => a_string_matching(services_url(service_2.compressed_id))),
           )
         }
         expect(response.parsed_body).to include(expected)
@@ -715,7 +716,7 @@ describe "Services API" do
       request = {
         'action'    => 'add_resource',
         'resources' => [
-          { 'href' => services_url(svc.id), 'resource' => {'href' => vms_url(vm1.id)} },
+          { 'href' => services_url(svc.compressed_id), 'resource' => {'href' => vms_url(vm1.id)} },
           { 'href' => services_url(svc1.id), 'resource' => {'href' => vms_url(vm2.id)} }
         ]
       }
@@ -741,8 +742,8 @@ describe "Services API" do
       request = {
         'action'    => 'add_resource',
         'resources' => [
-          { 'href' => services_url(svc.id), 'resource' => {'href' => vms_url(vm1.id)} },
-          { 'href' => services_url(svc1.id), 'resource' => {'href' => users_url(user.id)} }
+          { 'href' => services_url(svc.compressed_id), 'resource' => {'href' => vms_url(vm1.id)} },
+          { 'href' => services_url(svc1.id), 'resource' => {'href' => users_url(user.compressed_id)} }
         ]
       }
 
@@ -780,7 +781,7 @@ describe "Services API" do
       api_basic_authorize(collection_action_identifier(:services, :add_resource))
       request = {
         'action'   => 'add_resource',
-        'resource' => { 'resource' => { 'href' => users_url(user.id) } }
+        'resource' => { 'resource' => { 'href' => users_url(user.compressed_id) } }
       }
 
       run_post(services_url(svc.id), request)
@@ -853,7 +854,7 @@ describe "Services API" do
       request = {
         'action'    => 'remove_resource',
         'resources' => [
-          { 'href' => services_url(svc.id), 'resource' => { 'href' => vms_url(vm1.id)} },
+          { 'href' => services_url(svc.compressed_id), 'resource' => { 'href' => vms_url(vm1.id)} },
           { 'href' => services_url(svc1.id), 'resource' => { 'href' => vms_url(vm2.id)} }
         ]
       }
@@ -897,7 +898,7 @@ describe "Services API" do
       request = {
         'action'    => 'remove_resource',
         'resources' => [
-          { 'href' => services_url(svc.id), 'resource' => {} }
+          { 'href' => services_url(svc.compressed_id), 'resource' => {} }
         ]
       }
 
@@ -963,7 +964,7 @@ describe "Services API" do
       request = {
         'action'    => 'remove_all_resources',
         'resources' => [
-          { 'href' => services_url(svc.id) },
+          { 'href' => services_url(svc.compressed_id) },
           { 'href' => services_url(svc1.id) }
         ]
       }

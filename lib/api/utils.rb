@@ -3,7 +3,7 @@ module Api
     def self.build_href_slug(klass, id)
       return unless id
       collection = Api::CollectionConfig.new.name_for_subclass(klass)
-      "#{collection}/#{id}" if collection
+      "#{collection}/#{ApplicationRecord.compress_id(id)}" if collection
     end
 
     def self.resource_search_by_href_slug(href_slug, user = User.current_user)
@@ -16,7 +16,7 @@ module Api
       raise _("User must be defined") unless user
 
       klass = collection_config.klass(collection)
-      Rbac.filtered_object(klass.find(id), :user => user, :class => klass)
+      Rbac.filtered_object(klass.find(ApplicationRecord.uncompress_id(id)), :user => user, :class => klass)
     end
   end
 end

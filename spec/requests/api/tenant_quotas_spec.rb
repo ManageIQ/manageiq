@@ -13,8 +13,8 @@ describe "tenant quotas API" do
       expect_result_resources_to_include_hrefs(
         "resources",
         [
-          "/api/tenants/#{tenant.id}/quotas/#{quota_1.id}",
-          "/api/tenants/#{tenant.id}/quotas/#{quota_2.id}",
+          "/api/tenants/#{tenant.compressed_id}/quotas/#{quota_1.compressed_id}",
+          "/api/tenants/#{tenant.compressed_id}/quotas/#{quota_2.compressed_id}",
         ]
       )
 
@@ -30,7 +30,7 @@ describe "tenant quotas API" do
 
       expect_result_to_match_hash(
         response.parsed_body,
-        "href"      => "/api/tenants/#{tenant.id}/quotas/#{quota.id}",
+        "href"      => "/api/tenants/#{tenant.compressed_id}/quotas/#{quota.compressed_id}",
         "id"        => quota.compressed_id,
         "tenant_id" => tenant.compressed_id,
         "name"      => "cpu_allocated",
@@ -45,7 +45,7 @@ describe "tenant quotas API" do
 
       expected = {
         'results' => [
-          a_hash_including('href' => a_string_including("#{tenants_url(tenant.id)}/quotas/"))
+          a_hash_including('href' => a_string_including("#{tenants_url(tenant.compressed_id)}/quotas/"))
         ]
       }
       expect do
@@ -81,7 +81,7 @@ describe "tenant quotas API" do
       expect(response).to have_http_status(:ok)
       quota.reload
       expect(quota.value).to eq(5)
-      expect(response.parsed_body).to include('href' => a_string_including("tenants/#{tenant.id}/quotas/#{quota.id}"))
+      expect(response.parsed_body).to include('href' => a_string_including("tenants/#{tenant.compressed_id}/quotas/#{quota.compressed_id}"))
     end
 
     it "can update multiple quotas from a tenant with POST" do

@@ -299,7 +299,7 @@ RSpec.describe "users API" do
 
       run_post(user1_url, gen_request(:delete))
 
-      expect_single_action_result(:success => true, :message => "deleting", :href => user1_url)
+      expect_single_action_result(:success => true, :message => "deleting", :href => users_url(user1.compressed_id))
       expect(User.exists?(user1_id)).to be_falsey
     end
 
@@ -312,7 +312,7 @@ RSpec.describe "users API" do
       run_post(users_url, gen_request(:delete, [{"href" => user1_url}, {"href" => user2_url}]))
 
       expect_multiple_action_result(2)
-      expect_result_resources_to_include_hrefs("results", [user1_url, user2_url])
+      expect_result_resources_to_include_hrefs("results", [users_url(user1.compressed_id), users_url(user2.compressed_id)])
       expect(User.exists?(user1_id)).to be_falsey
       expect(User.exists?(user2_id)).to be_falsey
     end

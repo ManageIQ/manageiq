@@ -187,7 +187,7 @@ module Api
                  rescue => err
                    action_result(false, "#{err} - #{resource.errors.full_messages.join(', ')}")
                  end
-        add_href_to_result(result, type, id)
+        add_href_to_result(result, type, ApplicationRecord.compress_id(id))
         log_result(result)
         result
       end
@@ -204,7 +204,7 @@ module Api
                  rescue => err
                    action_result(false, err.to_s)
                  end
-        add_href_to_result(result, type, resource.id)
+        add_href_to_result(result, type, resource.compressed_id)
         log_result(result)
         result
       end
@@ -218,7 +218,7 @@ module Api
                  rescue => err
                    action_result(false, err.to_s)
                  end
-        add_href_to_result(result, type, resource.id)
+        add_href_to_result(result, type, resource.compressed_id)
         log_result(result)
         result
       end

@@ -162,7 +162,7 @@ describe "Custom Actions API" do
 
       run_post(services_url(svc1.id), gen_request(:button1, "button_key1" => "value", "button_key2" => "value"))
 
-      expect_single_action_result(:success => true, :message => /.*/, :href => services_url(svc1.id))
+      expect_single_action_result(:success => true, :message => /.*/, :href => services_url(svc1.compressed_id))
     end
 
     it "accepts a custom action as case insensitive" do
@@ -170,7 +170,7 @@ describe "Custom Actions API" do
 
       run_post(services_url(svc1.id), gen_request(:BuTtOn1, "button_key1" => "value", "button_key2" => "value"))
 
-      expect_single_action_result(:success => true, :message => /.*/, :href => services_url(svc1.id))
+      expect_single_action_result(:success => true, :message => /.*/, :href => services_url(svc1.compressed_id))
     end
   end
 

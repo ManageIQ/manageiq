@@ -67,7 +67,7 @@ RSpec.describe "Requests API" do
 
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include("id"   => service_request.compressed_id,
-                                              "href" => a_string_matching(requests_url(service_request.id)))
+                                              "href" => a_string_matching(requests_url(service_request.compressed_id)))
     end
 
     it "lists all the service requests if you are admin" do
@@ -89,8 +89,8 @@ RSpec.describe "Requests API" do
         "count"     => 2,
         "subcount"  => 2,
         "resources" => a_collection_containing_exactly(
-          {"href" => a_string_matching(requests_url(service_request_1.id))},
-          {"href" => a_string_matching(requests_url(service_request_2.id))},
+          {"href" => a_string_matching(requests_url(service_request_1.compressed_id))},
+          {"href" => a_string_matching(requests_url(service_request_2.compressed_id))},
         )
       }
       expect(response).to have_http_status(:ok)
@@ -110,7 +110,7 @@ RSpec.describe "Requests API" do
 
       expected = {
         "id"   => service_request.compressed_id,
-        "href" => a_string_matching(requests_url(service_request.id))
+        "href" => a_string_matching(requests_url(service_request.compressed_id))
       }
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)
@@ -378,7 +378,7 @@ RSpec.describe "Requests API" do
       run_post(request1_url, gen_request(:approve, :reason => "approval reason"))
 
       expected_msg = "Request #{request1.id} approved"
-      expect_single_action_result(:success => true, :message => expected_msg, :href => request1_url)
+      expect_single_action_result(:success => true, :message => expected_msg, :href => requests_url(request1.compressed_id))
     end
 
     it "fails approving a request if the reason is missing" do
@@ -396,7 +396,7 @@ RSpec.describe "Requests API" do
       run_post(request1_url, gen_request(:deny, :reason => "denial reason"))
 
       expected_msg = "Request #{request1.id} denied"
-      expect_single_action_result(:success => true, :message => expected_msg, :href => request1_url)
+      expect_single_action_result(:success => true, :message => expected_msg, :href => requests_url(request1.compressed_id))
     end
 
     it "fails denying a request if the reason is missing" do
@@ -419,12 +419,12 @@ RSpec.describe "Requests API" do
           {
             "message" => a_string_matching(/Request #{request1.id} approved/i),
             "success" => true,
-            "href"    => a_string_matching(request1_url)
+            "href"    => a_string_matching(requests_url(request1.compressed_id))
           },
           {
             "message" => a_string_matching(/Request #{request2.id} approved/i),
             "success" => true,
-            "href"    => a_string_matching(request2_url)
+            "href"    => a_string_matching(requests_url(request2.compressed_id))
           }
         )
       }
@@ -443,12 +443,12 @@ RSpec.describe "Requests API" do
           {
             "message" => a_string_matching(/Request #{request1.id} denied/i),
             "success" => true,
-            "href"    => a_string_matching(request1_url)
+            "href"    => a_string_matching(requests_url(request1.compressed_id))
           },
           {
             "message" => a_string_matching(/Request #{request2.id} denied/i),
             "success" => true,
-            "href"    => a_string_matching(request2_url)
+            "href"    => a_string_matching(requests_url(request2.compressed_id))
           }
         )
       }
@@ -466,8 +466,8 @@ RSpec.describe "Requests API" do
       run_get requests_url, :expand => :resources
 
       expected = [
-        a_hash_including('href' => a_string_including(requests_url(provision_request.id))),
-        a_hash_including('href' => a_string_including(requests_url(automation_request.id)))
+        a_hash_including('href' => a_string_including(requests_url(provision_request.compressed_id))),
+        a_hash_including('href' => a_string_including(requests_url(automation_request.compressed_id)))
       ]
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body['resources']).to match_array(expected)

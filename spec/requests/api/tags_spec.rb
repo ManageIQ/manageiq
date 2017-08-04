@@ -32,7 +32,7 @@ describe "Tags API" do
         tag = Tag.find(ApplicationRecord.uncompress_id(result["id"]))
         tag_category = Category.find(tag.category.id)
         expect(tag_category).to eq(category)
-        expect(result["href"]).to include(tags_url(tag.id))
+        expect(result["href"]).to include(tags_url(tag.compressed_id))
         expect(response).to have_http_status(:ok)
       end
 
@@ -270,7 +270,7 @@ describe "Tags API" do
       run_get tags_url(tag.id), :attributes => attr_list
 
       expect_single_resource_query(
-        "href"           => tags_url(tag.id),
+        "href"           => tags_url(tag.compressed_id),
         "id"             => tag.compressed_id,
         "name"           => tag.name,
         "category"       => {"name" => tag.category.name,       "description" => tag.category.description},
@@ -285,7 +285,7 @@ describe "Tags API" do
       run_get tags_url(tag.id), :attributes => "categorization"
 
       expect_single_resource_query(
-        "href"           => tags_url(tag.id),
+        "href"           => tags_url(tag.compressed_id),
         "id"             => tag.compressed_id,
         "name"           => tag.name,
         "categorization" => {

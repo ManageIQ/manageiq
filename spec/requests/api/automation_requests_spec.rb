@@ -38,7 +38,7 @@ describe "Automation Requests API" do
         "count"     => 2,
         "subcount"  => 1,
         "resources" => a_collection_containing_exactly(
-          "href" => a_string_matching(automation_requests_url(automation_request2.id)),
+          "href" => a_string_matching(automation_requests_url(automation_request2.compressed_id)),
         )
       }
       expect(response).to have_http_status(:ok)
@@ -58,8 +58,8 @@ describe "Automation Requests API" do
         "count"     => 2,
         "subcount"  => 2,
         "resources" => a_collection_containing_exactly(
-          {"href" => a_string_matching(automation_requests_url(automation_request1.id))},
-          {"href" => a_string_matching(automation_requests_url(automation_request2.id))},
+          {"href" => a_string_matching(automation_requests_url(automation_request1.compressed_id))},
+          {"href" => a_string_matching(automation_requests_url(automation_request2.compressed_id))},
         )
       }
       expect(response).to have_http_status(:ok)
@@ -86,7 +86,7 @@ describe "Automation Requests API" do
 
       expected = {
         "id"   => automation_request.compressed_id,
-        "href" => a_string_matching(automation_requests_url(automation_request.id))
+        "href" => a_string_matching(automation_requests_url(automation_request.compressed_id))
       }
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)
@@ -198,7 +198,7 @@ describe "Automation Requests API" do
       run_post(request1_url, gen_request(:approve, :reason => "approve reason"))
 
       expected_msg = "Automation request #{request1.id} approved"
-      expect_single_action_result(:success => true, :message => expected_msg, :href => request1_url)
+      expect_single_action_result(:success => true, :message => expected_msg, :href => automation_requests_url(request1.compressed_id))
     end
 
     it "supports denying a request" do
@@ -207,7 +207,7 @@ describe "Automation Requests API" do
       run_post(request2_url, gen_request(:deny, :reason => "deny reason"))
 
       expected_msg = "Automation request #{request2.id} denied"
-      expect_single_action_result(:success => true, :message => expected_msg, :href => request2_url)
+      expect_single_action_result(:success => true, :message => expected_msg, :href => automation_requests_url(request2.compressed_id))
     end
 
     it "supports approving multiple requests" do
@@ -221,12 +221,12 @@ describe "Automation Requests API" do
           {
             "message" => a_string_matching(/Automation request #{request1.id} approved/i),
             "success" => true,
-            "href"    => a_string_matching(request1_url)
+            "href"    => a_string_matching(automation_requests_url(request1.compressed_id))
           },
           {
             "message" => a_string_matching(/Automation request #{request2.id} approved/i),
             "success" => true,
-            "href"    => a_string_matching(request2_url)
+            "href"    => a_string_matching(automation_requests_url(request2.compressed_id))
           }
         )
       }
@@ -245,12 +245,12 @@ describe "Automation Requests API" do
           {
             "message" => a_string_matching(/Automation request #{request1.id} denied/i,),
             "success" => true,
-            "href"    => a_string_matching(request1_url)
+            "href"    => a_string_matching(automation_requests_url(request1.compressed_id))
           },
           {
             "message" => a_string_matching(/Automation request #{request2.id} denied/i),
             "success" => true,
-            "href"    => a_string_matching(request2_url)
+            "href"    => a_string_matching(automation_requests_url(request2.compressed_id))
           }
         )
       }

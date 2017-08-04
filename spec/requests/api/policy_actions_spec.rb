@@ -40,8 +40,10 @@ describe "Policy Actions API" do
       run_get policy_actions_url
 
       expect_query_result(:policy_actions, 4, 4)
-      expect_result_resources_to_include_hrefs("resources",
-                                               MiqAction.pluck(:id).collect { |id| /^.*#{policy_actions_url(id)}$/ })
+      expect_result_resources_to_include_hrefs(
+        "resources",
+        MiqAction.select(:id).collect { |ma| /^.*#{policy_actions_url(ma.compressed_id)}$/ }
+      )
     end
 
     it "query policy actions in expanded form" do

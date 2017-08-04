@@ -486,7 +486,7 @@ describe "Querying" do
 
       run_get(vms_url, :filter => ["retires_on = 2016-01-02", "vendor_display = VMware"])
 
-      expected = {"resources" => [{"href" => a_string_matching(vms_url(vm_2.id))}]}
+      expected = {"resources" => [{"href" => a_string_matching(vms_url(vm_2.compressed_id))}]}
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)
     end
@@ -498,7 +498,7 @@ describe "Querying" do
 
       run_get(vms_url, :filter => ["retires_on > 2016-01-01", "vendor_display = VMware"])
 
-      expected = {"resources" => [{"href" => a_string_matching(vms_url(vm_2.id))}]}
+      expected = {"resources" => [{"href" => a_string_matching(vms_url(vm_2.compressed_id))}]}
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)
     end
@@ -510,7 +510,7 @@ describe "Querying" do
 
       run_get(vms_url, :filter => ["last_scan_on > 2016-01-01T07:59:59Z", "vendor_display = VMware"])
 
-      expected = {"resources" => [{"href" => a_string_matching(vms_url(vm_2.id))}]}
+      expected = {"resources" => [{"href" => a_string_matching(vms_url(vm_2.compressed_id))}]}
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)
     end
@@ -522,7 +522,7 @@ describe "Querying" do
 
       run_get(vms_url, :filter => ["retires_on < 2016-01-03", "vendor_display = VMware"])
 
-      expected = {"resources" => [{"href" => a_string_matching(vms_url(vm_2.id))}]}
+      expected = {"resources" => [{"href" => a_string_matching(vms_url(vm_2.compressed_id))}]}
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)
     end
@@ -534,7 +534,7 @@ describe "Querying" do
 
       run_get(vms_url, :filter => ["last_scan_on < 2016-01-01T08:00:00Z", "vendor_display = VMware"])
 
-      expected = {"resources" => [{"href" => a_string_matching(vms_url(vm_2.id))}]}
+      expected = {"resources" => [{"href" => a_string_matching(vms_url(vm_2.compressed_id))}]}
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)
     end
@@ -588,7 +588,7 @@ describe "Querying" do
       expected = {
         "count"     => 2,
         "subcount"  => 1,
-        "resources" => [{"href" => a_string_matching(tags_url(tag_1.id))}]
+        "resources" => [{"href" => a_string_matching(tags_url(tag_1.compressed_id))}]
       }
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)
@@ -664,8 +664,8 @@ describe "Querying" do
         "resources" => [
           {
             "id"        => vm.compressed_id,
-            "href"      => a_string_matching(vms_url(vm.id)),
-            "href_slug" => "vms/#{vm.id}",
+            "href"      => a_string_matching(vms_url(vm.compressed_id)),
+            "href_slug" => "vms/#{vm.compressed_id}",
             "name"      => "aa",
             "vendor"    => anything
           }

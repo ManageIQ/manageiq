@@ -11,9 +11,9 @@ RSpec.describe "tenants API" do
     expect_result_resources_to_include_hrefs(
       "resources",
       [
-        tenants_url(root_tenant.id),
-        tenants_url(tenant_1.id),
-        tenants_url(tenant_2.id)
+        tenants_url(root_tenant.compressed_id),
+        tenants_url(tenant_1.compressed_id),
+        tenants_url(tenant_2.compressed_id)
       ]
     )
 
@@ -33,7 +33,7 @@ RSpec.describe "tenants API" do
 
     expect_result_to_match_hash(
       response.parsed_body,
-      "href"        => tenants_url(tenant.id),
+      "href"        => tenants_url(tenant.compressed_id),
       "id"          => tenant.compressed_id,
       "name"        => "Test Tenant",
       "description" => "Tenant for this test"
@@ -111,7 +111,7 @@ RSpec.describe "tenants API" do
         run_get tenants_url(root_tenant.id)
 
         expect_result_to_match_hash(response.parsed_body,
-                                    "href" => tenants_url(root_tenant.id),
+                                    "href" => tenants_url(root_tenant.compressed_id),
                                     "id"   => root_tenant.compressed_id,
                                     "name" => ::Settings.server.company,
                                    )

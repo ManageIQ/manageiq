@@ -36,7 +36,7 @@ describe "Cloud Volumes API" do
 
     expect(response).to have_http_status(:ok)
     expect(response.parsed_body).to include(
-      "href" => a_string_matching(cloud_volumes_url(cloud_volume.id)),
+      "href" => a_string_matching(cloud_volumes_url(cloud_volume.compressed_id)),
       "id"   => cloud_volume.compressed_id
     )
   end

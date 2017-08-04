@@ -210,7 +210,9 @@ describe "Providers API" do
 
       expect_query_result(:custom_attributes, 2)
 
-      expect_result_resources_to_include_hrefs("resources", provider_ca_url_list)
+      expect_result_resources_to_include_hrefs("resources",
+                                               ["#{providers_url(provider.compressed_id)}/custom_attributes/#{ca1.compressed_id}",
+                                                "#{providers_url(provider.compressed_id)}/custom_attributes/#{ca2.compressed_id}"])
     end
 
     it "getting custom_attributes from a provider in expanded form" do
@@ -372,7 +374,9 @@ describe "Providers API" do
       run_get providers_url, :provider_class => 'provider'
 
       expected = {
-        'resources' => [{'href' => a_string_including("/api/providers/#{provider.id}?provider_class=provider")}],
+        'resources' => [
+          {'href' => a_string_including("/api/providers/#{provider.compressed_id}?provider_class=provider")}
+        ],
         'actions'   => [a_hash_including('href' => a_string_including('?provider_class=provider'))]
       }
       expect(response).to have_http_status(:ok)
@@ -387,9 +391,9 @@ describe "Providers API" do
       run_get providers_url(provider.id), :provider_class => :provider
 
       expected = {
-        'href'    => a_string_including("/api/providers/#{provider.id}?provider_class=provider"),
+        'href'    => a_string_including("/api/providers/#{provider.compressed_id}?provider_class=provider"),
         'actions' => [
-          a_hash_including('href' => a_string_including("/api/providers/#{provider.id}?provider_class=provider"))
+          a_hash_including('href' => a_string_including("/api/providers/#{provider.compressed_id}?provider_class=provider"))
         ]
       }
       expect(response).to have_http_status(:ok)
@@ -760,7 +764,7 @@ describe "Providers API" do
 
       expect_single_action_result(:success => true,
                                   :message => "deleting",
-                                  :href    => providers_url(provider.id),
+                                  :href    => providers_url(provider.compressed_id),
                                   :task    => true)
     end
 
@@ -775,7 +779,7 @@ describe "Providers API" do
                                            {"href" => providers_url(p2.id)}]))
 
       expect_multiple_action_result(2, :task => true)
-      expect_result_resources_to_include_hrefs("results", [providers_url(p1.id), providers_url(p2.id)])
+      expect_result_resources_to_include_hrefs("results", [providers_url(p1.compressed_id), providers_url(p2.compressed_id)])
     end
   end
 
@@ -800,7 +804,7 @@ describe "Providers API" do
 
       run_post(providers_url(provider.id), gen_request(:refresh))
 
-      expect_single_action_result(failed_auth_action(provider.id).symbolize_keys)
+      expect_single_action_result(failed_auth_action(provider.compressed_id).symbolize_keys)
     end
 
     it "supports multiple provider refreshes" do
@@ -815,7 +819,7 @@ describe "Providers API" do
       run_post(providers_url, gen_request(:refresh, [{"href" => providers_url(p1.id)},
                                                      {"href" => providers_url(p2.id)}]))
       expect(response).to have_http_status(:ok)
-      expect_results_to_match_hash("results", [failed_auth_action(p1.id), failed_auth_action(p2.id)])
+      expect_results_to_match_hash("results", [failed_auth_action(p1.compressed_id), failed_auth_action(p2.compressed_id)])
     end
 
     it "provider refresh are created with a task" do
@@ -829,7 +833,7 @@ describe "Providers API" do
 
       expect_single_action_result(:success => true,
                                   :message => a_string_matching("Provider .* refreshing"),
-                                  :href    => providers_url(provider.id),
+                                  :href    => providers_url(provider.compressed_id),
                                   :task    => true)
     end
 
@@ -844,7 +848,7 @@ describe "Providers API" do
 
       expect_single_action_result(:success => true,
                                   :message => a_string_matching("Provider .* refreshing"),
-                                  :href    => providers_url(provider.id),
+                                  :href    => providers_url(provider.compressed_id),
                                   :task    => true)
     end
 
@@ -860,7 +864,7 @@ describe "Providers API" do
       expected = {
         "success"   => true,
         "message"   => a_string_matching("Provider .* refreshing"),
-        "href"      => a_string_matching(providers_url(provider.id)),
+        "href"      => a_string_matching(providers_url(provider.compressed_id)),
         "task_id"   => a_kind_of(String),
         "task_href" => a_string_matching(tasks_url),
         "tasks"     => [a_hash_including("id" => a_kind_of(String), "href" => a_string_matching(tasks_url)),
@@ -958,7 +962,9 @@ describe "Providers API" do
       api_basic_authorize subcollection_action_identifier(:providers, :load_balancers, :read, :get)
       expected = {
         'resources' => [
-          { 'href' => a_string_matching("#{providers_url(@provider.id)}/load_balancers/#{@load_balancer.id}") }
+          {
+            'href' => a_string_matching("#{providers_url(@provider.compressed_id)}/load_balancers/#{@load_balancer.compressed_id}")
+          }
         ]
 
       }
@@ -1007,7 +1013,7 @@ describe "Providers API" do
 
       expected = {
         'resources' => [
-          { 'href' => a_string_matching("#{providers_url(@provider.id)}/cloud_subnets/#{@cloud_subnet.id}") }
+          { 'href' => a_string_matching("#{providers_url(@provider.compressed_id)}/cloud_subnets/#{@cloud_subnet.compressed_id}") }
         ]
 
       }
@@ -1054,7 +1060,7 @@ describe "Providers API" do
 
       expected = {
         'resources' => [
-          { 'href' => a_string_matching("#{providers_url(@provider.id)}/cloud_tenants/#{@cloud_tenant.id}") }
+          { 'href' => a_string_matching("#{providers_url(@provider.compressed_id)}/cloud_tenants/#{@cloud_tenant.compressed_id}") }
         ]
 
       }

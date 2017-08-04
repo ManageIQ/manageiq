@@ -7,7 +7,7 @@ RSpec.describe "categories API" do
 
     expect_result_resources_to_include_hrefs(
       "resources",
-      categories.map { |category| categories_url(category.id) }
+      categories.map { |category| categories_url(category.compressed_id) }
     )
     expect(response).to have_http_status(:ok)
   end
@@ -20,7 +20,7 @@ RSpec.describe "categories API" do
     run_get categories_url, :filter => ["name=foo"]
 
     expect_query_result(:categories, 1, 2)
-    expect_result_resources_to_include_hrefs("resources", [categories_url(category_1.id)])
+    expect_result_resources_to_include_hrefs("resources", [categories_url(category_1.compressed_id)])
   end
 
   it "will return a bad request error if the filter name is invalid" do
@@ -40,7 +40,7 @@ RSpec.describe "categories API" do
     expect_result_to_match_hash(
       response.parsed_body,
       "description" => category.description,
-      "href"        => categories_url(category.id),
+      "href"        => categories_url(category.compressed_id),
       "id"          => category.compressed_id
     )
     expect(response).to have_http_status(:ok)
@@ -67,7 +67,7 @@ RSpec.describe "categories API" do
 
     expect_result_resources_to_include_hrefs(
       "resources",
-      ["#{categories_url(category.id)}/tags/#{tag.id}"]
+      ["#{categories_url(category.compressed_id)}/tags/#{tag.compressed_id}"]
     )
     expect(response).to have_http_status(:ok)
   end

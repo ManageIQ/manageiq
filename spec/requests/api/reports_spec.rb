@@ -9,8 +9,8 @@ RSpec.describe "reports API" do
     expect_result_resources_to_include_hrefs(
       "resources",
       [
-        reports_url(report_1.id),
-        reports_url(report_2.id)
+        reports_url(report_1.compressed_id),
+        reports_url(report_2.compressed_id)
       ]
     )
     expect_result_to_match_hash(response.parsed_body, "count" => 2, "name" => "reports")
@@ -35,7 +35,7 @@ RSpec.describe "reports API" do
 
     expect_result_to_match_hash(
       response.parsed_body,
-      "href"  => reports_url(report.id),
+      "href"  => reports_url(report.compressed_id),
       "id"    => report.compressed_id,
       "name"  => report.name,
       "title" => report.title
@@ -60,7 +60,7 @@ RSpec.describe "reports API" do
       expect_result_resources_to_include_hrefs(
         "resources",
         [
-          "#{reports_url(report.id)}/results/#{report_result.to_param}"
+          "#{reports_url(report.compressed_id)}/results/#{report_result.compressed_id}"
         ]
       )
       expect(response.parsed_body["resources"]).not_to be_any { |resource| resource.key?("result_set") }
@@ -92,7 +92,7 @@ RSpec.describe "reports API" do
       expect_result_resources_to_include_hrefs(
         "resources",
         [
-          results_url(result.id).to_s
+          results_url(result.compressed_id).to_s
         ]
       )
       expect(response).to have_http_status(:ok)
@@ -152,8 +152,8 @@ RSpec.describe "reports API" do
     expect_result_resources_to_include_hrefs(
       "resources",
       [
-        "/api/reports/#{report.id}/schedules/#{schedule_1.id}",
-        "/api/reports/#{report.id}/schedules/#{schedule_2.id}",
+        "/api/reports/#{report.compressed_id}/schedules/#{schedule_1.compressed_id}",
+        "/api/reports/#{report.compressed_id}/schedules/#{schedule_2.compressed_id}",
       ]
     )
     expect(response).to have_http_status(:ok)
@@ -184,7 +184,7 @@ RSpec.describe "reports API" do
 
     expect_result_to_match_hash(
       response.parsed_body,
-      "href" => "/api/reports/#{report.id}/schedules/#{schedule.id}",
+      "href" => "/api/reports/#{report.compressed_id}/schedules/#{schedule.compressed_id}",
       "id"   => schedule.compressed_id,
       "name" => 'unit_test'
     )
@@ -211,7 +211,7 @@ RSpec.describe "reports API" do
         run_post reports_url(report.id).to_s, :action => "run"
       end.to change(MiqReportResult, :count).by(1)
       expect_single_action_result(
-        :href    => reports_url(report.id),
+        :href    => reports_url(report.compressed_id),
         :success => true,
         :message => "running report #{report.id}"
       )
@@ -232,7 +232,7 @@ RSpec.describe "reports API" do
                  :time_zone   => 'UTC'
       end.to change(MiqSchedule, :count).by(1)
       expect_single_action_result(
-        :href    => reports_url(report.id),
+        :href    => reports_url(report.compressed_id),
         :success => true,
         :message => "scheduling of report #{report.id}"
       )
