@@ -13,12 +13,13 @@ class MiqExpression::Target
     # convert matches to hash to format
     # {:model_name => 'User', :associations => ...}
     parsed_params = Hash[match.names.map(&:to_sym).zip(match.to_a[1..-1])]
-    parsed_params[:model_name] = parsed_params[:model_name].classify.safe_constantize || return
+    parsed_params[:model_name] = parsed_params[:model_name].classify.safe_constantize
     parsed_params[:associations] = parsed_params[:associations].to_s.split(".")
     parsed_params
   end
 
-  attr_reader :model, :associations, :column
+  attr_reader :column
+  attr_accessor :model, :associations
 
   def initialize(model, associations, column)
     @model = model

@@ -3152,4 +3152,85 @@ describe MiqExpression do
       )
     end
   end
+
+  describe "#set_tagged_target" do
+    it "will substitute a new class into the expression" do
+      expression = described_class.new("CONTAINS" => {"tag" => "managed-environment", "value" => "prod"})
+
+      expression.set_tagged_target(Vm)
+
+      expect(expression.exp).to eq("CONTAINS" => {"tag" => "Vm.managed-environment", "value" => "prod"})
+    end
+
+    it "will substitute a new class and associations into the expression" do
+      expression = described_class.new("CONTAINS" => {"tag" => "managed-environment", "value" => "prod"})
+
+      expression.set_tagged_target(Vm, ["host"])
+
+      expect(expression.exp).to eq("CONTAINS" => {"tag" => "Vm.host.managed-environment", "value" => "prod"})
+    end
+
+    it "can handle OR expressions" do
+      expression = described_class.new(
+        "OR" => [
+          {"CONTAINS" => {"tag" => "managed-environment", "value" => "prod"}},
+          {"CONTAINS" => {"tag" => "managed-location", "value" => "ny"}}
+        ]
+      )
+
+      expression.set_tagged_target(Vm)
+
+      expected = {
+        "OR" => [
+          {"CONTAINS" => {"tag" => "Vm.managed-environment", "value" => "prod"}},
+          {"CONTAINS" => {"tag" => "Vm.managed-location", "value" => "ny"}}
+        ]
+      }
+      expect(expression.exp).to eq(expected)
+    end
+
+    it "can handle AND expressions" do
+      expression = described_class.new(
+        "AND" => [
+          {"CONTAINS" => {"tag" => "managed-environment", "value" => "prod"}},
+          {"CONTAINS" => {"tag" => "managed-location", "value" => "ny"}}
+        ]
+      )
+
+      expression.set_tagged_target(Vm)
+
+      expected = {
+        "AND" => [
+          {"CONTAINS" => {"tag" => "Vm.managed-environment", "value" => "prod"}},
+          {"CONTAINS" => {"tag" => "Vm.managed-location", "value" => "ny"}}
+        ]
+      }
+      expect(expression.exp).to eq(expected)
+    end
+
+    it "can handle NOT expressions" do
+      expression = described_class.new("NOT" => {"CONTAINS" => {"tag" => "managed-environment", "value" => "prod"}})
+
+      expression.set_tagged_target(Vm)
+
+      expected = {"NOT" => {"CONTAINS" => {"tag" => "Vm.managed-environment", "value" => "prod"}}}
+      expect(expression.exp).to eq(expected)
+    end
+
+    it "will not change the target of fields" do
+      expression = described_class.new("=" => {"field" => "Vm-vendor", "value" => "redhat"})
+
+      expression.set_tagged_target(Host)
+
+      expect(expression.exp).to eq("=" => {"field" => "Vm-vendor", "value" => "redhat"})
+    end
+
+    it "will not change the target of counts" do
+      expression = described_class.new("=" => {"count" => "Vm.disks", "value" => "1"})
+
+      expression.set_tagged_target(Host)
+
+      expect(expression.exp).to eq("=" => {"count" => "Vm.disks", "value" => "1"})
+    end
+  end
 end

@@ -43,6 +43,16 @@ class MiqExpression
     end
   end
 
+  def set_tagged_target(model, associations = [])
+    each_atom(exp) do |atom|
+      next unless atom.key?("tag")
+      tag = Tag.parse(atom["tag"])
+      tag.model = model
+      tag.associations = associations
+      atom["tag"] = tag.to_s
+    end
+  end
+
   def self.proto?
     return @proto if defined?(@proto)
     @proto = ::Settings.product.proto
@@ -1436,4 +1446,19 @@ class MiqExpression
     last_path
   end
   private_class_method :determine_relat_path
+
+  def each_atom(component, &block)
+    operator = component.keys.first
+
+    case operator.downcase
+    when "and", "or"
+      component[operator].each { |sub_component| each_atom(sub_component, &block) }
+    when "not", "!"
+      each_atom(component[operator], &block)
+    when "find"
+      component[operator].each { |_operator, operands| each_atom(operands, &block) }
+    else
+      yield(component[operator])
+    end
+  end
 end # class MiqExpression
