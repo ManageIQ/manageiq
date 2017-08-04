@@ -6,6 +6,8 @@ class LoadBalancer < ApplicationRecord
   include TenantIdentityMixin
   include CloudTenancyMixin
 
+  include_concern 'Operations'
+
   acts_as_miq_taggable
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::NetworkManager"
@@ -56,22 +58,6 @@ class LoadBalancer < ApplicationRecord
 
   def self.load_balancer_class_factory(load_balancer_manager)
     "#{load_balancer_manager.class.name}::LoadBalancer".constantize
-  end
-
-  def raw_update_load_balancer(_options = {})
-    raise NotImplementedError, _("raw_update_load_balancer must be implemented in a subclass")
-  end
-
-  def update_load_balancer(options = {})
-    raw_update_load_balancer(options)
-  end
-
-  def raw_delete_load_balancer
-    raise NotImplementedError, _("raw_delete_load_balancer must be implemented in a subclass")
-  end
-
-  def delete_load_balancer
-    raw_delete_load_balancer
   end
 
   def raw_status
