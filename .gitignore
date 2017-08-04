@@ -24,7 +24,6 @@ ca/root
 certs/v2_key
 config/secrets.yml*
 coverage/
-Gemfile.dev.rb
 Gemfile.lock*
 GUID
 openstack_environments.yml
