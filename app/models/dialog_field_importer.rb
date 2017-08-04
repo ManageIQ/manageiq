@@ -20,6 +20,7 @@ class DialogFieldImporter
 
       dialog_field
     elsif dialog_field_attributes["type"].nil?
+      dialog_field_attributes.delete("dialog_field_responders")
       dialog_field_attributes.delete("resource_action")
       DialogField.create(dialog_field_attributes)
     else

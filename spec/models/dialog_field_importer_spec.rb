@@ -4,11 +4,12 @@ describe DialogFieldImporter do
   describe "#import_field" do
     let(:dialog_field) do
       {
-        "type"            => type,
-        "name"            => "Something",
-        "label"           => "Something else",
-        "resource_action" => resource_action,
-        "options"         => options
+        "type"                    => type,
+        "name"                    => "Something",
+        "label"                   => "Something else",
+        "resource_action"         => resource_action,
+        "options"                 => options,
+        "dialog_field_responders" => ["foo_that_gets_ignored"]
       }
     end
 
