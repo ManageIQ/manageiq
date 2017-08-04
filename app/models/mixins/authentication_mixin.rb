@@ -13,7 +13,7 @@ module AuthenticationMixin
       assocs.each { |a| a.authentication_check_types_queue(:attempt => 1) }
     end
 
-    def self.queue_authentication_check(args, user_id, zone)
+    def self.validate_credentials_task(args, user_id, zone)
       task_opts = {
         :action => "Validate EMS Provider Credentials",
         :userid => user_id
@@ -37,7 +37,7 @@ module AuthenticationMixin
         error_message = task.message
       end
 
-      [!error_message.present?, error_message]
+      [error_message.blank?, error_message]
     end
   end
 

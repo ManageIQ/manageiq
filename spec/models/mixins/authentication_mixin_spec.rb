@@ -258,8 +258,8 @@ describe AuthenticationMixin do
       end
     end
 
-    context ".queue_authentication_check" do
-      let(:args) { ['userid', 'password', 'foo'] }
+    context ".validate_credentials_task" do
+      let(:args) { %w(userid password foo) }
       let(:queue_opts) do
         {
           :args        => [*args],
@@ -282,7 +282,7 @@ describe AuthenticationMixin do
         allow(MiqTask).to receive(:generic_action_with_callback).with(task_opts, queue_opts).and_return(1)
         allow(MiqTask).to receive(:wait_for_taskid).with(1, :timeout => 30).and_return(ok_task)
 
-        expect(ExtManagementSystem.queue_authentication_check(args, 'userid', 'zone')).to eq([true, nil])
+        expect(ExtManagementSystem.validate_credentials_task(args, 'userid', 'zone')).to eq([true, nil])
       end
 
       it "returns failure with an error message" do
@@ -291,7 +291,7 @@ describe AuthenticationMixin do
         allow(MiqTask).to receive(:generic_action_with_callback).with(task_opts, queue_opts).and_return(1)
         allow(MiqTask).to receive(:wait_for_taskid).with(1, :timeout => 30).and_return(error_task)
 
-        expect(ExtManagementSystem.queue_authentication_check(args, 'userid', 'zone')).to eq([false, message])
+        expect(ExtManagementSystem.validate_credentials_task(args, 'userid', 'zone')).to eq([false, message])
       end
     end
 
