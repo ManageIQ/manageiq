@@ -101,7 +101,7 @@ module Metric::Processing
           result[col] = state.send(method) if state.respond_to?(method)
         end
       when TYPE_RATE
-        if col.to_s == "cpu_usagemhz_rate_average" && attrs[:cpu_usagemhz_rate_average].blank?
+        if col == :cpu_usagemhz_rate_average && attrs[:cpu_usagemhz_rate_average].blank?
           # TODO(lsmola) for some reason, this column is used in chart, although from processing code above, it should
           # be named derived_cpu_used. Investigate what is the right solution and make it right. For now lets fill
           # the column shown in charts.
