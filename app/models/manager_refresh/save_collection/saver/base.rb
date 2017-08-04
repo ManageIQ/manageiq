@@ -153,10 +153,15 @@ module ManagerRefresh::SaveCollection
       def assert_referential_integrity(hash, inventory_object)
         inventory_object.inventory_collection.fixed_foreign_keys.each do |x|
           next unless hash[x].blank?
-          _log.info("Ignoring #{inventory_object} of #{inventory_object.inventory_collection} because of missing foreign key #{x} for "\
+          subject = "#{inventory_object} of #{inventory_object.inventory_collection} because of missing foreign key #{x} for "\
                     "#{inventory_object.inventory_collection.parent.class.name}:"\
-                    "#{inventory_object.inventory_collection.parent.try(:id)}")
-          return false
+                    "#{inventory_object.inventory_collection.parent.try(:id)}"
+          if Rails.env.production?
+            _log.warn("Referential integrity check violated, ignoring #{subject}")
+            return false
+          else
+            raise("Referential integrity check violated for #{subject}")
+          end
         end
         true
       end
