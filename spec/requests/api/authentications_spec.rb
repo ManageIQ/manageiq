@@ -466,6 +466,14 @@ RSpec.describe 'Authentications API' do
 
       expect(response).to have_http_status(:forbidden)
     end
+
+    it 'will raise an error if the authentication does not exist' do
+      api_basic_authorize action_identifier(:authentications, :delete, :resource_actions, :delete)
+
+      run_delete(authentications_url(999_999))
+
+      expect(response).to have_http_status(:not_found)
+    end
   end
 
   describe 'OPTIONS /api/authentications' do
