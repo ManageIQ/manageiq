@@ -16,10 +16,10 @@ describe "Alerts API" do
       "subcount"  => 2,
       "resources" => [
         {
-          "href" => a_string_matching(alerts_url(alert_statuses[0].id))
+          "href" => a_string_matching(alerts_url(alert_statuses[0].compressed_id))
         },
         {
-          "href" => a_string_matching(alerts_url(alert_statuses[1].id))
+          "href" => a_string_matching(alerts_url(alert_statuses[1].compressed_id))
         }
       ]
     )
@@ -38,7 +38,7 @@ describe "Alerts API" do
     run_get(alerts_url(alert_status.id))
     expect(response).to have_http_status(:ok)
     expect(response.parsed_body).to include(
-      "href" => a_string_matching(alerts_url(alert_status.id)),
+      "href" => a_string_matching(alerts_url(alert_status.compressed_id)),
       "id"   => alert_status.compressed_id
     )
   end
@@ -81,7 +81,7 @@ describe "Alerts API" do
         "subcount"  => 1,
         "resources" => [
           {
-            "href" => a_string_matching("#{alerts_url(alert.id)}/alert_actions/#{alert_action.id}")
+            "href" => a_string_matching("#{alerts_url(alert.compressed_id)}/alert_actions/#{alert_action.compressed_id}")
           }
         ]
       )
@@ -146,7 +146,7 @@ describe "Alerts API" do
     it "create an assignment alert action reference by href" do
       attributes = {
         "action_type" => "assign",
-        "assignee"    => { "href" => users_url(assignee.id) }
+        "assignee"    => { "href" => users_url(assignee.compressed_id) }
       }
       api_basic_authorize subcollection_action_identifier(:alerts, :alert_actions, :create, :post)
       run_post(actions_subcollection_url, attributes)
@@ -177,7 +177,7 @@ describe "Alerts API" do
       run_get("#{actions_subcollection_url}/#{alert_action.id}")
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(
-        "href"        => a_string_matching("#{alerts_url(alert.id)}/alert_actions/#{alert_action.id}"),
+        "href"        => a_string_matching("#{alerts_url(alert.compressed_id)}/alert_actions/#{alert_action.compressed_id}"),
         "id"          => alert_action.compressed_id,
         "action_type" => alert_action.action_type,
         "user_id"     => user.compressed_id,

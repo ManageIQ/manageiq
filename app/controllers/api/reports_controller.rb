@@ -30,7 +30,7 @@ module Api
       res = {:success => success}
       res[:message] = message if message.present?
       add_parent_href_to_result(res)
-      add_report_result_to_result(res, options[:report_result_id]) if options[:report_result_id].present?
+      add_report_result_to_result(res, ApplicationRecord.compress_id(options[:report_result_id])) if options[:report_result_id].present?
       add_task_to_result(res, options[:task_id]) if options[:task_id].present?
       res
     end
@@ -60,8 +60,8 @@ module Api
       desc = "scheduling of report #{report.id}"
       schedule = report.add_schedule fetch_schedule_data(data)
       res = action_result(true, desc)
-      add_report_schedule_to_result(res, schedule.id, report.id)
-      add_href_to_result(res, type, id)
+      add_report_schedule_to_result(res, schedule.compressed_id, report.compressed_id)
+      add_href_to_result(res, type, ApplicationRecord.compress_id(id))
       res
     rescue => err
       action_result(false, err.to_s)

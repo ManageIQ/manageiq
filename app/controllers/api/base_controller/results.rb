@@ -9,7 +9,7 @@ module Api
         res[:result]  = options[:result] unless options[:result].nil?
         add_task_to_result(res, options[:task_id]) if options[:task_id].present?
         add_tasks_to_result(res, options[:task_ids]) if options[:task_ids].present?
-        add_parent_href_to_result(res, options[:parent_id]) if options[:parent_id].present?
+        add_parent_href_to_result(res, ApplicationRecord.compress_id(options[:parent_id])) if options[:parent_id].present?
         res
       end
 
@@ -20,27 +20,27 @@ module Api
 
       def add_parent_href_to_result(hash, parent_id = nil)
         return if hash[:href].present?
-        hash[:href] = "#{@req.api_prefix}/#{@req.collection}/#{parent_id ? parent_id : @req.c_id}"
+        hash[:href] = "#{@req.api_prefix}/#{@req.collection}/#{parent_id ? parent_id : ApplicationRecord.compress_id(@req.c_id)}"
         hash
       end
 
       def add_task_to_result(hash, task_id)
         hash[:task_id]   = ApplicationRecord.compress_id(task_id)
-        hash[:task_href] = task_href(task_id)
+        hash[:task_href] = task_href(ApplicationRecord.compress_id(task_id))
         hash
       end
 
       def add_tasks_to_result(hash, task_ids)
         add_task_to_result(hash, task_ids.first)
         hash[:tasks] = task_ids.collect do |task_id|
-          { :id => ApplicationRecord.compress_id(task_id), :href => task_href(task_id) }
+          { :id => ApplicationRecord.compress_id(task_id), :href => task_href(ApplicationRecord.compress_id(task_id)) }
         end
       end
 
       def add_tag_to_result(hash, tag_spec)
         hash[:tag_category] = tag_spec[:category] if tag_spec[:category].present?
         hash[:tag_name]     = tag_spec[:name] if tag_spec[:name].present?
-        hash[:tag_href]     = "#{@req.api_prefix}/tags/#{tag_spec[:id]}" if tag_spec[:id].present?
+        hash[:tag_href]     = "#{@req.api_prefix}/tags/#{ApplicationRecord.compress_id(tag_spec[:id])}" if tag_spec[:id].present?
         hash
       end
 
@@ -52,7 +52,7 @@ module Api
         return hash if object.blank?
         ctype_pref = ctype.to_s.singularize
         hash["#{ctype_pref}_id".to_sym]   = object.id
-        hash["#{ctype_pref}_href".to_sym] = "#{@req.api_prefix}/#{ctype}/#{object.id}"
+        hash["#{ctype_pref}_href".to_sym] = "#{@req.api_prefix}/#{ctype}/#{object.compressed_id}"
         hash
       end
 

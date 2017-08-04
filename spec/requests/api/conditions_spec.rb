@@ -162,8 +162,10 @@ describe "Conditions API" do
       run_get conditions_url
 
       expect_query_result(:conditions, 3, 3)
-      expect_result_resources_to_include_hrefs("resources",
-                                               Condition.pluck(:id).collect { |id| /^.*#{conditions_url(id)}$/ })
+      expect_result_resources_to_include_hrefs(
+        "resources",
+        Condition.select(:id).collect { |c| /^.*#{conditions_url(c.compressed_id)}$/ }
+      )
     end
 
     it "query conditions in expanded form" do

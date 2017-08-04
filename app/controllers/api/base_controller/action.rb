@@ -8,7 +8,7 @@ module Api
 
         result = yield(klass) if block_given?
 
-        add_href_to_result(result, type, id) unless options[:skip_href]
+        add_href_to_result(result, type, compress_if_numeric_id(id)) unless options[:skip_href]
         log_result(result)
         result
       end

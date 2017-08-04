@@ -113,8 +113,10 @@ describe "Policies API" do
       run_get policies_url
 
       expect_query_result(:policies, 3, 3)
-      expect_result_resources_to_include_hrefs("resources",
-                                               [policies_url(p1.id), policies_url(p2.id), policies_url(p3.id)])
+      expect_result_resources_to_include_hrefs(
+        "resources",
+        [policies_url(p1.compressed_id), policies_url(p2.compressed_id), policies_url(p3.compressed_id)]
+      )
     end
 
     it "query policies in expanded form" do
@@ -145,8 +147,10 @@ describe "Policies API" do
       run_get policy_profiles_url
 
       expect_query_result(:policy_profiles, 2, 2)
-      expect_result_resources_to_include_hrefs("resources",
-                                               [policy_profiles_url(ps1.id), policy_profiles_url(ps2.id)])
+      expect_result_resources_to_include_hrefs(
+        "resources",
+        [policy_profiles_url(ps1.compressed_id), policy_profiles_url(ps2.compressed_id)]
+      )
     end
 
     it "query individual Policy Profile" do

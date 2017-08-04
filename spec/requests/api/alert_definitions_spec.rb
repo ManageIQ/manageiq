@@ -24,10 +24,10 @@ describe "Alerts Definitions API" do
       "subcount"  => 2,
       "resources" => a_collection_containing_exactly(
         {
-          "href" => a_string_matching(alert_definitions_url(alert_definitions[0].id))
+          "href" => a_string_matching(alert_definitions_url(alert_definitions[0].compressed_id))
         },
         {
-          "href" => a_string_matching(alert_definitions_url(alert_definitions[1].id))
+          "href" => a_string_matching(alert_definitions_url(alert_definitions[1].compressed_id))
         }
       )
     )
@@ -46,7 +46,7 @@ describe "Alerts Definitions API" do
     run_get(alert_definitions_url(alert_definition.id))
     expect(response).to have_http_status(:ok)
     expect(response.parsed_body).to include(
-      "href"        => a_string_matching(alert_definitions_url(alert_definition.id)),
+      "href"        => a_string_matching(alert_definitions_url(alert_definition.compressed_id)),
       "id"          => alert_definition.compressed_id,
       "description" => alert_definition.description,
       "guid"        => alert_definition.guid
@@ -94,7 +94,7 @@ describe "Alerts Definitions API" do
     expect(response).to have_http_status(:ok)
     expect_single_action_result(:success => true,
                                 :message => "alert_definitions id: #{alert_definition.id} deleting",
-                                :href    => alert_definitions_url(alert_definition.id))
+                                :href    => alert_definitions_url(alert_definition.compressed_id))
   end
 
   it "deletes an alert definition via DELETE" do
@@ -168,9 +168,11 @@ describe "Alerts Definition Profiles API" do
 
     expect(response).to have_http_status(:ok)
     expect_query_result(:alert_definition_profiles, 2, 2)
-    expect_result_resources_to_include_hrefs("resources",
-                                             [alert_definition_profiles_url(alert_definition_profiles.first.id),
-                                              alert_definition_profiles_url(alert_definition_profiles.second.id)])
+    expect_result_resources_to_include_hrefs(
+      "resources",
+      [alert_definition_profiles_url(alert_definition_profiles.first.compressed_id),
+       alert_definition_profiles_url(alert_definition_profiles.second.compressed_id)]
+    )
   end
 
   it "reads an alert definition profile as a resource" do
@@ -180,7 +182,7 @@ describe "Alerts Definition Profiles API" do
 
     expect(response).to have_http_status(:ok)
     expect(response.parsed_body).to include(
-      "href"        => a_string_matching(alert_definition_profiles_url(alert_definition_profile.id)),
+      "href"        => a_string_matching(alert_definition_profiles_url(alert_definition_profile.compressed_id)),
       "description" => alert_definition_profile.description,
       "guid"        => alert_definition_profile.guid
     )
@@ -196,8 +198,8 @@ describe "Alerts Definition Profiles API" do
     expect(response).to have_http_status(:ok)
     expect_result_resources_to_include_hrefs(
       "resources",
-      ["#{alert_definition_profiles_url}/#{alert_definition_profile.id}/alert_definitions/#{alert_definitions.first.id}",
-       "#{alert_definition_profiles_url}/#{alert_definition_profile.id}/alert_definitions/#{alert_definitions.first.id}"]
+      ["#{alert_definition_profiles_url}/#{alert_definition_profile.compressed_id}/alert_definitions/#{alert_definitions.first.compressed_id}",
+       "#{alert_definition_profiles_url}/#{alert_definition_profile.compressed_id}/alert_definitions/#{alert_definitions.first.compressed_id}"]
     )
   end
 
@@ -244,7 +246,7 @@ describe "Alerts Definition Profiles API" do
     expect(response).to have_http_status(:ok)
     expect_single_action_result(:success => true,
                                 :message => "alert_definition_profiles id: #{alert_definition_profile.id} deleting",
-                                :href    => alert_definition_profiles_url(alert_definition_profile.id))
+                                :href    => alert_definition_profiles_url(alert_definition_profile.compressed_id))
   end
 
   it "deletes an alert definition profile via DELETE" do

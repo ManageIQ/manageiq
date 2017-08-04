@@ -26,7 +26,7 @@ describe "Rest API Collections" do
     api_basic_authorize collection_action_identifier(collection, :query)
 
     obj = id.nil? ? klass.first : klass.find(id)
-    url = send("#{collection}_url", obj.id)
+    url = send("#{collection}_url", obj.compressed_id)
     attr_list = String(Api::ApiConfig.collections[collection].identifying_attrs).split(",")
     attr_list |= %w(guid) if klass.attribute_method?(:guid)
     resources = [{"id" => obj.compressed_id}, {"href" => url}]
@@ -537,7 +537,8 @@ describe "Rest API Collections" do
       vm = FactoryGirl.create(:vm_vmware)
       api_basic_authorize(collection_action_identifier(:vms, :query), action_identifier(:vms, :start))
 
-      run_post(vms_url, gen_request(:query, [{"id" => vm.id, "href" => vms_url(vm.id)}]))
+      # HMMM
+      run_post(vms_url, gen_request(:query, [{"id" => vm.id}]))
 
       expected = {
         "results" => [
@@ -546,7 +547,7 @@ describe "Rest API Collections" do
               a_hash_including(
                 "name"   => "start",
                 "method" => "post",
-                "href"   => a_string_matching(vms_url(vm.id))
+                "href"   => a_string_matching(vms_url(vm.compressed_id))
               )
             ]
           )

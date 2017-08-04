@@ -241,7 +241,7 @@ describe "Groups API" do
 
       run_post(g1_url, gen_request(:delete))
 
-      expect_single_action_result(:success => true, :message => "deleting", :href => g1_url)
+      expect_single_action_result(:success => true, :message => "deleting", :href => groups_url(group1.compressed_id))
       expect(MiqGroup.exists?(g1_id)).to be_falsey
     end
 
@@ -254,7 +254,7 @@ describe "Groups API" do
       run_post(groups_url, gen_request(:delete, [{"href" => g1_url}, {"href" => g2_url}]))
 
       expect_multiple_action_result(2)
-      expect_result_resources_to_include_hrefs("results", [g1_url, g2_url])
+      expect_result_resources_to_include_hrefs("results", [groups_url(group1.compressed_id), groups_url(group2.compressed_id)])
       expect(MiqGroup.exists?(g1_id)).to be_falsey
       expect(MiqGroup.exists?(g2_id)).to be_falsey
     end

@@ -44,7 +44,7 @@ describe "Service Dialogs API" do
 
       expect_single_resource_query(
         "id"    => dialog1.compressed_id,
-        "href"  => service_dialogs_url(dialog1.id),
+        "href"  => service_dialogs_url(dialog1.compressed_id),
         "label" => dialog1.label
       )
       expect_result_to_have_keys(%w(content))
@@ -137,7 +137,7 @@ describe "Service Dialogs API" do
         }
 
         expected = {
-          'href'  => a_string_including(service_dialogs_url(dialog.id)),
+          'href'  => a_string_including(service_dialogs_url(dialog.compressed_id)),
           'id'    => dialog.compressed_id,
           'label' => 'updated label'
         }
@@ -326,7 +326,7 @@ describe "Service Dialogs API" do
       expect(response.parsed_body).to include(
         "success" => true,
         "message" => a_string_matching(/refreshing dialog fields/i),
-        "href"    => a_string_matching(service_dialogs_url(dialog1.id)),
+        "href"    => a_string_matching(service_dialogs_url(dialog1.compressed_id)),
         "result"  => hash_including("text1")
       )
     end

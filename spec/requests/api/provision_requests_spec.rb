@@ -54,7 +54,7 @@ describe "Provision Requests API" do
         "count"     => 2,
         "subcount"  => 1,
         "resources" => a_collection_containing_exactly(
-          "href" => a_string_matching(provision_requests_url(provision_request2.id)),
+          "href" => a_string_matching(provision_requests_url(provision_request2.compressed_id)),
         )
       }
       expect(response).to have_http_status(:ok)
@@ -74,8 +74,8 @@ describe "Provision Requests API" do
         "count"     => 2,
         "subcount"  => 2,
         "resources" => a_collection_containing_exactly(
-          {"href" => a_string_matching(provision_requests_url(provision_request1.id))},
-          {"href" => a_string_matching(provision_requests_url(provision_request2.id))},
+          {"href" => a_string_matching(provision_requests_url(provision_request1.compressed_id))},
+          {"href" => a_string_matching(provision_requests_url(provision_request2.compressed_id))},
         )
       }
       expect(response).to have_http_status(:ok)
@@ -102,7 +102,7 @@ describe "Provision Requests API" do
 
       expected = {
         "id"   => provision_request.compressed_id,
-        "href" => a_string_matching(provision_requests_url(provision_request.id))
+        "href" => a_string_matching(provision_requests_url(provision_request.compressed_id))
       }
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)
@@ -230,7 +230,7 @@ describe "Provision Requests API" do
       run_post(provreq1_url, gen_request(:approve))
 
       expected_msg = "Provision request #{provreq1.id} approved"
-      expect_single_action_result(:success => true, :message => expected_msg, :href => provreq1_url)
+      expect_single_action_result(:success => true, :message => expected_msg, :href => provision_requests_url(provreq1.compressed_id))
     end
 
     it "supports denying a request" do
@@ -239,7 +239,7 @@ describe "Provision Requests API" do
       run_post(provreq2_url, gen_request(:deny))
 
       expected_msg = "Provision request #{provreq2.id} denied"
-      expect_single_action_result(:success => true, :message => expected_msg, :href => provreq2_url)
+      expect_single_action_result(:success => true, :message => expected_msg, :href => provision_requests_url(provreq2.compressed_id))
     end
 
     it "supports approving multiple requests" do
@@ -252,12 +252,12 @@ describe "Provision Requests API" do
           {
             "message" => a_string_matching(/Provision request #{provreq1.id} approved/i),
             "success" => true,
-            "href"    => a_string_matching(provreq1_url)
+            "href"    => a_string_matching(provision_requests_url(provreq1.compressed_id))
           },
           {
             "message" => a_string_matching(/Provision request #{provreq2.id} approved/i),
             "success" => true,
-            "href"    => a_string_matching(provreq2_url)
+            "href"    => a_string_matching(provision_requests_url(provreq2.compressed_id))
           }
         )
       }
@@ -275,12 +275,12 @@ describe "Provision Requests API" do
           {
             "message" => a_string_matching(/Provision request #{provreq1.id} denied/i),
             "success" => true,
-            "href"    => a_string_matching(provreq1_url)
+            "href"    => a_string_matching(provision_requests_url(provreq1.compressed_id))
           },
           {
             "message" => a_string_matching(/Provision request #{provreq2.id} denied/i),
             "success" => true,
-            "href"    => a_string_matching(provreq2_url)
+            "href"    => a_string_matching(provision_requests_url(provreq2.compressed_id))
           }
         )
       }

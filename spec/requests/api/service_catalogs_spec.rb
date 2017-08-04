@@ -253,7 +253,7 @@ describe "Service Catalogs API" do
 
       run_post(service_catalogs_url(sc.id), gen_request(:delete))
 
-      expect_single_action_result(:success => true, :message => "deleting", :href => service_catalogs_url(sc.id))
+      expect_single_action_result(:success => true, :message => "deleting", :href => service_catalogs_url(sc.compressed_id))
       expect { sc.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
@@ -267,7 +267,7 @@ describe "Service Catalogs API" do
                                                  [{"href" => service_catalogs_url(sc1.id)},
                                                   {"href" => service_catalogs_url(sc2.id)}]))
       expect_multiple_action_result(2)
-      expect_result_resources_to_include_hrefs("results", [service_catalogs_url(sc1.id), service_catalogs_url(sc2.id)])
+      expect_result_resources_to_include_hrefs("results", [service_catalogs_url(sc1.compressed_id), service_catalogs_url(sc2.compressed_id)])
 
       expect { sc1.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect { sc2.reload }.to raise_error(ActiveRecord::RecordNotFound)
@@ -299,7 +299,7 @@ describe "Service Catalogs API" do
       run_post(sc_templates_url(sc.id), gen_request(:assign, "href" => service_templates_url(999_999)))
 
       expect(response).to have_http_status(:ok)
-      expect_results_to_match_hash("results", [{"success" => false, "href" => service_catalogs_url(sc.id)}])
+      expect_results_to_match_hash("results", [{"success" => false, "href" => service_catalogs_url(sc.compressed_id)}])
     end
 
     it "supports assign requests" do
@@ -308,14 +308,15 @@ describe "Service Catalogs API" do
       sc = FactoryGirl.create(:service_template_catalog, :name => "sc", :description => "sc description")
       st = FactoryGirl.create(:service_template)
 
-      run_post(sc_templates_url(sc.id), gen_request(:assign, "href" => service_templates_url(st.id)))
+      run_post(sc_templates_url(sc.id), gen_request(:assign, "href" => service_templates_url(st.compressed_id)))
 
       expect(response).to have_http_status(:ok)
-      expect_results_to_match_hash("results", [{"success"               => true,
-                                                "href"                  => service_catalogs_url(sc.id),
-                                                "service_template_id"   => st.compressed_id,
-                                                "service_template_href" => /^.*#{service_templates_url(st.id)}$/,
-                                                "message"               => /assigning/i}])
+      expect_results_to_match_hash("results",
+                                   [{"success"               => true,
+                                     "href"                  => service_catalogs_url(sc.compressed_id),
+                                     "service_template_id"   => st.compressed_id,
+                                     "service_template_href" => /^.*#{service_templates_url(st.compressed_id)}$/,
+                                     "message"               => /assigning/i}])
       expect(sc.reload.service_templates.pluck(:id)).to eq([st.id])
     end
 
@@ -330,11 +331,12 @@ describe "Service Catalogs API" do
       run_post(sc_templates_url(sc.id), gen_request(:unassign, "href" => service_templates_url(st1.id)))
 
       expect(response).to have_http_status(:ok)
-      expect_results_to_match_hash("results", [{"success"               => true,
-                                                "href"                  => service_catalogs_url(sc.id),
-                                                "service_template_id"   => st1.compressed_id,
-                                                "service_template_href" => /^.*#{service_templates_url(st1.id)}$/,
-                                                "message"               => /unassigning/i}])
+      expect_results_to_match_hash("results",
+                                   [{"success"               => true,
+                                     "href"                  => service_catalogs_url(sc.compressed_id),
+                                     "service_template_id"   => st1.compressed_id,
+                                     "service_template_href" => /^.*#{service_templates_url(st1.compressed_id)}$/,
+                                     "message"               => /unassigning/i}])
       expect(sc.reload.service_templates.pluck(:id)).to eq([st2.id])
     end
   end

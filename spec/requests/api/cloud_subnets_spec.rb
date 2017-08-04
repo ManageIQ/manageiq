@@ -10,7 +10,7 @@ RSpec.describe 'CloudSubnets API' do
         'subcount'  => 1,
         'name'      => 'cloud_subnets',
         'resources' => [
-          hash_including('href' => a_string_matching(cloud_subnets_url(cloud_subnet.id)))
+          hash_including('href' => a_string_matching(cloud_subnets_url(cloud_subnet.compressed_id)))
         ]
       }
       expect(response).to have_http_status(:ok)
@@ -33,7 +33,7 @@ RSpec.describe 'CloudSubnets API' do
 
       run_get(cloud_subnets_url(cloud_subnet.id))
 
-      expect(response.parsed_body).to include('href' => a_string_matching(cloud_subnets_url(cloud_subnet.id)))
+      expect(response.parsed_body).to include('href' => a_string_matching(cloud_subnets_url(cloud_subnet.compressed_id)))
       expect(response).to have_http_status(:ok)
     end
 

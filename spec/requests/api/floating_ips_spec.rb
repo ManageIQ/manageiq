@@ -10,7 +10,7 @@ RSpec.describe 'FloatingIp API' do
         'subcount'  => 1,
         'name'      => 'floating_ips',
         'resources' => [
-          hash_including('href' => a_string_matching(floating_ips_url(floating_ip.id)))
+          hash_including('href' => a_string_matching(floating_ips_url(floating_ip.compressed_id)))
         ]
       }
       expect(response).to have_http_status(:ok)
@@ -33,7 +33,7 @@ RSpec.describe 'FloatingIp API' do
 
       run_get(floating_ips_url(floating_ip.id))
 
-      expect(response.parsed_body).to include('href' => a_string_matching(floating_ips_url(floating_ip.id)))
+      expect(response.parsed_body).to include('href' => a_string_matching(floating_ips_url(floating_ip.compressed_id)))
       expect(response).to have_http_status(:ok)
     end
 

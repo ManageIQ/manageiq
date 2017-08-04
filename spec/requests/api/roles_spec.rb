@@ -170,7 +170,7 @@ describe "Roles API" do
     it "rejects role edits without appropriate role" do
       role = FactoryGirl.create(:miq_user_role)
       api_basic_authorize
-      run_post(roles_url, gen_request(:edit, "name" => "role name", "href" => roles_url(role.id)))
+      run_post(roles_url, gen_request(:edit, "name" => "role name", "href" => roles_url(role.compressed_id)))
 
       expect(response).to have_http_status(:forbidden)
     end

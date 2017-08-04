@@ -102,7 +102,7 @@ describe "Service Requests API" do
       run_post(svcreq1_url, gen_request(:approve, :reason => "approve reason"))
 
       expected_msg = "Service request #{svcreq1.id} approved"
-      expect_single_action_result(:success => true, :message => expected_msg, :href => svcreq1_url)
+      expect_single_action_result(:success => true, :message => expected_msg, :href => service_requests_url(svcreq1.compressed_id))
     end
 
     it "supports denying a request" do
@@ -111,7 +111,7 @@ describe "Service Requests API" do
       run_post(svcreq2_url, gen_request(:deny, :reason => "deny reason"))
 
       expected_msg = "Service request #{svcreq2.id} denied"
-      expect_single_action_result(:success => true, :message => expected_msg, :href => svcreq2_url)
+      expect_single_action_result(:success => true, :message => expected_msg, :href => service_requests_url(svcreq2.compressed_id))
     end
 
     it "supports approving multiple requests" do
@@ -125,12 +125,12 @@ describe "Service Requests API" do
           {
             "message" => a_string_matching(/Service request #{svcreq1.id} approved/i),
             "success" => true,
-            "href"    => a_string_matching(svcreq1_url)
+            "href"    => a_string_matching(service_requests_url(svcreq1.compressed_id))
           },
           {
             "message" => a_string_matching(/Service request #{svcreq2.id} approved/i),
             "success" => true,
-            "href"    => a_string_matching(svcreq2_url)
+            "href"    => a_string_matching(service_requests_url(svcreq2.compressed_id))
           }
         )
       }
@@ -149,12 +149,12 @@ describe "Service Requests API" do
           {
             "message" => a_string_matching(/Service request #{svcreq1.id} denied/i),
             "success" => true,
-            "href"    => a_string_matching(svcreq1_url)
+            "href"    => a_string_matching(service_requests_url(svcreq1.compressed_id))
           },
           {
             "message" => a_string_matching(/Service request #{svcreq2.id} denied/i),
             "success" => true,
-            "href"    => a_string_matching(svcreq2_url)
+            "href"    => a_string_matching(service_requests_url(svcreq2.compressed_id))
           }
         )
       }
@@ -229,7 +229,7 @@ describe "Service Requests API" do
 
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include("id"   => service_request.compressed_id,
-                                       "href" => a_string_matching(service_requests_url(service_request.id)))
+                                              "href" => a_string_matching(service_requests_url(service_request.compressed_id)))
     end
 
     it "lists all the service requests if you are admin" do
@@ -251,8 +251,8 @@ describe "Service Requests API" do
         "count"     => 2,
         "subcount"  => 2,
         "resources" => a_collection_containing_exactly(
-          {"href" => a_string_matching(service_requests_url(service_request_1.id))},
-          {"href" => a_string_matching(service_requests_url(service_request_2.id))},
+          {"href" => a_string_matching(service_requests_url(service_request_1.compressed_id))},
+          {"href" => a_string_matching(service_requests_url(service_request_2.compressed_id))},
         )
       }
       expect(response).to have_http_status(:ok)
@@ -272,7 +272,7 @@ describe "Service Requests API" do
 
       expected = {
         "id"   => service_request.compressed_id,
-        "href" => a_string_matching(service_requests_url(service_request.id))
+        "href" => a_string_matching(service_requests_url(service_request.compressed_id))
       }
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)

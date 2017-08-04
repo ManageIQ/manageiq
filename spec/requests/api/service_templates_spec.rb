@@ -49,7 +49,7 @@ describe "Service Templates API" do
       run_get service_templates_url(template.id), :attributes => "picture"
 
       expect_result_to_have_keys(%w(id href picture))
-      expected = {"id" => template.compressed_id, "href" => service_templates_url(template.id)}
+      expected = {"id" => template.compressed_id, "href" => service_templates_url(template.compressed_id)}
       expect_result_to_match_hash(response.parsed_body, expected)
     end
 
@@ -134,7 +134,7 @@ describe "Service Templates API" do
       st = FactoryGirl.create(:service_template, :name => "st1")
       run_post(service_templates_url(st.id), gen_request(:edit, updated_catalog_item_options))
 
-      expect_single_resource_query("id" => st.compressed_id, "href" => service_templates_url(st.id), "name" => "Updated Template Name")
+      expect_single_resource_query("id" => st.compressed_id, "href" => service_templates_url(st.compressed_id), "name" => "Updated Template Name")
       expect(st.reload.name).to eq("Updated Template Name")
     end
 
@@ -215,7 +215,7 @@ describe "Service Templates API" do
       end.to change(ServiceTemplate, :count).by(-1)
 
       expected = {
-        "href"    => a_string_matching(service_templates_url(service_template.id)),
+        "href"    => a_string_matching(service_templates_url(service_template.compressed_id)),
         "message" => "service_templates id: #{service_template.id} deleting",
         "success" => true
       }
@@ -245,7 +245,7 @@ describe "Service Templates API" do
                                                    {"href" => service_templates_url(st2.id)}]))
       expect_multiple_action_result(2)
       expect_result_resources_to_include_hrefs("results",
-                                               [service_templates_url(st1.id), service_templates_url(st2.id)])
+                                               [service_templates_url(st1.compressed_id), service_templates_url(st2.compressed_id)])
 
       expect { st1.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect { st2.reload }.to raise_error(ActiveRecord::RecordNotFound)
@@ -281,7 +281,7 @@ describe "Service Templates API" do
         "resources" => [
           {
             "href" => a_string_matching(
-              "#{service_templates_url(service_template.id)}/service_requests/#{service_request.id}"
+              "#{service_templates_url(service_template.compressed_id)}/service_requests/#{service_request.compressed_id}"
             )
           }
         ]

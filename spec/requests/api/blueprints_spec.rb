@@ -11,7 +11,7 @@ RSpec.describe "Blueprints API" do
         "subcount"  => 1,
         "name"      => "blueprints",
         "resources" => [
-          hash_including("href" => a_string_matching(blueprints_url(blueprint.id)))
+          hash_including("href" => a_string_matching(blueprints_url(blueprint.compressed_id)))
         ]
       }
       expect(response.parsed_body).to include(expected)
@@ -35,7 +35,7 @@ RSpec.describe "Blueprints API" do
 
       run_get(blueprints_url(blueprint.id))
 
-      expect(response.parsed_body).to include("href" => a_string_matching(blueprints_url(blueprint.id)))
+      expect(response.parsed_body).to include("href" => a_string_matching(blueprints_url(blueprint.compressed_id)))
       expect(response).to have_http_status(:ok)
     end
 
