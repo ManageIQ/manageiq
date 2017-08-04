@@ -1,4 +1,13 @@
 module Metric::Processing
+  TYPE_AVAILABLE = "available".freeze
+  TYPE_ALLOCATED = "allocated".freeze
+  TYPE_USED      = "used".freeze
+  TYPE_RATE      = "rate".freeze
+  TYPE_RESERVED  = "reserved".freeze
+  TYPE_COUNT     = "count".freeze
+  TYPE_NUMVCPUS  = "numvcpus".freeze
+  TYPE_SOCKETS   = "sockets".freeze
+
   DERIVED_COLS = [
     :derived_cpu_available,
     :derived_cpu_reserved,
@@ -57,7 +66,7 @@ module Metric::Processing
       dummy, group, typ, mode = col.to_s.split("_")
       next if group == "vm" && obj.kind_of?(Service) && typ != "count"
       case typ
-      when "available"
+      when TYPE_AVAILABLE
         # Do not derive "available" values if there haven't been any usage
         # values collected
         if group == "cpu"
@@ -65,10 +74,10 @@ module Metric::Processing
         else
           result[col] = total_mem if have_mem_metrics && total_mem > 0
         end
-      when "allocated"
+      when TYPE_ALLOCATED
         method = col.to_s.split("_")[1..-1].join("_")
         result[col] = state.send(method) if state.respond_to?(method)
-      when "used"
+      when TYPE_USED
         if group == "cpu"
           # TODO: This branch is never called because there isn't a column
           # called derived_cpu_used.  The callers, such as chargeback, generally
@@ -89,24 +98,24 @@ module Metric::Processing
           method = col.to_s.split("_")[1..-1].join("_")
           result[col] = state.send(method) if state.respond_to?(method)
         end
-      when "rate"
+      when TYPE_RATE
         if col.to_s == "cpu_usagemhz_rate_average" && attrs[:cpu_usagemhz_rate_average].blank?
           # TODO(lsmola) for some reason, this column is used in chart, although from processing code above, it should
           # be named derived_cpu_used. Investigate what is the right solution and make it right. For now lets fill
           # the column shown in charts.
           result[col] = (attrs[:cpu_usage_rate_average] / 100 * total_cpu) unless total_cpu == 0 || attrs[:cpu_usage_rate_average].nil?
         end
-      when "reserved"
+      when TYPE_RESERVED
         method = group == "cpu" ? :reserve_cpu : :reserve_mem
         result[col] = state.send(method)
-      when "count"
+      when TYPE_COUNT
         method = [group, typ, mode].join("_")
         result[col] = state.send(method)
-      when "numvcpus" # This is actually logical cpus.  See note above.
+      when TYPE_NUMVCPUS # This is actually logical cpus.  See note above.
         # Do not derive "available" values if there haven't been any usage
         # values collected
         result[col] = state.numvcpus if have_cpu_metrics && state.try(:numvcpus).to_i > 0
-      when "sockets"
+      when TYPE_SOCKETS
         result[col] = state.host_sockets
       end
     end
