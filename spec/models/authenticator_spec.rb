@@ -65,7 +65,7 @@ describe Authenticator do
     it "only returns matched group for the current region" do
       FactoryGirl.create(:miq_group,
                          :description => "group2",
-                         :id          => ApplicationRecord.id_in_region(1, 99))
+                         :id          => ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1))
       FactoryGirl.create(:miq_group, :description => "group1")
       group2 = FactoryGirl.create(:miq_group, :description => "group2")
 
