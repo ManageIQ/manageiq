@@ -11,6 +11,7 @@ class GenericObjectDefinition < ApplicationRecord
   FEATURES = %w(attribute association method).freeze
   REG_ATTRIBUTE_NAME = /\A[a-z][a-zA-Z_0-9]*\z/
   REG_METHOD_NAME    = /\A[a-z][a-zA-Z_0-9]*[!?]?\z/
+  ALLOWED_ASSOCIATION_TYPES = (MiqReport.reportable_models + %w(GenericObject)).freeze
 
   serialize :properties, Hash
 
@@ -102,7 +103,10 @@ class GenericObjectDefinition < ApplicationRecord
   end
 
   def add_property_association(name, type)
-    properties[:associations][name.to_s] = type.to_s.classify
+    type = type.to_s.classify
+    raise "invalid model for association: [#{type}]" unless type.in?(ALLOWED_ASSOCIATION_TYPES)
+
+    properties[:associations][name.to_s] = type
     save
   end
 
@@ -160,12 +164,10 @@ class GenericObjectDefinition < ApplicationRecord
   end
 
   def validate_property_associations
-    properties[:associations].each do |name, klass|
-      begin
-        klass.constantize
-      rescue NameError
-        errors[:properties] << "association [#{name}] is not of a valid model: [#{klass}]"
-      end
+    invalid_models = properties[:associations].values - ALLOWED_ASSOCIATION_TYPES
+    errors[:properties] << "invalid models for association: [#{invalid_models.join(",")}]" unless invalid_models.empty?
+
+    properties[:associations].each do |name, _klass|
       errors[:properties] << "invalid association name: [#{name}]" unless REG_ATTRIBUTE_NAME =~ name
     end
   end
