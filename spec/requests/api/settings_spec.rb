@@ -87,7 +87,7 @@ describe "Settings API" do
     end
 
     before do
-      stub_settings_merge(sample_settings)
+      stub_settings(sample_settings)
     end
 
     it "supports multiple categories" do
