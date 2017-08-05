@@ -8,7 +8,8 @@ describe DialogImportService do
 
   shared_context "DialogImportService dialog setup" do
     let(:dialog_fields) do
-      [{"name" => "FavoriteColor", "label" => "Favorite Color"}]
+      [{"name" => "FavoriteColor", "label" => "Favorite Color"},
+       {"name" => "dialog_field_2", "dialog_field_responders" => ["dialog_field"] }]
     end
 
     let(:dialog_groups) do
@@ -28,7 +29,8 @@ describe DialogImportService do
 
     before do
       built_dialog_field = DialogField.create(:name => "dialog_field")
-      allow(dialog_field_importer).to receive(:import_field).and_return(built_dialog_field)
+      built_dialog_field2 = DialogField.create(:name => "dialog_field_2")
+      allow(dialog_field_importer).to receive(:import_field).and_return(built_dialog_field, built_dialog_field2)
     end
   end
 
@@ -180,6 +182,12 @@ describe DialogImportService do
       it "imports the dialog fields" do
         expect(dialog_field_importer).to receive(:import_field).with(dialog_fields[0])
         dialog_import_service.import_all_service_dialogs_from_yaml_file("filename")
+      end
+
+      it "sets associations" do
+        expect do
+          dialog_import_service.import_all_service_dialogs_from_yaml_file("filename")
+        end.to change(DialogFieldAssociation, :count).by(1)
       end
     end
   end
