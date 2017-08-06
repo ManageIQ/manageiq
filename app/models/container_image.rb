@@ -31,6 +31,7 @@ class ContainerImage < ApplicationRecord
 
   acts_as_miq_taggable
   virtual_column :display_registry, :type => :string
+  virtual_total :total_containers, :containers
 
   after_create :raise_creation_event
 
