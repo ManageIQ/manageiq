@@ -85,6 +85,15 @@ module Api
       end
     end
 
+    def options
+      req_class_name = @req.to_hash[:fullpath]
+                           .split('?').last.split('&')                        # '?' for query, '&' connects parameters
+                           .select { |param| param.starts_with?("ems_type") } # 'parameters with "ems_type" name
+                           .first.split('=').last                             # choosing only the first occuracne.
+      ems_class = ExtManagementSystem.descendants.select { |ems| ems.ems_type == req_class_name }.first
+      render :json => ems_class.respond_to?(:provider_settings) ? ems_class.provider_settings : {}
+    end
+
     private
 
     def format_provider_custom_attributes(attribute)
