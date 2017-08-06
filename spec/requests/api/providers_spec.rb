@@ -1110,4 +1110,14 @@ describe "Providers API" do
       end
     end
   end
+
+  context "#options" do
+    it "returns options for queried provider class" do
+      api_basic_authorize
+      ExtManagementSystem.descendants.select { |ems| ems.respond_to?(:provider_settings) }.each do |ems_type|
+        run_options("#{providers_url}?ems_type=#{ems_type.ems_type}")
+        expect(response.parsed_body.to_json).to eq(ems_type.provider_settings.to_json)
+      end
+    end
+  end
 end
