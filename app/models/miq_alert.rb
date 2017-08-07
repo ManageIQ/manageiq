@@ -1,4 +1,5 @@
 class MiqAlert < ApplicationRecord
+  ALLOWED_API_EXPRESSION_TYPES = %w(miq_expression hash).freeze
   include UuidMixin
 
   serialize :expression

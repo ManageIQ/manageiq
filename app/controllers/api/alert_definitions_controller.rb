@@ -6,7 +6,18 @@ module Api
       assert_id_not_specified(data, type)
       assert_all_required_fields_exists(data, type, REQUIRED_FIELDS)
       begin
-        data["expression"] = MiqExpression.new(data["expression"])
+        if data["expression_type"].present?
+          if MiqAlert::ALLOWED_API_EXPRESSION_TYPES.include? data["expression_type"]
+            data["expression_type"] == "hash" ? data["expression"].deep_symbolize_keys! : data["expression"] = MiqExpression.new(data["expression"])
+            # Delete the following line once #15315 is merged
+            data.delete("expression_type")
+          else
+            raise "Invalid expression type specified: #{data["expression_type"]}"
+          end
+        else
+          data["expression"] = MiqExpression.new(data["expression"])
+        end
+        data["options"].deep_symbolize_keys!
         data["enabled"] = true if data["enabled"].nil?
         super(type, id, data)
       rescue => err
