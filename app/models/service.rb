@@ -89,6 +89,10 @@ class Service < ApplicationRecord
     super
   end
 
+  def add_to_service(service)
+    service.add_resource!(self)
+  end
+
   alias parent_service parent
   alias_attribute :service, :parent
   virtual_belongs_to :service
