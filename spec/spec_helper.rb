@@ -62,14 +62,6 @@ RSpec.configure do |config|
 
   config.include UiConstants,          :type => :controller
   config.include Spec::Support::AuthHelper, :type => :controller
-
-  config.include Spec::Support::ApiHelper, :rest_api => true
-  config.include Spec::Support::AuthRequestHelper, :type => :request
-  config.define_derived_metadata(:file_path => /spec\/requests\/api/) do |metadata|
-    metadata[:aggregate_failures] = true
-    metadata[:rest_api] = true
-  end
-
   config.include Spec::Support::AuthHelper, :type => :helper
 
   config.include Spec::Support::PresenterHelper, :type => :presenter
@@ -95,8 +87,6 @@ RSpec.configure do |config|
     EmsRefresh.try(:debug_failures=, true)
     ApplicationController.handle_exceptions = false if %w(controller requests).include?(example.metadata[:type])
   end
-
-  config.before(:each, :rest_api => true) { init_api_spec_env }
 
   config.around(:each) do |example|
     EvmSpecHelper.clear_caches { example.run }

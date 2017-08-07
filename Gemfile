@@ -155,7 +155,7 @@ group :replication, :manageiq_default do
 end
 
 group :rest_api, :manageiq_default do
-  gem "jbuilder",                       "~>2.5.0" # For the REST API
+  gem "manageiq-api",                                                 :git => "https://github.com/ManageIQ/manageiq-api"
 end
 
 group :scheduler, :manageiq_default do
