@@ -118,7 +118,7 @@ module Authenticator
 
     def plain_username_from_dn_or_upn(username)
       return username.split("@").first if username.include?("@")
-      username[/=(.*?),/m, 1]
+      username[/=(.*?),/m, 1] || username
     end
 
     def userid_for(lobj, username)

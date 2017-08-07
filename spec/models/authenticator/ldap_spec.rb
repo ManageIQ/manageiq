@@ -143,6 +143,22 @@ describe Authenticator::Ldap do
       end
     end
 
+    context "validates the username but failes to auto-create it" do
+      let(:error_string) { "Unable to auto-create user because LDAP bind credentials are not configured" }
+      it "when username is simple format" do
+        expect { subject.lookup_by_identity('big_alice') }.to raise_error(RuntimeError, error_string)
+      end
+
+      it "when username is UPN format" do
+        expect { subject.lookup_by_identity('big_alice@example.com') }.to raise_error(RuntimeError, error_string)
+      end
+
+      it "when username is dn" do
+        expect { subject.lookup_by_identity('cn=big_alice,ou=prod,dc=example,dc=com') }
+          .to raise_error(RuntimeError, error_string)
+      end
+    end
+
     it "normalizes usernames" do
       expect(subject.lookup_by_identity('aXlice')).to eq(alice)
     end
