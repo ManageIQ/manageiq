@@ -24,7 +24,7 @@ module ManageIQ::Providers::Azure::RefreshHelperMethods
   def gather_data_for_this_region(arm_service, method_name = 'list_all')
     if method_name.to_s == 'list_all'
       arm_service.send(method_name).select do |resource|
-        resource.try(:location) == @ems.provider_region
+        resource.try(:location).try(:casecmp, @ems.provider_region).zero?
       end.flatten
     elsif method_name.to_s == 'list_all_private_images' # requires special handling
       arm_service.send(method_name, :location => @ems.provider_region)
@@ -32,7 +32,7 @@ module ManageIQ::Providers::Azure::RefreshHelperMethods
       resource_groups.collect do |resource_group|
         arm_service.send(method_name, resource_group.name).select do |resource|
           location = resource.respond_to?(:location) ? resource.location : resource_group.location
-          location == @ems.provider_region
+          location.casecmp(@ems.provider_region).zero?
         end
       end.flatten
     end
@@ -40,7 +40,7 @@ module ManageIQ::Providers::Azure::RefreshHelperMethods
 
   def resource_groups
     @resource_groups ||= @rgs.list.select do |resource_group|
-      resource_group.location == @ems.provider_region
+      resource_group.location.casecmp(@ems.provider_region).zero?
     end
   end
 
