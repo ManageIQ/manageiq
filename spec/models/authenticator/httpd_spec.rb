@@ -190,8 +190,8 @@ describe Authenticator::Httpd do
       end
     end
 
-    context "with unknown username" do
-      let(:username) { 'bob' }
+    context "with unknown username in mixed case" do
+      let(:username) { 'bOb' }
       let(:headers) do
         super().merge('X-Remote-User-FullName' => 'Bob Builderson',
                       'X-Remote-User-Email'    => 'bob@example.com')
@@ -205,12 +205,12 @@ describe Authenticator::Httpd do
         it "records one successful and one failing audit entry" do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
-            :userid  => 'bob',
+            :userid  => 'bOb',
             :message => "User bob successfully validated by External httpd",
           )
           expect(AuditEvent).to receive(:failure).with(
             :event   => 'authenticate_httpd',
-            :userid  => 'bob',
+            :userid  => 'bOb',
             :message => "User bob authenticated but not defined in EVM",
           )
           authenticate rescue nil
@@ -233,12 +233,12 @@ describe Authenticator::Httpd do
         it "records two successful audit entries" do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
-            :userid  => 'bob',
+            :userid  => 'bOb',
             :message => "User bob successfully validated by External httpd",
           )
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
-            :userid  => 'bob',
+            :userid  => 'bOb',
             :message => "Authentication successful for user bob",
           )
           expect(AuditEvent).not_to receive(:failure)
@@ -268,12 +268,12 @@ describe Authenticator::Httpd do
           it "records two successful audit entries plus one failure" do
             expect(AuditEvent).to receive(:success).with(
               :event   => 'authenticate_httpd',
-              :userid  => 'bob',
+              :userid  => 'bOb',
               :message => "User bob successfully validated by External httpd",
             )
             expect(AuditEvent).to receive(:success).with(
               :event   => 'authenticate_httpd',
-              :userid  => 'bob',
+              :userid  => 'bOb',
               :message => "Authentication successful for user bob",
             )
             expect(AuditEvent).to receive(:failure).with(
@@ -360,6 +360,34 @@ describe Authenticator::Httpd do
           allow(@ifp_interface).to receive(:GetUserAttr).with('jdoe', requested_attrs).and_return(jdoe_attrs)
 
           expect(subject.send(:user_attrs_from_external_directory, 'jdoe')).to eq(expected_jdoe_attrs)
+        end
+      end
+    end
+
+    context "with a userid record in mixed case" do
+      let!(:testuser_mixedcase) { FactoryGirl.create(:user, :userid => 'TestUser') }
+      let(:username) { 'testuser' }
+      let(:headers) do
+        super().merge('X-Remote-User-FullName' => 'Test User',
+                      'X-Remote-User-Email'    => 'testuser@example.com')
+      end
+
+      context "using external authorization" do
+        let(:config) { {:httpd_role => true} }
+
+        it "records two successful audit entries" do
+          expect(AuditEvent).to receive(:success).with(
+            :event   => 'authenticate_httpd',
+            :userid  => 'testuser',
+            :message => "User testuser successfully validated by External httpd",
+          )
+          expect(AuditEvent).to receive(:success).with(
+            :event   => 'authenticate_httpd',
+            :userid  => 'testuser',
+            :message => "Authentication successful for user testuser",
+          )
+          expect(AuditEvent).not_to receive(:failure)
+          authenticate
         end
       end
     end
