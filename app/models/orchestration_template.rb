@@ -20,17 +20,6 @@ class OrchestrationTemplate < ApplicationRecord
   attr_accessor :remote_proxy
   alias remote_proxy? remote_proxy
 
-  # Try to create the template if the name is not found in table
-  def self.seed
-    Vmdb::Plugins.instance.vmdb_plugins.each do |plugin|
-      Dir.glob(plugin.root.join('content', 'orchestration_templates', '*.{yaml,yml}')).each do |file|
-        hash = YAML.load_file(file)
-        next if hash[:type].constantize.find_by(:name => hash[:name])
-        find_or_create_by_contents(hash)
-      end
-    end
-  end
-
   # available templates for ordering an orchestration service
   def self.available
     where(:draft => false, :orderable => true)

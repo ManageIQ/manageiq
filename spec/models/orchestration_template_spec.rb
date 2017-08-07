@@ -284,53 +284,6 @@ describe OrchestrationTemplate do
     end
   end
 
-  describe ".seed" do
-    let(:azure_template) { "azure-single-vm-from-user-image" }
-
-    before do
-      mock_engine = double(:root => Rails.root.join('spec', 'fixtures', 'vmdb_plugin_root'))
-      allow(Vmdb::Plugins.instance).to receive(:vmdb_plugins).and_return([mock_engine])
-    end
-
-    context "the first time seeding" do
-      it "adds templates from default location" do
-        OrchestrationTemplate.seed
-        expect(OrchestrationTemplate.where(:name => azure_template).count).to eq(1)
-      end
-    end
-
-    context "when the seeding has been run before" do
-      before do
-        OrchestrationTemplate.seed
-      end
-
-      let(:seeded_template) { OrchestrationTemplate.find_by(:name => azure_template) }
-
-      it "does not add new templates from following runs" do
-        OrchestrationTemplate.seed
-        expect(OrchestrationTemplate.where(:name => azure_template).count).to eq(1)
-      end
-
-      it "does not add new template if the original template has been only renamed" do
-        seeded_template.update_attributes(:name => 'other')
-        OrchestrationTemplate.seed
-        expect(OrchestrationTemplate.where(:name => azure_template).count).to eq(0)
-      end
-
-      it "does not add new template if the original template has modified content" do
-        seeded_template.update_attributes(:content => '{}')
-        OrchestrationTemplate.seed
-        expect(OrchestrationTemplate.where(:name => azure_template).count).to eq(1)
-      end
-
-      it "adds new template if the original template has been renamed and modified" do
-        seeded_template.update_attributes(:name => 'other', :content => '{}')
-        OrchestrationTemplate.seed
-        expect(OrchestrationTemplate.where(:name => azure_template).count).to eq(1)
-      end
-    end
-  end
-
   describe "#deployment_options" do
     it do
       options = subject.deployment_options
