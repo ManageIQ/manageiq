@@ -9,6 +9,94 @@ The ManageIQ organization is continuously adding new smaller repositories.  The 
 - [manageiq-providers-vmware CHANGELOG](https://github.com/ManageIQ/manageiq-providers-vmware/blob/master/CHANGELOG.md)
 - [manageiq-ui-classic CHANGELOG](https://github.com/ManageIQ/manageiq-ui-classic/blob/master/CHANGELOG.md)
 
+## Unreleased - as of Sprint 66 end 2017-08-07
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+66+Ending+Aug+7%2C+2017%22+label%3Aenhancement)
+
+- Automate
+  - Added support for expression methods [(#15537)](https://github.com/ManageIQ/manageiq/pull/15537)
+  - Provisioning: Support memory limit for RHV [(#15591)](https://github.com/ManageIQ/manageiq/pull/15591)
+  - Services
+    - Add a relationship between generic objects and services. [(#15490)](https://github.com/ManageIQ/manageiq/pull/15490)
+    - Display the text "Generic Object Class" in the UI (instead of Generic Object Definition) [(#15672)](https://github.com/ManageIQ/manageiq/pull/15672)
+    - Set up dialog_field relationships through DialogFieldAssociations [(#15566)](https://github.com/ManageIQ/manageiq/pull/15566)
+    - Metric rollups at the Service level [(#15695)](https://github.com/ManageIQ/manageiq/pull/15695)
+    - Remove methods for Azure sample orchestration [(#15752)](https://github.com/ManageIQ/manageiq/pull/15752)
+
+- Platform
+  - Evaluate enablement expressions for custom buttons [(#15729)](https://github.com/ManageIQ/manageiq/pull/15729)
+  - Evaluate visibility expressions for CustomButtons [(#15725)](https://github.com/ManageIQ/manageiq/pull/15725)
+  - RBAC
+    - Include EvmRole-reader as read-only role in the fixtures [(#15647)](https://github.com/ManageIQ/manageiq/pull/15647)
+    - Add HostAggregates to RBAC [(#15417)](https://github.com/ManageIQ/manageiq/pull/15417)
+  - Adding options field to ext_management_system [(#15398)](https://github.com/ManageIQ/manageiq/pull/15398)
+  - Change the target of tag expressions [(#15715)](https://github.com/ManageIQ/manageiq/pull/15715)
+  - MiqExpression::Target#to_s [(#15713)](https://github.com/ManageIQ/manageiq/pull/15713)
+  - Rename applies_to_exp to visibility_expression for serializing [(#15501)](https://github.com/ManageIQ/manageiq/pull/15501)
+- Workers
+  - [Rearch] Combine worker messages 'sync_config' and sync_active_role' into a single 'sync_config' message. [(#15597)](https://github.com/ManageIQ/manageiq/pull/15597)
+  - Add server MB usage to rake evm:status and status_full. [(#15457)](https://github.com/ManageIQ/manageiq/pull/15457)
+
+- Providers
+  - Add a virtual column for `supports_block_storage?` and `supports_cloud_object_store_container_create?` [(#15600)](https://github.com/ManageIQ/manageiq/pull/15600)
+  - Containers
+    - Add product features for provider disable UI [(#15592)](https://github.com/ManageIQ/manageiq/pull/15592)
+    - Raise creation event batched job [(#15679)](https://github.com/ManageIQ/manageiq/pull/15679)
+  - Inventory
+    - Allow to run post processing job for ManagerRefresh (Graph Refresh) [(#15678)](https://github.com/ManageIQ/manageiq/pull/15678)
+    - Batch saving strategy that does not require unique indexes [(#15627)](https://github.com/ManageIQ/manageiq/pull/15627)
+    - Make sure passed ids for habtm relation are unique [(#15651)](https://github.com/ManageIQ/manageiq/pull/15651)
+    - Sort nodes for a proper disconnect_inv/destroy order [(#15636)](https://github.com/ManageIQ/manageiq/pull/15636)
+  - Middleware: Register product feature for stopping domains [(#15680)](https://github.com/ManageIQ/manageiq/pull/15680)
+  - Physical Infrastructure
+    - Add physical infra discovery to product features [(#15607)](https://github.com/ManageIQ/manageiq/pull/15607)
+    - Adds virtual totals for servers vms and hosts to Physical Infrastructure Providers [(#15613)](https://github.com/ManageIQ/manageiq/pull/15613)
+    - Change name of physical infra type in discovery [(#15681)](https://github.com/ManageIQ/manageiq/pull/15681)
+
+- REST API
+  - Add paging links to the API [(#15148)](https://github.com/ManageIQ/manageiq/pull/15148)
+  - Render links with compressed ids [(#15659)](https://github.com/ManageIQ/manageiq/pull/15659)
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+66+Ending+Aug+7%2C+2017%22+label%3Aenhancement)
+
+- Performance
+  - Don't run the broker for ems_inventory if update_driven_refresh is set [(#15579)](https://github.com/ManageIQ/manageiq/pull/15579)
+  - Merge retirement checks [(#15645)](https://github.com/ManageIQ/manageiq/pull/15645)
+  - Batch disconnect method for ContainerImage [(#15698)](https://github.com/ManageIQ/manageiq/pull/15698)
+  - Allow batch disconnect for the batch strategy [(#15699)](https://github.com/ManageIQ/manageiq/pull/15699)
+  - Optimize the query of a service's orchestration_stacks. [(#15727)](https://github.com/ManageIQ/manageiq/pull/15727)
+  - [Performance] MiqGroup.seed [(#15586)](https://github.com/ManageIQ/manageiq/pull/15586)
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+66+Ending+Aug+7%2C+2017%22+label%3Abug)
+
+- Automate
+  - Provisioning: Force status removal and default value [(#15685)](https://github.com/ManageIQ/manageiq/pull/15685)
+  - Services
+    - Fix service dialog edit [(#15658)](https://github.com/ManageIQ/manageiq/pull/15658)
+    - Set user's group to the requester group. [(#15696)](https://github.com/ManageIQ/manageiq/pull/15696)
+
+- Platform
+  - Seeding timeout [(#15595)](https://github.com/ManageIQ/manageiq/pull/15595)
+  - RBAC: Add Storage feature to container administrator role [(#15689)](https://github.com/ManageIQ/manageiq/pull/15689)
+  - Reporting: Do not limit width of table when downloading report in text format [(#15750)](https://github.com/ManageIQ/manageiq/pull/15750)
+  - Authenticatin: Normalize the username entered at login to lowercase [(#15716)](https://github.com/ManageIQ/manageiq/pull/15716)
+
+- Providers
+  - Containers
+    - Re-adding "Create Service Dialog from Container Template" feature [(#15653)](https://github.com/ManageIQ/manageiq/pull/15653)
+    - JobProxyDispatcher should use all container image classes [(#15519)](https://github.com/ManageIQ/manageiq/pull/15519)
+    - Remove remains of container definition [(#15721)](https://github.com/ManageIQ/manageiq/pull/15721)
+    - Use archived? instead of ems_id.nil? [(#15633)](https://github.com/ManageIQ/manageiq/pull/15633)
+  - Inventory
+    - Return VMs and Templates for EMS prev_relats [(#15671)](https://github.com/ManageIQ/manageiq/pull/15671)
+    - Fix bug in InventoryCollection#find_by with non-default ref [(#15648)](https://github.com/ManageIQ/manageiq/pull/15648)
+  - Remove methods for Azure sample orchestration [(#15752)](https://github.com/ManageIQ/manageiq/pull/15752)
+  - VMware Infrastructure: Fix Core Refresher if there is no ems_vmware setting [(#15690)](https://github.com/ManageIQ/manageiq/pull/15690)
+
+- REST API
+  - Allow operator characters on the RHS of filter [(#15534)](https://github.com/ManageIQ/manageiq/pull/15534)
+
+
 ## Unreleased - as of Sprint 65 end 2017-07-24
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+65+Ending+Jul+24%2C+2017%22+label%3Aenhancement)
