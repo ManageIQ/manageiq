@@ -79,6 +79,8 @@ module Api
       end
 
       def authenticate_with_system_token(x_miq_token)
+        validate_system_token_otp(x_miq_token)
+
         @miq_token_hash = YAML.load(MiqPassword.decrypt(x_miq_token))
 
         validate_system_token_server(@miq_token_hash[:server_guid])
@@ -104,6 +106,13 @@ module Api
       def validate_system_token_timestamp(timestamp)
         raise "Missing timestamp" if timestamp.blank?
         raise "Invalid timestamp #{timestamp} specified" if 5.minutes.ago.utc > timestamp
+      end
+
+      def validate_system_token_otp(x_miq_token)
+        token_store = TokenStore.acquire("api_system_token", 5.minutes)
+        token_used_timestamp = token_store.read(x_miq_token)
+        raise "System Token was already used at #{token_used_timestamp}" if token_used_timestamp
+        token_store.write(x_miq_token, Time.now.getlocal)
       end
     end
   end
