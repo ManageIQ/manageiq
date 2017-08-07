@@ -20,6 +20,7 @@ module Api
 
     def create_resource(type, _id, data = {})
       assert_id_not_specified(data, type)
+      raise BadRequestError, "Must specify credentials" if data[CREDENTIALS_ATTR].nil? && !data.keys.include?(*CONNECTION_ATTRS)
 
       create_provider(data)
     end
@@ -197,7 +198,6 @@ module Api
       provider_data = data.except(*RESTRICTED_ATTRS)
       invalid_keys  = provider_data.keys - provider_klass.columns_hash.keys - ENDPOINT_ATTRS - CONNECTION_ATTRS
       raise BadRequestError, "Invalid Provider attributes #{invalid_keys.join(', ')} specified" if invalid_keys.present?
-
       specify_zone(provider_data, data, options)
       provider_data
     end

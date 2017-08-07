@@ -15,6 +15,7 @@
 #
 describe "Providers API" do
   ENDPOINT_ATTRS = Api::ProvidersController::ENDPOINT_ATTRS
+  CREDENTIALS_ATTR = Api::ProvidersController::CREDENTIALS_ATTR
 
   let(:default_credentials) { {"userid" => "admin1", "password" => "password1"} }
   let(:metrics_credentials) { {"userid" => "admin2", "password" => "password2", "auth_type" => "metrics"} }
@@ -45,10 +46,14 @@ describe "Providers API" do
 
   let(:sample_vmware) do
     {
-      "type"      => "ManageIQ::Providers::Vmware::InfraManager",
-      "name"      => "sample vmware",
-      "hostname"  => "sample_vmware.provider.com",
-      "ipaddress" => "100.200.300.1"
+      "type"        => "ManageIQ::Providers::Vmware::InfraManager",
+      "name"        => "sample vmware",
+      "hostname"    => "sample_vmware.provider.com",
+      "ipaddress"   => "100.200.300.1",
+      "credentials" => {
+        "userid"   => "uname",
+        "password" => "pword"
+      }
     }
   end
   let(:sample_rhevm) do
@@ -60,6 +65,10 @@ describe "Providers API" do
       "ipaddress"             => "100.200.300.2",
       "security_protocol"     => "kerberos",
       "certificate_authority" => certificate_authority,
+      "credentials"           => {
+        "userid"   => "uname",
+        "password" => "pword"
+      }
     }
   end
 
@@ -185,7 +194,7 @@ describe "Providers API" do
   end
 
   context "Provider custom_attributes" do
-    let(:provider) { FactoryGirl.create(:ext_management_system, sample_rhevm) }
+    let(:provider) { FactoryGirl.create(:ext_management_system, sample_rhevm.except("credentials")) }
     let(:provider_url) { providers_url(provider.id) }
     let(:ca1) { FactoryGirl.create(:custom_attribute, :name => "name1", :value => "value1") }
     let(:ca2) { FactoryGirl.create(:custom_attribute, :name => "name2", :value => "value2") }
@@ -341,6 +350,14 @@ describe "Providers API" do
       expect_bad_request(/unsupported/i)
     end
 
+    it "requires credentials if no connection_configurations are specified" do
+      api_basic_authorize collection_action_identifier(:providers, :create)
+
+      run_post(providers_url, gen_request(:create, [{"name" => "name3"}]))
+
+      expect_bad_request("Must specify credentials")
+    end
+
     it "supports requests with valid provider_class" do
       api_basic_authorize collection_action_identifier(:providers, :read, :get)
 
@@ -421,7 +438,7 @@ describe "Providers API" do
     it "rejects provider creation with invalid type specified" do
       api_basic_authorize collection_action_identifier(:providers, :create)
 
-      run_post(providers_url, "name" => "sample provider", "type" => "BogusType")
+      run_post(providers_url, "name" => "sample provider", "type" => "BogusType", "credentials" => {})
 
       expect_bad_request(/Invalid provider type BogusType/i)
     end
@@ -434,7 +451,7 @@ describe "Providers API" do
       expect(response).to have_http_status(:ok)
       expected = {
         "results" => [
-          a_hash_including({"id" => kind_of(String)}.merge(sample_rhevm.except(*ENDPOINT_ATTRS)))
+          a_hash_including({"id" => kind_of(String)}.merge(sample_rhevm.except(*ENDPOINT_ATTRS, CREDENTIALS_ATTR)))
         ]
       }
       expect(response.parsed_body).to include(expected)
@@ -456,7 +473,7 @@ describe "Providers API" do
           expect(response).to have_http_status(:ok)
           expected = {
             "results" => [
-              a_hash_including({"id" => kind_of(String)}.merge(sample_containers.except(*ENDPOINT_ATTRS)))
+              a_hash_including({"id" => kind_of(String)}.merge(sample_containers.except(*ENDPOINT_ATTRS, CREDENTIALS_ATTR)))
             ]
           }
           expect(response.parsed_body).to include(expected)
@@ -477,7 +494,7 @@ describe "Providers API" do
       expect(response).to have_http_status(:ok)
       expected = {
         "results" => [
-          a_hash_including({"id" => kind_of(String)}.merge(sample_rhevm.except(*ENDPOINT_ATTRS)))
+          a_hash_including({"id" => kind_of(String)}.merge(sample_rhevm.except(*ENDPOINT_ATTRS, CREDENTIALS_ATTR)))
         ]
       }
       expect(response.parsed_body).to include(expected)
@@ -494,7 +511,7 @@ describe "Providers API" do
       expect(response).to have_http_status(:ok)
       expected = {
         "results" => [
-          a_hash_including({"id" => kind_of(String)}.merge(sample_vmware.except(*ENDPOINT_ATTRS)))
+          a_hash_including({"id" => kind_of(String)}.merge(sample_vmware.except(*ENDPOINT_ATTRS, CREDENTIALS_ATTR)))
         ]
       }
       expect(response.parsed_body).to include(expected)
@@ -513,7 +530,7 @@ describe "Providers API" do
       expect(response).to have_http_status(:ok)
       expected = {
         "results" => [
-          a_hash_including({"id" => kind_of(String)}.merge(sample_rhevm.except(*ENDPOINT_ATTRS)))
+          a_hash_including({"id" => kind_of(String)}.merge(sample_rhevm.except(*ENDPOINT_ATTRS, CREDENTIALS_ATTR)))
         ]
       }
       expect(response.parsed_body).to include(expected)
@@ -534,8 +551,8 @@ describe "Providers API" do
       expect(response).to have_http_status(:ok)
       expected = {
         "results" => a_collection_containing_exactly(
-          a_hash_including({"id" => kind_of(String)}.merge(sample_vmware.except(*ENDPOINT_ATTRS))),
-          a_hash_including({"id" => kind_of(String)}.merge(sample_rhevm.except(*ENDPOINT_ATTRS)))
+          a_hash_including({"id" => kind_of(String)}.merge(sample_vmware.except(*ENDPOINT_ATTRS, CREDENTIALS_ATTR))),
+          a_hash_including({"id" => kind_of(String)}.merge(sample_rhevm.except(*ENDPOINT_ATTRS, CREDENTIALS_ATTR)))
         )
       }
       expect(response.parsed_body).to include(expected)
@@ -564,6 +581,7 @@ describe "Providers API" do
           expected = {"id"   => a_kind_of(String),
                       "type" => containers_class,
                       "name" => "sample containers provider with multiple endpoints"}
+
           results = response.parsed_body["results"]
           expect(results.first).to include(expected)
 
@@ -601,7 +619,7 @@ describe "Providers API" do
     it "supports single resource edit" do
       api_basic_authorize collection_action_identifier(:providers, :edit)
 
-      provider = FactoryGirl.create(:ext_management_system, sample_rhevm)
+      provider = FactoryGirl.create(:ext_management_system, sample_rhevm.except("credentials"))
 
       run_post(providers_url(provider.id), gen_request(:edit, "name" => "updated provider", "port" => "8080"))
 
@@ -613,7 +631,7 @@ describe "Providers API" do
     it "only returns real attributes" do
       api_basic_authorize collection_action_identifier(:providers, :edit)
 
-      provider = FactoryGirl.create(:ext_management_system, sample_rhevm)
+      provider = FactoryGirl.create(:ext_management_system, sample_rhevm.except("credentials"))
 
       run_post(providers_url(provider.id), gen_request(:edit, "name" => "updated provider", "port" => "8080"))
 
@@ -625,7 +643,7 @@ describe "Providers API" do
     it "supports updates of credentials" do
       api_basic_authorize collection_action_identifier(:providers, :edit)
 
-      provider = FactoryGirl.create(:ext_management_system, sample_vmware)
+      provider = FactoryGirl.create(:ext_management_system, sample_vmware.except("credentials"))
       provider.update_authentication(:default => default_credentials.symbolize_keys)
 
       run_post(providers_url(provider.id), gen_request(:edit,
@@ -688,7 +706,7 @@ describe "Providers API" do
     it "supports additions of credentials" do
       api_basic_authorize collection_action_identifier(:providers, :edit)
 
-      provider = FactoryGirl.create(:ext_management_system, sample_rhevm)
+      provider = FactoryGirl.create(:ext_management_system, sample_rhevm.except("credentials"))
       provider.update_authentication(:default => default_credentials.symbolize_keys)
 
       run_post(providers_url(provider.id), gen_request(:edit,
@@ -799,7 +817,7 @@ describe "Providers API" do
     it "supports single provider refresh" do
       api_basic_authorize collection_action_identifier(:providers, :refresh)
 
-      provider = FactoryGirl.create(:ext_management_system, sample_vmware.symbolize_keys.except(:type))
+      provider = FactoryGirl.create(:ext_management_system, sample_vmware.symbolize_keys.except(:type, :credentials))
       provider.update_authentication(:default => default_credentials.symbolize_keys)
 
       run_post(providers_url(provider.id), gen_request(:refresh))
@@ -810,10 +828,10 @@ describe "Providers API" do
     it "supports multiple provider refreshes" do
       api_basic_authorize collection_action_identifier(:providers, :refresh)
 
-      p1 = FactoryGirl.create(:ext_management_system, sample_vmware.symbolize_keys.except(:type))
+      p1 = FactoryGirl.create(:ext_management_system, sample_vmware.symbolize_keys.except(:type, :credentials))
       p1.update_authentication(:default => default_credentials.symbolize_keys)
 
-      p2 = FactoryGirl.create(:ext_management_system, sample_rhevm.symbolize_keys.except(:type))
+      p2 = FactoryGirl.create(:ext_management_system, sample_rhevm.symbolize_keys.except(:type, :credentials))
       p2.update_authentication(:default => default_credentials.symbolize_keys)
 
       run_post(providers_url, gen_request(:refresh, [{"href" => providers_url(p1.id)},
@@ -825,7 +843,7 @@ describe "Providers API" do
     it "provider refresh are created with a task" do
       api_basic_authorize collection_action_identifier(:providers, :refresh)
 
-      provider = FactoryGirl.create(:ext_management_system, sample_vmware.symbolize_keys.except(:type))
+      provider = FactoryGirl.create(:ext_management_system, sample_vmware.symbolize_keys.except(:type, :credentials))
       provider.update_authentication(:default => default_credentials.symbolize_keys)
       provider.authentication_type(:default).update(:status => "Valid")
 
@@ -877,7 +895,7 @@ describe "Providers API" do
   end
 
   describe 'Providers import VM' do
-    let(:provider)      { FactoryGirl.create(:ems_redhat, sample_rhevm) }
+    let(:provider)      { FactoryGirl.create(:ems_redhat, sample_rhevm.except("credentials")) }
     let(:provider_url)  { providers_url(provider.id) }
 
     let(:vm)            { FactoryGirl.create(:vm_vmware) }
