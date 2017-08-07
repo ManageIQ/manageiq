@@ -77,6 +77,8 @@ describe MiqRequestWorkflow do
     before do
       values = {:values_from => {:method => :allowed_clusters}}
       dialog.store_path(:dialogs, :environment, :fields, :placement_cluster_name, values)
+      workflow.create_values_methods
+      Rails.cache.clear
     end
 
     it "refreshes value by default" do
@@ -169,6 +171,7 @@ describe MiqRequestWorkflow do
           it "auto-selects single value when true" do
             values[:auto_select_single] = true
             dialogs.store_path(:dialogs, :environment, :fields, :cluster_filter, values)
+            workflow.create_values_methods
             workflow.init_from_dialog(init_values)
 
             expect(init_values).to include(:cluster_filter => [122, 'name not empty'])
@@ -177,6 +180,7 @@ describe MiqRequestWorkflow do
           it "should not auto-select single value when false" do
             values[:auto_select_single] = false
             dialogs.store_path(:dialogs, :environment, :fields, :cluster_filter, values)
+            workflow.create_values_methods
             workflow.init_from_dialog(init_values)
 
             expect(init_values).to include(:cluster_filter => [nil, nil])

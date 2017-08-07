@@ -9,6 +9,7 @@ describe MiqProvisionWorkflow do
       before do
         server
         dialog
+        Rails.cache.clear
       end
       context "Without a Valid Template," do
         it "should not create an MiqRequest when calling from_ws" do
