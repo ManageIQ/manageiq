@@ -182,6 +182,15 @@ describe "Providers API" do
       cloud_tenant_ids = response.parsed_body['parent_manager']['cloud_tenants'].map { |x| x['id'] }
       expect([cloud_tenant_1.compressed_id, cloud_tenant_2.compressed_id]).to match_array(cloud_tenant_ids)
     end
+
+    context "when user's role has only allowed product feature 'ems_cloud'" do
+      it 'lists all providers' do
+        api_basic_authorize action_identifier(:providers, :read, :collection_actions, :get)[1] # take only `ems_cloud_show_list`
+        run_get('/api/providers')
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body['resources'].count).to eq(ExtManagementSystem.count)
+      end
+    end
   end
 
   context "Provider custom_attributes" do

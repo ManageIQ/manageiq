@@ -1321,7 +1321,9 @@
       - :name: resolve
   :providers:
     :description: Providers
-    :identifier: ems_infra
+    :identifier:
+    - ems_infra
+    - ems_cloud
     :options:
     - :collection
     :verbs: *gpd
@@ -1338,62 +1340,102 @@
     :collection_actions:
       :get:
       - :name: read
-        :identifier: ems_infra_show_list
+        :identifier:
+        - ems_infra_show_list
+        - ems_cloud_show_list
       :post:
       - :name: query
-        :identifier: ems_infra_show_list
+        :identifier:
+        - ems_infra_show_list
+        - ems_cloud_show_list
       - :name: create
-        :identifier: ems_infra_new
+        :identifier:
+        - ems_infra_new
+        - ems_cloud_new
       - :name: edit
-        :identifier: ems_infra_edit
+        :identifier:
+        - ems_infra_edit
+        - ems_cloud_edit
       - :name: refresh
-        :identifier: ems_infra_refresh
+        :identifier:
+        - ems_infra_refresh
+        - ems_cloud_refresh
       - :name: delete
-        :identifier: ems_infra_delete
+        :identifier:
+        - ems_infra_delete
+        - ems_cloud_delete
     :resource_actions:
       :get:
       - :name: read
-        :identifier: ems_infra_show
+        :identifier:
+        - ems_infra_show
+        - ems_cloud_show
       :post:
       - :name: edit
-        :identifier: ems_infra_edit
+        :identifier:
+        - ems_infra_edit
+        - ems_cloud_edit
       - :name: refresh
-        :identifier: ems_infra_refresh
+        :identifier:
+        - ems_infra_refresh
+        - ems_cloud_refresh
       - :name: delete
-        :identifier: ems_infra_delete
+        :identifier:
+        - ems_infra_delete
+        - ems_cloud_delete
       - :name: import_vm
         :identifier: ems_infra_import_vm
         :options:
         - :validate_action
       :delete:
       - :name: delete
-        :identifier: ems_infra_delete
+        :identifier:
+        - ems_infra_delete
+        - ems_cloud_delete
     :tags_subcollection_actions:
       :post:
       - :name: assign
-        :identifier: ems_infra_tag
+        :identifier:
+        - ems_infra_tag
+        - ems_cloud_tag
       - :name: unassign
-        :identifier: ems_infra_tag
+        :identifier:
+        - ems_infra_tag
+        - ems_cloud_tag
     :custom_attributes_subcollection_actions:
       :post:
       - :name: add
-        :identifier: ems_infra_edit
+        :identifier:
+        - ems_infra_edit
+        - ems_cloud_edit
       - :name: edit
-        :identifier: ems_infra_edit
+        :identifier:
+        - ems_infra_edit
+        - ems_cloud_edit
       - :name: delete
-        :identifier: ems_infra_edit
+        :identifier:
+        - ems_infra_edit
+        - ems_cloud_edit
     :policies_subcollection_actions:
       :post:
       - :name: assign
-        :identifier: ems_infra_protect
+        :identifier:
+        - ems_infra_protect
+        - ems_cloud_protect
       - :name: unassign
-        :identifier: ems_infra_protect
+        :identifier:
+        - ems_infra_protect
+        - ems_cloud_protect
     :policy_profiles_subcollection_actions:
       :post:
       - :name: assign
-        :identifier: ems_infra_protect
+        :identifier:
+        - ems_infra_protect
+        - ems_cloud_protect
       - :name: unassign
-        :identifier: ems_infra_protect
+        :identifier:
+        - ems_infra_protect
+        - ems_cloud_protect
   :provision_dialogs:
     :description: Provisioning Dialogs
     :identifier: miq_ae_customization_explorer
