@@ -109,6 +109,11 @@ describe "Rest API Collections" do
       test_collection_query(:events, events_url, MiqEventDefinition)
     end
 
+    it "query Event Streams" do
+      FactoryGirl.create(:event_stream)
+      test_collection_query(:event_streams, event_streams_url, EventStream)
+    end
+
     it "query Features" do
       FactoryGirl.create(:miq_product_feature, :identifier => "vm_auditing")
       test_collection_query(:features, features_url, MiqProductFeature)
@@ -380,6 +385,11 @@ describe "Rest API Collections" do
     it "bulk query Events" do
       FactoryGirl.create(:miq_event_definition)
       test_collection_bulk_query(:events, events_url, MiqEventDefinition)
+    end
+
+    it "bulk query Event Streams" do
+      FactoryGirl.create(:event_stream)
+      test_collection_bulk_query(:event_streams, event_streams_url, EventStream)
     end
 
     it "bulk query Flavors" do
