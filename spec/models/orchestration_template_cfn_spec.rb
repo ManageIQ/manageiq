@@ -7,34 +7,68 @@ describe OrchestrationTemplateCfn do
     end
   end
 
-  let(:valid_template) { FactoryGirl.create(:orchestration_template_cfn_with_content) }
-
-  context "when a raw template in JSON format is given" do
-    it "parses parameters from a template" do
-      groups = valid_template.parameter_groups
-      expect(groups.size).to eq(1)
-      expect(groups[0].label).to eq("Parameters")
-
-      param_hash = groups[0].parameters.index_by(&:name)
-      expect(param_hash.size).to eq(6)
-      assert_aws_type(param_hash["KeyName"])
-      assert_list_aws_type(param_hash["Subnets"])
-      assert_list_string_type(param_hash["AZs"])
-      assert_allowed_values(param_hash["WebServerInstanceType"])
-      assert_min_max_value(param_hash["SecondaryIPAddressCount"])
-      assert_hidden_length_pattern(param_hash["MasterUserPassword"])
+  shared_examples "a raw orchestration template" do
+    it "parses resources" do
+      assert_resources
     end
 
-    it "parses resources from a template" do
-      resource_types = valid_template.resources.collect(&:type).sort!
-
-      expect(resource_types).to eq(
-        ["AWS::AutoScaling::ScalingPolicy",
-         "AWS::AutoScaling::ScalingPolicy",
-         "AWS::EC2::Instance",
-         "AWS::EC2::SecurityGroup"]
-      )
+    it "parses parameters" do
+      assert_parameters
     end
+
+    describe '#validate_format' do
+      it 'passes validation if no content' do
+        template = OrchestrationTemplateCfn.new
+        expect(template.validate_format).to be_nil
+      end
+
+      it 'passes validation with correct content' do
+        expect(valid_template.validate_format).to be_nil
+      end
+
+      it 'fails validations with incorrect content' do
+        template = OrchestrationTemplateCfn.new(:content => "&*invalid string")
+        expect(template.validate_format).not_to be_nil
+      end
+    end
+  end
+
+  describe YAML do
+    it_behaves_like "a raw orchestration template" do
+      let(:valid_template) { FactoryGirl.create(:orchestration_template_cfn_with_yaml_content) }
+    end
+  end
+
+  describe JSON do
+    it_behaves_like "a raw orchestration template" do
+      let(:valid_template) { FactoryGirl.create(:orchestration_template_cfn_with_json_content) }
+    end
+  end
+
+  def assert_resources
+    resource_types = valid_template.resources.collect(&:type).sort!
+
+    expect(resource_types).to eq(
+      ["AWS::AutoScaling::ScalingPolicy",
+       "AWS::AutoScaling::ScalingPolicy",
+       "AWS::EC2::Instance",
+       "AWS::EC2::SecurityGroup"]
+    )
+  end
+
+  def assert_parameters
+    groups = valid_template.parameter_groups
+    expect(groups.size).to eq(1)
+    expect(groups[0].label).to eq("Parameters")
+
+    param_hash = groups[0].parameters.index_by(&:name)
+    expect(param_hash.size).to eq(6)
+    assert_aws_type(param_hash["KeyName"])
+    assert_list_aws_type(param_hash["Subnets"])
+    assert_list_string_type(param_hash["AZs"])
+    assert_allowed_values(param_hash["WebServerInstanceType"])
+    assert_min_max_value(param_hash["SecondaryIPAddressCount"])
+    assert_hidden_length_pattern(param_hash["MasterUserPassword"])
   end
 
   def assert_aws_type(parameter)
@@ -141,22 +175,6 @@ describe OrchestrationTemplateCfn do
       :min_length  => 1,
       :max_length  => 41
     )
-  end
-
-  describe '#validate_format' do
-    it 'passes validation if no content' do
-      template = OrchestrationTemplateCfn.new
-      expect(template.validate_format).to be_nil
-    end
-
-    it 'passes validation with correct JSON content' do
-      expect(valid_template.validate_format).to be_nil
-    end
-
-    it 'fails validations with incorrect JSON content' do
-      template = OrchestrationTemplateCfn.new(:content => "invalid string")
-      expect(template.validate_format).not_to be_nil
-    end
   end
 
   describe '#deployment_options' do

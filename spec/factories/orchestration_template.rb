@@ -21,6 +21,16 @@ FactoryGirl.define do
     content File.read(Rails.root.join('spec/fixtures/orchestration_templates/cfn_parameters.json'))
   end
 
+  factory :orchestration_template_cfn_with_json_content, :parent => :orchestration_template_cfn do
+    format "json"
+    content File.read(Rails.root.join('spec/fixtures/orchestration_templates/cfn_parameters.json'))
+  end
+
+  factory :orchestration_template_cfn_with_yaml_content, :parent => :orchestration_template_cfn do
+    format "yaml"
+    content File.read(Rails.root.join('spec/fixtures/orchestration_templates/cfn_parameters.yml'))
+  end
+
   factory :orchestration_template_hot_with_content,
           :parent => :orchestration_template,
           :class  => "OrchestrationTemplateHot" do

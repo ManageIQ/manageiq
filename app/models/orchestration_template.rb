@@ -20,6 +20,8 @@ class OrchestrationTemplate < ApplicationRecord
   attr_accessor :remote_proxy
   alias remote_proxy? remote_proxy
 
+  attr_accessor :format
+
   # Try to create the template if the name is not found in table
   def self.seed
     Vmdb::Plugins.instance.vmdb_plugins.each do |plugin|
