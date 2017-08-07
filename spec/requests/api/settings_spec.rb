@@ -1,6 +1,11 @@
 #
 # REST API Request Tests - /api/settings
 #
+# Also as resource settings
+#   GET /api/servers/:id?attribute=resource_settings
+#   GET /api/zones/:id?attribute=resource_settings
+#   GET /api/regions/:id?attribute=resource_settings
+#
 describe "Settings API" do
   let(:api_settings) { Api::ApiConfig.collections[:settings][:categories] }
 
@@ -144,6 +149,133 @@ describe "Settings API" do
         },
         "authentication" => sample_settings["authentication"]
       )
+    end
+  end
+
+  context "Resource Settings Queries" do
+    it "allows GETs of a server's resource_settings" do
+      api_basic_authorize
+
+      run_get(servers_url(@server.id), :attributes => "resource_settings")
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(
+        "href"              => a_string_matching(servers_url(@server.id)),
+        "id"                => @server.id,
+        "resource_settings" => a_hash_including(anything)
+      )
+    end
+
+    it "allows GETs of a zone's resource_settings" do
+      api_basic_authorize action_identifier(:zones, :read, :resource_actions, :get)
+
+      run_get(zones_url(@zone.id), :attributes => "resource_settings")
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(
+        "href"              => a_string_matching(zones_url(@zone.id)),
+        "id"                => @zone.id,
+        "resource_settings" => a_hash_including(anything)
+      )
+    end
+
+    it "allows GETs of a region's resource_settings" do
+      api_basic_authorize action_identifier(:regions, :read, :resource_actions, :get)
+
+      run_get(regions_url(@region.id), :attributes => "resource_settings")
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(
+        "href"              => a_string_matching(regions_url(@region.id)),
+        "id"                => @region.id,
+        "resource_settings" => a_hash_including(anything)
+      )
+    end
+  end
+
+  context "Filtered Settings GETs" do
+    let(:all_categories) { ::Settings.to_hash.keys.collect(&:to_s) }
+    let(:whitelisted_categories) { api_settings.collect { |category| category.split("/").first }.uniq }
+
+    def setup_admin_user
+      @role = FactoryGirl.create(:miq_user_role, :name => "EvmRole-super_administrator")
+      @group.miq_user_role = @role
+    end
+
+    it "return all settings for admin users" do
+      setup_admin_user
+      api_basic_authorize action_identifier(:settings, :read, :resource_actions, :get)
+
+      run_get(settings_url)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body.keys).to match_array(all_categories)
+    end
+
+    it "return white-listed settings for non-admin users" do
+      api_basic_authorize action_identifier(:settings, :read, :resource_actions, :get)
+
+      run_get(settings_url)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body.keys).to match_array(whitelisted_categories)
+    end
+
+    it "of a server's resource_settings return all settings for admin users" do
+      setup_admin_user
+      api_basic_authorize
+
+      run_get(servers_url(@server.id), :attributes => "resource_settings")
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["resource_settings"].keys).to match_array(all_categories)
+    end
+
+    it "of a server's resource_settings return white-listed settings for non-admin users" do
+      api_basic_authorize
+
+      run_get(servers_url(@server.id), :attributes => "resource_settings")
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["resource_settings"].keys).to match_array(whitelisted_categories)
+    end
+
+    it "of a zone's resource_settings return all settings for admin users" do
+      setup_admin_user
+      api_basic_authorize(action_identifier(:zones, :read, :resource_actions, :get), :zone)
+
+      run_get(zones_url(@zone.id), :attributes => "resource_settings")
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["resource_settings"].keys).to match_array(all_categories)
+    end
+
+    it "of a zone's resource_settings return white-listed settings for non-admin users" do
+      api_basic_authorize action_identifier(:zones, :read, :resource_actions, :get)
+
+      run_get(zones_url(@zone.id), :attributes => "resource_settings")
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["resource_settings"].keys).to match_array(whitelisted_categories)
+    end
+
+    it "of a regions's resource_settings return all settings for admin users" do
+      setup_admin_user
+      api_basic_authorize action_identifier(:regions, :read, :resource_actions, :get)
+
+      run_get(regions_url(@region.id), :attributes => "resource_settings")
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["resource_settings"].keys).to match_array(all_categories)
+    end
+
+    it "of a regions's resource_settings return white-listed settings for non-admin users" do
+      api_basic_authorize action_identifier(:regions, :read, :resource_actions, :get)
+
+      run_get(regions_url(@region.id), :attributes => "resource_settings")
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["resource_settings"].keys).to match_array(whitelisted_categories)
     end
   end
 end

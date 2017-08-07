@@ -22,6 +22,7 @@ class Zone < ApplicationRecord
   has_many :miq_templates,       :through => :ext_management_systems
   has_many :ems_clusters,        :through => :ext_management_systems
   virtual_has_many :active_miq_servers, :class_name => "MiqServer"
+  virtual_has_one  :resource_settings, :class_name => "Hash"
 
   before_destroy :check_zone_in_use_on_destroy
   after_update   :queue_ntp_reload_if_changed
