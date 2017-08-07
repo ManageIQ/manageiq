@@ -34,7 +34,6 @@ class ServiceTemplate < ApplicationRecord
 
   include CustomActionsMixin
   include ServiceMixin
-  include OwnershipMixin
   include NewWithTypeStiMixin
   include TenancyMixin
   include_concern 'Filter'
@@ -53,7 +52,8 @@ class ServiceTemplate < ApplicationRecord
   has_one :picture, :dependent => :destroy, :as => :resource, :autosave => true
 
   belongs_to :service_template_catalog
-
+  belongs_to :miq_group
+  
   has_many   :dialogs, -> { distinct }, :through => :resource_actions
 
   virtual_column   :type_display,                 :type => :string
