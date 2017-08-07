@@ -26,7 +26,7 @@ module Api
       def tags_assign_resource(object, _type, id = nil, data = nil)
         tag_spec = tag_specified(id, data)
         tag_subcollection_action(tag_spec) do
-          api_log_info("Assigning #{tag_ident(tag_spec)}")
+          $api_log.info("Assigning #{tag_ident(tag_spec)}")
           ci_set_tag(object, tag_spec)
         end
       end
@@ -34,7 +34,7 @@ module Api
       def tags_unassign_resource(object, _type, id = nil, data = nil)
         tag_spec = tag_specified(id, data)
         tag_subcollection_action(tag_spec) do
-          api_log_info("Unassigning #{tag_ident(tag_spec)}")
+          $api_log.info("Unassigning #{tag_ident(tag_spec)}")
           ci_unset_tag(object, tag_spec)
         end
       end

@@ -5,7 +5,7 @@ module Api
 
       api_action(type, id) do |klass|
         domain = resource_search(id, type, klass)
-        api_log_info("Refreshing #{automate_domain_ident(domain)}")
+        $api_log.info("Refreshing #{automate_domain_ident(domain)}")
 
         begin
           unless GitBasedDomainImportService.available?

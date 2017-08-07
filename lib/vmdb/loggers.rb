@@ -56,15 +56,15 @@ module Vmdb
       $cn_monitoring_log = create_multicast_logger(path_dir.join("container_monitoring.log"))
       $scvmm_log         = create_multicast_logger(path_dir.join("scvmm.log"))
       $azure_log         = create_multicast_logger(path_dir.join("azure.log"))
-      $api_log           = create_multicast_logger(path_dir.join("api.log"))
+      $api_log           = create_multicast_logger(path_dir.join("api.log"), VMDBLogger, ApiLogger)
       $websocket_log     = create_multicast_logger(path_dir.join("websocket.log"))
       $miq_ae_logger     = create_multicast_logger(path_dir.join("automation.log"))
 
       configure_external_loggers
     end
 
-    def self.create_multicast_logger(log_file_path, logger_class = VMDBLogger)
-      MulticastLogger.new(logger_class.new(log_file_path)).tap do |l|
+    def self.create_multicast_logger(log_file_path, logger_class = VMDBLogger, multicast_logger_class = MulticastLogger)
+      multicast_logger_class.new(logger_class.new(log_file_path)).tap do |l|
         l.loggers << $container_log if ENV["CONTAINER"]
       end
     end

@@ -58,6 +58,38 @@ module Api
 
       private
 
+      def log_api_auth
+        if @miq_token_hash
+          auth_type = "system"
+          $api_log.info do
+            format_data_for_logging(
+              "System Auth",
+              {:x_miq_token => request.headers[HttpHeaders::MIQ_TOKEN]}.merge(@miq_token_hash)
+            )
+          end
+        else
+          auth_type = request.headers[HttpHeaders::AUTH_TOKEN].blank? ? "basic" : "token"
+        end
+
+        $api_log.info do
+          format_data_for_logging("Authentication",
+                                  :type        => auth_type,
+                                  :token       => request.headers[HttpHeaders::AUTH_TOKEN],
+                                  :x_miq_group => request.headers[HttpHeaders::MIQ_GROUP],
+                                  :user        => User.current_user.userid)
+        end
+        if User.current_user
+          group = User.current_user.current_group
+          $api_log.info do
+            format_data_for_logging("Authorization",
+                                    :user   => User.current_user.userid,
+                                    :group  => group.description,
+                                    :role   => group.miq_user_role_name,
+                                    :tenant => group.tenant.name)
+          end
+        end
+      end
+
       def api_token_mgr
         Environment.user_token_service.token_mgr('api')
       end
@@ -92,7 +124,7 @@ module Api
         validate_user_identity(auth_user_obj)
         User.current_user = auth_user_obj
       rescue => err
-        api_log_error("Authentication Failed with System Token\nX-MIQ-Token: #{x_miq_token}\nError: #{err}")
+        $api_log.error("Authentication Failed with System Token\nX-MIQ-Token: #{x_miq_token}\nError: #{err}")
         raise AuthenticationError, "Invalid System Authentication Token specified"
       end
 

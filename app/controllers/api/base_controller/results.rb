@@ -69,7 +69,7 @@ module Api
       end
 
       def log_result(hash)
-        hash.each { |k, v| api_log_info("Result: #{k}=#{v}") }
+        hash.each { |k, v| $api_log.info("Result: #{k}=#{v}") }
       end
     end
   end

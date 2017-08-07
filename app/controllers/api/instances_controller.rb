@@ -8,7 +8,7 @@ module Api
 
       api_action(type, id) do |klass|
         instance = resource_search(id, type, klass)
-        api_log_info("Terminating #{instance_ident(instance)}")
+        $api_log.info("Terminating #{instance_ident(instance)}")
         terminate_instance(instance)
       end
     end
@@ -18,7 +18,7 @@ module Api
 
       api_action(type, id) do |klass|
         instance = resource_search(id, type, klass)
-        api_log_info("Stopping #{instance_ident(instance)}")
+        $api_log.info("Stopping #{instance_ident(instance)}")
 
         result = validate_instance_for_action(instance, "stop")
         result = stop_instance(instance) if result[:success]
@@ -31,7 +31,7 @@ module Api
 
       api_action(type, id) do |klass|
         instance = resource_search(id, type, klass)
-        api_log_info("Starting #{instance_ident(instance)}")
+        $api_log.info("Starting #{instance_ident(instance)}")
 
         result = validate_instance_for_action(instance, "start")
         result = start_instance(instance) if result[:success]
@@ -44,7 +44,7 @@ module Api
 
       api_action(type, id) do |klass|
         instance = resource_search(id, type, klass)
-        api_log_info("Pausing #{instance_ident(instance)}")
+        $api_log.info("Pausing #{instance_ident(instance)}")
 
         result = validate_instance_for_action(instance, "pause")
         result = pause_instance(instance) if result[:success]
@@ -57,7 +57,7 @@ module Api
 
       api_action(type, id) do |klass|
         instance = resource_search(id, type, klass)
-        api_log_info("Suspending #{instance_ident(instance)}")
+        $api_log.info("Suspending #{instance_ident(instance)}")
 
         result = validate_instance_for_action(instance, "suspend")
         result = suspend_instance(instance) if result[:success]
@@ -70,7 +70,7 @@ module Api
 
       api_action(type, id) do |klass|
         instance = resource_search(id, type, klass)
-        api_log_info("Shelving #{instance_ident(instance)}")
+        $api_log.info("Shelving #{instance_ident(instance)}")
 
         result = validate_instance_for_action(instance, "shelve")
         result = shelve_instance(instance) if result[:success]
@@ -83,7 +83,7 @@ module Api
 
       api_action(type, id) do |klass|
         instance = resource_search(id, type, klass)
-        api_log_info("Rebooting #{instance_ident(instance)}")
+        $api_log.info("Rebooting #{instance_ident(instance)}")
 
         result = validate_instance_for_action(instance, "reboot_guest")
         result = reboot_guest_instance(instance) if result[:success]
@@ -96,7 +96,7 @@ module Api
 
       api_action(type, id) do |klass|
         instance = resource_search(id, type, klass)
-        api_log_info("Resetting #{instance_ident(instance)}")
+        $api_log.info("Resetting #{instance_ident(instance)}")
 
         result = validate_instance_for_action(instance, "reset")
         result = reset_instance(instance) if result[:success]

@@ -67,7 +67,7 @@ module Api
         klass  = collection_class(ctype)
         policy = policy_specified(id, data, ctype, klass)
         policy_subcollection_action(ctype, policy) do
-          api_log_info("Assigning #{policy_ident(ctype, policy)}")
+          $api_log.info("Assigning #{policy_ident(ctype, policy)}")
           policy_assign(object, ctype, policy)
         end
       end
@@ -76,7 +76,7 @@ module Api
         klass  = collection_class(ctype)
         policy = policy_specified(id, data, ctype, klass)
         policy_subcollection_action(ctype, policy) do
-          api_log_info("Unassigning #{policy_ident(ctype, policy)}")
+          $api_log.info("Unassigning #{policy_ident(ctype, policy)}")
           policy_unassign(object, ctype, policy)
         end
       end
@@ -85,7 +85,7 @@ module Api
         klass  = collection_class(ctype)
         policy = policy_specified(id, data, ctype, klass)
         policy_subcollection_action(ctype, policy) do
-          api_log_info("Resolving #{policy_ident(ctype, policy)}")
+          $api_log.info("Resolving #{policy_ident(ctype, policy)}")
           policy_resolve(object, ctype, policy)
         end
       end

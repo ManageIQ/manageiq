@@ -7,7 +7,7 @@ module Api
 
       api_action(type, id) do |klass|
         service_dialog = resource_search(id, type, klass)
-        api_log_info("Refreshing Dialog Fields for #{service_dialog_ident(service_dialog)}")
+        $api_log.info("Refreshing Dialog Fields for #{service_dialog_ident(service_dialog)}")
 
         refresh_dialog_fields_service_dialog(service_dialog, data)
       end

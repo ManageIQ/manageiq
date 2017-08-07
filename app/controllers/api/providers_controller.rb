@@ -37,7 +37,7 @@ module Api
 
       api_action(type, id) do |klass|
         provider = resource_search(id, type, klass)
-        api_log_info("Refreshing #{provider_ident(provider)}")
+        $api_log.info("Refreshing #{provider_ident(provider)}")
 
         refresh_provider(provider)
       end
@@ -48,7 +48,7 @@ module Api
 
       api_action(type, id) do |klass|
         provider = resource_search(id, type, klass)
-        api_log_info("Deleting #{provider_ident(provider)}")
+        $api_log.info("Deleting #{provider_ident(provider)}")
 
         destroy_provider(provider)
       end
@@ -74,7 +74,7 @@ module Api
         # check if user can access the VM
         resource_search(vm_id, :vms, Vm)
 
-        api_log_info("Importing VM to #{provider_ident(provider)}")
+        $api_log.info("Importing VM to #{provider_ident(provider)}")
         target_params = {
           :name       => data.fetch_path('target', 'name'),
           :cluster_id => parse_id(data.fetch_path('target', 'cluster'), :clusters),

@@ -16,7 +16,7 @@ module Api
 
       api_action(type, id) do |klass|
         vm = resource_search(id, type, klass)
-        api_log_info("Starting #{vm_ident(vm)}")
+        $api_log.info("Starting #{vm_ident(vm)}")
 
         result = validate_vm_for_action(vm, "start")
         result = start_vm(vm) if result[:success]
@@ -29,7 +29,7 @@ module Api
 
       api_action(type, id) do |klass|
         vm = resource_search(id, type, klass)
-        api_log_info("Stopping #{vm_ident(vm)}")
+        $api_log.info("Stopping #{vm_ident(vm)}")
 
         result = validate_vm_for_action(vm, "stop")
         result = stop_vm(vm) if result[:success]
@@ -42,7 +42,7 @@ module Api
 
       api_action(type, id) do |klass|
         vm = resource_search(id, type, klass)
-        api_log_info("Suspending #{vm_ident(vm)}")
+        $api_log.info("Suspending #{vm_ident(vm)}")
 
         result = validate_vm_for_action(vm, "suspend")
         result = suspend_vm(vm) if result[:success]
@@ -55,7 +55,7 @@ module Api
 
       api_action(type, id) do |klass|
         vm = resource_search(id, type, klass)
-        api_log_info("Pausing #{vm_ident(vm)}")
+        $api_log.info("Pausing #{vm_ident(vm)}")
 
         result = validate_vm_for_action(vm, "pause")
         result = pause_vm(vm) if result[:success]
@@ -68,7 +68,7 @@ module Api
 
       api_action(type, id) do |klass|
         vm = resource_search(id, type, klass)
-        api_log_info("Shelving #{vm_ident(vm)}")
+        $api_log.info("Shelving #{vm_ident(vm)}")
 
         result = validate_vm_for_action(vm, "shelve")
         result = shelve_vm(vm) if result[:success]
@@ -81,7 +81,7 @@ module Api
 
       api_action(type, id) do |klass|
         vm = resource_search(id, type, klass)
-        api_log_info("Shelve-offloading #{vm_ident(vm)}")
+        $api_log.info("Shelve-offloading #{vm_ident(vm)}")
 
         result = validate_vm_for_action(vm, "shelve_offload")
         result = shelve_offload_vm(vm) if result[:success]
@@ -106,7 +106,7 @@ module Api
 
       api_action(type, id) do |klass|
         vm = resource_search(id, type, klass)
-        api_log_info("Deleting #{vm_ident(vm)}")
+        $api_log.info("Deleting #{vm_ident(vm)}")
 
         destroy_vm(vm)
       end
@@ -120,7 +120,7 @@ module Api
 
       api_action(type, id) do |klass|
         vm = resource_search(id, type, klass)
-        api_log_info("Setting owner of #{vm_ident(vm)}")
+        $api_log.info("Setting owner of #{vm_ident(vm)}")
 
         set_owner_vm(vm, owner)
       end
@@ -131,7 +131,7 @@ module Api
 
       api_action(type, id) do |klass|
         vm = resource_search(id, type, klass)
-        api_log_info("Adding Lifecycle Event to #{vm_ident(vm)}")
+        $api_log.info("Adding Lifecycle Event to #{vm_ident(vm)}")
 
         add_lifecycle_event_vm(vm, lifecycle_event_from_data(data))
       end
@@ -142,7 +142,7 @@ module Api
 
       api_action(type, id) do |klass|
         vm = resource_search(id, type, klass)
-        api_log_info("Scanning #{vm_ident(vm)}")
+        $api_log.info("Scanning #{vm_ident(vm)}")
 
         result = validate_vm_for_action(vm, "scan")
         result = scan_vm(vm) if result[:success]
@@ -157,7 +157,7 @@ module Api
 
       api_action(type, id) do |klass|
         vm = resource_search(id, type, klass)
-        api_log_info("Adding Event to #{vm_ident(vm)}")
+        $api_log.info("Adding Event to #{vm_ident(vm)}")
 
         vm_event(vm, data["event_type"].to_s, data["event_message"].to_s, data["event_time"].to_s)
       end
@@ -168,7 +168,7 @@ module Api
 
       api_action(type, id) do |klass|
         vm = resource_search(id, type, klass)
-        api_log_info("Retiring #{vm_ident(vm)}")
+        $api_log.info("Retiring #{vm_ident(vm)}")
         retire_vm(vm, id, data)
       end
     end
@@ -178,7 +178,7 @@ module Api
 
       api_action(type, id) do |klass|
         vm = resource_search(id, type, klass)
-        api_log_info("Resetting #{vm_ident(vm)}")
+        $api_log.info("Resetting #{vm_ident(vm)}")
 
         result = validate_vm_for_action(vm, "reset")
         result = reset_vm(vm) if result[:success]
@@ -191,7 +191,7 @@ module Api
 
       api_action(type, id) do |klass|
         vm = resource_search(id, type, klass)
-        api_log_info("Rebooting #{vm_ident(vm)}")
+        $api_log.info("Rebooting #{vm_ident(vm)}")
 
         result = validate_vm_for_action(vm, "reboot_guest")
         result = reboot_guest_vm(vm) if result[:success]
@@ -204,7 +204,7 @@ module Api
 
       api_action(type, id) do |klass|
         vm = resource_search(id, type, klass)
-        api_log_info("Shutting down #{vm_ident(vm)}")
+        $api_log.info("Shutting down #{vm_ident(vm)}")
 
         result = validate_vm_for_action(vm, "shutdown_guest")
         result = shutdown_guest_vm(vm) if result[:success]
@@ -217,7 +217,7 @@ module Api
 
       api_action(type, id) do |klass|
         vm = resource_search(id, type, klass)
-        api_log_info("Refreshing #{vm_ident(vm)}")
+        $api_log.info("Refreshing #{vm_ident(vm)}")
         refresh_vm(vm)
       end
     end
@@ -236,7 +236,7 @@ module Api
 
       api_action(type, id) do |klass|
         vm = resource_search(id, type, klass)
-        api_log_info("Requesting Console #{vm_ident(vm)}")
+        $api_log.info("Requesting Console #{vm_ident(vm)}")
 
         result = validate_vm_for_remote_console(vm, protocol)
         result = request_console_vm(vm, protocol) if result[:success]
