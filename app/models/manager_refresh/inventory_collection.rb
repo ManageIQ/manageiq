@@ -685,6 +685,8 @@ module ManagerRefresh
     end
 
     def manager_ref_to_cols
+      # TODO(lsmola) this should contain the polymorphic _type, otherwise the IC with polymorphic unique key will get
+      # conflicts
       # Convert attributes from unique key to actual db cols
       manager_ref.map do |ref|
         association_to_foreign_key_mapping[ref] || ref
@@ -994,10 +996,12 @@ module ManagerRefresh
     end
 
     def db_collection_for_comparison_for(manager_uuids_set)
+      # TODO(lsmola) this should have the build_multi_selection_condition, like in the method above
       full_collection_for_comparison.where(manager_ref.first => manager_uuids_set)
     end
 
     def db_collection_for_comparison_for_complement_of(manager_uuids_set)
+      # TODO(lsmola) this should have the build_multi_selection_condition, like in the method above
       full_collection_for_comparison.where.not(manager_ref.first => manager_uuids_set)
     end
 
