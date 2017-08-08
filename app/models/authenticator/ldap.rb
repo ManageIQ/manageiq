@@ -17,8 +17,7 @@ module Authenticator
     end
 
     def lookup_by_identity(username)
-      super ||
-        find_or_create_by_ldap(username)
+      super || User.find_by_userid(plain_username_from_dn_or_upn(username))
     end
 
     def user_authorizable_without_authentication?
@@ -26,6 +25,13 @@ module Authenticator
     end
 
     private
+
+    def plain_username_from_dn_or_upn(username)
+      username = miq_ldap.fqusername(username)
+
+      return username.split("@").first if username.include?("@")
+      username[/=(.*?),/m, 1] || username
+    end
 
     def ldap
       @ldap ||= ldap_bind(config[:bind_dn], config[:bind_pwd])
@@ -39,22 +45,6 @@ module Authenticator
     def ldap_bind(username, password)
       ldap = MiqLdap.new(:auth => config)
       ldap if ldap.bind(username, password)
-    end
-
-    def find_or_create_by_ldap(username)
-      username = miq_ldap.fqusername(username)
-      user = userprincipal_for(username)
-      return user unless user.nil?
-
-      raise _("Unable to auto-create user because LDAP bind credentials are not configured") unless authorize?
-
-      create_user_from_ldap(username) do |lobj|
-        groups = match_groups(groups_for(lobj))
-        if groups.empty?
-          raise _("Unable to auto-create user because unable to match user's group membership to an EVM role")
-        end
-        groups
-      end
     end
 
     def autocreate_user(username)
@@ -100,25 +90,6 @@ module Authenticator
       _log.debug("User obj from LDAP: #{lobj.inspect}")
 
       lobj
-    end
-
-    def userprincipal_for(username)
-      return find_user_in_db(username) unless authorize?
-
-      lobj = find_external_identity(username)
-      User.find_by_userid(userid_for(lobj, username))
-    end
-
-    def find_user_in_db(username)
-      user = User.find_by_userid(username)
-      return user unless user.nil?
-
-      User.find_by_userid(plain_username_from_dn_or_upn(username))
-    end
-
-    def plain_username_from_dn_or_upn(username)
-      return username.split("@").first if username.include?("@")
-      username[/=(.*?),/m, 1] || username
     end
 
     def userid_for(lobj, username)
