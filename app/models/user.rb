@@ -267,7 +267,7 @@ class User < ApplicationRecord
   end
 
   def self.missing_user_features(db_user)
-    if !db_user || !db_user.userid
+    if !db_user
       "User"
     elsif !db_user.current_group
       "Group"
