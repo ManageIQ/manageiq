@@ -342,6 +342,10 @@ class MiqWorker < ApplicationRecord
     end
   end
 
+  # Overriding queue_name as now some queue names can be
+  # arrays of names for some workers not just a singular name.
+  # We use JSON.parse as the array of names is stored as a string.
+  # This converts it back to a Ruby Array safely.
   def queue_name
     begin
       JSON.parse(self[:queue_name])
