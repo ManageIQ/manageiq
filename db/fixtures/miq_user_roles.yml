@@ -985,6 +985,7 @@
   - vms_filter_accord
   - instances_filter_accord
   - datacenter_controller
+  - storage
   - storage_pod
   - dashboard
   - miq_report
