@@ -175,6 +175,8 @@ group :ui_dependencies, :manageiq_default do # Added to Bundler.require in confi
   # Modified gems (forked on Github)
   gem "font-fabulous",                                                :git => "https://github.com/ManageIQ/font-fabulous.git", :branch => "master" # FIXME: this is just a temporary solution and it'll go to the ui-classic later
   gem "jquery-rjs",                   "=0.1.1",                       :git => "https://github.com/ManageIQ/jquery-rjs.git", :tag => "v0.1.1-1"
+  # temporary fix to prevent webpacker from modifying existing rake tasks
+  gem 'webpacker', :require => false, :git => "https://github.com/himdel/webpacker.git", :branch => "2.0-without-enhance"
 end
 
 group :web_server, :manageiq_default do
