@@ -4,15 +4,30 @@ module ManagerRefresh::SaveCollection
       include Vmdb::Logging
       include ManagerRefresh::SaveCollection::Saver::SqlHelper
 
-      attr_reader :inventory_collection
+      attr_reader :inventory_collection, :association
 
       def initialize(inventory_collection)
         @inventory_collection = inventory_collection
 
         # Private attrs
+        @primary_key            = inventory_collection.model_class.primary_key
+        @arel_primary_key       = inventory_collection.model_class.arel_attribute(primary_key)
         @unique_index_keys      = inventory_collection.manager_ref_to_cols
+        @unique_index_keys_to_s = inventory_collection.manager_ref_to_cols.map(&:to_s)
+        @select_keys            = [@primary_key.to_sym] + inventory_collection.manager_ref_to_cols
         @unique_db_primary_keys = Set.new
         @unique_db_indexes      = Set.new
+
+        # TODO(lsmola) do I need to reload every time? Also it should be enough to clear the associations.
+        inventory_collection.parent.reload if inventory_collection.parent
+        @association = inventory_collection.db_collection_for_comparison
+
+        # Right not ApplicationRecordIterator in association is used for targeted refresh. Given the small amounts of
+        # records flowing through there, we probably don't need to optimize that association to fetch pure SQL.
+        @pure_sql_records_fetching = !inventory_collection.use_ar_object? && !@association.kind_of?(ManagerRefresh::ApplicationRecordIterator)
+
+        @record_key_method = @pure_sql_records_fetching ? :pure_sql_record_key : :ar_record_key
+        @select_keys_indexes = @select_keys.each_with_object({}).with_index { |(key, obj), index| obj[key.to_s] = index }
       end
 
       def save_inventory_collection!
@@ -22,16 +37,13 @@ module ManagerRefresh::SaveCollection
         # job. We want to do 1 :delete_complement job at 1 time, to keep to memory down.
         return delete_complement if inventory_collection.all_manager_uuids.present?
 
-        # TODO(lsmola) do I need to reload every time? Also it should be enough to clear the associations.
-        inventory_collection.parent.reload if inventory_collection.parent
-        association = inventory_collection.db_collection_for_comparison
-
         save!(association)
       end
 
       private
 
-      attr_reader :unique_index_keys, :unique_db_primary_keys, :unique_db_indexes
+      attr_reader :unique_index_keys, :unique_index_keys_to_s, :select_keys, :unique_db_primary_keys, :unique_db_indexes,
+                  :primary_key, :arel_primary_key, :record_key_method, :pure_sql_records_fetching, :select_keys_indexes
 
       def save!(association)
         attributes_index        = {}
@@ -62,7 +74,7 @@ module ManagerRefresh::SaveCollection
               delete_record!(record) if inventory_collection.delete_allowed?
             else
               # Record was found in the DB and sent for saving, we will be updating the DB.
-              update_record!(record, hash, inventory_object) if assert_referential_integrity(hash, inventory_object)
+              update_record!(record, hash, inventory_object) if assert_referential_integrity(hash)
             end
           end
         end
@@ -77,7 +89,7 @@ module ManagerRefresh::SaveCollection
             inventory_objects_index.each do |index, inventory_object|
               hash = attributes_index.delete(index)
 
-              create_record!(hash, inventory_object) if assert_referential_integrity(hash, inventory_object)
+              create_record!(hash, inventory_object) if assert_referential_integrity(hash)
             end
           end
         end
@@ -95,7 +107,12 @@ module ManagerRefresh::SaveCollection
       end
 
       def batch_size
-        inventory_collection.batch_size
+        # We can do bigger batch size for the pure SQL, since it will be much smaller than loading AR objects
+        pure_sql_records_fetching ? 10_000 : inventory_collection.batch_size
+      end
+
+      def record_key(record, key)
+        record.public_send(key)
       end
 
       def delete_complement
@@ -133,7 +150,7 @@ module ManagerRefresh::SaveCollection
       end
 
       def assert_distinct_relation(record)
-        if unique_db_primary_keys.include?(record.id) # Include on Set is O(1)
+        if unique_db_primary_keys.include?(record_key(record, primary_key)) # Include on Set is O(1)
           # Change the InventoryCollection's :association or :arel parameter to return distinct results. The :through
           # relations can return the same record multiple times. We don't want to do SELECT DISTINCT by default, since
           # it can be very slow.
@@ -145,17 +162,17 @@ module ManagerRefresh::SaveCollection
             raise("Please update :association or :arel for #{inventory_collection} to return a DISTINCT result. ")
           end
         else
-          unique_db_primary_keys << record.id
+          unique_db_primary_keys << record_key(record, primary_key)
         end
         true
       end
 
-      def assert_referential_integrity(hash, inventory_object)
-        inventory_object.inventory_collection.fixed_foreign_keys.each do |x|
-          next unless hash[x].blank?
-          subject = "#{inventory_object} of #{inventory_object.inventory_collection} because of missing foreign key #{x} for "\
-                    "#{inventory_object.inventory_collection.parent.class.name}:"\
-                    "#{inventory_object.inventory_collection.parent.try(:id)}"
+      def assert_referential_integrity(hash)
+        inventory_collection.fixed_foreign_keys.each do |x|
+          next unless hash[x].nil?
+          subject = "#{hash} of #{inventory_collection} because of missing foreign key #{x} for "\
+                    "#{inventory_collection.parent.class.name}:"\
+                    "#{inventory_collection.parent.try(:id)}"
           if Rails.env.production?
             _log.warn("Referential integrity check violated, ignoring #{subject}")
             return false
@@ -186,7 +203,7 @@ module ManagerRefresh::SaveCollection
       end
 
       def assign_attributes_for_create!(hash, create_time)
-        hash[:type]         = inventory_collection.model_class.name if inventory_collection.supports_sti? && hash[:type].blank?
+        hash[:type]         = inventory_collection.model_class.name if inventory_collection.supports_sti? && hash[:type].nil?
         hash[:created_on]   = create_time if inventory_collection.supports_timestamps_on_variant?
         hash[:created_at]   = create_time if inventory_collection.supports_timestamps_at_variant?
         assign_attributes_for_update!(hash, create_time)
