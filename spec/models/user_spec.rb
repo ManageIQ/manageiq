@@ -81,6 +81,27 @@ describe User do
     end
   end
 
+  describe ".missing_user_features" do
+    it "user with group and role returns nil" do
+      user = FactoryGirl.create(:user_admin)
+      expect(User.missing_user_features(user)).to be_nil
+    end
+
+    it "no user returns 'User'" do
+      expect(User.missing_user_features(nil)).to eq "User"
+    end
+
+    it "missing group returns 'Group'" do
+      user = FactoryGirl.create(:user)
+      expect(User.missing_user_features(user)).to eq "Group"
+    end
+
+    it "missing role returns 'Role'" do
+      user = FactoryGirl.create(:user_with_group)
+      expect(User.missing_user_features(user)).to eq "Role"
+    end
+  end
+
   describe "role methods" do
     let(:user) do
       FactoryGirl.create(:user,
