@@ -151,9 +151,9 @@ module ManagerRefresh::SaveCollection
         @pg_types_cache = {}
         all_attribute_keys.each do |key|
           @pg_types_cache[key] = inventory_collection.model_class.columns_hash[key.to_s]
-                                   .try(:sql_type_metadata)
-                                   .try(:instance_values)
-                                   .try(:[], "sql_type")
+                                                     .try(:sql_type_metadata)
+                                                     .try(:instance_values)
+                                                     .try(:[], "sql_type")
         end
       end
     end
