@@ -350,16 +350,6 @@ class MiqWorker < ApplicationRecord
     end
   end
 
-  def queue_name=(value)
-    begin
-      JSON.parse(value)
-    rescue JSON::ParserError
-      value.to_json unless value.nil?
-    rescue TypeError
-    end
-    super(value)
-  end
-
   def start_runner
     if ENV['MIQ_SPAWN_WORKERS'] || !Process.respond_to?(:fork)
       start_runner_via_spawn
