@@ -140,6 +140,12 @@ class CustomButton < ApplicationRecord
     enablement_expression.lenient_evaluate(object)
   end
 
+  def evaluate_visibility_expression_for(object)
+    return true unless visibility_expression
+    return false if visibility_expression && !object # object == nil, method is called for list of objects
+    visibility_expression.lenient_evaluate(object)
+  end
+
   # End - Helper methods to support moving automate columns to resource_actions table
 
   def self.parse_uri(uri)
