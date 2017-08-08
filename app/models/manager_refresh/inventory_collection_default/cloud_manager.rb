@@ -2,12 +2,14 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
   class << self
     def vms(extra_attributes = {})
       attributes = {
-        :model_class          => ::ManageIQ::Providers::CloudManager::Vm,
-        :association          => :vms,
-        :delete_method        => :disconnect_inv,
-        :attributes_blacklist => [:genealogy_parent],
-        :unique_index_columns => [:ems_id, :ems_ref],
-        :builder_params       => {
+        :model_class            => ::ManageIQ::Providers::CloudManager::Vm,
+        :association            => :vms,
+        :delete_method          => :disconnect_inv,
+        :attributes_blacklist   => [:genealogy_parent],
+        :unique_index_columns   => [:ems_id, :ems_ref],
+        :use_ar_object          => true, # Because of raw_power_state setter
+        :batch_extra_attributes => [:power_state, :state_changed_on, :previous_state],
+        :builder_params         => {
           :ems_id   => ->(persister) { persister.manager.id },
           :name     => "unknown",
           :location => "unknown",
@@ -19,12 +21,14 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
 
     def miq_templates(extra_attributes = {})
       attributes = {
-        :model_class          => ::ManageIQ::Providers::CloudManager::Template,
-        :association          => :miq_templates,
-        :delete_method        => :disconnect_inv,
-        :attributes_blacklist => [:genealogy_parent],
-        :unique_index_columns => [:ems_id, :ems_ref],
-        :builder_params       => {
+        :model_class            => ::ManageIQ::Providers::CloudManager::Template,
+        :association            => :miq_templates,
+        :delete_method          => :disconnect_inv,
+        :attributes_blacklist   => [:genealogy_parent],
+        :unique_index_columns   => [:ems_id, :ems_ref],
+        :use_ar_object          => true, # Because of raw_power_state setter
+        :batch_extra_attributes => [:power_state, :state_changed_on, :previous_state],
+        :builder_params         => {
           :ems_id   => ->(persister) { persister.manager.id },
           :name     => "unknown",
           :location => "unknown",
@@ -79,6 +83,8 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
         :manager_ref                  => [:vm_or_template],
         :association                  => :hardwares,
         :parent_inventory_collections => [:vms, :miq_templates],
+        # TODO(lsmola) just because of default value on cpu_sockets, this can be fixed by separating instances_hardwares and images_hardwares
+        :use_ar_object                => true,
       }
 
       attributes[:custom_manager_uuid] = lambda do |hardware|
