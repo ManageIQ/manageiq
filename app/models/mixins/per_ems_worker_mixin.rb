@@ -101,10 +101,19 @@ module PerEmsWorkerMixin
     end
 
     def ems_id_from_queue_name(queue_name)
-      return nil if queue_name.blank?
-      name, id = queue_name.split("_")
-      return nil unless name == "ems"
-      id.to_i
+      if queue_name.kind_of?(Array)
+        queue_names = []
+        queue_name.each do |queue|
+          name, id = queue.split("_")
+          queue_names << id if name == "ems"
+        end
+        queue_names
+      else
+        return nil if queue_name.blank?
+        name, id = queue_name.split("_")
+        return nil unless name == "ems"
+        id.to_i
+      end
     end
 
     def ems_from_queue_name(queue_name)

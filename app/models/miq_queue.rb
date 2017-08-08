@@ -108,9 +108,9 @@ class MiqQueue < ApplicationRecord
     options[:priority]    ||= create_with_options[:priority] || NORMAL_PRIORITY
     options[:queue_name]  ||= create_with_options[:queue_name] || "generic"
     options[:msg_timeout] ||= create_with_options[:msg_timeout] || TIMEOUT
-    options[:task_id]      = $_miq_worker_current_msg.try(:task_id) unless options.key?(:task_id)
+    options[:task_id]        = $_miq_worker_current_msg.try(:task_id) unless options.key?(:task_id)
     options[:tracking_label] = Thread.current[:tracking_label] || options[:task_id] unless options.key?(:tracking_label)
-    options[:role]         = options[:role].to_s unless options[:role].nil?
+    options[:role]           = options[:role].to_s unless options[:role].nil?
 
     options[:args] = [options[:args]] if options[:args] && !options[:args].kind_of?(Array)
 
