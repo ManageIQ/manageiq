@@ -122,7 +122,7 @@ module ManageIQ::Providers::Microsoft::InfraManager::Provision::Cloning
 
       $vm = New-SCVirtualMachine \
         -Name '#{dest_name}' \
-        -VMHost #{dest_host} \
+        -VMHost '#{dest_host}' \
         -Path '#{dest_mount_point}' \
         -VMTemplate #{template_ps_script}; \
       Set-SCVirtualMachine -VM $vm \
