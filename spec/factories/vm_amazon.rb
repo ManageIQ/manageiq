@@ -8,5 +8,9 @@ FactoryGirl.define do
         FactoryGirl.create(:ems_amazon, :vms => [x])
       end
     end
+
+    trait :powered_off do
+      raw_power_state "stopped"
+    end
   end
 end

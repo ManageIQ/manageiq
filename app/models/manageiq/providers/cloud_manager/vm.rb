@@ -91,7 +91,7 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   end
 
   def perf_rollup_parents(interval_name = nil)
-    [availability_zone, host_aggregates].compact.flatten unless interval_name == 'realtime'
+    [availability_zone, host_aggregates, service].compact.flatten unless interval_name == 'realtime'
   end
 
   #

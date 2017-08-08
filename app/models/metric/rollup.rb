@@ -68,6 +68,25 @@ module Metric::Rollup
       :derived_memory_used,
       :net_usage_rate_average,
       :disk_usage_rate_average
+    ],
+    :Service_vms                           => [
+      :cpu_ready_delta_summation,
+      :cpu_system_delta_summation,
+      :cpu_usage_rate_average,
+      :cpu_usagemhz_rate_average,
+      :cpu_used_delta_summation,
+      :cpu_wait_delta_summation,
+      :derived_vm_allocated_disk_storage,
+      :derived_vm_numvcpus,
+      :derived_vm_used_disk_storage,
+      :derived_memory_used,
+      :derived_memory_available,
+      :disk_devicelatency_absolute_average,
+      :disk_kernellatency_absolute_average,
+      :disk_queuelatency_absolute_average,
+      :disk_usage_rate_average,
+      :mem_usage_absolute_average,
+      :net_usage_rate_average,
     ]
   }
 

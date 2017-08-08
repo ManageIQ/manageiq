@@ -26,6 +26,9 @@ class Service < ApplicationRecord
   belongs_to :service_template               # Template this service was cloned from
 
   has_many :dialogs, -> { distinct }, :through => :service_template
+  has_many :metrics, :as => :resource
+  has_many :metric_rollups, :as => :resource
+  has_many :vim_performance_states, :as => :resource
 
   has_one :miq_request_task, :dependent => :nullify, :as => :destination
   has_one :miq_request, :through => :miq_request_task
@@ -61,6 +64,7 @@ class Service < ApplicationRecord
   include ProcessTasksMixin
   include TenancyMixin
   include SupportsFeatureMixin
+  include Metric::CiMixin
 
   include_concern 'RetirementManagement'
   include_concern 'Aggregation'
@@ -392,5 +396,15 @@ class Service < ApplicationRecord
       :args        => options
     )
     _log.info "Added to queue: generate_chargeback_report for service #{name}"
+  end
+
+  #
+  # Metric methods
+  #
+
+  PERF_ROLLUP_CHILDREN = :vms
+
+  def perf_rollup_parents(interval_name = nil)
+    [].compact unless interval_name == 'realtime'
   end
 end
