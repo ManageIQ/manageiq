@@ -22,8 +22,8 @@ module ManagerRefresh::SaveCollection
         inventory_collection.parent.reload if inventory_collection.parent
         @association = inventory_collection.db_collection_for_comparison
 
-        # Right not ApplicationRecordIterator in association is used for targeted refresh. Given the small amounts of
-        # records flowing through there, we probably don't need to optimize that association to fetch pure SQL.
+        # Right now ApplicationRecordIterator in association is used for targeted refresh. Given the small amount of
+        # records flowing through there, we probably don't need to optimize that association to fetch a pure SQL.
         @pure_sql_records_fetching = !inventory_collection.use_ar_object? && !@association.kind_of?(ManagerRefresh::ApplicationRecordIterator)
 
         @record_key_method = @pure_sql_records_fetching ? :pure_sql_record_key : :ar_record_key

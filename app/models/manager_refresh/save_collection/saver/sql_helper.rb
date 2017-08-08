@@ -71,7 +71,6 @@ module ManagerRefresh::SaveCollection
       end
 
       def get_connection
-        # Cache the connection for the batch
         ActiveRecord::Base.connection
       end
 

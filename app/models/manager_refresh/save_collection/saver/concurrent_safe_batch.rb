@@ -21,8 +21,9 @@ module ManagerRefresh::SaveCollection
 
       def batch_iterator(association)
         if pure_sql_records_fetching
-          # Building fast iterator doing pure SQL query avoiding redundant creation of AR objects, responds to
-          # find_in_batches. For targeted refresh, the association can already be ApplicationRecordIterator.
+          # Building fast iterator doing pure SQL query and therefore avoiding redundant creation of AR objects. The
+          # iterator responds to find_in_batches, so it acts like the AR relation. For targeted refresh, the association
+          # can already be ApplicationRecordIterator, so we will skip that.
           pure_sql_iterator = lambda do |&block|
             primary_key_offset = nil
             loop do
@@ -42,7 +43,7 @@ module ManagerRefresh::SaveCollection
 
           ManagerRefresh::ApplicationRecordIterator.new(:iterator => pure_sql_iterator)
         else
-          # Normal rails association where we will call find_in_batches
+          # Normal Rails relation where we can call find_in_batches
           association
         end
       end
