@@ -133,6 +133,13 @@ class CustomButton < ApplicationRecord
   def get_resource_action
     resource_action || build_resource_action
   end
+
+  def evaluate_enablement_expression_for(object)
+    return true unless enablement_expression
+    return false if enablement_expression && !object # list
+    enablement_expression.lenient_evaluate(object)
+  end
+
   # End - Helper methods to support moving automate columns to resource_actions table
 
   def self.parse_uri(uri)
