@@ -266,6 +266,16 @@ class User < ApplicationRecord
     current_user.admin_user? ? all : includes(:miq_groups).where(:miq_groups => {:id => current_user.miq_group_ids})
   end
 
+  def self.missing_user_features(db_user)
+    if !db_user || !db_user.userid
+      "User"
+    elsif !db_user.current_group
+      "Group"
+    elsif !db_user.current_group.miq_user_role
+      "Role"
+    end
+  end
+
   def self.seed
     seed_data.each do |user_attributes|
       user_id = user_attributes[:userid]
