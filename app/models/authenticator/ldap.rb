@@ -20,18 +20,19 @@ module Authenticator
       super || User.find_by_userid(plain_username_from_dn_or_upn(username))
     end
 
+    def autocreate_user(username)
+      # when default group for ldap users is enabled, create the user
+      return unless config[:default_group_for_users]
+      default_group = MiqGroup.in_my_region.find_by(:description => config[:default_group_for_users])
+      return unless default_group
+      create_user_from_ldap(username) { [default_group] }
+    end
+
     def user_authorizable_without_authentication?
       true
     end
 
     private
-
-    def plain_username_from_dn_or_upn(username)
-      username = miq_ldap.fqusername(username)
-
-      return username.split("@").first if username.include?("@")
-      username[/=(.*?),/m, 1] || username
-    end
 
     def ldap
       @ldap ||= ldap_bind(config[:bind_dn], config[:bind_pwd])
@@ -47,12 +48,10 @@ module Authenticator
       ldap if ldap.bind(username, password)
     end
 
-    def autocreate_user(username)
-      # when default group for ldap users is enabled, create the user
-      return unless config[:default_group_for_users]
-      default_group = MiqGroup.in_my_region.find_by(:description => config[:default_group_for_users])
-      return unless default_group
-      create_user_from_ldap(username) { [default_group] }
+    def plain_username_from_dn_or_upn(username)
+      username = miq_ldap.fqusername(username)
+      return username.split("@").first if username.include?("@")
+      username[/=(.*?),/m, 1] || username
     end
 
     def create_user_from_ldap(username)

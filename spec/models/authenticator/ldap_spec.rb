@@ -62,6 +62,7 @@ describe Authenticator::Ldap do
       'rootdn' => {:password => 'verysecret'},
       'alice'  => alice_data,
       'bob'    => bob_data,
+      'bobby'  => bobby_data,
       'betty'  => betty_data,
       'sam'    => sam_data,
     }
@@ -85,6 +86,17 @@ describe Authenticator::Ldap do
       :givenname         => 'Bob',
       :sn                => 'Builderson',
       :mail              => 'bob@example.com',
+      :groups            => %w(wibble bubble),
+    }
+  end
+  let(:bobby_data) do
+    {
+      :userprincipalname => 'bobby',
+      :password          => 'secret',
+      :displayname       => 'Bobby Builderson',
+      :givenname         => 'Bobby',
+      :sn                => 'Builderson',
+      :mail              => 'bobby@example.com',
       :groups            => %w(wibble bubble),
     }
   end
@@ -143,29 +155,13 @@ describe Authenticator::Ldap do
       end
     end
 
-    context "validates the username but failes to auto-create it" do
-      let(:error_string) { "Unable to auto-create user because LDAP bind credentials are not configured" }
-      it "when username is simple format" do
-        expect { subject.lookup_by_identity('big_alice') }.to raise_error(RuntimeError, error_string)
-      end
-
-      it "when username is UPN format" do
-        expect { subject.lookup_by_identity('big_alice@example.com') }.to raise_error(RuntimeError, error_string)
-      end
-
-      it "when username is dn" do
-        expect { subject.lookup_by_identity('cn=big_alice,ou=prod,dc=example,dc=com') }
-          .to raise_error(RuntimeError, error_string)
-      end
-    end
-
     it "normalizes usernames" do
       expect(subject.lookup_by_identity('aXlice')).to eq(alice)
     end
 
     context "using internal authorization" do
       it "refuses users that exist in LDAP" do
-        expect(-> { subject.lookup_by_identity('bob') }).to raise_error(/credentials are not configured/)
+        expect(subject.lookup_by_identity('bob')).to eq(nil)
       end
 
       it "refuses users that don't exist in LDAP" do
@@ -173,24 +169,22 @@ describe Authenticator::Ldap do
       end
     end
 
-    context "using external authorization" do
-      let(:config) { super().merge(:ldap_role => true) }
+    context "not getting groups from LDAP" do
+      let(:config) { super().merge(:ldap_role => false) }
 
-      it "creates new users from LDAP" do
-        expect(subject.lookup_by_identity('bob')).to be_a(User)
-        expect(subject.lookup_by_identity('bob').name).to eq('Bob Builderson')
+      context "with a default group" do
+        let(:config) { super().merge(:default_group_for_users => 'wibble') }
+
+        it "creates new users from LDAP" do
+          expect(subject.lookup_by_identity('bob')).to eq(nil)
+          expect(subject.autocreate_user('bob').name).to eq('Bob Builderson')
+        end
       end
 
-      it "normalizes new users' names" do
-        expect(subject.lookup_by_identity('bXob')).to be_a(User)
-        expect(subject.lookup_by_identity('bXob').userid).to eq('bob')
-        expect(subject.lookup_by_identity('bXob').name).to eq('Bob Builderson')
-      end
-
-      context "with no matching groups" do
-        let(:bob_data) { super().merge(:groups => %w(bubble trouble)) }
+      context "with no default group" do
+        let(:config) { super().merge(:default_group_for_users => '') }
         it "refuses LDAP users" do
-          expect(-> { subject.lookup_by_identity('bob') }).to raise_error(/unable to match.*membership/)
+          expect(subject.autocreate_user('bob')).to eq(nil)
         end
       end
 
@@ -215,10 +209,6 @@ describe Authenticator::Ldap do
 
     let(:username) { 'alice' }
     let(:password) { 'secret' }
-
-    before do
-      allow(subject).to receive(:find_or_create_by_ldap)
-    end
 
     context "when using LDAP" do
       let(:config) { super().merge(:ldap_role => true) }
