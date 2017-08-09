@@ -724,24 +724,15 @@ class MiqAction < ApplicationRecord
     rec.scan
   end
 
-  def action_container_image_annotate_allow_execution(action, rec, inputs)
+  def action_container_image_annotate_scan_results(action, rec, inputs)
     MiqPolicy.logger.info("MIQ(#{__method__}): Now executing  [#{action.description}]")
-    openshift_container_image_annotate_method(action, rec, inputs, "annotate_allow_execution")
-  end
-
-  def action_container_image_annotate_deny_execution(action, rec, inputs)
-    MiqPolicy.logger.info("MIQ(#{__method__}): Now executing  [#{action.description}]")
-    openshift_container_image_annotate_method(action, rec, inputs, "annotate_deny_execution")
-  end
-
-  def openshift_container_image_annotate_method(action, rec, inputs, method_name)
     error_prefix = "MIQ(#{__method__}): Unable to perform action [#{action.description}], "
     unless rec.kind_of?(ContainerImage)
       MiqPolicy.logger.error("#{error_prefix} object [#{rec.inspect}] is not a Container Image")
       return
     end
 
-    unless rec.respond_to?(:annotate_deny_execution)
+    unless rec.respond_to?(:annotate_scan_policy_results)
       MiqPolicy.logger.error("#{error_prefix} ContainerImage is not linked with an OpenShift image")
       return
     end
@@ -749,7 +740,7 @@ class MiqAction < ApplicationRecord
     if inputs[:synchronous]
       MiqPolicy.logger.info("MIQ(#{__method__}): Now executing  [#{action.description}] for event "\
                             "[#{inputs[:event].description}]")
-      rec.send(method_name.to_sym, inputs[:policy].name)
+      rec.annotate_scan_policy_results(inputs[:policy].name, inputs[:result])
     else
       MiqPolicy.logger.info("MIQ(#{__method__}): Queueing [#{action.description}] for event "\
                             "[#{inputs[:event].description}]")
@@ -757,8 +748,8 @@ class MiqAction < ApplicationRecord
         :service     => "ems_operations",
         :affinity    => rec.ext_management_system,
         :class_name  => rec.class.name,
-        :method_name => method_name,
-        :args        => inputs[:policy].name,
+        :method_name => :annotate_scan_policy_results,
+        :args        => [inputs[:policy].name, inputs[:result]],
         :instance_id => rec.id,
         :priority    => MiqQueue::HIGH_PRIORITY,
       )
