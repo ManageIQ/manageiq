@@ -2,7 +2,7 @@
 - reserved: 
   options: 
   guid: 9bc0d572-40bd-11de-bd12-005056a170fa
-  expression: !ruby/object:MiqExpression 
+  miq_expression: !ruby/object:MiqExpression
     exp: 
       FIND: 
         search: 
@@ -17,7 +17,7 @@
 - reserved: 
   options: 
   guid: fc2ae066-44b8-11de-900a-005056a170fa
-  expression: 
+  hash_expression:
     :mode: internal
     :options: 
       :event_log_message_filter_type: INCLUDES
@@ -31,7 +31,7 @@
 - reserved: 
   options: 
   guid: 8a6d32a8-44b8-11de-900a-005056a170fa
-  expression: 
+  hash_expression:
     :mode: internal
     :options: 
       :event_log_message_filter_type: INCLUDES
@@ -46,7 +46,7 @@
 - reserved: 
   options: 
   guid: a9532172-44a5-11de-b543-005056a170fa
-  expression: 
+  hash_expression:
     :mode: internal
     :options: 
       :event_types: 
@@ -59,7 +59,7 @@
 - reserved: 
   options: 
   guid: 1bb81254-44a6-11de-b543-005056a170fa
-  expression: 
+  hash_expression:
     :mode: internal
     :options: 
       :event_log_message_filter_type: INCLUDES
@@ -73,7 +73,7 @@
 - reserved: 
   options: 
   guid: ce2f8846-44a5-11de-b543-005056a170fa
-  expression: 
+  hash_expression:
     :mode: internal
     :options: 
       :operator: Decreased
@@ -84,7 +84,7 @@
 - reserved: 
   options: 
   guid: fb73af80-40bd-11de-bd12-005056a170fa
-  expression: 
+  hash_expression:
     :mode: internal
     :options: 
       :event_types: 
@@ -97,7 +97,7 @@
 - reserved: 
   options: 
   guid: e750cdcc-447c-11de-aaba-005056a170fa
-  expression: 
+  hash_expression:
     :mode: internal
     :options: 
       :operator: Increased
@@ -108,7 +108,7 @@
 - reserved: 
   options: 
   guid: d59185a4-40bc-11de-bd12-005056a170fa
-  expression: 
+  hash_expression:
     :mode: internal
     :options: 
       :operator: ">"
@@ -121,7 +121,7 @@
 - reserved: 
   options: 
   guid: c2fc477a-44a5-11de-b543-005056a170fa
-  expression: 
+  hash_expression:
     :mode: internal
     :options: 
       :operator: Increased
@@ -132,7 +132,7 @@
 - reserved: 
   options: 
   guid: fbe4b5ee-447e-11de-aaba-005056a170fa
-  expression: 
+  hash_expression:
     :mode: internal
     :options: 
       :operator: Decreased
@@ -143,7 +143,7 @@
 - reserved: 
   options: 
   guid: 3cfbb5ce-40be-11de-bd12-005056a170fa
-  expression: 
+  hash_expression:
     :mode: internal
     :options: 
       :event_types: 
@@ -156,7 +156,7 @@
 - reserved: 
   options: 
   guid: 731da3b2-40bc-11de-bd12-005056a170fa
-  expression: !ruby/object:MiqExpression 
+  miq_expression: !ruby/object:MiqExpression
     exp: 
       and: 
       - "=": 
@@ -175,7 +175,7 @@
   db: Vm
 - :description: VM Unregistered
   :options: 
-  :expression: !ruby/object:MiqExpression 
+  :miq_expression: !ruby/object:MiqExpression
     exp: 
       and: 
       - IS EMPTY: 
@@ -187,7 +187,7 @@
   :guid: 5cd2b880-be53-11de-8d65-000c290de4f9
 - :description: VMs on local storage
   :options: 
-  :expression: !ruby/object:MiqExpression 
+  :miq_expression: !ruby/object:MiqExpression
     exp: 
       "!=": 
         field: Storage-v_total_hosts
@@ -196,7 +196,7 @@
   :guid: 8261bf0a-be54-11de-8d65-000c290de4f9
 - :description: VM Silver and CPU > 1
   :options: 
-  :expression: !ruby/object:MiqExpression 
+  :miq_expression: !ruby/object:MiqExpression
     exp: 
       and: 
       - CONTAINS: 
@@ -209,7 +209,7 @@
   :guid: fdee2784-bf2c-11de-b3b4-000c290de4f9
 - :description: VM Silver and RAM > 2 GB
   :options: 
-  :expression: !ruby/object:MiqExpression 
+  :miq_expression: !ruby/object:MiqExpression
     exp: 
       and: 
       - CONTAINS: 
@@ -222,7 +222,7 @@
   :guid: 9b61fd9e-bf35-11de-b3b4-000c290de4f9
 - :description: Host VMs >10
   :options: 
-  :expression: !ruby/object:MiqExpression 
+  :miq_expression: !ruby/object:MiqExpression
     exp: 
       ">": 
         field: Host-v_total_vms
@@ -231,7 +231,7 @@
   :guid: 561d023c-bf36-11de-b3b4-000c290de4f9
 - :description: Datacenter VMs > 10
   :options: 
-  :expression: !ruby/object:MiqExpression 
+  :miq_expression: !ruby/object:MiqExpression
     exp: 
       ">": 
         field: Storage-v_total_vms
@@ -240,7 +240,7 @@
   :guid: 82f853b0-bf36-11de-b3b4-000c290de4f9
 - :description: VM CD Drive or Floppy Connected
   :options: 
-  :expression: !ruby/object:MiqExpression 
+  :miq_expression: !ruby/object:MiqExpression
     exp: 
       or: 
       - FIND: 
@@ -265,7 +265,7 @@
   :guid: 58e8a372-bff9-11de-b3b4-000c290de4f9
 - :description: VM Memory Balloon > 250 in last 10 min
   :options: 
-  :expression: 
+  :hash_expression:
     :mode: internal
     :options: 
       :perf_column: mem_vmmemctl_absolute_average
@@ -277,7 +277,7 @@
   :guid: f8b870d0-c23d-11de-a3be-000c290de4f9
 - :description: Cluster DRS not enabled
   :options: 
-  :expression: !ruby/object:MiqExpression 
+  :miq_expression: !ruby/object:MiqExpression
     exp: 
       "=": 
         field: EmsCluster-drs_enabled
@@ -286,7 +286,7 @@
   :guid: eb88f942-c23e-11de-a3be-000c290de4f9
 - :description: Cluster HA not enabled
   :options: 
-  :expression: !ruby/object:MiqExpression 
+  :miq_expression: !ruby/object:MiqExpression
     exp: 
       "=": 
         field: EmsCluster-ha_enabled
@@ -295,7 +295,7 @@
   :guid: 196868de-c23f-11de-a3be-000c290de4f9
 - :description: VM Environment Tag <> Datastore Environment Tag
   :options: 
-  :expression: !ruby/object:MiqExpression 
+  :miq_expression: !ruby/object:MiqExpression
     exp: 
       and: 
       - CONTAINS: 
@@ -309,7 +309,7 @@
   :guid: 4077943a-c240-11de-a3be-000c290de4f9
 - :description: VM Environment Tag <> Host Environment Tag
   :options: 
-  :expression: !ruby/object:MiqExpression 
+  :miq_expression: !ruby/object:MiqExpression
     exp: 
       and: 
       - CONTAINS: 
