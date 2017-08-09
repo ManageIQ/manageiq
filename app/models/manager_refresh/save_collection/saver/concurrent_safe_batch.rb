@@ -162,7 +162,7 @@ module ManagerRefresh::SaveCollection
         rails_delete = %i(destroy delete).include?(inventory_collection.delete_method)
         if !rails_delete && inventory_collection.model_class.respond_to?(inventory_collection.delete_method)
           # We have custom delete method defined on a class, that means it supports batch destroy
-          # TODO(lsmola) store deleted records to IC
+          inventory_collection.store_deleted_records(records.map { |x| {:id => record_key(x, primary_key)} })
           inventory_collection.model_class.public_send(inventory_collection.delete_method, records.map { |x| record_key(x, primary_key) })
         else
           # We have either standard :destroy and :delete rails method, or custom instance level delete method
