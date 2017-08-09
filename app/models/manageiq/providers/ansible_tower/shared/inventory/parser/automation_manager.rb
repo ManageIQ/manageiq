@@ -88,7 +88,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::Inventory::Parser::AutomationM
                                 when 'satellite6' then "#{provider_module}::AutomationManager::Satellite6Credential"
                                 # when 'cloudforms' then "#{provider_module}::AutomationManager::$$$Credential"
                                 when 'gce' then "#{provider_module}::AutomationManager::GoogleCredential"
-                                # when 'azure' then "#{provider_module}::AutomationManager::???Credential"
+                                when 'azure' then "#{provider_module}::AutomationManager::AzureClassicCredential"
                                 when 'azure_rm' then "#{provider_module}::AutomationManager::AzureCredential"
                                 when 'openstack' then "#{provider_module}::AutomationManager::OpenstackCredential"
                                 else "#{provider_module}::AutomationManager::Credential"

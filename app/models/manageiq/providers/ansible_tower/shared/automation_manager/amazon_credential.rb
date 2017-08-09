@@ -1,6 +1,4 @@
 module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::AmazonCredential
-  extend ActiveSupport::Concern
-
   COMMON_ATTRIBUTES = {
     :userid => {
       :label     => N_('Access Key'),
