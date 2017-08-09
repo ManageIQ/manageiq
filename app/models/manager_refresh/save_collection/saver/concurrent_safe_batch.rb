@@ -123,7 +123,7 @@ module ManagerRefresh::SaveCollection
                                   hash
                                 end
               assign_attributes_for_update!(hash_for_update, update_time)
-              inventory_collection.store_updated_records([{:id => record_key(record, primary_key)}])
+              inventory_collection.store_updated_records([{:id => inventory_object.id}])
 
               hash_for_update[:id] = inventory_object.id
               hashes_for_update << hash_for_update
