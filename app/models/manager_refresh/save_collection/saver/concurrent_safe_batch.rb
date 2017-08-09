@@ -58,7 +58,6 @@ module ManagerRefresh::SaveCollection
           all_attribute_keys.merge(attributes_index[index].keys)
         end
 
-        all_attribute_keys << :last_sync_on if inventory_collection.supports_last_sync_on?
         all_attribute_keys += [:created_on, :updated_on] if inventory_collection.supports_timestamps_on_variant?
         all_attribute_keys += [:created_at, :updated_at] if inventory_collection.supports_timestamps_at_variant?
 

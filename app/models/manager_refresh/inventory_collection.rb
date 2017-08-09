@@ -614,11 +614,6 @@ module ManagerRefresh
       @supports_timestamps_at_variant
     end
 
-    def supports_last_sync_on?
-      @supports_last_sync_on = model_class.column_names.include?("last_sync_on") if @supports_last_sync_on.nil?
-      @supports_last_sync_on
-    end
-
     def targeted?
       targeted
     end

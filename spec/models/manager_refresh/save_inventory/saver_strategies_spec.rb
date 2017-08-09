@@ -276,12 +276,6 @@ describe ManagerRefresh::SaveInventory do
             expect(@data[:key_pairs].updated_records).to match_array(record_stats([]))
 
             # Check the changed timestamps
-            if options[:saver_strategy] == :batch
-              # TODO(lsmola) last_sync_on is not set by a model, investigate
-              expect(@vm3.last_sync_on).to be > time_before_refresh
-              expect(@vm31.last_sync_on).to be > time_before_refresh
-              expect(@vm2.last_sync_on).to be > time_before_refresh
-            end
             expect(@vm3.created_on).to be > time_before_refresh
             expect(@vm3.updated_on).to be > time_before_refresh
             expect(@vm31.created_on).to be > time_before_refresh
