@@ -12,9 +12,9 @@ module ManagerRefresh::SaveCollection
         # Private attrs
         @primary_key            = inventory_collection.model_class.primary_key
         @arel_primary_key       = inventory_collection.model_class.arel_attribute(primary_key)
-        @unique_index_keys      = inventory_collection.manager_ref_to_cols
+        @unique_index_keys      = inventory_collection.manager_ref_to_cols.map(&:to_sym)
         @unique_index_keys_to_s = inventory_collection.manager_ref_to_cols.map(&:to_s)
-        @select_keys            = [@primary_key.to_sym] + inventory_collection.manager_ref_to_cols
+        @select_keys            = [@primary_key] + @unique_index_keys_to_s
         @unique_db_primary_keys = Set.new
         @unique_db_indexes      = Set.new
 
