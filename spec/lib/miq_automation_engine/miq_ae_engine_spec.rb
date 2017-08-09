@@ -131,6 +131,7 @@ describe MiqAeEngine do
           args[:instance_name]    = "DEFAULT"
           args[:fqclass_name] = "Factory/StateMachines/ServiceProvision_template"
           args[:user_id] = @user.id
+          args[:miq_group_id] = @user.current_group.id
           expect(MiqAeEngine).to receive(:create_automation_object).with("DEFAULT", attrs, :fqclass => "Factory/StateMachines/ServiceProvision_template").and_return('uri')
           expect(MiqAeEngine.deliver(args)).to eq(@ws)
         end
@@ -467,6 +468,20 @@ describe MiqAeEngine do
     end
   end
 
+  context ".ae_user_object" do
+    it "user stays in the same group" do
+      user_obj = MiqAeEngine.ae_user_object(:user_id => @user.id, :miq_group_id => @user.current_group.id)
+      expect(user_obj.current_group).to eq(@user.current_group)
+    end
+
+    it "user has changed the group" do
+      requester_group = FactoryGirl.create(:miq_group)
+      user_obj = MiqAeEngine.ae_user_object(:user_id => @user.id, :miq_group_id => requester_group.id)
+      expect(user_obj.current_group).to eq(requester_group)
+      expect(user_obj.current_group).not_to eq(@user.current_group)
+    end
+  end
+
   it "a namespace containing a slash is parsed correctly " do
     start   = "namespace/more_namespace/my_favorite_class"
     msg_attrs = "message=testmessage&object_name=REQUEST&request=NOT_THERE"
@@ -780,7 +795,7 @@ describe MiqAeEngine do
     let(:test_class_instance) { test_class.new }
     let(:workspace) { double("MiqAeEngine::MiqAeWorkspaceRuntime", :root => options) }
     let(:user) { FactoryGirl.create(:user_with_group) }
-    let(:options) { {:user_id => user.id, :object_type => test_class_name} }
+    let(:options) { {:user_id => user.id, :miq_group_id => user.current_group.id, :object_type => test_class_name} }
 
     it "#before_ae_starts" do
       allow(MiqAeEngine).to receive(:create_automation_object).with(any_args).and_return(nil)

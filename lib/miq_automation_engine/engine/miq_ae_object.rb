@@ -249,7 +249,7 @@ module MiqAeEngine
 
     def user_info_attributes(user)
       {'user' => user, 'tenant' => user.current_tenant, 'miq_group' => user.current_group}.each do |k, v|
-        value = MiqAeObject.convert_value_based_on_datatype(v.id, v.class.name)
+        value = MiqAeMethodService::MiqAeServiceModelBase.wrap_results(v)
         @attributes[k] = value unless value.nil?
       end
     end
