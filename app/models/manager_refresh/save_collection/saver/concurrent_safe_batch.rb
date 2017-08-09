@@ -15,10 +15,6 @@ module ManagerRefresh::SaveCollection
         record[select_keys_indexes[key]]
       end
 
-      def batch_size_for_persisting
-        10_000
-      end
-
       def batch_iterator(association)
         if pure_sql_records_fetching
           # Building fast iterator doing pure SQL query and therefore avoiding redundant creation of AR objects. The

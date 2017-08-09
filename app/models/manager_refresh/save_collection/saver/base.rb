@@ -26,7 +26,10 @@ module ManagerRefresh::SaveCollection
         # records flowing through there, we probably don't need to optimize that association to fetch a pure SQL.
         @pure_sql_records_fetching = !inventory_collection.use_ar_object? && !@association.kind_of?(ManagerRefresh::ApplicationRecordIterator)
 
-        @record_key_method = @pure_sql_records_fetching ? :pure_sql_record_key : :ar_record_key
+        @batch_size_for_persisting = 10_000
+
+        @batch_size          = @pure_sql_records_fetching ? @batch_size_for_persisting : inventory_collection.batch_size
+        @record_key_method   = @pure_sql_records_fetching ? :pure_sql_record_key : :ar_record_key
         @select_keys_indexes = @select_keys.each_with_object({}).with_index { |(key, obj), index| obj[key.to_s] = index }
       end
 
@@ -43,7 +46,8 @@ module ManagerRefresh::SaveCollection
       private
 
       attr_reader :unique_index_keys, :unique_index_keys_to_s, :select_keys, :unique_db_primary_keys, :unique_db_indexes,
-                  :primary_key, :arel_primary_key, :record_key_method, :pure_sql_records_fetching, :select_keys_indexes
+                  :primary_key, :arel_primary_key, :record_key_method, :pure_sql_records_fetching, :select_keys_indexes,
+                  :batch_size, :batch_size_for_persisting
 
       def save!(association)
         attributes_index        = {}
@@ -104,11 +108,6 @@ module ManagerRefresh::SaveCollection
 
       def inventory_collection_details
         "strategy: #{inventory_collection.strategy}, saver_strategy: #{inventory_collection.saver_strategy}, targeted: #{inventory_collection.targeted?}"
-      end
-
-      def batch_size
-        # We can do bigger batch size for the pure SQL, since it will be much smaller than loading AR objects
-        pure_sql_records_fetching ? 10_000 : inventory_collection.batch_size
       end
 
       def record_key(record, key)
