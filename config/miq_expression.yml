@@ -23,6 +23,7 @@
 - ContainerNodePerformance
 - ContainerProject
 - ContainerProjectPerformance
+- ContainerQuota
 - ContainerReplicator
 - ContainerRoute
 - ContainerService
@@ -87,6 +88,7 @@
 - container_projects
 - container_images
 - container_nodes
+- container_quota_items
 - customization_scripts
 - customization_script_media
 - customization_script_ptables
