@@ -351,9 +351,11 @@ module Rbac
 
     def calc_filtered_ids(scope, user_filters, user, miq_group, scope_tenant_filter)
       klass = scope.respond_to?(:klass) ? scope.klass : scope
+      expression = miq_group.try(:entitlement).try(:filter_expression)
+      expression.set_tagged_target(klass) if expression
       u_filtered_ids = pluck_ids(get_self_service_objects(user, miq_group, klass))
       b_filtered_ids = get_belongsto_filter_object_ids(klass, user_filters['belongsto'])
-      m_filtered_ids = pluck_ids(get_managed_filter_object_ids(scope, user_filters['managed']))
+      m_filtered_ids = pluck_ids(get_managed_filter_object_ids(scope, expression || user_filters['managed']))
       d_filtered_ids = pluck_ids(matches_via_descendants(rbac_class(klass), user_filters['match_via_descendants'],
                                                          :user => user, :miq_group => miq_group))
 
@@ -417,6 +419,7 @@ module Rbac
     end
 
     def get_managed_filter_object_ids(scope, filter)
+      return scope.where(filter.to_sql.first) if filter.kind_of?(MiqExpression)
       klass = scope.respond_to?(:klass) ? scope.klass : scope
       return nil if !TAGGABLE_FILTER_CLASSES.include?(safe_base_class(klass).name) || filter.blank?
       scope.find_tags_by_grouping(filter, :ns => '*').reorder(nil)
