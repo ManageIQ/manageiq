@@ -48,18 +48,19 @@ module PgInspector
         lock["spid"] = lock["pid"].to_i
         lock.delete("pid")
       end
-      locks.each { |lock| lock["blocked_by"] = blocking_lock(lock) }
-      locks
+      locks.each do |lock|
+        lock["blocked_by"] = connection_spids_blocking_lock(lock)
+      end
     end
 
-    def blocking_lock(lock)
+    def connection_spids_blocking_lock(lock)
       return if lock["granted"] == "t"
       blocking_locks = blocking_lock_relation(lock).select do |l|
         lock["spid"] != l["spid"] &&
           l["granted"] == "t"
       end
       spids = blocking_locks.collect { |l| l["spid"] }
-      (spids & spids) if spids
+      spids & spids
     end
 
     def blocking_lock_relation(lock)
