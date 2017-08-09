@@ -69,7 +69,7 @@ MIQ_WORKER_TYPES = {
   "MiqSmartProxyWorker"                                                       => [:smartstate],
   "MiqUiWorker"                                                               => %i(ui_dependencies web_server),
   "MiqVimBrokerWorker"                                                        => [:manageiq_default],
-  "MiqWebServiceWorker"                                                       => %i(rest_api ui_dependencies web_server),
+  "MiqWebServiceWorker"                                                       => %i(automate rest_api ui_dependencies web_server),
   "MiqWebsocketWorker"                                                        => %i(ui_dependencies web_server web_socket)
 }.freeze
 
