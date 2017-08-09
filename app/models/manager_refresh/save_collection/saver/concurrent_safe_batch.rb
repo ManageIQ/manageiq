@@ -200,9 +200,9 @@ module ManagerRefresh::SaveCollection
                  elsif inventory_collection.serializable_keys?(all_attribute_keys)
                    values_for_database(inventory_collection.model_class,
                                        all_attribute_keys,
-                                       attributes_index.delete(index).symbolize_keys)
+                                       attributes_index.delete(index))
                  else
-                   attributes_index.delete(index).symbolize_keys
+                   attributes_index.delete(index)
                  end
 
           assign_attributes_for_create!(hash, create_time)
