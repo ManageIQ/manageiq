@@ -157,6 +157,11 @@ class CustomButton < ApplicationRecord
     BUTTON_CLASSES.collect(&:name)
   end
 
+  def visible_for_current_user?
+    return false unless visibility.key?(:roles)
+    visibility[:roles].include?(User.current_user.miq_user_role_name) || visibility[:roles].include?("_ALL_")
+  end
+
   def self.available_for_user(user, group)
     user = get_user(user)
     role = user.miq_user_role_name
