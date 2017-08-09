@@ -92,7 +92,9 @@ module ManagerRefresh::SaveCollection
           update_time = time_now
 
           batch.each do |record|
-            next unless assert_distinct_relation(record)
+            primary_key_value = record_key(record, primary_key)
+
+            next unless assert_distinct_relation(primary_key_value)
 
             # TODO(lsmola) unify this behavior with object_index_with_keys method in InventoryCollection
             index            = unique_index_keys_to_s.map { |attribute| record_key(record, attribute).to_s }.join(inventory_collection.stringify_joiner)
@@ -108,7 +110,7 @@ module ManagerRefresh::SaveCollection
             else
               # Record was found in the DB and sent for saving, we will be updating the DB.
               next unless assert_referential_integrity(hash)
-              inventory_object.id = record_key(record, primary_key)
+              inventory_object.id = primary_key_value
 
               hash_for_update = if inventory_collection.use_ar_object?
                                   record.assign_attributes(hash.except(:id, :type))
@@ -123,9 +125,9 @@ module ManagerRefresh::SaveCollection
                                   hash
                                 end
               assign_attributes_for_update!(hash_for_update, update_time)
-              inventory_collection.store_updated_records([{:id => inventory_object.id}])
+              inventory_collection.store_updated_records([{:id => primary_key_value}])
 
-              hash_for_update[:id] = inventory_object.id
+              hash_for_update[:id] = primary_key_value
               hashes_for_update << hash_for_update
             end
           end
