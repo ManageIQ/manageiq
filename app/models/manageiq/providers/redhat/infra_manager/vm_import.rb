@@ -45,20 +45,29 @@ module ManageIQ::Providers::Redhat::InfraManager::VmImport
     end
   end
 
+  def check_task!(t, msg)
+    raise msg if t.nil? || MiqTask.status_error?(t.status) || MiqTask.status_timeout?(t.status)
+  end
+
   def submit_import_vm(userid, source_vm_id, target_params)
     task_id = queue_self_method_call(userid, 'Import VM', 'import_vm', source_vm_id, target_params)
     task = MiqTask.wait_for_taskid(task_id)
+
+    check_task!(task, _('Error while importing the VM.'))
 
     task.task_results
   end
 
   def validate_import_vm
-    highest_supported_api_version && highest_supported_api_version >= '4'
+    # The version of the RHV needs to be at least 4.1.5 due to https://bugzilla.redhat.com/1477375
+    version_higher_than?('4.1.5')
   end
 
   def submit_configure_imported_vm_networks(userid, vm_id)
     task_id = queue_self_method_call(userid, "Configure imported VM's networks", 'configure_imported_vm_networks', vm_id)
     task = MiqTask.wait_for_taskid(task_id)
+
+    check_task!(task, _('Error while configuring VM network.'))
 
     task.task_results
   end
@@ -68,7 +77,7 @@ module ManageIQ::Providers::Redhat::InfraManager::VmImport
   def check_import_supported!(source_provider)
     raise _('Cannot import archived VMs') if source_provider.nil?
 
-    raise _('Cannot import to a RHEV provider of version < 4.0') unless api_version >= '4.0'
+    raise _('Cannot import to a RHEV provider of version < 4.1.5') unless validate_import_vm
     unless source_provider.type == ManageIQ::Providers::Vmware::InfraManager.name
       raise _('Source provider must be of type Vmware')
     end
