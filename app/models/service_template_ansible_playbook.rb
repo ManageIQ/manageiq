@@ -1,4 +1,6 @@
 class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
+  include AnsiblePlaybookMixin
+
   before_destroy :check_retirement_potential, :prepend => true
   around_destroy :around_destroy_callback, :prepend => true
 
@@ -72,16 +74,6 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     "miq_#{basic_name}_#{action}"
   end
   private_class_method :build_name
-
-  def self.create_job_template(name, description, info, auth_user)
-    tower, params = build_parameter_list(name, description, info)
-
-    task_id = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript.create_in_provider_queue(tower.id, params, auth_user)
-    task = MiqTask.wait_for_taskid(task_id)
-    raise task.message unless task.status == "Ok"
-    task.task_results
-  end
-  private_class_method :create_job_template
 
   def self.build_parameter_list(name, description, info)
     playbook = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook.find(info[:playbook_id])
