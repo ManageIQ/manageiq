@@ -916,13 +916,13 @@ class MiqExpression
     if model.to_s == "VimPerformanceTrend"
       VimPerformanceTrend.trend_model_details(interval.to_s)
     elsif model.ends_with?("Performance")
-      MiqExpression.model_details(model, :include_model => false, :include_tags => true, :interval => interval)
+      model_details(model, :include_model => false, :include_tags => true, :interval => interval)
     elsif Chargeback.db_is_chargeback?(model)
       cb_model = Chargeback.report_cb_model(model)
-      MiqExpression.model_details(model, :include_model => false, :include_tags => true).select { |c| c.last.ends_with?(*ReportController::Reports::Editor::CHARGEBACK_ALLOWED_FIELD_SUFFIXES) } +
-        MiqExpression.tag_details(cb_model, model, {}) + _custom_details_for(cb_model, {})
+      model_details(model, :include_model => false, :include_tags => true).select { |c| c.last.ends_with?(*ReportController::Reports::Editor::CHARGEBACK_ALLOWED_FIELD_SUFFIXES) } +
+        tag_details(cb_model, model, {}) + _custom_details_for(cb_model, {})
     else
-      MiqExpression.model_details(model, :include_model => false, :include_tags => true)
+      model_details(model, :include_model => false, :include_tags => true)
     end
   end
 
