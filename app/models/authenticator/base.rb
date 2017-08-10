@@ -151,7 +151,7 @@ module Authenticator
       userid = userid_for(identity, username)
       user   = User.find_by_userid(userid)
       user ||= User.in_my_region.where('lower(userid) = ?', userid).order(:lastlogon).last
-      user ||=  User.new(:userid => userid)
+      user ||= User.new(:userid => userid)
       [userid, user]
     end
 
