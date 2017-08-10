@@ -919,7 +919,9 @@ class MiqExpression
       model_details(model, :include_model => false, :include_tags => true, :interval => interval)
     elsif Chargeback.db_is_chargeback?(model)
       cb_model = Chargeback.report_cb_model(model)
-      md = model_details(model, :include_model => false, :include_tags => true).select { |c| c.last.ends_with?(*ReportController::Reports::Editor::CHARGEBACK_ALLOWED_FIELD_SUFFIXES) }
+      md = model_details(model, :include_model => false, :include_tags => true).select do |c|
+        c.last.ends_with?(*ReportController::Reports::Editor::CHARGEBACK_ALLOWED_FIELD_SUFFIXES)
+      end
       td = tag_details(cb_model, model, {}) + _custom_details_for(cb_model, {})
       md + td
     else
