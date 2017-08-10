@@ -35,7 +35,7 @@ describe MiqProvisionRequest do
     end
 
     it "should not be created with a valid userid but no vm being specified" do
-      expect { FactoryGirl.create(:miq_provision_request, :requester => user) }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { FactoryGirl.create(:miq_provision_request, :requester => user, :source => nil) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "should be created from either a VM or Template" do
