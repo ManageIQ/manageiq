@@ -209,7 +209,7 @@
           ae_message:
           ae_attributes: {}
       - name: install_drivers
-        description: Install necessary drivers as a part of the conversion process
+        description: Install necessary Windows drivers as a part of the conversion process
         data_type:
         notes:
         notes_display:
@@ -224,7 +224,7 @@
         values_method:
         values_method_options: {}
         options: {}
-        label: Install Drivers
+        label: Install Windows Drivers
         position: 5
         validator_type:
         validator_rule:
@@ -246,7 +246,7 @@
           ae_message:
           ae_attributes: {}
       - name: drivers_iso
-        description: ISO where the drivers are located
+        description: Image with drivers
         data_type: string
         notes:
         notes_display:
@@ -263,7 +263,7 @@
         options:
           :force_multi_value: false
           :sort_by: :description
-        label: Drivers ISO
+        label: Drivers
         position: 6
         validator_type:
         validator_rule:
