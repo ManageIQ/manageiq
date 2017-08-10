@@ -62,7 +62,6 @@ describe Authenticator::Ldap do
       'rootdn' => {:password => 'verysecret'},
       'alice'  => alice_data,
       'bob'    => bob_data,
-      'bobby'  => bobby_data,
       'betty'  => betty_data,
       'sam'    => sam_data,
     }
@@ -86,17 +85,6 @@ describe Authenticator::Ldap do
       :givenname         => 'Bob',
       :sn                => 'Builderson',
       :mail              => 'bob@example.com',
-      :groups            => %w(wibble bubble),
-    }
-  end
-  let(:bobby_data) do
-    {
-      :userprincipalname => 'bobby',
-      :password          => 'secret',
-      :displayname       => 'Bobby Builderson',
-      :givenname         => 'Bobby',
-      :sn                => 'Builderson',
-      :mail              => 'bobby@example.com',
       :groups            => %w(wibble bubble),
     }
   end
