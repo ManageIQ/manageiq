@@ -24,7 +24,7 @@ module ManagerRefresh::SaveCollection
             primary_key_offset = nil
             loop do
               relation    = association.select(*select_keys)
-                                       .order("#{primary_key} ASC")
+                                       .reorder("#{primary_key} ASC")
                                        .limit(batch_size)
               # Using rails way of comparing primary key instead of offset
               relation    = relation.where(arel_primary_key.gt(primary_key_offset)) if primary_key_offset
