@@ -802,7 +802,7 @@ class MiqExpression
     opts = {:typ => "all", :include_model => true}.merge(opts)
     if opts[:typ] == "tag"
       tags_for_model = if TAG_CLASSES.include?(model)
-                         tag_details(model, model, opts)
+                         tag_details(model, opts)
                        else
                          []
                        end
@@ -810,7 +810,7 @@ class MiqExpression
       TAG_CLASSES.invert.each do |name, tc|
         next if tc.constantize.base_class == model.constantize.base_class
         path = [model, name].join(".")
-        result.concat(tag_details(tc, path, opts))
+        result.concat(tag_details(path, opts))
       end
       @classifications = nil
       return tags_for_model.concat(result.sort! { |a, b| a.to_s <=> b.to_s })
@@ -829,7 +829,7 @@ class MiqExpression
         custom_details = _custom_details_for(model, opts)
         result.concat(custom_details.sort_by(&:to_s)) unless custom_details.empty?
       end
-      result.concat(tag_details(model, model, opts)) if opts[:include_tags] == true && TAG_CLASSES.include?(model)
+      result.concat(tag_details(model, opts)) if opts[:include_tags] == true && TAG_CLASSES.include?(model)
     end
 
     model_details = _model_details(relats, opts)
@@ -873,7 +873,7 @@ class MiqExpression
       else
         result.concat(get_column_details(ref[:columns], parent[:class_path], parent[:assoc_path], opts))
         if opts[:include_tags] == true && TAG_CLASSES.include?(parent[:assoc_class])
-          result.concat(tag_details(parent[:assoc_class], parent[:class_path], opts))
+          result.concat(tag_details(parent[:class_path], opts))
         end
       end
 
@@ -882,7 +882,7 @@ class MiqExpression
     result
   end
 
-  def self.tag_details(model, path, opts)
+  def self.tag_details(path, opts)
     result = []
     @classifications ||= categories
     @classifications.each do |name, cat|
@@ -927,7 +927,7 @@ class MiqExpression
         c.last.ends_with?(*ReportController::Reports::Editor::CHARGEBACK_ALLOWED_FIELD_SUFFIXES)
       end
       td = if TAG_CLASSES.include?(cb_model)
-             tag_details(cb_model, model, {}) + _custom_details_for(cb_model, {})
+             tag_details(model, {}) + _custom_details_for(cb_model, {})
            else
              []
            end
