@@ -37,11 +37,11 @@ describe Authenticator::Ldap do
 
     it "user does not exist" do
       group = create_super_admin_group
+      @auth_config[:authentication][:default_group_for_users] = group.name
       setup_to_create_user(group)
 
-      expect(current_user).to eq(nil)
-      autocreate_current_user
-      expect(User.all.size).to eq(0)
+      expect(autocreate_current_user).to be_present
+      expect(User.all.size).to eq(1)
     end
   end
 

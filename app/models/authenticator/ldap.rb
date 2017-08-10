@@ -16,10 +16,6 @@ module Authenticator
       end
     end
 
-    def lookup_by_identity(username)
-      super || User.find_by_userid(plain_username_from_dn_or_upn(username))
-    end
-
     def autocreate_user(username)
       # when default group for ldap users is enabled, create the user
       return unless config[:default_group_for_users]
@@ -46,12 +42,6 @@ module Authenticator
     def ldap_bind(username, password)
       ldap = MiqLdap.new(:auth => config)
       ldap if ldap.bind(username, password)
-    end
-
-    def plain_username_from_dn_or_upn(username)
-      username = miq_ldap.fqusername(username)
-      return username.split("@").first if username.include?("@")
-      username[/=(.*?),/m, 1] || username
     end
 
     def create_user_from_ldap(username)
