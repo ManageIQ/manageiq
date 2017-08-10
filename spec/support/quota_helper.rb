@@ -95,7 +95,7 @@ module Spec
       def create_request(prov_options)
         @miq_provision_request = FactoryGirl.create(:miq_provision_request,
                                                     :requester => @user,
-                                                    :src_vm_id => @vm_template.id,
+                                                    :source    => @vm_template,
                                                     :options   => prov_options)
         @miq_request = @miq_provision_request
       end
