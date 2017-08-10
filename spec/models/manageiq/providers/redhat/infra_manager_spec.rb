@@ -288,4 +288,49 @@ describe ManageIQ::Providers::Redhat::InfraManager do
       end
     end
   end
+
+  context "#version_higher_than?" do
+    let(:api_version) { "4.2" }
+    let(:ems) { FactoryGirl.create(:ems_redhat, :api_version => api_version) }
+
+    context "api version is higher or equal than checked version" do
+      it 'supports the right features' do
+        expect(ems.version_higher_than?("4.1")).to be_truthy
+
+        ems.api_version = "4.1.3.2-0.1.el7"
+        expect(ems.version_higher_than?("4.1")).to be_truthy
+
+        ems.api_version = "4.2.0_master"
+        expect(ems.version_higher_than?("4.1")).to be_truthy
+
+        ems.api_version = "4.2.1_master"
+        expect(ems.version_higher_than?("4.2.0")).to be_truthy
+      end
+    end
+
+    context "api version is lowergit  than checked version" do
+      let(:api_version) { "4.0" }
+      it 'supports the right features' do
+        expect(ems.version_higher_than?("4.1")).to be_falsey
+
+        ems.api_version = "4.0.3.2-0.1.el7"
+        expect(ems.version_higher_than?("4.1")).to be_falsey
+
+        ems.api_version = "4.0.0_master"
+        expect(ems.version_higher_than?("4.1")).to be_falsey
+
+        ems.api_version = "4.0.1_master"
+        expect(ems.version_higher_than?("4.0.2")).to be_falsey
+      end
+    end
+
+    context "api version not set" do
+      let(:api_version) { nil }
+      it 'always return false' do
+        expect(ems.version_higher_than?("10.1")).to be_falsey
+
+        expect(ems.version_higher_than?("0")).to be_falsey
+      end
+    end
+  end
 end
