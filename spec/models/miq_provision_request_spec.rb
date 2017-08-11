@@ -141,7 +141,7 @@ describe MiqProvisionRequest do
                                                        :tenant      => user.current_tenant,
                                                        :source      => vm_template,
                                                        :src_vm_id   => vm_template.id,
-                                                       :options     => prov_options)
+                                                       :options     => prov_options.merge(:owner_email => user.email, :requester_group => user.miq_groups.first.description))
           end
 
           def request_queue_entry(request)
@@ -177,8 +177,8 @@ describe MiqProvisionRequest do
             ems = FactoryGirl.create(:ems_vmware)
             vmware_tenant = FactoryGirl.create(:tenant)
             group = FactoryGirl.create(:miq_group, :tenant => vmware_tenant)
-            @vmware_user1 = FactoryGirl.create(:user, :miq_groups => [group])
-            @vmware_user2 = FactoryGirl.create(:user, :miq_groups => [group])
+            @vmware_user1 = FactoryGirl.create(:user_with_email, :miq_groups => [group])
+            @vmware_user2 = FactoryGirl.create(:user_with_email, :miq_groups => [group])
             hardware = FactoryGirl.create(:hardware, :cpu1x2, :memory_mb => 512)
             @vmware_template = FactoryGirl.create(:template_vmware,
                                                   :ext_management_system => ems,
@@ -198,8 +198,8 @@ describe MiqProvisionRequest do
                                      :availability_zones => [FactoryGirl.create(:availability_zone_google)])
             google_tenant = FactoryGirl.create(:tenant)
             group = FactoryGirl.create(:miq_group, :tenant => google_tenant)
-            @google_user1 = FactoryGirl.create(:user, :miq_groups => [group])
-            @google_user2 = FactoryGirl.create(:user, :miq_groups => [group])
+            @google_user1 = FactoryGirl.create(:user_with_email, :miq_groups => [group])
+            @google_user2 = FactoryGirl.create(:user_with_email, :miq_groups => [group])
             @google_template = FactoryGirl.create(:template_google, :ext_management_system => ems)
             flavor = FactoryGirl.create(:flavor_google, :ems_id => ems.id,
                                         :cpus => 4, :cpu_cores => 1, :memory => 1024)
@@ -249,8 +249,8 @@ describe MiqProvisionRequest do
               it_behaves_like "check_quota"
             end
 
-            context "active_provisions_by_user," do
-              let(:quota_method) { :active_provisions_by_user }
+            context "active_provisions_by_owner," do
+              let(:quota_method) { :active_provisions_by_owner }
               let(:counts_hash) do
                 {:count => 4, :memory => 4.gigabytes, :cpu => 8, :storage => 2.gigabytes}
               end
@@ -275,8 +275,8 @@ describe MiqProvisionRequest do
               it_behaves_like "check_quota"
             end
 
-            context "active_provisions_by_user," do
-              let(:quota_method) { :active_provisions_by_user }
+            context "active_provisions_by_owner," do
+              let(:quota_method) { :active_provisions_by_owner }
               let(:counts_hash) do
                 {:count => 2, :memory => 2048, :cpu => 8, :storage => 20.gigabytes}
               end

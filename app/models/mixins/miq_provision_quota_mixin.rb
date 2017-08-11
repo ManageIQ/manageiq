@@ -80,11 +80,6 @@ module MiqProvisionQuotaMixin
     quota_provision_stats(:quota_find_active_prov_request_by_owner, options.merge(:nil_vm_id_only => true))
   end
 
-  # Collect stats based on currently active provision requesets for the same user.
-  def quota_active_provisions_by_user(options)
-    quota_provision_stats(:quota_find_active_prov_request_by_user, options.merge(:nil_vm_id_only => true))
-  end
-
   def quota_active_provisions(options)
     quota_provision_stats(:quota_find_active_prov_request, options.merge(:nil_vm_id_only => true))
   end
@@ -258,17 +253,21 @@ module MiqProvisionQuotaMixin
 
   def quota_find_active_prov_request_by_owner(options)
     email = get_option(:owner_email).to_s.strip
-    quota_find_active_prov_request(options).select { |p| email.casecmp(p.get_option(:owner_email).to_s.strip) == 0 }
+    quota_find_active_prov_request(options).select { |p| email.casecmp(p.request_owner_email(p)).zero? }
   end
 
-  def quota_find_active_prov_request_by_user(options)
-    quota_find_active_prov_request(options).where(:userid => miq_request.requester.userid)
+  def request_owner_email(request)
+    service_request?(request) ? request.requester.email : request.get_option(:owner_email).to_s.strip
+  end
+
+  def service_request?(request)
+    request.kind_of?(ServiceTemplateProvisionRequest)
   end
 
   def quota_find_active_prov_request_by_group(options)
-    prov_request_group = miq_request.requester.current_group
+    prov_request_group = miq_request.options[:requester_group]
     quota_find_active_prov_request(options).select do |r|
-      prov_request_group == r.requester.current_group
+      prov_request_group == r.options[:requester_group]
     end
   end
 
@@ -348,7 +347,7 @@ module MiqProvisionQuotaMixin
              }
 
     send(prov_method, options).each do |pr|
-      pr.type == "ServiceTemplateProvisionRequest" ? service_quota_values(pr, result) : vm_quota_values(pr, result)
+      service_request?(pr) ? service_quota_values(pr, result) : vm_quota_values(pr, result)
     end
     result
   end

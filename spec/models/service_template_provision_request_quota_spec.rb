@@ -16,7 +16,7 @@ describe ServiceTemplateProvisionRequest do
                                                                 :source_type => "ServiceTemplate",
                                                                 :source_id   => template.id,
                                                                 :process     => true,
-                                                                :options     => prov_options)
+                                                                :options     => prov_options.merge(:owner_email => user.email))
       end
 
       def request_queue_entry(request)
@@ -69,8 +69,8 @@ describe ServiceTemplateProvisionRequest do
         let(:vmware_tasks) do
           ems = FactoryGirl.create(:ems_vmware)
           group = FactoryGirl.create(:miq_group, :tenant => FactoryGirl.create(:tenant))
-          @vmware_user1 = FactoryGirl.create(:user, :miq_groups => [group])
-          @vmware_user2 = FactoryGirl.create(:user, :miq_groups => [group])
+          @vmware_user1 = FactoryGirl.create(:user_with_email, :miq_groups => [group])
+          @vmware_user2 = FactoryGirl.create(:user_with_email, :miq_groups => [group])
           @vmware_template = FactoryGirl.create(:template_vmware,
                                                 :ext_management_system => ems,
                                                 :hardware              => FactoryGirl.create(:hardware, :cpu1x2, :memory_mb => 512))
@@ -111,8 +111,8 @@ describe ServiceTemplateProvisionRequest do
           it_behaves_like "check_quota"
         end
 
-        context "active_provisions_by_user," do
-          let(:quota_method) { :active_provisions_by_user }
+        context "active_provisions_by_owner," do
+          let(:quota_method) { :active_provisions_by_owner }
           let(:counts_hash) do
             {:count => 3, :memory => 3.gigabytes, :cpu => 8, :storage => 1_610_612_736}
           end
@@ -134,8 +134,8 @@ describe ServiceTemplateProvisionRequest do
           ems = FactoryGirl.create(:ems_google_with_authentication,
                                    :availability_zones => [FactoryGirl.create(:availability_zone_google)])
           group = FactoryGirl.create(:miq_group, :tenant => FactoryGirl.create(:tenant))
-          @google_user1 = FactoryGirl.create(:user, :miq_groups => [group])
-          @google_user2 = FactoryGirl.create(:user, :miq_groups => [group])
+          @google_user1 = FactoryGirl.create(:user_with_email, :miq_groups => [group])
+          @google_user2 = FactoryGirl.create(:user_with_email, :miq_groups => [group])
 
           @google_template = FactoryGirl.create(:template_google, :ext_management_system => ems)
           flavor = FactoryGirl.create(:flavor_google, :ems_id => ems.id,
@@ -178,8 +178,8 @@ describe ServiceTemplateProvisionRequest do
           it_behaves_like "check_quota"
         end
 
-        context "active_provisions_by_user," do
-          let(:quota_method) { :active_provisions_by_user }
+        context "active_provisions_by_owner," do
+          let(:quota_method) { :active_provisions_by_owner }
           let(:counts_hash) do
             {:count => 2, :memory => 2048, :cpu => 8, :storage => 20.gigabytes}
           end
