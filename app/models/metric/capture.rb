@@ -9,7 +9,7 @@ module Metric::Capture
   HISTORICAL_PRIORITY = MiqQueue::LOW_PRIORITY
 
   def self.capture_cols
-    Metric.columns_hash.collect { |c, h| c.to_sym if h.type == :float && c[0, 7] != "derived" }.compact
+    @capture_cols ||= Metric.columns_hash.collect { |c, h| c.to_sym if h.type == :float && c[0, 7] != "derived" }.compact
   end
 
   def self.historical_days
