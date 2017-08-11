@@ -5,6 +5,8 @@ class Entitlement < ApplicationRecord
   serialize :filters
   serialize :filter_expression
 
+  validate :one_kind_of_managed_filter
+
   def self.valid_filters?(filters_hash)
     return true  unless filters_hash                  # nil ok
     return false unless filters_hash.kind_of?(Hash)   # must be Hash
@@ -62,6 +64,12 @@ class Entitlement < ApplicationRecord
         filter.delete(filter_to_remove)
       end
       self.filters["managed"].reject!(&:empty?)
+    end
+  end
+
+  def one_kind_of_managed_filter
+    if get_managed_filters.any? && filter_expression
+      errors.add(:base, "cannot have both managed filters and a filter expression")
     end
   end
 end

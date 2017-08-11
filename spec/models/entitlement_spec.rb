@@ -1,4 +1,35 @@
 describe Entitlement do
+  describe "validation" do
+    it "can have a managed filter if it doesn't have a filter expression" do
+      entitlement = FactoryGirl.build(:entitlement)
+      entitlement.set_managed_filters([["/managed/environment/test"]])
+      expect(entitlement).to be_valid
+    end
+
+    it "can have a filter expression if it doesn't have a managed filter" do
+      entitlement = FactoryGirl.build(:entitlement)
+      expression = MiqExpression.new("=" => {"tag" => "managed-environment", "value" => "test"})
+      entitlement.filter_expression = expression
+      expect(entitlement).to be_valid
+    end
+
+    it "cannot have both managed filters and a filter expression" do
+      entitlement = FactoryGirl.build(:entitlement)
+      expression = MiqExpression.new("=" => {"tag" => "managed-environment", "value" => "test"})
+      entitlement.filter_expression = expression
+      entitlement.set_managed_filters([["/managed/environment/test"]])
+      expect(entitlement).not_to be_valid
+    end
+
+    it "can have a filter expression and a belongs_to filter" do
+      entitlement = FactoryGirl.build(:entitlement)
+      expression = MiqExpression.new("=" => {"tag" => "managed-environment", "value" => "test"})
+      entitlement.filter_expression = expression
+      entitlement.set_belongsto_filters([["/belongsto/ExtManagementSystem/ems1"]])
+      expect(entitlement).to be_valid
+    end
+  end
+
   describe "::remove_tag_from_all_managed_filters" do
     let!(:entitlement1) { FactoryGirl.create(:entitlement) }
     let!(:entitlement2) { FactoryGirl.create(:entitlement) }
