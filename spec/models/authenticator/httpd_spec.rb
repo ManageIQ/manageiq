@@ -206,9 +206,9 @@ describe Authenticator::Httpd do
       end
 
       context "when user record with userid in upn format already exists" do
-        let!(:sally_username) { FactoryGirl.create(:user, :userid => 'sally') }
+        let!(:sally_username) { FactoryGirl.create(:user, :userid => 'sAlly') }
         let!(:sally_dn) { FactoryGirl.create(:user, :userid => dn) }
-        let!(:sally_upn) { FactoryGirl.create(:user, :userid => 'sally@example.com') }
+        let!(:sally_upn) { FactoryGirl.create(:user, :userid => 'sAlly@example.com') }
 
         it "leaves user record with userid in username format unchanged" do
           expect(-> { authenticate }).to_not change { sally_username.reload.userid }
@@ -218,8 +218,9 @@ describe Authenticator::Httpd do
           expect(-> { authenticate }).to_not change { sally_dn.reload.userid }
         end
 
-        it "leaves user record with userid in upn format unchanged" do
-          expect(-> { authenticate }).to_not change { sally_upn.reload.userid }
+        it "downcases user record with userid in upn format" do
+          expect(-> { authenticate })
+            .to change { sally_upn.reload.userid }.from("sAlly@example.com").to("sally@example.com")
         end
       end
 

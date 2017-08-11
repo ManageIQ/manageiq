@@ -62,8 +62,8 @@ module Authenticator
       upn_username = "#{user_attrs[:username]}@#{user_attrs[:domain].downcase}"
 
       user = find_userid_as_upn(upn_username)
-      user ||= find_userid_as_username(identity, username, upn_username)
       user ||= find_userid_as_distinguished_name(user_attrs, upn_username)
+      user ||= find_userid_as_username(identity, username, upn_username)
       user ||= User.new(:userid => upn_username)
 
       [upn_username, user]
@@ -72,7 +72,8 @@ module Authenticator
     private
 
     def find_userid_as_upn(upn_username)
-      User.find_by_userid(upn_username)
+      user = User.find_by_userid(upn_username)
+      user || User.in_my_region.where('lower(userid) = ?', upn_username).order(:lastlogon).last
     end
 
     def find_userid_as_username(identity, username, upn_username)
