@@ -196,15 +196,14 @@ module ManagerRefresh::SaveCollection
       end
 
       def assign_attributes_for_update!(hash, update_time)
-        hash[:last_sync_on] = update_time if inventory_collection.supports_last_sync_on?
-        hash[:updated_on]   = update_time if inventory_collection.supports_timestamps_on_variant?
-        hash[:updated_at]   = update_time if inventory_collection.supports_timestamps_at_variant?
+        hash[:updated_on]   = update_time if inventory_collection.supports_updated_on?
+        hash[:updated_at]   = update_time if inventory_collection.supports_updated_at?
       end
 
       def assign_attributes_for_create!(hash, create_time)
         hash[:type]         = inventory_collection.model_class.name if inventory_collection.supports_sti? && hash[:type].nil?
-        hash[:created_on]   = create_time if inventory_collection.supports_timestamps_on_variant?
-        hash[:created_at]   = create_time if inventory_collection.supports_timestamps_at_variant?
+        hash[:created_on]   = create_time if inventory_collection.supports_created_on?
+        hash[:created_at]   = create_time if inventory_collection.supports_created_at?
         assign_attributes_for_update!(hash, create_time)
       end
     end

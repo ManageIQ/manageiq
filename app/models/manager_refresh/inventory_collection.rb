@@ -596,27 +596,32 @@ module ManagerRefresh
       @supports_sti_cache
     end
 
-    def supports_timestamps_on_variant?
-      if @supports_timestamps_on_variant.nil?
-        @supports_timestamps_on_variant = (model_class.column_names.include?("created_on") &&
-          model_class.column_names.include?("updated_on") &&
-          ActiveRecord::Base.record_timestamps)
+    def supports_created_on?
+      if @supports_created_on_cache.nil?
+        @supports_created_on_cache = (model_class.column_names.include?("created_on") && ActiveRecord::Base.record_timestamps)
       end
-      @supports_timestamps_on_variant
+      @supports_created_on_cache
     end
 
-    def supports_timestamps_at_variant?
-      if @supports_timestamps_at_variant.nil?
-        @supports_timestamps_at_variant = (model_class.column_names.include?("created_at") &&
-          model_class.column_names.include?("updated_at") &&
-          ActiveRecord::Base.record_timestamps)
+    def supports_updated_on?
+      if @supports_updated_on_cache.nil?
+        @supports_updated_on_cache = (model_class.column_names.include?("updated_on") && ActiveRecord::Base.record_timestamps)
       end
-      @supports_timestamps_at_variant
+      @supports_updated_on_cache
     end
 
-    def supports_last_sync_on?
-      @supports_last_sync_on = model_class.column_names.include?("last_sync_on") if @supports_last_sync_on.nil?
-      @supports_last_sync_on
+    def supports_created_at?
+      if @supports_created_at_cache.nil?
+        @supports_created_at_cache = (model_class.column_names.include?("created_at") && ActiveRecord::Base.record_timestamps)
+      end
+      @supports_created_at_cache
+    end
+
+    def supports_updated_at?
+      if @supports_updated_at_cache.nil?
+        @supports_updated_at_cache = (model_class.column_names.include?("updated_at") && ActiveRecord::Base.record_timestamps)
+      end
+      @supports_updated_at_cache
     end
 
     def targeted?
