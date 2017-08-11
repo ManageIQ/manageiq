@@ -66,6 +66,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
       'api_token' => Api::UserTokenService.new.generate_token(evm_owner.userid, 'api'),
       'service'   => href_slug,
       'user'      => evm_owner.href_slug,
+      'group'     => miq_group.href_slug,
       'action'    => action
     }.merge(request_options_extra_vars)
   end
