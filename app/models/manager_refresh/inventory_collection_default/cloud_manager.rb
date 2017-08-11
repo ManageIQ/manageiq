@@ -8,6 +8,8 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
         :attributes_blacklist   => [:genealogy_parent],
         :unique_index_columns   => [:ems_id, :ems_ref],
         :use_ar_object          => true, # Because of raw_power_state setter
+        # TODO(lsmola) can't do batch strategy for vms because of key_pairs relation
+        :saver_strategy         => :default,
         :batch_extra_attributes => [:power_state, :state_changed_on, :previous_state],
         :builder_params         => {
           :ems_id   => ->(persister) { persister.manager.id },
