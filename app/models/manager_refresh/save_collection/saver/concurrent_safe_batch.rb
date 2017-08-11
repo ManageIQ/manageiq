@@ -69,6 +69,10 @@ module ManagerRefresh::SaveCollection
         collect_pg_types!(all_attribute_keys)
         update_or_destroy_records!(batch_iterator(association), inventory_objects_index, attributes_index, all_attribute_keys)
 
+        unless inventory_collection.custom_reconnect_block.nil?
+          inventory_collection.custom_reconnect_block.call(inventory_collection, inventory_objects_index, attributes_index)
+        end
+
         all_attribute_keys << :type if inventory_collection.supports_sti?
         # Records that were not found in the DB but sent for saving, we will be creating these in the DB.
         if inventory_collection.create_allowed?
