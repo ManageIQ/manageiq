@@ -23,6 +23,8 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
         :model_class    => ::NetworkPort,
         :association    => :network_ports,
         :use_ar_object  => true,
+        # TODO(lsmola) can't do batch strategy for network_ports because of security_groups relation
+        :saver_strategy => :default,
         :builder_params => {
           :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
         }
