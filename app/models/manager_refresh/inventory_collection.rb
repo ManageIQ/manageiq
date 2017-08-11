@@ -965,6 +965,10 @@ module ManagerRefresh
       1000
     end
 
+    def batch_size_pure_sql
+      10_000
+    end
+
     def build_multi_selection_condition(hashes, keys = nil)
       keys       ||= manager_ref
       table_name = model_class.table_name
