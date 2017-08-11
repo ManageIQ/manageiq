@@ -16,9 +16,12 @@ module Authenticator
       end
     end
 
-    def lookup_by_identity(username)
-      super ||
-        find_or_create_by_ldap(username)
+    def autocreate_user(username)
+      # when default group for ldap users is enabled, create the user
+      return unless config[:default_group_for_users]
+      default_group = MiqGroup.in_my_region.find_by(:description => config[:default_group_for_users])
+      return unless default_group
+      create_user_from_ldap(username) { [default_group] }
     end
 
     def user_authorizable_without_authentication?
@@ -39,30 +42,6 @@ module Authenticator
     def ldap_bind(username, password)
       ldap = MiqLdap.new(:auth => config)
       ldap if ldap.bind(username, password)
-    end
-
-    def find_or_create_by_ldap(username)
-      username = miq_ldap.fqusername(username)
-      user = userprincipal_for(username)
-      return user unless user.nil?
-
-      raise _("Unable to auto-create user because LDAP bind credentials are not configured") unless authorize?
-
-      create_user_from_ldap(username) do |lobj|
-        groups = match_groups(groups_for(lobj))
-        if groups.empty?
-          raise _("Unable to auto-create user because unable to match user's group membership to an EVM role")
-        end
-        groups
-      end
-    end
-
-    def autocreate_user(username)
-      # when default group for ldap users is enabled, create the user
-      return unless config[:default_group_for_users]
-      default_group = MiqGroup.in_my_region.find_by(:description => config[:default_group_for_users])
-      return unless default_group
-      create_user_from_ldap(username) { [default_group] }
     end
 
     def create_user_from_ldap(username)
@@ -100,11 +79,6 @@ module Authenticator
       _log.debug("User obj from LDAP: #{lobj.inspect}")
 
       lobj
-    end
-
-    def userprincipal_for(username)
-      lobj = find_external_identity(username)
-      User.find_by_userid(userid_for(lobj, username))
     end
 
     def userid_for(lobj, username)
