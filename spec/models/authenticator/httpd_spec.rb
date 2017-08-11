@@ -195,7 +195,7 @@ describe Authenticator::Httpd do
       let(:dn) { 'cn=sally,ou=people,ou=prod,dc=example,dc=com' }
       let(:config) { {:httpd_role => true} }
 
-      let(:username) { 'sally' }
+      let(:username) { 'saLLy' }
       let(:user_groups) { 'wibble@fqdn:bubble@fqdn' }
 
       let(:headers) do
