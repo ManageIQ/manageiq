@@ -3233,4 +3233,18 @@ describe MiqExpression do
       expect(expression.exp).to eq("=" => {"count" => "Vm.disks", "value" => "1"})
     end
   end
+
+  describe ".tag_details" do
+    it "returns the tags when no path is given" do
+      Tenant.seed
+      FactoryGirl.create(
+        :classification,
+        :name        => "env",
+        :description => "Environment",
+        :children    => [FactoryGirl.create(:classification)]
+      )
+      actual = described_class.tag_details(nil, {})
+      expect(actual).to eq([["My Company Tags : Environment", "managed-env"]])
+    end
+  end
 end
