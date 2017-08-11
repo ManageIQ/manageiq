@@ -50,7 +50,8 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Configuration::Netw
   def build_config_spec_vlan(network, vnicDev, vmcs)
     operation = vnicDev.nil? ? VirtualDeviceConfigSpecOperation::Add : VirtualDeviceConfigSpecOperation::Edit
     add_device_config_spec(vmcs, operation) do |vdcs|
-      vdcs.device = edit_vlan_device(network, vnicDev) || create_vlan_device(network)
+      vdcs.device = vnicDev ? edit_vlan_device(network, vnicDev) : create_vlan_device(network)
+
       _log.info "Setting target network device to Device Name:<#{network[:network]}>  Device:<#{vdcs.device.inspect}>"
       vdcs.device.backing.deviceName = network[:network]
       #
@@ -75,7 +76,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Configuration::Netw
 
     operation = vnicDev.nil? ? VirtualDeviceConfigSpecOperation::Add : VirtualDeviceConfigSpecOperation::Edit
     add_device_config_spec(vmcs, operation) do |vdcs|
-      vdcs.device = edit_vlan_device(network, vnicDev) || create_vlan_device(network)
+      vdcs.device = vnicDev ? edit_vlan_device(network, vnicDev) : create_vlan_device(network)
       _log.info "Setting target network device to Device Name:<#{network[:network]}>  Device:<#{vdcs.device.inspect}>"
 
       #
