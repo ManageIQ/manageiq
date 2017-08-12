@@ -893,6 +893,14 @@
       :description: Edit Tags of Flavor
       :feature_type: control
       :identifier: flavor_tag
+    - :name: Add Flavor
+      :description: Add Flavor
+      :feature_type: control
+      :identifier: flavor_create
+    - :name: Delete Flavor
+      :description: Delete Flavor
+      :feature_type: control
+      :identifier: flavor_delete   
 
 # EmsInfra
 - :name: Infrastructure Providers
