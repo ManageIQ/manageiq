@@ -84,18 +84,18 @@ module EmsRefresh
           target, inventory = targets_with_inventory.shift
 
           _log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]..."
-          hashes, _ = Benchmark.realtime_block(:parse_targeted_inventory) do
+          parsed, _ = Benchmark.realtime_block(:parse_targeted_inventory) do
             parse_targeted_inventory(ems, target, inventory)
           end
           inventory = nil # clear to help GC
 
-          Benchmark.realtime_block(:save_inventory) { save_inventory(ems, target, hashes) }
+          Benchmark.realtime_block(:save_inventory) { save_inventory(ems, target, parsed) }
           _log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]...Complete"
 
-          if hashes.kind_of?(Array)
+          if parsed.kind_of?(Array)
             _log.info "#{log_header} ManagerRefresh Post Processing #{target.class} [#{target.name}] id [#{target.id}]..."
             # We have array of InventoryCollection, we want to use that data for post refresh
-            Benchmark.realtime_block(:manager_refresh_post_processing) { manager_refresh_post_processing(ems, target, hashes) }
+            Benchmark.realtime_block(:manager_refresh_post_processing) { manager_refresh_post_processing(ems, target, parsed) }
             _log.info "#{log_header} ManagerRefresh Post Processing #{target.class} [#{target.name}] id [#{target.id}]...Complete"
           end
         end
@@ -155,13 +155,13 @@ module EmsRefresh
           _log.debug "#{log_header} Parsing inventory...Complete"
           inventory_collections
         else
-          hashes, = Benchmark.realtime_block(:parse_legacy_inventory) { parse_legacy_inventory(ems) }
-          hashes
+          parsed, _ = Benchmark.realtime_block(:parse_legacy_inventory) { parse_legacy_inventory(ems) }
+          parsed
         end
       end
 
-      def save_inventory(ems, target, hashes)
-        EmsRefresh.save_ems_inventory(ems, hashes, target)
+      def save_inventory(ems, target, parsed)
+        EmsRefresh.save_ems_inventory(ems, parsed, target)
       end
 
       def post_refresh_ems_cleanup(_ems, _targets)
