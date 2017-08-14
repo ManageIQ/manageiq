@@ -103,7 +103,7 @@ shared_examples_for "ansible refresher" do |ansible_provider, manager_class, ems
     expect(automation_manager.configured_systems.count).to    eq(23)
     expect(automation_manager.configuration_scripts.count).to eq(122)
     expect(automation_manager.inventory_groups.count).to      eq(12)
-    expect(automation_manager.configuration_script_sources.count).to eq(28)
+    expect(automation_manager.configuration_script_sources.count).to eq(29)
     expect(automation_manager.configuration_script_payloads.count).to eq(2078)
     expect(automation_manager.credentials.count).to eq(35)
   end
@@ -173,7 +173,7 @@ shared_examples_for "ansible refresher" do |ansible_provider, manager_class, ems
   end
 
   def assert_configuration_script_sources
-    expect(automation_manager.configuration_script_sources.count).to eq(28)
+    expect(automation_manager.configuration_script_sources.count).to eq(29)
 
     expect(expected_configuration_script_source).to be_an_instance_of(manager_class::ConfigurationScriptSource)
     expect(expected_configuration_script_source).to have_attributes(
