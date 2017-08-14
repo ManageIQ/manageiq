@@ -427,7 +427,7 @@ module ManagerRefresh
 
       @data                             = []
       @data_index                       = {}
-      @saved                            = false
+      @saved                          ||= false
       @attributes_blacklist             = Set.new
       @attributes_whitelist             = Set.new
       @transitive_dependency_attributes = Set.new
