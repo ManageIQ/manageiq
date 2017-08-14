@@ -348,7 +348,12 @@ class MiqWorker::Runner
   end
 
   def heartbeat
+    now = Time.now.utc
+    # Heartbeats can be expensive, so do them only when needed
+    return if @last_hb.kind_of?(Time) && (@last_hb + worker_settings[:heartbeat_freq]) >= now
+
     ENV["WORKER_HEARTBEAT_METHOD"] == "file" ? heartbeat_to_file : heartbeat_to_drb
+    @last_hb = now
     do_heartbeat_work
   rescue SystemExit, SignalException
     raise
@@ -361,11 +366,7 @@ class MiqWorker::Runner
     # without the oversight of MiqServer::WorkerManagement
     return if skip_heartbeat?
 
-    now = Time.now.utc
-    # Heartbeats can be expensive, so do them only when needed
-    return if @last_hb.kind_of?(Time) && (@last_hb + worker_settings[:heartbeat_freq]) >= now
     messages = worker_monitor_drb.worker_heartbeat(@worker.pid, @worker.class.name, @worker.queue_name)
-    @last_hb = now
     messages.each { |msg, *args| process_message(msg, *args) }
   rescue DRb::DRbError => err
     do_exit("Error heartbeating to MiqServer because #{err.class.name}: #{err.message}", 1)
@@ -374,6 +375,31 @@ class MiqWorker::Runner
   def heartbeat_to_file(timeout = nil)
     timeout ||= worker_settings[:heartbeat_timeout] || Workers::MiqDefaults.heartbeat_timeout
     File.write(@worker.heartbeat_file, (Time.now.utc + timeout).to_s)
+
+    get_messages.each { |msg, *args| process_message(msg, *args) }
+  end
+
+  def get_messages
+    messages = []
+    @my_last_config_change ||= Time.now.utc
+
+    last_config_change = server_last_change(:last_config_change)
+    if last_config_change && last_config_change > @my_last_config_change
+      _log.info("#{log_prefix} Configuration has changed, New TS: #{last_config_change}, Old TS: #{@my_last_config_change}")
+      messages << ["sync_config"]
+
+      @my_last_config_change = last_config_change
+    end
+
+    messages
+  end
+
+  def key_store
+    @key_store ||= Dalli::Client.new(MiqMemcached.server_address, :namespace => "server_monitor")
+  end
+
+  def server_last_change(key)
+    key_store.get(key)
   end
 
   def do_gc
