@@ -86,10 +86,14 @@ module MiqServer::EnvironmentManagement
   # Apache
   #
   def start_apache
+    return unless MiqEnvironment::Command.is_appliance?
+
     MiqApache::Control.start
   end
 
   def stop_apache
+    return unless MiqEnvironment::Command.is_appliance?
+
     MiqApache::Control.stop
   end
 
