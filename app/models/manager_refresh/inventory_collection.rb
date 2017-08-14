@@ -854,6 +854,7 @@ module ManagerRefresh
                               :parent                => parent,
                               :arel                  => arel,
                               :strategy              => strategy,
+                              :saver_strategy        => saver_strategy,
                               :custom_save_block     => custom_save_block,
                               # Dependency attributes need to be a hard copy, since those will differ for each
                               # InventoryCollection
