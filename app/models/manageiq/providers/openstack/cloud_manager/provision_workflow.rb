@@ -8,8 +8,8 @@ class ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow < ::MiqPro
     minimum_disk_required   = [source.hardware.size_on_disk.to_i, source.hardware.disk_size_minimum.to_i].max
     minimum_memory_required = source.hardware.memory_mb_minimum.to_i * 1.megabyte
     flavors.each_with_object({}) do |flavor, h|
-      next if flavor.root_disk_size <= minimum_disk_required
-      next if flavor.memory         <= minimum_memory_required
+      next if flavor.root_disk_size < minimum_disk_required
+      next if flavor.memory         < minimum_memory_required
       h[flavor.id] = display_name_for_name_description(flavor)
     end
   end
