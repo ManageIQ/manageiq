@@ -6153,6 +6153,19 @@
       :description: Manage Policies of Object Storage Managers
       :feature_type: control
       :identifier: ems_object_storage_protect
+    - :name: Refresh
+      :description: Refresh Object Storage Managers
+      :feature_type: control
+      :identifier: ems_object_storage_refresh
+  - :name: Modify
+    :description: Modify Object Storage Managers
+    :feature_type: admin
+    :identifier: ems_object_storage_admin
+    :children:
+    - :name: Remove
+      :description: Remove Object Storage Manager
+      :feature_type: admin
+      :identifier: ems_object_storage_delete
 
 # EmsPhysicalInfra
 - :name: Physical Infrastructure Providers
