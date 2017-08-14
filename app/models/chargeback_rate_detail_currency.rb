@@ -26,7 +26,7 @@ class ChargebackRateDetailCurrency < ApplicationRecord
       fixture.each do |cbr|
         rec = ChargebackRateDetailCurrency.find_by(:name => cbr[:name])
         if rec.nil?
-          _log.info("Creating [#{cbr[:name]}] with symbols=[#{cbr[:symbol]}]!!!!")
+          _log.info("Creating [#{cbr[:name]}] with symbols=[#{cbr[:symbol]}]")
           rec = ChargebackRateDetailCurrency.create(cbr)
         elsif fixture_mtime_currency > rec.created_at
           _log.info("Updating [#{cbr[:name]}] with symbols=[#{cbr[:symbol]}]")
