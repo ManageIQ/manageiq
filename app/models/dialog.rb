@@ -89,8 +89,8 @@ class Dialog < ApplicationRecord
 
   def init_fields_with_values(values)
     dialog_field_hash.each do |key, field|
-      values[key] = field.value
       field.dialog = self
+      values[key] = field.value
     end
     dialog_field_hash.each { |key, field| values[key] = field.initialize_with_values(values) }
     dialog_field_hash.each { |_key, field| field.update_values(values) }
