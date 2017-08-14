@@ -856,6 +856,8 @@ module ManagerRefresh
                               :strategy              => strategy,
                               :saver_strategy        => saver_strategy,
                               :custom_save_block     => custom_save_block,
+                              # We want cloned IC to be update only, since this is used for cycle resolution
+                              :update_only           => true,
                               # Dependency attributes need to be a hard copy, since those will differ for each
                               # InventoryCollection
                               :dependency_attributes => dependency_attributes.clone)
