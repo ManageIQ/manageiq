@@ -88,4 +88,15 @@ describe "Quota Validation" do
       check_results(ws.root['quota_requested'], 30.gigabytes, 12, 3, 3.kilobytes)
     end
   end
+
+  context "VM Cloud provisioning with cloud volumes" do
+    it "google calculate_requested number of vms 3, cloud volumes 3 gig " do
+      setup_model("google")
+      @miq_provision_request.options[:volumes] = [{:name => "Fred", :size => '1'}, {:name => "Wilma", :size => '2'}]
+      @miq_provision_request.options[:number_of_vms] = 3
+      @miq_provision_request.save
+      ws = run_automate_method(vm_attrs)
+      check_results(ws.root['quota_requested'], 39.gigabytes, 12, 3, 3.kilobytes)
+    end
+  end
 end

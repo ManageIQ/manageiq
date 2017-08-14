@@ -177,8 +177,21 @@ def cloud_storage(args_hash)
             else
               flavor.root_disk_size.to_i + flavor.ephemeral_disk_size.to_i + flavor.swap_disk_size.to_i
             end
+
+  storage += cloud_volume_storage(args_hash)
   $evm.log(:info, "Retrieving cloud storage #{storage}")
   default_option((storage * args_hash[:number_of_vms]), args_hash[:options_array])
+end
+
+def cloud_volume_storage(args_hash)
+  storage = 0
+  if args_hash[:resource].options[:volumes]
+    args_hash[:resource].options[:volumes].each do |v|
+      $evm.log(:info, "Adding volume to storage:  #{v.inspect} ")
+      storage += v[:size].to_i.gigabytes
+    end
+  end
+  storage
 end
 
 def cloud_number_of_cpus(args_hash)
