@@ -62,7 +62,7 @@ class MetricRollup < ApplicationRecord
                     :capture_interval_name => capture_interval_name,
                     :timestamp             => start_date.beginning_of_day...end_date.end_of_day)
     metrics = metrics.where(:resource_id => resource_ids) if resource_ids
-    metrics
+    metrics.order(:resource_id, :timestamp => :desc)
   end
 
   def chargeback_fields_present?
