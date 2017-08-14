@@ -34,7 +34,7 @@ unless vm.retires_on.nil?
 
   $evm.log("info", "VM: <#{vm_name}> new retirement date is #{vm.retires_on}")
 
-  $evm.log("info", "Inspecting retirement: <#{vm.retirement.inspect}>")
+  $evm.log("info", "Inspecting retirement: <#{vm.retirement_state}>")
 
   evm_owner_id = vm.attributes['evm_owner_id']
   owner = nil

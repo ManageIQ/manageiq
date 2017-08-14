@@ -39,7 +39,7 @@ unless vm.retires_on.nil?
   # Resetting last warning
   # vm.retirement[:last_warn] = nil
 
-  $evm.log("info", "Inspecting retirement: <#{vm.retirement.inspect}>")
+  $evm.log("info", "Inspecting retirement: <#{vm.retirement_state}>")
 
   ######################################
   #
