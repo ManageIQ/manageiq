@@ -1,6 +1,11 @@
 module ManagerRefresh
   class InventoryCollection
-    attr_accessor :saved, :references, :attribute_references, :data_collection_finalized, :all_manager_uuids,
+    # [Boolean] Says whether this collection is already saved into the DB , e.g. InventoryCollections with
+    # DB only strategy are marked as saved. This causes InventoryCollection not being a dependency for any other
+    # InventoryCollection, since it is already persisted into the DB.
+    attr_accessor :saved
+
+    attr_accessor :references, :attribute_references, :data_collection_finalized, :all_manager_uuids,
                   :dependees
 
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
@@ -87,9 +92,6 @@ module ManagerRefresh
     #         - :local_db_find_missing_references => InventoryObject objects of the InventoryCollection will be saved to
     #                                                the DB. Then if we reference an object that is not present, it will
     #                                                load them from the db using :local_db_find_references strategy.
-    # @param saved [Boolean] Says whether this collection is already saved into the DB , e.g. InventoryCollections with
-    #        DB only strategy are marked as saved. This causes InventoryCollection not being a dependency for any other
-    #        InventoryCollection, since it is already persisted into the DB.
     # @param custom_save_block [Proc] A custom lambda/proc for persisting in the DB, for cases where it's not enough
     #        to just save every InventoryObject inside by the defined rules and default saving algorithm.
     #
@@ -374,7 +376,7 @@ module ManagerRefresh
     #        db. These extra attributes might be a product of :use_ar_object assignment and we need to specify them
     #        manually, if we want to use a batch saving strategy and we have models that populate attributes as a side
     #        effect.
-    def initialize(model_class: nil, manager_ref: nil, association: nil, parent: nil, strategy: nil, saved: nil,
+    def initialize(model_class: nil, manager_ref: nil, association: nil, parent: nil, strategy: nil,
                    custom_save_block: nil, delete_method: nil, data_index: nil, data: nil, dependency_attributes: nil,
                    attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil,
                    check_changed: nil, custom_manager_uuid: nil, custom_db_finder: nil, arel: nil, builder_params: {},
@@ -394,7 +396,6 @@ module ManagerRefresh
       @data                   = data || []
       @data_index             = data_index || {}
       @secondary_indexes      = secondary_refs.map { |n, _k| [n, {}] }.to_h
-      @saved                  = saved || false
       @strategy               = process_strategy(strategy)
       @delete_method          = delete_method || :destroy
       @custom_save_block      = custom_save_block
@@ -422,6 +423,7 @@ module ManagerRefresh
 
       @inventory_object_attributes = inventory_object_attributes
 
+      @saved                            = false
       @attributes_blacklist             = Set.new
       @attributes_whitelist             = Set.new
       @transitive_dependency_attributes = Set.new
