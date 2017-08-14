@@ -1,10 +1,22 @@
 module ManagerRefresh
   class InventoryCollection
-    attr_accessor :saved, :references, :attribute_references, :data_collection_finalized, :all_manager_uuids,
+    # @return [Boolean] Says whether this collection is already saved into the DB , e.g. InventoryCollections with
+    # DB only strategy are marked as saved. This causes InventoryCollection not being a dependency for any other
+    # InventoryCollection, since it is already persisted into the DB.
+    attr_accessor :saved
+
+    # @return data [Array] InventoryObject objects of the InventoryCollection in an Array
+    attr_accessor :data
+
+    # @return data_index [Hash] InventoryObject objects of the InventoryCollection indexed in a Hash by their
+    #        :manager_ref.
+    attr_accessor :data_index
+
+    attr_accessor :references, :attribute_references, :data_collection_finalized, :all_manager_uuids,
                   :dependees
 
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
-                :internal_attributes, :delete_method, :data, :data_index, :dependency_attributes, :manager_ref,
+                :internal_attributes, :delete_method, :dependency_attributes, :manager_ref,
                 :association, :complete, :update_only, :transitive_dependency_attributes, :custom_manager_uuid,
                 :custom_db_finder, :check_changed, :arel, :builder_params, :loaded_references, :db_data_index,
                 :inventory_object_attributes, :name, :saver_strategy, :parent_inventory_collections, :manager_uuids,
@@ -87,9 +99,6 @@ module ManagerRefresh
     #         - :local_db_find_missing_references => InventoryObject objects of the InventoryCollection will be saved to
     #                                                the DB. Then if we reference an object that is not present, it will
     #                                                load them from the db using :local_db_find_references strategy.
-    # @param saved [Boolean] Says whether this collection is already saved into the DB , e.g. InventoryCollections with
-    #        DB only strategy are marked as saved. This causes InventoryCollection not being a dependency for any other
-    #        InventoryCollection, since it is already persisted into the DB.
     # @param custom_save_block [Proc] A custom lambda/proc for persisting in the DB, for cases where it's not enough
     #        to just save every InventoryObject inside by the defined rules and default saving algorithm.
     #
@@ -174,9 +183,6 @@ module ManagerRefresh
     # @param delete_method [Symbol] A delete method that will be used for deleting of the InventoryObject, if the
     #        object is marked for deletion. A default is :destroy, the instance method must be defined on the
     #        :model_class.
-    # @param data_index [Hash] InventoryObject objects of the InventoryCollection indexed in a Hash by their
-    #        :manager_ref.
-    # @param data [Array] InventoryObject objects of the InventoryCollection in an Array
     # @param dependency_attributes [Hash] Manually defined dependencies of this InventoryCollection. We can use this
     #        by manually place the InventoryCollection into the graph, to make sure the saving is invoked after the
     #        dependencies were saved. The dependencies itself are InventoryCollection objects. For a common use-cases
@@ -374,8 +380,8 @@ module ManagerRefresh
     #        db. These extra attributes might be a product of :use_ar_object assignment and we need to specify them
     #        manually, if we want to use a batch saving strategy and we have models that populate attributes as a side
     #        effect.
-    def initialize(model_class: nil, manager_ref: nil, association: nil, parent: nil, strategy: nil, saved: nil,
-                   custom_save_block: nil, delete_method: nil, data_index: nil, data: nil, dependency_attributes: nil,
+    def initialize(model_class: nil, manager_ref: nil, association: nil, parent: nil, strategy: nil,
+                   custom_save_block: nil, delete_method: nil, dependency_attributes: nil,
                    attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil,
                    check_changed: nil, custom_manager_uuid: nil, custom_db_finder: nil, arel: nil, builder_params: {},
                    inventory_object_attributes: nil, unique_index_columns: nil, name: nil, saver_strategy: nil,
@@ -391,10 +397,7 @@ module ManagerRefresh
       @parent                 = parent || nil
       @arel                   = arel
       @dependency_attributes  = dependency_attributes || {}
-      @data                   = data || []
-      @data_index             = data_index || {}
       @secondary_indexes      = secondary_refs.map { |n, _k| [n, {}] }.to_h
-      @saved                  = saved || false
       @strategy               = process_strategy(strategy)
       @delete_method          = delete_method || :destroy
       @custom_save_block      = custom_save_block
@@ -422,6 +425,9 @@ module ManagerRefresh
 
       @inventory_object_attributes = inventory_object_attributes
 
+      @data                             = []
+      @data_index                       = {}
+      @saved                          ||= false
       @attributes_blacklist             = Set.new
       @attributes_whitelist             = Set.new
       @transitive_dependency_attributes = Set.new
@@ -842,18 +848,23 @@ module ManagerRefresh
     def clone
       # A shallow copy of InventoryCollection, the copy will share @data of the original collection, otherwise we would
       # be copying a lot of records in memory.
-      self.class.new(:model_class           => model_class,
-                     :manager_ref           => manager_ref,
-                     :association           => association,
-                     :parent                => parent,
-                     :arel                  => arel,
-                     :strategy              => strategy,
-                     :custom_save_block     => custom_save_block,
-                     :data                  => data,
-                     :data_index            => data_index,
-                     # Dependency attributes need to be a hard copy, since those will differ for each
-                     # InventoryCollection
-                     :dependency_attributes => dependency_attributes.clone)
+      cloned = self.class.new(:model_class           => model_class,
+                              :manager_ref           => manager_ref,
+                              :association           => association,
+                              :parent                => parent,
+                              :arel                  => arel,
+                              :strategy              => strategy,
+                              :saver_strategy        => saver_strategy,
+                              :custom_save_block     => custom_save_block,
+                              # We want cloned IC to be update only, since this is used for cycle resolution
+                              :update_only           => true,
+                              # Dependency attributes need to be a hard copy, since those will differ for each
+                              # InventoryCollection
+                              :dependency_attributes => dependency_attributes.clone)
+
+      cloned.data_index = data_index
+      cloned.data       = data
+      cloned
     end
 
     def belongs_to_associations
