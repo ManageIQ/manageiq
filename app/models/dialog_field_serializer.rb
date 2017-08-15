@@ -11,9 +11,9 @@ class DialogFieldSerializer < Serializer
 
   def serialize(dialog_field, all_attributes = false)
     serialized_resource_action = @resource_action_serializer.serialize(dialog_field.resource_action)
-
     extra_attributes = {
-      "resource_action" => serialized_resource_action
+      "resource_action"         => serialized_resource_action,
+      "dialog_field_responders" => dialog_field.dialog_field_responders.map(&:name)
     }
 
     if dialog_field.dynamic?
@@ -25,7 +25,6 @@ class DialogFieldSerializer < Serializer
       category = Category.find_by(:id => dialog_field.category)
       dialog_field.options.merge!(:category_name => category.name, :category_description => category.description)
     end
-
     included_attributes(dialog_field.as_json(:methods => [:type, :values]), all_attributes).merge(extra_attributes)
   end
 end
