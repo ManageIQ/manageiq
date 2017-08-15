@@ -10,6 +10,29 @@ module ManagerRefresh
       construct_graph!(@nodes)
     end
 
+    def to_graphviz(layers: nil)
+      node_names = friendly_unique_node_names
+      s = []
+
+      s << "digraph {"
+      (layers || [nodes]).each_with_index do |layer_nodes, i|
+        s << "  subgraph cluster_#{i} {  label = \"Layer #{i}\";" unless layers.nil?
+
+        layer_nodes.each do |n|
+          s << "    #{node_names[n]}; \t// #{n.inspect}"
+        end
+
+        s << "  }" unless layers.nil?
+      end
+
+      s << "  // edges:"
+      edges.each do |from, to|
+        s << "  #{node_names[from]} -> #{node_names[to]};"
+      end
+      s << "}"
+      s.join("\n") + "\n"
+    end
+
     protected
 
     attr_writer :nodes, :edges, :fixed_edges
@@ -70,6 +93,20 @@ module ManagerRefresh
 
     def node_edges(edges, node)
       edges.select { |e| e.second == node }
+    end
+
+    # Hash of {node => name}, appending numbers if needed to make unique, quoted if needed.
+    def friendly_unique_node_names
+      node_names = {}
+      # Try to use shorter .name method that InventoryCollection has.
+      nodes.group_by { |n| n.respond_to?(:name) ? n.name.to_s : n.to_s }.each do |base_name, ns|
+        ns.each_with_index do |n, i|
+          name = ns.size == 1 ? base_name : "#{base_name}_#{i}"
+          name = '"' + name.gsub(/["\\]/) { |c| "\\" + c } + '"' unless name =~ /^[A-Za-z0-9_]+$/
+          node_names[n] = name
+        end
+      end
+      node_names
     end
   end
 end

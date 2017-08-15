@@ -7,14 +7,8 @@ module ManagerRefresh::SaveCollection
 
         layers = ManagerRefresh::Graph::TopologicalSort.new(graph).topological_sort
 
-        sorted_graph_log = "Topological sorting of manager #{ems.name} with ---nodes---:\n#{graph.nodes.join("\n")}\n"
-        sorted_graph_log += "---edges---:\n#{graph.edges.map { |x| "<#{x.first}, #{x.last}>" }.join("\n")}\n"
-        sorted_graph_log += "---resulted in these layers processable in parallel:"
-
-        layers.each_with_index do |layer, index|
-          sorted_graph_log += "\n----- Layer #{index} -----: \n#{layer.select { |x| !x.saved? }.join("\n")}"
-        end
-
+        sorted_graph_log = "Topological sorting of manager #{ems.name} resulted in these layers processable in parallel:\n"
+        sorted_graph_log += graph.to_graphviz(:layers => layers)
         _log.info(sorted_graph_log)
 
         layers.each_with_index do |layer, index|
