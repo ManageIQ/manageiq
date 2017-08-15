@@ -72,7 +72,8 @@ unless options[:dry_run]
            end
 
   begin
-    worker.class::Runner.start_worker(runner_options.merge(:guid => worker.guid))
+    runner_options[:guid] = worker.guid
+    worker.class::Runner.new(runner_options).tap(&:setup_sigterm_trap).start
   ensure
     worker.delete
   end
