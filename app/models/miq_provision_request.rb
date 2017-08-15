@@ -27,11 +27,22 @@ class MiqProvisionRequest < MiqRequest
 
   def self.request_task_class_from(attribs)
     source_id = MiqRequestMixin.get_option(:src_vm_id, nil, attribs['options'])
-    vm_or_template = VmOrTemplate.find_by(:id => source_id)
-    raise MiqException::MiqProvisionError, "Unable to find source Template/Vm with id [#{source_id}]" if vm_or_template.nil?
+    vm_or_template = source_vm_or_template!(source_id)
 
     via = MiqRequestMixin.get_option(:provision_type, nil, attribs['options'])
     vm_or_template.ext_management_system.class.provision_class(via)
+  end
+
+  def self.source_vm_or_template!(source_id)
+    vm_or_template = VmOrTemplate.find_by(:id => source_id)
+    if vm_or_template.nil?
+      raise MiqException::MiqProvisionError, "Unable to find source Template/Vm with id [#{source_id}]"
+    end
+
+    if vm_or_template.ext_management_system.nil?
+      raise MiqException::MiqProvisionError, "Source Template/Vm with id [#{source_id}] has no EMS, unable to provision"
+    end
+    vm_or_template
   end
 
   def self.new_request_task(attribs)

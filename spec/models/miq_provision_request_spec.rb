@@ -1,21 +1,32 @@
 describe MiqProvisionRequest do
-  it ".request_task_class_from" do
-    ems = FactoryGirl.create(:ems_vmware)
-    vm = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
-    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Vmware::InfraManager::Provision
-    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id, :provision_type => "pxe"})).to eq ManageIQ::Providers::Vmware::InfraManager::ProvisionViaPxe
+  context "#request_task_class_from" do
+    it "retrieves the provision class when the vm has EMS" do
+      ems = FactoryGirl.create(:ems_vmware)
+      vm = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
+      expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Vmware::InfraManager::Provision
+      expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id, :provision_type => "pxe"})).to eq ManageIQ::Providers::Vmware::InfraManager::ProvisionViaPxe
 
-    ems = FactoryGirl.create(:ems_redhat)
-    vm = FactoryGirl.create(:vm_redhat, :ext_management_system => ems)
-    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Redhat::InfraManager::Provision
+      ems = FactoryGirl.create(:ems_redhat)
+      vm = FactoryGirl.create(:vm_redhat, :ext_management_system => ems)
+      expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Redhat::InfraManager::Provision
 
-    ems = FactoryGirl.create(:ems_openstack)
-    vm = FactoryGirl.create(:vm_openstack, :ext_management_system => ems)
-    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Openstack::CloudManager::Provision
+      ems = FactoryGirl.create(:ems_openstack)
+      vm = FactoryGirl.create(:vm_openstack, :ext_management_system => ems)
+      expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Openstack::CloudManager::Provision
 
-    ems = FactoryGirl.create(:ems_amazon)
-    vm = FactoryGirl.create(:vm_amazon, :ext_management_system => ems)
-    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Amazon::CloudManager::Provision
+      ems = FactoryGirl.create(:ems_amazon)
+      vm = FactoryGirl.create(:vm_amazon, :ext_management_system => ems)
+      expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Amazon::CloudManager::Provision
+    end
+
+    it "fails to retrieve the provision class when the vm has no EMS" do
+      vm = FactoryGirl.create(:vm_redhat)
+      expect { described_class.request_task_class_from('options' => {:src_vm_id => vm.id}) }.to raise_error(MiqException::MiqProvisionError)
+    end
+
+    it "fails to retrieve the provision class when the vm does not exist" do
+      expect { described_class.request_task_class_from('options' => {:src_vm_id => -1 }) }.to raise_error(MiqException::MiqProvisionError)
+    end
   end
 
   context "A new provision request," do
