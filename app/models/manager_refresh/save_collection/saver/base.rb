@@ -8,19 +8,19 @@ module ManagerRefresh::SaveCollection
 
       def initialize(inventory_collection)
         @inventory_collection = inventory_collection
+        # TODO(lsmola) do I need to reload every time? Also it should be enough to clear the associations.
+        inventory_collection.parent.reload if inventory_collection.parent
+        @association = inventory_collection.db_collection_for_comparison
 
         # Private attrs
-        @primary_key            = inventory_collection.model_class.primary_key
-        @arel_primary_key       = inventory_collection.model_class.arel_attribute(primary_key)
+        @model_class            = inventory_collection.model_class
+        @primary_key            = @model_class.primary_key
+        @arel_primary_key       = @model_class.arel_attribute(@primary_key)
         @unique_index_keys      = inventory_collection.manager_ref_to_cols.map(&:to_sym)
         @unique_index_keys_to_s = inventory_collection.manager_ref_to_cols.map(&:to_s)
         @select_keys            = [@primary_key] + @unique_index_keys_to_s
         @unique_db_primary_keys = Set.new
         @unique_db_indexes      = Set.new
-
-        # TODO(lsmola) do I need to reload every time? Also it should be enough to clear the associations.
-        inventory_collection.parent.reload if inventory_collection.parent
-        @association = inventory_collection.db_collection_for_comparison
 
         # Right now ApplicationRecordIterator in association is used for targeted refresh. Given the small amount of
         # records flowing through there, we probably don't need to optimize that association to fetch a pure SQL.
@@ -47,7 +47,7 @@ module ManagerRefresh::SaveCollection
 
       attr_reader :unique_index_keys, :unique_index_keys_to_s, :select_keys, :unique_db_primary_keys, :unique_db_indexes,
                   :primary_key, :arel_primary_key, :record_key_method, :pure_sql_records_fetching, :select_keys_indexes,
-                  :batch_size, :batch_size_for_persisting
+                  :batch_size, :batch_size_for_persisting, :model_class
 
       def save!(association)
         attributes_index        = {}
@@ -191,20 +191,53 @@ module ManagerRefresh::SaveCollection
         end
       end
 
-      def supports_remote_data_timestamp?(all_attribute_keys)
-        all_attribute_keys.include?(:remote_data_timestamp) # include? on Set is O(1)
-      end
-
       def assign_attributes_for_update!(hash, update_time)
-        hash[:updated_on]   = update_time if inventory_collection.supports_updated_on?
-        hash[:updated_at]   = update_time if inventory_collection.supports_updated_at?
+        hash[:updated_on]   = update_time if supports_updated_on?
+        hash[:updated_at]   = update_time if supports_updated_at?
       end
 
       def assign_attributes_for_create!(hash, create_time)
-        hash[:type]         = inventory_collection.model_class.name if inventory_collection.supports_sti? && hash[:type].nil?
-        hash[:created_on]   = create_time if inventory_collection.supports_created_on?
-        hash[:created_at]   = create_time if inventory_collection.supports_created_at?
+        hash[:type]         = model_class.name if supports_sti? && hash[:type].nil?
+        hash[:created_on]   = create_time if supports_created_on?
+        hash[:created_at]   = create_time if supports_created_at?
         assign_attributes_for_update!(hash, create_time)
+      end
+
+      def supports_sti?
+        @supports_sti_cache = model_class.column_names.include?("type") if @supports_sti_cache.nil?
+        @supports_sti_cache
+      end
+
+      def supports_created_on?
+        if @supports_created_on_cache.nil?
+          @supports_created_on_cache = (model_class.column_names.include?("created_on") && ActiveRecord::Base.record_timestamps)
+        end
+        @supports_created_on_cache
+      end
+
+      def supports_updated_on?
+        if @supports_updated_on_cache.nil?
+          @supports_updated_on_cache = (model_class.column_names.include?("updated_on") && ActiveRecord::Base.record_timestamps)
+        end
+        @supports_updated_on_cache
+      end
+
+      def supports_created_at?
+        if @supports_created_at_cache.nil?
+          @supports_created_at_cache = (model_class.column_names.include?("created_at") && ActiveRecord::Base.record_timestamps)
+        end
+        @supports_created_at_cache
+      end
+
+      def supports_updated_at?
+        if @supports_updated_at_cache.nil?
+          @supports_updated_at_cache = (model_class.column_names.include?("updated_at") && ActiveRecord::Base.record_timestamps)
+        end
+        @supports_updated_at_cache
+      end
+
+      def supports_remote_data_timestamp?(all_attribute_keys)
+        all_attribute_keys.include?(:remote_data_timestamp) # include? on Set is O(1)
       end
     end
   end

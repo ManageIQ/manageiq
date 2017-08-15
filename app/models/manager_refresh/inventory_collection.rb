@@ -597,39 +597,6 @@ module ManagerRefresh
       end
     end
 
-    def supports_sti?
-      @supports_sti_cache = model_class.column_names.include?("type") if @supports_sti_cache.nil?
-      @supports_sti_cache
-    end
-
-    def supports_created_on?
-      if @supports_created_on_cache.nil?
-        @supports_created_on_cache = (model_class.column_names.include?("created_on") && ActiveRecord::Base.record_timestamps)
-      end
-      @supports_created_on_cache
-    end
-
-    def supports_updated_on?
-      if @supports_updated_on_cache.nil?
-        @supports_updated_on_cache = (model_class.column_names.include?("updated_on") && ActiveRecord::Base.record_timestamps)
-      end
-      @supports_updated_on_cache
-    end
-
-    def supports_created_at?
-      if @supports_created_at_cache.nil?
-        @supports_created_at_cache = (model_class.column_names.include?("created_at") && ActiveRecord::Base.record_timestamps)
-      end
-      @supports_created_at_cache
-    end
-
-    def supports_updated_at?
-      if @supports_updated_at_cache.nil?
-        @supports_updated_at_cache = (model_class.column_names.include?("updated_at") && ActiveRecord::Base.record_timestamps)
-      end
-      @supports_updated_at_cache
-    end
-
     def targeted?
       targeted
     end
