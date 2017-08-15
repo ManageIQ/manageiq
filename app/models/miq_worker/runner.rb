@@ -341,6 +341,10 @@ class MiqWorker::Runner
         @backoff = nil
       end
 
+      # Should be caught by the rescue in `#start` and will run do_exit from
+      # there.
+      raise Interrupt if @sigterm_recieved
+
       do_gc
       self.class.log_ruby_object_usage(worker_settings[:top_ruby_object_classes_to_log].to_i)
       send(poll_method)
@@ -458,6 +462,15 @@ class MiqWorker::Runner
       _log.info("Ruby Object Usage: #{types.sort_by { |_k, v| -v }.take(top).inspect}")
       @last_ruby_object_usage = t
     end
+  end
+
+  # Traps both SIGTERM and SIGINT here, and does the same thing, but in a
+  # container based deployment, SIGTERM is probably the one that will be
+  # received from the container management system (aka OpenShift).  The SIGINT
+  # trap is mostly a developer convenience.
+  def setup_sigterm_trap
+    Kernel.trap("TERM") { @sigterm_recieved = true }
+    Kernel.trap("INT")  { @sigterm_recieved = true }
   end
 
   protected
