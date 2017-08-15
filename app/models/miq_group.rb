@@ -60,7 +60,8 @@ class MiqGroup < ApplicationRecord
     ldap_to_filters = filter_map_file.exist? ? YAML.load_file(filter_map_file) : {}
     root_tenant = Tenant.root_tenant
 
-    groups = where(:group_type => SYSTEM_GROUP).includes(:entitlement).index_by(&:description)
+    groups = where(:group_type => SYSTEM_GROUP, :tenant_id => Tenant.root_tenant)
+               .includes(:entitlement).index_by(&:description)
     roles  = MiqUserRole.where("name like 'EvmRole-%'").index_by(&:name)
 
     role_map.each_with_index do |(group_name, role_name), index|
