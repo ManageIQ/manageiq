@@ -673,7 +673,7 @@ class ReportController < ApplicationController
     partial = options[:partial] ? options[:partial] : set_partial_name
     unless @in_a_form
       c_tb = build_toolbar(center_toolbar_filename)
-      h_tb = build_toolbar("x_history_tb")
+      h_tb = build_toolbar("x_history_tb") unless x_active_tree == :export_tree
       v_tb = build_toolbar("report_view_tb") if @report && [:reports_tree, :savedreports_tree].include?(x_active_tree)
     end
 
