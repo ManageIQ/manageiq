@@ -5,15 +5,38 @@ module ManagerRefresh
     # InventoryCollection, since it is already persisted into the DB.
     attr_accessor :saved
 
-    # @return data [Array] InventoryObject objects of the InventoryCollection in an Array
+    # @return [Array] InventoryObject objects of the InventoryCollection in an Array
     attr_accessor :data
 
-    # @return data_index [Hash] InventoryObject objects of the InventoryCollection indexed in a Hash by their
+    # @return [Hash] InventoryObject objects of the InventoryCollection indexed in a Hash by their
     #        :manager_ref.
     attr_accessor :data_index
 
-    attr_accessor :references, :attribute_references, :data_collection_finalized, :all_manager_uuids,
-                  :dependees, :parent_inventory_collections
+    # @return [Set] A set of InventoryObjects manager_uuids, which tells us which InventoryObjects were
+    #         referenced by other InventoryObjects using a lazy_find.
+    attr_accessor :references
+
+    # @return [Set] A set of InventoryObject attributes names, which tells us InventoryObject attributes
+    #         were referenced by other InventoryObject objects using a lazy_find with :key.
+    attr_accessor :attribute_references
+
+    # @return [Boolean] A true value marks that we collected all the data of the InventoryCollection,
+    #         meaning we also collected all the references.
+    attr_accessor :data_collection_finalized
+
+    # @return [Array, nil] Returns nil or a list of all :manager_uuids that are present in the Provider's
+    #         InventoryCollection. If present, InventoryCollection switches into delete_complement mode, where it will
+    #         delete every record from the DB, that is not present in this list. This is used for the batch processing,
+    #         where we don't know which InventoryObject should be deleted, but we know all manager_uuids of all
+    #         InventoryObject objects that exists in the provider.
+    attr_accessor :all_manager_uuids
+
+    # @return [Set] A set of InventoryCollection objects that depends on this InventoryCollection object.
+    attr_accessor :dependees
+
+    # @return [Array] An array of symbols(names of InventoryCollection objects) or InventoryCollection objects. If
+    #         symbols are used, those will be transformed to InventoryCollection objects by the Scanner.
+    attr_accessor :parent_inventory_collections
 
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
                 :internal_attributes, :delete_method, :dependency_attributes, :manager_ref,
