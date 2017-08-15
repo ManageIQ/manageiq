@@ -161,7 +161,11 @@ module EmsRefresh
       end
 
       def save_inventory(ems, target, hashes)
-        EmsRefresh.save_ems_inventory(ems, hashes, target)
+        if refresher_options.try(:queue_save_inventory)
+          EmsRefresh.queue_save_ems_inventory(ems, hashes, target)
+        else
+          EmsRefresh.save_ems_inventory(ems, hashes, target)
+        end
       end
 
       def post_refresh_ems_cleanup(_ems, _targets)

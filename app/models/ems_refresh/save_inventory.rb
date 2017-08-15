@@ -1,5 +1,11 @@
 module EmsRefresh::SaveInventory
   def save_ems_inventory(ems, hashes, target = nil, disconnect = true)
+    ems    = get_target_objects(*ems).first    if ems.kind_of?(Array)
+    target = get_target_objects(*target).first if target && target.kind_of?(Array)
+
+    log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
+    _log.info "#{log_header} Saving inventory..."
+
     if hashes.kind_of?(Array)
       ManagerRefresh::SaveInventory.save_inventory(ems, hashes)
       return
@@ -19,10 +25,34 @@ module EmsRefresh::SaveInventory
 
     # Handle updates to the ext_management_system
     update_attributes!(ems, hashes[:ems], [:type]) unless hashes[:ems].nil?
+
+    _log.info "#{log_header} Saving inventory...Complete"
   end
 
   def save_ems_inventory_no_disconnect(ems, hashes, target = nil)
     save_ems_inventory(ems, hashes, target, false)
+  end
+
+  def queue_save_ems_inventory(ems, hashes, target = nil)
+    args = [[ems.class.name, ems.id]]
+    args << [target.class.name, target.id] unless target.nil?
+
+    queue_opts = {
+      :queue_name  => 'inventory',
+      :class_name  => name,
+      :method_name => 'save_ems_inventory_from_queue',
+      :role        => 'ems_inventory',
+      :zone        => ems.my_zone,
+      :args        => args,
+      :data        => hashes,
+      :msg_timeout => queue_timeout
+    }
+
+    MiqQueue.put(queue_opts)
+  end
+
+  def save_ems_inventory_from_queue(ems, target, hashes)
+    save_ems_inventory(ems, hashes, target)
   end
 
   #
