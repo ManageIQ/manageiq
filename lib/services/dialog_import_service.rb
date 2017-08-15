@@ -104,7 +104,15 @@ class DialogImportService
 
   def import_from_dialogs(dialogs)
     raise ParsedNonDialogYamlError if dialogs.empty?
+    associations = []
     dialogs.each do |dialog|
+      dialog["dialog_tabs"].flat_map do |tab|
+        tab["dialog_groups"].flat_map do |group|
+          group["dialog_fields"].flat_map do |field|
+            associations << { field["name"] => field["dialog_field_responders"] } unless field["dialog_field_responders"].nil?
+          end
+        end
+      end
       new_or_existing_dialog = Dialog.where(:label => dialog["label"]).first_or_create
       dialog['id'] = new_or_existing_dialog.id
       new_or_existing_dialog.update_attributes(
@@ -113,6 +121,16 @@ class DialogImportService
           "resource_actions" => build_resource_actions(dialog)
         )
       )
+      fields = new_or_existing_dialog.dialog_fields
+      associations.each do |association|
+        association.values.each do |values|
+          values.each do |responder|
+            next if fields.select { |field| field.name == responder }.empty?
+            DialogFieldAssociation.create(:trigger_id => fields.find { |field| field.name.include?(association.keys.first) }.id,
+                                          :respond_id => fields.find { |field| field.name == responder }.id)
+          end
+        end
+      end
     end
   rescue DialogFieldImporter::InvalidDialogFieldTypeError
     raise
