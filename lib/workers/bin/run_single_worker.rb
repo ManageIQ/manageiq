@@ -57,7 +57,7 @@ require File.expand_path("../../../config/environment", __dir__)
 worker_class = worker_class.constantize
 worker_class.before_fork
 unless options[:dry_run]
-  create_options = {}
+  create_options = {:pid => Process.pid}
   runner_options = {}
 
   if ENV["QUEUE"]
@@ -66,7 +66,9 @@ unless options[:dry_run]
   end
 
   worker = if options[:guid]
-             worker_class.find_by!(:guid => options[:guid])
+             worker_class.find_by!(:guid => options[:guid]).tap do |wrkr|
+               wrkr.update_attributes(:pid => Process.pid)
+             end
            else
              worker_class.create_worker_record(create_options)
            end
