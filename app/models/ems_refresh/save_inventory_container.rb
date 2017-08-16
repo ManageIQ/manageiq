@@ -221,10 +221,9 @@ module EmsRefresh::SaveInventoryContainer
       h[:type] ||= 'ContainerImage'
     end
 
-    save_inventory_multi(ems.container_images, hashes, :use_association, [:image_ref, :container_image_registry_id],
+    save_inventory_multi(ems.container_images, hashes, :use_association, [:image_ref],
                          [:labels, :docker_labels], :container_image_registry, true)
-    store_ids_for_new_records(ems.container_images, hashes,
-                              [:image_ref, :container_image_registry_id])
+    store_ids_for_new_records(ems.container_images, hashes, [:image_ref])
   end
 
   def save_container_image_registries_inventory(ems, hashes)
