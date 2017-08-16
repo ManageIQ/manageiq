@@ -13,6 +13,11 @@ class CustomButton < ApplicationRecord
   include UuidMixin
   acts_as_miq_set_member
 
+  TYPES = { "default"          => "Default",
+            "ansible_playbook" => "Ansible Playbook"}.freeze
+
+  PLAYBOOK_METHOD = "Order_Ansible_Playbook".freeze
+
   BUTTON_CLASSES = [
     AvailabilityZone,
     CloudNetwork,
