@@ -1,10 +1,6 @@
 module ManagerRefresh::SaveCollection
   module Saver
     module SqlHelper
-      def unique_index_columns
-        inventory_collection.unique_index_columns
-      end
-
       def on_conflict_update
         true
       end

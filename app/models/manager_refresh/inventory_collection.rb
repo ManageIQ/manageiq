@@ -318,9 +318,6 @@ module ManagerRefresh
     #             inventory_object[:label] = inventory_object[:name]
     #           So by using inventory_object_attributes, we will be guarding the allowed attributes and will have an
     #           explicit list of allowed attributes, that can be used also for documentation purposes.
-    # @param unique_index_columns [Array] Array of symbols identifying columns of a DB unique index, we will be using.
-    #        If there is only 1 unique index, this will be auto-discovered, otherwise we need to specify the correct
-    #        one.
     # @param name [Symbol] A unique name of the InventoryCollection under a Persister. If not provided, the :association
     #        attribute is used. If :association is nil as well, the :name will be inferred from the :model_class.
     # @param saver_strategy [Symbol] A strategy that will be used for InventoryCollection persisting into the DB.
@@ -384,7 +381,7 @@ module ManagerRefresh
                    custom_save_block: nil, delete_method: nil, dependency_attributes: nil,
                    attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil,
                    check_changed: nil, custom_manager_uuid: nil, custom_db_finder: nil, arel: nil, builder_params: {},
-                   inventory_object_attributes: nil, unique_index_columns: nil, name: nil, saver_strategy: nil,
+                   inventory_object_attributes: nil, name: nil, saver_strategy: nil,
                    parent_inventory_collections: nil, manager_uuids: [], all_manager_uuids: nil, targeted_arel: nil,
                    targeted: nil, manager_ref_allowed_nil: nil, secondary_refs: {}, use_ar_object: nil,
                    custom_reconnect_block: nil, batch_extra_attributes: [])
@@ -407,7 +404,6 @@ module ManagerRefresh
       @complete               = complete.nil? ? true : complete
       @update_only            = update_only.nil? ? false : update_only
       @builder_params         = builder_params
-      @unique_index_columns   = unique_index_columns
       @name                   = name || association || model_class.to_s.demodulize.tableize
       @saver_strategy         = process_saver_strategy(saver_strategy)
       @use_ar_object          = use_ar_object || false
@@ -599,23 +595,6 @@ module ManagerRefresh
 
     def targeted?
       targeted
-    end
-
-    def unique_index_columns
-      return @unique_index_columns if @unique_index_columns
-
-      unique_indexes = model_class.connection.indexes(model_class.table_name).select(&:unique)
-      if unique_indexes.count > 1
-        raise "Cannot infer unique index automatically, since the table #{model_class.table_name}"\
-              " of the #{self} contains more than 1 unique index: '#{unique_indexes.collect(&:name)}'. Please define"\
-              " the unique index columns explicitly as: :unique_index => [:column1, :column2, etc.]"
-      end
-
-      if unique_indexes.blank?
-        raise "#{self} and its table #{model_class.table_name} must have a unique index defined, in order to use "\
-              "saver_strategy :concurrent_safe or :concurrent_safe_batch."
-      end
-      @unique_index_columns = unique_indexes.first.columns.map(&:to_sym)
     end
 
     def <<(inventory_object)
