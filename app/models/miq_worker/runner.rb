@@ -48,6 +48,7 @@ class MiqWorker::Runner
     $log ||= Rails.logger
 
     @server = MiqServer.my_server(true)
+    @sigterm_received = false
 
     worker_initialization
     after_initialize
