@@ -400,15 +400,21 @@ describe MiqRequest do
     let(:group1)      { FactoryGirl.create(:miq_group, :description => 'Group 1', :tenant => root_tenant) }
     let(:group2)      { FactoryGirl.create(:miq_group, :description => 'Group 2', :tenant => tenant1) }
     let(:user)        { FactoryGirl.create(:user, :miq_groups => [group1, group2], :current_group => group1) }
+    let(:template)    { FactoryGirl.create(:template_vmware, :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication)) }
 
     it "takes the requester group" do
-      request = FactoryGirl.create(:miq_provision_request, :requester => user, :options => {:requester_group => group2.description})
+      request = FactoryGirl.create(
+        :miq_provision_request,
+        :requester => user,
+        :src_vm_id => template.id,
+        :options   => {:requester_group => group2.description}
+      )
       expect(user.current_group).to eq(group1)
       expect(request.get_user.current_group).to eq(group2)
     end
 
     it "stays with user's current group" do
-      request = FactoryGirl.create(:miq_provision_request, :requester => user)
+      request = FactoryGirl.create(:miq_provision_request, :requester => user, :src_vm_id => template.id)
       expect(user.current_group).to eq(group1)
       expect(request.get_user.current_group).to eq(group1)
     end
