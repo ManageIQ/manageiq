@@ -60,6 +60,7 @@ module SupportsFeatureMixin
   QUERYABLE_FEATURES = {
     :add_host                   => 'Add Host',
     :add_interface              => 'Add Interface',
+    :add_security_group         => 'Add Security Group',
     :associate_floating_ip      => 'Associate a Floating IP',
     :clone                      => 'Clone',
     # FIXME: this is just a internal helper and should be refactored
@@ -100,6 +101,7 @@ module SupportsFeatureMixin
     :remove_all_snapshots       => 'Remove all snapshots',
     :remove_host                => 'Remove Host',
     :remove_interface           => 'Remove Interface',
+    :remove_security_group      => 'Remove Security Group',
     :remove_snapshot            => 'Remove Snapshot',
     :remove_snapshot_by_description  => 'Remove snapshot having a description',
     :reset                      => 'Reset',

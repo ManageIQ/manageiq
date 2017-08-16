@@ -191,6 +191,54 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     raw_disassociate_floating_ip(ip_address)
   end
 
+  def raw_add_security_group(_security_group)
+    raise NotImplementedError, _("raw_add_security_group must be implemented in a subclass")
+  end
+
+  def add_security_group_queue(userid, security_group)
+    task_opts = {
+      :action => "associating Security Group with Instance for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'add_security_group',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :zone        => my_zone,
+      :args        => [security_group]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def add_security_group(security_group)
+    raw_add_security_group(security_group)
+  end
+
+  def raw_remove_security_group(_security_group)
+    raise NotImplementedError, _("raw_remove_security_group must be implemented in a subclass")
+  end
+
+  def remove_security_group_queue(userid, security_group)
+    task_opts = {
+      :action => "associating Security Group with Instance for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'remove_security_group',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :zone        => my_zone,
+      :args        => [security_group]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def remove_security_group(security_group)
+    raw_remove_security_group(security_group)
+  end
+
   def service
     super || orchestration_stack.try(:service)
   end
