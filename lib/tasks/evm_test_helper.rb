@@ -16,7 +16,9 @@ module EvmTestHelper
     #
     # Output: %w(./spec/controllers ./spec/helpers ./spec/initializers ..)
     Dir.glob("./spec/*").select do |d|
-      File.directory?(d) && !Dir.glob("#{d}/**/*_spec.rb").empty?
+      File.directory?(d) &&
+        !d.match(/^\.\/spec\/workers.*/) && # worker specs are slow.  run seperate
+        !Dir.glob("#{d}/**/*_spec.rb").empty?
     end
   end
 end
