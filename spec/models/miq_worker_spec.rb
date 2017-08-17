@@ -345,6 +345,20 @@ describe MiqWorker do
         expect(subject).to be_truthy
       end
 
+      it "true if stopping and last heartbeat is within the queue message timeout of an active message" do
+        @worker.messages << FactoryGirl.create(:miq_queue, :msg_timeout => 60.minutes)
+        @worker.update(:status         => described_class::STATUS_STOPPING,
+                       :last_heartbeat => 90.minutes.ago)
+        expect(subject).to be_truthy
+      end
+
+      it "false if stopping and last heartbeat is older than the queue message timeout of the work item" do
+        @worker.messages << FactoryGirl.create(:miq_queue, :msg_timeout => 60.minutes, :state => "dequeue")
+        @worker.update(:status         => described_class::STATUS_STOPPING,
+                       :last_heartbeat => 30.minutes.ago)
+        expect(subject).to be_falsey
+      end
+
       it "false if stopping and heartbeated recently" do
         @worker.update(:status         => described_class::STATUS_STOPPING,
                        :last_heartbeat => 1.minute.ago)

@@ -95,7 +95,7 @@ class EvmApplication
       s.miq_workers.order(:type).each do |w|
         data <<
           [w.type,
-           w.status,
+           w.status.sub("stopping", "stop pending"),
            w.id,
            w.pid,
            w.sql_spid,
