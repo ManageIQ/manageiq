@@ -69,7 +69,6 @@ RSpec.configure do |config|
 
   config.before(:each) do |example|
     EmsRefresh.try(:debug_failures=, true)
-    ApplicationController.handle_exceptions = false if %w(controller requests).include?(example.metadata[:type])
   end
 
   config.around(:each) do |example|
