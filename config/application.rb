@@ -18,7 +18,7 @@ require 'action_cable/engine'
 #  This variable should be a comma separated list of groups.
 #  The default BUNDLER_GROUPS below includes all bundler groups not in the Rails.groups.
 #
-ENV['BUNDLER_GROUPS'] ||= "manageiq_default"
+ENV['BUNDLER_GROUPS'] ||= "manageiq_default,ui_dependencies"
 
 if defined?(Bundler)
   groups = ENV['BUNDLER_GROUPS'].split(",").collect(&:to_sym)
