@@ -58,23 +58,7 @@ RSpec.configure do |config|
     config.example_status_persistence_file_path = Rails.root.join("tmp/rspec_example_store.txt")
   end
 
-  config.include UiConstants,    :type => :view
-
-  config.include UiConstants,          :type => :controller
-  config.include Spec::Support::AuthHelper, :type => :controller
-  config.include Spec::Support::AuthHelper, :type => :helper
-
-  config.include Spec::Support::PresenterHelper, :type => :presenter
-  config.define_derived_metadata(:file_path => /spec\/presenters/) do |metadata|
-    metadata[:type] ||= :presenter
-  end
-
   config.include Spec::Support::RakeTaskExampleGroup, :type => :rake_task
-  config.include Spec::Support::ButtonHelper, :type => :button
-  config.include Spec::Support::AuthHelper, :type => :button
-  config.define_derived_metadata(:file_path => /spec\/helpers\/application_helper\/buttons/) do |metadata|
-    metadata[:type] = :button
-  end
 
   # config.before(:all) do
   #   EvmSpecHelper.log_ruby_object_usage
