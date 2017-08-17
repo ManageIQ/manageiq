@@ -10,6 +10,7 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'application_helper'
 
 require 'rspec/rails'
+require 'aruba/rspec'
 require 'vcr'
 require 'cgi'
 
@@ -49,6 +50,8 @@ RSpec.configure do |config|
     # File store for --only-failures option
     config.example_status_persistence_file_path = Rails.root.join("tmp/rspec_example_store.txt")
   end
+
+  config.include Aruba::Api, :type => :worker
 
   config.include Spec::Support::RakeTaskExampleGroup, :type => :rake_task
 
