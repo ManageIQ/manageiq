@@ -9,7 +9,6 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'application_helper'
 
-require 'rails-controller-testing'
 require 'rspec/rails'
 require 'vcr'
 require 'cgi'
