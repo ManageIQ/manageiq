@@ -79,7 +79,7 @@ class EvmApplication
   def self.output_workers_status(workers)
     data = workers.sort_by(&:type).collect do |w|
       [w.type,
-       w.status,
+       w.status.sub("stopping", "stop pending"),
        w.id,
        w.pid,
        w.sql_spid,

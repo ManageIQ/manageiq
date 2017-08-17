@@ -408,7 +408,7 @@ class MiqWorker < ApplicationRecord
     # the database, so we can see how long it's been
     # 'stopping' by checking the last_heartbeat.
     stopping_timeout = self.class.worker_settings[:stopping_timeout] || 10.minutes
-    status == MiqWorker::STATUS_STOPPING && last_heartbeat < stopping_timeout.seconds.ago
+    status == MiqWorker::STATUS_STOPPING && (last_heartbeat + current_timeout.to_i) < stopping_timeout.seconds.ago
   end
 
   def validate_active_messages
