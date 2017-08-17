@@ -308,6 +308,18 @@ describe "MiqWorker Monitor" do
             end
           end
         end
+
+        context "for messaging through a key store" do
+          before do
+            allow(@miq_server).to receive(:key_store).and_return(@key_store)
+            @ts = Time.now.utc
+          end
+
+          it "should update timestamp with config or role changes" do
+            expect(@miq_server).to receive(:set_last_change).with("last_config_change", @ts)
+            @miq_server.update_sync_timestamp(@ts)
+          end
+        end
       end
 
       context "threshold validation" do
