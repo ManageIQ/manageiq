@@ -22,6 +22,7 @@ end
 
 require 'rspec/rails'
 require 'aruba/rspec'
+require 'database_cleaner'
 require 'vcr'
 require 'cgi'
 
@@ -50,8 +51,26 @@ RSpec.configure do |config|
   end
 
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
-  config.use_transactional_fixtures = true
-  config.use_instantiated_fixtures  = false
+
+  config.before(:suite) do
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
+  config.before(:each) do
+    DatabaseCleaner.strategy = :transaction
+  end
+
+  config.before(:each, :type => :worker) do
+    DatabaseCleaner.strategy = :truncation
+  end
+
+  config.before(:each) do
+    DatabaseCleaner.start
+  end
+
+  config.append_after(:each) do
+    DatabaseCleaner.clean
+  end
 
   # From rspec-rails, infer what helpers to mix in, such as `get` and
   # `post` methods in spec/controllers, without specifying type
