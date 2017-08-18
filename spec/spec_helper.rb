@@ -9,6 +9,17 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'application_helper'
 
+# Fixing a bug with miq-kernel, should be updated to match this or just removed
+module Kernel
+  def require_relative(path)
+    if File.exist?(path)
+      require path
+    else
+      require File.join(File.dirname(caller[0]), path.to_str)
+    end
+  end
+end
+
 require 'rspec/rails'
 require 'aruba/rspec'
 require 'vcr'
