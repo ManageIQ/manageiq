@@ -56,6 +56,7 @@ RSpec.configure do |config|
   # From rspec-rails, infer what helpers to mix in, such as `get` and
   # `post` methods in spec/controllers, without specifying type
   config.infer_spec_type_from_file_location!
+  WorkerSpecHelper.setup_worker_dir_metadata(config)
 
   unless ENV['CI']
     # File store for --only-failures option
@@ -63,6 +64,7 @@ RSpec.configure do |config|
   end
 
   config.include Aruba::Api, :type => :worker
+  config.include WorkerSpecHelper, :type => :worker
 
   config.include Spec::Support::RakeTaskExampleGroup, :type => :rake_task
 
