@@ -1,5 +1,5 @@
 name,description
-evm_operations,CFME Operation
+evm_operations,Appliance Operation
 ems_operations,Provider Operation
 host_operations,Host Operation
 compliance,Compliance
