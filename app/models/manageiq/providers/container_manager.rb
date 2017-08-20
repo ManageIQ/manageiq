@@ -34,6 +34,14 @@ module ManageIQ::Providers
     alias :all_computer_systems :computer_systems
     alias :all_computer_system_ids :computer_system_ids
 
+    def all_container_groups
+      ContainerGroup.where(:ems_id => id).or(ContainerGroup.where(:old_ems_id => id))
+    end
+
+    def all_container_images
+      ContainerImage.where(:ems_id => id).or(ContainerImage.where(:old_ems_id => id))
+    end
+
     def aggregate_cpu_total_cores(targets = nil)
       aggregate_hardware(:computer_systems, :cpu_total_cores, targets)
     end
