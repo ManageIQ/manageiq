@@ -26,6 +26,7 @@ MIQ_WORKER_TYPES = {
   "ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcher"           => %i(manageiq_default),
   "ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCollectorWorker" => %i(manageiq_default),
   "ManageIQ::Providers::Kubernetes::ContainerManager::RefreshWorker"          => %i(manageiq_default),
+  "ManageIQ::Providers::Kubernetes::MonitoringManager::EventCatcher"          => %i(manageiq_default),
   "ManageIQ::Providers::Lenovo::PhysicalInfraManager::EventCatcher"           => %i(manageiq_default),
   "ManageIQ::Providers::Lenovo::PhysicalInfraManager::RefreshWorker"          => %i(manageiq_default),
   "ManageIQ::Providers::Microsoft::InfraManager::RefreshWorker"               => %i(manageiq_default),
@@ -133,6 +134,7 @@ MIQ_WORKER_TYPES_IN_KILL_ORDER = %w(
   ManageIQ::Providers::Hawkular::DatawarehouseManager::EventCatcher
   ManageIQ::Providers::Google::CloudManager::EventCatcher
   ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcher
+  ManageIQ::Providers::Kubernetes::MonitoringManager::EventCatcher
   ManageIQ::Providers::Openshift::ContainerManager::EventCatcher
   ManageIQ::Providers::Lenovo::PhysicalInfraManager::EventCatcher
   MiqUiWorker
