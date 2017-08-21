@@ -10,6 +10,7 @@ class ContainerTemplate < ApplicationRecord
            :dependent  => :destroy
 
   serialize :objects, Array
+  serialize :object_labels, Hash
 
   acts_as_miq_taggable
 end
