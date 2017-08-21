@@ -102,6 +102,8 @@ class VmScan < Job
       if vm.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm) ||
          vm.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm)
         return unless create_snapshot(vm)
+      elsif vm.kind_of?(ManageIQ::Providers::Azure::CloudManager::Vm) && vm.require_snapshot_for_scan?
+        return unless create_snapshot(vm)
       elsif vm.require_snapshot_for_scan?
         proxy = MiqServer.find(miq_server_id)
 
