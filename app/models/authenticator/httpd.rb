@@ -57,9 +57,9 @@ module Authenticator
 
     def find_or_initialize_user(identity, username)
       user_attrs, _membership_list = identity
-      return super(identity, username) if user_attrs[:domain].nil?
+      return super if user_attrs[:domain].nil?
 
-      upn_username = "#{user_attrs[:username]}@#{user_attrs[:domain].downcase}"
+      upn_username = "#{user_attrs[:username]}@#{user_attrs[:domain]}".downcase
 
       user = find_userid_as_upn(upn_username)
       user ||= find_userid_as_distinguished_name(user_attrs, upn_username)
