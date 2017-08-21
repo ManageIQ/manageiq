@@ -2,7 +2,8 @@ module MiqProvisionQuotaMixin
   # Supported quota types
   # vm_by_owner, vm_by_group
   # provision_by_owner, provision_by_group
-  # requset_by_owner, request_by_group
+  # request_by_owner, request_by_group
+
   def check_quota(quota_type = :vms_by_owner, options = {})
     quota_method = "quota_#{quota_type}"
     unless respond_to?(quota_method)
@@ -67,6 +68,11 @@ module MiqProvisionQuotaMixin
   # Collect stats based on currently active provision requests for users in the same LDAP group as the owner.
   def quota_active_provisions_by_group(options)
     quota_provision_stats(:quota_find_active_prov_request_by_group, options.merge(:nil_vm_id_only => true))
+  end
+
+  # Collect stats based on currently active provision requests for user tenant.
+  def quota_active_provisions_by_tenant(options)
+    quota_provision_stats(:quota_find_active_prov_request_by_tenant, options.merge(:nil_vm_id_only => true))
   end
 
   # Collect stats based on currently active provision requesets for the same owner.
@@ -173,7 +179,7 @@ module MiqProvisionQuotaMixin
 
     queued_requests = MiqQueue.where(
       :class_name  => 'MiqProvisionRequest',
-      :method_name => 'create_provision_instances',
+      :method_name => 'create_request_tasks',
       :state       => 'ready',
       :deliver_on  => scheduled_range,
     )
@@ -247,26 +253,32 @@ module MiqProvisionQuotaMixin
 
   def quota_find_active_prov_request_by_owner(options)
     email = get_option(:owner_email).to_s.strip
-    quota_find_active_prov_request(options).select { |p| email.casecmp(p.get_option(:owner_email).to_s.strip) == 0 }
+    quota_find_active_prov_request(options).select { |p| email.casecmp(p.request_owner_email(p)).zero? }
+  end
+
+  def request_owner_email(request)
+    service_request?(request) ? request.requester.email : request.get_option(:owner_email).to_s.strip
+  end
+
+  def service_request?(request)
+    request.kind_of?(ServiceTemplateProvisionRequest)
   end
 
   def quota_find_active_prov_request_by_group(options)
-    prov_requests = []
-    prov_owner = get_owner
-    unless prov_owner.nil?
-      group = prov_owner.ldap_group
-      prov_requests = quota_find_active_prov_request(options).select do |p|
-        prov_req_owner = p.get_owner
-        prov_req_owner && group.casecmp(prov_req_owner.ldap_group) == 0
-      end
+    prov_request_group = miq_request.options[:requester_group]
+    quota_find_active_prov_request(options).select do |r|
+      prov_request_group == r.options[:requester_group]
     end
-    prov_requests
+  end
+
+  def quota_find_active_prov_request_by_tenant(options)
+    quota_find_active_prov_request(options).where(:tenant => miq_request.tenant)
   end
 
   def quota_find_active_prov_request(_options)
     prov_req_ids = []
     MiqQueue
-      .where(:method_name => 'create_provision_instances', :state => 'dequeue', :class_name => 'MiqProvisionRequest')
+      .where(:method_name => 'create_request_tasks', :state => 'dequeue', :class_name => %w(MiqProvisionRequest ServiceTemplateProvisionRequest))
       .each do |q|
         prov_req_ids << q.instance_id
       end
@@ -274,16 +286,56 @@ module MiqProvisionQuotaMixin
     prov_ids = []
     MiqQueue
       .where(:method_name => 'deliver', :state => %w(ready dequeue), :class_name => 'MiqAeEngine')
-      .where("task_id like ?", '%miq_provision_%')
+      .where("task_id like ?", '%_provision_%')
       .each do |q|
         if q.args
           args = q.args.first
-          prov_ids << args[:object_id] if args[:object_type] == 'MiqProvision' && !args[:object_id].blank?
+          prov_ids << args[:object_id] if args[:object_type].include?('Provision') && !args[:object_id].blank?
         end
       end
-    prov_req_ids += MiqProvision.where(:id => prov_ids).pluck("miq_request_id")
+    prov_req_ids += MiqRequestTask.where(:id => prov_ids).pluck("miq_request_id")
 
-    MiqProvisionRequest.where(:id => prov_req_ids.compact.uniq)
+    MiqRequest.where(:id => prov_req_ids.compact.uniq)
+  end
+
+  def vm_quota_values(pr, result)
+    num_vms_for_request = number_of_vms(pr)
+    return if num_vms_for_request.zero?
+    flavor_obj = flavor(pr)
+    result[:count] += num_vms_for_request
+    result[:memory] += memory(pr, cloud?(pr), vendor(pr), flavor_obj) * num_vms_for_request
+    result[:cpu] += number_of_cpus(pr, cloud?(pr), flavor_obj) * num_vms_for_request
+    result[:storage] += storage(pr, cloud?(pr), vendor(pr), flavor_obj) * num_vms_for_request
+    result[:ids] << pr.id
+
+    pr.miq_request_tasks.each do |p|
+      next unless p.state == 'Active'
+      host_id, storage_id = p.get_option(:dest_host).to_i, p.get_option(:dest_storage).to_i
+      active = result[:active]
+      active[:memory_by_host_id][host_id] += memory(p, cloud?(pr), vendor(pr), flavor_obj)
+      active[:cpu_by_host_id][host_id] += number_of_cpus(p, cloud?(pr), flavor_obj)
+      active[:storage_by_id][storage_id] += storage(p, cloud?(pr), vendor(pr), flavor_obj)
+      active[:vms_by_storage_id][storage_id] << p.id
+      active[:ids] << p.id
+    end
+  end
+
+  def service_quota_values(request, result)
+    request.service_template.service_resources.each do |sr|
+      if request.service_template.service_type == 'composite'
+        bundle_quota_values(sr, result)
+      else
+        next if request.service_template.prov_type.starts_with?("generic")
+        vm_quota_values(sr.resource, result)
+      end
+    end
+  end
+
+  def bundle_quota_values(service_resource, result)
+    return if service_resource.resource.prov_type.starts_with?('generic')
+    service_resource.resource.service_resources.each do |sr|
+      vm_quota_values(sr.resource, result)
+    end
   end
 
   def quota_provision_stats(prov_method, options)
@@ -296,33 +348,54 @@ module MiqProvisionQuotaMixin
              }
 
     send(prov_method, options).each do |pr|
-      num_vms_for_request = pr.get_option(:number_of_vms).to_i
-      if options[:nil_vm_id_only] == true && pr.miq_request_tasks.length == num_vms_for_request
-        no_vm = pr.miq_request_tasks.find_all { |p| p.destination_id.nil? && p.state != 'finished' }
-        num_vms_for_request = no_vm.length
-      end
-
-      unless num_vms_for_request.zero?
-        new_disk_storage_size = pr.get_new_disks.inject(0) { |s, d| s += d[:sizeInMB].to_i } * 1.megabyte
-        result[:count] += num_vms_for_request
-        result[:memory] += pr.get_option(:vm_memory).to_i * num_vms_for_request
-        result[:cpu] += pr.get_option(:number_of_cpus).to_i * num_vms_for_request
-        result[:storage] += (pr.vm_template.allocated_disk_storage.to_i + new_disk_storage_size) * num_vms_for_request
-        result[:ids] << pr.id
-
-        # Include a resource breakdown for actively provisioning records
-        pr.miq_request_tasks.each do |p|
-          next unless p.state == 'active'
-          host_id, storage_id = p.get_option(:dest_host).to_i, p.get_option(:dest_storage).to_i
-          active = result[:active]
-          active[:memory_by_host_id][host_id] += p.get_option(:vm_memory).to_i
-          active[:cpu_by_host_id][host_id] += p.get_option(:number_of_cpus).to_i
-          active[:storage_by_id][storage_id] += p.vm_template.allocated_disk_storage.to_i + new_disk_storage_size
-          active[:vms_by_storage_id][storage_id] << p.id
-          active[:ids] << p.id
-        end
-      end
+      service_request?(pr) ? service_quota_values(pr, result) : vm_quota_values(pr, result)
     end
     result
+  end
+
+  def number_of_vms(request)
+    num_vms_for_request = request.get_option(:number_of_vms).to_i
+    if options[:nil_vm_id_only] == true && request.miq_request_tasks.length == num_vms_for_request
+      num_vms_for_request = request.miq_request_tasks.where(:destination_id => nil).where.not(:state => 'finished').count
+    end
+    num_vms_for_request
+  end
+
+  def cloud?(request)
+    request.source.try(:cloud) || false
+  end
+
+  def vendor(request)
+    request.source.try(:vendor)
+  end
+
+  def flavor(request)
+    Flavor.find(request.get_option(:instance_type)) if cloud?(request)
+  end
+
+  def number_of_cpus(prov, cloud, flavor_obj)
+    return flavor_obj.try(:cpus) if cloud
+    request = prov.kind_of?(MiqRequest) ? prov : prov.miq_request
+    num_cpus = request.get_option(:number_of_sockets).to_i * request.get_option(:cores_per_socket).to_i
+    num_cpus.zero? ? request.get_option(:number_of_cpus).to_i : num_cpus
+  end
+
+  def storage(prov, cloud, vendor, flavor_obj = nil)
+    if cloud
+      if vendor == 'google'
+        return prov.get_option(:boot_disk_size).to_i.gigabytes
+      end
+      return nil unless flavor_obj
+      flavor_obj.root_disk_size.to_i + flavor_obj.ephemeral_disk_size.to_i + flavor_obj.swap_disk_size.to_i
+    else
+      prov.kind_of?(MiqRequest) ? prov.vm_template.provisioned_storage : prov.miq_request.vm_template.provisioned_storage
+    end
+  end
+
+  def memory(prov, cloud, vendor, flavor_obj = nil)
+    return flavor_obj.try(:memory) if cloud
+    request = prov.kind_of?(MiqRequest) ? prov : prov.miq_request
+    memory = request.get_option(:vm_memory).to_i
+    %w(amazon openstack google).include?(vendor) ? memory : memory.megabytes
   end
 end
