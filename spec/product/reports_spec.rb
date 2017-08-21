@@ -1,5 +1,5 @@
 describe 'YAML reports' do
-  let(:report_dirs) { [Rails.root.join("product", "reports"), "#{TIMELINES_FOLDER}/miq_reports"] }
+  let(:report_dirs) { [Rails.root.join("product", "reports"), "#{ApplicationController::TIMELINES_FOLDER}/miq_reports"] }
   let(:report_yamls) { report_dirs.collect { |dir| Dir.glob(File.join(dir, "**", "*.yaml")) }.flatten }
   let(:chart_dirs) { [ApplicationController::Performance::CHARTS_REPORTS_FOLDER] }
   let(:chart_yamls) { chart_dirs.collect { |dir| Dir.glob(File.join(dir, "**", "*.yaml")) }.flatten }
