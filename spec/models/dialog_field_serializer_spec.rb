@@ -138,7 +138,9 @@ describe DialogFieldSerializer do
         allow(dialog_field).to receive(:values).and_return("values")
       end
 
-      it "serializes the category name and description" do
+      it "serializes the category name, description and default value" do
+        default_values = "one,two"
+        dialog_field.update_attributes(:default_value => default_values)
         expect(dialog_field_serializer.serialize(dialog_field))
           .to eq(expected_serialized_values.merge(
                    "resource_action"         => "serialized resource action",
@@ -147,7 +149,8 @@ describe DialogFieldSerializer do
                      :category_id          => "123",
                      :category_name        => "best category ever",
                      :category_description => "best category ever"
-                   }
+                   },
+                   "default_value"           => default_values.split(",").to_json
           ))
       end
     end
