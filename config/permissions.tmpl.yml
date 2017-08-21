@@ -11,6 +11,8 @@
 - :conf
 - :inf
 - :mdl
+- :monitor
+- :monitor_alerts
 - :dwh
 - :net
 - :opt
