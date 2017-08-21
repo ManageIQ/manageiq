@@ -2077,13 +2077,13 @@ Vmdb::Application.routes.draw do
         edit
         show
         ownership
-        ownership_form_fields
       ),
       :post => %w(
         edit
         edit_vm
         form_field_changed
         show
+        ownership_form_fields
       ) +
                ownership_post
     },
