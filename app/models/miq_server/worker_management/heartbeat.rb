@@ -19,6 +19,7 @@ module MiqServer::WorkerManagement::Heartbeat
   def worker_heartbeat(worker_pid, worker_class = nil, queue_name = nil)
     # Set the heartbeat in memory and consume a message
     worker_class = worker_class.constantize if worker_class.kind_of?(String)
+
     messages = []
     @workers_lock.synchronize(:EX) do
       worker_add(worker_pid)

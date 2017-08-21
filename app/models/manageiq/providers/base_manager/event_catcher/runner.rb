@@ -18,7 +18,7 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
     do_exit("EMS ID [#{@cfg[:ems_id]}] failed authentication check.", 1) unless @ems.authentication_check.first
 
     @filtered_events = @ems.blacklisted_event_names
-    _log.info("#{log_prefix} Event Catcher skipping the following events:")
+    _log.info "#{log_prefix} Event Catcher skipping the following events:"
     $log.log_hashes(@filtered_events)
 
     configure_event_flooding_prevention if worker_settings.try(:[], :flooding_monitor_enabled)

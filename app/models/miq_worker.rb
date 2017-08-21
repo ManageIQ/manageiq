@@ -336,7 +336,7 @@ class MiqWorker < ApplicationRecord
     owner_to_pool[Process.ppid].values.compact.each do |pool|
       pool.connections.each do |conn|
         socket = conn.raw_connection.socket
-        _log.info("Closing socket: #{socket}")
+        _log.info "Closing socket: #{socket}"
         IO.for_fd(socket).close
       end
     end
@@ -577,7 +577,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.renice(pid)
-    AwesomeSpawn.run("renice", :params => {:n => nice_increment, :p => pid})
+    AwesomeSpawn.run("renice", :params =>  {:n => nice_increment, :p => pid })
   end
 
   def self.nice_increment
