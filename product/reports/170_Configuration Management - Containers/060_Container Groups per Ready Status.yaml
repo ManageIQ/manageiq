@@ -14,7 +14,11 @@ col_order:
 headers:
 - "# Pods per Ready Status"
 - Ready Condition Status
-conditions:
+conditions: !ruby/object:MiqExpression
+  exp:
+    IS NOT NULL:
+      field: ContainerGroup-deleted_on
+      value:
 order: Ascending
 sortby:
 - ready_condition_status
