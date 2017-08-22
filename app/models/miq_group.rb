@@ -118,6 +118,14 @@ class MiqGroup < ApplicationRecord
   end
 
   def self.get_httpd_groups_by_user(user)
+    if MiqEnvironment::Command.is_container?
+      get_httpd_groups_by_user_via_auth_api(user)
+    else
+      get_httpd_groups_by_user_via_dbus(user)
+    end
+  end
+
+  def self.get_httpd_groups_by_user_via_dbus(user)
     require "dbus"
 
     username = user.kind_of?(self) ? user.userid : user
@@ -133,6 +141,31 @@ class MiqGroup < ApplicationRecord
       raise _("Unable to get groups for user %{user_name} - %{error}") % {:user_name => username, :error => err}
     end
     strip_group_domains(user_groups.first)
+  end
+
+  def self.get_httpd_groups_by_user_via_auth_api(user)
+    host = ENV["HTTPD_AUTH_API_SERVICE_HOST"]
+    port = ENV["HTTPD_AUTH_API_SERVICE_PORT"]
+    conn = Faraday.new(:url => "http://#{host}:#{port}") do |faraday|
+      faraday.request(:url_encoded)               # form-encode POST params
+      faraday.adapter(Faraday.default_adapter)    # make requests with Net::HTTP
+    end
+
+    begin
+      response = conn.run_request(:get, "/api/dbus/user_groups/#{user}", nil, nil) do |req|
+        req.headers[:content_type] = "application/json"
+        req.headers[:accept]       = "application/json"
+      end
+    rescue => err
+      raise("Failed to query the httpd Authentication API service - #{err}")
+    end
+
+    if response.body
+      body = JSON.parse(response.body.strip)
+    end
+
+    raise(body["error"]) if response.status >= 400
+    strip_group_domains(body["result"])
   end
 
   def get_filters(type = nil)

@@ -108,6 +108,14 @@ module Authenticator
     end
 
     def user_attrs_from_external_directory(username)
+      if MiqEnvironment::Command.is_container?
+        user_attrs_from_external_directory_via_auth_api(username)
+      else
+        user_attrs_from_external_directory_via_dbus(username)
+      end
+    end
+
+    def user_attrs_from_external_directory_via_dbus(username)
       return unless username
       require "dbus"
 
@@ -126,6 +134,34 @@ module Authenticator
       end
 
       attrs_needed.each_with_object({}) { |attr, hash| hash[attr] = Array(user_attrs[attr]).first }
+    end
+
+    def user_attrs_from_external_directory_via_auth_api(username)
+      host = ENV["HTTPD_AUTH_API_SERVICE_HOST"]
+      port = ENV["HTTPD_AUTH_API_SERVICE_PORT"]
+      conn = Faraday.new(:url => "http://#{host}:#{port}") do |faraday|
+        faraday.request(:url_encoded)               # form-encode POST params
+        faraday.adapter(Faraday.default_adapter)    # make requests with Net::HTTP
+      end
+
+      attrs_needed = "mail,givenname,sn,displayname"
+
+      begin
+        url = "/api/dbus/user_attrs/#{username}?attributes=#{attrs_needed}"
+        response = conn.run_request(:get, url, nil, nil) do |req|
+          req.headers[:content_type] = "application/json"
+          req.headers[:accept]       = "application/json"
+        end
+      rescue => err
+        raise("Failed to query the httpd Authentication API service - #{err}")
+      end
+
+      if response.body
+        body = JSON.parse(response.body.strip)
+      end
+
+      raise(body["error"]) if response.status >= 400
+      body["result"]
     end
   end
 end
