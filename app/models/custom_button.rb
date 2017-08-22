@@ -162,15 +162,6 @@ class CustomButton < ApplicationRecord
     visibility[:roles].include?(User.current_user.miq_user_role_name) || visibility[:roles].include?("_ALL_")
   end
 
-  def self.available_for_user(user, group)
-    user = get_user(user)
-    role = user.miq_user_role_name
-    # Return all automation uri's that has his role or is allowed for all roles.
-    all.to_a.select do |uri|
-      uri.parent && uri.parent.name == group && uri.visibility.key?(:roles) && (uri.visibility[:roles].include?(role) || uri.visibility[:roles].include?("_ALL_"))
-    end
-  end
-
   def self.get_user(user)
     user = User.find_by_userid(user) if user.kind_of?(String)
     raise _("Unable to find user '%{user}'") % {:user => user} if user.nil?
