@@ -29,6 +29,10 @@ describe CustomButtonSet do
     let(:set_data)          { {:applies_to_class => "Vm", :button_order => [custom_button_1.id, custom_button_2.id]} }
     let(:custom_button_set) { FactoryGirl.create(:custom_button_set, :name => "set_1", :set_data => set_data) }
 
+    before do
+      [custom_button_1, custom_button_2].each { |x| custom_button_set.add_member(x) }
+    end
+
     context 'when all CustomButtons#visibility_expression=nil' do
       let(:miq_expression) { nil }
 
