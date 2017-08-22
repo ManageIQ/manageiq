@@ -14,13 +14,28 @@ class CustomButton < ApplicationRecord
   acts_as_miq_set_member
 
   BUTTON_CLASSES = [
+    AvailabilityZone,
+    CloudNetwork,
+    CloudObjectStoreContainer,
+    CloudSubnet,
     CloudTenant,
+    CloudVolume,
+    ContainerGroup,
+    ContainerImage,
+    ContainerProject,
+    ContainerTemplate,
+    ContainerVolume,
     EmsCluster,
     ExtManagementSystem,
     Host,
+    LoadBalancer,
     MiqTemplate,
+    NetworkRouter,
+    OrchestrationStack,
+    SecurityGroup,
     Service,
     Storage,
+    Switch,
     Vm,
   ].freeze
 
