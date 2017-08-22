@@ -250,6 +250,11 @@ class MiqQueue < ApplicationRecord
     _log.info("#{MiqQueue.format_full_log_msg(self)}, Requeued")
   end
 
+  # TODO (juliancheal) This is a hack. Brakeman was giving us an SQL injection
+  # warning when we concatonated the queue_name string onto the query.
+  # Creating two seperate queries like this, resolves the Brakeman issue, but
+  # isn't idea. This will need to be rewritten using Arel queires at some point.
+
   MIQ_QUEUE_PEEK = <<-EOL
     state = 'ready'
     AND (zone IS NULL OR zone = ?)
@@ -257,12 +262,24 @@ class MiqQueue < ApplicationRecord
     AND (server_guid IS NULL OR server_guid = ?)
     AND (deliver_on IS NULL OR deliver_on <= ?)
     AND (priority <= ?)
+    AND queue_name = ?
+  EOL
+
+  MIQ_QUEUE_PEEK_ARRAY = <<-EOL
+    state = 'ready'
+    AND (zone IS NULL OR zone = ?)
+    AND (role IS NULL OR role IN (?))
+    AND (server_guid IS NULL OR server_guid = ?)
+    AND (deliver_on IS NULL OR deliver_on <= ?)
+    AND (priority <= ?)
+    AND queue_name in (?)
   EOL
 
   def self.peek(options = {})
     conditions, select, limit = options.values_at(:conditions, :select, :limit)
 
-    sql_for_peek = MIQ_QUEUE_PEEK + where_queue_name(conditions[:queue_name].kind_of?(Array))
+    sql_for_peek = conditions[:queue_name].kind_of?(Array) ? MIQ_QUEUE_PEEK_ARRAY : MIQ_QUEUE_PEEK
+
     cond = [
       sql_for_peek,
       conditions[:zone] || MiqServer.my_server.zone.name,
