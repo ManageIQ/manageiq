@@ -7,7 +7,7 @@ module ApplicationController::CiProcessing
   end
 
   def ownership_form_fields
-    render :json => build_ownership_hash(params[:id].split(/\s*,\s*/))
+    render :json => build_ownership_hash(params[:object_ids])
   end
 
   # Set Ownership selected db records

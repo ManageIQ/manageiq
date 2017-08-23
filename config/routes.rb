@@ -2077,13 +2077,13 @@ Vmdb::Application.routes.draw do
         edit
         show
         ownership
-        ownership_form_fields
       ),
       :post => %w(
         edit
         edit_vm
         form_field_changed
         show
+        ownership_form_fields
       ) +
                ownership_post
     },
@@ -2595,7 +2595,6 @@ Vmdb::Application.routes.draw do
         retire
         service_form_fields
         show
-        ownership_form_fields
       ),
       :post => %w(
         button
@@ -2612,6 +2611,7 @@ Vmdb::Application.routes.draw do
         x_button
         x_history
         x_show
+        ownership_form_fields
       ) +
                dialog_runner_post
     },
@@ -2730,7 +2730,6 @@ Vmdb::Application.routes.draw do
         right_size
         show
         show_list
-        ownership_form_fields
       ),
       :post => %w(
         edit_vm
@@ -2755,6 +2754,7 @@ Vmdb::Application.routes.draw do
         tree_autoload
         vmtree_selected
         ownership_update
+        ownership_form_fields
       ) +
                ownership_post +
                pre_prov_post
@@ -2783,7 +2783,6 @@ Vmdb::Application.routes.draw do
         detach
         evacuate
         evacuate_form_fields
-        ownership_form_fields
         associate_floating_ip
         associate_floating_ip_form_fields
         disassociate_floating_ip
@@ -2851,6 +2850,7 @@ Vmdb::Application.routes.draw do
         ownership_update
         associate_floating_ip_vm
         disassociate_floating_ip_vm
+        ownership_form_fields
       ) +
                adv_search_post +
                compare_post +
@@ -2882,7 +2882,6 @@ Vmdb::Application.routes.draw do
         retire
         show
         tagging_edit
-        ownership_form_fields
       ) +
                compare_get,
       :post => %w(
@@ -2944,6 +2943,7 @@ Vmdb::Application.routes.draw do
         wait_for_task
         win32_services
         ownership_update
+        ownership_form_fields
       ) +
                adv_search_post +
                compare_post +
@@ -2975,7 +2975,6 @@ Vmdb::Application.routes.draw do
         util_report_download
         utilization
         vm_show
-        ownership_form_fields
       ) +
                compare_get,
       :post => %w(
@@ -3047,6 +3046,7 @@ Vmdb::Application.routes.draw do
         x_search_by_name
         x_show
         ownership_update
+        ownership_form_fields
       ) +
                adv_search_post +
                compare_post +

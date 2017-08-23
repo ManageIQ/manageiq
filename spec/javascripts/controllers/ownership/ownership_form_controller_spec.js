@@ -24,7 +24,7 @@ describe('ownershipFormController', function() {
   beforeEach(inject(function(_$controller_) {
     var ownershipFormResponse = { user:  'testUser2',
                                   group: 'testGroup2'};
-    $httpBackend.whenGET('ownership_form_fields/1000000000001,1000000000003').respond(ownershipFormResponse);
+    $httpBackend.whenPOST('ownership_form_fields', { object_ids: [1000000000001,1000000000003]}).respond(ownershipFormResponse);
     $httpBackend.flush();
   }));
 

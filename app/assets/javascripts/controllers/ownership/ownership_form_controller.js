@@ -14,7 +14,7 @@ ManageIQ.angular.app.controller('ownershipFormController', ['$http', '$scope', '
     ManageIQ.angular.scope = $scope;
 
     miqService.sparkleOn();
-    $http.get('ownership_form_fields/' + objectIds.join(',')).success(function(data) {
+    $http.post('ownership_form_fields', {object_ids: objectIds}).success(function(data) {
       $scope.ownershipModel.user = data.user;
       $scope.ownershipModel.group = data.group;
       $scope.afterGet = true;
