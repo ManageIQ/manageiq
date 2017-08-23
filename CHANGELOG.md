@@ -11,7 +11,7 @@ The ManageIQ organization is continuously adding new smaller repositories.  The 
 
 ## Sprint 67 ending 2017-08-21
 
-### [Enhancement](https://github.com/ManageIQ/manageiq/issues?utf8=%E2%9C%93&q=milestone%3A%22Sprint%2067%20Ending%20Aug%2021%2C%202017%22%20label%3Aenhancement%20)
+### [Added](https://github.com/ManageIQ/manageiq/issues?utf8=%E2%9C%93&q=milestone%3A%22Sprint%2067%20Ending%20Aug%2021%2C%202017%22%20label%3Aenhancement%20)
 - Don't use secure sessions in containers [(#15819)](https://github.com/ManageIQ/manageiq/pull/15819)
 - Add metrics default limit to API settings [(#15797)](https://github.com/ManageIQ/manageiq/pull/15797)
 - Missing settings for a cloud batch saving and adding shared_options [(#15792)](https://github.com/ManageIQ/manageiq/pull/15792)
@@ -28,7 +28,7 @@ The ManageIQ organization is continuously adding new smaller repositories.  The 
 - Use memcached for sending messages to workers [(#15471)](https://github.com/ManageIQ/manageiq/pull/15471)
 - Remove the Eventcatcher from CinderManager [(#14962)](https://github.com/ManageIQ/manageiq/pull/14962)
 
-### [Performance](https://github.com/ManageIQ/manageiq/issues?utf8=%E2%9C%93&q=milestone%3A%22Sprint%2067%20Ending%20Aug%2021%2C%202017%22%20label%3Aperformance)
+### [Changed](https://github.com/ManageIQ/manageiq/issues?utf8=%E2%9C%93&q=milestone%3A%22Sprint%2067%20Ending%20Aug%2021%2C%202017%22%20label%3Aperformance)
 - Ultimate batch saving speedup [(#15761)](https://github.com/ManageIQ/manageiq/pull/15761)
 - Memoize Metric::Capture.capture_cols [(#15791)](https://github.com/ManageIQ/manageiq/pull/15791)
 
