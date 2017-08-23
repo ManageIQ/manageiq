@@ -193,10 +193,8 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
   end
 
   it 'will skip container_images if get_container_images = false' do
-    stub_settings(
+    stub_settings_merge(
       :ems_refresh => {:openshift => {:get_container_images => false}},
-      :http_proxy  => {},
-      :ssl         => {}
     )
 
     VCR.use_cassette(described_class.name.underscore,
