@@ -1,7 +1,7 @@
 class Chargeback
   class ConsumptionWithRollups < Consumption
     delegate :timestamp, :resource, :resource_id, :resource_name, :resource_type, :parent_ems,
-             :hash_features_affecting_rate, :tag_list_with_prefix, :parents_determining_rate,
+             :hash_features_affecting_rate, :parents_determining_rate,
              :to => :first_metric_rollup_record
 
     def initialize(metric_rollup_records, start_time, end_time)
@@ -11,6 +11,10 @@ class Chargeback
 
     def tag_names
       first_metric_rollup_record.tag_names.split('|')
+    end
+
+    def tag_list_with_prefix
+      @tag_list_with_prefix ||= @rollups.map(&:tag_list_with_prefix).flatten.uniq
     end
 
     def max(metric)
