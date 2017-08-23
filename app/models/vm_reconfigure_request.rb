@@ -95,4 +95,24 @@ class VmReconfigureRequest < MiqRequest
   def my_role
     'ems_operations'
   end
+
+  def update_request_status
+    super
+    return unless request_state == 'finished'
+
+    q_options = {:zone => my_zone}
+    options = {
+      :fqclass_name  => 'Infrastructure/VM/Reconfigure/Email',
+      :instance_name => 'VmReconfigureTaskComplete',
+      :user_id       => requester.id,
+      :miq_group_id  => requester.current_group.id,
+      :tenant_id     => tenant.id
+    }
+
+    Vm.where(:id => self.options[:src_ids]).each do |vm|
+      options[:object_type] = vm.class.name
+      options[:object_id]   = vm.id
+      MiqAeEngine.deliver_queue(options, q_options)
+    end
+  end
 end
