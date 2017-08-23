@@ -205,6 +205,8 @@ RSpec.describe "reports API" do
         :success => true,
         :message => "running report #{report.id}"
       )
+      actual = MiqReportResult.find(ApplicationRecord.uncompress_id(response.parsed_body["result_id"]))
+      expect(actual.userid).to eq("api_user_id")
     end
 
     it "can schedule a run" do
