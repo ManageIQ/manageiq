@@ -352,18 +352,22 @@ module OpenstackHandle
       @tenant_names ||= tenants.collect(&:name)
     end
 
+    def tenant_accessible?(name)
+      begin
+        compute_service(name)
+        true
+      rescue Excon::Errors::Unauthorized
+        false
+      end
+    end
+
     def accessible_tenants
       @accessible_tenants ||= tenants.select do |t|
         # avoid 401 Unauth errors when checking for accessible tenants
         # the "services" tenant is a special tenant in openstack reserved
         # specifically for the various services
         next if t.name == "services"
-        begin
-          compute_service(t.name)
-          true
-        rescue Excon::Errors::Unauthorized
-          false
-        end
+        tenant_accessible?(t.name)
       end
     end
 
@@ -372,8 +376,11 @@ module OpenstackHandle
     end
 
     def default_tenant_name
-      return @default_tenant_name ||= "admin" if accessible_tenant_names.include?("admin")
-      @default_tenant_name ||= accessible_tenant_names.detect { |tn| tn != "services" }
+      return @default_tenant_name ||= "admin" if tenant_accessible?("admin")
+      tenant_names.each do |name|
+        next if name == "services"
+        return @default_tenant_name ||= name if tenant_accessible?(name)
+      end
     end
 
     def service_for_each_accessible_tenant(service_name, &block)
