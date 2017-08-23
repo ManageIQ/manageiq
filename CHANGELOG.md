@@ -32,7 +32,7 @@ The ManageIQ organization is continuously adding new smaller repositories.  The 
 - Ultimate batch saving speedup [(#15761)](https://github.com/ManageIQ/manageiq/pull/15761)
 - Memoize Metric::Capture.capture_cols [(#15791)](https://github.com/ManageIQ/manageiq/pull/15791)
 
-### Fixed
+### [(Fixed)](https://github.com/ManageIQ/manageiq/issues?utf8=%E2%9C%93&q=milestone%3A%22Sprint%2067%20Ending%20Aug%2021%2C%202017%22%20label%3Abug)
 - Remove rails-controller-testing from Gemfile [(#15852)](https://github.com/ManageIQ/manageiq/pull/15852)
 - Use ruby not runner for run single worker [(#15825)](https://github.com/ManageIQ/manageiq/pull/15825)
 - Handle pid in run_single_worker.rb properly [(#15820)](https://github.com/ManageIQ/manageiq/pull/15820)
