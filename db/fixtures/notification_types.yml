@@ -174,3 +174,13 @@
   :expires_in: 24.hours
   :level: :error
   :audience: global
+- :name: vm_destroy_success
+  :message: 'Destroying Virtual Machine %{subject} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: vm_destroy_error
+  :message: 'Destroying Virtual Machine %{subject} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
