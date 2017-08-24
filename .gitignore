@@ -42,7 +42,6 @@ bin/*
 config/apache
 config/cockpit
 config/database.yml*
-config/cable.yml
 config/vmdb.yml.db
 
 config/initializers/*.local.rb
