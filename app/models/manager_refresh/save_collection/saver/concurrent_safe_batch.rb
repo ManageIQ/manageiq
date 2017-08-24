@@ -58,10 +58,10 @@ module ManagerRefresh::SaveCollection
           all_attribute_keys.merge(attributes_index[index].keys)
         end
 
-        all_attribute_keys << :created_at if inventory_collection.supports_created_at?
-        all_attribute_keys << :updated_at if inventory_collection.supports_updated_at?
-        all_attribute_keys << :created_on if inventory_collection.supports_created_on?
-        all_attribute_keys << :updated_on if inventory_collection.supports_updated_on?
+        all_attribute_keys << :created_at if supports_created_at?
+        all_attribute_keys << :updated_at if supports_updated_at?
+        all_attribute_keys << :created_on if supports_created_on?
+        all_attribute_keys << :updated_on if supports_updated_on?
 
         _log.info("*************** PROCESSING #{inventory_collection} of size #{inventory_collection.size} *************")
 
@@ -73,7 +73,7 @@ module ManagerRefresh::SaveCollection
           inventory_collection.custom_reconnect_block.call(inventory_collection, inventory_objects_index, attributes_index)
         end
 
-        all_attribute_keys << :type if inventory_collection.supports_sti?
+        all_attribute_keys << :type if supports_sti?
         # Records that were not found in the DB but sent for saving, we will be creating these in the DB.
         if inventory_collection.create_allowed?
           inventory_objects_index.each_slice(batch_size_for_persisting) do |batch|
