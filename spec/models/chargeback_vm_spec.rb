@@ -499,6 +499,8 @@ describe ChargebackVm do
         [rate_assignment_options_1, rate_assignment_options_2].each do |rate_assignment|
           metric_rollup.tag_names = rate_assignment[:tag].first.tag.send(:name_path)
           uniq_rates = chargeback_vm.get(consumption)
+          consumption.instance_variable_set(:@tag_names, nil)
+          consumption.instance_variable_set(:@hash_features_affecting_rate, nil)
           expect([rate_assignment[:cb_rate]]).to match_array(uniq_rates)
         end
       end
