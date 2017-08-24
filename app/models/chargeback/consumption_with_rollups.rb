@@ -10,14 +10,16 @@ class Chargeback
     end
 
     def hash_features_affecting_rate
-      tags = tag_names.reject { |n| n.starts_with?('folder_path_') }.sort.join('|')
-      keys = [tags] + first_metric_rollup_record.resource_parents.map(&:id)
-      keys += [first_metric_rollup_record.resource.container_image, timestamp] if resource_type == Container.name
-      keys.join('_')
+      @hash_features_affecting_rate ||= begin
+        tags = tag_names.reject { |n| n.starts_with?('folder_path_') }.sort.join('|')
+        keys = [tags] + first_metric_rollup_record.resource_parents.map(&:id)
+        keys += [first_metric_rollup_record.resource.container_image, timestamp] if resource_type == Container.name
+        keys.join('_')
+      end
     end
 
     def tag_names
-      @rollups.inject([]) do |memo, rollup|
+      @tag_names ||= @rollups.inject([]) do |memo, rollup|
         memo |= rollup.tag_names.split('|') if rollup.tag_names.present?
         memo
       end
