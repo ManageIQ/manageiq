@@ -4,10 +4,6 @@ module ManageIQ::Providers
 
     include Inflector::Methods
 
-    has_many :child_managers,
-             :foreign_key => :parent_ems_id,
-             :class_name  => "ManageIQ::Providers::BaseManager"
-
     def self.metrics_collector_queue_name
       self::MetricsCollectorWorker.default_queue_name
     end
