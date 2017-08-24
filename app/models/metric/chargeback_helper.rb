@@ -1,13 +1,6 @@
 module Metric::ChargebackHelper
   TAG_MANAGED_PREFIX = "/tag/managed/".freeze
 
-  def hash_features_affecting_rate
-    tags = tag_names.split('|').reject { |n| n.starts_with?('folder_path_') }.sort.join('|')
-    keys = [tags] + resource_parents.map(&:id)
-    keys += [resource.container_image, timestamp] if resource_type == Container.name
-    keys.join('_')
-  end
-
   def tag_prefix
     klass_prefix = case resource_type
                    when Container.name        then 'container_image'

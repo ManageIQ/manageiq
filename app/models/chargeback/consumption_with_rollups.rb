@@ -1,7 +1,7 @@
 class Chargeback
   class ConsumptionWithRollups < Consumption
     delegate :timestamp, :resource, :resource_id, :resource_name, :resource_type, :parent_ems,
-             :hash_features_affecting_rate, :parents_determining_rate,
+             :parents_determining_rate,
              :to => :first_metric_rollup_record
 
     def initialize(metric_rollup_records, start_time, end_time)
@@ -9,8 +9,18 @@ class Chargeback
       @rollups = metric_rollup_records
     end
 
+    def hash_features_affecting_rate
+      tags = tag_names.reject { |n| n.starts_with?('folder_path_') }.sort.join('|')
+      keys = [tags] + first_metric_rollup_record.resource_parents.map(&:id)
+      keys += [first_metric_rollup_record.resource.container_image, timestamp] if resource_type == Container.name
+      keys.join('_')
+    end
+
     def tag_names
-      first_metric_rollup_record.tag_names.split('|')
+      @rollups.inject([]) do |memo, rollup|
+        memo |= rollup.tag_names.split('|') if rollup.tag_names.present?
+        memo
+      end
     end
 
     def tag_list_with_prefix
