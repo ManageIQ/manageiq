@@ -65,6 +65,18 @@ describe ChargebackContainerProject do
 
     subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(options).first.first }
 
+    context 'when first metric rollup has tag_names=nil' do
+      before do
+        @project.metric_rollups.first.update_attributes(:tag_names => nil)
+      end
+
+      it "cpu" do
+        metric_used = used_average_for(:cpu_usage_rate_average, hours_in_day, @project)
+        expect(subject.cpu_cores_used_metric).to eq(metric_used)
+        expect(subject.cpu_cores_used_cost).to be_within(0.01).of(metric_used * hourly_rate * hours_in_day)
+      end
+    end
+
     it "cpu" do
       metric_used = used_average_for(:cpu_usage_rate_average, hours_in_day, @project)
       expect(subject.cpu_cores_used_metric).to eq(metric_used)

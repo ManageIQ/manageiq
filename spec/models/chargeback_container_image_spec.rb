@@ -67,6 +67,16 @@ describe ChargebackContainerImage do
 
     subject { ChargebackContainerImage.build_results_for_report_ChargebackContainerImage(options).first.first }
 
+    context 'when first metric rollup has tag_names=nil' do
+      before do
+        @container.metric_rollups.first.update_attributes(:tag_names => nil)
+      end
+
+      it "fixed_compute" do
+        expect(subject.fixed_compute_1_cost).to eq(hourly_rate * hours_in_day)
+      end
+    end
+
     it "fixed_compute" do
       expect(subject.fixed_compute_1_cost).to eq(hourly_rate * hours_in_day)
     end
