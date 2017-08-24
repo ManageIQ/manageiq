@@ -90,7 +90,7 @@ class GenericObjectDefinition < ApplicationRecord
 
   def add_property_attribute(name, type)
     properties[:attributes][name.to_s] = type.to_sym
-    save
+    save!
   end
 
   def delete_property_attribute(name)
@@ -107,7 +107,7 @@ class GenericObjectDefinition < ApplicationRecord
     raise "invalid model for association: [#{type}]" unless type.in?(ALLOWED_ASSOCIATION_TYPES)
 
     properties[:associations][name.to_s] = type
-    save
+    save!
   end
 
   def delete_property_association(name)
@@ -121,12 +121,12 @@ class GenericObjectDefinition < ApplicationRecord
 
   def add_property_method(name)
     properties[:methods] << name.to_s unless properties[:methods].include?(name.to_s)
-    save
+    save!
   end
 
   def delete_property_method(name)
     properties[:methods].delete(name.to_s)
-    save
+    save!
   end
 
   private

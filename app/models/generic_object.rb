@@ -48,7 +48,7 @@ class GenericObject < ApplicationRecord
     klass = property_associations[name].constantize
     selected = objs.select { |obj| obj.kind_of?(klass) }
     properties[name] = (properties[name] + selected.pluck(:id)).uniq if selected
-    save
+    save!
   end
 
   def delete_from_property_association(name, objs)
@@ -59,7 +59,7 @@ class GenericObject < ApplicationRecord
     klass = property_associations[name].constantize
     selected = objs.select { |obj| obj.kind_of?(klass) }
     properties[name] = properties[name] - selected.pluck(:id)
-    save
+    save!
   end
 
   def inspect
