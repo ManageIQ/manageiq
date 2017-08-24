@@ -904,14 +904,6 @@ module ManagerRefresh
       @fixed_foreign_keys_cache
     end
 
-    def serializable_keys?(all_attribute_keys)
-      return @serializable_keys_cache unless @serializable_keys_cache.nil?
-
-      @serializable_keys_cache = all_attribute_keys.any? do |key|
-        model_class.type_for_attribute(key.to_s).respond_to?(:coder)
-      end
-    end
-
     def base_class_name
       return "" unless model_class
 

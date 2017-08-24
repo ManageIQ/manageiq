@@ -31,6 +31,12 @@ module ManagerRefresh::SaveCollection
         @batch_size          = @pure_sql_records_fetching ? @batch_size_for_persisting : inventory_collection.batch_size
         @record_key_method   = @pure_sql_records_fetching ? :pure_sql_record_key : :ar_record_key
         @select_keys_indexes = @select_keys.each_with_object({}).with_index { |(key, obj), index| obj[key.to_s] = index }
+        @serializable_keys   = @model_class.attribute_names.each_with_object({}) do |key, obj|
+          attribute_type = @model_class.type_for_attribute(key.to_s)
+          if attribute_type.respond_to?(:coder) || attribute_type.type == :int4range
+            obj[key.to_sym] = attribute_type
+          end
+        end
       end
 
       def save_inventory_collection!
@@ -47,7 +53,7 @@ module ManagerRefresh::SaveCollection
 
       attr_reader :unique_index_keys, :unique_index_keys_to_s, :select_keys, :unique_db_primary_keys, :unique_db_indexes,
                   :primary_key, :arel_primary_key, :record_key_method, :pure_sql_records_fetching, :select_keys_indexes,
-                  :batch_size, :batch_size_for_persisting, :model_class
+                  :batch_size, :batch_size_for_persisting, :model_class, :serializable_keys
 
       def save!(association)
         attributes_index        = {}
@@ -256,6 +262,10 @@ module ManagerRefresh::SaveCollection
           @supports_updated_at_cache = (model_class.column_names.include?("updated_at") && ActiveRecord::Base.record_timestamps)
         end
         @supports_updated_at_cache
+      end
+
+      def serializable_keys?
+        @serializable_keys_bool_cache ||= serializable_keys.blank?
       end
 
       def supports_remote_data_timestamp?(all_attribute_keys)
