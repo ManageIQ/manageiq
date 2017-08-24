@@ -5,21 +5,44 @@ module ManagerRefresh
     # InventoryCollection, since it is already persisted into the DB.
     attr_accessor :saved
 
-    # @return data [Array] InventoryObject objects of the InventoryCollection in an Array
+    # @return [Array] InventoryObject objects of the InventoryCollection in an Array
     attr_accessor :data
 
-    # @return data_index [Hash] InventoryObject objects of the InventoryCollection indexed in a Hash by their
+    # @return [Hash] InventoryObject objects of the InventoryCollection indexed in a Hash by their
     #        :manager_ref.
     attr_accessor :data_index
 
-    attr_accessor :references, :attribute_references, :data_collection_finalized, :all_manager_uuids,
-                  :dependees
+    # @return [Set] A set of InventoryObjects manager_uuids, which tells us which InventoryObjects were
+    #         referenced by other InventoryObjects using a lazy_find.
+    attr_accessor :references
+
+    # @return [Set] A set of InventoryObject attributes names, which tells us InventoryObject attributes
+    #         were referenced by other InventoryObject objects using a lazy_find with :key.
+    attr_accessor :attribute_references
+
+    # @return [Boolean] A true value marks that we collected all the data of the InventoryCollection,
+    #         meaning we also collected all the references.
+    attr_accessor :data_collection_finalized
+
+    # @return [Array, nil] Returns nil or a list of all :manager_uuids that are present in the Provider's
+    #         InventoryCollection. If present, InventoryCollection switches into delete_complement mode, where it will
+    #         delete every record from the DB, that is not present in this list. This is used for the batch processing,
+    #         where we don't know which InventoryObject should be deleted, but we know all manager_uuids of all
+    #         InventoryObject objects that exists in the provider.
+    attr_accessor :all_manager_uuids
+
+    # @return [Set] A set of InventoryCollection objects that depends on this InventoryCollection object.
+    attr_accessor :dependees
+
+    # @return [Array] An array of symbols(names of InventoryCollection objects) or InventoryCollection objects. If
+    #         symbols are used, those will be transformed to InventoryCollection objects by the Scanner.
+    attr_accessor :parent_inventory_collections
 
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
                 :internal_attributes, :delete_method, :dependency_attributes, :manager_ref,
                 :association, :complete, :update_only, :transitive_dependency_attributes, :custom_manager_uuid,
                 :custom_db_finder, :check_changed, :arel, :builder_params, :loaded_references, :db_data_index,
-                :inventory_object_attributes, :name, :saver_strategy, :parent_inventory_collections, :manager_uuids,
+                :inventory_object_attributes, :name, :saver_strategy, :manager_uuids,
                 :skeletal_manager_uuids, :targeted_arel, :targeted, :manager_ref_allowed_nil, :use_ar_object,
                 :secondary_refs, :secondary_indexes, :created_records, :updated_records, :deleted_records,
                 :custom_reconnect_block, :batch_extra_attributes
@@ -576,6 +599,14 @@ module ManagerRefresh
       data_collection_finalized
     end
 
+    def inventory_object?(value)
+      value.kind_of?(::ManagerRefresh::InventoryObject)
+    end
+
+    def inventory_object_lazy?(value)
+      value.kind_of?(::ManagerRefresh::InventoryObjectLazy)
+    end
+
     def noop?
       # If this InventoryCollection doesn't do anything. it can easily happen for targeted/batched strategies.
       if targeted?
@@ -958,25 +989,6 @@ module ManagerRefresh
       to_s
     end
 
-    def scan!(indexed_inventory_collections)
-      data.each do |inventory_object|
-        scan_inventory_object!(inventory_object)
-
-        if targeted? && inventory_object.inventory_collection.parent_inventory_collections.blank?
-          # We want to track what manager_uuids we should query from a db, for the targeted refresh
-          manager_uuids << inventory_object.manager_uuid
-        end
-      end
-
-      if targeted? && parent_inventory_collections.present?
-        self.parent_inventory_collections = parent_inventory_collections.map do |inventory_collection_index|
-          inventory_collection = indexed_inventory_collections[inventory_collection_index]
-          raise "Cannot find inventory collection #{inventory_collection_index} from #{self}" unless inventory_collection
-          inventory_collection
-        end
-      end
-    end
-
     def batch_size
       1000
     end
@@ -1032,7 +1044,7 @@ module ManagerRefresh
 
     private
 
-    attr_writer :attributes_blacklist, :attributes_whitelist, :db_data_index, :parent_inventory_collections
+    attr_writer :attributes_blacklist, :attributes_whitelist, :db_data_index
 
     # Returns array of records identities
     def records_identities(records)
@@ -1081,6 +1093,8 @@ module ManagerRefresh
 
       # Initialize db_data_index in nil
       self.db_data_index ||= {}
+
+      return if new_references.blank? # Return if all references are already loaded
 
       # TODO(lsmola) selected need to contain also :keys used in other InventoryCollections pointing to this one, once
       # we get list of all keys for each InventoryCollection ,we can uncomnent
@@ -1166,61 +1180,6 @@ module ManagerRefresh
 
       db_data_index[index]    = new_inventory_object(attributes)
       db_data_index[index].id = record.id
-    end
-
-    def scan_inventory_object!(inventory_object)
-      inventory_object.data.each do |key, value|
-        if value.kind_of?(Array)
-          value.each { |val| scan_inventory_object_attribute!(key, val) }
-        else
-          scan_inventory_object_attribute!(key, value)
-        end
-      end
-    end
-
-    def scan_inventory_object_attribute!(key, value)
-      return if !inventory_object_lazy?(value) && !inventory_object?(value)
-
-      # Storing attributes and their dependencies
-      (dependency_attributes[key] ||= Set.new) << value.inventory_collection if value.dependency?
-
-      # For concurent safe strategies, we want to pre-build the relations using the lazy_link data, so we can fill up
-      # the foreign key in first pass.
-      if [:concurrent_safe, :concurrent_safe_batch].include?(saver_strategy)
-        if value.inventory_collection.manager_ref.size == 1 && inventory_object_lazy?(value) &&
-           !value.ems_ref.blank? && value.key.nil? && value.dependency?
-          # Instead of loading the reference from the DB, we'll add the dummy InventoryObject (having only ems_ref and
-          # info from the builder_params) to the correct InventoryCollection. Which will either be found in the DB or
-          # created as a small dummy object. The refresh of the object will then fill the rest of the data, while not
-          # touching the reference.
-
-          # TODO(lsmola) solve the :key, since that requires data from the actual reference. At best our DB should be
-          # designed the way, we don't duplicate the data, but rather get them with a join. (3NF!)
-
-          value.inventory_collection.find_or_build(value.ems_ref)
-          value.inventory_collection.skeletal_manager_uuids << value.ems_ref
-        end
-      end
-
-      # Storing a reference in the target inventory_collection, then each IC knows about all the references and can
-      # e.g. load all the referenced uuids from a DB
-      value.inventory_collection.references << value.to_s
-
-      if inventory_object_lazy?(value)
-        # Storing if attribute is a transitive dependency, so a lazy_find :key results in dependency
-        transitive_dependency_attributes << key if value.transitive_dependency?
-
-        # If we access an attribute of the value, using a :key, we want to keep a track of that
-        value.inventory_collection.attribute_references << value.key if value.key
-      end
-    end
-
-    def inventory_object?(value)
-      value.kind_of?(::ManagerRefresh::InventoryObject)
-    end
-
-    def inventory_object_lazy?(value)
-      value.kind_of?(::ManagerRefresh::InventoryObjectLazy)
     end
 
     def validate_inventory_collection!
