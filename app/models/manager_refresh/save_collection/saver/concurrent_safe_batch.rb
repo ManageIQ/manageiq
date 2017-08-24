@@ -50,12 +50,13 @@ module ManagerRefresh::SaveCollection
         all_attribute_keys      = Set.new + inventory_collection.batch_extra_attributes
 
         inventory_collection.each do |inventory_object|
-          attributes = inventory_object.attributes(inventory_collection)
-          index      = inventory_object.manager_uuid
+          attributes = inventory_object.attributes_with_keys(inventory_collection, all_attribute_keys)
+          index      = unique_index_keys.map { |key| attributes[key].to_s }.join(inventory_collection.stringify_joiner)
 
+          # Interesting fact: not building attributes_index and using only inventory_objects_index doesn't do much
+          # of a difference, since the most objects inside are shared.
           attributes_index[index]        = attributes
           inventory_objects_index[index] = inventory_object
-          all_attribute_keys.merge(attributes_index[index].keys)
         end
 
         all_attribute_keys << :created_at if supports_created_at?
@@ -102,9 +103,9 @@ module ManagerRefresh::SaveCollection
             next unless assert_distinct_relation(primary_key_value)
 
             # TODO(lsmola) unify this behavior with object_index_with_keys method in InventoryCollection
-            index            = unique_index_keys_to_s.map { |attribute| record_key(record, attribute).to_s }.join(inventory_collection.stringify_joiner)
+            index            = unique_index_keys_to_s.map { |key| record_key(record, key).to_s }.join(inventory_collection.stringify_joiner)
             inventory_object = inventory_objects_index.delete(index)
-            hash             = attributes_index[index]
+            hash             = attributes_index.delete(index)
 
             if inventory_object.nil?
               # Record was found in the DB but not sent for saving, that means it doesn't exist anymore and we should

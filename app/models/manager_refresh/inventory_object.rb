@@ -84,6 +84,48 @@ module ManagerRefresh
       attributes_for_saving
     end
 
+    def attributes_with_keys(inventory_collection_scope = nil, all_attribute_keys = [])
+      # We should explicitly pass a scope, since the inventory_object can be mapped to more InventoryCollections with
+      # different blacklist and whitelist. The generic code always passes a scope.
+      inventory_collection_scope ||= inventory_collection
+
+      attributes_for_saving = {}
+      # First transform the values
+      data.each do |key, value|
+        if !allowed?(inventory_collection_scope, key)
+          next
+        elsif loadable?(value) || inventory_collection_scope.association_to_foreign_key_mapping[key]
+          # Lets fill also the original data, so other InventoryObject referring to this attribute gets the right
+          # result
+          data[key] = value.load if value.respond_to?(:load)
+          if (foreign_key = inventory_collection_scope.association_to_foreign_key_mapping[key])
+            # We have an association to fill, lets fill also the :key, cause some other InventoryObject can refer to it
+            record_id = data[key].try(:id)
+            foreign_key_to_sym = foreign_key.to_sym
+            attributes_for_saving[foreign_key_to_sym] = record_id
+            all_attribute_keys << foreign_key_to_sym
+            if (foreign_type = inventory_collection_scope.association_to_foreign_type_mapping[key])
+              # If we have a polymorphic association, we need to also fill a base class name, but we want to nullify it
+              # if record_id is missing
+              base_class = data[key].try(:base_class_name) || data[key].class.try(:base_class).try(:name)
+              foreign_type_to_sym = foreign_type.to_sym
+              attributes_for_saving[foreign_type_to_sym] = record_id ? base_class : nil
+              all_attribute_keys << foreign_type_to_sym
+            end
+          else
+            # We have a normal attribute to fill
+            attributes_for_saving[key] = data[key]
+            all_attribute_keys << key
+          end
+        else
+          attributes_for_saving[key] = value
+          all_attribute_keys << key
+        end
+      end
+
+      attributes_for_saving
+    end
+
     def assign_attributes(attributes)
       attributes.each { |k, v| public_send("#{k}=", v) }
       self
