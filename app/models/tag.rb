@@ -3,6 +3,7 @@ class Tag < ApplicationRecord
   has_one :classification
   virtual_has_one :category,       :class_name => "Classification"
   virtual_has_one :categorization, :class_name => "Hash"
+  virtual_has_many :resources
 
   has_many :container_label_tag_mappings
 
@@ -147,6 +148,10 @@ class Tag < ApplicationRecord
           "display_name" => "#{category.description}: #{classification.description}"
         }
       end
+  end
+
+  def resources
+    taggings.collect(&:taggable)
   end
 
   private
