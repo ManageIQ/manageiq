@@ -67,8 +67,6 @@ module ManagerRefresh::SaveCollection
 
         _log.info("*************** PROCESSING #{inventory_collection} of size #{inventory_collection.size} *************")
 
-        # TODO(lsmola) needed only because UPDATE FROM VALUES needs a specific PG typecasting, remove when fixed in PG
-        collect_pg_types!(all_attribute_keys)
         update_or_destroy_records!(batch_iterator(association), inventory_objects_index, attributes_index, all_attribute_keys)
 
         unless inventory_collection.custom_reconnect_block.nil?

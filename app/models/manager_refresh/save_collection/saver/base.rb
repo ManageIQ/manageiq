@@ -31,9 +31,27 @@ module ManagerRefresh::SaveCollection
         @batch_size          = @pure_sql_records_fetching ? @batch_size_for_persisting : inventory_collection.batch_size
         @record_key_method   = @pure_sql_records_fetching ? :pure_sql_record_key : :ar_record_key
         @select_keys_indexes = @select_keys.each_with_object({}).with_index { |(key, obj), index| obj[key.to_s] = index }
-        @serializable_keys   = @model_class.attribute_names.each_with_object({}) do |key, obj|
+        @pg_types            = @model_class.attribute_names.each_with_object({}) do |key, obj|
+          obj[key.to_sym] = inventory_collection.model_class.columns_hash[key]
+                                                .try(:sql_type_metadata)
+                                                .try(:instance_values)
+                                                .try(:[], "sql_type")
+        end
+
+        @serializable_keys = @model_class.attribute_names.each_with_object({}) do |key, obj|
           attribute_type = @model_class.type_for_attribute(key.to_s)
-          if attribute_type.respond_to?(:coder) || attribute_type.type == :int4range
+          pg_type        = @pg_types[key.to_sym]
+
+          if inventory_collection.use_ar_object?
+            # When using AR object, lets make sure we type.serialize(value) every value, so we have a slow but always
+            # working way driven by a configuration
+            obj[key.to_sym] = attribute_type
+          elsif attribute_type.respond_to?(:coder) ||
+                attribute_type.type == :int4range ||
+                pg_type == "text[]" ||
+                pg_type == "character varying[]"
+            # Identify columns that needs to be encoded by type.serialize(value), it's a costy operations so lets do
+            # do it only for columns we need it for.
             obj[key.to_sym] = attribute_type
           end
         end
@@ -53,7 +71,7 @@ module ManagerRefresh::SaveCollection
 
       attr_reader :unique_index_keys, :unique_index_keys_to_s, :select_keys, :unique_db_primary_keys, :unique_db_indexes,
                   :primary_key, :arel_primary_key, :record_key_method, :pure_sql_records_fetching, :select_keys_indexes,
-                  :batch_size, :batch_size_for_persisting, :model_class, :serializable_keys
+                  :batch_size, :batch_size_for_persisting, :model_class, :serializable_keys, :pg_types
 
       def save!(association)
         attributes_index        = {}
@@ -265,7 +283,7 @@ module ManagerRefresh::SaveCollection
       end
 
       def serializable_keys?
-        @serializable_keys_bool_cache ||= serializable_keys.blank?
+        @serializable_keys_bool_cache ||= !serializable_keys.blank?
       end
 
       def supports_remote_data_timestamp?(all_attribute_keys)
