@@ -8,7 +8,7 @@ class GenericObject < ApplicationRecord
   delegate :property_attribute_defined?,
            :property_defined?,
            :type_cast,
-           :property_associations, :property_association_defined?,
+           :property_association_defined?,
            :property_methods, :property_method_defined?,
            :to => :generic_object_definition, :allow_nil => true
 
@@ -35,6 +35,12 @@ class GenericObject < ApplicationRecord
     end
   end
 
+  def property_associations
+    properties.select { |k, _| property_association_defined?(k) }.each_with_object({}) do |(k, _), h|
+      h[k] = _property_getter(k)
+    end
+  end
+
   def delete_property(name)
     if !property_attribute_defined?(name) && !property_association_defined?(name)
       valid_property_names = generic_object_definition.property_attributes.keys + generic_object_definition.property_associations.keys
@@ -52,7 +58,7 @@ class GenericObject < ApplicationRecord
     name = name.to_s
     properties[name] ||= []
 
-    klass = property_associations[name].constantize
+    klass = generic_object_definition.property_associations[name].constantize
     selected = objs.select { |obj| obj.kind_of?(klass) }
     properties[name] = (properties[name] + selected.pluck(:id)).uniq if selected
     save!
@@ -63,10 +69,14 @@ class GenericObject < ApplicationRecord
     name = name.to_s
     properties[name] ||= []
 
-    klass = property_associations[name].constantize
+    klass = generic_object_definition.property_associations[name].constantize
     selected = objs.select { |obj| obj.kind_of?(klass) }
-    properties[name] = properties[name] - selected.pluck(:id)
+    common_ids = properties[name] & selected.pluck(:id)
+    properties[name] = properties[name] - common_ids
+    return unless properties_changed?
+
     save!
+    klass.where(:id => common_ids).to_a
   end
 
   def inspect
@@ -75,7 +85,7 @@ class GenericObject < ApplicationRecord
     end
 
     attributes_as_string += ["attributes: #{property_attributes}"]
-    attributes_as_string += ["associations: #{property_associations.keys}"]
+    attributes_as_string += ["associations: #{generic_object_definition.property_associations.keys}"]
     attributes_as_string += ["methods: #{property_methods}"]
 
     prefix = Kernel.instance_method(:inspect).bind(self).call.split(' ', 2).first
@@ -126,13 +136,14 @@ class GenericObject < ApplicationRecord
 
   def _property_setter(name, value)
     name = name.to_s
+
     val =
       if property_attribute_defined?(name)
         # property attribute is of single value, for now
         type_cast(name, value)
       elsif property_association_defined?(name)
         # property association is of multiple values
-        value.select { |v| v.kind_of?(property_associations[name].constantize) }.uniq.map(&:id)
+        value.select { |v| v.kind_of?(generic_object_definition.property_associations[name].constantize) }.uniq.map(&:id)
       end
 
     self.properties = properties.merge(name => val)
