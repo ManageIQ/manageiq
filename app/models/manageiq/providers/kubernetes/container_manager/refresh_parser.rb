@@ -3,8 +3,8 @@ require 'shellwords'
 module ManageIQ::Providers::Kubernetes
   class ContainerManager::RefreshParser
     include Vmdb::Logging
-    def self.ems_inv_to_hashes(inventory)
-      new.ems_inv_to_hashes(inventory)
+    def self.ems_inv_to_hashes(inventory, options = Config::Options.new)
+      new.ems_inv_to_hashes(inventory, options)
     end
 
     def initialize
@@ -13,7 +13,7 @@ module ManageIQ::Providers::Kubernetes
       @label_tag_mapping = ContainerLabelTagMapping.cache
     end
 
-    def ems_inv_to_hashes(inventory)
+    def ems_inv_to_hashes(inventory, _options = Config::Options.new)
       get_nodes(inventory)
       get_namespaces(inventory)
       get_resource_quotas(inventory)
