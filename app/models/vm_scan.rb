@@ -245,7 +245,7 @@ class VmScan < Job
           if vm.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm)
             vm.ext_management_system.vm_delete_evm_snapshot(vm, mor)
           elsif vm.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm) ||
-                vm.kind_of?(ManageIQ::Providers::Azure::CloudManager::Vm)
+                (vm.kind_of?(ManageIQ::Providers::Azure::CloudManager::Vm) && vm.require_snapshot_for_scan?)
             vm.ext_management_system.vm_delete_evm_snapshot(vm, :snMor => mor)
           else
             delete_snapshot(mor)
@@ -501,7 +501,7 @@ class VmScan < Job
         if vm.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm)
           vm.ext_management_system.vm_delete_evm_snapshot(vm, mor)
         elsif vm.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm) ||
-              vm.kind_of?(ManageIQ::Providers::Azure::CloudManager::Vm)
+              (vm.kind_of?(ManageIQ::Providers::Azure::CloudManager::Vm) && vm.require_snapshot_for_scan?)
           vm.ext_management_system.vm_delete_evm_snapshot(vm, :snMor => mor)
         else
           delete_snapshot(mor)
