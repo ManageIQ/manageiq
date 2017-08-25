@@ -80,7 +80,7 @@ class GenericObjectDefinition < ApplicationRecord
   end
 
   def type_cast(attr, value)
-    TYPE_MAP.fetch(property_attributes[attr]).cast(value)
+    TYPE_MAP.fetch(property_attributes[attr.to_s]).cast(value)
   end
 
   def properties=(props)
@@ -132,7 +132,7 @@ class GenericObjectDefinition < ApplicationRecord
   private
 
   def get_objects_of_association(attr, values)
-    property_associations[attr].constantize.where(:id => values).to_a
+    property_associations[attr.to_s].constantize.where(:id => values).to_a
   end
 
   def normalize_property_attributes

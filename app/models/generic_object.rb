@@ -114,7 +114,7 @@ class GenericObject < ApplicationRecord
   end
 
   def _property_getter(name)
-    generic_object_definition.property_getter(name, properties[name])
+    generic_object_definition.property_getter(name.to_s, properties[name.to_s])
   end
 
   def _property_setter(name, value)
