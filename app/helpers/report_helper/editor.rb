@@ -1,6 +1,6 @@
 module ReportHelper::Editor
   def cb_entities_by_provider_id(provider_id, entity_type)
-    provider = ManageIQ::Providers::ContainerManager.find(provider_id)
+    provider = ManageIQ::Providers::ContainerManager.find_by(:id => provider_id)
     return [] if provider.nil?
     case entity_type.underscore.to_sym
     when :container_project

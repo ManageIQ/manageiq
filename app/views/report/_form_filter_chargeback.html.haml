@@ -85,7 +85,7 @@
           :javascript
              miqInitSelectPicker();
              miqSelectPickerEvent('cb_provider_id', '#{url}', {beforeSend: true, complete: true});
-      - if @edit[:new][:cb_provider_id].present?
+      - if @edit[:new][:cb_provider_id].present? && @edit[:new][:cb_provider_id].try(:to_sym) != :all
         .form-group
           %label.control-label.col-md-2
             = ui_lookup(:model => @edit[:new][:cb_model])
