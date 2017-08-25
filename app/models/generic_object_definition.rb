@@ -95,10 +95,10 @@ class GenericObjectDefinition < ApplicationRecord
 
   def delete_property_attribute(name)
     transaction do
+      generic_objects.find_each { |o| o.delete_property(name) }
+
       properties[:attributes].delete(name.to_s)
       save!
-
-      generic_objects.find_each { |o| o.delete_property(name) }
     end
   end
 
@@ -112,10 +112,10 @@ class GenericObjectDefinition < ApplicationRecord
 
   def delete_property_association(name)
     transaction do
+      generic_objects.find_each { |o| o.delete_property(name) }
+
       properties[:associations].delete(name.to_s)
       save!
-
-      generic_objects.find_each { |o| o.delete_property(name) }
     end
   end
 

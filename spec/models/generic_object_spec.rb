@@ -221,4 +221,27 @@ describe GenericObject do
       expect(go.my_host).to eq("some_return_value")
     end
   end
+
+  describe '#delete_property' do
+    it 'an attriute' do
+      max = go.max_number
+      expect(go.delete_property("max_number")).to eq(max)
+      expect(go.max_number).to be_nil
+    end
+
+    it 'an association' do
+      vm2 = FactoryGirl.create(:vm_vmware)
+      go.vms = [vm1, vm2]
+      expect(go.delete_property("vms")).to match_array([vm1, vm2])
+      expect(go.vms).to be_empty
+    end
+
+    it 'a method' do
+      expect { go.delete_property("my_host") }.to raise_error(RuntimeError)
+    end
+
+    it 'an invalid property name' do
+      expect { go.delete_property("some_attribute_not_defined") }.to raise_error(RuntimeError)
+    end
+  end
 end

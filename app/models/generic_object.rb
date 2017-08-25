@@ -36,8 +36,15 @@ class GenericObject < ApplicationRecord
   end
 
   def delete_property(name)
-    properties.delete(name.to_s)
-    save!
+    if !property_attribute_defined?(name) && !property_association_defined?(name)
+      valid_property_names = generic_object_definition.property_attributes.keys + generic_object_definition.property_associations.keys
+      raise "Invalid property [#{name}]: must be one of #{valid_property_names.join(", ")}"
+    end
+
+    _property_getter(name).tap do
+      properties.delete(name.to_s)
+      save!
+    end
   end
 
   def add_to_property_association(name, objs)
