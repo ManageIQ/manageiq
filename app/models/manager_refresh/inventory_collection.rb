@@ -1054,7 +1054,12 @@ module ManagerRefresh
         selection  = nil
         projection = nil
       else
-        selection  = extract_references(new_references)
+        references = extract_references(new_references)
+        selection = if references.empty?
+                      nil
+                    else
+                      references
+                    end
         projection = nil
       end
 
@@ -1091,6 +1096,7 @@ module ManagerRefresh
       hash_uuids_by_ref = []
 
       new_references.each do |manager_uuid|
+        next if manager_uuid.nil? || manager_uuid.blank?
         uuids = manager_uuid.split(stringify_joiner)
 
         reference = {}
