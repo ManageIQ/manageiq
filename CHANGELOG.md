@@ -9,7 +9,7 @@ The ManageIQ organization is continuously adding new smaller repositories.  The 
 - [manageiq-providers-vmware CHANGELOG](https://github.com/ManageIQ/manageiq-providers-vmware/blob/master/CHANGELOG.md)
 - [manageiq-ui-classic CHANGELOG](https://github.com/ManageIQ/manageiq-ui-classic/blob/master/CHANGELOG.md)
 
-## Sprint 67 ending 2017-08-21
+## Unreleased - as of Sprint 67 ending 2017-08-21
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?utf8=%E2%9C%93&q=milestone%3A%22Sprint%2067%20Ending%20Aug%2021%2C%202017%22%20label%3Aenhancement%20)
 - Don't use secure sessions in containers [(#15819)](https://github.com/ManageIQ/manageiq/pull/15819)
