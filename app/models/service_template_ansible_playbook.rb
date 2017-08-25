@@ -65,7 +65,8 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   def self.create_job_templates(service_name, description, config_info, auth_user, service_template = nil)
     [:provision, :retirement, :reconfigure].each_with_object({}) do |action, hash|
       next unless new_job_template_required?(config_info[action], action, service_template)
-      hash[action] = { :configuration_template => create_job_template(build_name(service_name, action), description, config_info[action], auth_user) }
+      new_template, _tower_id = create_job_template(build_name(service_name, action), description, config_info[action], auth_user)
+      hash[action] = { :configuration_template => new_template }
     end
   end
   private_class_method :create_job_templates
