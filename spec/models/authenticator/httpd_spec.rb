@@ -242,9 +242,9 @@ describe Authenticator::Httpd do
       end
 
       context "when user record is for a different region" do
-        let(:my_region_number) { Classification.my_region_number }
-        let(:other_region) { Classification.my_region_number + 1 }
-        let(:other_region_id) { other_region * Classification.rails_sequence_factor + 1 }
+        let(:my_region_number) { ApplicationRecord.my_region_number }
+        let(:other_region) { ApplicationRecord.my_region_number + 1 }
+        let(:other_region_id) { other_region * ApplicationRecord.rails_sequence_factor + 1 }
 
         it "does not modify the user record when userid is in username format" do
           sally_username = FactoryGirl.create(:user, :userid => 'sally', :id => other_region_id)
