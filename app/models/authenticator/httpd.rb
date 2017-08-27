@@ -46,6 +46,7 @@ module Authenticator
     def update_user_attributes(user, username, identity)
       user_attrs, _membership_list = identity
 
+      $audit_log.info("Updating userid from #{user.userid} to #{username}") if user.userid != username
       user.userid     = username
       user.first_name = user_attrs[:firstname]
       user.last_name  = user_attrs[:lastname]
@@ -62,8 +63,8 @@ module Authenticator
       upn_username = "#{user_attrs[:username]}@#{user_attrs[:domain]}".downcase
 
       user = find_userid_as_upn(upn_username)
-      user ||= find_userid_as_distinguished_name(user_attrs, upn_username)
-      user ||= find_userid_as_username(identity, username, upn_username)
+      user ||= find_userid_as_distinguished_name(user_attrs)
+      user ||= find_userid_as_username(identity, username)
       user ||= User.new(:userid => upn_username)
 
       [upn_username, user]
@@ -76,20 +77,16 @@ module Authenticator
       user || User.in_my_region.where('lower(userid) = ?', upn_username).order(:lastlogon).last
     end
 
-    def find_userid_as_username(identity, username, upn_username)
+    def find_userid_as_username(identity, username)
       userid = userid_for(identity, username)
       user   = User.find_by_userid(userid)
       user ||= User.in_my_region.where('lower(userid) = ?', userid).order(:lastlogon).last
-      $audit_log.info("Updating userid from #{user.userid} to #{upn_username}") unless user.blank?
-
       user
     end
 
-    def find_userid_as_distinguished_name(user_attrs, upn_username)
+    def find_userid_as_distinguished_name(user_attrs)
       dn_domain = user_attrs[:domain].downcase.split(".").map { |s| "dc=#{s}" }.join(",")
       user = User.in_my_region.where("userid LIKE ?", "%=#{user_attrs[:username]},%,#{dn_domain}").last
-      $audit_log.info("Updating userid from #{user.userid} to #{upn_username}") unless user.blank?
-
       user
     end
 
