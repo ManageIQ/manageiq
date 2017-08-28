@@ -65,6 +65,7 @@ describe Authenticator::Httpd do
         'X-Remote-User-FirstName' => 'Alice',
         'X-Remote-User-LastName'  => 'Aardvark',
         'X-Remote-User-Email'     => 'alice@example.com',
+        'X-Remote-User-Domain'    => 'example.com',
         'X-Remote-User-Groups'    => user_groups,
       }
     end
@@ -190,6 +191,78 @@ describe Authenticator::Httpd do
       end
     end
 
+    context "with potential for multiple user records" do
+      let(:dn) { 'cn=sally,ou=people,ou=prod,dc=example,dc=com' }
+      let(:config) { {:httpd_role => true} }
+
+      let(:username) { 'saLLy' }
+      let(:user_groups) { 'wibble@fqdn:bubble@fqdn' }
+
+      let(:headers) do
+        super().merge('X-Remote-User-FullName'  => 'Sally Porsche',
+                      'X-Remote-User-FirstName' => 'Sally',
+                      'X-Remote-User-LastName'  => 'Porsche',
+                      'X-Remote-User-Email'     => 'Sally@example.com')
+      end
+
+      context "when user record with userid in upn format already exists" do
+        let!(:sally_username) { FactoryGirl.create(:user, :userid => 'sAlly') }
+        let!(:sally_dn) { FactoryGirl.create(:user, :userid => dn) }
+        let!(:sally_upn) { FactoryGirl.create(:user, :userid => 'sAlly@example.com') }
+
+        it "leaves user record with userid in username format unchanged" do
+          expect(-> { authenticate }).to_not change { sally_username.reload.userid }
+        end
+
+        it "leaves user record with userid in distinguished name format unchanged" do
+          expect(-> { authenticate }).to_not change { sally_dn.reload.userid }
+        end
+
+        it "downcases user record with userid in upn format" do
+          expect(-> { authenticate })
+            .to change { sally_upn.reload.userid }.from("sAlly@example.com").to("sally@example.com")
+        end
+      end
+
+      context "when user record with userid in upn format does not already exists" do
+        it "updates userid from username format to upn format" do
+          sally_username = FactoryGirl.create(:user, :userid => 'sally')
+          expect(-> { authenticate }).to change { sally_username.reload.userid }.from("sally").to("sally@example.com")
+        end
+
+        it "updates userid from distinguished name format to upn format" do
+          sally_dn = FactoryGirl.create(:user, :userid => dn)
+          expect(-> { authenticate }).to change { sally_dn.reload.userid }.from(dn).to("sally@example.com")
+        end
+
+        it "does not modify userid if already in upn format" do
+          sally_upn = FactoryGirl.create(:user, :userid => 'sally@example.com')
+          expect(-> { authenticate }).to_not change { sally_upn.reload.userid }
+        end
+      end
+
+      context "when user record is for a different region" do
+        let(:my_region_number) { ApplicationRecord.my_region_number }
+        let(:other_region) { ApplicationRecord.my_region_number + 1 }
+        let(:other_region_id) { other_region * ApplicationRecord.rails_sequence_factor + 1 }
+
+        it "does not modify the user record when userid is in username format" do
+          sally_username = FactoryGirl.create(:user, :userid => 'sally', :id => other_region_id)
+          expect(-> { authenticate }).to_not change { sally_username.reload.userid }
+        end
+
+        it "does not modify the user record when userid is in distinguished name format" do
+          sally_dn = FactoryGirl.create(:user, :userid => dn, :id => other_region_id)
+          expect(-> { authenticate }).to_not change { sally_dn.reload.userid }
+        end
+
+        it "does not modify the user record when userid is in already upn format" do
+          sally_upn = FactoryGirl.create(:user, :userid => 'sally@example.com', :id => other_region_id)
+          expect(-> { authenticate }).to_not change { sally_upn.reload.userid }
+        end
+      end
+    end
+
     context "with unknown username in mixed case" do
       let(:username) { 'bOb' }
       let(:headers) do
@@ -254,7 +327,7 @@ describe Authenticator::Httpd do
         end
 
         it "creates a new User" do
-          expect(-> { authenticate }).to change { User.where(:userid => 'bob').count }.from(0).to(1)
+          expect(-> { authenticate }).to change { User.where(:userid => 'bob@example.com').count }.from(0).to(1)
         end
 
         context "with no matching groups" do
@@ -279,7 +352,7 @@ describe Authenticator::Httpd do
             expect(AuditEvent).to receive(:failure).with(
               :event   => 'authorize',
               :userid  => 'bob',
-              :message => "Authentication failed for userid bob, unable to match user's group membership to an EVM role",
+              :message => "Authentication failed for userid bob@example.com, unable to match user's group membership to an EVM role",
             )
             authenticate
           end
@@ -319,8 +392,8 @@ describe Authenticator::Httpd do
                           'X-Remote-User-Email'     => 'sam@example.com')
           end
 
-          it "creates a new User with name set to the userid" do
-            expect(-> { authenticate }).to change { User.where(:name => 'sam').count }.from(0).to(1)
+          it "creates a new User with the userid set to the UPN" do
+            expect(-> { authenticate }).to change { User.where(:name => 'sam@example.com').count }.from(0).to(1)
           end
         end
       end
@@ -345,17 +418,19 @@ describe Authenticator::Httpd do
         end
 
         it "should return user attributes hash for valid user" do
-          requested_attrs = %w(mail givenname sn displayname)
+          requested_attrs = %w(mail givenname sn displayname domainname)
 
           jdoe_attrs = [{"mail"        => ["jdoe@example.com"],
                          "givenname"   => ["John"],
                          "sn"          => ["Doe"],
-                         "displayname" => ["John Doe"]}]
+                         "displayname" => ["John Doe"],
+                         "domainname"  => ["example.com"]}]
 
           expected_jdoe_attrs = {"mail"        => "jdoe@example.com",
                                  "givenname"   => "John",
                                  "sn"          => "Doe",
-                                 "displayname" => "John Doe"}
+                                 "displayname" => "John Doe",
+                                 "domainname"  => "example.com"}
 
           allow(@ifp_interface).to receive(:GetUserAttr).with('jdoe', requested_attrs).and_return(jdoe_attrs)
 
