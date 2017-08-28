@@ -125,9 +125,8 @@ module Authenticator
           end
 
           matching_groups = match_groups(groups_for(identity))
-          userid = userid_for(identity, username)
-          user   = find_or_initialize_user(userid)
-          update_user_attributes(user, username, identity)
+          userid, user = find_or_initialize_user(identity, username)
+          update_user_attributes(user, userid, identity)
           user.miq_groups = matching_groups
 
           if matching_groups.empty?
@@ -155,10 +154,12 @@ module Authenticator
       end
     end
 
-    def find_or_initialize_user(userid)
+    def find_or_initialize_user(identity, username)
+      userid = userid_for(identity, username)
       user   = User.find_by_userid(userid)
       user ||= User.in_my_region.where('lower(userid) = ?', userid).order(:lastlogon).last
-      user ||  User.new(:userid => userid)
+      user ||= User.new(:userid => userid)
+      [userid, user]
     end
 
     def authenticate_with_http_basic(username, password, request = nil, options = {})
