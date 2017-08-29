@@ -115,11 +115,11 @@ module Authenticator
       end
     end
 
+    ATTRS_NEEDED = %w(mail givenname sn displayname domainname).freeze
+
     def user_attrs_from_external_directory_via_dbus(username)
       return unless username
       require "dbus"
-
-      attrs_needed = %w(mail givenname sn displayname domainname)
 
       sysbus = DBus.system_bus
       ifp_service   = sysbus["org.freedesktop.sssd.infopipe"]
@@ -127,41 +127,17 @@ module Authenticator
       ifp_object.introspect
       ifp_interface = ifp_object["org.freedesktop.sssd.infopipe"]
       begin
-        user_attrs = ifp_interface.GetUserAttr(username, attrs_needed).first
+        user_attrs = ifp_interface.GetUserAttr(username, ATTRS_NEEDED).first
       rescue => err
         raise _("Unable to get attributes for external user %{user_name} - %{error}") %
               {:user_name => username, :error => err}
       end
 
-      attrs_needed.each_with_object({}) { |attr, hash| hash[attr] = Array(user_attrs[attr]).first }
+      ATTRS_NEEDED.each_with_object({}) { |attr, hash| hash[attr] = Array(user_attrs[attr]).first }
     end
 
     def user_attrs_from_external_directory_via_auth_api(username)
-      host = ENV["HTTPD_AUTH_API_SERVICE_HOST"]
-      port = ENV["HTTPD_AUTH_API_SERVICE_PORT"]
-      conn = Faraday.new(:url => "http://#{host}:#{port}") do |faraday|
-        faraday.request(:url_encoded)               # form-encode POST params
-        faraday.adapter(Faraday.default_adapter)    # make requests with Net::HTTP
-      end
-
-      attrs_needed = "mail,givenname,sn,displayname"
-
-      begin
-        url = "/api/dbus/user_attrs/#{username}?attributes=#{attrs_needed}"
-        response = conn.run_request(:get, url, nil, nil) do |req|
-          req.headers[:content_type] = "application/json"
-          req.headers[:accept]       = "application/json"
-        end
-      rescue => err
-        raise("Failed to query the httpd Authentication API service - #{err}")
-      end
-
-      if response.body
-        body = JSON.parse(response.body.strip)
-      end
-
-      raise(body["error"]) if response.status >= 400
-      body["result"]
+      AuthApiService.new.user_attrs(username, ATTRS_NEEDED)
     end
   end
 end
