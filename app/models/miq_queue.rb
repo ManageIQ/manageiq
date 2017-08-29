@@ -108,9 +108,9 @@ class MiqQueue < ApplicationRecord
     options[:priority]    ||= create_with_options[:priority] || NORMAL_PRIORITY
     options[:queue_name]  ||= create_with_options[:queue_name] || "generic"
     options[:msg_timeout] ||= create_with_options[:msg_timeout] || TIMEOUT
-    options[:task_id]      = $_miq_worker_current_msg.try(:task_id) unless options.key?(:task_id)
+    options[:task_id]       = $_miq_worker_current_msg.try(:task_id) unless options.key?(:task_id)
     options[:tracking_label] = Thread.current[:tracking_label] || options[:task_id] unless options.key?(:tracking_label)
-    options[:role]         = options[:role].to_s unless options[:role].nil?
+    options[:role]          = options[:role].to_s unless options[:role].nil?
 
     options[:args] = [options[:args]] if options[:args] && !options[:args].kind_of?(Array)
 
@@ -184,6 +184,10 @@ class MiqQueue < ApplicationRecord
     put(options)
   end
 
+  def self.where_queue_name(is_array)
+    is_array ? "AND queue_name in (?)" : "AND queue_name = ?"
+  end
+
   MIQ_QUEUE_GET = <<-EOL
     state = 'ready'
     AND (zone IS NULL OR zone = ?)
@@ -194,7 +198,6 @@ class MiqQueue < ApplicationRecord
         AND (zone IS NULL OR zone = ?)
         AND task_id IS NOT NULL
     ))
-    AND queue_name = ?
     AND (role IS NULL OR role IN (?))
     AND (server_guid IS NULL OR server_guid = ?)
     AND (deliver_on IS NULL OR deliver_on <= ?)
@@ -202,15 +205,16 @@ class MiqQueue < ApplicationRecord
   EOL
 
   def self.get(options = {})
+    sql_for_get = MIQ_QUEUE_GET + where_queue_name(options[:queue_name].kind_of?(Array))
     cond = [
-      MIQ_QUEUE_GET,
+      sql_for_get,
       options[:zone] || MiqServer.my_server.zone.name,
       options[:zone] || MiqServer.my_server.zone.name,
-      options[:queue_name] || "generic",
       options[:role] || MiqServer.my_server.active_role_names,
       MiqServer.my_guid,
       Time.now.utc,
       options[:priority] || MIN_PRIORITY,
+      options[:queue_name] || "generic",
     ]
 
     prefetch_max_per_worker = Settings.server.prefetch_max_per_worker
@@ -246,27 +250,44 @@ class MiqQueue < ApplicationRecord
     _log.info("#{MiqQueue.format_full_log_msg(self)}, Requeued")
   end
 
+  # TODO (juliancheal) This is a hack. Brakeman was giving us an SQL injection
+  # warning when we concatonated the queue_name string onto the query.
+  # Creating two seperate queries like this, resolves the Brakeman issue, but
+  # isn't idea. This will need to be rewritten using Arel queires at some point.
+
   MIQ_QUEUE_PEEK = <<-EOL
     state = 'ready'
     AND (zone IS NULL OR zone = ?)
-    AND queue_name = ?
     AND (role IS NULL OR role IN (?))
     AND (server_guid IS NULL OR server_guid = ?)
     AND (deliver_on IS NULL OR deliver_on <= ?)
     AND (priority <= ?)
+    AND queue_name = ?
+  EOL
+
+  MIQ_QUEUE_PEEK_ARRAY = <<-EOL
+    state = 'ready'
+    AND (zone IS NULL OR zone = ?)
+    AND (role IS NULL OR role IN (?))
+    AND (server_guid IS NULL OR server_guid = ?)
+    AND (deliver_on IS NULL OR deliver_on <= ?)
+    AND (priority <= ?)
+    AND queue_name in (?)
   EOL
 
   def self.peek(options = {})
     conditions, select, limit = options.values_at(:conditions, :select, :limit)
 
+    sql_for_peek = conditions[:queue_name].kind_of?(Array) ? MIQ_QUEUE_PEEK_ARRAY : MIQ_QUEUE_PEEK
+
     cond = [
-      MIQ_QUEUE_PEEK,
+      sql_for_peek,
       conditions[:zone] || MiqServer.my_server.zone.name,
-      conditions[:queue_name] || "generic",
       conditions[:role] || MiqServer.my_server.active_role_names,
       MiqServer.my_guid,
       Time.now.utc,
       conditions[:priority] || MIN_PRIORITY,
+      conditions[:queue_name] || "generic",
     ]
 
     result = MiqQueue.where(cond).order(:priority, :id).limit(limit || 1)
@@ -368,7 +389,7 @@ class MiqQueue < ApplicationRecord
             obj = obj.find(instance_id)
           end
         rescue ActiveRecord::RecordNotFound => err
-          _log.warn  "#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}"
+          _log.warn "#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}"
           return STATUS_WARN, nil, nil
         rescue => err
           _log.error "#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}"

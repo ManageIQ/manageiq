@@ -50,6 +50,7 @@ module MiqServer::WorkerManagement::Dequeue
     update_worker_last_heartbeat(pid)
     @workers_lock.synchronize(:SH) do
       w = @workers[pid]
+
       msg = get_queue_message_for_worker(w)
       msg ? [msg[:id], msg[:lock_version]] : nil
     end unless @workers_lock.nil?

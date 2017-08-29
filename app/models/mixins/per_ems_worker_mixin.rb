@@ -100,11 +100,15 @@ module PerEmsWorkerMixin
       ems.queue_name
     end
 
-    def ems_id_from_queue_name(queue_name)
+    def parse_ems_id(queue_name)
       return nil if queue_name.blank?
       name, id = queue_name.split("_")
       return nil unless name == "ems"
       id.to_i
+    end
+
+    def ems_id_from_queue_name(queue_name)
+      queue_name.kind_of?(Array) ? queue_name.collect { |q| parse_ems_id(q) }.flatten : parse_ems_id(queue_name)
     end
 
     def ems_from_queue_name(queue_name)
