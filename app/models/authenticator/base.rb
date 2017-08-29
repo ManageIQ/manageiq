@@ -89,7 +89,7 @@ module Authenticator
         if task.nil? || MiqTask.status_error?(task.status) || MiqTask.status_timeout?(task.status)
           raise MiqException::MiqEVMLoginError, fail_message
         end
-        user_or_taskid = User.find_by_userid(task.userid)
+        user_or_taskid = case_insensitive_find_by_userid(task.userid)
       end
 
       if user_or_taskid.kind_of?(User)
@@ -149,8 +149,7 @@ module Authenticator
 
     def find_or_initialize_user(identity, username)
       userid = userid_for(identity, username)
-      user   = User.find_by_userid(userid)
-      user ||= User.in_my_region.where('lower(userid) = ?', userid).order(:lastlogon).last
+      user   = case_insensitive_find_by_userid(userid)
       user ||= User.new(:userid => userid)
       [userid, user]
     end
@@ -168,12 +167,12 @@ module Authenticator
     end
 
     def lookup_by_identity(username)
-      User.find_by_userid(username)
+      case_insensitive_find_by_userid(username)
     end
 
     # FIXME: LDAP
     def find_by_principalname(username)
-      unless (user = User.find_by_userid(username))
+      unless (user = case_insensitive_find_by_userid(username))
         if username.include?('\\')
           parts = username.split('\\')
           username = "#{parts.last}@#{parts.first}"
@@ -181,7 +180,7 @@ module Authenticator
           suffix = config[:user_suffix]
           username = "#{username}@#{suffix}"
         end
-        user = User.find_by_userid(username)
+        user = case_insensitive_find_by_userid(username)
       end
       [user, username]
     end
@@ -198,6 +197,11 @@ module Authenticator
 
     def failure_reason(_username, _request)
       nil
+    end
+
+    def case_insensitive_find_by_userid(username)
+      user =  User.find_by_userid(username)
+      user || User.in_my_region.where('lower(userid) = ?', username.downcase).order(:lastlogon).last
     end
 
     def userid_for(_identity, username)

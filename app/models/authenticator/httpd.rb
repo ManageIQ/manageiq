@@ -73,15 +73,11 @@ module Authenticator
     private
 
     def find_userid_as_upn(upn_username)
-      user = User.find_by_userid(upn_username)
-      user || User.in_my_region.where('lower(userid) = ?', upn_username).order(:lastlogon).last
+      case_insensitive_find_by_userid(upn_username)
     end
 
     def find_userid_as_username(identity, username)
-      userid = userid_for(identity, username)
-      user   = User.find_by_userid(userid)
-      user ||= User.in_my_region.where('lower(userid) = ?', userid).order(:lastlogon).last
-      user
+      case_insensitive_find_by_userid(userid_for(identity, username))
     end
 
     def find_userid_as_distinguished_name(user_attrs)
