@@ -28,6 +28,8 @@ module Vm::Operations
   def ipv4_address
     if %w(amazon google).include?(vendor.downcase)
       public_address
+    elsif %w(openstack).include?(vendor.downcase)
+      public_address.nil? ? floating_ip_addresses.first : public_address
     else
       ipaddresses.find { |ip| IPAddr.new(ip).ipv4? }
     end
