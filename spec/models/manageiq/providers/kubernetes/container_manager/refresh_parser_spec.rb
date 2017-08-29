@@ -188,6 +188,16 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
                        :image_ref  => example_ref,
                        :image      => {:name => "example", :tag => nil, :digest => "sha256:1234567abcdefg",
                                        :image_ref => "docker://example@sha256:1234567abcdefg"},
+                       :registry   => nil},
+
+                      {:image_name => "localhost:1234/name",
+                       :image_ref  => nil,
+                       :image      => nil,
+                       :registry   => nil},
+
+                      {:image_name => nil,
+                       :image_ref  => example_ref,
+                       :image      => nil,
                        :registry   => nil}]
 
     example_images.each do |ex|
