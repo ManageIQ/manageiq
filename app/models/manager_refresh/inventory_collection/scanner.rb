@@ -66,10 +66,12 @@ module ManagerRefresh
         end
 
         # Transform :parent_inventory_collections symbols to InventoryCollection objects
-        if targeted? && parent_inventory_collections.present?
+        if parent_inventory_collections.present?
           self.parent_inventory_collections = parent_inventory_collections.map do |inventory_collection_index|
             ic = indexed_inventory_collections[inventory_collection_index]
             raise "Can't find InventoryCollection #{inventory_collection_index} from #{inventory_collection}" unless ic
+            # Add parent_inventory_collection as a dependency, so e.g. disconnect is done in a right order
+            (dependency_attributes[:__parent_inventory_collections] ||= Set.new) << ic
             ic
           end
         end
