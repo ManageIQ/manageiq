@@ -188,6 +188,16 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
                        :image_ref  => example_ref,
                        :image      => {:name => "example", :tag => nil, :digest => "sha256:1234567abcdefg",
                                        :image_ref => "docker://example@sha256:1234567abcdefg"},
+                       :registry   => nil},
+
+                      {:image_name => "localhost:1234/name",
+                       :image_ref  => nil,
+                       :image      => nil,
+                       :registry   => nil},
+
+                      {:image_name => nil,
+                       :image_ref  => example_ref,
+                       :image      => nil,
                        :registry   => nil}]
 
     example_images.each do |ex|
@@ -204,6 +214,22 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
     # check https://bugzilla.redhat.com/show_bug.cgi?id=1383498
     it "handles nil input" do
       expect(parser.send(:parse_container_state, nil)).to eq({})
+    end
+  end
+
+  describe "parse_container_status" do
+    let(:image)   { "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
+    let(:imageID) { "docker://#{image}" }
+    let(:pod_id)  { "af3d1a10-23d3-11e5-44c0-0af3d1a10370e" }
+
+    it "handles invalid image" do
+      container = array_recursive_ostruct(:image => nil, :imageID => imageID)
+      expect(parser.send(:parse_container_status, container, pod_id)).to be_nil
+    end
+
+    it "handles invalid imageID" do
+      container = array_recursive_ostruct(:image => image, :imageID => nil)
+      expect(parser.send(:parse_container_status, container, pod_id)).to be_nil
     end
   end
 
