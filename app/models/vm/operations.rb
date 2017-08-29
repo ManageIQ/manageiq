@@ -15,10 +15,14 @@ module Vm::Operations
 
   def cockpit_url
     return if ipaddresses.blank?
-    miq_server = ext_management_system.nil? ? nil : ext_management_system.zone.remote_cockpit_ws_miq_server
+    miq_server = if ext_management_system.nil? || ext_management_system.zone.remote_cockpit_ws_miq_server.nil?
+                   nil
+                 else
+                   ext_management_system.zone.remote_cockpit_ws_miq_server
+                 end
     MiqCockpit::WS.url(miq_server,
-                       MiqCockpitWsWorker.fetch_worker_settings_from_server(miq_server),
-                       ipv4_address || ipaddresses.first)
+                       miq_server.nil? ? nil : MiqCockpitWsWorker.fetch_worker_settings_from_server(miq_server),
+                       ipv4_address || ipaddresses.first).to_s
   end
 
   def ipv4_address
