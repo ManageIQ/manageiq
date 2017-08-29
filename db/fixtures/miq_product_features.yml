@@ -864,6 +864,14 @@
       :description: Edit Tags of Backups
       :feature_type: control
       :identifier: cloud_volume_backup_tag
+    - :name: Restore Backup
+      :description: Restore Backup to Volume
+      :feature_type: control
+      :identifier: cloud_volume_backup_restore_to_volume
+    - :name: Delete Backup
+      :description: Delete Backup
+      :feature_type: control
+      :identifier: cloud_volume_backup_delete
 
 # Flavor
 - :name: Flavors
