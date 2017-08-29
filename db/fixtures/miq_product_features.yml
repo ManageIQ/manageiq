@@ -6264,10 +6264,26 @@
       :description: Turn Off Server
       :feature_type: control
       :identifier: physical_server_power_off
+    - :name: Turn Off Server Immediately
+      :description: Turn Off Server Immediately
+      :feature_type: control
+      :identifier: physical_server_power_off_now
     - :name: Restart Server
       :description: Restart Server
       :feature_type: control
       :identifier: physical_server_restart
+    - :name: Restart Server Immediately
+      :description: Restart Server Immediately
+      :feature_type: control
+      :identifier: physical_server_restart_now
+    - :name: Restart Server to System Setup
+      :description: Restart Server to System Setup
+      :feature_type: control
+      :identifier: physical_server_restart_to_sys_setup
+    - :name: Restart Management Controller
+      :description: Restart Management Controller
+      :feature_type: control
+      :identifier: physical_server_restart_mgmt_controller
     - :name: Blink LED
       :description: Blink Loc LED
       :feature_type: control
