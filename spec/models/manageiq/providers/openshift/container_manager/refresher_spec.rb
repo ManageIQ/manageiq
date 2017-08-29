@@ -91,6 +91,42 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     assert_container_node_with_no_hawk_attributes
   end
 
+  it 'will skip container_images if get_container_images = false' do
+    stub_settings_merge(
+      :ems_refresh => {:openshift => {:get_container_images => false}},
+    )
+    VCR.use_cassette(described_class.name.underscore,
+                     :match_requests_on              => [:path,],
+                     :allow_unused_http_interactions => true) do # , :record => :new_episodes) do
+      EmsRefresh.refresh(@ems)
+    end
+
+    @ems.reload
+
+    expect(ContainerImage.count).to eq(pod_images_count)
+    assert_specific_used_container_image(:metadata => false)
+  end
+
+  it 'will not delete previously collected metadata if get_container_images = false' do
+    normal_refresh
+    stub_settings_merge(
+      :ems_refresh => {:openshift => {:get_container_images => false}},
+    )
+
+    VCR.use_cassette(described_class.name.underscore,
+                     :match_requests_on              => [:path,],
+                     :allow_unused_http_interactions => true) do # , :record => :new_episodes) do
+      EmsRefresh.refresh(@ems)
+    end
+
+    @ems.reload
+
+    # Unused images are archived, metadata is retained either way.
+    expect(@ems.container_images.count).to eq(pod_images_count)
+    assert_specific_used_container_image(:metadata => true)
+    assert_specific_unused_container_image(:metadata => true, :connected => false)
+  end
+
   context "when refreshing an empty DB" do
     # CREATING FIRST VCR
     # To recreate the tested objects in OpenShift use the template file:
@@ -227,6 +263,33 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
                      :allow_unused_http_interactions => true) do # , :record => :new_episodes) do
       EmsRefresh.refresh(@ems)
     end
+
+    @ems.reload
+
+    # Unused images are disconnected, metadata is retained either way.
+    expect(@ems.container_images.count).to eq(pod_images_count)
+    assert_specific_used_container_image(:metadata => true)
+    assert_specific_unused_container_image(:metadata => true, :connected => false)
+  end
+
+  it 'will store only images used by pods if store_unused_images = false' do
+    stub_settings_merge(
+      :ems_refresh => {:openshift => {:store_unused_images => false}},
+    )
+    normal_refresh
+
+    @ems.reload
+
+    expect(ContainerImage.count).to eq(pod_images_count)
+    assert_specific_used_container_image(:metadata => true)
+  end
+
+  it 'will not delete previously collected metadata if store_unused_images = false' do
+    normal_refresh
+    stub_settings_merge(
+      :ems_refresh => {:openshift => {:store_unused_images => false}},
+    )
+    normal_refresh
 
     @ems.reload
 

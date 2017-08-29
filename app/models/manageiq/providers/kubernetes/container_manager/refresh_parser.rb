@@ -667,7 +667,8 @@ module ManageIQ::Providers::Kubernetes
       res
     end
 
-    def parse_container_image(image, imageID)
+    # may return nil if store_new_images = false
+    def parse_container_image(image, imageID, store_new_images: true)
       container_image, container_image_registry = parse_image_name(image, imageID)
       host_port = nil
 
@@ -691,6 +692,7 @@ module ManageIQ::Providers::Kubernetes
         :container_image, :by_digest, container_image_identity)
 
       if stored_container_image.nil?
+        return nil unless store_new_images
         @data_index.store_path(
           :container_image, :by_digest,
           container_image_identity, container_image
