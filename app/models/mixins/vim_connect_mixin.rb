@@ -1,4 +1,6 @@
 module VimConnectMixin
+  extend ActiveSupport::Concern
+
   def connect(options = {})
     options[:auth_type] ||= :ws
     raise _("no credentials defined") if missing_credentials?(options[:auth_type])
@@ -40,6 +42,36 @@ module VimConnectMixin
       raise
     ensure
       vim.try(:disconnect) rescue nil
+    end
+  end
+
+  module ClassMethods
+    def raw_connect(options)
+      options[:pass] = MiqPassword.try_decrypt(options[:pass])
+      validate_connection do
+        if options[:fault_tolerant]
+          MiqFaultTolerantVim.new(options)
+        else
+          MiqVim.new(options[:ip], options[:user],options[:pass])
+        end
+      end
+    end
+
+    def validate_connection
+      yield
+    rescue SocketError, Errno::EHOSTUNREACH, Errno::ENETUNREACH
+      _log.warn($!.inspect)
+      raise MiqException::MiqUnreachableError, $!.message
+    rescue Handsoap::Fault
+      _log.warn($!.inspect)
+      if $!.respond_to?(:reason)
+        raise MiqException::MiqInvalidCredentialsError, $!.reason if $!.reason =~ /Authorize Exception|incorrect user name or password/
+        raise $!.reason
+      end
+      raise $!.message
+    rescue Exception
+      _log.warn($!.inspect)
+      raise "Unexpected response returned from #{ui_lookup(:table => "ext_management_systems")}, see log for details"
     end
   end
 end
