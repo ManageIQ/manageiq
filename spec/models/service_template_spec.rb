@@ -43,6 +43,44 @@ describe ServiceTemplate do
       }
       expect(service_template.custom_actions).to match(expected)
     end
+
+    it "does not show hidden buttons" do
+      service_template = FactoryGirl.create(:service_template, :name => "foo")
+      true_expression = MiqExpression.new("=" => {"field" => "ServiceTemplate-name", "value" => "foo"})
+      false_expression = MiqExpression.new("=" => {"field" => "ServiceTemplate-name", "value" => "bar"})
+      FactoryGirl.create(:custom_button,
+                         :name                  => "visible button",
+                         :applies_to_class      => "Service",
+                         :visibility_expression => true_expression)
+      FactoryGirl.create(:custom_button,
+                         :name                  => "hidden button",
+                         :applies_to_class      => "Service",
+                         :visibility_expression => false_expression)
+      FactoryGirl.create(:custom_button_set).tap do |group|
+        group.add_member(FactoryGirl.create(:custom_button,
+                                            :name                  => "visible button in group",
+                                            :applies_to_class      => "Service",
+                                            :visibility_expression => true_expression))
+        group.add_member(FactoryGirl.create(:custom_button,
+                                            :name                  => "hidden button in group",
+                                            :applies_to_class      => "Service",
+                                            :visibility_expression => false_expression))
+      end
+
+      expected = {
+        :buttons       => [
+          a_hash_including("name" => "visible button")
+        ],
+        :button_groups => [
+          a_hash_including(
+            :buttons => [
+              a_hash_including("name" => "visible button in group")
+            ]
+          )
+        ]
+      }
+      expect(service_template.custom_actions).to match(expected)
+    end
   end
 
   context "#type_display" do
