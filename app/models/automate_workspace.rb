@@ -2,8 +2,8 @@ class AutomateWorkspace < ApplicationRecord
   include UuidMixin
   belongs_to :user
   belongs_to :tenant
-  validates :tenant, :presence => true, :message => "is needed to own the workspace"
-  validates :user, :presence => true, :message => "is needed to own the workspace"
+  validates :tenant, :presence => true
+  validates :user, :presence => true
 
   def output=(hash)
     if hash['workspace'].blank? && hash['state_var'].blank?
