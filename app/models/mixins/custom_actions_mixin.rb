@@ -10,10 +10,10 @@ module CustomActionsMixin
 
   def custom_actions
     {
-      :buttons       => filter_by_visibility(custom_buttons).collect(&:expanded_serializable_hash),
+      :buttons       => filter_by_visibility(custom_buttons).collect(&method(:serialize_button)),
       :button_groups => custom_button_sets_with_generics.collect do |button_set|
         button_set.serializable_hash.merge(
-          :buttons => filter_by_visibility(button_set.children).collect(&:expanded_serializable_hash)
+          :buttons => filter_by_visibility(button_set.children).collect(&method(:serialize_button))
         )
       end
     }
@@ -41,6 +41,10 @@ module CustomActionsMixin
 
   def filter_by_visibility(buttons)
     buttons.select { |b| b.evaluate_visibility_expression_for(self) }
+  end
+
+  def serialize_button(button)
+    button.expanded_serializable_hash
   end
 
   def generic_custom_buttons
