@@ -238,11 +238,26 @@ module EmsRefresh::SaveInventory
         hardware.save! if hardware.id.nil?
         h[:network][:hardware_id] = hardware.id
       end
+      if h[:child_devices]
+        # Save the hardware to force an id if not found
+        hardware.save! if hardware.id.nil?
+        h[:child_devices].each do |child_device|
+          child_device[:hardware_id] = hardware.id
+        end
+      end
     end
 
     deletes = hardware.guest_devices.where(:device_type => ["ethernet", "storage"])
-    save_inventory_multi(hardware.guest_devices, hashes, deletes, [:device_type, :uid_ems], [:network, :miq_scsi_targets], [:switch, :lan])
+    save_inventory_multi(hardware.guest_devices, hashes, deletes, [:device_type, :uid_ems], [:network, :miq_scsi_targets, :firmwares, :child_devices], [:switch, :lan])
     store_ids_for_new_records(hardware.guest_devices, hashes, [:device_type, :uid_ems])
+  end
+
+  def save_child_devices_inventory(guest_device, hashes)
+    return if hashes.nil?
+
+    deletes = guest_device.child_devices.where(:device_type => ["ethernet", "storage"])
+    save_inventory_multi(guest_device.child_devices, hashes, deletes, [:device_type, :uid_ems], [:network, :miq_scsi_targets], [:switch, :lan])
+    store_ids_for_new_records(guest_device.child_devices, hashes, [:device_type, :uid_ems])
   end
 
   def save_disks_inventory(hardware, hashes)

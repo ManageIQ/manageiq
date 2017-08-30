@@ -20,6 +20,7 @@ class Hardware < ApplicationRecord
   has_many    :storage_adapters, -> { where "device_type = 'storage'" }, :class_name => "GuestDevice", :foreign_key => :hardware_id
   has_many    :nics, -> { where "device_type = 'ethernet'" }, :class_name => "GuestDevice", :foreign_key => :hardware_id
   has_many    :ports, -> { where "device_type != 'storage'" }, :class_name => "GuestDevice", :foreign_key => :hardware_id
+  has_many    :physical_ports, -> { where "device_type = 'physical_port'" }, :class_name => "GuestDevice", :foreign_key => :hardware_id
 
   virtual_column :ipaddresses,   :type => :string_set, :uses => :networks
   virtual_column :hostnames,     :type => :string_set, :uses => :networks
