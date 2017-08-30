@@ -44,7 +44,7 @@ module CustomActionsMixin
   end
 
   def serialize_button(button)
-    button.expanded_serializable_hash
+    button.expanded_serializable_hash.merge("enabled" => button.evaluate_enablement_expression_for(self))
   end
 
   def generic_custom_buttons
