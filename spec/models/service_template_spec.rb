@@ -83,6 +83,32 @@ describe ServiceTemplate do
     end
   end
 
+  describe "#custom_action_buttons" do
+    it "does not show hidden buttons" do
+      service_template = FactoryGirl.create(:service_template, :name => "foo")
+      true_expression = MiqExpression.new("=" => {"field" => "ServiceTemplate-name", "value" => "foo"})
+      false_expression = MiqExpression.new("=" => {"field" => "ServiceTemplate-name", "value" => "bar"})
+      visible_button = FactoryGirl.create(:custom_button,
+                                          :applies_to_class      => "Service",
+                                          :visibility_expression => true_expression)
+      _hidden_button = FactoryGirl.create(:custom_button,
+                                          :applies_to_class      => "Service",
+                                          :visibility_expression => false_expression)
+      visible_button_in_group = FactoryGirl.create(:custom_button,
+                                                   :applies_to_class      => "Service",
+                                                   :visibility_expression => true_expression)
+      hidden_button_in_group = FactoryGirl.create(:custom_button,
+                                                  :applies_to_class      => "Service",
+                                                  :visibility_expression => false_expression)
+      FactoryGirl.create(:custom_button_set).tap do |group|
+        group.add_member(visible_button_in_group)
+        group.add_member(hidden_button_in_group)
+      end
+
+      expect(service_template.custom_action_buttons).to contain_exactly(visible_button, visible_button_in_group)
+    end
+  end
+
   context "#type_display" do
     before(:each) do
       @st1 = FactoryGirl.create(:service_template, :name => 'Service Template 1')
