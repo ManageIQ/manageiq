@@ -24,7 +24,7 @@ module MiqServer::NtpManagement
   end
 
   # Called when zone ntp settings changed... run by the appropriate server
-  # Also, called in atStartup of miq_server and on a configuration change for the server
+  # Also, called in start of miq_server and on a configuration change for the server
   def ntp_reload(ntp_settings = server_ntp_settings)
     # matches ntp_reload_queue's guard clause
     return if !MiqEnvironment::Command.is_appliance? || MiqEnvironment::Command.is_container?

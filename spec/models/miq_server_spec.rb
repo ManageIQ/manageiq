@@ -1,17 +1,6 @@
 describe MiqServer do
   include_examples ".seed called multiple times"
 
-  it ".atStartup" do
-    MiqRegion.seed
-    described_class::RUN_AT_STARTUP.each do |klass|
-      next unless klass.respond_to?(:atStartup)
-      expect(klass.constantize).to receive(:atStartup)
-    end
-
-    expect(Vmdb.logger).to receive(:log_backtrace).never
-    described_class.atStartup
-  end
-
   context ".my_guid" do
     let(:guid_file) { Rails.root.join("GUID") }
 

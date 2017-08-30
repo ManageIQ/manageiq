@@ -501,23 +501,6 @@ class MiqQueue < ApplicationRecord
     !finished?
   end
 
-  def self.atStartup
-    _log.info("Cleaning up queue messages...")
-    MiqQueue.where(:state => STATE_DEQUEUE).each do |message|
-      if message.handler.nil?
-        _log.warn("Cleaning message in dequeue state without worker: #{format_full_log_msg(message)}")
-      else
-        handler_server = message.handler            if message.handler.kind_of?(MiqServer)
-        handler_server = message.handler.miq_server if message.handler.kind_of?(MiqWorker)
-        next unless handler_server == MiqServer.my_server
-
-        _log.warn("Cleaning message: #{format_full_log_msg(message)}")
-      end
-      message.update_attributes(:state => STATE_ERROR) rescue nil
-    end
-    _log.info("Cleaning up queue messages... Complete")
-  end
-
   def self.format_full_log_msg(msg)
     "Message id: [#{msg.id}], #{msg.handler_type} id: [#{msg.handler_id}], Zone: [#{msg.zone}], Role: [#{msg.role}], Server: [#{msg.server_guid}], Ident: [#{msg.queue_name}], Target id: [#{msg.target_id}], Instance id: [#{msg.instance_id}], Task id: [#{msg.task_id}], Command: [#{msg.class_name}.#{msg.method_name}], Timeout: [#{msg.msg_timeout}], Priority: [#{msg.priority}], State: [#{msg.state}], Deliver On: [#{msg.deliver_on}], Data: [#{msg.data.nil? ? "" : "#{msg.data.length} bytes"}], Args: #{MiqPassword.sanitize_string(msg.args.inspect)}"
   end

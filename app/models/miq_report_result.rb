@@ -115,12 +115,6 @@ class MiqReportResult < ApplicationRecord
     save
   end
 
-  def self.atStartup
-    _log.info("Purging adhoc report results...")
-    purge_for_user
-    _log.info("Purging adhoc report results... complete")
-  end
-
   #########################################################################################################
   # FIXME:  Hack because userid column is overridden with multiple column info using | character
   #
@@ -140,6 +134,10 @@ class MiqReportResult < ApplicationRecord
     return parts[0] if (parts.last == 'adhoc')
     return parts[1] if (parts.last == 'schedule')
     raise _("Cannot parse userid %{user_id}") % {:user_id => userid.inspect}
+  end
+
+  def self.purge_for_all_users
+    purge_for_user(:userid => "%")
   end
 
   def self.purge_for_user(options = {})

@@ -1,6 +1,7 @@
 require 'resolv'
 
 class MiqServer < ApplicationRecord
+  include_concern 'AtStartup'
   include_concern 'WorkerManagement'
   include_concern 'ServerMonitor'
   include_concern 'ServerSmartProxy'
@@ -29,8 +30,6 @@ class MiqServer < ApplicationRecord
 
   virtual_column :zone_description, :type => :string
 
-  RUN_AT_STARTUP  = %w( MiqRegion MiqWorker MiqQueue MiqReportResult )
-
   STATUS_STARTING       = 'starting'.freeze
   STATUS_STARTED        = 'started'.freeze
   STATUS_RESTARTING     = 'restarting'.freeze
@@ -47,19 +46,6 @@ class MiqServer < ApplicationRecord
 
   def self.active_miq_servers
     where(:status => STATUSES_ACTIVE)
-  end
-
-  def self.atStartup
-    _log.info("Invoking startup methods")
-    RUN_AT_STARTUP.each do |klass|
-      _log.info("Invoking startup method for #{klass}")
-      begin
-        klass = klass.constantize
-        klass.atStartup
-      rescue => err
-        _log.log_backtrace(err)
-      end
-    end
   end
 
   def starting_server_record
@@ -121,9 +107,12 @@ class MiqServer < ApplicationRecord
     clear_miq_queue_for_this_server
 
     #############################################################
-    # Call all the startup methods only NOW, since some check roles
+    # Other startup actions
     #############################################################
-    self.class.atStartup
+    self.class.log_managed_entities
+    self.class.clean_all_workers
+    self.class.clean_dequeued_messages
+    self.class.purge_report_results
 
     delete_active_log_collections_queue
 
