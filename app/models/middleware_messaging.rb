@@ -20,7 +20,7 @@ class MiddlewareMessaging < ApplicationRecord
   end
 
   def chart_layout_path
-    "#{self.class.name.gsub(/::/, '_')}_#{messaging_type.parameterize(:separator => '_')}"
+    "#{self.class.name.demodulize}_#{messaging_type.parameterize(:separator => '_')}"
   end
 
   def self.supported_models
