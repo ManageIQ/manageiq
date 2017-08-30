@@ -1,6 +1,8 @@
 module Vm::Operations
   extend ActiveSupport::Concern
 
+  include CockpitMixin
+
   include_concern 'Guest'
   include_concern 'Power'
   include_concern 'Lifecycle'
@@ -15,24 +17,12 @@ module Vm::Operations
 
   def cockpit_url
     return if ipaddresses.blank?
-    miq_server = if ext_management_system.nil? || ext_management_system.zone.remote_cockpit_ws_miq_server.nil?
-                   nil
-                 else
-                   ext_management_system.zone.remote_cockpit_ws_miq_server
-                 end
-    MiqCockpit::WS.url(miq_server,
-                       miq_server.nil? ? nil : MiqCockpitWsWorker.fetch_worker_settings_from_server(miq_server),
-                       ipv4_address || ipaddresses.first).to_s
+    MiqCockpit::WS.url(cockpit_server, cockpit_worker, ipv4_address || ipaddresses.first)
   end
 
   def ipv4_address
-    if %w(amazon google).include?(vendor.downcase)
-      public_address
-    elsif %w(openstack).include?(vendor.downcase)
-      public_address.nil? ? floating_ip_addresses.first : public_address
-    else
-      ipaddresses.find { |ip| IPAddr.new(ip).ipv4? }
-    end
+    return public_address unless public_address.nil?
+    ipaddresses.find { |ip| IPAddr.new(ip).ipv4? unless ip.starts_with?('192') }
   end
 
   def public_address
