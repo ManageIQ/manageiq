@@ -185,6 +185,7 @@ group :web_server, :manageiq_default do
 end
 
 group :web_socket, :manageiq_default do
+  gem "redis",                          "~>3.0"
   gem "websocket-driver",               "~>0.6.3"
 end
 
