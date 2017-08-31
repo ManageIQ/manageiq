@@ -107,7 +107,7 @@ module ApplicationController::TreeSupport
     node = {
       :key         => "#{folder.class.name}_#{folder.id}",
       :title       => folder.name,
-      :checkable   => !@edit.nil?,
+      :checkable   => @edit.present? || @assign.present?,
       :cfmeNoClick => true
     }
     node[:select] = true if @selected_ids.include?(node[:key]) # Check if tag is assigned
