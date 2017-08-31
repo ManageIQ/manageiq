@@ -3,7 +3,7 @@ describe AutomateWorkspace do
     let(:user) { FactoryGirl.create(:user_with_group, :userid => "admin") }
     let(:aw) { FactoryGirl.create(:automate_workspace, :user => user, :tenant => user.current_tenant) }
     it "raises error on invalid hash" do
-      expect { aw.output = {} }.to raise_exception(ArgumentError)
+      expect { aw.merge_output({}) }.to raise_exception(ArgumentError)
     end
 
     it "properly merges the hash with the new output" do
@@ -11,9 +11,9 @@ describe AutomateWorkspace do
       partial_hash = {'workspace' => {'c' => 1}}
       merged_hash = {'workspace' => {'a' => 1, 'c' => 1}, 'state_var' => {'b' => 2}}
 
-      aw.output = hash
+      aw.merge_output(hash)
       aw.reload
-      aw.output = partial_hash
+      aw.merge_output(partial_hash)
       aw.reload
 
       expect(aw.output).to eq(merged_hash)
