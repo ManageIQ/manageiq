@@ -1,4 +1,7 @@
 describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
+  let(:all_images_count) { 31 } # including /oapi/v1/images data
+  let(:pod_images_count) { 4 }  # only images mentioned by pods
+
   before(:each) do
     allow(MiqServer).to receive(:my_zone).and_return("default")
     @ems = FactoryGirl.create(:ems_openshift, :hostname => "10.35.0.174")
@@ -8,13 +11,17 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     expect(described_class.ems_type).to eq(:openshift)
   end
 
+  def normal_refresh
+    VCR.use_cassette(described_class.name.underscore,
+                     :match_requests_on => [:path,]) do # , :record => :new_episodes) do
+      EmsRefresh.refresh(@ems)
+    end
+  end
+
   it "will perform a full refresh on openshift" do
     2.times do
       @ems.reload
-      VCR.use_cassette(described_class.name.underscore,
-                       :match_requests_on => [:path,]) do # , :record => :new_episodes) do
-        EmsRefresh.refresh(@ems)
-      end
+      normal_refresh
       @ems.reload
 
       assert_ems
@@ -29,7 +36,8 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
       assert_specific_container_build
       assert_specific_container_build_pod
       assert_specific_container_template
-      assert_specific_container_image
+      assert_specific_running_container_image
+      assert_specific_unused_container_image(:metadata => true, :connected => true)
     end
   end
 
@@ -146,6 +154,23 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     stub_settings(Settings.to_hash.deep_merge(
       :ems_refresh => {:openshift => {:get_container_images => false}},
     ))
+    VCR.use_cassette(described_class.name.underscore,
+                     :match_requests_on              => [:path,],
+                     :allow_unused_http_interactions => true) do # , :record => :new_episodes) do
+      EmsRefresh.refresh(@ems)
+    end
+
+    @ems.reload
+
+    expect(ContainerImage.count).to eq(pod_images_count)
+    assert_specific_running_container_image
+  end
+
+  it 'will not delete previously collected metadata if get_container_images = false' do
+    normal_refresh
+    stub_settings(Settings.to_hash.deep_merge(
+      :ems_refresh => {:openshift => {:get_container_images => false}},
+    ))
 
     VCR.use_cassette(described_class.name.underscore,
                      :match_requests_on              => [:path,],
@@ -155,7 +180,10 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
 
     @ems.reload
 
-    expect(ContainerImage.count).to eq(4)
+    # Unused images are disconnected, metadata is retained either way.
+    expect(@ems.container_images.count).to eq(pod_images_count)
+    assert_specific_running_container_image
+    assert_specific_unused_container_image(:metadata => true, :connected => false)
   end
 
   def assert_table_counts
@@ -170,7 +198,8 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     expect(ContainerBuild.count).to eq(1)
     expect(ContainerBuildPod.count).to eq(1)
     expect(ContainerTemplate.count).to eq(6)
-    expect(ContainerImage.count).to eq(31)
+    expect(ContainerImage.count).to eq(all_images_count)
+    expect(ContainerImage.joins(:containers).distinct.count).to eq(pod_images_count)
   end
 
   def assert_ems
@@ -325,12 +354,25 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     )
   end
 
-  def assert_specific_container_image
+  def assert_specific_unused_container_image(metadata:, connected:)
+    # An image not mentioned in /pods, only in /images, built by openshift so it has metadata.
     @container_image = ContainerImage.find_by_name("centos/postgresql-95-centos7")
 
-    expect(@container_image.ext_management_system).to eq(@ems)
-    expect(@container_image.environment_variables.count).to eq(9)
+    expect(@container_image.ext_management_system).to eq(connected ? @ems : nil)
+    expect(@container_image.environment_variables.count).to eq(metadata ? 9 : 0)
     expect(@container_image.labels.count).to eq(1)
-    expect(@container_image.docker_labels.count).to eq(9)
+    expect(@container_image.docker_labels.count).to eq(metadata ? 9 : 0)
+  end
+
+  def assert_specific_running_container_image
+    # This VCR cassette has no overlap between images running in /pods
+    # and /images from openshift registry.
+    # At least test one from /pods then.
+    @container_image = ContainerImage.find_by(:name => "openshift/mysql-55-centos7")
+
+    expect(@container_image.ext_management_system).to eq(@ems)
+    expect(@container_image.environment_variables.count).to eq(0)
+    expect(@container_image.labels.count).to eq(0)
+    expect(@container_image.docker_labels.count).to eq(0)
   end
 end
