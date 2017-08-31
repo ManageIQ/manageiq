@@ -188,13 +188,24 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
                        :image_ref  => example_ref,
                        :image      => {:name => "example", :tag => nil, :digest => "sha256:1234567abcdefg",
                                        :image_ref => "docker://example@sha256:1234567abcdefg"},
+                       :registry   => nil},
+
+                      {:image_name => "localhost:1234/name",
+                       :image_ref  => nil,
+                       :image      => nil,
+                       :registry   => nil},
+
+                      {:image_name => nil,
+                       :image_ref  => example_ref,
+                       :image      => nil,
                        :registry   => nil}]
 
     example_images.each do |ex|
       it "tests '#{ex[:image_name]}'" do
         result_image, result_registry = parser.send(:parse_image_name, ex[:image_name], ex[:image_ref])
+        result_image = result_image.except(:registered_on) unless result_image.nil?
 
-        expect(result_image.except(:registered_on)).to eq(ex[:image])
+        expect(result_image).to eq(ex[:image])
         expect(result_registry).to eq(ex[:registry])
       end
     end
