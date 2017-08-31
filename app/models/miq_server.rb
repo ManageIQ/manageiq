@@ -50,27 +50,6 @@ class MiqServer < ApplicationRecord
   end
 
   def self.atStartup
-    starting_roles = ::Settings.server.role
-
-    # Change the database role to database_operations
-    roles = starting_roles.dup
-    if roles.gsub!(/\bdatabase\b/, 'database_operations')
-      MiqServer.my_server.set_config(:server => {:role => roles})
-    end
-
-    # Roles Changed!
-    roles = ::Settings.server.role
-    if roles != starting_roles
-      # tell the server to pick up the role change
-      server = MiqServer.my_server
-      server.sync_assigned_roles
-      server.sync_active_roles
-      server.set_active_role_flags
-    end
-    invoke_at_startups
-  end
-
-  def self.invoke_at_startups
     _log.info("Invoking startup methods")
     RUN_AT_STARTUP.each do |klass|
       _log.info("Invoking startup method for #{klass}")

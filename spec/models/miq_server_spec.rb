@@ -1,7 +1,7 @@
 describe MiqServer do
   include_examples ".seed called multiple times"
 
-  it ".invoke_at_startups" do
+  it ".atStartup" do
     MiqRegion.seed
     described_class::RUN_AT_STARTUP.each do |klass|
       next unless klass.respond_to?(:atStartup)
@@ -9,7 +9,7 @@ describe MiqServer do
     end
 
     expect(Vmdb.logger).to receive(:log_backtrace).never
-    described_class.invoke_at_startups
+    described_class.atStartup
   end
 
   context ".my_guid" do
