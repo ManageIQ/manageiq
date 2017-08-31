@@ -11,18 +11,18 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
     - Don't use secure sessions in containers [(#15819)](https://github.com/ManageIQ/manageiq/pull/15819)
     - Add MiqExpression support for managed filters [(#15623)](https://github.com/ManageIQ/manageiq/pull/15623)
     - Use memcached for sending messages to workers [(#15471)](https://github.com/ManageIQ/manageiq/pull/15471)
-- REST API
-    - Add metrics default limit to API settings [(#15797)](https://github.com/ManageIQ/manageiq/pull/15797)
 - Providers
     - Missing settings for a cloud batch saving and adding shared_options [(#15792)](https://github.com/ManageIQ/manageiq/pull/15792)
     - Needed config for Cloud batch saver_strategy [(#15708)](https://github.com/ManageIQ/manageiq/pull/15708)
     - Remove the Eventcatcher from CinderManager [(#14962)](https://github.com/ManageIQ/manageiq/pull/14962)
+- Reporting
+    - Limit Generic Object associations to the same list of objects available to reporting. [(#15735)](https://github.com/ManageIQ/manageiq/pull/15735)
+- REST API
+    - Add metrics default limit to API settings [(#15797)](https://github.com/ManageIQ/manageiq/pull/15797)
 - Services
     - Adds dialog field association info to importer [(#15740)](https://github.com/ManageIQ/manageiq/pull/15740)
     - Removes importer association data for backwards compatibility [(#15724)](https://github.com/ManageIQ/manageiq/pull/15724)
     - Exports new DialogFieldAssociations data [(#15608)](https://github.com/ManageIQ/manageiq/pull/15608)
-- Reporting
-    - Limit Generic Object associations to the same list of objects available to reporting. [(#15735)](https://github.com/ManageIQ/manageiq/pull/15735)
 
 ### Changed
 - Performance
@@ -30,8 +30,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
     - Memoize Metric::Capture.capture_cols [(#15791)](https://github.com/ManageIQ/manageiq/pull/15791)
 
 ### Fixed
-- UI (Classic)
-    - Remove rails-controller-testing from Gemfile [(#15852)](https://github.com/ManageIQ/manageiq/pull/15852)
+- Automate
+    - Fix for custom button not passing target object to dynamic dialog fields [(#15810)](https://github.com/ManageIQ/manageiq/pull/15810)
+    - miq_group_id is required by automate. [(#15760)](https://github.com/ManageIQ/manageiq/pull/15760)
 - Platform
     - Use ruby not runner for run single worker [(#15825)](https://github.com/ManageIQ/manageiq/pull/15825)
     - Handle pid in run_single_worker.rb properly [(#15820)](https://github.com/ManageIQ/manageiq/pull/15820)
@@ -40,11 +41,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
     - Get tag details for no specific model [(#15788)](https://github.com/ManageIQ/manageiq/pull/15788)
     - Support logins when "Get User Groups from LDAP" is not checked [(#15661)](https://github.com/ManageIQ/manageiq/pull/15661)
     - Give active queue worker time to complete message [(#15529)](https://github.com/ManageIQ/manageiq/pull/15529)
-- Automate
-    - Fix for custom button not passing target object to dynamic dialog fields [(#15810)](https://github.com/ManageIQ/manageiq/pull/15810)
-    - miq_group_id is required by automate. [(#15760)](https://github.com/ManageIQ/manageiq/pull/15760)
-- User Interface
-    - Fail with descriptive message when no EMS [(#15807)](https://github.com/ManageIQ/manageiq/pull/15807)
 - Providers
     - Make networks vms relations distinct [(#15783)](https://github.com/ManageIQ/manageiq/pull/15783)
     - Add custom reconnect logic also to the batch saver [(#15777)](https://github.com/ManageIQ/manageiq/pull/15777)
@@ -53,6 +49,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - REST API
     - web service worker needs to load MiqAeDomain etc. [(#15769)](https://github.com/ManageIQ/manageiq/pull/15769)
     - manageiq-api should be a plugin [(#15755)](https://github.com/ManageIQ/manageiq/pull/15755)
+- UI (Classic)
+    - Remove rails-controller-testing from Gemfile [(#15852)](https://github.com/ManageIQ/manageiq/pull/15852)
+- User Interface
+    - Fail with descriptive message when no EMS [(#15807)](https://github.com/ManageIQ/manageiq/pull/15807)
 
 ## Unreleased - as of Sprint 66 end 2017-08-07
 
