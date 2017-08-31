@@ -24,6 +24,9 @@ class Container < ApplicationRecord
   include EventMixin
   include Metric::CiMixin
 
+  # Used for chargeback. TODO: It might be better to have this as container_group.ems_created_on to get the real date.
+  delegate :created_on, :to => :container_group
+
   acts_as_miq_taggable
 
   def event_where_clause(assoc = :ems_events)
