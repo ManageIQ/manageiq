@@ -437,6 +437,24 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     # TODO: for next recording, oc label some running, openshift-built image
     expect(@container_image.labels.count).to eq(0)
     expect(@container_image.docker_labels.count).to eq(metadata ? 19 : 0)
+    if metadata
+      expect(@container_image).to have_attributes(
+        :architecture   => "amd64",
+        :author         => nil,
+        :command        => ["/usr/libexec/s2i/run"],
+        :digest         => "sha256:9422207673100308c18bccead913007b76ca3ef48f3c6bb70ce5f19d497c1392",
+        :docker_version => "1.10.3",
+        :entrypoint     => ["container-entrypoint"],
+        :exposed_ports  => {"tcp"=>"8080"},
+        :image_ref      => "docker://172.30.190.81:5000/python-project/python-project@sha256:9422207673100308c18bccead913007b76ca3ef48f3c6bb70ce5f19d497c1392",
+        :registered_on  => "Thu, 08 Dec 2016 06:14:59 UTC +00:00",
+        :size           => 206_435_839,
+
+        # TODO: tag is set by both kubernetes and openshift parsers, so it
+        # regresses to kubernetes value with get_container_images=false.
+        #:tag            => "latest",
+      )
+    end
   end
 
   def assert_container_node_with_no_hawk_attributes
