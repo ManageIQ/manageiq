@@ -26,7 +26,7 @@ module Vm::Operations
   end
 
   def public_address
-    ipaddresses.find { |ip| !Addrinfo.tcp(ip, 80).ipv4_private? }
+    ipaddresses.find { |ip| !Addrinfo.tcp(ip, 80).ipv4_private? && IPAddr.new(ip).ipv4? }
   end
 
   def validate_collect_running_processes

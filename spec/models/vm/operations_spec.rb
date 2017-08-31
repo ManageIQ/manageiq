@@ -14,7 +14,7 @@ describe 'VM::Operations' do
   context '#cockpit_url' do
     it '#returns a valid Cockpit url' do
       url = @vm.send(:cockpit_url)
-      expect(url).to eq('http://127.0.0.1:9090')
+      expect(url).to eq(URI::HTTP.build(:host => "127.0.0.1", :port => 9090))
     end
   end
 
