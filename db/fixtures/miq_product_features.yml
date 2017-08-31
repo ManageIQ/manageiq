@@ -5494,6 +5494,14 @@
         :description: Disassociate Floating IP from Instance
         :feature_type: control
         :identifier: instance_disassociate_floating_ip
+      - :name: Add Security Group
+        :description: Add Security Group to Instance
+        :feature_type: control
+        :identifier: instance_add_security_group
+      - :name: Remove Security Group
+        :description: Remove Security Group from Instance
+        :feature_type: control
+        :identifier: instance_remove_security_group
     - :name: Modify
       :description: Modify Instances
       :feature_type: admin
