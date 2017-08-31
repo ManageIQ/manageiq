@@ -125,12 +125,8 @@ module SupportsFeatureMixin
     :object_storage             => 'Object Storage',
   }.freeze
 
-  # Whenever this mixin is included we define all features as unsupported by default.
-  # This way we can query for every feature
-  included do
-    QUERYABLE_FEATURES.keys.each do |feature|
-      supports_not(feature)
-    end
+  QUERYABLE_FEATURES.keys.each do |feature|
+    define_method("supports_#{feature}?") { false }
   end
 
   class UnknownFeatureError < StandardError; end

@@ -1,18 +1,10 @@
 describe SupportsFeatureMixin do
   before do
-    stub_const('SupportsFeatureMixin::QUERYABLE_FEATURES',
-               SupportsFeatureMixin::QUERYABLE_FEATURES.merge(
-                 :publish => 'publish the post',
-                 :archive => 'archive the post',
-                 :fake    => 'fake it',
-                 :nuke    => 'nuke it'
-               ))
-
     stub_const('Post::Operations::Publishing', Module.new do
       extend ActiveSupport::Concern
 
       included do
-        supports :publish
+        supports :create
       end
     end)
 
@@ -21,9 +13,9 @@ describe SupportsFeatureMixin do
       include Post::Operations::Publishing
 
       included do
-        supports :archive
+        supports :retire
         supports_not :delete
-        supports_not :fake, :reason => 'We keep it real!'
+        supports_not :discovery, :reason => 'Your posts are bad'
       end
     end)
 
@@ -36,8 +28,8 @@ describe SupportsFeatureMixin do
       extend ActiveSupport::Concern
 
       included do
-        supports :fake do
-          unsupported_reason_add(:fake, 'Need more money') unless bribe
+        supports :discovery do
+          unsupported_reason_add(:discovery, 'Need more money') unless bribe
         end
       end
     end)
@@ -56,11 +48,11 @@ describe SupportsFeatureMixin do
 
   context "defines method" do
     it "supports_feature? on the class" do
-      expect(Post.respond_to?(:supports_publish?)).to be true
+      expect(Post.respond_to?(:supports_create?)).to be true
     end
 
     it "supports_feature? on the instance" do
-      expect(Post.new.respond_to?(:supports_publish?)).to be true
+      expect(Post.new.respond_to?(:supports_create?)).to be true
     end
 
     it "unsupported_reason on the class" do
@@ -74,41 +66,41 @@ describe SupportsFeatureMixin do
 
   context "for a supported feature" do
     it ".supports_feature? is true" do
-      expect(Post.supports_publish?).to be true
+      expect(Post.supports_create?).to be true
     end
 
     it ".supports?(feature) is true" do
-      expect(Post.supports?(:publish)).to be true
+      expect(Post.supports?(:create)).to be true
     end
 
     it "#supports_feature? is true" do
-      expect(Post.new.supports_publish?).to be true
+      expect(Post.new.supports_create?).to be true
     end
 
     it "#unsupported_reason(:feature) is nil" do
-      expect(Post.new.unsupported_reason(:publish)).to be nil
+      expect(Post.new.unsupported_reason(:create)).to be nil
     end
 
     it ".unsupported_reason(:feature) is nil" do
-      expect(Post.unsupported_reason(:publish)).to be nil
+      expect(Post.unsupported_reason(:create)).to be nil
     end
   end
 
   context "for an unsupported feature" do
     it ".supports_feature? is false" do
-      expect(Post.supports_fake?).to be false
+      expect(Post.supports_discovery?).to be false
     end
 
     it "#supports_feature? is false" do
-      expect(Post.new.supports_fake?).to be false
+      expect(Post.new.supports_discovery?).to be false
     end
 
     it "#unsupported_reason(:feature) returns a reason" do
-      expect(Post.new.unsupported_reason(:fake)).to eq "We keep it real!"
+      expect(Post.new.unsupported_reason(:discovery)).to eq("Your posts are bad")
     end
 
     it ".unsupported_reason(:feature) returns a reason" do
-      expect(Post.unsupported_reason(:fake)).to eq "We keep it real!"
+      expect(Post.unsupported_reason(:discovery)).to eq("Your posts are bad")
     end
   end
 
@@ -132,67 +124,67 @@ describe SupportsFeatureMixin do
 
   context "definition in nested modules" do
     it "defines a class method on the model" do
-      expect(Post.respond_to?(:supports_archive?)).to be true
+      expect(Post.respond_to?(:supports_retire?)).to be true
     end
 
     it "defines an instance method" do
-      expect(Post.new.respond_to?(:supports_archive?)).to be true
+      expect(Post.new.respond_to?(:supports_retire?)).to be true
     end
   end
 
   context "a feature defined on the base class" do
     it "defines supports_feature? on the subclass" do
-      expect(SpecialPost.respond_to?(:supports_publish?)).to be true
+      expect(SpecialPost.respond_to?(:supports_create?)).to be true
     end
 
     it "defines supports_feature? on an instance of the subclass" do
-      expect(SpecialPost.new.respond_to?(:supports_publish?)).to be true
+      expect(SpecialPost.new.respond_to?(:supports_create?)).to be true
     end
 
     it "can be overriden on the subclass" do
-      expect(SpecialPost.supports_fake?).to be true
+      expect(SpecialPost.supports_discovery?).to be true
     end
   end
 
   context "conditionally supported feature" do
     context "when the condition is met" do
       it "is supported on the class" do
-        expect(SpecialPost.supports_fake?).to be true
+        expect(SpecialPost.supports_discovery?).to be true
       end
 
       it "is supported on the instance" do
-        expect(SpecialPost.new(:bribe => true).supports_fake?).to be true
+        expect(SpecialPost.new(:bribe => true).supports_discovery?).to be true
       end
 
       it "gives no reason on the class" do
-        expect(SpecialPost.unsupported_reason(:fake)).to be nil
+        expect(SpecialPost.unsupported_reason(:discovery)).to be nil
       end
 
       it "gives no reason on the instance" do
-        expect(SpecialPost.new(:bribe => true).unsupported_reason(:fake)).to be nil
+        expect(SpecialPost.new(:bribe => true).unsupported_reason(:discovery)).to be nil
       end
     end
 
     context "when the condition is not met" do
       it "gives a reason on the instance" do
         special_post = SpecialPost.new
-        expect(special_post.supports_fake?).to be false
-        expect(special_post.unsupported_reason(:fake)).to eq "Need more money"
+        expect(special_post.supports_discovery?).to be false
+        expect(special_post.unsupported_reason(:discovery)).to eq "Need more money"
       end
 
       it "gives a reason without calling supports_feature? first" do
-        expect(SpecialPost.new.unsupported_reason(:fake)).to eq "Need more money"
+        expect(SpecialPost.new.unsupported_reason(:discovery)).to eq "Need more money"
       end
     end
 
     context "when the condition changes on the instance" do
       it "is checks the current condition" do
         special_post = SpecialPost.new
-        expect(special_post.supports_fake?).to be false
-        expect(special_post.unsupported_reason(:fake)).to eq "Need more money"
+        expect(special_post.supports_discovery?).to be false
+        expect(special_post.unsupported_reason(:discovery)).to eq "Need more money"
         special_post.bribe = true
-        expect(special_post.supports_fake?).to be true
-        expect(special_post.unsupported_reason(:fake)).to be nil
+        expect(special_post.supports_discovery?).to be true
+        expect(special_post.unsupported_reason(:discovery)).to be nil
       end
     end
   end
@@ -245,7 +237,7 @@ describe SupportsFeatureMixin do
 
   context "can be queried for features" do
     it "that are known on the class" do
-      expect(Post.feature_known?("fake")).to be true
+      expect(Post.feature_known?("discovery")).to be true
     end
 
     it "that are unknown on the class" do
@@ -253,7 +245,7 @@ describe SupportsFeatureMixin do
     end
 
     it "that are known on the instance" do
-      expect(Post.new.feature_known?("fake")).to be true
+      expect(Post.new.feature_known?("discovery")).to be true
     end
 
     it "that are unknown on the instance" do
@@ -262,18 +254,72 @@ describe SupportsFeatureMixin do
   end
 
   context "feature that is implicitly unsupported" do
-    it "class responds to supports_feature?" do
-      expect(Post.supports_nuke?).to be false
+    it "is unsupported by the class" do
+      expect(Post.supports_delete?).to be false
+    end
+
+    it "is unsupported by an instance of the class" do
+      expect(Post.new.supports_delete?).to be false
     end
 
     it "can be supported by the class" do
-      stub_const("NukeablePost", Class.new(SpecialPost) do
-        supports :nuke do
-          unsupported_reason_add(:nuke, "dont nuke the bribe") if bribe
+      stub_const("DeleteablePost", Class.new(SpecialPost) do
+        supports :delete do
+          unsupported_reason_add(:delete, "dont delete the bribe") if bribe
         end
       end)
-      expect(NukeablePost.new(:bribe => true).supports_nuke?).to be false
-      expect(NukeablePost.new(:bribe => false).supports_nuke?).to be true
+      expect(DeleteablePost.new(:bribe => true).supports_delete?).to be false
+      expect(DeleteablePost.new(:bribe => false).supports_delete?).to be true
+    end
+  end
+
+  context 'when included to a class a second time via another module which includes the mixin' do
+    before do
+      stub_const('MyModule', Module.new do
+        extend ActiveSupport::Concern
+        include SupportsFeatureMixin
+      end)
+
+      stub_const('SomePost', Class.new(Post) do
+        include MyModule
+      end)
+    end
+
+    it "doesn't overwrite existing methods" do
+      expect(Post.new.supports_create?).to eq(true)
+      expect(Post.supports_create?).to eq(true)
+      expect(SomePost.new.supports_create?).to eq(true)
+      expect(SomePost.supports_create?).to eq(true)
+    end
+  end
+
+  context 'used in a module WITHOUT using `included` hook' do
+    before do
+      stub_const('MyModule', Module.new do
+        include SupportsFeatureMixin
+        supports_not :create     # supported in base class Post
+        supports :discovery do   # unsupported in base class Post
+          unsupported_reason_add(:discovery, "Your Post is bad!")
+        end
+      end)
+
+      stub_const('SomePost', Class.new(Post) do
+        include MyModule
+      end)
+    end
+
+    it "does not affect undefined features" do
+      expect(SomePost.new.supports_delete?).to be false
+      expect(SomePost.supports_delete?).to be false
+    end
+
+    it "overrides features defined on the class with those in the module" do
+      expect(SomePost.new.supports_create?).to be false
+      expect(SomePost.supports_create?).to be false
+
+      expect(SomePost.supports_discovery?).to be true
+      expect(SomePost.new.supports_discovery?).to be false
+      expect(SomePost.new.unsupported_reason(:discovery)).to eq('Your Post is bad!')
     end
   end
 end
