@@ -9,7 +9,8 @@ describe TaskHelpers::Exports::Alerts do
           "description"        => "Alert Export Test",
           "options"            => nil,
           "db"                 => nil,
-          "expression"         => nil,
+          "miq_expression"     => nil,
+          "hash_expression"    => nil,
           "responds_to_events" => nil,
           "enabled"            => true,
           "read_only"          => nil
