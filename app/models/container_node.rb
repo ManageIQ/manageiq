@@ -5,6 +5,8 @@ class ContainerNode < ApplicationRecord
   include NewWithTypeStiMixin
   include TenantIdentityMixin
   include SupportsFeatureMixin
+  include ArchivedMixin
+  include_concern 'Purging'
 
   EXTERNAL_LOGGING_PATH = "/#/discover?_g=()&_a=(columns:!(hostname,level,kubernetes.pod_name,message),filters:!((meta:(disabled:!f,index:'%{index}',key:hostname,negate:!f),%{query})),index:'%{index}',interval:auto,query:(query_string:(analyze_wildcard:!t,query:'*')),sort:!(time,desc))".freeze
 
@@ -32,9 +34,6 @@ class ContainerNode < ApplicationRecord
   virtual_column :ready_condition_status, :type => :string, :uses => :container_conditions
   virtual_column :system_distribution, :type => :string
   virtual_column :kernel_version, :type => :string
-
-  # Needed for metrics
-  delegate :my_zone, :to => :ext_management_system
 
   def ready_condition
     container_conditions.find_by(:name => "Ready")
@@ -114,5 +113,13 @@ class ContainerNode < ApplicationRecord
     query = "bool:(filter:(or:!(#{node_hostnames_query})))"
     index = ".operations.*"
     EXTERNAL_LOGGING_PATH % {:index => index, :query => query}
+  end
+
+  def disconnect_inv
+    return if archived?
+    _log.info("Disconnecting Node [#{name}] id [#{id}] from EMS [#{ext_management_system.name}]" \
+    "id [#{ext_management_system.id}] ")
+    self.deleted_on = Time.now.utc
+    save
   end
 end
