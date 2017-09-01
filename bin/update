@@ -1,26 +1,33 @@
 #!/usr/bin/env ruby
 require_relative '../lib/manageiq/environment'
 
-# Don't run tests by default if we are in a prod env since no task exists.
-ENV["SKIP_TEST_RESET"] = '1' if ENV['RAILS_ENV'] == 'production'
+if ARGV.any?
+  puts <<-EOS
+Usage: bin/update
+
+Environment Variable Options:
+    SKIP_DATABASE_SETUP  Skip the migration and seeding of the database.
+    SKIP_TEST_RESET      Skip the creation of the test enviroment.  Defaults to
+                         true in production mode since the tasks do not exist.
+    SKIP_AUTOMATE_RESET  Skip the reset of the automate domain.
+EOS
+  exit 1
+end
+
+ENV["SKIP_TEST_RESET"] = 'true' if ENV['RAILS_ENV'] == 'production'
 
 Dir.chdir ManageIQ::Environment::APP_ROOT do
-  # This script is a way to update your development environment automatically.
-  # Add necessary update steps to this file.
   ManageIQ::Environment.ensure_config_files
 
   puts '== Installing dependencies =='
   ManageIQ::Environment.install_bundler
-
-  # TODO: This unlocks your dependencies and installs all updates.
-  # From: https://github.com/ManageIQ/manageiq/pull/11137
-  # It should be 'bundle check' || 'bundle install'.
-  # If we need a "reset all the things" script, we should call it bin/reset.
   ManageIQ::Environment.bundle_update
 
   ManageIQ::Environment.while_updating_bower do
-    ManageIQ::Environment.migrate_database
-    ManageIQ::Environment.seed_database
+    unless ENV["SKIP_DATABASE_SETUP"]
+      ManageIQ::Environment.migrate_database
+      ManageIQ::Environment.seed_database
+    end
 
     ManageIQ::Environment.setup_test_environment unless ENV["SKIP_TEST_RESET"]
     ManageIQ::Environment.reset_automate_domain  unless ENV["SKIP_AUTOMATE_RESET"]
