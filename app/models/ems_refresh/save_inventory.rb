@@ -36,9 +36,9 @@ module EmsRefresh::SaveInventory
     target = ems if target.nil? && disconnect
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
-    disconnects = if target.kind_of?(ExtManagementSystem) || target.kind_of?(Host)
+    disconnects = if disconnect && (target.kind_of?(ExtManagementSystem) || target.kind_of?(Host))
                     target.vms_and_templates.reload.to_a
-                  elsif target.kind_of?(Vm)
+                  elsif disconnect && target.kind_of?(Vm)
                     [target.ruby_clone]
                   else
                     []
