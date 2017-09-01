@@ -20,7 +20,7 @@ require 'action_cable/engine'
 #
 ENV['BUNDLER_GROUPS'] ||= "manageiq_default,ui_dependencies"
 
-if defined?(Bundler)
+if defined?(Bundler) && !ENV["WITH_BUNDLER_CACHE"]
   groups = ENV['BUNDLER_GROUPS'].split(",").collect(&:to_sym)
 
   if $DEBUG
@@ -29,6 +29,14 @@ if defined?(Bundler)
   end
 
   Bundler.require(*Rails.groups, *groups)
+else
+  File.read(".bundler.require_cache").lines.each do |file|
+    if Kernel.private_method_defined?(:gem_original_require)
+      Kernel.send(:gem_original_require, file.strip)
+    else
+      Kernel.require file.strip
+    end
+  end
 end
 
 module Vmdb
