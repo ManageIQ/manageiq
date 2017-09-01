@@ -446,6 +446,10 @@
       :description: Add a Cloud Provider
       :feature_type: admin
       :identifier: ems_cloud_new
+    - :name: Sync Users
+      :description: Sync Users from Cloud Provider
+      :feature_type: admin
+      :identifier: ems_cloud_user_sync
 
 # Cloud Topology
 - :name: Cloud Topology
