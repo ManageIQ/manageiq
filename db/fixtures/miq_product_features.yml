@@ -3838,6 +3838,14 @@
       :description: Add middleware datasource
       :feature_type: admin
       :identifier: middleware_datasource_add
+    - :name: Generate JDR report
+      :description: Generate JDR report for a Middleware Server
+      :feature_type: admin
+      :identifier: middleware_dr_generate
+    - :name: Delete JDR reports
+      :description: Delete JDR reports for a Middleware Server
+      :feature_type: admin
+      :identifier: middleware_dr_delete
 
 # MiddlewareDeployment
 - :name: Middleware Deployment
