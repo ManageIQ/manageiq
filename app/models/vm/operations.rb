@@ -1,6 +1,8 @@
 module Vm::Operations
   extend ActiveSupport::Concern
 
+  include CockpitMixin
+
   include_concern 'Guest'
   include_concern 'Power'
   include_concern 'Lifecycle'
@@ -15,14 +17,16 @@ module Vm::Operations
 
   def cockpit_url
     return if ipaddresses.blank?
-    miq_server = ext_management_system.nil? ? nil : ext_management_system.zone.remote_cockpit_ws_miq_server
-    MiqCockpit::WS.url(miq_server,
-                       MiqCockpitWsWorker.fetch_worker_settings_from_server(miq_server),
-                       ipv4_address || ipaddresses.first)
+    MiqCockpit::WS.url(cockpit_server, cockpit_worker, ipv4_address || ipaddresses.first)
   end
 
   def ipv4_address
-    ipaddresses.find { |ip| IPAddr.new(ip).ipv4? }
+    return public_address unless public_address.nil?
+    ipaddresses.find { |ip| IPAddr.new(ip).ipv4? && !ip.starts_with?('192') }
+  end
+
+  def public_address
+    ipaddresses.find { |ip| !Addrinfo.tcp(ip, 80).ipv4_private? && IPAddr.new(ip).ipv4? }
   end
 
   def validate_collect_running_processes

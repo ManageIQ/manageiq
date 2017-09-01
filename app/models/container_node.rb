@@ -6,6 +6,7 @@ class ContainerNode < ApplicationRecord
   include TenantIdentityMixin
   include SupportsFeatureMixin
   include ArchivedMixin
+  include CockpitMixin
   include_concern 'Purging'
 
   EXTERNAL_LOGGING_PATH = "/#/discover?_g=()&_a=(columns:!(hostname,level,kubernetes.pod_name,message),filters:!((meta:(disabled:!f,index:'%{index}',key:hostname,negate:!f),%{query})),index:'%{index}',interval:auto,query:(query_string:(analyze_wildcard:!t,query:'*')),sort:!(time,desc))".freeze
@@ -81,13 +82,7 @@ class ContainerNode < ApplicationRecord
   def cockpit_url
     URI::HTTP.build(:host => kubernetes_hostname, :port => 9090)
     address = kubernetes_hostname || name
-    miq_server = ext_management_system.nil? ? nil : ext_management_system.zone.remote_cockpit_ws_miq_server
-    if miq_server
-
-    end
-    MiqCockpit::WS.url(miq_server,
-                       MiqCockpitWsWorker.fetch_worker_settings_from_server(miq_server),
-                       address)
+    MiqCockpit::WS.url(cockpit_server, cockpit_worker, address)
   end
 
   def evaluate_alert(_alert_id, _event)
