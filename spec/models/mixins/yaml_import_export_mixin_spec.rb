@@ -42,10 +42,10 @@ describe YAMLImportExportMixin do
   end
 
   context ".import" do
-    subject { test_class }
+    subject { MiqReport }
 
     it "valid YAML file" do
-      @fd = StringIO.new("---\na:")
+      @fd = StringIO.new("---\n- MiqReport:\n")
       # if it gets to import_from_array, then it did not choke on yml
       expect(subject).to receive(:import_from_array)
       subject.import(@fd)
@@ -54,6 +54,20 @@ describe YAMLImportExportMixin do
     it "invalid YAML file" do
       @fd = StringIO.new("---\na:\nb")
       expect { subject.import(@fd) }.to raise_error("Invalid YAML file")
+    end
+  end
+
+  context ".validate_import_data_class" do
+    subject { MiqReport }
+
+    it "confirms valid class" do
+      @data = YAML.safe_load(StringIO.new("---\n- MiqReport:\n").read)
+      expect { subject.validate_import_data_class(@data) }.not_to raise_error
+    end
+
+    it "raises exception on invalid class" do
+      @data = YAML.safe_load(StringIO.new("---\n- MiqWidget:\n").read)
+      expect { subject.validate_import_data_class(@data) }.to raise_error("Incorrect format: Expected MiqReport and received MiqWidget.")
     end
   end
 end
