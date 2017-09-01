@@ -1088,6 +1088,14 @@ en:
       zone:                        Zone
       zones:                       Zones
 
+    data_type:
+      boolean:             Boolean
+      datetime:            Date/Time
+      float:               Float
+      integer:             Integer
+      string:              String
+      time:                Time
+
     ui_title:
       foreman:             Foreman
       ansible_tower:       Ansible Tower
