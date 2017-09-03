@@ -7,17 +7,17 @@ module ManageIQ::Providers
 
     include AvailabilityMixin
 
-    has_many :host_hardwares,         :through => :hosts, :source => :hardware
-    has_many :host_operating_systems, :through => :hosts, :source => :operating_system
-    has_many :host_storages,          :through => :hosts
-    has_many :host_switches,          :through => :hosts
-    has_many :host_networks,          :through => :hosts, :source => :networks
-    has_many :snapshots,              :through => :vms_and_templates
-    has_many :operating_systems,      :through => :vms_and_templates
-    has_many :switches,               :through => :hosts
-    has_many :lans,                   :through => :hosts
-    has_many :networks,               :through => :hardwares
-    has_many :guest_devices,          :through => :hardwares
+    has_many :host_hardwares,             :through => :hosts, :source => :hardware
+    has_many :host_operating_systems,     :through => :hosts, :source => :operating_system
+    has_many :host_storages,              :through => :hosts
+    has_many :host_switches,              :through => :hosts
+    has_many :host_networks,              :through => :hosts, :source => :networks
+    has_many :snapshots,                  :through => :vms_and_templates
+    has_many :operating_systems,          :through => :vms_and_templates
+    has_many :switches, -> { distinct },  :through => :hosts
+    has_many :lans, -> { distinct },      :through => :hosts
+    has_many :networks,                   :through => :hardwares
+    has_many :guest_devices,              :through => :hardwares
 
     class << model_name
       define_method(:route_key) { "ems_infras" }
