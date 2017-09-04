@@ -13,6 +13,9 @@ class Filesystem < ApplicationRecord
   virtual_column :contents,           :type => :string,  :uses => {:binary_blob => :binary_blob_parts}
   virtual_column :contents_available, :type => :boolean, :uses => :binary_blob
 
+  UTF_16BE_BOM = [254, 255].freeze
+  UTF_16LE_BOM = [255, 254].freeze
+
   def self.host_service_group_condition(host_service_group_id)
     arel_table[:host_service_group_id].eq(host_service_group_id)
   end
