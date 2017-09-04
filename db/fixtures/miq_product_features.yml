@@ -4946,7 +4946,7 @@
 - :name: Containers Explorer
   :description: Everything under Containers
   :feature_type: node
-  :identifier: containers
+  :identifier: container
   :children:
   - :name: Relationships
     :description: Everything under All Containers Accordion
@@ -4975,6 +4975,10 @@
         :description: Display Timelines for Containers
         :feature_type: view
         :identifier: container_timeline
+      - :name: Environment Variables
+        :description: Display Environment Variables for Containers
+        :feature_type: view
+        :identifier: container_env_vars
     - :name: Modify
       :description: Modify Containers
       :feature_type: admin
