@@ -61,7 +61,8 @@ module ManagerRefresh
 
           if targeted? && parent_inventory_collections.blank?
             # We want to track what manager_uuids we should query from a db, for the targeted refresh
-            manager_uuids << inventory_object.manager_uuid
+            manager_uuid = inventory_object.manager_uuid
+            manager_uuids << manager_uuid if manager_uuid
           end
         end
 
@@ -116,14 +117,17 @@ module ManagerRefresh
             # TODO(lsmola) solve the :key, since that requires data from the actual reference. At best our DB should be
             # designed the way, we don't duplicate the data, but rather get them with a join. (3NF!)
 
-            value_inventory_collection.find_or_build(value.ems_ref)
-            value_inventory_collection.skeletal_manager_uuids << value.ems_ref
+            if value.ems_ref
+              value_inventory_collection.find_or_build(value.ems_ref)
+              value_inventory_collection.skeletal_manager_uuids << value.ems_ref
+            end
           end
         end
 
         # Storing a reference in the target inventory_collection, then each IC knows about all the references and can
         # e.g. load all the referenced uuids from a DB
-        value_inventory_collection.references << value.to_s
+        value_to_s = value.to_s
+        value_inventory_collection.references << value_to_s if value_to_s
 
         if inventory_object_lazy?(value)
           # Storing if attribute is a transitive dependency, so a lazy_find :key results in dependency
