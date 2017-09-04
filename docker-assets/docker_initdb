@@ -27,7 +27,7 @@ echo "== Checking MIQ database status =="
 		pidof memcached
 		test $? -ne 0 && /usr/bin/memcached -u memcached -p 11211 -m 64 -c 1024 -l 127.0.0.1 -d
 		echo "** Starting DB setup"
-		${APP_ROOT}/bin/setup --no-tests
+		SKIP_TEST_RESET=true ${APP_ROOT}/bin/setup
 		test $? -ne 0 && echo "!! ${APP_ROOT}/docker-assets/docker_setup failed to run" && exit 1
 		echo "** MIQ database has been initialized"
 		exit 0

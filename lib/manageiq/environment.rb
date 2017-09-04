@@ -20,7 +20,7 @@ module ManageIQ
     end
 
     def self.manageiq_plugin_update(plugin_root = nil)
-      # determine plugin root dir. Assume we are called from a 'bin/setup' script in the plugin root
+      # determine plugin root dir. Assume we are called from a 'bin/update' script in the plugin root
       plugin_root ||= Pathname.new(caller_locations.last.absolute_path).dirname.parent
 
       bundle_update(plugin_root)
@@ -45,14 +45,16 @@ module ManageIQ
 
     def self.while_updating_bower
       # Run bower in a thread and continue to do the non-js stuff
-      puts "Updating bower assets in parallel..."
-      bower_thread = Thread.new { update_ui }
+      puts "\n== Updating bower assets in parallel =="
+      bower_thread = Thread.new do
+        update_ui
+        puts "\n== Updating bower assets complete =="
+      end
       bower_thread.abort_on_exception = true
 
       yield
 
       bower_thread.join
-      puts "Updating bower assets complete."
     end
 
     def self.install_bundler
@@ -109,12 +111,17 @@ module ManageIQ
       run_rake_task("log:clear tmp:clear")
     end
 
+    # In development, when switching branches to old versions prior to the
+    # ui-classic split, it's possible that bower_components end up cached in
+    # manageiq proper as well as manageiq-ui-classic, which causes duplicate
+    # sets of dependencies, with different versions, that bower can't handle.
+    #
+    # Once we no longer support versions of manageiq prior to the ui-classic
+    # split, this can be removed.
     def self.clear_obsolete
-      return unless Dir.exist? APP_ROOT.join('vendor', 'assets', 'bower_components')
+      return unless APP_ROOT.join("vendor/assets/bower_components").exist?
       puts "\n== Removing obsolete bower install =="
-      Dir.chdir APP_ROOT do
-        system("rm -rf vendor/assets/bower_components/")
-      end
+      FileUtils.rm_rf(APP_ROOT.join("vendor/assets/bower_components"))
     end
 
     def self.create_database_user
