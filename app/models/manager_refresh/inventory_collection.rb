@@ -423,7 +423,7 @@ module ManagerRefresh
       @custom_save_block      = custom_save_block
       @custom_reconnect_block = custom_reconnect_block
       @check_changed          = check_changed.nil? ? true : check_changed
-      @internal_attributes    = [:__feedback_edge_set_parent]
+      @internal_attributes    = [:__feedback_edge_set_parent, :__parent_inventory_collections]
       @complete               = complete.nil? ? true : complete
       @update_only            = update_only.nil? ? false : update_only
       @builder_params         = builder_params

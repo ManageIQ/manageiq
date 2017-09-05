@@ -331,7 +331,8 @@ describe ManagerRefresh::SaveInventory do
               :attributes_whitelist => [:raw_power_state, :ext_management_system]
             )
 
-            expect(inventory_collection.attributes_whitelist).to match_array([:__feedback_edge_set_parent, :ems_ref,
+            expect(inventory_collection.attributes_whitelist).to match_array([:__feedback_edge_set_parent,
+                                                                              :__parent_inventory_collections, :ems_ref,
                                                                               :name, :location, :raw_power_state,
                                                                               :ext_management_system])
           end
@@ -358,7 +359,8 @@ describe ManagerRefresh::SaveInventory do
               :attributes_whitelist => [:raw_power_state, :ext_management_system]
             )
 
-            expect(inventory_collection.attributes_whitelist).to match_array([:__feedback_edge_set_parent, :uid_ems,
+            expect(inventory_collection.attributes_whitelist).to match_array([:__feedback_edge_set_parent,
+                                                                              :__parent_inventory_collections, :uid_ems,
                                                                               :name, :location, :raw_power_state,
                                                                               :ext_management_system])
           end
