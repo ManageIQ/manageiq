@@ -208,7 +208,7 @@ module ManageIQ::Providers
         subnet_id               = network_port.fixed_ips.try(:first).try(:[], "subnet_id")
         network_router          = @data_index.fetch_path(:network_routers, network_port.device_id)
         subnet                  = @data_index.fetch_path(:cloud_subnets, subnet_id)
-        subnet[:network_router] = network_router
+        subnet[:network_router] = network_router unless subnet.nil?
       end
       # Returning nil for non VM port, we don't want to store those as ports
       nil
