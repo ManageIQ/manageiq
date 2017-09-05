@@ -1,6 +1,7 @@
 describe Authenticator::Database do
   subject { Authenticator::Database.new({}) }
   let!(:alice) { FactoryGirl.create(:user, :userid => 'alice', :password => 'secret') }
+  let!(:vincent) { FactoryGirl.create(:user, :userid => 'Vincent', :password => 'secret') }
 
   describe '#uses_stored_password?' do
     it "is true" do
@@ -96,6 +97,32 @@ describe Authenticator::Database do
         allow($log).to receive(:warn).with(/Audit/)
         expect($log).to receive(:warn).with(/Authentication failed$/)
         authenticate rescue nil
+      end
+    end
+
+    context "with mixed case username" do
+      let(:username) { 'vInCeNt' }
+
+      it "succeeds" do
+        expect(authenticate).to eq(vincent)
+      end
+
+      it "records two successful audit entries" do
+        expect(AuditEvent).to receive(:success).with(
+          :event   => 'authenticate_database',
+          :userid  => 'vInCeNt',
+          :message => "User vincent successfully validated by EVM",
+        )
+        expect(AuditEvent).to receive(:success).with(
+          :event   => 'authenticate_database',
+          :userid  => 'vInCeNt',
+          :message => "Authentication successful for user vincent",
+        )
+        expect(AuditEvent).not_to receive(:failure)
+        authenticate
+      end
+      it "updates lastlogon" do
+        expect(-> { authenticate }).to change { vincent.reload.lastlogon }
       end
     end
   end
