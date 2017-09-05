@@ -229,7 +229,7 @@
         validator_type:
         validator_rule:
         reconfigurable:
-        dynamic: false
+        dynamic: true
         show_refresh_button:
         load_values_on_init:
         read_only: false
@@ -240,9 +240,9 @@
         resource_action:
           action:
           resource_type: DialogField
-          ae_namespace:
-          ae_class:
-          ae_instance:
+          ae_namespace: Infrastructure/VM/Transform
+          ae_class: Import
+          ae_instance: install_drivers
           ae_message:
           ae_attributes: {}
       - name: drivers_iso
