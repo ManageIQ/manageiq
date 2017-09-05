@@ -139,4 +139,28 @@ class OrchestrationStack < ApplicationRecord
   rescue MiqException::MiqOrchestrationStackNotExistError
     false
   end
+
+  def refresh_ems
+    unless ext_management_system
+      raise _("No %{table} defined") % {:table => ui_lookup(:table => "ext_management_systems")}
+    end
+    unless ext_management_system.has_credentials?
+      raise _("No %{table} credentials defined") % {:table => ui_lookup(:table => "ext_management_systems")}
+    end
+    unless ext_management_system.authentication_status_ok?
+      raise _("%{table} failed last authentication check") % {:table => ui_lookup(:table => "ext_management_systems")}
+    end
+
+    manager_settings = Settings.ems_refresh[ext_management_system.class.ems_type]
+    if manager_settings[:inventory_object_refresh] && manager_settings[:allow_targeted_refresh]
+      # Queue new targeted refresh if allowed
+      orchestration_stack_target = ManagerRefresh::Target.new(:manager     => ext_management_system,
+                                                              :association => :orchestration_stacks,
+                                                              :manager_ref => {:ems_ref => ems_ref})
+      EmsRefresh.queue_refresh(orchestration_stack_target)
+    else
+      # Otherwise queue a full refresh
+      EmsRefresh.queue_refresh(ext_management_system)
+    end
+  end
 end
