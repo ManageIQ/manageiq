@@ -6,8 +6,8 @@ class AutomateWorkspace < ApplicationRecord
   validates :user, :presence => true
 
   def merge_output!(hash)
-    if hash['workspace'].blank? && hash['state_vars'].blank?
-      raise ArgumentError, "No workspace or state_var specified for edit"
+    if hash['workspace'].nil? || hash['state_vars'].nil?
+      raise ArgumentError, "No workspace or state_vars specified for edit"
     end
 
     self[:output] = (output || {}).deep_merge(hash)
