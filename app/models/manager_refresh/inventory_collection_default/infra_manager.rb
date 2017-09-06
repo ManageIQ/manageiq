@@ -1,39 +1,5 @@
 class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh::InventoryCollectionDefault
   class << self
-    def vms(extra_attributes = {})
-      attributes = {
-        :model_class    => ::ManageIQ::Providers::InfraManager::Vm,
-        :association    => :vms,
-        :builder_params => {
-          :ems_id => ->(persister) { persister.manager.id },
-        },
-      }
-
-      attributes.merge!(extra_attributes)
-    end
-
-    def miq_templates(extra_attributes = {})
-      attributes = {
-        :model_class    => ::ManageIQ::Providers::InfraManager::Template,
-        :association    => :miq_templates,
-        :builder_params => {
-          :ems_id => ->(persister) { persister.manager.id },
-        },
-      }
-
-      attributes.merge!(extra_attributes)
-    end
-
-    def disks(extra_attributes = {})
-      attributes = {
-        :model_class => ::Disk,
-        :manager_ref => [:hardware, :device_name],
-        :association => :disks,
-      }
-
-      attributes.merge!(extra_attributes)
-    end
-
     def networks(extra_attributes = {})
       attributes = {
           :model_class => ::Network,
@@ -59,16 +25,6 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
         :model_class => ::GuestDevice,
         :manager_ref => [:hardware, :uid_ems],
         :association => :guest_devices,
-      }
-
-      attributes.merge!(extra_attributes)
-    end
-
-    def hardwares(extra_attributes = {})
-      attributes = {
-        :model_class => ::Hardware,
-        :manager_ref => [:vm_or_template],
-        :association => :hardwares,
       }
 
       attributes.merge!(extra_attributes)
