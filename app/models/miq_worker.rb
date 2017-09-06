@@ -32,10 +32,6 @@ class MiqWorker < ApplicationRecord
   PROCESS_INFO_FIELDS = %i(priority memory_usage percent_memory percent_cpu memory_size cpu_time proportional_set_size)
 
   PROCESS_TITLE_PREFIX = "MIQ:".freeze
-  def self.atStartup
-    # Delete and Kill all workers that were running previously
-    clean_all_workers
-  end
 
   def self.atShutdown
     stop_all_workers
@@ -244,13 +240,6 @@ class MiqWorker < ApplicationRecord
     find_current(server_id).each(&:restart)
   end
 
-  def self.clean_workers
-    server_scope.each do |w|
-      Process.kill(9, w.pid) if w.pid && w.is_alive? rescue nil
-      w.destroy
-    end
-  end
-
   def self.status_update
     find_current.each(&:status_update)
   end
@@ -287,10 +276,6 @@ class MiqWorker < ApplicationRecord
 
   def self.restart_all_workers(server_id = nil)
     MiqWorker.restart_workers(server_id)
-  end
-
-  def self.clean_all_workers
-    MiqWorker.clean_workers
   end
 
   def self.status_update_all
