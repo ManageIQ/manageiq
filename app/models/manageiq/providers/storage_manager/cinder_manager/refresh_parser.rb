@@ -58,8 +58,8 @@ module ManageIQ::Providers
     end
 
     def parse_backup(backup)
-      _log.debug "backup['size'] = #{backup['size']}"
-      _log.debug "backup['size'].to_i.gigabytes = #{backup['size'].to_i.gigabytes}"
+      _log.debug("backup['size'] = #{backup['size']}")
+      _log.debug("backup['size'].to_i.gigabytes = #{backup['size'].to_i.gigabytes}")
       uid = backup['id']
       new_result = {
         :ems_ref               => uid,

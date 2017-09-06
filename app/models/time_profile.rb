@@ -10,7 +10,7 @@ class TimeProfile < ApplicationRecord
   has_many  :miq_reports
   has_many  :metric_rollups
 
-  scope :rollup_daily_metrics, -> { where :rollup_daily_metrics => true }
+  scope :rollup_daily_metrics, -> { where(:rollup_daily_metrics => true) }
 
   after_create :rebuild_daily_metrics_on_create
   after_save   :rebuild_daily_metrics_on_save

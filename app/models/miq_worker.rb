@@ -7,9 +7,9 @@ class MiqWorker < ApplicationRecord
 
   belongs_to :miq_server
   has_many   :messages,           :as => :handler, :class_name => 'MiqQueue'
-  has_many   :active_messages,    -> { where ["state = ?", "dequeue"] }, :as => :handler, :class_name => 'MiqQueue'
-  has_many   :ready_messages,     -> { where ["state = ?", "ready"] }, :as => :handler, :class_name => 'MiqQueue'
-  has_many   :processed_messages, -> { where ["state != ?", "ready"] }, :as => :handler, :class_name => 'MiqQueue', :dependent => :destroy
+  has_many   :active_messages,    -> { where(["state = ?", "dequeue"]) }, :as => :handler, :class_name => 'MiqQueue'
+  has_many   :ready_messages,     -> { where(["state = ?", "ready"]) }, :as => :handler, :class_name => 'MiqQueue'
+  has_many   :processed_messages, -> { where(["state != ?", "ready"]) }, :as => :handler, :class_name => 'MiqQueue', :dependent => :destroy
 
   virtual_column :friendly_name, :type => :string
   virtual_column :uri_or_queue_name, :type => :string
@@ -321,7 +321,7 @@ class MiqWorker < ApplicationRecord
     owner_to_pool[Process.ppid].values.compact.each do |pool|
       pool.connections.each do |conn|
         socket = conn.raw_connection.socket
-        _log.info "Closing socket: #{socket}"
+        _log.info("Closing socket: #{socket}")
         IO.for_fd(socket).close
       end
     end

@@ -105,7 +105,7 @@ module Metric::CiMixin::Capture
           qi
         else
           interval = qi[:method_name].sub("perf_capture_", "")
-          _log.debug "Skipping capture of #{log_target} - Performance capture for interval #{interval} is still running"
+          _log.debug("Skipping capture of #{log_target} - Performance capture for interval #{interval} is still running")
           # NOTE: do not update the message queue
           nil
         end
@@ -171,7 +171,7 @@ module Metric::CiMixin::Capture
       expected_start_range = expected_start_range.iso8601
     end
 
-    _log.info "#{log_header} Capture for #{log_target}#{log_time}..."
+    _log.info("#{log_header} Capture for #{log_target}#{log_time}...")
 
     start_range = end_range = counters = counter_values = nil
     _, t = Benchmark.realtime_block(:total_time) do
@@ -187,15 +187,15 @@ module Metric::CiMixin::Capture
       end_range   = ts.last
     end
 
-    _log.info "#{log_header} Capture for #{log_target}#{log_time}...Complete - Timings: #{t.inspect}"
+    _log.info("#{log_header} Capture for #{log_target}#{log_time}...Complete - Timings: #{t.inspect}")
 
     if start_range.nil?
-      _log.info "#{log_header} Skipping processing for #{log_target}#{log_time} as no metrics were captured."
+      _log.info("#{log_header} Skipping processing for #{log_target}#{log_time} as no metrics were captured.")
       # Set the last capture on to end_time to prevent forever queueing up the same collection range
       update_attributes(:last_perf_capture_on => end_time || Time.now.utc) if interval_name == 'realtime'
     else
       if expected_start_range && start_range > expected_start_range
-        _log.warn "#{log_header} For #{log_target}#{log_time}, expected to get data as of [#{expected_start_range}], but got data as of [#{start_range}]."
+        _log.warn("#{log_header} For #{log_target}#{log_time}, expected to get data as of [#{expected_start_range}], but got data as of [#{start_range}].")
 
         # Raise ems_performance_gap_detected alert event to enable notification.
         MiqEvent.raise_evm_alert_event_queue(ext_management_system, "ems_performance_gap_detected",
@@ -225,9 +225,9 @@ module Metric::CiMixin::Capture
           pclass, _, pid = task.context_data[:parent].rpartition(":")
           parent = pclass.constantize.find(pid)
           msg = "Queueing [#{task.context_data[:interval]}] rollup to #{parent.class.name} id: [#{parent.id}] for time range: [#{task.context_data[:start]} - #{task.context_data[:end]}]"
-          _log.info "#{msg}..."
+          _log.info("#{msg}...")
           parent.perf_rollup_range_queue(task.context_data[:start], task.context_data[:end], task.context_data[:interval])
-          _log.info "#{msg}...Complete"
+          _log.info("#{msg}...Complete")
         else
           task.state, task.status, task.message = [MiqTask::STATE_ACTIVE, MiqTask::STATUS_OK, task.message = "Performance collection active, #{task.context_data[:complete].length} out of #{task.context_data[:targets].length} collections completed"]
         end
@@ -243,7 +243,7 @@ module Metric::CiMixin::Capture
 
   def perf_capture_realtime_now
     # For UI to enable refresh of realtime charts on demand
-    _log.info "Realtime capture requested for #{log_target}"
+    _log.info("Realtime capture requested for #{log_target}")
 
     perf_capture_queue('realtime', :priority => MiqQueue::HIGH_PRIORITY)
   end

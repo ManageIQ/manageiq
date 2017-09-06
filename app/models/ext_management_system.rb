@@ -45,11 +45,11 @@ class ExtManagementSystem < ApplicationRecord
   has_many :disks,             :through => :hardwares
 
   has_many :storages,       -> { distinct },          :through => :hosts
-  has_many :ems_events,     -> { order "timestamp" }, :class_name => "EmsEvent",    :foreign_key => "ems_id",
+  has_many :ems_events,     -> { order("timestamp") }, :class_name => "EmsEvent",    :foreign_key => "ems_id",
                                                       :inverse_of => :ext_management_system
-  has_many :generated_events, -> { order "timestamp" }, :class_name => "EmsEvent", :foreign_key => "generating_ems_id",
+  has_many :generated_events, -> { order("timestamp") }, :class_name => "EmsEvent", :foreign_key => "generating_ems_id",
                                                           :inverse_of => :generating_ems
-  has_many :policy_events,  -> { order "timestamp" }, :class_name => "PolicyEvent", :foreign_key => "ems_id"
+  has_many :policy_events,  -> { order("timestamp") }, :class_name => "PolicyEvent", :foreign_key => "ems_id"
 
   has_many :blacklisted_events, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :miq_alert_statuses, :foreign_key => "ems_id"
@@ -95,7 +95,7 @@ class ExtManagementSystem < ApplicationRecord
   include ComplianceMixin
   include CustomAttributeMixin
 
-  after_destroy { |record| $log.info "MIQ(ExtManagementSystem.after_destroy) Removed EMS [#{record.name}] id [#{record.id}]" }
+  after_destroy { |record| $log.info("MIQ(ExtManagementSystem.after_destroy) Removed EMS [#{record.name}] id [#{record.id}]") }
 
   acts_as_miq_taggable
 
@@ -196,7 +196,7 @@ class ExtManagementSystem < ApplicationRecord
         :zone_id   => MiqServer.my_server.zone.id
       )
 
-      _log.info "#{ui_lookup(:table => "ext_management_systems")} #{ems.name} created"
+      _log.info("#{ui_lookup(:table => "ext_management_systems")} #{ems.name} created")
       AuditEvent.success(
         :event        => "ems_created",
         :target_id    => ems.id,
@@ -423,12 +423,12 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def disable!
-    _log.info "Disabling EMS [#{name}] id [#{id}]."
+    _log.info("Disabling EMS [#{name}] id [#{id}].")
     update!(:enabled => false)
   end
 
   def enable!
-    _log.info "Enabling EMS [#{name}] id [#{id}]."
+    _log.info("Enabling EMS [#{name}] id [#{id}].")
     update!(:enabled => true)
   end
 
@@ -572,7 +572,7 @@ class ExtManagementSystem < ApplicationRecord
 
   def vm_log_user_event(_vm, user_event)
     $log.info(user_event)
-    $log.warn "User event logging is not available on [#{self.class.name}] Name:[#{name}]"
+    $log.warn("User event logging is not available on [#{self.class.name}] Name:[#{name}]")
   end
 
   #
@@ -617,7 +617,7 @@ class ExtManagementSystem < ApplicationRecord
 
   def stop_event_monitor
     return if event_monitor_class.nil?
-    _log.info "EMS [#{name}] id [#{id}]: Stopping event monitor."
+    _log.info("EMS [#{name}] id [#{id}]: Stopping event monitor.")
     event_monitor_class.stop_worker_for_ems(self)
   end
 

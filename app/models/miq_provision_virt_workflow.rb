@@ -89,10 +89,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     update_field_visibility
 
     @last_vm_id = get_value(@values[:src_vm_id])
-    _log.info "provision refresh completed in [#{Time.now - st}] seconds"
+    _log.info("provision refresh completed in [#{Time.now - st}] seconds")
   rescue => err
-    _log.error "[#{err}]"
-    $log.error err.backtrace.join("\n")
+    _log.error("[#{err}]")
+    $log.error(err.backtrace.join("\n"))
     raise err
   ensure
     @allowed_vlan_cache = nil
@@ -198,7 +198,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     vlan_name = get_value(@values[:vlan])
     return all_hosts unless vlan_name
 
-    _log.info "Filtering hosts with the following network: <#{vlan_name}>"
+    _log.info("Filtering hosts with the following network: <#{vlan_name}>")
     all_hosts.reject { |h| !h.lans.pluck(:name).include?(vlan_name) }
   end
 
@@ -332,7 +332,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       end
 
       unless tag_conditions.blank?
-        _log.info "Filtering VM templates with the following tag_filters: <#{tag_conditions.inspect}>"
+        _log.info("Filtering VM templates with the following tag_filters: <#{tag_conditions.inspect}>")
         vms = MiqTemplate.in_my_region.where(condition).find_tags_by_grouping(tag_conditions, :ns => "/managed")
       end
     end
@@ -342,11 +342,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     @allowed_templates_tag_filters = @values[:vm_tags]
     rails_logger('allowed_templates', 1)
     if allowed_templates_list.blank?
-      _log.warn "Allowed Templates is returning an empty list"
+      _log.warn("Allowed Templates is returning an empty list")
     else
-      _log.warn "Allowed Templates is returning <#{allowed_templates_list.length}> template(s)"
+      _log.warn("Allowed Templates is returning <#{allowed_templates_list.length}> template(s)")
       allowed_templates_list.each do |vm|
-        _log.debug "Allowed Template <#{vm.id}:#{vm.name}>  GUID: <#{vm.guid}>  UID_EMS: <#{vm.uid_ems}>"
+        _log.debug("Allowed Template <#{vm.id}:#{vm.name}>  GUID: <#{vm.guid}>  UID_EMS: <#{vm.uid_ems}>")
       end
     end
 
@@ -585,7 +585,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     return if @current_spec == selected_spec && @custom_spec_override == current_spec_override
 
-    _log.info "Custom spec changed from [#{@current_spec}] to [#{selected_spec}].  Customize option:[#{@customize_option}]"
+    _log.info("Custom spec changed from [#{@current_spec}] to [#{selected_spec}].  Customize option:[#{@customize_option}]")
 
     if selected_spec
       src = get_source_and_targets
@@ -737,7 +737,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def self.from_ws_ver_1_0(version, user, src_name, target_name, auto_approve, tags, additional_values)
-    _log.info "Web-service provisioning starting with interface version <#{version}> for user <#{user.userid}>"
+    _log.info("Web-service provisioning starting with interface version <#{version}> for user <#{user.userid}>")
     values = {}
     p = new(values, user, :use_pre_dialog => false)
     src_name_down = src_name.downcase
@@ -774,22 +774,22 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     placement_cluster_name = ws_values[:cluster]
     unless placement_cluster_name.blank?
       data[:placement_cluster_name] = placement_cluster_name.to_s.downcase
-      _log.info "placement_cluster_name:<#{data[:placement_cluster_name].inspect}>"
+      _log.info("placement_cluster_name:<#{data[:placement_cluster_name].inspect}>")
       data[:data_centers] = EmsCluster.where("lower(name) = ?", data[:placement_cluster_name]).collect(&:v_parent_datacenter)
     end
-    _log.info "data:<#{data.inspect}>"
+    _log.info("data:<#{data.inspect}>")
 
     src_name =     data[:name].blank? ? nil : data[:name].downcase
     src_guid =     data[:guid].blank? ? nil : data[:guid].downcase
     ems_guid =     data[:ems_guid].blank? ? nil : data[:ems_guid].downcase
     data_centers = data[:data_centers]
 
-    _log.info "VM Passed: <#{src_name}> <#{src_guid}> <#{ems_guid}> Datacenters:<#{data_centers.inspect}>"
+    _log.info("VM Passed: <#{src_name}> <#{src_guid}> <#{ems_guid}> Datacenters:<#{data_centers.inspect}>")
     if [:clone_to_vm, :clone_to_template].include?(request_type)
       src = ws_find_template_or_vm(values, src_name, src_guid, ems_guid)
     else
       srcs = allowed_templates(:include_datacenter => true).find_all do |v|
-        _log.info "VM Detected: <#{v.name.downcase}> <#{v.guid}> <#{v.uid_ems}> Datacenter:<#{v.datacenter_name}>"
+        _log.info("VM Detected: <#{v.name.downcase}> <#{v.guid}> <#{v.uid_ems}> Datacenter:<#{v.datacenter_name}>")
         (src_name.nil? || src_name == v.name.downcase) && (src_guid.nil? || src_guid == v.guid) && (ems_guid.nil? || ems_guid == v.uid_ems) && (data_centers.nil? || data_centers.include?(v.datacenter_name))
       end
       if srcs.length > 1
@@ -800,7 +800,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     if src.nil?
       raise _("No source template was found from input data:<%{data}>") % {:data => data.inspect}
     end
-    _log.info "VM Found: <#{src.name}> <#{src.guid}> <#{src.uid_ems}>  Datacenter:<#{src.datacenter_name}>"
+    _log.info("VM Found: <#{src.name}> <#{src.guid}> <#{src.uid_ems}>  Datacenter:<#{src.datacenter_name}>")
     src
   end
 
@@ -816,7 +816,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def ws_vm_fields(values, fields)
     data = parse_ws_string(fields)
-    _log.info "data:<#{data.inspect}>"
+    _log.info("data:<#{data.inspect}>")
     ws_service_fields(values, fields, data)
     ws_hardware_fields(values, fields, data)
     ws_network_fields(values, fields, data)
@@ -824,7 +824,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     ws_schedule_fields(values, fields, data)
     ws_environment_fields(values, data)
 
-    data.each { |k, v| _log.warn "Unprocessed key <#{k}> with value <#{v.inspect}>" }
+    data.each { |k, v| _log.warn("Unprocessed key <#{k}> with value <#{v.inspect}>") }
   end
 
   def ws_environment_fields(values, data)
@@ -870,7 +870,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     # Check and remove invalid networks specifications
     values[:networks].delete_if do |d|
       result = d[:network].blank?
-      _log.warn "Skipping network due to blank name: <#{d.inspect}>"  if result == true
+      _log.warn("Skipping network due to blank name: <#{d.inspect}>")  if result == true
       result
     end unless values[:networks].blank?
   end
@@ -892,7 +892,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     # Check and remove invalid disk specifications
     values[:disk_scsi].delete_if do |d|
       result = d[:sizeInMB].to_i == 0
-      _log.warn "Skipping disk due to invalid size: <#{d.inspect}>" if result == true
+      _log.warn("Skipping disk due to invalid size: <#{d.inspect}>") if result == true
       result
     end unless values[:disk_scsi].blank?
   end
@@ -903,7 +903,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       next unless key_name =~ regex_filter
       item_id = Regexp.last_match(1).to_i
       v = data.delete(k)
-      _log.info "processing key <hardware:#{k}(#{v.class})> with value <#{v.inspect}>"
+      _log.info("processing key <hardware:#{k}(#{v.class})> with value <#{v.inspect}>")
 
       values[hw_key] ||= []
       item = values[hw_key][item_id] ||= {}
@@ -940,7 +940,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def self.from_ws_ver_1_x(version, user, template_fields, vm_fields, requester, tags, options)
     options = MiqHashStruct.new if options.nil?
-    _log.warn "Web-service provisioning starting with interface version <#{version}> by requester <#{user.userid}>"
+    _log.warn("Web-service provisioning starting with interface version <#{version}> by requester <#{user.userid}>")
 
     init_options = {:use_pre_dialog => false, :request_type => request_type(parse_ws_string(template_fields)[:request_type]), :initial_pass => true}
     data = parse_ws_string(requester)
@@ -971,7 +971,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       p.raise_validate_errors if request == false
     end
   rescue => err
-    _log.error "<#{err}>"
+    _log.error("<#{err}>")
     raise err
   end
 

@@ -81,7 +81,7 @@ module RelationshipMixin
     self.relationship_type = rel unless rel.nil?
 
     begin
-      return yield self
+      yield(self)
     ensure
       if rel_changed
         relationship_types.pop

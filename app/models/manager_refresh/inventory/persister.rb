@@ -56,7 +56,7 @@ class ManagerRefresh::Inventory::Persister
 
         if collection_options[:builder_params]
           collection_options[:builder_params] = collection_options[:builder_params].transform_values do |value|
-            if value.respond_to? :call
+            if value.respond_to?(:call)
               value.call(self)
             else
               value
@@ -118,7 +118,7 @@ class ManagerRefresh::Inventory::Persister
 
     if options[:builder_params]
       options[:builder_params] = options[:builder_params].transform_values do |value|
-        if value.respond_to? :call
+        if value.respond_to?(:call)
           value.call(self)
         else
           value

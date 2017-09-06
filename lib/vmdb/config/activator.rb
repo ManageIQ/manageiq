@@ -33,8 +33,8 @@ module VMDB
       end
 
       def session(data)
-        Session.timeout data.timeout
-        Session.interval data.interval
+        Session.timeout(data.timeout)
+        Session.interval(data.interval)
       end
 
       def server(data)

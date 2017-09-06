@@ -115,7 +115,7 @@ module Authenticator
 
       sysbus = DBus.system_bus
       ifp_service   = sysbus["org.freedesktop.sssd.infopipe"]
-      ifp_object    = ifp_service.object "/org/freedesktop/sssd/infopipe"
+      ifp_object    = ifp_service.object("/org/freedesktop/sssd/infopipe")
       ifp_object.introspect
       ifp_interface = ifp_object["org.freedesktop.sssd.infopipe"]
       begin

@@ -114,7 +114,7 @@ module Metric::CiMixin
 
     scope = send(meth)
     if Metric.column_names.include?(column.to_s)
-      scope = scope.select "capture_interval_name, capture_interval, timestamp, #{column}"
+      scope = scope.select("capture_interval_name, capture_interval, timestamp, #{column}")
     end
 
     total_records = scope

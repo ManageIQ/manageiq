@@ -8,7 +8,7 @@ module VmOrTemplate::Scanning
         .where(:sync_key => guid)
         .pluck(:id)
     unless j.blank?
-      _log.info "VM scan job will not be added due to existing scan job waiting to be processed.  VM ID:[#{id}] Name:[#{name}] Guid:[#{guid}]  Existing Job IDs [#{j.join(", ")}]"
+      _log.info("VM scan job will not be added due to existing scan job waiting to be processed.  VM ID:[#{id}] Name:[#{name}] Guid:[#{guid}]  Existing Job IDs [#{j.join(", ")}]")
       return nil
     end
 
@@ -25,7 +25,7 @@ module VmOrTemplate::Scanning
     }.merge(options)
     options[:zone] = ext_management_system.my_zone unless ext_management_system.nil?
 
-    _log.info "NAME [#{options[:name]}] SCAN [#{options[:categories].inspect}] [#{options[:categories].class}]"
+    _log.info("NAME [#{options[:name]}] SCAN [#{options[:categories].inspect}] [#{options[:categories].class}]")
 
     self.last_scan_attempt_on = Time.now.utc
     save

@@ -157,14 +157,14 @@ class OrchestrationTemplateCfn < OrchestrationTemplate
   end
 
   def add_allowed_values(parameter, val)
-    return unless val.key? 'AllowedValues'
+    return unless val.key?('AllowedValues')
 
     constraint = OrchestrationTemplate::OrchestrationParameterAllowed.new(:allowed_values => val['AllowedValues'])
     parameter.constraints << constraint
   end
 
   def add_pattern(parameter, val)
-    return unless val.key? 'AllowedPattern'
+    return unless val.key?('AllowedPattern')
 
     constraint = OrchestrationTemplate::OrchestrationParameterPattern.new(:pattern => val['AllowedPattern'])
     parameter.constraints << constraint

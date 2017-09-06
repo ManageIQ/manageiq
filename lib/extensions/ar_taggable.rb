@@ -86,7 +86,7 @@ module ActsAsTaggable
         .where(:taggable_id    => id)
         .where(:taggable_type  => self.class.base_class.name)
         .where(tagging[:tag_id].eq(tag[:id]))
-        .where(tag[:name].matches "#{ns}/%")
+        .where(tag[:name].matches("#{ns}/%"))
         .destroy_all
 
       # Apply new tags
@@ -114,10 +114,10 @@ module ActsAsTaggable
   def tagged_with(options = {})
     tagging = Tagging.arel_table
     query = Tag.includes(:taggings).references(:taggings)
-    query = query.where(tagging[:taggable_type].eq self.class.base_class.name)
-    query = query.where(tagging[:taggable_id].eq id)
+    query = query.where(tagging[:taggable_type].eq(self.class.base_class.name))
+    query = query.where(tagging[:taggable_id].eq(id))
     ns    = Tag.get_namespace(options)
-    query = query.where(Tag.arel_table[:name].matches "#{ns}%") if ns
+    query = query.where(Tag.arel_table[:name].matches("#{ns}%")) if ns
     query
   end
 

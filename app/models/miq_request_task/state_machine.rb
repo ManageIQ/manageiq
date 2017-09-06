@@ -14,7 +14,7 @@ module MiqRequestTask::StateMachine
     return signal(:finish) if ![:finish, :provision_error].include?(phase.to_sym) && prematurely_finished?
 
     self.phase = phase.to_s
-    $log.info "Starting Phase <#{self.phase}>"
+    $log.info("Starting Phase <#{self.phase}>")
     save
 
     begin

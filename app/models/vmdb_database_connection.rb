@@ -66,7 +66,7 @@ class VmdbDatabaseConnection < ApplicationRecord
   end
 
   def spid
-    read_attribute 'pid'
+    read_attribute('pid')
   end
 
   def task_state

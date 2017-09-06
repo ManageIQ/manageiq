@@ -39,8 +39,8 @@ class JobProxyDispatcher
 
         jobs_to_dispatch.each do |job|
           if concurrent_vm_scans_limit > 0 && active_vm_scans_by_zone[@zone] >= concurrent_vm_scans_limit
-            _log.warn "SKIPPING remaining %s jobs in dispatch since there are [%d] active scans in the zone [%s]" %
-                      [ui_lookup(:table => VmOrTemplate.name), active_vm_scans_by_zone[@zone], @zone]
+            _log.warn("SKIPPING remaining %s jobs in dispatch since there are [%d] active scans in the zone [%s]" %
+                      [ui_lookup(:table => VmOrTemplate.name), active_vm_scans_by_zone[@zone], @zone])
             break
           end
           @vm = @vms_for_dispatch_jobs.detect { |v| v.id == job.target_id }
@@ -81,7 +81,7 @@ class JobProxyDispatcher
           if proxy
             # Skip this embedded scan if the host/vc we'd need has already exceeded the limit
             next if embedded_resource_limit_exceeded?(job)
-            _log.info "STARTING job: [#{job.guid}] on proxy: [#{proxy.name}]"
+            _log.info("STARTING job: [#{job.guid}] on proxy: [#{proxy.name}]")
             Benchmark.current_realtime[:start_job_on_proxy_count] += 1
             Benchmark.realtime_block(:start_job_on_proxy) { start_job_on_proxy(job, proxy) }
           elsif @vm.host_id && @vm.storage_id && !@vm.template?
@@ -91,7 +91,7 @@ class JobProxyDispatcher
         end
       end
     end
-    _log.info "Complete - Timings: #{t.inspect}"
+    _log.info("Complete - Timings: #{t.inspect}")
   end
 
   def container_image_scan_class
@@ -127,7 +127,7 @@ class JobProxyDispatcher
   end
 
   def do_dispatch(job, ems_id)
-    _log.info "Signaling start for container image scan job [#{job.id}]"
+    _log.info("Signaling start for container image scan job [#{job.id}]")
     job.update(:dispatch_status => "active", :started_on => Time.now.utc)
     @active_container_scans_by_zone_and_ems[@zone][ems_id] += 1
     MiqQueue.put_unless_exists(
@@ -170,7 +170,7 @@ class JobProxyDispatcher
 
   def start_job_on_proxy(job, proxy)
     assign_proxy_to_job(proxy, job)
-    _log.info "Job #{job.attributes_log}"
+    _log.info("Job #{job.attributes_log}")
     job_options = {:args => ["start"], :zone => MiqServer.my_zone, :server_guid => proxy.guid, :role => "smartproxy"}
     @active_vm_scans_by_zone[MiqServer.my_zone] += 1
     queue_signal(job, job_options)

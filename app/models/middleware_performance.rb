@@ -26,7 +26,7 @@ class MiddlewarePerformance < ActsAsArModel
         next
       end
       if raw_stats.values[0]
-        parse_raw_stats_columns raw_stats
+        parse_raw_stats_columns(raw_stats)
         raw_stats.each { |timestamp, stats| results.push(parse_row(ms, timestamp, interval, stats)) }
       end
     end

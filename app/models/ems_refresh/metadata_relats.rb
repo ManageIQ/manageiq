@@ -8,7 +8,7 @@ module EmsRefresh::MetadataRelats
     relats ||= default_relats_hash
     return relats if target.nil?
 
-    _log.info "Getting VMDB relationships for #{target.class} [#{target.name}] id: [#{target.id}]..."
+    _log.info("Getting VMDB relationships for #{target.class} [#{target.name}] id: [#{target.id}]...")
     if target.kind_of?(ExtManagementSystem)
       vmdb_relats_ems(target, relats)
     else
@@ -16,7 +16,7 @@ module EmsRefresh::MetadataRelats
       vmdb_relats_descendants(target, relats)
     end
 
-    _log.info "Getting VMDB relationships for #{target.class} [#{target.name}] id: [#{target.id}]...Complete"
+    _log.info("Getting VMDB relationships for #{target.class} [#{target.name}] id: [#{target.id}]...Complete")
     relats
   end
 

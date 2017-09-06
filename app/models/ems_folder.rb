@@ -128,7 +128,7 @@ class EmsFolder < ApplicationRecord
     with_provider_connection do |vim|
       handle = provider_object(vim)
       begin
-        _log.info "Invoking addStandaloneHost with options: address => #{network_address}, #{userid}"
+        _log.info("Invoking addStandaloneHost with options: address => #{network_address}, #{userid}")
         cr_mor = handle.addStandaloneHost(network_address, userid, password)
       rescue VimFault => verr
         fault = verr.vimFaultInfo.fault
@@ -136,7 +136,7 @@ class EmsFolder < ApplicationRecord
         raise unless fault.xsiType == "SSLVerifyFault"
 
         ssl_thumbprint = fault.thumbprint
-        _log.info "Invoking addStandaloneHost with options: address => #{network_address}, userid => #{userid}, sslThumbprint => #{ssl_thumbprint}"
+        _log.info("Invoking addStandaloneHost with options: address => #{network_address}, userid => #{userid}, sslThumbprint => #{ssl_thumbprint}")
         cr_mor = handle.addStandaloneHost(network_address, userid, password, :sslThumbprint => ssl_thumbprint)
       end
 

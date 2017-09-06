@@ -4,6 +4,6 @@ class AuthenticationLdap < Authentication
     options.each do |key, val|
       hash["ldap_" + key.to_s] = val
     end
-    super hash
+    super(hash)
   end
 end

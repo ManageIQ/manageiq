@@ -9,7 +9,7 @@ require "optparse"
 
 options = {}
 opt_parser = OptionParser.new do |opts|
-  opts.banner = "usage: #{File.basename $PROGRAM_NAME, '.rb'} MIQ_WORKER_CLASS_NAME"
+  opts.banner = "usage: #{File.basename($PROGRAM_NAME, '.rb')} MIQ_WORKER_CLASS_NAME"
 
   opts.on("-l", "--[no-]list", "Toggle viewing available worker class names") do |val|
     options[:list] = val

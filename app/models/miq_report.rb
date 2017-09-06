@@ -138,7 +138,7 @@ class MiqReport < ApplicationRecord
   def list_schedules
     exp = MiqExpression.new("=" => {"field" => "MiqReport-id",
                                     "value" => id})
-    MiqSchedule.filter_matches_with exp
+    MiqSchedule.filter_matches_with(exp)
   end
 
   def add_schedule(data)
@@ -151,7 +151,7 @@ class MiqReport < ApplicationRecord
     params['towhat'] = "MiqReport"
     params['prod_default'] = "system"
 
-    MiqSchedule.create! params
+    MiqSchedule.create!(params)
   end
 
   def db_class

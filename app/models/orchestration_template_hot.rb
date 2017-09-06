@@ -76,15 +76,15 @@ class OrchestrationTemplateHot < OrchestrationTemplate
 
   def parse_constraints(raw_constraints)
     raw_constraints.collect do |raw_constraint|
-      if raw_constraint.key? 'allowed_values'
+      if raw_constraint.key?('allowed_values')
         parse_allowed_values(raw_constraint)
-      elsif raw_constraint.key? 'allowed_pattern'
+      elsif raw_constraint.key?('allowed_pattern')
         parse_pattern(raw_constraint)
-      elsif raw_constraint.key? 'length'
+      elsif raw_constraint.key?('length')
         parse_length_constraint(raw_constraint)
-      elsif raw_constraint.key? 'range'
+      elsif raw_constraint.key?('range')
         parse_value_constraint(raw_constraint)
-      elsif raw_constraint.key? 'custom_constraint'
+      elsif raw_constraint.key?('custom_constraint')
         parse_custom_constraint(raw_constraint)
       else
         raise MiqException::MiqParsingError, _("Unknown constraint %{constraint}") % {:constraint => raw_constraint}

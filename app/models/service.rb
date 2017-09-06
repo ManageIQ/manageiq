@@ -258,15 +258,15 @@ class Service < ApplicationRecord
         rsc_action = service_action(action, svc_rsc)
         rsc_name =  "#{rsc.class.name}:#{rsc.id}" + (rsc.respond_to?(:name) ? ":#{rsc.name}" : "")
         if rsc_action.nil?
-          _log.info "Not Processing action for Service:<#{name}:#{id}>, RSC:<#{rsc_name}}> in Group Idx:<#{group_idx}>"
+          _log.info("Not Processing action for Service:<#{name}:#{id}>, RSC:<#{rsc_name}}> in Group Idx:<#{group_idx}>")
         elsif rsc.respond_to?(rsc_action)
-          _log.info "Processing action <#{rsc_action}> for Service:<#{name}:#{id}>, RSC:<#{rsc_name}}> in Group Idx:<#{group_idx}>"
+          _log.info("Processing action <#{rsc_action}> for Service:<#{name}:#{id}>, RSC:<#{rsc_name}}> in Group Idx:<#{group_idx}>")
           rsc.send(rsc_action)
         else
-          _log.info "Skipping action <#{rsc_action}> for Service:<#{name}:#{id}>, RSC:<#{rsc.class.name}:#{rsc.id}> in Group Idx:<#{group_idx}>"
+          _log.info("Skipping action <#{rsc_action}> for Service:<#{name}:#{id}>, RSC:<#{rsc.class.name}:#{rsc.id}> in Group Idx:<#{group_idx}>")
         end
       rescue => err
-        _log.error "Error while processing Service:<#{name}> Group Idx:<#{group_idx}>  Resource<#{rsc_name}>.  Message:<#{err}>"
+        _log.error("Error while processing Service:<#{name}> Group Idx:<#{group_idx}>  Resource<#{rsc_name}>.  Message:<#{err}>")
       end
     end
 
@@ -372,12 +372,12 @@ class Service < ApplicationRecord
   end
 
   def generate_chargeback_report(options = {})
-    _log.info "Generation of chargeback report for service #{name} started..."
+    _log.info("Generation of chargeback report for service #{name} started...")
     MiqReportResult.where(:name => chargeback_report_name).destroy_all
     report = MiqReport.new(chargeback_yaml)
     options[:report_sync] = true
     report.queue_generate_table(options)
-    _log.info "Report #{chargeback_report_name} generated"
+    _log.info("Report #{chargeback_report_name} generated")
   end
 
   def chargeback_yaml
@@ -395,7 +395,7 @@ class Service < ApplicationRecord
       :method_name => "generate_chargeback_report",
       :args        => options
     )
-    _log.info "Added to queue: generate_chargeback_report for service #{name}"
+    _log.info("Added to queue: generate_chargeback_report for service #{name}")
   end
 
   #

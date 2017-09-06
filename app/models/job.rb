@@ -30,7 +30,7 @@ class Job < ApplicationRecord
     job.initialize_attributes
     job.save
     job.create_miq_task(job.attributes_for_task)
-    $log.info "Job created: #{job.attributes_log}"
+    $log.info("Job created: #{job.attributes_log}")
     job.signal(:initializing)
     job
   end
@@ -56,11 +56,11 @@ class Job < ApplicationRecord
 
   def check_active_on_destroy
     if self.is_active?
-      _log.warn "Job is active, delete not allowed - #{attributes_log}"
+      _log.warn("Job is active, delete not allowed - #{attributes_log}")
       throw :abort
     end
 
-    _log.info "Job deleted: #{attributes_log}"
+    _log.info("Job deleted: #{attributes_log}")
     true
   end
 
@@ -69,7 +69,7 @@ class Job < ApplicationRecord
     if job
       job.update_message(message)
     else
-      _log.warn "jobs.guid: [#{jobid}] not found"
+      _log.warn("jobs.guid: [#{jobid}] not found")
     end
   end
 
@@ -92,7 +92,7 @@ class Job < ApplicationRecord
   end
 
   def dispatch_start
-    _log.info "Dispatch Status is 'pending'"
+    _log.info("Dispatch Status is 'pending'")
     self.dispatch_status = "pending"
     save
     @storage_dispatcher_process_finish_flag = false
@@ -100,7 +100,7 @@ class Job < ApplicationRecord
 
   def dispatch_finish
     return if @storage_dispatcher_process_finish_flag
-    _log.info "Dispatch Status is 'finished'"
+    _log.info("Dispatch Status is 'finished'")
     self.dispatch_status = "finished"
     save
     @storage_dispatcher_process_finish_flag = true
@@ -110,26 +110,26 @@ class Job < ApplicationRecord
     options = args.first || {}
     options[:message] ||= options[:userid] ? "Job canceled by user [#{options[:useid]}] on #{Time.now}" : "Job canceled on #{Time.now}"
     options[:status] ||= "ok"
-    _log.info "job canceling, #{options[:message]}"
+    _log.info("job canceling, #{options[:message]}")
     signal(:finish, options[:message], options[:status])
   end
 
   def process_error(*args)
     message, status = args
-    _log.error message.to_s
+    _log.error(message.to_s)
     set_status(message, status)
   end
 
   def process_abort(*args)
     message, status = args
-    _log.error "job aborting, #{message}"
+    _log.error("job aborting, #{message}")
     set_status(message, status)
     signal(:finish, message, status)
   end
 
   def process_finished(*args)
     message, status = args
-    _log.info "job finished, #{message}"
+    _log.info("job finished, #{message}")
     set_status(message, status)
     dispatch_finish
   end
@@ -152,7 +152,7 @@ class Job < ApplicationRecord
   end
 
   def self.check_jobs_for_timeout
-    $log.debug "Checking for timed out jobs"
+    $log.debug("Checking for timed out jobs")
     begin
       in_my_region
         .where("state != 'finished' and (state != 'waiting_to_start' or dispatch_status = 'active')")

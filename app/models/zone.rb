@@ -127,15 +127,15 @@ class Zone < ApplicationRecord
   end
 
   def ems_infras
-    ext_management_systems.select { |e| e.kind_of? EmsInfra }
+    ext_management_systems.select { |e| e.kind_of?(EmsInfra) }
   end
 
   def ems_containers
-    ext_management_systems.select { |e| e.kind_of? ManageIQ::Providers::ContainerManager }
+    ext_management_systems.select { |e| e.kind_of?(ManageIQ::Providers::ContainerManager) }
   end
 
   def ems_middlewares
-    ext_management_systems.select { |e| e.kind_of? ManageIQ::Providers::MiddlewareManager }
+    ext_management_systems.select { |e| e.kind_of?(ManageIQ::Providers::MiddlewareManager) }
   end
 
   def middleware_servers
@@ -143,23 +143,23 @@ class Zone < ApplicationRecord
   end
 
   def ems_datawarehouses
-    ext_management_systems.select { |e| e.kind_of? ManageIQ::Providers::DatawarehouseManager }
+    ext_management_systems.select { |e| e.kind_of?(ManageIQ::Providers::DatawarehouseManager) }
   end
 
   def ems_monitors
-    ext_management_systems.select { |e| e.kind_of? ManageIQ::Providers::MonitoringManager }
+    ext_management_systems.select { |e| e.kind_of?(ManageIQ::Providers::MonitoringManager) }
   end
 
   def ems_configproviders
-    ext_management_systems.select { |e| e.kind_of? ManageIQ::Providers::ConfigurationManager }
+    ext_management_systems.select { |e| e.kind_of?(ManageIQ::Providers::ConfigurationManager) }
   end
 
   def ems_clouds
-    ext_management_systems.select { |e| e.kind_of? EmsCloud }
+    ext_management_systems.select { |e| e.kind_of?(EmsCloud) }
   end
 
   def ems_networks
-    ext_management_systems.select { |e| e.kind_of? ManageIQ::Providers::NetworkManager }
+    ext_management_systems.select { |e| e.kind_of?(ManageIQ::Providers::NetworkManager) }
   end
 
   def availability_zones

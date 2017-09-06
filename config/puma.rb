@@ -17,5 +17,5 @@
 # thread count or we risk a ActiveRecord::ConnectionTimeoutError waiting on a
 # connection from the connection pool.
 #
-threads 5, 5
-tag "MIQ: Web Server Worker"
+threads(5, 5)
+tag("MIQ: Web Server Worker")

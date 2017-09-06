@@ -71,11 +71,11 @@ class ServiceTemplateProvisionTask < MiqRequestTask
   def create_child_tasks
     parent_svc = Service.find_by(:id => options[:parent_service_id])
     parent_name = parent_svc.nil? ? 'none' : "#{parent_svc.class.name}:#{parent_svc.id}"
-    _log.info "- creating service tasks for service <#{self.class.name}:#{id}> with parent service <#{parent_name}>"
+    _log.info("- creating service tasks for service <#{self.class.name}:#{id}> with parent service <#{parent_name}>")
 
     tasks = source.create_tasks_for_service(self, parent_svc)
     tasks.each { |t| miq_request_tasks << t }
-    _log.info "- created <#{tasks.length}> service tasks for service <#{self.class.name}:#{id}> with parent service <#{parent_name}>"
+    _log.info("- created <#{tasks.length}> service tasks for service <#{self.class.name}:#{id}> with parent service <#{parent_name}>")
   end
 
   def do_request
@@ -173,7 +173,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
 
   def before_ae_starts(_options)
     reload
-    if state.to_s.downcase.in? %w(pending queued)
+    if state.to_s.downcase.in?(%w(pending queued))
       _log.info("Executing #{request_class::TASK_DESCRIPTION} request: [#{description}]")
       update_and_notify_parent(:state => "active", :status => "Ok", :message => "In Process")
     end

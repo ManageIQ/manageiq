@@ -6,7 +6,7 @@ class MiqReportResult < ApplicationRecord
   belongs_to :miq_task
   has_one    :binary_blob, :as => :resource, :dependent => :destroy
   has_many   :miq_report_result_details, :dependent => :delete_all
-  has_many   :html_details, -> { where "data_type = 'html'" }, :class_name => "MiqReportResultDetail", :foreign_key => "miq_report_result_id"
+  has_many   :html_details, -> { where("data_type = 'html'") }, :class_name => "MiqReportResultDetail", :foreign_key => "miq_report_result_id"
 
   serialize :report
 

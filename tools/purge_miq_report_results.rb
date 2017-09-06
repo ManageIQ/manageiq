@@ -26,7 +26,7 @@ else
 end
 
 def log(msg)
-  $log.info "MIQ(#{__FILE__}) #{msg}"
+  $log.info("MIQ(#{__FILE__}) #{msg}")
   puts msg
 end
 
@@ -36,15 +36,15 @@ msg = case purge_mode
       when :remaining then "last #{purge_value} results"
       when :date then      "[#{purge_value.iso8601}]"
       end
-log "Executing in #{opts[:mode]} mode for report results older than #{msg}"
+log("Executing in #{opts[:mode]} mode for report results older than #{msg}")
 
 count = MiqReportResult.purge_count(purge_mode, purge_value)
-log "Purge Count: #{formatter.number_with_delimiter(count)}"
+log("Purge Count: #{formatter.number_with_delimiter(count)}")
 puts
 
 exit if opts[:mode] != "purge"
 
-log "Purging..."
+log("Purging...")
 require 'ruby-progressbar'
 pbar = ProgressBar.create(:title => "Purging", :total => count, :autofinish => false)
 
@@ -55,4 +55,4 @@ if count > 0
 end
 
 pbar.finish
-log "Purging...Complete"
+log("Purging...Complete")

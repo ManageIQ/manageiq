@@ -64,7 +64,7 @@ class ContainerLabelTagMapping < ApplicationRecord
       category = Tag.find(tag_hash[:category_tag_id]).classification
       entry = category.find_entry_by_name(tag_hash[:entry_name])
       unless entry
-        category.lock :exclusive do
+        category.lock(:exclusive) do
           begin
             entry = category.add_entry(:name        => tag_hash[:entry_name],
                                        :description => tag_hash[:entry_description])

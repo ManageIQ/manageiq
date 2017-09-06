@@ -42,7 +42,7 @@ module ManageIQ
                 else                                            t
                 end
           if ems.nil?
-            _log.warn "Unable to perform refresh for #{t.class} [#{t.name}] id [#{t.id}], since it is not on an EMS."
+            _log.warn("Unable to perform refresh for #{t.class} [#{t.name}] id [#{t.id}], since it is not on an EMS.")
             next
           end
 

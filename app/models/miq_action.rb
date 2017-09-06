@@ -162,7 +162,7 @@ class MiqAction < ApplicationRecord
       MiqPolicy.logger.error("MIQ(action-invoke) Aborting action invocation [#{err.message}]")
       raise
     rescue MiqException::PolicyPreventAction => err
-      MiqPolicy.logger.info "MIQ(action-invoke) [#{err}]"
+      MiqPolicy.logger.info("MIQ(action-invoke) [#{err}]")
       raise
     end
 

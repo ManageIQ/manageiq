@@ -308,7 +308,7 @@ class MiqQueue < ApplicationRecord
     #   for proper comparison.  NOTE: hashes may not compare correctly due to
     #   it's unordered nature.
     where_scope = if conds.key?(:args)
-                    args = YAML.dump conds.delete(:args)
+                    args = YAML.dump(conds.delete(:args))
                     MiqQueue.where(conds).where(['args = ?', args])
                   else
                     MiqQueue.where(conds)
@@ -389,10 +389,10 @@ class MiqQueue < ApplicationRecord
             obj = obj.find(instance_id)
           end
         rescue ActiveRecord::RecordNotFound => err
-          _log.warn "#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}"
+          _log.warn("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}")
           return STATUS_WARN, nil, nil
         rescue => err
-          _log.error "#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}"
+          _log.error("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}")
           return STATUS_ERROR, err.message, nil
         end
       end
@@ -476,7 +476,7 @@ class MiqQueue < ApplicationRecord
         _log.error("backtrace: #{err.backtrace.join("\n")}")
       end
     else
-      _log.warn "#{MiqQueue.format_short_log_msg(self)}, Callback is not well-defined, skipping"
+      _log.warn("#{MiqQueue.format_short_log_msg(self)}, Callback is not well-defined, skipping")
     end
   end
 

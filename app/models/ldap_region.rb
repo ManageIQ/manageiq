@@ -26,7 +26,7 @@ class LdapRegion < ApplicationRecord
         users = domain.user_search(options)
         results.merge!(users)
       rescue => err
-        _log.error "Error during user search on domain <#{domain.id}:#{domain.name}>.  Msg:<#{err}>"
+        _log.error("Error during user search on domain <#{domain.id}:#{domain.name}>.  Msg:<#{err}>")
       end
     end
     results

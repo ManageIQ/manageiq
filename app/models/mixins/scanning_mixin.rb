@@ -59,7 +59,7 @@ module ScanningMixin
           # Reset the root of the xml document to match the expected starting point
           doc.root = doc.root.elements[1].elements[1]
         rescue => err
-          _log.error "Invalid xml error [#{err}] for xml:[#{doc}]"
+          _log.error("Invalid xml error [#{err}] for xml:[#{doc}]")
         end
         target.add_elements(doc)
         target.save!
@@ -117,7 +117,7 @@ module ScanningMixin
 
   # Do the SyncMetadata operation through the server smart proxy
   def sync_metadata(category, options = {})
-    _log.debug "category=[#{category}] [#{category.class}]"
+    _log.debug("category=[#{category}] [#{category.class}]")
     options = {
       "category"    => category.join(","),
       "from_time"   => nil, # TODO: is this still needed?: last_drift_state_timestamp.try(:to_i),
@@ -139,7 +139,7 @@ module ScanningMixin
 
   # Do the ScanMetadata operation through the server smart proxy
   def scan_metadata(category, options = {})
-    _log.info "category=[#{category}] [#{category.class}]"
+    _log.info("category=[#{category}] [#{category.class}]")
     options = {
       "category"    => category.join(","),
       "taskid"      => nil,
@@ -207,7 +207,7 @@ module ScanningMixin
     categories_processed = 0
     ost.xml_class = XmlHash::Document
 
-    _log.debug "Scanning - Initializing scan"
+    _log.debug("Scanning - Initializing scan")
     update_job_message(ost, "Initializing scan")
     bb, last_err = nil
     xml_summary = ost.xml_class.createDoc(:summary)
@@ -216,7 +216,7 @@ module ScanningMixin
     xml_summary.root.add_attributes("taskid" => ost.taskid)
 
     data_dir = File.join(File.expand_path(Rails.root), "data/metadata")
-    _log.debug "creating #{data_dir}"
+    _log.debug("creating #{data_dir}")
     begin
       Dir.mkdir(data_dir)
     rescue Errno::EEXIST
@@ -230,33 +230,33 @@ module ScanningMixin
 
     begin
       require 'metadata/MIQExtract/MIQExtract'
-      _log.debug "instantiating MIQExtract"
+      _log.debug("instantiating MIQExtract")
       extractor = MIQExtract.new(miqVm, ost)
-      _log.debug "instantiated MIQExtract"
+      _log.debug("instantiated MIQExtract")
 
       require 'blackbox/VmBlackBox'
-      _log.debug "instantiating BlackBox"
+      _log.debug("instantiating BlackBox")
       bb = Manageiq::BlackBox.new(guid, ost) # TODO: target must have GUID
-      _log.debug "instantiated BlackBox"
+      _log.debug("instantiated BlackBox")
 
-      _log.debug "Checking for file systems..."
+      _log.debug("Checking for file systems...")
       raise extractor.systemFsMsg unless extractor.systemFs
 
       categories = extractor.categories
-      _log.debug "categories = [ #{categories.join(', ')} ]"
+      _log.debug("categories = [ #{categories.join(', ')} ]")
 
       categories.each do |c|
         update_job_message(ost, "Scanning #{c}")
-        _log.info "Scanning [#{c}] information.  TaskId:[#{ost.taskid}]  VM:[#{name}]"
+        _log.info("Scanning [#{c}] information.  TaskId:[#{ost.taskid}]  VM:[#{name}]")
         st = Time.now
         xml = extractor.extract(c) { |scan_data| update_job_message(ost, scan_data[:msg]) }
         categories_processed += 1
-        _log.info "Scanning [#{c}] information ran for [#{Time.now - st}] seconds.  TaskId:[#{ost.taskid}]  VM:[#{name}]"
+        _log.info("Scanning [#{c}] information ran for [#{Time.now - st}] seconds.  TaskId:[#{ost.taskid}]  VM:[#{name}]")
         if xml
           xml.root.add_attributes("created_on" => ost.scanTime.to_i, "display_time" => ost.scanTime.iso8601)
-          _log.debug "Writing scanned data to XML for [#{c}] to blackbox."
+          _log.debug("Writing scanned data to XML for [#{c}] to blackbox.")
           bb.saveXmlData(xml, c)
-          _log.debug "writing xml complete."
+          _log.debug("writing xml complete.")
 
           category_node = xml_summary.class.load(xml.root.shallow_copy.to_xml.to_s).root
           category_node.add_attributes("start_time" => st.utc.iso8601, "end_time" => Time.now.utc.iso8601)
@@ -265,14 +265,14 @@ module ScanningMixin
           # Handle categories that we do not expect to return data.
           # Otherwise, log an error if we do not get data back.
           unless c == "vmevents"
-            _log.error "Error: No XML returned for category [#{c}]  TaskId:[#{ost.taskid}]  VM:[#{name}]"
+            _log.error("Error: No XML returned for category [#{c}]  TaskId:[#{ost.taskid}]  VM:[#{name}]")
           end
         end
       end
     rescue NoMethodError => scanErr
       last_err = scanErr
-      _log.error "Scanmetadata Error - [#{scanErr}]"
-      _log.error "Scanmetadata Error - [#{scanErr.backtrace.join("\n")}]"
+      _log.error("Scanmetadata Error - [#{scanErr}]")
+      _log.error("Scanmetadata Error - [#{scanErr.backtrace.join("\n")}]")
     rescue Timeout::Error, StandardError => scanErr
       last_err = scanErr
     ensure
@@ -280,13 +280,13 @@ module ScanningMixin
       update_job_message(ost, "Scanning completed.")
 
       # If we are sent a TaskId transfer a end of job summary xml.
-      _log.info "Starting: Sending scan summary to server.  TaskId:[#{ost.taskid}]  VM:[#{name}]"
+      _log.info("Starting: Sending scan summary to server.  TaskId:[#{ost.taskid}]  VM:[#{name}]")
       if last_err
         status = "Error"
         status_code = 8
         status_code = 16 if categories_processed.zero?
         scan_message = last_err.to_s
-        _log.error "ScanMetadata error status:[#{status_code}]:  message:[#{last_err}]"
+        _log.error("ScanMetadata error status:[#{status_code}]:  message:[#{last_err}]")
         _log.debug { last_err.backtrace.join("\n") }
       end
 
@@ -297,12 +297,12 @@ module ScanningMixin
         "message"     => scan_message
       )
       save_metadata_op(MIQEncode.encode(xml_summary.to_xml.to_s), "b64,zlib,xml", ost.taskid)
-      _log.info "Completed: Sending scan summary to server.  TaskId:[#{ost.taskid}]  target:[#{name}]"
+      _log.info("Completed: Sending scan summary to server.  TaskId:[#{ost.taskid}]  target:[#{name}]")
     end
   end
 
   def sync_stashed_metadata(ost)
-    _log.info "from #{self.class.name}"
+    _log.info("from #{self.class.name}")
     xml_summary = nil
     begin
       raise _("No synchronize category specified") if ost.category.nil?
@@ -316,7 +316,7 @@ module ScanningMixin
 
       bb = nil
       xml_summary = ost.xml_class.createDoc("<summary/>")
-      _log.debug "xml_summary1 = #{xml_summary.class.name}"
+      _log.debug("xml_summary1 = #{xml_summary.class.name}")
       xml_node = xml_summary.root.add_element("syncmetadata")
       xml_summary.root.add_attributes("scan_time" => ost.scanTime, "taskid" => ost.taskid)
       ost.skipConfig = true
@@ -343,20 +343,20 @@ module ScanningMixin
 
         # Verify that we have data to send
         if !items_selected.zero?
-          _log.info "Starting:  Sending target data for [#{c}] to server.  Size:[#{data.length}]  TaskId:[#{ost.taskid}]  target:[#{name}]"
+          _log.info("Starting:  Sending target data for [#{c}] to server.  Size:[#{data.length}]  TaskId:[#{ost.taskid}]  target:[#{name}]")
           save_metadata_op(data, "b64,zlib,xml", ost.taskid)
-          _log.info "Completed: Sending target data for [#{c}] to server.  Size:[#{data.length}]  TaskId:[#{ost.taskid}]  target:[#{name}]"
+          _log.info("Completed: Sending target data for [#{c}] to server.  Size:[#{data.length}]  TaskId:[#{ost.taskid}]  target:[#{name}]")
         else
           # Do not send empty XMLs.  Warn if there is not data at all, or just not items selected.
           if items_total.zero?
-            _log.warn "Synchronize: No data found for [#{c}].  Items:Total[#{items_total}] Selected[#{items_selected}]  TaskId:[#{ost.taskid}]  VM:[#{name}]"
+            _log.warn("Synchronize: No data found for [#{c}].  Items:Total[#{items_total}] Selected[#{items_selected}]  TaskId:[#{ost.taskid}]  VM:[#{name}]")
           else
-            _log.warn "Synchronize: No data selected for [#{c}].  Items:Total[#{items_total}] Selected[#{items_selected}]  TaskId:[#{ost.taskid}]  VM:[#{name}]"
+            _log.warn("Synchronize: No data selected for [#{c}].  Items:Total[#{items_total}] Selected[#{items_selected}]  TaskId:[#{ost.taskid}]  VM:[#{name}]")
           end
         end
       end
     rescue => syncErr
-      _log.error syncErr.to_s
+      _log.error(syncErr.to_s)
       _log.debug { syncErr.backtrace.join("\n") }
     ensure
       if bb
@@ -364,10 +364,10 @@ module ScanningMixin
         bb.close
       end
 
-      _log.info "Starting:  Sending target summary to server.  TaskId:[#{ost.taskid}]  target:[#{name}]"
-      _log.debug "xml_summary2 = #{xml_summary.class.name}"
+      _log.info("Starting:  Sending target summary to server.  TaskId:[#{ost.taskid}]  target:[#{name}]")
+      _log.debug("xml_summary2 = #{xml_summary.class.name}")
       save_metadata_op(MIQEncode.encode(xml_summary.to_s), "b64,zlib,xml", ost.taskid)
-      _log.info "Completed: Sending target summary to server.  TaskId:[#{ost.taskid}]  target:[#{name}]"
+      _log.info("Completed: Sending target summary to server.  TaskId:[#{ost.taskid}]  target:[#{name}]")
 
       update_job_message(ost, "Synchronization complete")
 

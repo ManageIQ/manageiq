@@ -4,7 +4,7 @@ class ScanItem < ApplicationRecord
   include UuidMixin
 
   YAML_DIR = File.expand_path(File.join(Rails.root, "product/scan_items"))
-  Dir.mkdir YAML_DIR unless File.exist?(YAML_DIR)
+  Dir.mkdir(YAML_DIR) unless File.exist?(YAML_DIR)
 
   SAMPLE_VM_PROFILE    = {:name => "sample",       :description => "VM Sample",    :mode => 'Vm',   :read_only => true}.freeze
   SAMPLE_HOST_PROFILE  = {:name => "host sample",  :description => "Host Sample",  :mode => 'Host', :read_only => true}.freeze
@@ -104,7 +104,7 @@ class ScanItem < ApplicationRecord
       guid = profile.attributes['guid']
       sis = ScanItemSet.find_by(:guid => guid)
       if sis.nil?
-        _log.warn "Unable to find ScanItemSet [guid: #{guid}] in the database."
+        _log.warn("Unable to find ScanItemSet [guid: #{guid}] in the database.")
         next
       end
 
@@ -114,7 +114,7 @@ class ScanItem < ApplicationRecord
 
         si = ScanItem.find_by(:guid => guid)
         if si.nil?
-          _log.warn "Unable to find ScanItem [guid: #{guid} type: #{item_type}] in the database."
+          _log.warn("Unable to find ScanItem [guid: #{guid} type: #{item_type}] in the database.")
           next
         end
 
@@ -124,11 +124,11 @@ class ScanItem < ApplicationRecord
         when 'registry'
           RegistryItem.add_elements(sis, si, vm, e)
         when 'category'
-          _log.debug "Skipping ScanItem [guid: #{guid} type: #{item_type}] as it is not expected in the data."
+          _log.debug("Skipping ScanItem [guid: #{guid} type: #{item_type}] as it is not expected in the data.")
         when 'nteventlog'
           EventLog.add_elements(vm, e)
         else
-          _log.debug "Unknown ScanItem type [#{item_type}]"
+          _log.debug("Unknown ScanItem type [#{item_type}]")
         end
       end
     end

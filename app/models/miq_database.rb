@@ -67,7 +67,7 @@ class MiqDatabase < ApplicationRecord
   end
 
   def size
-    ActiveRecord::Base.connection.database_size name
+    ActiveRecord::Base.connection.database_size(name)
   end
 
   def self.adapter

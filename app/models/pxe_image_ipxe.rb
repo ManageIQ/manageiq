@@ -31,7 +31,7 @@ PXE
     end
 
     if current_item[:kernel].blank?
-      _log.warn "Image #{current_item[:label]} missing kernel - Skipping"
+      _log.warn("Image #{current_item[:label]} missing kernel - Skipping")
       return []
     end
 

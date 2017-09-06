@@ -54,34 +54,34 @@ module MiqProvision::Automate
     related_vm_description = (related_vm == vm) ? "VM" : "Template"
 
     if related_vm.nil?
-      _log.error "No VM or Template Found for Provision Object"
+      _log.error("No VM or Template Found for Provision Object")
       return nil
     end
 
     if related_vm.ext_management_system.nil?
-      _log.error "No EMS Found for #{related_vm_description} of Provision Object"
+      _log.error("No EMS Found for #{related_vm_description} of Provision Object")
       return nil
     end
 
     vc_id = related_vm.ext_management_system.id
     unless vc_id.kind_of?(Fixnum)
-      _log.error "Invalid EMS ID <#{vc_id.inspect}> for #{related_vm_description} of Provision Object"
+      _log.error("Invalid EMS ID <#{vc_id.inspect}> for #{related_vm_description} of Provision Object")
       return nil
     end
 
     vlan_id, vlan_name = options[:vlan]
     unless vlan_name.kind_of?(String)
-      _log.error "VLAN Name <#{vlan_name.inspect}> is missing or invalid"
+      _log.error("VLAN Name <#{vlan_name.inspect}> is missing or invalid")
       return nil
     end
 
-    _log.info "<< vlan_name=<#{vlan_name}> vlan_id=#{vlan_id} vc_id=<#{vc_id}> user=<#{get_user}>"
+    _log.info("<< vlan_name=<#{vlan_name}> vlan_id=#{vlan_id} vc_id=<#{vc_id}> user=<#{get_user}>")
 
     attrs = automate_attributes('get_networks')
     ws = MiqAeEngine.resolve_automation_object("REQUEST", get_user, attrs)
 
     if ws.root.nil?
-      _log.warn "- Automate Failed (workspace empty)"
+      _log.warn("- Automate Failed (workspace empty)")
       return nil
     end
 
@@ -101,7 +101,7 @@ module MiqProvision::Automate
       return network
     end if networks.kind_of?(Array)
 
-    _log.warn "- No Network matched in Automate Results: #{ws.to_expanded_xml}"
+    _log.warn("- No Network matched in Automate Results: #{ws.to_expanded_xml}")
     nil
   end
 

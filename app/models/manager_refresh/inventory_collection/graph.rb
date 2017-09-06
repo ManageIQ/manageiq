@@ -65,7 +65,7 @@ module ManagerRefresh
 
       def assert_inventory_collections(inventory_collections)
         inventory_collections.each do |inventory_collection|
-          unless inventory_collection.kind_of? ::ManagerRefresh::InventoryCollection
+          unless inventory_collection.kind_of?(::ManagerRefresh::InventoryCollection)
             raise "A ManagerRefresh::SaveInventory needs a InventoryCollection object, it got: #{inventory_collection.inspect}"
           end
         end

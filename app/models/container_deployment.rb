@@ -35,8 +35,8 @@ class ContainerDeployment < ApplicationRecord
   end
 
   def roles_addresses(role)
-    if role.include? "deployment_master"
-      extract_public_ip_or_hostname container_nodes_by_role(role).first
+    if role.include?("deployment_master")
+      extract_public_ip_or_hostname(container_nodes_by_role(role).first)
     else
       addresses_array(container_nodes_by_role(role))
     end
@@ -118,9 +118,9 @@ EOS
     self.method_type = params["method_type"]
     create_needed_tags
     if method_type.include?("existing_managed")
-      self.deployed_on_ems = ExtManagementSystem.find params["underline_provider_id"]
+      self.deployed_on_ems = ExtManagementSystem.find(params["underline_provider_id"])
     elsif method_type.include?("provision")
-      self.deployed_on_ems = ExtManagementSystem.find params["underline_provider_id"]
+      self.deployed_on_ems = ExtManagementSystem.find(params["underline_provider_id"])
       keys = generate_ssh_keys
       public_key = keys[:public_key]
       private_key = keys[:private_key]
@@ -128,7 +128,7 @@ EOS
       params["ssh_authentication"]["public_key"] = public_key
       params["ssh_authentication"]["userid"] = "root"
     end
-    add_deployment_master_role params["nodes"]
+    add_deployment_master_role(params["nodes"])
     create_deployment_nodes(params["nodes"])
     create_deployment_authentication(params["identity_authentication"])
     create_deployment_authentication(params["ssh_authentication"].merge("type" => "AuthPrivateKey"))
@@ -141,7 +141,7 @@ EOS
   def create_deployment_authentication(authentication)
     auth = authentication["type"].safe_constantize.new
     auth.authtype = AUTHENTICATIONS_NAMES[authentication["type"]]
-    auth.assign_values authentication
+    auth.assign_values(authentication)
     authentications << auth
     save!
   end
@@ -154,7 +154,7 @@ EOS
   end
 
   def create_deployment_nodes(nodes)
-    work_by_vm_id = method_type.include? "existing_managed"
+    work_by_vm_id = method_type.include?("existing_managed")
     nodes.each do |node|
       container_deployment_node = ContainerDeploymentNode.new
       container_deployment_node.address = node["name"] unless work_by_vm_id
@@ -162,7 +162,7 @@ EOS
       container_deployment_nodes << container_deployment_node
       node["roles"].each do |key, value|
         if value
-          container_deployment_node.tag_add key
+          container_deployment_node.tag_add(key)
         end
       end
       container_deployment_node.save!
@@ -230,7 +230,7 @@ EOS
         "requestHeaderEmailHeaders"             => authentication.request_header_email_headers
       }
     end
-    {'name' => "example_name", 'login' => "true", 'challenge' => "true", 'kind' => authentication.authtype}.merge! options
+    {'name' => "example_name", 'login' => "true", 'challenge' => "true", 'kind' => authentication.authtype}.merge!(options)
   end
 
   private
@@ -250,15 +250,15 @@ EOS
     result = {}
     roles = container_deployment_nodes.collect(&:roles).flatten.uniq
     result["master"] = {"osm_use_cockpit"                     => "false",
-                        "openshift_master_identity_providers" => [identity_ansible_config_format]} if roles.include? "master"
+                        "openshift_master_identity_providers" => [identity_ansible_config_format]} if roles.include?("master")
     unless identity_provider_auth.first.htpassd_users.empty?
       result["master"]["openshift_master_htpasswd_users"] = htpasswd_hash
     end
-    result["node"] = {} if roles.include? "node"
-    result["storage"] = {} if roles.include? "storage"
-    result["etcd"] = {} if roles.include? "etcd"
-    result["master_lb"] = {} if roles.include? "master_lb"
-    result["dns"] = {} if roles.include? "dns"
+    result["node"] = {} if roles.include?("node")
+    result["storage"] = {} if roles.include?("storage")
+    result["etcd"] = {} if roles.include?("etcd")
+    result["master_lb"] = {} if roles.include?("master_lb")
+    result["dns"] = {} if roles.include?("dns")
     result
   end
 
@@ -282,7 +282,7 @@ EOS
       :containerized     => containerized,
       :rhsub_sku         => rhsm_auth.rhsm_sku
     }
-    if method_type.include? "provision"
+    if method_type.include?("provision")
       node_template = VmOrTemplate.find(params["nodes_creation_template_id"])
       master_template = VmOrTemplate.find(params["masters_creation_template_id"])
       parameters_provision = {
@@ -336,7 +336,7 @@ EOS
     options["vm_name"] = params["#{type.singularize}_base_name"]
     options["vm_memory"] = params[type + "_vm_memory"] if params[type + "_vm_memory"]
     options["cpu"] = params[type + "_cpu"] if params[type + "_cpu"]
-    if deployed_on_ems.kind_of? ManageIQ::Providers::Amazon::CloudManager
+    if deployed_on_ems.kind_of?(ManageIQ::Providers::Amazon::CloudManager)
       options["instance_type"] = 1 || params[type + "_instance_type"]
       options["placement_auto"] = true
     end

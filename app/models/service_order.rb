@@ -103,7 +103,7 @@ class ServiceOrder < ApplicationRecord
         request.class.send(:create, request.attributes.except(*REQUEST_ATTRIBUTES))
       end
       new_attributes.each do |attr, value|
-        new_service_order.send("#{attr}=", value) if self.class.attribute_names.include? attr.to_s
+        new_service_order.send("#{attr}=", value) if self.class.attribute_names.include?(attr.to_s)
       end
       new_service_order.save!
     end

@@ -75,11 +75,11 @@ class Snapshot < ApplicationRecord
   end
 
   def self.remove_unused_evm_snapshots(delay)
-    _log.debug "Called"
+    _log.debug("Called")
     find_all_evm_snapshots.each do |sn|
       job_guid, timestamp = parse_evm_snapshot_description(sn.description)
       unless Job.guid_active?(job_guid, timestamp, delay)
-        _log.info "Removing #{sn.description.inspect} under Vm [#{sn.vm_or_template.name}]"
+        _log.info("Removing #{sn.description.inspect} under Vm [#{sn.vm_or_template.name}]")
         sn.vm_or_template.remove_evm_snapshot_queue(sn.id)
       end
     end
