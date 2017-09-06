@@ -10,7 +10,6 @@ FactoryGirl.define do
 
   factory :host_with_ref, :parent => :host do
     sequence(:ems_ref)     { |n| "host-#{seq_padded_for_sorting(n)}" }
-    sequence(:ems_ref_obj) { |n| VimString.new("host-#{seq_padded_for_sorting(n)}", "HostSystem", "ManagedObjectReference") }
   end
 
   factory :host_with_authentication, :parent => :host do
@@ -53,7 +52,7 @@ FactoryGirl.define do
   factory :host_openstack_infra, :parent => :host, :class => "ManageIQ::Providers::Openstack::InfraManager::Host" do
     vmm_vendor  "unknown"
     ems_ref     "openstack-perf-host"
-    ems_ref_obj "openstack-perf-host-nova-instance"
+    ems_ref_obj "openstack-perf-host-nova-instance" # TODO need to fix openstack to not use a different value here
     association :ems_cluster, factory: :ems_cluster_openstack
   end
 

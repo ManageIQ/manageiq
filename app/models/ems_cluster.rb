@@ -61,7 +61,7 @@ class EmsCluster < ApplicationRecord
 
   def provider_object(connection)
     raise NotImplementedError unless ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
-    connection.getVimClusterByMor(ems_ref_obj)
+    connection.getVimClusterByMor(ems_ref)
   end
 
   def provider_object_release(handle)
@@ -306,7 +306,6 @@ class EmsCluster < ApplicationRecord
       end
 
       host.ems_ref                = host_mor
-      host.ems_ref_obj            = host_mor
       host.ext_management_system  = ext_management_system
       host.save!
       hosts << host

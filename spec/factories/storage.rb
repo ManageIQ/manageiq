@@ -12,7 +12,7 @@ FactoryGirl.define do
   end
 
   factory :storage_redhat, :parent => :storage_nfs do
-    sequence(:ems_ref_obj) { |n| "/api/storagedomains/#{n}" }
+    sequence(:ems_ref) { |n| "/api/storagedomains/#{n}" }
   end
 
   factory :storage_block, :parent => :storage do

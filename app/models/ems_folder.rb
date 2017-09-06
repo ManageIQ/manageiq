@@ -27,7 +27,7 @@ class EmsFolder < ApplicationRecord
   # TODO: Vmware specific - Fix when we subclass EmsFolder
 
   def provider_object(connection)
-    connection.getVimFolderByMor(ems_ref_obj)
+    connection.getVimFolderByMor(ems_ref)
   end
 
   def provider_object_release(handle)
@@ -144,7 +144,6 @@ class EmsFolder < ApplicationRecord
 
       host_mor                   = vim.computeResourcesByMor[cr_mor].host.first
       host.ems_ref               = host_mor
-      host.ems_ref_obj           = host_mor
       host.ext_management_system = ext_management_system
       host.save!
       add_host(host)

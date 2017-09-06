@@ -51,8 +51,8 @@ module VmOrTemplate::Operations::Relocation
       raise _("The VM '%{name}' can not be migrated to the same host it is already running on.") % {:name => name}
     end
 
-    host_mor = host.ems_ref_obj
-    pool_mor = pool.ems_ref_obj
+    host_mor = host.ems_ref
+    pool_mor = pool.ems_ref
     run_command_via_parent(:vm_migrate, :host => host_mor, :pool => pool_mor, :priority => priority, :state => state)
   end
 
@@ -84,9 +84,9 @@ module VmOrTemplate::Operations::Relocation
       end
     end
 
-    host_mor      = host.ems_ref_obj if host
-    pool_mor      = pool.ems_ref_obj if pool
-    datastore_mor = datastore.ems_ref_obj if datastore
+    host_mor      = host.ems_ref if host
+    pool_mor      = pool.ems_ref if pool
+    datastore_mor = datastore.ems_ref if datastore
 
     run_command_via_parent(:vm_relocate, :host => host_mor, :pool => pool_mor, :datastore => datastore_mor, :disk_move_type => disk_move_type, :transform => transform, :priority => priority, :disk => disk)
   end
