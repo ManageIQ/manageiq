@@ -7,6 +7,7 @@ class VmOrTemplate < ApplicationRecord
   include RetirementMixin
   include ScanningMixin
   include SupportsFeatureMixin
+  include DeprecationMixin
 
   self.table_name = 'vms'
 
@@ -19,7 +20,6 @@ class VmOrTemplate < ApplicationRecord
   attr_accessor :surrogate_host
   @surrogate_host = nil
 
-  include SerializedEmsRefObjMixin
   include ProviderObjectMixin
 
   include ComplianceMixin
@@ -192,6 +192,8 @@ class VmOrTemplate < ApplicationRecord
 
   alias_method :parent_cluster, :ems_cluster
   alias_method :owning_cluster, :ems_cluster
+
+  deprecate_attribute :ems_ref_obj, :ems_ref
 
   # Add virtual columns/methods for specific things derived from advanced_settings
   REQUIRED_ADVANCED_SETTINGS = {

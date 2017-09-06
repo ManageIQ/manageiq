@@ -98,8 +98,8 @@ class Host < ApplicationRecord
   deprecate_attribute :address, :hostname
   alias_attribute     :state,   :power_state
   alias_attribute     :to_s,    :name
+  deprecate_attribute :ems_ref_obj, :ems_ref
 
-  include SerializedEmsRefObjMixin
   include ProviderObjectMixin
   include EventMixin
 

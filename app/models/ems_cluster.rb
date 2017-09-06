@@ -4,6 +4,7 @@ class EmsCluster < ApplicationRecord
   include_concern 'CapacityPlanning'
   include EventMixin
   include TenantIdentityMixin
+  include DeprecationMixin
 
   acts_as_miq_taggable
 
@@ -35,7 +36,6 @@ class EmsCluster < ApplicationRecord
   virtual_has_many :resource_pools, :uses => :all_relationships
   has_many :failover_hosts, -> { failover }, :class_name => "Host"
 
-  include SerializedEmsRefObjMixin
   include ProviderObjectMixin
 
   include FilterableMixin
@@ -51,6 +51,8 @@ class EmsCluster < ApplicationRecord
   include Metric::CiMixin
   include MiqPolicyMixin
   include AsyncDeleteMixin
+
+  deprecate_attribute :ems_ref_obj, :ems_ref
 
   #
   # Provider Object methods

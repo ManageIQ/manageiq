@@ -1,11 +1,11 @@
 class EmsFolder < ApplicationRecord
   include NewWithTypeStiMixin
+  include DeprecationMixin
 
   belongs_to :ext_management_system, :foreign_key => "ems_id"
 
   acts_as_miq_taggable
 
-  include SerializedEmsRefObjMixin
   include ProviderObjectMixin
 
   include RelationshipMixin
@@ -18,6 +18,8 @@ class EmsFolder < ApplicationRecord
   virtual_has_many :vms,               :uses => :all_relationships
   virtual_has_many :miq_templates,     :uses => :all_relationships
   virtual_has_many :hosts,             :uses => :all_relationships
+
+  deprecate_attribute :ems_ref_obj, :ems_ref
 
   #
   # Provider Object methods
