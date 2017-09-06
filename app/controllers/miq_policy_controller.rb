@@ -516,7 +516,7 @@ class MiqPolicyController < ApplicationController
       when :policy_profile
         self.x_node = @new_profile_node if @new_profile_node
       when :policy
-        nil
+        self.x_node = @new_policy_node if @new_policy_node
       when :event
         nil
       when :condition
