@@ -1,5 +1,5 @@
 describe AutomateWorkspace do
-  context "#output=" do
+  describe "#merge_output!" do
     let(:user) { FactoryGirl.create(:user_with_group, :userid => "admin") }
     let(:aw) { FactoryGirl.create(:automate_workspace, :user => user, :tenant => user.current_tenant) }
     it "raises error on invalid hash" do
