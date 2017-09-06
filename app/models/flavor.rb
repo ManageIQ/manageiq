@@ -1,6 +1,10 @@
 class Flavor < ApplicationRecord
   include NewWithTypeStiMixin
   include CloudTenancyMixin
+  include SupportsFeatureMixin
+
+  supports :create
+  supports :delete
 
   acts_as_miq_taggable
 
@@ -35,7 +39,77 @@ class Flavor < ApplicationRecord
     }
   end
 
+  def self.class_by_ems(ext_management_system)
+    ext_management_system.class::Flavor
+  end
+
   def self.tenant_joins_clause(scope)
     scope.includes(:cloud_tenants => "source_tenant").includes(:ext_management_system)
+  end
+
+  def self.create_flavor_queue(userid, ext_management_system, options = {})
+    task_opts = {
+      :action => "Creating flavor for user #{userid}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => 'Flavor',
+      :method_name => 'create_flavor',
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => [ext_management_system.id, options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def self.raw_create_flavor(_ext_management_system, _options = {})
+    raise NotImplementedError, "raw_create_flavor must be implemented in a subclass"
+  end
+
+  def validate_create_flavor(_ext_management_system, _options = {})
+    validate_unsupported(_("Create Flavor Operation"))
+  end
+
+  def self.create_flavor(ems_id, options)
+    raise ArgumentError, _("ems cannot be nil") if ems_id.nil?
+    ext_management_system = ExtManagementSystem.find(ems_id)
+    raise ArgumentError, _("ems cannot be found") if ext_management_system.nil?
+
+    klass = class_by_ems(ext_management_system)
+    klass.raw_create_flavor(ext_management_system, options)
+  end
+
+  def delete_flavor_queue(userid)
+    task_opts = {
+      :action => "Deleting flavor for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => "Flavor",
+      :method_name => 'delete_flavor',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => []
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def raw_delete_flavor
+    raise NotImplementedError, _("raw_delete_flavor must be implemented in a subclass")
+  end
+
+  def validate_delete_flavor
+    validate_unsupported(_("Delete Flavor Operation"))
+  end
+
+  def delete_flavor
+    raw_delete_flavor
+  end
+
+  def validate_unsupported(message_prefix)
+    {:available => false,
+     :message   => _("%{message} is not available for %{name}.") % {:message => message_prefix, :name => name}}
   end
 end
