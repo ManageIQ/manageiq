@@ -58,6 +58,11 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
   end
 
   def display_name_for_name_description(ci)
+    if ci.type == 'ManageIQ::Providers::Openstack::CloudManager::Flavor'
+      ram = ActionController::Base.helpers.number_to_human_size(ci.memory)
+      root_disk_size = ActionController::Base.helpers.number_to_human_size(ci.root_disk_size)
+      return "#{ci.name}: #{ci.cpus} CPUs, #{ram} RAM, #{root_disk_size} Root Disk"
+    end
     ci.description.blank? ? ci.name : "#{ci.name}: #{ci.description}"
   end
 
