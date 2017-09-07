@@ -89,6 +89,7 @@ module SupportsFeatureMixin
     :live_migrate               => 'Live Migration',
     :migrate                    => 'Migration',
     :capture                    => 'Capture of Capacity & Utilization Metrics',
+    :openscap_scan              => 'OpenSCAP security scan',
     :provisioning               => 'Provisioning',
     :publish                    => 'Publishing',
     :quick_stats                => 'Quick Stats',
