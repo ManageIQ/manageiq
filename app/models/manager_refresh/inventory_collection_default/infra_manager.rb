@@ -25,7 +25,21 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
         :model_class => ::GuestDevice,
         :manager_ref => [:hardware, :uid_ems],
         :association => :guest_devices,
+        :parent_inventory_collections => [:vms],
       }
+
+      if extra_attributes[:strategy] == :local_db_cache_all
+        attributes[:custom_manager_uuid] = lambda do |guest_device|
+          [guest_device.hardware.vm_or_template.ems_ref, guest_device.uid_ems]
+        end
+      end
+
+      attributes[:targeted_arel] = lambda do |inventory_collection|
+        manager_uuids = inventory_collection.parent_inventory_collections.flat_map { |c| c.manager_uuids.to_a }
+        inventory_collection.parent.guest_devices.joins(:hardware => :vm_or_template).where(
+          :hardware => {'vms' => {:ems_ref => manager_uuids}}
+        )
+      end
 
       attributes.merge!(extra_attributes)
     end
@@ -148,7 +162,27 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
         :model_class => ::HostStorage,
         :manager_ref => [:host, :storage],
         :association => :host_storages,
+        :parent_inventory_collections => [:hosts, :storages],
       }
+
+      if extra_attributes[:strategy] == :local_db_cache_all
+        attributes[:custom_manager_uuid] = lambda do |host_storage|
+          [host_storage.host.ems_ref, host_storage.storage.ems_ref]
+        end
+      end
+
+      attributes[:targeted_arel] = lambda do |inventory_collection|
+        host_collection = inventory_collection.parent_inventory_collections.detect { |ic| ic.name == :hosts }
+        storage_collection = inventory_collection.parent_inventory_collections.detect { |ic| ic.name == :storages }
+
+        host_uuids = host_collection.manager_uuids.to_a
+        storage_uuids = storage_collection.manager_uuids.to_a
+
+        inventory_collection.parent.host_storages.where(
+          :host => host_uuids,
+          :storage => storage_uuids
+        )
+      end
 
       attributes.merge!(extra_attributes)
     end
