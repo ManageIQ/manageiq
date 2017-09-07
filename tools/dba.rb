@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 module Dba
   def self.select(*args)
     ActiveRecord::Base.connection.send(:select, *args)

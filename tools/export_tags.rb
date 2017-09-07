@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 output = ARGV[0]
 raise "No output file provided" if output.nil?
 

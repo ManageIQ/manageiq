@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 LOG_DIR = "./"
 logfile = File.join(LOG_DIR, "ldap_ping.log")
 # File.delete(logfile) if File.exist?(logfile)

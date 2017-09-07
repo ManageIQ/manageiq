@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 # Delete any records older than this:
 ARCHIVE_CUTOFF = Time.now.utc - 1.month
 # If true, do not delete anything; only report:

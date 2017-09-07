@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 def usage
   puts "Error: Must pass only one of the following:"
   puts "  --vm=<vm id>"

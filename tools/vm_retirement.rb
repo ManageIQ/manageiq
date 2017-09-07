@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 def header
   output  = "Name\tOwner\tOwner Userid\tOwning Group\tRetired?\tRetirement Date\tRetirement Warning"
   output += "\n"

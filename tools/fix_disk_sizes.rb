@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 def getDinfo(vim)
   dinfo = []
   vim.virtualMachinesByMor.each do |_k, v|

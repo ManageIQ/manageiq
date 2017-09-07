@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 KEEP_EVENTS  = 6.months
 PURGE_WINDOW = 1000
 

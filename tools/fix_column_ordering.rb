@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 $LOAD_PATH << Rails.root.join("tools")
 
 require 'column_ordering/column_ordering'

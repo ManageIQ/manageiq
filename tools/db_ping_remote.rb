@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 require File.expand_path('../config/environment', __dir__)
 require 'io/console'
 
