@@ -32,10 +32,6 @@ class MiqWorker
       scale_deployment
     end
 
-    def worker_deployment_name
-      @worker_deployment_name ||= self.class.name.underscore.dasherize
-    end
-
     def add_readiness_probe(container_definition)
       container_definition[:readinessProbe] = {
         :tcpSocket           => {:port => SERVICE_PORT},
