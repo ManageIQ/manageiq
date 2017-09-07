@@ -40,7 +40,7 @@ module Vmdb
       fh.info("---")
 
       fh.info("DATABASE settings:")
-      VMDBLogger.log_hashes(fh, Rails.configuration.database_configuration[Rails.env])
+      VMDBLogger.log_hashes(fh, ActiveRecord::Base.connection_config)
       fh.info("DATABASE settings END")
       fh.info("---")
     end
