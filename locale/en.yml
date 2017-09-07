@@ -883,7 +883,7 @@ en:
       NetworkRouter:            Network Router
       OrchestrationStack:       Orchestration Stack
       OrchestrationTemplate:    Orchestration Template
-      OrchestrationTemplateCfn: CloudFormation Template
+      ManageIQ::Providers::Amazon::CloudManager::OrchestrationTemplate: CloudFormation Template
       OrchestrationTemplateHot: Heat Template
       OrchestrationTemplateAzure: Azure Template
       OrchestrationTemplateVnfd: VNF Template

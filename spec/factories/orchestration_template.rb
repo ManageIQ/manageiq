@@ -5,7 +5,7 @@ FactoryGirl.define do
     sequence(:description) { |n| "some description #{seq_padded_for_sorting(n)}" }
   end
 
-  factory :orchestration_template_cfn, :parent => :orchestration_template, :class => "OrchestrationTemplateCfn" do
+  factory :orchestration_template_cfn, :parent => :orchestration_template, :class => "ManageIQ::Providers::Amazon::CloudManager::OrchestrationTemplate" do
     sequence(:content)     { |n| "{\"AWSTemplateFormatVersion\" : \"version(#{seq_padded_for_sorting(n)})\"}" }
   end
 
