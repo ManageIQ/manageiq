@@ -133,5 +133,9 @@ module Authenticator
         :log_formatter     => Aws::Log::Formatter.new(Aws::Log::Formatter.default.pattern.chomp)
       )
     end
+
+    def normalize_username(username)
+      username
+    end
   end
 end
