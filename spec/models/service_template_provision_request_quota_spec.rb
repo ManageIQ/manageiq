@@ -29,11 +29,11 @@ describe ServiceTemplateProvisionRequest do
 
       def task_queue_entry(task)
         FactoryGirl.create(:miq_queue,
-                           :state          => MiqQueue::STATE_DEQUEUE,
-                           :args           => [{:object_type => "ServiceTemplateProvisionRequest", :object_id => task.id}],
-                           :tracking_label => 'service_template_provision_task',
-                           :class_name     => 'MiqAeEngine',
-                           :method_name    => 'deliver')
+                           :state       => MiqQueue::STATE_DEQUEUE,
+                           :args        => [{:object_type => "ServiceTemplateProvisionRequest", :object_id => task.id}],
+                           :task_id     => 'service_template_provision_task',
+                           :class_name  => 'MiqAeEngine',
+                           :method_name => 'deliver')
       end
 
       def create_test_task(user, service_template)

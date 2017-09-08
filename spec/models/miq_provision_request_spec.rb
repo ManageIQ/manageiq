@@ -169,11 +169,11 @@ describe MiqProvisionRequest do
 
           def task_queue_entry(task)
             FactoryGirl.create(:miq_queue,
-                               :state          => MiqQueue::STATE_DEQUEUE,
-                               :args           => [{:object_type => "Provision", :object_id => task.id}],
-                               :tracking_label => 'miq_provision_task',
-                               :class_name     => 'MiqAeEngine',
-                               :method_name    => 'deliver')
+                               :state       => MiqQueue::STATE_DEQUEUE,
+                               :args        => [{:object_type => "Provision", :object_id => task.id}],
+                               :task_id     => 'miq_provision_task',
+                               :class_name  => 'MiqAeEngine',
+                               :method_name => 'deliver')
           end
 
           def create_test_task(user, template)
