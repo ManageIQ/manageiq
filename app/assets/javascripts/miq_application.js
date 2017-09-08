@@ -1602,7 +1602,7 @@ function miqInitMainContent() {
   $('#main-content').css('height', 'calc(100% - ' + height + 'px)')
 }
 
-function miqHideSearchClearButton() {
+function miqHideSearchClearButton(explorer) {
   // Hide the clear button if the search input is empty
   $(".search-pf .has-clear .clear").each(function() {
     if (!$(this).prev('.form-control').val()) {
@@ -1618,6 +1618,9 @@ function miqHideSearchClearButton() {
   $(".search-pf .has-clear .clear").click(function () {
     $(this).prev('.form-control').val('').focus();
     $(this).hide();
+    // Clear Search text values as well
+    var url = "/" + ManageIQ.controller + "/adv_search_text_clear" + "?in_explorer=" + explorer;
+    miqJqueryRequest(url);
   });
 }
 

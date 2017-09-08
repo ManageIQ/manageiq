@@ -49,7 +49,7 @@
       ManageIQ.explorer.clearSearchToggle(#{clear_search_status});
       $(function() {
         $(document).ready(function() {
-          miqHideSearchClearButton();
+          miqHideSearchClearButton("#{@explorer}");
         });
         $("button[data-target='#advsearchModal']").click(function(){
           miqJqueryRequest("adv_search_toggle", {beforeSend: true});

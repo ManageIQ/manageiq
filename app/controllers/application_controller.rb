@@ -426,6 +426,13 @@ class ApplicationController < ActionController::Base
     send_data fs.contents, :filename => fs.name
   end
 
+  def adv_search_text_clear
+    if params[:in_explorer] == "true"
+      @search_text = @sb[:search_text] = nil
+      reload
+    end
+  end
+
   protected
 
   def render_flash(add_flash_text = nil, severity = nil)
