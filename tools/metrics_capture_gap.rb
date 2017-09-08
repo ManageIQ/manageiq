@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 if ARGV.length != 2
   puts "Usage: rails runner #{$0} start_date end_date"
   puts

@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 if ARGV.length != 1
   puts "Usage: rails runner #{$0} time_profile_id"
   exit 1
