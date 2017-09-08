@@ -159,6 +159,15 @@ describe GenericObject do
       go_assoc.save!
       expect(go_assoc.vms.count).to eq(1)
     end
+
+    it 'method returns all associations' do
+      host = FactoryGirl.create(:host)
+      go_assoc.hosts = [host]
+
+      result = go_assoc.property_associations
+      expect(result["vms"]).to match_array([vm1, vm2])
+      expect(result["hosts"]).to match_array([host])
+    end
   end
 
   describe 'property methods' do
@@ -219,6 +228,88 @@ describe GenericObject do
     it 'returns value from automate' do
       allow(MiqAeEngine).to receive(:deliver).and_return(ws)
       expect(go.my_host).to eq("some_return_value")
+    end
+  end
+
+  describe '#delete_property' do
+    it 'an attriute' do
+      max = go.max_number
+      expect(go.delete_property("max_number")).to eq(max)
+      expect(go.max_number).to be_nil
+    end
+
+    it 'an association' do
+      vm2 = FactoryGirl.create(:vm_vmware)
+      go.vms = [vm1, vm2]
+      expect(go.delete_property("vms")).to match_array([vm1, vm2])
+      expect(go.vms).to be_empty
+    end
+
+    it 'a method' do
+      expect { go.delete_property("my_host") }.to raise_error(RuntimeError)
+    end
+
+    it 'an invalid property name' do
+      expect { go.delete_property("some_attribute_not_defined") }.to raise_error(RuntimeError)
+    end
+  end
+
+  describe '#add_to_property_association' do
+    let(:new_vm) { FactoryGirl.create(:vm_vmware) }
+    subject { go.add_to_property_association("vms", vm1) }
+
+    it 'adds objects into association' do
+      subject
+      expect(go.vms.count).to eq(1)
+
+      go.add_to_property_association(:vms, [new_vm])
+      expect(go.vms.count).to eq(2)
+    end
+
+    it 'does not add duplicate object' do
+      subject
+      expect(go.vms.count).to eq(1)
+
+      subject
+      expect(go.vms.count).to eq(1)
+    end
+
+    it 'does not add object from differnt class' do
+      go.add_to_property_association("vms", FactoryGirl.create(:host))
+      expect(go.vms.count).to eq(0)
+    end
+
+    it 'does not accept object id' do
+      go.add_to_property_association(:vms, new_vm.id)
+      expect(go.vms.count).to eq(0)
+    end
+  end
+
+  describe '#delete_from_property_association' do
+    before { go.add_to_property_association("vms", [vm1]) }
+    let(:new_vm) { FactoryGirl.create(:vm_vmware) }
+
+    it 'deletes objects from association' do
+      result = go.delete_from_property_association(:vms, [vm1])
+      expect(go.vms.count).to eq(0)
+      expect(result).to match_array([vm1])
+    end
+
+    it 'does not delete object that is not in association' do
+      expect(go.vms.count).to eq(1)
+      result = go.delete_from_property_association(:vms, [new_vm])
+      expect(go.vms).to match_array([vm1])
+      expect(result).to be_nil
+    end
+
+    it 'does not delete object from differnt class' do
+      result = go.delete_from_property_association(:vms, [FactoryGirl.create(:host)])
+      expect(go.vms).to match_array([vm1])
+      expect(result).to be_nil
+    end
+
+    it 'does not accept object id' do
+      expect(go.delete_from_property_association(:vms, vm1.id)).to be_nil
     end
   end
 end

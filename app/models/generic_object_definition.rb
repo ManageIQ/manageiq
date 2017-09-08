@@ -80,7 +80,7 @@ class GenericObjectDefinition < ApplicationRecord
   end
 
   def type_cast(attr, value)
-    TYPE_MAP.fetch(property_attributes[attr]).cast(value)
+    TYPE_MAP.fetch(property_attributes[attr.to_s]).cast(value)
   end
 
   def properties=(props)
@@ -90,15 +90,15 @@ class GenericObjectDefinition < ApplicationRecord
 
   def add_property_attribute(name, type)
     properties[:attributes][name.to_s] = type.to_sym
-    save
+    save!
   end
 
   def delete_property_attribute(name)
     transaction do
+      generic_objects.find_each { |o| o.delete_property(name) }
+
       properties[:attributes].delete(name.to_s)
       save!
-
-      generic_objects.find_each { |o| o.delete_property(name) }
     end
   end
 
@@ -107,32 +107,32 @@ class GenericObjectDefinition < ApplicationRecord
     raise "invalid model for association: [#{type}]" unless type.in?(ALLOWED_ASSOCIATION_TYPES)
 
     properties[:associations][name.to_s] = type
-    save
+    save!
   end
 
   def delete_property_association(name)
     transaction do
+      generic_objects.find_each { |o| o.delete_property(name) }
+
       properties[:associations].delete(name.to_s)
       save!
-
-      generic_objects.find_each { |o| o.delete_property(name) }
     end
   end
 
   def add_property_method(name)
     properties[:methods] << name.to_s unless properties[:methods].include?(name.to_s)
-    save
+    save!
   end
 
   def delete_property_method(name)
     properties[:methods].delete(name.to_s)
-    save
+    save!
   end
 
   private
 
   def get_objects_of_association(attr, values)
-    property_associations[attr].constantize.where(:id => values).to_a
+    property_associations[attr.to_s].constantize.where(:id => values).to_a
   end
 
   def normalize_property_attributes
