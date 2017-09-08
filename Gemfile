@@ -91,8 +91,6 @@ end
 
 group :google, :manageiq_default do
   manageiq_plugin "manageiq-providers-google"
-  gem "fog-google",                     ">=0.5.2",       :require => false
-  gem "google-api-client",              "~>0.8.6",       :require => false
 end
 
 group :hawkular, :manageiq_default do
