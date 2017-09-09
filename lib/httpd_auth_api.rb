@@ -1,7 +1,7 @@
 require "faraday"
 require "json"
 
-class AuthApiService
+class HttpdAuthApi
   def initialize(options = {})
     @options = options
   end

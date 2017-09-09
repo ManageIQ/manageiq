@@ -1,6 +1,6 @@
 require 'webmock/rspec'
 
-RSpec.describe AuthApiService do
+RSpec.describe HttpdAuthApi do
   let(:jdoe_userid) { "jdoe" }
 
   let(:jdoe_user_attrs) do

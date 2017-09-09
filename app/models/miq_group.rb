@@ -144,7 +144,7 @@ class MiqGroup < ApplicationRecord
   end
 
   def self.get_httpd_groups_by_user_via_auth_api(user)
-    groups = AuthApiService.new.user_groups(user)
+    groups = HttpdAuthApi.new.user_groups(user)
     strip_group_domains(groups)
   end
 

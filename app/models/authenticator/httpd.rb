@@ -137,7 +137,7 @@ module Authenticator
     end
 
     def user_attrs_from_external_directory_via_auth_api(username)
-      AuthApiService.new.user_attrs(username, ATTRS_NEEDED)
+      HttpdAuthApi.new.user_attrs(username, ATTRS_NEEDED)
     end
   end
 end
