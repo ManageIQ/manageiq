@@ -56,7 +56,9 @@ class ContainerLabelTagMapping < ApplicationRecord
   end
   private_class_method :map_name_type_value
 
-  # Given a hash built by `map_*` methods, returns a Tag (creating if needed).
+  # Given a hash built by `map_*` methods, sets tag_hash[:tag_id] (creating if needed),
+  # and returns the Tag object.
+  # TODO: remove this compatibility method?
   def self.find_or_create_tag(tag_hash)
     if tag_hash[:tag_id]
       Tag.find(tag_hash[:tag_id])
@@ -75,6 +77,13 @@ class ContainerLabelTagMapping < ApplicationRecord
         end
       end
       entry.tag
+    end
+  end
+
+  # Sets h[:tag_id] in each hash (creating if nedeed).
+  def self.find_or_create_tags(tag_hashes)
+    tag_hashes.each do |h|
+      find_or_create_tag(h)
     end
   end
 

@@ -1,5 +1,6 @@
 module EmsRefresh::SaveInventoryContainer
   def save_ems_container_inventory(ems, hashes, _target = nil)
+    ContainerLabelTagMapping.find_or_create_tags(hashes[:tags_to_resolve].to_a)
 
     child_keys = [:container_projects, :container_quotas, :container_limits, :container_nodes,
                   :container_builds, :container_build_pods, :persistent_volume_claims, :persistent_volumes,
