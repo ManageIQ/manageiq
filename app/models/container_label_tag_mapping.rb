@@ -60,32 +60,45 @@ class ContainerLabelTagMapping < ApplicationRecord
   # and returns the Tag object.
   # TODO: remove this compatibility method?
   def self.find_or_create_tag(tag_hash)
-    if tag_hash[:tag_id]
-      Tag.find(tag_hash[:tag_id])
-    else
-      category = Tag.find(tag_hash[:category_tag_id]).classification
-      entry = category.find_entry_by_name(tag_hash[:entry_name])
-      unless entry
-        category.lock(:exclusive) do
-          begin
-            entry = category.add_entry(:name        => tag_hash[:entry_name],
-                                       :description => tag_hash[:entry_description])
-            entry.save!
-          rescue ActiveRecord::RecordInvalid
-            entry = category.find_entry_by_name(tag_hash[:entry_name])
-          end
-        end
-      end
-      entry.tag
+    unless tag_hash[:tag_id]
+      find_or_create_tags([tag_hash])
     end
+    Tag.find(tag_hash[:tag_id])
   end
 
   # Sets h[:tag_id] in each hash (creating if nedeed).
   def self.find_or_create_tags(tag_hashes)
+    tag_hashes = tag_hashes.reject { |h| h[:tag_id] }
+    tag_hashes.group_by { |h| h[:category_tag_id] }.each do |category_tag_id, h|
+      find_or_create_tags_in_category(category_tag_id, h)
+    end
+    nil
+  end
+
+  def self.find_or_create_tags_in_category(category_tag_id, tag_hashes)
+    category = Tag.find(category_tag_id).classification
     tag_hashes.each do |h|
-      find_or_create_tag(h)
+      entry = category.find_entry_by_name(h[:entry_name])
+      entry ||= create_entry(category, h[:entry_name], h[:entry_description])
+      h[:tag_id] = entry.tag_id
     end
   end
+  private_class_method :find_or_create_tags_in_category
+
+  def self.create_entry(category, name, description)
+    # Avoid race with other workers mapping in same region. TODO: unique index?
+    category.lock(:exclusive) do
+      begin
+        entry = category.add_entry(:name        => name,
+                                   :description => description)
+        entry.save!
+        entry
+      rescue ActiveRecord::RecordInvalid
+        category.find_entry_by_name(name)
+      end
+    end
+  end
+  private_class_method :create_entry
 
   def self.controls_tag?(tag)
     return false unless tag.classification.try(:read_only) # never touch user-assignable tags.
