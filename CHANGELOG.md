@@ -4,6 +4,54 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+
+## Unreleased - as of Sprint 68 ending 2017-09-04
+
+### Added
+- Internationalization
+  - i8N: Add Data Types to dictionary [(#15922)](https://github.com/ManageIQ/manageiq/pull/15922)
+- Providers
+  - Add cloud volume backup delete and restore actions. [(#15891)](https://github.com/ManageIQ/manageiq/pull/15891)
+  - Add instantiation_attributes to Container Template Parameter [(#15863)](https://github.com/ManageIQ/manageiq/pull/15863)
+  - Add vm security group operations [(#15826)](https://github.com/ManageIQ/manageiq/pull/15826)
+  - Add metadata function that should return the description of the data that is stored in the options field [(#15799)](https://github.com/ManageIQ/manageiq/pull/15799)
+  - Register product features for JDR reports [(#15768)](https://github.com/ManageIQ/manageiq/pull/15768)
+  - Add number of container using image [(#15741)](https://github.com/ManageIQ/manageiq/pull/15741)
+  - Add support for additional power operations [(#15683)](https://github.com/ManageIQ/manageiq/pull/15683)
+  - Update model to support network adapters [(#15371)](https://github.com/ManageIQ/manageiq/pull/15371)
+  - Archive Container Nodes [(#15351)](https://github.com/ManageIQ/manageiq/pull/15351)
+  - Add Pod to PersistentVolume relationship [(#15023)](https://github.com/ManageIQ/manageiq/pull/15023)
+- Core
+  - Adding Child Managers to EMS [(#15889)](https://github.com/ManageIQ/manageiq/pull/15889)
+- Smart State
+  - Create Snapshot for Azure if a snapshot is required for SSA and if so call the snapshot code.[(#15865)](https://github.com/ManageIQ/manageiq/pull/15865)
+- Automate
+  - Add new classes to have custom buttons [(#15845)](https://github.com/ManageIQ/manageiq/pull/15845)
+- Storage
+  - Add missing features for Block Storage and Object Storage [(#15812)](https://github.com/ManageIQ/manageiq/pull/15812)
+- Alerts
+  - Add hash_expression to MiqAlert [(#15315)](https://github.com/ManageIQ/manageiq/pull/15315)
+- User Interface
+  - Show monitoring screen by default [(#14976)](https://github.com/ManageIQ/manageiq/pull/14976)
+
+### Changed
+- User Interface
+  - Split up miq_capacity into three separate controllers [(#15869)](https://github.com/ManageIQ/manageiq/pull/15869)
+
+### Fixed
+- Providers
+  - save_vms_inventory needs to respect disconnect flag [(#15924)](https://github.com/ManageIQ/manageiq/pull/15924)
+  - When trying to find char layout for middleware messaging return correct file path [(#15872)](https://github.com/ManageIQ/manageiq/pull/15872)
+  - Add the missing openstack Cloud Tenant translation to en.yml [(#15744)](https://github.com/ManageIQ/manageiq/pull/15744)
+  - Fix non existent container showing in report [(#15405)](https://github.com/ManageIQ/manageiq/pull/15405)
+- User Interface
+  - This fixes Cockpit console from attempting to connect to AWS and GCE on private instead of public ip addresses and enables Cockpit console for RHOS. [(#15901)](https://github.com/ManageIQ/manageiq/pull/15901)
+- Core
+  - This allows access to the worker object and also allows the web service workers to start the rails server which was broken [(#15880)](https://github.com/ManageIQ/manageiq/pull/15880)
+  - Allows seeding a database with groups from other regions. [(#15876)](https://github.com/ManageIQ/manageiq/pull/15876)
+- Authentication
+  - Converting userids to UPN format to avoid duplicate user records [(#15535)](https://github.com/ManageIQ/manageiq/pull/15535)
+
 ## Unreleased - as of Sprint 67 ending 2017-08-21
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+67+Ending+Aug+21%2C+2017%22+label%3Aenhancement)
