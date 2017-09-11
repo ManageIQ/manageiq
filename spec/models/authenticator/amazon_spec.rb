@@ -1,8 +1,8 @@
 require 'aws-sdk'
 
 describe Authenticator::Amazon do
-  AWS_ROOT_USER_KEY = 'aws_root_key'
-  AWS_IAM_USER_KEY = 'aws_iam_key'
+  AWS_ROOT_USER_KEY = 'aws_root_key'.freeze
+  AWS_IAM_USER_KEY = 'AWS_IAM_KEY'.freeze
 
   subject { Authenticator::Amazon.new(config) }
 
