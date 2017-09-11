@@ -41,12 +41,12 @@
   :group: fixed
   :source: compute_2
 - :metric: derived_vm_allocated_disk_storage
-  :description: Allocated Disk Storag
+  :description: Allocated Disk Storage
   :group: storage
   :source: allocated
   :measure: Bytes Units
 - :metric: derived_vm_used_disk_storage
-  :description: Used Disk Storag
+  :description: Used Disk Storage
   :group: storage
   :source: used
   :measure: Bytes Units
