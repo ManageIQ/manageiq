@@ -1,10 +1,10 @@
 describe ServiceOrchestration do
   let(:manager_by_setter)  { FactoryGirl.create(:ems_amazon) }
-  let(:template_by_setter) { FactoryGirl.create(:orchestration_template_cfn) }
+  let(:template_by_setter) { FactoryGirl.create(:orchestration_template) }
   let(:manager_by_dialog)  { FactoryGirl.create(:ems_amazon) }
-  let(:template_by_dialog) { FactoryGirl.create(:orchestration_template_cfn) }
+  let(:template_by_dialog) { FactoryGirl.create(:orchestration_template) }
   let(:manager_in_st)      { FactoryGirl.create(:ems_amazon) }
-  let(:template_in_st)     { FactoryGirl.create(:orchestration_template_cfn) }
+  let(:template_in_st)     { FactoryGirl.create(:orchestration_template) }
   let(:deployed_stack)     { FactoryGirl.create(:orchestration_stack_amazon) }
 
   let(:service_template) do
