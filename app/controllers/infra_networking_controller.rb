@@ -60,8 +60,8 @@ class InfraNetworkingController < ApplicationController
                       :url  => "/infra_networking/x_show/#{@record.id}?display=hosts")
       @showtype = "hosts"
     when "download_pdf", "main"
-      get_tagdata(@configuration_job)
-      drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @record..name},
+      get_tagdata(@record)
+      drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @record.name},
                       :url  => "/infra_networking/show/#{@record.id}")
       @showtype = "main"
       set_summary_pdf_data if %w(download_pdf).include?(@display)
