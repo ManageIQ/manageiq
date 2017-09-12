@@ -199,6 +199,7 @@ class VmScan < Job
                 "description"  => options[:snapshot_description]}
     snapshot['create_free_percent'] = ::Settings.snapshots.create_free_percent
     snapshot['remove_free_percent'] = ::Settings.snapshots.remove_free_percent
+    snapshot['name'] = context[:snapshot_mor]
     snapshot
   end
 
