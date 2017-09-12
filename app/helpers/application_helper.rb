@@ -1499,6 +1499,22 @@ module ApplicationHelper
       end
       # for second icon to show status in widget list
       glyphicon2 = listicon_glyphicon_tag_for_widget(row)
+    when "Job"
+      # This is far from ideal, but the new GTLs won't need it
+      glyphicon = if row['state'].downcase == "finished" && row['status']
+                    cancel_msg = row['message'].include?('cancel')
+                    if row['status'].downcase == "ok" && !cancel_msg
+                      "pficon pficon-ok"
+                    elsif row['status'].downcase == "error" || cancel_msg
+                      "pficon pficon-error-circle-o"
+                    elsif row['status'].downcase == "warn" || cancel_msg
+                      "pficon pficon-warning-triangle-o"
+                    end
+                  elsif %w(queued waiting_to_start).include?(row['state'].downcase)
+                    "fa fa-step-forward"
+                  elsif !%w(finished queued waiting_to_start).include?(row['state'].downcase)
+                    "pficon pficon-running"
+                  end
     end
 
     content_tag(:ul, :class => 'icons list-unstyled') do
@@ -1511,7 +1527,7 @@ module ApplicationHelper
   end
 
   def listicon_tag(db, row)
-    if %w(MiqReportResult MiqSchedule MiqUserRole MiqWidget).include?(db)
+    if %w(MiqReportResult MiqSchedule MiqUserRole MiqWidget Job).include?(db)
       listicon_glyphicon_tag(db, row)
     else
       listicon_image_tag(db, row)
