@@ -130,6 +130,24 @@ describe ChargebackVm do
 
       subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
 
+      context 'when first metric rollup has tag_names=nil' do
+        before do
+          options[:tag] = nil
+          options[:entity_id] = @vm1.id
+          @vm1.metric_rollups.first.update_attributes(:tag_names => nil)
+        end
+
+        it "cpu" do
+          expect(subject.cpu_allocated_metric).to eq(cpu_count)
+          used_metric = used_average_for(:cpu_usagemhz_rate_average, hours_in_day, @vm1)
+          expect(subject.cpu_used_metric).to eq(used_metric)
+
+          expect(subject.cpu_allocated_cost).to eq(cpu_count * count_hourly_rate * hours_in_day)
+          expect(subject.cpu_used_cost).to eq(used_metric * hourly_rate * hours_in_day)
+          expect(subject.cpu_cost).to eq(subject.cpu_allocated_cost + subject.cpu_used_cost)
+        end
+      end
+
       it "cpu" do
         expect(subject.cpu_allocated_metric).to eq(cpu_count)
         used_metric = used_average_for(:cpu_usagemhz_rate_average, hours_in_day, @vm1)
@@ -481,6 +499,8 @@ describe ChargebackVm do
         [rate_assignment_options_1, rate_assignment_options_2].each do |rate_assignment|
           metric_rollup.tag_names = rate_assignment[:tag].first.tag.send(:name_path)
           uniq_rates = chargeback_vm.get(consumption)
+          consumption.instance_variable_set(:@tag_names, nil)
+          consumption.instance_variable_set(:@hash_features_affecting_rate, nil)
           expect([rate_assignment[:cb_rate]]).to match_array(uniq_rates)
         end
       end
