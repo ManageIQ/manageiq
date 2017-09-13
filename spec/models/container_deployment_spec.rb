@@ -109,9 +109,10 @@ variant: openshift-enterprise
 
   context "container deployment nodes" do
     it "checks extract_public_ip_or_hostname return correct address" do
-      expect(@container_deployment.extract_public_ip_or_hostname(@container_deployment.container_deployment_nodes[0])).to eql("37.142.68.50")
-      expect(@container_deployment.extract_public_ip_or_hostname(@container_deployment.container_deployment_nodes[1])).to eql("37.142.68.51")
-      expect(@container_deployment.extract_public_ip_or_hostname(@container_deployment.container_deployment_nodes[2])).to eql("10.0.0.2")
+      ip_addrs = @container_deployment.container_deployment_nodes.map do |deployment_node|
+        @container_deployment.extract_public_ip_or_hostname(deployment_node)
+      end
+      expect(ip_addrs).to contain_exactly("37.142.68.50", "37.142.68.51", "10.0.0.2")
     end
 
     it "create deployment nodes works properly" do
