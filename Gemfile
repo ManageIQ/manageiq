@@ -130,7 +130,7 @@ end
 
 group :vmware, :manageiq_default do
   manageiq_plugin "manageiq-providers-vmware"
-  gem "vmware_web_service",             "~>0.1.4"
+  gem "vmware_web_service",             "~>0.2.0"
 end
 
 ### shared dependencies
@@ -165,7 +165,7 @@ group :seed, :manageiq_default do
 end
 
 group :smartstate, :manageiq_default do
-  gem "manageiq-smartstate",            "~>0.1.3",       :require => false
+  gem "manageiq-smartstate",            "~>0.1.4",       :require => false
 end
 
 group :ui_dependencies do # Added to Bundler.require in config/application.rb
