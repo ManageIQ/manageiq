@@ -171,7 +171,6 @@ end
 group :ui_dependencies do # Added to Bundler.require in config/application.rb
   manageiq_plugin "manageiq-ui-classic"
   # Modified gems (forked on Github)
-  gem "font-fabulous",                                                :git => "https://github.com/ManageIQ/font-fabulous.git", :branch => "master" # FIXME: this is just a temporary solution and it'll go to the ui-classic later
   gem "jquery-rjs",                   "=0.1.1",                       :git => "https://github.com/ManageIQ/jquery-rjs.git", :tag => "v0.1.1-1"
 end
 
