@@ -19,6 +19,7 @@ class ContainerProject < ApplicationRecord
   has_many :container_builds
   has_many :container_templates
   has_many :archived_container_groups, :foreign_key => "old_container_project_id", :class_name => "ContainerGroup"
+  has_many :persistent_volume_claims
 
   # Needed for metrics
   has_many :metrics,                :as => :resource

@@ -42,6 +42,9 @@ module EmsRefresh::SaveInventoryContainer
     return if hashes.nil?
 
     ems.persistent_volume_claims.reset
+    hashes.each do |h|
+      h[:container_project_id] = h.delete_path(:project)[:id]
+    end
 
     save_inventory_multi(ems.persistent_volume_claims, hashes, :use_association,
                          [:ems_ref], [], [:namespace])
