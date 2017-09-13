@@ -52,7 +52,7 @@ module VimConnectMixin
         if options[:fault_tolerant]
           MiqFaultTolerantVim.new(options)
         else
-          MiqVim.new(options[:ip], options[:user],options[:pass])
+          MiqVim.new(options[:ip], options[:user], options[:pass])
         end
       end
     end
