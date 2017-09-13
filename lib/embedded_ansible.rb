@@ -13,7 +13,7 @@ class EmbeddedAnsible
   HTTPS_PORT             = 54_322
   WAIT_FOR_ANSIBLE_SLEEP = 1.second
   TOWER_VERSION_FILE     = "/var/lib/awx/.tower_version".freeze
-  ANSIBLE_DC_NAME        = "manageiq-ansible".freeze
+  ANSIBLE_DC_NAME        = "ansible".freeze
 
   def self.available?
     return true if MiqEnvironment::Command.is_container?

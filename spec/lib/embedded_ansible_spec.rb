@@ -422,7 +422,7 @@ describe EmbeddedAnsible do
           orch = double("ContainerOrchestrator")
           expect(ContainerOrchestrator).to receive(:new).and_return(orch)
 
-          expect(orch).to receive(:scale).with("manageiq-ansible", 0)
+          expect(orch).to receive(:scale).with("ansible", 0)
 
           described_class.stop
         end
@@ -433,7 +433,7 @@ describe EmbeddedAnsible do
           orch = double("ContainerOrchestrator")
           expect(ContainerOrchestrator).to receive(:new).and_return(orch)
 
-          expect(orch).to receive(:scale).with("manageiq-ansible", 0)
+          expect(orch).to receive(:scale).with("ansible", 0)
 
           described_class.disable
         end
@@ -450,7 +450,7 @@ describe EmbeddedAnsible do
           orch = double("ContainerOrchestrator")
           expect(ContainerOrchestrator).to receive(:new).and_return(orch)
 
-          expect(orch).to receive(:scale).with("manageiq-ansible", 1)
+          expect(orch).to receive(:scale).with("ansible", 1)
           expect(described_class).to receive(:alive?).and_return(true)
 
           described_class.start
