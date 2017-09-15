@@ -32,6 +32,7 @@ class CustomButton < ApplicationRecord
     ContainerVolume,
     EmsCluster,
     ExtManagementSystem,
+    GenericObject,
     Host,
     LoadBalancer,
     MiqTemplate,

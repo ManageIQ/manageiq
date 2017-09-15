@@ -15,6 +15,8 @@ class GenericObjectDefinition < ApplicationRecord
 
   serialize :properties, Hash
 
+  include CustomActionsMixin
+
   has_one   :picture, :dependent => :destroy, :as => :resource
   has_many  :generic_objects
 
@@ -127,6 +129,10 @@ class GenericObjectDefinition < ApplicationRecord
   def delete_property_method(name)
     properties[:methods].delete(name.to_s)
     save!
+  end
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("GenericObject")
   end
 
   private
