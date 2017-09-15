@@ -293,6 +293,49 @@ describe GenericObjectDefinition do
     end
   end
 
+  describe "#custom_actions" do
+    it "returns the custom actions in a hash grouped by buttons and button groups" do
+      FactoryGirl.create(:custom_button, :name => "generic_no_group", :applies_to_class => "GenericObject")
+      generic_group = FactoryGirl.create(:custom_button, :name => "generic_group", :applies_to_class => "GenericObject")
+      generic_group_set = FactoryGirl.create(:custom_button_set, :name => "generic_group_set")
+      generic_group_set.add_member(generic_group)
+
+      FactoryGirl.create(
+        :custom_button,
+        :name             => "assigned_no_group",
+        :applies_to_class => "GenericObjectDefinition",
+        :applies_to_id    => definition.id
+      )
+      assigned_group = FactoryGirl.create(
+        :custom_button,
+        :name             => "assigned_group",
+        :applies_to_class => "GenericObjectDefinition",
+        :applies_to_id    => definition.id
+      )
+      assigned_group_set = FactoryGirl.create(:custom_button_set, :name => "assigned_group_set")
+      assigned_group_set.add_member(assigned_group)
+      definition.update(:custom_button_sets => [assigned_group_set])
+
+      expected = {
+        :buttons       => a_collection_containing_exactly(
+          a_hash_including("name" => "generic_no_group"),
+          a_hash_including("name" => "assigned_no_group")
+        ),
+        :button_groups => a_collection_containing_exactly(
+          a_hash_including(
+            "name"   => "assigned_group_set",
+            :buttons => [a_hash_including("name" => "assigned_group")]
+          ),
+          a_hash_including(
+            "name"   => "generic_group_set",
+            :buttons => [a_hash_including("name" => "generic_group")]
+          )
+        )
+      }
+      expect(definition.custom_actions).to match(expected)
+    end
+  end
+
   shared_examples 'AR attribute allowing letters' do |hash|
     it 'allows letters' do
       expect(described_class.new(:name => 'test', :properties => hash)).to be_valid
