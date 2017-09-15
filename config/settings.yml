@@ -859,7 +859,6 @@
   :level_lenovo: info
   :level_mw: info
   :level_cn_monitoring: info
-  :level_kube: info
   :level_api: info
   :level_fog: info
   :level_rhevm: info
