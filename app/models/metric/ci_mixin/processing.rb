@@ -95,6 +95,11 @@ module Metric::CiMixin::Processing
     affected_timestamps
   end
 
+  def perf_save_metrics(metrics)
+    _log.info("Saving metrics...")
+    _log.info("Saving metrics...Complete")
+  end
+
   private
 
   def normalize_value(value, counter)
