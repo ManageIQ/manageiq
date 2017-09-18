@@ -85,7 +85,7 @@ class Dialog
         :default_value  => parameter.default_value || dropdown_list.first,
         :label          => parameter.label,
         :description    => parameter.description,
-        :reconfigurable => true,
+        :reconfigurable => parameter.reconfigurable,
         :position       => position,
         :dialog_group   => group
       )
@@ -114,7 +114,7 @@ class Dialog
         :validator_rule => pattern.try(:pattern),
         :label          => parameter.label,
         :description    => parameter.description,
-        :reconfigurable => true,
+        :reconfigurable => parameter.reconfigurable,
         :position       => position,
         :dialog_group   => group
       )
@@ -130,7 +130,7 @@ class Dialog
         :options        => {:protected => parameter.hidden?},
         :label          => parameter.label,
         :description    => parameter.description,
-        :reconfigurable => true,
+        :reconfigurable => parameter.reconfigurable,
         :position       => position,
         :dialog_group   => group
       )

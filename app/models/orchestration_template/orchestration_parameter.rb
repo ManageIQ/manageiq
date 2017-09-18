@@ -27,9 +27,11 @@ class OrchestrationTemplate
     attr_accessor :default_value
     attr_accessor :hidden
     attr_accessor :required
+    attr_accessor :reconfigurable
     attr_writer   :constraints
 
     def initialize(hash = {})
+      @reconfigurable = true
       hash.each { |key, value| public_send("#{key}=", value) }
     end
 

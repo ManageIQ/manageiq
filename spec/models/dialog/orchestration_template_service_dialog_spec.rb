@@ -28,7 +28,7 @@ describe Dialog::OrchestrationTemplateServiceDialog do
         # Get the dropdown field
         field = dropdown_field(dialog)
         # Ensure the allowed values are properly stored.
-        assert_field(field, DialogFieldDropDownList, :name => "param_dropdown", :default_value => "val1", :values => [%w(val1 val1), %w(val2 val2)])
+        assert_field(field, DialogFieldDropDownList, :name => "param_dropdown", :default_value => "val1", :values => [%w(val1 val1), %w(val2 val2)], :reconfigurable => true)
       end
     end
 
@@ -90,8 +90,8 @@ describe Dialog::OrchestrationTemplateServiceDialog do
     expect(fields.size).to eq(4)
 
     expect(fields[0].resource_action.fqname).to eq("/Cloud/Orchestration/Operations/Methods/Available_Tenants")
-    assert_field(fields[0], DialogFieldDropDownList, :name => "tenant_name",     :dynamic => true)
-    assert_field(fields[1], DialogFieldTextBox,      :name => "stack_name",      :validator_rule => '^[A-Za-z][A-Za-z0-9\-]*$')
+    assert_field(fields[0], DialogFieldDropDownList, :name => "tenant_name", :dynamic => true, :reconfigurable => false)
+    assert_field(fields[1], DialogFieldTextBox,      :name => "stack_name",  :validator_rule => '^[A-Za-z][A-Za-z0-9\-]*$', :reconfigurable => false)
   end
 
   def assert_field(field, clss, attributes)
@@ -120,8 +120,9 @@ describe Dialog::OrchestrationTemplateServiceDialog do
           :data_type     => "string",
           :default_value => "val1",
           :required      => true,
-          :constraints   => [constraint])
-      ])
-    ]
+          :constraints   => [constraint]
+        )
+      ]
+    )]
   end
 end

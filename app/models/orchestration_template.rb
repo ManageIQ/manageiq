@@ -91,11 +91,12 @@ class OrchestrationTemplate < ApplicationRecord
   # Return array of OrchestrationParameters. (Deployment options are different from parameters, but they use same class)
   def deployment_options(_manager_class = nil)
     tenant_opt = OrchestrationTemplate::OrchestrationParameter.new(
-      :name        => "tenant_name",
-      :label       => "Tenant",
-      :data_type   => "string",
-      :description => "Tenant where the stack will be deployed",
-      :required    => true,
+      :name           => "tenant_name",
+      :label          => "Tenant",
+      :data_type      => "string",
+      :description    => "Tenant where the stack will be deployed",
+      :required       => true,
+      :reconfigurable => false,
       :constraints => [
         OrchestrationTemplate::OrchestrationParameterAllowedDynamic.new(
           :fqname => "/Cloud/Orchestration/Operations/Methods/Available_Tenants"
@@ -104,12 +105,13 @@ class OrchestrationTemplate < ApplicationRecord
     )
 
     stack_name_opt = OrchestrationTemplate::OrchestrationParameter.new(
-      :name        => "stack_name",
-      :label       => "Stack Name",
-      :data_type   => "string",
-      :description => "Name of the stack",
-      :required    => true,
-      :constraints => [
+      :name           => "stack_name",
+      :label          => "Stack Name",
+      :data_type      => "string",
+      :description    => "Name of the stack",
+      :required       => true,
+      :reconfigurable => false,
+      :constraints    => [
         OrchestrationTemplate::OrchestrationParameterPattern.new(
           :pattern => '^[A-Za-z][A-Za-z0-9\-]*$'
         )
