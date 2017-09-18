@@ -23,6 +23,22 @@ class ChargebackRateDetail < ApplicationRecord
     'yearly'  => _('Yearly')
   }.freeze
 
+  def populate_showback_rate(plan, rate_detail)
+    showback_rate = ManageIQ::Consumption::ShowbackRate.find_or_create_by(:category  => "Container",
+                                                                          :dimension => rate_detail.chargeable_field.metric,
+                                                                          :measure   => rate_detail.chargeable_field.showback_measure,
+                                                                          :showback_price_plan => plan,
+                                                                          :calculation => "duration")
+
+    fixed_rate = rate_detail.chargeback_tiers.first.fixed_rate.to_f * 100
+    variable_rate = rate_detail.chargeback_tiers.first.variable_rate.to_f * 100
+
+    showback_rate.fixed_rate = Money.new(fixed_rate, 'USD')
+    showback_rate.variable_rate = Money.new(variable_rate, 'USD')
+    showback_rate.save
+    binding.pry
+  end
+
   def charge(relevant_fields, consumption, options)
     result = {}
     if (relevant_fields & [metric_key, cost_keys[0]]).present?

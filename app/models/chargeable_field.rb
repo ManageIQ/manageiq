@@ -19,6 +19,23 @@ class ChargeableField < ApplicationRecord
   validates :metric, :uniqueness => true, :presence => true
   validates :group, :source, :presence => true
 
+  def showback_measure
+    case group
+      when 'cpu'
+        'CPU'
+      when 'cpu_cores'
+        'CPU'
+      when 'memory'
+        'MEM'
+      when 'net_io'
+        'NET'
+      when 'disk_io'
+        'DISK'
+      when 'FIXED'
+        'fixed'
+    end
+  end
+
   def measure(consumption, options)
     return consumption.consumed_hours_in_interval if metering?
     return 1.0 if fixed?

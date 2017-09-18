@@ -21,7 +21,6 @@ class Chargeback < ActsAsArModel
     rates = RatesCache.new
     ConsumptionHistory.for_report(self, options) do |consumption|
       rates_to_apply = rates.get(consumption)
-
       key = report_row_key(consumption)
       data[key] ||= new(options, consumption)
 
@@ -29,7 +28,13 @@ class Chargeback < ActsAsArModel
       data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
 
       # we are getting hash with metrics and costs for metrics defined for chargeback
-      data[key].calculate_costs(consumption, rates_to_apply)
+
+      if ENV['CHARGIO']
+        data[key].chargio_calculate_costs(consumption, rates_to_apply)
+      else
+        data[key].calculate_costs(consumption, rates_to_apply)
+      end
+
     end
     _log.info("Calculating chargeback costs...Complete")
 
@@ -75,8 +80,60 @@ class Chargeback < ActsAsArModel
     self.entity ||= consumption.resource
   end
 
-  def calculate_costs(consumption, rates)
+  def showback_category
+    case self
+      when ChargebackVm
+        'Vm'
+      when ChargebackContainerProject
+        'Container'
+      when ChargebackContainerImage
+        'ContainerImage'
+    end
+  end
+
+
+
+  def chargio_calculate_costs(consumption, rates)
     self.fixed_compute_metric = consumption.chargeback_fields_present if consumption.chargeback_fields_present
+
+    plan = nil
+    rates.each do |rate| # ChargebackRate
+
+      binding.pry
+      plan = ManageIQ::Consumption::ShowbackPricePlan.find_or_create_by(:description   => rate.description,
+                                                                        :name          => rate.description,
+                                                                        :resource      => MiqEnterprise.first
+      )
+
+      rate.rate_details_relevant_to(relevant_fields).each do |r| # ChargebackRateDetail
+        binding.pry
+        r.populate_showback_rate(plan, r)
+
+
+        result = plan.calculate_total_cost_input(resource_type: showback_category,
+                                                 data: {"CPU"=>{"v_derived_cpu_total_cores_used"=>consumption.avg('v_derived_cpu_total_cores_used') } },
+                                                 start_time: consumption.instance_variable_get("@start_time"),
+                                                 end_time: consumption.instance_variable_get("@end_time"),
+                                                 cycle_duration: 2678400 # 1.month
+        )
+        binding.pry
+
+        r.charge(relevant_fields, consumption, @options).each do |field, value|
+          next unless self.class.attribute_names.include?(field)
+          self[field] = (self[field] || 0) + value
+        end
+
+
+      end
+    end
+
+
+
+    binding.pry
+  end
+
+  def calculate_costs(consumption, rates)
+    self.fixed_compute_metric  = consumption.chargeback_fields_present if consumption.chargeback_fields_present
 
     rates.each do |rate|
       rate.rate_details_relevant_to(relevant_fields).each do |r|
