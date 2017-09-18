@@ -24,7 +24,7 @@ class Dialog
         :label    => "Options",
         :position => position
       ).tap do |dialog_group|
-        deploy_options.each_with_index { |opt, index| add_parameter_field(opt, dialog_group, index) }
+        deploy_options.each_with_index { |opt, index| add_field(opt, dialog_group, index) }
       end
     end
 
@@ -36,33 +36,33 @@ class Dialog
         :label    => parameter_group.label || "Parameter Group#{position}",
         :position => position
       ).tap do |dialog_group|
-        parameter_group.parameters.each_with_index { |param, index| add_parameter_field(param, dialog_group, index) }
+        parameter_group.parameters.each_with_index { |param, index| add_field(param, dialog_group, index, 'param_') }
       end
     end
 
-    def add_parameter_field(parameter, group, position)
+    def add_field(parameter, group, position, prefix = nil)
       if parameter.constraints
         dynamic_dropdown = parameter.constraints.detect { |c| c.kind_of?(OrchestrationTemplate::OrchestrationParameterAllowedDynamic) }
-        return create_parameter_dynamic_dropdown_list(parameter, group, position, dynamic_dropdown) if dynamic_dropdown
+        return create_dynamic_dropdown_list(parameter, group, position, dynamic_dropdown, prefix) if dynamic_dropdown
 
         dropdown = parameter.constraints.detect { |c| c.kind_of?(OrchestrationTemplate::OrchestrationParameterAllowed) }
-        return create_parameter_dropdown_list(parameter, group, position, dropdown) if dropdown
+        return create_dropdown_list(parameter, group, position, dropdown, prefix) if dropdown
 
         checkbox = parameter.constraints.detect { |c| c.kind_of?(OrchestrationTemplate::OrchestrationParameterBoolean) }
-        return create_parameter_checkbox(parameter, group, position) if checkbox
+        return create_checkbox(parameter, group, position, prefix) if checkbox
       end
 
-      create_parameter_textbox(parameter, group, position)
+      create_textbox(parameter, group, position, prefix)
     end
 
-    def create_parameter_dynamic_dropdown_list(parameter, group, position, dynamic_dropdown)
+    def create_dynamic_dropdown_list(parameter, group, position, dynamic_dropdown, prefix)
       group.dialog_fields.build(
         :type         => "DialogFieldDropDownList",
-        :name         => "param_#{parameter.name}",
-        :data_type    => "string",
+        :name         => "#{prefix}#{parameter.name}",
+        :data_type    => parameter.data_type || "string",
         :dynamic      => true,
         :display      => "edit",
-        :required     => false,
+        :required     => parameter.required,
         :label        => parameter.label,
         :description  => parameter.description,
         :position     => position,
@@ -72,15 +72,15 @@ class Dialog
       end
     end
 
-    def create_parameter_dropdown_list(parameter, group, position, dropdown)
+    def create_dropdown_list(parameter, group, position, dropdown, prefix)
       values = dropdown.allowed_values
       dropdown_list = values.kind_of?(Hash) ? values.to_a : values.collect { |v| [v, v] }
       group.dialog_fields.build(
         :type           => "DialogFieldDropDownList",
-        :name           => "param_#{parameter.name}",
-        :data_type      => "string",
+        :name           => "#{prefix}#{parameter.name}",
+        :data_type      => parameter.data_type || "string",
         :display        => "edit",
-        :required       => true,
+        :required       => parameter.required,
         :values         => dropdown_list,
         :default_value  => parameter.default_value || dropdown_list.first,
         :label          => parameter.label,
@@ -91,17 +91,23 @@ class Dialog
       )
     end
 
-    def create_parameter_textbox(parameter, group, position)
-      field_type = parameter.data_type == 'json' ? "DialogFieldTextAreaBox" : "DialogFieldTextBox"
+    def create_textbox(parameter, group, position, prefix)
+      if parameter.data_type == 'string' || parameter.data_type == 'integer'
+        data_type = parameter.data_type
+        field_type = 'DialogFieldTextBox'
+      else
+        data_type = 'string'
+        field_type = 'DialogFieldTextAreaBox'
+      end
       if parameter.constraints
-        pattern = parameter.constraints.detect { |c| c.kind_of? OrchestrationTemplate::OrchestrationParameterPattern }
+        pattern = parameter.constraints.detect { |c| c.kind_of?(OrchestrationTemplate::OrchestrationParameterPattern) }
       end
       group.dialog_fields.build(
         :type           => field_type,
-        :name           => "param_#{parameter.name}",
-        :data_type      => "string",
+        :name           => "#{prefix}#{parameter.name}",
+        :data_type      => data_type,
         :display        => "edit",
-        :required       => true,
+        :required       => parameter.required,
         :default_value  => parameter.default_value,
         :options        => {:protected => parameter.hidden?},
         :validator_type => pattern ? 'regex' : nil,
@@ -114,10 +120,10 @@ class Dialog
       )
     end
 
-    def create_parameter_checkbox(parameter, group, position)
+    def create_checkbox(parameter, group, position, prefix)
       group.dialog_fields.build(
         :type           => "DialogFieldCheckBox",
-        :name           => "param_#{parameter.name}",
+        :name           => "#{prefix}#{parameter.name}",
         :data_type      => "boolean",
         :display        => "edit",
         :default_value  => parameter.default_value,

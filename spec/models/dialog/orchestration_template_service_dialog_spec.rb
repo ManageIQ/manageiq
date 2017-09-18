@@ -119,6 +119,7 @@ describe Dialog::OrchestrationTemplateServiceDialog do
           :label         => "Drop down",
           :data_type     => "string",
           :default_value => "val1",
+          :required      => true,
           :constraints   => [constraint])
       ])
     ]
