@@ -91,6 +91,10 @@ class Chargeback < ActsAsArModel
     end
   end
 
+  # returns category(Vm, Container), measure (CPU, MEM, .. ), dimension(max_number, max_mem)
+  def self.showback_usage_type(chargeable_field)
+    ['Container', 'CPU', 'max_number_of_cpu']
+  end
 
 
   def chargio_calculate_costs(consumption, rates)
@@ -109,9 +113,10 @@ class Chargeback < ActsAsArModel
         binding.pry
         r.populate_showback_rate(plan, r)
 
+        _ ,measure, dimension = Chargeback.showback_usage_type(r.chargeable_field)
 
         result = plan.calculate_total_cost_input(resource_type: showback_category,
-                                                 data: {"CPU"=>{"v_derived_cpu_total_cores_used"=>consumption.avg('v_derived_cpu_total_cores_used') } },
+                                                 data: {measure => {dimension => consumption.avg(r.chargeable_field.metric) } },
                                                  start_time: consumption.instance_variable_get("@start_time"),
                                                  end_time: consumption.instance_variable_get("@end_time"),
                                                  cycle_duration: 2678400 # 1.month

@@ -24,9 +24,11 @@ class ChargebackRateDetail < ApplicationRecord
   }.freeze
 
   def populate_showback_rate(plan, rate_detail)
-    showback_rate = ManageIQ::Consumption::ShowbackRate.find_or_create_by(:category  => "Container",
-                                                                          :dimension => rate_detail.chargeable_field.metric,
-                                                                          :measure   => rate_detail.chargeable_field.showback_measure,
+    category, measure, dimension = Chargeback.showback_usage_type(rate_detail.chargeable_field)
+
+    showback_rate = ManageIQ::Consumption::ShowbackRate.find_or_create_by(:category  => category,
+                                                                          :measure   => measure,
+                                                                          :dimension => dimension,
                                                                           :showback_price_plan => plan,
                                                                           :calculation => "duration")
 
