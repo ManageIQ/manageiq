@@ -441,7 +441,7 @@ class MiqWidget < ApplicationRecord
     case group
     when String
       group = MiqGroup.in_my_region.find_by(:description => group)
-    when Fixnum
+    when Integer
       group = MiqGroup.in_my_region.find_by(:id => group)
     end
 

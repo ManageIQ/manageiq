@@ -64,7 +64,7 @@ module MiqProvision::Automate
     end
 
     vc_id = related_vm.ext_management_system.id
-    unless vc_id.kind_of?(Fixnum)
+    unless vc_id.kind_of?(Integer)
       _log.error("Invalid EMS ID <#{vc_id.inspect}> for #{related_vm_description} of Provision Object")
       return nil
     end

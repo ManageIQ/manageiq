@@ -159,8 +159,8 @@ module Metric::Helper
   # interval_name of hourly (and others)
   #   Just your typical x.seconds.ago
   #
-  # @param start_offset [Fixnum]
-  # @param end_offset [Fixnum|nil]
+  # @param start_offset [Integer]
+  # @param end_offset [Integer|nil]
   # @return [Range<Datetime,Datetime>] timestamp range for offsets
   def self.time_range_from_offset(interval_name, start_offset, end_offset, tz = nil)
     if interval_name == "daily"

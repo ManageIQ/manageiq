@@ -6,7 +6,7 @@ module VmdbMetric::Purging
     def purge_date(interval)
       type  = "keep_#{interval}_metrics".to_sym
       value = ::Settings.database.metrics_history[type]
-      value = value.to_i.days if value.kind_of?(Fixnum) # Default unit is days
+      value = value.to_i.days if value.kind_of?(Integer) # Default unit is days
       value = value.to_i_with_method.seconds.ago.utc unless value.nil?
       value
     end

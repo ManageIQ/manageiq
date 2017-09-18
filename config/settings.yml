@@ -912,7 +912,7 @@
   :mem_minimum: 32.megabytes
 :reporting:
   :format_by_class:
-    :Fixnum:
+    :Integer:
       :function:
         :name: number_with_delimiter
     :Float:
