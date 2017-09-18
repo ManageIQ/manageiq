@@ -23,8 +23,9 @@ class ChargebackRateDetail < ApplicationRecord
     'yearly'  => _('Yearly')
   }.freeze
 
-  def populate_showback_rate(plan, rate_detail)
-    category, measure, dimension = Chargeback.showback_usage_type(rate_detail.chargeable_field)
+  def populate_showback_rate(plan, rate_detail, category)
+    measure = rate_detail.chargeable_field.showback_measure
+    dimension = rate_detail.chargeable_field.showback_dimension
 
     showback_rate = ManageIQ::Consumption::ShowbackRate.find_or_create_by(:category  => category,
                                                                           :measure   => measure,
@@ -38,7 +39,6 @@ class ChargebackRateDetail < ApplicationRecord
     showback_rate.fixed_rate = Money.new(fixed_rate, 'USD')
     showback_rate.variable_rate = Money.new(variable_rate, 'USD')
     showback_rate.save
-    binding.pry
   end
 
   def charge(relevant_fields, consumption, options)

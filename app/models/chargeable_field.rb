@@ -19,21 +19,30 @@ class ChargeableField < ApplicationRecord
   validates :metric, :uniqueness => true, :presence => true
   validates :group, :source, :presence => true
 
+  # returns category(Vm, Container), measure (CPU, MEM, .. ), dimension(max_number, max_mem)
   def showback_measure
-    case group
-      when 'cpu'
-        'CPU'
-      when 'cpu_cores'
-        'CPU'
-      when 'memory'
-        'MEM'
-      when 'net_io'
-        'NET'
-      when 'disk_io'
-        'DISK'
-      when 'FIXED'
-        'fixed'
-    end
+    {'cpu'        => 'CPU',
+     'cpu_cores'  => 'CPU',
+     'memory'     => 'MEM',
+     'net_io'     => 'TODO',
+     'disk_io'    => 'TODO',
+     'fixed'      => 'TODO'}[group]
+  end
+
+  def showback_dimension
+    {'cpu_usagemhz_rate_average'         => 'average',
+     "v_derived_cpu_total_cores_used"    => 'max_number_of_cpu',
+     "derived_vm_numvcpus"               => 'max_number_of_cpu',
+     "derived_memory_used"               => 'max_mem',
+     "derived_memory_available"          => 'max_mem',
+     "net_usage_rate_average"            => 'TODO',
+     "disk_usage_rate_average"           => 'TODO',
+     "fixed_compute_1"                   => 'TODO',
+     "fixed_compute_2"                   => 'TODO',
+     "derived_vm_allocated_disk_storage" => 'TODO',
+     "derived_vm_used_disk_storage"      => 'TODO',
+     "fixed_storage_1"                   => 'TODO',
+     "fixed_storage_2"                   => 'TODO'}[metric]
   end
 
   def measure(consumption, options)

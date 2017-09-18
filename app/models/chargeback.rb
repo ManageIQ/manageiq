@@ -91,50 +91,45 @@ class Chargeback < ActsAsArModel
     end
   end
 
-  # returns category(Vm, Container), measure (CPU, MEM, .. ), dimension(max_number, max_mem)
-  def self.showback_usage_type(chargeable_field)
-    ['Container', 'CPU', 'max_number_of_cpu']
-  end
-
-
   def chargio_calculate_costs(consumption, rates)
     self.fixed_compute_metric = consumption.chargeback_fields_present if consumption.chargeback_fields_present
 
     plan = nil
     rates.each do |rate| # ChargebackRate
 
-      binding.pry
+
       plan = ManageIQ::Consumption::ShowbackPricePlan.find_or_create_by(:description   => rate.description,
                                                                         :name          => rate.description,
                                                                         :resource      => MiqEnterprise.first
       )
 
       rate.rate_details_relevant_to(relevant_fields).each do |r| # ChargebackRateDetail
-        binding.pry
-        r.populate_showback_rate(plan, r)
 
-        _ ,measure, dimension = Chargeback.showback_usage_type(r.chargeable_field)
+        r.populate_showback_rate(plan, r, showback_category)
+
+        measure = r.chargeable_field.showback_measure
+        dimension = r.chargeable_field.showback_dimension
+
+        value = r.chargeable_field.fixed? ? 1.0 : consumption.avg(r.chargeable_field.metric)
 
         result = plan.calculate_total_cost_input(resource_type: showback_category,
-                                                 data: {measure => {dimension => consumption.avg(r.chargeable_field.metric) } },
+                                                 data: {measure => {dimension =>value } },
                                                  start_time: consumption.instance_variable_get("@start_time"),
                                                  end_time: consumption.instance_variable_get("@end_time"),
-                                                 cycle_duration: 2678400 # 1.month
+                                                 cycle_duration: 2678400 # 1.month, report monthly, weekly, daily
         )
-        binding.pry
 
-        r.charge(relevant_fields, consumption, @options).each do |field, value|
+        puts "CHARGIO COST: #{r.chargeable_field.metric}: #{result.to_f}"
+
+        r.charge(relevant_fields, consumption, @options).each do |field, value| # this cycle is getting metric, cost and total cost
           next unless self.class.attribute_names.include?(field)
           self[field] = (self[field] || 0) + value
+          puts "#{field}: #{self[field].to_f}"
         end
-
-
+        puts "---"
       end
     end
 
-
-
-    binding.pry
   end
 
   def calculate_costs(consumption, rates)
