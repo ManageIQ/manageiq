@@ -26,23 +26,23 @@ class ChargeableField < ApplicationRecord
      'memory'     => 'MEM',
      'net_io'     => 'TODO',
      'disk_io'    => 'TODO',
-     'fixed'      => 'TODO'}[group]
+     'fixed'      => 'CPU'}[group]
   end
 
   def showback_dimension
-    {'cpu_usagemhz_rate_average'         => 'average',
-     "v_derived_cpu_total_cores_used"    => 'max_number_of_cpu',
-     "derived_vm_numvcpus"               => 'max_number_of_cpu',
-     "derived_memory_used"               => 'max_mem',
-     "derived_memory_available"          => 'max_mem',
-     "net_usage_rate_average"            => 'TODO',
-     "disk_usage_rate_average"           => 'TODO',
-     "fixed_compute_1"                   => 'TODO',
-     "fixed_compute_2"                   => 'TODO',
-     "derived_vm_allocated_disk_storage" => 'TODO',
-     "derived_vm_used_disk_storage"      => 'TODO',
-     "fixed_storage_1"                   => 'TODO',
-     "fixed_storage_2"                   => 'TODO'}[metric]
+    {'cpu_usagemhz_rate_average'         => ['average', 'Mhz', 'duration'],
+     "v_derived_cpu_total_cores_used"    => ['max_number_of_cpu', '', 'duration'],
+     "derived_vm_numvcpus"               => ['max_number_of_cpu', '', 'duration'],
+     "derived_memory_used"               => ['max_mem', 'B', 'duration'],
+     "derived_memory_available"          => ['max_mem', 'B', 'duration'],
+     "net_usage_rate_average"            => ['TODO', '',''],
+     "disk_usage_rate_average"           => ['TODO', '',''],
+     "fixed_compute_1"                   => ['number','', 'occurrence'],
+     "fixed_compute_2"                   => ['number','', 'occurrence'],
+     "derived_vm_allocated_disk_storage" => ['TODO', '',''],
+     "derived_vm_used_disk_storage"      => ['TODO', '',''],
+     "fixed_storage_1"                   => ['TODO', '',''],
+     "fixed_storage_2"                   => ['TODO', '','']}[metric]
   end
 
   def measure(consumption, options)

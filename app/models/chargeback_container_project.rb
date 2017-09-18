@@ -5,16 +5,23 @@ class ChargebackContainerProject < Chargeback
     :provider_name         => :string,
     :provider_uid          => :string,
     :archived              => :string,
+
+
     :cpu_cores_used_cost   => :float,
     :cpu_cores_used_metric => :float,
+
+
     :fixed_compute_1_cost  => :float,
     :fixed_compute_2_cost  => :float,
     :fixed_2_cost          => :float,
     :fixed_cost            => :float,
+
     :memory_used_cost      => :float,
     :memory_used_metric    => :float,
+
     :net_io_used_cost      => :float,
     :net_io_used_metric    => :float,
+
     :total_cost            => :float,
   )
 

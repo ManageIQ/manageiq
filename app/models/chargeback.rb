@@ -104,11 +104,10 @@ class Chargeback < ActsAsArModel
       )
 
       rate.rate_details_relevant_to(relevant_fields).each do |r| # ChargebackRateDetail
-
         r.populate_showback_rate(plan, r, showback_category)
 
         measure = r.chargeable_field.showback_measure
-        dimension = r.chargeable_field.showback_dimension
+        dimension, unit, calculation = r.chargeable_field.showback_dimension
 
         value = r.chargeable_field.fixed? ? 1.0 : consumption.avg(r.chargeable_field.metric)
 
@@ -127,7 +126,10 @@ class Chargeback < ActsAsArModel
           puts "#{field}: #{self[field].to_f}"
         end
         puts "---"
+        plan.showback_rates.destroy_all
+        plan.reload
       end
+
     end
 
   end
