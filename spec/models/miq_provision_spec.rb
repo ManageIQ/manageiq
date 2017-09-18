@@ -155,4 +155,44 @@ describe MiqProvision do
       prov.eligible_resources(:hosts)
     end
   end
+
+  describe "#placement_auto" do
+    let(:miq_provision) { FactoryGirl.build(:miq_provision, :options => {:placement_auto => placement_option}) }
+
+    context "when option[:placement_auto] is true" do
+      let(:placement_option) { [true, 1] }
+
+      it "without force_placement_auto" do
+        expect(miq_provision.placement_auto).to eq(true)
+      end
+
+      it "with force_placement_auto set to false" do
+        miq_provision.options[:force_placement_auto] = false
+        expect(miq_provision.placement_auto).to eq(true)
+      end
+
+      it "with force_placement_auto set to true" do
+        miq_provision.options[:force_placement_auto] = true
+        expect(miq_provision.placement_auto).to eq(true)
+      end
+    end
+
+    context "when option[:placement_auto] is false" do
+      let(:placement_option) { [false, 0] }
+
+      it "without force_placement_auto" do
+        expect(miq_provision.placement_auto).to eq(false)
+      end
+
+      it "with force_placement_auto set to false" do
+        miq_provision.options[:force_placement_auto] = false
+        expect(miq_provision.placement_auto).to eq(false)
+      end
+
+      it "with force_placement_auto set to true" do
+        miq_provision.options[:force_placement_auto] = true
+        expect(miq_provision.placement_auto).to eq(true)
+      end
+    end
+  end
 end
