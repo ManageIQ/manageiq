@@ -1,5 +1,7 @@
 class ContainerOrchestrator
   module ObjectDefinition
+    private
+
     def deployment_config_definition(name)
       {
         :metadata => {
