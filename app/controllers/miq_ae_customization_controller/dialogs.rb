@@ -1329,6 +1329,7 @@ module MiqAeCustomizationController::Dialogs
                     fld[:load_values_on_init] = field[:load_on_init]
                     fld[:show_refresh_button] = field[:show_refresh_button]
                     fld[:auto_refresh]        = field[:auto_refresh]
+                    fld[:required]            = field[:required]
                   end
 
                   if field[:typ] == "DialogFieldCheckBox"

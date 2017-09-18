@@ -59,9 +59,8 @@
   .form-group
     %label.col-md-2.control-label= _('Required')
     .col-md-8
-      = check_box_tag('field_required', 'true',
-                      @edit[:field_required],
-                        "data-miq_observe_checkbox" => {:url => url}.to_json)
+      = check_box_tag('field_required', 'true', @edit[:field_required],
+                      "data-miq_observe_checkbox" => {:url => url}.to_json)
 - if %w(DialogFieldTextBox DialogFieldTextAreaBox).include?(@edit[:field_typ])
   .form-group
     %label.col-md-2.control-label
@@ -91,12 +90,8 @@
     %label.col-md-2.control-label
       = _('Required')
     .col-md-8
-      = select_tag('field_required',
-                  options_for_select([[_("True"), true], [_("False"), false]], @edit[:field_required].to_s),
-                  "data-miq_sparkle_on" => true,
-                  :class    => "selectpicker")
-      :javascript
-        miqSelectPickerEvent('field_required', "#{url}")
+      = check_box_tag('field_required', 'true', @edit[:field_required],
+                      "data-miq_observe_checkbox" => {:url => url}.to_json)
   .form-group
     %label.col-md-2.control-label
       = _('Value Type')
