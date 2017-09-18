@@ -91,6 +91,60 @@ module EmsRefresh::SaveInventoryHelper
     association.push(new_records)
   end
 
+  # Saves a inventory record, and any sub inventory records, without
+  # associating it with the parent object that is passed in.  Parent usually is
+  # an EMS, but doesn't have to be.
+  #
+  # @param parent [ActiveRecord] base record being saved
+  # @param association [Symbol]  associated record type being added to parent
+  # @param hashes [Array]        inventory data (hash per record)
+  # @param find_key [Array]      ordered keys for existing record lookup
+  # @param child_keys [Array]    keys from hashes that are child records
+  # @param extra_keys [Array]    hash keys to be removed before saving records
+  # @param disconnect [Boolean]  whether or not to delete or disconnect records
+  #                              that don't exist in the inventory hashes, but
+  #                              are present in the DB
+  #
+  # @return [Hash] the hashes passed into the method
+  def save_inventory_with_thin_association(parent, association, hashes, find_key,
+                                           child_keys = [], extra_keys = [],
+                                           disconnect = false)
+
+    relation      = parent.association(association).reflection
+    model         = parent.association(association).klass
+    assoc_attrs   = parent.association(association).reader.scope_attributes
+    deletes_index = model.pluck(relation.active_record_primary_key)
+                         .index_by { |x| x }
+
+    child_keys = Array.wrap(child_keys)
+    remove_keys = Array.wrap(extra_keys) + child_keys
+    record_index = IdTypedIndex.new(deletes_index.values, find_key, model)
+    inventory_ids = []
+
+    hashes.each do |h|
+      found = nil
+      ActiveRecord::Base.transaction do
+        found = save_inventory_with_findkey(model, h.except(*remove_keys).merge(assoc_attrs), deletes_index, nil, record_index, true)
+        save_child_inventory(found, h, child_keys)
+        found.save
+        # store both found and new ids for updating stored_ids
+        inventory_ids << found.id
+      end
+    end
+
+    # Delete the items no longer found
+    deletes = deletes_index.values
+    unless deletes.blank?
+      ActiveRecord::Base.transaction do
+        delete_records = model.where(:id => deletes)
+        _log.info("[#{association}] Deleting #{log_format_deletes(delete_records)}")
+        disconnect ? delete_records.each(&:disconnect_inv) : association.delete(delete_records)
+      end
+    end
+
+    store_ids_for_record_ids(inventory_ids, model, hashes, find_key)
+  end
+
   def save_inventory_single(type, parent, hash, child_keys = [], extra_keys = [], disconnect = false)
     child = parent.send(type)
     if hash.blank?
@@ -108,15 +162,16 @@ module EmsRefresh::SaveInventoryHelper
     save_child_inventory(child, hash, child_keys)
   end
 
-  def save_inventory_with_findkey(association, hash, deletes, new_records, record_index)
+  def save_inventory_with_findkey(association, hash, deletes, new_records, record_index, id_only = false)
     # Find the record, and update if found, else create it
     found = record_index.fetch(hash)
     if found.nil?
-      found = association.build(hash.except(:id))
-      new_records << found
+      found = association.public_send(id_only ? :new : :build, hash.except(:id))
+      new_records << found if new_records
     else
+      found = association.find(found) if id_only
       update_attributes!(found, hash, [:id, :type])
-      deletes.delete(found) unless deletes.blank?
+      deletes.delete(id_only ? found.id : found) unless deletes.blank?
     end
     found
   end
@@ -151,6 +206,15 @@ module EmsRefresh::SaveInventoryHelper
       record = record_index[build_index_from_hash(keys, hash, record_class)]
       hash[:id] = record.id
     end
+  end
+
+  def store_ids_for_record_ids(ids, model, hashes, keys)
+    return if ids.blank?
+
+    keys = Array(keys)
+    record_index = IdTypedIndex.new(ids, keys, model)
+
+    hashes.each { |hash| hash[:id] = record_index.fetch(hash) }
   end
 
   def build_index_from_hash(keys, hash, record_class)
