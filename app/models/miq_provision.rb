@@ -53,7 +53,7 @@ class MiqProvision < MiqProvisionTask
   end
 
   def placement_auto
-    get_option(:placement_auto)
+    get_option(:force_placement_auto) || get_option(:placement_auto)
   end
 
   def after_request_task_create
