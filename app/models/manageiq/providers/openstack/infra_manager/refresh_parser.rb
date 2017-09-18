@@ -79,23 +79,39 @@ module ManageIQ
 
       private
 
-      def all_server_resources
-        return @all_server_resources if @all_server_resources
+      def stack_resources_by_depth(stack, depth = 2)
+        return @stack_resources if @stack_server_resources
+        # TODO(lsmola) loading this from already obtained nested stack hierarchy will be more effective. This is one
+        # extra API call. But we will need to change order of loading, so we have all resources first.
+        @stack_resources = @orchestration_service.list_resources(:stack => stack, :nested_depth => depth).body['resources']
+      end
+
+      def filter_stack_resources_by_resource_type(resource_type_list)
         resources = []
         stacks.each do |stack|
           # Filtering just server resources which is important to us for getting Purpose of the node
           # (compute, controller, etc.).
-          resources += all_stack_server_resources(stack).select do |x|
-            %w(OS::TripleO::Server OS::Nova::Server).include?(x["resource_type"])
+          resources += stack_resources_by_depth(stack).select do |x|
+            resource_type_list.include?(x["resource_type"])
           end
         end
-        @all_server_resources = resources
+        resources
       end
 
-      def all_stack_server_resources(stack)
-        # TODO(lsmola) loading this from already obtained nested stack hierarchy will be more effective. This is one
-        # extra API call. But we will need to change order of loading, so we have all resources first.
-        @orchestration_service.list_resources(:stack => stack, :nested_depth => 2).body['resources']
+      def stack_resource_groups
+        return @stack_resource_groups if @stack_resource_groups
+        @stack_resource_groups = filter_stack_resources_by_resource_type(["OS::Heat::ResourceGroup"])
+      end
+
+      def stack_server_resource_types
+        return @stack_server_resource_types if @stack_server_resource_types
+        @stack_server_resource_types = ["OS::TripleO::Server", "OS::Nova::Server"]
+        @stack_server_resource_types += stack_resource_groups.map { |rg| "OS::TripleO::" + rg["resource_name"] + "Server" }
+      end
+
+      def stack_server_resources
+        return @stack_server_resources if @stack_server_resources
+        @stack_server_resources = filter_stack_resources_by_resource_type(stack_server_resource_types)
       end
 
       def servers
@@ -145,7 +161,7 @@ module ManageIQ
 
         # Indexed Heat resources, we are interested only in OS::Nova::Server/OS::TripleO::Server
         indexed_resources = {}
-        all_server_resources.each { |p| indexed_resources[p['physical_resource_id']] = p }
+        stack_server_resources.each { |p| indexed_resources[p['physical_resource_id']] = p }
 
         process_collection(hosts, :hosts) do  |host|
           parse_host(host, indexed_servers, indexed_resources, cloud_ems_hosts_attributes)
@@ -349,7 +365,7 @@ module ManageIQ
           next unless uid
 
           nova_server = stack[:resources].detect do |r|
-            %w(OS::TripleO::Server OS::Nova::Server).include?(r[:resource_category])
+            stack_server_resource_types.include?(r[:resource_category])
           end
           next unless nova_server
 
