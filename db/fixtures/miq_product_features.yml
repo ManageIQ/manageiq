@@ -6391,6 +6391,26 @@
       :feature_type: view
       :identifier: guest_device_show
 
+# Configuration Templates
+- :name: Configuration Templates
+  :description: Everything under Configuration Templates
+  :feature_type: node
+  :identifier: configuration_template
+  :children:
+  - :name: View
+    :description: View Configuration Template
+    :feature_type: view
+    :identifier: configuration_template_view
+    :children:
+    - :name: List
+      :description: Display Lists of Configuration Templates
+      :feature_type: view
+      :identifier: configuration_template_show_list
+    - :name: Show
+      :description: Display Individual Configuration Templates
+      :feature_type: view
+      :identifier: configuration_template_show
+
 # Physical Infrastructure Topology
 - :name: Physical Infra Topology
   :description: Physical Infra Topology

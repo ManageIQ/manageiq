@@ -23,6 +23,7 @@ module EmsRefresh::SaveInventoryPhysicalInfra
 
     child_keys = [
       :physical_servers,
+      :configuration_templates
     ]
 
     # Save and link other subsections
@@ -49,6 +50,20 @@ module EmsRefresh::SaveInventoryPhysicalInfra
     child_keys = [:computer_system, :asset_details, :hosts]
     save_inventory_multi(ems.physical_servers, hashes, deletes, [:ems_ref], child_keys)
     store_ids_for_new_records(ems.physical_servers, hashes, :ems_ref)
+  end
+
+  def save_configuration_templates_inventory(ems, hashes, target = nil)
+    target = ems if target.nil?
+
+    ems.configuration_templates.reset
+    deletes = if target == ems
+                :use_association
+              else
+                []
+              end
+
+    save_inventory_multi(ems.configuration_templates, hashes, deletes, [:ems_ref])
+    store_ids_for_new_records(ems.configuration_templates, hashes, :ems_ref)
   end
 
   #
