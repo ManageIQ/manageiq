@@ -1,6 +1,9 @@
 class GenericObject < ApplicationRecord
   acts_as_miq_taggable
 
+  virtual_has_one :custom_actions
+  virtual_has_one :custom_action_buttons
+
   belongs_to :generic_object_definition
 
   validates :name, :presence => true
@@ -10,6 +13,7 @@ class GenericObject < ApplicationRecord
            :type_cast,
            :property_association_defined?,
            :property_methods, :property_method_defined?,
+           :custom_actions, :custom_action_buttons,
            :to => :generic_object_definition, :allow_nil => true
 
   def initialize(attributes = {})

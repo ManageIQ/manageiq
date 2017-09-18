@@ -9,6 +9,11 @@ class CustomButtonSet < ApplicationRecord
       # for services we need to show custom buttons for a specific Services parent ServiceTemplate and for all Services
       applies_to_instance(class_name, class_id).sort_by(&ordering) +
         applies_to_all_instances("Service").sort_by(&ordering)
+    when "GenericObjectDefinition"
+      # for generic objects we need to show custom buttons for a specific generic object's parent GenericObjectDefinition
+      # and for all Generic Objects
+      applies_to_instance(class_name, class_id).sort_by(&ordering) +
+        applies_to_all_instances("GenericObject").sort_by(&ordering)
     else
       applies_to_all_instances(class_name).sort_by(&ordering)
     end
