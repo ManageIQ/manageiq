@@ -33,6 +33,23 @@ module EmsRefresh::SaveInventoryHelper
     end
   end
 
+  # instead of storing records, only store ids
+  class IdTypedIndex < TypedIndex
+    def initialize(ids, find_key, model)
+      @key_attribute_types = find_key.map { |k| model.type_for_attribute(k) }
+
+      # find the records keys for the given records
+      records = model.where(model.primary_key => ids).pluck(*find_key, model.primary_key)
+
+      # Index the records by the values from the find_key
+      @record_index = records.each_with_object({}) do |keys_and_val, h|
+        h.store_path(*keys_and_val)
+      end
+
+      @find_key = find_key
+    end
+  end
+
   def save_inventory_multi(association, hashes, deletes, find_key, child_keys = [], extra_keys = [], disconnect = false)
     association.reset
 
