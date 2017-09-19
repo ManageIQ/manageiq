@@ -431,9 +431,9 @@ describe Dialog do
   end
 
   describe "#deep_copy" do
-    let(:dialog_service) { OrchestrationTemplateDialogService.new }
-    let(:template_hot)   { FactoryGirl.create(:orchestration_template_hot_with_content) }
-    let(:dialog) { dialog_service.create_dialog('test', template_hot) }
+    let(:dialog_service) { Dialog::OrchestrationTemplateServiceDialog.new }
+    let(:template)       { FactoryGirl.create(:orchestration_template).tap { |t| allow(t).to receive(:parameter_groups).and_return([]) } }
+    let(:dialog)         { dialog_service.create_dialog('test', template) }
 
     it "clones the dialog and all containing components" do
       dialog_new = dialog.deep_copy(:name => 'test_cloned')
