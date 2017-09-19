@@ -91,12 +91,17 @@ class Chargeback < ActsAsArModel
     end
   end
 
+  # add filter to showback rate
+  # using report monthly/weekly/daily
+  # use daily/hourly/monthly in  showback charge
+  # map new result value to report engine
+  # rewrite with using tiers
+
+
   def chargio_calculate_costs(consumption, rates)
     self.fixed_compute_metric = consumption.chargeback_fields_present if consumption.chargeback_fields_present
 
-    plan = nil
     rates.each do |rate| # ChargebackRate
-
 
       plan = ManageIQ::Consumption::ShowbackPricePlan.find_or_create_by(:description   => rate.description,
                                                                         :name          => rate.description,

@@ -210,6 +210,7 @@ unless ENV["APPLIANCE"]
   end
 
   group :development, :test do
+    gem 'hashdiff'
     gem "parallel_tests"
     gem "rspec-rails",      "~>3.6.0"
   end
