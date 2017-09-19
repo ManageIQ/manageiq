@@ -227,10 +227,9 @@ class MiqServer < ApplicationRecord
 
   def validate_is_deleteable
     unless self.is_deleteable?
-      msg = @error_message
+      _log.error(@error_message)
       @error_message = nil
-      _log.error(msg)
-      raise _(msg)
+      throw :abort
     end
   end
 
