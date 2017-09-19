@@ -413,4 +413,13 @@ class Service < ApplicationRecord
   def enforce_single_service_parent?
     true
   end
+
+  def add_to_service(parenent_service)
+    parenent_service.add_resource!(self)
+  end
+
+  def remove_from_service(parenent_service)
+    update(:parent => nil)
+    parenent_service.remove_resource(self)
+  end
 end
