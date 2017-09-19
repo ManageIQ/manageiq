@@ -86,13 +86,6 @@ class Service < ApplicationRecord
     unsupported_reason_add(:reconfigure, _("Reconfigure unsupported")) unless validate_reconfigure
   end
 
-  def add_resource(rsc, options = {})
-    if rsc.kind_of?(Vm) && !rsc.service.nil?
-      raise MiqException::Error, _("Vm <%{name}> is already connected to a service.") % {:name => rsc.name}
-    end
-    super
-  end
-
   alias parent_service parent
   alias_attribute :service, :parent
   virtual_belongs_to :service
@@ -406,5 +399,18 @@ class Service < ApplicationRecord
 
   def perf_rollup_parents(interval_name = nil)
     [].compact unless interval_name == 'realtime'
+  end
+
+  def add_resource(rsc, options = {})
+    service_resource = super
+    return if service_resource.nil?
+
+    # Create ancestry link between services
+    resource = service_resource.resource
+    resource.update_attributes(:parent => self) if resource.kind_of?(Service)
+  end
+
+  def enforce_single_service_parent?
+    true
   end
 end

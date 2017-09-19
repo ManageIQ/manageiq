@@ -17,29 +17,12 @@ module ServiceMixin
     rsc_type = rsc.class.base_class.name.tableize
     raise _("Cannot connect service with nil ID.") if rsc.id.nil? && rsc_type == "service_templates"
 
-    # fetch the corresponding service resource
-    # may want to use a query for this
-    sr = service_resources.detect { |sr| sr.resource_type == rsc.class.base_class.name && sr.resource_id == rsc.id }
-    if sr.nil?
-      if options.kind_of?(ServiceResource)
-        nh = options.attributes.dup
-        %w(id created_at updated_at service_template_id ancestry).each { |key| nh.delete(key) }
-      else
-        nh = options
-      end
+    enforce_single_service_parent(rsc)
 
-      if circular_reference?(rsc)
-        raise MiqException::MiqServiceCircularReferenceError,
-              _("Adding resource <%{resource_name}> to Service <%{name}> will create a circular reference") %
-              {:resource_name => rsc.name, :name => name}
-      else
-        service_resources.new(nh.merge(:resource => rsc))
-        set_service_type if respond_to?(:set_service_type)
-        # Create link between services
-        rsc.update_attributes(:parent => self) if self.class == Service && rsc.kind_of?(Service)
-      end
-    end
-    sr
+    sr = service_resources.detect { |r| r.resource_type == rsc.class.base_class.name && r.resource_id == rsc.id }
+    return sr unless sr.nil?
+
+    create_service_resource(rsc, options) if sr.nil?
   end
 
   def <<(*args)
@@ -119,6 +102,37 @@ module ServiceMixin
     nil
   end
 
+  def parent_services(svc = self)
+    return svc.ancestors if svc.kind_of?(Service)
+    srs = ServiceResource.where(:resource => svc)
+    srs.collect { |sr| sr.public_send(sr.resource_type.underscore) }.compact
+  end
+
+  private
+
+  def enforce_single_service_parent(resource)
+    if resource.try(:enforce_single_service_parent?) == true && resource.service
+      raise MiqException::Error, _("<%{class_name}> <%{id}>:<%{name}> is already connected to a service.") %
+                                 {:class_name => resource.class.name, :id => resource.id, :name => resource.name}
+    end
+  end
+
+  def create_service_resource(rsc, options)
+    if circular_reference?(rsc)
+      raise MiqException::MiqServiceCircularReferenceError,
+            _("Adding resource <%{resource_name}> to Service <%{name}> will create a circular reference") %
+            {:resource_name => rsc.name, :name => name}
+    else
+      nh = if options.kind_of?(ServiceResource)
+             options.attributes.except('id', 'created_at', 'updated_at', 'service_template_id', 'ancestry')
+           else
+             options
+           end
+
+      service_resources.new(nh.merge(:resource => rsc))
+    end
+  end
+
   def circular_reference?(child_svc)
     return true if child_svc == self
     if child_svc.kind_of?(Service)
@@ -137,11 +151,5 @@ module ServiceMixin
       return(result) unless result.nil?
     end
     nil
-  end
-
-  def parent_services(svc = self)
-    return svc.ancestors if svc.kind_of?(Service)
-    srs = ServiceResource.where(:resource => svc)
-    srs.collect { |sr| sr.public_send(sr.resource_type.underscore) }.compact
   end
 end
