@@ -13,7 +13,7 @@ module Metric::Targets
     all_hosts = capture_host_targets(emses)
     targets = enabled_hosts = only_enabled(all_hosts)
     targets += capture_storage_targets(all_hosts) unless options[:exclude_storages]
-    targets += capture_vm_targets(enabled_hosts) unless options[:exclude_vms]
+    targets += capture_vm_targets(emses, enabled_hosts) unless options[:exclude_vms]
 
     targets
   end
@@ -73,7 +73,7 @@ module Metric::Targets
     # Preload all of the objects we are going to be inspecting.
     includes = {:hosts => {:ems_cluster => :tags, :tags => {}}}
     includes[:hosts][:storages] = :tags unless options[:exclude_storages]
-    includes[:hosts][:vms] = {} unless options[:exclude_vms]
+    includes[:vms] = {} unless options[:exclude_vms]
     includes
   end
 
@@ -91,16 +91,19 @@ module Metric::Targets
     emses.each do |ems|
       ems.hosts.each do |host|
         host.ems_cluster.association(:ext_management_system).target = ems if host.ems_cluster_id
-        unless options[:exclude_vms]
-          host.vms.each do |vm|
-            vm.association(:ext_management_system).target = ems if vm.ems_id
-            vm.association(:ems_cluster).target = host.ems_cluster if vm.ems_cluster_id
-          end
-        end
         unless options[:exclude_storages]
           host.storages.each do |storage|
             storage.ext_management_system = ems
           end
+        end
+      end
+      unless options[:exclude_vms]
+        host_ids = ems.hosts.index_by(&:id)
+        clusters = ems.hosts.flat_map(&:ems_cluster).uniq.compact.index_by(&:id)
+        ems.vms.each do |vm|
+          vm.association(:ext_management_system).target = ems if vm.ems_id
+          vm.association(:ems_cluster).target = clusters[vm.ems_cluster_id] if vm.ems_cluster_id
+          vm.association(:host).target = host_ids[vm.host_id] if vm.host_id
         end
       end
     end
@@ -120,10 +123,12 @@ module Metric::Targets
     hosts.flat_map(&:storages).uniq.select { |s| Storage.supports?(s.store_type) & s.perf_capture_enabled? }
   end
 
+  # @param [Array<ExtManagementSystem>] emses Typically 1 ems for this zone
   # @param [Host] hosts that are enabled or cluster enabled
-  def self.capture_vm_targets(hosts)
-    hosts.select(&:perf_capture_enabled?)
-         .flat_map { |t| t.vms.select { |v| v.ext_management_system && v.state == 'on' && v.supports_capture? } }
+  # we want to work with only enabled_hosts, so hosts needs to be further filtered
+  def self.capture_vm_targets(emses, hosts)
+    enabled_host_ids = hosts.select(&:perf_capture_enabled?).index_by(&:id)
+    emses.flat_map { |e| e.vms.select { |v| enabled_host_ids.include?(v.host_id) && v.state == 'on' && v.supports_capture? } }
   end
 
   # If a Cluster, standalone Host, or Storage is not enabled, skip it.
