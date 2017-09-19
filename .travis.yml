@@ -16,7 +16,7 @@ env:
 matrix:
   fast_finish: true
 addons:
-  postgresql: '9.4'
+  postgresql: '9.5'
 before_install:
 - source ${TRAVIS_BUILD_DIR}/tools/ci/before_install.sh
 before_script:
