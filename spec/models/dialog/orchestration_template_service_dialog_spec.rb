@@ -1,10 +1,10 @@
 describe Dialog::OrchestrationTemplateServiceDialog do
   let(:orchestration_template) { FactoryGirl.create(:orchestration_template) }
 
-  describe "#create_dialog" do
+  describe ".create_dialog" do
     it "creates a dialog from a template without parameters" do
       allow(orchestration_template).to receive(:parameter_groups).and_return([])
-      dialog = subject.create_dialog("test", orchestration_template)
+      dialog = described_class.create_dialog("test", orchestration_template)
 
       expect(dialog).to have_attributes(
         :label   => "test",

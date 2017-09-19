@@ -1,7 +1,7 @@
 class Dialog
   class OrchestrationTemplateServiceDialog
     def self.create_dialog(label, template)
-      Dialog::OrchestrationTemplateServiceDialog.new.create_dialog(label, template)
+      new.create_dialog(label, template)
     end
 
     def create_dialog(label, template)
@@ -40,25 +40,25 @@ class Dialog
       end
     end
 
-    def add_field(parameter, group, position, prefix = nil)
+    def add_field(parameter, group, position, name_prefix = nil)
       if parameter.constraints
         dynamic_dropdown = parameter.constraints.detect { |c| c.kind_of?(OrchestrationTemplate::OrchestrationParameterAllowedDynamic) }
-        return create_dynamic_dropdown_list(parameter, group, position, dynamic_dropdown, prefix) if dynamic_dropdown
+        return create_dynamic_dropdown_list(parameter, group, position, dynamic_dropdown, name_prefix) if dynamic_dropdown
 
         dropdown = parameter.constraints.detect { |c| c.kind_of?(OrchestrationTemplate::OrchestrationParameterAllowed) }
-        return create_dropdown_list(parameter, group, position, dropdown, prefix) if dropdown
+        return create_dropdown_list(parameter, group, position, dropdown, name_prefix) if dropdown
 
         checkbox = parameter.constraints.detect { |c| c.kind_of?(OrchestrationTemplate::OrchestrationParameterBoolean) }
-        return create_checkbox(parameter, group, position, prefix) if checkbox
+        return create_checkbox(parameter, group, position, name_prefix) if checkbox
       end
 
-      create_textbox(parameter, group, position, prefix)
+      create_textbox(parameter, group, position, name_prefix)
     end
 
-    def create_dynamic_dropdown_list(parameter, group, position, dynamic_dropdown, prefix)
+    def create_dynamic_dropdown_list(parameter, group, position, dynamic_dropdown, name_prefix)
       group.dialog_fields.build(
         :type         => "DialogFieldDropDownList",
-        :name         => "#{prefix}#{parameter.name}",
+        :name         => "#{name_prefix}#{parameter.name}",
         :data_type    => parameter.data_type || "string",
         :dynamic      => true,
         :display      => "edit",
@@ -72,12 +72,12 @@ class Dialog
       end
     end
 
-    def create_dropdown_list(parameter, group, position, dropdown, prefix)
+    def create_dropdown_list(parameter, group, position, dropdown, name_prefix)
       values = dropdown.allowed_values
       dropdown_list = values.kind_of?(Hash) ? values.to_a : values.collect { |v| [v, v] }
       group.dialog_fields.build(
         :type           => "DialogFieldDropDownList",
-        :name           => "#{prefix}#{parameter.name}",
+        :name           => "#{name_prefix}#{parameter.name}",
         :data_type      => parameter.data_type || "string",
         :display        => "edit",
         :required       => parameter.required,
@@ -91,7 +91,7 @@ class Dialog
       )
     end
 
-    def create_textbox(parameter, group, position, prefix)
+    def create_textbox(parameter, group, position, name_prefix)
       if parameter.data_type == 'string' || parameter.data_type == 'integer'
         data_type = parameter.data_type
         field_type = 'DialogFieldTextBox'
@@ -104,7 +104,7 @@ class Dialog
       end
       group.dialog_fields.build(
         :type           => field_type,
-        :name           => "#{prefix}#{parameter.name}",
+        :name           => "#{name_prefix}#{parameter.name}",
         :data_type      => data_type,
         :display        => "edit",
         :required       => parameter.required,
@@ -120,10 +120,10 @@ class Dialog
       )
     end
 
-    def create_checkbox(parameter, group, position, prefix)
+    def create_checkbox(parameter, group, position, name_prefix)
       group.dialog_fields.build(
         :type           => "DialogFieldCheckBox",
-        :name           => "#{prefix}#{parameter.name}",
+        :name           => "#{name_prefix}#{parameter.name}",
         :data_type      => "boolean",
         :display        => "edit",
         :default_value  => parameter.default_value,
