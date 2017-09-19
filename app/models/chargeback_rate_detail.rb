@@ -36,6 +36,9 @@ class ChargebackRateDetail < ApplicationRecord
 
     fixed_rate = rate_detail.chargeback_tiers.first.fixed_rate.to_f * 100
     variable_rate = rate_detail.chargeback_tiers.first.variable_rate.to_f * 100
+
+    showback_rate.variable_rate_per_time = rate_detail.per_time
+    showback_rate.fixed_rate_per_time    = rate_detail.per_time
     showback_rate.fixed_rate = Money.new(fixed_rate, 'USD')
     showback_rate.variable_rate = Money.new(variable_rate, 'USD')
     showback_rate.save
