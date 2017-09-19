@@ -6,13 +6,13 @@ class ContainerOrchestrator
       {
         :metadata => {
           :name      => name,
-          :labels    => {:app => "manageiq"},
+          :labels    => {:app => app_name},
           :namespace => my_namespace,
         },
         :spec     => {
-          :selector => {:name => name, :app => "manageiq"},
+          :selector => {:name => name, :app => app_name},
           :template => {
-            :metadata => {:name => name, :labels => {:name => name, :app => "manageiq"}},
+            :metadata => {:name => name, :labels => {:name => name, :app => app_name}},
             :spec     => {
               :serviceAccount     => "miq-anyuid",
               :serviceAccountName => "miq-anyuid",
@@ -31,7 +31,7 @@ class ContainerOrchestrator
       {
         :metadata => {
           :name      => name,
-          :labels    => {:app => "manageiq"},
+          :labels    => {:app => app_name},
           :namespace => my_namespace
         },
         :spec     => {
@@ -49,7 +49,7 @@ class ContainerOrchestrator
       {
         :metadata   => {
           :name      => name,
-          :labels    => {:app => "manageiq"},
+          :labels    => {:app => app_name},
           :namespace => my_namespace
         },
         :stringData => string_data
@@ -65,9 +65,9 @@ class ContainerOrchestrator
         {:name => "WORKER_HEARTBEAT_METHOD", :value => "file"},
         {:name => "WORKER_HEARTBEAT_FILE",   :value => Rails.root.join("tmp", "worker.hb").to_s},
         {:name      => "DATABASE_URL",
-         :valueFrom => {:secretKeyRef=>{:name => "manageiq-secrets", :key => "database-url"}}},
+         :valueFrom => {:secretKeyRef=>{:name => "#{app_name}-secrets", :key => "database-url"}}},
         {:name      => "V2_KEY",
-         :valueFrom => {:secretKeyRef=>{:name => "manageiq-secrets", :key => "v2-key"}}}
+         :valueFrom => {:secretKeyRef=>{:name => "#{app_name}-secrets", :key => "v2-key"}}}
       ]
     end
 
@@ -81,6 +81,10 @@ class ContainerOrchestrator
 
     def my_namespace
       ENV["MY_POD_NAMESPACE"]
+    end
+
+    def app_name
+      I18n.t("product.name").downcase
     end
   end
 end
