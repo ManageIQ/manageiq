@@ -28,7 +28,6 @@ class Chargeback < ActsAsArModel
       data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
 
       # we are getting hash with metrics and costs for metrics defined for chargeback
-
       if ENV['CHARGIO']
         data[key].chargio_calculate_costs(consumption, rates_to_apply)
       else
@@ -97,17 +96,15 @@ class Chargeback < ActsAsArModel
   # map new result value to report engine
   # rewrite with using tiers
 
-
   def chargio_calculate_costs(consumption, rates)
     self.fixed_compute_metric = consumption.chargeback_fields_present if consumption.chargeback_fields_present
 
     rates.each do |rate| # ChargebackRate
-
       plan = ManageIQ::Consumption::ShowbackPricePlan.find_or_create_by(:description   => rate.description,
                                                                         :name          => rate.description,
                                                                         :resource      => MiqEnterprise.first
       )
-
+      data = {}
       rate.rate_details_relevant_to(relevant_fields).each do |r| # ChargebackRateDetail
         r.populate_showback_rate(plan, r, showback_category)
 
@@ -115,26 +112,33 @@ class Chargeback < ActsAsArModel
         dimension, unit, calculation = r.chargeable_field.showback_dimension
 
         value = r.chargeable_field.fixed? ? 1.0 : consumption.avg(r.chargeable_field.metric)
-
-        result = plan.calculate_total_cost_input(resource_type: showback_category,
-                                                 data: {measure => {dimension =>value } },
-                                                 start_time: consumption.instance_variable_get("@start_time"),
-                                                 end_time: consumption.instance_variable_get("@end_time"),
-                                                 cycle_duration: 2678400 # 1.month, report monthly, weekly, daily
-        )
-
-        puts "CHARGIO COST: #{r.chargeable_field.metric}: #{result.to_f}"
-
-        r.charge(relevant_fields, consumption, @options).each do |field, value| # this cycle is getting metric, cost and total cost
-          next unless self.class.attribute_names.include?(field)
-          self[field] = (self[field] || 0) + value
-          puts "#{field}: #{self[field].to_f}"
-        end
-        puts "---"
-        plan.showback_rates.destroy_all
-        plan.reload
+        data[measure] ||= {}
+        data[measure][dimension] = value
+        # Old calculation
+        # r.charge(relevant_fields, consumption, @options).each do |field, value| # this cycle is getting metric, cost and total cost
+        #   next unless self.class.attribute_names.include?(field)
+        #   self[field] = (self[field] || 0) + value
+        #   puts "#{field}: #{self[field].to_f}"
+        # end
       end
 
+      results = plan.calculate_list_of_costs_input(resource_type: showback_category,
+                                                  data: data,
+                                                  start_time: consumption.instance_variable_get("@start_time"),
+                                                  end_time: consumption.instance_variable_get("@end_time"),
+                                                  cycle_duration: @options.duration_of_report_step
+      )
+
+      results.each do |cost_value, sb_rate|
+        r = ChargebackRateDetail.find(sb_rate.concept)
+        # puts "CHARGIO COST: #{r.chargeable_field.metric}: #{cost_value.to_f}"
+        metric_value = data[r.chargeable_field.group][r.chargeable_field.metric]
+        metric_field = [r.chargeable_field.group, r.chargeable_field.source, "metric"].join("_")
+        cost_field = [r.chargeable_field.group, r.chargeable_field.source, "cost"].join("_")
+
+        self[cost_field] = cost_value
+        self[metric_field] = metric_value
+      end
     end
 
   end

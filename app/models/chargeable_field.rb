@@ -21,28 +21,23 @@ class ChargeableField < ApplicationRecord
 
   # returns category(Vm, Container), measure (CPU, MEM, .. ), dimension(max_number, max_mem)
   def showback_measure
-    {'cpu'        => 'CPU',
-     'cpu_cores'  => 'CPU',
-     'memory'     => 'MEM',
-     'net_io'     => 'TODO',
-     'disk_io'    => 'TODO',
-     'fixed'      => 'CPU'}[group]
+    group
   end
 
   def showback_dimension
-    {'cpu_usagemhz_rate_average'         => ['average', 'Mhz', 'duration'],
-     "v_derived_cpu_total_cores_used"    => ['max_number_of_cpu', '', 'duration'],
-     "derived_vm_numvcpus"               => ['max_number_of_cpu', '', 'duration'],
-     "derived_memory_used"               => ['max_mem', 'B', 'duration'],
-     "derived_memory_available"          => ['max_mem', 'B', 'duration'],
-     "net_usage_rate_average"            => ['TODO', '',''],
-     "disk_usage_rate_average"           => ['TODO', '',''],
-     "fixed_compute_1"                   => ['number','', 'occurrence'],
-     "fixed_compute_2"                   => ['number','', 'occurrence'],
-     "derived_vm_allocated_disk_storage" => ['TODO', '',''],
-     "derived_vm_used_disk_storage"      => ['TODO', '',''],
-     "fixed_storage_1"                   => ['TODO', '',''],
-     "fixed_storage_2"                   => ['TODO', '','']}[metric]
+    {'cpu_usagemhz_rate_average'         => ['cpu_usagemhz_rate_average', 'Mhz', 'duration'],
+     "v_derived_cpu_total_cores_used"    => ['v_derived_cpu_total_cores_used', '', 'duration'],
+     "derived_vm_numvcpus"               => ['derived_vm_numvcpus', '', 'duration'],
+     "derived_memory_used"               => ['derived_memory_used', 'B', 'duration'],
+     "derived_memory_available"          => ['derived_memory_available', 'B', 'duration'],
+     "net_usage_rate_average"            => ['net_usage_rate_average', '',''],
+     "disk_usage_rate_average"           => ['disk_usage_rate_average', '',''],
+     "fixed_compute_1"                   => ['fixed_compute_1','', 'occurrence'],
+     "fixed_compute_2"                   => ['fixed_compute_2','', 'occurrence'],
+     "derived_vm_allocated_disk_storage" => ['derived_vm_allocated_disk_storage', '',''],
+     "derived_vm_used_disk_storage"      => ['derived_vm_used_disk_storage', '',''],
+     "fixed_storage_1"                   => ['fixed_storage_1', '',''],
+     "fixed_storage_2"                   => ['fixed_storage_2', '','']}[metric]
   end
 
   def measure(consumption, options)

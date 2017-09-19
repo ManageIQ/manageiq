@@ -27,11 +27,12 @@ class ChargebackRateDetail < ApplicationRecord
     measure = rate_detail.chargeable_field.showback_measure
     dimension, unit, calculation = rate_detail.chargeable_field.showback_dimension
 
-    showback_rate = ManageIQ::Consumption::ShowbackRate.find_or_create_by(:category  => category,
-                                                                          :measure   => measure,
-                                                                          :dimension => dimension,
+    showback_rate = ManageIQ::Consumption::ShowbackRate.find_or_create_by(:category            => category,
+                                                                          :measure             => measure,
+                                                                          :dimension           => dimension,
                                                                           :showback_price_plan => plan,
-                                                                          :calculation =>    calculation)
+                                                                          :calculation         => calculation,
+                                                                          :concept             => rate_detail.id)
 
     fixed_rate = rate_detail.chargeback_tiers.first.fixed_rate.to_f * 100
     variable_rate = rate_detail.chargeback_tiers.first.variable_rate.to_f * 100
