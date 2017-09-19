@@ -149,7 +149,7 @@ module ManagerRefresh
     #              }
     #            })
     #
-    #        And the labmda is defined as:
+    #        And the lambda is defined as:
     #
     #            orchestration_stack_ancestry_save_block = lambda do |_ems, inventory_collection|
     #              stacks_inventory_collection = inventory_collection.dependency_attributes[:orchestration_stacks].try(:first)
@@ -182,7 +182,7 @@ module ManagerRefresh
     #              :custom_reconnect_block => vms_custom_reconnect_block,
     #            })
     #
-    #        And the labmda is defined as:
+    #        And the lambda is defined as:
     #
     #            vms_custom_reconnect_block = lambda do |inventory_collection, inventory_objects_index, attributes_index|
     #              inventory_objects_index.each_slice(1000) do |batch|
