@@ -5,6 +5,7 @@ class GenericObject < ApplicationRecord
   virtual_has_one :custom_action_buttons
 
   belongs_to :generic_object_definition
+  has_one :picture, :through => :generic_object_definition
 
   validates :name, :presence => true
 
