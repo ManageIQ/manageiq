@@ -58,29 +58,7 @@ module Metric::CiMixin::Processing
       end
 
       ActiveMetrics::Base.connection.write_multiple(
-        rt_rows.flat_map do |ts, rt|
-          rt.merge!(Metric::Processing.process_derived_columns(self, rt, interval_name == 'realtime' ? Metric::Helper.nearest_hourly_timestamp(ts) : nil))
-          rt.delete_nils
-          rt_tags   = rt.slice(:capture_interval_name, :capture_interval, :resource_name).symbolize_keys
-          rt_fields = rt.except(:capture_interval_name,
-                                :capture_interval,
-                                :resource_name,
-                                :timestamp,
-                                :instance_id,
-                                :class_name,
-                                :resource_type,
-                                :resource_id)
-
-          rt_fields.map do |k, v|
-            {
-              :timestamp   => ts,
-              :metric_name => k,
-              :value       => v,
-              :resource    => self,
-              :tags        => rt_tags
-            }
-          end
-        end
+        ActiveMetrics::Base.connection.transform_parameters(self, interval_name, start_time, end_time, rt_rows)
       )
 
       update_attribute(:last_perf_capture_on, end_time) if last_perf_capture_on.nil? || last_perf_capture_on.utc.iso8601 < end_time
