@@ -102,7 +102,15 @@ module ManagerRefresh::SaveCollection
             next unless assert_distinct_relation(primary_key_value)
 
             # TODO(lsmola) unify this behavior with object_index_with_keys method in InventoryCollection
-            index            = unique_index_keys_to_s.map { |key| record_key(record, key).to_s }.join(inventory_collection.stringify_joiner)
+            index = unique_index_keys_to_s.map do |attribute|
+              if attribute == "timestamp"
+                type = model_class.type_for_attribute(attribute)
+                type.cast(record_key(record, attribute)).utc.iso8601.to_s
+              else
+                record_key(record, attribute).to_s
+              end
+            end.join(inventory_collection.stringify_joiner)
+
             inventory_object = inventory_objects_index.delete(index)
             hash             = attributes_index.delete(index)
 
@@ -120,11 +128,15 @@ module ManagerRefresh::SaveCollection
               hash_for_update = if inventory_collection.use_ar_object?
                                   record.assign_attributes(hash.except(:id, :type))
                                   values_for_database!(all_attribute_keys,
-                                                       record.attributes.symbolize_keys)
+                                                      record.attributes.symbolize_keys)
                                 elsif serializable_keys?
+                                  # TODO(lsmola) hash data with current DB data to allow subset of data being sent,
+                                  # otherwise we would nullify the not sent attributes. Test e.g. on disks in cloud
                                   values_for_database!(all_attribute_keys,
-                                                       hash)
+                                                      hash)
                                 else
+                                  # TODO(lsmola) hash data with current DB data to allow subset of data being sent,
+                                  # otherwise we would nullify the not sent attributes. Test e.g. on disks in cloud
                                   hash
                                 end
               assign_attributes_for_update!(hash_for_update, update_time)
