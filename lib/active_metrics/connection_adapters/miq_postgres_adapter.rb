@@ -20,14 +20,32 @@ module ActiveMetrics
         obj_perfs, = Benchmark.realtime_block(:db_find_prev_perfs) do
           Metric::Finders.find_all_by_range(resource, start_time, end_time, interval_name).find_each.each_with_object({}) do |p, h|
             data, = Benchmark.realtime_block(:get_attributes) do
+              # TODO(lsmola) calling .attributes takes more time than actually saving all the samples, try to fetch pure
+              # arrays from the PG
               p.attributes.delete_nils
             end
             h.store_path([p.resource_type, p.resource_id, p.capture_interval_name, p.timestamp.utc.iso8601], data.symbolize_keys)
           end
         end
 
+        Benchmark.realtime_block(:preload_vim_performance_state_for_ts) do
+          # Make sure we preload all vim_performance_state_for_ts to avoid n+1 queries
+          condition = if start_time.nil?
+                        nil
+                      elsif start_time == end_time
+                        {:timestamp => start_time}
+                      elsif end_time.nil?
+                        resource.class.arel_table[:timestamp].gteq(start_time)
+                      else
+                        {:timestamp => start_time..end_time}
+                      end
+
+          resource.preload_vim_performance_state_for_ts_iso8601(condition)
+        end
+
         Benchmark.realtime_block(:process_perfs) do
           rt_rows.each do |ts, rt|
+            # TODO(lsmola) cycle through possible multiple resources
             rt[:resource_id] = resource.id
             rt[:resource_type] = resource.class.base_class.name
 
