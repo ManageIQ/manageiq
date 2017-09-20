@@ -74,8 +74,8 @@ class EmbeddedAnsible
 
   def self.api_connection
     if MiqEnvironment::Command.is_container?
-      host = ENV["ANSIBLE_SERVICE_NAME"]
-      port = 80
+      host = ENV["ANSIBLE_SERVICE_HOST"]
+      port = ENV["ANSIBLE_SERVICE_PORT_HTTP"]
     else
       host = "localhost"
       port = HTTP_PORT
