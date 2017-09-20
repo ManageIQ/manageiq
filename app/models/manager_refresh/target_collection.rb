@@ -42,10 +42,10 @@ module ManagerRefresh
     end
 
     # Returns targets in a format:
-    # {
-    #   :vms => {:ems_ref => Set.new(["vm_ref_1", "vm_ref2"])}
-    #   :network_ports => {:ems_ref => Set.new(["network_port_1", "network_port2"])
-    # }
+    #   {
+    #     :vms => {:ems_ref => Set.new(["vm_ref_1", "vm_ref2"])},
+    #     :network_ports => {:ems_ref => Set.new(["network_port_1", "network_port2"])
+    #   }
     #
     # Then we can quickly access all objects affected by:
     #   NetworkPort.where(target_collection.manager_refs_by_association[:network_ports].to_a) =>
