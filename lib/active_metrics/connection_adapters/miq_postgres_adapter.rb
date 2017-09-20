@@ -18,8 +18,11 @@ module ActiveMetrics
 
       def transform_parameters(resource, interval_name, start_time, end_time, rt_rows)
         obj_perfs, = Benchmark.realtime_block(:db_find_prev_perfs) do
-          Metric::Finders.find_all_by_range(resource, start_time, end_time, interval_name).each_with_object({}) do |p, h|
-            h.store_path([p.resource_type, p.resource_id, p.capture_interval_name, p.timestamp.utc.iso8601], p.attributes.symbolize_keys)
+          Metric::Finders.find_all_by_range(resource, start_time, end_time, interval_name).find_each.each_with_object({}) do |p, h|
+            data, = Benchmark.realtime_block(:get_attributes) do
+              p.attributes.delete_nils
+            end
+            h.store_path([p.resource_type, p.resource_id, p.capture_interval_name, p.timestamp.utc.iso8601], data.symbolize_keys)
           end
         end
 
