@@ -132,7 +132,7 @@
 - :name: tower_op_failure
   :message: 'The operation %{op_name} %{op_arg} on %{tower} has failed to complete. Please check the logs for further details.'
   :expires_in: 24.hours
-  :level: :success
+  :level: :error
   :audience: global
 - :name: orchestration_stack_retired
   :message: Orchestration Stack %{subject} has been retired.
