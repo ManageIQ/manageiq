@@ -12,27 +12,29 @@ module ActiveMetrics
 
       def write_multiple(*params)
         resource, interval_name, start_time, end_time, data = params.first
-
-        Benchmark.realtime_block(:write_multiple) do
-          write_rows(interval_name, resource, start_time, end_time, data)
-
-          data
-        end
+        write_rows(interval_name, resource, start_time, end_time, data)
+        data
       end
 
       def transform_parameters(resource, interval_name, start_time, end_time, rt_rows)
         obj_perfs, = Benchmark.realtime_block(:db_find_prev_perfs) do
-          # TODO(lsmola) store just attributes, not whole AR objects here
-          Metric::Finders.hash_by_capture_interval_name_and_timestamp(resource, start_time, end_time, interval_name)
+          Metric::Finders.find_all_by_range(resource, start_time, end_time, interval_name).each_with_object({}) do |p, h|
+            h.store_path([p.resource_type, p.resource_id, p.capture_interval_name, p.timestamp.utc.iso8601], p.attributes.symbolize_keys)
+          end
         end
 
-        rt_rows.each do |ts, rt|
-          if (perf = obj_perfs.fetch_path(interval_name, ts))
-            rt.reverse_merge!(perf.attributes.symbolize_keys)
-            rt.delete(:id) # Remove protected attributes
-          end
+        Benchmark.realtime_block(:process_perfs) do
+          rt_rows.each do |ts, rt|
+            rt[:resource_id] = resource.id
+            rt[:resource_type] = resource.class.base_class.name
 
-          rt.merge!(Metric::Processing.process_derived_columns(resource, rt, interval_name == 'realtime' ? Metric::Helper.nearest_hourly_timestamp(ts) : nil))
+            if (perf = obj_perfs.fetch_path([rt[:resource_type], rt[:resource_id], interval_name, ts]))
+              rt.reverse_merge!(perf)
+              rt.delete(:id) # Remove protected attributes
+            end
+
+            rt.merge!(Metric::Processing.process_derived_columns(resource, rt, interval_name == 'realtime' ? Metric::Helper.nearest_hourly_timestamp(ts) : nil))
+          end
         end
         # Assign nil so GC can clean it up
         obj_perfs = nil
@@ -60,9 +62,7 @@ module ActiveMetrics
         # Create or update the performance rows from the hashes
         _log.info("#{log_header} Processing #{data.length} performance rows...")
         data.each do |_ts, v|
-          Benchmark.realtime_block(:process_perfs) do
-            v[:resource_id] = resource.id
-            v[:resource_type] = resource.class.base_class.name
+          Benchmark.realtime_block(:process_build_ics) do
             samples_inventory_collection.build(v)
           end
         end
