@@ -156,9 +156,11 @@ describe EmbeddedAnsible do
 
     describe ".api_connection" do
       around do |example|
-        ENV["ANSIBLE_SERVICE_NAME"] = "ansible-service"
+        ENV["ANSIBLE_SERVICE_HOST"] = "192.0.2.1"
+        ENV["ANSIBLE_SERVICE_PORT_HTTP"] = "1234"
         example.run
-        ENV.delete("ANSIBLE_SERVICE_NAME")
+        ENV.delete("ANSIBLE_SERVICE_HOST")
+        ENV.delete("ANSIBLE_SERVICE_PORT_HTTP")
       end
 
       it "connects to the ansible service when running in a container" do
@@ -166,7 +168,7 @@ describe EmbeddedAnsible do
         expect(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
 
         expect(AnsibleTowerClient::Connection).to receive(:new).with(
-          :base_url   => "http://ansible-service/api/v1",
+          :base_url   => "http://192.0.2.1:1234/api/v1",
           :username   => "admin",
           :password   => "adminpassword",
           :verify_ssl => 0

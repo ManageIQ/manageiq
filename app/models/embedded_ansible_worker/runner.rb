@@ -71,7 +71,7 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
     server = MiqServer.my_server(true)
 
     if MiqEnvironment::Command.is_container?
-      host = ENV["ANSIBLE_SERVICE_NAME"]
+      host = ENV["ANSIBLE_SERVICE_HOST"]
       path = "/api/v1"
     else
       host = server.hostname || server.ipaddress

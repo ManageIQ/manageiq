@@ -70,9 +70,9 @@ describe EmbeddedAnsibleWorker::Runner do
         end
 
         around do |example|
-          ENV["ANSIBLE_SERVICE_NAME"] = "ansible-service"
+          ENV["ANSIBLE_SERVICE_HOST"] = "192.0.2.1"
           example.run
-          ENV.delete("ANSIBLE_SERVICE_NAME")
+          ENV.delete("ANSIBLE_SERVICE_HOST")
         end
 
         it "creates the provider with the service name for the URL" do
@@ -84,7 +84,7 @@ describe EmbeddedAnsibleWorker::Runner do
 
           provider = ManageIQ::Providers::EmbeddedAnsible::Provider.first
           expect(provider.zone).to eq(miq_server.zone)
-          expect(provider.default_endpoint.url).to eq("https://ansible-service/api/v1")
+          expect(provider.default_endpoint.url).to eq("https://192.0.2.1/api/v1")
           userid, password = provider.auth_user_pwd
           expect(userid).to eq("admin")
           expect(password).to eq("secret")
