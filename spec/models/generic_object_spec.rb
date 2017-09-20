@@ -312,4 +312,31 @@ describe GenericObject do
       expect(go.delete_from_property_association(:vms, vm1.id)).to be_nil
     end
   end
+
+  describe '#add_to_service' do
+    let(:service) { FactoryGirl.create(:service) }
+
+    it 'associates the generic object to the service' do
+      go.add_to_service(service)
+      expect(service.reload.generic_objects).to include(go)
+    end
+
+    it 'can associate to multiple services' do
+      go.add_to_service(FactoryGirl.create(:service))
+      go.add_to_service(service)
+      expect(service.reload.generic_objects).to include(go)
+    end
+  end
+
+  describe '#remove_from_service' do
+    let(:service) { FactoryGirl.create(:service) }
+
+    it 'removes the generic object from the service' do
+      go.add_to_service(service)
+      expect(service.generic_objects).to include(go)
+
+      go.remove_from_service(service)
+      expect(service.generic_objects).to be_blank
+    end
+  end
 end

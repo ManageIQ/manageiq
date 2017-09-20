@@ -83,6 +83,14 @@ class GenericObject < ApplicationRecord
     klass.where(:id => common_ids).to_a
   end
 
+  def add_to_service(service)
+    service.add_resource!(self)
+  end
+
+  def remove_from_service(service)
+    service.remove_resource(self)
+  end
+
   def inspect
     attributes_as_string = (self.class.column_names - ["properties"]).collect do |name|
       "#{name}: #{attribute_for_inspect(name)}"
