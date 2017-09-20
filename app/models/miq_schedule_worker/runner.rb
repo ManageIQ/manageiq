@@ -472,7 +472,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
             # In Rufus::Scheduler Version 2, schedule returns a Job
             # In Rufus::Scheduler Version 3, schedule could return a Job/JobID, depending on whether :job => true is
             # passed to opts
-            if j.kind_of?(Fixnum)
+            if j.kind_of?(Integer)
               @system_scheduler.unschedule(j)
             else
               if j.respond_to?(:tags)

@@ -93,7 +93,7 @@ module MiqServer::WorkerManagement::Monitor::SystemLimits
     end
 
     value = settings[:memory_threshold]
-    unless value.kind_of?(Fixnum)
+    unless value.kind_of?(Integer)
       _log.warn("Allowing worker: [#{options[:worker_name]}] to start since the threshold is invalid: [#{value}], type: [#{value.class.name}]")
       return false
     end

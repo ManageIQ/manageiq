@@ -162,7 +162,7 @@ class GenericObject < ApplicationRecord
   end
 
   # the method parameters are passed into automate as a hash:
-  # {:param_1 => 12, :param_1_type => "Vm", :param_2 => 14, :param_2_type => "Fixnum"}
+  # {:param_1 => 12, :param_1_type => "Vm", :param_2 => 14, :param_2_type => "Integer"}
   # the return value from automate is in $evm.root['method_result']
   def _call_automate(method_name, *args)
     raise "A user is required to send [#{method_name}] to automate." unless @user

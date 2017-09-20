@@ -79,7 +79,7 @@ module MiqReport::Generator::Html
     else
       if row_data[col_name].kind_of?(Time)
         output << "<td#{style_class} " + 'style="text-align:center">'
-      elsif row_data[col_name].kind_of?(Bignum) || row_data[col_name].kind_of?(Fixnum) || row_data[col_name].kind_of?(Float)
+      elsif row_data[col_name].kind_of?(Integer) || row_data[col_name].kind_of?(Float)
         output << "<td#{style_class} " + 'style="text-align:right">'
       else
         output << "<td#{style_class}>"

@@ -80,7 +80,7 @@ describe VmdbDatabase do
       expected_keys = ["client_address", "database", "spid", "is_waiting", "query"]
       expect(connections.first.keys).to match_array(expected_keys)
 
-      expect(connections.first['spid']).to be_kind_of(Fixnum)
+      expect(connections.first['spid']).to be_kind_of(Integer)
     end
   end
 

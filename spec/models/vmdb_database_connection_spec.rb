@@ -90,7 +90,7 @@ describe VmdbDatabaseConnection do
 
   it 'computes wait_time' do
     setting = VmdbDatabaseConnection.all.first
-    expect(setting.wait_time).to be_kind_of(Fixnum)
+    expect(setting.wait_time).to be_kind_of(Integer)
   end
 
   it 'wait_time_ms defaults to 0 on nil query_start' do
