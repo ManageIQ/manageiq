@@ -59,7 +59,8 @@ describe DialogFieldDateControl do
       {
         "value"           => value,
         "show_past_dates" => true,
-        "read_only"       => true
+        "read_only"       => true,
+        "description"     => "description"
       }
     end
 
@@ -78,6 +79,10 @@ describe DialogFieldDateControl do
 
       it "sets the read_only" do
         expect(dialog_field.read_only).to be_truthy
+      end
+
+      it "sets the description" do
+        expect(dialog_field.description).to eq("description")
       end
     end
 

@@ -283,6 +283,7 @@ describe DialogFieldTextBox do
         "data_type"      => "datatype",
         "value"          => value,
         "protected"      => true,
+        "description"    => "description",
         "required"       => true,
         "read_only"      => true,
         "validator_type" => "regex",
@@ -301,6 +302,10 @@ describe DialogFieldTextBox do
 
       it "sets the required" do
         expect(dialog_field.required).to be_truthy
+      end
+
+      it "sets the description" do
+        expect(dialog_field.description).to eq("description")
       end
 
       it "sets the read_only" do
