@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### Added
 - Internationalization
-  - i8N: Add Data Types to dictionary [(#15922)](https://github.com/ManageIQ/manageiq/pull/15922)
+  - i18n: Add Data Types to dictionary [(#15922)](https://github.com/ManageIQ/manageiq/pull/15922)
 - Providers
   - Add cloud volume backup delete and restore actions. [(#15891)](https://github.com/ManageIQ/manageiq/pull/15891)
   - Add instantiation_attributes to Container Template Parameter [(#15863)](https://github.com/ManageIQ/manageiq/pull/15863)
@@ -2154,7 +2154,7 @@ and before subscription is enabled
   - RBAC Control of Menus and Features
   - Reconfiguring a Service
   - Set Ownership of a Service
-  - I18n support added to the Self Service UI
+  - i18n support added to the Self Service UI
   - Self Service UI group switcher
   - Support for Custom Buttons that use Dialogs
   - Navigation bar restyled to match Operations UI
@@ -2169,10 +2169,10 @@ and before subscription is enabled
   - Dashboard no data cards
   - Refresh option in Configuration dropdown
   - Container Builds tab, Chargeback  
-- I18n
+- i18n
   - Marked translated strings directly in UI
   - Gettext support
-  - I18n for toolbars
+  - i18n for toolbars
 - Topology Status Colors
 - Vertical navigation menus
 - VM Reconfigure - add/remove disks
@@ -2473,7 +2473,7 @@ and before subscription is enabled
   - Patternfly styling
   - Schedule Editor updated to use Angular and RESTful routes
   - Increased chart responsiveness
-  - Fixes for Japanese I18n support
+  - Fixes for Japanese i18n support
   - Fixed alignment of Foreman explorer RBAC features with the UI
 - Chargeback: selectable units for Chargeback Rates
 
@@ -2559,8 +2559,8 @@ and before subscription is enabled
 - AngularJS
   - Repository Editor using AngularJS
   - Schedule editor converted to AngularJS
-- I18N
-  - HAML and I18n strings 100% completed in views
+- i18n
+  - HAML and i18n strings 100% completed in views
   - Multi-character set language support
   - Can now set the locale for both server and user
 - HTML5 Console for RHEVM, VMware, and OpenStack
@@ -2616,9 +2616,9 @@ and before subscription is enabled
 - Systemd fleecing support
 - XFS filesystem support
 
-### I18n
-  - All strings in the views have been converted to use gettext (I18n) calls
-  - Can add/update I18n files with translations
+### i18n
+  - All strings in the views have been converted to use gettext (i18n) calls
+  - Can add/update i18n files with translations
 
 ### Service Dialogs
 - Dynamic field support: text boxes, text area boxes, checkboxes, radio buttons, date/time control
