@@ -3270,9 +3270,19 @@
           :hidden: true
           :identifier: db_refresh
 
+# Documentation
+- :name: Documentation
+  :description: Open the Documentation Page
+  :feature_type: node
+  :identifier: documentation
+# Product
+- :name: Product
+  :description: Open the Product Website
+  :feature_type: node
+  :identifier: product
 # About
 - :name: About
-  :description:
+  :description: Show the About Information
   :feature_type: node
   :identifier: about
 
