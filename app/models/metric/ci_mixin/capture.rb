@@ -131,19 +131,19 @@ module Metric::CiMixin::Capture
     end
     raise ArgumentError, _("end_time cannot be specified if start_time is nil") if start_time.nil? && !end_time.nil?
 
+    start_time, end_time = fix_capture_start_end_time(interval_name, start_time, end_time)
+    start_range, end_range, counters_data = just_perf_capture(interval_name, start_time, end_time)
+
+    perf_process(interval_name, start_range, end_range, counters_data) if start_range
+  end
+
+  def fix_capture_start_end_time(interval_name, start_time, end_time)
     start_time = start_time.utc unless start_time.nil?
     end_time = end_time.utc unless end_time.nil?
-
-    log_header = "[#{interval_name}]"
-    log_time = ''
-    log_time << ", start_time: [#{start_time}]" unless start_time.nil?
-    log_time << ", end_time: [#{end_time}]" unless end_time.nil?
 
     # Determine the start_time for capturing if not provided
     if interval_name == 'historical'
       start_time = Metric::Capture.historical_start_time if start_time.nil?
-
-      interval_name_for_capture = 'hourly'
     else
       start_time = last_perf_capture_on if start_time.nil?
       if start_time.nil? && interval_name == 'hourly'
@@ -151,10 +151,11 @@ module Metric::CiMixin::Capture
         #   historical data, so we shorten the query
         start_time = 4.hours.ago.utc
       end
-
-      interval_name_for_capture = interval_name
     end
+    [start_time, end_time]
+  end
 
+  def just_perf_capture(interval_name, start_time = nil, end_time = nil)
     # Determine the expected start time, so we can detect gaps or missing data
     expected_start_range = start_time
     # If we've changed power state within the last hour, the returned data
@@ -171,12 +172,18 @@ module Metric::CiMixin::Capture
       expected_start_range = expected_start_range.iso8601
     end
 
+    log_header = "[#{interval_name}]"
+    log_time = ''
+    log_time << ", start_time: [#{start_time}]" unless start_time.nil?
+    log_time << ", end_time: [#{end_time}]" unless end_time.nil?
+
     _log.info("#{log_header} Capture for #{log_target}#{log_time}...")
 
-    start_range = end_range = counters = counter_values = nil
+    start_range = end_range = counters = counter_values = counters_data = nil
     _, t = Benchmark.realtime_block(:total_time) do
       Benchmark.realtime_block(:capture_state) { perf_capture_state }
 
+      interval_name_for_capture = interval_name == 'historical' ? 'hourly' : interval_name
       counters_by_mor, counter_values_by_mor_and_ts = perf_collect_metrics(interval_name_for_capture, start_time, end_time)
 
       counters       = counters_by_mor[ems_ref] || {}
@@ -213,9 +220,9 @@ module Metric::CiMixin::Capture
           :counter_values => counter_values
         }
       }
-
-      perf_process(interval_name, start_range, end_range, counters_data)
     end
+
+    [start_range, end_range, counters_data]
   end
 
   def perf_capture_callback(task_ids, _status, _message, _result)
