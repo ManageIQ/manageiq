@@ -1055,6 +1055,9 @@
       :starting_timeout: 20.minutes
       :poll: 10.seconds
       :memory_threshold: 0.megabytes
+    :ems_metrics_collector_worker:
+      :defaults:
+        :poll: 30.seconds
     :ems_refresh_core_worker:
       :poll: 1.seconds
       :nice_delta: 1
@@ -1089,14 +1092,6 @@
         :memory_threshold: 500.megabytes
         :poll_method: :normal
         :queue_timeout: 10.minutes
-      :ems_metrics_collector_worker:
-        :defaults:
-          :count: 2
-          :memory_threshold: 400.megabytes
-          :nice_delta: 3
-          :poll_method: :escalate
-        :ems_metrics_collector_worker_google: {}
-        :ems_metrics_collector_worker_redhat: {}
       :ems_metrics_processor_worker:
         :count: 2
         :memory_threshold: 600.megabytes
