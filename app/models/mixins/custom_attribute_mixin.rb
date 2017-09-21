@@ -27,7 +27,7 @@ module CustomAttributeMixin
     end
 
     def self.custom_keys
-      custom_attr_scope = CustomAttribute.where(:resource_type => base_class).where.not(:name => nil).distinct.pluck(:name, :section)
+      custom_attr_scope = CustomAttribute.where(:resource_type => base_class.name).where.not(:name => nil).distinct.pluck(:name, :section)
       custom_attr_scope.map do |x|
         "#{x[0]}#{x[1] ? SECTION_SEPARATOR + x[1] : ''}"
       end
