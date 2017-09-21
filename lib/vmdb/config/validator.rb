@@ -59,7 +59,7 @@ module VMDB
           valid = false; errors << [:nameresolution, "webservices nameresolution, \"#{data.nameresolution}\", invalid. Should be one of: true or false"]
         end
 
-        if keys.include?(:timeout) && !data.timeout.kind_of?(Fixnum)
+        if keys.include?(:timeout) && !data.timeout.kind_of?(Integer)
           valid = false; errors << [:timeout, "timeout, \"#{data.timeout}\", invalid. Should be numeric"]
         end
 
@@ -108,7 +108,7 @@ module VMDB
         keys = data.each_pair.to_a.transpose.first.to_set
 
         if keys.include?(:timeout)
-          unless data.timeout.kind_of?(Fixnum)
+          unless data.timeout.kind_of?(Integer)
             valid = false; errors << [:timeout, "timeout, \"#{data.timeout}\", invalid. Should be numeric"]
           end
 
@@ -118,7 +118,7 @@ module VMDB
         end
 
         if keys.include?(:interval)
-          unless data.interval.kind_of?(Fixnum)
+          unless data.interval.kind_of?(Integer)
             valid, key, message = [false, :interval, "interval, \"#{data.interval}\", invalid.  invalid. Should be numeric"]
           end
 
