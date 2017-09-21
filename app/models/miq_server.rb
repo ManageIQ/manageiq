@@ -22,11 +22,12 @@ class MiqServer < ApplicationRecord
   belongs_to              :vm, :inverse_of => :miq_server
   belongs_to              :zone
   has_many                :messages,  :as => :handler, :class_name => 'MiqQueue'
-  has_many                :miq_events, :as => :target, :dependent => :destroy
+  has_many                :miq_events, :as => :target
 
   cattr_accessor          :my_guid_cache
 
   before_destroy          :validate_is_deleteable
+  after_destroy           :destroy_linked_events_queue
 
   virtual_column :zone_description, :type => :string
 
@@ -58,6 +59,19 @@ class MiqServer < ApplicationRecord
     self.is_master  = false
     self.sql_spid   = ActiveRecord::Base.connection.spid
     save
+  end
+
+  def destroy_linked_events_queue
+    MiqQueue.put(
+      :class_name  => "MiqServer",
+      :method_name => 'destroy_linked_events',
+      :args        => [id],
+      :zone        => my_zone
+    )
+  end
+
+  def self.destroy_linked_events(server_id)
+    EventStream.where(:target_id => server_id, :target_type => "MiqServer").destroy_all
   end
 
   def self.setup_data_directory

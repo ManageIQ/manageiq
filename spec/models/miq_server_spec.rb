@@ -368,6 +368,31 @@ describe MiqServer do
         end
       end
     end
+
+    context "after_destroy callback" do
+      let(:remote_server) { EvmSpecHelper.remote_miq_server }
+
+      describe "#destroy_linked_events_queue" do
+        it "queue request to destroy events linked to this server" do
+          remote_server.destroy_linked_events_queue
+          expect(MiqQueue.find_by(:class_name => 'MiqServer').method_name).to eq 'destroy_linked_events'
+        end
+      end
+
+      describe ".destroy_linked_events" do
+        it "destroys all events associated with destroyed server" do
+          FactoryGirl.create(:miq_event, :event_type => "Local TestEvent", :target => @miq_server)
+          FactoryGirl.create(:miq_event, :event_type => "Remote TestEvent 1", :target => remote_server)
+          FactoryGirl.create(:miq_event, :event_type => "Remote TestEvent 1", :target => remote_server)
+
+          expect(MiqEvent.count).to eq 3
+
+          allow(remote_server).to receive(:is_deleteable?).and_return(true)
+          described_class.destroy_linked_events(remote_server.id)
+          expect(MiqEvent.count).to eq 1
+        end
+      end
+    end
   end
 
   it "detects already .running?" do
