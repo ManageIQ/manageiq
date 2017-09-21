@@ -206,7 +206,16 @@ module Metric::CiMixin::Capture
                                              :start_range          => start_range
                                             )
       end
-      perf_process(interval_name, start_range, end_range, counters, counter_values)
+
+      # Convert to format allowing to send multiple resources at once
+      counters_data = {
+        [self.class.base_class.name, self.id] => {
+          :counters       => counters,
+          :counter_values => counter_values
+        }
+      }
+
+      perf_process(interval_name, start_range, end_range, counters_data)
     end
   end
 

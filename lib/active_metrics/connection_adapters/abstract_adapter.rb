@@ -36,9 +36,9 @@ module ActiveMetrics
         raise NotImplementedError, "must implemented by the adapter"
       end
 
-      def transform_parameters(resource, interval_name, _start_time, _end_time, rt_rows)
+      def transform_parameters(_resources, interval_name, _start_time, _end_time, rt_rows)
         rt_rows.flat_map do |ts, rt|
-          rt.merge!(Metric::Processing.process_derived_columns(resource, rt, interval_name == 'realtime' ? Metric::Helper.nearest_hourly_timestamp(ts) : nil))
+          rt.merge!(Metric::Processing.process_derived_columns(rt[:resource], rt, interval_name == 'realtime' ? Metric::Helper.nearest_hourly_timestamp(ts) : nil))
           rt.delete_nils
           rt_tags   = rt.slice(:capture_interval_name, :capture_interval, :resource_name).symbolize_keys
           rt_fields = rt.except(:capture_interval_name,
@@ -47,6 +47,7 @@ module ActiveMetrics
                                 :timestamp,
                                 :instance_id,
                                 :class_name,
+                                :resource,
                                 :resource_type,
                                 :resource_id)
 
@@ -55,7 +56,7 @@ module ActiveMetrics
               :timestamp   => ts,
               :metric_name => k,
               :value       => v,
-              :resource    => resource,
+              :resource    => rt[:resource],
               :tags        => rt_tags
             }
           end

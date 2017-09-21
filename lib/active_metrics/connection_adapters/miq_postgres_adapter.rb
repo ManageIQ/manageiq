@@ -11,14 +11,14 @@ module ActiveMetrics
       end
 
       def write_multiple(*params)
-        resource, interval_name, start_time, end_time, data = params.first
-        write_rows(interval_name, resource, start_time, end_time, data)
+        resources, interval_name, start_time, end_time, data = params.first
+        write_rows(resources, interval_name, start_time, end_time, data)
         data
       end
 
-      def transform_parameters(resource, interval_name, start_time, end_time, rt_rows)
+      def transform_parameters(resources, interval_name, start_time, end_time, rt_rows)
         obj_perfs, = Benchmark.realtime_block(:db_find_prev_perfs) do
-          Metric::Finders.find_all_by_range(resource, start_time, end_time, interval_name).find_each.each_with_object({}) do |p, h|
+          Metric::Finders.find_all_by_range(resources, start_time, end_time, interval_name).find_each.each_with_object({}) do |p, h|
             data, = Benchmark.realtime_block(:get_attributes) do
               # TODO(lsmola) calling .attributes takes more time than actually saving all the samples, try to fetch pure
               # arrays from the PG
@@ -35,39 +35,39 @@ module ActiveMetrics
                       elsif start_time == end_time
                         {:timestamp => start_time}
                       elsif end_time.nil?
-                        resource.class.arel_table[:timestamp].gteq(start_time)
+                        VimPerformanceState.arel_table[:timestamp].gteq(start_time)
                       else
                         {:timestamp => start_time..end_time}
                       end
 
-          resource.preload_vim_performance_state_for_ts_iso8601(condition)
+          resources.each { |r| r.preload_vim_performance_state_for_ts_iso8601(condition) }
         end
 
         Benchmark.realtime_block(:process_perfs) do
           rt_rows.each do |ts, rt|
-            # TODO(lsmola) cycle through possible multiple resources
-            rt[:resource_id] = resource.id
-            rt[:resource_type] = resource.class.base_class.name
+            rt[:resource_id]   = rt[:resource].id
+            rt[:resource_type] = rt[:resource].class.base_class.name
 
             if (perf = obj_perfs.fetch_path([rt[:resource_type], rt[:resource_id], interval_name, ts]))
               rt.reverse_merge!(perf)
               rt.delete(:id) # Remove protected attributes
             end
 
-            rt.merge!(Metric::Processing.process_derived_columns(resource, rt, interval_name == 'realtime' ? Metric::Helper.nearest_hourly_timestamp(ts) : nil))
+            rt.merge!(Metric::Processing.process_derived_columns(rt[:resource], rt, interval_name == 'realtime' ? Metric::Helper.nearest_hourly_timestamp(ts) : nil))
           end
         end
         # Assign nil so GC can clean it up
         obj_perfs = nil
 
-        return resource, interval_name, start_time, end_time, rt_rows
+        return resources, interval_name, start_time, end_time, rt_rows
       end
 
       private
 
-      def write_rows(interval_name, resource, start_time, end_time, data)
+      def write_rows(resources, interval_name, start_time, end_time, data)
         klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
-        samples_arel = klass.where(:capture_interval_name => interval_name).where(:resource => resource).where(:timestamp => start_time..end_time)
+
+        samples_arel = klass.where(:capture_interval_name => interval_name).where(:resource => resources).where(:timestamp => start_time..end_time)
 
         samples_inventory_collection = ::ManagerRefresh::InventoryCollection.new(
           :manager_ref    => [:resource_type, :resource_id, :timestamp, :capture_interval_name],
@@ -89,7 +89,8 @@ module ActiveMetrics
         end
 
         Benchmark.realtime_block(:process_perfs_db) do
-          ManagerRefresh::SaveInventory.save_inventory(ExtManagementSystem.first, [samples_inventory_collection])
+          # TODO(lsmola) where can I can take the manager from?
+          ManagerRefresh::SaveInventory.save_inventory(resources.first.ext_management_system, [samples_inventory_collection])
         end
         created_count = samples_inventory_collection.created_records.count
         updated_count = samples_inventory_collection.updated_records.count
@@ -103,7 +104,9 @@ module ActiveMetrics
           end
 
           _log.info("#{log_header} Adding missing timestamp intervals...")
-          Benchmark.realtime_block(:add_missing_intervals) { Metric::Processing.add_missing_intervals(resource, "hourly", start_time, end_time) }
+          resources.each do |resource|
+            Benchmark.realtime_block(:add_missing_intervals) { Metric::Processing.add_missing_intervals(resource, "hourly", start_time, end_time) }
+          end
           _log.info("#{log_header} Adding missing timestamp intervals...Complete")
         end
 
