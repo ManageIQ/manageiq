@@ -184,3 +184,53 @@
   :expires_in: 24.hours
   :level: :error
   :audience: global
+- :name: cloud_volume_attach_success
+  :message: 'Attaching Volume %{subject} to Instance %{instance_name} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: cloud_volume_attach_error
+  :message: 'Attaching Volume %{subject} to Instance %{instance_name} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: cloud_volume_detach_success
+  :message: 'Detaching Volume %{subject} from Instance %{instance_name} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: cloud_volume_detach_error
+  :message: 'Detaching Volume %{subject} from Instance %{instance_name} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: cloud_volume_create_success
+  :message: 'Creating Volume %{volume_name} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: cloud_volume_create_error
+  :message: 'Creating Volume %{volume_name} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: cloud_volume_update_success
+  :message: 'Updating Volume %{subject} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: cloud_volume_update_error
+  :message: 'Updating Volume %{subject} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: cloud_volume_delete_success
+  :message: 'Deleting Volume %{subject} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: cloud_volume_delete_error
+  :message: 'Deleting Volume %{subject} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
