@@ -6471,3 +6471,21 @@
       :description: View Metrics
       :feature_type: view
       :identifier: metrics_view
+  - :name: Event Streams
+    :description: Everything under Event Streams
+    :feature_type: node
+    :identifier: event_streams
+    :children:
+    - :name: View
+      :description: View Event Streams
+      :feature_type: view
+      :identifier: event_streams_view
+      :children:
+      - :name: List
+        :description: Display Lists of Event Streams
+        :feature_type: view
+        :identifier: event_streams_show_list
+      - :name: Show
+        :description: Display Individual Event Streams
+        :feature_type: view
+        :identifier: event_streams_show
