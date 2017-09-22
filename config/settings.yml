@@ -1137,9 +1137,9 @@
         :nice_delta: 7
       :smart_proxy_worker:
         :count: 2
-        :memory_threshold: 600.megabytes
+        :memory_threshold: 2.gigabytes
         :queue_timeout: 20.minutes
-        :restart_interval: 2.hours
+        :restart_interval: 6.hours
     :schedule_worker:
       :container_entities_purge_interval: 1.day
       :authentication_check_interval: 1.hour
