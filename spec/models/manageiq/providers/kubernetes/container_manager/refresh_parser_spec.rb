@@ -676,6 +676,15 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         expect(first_obj).to be(second_obj)
       end
     end
+
+    it "returns existing image or nil with store_new_images=false" do
+      obj1 = parser.parse_container_image(shared_image_without_host, shared_ref)
+      obj2 = parser.parse_container_image(shared_image_without_host, shared_ref, :store_new_images => false)
+      obj3 = parser.parse_container_image(shared_image_without_host, unique_ref, :store_new_images => false)
+      expect(obj1).not_to be nil
+      expect(obj2).to be obj2
+      expect(obj3).to be nil
+    end
   end
 
   describe "cross_link_node" do
