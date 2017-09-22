@@ -9,7 +9,20 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'application_helper'
 
+# Fixing a bug with miq-kernel, should be updated to match this or just removed
+module Kernel
+  def require_relative(path)
+    if File.exist?(path)
+      require path
+    else
+      require File.join(File.dirname(caller[0]), path.to_str)
+    end
+  end
+end
+
 require 'rspec/rails'
+require 'aruba/rspec'
+require 'database_cleaner'
 require 'vcr'
 require 'cgi'
 
@@ -38,17 +51,39 @@ RSpec.configure do |config|
   end
 
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
-  config.use_transactional_fixtures = true
-  config.use_instantiated_fixtures  = false
+
+  config.before(:suite) do
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
+  config.before(:each) do
+    DatabaseCleaner.strategy = :transaction
+  end
+
+  config.before(:each, :type => :worker) do
+    DatabaseCleaner.strategy = :truncation
+  end
+
+  config.before(:each) do
+    DatabaseCleaner.start
+  end
+
+  config.append_after(:each) do
+    DatabaseCleaner.clean
+  end
 
   # From rspec-rails, infer what helpers to mix in, such as `get` and
   # `post` methods in spec/controllers, without specifying type
   config.infer_spec_type_from_file_location!
+  WorkerSpecHelper.setup_worker_dir_metadata(config)
 
   unless ENV['CI']
     # File store for --only-failures option
     config.example_status_persistence_file_path = Rails.root.join("tmp/rspec_example_store.txt")
   end
+
+  config.include Aruba::Api, :type => :worker
+  config.include WorkerSpecHelper, :type => :worker
 
   config.include Spec::Support::RakeTaskExampleGroup, :type => :rake_task
 
