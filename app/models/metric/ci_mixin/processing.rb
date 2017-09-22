@@ -11,10 +11,15 @@ module Metric::CiMixin::Processing
 
     affected_timestamps = []
 
-    # TODO(lsmola) group by class and fetch at once?
-    # Transforming [Class, id] that were transferred via the queue into the ActiveRecord objects
-    counters_data.transform_keys! { |x| x.first.constantize.find(x.second) }
+    # Fetch ActiveRecord object by 1 query per Model
+    grouped_resource_refs = counters_data.keys.each_with_object({}) { |x, obj| (obj[x.first] ||= []) << x.second }
+    fetched_records = grouped_resource_refs.keys.each_with_object({}) do |x, obj|
+      x.constantize.where(:id => grouped_resource_refs[x]).each { |rec| obj[[x, rec.id]] = rec }
+    end
+    # Transforming [Class, id] that were sent via the counters_data into the ActiveRecord objects
+    counters_data.transform_keys! { |x| fetched_records[x] }
     resources = counters_data.keys
+
     _log.info("#{log_header} Processing for #{log_specific_targets(resources)}, for range [#{start_time} - #{end_time}]...")
 
     dummy, t = Benchmark.realtime_block(:total_time) do
