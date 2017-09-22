@@ -460,7 +460,7 @@ module EmsCommon
       when "security_group_tag"               then tag(SecurityGroup)
       end
 
-      return if params[:pressed].include?("tag") && !%w(host_tag vm_tag miq_template_tag).include?(params[:pressed])
+      return if params[:pressed].include?("tag") && !%w(host_tag vm_tag miq_template_tag instance_tag).include?(params[:pressed])
       pfx = pfx_for_vm_button_pressed(params[:pressed])
       # Handle Host power buttons
       if ["host_shutdown", "host_reboot", "host_standby", "host_enter_maint_mode", "host_exit_maint_mode",
