@@ -149,44 +149,58 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
     event = @queue.deq
     return if event.nil?
 
-    method = "on_#{event[:op].to_s.underscore}_event"
-    send(method, event) if self.respond_to?(method)
-  end
-
-  def on_notify_event(event)
     ems_id = ems_ids_for_notify(event[:server], event[:username])
     return if ems_id.nil?
-    _log.info("Queueing update for EMS id: [#{ems_id}] on event [#{event[:objType]}-#{event[:op]}]#{" for properties: #{event[:changedProps].inspect}" if event.key?(:changedProps)}")
-    EmsRefresh.queue_vc_update(ems_id, event)
+
+    method = "on_#{event[:op].to_s.underscore}_event"
+    send(method, ems_id, event) if respond_to?(method)
   end
-  alias_method :on_create_event, :on_notify_event
-  alias_method :on_delete_event, :on_notify_event
 
-  def on_update_event(event)
-    obj_type, changed_props, change_set = event.values_at(:objType, :changedProps, :changeSet)
+  OBJ_TYPE_TO_TYPE_AND_CLASS = {
+    'VirtualMachine' => [:vm,   VmOrTemplate],
+    'HostSystem'     => [:host, Host]
+  }.freeze
 
-    type, = EmsRefresh::VcUpdates::OBJ_TYPE_TO_TYPE_AND_CLASS[obj_type]
+  def on_create_event(ems_id, event)
+    # TODO: Implement
+    _log.debug("Ignoring refresh for EMS id: [#{ems_id}] on event [#{event[:objType]}-create]")
+    nil
+  end
 
-    changed_props.reject! { |p| !EmsRefresh::VcUpdates.selected_property?(type, p) }
-    change_set.reject!    { |c| !EmsRefresh::VcUpdates.selected_property?(type, c["name"]) }
+  def on_delete_event(ems_id, event)
+    # TODO: Implement
+    _log.debug("Ignoring refresh for EMS id: [#{ems_id}] on event [#{event[:objType]}-delete]")
+    nil
+  end
+
+  def on_update_event(ems_id, event)
+    obj_type, mor, changed_props = event.values_at(:objType, :mor, :changedProps)
+
+    type, klass = OBJ_TYPE_TO_TYPE_AND_CLASS[obj_type]
+    return if type.nil?
+
+    obj = klass.find_by(:ems_ref => mor, :ems_id => ems_id)
+    return if obj.nil?
+
+    changed_props.reject! { |p| !ManageIQ::Providers::Vmware::InfraManager::SelectorSpec.selected_property?(type, p) }
 
     exclude_props = @exclude_props[obj_type]
     if exclude_props
       changed_props.reject! { |p| exclude_props.include?(p) }
-      change_set.reject!    { |c| exclude_props.include?(c["name"]) }
     end
 
     return if changed_props.empty?
 
-    on_notify_event(event)
+    _log.info("Queueing refresh for #{obj.class} id: [#{obj.id}], EMS id: [#{ems_id}] on event [#{obj_type}-update] for properties #{changed_props.inspect}")
+    EmsRefresh.queue_refresh(obj)
   end
 
-  def on_miq_vim_removed_event(event)
+  def on_miq_vim_removed_event(ems_id, event)
     return unless event[:op] == 'MiqVimRemoved'
 
     _log.info("#{log_prefix} Attempting to reconnect broker for EMS with address: [#{event[:server]}] due to error: #{event[:error]}")
 
-    ems = ManageIQ::Providers::Vmware::InfraManager.with_hostname(event[:server]).first
+    ems = ManageIQ::Providers::Vmware::InfraManager.find(ems_id)
     if ems.nil?
       _log.error "#{log_prefix} Unable to find EMS with address: [#{event[:server]}]"
       return
@@ -227,7 +241,7 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
     MiqVimBroker.updateDelay  = nil
     MiqVimBroker.notifyMethod = nil
     MiqVimBroker.cacheScope   = expected_broker_cache_scope
-    MiqVimBroker.setSelector(EmsRefresh::VcUpdates::VIM_SELECTOR_SPEC)
+    MiqVimBroker.setSelector(ManageIQ::Providers::Vmware::InfraManager::SelectorSpec::VIM_SELECTOR_SPEC)
     MiqVimBroker.maxWait      = worker_settings[:vim_broker_max_wait]
     MiqVimBroker.maxObjects   = worker_settings[:vim_broker_max_objects]
 
