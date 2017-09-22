@@ -911,14 +911,6 @@
   :cpu_minimum: 1
   :mem_minimum: 32.megabytes
 :reporting:
-  :format_by_class:
-    :Integer:
-      :function:
-        :name: number_with_delimiter
-    :Float:
-      :function:
-        :name: number_with_delimiter
-  :format_by_column: {}
   :history:
     :keep_reports: 6.months
     :purge_window_size: 100
