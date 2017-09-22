@@ -155,12 +155,16 @@ module Metric::CiMixin::Capture
     [start_time, end_time]
   end
 
-  def just_perf_capture(interval_name, start_time = nil, end_time = nil)
-    # Determine the expected start time, so we can detect gaps or missing data
+  # Determine the expected start time, so we can detect gaps or missing data
+  # @param interval_name [String]
+  # @param start_time [Date] start date passed to pref_capture
+  # @return [String, nil] Expected start date for the gap.
+  #     nil if none
+  def calculate_gap(interval_name, start_time)
     expected_start_range = start_time
     # If we've changed power state within the last hour, the returned data
     #   may not include all the data we'd expect
-    expected_start_range = nil if self.respond_to?(:state_changed_on) && state_changed_on && state_changed_on > Time.now.utc - 1.hour
+    return if try(:state_changed_on) && state_changed_on > 1.hour.ago
 
     unless expected_start_range.nil?
       # Shift the expected time for first item, since you may not get back an
@@ -171,7 +175,9 @@ module Metric::CiMixin::Capture
       end
       expected_start_range = expected_start_range.iso8601
     end
+  end
 
+  def just_perf_capture(interval_name, start_time = nil, end_time = nil)
     log_header = "[#{interval_name}]"
     log_time = ''
     log_time << ", start_time: [#{start_time}]" unless start_time.nil?
@@ -201,6 +207,7 @@ module Metric::CiMixin::Capture
       # Set the last capture on to end_time to prevent forever queueing up the same collection range
       update_attributes(:last_perf_capture_on => end_time || Time.now.utc) if interval_name == 'realtime'
     else
+      expected_start_range = calculate_gap(interval_name, start_time)
       if expected_start_range && start_range > expected_start_range
         _log.warn("#{log_header} For #{log_target}#{log_time}, expected to get data as of [#{expected_start_range}], but got data as of [#{start_range}].")
 
