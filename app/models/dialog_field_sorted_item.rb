@@ -1,5 +1,5 @@
 class DialogFieldSortedItem < DialogField
-  AUTOMATE_VALUE_FIELDS = %w(sort_by sort_order data_type default_value required read_only visible).freeze
+  AUTOMATE_VALUE_FIELDS = %w(sort_by sort_order data_type default_value required read_only visible description).freeze
 
   def initialize_with_values(dialog_values)
     if load_values_on_init?

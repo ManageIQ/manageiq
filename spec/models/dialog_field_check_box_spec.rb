@@ -76,9 +76,10 @@ describe DialogFieldCheckBox do
     let(:dialog_field) { described_class.new }
     let(:automate_hash) do
       {
-        "value"     => value,
-        "required"  => true,
-        "read_only" => true
+        "value"       => value,
+        "required"    => true,
+        "read_only"   => true,
+        "description" => "description"
       }
     end
 
@@ -93,6 +94,10 @@ describe DialogFieldCheckBox do
 
       it "sets the read_only" do
         expect(dialog_field.read_only).to be_truthy
+      end
+
+      it "sets the description" do
+        expect(dialog_field.description).to eq("description")
       end
     end
 

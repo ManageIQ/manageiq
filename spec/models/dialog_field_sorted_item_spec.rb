@@ -302,6 +302,7 @@ describe DialogFieldSortedItem do
         "sort_order"    => "descending",
         "data_type"     => "datatype",
         "default_value" => "default",
+        "description"   => "description",
         "required"      => true,
         "read_only"     => true,
         "values"        => values
@@ -319,6 +320,10 @@ describe DialogFieldSortedItem do
 
       it "sets the sort_order" do
         expect(dialog_field.sort_order).to eq(:descending)
+      end
+
+      it "sets the description" do
+        expect(dialog_field.description).to eq("description")
       end
 
       it "sets the data_type" do
