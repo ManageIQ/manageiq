@@ -17,4 +17,9 @@ puts opts.inspect
 Trollop.die :path, "is required" unless opts[:path_given]
 
 server = opts[:serverid] ? MiqServer.find(opts[:serverid]) : MiqServer.my_server
-ServerSettingsReplicator.replicate(server, opts[:path], opts[:dry_run])
+
+# all servers except source
+target_servers = MiqServer.where.not(:id => server.id)
+puts "Replicating from server id=#{server.id}, path=#{opts[:path]} to #{target_servers.count} servers"
+ServerSettingsReplicator.replicate(server, opts[:path], target_servers, opts[:dry_run])
+puts "Done"
