@@ -181,6 +181,9 @@ class Job < ApplicationRecord
     if target.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm) ||
        target.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Template)
       timeout_adjustment = 4
+    elsif target.kind_of?(ManageIQ::Providers::Azure::CloudManager::Vm) ||
+          target.kind_of?(ManageIQ::Providers::Azure::CloudManager::Template)
+      timeout_adjustment = 4
     end
     timeout_adjustment
   end
