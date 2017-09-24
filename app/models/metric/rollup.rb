@@ -43,19 +43,22 @@ module Metric::Rollup
       :cpu_usage_rate_average,
       :derived_vm_numvcpus,
       :derived_memory_used,
-      :net_usage_rate_average
+      :net_usage_rate_average,
+      :derived_vm_allocated_disk_storage
     ],
     :ContainerService_container_groups    => [
       :cpu_usage_rate_average,
       :derived_vm_numvcpus,
       :derived_memory_used,
-      :net_usage_rate_average
+      :net_usage_rate_average,
+      :derived_vm_allocated_disk_storage
     ],
     :ContainerReplicator_container_groups => [
       :cpu_usage_rate_average,
       :derived_vm_numvcpus,
       :derived_memory_used,
-      :net_usage_rate_average
+      :net_usage_rate_average,
+      :derived_vm_allocated_disk_storage
     ],
     :AvailabilityZone_vms                 => [
       :cpu_usage_rate_average,
@@ -205,6 +208,7 @@ module Metric::Rollup
     new_perf.reverse_merge!(orig_perf)
     new_perf.merge!(Metric::Processing.process_derived_columns(obj, new_perf, hour)) unless DERIVED_COLS_EXCLUDED_CLASSES.include?(obj.class.base_class.name)
     new_perf.merge!(Metric::Statistic.calculate_stat_columns(obj, hour))
+    new_perf.merge!(Metric::PodStorage.fill_pod_allocated_storage(obj))
 
     new_perf
   end
