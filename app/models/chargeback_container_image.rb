@@ -35,7 +35,7 @@ class ChargebackContainerImage < Chargeback
                     Container.joins(:container_group).where('container_groups.container_project_id = ? or container_groups.old_container_project_id = ?', id, id)
                   end
 
-    @containers = @containers.includes(:container_project, :old_container_project, :container_image)
+    @containers = @containers.includes(:container_project, :old_container_project, :container_image, :container_groups)
     return [[]] if @containers.empty?
 
     @data_index = {}
