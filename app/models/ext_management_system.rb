@@ -59,7 +59,7 @@ class ExtManagementSystem < ApplicationRecord
   has_many :customization_specs, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :storage_profiles,    :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :physical_servers,    :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
-  has_many :configuration_templates, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :customization_scripts, :foreign_key => "manager_id", :dependent => :destroy, :inverse_of => :ext_management_system
 
   has_one  :iso_datastore, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
 
