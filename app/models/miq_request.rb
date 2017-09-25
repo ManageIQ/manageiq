@@ -126,17 +126,6 @@ class MiqRequest < ApplicationRecord
     self.tenant         ||= requester.current_tenant
   end
 
-  # TODO: Move call_automate_event_queue from MiqProvisionWorkflow to be done here automagically
-  # Seems like we need to call automate after the MiqProvisionRequest in SQL and wired back to this object
-  #
-  # after_create do
-  #   self.call_automate_event_queue("request_created")
-  # end
-  #
-  # after_update do
-  #   self.call_automate_event_queue("request_updated")
-  # end
-
   def must_have_user
     errors.add(:userid, "must have valid user") unless requester
   end
