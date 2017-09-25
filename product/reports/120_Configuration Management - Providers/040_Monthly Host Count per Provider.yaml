@@ -27,7 +27,17 @@ headers:
 - Region
 - Daily Host Count (Max)
 - Daily Host Socket Count (Max)
-conditions:
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - not:
+        INCLUDES:
+          field: ExtManagementSystemPerformance.ext_management_system-type
+          value: CloudManager
+    - not:
+        INCLUDES:
+          field: ExtManagementSystemPerformance.ext_management_system-type
+          value: ContainerManager
 order: Ascending
 sortby:
 - v_month
