@@ -45,18 +45,10 @@ module MiqProvisionMixin
     update_attribute(:options, options.merge(:vm_notes => notes))
   end
 
-  def call_automate_event(event_name, continue_on_error = true)
-    _log.info("Raising event [#{event_name}] to Automate")
-    MiqAeEvent.raise_evm_event(event_name, self, build_request_event(event_name))
-    _log.info("Raised  event [#{event_name}] to Automate")
-  rescue MiqAeException::Error => err
-    message = "Error returned from #{event_name} event processing in Automate: #{err.message}"
-    if continue_on_error
-      _log.warn("[#{message}] encountered during provisioning - continuing")
-    else
-      _log.error("[#{message}] encountered during provisioning")
-    end
-    return nil
+  def call_automate_event(*args)
+    super
+  rescue MiqAeException::Error
+    # Allow the state machine to complete.
   end
 
   def get_owner
