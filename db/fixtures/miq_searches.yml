@@ -329,16 +329,6 @@
     search_type: default
     db: Host
 - attributes:
-    name: default_Status / Running
-    description: Status / Running
-    filter: !ruby/object:MiqExpression
-      exp:
-        INCLUDES:
-          field: Host-power_state
-          value: "on"
-    search_type: default
-    db: Host
-- attributes:
     name: default_Status / Stopped
     description: Status / Stopped
     filter: !ruby/object:MiqExpression
@@ -377,17 +367,6 @@
         INCLUDES:
           field: Host-power_state
           value: "on"
-    search_type: default
-    db: Host
-- attributes:
-    name: default_Status / Stopped
-    description: Status / Stopped
-    filter: !ruby/object:MiqExpression
-      exp:
-        not:
-          INCLUDES:
-            field: Host-power_state
-            value: "on"
     search_type: default
     db: Host
 - attributes:
