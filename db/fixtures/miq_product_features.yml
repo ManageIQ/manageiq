@@ -4849,6 +4849,10 @@
       :description: Edit Tags of Container Build
       :feature_type: control
       :identifier: container_build_tag
+    - :name: Container Build Scan
+      :description: Perform SmartState Analysis
+      :feature_type: control
+      :identifier: container_build_scan
 
 # ContainerTemplate
 - :name: Templates
