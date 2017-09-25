@@ -185,6 +185,10 @@ class Host < ApplicationRecord
     true
   end
 
+  def self.manager_refresh_unique_index_columns
+    [:ems_id, :ems_ref]
+  end
+
   def self.non_clustered
     where(:ems_cluster_id => nil)
   end
