@@ -153,10 +153,11 @@ class MiqRequest < ApplicationRecord
     }
   end
 
-  def call_automate_event(event_name)
-    _log.info("Raising event [#{event_name}] to Automate")
-    MiqAeEvent.raise_evm_event(event_name, self, build_request_event(event_name))
-    _log.info("Raised  event [#{event_name}] to Automate")
+  def call_automate_event(event_name, synchronous: false)
+    _log.info("Raising event [#{event_name}] to Automate#{' synchronously' if synchronous}")
+    MiqAeEvent.raise_evm_event(event_name, self, build_request_event(event_name), :synchronous => synchronous).tap do
+      _log.info("Raised event [#{event_name}] to Automate")
+    end
   rescue MiqAeException::Error => err
     message = _("Error returned from %{name} event processing in Automate: %{error_message}") % {:name => event_name, :error_message => err.message}
     _log.error(message)
@@ -164,14 +165,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def call_automate_event_sync(event_name)
-    _log.info("Raising event [#{event_name}] to Automate synchronously")
-    ws = MiqAeEvent.raise_evm_event(event_name, self, build_request_event(event_name), :synchronous => true)
-    _log.info("Raised event [#{event_name}] to Automate")
-    return ws
-  rescue MiqAeException::Error => err
-    message = _("Error returned from %{name} event processing in Automate: %{error_message}") % {:name => event_name, :error_message => err.message}
-    _log.error(message)
-    raise
+    call_automate_event(event_name, :synchronous => true)
   end
 
   def automate_event_failed?(event_name)
