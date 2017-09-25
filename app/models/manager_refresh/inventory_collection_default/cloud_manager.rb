@@ -6,7 +6,7 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
         :association            => :vms,
         :delete_method          => :disconnect_inv,
         :attributes_blacklist   => [:genealogy_parent],
-        :use_ar_object          => true, # Because of raw_power_state setter
+        :use_ar_object          => true, # Because of raw_power_state setter and hooks are needed for settings user
         # TODO(lsmola) can't do batch strategy for vms because of key_pairs relation
         :saver_strategy         => :default,
         :batch_extra_attributes => [:power_state, :state_changed_on, :previous_state],
@@ -27,6 +27,7 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
         :delete_method          => :disconnect_inv,
         :attributes_blacklist   => [:genealogy_parent],
         :use_ar_object          => true, # Because of raw_power_state setter
+        :saver_strategy         => :default, # Hooks are needed for setting user
         :batch_extra_attributes => [:power_state, :state_changed_on, :previous_state],
         :builder_params         => {
           :ems_id   => ->(persister) { persister.manager.id },
