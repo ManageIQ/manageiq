@@ -520,7 +520,6 @@ module MiqReport::Generator
       while (rec.timestamp - last_rec.timestamp) > int
         base_attrs = last_rec.attributes.reject { |k, _v| !base_cols.include?(k) }
         last_rec = klass.new(base_attrs.merge(:timestamp => (last_rec.timestamp + int)))
-        # $log.info("XXX: Adding timestamp: [#{last_rec.timestamp}]")
         last_rec.inside_time_profile = false if last_rec.respond_to?(:inside_time_profile)
         arr << last_rec
       end

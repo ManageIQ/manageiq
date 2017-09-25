@@ -174,7 +174,6 @@ describe MiqScheduleWorker::Runner do
 
         context "calling check_roles_changed" do
           before(:each) do
-            # MiqScheduleWorker::Runner.any_instance.stub(:schedules_for_scheduler_role)
             allow(@schedule_worker).to receive(:worker_settings).and_return(Hash.new(5.minutes))
             @schedule_worker.instance_variable_set(:@schedules, :scheduler => [])
 

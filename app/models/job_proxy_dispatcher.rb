@@ -230,7 +230,6 @@ class JobProxyDispatcher
 
     # Return if the active job count meets or exceeds the max allowed concurrent jobs for the agent
     if active_job_count >= concurrent_job_max
-      # _log.debug("Too many active scans using resource: [#{proxy.class}]:[#{proxy.id}]. Count/Limit: [#{active_job_count} / #{concurrent_job_max}]")
       return true
     end
 
@@ -332,7 +331,6 @@ class JobProxyDispatcher
       target_resource = embedded_scan_resource(@vm)
       count = busy_resources_for_embedded_scanning[target_resource]
       if count && count >= count_allowed
-        # _log.debug("Too many active scans using resource: [#{target_resource}], Count/Limit: [#{count} / #{count_allowed}]")
         return true
       end
     rescue

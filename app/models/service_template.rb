@@ -169,13 +169,9 @@ class ServiceTemplate < ApplicationRecord
 
     nh['initiator'] = service_task.options[:initiator] if service_task.options[:initiator]
 
-    # Determine service name
-    # target_name = self.get_option(:target_name)
-    # nh['name'] = target_name unless target_name.blank?
     svc = Service.create(nh)
     svc.service_template = self
 
-    # self.options[:service_guid] = svc.guid
     service_resources.each do |sr|
       nh = sr.attributes.dup
       %w(id created_at updated_at service_template_id).each { |key| nh.delete(key) }

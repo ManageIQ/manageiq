@@ -77,7 +77,6 @@ class Classification < ApplicationRecord
   def ns
     @ns ||= DEFAULT_NAMESPACE if self.new_record?
 
-    # @ns = tag2ns(self.tag.name) unless self.tag.nil?
     return @ns if tag.nil?
 
     return @ns unless @ns.nil?
@@ -344,14 +343,6 @@ class Classification < ApplicationRecord
     unless tag.nil?
       ta = tag.split("/")
       ta[0..(ta.length - 2)].join("/")
-
-      # tnew = []
-      # tag.split("/").each {|level|
-      #   p "level=#{level}"
-      #   tnew.push(level) unless level == self.name
-      #   p "level=#{level}, #{tnew.inspect}, #{(level == self.name)}"
-      # }
-      # tnew.join("/")
     end
   end
 

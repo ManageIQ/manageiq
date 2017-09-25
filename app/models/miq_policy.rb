@@ -435,7 +435,6 @@ class MiqPolicy < ApplicationRecord
   def add_action_for_event(event, action, opt_hash = nil)
     # we now expect an options hash provided by the UI, merge the qualifier with the options_hash
     # overwriting with the values from the options hash
-    #    _log.debug("opt_hash: #{opt_hash.inspect}")
     opt_hash = {:qualifier => :failure}.merge(opt_hash)
 
     # update the correct DB sequence and synchronous value with the value from the UI
