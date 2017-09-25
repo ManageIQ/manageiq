@@ -534,10 +534,12 @@ class MiqRequestWorkflow
 
   def tags
     vm_tags = @values[:vm_tags]
+    return unless vm_tags.kind_of?(Array)
+
     vm_tags.each do |tag_id|
       tag = Classification.find(tag_id)
       yield(tag.name, tag.parent.name)  unless tag.nil?    # yield the tag's name and category
-    end if vm_tags.kind_of?(Array)
+    end
   end
 
   def get_tags
