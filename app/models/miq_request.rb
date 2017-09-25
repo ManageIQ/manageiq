@@ -164,12 +164,8 @@ class MiqRequest < ApplicationRecord
     raise
   end
 
-  def call_automate_event_sync(event_name)
-    call_automate_event(event_name, :synchronous => true)
-  end
-
   def automate_event_failed?(event_name)
-    ws = call_automate_event_sync(event_name)
+    ws = call_automate_event(event_name, :synchronous => true)
 
     if ws.nil?
       _log.warn("Aborting because Automate failed for event <#{event_name}>")
