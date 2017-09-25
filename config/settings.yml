@@ -1065,7 +1065,7 @@
       :event_catcher_google:
         :poll: 15.seconds
       :event_catcher_lenovo:
-        :poll: 4.minutes
+        :poll: 15.seconds
       :event_catcher_cinder:
         :poll: 10.seconds
       :event_catcher_swift:
