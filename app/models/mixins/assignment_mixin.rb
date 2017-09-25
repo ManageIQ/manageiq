@@ -3,6 +3,15 @@
 module AssignmentMixin
   extend ActiveSupport::Concern
   ESCAPED_PREFIX = "escaped".freeze
+  NAMESPACE_SUFFIX = "assigned_to".freeze
+
+  def all_assignments(tag = nil)
+    scope = Tag.where(["name LIKE ?", "%/#{AssignmentMixin::NAMESPACE_SUFFIX}/%"])
+    scope = scope.where(["name LIKE ?", "%#{tag}"]) if tag.present?
+
+    scope
+  end
+  module_function :all_assignments
 
   included do  #:nodoc:
     acts_as_miq_taggable
@@ -188,7 +197,7 @@ module AssignmentMixin
     end
 
     def namespace
-      "/#{base_model.name.underscore}/assigned_to"
+      "/#{base_model.name.underscore}/#{NAMESPACE_SUFFIX}"
     end
   end # module ClassMethods
 end # module AssignmentMixin
