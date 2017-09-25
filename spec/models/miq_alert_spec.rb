@@ -184,6 +184,26 @@ describe MiqAlert do
         expect(mas.severity).to eq('warning')
       end
 
+      it "miq_alert_status.severity = MiqAlert#severity if ems_event.full_data.severity not present" do
+        @alert.severity = "error"
+        @alert.evaluate(
+          [@vm.class.base_class.name, @vm.id],
+          :ems_event => FactoryGirl.create(:ems_event, :full_data => {})
+        )
+        mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
+        expect(mas.severity).to eq('error')
+      end
+
+      it "miq_alert_status.severity = ems_event.full_data.severity  if present and MiqAlert#severity is also present" do
+        @alert.severity = "error"
+        @alert.evaluate(
+          [@vm.class.base_class.name, @vm.id],
+          :ems_event => FactoryGirl.create(:ems_event, :full_data => {:severity => 'info'})
+        )
+        mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
+        expect(mas.severity).to eq('info')
+      end
+
       it "miq_alert_status.severity = nil if  ems_event.full_data.severity not present" do
         @alert.evaluate([@vm.class.base_class.name, @vm.id])
         mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first

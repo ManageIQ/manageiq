@@ -1,6 +1,8 @@
 class MiqAlert < ApplicationRecord
   include UuidMixin
 
+  SEVERITIES = [nil, "info", "warning", "error"]
+
   serialize :miq_expression
   serialize :hash_expression
   serialize :options
@@ -9,6 +11,7 @@ class MiqAlert < ApplicationRecord
   validates_uniqueness_of   :description, :guid
   validate :validate_automate_expressions
   validate :validate_single_expression
+  validates :severity, :inclusion => { :in => SEVERITIES }
 
   has_many :miq_alert_statuses, :dependent => :destroy
   before_save :set_responds_to_events
@@ -235,12 +238,13 @@ class MiqAlert < ApplicationRecord
   end
 
   def add_status_post_evaluate(target, result, event)
-    status_description, severity, url, ems_ref, resolved = event.try(:parse_event_metadata)
+    status_description, event_severity, url, ems_ref, resolved = event.try(:parse_event_metadata)
     status = miq_alert_statuses.find_or_initialize_by(:resource => target, :event_ems_ref => ems_ref)
     status.result = result
     status.ems_id = target.try(:ems_id)
     status.description = status_description || description
-    status.severity = severity unless severity.blank?
+    status.severity = severity
+    status.severity = event_severity unless event_severity.blank?
     status.url = url unless url.blank?
     status.event_ems_ref = ems_ref unless ems_ref.blank?
     status.resolved = resolved
