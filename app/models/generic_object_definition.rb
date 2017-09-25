@@ -34,6 +34,9 @@ class GenericObjectDefinition < ApplicationRecord
 
   before_destroy    :check_not_in_use
 
+  delegate :count, :to => :generic_objects, :prefix => true, :allow_nil => false
+  virtual_column :generic_objects_count, :type => :integer
+
   FEATURES.each do |feature|
     define_method("property_#{feature}s") do
       return errors[:properties] if properties_changed? && !valid?
