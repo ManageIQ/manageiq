@@ -121,6 +121,7 @@ describe EmbeddedAnsible do
         expect(nginx_service).to receive(:enable).and_return(nginx_service)
         expect(supervisord_service).to receive(:enable).and_return(supervisord_service)
         expect(rabbitmq_service).to receive(:enable).and_return(rabbitmq_service)
+        expect(described_class).to receive(:update_proxy_settings)
       end
 
       it "waits for Ansible to respond" do
@@ -481,6 +482,36 @@ describe EmbeddedAnsible do
         auth = described_class.send(:generate_database_authentication)
         expect(auth.userid).to eq("awx")
         expect(auth.password).to eq(password)
+      end
+    end
+
+    describe ".update_proxy_settings (private)" do
+      let(:file_content) do
+        <<-EOF
+# Arbitrary line 1
+
+# Arbitrary line 2
+AWX_TASK_ENV['HTTP_PROXY'] = 'somehost'
+AWX_TASK_ENV['HTTPS_PROXY'] = 'somehost'
+AWX_TASK_ENV['NO_PROXY'] = 'somehost'
+EOF
+      end
+      let(:proxy_uri) { "http://user:password@localhost:3333" }
+      let(:settings_file) { Tempfile.new("settings.py") }
+      before do
+        settings_file.write(file_content)
+        settings_file.close
+        stub_const("EmbeddedAnsible::SETTINGS_FILE", settings_file.path)
+        expect(VMDB::Util).to receive(:http_proxy_uri).and_return(proxy_uri)
+      end
+
+      it "add current proxy info" do
+        described_class.send(:update_proxy_settings)
+        new_contents = File.read(settings_file.path)
+        expect(new_contents).to include("AWX_TASK_ENV['HTTP_PROXY'] = '#{proxy_uri}'\n")
+        expect(new_contents).to include("AWX_TASK_ENV['HTTPS_PROXY'] = '#{proxy_uri}'\n")
+        expect(new_contents).to include("AWX_TASK_ENV['NO_PROXY'] = '127.0.0.1'\n")
+        expect(new_contents).not_to include("'somehost'")
       end
     end
   end
