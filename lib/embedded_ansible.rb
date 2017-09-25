@@ -8,6 +8,7 @@ class EmbeddedAnsible
   ANSIBLE_ROLE           = "embedded_ansible".freeze
   SETUP_SCRIPT           = "ansible-tower-setup".freeze
   SECRET_KEY_FILE        = "/etc/tower/SECRET_KEY".freeze
+  SETTINGS_FILE          = "/etc/tower/settings.py".freeze
   EXCLUDE_TAGS           = "packages,migrations,firewall".freeze
   HTTP_PORT              = 54_321
   HTTPS_PORT             = 54_322
@@ -53,6 +54,7 @@ class EmbeddedAnsible
 
   def self.start
     if configured? && !upgrade?
+      update_proxy_settings
       services.each { |service| LinuxAdmin::Service.new(service).start.enable }
     else
       configure_secret_key
@@ -138,6 +140,21 @@ class EmbeddedAnsible
     end
   end
   private_class_method :configure_secret_key
+
+  def self.update_proxy_settings
+    current_contents = File.read(SETTINGS_FILE)
+    new_contents = current_contents.gsub(/^.*AWX_TASK_ENV\['(HTTPS?_PROXY|NO_PROXY)'\].*$/, "")
+
+    proxy_uri = VMDB::Util.http_proxy_uri(:embedded_ansible) || VMDB::Util.http_proxy_uri
+    if proxy_uri
+      new_contents << "\n" unless new_contents.end_with?("\n")
+      new_contents << "AWX_TASK_ENV['HTTP_PROXY'] = '#{proxy_uri}'\n"
+      new_contents << "AWX_TASK_ENV['HTTPS_PROXY'] = '#{proxy_uri}'\n"
+      new_contents << "AWX_TASK_ENV['NO_PROXY'] = '127.0.0.1'\n"
+    end
+    File.write(SETTINGS_FILE, new_contents)
+  end
+  private_class_method :update_proxy_settings
 
   def self.generate_admin_authentication
     miq_database.set_ansible_admin_authentication(:password => generate_password)
