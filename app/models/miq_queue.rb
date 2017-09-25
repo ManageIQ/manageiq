@@ -473,7 +473,7 @@ class MiqQueue < ApplicationRecord
         end
       rescue => err
         _log.error("#{MiqQueue.format_short_log_msg(self)}: #{err}")
-        _log.error("backtrace: #{err.backtrace.join("\n")}")
+        _log.log_backtrace(err)
       end
     else
       _log.warn("#{MiqQueue.format_short_log_msg(self)}, Callback is not well-defined, skipping")

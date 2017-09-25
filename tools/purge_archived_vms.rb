@@ -30,7 +30,7 @@ query.all_archived.find_in_batches do |vms|
         vm.destroy
       end
     rescue => err
-      $log.error("#{err} #{err.backtrace.join("\n")}")
+      $log.log_backtrace(err)
     end
   end
 end

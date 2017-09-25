@@ -91,9 +91,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     @last_vm_id = get_value(@values[:src_vm_id])
     _log.info("provision refresh completed in [#{Time.now - st}] seconds")
   rescue => err
-    _log.error("[#{err}]")
-    $log.error(err.backtrace.join("\n"))
-    raise err
+    $log.log_backtrace(err)
+    raise
   ensure
     @allowed_vlan_cache = nil
   end

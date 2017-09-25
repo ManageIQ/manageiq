@@ -781,9 +781,8 @@ class MiqRequestWorkflow
 
     _log.info("refresh completed in [#{Time.now - st}] seconds")
   rescue => err
-    _log.error("[#{err}]")
-    $log.error(err.backtrace.join("\n"))
-    raise err
+    $log.log_backtrace(err)
+    raise
   end
 
   # Run the relationship methods and perform set intersections on the returned values.

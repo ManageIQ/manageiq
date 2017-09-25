@@ -46,7 +46,7 @@ module ScanningMixin
           job.signal(:data, xml_file)
         rescue => err
           _log.error("Processing xml for [#{name}] [#{err}]")
-          _log.error("Processing xml for [#{name}] #{err.backtrace.join("\n")}")
+          _log.log_backtrace(err)
         end
       end
 
@@ -272,7 +272,7 @@ module ScanningMixin
     rescue NoMethodError => scanErr
       last_err = scanErr
       _log.error("Scanmetadata Error - [#{scanErr}]")
-      _log.error("Scanmetadata Error - [#{scanErr.backtrace.join("\n")}]")
+      _log.log_backtrace(scanErr)
     rescue Timeout::Error, StandardError => scanErr
       last_err = scanErr
     ensure
@@ -287,7 +287,7 @@ module ScanningMixin
         status_code = 16 if categories_processed.zero?
         scan_message = last_err.to_s
         _log.error("ScanMetadata error status:[#{status_code}]:  message:[#{last_err}]")
-        _log.debug { last_err.backtrace.join("\n") }
+        _log.log_backtrace(last_err, :debug)
       end
 
       xml_node_scan.add_attributes(
@@ -357,7 +357,7 @@ module ScanningMixin
       end
     rescue => syncErr
       _log.error(syncErr.to_s)
-      _log.debug { syncErr.backtrace.join("\n") }
+      _log.log_backtrace(syncErr, :debug)
     ensure
       if bb
         bb.postSync

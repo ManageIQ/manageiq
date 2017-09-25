@@ -125,7 +125,7 @@ module MiqServer::ServerSmartProxy
       target.perform_metadata_scan(ost)
     rescue Exception => err
       _log.error(err.to_s)
-      _log.debug(err.backtrace.join("\n"))
+      _log.log_backtrace(err, :debug)
       job.signal(:abort_retry, err.to_s, "error", true)
       return
     end
@@ -141,7 +141,7 @@ module MiqServer::ServerSmartProxy
       target.perform_metadata_sync(ost)
     rescue Exception => err
       _log.error(err.to_s)
-      _log.debug(err.backtrace.join("\n"))
+      _log.log_backtrace(err, :debug)
       job.signal(:abort_retry, err.to_s, "error", true)
       return
     end

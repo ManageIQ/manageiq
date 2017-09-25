@@ -186,8 +186,7 @@ class VmScan < Job
       signal(:abort, message, "error")
       return
     rescue => message
-      _log.error(message.to_s)
-      _log.error(message.backtrace.join("\n"))
+      _log.log_backtrace(message)
       signal(:abort, message.message, "error")
     end
 
@@ -402,7 +401,7 @@ class VmScan < Job
         end
       rescue => err
         _log.error(err.message)
-        _log.debug(err.backtrace.join("\n"))
+        _log.log_backtrace(err, :debug)
       end
     else
       end_user_event_message(vm)
