@@ -1009,7 +1009,7 @@ module ManagerRefresh
       else
         return db_data_index[manager_uuid] if db_data_index && db_data_index[manager_uuid]
         # We haven't found the reference, lets add it to the list of references and load it
-        references << manager_uuid unless references.include?(manager_uuid) # O(1) since references is Set
+        references << manager_uuid if manager_uuid
       end
 
       # Put our existing data keys into loaded references
@@ -1081,6 +1081,7 @@ module ManagerRefresh
       hash_uuids_by_ref = []
 
       new_references.each do |manager_uuid|
+        next if manager_uuid.nil?
         uuids = manager_uuid.split(stringify_joiner)
 
         reference = {}
