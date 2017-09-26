@@ -50,6 +50,9 @@ class Dialog
 
         checkbox = parameter.constraints.detect { |c| c.kind_of?(OrchestrationTemplate::OrchestrationParameterBoolean) }
         return create_checkbox(parameter, group, position, name_prefix) if checkbox
+
+        textarea = parameter.constraints.detect { |c| c.kind_of?(OrchestrationTemplate::OrchestrationParameterMultiline) }
+        return create_textarea(parameter, group, position, name_prefix) if textarea
       end
 
       create_textbox(parameter, group, position, name_prefix)
@@ -59,7 +62,7 @@ class Dialog
       group.dialog_fields.build(
         :type         => "DialogFieldDropDownList",
         :name         => "#{name_prefix}#{parameter.name}",
-        :data_type    => parameter.data_type || "string",
+        :data_type    => "string",
         :dynamic      => true,
         :display      => "edit",
         :required     => parameter.required,
@@ -76,34 +79,29 @@ class Dialog
       values = dropdown.allowed_values
       dropdown_list = values.kind_of?(Hash) ? values.to_a : values.collect { |v| [v, v] }
       group.dialog_fields.build(
-        :type           => "DialogFieldDropDownList",
-        :name           => "#{name_prefix}#{parameter.name}",
-        :data_type      => parameter.data_type || "string",
-        :display        => "edit",
-        :required       => parameter.required,
-        :values         => dropdown_list,
-        :default_value  => parameter.default_value || dropdown_list.first,
-        :label          => parameter.label,
-        :description    => parameter.description,
-        :reconfigurable => parameter.reconfigurable,
-        :position       => position,
-        :dialog_group   => group
+        :type              => "DialogFieldDropDownList",
+        :name              => "#{name_prefix}#{parameter.name}",
+        :data_type         => "string",
+        :display           => "edit",
+        :force_multi_value => dropdown.allow_multiple,
+        :required          => parameter.required,
+        :values            => dropdown_list,
+        :default_value     => parameter.default_value || dropdown_list.first,
+        :label             => parameter.label,
+        :description       => parameter.description,
+        :reconfigurable    => parameter.reconfigurable,
+        :position          => position,
+        :dialog_group      => group
       )
     end
 
     def create_textbox(parameter, group, position, name_prefix)
-      if parameter.data_type == 'string' || parameter.data_type == 'integer'
-        data_type = parameter.data_type
-        field_type = 'DialogFieldTextBox'
-      else
-        data_type = 'string'
-        field_type = 'DialogFieldTextAreaBox'
-      end
+      data_type = parameter.data_type.casecmp('integer').zero? ? 'integer' : 'string'
       if parameter.constraints
         pattern = parameter.constraints.detect { |c| c.kind_of?(OrchestrationTemplate::OrchestrationParameterPattern) }
       end
       group.dialog_fields.build(
-        :type           => field_type,
+        :type           => 'DialogFieldTextBox',
         :name           => "#{name_prefix}#{parameter.name}",
         :data_type      => data_type,
         :display        => "edit",
@@ -120,6 +118,22 @@ class Dialog
       )
     end
 
+    def create_textarea(parameter, group, position, name_prefix)
+      group.dialog_fields.build(
+        :type           => 'DialogFieldTextAreaBox',
+        :name           => "#{name_prefix}#{parameter.name}",
+        :data_type      => 'string',
+        :display        => "edit",
+        :required       => parameter.required,
+        :default_value  => parameter.default_value,
+        :label          => parameter.label,
+        :description    => parameter.description,
+        :reconfigurable => parameter.reconfigurable,
+        :position       => position,
+        :dialog_group   => group
+      )
+    end
+
     def create_checkbox(parameter, group, position, name_prefix)
       group.dialog_fields.build(
         :type           => "DialogFieldCheckBox",
@@ -127,7 +141,6 @@ class Dialog
         :data_type      => "boolean",
         :display        => "edit",
         :default_value  => parameter.default_value,
-        :options        => {:protected => parameter.hidden?},
         :label          => parameter.label,
         :description    => parameter.description,
         :reconfigurable => parameter.reconfigurable,
