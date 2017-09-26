@@ -214,7 +214,7 @@ describe AutomationRequest do
       root = {'ae_result' => 'ok'}
       ws = double('ws')
       allow(ws).to receive_messages(:root => root)
-      allow_any_instance_of(AutomationRequest).to receive(:call_automate_event_sync).and_return(ws)
+      allow_any_instance_of(AutomationRequest).to receive(:call_automate_event).and_return(ws)
 
       @ar.create_request_tasks
       @ar.reload

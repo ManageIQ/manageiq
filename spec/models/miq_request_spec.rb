@@ -81,24 +81,10 @@ describe MiqRequest do
       expect(msg.msg_timeout).to eq(1.hour)
     end
 
-    context "#call_automate_event_sync" do
-      it "successful" do
-        allow(MiqAeEvent).to receive(:raise_evm_event).and_return("foo")
-
-        expect(request.call_automate_event_sync(event_name)).to eq("foo")
-      end
-
-      it "re-raises exceptions" do
-        allow(MiqAeEvent).to receive(:raise_evm_event).and_raise(MiqAeException::AbortInstantiation.new("bogus automate error"))
-
-        expect { request.call_automate_event_sync(event_name) }.to raise_error(MiqAeException::Error, "bogus automate error")
-      end
-    end
-
     context "#call_automate_event" do
       it "successful" do
-        expect(MiqAeEvent).to receive(:raise_evm_event)
-        request.call_automate_event(event_name)
+        expect(MiqAeEvent).to receive(:raise_evm_event).and_return("foo")
+        expect(request.call_automate_event(event_name)).to eq("foo")
       end
 
       it "re-raises exceptions" do
