@@ -7,9 +7,9 @@ describe AutomateWorkspace do
     end
 
     it "properly merges the hash with the new output" do
-      hash = {'workspace' => {'a' => 1}, 'state_vars' => {'b' => 2}}
-      partial_hash = {'workspace' => {'c' => 1}, 'state_vars' => {} }
-      merged_hash = {'workspace' => {'a' => 1, 'c' => 1}, 'state_vars' => {'b' => 2}}
+      hash = {'objects' => {'root' => {'a' => 1}}, 'state_vars' => {'b' => 2}}
+      partial_hash = {'objects' => {'root' => {'c' => 1}}, 'state_vars' => {} }
+      merged_hash = {'objects' => {'root' => {'a' => 1, 'c' => 1}}, 'state_vars' => {'b' => 2}}
 
       aw.merge_output!(hash)
       aw.reload
