@@ -37,6 +37,10 @@ class Vm < VmOrTemplate
     service.add_resource!(self)
   end
 
+  def enforce_single_service_parent?
+    true
+  end
+
   def self.find_all_by_mac_address_and_hostname_and_ipaddress(mac_address, hostname, ipaddress)
     return [] if mac_address.blank? && hostname.blank? && ipaddress.blank?
 

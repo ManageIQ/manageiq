@@ -681,6 +681,37 @@ describe Service do
     end
   end
 
+  describe '#add_to_service' do
+    let(:service) { FactoryGirl.create(:service) }
+    let(:child_service) { FactoryGirl.create(:service) }
+
+    it 'associates a child_service to the service' do
+      child_service.add_to_service(service)
+
+      expect(service.reload.services).to include(child_service)
+    end
+
+    it 'raise an error if the child_service is already part of a service' do
+      child_service.add_to_service(service)
+
+      expect { child_service.add_to_service(service) }.to raise_error MiqException::Error
+    end
+  end
+
+  describe '#remove_from_service' do
+    let(:service) { FactoryGirl.create(:service) }
+    let(:child_service) { FactoryGirl.create(:service) }
+
+    it 'removes child_service from the service' do
+      child_service.add_to_service(service)
+      expect(service.services).to include(child_service)
+
+      child_service.remove_from_service(service)
+      expect(service.services).to be_blank
+      expect(child_service.service).to be_nil
+    end
+  end
+
   def create_deep_tree
     @service      = FactoryGirl.create(:service)
     @service_c1   = FactoryGirl.create(:service, :service => @service)
