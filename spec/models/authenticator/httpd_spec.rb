@@ -398,7 +398,7 @@ describe Authenticator::Httpd do
         end
       end
 
-      describe ".user_attrs_from_external_directory" do
+      describe ".user_attrs_from_external_directory_via_dbus" do
         before do
           require "dbus"
           sysbus = double('sysbus')
@@ -414,7 +414,7 @@ describe Authenticator::Httpd do
         end
 
         it "should return nil for unspecified user" do
-          expect(subject.send(:user_attrs_from_external_directory, nil)).to be_nil
+          expect(subject.send(:user_attrs_from_external_directory_via_dbus, nil)).to be_nil
         end
 
         it "should return user attributes hash for valid user" do
@@ -434,7 +434,7 @@ describe Authenticator::Httpd do
 
           allow(@ifp_interface).to receive(:GetUserAttr).with('jdoe', requested_attrs).and_return(jdoe_attrs)
 
-          expect(subject.send(:user_attrs_from_external_directory, 'jdoe')).to eq(expected_jdoe_attrs)
+          expect(subject.send(:user_attrs_from_external_directory_via_dbus, 'jdoe')).to eq(expected_jdoe_attrs)
         end
       end
     end

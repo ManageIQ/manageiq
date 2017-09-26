@@ -108,10 +108,18 @@ module Authenticator
     end
 
     def user_attrs_from_external_directory(username)
+      if MiqEnvironment::Command.is_container?
+        user_attrs_from_external_directory_via_auth_api(username)
+      else
+        user_attrs_from_external_directory_via_dbus(username)
+      end
+    end
+
+    ATTRS_NEEDED = %w(mail givenname sn displayname domainname).freeze
+
+    def user_attrs_from_external_directory_via_dbus(username)
       return unless username
       require "dbus"
-
-      attrs_needed = %w(mail givenname sn displayname domainname)
 
       sysbus = DBus.system_bus
       ifp_service   = sysbus["org.freedesktop.sssd.infopipe"]
@@ -119,13 +127,17 @@ module Authenticator
       ifp_object.introspect
       ifp_interface = ifp_object["org.freedesktop.sssd.infopipe"]
       begin
-        user_attrs = ifp_interface.GetUserAttr(username, attrs_needed).first
+        user_attrs = ifp_interface.GetUserAttr(username, ATTRS_NEEDED).first
       rescue => err
         raise _("Unable to get attributes for external user %{user_name} - %{error}") %
               {:user_name => username, :error => err}
       end
 
-      attrs_needed.each_with_object({}) { |attr, hash| hash[attr] = Array(user_attrs[attr]).first }
+      ATTRS_NEEDED.each_with_object({}) { |attr, hash| hash[attr] = Array(user_attrs[attr]).first }
+    end
+
+    def user_attrs_from_external_directory_via_auth_api(username)
+      HttpdAuthApi.new.user_attrs(username, ATTRS_NEEDED)
     end
   end
 end

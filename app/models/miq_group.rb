@@ -118,6 +118,14 @@ class MiqGroup < ApplicationRecord
   end
 
   def self.get_httpd_groups_by_user(user)
+    if MiqEnvironment::Command.is_container?
+      get_httpd_groups_by_user_via_auth_api(user)
+    else
+      get_httpd_groups_by_user_via_dbus(user)
+    end
+  end
+
+  def self.get_httpd_groups_by_user_via_dbus(user)
     require "dbus"
 
     username = user.kind_of?(self) ? user.userid : user
@@ -133,6 +141,11 @@ class MiqGroup < ApplicationRecord
       raise _("Unable to get groups for user %{user_name} - %{error}") % {:user_name => username, :error => err}
     end
     strip_group_domains(user_groups.first)
+  end
+
+  def self.get_httpd_groups_by_user_via_auth_api(user)
+    groups = HttpdAuthApi.new.user_groups(user)
+    strip_group_domains(groups)
   end
 
   def get_filters(type = nil)

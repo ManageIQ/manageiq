@@ -80,7 +80,7 @@ describe MiqGroup do
 
       allow(@ifp_interface).to receive(:GetUserGroups).with('user').and_return(memberships)
 
-      expect(MiqGroup.get_httpd_groups_by_user('user')).to eq(memberships.first)
+      expect(MiqGroup.get_httpd_groups_by_user_via_dbus('user')).to eq(memberships.first)
     end
 
     it "should remove FQDN from the groups by user name with external authentication" do
@@ -89,7 +89,7 @@ describe MiqGroup do
 
       allow(@ifp_interface).to receive(:GetUserGroups).with('user').and_return(ifp_memberships)
 
-      expect(MiqGroup.get_httpd_groups_by_user('user')).to eq(memberships.first)
+      expect(MiqGroup.get_httpd_groups_by_user_via_dbus('user')).to eq(memberships.first)
     end
   end
 
