@@ -180,12 +180,12 @@ describe AutomationRequest do
       end
 
       it "calls #call_automate_event_queue('request_approved')" do
-        expect_any_instance_of(AutomationRequest).to receive(:call_automate_event_queue).with('request_approved').once
+        expect(@ar).to receive(:call_automate_event_queue).with('request_approved').once
         @ar.approve(@approver, @reason)
       end
 
       it "calls #execute" do
-        expect_any_instance_of(AutomationRequest).to receive(:execute).once
+        expect(@ar).to receive(:execute).once
         @ar.approve(@approver, @reason)
       end
     end
@@ -212,9 +212,9 @@ describe AutomationRequest do
     before(:each) do
       @ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, {})
       root = {'ae_result' => 'ok'}
-      ws = double('ws')
-      allow(ws).to receive_messages(:root => root)
-      allow_any_instance_of(AutomationRequest).to receive(:call_automate_event).and_return(ws)
+      @ws = double('ws')
+      allow(@ws).to receive_messages(:root => root)
+      allow(@ar).to receive(:call_automate_event).and_return(@ws)
 
       @ar.create_request_tasks
       @ar.reload
