@@ -393,6 +393,11 @@ class ServiceTemplate < ApplicationRecord
     end
   end
 
+  def add_resource(rsc, options = {})
+    super
+    set_service_type
+  end
+
   private
 
   def update_service_resources(config_info, auth_user = nil)
