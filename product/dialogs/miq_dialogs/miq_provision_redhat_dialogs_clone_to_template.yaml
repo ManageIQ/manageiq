@@ -221,7 +221,7 @@
           :display: :edit
           :default: false
           :data_type: :boolean
-        :seal:
+        :seal_template:
           :description: Seal Template
           :notes: (Applicable for non-Windows OS only)
           :validation_method: :validate_seal_template
