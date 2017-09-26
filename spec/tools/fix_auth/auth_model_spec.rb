@@ -25,9 +25,6 @@ describe FixAuth::AuthModel do
   context "#authentications" do
     subject { FixAuth::FixAuthentication }
     let(:contenders) { subject.contenders.collect(&:name) }
-
-    # NOTE: these are not created unless you reference them
-    # if you want to always create them use let!(:var) {} instead
     let(:v1_v2)  { subject.create(:name => "v2_v1", :password => enc_v2, :auth_key => enc_v1) }
     let(:v2_v1)  { subject.create(:name => "v1_v2", :password => enc_v1, :auth_key => enc_v2) }
     let(:v1)     { subject.create(:name => "v1", :password => enc_v1) }

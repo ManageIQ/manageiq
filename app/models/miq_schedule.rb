@@ -184,7 +184,6 @@ class MiqSchedule < ApplicationRecord
     sched_action[:options] ||= {}
     obj.scan_queue(userid, sched_action[:options])
     _log.info("Action [#{name}] has been run for target: [#{obj.name}]")
-    # puts("[#{Time.now}] MIQ(Schedule.action_vm_scan) Action [#{self.name}] has been run for target: [#{obj.name}]")
   end
 
   def action_scan(obj, _at)

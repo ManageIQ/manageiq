@@ -103,9 +103,6 @@ class MiqAction < ApplicationRecord
 
   def self.invoke_actions(apply_policies_to, inputs, succeeded, failed)
     deferred = []
-    # _log.info("succeeded policies: #{succeeded.inspect}")
-    # _log.info("failed policies: #{failed.inspect}")
-
     results = {}
 
     begin
@@ -115,7 +112,6 @@ class MiqAction < ApplicationRecord
                   else            p.actions_for_event
                   end
 
-        #        _log.debug("actions on failure: #{actions.inspect}")
         actions.each do|a|
           # merge in the synchronous flag and possibly the sequence if not already sorted by this
           inputs = inputs.merge(:policy => p, :result => false, :sequence => a.sequence, :synchronous => a.synchronous)
@@ -135,7 +131,6 @@ class MiqAction < ApplicationRecord
       succeeded.each do|p|
         next unless p.kind_of?(MiqPolicy) # built-in policies are OpenStructs whose actions will be invoked only on failure
         actions = p.actions_for_event(inputs[:event], :success).uniq
-        # _log.info("actions on success: #{actions.inspect}")
         actions.each do|a|
           inputs = inputs.merge(:policy => p, :result => true, :sequence => a.sequence, :synchronous => a.synchronous)
           _log.debug("action: [#{a.name}], seq: [#{a.sequence}], sync: [#{a.synchronous}], inputs to action: seq: [#{inputs[:sequence]}], sync: [#{inputs[:synchronous]}]")
@@ -201,7 +196,6 @@ class MiqAction < ApplicationRecord
   end
 
   def action_prevent(_action, _rec, _inputs)
-    #    MiqPolicy.logger.warn("MIQ(action_prevent): Invoking action [prevent] for policy: [#{inputs[:policy].description}], event: [#{inputs[:event].description}], entity name: [#{rec.name}], entity type: [#{Dictionary.gettext(rec.class.to_s, :type=>:model)}]")
     raise MiqException::PolicyPreventAction, "preventing current process from proceeding due to policy failure"
   end
 

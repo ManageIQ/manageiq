@@ -1582,7 +1582,6 @@ describe Rbac::Filterer do
     expect(described_class.new.send(:apply_rbac_through_association?, Vm)).not_to be
   end
 
-  # find_targets_with_direct_rbac(klass, scope, rbac_filters, find_options, user_or_group)
   describe "find_targets_with_direct_rbac" do
     let(:host_match) { FactoryGirl.create(:host, :hostname => 'good') }
     let(:host_other) { FactoryGirl.create(:host, :hostname => 'bad') }

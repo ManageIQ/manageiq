@@ -328,10 +328,6 @@ describe ServiceTemplate do
       expect { add_and_save_service(@svc_c, @svc_a) }.to raise_error(MiqException::MiqServiceCircularReferenceError)
       expect { add_and_save_service(@svc_d, @svc_a) }.to raise_error(MiqException::MiqServiceCircularReferenceError)
       expect { add_and_save_service(@svc_c, @svc_b) }.to raise_error(MiqException::MiqServiceCircularReferenceError)
-
-      # Print tree-view of services
-      # puts "\n#{svc_a.name}"
-      # print_svc(svc_a, "  ")
     end
 
     it "should not allow deeply nested service templates to be connected in a circular reference" do

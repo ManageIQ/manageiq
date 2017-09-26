@@ -48,7 +48,6 @@ class VmReconfigureTask < MiqRequestTask
       update_and_notify_parent(:state => 'reconfigured', :message => "Finished #{request_class::TASK_DESCRIPTION}")
     else
       update_and_notify_parent(:state => 'finished', :message => "#{request_class::TASK_DESCRIPTION} complete")
-      #        call_automate_event('vm_provision_postprocessing')
     end
   end
 end

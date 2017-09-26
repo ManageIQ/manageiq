@@ -130,8 +130,6 @@ describe JobProxyDispatcher do
       context "with jobs, a default smartproxy for repo scanning" do
         before(:each) do
           allow(MiqVimBrokerWorker).to receive(:available?).and_return(true)
-          # JobProxyDispatcher.stub(:start_job_on_proxy).and_return(nil)
-          # MiqProxy.any_instance.stub(:concurrent_job_max).and_return(1)
           @repo_proxy = @proxies.last
           if @repo_proxy
             @repo_proxy.name = "repo_proxy"

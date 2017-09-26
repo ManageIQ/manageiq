@@ -406,7 +406,6 @@ class MiqWorker < ApplicationRecord
       end
     end
 
-    # ActiveRecord::Base.connection.kill(self.sql_spid)
     destroy
   end
 
