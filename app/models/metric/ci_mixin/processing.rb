@@ -71,7 +71,7 @@ module Metric::CiMixin::Processing
         end
       end
 
-      parameters = if ActiveMetrics::Base.connection.kind_of?(ActiveMetrics::ConnectionAdapters::MiqPostgresAdapter)
+      parameters = if ActiveMetrics::Base.connection_config[:adapter] == "miq_postgres"
                      # We can just pass original data to PG, with metrics grouped by timestamps, since that is how
                      # we store to PG now. It will spare quite some memory and time to not convert it to row_per_metric
                      # and than back to original format.
