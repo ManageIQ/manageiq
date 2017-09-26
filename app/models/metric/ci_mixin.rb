@@ -223,4 +223,12 @@ module Metric::CiMixin
   def log_target
     "#{self.class.name} name: [#{name}], id: [#{id}]"
   end
+
+  def log_specific_target(target)
+    "#{target.class.name} name: [#{target.name}], id: [#{target.id}]"
+  end
+
+  def log_specific_targets(targets)
+    targets.map { |target| log_specific_target(target) }.join(" | ")
+  end
 end
