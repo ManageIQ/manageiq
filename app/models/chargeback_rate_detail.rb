@@ -33,14 +33,16 @@ class ChargebackRateDetail < ApplicationRecord
                                                                           :showback_price_plan => plan,
                                                                           :calculation         => calculation,
                                                                           :concept             => rate_detail.id)
-
-    fixed_rate = rate_detail.chargeback_tiers.first.fixed_rate.to_f * 100
-    variable_rate = rate_detail.chargeback_tiers.first.variable_rate.to_f * 100
-
-    showback_rate.variable_rate_per_time = rate_detail.per_time
-    showback_rate.fixed_rate_per_time    = rate_detail.per_time
-    showback_rate.fixed_rate = Money.new(fixed_rate, 'USD')
-    showback_rate.variable_rate = Money.new(variable_rate, 'USD')
+    showback_rate.showback_tiers.destroy_all
+    rate_detail.chargeback_tiers.each do |tier|
+      showback_rate.showback_tiers.build(:tier_start_value => tier.start,
+                                         :tier_end_value   => tier.finish,
+                                         :variable_rate_per_time => rate_detail.per_time,
+                                         :fixed_rate_per_time => rate_detail.per_time,
+                                         :fixed_rate          => Money.new(tier.fixed_rate * Money.default_currency.subunit_to_unit),
+                                         :variable_rate       => Money.new(tier.variable_rate * Money.default_currency.subunit_to_unit)
+)
+    end
     showback_rate.save
   end
 
