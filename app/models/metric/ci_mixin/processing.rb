@@ -74,9 +74,16 @@ module Metric::CiMixin::Processing
         end
       end
 
-      ActiveMetrics::Base.connection.write_multiple(
-        ActiveMetrics::Base.connection.transform_parameters(resources, interval_name, start_time, end_time, rt_rows)
-      )
+      parameters = if ActiveMetrics::Base.connection.kind_of?(ActiveMetrics::ConnectionAdapters::MiqPostgresAdapter)
+                     # We can just pass original data to PG, with metrics grouped by timestamps, since that is how
+                     # we store to PG now. It will spare quite some memory and time to not convert it to row_per_metric
+                     # and than back to original format.
+                     transform_parameters_row_with_all_metrics(resources, interval_name, start_time, end_time, rt_rows)
+                   else
+                     transform_parameters_row_per_metric(resources, interval_name, start_time, end_time, rt_rows)
+                   end
+
+      ActiveMetrics::Base.connection.write_multiple(parameters)
 
       resources.each do |resource|
         resource.update_attribute(:last_perf_capture_on, end_time) if resource.last_perf_capture_on.nil? || resource.last_perf_capture_on.utc.iso8601 < end_time
@@ -97,6 +104,79 @@ module Metric::CiMixin::Processing
   end
 
   private
+
+  def transform_parameters_row_per_metric(_resources, interval_name, _start_time, _end_time, rt_rows)
+    rt_rows.flat_map do |ts, rt|
+      rt.merge!(Metric::Processing.process_derived_columns(rt[:resource], rt, interval_name == 'realtime' ? Metric::Helper.nearest_hourly_timestamp(ts) : nil))
+      rt.delete_nils
+      rt_tags   = rt.slice(:capture_interval_name, :capture_interval, :resource_name).symbolize_keys
+      rt_fields = rt.except(:capture_interval_name,
+                            :capture_interval,
+                            :resource_name,
+                            :timestamp,
+                            :instance_id,
+                            :class_name,
+                            :resource,
+                            :resource_type,
+                            :resource_id)
+
+      rt_fields.map do |k, v|
+        {
+          :timestamp   => ts,
+          :metric_name => k,
+          :value       => v,
+          :resource    => rt[:resource],
+          :tags        => rt_tags
+        }
+      end
+    end
+  end
+
+  def transform_parameters_row_with_all_metrics(resources, interval_name, start_time, end_time, rt_rows)
+    obj_perfs, = Benchmark.realtime_block(:db_find_prev_perfs) do
+      Metric::Finders.find_all_by_range(resources, start_time, end_time, interval_name).find_each.each_with_object({}) do |p, h|
+        data, = Benchmark.realtime_block(:get_attributes) do
+          # TODO(lsmola) calling .attributes takes more time than actually saving all the samples, try to fetch pure
+          # arrays from the PG
+          p.attributes.delete_nils
+        end
+        h.store_path([p.resource_type, p.resource_id, p.capture_interval_name, p.timestamp.utc.iso8601], data.symbolize_keys)
+      end
+    end
+
+    Benchmark.realtime_block(:preload_vim_performance_state_for_ts) do
+      # Make sure we preload all vim_performance_state_for_ts to avoid n+1 queries
+      condition = if start_time.nil?
+                    nil
+                  elsif start_time == end_time
+                    {:timestamp => start_time}
+                  elsif end_time.nil?
+                    VimPerformanceState.arel_table[:timestamp].gteq(start_time)
+                  else
+                    {:timestamp => start_time..end_time}
+                  end
+
+      resources.each {|r| r.preload_vim_performance_state_for_ts_iso8601(condition)}
+    end
+
+    Benchmark.realtime_block(:process_perfs) do
+      rt_rows.each do |ts, rt|
+        rt[:resource_id]   = rt[:resource].id
+        rt[:resource_type] = rt[:resource].class.base_class.name
+
+        if (perf = obj_perfs.fetch_path([rt[:resource_type], rt[:resource_id], interval_name, ts]))
+          rt.reverse_merge!(perf)
+          rt.delete(:id) # Remove protected attributes
+        end
+
+        rt.merge!(Metric::Processing.process_derived_columns(rt[:resource], rt, interval_name == 'realtime' ? Metric::Helper.nearest_hourly_timestamp(ts) : nil))
+      end
+    end
+    # Assign nil so GC can clean it up
+    obj_perfs = nil
+
+    return resources, interval_name, start_time, end_time, rt_rows
+  end
 
   def normalize_value(value, counter)
     return counter[:rollup] == 'latest' ? nil : 0 if value < 0
