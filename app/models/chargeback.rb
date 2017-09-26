@@ -136,6 +136,10 @@ class Chargeback < ActsAsArModel
         metric_field = [r.chargeable_field.group, r.chargeable_field.source, "metric"].join("_")
         cost_field = [r.chargeable_field.group, r.chargeable_field.source, "cost"].join("_")
 
+        _, total_metric_field, total_field =  r.chargeable_field.cost_keys
+
+        self[total_field] = (self[total_field] || 0) + cost_value
+        self[total_metric_field] = (self[total_metric_field] || 0) + cost_value
         self[cost_field] = cost_value
         self[metric_field] = metric_value
       end
