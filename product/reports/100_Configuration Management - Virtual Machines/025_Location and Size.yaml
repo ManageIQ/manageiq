@@ -1,15 +1,15 @@
---- 
-dims: 
+---
+dims:
 created_on: 2008-08-12 19:16:31.412418 Z
 title: "VM Location and Size"
-conditions: 
+conditions:
 updated_on: 2008-08-13 22:59:59.263899 Z
 order: Ascending
-graph: 
+graph:
 menu_name: "VM Location and Size"
 rpt_group: Custom
 priority: 231
-col_order: 
+col_order:
 - name
 - host.name
 - storage.name
@@ -18,34 +18,34 @@ col_order:
 - created_on
 - updated_on
 - last_sync_on
-timeline: 
+timeline:
 id: 87
-file_mtime: 
-categories: 
+file_mtime:
+categories:
 rpt_type: Custom
-filename: 
-include: 
-  hardware: 
-    columns: 
+filename:
+include:
+  hardware:
+    columns:
     - size_on_disk
-  host: 
-    columns: 
+  host:
+    columns:
     - name
-  storage: 
-    columns: 
+  storage:
+    columns:
     - name
 db: Vm
-cols: 
+cols:
 - name
 - v_datastore_path
 - created_on
 - updated_on
 - last_sync_on
 template_type: report
-group: 
-sortby: 
+group:
+sortby:
 - name
-headers: 
+headers:
 - VM Name
 - Host Name
 - Datastore

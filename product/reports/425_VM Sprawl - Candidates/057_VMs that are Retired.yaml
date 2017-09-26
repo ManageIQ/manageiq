@@ -1,23 +1,23 @@
---- 
-where_clause: 
-generate_cols: 
-dims: 
+---
+where_clause:
+generate_cols:
+dims:
 created_on: 2009-11-10 20:18:58.003982 Z
-reserved: 
+reserved:
 title: "VMs that have been Retired (past retirement date)"
-conditions: !ruby/object:MiqExpression 
-  exp: 
-    "=": 
+conditions: !ruby/object:MiqExpression
+  exp:
+    "=":
       field: Vm-retired
       value: "true"
 updated_on: 2009-11-10 20:18:58.003982 Z
 order: Ascending
-graph: 
-generate_rows: 
+graph:
+generate_rows:
 menu_name: "VMs that are Retired"
 rpt_group: Custom
 priority: 54
-col_order: 
+col_order:
 - name
 - hardware.annotation
 - ems_cluster.name
@@ -32,46 +32,46 @@ col_order:
 - managed.function
 - managed.lob
 - managed.location
-timeline: 
+timeline:
 id: 183
-file_mtime: 
-categories: 
+file_mtime:
+categories:
 rpt_type: Custom
-filename: 
+filename:
 db_options: {}
 
-col_formats: 
-include: 
-  hardware: 
-    columns: 
+col_formats:
+include:
+  hardware:
+    columns:
     - annotation
     - cpu_total_cores
     - memory_mb
     - size_on_disk
-  managed: 
-    columns: 
+  managed:
+    columns:
     - department
     - environment
     - function
     - lob
     - location
-  storage: 
-    columns: 
+  storage:
+    columns:
     - name
-  ems_cluster: 
-    columns: 
+  ems_cluster:
+    columns:
     - name
 db: Vm
-cols: 
+cols:
 - name
 - retired
 - retires_on
 template_type: report
-group: 
-sortby: 
+group:
+sortby:
 - retires_on
 - name
-headers: 
+headers:
 - VM
 - VM Notes
 - Cluster

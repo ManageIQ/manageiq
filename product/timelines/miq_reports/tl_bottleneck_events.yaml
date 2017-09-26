@@ -31,7 +31,7 @@ cols:
 include:
 
 # Order of columns (from all tables)
-col_order: 
+col_order:
 - timestamp
 - resource_type
 - resource_name
@@ -80,7 +80,7 @@ dims:
 
 timeline:
   :field: BottleneckEvent-timestamp
-  :bands: 
+  :bands:
   - :text: true
     :gap: 0.0
     :unit: Day

@@ -6,8 +6,8 @@ updated_on: 2014-05-09 15:43:51.726229000 Z
 object:
   attributes:
     name: DOMAIN1
-    description: 
-    display_name: 
-    system: 
+    description:
+    display_name:
+    system:
     priority: 100
     enabled: false

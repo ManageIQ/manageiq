@@ -1,12 +1,12 @@
 # VmdbDatabase Hourly performance chart layouts
---- 
+---
 - :title: Disk Size
   :type: Line
   :columns:
   - disk_total_bytes
   - disk_free_bytes
   - disk_used_bytes
-  :menu: 
+  :menu:
   :decimals: 2
   :units: GB
 
@@ -16,4 +16,4 @@
   - disk_total_inodes
   - disk_free_inodes
   - disk_used_inodes
-  :menu: 
+  :menu:

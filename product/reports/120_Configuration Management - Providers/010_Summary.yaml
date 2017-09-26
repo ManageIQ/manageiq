@@ -1,15 +1,15 @@
---- 
-dims: 
+---
+dims:
 created_on: 2008-08-11 19:15:31.428291 Z
 title: "Providers Summary"
-conditions: 
+conditions:
 updated_on: 2008-08-11 19:15:31.428291 Z
 order: Ascending
-graph: 
+graph:
 menu_name: "Providers Summary"
 rpt_group: Custom
-priority: 
-col_order: 
+priority:
+col_order:
 - name
 - hostname
 - ipaddress
@@ -18,16 +18,16 @@ col_order:
 - aggregate_cpu_speed
 - aggregate_cpu_total_cores
 - aggregate_physical_cpus
-timeline: 
+timeline:
 id: 78
-file_mtime: 
-categories: 
+file_mtime:
+categories:
 rpt_type: Custom
-filename: 
+filename:
 include: {}
 
 db: ExtManagementSystem
-cols: 
+cols:
 - name
 - hostname
 - ipaddress
@@ -37,9 +37,9 @@ cols:
 - aggregate_cpu_total_cores
 - aggregate_physical_cpus
 template_type: report
-group: 
-sortby: 
-headers: 
+group:
+sortby:
+headers:
 - Name
 - Hostname
 - IP Address

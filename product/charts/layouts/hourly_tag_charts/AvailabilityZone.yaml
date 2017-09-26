@@ -1,5 +1,5 @@
 # Availability Zone Hourly performance by tag chart layouts
---- 
+---
 - :title: CPU (Mhz)
   :type: Line
   :columns:

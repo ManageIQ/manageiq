@@ -1,5 +1,5 @@
 # Cluster Daily performance chart layouts
---- 
+---
 - :title: CPU (Mhz)
   :type: Line
   :columns:

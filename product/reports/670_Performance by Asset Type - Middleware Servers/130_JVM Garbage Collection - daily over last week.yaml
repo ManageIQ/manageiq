@@ -1,29 +1,29 @@
---- 
-where_clause: 
-dims: 
+---
+where_clause:
+dims:
 created_on: 2016-05-23 14:53:10.822035 Z
-reserved: 
+reserved:
 title: "JVM Garbage Collection - daily averages for last week"
-conditions: 
+conditions:
 updated_on: 2016-05-23 00:35:33.732482 Z
 order: Descending
-graph: 
+graph:
 menu_name: "JVM Garbage Collection - daily over last week"
 rpt_group: Custom
-priority: 
-col_order: 
+priority:
+col_order:
 - id
 - name
 - start_time
 - mw_accumulated_gc_duration_min
 - mw_accumulated_gc_duration_avg
 - mw_accumulated_gc_duration_max
-timeline: 
+timeline:
 id: 672
-file_mtime: 
-categories: 
+file_mtime:
+categories:
 rpt_type: Custom
-filename: 
+filename:
 db_options:
   :rpt_type: middleware
   :options:
@@ -33,7 +33,7 @@ db_options:
 include: {}
 
 db: MiddlewareServerPerformance
-cols: 
+cols:
 - id
 - name
 - start_time
@@ -44,7 +44,7 @@ template_type: report
 group: n
 sortby:
 - id
-headers: 
+headers:
 - Id
 - Name
 - Start

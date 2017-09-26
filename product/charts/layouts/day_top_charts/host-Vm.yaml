@@ -1,5 +1,5 @@
 # host-Vm Top CIs/day chart layouts
---- 
+---
 - :title: Average CPU Used (Mhz)
   :type: Pie
   :columns:

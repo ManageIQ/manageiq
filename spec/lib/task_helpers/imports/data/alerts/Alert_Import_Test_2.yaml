@@ -17,9 +17,9 @@
         :operator: ">"
         :value_threshold: '1'
         :trend_direction: none
-        :trend_steepness: 
+        :trend_steepness:
         :debug_trace: 'false'
         :rt_time_threshold: 180
     responds_to_events: host_perf_complete
     enabled: true
-    read_only: 
+    read_only:

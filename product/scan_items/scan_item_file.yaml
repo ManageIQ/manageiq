@@ -1,7 +1,7 @@
---- 
+---
 :item_type: file
-:definition: 
-  stats: 
+:definition:
+  stats:
   - target: c:/windows/system32/*.scr
   - target: c:/windows/system32/msi*.*
   - target: /etc/*.conf

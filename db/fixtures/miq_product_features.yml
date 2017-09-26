@@ -125,10 +125,10 @@
   :feature_type: node
   :identifier: infra_topology
   :children:
-    - :name: View
-      :description: View Infra Topology
-      :feature_type: view
-      :identifier: infra_topology_view
+  - :name: View
+    :description: View Infra Topology
+    :feature_type: view
+    :identifier: infra_topology_view
 
 # MiqRequest
 - :name: Requests
@@ -453,10 +453,10 @@
   :feature_type: node
   :identifier: cloud_topology
   :children:
-    - :name: View
-      :description: View Cloud Topology
-      :feature_type: view
-      :identifier: cloud_topology_view
+  - :name: View
+    :description: View Cloud Topology
+    :feature_type: view
+    :identifier: cloud_topology_view
 
 # AvailabilityZone
 - :name: Availability Zones
@@ -908,7 +908,7 @@
     - :name: Delete Flavor
       :description: Delete Flavor
       :feature_type: control
-      :identifier: flavor_delete   
+      :identifier: flavor_delete
 
 # EmsInfra
 - :name: Infrastructure Providers
@@ -3665,7 +3665,7 @@
         :identifier: container_deployment_view
         :children:
         - :name: Container Deployment Show
-          :description:  Container Deployment Show
+          :description: Container Deployment Show
           :feature_type: view
           :identifier: container_deployment_show
       - :name: Operate
@@ -3763,10 +3763,10 @@
   :feature_type: node
   :identifier: middleware_topology
   :children:
-    - :name: View
-      :description: View Middleware Topology
-      :feature_type: view
-      :identifier: middleware_topology_view
+  - :name: View
+    :description: View Middleware Topology
+    :feature_type: view
+    :identifier: middleware_topology_view
 
 # MiddlewareServer
 - :name: Middleware Server
@@ -4394,10 +4394,10 @@
   :feature_type: node
   :identifier: network_topology
   :children:
-    - :name: View
-      :description: View Network Topology
-      :feature_type: view
-      :identifier: network_topology_view
+  - :name: View
+    :description: View Network Topology
+    :feature_type: view
+    :identifier: network_topology_view
 
 # Cloud Subnet
 - :name: Cloud Subnets
@@ -5000,10 +5000,10 @@
   :feature_type: node
   :identifier: container_topology
   :children:
-    - :name: View
-      :description: View Containers Topology
-      :feature_type: view
-      :identifier: container_topology_view
+  - :name: View
+    :description: View Containers Topology
+    :feature_type: view
+    :identifier: container_topology_view
 
 # Container Dashboard
 - :name: Containers Dashboard
@@ -5047,57 +5047,57 @@
       :feature_type: control
       :identifier: provider_foreman_control
       :children:
-        - :name: Edit Tags
-          :description: Edit Tags of Foreman Provider
-          :feature_type: control
-          :identifier: configuration_manager_provider_tag
-        - :name: Provision Configured Systems
-          :description: Provision Configured Systems
-          :feature_type: control
-          :identifier: provider_foreman_configured_system_provision
-        - :name: Refresh Providers
-          :description: Refresh relationships for all items related of Provider
-          :feature_type: control
-          :identifier: provider_foreman_refresh_provider
+      - :name: Edit Tags
+        :description: Edit Tags of Foreman Provider
+        :feature_type: control
+        :identifier: configuration_manager_provider_tag
+      - :name: Provision Configured Systems
+        :description: Provision Configured Systems
+        :feature_type: control
+        :identifier: provider_foreman_configured_system_provision
+      - :name: Refresh Providers
+        :description: Refresh relationships for all items related of Provider
+        :feature_type: control
+        :identifier: provider_foreman_refresh_provider
     - :name: Modify
       :description: Modify Providers
       :feature_type: admin
       :identifier: provider_admin
       :children:
-        - :name: Remove Providers
-          :description: Remove Provier
-          :feature_type: admin
-          :identifier: provider_foreman_delete_provider
-        - :name: Edit Provider
-          :description: Edit a Provider
-          :feature_type: admin
-          :identifier: provider_foreman_edit_provider
-        - :name: Add Provider
-          :description: Add a Provider
-          :feature_type: admin
-          :identifier: provider_foreman_add_provider
+      - :name: Remove Providers
+        :description: Remove Provier
+        :feature_type: admin
+        :identifier: provider_foreman_delete_provider
+      - :name: Edit Provider
+        :description: Edit a Provider
+        :feature_type: admin
+        :identifier: provider_foreman_edit_provider
+      - :name: Add Provider
+        :description: Add a Provider
+        :feature_type: admin
+        :identifier: provider_foreman_add_provider
   - :name: Configured Systems
     :description: Everything under Configured Systems accordion
     :feature_type: node
     :identifier: configured_systems_filter_accord
     :children:
-      - :name: View
-        :description: View Configured Systems
-        :feature_type: view
-        :identifier: configured_systems_filter_accord_view
-      - :name: Operate
-        :description: Perform Operations on Configured Systems
+    - :name: View
+      :description: View Configured Systems
+      :feature_type: view
+      :identifier: configured_systems_filter_accord_view
+    - :name: Operate
+      :description: Perform Operations on Configured Systems
+      :feature_type: control
+      :identifier: configuredsystem_control
+      :children:
+      - :name: Edit Tags
+        :description: Edit Configured Systems Tags
         :feature_type: control
-        :identifier: configuredsystem_control
-        :children:
-          - :name: Edit Tags
-            :description: Edit Configured Systems Tags
-            :feature_type: control
-            :identifier: configured_system_tag
-          - :name: Provision Configured Systems
-            :description: Provision Configured Systems
-            :feature_type: control
-            :identifier: configured_system_provision
+        :identifier: configured_system_tag
+      - :name: Provision Configured Systems
+        :description: Provision Configured Systems
+        :feature_type: control
+        :identifier: configured_system_provision
   - :name: Ansible Tower Job Templates
     :description: Everything under Ansible Tower Job Templates accordion
     :feature_type: node
@@ -5112,14 +5112,14 @@
       :feature_type: control
       :identifier: configuration_script_control
       :children:
-        - :name: Create Service Dialog
-          :description: Create Service Dialog
-          :feature_type: admin
-          :identifier: configscript_service_dialog
-        - :name: Edit Tags
-          :description: Edit Job Templates Tags
-          :feature_type: control
-          :identifier: configuration_script_tag
+      - :name: Create Service Dialog
+        :description: Create Service Dialog
+        :feature_type: admin
+        :identifier: configscript_service_dialog
+      - :name: Edit Tags
+        :description: Edit Job Templates Tags
+        :feature_type: control
+        :identifier: configuration_script_tag
 
 # Embedded Automation Manager
 - :name: Embedded Automation Manager
@@ -5141,22 +5141,22 @@
       :feature_type: admin
       :identifier: embedded_configuration_script_source_admin
       :children:
-        - :name: Add Repository
-          :description: Add a Repository
-          :feature_type: admin
-          :identifier: embedded_configuration_script_source_add
-        - :name: Edit Repository
-          :description: Edit a Repository
-          :feature_type: admin
-          :identifier: embedded_configuration_script_source_edit
-        - :name: Remove Repository
-          :description: Remove a Repository
-          :feature_type: admin
-          :identifier: embedded_configuration_script_source_delete
-        - :name: Refresh Repositories
-          :description: Ansible Repositories Refresh
-          :feature_type: control
-          :identifier: embedded_configuration_script_source_refresh
+      - :name: Add Repository
+        :description: Add a Repository
+        :feature_type: admin
+        :identifier: embedded_configuration_script_source_add
+      - :name: Edit Repository
+        :description: Edit a Repository
+        :feature_type: admin
+        :identifier: embedded_configuration_script_source_edit
+      - :name: Remove Repository
+        :description: Remove a Repository
+        :feature_type: admin
+        :identifier: embedded_configuration_script_source_delete
+      - :name: Refresh Repositories
+        :description: Ansible Repositories Refresh
+        :feature_type: control
+        :identifier: embedded_configuration_script_source_refresh
   - :name: Playbooks
     :description: Everything under Playbooks
     :feature_type: node
@@ -5171,18 +5171,18 @@
       :feature_type: admin
       :identifier: embedded_configuration_script_payload_admin
       :children:
-        - :name: Add Playbook
-          :description: Add a Playbook
-          :feature_type: admin
-          :identifier: embedded_configuration_script_payload_add
-        - :name: Edit Playbook
-          :description: Edit a Playbook
-          :feature_type: admin
-          :identifier: embedded_configuration_script_payload_edit
-        - :name: Refresh Playbooks
-          :description: Ansible Playbooks Refresh
-          :feature_type: control
-          :identifier: embedded_configuration_script_payload_refresh
+      - :name: Add Playbook
+        :description: Add a Playbook
+        :feature_type: admin
+        :identifier: embedded_configuration_script_payload_add
+      - :name: Edit Playbook
+        :description: Edit a Playbook
+        :feature_type: admin
+        :identifier: embedded_configuration_script_payload_edit
+      - :name: Refresh Playbooks
+        :description: Ansible Playbooks Refresh
+        :feature_type: control
+        :identifier: embedded_configuration_script_payload_refresh
 
   - :name: Credentials
     :description: Everything under Credentials
@@ -5198,22 +5198,22 @@
       :feature_type: admin
       :identifier: embedded_automation_manager_credentials_admin
       :children:
-        - :name: Add Credentials
-          :description: Add a Credential
-          :feature_type: admin
-          :identifier: embedded_automation_manager_credentials_add
-        - :name: Edit Credentials
-          :description: Edit a Credential
-          :feature_type: admin
-          :identifier: embedded_automation_manager_credentials_edit
-        - :name: Delete Credentials
-          :description: Delete a Credential
-          :feature_type: admin
-          :identifier: embedded_automation_manager_credentials_delete
-        - :name: Refresh Credentials
-          :description: Ansible Credentials Refresh
-          :feature_type: control
-          :identifier: embedded_automation_manager_credentials_refresh
+      - :name: Add Credentials
+        :description: Add a Credential
+        :feature_type: admin
+        :identifier: embedded_automation_manager_credentials_add
+      - :name: Edit Credentials
+        :description: Edit a Credential
+        :feature_type: admin
+        :identifier: embedded_automation_manager_credentials_edit
+      - :name: Delete Credentials
+        :description: Delete a Credential
+        :feature_type: admin
+        :identifier: embedded_automation_manager_credentials_delete
+      - :name: Refresh Credentials
+        :description: Ansible Credentials Refresh
+        :feature_type: control
+        :identifier: embedded_automation_manager_credentials_refresh
 
 # Automation Manager
 - :name: Ansible Tower
@@ -5235,49 +5235,49 @@
       :feature_type: control
       :identifier: automation_manager_providers_control
       :children:
-        - :name: Edit Tags
-          :description: Edit Tags of Ansible Tower Provider
-          :feature_type: control
-          :identifier: automation_manager_provider_tag
-        - :name: Refresh Providers
-          :description: Refresh relationships for all items related of Provider
-          :feature_type: control
-          :identifier: automation_manager_refresh_provider
+      - :name: Edit Tags
+        :description: Edit Tags of Ansible Tower Provider
+        :feature_type: control
+        :identifier: automation_manager_provider_tag
+      - :name: Refresh Providers
+        :description: Refresh relationships for all items related of Provider
+        :feature_type: control
+        :identifier: automation_manager_refresh_provider
     - :name: Modify
       :description: Modify Providers
       :feature_type: admin
       :identifier: automation_manager_admin
       :children:
-        - :name: Remove Providers
-          :description: Remove Provier
-          :feature_type: admin
-          :identifier: automation_manager_delete_provider
-        - :name: Edit Provider
-          :description: Edit a Provider
-          :feature_type: admin
-          :identifier: automation_manager_edit_provider
-        - :name: Add Provider
-          :description: Add a Provider
-          :feature_type: admin
-          :identifier: automation_manager_add_provider
+      - :name: Remove Providers
+        :description: Remove Provier
+        :feature_type: admin
+        :identifier: automation_manager_delete_provider
+      - :name: Edit Provider
+        :description: Edit a Provider
+        :feature_type: admin
+        :identifier: automation_manager_edit_provider
+      - :name: Add Provider
+        :description: Add a Provider
+        :feature_type: admin
+        :identifier: automation_manager_add_provider
   - :name: Configured Systems
     :description: Everything under Configured Systems accordion
     :feature_type: node
     :identifier: automation_manager_configured_system
     :children:
-      - :name: View
-        :description: View Configured Systems
-        :feature_type: view
-        :identifier: automation_manager_configured_system_view
-      - :name: Operate
-        :description: Perform Operations on Configured Systems
+    - :name: View
+      :description: View Configured Systems
+      :feature_type: view
+      :identifier: automation_manager_configured_system_view
+    - :name: Operate
+      :description: Perform Operations on Configured Systems
+      :feature_type: control
+      :identifier: automation_manager_configured_system_control
+      :children:
+      - :name: Edit Tags
+        :description: Edit Configured Systems Tags
         :feature_type: control
-        :identifier: automation_manager_configured_system_control
-        :children:
-          - :name: Edit Tags
-            :description: Edit Configured Systems Tags
-            :feature_type: control
-            :identifier: automation_manager_configured_system_tag
+        :identifier: automation_manager_configured_system_tag
   - :name: Automation Scripts
     :description: Everything under Automation Scripts accordion
     :feature_type: node
@@ -5292,14 +5292,14 @@
       :feature_type: control
       :identifier: automation_manager_configuration_script_control
       :children:
-        - :name: Create Service Dialog
-          :description: Create Service Dialog
-          :feature_type: admin
-          :identifier: automation_manager_configuration_script_service_dialog
-        - :name: Edit Tags
-          :description: Edit Job Templates Tags
-          :feature_type: control
-          :identifier: automation_manager_configuration_script_tag
+      - :name: Create Service Dialog
+        :description: Create Service Dialog
+        :feature_type: admin
+        :identifier: automation_manager_configuration_script_service_dialog
+      - :name: Edit Tags
+        :description: Edit Job Templates Tags
+        :feature_type: control
+        :identifier: automation_manager_configuration_script_tag
 
 # Configuration Jobs
 - :name: Configuration Jobs
@@ -5997,10 +5997,10 @@
   :feature_type: node
   :identifier: miq_cloud_networks
   :children:
-    - :name: View
-      :description: Show Cloud Networks
-      :feature_type: view
-      :identifier: miq_cloud_networks_view
+  - :name: View
+    :description: Show Cloud Networks
+    :feature_type: view
+    :identifier: miq_cloud_networks_view
 
 # Blueprints
 - :name: Blueprints
@@ -6427,10 +6427,10 @@
   :feature_type: node
   :identifier: physical_infra_topology
   :children:
-    - :name: View
-      :description: View Physical Infra Topology
-      :feature_type: view
-      :identifier: physical_infra_topology_view
+  - :name: View
+    :description: View Physical Infra Topology
+    :feature_type: view
+    :identifier: physical_infra_topology_view
 
 # Monitor
 - :name: Monitor
