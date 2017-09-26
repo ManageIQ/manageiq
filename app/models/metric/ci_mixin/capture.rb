@@ -175,7 +175,7 @@ module Metric::CiMixin::Capture
 
     start_range = end_range = counters = counter_values = nil
     _, t = Benchmark.realtime_block(:total_time) do
-      # TODO why we call capture here? We call the same in processing.
+      # TODO: why we call capture here? We call the same in processing.
       Benchmark.realtime_block(:capture_state) { perf_capture_state }
 
       counters_by_mor, counter_values_by_mor_and_ts = perf_collect_metrics(interval_name_for_capture, start_time, end_time)

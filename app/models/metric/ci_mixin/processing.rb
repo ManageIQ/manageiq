@@ -56,7 +56,10 @@ module Metric::CiMixin::Processing
               if value.nil?
                 value = 0
                 counter = nil
-                values_by_instance.each_value { |v, c| value += v; counter = c }
+                values_by_instance.each_value do |v, c|
+                  value += v
+                  counter = c
+                end
               end
 
               # Create the hashes for the rows
@@ -156,7 +159,7 @@ module Metric::CiMixin::Processing
                     {:timestamp => start_time..end_time}
                   end
 
-      resources.each {|r| r.preload_vim_performance_state_for_ts_iso8601(condition)}
+      resources.each { |r| r.preload_vim_performance_state_for_ts_iso8601(condition) }
     end
 
     Benchmark.realtime_block(:process_perfs) do

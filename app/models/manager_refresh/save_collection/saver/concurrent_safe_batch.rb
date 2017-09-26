@@ -128,12 +128,12 @@ module ManagerRefresh::SaveCollection
               hash_for_update = if inventory_collection.use_ar_object?
                                   record.assign_attributes(hash.except(:id, :type))
                                   values_for_database!(all_attribute_keys,
-                                                      record.attributes.symbolize_keys)
+                                                       record.attributes.symbolize_keys)
                                 elsif serializable_keys?
                                   # TODO(lsmola) hash data with current DB data to allow subset of data being sent,
                                   # otherwise we would nullify the not sent attributes. Test e.g. on disks in cloud
                                   values_for_database!(all_attribute_keys,
-                                                      hash)
+                                                       hash)
                                 else
                                   # TODO(lsmola) hash data with current DB data to allow subset of data being sent,
                                   # otherwise we would nullify the not sent attributes. Test e.g. on disks in cloud
