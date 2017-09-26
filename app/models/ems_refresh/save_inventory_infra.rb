@@ -77,7 +77,7 @@ module EmsRefresh::SaveInventoryInfra
     _log.info("#{log_header} Saving EMS Inventory...Complete")
 
     new_relats = hashes_relats(hashes)
-    link_ems_inventory(ems, target, prev_relats, new_relats)
+    link_ems_inventory(ems, target, prev_relats, new_relats, disconnect)
     remove_obsolete_switches
 
     ems

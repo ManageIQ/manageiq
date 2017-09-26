@@ -1,6 +1,6 @@
 module EmsRefresh::LinkInventory
   # Link EMS inventory through the relationships table
-  def link_ems_inventory(ems, target, prev_relats, new_relats)
+  def link_ems_inventory(ems, target, prev_relats, new_relats, disconnect = true)
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
     _log.info("#{log_header} Linking EMS Inventory...")
     _log.debug("#{log_header} prev_relats: #{prev_relats.inspect}")
@@ -23,7 +23,7 @@ module EmsRefresh::LinkInventory
     # Do the Folders to *, and Clusters to * relationships
     #   For these, we only disconnect when doing an EMS refresh since we don't have
     #   enough information in the filtered data for other refresh types
-    do_disconnect = target.kind_of?(ExtManagementSystem)
+    do_disconnect = target.kind_of?(ExtManagementSystem) if disconnect
 
     # Do the Folders to Folders relationships
     update_relats(:folders_to_folders, prev_relats, new_relats) do |f|
@@ -81,7 +81,7 @@ module EmsRefresh::LinkInventory
     # Do the Hosts to * relationships, ResourcePool to * relationships
     #   For these, we only disconnect when doing an EMS or Host refresh since we don't
     #   have enough information in the filtered data for other refresh types
-    do_disconnect ||= target.kind_of?(Host)
+    do_disconnect ||= target.kind_of?(Host) if disconnect
 
     # Do the Hosts to ResourcePools relationships
     update_relats(:hosts_to_resource_pools, prev_relats, new_relats) do |h|
@@ -134,8 +134,7 @@ module EmsRefresh::LinkInventory
     update_relats_by_ids(prev_ids, new_ids,
                          do_disconnect ? proc { |s| object.send(accessor).delete(instance_with_id(model, s)) } : nil, # Disconnect proc
                          proc { |s| object.send(accessor) << instance_with_id(model, s) },                            # Connect proc
-                         proc { |ss| object.send(accessor) << instances_with_ids(model, ss) }                         # Bulk connect proc
-                        )
+                         proc { |ss| object.send(accessor) << instances_with_ids(model, ss) }) # Bulk connect proc
   end
 
   #
