@@ -19,7 +19,6 @@ module ManageIQ::Providers
     has_many :container_images, -> { active }, :foreign_key => :ems_id
     has_many :persistent_volumes, :as => :parent, :dependent => :destroy
     has_many :persistent_volume_claims, :foreign_key => :ems_id, :dependent => :destroy
-    has_many :container_component_statuses, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_builds, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_build_pods, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_templates, :foreign_key => :ems_id, :dependent => :destroy
