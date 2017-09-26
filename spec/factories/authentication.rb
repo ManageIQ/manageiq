@@ -35,4 +35,8 @@ FactoryGirl.define do
     auth_key    nil
     status      "SomeMockedStatus"
   end
+
+  factory :authentication_redhat_metric, :parent => :authentication do
+    authtype "metrics"
+  end
 end
