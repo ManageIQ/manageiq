@@ -50,12 +50,14 @@ module ManagerRefresh::SaveCollection
         all_attribute_keys      = Set.new + inventory_collection.batch_extra_attributes
 
         inventory_collection.each do |inventory_object|
-          attributes = inventory_object.attributes(inventory_collection)
-          index      = inventory_object.manager_uuid
+          attributes = inventory_object.attributes_with_keys(inventory_collection, all_attribute_keys)
+          # TODO(lsmola) unify this behavior with object_index_with_keys method in InventoryCollection
+          index      = unique_index_keys.map { |key| attributes[key].to_s }.join(inventory_collection.stringify_joiner)
 
+          # Interesting fact: not building attributes_index and using only inventory_objects_index doesn't do much
+          # of a difference, since the most objects inside are shared.
           attributes_index[index]        = attributes
           inventory_objects_index[index] = inventory_object
-          all_attribute_keys.merge(attributes_index[index].keys)
         end
 
         all_attribute_keys << :created_at if supports_created_at?
@@ -65,8 +67,6 @@ module ManagerRefresh::SaveCollection
 
         _log.info("*************** PROCESSING #{inventory_collection} of size #{inventory_collection.size} *************")
 
-        # TODO(lsmola) needed only because UPDATE FROM VALUES needs a specific PG typecasting, remove when fixed in PG
-        collect_pg_types!(all_attribute_keys)
         update_or_destroy_records!(batch_iterator(association), inventory_objects_index, attributes_index, all_attribute_keys)
 
         unless inventory_collection.custom_reconnect_block.nil?
@@ -102,9 +102,9 @@ module ManagerRefresh::SaveCollection
             next unless assert_distinct_relation(primary_key_value)
 
             # TODO(lsmola) unify this behavior with object_index_with_keys method in InventoryCollection
-            index            = unique_index_keys_to_s.map { |attribute| record_key(record, attribute).to_s }.join(inventory_collection.stringify_joiner)
+            index            = unique_index_keys_to_s.map { |key| record_key(record, key).to_s }.join(inventory_collection.stringify_joiner)
             inventory_object = inventory_objects_index.delete(index)
-            hash             = attributes_index[index]
+            hash             = attributes_index.delete(index)
 
             if inventory_object.nil?
               # Record was found in the DB but not sent for saving, that means it doesn't exist anymore and we should
@@ -119,13 +119,11 @@ module ManagerRefresh::SaveCollection
 
               hash_for_update = if inventory_collection.use_ar_object?
                                   record.assign_attributes(hash.except(:id, :type))
-                                  values_for_database(inventory_collection.model_class,
-                                                      all_attribute_keys,
-                                                      record.attributes.symbolize_keys)
-                                elsif inventory_collection.serializable_keys?(all_attribute_keys)
-                                  values_for_database(inventory_collection.model_class,
-                                                      all_attribute_keys,
-                                                      hash)
+                                  values_for_database!(all_attribute_keys,
+                                                       record.attributes.symbolize_keys)
+                                elsif serializable_keys?
+                                  values_for_database!(all_attribute_keys,
+                                                       hash)
                                 else
                                   hash
                                 end
@@ -201,13 +199,11 @@ module ManagerRefresh::SaveCollection
         batch.each do |index, inventory_object|
           hash = if inventory_collection.use_ar_object?
                    record = inventory_collection.model_class.new(attributes_index.delete(index))
-                   values_for_database(inventory_collection.model_class,
-                                       all_attribute_keys,
-                                       record.attributes.symbolize_keys)
-                 elsif inventory_collection.serializable_keys?(all_attribute_keys)
-                   values_for_database(inventory_collection.model_class,
-                                       all_attribute_keys,
-                                       attributes_index.delete(index))
+                   values_for_database!(all_attribute_keys,
+                                        record.attributes.symbolize_keys)
+                 elsif serializable_keys?
+                   values_for_database!(all_attribute_keys,
+                                        attributes_index.delete(index))
                  else
                    attributes_index.delete(index)
                  end
@@ -233,12 +229,13 @@ module ManagerRefresh::SaveCollection
         end
       end
 
-      def values_for_database(model_class, all_attribute_keys, attributes)
-        all_attribute_keys.each_with_object({}) do |attribute_name, db_values|
-          type                      = model_class.type_for_attribute(attribute_name.to_s)
-          raw_val                   = attributes[attribute_name]
-          db_values[attribute_name] = type.type == :boolean ? type.cast(raw_val) : type.serialize(raw_val)
+      def values_for_database!(all_attribute_keys, attributes)
+        all_attribute_keys.each do |key|
+          if (type = serializable_keys[key])
+            attributes[key] = type.serialize(attributes[key])
+          end
         end
+        attributes
       end
 
       def map_ids_to_inventory_objects(indexed_inventory_objects, all_attribute_keys, hashes, result)

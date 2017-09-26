@@ -127,7 +127,7 @@ module ManagerRefresh::SaveCollection
       def quote_and_pg_type_cast(connection, value, name)
         pg_type_cast(
           connection.quote(value),
-          pg_type(name)
+          pg_types[name]
         )
       end
 
@@ -136,20 +136,6 @@ module ManagerRefresh::SaveCollection
           value
         else
           "#{value}::#{sql_type}"
-        end
-      end
-
-      def pg_type(name)
-        @pg_types_cache[name]
-      end
-
-      def collect_pg_types!(all_attribute_keys)
-        @pg_types_cache = {}
-        all_attribute_keys.each do |key|
-          @pg_types_cache[key] = inventory_collection.model_class.columns_hash[key.to_s]
-                                                     .try(:sql_type_metadata)
-                                                     .try(:instance_values)
-                                                     .try(:[], "sql_type")
         end
       end
     end
