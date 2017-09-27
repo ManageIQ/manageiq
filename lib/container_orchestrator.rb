@@ -3,7 +3,8 @@ require 'kubeclient'
 class ContainerOrchestrator
   include_concern 'ObjectDefinition'
 
-  TOKEN_FILE = "/run/secrets/kubernetes.io/serviceaccount/token".freeze
+  TOKEN_FILE   = "/run/secrets/kubernetes.io/serviceaccount/token".freeze
+  CA_CERT_FILE = "/run/secrets/kubernetes.io/serviceaccount/ca.crt".freeze
 
   def scale(deployment_config_name, replicas)
     connection.patch_deployment_config(deployment_config_name, { :spec => { :replicas => replicas } }, my_namespace)
@@ -66,10 +67,15 @@ class ContainerOrchestrator
   end
 
   def raw_connect(uri)
+    ssl_options = {
+      :verify_ssl => OpenSSL::SSL::VERIFY_PEER,
+      :ca_file    => CA_CERT_FILE
+    }
+
     Kubeclient::Client.new(
       uri,
       :auth_options => { :bearer_token_file => TOKEN_FILE },
-      :ssl_options  => { :verify_ssl => OpenSSL::SSL::VERIFY_NONE }
+      :ssl_options  => ssl_options
     )
   end
 

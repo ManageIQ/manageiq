@@ -24,7 +24,7 @@ describe ContainerOrchestrator do
     it "connects to the correct uri" do
       expect(connection.api_endpoint.to_s).to eq("https://kube.example.com:8443/oapi")
       expect(connection.auth_options[:bearer_token_file]).to eq(token_path)
-      expect(connection.ssl_options[:verify_ssl]).to eq(0)
+      expect(connection.ssl_options[:verify_ssl]).to eq(1)
     end
   end
 
@@ -32,7 +32,7 @@ describe ContainerOrchestrator do
     it "connects to the correct uri" do
       expect(kube_connection.api_endpoint.to_s).to eq("https://kube.example.com:8443/api")
       expect(kube_connection.auth_options[:bearer_token_file]).to eq(token_path)
-      expect(kube_connection.ssl_options[:verify_ssl]).to eq(0)
+      expect(kube_connection.ssl_options[:verify_ssl]).to eq(1)
     end
   end
 
