@@ -16,7 +16,8 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
                             ManageIQ::Providers::Openstack::CloudManager::Template
                             ManageIQ::Providers::Azure::CloudManager::Template
                             ManageIQ::Providers::Google::CloudManager::Template
-                            ManageIQ::Providers::Openstack::CloudManager::VolumeTemplate))
+                            ManageIQ::Providers::Openstack::CloudManager::VolumeTemplate
+                            ManageIQ::Providers::Openstack::CloudManager::VolumeSnapshotTemplate))
   end
 
   private
