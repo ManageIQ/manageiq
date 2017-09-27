@@ -63,7 +63,7 @@ module ManageIQ::Providers
         ems.try(:update_attributes,
                 :last_metrics_error       => :invalid,
                 :last_metrics_update_date => Time.now.utc)
-        return [{}, {}]
+        raise
       end
 
       Benchmark.realtime_block(:collect_data) do
@@ -73,7 +73,7 @@ module ManageIQ::Providers
           _log.error("Hawkular metrics service unavailable: #{e.message}")
           ems.update_attributes(:last_metrics_error       => :unavailable,
                                 :last_metrics_update_date => Time.now.utc) if ems
-          return [{}, {}]
+          raise
         end
       end
 
