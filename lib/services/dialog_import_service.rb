@@ -126,9 +126,7 @@ class DialogImportService
         )
       )
       fields = new_or_existing_dialog.dialog_fields
-      associations = build_association_list(dialog)
-      next if associations.empty?
-      associations.each do |association|
+      build_association_list(dialog).each do |association|
         association.values.each do |values|
           values.each do |responder|
             next if fields.select { |field| field.name == responder }.empty?
