@@ -402,12 +402,13 @@ class Service < ApplicationRecord
   end
 
   def add_resource(rsc, options = {})
-    service_resource = super
-    return if service_resource.nil?
+    super.tap do |service_resource|
+      break if service_resource.nil?
 
-    # Create ancestry link between services
-    resource = service_resource.resource
-    resource.update_attributes(:parent => self) if resource.kind_of?(Service)
+      # Create ancestry link between services
+      resource = service_resource.resource
+      resource.update_attributes(:parent => self) if resource.kind_of?(Service)
+    end
   end
 
   def enforce_single_service_parent?
