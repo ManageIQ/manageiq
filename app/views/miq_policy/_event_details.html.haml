@@ -56,7 +56,7 @@
                                       "data-method" => :post,
                                       "data-miq_sparkle_on"  => true,
                                       "data-miq_sparkle_off" => true,
-                                      "data-click_url" => {:url => url_for_only_path(:action => 'event_edit',
+                                      "data-click_url" => {:url => url_for(:action => 'event_edit',
                                                                            :button => action,
                                                                            :id => @event)}.to_json}
                 %i.fa.fa-lg.hidden-xs.hidden-sm{:class => arrow_style}
@@ -87,7 +87,7 @@
                                       "data-method" => :post,
                                       "data-miq_sparkle_on"  => true,
                                       "data-miq_sparkle_off" => true,
-                                      "data-click_url" => {:url => url_for_only_path(:action => 'event_edit',
+                                      "data-click_url" => {:url => url_for(:action => 'event_edit',
                                                                            :button => action,
                                                                            :id => @event)}.to_json}
                 - if %w(A S).include?(arrow_style)
@@ -151,7 +151,7 @@
                                       "data-method" => :post,
                                       "data-miq_sparkle_on"  => true,
                                       "data-miq_sparkle_off" => true,
-                                      "data-click_url" => {:url => url_for_only_path(:action => 'event_edit',
+                                      "data-click_url" => {:url => url_for(:action => 'event_edit',
                                                                            :button => action,
                                                                            :id => @event)}.to_json}
                 %i.fa.fa-lg.hidden-xs.hidden-sm{:class => arrow_style}
@@ -183,7 +183,7 @@
                                       "data-method" => :post,
                                       "data-miq_sparkle_on"  => true,
                                       "data-miq_sparkle_off" => true,
-                                      "data-click_url" => {:url => url_for_only_path(:action => 'event_edit',
+                                      "data-click_url" => {:url => url_for(:action => 'event_edit',
                                                                            :button => action,
                                                                            :id => @event)}.to_json}
                 - if %w(A S).include?(arrow_style)
