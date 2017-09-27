@@ -96,7 +96,7 @@
     :purge_window_size: 10000
 :ems:
   :ems_redhat:
-    :use_ovirt_engine_sdk: false
+    :use_ovirt_engine_sdk: true
     :resolve_ip_addresses: true
     :inventory:
       :read_timeout: 1.hour
