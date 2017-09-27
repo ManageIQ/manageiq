@@ -578,7 +578,8 @@ module Rbac
         # typically, this is the only one we want:
         vcmeta = vcmeta_list.last
 
-        if [ExtManagementSystem, Host].any? { |x| vcmeta.kind_of?(x) } && klass <= VmOrTemplate
+        if [ExtManagementSystem, Host].any? { |x| vcmeta.kind_of?(x) } && klass <= VmOrTemplate ||
+           vcmeta.kind_of?(ManageIQ::Providers::NetworkManager)        && klass <= CloudNetwork
           vcmeta.send(association_name).to_a
         else
           vcmeta_list.grep(klass) + vcmeta.descendants.grep(klass)
