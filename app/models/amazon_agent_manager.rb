@@ -15,24 +15,12 @@ class AmazonAgentManager
     @s3     ||= ems.connect(:service => 'S3')
     @iam    ||= ems.connect(:service => 'IAM')
 
+    # List of active agent ids
     @alive_agent_ids = []
+
+    # List of all agent ids, include those in power off state.
+    @agent_ids = []
   end
-
-  #
-  # Intialize Amazon services
-  #
-
-#  def ec2
-#  end
-
-#  def sqs
-#  end
-
-  def s3
-  end
-
-#  def iam
-#  end
 
   def config
     @config ||= VMDB::Config.new("vmdb").config
@@ -82,17 +70,16 @@ class AmazonAgentManager
     MIQ_SSA
   end
 
-  def alive_agent_ids(interval = 300)
-    @alive_agent_ids = agent_ids.nil? ? [] : @agent_ids.select { |id| agent_alive?(id, interval) }
+  def alive_agent_ids(interval = 180)
+    @alive_agent_ids = agent_ids.select { |id| agent_alive?(id, interval) }
   end
 
   def agent_ids
+    # reset to empty
     @agent_ids = []
 
     bucket = @s3.bucket(ssa_bucket)
     return @agent_ids unless bucket.exists?
-
-    _log.info("EMS #{@ems.guid} found bucket: #{bucket.name}")
 
     bucket.objects({prefix: heartbeat_prefix}).each do |obj|
       @agent_ids << obj.key.split('/')[2]
@@ -101,9 +88,34 @@ class AmazonAgentManager
     @agent_ids
   end
 
+  def get_request_message?
+    messages_in_queue(request_queue) > 0 ? true : false
+  end
+
+  def get_reply_message?
+    messages_in_queue(reply_queue) > 0 ? true : false
+  end
+
+  def messages_in_queue(q_name)
+    q = @sqs.get_queue_by_name(queue_name: q_name)
+    q.attributes["ApproximateNumberOfMessages"].to_i + q.attributes["ApproximateNumberOfMessagesNotVisible"].to_i
+  end
+
+  def setup_agent
+    agent_ids.empty? ? deploy_agent : activate_agent(agent_ids[0])
+  end
+
+  def activate_agent(agent_id)
+    agent = @ec2.instance(agent_id)
+    agent.start
+    agent.wait_until_running
+    _log.info("Agent #{agent_id} is activated to serve requests.")
+    agent_id
+  end
+
   # check timestamp of heartbeat of agent_id, return true if the last beat time in
   # in the time interval
-  def agent_alive?(agent_id, interval = 300)
+  def agent_alive?(agent_id, interval = 180)
     bucket = @s3.bucket(ssa_bucket)
     return false unless bucket.exists?
 
@@ -112,7 +124,7 @@ class AmazonAgentManager
     return false unless obj.exists?
 
     last_beat_stamp = YAML.load(obj.get.body.read, safe: true)
-    _log.info("#{obj.key}: Last heartbeat time stamp: #{last_beat_stamp}")
+    _log.debug("#{obj.key}: Last heartbeat time stamp: #{last_beat_stamp}")
 
     Time.now.utc - last_beat_stamp > interval ? false : true
   end
@@ -296,8 +308,33 @@ class AmazonAgentManager
     pem_file_name
   end
 
+  def setup_ruby(log = '/var/log/miq_ssa_deploy.log')
+    <<~SETUP
+      yum -y update > #{log} 2>&1
+      yum -y install git-core zlib zlib-devel gcc-c++ patch readline readline-devel libyaml-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison curl sqlite-devel postgresql-devel >> #{log} 2>&1
+      git clone https://github.com/rbenv/rbenv.git ~/.rbenv >> #{log} 2>&1
+      export HOME="/root" >> #{log} 2>&1
+      echo 'export HOME="/root"' >> ~/.bash_profile
+      echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bash_profile
+      echo 'eval "$(/root/.rbenv/bin/rbenv init -)"' >> ~/.bash_profile
+      source ~/.bash_profile >> #{log} 2>&1
+      git clone git://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build >> #{log} 2>&1
+      echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.bash_profile
+      source ~/.bash_profile >> #{log} 2>&1
+      echo $PATH >> #{log} 2>&1
+      rbenv install -l >> #{log} 2>&1
+      rbenv install 2.3.3 >> #{log} 2>&1
+      rbenv global 2.3.3 >> #{log} 2>&1
+      gem install bundler >> #{log} 2>&1
+      gem install rails >> #{log} 2>&1
+      gem install aws-sdk >> #{log} 2>&1
+      rbenv rehash >> #{log} 2>&1
+      ruby -v >> #{log} 2>&1
+    SETUP
+  end
+
   def default_settings
-    <<~HEREDOC
+    <<~SETTINGS
       echo "---" > default_ssa_config.yml
       echo ":log_level: #{log_level}" >> default_ssa_config.yml
       echo ":region: #{region}" >> default_ssa_config.yml
@@ -308,11 +345,11 @@ class AmazonAgentManager
       echo ":log_prefix: #{log_prefix}" >> default_ssa_config.yml
       echo ":heartbeat_prefix: #{heartbeat_prefix}" >> default_ssa_config.yml
       echo ":heartbeat_interval: #{heartbeat_interval}" >> default_ssa_config.yml
-    HEREDOC
+    SETTINGS
   end
 
   def github_gem_file
-    <<~HEREDOC
+    <<~GEMFILE
       echo 'source "https://rubygems.org"' > Gemfile
       echo 'gem "manageiq-gems-pending", ">0", :require => "manageiq-gems-pending", :git => "https://github.com/ManageIQ/manageiq-gems-pending.git", :branch => "master"' >> Gemfile
       echo 'gem "manageiq-smartstate", ">0", :require => "manageiq-smartstate", :git => "https://github.com/ManageIQ/manageiq-smartstate.git", :branch => "master"' >> Gemfile
@@ -320,50 +357,41 @@ class AmazonAgentManager
       # Modified gems for gems-pending.  Setting sources here since they are git references
       echo 'gem "handsoap", "~>0.2.5", :require => false, :git => "https://github.com/ManageIQ/handsoap.git", :tag => "v0.2.5-5"' >> Gemfile
       echo 'gem "aws-sdk"' >> Gemfile
-    HEREDOC
+    GEMFILE
   end
 
-  def startup_script
-    <<~HEREDOC
+  def startup_script(log = '/var/log/miq_ssa_deploy.log')
+    <<~STARTUP
       echo "#!/bin/sh" > start_agent.sh
       echo "ssa_root=`bundle show amazon_ssa_support`" >> start_agent.sh
       echo 'ssa_script="$ssa_root/tools/amazon_ssa_extract.rb"' >> start_agent.sh
-      echo 'ruby $ssa_script' >> start_agent.sh
+      echo 'ruby $ssa_script -l ${log_level}' >> start_agent.sh
       chmod 755 start_agent.sh
-      echo "Agent starts ..." >> /var/log/miq_ssa_deploy.log 2>&1
+      echo "Agent starts ..." >> #{log} 2>&1
       ./start_agent.sh
-    HEREDOC
+    STARTUP
   end
 
-  def create_user_data
-    userdata = <<~HEREDOC
+  def rc_local
+    <<~RCLOCAL
+      echo 'source /root/.bash_profile' >> /etc/rc.d/rc.local
+      echo 'cd /opt/miq && /opt/miq/start_agent.sh &' >> /etc/rc.d/rc.local
+    RCLOCAL
+  end
+
+  def create_user_data(log = '/var/log/miq_ssa_deploy.log')
+    userdata = <<~DATA
       #!/bin/bash
-      yum -y update > /var/log/miq_ssa_deploy.log 2>&1
-      yum -y install git-core zlib zlib-devel gcc-c++ patch readline readline-devel libyaml-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison curl sqlite-devel postgresql-devel >> /var/log/miq_ssa_deploy.log 2>&1
-      git clone https://github.com/rbenv/rbenv.git ~/.rbenv >> /var/log/miq_ssa_deploy.log 2>&1
-      export HOME="/root" >> /var/log/miq_ssa_deploy.log 2>&1
-      echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bash_profile
-      echo 'eval "$(/root/.rbenv/bin/rbenv init -)"' >> ~/.bash_profile
-      source ~/.bash_profile >> /var/log/miq_ssa_deploy.log 2>&1
-      git clone git://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build >> /var/log/miq_ssa_deploy.log 2>&1
-      echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.bash_profile
-      source ~/.bash_profile >> /var/log/miq_ssa_deploy.log 2>&1
-      echo $PATH >> /var/log/miq_ssa_deploy.log 2>&1
-      rbenv install -l >> /var/log/miq_ssa_deploy.log 2>&1
-      rbenv install 2.3.3 >> /var/log/miq_ssa_deploy.log 2>&1
-      rbenv global 2.3.3 >> /var/log/miq_ssa_deploy.log 2>&1
-      gem install bundler >> /var/log/miq_ssa_deploy.log 2>&1
-      gem install rails >> /var/log/miq_ssa_deploy.log 2>&1
-      gem install aws-sdk >> /var/log/miq_ssa_deploy.log 2>&1
-      rbenv rehash >> /var/log/miq_ssa_deploy.log 2>&1
-      ruby -v >> /var/log/miq_ssa_deploy.log 2>&1
+      #{setup_ruby}
       mkdir -p /opt/miq/log
       cd /opt/miq
       #{github_gem_file}
-      bundle install >> /var/log/miq_ssa_deploy.log 2>&1
+      bundle install >> #{log} 2>&1
       #{default_settings}
       #{startup_script}
-    HEREDOC
+      chmod +x /etc/rc.d/rc.local
+      #{rc_local}
+    DATA
     Base64.encode64(userdata)
   end
 

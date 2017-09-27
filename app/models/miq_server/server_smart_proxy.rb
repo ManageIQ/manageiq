@@ -89,9 +89,8 @@ module MiqServer::ServerSmartProxy
               target.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Template)
           timeout_adj = 8
         end
-
-        find_or_create_amazon_agent(ost)
       end
+
       $log.debug("#{log_prefix}: queuing call to #{self.class.name}##{ost.method_name}")
       # Queue call to scan_metadata or sync_metadata.
       MiqQueue.submit_job(
@@ -108,22 +107,37 @@ module MiqServer::ServerSmartProxy
     end
   end
 
-  def find_or_create_amazon_agent(ost)
-    _log.info("Checking Amazon agent manager for scanning")
-
-    MiqQueue.submit_job(
-      :service     => "smartproxy",
-      :class_name  => "AmazonAgentManagerWorker",
-      :method_name => "find_or_create_agent",
-      :args        => ost
-    )
-  end
-
-  def prepare_amazon_agent_manager(ost)
-    _log.info("Preparing Amazon agent manager for scanning")
-
-    AmazonAgentManagerWorker.agent_status(ost)
-  end
+#  def find_or_create_amazon_agent(ost)
+#    _log.info("Checking Amazon agent manager for scanning")
+#
+#    cb = {
+#        :service     => "smartproxy",
+#        :class_name  => self.class.name,
+#        :instance_id => id,
+#        :method_name => "get_args",
+#        :args        => [ost],
+#        :server_guid => guid
+#    }
+#
+#    MiqQueue.submit_job(
+#      :service      => "smartproxy",
+#      :class_name   => "AmazonAgentManagerWorker",
+#      :method_name  => "find_or_create_agent",
+#      :args         => ost,
+#      :miq_callback => cb,
+#      :msg_timeout  => 900
+#    )
+#  end
+#
+#  def get_args(*args)
+#    ost = args[0]
+#    case ost.method_name
+#    when "scan_metadata"
+#     scan_metadata(ost)
+#    when "sync_metadata"
+#     sync_metadata(ost)
+#    end 
+#  end
 
   # Called through Queue by Job
   def scan_metadata(ost)
