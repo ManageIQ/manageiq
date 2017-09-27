@@ -1,4 +1,6 @@
 class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
+  include AnsiblePlaybookMixin
+
   before_destroy :check_retirement_potential, :prepend => true
   around_destroy :around_destroy_callback, :prepend => true
 
@@ -63,7 +65,8 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   def self.create_job_templates(service_name, description, config_info, auth_user, service_template = nil)
     [:provision, :retirement, :reconfigure].each_with_object({}) do |action, hash|
       next unless new_job_template_required?(config_info[action], action, service_template)
-      hash[action] = { :configuration_template => create_job_template(build_name(service_name, action), description, config_info[action], auth_user) }
+      new_template, _tower_id = create_job_template(build_name(service_name, action), description, config_info[action], auth_user)
+      hash[action] = { :configuration_template => new_template }
     end
   end
   private_class_method :create_job_templates
@@ -72,16 +75,6 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     "miq_#{basic_name}_#{action}"
   end
   private_class_method :build_name
-
-  def self.create_job_template(name, description, info, auth_user)
-    tower, params = build_parameter_list(name, description, info)
-
-    task_id = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript.create_in_provider_queue(tower.id, params, auth_user)
-    task = MiqTask.wait_for_taskid(task_id)
-    raise task.message unless task.status == "Ok"
-    task.task_results
-  end
-  private_class_method :create_job_template
 
   def self.build_parameter_list(name, description, info)
     playbook = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook.find(info[:playbook_id])
