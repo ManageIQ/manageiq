@@ -84,8 +84,7 @@ module Rbac
       "VmOrTemplate::EmsFolder"                => :parent_blue_folders,
       "VmOrTemplate::ResourcePool"             => :resource_pool,
       "ConfiguredSystem::ExtManagementSystem"  => :ext_management_system,
-      "ConfiguredSystem::ConfigurationProfile" => [:id, :configuration_profile_id],
-      "ExtManagementSystem::CloudNetwork"      => [:ems_id, :id]
+      "ConfiguredSystem::ConfigurationProfile" => [:id, :configuration_profile_id]
     }
 
     # These classes should accept any of the relationship_mixin methods including:
