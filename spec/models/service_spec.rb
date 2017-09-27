@@ -686,7 +686,7 @@ describe Service do
     let(:child_service) { FactoryGirl.create(:service) }
 
     it 'associates a child_service to the service' do
-      child_service.add_to_service(service)
+      expect(child_service.add_to_service(service)).to be_kind_of(ServiceResource)
 
       expect(service.reload.services).to include(child_service)
     end
