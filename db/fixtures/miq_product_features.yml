@@ -5662,6 +5662,14 @@
         :description: Refresh relationships and power states for all items related of Images
         :feature_type: control
         :identifier: image_refresh
+      - :name: Right Size Recommendations
+        :description: CPU/Memory Recommendations of Images
+        :feature_type: control
+        :identifier: image_right_size
+      - :name: Reconfigure
+        :description: Reconfigure the Memory/CPUs of  Images
+        :feature_type: control
+        :identifier: image_reconfigure
       - :name: Edit Tags
         :description: Edit Image Tags
         :feature_type: control
