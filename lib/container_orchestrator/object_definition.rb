@@ -58,12 +58,12 @@ class ContainerOrchestrator
 
     def default_environment
       [
-        {:name => "GUID",                    :value => MiqServer.my_guid},
         {:name => "DATABASE_SERVICE_NAME",   :value => ENV["DATABASE_SERVICE_NAME"]},
+        {:name => "GUID",                    :value => MiqServer.my_guid},
         {:name => "MEMCACHED_SERVER",        :value => ENV["MEMCACHED_SERVER"]},
         {:name => "MEMCACHED_SERVICE_NAME",  :value => ENV["MEMCACHED_SERVICE_NAME"]},
-        {:name => "WORKER_HEARTBEAT_METHOD", :value => "file"},
         {:name => "WORKER_HEARTBEAT_FILE",   :value => Rails.root.join("tmp", "worker.hb").to_s},
+        {:name => "WORKER_HEARTBEAT_METHOD", :value => "file"},
         {:name      => "DATABASE_URL",
          :valueFrom => {:secretKeyRef=>{:name => "#{app_name}-secrets", :key => "database-url"}}},
         {:name      => "V2_KEY",
