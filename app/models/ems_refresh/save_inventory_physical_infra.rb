@@ -52,7 +52,7 @@ module EmsRefresh::SaveInventoryPhysicalInfra
     store_ids_for_new_records(ems.physical_servers, hashes, :ems_ref)
   end
 
-  def save_customization_scripts(ems, hashes, target = nil)
+  def save_customization_scripts_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
     ems.customization_scripts.reset
