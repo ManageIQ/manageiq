@@ -177,7 +177,15 @@ module Metric::CiMixin::Capture
     _, t = Benchmark.realtime_block(:total_time) do
       Benchmark.realtime_block(:capture_state) { perf_capture_state }
 
-      counters_by_mor, counter_values_by_mor_and_ts = perf_collect_metrics(interval_name_for_capture, start_time, end_time)
+      begin
+        counters_by_mor, counter_values_by_mor_and_ts = perf_collect_metrics(interval_name_for_capture, start_time, end_time)
+      rescue => err
+        MiqEvent.raise_evm_event_queue(ems_for_capture_target, "perf_capture_failed", :event_details => err.message)
+        ems_for_capture_target.try(:update_attributes,
+                                   :last_metrics_error       => :invalid,
+                                   :last_metrics_update_date => Time.now.utc)
+        raise err
+      end
 
       counters       = counters_by_mor[ems_ref] || {}
       counter_values = counter_values_by_mor_and_ts[ems_ref] || {}
