@@ -95,6 +95,10 @@
     :keep_drift_states: 6.months
     :purge_window_size: 10000
 :ems:
+# provider specific settings are nested here, but they are in the provider repos
+# e.g.:
+#  :ems_<provider_name>:
+#    :use_feature: false
 :event_streams:
   :history:
     :keep_events: 6.months
