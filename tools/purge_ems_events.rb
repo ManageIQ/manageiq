@@ -11,7 +11,7 @@ $log.level = Logger::INFO
 begin
   EmsEvent.purge(KEEP_EVENTS.ago.utc, PURGE_WINDOW)
 rescue => err
-  $log.error("#{err} #{err.backtrace.join("\n")}")
+  $log.log_backtrace(err)
 end
 
 $log.close

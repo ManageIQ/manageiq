@@ -47,8 +47,7 @@ module Vmdb
           end
         end
       rescue => err
-        _log.error("#{err.class}: #{err}")
-        _log.error(err.backtrace.join("\n"))
+        _log.log_backtrace(err)
         raise
       end
 

@@ -199,7 +199,7 @@ class MiqRequest < ApplicationRecord
       execute
     rescue => err
       _log.error("#{err.message}, attempting to execute request: [#{description}]")
-      _log.error(err.backtrace.join("\n"))
+      _log.log_backtrace(err)
     end
 
     true
