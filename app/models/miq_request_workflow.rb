@@ -1122,23 +1122,19 @@ class MiqRequestWorkflow
   def respool_to_cluster(src)
     return nil unless ems_has_clusters?
     sources = src[:respool].nil? ? find_all_ems_of_type(ResourcePool) : [src[:respool]]
-    targets = sources.collect { |rp| find_cluster_above_ci(rp) }.compact
-    targets.each_with_object({}) { |c, r| r[c.id] = c.name }
+    build_id_to_name_hash(sources.collect { |rp| find_cluster_above_ci(rp) }.compact)
   end
 
   def host_to_cluster(src)
     return nil unless ems_has_clusters?
     sources = src[:host].nil? ? allowed_hosts_obj : [src[:host]]
-    targets = sources.collect { |h| find_cluster_above_ci(h) }.compact
-    targets.each_with_object({}) { |c, r| r[c.id] = c.name }
+    build_id_to_name_hash(sources.collect { |h| find_cluster_above_ci(h) }.compact)
   end
 
   def folder_to_cluster(src)
     return nil unless ems_has_clusters?
     source = find_all_ems_of_type(EmsCluster)
-    # If a folder is selected, reduce the cluster list to only clusters in the same data center as the folder
-    source = source.reject { |c| find_datacenter_for_ci(c).id != src[:datacenter].id } unless src[:datacenter].nil?
-    source.each_with_object({}) { |c, r| r[c.id] = c.name }
+    build_id_to_name_hash(filter_to_objects_in_same_datacenter(source, src))
   end
 
   def cluster_to_respool(src)
@@ -1170,19 +1166,17 @@ class MiqRequestWorkflow
   def cluster_to_host(src)
     return nil unless ems_has_clusters?
     hosts = src[:cluster].nil? ? find_all_ems_of_type(Host) : find_hosts_under_ci(src[:cluster])
-    hosts.each_with_object({}) { |h, r| r[h.id] = h.name }
+    build_id_to_name_hash(hosts)
   end
 
   def respool_to_host(src)
     hosts = src[:respool].nil? ? find_all_ems_of_type(Host) : find_hosts_for_respool(src[:respool])
-    hosts.each_with_object({}) { |h, r| r[h.id] = h.name }
+    build_id_to_name_hash(hosts)
   end
 
   def folder_to_host(src)
     source = find_all_ems_of_type(Host)
-    # If a folder is selected, reduce the host list to only hosts in the same datacenter as the folder
-    source = source.reject { |h| find_datacenter_for_ci(h).id != src[:datacenter].id } unless src[:datacenter].nil?
-    source.each_with_object({}) { |h, r| r[h.id] = h.name }
+    build_id_to_name_hash(filter_to_objects_in_same_datacenter(source, src))
   end
 
   def host_to_folder(src)
@@ -1461,9 +1455,18 @@ class MiqRequestWorkflow
     [result.first, result.last] unless result.nil?
   end
 
+  def build_id_to_name_hash(array)
+    array.each_with_object({}) { |i, h| h[i.id] = i.name }
+  end
+
   def default_ci_to_hash_struct(ci)
     attributes = []
     attributes << :name if ci.respond_to?(:name)
     build_ci_hash_struct(ci, attributes)
+  end
+
+  def filter_to_objects_in_same_datacenter(array, source)
+    # If a folder is selected, reduce the host/cluster list to only hosts/clusters in the same datacenter as the folder
+    source[:datacenter] ? array.reject { |i| find_datacenter_for_ci(i).id != source[:datacenter].id } : array
   end
 end
