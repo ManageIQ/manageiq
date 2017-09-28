@@ -6489,3 +6489,22 @@
         :description: Display Individual Event Streams
         :feature_type: view
         :identifier: event_streams_show
+# SUI
+- :name: Service UI
+  :description: Features for the Service UI
+  :feature_type: node
+  :identifier: sui
+  :children:
+  - :name: menus
+    :description: Menus for the SUI
+    :feature_type: node
+    :identifier: menus
+    :children:
+    - :name: Help Menu
+      :description: Display help menu
+      :feature_type: view
+      :identifier: help_menu_display
+    - :name: UI Switcher
+      :description: Display the UI Switcher
+      :feature_type: view
+      :identifier: ui_switcher_display
