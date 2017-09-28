@@ -107,38 +107,6 @@ module MiqServer::ServerSmartProxy
     end
   end
 
-#  def find_or_create_amazon_agent(ost)
-#    _log.info("Checking Amazon agent manager for scanning")
-#
-#    cb = {
-#        :service     => "smartproxy",
-#        :class_name  => self.class.name,
-#        :instance_id => id,
-#        :method_name => "get_args",
-#        :args        => [ost],
-#        :server_guid => guid
-#    }
-#
-#    MiqQueue.submit_job(
-#      :service      => "smartproxy",
-#      :class_name   => "AmazonAgentManagerWorker",
-#      :method_name  => "find_or_create_agent",
-#      :args         => ost,
-#      :miq_callback => cb,
-#      :msg_timeout  => 900
-#    )
-#  end
-#
-#  def get_args(*args)
-#    ost = args[0]
-#    case ost.method_name
-#    when "scan_metadata"
-#     scan_metadata(ost)
-#    when "sync_metadata"
-#     sync_metadata(ost)
-#    end 
-#  end
-
   # Called through Queue by Job
   def scan_metadata(ost)
     klass  = ost.target_type.constantize

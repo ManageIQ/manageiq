@@ -26,9 +26,6 @@ class AmazonAgentManager
     @config ||= VMDB::Config.new("vmdb").config
   end
 
-  #
-  # TODO: Intialize SSA constants from Config
-  #
   def region
     @ems.provider_region
   end
@@ -89,11 +86,11 @@ class AmazonAgentManager
   end
 
   def get_request_message?
-    messages_in_queue(request_queue) > 0 ? true : false
+    messages_in_queue(request_queue) > 0
   end
 
   def get_reply_message?
-    messages_in_queue(reply_queue) > 0 ? true : false
+    messages_in_queue(reply_queue) > 0
   end
 
   def messages_in_queue(q_name)
@@ -111,6 +108,10 @@ class AmazonAgentManager
     agent.wait_until_running
     _log.info("Agent #{agent_id} is activated to serve requests.")
     agent_id
+  rescue => err
+    _log.error("Failed to activate agent #{agent_id}: #{err.message}")
+    _log.info("Depoly a new agent. This may take a while ...")
+    deploy_agent
   end
 
   # check timestamp of heartbeat of agent_id, return true if the last beat time in
@@ -127,6 +128,9 @@ class AmazonAgentManager
     _log.debug("#{obj.key}: Last heartbeat time stamp: #{last_beat_stamp}")
 
     Time.now.utc - last_beat_stamp > interval ? false : true
+  rescue => err
+    _log.error("#{agent_id}: #{e.message}")
+    false
   end
 
   def deploy_agent
@@ -352,7 +356,7 @@ class AmazonAgentManager
     <<~GEMFILE
       echo 'source "https://rubygems.org"' > Gemfile
       echo 'gem "manageiq-gems-pending", ">0", :require => "manageiq-gems-pending", :git => "https://github.com/ManageIQ/manageiq-gems-pending.git", :branch => "master"' >> Gemfile
-      echo 'gem "manageiq-smartstate", ">0", :require => "manageiq-smartstate", :git => "https://github.com/ManageIQ/manageiq-smartstate.git", :branch => "master"' >> Gemfile
+      echo 'gem "manageiq-smartstate", "~>0.1.5", :require => "manageiq-smartstate", :git => "https://github.com/ManageIQ/manageiq-smartstate.git", :branch => "master"' >> Gemfile
       echo 'gem "amazon_ssa_support", ">0", :require => "amazon_ssa_support", :git => "https://github.com/ManageIQ/amazon_ssa_support.git", :branch => "master"' >> Gemfile
       # Modified gems for gems-pending.  Setting sources here since they are git references
       echo 'gem "handsoap", "~>0.2.5", :require => false, :git => "https://github.com/ManageIQ/handsoap.git", :tag => "v0.2.5-5"' >> Gemfile
