@@ -58,7 +58,7 @@ module Authenticator
           else
             # If role_mode == database we will only use the external system for authentication. Also, the user must exist in our database
             # otherwise we will fail authentication
-            user_or_taskid = lookup_by_identity(username)
+            user_or_taskid = lookup_by_identity(username, request)
             user_or_taskid ||= autocreate_user(username)
 
             unless user_or_taskid
@@ -166,7 +166,7 @@ module Authenticator
       [!!result, username]
     end
 
-    def lookup_by_identity(username)
+    def lookup_by_identity(username, *_args)
       case_insensitive_find_by_userid(username)
     end
 

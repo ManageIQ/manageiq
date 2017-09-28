@@ -1,7 +1,16 @@
 describe Authenticator::Httpd do
   subject { Authenticator::Httpd.new(config) }
   let!(:alice) { FactoryGirl.create(:user, :userid => 'alice') }
+  let!(:cheshire) { FactoryGirl.create(:user, :userid => 'cheshire@example.com') }
+  let(:user_groups) { 'wibble@fqdn:bubble@fqdn' }
   let(:config) { {:httpd_role => false} }
+  let(:request) do
+    env = {}
+    headers.each do |k, v|
+      env["HTTP_#{k.upcase.tr '-', '_'}"] = v if v
+    end
+    ActionDispatch::Request.new(Rack::MockRequest.env_for("/", env))
+  end
 
   before(:each) do
     # If anything goes looking for the currently configured
@@ -36,26 +45,43 @@ describe Authenticator::Httpd do
   end
 
   describe '#lookup_by_identity' do
-    it "finds existing users" do
-      expect(subject.lookup_by_identity('alice')).to eq(alice)
+    let(:dn) { 'cn=towmater,ou=people,ou=prod,dc=example,dc=com' }
+    let!(:towmater_dn) { FactoryGirl.create(:user, :userid => dn) }
+
+    let(:headers) do
+      {
+        'X-Remote-User'           => username,
+        'X-Remote-User-FullName'  => 'Cheshire Cat',
+        'X-Remote-User-FirstName' => 'Chechire',
+        'X-Remote-User-LastName'  => 'Cat',
+        'X-Remote-User-Email'     => 'cheshire@example.com',
+        'X-Remote-User-Domain'    => 'example.com',
+        'X-Remote-User-Groups'    => user_groups,
+      }
+    end
+
+    let(:username) { 'cheshire' }
+
+    it "finds existing users as username" do
+      expect(subject.lookup_by_identity('alice', request)).to eq(alice)
+    end
+
+    it "finds existing users as UPN" do
+      expect(subject.lookup_by_identity('cheshire', request)).to eq(cheshire)
+    end
+
+    it "finds existing users as distinguished name" do
+      expect(subject.lookup_by_identity('towmater', request)).to eq(towmater_dn)
     end
 
     it "doesn't create new users" do
-      expect(subject.lookup_by_identity('bob')).to be_nil
+      expect(subject.lookup_by_identity('bob', request)).to be_nil
     end
   end
 
   describe '#authenticate' do
     def authenticate
       subject.authenticate(username, nil, request)
-    end
-
-    let(:request) do
-      env = {}
-      headers.each do |k, v|
-        env["HTTP_#{k.upcase.tr '-', '_'}"] = v if v
-      end
-      ActionDispatch::Request.new(Rack::MockRequest.env_for("/", env))
     end
 
     let(:headers) do
@@ -71,7 +97,6 @@ describe Authenticator::Httpd do
     end
 
     let(:username) { 'alice' }
-    let(:user_groups) { 'wibble@fqdn:bubble@fqdn' }
 
     context "with user details" do
       context "using local authorization" do
@@ -196,8 +221,6 @@ describe Authenticator::Httpd do
       let(:config) { {:httpd_role => true} }
 
       let(:username) { 'saLLy' }
-      let(:user_groups) { 'wibble@fqdn:bubble@fqdn' }
-
       let(:headers) do
         super().merge('X-Remote-User-FullName'  => 'Sally Porsche',
                       'X-Remote-User-FirstName' => 'Sally',
