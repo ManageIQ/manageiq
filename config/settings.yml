@@ -1116,6 +1116,11 @@
       :event_handler:
         :cpu_usage_threshold: 0.percent
         :nice_delta: 7
+        :queue_type: artemis
+        :queue_hostname: localhost
+        :queue_port: 61616
+        :queue_username: admin
+        :queue_password: smartvm
       :generic_worker:
         :count: 2
       :priority_worker:

@@ -19,6 +19,7 @@ end
 
 manageiq_plugin "manageiq-providers-ansible_tower" # can't move this down yet, because we can't autoload ManageIQ::Providers::AnsibleTower::Shared
 manageiq_plugin "manageiq-schema"
+manageiq_plugin "manageiq-messaging"
 
 # Unmodified gems
 gem "activerecord-id_regions",        "~>0.2.0"
