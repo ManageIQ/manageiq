@@ -6495,7 +6495,7 @@
   :feature_type: node
   :identifier: sui
   :children:
-  - :name: menus
+  - :name: Menus
     :description: Menus for the SUI
     :feature_type: node
     :identifier: menus
