@@ -59,13 +59,37 @@ class EmsEvent < EventStream
   end
 
   def self.add_queue(meth, ems_id, event)
-    MiqQueue.submit_job(
-      :service     => "event",
-      :target_id   => ems_id,
-      :class_name  => "EmsEvent",
-      :method_name => meth,
-      :args        => [event],
-    )
+    queue_settings = Settings.workers.worker_base.queue_worker_base.event_handler
+    if queue_settings.queue_type == "artemis"
+      require "manageiq-messaging"
+
+      connect_opts = {
+        :host       => queue_settings.queue_hostname,
+        :port       => queue_settings.queue_port.to_i,
+        :username   => queue_settings.queue_username,
+        :password   => queue_settings.queue_password,
+        :client_ref => "event_handler",
+      }
+
+      ManageIQ::Messaging::Client.open(connect_opts) do |client|
+        client.publish_topic(
+          {
+            :service => "events",
+            :sender  => ems_id,
+            :event   => event[:event_type],
+            :payload => event
+          }
+        )
+      end
+    else
+      MiqQueue.submit_job(
+        :service     => "event",
+        :target_id   => ems_id,
+        :class_name  => "EmsEvent",
+        :method_name => meth,
+        :args        => [event],
+      )
+    end
   end
 
   def self.add(ems_id, event_hash)
