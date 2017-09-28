@@ -7,5 +7,9 @@ module ManageIQ::Providers
     def self.description
       "Monitoring Manager".freeze
     end
+
+    def name
+      "#{parent_manager.try(:name)} Monitoring Manager"
+    end
   end
 end
