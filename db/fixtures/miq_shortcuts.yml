@@ -484,3 +484,8 @@
   :url: /alerts_most_recent
   :rbac_feature_name: monitor_alerts_most_recent
   :startup: true
+- :name: miq_proxy_tasks
+  :description: Settings / Tasks
+  :url: /miq_task/index?jobs_tab=tasks
+  :rbac_feature_name: tasks
+  :startup: true
