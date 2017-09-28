@@ -1,21 +1,23 @@
 class ChargebackContainerProject < Chargeback
   set_columns_hash(
-    :project_name          => :string,
-    :project_uid           => :string,
-    :provider_name         => :string,
-    :provider_uid          => :string,
-    :archived              => :string,
-    :cpu_cores_used_cost   => :float,
-    :cpu_cores_used_metric => :float,
-    :fixed_compute_1_cost  => :float,
-    :fixed_compute_2_cost  => :float,
-    :fixed_2_cost          => :float,
-    :fixed_cost            => :float,
-    :memory_used_cost      => :float,
-    :memory_used_metric    => :float,
-    :net_io_used_cost      => :float,
-    :net_io_used_metric    => :float,
-    :total_cost            => :float,
+    :project_name             => :string,
+    :project_uid              => :string,
+    :provider_name            => :string,
+    :provider_uid             => :string,
+    :archived                 => :string,
+    :cpu_cores_used_cost      => :float,
+    :cpu_cores_used_metric    => :float,
+    :fixed_compute_1_cost     => :float,
+    :fixed_compute_2_cost     => :float,
+    :fixed_2_cost             => :float,
+    :fixed_cost               => :float,
+    :memory_used_cost         => :float,
+    :memory_used_metric       => :float,
+    :net_io_used_cost         => :float,
+    :net_io_used_metric       => :float,
+    :storage_allocated_cost   => :float,
+    :storage_allocated_metric => :float,
+    :total_cost               => :float,
   )
 
   def self.build_results_for_report_ChargebackContainerProject(options)
@@ -56,19 +58,21 @@ class ChargebackContainerProject < Chargeback
 
   def self.report_col_options
     {
-      "cpu_cores_used_cost"   => {:grouping => [:total]},
-      "cpu_cores_used_metric" => {:grouping => [:total]},
-      "fixed_compute_metric"  => {:grouping => [:total]},
-      "fixed_compute_1_cost"  => {:grouping => [:total]},
-      "fixed_compute_2_cost"  => {:grouping => [:total]},
-      "fixed_cost"            => {:grouping => [:total]},
-      "memory_used_cost"      => {:grouping => [:total]},
-      "memory_used_metric"    => {:grouping => [:total]},
-      "metering_used_metric"  => {:grouping => [:total]},
-      "metering_used_cost"    => {:grouping => [:total]},
-      "net_io_used_cost"      => {:grouping => [:total]},
-      "net_io_used_metric"    => {:grouping => [:total]},
-      "total_cost"            => {:grouping => [:total]}
+      "cpu_cores_used_cost"      => {:grouping => [:total]},
+      "cpu_cores_used_metric"    => {:grouping => [:total]},
+      "fixed_compute_metric"     => {:grouping => [:total]},
+      "fixed_compute_1_cost"     => {:grouping => [:total]},
+      "fixed_compute_2_cost"     => {:grouping => [:total]},
+      "fixed_cost"               => {:grouping => [:total]},
+      "memory_used_cost"         => {:grouping => [:total]},
+      "memory_used_metric"       => {:grouping => [:total]},
+      "metering_used_metric"     => {:grouping => [:total]},
+      "metering_used_cost"       => {:grouping => [:total]},
+      "net_io_used_cost"         => {:grouping => [:total]},
+      "net_io_used_metric"       => {:grouping => [:total]},
+      "storage_allocated_cost"   => {:grouping => [:total]},
+      "storage_allocated_metric" => {:grouping => [:total]},
+      "total_cost"               => {:grouping => [:total]}
     }
   end
 

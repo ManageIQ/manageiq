@@ -12,6 +12,10 @@ module Spec
         resource.metric_rollups.sum(&metric) / hours_in_interval
       end
 
+      def allocated_max_for(metric, resource)
+        resource.metric_rollups.collect(&metric.to_sym).compact.max
+      end
+
       def add_metric_rollups_for(resources, range, step, metric_rollup_params, trait = :with_data)
         range.step_value(step).each do |time|
           Array(resources).each do |resource|

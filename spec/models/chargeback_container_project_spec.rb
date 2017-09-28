@@ -20,7 +20,8 @@ describe ChargebackContainerProject do
           :chargeback_rate_detail_cpu_cores_used     => {:tiers => [hourly_variable_tier_rate]},
           :chargeback_rate_detail_net_io_used        => {:tiers => [hourly_variable_tier_rate]},
           :chargeback_rate_detail_memory_used        => {:tiers => [hourly_variable_tier_rate]},
-          :chargeback_rate_detail_metering_used      => {:tiers => [hourly_variable_tier_rate]}
+          :chargeback_rate_detail_metering_used      => {:tiers => [hourly_variable_tier_rate]},
+          :chargeback_rate_detail_storage_allocated  => {:tiers => [hourly_variable_tier_rate]}
       }
     end
 
@@ -108,6 +109,13 @@ describe ChargebackContainerProject do
         expect(subject.metering_used_metric).to eq(hours_in_day)
         expect(subject.metering_used_cost).to eq(hours_in_day * hourly_rate)
       end
+
+      it "storage" do
+        skip('this feature needs to be added to new chargeback rating') if Settings.new_chargeback
+        storage_allocated_metric = allocated_max_for(:derived_vm_allocated_disk_storage, @project)
+        expect(subject.storage_allocated_metric).to eq(storage_allocated_metric)
+        expect(subject.storage_allocated_cost).to eq(storage_allocated_metric / 1.gigabyte * hourly_rate * hours_in_day)
+      end
     end
 
     context "Monthly" do
@@ -146,6 +154,13 @@ describe ChargebackContainerProject do
       it 'calculates metering used hours and cost' do
         expect(subject.metering_used_metric).to eq(hours_in_month)
         expect(subject.metering_used_cost).to eq(hours_in_month * hourly_rate)
+      end
+
+      it "storage" do
+        skip('this feature needs to be added to new chargeback rating') if Settings.new_chargeback
+        storage_allocated_metric = allocated_max_for(:derived_vm_allocated_disk_storage, @project)
+        expect(subject.storage_allocated_metric).to eq(storage_allocated_metric)
+        expect(subject.storage_allocated_cost).to eq(storage_allocated_metric / 1.gigabyte * hourly_rate * hours_in_month)
       end
     end
 
