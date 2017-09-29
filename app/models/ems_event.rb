@@ -82,7 +82,7 @@ class EmsEvent < EventStream
   def self.add_queue(_meth, ems_id, event)
     # FIXME: I dont like, we query a deep settings path on every call
     #  but we want to be able to switch implementations, when config changes via the UI
-    if Settings.workers.worker_base.queue_worker_base.event_handler.queue_type == 'artemis'
+    if Settings.prototype.queue_type == 'artemis'
       artemis_client.publish_topic(
         :service => "events",
         :sender  => ems_id,

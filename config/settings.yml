@@ -910,6 +910,7 @@
   :maindb: ExtManagementSystem
   :container_deployment_wizard: false
 :prototype:
+  :queue_type: artemis
 :recommendations:
   :cpu_minimum: 1
   :mem_minimum: 32.megabytes
@@ -1116,7 +1117,6 @@
       :event_handler:
         :cpu_usage_threshold: 0.percent
         :nice_delta: 7
-        :queue_type: artemis
         :queue_hostname: localhost
         :queue_port: 61616
         :queue_username: admin

@@ -1,6 +1,6 @@
 class MiqEventHandler::Runner < MiqQueueWorkerBase::Runner
   def artemis?
-    worker_settings[:queue_type] == "artemis"
+    Settings.prototype.queue_type == 'artemis'
   end
 
   def artemis_client
