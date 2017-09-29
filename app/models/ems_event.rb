@@ -58,37 +58,38 @@ class EmsEvent < EventStream
     group[:name]
   end
 
-  if Settings.workers.worker_base.queue_worker_base.event_handler.queue_type == 'artemis'
-
+  def self.artemis_client
     require "manageiq-messaging"
+    # FIXME: logger should be set at a global level
+    ManageIQ::Messaging.logger = _log
+    @artemis_client ||= begin
+      queue_settings = Settings.workers.worker_base.queue_worker_base.event_handler
+      connect_opts = {
+        :host       => queue_settings.queue_hostname,
+        :port       => queue_settings.queue_port.to_i,
+        :username   => queue_settings.queue_username,
+        :password   => queue_settings.queue_password,
+        :client_ref => "event_handler",
+      }
 
-    def self.artemis_client
-      @artemis_client ||= begin
-        queue_settings = Settings.workers.worker_base.queue_worker_base.event_handler
-        connect_opts = {
-          :host       => queue_settings.queue_hostname,
-          :port       => queue_settings.queue_port.to_i,
-          :username   => queue_settings.queue_username,
-          :password   => queue_settings.queue_password,
-          :client_ref => "event_handler",
-        }
-
-        ManageIQ::Messaging::Client.open(connect_opts)
-      end
+      # caching the client works, even if the connection becomes unavailable
+      # internally the client will track the state of the connection and re-open it,
+      # once it's available again - at least thats true for a stomp connection
+      ManageIQ::Messaging::Client.open(connect_opts)
     end
+  end
 
-    def self.add_queue(_meth, ems_id, event)
+  def self.add_queue(_meth, ems_id, event)
+    # FIXME: I dont like, we query a deep settings path on every call
+    #  but we want to be able to switch implementations, when config changes via the UI
+    if Settings.workers.worker_base.queue_worker_base.event_handler.queue_type == 'artemis'
       artemis_client.publish_topic(
         :service => "events",
         :sender  => ems_id,
         :event   => event[:event_type],
         :payload => event
       )
-    end
-
-  else
-
-    def self.add_queue(meth, ems_id, event)
+    else
       MiqQueue.submit_job(
         :service     => "event",
         :target_id   => ems_id,
@@ -97,7 +98,6 @@ class EmsEvent < EventStream
         :args        => [event],
       )
     end
-
   end
 
   def self.add(ems_id, event_hash)
