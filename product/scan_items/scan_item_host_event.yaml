@@ -1,9 +1,9 @@
---- 
-:definition: 
-  content: 
+---
+:definition:
+  content:
   - :name: hostd
     :filter:
-      :message: 
+      :message:
       :level: warn
       :rec_count: 0
       :source:

@@ -51,22 +51,22 @@ linters:
   RuboCop:
     enabled: true
     ignored_cops:
-      - Lint/BlockAlignment
-      - Lint/EndAlignment
-      - Lint/Void
-      - Metrics/LineLength
-      - Style/AlignParameters
-      - Style/BlockNesting
-      - Style/ExtraSpacing
-      - Style/FileName
-      - Style/FinalNewline
-      - Style/IfUnlessModifier
-      - Style/IndentationWidth
-      - Style/Next
-      - Style/TrailingBlankLines
-      - Style/TrailingWhitespace
-      - Style/WhileUntilModifier
-      - Style/SpaceAroundOperators
+    - Lint/BlockAlignment
+    - Lint/EndAlignment
+    - Lint/Void
+    - Metrics/LineLength
+    - Style/AlignParameters
+    - Style/BlockNesting
+    - Style/ExtraSpacing
+    - Style/FileName
+    - Style/FinalNewline
+    - Style/IfUnlessModifier
+    - Style/IndentationWidth
+    - Style/Next
+    - Style/TrailingBlankLines
+    - Style/TrailingWhitespace
+    - Style/WhileUntilModifier
+    - Style/SpaceAroundOperators
 
   RubyComments:
     enabled: true

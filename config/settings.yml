@@ -1192,8 +1192,8 @@
       :memory_threshold: 1.gigabytes
       :nice_delta: 1
     :websocket_worker:
-       :connection_pool_size: 14
-       :memory_threshold: 1.gigabytes
-       :nice_delta: 1
+      :connection_pool_size: 14
+      :memory_threshold: 1.gigabytes
+      :nice_delta: 1
     :cockpit_ws_worker:
-        :count: 1
+      :count: 1

@@ -1,65 +1,65 @@
---- 
-where_clause: 
-generate_cols: 
-dims: 
-reserved: 
+---
+where_clause:
+generate_cols:
+dims:
+reserved:
 title: "Top CPU Consumers (weekly)"
-conditions: !ruby/object:MiqExpression 
-  context_type: 
-  exp: 
-    "!=": 
+conditions: !ruby/object:MiqExpression
+  context_type:
+  exp:
+    "!=":
       field: VmPerformance-cpu_usage_rate_average
       value: "0"
 col_options: {}
 
 order: Descending
-graph: 
-generate_rows: 
+graph:
+generate_rows:
 menu_name: "Top CPU Consumers (weekly)"
 rpt_group: Custom
-priority: 
-col_order: 
+priority:
+col_order:
 - resource_name
 - ems_cluster.name
 - host.name
 - cpu_usage_rate_average__avg
-timeline: 
+timeline:
 file_mtime:
-categories: 
-time_profile_id: 
+categories:
+time_profile_id:
 rpt_type: Custom
-filename: 
-db_options: 
+filename:
+db_options:
   :start_offset: 604800
   :end_offset: 0
   :interval: daily
-col_formats: 
-- 
-- 
-- 
-- 
-include: 
-  host: 
-    columns: 
+col_formats:
+-
+-
+-
+-
+include:
+  host:
+    columns:
     - name
-  ems_cluster: 
-    columns: 
+  ems_cluster:
+    columns:
     - name
 db: VmPerformance
-cols: 
+cols:
 - resource_name
 - cpu_usage_rate_average
 template_type: report
-group: 
-sortby: 
+group:
+sortby:
 - cpu_usage_rate_average__avg
-rpt_options: 
-  :pivot: 
-    :group_cols: 
+rpt_options:
+  :pivot:
+    :group_cols:
     - resource_name
-headers: 
+headers:
 - Asset Name
 - Cluster Name
 - Host Name
 - CPU - Usage Rate (%) (Avg)
-display_filter: 
+display_filter:

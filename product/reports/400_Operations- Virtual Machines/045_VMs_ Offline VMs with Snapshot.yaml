@@ -1,28 +1,28 @@
---- 
-dims: 
+---
+dims:
 created_on: 2008-08-14 03:45:24.707779 Z
 title: "Offline VMs with Snapshots"
-conditions: !ruby/object:MiqExpression 
-  exp: 
-    and: 
-    - FIND: 
-        search: 
-          IS NOT EMPTY: 
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - FIND:
+        search:
+          IS NOT EMPTY:
             field: Vm.snapshots-name
             value: ""
-        checkcount: 
-          ">": 
+        checkcount:
+          ">":
             field: <count>
             value: 0
-    - IS EMPTY: 
+    - IS EMPTY:
         field: Vm.host-name
 updated_on: 2008-08-14 03:45:24.707779 Z
 order: Ascending
-graph: 
+graph:
 menu_name: "Offline VMs with Snapshot"
 rpt_group: Custom
 priority: 83
-col_order: 
+col_order:
 - name
 - storage.name
 - v_datastore_path
@@ -32,34 +32,34 @@ col_order:
 - snapshots.create_time
 - snapshots.updated_on
 - snapshots.created_on
-timeline: 
+timeline:
 id: 137
-file_mtime: 
-categories: 
+file_mtime:
+categories:
 rpt_type: Custom
-filename: 
-include: 
-  snapshots: 
-    columns: 
+filename:
+include:
+  snapshots:
+    columns:
     - name
     - current
     - description
     - create_time
     - updated_on
     - created_on
-  storage: 
-    columns: 
+  storage:
+    columns:
     - name
 db: Vm
-cols: 
+cols:
 - name
 - v_datastore_path
 template_type: report
 group: c
-sortby: 
+sortby:
 - name
 - snapshots.name
-headers: 
+headers:
 - VM Name
 - Datastore
 - Datastore Path

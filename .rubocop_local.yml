@@ -28,24 +28,24 @@ GlobalVars:
 AllCops:
   TargetRubyVersion: 2.2
   Exclude:
-    - lib/generators/provider/templates/**/*
-    - db/schema.rb
-    - vendor/**/*
+  - lib/generators/provider/templates/**/*
+  - db/schema.rb
+  - vendor/**/*
 ClassAndModuleCamelCase:
   Exclude:
-    - lib/miq_automation_engine/service_models/*.rb
+  - lib/miq_automation_engine/service_models/*.rb
 FileName:
   Exclude:
-    - lib/miq_automation_engine/service_models/*.rb
+  - lib/miq_automation_engine/service_models/*.rb
 Metrics/LineLength:
   Exclude:
-    - Gemfile
+  - Gemfile
 Rails/Exit:
   Exclude:
-    - lib/workers/bin/*
+  - lib/workers/bin/*
 Rails/Output:
   Exclude:
-    - lib/workers/bin/*
+  - lib/workers/bin/*
 Style/ExtraSpacing:
   Exclude:
-    - Gemfile
+  - Gemfile

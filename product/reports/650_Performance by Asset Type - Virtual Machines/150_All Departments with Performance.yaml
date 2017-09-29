@@ -1,30 +1,30 @@
---- 
-where_clause: 
-generate_cols: 
-dims: 
-reserved: 
+---
+where_clause:
+generate_cols:
+dims:
+reserved:
 title: "All Departments with Performance for last week"
-conditions: !ruby/object:MiqExpression 
-  context_type: 
-  exp: 
-    IS NOT EMPTY: 
+conditions: !ruby/object:MiqExpression
+  context_type:
+  exp:
+    IS NOT EMPTY:
       field: VmPerformance.host-name
-col_options: 
-  vm.mem_cpu__total: 
-    :grouping: 
+col_options:
+  vm.mem_cpu__total:
+    :grouping:
     - :avg
     - :max
     - :total
-  vm.disk_2_size_on_disk: 
-    :grouping: 
+  vm.disk_2_size_on_disk:
+    :grouping:
     - :avg
     - :max
     - :total
   vm.cpu_total_cores__total:
     :grouping:
     - :total
-  vm.disk_6_size_on_disk: 
-    :grouping: 
+  vm.disk_6_size_on_disk:
+    :grouping:
     - :avg
     - :max
     - :total
@@ -33,82 +33,82 @@ col_options:
     - :avg
     - :max
     - :total
-  vm.v_total_snapshots: 
-    :grouping: 
+  vm.v_total_snapshots:
+    :grouping:
     - :avg
     - :max
     - :total
-  vm.disk_4_size_on_disk: 
-    :grouping: 
+  vm.disk_4_size_on_disk:
+    :grouping:
     - :avg
     - :max
     - :total
-  cpu_usagemhz_rate_average__avg: 
-    :grouping: 
+  cpu_usagemhz_rate_average__avg:
+    :grouping:
     - :avg
     - :max
     - :total
-  derived_memory_used__avg: 
-    :grouping: 
+  derived_memory_used__avg:
+    :grouping:
     - :avg
     - :max
     - :total
-  vm.provisioned_storage: 
-    :grouping: 
+  vm.provisioned_storage:
+    :grouping:
     - :avg
     - :max
     - :total
-  vm.disk_3_size_on_disk: 
-    :grouping: 
+  vm.disk_3_size_on_disk:
+    :grouping:
     - :avg
     - :max
     - :total
-  max_cpu_usage_rate_average__avg: 
-    :grouping: 
+  max_cpu_usage_rate_average__avg:
+    :grouping:
     - :avg
     - :max
-  max_mem_usage_absolute_average__avg: 
-    :grouping: 
+  max_mem_usage_absolute_average__avg:
+    :grouping:
     - :avg
     - :max
-  vm.disk_1_size_on_disk: 
-    :grouping: 
-    - :avg
-    - :max
-    - :total
-  vm.mem_cpu: 
-    :grouping: 
-    - :total
-  vm.used_disk_storage: 
-    :grouping: 
+  vm.disk_1_size_on_disk:
+    :grouping:
     - :avg
     - :max
     - :total
-  vm.disk_5_size_on_disk: 
-    :grouping: 
+  vm.mem_cpu:
+    :grouping:
+    - :total
+  vm.used_disk_storage:
+    :grouping:
     - :avg
     - :max
     - :total
-  cpu_usage_rate_average__avg: 
-    :grouping: 
-    - :avg
-    - :max
-  vm.memory_reserve: 
-    :grouping: 
+  vm.disk_5_size_on_disk:
+    :grouping:
     - :avg
     - :max
     - :total
-  mem_usage_absolute_average__avg: 
-    :grouping: 
+  cpu_usage_rate_average__avg:
+    :grouping:
+    - :avg
+    - :max
+  vm.memory_reserve:
+    :grouping:
+    - :avg
+    - :max
+    - :total
+  mem_usage_absolute_average__avg:
+    :grouping:
     - :avg
     - :max
 order: Ascending
-graph: 
-generate_rows: 
+graph:
+generate_rows:
 menu_name: "All Departments with Performance"
 rpt_group: Custom
-priority: 
-col_order: 
+priority:
+col_order:
 - ems_cluster.name
 - vm.managed.folder_path_yellow
 - resource_name
@@ -159,70 +159,70 @@ col_order:
 - vm.disk_6_used_percent_of_provisioned
 - vm.managed.department
 - host.name
-timeline: 
+timeline:
 file_mtime:
-categories: 
-time_profile_id: 
+categories:
+time_profile_id:
 rpt_type: Custom
-filename: 
-db_options: 
+filename:
+db_options:
   :start_offset: 604800
   :end_offset: 0
   :interval: daily
-col_formats: 
-- 
-- 
-- 
-- 
-- 
-- 
-- 
-- 
-- 
+col_formats:
+-
+-
+-
+-
+-
+-
+-
+-
+-
 - :percent_precision_0
 - :percent_precision_0
 - :mhz
 - :percent_precision_0
 - :percent_precision_0
-- 
-- 
-- 
-- 
-- 
-- 
-- 
-- 
+-
+-
+-
+-
+-
+-
+-
+-
 - :percent_precision_0
-- 
-- 
-- 
-- 
+-
+-
+-
+-
 - :percent_precision_0
-- 
-- 
-- 
-- 
+-
+-
+-
+-
 - :percent_precision_0
-- 
-- 
-- 
-- 
+-
+-
+-
+-
 - :percent_precision_0
-- 
-- 
-- 
-- 
+-
+-
+-
+-
 - :percent_precision_0
-- 
-- 
-- 
-- 
+-
+-
+-
+-
 - :percent_precision_0
-- 
-- 
-include: 
-  vm: 
-    columns: 
+-
+-
+include:
+  vm:
+    columns:
     - v_annotation
     - cpu_total_cores
     - cpu_shares_level
@@ -262,19 +262,19 @@ include:
     - disk_6_size
     - disk_6_size_on_disk
     - disk_6_used_percent_of_provisioned
-    include: 
-      managed: 
-        columns: 
+    include:
+      managed:
+        columns:
         - folder_path_yellow
         - department
-  host: 
-    columns: 
+  host:
+    columns:
     - name
-  ems_cluster: 
-    columns: 
+  ems_cluster:
+    columns:
     - name
 db: VmPerformance
-cols: 
+cols:
 - resource_name
 - max_cpu_usage_rate_average
 - cpu_usage_rate_average
@@ -284,15 +284,15 @@ cols:
 - derived_memory_used
 template_type: report
 group: c
-sortby: 
+sortby:
 - vm.managed.department
 - resource_name
-rpt_options: 
-  :pivot: 
-    :group_cols: 
+rpt_options:
+  :pivot:
+    :group_cols:
     - vm.managed.department
     - resource_name
-headers: 
+headers:
 - Cluster
 - Folder Path
 - VM
@@ -343,4 +343,4 @@ headers:
 - Disk 6 % Used
 - Department
 - Host Name
-display_filter: 
+display_filter:

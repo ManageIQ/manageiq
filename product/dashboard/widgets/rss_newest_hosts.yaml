@@ -11,7 +11,7 @@ resource_name: newest_hosts
 resource_type: RssFeed
 miq_schedule_options:
   :run_at:
-    :interval: 
+    :interval:
       :value: "1"
       :unit: hourly
 enabled: true

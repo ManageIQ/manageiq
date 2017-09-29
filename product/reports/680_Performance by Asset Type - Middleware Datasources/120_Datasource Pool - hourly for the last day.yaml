@@ -1,17 +1,17 @@
---- 
-where_clause: 
-dims: 
+---
+where_clause:
+dims:
 created_on: 2016-07-07 14:53:10.822035 Z
-reserved: 
+reserved:
 title: "Datasource Pool - hourly for the last day"
-conditions: 
+conditions:
 updated_on: 2016-07-08 17:23:33.732482 Z
 order: Descending
-graph: 
+graph:
 menu_name: "Datasource Pool - hourly for the last day"
 rpt_group: Custom
-priority: 
-col_order: 
+priority:
+col_order:
 - id
 - name
 - start_time
@@ -30,11 +30,11 @@ col_order:
 - mw_ds_average_creation_time_min
 - mw_ds_average_creation_time_avg
 - mw_ds_average_creation_time_max
-timeline: 
+timeline:
 file_mtime:
-categories: 
+categories:
 rpt_type: Custom
-filename: 
+filename:
 db_options:
   :rpt_type: middleware
   :options:
@@ -44,7 +44,7 @@ db_options:
 include: {}
 
 db: MiddlewareDatasourcePerformance
-cols: 
+cols:
 - id
 - name
 - start_time
@@ -67,7 +67,7 @@ template_type: report
 group: n
 sortby:
 - id
-headers: 
+headers:
 - Id
 - Name
 - Start

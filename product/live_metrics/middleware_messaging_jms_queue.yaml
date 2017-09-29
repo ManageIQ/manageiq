@@ -8,8 +8,8 @@
 #   - Provider native metric type id: MiQ metric id
 #
 supported_metrics:
-  - JMS Queue Metrics~Consumer Count: mw_ms_queue_consumer_count
-  - JMS Queue Metrics~Delivering Count: mw_ms_queue_delivering_count
-  - JMS Queue Metrics~Message Count: mw_ms_queue_message_count
-  - JMS Queue Metrics~Messages Added: mw_ms_queue_messages_added
-  - JMS Queue Metrics~Scheduled Count: mw_ms_queue_scheduled_count
+- JMS Queue Metrics~Consumer Count: mw_ms_queue_consumer_count
+- JMS Queue Metrics~Delivering Count: mw_ms_queue_delivering_count
+- JMS Queue Metrics~Message Count: mw_ms_queue_message_count
+- JMS Queue Metrics~Messages Added: mw_ms_queue_messages_added
+- JMS Queue Metrics~Scheduled Count: mw_ms_queue_scheduled_count

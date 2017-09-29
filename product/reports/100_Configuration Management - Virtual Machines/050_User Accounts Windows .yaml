@@ -1,19 +1,19 @@
---- 
-dims: 
+---
+dims:
 created_on: 2008-08-13 15:47:10.780648 Z
 title: "VM User Accounts for Windows"
-conditions: !ruby/object:MiqExpression 
-  exp: 
-    INCLUDES: 
+conditions: !ruby/object:MiqExpression
+  exp:
+    INCLUDES:
       field: Vm.operating_system-product_name
       value: Win
 updated_on: 2008-08-13 15:54:21.910282 Z
 order: Ascending
-graph: 
+graph:
 menu_name: "User Accounts - Windows"
 rpt_group: Custom
 priority: 130
-col_order: 
+col_order:
 - name
 - users.name
 - users.display_name
@@ -29,22 +29,22 @@ col_order:
 - operating_system.min_pw_len
 - users.domain
 - users.local
-timeline: 
+timeline:
 id: 105
-file_mtime: 
-categories: 
+file_mtime:
+categories:
 rpt_type: Custom
-filename: 
-include: 
-  operating_system: 
-    columns: 
+filename:
+include:
+  operating_system:
+    columns:
     - lockout_duration
     - lockout_threshold
     - max_pw_age
     - min_pw_age
     - min_pw_len
-  users: 
-    columns: 
+  users:
+    columns:
     - name
     - display_name
     - comment
@@ -55,14 +55,14 @@ include:
     - domain
     - local
 db: Vm
-cols: 
+cols:
 - name
 template_type: report
 group: c
-sortby: 
+sortby:
 - name
 - users.name
-headers: 
+headers:
 - VM Name
 - User Name
 - User Display Name
