@@ -44,16 +44,11 @@ class MiqEventHandler::Runner < MiqQueueWorkerBase::Runner
     # we dont do any work, we are lazy
     # upon msg received, the messaging thread will execute the block in .subscribe_topic as above
     # sleeping is done in do_work_loop
-
-    # FIXME: what about these checks?
-    # this checks cpu usage, iirc this is done in a worker monitor anyways
-    # break if thresholds_exceeded?
-
-    # is that some kind of setting?
-    # break if message_delivery_suspended?
   end
 
   def before_exit(_message, _exit_code)
     artemis_client.close if artemis?
+  rescue => e
+    _log.error "Could not close artemis connection: #{e}"
   end
 end
