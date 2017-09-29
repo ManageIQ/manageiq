@@ -89,9 +89,9 @@ class Account < ApplicationRecord
     Account.accttype_opposite(accttype)
   end
 
-  def with_valid_account_type(valid_account_type, &block)
+  def with_valid_account_type(valid_account_type)
     if accttype == valid_account_type
-      block.call
+      yield
     else
       raise _("Cannot call method '%{caller}' on an Account of type '%{type}'") % {:caller => caller[0][/`.*'/][1..-2],
                                                                                    :type   => accttype}
