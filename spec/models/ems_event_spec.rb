@@ -169,10 +169,12 @@ describe EmsEvent do
     context ".add" do
       before :each do
         @event_hash = {
-          :event_type => "event_with_availability_zone",
-          :vm_ems_ref => @vm.ems_ref,
-          :timestamp  => Time.now,
-          :ems_id     => @ems.id
+          :event_type  => "event_with_availability_zone",
+          :target_type => @vm.class.name,
+          :target_id   => @vm.id,
+          :vm_ems_ref  => @vm.ems_ref,
+          :timestamp   => Time.now,
+          :ems_id      => @ems.id
         }
       end
 
@@ -194,6 +196,31 @@ describe EmsEvent do
 
           new_event = EmsEvent.add(@vm.ems_id, @event_hash)
           expect(new_event.availability_zone_id).to eq @availability_zone.id
+        end
+      end
+
+      context "when an event was previously added" do
+        before do
+          EmsEvent.add(@ems.id, @event_hash)
+        end
+
+        it "should reject duplicates" do
+          ems_event = EmsEvent.add(@ems.id, @event_hash)
+          expect(
+            EmsEvent.where(@event_hash.except(:target_id)).count
+          ).to eq(1)
+          expect(ems_event).to be_nil
+        end
+
+        it "should add an identical event if it is for a different target" do
+          ems_event = EmsEvent.add(
+            @ems.id,
+            @event_hash.merge(:target_id => FactoryGirl.build(:vm_openstack).id)
+          )
+          expect(
+            EmsEvent.where(@event_hash.except(:target_id)).count
+          ).to eq(2)
+          expect(ems_event).to_not be_nil
         end
       end
     end
