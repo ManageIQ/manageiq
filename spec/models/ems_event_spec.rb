@@ -17,13 +17,15 @@ describe EmsEvent do
       @ems = FactoryGirl.create(:ems_kubernetes)
       @container_project = FactoryGirl.create(:container_project, :ext_management_system => @ems)
       @event_hash = {
-        :ems_ref    => ems_ref,
+        :ems_ref    => "event-ref",
         :ems_id     => @ems.id,
         :event_type => "STUFF_HAPPENED"
       }
     end
 
     context "on node" do
+      let(:node_event_hash) { @event_hash.merge(:container_node_ems_ref => ems_ref) }
+
       before :each do
         @container_node = FactoryGirl.create(:container_node,
                                              :ext_management_system => @ems,
@@ -32,17 +34,24 @@ describe EmsEvent do
       end
 
       it "process_container_entities_in_event! links node id to event" do
-        EmsEvent.process_container_entities_in_event!(@event_hash)
-        expect(@event_hash[:container_node_id]).to eq @container_node.id
+        EmsEvent.process_container_entities_in_event!(node_event_hash)
+        expect(node_event_hash[:container_node_id]).to eq @container_node.id
+      end
+
+      it "process_container_entities_in_event! doesn't clear event ems_ref" do
+        EmsEvent.process_container_entities_in_event!(node_event_hash)
+        expect(node_event_hash[:ems_ref]).to eq "event-ref"
       end
 
       it "constructed event has .container_node" do
-        event = EmsEvent.add(@ems.id, @event_hash)
+        event = EmsEvent.add(@ems.id, node_event_hash)
         expect(event.container_node).to eq @container_node
       end
     end
 
     context "on pod" do
+      let(:pod_event_hash) { @event_hash.merge(:container_group_ems_ref => ems_ref) }
+
       before :each do
         @container_group = FactoryGirl.create(:container_group,
                                               :ext_management_system => @ems,
@@ -52,17 +61,19 @@ describe EmsEvent do
       end
 
       it "process_container_entities_in_event! links pod id to event" do
-        EmsEvent.process_container_entities_in_event!(@event_hash)
-        expect(@event_hash[:container_group_id]).to eq @container_group.id
+        EmsEvent.process_container_entities_in_event!(pod_event_hash)
+        expect(pod_event_hash[:container_group_id]).to eq @container_group.id
       end
 
       it "constructed event has .container_group" do
-        event = EmsEvent.add(@ems.id, @event_hash)
+        event = EmsEvent.add(@ems.id, pod_event_hash)
         expect(event.container_group).to eq @container_group
       end
     end
 
     context "on replicator" do
+      let(:repl_event_hash) { @event_hash.merge(:container_replicator_ems_ref => ems_ref) }
+
       before :each do
         @container_replicator = FactoryGirl.create(:container_replicator,
                                                    :ext_management_system => @ems,
@@ -72,12 +83,12 @@ describe EmsEvent do
       end
 
       it "process_container_entities_in_event! links replicator id to event" do
-        EmsEvent.process_container_entities_in_event!(@event_hash)
-        expect(@event_hash[:container_replicator_id]).to eq @container_replicator.id
+        EmsEvent.process_container_entities_in_event!(repl_event_hash)
+        expect(repl_event_hash[:container_replicator_id]).to eq @container_replicator.id
       end
 
       it "constructed event has .container_replicator" do
-        event = EmsEvent.add(@ems.id, @event_hash)
+        event = EmsEvent.add(@ems.id, repl_event_hash)
         expect(event.container_replicator).to eq @container_replicator
       end
     end
