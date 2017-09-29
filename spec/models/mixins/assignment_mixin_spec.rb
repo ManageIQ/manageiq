@@ -25,6 +25,24 @@ describe AssignmentMixin do
     end
   end
 
+  describe ".all_assignments" do
+    it "returns only tags representing assignments" do
+      t1 = Tag.create(:name => "/chargeback_rate/assigned_to/vm/tag/managed/environment/any1")
+      Tag.create(:name => "/something/with_the same_tag/vm/tag/managed/environment/any1")
+
+      expect(described_class.all_assignments.all).to eq([t1])
+    end
+
+    it "returns only tags representing assignments that match tag in argument" do
+      Tag.create(:name => "/chargeback_rate/assigned_to/vm/tag/managed/environment/any1")
+      t2 = Tag.create(:name => "/chargeback_rate/assigned_to/vm/tag/managed/environment/any2")
+
+      expect(
+        described_class.all_assignments("/chargeback_rate/assigned_to/vm/tag/managed/environment/any2").all
+      ).to eq([t2])
+    end
+  end
+
   private
 
   # creates a tag e.g. "/managed/environment/test"
