@@ -130,9 +130,8 @@ class EmsEvent < EventStream
 
   def self.process_container_entities_in_event!(event, _options = {})
     [ContainerNode, ContainerGroup, ContainerReplicator].each do |entity|
-      process_object_in_event!(entity, event, :ems_ref_key => :ems_ref)
+      process_object_in_event!(entity, event)
     end
-    event.except!(:ems_ref)
   end
 
   def self.process_middleware_entities_in_event!(event, _options = {})
