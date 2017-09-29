@@ -58,11 +58,10 @@ class EmsEvent < EventStream
     group[:name]
   end
 
-  def self.add_queue(meth, ems_id, event)
-    queue_settings = Settings.workers.worker_base.queue_worker_base.event_handler
-    if queue_settings.queue_type == "artemis"
-      require "manageiq-messaging"
+  if Settings.workers.worker_base.queue_worker_base.event_handler == 'artemis'
 
+    require "manageiq-messaging"
+    def self.add_queue(_meth, ems_id, event)
       connect_opts = {
         :host       => queue_settings.queue_hostname,
         :port       => queue_settings.queue_port.to_i,
@@ -81,7 +80,11 @@ class EmsEvent < EventStream
           }
         )
       end
-    else
+    end
+
+  else
+
+    def self.add_queue(meth, ems_id, event)
       MiqQueue.submit_job(
         :service     => "event",
         :target_id   => ems_id,
@@ -90,6 +93,7 @@ class EmsEvent < EventStream
         :args        => [event],
       )
     end
+
   end
 
   def self.add(ems_id, event_hash)
