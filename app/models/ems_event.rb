@@ -58,28 +58,32 @@ class EmsEvent < EventStream
     group[:name]
   end
 
-  if Settings.workers.worker_base.queue_worker_base.event_handler == 'artemis'
+  if Settings.workers.worker_base.queue_worker_base.event_handler.queue_type == 'artemis'
 
     require "manageiq-messaging"
-    def self.add_queue(_meth, ems_id, event)
-      connect_opts = {
-        :host       => queue_settings.queue_hostname,
-        :port       => queue_settings.queue_port.to_i,
-        :username   => queue_settings.queue_username,
-        :password   => queue_settings.queue_password,
-        :client_ref => "event_handler",
-      }
 
-      ManageIQ::Messaging::Client.open(connect_opts) do |client|
-        client.publish_topic(
-          {
-            :service => "events",
-            :sender  => ems_id,
-            :event   => event[:event_type],
-            :payload => event
-          }
-        )
+    def self.artemis_client
+      @artemis_client ||= begin
+        queue_settings = Settings.workers.worker_base.queue_worker_base.event_handler
+        connect_opts = {
+          :host       => queue_settings.queue_hostname,
+          :port       => queue_settings.queue_port.to_i,
+          :username   => queue_settings.queue_username,
+          :password   => queue_settings.queue_password,
+          :client_ref => "event_handler",
+        }
+
+        ManageIQ::Messaging::Client.open(connect_opts)
       end
+    end
+
+    def self.add_queue(_meth, ems_id, event)
+      artemis_client.publish_topic(
+        :service => "events",
+        :sender  => ems_id,
+        :event   => event[:event_type],
+        :payload => event
+      )
     end
 
   else
