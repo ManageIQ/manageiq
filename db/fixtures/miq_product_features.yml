@@ -6495,16 +6495,7 @@
   :feature_type: node
   :identifier: sui
   :children:
-  - :name: Menus
-    :description: Menus for the SUI
-    :feature_type: node
-    :identifier: menus
-    :children:
-    - :name: Help Menu
-      :description: Display help menu
-      :feature_type: view
-      :identifier: help_menu_display
-    - :name: UI Switcher
-      :description: Display the UI Switcher
-      :feature_type: view
-      :identifier: ui_switcher_display
+  - :name: App Launcher
+    :description: Display the App Launcher
+    :feature_type: view
+    :identifier: sui_app_launcher
