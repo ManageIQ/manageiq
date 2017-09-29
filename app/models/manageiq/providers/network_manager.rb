@@ -82,5 +82,9 @@ module ManageIQ::Providers
         end
       end
     end
+
+    def name
+      "#{parent_manager.try(:name)} Network Manager"
+    end
   end
 end
