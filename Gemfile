@@ -19,7 +19,6 @@ end
 
 manageiq_plugin "manageiq-providers-ansible_tower" # can't move this down yet, because we can't autoload ManageIQ::Providers::AnsibleTower::Shared
 manageiq_plugin "manageiq-schema"
-manageiq_plugin "manageiq-messaging"
 
 # Unmodified gems
 gem "activerecord-id_regions",        "~>0.2.0"
@@ -40,6 +39,7 @@ gem "inifile",                        "~>3.0",         :require => false
 gem "kubeclient",                     "~>2.4.0",       :require => false # For scaling pods at runtime
 gem "manageiq-api-client",            "~>0.1.0",       :require => false
 gem "manageiq-network_discovery",     "~>0.1.2",       :require => false
+gem "manageiq-messaging", :git => "https://github.com/ManageIQ/manageiq-messaging", :branch => "master", :require => false
 gem "mime-types",                     "~>2.6.1",       :path => "mime-types-redirector"
 gem "more_core_extensions",           "~>3.3"
 gem "net-ldap",                       "~>0.14.0",      :require => false
