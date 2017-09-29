@@ -521,7 +521,14 @@ class Classification < ApplicationRecord
   end
 
   def delete_all_entries
-    entries.each(&:delete_tag_and_taggings)
+    entries.each do |e|
+      e.delete_assignments
+      e.delete_tag_and_taggings
+    end
+  end
+
+  def delete_assignments
+    AssignmentMixin.all_assignments(tag.name).destroy_all
   end
 
   def delete_tag_and_taggings
@@ -532,7 +539,12 @@ class Classification < ApplicationRecord
   end
 
   def delete_tags_and_entries
-    delete_all_entries    if category?
+    if category?
+      delete_all_entries
+    else # entry
+      delete_assignments
+    end
+
     delete_tag_and_taggings
   end
 end
