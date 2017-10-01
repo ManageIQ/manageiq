@@ -1250,6 +1250,31 @@ describe Rbac::Filterer do
             end
           end
         end
+
+        context 'network manager is tagged' do
+          before do
+            group.entitlement = Entitlement.new
+            group.entitlement.set_managed_filters([['/managed/environment/prod']])
+            group.entitlement.set_belongsto_filters([])
+            group.save!
+
+            network_manager.tag_with('/managed/environment/prod', :ns => '*')
+          end
+
+          it 'doesn\'t list cloud networks' do
+            User.with_user(user) do
+              results = described_class.search(:class => CloudNetwork).first
+              expect(results).to be_empty
+            end
+          end
+
+          it 'lists only tagged network manager' do
+            User.with_user(user) do
+              results = described_class.search(:class => ManageIQ::Providers::NetworkManager).first
+              expect(results).to match_array([network_manager])
+            end
+          end
+        end
       end
 
       it 'lists all cloud networks' do
