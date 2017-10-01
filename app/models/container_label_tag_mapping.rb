@@ -14,70 +14,18 @@ class ContainerLabelTagMapping < ApplicationRecord
 
   belongs_to :tag
 
-  # Pass the data this returns to map_* methods.
-  def self.cache
-    # {[name, type, value] => [tag_id, ...]}
-    in_my_region.find_each
-                .group_by { |m| [m.label_name, m.labeled_resource_type, m.label_value].freeze }
-                .transform_values { |mappings| mappings.collect(&:tag_id) }
+  require_nested :Mapper
+
+  # Return ContainerLabelTagMapping::Mapper instance that holds current mappings,
+  # can compute applicable tags, and create/find Tag records.
+  def self.mapper
+    ContainerLabelTagMapping::Mapper.new(in_my_region.all)
   end
 
-  # We expect labels to be {:name, :value} hashes
-  # and return {:tag_id} or {:category_tag_id, :entry_name, :entry_description} hashes.
+  # Assigning/unassigning should be possible without Mapper instance, perhaps in another process.
 
-  def self.map_labels(cache, type, labels)
-    labels.collect_concat { |label| map_label(cache, type, label) }.uniq
-  end
-
-  def self.map_label(cache, type, label)
-    # Apply both specific-type and any-type, independently.
-    (map_name_type_value(cache, label[:name], type, label[:value]) +
-     map_name_type_value(cache, label[:name], nil,  label[:value]))
-  end
-
-  def self.map_name_type_value(cache, name, type, value)
-    specific_value = cache[[name, type, value]] || []
-    any_value      = cache[[name, type, nil]]   || []
-    if !specific_value.empty?
-      specific_value.map { |tag_id| {:tag_id => tag_id} }
-    else
-      if value.empty?
-        [] # Don't map empty value to any tag.
-      else
-        # Note: if the way we compute `entry_name` changes,
-        # consider what will happen to previously created tags.
-        any_value.map do |tag_id|
-          {:category_tag_id   => tag_id,
-           :entry_name        => Classification.sanitize_name(value),
-           :entry_description => value}
-        end
-      end
-    end
-  end
-  private_class_method :map_name_type_value
-
-  # Given a hash built by `map_*` methods, returns a Tag (creating if needed).
-  def self.find_or_create_tag(tag_hash)
-    if tag_hash[:tag_id]
-      Tag.find(tag_hash[:tag_id])
-    else
-      category = Tag.find(tag_hash[:category_tag_id]).classification
-      entry = category.find_entry_by_name(tag_hash[:entry_name])
-      unless entry
-        category.lock(:exclusive) do
-          begin
-            entry = category.add_entry(:name        => tag_hash[:entry_name],
-                                       :description => tag_hash[:entry_description])
-            entry.save!
-          rescue ActiveRecord::RecordInvalid
-            entry = category.find_entry_by_name(tag_hash[:entry_name])
-          end
-        end
-      end
-      entry.tag
-    end
-  end
-
+  # Checks whether a Tag record is under mapping control.
+  # TODO: expensive.
   def self.controls_tag?(tag)
     return false unless tag.classification.try(:read_only) # never touch user-assignable tags.
     tag_ids = [tag.id, tag.category.tag_id].uniq
@@ -85,8 +33,9 @@ class ContainerLabelTagMapping < ApplicationRecord
   end
 
   # Assign/unassign mapping-controlled tags, preserving user-assigned tags.
-  def self.retag_entity(entity, tag_hashes)
-    mapped_tags = tag_hashes.map { |tag_hash| find_or_create_tag(tag_hash) }
+  # All tag references must have been resolved first by Mapper#find_or_create_tags.
+  def self.retag_entity(entity, tag_references)
+    mapped_tags = Mapper.references_to_tags(tag_references)
     existing_tags = entity.tags
     Tagging.transaction do
       (mapped_tags - existing_tags).each do |tag|
