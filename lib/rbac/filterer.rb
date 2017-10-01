@@ -62,6 +62,7 @@ module Rbac
       EmsCluster
       ResourcePool
       Storage
+      CloudNetwork
     )
 
     # key: MiqUserRole#name - user's role
