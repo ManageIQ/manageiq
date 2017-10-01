@@ -42,4 +42,23 @@ describe ContainerImage do
     expect(image.computer_system).not_to be_nil
     expect(image.operating_system).to eq(image.computer_system.operating_system)
   end
+
+  context "#annotate_deny_execution" do
+    it "does not crush if annotating non existent image" do
+      osp = FactoryGirl.create(:ems_openshift, :hostname => "test.com")
+      allow(osp).to receive(:annotate) { raise KubeException.new(404, "Can't find image!", nil) }
+      image = FactoryGirl.create(:container_image, :ext_management_system => osp)
+      expect(osp).to receive(:annotate)
+      image.annotate_deny_execution("test policy")
+    end
+
+    it "crushes when annotating crushes for un expected error" do
+      excp = KubeException.new(500, "Something Awful happend!", nil)
+      osp = FactoryGirl.create(:ems_openshift, :hostname => "test.com")
+      allow(osp).to receive(:annotate) { raise excp }
+      image = FactoryGirl.create(:container_image, :ext_management_system => osp)
+      expect(osp).to receive(:annotate)
+      expect { image.annotate_deny_execution("test policy") }.to raise_error { excp }
+    end
+  end
 end
