@@ -55,6 +55,7 @@ module Rbac
       EmsCluster
       ResourcePool
       Storage
+      CloudNetwork
     )
 
     # key: MiqUserRole#name - user's role
@@ -77,8 +78,7 @@ module Rbac
       "VmOrTemplate::EmsFolder"                => :parent_blue_folders,
       "VmOrTemplate::ResourcePool"             => :resource_pool,
       "ConfiguredSystem::ExtManagementSystem"  => :ext_management_system,
-      "ConfiguredSystem::ConfigurationProfile" => [:id, :configuration_profile_id],
-      "ExtManagementSystem::CloudNetwork"      => [:ems_id, :id]
+      "ConfiguredSystem::ConfigurationProfile" => [:id, :configuration_profile_id]
     }
 
     # These classes should accept any of the relationship_mixin methods including:
@@ -583,7 +583,8 @@ module Rbac
         # typically, this is the only one we want:
         vcmeta = vcmeta_list.last
 
-        if [ExtManagementSystem, Host].any? { |x| vcmeta.kind_of?(x) } && klass <= VmOrTemplate
+        if [ExtManagementSystem, Host].any? { |x| vcmeta.kind_of?(x) } && klass <= VmOrTemplate ||
+           vcmeta.kind_of?(ManageIQ::Providers::NetworkManager)        && klass <= CloudNetwork
           vcmeta.send(association_name).to_a
         else
           vcmeta_list.grep(klass) + vcmeta.descendants.grep(klass)
