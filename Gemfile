@@ -157,7 +157,7 @@ group :rest_api, :manageiq_default do
 end
 
 group :scheduler, :manageiq_default do
-  gem "rufus-scheduler",                "~>3.1.3",       :require => false
+  gem "rufus-scheduler", :git => "https://github.com/chrisarcand/rufus-scheduler.git", :branch => "3-1-with-ruby-2-4-support", :require => false
 end
 
 group :seed, :manageiq_default do
