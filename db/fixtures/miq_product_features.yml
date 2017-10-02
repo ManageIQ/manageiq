@@ -6489,3 +6489,13 @@
         :description: Display Individual Event Streams
         :feature_type: view
         :identifier: event_streams_show
+# SUI
+- :name: Service UI
+  :description: Features for the Service UI
+  :feature_type: node
+  :identifier: sui
+  :children:
+  - :name: App Launcher
+    :description: Display the App Launcher
+    :feature_type: view
+    :identifier: sui_app_launcher
