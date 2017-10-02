@@ -2,7 +2,7 @@
 #
 # * copy Procfile.example to Procfile
 # * uncomment needed processes
-# * bin/rake evm:foreman:start to start the processes!
+# * `bin/rake evm:foreman:start` to start the processes!
 #   This task will configure the local server to look started and then start the processes in the Procfile.
 #
 # See documentation at http://manageiq.org/docs/guides/developer_setup/foreman
