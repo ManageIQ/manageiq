@@ -68,6 +68,7 @@ class Service < ApplicationRecord
 
   include_concern 'RetirementManagement'
   include_concern 'Aggregation'
+  include_concern 'ResourceLinking'
 
   virtual_column :has_parent,                               :type => :boolean
   virtual_column :power_state,                              :type => :string
