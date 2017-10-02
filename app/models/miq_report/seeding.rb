@@ -62,8 +62,8 @@ module MiqReport::Seeding
       rec = find_by_filename(rpt[:filename])
 
       if rec
-        if rec.filename && (rec.file_mtime.nil? || rec.file_mtime.utc < rpt[:file_mtime])
-          _log.info("#{typ.titleize}: [#{rec.name}] file has been updated on disk, synchronizing with model")
+        if rec.filename
+          _log.info("#{typ.titleize}: [#{rec.name}] file exists, synchronizing with model")
           rec.update_attributes(rpt)
           rec.save
         end
