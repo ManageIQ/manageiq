@@ -5512,6 +5512,10 @@
         :description: Pause Instance
         :feature_type: control
         :identifier: instance_pause
+      - :name: Resume
+        :description: Resume Instance
+        :feature_type: control
+        :identifier: instance_resume
       - :name: Suspend
         :description: Suspend Instance
         :feature_type: control
