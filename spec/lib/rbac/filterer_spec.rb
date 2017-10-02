@@ -1026,6 +1026,102 @@ describe Rbac::Filterer do
       end
     end
 
+    context 'with cloud network and network manager' do
+      let!(:network_manager)   { FactoryGirl.create(:ems_openstack).network_manager }
+      let!(:cloud_network)     { FactoryGirl.create(:cloud_network, :ext_management_system => network_manager) }
+      let!(:network_manager_1) { FactoryGirl.create(:ems_openstack).network_manager }
+      let!(:cloud_network_1)   { FactoryGirl.create(:cloud_network, :ext_management_system => network_manager_1) }
+
+      context 'with belongs_to_filter' do
+        before do
+          group.entitlement = Entitlement.new
+          group.entitlement.set_managed_filters([])
+          group.entitlement.set_belongsto_filters(["/belongsto/ExtManagementSystem|#{network_manager.name}"])
+          group.save!
+        end
+
+        context 'when records match belognsto filter' do
+          it 'lists cloud networks with network manager according to belongsto filter' do
+            User.with_user(user) do
+              results = described_class.search(:class => CloudNetwork).first
+              expect(results).to match_array([cloud_network])
+              expect(results.first.ext_management_system).to eq(network_manager)
+            end
+          end
+
+          it 'lists network manager according to belongsto filter' do
+            User.with_user(user) do
+              results = described_class.search(:class => ManageIQ::Providers::NetworkManager).first
+              expect(results).to match_array([network_manager])
+            end
+          end
+        end
+
+        context 'when records don\'t match belognsto filter' do
+          before do
+            group.entitlement = Entitlement.new
+            group.entitlement.set_managed_filters([])
+            group.entitlement.set_belongsto_filters(["/belongsto/ExtManagementSystem|XXXX"])
+            group.save!
+          end
+
+          it 'lists no cloud networks' do
+            User.with_user(user) do
+              results = described_class.search(:class => CloudNetwork).first
+              expect(results).to be_empty
+            end
+          end
+
+          it 'lists no network manager' do
+            User.with_user(user) do
+              results = described_class.search(:class => ManageIQ::Providers::NetworkManager).first
+              expect(results).to be_empty
+            end
+          end
+        end
+
+        context 'network manager is tagged' do
+          before do
+            group.entitlement = Entitlement.new
+            group.entitlement.set_managed_filters([['/managed/environment/prod']])
+            group.entitlement.set_belongsto_filters([])
+            group.save!
+
+            network_manager.tag_with('/managed/environment/prod', :ns => '*')
+          end
+
+          it 'doesn\'t list cloud networks' do
+            User.with_user(user) do
+              results = described_class.search(:class => CloudNetwork).first
+              expect(results).to be_empty
+            end
+          end
+
+          it 'lists only tagged network manager' do
+            User.with_user(user) do
+              results = described_class.search(:class => ManageIQ::Providers::NetworkManager).first
+              expect(results).to match_array([network_manager])
+            end
+          end
+        end
+      end
+
+      it 'lists all cloud networks' do
+        User.with_user(user) do
+          results = described_class.search(:class => CloudNetwork).first
+          expect(results).to match_array(CloudNetwork.all)
+          expect(results.first.ext_management_system).to eq(network_manager)
+        end
+      end
+
+      it 'lists all network managers' do
+        User.with_user(user) do
+          results = described_class.search(:class => ManageIQ::Providers::NetworkManager).first
+          expect(results).to match_array(ManageIQ::Providers::NetworkManager.all)
+        end
+      end
+    end
+
     context 'with network models' do
       NETWORK_MODELS = %w(
         CloudNetwork
