@@ -5,7 +5,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Unreleased - as of Sprint 68 ending 2017-09-04
+## Unreleased as of Sprint 69 ending 2017-09-18
+
+### Added
+- Automate
+  - Added 'playbook' as location type for Automate Methods [(#15939)](https://github.com/ManageIQ/manageiq/pull/15939)
+  - Added AutomateWorkspace model [(#15817)](https://github.com/ManageIQ/manageiq/pull/15817)
+- Classic UI
+  - Allow the target attribute to be read on ResourceActionWorkflow objects [(#15916)](https://github.com/ManageIQ/manageiq/pull/15916)
+- Providers
+  - Update model to support LXCA config patterns [(#15956)](https://github.com/ManageIQ/manageiq/pull/15956)
+  - Add orchestration stack targeted refresh method [(#15936)](https://github.com/ManageIQ/manageiq/pull/15936)
+  - Add relation between container projects and persistent volume claims [(#15932)](https://github.com/ManageIQ/manageiq/pull/15932)
+  - Apply distinct on lans and switches [(#15930)](https://github.com/ManageIQ/manageiq/pull/15930)
+  - Add instance security group management to product features [(#15915)](https://github.com/ManageIQ/manageiq/pull/15915)
+  - raw_connect method for infra provider  [(#15914)](https://github.com/ManageIQ/manageiq/pull/15914)
+  - Add Ansible Playbook custom button type [(#15874)](https://github.com/ManageIQ/manageiq/pull/15874)
+  - Add Openscap Result to VM model [(#15862)](https://github.com/ManageIQ/manageiq/pull/15862)
+  - Flavors create and add methods [(#15552)](https://github.com/ManageIQ/manageiq/pull/15552)
+  - Container Template: Add object_labels [(#15406)](https://github.com/ManageIQ/manageiq/pull/15406)
+- Smart State
+  - Snapshot Support for Non-Managed Disks SSA [(#15960)](https://github.com/ManageIQ/manageiq/pull/15960)
+- Tools
+  - Make tools easier to run [(#15957)](https://github.com/ManageIQ/manageiq/pull/15957)
+- User Interface
+  - Add custom buttons to generic object. [(#15980)](https://github.com/ManageIQ/manageiq/pull/15980)
+
+### Fixed
+- Authentication
+  - If the userid is not found in the DB do a case insensitive search [(#15904)](https://github.com/ManageIQ/manageiq/pull/15904)
+  - A tool for converting miqldap auth to external auth with sssd [(#15640)](https://github.com/ManageIQ/manageiq/pull/15640)
+- Chargeback
+  - Rate selection using union of all tags in reporting(consumption) period [(#15888)](https://github.com/ManageIQ/manageiq/pull/15888)
+- Core
+  - Fix event_catcher blacklisted events logging [(#15945)](https://github.com/ManageIQ/manageiq/pull/15945)
+- Providers
+  - Have parent inventory collections as dependencies [(#15903)](https://github.com/ManageIQ/manageiq/pull/15903)
+  - Orchestrate destroy of dependent managers [(#15590)](https://github.com/ManageIQ/manageiq/pull/15590)
+
+## Unreleased as of Sprint 68 ending 2017-09-04
 
 ### Added
 - Internationalization
