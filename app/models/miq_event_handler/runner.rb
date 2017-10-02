@@ -11,8 +11,6 @@ class MiqEventHandler::Runner < MiqQueueWorkerBase::Runner
       }
 
       # this block is stored in a lambda callback and is executed in another thread once a msg is received
-      # FIXME: is the subscription stored in artemis?
-      # Would it hurt to subscribe again on a second startup of the worker?
       MiqQueue.artemis_events_client.subscribe_topic(topic_options) do |sender, event, payload|
         _log.info "Received Event (#{event}) by sender #{sender}: #{payload[:event_type]} #{payload[:chain_id]}"
         EmsEvent.add(sender.to_i, payload)
@@ -31,9 +29,8 @@ class MiqEventHandler::Runner < MiqQueueWorkerBase::Runner
   end
 
   def before_exit(_message, _exit_code)
-    # FIXME: should we unsubscribe ?
-    # artemis_client.close if artemis?
+    artemis_client.close if artemis?
   rescue => e
-    # _log.error "Could not close artemis connection: #{e}"
+    _log.error "Could not close artemis connection: #{e}" if artemis?
   end
 end
