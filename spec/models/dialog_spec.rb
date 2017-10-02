@@ -391,9 +391,18 @@ describe Dialog do
 
   context "validate children before save" do
     let(:dialog) { FactoryGirl.build(:dialog, :label => 'dialog') }
+    let(:dialog_field) { FactoryGirl.build(:dialog_field, :label => 'thing', :name => 'df') }
 
     it "fails without tab" do
       expect { dialog.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Dialog #{dialog.label} must have at least one Tab")
+    end
+
+    it "fails with duplicate field name" do
+      dialog.dialog_tabs << FactoryGirl.create(:dialog_tab, :label => 'tab')
+      dialog.dialog_tabs.first.dialog_groups << FactoryGirl.create(:dialog_group, :label => 'group')
+      dialog.dialog_tabs.first.dialog_groups.first.dialog_fields << FactoryGirl.create(:dialog_field, :label => 'field', :name => 'df')
+      dialog.dialog_tabs.first.dialog_groups.first.dialog_fields << dialog_field
+      expect { dialog.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Dialog field name df cannot be duplicated on a dialog")
     end
 
     it "validates with tab" do
