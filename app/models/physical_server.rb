@@ -2,6 +2,9 @@ class PhysicalServer < ApplicationRecord
   include NewWithTypeStiMixin
   include MiqPolicyMixin
   include TenantIdentityMixin
+  include SupportsFeatureMixin
+  include EventMixin
+
   include_concern 'Operations'
 
   acts_as_miq_taggable
@@ -61,5 +64,9 @@ class PhysicalServer < ApplicationRecord
   def my_zone
     ems = ext_management_system
     ems ? ems.my_zone : MiqServer.my_zone
+  end
+
+  def event_where_clause(assoc = :ems_events)
+    ["#{events_table_name(assoc)}.physical_server_id = ?", id]
   end
 end
