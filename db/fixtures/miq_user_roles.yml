@@ -113,6 +113,7 @@
   - ems_physical_infra_show_list
   - ems_physical_infra_tag
   - ems_physical_infra_timeline
+  - physical_server_timeline
   - host_show
   - host_show_list
   - host_perf
@@ -200,6 +201,7 @@
   - ems_physical_infra_show_list
   - ems_physical_infra_tag
   - ems_physical_infra_timeline
+  - physical_server_timeline
   - host_show
   - host_show_list
   - host_perf
@@ -353,6 +355,7 @@
   - ems_physical_infra_show_list
   - ems_physical_infra_tag
   - ems_physical_infra_timeline
+  - physical_server_timeline
   - host_new
   - host_analyze
   - host_compare
@@ -459,6 +462,7 @@
   - ems_physical_infra_show_list
   - ems_physical_infra_tag
   - ems_physical_infra_timeline
+  - physical_server_timeline
   - host_show
   - host_show_list
   - host_perf
@@ -541,6 +545,7 @@
   - ems_physical_infra_show_list
   - ems_physical_infra_tag
   - ems_physical_infra_timeline
+  - physical_server_timeline
   - host_show
   - host_show_list
   - host_perf
@@ -622,6 +627,7 @@
   - ems_physical_infra_show_list
   - ems_physical_infra_tag
   - ems_physical_infra_timeline
+  - physical_server_timeline
   - host_show
   - host_show_list
   - host_perf
