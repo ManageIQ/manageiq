@@ -1,6 +1,4 @@
 class Zone < ApplicationRecord
-  DEFAULT_NTP_SERVERS = {:server => %w(0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org)}.freeze
-
   validates_presence_of   :name, :description
   validates_uniqueness_of :name
 
@@ -56,10 +54,8 @@ class Zone < ApplicationRecord
   end
 
   def ntp_settings
-    # Return ntp settings if populated otherwise return the defaults  {:ntp => {:server => ['blah'], :timeout => 5}}
-    return settings[:ntp] if settings.fetch_path(:ntp, :server).present?
-
-    Zone::DEFAULT_NTP_SERVERS.dup
+    # Return ntp settings if populated otherwise return the defaults
+    settings.fetch_path(:ntp, :server).present? ? settings[:ntp] : settings_for_resource.ntp.to_h
   end
 
   def assigned_roles
