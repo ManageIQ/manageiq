@@ -37,10 +37,10 @@ class MiqQueue < ApplicationRecord
       ManageIQ::Messaging.logger = _log
       queue_settings = Settings.workers.worker_base.queue_worker_base.event_handler
       connect_opts = {
-        :host       => queue_settings.queue_hostname,
-        :port       => queue_settings.queue_port.to_i,
-        :username   => queue_settings.queue_username,
-        :password   => queue_settings.queue_password,
+        :host       => ENV["ARTEMIS_QUEUE_HOSTNAME"] ? ENV["ARTEMIS_QUEUE_HOSTNAME"] : queue_settings.queue_hostname,
+        :port       => (ENV["ARTEMIS_QUEUE_PORT"] ? ENV["ARTEMIS_QUEUE_PORT"] : queue_settings.queue_port).to_i,
+        :username   => ENV["ARTEMIS_QUEUE_USERNAME"] ? ENV["ARTEMIS_QUEUE_USERNAME"] : queue_settings.queue_username,
+        :password   => ENV["ARTEMIS_QUEUE_PASSWORD"] ? ENV["ARTEMIS_QUEUE_PASSWORD"] : queue_settings.queue_password,
         :client_ref => "event_handler",
       }
 
