@@ -472,7 +472,7 @@ class MiqWidget < ApplicationRecord
 
     widget = find_by(:description => attrs["description"])
     if widget
-      if filename && widget.updated_at.utc < File.mtime(filename).utc
+      if filename
         $log.info("Widget: [#{widget.description}] file has been updated on disk, synchronizing with model")
         ["enabled", "visibility"].each { |a| attrs.delete(a) } # Don't updates these because they may have been modofoed by the end user.
         widget.updated_at = Time.now.utc
