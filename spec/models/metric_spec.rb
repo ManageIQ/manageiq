@@ -43,16 +43,6 @@ describe Metric do
           targets = Metric::Targets.capture_targets(nil, :exclude_storages => true)
           assert_infra_targets_enabled targets, %w(ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host)
         end
-
-        it "should find enabled targets excluding vms" do
-          targets = Metric::Targets.capture_targets(nil, :exclude_vms => true)
-          assert_infra_targets_enabled targets, %w(ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host Storage)
-        end
-
-        it "should find enabled targets excluding vms and storages" do
-          targets = Metric::Targets.capture_targets(nil, :exclude_storages => true, :exclude_vms => true)
-          assert_infra_targets_enabled targets, %w(ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host)
-        end
       end
 
       context "executing perf_capture_timer" do
@@ -1024,11 +1014,6 @@ describe Metric do
         it "should find enabled targets" do
           targets = Metric::Targets.capture_targets
           assert_cloud_targets_enabled targets, %w(ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm)
-        end
-
-        it "should find no enabled targets excluding vms" do
-          targets = Metric::Targets.capture_targets(nil, :exclude_vms => true)
-          assert_cloud_targets_enabled targets, %w()
         end
       end
 

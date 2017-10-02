@@ -13,7 +13,7 @@ module Metric::Targets
     all_hosts = capture_host_targets(emses)
     targets = enabled_hosts = only_enabled(all_hosts)
     targets += capture_storage_targets(all_hosts) unless options[:exclude_storages]
-    targets += capture_vm_targets(emses, enabled_hosts) unless options[:exclude_vms]
+    targets += capture_vm_targets(emses, enabled_hosts)
 
     targets
   end
@@ -32,8 +32,6 @@ module Metric::Targets
   #         and vms under no availability zone
   # NOTE: some stacks (e.g. nova) default to no availability zone
   def self.capture_cloud_targets(emses, options = {})
-    return [] if options[:exclude_vms]
-
     MiqPreloader.preload(emses, :vms => [{:availability_zone => :tags}, :ext_management_system])
 
     emses.flat_map(&:vms).select do |vm|
@@ -73,7 +71,7 @@ module Metric::Targets
     # Preload all of the objects we are going to be inspecting.
     includes = {:hosts => {:ems_cluster => :tags, :tags => {}}}
     includes[:hosts][:storages] = :tags unless options[:exclude_storages]
-    includes[:vms] = {} unless options[:exclude_vms]
+    includes[:vms] = {}
     includes
   end
 
@@ -97,14 +95,12 @@ module Metric::Targets
           end
         end
       end
-      unless options[:exclude_vms]
-        host_ids = ems.hosts.index_by(&:id)
-        clusters = ems.hosts.flat_map(&:ems_cluster).uniq.compact.index_by(&:id)
-        ems.vms.each do |vm|
-          vm.association(:ext_management_system).target = ems if vm.ems_id
-          vm.association(:ems_cluster).target = clusters[vm.ems_cluster_id] if vm.ems_cluster_id
-          vm.association(:host).target = host_ids[vm.host_id] if vm.host_id
-        end
+      host_ids = ems.hosts.index_by(&:id)
+      clusters = ems.hosts.flat_map(&:ems_cluster).uniq.compact.index_by(&:id)
+      ems.vms.each do |vm|
+        vm.association(:ext_management_system).target = ems if vm.ems_id
+        vm.association(:ems_cluster).target = clusters[vm.ems_cluster_id] if vm.ems_cluster_id
+        vm.association(:host).target = host_ids[vm.host_id] if vm.host_id
       end
     end
   end
