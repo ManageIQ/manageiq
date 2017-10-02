@@ -196,11 +196,10 @@ describe MiqServer do
 
         it "syncs with default zone settings if server and zone not configured" do
           @zone.update_attribute(:settings, {})
-          stub_settings({})
 
           expect(LinuxAdmin::Chrony).to receive(:new).and_return(chrony)
           expect(chrony).to receive(:clear_servers)
-          expect(chrony).to receive(:add_servers).with(*Zone::DEFAULT_NTP_SERVERS[:server])
+          expect(chrony).to receive(:add_servers).with("0.pool.ntp.org", "1.pool.ntp.org", "2.pool.ntp.org")
           @miq_server.ntp_reload
         end
       end

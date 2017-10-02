@@ -870,6 +870,11 @@
   :level_scvmm: info
   :level_vim: warn
   :level_websocket: info
+:ntp:
+  :server:
+  - 0.pool.ntp.org
+  - 1.pool.ntp.org
+  - 2.pool.ntp.org
 :performance:
   :capture_threshold:
     :default: 10.minutes

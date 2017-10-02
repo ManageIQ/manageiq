@@ -140,9 +140,11 @@ describe Zone do
   end
 
   context "#ntp_settings" do
-    let(:zone) { described_class.new }
+    let(:zone) { described_class.new(:name => "test", :description => "test description") }
 
     it "no settings returns default NTP settings" do
+      zone.save!
+
       expect(zone.ntp_settings).to eq(:server => ["0.pool.ntp.org", "1.pool.ntp.org", "2.pool.ntp.org"])
     end
 
