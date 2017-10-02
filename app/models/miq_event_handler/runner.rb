@@ -3,24 +3,6 @@ class MiqEventHandler::Runner < MiqQueueWorkerBase::Runner
     Settings.prototype.queue_type == 'artemis'
   end
 
-  def artemis_client
-    # FIXME: maybe we move that client to a global connection, like ActiveRecord
-    # FIXME: logger should be set at a global level
-    require "manageiq-messaging"
-    ManageIQ::Messaging.logger = _log
-    @artemis_client ||= begin
-      connect_opts = {
-        :host       => worker_settings[:queue_hostname],
-        :port       => worker_settings[:queue_port].to_i,
-        :username   => worker_settings[:queue_username],
-        :password   => worker_settings[:queue_password],
-        :client_ref => "event_handler",
-      }
-
-      ManageIQ::Messaging::Client.open(connect_opts)
-    end
-  end
-
   def do_before_work_loop
     if artemis?
       topic_options = {
@@ -29,7 +11,9 @@ class MiqEventHandler::Runner < MiqQueueWorkerBase::Runner
       }
 
       # this block is stored in a lambda callback and is executed in another thread once a msg is received
-      artemis_client.subscribe_topic(topic_options) do |sender, event, payload|
+      # FIXME: is the subscription stored in artemis?
+      # Would it hurt to subscribe again on a second startup of the worker?
+      MiqQueue.artemis_events_client.subscribe_topic(topic_options) do |sender, event, payload|
         _log.info "Received Event (#{event}) by sender #{sender}: #{payload[:event_type]} #{payload[:chain_id]}"
         EmsEvent.add(sender.to_i, payload)
       end
@@ -47,8 +31,9 @@ class MiqEventHandler::Runner < MiqQueueWorkerBase::Runner
   end
 
   def before_exit(_message, _exit_code)
-    artemis_client.close if artemis?
+    # FIXME: should we unsubscribe ?
+    # artemis_client.close if artemis?
   rescue => e
-    _log.error "Could not close artemis connection: #{e}"
+    # _log.error "Could not close artemis connection: #{e}"
   end
 end

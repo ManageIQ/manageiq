@@ -31,6 +31,26 @@ class MiqQueue < ApplicationRecord
   PRIORITY_WHICH  = [:max, :high, :normal, :low, :min]
   PRIORITY_DIR    = [:higher, :lower]
 
+  def self.artemis_events_client
+    @artemis_client ||= begin
+      require "manageiq-messaging"
+      ManageIQ::Messaging.logger = _log
+      queue_settings = Settings.workers.worker_base.queue_worker_base.event_handler
+      connect_opts = {
+        :host       => queue_settings.queue_hostname,
+        :port       => queue_settings.queue_port.to_i,
+        :username   => queue_settings.queue_username,
+        :password   => queue_settings.queue_password,
+        :client_ref => "event_handler",
+      }
+
+      # caching the client works, even if the connection becomes unavailable
+      # internally the client will track the state of the connection and re-open it,
+      # once it's available again - at least thats true for a stomp connection
+      ManageIQ::Messaging::Client.open(connect_opts)
+    end
+  end
+
   def self.columns_for_requeue
     @requeue_columns ||= MiqQueue.column_names.map(&:to_sym) - [:id]
   end
