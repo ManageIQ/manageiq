@@ -12,6 +12,10 @@
   :description: Allocated CPU Count
   :group: cpu
   :source: allocated
+- :metric: derived_vm_numvcpu_cores
+  :description: Allocated CPU Cores
+  :group: cpu_cores
+  :source: allocated
 - :metric: derived_memory_used
   :description: Used Memory
   :group: memory

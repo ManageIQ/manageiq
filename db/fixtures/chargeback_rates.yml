@@ -34,6 +34,16 @@
       :finish: Infinity
       :fixed_rate: 1.0
       :variable_rate: 0.0
+  - :description: Allocated CPU Cores
+    :metric: derived_vm_numvcpu_cores
+    :per_time: hourly
+    :per_unit: cpu core
+    :type_currency: Dollars
+    :tiers:
+    - :start: 0
+      :finish: Infinity
+      :fixed_rate: 1.0
+      :variable_rate: 0.0
   - :description: Used Memory
     :metric: derived_memory_used
     :per_time: hourly
@@ -178,6 +188,16 @@
     :metric: derived_vm_numvcpus
     :per_time: hourly
     :per_unit: cpu
+    :type_currency: Dollars
+    :tiers:
+    - :start: 0
+      :finish: Infinity
+      :fixed_rate: 1.0
+      :variable_rate: 0.0
+  - :description: Allocated CPU Cores
+    :metric: derived_vm_numvcpu_cores
+    :per_time: hourly
+    :per_unit: cpu core
     :type_currency: Dollars
     :tiers:
     - :start: 0

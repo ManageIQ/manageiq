@@ -21,6 +21,7 @@ describe ChargebackRateDetail do
       rates = ChargebackRateDetail.default_rate_details_for('Compute')
       expected_metrics = %w(
         derived_vm_numvcpus
+        derived_vm_numvcpu_cores
         cpu_usagemhz_rate_average
         v_derived_cpu_total_cores_used
         disk_usage_rate_average
