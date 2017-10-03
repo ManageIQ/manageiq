@@ -195,6 +195,6 @@ module VmOrTemplate::RightSizing
     div = (actual.to_f / recommended.to_f)
     return 0 if div == 0
 
-    result = ((1 - (1 / div)) * 1000).round / 10.0
+    ((1 - (1 / div)) * 1000).round / 10.0
   end
 end

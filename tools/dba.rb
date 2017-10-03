@@ -11,14 +11,14 @@ module Dba
   #
   def self.client_connections
     select(<<-SQL, "Client Connections")
-                      SELECT client_addr   AS client_address
-                           , datname       AS database
-                           , procpid       AS spid
-                           , waiting       AS number_waiting
-                           , current_query AS query
-                        FROM pg_stat_activity
-                       ORDER BY 1, 2
-                      SQL
+    SELECT client_addr   AS client_address
+         , datname       AS database
+         , procpid       AS spid
+         , waiting       AS number_waiting
+         , current_query AS query
+      FROM pg_stat_activity
+     ORDER BY 1, 2
+    SQL
   end
 
   # Taken from: https://github.com/bucardo/check_postgres/blob/2.19.0/check_postgres.pl#L3492
@@ -332,25 +332,25 @@ module Dba
 
   def self.table_statistics
     select(<<-SQL, "Table Statistics")
-                SELECT relname            AS table_name
-                     , seq_scan           AS table_scan
-                     , seq_tup_read       AS sequential_rows_read
-                     , idx_scan           AS index_scan
-                     , idx_tup_fetch      AS index_rows_fetched
-                     , n_tup_ins          AS rows_inserted
-                     , n_tup_upd          AS rows_updated
-                     , n_tup_del          AS rows_deleted
-                     , n_tup_hot_upd      AS rows_hot_updated
-                     , n_live_tup         AS rows_live
-                     , n_dead_tup         AS rows_dead
-                     , last_vacuum        AS last_vacuum_date
-                     , last_autovacuum    AS last_autovacuum_date
-                     , last_analyze       AS last_analyze_date
-                     , last_autoanalyze   AS last_autoanalyze_date
-                  FROM pg_stat_all_tables
-                 WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
-                 ORDER BY relname ASC ;
-                 SQL
+    SELECT relname            AS table_name
+         , seq_scan           AS table_scan
+         , seq_tup_read       AS sequential_rows_read
+         , idx_scan           AS index_scan
+         , idx_tup_fetch      AS index_rows_fetched
+         , n_tup_ins          AS rows_inserted
+         , n_tup_upd          AS rows_updated
+         , n_tup_del          AS rows_deleted
+         , n_tup_hot_upd      AS rows_hot_updated
+         , n_live_tup         AS rows_live
+         , n_dead_tup         AS rows_dead
+         , last_vacuum        AS last_vacuum_date
+         , last_autovacuum    AS last_autovacuum_date
+         , last_analyze       AS last_analyze_date
+         , last_autoanalyze   AS last_autoanalyze_date
+      FROM pg_stat_all_tables
+      WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
+      ORDER BY relname ASC ;
+    SQL
   end
 
   def self.table_size
