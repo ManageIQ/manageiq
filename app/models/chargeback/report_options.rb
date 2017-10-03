@@ -13,6 +13,7 @@ class Chargeback
     :service_id,
     :groupby,
     :groupby_tag,
+    :groupby_label,
     :userid,
     :ext_options,
     :include_metrics,      # enable charging allocated resources with C & U

@@ -46,9 +46,23 @@ class ChargebackContainerImage < Chargeback
 
     @unknown_project ||= OpenStruct.new(:id => 0, :name => _('Unknown Project'), :ems_ref => _('Unknown'))
     @unknown_image ||= OpenStruct.new(:id => 0, :full_name => _('Unknown Image'))
+
+    load_custom_attribute_groupby(options[:groupby_label]) if options[:groupby_label].present?
     build_results_for_report_chargeback(options)
   ensure
     @data_index = @containers = nil
+  end
+
+  def self.load_custom_attribute_groupby(groupby_label)
+    report_cb_model(self.name).safe_constantize.add_custom_attribute(groupby_label_method(groupby_label))
+  end
+
+  def self.groupby_label_method(groupby_label)
+    CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX + groupby_label + CustomAttributeMixin::SECTION_SEPARATOR + 'docker_labels'
+  end
+
+  def self.groupby_label_value(consumption, groupby_label)
+    ChargebackContainerImage.image(consumption).try(groupby_label_method(groupby_label))
   end
 
   def self.default_key(metric_rollup_record, ts_key)
