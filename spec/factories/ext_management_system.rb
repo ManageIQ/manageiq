@@ -153,9 +153,14 @@ FactoryGirl.define do
   end
 
   factory :ems_redhat,
+          :parent => :ems_redhat_with_ensure_managers do
+    after(:build) { |ems_redhat| ems_redhat.class.skip_callback(:save, :before, :ensure_managers, :raise => false) }
+  end
+
+  factory :ems_redhat_with_ensure_managers,
           :aliases => ["manageiq/providers/redhat/infra_manager"],
-          :class   => "ManageIQ::Providers::Redhat::InfraManager",
-          :parent  => :ems_infra do
+          :class => "ManageIQ::Providers::Redhat::InfraManager",
+          :parent => :ems_infra do
   end
 
   factory :ems_redhat_v3,

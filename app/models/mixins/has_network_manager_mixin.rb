@@ -26,7 +26,7 @@ module HasNetworkManagerMixin
 
     def ensure_managers
       ensure_network_manager
-      network_manager.name = "#{name} Network Manager"
+      network_manager.name = "#{name} Network Manager" if network_manager
       ensure_managers_zone_and_provider_region
     end
 

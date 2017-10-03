@@ -5,7 +5,7 @@ class CloudTenant < ApplicationRecord
   include NewWithTypeStiMixin
   extend ActsAsTree::TreeWalker
 
-  belongs_to :ext_management_system, :foreign_key => "ems_id", :class_name => "ManageIQ::Providers::CloudManager"
+  belongs_to :ext_management_system, :foreign_key => "ems_id"
   has_one    :source_tenant, :as => :source, :class_name => 'Tenant'
   has_many   :security_groups
   has_many   :cloud_networks
