@@ -6360,6 +6360,18 @@
       :description: Refresh relationships and power states for all items related to Physical Servers / Nodes
       :feature_type: control
       :identifier: physical_server_refresh
+    - :name: Manage Policies
+      :description: Manage Policies on Physical Server
+      :feature_type: control
+      :identifier: physical_server_protect
+    - :name: Policy Simulation
+      :description: View Policy Simulation of Physical Server
+      :feature_type: control
+      :identifier: physical_server_policy_sim
+    - :name: Edit Tags
+      :description: Edit Instance Tags
+      :feature_type: control
+      :identifier: physical_server_tag
 
 # Firmwares
 - :name: Firmwares
