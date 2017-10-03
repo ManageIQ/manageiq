@@ -48,6 +48,7 @@
     :memory_used_cost: :currency_precision_2
     :memory_allocated_cost: :currency_precision_2
     :memory_cost: :currency_precision_2
+    :metering_used_cost: :currency_precision_2
     :storage_used_cost: :currency_precision_2
     :storage_allocated_cost: :currency_precision_2
     :storage_cost: :currency_precision_2
@@ -191,6 +192,7 @@
     :memory_used_metric: :megabytes_precision_2
     :memory_mb: :megabytes
     :mem_cpu: :megabytes
+    :metering_used_metric: :hours
     :min_derived_memory_used: :megabytes
     :ram_size: :megabytes
     :trend_derived_memory_used: :megabytes
@@ -473,6 +475,17 @@
       :name: mhz_to_human_size
       :delimiter: ","
     :precision: 1
+
+  :hours:
+    :description: Hours
+    :columns:
+    :sub_types:
+    - :hours
+    :function:
+    :function:
+      :name: number_with_delimiter
+      :delimiter: ","
+      :suffix: ! ' Hours'
 
   :mhz_precision_2:
     :description: Megahertz Avg (12.11 Mhz)
