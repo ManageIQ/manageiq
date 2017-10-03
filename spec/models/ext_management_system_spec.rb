@@ -41,6 +41,7 @@ describe ExtManagementSystem do
       "openstack_network"           => "OpenStack Network",
       "lenovo_ph_infra"             => "Lenovo XClarity",
       "nuage_network"               => "Nuage Network Manager",
+      "redhat_network"              => "Redhat Network",
       "rhevm"                       => "Red Hat Virtualization",
       "scvmm"                       => "Microsoft System Center VMM",
       "vmwarews"                    => "VMware vCenter",

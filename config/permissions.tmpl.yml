@@ -46,6 +46,7 @@
 - ems-type:openstack
 - ems-type:openstack_infra
 - ems-type:openstack_network
+- ems-type:redhat_network
 - ems-type:rhevm
 - ems-type:scvmm
 - ems-type:swift
