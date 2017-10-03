@@ -71,7 +71,12 @@ class DescendantLoader
       require 'ripper_ruby_parser'
 
       content = File.read(filename)
-      parsed = RipperRubyParser::Parser.new.parse(content)
+      begin
+        parsed = RipperRubyParser::Parser.new.parse(content)
+      rescue => e
+        puts "\nError parsing classes in #{filename}:\n#{e.class.name}: #{e}\n\n"
+        raise
+      end
 
       classes = collect_classes(parsed)
 
@@ -93,10 +98,6 @@ class DescendantLoader
 
         [search_combos, define_combos, flatten_name(name), flatten_name(sklass)]
       end.compact
-
-    rescue RipperRubyParser::SyntaxError
-      puts "\nSyntax error in #{filename}\n\n"
-      raise
     end
 
     def collect_classes(node, parents = [])
