@@ -16,6 +16,8 @@ RSpec::Matchers.define :have_attributes do |attrs|
 
         matcher = if actual.respond_to?(:acts_like_time?) && expected.respond_to?(:acts_like_time?)
                     be_same_time_as(expected)
+                  elsif expected.kind_of?(RSpec::Matchers::BuiltIn::Match)
+                    match(expected.expected)
                   else
                     eq(expected)
                   end
