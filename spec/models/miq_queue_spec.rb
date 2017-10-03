@@ -44,14 +44,14 @@ describe MiqQueue do
                                            :class_name  => 'Storage',
                                            :method_name => 'foobar',
                                            :user_id     => user.id,
-                                           :args        => [1,2,3],
+                                           :args        => [1, 2, 3],
                                            :group_id    => user.current_group.id,
                                            :tenant_id   => user.current_tenant.id)
-      expect(Storage).to receive(:foobar) do |arg|
+      expect(Storage).to receive(:foobar) do
         expect(User.current_user.name).to eq(user.name)
         expect(User.current_user.current_group.id).to eq(user.current_user.current_group.id)
         expect(User.current_user.current_tenant.id).to eq(user.current_user.current_tenant.id)
-        expect(args).to eq([1,2,3])
+        expect(args).to eq([1, 2, 3])
       end
 
       msg.deliver
