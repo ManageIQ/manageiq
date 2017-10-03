@@ -36,6 +36,28 @@ describe MiqQueue do
     end
   end
 
+  describe "user_context" do
+    it "sets the User.current_user" do
+      user = FactoryGirl.create(:user_with_group, :name => 'Freddy Kreuger')
+      msg = FactoryGirl.create(:miq_queue, :state       => MiqQueue::STATE_DEQUEUE,
+                                           :handler     => @miq_server,
+                                           :class_name  => 'Storage',
+                                           :method_name => 'foobar',
+                                           :user_id     => user.id,
+                                           :args        => [1, 2, 3],
+                                           :group_id    => user.current_group.id,
+                                           :tenant_id   => user.current_tenant.id)
+      expect(Storage).to receive(:foobar) do
+        expect(User.current_user.name).to eq(user.name)
+        expect(User.current_user.current_group.id).to eq(user.current_user.current_group.id)
+        expect(User.current_user.current_tenant.id).to eq(user.current_user.current_tenant.id)
+        expect(args).to eq([1, 2, 3])
+      end
+
+      msg.deliver
+    end
+  end
+
   describe "#check_for_timeout" do
     it "will destroy a dequeued message when it times out" do
       handler = FactoryGirl.create(:miq_ems_refresh_worker)

@@ -248,6 +248,18 @@ class User < ApplicationRecord
     Thread.current[:userid] = saved_userid
   end
 
+  def self.with_user_group(user, group, &block)
+    return yield if user.nil?
+    user = User.find(user) unless user.kind_of?(User)
+    if group && group.kind_of?(MiqGroup)
+      user.current_group = group
+    elsif group != user.current_group_id
+      group = MiqGroup.find_by(:id => group)
+      user.current_group = group if group
+    end
+    User.with_user(user, &block)
+  end
+
   def self.current_user=(user)
     Thread.current[:userid] = user.try(:userid)
     Thread.current[:user] = user

@@ -519,6 +519,25 @@ describe User do
     end
   end
 
+  describe "#with_user_group" do
+    let(:user1) { FactoryGirl.create(:user_with_group) }
+    let(:user2) { FactoryGirl.create(:user_with_group) }
+
+    it "sets the user and group" do
+      User.with_user_group(user1, user2.current_group_id) do
+        expect(User.current_userid).to eq(user1.userid)
+        expect(User.current_user).to eq(user1)
+        expect(User.current_user.current_group).to eq(user2.current_group)
+        User.with_user_group(user2, user1.current_group) do
+          expect(User.current_userid).to eq(user2.userid)
+          expect(User.current_user).to eq(user2)
+        end
+        expect(User.current_userid).to eq(user1.userid)
+        expect(User.current_user).to eq(user1)
+      end
+    end
+  end
+
   context ".super_admin" do
     it "has super_admin" do
       FactoryGirl.create(:miq_group, :role => "super_administrator")

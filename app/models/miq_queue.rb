@@ -404,9 +404,7 @@ class MiqQueue < ApplicationRecord
       begin
         status = STATUS_OK
         message = "Message delivered successfully"
-        Timeout.timeout(msg_timeout) do
-          result = obj.send(method_name, *args)
-        end
+        result = User.with_user_group(user_id, group_id) { dispatch_method(obj, args) }
       rescue MiqException::MiqQueueRetryLater => err
         unget(err.options)
         message = "Message not processed.  Retrying #{err.options[:deliver_on] ? "at #{err.options[:deliver_on]}" : 'immediately'}"
@@ -426,6 +424,12 @@ class MiqQueue < ApplicationRecord
     end
 
     return status, message, result
+  end
+
+  def dispatch_method(obj, args)
+    Timeout.timeout(msg_timeout) do
+      obj.send(method_name, *args)
+    end
   end
 
   DELIVER_IN_ERROR_MSG = 'Deliver in error'.freeze
