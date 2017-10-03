@@ -404,7 +404,7 @@ class MiqQueue < ApplicationRecord
       begin
         status = STATUS_OK
         message = "Message delivered successfully"
-        result = User.with_user(user_id, group_id) { dispatch_method(obj, args) }
+        result = User.with_user_group(user_id, group_id) { dispatch_method(obj, args) }
       rescue MiqException::MiqQueueRetryLater => err
         unget(err.options)
         message = "Message not processed.  Retrying #{err.options[:deliver_on] ? "at #{err.options[:deliver_on]}" : 'immediately'}"
