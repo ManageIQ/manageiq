@@ -156,7 +156,7 @@ module ActsAsTaggable
       else
         subject.send(relationship).any? { |o| o.send(attr).to_s == object }
       end
-    rescue NoMethodError => err
+    rescue NoMethodError
       return false
     end
   end

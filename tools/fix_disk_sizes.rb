@@ -36,7 +36,6 @@ ExtManagementSystem.all.each do |e|
     next
   ensure
     vim.disconnect if vim rescue nil
-    vim = nil
   end
 
   dinfo.each do |di|

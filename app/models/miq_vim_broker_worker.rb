@@ -58,7 +58,7 @@ class MiqVimBrokerWorker < MiqWorker
   def self.drb_port
     uri = drb_uri
     return nil if uri.nil?
-    scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(uri)
+    _scheme, _userinfo, _host, port, _registry, _path, _opaque, _query, _fragment = URI.split(uri)
     _log.debug("Active VimBroker DRb Port is #{port}")
     port.to_i
   end

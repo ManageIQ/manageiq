@@ -170,7 +170,6 @@ module MiqServer::ServerSmartProxy
         require 'VMwareWebService/VixDiskLib/VixDiskLib'
         caps[:vixDisk] = true
       end
-    rescue Exception => err
       # It is ok if we hit an error, it just means the library is not available to load.
     end
 

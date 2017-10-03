@@ -69,7 +69,7 @@ class VimPerformancePlanning < ActsAsArModel
         next
       end
 
-      method = case t
+      case t
                when :cpu     then vm_profile[t] = "#{vm_profile[t].round} MHz"
                when :memory  then vm_profile[t] = "#{vm_profile[t].round} MB"
                when :storage then vm_profile[t] = "#{(vm_profile[t].to_i / 1.gigabyte).round} GB"

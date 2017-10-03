@@ -16,7 +16,7 @@ module Metric::CiMixin::Processing
 
     _log.info("#{log_header} Processing for #{log_specific_targets(resources)}, for range [#{start_time} - #{end_time}]...")
 
-    dummy, t = Benchmark.realtime_block(:total_time) do
+    _dummy, t = Benchmark.realtime_block(:total_time) do
       # Take the raw metrics and create hashes out of them
       rt_rows = {}
 

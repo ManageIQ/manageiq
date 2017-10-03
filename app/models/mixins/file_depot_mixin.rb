@@ -37,7 +37,7 @@ module FileDepotMixin
       # Strip any leading and trailing whitespace
       uri_str.strip!
 
-      scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(URI.encode(uri_str))
+      scheme, _userinfo, _host, _port, _registry, _path, _opaque, _query, _fragment = URI.split(URI.encode(uri_str))
       scheme
     end
   end

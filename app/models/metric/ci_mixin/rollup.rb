@@ -74,12 +74,12 @@ module Metric::CiMixin::Rollup
       raise ArgumentError, _("time_profile must be passed if interval name is 'daily'")
     end
     time_profile = TimeProfile.extract_objects(time_profile)
-    klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
+    _klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
 
     log_header = "[#{interval_name}] Rollup for #{self.class.name} name: [#{name}], id: [#{id}] for time: [#{time}]"
     _log.info("#{log_header}...")
 
-    dummy, t = Benchmark.realtime_block(:total_time) do
+    _dummy, t = Benchmark.realtime_block(:total_time) do
       new_perf = {
         :timestamp             => time,
         :capture_interval_name => (interval_name == 'historical' ? 'hourly' : interval_name)

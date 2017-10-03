@@ -475,7 +475,7 @@ class VmScan < Job
 
   # Logic to determine if we should abort the job or retry the scan depending on the error
   def call_abort_retry(*args)
-    message, status, skip_retry = args
+    message, _status, skip_retry = args
     if message.to_s.include?("Could not find VM: [") && options[:scan_count].to_i.zero?
       # We may need to skip calling the retry if this method is called twice.
       return if skip_retry == true

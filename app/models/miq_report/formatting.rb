@@ -172,7 +172,7 @@ module MiqReport::Formatting
     return val unless val.kind_of?(Time) || stime.kind_of?(Date)
 
     col = options[:column]
-    col, sfx = col.to_s.split("__") # The suffix (month, quarter, year) defines the range
+    _col, sfx = col.to_s.split("__") # The suffix (month, quarter, year) defines the range
 
     val = val.in_time_zone(get_time_zone("UTC"))
     if val.respond_to?("beginning_of_#{sfx}")

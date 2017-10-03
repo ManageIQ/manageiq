@@ -595,7 +595,7 @@ module MiqReport::Generator
 
     group_key =  rpt_options[:pivot][:group_cols]
     data = generate_subtotals(data, group_key, options)
-    data = data.inject([]) do |a, (k, v)|
+    data.inject([]) do |a, (k, v)|
       next(a) if k == :_total_
       row = col_order.inject({}) do |h, col|
         if col.include?("__")

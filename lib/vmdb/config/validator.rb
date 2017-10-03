@@ -119,7 +119,7 @@ module VMDB
 
         if keys.include?(:interval)
           unless data.interval.kind_of?(Integer)
-            valid, key, message = [false, :interval, "interval, \"#{data.interval}\", invalid.  invalid. Should be numeric"]
+            valid, _key, _message = [false, :interval, "interval, \"#{data.interval}\", invalid.  invalid. Should be numeric"]
           end
 
           if data.interval == 0

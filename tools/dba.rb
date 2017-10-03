@@ -10,7 +10,7 @@ module Dba
   # Extended PostgreSQL DBA functionality
   #
   def self.client_connections
-    all_connections = select(<<-SQL, "Client Connections")
+    select(<<-SQL, "Client Connections")
                       SELECT client_addr   AS client_address
                            , datname       AS database
                            , procpid       AS spid
@@ -30,7 +30,7 @@ module Dba
   # Reformatted the SQL and renamed some columns to make them more easier to id.
   # Changed to a UNION so that it is easier to read the output and to separate table stats from idx stats.
   def self.database_bloat
-    db_array = select(<<-SQL, "Database Bloat")
+    select(<<-SQL, "Database Bloat")
               SELECT   tablename                                         AS table_name
                      , ' '                                               AS index_name
                      , reltuples::bigint                                 AS rows
@@ -168,7 +168,7 @@ module Dba
   # Reformatted the SQL and renamed some columns to make them more easier to id.
   # Removed some CASE... logic statements as not needed for our requirements.
   def self.table_bloat
-    tbl_array = select(<<-SQL, "Table Bloat")
+    select(<<-SQL, "Table Bloat")
                 SELECT tablename                                                    AS table_name
                      , reltuples::bigint                                            AS rows
                      , relpages::bigint                                             AS pages
@@ -244,7 +244,7 @@ module Dba
   # Removed  schemaname and totalwastedbytes columns from the original to fit our requirements.
   # Reformatted the SQL and renamed some columns to make them more easier to id.
   def self.index_bloat
-    idx_array = select(<<-SQL, "Index Bloat")
+    select(<<-SQL, "Index Bloat")
                 SELECT   tablename                                         AS table_name
                        , iname                                             AS index_name
                        , ituples::bigint                                   AS rows
@@ -331,7 +331,7 @@ module Dba
   end
 
   def self.table_statistics
-    tbl_stats_array = select(<<-SQL, "Table Statistics")
+    select(<<-SQL, "Table Statistics")
                 SELECT relname            AS table_name
                      , seq_scan           AS table_scan
                      , seq_tup_read       AS sequential_rows_read
@@ -354,7 +354,7 @@ module Dba
   end
 
   def self.table_size
-    tbl_size_array = select(<<-SQL, "Table Size")
+    select(<<-SQL, "Table Size")
                 SELECT relname                                                           AS table_name
                      , to_char(reltuples, '999G999G999G999')                             AS rows
                      , to_char(((relpages * 8.0) / (1024 *1024)), '999G999.999')         AS size_in_gb

@@ -60,8 +60,6 @@ log(:info, "Process stats: #{MiqProcess.processInfo.inspect}")
 begin
   t0 = Time.now
   vc_data = {}
-  con = vim_vc_connect
-  inv = vim_vc_inv_hash
   log(:info, "Requesting inventory accessors...")
   VC_ACCESSORS.each do |acc, type|
     inv_hash = @vi.send(acc)

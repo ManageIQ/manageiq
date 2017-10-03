@@ -74,7 +74,7 @@ module Metric::CiMixin
     slope_steepness = options[:slope_steepness].to_f
     percentage = options[:percentage] if options[:percentage]
     interval_name = options[:interval_name] || "realtime"
-    klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
+    _klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
     now = options[:now] || Time.now.utc # for testing only
 
     # Turn on for the listing of timestamps and values in the debug log
@@ -148,7 +148,7 @@ module Metric::CiMixin
       total_records = total_records[0..start_on_idx]
     end
 
-    slope, yint = VimPerformanceAnalysis.calc_slope_from_data(total_records.dup, :timestamp, column)
+    slope, _yint = VimPerformanceAnalysis.calc_slope_from_data(total_records.dup, :timestamp, column)
     _log.info("[#{total_records.length}] total records found, slope: #{slope}, counter: [#{column}] criteria: #{interval_name} from [#{total_records.last.timestamp}] to [#{now}]")
 
     # Honor trend direction option by comparing with the calculated slope value

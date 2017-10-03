@@ -48,7 +48,7 @@ class RssFeed < ApplicationRecord
   end
 
   def self.to_html(feed, options)
-    limit = options[:limit_to_count]
+    options[:limit_to_count]
     output = ""
     output << '<table class="table table-striped table-bordered table-hover">'
     output << '<tbody>'
@@ -116,7 +116,7 @@ class RssFeed < ApplicationRecord
       end
       items
     else  # Custom find method
-      items = item_class.send(options[:search_method].to_sym, name, options)
+      item_class.send(options[:search_method].to_sym, name, options)
     end
   end
 

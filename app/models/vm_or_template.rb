@@ -607,7 +607,7 @@ class VmOrTemplate < ApplicationRecord
     _log.info("vm_hash [#{vm_hash.inspect}]")
     store = Storage.find_by(:name => vm_hash[:name])
     return nil unless store
-    vmobj = VmOrTemplate.find_by(:location => vm_hash[:location], :storage_id => store.id)
+    VmOrTemplate.find_by(:location => vm_hash[:location], :storage_id => store.id)
   end
 
   def self.repository_parse_path(path)
