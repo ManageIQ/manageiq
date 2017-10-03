@@ -8,6 +8,8 @@ class Chargeback < ActsAsArModel
     :entity               => :binary,
     :tag_name             => :string,
     :fixed_compute_metric => :integer,
+    :metering_used_metric => :integer,
+    :metering_used_cost   => :float
   )
 
   def self.build_results_for_report_chargeback(options)
