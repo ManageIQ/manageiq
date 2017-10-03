@@ -491,7 +491,7 @@ module VimPerformanceAnalysis
         c, e = t.split("/")
         cat = classifications.fetch_path(c, :category)
         cat_desc = cat.nil? ? c.titleize : cat.description
-        ent = cat.nil? ? nil : classifications.fetch_path(c, :entry, e)
+        ent = cat && classifications.fetch_path(c, :entry, e)
         ent_desc = ent.nil? ? e.titleize : ent.description
         h[tag] = "#{ui_lookup(:model => p.resource_type)}: #{cat_desc}: #{ent_desc}"
       end

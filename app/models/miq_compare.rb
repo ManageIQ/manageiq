@@ -223,7 +223,7 @@ class MiqCompare
       unless @include[section].key?(:master_index)
         @include[section][:master_index] = @master_list.length
 
-        @master_list << {:name => section, :header => section_header, :group => @include[section][:group]} << (key.nil? ? nil : []) << []
+        @master_list << {:name => section, :header => section_header, :group => @include[section][:group]} << (key || []) << []
       end
 
       # Don't add in any columns that are nil, the key, or start with '_'
@@ -330,7 +330,7 @@ class MiqCompare
       sub_rec = eval_section(rec, section, id)
       columns.each do |col|
         col = col[:name]
-        value = sub_rec.nil? ? nil : eval_column(sub_rec, col, id)
+        value = sub_rec && eval_column(sub_rec, col, id)
         value = EMPTY if value.nil?
         result_section[col] = {:_value_ => value}
       end

@@ -202,7 +202,7 @@ module Metric::CiMixin
       # Slide the window and subtract the oldest match_history value from the matches_in_window once we have looked at recs_in_window records.
       matches_in_window -= match_history[i - recs_in_window] if i > (recs_in_window - 1) && match_history[i - recs_in_window]
       colvalue = rec.send(column)
-      res = colvalue.nil? ? nil : colvalue.send(operator, value)
+      res = colvalue && colvalue.send(operator, value)
       match_history[i] = res ? 1 : 0
       if res
         matches_in_window += match_history[i]

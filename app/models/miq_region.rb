@@ -211,17 +211,17 @@ class MiqRegion < ApplicationRecord
 
   def remote_ui_ipaddress
     server = remote_ui_miq_server
-    server.nil? ? nil : server.ipaddress
+    server.try(:ipaddress)
   end
 
   def remote_ui_hostname
     server = remote_ui_miq_server
-    server.nil? ? nil : (server.hostname || server.ipaddress)
+    server && (server.hostname || server.ipaddress)
   end
 
   def remote_ui_url(contact_with = :hostname)
     hostname = send("remote_ui_#{contact_with}")
-    hostname.nil? ? nil : "https://#{hostname}"
+    hostname && "https://#{hostname}"
   end
 
   def remote_ws_miq_server
@@ -234,12 +234,12 @@ class MiqRegion < ApplicationRecord
 
   def remote_ws_ipaddress
     miq_server = remote_ws_miq_server
-    miq_server.nil? ? nil : miq_server.ipaddress
+    miq_server.try(:ipaddress)
   end
 
   def remote_ws_hostname
     miq_server = remote_ws_miq_server
-    miq_server.nil? ? nil : (miq_server.hostname || miq_server.ipaddress)
+    miq_server && (miq_server.hostname || miq_server.ipaddress)
   end
 
   def remote_ws_url

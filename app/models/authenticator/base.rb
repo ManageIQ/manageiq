@@ -159,7 +159,7 @@ module Authenticator
       user, username = find_by_principalname(username)
       result = nil
       begin
-        result = user.nil? ? nil : authenticate(username, password, request, options)
+        result = user && authenticate(username, password, request, options)
       rescue MiqException::MiqEVMLoginError
       end
       AuditEvent.failure(:userid => username, :message => "Authentication failed for user #{username}") if result.nil?

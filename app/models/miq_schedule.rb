@@ -141,7 +141,7 @@ class MiqSchedule < ApplicationRecord
     else
       time = (last_run_on && (last_run_on > run_at[:start_time])) ? nil : run_at[:start_time]
     end
-    time.nil? ? nil : time.utc
+    time.try(:utc)
   end
 
   def run_at_to_human(timezone)
@@ -406,7 +406,7 @@ class MiqSchedule < ApplicationRecord
     interval_value = run_at[:interval][:value].to_i
     meth = rails_interval
 
-    meth.nil? ? nil : interval_value.send(meth)
+    meth && interval_value.send(meth)
   end
 
   def self.preload_schedules

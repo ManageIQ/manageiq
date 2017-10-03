@@ -485,7 +485,7 @@ class MiqWorker < ApplicationRecord
 
   def current_timeout
     msg = active_messages.first
-    msg.nil? ? nil : msg.msg_timeout
+    msg.try(:msg_timeout)
   end
 
   def uri_or_queue_name

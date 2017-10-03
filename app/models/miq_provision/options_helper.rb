@@ -78,7 +78,7 @@ module MiqProvision::OptionsHelper
     value = get_option(:dns_domain)
     if value.blank?
       value = get_option(:dns_suffixes).to_s.split(',').first
-      options[:dns_domain] = value.nil? ? nil : value.strip
+      options[:dns_domain] = value.try(:strip)
     end
   end
 end

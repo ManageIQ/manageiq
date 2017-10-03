@@ -506,9 +506,9 @@ class MiqRequestWorkflow
         raise _("No information returned for %{email}") % {:email => email} if (d = l.get_user_info(email)).nil?
         [:first_name, :last_name, :address, :city, :state, :zip, :country, :title, :company,
          :department, :office, :phone, :phone_mobile, :manager, :manager_mail, :manager_phone].each do |prop|
-          @values["owner_#{prop}".to_sym] = d[prop].nil? ? nil : d[prop].dup
+          @values["owner_#{prop}".to_sym] = d[prop].try(:dup)
         end
-        @values[:sysprep_organization] = d[:company].nil? ? nil : d[:company].dup
+        @values[:sysprep_organization] = d[:company].try(:dup)
       end
     end
   end

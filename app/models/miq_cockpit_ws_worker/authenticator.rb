@@ -37,7 +37,7 @@ module MiqCockpitWsWorker::Authenticator
 
   def creds_for_vm(vm)
     return nil unless vm
-    creds = vm.container_deployment.nil? ? nil : vm.container_deployment.ssh_auth
+    creds = vm.container_deployment.try(:ssh_auth)
     creds = vm.respond_to?(:key_pairs) ? vm.key_pairs.first : nil unless creds
     creds ? creds : Authentication.new
   end

@@ -48,7 +48,7 @@ class Relationship < ApplicationRecord
   end
 
   def self.resource_pair(relationship)
-    relationship.nil? ? nil : relationship.resource_pair
+    relationship.try(:resource_pair)
   end
 
   def self.resource_pairs(relationships)

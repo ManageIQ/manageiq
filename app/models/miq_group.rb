@@ -171,7 +171,7 @@ class MiqGroup < ApplicationRecord
   end
 
   def miq_user_role_name
-    miq_user_role.nil? ? nil : miq_user_role.name
+    miq_user_role.try(:name)
   end
 
   def system_group?

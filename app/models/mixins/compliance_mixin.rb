@@ -21,12 +21,12 @@ module ComplianceMixin
 
   def last_compliance_status
     lc = last_compliance
-    lc.nil? ? nil : lc.compliant
+    lc.try(:compliant)
   end
 
   def last_compliance_timestamp
     lc = last_compliance
-    lc.nil? ? nil : lc.timestamp
+    lc.try(:timestamp)
   end
 
   def check_compliance

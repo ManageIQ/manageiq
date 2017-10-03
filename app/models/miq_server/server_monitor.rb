@@ -128,7 +128,7 @@ module MiqServer::ServerMonitor
         end
 
         # Raise miq_server_is_master event
-        master_msg = master.nil? ? nil : " from #{master.format_short_log_msg}"
+        master_msg = master && " from #{master.format_short_log_msg}"
         msg = "#{format_short_log_msg} has taken over master#{master_msg}"
         MiqEvent.raise_evm_event_queue_in_region(self, "evm_server_is_master", :event_details => msg)
 

@@ -241,7 +241,7 @@ class Classification < ApplicationRecord
   def self.tag_name_to_objects(tag_name)
     ns, cat, entry = tag_name_split(tag_name)
     cat_obj = find_by_name(cat)
-    entry_obj = cat_obj.nil? ? nil : cat_obj.find_entry_by_name(entry)
+    entry_obj = cat_obj && cat_obj.find_entry_by_name(entry)
     return ns, cat_obj, entry_obj
   end
 
