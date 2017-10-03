@@ -58,3 +58,8 @@
   :group: fixed
   :source: storage_2
   :description: Fixed Storage Cost 2
+- :metric: user_metering_hours
+  :group: metering
+  :source: used
+  :description: Metering - Hours Used
+
