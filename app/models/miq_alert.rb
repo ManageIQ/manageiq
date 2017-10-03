@@ -586,7 +586,7 @@ class MiqAlert < ApplicationRecord
   end
 
   def evaluate_internal(target, _inputs = {})
-    if target.class.name == 'MiddlewareServer'
+    if target.kind_of?(::MiddlewareServer)
       method = "evaluate_middleware"
       options = _inputs[:ems_event]
     else
