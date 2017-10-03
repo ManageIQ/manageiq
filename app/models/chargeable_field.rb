@@ -20,6 +20,7 @@ class ChargeableField < ApplicationRecord
   validates :group, :source, :presence => true
 
   def measure(consumption, options)
+    return consumption.consumed_hours_in_interval if metering?
     return 1.0 if fixed?
     return 0 if consumption.none?(metric)
     return consumption.send(options.method_for_allocated_metrics, metric) if allocated?
@@ -43,6 +44,10 @@ class ChargeableField < ApplicationRecord
     ["#{rate_name}_cost",   # cost associated with metric (e.g. Storage [Used|Allocated|Fixed] Cost)
      "#{group}_cost",       # cost associated with metric's group (e.g. Storage Total Cost)
      'total_cost']
+  end
+
+  def metering?
+    group == 'metering' && source == 'used'
   end
 
   private
