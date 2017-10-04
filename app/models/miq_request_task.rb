@@ -85,6 +85,11 @@ class MiqRequestTask < ApplicationRecord
     update_and_notify_parent(:state => req_state, :status => req_status, :message => display_message(msg))
   end
 
+  def update_request_task(values)
+    update_attributes(:options => options.merge(values['options'] || {}))
+    self
+  end
+  
   def execute_callback(state, message, _result)
     unless state.to_s.downcase == "ok"
       update_and_notify_parent(:state => "finished", :status => "Error", :message => "Error: #{message}")
