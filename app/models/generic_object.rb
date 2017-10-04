@@ -169,6 +169,9 @@ class GenericObject < ApplicationRecord
   # {:param_1 => 12, :param_1_type => "Vm", :param_2 => 14, :param_2_type => "Integer"}
   # the return value from automate is in $evm.root['method_result']
   def _call_automate(method_name, *args)
+    @user ||= User.current_user
+    @group ||= User.current_user.current_group
+    @tenant ||= User.current_user.current_tenant
     raise "A user is required to send [#{method_name}] to automate." unless @user
 
     attrs = { :method_name => method_name }
