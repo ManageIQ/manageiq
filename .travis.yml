@@ -17,6 +17,9 @@ env:
 matrix:
   allow_failures:
   - rvm: 2.4.2
+  exclude:
+  - rvm: 2.4.2
+    env: TEST_SUITE=brakeman
   fast_finish: true
 addons:
   postgresql: '9.5'
