@@ -28,6 +28,14 @@ describe MiqEvent do
         end
         MiqEvent.raise_evm_job_event(obj, {:type => "scan", :suffix => "complete"}, {})
       end
+
+      it "physical_server" do
+        obj = FactoryGirl.create(:physical_server)
+        expect(MiqEvent).to receive(:raise_evm_event) do |target, raw_event, _inputs|
+          target == obj && raw_event == "physical_server_shutdown"
+        end
+        MiqEvent.raise_evm_job_event(obj, {:type => "shutdown"}, {})
+      end
     end
 
     it "will recognize known events" do
