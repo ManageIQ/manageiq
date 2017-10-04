@@ -116,6 +116,11 @@ class GenericObject < ApplicationRecord
     @tenant ||= @user.current_tenant
   end
 
+  def call_queued_method(params)
+    ae_user_identity(User.current_user)
+    public_send(params[:action], *params[:parameters])
+  end
+
   private
 
   # The properties column contains raw data that are converted during read/write.
