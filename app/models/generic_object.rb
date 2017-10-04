@@ -117,7 +117,7 @@ class GenericObject < ApplicationRecord
   end
 
   def call_queued_method(params)
-    ae_user_identity(params[:user])
+    ae_user_identity(User.current_user)
     public_send(params[:action], *params[:parameters])
   end
 

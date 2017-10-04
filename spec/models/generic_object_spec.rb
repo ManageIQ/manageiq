@@ -343,7 +343,8 @@ describe GenericObject do
   describe '#call_queued_method' do
     it 'calls the specified method with the correct parameters' do
       user = FactoryGirl.create(:user)
-      params = { :user => user, :action => 'my_host', :parameters => %w(param1 param2) }
+      User.current_user = user
+      params = {  :action => 'my_host', :parameters => %w(param1 param2) }
 
       expect(go).to receive(:ae_user_identity).with(user)
       expect(go).to receive(:my_host).with('param1', 'param2')
