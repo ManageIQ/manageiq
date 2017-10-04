@@ -1,6 +1,7 @@
 language: ruby
 rvm:
-- '2.3.5'
+- 2.3.1
+- 2.4.2
 sudo: false
 cache:
   bundler: true
@@ -14,6 +15,11 @@ env:
   - TEST_SUITE=vmdb PARALLEL=true
   - TEST_SUITE=brakeman
 matrix:
+  allow_failures:
+  - rvm: 2.4.2
+  exclude:
+  - rvm: 2.4.2
+    env: TEST_SUITE=brakeman
   fast_finish: true
 addons:
   postgresql: '9.5'
