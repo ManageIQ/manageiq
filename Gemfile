@@ -1,4 +1,4 @@
-raise "Ruby versions less than 2.2.2 are unsupported!" if RUBY_VERSION < "2.2.2"
+raise "Ruby versions less than 2.3.1 are unsupported!" if RUBY_VERSION < "2.3.1"
 
 source 'https://rubygems.org'
 
