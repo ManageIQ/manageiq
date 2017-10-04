@@ -24,7 +24,7 @@ sortby:
 - ready_condition_status
 group:
 graph:
-  :type: PieThreed
+  :type: Pie
   :count: 10
   :other: true
 dims: 1
