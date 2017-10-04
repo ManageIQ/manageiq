@@ -1,6 +1,7 @@
 require 'webmock/rspec'
+require 'httpd_dbus_api'
 
-RSpec.describe HttpdAuthApi do
+RSpec.describe HttpdDBusApi do
   let(:jdoe_userid) { "jdoe" }
 
   let(:jdoe_user_attrs) do
@@ -20,8 +21,8 @@ RSpec.describe HttpdAuthApi do
   let(:jim_groups_error) { "Unable to get groups for user #{jim_userid} - No such user" }
 
   before do
-    ENV["HTTPD_AUTH_API_SERVICE_HOST"] = "1.2.3.4"
-    ENV["HTTPD_AUTH_API_SERVICE_PORT"] = "3400"
+    ENV["HTTPD_DBUS_API_SERVICE_HOST"] = "1.2.3.4"
+    ENV["HTTPD_DBUS_API_SERVICE_PORT"] = "3400"
 
     stub_request(:get, "http://1.2.3.4:3400/api/user_attrs/#{jdoe_userid}")
       .to_return(:status => 200, :body => { "result" => jdoe_user_attrs }.to_json)
