@@ -35,7 +35,7 @@ class MiqQueue < ApplicationRecord
     @artemis_client ||= begin
       require "manageiq-messaging"
       ManageIQ::Messaging.logger = _log
-      queue_settings = Settings.workers.worker_base.queue_worker_base.event_handler
+      queue_settings = Settings.prototype
       connect_opts = {
         :host       => ENV["ARTEMIS_QUEUE_HOSTNAME"] ? ENV["ARTEMIS_QUEUE_HOSTNAME"] : queue_settings.queue_hostname,
         :port       => (ENV["ARTEMIS_QUEUE_PORT"] ? ENV["ARTEMIS_QUEUE_PORT"] : queue_settings.queue_port).to_i,
