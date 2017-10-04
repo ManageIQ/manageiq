@@ -3,8 +3,9 @@ require 'amazon_ssa_support'
 require 'yaml'
 
 class AmazonAgentManager
+  include Comparable
   include Vmdb::Logging
-  attr_accessor :ems
+  attr_accessor :ems, :deploying
 
   MIQ_SSA = "MIQ_SSA"
 
@@ -20,6 +21,11 @@ class AmazonAgentManager
 
     # List of all agent ids, include those in power off state.
     @agent_ids = []
+    @deploying = false
+  end
+
+  def <=>(other)
+    @ems.guid <=> other.ems.guid
   end
 
   def config
@@ -48,11 +54,11 @@ class AmazonAgentManager
   end
 
   def request_queue
-    config[:aws_ssa_request_queue] || AmazonSsaSupport::DEFAULT_REQUEST_QUEUE
+    (config[:aws_ssa_request_queue] || AmazonSsaSupport::DEFAULT_REQUEST_QUEUE) + '-' + @ems.guid
   end
 
   def reply_queue
-    config[:aws_ssa_reply_queue] || AmazonSsaSupport::DEFAULT_REPLY_QUEUE
+    (config[:aws_ssa_reply_queue] || AmazonSsaSupport::DEFAULT_REPLY_QUEUE) + '-' + @ems.guid
   end
 
   def reply_prefix
@@ -79,7 +85,8 @@ class AmazonAgentManager
     return @agent_ids unless bucket.exists?
 
     bucket.objects({prefix: heartbeat_prefix}).each do |obj|
-      @agent_ids << obj.key.split('/')[2]
+      id = obj.key.split('/')[2]
+      @agent_ids << id if @ec2.instance(id).exists?
     end
 
     @agent_ids
@@ -96,22 +103,37 @@ class AmazonAgentManager
   def messages_in_queue(q_name)
     q = @sqs.get_queue_by_name(queue_name: q_name)
     q.attributes["ApproximateNumberOfMessages"].to_i + q.attributes["ApproximateNumberOfMessagesNotVisible"].to_i
+  rescue => err
+    _log.warn(err.message)
+    0
+  end
+
+  def deploying?
+    !!@deploying
   end
 
   def setup_agent
-    agent_ids.empty? ? deploy_agent : activate_agent(agent_ids[0])
+    agent_ids.empty? ? deploy_agent : activate_agent
+  rescue => err
+    _log.error("No agent is set up to prcoess requests: #{err.message}")
+    _log.error(err.backtrace.join("\n"))
   end
 
-  def activate_agent(agent_id)
-    agent = @ec2.instance(agent_id)
-    agent.start
-    agent.wait_until_running
-    _log.info("Agent #{agent_id} is activated to serve requests.")
-    agent_id
-  rescue => err
-    _log.error("Failed to activate agent #{agent_id}: #{err.message}")
-    _log.info("Depoly a new agent. This may take a while ...")
-    deploy_agent
+  def activate_agent
+    agent_ids.each do |id|
+      agent = @ec2.instance(id)
+      if (agent.state.name == "stopped")
+        agent.start
+        agent.wait_until_running
+        _log.info("Agent #{id} is activated to serve requests.")
+        return id
+      else
+        _log.warn("Agent #{id} is in abnormal state: #{agent.state.name}.")
+        next
+      end
+    end
+
+    _log.error("Failed to activate agents: #{agent_ids}.")
   end
 
   # check timestamp of heartbeat of agent_id, return true if the last beat time in
@@ -127,14 +149,15 @@ class AmazonAgentManager
     last_beat_stamp = YAML.load(obj.get.body.read, safe: true)
     _log.debug("#{obj.key}: Last heartbeat time stamp: #{last_beat_stamp}")
 
-    Time.now.utc - last_beat_stamp > interval ? false : true
+    Time.now.utc - last_beat_stamp < interval && @ec2.instance(agent_id).state.name == "running" ? true : false
   rescue => err
     _log.error("#{agent_id}: #{e.message}")
     false
   end
 
   def deploy_agent
-    _log.info("Deploy agent ...")
+    _log.info("Deploying agent ...")
+    @deploying = true
 
     kp = get_key_pair
     security_group_id = create_security_group
@@ -312,7 +335,7 @@ class AmazonAgentManager
     pem_file_name
   end
 
-  def setup_ruby(log = '/var/log/miq_ssa_deploy.log')
+  def setup_ruby(log = '/var/log/miq_ssa_deploy.log', version = '2.3.3')
     <<~SETUP
       yum -y update > #{log} 2>&1
       yum -y install git-core zlib zlib-devel gcc-c++ patch readline readline-devel libyaml-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison curl sqlite-devel postgresql-devel >> #{log} 2>&1
@@ -327,8 +350,8 @@ class AmazonAgentManager
       source ~/.bash_profile >> #{log} 2>&1
       echo $PATH >> #{log} 2>&1
       rbenv install -l >> #{log} 2>&1
-      rbenv install 2.3.3 >> #{log} 2>&1
-      rbenv global 2.3.3 >> #{log} 2>&1
+      rbenv install #{version} >> #{log} 2>&1
+      rbenv global #{version} >> #{log} 2>&1
       gem install bundler >> #{log} 2>&1
       gem install rails >> #{log} 2>&1
       gem install aws-sdk >> #{log} 2>&1
@@ -369,7 +392,7 @@ class AmazonAgentManager
       echo "#!/bin/sh" > start_agent.sh
       echo "ssa_root=`bundle show amazon_ssa_support`" >> start_agent.sh
       echo 'ssa_script="$ssa_root/tools/amazon_ssa_extract.rb"' >> start_agent.sh
-      echo 'ruby $ssa_script -l ${log_level}' >> start_agent.sh
+      echo 'ruby $ssa_script -l ' #{log_level} >> start_agent.sh
       chmod 755 start_agent.sh
       echo "Agent starts ..." >> #{log} 2>&1
       ./start_agent.sh

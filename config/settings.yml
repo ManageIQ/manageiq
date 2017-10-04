@@ -1058,6 +1058,7 @@
       :memory_threshold: 0.megabytes
     :amazon_agent_manager_worker:
       :starting_timeout: 20.minutes
+      :heartbeat_timeout: 30.minutes
       :poll: 10.seconds
       :memory_threshold: 0.megabytes
     :ems_refresh_core_worker:
