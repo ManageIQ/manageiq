@@ -95,15 +95,10 @@
     :keep_drift_states: 6.months
     :purge_window_size: 10000
 :ems:
-  :ems_redhat:
-    :use_ovirt_engine_sdk: false
-    :resolve_ip_addresses: true
-    :inventory:
-      :read_timeout: 1.hour
-      :open_timeout: 1.minute
-    :service:
-      :read_timeout: 1.hour
-      :open_timeout: 1.minute
+# provider specific settings are nested here, but they are in the provider repos
+# e.g.:
+#  :ems_<provider_name>:
+#    :use_feature: false
 :event_streams:
   :history:
     :keep_events: 6.months
@@ -866,7 +861,6 @@
   :level_kube: info
   :level_api: info
   :level_fog: info
-  :level_rhevm: info
   :level_scvmm: info
   :level_vim: warn
   :level_websocket: info
@@ -1073,8 +1067,6 @@
         :poll: 20.seconds
       :event_catcher_embedded_ansible:
         :poll: 20.seconds
-      :event_catcher_redhat:
-        :poll: 15.seconds
       :event_catcher_google:
         :poll: 15.seconds
       :event_catcher_lenovo:
@@ -1097,7 +1089,6 @@
           :nice_delta: 3
           :poll_method: :escalate
         :ems_metrics_collector_worker_google: {}
-        :ems_metrics_collector_worker_redhat: {}
       :ems_metrics_processor_worker:
         :count: 2
         :memory_threshold: 600.megabytes
@@ -1120,7 +1111,6 @@
         :ems_refresh_worker_lenovo_physical_infra: {}
         :ems_refresh_worker_microsoft: {}
         :ems_refresh_worker_nuage_network: {}
-        :ems_refresh_worker_redhat: {}
         :ems_refresh_worker_cinder: {}
         :ems_refresh_worker_swift: {}
       :event_handler:
