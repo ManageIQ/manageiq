@@ -27,7 +27,7 @@ module ManagerRefresh::Inventory::MiddlewareManager
       has_inventory({
         :model_class                 => provider_module::MiddlewareManager::MiddlewareServer,
         :association                 => :middleware_servers,
-        :inventory_object_attributes => %i(type_path hostname product lives_on_id lives_on_type
+        :inventory_object_attributes => %i(type type_path hostname product lives_on_id lives_on_type
                                            middleware_server_group).concat(COMMON_ATTRIBUTES),
         :builder_params              => { :ext_management_system => ->(persister) { persister.manager } }
       }.merge(options))
