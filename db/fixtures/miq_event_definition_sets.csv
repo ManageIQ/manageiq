@@ -2,6 +2,7 @@ name,description
 evm_operations,CFME Operation
 ems_operations,Provider Operation
 host_operations,Host Operation
+middleware_operations,Middleware Operation
 compliance,Compliance
 tags,Company Tag
 vm_operational,VM Operation
