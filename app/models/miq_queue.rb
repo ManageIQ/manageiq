@@ -31,8 +31,9 @@ class MiqQueue < ApplicationRecord
   PRIORITY_WHICH  = [:max, :high, :normal, :low, :min]
   PRIORITY_DIR    = [:higher, :lower]
 
-  def self.artemis_events_client
-    @artemis_client ||= begin
+  def self.artemis_client(client_ref)
+    @artemis_client ||= {}
+    @artemis_client[client_ref] ||= begin
       require "manageiq-messaging"
       ManageIQ::Messaging.logger = _log
       queue_settings = Settings.prototype
@@ -41,7 +42,7 @@ class MiqQueue < ApplicationRecord
         :port       => (ENV["ARTEMIS_QUEUE_PORT"] || queue_settings.queue_port).to_i,
         :username   => ENV["ARTEMIS_QUEUE_USERNAME"] || queue_settings.queue_username,
         :password   => ENV["ARTEMIS_QUEUE_PASSWORD"] || queue_settings.queue_password,
-        :client_ref => "event_handler",
+        :client_ref => client_ref,
       }
 
       # caching the client works, even if the connection becomes unavailable

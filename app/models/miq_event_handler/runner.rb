@@ -11,7 +11,7 @@ class MiqEventHandler::Runner < MiqQueueWorkerBase::Runner
       }
 
       # this block is stored in a lambda callback and is executed in another thread once a msg is received
-      MiqQueue.artemis_events_client.subscribe_topic(topic_options) do |sender, event, payload|
+      MiqQueue.artemis_client('event_handler').subscribe_topic(topic_options) do |sender, event, payload|
         _log.info "Received Event (#{event}) by sender #{sender}: #{payload[:event_type]} #{payload[:chain_id]}"
         EmsEvent.add(sender.to_i, payload)
       end
