@@ -29,8 +29,9 @@ class MiqEventHandler::Runner < MiqQueueWorkerBase::Runner
   end
 
   def before_exit(_message, _exit_code)
-    artemis_client.close if artemis?
+    return unless artemis?
+    MiqQueue.artemis_client('event_handler').close
   rescue => e
-    _log.error "Could not close artemis connection: #{e}" if artemis?
+    safe_log("Could not close artemis connection: #{e}", 1)
   end
 end
