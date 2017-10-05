@@ -18,5 +18,9 @@ describe AutomateWorkspace do
 
       expect(aw.output).to eq(merged_hash)
     end
+
+    it "#href_slug" do
+      expect(aw.href_slug).to eq("automate_workspaces/#{aw.guid}")
+    end
   end
 end
