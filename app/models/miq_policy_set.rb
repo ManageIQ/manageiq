@@ -45,16 +45,12 @@ class MiqPolicySet < ApplicationRecord
     operation_on_multiple(ids, db, :remove_policy)
   end
 
-  def operation_on_multiple(ids, db, operation)
+  private def operation_on_multiple(ids, db, operation)
     model = db.respond_to?(:constantize) ? db.constantize : db
-    ids.each do |id|
-      rec = model.find_by(:id => id)
-      next unless rec
-
+    model.where(:id => ids).each do |rec|
       rec.send(operation, self)
     end
   end
-  private :operation_on_multiple
 
   def export_to_array
     h = attributes
