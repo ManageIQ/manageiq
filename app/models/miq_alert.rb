@@ -477,6 +477,36 @@ class MiqAlert < ApplicationRecord
           {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<=", "="]},
           {:name => :value_mw_garbage_collector, :description => _("Duration Per Minute (ms)"), :numeric => true}
         ]},
+      {:name => "mw_ds_available_count", :description => _("DataSource - Connections Available"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of available Datasource connections"), :numeric => true}
+        ]},
+      {:name => "mw_ds_in_use_count", :description => _("DataSource - Connections In Use"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of Datasource connections in use"), :numeric => true}
+        ]},
+      {:name => "mw_ds_timed_out", :description => _("DataSource - Connections Time Out"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of Time Out Datasource connections"), :numeric => true}
+        ]},
+      {:name => "mw_ds_average_get_time", :description => _("DataSource - Connection Get Time"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Average Get Time in Datasource connection (ms)"), :numeric => true}
+        ]},
+      {:name => "mw_ds_average_creation_time", :description => _("DataSource - Connection Creation Time"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Average Creation Time in Datasource connection (ms)"), :numeric => true}
+        ]},
+      {:name => "mw_ds_max_wait_time", :description => _("DataSource - Connection Wait Time"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Max Wait Time in Datasource connection (ms)"), :numeric => true}
+        ]},
       {:name => "dwh_generic", :description => _("All Datawarehouse alerts"), :db => ["ContainerNode"], :responds_to_events => "datawarehouse_alert",
         :options => [], :always_evaluate => true}
     ]
