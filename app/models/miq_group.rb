@@ -119,7 +119,7 @@ class MiqGroup < ApplicationRecord
 
   def self.get_httpd_groups_by_user(user)
     if MiqEnvironment::Command.is_container?
-      get_httpd_groups_by_user_via_auth_api(user)
+      get_httpd_groups_by_user_via_dbus_api_service(user)
     else
       get_httpd_groups_by_user_via_dbus(user)
     end
@@ -143,8 +143,10 @@ class MiqGroup < ApplicationRecord
     strip_group_domains(user_groups.first)
   end
 
-  def self.get_httpd_groups_by_user_via_auth_api(user)
-    groups = HttpdAuthApi.new.user_groups(user)
+  def self.get_httpd_groups_by_user_via_dbus_api_service(user)
+    require_dependency "httpd_dbus_api"
+
+    groups = HttpdDBusApi.new.user_groups(user)
     strip_group_domains(groups)
   end
 

@@ -1,28 +1,28 @@
 require "faraday"
 require "json"
 
-class HttpdAuthApi
+class HttpdDBusApi
   def initialize(options = {})
     @options = options
   end
 
   def user_attrs(userid, attributes = nil)
     if attributes.present?
-      auth_api("/api/user_attrs/#{userid}?attributes=#{attributes.join(',')}")
+      dbus_api("/api/user_attrs/#{userid}?attributes=#{attributes.join(',')}")
     else
-      auth_api("/api/user_attrs/#{userid}")
+      dbus_api("/api/user_attrs/#{userid}")
     end
   end
 
   def user_groups(userid)
-    auth_api("/api/user_groups/#{userid}")
+    dbus_api("/api/user_groups/#{userid}")
   end
 
   private
 
-  def auth_api(request_url)
-    host = ENV["HTTPD_AUTH_API_SERVICE_HOST"]
-    port = ENV["HTTPD_AUTH_API_SERVICE_PORT"]
+  def dbus_api(request_url)
+    host = ENV["HTTPD_DBUS_API_SERVICE_HOST"]
+    port = ENV["HTTPD_DBUS_API_SERVICE_PORT"]
     conn = Faraday.new(:url => "http://#{host}:#{port}") do |faraday|
       faraday.options[:open_timeout] = @options[:open_timeout] || 5  # Net::HTTP open_timeout
       faraday.options[:timeout]      = @options[:timeout]      || 30 # Net::HTTP read_timeout

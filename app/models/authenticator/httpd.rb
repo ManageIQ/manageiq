@@ -118,7 +118,7 @@ module Authenticator
 
     def user_attrs_from_external_directory(username)
       if MiqEnvironment::Command.is_container?
-        user_attrs_from_external_directory_via_auth_api(username)
+        user_attrs_from_external_directory_via_dbus_api_service(username)
       else
         user_attrs_from_external_directory_via_dbus(username)
       end
@@ -145,8 +145,10 @@ module Authenticator
       ATTRS_NEEDED.each_with_object({}) { |attr, hash| hash[attr] = Array(user_attrs[attr]).first }
     end
 
-    def user_attrs_from_external_directory_via_auth_api(username)
-      HttpdAuthApi.new.user_attrs(username, ATTRS_NEEDED)
+    def user_attrs_from_external_directory_via_dbus_api_service(username)
+      require_dependency "httpd_dbus_api"
+
+      HttpdDBusApi.new.user_attrs(username, ATTRS_NEEDED)
     end
   end
 end
