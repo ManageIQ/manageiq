@@ -38,24 +38,23 @@ class MiqPolicySet < ApplicationRecord
   end
 
   def add_to(ids, db)
-    model = db.respond_to?(:constantize) ? db.constantize : db
-    ids.each do|id|
-      rec = model.find_by(:id => id)
-      next unless rec
-
-      rec.add_policy(self)
-    end
+    operation_on_multiple(ids, db, :add_policy)
   end
 
   def remove_from(ids, db)
+    operation_on_multiple(ids, db, :remove_policy)
+  end
+
+  def operation_on_multiple(ids, db, operation)
     model = db.respond_to?(:constantize) ? db.constantize : db
-    ids.each do|id|
+    ids.each do |id|
       rec = model.find_by(:id => id)
       next unless rec
 
-      rec.remove_policy(self)
+      rec.send(operation, self)
     end
   end
+  private :operation_on_multiple
 
   def export_to_array
     h = attributes
