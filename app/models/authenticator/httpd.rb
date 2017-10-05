@@ -137,7 +137,7 @@ module Authenticator
     end
 
     def user_attrs_from_external_directory_via_dbus_api_service(username)
-      require "httpd_dbus_api"
+      require_dependency "httpd_dbus_api"
 
       HttpdDBusApi.new.user_attrs(username, ATTRS_NEEDED)
     end

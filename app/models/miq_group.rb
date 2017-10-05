@@ -144,7 +144,7 @@ class MiqGroup < ApplicationRecord
   end
 
   def self.get_httpd_groups_by_user_via_dbus_api_service(user)
-    require "httpd_dbus_api"
+    require_dependency "httpd_dbus_api"
 
     groups = HttpdDBusApi.new.user_groups(user)
     strip_group_domains(groups)
