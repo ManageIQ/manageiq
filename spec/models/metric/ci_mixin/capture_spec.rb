@@ -92,6 +92,7 @@ describe Metric::CiMixin::Capture do
       raw_connection = adapter_class.create_connection(connection_config)
 
       allow(ActiveMetrics::Base).to receive(:connection).and_return(adapter_class.new(raw_connection))
+      allow(ActiveMetrics::Base).to receive(:connection_config).and_return(connection_config)
     end
 
     ["miq_postgres", "miq_postgres_legacy"].each do |postgre_adapter|
