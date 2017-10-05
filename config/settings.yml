@@ -930,10 +930,6 @@
     :container: 50.minutes
     :container_group: 50.minutes
     :container_node: 50.minutes
-  :capture_threshold_with_alerts:
-    :default: 1.minutes
-    :host: 20.minutes
-    :vm: 20.minutes
   :concurrent_requests:
     :historical: 1
     :hourly: 1
