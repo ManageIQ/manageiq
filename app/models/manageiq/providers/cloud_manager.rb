@@ -73,12 +73,16 @@ module ManageIQ::Providers
 
       CloudTenant.with_ext_management_system(id).walk_tree do |cloud_tenant, _|
         cloud_tenant_description = cloud_tenant.description.blank? ? cloud_tenant.name : cloud_tenant.description
-        tenant_params = {:name => cloud_tenant.name, :description => cloud_tenant_description}
+        tenant_params = {:name => cloud_tenant.name, :description => cloud_tenant_description, :source => cloud_tenant}
+
+        tenant_parent = cloud_tenant.parent.try(:source_tenant) || source_tenant
 
         if cloud_tenant.source_tenant
-          _log.info("CloudTenant #{cloud_tenant.name} has tenant #{cloud_tenant.source_tenant.name}")
-          _log.info("Updating Tenant #{cloud_tenant.source_tenant.name} with parameters: #{tenant_params.inspect}")
-          cloud_tenant.source_tenant.update(tenant_params)
+          cloud_tenant.update_source_tenant(tenant_params)
+        elsif existing_source_tenant = Tenant.descendants_of(tenant_parent).find_by(:name => tenant_params[:name])
+          _log.info("CloudTenant #{cloud_tenant.name} has orphaned tenant #{existing_source_tenant.name}")
+          cloud_tenant.source_tenant = existing_source_tenant
+          cloud_tenant.update_source_tenant(tenant_params)
         else
           _log.info("CloudTenant #{cloud_tenant.name} has no tenant")
           _log.info("Creating Tenant with parameters: #{tenant_params.inspect}")
@@ -88,21 +92,10 @@ module ManageIQ::Providers
           # provider (EmsCloud)
           # if it is not first level of cloud tenant
           # there is existing parent of CloudTenant and his related tenant is taken
-          tenant_parent = cloud_tenant.parent.try(:source_tenant) || source_tenant
           _log.info("and with parent #{tenant_parent.name}")
           tenant_params[:parent] = tenant_parent
-          tenant_params[:source] = cloud_tenant
-          existing_source_tenant = Tenant.descendants_of(tenant_parent).find_by(:name => tenant_params[:name])
-          if existing_source_tenant
-            cloud_tenant.source_tenant = existing_source_tenant
-            _log.info("CloudTenant #{cloud_tenant.name} has orphaned tenant #{existing_source_tenant.name}")
-            _log.info("Updating Tenant #{cloud_tenant.source_tenant.name} with parameters: #{tenant_params.inspect}")
-            cloud_tenant.source_tenant.update(tenant_params)
-          else
-            cloud_tenant.source_tenant = Tenant.new(tenant_params)
-            _log.info("New Tenant #{cloud_tenant.source_tenant.name} created")
-            _log.info("New Tenant #{cloud_tenant.source_tenant.name} created")
-          end
+          cloud_tenant.source_tenant = Tenant.new(tenant_params)
+          _log.info("New Tenant #{cloud_tenant.source_tenant.name} created")
         end
 
         cloud_tenant.update_source_tenant_associations
