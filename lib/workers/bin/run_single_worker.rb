@@ -23,10 +23,6 @@ opt_parser = OptionParser.new do |opts|
     options[:dry_run] = val
   end
 
-  opts.on("-g=GUID", "--guid=GUID", "Find an existing worker record instead of creating") do |val|
-    options[:guid] = val
-  end
-
   opts.on("-h", "--help", "Displays this help") do
     puts opts
     exit
