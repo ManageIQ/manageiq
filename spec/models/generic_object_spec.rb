@@ -5,6 +5,7 @@ describe GenericObject do
   let(:data_read)      { 345.67 }
   let(:s_time)         { Time.now.utc }
   let(:vm1)            { FactoryGirl.create(:vm_vmware) }
+  let(:user)           { FactoryGirl.create(:user_with_group) }
 
   let(:definition) do
     FactoryGirl.create(
@@ -172,7 +173,6 @@ describe GenericObject do
 
   describe 'property methods' do
     let(:ws)   { double("MiqAeWorkspaceRuntime", :root => {"method_result" => "some_return_value"}) }
-    let(:user) { FactoryGirl.create(:user_with_group) }
 
     before { go.ae_user_identity(user) }
 
@@ -228,6 +228,20 @@ describe GenericObject do
     it 'returns value from automate' do
       allow(MiqAeEngine).to receive(:deliver).and_return(ws)
       expect(go.my_host).to eq("some_return_value")
+    end
+  end
+
+  describe 'property methods without user set' do
+    it 'will set the current user' do
+      workspace = double("MiqAeWorkspaceRuntime", :root => {"method_result" => "result"})
+
+      options = {
+        :user_id      => user.id,
+        :miq_group_id => user.current_group.id,
+        :tenant_id    => user.current_tenant.id
+      }
+      expect(MiqAeEngine).to receive(:deliver).with(hash_including(options)).and_return(workspace)
+      User.with_user_group(user, user.current_group) { go.my_host }
     end
   end
 
