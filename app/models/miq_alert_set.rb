@@ -32,45 +32,7 @@ class MiqAlertSet < ApplicationRecord
   end
 
   def self.import_from_hash(alert_profile, options = {})
-    status = {:class => name, :description => alert_profile["description"], :children => []}
-    ap = alert_profile.delete("MiqAlert") { |_k| raise "No Alerts for Alert Profile == #{alert_profile.inspect}" }
-
-    alerts = []
-    ap.each do |a|
-      alert, s = MiqAlert.import_from_hash(a, options)
-      status[:children].push(s)
-      alerts.push(alert)
-    end
-
-    aset = MiqAlertSet.find_by(:guid => alert_profile["guid"])
-    msg_pfx = "Importing Alert Profile: guid=[#{alert_profile["guid"]}] description=[#{alert_profile["description"]}]"
-    if aset.nil?
-      aset = MiqAlertSet.new(alert_profile)
-      status[:status] = :add
-    else
-      status[:old_description] = aset.description
-      aset.attributes = alert_profile
-      status[:status] = :update
-    end
-
-    unless aset.valid?
-      status[:status]   = :conflict
-      status[:messages] = aset.errors.full_messages
-    end
-
-    aset["mode"] ||= "control" # Default "mode" value to true to support older export decks that don't have a value set.
-
-    msg = "#{msg_pfx}, Status: #{status[:status]}"
-    msg += ", Messages: #{status[:messages].join(",")}" if status[:messages]
-    if options[:preview] == true
-      MiqPolicy.logger.info("[PREVIEW] #{msg}")
-    else
-      MiqPolicy.logger.info(msg)
-      aset.save!
-      alerts.each { |a| aset.add_member(a) }
-    end
-
-    return aset, status
+    ContentImporter.import_from_hash(MiqAlertSet, MiqAlert, alert_profile, options)
   end
 
   def self.import_from_yaml(fd)

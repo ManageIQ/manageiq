@@ -61,47 +61,7 @@ class MiqPolicySet < ApplicationRecord
   end
 
   def self.import_from_hash(policy_profile, options = {})
-    status = {:class => name, :description => policy_profile["description"], :children => []}
-    pp = policy_profile.delete("MiqPolicy") do |_k|
-      raise _("No Policies for Policy Profile == %{profile}") % {:profile => policy_profile.inspect}
-    end
-
-    policies = []
-    pp.each do |p|
-      policy, s = MiqPolicy.import_from_hash(p, options)
-      status[:children].push(s)
-      policies.push(policy)
-    end
-
-    pset = MiqPolicySet.find_by(:guid => policy_profile["guid"])
-    msg_pfx = "Importing Policy Profile: guid=[#{policy_profile["guid"]}] description=[#{policy_profile["description"]}]"
-    if pset.nil?
-      pset = MiqPolicySet.new(policy_profile)
-      status[:status] = :add
-    else
-      status[:old_description] = pset.description
-      pset.attributes = policy_profile
-      status[:status] = :update
-    end
-
-    unless pset.valid?
-      status[:status]   = :conflict
-      status[:messages] = pset.errors.full_messages
-    end
-
-    pset["mode"] ||= "control" # Default "mode" value to true to support older export decks that don't have a value set.
-
-    msg = "#{msg_pfx}, Status: #{status[:status]}"
-    msg += ", Messages: #{status[:messages].join(",")}" if status[:messages]
-    if options[:preview] == true
-      MiqPolicy.logger.info("[PREVIEW] #{msg}")
-    else
-      MiqPolicy.logger.info(msg)
-      pset.save!
-      policies.each { |p| pset.add_member(p) }
-    end
-
-    return pset, status
+    ContentImporter.import_from_hash(MiqPolicySet, MiqPolicy, policy_profile, options)
   end
 
   def self.import_from_yaml(fd)
