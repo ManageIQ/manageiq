@@ -92,9 +92,17 @@ module ManageIQ::Providers
           _log.info("and with parent #{tenant_parent.name}")
           tenant_params[:parent] = tenant_parent
           tenant_params[:source] = cloud_tenant
-          cloud_tenant.source_tenant = Tenant.descendants_of(tenant_parent).find_by(:name => tenant_params[:name]) ||
-              Tenant.new(tenant_params)
-          _log.info("New Tenant #{cloud_tenant.source_tenant.name} created")
+          existing_source_tenant = Tenant.descendants_of(tenant_parent).find_by(:name => tenant_params[:name])
+          if existing_source_tenant
+            cloud_tenant.source_tenant = existing_source_tenant
+            _log.info("CloudTenant #{cloud_tenant.name} has orphaned tenant #{existing_source_tenant.name}")
+            _log.info("Updating Tenant #{cloud_tenant.source_tenant.name} with parameters: #{tenant_params.inspect}")
+            cloud_tenant.source_tenant.update(tenant_params)
+          else
+            cloud_tenant.source_tenant = Tenant.new(tenant_params)
+            _log.info("New Tenant #{cloud_tenant.source_tenant.name} created")
+            _log.info("New Tenant #{cloud_tenant.source_tenant.name} created")
+          end
         end
 
         cloud_tenant.update_source_tenant_associations

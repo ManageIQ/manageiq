@@ -237,6 +237,9 @@ describe EmsCloud do
           ems_cloud.sync_cloud_tenants_with_tenants
           expect_created_tenant_tree
 
+          ct_4.description = "New description"
+          ct_4.save
+
           tenant_ct_4.source = nil
           tenant_ct_4.save!
 
