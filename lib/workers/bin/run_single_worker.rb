@@ -60,13 +60,13 @@ unless options[:dry_run]
   create_options = {:pid => Process.pid}
   runner_options = {}
 
-  if ENV["QUEUE"]
-    create_options[:queue_name] = ENV["QUEUE"]
-    runner_options[:ems_id] = worker_class.ems_id_from_queue_name(ENV["QUEUE"]) if worker_class.respond_to?(:ems_id_from_queue_name)
+  if ENV["EMS_ID"].to_i > 0
+    create_options[:queue_name] = "ems_#{ENV['EMS_ID']}"
+    runner_options[:ems_id]     = ENV["EMS_ID"].to_i
   end
 
-  worker = if options[:guid]
-             worker_class.find_by!(:guid => options[:guid]).tap do |wrkr|
+  worker = if ENV["GUID"]
+             worker_class.find_by!(:guid => ENV["GUID"]).tap do |wrkr|
                wrkr.update_attributes(:pid => Process.pid)
              end
            else

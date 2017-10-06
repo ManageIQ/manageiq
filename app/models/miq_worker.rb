@@ -316,10 +316,28 @@ class MiqWorker < ApplicationRecord
     end
   end
 
-  def self.build_command_line(guid)
-    command_line = "#{Gem.ruby} #{runner_script} --heartbeat --guid=#{guid} #{name}"
-    ENV['APPLIANCE'] ? "nice #{nice_increment} #{command_line}" : command_line
+  def self.build_command_line(options)
+    raise ArgumentError, "expected options hash, received: #{options.class}" unless options.kind_of?(Hash)
+    raise ArgumentError, "missing :guid options key" unless options.key?(:guid)
+
+    prefix = command_line_env_prefix(options)
+    cmd    = "#{prefix}#{Gem.ruby} #{runner_script} --heartbeat #{name}"
+    ENV['APPLIANCE'] ? "nice #{nice_increment} #{cmd}" : cmd
   end
+
+  # Converts:
+  # { :guid   => 8d473240-efb9-11e5-92d7-0050569c24ad,
+  #   :ems_id => 1 }
+  #
+  # To: 'GUID=8d473240-efb9-11e5-92d7-0050569c24ad EMS_ID=1 '
+  def self.command_line_env_prefix(options)
+   return "" unless options.kind_of?(Hash)
+
+    options.each_with_object("") do |kv, prefix|
+      prefix << "#{kv.first.to_s.upcase}=#{kv.last} "
+    end
+  end
+  private_class_method :command_line_env_prefix
 
   def self.runner_script
     script = ManageIQ.root.join("lib/workers/bin/run_single_worker.rb")
@@ -327,8 +345,12 @@ class MiqWorker < ApplicationRecord
     script
   end
 
+  def command_line
+    self.class.build_command_line(worker_options)
+  end
+
   def start_runner
-    pid = Kernel.spawn(self.class.build_command_line(guid), [:out, :err] => [Rails.root.join("log", "evm.log"), "a"])
+    pid = Kernel.spawn(command_line, [:out, :err] => [Rails.root.join("log", "evm.log"), "a"])
     Process.detach(pid)
     pid
   end

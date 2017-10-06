@@ -39,7 +39,7 @@ describe MiqWorker do
         old_env = ENV.delete('DATABASE_URL')
         ENV['APPLIANCE'] = 'true'
         w = FactoryGirl.build(:miq_generic_worker)
-        cmd = w.class.build_command_line(123)
+        cmd = w.class.build_command_line(:guid => 123)
         expect(cmd).to start_with("nice +10")
         expect(cmd).to end_with("MiqGenericWorker")
       ensure
@@ -50,7 +50,7 @@ describe MiqWorker do
 
     it "without ENV['APPLIANCE']" do
       w = FactoryGirl.build(:miq_generic_worker)
-      cmd = w.class.build_command_line(123)
+      cmd = w.class.build_command_line(:guid => 123)
       expect(cmd).to_not start_with("nice +10")
     end
   end
@@ -369,6 +369,25 @@ describe MiqWorker do
 
     it "#worker_options" do
       expect(@worker.worker_options).to eq(:guid => @worker.guid)
+    end
+
+    context "#command_line" do
+      it "with nil worker_options" do
+        allow(@worker).to receive(:worker_options).and_return(nil)
+        expect {@worker.command_line}.to raise_error(ArgumentError)
+      end
+
+      it "without guid in worker_options" do
+        allow(@worker).to receive(:worker_options).and_return({})
+        expect {@worker.command_line}.to raise_error(ArgumentError)
+      end
+
+      it "with provider worker_options" do
+        allow(@worker).to receive(:worker_options).and_return({:ems_id => 1234, :guid => @worker.guid})
+        cmd = @worker.command_line
+        expect(cmd).to include("GUID=#{@worker.guid} ")
+        expect(cmd).to include("EMS_ID=1234 ")
+      end
     end
 
     describe "#stopping_for_too_long?" do
