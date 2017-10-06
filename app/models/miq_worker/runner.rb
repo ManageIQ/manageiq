@@ -43,8 +43,6 @@ class MiqWorker::Runner
 
   def initialize(cfg = {})
     @cfg = cfg
-    @cfg[:guid] ||= ENV['MIQ_GUID']
-
     $log ||= Rails.logger
 
     @server = MiqServer.my_server(true)

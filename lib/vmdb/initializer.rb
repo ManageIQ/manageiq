@@ -1,7 +1,7 @@
 module Vmdb
   module Initializer
     def self.init
-      _log.info("- Program Name: #{$PROGRAM_NAME}, PID: #{Process.pid}, ENV['MIQ_GUID']: #{ENV['MIQ_GUID']}, ENV['EVMSERVER']: #{ENV['EVMSERVER']}")
+      _log.info("- Program Name: #{$PROGRAM_NAME}, PID: #{Process.pid}, ENV['EVMSERVER']: #{ENV['EVMSERVER']}")
 
       # UiWorker called in Development Mode
       #   * command line(rails server)
