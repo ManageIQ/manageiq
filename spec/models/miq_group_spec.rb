@@ -312,6 +312,15 @@ describe MiqGroup do
       ws3 = FactoryGirl.create(:miq_widget_set, :name => 'B2', :owner => group)
       expect(group.ordered_widget_sets).to eq([ws1, ws3, ws2])
     end
+
+    it "works when settings use strings" do
+      ws1 = FactoryGirl.create(:miq_widget_set, :name => 'A1', :owner => group)
+      _ws2 = FactoryGirl.create(:miq_widget_set, :name => 'C3', :owner => group)
+      ws3 = FactoryGirl.create(:miq_widget_set, :name => 'B2', :owner => group)
+      group.update_attributes(:settings => {"dashboard_order" => [ws3.id.to_s, ws1.id.to_s]})
+
+      expect(group.ordered_widget_sets).to eq([ws3, ws1])
+    end
   end
 
   context ".sort_by_desc" do
