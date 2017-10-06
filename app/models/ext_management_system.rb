@@ -428,7 +428,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def self.ems_infra_discovery_types
-    @ems_infra_discovery_types ||= %w(virtualcenter scvmm rhevm)
+    @ems_infra_discovery_types ||= %w(virtualcenter scvmm rhevm openstack_infra)
   end
 
   def self.ems_physical_infra_discovery_types
