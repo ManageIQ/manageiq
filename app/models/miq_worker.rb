@@ -317,12 +317,13 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.build_command_line(options)
+    require 'shellwords'
     raise ArgumentError, "expected options hash, received: #{options.class}" unless options.kind_of?(Hash)
     raise ArgumentError, "missing :guid options key" unless options.key?(:guid)
 
-    prefix = command_line_env_prefix(options)
-    cmd    = "#{prefix}#{Gem.ruby} #{runner_script} --heartbeat #{name}"
-    ENV['APPLIANCE'] ? "nice #{nice_increment} #{cmd}" : cmd
+    cmd = "#{Gem.ruby} #{runner_script} --heartbeat #{name}"
+    cmd = "nice #{nice_increment} #{cmd}" if ENV["APPLIANCE"]
+    "#{command_line_env_prefix(options)}#{cmd}".shellescape
   end
 
   # Converts:
@@ -331,11 +332,13 @@ class MiqWorker < ApplicationRecord
   #
   # To: 'GUID=8d473240-efb9-11e5-92d7-0050569c24ad EMS_ID=1 '
   def self.command_line_env_prefix(options)
-   return "" unless options.kind_of?(Hash)
+    return "" unless options.kind_of?(Hash)
 
-    options.each_with_object("") do |kv, prefix|
-      prefix << "#{kv.first.to_s.upcase}=#{kv.last} "
+    prefix = ""
+    options.keys.sort.each do |key|
+      prefix << "#{key.to_s.upcase}=#{options[key]} "
     end
+    prefix
   end
   private_class_method :command_line_env_prefix
 
