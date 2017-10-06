@@ -53,10 +53,7 @@ class MiqPolicySet < ApplicationRecord
   end
 
   def export_to_array
-    h = attributes
-    ["id", "created_on", "updated_on"].each { |k| h.delete(k) }
-    h["MiqPolicy"] = members.collect { |p| p.export_to_array.first["MiqPolicy"] unless p.nil? }
-    [self.class.to_s => h]
+    [self.class.to_s => ContentExporter.export_to_hash(attributes, "MiqPolicy", members)]
   end
 
   def export_to_yaml
