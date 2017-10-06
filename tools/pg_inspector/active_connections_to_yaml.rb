@@ -6,9 +6,17 @@ require 'pg_inspector/util'
 
 module PgInspector
   class ActiveConnectionsYAML < PgInspectorOperation
-    HELP_MSG_SHORT = "Dump avtive connections to YAML file".freeze
+    HELP_MSG_SHORT = "Dump active connections to YAML file".freeze
     def parse_options(args)
       self.options = Trollop.options(args) do
+        banner <<-BANNER
+
+#{HELP_MSG_SHORT}
+
+Use password in PGPASSWORD environment if no password file given.
+
+Options:
+BANNER
         opt(:pg_host, "PostgreSQL host name or address",
             :type => :string, :short => "s", :default => "127.0.0.1")
         opt(:port, "PostgreSQL server port",
@@ -21,6 +29,8 @@ module PgInspector
             :type => :string, :short => "o", :default => DEFAULT_OUTPUT_PATH + "active_connections.yml")
         opt(:output_locks, "Output lock file",
             :type => :string, :short => "l", :default => DEFAULT_OUTPUT_PATH + "locks.yml")
+        opt(:password_file, "File content to use as password",
+            :type => :string, :short => "f")
         opt(:ignore_error, "Ignore incomplete application name column",
             :short => "i")
         opt(:only_miq_rows, "Get only ManageIQ Server/Worker rows",
@@ -63,11 +73,10 @@ module PgInspector
       if options[:user]
         conn_options[:user] = options[:user]
       end
-      options[:password] = Util.ask_for_password_or_none(
-        "Please enter password for PostgreSQL user #{options[:user]}:"
-      )
-      unless options[:password].empty?
-        conn_options[:password] = options[:password]
+      if options[:password_file]
+        conn_options[:password] = File.read(options[:password_file]).strip
+      elsif ENV["PGPASSWORD"]
+        conn_options[:password] = ENV["PGPASSWORD"]
       end
       PG::Connection.open(conn_options)
     rescue PG::Error => e
