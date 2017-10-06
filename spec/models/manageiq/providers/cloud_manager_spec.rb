@@ -233,6 +233,23 @@ describe EmsCloud do
           expect(tenant_ct_4.vm_or_templates).to match_array([vm_3, vm_4, vm_5])
         end
 
+        it "finds and updates existing tenant with orphaned source cloud tenant" do
+          ems_cloud.sync_cloud_tenants_with_tenants
+          expect_created_tenant_tree
+
+          tenant_ct_4.source = nil
+          tenant_ct_4.save!
+
+          ems_cloud.sync_cloud_tenants_with_tenants
+          tenant_ct_4.reload
+
+          expect(tenant_ct_4.name).to eq(ct_4.name)
+          expect(tenant_ct_4.description).to eq(ct_4.description)
+          expect(tenant_ct_4.parent.name).to eq(ct_2.name)
+          expect(tenant_ct_4.parent.description).to eq(ct_2.description)
+          expect(tenant_ct_4.vm_or_templates).to match_array([vm_3, vm_4])
+        end
+
         it "sets description to CloudTenant#name when CloudTenant#description is empty" do
           ct_4.description = ""
           ct_4.save

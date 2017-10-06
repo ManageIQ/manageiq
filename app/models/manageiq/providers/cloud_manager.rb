@@ -92,7 +92,8 @@ module ManageIQ::Providers
           _log.info("and with parent #{tenant_parent.name}")
           tenant_params[:parent] = tenant_parent
           tenant_params[:source] = cloud_tenant
-          cloud_tenant.source_tenant = Tenant.new(tenant_params)
+          cloud_tenant.source_tenant = Tenant.descendants_of(tenant_parent).find_by(:name => tenant_params[:name]) ||
+              Tenant.new(tenant_params)
           _log.info("New Tenant #{cloud_tenant.source_tenant.name} created")
         end
 
