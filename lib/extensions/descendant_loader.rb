@@ -72,9 +72,9 @@ class DescendantLoader
 
       content = File.read(filename)
       begin
-        parsed = RipperRubyParser::Parser.new.parse(content)
+        parsed = RipperRubyParser::Parser.new.parse(content, filename)
       rescue => e
-        puts "\nError parsing classes in #{filename}:\n#{e.class.name}: #{e}\n\n"
+        $stderr.puts "\nError parsing classes in #{filename}:\n#{e.class.name}: #{e}\n\n"
         raise
       end
 
