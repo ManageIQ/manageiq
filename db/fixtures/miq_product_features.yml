@@ -6413,25 +6413,25 @@
       :feature_type: view
       :identifier: guest_device_show
 
-# Configuration Templates
-- :name: Configuration Templates
-  :description: Everything under Configuration Templates
+# Customization Scripts
+- :name: Customization Scripts
+  :description: Everything under Customization Scripts
   :feature_type: node
-  :identifier: configuration_template
+  :identifier: customization_script
   :children:
   - :name: View
-    :description: View Configuration Template
+    :description: View Customization Script
     :feature_type: view
-    :identifier: configuration_template_view
+    :identifier: customization_script_view
     :children:
     - :name: List
-      :description: Display Lists of Configuration Templates
+      :description: Display Lists of Customization Scripts
       :feature_type: view
-      :identifier: configuration_template_show_list
+      :identifier: customization_script_show_list
     - :name: Show
-      :description: Display Individual Configuration Templates
+      :description: Display Individual Customization Scripts
       :feature_type: view
-      :identifier: configuration_template_show
+      :identifier: customization_script_show
 
 # Physical Infrastructure Topology
 - :name: Physical Infra Topology
