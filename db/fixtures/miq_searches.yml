@@ -1284,3 +1284,56 @@
           value: "waiting"
     search_type: default
     db: Container
+
+# Physical Servers default filters (Testados)
+
+- attributes:
+    name: default_Over Sized
+    description: Over Sized
+    filter: !ruby/object:MiqExpression
+      exp:
+        and:
+        - ">=":
+            field: PhysicalServer.hardware-disk_capacity
+            value: 50039280896
+        - IS NOT EMPTY:
+            field: PhysicalServer.hardware-v_pct_free_disk_space
+            value: ""
+    search_type: default
+    db: PhysicalServer
+- attributes:
+    name: default_Platform / Lenovo
+    description: Platform / Lenovo
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: PhysicalServer-type
+          value: ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalServer
+    search_type: default
+    db: PhysicalServer
+- attributes:
+    name: default_Status / Running
+    description: Status / Running
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: PhysicalServer-power_state
+          value: "on"
+    search_type: default
+    db: PhysicalServer
+- attributes:
+    name: default_Over Allocated
+    description: Over Allocated
+    filter: !ruby/object:MiqExpression
+      exp:
+        and:
+        - ">=":
+            field: PhysicalServer.hardware-v_pct_free_disk_space
+            value: 50
+        - IS NOT EMPTY:
+            field: PhysicalServer.hardware-v_pct_free_disk_space
+            value: ""
+    search_type: default
+    db: PhysicalServer
+
+# Physical Servers default filters (Testando)

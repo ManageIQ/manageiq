@@ -48,6 +48,7 @@
 - MiqWorker
 - OrchestrationStack
 - OrchestrationTemplate
+- PhysicalServer
 - PolicyEvent
 - ResourcePool
 - SecurityGroup
