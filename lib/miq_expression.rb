@@ -848,7 +848,7 @@ class MiqExpression
     custom_attributes_details = []
 
     klass.custom_keys.each do |custom_key|
-      custom_detail_column = [model, CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX + custom_key].join("-")
+      custom_detail_column = [model, CustomAttributeMixin.column_name(custom_key)].join("-")
       custom_detail_name = CustomAttributeMixin.to_human(custom_key)
 
       if options[:include_model]

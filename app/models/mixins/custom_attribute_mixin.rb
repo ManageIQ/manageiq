@@ -61,6 +61,11 @@ module CustomAttributeMixin
     _("%{section}: %{custom_key}") % { :custom_key => col_name, :section => section.try(:titleize) || DEFAULT_SECTION_NAME}
   end
 
+  def self.column_name(custom_key)
+    return if custom_key.nil?
+    CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX + custom_key
+  end
+
   def self.select_virtual_custom_attributes(cols)
     cols.nil? ? [] : cols.select { |x| x.start_with?(CUSTOM_ATTRIBUTES_PREFIX) }
   end

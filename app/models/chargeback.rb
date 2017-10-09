@@ -7,6 +7,7 @@ class Chargeback < ActsAsArModel
     :chargeback_rates     => :string,
     :entity               => :binary,
     :tag_name             => :string,
+    :label_name           => :string,
     :fixed_compute_metric => :integer,
     :metering_used_metric => :integer,
     :metering_used_cost   => :float
@@ -41,6 +42,8 @@ class Chargeback < ActsAsArModel
       classification = @options.classification_for(consumption)
       classification_id = classification.present? ? classification.id : 'none'
       "#{classification_id}_#{ts_key}"
+    elsif @options[:groupby_label].present?
+      "#{groupby_label_value(consumption, @options[:groupby_label])}_#{ts_key}"
     else
       default_key(consumption, ts_key)
     end
@@ -50,12 +53,19 @@ class Chargeback < ActsAsArModel
     "#{consumption.resource_id}_#{ts_key}"
   end
 
+  def self.groupby_label_value(consumption, groupby_label)
+    nil
+  end
+
   def initialize(options, consumption)
     @options = options
     super()
     if @options[:groupby_tag].present?
       classification = @options.classification_for(consumption)
       self.tag_name = classification.present? ? classification.description : _('<Empty>')
+    elsif @options[:groupby_label].present?
+      label_value = self.class.groupby_label_value(consumption, options[:groupby_label])
+      self.label_name = label_value.present? ? label_value : _('<Empty>')
     else
       init_extra_fields(consumption)
     end
@@ -90,17 +100,28 @@ class Chargeback < ActsAsArModel
     "tag_name"
   end
 
-  def self.set_chargeback_report_options(rpt, group_by, header_for_tag, tz)
+  def self.report_label_field
+    "label_name"
+  end
+
+  def self.set_chargeback_report_options(rpt, group_by, header_for_tag, groupby_label, tz)
     rpt.cols = %w(start_date display_range)
 
     static_cols       = group_by == "project" ? report_static_cols - ["image_name"] : report_static_cols
     static_cols       = group_by == "tag" ? [report_tag_field] : static_cols
+    static_cols       = group_by == "label" ? [report_label_field] : static_cols
     rpt.cols         += static_cols
     rpt.col_order     = static_cols + ["display_range"]
     rpt.sortby        = static_cols + ["start_date"]
 
     rpt.col_order.each do |c|
-      header_column = (c == report_tag_field && header_for_tag) ? header_for_tag : c
+      header_column = if (c == report_tag_field && header_for_tag)
+                        header_for_tag
+                      elsif (c == report_label_field && groupby_label)
+                        groupby_label
+                      else
+                        c
+                      end
       rpt.headers.push(Dictionary.gettext(header_column, :type => :column, :notfound => :titleize))
       rpt.col_formats.push(nil) # No formatting needed on the static cols
     end
