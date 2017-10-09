@@ -485,12 +485,12 @@ class MiqRequest < ApplicationRecord
   end
 
   def update_request(values, requester)
-    update_attribute(:options, options.merge(values))
-    set_description(true)
-
-    log_request_success(requester, :updated)
-
-    call_automate_event_queue("request_updated")
+    update_attributes(:options => options.merge(values))
+    if values[:user_message].present? && values.keys.length == 1
+      self.user_message = values[:user_message]
+    else
+      after_update_options(requester)
+    end
     self
   end
   api_relay_method(:update_request, :edit) do |values, requester|
@@ -557,5 +557,13 @@ class MiqRequest < ApplicationRecord
 
   def validate_request_type
     errors.add(:request_type, "should be #{request_types.join(", ")}") unless request_types.include?(request_type)
+  end
+
+  def after_update_options(requester)
+    set_description(true)
+
+    log_request_success(requester, :updated)
+
+    call_automate_event_queue("request_updated")
   end
 end

@@ -428,4 +428,19 @@ describe MiqRequest do
       expect(request.get_user.current_group).to eq(group1)
     end
   end
+
+  context "#update_request" do
+    let(:msg) { "Yabba Dabba Doo" }
+    it "user_message" do
+      allow(MiqServer).to receive(:my_zone).and_return("New York")
+      request = FactoryGirl.create(:miq_provision_request,
+                                   :requester => fred,
+                                   :options   => {:a => "1"})
+      request.update_request({:user_message => msg}, fred)
+
+      request.reload
+      expect(request.options[:user_message]).to eq(msg)
+      expect(request.message).to eq(msg)
+    end
+  end
 end
