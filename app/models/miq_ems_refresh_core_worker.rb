@@ -6,7 +6,7 @@ class MiqEmsRefreshCoreWorker < MiqWorker
   self.required_roles = ["ems_inventory"]
 
   def self.has_required_role?
-    return false if Settings.prototype.try(:ems_vmware).try(:update_driven_refresh)
+    return false if Settings.prototype.ems_vmware.update_driven_refresh
     super
   end
 
