@@ -75,9 +75,9 @@ headers:
 - Committed
 - Timed-out
 - Heuristic
-- Application Failure
+- Application Rollback
 - Aborted
-- Resource Failure
+- Resource Rollback
 
 # Condition expression for search filtering
 conditions:
