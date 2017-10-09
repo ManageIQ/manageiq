@@ -85,6 +85,14 @@ class TopologyService
         remove_ids = node_resource_ids - Rbac::Filterer.filtered(klass.safe_constantize.where(:id => node_resource_ids)).map(&:id)
         remove_list << remove_ids.map { |x| node_of_resource[x] } if remove_ids.present?
       end
+
+      # remove nodes and edges
+      remove_list.flatten.each do |x|
+        topo_items.delete(x)
+        links = links.select do |edge|
+          !(edge[:source] == x || edge[:target] == x)
+        end
+      end
     end
 
     [topo_items, links]
