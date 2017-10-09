@@ -63,39 +63,46 @@ describe MiddlewareTopologyService do
                                                                        :kind         => "MiddlewareManager",
                                                                        :display_kind => "Hawkular",
                                                                        :miq_id       => ems_hawkular.id,
-                                                                       :icon         => "vendor-hawkular"},
+                                                                       :icon         => "vendor-hawkular",
+                                                                       :model        => ems_hawkular.class.name,
+                                                                       :key          => "MiddlewareManager" + ems_hawkular.compressed_id.to_s},
 
         "MiddlewareServer" + mw_server.compressed_id.to_s          => {:name         => mw_server.name,
                                                                        :status       => "Unknown",
                                                                        :kind         => "MiddlewareServer",
                                                                        :display_kind => "MiddlewareServer",
                                                                        :miq_id       => mw_server.id,
-                                                                       :icon         => "vendor-wildfly"},
-
+                                                                       :icon         => "vendor-wildfly",
+                                                                       :model        => mw_server.class.name,
+                                                                       :key          => "MiddlewareServer" + mw_server.compressed_id.to_s},
         "MiddlewareDeployment" + mw_deployment1.compressed_id.to_s => {:name         => mw_deployment1.name,
                                                                        :status       => "Unknown",
                                                                        :kind         => "MiddlewareDeployment",
                                                                        :display_kind => "MiddlewareDeploymentWar",
-                                                                       :miq_id       => mw_deployment1.id},
-
+                                                                       :miq_id       => mw_deployment1.id,
+                                                                       :model        => mw_deployment1.class.name,
+                                                                       :key          => "MiddlewareDeployment" + mw_deployment1.compressed_id.to_s},
         "MiddlewareDeployment" + mw_deployment2.compressed_id.to_s => {:name         => mw_deployment2.name,
                                                                        :status       => "Unknown",
                                                                        :kind         => "MiddlewareDeployment",
                                                                        :display_kind => "MiddlewareDeploymentWar",
-                                                                       :miq_id       => mw_deployment2.id},
-
+                                                                       :miq_id       => mw_deployment2.id,
+                                                                       :model        => mw_deployment2.class.name,
+                                                                       :key          => "MiddlewareDeployment" + mw_deployment2.compressed_id.to_s},
         "MiddlewareDatasource" + mw_datasource.compressed_id.to_s  => {:name         => mw_datasource.name,
                                                                        :status       => "Unknown",
                                                                        :kind         => "MiddlewareDatasource",
                                                                        :display_kind => "MiddlewareDatasource",
-                                                                       :miq_id       => mw_datasource.id},
-
+                                                                       :miq_id       => mw_datasource.id,
+                                                                       :model        => mw_datasource.class.name,
+                                                                       :key          => "MiddlewareDatasource" + mw_datasource.compressed_id.to_s},
         "MiddlewareMessaging" + mw_messaging.compressed_id.to_s    => {:name         => mw_messaging.name,
                                                                        :status       => "Unknown",
                                                                        :kind         => "MiddlewareMessaging",
                                                                        :display_kind => "MiddlewareMessaging",
-                                                                       :miq_id       => mw_messaging.id},
-
+                                                                       :miq_id       => mw_messaging.id,
+                                                                       :model        => mw_messaging.class.name,
+                                                                       :key          => "MiddlewareMessaging" + mw_messaging.compressed_id.to_s}
       )
 
       expect(subject[:relations].size).to eq(5)

@@ -68,7 +68,9 @@ describe NetworkTopologyService do
                                                       :status       => "Unknown",
                                                       :kind         => "NetworkManager",
                                                       :display_kind => "Openstack",
-                                                      :miq_id       => ems.id}
+                                                      :miq_id       => ems.id,
+                                                      :model        => ems.class.name,
+                                                      :key          => "NetworkManager" + ems.compressed_id.to_s}
       )
     end
 
@@ -83,64 +85,81 @@ describe NetworkTopologyService do
             :kind         => "NetworkManager",
             :miq_id       => ems.id,
             :status       => "Unknown",
-            :display_kind => "Openstack"
+            :display_kind => "Openstack",
+            :model        => ems.class.name,
+            :key          => "NetworkManager" + ems.compressed_id.to_s
           },
           "AvailabilityZone" + @availability_zone.compressed_id.to_s => {
             :name         => "AZ name",
             :kind         => "AvailabilityZone",
             :miq_id       => @availability_zone.id,
             :status       => "Unknown",
-            :display_kind => "AvailabilityZone"
+            :display_kind => "AvailabilityZone",
+            :model        => @availability_zone.class.name,
+            :key          => "AvailabilityZone" + @availability_zone.compressed_id.to_s
           },
           "CloudTenant" + @cloud_tenant.compressed_id.to_s           => {
             :name         => @cloud_tenant.name,
             :kind         => "CloudTenant",
             :miq_id       => @cloud_tenant.id,
             :status       => "Unknown",
-            :display_kind => "CloudTenant"
+            :display_kind => "CloudTenant",
+            :model        => @cloud_tenant.class.name,
+            :key          => "CloudTenant" + @cloud_tenant.compressed_id.to_s
           },
           "CloudNetwork" + @cloud_network.compressed_id.to_s         => {
             :name         => @cloud_network.name,
             :kind         => "CloudNetwork",
             :miq_id       => @cloud_network.id,
             :status       => "Unknown",
-            :display_kind => "CloudNetwork"
+            :display_kind => "CloudNetwork",
+            :model        => @cloud_network.class.name,
+            :key          => "CloudNetwork" + @cloud_network.compressed_id.to_s
           },
           "CloudNetwork" + @public_network.compressed_id.to_s        => {
             :name         => @public_network.name,
             :kind         => "CloudNetwork",
             :miq_id       => @public_network.id,
             :status       => "Unknown",
-            :display_kind => "CloudNetwork"
+            :display_kind => "CloudNetwork",
+            :model        => @public_network.class.name,
+            :key          => "CloudNetwork" + @public_network.compressed_id.to_s
           },
           "CloudSubnet" + @cloud_subnet.compressed_id.to_s           => {
             :name         => @cloud_subnet.name,
             :kind         => "CloudSubnet",
             :miq_id       => @cloud_subnet.id,
             :status       => "Unknown",
-            :display_kind => "CloudSubnet"
+            :display_kind => "CloudSubnet",
+            :model        => @cloud_subnet.class.name,
+            :key          => "CloudSubnet" + @cloud_subnet.compressed_id.to_s
           },
           "FloatingIp" + @floating_ip.compressed_id.to_s             => {
             :name         => @floating_ip.name,
             :kind         => "FloatingIp",
             :miq_id       => @floating_ip.id,
             :status       => "Unknown",
-            :display_kind => "FloatingIp"
+            :display_kind => "FloatingIp",
+            :model        => @floating_ip.class.name,
+            :key          => "FloatingIp" + @floating_ip.compressed_id.to_s
           },
           "NetworkRouter" + @network_router.compressed_id.to_s       => {
             :name         => @network_router.name,
             :kind         => "NetworkRouter",
             :miq_id       => @network_router.id,
             :status       => "Unknown",
-            :display_kind => "NetworkRouter"
+            :display_kind => "NetworkRouter",
+            :model        => @network_router.class.name,
+            :key          => "NetworkRouter" + @network_router.compressed_id.to_s
           },
-
           "SecurityGroup" + @security_group.compressed_id.to_s       => {
             :name         => @security_group.name,
             :kind         => "SecurityGroup",
             :miq_id       => @security_group.id,
             :status       => "Unknown",
-            :display_kind => "SecurityGroup"
+            :display_kind => "SecurityGroup",
+            :model        => @security_group.class.name,
+            :key          => "SecurityGroup" + @security_group.compressed_id.to_s
           },
           "Vm" + @vm.compressed_id.to_s                              => {
             :name         => @vm.name,
@@ -148,7 +167,9 @@ describe NetworkTopologyService do
             :miq_id       => @vm.id,
             :status       => "On",
             :display_kind => "VM",
-            :provider     => ems_cloud.name
+            :provider     => ems_cloud.name,
+            :model        => @vm.class.name,
+            :key          => "Vm" + @vm.compressed_id.to_s
           },
         )
       )
@@ -182,63 +203,81 @@ describe NetworkTopologyService do
             :kind         => "NetworkManager",
             :miq_id       => ems.id,
             :status       => "Unknown",
-            :display_kind => "Openstack"
+            :display_kind => "Openstack",
+            :model        => ems.class.name,
+            :key          => "NetworkManager" + ems.compressed_id.to_s
           },
           "AvailabilityZone" + @availability_zone.compressed_id.to_s => {
             :name         => "AZ name",
             :kind         => "AvailabilityZone",
             :miq_id       => @availability_zone.id,
             :status       => "Unknown",
-            :display_kind => "AvailabilityZone"
+            :display_kind => "AvailabilityZone",
+            :model        => @availability_zone.class.name,
+            :key          => "AvailabilityZone" + @availability_zone.compressed_id.to_s
           },
           "CloudTenant" + @cloud_tenant.compressed_id.to_s           => {
             :name         => @cloud_tenant.name,
             :kind         => "CloudTenant",
             :miq_id       => @cloud_tenant.id,
             :status       => "Unknown",
-            :display_kind => "CloudTenant"
+            :display_kind => "CloudTenant",
+            :model        => @cloud_tenant.class.name,
+            :key          => "CloudTenant" + @cloud_tenant.compressed_id.to_s
           },
           "CloudNetwork" + @cloud_network.compressed_id.to_s         => {
             :name         => @cloud_network.name,
             :kind         => "CloudNetwork",
             :miq_id       => @cloud_network.id,
             :status       => "Unknown",
-            :display_kind => "CloudNetwork"
+            :display_kind => "CloudNetwork",
+            :model        => @cloud_network.class.name,
+            :key          => "CloudNetwork" + @cloud_network.compressed_id.to_s
           },
           "CloudNetwork" + @public_network.compressed_id.to_s        => {
             :name         => @public_network.name,
             :kind         => "CloudNetwork",
             :miq_id       => @public_network.id,
             :status       => "Unknown",
-            :display_kind => "CloudNetwork"
+            :display_kind => "CloudNetwork",
+            :model        => @public_network.class.name,
+            :key          => "CloudNetwork" + @public_network.compressed_id.to_s
           },
           "CloudSubnet" + @cloud_subnet.compressed_id.to_s           => {
             :name         => @cloud_subnet.name,
             :kind         => "CloudSubnet",
             :miq_id       => @cloud_subnet.id,
             :status       => "Unknown",
-            :display_kind => "CloudSubnet"
+            :display_kind => "CloudSubnet",
+            :model        => @cloud_subnet.class.name,
+            :key          => "CloudSubnet" + @cloud_subnet.compressed_id.to_s
           },
           "FloatingIp" + @floating_ip.compressed_id.to_s             => {
             :name         => @floating_ip.name,
             :kind         => "FloatingIp",
             :miq_id       => @floating_ip.id,
             :status       => "Unknown",
-            :display_kind => "FloatingIp"
+            :display_kind => "FloatingIp",
+            :model        => @floating_ip.class.name,
+            :key          => "FloatingIp" + @floating_ip.compressed_id.to_s
           },
           "NetworkRouter" + @network_router.compressed_id.to_s       => {
             :name         => @network_router.name,
             :kind         => "NetworkRouter",
             :miq_id       => @network_router.id,
             :status       => "Unknown",
-            :display_kind => "NetworkRouter"
+            :display_kind => "NetworkRouter",
+            :model        => @network_router.class.name,
+            :key          => "NetworkRouter" + @network_router.compressed_id.to_s
           },
           "SecurityGroup" + @security_group.compressed_id.to_s       => {
             :name         => @security_group.name,
             :kind         => "SecurityGroup",
             :miq_id       => @security_group.id,
             :status       => "Unknown",
-            :display_kind => "SecurityGroup"
+            :display_kind => "SecurityGroup",
+            :model        => @security_group.class.name,
+            :key          => "SecurityGroup" + @security_group.compressed_id.to_s
           },
           "Vm" + @vm.compressed_id.to_s                              => {
             :name         => @vm.name,
@@ -246,7 +285,9 @@ describe NetworkTopologyService do
             :miq_id       => @vm.id,
             :status       => "Off",
             :display_kind => "VM",
-            :provider     => ems_cloud.name
+            :provider     => ems_cloud.name,
+            :model        => @vm.class.name,
+            :key          => "Vm" + @vm.compressed_id.to_s
           },
         )
       )

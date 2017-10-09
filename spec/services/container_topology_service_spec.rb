@@ -39,8 +39,10 @@ describe ContainerTopologyService do
                                                                           :status       => "Unknown",
                                                                           :kind         => "ContainerManager",
                                                                           :display_kind => "Openshift",
-                                                                          :miq_id       => ems_openshift.id})
-
+                                                                          :miq_id       => ems_openshift.id,
+                                                                          :model        => ems_openshift.class.name,
+                                                                          :key          => "ContainerManager" + ems_openshift.compressed_id.to_s}
+      )
     end
 
     it "topology contains the expected structure and content" do
@@ -72,57 +74,75 @@ describe ContainerTopologyService do
                                                                             :status       => "Error",
                                                                             :kind         => "ContainerManager",
                                                                             :display_kind => "Kubernetes",
-                                                                            :miq_id       => ems_kube.id},
+                                                                            :miq_id       => ems_kube.id,
+                                                                            :model        => ems_kube.class.name,
+                                                                            :key          => "ContainerManager" + ems_kube.compressed_id.to_s},
 
         "ContainerNode" + container_node.compressed_id.to_s             => {:name         => container_node.name,
                                                                             :status       => "Ready",
                                                                             :kind         => "ContainerNode",
                                                                             :display_kind => "Node",
-                                                                            :miq_id       => container_node.id},
+                                                                            :miq_id       => container_node.id,
+                                                                            :model        => container_node.class.name,
+                                                                            :key          => "ContainerNode" + container_node.compressed_id.to_s},
 
         "ContainerReplicator" + container_replicator.compressed_id.to_s => {:name         => container_replicator.name,
                                                                             :status       => "OK",
                                                                             :kind         => "ContainerReplicator",
                                                                             :display_kind => "Replicator",
-                                                                            :miq_id       => container_replicator.id},
+                                                                            :miq_id       => container_replicator.id,
+                                                                            :model        => container_replicator.class.name,
+                                                                            :key          => "ContainerReplicator" + container_replicator.compressed_id.to_s},
 
         "ContainerService" + container_service.compressed_id.to_s       => {:name         => container_service.name,
                                                                             :status       => "Unknown",
                                                                             :kind         => "ContainerService",
                                                                             :display_kind => "Service",
-                                                                            :miq_id       => container_service.id},
+                                                                            :miq_id       => container_service.id,
+                                                                            :model        => container_service.class.name,
+                                                                            :key          => "ContainerService" + container_service.compressed_id.to_s},
 
         "ContainerGroup" + container_group.compressed_id.to_s           => {:name         => container_group.name,
                                                                             :status       => "Running",
                                                                             :kind         => "ContainerGroup",
                                                                             :display_kind => "Pod",
-                                                                            :miq_id       => container_group.id},
+                                                                            :miq_id       => container_group.id,
+                                                                            :model        => container_group.class.name,
+                                                                            :key          => "ContainerGroup" + container_group.compressed_id.to_s},
 
         "ContainerRoute" + container_route.compressed_id.to_s           => {:name         => container_route.name,
                                                                             :status       => "Unknown",
                                                                             :kind         => "ContainerRoute",
                                                                             :display_kind => "Route",
-                                                                            :miq_id       => container_route.id},
+                                                                            :miq_id       => container_route.id,
+                                                                            :model        => container_route.class.name,
+                                                                            :key          => "ContainerRoute" + container_route.compressed_id.to_s},
 
         "Container" + container.compressed_id.to_s                      => {:name         => container.name,
                                                                             :status       => "Running",
                                                                             :kind         => "Container",
                                                                             :display_kind => "Container",
-                                                                            :miq_id       => container.id},
+                                                                            :miq_id       => container.id,
+                                                                            :model        => container.class.name,
+                                                                            :key          => "Container" + container.compressed_id.to_s},
 
         "Vm" + vm_rhev.compressed_id.to_s                               => {:name         => vm_rhev.name,
                                                                             :status       => "On",
                                                                             :kind         => "Vm",
                                                                             :display_kind => "VM",
                                                                             :miq_id       => vm_rhev.id,
-                                                                            :provider     => ems_rhev.name},
+                                                                            :provider     => ems_rhev.name,
+                                                                            :model        => vm_rhev.class.name,
+                                                                            :key          => "Vm" + vm_rhev.compressed_id.to_s},
 
         "Host" + host.compressed_id.to_s                                => {:name         => host.name,
                                                                             :status       => "On",
                                                                             :kind         => "Host",
                                                                             :display_kind => "Host",
                                                                             :miq_id       => host.id,
-                                                                            :provider     => ems_rhev.name}
+                                                                            :provider     => ems_rhev.name,
+                                                                            :model        => host.class.name,
+                                                                            :key          => "Host" + host.compressed_id.to_s},
       )
 
       expect(subject[:relations].size).to eq(8)
@@ -157,38 +177,50 @@ describe ContainerTopologyService do
                                                                       :status       => "Ready",
                                                                       :kind         => "ContainerNode",
                                                                       :display_kind => "Node",
-                                                                      :miq_id       => container_node.id},
+                                                                      :miq_id       => container_node.id,
+                                                                      :model        => container_node.class.name,
+                                                                      :key          => "ContainerNode" + container_node.compressed_id.to_s},
 
         "ContainerService" + container_service.compressed_id.to_s => {:name         => container_service.name,
                                                                       :status       => "Unknown",
                                                                       :kind         => "ContainerService",
                                                                       :display_kind => "Service",
-                                                                      :miq_id       => container_service.id},
+                                                                      :miq_id       => container_service.id,
+                                                                      :model        => container_service.class.name,
+                                                                      :key          => "ContainerService" + container_service.compressed_id.to_s},
 
         "ContainerGroup" + container_group.compressed_id.to_s     => {:name         => container_group.name,
                                                                       :status       => "Running",
                                                                       :kind         => "ContainerGroup",
                                                                       :display_kind => "Pod",
-                                                                      :miq_id       => container_group.id},
+                                                                      :miq_id       => container_group.id,
+                                                                      :model        => container_group.class.name,
+                                                                      :key          => "ContainerGroup" + container_group.compressed_id.to_s},
 
         "Container" + container.compressed_id.to_s                => {:name         => container.name,
                                                                       :status       => "Running",
                                                                       :kind         => "Container",
                                                                       :display_kind => "Container",
-                                                                      :miq_id       => container.id},
+                                                                      :miq_id       => container.id,
+                                                                      :model        => container.class.name,
+                                                                      :key          => "Container" + container.compressed_id.to_s},
 
         "Vm" + vm_rhev.compressed_id.to_s                         => {:name         => vm_rhev.name,
                                                                       :status       => "Off",
                                                                       :kind         => "Vm",
                                                                       :display_kind => "VM",
                                                                       :miq_id       => vm_rhev.id,
-                                                                      :provider     => ems_rhev.name},
+                                                                      :provider     => ems_rhev.name,
+                                                                      :model        => vm_rhev.class.name,
+                                                                      :key          => "Vm" + vm_rhev.compressed_id.to_s},
 
         "ContainerManager" + ems_kube.compressed_id.to_s          => {:name         => ems_kube.name,
                                                                       :status       => "Error",
                                                                       :kind         => "ContainerManager",
                                                                       :display_kind => "Kubernetes",
-                                                                      :miq_id       => ems_kube.id}
+                                                                      :miq_id       => ems_kube.id,
+                                                                      :model        => ems_kube.class.name,
+                                                                      :key          => "ContainerManager" + ems_kube.compressed_id.to_s},
       )
 
       expect(subject[:relations].size).to eq(5)
