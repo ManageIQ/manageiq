@@ -8,7 +8,7 @@ class MiqVimBrokerWorker < MiqWorker
       smartproxy
       smartstate
     ).tap do |roles|
-      roles << 'ems_inventory' unless Settings.prototype.try(:ems_vmware).try(:update_driven_refresh)
+      roles << 'ems_inventory' unless Settings.prototype.ems_vmware.update_driven_refresh
     end
   }
 

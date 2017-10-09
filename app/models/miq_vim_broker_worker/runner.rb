@@ -46,7 +46,7 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
   end
 
   def has_ems_inventory_role?
-    @active_roles.include?("ems_inventory") && !Settings.prototype.try(:ems_vmware).try(:update_driven_refresh)
+    @active_roles.include?("ems_inventory") && !Settings.prototype.ems_vmware.update_driven_refresh
   end
 
   def reset_broker_update_notification
