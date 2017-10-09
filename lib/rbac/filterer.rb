@@ -54,6 +54,10 @@ module Rbac
 
     TAGGABLE_FILTER_CLASSES = CLASSES_THAT_PARTICIPATE_IN_RBAC - %w(EmsFolder) + %w(MiqGroup User)
 
+    NETWORK_MODELS_FOR_BELONGSTO_FILTER = %w(
+      CloudNetwork
+    ).freeze
+
     BELONGSTO_FILTER_CLASSES = %w(
       VmOrTemplate
       Host
@@ -62,8 +66,7 @@ module Rbac
       EmsCluster
       ResourcePool
       Storage
-      CloudNetwork
-    )
+    ).freeze + NETWORK_MODELS_FOR_BELONGSTO_FILTER
 
     # key: MiqUserRole#name - user's role
     # value:
