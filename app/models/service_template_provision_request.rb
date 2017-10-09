@@ -1,4 +1,6 @@
 class ServiceTemplateProvisionRequest < MiqRequest
+  include MiqProvisionQuotaMixin
+
   TASK_DESCRIPTION  = 'Service_Template_Provisioning'
   SOURCE_CLASS_NAME = 'ServiceTemplate'
   ACTIVE_STATES     = %w( migrated ) + base_class::ACTIVE_STATES
