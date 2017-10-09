@@ -173,15 +173,7 @@ module EmsRefresh::SaveInventoryInfra
           found.update_attributes(h)
         end
 
-        # Handle duplicate names coming in because of duplicate hostnames.
-        begin
-          found.save!
-        rescue ActiveRecord::RecordInvalid
-          raise if found.errors[:name].blank?
-          old_name = Host.where("name LIKE ?", "#{found.name.sub(/ - \d+$/, "")}%").order("LENGTH(name) DESC").order("name DESC").first.name
-          found.name = old_name =~ / - \d+$/ ? old_name.succ : "#{old_name} - 2"
-          retry
-        end
+        found.save!
 
         disconnects.delete(found)
 
