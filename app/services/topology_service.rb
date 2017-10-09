@@ -53,6 +53,15 @@ class TopologyService
     }
   end
 
+  def group_nodes_by_model(nodes)
+    return unless block_given?
+    nodes_grouped_by_model = nodes.group_by { |_, v| v[:model] }
+
+    nodes_grouped_by_model.each do |klass, entity_data|
+      yield(klass, entity_data.map { |x| [x.second[:miq_id], x.second[:key]] }.to_h)
+    end
+  end
+
   def build_recursive_topology(entity, entity_relationships_mapping, topo_items, links)
     unless entity.nil?
       topo_items[entity_id(entity)] = build_entity_data(entity)
