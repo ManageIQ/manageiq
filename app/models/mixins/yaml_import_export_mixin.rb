@@ -32,12 +32,21 @@ module YAMLImportExportMixin
       fd.rewind   # ensure to be at the beginning as the file is read multiple times
       begin
         reps = YAML.load(fd.read)
+        validate_import_data_class(reps)
       rescue Psych::SyntaxError => err
         _log.error("Failed to load from #{fd}: #{err}")
         raise "Invalid YAML file"
       end
 
       return reps, import_from_array(reps, options)
+    end
+
+    def validate_import_data_class(data)
+      data_class_name = data.first.keys.first
+
+      unless self::IMPORT_CLASS_NAMES.include?(data_class_name)
+        raise _("Incorrect format: Expected #{self::IMPORT_CLASS_NAMES.join(", ")} and received #{data_class_name}.")
+      end
     end
 
     # Import from an array of hash of the objects
