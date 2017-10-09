@@ -304,6 +304,29 @@ class MiqWorker < ApplicationRecord
     )
   end
 
+  def self.before_fork
+    preload_for_worker_role if respond_to?(:preload_for_worker_role)
+  end
+
+  def self.after_fork
+    close_pg_sockets_inherited_from_parent
+    DRb.stop_service
+    renice(Process.pid)
+  end
+
+  # When we fork, the children inherits the parent's file descriptors
+  # so we need to close any inherited raw pg sockets in the child.
+  def self.close_pg_sockets_inherited_from_parent
+    owner_to_pool = ActiveRecord::Base.connection_handler.instance_variable_get(:@owner_to_pool)
+    owner_to_pool[Process.ppid].values.compact.each do |pool|
+      pool.connections.each do |conn|
+        socket = conn.raw_connection.socket
+        _log.info("Closing socket: #{socket}")
+        IO.for_fd(socket).close
+      end
+    end
+  end
+
   # Overriding queue_name as now some queue names can be
   # arrays of names for some workers not just a singular name.
   # We use JSON.parse as the array of names is stored as a string.
@@ -314,6 +337,26 @@ class MiqWorker < ApplicationRecord
     rescue JSON::ParserError, TypeError
       self[:queue_name]
     end
+  end
+
+  def start_runner
+    if ENV['MIQ_SPAWN_WORKERS'] || !Process.respond_to?(:fork)
+      start_runner_via_spawn
+    else
+      start_runner_via_fork
+    end
+  end
+
+  def start_runner_via_fork
+    self.class.before_fork
+    pid = fork(:cow_friendly => true) do
+      self.class.after_fork
+      self.class::Runner.start_worker(worker_options)
+      exit!
+    end
+
+    Process.detach(pid)
+    pid
   end
 
   def self.build_command_line(guid)
@@ -327,7 +370,7 @@ class MiqWorker < ApplicationRecord
     script
   end
 
-  def start_runner
+  def start_runner_via_spawn
     pid = Kernel.spawn(self.class.build_command_line(guid), [:out, :err] => [Rails.root.join("log", "evm.log"), "a"])
     Process.detach(pid)
     pid
