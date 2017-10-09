@@ -36,9 +36,12 @@ class TopologyService
   end
 
   def build_base_entity_data(entity)
-    {:name   => entity.name,
-     :kind   => entity_type(entity),
-     :miq_id => entity.id}
+    {
+      :name   => entity.name,
+      :kind   => entity_type(entity),
+      :model  => entity.class.to_s,
+      :miq_id => entity.id
+    }
   end
 
   def populate_topology(topo_items, links, kinds, icons)
