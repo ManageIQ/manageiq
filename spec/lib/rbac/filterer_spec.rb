@@ -1211,43 +1211,56 @@ describe Rbac::Filterer do
           group.save!
         end
 
-        describe '.search' do
-          context 'when records match belognsto filter' do
-            it 'lists cloud networks with network manager according to belongsto filter' do
-              User.with_user(user) do
-                results = described_class.search(:class => CloudNetwork).first
-                expect(results).to match_array([cloud_network])
-                expect(results.first.ext_management_system).to eq(network_manager)
+        NETWORK_MODELS = %w(
+          CloudNetwork
+          CloudSubnet
+          FloatingIp
+          LoadBalancer
+          NetworkPort
+          NetworkRouter
+          SecurityGroup
+          ManageIQ::Providers::NetworkManager
+        ).freeze
+
+        NETWORK_MODELS.each do |network_model|
+          describe '.search' do
+            context 'when records match belognsto filter' do
+              it 'lists cloud networks with network manager according to belongsto filter' do
+                User.with_user(user) do
+                  results = described_class.search(:class => CloudNetwork).first
+                  expect(results).to match_array([cloud_network])
+                  expect(results.first.ext_management_system).to eq(network_manager)
+                end
+              end
+
+              it 'lists network manager according to belongsto filter' do
+                User.with_user(user) do
+                  results = described_class.search(:class => ManageIQ::Providers::NetworkManager).first
+                  expect(results).to match_array([network_manager])
+                end
               end
             end
 
-            it 'lists network manager according to belongsto filter' do
-              User.with_user(user) do
-                results = described_class.search(:class => ManageIQ::Providers::NetworkManager).first
-                expect(results).to match_array([network_manager])
+            context 'when records don\'t match belognsto filter' do
+              before do
+                group.entitlement = Entitlement.new
+                group.entitlement.set_managed_filters([])
+                group.entitlement.set_belongsto_filters(["/belongsto/ExtManagementSystem|XXXX"])
+                group.save!
               end
-            end
-          end
 
-          context 'when records don\'t match belognsto filter' do
-            before do
-              group.entitlement = Entitlement.new
-              group.entitlement.set_managed_filters([])
-              group.entitlement.set_belongsto_filters(["/belongsto/ExtManagementSystem|XXXX"])
-              group.save!
-            end
-
-            it 'lists no cloud networks' do
-              User.with_user(user) do
-                results = described_class.search(:class => CloudNetwork).first
-                expect(results).to be_empty
+              it 'lists no cloud networks' do
+                User.with_user(user) do
+                  results = described_class.search(:class => CloudNetwork).first
+                  expect(results).to be_empty
+                end
               end
-            end
 
-            it 'lists no network manager' do
-              User.with_user(user) do
-                results = described_class.search(:class => ManageIQ::Providers::NetworkManager).first
-                expect(results).to be_empty
+              it 'lists no network manager' do
+                User.with_user(user) do
+                  results = described_class.search(:class => ManageIQ::Providers::NetworkManager).first
+                  expect(results).to be_empty
+                end
               end
             end
           end
