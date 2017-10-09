@@ -8,7 +8,9 @@ class AmazonAgentManager
   include Vmdb::Logging
   attr_accessor :ems, :deploying
 
-  MIQ_SSA = "MIQ_SSA".freeze
+  MIQ_SSA   = "MIQ_SSA".freeze
+  RUBY_VERS = "2.3.3".freeze
+  AGENT_AMI = "centos-7.2-hvm*".freeze
 
   def initialize(ems)
     @ems = ems
@@ -84,11 +86,11 @@ class AmazonAgentManager
   end
 
   def agent_ami
-    agent_manager_settings.try(:agent_ami) || "centos-7.2-hvm*"
+    agent_manager_settings.try(:agent_ami) || AGENT_AMI
   end
 
   def ruby_version
-    agent_manager_settings.try(:ruby_version) || "2.3.3"
+    agent_manager_settings.try(:ruby_version) || RUBY_VERS
   end
 
   def userdata_script
@@ -271,7 +273,7 @@ class AmazonAgentManager
     ssa_profile = iam.create_instance_profile(instance_profile_name: profile_name) unless ssa_profile.exists?
 
     find_or_create_role(role_name)
-    ssa_profile.add_role(role_name: role_name) if ssa_profile.roles.size == 0
+    ssa_profile.add_role(role_name: role_name) if ssa_profile.roles.zero?
 
     ssa_profile
   end
@@ -374,7 +376,7 @@ class AmazonAgentManager
 
   def create_userdata
     File.chmod(0755, userdata_script)
-    stdout, stderr, status = Open3.capture3("#{userdata_script}", "#{ruby_version}", "#{log_level}")
+    stdout, stderr, status = Open3.capture3(userdata_script, "#{ruby_version}", "#{log_level}")
 
     raise "#{stderr}" unless status.exitstatus.zero?
     Base64.encode64(stdout)

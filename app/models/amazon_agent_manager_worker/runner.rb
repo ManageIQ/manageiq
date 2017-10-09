@@ -83,7 +83,7 @@ class AmazonAgentManagerWorker::Runner < MiqWorker::Runner
 
     unless missing.empty?
       missing.each do |guid|
-        mgs << AmazonAgentManager.new(ems_by_guid(guid))
+        mgrs << AmazonAgentManager.new(ems_by_guid(guid))
         _log.info("EMS: [#{guid}] is added from appliance")
       end
     end

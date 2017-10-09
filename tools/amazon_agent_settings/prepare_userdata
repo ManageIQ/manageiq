@@ -105,18 +105,21 @@ cat <<EOF
 #
 echo "Start to setup Amazon agent"
 (
-  setup_ruby ${ver}
+  setup_ruby "${ver}"
   install_gems
   create_setting_yml
   add_rc_local_script
-  create_startup_script $loglevel
+  create_startup_script "$loglevel"
 )  >> /var/log/miq_ssa_deploy.log 2>&1
 EOF
 }
+
+ruby_version=$1
+log_level=$2
 
 setup_ruby
 install_gems 'tools/amazon_agent_settings/agent_gemfile'
 create_setting_yml 'tools/amazon_agent_settings/default_ssa_config.yml'
 add_rc_local_script
 create_startup_script
-userdata '2.3.3' 'INFO'
+userdata $ruby_version $log_level

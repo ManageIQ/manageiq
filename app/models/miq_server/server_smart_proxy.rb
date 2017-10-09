@@ -90,7 +90,6 @@ module MiqServer::ServerSmartProxy
           timeout_adj = 8
         end
       end
-
       $log.debug("#{log_prefix}: queuing call to #{self.class.name}##{ost.method_name}")
       # Queue call to scan_metadata or sync_metadata.
       MiqQueue.submit_job(
