@@ -1225,18 +1225,11 @@ describe Rbac::Filterer do
         NETWORK_MODELS.each do |network_model|
           describe '.search' do
             context 'when records match belognsto filter' do
-              it 'lists cloud networks with network manager according to belongsto filter' do
+              it "lists records of #{network_model} manager according to belongsto filter" do
                 User.with_user(user) do
                   results = described_class.search(:class => CloudNetwork).first
                   expect(results).to match_array([cloud_network])
                   expect(results.first.ext_management_system).to eq(network_manager)
-                end
-              end
-
-              it 'lists network manager according to belongsto filter' do
-                User.with_user(user) do
-                  results = described_class.search(:class => ManageIQ::Providers::NetworkManager).first
-                  expect(results).to match_array([network_manager])
                 end
               end
             end
@@ -1249,16 +1242,9 @@ describe Rbac::Filterer do
                 group.save!
               end
 
-              it 'lists no cloud networks' do
+              it "lists no records of #{network_model}" do
                 User.with_user(user) do
                   results = described_class.search(:class => CloudNetwork).first
-                  expect(results).to be_empty
-                end
-              end
-
-              it 'lists no network manager' do
-                User.with_user(user) do
-                  results = described_class.search(:class => ManageIQ::Providers::NetworkManager).first
                   expect(results).to be_empty
                 end
               end
