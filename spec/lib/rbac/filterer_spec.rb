@@ -1199,9 +1199,7 @@ describe Rbac::Filterer do
 
     context 'with cloud network and network manager' do
       let!(:network_manager)   { FactoryGirl.create(:ems_openstack).network_manager }
-      let!(:cloud_network)     { FactoryGirl.create(:cloud_network, :ext_management_system => network_manager) }
       let!(:network_manager_1) { FactoryGirl.create(:ems_openstack).network_manager }
-      let!(:cloud_network_1)   { FactoryGirl.create(:cloud_network, :ext_management_system => network_manager_1) }
 
       context 'with belongs_to_filter' do
         before do
@@ -1254,6 +1252,9 @@ describe Rbac::Filterer do
       end
 
       context 'network manager is tagged' do
+        let!(:cloud_network)     { FactoryGirl.create(:cloud_network, :ext_management_system => network_manager) }
+        let!(:cloud_network_1)   { FactoryGirl.create(:cloud_network, :ext_management_system => network_manager_1) }
+
         before do
           group.entitlement = Entitlement.new
           group.entitlement.set_managed_filters([['/managed/environment/prod']])
