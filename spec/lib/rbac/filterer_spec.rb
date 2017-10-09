@@ -1209,26 +1209,15 @@ describe Rbac::Filterer do
           group.save!
         end
 
-        NETWORK_MODELS = %w(
-          CloudNetwork
-          CloudSubnet
-          FloatingIp
-          LoadBalancer
-          NetworkPort
-          NetworkRouter
-          SecurityGroup
-          ManageIQ::Providers::NetworkManager
-        ).freeze
-
-        NETWORK_MODELS.each do |network_model|
+        (described_class::NETWORK_MODELS_FOR_BELONGSTO_FILTER + [ManageIQ::Providers::NetworkManager]).each do |network_model|
           describe ".search" do
             let!(:network_object) do
-              return network_manager if network_model == "ManageIQ::Providers::NetworkManager"
+              return network_manager if network_model == ManageIQ::Providers::NetworkManager
               FactoryGirl.create(network_model.underscore, :ext_management_system => network_manager)
             end
 
             let!(:network_object_with_different_network_manager) do
-              return network_manager_1 if network_model == "ManageIQ::Providers::NetworkManager"
+              return network_manager_1 if network_model == ManageIQ::Providers::NetworkManager
               FactoryGirl.create(network_model.underscore,  :ext_management_system => network_manager_1)
             end
 
