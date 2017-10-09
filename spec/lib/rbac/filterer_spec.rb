@@ -1197,11 +1197,11 @@ describe Rbac::Filterer do
       end
     end
 
-    context 'with cloud network and network manager' do
+    context "with cloud network and network manager" do
       let!(:network_manager)   { FactoryGirl.create(:ems_openstack).network_manager }
       let!(:network_manager_1) { FactoryGirl.create(:ems_openstack).network_manager }
 
-      context 'with belongs_to_filter' do
+      context "with belongs_to_filter" do
         before do
           group.entitlement = Entitlement.new
           group.entitlement.set_managed_filters([])
@@ -1221,7 +1221,7 @@ describe Rbac::Filterer do
         ).freeze
 
         NETWORK_MODELS.each do |network_model|
-          describe '.search' do
+          describe ".search" do
             let!(:network_object) do
               return network_manager if network_model == "ManageIQ::Providers::NetworkManager"
               FactoryGirl.create(network_model.underscore, :ext_management_system => network_manager)
@@ -1232,7 +1232,7 @@ describe Rbac::Filterer do
               FactoryGirl.create(network_model.underscore,  :ext_management_system => network_manager_1)
             end
 
-            context 'when records match belognsto filter' do
+            context "when records match belogns to filter" do
               it "lists records of #{network_model} manager according to belongsto filter" do
                 User.with_user(user) do
                   results = described_class.search(:class => network_model).first
@@ -1242,7 +1242,7 @@ describe Rbac::Filterer do
               end
             end
 
-            context 'when records don\'t match belognsto filter' do
+            context "when records don't match belogns to filter" do
               before do
                 group.entitlement = Entitlement.new
                 group.entitlement.set_managed_filters([])
@@ -1261,28 +1261,28 @@ describe Rbac::Filterer do
         end
       end
 
-      context 'network manager with/without tagging' do
+      context "network manager with/without tagging" do
         let!(:cloud_network)     { FactoryGirl.create(:cloud_network, :ext_management_system => network_manager) }
         let!(:cloud_network_1)   { FactoryGirl.create(:cloud_network, :ext_management_system => network_manager_1) }
 
-        context 'network manager is tagged' do
+        context "network manager is tagged" do
           before do
             group.entitlement = Entitlement.new
-            group.entitlement.set_managed_filters([['/managed/environment/prod']])
+            group.entitlement.set_managed_filters([["/managed/environment/prod"]])
             group.entitlement.set_belongsto_filters([])
             group.save!
 
-            network_manager.tag_with('/managed/environment/prod', :ns => '*')
+            network_manager.tag_with("/managed/environment/prod", :ns => "*")
           end
 
-          it 'doesn\'t list cloud networks' do
+          it "doesn't list cloud networks" do
             User.with_user(user) do
               results = described_class.search(:class => CloudNetwork).first
               expect(results).to be_empty
             end
           end
 
-          it 'lists only tagged network manager' do
+          it "lists only tagged network manager" do
             User.with_user(user) do
               results = described_class.search(:class => ManageIQ::Providers::NetworkManager).first
               expect(results).to match_array([network_manager])
@@ -1290,7 +1290,7 @@ describe Rbac::Filterer do
           end
         end
 
-        context 'network manager not is tagged' do
+        context "network manager not is tagged" do
           before do
             group.entitlement = Entitlement.new
             group.entitlement.set_managed_filters([])
@@ -1298,7 +1298,7 @@ describe Rbac::Filterer do
             group.save!
           end
 
-          it 'lists all cloud networks' do
+          it "lists all cloud networks" do
             User.with_user(user) do
               results = described_class.search(:class => CloudNetwork).first
               expect(results).to match_array(CloudNetwork.all)
@@ -1306,7 +1306,7 @@ describe Rbac::Filterer do
             end
           end
 
-          it 'lists all network managers' do
+          it "lists all network managers" do
             User.with_user(user) do
               results = described_class.search(:class => ManageIQ::Providers::NetworkManager).first
               expect(results).to match_array(ManageIQ::Providers::NetworkManager.all)
