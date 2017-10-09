@@ -1,6 +1,7 @@
 require 'aws-sdk'
 require 'amazon_ssa_support'
 require 'yaml'
+require 'open3'
 
 class AmazonAgentManager
   include Comparable
@@ -373,8 +374,10 @@ class AmazonAgentManager
 
   def create_userdata
     File.chmod(0755, userdata_script)
-    userdata = `#{userdata_script} "#{ruby_version}" "#{log_level}"`
-    Base64.encode64(userdata)
+    stdout, stderr, status = Open3.capture3("#{userdata_script}", "#{ruby_version}", "#{log_level}")
+
+    raise "#{stderr}" unless status.exitstatus.zero?
+    Base64.encode64(stdout)
   end
 
   def get_subnets(az)
