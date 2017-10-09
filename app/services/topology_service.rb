@@ -40,7 +40,8 @@ class TopologyService
       :name   => entity.name,
       :kind   => entity_type(entity),
       :model  => entity.class.to_s,
-      :miq_id => entity.id
+      :miq_id => entity.id,
+      :key    => entity_id(entity)
     }
   end
 
