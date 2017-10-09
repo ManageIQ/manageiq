@@ -37,6 +37,9 @@ class GenericObjectDefinition < ApplicationRecord
   delegate :count, :to => :generic_objects, :prefix => true, :allow_nil => false
   virtual_column :generic_objects_count, :type => :integer
 
+  delegate :url_path, :to => :picture, :prefix => true, :allow_nil => true
+  virtual_column :picture_url_path, :type => :string
+
   FEATURES.each do |feature|
     define_method("property_#{feature}s") do
       return errors[:properties] if properties_changed? && !valid?
