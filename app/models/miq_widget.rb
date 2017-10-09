@@ -7,6 +7,7 @@ class MiqWidget < ApplicationRecord
   default_value_for :read_only, false
 
   DEFAULT_ROW_COUNT = 5
+  IMPORT_CLASS_NAMES = %w(MiqWidget).freeze
 
   belongs_to :resource, :polymorphic => true
   belongs_to :miq_schedule
