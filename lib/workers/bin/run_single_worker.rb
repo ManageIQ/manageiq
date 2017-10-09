@@ -55,7 +55,7 @@ ENV["BUNDLER_GROUPS"] = MIQ_WORKER_TYPES[worker_class].join(',')
 require File.expand_path("../../../config/environment", __dir__)
 
 worker_class = worker_class.constantize
-worker_class.preload_for_worker_role if worker_class.respond_to?(:preload_for_worker_role)
+worker_class.before_fork
 unless options[:dry_run]
   create_options = {:pid => Process.pid}
   runner_options = {}
