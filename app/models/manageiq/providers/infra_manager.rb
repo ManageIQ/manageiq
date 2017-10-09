@@ -16,6 +16,7 @@ module ManageIQ::Providers
     has_many :operating_systems,          :through => :vms_and_templates
     has_many :switches, -> { distinct },  :through => :hosts
     has_many :lans, -> { distinct },      :through => :hosts
+    has_many :subnets, -> { distinct },   :through => :lans
     has_many :networks,                   :through => :hardwares
     has_many :guest_devices,              :through => :hardwares
 

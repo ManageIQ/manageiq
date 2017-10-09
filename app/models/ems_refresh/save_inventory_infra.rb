@@ -347,7 +347,14 @@ module EmsRefresh::SaveInventoryInfra
   end
 
   def save_lans_inventory(switch, hashes)
-    save_inventory_multi(switch.lans, hashes, :use_association, [:uid_ems])
+    extra_keys = [:parent]
+    child_keys = [:subnets]
+
+    save_inventory_multi(switch.lans, hashes, :use_association, [:uid_ems], child_keys, extra_keys)
+  end
+
+  def save_subnets_inventory(lan, hashes)
+    save_inventory_multi(lan.subnets, hashes, :use_association, [:ems_ref])
   end
 
   def save_storage_files_inventory(storage, hashes)
