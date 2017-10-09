@@ -14,7 +14,7 @@ class AmazonAgentManagerWorker::Runner < MiqWorker::Runner
       # Only setup agents when:
       # 1. there is no running agents;
       # 2. get new requests;
-      # 3. manager is not in deploying agent state; 
+      # 3. manager is not in deploying agent state;
       m.setup_agent if alive_agents.empty? && !m.request_queue_empty? && !m.deploying?
 
       # Turn flag off if deploying is done.
@@ -44,7 +44,7 @@ class AmazonAgentManagerWorker::Runner < MiqWorker::Runner
   end
 
   def self.all_valid_ems_in_zone
-    #all_ems_in_zone.select {|e| e.enabled && e.authentication_status_ok?}
+    # all_ems_in_zone.select {|e| e.enabled && e.authentication_status_ok?}
     all_ems_in_zone.select(&:enabled)
   end
 

@@ -7,10 +7,11 @@ class AmazonAgentManager
   include Vmdb::Logging
   attr_accessor :ems, :deploying
 
-  MIQ_SSA = "MIQ_SSA"
+  MIQ_SSA = "MIQ_SSA".freeze
 
   def initialize(ems)
     @ems = ems
+    @guid = MiqServer.my_server.guid
 
     # List of active agent ids
     @alive_agent_ids = []
@@ -81,6 +82,14 @@ class AmazonAgentManager
     agent_manager_settings.try(:log_prefix) || AmazonSsaSupport::DEFAULT_LOG_PREFIX
   end
 
+  def agent_ami
+    agent_manager_settings.try(:agent_ami) || "centos-7.2-hvm*"
+  end
+
+  def ruby_version
+    agent_manager_settings.try(:ruby_version) || "2.3.3"
+  end
+
   def userdata_script
     agent_manager_settings.try(:userdata_script)
   end
@@ -100,7 +109,7 @@ class AmazonAgentManager
     bucket = s3.bucket(ssa_bucket)
     return @agent_ids unless bucket.exists?
 
-    bucket.objects({prefix: heartbeat_prefix}).each do |obj|
+    bucket.objects(prefix: heartbeat_prefix).each do |obj|
       id = obj.key.split('/')[2]
       @agent_ids << id if ec2.instance(id).exists?
     end
@@ -109,11 +118,11 @@ class AmazonAgentManager
   end
 
   def request_queue_empty?
-    messages_in_queue(request_queue) == 0
+    messages_in_queue(request_queue).zero?
   end
 
   def reply_queue_empty?
-    messages_in_queue(reply_queue) == 0
+    messages_in_queue(reply_queue).zero?
   end
 
   def messages_in_queue(q_name)
@@ -138,7 +147,7 @@ class AmazonAgentManager
   def activate_agent
     agent_ids.each do |id|
       agent = ec2.instance(id)
-      if (agent.state.name == "stopped")
+      if agent.state.name == "stopped"
         agent.start
         agent.wait_until_running
         _log.info("Agent #{id} is activated to serve requests.")
@@ -181,7 +190,7 @@ class AmazonAgentManager
     data = create_userdata
     zone_name = ec2.client.describe_availability_zones.availability_zones[0].zone_name
     subnets = get_subnets(zone_name)
-    raise "No subnet_id is available for #{zone_name}!" if subnets.length == 0
+    raise "No subnet_id is available for #{zone_name}!" if subnets.length.zero?
     create_profile
 
     instance = ec2.create_instances({
@@ -213,14 +222,13 @@ class AmazonAgentManager
   end
 
   private
+
   def role_exists?(role_name)
-    begin
-      role = iam.role(role_name)
-      role.role_id
-      true
-    rescue ::Aws::IAM::Errors::NoSuchEntity
-      false
-    end
+    role = iam.role(role_name)
+    role.role_id
+    true
+  rescue ::Aws::IAM::Errors::NoSuchEntity
+    false
   end
 
   def find_or_create_role(role_name = MIQ_SSA)
@@ -229,19 +237,17 @@ class AmazonAgentManager
     # Policy Generator:
     policy_doc = {
       :Version => "2012-10-17",
-      :Statement => [
-        {
-          :Effect => "Allow",
-          :Principal => {:Service => "ec2.amazonaws.com"},
-          :Action => "sts:AssumeRole"
-        }
-      ]
+      :Statement => [{
+        :Effect => "Allow",
+        :Principal => {:Service => "ec2.amazonaws.com"},
+        :Action => "sts:AssumeRole"
+      }]
     }
 
-    role = iam.create_role({
+    role = iam.create_role(
       role_name: role_name,
       assume_role_policy_document: policy_doc.to_json
-    })
+    )
 
     # grant all priviledges
     role.attach_policy({
@@ -270,12 +276,12 @@ class AmazonAgentManager
   end
 
   # possible RHEL image name: values: [ "RHEL-7.3_HVM_GA*" ]
-  def get_agent_image_id(img = "centos-7.2-hvm*")
+  def get_agent_image_id(img = agent_ami)
     imgs = ec2.client.describe_images(
       filters: [
         {
           name: "name",
-          values: [ img ]
+          values: [img]
         }
       ]
     ).images
@@ -284,56 +290,57 @@ class AmazonAgentManager
   end
 
   def create_security_group(group_name = MIQ_SSA)
-    begin
-      sgs = ec2.client.describe_security_groups(
-        filters: [
-          {
-            name: "group-name",
-            values: [ group_name ]
-          }
-        ]
-      ).security_groups
-      return sgs[0].group_id if sgs.length > 0
+    sgs = ec2.client.describe_security_groups(
+      filters: [
+        {
+          name: "group-name",
+          values: [group_name]
+        }
+      ]
+    ).security_groups
+    return sgs[0].group_id unless sgs.empty?
 
-      # create security group if not exist
-      security_group = ec2.create_security_group({
-        group_name: group_name,
-        description: 'Security group for MIQ SSA Agent',
-        vpc_id: ec2.client.describe_vpcs.vpcs[0].vpc_id
-      })
+    # create security group if not exist
+    security_group = ec2.create_security_group({
+      group_name: group_name,
+      description: 'Security group for MIQ SSA Agent',
+      vpc_id: ec2.client.describe_vpcs.vpcs[0].vpc_id
+    })
 
-      security_group.authorize_ingress({
-        ip_permissions: [{
-          ip_protocol: 'tcp',
-          from_port: 22,
-          to_port: 22,
-          ip_ranges: [{
-            cidr_ip: '0.0.0.0/0'
-          }]}]
-      })
+    security_group.authorize_ingress({
+      ip_permissions: [{
+        ip_protocol: 'tcp',
+        from_port: 22,
+        to_port: 22,
+        ip_ranges: [{
+          cidr_ip: '0.0.0.0/0'
+        }]
+      }]
+    })
 
-      security_group.authorize_ingress({
-        ip_permissions: [{
-          ip_protocol: 'tcp',
-          from_port: 80,
-          to_port: 80,
-          ip_ranges: [{
-            cidr_ip: '0.0.0.0/0'
-          }]}]
-      })
+    security_group.authorize_ingress({
+      ip_permissions: [{
+        ip_protocol: 'tcp',
+        from_port: 80,
+        to_port: 80,
+        ip_ranges: [{
+          cidr_ip: '0.0.0.0/0'
+        }]
+      }]
+    })
 
-      security_group.authorize_ingress({
-        ip_permissions: [{
-          ip_protocol: 'tcp',
-          from_port: 443,
-          to_port: 443,
-          ip_ranges: [{
-            cidr_ip: '0.0.0.0/0'
-          }]}]
-      })
+    security_group.authorize_ingress({
+      ip_permissions: [{
+        ip_protocol: 'tcp',
+        from_port: 443,
+        to_port: 443,
+        ip_ranges: [{
+          cidr_ip: '0.0.0.0/0'
+        }]
+      }]
+    })
 
-      security_group.group_id
-    end
+    security_group.group_id
   end
 
   # Get Key Pair for SSH. Create a new one if not exists.
@@ -349,8 +356,8 @@ class AmazonAgentManager
 
   def create_pem_file(pair_name = MIQ_SSA)
     kp = get_key_pair(pair_name)
-    pem_file_name = pair_name+".pem"
-    File.open(pem_file_name, 'w') {|f| f.write(kp.auth_key) }
+    pem_file_name = pair_name + ".pem"
+    File.open(pem_file_name, 'w') { |f| f.write(kp.auth_key) }
     File.chmod(0400, pem_file_name)
     pem_file_name
   end
@@ -366,7 +373,7 @@ class AmazonAgentManager
 
   def create_userdata
     File.chmod(0755, userdata_script)
-    userdata = %x( #{userdata_script} )
+    userdata = `#{userdata_script} "#{ruby_version}" "#{log_level}"`
     Base64.encode64(userdata)
   end
 
@@ -374,9 +381,8 @@ class AmazonAgentManager
     ec2.client.describe_subnets(filters: [
       {
         name: "availability-zone",
-        values: [ az ]
+        values: [az]
       }
     ]).subnets
   end
-
 end
