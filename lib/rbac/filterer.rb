@@ -56,6 +56,12 @@ module Rbac
 
     NETWORK_MODELS_FOR_BELONGSTO_FILTER = %w(
       CloudNetwork
+      CloudSubnet
+      FloatingIp
+      LoadBalancer
+      NetworkPort
+      NetworkRouter
+      SecurityGroup
     ).freeze
 
     BELONGSTO_FILTER_CLASSES = %w(
@@ -66,7 +72,7 @@ module Rbac
       EmsCluster
       ResourcePool
       Storage
-    ).freeze + NETWORK_MODELS_FOR_BELONGSTO_FILTER
+    ) + NETWORK_MODELS_FOR_BELONGSTO_FILTER
 
     # key: MiqUserRole#name - user's role
     # value:
