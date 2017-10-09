@@ -1,6 +1,7 @@
 class Lan < ApplicationRecord
   belongs_to :switch
 
+  has_many :subnets, :dependent => :destroy
   has_many :guest_devices
   has_many :vms_and_templates, -> { distinct }, :through => :guest_devices
   has_many :vms,               -> { distinct }, :through => :guest_devices
