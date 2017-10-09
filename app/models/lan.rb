@@ -7,6 +7,9 @@ class Lan < ApplicationRecord
   has_many :vms,               -> { distinct }, :through => :guest_devices
   has_many :miq_templates,     -> { distinct }, :through => :guest_devices
 
+  has_many :lans, :foreign_key => :parent_id
+  belongs_to :parent, :class_name => "::Lan"
+
   # TODO: Should this go through switch and not guest devices?
   has_many :hosts,             :through => :guest_devices
 
