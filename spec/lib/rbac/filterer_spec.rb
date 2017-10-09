@@ -1222,11 +1222,21 @@ describe Rbac::Filterer do
 
         NETWORK_MODELS.each do |network_model|
           describe '.search' do
+            let!(:network_object) do
+              return network_manager if network_model == "ManageIQ::Providers::NetworkManager"
+              FactoryGirl.create(network_model.underscore, :ext_management_system => network_manager)
+            end
+
+            let!(:network_object_with_different_network_manager) do
+              return network_manager_1 if network_model == "ManageIQ::Providers::NetworkManager"
+              FactoryGirl.create(network_model.underscore,  :ext_management_system => network_manager_1)
+            end
+
             context 'when records match belognsto filter' do
               it "lists records of #{network_model} manager according to belongsto filter" do
                 User.with_user(user) do
-                  results = described_class.search(:class => CloudNetwork).first
-                  expect(results).to match_array([cloud_network])
+                  results = described_class.search(:class => network_model).first
+                  expect(results).to match_array([network_object])
                   expect(results.first.ext_management_system).to eq(network_manager)
                 end
               end
@@ -1242,7 +1252,7 @@ describe Rbac::Filterer do
 
               it "lists no records of #{network_model}" do
                 User.with_user(user) do
-                  results = described_class.search(:class => CloudNetwork).first
+                  results = described_class.search(:class => network_model).first
                   expect(results).to be_empty
                 end
               end
