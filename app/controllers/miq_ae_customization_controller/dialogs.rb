@@ -954,6 +954,11 @@ module MiqAeCustomizationController::Dialogs
     # element type was NOT changed and is present
     elsif !@edit[:field_typ].blank?
       @edit[:field_visible] = key[:visible]
+
+      if params[:field_required]
+        @edit[:field_required] = key[:required] = (params[:field_required] == "true")
+      end
+
       # set default_value - checkbox
       if @edit[:field_typ] =~ /Check/
         if params[:field_default_value]
@@ -975,10 +980,6 @@ module MiqAeCustomizationController::Dialogs
         else
           @edit[:field_default_value] ||= ""
           key[:default_value] ||= ""
-        end
-
-        if params[:field_required]
-          @edit[:field_required] = key[:required] = (params[:field_required] == "true")
         end
       end
 
@@ -1017,10 +1018,6 @@ module MiqAeCustomizationController::Dialogs
 
         if params[:field_single_value]
           @edit[:field_single_value] = key[:single_value] = (params[:field_single_value] == "true")
-        end
-
-        if params[:field_required]
-          @edit[:field_required] = key[:required] = (params[:field_required] == "true")
         end
 
         @edit[:field_sort_by]    = key[:sort_by]    = params[:field_sort_by]  if params[:field_sort_by]
