@@ -121,7 +121,7 @@ module Metric::Helper
 
   def self.remove_duplicate_timestamps(recs)
     if recs.respond_to?(:klass) # active record relation
-      return recs unless recs.klass.kind_of?(Metric) || recs.klass.kind_of?(MetricRollup)
+      return recs unless recs.klass <= Metric || recs.klass <= MetricRollup
     elsif recs.empty? || !recs.all? { |r| r.kind_of?(Metric) || r.kind_of?(MetricRollup) }
       return recs 
     end
