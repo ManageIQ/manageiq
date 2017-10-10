@@ -3,13 +3,14 @@ describe DialogFieldSortedItem do
     let(:dialog_field) do
       described_class.new(
         :name                => "potato_name",
-        :default_value       => "test2",
+        :default_value       => default_value,
         :dynamic             => true,
         :load_values_on_init => load_values_on_init,
         :show_refresh_button => show_refresh_button,
         :values              => [%w(test test), %w(test2 test2)]
       )
     end
+    let(:default_value) { "test2" }
 
     context "when show_refresh_button is true" do
       let(:show_refresh_button) { true }
