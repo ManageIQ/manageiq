@@ -2,6 +2,39 @@ require "linux_admin"
 require "awesome_spawn"
 
 describe EmbeddedAnsible do
+  describe ".new" do
+    it "returns an instance of NullEmbeddedAnsible if there is no available subclass" do
+      expect(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
+      expect(ContainerOrchestrator).to receive(:available?).and_return(false)
+
+      expect(described_class.new).to be_an_instance_of(NullEmbeddedAnsible)
+    end
+
+    context "in an appliance" do
+      before do
+        allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(true)
+      end
+
+      it "returns an instance of ApplianceEmbeddedAnsible when the tower rpms are installed" do
+        installed_rpms = {
+          "ansible-tower-server" => "1.0.1",
+          "ansible-tower-setup"  => "1.2.3",
+          "vim"                  => "13.5.1"
+        }
+        expect(LinuxAdmin::Rpm).to receive(:list_installed).and_return(installed_rpms)
+
+        expect(described_class.new).to be_an_instance_of(ApplianceEmbeddedAnsible)
+      end
+    end
+
+    context "in Kubernetes/OpenShift" do
+      it "returns an instance of ContainerEmbeddedAnsible" do
+        expect(ContainerOrchestrator).to receive(:available?).and_return(true)
+        expect(described_class.new).to be_an_instance_of(ContainerEmbeddedAnsible)
+      end
+    end
+  end
+
   context ".available?" do
     context "in an appliance" do
       before do

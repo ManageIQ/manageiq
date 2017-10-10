@@ -18,6 +18,14 @@ class EmbeddedAnsible
   TOWER_VERSION_FILE     = "/var/lib/awx/.tower_version".freeze
   ANSIBLE_DC_NAME        = "ansible".freeze
 
+  def self.new
+    self == EmbeddedAnsible ? detect_available_platform.new : super
+  end
+
+  def self.detect_available_platform
+    subclasses.detect(&:available?) || NullEmbeddedAnsible
+  end
+
   def self.available?
     return true if MiqEnvironment::Command.is_container?
     return false unless MiqEnvironment::Command.is_appliance?
@@ -295,3 +303,5 @@ class EmbeddedAnsible
   end
   private_class_method :setup_complete_file
 end
+
+Dir.glob(File.join(File.dirname(__FILE__), "embedded_ansible/*.rb")).each { |f| require_dependency f }
