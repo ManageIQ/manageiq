@@ -11,7 +11,6 @@ class EmbeddedAnsible
   HTTP_PORT              = 54_321
   HTTPS_PORT             = 54_322
   WAIT_FOR_ANSIBLE_SLEEP = 1.second
-  ANSIBLE_DC_NAME        = "ansible".freeze
 
   def self.new
     self == EmbeddedAnsible ? detect_available_platform.new : super
@@ -22,26 +21,14 @@ class EmbeddedAnsible
   end
 
   def self.available?
-    return true if MiqEnvironment::Command.is_container?
-    return false unless MiqEnvironment::Command.is_appliance?
-
-    required_rpms = Set["ansible-tower-server", "ansible-tower-setup"]
-    required_rpms.subset?(LinuxAdmin::Rpm.list_installed.keys.to_set)
+    detect_available_platform != NullEmbeddedAnsible
   end
 
   def self.enabled?
     MiqServer.my_server(true).has_active_role?(ANSIBLE_ROLE)
   end
 
-  def self.running?
-    return true if MiqEnvironment::Command.is_container?
-  end
-
-  def self.configured?
-    return true if MiqEnvironment::Command.is_container?
-  end
-
-  def self.alive?
+  def alive?
     return false unless configured? && running?
     begin
       api_connection.api.verify_credentials
@@ -51,19 +38,7 @@ class EmbeddedAnsible
     true
   end
 
-  def self.start
-    MiqEnvironment::Command.is_container? ? container_start : appliance_start
-  end
-
-  def self.stop
-    MiqEnvironment::Command.is_container? ? container_stop : appliance_stop
-  end
-
-  def self.disable
-    MiqEnvironment::Command.is_container? ? container_stop : appliance_disable
-  end
-
-  def self.api_connection
+  def api_connection
     if MiqEnvironment::Command.is_container?
       host = ENV["ANSIBLE_SERVICE_HOST"]
       port = ENV["ANSIBLE_SERVICE_PORT_HTTP"]
@@ -81,27 +56,11 @@ class EmbeddedAnsible
     )
   end
 
-  def self.container_start
-    miq_database.set_ansible_admin_authentication(:password => ENV["ANSIBLE_ADMIN_PASSWORD"])
-    ContainerOrchestrator.new.scale(ANSIBLE_DC_NAME, 1)
+  private
 
-    loop do
-      break if alive?
-
-      _log.info("Waiting for Ansible container to respond")
-      sleep WAIT_FOR_ANSIBLE_SLEEP
-    end
-  end
-  private_class_method :container_start
-
-  def self.container_stop
-    ContainerOrchestrator.new.scale(ANSIBLE_DC_NAME, 0)
-  end
-
-  def self.miq_database
+  def miq_database
     MiqDatabase.first
   end
-  private_class_method :miq_database
 end
 
 Dir.glob(File.join(File.dirname(__FILE__), "embedded_ansible/*.rb")).each { |f| require_dependency f }

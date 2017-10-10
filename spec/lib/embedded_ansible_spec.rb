@@ -81,14 +81,6 @@ describe EmbeddedAnsible do
 
   context "with an miq_databases row" do
     let(:miq_database) { MiqDatabase.first }
-    let(:extra_vars) do
-      {
-        :minimum_var_space  => 0,
-        :http_port          => described_class::HTTP_PORT,
-        :https_port         => described_class::HTTPS_PORT,
-        :tower_package_name => "ansible-tower-server"
-      }.to_json
-    end
 
     before do
       FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
@@ -181,60 +173,6 @@ describe EmbeddedAnsible do
         it "returns true when no error is raised" do
           expect(api).to receive(:verify_credentials)
           expect(described_class.alive?).to be true
-        end
-      end
-    end
-
-    describe ".configured?" do
-      it "returns true when the file doesn't exist and we are running in a container" do
-        expect(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
-        expect(described_class.configured?).to be true
-      end
-    end
-
-    context "when in a container" do
-      before do
-        expect(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
-      end
-
-      describe ".stop" do
-        it "scales the ansible pod to 0 replicas" do
-          orch = double("ContainerOrchestrator")
-          expect(ContainerOrchestrator).to receive(:new).and_return(orch)
-
-          expect(orch).to receive(:scale).with("ansible", 0)
-
-          described_class.stop
-        end
-      end
-
-      describe ".disable" do
-        it "scales the ansible pod to 0 replicas" do
-          orch = double("ContainerOrchestrator")
-          expect(ContainerOrchestrator).to receive(:new).and_return(orch)
-
-          expect(orch).to receive(:scale).with("ansible", 0)
-
-          described_class.disable
-        end
-      end
-
-      describe ".start" do
-        around do |example|
-          ENV["ANSIBLE_ADMIN_PASSWORD"] = "thepassword"
-          example.run
-          ENV.delete("ANSIBLE_ADMIN_PASSWORD")
-        end
-
-        it "sets the admin password using the environment variable and waits for the service to respond" do
-          orch = double("ContainerOrchestrator")
-          expect(ContainerOrchestrator).to receive(:new).and_return(orch)
-
-          expect(orch).to receive(:scale).with("ansible", 1)
-          expect(described_class).to receive(:alive?).and_return(true)
-
-          described_class.start
-          expect(miq_database.reload.ansible_admin_authentication.password).to eq("thepassword")
         end
       end
     end
