@@ -73,9 +73,7 @@ class TopologyService
   end
 
   def rbac_filter_nodes_and_edges(nodes, edges)
-    remove_list = disallowed_nodes(nodes)
-
-    remove_list.flatten.each do |x|
+    disallowed_nodes(nodes).flatten.each do |x|
       nodes.delete(x)
       edges = edges.select do |edge|
         !(edge[:source] == x || edge[:target] == x)
