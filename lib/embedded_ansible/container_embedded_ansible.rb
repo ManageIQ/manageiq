@@ -1,5 +1,6 @@
 class ContainerEmbeddedAnsible < EmbeddedAnsible
   def self.available?
+    ContainerOrchestrator.available?
   end
 
   def start
