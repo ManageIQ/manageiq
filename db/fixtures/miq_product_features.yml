@@ -6298,6 +6298,10 @@
       :description: Display Individual Physical Server
       :feature_type: view
       :identifier: physical_server_show
+      :name: Timeline
+      :description: Display Timelines for Physical Servers
+      :feature_type: view
+      :identifier: physical_server_timeline
   - :name: Modify
     :description: Modify Physical Servers
     :feature_type: admin
