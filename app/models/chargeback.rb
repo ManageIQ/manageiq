@@ -132,7 +132,9 @@ class Chargeback < ActsAsArModel
       results.each do |cost_value, sb_rate|
         r = ChargebackRateDetail.find(sb_rate.concept)
         # puts "CHARGIO COST: #{r.chargeable_field.metric}: #{cost_value.to_f}"
-        metric_value = data[r.chargeable_field.group][r.chargeable_field.metric]
+        metric = r.chargeable_field.metric
+        metric_index = ChargeableField::VIRTUAL_COL_USES.invert[metric] || metric
+        metric_value = data[r.chargeable_field.group][metric_index]
         metric_field = [r.chargeable_field.group, r.chargeable_field.source, "metric"].join("_")
         cost_field = [r.chargeable_field.group, r.chargeable_field.source, "cost"].join("_")
 
