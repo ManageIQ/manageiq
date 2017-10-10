@@ -202,8 +202,4 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
   def setup_complete_file
     Rails.root.join("tmp", "embedded_ansible_setup_complete")
   end
-
-  def miq_database
-    MiqDatabase.first
-  end
 end
