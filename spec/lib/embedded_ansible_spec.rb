@@ -2,80 +2,65 @@ require "linux_admin"
 require "awesome_spawn"
 
 describe EmbeddedAnsible do
-  describe ".new" do
-    it "returns an instance of NullEmbeddedAnsible if there is no available subclass" do
+  context "with no available subclass" do
+    before do
       expect(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
       expect(ContainerOrchestrator).to receive(:available?).and_return(false)
-
-      expect(described_class.new).to be_an_instance_of(NullEmbeddedAnsible)
     end
 
-    context "in an appliance" do
-      before do
-        allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(true)
+    describe ".new" do
+      it "returns an instance of NullEmbeddedAnsible" do
+        expect(described_class.new).to be_an_instance_of(NullEmbeddedAnsible)
       end
+    end
 
-      it "returns an instance of ApplianceEmbeddedAnsible when the tower rpms are installed" do
-        installed_rpms = {
-          "ansible-tower-server" => "1.0.1",
-          "ansible-tower-setup"  => "1.2.3",
-          "vim"                  => "13.5.1"
-        }
-        expect(LinuxAdmin::Rpm).to receive(:list_installed).and_return(installed_rpms)
+    describe ".available?" do
+      it "returns false" do
+        expect(described_class.available?).to be false
+      end
+    end
+  end
 
+  context "in an appliance" do
+    before do
+      allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(true)
+
+      installed_rpms = {
+        "ansible-tower-server" => "1.0.1",
+        "ansible-tower-setup"  => "1.2.3",
+        "vim"                  => "13.5.1"
+      }
+      expect(LinuxAdmin::Rpm).to receive(:list_installed).and_return(installed_rpms)
+    end
+
+    describe ".new" do
+      it "returns an instance of ApplianceEmbeddedAnsible" do
         expect(described_class.new).to be_an_instance_of(ApplianceEmbeddedAnsible)
       end
     end
 
-    context "in Kubernetes/OpenShift" do
+    describe ".available?" do
+      it "returns true" do
+        expect(described_class.available?).to be true
+      end
+    end
+  end
+
+  context "in Kubernetes/OpenShift" do
+    before do
+      expect(ContainerOrchestrator).to receive(:available?).and_return(true)
+    end
+
+    describe ".new" do
       it "returns an instance of ContainerEmbeddedAnsible" do
-        expect(ContainerOrchestrator).to receive(:available?).and_return(true)
         expect(described_class.new).to be_an_instance_of(ContainerEmbeddedAnsible)
       end
     end
-  end
 
-  context ".available?" do
-    context "in an appliance" do
-      before do
-        allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(true)
+    describe ".available?" do
+      it "returns true" do
+        expect(described_class.available?).to be true
       end
-
-      it "returns true when installed in the default location" do
-        installed_rpms = {
-          "ansible-tower-server" => "1.0.1",
-          "ansible-tower-setup"  => "1.2.3",
-          "vim"                  => "13.5.1"
-        }
-        expect(LinuxAdmin::Rpm).to receive(:list_installed).and_return(installed_rpms)
-
-        expect(described_class.available?).to be_truthy
-      end
-
-      it "returns false when not installed" do
-        expect(LinuxAdmin::Rpm).to receive(:list_installed).and_return("vim" => "13.5.1")
-
-        expect(described_class.available?).to be_falsey
-      end
-    end
-
-    it "returns true unconditionally in a container" do
-      allow(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
-      expect(described_class.available?).to be_truthy
-    end
-
-    it "returns false outside of an appliance" do
-      allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
-      expect(described_class.available?).to be_falsey
-    end
-  end
-
-  describe ".running?" do
-    it "always returns true when in a container" do
-      expect(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
-      expect(LinuxAdmin::Service).not_to receive(:new)
-
-      expect(described_class.running?).to be_truthy
     end
   end
 
