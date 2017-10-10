@@ -80,6 +80,7 @@ gem "american_date"
 # This default is used to automatically require all of our gems in processes that don't specify which bundler groups they want.
 #
 ### providers
+<<<<<<< HEAD
 group :amazon, :manageiq_default do
   manageiq_plugin "manageiq-providers-amazon"
   gem "amazon_ssa_support",                          :require => false, :git => "https://github.com/ManageIQ/amazon_ssa_support.git", :branch => "master" # Temporary dependency to be moved to manageiq-providers-amazon when officially release
@@ -144,6 +145,68 @@ group :vmware, :manageiq_default do
   manageiq_plugin "manageiq-providers-vmware"
   gem "vmware_web_service",             "~>0.2.0"
 end
+=======
+# group :amazon, :manageiq_default do
+#   manageiq_plugin "manageiq-providers-amazon"
+# end
+#
+# group :ansible, :manageiq_default do
+#   gem "ansible_tower_client",           "~>0.12.2",      :require => false
+# end
+#
+# group :azure, :manageiq_default do
+#   manageiq_plugin "manageiq-providers-azure"
+# end
+#
+# group :foreman, :manageiq_default do
+#   manageiq_plugin "manageiq-providers-foreman"
+#   gem "foreman_api_client",             ">=0.1.0",   :require => false, :git => "https://github.com/ManageIQ/foreman_api_client.git", :branch => "master"
+# end
+#
+# group :google, :manageiq_default do
+#   manageiq_plugin "manageiq-providers-google"
+# end
+#
+# group :hawkular, :manageiq_default do
+#   manageiq_plugin "manageiq-providers-hawkular"
+# end
+#
+# group :kubernetes, :openshift, :manageiq_default do
+#   manageiq_plugin "manageiq-providers-kubernetes"
+# end
+#
+# group :lenovo, :manageiq_default do
+#   manageiq_plugin "manageiq-providers-lenovo"
+# end
+#
+# group :nuage, :manageiq_default do
+#   manageiq_plugin "manageiq-providers-nuage"
+# end
+# 
+# group :openshift, :manageiq_default do
+#   manageiq_plugin "manageiq-providers-openshift"
+#   gem "htauth",                         "2.0.0",         :require => false # used by container deployment
+# end
+#
+# group :openstack, :manageiq_default do
+#   manageiq_plugin "manageiq-providers-openstack"
+# end
+#
+# group :ovirt, :manageiq_default do
+#   manageiq_plugin "manageiq-providers-ovirt"
+#   gem "ovirt-engine-sdk",               "~>4.1.4",       :require => false # Required by the oVirt provider
+#   gem "ovirt_metrics",                  "~>1.4.1",       :require => false
+# end
+#
+# group :scvmm, :manageiq_default do
+#   manageiq_plugin "manageiq-providers-scvmm"
+# end
+#
+# group :vmware, :manageiq_default do
+#   manageiq_plugin "manageiq-providers-vmware"
+#   gem "vmware_web_service",             "~>0.2.0"
+# end
+>>>>>>> Removing provider gems
 
 ### shared dependencies
 group :google, :openshift, :manageiq_default do
