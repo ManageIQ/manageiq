@@ -1319,6 +1319,17 @@
     search_type: default
     db: PhysicalServer
 - attributes:
+    name: default_Status / Stopped
+    description: Status / Stopped
+    filter: !ruby/object:MiqExpression
+      exp:
+        not:
+          INCLUDES:
+            field: PhysicalServer-power_state
+            value: "on"
+    search_type: default
+    db: PhysicalServer
+- attributes:
     name: default_Over Allocated
     description: Over Allocated
     filter: !ruby/object:MiqExpression
