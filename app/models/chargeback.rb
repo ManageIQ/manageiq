@@ -111,7 +111,7 @@ class Chargeback < ActsAsArModel
         measure = r.chargeable_field.showback_measure
         dimension, unit, calculation = r.chargeable_field.showback_dimension
 
-        value = r.chargeable_field.fixed? ? 1.0 : consumption.avg(r.chargeable_field.metric)
+        value =  r.chargeable_field.measure(consumption, @options)
         data[measure] ||= {}
         data[measure][dimension] = value
         # Old calculation
