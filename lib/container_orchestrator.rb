@@ -6,6 +6,10 @@ class ContainerOrchestrator
   TOKEN_FILE   = "/run/secrets/kubernetes.io/serviceaccount/token".freeze
   CA_CERT_FILE = "/run/secrets/kubernetes.io/serviceaccount/ca.crt".freeze
 
+  def self.available?
+    File.exist?(TOKEN_FILE) && File.exist?(CA_CERT_FILE)
+  end
+
   def scale(deployment_config_name, replicas)
     connection.patch_deployment_config(deployment_config_name, { :spec => { :replicas => replicas } }, my_namespace)
   end
