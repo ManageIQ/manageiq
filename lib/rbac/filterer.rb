@@ -12,8 +12,8 @@ module Rbac
       CloudTenant
       CloudVolume
       ConfigurationProfile
-      ConfiguredSystem
       ConfigurationScriptBase
+      ConfiguredSystem
       Container
       ContainerBuild
       ContainerGroup
@@ -42,8 +42,8 @@ module Rbac
       MiddlewareServerGroup
       NetworkPort
       NetworkRouter
-      OrchestrationTemplate
       OrchestrationStack
+      OrchestrationTemplate
       ResourcePool
       SecurityGroup
       Service
@@ -65,13 +65,13 @@ module Rbac
     ).freeze
 
     BELONGSTO_FILTER_CLASSES = %w(
-      VmOrTemplate
-      Host
-      ExtManagementSystem
-      EmsFolder
       EmsCluster
+      EmsFolder
+      ExtManagementSystem
+      Host
       ResourcePool
       Storage
+      VmOrTemplate
     ) + NETWORK_MODELS_FOR_BELONGSTO_FILTER
 
     # key: MiqUserRole#name - user's role
@@ -88,13 +88,13 @@ module Rbac
     #   if it is an array [klass_id, descendant_id]
     #     klass.where(klass_id => descendant.select(descendant_id))
     MATCH_VIA_DESCENDANT_RELATIONSHIPS = {
-      "VmOrTemplate::ExtManagementSystem"      => [:id, :ems_id],
-      "VmOrTemplate::Host"                     => [:id, :host_id],
+      "ConfiguredSystem::ConfigurationProfile" => [:id, :configuration_profile_id],
+      "ConfiguredSystem::ExtManagementSystem"  => :ext_management_system,
       "VmOrTemplate::EmsCluster"               => [:id, :ems_cluster_id],
       "VmOrTemplate::EmsFolder"                => :parent_blue_folders,
+      "VmOrTemplate::ExtManagementSystem"      => [:id, :ems_id],
+      "VmOrTemplate::Host"                     => [:id, :host_id],
       "VmOrTemplate::ResourcePool"             => :resource_pool,
-      "ConfiguredSystem::ExtManagementSystem"  => :ext_management_system,
-      "ConfiguredSystem::ConfigurationProfile" => [:id, :configuration_profile_id]
     }
 
     # These classes should accept any of the relationship_mixin methods including:
@@ -115,9 +115,9 @@ module Rbac
       'MiqRequestTask'         => nil, # tenant only
       'MiqTemplate'            => :ancestor_ids,
       'Provider'               => :ancestor_ids,
-      'ServiceTemplateCatalog' => :ancestor_ids,
-      'ServiceTemplate'        => :ancestor_ids,
       'Service'                => :descendant_ids,
+      'ServiceTemplate'        => :ancestor_ids,
+      'ServiceTemplateCatalog' => :ancestor_ids,
       'Tenant'                 => :descendant_ids,
       'User'                   => :descendant_ids,
       'Vm'                     => :descendant_ids
