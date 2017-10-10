@@ -87,7 +87,6 @@ class MiqRequestTask < ApplicationRecord
 
   def update_request_task(values)
     update_attributes(:options => options.merge(values['options'] || {}))
-    self
   end
 
   def execute_callback(state, message, _result)
