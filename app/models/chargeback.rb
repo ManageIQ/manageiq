@@ -110,8 +110,8 @@ class Chargeback < ActsAsArModel
 
         measure = r.chargeable_field.showback_measure
         dimension, unit, calculation = r.chargeable_field.showback_dimension
-
         value =  r.chargeable_field.measure(consumption, @options)
+        puts "#{measure}##{dimension}: #{r.chargeable_field.metric}: #{value}"
         data[measure] ||= {}
         data[measure][dimension] = value
         # Old calculation
@@ -121,7 +121,6 @@ class Chargeback < ActsAsArModel
         #   puts "#{field}: #{self[field].to_f}"
         # end
       end
-
       results = plan.calculate_list_of_costs_input(resource_type: showback_category,
                                                   data: data,
                                                   start_time: consumption.instance_variable_get("@start_time"),
@@ -131,19 +130,16 @@ class Chargeback < ActsAsArModel
 
       results.each do |cost_value, sb_rate|
         r = ChargebackRateDetail.find(sb_rate.concept)
-        # puts "CHARGIO COST: #{r.chargeable_field.metric}: #{cost_value.to_f}"
         metric = r.chargeable_field.metric
         metric_index = ChargeableField::VIRTUAL_COL_USES.invert[metric] || metric
         metric_value = data[r.chargeable_field.group][metric_index]
         metric_field = [r.chargeable_field.group, r.chargeable_field.source, "metric"].join("_")
         cost_field = [r.chargeable_field.group, r.chargeable_field.source, "cost"].join("_")
-
         _, total_metric_field, total_field =  r.chargeable_field.cost_keys
-
-        self[total_field] = (self[total_field] || 0) + cost_value
-        self[total_metric_field] = (self[total_metric_field] || 0) + cost_value
-        self[cost_field] = cost_value
-        self[metric_field] = metric_value
+        self[total_field] = (self[total_field].to_f || 0) + cost_value.to_f
+        self[total_metric_field] = (self[total_metric_field].to_f || 0) +  cost_value.to_f
+        self[cost_field] = cost_value.to_f
+        self[metric_field] = metric_value.to_f
       end
     end
 
