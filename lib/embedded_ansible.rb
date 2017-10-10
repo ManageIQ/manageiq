@@ -5,6 +5,8 @@ require "ansible_tower_client"
 require "fileutils"
 
 class EmbeddedAnsible
+  include Vmdb::Logging
+
   ANSIBLE_ROLE           = "embedded_ansible".freeze
   SETUP_SCRIPT           = "ansible-tower-setup".freeze
   SECRET_KEY_FILE        = "/etc/tower/SECRET_KEY".freeze
