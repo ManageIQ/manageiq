@@ -25,19 +25,21 @@ class ChargeableField < ApplicationRecord
   end
 
   def showback_dimension
-    {'cpu_usagemhz_rate_average'         => ['cpu_usagemhz_rate_average', 'Mhz', 'duration'],
+    metric_index = VIRTUAL_COL_USES.invert[metric] || metric
+    {'cpu_usagemhz_rate_average'         => ['cpu_usagemhz_rate_average', '', 'duration'],
      "v_derived_cpu_total_cores_used"    => ['v_derived_cpu_total_cores_used', '', 'duration'],
      "derived_vm_numvcpus"               => ['derived_vm_numvcpus', '', 'duration'],
-     "derived_memory_used"               => ['derived_memory_used', 'B', 'duration'],
-     "derived_memory_available"          => ['derived_memory_available', 'B', 'duration'],
-     "net_usage_rate_average"            => ['net_usage_rate_average', '',''],
-     "disk_usage_rate_average"           => ['disk_usage_rate_average', '',''],
+     "derived_memory_used"               => ['derived_memory_used', '', 'duration'],
+     "derived_memory_available"          => ['derived_memory_available', '', 'duration'],
+     "metering_used_hours"               => ['metering_used_hours', '', 'quantity'],
+     "net_usage_rate_average"            => ['net_usage_rate_average', '','duration'],
+     "disk_usage_rate_average"           => ['disk_usage_rate_average', '','duration'],
      "fixed_compute_1"                   => ['fixed_compute_1','', 'occurrence'],
      "fixed_compute_2"                   => ['fixed_compute_2','', 'occurrence'],
-     "derived_vm_allocated_disk_storage" => ['derived_vm_allocated_disk_storage', '',''],
-     "derived_vm_used_disk_storage"      => ['derived_vm_used_disk_storage', '',''],
-     "fixed_storage_1"                   => ['fixed_storage_1', '',''],
-     "fixed_storage_2"                   => ['fixed_storage_2', '','']}[metric]
+     "derived_vm_allocated_disk_storage" => ['derived_vm_allocated_disk_storage', 'Gi','duration'],
+     "derived_vm_used_disk_storage"      => ['derived_vm_used_disk_storage', 'Gi', 'duration'],
+     "fixed_storage_1"                   => ['fixed_storage_1', '','occurrence'],
+     "fixed_storage_2"                   => ['fixed_storage_2', '','occurrence']}[metric_index]
   end
 
   def measure(consumption, options)

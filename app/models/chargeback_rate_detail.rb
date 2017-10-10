@@ -38,6 +38,7 @@ class ChargebackRateDetail < ApplicationRecord
       showback_rate.showback_tiers.build(:tier_start_value => tier.start,
                                          :tier_end_value   => tier.finish,
                                          :variable_rate_per_time => rate_detail.per_time,
+                                         :variable_rate_per_unit => unit,
                                          :fixed_rate_per_time => rate_detail.per_time,
                                          :fixed_rate          => Money.new(tier.fixed_rate * Money.default_currency.subunit_to_unit),
                                          :variable_rate       => Money.new(tier.variable_rate * Money.default_currency.subunit_to_unit)
