@@ -8,8 +8,6 @@ class EmbeddedAnsible
   include Vmdb::Logging
 
   ANSIBLE_ROLE           = "embedded_ansible".freeze
-  HTTP_PORT              = 54_321
-  HTTPS_PORT             = 54_322
   WAIT_FOR_ANSIBLE_SLEEP = 1.second
 
   def self.new
@@ -38,15 +36,9 @@ class EmbeddedAnsible
     true
   end
 
-  def api_connection
-    if MiqEnvironment::Command.is_container?
-      host = ENV["ANSIBLE_SERVICE_HOST"]
-      port = ENV["ANSIBLE_SERVICE_PORT_HTTP"]
-    else
-      host = "localhost"
-      port = HTTP_PORT
-    end
+  private
 
+  def api_connection_raw(host, port)
     admin_auth = miq_database.ansible_admin_authentication
     AnsibleTowerClient::Connection.new(
       :base_url   => URI::HTTP.build(:host => host, :path => "/api/v1", :port => port).to_s,
@@ -55,8 +47,6 @@ class EmbeddedAnsible
       :verify_ssl => 0
     )
   end
-
-  private
 
   def miq_database
     MiqDatabase.first

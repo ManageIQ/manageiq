@@ -6,6 +6,8 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
   SECRET_KEY_FILE        = "/etc/tower/SECRET_KEY".freeze
   SETTINGS_FILE          = "/etc/tower/settings.py".freeze
   EXCLUDE_TAGS           = "packages,migrations,firewall".freeze
+  HTTP_PORT              = 54_321
+  HTTPS_PORT             = 54_322
 
   def self.available?
     return false unless MiqEnvironment::Command.is_appliance?
@@ -53,6 +55,7 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
   end
 
   def api_connection
+    api_connection_raw("localhost", HTTP_PORT)
   end
 
   private

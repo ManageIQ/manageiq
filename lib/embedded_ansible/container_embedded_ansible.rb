@@ -32,5 +32,6 @@ class ContainerEmbeddedAnsible < EmbeddedAnsible
   end
 
   def api_connection
+    api_connection_raw(ENV["ANSIBLE_SERVICE_HOST"], ENV["ANSIBLE_SERVICE_PORT_HTTP"])
   end
 end
