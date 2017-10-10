@@ -430,17 +430,32 @@ describe MiqRequest do
   end
 
   context "#update_request" do
-    let(:msg) { "Yabba Dabba Doo" }
-    it "user_message" do
+    before do
       allow(MiqServer).to receive(:my_zone).and_return("New York")
-      request = FactoryGirl.create(:miq_provision_request,
-                                   :requester => fred,
-                                   :options   => {:a => "1"})
+    end
+
+    let(:request) do
+      FactoryGirl.create(:miq_provision_request,
+                         :requester => fred,
+                         :options   => {:a => "1"})
+    end
+
+    it "user_message" do
+      msg = "Yabba Dabba Doo"
       request.update_request({:user_message => msg}, fred)
 
       request.reload
       expect(request.options[:user_message]).to eq(msg)
       expect(request.message).to eq(msg)
+    end
+
+    it "truncates long messages" do
+      msg = "Yabba Dabba Doo" * 30
+      request.update_request({:user_message => msg}, fred)
+
+      request.reload
+      expect(request.options[:user_message].length).to eq(255)
+      expect(request.message.length).to eq(255)
     end
   end
 end

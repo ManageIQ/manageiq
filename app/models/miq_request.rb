@@ -486,11 +486,8 @@ class MiqRequest < ApplicationRecord
 
   def update_request(values, requester)
     update_attributes(:options => options.merge(values))
-    if values[:user_message].present? && values.keys.length == 1
-      self.user_message = values[:user_message]
-    else
-      after_update_options(requester)
-    end
+    self.user_message = values[:user_message] if values[:user_message].present?
+    after_update_options(requester) unless values.keys == [:user_message]
     self
   end
   api_relay_method(:update_request, :edit) do |values, requester|
