@@ -110,7 +110,7 @@
       = _('Default Value')
     .col-md-8
       = select_tag("field_default_value",
-                   default_value_form_options(@edit[:field_typ], @edit[:field_values], @edit[:field_default_value]),
+                   default_value_form_options(@edit[:field_values], @edit[:field_default_value]),
                    :class    => "selectpicker")
       :javascript
         miqSelectPickerEvent("field_default_value", "#{url}")

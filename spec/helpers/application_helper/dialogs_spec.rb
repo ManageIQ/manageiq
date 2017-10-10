@@ -545,48 +545,24 @@ describe ApplicationHelper::Dialogs do
   end
 
   describe "#default_value_form_options" do
-    let(:subject) { helper.default_value_form_options(field_type, field_values, field_default_value) }
+    let(:subject) { helper.default_value_form_options(field_values, field_default_value) }
 
     context "when the field values are empty" do
       let(:field_values) { [] }
 
-      context "when the field type is a DialogFieldDropDownList" do
-        let(:field_type) { "DialogFieldDropDownList" }
+      context "when the field default value is set" do
+        let(:field_default_value) { "some default" }
 
-        context "when the field default value is set" do
-          let(:field_default_value) { "some default" }
-
-          it "adds the ability to select no default value" do
-            expect(subject).to eq("<option value=\"\">&lt;None&gt;</option>")
-          end
-        end
-
-        context "when the field default value is not set" do
-          let(:field_default_value) { nil }
-
-          it "adds the ability to select no default value" do
-            expect(subject).to eq("<option value=\"\">&lt;None&gt;</option>")
-          end
+        it "adds the ability to select no default value" do
+          expect(subject).to eq("<option value=\"\">&lt;None&gt;</option>")
         end
       end
 
-      context "when the field type is a DialogFieldRadioButton" do
-        let(:field_type) { "DialogFieldRadioButton" }
+      context "when the field default value is not set" do
+        let(:field_default_value) { nil }
 
-        context "when the field default value is set" do
-          let(:field_default_value) { "some default" }
-
-          it "adds the ability to select no default value" do
-            expect(subject).to eq("<option value=\"\">&lt;None&gt;</option>")
-          end
-        end
-
-        context "when the field default value is not set" do
-          let(:field_default_value) { nil }
-
-          it "adds the ability to select no default value" do
-            expect(subject).to eq("<option value=\"\">&lt;None&gt;</option>")
-          end
+        it "adds the ability to select no default value" do
+          expect(subject).to eq("<option value=\"\">&lt;None&gt;</option>")
         end
       end
     end
@@ -594,51 +570,28 @@ describe ApplicationHelper::Dialogs do
     context "when the field values are not empty" do
       let(:field_values) { [%w(123 456)] }
 
-      context "when the field type is a DialogFieldDropDownList" do
-        let(:field_type) { "DialogFieldDropDownList" }
+      context "when the field default value is set" do
+        let(:field_default_value) { "123" }
 
-        context "when the field default value is set" do
-          let(:field_default_value) { "123" }
-
-          it "selects the default value and does not add any" do
-            expect(subject).to eq("<option selected=\"selected\" value=\"123\">456</option>")
-          end
-        end
-
-        context "when the field default value is not set" do
-          let(:field_default_value) { nil }
-
-          it "does not explicitly select anything" do
-            expect(subject).to eq("<option value=\"123\">456</option>")
-          end
+        it "adds a none option and selects the default value" do
+          expect(subject).to eq("<option value=\"\">&lt;None&gt;</option>\n<option selected=\"selected\" value=\"123\">456</option>")
         end
       end
 
-      context "when the field type is a DialogFieldRadioButton" do
-        let(:field_type) { "DialogFieldRadioButton" }
+      context "when the field default value is not set" do
+        let(:field_default_value) { nil }
 
-        context "when the field default value is set" do
-          let(:field_default_value) { "123" }
-
-          it "adds the ability to select no default value but selects the default" do
-            expected_html = <<-HTML
-<option value=\"\">&lt;None&gt;</option>
-<option selected=\"selected\" value=\"123\">456</option>
-            HTML
-            expect(subject).to eq(expected_html.chomp)
-          end
+        it "adds a none option and does not explicitly select anything" do
+          expect(subject).to eq("<option value=\"\">&lt;None&gt;</option>\n<option value=\"123\">456</option>")
         end
+      end
 
-        context "when the field default value is not set" do
-          let(:field_default_value) { nil }
+      context "when the field values contain a nil value" do
+        let(:field_default_value) { nil }
+        let(:field_values) { [%w(123 456), [nil, "empty"]] }
 
-          it "adds the ability to select no default value" do
-            expected_html = <<-HTML
-<option value=\"\">&lt;None&gt;</option>
-<option value=\"123\">456</option>
-            HTML
-            expect(subject).to eq(expected_html.chomp)
-          end
+        it "removes the nil value and replaces it with a 'none' option" do
+          expect(subject).to eq("<option value=\"\">&lt;None&gt;</option>\n<option value=\"123\">456</option>")
         end
       end
     end

@@ -116,13 +116,14 @@ module ApplicationHelper::Dialogs
     add_options_unless_read_only({}, tag_options, field)
   end
 
-  def default_value_form_options(field_type, field_values, field_default_value)
+  def default_value_form_options(field_values, field_default_value)
     no_default_value = [["<#{_('None')}>", nil]]
     if field_values.empty?
       values = no_default_value
     else
       values = field_values.collect(&:reverse)
-      values = no_default_value + values if field_type == "DialogFieldRadioButton"
+      values = values.reject { |value| value[1].nil? }
+      values = no_default_value + values
     end
 
     selected = field_default_value || nil
