@@ -62,6 +62,16 @@ class TopologyService
     end
   end
 
+  def disallowed_nodes(nodes)
+    remove_list = []
+    group_nodes_by_model(nodes) do |klass, node_of_resource| # node is hash { 10001 => 'CloudNetwork1r0001'}
+      node_resource_ids = node_of_resource.keys
+      remove_ids = node_resource_ids - Rbac::Filterer.filtered(klass.safe_constantize.where(:id => node_resource_ids)).map(&:id)
+      remove_list << remove_ids.map { |x| node_of_resource[x] } if remove_ids.present?
+    end
+    remove_list
+  end
+
   def build_recursive_topology(entity, entity_relationships_mapping, topo_items, links)
     unless entity.nil?
       topo_items[entity_id(entity)] = build_entity_data(entity)
@@ -79,12 +89,7 @@ class TopologyService
         end
       end
 
-      remove_list = []
-      group_nodes_by_model(topo_items) do |klass, node_of_resource| # node is hash { 10001 => 'CloudNetwork1r0001'}
-        node_resource_ids = node_of_resource.keys
-        remove_ids = node_resource_ids - Rbac::Filterer.filtered(klass.safe_constantize.where(:id => node_resource_ids)).map(&:id)
-        remove_list << remove_ids.map { |x| node_of_resource[x] } if remove_ids.present?
-      end
+      remove_list = disallowed_nodes(topo_items)
 
       # remove nodes and edges
       remove_list.flatten.each do |x|
