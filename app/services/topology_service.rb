@@ -72,6 +72,18 @@ class TopologyService
     remove_list
   end
 
+  def rbac_filter_nodes_and_edges(nodes, edges)
+    remove_list = disallowed_nodes(nodes)
+
+    remove_list.flatten.each do |x|
+      nodes.delete(x)
+      edges = edges.select do |edge|
+        !(edge[:source] == x || edge[:target] == x)
+      end
+    end
+    [nodes, edges]
+  end
+
   def build_recursive_topology(entity, entity_relationships_mapping, topo_items, links)
     unless entity.nil?
       topo_items[entity_id(entity)] = build_entity_data(entity)
@@ -89,18 +101,10 @@ class TopologyService
         end
       end
 
-      remove_list = disallowed_nodes(topo_items)
-
-      # remove nodes and edges
-      remove_list.flatten.each do |x|
-        topo_items.delete(x)
-        links = links.select do |edge|
-          !(edge[:source] == x || edge[:target] == x)
-        end
-      end
+      filtered_topo_items, filtered_links = rbac_filter_nodes_and_edges(topo_items, links)
     end
 
-    [topo_items, links]
+    [filtered_topo_items, filtered_links]
   end
 
   def build_rel_data_and_links(entity, entity_relationships, key, links, relation, topo_items)
