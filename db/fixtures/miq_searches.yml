@@ -1284,9 +1284,6 @@
           value: "waiting"
     search_type: default
     db: Container
-
-# Physical Servers default filters (Testados)
-
 - attributes:
     name: default_Over Sized
     description: Over Sized
@@ -1335,5 +1332,38 @@
             value: ""
     search_type: default
     db: PhysicalServer
-
-# Physical Servers default filters (Testando)
+- attributes:
+    name: default_Under Allocated
+    description: Under Allocated
+    filter: !ruby/object:MiqExpression
+      exp:
+        and:
+        - "<=":
+            field: PhysicalServer.hardware-v_pct_free_disk_space
+            value: 35
+        - IS NOT EMPTY:
+            field: PhysicalServer.hardware-v_pct_free_disk_space
+            value: ""
+    search_type: default
+    db: PhysicalServer
+- attributes:
+    name: default_Guest OS / Windows
+    description: Guest OS / Windows
+    filter: !ruby/object:MiqExpression
+      exp:
+        INCLUDES:
+          field: PhysicalServer.computer_system.operating_system-product_name
+          value: Win
+    search_type: default
+    db: PhysicalServer
+- attributes:
+    name: default_Guest OS / Linux
+    description: Guest OS / Linux
+    filter: !ruby/object:MiqExpression
+      exp:
+        not:
+          INCLUDES:
+            field: PhysicalServer.computer_system.operating_system-product_name
+            value: Win
+    search_type: default
+    db: PhysicalServer
