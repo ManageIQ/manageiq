@@ -48,6 +48,16 @@ module Rbac
 
     TAGGABLE_FILTER_CLASSES = CLASSES_THAT_PARTICIPATE_IN_RBAC - %w(EmsFolder) + %w(MiqGroup User)
 
+    NETWORK_MODELS_FOR_BELONGSTO_FILTER = %w(
+      CloudNetwork
+      CloudSubnet
+      FloatingIp
+      LoadBalancer
+      NetworkPort
+      NetworkRouter
+      SecurityGroup
+    ).freeze
+
     BELONGSTO_FILTER_CLASSES = %w(
       VmOrTemplate
       Host
@@ -56,8 +66,7 @@ module Rbac
       EmsCluster
       ResourcePool
       Storage
-      CloudNetwork
-    )
+    ) + NETWORK_MODELS_FOR_BELONGSTO_FILTER
 
     # key: MiqUserRole#name - user's role
     # value:
@@ -588,8 +597,8 @@ module Rbac
         # typically, this is the only one we want:
         vcmeta = vcmeta_list.last
 
-        if [ExtManagementSystem, Host].any? { |x| vcmeta.kind_of?(x) } && klass <= VmOrTemplate ||
-           vcmeta.kind_of?(ManageIQ::Providers::NetworkManager)        && klass <= CloudNetwork
+        if ([ExtManagementSystem, Host].any? { |x| vcmeta.kind_of?(x) } && klass <= VmOrTemplate) ||
+           (vcmeta.kind_of?(ManageIQ::Providers::NetworkManager)        && NETWORK_MODELS_FOR_BELONGSTO_FILTER.any? { |association_class| klass <= association_class.safe_constantize })
           vcmeta.send(association_name).to_a
         else
           vcmeta_list.grep(klass) + vcmeta.descendants.grep(klass)
