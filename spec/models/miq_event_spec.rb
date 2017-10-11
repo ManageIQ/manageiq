@@ -102,6 +102,20 @@ describe MiqEvent do
         expect(MiqAeEvent).not_to receive(:raise_evm_event)
         MiqEvent.raise_evm_event(@miq_server, "evm_server_start")
       end
+
+      it "will create miq_event object with username" do
+        user = FactoryGirl.create(:user_with_group, :userid => "test")
+        vm = FactoryGirl.create(:vm_vmware)
+        event = 'request_vm_start'
+        FactoryGirl.create(:miq_event_definition, :name => event)
+
+        User.with_user(user) do
+          event_obj = MiqEvent.raise_evm_event(vm, event)
+          expect(event_obj.user_id).to eq(user.id)
+          expect(event_obj.group_id).to eq(user.current_group.id)
+          expect(event_obj.tenant_id).to eq(user.current_tenant.id)
+        end
+      end
     end
 
     context "#process_evm_event" do

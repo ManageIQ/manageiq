@@ -11,16 +11,20 @@ module ProcessTasksMixin
         task_audit_event(:success, options, :message => msg)
       else
         assert_known_task(options)
-        options[:userid] ||= "system"
+        options[:userid] ||= User.current_user.try(:userid) || "system"
         invoke_tasks_queue(options)
       end
     end
 
     def invoke_tasks_queue(options)
+      user = User.current_user
       MiqQueue.submit_job(
         :class_name  => name,
         :method_name => "invoke_tasks",
-        :args        => [options]
+        :args        => [options],
+        :user_id     => user.id,
+        :group_id    => user.current_group.id,
+        :tenant_id   => user.current_tenant.id
       )
     end
 
@@ -74,11 +78,15 @@ module ProcessTasksMixin
 
           $log.error("An error occurred while invoking remote tasks...Requeueing for 1 minute from now.")
           $log.log_backtrace(err)
+          user = User.current_user
           MiqQueue.submit_job(
             :class_name  => name,
             :method_name => 'invoke_tasks_remote',
             :args        => [remote_options],
-            :deliver_on  => Time.now.utc + 1.minute
+            :deliver_on  => Time.now.utc + 1.minute,
+            :user_id     => user.id,
+            :group_id    => user.current_group.id,
+            :tenant_id   => user.current_tenant.id
           )
           next
         end
@@ -131,6 +139,7 @@ module ProcessTasksMixin
 
     # default implementation, can be overridden
     def invoke_task_local(task, instance, options, args)
+      user = User.current_user
       cb = {
         :class_name  => task.class.to_s,
         :instance_id => task.id,
@@ -143,7 +152,10 @@ module ProcessTasksMixin
         :instance_id  => instance.id,
         :method_name  => options[:task],
         :args         => args,
-        :miq_callback => cb
+        :miq_callback => cb,
+        :user_id      => user.id,
+        :group_id     => user.current_group.id,
+        :tenant_id    => user.current_tenant.id
       )
     end
 
