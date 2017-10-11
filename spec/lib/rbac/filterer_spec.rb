@@ -211,13 +211,42 @@ describe Rbac::Filterer do
     end
 
     context 'when class does not participate in RBAC' do
+      before do
+        @vm = FactoryGirl.create(:vm_vmware, :name => "VM1", :host => @host1, :ext_management_system => @ems)
+        ["2010-04-14T20:52:30Z", "2010-04-14T21:51:10Z"].each do |t|
+          @vm.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => t)
+        end
+      end
       let(:miq_ae_domain) { FactoryGirl.create(:miq_ae_domain) }
 
-      it 'returns same class as input' do
+      it 'returns the same class as input for MiqAeDomain' do
         User.with_user(admin_user) do
           results = described_class.search(:targets => [miq_ae_domain]).first
           expect(results.first).to be_an_instance_of(MiqAeDomain)
           expect(results).to match_array [miq_ae_domain]
+        end
+      end
+
+      it 'returns the same class as input for parent class that is not STI' do
+        User.with_user(admin_user) do
+          targets = @vm.metric_rollups
+
+          results = described_class.search(:targets => targets, :user => admin_user)
+          objects = results.first
+          expect(objects.length).to eq(2)
+          expect(objects).to match_array(targets)
+        end
+      end
+
+      it 'returns the same class as input for subclass that is not STI' do
+        User.with_user(admin_user) do
+          vm_perf = VmPerformance.find(@vm.metric_rollups.last.id)
+          targets = [vm_perf]
+
+          results = described_class.search(:targets => targets, :user => admin_user)
+          objects = results.first
+          expect(objects.length).to eq(1)
+          expect(objects).to match_array(targets)
         end
       end
     end
@@ -828,6 +857,18 @@ describe Rbac::Filterer do
             objects = results.first
             expect(objects.length).to eq(4)
             expect(objects).to eq(targets)
+          end
+
+          it "returns the correct class for different classes of targets" do
+            @ems3 = FactoryGirl.create(:ems_vmware, :name => 'ems3')
+            @ems4 = FactoryGirl.create(:ems_microsoft, :name => 'ems4')
+
+            targets = [@ems2, @ems4, @ems3, @ems]
+
+            results = described_class.search(:targets => targets, :user => user)
+            objects = results.first
+            expect(objects.length).to eq(4)
+            expect(objects).to match_array(targets)
           end
 
           it "finds both EMSes without belongsto filters" do

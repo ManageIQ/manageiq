@@ -218,6 +218,7 @@ module Rbac
           target_ids  = targets.collect(&:id)
           klass       = targets.first.class
           klass       = base_class if !klass.respond_to?(:find) && (base_class = rbac_base_class(klass))
+          klass       = safe_base_class(klass) if is_sti?(klass) # always scope to base class if model is STI
         end
         scope = apply_scope(klass, scope)
         scope = apply_select(klass, scope, options[:extra_cols]) if options[:extra_cols]
@@ -277,6 +278,10 @@ module Rbac
       attrs[:auth_count] = auth_count unless options[:skip_counts]
 
       return targets, attrs
+    end
+
+    def is_sti?(klass)
+      klass.respond_to?(:finder_needs_type_condition?) ? klass.finder_needs_type_condition? : false
     end
 
     def include_references(scope, klass, include_for_find, exp_includes)
