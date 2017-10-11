@@ -211,6 +211,10 @@ module Rbac
         scope = apply_scope(klass, scope)
         scope = apply_select(klass, scope, options[:extra_cols]) if options[:extra_cols]
       elsif targets.kind_of?(Array)
+        Vmdb::Deprecation.deprecation_warning(":targets =>[#{targets.first.kind_of?(Numeric) ? "Integers" : "Objects"}]",
+                                              "Pass actual scopes to rbac",
+                                              caller(5)) unless Rails.env.production? ##
+        raise "fix me" unless options[:array_ok]
         if targets.first.kind_of?(Numeric)
           target_ids = targets
           # assume klass is passed in
@@ -299,7 +303,8 @@ module Rbac
     end
 
     def filtered_object(object, options = {})
-      filtered([object], options).first
+      # array ok for now
+      filtered([object], options.merge(:array_ok => true)).first
     end
 
     private
