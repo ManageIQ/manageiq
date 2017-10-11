@@ -173,6 +173,15 @@ module MiqServer::RoleManagement
     assigned_server_role
   end
 
+  LOGIN_ROLES = %w(user_interface web_services).freeze
+  def reset_login_roles
+    LOGIN_ROLES.each { |r| assign_role(r, 1) }
+  end
+
+  def self.reset_login_roles
+    MiqServer.my_server.reset_login_roles
+  end
+
   def inactive_role_names
     inactive_roles.collect(&:name).sort
   end
