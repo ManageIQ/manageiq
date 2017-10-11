@@ -13,7 +13,7 @@ module PgInspector
 
 #{HELP_MSG_SHORT}
 
-Use password in PGPASSWORD environment if no password file given.
+Use password in PGPASSWORD environment variable if no password file given.
 
 Options:
 BANNER
@@ -22,7 +22,7 @@ BANNER
         opt(:port, "PostgreSQL server port",
             :short => "p", :default => 5432)
         opt(:user, "PostgreSQL user",
-            :type => :string, :short => "u", :default => "postgres")
+            :type => :string, :short => "u", :default => "root")
         opt(:database, "Database to output stat activity, with `-m' to only output activity for this Database",
             :type => :string, :short => "d", :default => "postgres")
         opt(:output, "Output file",
