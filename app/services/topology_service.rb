@@ -82,7 +82,7 @@ class TopologyService
     [nodes, edges]
   end
 
-  def build_recursive_topology(entity, entity_relationships_mapping, topo_items, links)
+  def build_recursive_topology(entity, entity_relationships_mapping, topo_items, links, called_from_special_controller = true)
     unless entity.nil?
       topo_items[entity_id(entity)] = build_entity_data(entity)
       unless entity_relationships_mapping.nil?
@@ -98,11 +98,9 @@ class TopologyService
           end
         end
       end
-
-      filtered_topo_items, filtered_links = rbac_filter_nodes_and_edges(topo_items, links)
     end
 
-    [filtered_topo_items, filtered_links]
+    called_from_special_controller ? rbac_filter_nodes_and_edges(topo_items, links) : [topo_items, links]
   end
 
   def build_rel_data_and_links(entity, entity_relationships, key, links, relation, topo_items)
@@ -110,7 +108,8 @@ class TopologyService
       topo_items[entity_id(relation)] = build_entity_data(relation)
       links << build_link(entity_id(entity), entity_id(relation))
     end
-    build_recursive_topology(relation, entity_relationships[key], topo_items, links)
+
+    build_recursive_topology(relation, entity_relationships[key], topo_items, links, false)
   end
 
   def build_entity_relationships(included_relations)
