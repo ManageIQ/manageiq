@@ -33,7 +33,7 @@ module PgInspector
 
     private
 
-    def merge_lock_and_connection(connections)
+    def merge_lock_and_connection
       some_connection_blocked = false
       self.connections["connections"].each do |conn|
         conn["blocked_by"] = find_lock_blocking_spid(conn["spid"])
