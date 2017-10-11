@@ -4,7 +4,7 @@ class DialogFieldSortedItem < DialogField
   def initialize_with_values(dialog_values)
     if load_values_on_init?
       raw_values
-      @value = value_from_dialog_fields(dialog_values) || default_value
+      @value = value_from_dialog_fields(dialog_values) || default_value_if_included
     else
       @raw_values = initial_values
     end
@@ -32,10 +32,8 @@ class DialogFieldSortedItem < DialogField
     options[:sort_order] = value.to_sym
   end
 
-  # Sort values before sending back
   def values
-    values_data = raw_values
-    sort_data(values_data)
+    raw_values
   end
 
   def get_default_value
@@ -79,6 +77,14 @@ class DialogFieldSortedItem < DialogField
 
   private
 
+  def add_nil_option
+    @raw_values.unshift(nil_option).reject!(&:empty?)
+  end
+
+  def default_value_if_included
+    default_value if default_value_included?(@raw_values)
+  end
+
   def sort_data(data_to_sort)
     return data_to_sort if sort_by == :none
 
@@ -89,12 +95,22 @@ class DialogFieldSortedItem < DialogField
     data_to_sort
   end
 
+  def determine_selected_default_value
+    use_first_value_as_default unless default_value_included?(@raw_values)
+    self.value ||= default_value.nil? && data_type == "integer" ? nil : default_value.send(value_modifier)
+  end
+
   def raw_values
     @raw_values ||= dynamic ? values_from_automate : static_raw_values
-    use_first_value_as_default unless default_value_included?(@raw_values)
-    self.value ||= default_value.send(value_modifier)
-
+    reject_extranneous_nil_values unless dynamic?
+    @raw_values = sort_data(@raw_values)
+    add_nil_option unless dynamic?
+    determine_selected_default_value
     @raw_values
+  end
+
+  def reject_extranneous_nil_values
+    @raw_values = @raw_values.reject { |value| value[0].nil? }
   end
 
   def use_first_value_as_default
@@ -106,7 +122,7 @@ class DialogFieldSortedItem < DialogField
   end
 
   def static_raw_values
-    self[:values].to_miq_a.reject { |value| value[0].nil? }.unshift(nil_option).reject(&:empty?)
+    self[:values].to_miq_a.reject { |value| value[0].nil? }.reject(&:empty?)
   end
 
   def initial_values

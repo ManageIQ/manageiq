@@ -1,62 +1,139 @@
 describe DialogFieldDropDownList do
   context "dialog_field_drop_down_list" do
-    before(:each) do
-      @df = FactoryGirl.create(:dialog_field_sorted_item, :label => 'drop_down_list', :name => 'drop_down_list')
+    let(:data_type) { "string" }
+    let(:sort_by) { :description }
+    let(:sort_order) { :ascending }
+    before do
+      @df = FactoryGirl.create(:dialog_field_sorted_item,
+                               :label      => 'drop_down_list',
+                               :name       => 'drop_down_list',
+                               :data_type  => data_type,
+                               :sort_by    => sort_by,
+                               :sort_order => sort_order)
     end
 
-    it "sort_by" do
-      expect(@df.sort_by).to eq(:description)
-      @df.sort_by = :none
-      expect(@df.sort_by).to eq(:none)
-      @df.sort_by = :value
-      expect(@df.sort_by).to eq(:value)
-      expect { @df.sort_by = :data }.to raise_error(RuntimeError)
-      expect(@df.sort_by).to eq(:value)
+    describe "#sort_by" do
+      it "allows setters and getters" do
+        expect(@df.sort_by).to eq(:description)
+        @df.sort_by = :none
+        expect(@df.sort_by).to eq(:none)
+        @df.sort_by = :value
+        expect(@df.sort_by).to eq(:value)
+        expect { @df.sort_by = :data }.to raise_error(RuntimeError)
+        expect(@df.sort_by).to eq(:value)
+      end
     end
 
-    it "sort_order" do
-      expect(@df.sort_order).to eq(:ascending)
-      @df.sort_order = :descending
-      expect(@df.sort_order).to eq(:descending)
-      expect { @df.sort_order = :mixed }.to raise_error(RuntimeError)
-      expect(@df.sort_order).to eq(:descending)
+    describe "#sort_order" do
+      it "allows setters and getters" do
+        expect(@df.sort_order).to eq(:ascending)
+        @df.sort_order = :descending
+        expect(@df.sort_order).to eq(:descending)
+        expect { @df.sort_order = :mixed }.to raise_error(RuntimeError)
+        expect(@df.sort_order).to eq(:descending)
+      end
     end
 
-    it "return sorted values array as strings" do
-      @df.data_type = "string"
-      @df.values = [%w(2 Y), %w(1 Z), %w(3 X)]
-      expect(@df.values).to eq([[nil, "<None>"], %w(3 X), %w(2 Y), %w(1 Z)])
-      @df.sort_order = :descending
-      expect(@df.values).to eq([%w(1 Z), %w(2 Y), %w(3 X), [nil, "<None>"]])
+    describe "sorting #values" do
+      before do
+        @df.values = [%w(2 Y), %w(1 Z), %w(3 X)]
+      end
 
-      @df.sort_by = :value
-      @df.sort_order = :ascending
-      expect(@df.values).to eq([[nil, "<None>"], %w(1 Z), %w(2 Y), %w(3 X)])
-      @df.sort_order = :descending
-      expect(@df.values).to eq([%w(3 X), %w(2 Y), %w(1 Z), [nil, "<None>"]])
+      context "when the data type is a string" do
+        let(:data_type) { "string" }
 
-      @df.sort_by = :none
-      @df.sort_order = :ascending
-      expect(@df.values).to eq([[nil, "<None>"], %w(2 Y), %w(1 Z), %w(3 X)])
-      @df.sort_order = :descending
-      expect(@df.values).to eq([[nil, "<None>"], %w(2 Y), %w(1 Z), %w(3 X)])
-    end
+        context "when sorting by description" do
+          context "when sorting ascending" do
+            it "returns the sorted values with a nil option prepended" do
+              expect(@df.values).to eq([[nil, "<None>"], %w(3 X), %w(2 Y), %w(1 Z)])
+            end
+          end
 
-    it "return sorted values array as integers" do
-      @df.data_type = "integer"
-      @df.values = [%w(2 Y), %w(10 Z), %w(3 X)]
+          context "when sorting descending" do
+            let(:sort_order) { :descending }
 
-      @df.sort_by = :value
-      @df.sort_order = :ascending
-      expect(@df.values).to eq([[nil, "<None>"], %w(2 Y), %w(3 X), %w(10 Z)])
-      @df.sort_order = :descending
-      expect(@df.values).to eq([%w(10 Z), %w(3 X), %w(2 Y), [nil, "<None>"]])
+            it "returns the sorted values with a nil option prepended" do
+              expect(@df.values).to eq([[nil, "<None>"], %w(1 Z), %w(2 Y), %w(3 X)])
+            end
+          end
+        end
 
-      @df.sort_by = :none
-      @df.sort_order = :ascending
-      expect(@df.values).to eq([[nil, "<None>"], %w(2 Y), %w(10 Z), %w(3 X)])
-      @df.sort_order = :descending
-      expect(@df.values).to eq([[nil, "<None>"], %w(2 Y), %w(10 Z), %w(3 X)])
+        context "when sorting by value" do
+          let(:sort_by) { :value }
+
+          context "when sorting ascending" do
+            it "returns the sorted values with a nil option prepended" do
+              expect(@df.values).to eq([[nil, "<None>"], %w(1 Z), %w(2 Y), %w(3 X)])
+            end
+          end
+
+          context "when sorting descending" do
+            let(:sort_order) { :descending }
+
+            it "returns the sorted values with a nil option prepended" do
+              expect(@df.values).to eq([[nil, "<None>"], %w(3 X), %w(2 Y), %w(1 Z)])
+            end
+          end
+        end
+
+        context "when sorting by none" do
+          let(:sort_by) { :none }
+
+          context "when sorting ascending" do
+            it "returns the unsorted values with a nil option prepended" do
+              expect(@df.values).to eq([[nil, "<None>"], %w(2 Y), %w(1 Z), %w(3 X)])
+            end
+          end
+
+          context "when sorting descending" do
+            let(:sort_order) { :descending }
+
+            it "returns the unsorted values with a nil option prepended" do
+              expect(@df.values).to eq([[nil, "<None>"], %w(2 Y), %w(1 Z), %w(3 X)])
+            end
+          end
+        end
+      end
+
+      context "when the data type is an integer" do
+        let(:data_type) { "integer" }
+
+        context "when sorting by value" do
+          let(:sort_by) { :value }
+
+          context "when sorting ascending" do
+            it "returns the sorted values with a nil option prepended" do
+              expect(@df.values).to eq([[nil, "<None>"], %w(1 Z), %w(2 Y), %w(3 X)])
+            end
+          end
+
+          context "when sorting descending" do
+            let(:sort_order) { :descending }
+
+            it "returns the sorted values with a nil option prepended" do
+              expect(@df.values).to eq([[nil, "<None>"], %w(3 X), %w(2 Y), %w(1 Z)])
+            end
+          end
+        end
+
+        context "when sorting by none" do
+          let(:sort_by) { :none }
+
+          context "when sorting ascending" do
+            it "returns the unsorted values with a nil option prepended" do
+              expect(@df.values).to eq([[nil, "<None>"], %w(2 Y), %w(1 Z), %w(3 X)])
+            end
+          end
+
+          context "when sorting descending" do
+            let(:sort_order) { :descending }
+
+            it "returns the unsorted values with a nil option prepended" do
+              expect(@df.values).to eq([[nil, "<None>"], %w(2 Y), %w(1 Z), %w(3 X)])
+            end
+          end
+        end
+      end
     end
 
     context "#initialize_with_values" do
@@ -154,7 +231,7 @@ describe DialogFieldDropDownList do
 
           it "returns the values" do
             expect(dialog_field.refresh_json_value("789")).to eq(
-              :refreshed_values => [["789", 101], ["123", 456], [nil, "<None>"]],
+              :refreshed_values => [[nil, "<None>"], ["789", 101], ["123", 456]],
               :checked_value    => "789",
               :read_only        => true,
               :visible          => true
@@ -190,6 +267,16 @@ describe DialogFieldDropDownList do
 
           it "returns the values from automate" do
             expect(dialog_field.values).to eq(%w(automate values))
+          end
+
+          context "when the values returned contain a nil" do
+            before do
+              allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return([[nil, "Choose something!"]])
+            end
+
+            it "returns the values from automate" do
+              expect(dialog_field.values).to eq([[nil, "Choose something!"]])
+            end
           end
         end
 
@@ -235,11 +322,11 @@ describe DialogFieldDropDownList do
 
       context "when the raw values are already set" do
         before do
-          dialog_field.instance_variable_set(:@raw_values, %w(potato potato))
+          dialog_field.instance_variable_set(:@raw_values, [%w(potato potato)])
         end
 
-        it "returns the raw values" do
-          expect(dialog_field.values).to eq(%w(potato potato))
+        it "returns the raw values with a nil option" do
+          expect(dialog_field.values).to eq([[nil, "<None>"], %w(potato potato)])
         end
       end
 
