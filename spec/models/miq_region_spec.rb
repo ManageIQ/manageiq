@@ -180,6 +180,21 @@ describe MiqRegion do
       end
     end
 
+    describe "#remove_settings_path_for_resource" do
+      it "removes the specified setting record and all children" do
+        settings = {:some_test_setting => {:setting => {:deeper => 1}, :other => 2}}
+        expect(region).to receive(:reload_all_server_settings).twice
+
+        region.add_settings_for_resource(settings)
+
+        expect(Vmdb::Settings.for_resource(region).some_test_setting.setting.deeper).to eq(1)
+
+        region.remove_settings_path_for_resource(:some_test_setting, :setting)
+
+        expect(Vmdb::Settings.for_resource(region).some_test_setting.to_h).to eq(:other => 2)
+      end
+    end
+
     describe "#reload_all_server_settings" do
       it "queues #reload_settings for the started servers" do
         started_server = FactoryGirl.create(:miq_server, :status => "started")
