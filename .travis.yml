@@ -21,6 +21,10 @@ matrix:
   - rvm: 2.4.2
     env: TEST_SUITE=brakeman
   fast_finish: true
+  include:
+    - rvm: '2.3.1'
+      env: TEST_SUITE=miq_benchmark
+      sudo: required
 addons:
   postgresql: '9.5'
 before_install:
