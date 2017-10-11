@@ -29,10 +29,8 @@ BANNER
             :type => :string, :short => "u", :default => "root")
         opt(:database, "ManageIQ Database to output server information",
             :type => :string, :short => "d", :default => "vmdb_production")
-        opt(:output_path, "Output file path",
-            :type => :string, :default => DEFAULT_OUTPUT_PATH)
         opt(:output, "Output file",
-            :type => :string, :short => "o", :default => "server.yml")
+            :type => :string, :short => "o", :default => DEFAULT_OUTPUT_PATH + "server.yml")
         opt(:password_file, "File content to use as password",
             :type => :string, :short => "f")
       end
@@ -84,7 +82,7 @@ SQL
     end
 
     def output_file_path
-      "#{options[:output_path]}#{options[:output]}"
+      options[:output]
     end
 
     def new_output_file_path
