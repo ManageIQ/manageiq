@@ -1,4 +1,4 @@
-module ApplicationController::Filter::SubstMixin
+module MiqExpression::SubstMixin
   include ActiveSupport::Concern
   def exp_build_table_or_nil(exp)
     return nil if exp == {"???" => "???"}
