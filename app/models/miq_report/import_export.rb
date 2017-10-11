@@ -11,8 +11,8 @@ module MiqReport::ImportExport
         raise _("Incorrect format, only policy records can be imported.")
       end
 
-      # Ensure that all columns serialized as hashes in the report have keys that are symbols
-      self.column_names.each { |k| report[k].deep_symbolize_keys! if report[k].kind_of?(Hash) }
+      report[:db_options] ||= report["db_options"]
+      report[:db_options].deep_symbolize_keys! if report[:db_options]
 
       user = options[:user] || User.find_by_userid(options[:userid])
       report.merge!("miq_group_id" => user.current_group_id, "user_id" => user.id)
