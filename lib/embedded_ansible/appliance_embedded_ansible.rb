@@ -1,4 +1,6 @@
-require 'linux_admin'
+require "awesome_spawn"
+require "fileutils"
+require "securerandom"
 
 class ApplianceEmbeddedAnsible < EmbeddedAnsible
   TOWER_VERSION_FILE     = "/var/lib/awx/.tower_version".freeze
@@ -10,9 +12,14 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
   HTTPS_PORT             = 54_322
 
   def self.available?
+    require "linux_admin"
     return false unless MiqEnvironment::Command.is_appliance?
     required_rpms = Set["ansible-tower-server", "ansible-tower-setup"]
     required_rpms.subset?(LinuxAdmin::Rpm.list_installed.keys.to_set)
+  end
+
+  def initialize
+    require "linux_admin"
   end
 
   def start

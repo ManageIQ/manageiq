@@ -1,6 +1,3 @@
-require "linux_admin"
-require "awesome_spawn"
-
 describe EmbeddedAnsible do
   context "with no available subclass" do
     before do

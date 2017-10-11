@@ -1,9 +1,3 @@
-require "securerandom"
-require "awesome_spawn"
-require "linux_admin"
-require "ansible_tower_client"
-require "fileutils"
-
 class EmbeddedAnsible
   include Vmdb::Logging
 
@@ -11,6 +5,7 @@ class EmbeddedAnsible
   WAIT_FOR_ANSIBLE_SLEEP = 1.second
 
   def self.new
+    require "ansible_tower_client"
     self == EmbeddedAnsible ? detect_available_platform.new : super
   end
 
