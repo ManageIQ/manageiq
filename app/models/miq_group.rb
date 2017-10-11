@@ -43,6 +43,10 @@ class MiqGroup < ApplicationRecord
     description
   end
 
+  def settings
+    super && super.with_indifferent_access
+  end
+
   def self.with_allowed_roles_for(user_or_group)
     includes(:miq_user_role).where.not({:miq_user_roles => {:name => user_or_group.disallowed_roles}})
   end
