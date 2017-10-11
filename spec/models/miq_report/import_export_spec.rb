@@ -7,7 +7,8 @@ describe MiqReport::ImportExport do
                                      :tz         => "Eastern Time (US & Canada)",
                                      :col_order  => ["name", "boot_time", "disks_aligned"],
                                      :cols       => ["name", "boot_time", "disks_aligned"],
-                                     :db_options => {:rpt_type => "ChargebackContainerProject"}
+                                     :db_options => {:rpt_type => "ChargebackContainerProject"},
+                                     "include"   => {"columns" => %w(col1 col2)}
                                     )
   end
 
@@ -40,13 +41,21 @@ describe MiqReport::ImportExport do
         expect(result[:status]).to eq(:add)
         expect(MiqReport.count).to eq(1)
       end
+    end
 
-      it "imports from json and preserves symbolized keys in serialized columns" do
+    context "keys symbolizing" do
+      let(:report) do
         @options[:save] = true
         MiqReport.import_from_hash(@from_json, @options)
+        MiqReport.last
+      end
 
-        report = MiqReport.last
+      it "imports from json and preserves symbolized keys in `db_options` section " do
         expect(report.db_options[:rpt_type]).to_not be_nil
+      end
+
+      it "keeps string keys in 'include:' section" do
+        expect(report["include"]["columns"]).to_not be_nil
       end
     end
 
