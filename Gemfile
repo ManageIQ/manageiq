@@ -149,7 +149,7 @@ group :automate, :seed, :manageiq_default do
 end
 
 group :replication, :manageiq_default do
-  gem "pg-pglogical",                   "~>1.1.0",       :require => false
+  gem "pg-pglogical",                   "~>2.0.0",       :require => false
 end
 
 group :rest_api, :manageiq_default do
