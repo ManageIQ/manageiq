@@ -243,5 +243,17 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
 
       attributes.merge!(extra_attributes)
     end
+
+    def network_groups(extra_attributes = {})
+      attributes = {
+        :model_class    => ::NetworkGroup,
+        :association    => :network_groups,
+        :builder_params => {
+          :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
+        }
+      }
+
+      attributes.merge!(extra_attributes)
+    end
   end
 end
