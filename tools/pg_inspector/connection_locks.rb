@@ -7,7 +7,7 @@ require 'pg_inspector/util'
 module PgInspector
   class LockConnectionYAML < PgInspectorOperation
     HELP_MSG_SHORT = "Dump lock friendly connection information to YAML file".freeze
-    attr_accessor :locks
+    attr_accessor :locks, :connections
 
     def parse_options(args)
       self.options = Trollop.options(args) do
@@ -21,12 +21,13 @@ module PgInspector
     end
 
     def run
+      load_connection_file
       load_lock_file
       process_lock_file
       Util.dump_to_yml_file(
-        merge_lock_and_connection(
-          YAML.load_file(options[:connections])
-        ), "Lock friendly connection info", options[:output]
+        merge_lock_and_connection,
+        "Lock friendly connection info",
+        options[:output]
       )
     end
 
@@ -34,7 +35,7 @@ module PgInspector
 
     def merge_lock_and_connection(connections)
       some_connection_blocked = false
-      connections["connections"].each do |conn|
+      self.connections["connections"].each do |conn|
         conn["blocked_by"] = find_lock_blocking_spid(conn["spid"])
         unless conn["blocked_by"].empty?
           some_connection_blocked = true
@@ -44,11 +45,19 @@ module PgInspector
       unless some_connection_blocked
         puts "Every connection is OK and not blocked. No need to generate lock graph."
       end
-      connections
+      self.connections
+    end
+
+    def load_connection_file
+      self.connections = YAML.load_file(options[:connections])
+    rescue => e
+      Util.error_exit(e)
     end
 
     def load_lock_file
       self.locks = YAML.load_file(options[:locks])
+    rescue => e
+      Util.error_exit(e)
     end
 
     def process_lock_file
