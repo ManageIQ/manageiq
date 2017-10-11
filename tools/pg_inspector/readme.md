@@ -8,28 +8,46 @@ Step 1: dump active connections to YAML file
 
 Run `pg_inspector.rb connections`, and will dump current `pg_stat_activity` to a YAML file. It will also dump `pg_locks`. Database password should be given in either a file using `-f` option or PGPASSWORD environment variable.
 
-It by default use `postgres` user to login local postgres server, and will ask you for password. If your database setting doesn't need a password, you can leave it as empty. The output connection file is `pg_inspector/output/active_connections.yml` by default, and lock file is `pg_inspector/output/locks.yml`. You can connect to a different database host by `-s` option, using a different user by `-u` option, and output to different place by `-o` for active connections, `-l` for locks. But default settings and empty password should be sufficient to run in master node of appliance. This dump operation can be run even after database get blocked, so this can be run only when blocking happens.
+Examples:
+```
+PGPASSWORD=smartvm pg_inspector.rb connections
+pg_inspector.rb connections -u username -f file_that_contains_password -s host -p port -o output_file -l locks_output_file
+```
+
+It by default use `root` user to login local postgres server, and will ask you for password. The output connection file is `pg_inspector/output/active_connections.yml` by default, and lock file is `pg_inspector/output/locks.yml`. You can connect to a different database host by `-s` option, using a different user by `-u` option, and output to different place by `-o` for active connections, `-l` for locks. But default settings and empty password should be sufficient to run in master node of appliance. This dump operation can be run even after database get blocked.
 
 Step 2: dump ManageIQ server information to YAML file
 -----------------------------------------------------
 
-Run `pg_inspector.rb servers` will dump ManageIQ server information in a YAML file. Database password is given in the same way as step 1. The YAML file is by default `pg_inspector/output/server_MM-DD-YYYY_HH:MM:SS.yml`, and a symlink `pg_inspector/output/server.yml` will be linked to the newest server dump file.
+Run `pg_inspector.rb servers` will dump ManageIQ server information in a YAML file. Database password is given in the same way as step 1. The YAML file is by default `pg_inspector/output/server.yml`. New one will overwrite old one only if new one dumps successfully. This step can't be dump if blocking happens, so it should be run as a periodical task.
 
-You can give host, user, output name options the same way as step 1. This step can't be dump when postgres server blocked, so you need to run it periodically to get (hopefully) up to date dump file.
+Examples:
+```
+PGPASSWORD=smartvm pg_inspector.rb servers
+pg_inspector.rb servers -u username -f file_that_contains_password -s host -p port -o output_file
+```
 
 Step 3: Combine connections and servers information to human readable format
 ----------------------------------------------------------------------------
 
-Run `pg_inspector.rb human` will combine information gathered from step 1 and step 2 to a human readable YAML file. It doesn't require database access.
+Run `pg_inspector.rb human` will combine information gathered from step 1 and step 2 to a human readable YAML file. It doesn't require database access and will take default output name from step 1 and step 2 as input. The output file will by default as `pg_inspector/output/human.yml`. It has four sections: servers, workers, connections and other_processes.
 
-The output file will by default as `pg_inspector/output/human.yml`. It has four sections: servers, workers, connections and other_processes.
+Examples:
+```
+pg_inspector.rb human
+pg_inspector.rb human -c connections.yml -s servers.yml -o human.yml
+```
 
 Step 4: Combine human.yml file and lock file
 --------------------------------------------
 
-Run `pg_inspector.rb locks` will combine lock output from step 1 and human.yml from step3. It doesn't require database access.
+Run `pg_inspector.rb locks` will combine lock output from step 1 and human.yml from step 3. It doesn't require database access and will take default output name from step 1 and step 3 as input. The output file will by default as `pg_inspector/output/locks_output.yml`. The file organization will be same as step 3, but each connection has a `blocked_by` property indicate it's blocked by which connection.
 
-The output file will by default as `pg_inspector/output/locks_output.yml`. The file organization will be same as step 3, but each connection has a `blocked_by` property indicate it's blocked by which connection.
+Examples:
+```
+pg_inspector.rb locks
+pg_inspector.rb locks -l locks.yml -c human.yml -o locks_output.yml
+```
 
 After four steps
 ----------------
