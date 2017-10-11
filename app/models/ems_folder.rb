@@ -159,10 +159,24 @@ class EmsFolder < ApplicationRecord
   #     :exclude_non_display_folders => false
   def folder_path_objs(*args)
     options = args.extract_options!
-    folders = path(:of_type => "EmsFolder")
-    folders = folders[1..-1] if options[:exclude_root_folder]
-    folders = folders.reject(&:hidden?) if options[:exclude_non_display_folders]
-    folders
+    self.class.apply_folder_options(path(:of_type => "EmsFolder"), options)
+  end
+
+  # similar to folder_path_objs, but called on a scope
+  def self.folder_path_objs(relationship_type, *args)
+    options = args.extract_options!
+    folder_rels = Relationship.find_by(:resource_id   => select(:id),
+                                       :resource_type => "EmsFolder",
+                                       :relationship  => relationship_type)
+    folders = if folder_rels.nil? # parent folder has no parents, use the parent folder
+                [first].compact
+              else
+                folder_path_resource_ids = folder_rels.path.where(:resource_type => "EmsFolder",
+                                                                  :relationship  => relationship_type)
+                                                      .select(:resource_id)
+                EmsFolder.where(:id => folder_path_resource_ids)
+              end
+    apply_folder_options(folders, options)
   end
 
   def folder_path(*args)
@@ -194,4 +208,11 @@ class EmsFolder < ApplicationRecord
     end
   end
   private_class_method :child_folder_paths_recursive
+
+  def self.apply_folder_options(folders, options)
+    # we can translate these into scopes if needed
+    folders = folders[1..-1] if options[:exclude_root_folder]
+    folders = folders.reject(&:hidden?) if options[:exclude_non_display_folders]
+    folders
+  end
 end
