@@ -58,19 +58,23 @@ module Spec
       def create_vmware_vms
         @active_vm = FactoryGirl.create(:vm_vmware,
                                         :miq_group_id => @miq_group.id,
+                                        :evm_owner_id => @user.id,
                                         :ems_id       => @ems.id,
                                         :storage_id   => @storage.id,
                                         :hardware     => @hw1,
                                         :tenant       => @tenant)
         @archived_vm = FactoryGirl.create(:vm_vmware,
                                           :miq_group_id => @miq_group.id,
+                                          :evm_owner_id => @user.id,
                                           :hardware     => @hw2)
         @orphaned_vm = FactoryGirl.create(:vm_vmware,
                                           :miq_group_id => @miq_group.id,
+                                          :evm_owner_id => @user.id,
                                           :storage_id   => @storage.id,
                                           :hardware     => @hw3)
         @retired_vm = FactoryGirl.create(:vm_vmware,
                                          :miq_group_id => @miq_group.id,
+                                         :evm_owner_id => @user.id,
                                          :retired      => true,
                                          :hardware     => @hw4)
       end
@@ -78,16 +82,20 @@ module Spec
       def create_google_vms
         @active_vm = FactoryGirl.create(:vm_google,
                                         :miq_group_id          => @miq_group.id,
+                                        :evm_owner_id          => @user.id,
                                         :ext_management_system => @ems,
                                         :tenant                => @tenant)
         @archived_vm = FactoryGirl.create(:vm_google,
                                           :miq_group_id => @miq_group.id,
+                                          :evm_owner_id => @user.id,
                                           :tenant       => @tenant)
         @orphaned_vm = FactoryGirl.create(:vm_google,
                                           :miq_group_id => @miq_group.id,
+                                          :evm_owner_id => @user.id,
                                           :tenant       => @tenant)
         @retired_vm = FactoryGirl.create(:vm_google,
                                          :miq_group_id => @miq_group.id,
+                                         :evm_owner_id => @user.id,
                                          :retired      => true,
                                          :tenant       => @tenant)
       end
@@ -177,8 +185,7 @@ module Spec
         options = {:src_vm_id => @vm_template.id, :requester => @user}.merge(vmware_requested_quota_values)
         model = {"vmware_service_item" => {:type      => 'atomic',
                                            :prov_type => 'vmware',
-                                           :request   => options}
-                 }
+                                           :request   => options}}
         build_service_template_tree(model)
         @service_request = build_service_template_request("vmware_service_item", @user, :dialog => {"test" => "dialog"})
       end
