@@ -1,5 +1,5 @@
 describe MiqReport do
   context "Seeding" do
-    include_examples(".seed called multiple times", 144)
+    include_examples(".seed called multiple times", 145)
   end
 end
