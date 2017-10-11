@@ -79,16 +79,16 @@ module ManageIQ
 
       private
 
-      def stack_resources_by_depth(stack, depth = 2)
+      def stack_resources_by_depth(stack)
         return @stack_resources if @stack_resources
         # TODO(lsmola) loading this from already obtained nested stack hierarchy will be more effective. This is one
         # extra API call. But we will need to change order of loading, so we have all resources first.
-        @stack_resources = @orchestration_service.list_resources(:stack => stack, :nested_depth => depth).body['resources']
+        @stack_resources = @orchestration_service.list_resources(:stack => stack, :nested_depth => 2).body['resources']
       end
 
       def filter_stack_resources_by_resource_type(resource_type_list)
         resources = []
-        stacks.each do |stack|
+        root_stacks.each do |stack|
           # Filtering just server resources which is important to us for getting Purpose of the node
           # (compute, controller, etc.).
           resources += stack_resources_by_depth(stack).select do |x|
