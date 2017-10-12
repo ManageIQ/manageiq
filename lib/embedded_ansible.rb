@@ -78,6 +78,10 @@ class EmbeddedAnsible
   def database_connection
     ActiveRecord::Base.connection
   end
+
+  def database_configuration
+    @db_config ||= ActiveRecord::Base.configurations[Rails.env]
+  end
 end
 
 Dir.glob(File.join(File.dirname(__FILE__), "embedded_ansible/*.rb")).each { |f| require_dependency f }

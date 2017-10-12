@@ -134,7 +134,6 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
     admin_auth    = find_or_create_admin_authentication
     rabbitmq_auth = find_or_create_rabbitmq_authentication
     database_auth = find_or_create_database_authentication
-    db_config     = Rails.configuration.database_configuration[Rails.env]
 
     <<-EOF.strip_heredoc
       [tower]
@@ -145,8 +144,8 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
       [all:vars]
       admin_password='#{admin_auth.password}'
 
-      pg_host='#{db_config["host"] || "localhost"}'
-      pg_port='#{db_config["port"] || "5432"}'
+      pg_host='#{database_configuration["host"] || "localhost"}'
+      pg_port='#{database_configuration["port"] || "5432"}'
 
       pg_database='awx'
       pg_username='#{database_auth.userid}'
