@@ -27,6 +27,7 @@ class CustomButton < ApplicationRecord
     CloudVolume,
     ContainerGroup,
     ContainerImage,
+    ContainerNode,
     ContainerProject,
     ContainerTemplate,
     ContainerVolume,
@@ -35,6 +36,7 @@ class CustomButton < ApplicationRecord
     GenericObject,
     Host,
     LoadBalancer,
+    MiqGroup,
     MiqTemplate,
     NetworkRouter,
     OrchestrationStack,
@@ -42,6 +44,8 @@ class CustomButton < ApplicationRecord
     Service,
     Storage,
     Switch,
+    Tenant,
+    User,
     Vm,
   ].freeze
 
