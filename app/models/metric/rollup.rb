@@ -170,6 +170,7 @@ module Metric::Rollup
   ].freeze
   BURST_COLS = [
     :cpu_usage_rate_average,
+    :cpu_usagemhz_rate_average,
     :disk_usage_rate_average,
     :mem_usage_absolute_average,
     :net_usage_rate_average
