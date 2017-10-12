@@ -910,6 +910,12 @@
   :maindb: ExtManagementSystem
   :container_deployment_wizard: false
 :prototype:
+  :queue_type: miq_queue
+  :artemis:
+    :queue_hostname: localhost
+    :queue_port: 61616
+    :queue_username: admin
+    :queue_password: smartvm
 :recommendations:
   :cpu_minimum: 1
   :mem_minimum: 32.megabytes
