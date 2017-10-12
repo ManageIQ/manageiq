@@ -193,7 +193,7 @@ describe MiqEmsRefreshCoreWorker::Runner do
       end.not_to raise_error
       expect(obj.template).to eq(expected_template)
       expect(obj.state).to eq(expected_state)
-      expect(obj.state_changed_on).to be_same_time_as expected_time
+      expect(obj.state_changed_on).to be_within(0.00001).of expected_time
     end
 
     def should_not_have_changed(obj, props)
@@ -204,7 +204,7 @@ describe MiqEmsRefreshCoreWorker::Runner do
       expect { obj.reload }.not_to raise_error
       expect(obj.template).to eq(expected_template)
       expect(obj.state).to eq(expected_state)
-      expect(obj.state_changed_on).to be_same_time_as expected_time
+      expect(obj.state_changed_on).to be_within(0.00001).of expected_time
     end
   end
 end

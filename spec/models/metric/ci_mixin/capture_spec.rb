@@ -276,15 +276,15 @@ describe Metric::CiMixin::Capture do
       expect(queue_item.method_name).to eq "perf_capture_realtime"
       if expected_start_time
         q_start_time = queue_item.args.first
-        expect(q_start_time).to be_same_time_as expected_start_time
+        expect(q_start_time).to be_within(0.00001).of expected_start_time
       end
     end
 
     def verify_historical_queue_item(queue_item, expected_start_time, expected_end_time)
       expect(queue_item.method_name).to eq "perf_capture_historical"
       q_start_time, q_end_time = queue_item.args
-      expect(q_start_time).to be_same_time_as expected_start_time
-      expect(q_end_time).to be_same_time_as expected_end_time
+      expect(q_start_time).to be_within(0.00001).of expected_start_time
+      expect(q_end_time).to be_within(0.00001).of expected_end_time
     end
 
     def verify_perf_capture_queue(last_perf_capture_on, total_queue_items)

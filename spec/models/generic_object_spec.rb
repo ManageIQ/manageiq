@@ -66,7 +66,7 @@ describe GenericObject do
         expect(go.data_read).to                 eq(data_read)
         expect(go.max_number).to                eq(max_number)
         expect(go.server).to                    eq(server_name)
-        expect(go.s_time).to                    be_same_time_as(s_time).with_precision(2)
+        expect(go.s_time).to                    be_within(0.001).of s_time
       end
 
       it "can be set as an attribute" do
@@ -89,7 +89,7 @@ describe GenericObject do
         }
         go.save!
 
-        expect(go.property_attributes['s_time']).to be_same_time_as(s_time - 2.days).with_precision(2)
+        expect(go.property_attributes['s_time']).to be_within(0.001).of (s_time - 2.days)
         expect(go.property_attributes).to include(
           "flag"       => false,
           "data_read"  => data_read + 100.50,
