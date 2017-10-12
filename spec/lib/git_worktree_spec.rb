@@ -72,7 +72,7 @@ describe GitWorktree do
 
     it "#read_file that exists" do
       fname = 'A/File1.YamL'
-      expect(YAML.load(@ae_db.read_file(fname))).to have_attributes(@default_hash.merge(:fname => fname))
+      expect(YAML.load(@ae_db.read_file(fname))).to include(@default_hash.merge(:fname => fname))
     end
 
     it "#file_attributes" do

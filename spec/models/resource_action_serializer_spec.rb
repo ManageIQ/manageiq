@@ -15,7 +15,7 @@ describe ResourceActionSerializer do
 
     it "serializes the resource_action" do
       serialized = resource_action_serializer.serialize(resource_action)
-      expect(serialized).to have_attributes(expected_serialized_values)
+      expect(serialized).to include(expected_serialized_values)
       expect(serialized.keys).to include("action", "ae_attributes", "ae_message")
       expect(serialized.keys).not_to include(*described_class::EXCLUDED_ATTRIBUTES)
     end

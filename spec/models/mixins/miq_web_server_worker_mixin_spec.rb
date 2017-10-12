@@ -51,7 +51,7 @@ describe MiqWebServerWorkerMixin do
 
   it "#rails_server_options" do
     w = FactoryGirl.create(:miq_ui_worker, :uri => "http://127.0.0.1:3000")
-    expect(w.rails_server_options).to have_attributes(
+    expect(w.rails_server_options).to include(
       :Port        => 3000,
       :Host        => w.class.binding_address,
       :environment => Rails.env.to_s,
