@@ -166,7 +166,7 @@ group :seed, :manageiq_default do
 end
 
 group :smartstate, :manageiq_default do
-  gem "manageiq-smartstate",            "~>0.1.6",       :require => false
+  gem "manageiq-smartstate",            "~>0.2",       :require => false
 end
 
 group :ui_dependencies do # Added to Bundler.require in config/application.rb
