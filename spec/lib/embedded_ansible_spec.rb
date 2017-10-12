@@ -128,5 +128,33 @@ describe EmbeddedAnsible do
         end
       end
     end
+
+    describe "#find_or_create_database_authentication (private)" do
+      let(:password)        { "secretpassword" }
+      let(:quoted_password) { ActiveRecord::Base.connection.quote(password) }
+      let(:connection)      { double(:quote => quoted_password) }
+
+      before do
+        allow(connection).to receive(:quote_column_name) do |name|
+          ActiveRecord::Base.connection.quote_column_name(name)
+        end
+      end
+
+      it "creates the database" do
+        allow(subject).to receive(:database_connection).and_return(connection)
+        expect(subject).to receive(:generate_password).and_return(password)
+        expect(connection).to receive(:select_value).with("CREATE ROLE \"awx\" WITH LOGIN PASSWORD #{quoted_password}")
+        expect(connection).to receive(:select_value).with("CREATE DATABASE awx OWNER \"awx\" ENCODING 'utf8'")
+
+        auth = subject.send(:find_or_create_database_authentication)
+        expect(auth).to have_attributes(:userid => "awx", :password => password)
+      end
+
+      it "returns the saved authentication" do
+        miq_database.set_ansible_database_authentication(:password => "mypassword")
+        auth = subject.send(:find_or_create_database_authentication)
+        expect(auth).to have_attributes(:userid => "awx", :password => "mypassword")
+      end
+    end
   end
 end

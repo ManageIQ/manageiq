@@ -242,7 +242,7 @@ describe ApplianceEmbeddedAnsible do
 
       it "generates new passwords with no passwords set" do
         expect(subject).to receive(:alive?).and_return(true)
-        expect(subject).to receive(:generate_database_authentication).and_return(double(:userid => "awx", :password => "databasepassword"))
+        expect(subject).to receive(:find_or_create_database_authentication).and_return(double(:userid => "awx", :password => "databasepassword"))
         expect(AwesomeSpawn).to receive(:run!) do |script_path, options|
           params                  = options[:params]
           inventory_file_contents = File.read(params[:inventory=])
@@ -292,34 +292,11 @@ describe ApplianceEmbeddedAnsible do
 
       it "removes the secret key from the database when setup fails" do
         miq_database.ansible_secret_key = "supersecretkey"
-        expect(subject).to receive(:generate_database_authentication).and_return(double(:userid => "awx", :password => "databasepassword"))
+        expect(subject).to receive(:find_or_create_database_authentication).and_return(double(:userid => "awx", :password => "databasepassword"))
 
         expect(AwesomeSpawn).to receive(:run!).and_raise(AwesomeSpawn::CommandResultError.new("error", 1))
         expect { subject.start }.to raise_error(AwesomeSpawn::CommandResultError)
         expect(miq_database.reload.ansible_secret_key).not_to be_present
-      end
-    end
-
-    describe "#generate_database_authentication (private)" do
-      let(:password)        { "secretpassword" }
-      let(:quoted_password) { ActiveRecord::Base.connection.quote(password) }
-      let(:connection)      { double(:quote => quoted_password) }
-
-      before do
-        allow(connection).to receive(:quote_column_name) do |name|
-          ActiveRecord::Base.connection.quote_column_name(name)
-        end
-      end
-
-      it "creates the database" do
-        allow(subject).to receive(:database_connection).and_return(connection)
-        expect(subject).to receive(:generate_password).and_return(password)
-        expect(connection).to receive(:select_value).with("CREATE ROLE \"awx\" WITH LOGIN PASSWORD #{quoted_password}")
-        expect(connection).to receive(:select_value).with("CREATE DATABASE awx OWNER \"awx\" ENCODING 'utf8'")
-
-        auth = subject.send(:generate_database_authentication)
-        expect(auth.userid).to eq("awx")
-        expect(auth.password).to eq(password)
       end
     end
   end

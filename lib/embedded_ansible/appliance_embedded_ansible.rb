@@ -112,7 +112,7 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
   end
 
   def configure_secret_key
-    key = miq_database.ansible_secret_key || generate_secret_key
+    key = find_or_create_secret_key
     File.write(SECRET_KEY_FILE, key)
   end
 
@@ -130,29 +130,10 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
     File.write(SETTINGS_FILE, new_contents)
   end
 
-  def generate_secret_key
-    miq_database.ansible_secret_key = SecureRandom.hex(16)
-  end
-
-  def generate_admin_authentication
-    miq_database.set_ansible_admin_authentication(:password => generate_password)
-  end
-
-  def generate_rabbitmq_authentication
-    miq_database.set_ansible_rabbitmq_authentication(:password => generate_password)
-  end
-
-  def generate_database_authentication
-    auth = miq_database.set_ansible_database_authentication(:password => generate_password)
-    database_connection.select_value("CREATE ROLE #{database_connection.quote_column_name(auth.userid)} WITH LOGIN PASSWORD #{database_connection.quote(auth.password)}")
-    database_connection.select_value("CREATE DATABASE awx OWNER #{database_connection.quote_column_name(auth.userid)} ENCODING 'utf8'")
-    auth
-  end
-
   def inventory_file_contents
-    admin_auth    = miq_database.ansible_admin_authentication || generate_admin_authentication
-    rabbitmq_auth = miq_database.ansible_rabbitmq_authentication || generate_rabbitmq_authentication
-    database_auth = miq_database.ansible_database_authentication || generate_database_authentication
+    admin_auth    = find_or_create_admin_authentication
+    rabbitmq_auth = find_or_create_rabbitmq_authentication
+    database_auth = find_or_create_database_authentication
     db_config     = Rails.configuration.database_configuration[Rails.env]
 
     <<-EOF.strip_heredoc
@@ -179,14 +160,6 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
       rabbitmq_use_long_name=false
       rabbitmq_enable_manager=false
     EOF
-  end
-
-  def generate_password
-    SecureRandom.base64(18).tr("+/", "-_")
-  end
-
-  def database_connection
-    ActiveRecord::Base.connection
   end
 
   def local_tower_version
