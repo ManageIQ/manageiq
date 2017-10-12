@@ -58,7 +58,7 @@ class EmsEvent < EventStream
     group[:name]
   end
 
-  def self.add_queue(_meth, ems_id, event)
+  def self.add_queue(meth, ems_id, event)
     if Settings.prototype.queue_type == 'artemis'
       MiqQueue.artemis_client('event_handler').publish_topic(
         :service => "events",
