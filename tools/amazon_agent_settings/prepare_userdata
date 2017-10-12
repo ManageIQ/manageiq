@@ -72,13 +72,7 @@ cat <<EOF
 #
 function create_startup_script() {
   ll=\$1
-  echo "#!/bin/sh" > start_agent.sh
-  echo 'ssa_root=\`bundle show amazon_ssa_support\`' >> start_agent.sh
-  echo 'ssa_script="\$ssa_root/tools/amazon_ssa_extract.rb"' >> start_agent.sh
-  echo 'ruby \$ssa_script -l' \${ll} >> start_agent.sh
-  chmod 755 start_agent.sh
-  echo "Agent starts ..."
-  ./start_agent.sh 
+  bundle exec amazon_ssa_agent -l \${ll}
 }
 EOF
 }
@@ -91,7 +85,7 @@ cat <<EOF
 function add_rc_local_script() {
   chmod +x /etc/rc.d/rc.local
   echo 'source /root/.bash_profile' >> /etc/rc.d/rc.local
-  echo 'cd /opt/miq && /opt/miq/start_agent.sh &' >> /etc/rc.d/rc.local
+  echo 'bundle exec amazon_ssa_agent &' >> /etc/rc.d/rc.local
 }
 EOF
 }

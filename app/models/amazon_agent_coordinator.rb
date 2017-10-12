@@ -1,5 +1,7 @@
 require 'yaml'
 require 'open3'
+require 'net/scp'
+require 'linux_admin'
 require 'amazon_ssa_support'
 
 class AmazonAgentCoordinator
@@ -7,6 +9,7 @@ class AmazonAgentCoordinator
   attr_accessor :ems, :deploying
 
   # TODO: redefine these constants
+  USER_NAME          = "centos".freeze
   MIQ_SSA            = "MIQ_SSA".freeze
   AGENT_RUBY_VERSION = "2.3.3".freeze
   AGENT_AMI_NAME     = "centos-7.2-hvm*".freeze
@@ -93,6 +96,10 @@ class AmazonAgentCoordinator
 
   def profile_name
     MIQ_SSA
+  end
+
+  def keypair_name
+    "#{MIQ_SSA}-#{@ems.guid}"
   end
 
   def alive_agent_ids(interval = 180)
@@ -190,28 +197,26 @@ class AmazonAgentCoordinator
     raise "No subnet_id is available for #{zone_name}!" if subnets.empty?
     create_profile
 
-    instance = ec2.create_instances(
-      :image_id => get_agent_image_id,
-      :min_count => 1,
-      :max_count => 1,
-      :key_name => kp.name,
-      :security_group_ids => [security_group_id],
-      :user_data => data,
-      :instance_type => 't2.micro',
-      :placement => 
-      {
-        :availability_zone => zone_name
+    instance                = ec2.create_instances(
+      :image_id             => get_agent_image_id,
+      :min_count            => 1,
+      :max_count            => 1,
+      :key_name             => kp.name,
+      :security_group_ids   => [security_group_id],
+      :user_data            => data,
+      :instance_type        => 't2.micro',
+      :placement            => {
+        :availability_zone  => zone_name
       },
-      :subnet_id => subnets[0].subnet_id,
-      :iam_instance_profile => 
-      {
-        :name => profile_name
+      :subnet_id            => subnets[0].subnet_id,
+      :iam_instance_profile => {
+        :name               => profile_name
       },
-      :tag_specifications => [{
-        :resource_type => "instance",
-        :tags => [{
-          :key => "Name",
-          :value => MIQ_SSA
+      :tag_specifications   => [{
+        :resource_type      => "instance",
+        :tags               => [{
+          :key              => "Name",
+          :value            => MIQ_SSA
         }]
       }]
     )
@@ -234,40 +239,28 @@ class AmazonAgentCoordinator
     return iam.role(role_name) if role_exists?(role_name)
 
     # Policy Generator:
-    policy_doc = 
-    {
-      :Version => "2012-10-17",
-      :Statement => {
-        :Effect => "Allow",
-        :Principal => {:Service => "ec2.amazonaws.com"},
-        :Action => "sts:AssumeRole"
+    policy_doc     = {
+      :Version     => "2012-10-17",
+      :Statement   => {
+        :Effect    => "Allow",
+        :Principal => {
+          :Service => "ec2.amazonaws.com"
+        },
+        :Action    => "sts:AssumeRole"
       }
     }
 
     role = iam.create_role(
-      :role_name => role_name,
+      :role_name                   => role_name,
       :assume_role_policy_document => policy_doc.to_json
     )
-
-    # grant all priviledges
-###    role.attach_policy({
-###      :policy_arn => 'arn:aws:iam::aws:policy/AmazonS3FullAccess'
-###    })
-###
-###    role.attach_policy({
-###      :policy_arn => 'arn:aws:iam::aws:policy/AmazonEC2FullAccess'
-###    })
-###
-###    role.attach_policy({
-###      :policy_arn => 'arn:aws:iam::aws:policy/AmazonSQSFullAccess'
-###    })
 
     role
   end
 
   def create_profile(profile_name = MIQ_SSA, role_name = MIQ_SSA)
     ssa_profile = iam.instance_profile(profile_name)
-    ssa_profile = iam.create_instance_profile(instance_profile_name: profile_name) unless ssa_profile.exists?
+    ssa_profile = iam.create_instance_profile(:instance_profile_name => profile_name) unless ssa_profile.exists?
 
     find_or_create_role(role_name)
     ssa_profile.add_role(:role_name => role_name) if ssa_profile.roles.empty?
@@ -277,8 +270,8 @@ class AmazonAgentCoordinator
 
   def get_subnets(az)
     ec2.client.describe_subnets(
-      :filters => [{
-        :name => "availability-zone",
+      :filters  => [{
+        :name   => "availability-zone",
         :values => [az]
       }]
     ).subnets
@@ -287,8 +280,8 @@ class AmazonAgentCoordinator
   # possible RHEL image name: values: [ "RHEL-7.3_HVM_GA*" ]
   def get_agent_image_id(image_name = agent_ami)
     imgs = ec2.client.describe_images(
-      :filters => [{
-        :name => "name",
+      :filters  => [{
+        :name   => "name",
         :values => [image_name]
       }]
     ).images
@@ -298,8 +291,8 @@ class AmazonAgentCoordinator
 
   def create_security_group(group_name = MIQ_SSA)
     sgs = ec2.client.describe_security_groups(
-      :filters => [{
-        :name => "group-name",
+      :filters  => [{
+        :name   => "group-name",
         :values => [group_name]
       }]
     ).security_groups
@@ -307,46 +300,40 @@ class AmazonAgentCoordinator
 
     # create security group if not exist
     security_group = ec2.create_security_group(
-      :group_name => group_name,
+      :group_name  => group_name,
       :description => 'Security group for MIQ SSA Agent',
-      :vpc_id => ec2.client.describe_vpcs.vpcs[0].vpc_id
+      :vpc_id      => ec2.client.describe_vpcs.vpcs[0].vpc_id
     )
 
     security_group.authorize_ingress(
-      :ip_permissions => 
-      {
-        :ip_protocol => 'tcp',
-        :from_port => 22,
-        :to_port => 22,
-        :ip_ranges => 
-        {
-          :cidr_ip => '0.0.0.0/0'
+      :ip_permissions => {
+        :ip_protocol  => 'tcp',
+        :from_port    => 22,
+        :to_port      => 22,
+        :ip_ranges    => {
+          :cidr_ip    => '0.0.0.0/0'
         }
       }
     )
 
     security_group.authorize_ingress(
-      :ip_permissions => 
-      {
-        :ip_protocol => 'tcp',
-        :from_port => 80,
-        :to_port => 80,
-        :ip_ranges => 
-        {
-          :cidr_ip => '0.0.0.0/0'
+      :ip_permissions => {
+        :ip_protocol  => 'tcp',
+        :from_port    => 80,
+        :to_port      => 80,
+        :ip_ranges    => {
+          :cidr_ip    => '0.0.0.0/0'
         }
       }
     )
 
     security_group.authorize_ingress(
-      :ip_permissions => 
-      {
-        :ip_protocol => 'tcp',
-        :from_port => 443,
-        :to_port => 443,
-        :ip_ranges => 
-        {
-          :cidr_ip => '0.0.0.0/0'
+      :ip_permissions => {
+        :ip_protocol  => 'tcp',
+        :from_port    => 443,
+        :to_port      => 443,
+        :ip_ranges    => {
+          :cidr_ip    => '0.0.0.0/0'
         }
       }
     )
@@ -354,15 +341,24 @@ class AmazonAgentCoordinator
     security_group.group_id
   end
 
+  def perform_scp(local_path, remote_path, remote_instance_id, key_data)
+    ip = ec2.instance(remote_instance_id).public_dns_name
+    username = "centos".freeze  # This is harded coded in centos AMI image
+    Net::SCP.upload!(ip, username, local_path, remote_path, :ssh => {:key_data => key_data})
+  rescue => err
+    _log.error(err.message)
+  end
+
   # Get Key Pair for SSH. Create a new one if not exists.
-  def get_key_pair(pair_name = MIQ_SSA)
+  def get_key_pair(pair_name = keypair_name)
     kps = @ems.authentications.where(:name => pair_name)
     return kps[0] if kps.any?
 
+    _log.info("KeyPair #{pair_name} will be created!")
     ManageIQ::Providers::CloudManager::AuthKeyPair.create_key_pair(@ems.id, :key_name => pair_name)
   end
 
-  def create_pem_file(pair_name = MIQ_SSA)
+  def create_pem_file(pair_name = keypair_name)
     kp = get_key_pair(pair_name)
     pem_file_name = "#{pair_name}.pem"
     File.write(pem_file_name, kp.auth_key)
