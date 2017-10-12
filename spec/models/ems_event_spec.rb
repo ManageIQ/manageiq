@@ -177,6 +177,55 @@ describe EmsEvent do
       end
     end
 
+    context ".add_queue" do
+      let(:ems) { FactoryGirl.create(:ems_kubernetes) }
+      let(:event_hash) do
+        {
+          :ems_ref    => "event-ref",
+          :ems_id     => ems.id,
+          :event_type => "STUFF_HAPPENED"
+        }
+      end
+
+      context "queue_type: artemis" do
+        before { stub_settings_merge(:prototype => {:queue_type => 'artemis'}) }
+
+        it "Adds event to Artemis queue" do
+          queue_client = double("ManageIQ::Messaging")
+
+          expected_queue_payload = {
+            :service => "events",
+            :sender  => ems.id,
+            :event   => event_hash[:event_type],
+            :payload => event_hash,
+          }
+
+          expect(queue_client).to receive(:publish_topic).with(expected_queue_payload)
+          expect(MiqQueue).to receive(:artemis_client).with('event_handler').and_return(queue_client)
+
+          described_class.add_queue('add', ems.id, event_hash)
+        end
+      end
+
+      context "queue_type: miq_queue" do
+        before { stub_settings_merge(:prototype => {:queue_type => 'miq_queue'}) }
+
+        it "Adds event to MiqQueue" do
+          expected_queue_payload = {
+            :service     => "event",
+            :target_id   => ems.id,
+            :class_name  => described_class.name,
+            :method_name => 'add',
+            :args        => [event_hash],
+          }
+
+          expect(MiqQueue).to receive(:submit_job).with(expected_queue_payload)
+
+          described_class.add_queue('add', ems.id, event_hash)
+        end
+      end
+    end
+
     context ".add" do
       before :each do
         @event_hash = {
