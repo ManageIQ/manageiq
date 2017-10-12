@@ -113,12 +113,11 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
 
   def configure_secret_key
     key = miq_database.ansible_secret_key
-    if key.present?
-      File.write(SECRET_KEY_FILE, key)
-    else
-      AwesomeSpawn.run!("/usr/bin/python -c \"import uuid; file('#{SECRET_KEY_FILE}', 'wb').write(uuid.uuid4().hex)\"")
-      miq_database.ansible_secret_key = File.read(SECRET_KEY_FILE)
+    unless key.present?
+      key = SecureRandom.hex(16)
+      miq_database.ansible_secret_key = key
     end
+    File.write(SECRET_KEY_FILE, key)
   end
 
   def update_proxy_settings
