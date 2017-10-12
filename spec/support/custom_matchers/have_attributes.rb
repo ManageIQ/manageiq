@@ -37,7 +37,7 @@ RSpec::Matchers.define :have_attributes do |attrs|
 
     if @array_access_used
       puts <<-MESSAGE
-\rWARNING: Use of `have_attributes` with array access (:[]) is deprecated and will be removed shortly.
+\nWARNING: Use of `have_attributes` with array access (:[]) is deprecated and will be removed shortly.
 If you're matching attributes in hashes, use appropriate hash matchers instead (`include`, `eq`).
 #{"Called from " + called_from if called_from}
       MESSAGE
