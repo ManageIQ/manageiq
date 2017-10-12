@@ -112,11 +112,7 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
   end
 
   def configure_secret_key
-    key = miq_database.ansible_secret_key
-    unless key.present?
-      key = SecureRandom.hex(16)
-      miq_database.ansible_secret_key = key
-    end
+    key = miq_database.ansible_secret_key || generate_secret_key
     File.write(SECRET_KEY_FILE, key)
   end
 
@@ -132,6 +128,10 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
       new_contents << "AWX_TASK_ENV['NO_PROXY'] = '127.0.0.1'\n"
     end
     File.write(SETTINGS_FILE, new_contents)
+  end
+
+  def generate_secret_key
+    miq_database.ansible_secret_key = SecureRandom.hex(16)
   end
 
   def generate_admin_authentication
