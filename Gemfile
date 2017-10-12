@@ -107,6 +107,7 @@ end
 
 group :nuage, :manageiq_default do
   manageiq_plugin "manageiq-providers-nuage"
+  gem "qpid_proton",                    "~>0.17.0.2", :git => "https://github.com/gberginc/qpid_proton_gem"
 end
 
 group :openshift, :manageiq_default do
