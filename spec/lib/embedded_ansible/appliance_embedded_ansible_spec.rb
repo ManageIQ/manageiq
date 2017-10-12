@@ -1,3 +1,4 @@
+require 'linux_admin'
 require_dependency 'embedded_ansible'
 
 describe ApplianceEmbeddedAnsible do
