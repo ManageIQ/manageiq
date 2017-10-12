@@ -243,6 +243,10 @@ class MiqRegion < ApplicationRecord
   end
 
   def remote_ws_url
+    svr = remote_ws_miq_server
+    remote_url_override = svr.settings_for_resource.webservices.url if svr
+    return remote_url_override if remote_url_override
+
     hostname = remote_ws_address
     hostname && URI::HTTPS.build(:host => hostname).to_s
   end

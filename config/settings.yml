@@ -1044,6 +1044,7 @@
   :timeout: 120
   :use_vim_broker: true
   :authentication_timeout: 30.seconds
+  :url:
 :workers:
   :worker_base:
     :defaults:

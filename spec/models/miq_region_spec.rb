@@ -189,4 +189,24 @@ describe MiqRegion do
       expect(region.vms_and_templates).to match_array [vm, t]
     end
   end
+
+  describe "#remote_ws_url" do
+    let(:ip) { "1.1.1.94" }
+    let(:hostname) { "www.manageiq.org" }
+    let(:url) { "https://www.manageiq.org" }
+    let!(:web_server) do
+      FactoryGirl.create(:miq_server, :has_active_webservices => true,
+                                      :hostname               => hostname,
+                                      :ipaddress              => ip)
+    end
+
+    it "fetches the url from server" do
+      expect(region.remote_ws_url).to eq("https://#{ip}")
+    end
+
+    it "fetches the url from the setting" do
+      Vmdb::Settings.save!(web_server, :webservices => {:url => url})
+      expect(region.remote_ws_url).to eq(url)
+    end
+  end
 end
