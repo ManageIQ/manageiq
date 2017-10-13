@@ -140,13 +140,18 @@ class MiqAlert < ApplicationRecord
     !assigned_to_target(target, "#{target.class.base_model.name.underscore}_perf_complete").empty?
   end
 
-  def self.evaluate_alerts(target, event, inputs = {})
+  def self.normalize_target(target)
     if target.kind_of?(Array)
       klass, id = target
       klass = Object.const_get(klass)
       target = klass.find_by(:id => id)
       raise "Unable to find object with class: [#{klass}], Id: [#{id}]" unless target
     end
+    target
+  end
+
+  def self.evaluate_alerts(target, event, inputs = {})
+    target = normalize_target(target)
 
     log_header = "[#{event}]"
     log_target = "Target: #{target.class.name} Name: [#{target.name}], Id: [#{target.id}]"
@@ -221,12 +226,7 @@ class MiqAlert < ApplicationRecord
   end
 
   def evaluate(target, inputs = {})
-    if target.kind_of?(Array)
-      klass, id = target
-      klass = Object.const_get(klass)
-      target = klass.find_by(:id => id)
-      raise "Unable to find object with class: [#{klass}], Id: [#{id}]" unless target
-    end
+    target = self.class.normalize_target(target)
 
     return if self.postpone_evaluation?(target)
 
