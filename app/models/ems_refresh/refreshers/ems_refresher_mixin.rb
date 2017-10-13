@@ -145,23 +145,32 @@ module EmsRefresh
         if collector.kind_of?(ManagerRefresh::Inventory::Collector)
           log_header = format_ems_for_logging(ems)
           _log.debug("#{log_header} Parsing inventory...")
-          inventory_collections, = Benchmark.realtime_block(:parse_inventory) do
+          persister, = Benchmark.realtime_block(:parse_inventory) do
             persister = ManagerRefresh::Inventory.persister_class_for(target.class).new(ems, target)
             parser = ManagerRefresh::Inventory.parser_class_for(target.class).new
 
             i = ManagerRefresh::Inventory.new(persister, collector, parser)
-            i.inventory_collections
+            i.parse
           end
           _log.debug("#{log_header} Parsing inventory...Complete")
-          inventory_collections
+          persister
         else
           parsed, _ = Benchmark.realtime_block(:parse_legacy_inventory) { parse_legacy_inventory(ems) }
           parsed
         end
       end
 
-      def save_inventory(ems, target, parsed)
-        EmsRefresh.save_ems_inventory(ems, parsed, target)
+      # Saves the inventory to the DB
+      #
+      # @param ems [ManageIQ::Providers::BaseManager]
+      # @param target [ManageIQ::Providers::BaseManager or ManagerRefresh::Target or ManagerRefresh::TargetCollection]
+      # @param parsed [Array<Hash> or ManagerRefresh::Inventory::Persister]
+      def save_inventory(ems, target, parsed_hashes_or_persister)
+        if parsed_hashes_or_persister.kind_of?(ManagerRefresh::Inventory::Persister)
+          parsed_hashes_or_persister.persist!
+        else
+          EmsRefresh.save_ems_inventory(ems, parsed_hashes_or_persister, target)
+        end
       end
 
       def post_refresh_ems_cleanup(_ems, _targets)
