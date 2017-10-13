@@ -33,6 +33,10 @@ class MiqAlert < ApplicationRecord
     BASE_TABLES
   end
 
+  def self.display_name
+    "Alert"
+  end
+
   acts_as_miq_set_member
 
   ASSIGNMENT_PARENT_ASSOCIATIONS = [:host, :ems_cluster, :ext_management_system, :my_enterprise]

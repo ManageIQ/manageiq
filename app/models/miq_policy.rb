@@ -81,6 +81,10 @@ class MiqPolicy < ApplicationRecord
     attrs
   end
 
+  def self.display_name
+    "Policy"
+  end
+
   def copy(new_fields)
     npolicy = self.class.new(self.class.clean_attrs(attributes).merge(new_fields))
     npolicy.conditions = conditions
