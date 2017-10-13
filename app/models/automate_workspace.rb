@@ -24,9 +24,9 @@ class AutomateWorkspace < ApplicationRecord
   end
 
   def encrypt(object_name, attribute, value)
-    self.output ||= {}
-    self.output.store_path('objects', object_name, attribute, "password::#{MiqAePassword.encrypt(value)}")
-    save
+    hash = {'objects' => {}, 'state_vars' => {}}
+    hash.store_path('objects', object_name, attribute, "password::#{MiqAePassword.encrypt(value)}")
+    merge_output!(hash)
   end
 
   private

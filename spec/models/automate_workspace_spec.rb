@@ -6,11 +6,11 @@ describe AutomateWorkspace do
                                               :tenant => user.current_tenant,
                                               :input  => input)
     end
-    let(:password) { "secret" }
+    let(:password) { "ca$hc0w" }
     let(:encrypted) { MiqAePassword.encrypt(password) }
     let(:input) do
-      { 'objects'           => {'root' => { 'var1' => '1', 'var2' => "password::#{encrypted}"}},
-        'method_parameters' => {'arg1' => "password::#{encrypted}"} }
+      { "objects"           => {"root" => { "var1" => "1", "var2" => "password::#{encrypted}"}},
+        "method_parameters" => {"arg1" => "password::#{encrypted}"} }
     end
 
     it "raises error on invalid hash" do
