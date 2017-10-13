@@ -7,7 +7,7 @@ describe AutomateWorkspace do
                                               :input  => input)
     end
     let(:password) { "ca$hc0w" }
-    let(:encrypted) { MiqAePassword.encrypt(password) }
+    let(:encrypted) { MiqPassword.encrypt(password) }
     let(:input) do
       { "objects"           => {"root" => { "var1" => "1", "var2" => "password::#{encrypted}"}},
         "method_parameters" => {"arg1" => "password::#{encrypted}"} }

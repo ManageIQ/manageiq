@@ -20,12 +20,12 @@ class AutomateWorkspace < ApplicationRecord
   end
 
   def decrypt(object_name, attribute)
-    MiqAePassword.decrypt(encrypted_value(object_name, attribute))
+    MiqPassword.decrypt(encrypted_value(object_name, attribute))
   end
 
   def encrypt(object_name, attribute, value)
     hash = {'objects' => {}, 'state_vars' => {}}
-    hash.store_path('objects', object_name, attribute, "password::#{MiqAePassword.encrypt(value)}")
+    hash.store_path('objects', object_name, attribute, "password::#{MiqPassword.encrypt(value)}")
     merge_output!(hash)
   end
 
