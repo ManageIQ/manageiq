@@ -113,9 +113,8 @@ module Vmdb
       if File.exist?(build_file)
         build = File.read(build_file).strip.split("-").last
       else
-        date  = Time.now.strftime("%Y%m%d%H%M%S")
         sha   = `git rev-parse --short HEAD`.chomp
-        build = "#{date}_#{sha}"
+        build = "unknown_#{sha}"
       end
 
       build
