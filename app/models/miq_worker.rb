@@ -359,9 +359,14 @@ class MiqWorker < ApplicationRecord
     pid
   end
 
-  def self.build_command_line(guid)
-    command_line = "#{Gem.ruby} #{runner_script} --heartbeat --guid=#{guid} #{name}"
-    ENV['APPLIANCE'] ? "nice #{nice_increment} #{command_line}" : command_line
+  def self.build_command_line(options)
+    require 'awesome_spawn'
+    raise ArgumentError, "expected options hash, received: #{options.class}" unless options.kind_of?(Hash)
+    raise ArgumentError, "missing :guid options key" unless options.key?(:guid)
+
+    cmd = "#{Gem.ruby} #{runner_script}"
+    cmd = "nice #{nice_increment} #{cmd}" if ENV["APPLIANCE"]
+    "#{AwesomeSpawn::CommandLineBuilder.new.build(cmd, options.merge(:heartbeat => nil))} #{name}"
   end
 
   def self.runner_script
@@ -370,8 +375,12 @@ class MiqWorker < ApplicationRecord
     script
   end
 
+  def command_line
+    self.class.build_command_line(worker_options)
+  end
+
   def start_runner_via_spawn
-    pid = Kernel.spawn(self.class.build_command_line(guid), [:out, :err] => [Rails.root.join("log", "evm.log"), "a"])
+    pid = Kernel.spawn(command_line, [:out, :err] => [Rails.root.join("log", "evm.log"), "a"])
     Process.detach(pid)
     pid
   end
