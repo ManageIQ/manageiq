@@ -51,54 +51,6 @@ describe MiqServer, "::ConfigurationManagement" do
 
   context "ConfigurationManagementMixin" do
     let(:miq_server) { FactoryGirl.create(:miq_server) }
-
-    describe "#settings_for_resource" do
-      it "returns the resource's settings" do
-        settings = {:some_thing => [1, 2, 3]}
-        stub_settings(settings)
-        expect(miq_server.settings_for_resource.to_hash).to eq(settings)
-      end
-    end
-
-    describe "#add_settings_for_resource" do
-      it "sets the specified settings" do
-        settings = {:some_test_setting => {:setting => 1}}
-        expect(miq_server).to receive(:reload_all_server_settings)
-
-        miq_server.add_settings_for_resource(settings)
-
-        expect(Vmdb::Settings.for_resource(miq_server).some_test_setting.setting).to eq(1)
-      end
-    end
-
-    describe "#remove_settings_path_for_resource" do
-      it "removes the specified setting record and all children" do
-        settings = {:some_test_setting => {:setting => {:deeper => 1}, :other => 2}}
-        expect(miq_server).to receive(:reload_all_server_settings).twice
-
-        miq_server.add_settings_for_resource(settings)
-
-        expect(Vmdb::Settings.for_resource(miq_server).some_test_setting.setting.deeper).to eq(1)
-
-        miq_server.remove_settings_path_for_resource(:some_test_setting, :setting)
-
-        expect(Vmdb::Settings.for_resource(miq_server).some_test_setting.to_h).to eq(:other => 2)
-      end
-    end
-
-    describe "#reload_all_server_settings" do
-      it "queues #reload_settings for the started servers" do
-        FactoryGirl.create(:miq_server, :status => "started")
-
-        miq_server.reload_all_server_settings
-
-        expect(MiqQueue.count).to eq(1)
-        message = MiqQueue.first
-        expect(message.instance_id).to eq(miq_server.id)
-        expect(message.method_name).to eq("reload_settings")
-      end
-    end
-
     describe "#config_activated" do
       let(:zone) { FactoryGirl.create(:zone, :name => "My Zone") }
       let(:zone_other_region) do
