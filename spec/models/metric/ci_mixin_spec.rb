@@ -22,7 +22,7 @@ describe Metric::CiMixin do
         FactoryGirl.create(:metric_rollup_vm_hr, :resource => vm, :timestamp => 10.minutes.ago.utc)
         FactoryGirl.create(:metric_rollup_vm_hr, :resource => vm, :timestamp => 5.minutes.ago.utc)
         last = FactoryGirl.create(:metric_rollup_vm_hr, :resource => vm, :timestamp => Time.now.utc)
-        expect(vm.last_capture).to be_same_time_as last.timestamp
+        expect(vm.last_capture).to be_within(0.1).of last.timestamp
       end
     end
 
@@ -35,7 +35,7 @@ describe Metric::CiMixin do
         first = FactoryGirl.create(:metric_rollup_vm_hr, :resource => vm, :timestamp => 10.minutes.ago.utc)
         FactoryGirl.create(:metric_rollup_vm_hr, :resource => vm, :timestamp => 5.minutes.ago.utc)
         FactoryGirl.create(:metric_rollup_vm_hr, :resource => vm, :timestamp => Time.now.utc)
-        expect(vm.first_capture).to be_same_time_as first.timestamp
+        expect(vm.first_capture).to be_within(0.1).of first.timestamp
       end
     end
 
@@ -48,8 +48,8 @@ describe Metric::CiMixin do
         first = FactoryGirl.create(:metric_rollup_vm_hr, :resource => vm, :timestamp => Time.now.utc)
         actual = vm.first_and_last_capture
         expect(actual.length).to eq(2)
-        expect(actual[0]).to be_same_time_as first.timestamp
-        expect(actual[1]).to be_same_time_as first.timestamp
+        expect(actual[0]).to be_within(0.1).of first.timestamp
+        expect(actual[1]).to be_within(0.1).of first.timestamp
       end
 
       it "with multiple records" do
@@ -58,8 +58,8 @@ describe Metric::CiMixin do
         last = FactoryGirl.create(:metric_rollup_vm_hr, :resource => vm, :timestamp => Time.now.utc)
         actual = vm.first_and_last_capture
         expect(actual.length).to eq(2)
-        expect(actual[0]).to be_same_time_as first.timestamp
-        expect(actual[1]).to be_same_time_as last.timestamp
+        expect(actual[0]).to be_within(0.1).of first.timestamp
+        expect(actual[1]).to be_within(0.1).of last.timestamp
       end
     end
   end

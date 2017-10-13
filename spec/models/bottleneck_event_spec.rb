@@ -82,27 +82,27 @@ describe BottleneckEvent do
 
     context "for a host_redhat resource" do
       let(:resource_name) { :host_redhat }
-      it { is_expected.to be_same_time_as(bottleneck_event.created_on) }
+      it { is_expected.to be_within(0.1).of bottleneck_event.created_on }
     end
 
     context "for a host_vmware resource" do
       let(:resource_name) { :host_vmware }
-      it { is_expected.to be_same_time_as(bottleneck_event.created_on) }
+      it { is_expected.to be_within(0.1).of bottleneck_event.created_on }
     end
 
     context "for a miq_enterprise resource" do
       let(:resource_name) { :miq_enterprise }
-      it { is_expected.to be_same_time_as(bottleneck_event.created_on) }
+      it { is_expected.to be_within(0.1).of bottleneck_event.created_on }
     end
 
     context "for a ems_redhat resource" do
       let(:resource_name) { :ems_redhat }
-      it { is_expected.to be_same_time_as(bottleneck_event.created_on) }
+      it { is_expected.to be_within(0.1).of bottleneck_event.created_on }
     end
 
     context "for a ems_cluster_openstack resource" do
       let(:resource_name) { :ems_cluster_openstack }
-      it { is_expected.to be_same_time_as(bottleneck_event.created_on) }
+      it { is_expected.to be_within(0.1).of bottleneck_event.created_on }
     end
   end
 

@@ -67,7 +67,7 @@ describe MiqReportResult do
           :method_name => "purge_by_date"
         )
 
-        expect(q.first.args[0]).to be_same_time_as 6.months.to_i.seconds.ago.utc
+        expect(q.first.args[0]).to be_within(0.1).of 6.months.to_i.seconds.ago.utc
       end
     end
 
