@@ -160,8 +160,6 @@
 - win32_services
 - zones
 :exclude_columns:
-- "^.*_id$"
-- "^id$"
 - "^min_derived_storage.*$"
 - "^max_derived_storage.*$"
 - assoc_ids
@@ -191,10 +189,13 @@
 - password
 - policy_settings
 - "^reserved$"
-- resource_id
 - settings
 - tag_names
 - v_qualified_desc
+:exclude_id_columns:
+- "^.*_id$"
+- "^id$"
+- resource_id
 :exclude_exceptions:
 - capacity_profile_1_memory_per_vm_with_min_max
 - capacity_profile_1_vcpu_per_vm_with_min_max

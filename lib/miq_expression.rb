@@ -7,6 +7,7 @@ class MiqExpression
   BASE_TABLES = config[:base_tables]
   INCLUDE_TABLES = config[:include_tables]
   EXCLUDE_COLUMNS = config[:exclude_columns]
+  EXCLUDE_ID_COLUMNS = config[:exclude_id_columns]
   EXCLUDE_EXCEPTIONS = config[:exclude_exceptions]
   TAG_CLASSES = config[:tag_classes]
   EXCLUDE_FROM_RELATS = config[:exclude_from_relats]
@@ -795,7 +796,7 @@ class MiqExpression
     BASE_TABLES
   end
 
-  def self.model_details(model, opts = {:typ => "all", :include_model => true, :include_tags => false, :include_my_tags => false})
+  def self.model_details(model, opts = {:typ => "all", :include_model => true, :include_tags => false, :include_my_tags => false, :include_id_columns => false})
     @classifications = nil
     model = model.to_s
 
@@ -998,7 +999,9 @@ class MiqExpression
     include_model = opts[:include_model]
     base_model = class_path.split(".").first
 
-    excludes = EXCLUDE_COLUMNS
+    excludes  = EXCLUDE_COLUMNS
+    excludes += EXCLUDE_ID_COLUMNS unless opts[:include_id_columns]
+
     # special case for C&U ad-hoc reporting
     if opts[:interval] && opts[:interval] != "daily" && base_model.ends_with?("Performance") && !class_path.include?(".")
       excludes += ["^min_.*$", "^max_.*$", "^.*derived_storage_.*$", "created_on"]
