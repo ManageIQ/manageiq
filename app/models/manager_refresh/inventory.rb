@@ -30,14 +30,19 @@ module ManagerRefresh
       @parsers   = parsers.kind_of?(Array) ? parsers : [parsers]
     end
 
-    def inventory_collections
+    # Invokes all associated parsers storing parsed data into persister.inventory_collections
+    def parse
       parsers.each do |parser|
         parser.collector = collector
         parser.persister = persister
         parser.parse
       end
 
-      persister.inventory_collections
+      persister
+    end
+
+    def inventory_collections
+      parse.inventory_collections
     end
   end
 end

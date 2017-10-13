@@ -21,6 +21,11 @@ class ManagerRefresh::Inventory::Persister
     initialize_inventory_collections
   end
 
+  # Persists InventoryCollection objects into the DB
+  def persist!
+    ManagerRefresh::SaveInventory.save_inventory(manager, inventory_collections)
+  end
+
   def self.supported_collections
     @supported_collections ||= Concurrent::Array.new
   end
