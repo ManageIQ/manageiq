@@ -3,7 +3,7 @@
 #
 
 def request_info
-  @service = ($evm.root['vmdb_object_type'] == 'service_template_provision_request') ? true : false
+  @service = $evm.root['vmdb_object_type'] == 'service_template_provision_request' ? true : false
   @miq_request = $evm.root['miq_request']
   $evm.log(:info, "Request: #{@miq_request.description} id: #{@miq_request.id} ")
 end
@@ -21,13 +21,15 @@ end
 
 def get_total_requested(options_hash, prov_option)
   total_requested = collect_template_totals(prov_option)
-  total_requested = request_totals(total_requested.to_i,
-                                   collect_dialog_totals(prov_option, options_hash).to_i) if options_hash
+  if options_hash
+    total_requested = request_totals(total_requested.to_i,
+                                     collect_dialog_totals(prov_option, options_hash).to_i)
+  end
   total_requested
 end
 
 def request_totals(template_totals, dialog_totals)
-  [template_totals, dialog_totals].max
+  dialog_totals > 0 ? dialog_totals : template_totals
 end
 
 def collect_template_totals(prov_option)
@@ -141,7 +143,38 @@ end
 
 def collect_dialog_totals(prov_option, options_hash)
   dialog_values(prov_option, options_hash, dialog_array = [])
-  collect_totals(dialog_array)
+  total = collect_totals(dialog_array)
+  if prov_option == :number_of_cpus
+    options_hash.each do |_sequence_id, options|
+      if options.keys.include?(:number_of_sockets) || options.keys.include?(:cores_per_socket)
+        $evm.log(:info, "Recalculating number of cpus based on dialog overrides")
+        total = recalculate_number_of_cpus(service_resource, options[:number_of_sockets].to_i, options[:cores_per_socket].to_i)
+      end
+    end
+  end
+  total
+end
+
+def service_resource
+  resource = nil
+  @service_template.service_resources.each do |child_service_resource|
+    next if @service_template.service_type == 'composite'
+    next if @service_template.prov_type.starts_with?("generic")
+    resource = child_service_resource.resource
+  end
+  resource
+end
+
+def recalculate_number_of_cpus(resource, override_number_of_sockets, override_cores_per_socket)
+  $evm.log(:info, "Recalculating the number_of_cpus resource: #{resource} override_number_of_sockets: #{override_number_of_sockets} override_cores_per_socket: #{override_cores_per_socket}")
+  if override_number_of_sockets.positive? && override_cores_per_socket.positive?
+    cpu_in_request = override_number_of_sockets * override_cores_per_socket
+  elsif override_number_of_sockets.positive?
+    cpu_in_request = get_option_value(resource, :cores_per_socket) * override_number_of_sockets
+  elsif override_cores_per_socket.positive?
+    cpu_in_request = get_option_value(resource, :number_of_sockets) * override_cores_per_socket
+  end
+  cpu_in_request * get_option_value(resource, :number_of_vms) if cpu_in_request.to_i.positive?
 end
 
 def dialog_values(prov_option, options_hash, dialog_array)

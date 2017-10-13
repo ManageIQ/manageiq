@@ -45,6 +45,89 @@ describe "Quota Validation" do
     end
   end
 
+  shared_examples_for "requested" do
+    it "check" do
+      setup_model("vmware")
+      build_small_environment
+      build_vmware_service_item
+      @service_request.options[:dialog] = result_dialog
+      @service_request.save
+      expect(@service_request.options[:dialog]).to include(result_dialog)
+      ws = run_automate_method(service_attrs)
+      expect(ws.root['quota_requested']).to include(result_counts_hash)
+    end
+  end
+
+  context "vmware service item with dialog override number_of_sockets = 3" do
+    let(:result_counts_hash) do
+      {:storage => 512.megabytes, :cpu => 6, :vms => 1, :memory => 1.gigabytes}
+    end
+    let(:result_dialog) do
+      {"dialog_option_0_number_of_sockets" => "3"}
+    end
+    it_behaves_like "requested"
+  end
+
+  context "vmware service item with dialog override cores_per_socket = 4" do
+    let(:result_counts_hash) do
+      {:storage => 512.megabytes, :cpu => 8, :vms => 1, :memory => 1.gigabytes}
+    end
+    let(:result_dialog) do
+      {"dialog_option_0_cores_per_socket" => "4"}
+    end
+    it_behaves_like "requested"
+  end
+
+  context "vmware service item with dialog override sockets = 3 and cores = 4 = 12" do
+    let(:result_counts_hash) do
+      {:storage => 512.megabytes, :cpu => 12, :vms => 1, :memory => 1.gigabytes}
+    end
+    let(:result_dialog) do
+      {"dialog_option_0_number_of_sockets" => "3", "dialog_option_0_cores_per_socket" => "4"}
+    end
+    it_behaves_like "requested"
+  end
+
+  context "vmware service item with dialog override number_of_cpus = 5" do
+    let(:result_counts_hash) do
+      {:storage => 512.megabytes, :cpu => 5, :vms => 1, :memory => 1.gigabytes}
+    end
+    let(:result_dialog) do
+      {"dialog_option_0_number_of_cpus" => "5"}
+    end
+    it_behaves_like "requested"
+  end
+
+  context "vmware service item with dialog override vm_memory = 2147483648" do
+    let(:result_counts_hash) do
+      {:storage => 512.megabytes, :cpu => 4, :vms => 1, :memory => 2.gigabytes}
+    end
+    let(:result_dialog) do
+      {"dialog_option_0_vm_memory" => "2147483648"}
+    end
+    it_behaves_like "requested"
+  end
+
+  context "vmware service item with dialog override number_of_vms = 5" do
+    let(:result_counts_hash) do
+      {:storage => 512.megabytes, :cpu => 4, :vms => 5, :memory => 1.gigabytes}
+    end
+    let(:result_dialog) do
+      {"dialog_option_0_number_of_vms" => "5"}
+    end
+    it_behaves_like "requested"
+  end
+
+  context "vmware service item with dialog override storage = 2147483648" do
+    let(:result_counts_hash) do
+      {:storage => 2.gigabytes, :cpu => 4, :vms => 1, :memory => 1.gigabytes}
+    end
+    let(:result_dialog) do
+      {"dialog_option_0_storage" => "2147483648"}
+    end
+    it_behaves_like "requested"
+  end
+
   context "Service Bundle provisioning quota" do
     it "Bundle of 2, google and vmware" do
       create_service_bundle([google_template, vmware_template])
