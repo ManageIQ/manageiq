@@ -3,6 +3,11 @@ pg_inspector readme
 
 pg_inspector is a tool to inspect ManageIQ process caused deadlock or long time blocking in PostgreSQL. pg_inpector inspects database in four steps. You can run `pg_inspector.rb -h` to see all steps, which are displayed in `Operations` section. For each step, you can see its specific options by `pg_inspector.rb operation -h`.
 
+Automatically run all steps
+---------------------------
+
+Run `schedule.sh` (TODO) to dump server information in a daily basis. Then when block happens, run `inspect_pg.sh` to run step 1, 3 and 4 together, and collect all output into `pg_inspector_output.tar.gz`. For details for each step, see below.
+
 Step 1: dump active connections to YAML file
 --------------------------------------------
 
