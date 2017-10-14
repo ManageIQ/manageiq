@@ -6,7 +6,7 @@ pg_inspector is a tool to inspect ManageIQ process caused deadlock or long time 
 Automatically run all steps
 ---------------------------
 
-Run `schedule.sh` (TODO) to dump server information in a daily basis. Then when block happens, run `inspect_pg.sh` to run step 1, 3 and 4 together, and collect all output into `pg_inspector_output.tar.gz`. For details for each step, see below.
+Run `schedule_server_dump.sh` to dump server information in a daily basis. Then when block happens, run `inspect_pg.sh` to run step 1, 3 and 4 together, and collect all output into `pg_inspector_output.tar.gz`. For details for each step, see below.
 
 Step 1: dump active connections to YAML file
 --------------------------------------------
