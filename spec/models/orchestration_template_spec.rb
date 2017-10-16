@@ -292,6 +292,17 @@ describe OrchestrationTemplate do
     end
   end
 
+  # Temporarily maintain backward compatibility for API users. Should be removed later.
+  describe '.new' do
+    it 'creates new type from old type with key being a symbol' do
+      expect(described_class.new(:type => 'OrchestrationTemplateCfn')).to be_a(ManageIQ::Providers::Amazon::CloudManager::OrchestrationTemplate)
+    end
+
+    it 'creates new type from old type with key being a string' do
+      expect(described_class.new('type' => 'OrchestrationTemplateCfn')).to be_a(ManageIQ::Providers::Amazon::CloudManager::OrchestrationTemplate)
+    end
+  end
+
   def assert_deployment_option(option, name, constraint_type, required)
     expect(option.name).to eq(name)
     expect(option.required?).to eq(required)
