@@ -11,6 +11,7 @@ describe ContainerLabelTagMapping do
     cat = FactoryGirl.create(:classification, :read_only => true)
     cat.add_entry(:name => 'unrelated', :description => 'Unrelated tag').tag
   end
+  let(:ems) { FactoryGirl.build(:ext_management_system) }
 
   def labels(kv)
     kv.map do |name, value|
@@ -26,7 +27,7 @@ describe ContainerLabelTagMapping do
   # All-in-one
   def map_to_tags(mapper, model_name, labels_kv)
     tag_refs = mapper.map_labels(model_name, labels(labels_kv))
-    mapper.find_or_create_tags
+    ManagerRefresh::SaveInventory.save_inventory(ems, [mapper.tags_to_resolve_collection])
     ContainerLabelTagMapping::Mapper.references_to_tags(tag_refs)
   end
 
@@ -218,7 +219,7 @@ describe ContainerLabelTagMapping do
     let(:node) { FactoryGirl.create(:container_node) }
 
     def ref_to_tag(tag)
-      {:tag_id => tag.id}
+      instance_double(ManagerRefresh::InventoryObject, :id => tag.id)
     end
 
     before(:each) do
