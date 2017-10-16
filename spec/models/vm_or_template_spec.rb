@@ -721,21 +721,30 @@ describe VmOrTemplate do
       FactoryGirl.create :metric_rollup_vm_daily,
                          :with_data,
                          :time_profile_id => tp_id,
-                         :resource_id     => vm.id
+                         :resource_id     => vm.id,
+                         :min_max         => {
+                           :abs_max_derived_memory_used_value => 100.00
+                         }
       FactoryGirl.create :metric_rollup_vm_daily,
                          :with_data,
                          :derived_memory_used => 10.0,
                          :time_profile_id     => tp_id,
-                         :resource_id         => vm.id
+                         :resource_id         => vm.id,
+                         :min_max             => {
+                           :abs_max_derived_memory_used_value => 500.00
+                         }
       FactoryGirl.create :metric_rollup_vm_daily,
                          :with_data,
                          :derived_memory_used => 1000.0,
                          :time_profile_id     => tp_id,
-                         :resource_id         => vm.id
+                         :resource_id         => vm.id,
+                         :min_max             => {
+                           :abs_max_derived_memory_used_value => 200.00
+                         }
     end
 
     it "calculates in ruby" do
-      expect(vm.derived_memory_used_max_over_time_period).to eq(1000.0)
+      expect(vm.derived_memory_used_max_over_time_period).to eq(500.0)
     end
 
     it "calculates in the database" do
