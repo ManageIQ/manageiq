@@ -21,6 +21,13 @@ RSpec.describe MiqExpression::Tag do
                                                             :namespace    => "/managed/service_level")
     end
 
+    it "with model-parent::model.managed-in_tag" do
+      tag = "ManageIQ::Providers::CloudManager.managed-service_level"
+      expect(described_class.parse(tag)).to have_attributes(:model        => ManageIQ::Providers::CloudManager,
+                                                            :associations => [],
+                                                            :namespace    => "/managed/service_level")
+    end
+
     it "with model.associations.associations.managed-in_tag" do
       tag = "Vm.service.user.managed-service_level"
       expect(described_class.parse(tag)).to have_attributes(:model        => Vm,
