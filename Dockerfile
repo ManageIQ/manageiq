@@ -66,7 +66,7 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
                    openssh-clients         \
                    openssh-server          \
                    &&                      \
-yum clean all
+    yum clean all
 
 # Add persistent data volume for postgres
 VOLUME [ "/var/opt/rh/rh-postgresql95/lib/pgsql/data" ]
