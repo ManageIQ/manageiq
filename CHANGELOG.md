@@ -5,6 +5,72 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 70 ending 2017-10-02
+
+### Added
+- Authentication
+  - Added support for httpd auth-api service for containers. [(#15881)](https://github.com/ManageIQ/manageiq/pull/15881)
+- Automate
+  - Add the `picture` association to Generic Objects via `generic_object_definition` [(#16006)](https://github.com/ManageIQ/manageiq/pull/16006)
+  - Generic object add to service. [(#16000)](https://github.com/ManageIQ/manageiq/pull/16000)
+  - Rename the key from workspace to objects [(#15977)](https://github.com/ManageIQ/manageiq/pull/15977)
+- Core
+  - Add event streams product features [(#16021)](https://github.com/ManageIQ/manageiq/pull/16021)
+  - Use the built-in OpenShift service environment variables [(#16001)](https://github.com/ManageIQ/manageiq/pull/16001)
+- Events
+  - Add target to event existence check [(#15719)](https://github.com/ManageIQ/manageiq/pull/15719)
+- Performance
+  - Optimize speed and stabilize the batch graph refresh memory usage [(#15897)](https://github.com/ManageIQ/manageiq/pull/15897)
+- Providers
+  - Use more descriptive name for seal template [(#16045)](https://github.com/ManageIQ/manageiq/pull/16045)
+  - Enhance NetworkRouter model for Amazon [(#16030)](https://github.com/ManageIQ/manageiq/pull/16030)
+  - Metrics Worker capture_timer more ems centric [(#16004)](https://github.com/ManageIQ/manageiq/pull/16004)
+  - Support publish Vm by RHV [(#15981)](https://github.com/ManageIQ/manageiq/pull/15981)
+  - Improve metrics saving [(#15976)](https://github.com/ManageIQ/manageiq/pull/15976)
+  - Add OpenSCAP scan to supported features mixin [(#15944)](https://github.com/ManageIQ/manageiq/pull/15944)
+  - Queue targeted refresh in a provisioning workflow [(#15933)](https://github.com/ManageIQ/manageiq/pull/15933)
+  - Convert Container quotas to numeric values [(#15639)](https://github.com/ManageIQ/manageiq/pull/15639)
+- Provisioning
+  - Automate - VMware placement to support only Clusters or only Folders. [(#15951)](https://github.com/ManageIQ/manageiq/pull/15951)
+- Service UI
+  - Add SUI product features [(#16068)](https://github.com/ManageIQ/manageiq/pull/16068)
+  - Service dialog generation rely only on OrchestrationParameterConstraint [(#16047)](https://github.com/ManageIQ/manageiq/pull/16047)
+- User Interface
+  - Add dialog field description to list of values updatable by automate [(#16011)](https://github.com/ManageIQ/manageiq/pull/16011)
+  - Add virtual columns for GenericObject and GenericObjectDefinition [(#16007)](https://github.com/ManageIQ/manageiq/pull/16007)
+  - Expose Custom Button visability/enablement [(#15911)](https://github.com/ManageIQ/manageiq/pull/15911)
+
+### Fixed
+- Chargeback
+  - Delete tag assignments when deleting a tag that is referenced in an assignment [(#16039)](https://github.com/ManageIQ/manageiq/pull/16039)
+- Core
+  - Queue destroying of linked events when instance of MiqServer destroyed [(#15995)](https://github.com/ManageIQ/manageiq/pull/15995)
+  - Tool to replicate server settings to other servers [(#15990)](https://github.com/ManageIQ/manageiq/pull/15990)
+  - Ruby 2.4 - Replace all Fixnum|Bignum [(#15987)](https://github.com/ManageIQ/manageiq/pull/15987)
+  - Cancel before_destroy  callback chain for MiqServer by throwing 'abort' [(#15986)](https://github.com/ManageIQ/manageiq/pull/15986)
+- Providers
+  - Delegate name attribute to parent_manager [(#16067)](https://github.com/ManageIQ/manageiq/pull/16067)
+  - Fix for when target new refresh fails [(#16043)](https://github.com/ManageIQ/manageiq/pull/16043)
+  - Disabling batch saving for VmOrTemplate because of needed hooks [(#16031)](https://github.com/ManageIQ/manageiq/pull/16031)
+  - Fix the lenovo's event_catcher time [(#16012)](https://github.com/ManageIQ/manageiq/pull/16012)
+  - Change error notification level from success to error [(#15998)](https://github.com/ManageIQ/manageiq/pull/15998)
+  - Add nil checks for manager_uuids and references [(#15934)](https://github.com/ManageIQ/manageiq/pull/15934)
+  - Proxy support for cloning ansible repo and add provider [(#15762)](https://github.com/ManageIQ/manageiq/pull/15762)
+- RBAC
+  - Move rule for network manager to belonsto filter [(#16063)](https://github.com/ManageIQ/manageiq/pull/16063)
+  - Add Tasks start page URL to shortcuts yaml file [(#16061)](https://github.com/ManageIQ/manageiq/pull/16061)
+- Reporting
+  - Unconditionally seed all standard reports and widgets [(#16062)](https://github.com/ManageIQ/manageiq/pull/16062)
+  - Do not show container and cloud providers  on 'Monthly Hosts per Provider' report [(#15822)](https://github.com/ManageIQ/manageiq/pull/15822)
+- Smartstate
+  - Increase Timeouts and Worker Memory for Azure SSA [(#16016)](https://github.com/ManageIQ/manageiq/pull/16016)
+- User Interface
+  - Add monitoring menus [(#15866)](https://github.com/ManageIQ/manageiq/pull/15866)
+
+### Removed
+- Core
+  - Passing a class as a value in an Active Record query is deprecated [(#16008)](https://github.com/ManageIQ/manageiq/pull/16008)
+
 ## Unreleased as of Sprint 69 ending 2017-09-18
 
 ### Added
