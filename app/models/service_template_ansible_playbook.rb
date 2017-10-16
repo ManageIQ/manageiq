@@ -74,7 +74,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   private_class_method :build_name
 
   def self.create_job_template(name, description, info, auth_user)
-    tower, params = build_parameter_list(name, description, info)
+    tower, params = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook.build_parameter_list(name, description, info)
 
     task_id = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript.create_in_provider_queue(tower.id, params, auth_user)
     task = MiqTask.wait_for_taskid(task_id)
@@ -82,37 +82,6 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     task.task_results
   end
   private_class_method :create_job_template
-
-  def self.build_parameter_list(name, description, info)
-    playbook = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook.find(info[:playbook_id])
-    tower = playbook.manager
-    params = {
-      :name                     => name,
-      :description              => description || '',
-      :project                  => playbook.configuration_script_source.manager_ref,
-      :playbook                 => playbook.name,
-      :inventory                => tower.provider.default_inventory,
-      :become_enabled           => info[:become_enabled].present?,
-      :verbosity                => info[:verbosity].presence || 0,
-      :ask_variables_on_launch  => true,
-      :ask_limit_on_launch      => true,
-      :ask_inventory_on_launch  => true,
-      :ask_credential_on_launch => true
-    }
-    if info[:extra_vars]
-      params[:extra_vars] = info[:extra_vars].transform_values do |val|
-        val.kind_of?(String) ? val : val[:default] # TODO: support Hash only
-      end.to_json
-    end
-
-    [:credential, :cloud_credential, :network_credential].each do |credential|
-      cred_sym = "#{credential}_id".to_sym
-      params[credential] = Authentication.find(info[cred_sym]).manager_ref if info[cred_sym]
-    end
-
-    [tower, params.compact]
-  end
-  private_class_method :build_parameter_list
 
   def self.validate_config_info(info)
     info[:provision][:fqname]   ||= default_provisioning_entry_point('atomic') if info.key?(:provision)

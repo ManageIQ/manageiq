@@ -1,6 +1,10 @@
 class ServiceAnsiblePlaybook < ServiceGeneric
   delegate :job_template, :to => :service_template, :allow_nil => true
 
+  def self.create_inventory(tower, name, hosts)
+    new.send(:create_raw_inventory, tower, name, hosts)
+  end
+
   # A chance for taking options from automate script to override options from a service dialog
   def preprocess(action, add_options = {})
     unless add_options.blank?
@@ -122,9 +126,13 @@ class ServiceAnsiblePlaybook < ServiceGeneric
 
   def create_inventory_with_hosts(action, hosts)
     tower = manager(action)
+    create_raw_inventory(tower, inventory_name(action), hosts)
+  end
+
+  def create_raw_inventory(tower, name, hosts)
     tower.with_provider_connection do |connection|
       miq_org = tower.provider.default_organization
-      connection.api.inventories.create!(:name => inventory_name(action), :organization => miq_org).tap do |inventory|
+      connection.api.inventories.create!(:name => name, :organization => miq_org).tap do |inventory|
         hosts.split(',').each do |host|
           connection.api.hosts.create!(:name => host, :inventory => inventory.id)
         end
