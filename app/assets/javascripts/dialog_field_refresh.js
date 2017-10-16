@@ -1,4 +1,4 @@
-/* global miqInitSelectPicker miqSelectPickerEvent miqSparkle miqSparkleOn */
+/* global miqInitSelectPicker miqObserveRequest miqSelectPickerEvent miqSparkle miqSparkleOn */
 
 var dialogFieldRefresh = {
   unbindAllPreviousListeners: function() {
@@ -238,7 +238,7 @@ var dialogFieldRefresh = {
   },
 
   sendRefreshRequest: function(url, data, doneFunction) {
-    miqJqueryRequest(url, {
+    miqObserveRequest(url, {
       data: data,
       dataType: 'json',
       beforeSend: true,

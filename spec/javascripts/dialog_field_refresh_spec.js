@@ -923,4 +923,21 @@ describe('dialogFieldRefresh', function() {
       });
     });
   });
+
+  describe('#sendRefreshRequest', function() {
+    beforeEach(function() {
+      spyOn(window, 'miqObserveRequest');
+    });
+
+    it('delegates to miqObserveRequest', function() {
+      dialogFieldRefresh.sendRefreshRequest('the url', 'the data', 'the done function');
+      expect(window.miqObserveRequest).toHaveBeenCalledWith('the url', {
+        data: 'the data',
+        dataType: 'json',
+        beforeSend: true,
+        complete: true,
+        done: 'the done function'
+      });
+    });
+  });
 });
