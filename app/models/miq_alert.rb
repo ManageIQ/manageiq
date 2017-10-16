@@ -585,6 +585,21 @@ class MiqAlert < ApplicationRecord
           {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
           {:name => :value_mw_threshold, :description => _("Number of Aborted Transactions"), :numeric => true, :required => true}
         ]},
+      {:name => "mw_aggregated_active_web_sessions", :description => _("Web sessions - Active"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of active Web sessions"), :numeric => true, :required => true}
+        ]},
+      {:name => "mw_aggregated_expired_web_sessions", :description => _("Web sessions - Expired"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of expired Web sessions"), :numeric => true, :required => true}
+        ]},
+      {:name => "mw_aggregated_rejected_web_sessions", :description => _("Web sessions - Rejected"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of rejected Web sessions"), :numeric => true, :required => true}
+        ]},
       {:name => "dwh_generic", :description => _("All Datawarehouse alerts"), :db => ["ContainerNode"], :responds_to_events => "datawarehouse_alert",
         :options => [], :always_evaluate => true}
     ]
