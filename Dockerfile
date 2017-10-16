@@ -1,5 +1,6 @@
 FROM manageiq/ruby
 ENV container docker
+MAINTAINER ManageIQ https://github.com/ManageIQ/manageiq
 ARG REF=master
 
 # Set ENV, LANG only needed if building with docker-1.8
