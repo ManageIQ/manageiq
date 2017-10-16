@@ -151,4 +151,17 @@ describe Condition do
       expect(Condition.subst_matches?(expr, vm1)).not_to be_truthy
     end
   end
+
+  describe ".import_from_hash" do
+    it "removes condition modifier" do
+      cond_hash = {
+        "description" => "test condition",
+        "expression"  => MiqExpression.new(">" => {"field" => "Vm-cpu_num", "value" => 2}),
+        "modifier"    => 'deny',
+        "towhat"      => "Vm"
+      }
+      condition, _s = Condition.import_from_hash(cond_hash)
+      expect(condition.expression.exp).to eq("not" => {">" => {"field" => "Vm-cpu_num", "value" => 2}})
+    end
+  end
 end

@@ -63,7 +63,6 @@ class MiqPolicy < ApplicationRecord
             :name        => policy.attributes["name"],
             :description => policy.attributes["description"],
             :expression  => MiqExpression.new(policy.condition),
-            :modifier    => policy.modifier,
             :towhat      => "Vm"
           )]
         else
