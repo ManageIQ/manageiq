@@ -20,6 +20,7 @@ col_order:
 - hardware.cpu_cores_per_socket
 - hardware.memory_mb
 - hardware.number_of_nics
+- hardware.serial_number
 timeline:
 id: 70
 file_mtime:
@@ -37,6 +38,7 @@ include:
     - cpu_cores_per_socket
     - memory_mb
     - number_of_nics
+    - serial_number
 db: Host
 cols:
 - name
@@ -55,3 +57,4 @@ headers:
 - Hardware Cores Per Socket
 - Hardware RAM
 - Hardware Number Of Nics
+- Serial Number
