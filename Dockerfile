@@ -12,6 +12,10 @@ ENV SUI_ROOT /opt/manageiq/manageiq-ui-service
 ## To cleanly shutdown systemd, use SIGRTMIN+3
 STOPSIGNAL SIGRTMIN+3
 
+# Fetch and manageiq release repo
+RUN curl -sSLko /etc/yum.repos.d/manageiq-ManageIQ-Fine-epel-7.repo \
+      https://copr.fedorainfracloud.org/coprs/manageiq/ManageIQ-Fine/repo/epel-7/manageiq-ManageIQ-Fine-epel-7.repo
+
 ## Install EPEL repo, yum necessary packages for the build without docs, clean all caches
 RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
     yum -y install centos-release-scl-rh && \
