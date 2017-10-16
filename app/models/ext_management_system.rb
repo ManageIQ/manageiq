@@ -76,7 +76,7 @@ class ExtManagementSystem < ApplicationRecord
 
   validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_id]}
   validates :hostname, :presence => true, :if => :hostname_required?
-  validate :hostname_uniqueness_valid?, :if => :hostname_required?
+  validate :hostname_uniqueness_valid?, :hostname_format_valid?, :if => :hostname_required?
 
   scope :with_eligible_manager_types, ->(eligible_types) { where(:type => eligible_types) }
 
@@ -86,10 +86,14 @@ class ExtManagementSystem < ApplicationRecord
     return unless hostname_required?
     return unless hostname.present? # Presence is checked elsewhere
     # check uniqueness per provider type
+    existing_hostnames = (self.class.all - [self]).map(&:hostname).compact.map { |hostname| hostname.downcase.gsub(/\/$/, '') }
+    errors.add(:hostname, N_("has to be unique per provider type")) if existing_hostnames.include?(hostname.downcase.gsub(/\/$/, ''))
+  end
 
-    existing_hostnames = (self.class.all - [self]).map(&:hostname).compact.map(&:downcase)
-
-    errors.add(:hostname, N_("has to be unique per provider type")) if existing_hostnames.include?(hostname.downcase)
+  def hostname_format_valid?
+    return if Utils::RegexUtil::IS_IPV4_OR_IPV6.match(:hostname) || Utils::RegexUtil::IS_HOSTNAME.match(:hostname)
+    error_msg = N_("is in a wrong format. Please, remove the path after IP address.")
+    errors.add(:hostname, _(error_msg))
   end
 
   include NewWithTypeStiMixin
