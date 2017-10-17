@@ -1,22 +1,29 @@
+# A mapping matches labels on `resource_type` (NULL means any), `name` (required),
+# and `value` (NULL means any).
+#
+# Note: `labeled_resource_type` doesn't really need to match the actual label's `resource_type`;
+# it's simply matched against the type argument to Mapper#map_labels,
+# and sometimes is a fake string like 'Vm' or 'Image' instead of a model name.
+#
+# Different labels might map to same tag, and one label might map to multiple tags.
+#
+# There are 2 kinds of rows:
+# - When `label_value` is specified, we map only this value to a specific `tag`.
+#   TODO: drop this.  This was never exposed in UI and is dead code to maintain.
+#
+# - When `label_value` is NULL, we map this name with any value to per-value tags.
+#   In this case, `tag` specifies the category under which to create
+#   the value-specific tag (and classification) on demand.
+#
+# All involved tags must also have a Classification.
+#
+# TODO: rename, no longer specific to containers.
 class ContainerLabelTagMapping < ApplicationRecord
-  # A mapping matches labels on `resource_type` (NULL means any), `name` (required),
-  # and `value` (NULL means any).
-  #
-  # Different labels might map to same tag, and one label might map to multiple tags.
-  #
-  # There are 2 kinds of rows:
-  # - When `label_value` is specified, we map only this value to a specific `tag`.
-  # - When `label_value` is NULL, we map this name with any value to per-value tags.
-  #   In this case, `tag` specifies the category under which to create
-  #   the value-specific tag (and classification) on demand.
-  #
-  # All involved tags must also have a Classification.
-
   belongs_to :tag
 
   require_nested :Mapper
 
-  # Return ContainerLabelTagMapping::Mapper instance that holds current mappings,
+  # Return ContainerLabelTagMapping::Mapper instance that holds all current mappings,
   # can compute applicable tags, and create/find Tag records.
   def self.mapper
     ContainerLabelTagMapping::Mapper.new(in_my_region.all)

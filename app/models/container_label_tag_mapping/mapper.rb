@@ -1,8 +1,9 @@
+# coding: utf-8
 class ContainerLabelTagMapping
   # Performs most of the work of ContainerLabelTagMapping - holds current mappings,
   # computes applicable tags, and creates/finds Tag records - except actually [un]assigning.
   class Mapper
-    # Loads all mappings from DB.
+    # @param mappings [Array<ContainerLabelTagMapping>] Mapping records to use
     def initialize(mappings)
       # {[name, type, value] => [tag_id, ...]}
       @mappings = mappings.group_by { |m| [m.label_name, m.labeled_resource_type, m.label_value].freeze }
@@ -10,15 +11,20 @@ class ContainerLabelTagMapping
       @tags_to_resolve = []
     end
 
-    # labels should be array of {:name, :value} hashes.
-    # Returns array of opaque "tag references".
-    # (Currently {:tag_id} or {:category_tag_id, :entry_name, :entry_description} hashes but will change.)
+    # Compute desired tags, in intermediate form to be resolved later.
+    #
+    # @param type [String] Matched against `labeled_resource_type` in mappings.
+    #   May be `resource_type` of an actual label, but doesn't have to; can be fake string such as 'Vm'.
+    # @param labels [Array] array of {:name, :value} hashes.
+    # @return [Array] opaque "tag references" representing desired tags.
+    #   (Currently {:tag_id} or {:category_tag_id, :entry_name, :entry_description} hashes but will change.)
     def map_labels(type, labels)
       labels.collect_concat { |label| map_label(type, label) }.uniq
     end
 
     # Resolves/creates all "tag references" built by `map_labels` method of same Mapper.
     # The references are mutated to contain a Tag id.
+    # @return [void]
     def find_or_create_tags
       # TODO: O(N) queries, optimize.
       @tags_to_resolve.each do |h|
@@ -26,6 +32,9 @@ class ContainerLabelTagMapping
       end
     end
 
+    # Convert "tag references" to actual Tag objects.  Must have been resolved to known id first.
+    # @param tag_references [Array]
+    # @return [Array<Tag>]
     def self.references_to_tags(tag_references)
       ref_without_id = tag_references.detect { |ref| ref[:tag_id].nil? }
       raise "Unresolved tag reference #{ref_without_id}, must call find_or_create_tags first" if ref_without_id
@@ -68,6 +77,7 @@ class ContainerLabelTagMapping
       h
     end
 
+    # Mutate the hash to contain :tag_id.
     def find_or_create_tag(tag_hash)
       return if tag_hash[:tag_id]
 
