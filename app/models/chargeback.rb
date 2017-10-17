@@ -98,8 +98,14 @@ class Chargeback < ActsAsArModel
                                                                         :name        => rate.description,
                                                                         :resource    => MiqEnterprise.first)
       
+      data = {}
       rate.rate_details_relevant_to(relevant_fields).each do |r|
         r.populate_showback_rate(plan, r, showback_category)
+        measure = r.chargeable_field.showback_measure
+        dimension, _, _ = r.chargeable_field.showback_dimension
+        value = r.chargeable_field.measure(consumption, @options)
+        data[measure] ||= {}
+        data[measure][dimension] = [value, r.showback_unit(ChargeableField::UNITS[r.chargeable_field.metric])]
       end
     end
   end
