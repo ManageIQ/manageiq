@@ -43,6 +43,8 @@ class OrchestrationStack < ApplicationRecord
 
   virtual_column :stdout, :type => :string
 
+  scope :without_type, ->(type) { where.not(:type => type) }
+
   alias_method :orchestration_stack_parameters, :parameters
   alias_method :orchestration_stack_outputs,    :outputs
   alias_method :orchestration_stack_resources,  :resources

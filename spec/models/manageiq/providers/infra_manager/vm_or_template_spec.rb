@@ -22,7 +22,7 @@ describe ManageIQ::Providers::InfraManager::VmOrTemplate do
       FactoryGirl.create(:vm_openstack)
       FactoryGirl.create(:template_openstack)
 
-      expect(described_class.all_archived).to match_array([vm, t])
+      expect(described_class.archived).to match_array([vm, t])
     end
   end
 end

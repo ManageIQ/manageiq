@@ -14,14 +14,14 @@ query = Vm.where("updated_on < ? or updated_on IS NULL", ARCHIVE_CUTOFF)
 archived = 0
 
 $log.info("Searching for archived VMs older than #{ARCHIVE_CUTOFF} UTC.")
-$log.info("Expecting to prune #{query.all_archived.count} of the #{query.count} older vms")
+$log.info("Expecting to prune #{query.archived.count} of the #{query.count} older vms")
 if REPORT_ONLY
   $log.info("Reporting only; no rows will be deleted.")
 else
   $log.warn("Will delete any matching records.")
 end
 
-query.all_archived.find_in_batches do |vms|
+query.archived.find_in_batches do |vms|
   vms.each do |vm|
     begin
       archived += 1

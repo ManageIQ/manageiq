@@ -24,6 +24,8 @@ class PhysicalServer < ApplicationRecord
   has_one :host, :inverse_of => :physical_server
   has_one :asset_details, :as => :resource, :dependent => :destroy
 
+  scope :with_hosts, -> { where("physical_servers.id in (select hosts.physical_server_id from hosts)") }
+
   def name_with_details
     details % {
       :name => name,

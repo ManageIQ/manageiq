@@ -75,6 +75,8 @@ class ExtManagementSystem < ApplicationRecord
   validates :hostname, :presence => true, :if => :hostname_required?
   validate :hostname_uniqueness_valid?, :if => :hostname_required?
 
+  scope :with_eligible_manager_types, ->(eligible_types) { where(:type => eligible_types) }
+
   serialize :options
 
   def hostname_uniqueness_valid?

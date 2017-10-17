@@ -15,6 +15,8 @@ class OrchestrationTemplate < ApplicationRecord
             :if         => :unique_md5?
   validates_presence_of :name
 
+  scope :orderable, -> { where(:orderable => true) }
+
   before_destroy :check_not_in_use
 
   attr_accessor :remote_proxy
@@ -122,7 +124,7 @@ class OrchestrationTemplate < ApplicationRecord
 
   # List managers that may be able to deploy this template
   def self.eligible_managers
-    Rbac::Filterer.filtered(ExtManagementSystem, :where_clause => {:type => eligible_manager_types})
+    Rbac::Filterer.filtered(ExtManagementSystem, :named_scope => [[:with_eligible_manager_types, eligible_manager_types]])
   end
 
   delegate :eligible_managers, :to => :class

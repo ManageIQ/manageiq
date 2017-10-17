@@ -83,6 +83,9 @@ class Service < ApplicationRecord
   validates :display, :inclusion => { :in => [true, false] }
   validates :retired, :inclusion => { :in => [true, false] }
 
+  scope :displayed, ->              { where(:display => true) }
+  scope :retired,   ->(bool = true) { where(:retired => bool) }
+
   supports :reconfigure do
     unsupported_reason_add(:reconfigure, _("Reconfigure unsupported")) unless validate_reconfigure
   end

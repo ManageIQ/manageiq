@@ -22,7 +22,7 @@ describe ManageIQ::Providers::CloudManager::VmOrTemplate do
       FactoryGirl.create(:vm_vmware)
       FactoryGirl.create(:template_vmware)
 
-      expect(described_class.all_archived).to match_array([vm, t])
+      expect(described_class.archived).to match_array([vm, t])
     end
   end
 end

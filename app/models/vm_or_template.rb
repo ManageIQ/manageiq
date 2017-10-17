@@ -188,7 +188,12 @@ class VmOrTemplate < ApplicationRecord
   before_validation :set_tenant_from_group
   after_save :save_genealogy_information
 
-  scope :active, -> { where.not(:ems_id => nil) }
+  scope :active,    ->       { where.not(:ems_id => nil) }
+  scope :with_type, ->(type) { where(:type => type) }
+  scope :archived,  ->       { where(:ems_id => nil, :storage_id => nil) }
+  scope :orphaned,  ->       { where(:ems_id => nil).where.not(:storage_id => nil) }
+  scope :with_ems,  ->       { where.not(:ems_id => nil) }
+
 
   alias_method :datastores, :storages    # Used by web-services to return datastores as the property name
 
@@ -1676,24 +1681,6 @@ class VmOrTemplate < ApplicationRecord
 
   def console_supported?(_type)
     false
-  end
-
-  # Return all archived VMs
-  ARCHIVED_CONDITIONS = "vms.ems_id IS NULL AND vms.storage_id IS NULL".freeze
-  def self.all_archived
-    where(ARCHIVED_CONDITIONS)
-  end
-
-  # Return all orphaned VMs
-  ORPHANED_CONDITIONS = "vms.ems_id IS NULL AND vms.storage_id IS NOT NULL".freeze
-  def self.all_orphaned
-    where(ORPHANED_CONDITIONS)
-  end
-
-  # where.not(ORPHANED_CONDITIONS).where.not(ARCHIVED_CONDITIONS)
-  NOT_ARCHIVED_NOR_OPRHANED_CONDITIONS = "vms.ems_id IS NOT NULL".freeze
-  def self.not_archived_nor_orphaned
-    where.not(:ems_id => nil)
   end
 
   # Stop certain charts from showing unless the subclass allows
