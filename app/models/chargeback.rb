@@ -113,6 +113,20 @@ class Chargeback < ActsAsArModel
                                                    start_time:     consumption.instance_variable_get("@start_time"),
                                                    end_time:       consumption.instance_variable_get("@end_time"),
                                                    cycle_duration: @options.duration_of_report_step)
+
+      results.each do |cost_value, sb_rate|
+        r = ChargebackRateDetail.find(sb_rate.concept)
+        metric = r.chargeable_field.metric
+        metric_index = ChargeableField::VIRTUAL_COL_USES.invert[metric] || metric
+        metric_value = data[r.chargeable_field.group][metric_index]
+        metric_field = [r.chargeable_field.group, r.chargeable_field.source, "metric"].join("_")
+        cost_field = [r.chargeable_field.group, r.chargeable_field.source, "cost"].join("_")
+        _, total_metric_field, total_field = r.chargeable_field.cost_keys
+        self[total_field] = (self[total_field].to_f || 0) + cost_value.to_f
+        self[total_metric_field] = (self[total_metric_field].to_f || 0) + cost_value.to_f
+        self[cost_field] = cost_value.to_f
+        self[metric_field] = metric_value.first.to_f
+      end
     end
   end
 
