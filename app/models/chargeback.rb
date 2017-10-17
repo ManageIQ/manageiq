@@ -107,6 +107,12 @@ class Chargeback < ActsAsArModel
         data[measure] ||= {}
         data[measure][dimension] = [value, r.showback_unit(ChargeableField::UNITS[r.chargeable_field.metric])]
       end
+
+      results = plan.calculate_list_of_costs_input(resource_type:  showback_category,
+                                                   data:           data,
+                                                   start_time:     consumption.instance_variable_get("@start_time"),
+                                                   end_time:       consumption.instance_variable_get("@end_time"),
+                                                   cycle_duration: @options.duration_of_report_step)
     end
   end
 
