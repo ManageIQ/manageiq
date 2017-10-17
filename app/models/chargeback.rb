@@ -94,6 +94,10 @@ class Chargeback < ActsAsArModel
     self.fixed_compute_metric = consumption.chargeback_fields_present if consumption.chargeback_fields_present
 
     rates.each do |rate|
+      plan = ManageIQ::Consumption::ShowbackPricePlan.find_or_create_by(:description => rate.description,
+                                                                        :name        => rate.description,
+                                                                        :resource    => MiqEnterprise.first)
+      
       rate.rate_details_relevant_to(relevant_fields).each do |r|
       end
     end
