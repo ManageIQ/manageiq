@@ -99,6 +99,7 @@ class Chargeback < ActsAsArModel
                                                                         :resource    => MiqEnterprise.first)
       
       rate.rate_details_relevant_to(relevant_fields).each do |r|
+        r.populate_showback_rate(plan, r, showback_category)
       end
     end
   end
