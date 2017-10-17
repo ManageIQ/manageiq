@@ -675,21 +675,31 @@ describe VmOrTemplate do
       FactoryGirl.create :metric_rollup_vm_daily,
                          :with_data,
                          :time_profile_id => tp_id,
-                         :resource_id     => vm.id
+                         :resource_id     => vm.id,
+                         :min_max         => {
+                           :abs_max_cpu_usagemhz_rate_average_value => 100.00
+                         }
+
       FactoryGirl.create :metric_rollup_vm_daily,
                          :with_data,
                          :cpu_usagemhz_rate_average => 10.0,
                          :time_profile_id           => tp_id,
-                         :resource_id               => vm.id
+                         :resource_id               => vm.id,
+                         :min_max                   => {
+                           :abs_max_cpu_usagemhz_rate_average_value => 900.00
+                         }
       FactoryGirl.create :metric_rollup_vm_daily,
                          :with_data,
                          :cpu_usagemhz_rate_average => 100.0,
                          :time_profile_id           => tp_id,
-                         :resource_id               => vm.id
+                         :resource_id               => vm.id,
+                         :min_max                   => {
+                           :abs_max_cpu_usagemhz_rate_average_value => 500.00
+                         }
     end
 
     it "calculates in ruby" do
-      expect(vm.cpu_usagemhz_rate_average_max_over_time_period).to eq(100.0)
+      expect(vm.cpu_usagemhz_rate_average_max_over_time_period).to eq(900.00)
     end
 
     it "calculates in the database" do
