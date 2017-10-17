@@ -19,27 +19,20 @@ describe ContainerLabelTagMapping do
     end
   end
 
-  def map_labels(model_name, labels_kv)
-    ContainerLabelTagMapping.map_labels(ContainerLabelTagMapping.cache,
-                                        model_name,
-                                        labels(labels_kv))
-  end
-
-  def to_tags(tag_hashes)
-    tag_hashes.map { |h| ContainerLabelTagMapping.find_or_create_tag(h) }
+  def new_mapper
+    ContainerLabelTagMapping.mapper
   end
 
   # All-in-one
-  def map_to_tags(model_name, labels_kv)
-    to_tags(map_labels(model_name, labels_kv))
+  def map_to_tags(mapper, model_name, labels_kv)
+    tag_refs = mapper.map_labels(model_name, labels(labels_kv))
+    mapper.find_or_create_tags
+    ContainerLabelTagMapping::Mapper.references_to_tags(tag_refs)
   end
 
   context "with empty mapping" do
     it "does nothing" do
-      expect(ContainerLabelTagMapping.cache).to be_empty
-      expect(map_labels('ContainerNode',
-                        'foo'  => 'bar',
-                        'quux' => 'whatever')).to be_empty
+      expect(map_to_tags(new_mapper, 'ContainerNode', 'foo' => 'bar', 'quux' => 'whatever')).to be_empty
     end
   end
 
@@ -50,11 +43,8 @@ describe ContainerLabelTagMapping do
     end
 
     it "map_labels returns 2 tags" do
-      expect(map_labels('ContainerNode', 'name' => 'value-1')).to contain_exactly(
-        {:tag_id => tag1.id},
-        {:tag_id => tag2.id}
-      )
-      expect(map_to_tags('ContainerNode', 'name' => 'value-1')).to contain_exactly(tag1, tag2)
+      expect(new_mapper.map_labels('ContainerNode', labels('name' => 'value-1')).size).to eq(2)
+      expect(map_to_tags(new_mapper, 'ContainerNode', 'name' => 'value-1')).to contain_exactly(tag1, tag2)
     end
   end
 
@@ -68,7 +58,7 @@ describe ContainerLabelTagMapping do
     end
 
     it "prefers specific-value" do
-      expect(map_to_tags('ContainerNode', 'name' => 'value-1')).to contain_exactly(tag1, tag2)
+      expect(map_to_tags(new_mapper, 'ContainerNode', 'name' => 'value-1')).to contain_exactly(tag1, tag2)
     end
 
     it "creates tag for new value" do
@@ -76,8 +66,8 @@ describe ContainerLabelTagMapping do
       expect(ContainerLabelTagMapping.controls_tag?(tag2)).to be true
       expect(ContainerLabelTagMapping.controls_tag?(tag_in_another_cat)).to be false
 
-      cached1 = ContainerLabelTagMapping.cache
-      tags = to_tags(ContainerLabelTagMapping.map_labels(cached1, 'ContainerNode', labels('name' => 'value-2')))
+      mapper1 = ContainerLabelTagMapping.mapper
+      tags = map_to_tags(mapper1, 'ContainerNode', 'name' => 'value-2')
       expect(tags.size).to eq(1)
       expect(tags[0].name).to eq(cat_tag.name + '/value_2')
       expect(tags[0].classification.description).to eq('value-2')
@@ -88,7 +78,7 @@ describe ContainerLabelTagMapping do
 
       # But nothing changes when called again, the previously created tag is re-used.
 
-      tags2 = to_tags(ContainerLabelTagMapping.map_labels(cached1, 'ContainerNode', labels('name' => 'value-2')))
+      tags2 = map_to_tags(mapper1, 'ContainerNode', 'name' => 'value-2')
       expect(tags2).to contain_exactly(tags[0])
 
       expect(ContainerLabelTagMapping.controls_tag?(tag1)).to be true
@@ -97,9 +87,9 @@ describe ContainerLabelTagMapping do
 
       # And nothing changes when we re-load the mappings table.
 
-      cached2 = ContainerLabelTagMapping.cache
+      mapper2 = ContainerLabelTagMapping.mapper
 
-      tags2 = to_tags(ContainerLabelTagMapping.map_labels(cached2, 'ContainerNode', labels('name' => 'value-2')))
+      tags2 = map_to_tags(mapper2, 'ContainerNode', 'name' => 'value-2')
       expect(tags2).to contain_exactly(tags[0])
 
       expect(ContainerLabelTagMapping.controls_tag?(tag1)).to be true
@@ -112,8 +102,8 @@ describe ContainerLabelTagMapping do
       # (but the optional domain prefix must be lowercase).
       FactoryGirl.create(:container_label_tag_mapping,
                          :label_name => 'Name_Case', :label_value => 'value', :tag => tag2)
-      tags = map_to_tags('ContainerNode', 'name_case' => 'value')
-      tags2 = map_to_tags('ContainerNode', 'Name_Case' => 'value', 'naME_caSE' => 'value')
+      tags = map_to_tags(new_mapper, 'ContainerNode', 'name_case' => 'value')
+      tags2 = map_to_tags(new_mapper, 'ContainerNode', 'Name_Case' => 'value', 'naME_caSE' => 'value')
       expect(tags).to be_empty
       expect(tags2).to contain_exactly(tag2)
 
@@ -122,9 +112,9 @@ describe ContainerLabelTagMapping do
     end
 
     it "handles values that differ only by case / punctuation" do
-      tags = map_to_tags('ContainerNode', 'name' => 'value-case.punct')
-      tags2 = map_to_tags('ContainerNode', 'name' => 'VaLuE-CASE.punct')
-      tags3 = map_to_tags('ContainerNode', 'name' => 'value-case/punct')
+      tags = map_to_tags(new_mapper, 'ContainerNode', 'name' => 'value-case.punct')
+      tags2 = map_to_tags(new_mapper, 'ContainerNode', 'name' => 'VaLuE-CASE.punct')
+      tags3 = map_to_tags(new_mapper, 'ContainerNode', 'name' => 'value-case/punct')
       # TODO: They get mapped to the same tag, is this desired?
       # TODO: What do we want the description to be?
       expect(tags2).to eq(tags)
@@ -132,9 +122,9 @@ describe ContainerLabelTagMapping do
     end
 
     it "handles values that differ only past 50th character" do
-      tags = map_to_tags('ContainerNode', 'name' => 'x' * 50)
-      tags2 = map_to_tags('ContainerNode', 'name' => 'x' * 50 + 'y')
-      tags3 = map_to_tags('ContainerNode', 'name' => 'x' * 50 + 'z')
+      tags = map_to_tags(new_mapper, 'ContainerNode', 'name' => 'x' * 50)
+      tags2 = map_to_tags(new_mapper, 'ContainerNode', 'name' => 'x' * 50 + 'y')
+      tags3 = map_to_tags(new_mapper, 'ContainerNode', 'name' => 'x' * 50 + 'z')
       # TODO: They get mapped to the same tag, is this desired?
       # TODO: What do we want the description to be?
       expect(tags2).to eq(tags)
@@ -145,19 +135,19 @@ describe ContainerLabelTagMapping do
     # each with independently cached mapping table.
     context "2 workers with independent cache" do
       it "handle known value simultaneously" do
-        cached1 = ContainerLabelTagMapping.cache
-        cached2 = ContainerLabelTagMapping.cache
-        tags1 = to_tags(ContainerLabelTagMapping.map_labels(cached1, 'ContainerNode', labels('name' => 'value-1')))
-        tags2 = to_tags(ContainerLabelTagMapping.map_labels(cached2, 'ContainerNode', labels('name' => 'value-1')))
+        mapper1 = ContainerLabelTagMapping.mapper
+        mapper2 = ContainerLabelTagMapping.mapper
+        tags1 = map_to_tags(mapper1, 'ContainerNode', 'name' => 'value-1')
+        tags2 = map_to_tags(mapper2, 'ContainerNode', 'name' => 'value-1')
         expect(tags1).to contain_exactly(tag1, tag2)
         expect(tags2).to contain_exactly(tag1, tag2)
       end
 
       it "handle new value encountered simultaneously" do
-        cached1 = ContainerLabelTagMapping.cache
-        cached2 = ContainerLabelTagMapping.cache
-        tags1 = to_tags(ContainerLabelTagMapping.map_labels(cached1, 'ContainerNode', labels('name' => 'value-2')))
-        tags2 = to_tags(ContainerLabelTagMapping.map_labels(cached2, 'ContainerNode', labels('name' => 'value-2')))
+        mapper1 = ContainerLabelTagMapping.mapper
+        mapper2 = ContainerLabelTagMapping.mapper
+        tags1 = map_to_tags(mapper1, 'ContainerNode', 'name' => 'value-2')
+        tags2 = map_to_tags(mapper2, 'ContainerNode', 'name' => 'value-2')
         expect(tags1.size).to eq(1)
         expect(tags1).to eq(tags2)
       end
@@ -171,7 +161,7 @@ describe ContainerLabelTagMapping do
     end
 
     it "maps same new value in both into 1 new tag" do
-      tags = map_to_tags('ContainerNode', 'name1' => 'value', 'name2' => 'value')
+      tags = map_to_tags(new_mapper, 'ContainerNode', 'name1' => 'value', 'name2' => 'value')
       expect(tags.size).to eq(1)
       expect(ContainerLabelTagMapping.controls_tag?(tags[0])).to be true
     end
@@ -180,15 +170,15 @@ describe ContainerLabelTagMapping do
   context "given a label with empty value" do
     it "any-value mapping is ignored" do
       FactoryGirl.create(:container_label_tag_mapping, :tag => cat_tag)
-      expect(map_to_tags('ContainerNode', 'name' => '')).to be_empty
+      expect(map_to_tags(new_mapper, 'ContainerNode', 'name' => '')).to be_empty
     end
 
     it "honors specific mapping for the empty value" do
       FactoryGirl.create(:container_label_tag_mapping, :label_value => '', :tag => empty_tag_under_cat)
-      expect(map_to_tags('ContainerNode', 'name' => '')).to contain_exactly(empty_tag_under_cat)
+      expect(map_to_tags(new_mapper, 'ContainerNode', 'name' => '')).to contain_exactly(empty_tag_under_cat)
       # same with both any-value and specific-value mappings
       FactoryGirl.create(:container_label_tag_mapping, :tag => cat_tag)
-      expect(map_to_tags('ContainerNode', 'name' => '')).to contain_exactly(empty_tag_under_cat)
+      expect(map_to_tags(new_mapper, 'ContainerNode', 'name' => '')).to contain_exactly(empty_tag_under_cat)
     end
   end
 
@@ -203,11 +193,11 @@ describe ContainerLabelTagMapping do
     end
 
     it "applies both independently" do
-      expect(map_to_tags('ContainerNode', 'name' => 'value')).to contain_exactly(tag1, tag2)
+      expect(map_to_tags(new_mapper, 'ContainerNode', 'name' => 'value')).to contain_exactly(tag1, tag2)
     end
 
     it "skips specific-type when type doesn't match" do
-      expect(map_to_tags('ContainerProject', 'name' => 'value')).to contain_exactly(tag2)
+      expect(map_to_tags(new_mapper, 'ContainerProject', 'name' => 'value')).to contain_exactly(tag2)
     end
   end
 
@@ -218,7 +208,7 @@ describe ContainerLabelTagMapping do
     end
 
     it "resolves them independently" do
-      tags = map_to_tags('ContainerNode', 'name' => 'value')
+      tags = map_to_tags(new_mapper, 'ContainerNode', 'name' => 'value')
       expect(tags.size).to eq(2)
       expect(tags).to include(tag2)
     end
@@ -226,6 +216,11 @@ describe ContainerLabelTagMapping do
 
   describe ".retag_entity" do
     let(:node) { FactoryGirl.create(:container_node) }
+
+    def ref_to_tag(tag)
+      {:tag_id => tag.id}
+    end
+
     before(:each) do
       # For tag1, tag2 etc. to be considered controlled by the mapping
       FactoryGirl.create(:container_label_tag_mapping, :tag => cat_tag)
@@ -233,9 +228,9 @@ describe ContainerLabelTagMapping do
 
     it "assigns new tags, idempotently" do
       expect(node.tags).to be_empty
-      ContainerLabelTagMapping.retag_entity(node, [{:tag_id => tag1.id}])
+      ContainerLabelTagMapping.retag_entity(node, [ref_to_tag(tag1)])
       expect(node.tags).to contain_exactly(tag1)
-      ContainerLabelTagMapping.retag_entity(node, [{:tag_id => tag1.id}])
+      ContainerLabelTagMapping.retag_entity(node, [ref_to_tag(tag1)])
       expect(node.tags).to contain_exactly(tag1)
     end
 
@@ -252,7 +247,7 @@ describe ContainerLabelTagMapping do
       expect(ContainerLabelTagMapping.controls_tag?(tag2)).to be true
       expect(ContainerLabelTagMapping.controls_tag?(tag3)).to be true
       node.tags = [tag1, user_tag, tag2]
-      ContainerLabelTagMapping.retag_entity(node, [{:tag_id => tag1.id}, {:tag_id => tag3.id}])
+      ContainerLabelTagMapping.retag_entity(node, [ref_to_tag(tag1), ref_to_tag(tag3)])
       expect(node.tags).to contain_exactly(user_tag, tag1, tag3)
     end
   end
