@@ -29,7 +29,11 @@ class Chargeback < ActsAsArModel
       data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
 
       # we are getting hash with metrics and costs for metrics defined for chargeback
-      data[key].calculate_costs(consumption, rates_to_apply)
+      if Settings[:new_chargeback]
+        data[key].new_chargeback_calculate_costs(consumption, rates_to_apply)
+      else
+        data[key].calculate_costs(consumption, rates_to_apply)
+      end
     end
     _log.info("Calculating chargeback costs...Complete")
 
@@ -73,6 +77,19 @@ class Chargeback < ActsAsArModel
     self.interval_name = options.interval
     self.chargeback_rates = ''
     self.entity ||= consumption.resource
+  end
+
+  def new_chargeback_calculate_costs(consumption, rates)
+    self.fixed_compute_metric = consumption.chargeback_fields_present if consumption.chargeback_fields_present
+
+    rates.each do |rate|
+      rate.rate_details_relevant_to(relevant_fields).each do |r|
+        r.charge(relevant_fields, consumption, @options).each do |field, value|
+          next unless self.class.attribute_names.include?(field)
+          self[field] = (self[field] || 0) + value
+        end
+      end
+    end
   end
 
   def calculate_costs(consumption, rates)
