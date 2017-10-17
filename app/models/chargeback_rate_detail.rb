@@ -23,6 +23,52 @@ class ChargebackRateDetail < ApplicationRecord
     'yearly'  => _('Yearly')
   }.freeze
 
+  # gigabytes -> GiB
+  #
+  def showback_unit(p_per_unit = nil)
+    return '' unless chargeable_field.detail_measure
+    {'bytes' => '',
+     'kilobytes'  => 'KiB',
+     'megabytes'  => 'MiB',
+     'gigabytes'  => 'GiB',
+     'terabytes'  => 'TiB',
+     'hertz'      => '',
+     'kilohertz'  => 'KHz',
+     'megahertz'  => 'MHz',
+     'gigahertz'  => 'GHz',
+     'teraherts'  => 'THz',
+     'bps'        => '',
+     'kbps'       => 'Mbps',
+     'mbps'       => 'Gbps',
+     'gbps'       => 'Tbps',
+    }[p_per_unit || per_unit]
+  end
+
+  def populate_showback_rate(plan, rate_detail, category)
+    measure = rate_detail.chargeable_field.showback_measure
+    dimension, unit, calculation = rate_detail.chargeable_field.showback_dimension
+    unit = rate_detail.showback_unit
+
+    showback_rate = ManageIQ::Consumption::ShowbackRate.find_or_create_by(:category            => category,
+                                                                          :measure             => measure,
+                                                                          :dimension           => dimension,
+                                                                          :showback_price_plan => plan,
+                                                                          :calculation         => calculation,
+                                                                          :concept             => rate_detail.id)
+    showback_rate.showback_tiers.destroy_all
+    rate_detail.chargeback_tiers.each do |tier|
+      showback_rate.showback_tiers.build(:tier_start_value => tier.start,
+                                         :tier_end_value   => tier.finish,
+                                         :variable_rate_per_time => rate_detail.per_time,
+                                         :variable_rate_per_unit => unit,
+                                         :fixed_rate_per_time => rate_detail.per_time,
+                                         :fixed_rate          => Money.new(tier.fixed_rate * Money.default_currency.subunit_to_unit),
+                                         :variable_rate       => Money.new(tier.variable_rate * Money.default_currency.subunit_to_unit)
+)
+    end
+    showback_rate.save
+  end
+
   def charge(relevant_fields, consumption, options)
     result = {}
     if (relevant_fields & [metric_key, cost_keys[0]]).present?

@@ -7,29 +7,42 @@ class ChargebackVm < Chargeback
     :owner_name               => :string,
     :provider_name            => :string,
     :provider_uid             => :string,
+
     :cpu_allocated_metric     => :float,
     :cpu_allocated_cost       => :float,
+
     :cpu_used_cost            => :float,
     :cpu_used_metric          => :float,
     :cpu_cost                 => :float,
+
+
     :disk_io_used_cost        => :float,
     :disk_io_used_metric      => :float,
+
+
     :fixed_compute_1_cost     => :float,
     :fixed_compute_2_cost     => :float,
+
     :fixed_storage_1_cost     => :float,
     :fixed_storage_2_cost     => :float,
+
     :memory_allocated_cost    => :float,
     :memory_allocated_metric  => :float,
+
     :memory_used_cost         => :float,
     :memory_used_metric       => :float,
     :memory_cost              => :float,
+
     :net_io_used_cost         => :float,
     :net_io_used_metric       => :float,
+
     :storage_allocated_cost   => :float,
     :storage_allocated_metric => :float,
+
     :storage_used_cost        => :float,
     :storage_used_metric      => :float,
     :storage_cost             => :float,
+
     :total_cost               => :float,
   )
 

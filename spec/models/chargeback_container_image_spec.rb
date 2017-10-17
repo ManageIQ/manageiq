@@ -30,6 +30,8 @@ describe ChargebackContainerImage do
     MiqRegion.seed
     ChargebackRateDetailMeasure.seed
     ChargeableField.seed
+    ManageIQ::Consumption::ShowbackUsageType.seed
+    MiqEnterprise.seed
 
     EvmSpecHelper.create_guid_miq_server_zone
     @node = FactoryGirl.create(:container_node, :name => "node")
@@ -138,5 +140,9 @@ describe ChargebackContainerImage do
       # .to be_within(0.01) is used since theres a float error here
       expect(subject.fixed_compute_1_cost).to be_within(0.01).of(hourly_rate * hours_in_month)
     end
+  end
+
+  after(:all) do
+    Settings[:new_chargeback] = nil if Settings[:new_chargeback]
   end
 end
