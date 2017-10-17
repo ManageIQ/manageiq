@@ -70,6 +70,11 @@ RSpec.describe MiqExpression::Tag do
       tag = "Vm.managed"
       expect(described_class.parse(tag)).to be_nil
     end
+
+    it "returns nil with invalid case parent-model::model::somethingmanaged-se" do
+      tag = "ManageIQ::Providers::CloudManagermanaged-se'"
+      expect(described_class.parse(tag)).to be_nil
+    end
   end
 
   describe "#to_s" do
