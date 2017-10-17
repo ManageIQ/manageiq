@@ -6511,11 +6511,230 @@
   :feature_type: node
   :identifier: sui
   :children:
-  - :name: App Launcher
-    :description: Display the App Launcher
-    :feature_type: view
-    :identifier: sui_app_launcher
-  - :name: Notifications
-    :description: Display notifications
-    :feature_type: view
-    :identifier: sui_notifications
+  - :name: Core
+    :description: Core features
+    :feature_type: node
+    :identifier: sui_core
+    :children:
+    - :name: Application Launcher
+      :description: Display the Application Launcher
+      :feature_type: view
+      :identifier: sui_app_launcher
+    - :name: Switch Language
+      :description: Display Language options
+      :feature_type: view
+      :identifier: sui_language 
+    - :name: Notifications
+      :description: Display notifications
+      :feature_type: view
+      :identifier: sui_notifications
+  - :name: Dashboard
+    :description: Dashboard features
+    :feature_type: node
+    :identifier: sui_dashboard
+    :children:
+     - :name: Monthly Charge view
+       :description: Display monthly charges
+       :feature_type: view
+       :identifier: sui_dashboard_monthly_charge_view
+  - :name: My Services
+    :description: My Services features
+    :feature_type: node
+    :identifier: sui_services
+    :children:
+    - :name: View
+      :description: View services
+      :feature_type: node
+      :identifier: sui_services_view
+      :children:
+      - :name: Show
+        :description: Show services
+        :feature_type: view
+        :identifier: sui_services_show
+    - :name: Operate
+      :description: Service Operations
+      :feature_type: node
+      :identifier: sui_servics_operations
+      :children:
+      - :name: Start
+        :description: Start services
+        :feature_type: control
+        :identifier: sui_services_start
+      - :name: Stop
+        :description: Stop services
+        :feature_type: control
+        :identifier: sui_services_stop
+      - :name: Suspend
+        :description: Suspend services
+        :feature_type: control
+        :identifier: sui_services_suspend
+      - :name: Edit Tags
+        :description: Edit Service tags
+        :feature_type: control
+        :identifier: sui_services_tags
+      - :name: Set Retirement Date
+        :description: Set services retire date
+        :feature_type: control
+        :identifier: sui_services_retire_date
+      - :name: Retire Service
+        :description: Retire Service
+        :feature_type: control
+        :identifier: sui_services_retire
+    - :name: Modify
+      :description: Modify services
+      :feature_type: node
+      :identifier: sui_services_modify
+      :children:
+      - :name: Edit
+        :description: Edit services
+        :feature_type: control
+        :identifier: sui_services_edit
+      - :name: Remove
+        :description: Remove services
+        :feature_type: control
+        :identifier: sui_services_delete
+      - :name: Set Ownership
+        :description: Set service ownership
+        :feature_type: control
+        :identifier: sui_services_ownership
+  - :name: VM Resource
+    :description: VM Resource features
+    :feature_type: node
+    :identifier: sui_vm
+    :children:
+    - :name: View
+      :description: View VM
+      :feature_type: node
+      :identifier: sui_vm_view
+      :children:
+      - :name: Details
+        :description: Display VM details
+        :feature_type: view
+        :identifier: sui_vm_details_view
+      - :name: Snapshots
+        :description: Display Snapshots
+        :feature_type: view
+        :identifier: sui_vm_snapshots_view
+    - :name: Operate
+      :description: VM operations
+      :feature_type: node
+      :identifier: sui_vm_operations
+      :children:
+      - :name: Create Snapshots
+        :description: Creates snapshots
+        :feature_type: control
+        :identifier: sui_vm_snapshot_create
+      - :name: Delete Snapshots
+        :description: Delete snapshots
+        :feature_type: control
+        :identifier: sui_vm_snapshot_delete
+      - :name: Open Remote Console
+        :description: Open Remote Console
+        :feature_type: control
+        :identifier: sui_vm_console
+      - :name: Open Web Console
+        :description: Open Web Console
+        :feature_type: control
+        :identifier: sui_vm_web_console
+      - :name: Edit Tag
+        :description: Edit VM Tags
+        :feature_type: control
+        :identifier: sui_vm_tags
+      - :name: Retire
+        :description: Retire VM
+        :feature_type: control
+        :identifier: sui_vm_retire
+      - :name: Start
+        :description: Start VM
+        :feature_type: control
+        :identifier: sui_vm_start
+      - :name: Stop
+        :description: Stop VM
+        :feature_type: control
+        :identifier: sui_vm_stop
+      - :name: Suspend
+        :description: Suspend VM
+        :feature_type: control
+        :identifier: sui_vm_suspend
+  - :name: My Orders
+    :description: Order features
+    :feature_type: node
+    :identifier: sui_orders
+    :children:
+    - :name: View
+      :description: View Orders
+      :feature_type: node
+      :identifier: sui_orders_display
+      :children:  
+      - :name: Show
+        :description: Display Orders
+        :feature_type: view
+        :identifier: sui_orders_view
+    - :name: Operate
+      :description: Orders operations
+      :feature_type: node
+      :identifier: sui_orders_operations
+      :children:
+      - :name: Duplicate
+        :description: Duplicate orders
+        :feature_type: control
+        :identifier: sui_orders_duplicate
+    - :name: Modify
+      :description: Modify orders
+      :feature_type: node
+      :identifier: sui_orders_modify
+      :children:
+      - :name: Remove
+        :description: Delete Order
+        :feature_type: control
+        :identifier: sui_orders_delete
+  - :name: Service Catalog
+    :description: Service Catalog features
+    :feature_type: node
+    :identifier: sui_svc_catalog
+    :children:   
+    - :name: View
+      :description: Display Service Catalog
+      :feature_type: node
+      :identifier: sui_svc_catalog_display
+      :children:
+      - :name: Show
+        :description: Show Service Catalog
+        :feature_type: view
+        :identifier: sui_svc_catalog_view
+    - :name: Operate
+      :description: Catalog operations
+      :feature_type: node
+      :identifier: sui_svc_catalog_operations
+      :children:  
+      - :name: Add to Shopping Cart
+        :description: Add to Shopping Cart
+        :feature_type: control
+        :identifier: sui_svc_catalog_cart
+  - :name: Shopping Cart
+    :description: Shopping Cart features
+    :feature_type: node
+    :identifier: sui_cart
+    :children:
+    - :name: View
+      :description: View shopping cart
+      :feature_type: node
+      :identifier: sui_cart_display
+      :children:
+      - :name: Show
+        :description: Show shopping cart
+        :feature_type: view
+        :identifier: sui_cart_view
+    - :name: Operate
+      :description: Shopping Cart operations
+      :feature_type: node
+      :identifier: sui_cart_operations
+      :children:    
+      - :name: Clear
+        :description: Clear cart
+        :feature_type: control
+        :identifier: sui_cart_delete
+      - :name: Order
+        :description: Order cart
+        :feature_type: control
+        :identifier: sui_cart_order
