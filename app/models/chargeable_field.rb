@@ -19,6 +19,28 @@ class ChargeableField < ApplicationRecord
   validates :metric, :uniqueness => true, :presence => true
   validates :group, :source, :presence => true
 
+  def showback_measure
+    group
+  end
+
+  def showback_dimension
+    metric_index = VIRTUAL_COL_USES.invert[metric] || metric
+    {'cpu_usagemhz_rate_average'         => ['cpu_usagemhz_rate_average', '', 'duration'],
+     "v_derived_cpu_total_cores_used"    => ['v_derived_cpu_total_cores_used', 'THz', 'duration'],
+     "derived_vm_numvcpus"               => ['derived_vm_numvcpus', '', 'duration'],
+     "derived_memory_used"               => ['derived_memory_used', 'Gi', 'duration'],
+     "derived_memory_available"          => ['derived_memory_available', 'B', 'duration'],
+     "metering_used_hours"               => ['metering_used_hours', '', 'quantity'],
+     "net_usage_rate_average"            => ['net_usage_rate_average', '', 'duration'],
+     "disk_usage_rate_average"           => ['disk_usage_rate_average', '', 'duration'],
+     "fixed_compute_1"                   => ['fixed_compute_1', '', 'occurrence'],
+     "fixed_compute_2"                   => ['fixed_compute_2', '', 'occurrence'],
+     "derived_vm_allocated_disk_storage" => ['derived_vm_allocated_disk_storage', 'Gi', 'duration'],
+     "derived_vm_used_disk_storage"      => ['derived_vm_used_disk_storage', 'Gi', 'duration'],
+     "fixed_storage_1"                   => ['fixed_storage_1', '', 'occurrence'],
+     "fixed_storage_2"                   => ['fixed_storage_2', '', 'occurrence']}[metric_index]
+  end
+
   def measure(consumption, options)
     return consumption.consumed_hours_in_interval if metering?
     return 1.0 if fixed?

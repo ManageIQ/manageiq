@@ -169,6 +169,11 @@ group :smartstate, :manageiq_default do
   gem "manageiq-smartstate",            "~>0.2",       :require => false
 end
 
+group :consumption, :manageiq_default do
+  manageiq_plugin "manageiq-consumption"
+  gem 'hashdiff'
+end
+
 group :ui_dependencies do # Added to Bundler.require in config/application.rb
   manageiq_plugin "manageiq-ui-classic"
   # Modified gems (forked on Github)
