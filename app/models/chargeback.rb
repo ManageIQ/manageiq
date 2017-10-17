@@ -28,8 +28,8 @@ class Chargeback < ActsAsArModel
       data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
 
       # we are getting hash with metrics and costs for metrics defined for chargeback
-      if ENV['CHARGIO']
         puts "Running CHARGIO"
+      if Settings[:new_chargeback]
         data[key].chargio_calculate_costs(consumption, rates_to_apply)
       else
         puts "Running default"

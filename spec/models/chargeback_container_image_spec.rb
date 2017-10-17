@@ -143,6 +143,6 @@ describe ChargebackContainerImage do
   end
 
   after(:all) do
-    ENV['CHARGIO'] = nil if ENV['CHARGIO']
+    Settings[:new_chargeback] = nil if Settings[:new_chargeback]
   end
 end
