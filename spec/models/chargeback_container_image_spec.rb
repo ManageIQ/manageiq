@@ -141,4 +141,8 @@ describe ChargebackContainerImage do
       expect(subject.fixed_compute_1_cost).to be_within(0.01).of(hourly_rate * hours_in_month)
     end
   end
+
+  after(:all) do
+    ENV['CHARGIO'] = nil if ENV['CHARGIO']
+  end
 end

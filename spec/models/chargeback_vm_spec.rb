@@ -630,4 +630,8 @@ describe ChargebackVm do
       end
     end
   end
+
+  after(:all) do
+    ENV['CHARGIO'] = nil if ENV['CHARGIO']
+  end
 end

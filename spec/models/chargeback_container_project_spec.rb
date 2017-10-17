@@ -232,4 +232,8 @@ describe ChargebackContainerProject do
       expect(subject.fixed_compute_metric).to eq(@metric_size / 2)
     end
   end
+
+  after(:all) do
+    ENV['CHARGIO'] = nil if ENV['CHARGIO']
+  end
 end
