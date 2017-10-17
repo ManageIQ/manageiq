@@ -48,7 +48,7 @@ gem "more_core_extensions",           "~>3.3"
 gem "nakayoshi_fork",                 "~>0.0.3"  # provides a more CoW friendly fork (GC a few times before fork)
 gem "net-ldap",                       "~>0.14.0",      :require => false
 gem "net-ping",                       "~>1.7.4",       :require => false
-gem "net-ssh",                        "=3.2.0",        :require => false
+gem "net-ssh",                        "~>4.2.0",        :require => false
 gem "openscap",                       "~>0.4.3",       :require => false
 gem "query_relation",                 "~>0.1.0",       :require => false
 gem "rails",                          "~>5.0.2"
