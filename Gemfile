@@ -35,6 +35,7 @@ gem "fast_gettext",                   "~>1.2.0"
 gem "gettext_i18n_rails",             "~>1.7.2"
 gem "gettext_i18n_rails_js",          "~>1.1.0"
 gem "hamlit",                         "~>2.7.0"
+gem "highline",                       "~>1.6.21",      :require => false
 gem "inifile",                        "~>3.0",         :require => false
 gem "kubeclient",                     "~>2.4.0",       :require => false # For scaling pods at runtime
 gem "manageiq-api-client",            "~>0.1.0",       :require => false
@@ -59,6 +60,7 @@ gem "rubyzip",                        "~>1.2.1",       :require => false
 gem "rugged",                         "~>0.25.0",      :require => false
 gem "simple-rss",                     "~>1.3.1",       :require => false
 gem "snmp",                           "~>1.2.0",       :require => false
+gem "trollop",                        "~>2.0",         :require => false
 
 # Modified gems (forked on Github)
 gem "amazon_ssa_support",                          :require => false, :git => "https://github.com/ManageIQ/amazon_ssa_support.git", :branch => "master" # Temporary dependency to be moved to manageiq-providers-amazon when officially release
