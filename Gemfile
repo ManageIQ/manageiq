@@ -124,7 +124,6 @@ end
 
 group :ovirt, :manageiq_default do
   manageiq_plugin "manageiq-providers-ovirt"
-  gem "ovirt-engine-sdk",               "~>4.1.4",       :require => false # Required by the oVirt provider
   gem "ovirt_metrics",                  "~>1.4.1",       :require => false
 end
 
