@@ -1029,7 +1029,12 @@
   - blueprint
   - redhat_access_insights_admin
   - ems_container_ad_hoc_metrics
-
+  - monitor
+  - alert_status
+  - alert_action
+  - ems_infra
+  - rbac_user
+  - ops_settings
 
 - :name: EvmRole-container_operator
   :read_only: true
@@ -1068,7 +1073,12 @@
   - instance_view
   - vm_view
   - ems_container_ad_hoc_metrics
-
+  - monitor
+  - alert_status
+  - alert_action
+  - ems_infra
+  - rbac_user
+  - ops_settings
 
 - :name: EvmRole-reader
   :read_only: true
