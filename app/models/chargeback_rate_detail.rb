@@ -23,9 +23,31 @@ class ChargebackRateDetail < ApplicationRecord
     'yearly'  => _('Yearly')
   }.freeze
 
+  # gigabytes -> GiB
+  #
+  def showback_unit(p_per_unit = nil)
+    return '' unless chargeable_field.detail_measure
+    {'bytes' => '',
+     'kilobytes'  => 'KiB',
+     'megabytes'  => 'MiB',
+     'gigabytes'  => 'GiB',
+     'terabytes'  => 'TiB',
+     'hertz'      => '',
+     'kilohertz'  => 'KHz',
+     'megahertz'  => 'MHz',
+     'gigahertz'  => 'GHz',
+     'teraherts'  => 'THz',
+     'bps'        => '',
+     'kbps'       => 'Mbps',
+     'mbps'       => 'Gbps',
+     'gbps'       => 'Tbps',
+    }[p_per_unit || per_unit]
+  end
+
   def populate_showback_rate(plan, rate_detail, category)
     measure = rate_detail.chargeable_field.showback_measure
     dimension, unit, calculation = rate_detail.chargeable_field.showback_dimension
+    unit = rate_detail.showback_unit
 
     showback_rate = ManageIQ::Consumption::ShowbackRate.find_or_create_by(:category            => category,
                                                                           :measure             => measure,

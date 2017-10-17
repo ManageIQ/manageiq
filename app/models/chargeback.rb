@@ -113,7 +113,9 @@ class Chargeback < ActsAsArModel
         value =  r.chargeable_field.measure(consumption, @options)
         puts "#{measure}##{dimension}: #{r.chargeable_field.metric}: #{value}"
         data[measure] ||= {}
-        data[measure][dimension] = value
+
+        puts r.showback_unit(ChargeableField::UNITS[r.chargeable_field.metric])
+        data[measure][dimension] = [value, r.showback_unit(ChargeableField::UNITS[r.chargeable_field.metric])]
         # Old calculation
         # r.charge(relevant_fields, consumption, @options).each do |field, value| # this cycle is getting metric, cost and total cost
         #   next unless self.class.attribute_names.include?(field)
@@ -139,10 +141,9 @@ class Chargeback < ActsAsArModel
         self[total_field] = (self[total_field].to_f || 0) + cost_value.to_f
         self[total_metric_field] = (self[total_metric_field].to_f || 0) +  cost_value.to_f
         self[cost_field] = cost_value.to_f
-        self[metric_field] = metric_value.to_f
+        self[metric_field] = metric_value.first.to_f
       end
     end
-
   end
 
   def calculate_costs(consumption, rates)

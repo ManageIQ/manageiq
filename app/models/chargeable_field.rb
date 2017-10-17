@@ -27,10 +27,10 @@ class ChargeableField < ApplicationRecord
   def showback_dimension
     metric_index = VIRTUAL_COL_USES.invert[metric] || metric
     {'cpu_usagemhz_rate_average'         => ['cpu_usagemhz_rate_average', '', 'duration'],
-     "v_derived_cpu_total_cores_used"    => ['v_derived_cpu_total_cores_used', '', 'duration'],
+     "v_derived_cpu_total_cores_used"    => ['v_derived_cpu_total_cores_used', 'THz', 'duration'],
      "derived_vm_numvcpus"               => ['derived_vm_numvcpus', '', 'duration'],
-     "derived_memory_used"               => ['derived_memory_used', '', 'duration'],
-     "derived_memory_available"          => ['derived_memory_available', '', 'duration'],
+     "derived_memory_used"               => ['derived_memory_used', 'Gi', 'duration'],
+     "derived_memory_available"          => ['derived_memory_available', 'B', 'duration'],
      "metering_used_hours"               => ['metering_used_hours', '', 'quantity'],
      "net_usage_rate_average"            => ['net_usage_rate_average', '','duration'],
      "disk_usage_rate_average"           => ['disk_usage_rate_average', '','duration'],
