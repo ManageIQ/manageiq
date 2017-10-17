@@ -79,6 +79,17 @@ class Chargeback < ActsAsArModel
     self.entity ||= consumption.resource
   end
 
+  def showback_category
+    case self
+    when ChargebackVm
+      'Vm'
+    when ChargebackContainerProject
+      'Container'
+    when ChargebackContainerImage
+      'ContainerImage'
+    end
+  end
+
   def new_chargeback_calculate_costs(consumption, rates)
     self.fixed_compute_metric = consumption.chargeback_fields_present if consumption.chargeback_fields_present
 
