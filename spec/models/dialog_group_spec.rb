@@ -29,9 +29,9 @@ describe DialogGroup do
     context 'a collection of dialog fields containing two objects with ids and one without an id' do
       let(:updated_fields) do
         [
-          { 'id' => dialog_fields.first.id, 'label' => 'updated_field_label'},
-          { 'id' => dialog_fields.last.id, 'label' => 'updated_field_label'},
-          { 'name' => 'new field', 'label' => 'new field label' }
+          { 'id' => dialog_fields.first.id, 'label' => 'updated_field_label', 'dialog_field_responders' => []},
+          { 'id' => dialog_fields.last.id, 'label' => 'updated_field_label', 'dialog_field_responders' => []},
+          { 'name' => 'new field', 'label' => 'new field label', 'dialog_field_responders' => [] }
         ]
       end
       it 'creates or updates the dialog fields' do
@@ -46,9 +46,9 @@ describe DialogGroup do
       let(:updated_fields) do
         [
           { 'id' => dialog_fields.first.id, 'label' => 'updated_field_label', 'resource_action' =>
-            {'resource_type' => 'DialogField', 'ae_attributes' => {}} },
+            {'resource_type' => 'DialogField', 'ae_attributes' => {}}, 'dialog_field_responders' => [] },
           { 'id' => dialog_fields.last.id, 'label' => 'updated_field_label', 'resource_action' =>
-            {'id' => resource_action.id, 'resource_type' => 'DialogField'} }
+            {'id' => resource_action.id, 'resource_type' => 'DialogField'}, 'dialog_field_responders' => []}
         ]
       end
       it 'updates the dialog fields' do
@@ -62,7 +62,7 @@ describe DialogGroup do
     context 'with a dialog field removed from the dialog fields' do
       let(:updated_fields) do
         [
-          { 'id' => dialog_fields.first.id }
+          { 'id' => dialog_fields.first.id, 'dialog_field_responders' => [] }
         ]
       end
 
