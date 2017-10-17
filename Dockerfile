@@ -1,12 +1,10 @@
-FROM centos:7
+FROM manageiq/ruby
 ENV container docker
-MAINTAINER ManageIQ https://github.com/ManageIQ/manageiq-appliance-build
+MAINTAINER ManageIQ https://github.com/ManageIQ/manageiq
 ARG REF=master
 
 # Set ENV, LANG only needed if building with docker-1.8
-ENV LANG en_US.UTF-8
 ENV TERM xterm
-ENV RUBY_GEMS_ROOT /opt/rubies/ruby-2.3.1/lib/ruby/gems/2.3.0
 ENV APP_ROOT /var/www/miq/vmdb
 ENV APPLIANCE_ROOT /opt/manageiq/manageiq-appliance
 ENV SUI_ROOT /opt/manageiq/manageiq-ui-service
@@ -92,22 +90,6 @@ RUN ssh-keygen -q -t dsa -N '' -f /etc/ssh/ssh_host_dsa_key && \
     echo "root:smartvm" | chpasswd && \
     chmod 700 /root/.ssh && \
     chmod 600 /root/.ssh/*
-
-# Download chruby and chruby-install, install, setup environment, clean all
-RUN curl -sL https://github.com/postmodern/chruby/archive/v0.3.9.tar.gz | tar xz && \
-    cd chruby-0.3.9 && \
-    make install && \
-    scripts/setup.sh && \
-    echo "gem: --no-ri --no-rdoc --no-document" > ~/.gemrc && \
-    echo "source /usr/local/share/chruby/chruby.sh" >> ~/.bashrc && \
-    curl -sL https://github.com/postmodern/ruby-install/archive/v0.6.0.tar.gz | tar xz && \
-    cd ruby-install-0.6.0 && \
-    make install && \
-    ruby-install ruby 2.3.1 -- --disable-install-doc && \
-    echo "chruby ruby-2.3.1" >> ~/.bash_profile && \
-    rm -rf /chruby-* && \
-    rm -rf /usr/local/src/* && \
-    yum clean all
 
 ## GIT clone manageiq-appliance and service UI repo (SUI)
 RUN mkdir -p ${APP_ROOT} && \
