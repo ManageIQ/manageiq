@@ -45,6 +45,8 @@ module EmsRefresh::SaveInventoryCloud
       _log.debug "#{log_header} hashes:\n#{YAML.dump(hashes)}"
     end
 
+    hashes[:tag_mapper].find_or_create_tags if hashes[:tag_mapper]
+
     child_keys = [
       :cloud_tenants,
       :flavors,
