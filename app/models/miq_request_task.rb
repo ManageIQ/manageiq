@@ -86,14 +86,14 @@ class MiqRequestTask < ApplicationRecord
   end
 
   # This function updates the task attributes
-  # The list of attributes that can be updated are 
+  # The list of attributes that can be updated are
   # 1. options
   # 2. message
   # For now we are only supporting updating the options hash because
   # it contains key provisioning parameters, like ip address etc.
   # Usecase: Allow Ansible playbook to update provisioning parameters
   # via the REST API.
-  # 
+  #
   # TODO : Use strong parameters for validating which parameters can
   #        be updated.
   def update_request_task(values)
