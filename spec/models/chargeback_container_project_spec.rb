@@ -232,4 +232,8 @@ describe ChargebackContainerProject do
       expect(subject.fixed_compute_metric).to eq(@metric_size / 2)
     end
   end
+
+  after(:all) do
+    Settings[:new_chargeback] = nil if Settings[:new_chargeback]
+  end
 end
