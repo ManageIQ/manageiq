@@ -10,7 +10,8 @@ module ManageIQ::Providers::Kubernetes
     def initialize
       @data = {}
       @data_index = {}
-      @label_tag_mapping = ContainerLabelTagMapping.cache
+      @tag_mapper = ContainerLabelTagMapping.mapper
+      @data[:tag_mapper] = @tag_mapper
     end
 
     def ems_inv_to_hashes(inventory, _options = Config::Options.new)
@@ -142,7 +143,7 @@ module ManageIQ::Providers::Kubernetes
     end
 
     def map_labels(model_name, labels)
-      ContainerLabelTagMapping.map_labels(@label_tag_mapping, model_name, labels)
+      @tag_mapper.map_labels(model_name, labels)
     end
 
     def find_host_by_provider_id(provider_id)
