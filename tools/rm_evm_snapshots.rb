@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 require File.expand_path('../config/environment', __dir__)
 require 'rubygems'
-require 'log4r'
 require 'VMwareWebService/MiqVim'
 
 if ARGV.length != 1
