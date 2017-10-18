@@ -1026,7 +1026,6 @@
   - miq_cloud_networks
   - miq_arbitration_settings
   - miq_arbitration_rules
-  - blueprint
   - redhat_access_insights_admin
   - ems_container_ad_hoc_metrics
   - monitor
