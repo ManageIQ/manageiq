@@ -114,6 +114,10 @@ group :nuage, :manageiq_default do
   manageiq_plugin "manageiq-providers-nuage"
 end
 
+group :qpid_proton, :optional => true do
+  gem "qpid_proton",                    "~>0.18",        :git => "https://github.com/xlab-si/qpid_proton_gem", :require => false
+end
+
 group :openshift, :manageiq_default do
   manageiq_plugin "manageiq-providers-openshift"
   gem "htauth",                         "2.0.0",         :require => false # used by container deployment
