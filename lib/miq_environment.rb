@@ -6,7 +6,7 @@ module MiqEnvironment
 
     def self.supports_memcached?
       return @supports_memcached unless @supports_memcached.nil?
-      @supports_memcached = self.is_linux? && self.is_appliance? && self.supports_command?('memcached') && self.supports_command?('memcached-tool') && self.supports_command?('service')
+      @supports_memcached = is_linux? && is_appliance? && !is_container? && supports_command?('memcached') && supports_command?('memcached-tool') && supports_command?('service')
     end
 
     def self.supports_apache?
