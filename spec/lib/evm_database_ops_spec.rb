@@ -1,4 +1,5 @@
 require 'manageiq-postgres_admin'
+require 'util/runcmd'
 
 describe EvmDatabaseOps do
   context "#backup" do
