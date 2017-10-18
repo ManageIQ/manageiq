@@ -3,7 +3,7 @@ class PhysicalServerProvisionRequest < MiqProvisionConfiguredSystemRequest
   SOURCE_CLASS_NAME = 'PhysicalServer'.freeze
 
   def src_configured_systems
-    PhysicalServer.where(:id => @options[:src_configured_system_ids])
+    PhysicalServer.where(:id => options[:src_configured_system_ids])
   end
 
   def self.request_task_class_from(_attribs)
