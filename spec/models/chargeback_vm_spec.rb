@@ -241,13 +241,14 @@ describe ChargebackVm do
     end
 
     context "Report a chargeback of a tenant" do
-      let(:options_tenant) { base_options.merge(:tenant_id => @tenant.id) }
+      let(:options_tenant) { base_options.merge(:tenant_id => @tenant.id).tap { |t| t.delete(:tag) } }
+
       let(:start_time)  { report_run_time - 17.hours }
       let(:finish_time) { report_run_time - 14.hours }
 
       before do
         @tenant = FactoryGirl.create(:tenant)
-        @tenant_child = FactoryGirl.create(:tenant, :ancestry => @tenant.id)
+        @tenant_child = FactoryGirl.create(:tenant, :parent => @tenant)
         @vm_tenant = FactoryGirl.create(:vm_vmware, :tenant_id => @tenant_child.id,
                                         :name => "test_vm_tenant", :created_on => month_beginning)
 
