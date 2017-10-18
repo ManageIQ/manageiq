@@ -24,7 +24,8 @@ class EvmDatabaseOps
   end
 
   def self.database_size(opts)
-    PostgresAdmin.database_size(opts)
+    require 'manageiq-postgres_admin'
+    ManageIQ::PostgresAdmin.database_size(opts)
   end
 
   def self.backup(db_opts, connect_opts = {})
@@ -61,7 +62,9 @@ class EvmDatabaseOps
         MiqEvent.raise_evm_event_queue(MiqServer.my_server, "evm_server_db_backup_low_space", :event_details => msg)
         raise MiqException::MiqDatabaseBackupInsufficientSpace, msg
       end
-      backup = PostgresAdmin.backup(db_opts)
+
+      require 'manageiq-postgres_admin'
+      backup = ManageIQ::PostgresAdmin.backup(db_opts)
     ensure
       session.disconnect if session
     end
@@ -92,7 +95,8 @@ class EvmDatabaseOps
         db_opts[:local_file] = session.uri_to_local_path(uri)
       end
 
-      backup = PostgresAdmin.restore(db_opts)
+      require 'manageiq-postgres_admin'
+      backup = ManageIQ::PostgresAdmin.restore(db_opts)
     ensure
       session.disconnect if session
     end
@@ -103,7 +107,8 @@ class EvmDatabaseOps
   end
 
   def self.gc(options = {})
-    PostgresAdmin.gc(options)
+    require 'manageiq-postgres_admin'
+    ManageIQ::PostgresAdmin.gc(options)
   end
 
   def self.database_connections(database = nil, type = :all)

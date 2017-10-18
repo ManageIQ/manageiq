@@ -25,7 +25,8 @@ class MiqDatabase < ApplicationRecord
   end
 
   def self.postgres_package_name
-    PostgresAdmin.package_name
+    require 'manageiq-postgres_admin'
+    ManageIQ::PostgresAdmin.package_name
   end
 
   def self.registration_default_values
