@@ -23,4 +23,14 @@ class ApplicationHelper::Toolbar::DashboardSummaryToggleView < ApplicationHelper
       :url_parms => "?display=topology",
       :klass     => ApplicationHelper::Button::TopologyFeatureButton)
   ])
+  button_group('summary_download', [
+    button(
+      :download_view,
+      'fa fa-file-pdf-o fa-lg',
+      N_('Download summary in PDF format'),
+      nil,
+      :klass => ApplicationHelper::Button::Pdf,
+      :url   => "/download_summary_pdf"
+    ),
+  ])
 end
