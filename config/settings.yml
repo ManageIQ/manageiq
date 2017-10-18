@@ -1056,11 +1056,9 @@
       :starting_timeout: 20.minutes
       :poll: 10.seconds
       :memory_threshold: 0.megabytes
-    :amazon_agent_manager_worker:
-      :starting_timeout: 20.minutes
+    :agent_coordinator_worker:
       :heartbeat_timeout: 30.minutes
-      :poll: 10.seconds
-      :memory_threshold: 0.megabytes
+      :poll: 30.seconds
     :ems_refresh_core_worker:
       :poll: 1.seconds
       :nice_delta: 1
@@ -1142,11 +1140,6 @@
         :memory_threshold: 2.gigabytes
         :queue_timeout: 20.minutes
         :restart_interval: 6.hours
-      :amazon_agent_manager_worker:
-        :count: 1
-        :memory_threshold: 600.megabytes
-        :queue_timeout: 20.minutes
-        :restart_interval: 2.hours
     :schedule_worker:
       :container_entities_purge_interval: 1.day
       :authentication_check_interval: 1.hour
