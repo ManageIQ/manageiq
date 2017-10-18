@@ -435,13 +435,18 @@ describe MiqRequestWorkflow do
   end
 
   context "#set_request_values" do
-    it "doesn't reset owner_group and requester_group on a second run" do
-      owner = FactoryGirl.create(:user_with_email, :miq_groups => [FactoryGirl.create(:miq_group)])
-      values = {:owner_email => owner.email}
+    before do
       workflow.set_request_values(values)
+    end
+    let(:values) { {:owner_email => owner.email} }
+    let(:owner)  { FactoryGirl.create(:user_with_email, :miq_groups => [FactoryGirl.create(:miq_group)]) }
+
+    it 'sets owner_group and requester_group' do
       expect(values[:owner_group]).to eq(owner.current_group.description)
       expect(values[:requester_group]).to eq(workflow.requester.miq_group_description)
+    end
 
+    it 'does not reset owner_group and requester_group on a second run' do
       old_requester = workflow.requester
       new_requester = FactoryGirl.create(:user_with_email, :miq_groups => [FactoryGirl.create(:miq_group)])
       workflow.requester = new_requester
