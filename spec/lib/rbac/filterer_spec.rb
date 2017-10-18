@@ -1436,7 +1436,7 @@ describe Rbac::Filterer do
 
           it "works when passing a named_scope" do
             User.with_user(user) do
-              results = described_class.search(:class => "Vm", :named_scope => [:group_scope, 1]).first
+              results = described_class.search(:class => "Vm", :named_scope => [[:group_scope, 1]]).first
               expect(results.length).to eq(1)
             end
           end
@@ -1465,10 +1465,10 @@ describe Rbac::Filterer do
 
           it "works when passing a named_scope" do
             User.with_user(user) do
-              results = described_class.search(:class => "Vm", :named_scope => [:group_scope, 1]).first
+              results = described_class.search(:class => "Vm", :named_scope => [[:group_scope, 1]]).first
               expect(results.length).to eq(1)
 
-              results = described_class.search(:class => "Vm", :named_scope => [:group_scope, 2]).first
+              results = described_class.search(:class => "Vm", :named_scope => [[:group_scope, 2]]).first
               expect(results.length).to eq(0)
             end
           end
@@ -1491,7 +1491,7 @@ describe Rbac::Filterer do
         end
 
         it "works when passing a named_scope" do
-          results = described_class.search(:class => "Vm", :named_scope => [:group_scope, 4]).first
+          results = described_class.search(:class => "Vm", :named_scope => [[:group_scope, 4]]).first
           expect(results.length).to eq(1)
         end
 
