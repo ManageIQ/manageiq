@@ -10,4 +10,7 @@ class ManageIQ::Providers::BaseManager::InventoryCollectorWorker::Runner < ::Miq
     do_exit("Unable to find instance for EMS ID [#{@cfg[:ems_id]}].", 1) if @ems.nil?
     do_exit("EMS ID [#{@cfg[:ems_id]}] failed authentication check.", 1) unless @ems.authentication_check.first
   end
+
+  attr_reader :ems
+  private :ems
 end

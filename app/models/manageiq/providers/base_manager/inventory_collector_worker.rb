@@ -5,6 +5,10 @@ class ManageIQ::Providers::BaseManager::InventoryCollectorWorker < MiqWorker
 
   self.required_roles = "ems_inventory"
 
+  def self.has_required_role?
+    !worker_settings[:disabled]
+  end
+
   def friendly_name
     @friendly_name ||= begin
       ems = ext_management_system
