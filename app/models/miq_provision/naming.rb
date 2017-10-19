@@ -2,12 +2,10 @@ module MiqProvision::Naming
   extend ActiveSupport::Concern
 
   NAME_SEQUENCE_REGEX = /\$n\{(\d+)\}/
-  SOURCE_IDENTIFIER = "provisioning"  # a unique name for the source column in custom_attributes table
+  SOURCE_IDENTIFIER = "provisioning".freeze # a unique name for the source column in custom_attributes table
 
   module ClassMethods
     def get_next_vm_name(prov_obj, determine_index = true)
-      unresolved_vm_name = nil
-
       prov_obj.save
       attrs = {'request' => 'UI_PROVISION_INFO', 'message' => 'get_vmname'}
       MiqAeEngine.set_automation_attributes_from_objects([prov_obj.get_user], attrs)
@@ -22,8 +20,7 @@ module MiqProvision::Naming
         _log.info("Forced unique provision name to #{unresolved_vm_name} for #{prov_obj.class}:#{prov_obj.id}")
       end
 
-      vm_name = get_vm_full_name(unresolved_vm_name, prov_obj, determine_index)
-      vm_name
+      get_vm_full_name(unresolved_vm_name, prov_obj, determine_index)
     end
 
     def get_vm_full_name(unresolved_vm_name, prov_obj, determine_index)
@@ -41,7 +38,7 @@ module MiqProvision::Naming
       index_length = name[:index_length]
       loop do
         next_number = MiqRegion.my_region.next_naming_sequence(unresolved_vm_name, SOURCE_IDENTIFIER)
-        idx_str  = "%0#{index_length}d" % next_number
+        idx_str = "%0#{index_length}d" % next_number
         if idx_str.length > index_length
           index_length += 1
           unresolved_vm_name = "#{name[:prefix]}$n{#{index_length}}#{name[:suffix]}"
