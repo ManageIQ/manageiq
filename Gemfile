@@ -50,6 +50,8 @@ gem "net-ldap",                       "~>0.14.0",      :require => false
 gem "net-ping",                       "~>1.7.4",       :require => false
 gem "net-ssh",                        "=3.2.0",        :require => false
 gem "openscap",                       "~>0.4.3",       :require => false
+gem "pg",                             "~>0.18.2",      :require => false
+gem "pg-dsn_parser",                  "~>0.1.0",       :require => false
 gem "query_relation",                 "~>0.1.0",       :require => false
 gem "rails",                          "~>5.0.2"
 gem "rails-i18n",                     "~>5.x"
