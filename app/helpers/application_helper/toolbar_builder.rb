@@ -1131,6 +1131,10 @@ class ApplicationHelper::ToolbarBuilder
         if @record.current_state != "on"
           return N_("The web-based VNC console is not available because the VM is not powered on")
         end
+        type = get_vmdb_config.fetch_path(:server, :remote_console_type)
+        if @record.vendor == 'vmware' && type == 'VNC' && @record.console_supported?(type) && @record.ext_management_system.api_version.to_f > 6
+          return N_("The web-based VNC console is not available on VMware versions 6.5 and above.")
+        end
       when "instance_retire_now"
         return N_("Instance is already retired") if @record.retired
       when "vm_timeline"
