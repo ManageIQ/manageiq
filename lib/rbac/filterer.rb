@@ -576,10 +576,10 @@ module Rbac
 
     def apply_scope(klass, scope)
       klass = klass.all
-      if !scope.kind_of?(Array)
-        send_scope(klass, scope)
-      else
+      if scope.kind_of?(Array)
         scope.inject(klass) { |k, s| send_scope(k, s) }
+      else
+        send_scope(klass, scope)
       end
     end
 
