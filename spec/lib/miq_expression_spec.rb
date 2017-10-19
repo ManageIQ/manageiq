@@ -2510,6 +2510,13 @@ describe MiqExpression do
         expect(result.map(&:first)[0]).to eq(" CPU Total Cost")
       end
     end
+
+    context "with :include_id_columns" do
+      it "Vm" do
+        result = described_class.model_details("Vm", :include_id_columns => true)
+        expect(result.map(&:second)).to include("Vm-id", "Vm-host_id", "Vm.host-id")
+      end
+    end
   end
 
   context ".build_relats" do
