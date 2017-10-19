@@ -86,10 +86,10 @@ class MiqRequestWorkflow
     # Ensure that tags selected in the pre-dialog get applied to the request
     values[:vm_tags] = (values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags]).uniq if @values.try(:[], :pre_dialog_vm_tags).present?
 
+    set_request_values(values)
     if request
       MiqRequest.update_request(request, values, @requester)
     else
-      set_request_values(values)
       req = request_class.new(:options => values, :requester => @requester, :request_type => request_type.to_s)
       return req unless req.valid? # TODO: CatalogController#atomic_req_submit is the only one that enumerates over the errors
       values[:__request_type__] = request_type.to_s.presence # Pass this along to MiqRequest#create_request
