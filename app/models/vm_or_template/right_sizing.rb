@@ -168,16 +168,8 @@ module VmOrTemplate::RightSizing
   end
 
   def derived_memory_used_max_over_time_period
-    if has_attribute?("derived_memory_used_max_over_time_period")
-      self["derived_memory_used_max_over_time_period"]
-    else
-      opts = {
-        :end_date => Time.now.utc,
-        :days     => Metric::LongTermAverages::AVG_DAYS
-      }
-      VimPerformanceAnalysis.find_perf_for_time_period(self, "daily", opts)
-                            .maximum(:derived_memory_used)
-    end
+    perfs = VimPerformanceAnalysis.find_perf_for_time_period(self, "daily", :end_date => Time.now.utc, :days => Metric::LongTermAverages::AVG_DAYS)
+    perfs.collect(&:abs_max_derived_memory_used_value).compact.max
   end
 
   private
