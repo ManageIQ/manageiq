@@ -127,7 +127,7 @@ class ChargebackVm < Chargeback
             _log.error("Unable to find tenant '#{@options[:tenant_id]}'. Calculating chargeback costs aborted.")
             raise MiqException::Error, "Unable to find tenant '#{@options[:tenant_id]}'"
           end
-          tenant.vms
+          Vm.where(:id => tenant.subtree.map { |t| t.vms.ids }.flatten)
         elsif @options[:service_id]
           service = Service.find(@options[:service_id])
           if service.nil?
