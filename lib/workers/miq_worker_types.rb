@@ -26,6 +26,7 @@ MIQ_WORKER_TYPES = {
   "ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshWorker"           => %i(manageiq_default),
   "ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcher"           => %i(manageiq_default),
   "ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCollectorWorker" => %i(manageiq_default),
+  "ManageIQ::Providers::Kubernetes::ContainerManager::InventoryCollectorWorker" => %i(manageiq_default),
   "ManageIQ::Providers::Kubernetes::ContainerManager::RefreshWorker"          => %i(manageiq_default),
   "ManageIQ::Providers::Kubernetes::MonitoringManager::EventCatcher"          => %i(manageiq_default),
   "ManageIQ::Providers::Lenovo::PhysicalInfraManager::EventCatcher"           => %i(manageiq_default),
@@ -35,6 +36,7 @@ MIQ_WORKER_TYPES = {
   "ManageIQ::Providers::Nuage::NetworkManager::EventCatcher"                  => %i(manageiq_default),
   "ManageIQ::Providers::Openshift::ContainerManager::EventCatcher"            => %i(manageiq_default),
   "ManageIQ::Providers::Openshift::ContainerManager::MetricsCollectorWorker"  => %i(manageiq_default),
+  "ManageIQ::Providers::Openshift::ContainerManager::InventoryCollectorWorker" => %i(manageiq_default),
   "ManageIQ::Providers::Openshift::ContainerManager::RefreshWorker"           => %i(manageiq_default),
   "ManageIQ::Providers::Openshift::MonitoringManager::EventCatcher"           => %i(manageiq_default),
   "ManageIQ::Providers::Openstack::CloudManager::EventCatcher"                => %i(manageiq_default),
@@ -109,8 +111,10 @@ MIQ_WORKER_TYPES_IN_KILL_ORDER = %w(
   ManageIQ::Providers::Foreman::ProvisioningManager::RefreshWorker
   ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshWorker
   ManageIQ::Providers::Hawkular::DatawarehouseManager::RefreshWorker
+  ManageIQ::Providers::Kubernetes::ContainerManager::InventoryCollectorWorker
   ManageIQ::Providers::Kubernetes::ContainerManager::RefreshWorker
   ManageIQ::Providers::Lenovo::PhysicalInfraManager::RefreshWorker
+  ManageIQ::Providers::Openshift::ContainerManager::InventoryCollectorWorker
   ManageIQ::Providers::Openshift::ContainerManager::RefreshWorker
   ManageIQ::Providers::Microsoft::InfraManager::RefreshWorker
   ManageIQ::Providers::Redhat::InfraManager::RefreshWorker
