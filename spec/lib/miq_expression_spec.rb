@@ -3254,4 +3254,35 @@ describe MiqExpression do
       expect(actual).to eq([["My Company Tags : Environment", "managed-env"]])
     end
   end
+
+  describe "miq_adv_search_lists" do
+    it ":exp_available_fields" do
+      options = {:include_model                              => true,
+                 :typ                                        => 'field',
+                 :disallow_loading_virtual_custom_attributes => false}
+      expect(described_class).to receive(:model_details).with(Vm, options)
+      described_class.miq_adv_search_lists(Vm, :exp_available_fields)
+    end
+
+    it ":exp_available_counts" do
+      options = {:include_model => true, :typ => 'count'}
+      expect(described_class).to receive(:model_details).with(Vm, options)
+      described_class.miq_adv_search_lists(Vm, :exp_available_counts)
+    end
+
+    it ":exp_available_finds" do
+      options = {:include_model => true, :typ => 'find'}
+      expect(described_class).to receive(:model_details).with(Vm, options)
+      described_class.miq_adv_search_lists(Vm, :exp_available_finds)
+    end
+
+    it ":exp_available_fields with include_id_columns" do
+      options = {:include_model                              => true,
+                 :typ                                        => 'field',
+                 :include_id_columns                         => true,
+                 :disallow_loading_virtual_custom_attributes => false}
+      expect(described_class).to receive(:model_details).with(Vm, options)
+      described_class.miq_adv_search_lists(Vm, :exp_available_fields, :include_id_columns => true)
+    end
+  end
 end
