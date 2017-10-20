@@ -140,6 +140,12 @@ class CloudTenant < ApplicationRecord
     end
   end
 
+  def update_source_tenant(tenant_params)
+    _log.info("CloudTenant #{name} has tenant #{source_tenant.name}")
+    _log.info("Updating Tenant #{source_tenant.name} with parameters: #{tenant_params.inspect}")
+    source_tenant.update(tenant_params)
+  end
+
   def self.with_ext_management_system(ems_id)
     where(:ext_management_system => ems_id)
   end
