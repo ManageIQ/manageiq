@@ -28,15 +28,10 @@ RUN ssh-keygen -q -t dsa -N '' -f /etc/ssh/ssh_host_dsa_key && \
     chmod 700 /root/.ssh && \
     chmod 600 /root/.ssh/*
 
-## Copy the appliance files again so that we get ssl
+## Copy/link the appliance files again so that we get ssl
 RUN ${APPLIANCE_ROOT}/setup && \
-    echo "export PATH=\$PATH:/opt/rubies/ruby-2.3.1/bin" >> /etc/default/evm && \
-    mkdir ${APP_ROOT}/log/apache && \
     mv /etc/httpd/conf.d/ssl.conf{,.orig} && \
-    echo "# This file intentionally left blank. ManageIQ maintains its own SSL configuration" > /etc/httpd/conf.d/ssl.conf && \
-    cp ${APP_ROOT}/config/cable.yml.sample ${APP_ROOT}/config/cable.yml && \
-    echo "export APP_ROOT=${APP_ROOT}" >> /etc/default/evm && \
-    echo "export CONTAINER=true" >> /etc/default/evm
+    echo "# This file intentionally left blank. ManageIQ maintains its own SSL configuration" > /etc/httpd/conf.d/ssl.conf
 
 ## Copy appliance-initialize script and service unit file
 COPY docker-assets/appliance-initialize.sh /usr/bin
