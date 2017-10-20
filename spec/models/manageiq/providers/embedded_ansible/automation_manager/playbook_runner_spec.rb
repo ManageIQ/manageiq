@@ -36,7 +36,8 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
     end
 
     context 'other hosts are used' do
-      let(:options) { {:hosts => 'host1,host2'} }
+      # Use string key to also test the indifferent accessibility
+      let(:options) { {'hosts' => 'host1,host2'} }
 
       it 'creates an inventory and moves on to create_job_template' do
         expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Inventory).to receive(:raw_create_inventory).and_return(double(:id => 'inv1'))
