@@ -144,5 +144,12 @@ describe ChargebackContainerImage do
     end
   end
 
-  include_examples "ChargebackContainerImage"
+  context "Old Chargeback" do
+    include_examples "ChargebackContainerImage"
+  end
+
+  context "New Chargeback" do
+    before { stub_settings(:new_chargeback => '1') }
+    include_examples "ChargebackContainerImage"
+  end
 end
