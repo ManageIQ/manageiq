@@ -289,10 +289,23 @@ describe EmsEvent do
   context '.event_groups' do
     let(:provider_event) { 'SomeSpecialProviderEvent' }
 
-    it 'returns a list of groups' do
+    it 'returns a list of expected groups' do
       event_group_names = [
-        :addition, :application, :configuration, :console, :deletion, :general, :import_export, :migration, :network,
-        :power, :snapshot, :status, :storage
+        :addition,
+        :application,
+        :configuration,
+        :console,
+        :deletion,
+        :devices,
+        :firmware,
+        :general,
+        :import_export,
+        :migration,
+        :network,
+        :power,
+        :snapshot,
+        :status,
+        :storage,
       ]
       expect(described_class.event_groups.keys).to match_array(event_group_names)
       expect(described_class.event_groups[:addition]).to include(:name => 'Creation/Addition')
