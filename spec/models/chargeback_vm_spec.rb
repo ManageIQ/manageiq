@@ -631,8 +631,4 @@ describe ChargebackVm do
       end
     end
   end
-
-  after(:all) do
-    Settings[:new_chargeback] = nil if Settings[:new_chargeback]
-  end
 end

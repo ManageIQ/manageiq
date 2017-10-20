@@ -1,2 +1,2 @@
-Settings[:new_chargeback] = '1'
+ChargebackVm.include(Chargeback::New)
 require './spec/models/chargeback_vm_spec.rb'

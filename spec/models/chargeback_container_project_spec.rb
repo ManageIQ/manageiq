@@ -29,7 +29,7 @@ describe ChargebackContainerProject do
 
   let(:metric_rollup_params) { {:parent_ems_id => ems.id, :tag_names => ""} }
 
-  before(:each) do
+  before do
     MiqRegion.seed
     ChargebackRateDetailMeasure.seed
     ChargeableField.seed
@@ -208,7 +208,7 @@ describe ChargebackContainerProject do
 
   context "gets rate from enterprise" do
     let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @project.id, :tag => nil) }
-    let(:miq_enterprise) { MiqEnterprise.first || FactoryGirl.create(:miq_enterprise) }
+    let(:miq_enterprise) { MiqEnterprise.first }
 
     before do
       add_metric_rollups_for(@project, month_beginning...month_end, 24.hours, metric_rollup_params)
@@ -231,9 +231,5 @@ describe ChargebackContainerProject do
       expect(subject.fixed_compute_1_cost).to be_within(0.01).of(hourly_rate * hours_in_month)
       expect(subject.fixed_compute_metric).to eq(@metric_size / 2)
     end
-  end
-
-  after(:all) do
-    Settings[:new_chargeback] = nil if Settings[:new_chargeback]
   end
 end

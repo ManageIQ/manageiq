@@ -83,6 +83,13 @@ describe ChargebackVm do
   let(:cpu_usage_cost) { cpu_usagemhz * consumed_hours * hourly_rate }
 
   it 'should calculate the same -- no matter the time range (daily/weekly/monthly)' do
+    puts "-------"
+    puts ChargebackVm.include?(Chargeback::New)
+    puts ChargebackContainerImage.include?(Chargeback::New)
+    puts ChargebackContainerProject.include?(Chargeback::New)
+    puts Settings[:new_chargeback]
+    puts "----"
+
     [daily_cb, weekly_cb, monthly_cb].each do |cb|
       expect(cb.start_date).to eq(report_run_time.beginning_of_month)
       expect(cb.fixed_compute_metric).to eq(consumed_hours)
