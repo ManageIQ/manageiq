@@ -35,7 +35,6 @@ else
   echo "** Starting DB setup"
   pushd ${APP_ROOT}
     cp certs/v2_key.dev certs/v2_key
-    cp config/database.pg.yml config/database.yml
     bundle exec rake evm:db:reset
   popd
 

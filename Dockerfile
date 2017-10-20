@@ -1,6 +1,8 @@
 FROM manageiq/manageiq-pods:frontend-latest
 MAINTAINER ManageIQ https://github.com/ManageIQ/manageiq
 
+ENV DATABASE_URL=postgresql://root@localhost/vmdb_production?encoding=utf8&pool=5&wait_timeout=5
+
 RUN yum -y install --setopt=tsflags=nodocs \
                    memcached               \
                    rh-postgresql95-postgresql-server \
