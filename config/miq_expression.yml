@@ -155,6 +155,7 @@
 - storage_files
 - switches
 - tenant_quotas
+- tenants
 - users
 - vms
 - volumes
