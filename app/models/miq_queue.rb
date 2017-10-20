@@ -332,7 +332,7 @@ class MiqQueue < ApplicationRecord
                     args = YAML.dump(conds.delete(:args))
                     MiqQueue.where(conds).where(['args = ?', args])
                   else
-                    MiqQueue.where(conds)
+                    MiqQueue.where(conds).select(MiqQueue.columns.map(&:name) - ['jsonb_data'])
                   end
 
     msg = nil
@@ -341,6 +341,7 @@ class MiqQueue < ApplicationRecord
 
       save_options = block_given? ? yield(msg, find_options) : nil
       save_options = save_options.dup unless save_options.nil?
+      jsonb_targets = save_options.delete(:jsonb_targets)
 
       # Add a new queue item based on the returned save options, or the find
       #   options if no save options were given.
@@ -359,7 +360,15 @@ class MiqQueue < ApplicationRecord
             save_options.delete(:msg_timeout)
           end
 
-          msg.update_attributes!(save_options)
+          if jsonb_targets.present?
+            # TODO(lsmola) I should probably throw ActiveRecord::StaleObjectError, if the version is higher than expected
+            update_with_jsonb_data(msg, jsonb_targets, save_options)
+          end
+
+          if save_options[:args].present?
+            msg.update_attributes!(save_options)
+          end
+
           _log.info("#{MiqQueue.format_short_log_msg(msg)} updated with following: #{save_options.inspect}")
           _log.info("#{MiqQueue.format_full_log_msg(msg)}, Requeued")
         end
@@ -374,6 +383,29 @@ class MiqQueue < ApplicationRecord
       end
     end
     msg
+  end
+
+  def self.update_with_jsonb_data(msg, jsonb_targets, save_options)
+    connection = ActiveRecord::Base.connection
+
+    jsonb_set_query = jsonb_targets.map do |target|
+      target_data = target.second # Stored in format [target_class, target_data]
+      "jsonb_data = jsonb_set(jsonb_data, '{#{target_data[:association]}___#{target_data[:manager_ref]}}', '#{target.to_json}')"
+    end.join(", ")
+
+    options_set_query = save_options.map do |key, value|
+      next if %i(args).include?(key) # args are stored the old way
+
+      "#{connection.quote_column_name(key)} = #{connection.quote(value)}"
+    end.compact.join(", ")
+
+    query = <<-SQL
+      UPDATE miq_queue
+      SET #{jsonb_set_query}, #{options_set_query}
+      WHERE miq_queue.id = #{msg.id}
+    SQL
+
+    connection.execute(query)
   end
 
   # Find the MiqQueue item with the specified find options, and if not found
@@ -418,8 +450,10 @@ class MiqQueue < ApplicationRecord
         end
       end
 
-      data = self.data
+      data       = self.data
+      jsonb_data = self.jsonb_data
       args.push(data) if data
+      args[0] += (jsonb_data.values) if jsonb_data.present?
       args.unshift(target_id) if obj.kind_of?(Class) && target_id
 
       begin

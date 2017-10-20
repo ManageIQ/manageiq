@@ -140,7 +140,7 @@ module EmsRefresh
       ids.uniq!
 
       recs = if target_class <= ManagerRefresh::Target
-               ids.map { |x| ManagerRefresh::Target.load(x) }
+               ids.map { |x| ManagerRefresh::Target.load(x.symbolize_keys) }
              else
                active_record_recs = target_class.where(:id => ids)
                active_record_recs = active_record_recs.includes(:ext_management_system) unless target_class <= ExtManagementSystem
@@ -164,6 +164,10 @@ module EmsRefresh
       :role        => "ems_inventory",
       :zone        => ems.my_zone,
     }
+
+    # TODO(lsmola) do options check
+    jsonb_targets, targets = targets.partition { |x| x.first == "ManagerRefresh::Target" }
+    #jsonb_targets = []
 
     # If this is the only refresh then we will use the task we just created,
     # if we merge with another queue item then we will return its task_id
@@ -190,11 +194,13 @@ module EmsRefresh
           :args        => ['Finished']
         }
       end
-      item.merge(
-        :args        => [targets],
-        :task_id     => task_id,
-        :msg_timeout => queue_timeout
+      item.merge!(
+        :args         => [targets],
+        :task_id      => task_id,
+        :msg_timeout  => queue_timeout
       )
+      item[:jsonb_targets] = jsonb_targets unless jsonb_targets.blank?
+      item
     end
 
     task_id
