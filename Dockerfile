@@ -9,10 +9,6 @@ RUN yum -y install --setopt=tsflags=nodocs \
                    rh-postgresql95-postgresql-pglogical \
                    rh-postgresql95-repmgr  \
                    mod_ssl                 \
-                   mod_auth_kerb           \
-                   mod_authnz_pam          \
-                   mod_intercept_form_submit \
-                   mod_lookup_identity     \
                    openssh-clients         \
                    openssh-server          \
                    &&                      \
