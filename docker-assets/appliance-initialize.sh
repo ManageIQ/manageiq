@@ -2,6 +2,13 @@
 
 # Source EVM environment 
 [ -f /etc/default/evm ] &&  . /etc/default/evm
+[[ -s ${CONTAINER_SCRIPTS_ROOT}/container-deploy-common.sh ]] && source "${CONTAINER_SCRIPTS_ROOT}/container-deploy-common.sh"
+
+function create_v2_key() {
+  V2_KEY=$(ruby -ropenssl -rbase64 -e 'puts Base64.strict_encode64(Digest::SHA256.digest(OpenSSL::Random.random_bytes(32))[0, 32])')
+  write_v2_key
+  unset V2_KEY
+}
 
 # Check postgres server DB init status, if necessary, initdb, start/enable service and inject MIQ role
 
@@ -34,7 +41,7 @@ else
 
   echo "** Starting DB setup"
   pushd ${APP_ROOT}
-    cp certs/v2_key.dev certs/v2_key
+    create_v2_key
     bundle exec rake evm:db:reset
   popd
 
