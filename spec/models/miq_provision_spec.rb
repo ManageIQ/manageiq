@@ -46,6 +46,7 @@ describe MiqProvision do
         end
 
         it "should populate description, target_name and target_hostname" do
+          allow(@vm_prov).to receive(:get_next_vm_name).and_return("test_vm")
           @vm_prov.after_request_task_create
           expect(@vm_prov.description).not_to be_nil
           expect(@vm_prov.get_option(:vm_target_name)).not_to be_nil
@@ -54,9 +55,14 @@ describe MiqProvision do
 
         it "should create a valid target_name and hostname" do
           MiqRegion.seed
+          ae_workspace = double("ae_workspace")
+          expect(ae_workspace).to receive(:root).and_return(@target_vm_name)
+          expect(MiqAeEngine).to receive(:resolve_automation_object).and_return(ae_workspace).exactly(3).times
+
           @vm_prov.after_request_task_create
           expect(@vm_prov.get_option(:vm_target_name)).to eq(@target_vm_name)
 
+          expect(ae_workspace).to receive(:root).and_return("#{@target_vm_name}$n{3}").twice
           @vm_prov.options[:number_of_vms] = 2
           @vm_prov.after_request_task_create
           name_001 = "#{@target_vm_name}001"
@@ -80,6 +86,10 @@ describe MiqProvision do
           end
 
           it "should advance to next range but based on the existing sequence number for the new range" do
+            ae_workspace = double("ae_workspace")
+            expect(ae_workspace).to receive(:root).and_return("#{@target_vm_name}$n{3}").twice
+            expect(MiqAeEngine).to receive(:resolve_automation_object).and_return(ae_workspace).twice
+
             @vm_prov.options[:number_of_vms] = 2
             @vm_prov.after_request_task_create
             expect(@vm_prov.get_option(:vm_target_name)).to eq("#{@target_vm_name}999")  # 3 digits
@@ -94,8 +104,9 @@ describe MiqProvision do
           # Hostname lengths by platform:
           #   Linux   : 63
           #   Windows : 15
-          #                                      1         2         3         4         5         6
-          @vm_prov.options[:vm_name] = '123456789012345678901234567890123456789012345678901234567890123456789'
+          #                        1         2         3         4         5         6
+          long_vm_name = '123456789012345678901234567890123456789012345678901234567890123456789'
+          expect(@vm_prov).to receive(:get_next_vm_name).and_return(long_vm_name).twice
           @vm_prov.after_request_task_create
           expect(@vm_prov.get_option(:vm_target_hostname).length).to eq(15)
 

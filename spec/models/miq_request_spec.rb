@@ -282,6 +282,12 @@ describe MiqRequest do
 
   context '#post_create_request_tasks' do
     context 'VM provisioning' do
+      before do
+        ae_workspace = double("ae_workspace")
+        allow(ae_workspace).to receive(:root).and_return("test_vm")
+        allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(ae_workspace)
+      end
+
       let(:description) { 'my original information' }
       let(:template)    { FactoryGirl.create(:template_vmware, :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication)) }
       let(:request)     { FactoryGirl.build(:miq_provision_request, :requester => fred, :description => description, :src_vm_id => template.id).tap(&:valid?) }
@@ -369,6 +375,9 @@ describe MiqRequest do
 
     before do
       allow(MiqRegion).to receive(:my_region).and_return(FactoryGirl.create(:miq_region))
+      ae_workspace = double("ae_workspace")
+      allow(ae_workspace).to receive(:root).and_return("test_vm")
+      allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(ae_workspace)
 
       @options = {
         :src_vm_id     => template.id,
