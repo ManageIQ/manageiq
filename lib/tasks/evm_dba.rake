@@ -1,5 +1,6 @@
 require 'awesome_spawn'
 require 'evm_rake_helper'
+require 'manageiq-postgres_admin'
 
 # TODO: move into DatabaseYml
 # TODO: can we use EvmDatabseOps directly?
@@ -24,18 +25,18 @@ namespace :evm do
   namespace :db do
     desc 'Start the local ManageIQ EVM Database (VMDB)'
     task :start do
-      LinuxAdmin::Service.new(PostgresAdmin.service_name).start
+      LinuxAdmin::Service.new(ManageIQ::PostgresAdmin.service_name).start
     end
 
     desc 'Stop the local ManageIQ EVM Database (VMDB)'
     task :stop do
-      LinuxAdmin::Service.new(PostgresAdmin.service_name).stop
+      LinuxAdmin::Service.new(ManageIQ::PostgresAdmin.service_name).stop
     end
 
     # Start the EVM Database silently - not to be a visible rake task
     task :silent_start do
       begin
-        LinuxAdmin::Service.new(PostgresAdmin.service_name).start
+        LinuxAdmin::Service.new(ManageIQ::PostgresAdmin.service_name).start
       rescue AwesomeSpawn::CommandResultError
         # ignore issues (ala silent)
       end
@@ -44,7 +45,7 @@ namespace :evm do
     # Stop the EVM Database silently - not to be a visible rake task
     task :silent_stop do
       begin
-        LinuxAdmin::Service.new(PostgresAdmin.service_name).stop
+        LinuxAdmin::Service.new(ManageIQ::PostgresAdmin.service_name).stop
       rescue AwesomeSpawn::CommandResultError
         # ignore issues (ala silent)
       end

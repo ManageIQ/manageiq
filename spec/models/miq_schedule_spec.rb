@@ -1,3 +1,5 @@
+require 'manageiq-postgres_admin'
+
 describe MiqSchedule do
   before { EvmSpecHelper.create_guid_miq_server_zone }
   context 'with schedule infrastructure and valid run_ats' do
@@ -498,7 +500,7 @@ describe MiqSchedule do
       context "deliver DatabaseBackup.gc message" do
         before(:each) do
           # stub out the actual backup behavior
-          allow(PostgresAdmin).to receive(:gc)
+          allow(ManageIQ::PostgresAdmin).to receive(:gc)
 
           @status, message, result = @gc_message.deliver
           @gc_message.delivered(@status, message, result)

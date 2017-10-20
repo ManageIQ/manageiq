@@ -136,7 +136,8 @@ module MiqServer::LogManagement
   end
 
   def pg_data_dir
-    PostgresAdmin.data_directory
+    require 'manageiq-postgres_admin'
+    ManageIQ::PostgresAdmin.data_directory
   end
 
   def pg_log_patterns
