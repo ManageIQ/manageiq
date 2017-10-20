@@ -28,11 +28,6 @@ RUN ssh-keygen -q -t dsa -N '' -f /etc/ssh/ssh_host_dsa_key && \
     chmod 700 /root/.ssh && \
     chmod 600 /root/.ssh/*
 
-## Add ManageIQ source from local directory (dockerfile development) or from Github (official build)
-RUN rm -rf ${APP_ROOT}
-ADD . ${APP_ROOT}
-#RUN curl -L https://github.com/ManageIQ/manageiq/tarball/${REF} | tar vxz -C ${APP_ROOT} --strip 1
-
 ## Copy the appliance files again so that we get ssl
 RUN ${APPLIANCE_ROOT}/setup && \
     echo "export PATH=\$PATH:/opt/rubies/ruby-2.3.1/bin" >> /etc/default/evm && \
