@@ -15,9 +15,7 @@ module ConfigurationManagementMixin
   end
 
   def remove_settings_path_for_resource(*keys)
-    return if keys.blank?
-    settings_path = File.join("/", keys.collect(&:to_s))
-    settings_changes.where("key LIKE ?", "#{settings_path}%").destroy_all
+    Vmdb::Settings.destroy!(self, keys)
     immediately_reload_settings
   end
 
