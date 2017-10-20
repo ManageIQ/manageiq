@@ -66,7 +66,6 @@ gem "snmp",                           "~>1.2.0",       :require => false
 gem "trollop",                        "~>2.0",         :require => false
 
 # Modified gems (forked on Github)
-gem "amazon_ssa_support",                          :require => false, :git => "https://github.com/ManageIQ/amazon_ssa_support.git", :branch => "master" # Temporary dependency to be moved to manageiq-providers-amazon when officially release
 gem "ruport",                         "=1.7.0",                       :git => "https://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-3"
 
 # In 1.9.3: Time.parse uses british version dd/mm/yyyy instead of american version mm/dd/yyyy
@@ -81,6 +80,7 @@ gem "american_date"
 ### providers
 group :amazon, :manageiq_default do
   manageiq_plugin "manageiq-providers-amazon"
+  gem "amazon_ssa_support",                          :require => false, :git => "https://github.com/ManageIQ/amazon_ssa_support.git", :branch => "master" # Temporary dependency to be moved to manageiq-providers-amazon when officially release
 end
 
 group :ansible, :manageiq_default do
