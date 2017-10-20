@@ -20,7 +20,8 @@ class MiqAeMethod < ApplicationRecord
                                   :network_credential_id,
                                   :cloud_credential_id,
                                   :verbosity,
-                                  :become_enabled].freeze
+                                  :become_enabled,
+                                  :extra_vars].freeze
 
   AVAILABLE_LANGUAGES  = ["ruby", "perl"]  # someday, add sh, perl, python, tcl and any other scripting language
   validates_inclusion_of  :language,  :in => AVAILABLE_LANGUAGES
