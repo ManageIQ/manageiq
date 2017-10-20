@@ -41,26 +41,6 @@
       "note": "Temporarily skipped, found in new brakeman version"
     },
     {
-      "warning_type": "File Access",
-      "warning_code": 16,
-      "fingerprint": "7db29962886ebaade1d869d329da3fb601de293d121ca29c318410122bf1be40",
-      "check_name": "FileAccess",
-      "message": "Model attribute used in file name",
-      "file": "app/models/miq_provision/naming.rb",
-      "line": 26,
-      "link": "http://brakemanscanner.org/docs/warning_types/file_access/",
-      "code": "load(ApplicationRecord::FIXTURE_DIR.join(\"miq_provision_naming.rb\"))",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "MiqProvision::Naming::ClassMethods",
-        "method": "get_next_vm_name"
-      },
-      "user_input": "ApplicationRecord::FIXTURE_DIR.join(\"miq_provision_naming.rb\")",
-      "confidence": "Weak",
-      "note": "Temporarily skipped, found in new brakeman version"
-    },
-    {
       "warning_type": "Command Injection",
       "warning_code": 14,
       "fingerprint": "921b9f7b353a4de1033addb95d4a7c7efb090a7e60f8acb350ec8c7aea6e84ff",
