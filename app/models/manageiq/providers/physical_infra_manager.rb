@@ -1,5 +1,7 @@
 module ManageIQ::Providers
   class PhysicalInfraManager < BaseManager
+    include SupportsFeatureMixin
+
     virtual_total :total_physical_servers,    :physical_servers
     virtual_column :total_hosts,              :type => :integer
     virtual_column :total_vms,                :type => :integer
@@ -32,5 +34,19 @@ module ManageIQ::Providers
     end
 
     alias total_vms count_vms
+
+    supports :console do
+      unless console_supported?
+        unsupported_reason_add(:console, N_("Console not supported"))
+      end
+    end
+
+    def console_supported?
+      false
+    end
+
+    def console_url
+      raise MiqException::Error, _("Console not supported")
+    end
   end
 end
