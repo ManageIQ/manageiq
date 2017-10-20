@@ -33,8 +33,11 @@ else
   test $? -ne 0 && /usr/bin/memcached -u memcached -p 11211 -m 64 -c 1024 -l 127.0.0.1 -d
 
   echo "** Starting DB setup"
-  SKIP_TEST_RESET=true ${APP_ROOT}/bin/setup
-  test $? -ne 0 && echo "!! ${APP_ROOT}/docker-assets/docker_setup failed to run" && exit 1
+  pushd ${APP_ROOT}
+    cp certs/v2_key.dev certs/v2_key
+    cp config/database.pg.yml config/database.yml
+    bundle exec rake evm:db:reset
+  popd
 
   echo "** MIQ database has been initialized"
 
