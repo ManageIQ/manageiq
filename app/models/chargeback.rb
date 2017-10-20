@@ -13,6 +13,10 @@ class Chargeback < ActsAsArModel
     :metering_used_cost   => :float
   )
 
+  def self.self_class
+    Settings[:new_chargeback] ? include(Chargeback::New) : self
+  end
+
   def self.build_results_for_report_chargeback(options)
     _log.info("Calculating chargeback costs...")
     @options = options = ReportOptions.new_from_h(options)
@@ -23,7 +27,7 @@ class Chargeback < ActsAsArModel
       rates_to_apply = rates.get(consumption)
 
       key = report_row_key(consumption)
-      data[key] ||= new(options, consumption)
+      data[key] ||= self_class.new(options, consumption)
 
       chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
       data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
