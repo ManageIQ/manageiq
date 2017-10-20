@@ -949,12 +949,7 @@ class MiqExpression
     result = {:columns => model.attribute_names, :parent => parent}
     result[:reflections] = {}
 
-    refs = model.reflections_with_virtual
-    if model.try(:include_descendant_classes_in_expressions?)
-      model.descendants.each { |desc| refs.reverse_merge!(desc.reflections_with_virtual) }
-    end
-
-    refs.each do |assoc, ref|
+    model.reflections_with_virtual.each do |assoc, ref|
       next unless INCLUDE_TABLES.include?(assoc.to_s.pluralize)
       next if     assoc.to_s.pluralize == "event_logs" && parent[:root] == "Host" && !proto?
       next if     assoc.to_s.pluralize == "processes" && parent[:root] == "Host" # Process data not available yet for Host
