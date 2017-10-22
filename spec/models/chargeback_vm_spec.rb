@@ -634,5 +634,12 @@ describe ChargebackVm do
     end
   end
 
-  include_examples "ChargebackVm"
+  context "Old Chargeback" do
+    include_examples "ChargebackVm"
+  end
+
+  context "New Chargeback" do
+    before {stub_settings(:new_chargeback => '1')}
+    include_examples "ChargebackVm"
+  end
 end
