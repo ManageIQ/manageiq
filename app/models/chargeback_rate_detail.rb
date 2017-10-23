@@ -252,6 +252,18 @@ class ChargebackRateDetail < ApplicationRecord
         end
 
         rate_details.push(detail_new)
+
+        if detail_new.chargeable_field.metric == 'derived_vm_allocated_disk_storage'
+          volume_types = CloudVolume.pluck(:volume_type).uniq.compact
+          volume_types.each do |volume_type|
+            storage_detail_new = detail_new.dup
+            storage_detail_new.sub_metric = volume_type
+            detail[:tiers].sort_by { |tier| tier[:start] }.each do |tier|
+              storage_detail_new.chargeback_tiers << ChargebackTier.new(tier.slice(*ChargebackTier::FORM_ATTRIBUTES))
+            end
+            rate_details.push(storage_detail_new)
+          end
+        end
       end
     end
 
