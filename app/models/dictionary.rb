@@ -1,5 +1,7 @@
 class Dictionary
   def self.gettext(text, opts = {})
+    return "" if text.blank?
+
     opts[:type] ||= :column
     opts[:plural] = false if opts[:plural].nil?
     opts[:translate] = true if opts[:translate].nil?
