@@ -19,14 +19,14 @@ describe MiqApache::Control do
     allow(File).to receive(:exist?).and_return(false)
     expect(Dir).to receive(:mkdir).with(File.dirname(MiqApache::Control::APACHE_CONTROL_LOG))
     allow(MiqUtil).to receive(:runcmd)
-    MiqApache::Control.run_apache_cmd("start")
+    MiqApache::Control.start
   end
 
   it "should not make the apache control log's directory if it exists when calling run_apache_cmd" do
     allow(File).to receive(:exist?).and_return(true)
     expect(Dir).to receive(:mkdir).with(File.dirname(MiqApache::Control::APACHE_CONTROL_LOG)).never
     allow(MiqUtil).to receive(:runcmd)
-    MiqApache::Control.run_apache_cmd("start")
+    MiqApache::Control.start
   end
 
   it "should build cmdline when calling run_apache_cmd with start" do
@@ -35,7 +35,7 @@ describe MiqApache::Control do
     $log = Logger.new(STDOUT) unless $log
     allow($log).to receive(:debug?).and_return(false)
     expect(MiqUtil).to receive(:runcmd).with("apachectl #{cmd}")
-    MiqApache::Control.run_apache_cmd("start")
+    MiqApache::Control.start
   end
 
   it "should build cmdline when calling run_apache_cmd with start in debug mode if $log is debug" do
@@ -44,16 +44,15 @@ describe MiqApache::Control do
     $log = Logger.new(STDOUT) unless $log
     allow($log).to receive(:debug?).and_return(true)
     expect(MiqUtil).to receive(:runcmd).with("apachectl #{cmd}")
-    MiqApache::Control.run_apache_cmd("start")
+    MiqApache::Control.start
   end
 
   it "should log a warning when calling run_apache_cmd with start that raises an error" do
-    cmd = "start"
     allow(File).to receive(:exist?).and_return(true)
     $log = Logger.new(STDOUT) unless $log
     allow($log).to receive(:debug?).and_return(false)
     allow(MiqUtil).to receive(:runcmd).and_raise("warn")
     expect($log).to receive(:warn)
-    MiqApache::Control.run_apache_cmd("start")
+    MiqApache::Control.start
   end
 end
