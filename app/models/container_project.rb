@@ -9,7 +9,6 @@ class ContainerProject < ApplicationRecord
   has_many :container_replicators
   has_many :container_services
   has_many :containers, :through => :container_groups
-  has_many :containers, :through => :container_groups
   has_many :container_images, -> { distinct }, :through => :container_groups
   has_many :container_nodes, -> { distinct }, :through => :container_groups
   has_many :container_quotas
