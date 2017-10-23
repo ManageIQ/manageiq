@@ -195,6 +195,25 @@
           :required: false
           :display: :edit
           :data_type: :string
+        :sysprep_enabled:
+          :values_from:
+            :method: :allowed_customization
+          :description: Customize
+          :required: false
+          :display: :edit
+          :default: disabled
+          :data_type: :string
+        :sysprep_upload_file:
+          :description: Upload
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_upload_text:
+          :description: Sysprep Text
+          :required_method: :validate_sysprep_upload
+          :required: true
+          :display: :edit
+          :data_type: :string
       :display: :show
     :environment:
       :description: Environment
