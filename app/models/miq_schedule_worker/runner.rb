@@ -223,6 +223,9 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     schedule_check_for_task_timeout
 
     @schedules[:scheduler]
+
+    # Periodic validation of shares
+    scheduler.schedule_every( worker_settings[:share_sweeper_interval]) { enqueue :share_sweeper_timer }
   end
 
   def schedule_check_for_task_timeout

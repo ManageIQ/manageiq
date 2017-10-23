@@ -1169,6 +1169,7 @@
       :server_stats_interval: 60.seconds
       :service_retired_interval: 10.minutes
       :session_timeout_interval: 30.seconds
+      :share_sweeper_interval: 15.minutes
       :storage_file_collection_interval: 1.days
       :storage_file_collection_time_utc: 21600
       :task_timeout_check_frequency: 1.hour

@@ -164,6 +164,10 @@ class MiqScheduleWorker::Jobs
     queue_work(:class_name => "MiqTask", :method_name => "update_status_for_timed_out_active_tasks", :zone => nil)
   end
 
+  def share_sweeper_timer
+    queue_work(:class_name => "Share", :method_name => "sweeper_time")
+  end
+
   private
 
   def queue_work(options)
