@@ -170,9 +170,7 @@ module EmsRefresh
     task_id = nil
 
     # Items will be naturally serialized since there is a dedicated worker.
-    MiqQueue.put_or_update(queue_options) do |msg, item|
-      targets = msg.nil? ? targets : (msg.args[0] | targets)
-
+    MiqQueue.put_or_update_with_targets(queue_options) do |msg, item|
       # If we are merging with an existing queue item we don't need a new
       # task, just use the original one
       task_id = if msg && msg.task_id
@@ -191,7 +189,7 @@ module EmsRefresh
         }
       end
       item.merge(
-        :args        => [targets],
+        :targets     => targets,
         :task_id     => task_id,
         :msg_timeout => queue_timeout
       )
