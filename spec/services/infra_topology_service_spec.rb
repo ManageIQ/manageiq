@@ -46,7 +46,9 @@ describe InfraTopologyService do
                                                       :status       => "Unknown",
                                                       :kind         => "InfraManager",
                                                       :display_kind => "Openstack",
-                                                      :miq_id       => ems.id})
+                                                      :miq_id       => ems.id,
+                                                      :model        => ems.class.name,
+                                                      :key          => "InfraManager" + ems.compressed_id.to_s})
     end
 
     it "topology contains the expected structure and content" do
@@ -58,19 +60,25 @@ describe InfraTopologyService do
                                                                  :kind         => "InfraManager",
                                                                  :miq_id       => ems.id,
                                                                  :status       => "Unknown",
-                                                                 :display_kind => "Openstack"},
+                                                                 :display_kind => "Openstack",
+                                                                 :model        => ems.class.name,
+                                                                 :key          => "InfraManager" + ems.compressed_id.to_s},
         "EmsCluster" + @cluster.compressed_id.to_s          =>  {:name         => @cluster.name,
                                                                  :kind         => "EmsCluster",
                                                                  :miq_id       => @cluster.id,
                                                                  :status       => "Unknown",
                                                                  :display_kind => "EmsCluster",
-                                                                 :provider     => ems.name},
+                                                                 :provider     => ems.name,
+                                                                 :model        => @cluster.class.name,
+                                                                 :key          => "EmsCluster" + @cluster.compressed_id.to_s},
         "Host" + @host.compressed_id.to_s                   =>  {:name         => @host.name,
                                                                  :kind         => "Host",
                                                                  :miq_id       => @host.id,
                                                                  :status       => "On",
                                                                  :display_kind => "Host",
-                                                                 :provider     => ems.name},
+                                                                 :provider     => ems.name,
+                                                                 :model        => @host.class.name,
+                                                                 :key          => "Host" + @host.compressed_id.to_s},
       )
 
       expect(subject[:relations].size).to eq(2)

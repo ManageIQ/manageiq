@@ -36,9 +36,13 @@ class TopologyService
   end
 
   def build_base_entity_data(entity)
-    {:name   => entity.name,
-     :kind   => entity_type(entity),
-     :miq_id => entity.id}
+    {
+      :name   => entity.name,
+      :kind   => entity_type(entity),
+      :model  => entity.class.to_s,
+      :miq_id => entity.id,
+      :key    => entity_id(entity)
+    }
   end
 
   def populate_topology(topo_items, links, kinds, icons)
@@ -49,7 +53,36 @@ class TopologyService
     }
   end
 
-  def build_recursive_topology(entity, entity_relationships_mapping, topo_items, links)
+  def group_nodes_by_model(nodes)
+    return unless block_given?
+    nodes_grouped_by_model = nodes.group_by { |_, v| v[:model] }
+
+    nodes_grouped_by_model.each do |klass, entity_data|
+      yield(klass, entity_data.map { |x| [x.second[:miq_id], x.second[:key]] }.to_h)
+    end
+  end
+
+  def disallowed_nodes(nodes)
+    remove_list = []
+    group_nodes_by_model(nodes) do |klass, node_of_resource| # node is hash { 10001 => 'CloudNetwork1r0001'}
+      node_resource_ids = node_of_resource.keys
+      remove_ids = node_resource_ids - Rbac::Filterer.filtered(klass.safe_constantize.where(:id => node_resource_ids)).map(&:id)
+      remove_list << remove_ids.map { |x| node_of_resource[x] } if remove_ids.present?
+    end
+    remove_list
+  end
+
+  def rbac_filter_nodes_and_edges(nodes, edges)
+    disallowed_nodes(nodes).flatten.each do |x|
+      nodes.delete(x)
+      edges = edges.select do |edge|
+        !(edge[:source] == x || edge[:target] == x)
+      end
+    end
+    [nodes, edges]
+  end
+
+  def build_recursive_topology(entity, entity_relationships_mapping, topo_items, links, called_from_special_controller = true)
     unless entity.nil?
       topo_items[entity_id(entity)] = build_entity_data(entity)
       unless entity_relationships_mapping.nil?
@@ -67,7 +100,7 @@ class TopologyService
       end
     end
 
-    [topo_items, links]
+    called_from_special_controller ? rbac_filter_nodes_and_edges(topo_items, links) : [topo_items, links]
   end
 
   def build_rel_data_and_links(entity, entity_relationships, key, links, relation, topo_items)
@@ -75,7 +108,8 @@ class TopologyService
       topo_items[entity_id(relation)] = build_entity_data(relation)
       links << build_link(entity_id(entity), entity_id(relation))
     end
-    build_recursive_topology(relation, entity_relationships[key], topo_items, links)
+
+    build_recursive_topology(relation, entity_relationships[key], topo_items, links, false)
   end
 
   def build_entity_relationships(included_relations)
