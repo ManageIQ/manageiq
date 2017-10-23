@@ -963,7 +963,7 @@ describe VmOrTemplate do
       arch = FactoryGirl.create(:vm_or_template)
       FactoryGirl.create(:vm_or_template, :storage => FactoryGirl.create(:storage))
 
-      expect(VmOrTemplate.all_archived).to eq([arch])
+      expect(VmOrTemplate.archived).to eq([arch])
     end
   end
 
@@ -973,7 +973,7 @@ describe VmOrTemplate do
       FactoryGirl.create(:vm_or_template)
       orph = FactoryGirl.create(:vm_or_template, :storage => FactoryGirl.create(:storage))
 
-      expect(VmOrTemplate.all_orphaned).to eq([orph])
+      expect(VmOrTemplate.orphaned).to eq([orph])
     end
   end
 
@@ -983,7 +983,7 @@ describe VmOrTemplate do
       FactoryGirl.create(:vm_or_template)
       FactoryGirl.create(:vm_or_template, :storage => FactoryGirl.create(:storage))
 
-      expect(VmOrTemplate.not_archived_nor_orphaned).to eq([vm])
+      expect(VmOrTemplate.with_ems).to eq([vm])
     end
   end
 

@@ -1,6 +1,6 @@
 class ManageIQ::Providers::InfraManager::VmOrTemplate < ActsAsArScope
   class << self
-    delegate :all_orphaned, :all_archived, :to => :aar_scope
+    delegate :orphaned, :archived, :to => :aar_scope
     delegate :klass, :to => :aar_scope, :prefix => true
   end
 

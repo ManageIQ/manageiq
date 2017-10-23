@@ -19,5 +19,7 @@ class ConfigurationScriptBase < ApplicationRecord
   has_many   :authentications,
              :through => :authentication_configuration_script_bases
 
+  scope :with_manager, ->(manager_id) { where(:manager_id => manager_id) }
+
   include ProviderObjectMixin
 end

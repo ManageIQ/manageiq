@@ -65,6 +65,10 @@ class ServiceTemplate < ApplicationRecord
 
   virtual_has_one :config_info, :class_name => "Hash"
 
+  scope :with_service_template_catalog_id,          ->(cat_id) { where(:service_template_catalog_id => cat_id) }
+  scope :with_existent_service_template_catalog_id, ->         { where.not(:service_template_catalog_id => nil) }
+  scope :displayed,                                 ->         { where(:display => true) }
+
   def self.create_catalog_item(options, auth_user)
     transaction do
       create_from_options(options).tap do |service_template|

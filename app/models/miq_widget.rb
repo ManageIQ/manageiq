@@ -26,6 +26,8 @@ class MiqWidget < ApplicationRecord
   serialize :visibility
   serialize :options
 
+  scope :with_content_type, ->(type) { where(:content_type => type) }
+
   include_concern 'ImportExport'
   include UuidMixin
   include YAMLImportExportMixin

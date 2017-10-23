@@ -6,5 +6,8 @@ class Switch < ApplicationRecord
   has_many :lans, :dependent => :destroy
   has_many :subnets, :through => :lans
 
+  scope :shareable, ->     { where(:shared => true) }
+  scope :with_id,   ->(id) { where(:id => id) }
+
   acts_as_miq_taggable
 end
