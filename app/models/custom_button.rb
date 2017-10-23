@@ -9,6 +9,7 @@ class CustomButton < ApplicationRecord
   validates :applies_to_class, :presence => true
   validates :name, :description, :uniqueness => {:scope => [:applies_to_class, :applies_to_id]}, :presence => true
   validates :guid, :uniqueness => true, :presence => true
+  accepts_nested_attributes_for :resource_action
 
   include UuidMixin
   acts_as_miq_set_member
