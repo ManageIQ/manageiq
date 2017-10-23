@@ -132,6 +132,10 @@ module SupportsFeatureMixin
     QUERYABLE_FEATURES.keys.each do |feature|
       supports_not(feature)
     end
+
+    private_class_method :unsupported
+    private_class_method :unsupported_reason_add
+    private_class_method :define_supports_feature_methods
   end
 
   class UnknownFeatureError < StandardError; end
@@ -253,11 +257,5 @@ module SupportsFeatureMixin
         !unsupported.key?(feature)
       end
     end
-  end
-
-  included do
-    private_class_method :unsupported
-    private_class_method :unsupported_reason_add
-    private_class_method :define_supports_feature_methods
   end
 end
