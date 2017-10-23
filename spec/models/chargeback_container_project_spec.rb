@@ -209,7 +209,7 @@ describe ChargebackContainerProject do
 
     context "gets rate from enterprise" do
       let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @project.id, :tag => nil) }
-      let(:miq_enterprise) { MiqEnterprise.first || FactoryGirl.create(:miq_enterprise) }
+      let(:miq_enterprise) { MiqEnterprise.first }
 
       before do
         add_metric_rollups_for(@project, month_beginning...month_end, 24.hours, metric_rollup_params)
