@@ -58,8 +58,6 @@ module MiqApache
       end
     end
 
-    private
-
     def self.run_apache_cmd(command)
       Dir.mkdir(File.dirname(APACHE_CONTROL_LOG)) unless File.exist?(File.dirname(APACHE_CONTROL_LOG))
       begin
@@ -69,5 +67,6 @@ module MiqApache
         $log.warn("MIQ(MiqApache::Control.run_apache_cmd) Apache command #{command} with result: #{res} failed with error: #{err}") if $log
       end
     end
+    private_class_method :run_apache_cmd
   end
 end

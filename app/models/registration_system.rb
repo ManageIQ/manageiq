@@ -89,8 +89,6 @@ module RegistrationSystem
                       :proxy_password => option_values[:proxy_password])
   end
 
-  private
-
   def self.assemble_options(options)
     options = database_options if options.blank?
     {
