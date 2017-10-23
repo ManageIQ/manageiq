@@ -80,7 +80,7 @@ module EmsRefresh
     EmsRefresh.init_console if defined?(Rails::Console)
 
     # Handle targets passed as a single class/id pair, an array of class/id pairs, or an array of references
-    targets = get_target_objects(target, id)
+    targets = get_target_objects(target, id).uniq
 
     # Split the targets into refresher groups
     groups = targets.group_by do |t|
@@ -171,7 +171,7 @@ module EmsRefresh
 
     # Items will be naturally serialized since there is a dedicated worker.
     MiqQueue.put_or_update(queue_options) do |msg, item|
-      targets = msg.nil? ? targets : (msg.args[0] | targets)
+      targets = msg.nil? ? targets : msg.data.concat(targets)
 
       # If we are merging with an existing queue item we don't need a new
       # task, just use the original one
@@ -191,7 +191,7 @@ module EmsRefresh
         }
       end
       item.merge(
-        :args        => [targets],
+        :data        => targets,
         :task_id     => task_id,
         :msg_timeout => queue_timeout
       )
