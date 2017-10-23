@@ -235,5 +235,12 @@ describe ChargebackContainerProject do
     end
   end
 
-  include_examples "ChargebackContainerProject"
+  context "Old Chargeback" do
+    include_examples "ChargebackContainerProject"
+  end
+
+  context "New Chargeback" do
+    before { stub_settings(:new_chargeback => '1') }
+    include_examples "ChargebackContainerProject"
+  end
 end
