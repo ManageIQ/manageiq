@@ -88,7 +88,7 @@ describe Picture do
       it "with extension" do
         subject.extension = "png"
         subject.save
-        expect(subject.basename).to eq("#{subject.compressed_id}.#{subject.extension}")
+        expect(subject.basename).to eq("#{subject.id}.#{subject.extension}")
       end
     end
   end
