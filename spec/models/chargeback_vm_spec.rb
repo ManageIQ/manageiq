@@ -638,7 +638,12 @@ describe ChargebackVm do
   end
 
   context "New Chargeback" do
-    before {stub_settings(:new_chargeback => '1')}
+    before do
+      ManageIQ::Consumption::ShowbackUsageType.seed
+
+      stub_settings(:new_chargeback => '1')
+    end
+
     include_examples "ChargebackVm"
   end
 end

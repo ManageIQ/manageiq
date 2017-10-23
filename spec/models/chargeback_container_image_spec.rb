@@ -31,7 +31,6 @@ describe ChargebackContainerImage do
       MiqRegion.seed
       ChargebackRateDetailMeasure.seed
       ChargeableField.seed
-      ManageIQ::Consumption::ShowbackUsageType.seed
       MiqEnterprise.seed
 
       EvmSpecHelper.create_guid_miq_server_zone
@@ -149,7 +148,12 @@ describe ChargebackContainerImage do
   end
 
   context "New Chargeback" do
-    before { stub_settings(:new_chargeback => '1') }
+    before do
+      ManageIQ::Consumption::ShowbackUsageType.seed
+
+      stub_settings(:new_chargeback => '1')
+    end
+
     include_examples "ChargebackContainerImage"
   end
 end
