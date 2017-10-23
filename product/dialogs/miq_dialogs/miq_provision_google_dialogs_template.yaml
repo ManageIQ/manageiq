@@ -301,10 +301,77 @@
           :default: false
           :data_type: :boolean
       :display: :show
+    :customize:
+      :description: Customize
+      :fields:
+        :dns_servers:
+          :description: DNS Server list
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :dns_suffixes:
+          :description: DNS Suffix List
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :addr_mode:
+          :values:
+            static: Static
+            dhcp: DHCP
+          :description: Address Mode
+          :required: false
+          :display: :edit
+          :default: dhcp
+          :data_type: :string
+        :linux_host_name:
+          :description: Computer Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :gateway:
+          :description: Gateway
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :linux_domain_name:
+          :description: Domain Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :subnet_mask:
+          :description: Subnet Mask
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :customization_template_id:
+          :values_from:
+            :method: :allowed_customization_templates
+          :auto_select_single: false
+          :description: Script Name
+          :required: false
+          :display: :edit
+          :data_type: :integer
+        :customization_template_script:
+          :description: Script Text
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :root_password:
+          :description: Root Password
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :hostname:
+          :description: Host Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+      :display: :show
   :dialog_order:
   - :requester
   - :purpose
   - :service
   - :environment
   - :hardware
+  - :customize
   - :schedule
