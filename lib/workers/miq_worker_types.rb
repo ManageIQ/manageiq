@@ -2,6 +2,7 @@
 # global namespace
 
 MIQ_WORKER_TYPES = {
+  "ManageIQ::Providers::Amazon::AgentCoordinatorWorker"                       => %i(manageiq_default),
   "ManageIQ::Providers::Amazon::CloudManager::EventCatcher"                   => %i(manageiq_default),
   "ManageIQ::Providers::Amazon::CloudManager::MetricsCollectorWorker"         => %i(manageiq_default),
   "ManageIQ::Providers::Amazon::CloudManager::RefreshWorker"                  => %i(manageiq_default),
@@ -98,6 +99,7 @@ MIQ_WORKER_TYPES_IN_KILL_ORDER = %w(
   ManageIQ::Providers::Amazon::NetworkManager::RefreshWorker
   ManageIQ::Providers::Amazon::StorageManager::Ebs::RefreshWorker
   ManageIQ::Providers::Amazon::StorageManager::S3::RefreshWorker
+  ManageIQ::Providers::Amazon::AgentCoordinatorWorker
   ManageIQ::Providers::Google::CloudManager::RefreshWorker
   ManageIQ::Providers::Google::NetworkManager::RefreshWorker
   ManageIQ::Providers::AnsibleTower::AutomationManager::RefreshWorker
