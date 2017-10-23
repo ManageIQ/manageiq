@@ -3256,33 +3256,22 @@ describe MiqExpression do
   end
 
   describe "miq_adv_search_lists" do
-    it ":exp_available_fields" do
-      options = {:include_model                              => true,
-                 :typ                                        => 'field',
-                 :disallow_loading_virtual_custom_attributes => false}
-      expect(described_class).to receive(:model_details).with(Vm, options)
-      described_class.miq_adv_search_lists(Vm, :exp_available_fields)
-    end
-
     it ":exp_available_counts" do
-      options = {:include_model => true, :typ => 'count'}
-      expect(described_class).to receive(:model_details).with(Vm, options)
-      described_class.miq_adv_search_lists(Vm, :exp_available_counts)
+      result = described_class.miq_adv_search_lists(Vm, :exp_available_counts)
+
+      expect(result.map(&:first)).to include(" VM and Instance.Users")
     end
 
     it ":exp_available_finds" do
-      options = {:include_model => true, :typ => 'find'}
-      expect(described_class).to receive(:model_details).with(Vm, options)
-      described_class.miq_adv_search_lists(Vm, :exp_available_finds)
+      result = described_class.miq_adv_search_lists(Vm, :exp_available_finds)
+
+      expect(result.map(&:first)).to include("VM and Instance.Provisioned VMs : Href Slug")
+      expect(result.map(&:first)).not_to include("VM and Instance : Id")
     end
 
     it ":exp_available_fields with include_id_columns" do
-      options = {:include_model                              => true,
-                 :typ                                        => 'field',
-                 :include_id_columns                         => true,
-                 :disallow_loading_virtual_custom_attributes => false}
-      expect(described_class).to receive(:model_details).with(Vm, options)
-      described_class.miq_adv_search_lists(Vm, :exp_available_fields, :include_id_columns => true)
+      result = described_class.miq_adv_search_lists(Vm, :exp_available_fields, :include_id_columns => true)
+      expect(result.map(&:first)).to include("VM and Instance : Id")
     end
   end
 end
