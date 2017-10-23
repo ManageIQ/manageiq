@@ -115,21 +115,23 @@ class MiqEventDefinition < ApplicationRecord
   end
 
   def self.seed
-    seed_default_events
-    seed_default_definitions
+    event_defs = all.group_by(&:name)
+    seed_default_events(event_defs)
+    seed_default_definitions(event_defs)
   end
 
-  def self.seed_default_events
+  def self.seed_default_events(event_defs)
     event_sets = MiqEventDefinitionSet.all.index_by(&:name)
     fname = File.join(FIXTURE_DIR, "#{to_s.pluralize.underscore}.csv")
     CSV.foreach(fname, :headers => true, :skip_lines => /^#/, :skip_blanks => true) do |csv_row|
       event = csv_row.to_hash
       set_type = event.delete('set_type')
 
-      rec = find_by(:name => event['name'])
+      rec = event_defs[event['name']].try(:first)
       if rec.nil?
         _log.info("Creating [#{event['name']}]")
         rec = create(event)
+        (event_defs[event['name']] ||= []) << rec
       else
         rec.attributes = event
         if rec.changed?
@@ -144,17 +146,18 @@ class MiqEventDefinition < ApplicationRecord
     end
   end
 
-  def self.seed_default_definitions
+  def self.seed_default_definitions(event_defs)
     stats = {:a => 0, :u => 0}
 
     fname = File.join(FIXTURE_DIR, "miq_event_definitions.yml")
     defns = YAML.load_file(fname)
     defns.each do |event_type, events|
       events[:events].each do |e|
-        event = find_by(:name => e[:name], :event_type => event_type.to_s)
+        event = (event_defs[e[:name]] || []).detect { |ed| ed.event_type == event_type.to_s }
         if event.nil?
           _log.info("Creating [#{e[:name]}]")
           event = create(e.merge(:event_type => event_type.to_s, :default => true, :enabled => true))
+          (event_defs[e[:name]] ||= []) << event
           stats[:a] += 1
         else
           event.attributes = e
