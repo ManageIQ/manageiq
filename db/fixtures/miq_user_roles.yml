@@ -164,6 +164,7 @@
   - vm_vnc_console
   - vm_vmrc_console
   - cockpit_console
+  - ovirt_ui
   - vm_perf
   - vm_policy_sim
   - vm_show
@@ -253,6 +254,7 @@
   - vm_vnc_console
   - vm_vmrc_console
   - cockpit_console
+  - ovirt_ui
   - vm_perf
   - vm_show
   - vm_show_list
@@ -296,6 +298,7 @@
   - vm_vnc_console
   - vm_vmrc_console
   - cockpit_console
+  - ovirt_ui
   - vm_drift
   - vm_edit
   - vm_refresh
@@ -417,6 +420,7 @@
   - vm_vnc_console
   - vm_vmrc_console
   - cockpit_console
+  - ovirt_ui
   - vm_drift
   - vm_edit
   - vm_perf
@@ -593,6 +597,7 @@
   - vm_vnc_console
   - vm_vmrc_console
   - cockpit_console
+  - ovirt_ui
   - vm_compare
   - vm_drift
   - vm_perf
@@ -673,6 +678,7 @@
   - vm_vnc_console
   - vm_vmrc_console
   - cockpit_console
+  - ovirt_ui
   - vm_compare
   - vm_drift
   - vm_perf
@@ -794,6 +800,7 @@
   - vm_vmrc_console
   - vm_vnc_console
   - cockpit_console
+  - ovirt_ui
 
 - :name: EvmRole-vm_user
   :read_only: true
@@ -856,6 +863,7 @@
   - vm_vmrc_console
   - vm_vnc_console
   - cockpit_console
+  - ovirt_ui
 
 - :name: EvmRole-tenant_administrator
   :read_only: true

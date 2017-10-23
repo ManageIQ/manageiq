@@ -5781,6 +5781,10 @@
         :description: Open the Cockpit console for VMs
         :feature_type: control
         :identifier: cockpit_console
+      - :name: oVirt UI
+        :description: Open the oVirt UI for VMs
+        :feature_type: control
+        :identifier: ovirt_ui
       - :name: Edit Tags
         :description: Edit VM Tags
         :feature_type: control
