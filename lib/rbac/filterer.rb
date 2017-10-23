@@ -147,8 +147,10 @@ module Rbac
     #   - Array<Numeric> list if ids. :class is required. results are returned as ids
     #   - Array<Object> list of objects. results are returned as objects
     # @option options :named_scope   [Symbol|Array<String,Integer>] support for using named scope in search
-    #     Example without args: :named_scope => :in_my_region
-    #     Example with args:    :named_scope => [in_region, 1]
+    #     Example one scope without args:     :named_scope => :in_my_region
+    #     Example one scope with args:        :named_scope => [[:in_region, 1]]
+    #     Example more scopes without args:   :named_scope => [:in_my_region, :active]
+    #     Example more scopes some with args: :named_scope => [[:in_region, 1], :active, [:with_manager, "X"]]
     # @option options :conditions    [Hash|String|Array<String>]
     # @option options :where_clause  []
     # @option options :sub_filter
@@ -181,10 +183,6 @@ module Rbac
       # => list of objects
       # results are returned in the same format as the targets. for empty targets, the default result format is a list of ids.
       targets           = options[:targets]
-
-      # Support for using named_scopes in search. Supports scopes with or without args:
-      # Example without args: :named_scope => :in_my_region
-      # Example with args:    :named_scope => [in_region, 1]
       scope             = options[:named_scope]
 
       klass             = to_class(options[:class])
@@ -563,8 +561,7 @@ module Rbac
       klass.kind_of?(String) || klass.kind_of?(Symbol) ? klass.to_s.constantize : klass
     end
 
-    def apply_scope(klass, scope)
-      klass = klass.all
+    def send_scope(klass, scope)
       scope_name = Array.wrap(scope).first
       if scope_name.nil?
         klass
@@ -574,6 +571,15 @@ module Rbac
                                                                                            :class_name => class_name}
       else
         klass.send(*scope)
+      end
+    end
+
+    def apply_scope(klass, scope)
+      klass = klass.all
+      if scope.kind_of?(Array)
+        scope.inject(klass) { |k, s| send_scope(k, s) }
+      else
+        send_scope(klass, scope)
       end
     end
 

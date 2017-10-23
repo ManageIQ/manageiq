@@ -1393,6 +1393,8 @@ describe Rbac::Filterer do
     end
 
     context "with tagged VMs" do
+      let(:ems) { FactoryGirl.create(:ext_management_system) }
+
       before(:each) do
         [
           FactoryGirl.create(:host, :name => "Host1", :hostname => "host1.local"),
@@ -1407,11 +1409,13 @@ describe Rbac::Filterer do
           vm.host = host
           vm.evm_owner_id = user.id  if i.even?
           vm.miq_group_id = group.id if i.odd?
+          vm.ext_management_system = ems if i.even?
           vm.save
           vm.tag_with(@tags.values.join(" "), :ns => "*") if i > 0
         end
 
-        Vm.scope :group_scope, ->(group_num) { Vm.where("name LIKE ?", "Test Group #{group_num}%") }
+        Vm.scope :group_scope,    ->(group_num) { Vm.where("name LIKE ?", "Test Group #{group_num}%") }
+        Vm.scope :is_on,          ->            { Vm.where(:power_state => "on") }
       end
 
       context ".search" do
@@ -1436,7 +1440,7 @@ describe Rbac::Filterer do
 
           it "works when passing a named_scope" do
             User.with_user(user) do
-              results = described_class.search(:class => "Vm", :named_scope => [:group_scope, 1]).first
+              results = described_class.search(:class => "Vm", :named_scope => [[:group_scope, 1]]).first
               expect(results.length).to eq(1)
             end
           end
@@ -1465,10 +1469,10 @@ describe Rbac::Filterer do
 
           it "works when passing a named_scope" do
             User.with_user(user) do
-              results = described_class.search(:class => "Vm", :named_scope => [:group_scope, 1]).first
+              results = described_class.search(:class => "Vm", :named_scope => [[:group_scope, 1]]).first
               expect(results.length).to eq(1)
 
-              results = described_class.search(:class => "Vm", :named_scope => [:group_scope, 2]).first
+              results = described_class.search(:class => "Vm", :named_scope => [[:group_scope, 2]]).first
               expect(results.length).to eq(0)
             end
           end
@@ -1491,7 +1495,22 @@ describe Rbac::Filterer do
         end
 
         it "works when passing a named_scope" do
-          results = described_class.search(:class => "Vm", :named_scope => [:group_scope, 4]).first
+          results = described_class.search(:class => "Vm", :named_scope => :is_on).first
+          expect(results.length).to eq(4)
+        end
+
+        it "works when passing a named_scope with parameterized scope" do
+          results = described_class.search(:class => "Vm", :named_scope => [[:group_scope, 4]]).first
+          expect(results.length).to eq(1)
+        end
+
+        it "works when passing a named_scope with multiple scopes" do
+          results = described_class.search(:class => "Vm", :named_scope => [:is_on, :active]).first
+          expect(results.length).to eq(2)
+        end
+
+        it "works when passing a named_scope with multiple mixed scopes" do
+          results = described_class.search(:class => "Vm", :named_scope => [[:group_scope, 3], :active]).first
           expect(results.length).to eq(1)
         end
 
