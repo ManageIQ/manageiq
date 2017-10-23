@@ -17,7 +17,7 @@ class MiqEmsRefreshCoreWorker < MiqWorker
   def friendly_name
     @friendly_name ||= begin
       ems = ext_management_system
-      ems.nil? ? queue_name.titleize : "Core Refresh Worker for #{ui_lookup(:table => "ext_management_systems")}: #{ems.name}"
+      ems.nil? ? queue_name.titleize : "Core Refresh Worker for Provider: #{ems.name}"
     end
   end
 end

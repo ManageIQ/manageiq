@@ -693,7 +693,7 @@ class MiqAction < ApplicationRecord
 
   def action_ems_refresh(action, rec, inputs)
     unless rec.respond_to?(:ext_management_system) && !rec.ext_management_system.nil?
-      MiqPolicy.logger.error("MIQ(action_ems_refresh): Unable to perform action [#{action.description}], object [#{rec.inspect}] does not have a #{ui_lookup(:table => "ext_management_systems")}")
+      MiqPolicy.logger.error("MIQ(action_ems_refresh): Unable to perform action [#{action.description}], object [#{rec.inspect}] does not have a Provider")
       return
     end
 
@@ -785,7 +785,7 @@ class MiqAction < ApplicationRecord
 
   def action_cancel_task(action, rec, inputs)
     unless rec.respond_to?(:ext_management_system) && !rec.ext_management_system.nil?
-      MiqPolicy.logger.error("MIQ(action_cancel_task): Unable to perform action [#{action.description}], object [#{rec.inspect}] does not have a #{ui_lookup(:table => "ext_management_systems")}")
+      MiqPolicy.logger.error("MIQ(action_cancel_task): Unable to perform action [#{action.description}], object [#{rec.inspect}] does not have a Provider")
       return
     end
 

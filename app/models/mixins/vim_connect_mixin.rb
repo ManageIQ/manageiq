@@ -71,7 +71,7 @@ module VimConnectMixin
       raise $!.message
     rescue Exception
       _log.warn($!.inspect)
-      raise "Unexpected response returned from #{ui_lookup(:table => "ext_management_systems")}, see log for details"
+      raise "Unexpected response returned from Provider, see log for details"
     end
   end
 end

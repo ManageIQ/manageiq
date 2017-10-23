@@ -362,7 +362,7 @@ class VmOrTemplate < ApplicationRecord
 
     # VM has no host or storage affiliation
     if vm.storage.nil?
-      task.error("#{vm.name}: There is no owning Host or #{ui_lookup(:table => "storages")} for this VM, "\
+      task.error("#{vm.name}: There is no owning Host or Datastore for this VM, "\
                  "'#{options[:task]}' is not allowed")
       return false
     end
@@ -706,7 +706,7 @@ class VmOrTemplate < ApplicationRecord
 
   def connect_storage(s)
     unless storage == s
-      _log.debug("Connecting Vm [#{name}] id [#{id}] to #{ui_lookup(:table => "storages")} [#{s.name}] id [#{s.id}]")
+      _log.debug("Connecting Vm [#{name}] id [#{id}] to Datastore [#{s.name}] id [#{s.id}]")
       self.storage = s
       save
     end
@@ -715,7 +715,7 @@ class VmOrTemplate < ApplicationRecord
   def disconnect_storage(s = nil)
     if s.nil? || storage == s || storages.include?(s)
       stores = s.nil? ? ([storage] + storages).compact.uniq : [s]
-      log_text = stores.collect { |x| "#{ui_lookup(:table => "storages")} [#{x.name}] id [#{x.id}]" }.join(", ")
+      log_text = stores.collect { |x| "Datastore [#{x.name}] id [#{x.id}]" }.join(", ")
       _log.info("Disconnecting Vm [#{name}] id [#{id}] from #{log_text}")
 
       if s.nil?
@@ -911,7 +911,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def log_proxies_vm_config
-    msg = "[#{log_proxies_format_instance(self)}] on host [#{log_proxies_format_instance(host)}] #{ui_lookup(:table => "storages").downcase} "
+    msg = "[#{log_proxies_format_instance(self)}] on host [#{log_proxies_format_instance(host)}] datastore "
     msg << (storage ? "[#{storage.name}-#{storage.store_type}]" : "No storage")
   end
 
@@ -1052,13 +1052,13 @@ class VmOrTemplate < ApplicationRecord
 
   def refresh_ems
     unless ext_management_system
-      raise _("No %{table} defined") % {:table => ui_lookup(:table => "ext_management_systems")}
+      raise _("No Provider defined")
     end
     unless ext_management_system.has_credentials?
-      raise _("No %{table} credentials defined") % {:table => ui_lookup(:table => "ext_management_systems")}
+      raise _("No Provider credentials defined")
     end
     unless ext_management_system.authentication_status_ok?
-      raise _("%{table} failed last authentication check") % {:table => ui_lookup(:table => "ext_management_systems")}
+      raise _("Provider failed last authentication check")
     end
     EmsRefresh.queue_refresh(self)
   end
@@ -1071,13 +1071,13 @@ class VmOrTemplate < ApplicationRecord
 
   def refresh_ems_sync
     unless ext_management_system
-      raise _("No %{table} defined") % {:table => ui_lookup(:table => "ext_management_systems")}
+      raise _("No Provider defined")
     end
     unless ext_management_system.has_credentials?
-      raise _("No %{table} credentials defined") % {:table => ui_lookup(:table => "ext_management_systems")}
+      raise _("No Provider credentials defined")
     end
     unless ext_management_system.authentication_status_ok?
-      raise _("%{table} failed last authentication check") % {:table => ui_lookup(:table => "ext_management_systems")}
+      raise _("Provider failed last authentication check")
     end
     EmsRefresh.refresh(self)
   end

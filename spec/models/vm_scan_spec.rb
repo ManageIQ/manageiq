@@ -359,7 +359,7 @@ describe VmScan do
         allow(@vm).to receive(:ext_management_system).and_return(false)
         expect(@job).not_to receive(:delete_snapshot)
         @job.call_snapshot_delete
-        expect(@job.message).to eq "No #{ui_lookup(:table => "ext_management_systems")} available to delete snapshot, skipping"
+        expect(@job.message).to eq "No Providers available to delete snapshot, skipping"
       end
 
       it "calls 'delete_snapshot'" do

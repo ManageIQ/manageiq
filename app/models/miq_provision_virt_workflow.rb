@@ -127,8 +127,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       show_dialog(:customize, :show, "disabled")
     else
       if vm.ext_management_system.nil?
-        raise _("Source VM [%{name}] does not belong to a %{table}") %
-                {:name => vm.name, :table => ui_lookup(:table => "ext_management_systems")}
+        raise _("Source VM [%{name}] does not belong to a Provider") % {:name => vm.name}
       end
       set_or_default_hardware_field_values(vm)
 

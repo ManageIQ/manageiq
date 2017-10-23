@@ -44,7 +44,7 @@ module VmOrTemplate::Operations
 
   def raw_unregister
     unless ext_management_system
-      raise _("VM has no %{table}, unable to unregister VM") % {:table => ui_lookup(:table => "ext_management_systems")}
+      raise _("VM has no Provider, unable to unregister VM")
     end
     run_command_via_parent(:vm_unregister)
   end
@@ -55,7 +55,7 @@ module VmOrTemplate::Operations
 
   def raw_destroy
     unless ext_management_system
-      raise _("VM has no %{table}, unable to destroy VM") % {:table => ui_lookup(:table => "ext_management_systems")}
+      raise _("VM has no Provider, unable to destroy VM")
     end
     run_command_via_parent(:vm_destroy)
   end

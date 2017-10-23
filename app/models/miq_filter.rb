@@ -39,7 +39,7 @@ module MiqFilter
   def self.object2belongsto(obj)
     # /belongsto/ExtManagementSystem|<name>/EmsCluster|<name>/EmsFolder|<name>
     unless obj.root_id[0] == "ExtManagementSystem"
-      raise _("Folder Root is not a %{table}") % {:table => ui_lookup(:table => "ext_management_systems")}
+      raise _("Folder Root is not a Provider")
     end
 
     tag = obj.ancestry(
