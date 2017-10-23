@@ -9,7 +9,8 @@ class ChargebackRateDetail < ApplicationRecord
   validates :group, :source, :chargeback_rate, :presence => true
   validate :contiguous_tiers?
 
-  FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric).freeze
+  FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric sub_metric).freeze
+
   PER_TIME_TYPES = {
     "hourly"  => _("Hourly"),
     "daily"   => _("Daily"),
