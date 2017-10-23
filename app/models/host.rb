@@ -299,7 +299,7 @@ class Host < ApplicationRecord
 
   def validate_esx_host_connected_to_vc
     # Check the basic require to interact with a VM.
-    return {:available => false, :message => "The Host is not connected to an active #{ui_lookup(:table => "ext_management_systems")}"} unless has_active_ems?
+    return {:available => false, :message => "The Host is not connected to an active Provider"} unless has_active_ems?
     return {:available => false, :message => "The Host is not VMware ESX"} unless is_vmware_esx?
     nil
   end
@@ -587,13 +587,13 @@ class Host < ApplicationRecord
 
   def refresh_ems
     unless ext_management_system
-      raise _("No %{table} defined") % {:table => ui_lookup(:table => "ext_management_systems")}
+      raise _("No Providers defined")
     end
     unless ext_management_system.has_credentials?
-      raise _("No %{table} credentials defined") % {:table => ui_lookup(:table => "ext_management_systems")}
+      raise _("No Provider credentials defined")
     end
     unless ext_management_system.authentication_status_ok?
-      raise _("%{table} failed last authentication check") % {:table => ui_lookup(:table => "ext_management_systems")}
+      raise _("Provider failed last authentication check")
     end
     EmsRefresh.queue_refresh(self)
   end

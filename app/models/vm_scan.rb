@@ -263,8 +263,8 @@ class VmScan < Job
           set_status("Snapshot deleted: reference: [#{mor}]")
         end
       else
-        _log.error("Deleting snapshot: reference: [#{mor}], No #{ui_lookup(:table => "ext_management_systems")} available to delete snapshot")
-        set_status("No #{ui_lookup(:table => "ext_management_systems")} available to delete snapshot, skipping", "error")
+        _log.error("Deleting snapshot: reference: [#{mor}], No Providers available to delete snapshot")
+        set_status("No Providers available to delete snapshot, skipping", "error")
       end
     else
       set_status("Snapshot was not taken, delete not required") if options[:snapshot] == :skipped
@@ -396,8 +396,7 @@ class VmScan < Job
             vm.ext_management_system.vm_remove_snapshot(vm, :snMor => mor, :user_event => user_event)
           end
         else
-          raise _("No %{table} available to delete snapshot") %
-                  {:table => ui_lookup(:table => "ext_management_systems")}
+          raise _("No Providers available to delete snapshot")
         end
       rescue => err
         _log.error(err.message)
@@ -584,7 +583,7 @@ class VmScan < Job
       options[:use_existing_snapshot] = true
       return true
     else
-      signal(:abort, "No #{ui_lookup(:table => "ext_management_systems")} available to create snapshot, skipping", "error")
+      signal(:abort, "No Providers available to create snapshot, skipping", "error")
       return false
     end
   end

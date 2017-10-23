@@ -199,7 +199,7 @@ class ExtManagementSystem < ApplicationRecord
         :zone_id   => MiqServer.my_server.zone.id
       )
 
-      _log.info("#{ui_lookup(:table => "ext_management_systems")} #{ems.name} created")
+      _log.info("Provider #{ems.name} created")
       AuditEvent.success(
         :event        => "ems_created",
         :target_id    => ems.id,
@@ -409,10 +409,10 @@ class ExtManagementSystem < ApplicationRecord
 
   def refresh_ems(opts = {})
     if missing_credentials?
-      raise _("no %{table} credentials defined") % {:table => ui_lookup(:table => "ext_management_systems")}
+      raise _("no Provider credentials defined")
     end
     unless authentication_status_ok?
-      raise _("%{table} failed last authentication check") % {:table => ui_lookup(:table => "ext_management_systems")}
+      raise _("Provider failed last authentication check")
     end
     EmsRefresh.queue_refresh(self, nil, opts)
   end

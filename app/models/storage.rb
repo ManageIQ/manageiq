@@ -359,15 +359,15 @@ class Storage < ApplicationRecord
   def scan(userid = "system", _role = "ems_operations")
     unless SUPPORTED_STORAGE_TYPES.include?(store_type.upcase)
       raise(MiqException::MiqUnsupportedStorage,
-            _("Action not supported for %{table} type [%{store_type}], [%{name}] with id: [%{id}]") %
-              {:table => ui_lookup(:table => "storages"), :store_type => store_type, :name => name, :id => id})
+            _("Action not supported for Datastore type [%{store_type}], [%{name}] with id: [%{id}]") %
+              {:store_type => store_type, :name => name, :id => id})
     end
 
     hosts = active_hosts_with_authentication_status_ok
     if hosts.empty?
       raise(MiqException::MiqStorageError,
-            _("Check that a Host is running and has valid credentials for %{table} [%{name}] with id: [%{id}]") %
-              {:table => ui_lookup(:tables => "storage"), :name => name, :id => id})
+            _("Check that a Host is running and has valid credentials for Datastore [%{name}] with id: [%{id}]") %
+              {:name => name, :id => id})
     end
     task_name = "SmartState Analysis for [#{name}]"
     self.class.create_scan_task(task_name, userid, [self])

@@ -141,7 +141,7 @@ class OrchestrationTemplate < ApplicationRecord
     test_managers.each do |mgr|
       return mgr.orchestration_template_validate(self) rescue nil
     end
-    "No #{ui_lookup(:model => 'ExtManagementSystem').downcase} is capable to validate the template"
+    "No provider is capable to validate the template"
   end
 
   def validate_format

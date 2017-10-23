@@ -39,8 +39,8 @@ class JobProxyDispatcher
 
         jobs_to_dispatch.each do |job|
           if concurrent_vm_scans_limit > 0 && active_vm_scans_by_zone[@zone] >= concurrent_vm_scans_limit
-            _log.warn("SKIPPING remaining %s jobs in dispatch since there are [%d] active scans in the zone [%s]" %
-                      [ui_lookup(:table => VmOrTemplate.name), active_vm_scans_by_zone[@zone], @zone])
+            _log.warn("SKIPPING remaining Vm Or Template jobs in dispatch since there are [%d] active scans in the zone [%s]" %
+                      [active_vm_scans_by_zone[@zone], @zone])
             break
           end
           @vm = @vms_for_dispatch_jobs.detect { |v| v.id == job.target_id }
@@ -111,10 +111,8 @@ class JobProxyDispatcher
       active_ems_scans = active_container_scans_by_zone_and_ems[@zone][ems_id]
       if concurrent_ems_limit > 0 && active_ems_scans >= concurrent_ems_limit
         _log.warn(
-          "SKIPPING remaining %s scan jobs for %s [%s] in dispatch since there are [%d] active scans in zone [%s]" %
+          "SKIPPING remaining Container Image scan jobs for Provider [%s] in dispatch since there are [%d] active scans in zone [%s]" %
             [
-              ui_lookup(:table => ContainerImage.name),
-              ui_lookup(:table => ExtManagementSystem.name),
               ems_id,
               active_ems_scans,
               @zone
