@@ -60,7 +60,6 @@ describe ChargebackVm do
       ChargebackRateDetailMeasure.seed
       ChargeableField.seed
       ManageIQ::Consumption::ShowbackUsageType.seed
-      ManageIQ::Consumption::ShowbackPricePlan.seed
       MiqEnterprise.seed
 
       EvmSpecHelper.create_guid_miq_server_zone
