@@ -19,6 +19,23 @@ class ChargebackRateDetail < ApplicationRecord
     'yearly'  => _('Yearly')
   }.freeze
 
+  def sub_metrics
+    if metric == 'derived_vm_allocated_disk_storage'
+      volume_types = CloudVolume.pluck(:volume_type).uniq.compact
+      unless volume_types.empty?
+        res = {}
+        res[_('All')] = ''
+        volume_types.each {|type| res[type.capitalize] = type}
+        res[_('Other - Unclassified')] = 'unclassified'
+        res
+      end
+    end
+  end
+
+  def sub_metric_human
+    sub_metric.present? ? sub_metric.capitalize : 'All'
+  end
+
   def charge(relevant_fields, consumption)
     result = {}
     if (relevant_fields & [metric_keys[0], cost_keys[0]]).present?
