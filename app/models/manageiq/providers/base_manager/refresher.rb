@@ -36,18 +36,23 @@ module ManageIQ
         self.targets_by_ems_id = Hash.new { |h, k| h[k] = [] }
 
         targets.each do |t|
-          ems = case
-                when t.respond_to?(:ext_management_system) then t.ext_management_system
-                when t.respond_to?(:manager)               then t.manager
-                else                                            t
-                end
-          if ems.nil?
-            _log.warn("Unable to perform refresh for #{t.class} [#{t.name}] id [#{t.id}], since it is not on an EMS.")
-            next
-          end
+          if t.kind_of?(ManagerRefresh::Target)
+            ems_by_ems_id[t.manager_id] ||= t.manager
+            targets_by_ems_id[t.manager_id] << t
+          else
+            ems = case
+                  when t.respond_to?(:ext_management_system) then t.ext_management_system
+                  when t.respond_to?(:manager)               then t.manager
+                  else                                            t
+                  end
+            if ems.nil?
+              _log.warn("Unable to perform refresh for #{t.class} [#{t.name}] id [#{t.id}], since it is not on an EMS.")
+              next
+            end
 
-          ems_by_ems_id[ems.id] ||= ems
-          targets_by_ems_id[ems.id] << t
+            ems_by_ems_id[ems.id] ||= ems
+            targets_by_ems_id[ems.id] << t
+          end
         end
       end
 

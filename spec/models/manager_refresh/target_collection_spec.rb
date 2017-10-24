@@ -110,7 +110,8 @@ describe ManagerRefresh::TargetCollection do
         :options     => {:opt1 => "opt1", :opt2 => "opt2"}
       )
 
-      expect(target_collection.name).to eq "Collection of targets with name: [{:ems_ref=>\"vm_1\"}, {:ems_ref=>\"vm_2\"}]"
+      expect(target_collection.name).to eq "Collection of 2 targets"
+      expect(target_collection.id).to eq "Collection of targets with id: [{:ems_ref=>\"vm_1\"}, {:ems_ref=>\"vm_2\"}]"
     end
   end
 
