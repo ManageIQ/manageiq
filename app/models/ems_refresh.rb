@@ -82,10 +82,14 @@ module EmsRefresh
     # Handle targets passed as a single class/id pair, an array of class/id pairs, or an array of references
     targets = get_target_objects(target, id).uniq
 
+    # Store manager records to avoid n+1 queries
+    manager_by_manager_id = {}
+
     # Split the targets into refresher groups
     groups = targets.group_by do |t|
       ems = case
             when t.respond_to?(:ext_management_system) then t.ext_management_system
+            when t.respond_to?(:manager_id)            then manager_by_manager_id[t.manager_id] ||= t.manager
             when t.respond_to?(:manager)               then t.manager
             else                                            t
             end
