@@ -1,9 +1,12 @@
 - url = url_for(:action => 'cb_rate_form_field_changed', :id => @edit[:rec_id] || "new")
+- breakdown_present = @edit[:new][:details].any? { |d| d[:sub_metric].present? }
 %table.table.table-bordered{:id => "chargeback_rate_edit_form"}
   %thead
     %tr
       %th{:rowspan => "2"}= _('Group')
       %th{:rowspan => "2"}= _('Description')
+      - if breakdown_present
+        %th{:rowspan => '2'}= _('Sub Metric')
       %th{:rowspan => "2"}= _('Per Time')
       %th{:rowspan => "2"}= _('Per Unit')
       %th{:colspan => "2"}= _('Range')
@@ -29,6 +32,11 @@
           = h(rate_detail_group(detail[:group]))
         %td{:rowspan => num_tiers}
           = detail[:description]
+        - if breakdown_present
+          %td{:rowspan => num_tiers}
+            - sub_metrics = detail[:sub_metrics]
+            - if sub_metrics.present?
+              = detail[:sub_metric_human]
         %td{:rowspan => num_tiers}
           = select_tag("per_time_#{detail_index}",
             options_for_select(@edit[:new][:per_time_types].invert, @edit[:new][:details][detail_index][:per_time]),

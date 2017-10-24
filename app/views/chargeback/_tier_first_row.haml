@@ -2,12 +2,18 @@
 - r = @edit[:new][:details][i.to_i]
 - url = url_for(:action => 'cb_rate_form_field_changed', :id => "#{@edit[:rec_id] || "new"}")
 - n = @edit[:new][:num_tiers][i.to_i]
+- breakdown_present = @edit[:new][:details].any? { |d| d[:sub_metric].present? }
 
 %tr.rdetail{:id => "rate_detail_row_#{i}_0"}
   %td{:rowspan => n.to_s}
     = Dictionary.gettext(r[:group], :type => :rate_detail_group, :notfound => :titleize)
   %td{:rowspan => n.to_s}
     = r[:description]
+    - if breakdown_present
+      %td{:rowspan => n.to_s}
+        - sub_metrics = r[:sub_metrics]
+        - if sub_metrics.present?
+          = r[:sub_metric_human]
   %td{:rowspan => n.to_s}
     = select_tag("per_time_#{i}",
       options_for_select(ChargebackRateDetail::PER_TIME_TYPES.invert, @edit[:new][:details][i.to_i][:per_time]),
