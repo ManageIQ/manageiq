@@ -150,7 +150,7 @@ describe DialogFieldSerializer do
                      :category_name        => "best category ever",
                      :category_description => "best category ever"
                    },
-                   "default_value"           => default_values.split(",").to_json
+                   "default_value"           => default_values.split(",")
           ))
       end
     end

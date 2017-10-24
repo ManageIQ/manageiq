@@ -27,7 +27,7 @@ class DialogFieldSerializer < Serializer
     end
 
     field_as_json = dialog_field.as_json(:methods => [:type, :values])
-    field_as_json["default_value"] = field_as_json["default_value"].split(",").to_json if dialog_field.try(:force_multi_value)
+    field_as_json["default_value"] = field_as_json["default_value"].split(",") if dialog_field.try(:force_multi_value)
     included_attributes(field_as_json, all_attributes).merge(extra_attributes)
   end
 end
