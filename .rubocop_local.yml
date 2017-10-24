@@ -46,6 +46,6 @@ Rails/Exit:
 Rails/Output:
   Exclude:
   - lib/workers/bin/*
-Style/ExtraSpacing:
+Layout/ExtraSpacing:
   Exclude:
   - Gemfile
