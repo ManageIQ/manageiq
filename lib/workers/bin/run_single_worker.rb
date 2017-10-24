@@ -65,7 +65,7 @@ unless options[:dry_run]
 
   if options[:ems_id]
     create_options[:queue_name] = options[:ems_id].length == 1 ? "ems_#{options[:ems_id].first}" : options[:ems_id].collect { |id| "ems_#{id}" }
-    runner_options[:ems_id]     = options[:ems_id]
+    runner_options[:ems_id]     = options[:ems_id].length == 1 ? options[:ems_id].first : options[:ems_id].collect { |id| id }
   end
 
   worker = if options[:guid]
