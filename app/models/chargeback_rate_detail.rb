@@ -24,7 +24,7 @@ class ChargebackRateDetail < ApplicationRecord
 
   def sub_metrics
     if metric == 'derived_vm_allocated_disk_storage'
-      volume_types = CloudVolume.pluck(:volume_type).uniq.compact
+      volume_types = CloudVolume.volume_types
       unless volume_types.empty?
         res = {}
         res[_('All')] = ''
@@ -294,7 +294,7 @@ class ChargebackRateDetail < ApplicationRecord
         rate_details.push(detail_new)
 
         if detail_new.metric == 'derived_vm_allocated_disk_storage'
-          volume_types = CloudVolume.pluck(:volume_type).uniq.compact
+          volume_types = CloudVolume.volume_types
           volume_types.each do |volume_type|
             storage_detail_new = detail_new.dup
             storage_detail_new.sub_metric = volume_type
