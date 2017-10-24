@@ -189,8 +189,8 @@ describe DialogField do
     end
 
     context "when the given list is not empty" do
-      it "rebuilds the responder list based on the compressed IDs" do
-        dialog_field.update_dialog_field_responders([dialog_field2.compressed_id])
+      it "rebuilds the responder list based on the IDs" do
+        dialog_field.update_dialog_field_responders([dialog_field2.id])
         expect(dialog_field.dialog_field_responders).to eq([dialog_field2])
       end
     end

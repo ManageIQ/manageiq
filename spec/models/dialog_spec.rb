@@ -284,15 +284,15 @@ describe Dialog do
     let(:updated_content) do
       [
         {
-          'id'            => dialog_tab.first.compressed_id,
+          'id'            => dialog_tab.first.id,
           'label'         => 'updated_label',
           'dialog_groups' => [
-            { 'id'            => dialog_group.first.compressed_id,
-              'dialog_tab_id' => dialog_tab.first.compressed_id,
+            { 'id'            => dialog_group.first.id,
+              'dialog_tab_id' => dialog_tab.first.id,
               'dialog_fields' =>
                                  [{
                                    'id'              => dialog_field.first.id,
-                                   'dialog_group_id' => dialog_group.first.compressed_id
+                                   'dialog_group_id' => dialog_group.first.id
                                  }] },
             {
               'label'         => 'group 2',
@@ -347,37 +347,6 @@ describe Dialog do
         expect do
           dialog.update_tabs(updated_content)
         end.to change(dialog.reload.dialog_tabs, :count).by(-1)
-      end
-    end
-
-    context 'compresssed ids' do
-      let(:updated_content) do
-        [
-          {
-            'id'            => dialog_tab.first.id,
-            'label'         => 'updated_label_foo',
-            'dialog_groups' => [
-              { 'id'            => dialog_group.first.compressed_id,
-                'label'         => 'updated_label_bar',
-                'dialog_fields' =>
-                                   [{'id' => dialog_field.first.compressed_id, 'label' => 'updated_label_baz'}]}
-            ]
-          }
-        ]
-      end
-
-      before do
-        dialog.dialog_tabs << FactoryGirl.create(:dialog_tab)
-      end
-
-      it 'updates the content' do
-        dialog.update_tabs(updated_content)
-
-        tab = dialog.dialog_tabs.first
-        group = tab.dialog_groups.first
-        expect(tab.label).to eq('updated_label_foo')
-        expect(group.label).to eq('updated_label_bar')
-        expect(group.dialog_fields.first.label).to eq('updated_label_baz')
       end
     end
   end
