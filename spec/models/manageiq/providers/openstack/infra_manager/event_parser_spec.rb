@@ -2,7 +2,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::EventParser do
   context ".event_to_hash" do
     it "with a compute.instance.create.end event" do
       event = YAML.load_file(File.join(data_dir, 'compute_instance_create_end.yml'))
-      data = described_class.event_to_hash(event, 123)
+      data = described_class.event_to_hash(event, nil)
 
       expected_attributes = common_attributes(event).merge(
         :event_type   => "compute.instance.create.end",
@@ -20,7 +20,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::EventParser do
 
     it "with a compute.instance.create.error event" do
       event = YAML.load_file(File.join(data_dir, 'compute_instance_create_error.yml'))
-      data = described_class.event_to_hash(event, 123)
+      data = described_class.event_to_hash(event, nil)
 
       expected_attributes = common_attributes(event).merge(
         :event_type   => "compute.instance.create.error",
@@ -40,7 +40,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::EventParser do
 
     it "with an orchestration.stack.create.end event" do
       event = YAML.load_file(File.join(data_dir, 'orchestration_stack_create_end.yml'))
-      data = described_class.event_to_hash(event, 123)
+      data = described_class.event_to_hash(event, nil)
 
       expected_attributes = common_attributes(event).merge(
         :event_type => "orchestration.stack.create.end",
@@ -54,7 +54,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::EventParser do
 
     it "with an orchestration.stack.update.end event" do
       event = YAML.load_file(File.join(data_dir, 'orchestration_stack_update_end.yml'))
-      data = described_class.event_to_hash(event, 123)
+      data = described_class.event_to_hash(event, nil)
 
       expected_attributes = common_attributes(event).merge(
         :event_type => "orchestration.stack.update.end",
@@ -68,11 +68,11 @@ describe ManageIQ::Providers::Openstack::InfraManager::EventParser do
 
     it "with a port.create.end event" do
       event = YAML.load_file(File.join(data_dir, 'port_create_end.yml'))
-      data = described_class.event_to_hash(event, 123)
+      data = described_class.event_to_hash(event, nil)
 
       expected_attributes = common_attributes(event).merge(
         :event_type => "port.create.end",
-        :timestamp  => "2015-05-12 07:22:37.008738"
+        :timestamp  => "2015-05-12 07:22:37.008738",
       )
 
       expect(data).to have_attributes(expected_attributes)
@@ -82,7 +82,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::EventParser do
 
     it "with a port.update.end event" do
       event = YAML.load_file(File.join(data_dir, 'port_update_end.yml'))
-      data = described_class.event_to_hash(event, 123)
+      data = described_class.event_to_hash(event, nil)
 
       expected_attributes = common_attributes(event).merge(
         :event_type => "port.update.end",
@@ -105,10 +105,9 @@ describe ManageIQ::Providers::Openstack::InfraManager::EventParser do
       :chain_id     => nil,
       :is_task      => nil,
       :source       => "OPENSTACK",
-      :message      => nil,
       :timestamp    => nil,
       :full_data    => event,
-      :ems_id       => 123,
+      :ems_id       => nil,
       :username     => nil,
       :vm_ems_ref   => nil,
       :vm_name      => nil,
