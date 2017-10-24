@@ -3,8 +3,8 @@ class MiqEventDefinition < ApplicationRecord
 
   validates_presence_of     :name
   validates_uniqueness_of   :name
-  validates_format_of       :name, :with => /\A[a-z0-9_\-]+\z/i,
-    :allow_nil => true, :message => "must only contain alpha-numeric, underscore and hyphen characters without spaces"
+  validates_format_of       :name, :with => /\A[a-z0-9_\-.]+\z/i,
+    :allow_nil => true, :message => "must only contain alpha-numeric, underscore, hyphen and dot characters without spaces"
   validates_presence_of     :description
 
   acts_as_miq_set_member
