@@ -20,6 +20,10 @@ class CloudVolume < ApplicationRecord
 
   acts_as_miq_taggable
 
+  def self.volume_types
+    pluck(:volume_type).uniq.compact
+  end
+
   def self.available
     left_outer_joins(:attachments).where("disks.backing_id" => nil)
   end
