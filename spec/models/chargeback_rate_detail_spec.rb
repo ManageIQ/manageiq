@@ -11,6 +11,43 @@ describe ChargebackRateDetail do
     end
   end
 
+  describe "#default_rate_details_for" do
+    before do
+      ChargebackRateDetailMeasure.seed
+      ChargeableField.seed
+    end
+
+    it 'loads chargeback rates from yml for Compute metrics' do
+      rates = ChargebackRateDetail.default_rate_details_for('Compute')
+      expected_metrics = %w(
+        derived_vm_numvcpus
+        cpu_usagemhz_rate_average
+        v_derived_cpu_total_cores_used
+        disk_usage_rate_average
+        fixed_compute_1
+        fixed_compute_2
+        derived_memory_available
+        derived_memory_used
+        metering_used_hours
+        net_usage_rate_average
+      )
+
+      expect(rates.map { |x| x.chargeable_field.metric }).to match_array(expected_metrics)
+    end
+
+    it 'loads chargeback rates from yml for Storage metrics' do
+      rates = ChargebackRateDetail.default_rate_details_for('Storage')
+      expected_metrics = %w(
+        fixed_storage_1
+        fixed_storage_2
+        derived_vm_allocated_disk_storage
+        derived_vm_used_disk_storage
+      )
+
+      expect(rates.map { |x| x.chargeable_field.metric }).to match_array(expected_metrics)
+    end
+  end
+
   describe "#find_rate" do
     let(:cvalue) { {"val1" => 0.0, "val2" => 10.0, "val3" => 20.0, "val4" => 50.0} }
     let(:cbt1) { FactoryGirl.build(:chargeback_tier, :start => 0, :finish => 10, :fixed_rate => 3.0, :variable_rate => 0.3) }
