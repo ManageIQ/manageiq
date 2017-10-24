@@ -42,6 +42,9 @@ module EmsRefresh
             post_refresh_ems_cleanup(ems, targets)
           end
 
+          # We need to reload the ems, since it can try to autosave a models that did not pass a validation, and the
+          # ems status with the error would not save.
+          ems.reload
           ems.update_attributes(:last_refresh_error => nil, :last_refresh_date => Time.now.utc)
           post_refresh(ems, ems_refresh_start_time)
         end
