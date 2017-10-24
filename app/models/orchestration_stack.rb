@@ -160,7 +160,7 @@ class OrchestrationStack < ApplicationRecord
     end
 
     manager_settings = Settings.ems_refresh[manager.class.ems_type]
-    if manager_settings[:inventory_object_refresh] && manager_settings[:allow_targeted_refresh]
+    if manager_settings && manager_settings[:inventory_object_refresh] && manager_settings[:allow_targeted_refresh]
       # Queue new targeted refresh if allowed
       orchestration_stack_target = ManagerRefresh::Target.new(:manager     => manager,
                                                               :association => :orchestration_stacks,
