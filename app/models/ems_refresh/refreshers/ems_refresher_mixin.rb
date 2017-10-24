@@ -92,7 +92,7 @@ module EmsRefresh
           Benchmark.realtime_block(:save_inventory) { save_inventory(ems, target, parsed) }
           _log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]...Complete"
 
-          if parsed.kind_of?(Array)
+          if parsed.kind_of?(ManagerRefresh::Inventory::Persister)
             _log.info("#{log_header} ManagerRefresh Post Processing #{target.class} [#{target.name}] id [#{target.id}]...")
             # We have array of InventoryCollection, we want to use that data for post refresh
             Benchmark.realtime_block(:manager_refresh_post_processing) { manager_refresh_post_processing(ems, target, parsed) }
