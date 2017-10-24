@@ -46,6 +46,7 @@ if options[:list]
   exit
 end
 opt_parser.abort(opt_parser.help) unless worker_class
+
 unless ::MIQ_WORKER_TYPES.keys.include?(worker_class)
   puts "ERR:  `#{worker_class}` WORKER CLASS NOT FOUND!  Please run with `-l` to see possible worker class names."
   exit 1
