@@ -27,7 +27,7 @@ opt_parser = OptionParser.new do |opts|
     options[:guid] = val
   end
 
-  opts.on("-e=ems_id", "--ems-id=ems_id", "Provide an ems id to a provider worker.") do |val|
+  opts.on("-e=ems_id", "--ems-id=ems_id,ems_id", Array, "Provide a list of ems ids (without spaces) to a provider worker. This requires, at least one argument.") do |val|
     options[:ems_id] = val
   end
 
@@ -46,7 +46,6 @@ if options[:list]
   exit
 end
 opt_parser.abort(opt_parser.help) unless worker_class
-
 unless ::MIQ_WORKER_TYPES.keys.include?(worker_class)
   puts "ERR:  `#{worker_class}` WORKER CLASS NOT FOUND!  Please run with `-l` to see possible worker class names."
   exit 1
@@ -65,7 +64,7 @@ unless options[:dry_run]
   runner_options = {}
 
   if options[:ems_id]
-    create_options[:queue_name] = "ems_#{options[:ems_id]}"
+    create_options[:queue_name] = options[:ems_id].length == 1 ? "ems_#{options[:ems_id].first}" : options[:ems_id].collect { |id| "ems_#{id}" }
     runner_options[:ems_id]     = options[:ems_id]
   end
 
