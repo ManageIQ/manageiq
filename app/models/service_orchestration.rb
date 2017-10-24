@@ -1,6 +1,7 @@
 class ServiceOrchestration < Service
   include ServiceOrchestrationMixin
   include ServiceOrchestrationOptionsMixin
+  include_concern 'ProvisionTagging'
 
   # read from DB or parse from dialog
   def stack_name
@@ -81,6 +82,7 @@ class ServiceOrchestration < Service
     add_stack_to_resource
     link_orchestration_template
     assign_vms_owner
+    apply_provisioning_tags
   end
 
   def my_zone
