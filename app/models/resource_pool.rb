@@ -1,12 +1,12 @@
 class ResourcePool < ApplicationRecord
   include TenantIdentityMixin
+  include DeprecationMixin
 
   acts_as_miq_taggable
 
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   has_many   :miq_events,            :as => :target, :dependent => :destroy
 
-  include SerializedEmsRefObjMixin
   include FilterableMixin
 
   include RelationshipMixin
@@ -45,6 +45,7 @@ class ResourcePool < ApplicationRecord
 
   alias_method :add_resource_pool, :set_child
   alias_method :remove_resource_pool, :remove_child
+  deprecate_attribute :ems_ref_obj, :ems_ref
 
   def remove_all_resource_pools
     remove_all_children(:of_type => 'ResourcePool')

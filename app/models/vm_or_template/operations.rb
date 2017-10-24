@@ -11,10 +11,10 @@ module VmOrTemplate::Operations
 
   def raw_clone(name, folder, pool = nil, host = nil, datastore = nil, powerOn = false, template_flag = false, transform = nil, config = nil, customization = nil, disk = nil)
     raise _("VM has no EMS, unable to clone") unless ext_management_system
-    folder_mor    = folder.ems_ref_obj    if folder.respond_to?(:ems_ref_obj)
-    pool_mor      = pool.ems_ref_obj      if pool.respond_to?(:ems_ref_obj)
-    host_mor      = host.ems_ref_obj      if host.respond_to?(:ems_ref_obj)
-    datastore_mor = datastore.ems_ref_obj if datastore.respond_to?(:ems_ref_obj)
+    folder_mor    = folder.ems_ref    if folder.respond_to?(:ems_ref)
+    pool_mor      = pool.ems_ref      if pool.respond_to?(:ems_ref)
+    host_mor      = host.ems_ref      if host.respond_to?(:ems_ref)
+    datastore_mor = datastore.ems_ref if datastore.respond_to?(:ems_ref)
     run_command_via_parent(:vm_clone, :name => name, :folder => folder_mor, :pool => pool_mor, :host => host_mor, :datastore => datastore_mor, :powerOn => powerOn, :template => template_flag, :transform => transform, :config => config, :customization => customization, :disk => disk)
   end
 
@@ -33,8 +33,8 @@ module VmOrTemplate::Operations
 
   def raw_mark_as_vm(pool, host = nil)
     raise _("VM has no EMS, unable to mark as vm") unless ext_management_system
-    pool_mor = pool.ems_ref_obj if pool.respond_to?(:ems_ref_obj)
-    host_mor = host.ems_ref_obj if host.respond_to?(:ems_ref_obj)
+    pool_mor = pool.ems_ref if pool.respond_to?(:ems_ref)
+    host_mor = host.ems_ref if host.respond_to?(:ems_ref)
     run_command_via_parent(:vm_mark_as_vm, :pool => pool_mor, :host => host_mor)
   end
 

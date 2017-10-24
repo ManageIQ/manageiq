@@ -33,7 +33,6 @@ class Storage < ApplicationRecord
 
   acts_as_miq_taggable
 
-  include SerializedEmsRefObjMixin
   include FilterableMixin
   include SupportsFeatureMixin
   include Metric::CiMixin
@@ -41,6 +40,7 @@ class Storage < ApplicationRecord
   include AsyncDeleteMixin
   include AvailabilityMixin
   include TenantIdentityMixin
+  include DeprecationMixin
 
   virtual_column :v_used_space,                   :type => :integer
   virtual_column :v_used_space_percent_of_total,  :type => :integer
@@ -62,6 +62,8 @@ class Storage < ApplicationRecord
   virtual_column :total_managed_registered_vms,   :type => :integer
   virtual_column :total_unmanaged_vms,            :type => :integer  # uses is handled via class method that aggregates
   virtual_column :count_of_vmdk_disk_files,       :type => :integer
+
+  deprecate_attribute :ems_ref_obj, :ems_ref
 
   SUPPORTED_STORAGE_TYPES = %w( VMFS NFS NFS41 FCP ISCSI GLUSTERFS )
 

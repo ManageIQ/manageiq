@@ -4,6 +4,7 @@ class EmsCluster < ApplicationRecord
   include_concern 'CapacityPlanning'
   include EventMixin
   include TenantIdentityMixin
+  include DeprecationMixin
 
   acts_as_miq_taggable
 
@@ -35,7 +36,6 @@ class EmsCluster < ApplicationRecord
   virtual_has_many :resource_pools, :uses => :all_relationships
   has_many :failover_hosts, -> { failover }, :class_name => "Host"
 
-  include SerializedEmsRefObjMixin
   include ProviderObjectMixin
 
   include FilterableMixin
@@ -52,6 +52,8 @@ class EmsCluster < ApplicationRecord
   include MiqPolicyMixin
   include AsyncDeleteMixin
 
+  deprecate_attribute :ems_ref_obj, :ems_ref
+
   #
   # Provider Object methods
   #
@@ -59,7 +61,7 @@ class EmsCluster < ApplicationRecord
 
   def provider_object(connection)
     raise NotImplementedError unless ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
-    connection.getVimClusterByMor(ems_ref_obj)
+    connection.getVimClusterByMor(ems_ref)
   end
 
   def provider_object_release(handle)
@@ -304,7 +306,6 @@ class EmsCluster < ApplicationRecord
       end
 
       host.ems_ref                = host_mor
-      host.ems_ref_obj            = host_mor
       host.ext_management_system  = ext_management_system
       host.save!
       hosts << host

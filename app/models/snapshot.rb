@@ -1,15 +1,17 @@
 require 'time'
 
 class Snapshot < ApplicationRecord
+  include DeprecationMixin
+
   acts_as_tree
 
   belongs_to :vm_or_template
 
-  include SerializedEmsRefObjMixin
-
   serialize :disks, Array
 
   after_create  :after_create_callback
+
+  deprecate_attribute :ems_ref_obj, :ems_ref
 
   def after_create_callback
     MiqEvent.raise_evm_event_queue(vm_or_template, "vm_snapshot_complete", attributes) unless self.is_a_type?(:system_snapshot) || self.not_recently_created?
