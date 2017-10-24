@@ -38,6 +38,8 @@ class MiqVimBroker
       require 'httpclient'  # needed for exception classes
       require 'MiqVimDump'
       require 'MiqVimVdlMod'
+      require 'MiqVimDrbDebug'
+
       #
       # Modify the meta-class of DRb::DRbObject
       # so we can alias class methods
