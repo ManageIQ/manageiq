@@ -296,7 +296,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
     - Add server MB usage to rake evm:status and status_full. [(#15457)](https://github.com/ManageIQ/manageiq/pull/15457)
 
 - Providers
-  - Add a virtual column for `supports_block_storage?` and `supports_cloud_object_store_container_create?` [(#15600)](https://github.com/ManageIQ/manageiq/pull/15600)
   - Containers
     - Add product features for provider disable UI [(#15592)](https://github.com/ManageIQ/manageiq/pull/15592)
     - Raise creation event batched job [(#15679)](https://github.com/ManageIQ/manageiq/pull/15679)
@@ -336,7 +335,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
   - Seeding timeout [(#15595)](https://github.com/ManageIQ/manageiq/pull/15595)
   - RBAC: Add Storage feature to container administrator role [(#15689)](https://github.com/ManageIQ/manageiq/pull/15689)
   - Reporting: Do not limit width of table when downloading report in text format [(#15750)](https://github.com/ManageIQ/manageiq/pull/15750)
-  - Authenticatin: Normalize the username entered at login to lowercase [(#15716)](https://github.com/ManageIQ/manageiq/pull/15716)
 
 - Providers
   - Containers
@@ -345,13 +343,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
     - Remove remains of container definition [(#15721)](https://github.com/ManageIQ/manageiq/pull/15721)
     - Use archived? instead of ems_id.nil? [(#15633)](https://github.com/ManageIQ/manageiq/pull/15633)
   - Inventory
-    - Return VMs and Templates for EMS prev_relats [(#15671)](https://github.com/ManageIQ/manageiq/pull/15671)
     - Fix bug in InventoryCollection#find_by with non-default ref [(#15648)](https://github.com/ManageIQ/manageiq/pull/15648)
   - Remove methods for Azure sample orchestration [(#15752)](https://github.com/ManageIQ/manageiq/pull/15752)
   - VMware Infrastructure: Fix Core Refresher if there is no ems_vmware setting [(#15690)](https://github.com/ManageIQ/manageiq/pull/15690)
-
-- REST API
-  - Allow operator characters on the RHS of filter [(#15534)](https://github.com/ManageIQ/manageiq/pull/15534)
 
 ## Unreleased - as of Sprint 65 end 2017-07-24
 
@@ -396,9 +390,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 - Platform
   - Fix CI after adding new columns to custom_buttons table [(#15581)](https://github.com/ManageIQ/manageiq/pull/15581)
-  - Check for messages key in prefetch_below_threshold? [(#15620)](https://github.com/ManageIQ/manageiq/pull/15620)
   - Reporting
-    - Cast virtual attribute 'Hardware#ram_size_in_bytes' to bigint [(#15554)](https://github.com/ManageIQ/manageiq/pull/15554)
 
 - Providers
   - Pluggability: change ManageIQ::Environment to run bundle install on plugin_setup [(#15589)](https://github.com/ManageIQ/manageiq/pull/15589)
@@ -411,11 +403,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+64+Ending+Jul+10%2C+2017%22+label%3Aenhancement)
 
-- Automate
-  - Provisioning: Add validate_blacklist method for VM pre-provisioning [(#15513)](https://github.com/ManageIQ/manageiq/pull/15513)
-
 - Platform
-  - Make namespace into a virtual attribute [(#15532)](https://github.com/ManageIQ/manageiq/pull/15532)
   - Use OpenShift API to control the Ansible container [(#15492)](https://github.com/ManageIQ/manageiq/pull/15492)
   - Allow MiqWorker.required_roles to be a lambda [(#15522)](https://github.com/ManageIQ/manageiq/pull/15522)
   - MulticastLogger#reopen shouldn't be used because it's backed by other loggers [(#15512)](https://github.com/ManageIQ/manageiq/pull/15512)
@@ -460,7 +448,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
   - Alerts: Fail explicitly for MAS validation failure [(#15473)](https://github.com/ManageIQ/manageiq/pull/15473)
   - Workers
     - Fix pseudo heartbeating when HB file missing [(#15483)](https://github.com/ManageIQ/manageiq/pull/15483)
-    - Only remove my process' pidfile. [(#15491)](https://github.com/ManageIQ/manageiq/pull/15491)
     - Add UiConstants back to the web server worker mixin [(#15518)](https://github.com/ManageIQ/manageiq/pull/15518)
 
 - Providers
@@ -470,9 +457,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - REST API
   - Make request APIs consistent by restricting access to automation/provision requests to admin/requester [(#15186)](https://github.com/ManageIQ/manageiq/pull/15186)
   - Render ids in compressed form in API responses [(#15430)](https://github.com/ManageIQ/manageiq/pull/15430)
-  - Use correct identifier for VM Retirement [(#15509)](https://github.com/ManageIQ/manageiq/pull/15509)
   - Return only requested attributes [(#14734)](https://github.com/ManageIQ/manageiq/pull/14734)
-  - Return Not Found on Snapshots Delete actions  [(#15489)](https://github.com/ManageIQ/manageiq/pull/15489)
 
 ## Unreleased - as of Sprint 63 end 2017-06-19
 
@@ -518,7 +503,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
   - Services: Add orchestration stack my_zone. [(#15334)](https://github.com/ManageIQ/manageiq/pull/15334)
 
 - Platform
-  - Add vm_migrate_task factory. [(#15332)](https://github.com/ManageIQ/manageiq/pull/15332)
   - FileDepotFtp: FTP.nlst cannot distinguish empty from non-existent dir [(#9127)](https://github.com/ManageIQ/manageiq/pull/9127)
   - Put back region_description method that was accidentally extracted [(#15372)](https://github.com/ManageIQ/manageiq/pull/15372)
   - RBAC
@@ -798,6 +782,100 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
   - Return correct resource hrefs [(#14549)](https://github.com/ManageIQ/manageiq/pull/14549)
   - Removing ems_events from config/api.yml [(#14699)](https://github.com/ManageIQ/manageiq/pull/14699)
 
+# Fine-4
+
+## Added
+- Automate
+  - Add ae_state_max_retries to root object. [(#46)](https://github.com/ManageIQ/manageiq-automation_engine/pull/46)
+  - Add missing service model change for calculating active quota counts for Service requests. [(#69)](https://github.com/ManageIQ/manageiq-automation_engine/pull/69)
+- Platform
+  - Only remove my process' pidfile. [(#15491)](https://github.com/ManageIQ/manageiq/pull/15491)
+- Providers
+  - Implement :reboot_guest for VM [(#52)](https://github.com/ManageIQ/manageiq-providers-ovirt/pull/52)
+  - Add additional logging into the websocket proxy for easier debugging [(#15428)](https://github.com/ManageIQ/manageiq/pull/15428)
+  - Add validate_blacklist method for VM pre-provisioning [(#15513)](https://github.com/ManageIQ/manageiq/pull/15513)
+  - Add blacklists for VM username and password when provisioning [(#88)](https://github.com/ManageIQ/manageiq-providers-azure/pull/88)
+  - ovirt-networking: using profiles [(#14991)](https://github.com/ManageIQ/manageiq/pull/14991)
+  - Disable delete button for the active snapshot on oVirt [(#54)](https://github.com/ManageIQ/manageiq-providers-ovirt/pull/54)
+  - Update provision requirements check to allow exact matches [(#72)](https://github.com/ManageIQ/manageiq-providers-openstack/pull/72)
+  - Add config option to skip container_images [(#14606)](https://github.com/ManageIQ/manageiq/pull/14606)
+  - Create Snapshot for Azure [(#15865)](https://github.com/ManageIQ/manageiq/pull/15865)
+  - Option needed for new ems_refresh.openshift.store_unused_images setting [(#11)](https://github.com/ManageIQ/manageiq-providers-kubernetes/pull/11)
+- RBAC
+  - Include EvmRole-reader as read-only role in the fixtures [(#15647)](https://github.com/ManageIQ/manageiq/pull/15647)
+- Services
+  - Add group in manageiq payload for ansible automation. [(#15787)](https://github.com/ManageIQ/manageiq/pull/15787)
+- Smart State
+  - Snapshot Support for Non-Managed Disks SSA [(#15960)](https://github.com/ManageIQ/manageiq/pull/15960)
+  - Increase Timeouts and Worker Memory for Azure SSA [(#16016)](https://github.com/ManageIQ/manageiq/pull/16016)
+
+## Fixed
+- Authentication
+  - Normalize the username entered at login to lowercase [(#15716)](https://github.com/ManageIQ/manageiq/pull/15716)
+  - Converting userids to UPN format to avoid duplicate user records [(#15535)](https://github.com/ManageIQ/manageiq/pull/15535)
+- Automate
+  - Add validate_blacklist method for VM pre-provisioning [(#15513)](https://github.com/ManageIQ/manageiq/pull/15513)
+  - Fix vm_migrate_task statemachine_task_status value. [(#38)](https://github.com/ManageIQ/manageiq-automation_engine/pull/38)
+  - Need to pass the user's group in to automate when the provision starts. [(#61)](https://github.com/ManageIQ/manageiq-automation_engine/pull/61)
+  - miq_group_id is required by automate. [(#15760)](https://github.com/ManageIQ/manageiq/pull/15760)
+- Chargeback
+  - Delete tag assignments when deleting a tag that is referenced in an assignment [(#16039)](https://github.com/ManageIQ/manageiq/pull/16039)
+- Core
+  - Do not limit width of table when downloading report in text format [(#15750)](https://github.com/ManageIQ/manageiq/pull/15750)
+  - Check for messages key in prefetch_below_threshold? [(#15620)](https://github.com/ManageIQ/manageiq/pull/15620)
+  - Give active queue worker time to complete message [(#15529)](https://github.com/ManageIQ/manageiq/pull/15529)
+  - Fix constant reference in ManagerRefresh::Inventory::AutomationManager [(#14984)](https://github.com/ManageIQ/manageiq/pull/14984)
+- Platform
+  - Add vm_migrate_task factory. [(#15332)](https://github.com/ManageIQ/manageiq/pull/15332)
+  - Check for messages key in prefetch_below_threshold? [(#15620)](https://github.com/ManageIQ/manageiq/pull/15620)
+  - Normalize the username entered at login to lowercase [(#15716)](https://github.com/ManageIQ/manageiq/pull/15716)
+  - Collect log follows symlink recursively to the origin file [(#15420)](https://github.com/ManageIQ/manageiq/pull/15420)
+- Providers
+  - Return VMs and Templates for EMS prev_relats [(#15671)](https://github.com/ManageIQ/manageiq/pull/15671)
+  - Fix VM password restrictions [(#87)](https://github.com/ManageIQ/manageiq-providers-azure/pull/87)
+  - Fix unhandled exception in metrics collection when missing credentials [(#53)](https://github.com/ManageIQ/manageiq-providers-ovirt/pull/53)
+  - Add explicit capture threshold for container [(#15311)](https://github.com/ManageIQ/manageiq/pull/15311)
+  - Avoid Tower in notifications for embedded ansible [(#15478)](https://github.com/ManageIQ/manageiq/pull/15478)
+  - Pass userid before going to automation [(#54)](https://github.com/ManageIQ/manageiq-providers-kubernetes/pull/54)
+  - Manager name not updated on foreman provider edit [(#5)](https://github.com/ManageIQ/manageiq-providers-foreman/pull/5)
+  - Remove the expose of manager to Embedded Ansible Job in service model. [(#47)](https://github.com/ManageIQ/manageiq-automation_engine/pull/47)
+  - Avoid Tower in notifications for embedded ansible [(#10)](https://github.com/ManageIQ/manageiq-providers-ansible_tower/pull/10)
+  - Choose build pod by name AND namespace [(#15575)](https://github.com/ManageIQ/manageiq/pull/15575)
+  - disconnect_storage should be called once [(#62)](https://github.com/ManageIQ/manageiq-providers-ovirt/pull/62)
+  - Matching on array order is failing sporadically [(#15692)](https://github.com/ManageIQ/manageiq/pull/15692)
+  - Revamp create_vm_script to use configuration [(#9)](https://github.com/ManageIQ/manageiq-providers-scvmm/pull/9)
+  - Force array context for VMs, hosts, vnets and images [(#13)](https://github.com/ManageIQ/manageiq-providers-scvmm/pull/13)
+  - Don't break refresh if a flavor couldn't be found [(#69)](https://github.com/ManageIQ/manageiq-providers-openstack/pull/69)
+  - Fixed cases causing waiting on timeout in vm_import [(#73)](https://github.com/ManageIQ/manageiq-providers-ovirt/pull/73)
+  - fix builds namespace matching [(#33)](https://github.com/ManageIQ/manageiq-providers-openshift/pull/33)
+  - Handle case where do_volume_creation_check gets a nil from Fog [(#73)](https://github.com/ManageIQ/manageiq-providers-openstack/pull/73)
+  - Fix non existent container showing in report [(#15405)](https://github.com/ManageIQ/manageiq/pull/15405)
+  - 'try' in case its a v2 tower which doesn't have v3 attr [(#17)](https://github.com/ManageIQ/manageiq-providers-ansible_tower/pull/17)
+  - Quota - Calculate quota values for active provisions. [(#15466)](https://github.com/ManageIQ/manageiq/pull/15466)
+  - Do not downcase the amazon IAM username [(#296)](https://github.com/ManageIQ/manageiq-providers-amazon/pull/296)
+  - Skip invalid container_images [(#94)](https://github.com/ManageIQ/manageiq-providers-kubernetes/pull/94)
+  - Proxy support for cloning ansible repo and add provider [(#15762)](https://github.com/ManageIQ/manageiq/pull/15762)
+  - Check if project_id is accessible [(#23)](https://github.com/ManageIQ/manageiq-providers-ansible_tower/pull/23)
+- RBAC
+  - Move rule for network manager to belongsto filter [(#16063)](https://github.com/ManageIQ/manageiq/pull/16063)
+- Reporting
+  - Cast virtual attribute 'Hardware#ram_size_in_bytes' to bigint [(#15554)](https://github.com/ManageIQ/manageiq/pull/15554)
+  - Unconditionally seed all standard reports and widgets [(#16062)](https://github.com/ManageIQ/manageiq/pull/16062)
+- REST API
+  - Return Not Found on Snapshots Delete actions  [(#15489)](https://github.com/ManageIQ/manageiq/pull/15489)
+  - Use correct identifier for VM Retirement [(#15509)](https://github.com/ManageIQ/manageiq/pull/15509)
+  - Allow operator characters on the RHS of filter [(#15534)](https://github.com/ManageIQ/manageiq/pull/15534)
+  - Set the current userid when running a report [(#30)](https://github.com/ManageIQ/manageiq-api/pull/30)
+- Security
+  - Use nil ca_certs to trust system CAs [(#63)](https://github.com/ManageIQ/manageiq-providers-ovirt/pull/63)
+- Services
+  - Set user's group to the requester group. [(#15696)](https://github.com/ManageIQ/manageiq/pull/15696)
+- User Interface
+  - Fix for <Choose> found as option in drop down service dialogs [(#15456)](https://github.com/ManageIQ/manageiq/pull/15456)
+  - Don't unconditionally update verify_ssl [(#52)](https://github.com/ManageIQ/manageiq-automation_engine/pull/52)]
+  - Login Start Pages dropdown list - Clouds menus [(#15017)](https://github.com/ManageIQ/manageiq/pull/15017)
+  - Fix for custom button not passing target object to dynamic dialog fields [(#15810)](https://github.com/ManageIQ/manageiq/pull/15810)
+
 # Fine-3
 
 ## Added
@@ -845,7 +923,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
   - miq_group_id is required by automate. [(#15760)](https://github.com/ManageIQ/manageiq/pull/15760)
   - Control: Remove the policy checking for request_host_vmotion_enabled. [(#14429)](https://github.com/ManageIQ/manageiq/pull/14429)
   - Provisioning
-    - Add validate_blacklist method for VM pre-provisioning [(#15513)](https://github.com/ManageIQ/manageiq/pull/15513)
     - Filter out the hosts with the selected network. [(#14946)](https://github.com/ManageIQ/manageiq/pull/14946)
     - Add :sort_by: :none to GCE Boot Disk Size dialog field. [(#14981)](https://github.com/ManageIQ/manageiq/pull/14981)
     - Force status removal and default value [(#15685)](https://github.com/ManageIQ/manageiq/pull/15685)
@@ -858,28 +935,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
   - Give active queue worker time to complete message [(#15529)](https://github.com/ManageIQ/manageiq/pull/15529)
   - Authentication
     - Check the current region when creating a new user [(#15516)](https://github.com/ManageIQ/manageiq/pull/15516)
-    - Normalize the username entered at login to lowercase [(#15716)](https://github.com/ManageIQ/manageiq/pull/15716)
   - Format time interval for log message [(#15370)](https://github.com/ManageIQ/manageiq/pull/15370)
-  - Add vm_migrate_task factory. [(#15332)](https://github.com/ManageIQ/manageiq/pull/15332)
   - Start Apache if roles were changed and it is needed by the current roles [(#15078)](https://github.com/ManageIQ/manageiq/pull/15078)
   - Add a notification for when the embedded ansible role is activated [(#14867)](https://github.com/ManageIQ/manageiq/pull/14867)
   - Reporting
     - Do not limit width of table when downloading report in text format [(#15750)](https://github.com/ManageIQ/manageiq/pull/15750)
     - Fix chargeback report with unassigned rates [(#15580)](https://github.com/ManageIQ/manageiq/pull/15580)
-    - Cast virtual attribute 'Hardware#ram_size_in_bytes' to bigint [(#15554)](https://github.com/ManageIQ/manageiq/pull/15554)
     - Fix key for regexp in miq_expression.yaml [(#15452)](https://github.com/ManageIQ/manageiq/pull/15452)
     - Include cloud instances in Powered On/Off Report [(#15333)](https://github.com/ManageIQ/manageiq/pull/15333)
     - Correct field names for reports [(#14905)](https://github.com/ManageIQ/manageiq/pull/14905)
     - Changed report name to be consistent with actual produced report. [(#14646)](https://github.com/ManageIQ/manageiq/pull/14646)
   - Fix constant reference in ManagerRefresh::Inventory::AutomationManager [(#14984)](https://github.com/ManageIQ/manageiq/pull/14984)
   - Do not delete report if task associated with this report deleted [(#15134)](https://github.com/ManageIQ/manageiq/pull/15134)
-  - Workers
-    - Only remove my process' pidfile. [(#15491)](https://github.com/ManageIQ/manageiq/pull/15491)
-  - Check for messages key in prefetch_below_threshold? [(#15620)](https://github.com/ManageIQ/manageiq/pull/15620)
 
 - Providers
   - Inventory
-    - Return VMs and Templates for EMS prev_relats [(#15671)](https://github.com/ManageIQ/manageiq/pull/15671)
   - Ansible Tower: Let ansible worker gracefully stop [(#15643)](https://github.com/ManageIQ/manageiq/pull/15643)
   - Limit CloudTenants' related VMs to the non-archived ones [(#15329)](https://github.com/ManageIQ/manageiq/pull/15329)
   - Containers
@@ -892,11 +962,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
   - Virtual Infrastructure: Add a method to InfraManager to retrieve Hosts without EmsCluster [(#14884)](https://github.com/ManageIQ/manageiq/pull/14884)
 
 - REST API
-  - Allow operator characters on the RHS of filter [(#15534)](https://github.com/ManageIQ/manageiq/pull/15534)
   - Fix virtual attribute selection [(#15387)](https://github.com/ManageIQ/manageiq/pull/15387)
   - Make TokenManager#token_ttl callable (evaluated at call time) [(#15124)](https://github.com/ManageIQ/manageiq/pull/15124)
-  - Return Not Found on Snapshots Delete actions  [(#15489)](https://github.com/ManageIQ/manageiq/pull/15489)
-  - Use correct identifier for VM Retirement [(#15509)](https://github.com/ManageIQ/manageiq/pull/15509)
 
 - SmartState: Fixed bug: one call to Job#set_status from \`VmScan#call_snapshot_delete' has one extra parameter [(#14964)](https://github.com/ManageIQ/manageiq/pull/14964)
 
