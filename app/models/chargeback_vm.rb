@@ -47,6 +47,16 @@ class ChargebackVm < Chargeback
     :entity                   => :binary
   )
 
+  def self.refresh_dynamic_metric_columns
+    dynamic_columns = CloudVolume.pluck(:volume_type).uniq.each_with_object({}) do |volume_type, result|
+      [:metric, :cost].collect do |type|
+        result["storage_allocated_#{volume_type || 'unclassified'}_#{type}"] = :integer
+      end
+    end
+
+    set_columns_hash(dynamic_columns)
+  end
+
   def self.build_results_for_report_ChargebackVm(options)
     # Options: a hash transformable to Chargeback::ReportOptions
 
