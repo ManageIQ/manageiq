@@ -346,11 +346,6 @@ describe MiqWorker do
     end
 
     context "#command_line" do
-      it "with nil worker_options" do
-        allow(@worker).to receive(:worker_options).and_return(nil)
-        expect { @worker.command_line }.to raise_error(ArgumentError)
-      end
-
       it "without guid in worker_options" do
         allow(@worker).to receive(:worker_options).and_return({})
         expect { @worker.command_line }.to raise_error(ArgumentError)
@@ -369,7 +364,10 @@ describe MiqWorker do
           ENV['APPLIANCE'] = 'true'
           cmd = @worker.command_line
           expect(cmd).to start_with("nice +10")
-          expect(cmd).to end_with("--ems-id 1234 --guid #{@worker.guid} --heartbeat MiqWorker")
+          expect(cmd).to include("--ems-id 1234")
+          expect(cmd).to include("--guid #{@worker.guid}")
+          expect(cmd).to include("--heartbeat")
+          expect(cmd).to end_with("MiqWorker")
         ensure
           # ENV['x'] = nil deletes the key because ENV accepts only string values
           ENV['APPLIANCE'] = old_env
