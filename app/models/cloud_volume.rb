@@ -20,7 +20,7 @@ class CloudVolume < ApplicationRecord
   acts_as_miq_taggable
 
   def self.volume_types
-    pluck(:volume_type).uniq.compact
+    where.not(:volume_type => nil).group(:volume_type).pluck(:volume_type)
   end
 
   def self.available
