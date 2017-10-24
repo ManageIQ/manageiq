@@ -151,10 +151,12 @@ class Tenant < ApplicationRecord
   end
 
   def combined_quotas
-    tenant_quotas.each_with_object({}) do |q, h|
+    TenantQuota.quota_definitions.each_with_object({}) do |d, h|
+      scope_name, _ = d
+      q = tenant_quotas.send(scope_name).take || tenant_quotas.build(:name => scope_name, :value => 0)
       h[q.name.to_sym] = q.quota_hash
       h[q.name.to_sym][:allocated]   = q.allocated
-      h[q.name.to_sym][:available]   = q.available
+      h[q.name.to_sym][:available]   = q.available unless q.new_record?
       h[q.name.to_sym][:used]        = q.used
     end.reverse_merge(TenantQuota.quota_definitions)
   end

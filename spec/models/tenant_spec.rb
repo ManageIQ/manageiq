@@ -618,6 +618,7 @@ describe Tenant do
     let(:parent_tenant) { FactoryGirl.create(:tenant, :parent => default_tenant) }
     let(:child_tenant1) { FactoryGirl.create(:tenant, :parent => parent_tenant) }
     let(:child_tenant2) { FactoryGirl.create(:tenant, :parent => parent_tenant) }
+    let(:child_tenant3) { FactoryGirl.create(:tenant, :parent => parent_tenant) }
 
     before do
       parent_tenant.set_quotas(
@@ -702,6 +703,22 @@ describe Tenant do
       expect(combined[:cpu_allocated][:used]).to              eql 2
       expect(combined[:storage_allocated][:used]).to          eql 2
       expect(combined[:templates_allocated][:used]).to        eql 2
+    end
+
+    it "combined quotas get used value when no quotas are defined for tenant" do
+      combined = child_tenant3.combined_quotas
+
+      expect(combined[:vms_allocated][:used]).to              eql 2
+      expect(combined[:mem_allocated][:used]).to              eql 2
+      expect(combined[:cpu_allocated][:used]).to              eql 2
+      expect(combined[:storage_allocated][:used]).to          eql 2
+      expect(combined[:templates_allocated][:used]).to        eql 2
+
+      expect(combined[:vms_allocated][:value]).to             eql 0.0
+      expect(combined[:mem_allocated][:value]).to             eql 0.0
+      expect(combined[:cpu_allocated][:value]).to             eql 0.0
+      expect(combined[:storage_allocated][:value]).to         eql 0.0
+      expect(combined[:templates_allocated][:value]).to       eql 0.0
     end
   end
 
