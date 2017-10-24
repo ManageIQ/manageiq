@@ -322,31 +322,28 @@ class MiqQueue < ApplicationRecord
   #   used to put a new item on the queue.
   #
   def self.put_or_update(find_options)
-    find_options  = default_get_options(find_options)
-    conds = find_options.dup
+    find_options = default_get_options(find_options)
 
     # Since args are a serializable field, remove them and manually dump them
-    #   for proper comparison.  NOTE: hashes may not compare correctly due to
-    #   it's unordered nature.
-    where_scope = if conds.key?(:args)
-                    args = YAML.dump(conds.delete(:args))
-                    MiqQueue.where(conds).where(['args = ?', args])
-                  else
-                    MiqQueue.where(conds)
-                  end
+    #   for proper comparison.
+    where_scope =
+      if find_options.key?(:args)
+        MiqQueue.where(find_options.except(:args)).where(['args = ?', find_options[:args].try(:to_yaml)])
+      else
+        MiqQueue.where(find_options)
+      end
 
     msg = nil
     loop do
       msg = where_scope.order("priority, id").first
 
       save_options = block_given? ? yield(msg, find_options) : nil
-      save_options = save_options.dup unless save_options.nil?
 
       # Add a new queue item based on the returned save options, or the find
       #   options if no save options were given.
       if msg.nil?
         put_options = save_options || find_options
-        put_options.delete(:state)
+        put_options = put_options.except(:state) if put_options.key?(:state)
         msg = MiqQueue.put(put_options)
         break
       end
@@ -356,7 +353,7 @@ class MiqQueue < ApplicationRecord
         unless save_options.nil?
           if save_options.key?(:msg_timeout) && (msg.msg_timeout > save_options[:msg_timeout])
             _log.warn("#{MiqQueue.format_short_log_msg(msg)} ignoring request to decrease timeout from <#{msg.msg_timeout}> to <#{save_options[:msg_timeout]}>")
-            save_options.delete(:msg_timeout)
+            save_options = save_options.except(:msg_timeout)
           end
 
           msg.update_attributes!(save_options)
