@@ -34,6 +34,15 @@ describe ChargebackRateDetail do
 
       expect(rates.map { |x| x.metric }.compact).to match_array(expected_metrics)
     end
+
+    context 'when cloud volumes are present' do
+      let!(:cloud_volumes) { FactoryGirl.create_list(:cloud_volume_openstack, 3) }
+
+      it 'loads chargeback rates with sub metric from CloudVolumes' do
+        rates = ChargebackRateDetail.default_rate_details_for('Storage')
+        expect(rates.map(&:sub_metric).compact).to match_array(cloud_volumes.map(&:volume_type).uniq.compact)
+      end
+    end
   end
 
   describe "#find_rate" do
