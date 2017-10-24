@@ -204,7 +204,9 @@
             :method: :allowed_clusters
           :auto_select_single: true
           :description: Name
-          :required: false
+          :required: true
+          :required_method: :validate_placement
+          :required_description: Cluster Name
           :display: :show
           :data_type: :integer
         :cluster_filter:
