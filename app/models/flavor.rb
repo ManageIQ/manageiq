@@ -35,7 +35,7 @@ class Flavor < ApplicationRecord
       :name                => name,
       :num_cpus            => cpus,
       :memory_gigabytes    => memory.bytes / 1.0.gigabytes,
-      :root_disk_gigabytes => root_disk_size.nil? ? nil : root_disk_size.bytes / 1.0.gigabytes
+      :root_disk_gigabytes => root_disk_size && root_disk_size.bytes / 1.0.gigabytes
     }
   end
 

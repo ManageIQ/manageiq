@@ -20,7 +20,7 @@ module MiqReport::Generator::Sorting
                         when :string, :text, :boolean             then "00ff".hex.chr   # "\xFF"
                         when :integer, :fixnum, :decimal, :float  then @table.data.collect { |d| d.data[sb] }.compact.max.to_i + 1
                         when :datetime                            then Time.at(@table.data.collect { |d| d.data[sb] }.compact.max.to_i + 1).utc
-                        when :date                                then max = @table.data.collect { |d| d.data[sb] }.compact.max; max.nil? ? nil : max + 1
+                        when :date                                then max = @table.data.collect { |d| d.data[sb] }.compact.max; max && max + 1
                         end
     end
 

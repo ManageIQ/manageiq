@@ -96,7 +96,7 @@ module MiqCockpit
       if @opts[:web_ui_url]
         url = URI.parse(@opts[:web_ui_url])
       else
-        server = MiqRegion.my_region.nil? ? nil : MiqRegion.my_region.remote_ui_miq_server
+        server = MiqRegion.my_region.try(:remote_ui_miq_server)
         unless server.nil?
           opts = { :port => 3000 }
           url = MiqCockpit::WS.url_from_server(server, opts)

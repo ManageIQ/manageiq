@@ -330,7 +330,7 @@ class MiqCompare
       sub_rec = eval_section(rec, section, id)
       columns.each do |col|
         col = col[:name]
-        value = sub_rec.nil? ? nil : eval_column(sub_rec, col, id)
+        value = sub_rec && eval_column(sub_rec, col, id)
         value = EMPTY if value.nil?
         result_section[col] = {:_value_ => value}
       end

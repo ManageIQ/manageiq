@@ -19,7 +19,7 @@ module AnsibleAuthentications
 
   def ansible_secret_key
     auth = authentication_type(ANSIBLE_SECRET_KEY_TYPE)
-    auth.nil? ? nil : auth.auth_key
+    auth.try(:auth_key)
   end
 
   def ansible_secret_key=(key)

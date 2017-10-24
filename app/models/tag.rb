@@ -53,7 +53,7 @@ class Tag < ApplicationRecord
 
   def self.parse(list)
     if list.kind_of?(Array)
-      tag_names = list.collect { |tag| tag.nil? ? nil : tag.to_s }
+      tag_names = list.collect { |tag| tag.try(:to_s) }
       return tag_names.compact
     else
       tag_names = []

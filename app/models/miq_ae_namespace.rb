@@ -46,7 +46,7 @@ class MiqAeNamespace < ApplicationRecord
     end
 
     new_parts.each do |p|
-      found = create(:name => p, :parent_id => found.nil? ? nil : found.id)
+      found = create(:name => p, :parent_id => found.try(:id))
     end
 
     found

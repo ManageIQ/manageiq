@@ -99,7 +99,7 @@ class MiqReportResult < ApplicationRecord
   end
 
   def report=(val)
-    write_attribute(:report, val.nil? ? nil : val.to_hash)
+    write_attribute(:report, val.try(:to_hash))
   end
 
   def build_html_rows_for_legacy

@@ -678,7 +678,7 @@ class MiqAlert < ApplicationRecord
     return nil if miq_expression || hash_expression.nil? || hash_expression[:eval_method] == "nothing"
 
     options = self.class.expression_by_name(hash_expression[:eval_method])
-    options.nil? ? nil : substitute(options[:responds_to_events])
+    options && substitute(options[:responds_to_events])
   end
 
   def substitute(str)

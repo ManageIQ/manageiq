@@ -132,7 +132,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       set_or_default_hardware_field_values(vm)
 
       # Record the nic/lan setting on the template for validation checks at provision time.
-      @values[:src_vm_nics] = vm.hardware.nil? ? nil : vm.hardware.nics.collect(&:device_name).compact
+      @values[:src_vm_nics] = vm.hardware && vm.hardware.nics.collect(&:device_name).compact
       @values[:src_vm_lans] = vm.lans.collect(&:name).compact
       vlan = @values[:src_vm_lans].first
       vm_description = vm.description

@@ -5,6 +5,6 @@ module CockpitMixin
   end
 
   def cockpit_worker
-    cockpit_server.nil? ? nil : MiqCockpitWsWorker.fetch_worker_settings_from_server(cockpit_server)
+    cockpit_server && MiqCockpitWsWorker.fetch_worker_settings_from_server(cockpit_server)
   end
 end

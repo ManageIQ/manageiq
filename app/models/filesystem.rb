@@ -84,7 +84,7 @@ class Filesystem < ApplicationRecord
   end
 
   def image_name
-    ext = base_name.nil? ? nil : File.extname(base_name)
+    ext = base_name && File.extname(base_name)
     unless ext.nil?
       ext.sub!(".", "")
       ext.downcase!
@@ -94,7 +94,7 @@ class Filesystem < ApplicationRecord
   end
 
   def contents
-    binary_blob.nil? ? nil : binary_blob.binary
+    binary_blob.try(:binary)
   end
 
   def contents=(val)
@@ -145,7 +145,7 @@ class Filesystem < ApplicationRecord
     [:other_exec,  00001],
   ].each do |m, o|
     define_method("permission_#{m}?") do
-      return permissions.nil? ? nil : permissions.to_i(8) & o != 0
+      return permissions && permissions.to_i(8) & o != 0
     end
   end
 
