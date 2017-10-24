@@ -60,7 +60,7 @@ module ManagerRefresh::Inventory::Core
       has_inventory({
         :model_class                 => ::Vm,
         :manager_ref                 => [:uid_ems],
-        :inventory_object_attributes => %i(),
+        :inventory_object_attributes => %i(location name vendor),
       }.merge(options))
     end
   end
