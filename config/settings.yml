@@ -1197,3 +1197,5 @@
       :nice_delta: 1
     :cockpit_ws_worker:
       :count: 1
+:hawkular_tenant_labels:
+  :_hawkular_admin: Hawkular Admin
