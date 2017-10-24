@@ -78,6 +78,20 @@ module EmsRefresh::SaveInventoryNetwork
                          deletes,
                          [:ems_ref],
                          :cloud_subnets)
+
+    if ems.kind_of?(ManageIQ::Providers::Openstack::NetworkManager)
+      # TODO(lsmola) Remove once OpenStack uses graph refresh, where we can model separately saving of the Public and
+      # Private network. Till then, we need to deal with possibility of changing of the external_facing attribute and
+      # therefore of the STI class.
+      ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork.where(:external_facing => true).update_all(
+        :type => ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Public
+      )
+      ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork.where(:external_facing => false).update_all(
+        :type => ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private
+      )
+      # Reload the cached records, so we have correct types
+      ems.cloud_networks.reset
+    end
     store_ids_for_new_records(ems.cloud_networks, hashes, :ems_ref)
   end
 
