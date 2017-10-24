@@ -4,7 +4,7 @@ describe Vmdb::Gettext::Debug do
   let(:instance) do
     Class.new do
       include Vmdb::Gettext::Debug
-    end.new 
+    end.new
   end
 
   let(:dl) { Vmdb::Gettext::Debug::DL }
