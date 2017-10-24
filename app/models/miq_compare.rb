@@ -223,7 +223,7 @@ class MiqCompare
       unless @include[section].key?(:master_index)
         @include[section][:master_index] = @master_list.length
 
-        @master_list << {:name => section, :header => section_header, :group => @include[section][:group]} << (key || []) << []
+        @master_list << {:name => section, :header => section_header, :group => @include[section][:group]} << (key.nil? ? nil : []) << []
       end
 
       # Don't add in any columns that are nil, the key, or start with '_'
