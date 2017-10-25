@@ -5,7 +5,7 @@ module ManagerRefresh::Inventory::MiddlewareManager
   COMMON_ATTRIBUTES = %i(name ems_ref nativeid properties feed).freeze
 
   class_methods do
-    # rubocop:disable Naming/PredicateName
+    # rubocop:disable Style/PredicateName
     def has_middleware_manager_domains(options = {})
       has_inventory({
         :model_class                 => provider_module::MiddlewareManager::MiddlewareDomain,
@@ -59,6 +59,6 @@ module ManagerRefresh::Inventory::MiddlewareManager
         :builder_params              => { :ext_management_system => ->(persister) { persister.manager } }
       }.merge(options))
     end
-    # rubocop:enable Naming/PredicateName
+    # rubocop:enable Style/PredicateName
   end
 end

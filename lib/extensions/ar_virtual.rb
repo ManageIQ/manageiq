@@ -604,8 +604,8 @@ module ActiveRecord
     # Ignoring them to avoid noise in RuboCop, but allow us to keep the same
     # syntax from the original codebase.
     #
-    # rubocop:disable Style/BlockDelimiters, Layout/SpaceAfterComma, Style/HashSyntax
-    # rubocop:disable Layout/AlignHash, Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:disable Style/BlockDelimiters, Style/SpaceAfterComma, Style/HashSyntax
+    # rubocop:disable Style/AlignHash, Metrics/AbcSize, Metrics/MethodLength
     class JoinDependency
       def instantiate(result_set, aliases)
         primary_key = aliases.column_alias(join_root, join_root.primary_key)
@@ -682,8 +682,8 @@ module ActiveRecord
 
         parents.values
       end
-      # rubocop:enable Style/BlockDelimiters, Layout/SpaceAfterComma, Style/HashSyntax
-      # rubocop:enable Layout/AlignHash, Metrics/AbcSize, Metrics/MethodLength
+      # rubocop:enable Style/BlockDelimiters, Style/SpaceAfterComma, Style/HashSyntax
+      # rubocop:enable Style/AlignHash, Metrics/AbcSize, Metrics/MethodLength
     end
   end
 
