@@ -30,6 +30,9 @@ class MiqPolicy < ApplicationRecord
   validates_uniqueness_of   :name, :description, :guid
   validates :mode, :inclusion => { :in => %w(compliance control) }
 
+  scope :with_mode,   ->(mode)   { where(:mode => mode) }
+  scope :with_towhat, ->(towhat) { where(:towhat => towhat) }
+
   serialize :expression
 
   @@associations_to_get_policies = [:parent_enterprise, :ext_management_system, :parent_datacenter, :ems_cluster, :parent_resource_pool, :host]

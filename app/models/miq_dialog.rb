@@ -2,6 +2,8 @@ class MiqDialog < ApplicationRecord
   validates :name, :description, :presence => true
   validates :name, :uniqueness => { :scope => :dialog_type, :case_sensitive => false }
 
+  scope :with_dialog_type, ->(dialog_type) { where(:dialog_type => dialog_type) }
+
   DIALOG_TYPES = [
     [_("VM Provision"),                "MiqProvisionWorkflow"],
     [_("Configured System Provision"), "MiqProvisionConfiguredSystemWorkflow"],

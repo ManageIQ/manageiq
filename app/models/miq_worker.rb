@@ -14,6 +14,9 @@ class MiqWorker < ApplicationRecord
   virtual_column :friendly_name, :type => :string
   virtual_column :uri_or_queue_name, :type => :string
 
+  scope :with_miq_server_id, ->(server_id) { where(:miq_server_id => server_id) }
+  scope :with_status,        ->(status)    { where(:status => status) }
+
   STATUS_CREATING = 'creating'.freeze
   STATUS_STARTING = 'starting'.freeze
   STATUS_STARTED  = 'started'.freeze
