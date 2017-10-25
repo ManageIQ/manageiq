@@ -6,7 +6,10 @@ require 'ostruct'
 
 class Post
   attr_reader :id, :created_at
-  def save; @id = 1; @created_at = Time.now.utc end
+  def save
+    @id = 1
+    @created_at = Time.now.utc
+  end
 
   def new_record?; @id.nil? end
 

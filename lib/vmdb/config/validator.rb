@@ -48,19 +48,23 @@ module VMDB
         keys = data.each_pair.to_a.transpose.first.to_set
 
         if keys.include?(:mode) && !["invoke", "disable"].include?(data.mode)
-          valid = false; errors << [:mode, "webservices mode, \"#{data.mode}\", invalid. Should be one of: invoke or disable"]
+          valid = false
+          errors << [:mode, "webservices mode, \"#{data.mode}\", invalid. Should be one of: invoke or disable"]
         end
 
         if keys.include?(:contactwith) && !["ipaddress", "hostname"].include?(data.contactwith)
-          valid = false; errors << [:contactwith, "webservices contactwith, \"#{data.contactwith}\", invalid. Should be one of: ipaddress or hostname"]
+          valid = false
+          errors << [:contactwith, "webservices contactwith, \"#{data.contactwith}\", invalid. Should be one of: ipaddress or hostname"]
         end
 
         if keys.include?(:nameresolution) && ![true, false].include?(data.nameresolution)
-          valid = false; errors << [:nameresolution, "webservices nameresolution, \"#{data.nameresolution}\", invalid. Should be one of: true or false"]
+          valid = false
+          errors << [:nameresolution, "webservices nameresolution, \"#{data.nameresolution}\", invalid. Should be one of: true or false"]
         end
 
         if keys.include?(:timeout) && !data.timeout.kind_of?(Integer)
-          valid = false; errors << [:timeout, "timeout, \"#{data.timeout}\", invalid. Should be numeric"]
+          valid = false
+          errors << [:timeout, "timeout, \"#{data.timeout}\", invalid. Should be numeric"]
         end
 
         return valid, errors
@@ -95,7 +99,8 @@ module VMDB
 
           level = value.to_s.upcase.to_sym
           unless VMDBLogger::Severity.constants.include?(level)
-            valid = false; errors << [key, "#{key}, \"#{level}\", is invalid. Should be one of: #{VMDBLogger::Severity.constants.join(", ")}"]
+            valid = false
+            errors << [key, "#{key}, \"#{level}\", is invalid. Should be one of: #{VMDBLogger::Severity.constants.join(", ")}"]
           end
         end
 
@@ -109,11 +114,13 @@ module VMDB
 
         if keys.include?(:timeout)
           unless data.timeout.kind_of?(Integer)
-            valid = false; errors << [:timeout, "timeout, \"#{data.timeout}\", invalid. Should be numeric"]
+            valid = false
+            errors << [:timeout, "timeout, \"#{data.timeout}\", invalid. Should be numeric"]
           end
 
           if data.timeout == 0
-            valid = false; errors << [:timeout, "timeout can't be zero"]
+            valid = false
+            errors << [:timeout, "timeout can't be zero"]
           end
         end
 
@@ -123,7 +130,8 @@ module VMDB
           end
 
           if data.interval == 0
-            valid = false; errors << [:interval, "interval can't be zero"]
+            valid = false
+            errors << [:interval, "interval can't be zero"]
           end
         end
 
@@ -137,12 +145,14 @@ module VMDB
 
         if keys.include?(:listening_port)
           unless is_numeric?(data.listening_port) || data.listening_port.blank?
-            valid = false; errors << [:listening_port, "listening_port, \"#{data.listening_port}\", invalid. Should be numeric"]
+            valid = false
+            errors << [:listening_port, "listening_port, \"#{data.listening_port}\", invalid. Should be numeric"]
           end
         end
 
         if keys.include?(:session_store) && !["sql", "memory", "cache"].include?(data.session_store)
-          valid = false; errors << [:session_store, "session_store, \"#{data.session_store}\", invalid. Should be one of \"sql\", \"memory\", \"cache\""]
+          valid = false
+          errors << [:session_store, "session_store, \"#{data.session_store}\", invalid. Should be one of \"sql\", \"memory\", \"cache\""]
         end
 
         return valid, errors
@@ -154,19 +164,23 @@ module VMDB
         keys = data.each_pair.to_a.transpose.first.to_set
 
         if keys.include?(:authentication) && !["login", "plain", "none"].include?(data.authentication)
-          valid = false; errors << [:mode, "authentication, \"#{data.mode}\", invalid. Should be one of: login, plain, or none"]
+          valid = false
+          errors << [:mode, "authentication, \"#{data.mode}\", invalid. Should be one of: login, plain, or none"]
         end
 
         if data.authentication == "login" && data.user_name.blank?
-          valid = false; errors << [:user_name, "cannot be blank for 'login' authentication"]
+          valid = false
+          errors << [:user_name, "cannot be blank for 'login' authentication"]
         end
 
         if keys.include?(:port) && data.port.to_s !~ /^[0-9]*$/
-          valid = false; errors << [:port, "\"#{data.port}\", invalid. Should be numeric"]
+          valid = false
+          errors << [:port, "\"#{data.port}\", invalid. Should be numeric"]
         end
 
         if keys.include?(:from) && data.from !~ /^\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z$/i
-          valid = false; errors << [:from, "\"#{data.from}\", invalid. Should be a valid email address"]
+          valid = false
+          errors << [:from, "\"#{data.from}\", invalid. Should be a valid email address"]
         end
 
         return valid, errors
