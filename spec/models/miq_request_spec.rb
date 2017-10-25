@@ -12,6 +12,7 @@ describe MiqRequest do
         :MiqHostProvisionRequest             => {:host_pxe_install      => "Host Provision"},
         :MiqProvisionConfiguredSystemRequest => {:provision_via_foreman => "#{ui_lookup(:ui_title => 'foreman')} Provision"},
         :VmReconfigureRequest                => {:vm_reconfigure        => "VM Reconfigure"},
+        :VmCloudReconfigureRequest           => {:vm_cloud_reconfigure  => "VM Cloud Reconfigure"},
         :VmMigrateRequest                    => {:vm_migrate            => "VM Migrate"},
         :AutomationRequest                   => {:automation            => "Automation"},
         :ServiceTemplateProvisionRequest     => {:clone_to_service      => "Service Provision"},

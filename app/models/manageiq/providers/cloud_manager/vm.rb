@@ -107,22 +107,6 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     true
   end
 
-  def resize_queue(userid, new_flavor)
-    task_opts = {
-      :action => "resizing Instance for user #{userid}",
-      :userid => userid
-    }
-    queue_opts = {
-      :class_name  => self.class.name,
-      :method_name => 'resize',
-      :instance_id => id,
-      :role        => 'ems_operations',
-      :zone        => my_zone,
-      :args        => [new_flavor.id]
-    }
-    MiqTask.generic_action_with_callback(task_opts, queue_opts)
-  end
-
   def resize(new_flavor_id)
     raise ArgumentError, _("new_flavor_id cannot be nil") if new_flavor_id.nil?
     new_flavor = Flavor.find(new_flavor_id)

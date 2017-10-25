@@ -65,6 +65,9 @@ class MiqRequest < ApplicationRecord
       :VmReconfigureRequest                => {
         :vm_reconfigure => N_("VM Reconfigure")
       },
+      :VmCloudReconfigureRequest           => {
+        :vm_cloud_reconfigure => N_("VM Cloud Reconfigure")
+      },
       :VmMigrateRequest                    => {
         :vm_migrate => N_("VM Migrate")
       },
