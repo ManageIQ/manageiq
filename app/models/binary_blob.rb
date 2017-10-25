@@ -11,7 +11,10 @@ class BinaryBlob < ApplicationRecord
   # Get binary file from database into a raw String
   def binary
     # TODO: Change this to collect the binary_blob_parts in batches, so we are not pulling in every row into memory at once
-    data = binary_blob_parts.inject("") { |d, b| d << b.data; d }
+    data = binary_blob_parts.inject("") do |d, b|
+      d << b.data
+      d
+    end
     unless size.nil? || size == data.bytesize
       raise _("size of %{name} id [%{number}] is incorrect") % {:name => self.class.name, :number => id}
     end

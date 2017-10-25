@@ -15,5 +15,5 @@ Host.all.each do |host|
     end
   end unless host.hardware.nil?
 
-  puts; puts
+  puts("\n")
 end

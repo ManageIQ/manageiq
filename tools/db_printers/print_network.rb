@@ -46,5 +46,5 @@ Host.all.each do |host|
     end
   end
 
-  puts; puts
+  puts("\n")
 end
