@@ -27,6 +27,10 @@ opt_parser = OptionParser.new do |opts|
     options[:guid] = val
   end
 
+  opts.on("-e=ems_id", "--ems-id=ems_id,ems_id", Array, "Provide a list of ems ids (without spaces) to a provider worker. This requires, at least one argument.") do |val|
+    options[:ems_id] = val
+  end
+
   opts.on("-h", "--help", "Displays this help") do
     puts opts
     exit
@@ -60,9 +64,9 @@ unless options[:dry_run]
   create_options = {:pid => Process.pid}
   runner_options = {}
 
-  if ENV["QUEUE"]
-    create_options[:queue_name] = ENV["QUEUE"]
-    runner_options[:ems_id] = worker_class.ems_id_from_queue_name(ENV["QUEUE"]) if worker_class.respond_to?(:ems_id_from_queue_name)
+  if options[:ems_id]
+    create_options[:queue_name] = options[:ems_id].length == 1 ? "ems_#{options[:ems_id].first}" : options[:ems_id].collect { |id| "ems_#{id}" }
+    runner_options[:ems_id]     = options[:ems_id].length == 1 ? options[:ems_id].first : options[:ems_id].collect { |id| id }
   end
 
   worker = if options[:guid]
