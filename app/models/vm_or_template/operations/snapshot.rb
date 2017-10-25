@@ -65,6 +65,7 @@ module VmOrTemplate::Operations::Snapshot
     begin
       run_command_via_parent(:vm_remove_snapshot, :snMor => snapshot.uid_ems)
     rescue => err
+      create_notification(:vm_snapshot_failure, :error => err.to_s, :snapshot_op => "remove")
       if err.to_s.include?('not found')
         raise MiqException::MiqVmSnapshotError, err.to_s
       else
