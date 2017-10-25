@@ -131,6 +131,8 @@ describe ChargebackVm do
         let(:cloud_volume) { FactoryGirl.create(:cloud_volume_openstack) }
 
         it 'contains also columns with sub_metric(from cloud_volume)' do
+          skip('this feature needs to be added to new chargeback rating') if Settings.new_chargeback
+
           cloud_volume_type_chargeback_colums = []
           %w(metric cost).each do |key|
             cloud_volume_type_chargeback_colums << "storage_allocated_#{cloud_volume.volume_type}_#{key}"
