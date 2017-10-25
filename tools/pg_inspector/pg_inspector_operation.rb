@@ -1,7 +1,9 @@
+require 'pathname'
+
 module PgInspector
   class PgInspectorOperation
     HELP_MSG_SHORT = ''.freeze
-    DEFAULT_OUTPUT_PATH = (File.dirname(__FILE__) + "/output/").freeze
+    DEFAULT_OUTPUT_PATH = Pathname.new(__dir__).join("../../log").freeze
     attr_accessor :options
 
     def parse_options(args)
