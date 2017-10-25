@@ -23,6 +23,8 @@ module ManagerRefresh
 
     # A Rails recommended interface for deserializing an object
     def self.load(*args)
+      # Transform to symbolized kwargs, if the inpute was just parsed JSON
+      args[0].symbolize_keys! if args[0].kind_of?(Hash)
       new(*args)
     end
 

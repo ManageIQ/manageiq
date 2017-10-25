@@ -373,6 +373,58 @@ class MiqQueue < ApplicationRecord
     msg
   end
 
+  # Find the MiqQueue item with the specified find options, and yields that
+  #   record to a block.  The block should return the options for updating
+  #   the record.  If the record was not found, the block's options will be
+  #   used to put a new item on the queue.
+  #
+  def self.put_or_update_with_targets(find_options)
+    find_options = default_get_options(find_options)
+    conds = find_options.dup
+
+    where_scope = MiqQueue.where(conds).select(MiqQueue.column_names_symbols - ['targets'])
+
+    msg = nil
+    loop do
+      msg = where_scope.order("priority, id").first
+
+      save_options = block_given? ? yield(msg, find_options) : nil
+      save_options = save_options.dup unless save_options.nil?
+
+      # Add a new queue item based on the returned save options, or the find
+      #   options if no save options were given.
+      if msg.nil?
+        put_options = save_options || find_options
+        put_options.delete(:state)
+        msg = MiqQueue.put(put_options.except(:targets))
+        break
+      end
+
+      begin
+        # Update the queue item based on the returned save options.
+        unless save_options.nil?
+          if save_options.key?(:msg_timeout) && (msg.msg_timeout > save_options[:msg_timeout])
+            _log.warn("#{MiqQueue.format_short_log_msg(msg)} ignoring request to decrease timeout from <#{msg.msg_timeout}> to <#{save_options[:msg_timeout]}>")
+            save_options.delete(:msg_timeout)
+          end
+
+          update_with_targets!(msg, save_options)
+          _log.info("#{MiqQueue.format_short_log_msg(msg)} updated with following: #{save_options.inspect}")
+          _log.info("#{MiqQueue.format_full_log_msg(msg)}, Requeued")
+        end
+        break
+      rescue ActiveRecord::StaleObjectError
+        _log.debug("#{MiqQueue.format_short_log_msg(msg)} stale, retrying...")
+      rescue => err
+        raise RuntimeError,
+              _("%{log_message} \"%{error}\" attempting merge next message") % {:log_message => _log.prefix,
+                                                                                :error       => err},
+              err.backtrace
+      end
+    end
+    msg
+  end
+
   # Find the MiqQueue item with the specified find options, and if not found
   #   puts a new item on the queue.  If the item was found, it will not be
   #   changed, and will be yielded to an optional block, generally for logging
@@ -415,8 +467,10 @@ class MiqQueue < ApplicationRecord
         end
       end
 
-      data = self.data
+      data    = self.data
+      targets = self.targets
       args.push(data) if data
+      args[0].concat(targets.map { |x| JSON.parse(x) }) if targets.present?
       args.unshift(target_id) if obj.kind_of?(Class) && target_id
 
       begin
@@ -540,6 +594,16 @@ class MiqQueue < ApplicationRecord
   end
 
   private
+
+  def self.update_with_targets!(msg, save_options)
+    targets = save_options[:targets]
+
+    sql_target_array = targets.map { |target| "#{connection.quote(target.to_json)}::text" }.join(",")
+    set_clauses      = ["targets = targets || ARRAY[#{sql_target_array}]"]
+    set_clauses << sanitize_sql_for_assignment(save_options.except(:targets))
+
+    where(:id => msg.id).update_all(set_clauses.join(", "))
+  end
 
   # default values for get operations
   def self.default_get_options(options)
