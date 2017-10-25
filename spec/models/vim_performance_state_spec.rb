@@ -50,7 +50,7 @@ RSpec.describe VimPerformanceState do
     let(:hdd2_size) { 9_101 }
     let(:ssd_volume) { FactoryGirl.create(:cloud_volume_openstack, :volume_type => 'ssd') }
     let(:ssd_disk) { FactoryGirl.create(:disk, :size => ssd_size, :backing => ssd_volume) }
-    let(:hdd_volume) { FactoryGirl.create(:cloud_volume_openstack) }
+    let(:hdd_volume) { FactoryGirl.create(:cloud_volume_openstack, :volume_type => nil) }
     let(:hdd1_disk) { FactoryGirl.create(:disk, :size => hdd1_size, :backing => hdd_volume) }
     let(:hdd2_disk) { FactoryGirl.create(:disk, :size => hdd2_size) }
     let(:hardware) { FactoryGirl.create(:hardware, :disks => [ssd_disk, hdd1_disk, hdd2_disk]) }

@@ -14,7 +14,7 @@ class ChargebackRateDetail < ApplicationRecord
 
   delegate :metric_key, :cost_keys, :to => :chargeable_field
 
-  FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric chargeable_field_id).freeze
+  FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric chargeable_field_id sub_metric).freeze
   PER_TIME_TYPES = {
     "hourly"  => _("Hourly"),
     "daily"   => _("Daily"),
@@ -65,6 +65,23 @@ class ChargebackRateDetail < ApplicationRecord
                                          :variable_rate          => Money.new(tier.variable_rate * Money.default_currency.subunit_to_unit))
     end
     showback_rate.save
+  end
+
+  def sub_metrics
+    if metric == 'derived_vm_allocated_disk_storage'
+      volume_types = CloudVolume.volume_types
+      unless volume_types.empty?
+        res = {}
+        res[_('All')] = ''
+        volume_types.each { |type| res[type.capitalize] = type }
+        res[_('Other - Unclassified')] = 'unclassified'
+        res
+      end
+    end
+  end
+
+  def sub_metric_human
+    sub_metric.present? ? sub_metric.capitalize : 'All'
   end
 
   def charge(relevant_fields, consumption, options)
@@ -252,9 +269,21 @@ class ChargebackRateDetail < ApplicationRecord
         end
 
         rate_details.push(detail_new)
+
+        if detail_new.chargeable_field.metric == 'derived_vm_allocated_disk_storage'
+          volume_types = CloudVolume.volume_types
+          volume_types.each do |volume_type|
+            storage_detail_new = detail_new.dup
+            storage_detail_new.sub_metric = volume_type
+            detail[:tiers].sort_by { |tier| tier[:start] }.each do |tier|
+              storage_detail_new.chargeback_tiers << ChargebackTier.new(tier.slice(*ChargebackTier::FORM_ATTRIBUTES))
+            end
+            rate_details.push(storage_detail_new)
+          end
+        end
       end
     end
 
-    rate_details.sort_by { |rd| [rd[:group], rd[:description]] }
+    rate_details.sort_by { |rd| [rd.chargeable_field[:group], rd.chargeable_field[:description], rd[:sub_metric].to_s] }
   end
 end
