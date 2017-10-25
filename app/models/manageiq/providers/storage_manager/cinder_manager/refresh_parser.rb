@@ -105,7 +105,6 @@ module ManageIQ::Providers
     end
 
     def parse_volume(volume)
-
       uid = volume.id
       new_result = {
         :ems_ref       => uid,

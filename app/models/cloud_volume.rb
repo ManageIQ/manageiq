@@ -51,8 +51,6 @@ class CloudVolume < ApplicationRecord
     raise ArgumentError, _("ext_management_system cannot be found") if ext_management_system.nil?
 
     klass = class_by_ems(ext_management_system)
-    options[:cloud_tenant]
-
     klass.raw_create_volume(ext_management_system, options)
   end
 

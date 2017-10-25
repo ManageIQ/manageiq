@@ -123,7 +123,6 @@ class LdapUser < ApplicationRecord
     rec_count = 0
     ldap_server.search(opts) do |entry|
       rec_count += 1
-      dn = MiqLdap.get_attr(entry, :dn)
     end
 
     _log.info("#{log_header} Completed LDAP User sync for <#{rec_count}> records updated since <#{when_changed}>")
