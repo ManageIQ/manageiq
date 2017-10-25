@@ -19,7 +19,7 @@ module Metric::Targets
   end
 
   # Filter to enabled hosts. If it has a cluster consult that, otherwise consult the host itself.
-  # 
+  #
   # NOTE: if capture_storage takes only enabled, then move
   # this logic into capture_host_targets
   def self.only_enabled(hosts)

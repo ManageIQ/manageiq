@@ -97,7 +97,7 @@ class Chargeback < ActsAsArModel
       plan = ManageIQ::Consumption::ShowbackPricePlan.find_or_create_by(:description => rate.description,
                                                                         :name        => rate.description,
                                                                         :resource    => MiqEnterprise.first)
-      
+
       data = {}
       rate.rate_details_relevant_to(relevant_fields).each do |r|
         r.populate_showback_rate(plan, r, showback_category)
