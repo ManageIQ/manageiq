@@ -158,7 +158,11 @@ module MiqWebServerWorkerMixin
       _log.warn("#{format_full_log_msg} has been killed, but with the following error: #{err}")
     end
 
-    kill if MiqProcess.alive?(pid)
+    if MiqProcess.alive?(pid)
+      kill
+    else
+      delete_pid_file
+    end
   end
 
   def kill

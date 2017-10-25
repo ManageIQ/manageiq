@@ -46,6 +46,10 @@ module MiqServer::QueueManagement
     enqueue_for_server('shutdown_and_exit')
   end
 
+  def kill_queue
+    enqueue_for_server('kill')
+  end
+
   # Tell the remote or local server to restart
   def restart_queue
     log_message  = "Server restart requested"

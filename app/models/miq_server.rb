@@ -359,11 +359,19 @@ class MiqServer < ApplicationRecord
     shutdown_and_exit
   end
 
+  def server_process?
+    pid == Process.pid
+  end
+
   def stop(sync = false)
     return if self.stopped?
 
-    shutdown_and_exit_queue
-    wait_for_stopped if sync
+    if server_process?
+      shutdown_and_exit
+    else
+      shutdown_and_exit_queue
+      wait_for_stopped if sync
+    end
   end
 
   def wait_for_stopped
@@ -381,13 +389,16 @@ class MiqServer < ApplicationRecord
   end
 
   def kill
-    # Kill all the workers of this server
+    return kill_queue unless server_process?
+
+    deactivate_all_roles
     kill_all_workers
 
-    # Then kill this server
     _log.info("initiated for #{format_full_log_msg}")
     update_attributes(:stopped_on => Time.now.utc, :status => "killed", :is_master => false)
-    (pid == Process.pid) ? shutdown_and_exit : Process.kill(9, pid)
+
+    # This is mostly a no-op since we killed workers. There is no quiesce to be done.
+    shutdown_and_exit
   end
 
   def self.kill
@@ -400,7 +411,7 @@ class MiqServer < ApplicationRecord
     _log.info("initiated for #{format_full_log_msg}")
     MiqEvent.raise_evm_event(self, "evm_server_stop")
 
-    quiesce
+    quiesce if active?
   end
 
   def shutdown_and_exit(exit_status = 0)
