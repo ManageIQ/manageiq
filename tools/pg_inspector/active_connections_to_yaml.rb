@@ -26,9 +26,9 @@ BANNER
         opt(:database, "Database to output stat activity, with `-m' to only output activity for this Database",
             :type => :string, :short => "d", :default => "postgres")
         opt(:output, "Output file",
-            :type => :string, :short => "o", :default => DEFAULT_OUTPUT_PATH + "active_connections.yml")
+            :type => :string, :short => "o", :default => DEFAULT_OUTPUT_PATH.join("active_connections.yml").to_s)
         opt(:output_locks, "Output lock file",
-            :type => :string, :short => "l", :default => DEFAULT_OUTPUT_PATH + "locks.yml")
+            :type => :string, :short => "l", :default => DEFAULT_OUTPUT_PATH.join("locks.yml").to_s)
         opt(:password_file, "File content to use as password",
             :type => :string, :short => "f")
         opt(:ignore_error, "Ignore incomplete application name column",
