@@ -3254,4 +3254,24 @@ describe MiqExpression do
       expect(actual).to eq([["My Company Tags : Environment", "managed-env"]])
     end
   end
+
+  describe "miq_adv_search_lists" do
+    it ":exp_available_counts" do
+      result = described_class.miq_adv_search_lists(Vm, :exp_available_counts)
+
+      expect(result.map(&:first)).to include(" VM and Instance.Users")
+    end
+
+    it ":exp_available_finds" do
+      result = described_class.miq_adv_search_lists(Vm, :exp_available_finds)
+
+      expect(result.map(&:first)).to include("VM and Instance.Provisioned VMs : Href Slug")
+      expect(result.map(&:first)).not_to include("VM and Instance : Id")
+    end
+
+    it ":exp_available_fields with include_id_columns" do
+      result = described_class.miq_adv_search_lists(Vm, :exp_available_fields, :include_id_columns => true)
+      expect(result.map(&:first)).to include("VM and Instance : Id")
+    end
+  end
 end
