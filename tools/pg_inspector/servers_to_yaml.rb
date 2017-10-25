@@ -30,7 +30,7 @@ BANNER
         opt(:database, "ManageIQ Database to output server information",
             :type => :string, :short => "d", :default => "vmdb_production")
         opt(:output, "Output file",
-            :type => :string, :short => "o", :default => DEFAULT_OUTPUT_PATH.join("server.yml").to_s)
+            :type => :string, :short => "o", :default => DEFAULT_OUTPUT_PATH.join("#{PREFIX}server.yml").to_s)
         opt(:password_file, "File content to use as password",
             :type => :string, :short => "f")
       end

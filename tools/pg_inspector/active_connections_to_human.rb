@@ -12,11 +12,11 @@ module PgInspector
     def parse_options(args)
       self.options = Trollop.options(args) do
         opt(:connections, "Active connections file",
-            :type => :string, :short => "c", :default => DEFAULT_OUTPUT_PATH.join("active_connections.yml").to_s)
+            :type => :string, :short => "c", :default => DEFAULT_OUTPUT_PATH.join("#{PREFIX}active_connections.yml").to_s)
         opt(:servers, "Servers information file",
-            :type => :string, :short => "s", :default => DEFAULT_OUTPUT_PATH.join("server.yml").to_s)
+            :type => :string, :short => "s", :default => DEFAULT_OUTPUT_PATH.join("#{PREFIX}server.yml").to_s)
         opt(:output, "Output file",
-            :type => :string, :short => "o", :default => DEFAULT_OUTPUT_PATH.join("human.yml").to_s)
+            :type => :string, :short => "o", :default => DEFAULT_OUTPUT_PATH.join("#{PREFIX}human.yml").to_s)
       end
     end
 
