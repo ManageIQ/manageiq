@@ -23,7 +23,7 @@ end
 
 $event_cnt = 0
 log(:info, "Starting Event Catcher on #{host}...")
-tid = Thread.new do
+Thread.new do
   begin
     $vim_em = MiqVimEventMonitor.new(host, user, pass, nil, 100)
     $vim_em.monitorEvents do |ea|
@@ -40,7 +40,6 @@ tid = Thread.new do
           sub_event_type = event['eventTypeId']
           display_name   = "#{event_type}]-[#{sub_event_type}"
         else
-          sub_event_type = nil
           display_name   = event_type
         end
 

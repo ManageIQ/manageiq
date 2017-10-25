@@ -400,7 +400,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
   def rufus_add_monthly_schedule(options)
     months = options.delete(:months)
     method = options.delete(:method)
-    interval = options.delete(:interval)
+    options.delete(:interval)
     schedule_id = options.delete(:schedule_id)
 
     # Treat months differently since rufus doesn't support :schedule_every with X.months type of options

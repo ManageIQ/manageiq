@@ -84,7 +84,6 @@ module EmsRefresh::SaveInventoryInfra
   end
 
   def save_storages_inventory(ems, hashes, target = nil, _disconnect = true)
-    target = ems if target.nil?
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
     # Query for all of the storages ahead of time

@@ -54,7 +54,7 @@ module ResourceFeeder
             xml.updated((resource.respond_to?(:updated_at) ? call_or_read(options[:item][:pub_date] || :updated_at, resource) : published_at).xmlschema)
             xml.link(:rel => 'alternate', :type => 'text/html', :href => call_or_read(options[:item][:link] || options[:item][:guid] || resource_link, resource))
 
-            if author = call_or_read(options[:item][:author], resource)
+            if call_or_read(options[:item][:author], resource)
               xml.author do
                 xml.name
               end

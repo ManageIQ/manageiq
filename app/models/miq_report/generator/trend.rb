@@ -67,7 +67,7 @@ module MiqReport::Generator::Trend
     begin
       val = MiqStats.solve_for_y(rec.send(CHART_X_AXIS_COLUMN_ADJUSTED).to_i, @trend_data[col][:slope], @trend_data[col][:yint])
       return val > 0 ? val : 0
-    rescue ZeroDivisionError => err
+    rescue ZeroDivisionError
       return nil
     end
   end

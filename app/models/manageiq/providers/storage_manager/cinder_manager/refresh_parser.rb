@@ -105,8 +105,6 @@ module ManageIQ::Providers
     end
 
     def parse_volume(volume)
-      log_header = "MIQ(#{self.class.name}.#{__method__})"
-
       uid = volume.id
       new_result = {
         :ems_ref       => uid,

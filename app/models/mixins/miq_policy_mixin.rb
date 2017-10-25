@@ -154,7 +154,7 @@ module MiqPolicyMixin
         :args        => [eventobj.name, targets],
         :priority    => MiqQueue::HIGH_PRIORITY
       }
-      tid = MiqTask.generic_action_with_callback(opts, qopts)
+      MiqTask.generic_action_with_callback(opts, qopts)
     end
   end # module ClassMethods
 end # module MiqPolicyMixin

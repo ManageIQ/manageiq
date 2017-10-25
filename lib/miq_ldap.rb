@@ -67,7 +67,7 @@ class MiqLdap
         addresses = host.to_miq_a # Host is already an IP Address, no need to resolve
       else
         begin
-          canonical, aliases, type, *addresses = TCPSocket.gethostbyname(host) # Resolve hostname to IP Address
+          _canonical, _aliases, _type, *addresses = TCPSocket.gethostbyname(host) # Resolve hostname to IP Address
           $log.info("MiqLdap.connection: Resolved host [#{host}] has these IP Address: #{addresses.inspect}") if $log
         rescue => err
           $log.debug("Warning: '#{err.message}', resolving host: [host]")
@@ -187,7 +187,7 @@ class MiqLdap
     objs.each do |o|
       if o.attribute_names.include?(:search_referrals)
         o.search_referrals.each do |ref|
-          scheme, userinfo, host, port, registry, dn, opaque, query, fragment = URI.split(ref)
+          scheme, _userinfo, host, port, _registry, dn, _opaque, _query, _fragment = URI.split(ref)
           port ||= self.class.default_ldap_port(scheme)
           dn = normalize(dn.split("/").last)
           next if seen[:objects].include?(dn)

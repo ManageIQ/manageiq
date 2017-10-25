@@ -38,7 +38,7 @@ end
 
 ldap_addresses = []
 ldap_hosts.to_miq_a.each do |host|
-  canonical, aliases, type, *addresses = TCPSocket.gethostbyname(host)
+  _canonical, _aliases, _type, *addresses = TCPSocket.gethostbyname(host)
   log(:info, "Resolved host <#{host}> has these IP Address: #{addresses.inspect}")
   ldap_addresses += addresses
 end

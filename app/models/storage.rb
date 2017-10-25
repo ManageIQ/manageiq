@@ -697,9 +697,9 @@ class Storage < ApplicationRecord
 
     _log.info("#{log_header} Capture for #{log_target}...")
 
-    klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
+    _klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
 
-    dummy, t = Benchmark.realtime_block(:total_time) do
+    _dummy, t = Benchmark.realtime_block(:total_time) do
       hour = Metric::Helper.nearest_hourly_timestamp(Time.now.utc + 30.minutes)
 
       interval = case interval_name

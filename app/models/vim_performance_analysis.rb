@@ -216,8 +216,8 @@ module VimPerformanceAnalysis
         chash = v[:count][:storage]
         # Calculate storage total based on merged counts.
         chash[:total] = chash[:details].inject(0) do|t, h|
-          k, val = h.to_a.flatten
-          t += val
+          _k, val = h.to_a.flatten
+          t + val
         end if v[:count].key?(:storage)
         #
         chash = v[:count]
@@ -539,7 +539,7 @@ module VimPerformanceAnalysis
     end
 
     result.inject([]) do |recs, k|
-      ts, v = k
+      _ts, v = k
       cols.each do |c|
         next unless v[c].kind_of?(Float)
         Metric::Aggregation::Process.column(c, nil, v, counts[k], true, :average)

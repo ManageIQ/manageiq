@@ -20,7 +20,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
   end
 
   def client_connections
-    data = select(<<-SQL, "Client Connections").to_a
+    select(<<-SQL, "Client Connections").to_a
                   SELECT client_addr   AS client_address
                        , datname       AS database
                        , pid           AS spid
