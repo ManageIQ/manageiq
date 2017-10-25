@@ -29,32 +29,6 @@ describe MiqWorker do
     expect(result.command_line).to eq "renice -n 5 -p 123"
   end
 
-  context ".build_command_line" do
-    before do
-      allow(MiqGenericWorker).to receive(:nice_increment).and_return("+10")
-    end
-
-    it "with ENV['APPLIANCE']" do
-      begin
-        old_env = ENV.delete('DATABASE_URL')
-        ENV['APPLIANCE'] = 'true'
-        w = FactoryGirl.build(:miq_generic_worker)
-        cmd = w.class.build_command_line(123)
-        expect(cmd).to start_with("nice +10")
-        expect(cmd).to end_with("MiqGenericWorker")
-      ensure
-        # ENV['x'] = nil deletes the key because ENV accepts only string values
-        ENV['APPLIANCE'] = old_env
-      end
-    end
-
-    it "without ENV['APPLIANCE']" do
-      w = FactoryGirl.build(:miq_generic_worker)
-      cmd = w.class.build_command_line(123)
-      expect(cmd).to_not start_with("nice +10")
-    end
-  end
-
   context ".has_required_role?" do
     def check_has_required_role(worker_role_names, expected_result)
       allow(described_class).to receive(:required_roles).and_return(worker_role_names)
@@ -369,6 +343,36 @@ describe MiqWorker do
 
     it "#worker_options" do
       expect(@worker.worker_options).to eq(:guid => @worker.guid)
+    end
+
+    context "#command_line" do
+      it "without guid in worker_options" do
+        allow(@worker).to receive(:worker_options).and_return({})
+        expect { @worker.command_line }.to raise_error(ArgumentError)
+      end
+
+      it "without ENV['APPLIANCE']" do
+        allow(@worker).to receive(:worker_options).and_return(:ems_id => 1234, :guid => @worker.guid)
+        expect(@worker.command_line).to_not include("nice")
+      end
+
+      it "with ENV['APPLIANCE']" do
+        begin
+          allow(MiqWorker).to receive(:nice_increment).and_return("+10")
+          allow(@worker).to receive(:worker_options).and_return(:ems_id => 1234, :guid => @worker.guid)
+          old_env = ENV.delete('APPLIANCE')
+          ENV['APPLIANCE'] = 'true'
+          cmd = @worker.command_line
+          expect(cmd).to start_with("nice +10")
+          expect(cmd).to include("--ems-id 1234")
+          expect(cmd).to include("--guid #{@worker.guid}")
+          expect(cmd).to include("--heartbeat")
+          expect(cmd).to end_with("MiqWorker")
+        ensure
+          # ENV['x'] = nil deletes the key because ENV accepts only string values
+          ENV['APPLIANCE'] = old_env
+        end
+      end
     end
 
     describe "#stopping_for_too_long?" do
