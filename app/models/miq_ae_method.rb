@@ -15,6 +15,15 @@ class MiqAeMethod < ApplicationRecord
   validates_format_of     :name, :with    => /\A[\w]+\z/i,
                                  :message => N_("may contain only alphanumeric and _ characters")
 
+  ANSIBLE_JOB_TEMPLATE_SYMBOLS = [:repository_id,
+                                  :playbook_id,
+                                  :credential_id,
+                                  :network_credential_id,
+                                  :cloud_credential_id,
+                                  :verbosity,
+                                  :become_enabled,
+                                  :extra_vars].freeze
+
   AVAILABLE_LANGUAGES  = ["ruby", "perl"]  # someday, add sh, perl, python, tcl and any other scripting language
   validates_inclusion_of  :language,  :in => AVAILABLE_LANGUAGES
   AVAILABLE_LOCATIONS = %w(builtin inline uri expression playbook).freeze
