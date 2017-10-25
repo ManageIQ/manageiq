@@ -1,17 +1,17 @@
 pg_inspector readme
 ===================
 
-pg_inspector is a tool to inspect ManageIQ process caused deadlock or long time blocking in PostgreSQL. pg_inpector inspects database in four steps. You can run `pg_inspector.rb -h` to see all steps, which are displayed in `Operations` section. For each step, you can see its specific options by `pg_inspector.rb operation -h`.
+pg_inspector is a tool to inspect database locks originating from ManageIQ processes. pg_inpector does this in four steps. Run `pg_inspector.rb -h` to see each of the steps. For each step, see its specific options by running pg_inspector.rb operation `-h`.
 
 Automatically run all steps
 ---------------------------
 
-Run `schedule_server_dump.sh` to dump server information in a daily basis. Then when block happens, run `inspect_pg.sh` to run step 1, 3 and 4 together, and collect all output into `pg_inspector_output.tar.gz`. For details for each step, see below.
+Run `schedule_server_dump.sh` to dump server information in a daily basis. Then when a database lock problem happens, run `inspect_pg.sh` to run step 1, 3 and 4 together, and collect all output into `pg_inspector_output.tar.gz`. For details of each step, see below.
 
 Step 1: dump active connections to YAML file
 --------------------------------------------
 
-Run `pg_inspector.rb connections`, and will dump current `pg_stat_activity` to a YAML file. It will also dump `pg_locks`. Database password should be given in either a file using `-f` option or PGPASSWORD environment variable.
+Run `pg_inspector.rb connections`, and it will dump current `pg_stat_activity` to a YAML file. It will also dump `pg_locks`. The database password should be provided using the file `-f` option or a PGPASSWORD environment variable.
 
 Examples:
 ```
