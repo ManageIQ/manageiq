@@ -18,10 +18,6 @@ class Dialog < ApplicationRecord
 
   attr_accessor :target_resource
 
-  belongs_to :blueprint
-
-  delegate :readonly?, :to => :blueprint, :allow_nil => true
-
   def self.seed
     dialog_import_service = DialogImportService.new
 

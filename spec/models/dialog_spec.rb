@@ -34,32 +34,6 @@ describe Dialog do
     end
   end
 
-  describe "#readonly?" do
-    it "is not readonly if it no blueprint associated" do
-      dialog = FactoryGirl.create(:dialog, :label => 'dialog')
-      expect(dialog.readonly?).to be_falsey
-    end
-
-    it "is not readonly if the blueprint is not readonly" do
-      blueprint = FactoryGirl.create(:blueprint)
-      dialog = FactoryGirl.create(:dialog, :label => 'dialog', :blueprint => blueprint)
-      expect(dialog.readonly?).to be_falsey
-    end
-
-    it "cannot create a dialog to be associated with a published blueprint" do
-      blueprint = FactoryGirl.create(:blueprint, :status => 'published')
-      expect { FactoryGirl.create(:dialog, :label => 'dialog', :blueprint => blueprint) }.to raise_error(ActiveRecord::ReadOnlyRecord)
-    end
-
-    it "is readonly if the blueprint is readonly" do
-      blueprint = FactoryGirl.create(:blueprint)
-      dialog = FactoryGirl.create(:dialog, :label => 'dialog', :blueprint => blueprint)
-      blueprint.update_attributes(:status => 'published')
-      expect(dialog.readonly?).to be_truthy
-      expect { dialog.save! }.to raise_error(ActiveRecord::ReadOnlyRecord)
-    end
-  end
-
   context "validate label uniqueness" do
     it "with same label" do
       expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog') }.to_not raise_error
