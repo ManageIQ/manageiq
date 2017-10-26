@@ -33,13 +33,15 @@ class ChargebackVm < Chargeback
     :total_cost               => :float,
   )
 
-  def self.refresh_dynamic_metric_columns
-    dynamic_columns = CloudVolume.volume_types.each_with_object({}) do |volume_type, result|
+  def self.dynamic_columns
+    CloudVolume.volume_types.each_with_object({}) do |volume_type, result|
       [:metric, :cost].collect do |type|
         result["storage_allocated_#{volume_type || 'unclassified'}_#{type}"] = :integer
       end
     end
+  end
 
+  def self.refresh_dynamic_metric_columns
     set_columns_hash(dynamic_columns)
   end
 
