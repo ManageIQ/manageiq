@@ -43,14 +43,14 @@ class ChargebackRateDetail < ApplicationRecord
      'gbps'      => 'Tbps'}[p_per_unit || per_unit]
   end
 
-  def populate_showback_rate(plan, rate_detail, category)
-    measure = rate_detail.chargeable_field.showback_measure
-    dimension, _, calculation = rate_detail.chargeable_field.showback_dimension
-    unit = rate_detail.showback_unit
+  def populate_showback_rate(plan, rate_detail, entity)
+    group = rate_detail.chargeable_field.showback_measure
+    field, _, calculation = rate_detail.chargeable_field.showback_dimension
+    unit  = rate_detail.showback_unit
 
-    showback_rate = ManageIQ::Consumption::ShowbackRate.find_or_create_by(:category            => category,
-                                                                          :measure             => measure,
-                                                                          :dimension           => dimension,
+    showback_rate = ManageIQ::Consumption::ShowbackRate.find_or_create_by(:entity              => entity,
+                                                                          :group               => group,
+                                                                          :field               => field,
                                                                           :showback_price_plan => plan,
                                                                           :calculation         => calculation,
                                                                           :concept             => rate_detail.id)
