@@ -55,7 +55,6 @@ describe MiqAlert do
           alert = MiqAlert.find_by(:id => msg.instance_id)
           expect(alert).not_to be_nil
 
-          event, guid = @events_to_alerts[i]
           expect(guids.include?(alert.guid)).to be_truthy
         end
       end

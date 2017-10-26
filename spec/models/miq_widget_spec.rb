@@ -180,7 +180,7 @@ describe MiqWidget do
 
       it "owned by miq_group and not in user's timezone" do
         @user1.settings.store_path(:display, :timezone, "Eastern Time (US & Canada)")
-        content = FactoryGirl.create(:miq_widget_content,
+        FactoryGirl.create(:miq_widget_content,
                                      :miq_widget   => @widget_report_vendor_and_guest_os,
                                      :miq_group_id => @group1.id,
                                      :timezone     => "UTC"
@@ -189,7 +189,7 @@ describe MiqWidget do
       end
 
       it "both user and miq_group owned" do
-        content1 = FactoryGirl.create(:miq_widget_content,
+        FactoryGirl.create(:miq_widget_content,
                                       :miq_widget   => @widget_report_vendor_and_guest_os,
                                       :miq_group_id => @group1.id,
                                       :timezone     => "Eastern Time (US & Canada)"
@@ -782,7 +782,6 @@ describe MiqWidget do
     end
 
     it "uses task value" do
-      dt = Time.now.utc
       widget = FactoryGirl.build(:miq_widget, :miq_task => FactoryGirl.build(:miq_task, :message => "message"))
       expect(widget.status_message).to eq("message")
     end

@@ -53,8 +53,8 @@ describe Authenticator::Ldap do
   end
 
   before(:each) do
-    wibble = FactoryGirl.create(:miq_group, :description => 'wibble')
-    wobble = FactoryGirl.build_stubbed(:miq_group, :description => 'wobble')
+    FactoryGirl.create(:miq_group, :description => 'wibble')
+    FactoryGirl.build_stubbed(:miq_group, :description => 'wobble')
   end
 
   let(:user_data) do

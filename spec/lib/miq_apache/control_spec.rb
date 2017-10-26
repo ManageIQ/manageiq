@@ -48,7 +48,6 @@ describe MiqApache::Control do
   end
 
   it "should log a warning when calling run_apache_cmd with start that raises an error" do
-    cmd = "start"
     allow(File).to receive(:exist?).and_return(true)
     $log = Logger.new(STDOUT) unless $log
     allow($log).to receive(:debug?).and_return(false)

@@ -1,6 +1,6 @@
 describe MiqEmsRefreshCoreWorker::Runner do
   before(:each) do
-    guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
+    _guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => zone)
 
     # General stubbing for testing any worker (methods called during initialize)

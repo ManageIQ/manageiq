@@ -1,6 +1,6 @@
 describe PerEmsWorkerMixin do
   before(:each) do
-    guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
+    _guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => zone)
     @ems_queue_name = "ems_#{@ems.id}"
 

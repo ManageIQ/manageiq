@@ -59,8 +59,6 @@ describe MiqReport::Generator do
         used_mem_up = [400, 500, 600, 700]
         create_rollup(@host1, @time_profile_all, used_mem_up)
         @miq_report_profile_all.generate_table(:userid => @user.userid)
-        report_min = @miq_report_profile_all.table.data[0].data['min_trend_value']
-        report_max = @miq_report_profile_all.table.data[0].data['max_trend_value']
         expect(@miq_report_profile_all.table.data[0].data).to include("min_trend_value" => used_mem_up.min,
                                                                       "max_trend_value" => used_mem_up.max)
       end

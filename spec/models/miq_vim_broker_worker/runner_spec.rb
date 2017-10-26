@@ -4,9 +4,9 @@ require 'VMwareWebService/MiqVimBroker'
 describe MiqVimBrokerWorker::Runner do
   before(:each) do
     _guid_2, _server_2, @zone_2 = EvmSpecHelper.create_guid_miq_server_zone
-    guid, server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+    _guid, server, @zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone)
-    other_ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone)
+    FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone)
 
     # General stubbing for testing any worker (methods called during initialize)
     @worker_guid = SecureRandom.uuid
