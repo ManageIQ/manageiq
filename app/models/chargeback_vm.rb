@@ -62,7 +62,7 @@ class ChargebackVm < Chargeback
   end
 
   def self.refresh_dynamic_metric_columns
-    set_columns_hash(dynamic_columns(:integer))
+    set_columns_hash(dynamic_columns_for(:integer))
   end
 
   def self.build_results_for_report_ChargebackVm(options)
@@ -97,6 +97,10 @@ class ChargebackVm < Chargeback
     %w(vm_name)
   end
 
+  def self.sub_metric_columns
+    dynamic_columns_for(:grouping => [:total])
+  end
+
   def self.report_col_options
     {
       "cpu_allocated_cost"       => {:grouping => [:total]},
@@ -129,7 +133,7 @@ class ChargebackVm < Chargeback
       "storage_used_cost"        => {:grouping => [:total]},
       "storage_used_metric"      => {:grouping => [:total]},
       "total_cost"               => {:grouping => [:total]}
-    }
+    }.merge(sub_metric_columns)
   end
 
   def self.vm_owner(consumption)
