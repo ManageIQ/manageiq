@@ -2,7 +2,7 @@ describe Metric do
   before(:each) do
     MiqRegion.seed
 
-    guid, server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+    _guid, _server, @zone = EvmSpecHelper.create_guid_miq_server_zone
   end
 
   context "as vmware" do

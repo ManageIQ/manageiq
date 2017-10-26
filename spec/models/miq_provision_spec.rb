@@ -121,7 +121,7 @@ describe MiqProvision do
           @vm_prov.options[:ip_addr] = '127.0.0.100'
           @vm_prov.set_static_ip_address(1)
           expect(@vm_prov.get_option(:ip_addr)).to eq('127.0.0.100')
-          x = @vm_prov.set_static_ip_address(2)
+          @vm_prov.set_static_ip_address(2)
           expect(@vm_prov.get_option(:ip_addr)).to eq('127.0.0.101')
         end
 

@@ -1,6 +1,6 @@
 describe VmdbTableEvm do
   it "#seed" do
-    db = VmdbDatabase.seed_self
+    VmdbDatabase.seed_self
     evm_table = FactoryGirl.create(:vmdb_table_evm, :vmdb_database => @db, :name => 'foo')
     expect(evm_table).to receive(:seed_texts).once
     expect(evm_table).to receive(:seed_indexes).once

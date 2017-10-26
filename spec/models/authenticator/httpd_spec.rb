@@ -26,8 +26,8 @@ describe Authenticator::Httpd do
   end
 
   before(:each) do
-    wibble = FactoryGirl.create(:miq_group, :description => 'wibble')
-    wobble = FactoryGirl.create(:miq_group, :description => 'wobble')
+    FactoryGirl.create(:miq_group, :description => 'wibble')
+    FactoryGirl.create(:miq_group, :description => 'wobble')
 
     allow(MiqLdap).to receive(:using_ldap?) { false }
   end

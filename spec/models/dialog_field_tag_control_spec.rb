@@ -4,7 +4,7 @@ describe DialogFieldTagControl do
     # Inherit from parent classification
     options.merge!(:read_only => cat.read_only, :syntax => cat.syntax, :single_value => cat.single_value, :ns => cat.ns)
     options.merge!(:parent_id => cat.id) # Ugly way to set up a child
-    entry = FactoryGirl.create(:classification, options)
+    FactoryGirl.create(:classification, options)
   end
 
   context "dialog field tag control without options hash" do

@@ -51,7 +51,7 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
 
           context "'smartproxy' server and roles deactivated" do
             before(:each) do
-              server_roles = [FactoryGirl.create(:server_role, :name => "smartproxy", :max_concurrent => 0)]
+              FactoryGirl.create(:server_role, :name => "smartproxy", :max_concurrent => 0)
 
               @server1.deactivate_all_roles
               @server1.role = 'smartproxy'

@@ -10,7 +10,7 @@ describe MiqQueue do
       deliver_on = Time.now.utc + 1.minute
       allow(Storage).to receive(:foobar).and_raise(MiqException::MiqQueueRetryLater.new(:deliver_on => deliver_on))
       msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'Storage', :method_name => 'foobar')
-      status, message, result = msg.deliver
+      status, _message, _result = msg.deliver
 
       expect(status).to eq(MiqQueue::STATUS_RETRY)
       expect(msg.state).to eq(MiqQueue::STATE_READY)
@@ -20,7 +20,7 @@ describe MiqQueue do
       allow(Storage).to receive(:foobar).and_raise(MiqException::MiqQueueRetryLater.new)
       msg.state   = MiqQueue::STATE_DEQUEUE
       msg.handler = @miq_server
-      status, message, result = msg.deliver
+      status, _message, _result = msg.deliver
 
       expect(status).to eq(MiqQueue::STATUS_RETRY)
       expect(msg.state).to eq(MiqQueue::STATE_READY)
@@ -30,7 +30,7 @@ describe MiqQueue do
     it "sets last_exception on raised Exception" do
       allow(MiqServer).to receive(:foobar).and_raise(StandardError)
       msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'MiqServer', :method_name => 'foobar')
-      status, message, result = msg.deliver
+      status, _message, _result = msg.deliver
       expect(status).to eq(MiqQueue::STATUS_ERROR)
       expect(msg.last_exception).to be_kind_of(Exception)
     end
@@ -597,13 +597,13 @@ describe MiqQueue do
     end
 
     it "should use args param to find messages on the queue" do
-      msg1 = MiqQueue.put(
+      MiqQueue.put(
         :class_name  => 'MyClass',
         :method_name => 'method1',
         :args        => [1, 2],
         :task_id     => 'first_task'
       )
-      msg2 = MiqQueue.put(
+      MiqQueue.put(
         :class_name  => 'MyClass',
         :method_name => 'method1',
         :args        => [3, 4],

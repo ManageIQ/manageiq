@@ -24,7 +24,7 @@ describe VmOrTemplate do
       it "by IP Address" do
         ipaddress       = "192.268.20.1"
         hardware        = FactoryGirl.create(:hardware,  :vm_or_template_id => @vm.id,       :host     => @host)
-        network         = FactoryGirl.create(:network,   :hardware_id       => hardware.id, :ipaddress => ipaddress)
+        FactoryGirl.create(:network,   :hardware_id       => hardware.id, :ipaddress => ipaddress)
         event_msg       = "Add EMS Event by IP address"
 
         expect_any_instance_of(VmOrTemplate).to receive(:add_ems_event).with(@event_type, event_msg, @event_timestamp)
@@ -85,7 +85,7 @@ describe VmOrTemplate do
         vm_no_host       = FactoryGirl.create(:vm_vmware, :name => "vm 2", :location => "/local/path", :uid_ems => "2", :ems_id => 102)
         ipaddress        = "192.268.20.2"
         hardware_no_host = FactoryGirl.create(:hardware, :vm_or_template_id => vm_no_host.id)
-        network_no_host  = FactoryGirl.create(:network,  :hardware_id       => hardware_no_host.id, :ipaddress => ipaddress)
+        FactoryGirl.create(:network,  :hardware_id       => hardware_no_host.id, :ipaddress => ipaddress)
 
         event_msg = "Add EMS Event by IP address with no host"
         @event_hash[:message]           = event_msg
@@ -102,7 +102,7 @@ describe VmOrTemplate do
         vm_no_ems       = FactoryGirl.create(:vm_vmware, :name => "vm 3", :location => "/local/path", :host => @host)
         ipaddress       = "192.268.20.3"
         hardware_no_ems = FactoryGirl.create(:hardware, :vm_or_template_id => vm_no_ems.id)
-        network_no_ems  = FactoryGirl.create(:network,  :hardware_id       => hardware_no_ems.id, :ipaddress => ipaddress)
+        FactoryGirl.create(:network,  :hardware_id       => hardware_no_ems.id, :ipaddress => ipaddress)
 
         event_msg = "Add EMS Event by IP address with no ems id"
         @event_hash[:message]           = event_msg
@@ -120,7 +120,7 @@ describe VmOrTemplate do
         vm_no_host_no_ems       = FactoryGirl.create(:vm_vmware, :name => "vm 4", :location => "/local/path")
         ipaddress               = "192.268.20.4"
         hardware_no_host_no_ems = FactoryGirl.create(:hardware, :vm_or_template_id => vm_no_host_no_ems.id)
-        network_no_host_no_ems  = FactoryGirl.create(:network,  :hardware_id       => hardware_no_host_no_ems.id, :ipaddress => ipaddress)
+        FactoryGirl.create(:network,  :hardware_id       => hardware_no_host_no_ems.id, :ipaddress => ipaddress)
 
         event_msg = "Add EMS Event by IP address with no host and no ems id"
         @event_hash[:message]           = event_msg

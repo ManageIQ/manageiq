@@ -173,7 +173,7 @@ module Metric::CiMixin::Capture
       when 'realtime' then expected_start_range += (1.minute / Metric::Capture::REALTIME_METRICS_PER_MINUTE)
       when 'hourly'   then expected_start_range += 1.hour
       end
-      expected_start_range = expected_start_range.iso8601
+      expected_start_range.iso8601
     end
   end
 
