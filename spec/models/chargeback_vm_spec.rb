@@ -128,6 +128,21 @@ describe ChargebackVm do
         let(:start_time)  { report_run_time - 17.hours }
         let(:finish_time) { report_run_time - 14.hours }
 
+        let(:cloud_volume) { FactoryGirl.create(:cloud_volume_openstack) }
+
+        it 'contains also columns with sub_metric(from cloud_volume)' do
+          skip('this feature needs to be added to new chargeback rating') if Settings.new_chargeback
+
+          cloud_volume_type_chargeback_colums = []
+          %w(metric cost).each do |key|
+            cloud_volume_type_chargeback_colums << "storage_allocated_#{cloud_volume.volume_type}_#{key}"
+          end
+
+          described_class.refresh_dynamic_metric_columns
+
+          expect(cloud_volume_type_chargeback_colums & described_class.attribute_names).to match_array(cloud_volume_type_chargeback_colums)
+        end
+
         before do
           add_metric_rollups_for(@vm1, start_time...finish_time, 1.hour, metric_rollup_params)
         end
