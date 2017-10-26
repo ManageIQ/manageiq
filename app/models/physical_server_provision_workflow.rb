@@ -39,16 +39,7 @@ class PhysicalServerProvisionWorkflow < MiqProvisionConfiguredSystemWorkflow
   private
 
   def get_customization_scripts
-    customization_scripts = []
-
-    # Retrieve the customization scripts/config patterns associated
-    # with the provider that's associated with each physical server
-    physical_servers = PhysicalServer.where(:id => @values[:src_configured_system_ids])
-    physical_servers.each do |server|
-      script = CustomizationScript.where(:manager_id => server.ems_id)
-      customization_scripts.push(script)
-    end
-
-    customization_scripts.flatten
+    ems_ids = PhysicalServer.where(:id => @values[:src_configured_system_ids]).pluck(:ems_id).uniq
+    CustomizationScript.where(:manager_id => ems_ids)
   end
 end
