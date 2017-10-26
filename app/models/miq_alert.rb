@@ -246,6 +246,7 @@ class MiqAlert < ApplicationRecord
     status = miq_alert_statuses.find_or_initialize_by(:resource => target, :event_ems_ref => ems_ref)
     status.result = result
     status.ems_id = target.try(:ems_id)
+    status.ems_id ||= target.id if target.is_a?(ExtManagementSystem)
     status.description = status_description || description
     status.severity = severity
     status.severity = event_severity unless event_severity.blank?
@@ -600,7 +601,7 @@ class MiqAlert < ApplicationRecord
           {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
           {:name => :value_mw_threshold, :description => _("Number of rejected Web sessions"), :numeric => true, :required => true}
         ]},
-      {:name => "dwh_generic", :description => _("All Datawarehouse alerts"), :db => ["ContainerNode"], :responds_to_events => "datawarehouse_alert",
+      {:name => "dwh_generic", :description => _("External Prometheus Alerts"), :db => ["ContainerNode", "ExtManagementSystem"], :responds_to_events => "datawarehouse_alert",
         :options => [], :always_evaluate => true}
     ]
   end
