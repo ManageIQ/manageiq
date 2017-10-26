@@ -25,6 +25,8 @@ class ChargebackRate < ApplicationRecord
 
   delegate :symbol, :to => :currency, :prefix => true, :allow_nil => true
 
+  scope :with_rate_type, ->(rate_type) { where(:rate_type => rate_type) }
+
   VALID_CB_RATE_TYPES = ["Compute", "Storage"]
 
   def rate_details_relevant_to(report_cols)

@@ -29,6 +29,8 @@ class MiqProvision < MiqProvisionTask
   virtual_column     :placement_auto, :type => :boolean
   virtual_column     :provision_type, :type => :string  # Legacy provisioning support
 
+  scope :with_miq_request_id, ->(request_id) { where(:miq_request_id => request_id) }
+
   CLONE_SYNCHRONOUS     = false
   CLONE_TIME_LIMIT      = 4.hours
 

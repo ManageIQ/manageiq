@@ -21,7 +21,11 @@ class MiqSchedule < ApplicationRecord
     where("updated_at > ?", time)
   }
 
-  scope :filter_matches_with, -> (exp) { where(:filter => exp) }
+  scope :filter_matches_with,      ->(exp)    { where(:filter => exp) }
+  scope :with_prod_default_not_in, ->(prod)   { where.not(:prod_default => [prod, nil]) }
+  scope :with_adhoc,               ->(adhoc)  { where(:adhoc => adhoc) }
+  scope :with_towhat,              ->(towhat) { where(:towhat => towhat) }
+  scope :with_userid,              ->(userid) { where(:userid => userid) }
 
   serialize :sched_action
   serialize :filter

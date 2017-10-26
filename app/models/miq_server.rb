@@ -31,6 +31,8 @@ class MiqServer < ApplicationRecord
 
   virtual_column :zone_description, :type => :string
 
+  scope :with_zone_id, ->(zone_id) { where(:zone_id => zone_id) }
+
   STATUS_STARTING       = 'starting'.freeze
   STATUS_STARTED        = 'started'.freeze
   STATUS_RESTARTING     = 'restarting'.freeze
