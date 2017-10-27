@@ -271,7 +271,8 @@ class ChargebackRateDetail < ApplicationRecord
         rate_details.push(detail_new)
 
         if detail_new.chargeable_field.metric == 'derived_vm_allocated_disk_storage'
-          volume_types = CloudVolume.volume_types + ['unclassified']
+          volume_types = CloudVolume.volume_types
+          volume_types.push('unclassified') if volume_types.present?
           volume_types.each do |volume_type|
             storage_detail_new = detail_new.dup
             storage_detail_new.sub_metric = volume_type
