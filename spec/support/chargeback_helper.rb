@@ -23,6 +23,18 @@ module Spec
           end
         end
       end
+
+      def add_vim_performance_state_for(resources, range, step, state_data)
+        range.step_value(step).each do |time|
+          Array(resources).each do |resource|
+            FactoryGirl.create(:vim_performance_state,
+                               :timestamp        => time,
+                               :resource         => resource,
+                               :state_data       => state_data,
+                               :capture_interval => 1.hour)
+          end
+        end
+      end
     end
   end
 end
