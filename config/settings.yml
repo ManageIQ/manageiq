@@ -797,6 +797,13 @@
     - MoveIntoResourcePool
     :VmSuspendedEvent:
     - SuspendVM_Task
+:help_menu:
+  :documentation:
+    :enabled: true
+  :product:
+    :enabled: true
+  :about:
+    :enabled: true
 :host_delete:
   :queue_timeout: 20.minutes
 :host_introspect:
