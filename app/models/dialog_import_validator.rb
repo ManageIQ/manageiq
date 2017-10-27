@@ -3,6 +3,11 @@ class DialogImportValidator
   class InvalidDialogFieldTypeError < StandardError; end
   class ParsedNonDialogYamlError < StandardError; end
   class ParsedNonDialogError < StandardError; end
+  class DialogFieldAssociationCircularReferenceError < StandardError; end
+
+  def initialize(dialog_field_association_validator = DialogFieldAssociationValidator.new)
+    @dialog_field_association_validator = dialog_field_association_validator
+  end
 
   def determine_validity(import_file_upload)
     potential_dialogs = YAML.load(import_file_upload.uploaded_content)
@@ -45,9 +50,17 @@ class DialogImportValidator
 
   def check_dialog_fields_for_validity(dialog_fields)
     dialog_fields.each do |dialog_field|
-      unless valid_dialog_field_type?(dialog_field["type"])
-        raise InvalidDialogFieldTypeError
-      end
+      raise InvalidDialogFieldTypeError unless valid_dialog_field_type?(dialog_field["type"])
+      check_dialog_associations_for_validity(dialog_fields)
+    end
+  end
+
+  def check_dialog_associations_for_validity(dialog_fields)
+    associations = {}
+    dialog_fields.each { |df| associations.merge!(df["name"] => df["dialog_field_responders"]) unless df["dialog_field_responders"].nil? }
+    unless associations.blank?
+      circular_references = @dialog_field_association_validator.circular_references(associations)
+      raise DialogFieldAssociationCircularReferenceError, circular_references if circular_references
     end
   end
 
