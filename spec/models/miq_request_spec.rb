@@ -442,6 +442,7 @@ describe MiqRequest do
 
     it "user_message" do
       msg = "Yabba Dabba Doo"
+      expect(request).not_to receive(:after_update_options)
       request.update_request({:user_message => msg}, fred)
 
       request.reload
@@ -451,11 +452,19 @@ describe MiqRequest do
 
     it "truncates long messages" do
       msg = "Yabba Dabba Doo" * 30
+      expect(request).not_to receive(:after_update_options)
       request.update_request({:user_message => msg}, fred)
 
       request.reload
       expect(request.options[:user_message].length).to eq(255)
       expect(request.message.length).to eq(255)
+    end
+
+    it "non user_message should call after_update_options" do
+      expect(request).to receive(:after_update_options)
+      request.update_request({:abc => 1}, fred)
+
+      expect(request.options[:abc]).to eq(1)
     end
   end
 end
