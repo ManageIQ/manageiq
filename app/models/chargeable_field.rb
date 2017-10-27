@@ -41,11 +41,11 @@ class ChargeableField < ApplicationRecord
      "fixed_storage_2"                   => ['fixed_storage_2', '', 'occurrence']}[metric_index]
   end
 
-  def measure(consumption, options)
+  def measure(consumption, options, sub_metric = nil)
     return consumption.consumed_hours_in_interval if metering?
     return 1.0 if fixed?
     return 0 if consumption.none?(metric)
-    return consumption.send(options.method_for_allocated_metrics, metric) if allocated?
+    return consumption.send(options.method_for_allocated_metrics, metric, sub_metric) if allocated?
     return consumption.avg(metric) if used?
   end
 
@@ -58,14 +58,15 @@ class ChargeableField < ApplicationRecord
     UNITS[metric] ? detail_measure.adjust(target_unit, UNITS[metric]) : 1
   end
 
-  def metric_key
-    "#{rate_name}_metric" # metric value (e.g. Storage [Used|Allocated|Fixed])
+  def metric_key(sub_metric = nil)
+    "#{rate_name}_#{sub_metric ? sub_metric + '_' : ''}metric" # metric value (e.g. Storage [Used|Allocated|Fixed])
   end
 
-  def cost_keys
-    ["#{rate_name}_cost",   # cost associated with metric (e.g. Storage [Used|Allocated|Fixed] Cost)
-     "#{group}_cost",       # cost associated with metric's group (e.g. Storage Total Cost)
-     'total_cost']
+  def cost_keys(sub_metric = nil)
+    keys = ["#{rate_name}_#{sub_metric ? sub_metric + '_' : ''}cost", # cost associated with metric (e.g. Storage [Used|Allocated|Fixed] Cost)
+            'total_cost']
+
+    sub_metric ? keys : keys + ["#{group}_cost"] # cost associated with metric's group (e.g. Storage Total Cost)
   end
 
   def metering?

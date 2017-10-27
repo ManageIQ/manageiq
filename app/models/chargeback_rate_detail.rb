@@ -91,8 +91,8 @@ class ChargebackRateDetail < ApplicationRecord
       if !consumption.chargeback_fields_present && chargeable_field.fixed?
         cost = 0
       end
-      result[metric_key] = metric_value
-      cost_keys.each { |field| result[field] = cost }
+      result[metric_key(sub_metric)] = metric_value
+      cost_keys(sub_metric).each { |field| result[field] = cost }
     end
     result
   end
@@ -224,7 +224,7 @@ class ChargebackRateDetail < ApplicationRecord
   end
 
   def metric_and_cost_by(consumption, options)
-    metric_value = chargeable_field.measure(consumption, options)
+    metric_value = chargeable_field.measure(consumption, options, sub_metric)
     hourly_cost = hourly_cost(metric_value, consumption)
     cost = chargeable_field.metering? ? hourly_cost : hourly_cost * consumption.consumed_hours_in_interval
     [metric_value, cost]
@@ -272,6 +272,7 @@ class ChargebackRateDetail < ApplicationRecord
 
         if detail_new.chargeable_field.metric == 'derived_vm_allocated_disk_storage'
           volume_types = CloudVolume.volume_types
+          volume_types.push('unclassified') if volume_types.present?
           volume_types.each do |volume_type|
             storage_detail_new = detail_new.dup
             storage_detail_new.sub_metric = volume_type

@@ -147,6 +147,44 @@ describe ChargebackVm do
           add_metric_rollups_for(@vm1, start_time...finish_time, 1.hour, metric_rollup_params)
         end
 
+        context 'with cloud volume types' do
+          let!(:cloud_volume_sdd) { FactoryGirl.create(:cloud_volume_openstack, :volume_type => 'sdd') }
+          let!(:cloud_volume_hdd) { FactoryGirl.create(:cloud_volume_openstack, :volume_type => 'hdd') }
+          let(:state_data) do
+            {
+              :allocated_disk_types => {
+                'sdd' => 3.gigabytes,
+                'hdd' => 1.gigabytes,
+              },
+            }
+          end
+
+          before do
+            # create vim performance state
+            allocated_storage_rate_detail = chargeback_rate.chargeback_rate_details.detect { |x| x.chargeable_field.metric == 'derived_vm_allocated_disk_storage' }
+            CloudVolume.all.each do |cv|
+              new_rate_detail = allocated_storage_rate_detail.dup
+              new_rate_detail.sub_metric = cv.volume_type
+              new_rate_detail.chargeback_tiers = allocated_storage_rate_detail.chargeback_tiers.map(&:dup)
+              new_rate_detail.save
+              chargeback_rate.chargeback_rate_details << new_rate_detail
+            end
+
+            chargeback_rate.save
+            add_vim_performance_state_for(@vm1, start_time...finish_time, 1.hour, state_data)
+          end
+
+          it 'charges sub metrics as cloud volume types' do
+            skip('this feature needs to be added to new chargeback rating') if Settings.new_chargeback
+
+            expect(subject.storage_allocated_sdd_metric).to eq(3.gigabytes)
+            expect(subject.storage_allocated_sdd_cost).to eq(state_data[:allocated_disk_types]['sdd'] / 1.gigabytes * count_hourly_rate * hours_in_day)
+
+            expect(subject.storage_allocated_hdd_metric).to eq(1.gigabytes)
+            expect(subject.storage_allocated_hdd_cost).to eq(state_data[:allocated_disk_types]['hdd'] / 1.gigabytes * count_hourly_rate * hours_in_day)
+          end
+        end
+
         subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
 
         context 'when first metric rollup has tag_names=nil' do
