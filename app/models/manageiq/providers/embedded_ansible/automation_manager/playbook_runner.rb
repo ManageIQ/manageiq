@@ -67,6 +67,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
     tower_job_status = ansible_job.raw_status
     if tower_job_status.completed?
       ansible_job.refresh_ems
+      log_stdout(tower_job_status)
       if tower_job_status.succeeded?
         my_signal(minimize_indirect, :post_ansible_run, 'Playbook ran successfully', 'ok')
       else
@@ -95,6 +96,11 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
 
   def ansible_job
     ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job.find(options[:tower_job_id])
+  end
+
+  def set_status(message, status = "ok")
+    _log.info(message)
+    super
   end
 
   alias_method :initializing, :dispatch_start
@@ -172,5 +178,14 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
     # log the error but do not treat the playbook running as failure
     _log.log_backtrace(err)
     false
+  end
+
+  def log_stdout(tower_job_status)
+    return unless %(on_error always).include?(options[:log_output])
+    return if options[:log_output] == 'on_error' && tower_job_status.succeeded?
+    _log.info("Stdout from playbook #{playbook.name}: #{ansible_job.raw_stdout('txt_download')}")
+  rescue => err
+    _log.error("Failed to get stdout from playbook #{playbook.name}")
+    _log.log_backtrace(err)
   end
 end

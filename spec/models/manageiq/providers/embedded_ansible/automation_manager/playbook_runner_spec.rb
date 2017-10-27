@@ -67,7 +67,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
         allow(playbook).to receive(:raw_create_job_template).and_return(double(:id => 'jt_ref'))
         expect(subject).to receive(:signal).with(:launch_ansible_tower_job)
         subject.create_job_template
-        expect(subject.options).to have_attributes(:job_template_ref => 'jt_ref')
+        expect(subject.options).to include(:job_template_ref => 'jt_ref')
       end
     end
 
@@ -114,20 +114,52 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
     end
 
     context 'tower job finishes normally' do
-      before { allow(subject).to receive(:ansible_job).and_return(double(:raw_status => double(:completed? => true, :succeeded? => true), :refresh_ems => nil)) }
+      let(:ansible_job) { double(:raw_status => double(:completed? => true, :succeeded? => true), :refresh_ems => nil) }
+      before { allow(subject).to receive(:ansible_job).and_return(ansible_job) }
 
-      it 'moves on to post_ansible_run with ok status' do
-        expect(subject).to receive(:signal).with(:post_ansible_run, kind_of(String), 'ok')
-        subject.poll_ansible_tower_job_status(10)
+      context 'always log output' do
+        let(:options) { {:tower_job_id => 'jb1', :log_output => 'always'} }
+
+        it 'gets ansible output and moves on to post_ansible_run with ok status' do
+          expect(ansible_job).to receive(:raw_stdout)
+          expect(subject).to receive(:signal).with(:post_ansible_run, kind_of(String), 'ok')
+          subject.poll_ansible_tower_job_status(10)
+        end
+      end
+
+      context 'log output on error' do
+        let(:options) { {:tower_job_id => 'jb1', :log_output => 'on_error'} }
+
+        it 'moves on to post_ansible_run with ok status' do
+          expect(ansible_job).not_to receive(:raw_stdout)
+          expect(subject).to receive(:signal).with(:post_ansible_run, kind_of(String), 'ok')
+          subject.poll_ansible_tower_job_status(10)
+        end
       end
     end
 
     context 'tower job fails' do
-      before { allow(subject).to receive(:ansible_job).and_return(double(:raw_status => double(:completed? => true, :succeeded? => false), :refresh_ems => nil)) }
+      let(:ansible_job) { double(:raw_status => double(:completed? => true, :succeeded? => false), :refresh_ems => nil) }
+      before { allow(subject).to receive(:ansible_job).and_return(ansible_job) }
 
-      it 'moves on to post_ansible_run with error status' do
-        expect(subject).to receive(:signal).with(:post_ansible_run, kind_of(String), 'error')
-        subject.poll_ansible_tower_job_status(10)
+      context 'log output on error' do
+        let(:options) { {:tower_job_id => 'jb1', :log_output => 'on_error'} }
+
+        it 'gets ansible outputs and moves on to post_ansible_run with error status' do
+          expect(ansible_job).to receive(:raw_stdout)
+          expect(subject).to receive(:signal).with(:post_ansible_run, kind_of(String), 'error')
+          subject.poll_ansible_tower_job_status(10)
+        end
+      end
+
+      context 'never log output' do
+        let(:options) { {:tower_job_id => 'jb1', :log_output => 'never'} }
+
+        it 'moves on to post_ansible_run with error status' do
+          expect(ansible_job).not_to receive(:raw_stdout)
+          expect(subject).to receive(:signal).with(:post_ansible_run, kind_of(String), 'error')
+          subject.poll_ansible_tower_job_status(10)
+        end
       end
     end
 
