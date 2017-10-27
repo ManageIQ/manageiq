@@ -211,6 +211,14 @@ class Chargeback < ActsAsArModel
     end
   end
 
+  def self.default_column_for_format(col)
+    if col.start_with?('storage_allocated')
+      col.ends_with?('cost') ? 'storage_allocated_cost' : 'storage_allocated_metric'
+    else
+      col
+    end
+  end
+
   private
 
   def relevant_fields

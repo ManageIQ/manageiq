@@ -36,6 +36,9 @@ module MiqReport::Formatting
         options[:format] = :cores
       end
     end
+
+    col = Chargeback.default_column_for_format(col.to_s) if Chargeback.db_is_chargeback?(db)
+
     format = options.delete(:format)
     return "" if value.nil?
     return value.to_s if format == :_none_ # Raw value was requested, do not attempt to format
