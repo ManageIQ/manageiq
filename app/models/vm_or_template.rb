@@ -448,31 +448,28 @@ class VmOrTemplate < ApplicationRecord
         end
     end
 
-    if options[:task] == "destroy"
-      MiqQueue.submit_job(
-        :class_name   => base_class.name,
-        :instance_id  => vm.id,
-        :method_name  => options[:task],
-        :args         => args,
-        :miq_callback => cb,
-        :user_id      => user.id,
-        :group_id     => user.current_group.id,
-        :tenant_id    => user.current_tenant.id
-      )
-    else
-      MiqQueue.submit_job(
-        :service      => options[:invoke_by] == :job ? "smartstate" : "ems_operations",
-        :affinity     => vm.ext_management_system,
-        :class_name   => base_class.name,
-        :instance_id  => vm.id,
-        :method_name  => options[:task],
-        :args         => args,
-        :miq_callback => cb,
-        :user_id      => user.id,
-        :group_id     => user.current_group.id,
-        :tenant_id    => user.current_tenant.id
-      )
-    end
+    q_hash =
+      if options[:task] == "destroy"
+        {
+          :class_name   => base_class.name,
+          :instance_id  => vm.id,
+          :method_name  => options[:task],
+          :args         => args,
+          :miq_callback => cb,
+        }
+      else
+        {
+          :service      => options[:invoke_by] == :job ? "smartstate" : "ems_operations",
+          :affinity     => vm.ext_management_system,
+          :class_name   => base_class.name,
+          :instance_id  => vm.id,
+          :method_name  => options[:task],
+          :args         => args,
+          :miq_callback => cb,
+        }
+      end
+    q_hash.merge!(:user_id => user.id, :group_id => user.current_group.id, :tenant_id => user.current_tenant.id) if user
+    MiqQueue.submit_job(q_hash)
   end
 
   def self.action_for_task(task)
