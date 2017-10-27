@@ -18,4 +18,4 @@ fi
 rm -f pg_inspector_output.tar.gz
 
 # collect the output
-tar czf pg_inspector_output.tar.gz ${basedir}/output
+tar czf pg_inspector_output.tar.gz /var/www/miq/vmdb/log/pg_inspector*
