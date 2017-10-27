@@ -11,10 +11,15 @@ module MiqReport::ImportExport
       )
     end
 
-    def resolve_view_path(file_name)
+    def resolve_view_path(file_name, file_name_no_suffix = nil)
       view_paths.each do |path|
         full_path = File.join(path, file_name)
         return full_path if File.exist?(full_path)
+
+        if file_name_no_suffix
+          full_path_no_suffix = File.join(path, file_name_no_suffix)
+          return full_path_no_suffix if File.exist?(full_path_no_suffix)
+        end
       end
       nil
     end
@@ -103,7 +108,7 @@ module MiqReport::ImportExport
 
       suffix = suffix ? "-#{suffix}" : ''
 
-      viewfile = resolve_view_path("#{db}#{suffix}.yaml")
+      viewfile = resolve_view_path("#{db}#{suffix}.yaml", "#{db}.yaml")
       viewfilebyrole = resolve_view_path("#{db}#{suffix}-#{role}.yaml")
 
       viewfilerestricted || viewfilebyrole || viewfile
