@@ -427,6 +427,7 @@ class VmOrTemplate < ApplicationRecord
 
   # override
   def self.invoke_task_local(task, vm, options, args)
+    user = User.current_user
     cb = nil
     if task
       cb =
@@ -454,6 +455,9 @@ class VmOrTemplate < ApplicationRecord
         :method_name  => options[:task],
         :args         => args,
         :miq_callback => cb,
+        :user_id      => user.id,
+        :group_id     => user.current_group.id,
+        :tenant_id    => user.current_tenant.id
       )
     else
       MiqQueue.submit_job(
@@ -464,6 +468,9 @@ class VmOrTemplate < ApplicationRecord
         :method_name  => options[:task],
         :args         => args,
         :miq_callback => cb,
+        :user_id      => user.id,
+        :group_id     => user.current_group.id,
+        :tenant_id    => user.current_tenant.id
       )
     end
   end

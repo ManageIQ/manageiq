@@ -28,6 +28,7 @@ describe ProcessTasksMixin do
 
     it "queues a message for the specified task" do
       EvmSpecHelper.create_guid_miq_server_zone
+      allow(User).to receive(:current_user).and_return(FactoryGirl.create(:user_with_group, :userid => "admin"))
       test_class.process_tasks(:task => "test_method", :ids => [5], :userid => "admin")
 
       message = MiqQueue.first
@@ -42,6 +43,7 @@ describe ProcessTasksMixin do
 
     it "defaults the userid to system in the queue message" do
       EvmSpecHelper.create_guid_miq_server_zone
+      allow(User).to receive(:current_user).and_return(FactoryGirl.create(:user_with_group, :userid => "admin"))
       test_class.process_tasks(:task => "test_method", :ids => [5])
 
       message = MiqQueue.first
@@ -50,7 +52,7 @@ describe ProcessTasksMixin do
       message.args.each do |h|
         expect(h[:task]).to eq("test_method")
         expect(h[:ids]).to eq([5])
-        expect(h[:userid]).to eq("system")
+        expect(h[:userid]).to eq("admin")
       end
     end
 
@@ -98,6 +100,7 @@ describe ProcessTasksMixin do
       end
 
       it "requeues invoke_tasks_remote when invoke_api_tasks fails" do
+        allow(User).to receive(:current_user).and_return(FactoryGirl.create(:user_with_group, :userid => "admin"))
         expect(InterRegionApiMethodRelay).to receive(:api_client_connection_for_region)
         expect(test_class).to receive(:invoke_api_tasks).and_raise(RuntimeError)
         test_class.invoke_tasks_remote(test_options)
@@ -118,6 +121,7 @@ describe ProcessTasksMixin do
     end
 
     it "requeues if the server does not have an address" do
+      allow(User).to receive(:current_user).and_return(FactoryGirl.create(:user_with_group, :userid => "admin"))
       test_class.invoke_tasks_remote(test_options)
 
       expect(MiqQueue.first).to have_attributes(
