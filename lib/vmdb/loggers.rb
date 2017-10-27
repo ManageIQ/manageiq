@@ -73,6 +73,9 @@ module Vmdb
     def self.configure_external_loggers
       require 'awesome_spawn'
       AwesomeSpawn.logger = $log
+
+      require 'log_decorator'
+      LogDecorator.logger = $log
     end
     private_class_method :configure_external_loggers
 
