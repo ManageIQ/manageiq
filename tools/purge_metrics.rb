@@ -11,7 +11,8 @@ opts = Trollop.options do
   opt :realtime, "Realtime range", :default => "4.hours"
   opt :hourly,   "Hourly range",   :default => "6.months"
   opt :daily,    "Daily range",    :default => "6.months"
-  opt :window,   "Window of records to delete at once", :default => 1000
+  opt :window,   "Window of records to delete at once", :default => 10000
+  opt :limit,    "Total number of records to delete per method"
 end
 Trollop.die :mode,     "must be one of #{MODES.join(", ")}" unless MODES.include?(opts[:mode])
 Trollop.die :realtime, "must be a number with method (e.g. 4.hours)"  unless opts[:realtime].number_with_method?
@@ -43,7 +44,7 @@ require 'ruby-progressbar'
 %w(realtime hourly daily).each do |interval|
   pbar = ProgressBar.create(:title => interval.titleize, :total => counts[interval], :autofinish => false)
   if counts[interval] > 0
-    Metric::Purging.purge(dates[interval], interval, opts[:window]) do |count, _|
+    Metric::Purging.purge(dates[interval], interval, opts[:window], opts[:limit]) do |count, _|
       pbar.progress += count
     end
   end
