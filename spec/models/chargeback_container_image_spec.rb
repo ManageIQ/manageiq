@@ -149,7 +149,7 @@ describe ChargebackContainerImage do
 
   context "New Chargeback" do
     before do
-      ManageIQ::Consumption::ShowbackUsageType.seed
+      ManageIQ::Consumption::ShowbackInputMeasure.seed
 
       stub_settings(:new_chargeback => '1')
     end
