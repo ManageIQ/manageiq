@@ -22,7 +22,7 @@ describe DialogImportService do
 
     let(:dialogs) do
       [{"label" => "Test", "dialog_tabs" => dialog_tabs},
-       {"label" => "Test2", "dialog_tabs" => dialog_tabs, "description" => "potato"}]
+       {"label" => "Test2", "dialog_tabs" => dialog_tabs, "description" => "potato", "blueprint_id" => "456"}]
     end
 
     let(:not_dialogs) { [{"this is not" => "a dialog"}] }
