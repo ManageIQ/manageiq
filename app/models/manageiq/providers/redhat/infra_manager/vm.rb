@@ -5,7 +5,9 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
   include_concern 'ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared'
 
   supports :migrate do
-    unless ext_management_system.supports_migrate?
+    if blank? || orphaned? || archived?
+      unsupported_reason_add(:migrate, "Migrate operation in not supported.")
+    elsif !ext_management_system.supports_migrate?
       unsupported_reason_add(:migrate, 'RHV API version does not support migrate')
     end
   end
@@ -43,23 +45,29 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
   alias_method :ems_cluster, :parent_cluster
 
   def disconnect_storage(_s = nil)
-    vm_disks = collect_disks
+    return unless active?
 
-    if vm_disks.blank?
-      storage = nil
-    else
-      vm_storages = ([storage] + storages).compact.uniq
-      storage = vm_storages.select { |store| !vm_disks.include?(store.ems_ref) }
-    end
+    vm_storages = ([storage] + storages).compact.uniq
+    return if vm_storages.empty?
+
+    vm_disks = collect_disks
+    storage = vm_disks.blank? ? nil : vm_storages.select { |store| !vm_disks.include?(store.ems_ref) }
 
     super(storage)
   end
 
   def collect_disks
-    disks = hardware.disks.map { |disk| "#{disk.storage.ems_ref}/disks/#{disk.filename}" }
-    vm_disks = []
+    return [] if hardware.nil?
 
-    ext_management_system.with_provider_connection do |rhevm|
+    disks = hardware.disks.map do |disk|
+      unless disk.storage.nil?
+        "#{disk.storage.ems_ref}/disks/#{disk.filename}"
+      end
+    end
+
+    vm_disks = []
+    disks.compact!
+    ext_management_system.try(:with_provider_connection) do |rhevm|
       disks.each do |disk|
         begin
           vm_disks << Ovirt::Disk.find_by_href(rhevm, disk)
@@ -68,7 +76,14 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
         end
       end
     end
+
     vm_disks
+  end
+
+  def disconnect_inv
+    disconnect_storage
+
+    super
   end
 
   #
