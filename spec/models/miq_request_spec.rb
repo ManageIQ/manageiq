@@ -428,4 +428,43 @@ describe MiqRequest do
       expect(request.get_user.current_group).to eq(group1)
     end
   end
+
+  context "#update_request" do
+    before do
+      allow(MiqServer).to receive(:my_zone).and_return("New York")
+    end
+
+    let(:request) do
+      FactoryGirl.create(:miq_provision_request,
+                         :requester => fred,
+                         :options   => {:a => "1"})
+    end
+
+    it "user_message" do
+      msg = "Yabba Dabba Doo"
+      expect(request).not_to receive(:after_update_options)
+      request.update_request({:user_message => msg}, fred)
+
+      request.reload
+      expect(request.options[:user_message]).to eq(msg)
+      expect(request.message).to eq(msg)
+    end
+
+    it "truncates long messages" do
+      msg = "Yabba Dabba Doo" * 30
+      expect(request).not_to receive(:after_update_options)
+      request.update_request({:user_message => msg}, fred)
+
+      request.reload
+      expect(request.options[:user_message].length).to eq(255)
+      expect(request.message.length).to eq(255)
+    end
+
+    it "non user_message should call after_update_options" do
+      expect(request).to receive(:after_update_options)
+      request.update_request({:abc => 1}, fred)
+
+      expect(request.options[:abc]).to eq(1)
+    end
+  end
 end
