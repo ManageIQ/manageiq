@@ -54,7 +54,9 @@ class ChargebackVm < Chargeback
   #   'storage_allocated_volume_type1_cost'   => {:group => [:total]},
   # }
   def self.dynamic_columns_for(column_type)
-    (CloudVolume.volume_types + [nil]).each_with_object({}) do |volume_type, result|
+    volume_types = CloudVolume.volume_types
+    volume_types.push(nil) if volume_types.present?
+    volume_types.each_with_object({}) do |volume_type, result|
       [:metric, :cost].collect do |type|
         result["storage_allocated_#{volume_type || 'unclassified'}_#{type}"] = column_type
       end
