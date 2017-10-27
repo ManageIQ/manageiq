@@ -145,18 +145,6 @@ class DialogImportService
     Dialog.where("label" => label).exists?
   end
 
-  def build_association_list(dialog)
-    associations = []
-    dialog["dialog_tabs"].flat_map do |tab|
-      tab["dialog_groups"].flat_map do |group|
-        group["dialog_fields"].flat_map do |field|
-          associations << { field["name"] => field["dialog_field_responders"] } unless field["dialog_field_responders"].nil?
-        end
-      end
-    end
-    associations
-  end
-
   def destroy_queued_deletion(import_file_upload_id)
     MiqQueue.unqueue(
       :class_name  => "ImportFileUpload",
