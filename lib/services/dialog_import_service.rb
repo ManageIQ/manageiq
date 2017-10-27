@@ -119,6 +119,7 @@ class DialogImportService
     dialogs.each do |dialog|
       new_or_existing_dialog = Dialog.where(:label => dialog["label"]).first_or_create
       dialog['id'] = new_or_existing_dialog.id
+      associations_to_be_created = build_association_list(dialog)
       new_or_existing_dialog.update_attributes(
         dialog.merge(
           "dialog_tabs"      => build_dialog_tabs(dialog),
@@ -126,7 +127,7 @@ class DialogImportService
         )
       )
       fields = new_or_existing_dialog.dialog_fields
-      build_association_list(dialog).each do |association|
+      associations_to_be_created.each do |association|
         association.values.each do |values|
           values.each do |responder|
             next if fields.select { |field| field.name == responder }.empty?
@@ -142,6 +143,18 @@ class DialogImportService
 
   def dialog_with_label?(label)
     Dialog.where("label" => label).exists?
+  end
+
+  def build_association_list(dialog)
+    associations = []
+    dialog["dialog_tabs"].flat_map do |tab|
+      tab["dialog_groups"].flat_map do |group|
+        group["dialog_fields"].flat_map do |field|
+          associations << { field["name"] => field["dialog_field_responders"] } unless field["dialog_field_responders"].nil?
+        end
+      end
+    end
+    associations
   end
 
   def destroy_queued_deletion(import_file_upload_id)
