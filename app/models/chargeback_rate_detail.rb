@@ -91,8 +91,8 @@ class ChargebackRateDetail < ApplicationRecord
       if !consumption.chargeback_fields_present && chargeable_field.fixed?
         cost = 0
       end
-      cost_keys.each { |field| result[field] = cost }
       result[metric_key(sub_metric)] = metric_value
+      cost_keys(sub_metric).each { |field| result[field] = cost }
     end
     result
   end
