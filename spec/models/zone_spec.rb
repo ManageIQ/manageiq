@@ -185,45 +185,6 @@ describe Zone do
   end
 
   context "ConfigurationManagementMixin" do
-    let(:zone) { FactoryGirl.create(:zone) }
-
-    describe "#settings_for_resource" do
-      it "returns the resource's settings" do
-        settings = {:some_thing => [1, 2, 3]}
-        stub_settings(settings)
-        expect(zone.settings_for_resource.to_hash).to eq(settings)
-      end
-    end
-
-    describe "#add_settings_for_resource" do
-      it "sets the specified settings" do
-        settings = {:some_test_setting => {:setting => 1}}
-        expect(zone).to receive(:reload_all_server_settings)
-
-        zone.add_settings_for_resource(settings)
-
-        expect(Vmdb::Settings.for_resource(zone).some_test_setting.setting).to eq(1)
-      end
-    end
-
-    describe "#reload_all_server_settings" do
-      it "queues #reload_settings for the started servers" do
-        some_other_zone = FactoryGirl.create(:zone)
-        started_server = FactoryGirl.create(:miq_server, :status => "started", :zone => zone)
-        FactoryGirl.create(:miq_server, :status => "started", :zone => some_other_zone)
-        FactoryGirl.create(:miq_server, :status => "stopped", :zone => zone)
-
-        zone.reload_all_server_settings
-
-        expect(MiqQueue.count).to eq(1)
-        message = MiqQueue.first
-        expect(message.instance_id).to eq(started_server.id)
-        expect(message.method_name).to eq("reload_settings")
-      end
-    end
-  end
-
-  context "ConfigurationManagementMixin" do
     describe "#remote_cockpit_ws_miq_server" do
       before(:each) do
         @csv = <<-CSV.gsub(/^\s+/, "")

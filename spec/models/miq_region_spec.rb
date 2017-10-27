@@ -160,42 +160,6 @@ describe MiqRegion do
     end
   end
 
-  context "ConfigurationManagementMixin" do
-    describe "#settings_for_resource" do
-      it "returns the resource's settings" do
-        settings = {:some_thing => [1, 2, 3]}
-        stub_settings(settings)
-        expect(region.settings_for_resource.to_hash).to eq(settings)
-      end
-    end
-
-    describe "#add_settings_for_resource" do
-      it "sets the specified settings" do
-        settings = {:some_test_setting => {:setting => 1}}
-        expect(region).to receive(:reload_all_server_settings)
-
-        region.add_settings_for_resource(settings)
-
-        expect(Vmdb::Settings.for_resource(region).some_test_setting.setting).to eq(1)
-      end
-    end
-
-    describe "#reload_all_server_settings" do
-      it "queues #reload_settings for the started servers" do
-        started_server = FactoryGirl.create(:miq_server, :status => "started")
-        FactoryGirl.create(:miq_server, :status => "started", :id => external_region_id)
-        FactoryGirl.create(:miq_server, :status => "stopped")
-
-        region.reload_all_server_settings
-
-        expect(MiqQueue.count).to eq(1)
-        message = MiqQueue.first
-        expect(message.instance_id).to eq(started_server.id)
-        expect(message.method_name).to eq("reload_settings")
-      end
-    end
-  end
-
   describe "#vms" do
     it "brings them back" do
       FactoryGirl.create(:vm_vmware, :id => external_region_id)
