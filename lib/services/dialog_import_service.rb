@@ -119,6 +119,7 @@ class DialogImportService
     dialogs.each do |dialog|
       new_or_existing_dialog = Dialog.where(:label => dialog["label"]).first_or_create
       dialog['id'] = new_or_existing_dialog.id
+      associations_to_be_created = build_association_list(dialog)
       new_or_existing_dialog.update_attributes(
         dialog.merge(
           "dialog_tabs"      => build_dialog_tabs(dialog),
@@ -126,7 +127,7 @@ class DialogImportService
         )
       )
       fields = new_or_existing_dialog.dialog_fields
-      build_association_list(dialog).each do |association|
+      associations_to_be_created.each do |association|
         association.values.each do |values|
           values.each do |responder|
             next if fields.select { |field| field.name == responder }.empty?
