@@ -58,8 +58,8 @@ class ChargeableField < ApplicationRecord
     UNITS[metric] ? detail_measure.adjust(target_unit, UNITS[metric]) : 1
   end
 
-  def metric_key
-    "#{rate_name}_metric" # metric value (e.g. Storage [Used|Allocated|Fixed])
+  def metric_key(sub_metric = nil)
+    "#{rate_name}_#{sub_metric ? sub_metric + '_' : ''}metric" # metric value (e.g. Storage [Used|Allocated|Fixed])
   end
 
   def cost_keys
