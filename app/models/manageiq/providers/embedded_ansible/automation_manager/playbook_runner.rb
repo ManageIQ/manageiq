@@ -13,7 +13,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
     time = Time.zone.now
     update_attributes(:started_on => time)
     miq_task.update_attributes(:started_on => time)
-    if options[:inventory]
+    if options[:hosts].blank? || options[:hosts] == 'localhost'
       my_signal(false, :create_job_template)
     else
       my_signal(false, :create_inventory)
@@ -22,15 +22,10 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
 
   def create_inventory
     set_status('creating inventory')
-    tower = playbook.manager
-    hosts = options[:hosts] || options.fetch_path(:extra_vars, :hosts)
-    options[:inventory] =
-      if hosts == 'localhost' || hosts.nil?
-        tower.provider.default_inventory
-      else
-        inventory_name = "#{playbook.name}_#{Time.zone.now.to_i}"
-        ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Inventory.raw_create_inventory(tower, inventory_name, hosts).id
-      end
+
+    inventory_name = "#{playbook.name}_#{Time.zone.now.to_i}"
+    options[:inventory] = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Inventory
+                          .raw_create_inventory(playbook.manager, inventory_name, options[:hosts]).id
     save!
     my_signal(minimize_indirect, :create_job_template)
   rescue => err
@@ -52,13 +47,9 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
 
   def launch_ansible_tower_job
     set_status('launching tower job')
-    job_template = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript.new(
-      :manager     => playbook.manager,
-      :manager_ref => options[:job_template_ref],
-      :variables   => {}
-    )
+
     launch_options = options.slice(:extra_vars, :limit)
-    tower_job = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job.create_job(job_template, launch_options)
+    tower_job = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job.create_job(temp_configuration_script, launch_options)
     options[:tower_job_id] = tower_job.id
     self.name = "#{name}, Job ID: #{tower_job.id}"
     miq_task.update_attributes(:name => name)
@@ -73,9 +64,9 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
   def poll_ansible_tower_job_status(interval)
     set_status('waiting for tower job to complete')
 
-    tower_job_status = tower_job.raw_status
+    tower_job_status = ansible_job.raw_status
     if tower_job_status.completed?
-      tower_job.refresh_ems
+      ansible_job.refresh_ems
       if tower_job_status.succeeded?
         my_signal(minimize_indirect, :post_ansible_run, 'Playbook ran successfully', 'ok')
       else
@@ -90,9 +81,20 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
     my_signal(minimize_indirect, :post_ansible_run, err.message, 'error')
   end
 
-  def post_ansible_run(*args)
-    # delete inventory, job_template, job?
-    my_signal(true, :finish, *args)
+  def post_ansible_run(message, status)
+    inventory_not_deleted = !delete_inventory
+    jt_not_deleted = !delete_job_template
+
+    message = "#{message}; Cleanup encountered error" if inventory_not_deleted || jt_not_deleted
+    my_signal(true, :finish, message, status)
+  end
+
+  def playbook
+    ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook.find(options[:playbook_id])
+  end
+
+  def ansible_job
+    ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job.find(options[:tower_job_id])
   end
 
   alias_method :initializing, :dispatch_start
@@ -145,11 +147,30 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
     )
   end
 
-  def playbook
-    ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook.find(options[:playbook_id])
+  def temp_configuration_script
+    ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript.new(
+      :manager     => playbook.manager,
+      :manager_ref => options[:job_template_ref],
+      :variables   => {}
+    )
   end
 
-  def tower_job
-    ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job.find(options[:tower_job_id])
+  def delete_inventory
+    return unless options[:inventory]
+    playbook.manager.with_provider_connection do |connection|
+      connection.api.inventories.find(options[:inventory]).destroy!
+    end
+  rescue => err
+    # log the error but do not treat the playbook running as failure
+    _log.log_backtrace(err)
+    false
+  end
+
+  def delete_job_template
+    temp_configuration_script.raw_delete_in_provider
+  rescue => err
+    # log the error but do not treat the playbook running as failure
+    _log.log_backtrace(err)
+    false
   end
 end

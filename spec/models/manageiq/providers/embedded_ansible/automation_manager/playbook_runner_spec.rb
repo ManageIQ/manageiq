@@ -4,8 +4,17 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
   subject { ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner.create_job(options.merge(:playbook_id => playbook.id)) }
 
   describe '#start' do
-    context 'inventory is given' do
-      let(:options) { {:inventory => '3'} }
+    context 'localhost is used' do
+      let(:options) { {:hosts => 'localhost'} }
+
+      it 'moves on to create_job_template' do
+        expect(subject).to receive(:queue_signal).with(:create_job_template, :deliver_on => nil)
+        subject.start
+      end
+    end
+
+    context 'no host is given' do
+      let(:options) { {} }
 
       it 'moves on to create_job_template' do
         expect(subject).to receive(:queue_signal).with(:create_job_template, :deliver_on => nil)
@@ -24,25 +33,15 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
   end
 
   describe '#create_inventory' do
-    context 'localhost is used' do
-      let(:options) { {:hosts => 'localhost'} }
-
-      it 'uses default inventory and moves on to create_job_template' do
-        subject.send(:minimize_indirect=, false)
-        allow(subject).to receive(:playbook).and_return(double(:manager => double(:provider => double(:default_inventory => 'default'))))
-        expect(subject).to receive(:queue_signal).with(:create_job_template, :deliver_on => nil)
-        subject.create_inventory
-        expect(subject.options).to have_attributes(:inventory => 'default')
-      end
-    end
-
-    context 'other hosts are used' do
+    context 'hosts are given' do
       # Use string key to also test the indifferent accessibility
       let(:options) { {'hosts' => 'host1,host2'} }
 
       it 'creates an inventory and moves on to create_job_template' do
+        # Also test signal with queue
+        subject.send(:minimize_indirect=, false)
         expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Inventory).to receive(:raw_create_inventory).and_return(double(:id => 'inv1'))
-        expect(subject).to receive(:signal).with(:create_job_template)
+        expect(subject).to receive(:queue_signal).with(:create_job_template, :deliver_on => nil)
         subject.create_inventory
         expect(subject.options[:inventory]).to eq('inv1')
       end
@@ -106,7 +105,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
     let(:options) { {:tower_job_id => 'jb1'} }
 
     context 'tower job is still running' do
-      before { allow(subject).to receive(:tower_job).and_return(double(:raw_status => double(:completed? => false))) }
+      before { allow(subject).to receive(:ansible_job).and_return(double(:raw_status => double(:completed? => false))) }
 
       it 'requeues for later poll' do
         expect(subject).to receive(:queue_signal).with(:poll_ansible_tower_job_status, 20, kind_of(Hash))
@@ -115,7 +114,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
     end
 
     context 'tower job finishes normally' do
-      before { allow(subject).to receive(:tower_job).and_return(double(:raw_status => double(:completed? => true, :succeeded? => true), :refresh_ems => nil)) }
+      before { allow(subject).to receive(:ansible_job).and_return(double(:raw_status => double(:completed? => true, :succeeded? => true), :refresh_ems => nil)) }
 
       it 'moves on to post_ansible_run with ok status' do
         expect(subject).to receive(:signal).with(:post_ansible_run, kind_of(String), 'ok')
@@ -124,7 +123,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
     end
 
     context 'tower job fails' do
-      before { allow(subject).to receive(:tower_job).and_return(double(:raw_status => double(:completed? => true, :succeeded? => false), :refresh_ems => nil)) }
+      before { allow(subject).to receive(:ansible_job).and_return(double(:raw_status => double(:completed? => true, :succeeded? => false), :refresh_ems => nil)) }
 
       it 'moves on to post_ansible_run with error status' do
         expect(subject).to receive(:signal).with(:post_ansible_run, kind_of(String), 'error')
@@ -133,11 +132,47 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
     end
 
     context 'error is raised' do
-      before { allow(subject).to receive(:tower_job).and_raise('internal error') }
+      before { allow(subject).to receive(:ansible_job).and_raise('internal error') }
 
       it 'moves on to post_ansible_run with error message' do
         expect(subject).to receive(:signal).with(:post_ansible_run, 'internal error', 'error')
         subject.poll_ansible_tower_job_status(10)
+      end
+    end
+  end
+
+  describe '#post_ansible_run' do
+    let(:options) { {:inventory => 'inv1', :job_template_ref => 'jt1'} }
+
+    context 'playbook runs successfully' do
+      it 'removes temporary inventory and job template and finishes the job' do
+        expect(subject).to receive(:delete_inventory)
+        expect(subject).to receive(:delete_job_template)
+        subject.post_ansible_run('Playbook ran successfully', 'ok')
+        expect(subject).to have_attributes(:state => 'finished', :status => 'ok')
+      end
+    end
+
+    context 'playbook runs with error' do
+      it 'removes temporary inventory and job template and finishes the job with error' do
+        expect(subject).to receive(:delete_inventory)
+        expect(subject).to receive(:delete_job_template)
+        subject.post_ansible_run('Ansible engine returned an error for the job', 'error')
+        expect(subject).to have_attributes(:state => 'finished', :status => 'error')
+      end
+    end
+
+    context 'cleaning up has error' do
+      it 'does fail the job but logs the error' do
+        expect(subject).to receive(:delete_inventory)
+        allow(subject).to receive(:temp_configuration_script).and_raise('fake error')
+        expect($log).to receive(:log_backtrace)
+        subject.post_ansible_run('Playbook ran successfully', 'ok')
+        expect(subject).to have_attributes(
+          :state   => 'finished',
+          :status  => 'ok',
+          :message => 'Playbook ran successfully; Cleanup encountered error'
+        )
       end
     end
   end
