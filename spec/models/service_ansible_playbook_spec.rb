@@ -82,7 +82,7 @@ describe(ServiceAnsiblePlaybook) do
         expect(basic_service).to receive(:create_inventory_with_hosts).with(action, hosts).and_return(double(:id => 10))
         basic_service.preprocess(action)
         service.reload
-        expect(basic_service.options[:provision_job_options]).to have_attributes(:inventory => 10)
+        expect(basic_service.options[:provision_job_options]).to include(:inventory => 10)
       end
     end
 
@@ -92,7 +92,7 @@ describe(ServiceAnsiblePlaybook) do
         expect(service).to receive(:create_inventory_with_hosts).with(action, hosts).and_return(double(:id => 20))
         service.preprocess(action)
         service.reload
-        expect(service.options[:provision_job_options]).to have_attributes(
+        expect(service.options[:provision_job_options]).to include(
           :inventory  => 20,
           :credential => credential_1.manager_ref,
           :extra_vars => {'var1' => 'value1', 'var2' => 'value2', 'var3' => 'default_val3', 'pswd' => encrypted_val}
@@ -113,7 +113,7 @@ describe(ServiceAnsiblePlaybook) do
           expect(service).to receive(:create_inventory_with_hosts).with(action, hosts).and_return(double(:id => 20))
           service.preprocess(action)
           service.reload
-          expect(service.options[:retirement_job_options]).to have_attributes(
+          expect(service.options[:retirement_job_options]).to include(
             :inventory  => 20,
             :credential => nil,
             :extra_vars => {'var1' => 'default_val1', 'var2' => 'default_val2', 'var3' => 'default_val3'}
@@ -128,7 +128,7 @@ describe(ServiceAnsiblePlaybook) do
         expect(service).to receive(:create_inventory_with_hosts).with(action, hosts).and_return(double(:id => 30))
         service.preprocess(action, override_options)
         service.reload
-        expect(service.options[:provision_job_options]).to have_attributes(
+        expect(service.options[:provision_job_options]).to include(
           :inventory  => 30,
           :credential => credential_2.manager_ref,
           :extra_vars => {'var1' => 'new_val1', 'var2' => 'value2', 'var3' => 'default_val3', 'pswd' => encrypted_val2}

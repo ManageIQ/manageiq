@@ -436,9 +436,9 @@ describe Service do
     describe "#queue_chargeback_report_generation" do
       it "queue request to generate chargeback report" do
         expect(MiqQueue).to receive(:put) do |args|
-          expect(args).to have_attributes(:class_name  => described_class.name,
-                                          :method_name => "generate_chargeback_report",
-                                          :args        => {:report_source => "Test Run"})
+          expect(args).to include(:class_name  => described_class.name,
+                                  :method_name => "generate_chargeback_report",
+                                  :args        => {:report_source => "Test Run"})
         end
         @service.queue_chargeback_report_generation(:report_source => "Test Run")
       end
