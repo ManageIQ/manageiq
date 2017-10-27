@@ -22,6 +22,7 @@ describe MiqReport::Formats do
       let(:columns) { Chargeback.descendants.collect(&:virtual_attributes_to_define).inject({}, &:merge) }
       it 'works' do
         columns.each do |name, datatype|
+          name = ChargebackVm.default_column_for_format(name)
           subj = described_class.default_format_for(name.to_sym, name.to_sym, datatype.first)
           if name.ends_with?('_cost')
             expect(subj).to eq(:currency_precision_2)
