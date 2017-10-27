@@ -60,6 +60,7 @@ class Chargeback < ActsAsArModel
 
   def calculate_costs(consumption, rates)
     self.fixed_compute_metric = consumption.chargeback_fields_present if consumption.chargeback_fields_present
+    self.class.try(:refresh_dynamic_metric_columns)
 
     rates.each do |rate|
       rate.chargeback_rate_details.each do |r|
