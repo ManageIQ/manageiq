@@ -2,8 +2,16 @@
 
 # ensure pathname correct when runs in a different place
 basedir=$(dirname $0)
+logdir=/var/www/miq/vmdb/log
+logfile=${logdir}/pg_inspector.log
 # default postgresql password: smartvm
 export PGPASSWORD="${PGPASSWORD:-smartvm}"
+
+# show message on screen and also append to log file
+exec > >(tee -ia ${logfile})
+exec 2>&1
+echo ""
+echo "inspect_pg runs on $(date)"
 
 # Run step 1, 3 and 4 in sequence, assume step 2 has done before.
 ${basedir}/../pg_inspector.rb connections
@@ -18,4 +26,5 @@ fi
 rm -f pg_inspector_output.tar.gz
 
 # collect the output
-tar czf pg_inspector_output.tar.gz /var/www/miq/vmdb/log/pg_inspector*
+cd ${logdir}
+tar -czf pg_inspector_output.tar.gz pg_inspector*
