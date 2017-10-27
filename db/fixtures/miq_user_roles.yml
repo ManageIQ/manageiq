@@ -729,6 +729,13 @@
   - vm_shelve
   - vm_shelve_offload
   - vm_tag
+  - sui_core
+  - sui_services
+  - sui_vm
+  - sui_orders
+  - sui_svc_catalog_view
+  - sui_svc_catalog_cart
+  - sui_cart
 
 - :name: EvmRole-user_self_service
   :read_only: true
@@ -800,6 +807,7 @@
   - vm_vmrc_console
   - vm_vnc_console
   - cockpit_console
+  - sui
 
 - :name: EvmRole-vm_user
   :read_only: true
