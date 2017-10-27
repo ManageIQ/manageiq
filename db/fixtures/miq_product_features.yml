@@ -2521,6 +2521,30 @@
       :description: Add a Generic Object Class
       :feature_type: admin
       :identifier: generic_object_definition_new
+    - :name: Add Custom Button Group
+      :description: Add a Custom Button Group for a Generic Object Class
+      :feature_type: control
+      :identifier: generic_object_definition_ab_group_new
+    - :name: Edit Custom Button Group
+      :description: Edit a Custom Button Group for a Generic Object Class
+      :feature_type: control
+      :identifier: generic_object_definition_ab_group_edit
+    - :name: Delete Custom Button Group
+      :description: Delete a Custom Button Group for a Generic Object Class
+      :feature_type: control
+      :identifier: generic_object_definition_ab_group_delete
+    - :name: Add Custom Button
+      :description: Add a Custom Button for a Generic Object Class
+      :feature_type: control
+      :identifier: generic_object_definition_ab_button_new
+    - :name: Edit Custom Button
+      :description: Edit a Custom Button for a Generic Object Class
+      :feature_type: control
+      :identifier: generic_object_definition_ab_button_edit
+    - :name: Delete Custom Button
+      :description: Delete a Custom Button for a Generic Object Class
+      :feature_type: control
+      :identifier: generic_object_definition_ab_button_delete
 
 # Automate Generic Objects
 - :name: Generic Objects
