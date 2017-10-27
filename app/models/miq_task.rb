@@ -33,15 +33,12 @@ class MiqTask < ApplicationRecord
     t.grouping(Arel::Nodes::Case.new(t[:state]).when(STATE_FINISHED).then(t[:status]).else(t[:state]))
   end)
 
-  scope :active,                 ->          { where(:state => STATE_ACTIVE) }
-  scope :no_associated_job,      ->          { where.not("id IN (SELECT miq_task_id from jobs)") }
-  scope :timed_out,              ->          { where("updated_on < ?", Time.now.utc - ::Settings.task.active_task_timeout.to_i_with_method) }
-  scope :with_user_id,           ->(user_id) { where(:user_id => user_id) }
-  scope :with_zone,              ->(zone)    { where(:zone => zone) }
-  scope :with_state,             ->(state)   { where(:state => state) }
-  scope :with_status,            ->(status)  { where(:status => status) }
-  scope :without_status,         ->(status)  { where.not(:status => status) }
-  scope :with_update_on_between, ->(range)   { where(:update_on => range) }
+  scope :active,                  ->          { where(:state => STATE_ACTIVE) }
+  scope :no_associated_job,       ->          { where.not("id IN (SELECT miq_task_id from jobs)") }
+  scope :timed_out,               ->          { where("updated_on < ?", Time.now.utc - ::Settings.task.active_task_timeout.to_i_with_method) }
+  scope :with_userid,             ->(userid)  { where(:userid => userid) }
+  scope :with_zone,               ->(zone)    { where(:zone => zone) }
+  scope :with_updated_on_between, ->(range)   { where(:updated_on => range) }
 
   def self.update_status_for_timed_out_active_tasks
     MiqTask.active.timed_out.no_associated_job.find_each do |task|
