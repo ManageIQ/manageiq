@@ -224,7 +224,7 @@ class ChargebackRateDetail < ApplicationRecord
   end
 
   def metric_and_cost_by(consumption, options)
-    metric_value = chargeable_field.measure(consumption, options)
+    metric_value = chargeable_field.measure(consumption, options, sub_metric)
     hourly_cost = hourly_cost(metric_value, consumption)
     cost = chargeable_field.metering? ? hourly_cost : hourly_cost * consumption.consumed_hours_in_interval
     [metric_value, cost]
