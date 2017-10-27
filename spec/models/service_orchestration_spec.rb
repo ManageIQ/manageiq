@@ -258,6 +258,8 @@ describe ServiceOrchestration do
       allow(ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack).to receive(
         :raw_create_stack).and_return("ems_ref")
       @resulting_stack = service.deploy_orchestration_stack
+
+      service.miq_request_task = FactoryGirl.create(:service_template_provision_task)
     end
 
     it 'sets owners for all vms included in the stack' do
