@@ -1378,3 +1378,43 @@
             value: Win
     search_type: default
     db: PhysicalServer
+- attributes:
+    name: default_Environment / Dev
+    description: Environment / Dev
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: Service.managed-environment
+          value: dev
+    search_type: default
+    db: Service
+- attributes:
+    name: default_Environment / Prod
+    description: Environment / Prod
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: Service.managed-environment
+          value: prod
+    search_type: default
+    db: Service
+- attributes:
+    name: default_Environment / Test
+    description: Environment / Test
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: Service.managed-environment
+          value: test
+    search_type: default
+    db: Service
+- attributes:
+    name: default_Environment / UAT
+    description: Environment / UAT
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: Service.managed-environment
+          value: uat
+    search_type: default
+    db: Service
