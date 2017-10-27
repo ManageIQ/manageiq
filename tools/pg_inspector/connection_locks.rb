@@ -35,7 +35,7 @@ module PgInspector
 
     def merge_lock_and_connection
       some_connection_blocked = false
-      self.connections["connections"].each do |conn|
+      connections["connections"].each do |conn|
         conn["blocked_by"] = find_lock_blocking_spid(conn["spid"])
         unless conn["blocked_by"].empty?
           some_connection_blocked = true
@@ -45,7 +45,7 @@ module PgInspector
       unless some_connection_blocked
         puts "Every connection is OK and not blocked. No need to generate lock graph."
       end
-      self.connections
+      connections
     end
 
     def load_connection_file
