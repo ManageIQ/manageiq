@@ -8,7 +8,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
       let(:options) { {:inventory => '3'} }
 
       it 'moves on to create_job_template' do
-        expect(subject).to receive(:queue_signal).with(:create_job_template)
+        expect(subject).to receive(:queue_signal).with(:create_job_template, :deliver_on => nil)
         subject.start
       end
     end
@@ -17,7 +17,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
       let(:options) { {:hosts => 'host1,localhost'} }
 
       it 'moves on to create inventory' do
-        expect(subject).to receive(:queue_signal).with(:create_inventory)
+        expect(subject).to receive(:queue_signal).with(:create_inventory, :deliver_on => nil)
         subject.start
       end
     end
@@ -28,8 +28,9 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
       let(:options) { {:hosts => 'localhost'} }
 
       it 'uses default inventory and moves on to create_job_template' do
+        subject.send(:minimize_indirect=, false)
         allow(subject).to receive(:playbook).and_return(double(:manager => double(:provider => double(:default_inventory => 'default'))))
-        expect(subject).to receive(:queue_signal).with(:create_job_template)
+        expect(subject).to receive(:queue_signal).with(:create_job_template, :deliver_on => nil)
         subject.create_inventory
         expect(subject.options).to have_attributes(:inventory => 'default')
       end
@@ -41,7 +42,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
 
       it 'creates an inventory and moves on to create_job_template' do
         expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Inventory).to receive(:raw_create_inventory).and_return(double(:id => 'inv1'))
-        expect(subject).to receive(:queue_signal).with(:create_job_template)
+        expect(subject).to receive(:signal).with(:create_job_template)
         subject.create_inventory
         expect(subject.options[:inventory]).to eq('inv1')
       end
@@ -52,7 +53,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
 
       it 'moves on to post_ansible_run' do
         allow(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Inventory).to receive(:raw_create_inventory).and_raise("can't complete the request")
-        expect(subject).to receive(:queue_signal).with(:post_ansible_run, "can't complete the request", "error")
+        expect(subject).to receive(:signal).with(:post_ansible_run, "can't complete the request", "error")
         subject.create_inventory
       end
     end
@@ -65,7 +66,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
     context 'options are enough to cretate job template' do
       it 'creates a job template and moves on to launch_ansible_tower_job' do
         allow(playbook).to receive(:raw_create_job_template).and_return(double(:id => 'jt_ref'))
-        expect(subject).to receive(:queue_signal).with(:launch_ansible_tower_job)
+        expect(subject).to receive(:signal).with(:launch_ansible_tower_job)
         subject.create_job_template
         expect(subject.options).to have_attributes(:job_template_ref => 'jt_ref')
       end
@@ -74,7 +75,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
     context 'error is raised' do
       it 'moves on to post_ansible_run' do
         allow(playbook).to receive(:raw_create_job_template).and_raise("can't complete the request")
-        expect(subject).to receive(:queue_signal).with(:post_ansible_run, "can't complete the request", "error")
+        expect(subject).to receive(:signal).with(:post_ansible_run, "can't complete the request", "error")
         subject.create_job_template
       end
     end
@@ -86,7 +87,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
     context 'job template is ready' do
       it 'launches a job and moves on to poll_ansible_tower_job_status' do
         expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job).to receive(:create_job).and_return(double(:id => 'jb1'))
-        expect(subject).to receive(:queue_signal).with(:poll_ansible_tower_job_status, kind_of(Integer))
+        expect(subject).to receive(:queue_signal).with(:poll_ansible_tower_job_status, kind_of(Integer), kind_of(Hash))
         subject.launch_ansible_tower_job
         expect(subject.options[:tower_job_id]).to eq('jb1')
       end
@@ -95,7 +96,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
     context 'error is raised' do
       it 'moves on to post_ansible_run' do
         allow(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job).to receive(:create_job).and_raise("can't complete the request")
-        expect(subject).to receive(:queue_signal).with(:post_ansible_run, "can't complete the request", "error")
+        expect(subject).to receive(:signal).with(:post_ansible_run, "can't complete the request", "error")
         subject.launch_ansible_tower_job
       end
     end
@@ -117,7 +118,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
       before { allow(subject).to receive(:tower_job).and_return(double(:raw_status => double(:completed? => true, :succeeded? => true), :refresh_ems => nil)) }
 
       it 'moves on to post_ansible_run with ok status' do
-        expect(subject).to receive(:queue_signal).with(:post_ansible_run, kind_of(String), 'ok')
+        expect(subject).to receive(:signal).with(:post_ansible_run, kind_of(String), 'ok')
         subject.poll_ansible_tower_job_status(10)
       end
     end
@@ -126,7 +127,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
       before { allow(subject).to receive(:tower_job).and_return(double(:raw_status => double(:completed? => true, :succeeded? => false), :refresh_ems => nil)) }
 
       it 'moves on to post_ansible_run with error status' do
-        expect(subject).to receive(:queue_signal).with(:post_ansible_run, kind_of(String), 'error')
+        expect(subject).to receive(:signal).with(:post_ansible_run, kind_of(String), 'error')
         subject.poll_ansible_tower_job_status(10)
       end
     end
@@ -135,7 +136,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
       before { allow(subject).to receive(:tower_job).and_raise('internal error') }
 
       it 'moves on to post_ansible_run with error message' do
-        expect(subject).to receive(:queue_signal).with(:post_ansible_run, 'internal error', 'error')
+        expect(subject).to receive(:signal).with(:post_ansible_run, 'internal error', 'error')
         subject.poll_ansible_tower_job_status(10)
       end
     end

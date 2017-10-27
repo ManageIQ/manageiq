@@ -4,14 +4,19 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
     super(name, options.with_indifferent_access)
   end
 
+  def minimize_indirect
+    @minimize_indirect = true if @minimize_indirect.nil?
+    @minimize_indirect
+  end
+
   def start
     time = Time.zone.now
     update_attributes(:started_on => time)
     miq_task.update_attributes(:started_on => time)
     if options[:inventory]
-      queue_signal(:create_job_template)
+      my_signal(false, :create_job_template)
     else
-      queue_signal(:create_inventory)
+      my_signal(false, :create_inventory)
     end
   end
 
@@ -27,10 +32,10 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
         ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Inventory.raw_create_inventory(tower, inventory_name, hosts).id
       end
     save!
-    queue_signal(:create_job_template)
+    my_signal(minimize_indirect, :create_job_template)
   rescue => err
     _log.log_backtrace(err)
-    queue_signal(:post_ansible_run, err.message, 'error')
+    my_signal(minimize_indirect, :post_ansible_run, err.message, 'error')
   end
 
   def create_job_template
@@ -39,10 +44,10 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
     options[:job_template_ref] = raw_job_template.id
     save!
 
-    queue_signal(:launch_ansible_tower_job)
+    my_signal(minimize_indirect, :launch_ansible_tower_job)
   rescue => err
     _log.log_backtrace(err)
-    queue_signal(:post_ansible_run, err.message, 'error')
+    my_signal(minimize_indirect, :post_ansible_run, err.message, 'error')
   end
 
   def launch_ansible_tower_job
@@ -59,10 +64,10 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
     miq_task.update_attributes(:name => name)
     save!
 
-    queue_signal(:poll_ansible_tower_job_status, 10)
+    my_signal(false, :poll_ansible_tower_job_status, 10)
   rescue => err
     _log.log_backtrace(err)
-    queue_signal(:post_ansible_run, err.message, 'error')
+    my_signal(minimize_indirect, :post_ansible_run, err.message, 'error')
   end
 
   def poll_ansible_tower_job_status(interval)
@@ -72,22 +77,22 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
     if tower_job_status.completed?
       tower_job.refresh_ems
       if tower_job_status.succeeded?
-        queue_signal(:post_ansible_run, 'Playbook ran successfully', 'ok')
+        my_signal(minimize_indirect, :post_ansible_run, 'Playbook ran successfully', 'ok')
       else
-        queue_signal(:post_ansible_run, 'Ansible engine returned an error for the job', 'error')
+        my_signal(minimize_indirect, :post_ansible_run, 'Ansible engine returned an error for the job', 'error')
       end
     else
       interval = 60 if interval > 60
-      queue_signal(:poll_ansible_tower_job_status, interval * 2, :deliver_on => Time.now.utc + interval)
+      my_signal(false, :poll_ansible_tower_job_status, interval * 2, :deliver_on => Time.now.utc + interval)
     end
   rescue => err
     _log.log_backtrace(err)
-    queue_signal(:post_ansible_run, err.message, 'error')
+    my_signal(minimize_indirect, :post_ansible_run, err.message, 'error')
   end
 
   def post_ansible_run(*args)
     # delete inventory, job_template, job?
-    queue_signal(:finish, *args)
+    my_signal(true, :finish, *args)
   end
 
   alias_method :initializing, :dispatch_start
@@ -97,6 +102,8 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
   alias_method :error,        :process_error
 
   private
+
+  attr_writer :minimize_indirect
 
   def load_transitions
     self.state ||= 'initialize'
@@ -114,6 +121,14 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
       :cancel                        => {'*'                => 'canceling'},
       :error                         => {'*'                => '*'}
     }
+  end
+
+  def my_signal(no_queue, action, *args, deliver_on: nil)
+    if no_queue
+      signal(action, *args)
+    else
+      queue_signal(action, *args, :deliver_on => deliver_on)
+    end
   end
 
   def queue_signal(*args, deliver_on: nil)
