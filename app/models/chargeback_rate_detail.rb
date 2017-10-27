@@ -52,11 +52,11 @@ class ChargebackRateDetail < ApplicationRecord
     result
   end
 
-  def metric_value_by(consumption)
+  def metric_value_by(consumption, sub_metric = nil)
     return 1.0 if fixed?
 
     return 0 if consumption.none?(metric)
-    return consumption.max(metric) if allocated?
+    return consumption.max(metric, sub_metric) if allocated?
     return consumption.avg(metric) if used?
   end
 
@@ -249,7 +249,7 @@ class ChargebackRateDetail < ApplicationRecord
   end
 
   def metric_and_cost_by(consumption)
-    metric_value = metric_value_by(consumption)
+    metric_value = metric_value_by(consumption, sub_metric)
     [metric_value, hourly_cost(metric_value, consumption) * consumption.consumed_hours_in_interval]
   end
 

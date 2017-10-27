@@ -13,12 +13,12 @@ class Chargeback
       first_metric_rollup_record.tag_names.split('|')
     end
 
-    def max(metric)
-      values(metric).max
+    def max(metric, sub_metric = nil)
+      values(metric, sub_metric).max
     end
 
-    def avg(metric)
-      metric_sum = values(metric).sum
+    def avg(metric, sub_metric = nil)
+      metric_sum = values(metric, sub_metric).sum
       metric_sum / consumed_hours_in_interval
     end
 
@@ -37,7 +37,7 @@ class Chargeback
       [super, first_metric_rollup_record.timestamp].compact.min
     end
 
-    def values(metric)
+    def values(metric, sub_metric = nil)
       @values ||= {}
       @values[metric] ||= @rollups.collect(&metric.to_sym).compact
     end
