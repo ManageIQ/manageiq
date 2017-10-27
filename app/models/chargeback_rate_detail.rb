@@ -46,8 +46,9 @@ class ChargebackRateDetail < ApplicationRecord
       if !consumption.chargeback_fields_present && fixed?
         cost = 0
       end
-      metric_keys.each { |field| result[field] = metric_value }
-      cost_keys.each   { |field| result[field] = cost }
+      
+      metric_keys(sub_metric).each { |field| result[field] = metric_value }
+      cost_keys(sub_metric).each { |field| result[field] = cost }
     end
     result
   end
@@ -238,8 +239,8 @@ class ChargebackRateDetail < ApplicationRecord
 
   private
 
-  def metric_keys
-    ["#{rate_name}_metric"] # metric value (e.g. Storage [Used|Allocated|Fixed])
+  def metric_keys(sub_metric = nil)
+    ["#{rate_name}_#{sub_metric ? sub_metric + '_' : ''}metric"] # metric value (e.g. Storage [Used|Allocated|Fixed])
   end
 
   def cost_keys
