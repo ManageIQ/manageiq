@@ -181,7 +181,7 @@ module EmsRefresh::SaveInventoryContainer
 
     hashes.each do |h|
       h[:ems_id] = container_group[:ems_id]
-      h[:container_image_id] = h[:container_image][:id]
+      h[:container_image_id] = h.fetch_path(:container_image, :id)
     end
 
     save_inventory_multi(container_group.containers, hashes, :use_association, [:ems_ref],
