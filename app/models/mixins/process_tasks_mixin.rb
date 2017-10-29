@@ -17,15 +17,14 @@ module ProcessTasksMixin
     end
 
     def invoke_tasks_queue(options)
-      user = User.current_user
-      MiqQueue.submit_job(
+      q_hash = {
         :class_name  => name,
         :method_name => "invoke_tasks",
-        :args        => [options],
-        :user_id     => user.id,
-        :group_id    => user.current_group.id,
-        :tenant_id   => user.current_tenant.id
-      )
+        :args        => [options]
+      }
+      user = User.current_user
+      q_hash.merge!(:user_id => user.id, :group_id => user.current_group.id, :tenant_id => user.current_tenant.id) if user
+      MiqQueue.submit_job(q_hash)
     end
 
     # Performs tasks received from the UI via the queue
@@ -78,16 +77,16 @@ module ProcessTasksMixin
 
           $log.error("An error occurred while invoking remote tasks...Requeueing for 1 minute from now.")
           $log.log_backtrace(err)
-          user = User.current_user
-          MiqQueue.submit_job(
+
+          q_hash = {
             :class_name  => name,
             :method_name => 'invoke_tasks_remote',
             :args        => [remote_options],
-            :deliver_on  => Time.now.utc + 1.minute,
-            :user_id     => user.id,
-            :group_id    => user.current_group.id,
-            :tenant_id   => user.current_tenant.id
-          )
+            :deliver_on  => Time.now.utc + 1.minute
+          }
+          user = User.current_user
+          q_hash.merge!(:user_id => user.id, :group_id => user.current_group.id, :tenant_id => user.current_tenant.id) if user
+          MiqQueue.submit_job(q_hash)
           next
         end
 
@@ -139,7 +138,6 @@ module ProcessTasksMixin
 
     # default implementation, can be overridden
     def invoke_task_local(task, instance, options, args)
-      user = User.current_user
       cb = {
         :class_name  => task.class.to_s,
         :instance_id => task.id,
@@ -147,16 +145,16 @@ module ProcessTasksMixin
         :args        => ["Finished"]
       } if task
 
-      MiqQueue.submit_job(
+      q_hash = {
         :class_name   => name,
         :instance_id  => instance.id,
         :method_name  => options[:task],
         :args         => args,
-        :miq_callback => cb,
-        :user_id      => user.id,
-        :group_id     => user.current_group.id,
-        :tenant_id    => user.current_tenant.id
-      )
+        :miq_callback => cb
+      }
+      user = User.current_user
+      q_hash.merge!(:user_id => user.id, :group_id => user.current_group.id, :tenant_id => user.current_tenant.id) if user
+      MiqQueue.submit_job(q_hash)
     end
 
     private

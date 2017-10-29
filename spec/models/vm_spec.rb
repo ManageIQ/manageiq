@@ -117,7 +117,6 @@ describe Vm do
       EvmSpecHelper.create_guid_miq_server_zone
       @host = FactoryGirl.create(:host)
       @vm = FactoryGirl.create(:vm_vmware, :host => @host)
-      allow(User).to receive(:current_user).and_return(FactoryGirl.create(:user_with_group, :userid => "Freddy"))
     end
 
     it "sets up standard callback for non Power Operations" do

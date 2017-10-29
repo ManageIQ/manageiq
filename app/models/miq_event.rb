@@ -79,16 +79,15 @@ class MiqEvent < EventStream
   end
 
   def self.build_evm_event(event, target)
-    user = User.current_user
-    MiqEvent.create(
+    options = {
       :event_type => event,
       :target     => target,
       :source     => 'POLICY',
-      :timestamp  => Time.now.utc,
-      :user_id    => user.try(:id),
-      :group_id   => user.try(:current_group).try(:id),
-      :tenant_id  => user.try(:current_tenant).try(:id)
-    )
+      :timestamp  => Time.now.utc
+    }
+    user = User.current_user
+    options.merge!(:user_id => user.id, :group_id => user.current_group.id, :tenant_id => user.current_tenant.id) if user
+    MiqEvent.create(options)
   end
 
   def update_with_policy_result(result = {})
