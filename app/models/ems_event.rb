@@ -186,7 +186,6 @@ class EmsEvent < EventStream
       event_type == "datawarehouse_alert" ? message : nil,
       data[:severity],
       data[:url],
-      data[:ems_ref],
       data[:resolved],
     ]
   end

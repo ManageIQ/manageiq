@@ -242,8 +242,8 @@ class MiqAlert < ApplicationRecord
   end
 
   def add_status_post_evaluate(target, result, event)
-    status_description, event_severity, url, ems_ref, resolved = event.try(:parse_event_metadata)
-    status = miq_alert_statuses.find_or_initialize_by(:resource => target, :event_ems_ref => ems_ref)
+    status_description, event_severity, url, resolved = event.try(:parse_event_metadata)
+    status = miq_alert_statuses.find_or_initialize_by(:resource => target, :event_ems_ref => event.ems_ref)
     status.result = result
     status.ems_id = target.try(:ems_id)
     status.ems_id ||= target.id if target.is_a?(ExtManagementSystem)
