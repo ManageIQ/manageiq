@@ -763,6 +763,21 @@ describe Service do
     end
   end
 
+  context 'service naming' do
+    it 'without empty options hash' do
+      expect(Service.create(:name => 'test').name).to eq('test')
+    end
+
+    it 'with empty dialog options' do
+      expect(Service.create(:name => 'test', :options => {:dialog => {}}).name).to eq('test')
+    end
+
+    it 'with dialog option dialog_service_name' do
+      expect(Service.create(:name => 'test', :options => {:dialog => {'dialog_service_name' => 'name from dialog'}}).name)
+        .to eq('name from dialog')
+    end
+  end
+
   def create_deep_tree
     @service      = FactoryGirl.create(:service)
     @service_c1   = FactoryGirl.create(:service, :service => @service)

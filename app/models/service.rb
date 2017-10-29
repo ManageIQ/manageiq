@@ -52,6 +52,7 @@ class Service < ApplicationRecord
   virtual_has_one    :configuration_script
 
   before_validation :set_tenant_from_group
+  before_create     :apply_dialog_settings
 
   delegate :custom_actions, :custom_action_buttons, :to => :service_template, :allow_nil => true
   delegate :provision_dialog, :to => :miq_request, :allow_nil => true
@@ -426,5 +427,19 @@ class Service < ApplicationRecord
   def remove_from_service(parenent_service)
     update(:parent => nil)
     parenent_service.remove_resource(self)
+  end
+
+  private
+
+  def apply_dialog_settings
+    dialog_options = options[:dialog] || {}
+
+    %w(dialog_service_name).each do |field_name|
+      send(field_name, dialog_options[field_name]) if dialog_options.key?(field_name)
+    end
+  end
+
+  def dialog_service_name(value)
+    self.name = value if value.present?
   end
 end
