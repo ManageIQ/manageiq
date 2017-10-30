@@ -23,8 +23,9 @@ if [ $? -ne '0' ]; then
   echo "Fails to generate lock output."
   exit 1
 fi
-rm -f pg_inspector_output.tar.gz
+rm -f ${logdir}/pg_inspector_output.tar.gz
 
 # collect the output
 cd ${logdir}
 tar -czf pg_inspector_output.tar.gz pg_inspector*
+echo "Successfully output to ${logdir}/pg_inspector_output.tar.gz"
