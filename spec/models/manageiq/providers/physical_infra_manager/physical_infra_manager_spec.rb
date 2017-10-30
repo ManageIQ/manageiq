@@ -40,4 +40,25 @@ describe ManageIQ::Providers::PhysicalInfraManager do
     pim.physical_servers = [ps]
     expect(pim.total_vms).to be(1)
   end
+
+  it 'will check supports_console returns false' do
+    ps = FactoryGirl.create(:generic_physical_infra,
+                            :name     => "LXCA",
+                            :hostname => "0.0.0.0")
+    expect(ps.supports_console?).to be(false)
+  end
+
+  it 'will return false if console is not supported' do
+    ps = FactoryGirl.create(:generic_physical_infra,
+                            :name     => "LXCA",
+                            :hostname => "0.0.0.0")
+    expect(ps.console_supported?).to be(false)
+  end
+
+  it 'will raise  exception for cnosle url if  console is not supported' do
+    ps = FactoryGirl.create(:generic_physical_infra,
+                            :name     => "LXCA",
+                            :hostname => "0.0.0.0")
+    expect { ps.console_url }.to raise_error(MiqException::Error)
+  end
 end

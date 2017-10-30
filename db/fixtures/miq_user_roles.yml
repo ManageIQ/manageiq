@@ -109,6 +109,7 @@
   - ems_infra_show_list
   - ems_infra_tag
   - ems_infra_timeline
+  - ems_physical_infra_console
   - ems_physical_infra_show
   - ems_physical_infra_show_list
   - ems_physical_infra_tag
@@ -197,6 +198,7 @@
   - ems_infra_show_list
   - ems_infra_tag
   - ems_infra_timeline
+  - ems_physical_infra_console
   - ems_physical_infra_show
   - ems_physical_infra_show_list
   - ems_physical_infra_tag
@@ -347,6 +349,7 @@
   - ems_infra_tag
   - ems_infra_timeline
   - ems_physical_infra_new
+  - ems_physical_infra_console
   - ems_physical_infra_delete
   - ems_physical_infra_discover
   - ems_physical_infra_edit
@@ -541,6 +544,7 @@
   - ems_infra_show_list
   - ems_infra_tag
   - ems_infra_timeline
+  - ems_physical_infra_console
   - ems_physical_infra_show
   - ems_physical_infra_show_list
   - ems_physical_infra_tag
@@ -623,6 +627,7 @@
   - ems_infra_show_list
   - ems_infra_tag
   - ems_infra_timeline
+  - ems_physical_infra_console
   - ems_physical_infra_show
   - ems_physical_infra_show_list
   - ems_physical_infra_tag
@@ -735,6 +740,7 @@
   - all_vm_rules
   - automation_manager
   - embedded_automation_manager
+  - ems_physical_infra_console
   - catalog_items_view
   - compute
   - miq_template_clone
