@@ -1,6 +1,7 @@
 class MeteringContainerProject < ChargebackContainerProject
   set_columns_hash(
     :metering_used_metric => :integer,
+    :existence_hours_metric => :interger
   )
 
   include Metering
