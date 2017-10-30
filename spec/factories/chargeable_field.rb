@@ -51,6 +51,13 @@ FactoryGirl.define do
     source      'used'
   end
 
+  factory :chargeable_field_cpu_cores_allocated, :parent => :chargeable_field do
+    description 'Allocated CPU in Cores'
+    metric      'derived_vm_numvcpu_cores'
+    group       'cpu_cores'
+    source      'allocated'
+  end
+
   factory :chargeable_field_memory_used, :parent => :chargeable_field do
     description 'Used Memory in MB'
     metric      'derived_memory_used'

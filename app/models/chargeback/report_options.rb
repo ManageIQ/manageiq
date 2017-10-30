@@ -23,7 +23,7 @@ class Chargeback
       new(*hash.values_at(*members))
     end
 
-    ALLOCATED_METHODS_WHITELIST = %i(max avg).freeze
+    ALLOCATED_METHODS_WHITELIST = %i(max avg current_value).freeze
 
     def method_for_allocated_metrics
       method = self[:method_for_allocated_metrics] || :max

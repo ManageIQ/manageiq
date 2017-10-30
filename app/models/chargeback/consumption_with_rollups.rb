@@ -40,6 +40,15 @@ class Chargeback
       metric_sum / consumed_hours_in_interval
     end
 
+    def current_value(metric, _sub_metric) # used for containers allocated metrics
+      case metric
+      when 'derived_vm_numvcpu_cores' # Allocated CPU count
+        resource.try(:limit_cpu_cores).to_f
+      when 'derived_memory_available'
+        resource.try(:limit_memory_bytes).to_f / 1.megabytes # bytes to megabytes
+      end
+    end
+
     def none?(metric)
       values(metric).empty?
     end

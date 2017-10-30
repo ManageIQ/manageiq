@@ -24,7 +24,7 @@ class Chargeback
                                                      :tag_list => consumption.tag_list_with_prefix,
                                                      :parents  => consumption.parents_determining_rate)
 
-      if consumption.resource_type == Container.name && rates.empty?
+      if consumption.resource.kind_of?(Container) && rates.empty?
         rates = [ChargebackRate.find_by(:description => "Default Container Image Rate", :rate_type => "Compute")]
       end
 
