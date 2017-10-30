@@ -29,7 +29,6 @@ describe ChargebackRateDetail do
         fixed_compute_2
         derived_memory_available
         derived_memory_used
-        metering_used_hours
         net_usage_rate_average
       )
 
