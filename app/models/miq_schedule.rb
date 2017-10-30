@@ -23,7 +23,7 @@ class MiqSchedule < ApplicationRecord
 
   scope :filter_matches_with,      ->(exp)    { where(:filter => exp) }
   scope :with_prod_default_not_in, ->(prod)   { where.not(:prod_default => [prod, nil]) }
-  scope :with_adhoc,               ->(adhoc)  { where(:adhoc => adhoc) }
+  scope :without_adhoc,            ->         { where(:adhoc => nil) }
   scope :with_towhat,              ->(towhat) { where(:towhat => towhat) }
   scope :with_userid,              ->(userid) { where(:userid => userid) }
 
