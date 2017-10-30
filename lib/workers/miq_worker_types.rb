@@ -32,6 +32,7 @@ MIQ_WORKER_TYPES = {
   "ManageIQ::Providers::Lenovo::PhysicalInfraManager::RefreshWorker"          => %i(manageiq_default),
   "ManageIQ::Providers::Microsoft::InfraManager::RefreshWorker"               => %i(manageiq_default),
   "ManageIQ::Providers::Nuage::NetworkManager::RefreshWorker"                 => %i(manageiq_default),
+  "ManageIQ::Providers::Nuage::NetworkManager::EventCatcher"                  => %i(manageiq_default),
   "ManageIQ::Providers::Openshift::ContainerManager::EventCatcher"            => %i(manageiq_default),
   "ManageIQ::Providers::Openshift::ContainerManager::MetricsCollectorWorker"  => %i(manageiq_default),
   "ManageIQ::Providers::Openshift::ContainerManager::RefreshWorker"           => %i(manageiq_default),
@@ -123,6 +124,7 @@ MIQ_WORKER_TYPES_IN_KILL_ORDER = %w(
   ManageIQ::Providers::Vmware::NetworkManager::RefreshWorker
   ManageIQ::Providers::Vmware::InfraManager::RefreshWorker
   ManageIQ::Providers::Nuage::NetworkManager::RefreshWorker
+  ManageIQ::Providers::Nuage::NetworkManager::EventCatcher
   MiqScheduleWorker
   MiqPriorityWorker
   MiqWebServiceWorker
