@@ -429,6 +429,14 @@
           :required: false
           :display: :hide
           :data_type: :string
+        :subnet:
+          :values_from:
+            :method: :allowed_subnets
+          :auto_select_single: false
+          :description: Subnet
+          :required: false
+          :display: :edit
+          :data_type: :string
       :display: :show
     :hardware:
       :description: Hardware
