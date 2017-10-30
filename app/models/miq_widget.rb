@@ -385,7 +385,7 @@ class MiqWidget < ApplicationRecord
 
   def grouped_subscribers
     grouped_users   = grouped_users_by_id
-    groups_by_id    = MiqGroup.where(:id => grouped_users.keys).index_by(&:id)
+    groups_by_id    = MiqGroup.in_my_region.where(:id => grouped_users.keys).index_by(&:id)
     users_by_userid = User.in_my_region.where(:userid => grouped_users.values.flatten.uniq).index_by(&:userid)
     grouped_users.each_with_object({}) do |(k, v), h|
       user_objs = users_by_userid.values_at(*v).reject(&:blank?)
