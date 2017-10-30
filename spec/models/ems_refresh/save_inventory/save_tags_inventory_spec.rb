@@ -1,3 +1,5 @@
+require 'manager_refresh/inventory_object'
+
 context "save_tags_inventory" do
   before(:each) do
     @zone = FactoryGirl.create(:zone)
@@ -12,15 +14,15 @@ context "save_tags_inventory" do
     @tag3 = FactoryGirl.create(:tag, :name => '/managed/kubernetes::foo/bar') # All
   end
 
-  # This is what ContainerLabelTagMapping::Mapper.map_labels(cache, 'Type', labels) would
-  # return in the refresh parser. Note that we don't explicitly test the mapping
+  # Simulate what ContainerLabelTagMapping::Mapper.map_labels(...) would return, after resolving to tag ids.
+  # Note that we don't explicitly test the mapping
   # creation here, the assumption is that these were the generated mappings.
   let(:data) do
     {
       :tags => [
-        {:tag_id => @tag1.id},
-        {:tag_id => @tag2.id},
-        {:tag_id => @tag3.id},
+        instance_double(ManagerRefresh::InventoryObject, :id => @tag1.id),
+        instance_double(ManagerRefresh::InventoryObject, :id => @tag2.id),
+        instance_double(ManagerRefresh::InventoryObject, :id => @tag3.id),
       ]
     }
   end

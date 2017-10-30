@@ -45,7 +45,9 @@ module EmsRefresh::SaveInventoryCloud
       _log.debug("#{log_header} hashes:\n#{YAML.dump(hashes)}")
     end
 
-    hashes[:tag_mapper].find_or_create_tags if hashes[:tag_mapper]
+    if hashes[:tag_mapper]
+      ManagerRefresh::SaveInventory.save_inventory(ems, [hashes[:tag_mapper].tags_to_resolve_collection])
+    end
 
     child_keys = [
       :resource_groups,
