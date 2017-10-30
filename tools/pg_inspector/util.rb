@@ -11,10 +11,6 @@ module PgInspector
       puts "Exporting #{name} to #{output} ... Complete"
     end
 
-    def self.ask_for_password_or_none(prompt)
-      HighLine.new.ask(prompt) { |q| q.echo = false }
-    end
-
     def self.error_exit(e, exit_code = 1)
       $stderr.puts e.message
       exit(exit_code)

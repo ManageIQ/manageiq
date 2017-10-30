@@ -1,3 +1,4 @@
+require 'fileutils'
 require 'trollop'
 require 'pg'
 require 'pg_inspector/error'
@@ -15,7 +16,8 @@ module PgInspector
 #{HELP_MSG_SHORT}
 
 Use password in PGPASSWORD environment if no password file given.
-The file will be named as <output>_MM-DD-YYYY_HH:MM:SS.yml. Time is local time.
+The output file will overwrite the previous one with same name after
+successfully dumped.
 
 Options:
 BANNER
@@ -24,11 +26,11 @@ BANNER
         opt(:port, "PostgreSQL server port",
             :short => "p", :default => 5432)
         opt(:user, "PostgreSQL user",
-            :type => :string, :short => "u", :default => "postgres")
+            :type => :string, :short => "u", :default => "root")
         opt(:database, "ManageIQ Database to output server information",
             :type => :string, :short => "d", :default => "vmdb_production")
-        opt(:output, "Output file prefix",
-            :type => :string, :short => "o", :default => "server")
+        opt(:output, "Output file",
+            :type => :string, :short => "o", :default => DEFAULT_OUTPUT_PATH.join("#{PREFIX}server.yml").to_s)
         opt(:password_file, "File content to use as password",
             :type => :string, :short => "f")
       end
@@ -38,8 +40,9 @@ BANNER
       Util.dump_to_yml_file(
         table_from_db_conn(
           connect_pg_server, "miq_servers"
-        ), "ManageIQ server information", make_output_file_name(options[:output])
+        ), "ManageIQ server information", new_output_file_path
       )
+      FileUtils.mv(new_output_file_path, output_file_path)
     end
 
     private
@@ -78,9 +81,12 @@ SQL
       Util.error_exit(e)
     end
 
-    def make_output_file_name(base_name)
-      timestamp = Time.new.getlocal.strftime("%m-%d-%Y_%H:%M:%S")
-      "#{base_name}_#{timestamp}.yml"
+    def output_file_path
+      options[:output]
+    end
+
+    def new_output_file_path
+      "#{output_file_path}.new"
     end
   end
 end

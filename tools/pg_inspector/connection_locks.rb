@@ -7,40 +7,57 @@ require 'pg_inspector/util'
 module PgInspector
   class LockConnectionYAML < PgInspectorOperation
     HELP_MSG_SHORT = "Dump lock friendly connection information to YAML file".freeze
-    attr_accessor :locks
+    attr_accessor :locks, :connections
 
     def parse_options(args)
       self.options = Trollop.options(args) do
         opt(:locks, "Lock file",
-            :type => :string, :short => "l", :default => "locks.yml")
+            :type => :string, :short => "l", :default => DEFAULT_OUTPUT_PATH.join("#{PREFIX}locks.yml").to_s)
         opt(:connections, "Human readable active connections file",
-            :type => :string, :short => "c")
+            :type => :string, :short => "c", :default => DEFAULT_OUTPUT_PATH.join("#{PREFIX}human.yml").to_s)
         opt(:output, "Output file",
-            :type => :string, :short => "o", :default => "locks_output.yml")
+            :type => :string, :short => "o", :default => DEFAULT_OUTPUT_PATH.join("#{PREFIX}locks_output.yml").to_s)
       end
     end
 
     def run
+      load_connection_file
       load_lock_file
       process_lock_file
       Util.dump_to_yml_file(
-        merge_lock_and_connection(
-          YAML.load_file(options[:connections])
-        ), "Lock friendly connection info", options[:output]
+        merge_lock_and_connection,
+        "Lock friendly connection info",
+        options[:output]
       )
     end
 
     private
 
-    def merge_lock_and_connection(connections)
+    def merge_lock_and_connection
+      some_connection_blocked = false
       connections["connections"].each do |conn|
         conn["blocked_by"] = find_lock_blocking_spid(conn["spid"])
+        unless conn["blocked_by"].empty?
+          some_connection_blocked = true
+          puts "Connection #{conn["spid"]} is blocked by #{conn["blocked_by"]}."
+        end
+      end
+      unless some_connection_blocked
+        puts "Every connection is OK and not blocked. No need to generate lock graph."
       end
       connections
     end
 
+    def load_connection_file
+      self.connections = YAML.load_file(options[:connections])
+    rescue => e
+      Util.error_exit(e)
+    end
+
     def load_lock_file
       self.locks = YAML.load_file(options[:locks])
+    rescue => e
+      Util.error_exit(e)
     end
 
     def process_lock_file

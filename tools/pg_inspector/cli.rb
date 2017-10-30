@@ -9,10 +9,10 @@ module PgInspector
   class Cli
     attr_accessor :cmd
     SUB_COMMANDS = {
-      :active_connections => ActiveConnectionsYAML,
-      :servers            => ServersYAML,
-      :human              => ActiveConnectionsHumanYAML,
-      :locks              => LockConnectionYAML
+      :connections => ActiveConnectionsYAML,
+      :servers     => ServersYAML,
+      :human       => ActiveConnectionsHumanYAML,
+      :locks       => LockConnectionYAML
     }.freeze
 
     def self.run(args)
