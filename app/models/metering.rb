@@ -7,6 +7,22 @@ module Metering
     relevant_fields.each do |field|
       next unless self.class.report_col_options.include?(field)
       group, source, * = field.split('_')
+
+      if field == 'net_io_used_metric'
+        group = 'net_io'
+        source = 'used'
+      end
+
+      if field == 'disk_io_used_metric'
+        group = 'disk_io'
+        source = 'used'
+      end
+
+      if field == 'cpu_cores_used_metric'
+        group = 'cpu_cores'
+        source = 'used'
+      end
+
       chargable_field = ChargeableField.find_by(:group => group, :source => source)
       next if field == "existence_hours_metric" || field == "fixed_compute_metric" || chargable_field && chargable_field.metering?
       value = chargable_field.measure_metering(consumption, @options) if chargable_field
