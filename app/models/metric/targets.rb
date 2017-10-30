@@ -39,6 +39,12 @@ module Metric::Targets
     end
   end
 
+  def self.with_archived(scope)
+    # We will look also for freshly archived entities, if the entity was short-lived or even sub-hour
+    archived_from = Metric::Capture.targets_archived_from
+    scope.where(:deleted_on => nil).or(scope.where(:deleted_on => (archived_from..Time.now.utc)))
+  end
+
   def self.capture_container_targets(emses, _options)
     includes = {
       :container_nodes  => :tags,
@@ -49,9 +55,9 @@ module Metric::Targets
 
     targets = []
     emses.each do |ems|
-      targets += ems.container_nodes
-      targets += ems.container_groups
-      targets += ems.containers
+      targets += with_archived(ems.all_container_nodes)
+      targets += with_archived(ems.all_container_groups)
+      targets += with_archived(ems.all_containers)
     end
 
     targets

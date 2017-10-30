@@ -903,6 +903,8 @@
   :host_overhead:
     :memory: 2.01.percent
     :cpu: 0.15.percent
+  :targets:
+    :archived_for: 8.hours
   :vim_cache_ttl: 1.hour
 :policy_events:
   :history:
