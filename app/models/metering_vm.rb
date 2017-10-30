@@ -1,4 +1,6 @@
 class MeteringVm < ChargebackVm
+  include Metering
+
   def self.report_col_options
     {
       "cpu_allocated_metric"     => {:grouping => [:total]},

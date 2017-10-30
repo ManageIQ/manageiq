@@ -1,4 +1,6 @@
 class MeteringContainerProject < ChargebackContainerProject
+  include Metering
+
   def self.report_col_options
     {
       "cpu_cores_used_metric" => {:grouping => [:total]},
