@@ -41,6 +41,10 @@ class ChargeableField < ApplicationRecord
      "fixed_storage_2"                   => ['fixed_storage_2', '', 'occurrence']}[metric_index]
   end
 
+  def measure_metering(consumption, options, sub_metric = nil)
+    used? ? consumption.sum(metric) : measure(consumption, options, sub_metric)
+  end
+
   def measure(consumption, options, sub_metric = nil)
     return consumption.consumed_hours_in_interval if metering?
     return 1.0 if fixed?

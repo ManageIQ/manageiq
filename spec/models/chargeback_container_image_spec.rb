@@ -32,6 +32,9 @@ describe ChargebackContainerImage do
     let(:metric_rollup_params) { {:parent_ems_id => ems.id, :tag_names => ""} }
 
     before do
+      # TODO: remove metering columns form specs
+      described_class.set_columns_hash(:metering_used_metric => :integer, :metering_used_cost => :float)
+
       MiqRegion.seed
       ChargebackRateDetailMeasure.seed
       ChargeableField.seed

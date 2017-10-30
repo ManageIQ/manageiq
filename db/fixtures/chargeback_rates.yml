@@ -106,16 +106,6 @@
       :finish: Infinity
       :fixed_rate: 0.0
       :variable_rate: 0.0
-  - :description: Metering - Hours Used
-    :metric: metering_used_hours
-    :per_time: hourly
-    :per_unit: hours
-    :type_currency: Dollars
-    :tiers:
-    - :start: 0
-      :finish: Infinity
-      :fixed_rate: 0.0
-      :variable_rate: 1
 - :description: Default
   :guid: 7d7aaf20-5214-11df-a888-001d09066d98
   :rate_type: Storage

@@ -9,8 +9,6 @@ class Chargeback < ActsAsArModel
     :tag_name             => :string,
     :label_name           => :string,
     :fixed_compute_metric => :integer,
-    :metering_used_metric => :integer,
-    :metering_used_cost   => :float
   )
 
   def self.build_results_for_report_chargeback(options)
@@ -145,7 +143,7 @@ class Chargeback < ActsAsArModel
   end
 
   def self.report_cb_model(model)
-    model.gsub(/^Chargeback/, "")
+    model.gsub(/^(Chargeback|Metering)/, "")
   end
 
   def self.db_is_chargeback?(db)
