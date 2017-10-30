@@ -32,7 +32,7 @@ module PerEmsWorkerMixin
       desired = self.has_required_role? ? desired_queue_names.sort : []
       result  = {:adds => [], :deletes => []}
 
-      if current != desired
+      unless compare_queues(current, desired)
         _log.info("Workers are being synchronized: Current: #{current.inspect}, Desired: #{desired.inspect}")
 
         dups = current.uniq.find_all { |u| current.find_all { |c| c == u }.length > 1 }
@@ -113,6 +113,12 @@ module PerEmsWorkerMixin
 
     def ems_from_queue_name(queue_name)
       ExtManagementSystem.find_by(:id => ems_id_from_queue_name(queue_name))
+    end
+
+    private
+
+    def compare_queues(current, desired)
+      current.flatten.sort == desired.flatten.sort
     end
   end
 
