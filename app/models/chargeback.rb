@@ -9,8 +9,6 @@ class Chargeback < ActsAsArModel
     :tag_name             => :string,
     :label_name           => :string,
     :fixed_compute_metric => :integer,
-    :metering_used_metric => :integer,
-    :metering_used_cost   => :float
   )
 
   def self.build_results_for_report_chargeback(options)

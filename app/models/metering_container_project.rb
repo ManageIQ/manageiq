@@ -1,4 +1,8 @@
 class MeteringContainerProject < ChargebackContainerProject
+  set_columns_hash(
+    :metering_used_metric => :integer,
+  )
+
   include Metering
 
   def self.report_col_options

@@ -1,4 +1,8 @@
 class MeteringVm < ChargebackVm
+  set_columns_hash( # Fields common to any chargeback type
+    :metering_used_metric => :integer,
+  )
+
   include Metering
 
   def self.report_col_options

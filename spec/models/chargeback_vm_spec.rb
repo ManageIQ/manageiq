@@ -56,6 +56,9 @@ describe ChargebackVm do
     end
 
     before do
+      # TODO: remove metering columns form specs
+      described_class.set_columns_hash(:metering_used_metric => :integer, :metering_used_cost => :float)
+
       MiqRegion.seed
       ChargebackRateDetailMeasure.seed
       ChargeableField.seed
