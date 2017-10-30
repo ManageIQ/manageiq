@@ -104,7 +104,7 @@ describe EmsRefresh do
   def assert_queue_item(expected_targets)
     q_all = MiqQueue.all
     expect(q_all.length).to eq(1)
-    expect(q_all[0].args).to eq([expected_targets.collect { |t| [t.class.name, t.id] }])
+    expect(q_all[0].data).to eq(expected_targets.collect { |t| [t.class.name, t.id] })
     expect(q_all[0].class_name).to eq(described_class.name)
     expect(q_all[0].method_name).to eq('refresh')
     expect(q_all[0].role).to eq("ems_inventory")

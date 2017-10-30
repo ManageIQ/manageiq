@@ -357,7 +357,7 @@ class MiqQueue < ApplicationRecord
           end
 
           msg.update_attributes!(save_options)
-          _log.info("#{MiqQueue.format_short_log_msg(msg)} updated with following: #{save_options.inspect}")
+          _log.info("#{MiqQueue.format_short_log_msg(msg)} updated with following: #{save_options.except(:data, :msg_data).inspect}")
           _log.info("#{MiqQueue.format_full_log_msg(msg)}, Requeued")
         end
         break
