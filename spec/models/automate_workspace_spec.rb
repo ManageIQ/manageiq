@@ -9,7 +9,13 @@ describe AutomateWorkspace do
     let(:password) { "ca$hc0w" }
     let(:encrypted) { MiqPassword.encrypt(password) }
     let(:input) do
-      { "objects"           => {"root" => { "var1" => "1", "var2" => "password::#{encrypted}"}},
+      { "objects"           => {
+        "root" => {
+          "var1" => "1",
+          "var2" => "password::#{encrypted}",
+          "var3" => "password::v2:{c8qTeiuz6JgbBOiDqp3eiQ==}"
+        }
+      },
         "method_parameters" => {"arg1" => "password::#{encrypted}"} }
     end
 
@@ -42,16 +48,20 @@ describe AutomateWorkspace do
       expect(aw.decrypt('method_parameters', 'arg1')).to eq(password)
     end
 
-    it "#decrypt raises error when object doesn't exist" do
-      expect { aw.decrypt('frooti', 'var2') }.to raise_exception(ArgumentError)
+    it "#decrypt doesn't raise exception when bad encrypted data" do
+      expect(aw.decrypt('root', 'var3')).to eq("")
     end
 
-    it "#decrypt raises error when attribute doesn't exist" do
-      expect { aw.decrypt('root', 'nada') }.to raise_exception(ArgumentError)
+    it "#decrypt doesn't raise exception when object doesn't exist" do
+      expect(aw.decrypt('frooti', 'var2')).to eq("")
+    end
+
+    it "#decrypt doesn't raise exception when attribute doesn't exist" do
+      expect(aw.decrypt('root', 'nada')).to eq("")
     end
 
     it "#decrypt raises error when type is invalid" do
-      expect { aw.decrypt('root', 'var1') }.to raise_exception(ArgumentError)
+      expect(aw.decrypt('root', 'var1')).to eq("")
     end
 
     it "#encrypt" do

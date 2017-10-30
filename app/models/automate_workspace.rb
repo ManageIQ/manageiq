@@ -21,6 +21,10 @@ class AutomateWorkspace < ApplicationRecord
 
   def decrypt(object_name, attribute)
     MiqPassword.decrypt(encrypted_value(object_name, attribute))
+  rescue ArgumentError
+    ""
+  rescue MiqPassword::MiqPasswordError
+    ""
   end
 
   def encrypt(object_name, attribute, value)
@@ -35,7 +39,7 @@ class AutomateWorkspace < ApplicationRecord
     value = fetch_value(object_name, attribute)
     raise ArgumentError, "#{object_name} : Attribute #{attribute} not found" unless value
     raise ArgumentError, "#{object_name} : Attribute #{attribute} invalid type" unless value.kind_of?(String)
-    match_data = /password::(.*)/.match(value)
+    match_data = /^password::(.*)/.match(value)
     raise ArgumentError, "Attribute #{attribute} is not a password type" unless match_data
     match_data[1]
   end
