@@ -23,6 +23,11 @@ module Metering
         source = 'used'
       end
 
+      if field == 'cpu_cores_allocated_metric'
+        group = 'cpu_cores'
+        source = 'allocated'
+      end
+
       chargable_field = ChargeableField.find_by(:group => group, :source => source)
       next if field == "existence_hours_metric" || field == "fixed_compute_metric" || chargable_field && chargable_field.metering?
       value = chargable_field.measure_metering(consumption, @options) if chargable_field

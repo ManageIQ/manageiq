@@ -47,7 +47,7 @@ class Chargeback
 
     def current_value(metric, _sub_metric) # used for containers allocated metrics
       case metric
-      when 'derived_vm_numvcpu_cores' # Allocated CPU count
+      when 'derived_vm_numvcpu_cores', 'derived_vm_numvcpus_cores' # Allocated CPU count
         resource.try(:limit_cpu_cores).to_f
       when 'derived_memory_available'
         resource.try(:limit_memory_bytes).to_f / 1.megabytes # bytes to megabytes
