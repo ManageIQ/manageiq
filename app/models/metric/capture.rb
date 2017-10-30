@@ -21,7 +21,8 @@ module Metric::Capture
   end
 
   def self.targets_archived_from
-    Settings.performance.targets.archived_for.to_i_with_method.seconds.ago.utc
+    archived_for_setting = Settings.performance.targets.archived_for
+    archived_for_setting.to_i_with_method.seconds.ago.utc
   end
 
   def self.concurrent_requests(interval_name)
