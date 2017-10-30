@@ -19,6 +19,12 @@ describe MiqReport::Formats do
 
   describe '.default_format_for' do
     context 'for chargebacks' do
+      let!(:cloud_volume) { FactoryGirl.create(:cloud_volume_openstack) }
+
+      before do
+        ChargebackVm.refresh_dynamic_metric_columns
+      end
+
       let(:columns) { Chargeback.descendants.collect(&:virtual_attributes_to_define).inject({}, &:merge) }
       it 'works' do
         columns.each do |name, datatype|
