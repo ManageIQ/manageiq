@@ -25,7 +25,7 @@ describe EmbeddedAnsibleWorker::Runner do
     context "#update_embedded_ansible_provider" do
       let(:api_connection) { double("AnsibleAPIConnection") }
       before do
-        EvmSpecHelper.local_guid_miq_server_zone
+        EvmSpecHelper.local_miq_server
         MiqDatabase.seed
         MiqDatabase.first.set_ansible_admin_authentication(:password => "secret")
 

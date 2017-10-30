@@ -362,7 +362,7 @@ describe MiqProvisionVirtWorkflow do
     let(:local_vmware)  { FactoryGirl.create(:ems_vmware_with_authentication) }
 
     it "only returns records from its region" do
-      EvmSpecHelper.local_guid_miq_server_zone # Because there is no default timezone in settings
+      EvmSpecHelper.local_miq_server # Because there is no default timezone in settings
       FactoryGirl.create(:template_vmware, :ext_management_system => remote_vmware, :id => external_region_id)
       FactoryGirl.create(:template_vmware, :ext_management_system => local_vmware)
 
