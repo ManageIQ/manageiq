@@ -15,7 +15,7 @@ describe MiqLdapToSssd::ConfigureApplianceSettings do
   end
 
   describe '#configure' do
-    let!(:miq_server) { EvmSpecHelper.local_guid_miq_server_zone[1] }
+    let!(:miq_server) { EvmSpecHelper.local_miq_server }
     before do
       stub_local_settings(miq_server)
     end
