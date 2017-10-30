@@ -931,11 +931,11 @@ class MiqExpression
         c.last.ends_with?(*allowed_suffixes)
       end
       td = if TAG_CLASSES.include?(cb_model)
-             tag_details(model, {}) + _custom_details_for(cb_model, {})
+             tag_details(model, {})
            else
              []
            end
-      md + td
+      md + td + _custom_details_for(cb_model, {})
     else
       model_details(model, :include_model => false, :include_tags => true)
     end
