@@ -145,7 +145,7 @@ class Chargeback < ActsAsArModel
   end
 
   def self.report_cb_model(model)
-    model.gsub(/^Chargeback/, "")
+    model.gsub(/^(Chargeback|Metering)/, "")
   end
 
   def self.db_is_chargeback?(db)
