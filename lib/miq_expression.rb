@@ -926,7 +926,9 @@ class MiqExpression
       cb_model = Chargeback.report_cb_model(model)
       model.constantize.try(:refresh_dynamic_metric_columns)
       md = model_details(model, :include_model => false, :include_tags => true).select do |c|
-        c.last.ends_with?(*ReportController::Reports::Editor::CHARGEBACK_ALLOWED_FIELD_SUFFIXES)
+        allowed_suffixes = ReportController::Reports::Editor::CHARGEBACK_ALLOWED_FIELD_SUFFIXES
+        allowed_suffixes -= ['_cost'] if model.starts_with?('Metering')
+        c.last.ends_with?(*allowed_suffixes)
       end
       td = if TAG_CLASSES.include?(cb_model)
              tag_details(model, {}) + _custom_details_for(cb_model, {})
