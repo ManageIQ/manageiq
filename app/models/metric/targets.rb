@@ -130,7 +130,7 @@ module Metric::Targets
   # we want to work with only enabled_hosts, so hosts needs to be further filtered
   def self.capture_vm_targets(emses, hosts)
     enabled_host_ids = hosts.select(&:perf_capture_enabled?).index_by(&:id)
-    emses.flat_map { |e| e.vms.select { |v| enabled_host_ids.include?(v.host_id) && v.state == 'on' && v.supports_capture? } }
+    emses.flat_map { |e| e.vms.select { |v| enabled_host_ids.key?(v.host_id) && v.state == 'on' && v.supports_capture? } }
   end
 
   # If a Cluster, standalone Host, or Storage is not enabled, skip it.
