@@ -57,12 +57,16 @@ class MiqWorker::Runner
   def worker_initialization
     starting_worker_record
     set_process_title
-
     # Sync the config and roles early since heartbeats and logging require the configuration
     sync_active_roles
     sync_config
 
     set_connection_pool_size
+  end
+
+  # More process specific stuff :-(
+  def set_database_application_name
+    ArApplicationName.name = @worker.database_application_name
   end
 
   def set_connection_pool_size
@@ -142,6 +146,7 @@ class MiqWorker::Runner
   end
 
   def prepare
+    set_database_application_name
     ObjectSpace.garbage_collect
     started_worker_record
     do_wait_for_worker_monitor if self.class.wait_for_worker_monitor?
@@ -469,12 +474,15 @@ class MiqWorker::Runner
     _log.info("#{log_prefix} Releasing any broker connections for pid: [#{Process.pid}], ERROR: #{err.message}")
   end
 
-  def set_process_title
-    type   = @worker.type.sub(/^ManageIQ::Providers::/, "")
+  def process_title
+    type   = @worker.abbreviated_class_name
     title  = "#{MiqWorker::PROCESS_TITLE_PREFIX} #{type} id: #{@worker.id}"
     title << ", queue: #{@worker.queue_name}" if @worker.queue_name
     title << ", uri: #{@worker.uri}" if @worker.uri
+    title
+  end
 
-    Process.setproctitle(title)
+  def set_process_title
+    Process.setproctitle(process_title)
   end
 end

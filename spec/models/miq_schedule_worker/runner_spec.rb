@@ -26,7 +26,7 @@ describe MiqScheduleWorker::Runner do
         @worker1 = FactoryGirl.create(:miq_worker, :status => MiqWorker::STATUS_STOPPED)
         @dispatch1 = FactoryGirl.create(:miq_queue, {:zone => @zone1.name, :handler_type => @worker1.class.name, :handler_id => @worker1.id}.merge(@opts))
 
-        @zone2 = FactoryGirl.create(:zone, :name => 'zone2')
+        @zone2 = FactoryGirl.create(:zone)
         @worker2 = FactoryGirl.create(:miq_worker, :status => MiqWorker::STATUS_STOPPED)
 
         allow(MiqServer).to receive(:my_zone).and_return(@zone1.name)
