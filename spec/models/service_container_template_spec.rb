@@ -95,7 +95,7 @@ describe(ServiceContainerTemplate) do
     it 'prepares job options from dialog' do
       expect(ems).not_to receive(:create_project)
       service.preprocess(action)
-      expect(service.options[:provision_options]).to have_attributes(
+      expect(service.options[:provision_options]).to include(
         :container_project_name => 'old_project',
         :parameters             => {"var1" => "value1", "var2" => "value2"}
       )
@@ -104,7 +104,7 @@ describe(ServiceContainerTemplate) do
     it 'honors new project name more than existing project name' do
       expect(ems).to receive(:create_project)
       service_with_new_project.preprocess(action)
-      expect(service_with_new_project.options[:provision_options]).to have_attributes(
+      expect(service_with_new_project.options[:provision_options]).to include(
         :container_project_name => 'new_project',
         :parameters             => {"var1" => "value1", "var2" => "value2"}
       )
@@ -113,7 +113,7 @@ describe(ServiceContainerTemplate) do
     it 'prepares job options combined from dialog and overrides' do
       expect(ems).to receive(:create_project)
       service_with_new_project.preprocess(action, override_options)
-      expect(service_with_new_project.options[:provision_options]).to have_attributes(
+      expect(service_with_new_project.options[:provision_options]).to include(
         :container_project_name => 'override_project',
         :parameters             => {'var1' => 'new_val1', 'var2' => 'value2'}
       )

@@ -128,7 +128,7 @@ describe ServiceTemplateAnsiblePlaybook do
                                                     catalog_extra_vars[:description],
                                                     catalog_extra_vars[:config_info][:provision])
 
-      expect(params).to have_attributes(
+      expect(params).to include(
         :name               => name,
         :description        => description,
         :become_enabled     => true,
@@ -139,7 +139,7 @@ describe ServiceTemplateAnsiblePlaybook do
 
       expect(params.keys).to_not include(:extra_vars, :cloud_credentials)
       expect(params_two.keys).to include(:extra_vars)
-      expect(JSON.parse(params_two[:extra_vars])).to have_attributes(
+      expect(JSON.parse(params_two[:extra_vars])).to include(
         'key1' => 'val1',
         'key2' => 'val2'
       )
@@ -218,11 +218,11 @@ describe ServiceTemplateAnsiblePlaybook do
 
       expect(service_template.name).to eq(catalog_item_options_three[:name])
       expect(service_template.description).to eq(catalog_item_options_three[:description])
-      expect(service_template.options.fetch_path(:config_info, :provision, :extra_vars)).to have_attributes(
+      expect(service_template.options.fetch_path(:config_info, :provision, :extra_vars)).to include(
         'key1' => {:default => 'updated_val1'},
         'key2' => {:default => 'updated_val2'}
       )
-      expect(service_template.options.fetch_path(:config_info, :provision)).to have_attributes(
+      expect(service_template.options.fetch_path(:config_info, :provision)).to include(
         :become_enabled => false,
         :verbosity      => 0
       )
