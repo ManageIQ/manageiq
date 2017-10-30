@@ -19,6 +19,7 @@ class DialogImportService
 
     begin
       dialogs.each do |dialog|
+        dialog.except!(:blueprint_id, 'blueprint_id') # blueprint_id might appear in some old dialogs, but no longer exists
         if dialog_with_label?(dialog["label"])
           yield dialog if block_given?
         else
@@ -117,6 +118,7 @@ class DialogImportService
   def import_from_dialogs(dialogs)
     raise ParsedNonDialogYamlError if dialogs.empty?
     dialogs.each do |dialog|
+      dialog.except!(:blueprint_id, 'blueprint_id') # blueprint_id might appear in some old dialogs, but no longer exists
       new_or_existing_dialog = Dialog.where(:label => dialog["label"]).first_or_create
       dialog['id'] = new_or_existing_dialog.id
       associations_to_be_created = build_association_list(dialog)
