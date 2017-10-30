@@ -132,6 +132,10 @@ module SupportsFeatureMixin
     QUERYABLE_FEATURES.keys.each do |feature|
       supports_not(feature)
     end
+
+    private_class_method :unsupported
+    private_class_method :unsupported_reason_add
+    private_class_method :define_supports_feature_methods
   end
 
   class UnknownFeatureError < StandardError; end
@@ -211,8 +215,6 @@ module SupportsFeatureMixin
     def feature_known?(feature)
       SupportsFeatureMixin::QUERYABLE_FEATURES.key?(feature.to_sym)
     end
-
-    private
 
     def unsupported
       # This is a class variable and it might be modified during runtime
