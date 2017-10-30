@@ -1,6 +1,6 @@
 class MeteringVm < ChargebackVm
-  set_columns_hash( # Fields common to any chargeback type
-    :metering_used_metric => :integer,
+  set_columns_hash(
+    :metering_used_metric   => :integer,
     :existence_hours_metric => :integer
   )
 
