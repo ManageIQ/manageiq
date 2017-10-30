@@ -6,7 +6,7 @@ module Metering
       next unless self.class.report_col_options.include?(field)
       group, source, * = field.split('_')
       chargable_field = ChargeableField.find_by(:group => group, :source => source)
-      value = chargable_field.measure(consumption, @options) if chargable_field
+      value = chargable_field.measure_metering(consumption, @options) if chargable_field
       self[field] = (value || 0) unless field == 'fixed_compute_metric'
     end
   end

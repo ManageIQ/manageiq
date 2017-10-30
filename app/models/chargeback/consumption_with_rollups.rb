@@ -31,6 +31,11 @@ class Chargeback
       @tag_list_with_prefix ||= @rollups.map(&:tag_list_with_prefix).flatten.uniq
     end
 
+    def sum(metric, sub_metric = nil)
+      metric = ChargeableField::VIRTUAL_COL_USES[metric] || metric
+      values(metric, sub_metric).sum
+    end
+
     def max(metric, sub_metric = nil)
       values(metric, sub_metric).max
     end
