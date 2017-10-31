@@ -71,4 +71,23 @@ class PhysicalServer < ApplicationRecord
   def event_where_clause(assoc = :ems_events)
     ["#{events_table_name(assoc)}.physical_server_id = ?", id]
   end
+
+  def self.refresh_ems(physical_server_ids)
+    physical_server_ids = [physical_server_ids] unless physical_server_ids.kind_of?(Array)
+    physical_server_ids = physical_server_ids.collect { |id| [PhysicalServer, id] }
+    EmsRefresh.queue_refresh(physical_server_ids)
+  end
+
+  def refresh_ems
+    unless ext_management_system
+      raise _("No %{table} defined") % {:table => ui_lookup(:table => "ext_management_systems")}
+    end
+    unless ext_management_system.has_credentials?
+      raise _("No %{table} credentials defined") % {:table => ui_lookup(:table => "ext_management_systems")}
+    end
+    unless ext_management_system.authentication_status_ok?
+      raise _("%{table} failed last authentication check") % {:table => ui_lookup(:table => "ext_management_systems")}
+    end
+    EmsRefresh.queue_refresh(self)
+  end
 end
