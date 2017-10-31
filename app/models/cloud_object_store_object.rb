@@ -15,7 +15,7 @@ class CloudObjectStoreObject < ApplicationRecord
 
   alias_attribute :name, :key
 
-  supports_not :delete, :reason => N_("Delete operation is not supported.")
+  supports :delete
 
   def disconnect_inv
     # This is for bypassing a weird Rails behaviour. If we do a ems.cloud_object_store_objects.delete(objects) and a
