@@ -321,3 +321,45 @@
             value: prod
   :db: Vm
   :guid: 89db0be8-c240-11de-a3be-000c290de4f9
+- description: Middleware Heap Max > 90%
+  options:
+    :notifications:
+      :delay_next_evaluation: 600
+      :evm_event: {}
+  db: MiddlewareServer
+  responds_to_events: hawkular_alert
+  hash_expression:
+    :eval_method: mw_heap_used
+    :mode: internal
+    :options:
+      :value_mw_greater_than: '90'
+      :value_mw_less_than: '0'
+  guid: 017f8cbf-fb9b-4417-9b0a-c0fc02d8e0a2
+- description: Middleware Non Heap > 90%
+  options:
+    :notifications:
+      :delay_next_evaluation: 600
+      :evm_event: {}
+  db: MiddlewareServer
+  responds_to_events: hawkular_alert
+  hash_expression:
+    :eval_method: mw_non_heap_used
+    :mode: internal
+    :options:
+      :value_mw_greater_than: '90'
+      :value_mw_less_than: '0'
+  guid: b6fa8fb2-97fd-4c95-8374-bf374fc7ab6f
+- description: Middleware GC > 10 sec/minute
+  options:
+    :notifications:
+      :evm_event: {}
+      :delay_next_evaluation: 600
+  db: MiddlewareServer
+  responds_to_events: hawkular_alert
+  hash_expression:
+    :eval_method: mw_accumulated_gc_duration
+    :mode: internal
+    :options:
+      :mw_operator: ">"
+      :value_mw_garbage_collector: '10000'
+  guid: 4dca61d2-767e-4e6c-ab88-a8d309ad4d23
