@@ -117,7 +117,7 @@ group :nuage, :manageiq_default do
 end
 
 group :qpid_proton, :optional => true do
-  gem "qpid_proton",                    "~>0.18",        :git => "https://github.com/xlab-si/qpid_proton_gem", :require => false
+  gem "qpid_proton",                    "~>0.18",        :require => false # used by Nuage provider
 end
 
 group :openshift, :manageiq_default do
