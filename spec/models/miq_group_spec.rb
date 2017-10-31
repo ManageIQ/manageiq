@@ -14,6 +14,16 @@ describe MiqGroup do
       end
     end
 
+    describe "#generic_custom_buttons" do
+      before do
+        allow(CustomButton).to receive(:buttons_for).with("MiqGroup").and_return("this is a list of custom buttons")
+      end
+
+      it "returns all the custom buttons for miq groups" do
+        expect(MiqGroup.new.generic_custom_buttons).to eq("this is a list of custom buttons")
+      end
+    end
+
     describe "#get_managed_filters" do
       it "takes managed filters from the group's entitlement" do
         expect(subject.get_managed_filters).to eq([['some managed filter']])
@@ -242,7 +252,7 @@ describe MiqGroup do
 
     it "fails if referenced by a tenant#default_miq_group" do
       expect { FactoryGirl.create(:tenant).default_miq_group.reload.destroy }
-        .to raise_error(RuntimeError, /A tenant default group can not be deleted/)
+      .to raise_error(RuntimeError, /A tenant default group can not be deleted/)
     end
   end
 
@@ -358,7 +368,7 @@ describe MiqGroup do
       group = FactoryGirl.create(:miq_group,
                                  :description   => "MiqGroup-self_service",
                                  :miq_user_role => role
-                                )
+                                 )
       expect(group).to be_self_service
     end
 
@@ -400,7 +410,7 @@ describe MiqGroup do
       tenant = FactoryGirl.create(:tenant)
       g = FactoryGirl.create(:tenant).default_miq_group
       expect { g.update_attributes!(:tenant => tenant) }
-        .to raise_error(ActiveRecord::RecordInvalid, /Tenant cant change the tenant of a default group/)
+      .to raise_error(ActiveRecord::RecordInvalid, /Tenant cant change the tenant of a default group/)
     end
   end
 

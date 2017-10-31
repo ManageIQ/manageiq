@@ -427,6 +427,16 @@ describe ExtManagementSystem do
     end
   end
 
+  describe "#generic_custom_buttons" do
+    before do
+      allow(CustomButton).to receive(:buttons_for).with("ExtManagementSystem").and_return("this is a list of custom buttons")
+    end
+
+    it "returns all the custom buttons for ext management systems" do
+      expect(ExtManagementSystem.new.generic_custom_buttons).to eq("this is a list of custom buttons")
+    end
+  end
+
   context "virtual column :supports_cloud_object_store_container_create" do
     it "returns true if cloud_object_store_container_create is supported" do
       ems = FactoryGirl.create(:ext_management_system)

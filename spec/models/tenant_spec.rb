@@ -23,6 +23,16 @@ describe Tenant do
     end
   end
 
+  describe "#generic_custom_buttons" do
+    before do
+      allow(CustomButton).to receive(:buttons_for).with("Tenant").and_return("this is a list of custom buttons")
+    end
+
+    it "returns all the custom buttons for tenants" do
+      expect(Tenant.new.generic_custom_buttons).to eq("this is a list of custom buttons")
+    end
+  end
+
   describe "#root_tenant" do
     it "has a root tenant" do
       Tenant.seed
@@ -152,7 +162,7 @@ describe Tenant do
     it "is unique per parent tenant" do
       FactoryGirl.create(:tenant, :name => "common", :parent => root_tenant)
       expect { FactoryGirl.create(:tenant, :name => "common", :parent => root_tenant) }
-        .to raise_error(ActiveRecord::RecordInvalid, /Name should be unique per parent/)
+      .to raise_error(ActiveRecord::RecordInvalid, /Name should be unique per parent/)
     end
 
     it "can be the same for different parents" do
@@ -216,14 +226,14 @@ describe Tenant do
       tenant2 = FactoryGirl.create(:tenant)
       g = FactoryGirl.create(:miq_group, :tenant => tenant1)
       expect { tenant2.update_attributes!(:default_miq_group => g) }
-        .to raise_error(ActiveRecord::RecordInvalid, /default group must be a default group for this tenant/)
+      .to raise_error(ActiveRecord::RecordInvalid, /default group must be a default group for this tenant/)
     end
 
     # we may want to change this in the future
     it "prevents changing default_miq_group" do
       g = FactoryGirl.create(:miq_group, :tenant => tenant)
       expect { tenant.update_attributes!(:default_miq_group => g) }
-        .to raise_error(ActiveRecord::RecordInvalid, /default group must be a default group for this tenant/)
+      .to raise_error(ActiveRecord::RecordInvalid, /default group must be a default group for this tenant/)
     end
   end
 
@@ -268,7 +278,7 @@ describe Tenant do
       FactoryGirl.create(:miq_group,
                          :miq_user_role => admin_with_brand,
                          :tenant        => tenant1
-                        )
+                         )
     end
     let(:tenant1_users) do
       FactoryGirl.create(:miq_group,

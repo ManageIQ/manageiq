@@ -81,6 +81,16 @@ describe User do
     end
   end
 
+  describe "#generic_custom_buttons" do
+    before do
+      allow(CustomButton).to receive(:buttons_for).with("User").and_return("this is a list of custom buttons")
+    end
+
+    it "returns all the custom buttons for users" do
+      expect(User.new.generic_custom_buttons).to eq("this is a list of custom buttons")
+    end
+  end
+
   describe ".missing_user_features" do
     it "user with group and role returns nil" do
       user = FactoryGirl.create(:user_admin)

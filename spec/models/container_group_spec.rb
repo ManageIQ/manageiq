@@ -48,4 +48,14 @@ describe ContainerGroup do
     expect(group.persistent_volumes.second.name).to eq("persistent_volume1")
     expect(group.persistent_volumes.count).to eq(2)
   end
+
+  describe "#generic_custom_buttons" do
+    before do
+      allow(CustomButton).to receive(:buttons_for).with("ContainerGroup").and_return("this is a list of custom buttons")
+    end
+
+    it "returns all the custom buttons for container groups" do
+      expect(ContainerGroup.new.generic_custom_buttons).to eq("this is a list of custom buttons")
+    end
+  end
 end

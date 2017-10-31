@@ -60,4 +60,14 @@ describe MiqTemplate do
     FactoryGirl.create(:ems_openstack, :miq_templates => [template])
     expect(template.supports_provisioning?).to be_truthy
   end
+
+  describe "#generic_custom_buttons" do
+    before do
+      allow(CustomButton).to receive(:buttons_for).with("MiqTemplate").and_return("this is a list of custom buttons")
+    end
+
+    it "returns all the custom buttons for miq templates" do
+      expect(MiqTemplate.new.generic_custom_buttons).to eq("this is a list of custom buttons")
+    end
+  end
 end
