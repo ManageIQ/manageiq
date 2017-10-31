@@ -26,7 +26,24 @@ end
 puts "Generating report... #{report.name}"
 
 report.queue_generate_table(:userid => USER_ID)
-report._async_generate_table(MiqTask.last.id, REPORT_PARAMS)
+def report_run
+  if defined?(ManageIQPerformance)
+    ManageIQPerformance.profile('generate_report') do
+      total_report_time = Benchmark.measure { yield }
+      puts "Total report time: #{total_report_time.utime} (user)  #{total_report_time.stime} (system)  #{total_report_time.real} (real)  #{total_report_time.total} (total)"
+      puts "Total time in SQL: #{Thread.current[:miq_perf_sql_query_data][:queries].inject(0){ |s,r| s + r[:elapsed_time] }.round(2)} ms"
+      puts "Total count queries #{Thread.current[:miq_perf_sql_query_data][:total_queries]}"
+      slowest_query = Thread.current[:miq_perf_sql_query_data][:queries].max_by{ |x| x[:elapsed_time] }
+      puts "Slowest SQL query took #{slowest_query[:elapsed_time]} ms: \n" + slowest_query[:sql]
+    end
+  else
+    yield
+  end
+end
+
+report_run do
+  report._async_generate_table(MiqTask.last.id, REPORT_PARAMS)
+end
 
 default_url_options[:host] = "localhost"
 default_url_options[:port] = 3000
