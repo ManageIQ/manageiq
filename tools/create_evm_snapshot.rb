@@ -13,7 +13,10 @@ end
 usage unless ARGV.join.strip =~ /--(vm|job) *=?([0-9, ]+)/
 
 type = $1
-ids  = $2.split(',').collect { |id| id.strip!; id.blank? ? nil : id.to_i }.compact.uniq
+ids  = $2.split(',').collect do |id|
+  id.strip!
+  id.blank? ? nil : id.to_i
+end.compact.uniq
 
 case type
 when 'vm'

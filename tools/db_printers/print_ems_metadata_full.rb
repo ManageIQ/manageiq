@@ -23,5 +23,5 @@ end
 ExtManagementSystem.all.each do |ems|
   puts "EMS: #{ems.name}  (id: #{ems.id})"
   print_subtree(ems.descendants_arranged)
-  puts; puts
+  puts("\n")
 end

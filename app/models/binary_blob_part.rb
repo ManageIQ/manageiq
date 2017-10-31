@@ -5,10 +5,16 @@ class BinaryBlobPart < ApplicationRecord
 
   def inspect
     # Clean up inspect so that we don't flood script/console
-    attrs = attribute_names.inject("{") { |s, n| s << "#{n.inspect}=>#{n == "data" ? "\"...\"" : read_attribute(n).inspect}, "; s }
+    attrs = attribute_names.inject("{") do |s, n|
+      s << "#{n.inspect}=>#{n == "data" ? "\"...\"" : read_attribute(n).inspect}, "
+      s
+    end
     attrs.chomp!(", ")
     attrs << "}"
-    iv = instance_variables.inject(" ") { |s, v| s << "#{v}=#{v == "@attributes" ? attrs : instance_variable_get(v).inspect}, "; s }
+    iv = instance_variables.inject(" ") do |s, v|
+      s << "#{v}=#{v == "@attributes" ? attrs : instance_variable_get(v).inspect}, "
+      s
+    end
     iv.chomp!(", ")
     iv.rstrip!
     "#{to_s.chop}#{iv}>"

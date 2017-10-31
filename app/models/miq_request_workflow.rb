@@ -197,11 +197,13 @@ class MiqRequestWorkflow
     case fld[:data_type]
     when :integer
       unless is_integer?(value)
-        fld[:error] = msg; valid = false
+        fld[:error] = msg
+        valid = false
       end
     when :float
       unless is_numeric?(value)
-        fld[:error] = msg; valid = false
+        fld[:error] = msg
+        valid = false
       end
     when :boolean
       # TODO: do we need validation for boolean
@@ -209,12 +211,14 @@ class MiqRequestWorkflow
       # Ignore
     when :array_integer
       unless value.kind_of?(Array)
-        fld[:error] = msg; valid = false
+        fld[:error] = msg
+        valid = false
       end
     else
       data_type = Object.const_get(fld[:data_type].to_s.camelize)
       unless value.kind_of?(data_type)
-        fld[:error] = msg; valid = false
+        fld[:error] = msg
+        valid = false
       end
     end
     [valid, fld]

@@ -12,5 +12,5 @@ end
 roots = Relationship.roots.sort_by(&:resource_pair)
 roots.each do |root|
   print_rels(root.subtree.arrange)
-  puts; puts
+  puts("\n")
 end

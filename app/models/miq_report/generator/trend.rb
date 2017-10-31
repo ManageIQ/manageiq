@@ -84,7 +84,8 @@ module MiqReport::Generator::Trend
       @trend_data[c] = {}
 
       y_array, x_array = recs.inject([]) do |arr, r|
-        arr[0] ||= []; arr[1] ||= []
+        arr[0] ||= []
+        arr[1] ||= []
         next(arr) unless  r.respond_to?(CHART_X_AXIS_COLUMN) && r.respond_to?(c[6..-1])
         if r.respond_to?(:inside_time_profile) && r.inside_time_profile == false
           _log.debug("Timestamp: [#{r.timestamp}] is outside of time profile: [#{time_profile.description}]")

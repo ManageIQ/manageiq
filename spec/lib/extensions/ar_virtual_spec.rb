@@ -246,9 +246,20 @@ describe VirtualFields do
         expect(TestClass.virtual_reflection(:vref1).name).to eq(:vref1)
       end
 
-      it("with has_one macro")    { TestClass.virtual_has_one(:vref1); expect(TestClass.virtual_reflection(:vref1).macro).to eq(:has_one) }
-      it("with has_many macro")   { TestClass.virtual_has_many(:vref1); expect(TestClass.virtual_reflection(:vref1).macro).to eq(:has_many) }
-      it("with belongs_to macro") { TestClass.virtual_belongs_to(:vref1); expect(TestClass.virtual_reflection(:vref1).macro).to eq(:belongs_to) }
+      it("with has_one macro")    do
+        TestClass.virtual_has_one(:vref1)
+        expect(TestClass.virtual_reflection(:vref1).macro).to eq(:has_one)
+      end
+
+      it("with has_many macro")   do
+        TestClass.virtual_has_many(:vref1)
+        expect(TestClass.virtual_reflection(:vref1).macro).to eq(:has_many)
+      end
+
+      it("with belongs_to macro") do
+        TestClass.virtual_belongs_to(:vref1)
+        expect(TestClass.virtual_reflection(:vref1).macro).to eq(:belongs_to)
+      end
 
       it "without uses" do
         TestClass.virtual_has_one :vref1

@@ -47,8 +47,12 @@ module EmsRefresh::LinkInventory
     update_relats(:folders_to_hosts, prev_relats, new_relats) do |f|
       folder = instance_with_id(EmsFolder, f)
       break if folder.nil?
-      [do_disconnect ? proc { |h| folder.remove_host(instance_with_id(Host, h)) } : nil,            # Disconnect proc
-       proc { |h| host = instance_with_id(Host, h); host.replace_parent(folder) unless host.nil? }] # Connect proc
+      disconnect_proc = do_disconnect ? proc { |h| folder.remove_host(instance_with_id(Host, h)) } : nil
+      connect_proc = proc do |h|
+        host = instance_with_id(Host, h)
+        host.replace_parent(folder) unless host.nil?
+      end
+      [disconnect_proc, connect_proc]
     end
 
     # Do the Folders to Vms relationships
@@ -87,8 +91,19 @@ module EmsRefresh::LinkInventory
     update_relats(:hosts_to_resource_pools, prev_relats, new_relats) do |h|
       host = instance_with_id(Host, h)
       break if host.nil?
-      [do_disconnect ? proc { |r| rp = instance_with_id(ResourcePool, r); rp.remove_parent(host) unless rp.nil? } : nil, # Disconnect proc
-       proc { |r| rp = instance_with_id(ResourcePool, r); rp.set_parent(host) unless rp.nil? }]                          # Connect proc
+      disconnect_proc = if do_disconnect
+        proc do |r|
+          rp = instance_with_id(ResourcePool, r)
+          rp.remove_parent(host) unless rp.nil?
+        end
+      else
+        nil
+      end
+      connect_proc = proc do |r|
+        rp = instance_with_id(ResourcePool, r)
+        rp.set_parent(host) unless rp.nil?
+      end
+      [disconnect_proc, connect_proc]
     end
 
     # Do the ResourcePools to ResourcePools relationships
