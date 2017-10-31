@@ -434,12 +434,16 @@ class Service < ApplicationRecord
   def apply_dialog_settings
     dialog_options = options[:dialog] || {}
 
-    %w(dialog_service_name).each do |field_name|
+    %w(dialog_service_name dialog_service_description).each do |field_name|
       send(field_name, dialog_options[field_name]) if dialog_options.key?(field_name)
     end
   end
 
   def dialog_service_name(value)
     self.name = value if value.present?
+  end
+
+  def dialog_service_description(value)
+    self.description = value if value.present?
   end
 end
