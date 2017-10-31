@@ -33,12 +33,21 @@ class MiqTask < ApplicationRecord
     t.grouping(Arel::Nodes::Case.new(t[:state]).when(STATE_FINISHED).then(t[:status]).else(t[:state]))
   end)
 
-  scope :active,                  ->          { where(:state => STATE_ACTIVE) }
-  scope :no_associated_job,       ->          { where.not("id IN (SELECT miq_task_id from jobs)") }
-  scope :timed_out,               ->          { where("updated_on < ?", Time.now.utc - ::Settings.task.active_task_timeout.to_i_with_method) }
-  scope :with_userid,             ->(userid)  { where(:userid => userid) }
-  scope :with_zone,               ->(zone)    { where(:zone => zone) }
-  scope :with_updated_on_between, ->(range)   { where(:updated_on => range) }
+  scope :active,                  ->           { where(:state => STATE_ACTIVE) }
+  scope :no_associated_job,       ->           { where.not("id IN (SELECT miq_task_id from jobs)") }
+  scope :timed_out,               ->           { where("updated_on < ?", Time.now.utc - ::Settings.task.active_task_timeout.to_i_with_method) }
+  scope :with_userid,             ->(userid)   { where(:userid => userid) }
+  scope :with_zone,               ->(zone)     { where(:zone => zone) }
+  scope :with_updated_on_between, ->(from, to) { where("miq_tasks.updated_on BETWEEN ? AND ?", from, to) }
+  scope :with_state,              ->(state)    { where(:state => state) }
+  scope :finished,                ->           { with_state('Finished') }
+  scope :running,                 ->           { where.not(:state => %w(Finished Waiting_to_start Queued)) }
+  scope :queued,                  ->           { with_state(%w(Waiting_to_start Queued)) }
+  scope :completed_ok,            ->           { finished.where(:status => 'Ok') }
+  scope :completed_warn,          ->           { finished.where(:status => 'Warn') }
+  scope :completed_error,         ->           { finished.where(:status => 'Error') }
+  scope :no_status_selected,      ->           { running.where.not(:status => %(Ok Error Warn)) }
+  scope :with_status_in,          ->(s, *rest) { rest.reduce(MiqTask.send(s)) { |chain, r| chain.or(MiqTask.send(r)) } }
 
   def self.update_status_for_timed_out_active_tasks
     MiqTask.active.timed_out.no_associated_job.find_each do |task|
