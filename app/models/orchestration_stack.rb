@@ -7,6 +7,7 @@ class OrchestrationStack < ApplicationRecord
   include ProcessTasksMixin
   include RetirementMixin
   include TenantIdentityMixin
+  include CustomActionsMixin
 
   acts_as_miq_taggable
 

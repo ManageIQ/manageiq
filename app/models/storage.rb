@@ -41,6 +41,7 @@ class Storage < ApplicationRecord
   include AsyncDeleteMixin
   include AvailabilityMixin
   include TenantIdentityMixin
+  include CustomActionsMixin
 
   virtual_column :v_used_space,                   :type => :integer
   virtual_column :v_used_space_percent_of_total,  :type => :integer

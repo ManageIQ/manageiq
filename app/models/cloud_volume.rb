@@ -7,6 +7,7 @@ class CloudVolume < ApplicationRecord
   include AvailabilityMixin
   include SupportsFeatureMixin
   include CloudTenancyMixin
+  include CustomActionsMixin
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ExtManagementSystem"
   belongs_to :availability_zone

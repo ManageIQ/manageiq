@@ -5,6 +5,7 @@ class LoadBalancer < ApplicationRecord
   include RetirementMixin
   include TenantIdentityMixin
   include CloudTenancyMixin
+  include CustomActionsMixin
 
   acts_as_miq_taggable
 
