@@ -1351,9 +1351,9 @@ _("Node")
 # TRANSLATORS: en.yml key: dictionary.model.ContainerNode (plural form)
 _("Nodes")
 # TRANSLATORS: en.yml key: dictionary.model.ContainerNodePerformance
-_("Performance - ContainerNode")
+_("Performance - Container Node")
 # TRANSLATORS: en.yml key: dictionary.model.ContainerNodePerformance (plural form)
-_("Performance - ContainerNodes")
+_("Performance - Container Nodes")
 # TRANSLATORS: en.yml key: dictionary.model.ContainerProject
 _("Project")
 # TRANSLATORS: en.yml key: dictionary.model.ContainerProject (plural form)
@@ -1428,6 +1428,10 @@ _("Flavors")
 _("Floating IP")
 # TRANSLATORS: en.yml key: dictionary.model.FloatingIp (plural form)
 _("Floating IPs")
+# TRANSLATORS: en.yml key: dictionary.model.GenericObjectDefinition
+_("Generic Object Class")
+# TRANSLATORS: en.yml key: dictionary.model.GenericObjectDefinition (plural form)
+_("Generic Object Classes")
 # TRANSLATORS: en.yml key: dictionary.model.Host
 _("Host / Node")
 # TRANSLATORS: en.yml key: dictionary.model.Host (plural form)
@@ -1516,6 +1520,10 @@ _("Credentials (VMware)")
 _("Playbook (Embedded Ansible)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook (plural form)
 _("Playbooks (Embedded Ansible)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource
+_("Repository (Embedded Ansible)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource (plural form)
+_("Repositories (Embedded Ansible)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AutomationManager::Authentication
 _("Credential")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AutomationManager::Authentication (plural form)
@@ -1628,6 +1636,10 @@ _("Instances (VMware vCloud)")
 _("Image")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager::Template (plural form)
 _("Images")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::CloudManager::Template
+_("Image (Amazon)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::CloudManager::Template (plural form)
+_("Images (Amazon)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager::VirtualTemplate
 _("Resourceless Server Template")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager::VirtualTemplate (plural form)
@@ -1740,6 +1752,10 @@ _("Pods (Kubernetes)")
 _("Container Provider (OpenShift)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openshift::ContainerManager (plural form)
 _("Container Providers (OpenShift)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::NetworkManager
+_("Network Provider (Amazon)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::NetworkManager (plural form)
+_("Network Providers (Amazon)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::NetworkManager::CloudNetwork
 _("Cloud Network (Amazon)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::NetworkManager::CloudNetwork (plural form)
@@ -1824,6 +1840,10 @@ _("Network Routers (OpenStack)")
 _("Orchestration Stack (OpenStack)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack (plural form)
 _("Orchestration Stacks (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager::CloudTenant
+_("Cloud Tenant (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager::CloudTenant (plural form)
+_("Cloud Tenants (OpenStack)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack
 _("Orchestration Stack (OpenStack)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack (plural form)
@@ -1864,6 +1884,30 @@ _("Storage Managers (Cinder)")
 _("Storage Manager (Swift)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager::SwiftManager (plural form)
 _("Storage Managers (Swift)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Microsoft::InfraManager::Host
+_("Host (Microsoft)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Microsoft::InfraManager::Host (plural form)
+_("Hosts (Microsoft)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::InfraManager::Host
+_("Host (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::InfraManager::Host (plural form)
+_("Hosts (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Redhat::InfraManager::Host
+_("Host (Redhat)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Redhat::InfraManager::Host (plural form)
+_("Hosts (Redhat)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::InfraManager::Host
+_("Host (Vmware)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::InfraManager::Host (plural form)
+_("Hosts (Vmware)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::InfraManager::HostEsx
+_("Host (Vmware)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::InfraManager::HostEsx (plural form)
+_("Hosts (Vmware)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalServer
+_("Physical Server (Lenovo)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalServer (plural form)
+_("Physical Servers (Lenovo)")
 # TRANSLATORS: en.yml key: dictionary.model.MiddlewareDatasource
 _("Middleware Datasource")
 # TRANSLATORS: en.yml key: dictionary.model.MiddlewareDatasource (plural form)
@@ -2012,21 +2056,21 @@ _("Orchestration Stacks")
 _("Orchestration Template")
 # TRANSLATORS: en.yml key: dictionary.model.OrchestrationTemplate (plural form)
 _("Orchestration Templates")
-# TRANSLATORS: en.yml key: dictionary.model.OrchestrationTemplateCfn
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::CloudManager::OrchestrationTemplate
 _("CloudFormation Template")
-# TRANSLATORS: en.yml key: dictionary.model.OrchestrationTemplateCfn (plural form)
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::CloudManager::OrchestrationTemplate (plural form)
 _("CloudFormation Templates")
-# TRANSLATORS: en.yml key: dictionary.model.OrchestrationTemplateHot
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager::OrchestrationTemplate
 _("Heat Template")
-# TRANSLATORS: en.yml key: dictionary.model.OrchestrationTemplateHot (plural form)
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager::OrchestrationTemplate (plural form)
 _("Heat Templates")
-# TRANSLATORS: en.yml key: dictionary.model.OrchestrationTemplateAzure
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::CloudManager::OrchestrationTemplate
 _("Azure Template")
-# TRANSLATORS: en.yml key: dictionary.model.OrchestrationTemplateAzure (plural form)
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::CloudManager::OrchestrationTemplate (plural form)
 _("Azure Templates")
-# TRANSLATORS: en.yml key: dictionary.model.OrchestrationTemplateVnfd
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager::VnfdTemplate
 _("VNF Template")
-# TRANSLATORS: en.yml key: dictionary.model.OrchestrationTemplateVnfd (plural form)
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager::VnfdTemplate (plural form)
 _("VNF Templates")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate
 _("vApp Template")
@@ -2036,6 +2080,10 @@ _("vApp Templates")
 _("Persistent Volume")
 # TRANSLATORS: en.yml key: dictionary.model.PersistentVolume (plural form)
 _("Persistent Volumes")
+# TRANSLATORS: en.yml key: dictionary.model.PhysicalServer
+_("Physical Server")
+# TRANSLATORS: en.yml key: dictionary.model.PhysicalServer (plural form)
+_("Physical Servers")
 # TRANSLATORS: en.yml key: dictionary.model.ProductUpdate
 _("Product Update")
 # TRANSLATORS: en.yml key: dictionary.model.ProductUpdate (plural form)
@@ -2590,6 +2638,12 @@ _("Orchestration Template")
 _("Orchestration Templates")
 # TRANSLATORS: en.yml key: dictionary.table.operating_system
 _("OS")
+# TRANSLATORS: en.yml key: dictionary.table.physical_server
+_("Physical Server")
+# TRANSLATORS: en.yml key: dictionary.table.physical_server (plural form)
+_("Physical Servers")
+# TRANSLATORS: en.yml key: dictionary.table.physical_servers
+_("Physical Servers")
 # TRANSLATORS: en.yml key: dictionary.table.registry_items
 _("Registry")
 # TRANSLATORS: en.yml key: dictionary.table.registry_items (plural form)
@@ -2628,8 +2682,6 @@ _("Datastore File")
 _("Datastore Files")
 # TRANSLATORS: en.yml key: dictionary.table.storage_files
 _("Datastore Files")
-# TRANSLATORS: en.yml key: dictionary.table.storage_managers
-_("Storage Managers")
 # TRANSLATORS: en.yml key: dictionary.table.storages
 _("Datastores")
 # TRANSLATORS: en.yml key: dictionary.table.switches
