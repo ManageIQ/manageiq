@@ -70,7 +70,7 @@ module PerEmsWorkerMixin
 
     def stop_worker_for_ems(ems_or_queue_name)
       wpid = nil
-      find_by_queue_name(queue_name_for_ems(ems_or_queue_name)).each do |w|
+      find_by_queue_name(queue_name_for_ems(ems_or_queue_name).to_s).each do |w|
         next unless w.status == MiqWorker::STATUS_STARTED
         wpid = w.pid
         w.stop
