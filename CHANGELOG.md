@@ -5,6 +5,112 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 72 ending 2017-10-30
+
+### Added
+- Chargeback
+  - Add metering reports [(#16342)](https://github.com/ManageIQ/manageiq/pull/16342)
+  - Charge volume types [(#16321)](https://github.com/ManageIQ/manageiq/pull/16321)
+  - Offer dynamic storage types in chargeback report [(#16277)](https://github.com/ManageIQ/manageiq/pull/16277)
+  - Populate cloud volume types for new chargeback rates [(#16264)](https://github.com/ManageIQ/manageiq/pull/16264)
+  - New chargeback integration [(#16214)](https://github.com/ManageIQ/manageiq/pull/16214)
+- Core
+  - Change with_adhoc scope to without_adhoc [(#16348)](https://github.com/ManageIQ/manageiq/pull/16348)
+  - Add a method to easily delete settings_changes for a resource [(#16169)](https://github.com/ManageIQ/manageiq/pull/16169)
+  - Register Nuage's event catcher worker type [(#16319)](https://github.com/ManageIQ/manageiq/pull/16319)
+  - Add agent coordinator worker for amazon ssa support [(#16265)](https://github.com/ManageIQ/manageiq/pull/16265)
+  - Add runners needed for Prometheus alert collection [(#15864)](https://github.com/ManageIQ/manageiq/pull/15864)
+  - Add Custom Buttons and Group features [(#16332)](https://github.com/ManageIQ/manageiq/pull/16332)
+  - Return used and allocated values in combined_quota results even when no quota defined [(#16294)](https://github.com/ManageIQ/manageiq/pull/16294)
+  - Store the event initiator in MiqEvent object when user info is available. [(#16336)](https://github.com/ManageIQ/manageiq/pull/16336)
+  - Log playbook stdout according to options [(#16333)](https://github.com/ManageIQ/manageiq/pull/16333)
+  - Set up LogDecorator [(#16317)](https://github.com/ManageIQ/manageiq/pull/16317)
+  - Avoid queuing signals if possible when executing a playbook [(#16305)](https://github.com/ManageIQ/manageiq/pull/16305)
+  - Serialize the options Hash [(#16290)](https://github.com/ManageIQ/manageiq/pull/16290)
+  - Adds vm_snapshot_success NotificationType [(#16286)](https://github.com/ManageIQ/manageiq/pull/16286)
+  - Turn options into indifferent access [(#16254)](https://github.com/ManageIQ/manageiq/pull/16254)
+  - Pass extra options into miq_adv_search_lists [(#16242)](https://github.com/ManageIQ/manageiq/pull/16242)
+  - Delete temporary inventory and job template after playbook runs [(#16231)](https://github.com/ManageIQ/manageiq/pull/16231)
+  - Store the event initiator in MiqEvent object. [(#16179)](https://github.com/ManageIQ/manageiq/pull/16179)
+  - Allow the request_update to update user_message [(#16155)](https://github.com/ManageIQ/manageiq/pull/16155)
+  - Adds check for circular association references to dialog import [(#15909)](https://github.com/ManageIQ/manageiq/pull/15909)
+- Providers
+  - Enable alerts on ext_management_system from prometheus events [(#16310)](https://github.com/ManageIQ/manageiq/pull/16310)
+  - Catch exceptions while decrypting object
+  - Create EAP operation Events [(#16134)](https://github.com/ManageIQ/manageiq/pull/16134)
+  - Don't support memcached in containers even if it is installed [(#16229)](https://github.com/ManageIQ/manageiq/pull/16229)
+  - Optionally return "id" columns MiqExpression.model_details [(#16204)](https://github.com/ManageIQ/manageiq/pull/16204)
+  - Change in :named_scope to allow chaining [(#16236)](https://github.com/ManageIQ/manageiq/pull/16236)
+  - Enhance `resolve_view_path` to check for other possible yaml required for reporting [(#16230)](https://github.com/ManageIQ/manageiq/pull/16230)
+  - Apply dialog tags to VMs created during orchestration provisioning [(#16299)](https://github.com/ManageIQ/manageiq/pull/16299)
+  - Adds Notification when vm_snapshot_remove failed [(#16288)](https://github.com/ManageIQ/manageiq/pull/16288)
+  - User sync feature [(#16293)](https://github.com/ManageIQ/manageiq/pull/16293)
+  - Add container inventory collector worker classes [(#16311)](https://github.com/ManageIQ/manageiq/pull/16311)
+  - Label->tag mapper: produce InventoryCollection<Tag> [(#16259)](https://github.com/ManageIQ/manageiq/pull/16259)
+  - Add Monitoring features to Container Roles [(#16215)](https://github.com/ManageIQ/manageiq/pull/16215)
+  - Allow to schedule disconnected container entities for perf capture [(#16302)](https://github.com/ManageIQ/manageiq/pull/16302)
+  - Add standard Customize tab to Google provisioning dialog [(#16192)](https://github.com/ManageIQ/manageiq/pull/16192)
+  - inventory cloud_manager module [(#16282)](https://github.com/ManageIQ/manageiq/pull/16282)
+  - Add an inventory_collector_worker base class [(#16198)](https://github.com/ManageIQ/manageiq/pull/16198)
+  - Cut up `perf_capture` into multiple methods [(#16262)](https://github.com/ManageIQ/manageiq/pull/16262)
+  - Add allowed_subnets for scvmm provisioning [(#16177)](https://github.com/ManageIQ/manageiq/pull/16177)
+  - Enable mwPolicies [(#16312)](https://github.com/ManageIQ/manageiq/pull/16312)
+  - Add MW diagnostic report class so we can use it when generating JDRs in report data table [(#16135)](https://github.com/ManageIQ/manageiq/pull/16135)
+  - Add Web Metrics reports hourly and every minute [(#16174)](https://github.com/ManageIQ/manageiq/pull/16174)
+  - Allow Openstack provider Volumes and Snapshots to be eligible for provisioning. [(#16066)](https://github.com/ManageIQ/manageiq/pull/16066)
+  - Use approval workflow for instance resize operation [(#16044)](https://github.com/ManageIQ/manageiq/pull/16044)
+  - Updates model to indicate support for console [(#16256)](https://github.com/ManageIQ/manageiq/pull/16256)
+  - Implement a physical server workflow and request [(#16203)](https://github.com/ManageIQ/manageiq/pull/16203)
+  - Support sysprep for windows templates [(#16263)](https://github.com/ManageIQ/manageiq/pull/16263)
+- RBAC
+  - Added Service UI permission tree [(#16212)](https://github.com/ManageIQ/manageiq/pull/16212)
+- Services
+  - Added few OOTB global filters for Services. [(#16315)](https://github.com/ManageIQ/manageiq/pull/16315)
+- Smart State
+  - adding ScanResult model and ContainerImage has_one [(#15967)](https://github.com/ManageIQ/manageiq/pull/15967)
+- Tools
+  - Add limit to purge_tool [(#16334)](https://github.com/ManageIQ/manageiq/pull/16334)
+- UI
+  - Enable help menu items by default in the config/settings.yml [(#16322)](https://github.com/ManageIQ/manageiq/pull/16322)
+  - Move EmsRefresh targets to MiqQueue data [(#16271)](https://github.com/ManageIQ/manageiq/pull/16271)
+  - Ensure dialog field associations are being saved properly [(#15937)](https://github.com/ManageIQ/manageiq/pull/15937)
+  - Only allow one service order in cart state per user tenant [(#16351)](https://github.com/ManageIQ/manageiq/pull/16351) 
+
+### Fixed
+- Automate
+  - Use in_my_region during widget content generation [(#16354)](https://github.com/ManageIQ/manageiq/pull/16354)
+- I18N
+  - Dictionary.gettext should not break on empty string [(#16094)](https://github.com/ManageIQ/manageiq/pull/16094)
+- Chargeback
+  - Fix chargeback specs formatting [(#16328)](https://github.com/ManageIQ/manageiq/pull/16328)
+  - Use resources(VMs) also from all subtenants in chargeback reporting [(#16228)](https://github.com/ManageIQ/manageiq/pull/16228)
+- Containers
+  - Add Container Environment Variables feature [(#15935)](https://github.com/ManageIQ/manageiq/pull/15935)
+  - Add container groups\images statistics for container projects [(#10470)](https://github.com/ManageIQ/manageiq/pull/10470)
+- Core
+  - Keep full model name when parsing expression with tag [(#16211)](https://github.com/ManageIQ/manageiq/pull/16211)
+  - Fix Compare Current and Desired queue arrays [(#16325)](https://github.com/ManageIQ/manageiq/pull/16325)
+  - Make spawn pass worker options again [(#16199)](https://github.com/ManageIQ/manageiq/pull/16199)
+- Providers
+  - Adds check if manager_settings is set. [(#16279)](https://github.com/ManageIQ/manageiq/pull/16279)
+  - Fixes issue with undefinded method [(#16276)](https://github.com/ManageIQ/manageiq/pull/16276)
+  - Fix containers refresh for when a container has no set image yet [(#16313)](https://github.com/ManageIQ/manageiq/pull/16313)
+  - Add hawkular admin tenant label to settings [(#16275)](https://github.com/ManageIQ/manageiq/pull/16275)
+  - We need to check for Persister class for post refresh [(#16280)](https://github.com/ManageIQ/manageiq/pull/16280)
+  - Find peaks/troughs of memory usage during rollup [(#16224)](https://github.com/ManageIQ/manageiq/pull/16224)
+  - Find absolute max/min of CPU usage in mhz during rollup [(#16195)](https://github.com/ManageIQ/manageiq/pull/16195)
+  - Fix issue where new Lan records don't get linked [(#16217)](https://github.com/ManageIQ/manageiq/pull/16217)
+  - Require cluster for RVH VM provision [(#16281)](https://github.com/ManageIQ/manageiq/pull/16281)
+- Provisioning
+  - Run set_request_values on request update as well as creation [(#16189)](https://github.com/ManageIQ/manageiq/pull/16189)
+  - Fixed named scope regression in MiqSchedule.with_prod_default_not_in [(#16349)](https://github.com/ManageIQ/manageiq/pull/16349)
+- Schema
+  - Fix customization_scripts relation after ManageIQ/manageiq-schema#85 [(#16356)](https://github.com/ManageIQ/manageiq/pull/16356)
+- Tenancy
+  - Check for existing source tenant of cloud tenant before attempting to create a new one [(#16144)](https://github.com/ManageIQ/manageiq/pull/16144)
+- UI
+  - Fix dialog association import [(#16316)](https://github.com/ManageIQ/manageiq/pull/16316)
+
 ## Unreleased as of Sprint 71 ending 2017-10-16
 
 ### Added
