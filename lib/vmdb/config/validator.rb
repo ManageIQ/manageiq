@@ -21,7 +21,7 @@ module VMDB
       def validate
         @errors = {}
         valid = true
-        @config.each_key do|k|
+        @config.each_key do |k|
           if respond_to?(k.to_s, true)
             _log.debug("Validating #{k}")
             ost = OpenStruct.new(@config[k].stringify_keys)
@@ -29,7 +29,7 @@ module VMDB
 
             unless section_valid
               _log.debug("  Invalid: #{errors}")
-              errors.each do|e|
+              errors.each do |e|
                 key, msg = e
                 @errors[[k, key].join("_")] = msg
               end

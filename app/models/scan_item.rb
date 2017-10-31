@@ -11,7 +11,7 @@ class ScanItem < ApplicationRecord
   DEFAULT_HOST_PROFILE = {:name => "host default", :description => "Host Default", :mode => 'Host'}.freeze
 
   def self.sync_from_dir
-    where(:prod_default => 'Default').where.not(:filename => nil).each do|f|
+    where(:prod_default => 'Default').where.not(:filename => nil).each do |f|
       next unless f.filename
       unless File.exist?(File.join(YAML_DIR, f.filename))
         $log.info("Scan Item: file [#{f.filename}] has been deleted from disk, deleting from model")
@@ -19,7 +19,7 @@ class ScanItem < ApplicationRecord
       end
     end
 
-    Dir.glob(File.join(YAML_DIR, "*.yaml")).sort.each do|f|
+    Dir.glob(File.join(YAML_DIR, "*.yaml")).sort.each do |f|
       sync_from_file(f)
     end
   end

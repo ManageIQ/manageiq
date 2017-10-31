@@ -22,9 +22,9 @@ class ClassificationImport
     @errors.clear
     @verified_data = {}
     good = bad = 0
-    @data.each do|line|
+    @data.each do |line|
       keys = []
-      @keys.each do|k|
+      @keys.each do |k|
         t = []
         t[0] = k
         t[1] = line[k]
@@ -53,7 +53,7 @@ class ClassificationImport
         @verified_data[vms[0].id] ||= {}
         @verified_data[vms[0].id][line["category"]] ||= []
         entry = nil
-        cat.entries.each do|e|
+        cat.entries.each do |e|
           if e.description == line["entry"]
             @verified_data[vms[0].id][line["category"]].push(line["entry"])
             entry = e
@@ -70,8 +70,8 @@ class ClassificationImport
       end
     end
 
-    @verified_data.each do|id, data|
-      data.each do|category, entries|
+    @verified_data.each do |id, data|
+      data.each do |category, entries|
         cat = Classification.find_by(:description => category)
         if cat.single_value && entries.length > 1
           vm = VmOrTemplate.find_by(:id => id)
@@ -89,14 +89,14 @@ class ClassificationImport
   end
 
   def apply
-    @verified_data.each do|id, data|
+    @verified_data.each do |id, data|
       vm = VmOrTemplate.find_by(:id => id)
       if vm
-        data.each do|category, entries|
+        data.each do |category, entries|
           cat = Classification.find_by(:description => category)
           next unless cat
-          entries.each do|ent|
-            cat.entries.each do|e|
+          entries.each do |ent|
+            cat.entries.each do |e|
               if e.description == ent
                 _log.info("Vm: #{vm.name}, Location: #{vm.location}, Category: #{cat.description}: Applying entry #{ent}")
                 e.assign_entry_to(vm)

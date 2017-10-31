@@ -780,7 +780,7 @@ class Storage < ApplicationRecord
             vm_attrs[:derived_vm_allocated_disk_storage] = val
             attrs[:derived_vm_allocated_disk_storage] += val unless val.nil?
 
-            ['snapshot', 'mem', 'disk'].each do|a|
+            ['snapshot', 'mem', 'disk'].each do |a|
               col = "derived_storage_#{a}_#{mode}".to_sym
               val = vm_attrs[col]
               attrs[col] ||= 0

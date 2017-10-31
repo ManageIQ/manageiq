@@ -79,7 +79,7 @@ class MiqAction < ApplicationRecord
     when "email"
       self.options ||= {}
       self.options[:to] ||= ""
-      [:from, :to].each do|k|
+      [:from, :to].each do |k|
         if self.options && self.options[k]
           next if k == :from && self.options[k].blank? # allow blank from addres, we use the default.
           match = self.options[k] =~ /^\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z$/i
@@ -106,13 +106,13 @@ class MiqAction < ApplicationRecord
     results = {}
 
     begin
-      failed.each do|p|
+      failed.each do |p|
         actions = case p
                   when MiqPolicy then p.actions_for_event(inputs[:event], :failure).uniq
                   else            p.actions_for_event
                   end
 
-        actions.each do|a|
+        actions.each do |a|
           # merge in the synchronous flag and possibly the sequence if not already sorted by this
           inputs = inputs.merge(:policy => p, :result => false, :sequence => a.sequence, :synchronous => a.synchronous)
           _log.debug("action: [#{a.name}], seq: [#{a.sequence}], sync: [#{a.synchronous}], inputs to action: seq: [#{inputs[:sequence]}], sync: [#{inputs[:synchronous]}]")
@@ -128,10 +128,10 @@ class MiqAction < ApplicationRecord
         end
       end
 
-      succeeded.each do|p|
+      succeeded.each do |p|
         next unless p.kind_of?(MiqPolicy) # built-in policies are OpenStructs whose actions will be invoked only on failure
         actions = p.actions_for_event(inputs[:event], :success).uniq
-        actions.each do|a|
+        actions.each do |a|
           inputs = inputs.merge(:policy => p, :result => true, :sequence => a.sequence, :synchronous => a.synchronous)
           _log.debug("action: [#{a.name}], seq: [#{a.sequence}], sync: [#{a.synchronous}], inputs to action: seq: [#{inputs[:sequence]}], sync: [#{inputs[:synchronous]}]")
 
@@ -146,7 +146,7 @@ class MiqAction < ApplicationRecord
         end
       end
 
-      deferred.each do|arr|
+      deferred.each do |arr|
         a, apply_policies_to, inputs = arr
         a.invoke(apply_policies_to, inputs)
       end
