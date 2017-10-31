@@ -50,6 +50,10 @@ class OrchestrationStack < ApplicationRecord
   alias_method :orchestration_stack_outputs,    :outputs
   alias_method :orchestration_stack_resources,  :resources
 
+  def generic_custom_buttons
+    CustomButton.buttons_for("OrchestrationStack")
+  end
+
   def orchestration_stacks
     children
   end

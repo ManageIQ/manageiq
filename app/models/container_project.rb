@@ -57,6 +57,10 @@ class ContainerProject < ApplicationRecord
     end
   end
 
+  def generic_custom_buttons
+    CustomButton.buttons_for("ContainerProject")
+  end
+
   def perf_rollup_parents(interval_name = nil)
     []
   end

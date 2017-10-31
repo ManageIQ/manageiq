@@ -28,4 +28,8 @@ class SecurityGroup < ApplicationRecord
     # TODO: use a factory on ExtManagementSystem side to return correct class for each provider
     ext_management_system && ext_management_system.class::SecurityGroup
   end
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("SecurityGroup")
+  end
 end

@@ -118,6 +118,10 @@ class CloudVolume < ApplicationRecord
     raw_delete_volume
   end
 
+  def generic_custom_buttons
+    CustomButton.buttons_for("CloudVolume")
+  end
+
   def validate_delete_volume
     validate_unsupported("Delete Volume Operation")
   end

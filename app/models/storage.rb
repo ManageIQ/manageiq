@@ -99,6 +99,10 @@ class Storage < ApplicationRecord
     ext_management_systems.select { |ems| ems.my_zone == zone_name }
   end
 
+  def generic_custom_buttons
+    CustomButton.buttons_for("Storage")
+  end
+
   def storage_clusters
     parents.select { |parent| parent.kind_of?(StorageCluster) }
   end

@@ -14,4 +14,8 @@ class ContainerTemplate < ApplicationRecord
   serialize :object_labels, Hash
 
   acts_as_miq_taggable
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("ContainerTemplate")
+  end
 end

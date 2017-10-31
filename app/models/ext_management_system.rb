@@ -80,6 +80,10 @@ class ExtManagementSystem < ApplicationRecord
 
   serialize :options
 
+  def generic_custom_buttons
+    CustomButton.buttons_for("ExtManagementSystem")
+  end
+
   def hostname_uniqueness_valid?
     return unless hostname_required?
     return unless hostname.present? # Presence is checked elsewhere

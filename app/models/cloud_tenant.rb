@@ -124,6 +124,10 @@ class CloudTenant < ApplicationRecord
     try(:ext_management_system).try(:cloud_networks).try(:where, :shared => true) || []
   end
 
+  def generic_custom_buttons
+    CustomButton.buttons_for("CloudTenant")
+  end
+
   def update_source_tenant_associations
     TENANT_MAPPING_ASSOCIATIONS.each do |tenant_association|
       custom_update_method = "#{__method__}_for_#{tenant_association}"

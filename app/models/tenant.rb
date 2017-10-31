@@ -88,6 +88,10 @@ class Tenant < ApplicationRecord
     (strategy ? send(strategy) : []).append(id)
   end
 
+  def generic_custom_buttons
+    CustomButton.buttons_for("Tenant")
+  end
+
   def name
     tenant_attribute(:name, :company)
   end

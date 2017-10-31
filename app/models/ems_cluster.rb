@@ -58,6 +58,10 @@ class EmsCluster < ApplicationRecord
   #
   # TODO: Vmware specific - Fix when we subclass EmsCluster
 
+  def generic_custom_buttons
+    CustomButton.buttons_for("EmsCluster")
+  end
+
   def provider_object(connection)
     raise NotImplementedError unless ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
     connection.getVimClusterByMor(ems_ref_obj)

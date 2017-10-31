@@ -36,6 +36,10 @@ class ContainerGroup < ApplicationRecord
   virtual_column :ready_condition_status, :type => :string, :uses => :container_conditions
   virtual_column :running_containers_summary, :type => :string
 
+  def generic_custom_buttons
+    CustomButton.buttons_for("ContainerGroup")
+  end
+
   def ready_condition
     container_conditions.find_by(:name => "Ready")
   end

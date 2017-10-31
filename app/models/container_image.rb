@@ -37,6 +37,10 @@ class ContainerImage < ApplicationRecord
 
   after_create :raise_creation_event
 
+  def generic_custom_buttons
+    CustomButton.buttons_for("ContainerImage")
+  end
+
   def full_name
     return docker_id if image_ref && image_ref.start_with?(DOCKER_PULLABLE_PREFIX)
     result = ""

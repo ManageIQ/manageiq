@@ -17,6 +17,10 @@ class MiqTemplate < VmOrTemplate
   delegate :corresponding_model, :to => :class
   alias_method :corresponding_vm_model, :corresponding_model
 
+  def generic_custom_buttons
+    CustomButton.buttons_for("MiqTemplate")
+  end
+
   def scan_via_ems?
     true
   end

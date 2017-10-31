@@ -37,6 +37,10 @@ class ContainerNode < ApplicationRecord
   virtual_column :system_distribution, :type => :string
   virtual_column :kernel_version, :type => :string
 
+  def generic_custom_buttons
+    CustomButton.buttons_for("ContainerNode")
+  end
+
   def ready_condition
     container_conditions.find_by(:name => "Ready")
   end

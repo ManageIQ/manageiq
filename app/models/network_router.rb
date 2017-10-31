@@ -49,6 +49,10 @@ class NetworkRouter < ApplicationRecord
     ext_management_system && ext_management_system.class::NetworkRouter
   end
 
+  def generic_custom_buttons
+    CustomButton.buttons_for("NetworkRouter")
+  end
+
   private
 
   def extra_attributes_save(key, value)

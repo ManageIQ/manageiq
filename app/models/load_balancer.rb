@@ -38,6 +38,10 @@ class LoadBalancer < ApplicationRecord
     direct_services.first
   end
 
+  def generic_custom_buttons
+    CustomButton.buttons_for("LoadBalancer")
+  end
+
   def service
     direct_service.try(:root_service)
   end

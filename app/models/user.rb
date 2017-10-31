@@ -112,6 +112,10 @@ class User < ApplicationRecord
     end
   end
 
+  def generic_custom_buttons
+    CustomButton.buttons_for("User")
+  end
+
   def nil_email_field_if_blank
     self.email = nil if email.blank?
   end
