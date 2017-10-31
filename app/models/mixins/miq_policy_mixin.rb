@@ -25,7 +25,7 @@ module MiqPolicyMixin
   def get_policies(mode = nil)
     ns = "/miq_policy"
     cat = "assignment"
-    tag_list(:ns => ns, :cat => cat).split.collect do|t|
+    tag_list(:ns => ns, :cat => cat).split.collect do |t|
       klass, id = t.split("/")
       next unless ["miq_policy", "miq_policy_set"].include?(klass)
       policy = klass.camelize.constantize.find_by(:id => id.to_i)
@@ -43,7 +43,7 @@ module MiqPolicyMixin
 
   def resolve_profiles(list, event = nil)
     result = []
-    list.each do|pid|
+    list.each do |pid|
       prof = MiqPolicySet.find(pid)
       next unless prof
 
@@ -53,7 +53,7 @@ module MiqPolicyMixin
       next if presults.empty? # skip profiles that had no policies due to the event not matching or no policies in scope
 
       prof_result = "allow"
-      presults.each do|r|
+      presults.each do |r|
         if r["result"] == "deny"
           prof_result = "deny"
           break
@@ -70,7 +70,7 @@ module MiqPolicyMixin
   def passes_policy?(list = nil)
     list.nil? ? plist = policies : plist = resolve_policies(list)
     result = true
-    plist.each do|policy|
+    plist.each do |policy|
       result = false if policy["result"] == "deny"
     end
     result_list = plist.collect { |r| r["result"] }.uniq
@@ -81,7 +81,7 @@ module MiqPolicyMixin
   def passes_profiles?(list)
     plist = resolve_profiles(list)
     result = true
-    plist.each do|prof|
+    plist.each do |prof|
       result = false if prof["result"] == "deny"
     end
     result_list = plist.collect { |r| r["result"] }.uniq
@@ -124,7 +124,7 @@ module MiqPolicyMixin
 
       result = []
       targets.each do |t|
-        profiles = (t.get_policies + MiqPolicy.associations_to_get_policies.collect do|assoc|
+        profiles = (t.get_policies + MiqPolicy.associations_to_get_policies.collect do |assoc|
           next unless t.respond_to?(assoc)
           t.send(assoc).get_policies unless t.send(assoc).nil?
         end).compact.flatten.uniq

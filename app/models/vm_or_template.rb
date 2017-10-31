@@ -544,7 +544,7 @@ class VmOrTemplate < ApplicationRecord
       rec.reason = []
       presult = vm.enforce_policy("rsop")
       if presult[:result] == false
-        presult[:details].each do|p|
+        presult[:details].each do |p|
           rec.reason.push(p["description"]) unless p["result"]
         end
         if rec.reason != []

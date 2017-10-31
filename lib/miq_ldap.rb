@@ -284,7 +284,7 @@ class MiqLdap
       return username if username =~ /^.+@.+$/ # already qualified with user@domain
 
       return "#{username}@#{@user_suffix}"
-    when"mail"
+    when "mail"
       username = "#{username}@#{@user_suffix}" unless @user_suffix.blank? || username =~ /^.+@.+$/
       dbuser = User.find_by_email(username.downcase)
       dbuser = User.find_by_userid(username.downcase) unless dbuser
@@ -375,7 +375,7 @@ class MiqLdap
     _log.debug("Groups: #{groups.inspect}")
     return result unless groups
 
-    groups.each do|group|
+    groups.each do |group|
       # puts "group #{group}"
       gobj = get(group, [:cn, attr])
       dn   = nil

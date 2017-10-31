@@ -55,7 +55,7 @@ module MiqPolicy::ImportExport
       end
 
       conditions = []
-      pc.each do|c|
+      pc.each do |c|
         c.delete("condition_id")
         condition, s = Condition.import_from_hash(c, options)
         status[:children].push(s)

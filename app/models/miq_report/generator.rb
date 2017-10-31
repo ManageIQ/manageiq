@@ -377,7 +377,7 @@ module MiqReport::Generator
     objs = build_add_missing_timestamps(objs)
 
     data = build_includes(objs)
-    result = data.collect do|entry|
+    result = data.collect do |entry|
       build_reportable_data(entry, {:only => only_cols, "include" => include}, nil)
     end.flatten
 
@@ -479,8 +479,8 @@ module MiqReport::Generator
 
   def build_correlate_tag_cols
     tags2desc = {}
-    arr = self.cols.inject([]) do|a, c|
-      self.extras[:group_by_tag_cols].each do|tc|
+    arr = self.cols.inject([]) do |a, c|
+      self.extras[:group_by_tag_cols].each do |tc|
         tag = tc[(c.length + 1)..-1]
         if tc.starts_with?(c)
           unless tags2desc.key?(tag)
@@ -630,7 +630,7 @@ module MiqReport::Generator
   def build_includes(objs)
     results = []
 
-    objs.each do|obj|
+    objs.each do |obj|
       entry = {:obj => obj}
       build_search_includes(obj, entry, include) if include
       results.push(entry)
@@ -640,12 +640,12 @@ module MiqReport::Generator
   end
 
   def build_search_includes(obj, entry, includes)
-    includes.each_key do|assoc|
+    includes.each_key do |assoc|
       next unless obj.respond_to?(assoc)
 
       assoc_objects = [obj.send(assoc)].flatten.compact
 
-      entry[assoc.to_sym] = assoc_objects.collect do|rec|
+      entry[assoc.to_sym] = assoc_objects.collect do |rec|
         new_entry = {:obj => rec}
         build_search_includes(rec, new_entry, includes[assoc]["include"]) if includes[assoc]["include"]
         new_entry
@@ -702,7 +702,7 @@ module MiqReport::Generator
           h[c.tag_id] = c.description
         end
 
-        assoc_options[:only].each do|c|
+        assoc_options[:only].each do |c|
           entarr = []
           entry[:obj].tags.each do |t|
             next unless t.name.starts_with?("/managed/#{c}/")

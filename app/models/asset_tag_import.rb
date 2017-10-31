@@ -36,9 +36,9 @@ class AssetTagImport
     @verified_data = {}
     good = bad = 0
 
-    @data.each do|line|
+    @data.each do |line|
       keys = []
-      @keys.each do|k|
+      @keys.each do |k|
         t = []
         t[0] = k
         t[1] = line[k]
@@ -60,7 +60,7 @@ class AssetTagImport
       else
         @verified_data[objs[0].id] ||= []
         tags = {}
-        @tags.each do|tag|
+        @tags.each do |tag|
           tags[tag] = line[tag]
         end
         @verified_data[objs[0].id].push(tags)
@@ -68,7 +68,7 @@ class AssetTagImport
       end
     end
 
-    @verified_data.each do|id, data|
+    @verified_data.each do |id, data|
       if data.length > 1
         obj = @klass.find_by(:id => id)
         while data.length > 1
