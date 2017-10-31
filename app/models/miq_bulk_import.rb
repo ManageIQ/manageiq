@@ -24,7 +24,7 @@ module MiqBulkImport
     end
 
     matched_keys = []
-    keys.each do|k|
+    keys.each do |k|
       if header.include?(k)
         matched_keys.push(k)
         tags = tags.unshift(k)
@@ -37,10 +37,10 @@ module MiqBulkImport
     end
 
     result = []
-    reader.each do|row|
+    reader.each do |row|
       next if row.first.nil?
       line = {}
-      header.each_index do|i|
+      header.each_index do |i|
         next unless tags.include?(header[i])
         line[header[i]] = row[i].strip if row[i]
       end
@@ -62,7 +62,7 @@ module MiqBulkImport
       sub_key, sub_key_value = keys2array.shift
       next if sub_key_value.blank?
 
-      filtered_result = result.collect do|rec|
+      filtered_result = result.collect do |rec|
         rec if get_sub_key_values(rec, sub_key).include?(sub_key_value.downcase)
       end.compact
 
@@ -83,7 +83,7 @@ module MiqBulkImport
     attr = parts.pop
 
     current = rec
-    parts.each do|p|
+    parts.each do |p|
       return [] if !current.kind_of?(ActiveRecord::Base) && p != parts.last # we're only supporting multi-value for the last relationship
       return [] unless current.respond_to?(p)
 
@@ -91,7 +91,7 @@ module MiqBulkImport
     end
     current = current.kind_of?(ActiveRecord::Base) ? [current] : current
 
-    results = current.collect do|c|
+    results = current.collect do |c|
       return [] unless c.respond_to?(attr)
       c.send(attr)
     end.compact

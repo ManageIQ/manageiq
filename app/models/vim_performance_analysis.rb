@@ -215,7 +215,7 @@ module VimPerformanceAnalysis
       nh.each do |_cid, v|
         chash = v[:count][:storage]
         # Calculate storage total based on merged counts.
-        chash[:total] = chash[:details].inject(0) do|t, h|
+        chash[:total] = chash[:details].inject(0) do |t, h|
           _k, val = h.to_a.flatten
           t + val
         end if v[:count].key?(:storage)

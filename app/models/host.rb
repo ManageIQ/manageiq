@@ -816,7 +816,7 @@ class Host < ApplicationRecord
     raise _("Starting address is malformed") if (starting =~ pattern).nil?
     raise _("Ending address is malformed") if (ending =~ pattern).nil?
 
-    starting.split(".").each_index do|i|
+    starting.split(".").each_index do |i|
       if starting.split(".")[i].to_i > 255 || ending.split(".")[i].to_i > 255
         raise _("IP address octets must be 0 to 255")
       end
@@ -829,7 +829,7 @@ class Host < ApplicationRecord
     host_start = starting.split(".").last.to_i
     host_end = ending.split(".").last.to_i
 
-    host_start.upto(host_end) do|h|
+    host_start.upto(host_end) do |h|
       ipaddr = network_id + "." + h.to_s
 
       unless Host.find_by(:ipaddress => ipaddr).nil? # skip discover for existing hosts

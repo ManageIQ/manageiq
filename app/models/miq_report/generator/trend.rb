@@ -79,7 +79,7 @@ module MiqReport::Generator::Trend
     @trend_data = {}
     recs.sort! { |a, b| a.send(CHART_X_AXIS_COLUMN) <=> b.send(CHART_X_AXIS_COLUMN) } if recs.first.respond_to?(CHART_X_AXIS_COLUMN)
 
-    cols.each do|c|
+    cols.each do |c|
       next unless self.class.is_trend_column?(c)
       @trend_data[c] = {}
 

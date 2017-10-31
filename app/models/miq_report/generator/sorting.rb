@@ -25,7 +25,7 @@ module MiqReport::Generator::Sorting
     end
 
     new_sortby.each_with_index do |sb, idx|
-      @table.data.each do|d|
+      @table.data.each do |d|
         # Substitute any nils in the sort columns of the table so the sort doesn't crash
         d.data[sb] = sb_nil_sub[idx] if d.data[sb].nil?
         # Convert any booleans to string so the sort doesn't crash

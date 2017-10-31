@@ -224,7 +224,7 @@ class Classification < ApplicationRecord
     cat = find_by_name(name, obj.region_id)
     return nil unless cat
 
-    find_assigned_entries(obj).each do|e|
+    find_assigned_entries(obj).each do |e|
       return e if e.parent_id == cat.id
     end
     nil
