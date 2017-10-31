@@ -9,6 +9,7 @@ class MiqDialog < ApplicationRecord
     [_("Configured System Provision"), "MiqProvisionConfiguredSystemWorkflow"],
     [_("Host Provision"),              "MiqHostProvisionWorkflow"],
     [_("VM Migrate"),                  "VmMigrateWorkflow"],
+    [_("Physical Server Provision"),   "PhysicalServerProvisionWorkflow"]
   ].freeze
 
   serialize :content

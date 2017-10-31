@@ -6367,6 +6367,10 @@
       :description: Edit Instance Tags
       :feature_type: control
       :identifier: physical_server_tag
+    - :name: Provision Physical Server
+      :description: Provision Physical Server
+      :feature_type: control
+      :identifier: physical_server_provision
 
 # Firmwares
 - :name: Firmwares

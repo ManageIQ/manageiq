@@ -17,6 +17,7 @@ describe MiqRequest do
         :AutomationRequest                   => {:automation            => "Automation"},
         :ServiceTemplateProvisionRequest     => {:clone_to_service      => "Service Provision"},
         :ServiceReconfigureRequest           => {:service_reconfigure   => "Service Reconfigure"},
+        :PhysicalServerProvisionRequest      => {:provision_physical_server => "Physical Server Provision"}
       }
 
       expect(described_class::REQUEST_TYPES).to eq(expected_request_types)

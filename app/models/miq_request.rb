@@ -76,6 +76,9 @@ class MiqRequest < ApplicationRecord
       },
       :ServiceReconfigureRequest           => {
         :service_reconfigure => N_("Service Reconfigure")
+      },
+      :PhysicalServerProvisionRequest      => {
+        :provision_physical_server => N_("Physical Server Provision")
       }
     },
     :Infrastructure => {
