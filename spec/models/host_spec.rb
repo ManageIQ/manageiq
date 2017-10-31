@@ -606,7 +606,8 @@ describe Host do
     let(:host) { FactoryGirl.create(:host) }
 
     it "detects clustered hosts" do
-      host_with_cluster ; host
+      host_with_cluster
+      host
 
       expect(Host.clustered).to eq([host_with_cluster])
     end
@@ -617,7 +618,8 @@ describe Host do
     let(:host) { FactoryGirl.create(:host) }
 
     it "detects non_clustered hosts" do
-      host_with_cluster ; host
+      host_with_cluster
+      host
 
       expect(Host.non_clustered).to eq([host])
     end

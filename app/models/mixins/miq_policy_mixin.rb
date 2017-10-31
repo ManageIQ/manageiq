@@ -129,7 +129,10 @@ module MiqPolicyMixin
           t.send(assoc).get_policies unless t.send(assoc).nil?
         end).compact.flatten.uniq
         presults = t.resolve_profiles(profiles.collect(&:id), eventobj)
-        target_result = presults.inject("allow") { |s, r| break "deny" if r["result"] == "deny"; s }
+        target_result = presults.inject("allow") do |s, r|
+          break "deny" if r["result"] == "deny"
+          s
+        end
 
         result_list = presults.collect { |r| r["result"] }.uniq
         target_result = result_list.first if result_list.length == 1 && result_list.first == "N/A"

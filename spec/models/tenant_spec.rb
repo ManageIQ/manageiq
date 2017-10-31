@@ -280,7 +280,9 @@ describe Tenant do
     let(:user2) { FactoryGirl.create(:user) }
 
     it "has users" do
-      admin; user1; user2
+      admin
+      user1
+      user2
       expect(tenant1.users).to include(admin)
       expect(tenant1.users).to include(user1)
       expect(tenant1.users).not_to include(user2)

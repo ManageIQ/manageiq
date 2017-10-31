@@ -70,7 +70,8 @@ describe Zone do
     let(:host) { FactoryGirl.create(:host, :ext_management_system => ems) }
 
     it "returns clustered hosts" do
-      host ; host_with_cluster
+      host
+      host_with_cluster
 
       expect(zone.clustered_hosts).to eq([host_with_cluster])
     end
@@ -84,7 +85,8 @@ describe Zone do
     let(:host) { FactoryGirl.create(:host, :ext_management_system => ems) }
 
     it "returns clustered hosts" do
-      host ; host_with_cluster
+      host
+      host_with_cluster
 
       expect(zone.non_clustered_hosts).to eq([host])
     end

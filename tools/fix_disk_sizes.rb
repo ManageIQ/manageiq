@@ -21,7 +21,11 @@ end
 log_header = "MIQ(#{__FILE__})"
 $log.info("#{log_header} Correcting Disk Sizes...")
 
-disks_by_filename = Disk.all.inject({}) { |h, d| h[d.filename] = d; h }
+disks_by_filename = Disk.all.inject({}) do |h, d|
+  h[d.filename] = d
+  h
+end
+
 changed_disks = {}
 
 ExtManagementSystem.all.each do |e|

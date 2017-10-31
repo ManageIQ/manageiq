@@ -62,7 +62,10 @@ class Tag < ApplicationRecord
       list = list.dup
 
       # first, pull out the quoted tags
-      list.gsub!(/\"(.*?)\"\s*/) { tag_names << $1; "" }
+      list.gsub!(/\"(.*?)\"\s*/) do
+        tag_names << $1
+        ""
+      end
 
       # then, replace all commas with a space
       list.tr!(',', " ")

@@ -554,7 +554,8 @@ module VimPerformanceAnalysis
     recs = recs.sort_by { |r| r.send(x_attr) } if recs.first.respond_to?(x_attr)
 
     y_array, x_array = recs.inject([]) do |arr, r|
-      arr[0] ||= []; arr[1] ||= []
+      arr[0] ||= []
+      arr[1] ||= []
       next(arr) unless  r.respond_to?(x_attr) && r.respond_to?(y_attr)
       if r.respond_to?(:inside_time_profile) && r.inside_time_profile == false
         _log.debug("Class: [#{r.class}], [#{r.resource_type} - #{r.resource_id}], Timestamp: [#{r.timestamp}] is outside of time profile")

@@ -379,7 +379,10 @@ class MiqAlert < ApplicationRecord
 
   def self.operating_range_perf_model_details(dbs)
     dbs.inject({}) do |h, db|
-      h[db] = Metric::LongTermAverages::AVG_COLS.inject({}) { |hh, c| hh[c.to_s] = Dictionary.gettext("#{db}Performance.#{c}"); hh }
+      h[db] = Metric::LongTermAverages::AVG_COLS.inject({}) do |hh, c|
+        hh[c.to_s] = Dictionary.gettext("#{db}Performance.#{c}")
+        hh
+      end
       h
     end
   end
