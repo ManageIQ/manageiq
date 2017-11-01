@@ -48,6 +48,6 @@ module CustomActionsMixin
   end
 
   def generic_custom_buttons
-    CustomButton.buttons_for(self.class.name)
+    CustomButton.buttons_for(self.class.base_model.name)
   end
 end
