@@ -2,6 +2,7 @@ class CloudSubnet < ApplicationRecord
   include NewWithTypeStiMixin
   include SupportsFeatureMixin
   include CloudTenancyMixin
+  include CustomActionsMixin
 
   acts_as_miq_taggable
 

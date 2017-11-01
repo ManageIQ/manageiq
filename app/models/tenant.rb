@@ -6,6 +6,7 @@ class Tenant < ApplicationRecord
   DEFAULT_URL = nil
 
   include ActiveVmAggregationMixin
+  include CustomActionsMixin
 
   acts_as_miq_taggable
 

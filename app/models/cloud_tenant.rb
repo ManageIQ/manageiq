@@ -3,6 +3,7 @@ class CloudTenant < ApplicationRecord
   TENANT_MAPPING_ASSOCIATIONS = %i(vms_and_templates).freeze
 
   include NewWithTypeStiMixin
+  include CustomActionsMixin
   extend ActsAsTree::TreeWalker
 
   belongs_to :ext_management_system, :foreign_key => "ems_id"

@@ -1,4 +1,6 @@
 class MiqTemplate < VmOrTemplate
+  include CustomActionsMixin
+
   default_scope { where(:template => true) }
 
   include_concern 'Operations'

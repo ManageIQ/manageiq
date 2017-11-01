@@ -4,6 +4,7 @@ class EmsCluster < ApplicationRecord
   include_concern 'CapacityPlanning'
   include EventMixin
   include TenantIdentityMixin
+  include CustomActionsMixin
 
   acts_as_miq_taggable
 

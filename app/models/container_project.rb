@@ -2,6 +2,7 @@ class ContainerProject < ApplicationRecord
   include SupportsFeatureMixin
   include CustomAttributeMixin
   include ArchivedMixin
+  include CustomActionsMixin
   include_concern 'Purging'
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   has_many :container_groups, -> { active }

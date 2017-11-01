@@ -11,6 +11,7 @@ class Host < ApplicationRecord
   include NewWithTypeStiMixin
   include TenantIdentityMixin
   include DeprecationMixin
+  include CustomActionsMixin
 
   VENDOR_TYPES = {
     # DB            Displayed

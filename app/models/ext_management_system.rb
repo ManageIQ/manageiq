@@ -1,4 +1,6 @@
 class ExtManagementSystem < ApplicationRecord
+  include CustomActionsMixin
+
   def self.types
     leaf_subclasses.collect(&:ems_type)
   end
