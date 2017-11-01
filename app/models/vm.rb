@@ -112,8 +112,4 @@ class Vm < VmOrTemplate
     )
     console.id
   end
-
-  def generic_custom_buttons
-    CustomButton.buttons_for("Vm")
-  end
 end
