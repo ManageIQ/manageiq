@@ -252,7 +252,7 @@ describe MiqGroup do
 
     it "fails if referenced by a tenant#default_miq_group" do
       expect { FactoryGirl.create(:tenant).default_miq_group.reload.destroy }
-      .to raise_error(RuntimeError, /A tenant default group can not be deleted/)
+        .to raise_error(RuntimeError, /A tenant default group can not be deleted/)
     end
   end
 
@@ -368,7 +368,7 @@ describe MiqGroup do
       group = FactoryGirl.create(:miq_group,
                                  :description   => "MiqGroup-self_service",
                                  :miq_user_role => role
-                                 )
+                                )
       expect(group).to be_self_service
     end
 
@@ -410,7 +410,7 @@ describe MiqGroup do
       tenant = FactoryGirl.create(:tenant)
       g = FactoryGirl.create(:tenant).default_miq_group
       expect { g.update_attributes!(:tenant => tenant) }
-      .to raise_error(ActiveRecord::RecordInvalid, /Tenant cant change the tenant of a default group/)
+        .to raise_error(ActiveRecord::RecordInvalid, /Tenant cant change the tenant of a default group/)
     end
   end
 
