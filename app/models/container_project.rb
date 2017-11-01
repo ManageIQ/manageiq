@@ -2,6 +2,7 @@ class ContainerProject < ApplicationRecord
   include SupportsFeatureMixin
   include CustomAttributeMixin
   include ArchivedMixin
+  include CustomActionsMixin
   include_concern 'Purging'
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   has_many :container_groups, -> { active }
@@ -54,6 +55,10 @@ class ContainerProject < ApplicationRecord
       # TODO: implement policy events and its relationship
       ["ems_id = ?", ems_id]
     end
+  end
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("ContainerProject")
   end
 
   def perf_rollup_parents(interval_name = nil)

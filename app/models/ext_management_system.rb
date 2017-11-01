@@ -29,6 +29,7 @@ class ExtManagementSystem < ApplicationRecord
   has_many :child_managers, :class_name => 'ExtManagementSystem', :foreign_key => 'parent_ems_id'
 
   include CustomAttributeMixin
+  include CustomActionsMixin
   belongs_to :tenant
   has_many :container_deployments, :foreign_key => :deployed_on_ems_id, :inverse_of => :deployed_on_ems
   has_many :endpoints, :as => :resource, :dependent => :destroy, :autosave => true
@@ -78,6 +79,10 @@ class ExtManagementSystem < ApplicationRecord
   scope :with_eligible_manager_types, ->(eligible_types) { where(:type => eligible_types) }
 
   serialize :options
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("ExtManagementSystem")
+  end
 
   def hostname_uniqueness_valid?
     return unless hostname_required?

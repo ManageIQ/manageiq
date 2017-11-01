@@ -2,6 +2,7 @@ class NetworkRouter < ApplicationRecord
   include NewWithTypeStiMixin
   include SupportsFeatureMixin
   include CloudTenancyMixin
+  include CustomActionsMixin
 
   acts_as_miq_taggable
 
@@ -46,6 +47,10 @@ class NetworkRouter < ApplicationRecord
   def self.class_by_ems(ext_management_system)
     # TODO: use a factory on ExtManagementSystem side to return correct class for each provider
     ext_management_system && ext_management_system.class::NetworkRouter
+  end
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("NetworkRouter")
   end
 
   private

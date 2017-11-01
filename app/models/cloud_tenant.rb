@@ -3,6 +3,7 @@ class CloudTenant < ApplicationRecord
   TENANT_MAPPING_ASSOCIATIONS = %i(vms_and_templates).freeze
 
   include NewWithTypeStiMixin
+  include CustomActionsMixin
   extend ActsAsTree::TreeWalker
 
   belongs_to :ext_management_system, :foreign_key => "ems_id"
@@ -121,6 +122,10 @@ class CloudTenant < ApplicationRecord
 
   def shared_cloud_networks
     try(:ext_management_system).try(:cloud_networks).try(:where, :shared => true) || []
+  end
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("CloudTenant")
   end
 
   def update_source_tenant_associations

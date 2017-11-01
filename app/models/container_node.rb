@@ -7,6 +7,7 @@ class ContainerNode < ApplicationRecord
   include SupportsFeatureMixin
   include ArchivedMixin
   include CockpitMixin
+  include CustomActionsMixin
   include_concern 'Purging'
 
   EXTERNAL_LOGGING_PATH = "/#/discover?_g=()&_a=(columns:!(hostname,level,kubernetes.pod_name,message),filters:!((meta:(disabled:!f,index:'%{index}',key:hostname,negate:!f),%{query})),index:'%{index}',interval:auto,query:(query_string:(analyze_wildcard:!t,query:'*')),sort:!(time,desc))".freeze
@@ -35,6 +36,10 @@ class ContainerNode < ApplicationRecord
   virtual_column :ready_condition_status, :type => :string, :uses => :container_conditions
   virtual_column :system_distribution, :type => :string
   virtual_column :kernel_version, :type => :string
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("ContainerNode")
+  end
 
   def ready_condition
     container_conditions.find_by(:name => "Ready")

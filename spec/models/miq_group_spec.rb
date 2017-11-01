@@ -14,6 +14,16 @@ describe MiqGroup do
       end
     end
 
+    describe "#generic_custom_buttons" do
+      before do
+        allow(CustomButton).to receive(:buttons_for).with("MiqGroup").and_return("this is a list of custom buttons")
+      end
+
+      it "returns all the custom buttons for miq groups" do
+        expect(MiqGroup.new.generic_custom_buttons).to eq("this is a list of custom buttons")
+      end
+    end
+
     describe "#get_managed_filters" do
       it "takes managed filters from the group's entitlement" do
         expect(subject.get_managed_filters).to eq([['some managed filter']])

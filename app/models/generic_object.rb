@@ -20,6 +20,10 @@ class GenericObject < ApplicationRecord
   delegate :name, :to => :generic_object_definition, :prefix => true, :allow_nil => false
   virtual_column :generic_object_definition_name, :type => :string
 
+  def generic_custom_buttons
+    CustomButton.buttons_for("GenericObject")
+  end
+
   def initialize(attributes = {})
     # generic_object_definition will be set first since hash iteration is based on the order of key insertion
     attributes = (attributes || {}).symbolize_keys

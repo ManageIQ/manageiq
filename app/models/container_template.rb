@@ -1,5 +1,6 @@
 class ContainerTemplate < ApplicationRecord
   include CustomAttributeMixin
+  include CustomActionsMixin
 
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   belongs_to :container_project
@@ -13,4 +14,8 @@ class ContainerTemplate < ApplicationRecord
   serialize :object_labels, Hash
 
   acts_as_miq_taggable
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("ContainerTemplate")
+  end
 end

@@ -42,4 +42,14 @@ describe ContainerImage do
     expect(image.computer_system).not_to be_nil
     expect(image.operating_system).to eq(image.computer_system.operating_system)
   end
+
+  describe "#generic_custom_buttons" do
+    before do
+      allow(CustomButton).to receive(:buttons_for).with("ContainerImage").and_return("this is a list of custom buttons")
+    end
+
+    it "returns all the custom buttons for container images" do
+      expect(ContainerImage.new.generic_custom_buttons).to eq("this is a list of custom buttons")
+    end
+  end
 end

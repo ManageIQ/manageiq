@@ -5,6 +5,7 @@ class User < ApplicationRecord
   include CustomAttributeMixin
   include ActiveVmAggregationMixin
   include TimezoneMixin
+  include CustomActionsMixin
 
   has_many   :miq_approvals, :as => :approver
   has_many   :miq_approval_stamps,  :class_name => "MiqApproval", :foreign_key => :stamper_id
@@ -109,6 +110,10 @@ class User < ApplicationRecord
       desired_group ||= MiqGroup.find_by(:description => group_description) if super_admin_user?
       self.current_group = desired_group if desired_group
     end
+  end
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("User")
   end
 
   def nil_email_field_if_blank

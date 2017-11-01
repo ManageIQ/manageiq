@@ -4,6 +4,7 @@ class EmsCluster < ApplicationRecord
   include_concern 'CapacityPlanning'
   include EventMixin
   include TenantIdentityMixin
+  include CustomActionsMixin
 
   acts_as_miq_taggable
 
@@ -56,6 +57,10 @@ class EmsCluster < ApplicationRecord
   # Provider Object methods
   #
   # TODO: Vmware specific - Fix when we subclass EmsCluster
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("EmsCluster")
+  end
 
   def provider_object(connection)
     raise NotImplementedError unless ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager)

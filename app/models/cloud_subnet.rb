@@ -2,6 +2,7 @@ class CloudSubnet < ApplicationRecord
   include NewWithTypeStiMixin
   include SupportsFeatureMixin
   include CloudTenancyMixin
+  include CustomActionsMixin
 
   acts_as_miq_taggable
 
@@ -54,6 +55,10 @@ class CloudSubnet < ApplicationRecord
 
   def delete_cloud_subnet
     raw_delete_cloud_subnet
+  end
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("CloudSubnet")
   end
 
   def raw_delete_cloud_subnet

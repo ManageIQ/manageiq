@@ -7,6 +7,7 @@ class CloudVolume < ApplicationRecord
   include AvailabilityMixin
   include SupportsFeatureMixin
   include CloudTenancyMixin
+  include CustomActionsMixin
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ExtManagementSystem"
   belongs_to :availability_zone
@@ -115,6 +116,10 @@ class CloudVolume < ApplicationRecord
 
   def delete_volume
     raw_delete_volume
+  end
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("CloudVolume")
   end
 
   def validate_delete_volume

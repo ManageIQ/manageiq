@@ -23,6 +23,16 @@ describe Tenant do
     end
   end
 
+  describe "#generic_custom_buttons" do
+    before do
+      allow(CustomButton).to receive(:buttons_for).with("Tenant").and_return("this is a list of custom buttons")
+    end
+
+    it "returns all the custom buttons for tenants" do
+      expect(Tenant.new.generic_custom_buttons).to eq("this is a list of custom buttons")
+    end
+  end
+
   describe "#root_tenant" do
     it "has a root tenant" do
       Tenant.seed

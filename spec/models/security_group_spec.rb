@@ -32,4 +32,14 @@ describe SecurityGroup do
       expect(SecurityGroup.attribute_supported_by_sql?(:total_vms)).to be false
     end
   end
+
+  describe "#generic_custom_buttons" do
+    before do
+      allow(CustomButton).to receive(:buttons_for).with("SecurityGroup").and_return("this is a list of custom buttons")
+    end
+
+    it "returns all the custom buttons for security group" do
+      expect(SecurityGroup.new.generic_custom_buttons).to eq("this is a list of custom buttons")
+    end
+  end
 end

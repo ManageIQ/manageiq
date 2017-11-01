@@ -5,6 +5,7 @@ class LoadBalancer < ApplicationRecord
   include RetirementMixin
   include TenantIdentityMixin
   include CloudTenancyMixin
+  include CustomActionsMixin
 
   acts_as_miq_taggable
 
@@ -35,6 +36,10 @@ class LoadBalancer < ApplicationRecord
 
   def direct_service
     direct_services.first
+  end
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("LoadBalancer")
   end
 
   def service

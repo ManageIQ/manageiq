@@ -7,6 +7,7 @@ class OrchestrationStack < ApplicationRecord
   include ProcessTasksMixin
   include RetirementMixin
   include TenantIdentityMixin
+  include CustomActionsMixin
 
   acts_as_miq_taggable
 
@@ -48,6 +49,10 @@ class OrchestrationStack < ApplicationRecord
   alias_method :orchestration_stack_parameters, :parameters
   alias_method :orchestration_stack_outputs,    :outputs
   alias_method :orchestration_stack_resources,  :resources
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("OrchestrationStack")
+  end
 
   def orchestration_stacks
     children

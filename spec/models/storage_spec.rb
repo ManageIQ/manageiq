@@ -543,4 +543,14 @@ describe Storage do
       expect(storage.tenant_identity.current_tenant).to eq(Tenant.root_tenant)
     end
   end
+
+  describe "#generic_custom_buttons" do
+    before do
+      allow(CustomButton).to receive(:buttons_for).with("Storage").and_return("this is a list of custom buttons")
+    end
+
+    it "returns all the custom buttons for storage" do
+      expect(Storage.new.generic_custom_buttons).to eq("this is a list of custom buttons")
+    end
+  end
 end

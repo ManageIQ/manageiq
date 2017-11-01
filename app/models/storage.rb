@@ -41,6 +41,7 @@ class Storage < ApplicationRecord
   include AsyncDeleteMixin
   include AvailabilityMixin
   include TenantIdentityMixin
+  include CustomActionsMixin
 
   virtual_column :v_used_space,                   :type => :integer
   virtual_column :v_used_space_percent_of_total,  :type => :integer
@@ -96,6 +97,10 @@ class Storage < ApplicationRecord
 
   def ext_management_systems_in_zone(zone_name)
     ext_management_systems.select { |ems| ems.my_zone == zone_name }
+  end
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("Storage")
   end
 
   def storage_clusters

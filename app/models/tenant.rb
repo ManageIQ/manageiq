@@ -6,6 +6,7 @@ class Tenant < ApplicationRecord
   DEFAULT_URL = nil
 
   include ActiveVmAggregationMixin
+  include CustomActionsMixin
 
   acts_as_miq_taggable
 
@@ -85,6 +86,10 @@ class Tenant < ApplicationRecord
 
   def accessible_tenant_ids(strategy = nil)
     (strategy ? send(strategy) : []).append(id)
+  end
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("Tenant")
   end
 
   def name

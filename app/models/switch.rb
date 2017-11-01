@@ -1,4 +1,6 @@
 class Switch < ApplicationRecord
+  include CustomActionsMixin
+
   has_many :host_switches, :dependent => :destroy
   has_many :hosts, :through => :host_switches
 
@@ -10,4 +12,8 @@ class Switch < ApplicationRecord
   scope :with_id,   ->(id) { where(:id => id) }
 
   acts_as_miq_taggable
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("Switch")
+  end
 end

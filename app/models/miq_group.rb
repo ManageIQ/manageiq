@@ -36,8 +36,13 @@ class MiqGroup < ApplicationRecord
   include ActiveVmAggregationMixin
   include TimezoneMixin
   include TenancyMixin
+  include CustomActionsMixin
 
   alias_method :current_tenant, :tenant
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("MiqGroup")
+  end
 
   def name
     description
