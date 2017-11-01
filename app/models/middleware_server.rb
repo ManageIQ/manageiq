@@ -1,4 +1,6 @@
 class MiddlewareServer < ApplicationRecord
+  include MiqPolicyMixin
+  include ComplianceMixin
   include NewWithTypeStiMixin
   include LiveMetricsMixin
 

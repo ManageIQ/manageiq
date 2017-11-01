@@ -3832,6 +3832,10 @@
       :description: Edit Tags of Middleware Servers
       :feature_type: control
       :identifier: middleware_server_tag
+    - :name: Check Compliance
+      :description: Check Compliance of Last Known Configuration
+      :feature_type: control
+      :identifier: middleware_server_check_compliance
     - :name: Reload middleware server
       :description: Trigger reload operation for Middleware Server
       :feature_type: admin
