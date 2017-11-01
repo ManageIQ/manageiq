@@ -57,11 +57,6 @@ module ManageIQ
       system!("gem install bundler -v '#{bundler_version}' --conservative")
     end
 
-    def self.bundle_install(root = APP_ROOT)
-      system("bundle check", :chdir => root) ||
-        system!("bundle install #{bundle_params}", :chdir => root)
-    end
-
     def self.bundle_update(root = APP_ROOT)
       system!("bundle update", :chdir => root)
       return unless ENV["CI"]
