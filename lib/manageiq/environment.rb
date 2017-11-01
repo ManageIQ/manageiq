@@ -69,6 +69,9 @@ module ManageIQ
 
     def self.bundle_update(root = APP_ROOT)
       system!("bundle update", :chdir => root)
+      return unless ENV["CI"]
+      lockfile_contents = File.read(root.join("Gemfile.lock"))
+      puts "===== Begin Gemfile.lock =====\n\n#{lockfile_contents}\n\n===== End Gemfile.lock ====="
     end
 
     def self.bundle_params
