@@ -10,6 +10,7 @@ class CloudObjectStoreContainer < ApplicationRecord
   include NewWithTypeStiMixin
   include ProcessTasksMixin
   include SupportsFeatureMixin
+  include CustomActionsMixin
 
   include_concern 'Operations'
 
@@ -46,5 +47,9 @@ class CloudObjectStoreContainer < ApplicationRecord
 
   def self.raw_cloud_object_store_container_create(_ext_management_system, _options)
     raise NotImplementedError, _("must be implemented in subclass")
+  end
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("CloudObjectStoreContainer")
   end
 end

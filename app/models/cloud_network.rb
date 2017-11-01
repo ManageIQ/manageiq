@@ -2,6 +2,7 @@ class CloudNetwork < ApplicationRecord
   include NewWithTypeStiMixin
   include SupportsFeatureMixin
   include CloudTenancyMixin
+  include CustomActionsMixin
 
   acts_as_miq_taggable
 
@@ -47,6 +48,10 @@ class CloudNetwork < ApplicationRecord
   def self.class_by_ems(ext_management_system, _external = false)
     # TODO: A factory on ExtManagementSystem to return class for each provider
     ext_management_system && ext_management_system.class::CloudNetwork
+  end
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("CloudNetwork")
   end
 
   private
