@@ -1,4 +1,6 @@
 class Switch < ApplicationRecord
+  include CustomActionsMixin
+
   has_many :host_switches, :dependent => :destroy
   has_many :hosts, :through => :host_switches
 

@@ -36,6 +36,7 @@ class MiqGroup < ApplicationRecord
   include ActiveVmAggregationMixin
   include TimezoneMixin
   include TenancyMixin
+  include CustomActionsMixin
 
   alias_method :current_tenant, :tenant
 
