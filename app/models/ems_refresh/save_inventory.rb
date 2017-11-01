@@ -197,7 +197,7 @@ module EmsRefresh::SaveInventory
   # should have a single :tags key, or a simple Array.
   #
   def save_tags_inventory(object, collection, _target = nil)
-    return if collection.blank?
+    return if collection.nil?
     tags = collection.kind_of?(Hash) ? collection[:tags] : collection
     ContainerLabelTagMapping.retag_entity(object, tags)
   rescue => err
