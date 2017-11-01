@@ -1,6 +1,4 @@
 class GenericObject < ApplicationRecord
-  include CustomActionsMixin
-
   acts_as_miq_taggable
 
   virtual_has_one :custom_actions
