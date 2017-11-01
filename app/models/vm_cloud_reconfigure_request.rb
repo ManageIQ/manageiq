@@ -7,6 +7,10 @@ class VmCloudReconfigureRequest < MiqRequest
                                             :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"}
   validate  :must_have_user
 
+  def vms
+    Vm.find(options[:src_ids])
+  end
+
   def self.make_request(request, values, requester, auto_approve = false)
     values[:request_type] = :vm_cloud_reconfigure
 
