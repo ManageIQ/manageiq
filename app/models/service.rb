@@ -65,6 +65,7 @@ class Service < ApplicationRecord
   include TenancyMixin
   include SupportsFeatureMixin
   include Metric::CiMixin
+  include CustomActionsMixin
 
   include_concern 'RetirementManagement'
   include_concern 'Aggregation'

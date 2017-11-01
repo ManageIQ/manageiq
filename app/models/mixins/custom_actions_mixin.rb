@@ -48,6 +48,6 @@ module CustomActionsMixin
   end
 
   def generic_custom_buttons
-    raise "called abstract method generic_custom_buttons"
+    CustomButton.buttons_for(self.class.name)
   end
 end
