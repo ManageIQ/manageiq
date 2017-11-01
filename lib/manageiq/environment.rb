@@ -58,16 +58,11 @@ module ManageIQ
     end
 
     def self.bundle_update(root = APP_ROOT)
-      system!("bundle update", :chdir => root)
+      system!("bundle update --jobs=3", :chdir => root)
       return unless ENV["CI"]
       lockfile_contents = File.read(root.join("Gemfile.lock"))
       puts "===== Begin Gemfile.lock =====\n\n#{lockfile_contents}\n\n===== End Gemfile.lock ====="
     end
-
-    def self.bundle_params
-      "--jobs=3 --retry=3 --path=${BUNDLE_PATH:-vendor/bundle}" if ENV['CI']
-    end
-    private_class_method :bundle_params
 
     def self.create_database
       puts "\n== Updating database =="
