@@ -54,8 +54,7 @@ class Zone < ApplicationRecord
   end
 
   def ntp_settings
-    # Return ntp settings if populated otherwise return the defaults
-    settings.fetch_path(:ntp, :server).present? ? settings[:ntp] : settings_for_resource.ntp.to_h
+    settings_for_resource.ntp.to_h
   end
 
   def assigned_roles
@@ -200,8 +199,6 @@ class Zone < ApplicationRecord
   private
 
   def queue_ntp_reload_if_changed
-    return if settings_was[:ntp] == ntp_settings
-
     servers = active_miq_servers
     return if servers.blank?
     _log.info("Zone: [#{name}], Queueing ntp_reload for [#{servers.length}] active_miq_servers, ids: #{servers.collect(&:id)}")
