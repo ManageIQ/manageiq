@@ -782,9 +782,9 @@ class Host < ApplicationRecord
       # connect_ssh logs address and user name(s) being used to make connection
       _log.info("Verifying Host SSH credentials for [#{name}]")
       connect_ssh(options) { |ssu| ssu.exec("uname -a") }
-    rescue Net::SSH::AuthenticationFailed
+    rescue MiqException::MiqInvalidCredentialsError
       raise MiqException::MiqInvalidCredentialsError, _("Login failed due to a bad username or password.")
-    rescue Net::SSH::HostKeyMismatch
+    rescue MiqException::MiqSshUtilHostKeyMismatch
       raise # Re-raise the error so the UI can prompt the user to allow the keys to be reset.
     rescue Exception => err
       _log.warn(err.inspect)
@@ -1418,7 +1418,7 @@ class Host < ApplicationRecord
 
             save
           end
-        rescue Net::SSH::HostKeyMismatch
+        rescue MiqException::MiqSshUtilHostKeyMismatch
           # Keep from dumping stack trace for this error which is sufficiently logged in the connect_ssh method
         rescue => err
           _log.log_backtrace(err)
