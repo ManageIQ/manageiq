@@ -484,6 +484,33 @@
       :get:
       - :name: read
         :identifier: miq_cloud_networks_view
+  :cloud_subnets:
+    :description: Cloud Subnets
+    :identifier: cloud_subnet
+    :options:
+    - :collection
+    - :subcollection
+    :verbs: *gp
+    :klass: CloudSubnet
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: cloud_subnet_show_list
+      :post:
+      - :name: query
+        :identifier: cloud_subnet_show_list
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: cloud_subnet_show
+    :subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: cloud_tenant_show_list
+    :subresource_actions:
+      :get:
+      - :name: read
+        :identifier: cloud_tenant_show
   :cloud_tenants:
     :description: Cloud Tenants
     :identifier: cloud_tenant
@@ -1228,6 +1255,7 @@
     - :policies
     - :policy_profiles
     - :cloud_networks
+    - :cloud_subnets
     - :cloud_tenants
     - :custom_attributes
     - :load_balancers
