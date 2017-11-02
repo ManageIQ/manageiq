@@ -122,30 +122,30 @@ describe MiqAlert do
         end
       end
 
-      it "should update the existing status if event metadata has the same ems_ref" do
+      it "should update the existing status if event has the same ems_ref" do
         @alert.evaluate(
           [@vm.class.base_class.name, @vm.id],
-          :ems_event => FactoryGirl.create(:ems_event, :full_data => {:ems_ref => 'same'})
+          :ems_event => FactoryGirl.create(:ems_event, :ems_ref => 'same')
         )
         Timecop.travel 10.minutes do
           @alert.evaluate(
             [@vm.class.base_class.name, @vm.id],
-            :ems_event => FactoryGirl.create(:ems_event, :full_data => {:ems_ref => 'same'})
+            :ems_event => FactoryGirl.create(:ems_event, :ems_ref => 'same')
           )
           statuses = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id)
           expect(statuses.length).to eq(1)
         end
       end
 
-      it "should create a new status if event metadata has a different ems_ref" do
+      it "should create a new status if event has a different ems_ref" do
         @alert.evaluate(
           [@vm.class.base_class.name, @vm.id],
-          :ems_event => FactoryGirl.create(:ems_event, :full_data => {:ems_ref => 'same'})
+          :ems_event => FactoryGirl.create(:ems_event, :ems_ref => 'same')
         )
         Timecop.travel 10.minutes do
           @alert.evaluate(
             [@vm.class.base_class.name, @vm.id],
-            :ems_event => FactoryGirl.create(:ems_event, :full_data => {:ems_ref => 'different'})
+            :ems_event => FactoryGirl.create(:ems_event, :ems_ref => 'different')
           )
           statuses = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id)
           expect(statuses.length).to eq(2)
