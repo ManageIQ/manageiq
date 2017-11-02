@@ -211,7 +211,6 @@ class Zone < ApplicationRecord
         :class_name  => "MiqServer",
         :instance_id => s.id,
         :method_name => "ntp_reload",
-        :args        => [ntp_settings],
         :server_guid => s.guid,
         :priority    => MiqQueue::HIGH_PRIORITY,
         :zone        => name

@@ -64,7 +64,6 @@ module MiqServer::QueueManagement
       :method_name => "ntp_reload",
       :server_guid => guid,
       :priority    => MiqQueue::HIGH_PRIORITY,
-      :args => [server_ntp_settings],
       :zone        => my_zone
     )
   end
