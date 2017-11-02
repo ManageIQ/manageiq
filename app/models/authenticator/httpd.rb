@@ -70,13 +70,15 @@ module Authenticator
       [upn_username, user]
     end
 
-    def lookup_by_identity(username, request)
-      user_attrs, _membership_list = user_details_from_headers(username, request)
-      upn_username = "#{user_attrs[:username]}@#{user_attrs[:domain]}".downcase
+    def lookup_by_identity(username, request = nil)
+      if request
+        user_attrs, _membership_list = user_details_from_headers(username, request)
+        upn_username = "#{user_attrs[:username]}@#{user_attrs[:domain]}".downcase
 
-      user =   find_userid_as_upn(upn_username)
-      user ||= find_userid_as_distinguished_name(user_attrs)
-      user ||  case_insensitive_find_by_userid(username)
+        user =   find_userid_as_upn(upn_username)
+        user ||= find_userid_as_distinguished_name(user_attrs)
+      end
+      user || case_insensitive_find_by_userid(username)
     end
 
     private
