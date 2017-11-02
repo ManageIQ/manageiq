@@ -83,7 +83,6 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
   end
 
   def get_message
-    @worker.update_spid!
     if dequeue_method_via_drb? && @worker_monitor_drb
       get_message_via_drb
     else
@@ -108,6 +107,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
         begin
           _log.info("#{log_prefix} Reconnecting to DB after timeout error during queue deliver")
           ActiveRecord::Base.connection.reconnect!
+          @worker.update_spid!
         rescue => err
           do_exit("Exiting worker due to timeout error that could not be recovered from...error: #{err.class.name}: #{err.message}", 1)
         end
