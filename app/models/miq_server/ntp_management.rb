@@ -3,17 +3,6 @@ require 'linux_admin'
 module MiqServer::NtpManagement
   extend ActiveSupport::Concern
 
-  def server_ntp_settings
-    # Get the ntp servers from the vmdb.yml first, zone second, else use some defaults
-    ntp = ntp_config
-    if server_ntp_settings_blank?(ntp)
-      zone.ntp_settings
-    else
-      ntp[:source] = :server
-      ntp
-    end
-  end
-
   def ntp_config
     get_config("vmdb").config[:ntp]
   end
@@ -25,7 +14,7 @@ module MiqServer::NtpManagement
 
   # Called when zone ntp settings changed... run by the appropriate server
   # Also, called in start of miq_server and on a configuration change for the server
-  def ntp_reload(ntp_settings = server_ntp_settings)
+  def ntp_reload(ntp_settings = ntp_config)
     # matches ntp_reload_queue's guard clause
     return if !MiqEnvironment::Command.is_appliance? || MiqEnvironment::Command.is_container?
 
