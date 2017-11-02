@@ -62,6 +62,10 @@ describe Authenticator::Httpd do
 
     let(:username) { 'cheshire' }
 
+    it "Handles missing request parameter" do
+      expect(subject.lookup_by_identity('alice')).to eq(alice)
+    end
+
     it "finds existing users as username" do
       expect(subject.lookup_by_identity('alice', request)).to eq(alice)
     end
