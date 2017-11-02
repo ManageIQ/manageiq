@@ -52,6 +52,7 @@ class VimPerformanceState < ApplicationRecord
     return state unless state.nil?
 
     state = obj.vim_performance_states.build(:timestamp => ts)
+    state.association(:resource).target = obj
     state.capture
     state.save
 
@@ -245,6 +246,7 @@ class VimPerformanceState < ApplicationRecord
 
   def capture_vm_disk_storage
     if resource.kind_of?(VmOrTemplate)
+      resource.hardware.disks.load if resource.hardware
       [:used_disk, :allocated_disk].each do |type|
         send("vm_#{type}_storage=", resource.send("#{type}_storage"))
       end
