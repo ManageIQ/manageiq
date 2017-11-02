@@ -4,9 +4,14 @@ class Tag < ApplicationRecord
   virtual_has_one :category,       :class_name => "Classification"
   virtual_has_one :categorization, :class_name => "Hash"
 
-  has_many :container_label_tag_mappings
+  has_many :container_label_tag_mappings # see also controlled_by_mapping scope
 
   before_destroy :remove_from_managed_filters
+
+  # Note those scopes exclude Tags that don't have a Classification.
+  scope :visible,   -> { joins(:classification).merge(Classification.visible) }
+  scope :read_only, -> { joins(:classification).merge(Classification.read_only) }
+  scope :writable,  -> { joins(:classification).merge(Classification.writable) }
 
   def self.list(object, options = {})
     ns = get_namespace(options)
@@ -150,6 +155,24 @@ class Tag < ApplicationRecord
           "display_name" => "#{category.description}: #{classification.description}"
         }
       end
+  end
+
+  # @return [ActiveRecord::Relation] Scope for tags controlled by ContainerLabelTagMapping.
+  #   May include not only "entry" tags but also some parent "category" tags.
+  def self.controlled_by_mapping
+    # TODO: complex query, can we simply select by prefixes e.g. '/managed/kubernetes:%'?
+    # User can create categories with such prefix, but they won't be read_only.
+
+    # Entry tags from specific value->tag mappings.
+
+    mapped_specific_tags = read_only.where(:id => ContainerLabelTagMapping.specific_value.pluck(:tag_id))
+
+    # Entry tags for name->category mappings.
+    mapped_categories = Classification.where(:tag => ContainerLabelTagMapping.any_value.pluck(:tag_id))
+    mapped_entries = Classification.where(:parent => mapped_categories)
+    mapped_child_tags = read_only.where(:id => mapped_entries.select(:tag_id))
+
+    mapped_specific_tags.or(mapped_child_tags)
   end
 
   private
