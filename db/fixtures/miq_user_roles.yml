@@ -123,6 +123,7 @@
   - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
+  - middleware_server_check_compliance
   - miq_report_run
   - miq_report_saved_reports
   - miq_report_schedules
@@ -213,6 +214,7 @@
   - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
+  - middleware_server_check_compliance
   - miq_report_run
   - miq_report_saved_reports
   - miq_report_schedules
@@ -374,6 +376,7 @@
   - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
+  - middleware_server_check_compliance
   - miq_report_run
   - miq_report_saved_reports
   - miq_report_schedules
@@ -474,6 +477,7 @@
   - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
+  - middleware_server_check_compliance
   - miq_report_run
   - miq_report_saved_reports
   - miq_report_schedules
@@ -559,6 +563,7 @@
   - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
+  - middleware_server_check_compliance
   - miq_report_run
   - miq_report_saved_reports
   - miq_report_schedules
@@ -642,6 +647,7 @@
   - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
+  - middleware_server_check_compliance
   - miq_report_run
   - miq_report_saved_reports
   - miq_report_schedules
@@ -809,6 +815,7 @@
   - automation_manager
   - embedded_automation_manager
   - compute
+  - middleware_server_check_compliance
   - miq_request_admin
   - miq_request_view
   - miq_template_analyze
