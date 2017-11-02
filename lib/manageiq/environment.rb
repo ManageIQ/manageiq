@@ -6,6 +6,9 @@ module ManageIQ
     APP_ROOT = Pathname.new(__dir__).join("../..")
 
     def self.manageiq_plugin_setup(plugin_root = nil)
+      # determine plugin root dir. Assume we are called from a 'bin/' script in the plugin root
+      plugin_root ||= Pathname.new(caller_locations.last.absolute_path).dirname.parent
+
       manageiq_plugin_update(plugin_root)
     end
 
