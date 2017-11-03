@@ -40,7 +40,20 @@ module ManagerRefresh
     def construct_graph!(nodes)
       self.nodes = nodes
       self.edges, self.fixed_edges = build_edges(nodes)
+      assert_edges_in_nodes!
+      assert_fixed_edges_in_edges!
       self
+    end
+
+    def assert_edges_in_nodes!
+      edge_endpoints = edges.collect_concat { |e| e }
+      extra = edge_endpoints - nodes
+      raise "Graph has edge endpoints that are not among its nodes: #{extra}" unless extra.empty?
+    end
+
+    def assert_fixed_edges_in_edges!
+      extra = fixed_edges - edges
+      raise "Graph has fixed_edges that are not in edges: #{extra}" unless extra.empty?
     end
 
     def assert_graph!(fixed_edges)
