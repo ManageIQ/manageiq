@@ -43,6 +43,8 @@ namespace :locale do
   desc "Extract strings from various yaml files and store them in a ruby file for gettext:find"
   task :extract_yaml_strings => :environment do
     def update_output(string, file, output)
+      file.gsub!(pwd + '/', "")
+      file.gsub!(ManageIQ::UI::Classic::Engine.root.to_s + '/', "")
       return if string.nil? || string.empty?
       if output.key?(string)
         output[string].append(file)
