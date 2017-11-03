@@ -355,7 +355,7 @@ describe Vmdb::Settings do
       expect(settings.api.token_ttl).to eq "3.hour"
     end
 
-    it "applied settings from hierarchy Region -> Zone -> Server" do
+    it "applies settings from up the hierarchy: Region -> Zone -> Server" do
       MiqRegion.seed
 
       described_class.save!(server.zone.miq_region, :api => {:token_ttl => "3.hour"})
@@ -369,6 +369,9 @@ describe Vmdb::Settings do
       described_class.save!(server, :api => {:token_ttl => "5.hour"})
       settings = Vmdb::Settings.for_resource(server)
       expect(settings.api.token_ttl).to eq "5.hour"
+
+      settings = Vmdb::Settings.for_resource(MiqServer.new(:zone => server.zone))
+      expect(settings.api.token_ttl).to eq "4.hour"
     end
   end
 
