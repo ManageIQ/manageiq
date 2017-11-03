@@ -3,15 +3,13 @@ require 'linux_admin'
 module MiqServer::NtpManagement
   extend ActiveSupport::Concern
 
-  def ntp_config
-    get_config("vmdb").config[:ntp]
-  end
-
   # Called when zone ntp settings changed... run by the appropriate server
   # Also, called in start of miq_server and on a configuration change for the server
-  def ntp_reload(ntp_settings = ntp_config)
+  def ntp_reload
     # matches ntp_reload_queue's guard clause
     return if !MiqEnvironment::Command.is_appliance? || MiqEnvironment::Command.is_container?
+
+    ntp_settings = get_config("vmdb").config[:ntp]
 
     if @ntp_settings && @ntp_settings == ntp_settings
       _log.info("Skipping reload of ntp settings since they are unchanged")
