@@ -22,7 +22,6 @@ class Zone < ApplicationRecord
   virtual_has_many :active_miq_servers, :class_name => "MiqServer"
 
   before_destroy :check_zone_in_use_on_destroy
-  after_update   :queue_ntp_reload_if_changed
 
   include AuthenticationMixin
 
@@ -51,10 +50,6 @@ class Zone < ApplicationRecord
 
   def miq_region
     MiqRegion.find_by(:region => region_id)
-  end
-
-  def ntp_settings
-    settings_for_resource.ntp.to_h
   end
 
   def assigned_roles
@@ -189,29 +184,18 @@ class Zone < ApplicationRecord
     miq_servers.any?(&:started?)
   end
 
+  def ntp_reload_queue
+    servers = active_miq_servers
+    return if servers.blank?
+    _log.info("Zone: [#{name}], Queueing ntp_reload for [#{servers.length}] active_miq_servers, ids: #{servers.collect(&:id)}")
+
+    servers.each(&:ntp_reload_queue)
+  end
+
   protected
 
   def check_zone_in_use_on_destroy
     raise _("cannot delete default zone") if name == "default"
     raise _("zone name '%{name}' is used by a server") % {:name => name} unless miq_servers.blank?
-  end
-
-  private
-
-  def queue_ntp_reload_if_changed
-    servers = active_miq_servers
-    return if servers.blank?
-    _log.info("Zone: [#{name}], Queueing ntp_reload for [#{servers.length}] active_miq_servers, ids: #{servers.collect(&:id)}")
-
-    servers.each do |s|
-      MiqQueue.put_deprecated(
-        :class_name  => "MiqServer",
-        :instance_id => s.id,
-        :method_name => "ntp_reload",
-        :server_guid => s.guid,
-        :priority    => MiqQueue::HIGH_PRIORITY,
-        :zone        => name
-      )
-    end
   end
 end
