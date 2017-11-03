@@ -36,7 +36,9 @@ module Vmdb
       end
 
       def resource
-        @resource_instance == :my_server ? my_server : @resource_instance.reload
+        return my_server if @resource_instance == :my_server
+        @resource_instance.reload if @resource_instance.persisted?
+        @resource_instance
       end
 
       def load
