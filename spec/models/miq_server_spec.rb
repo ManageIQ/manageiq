@@ -174,29 +174,7 @@ describe MiqServer do
           @miq_server.ntp_reload
         end
 
-        it "syncs with server settings with zone and server configured" do
-          @zone.update_attribute(:settings, :ntp => zone_ntp)
-          stub_settings(:ntp => server_ntp)
-
-          expect(LinuxAdmin::Chrony).to receive(:new).and_return(chrony)
-          expect(chrony).to receive(:clear_servers)
-          expect(chrony).to receive(:add_servers).with(*server_ntp[:server])
-          @miq_server.ntp_reload
-        end
-
-        it "syncs with zone settings if server not configured" do
-          @zone.update_attribute(:settings, :ntp => zone_ntp)
-          stub_settings({})
-
-          expect(LinuxAdmin::Chrony).to receive(:new).and_return(chrony)
-          expect(chrony).to receive(:clear_servers)
-          expect(chrony).to receive(:add_servers).with(*zone_ntp[:server])
-          @miq_server.ntp_reload
-        end
-
-        it "syncs with default zone settings if server and zone not configured" do
-          @zone.update_attribute(:settings, {})
-
+        it "syncs the settings" do
           expect(LinuxAdmin::Chrony).to receive(:new).and_return(chrony)
           expect(chrony).to receive(:clear_servers)
           expect(chrony).to receive(:add_servers).with("0.pool.ntp.org", "1.pool.ntp.org", "2.pool.ntp.org")
