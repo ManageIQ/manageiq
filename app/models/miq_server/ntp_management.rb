@@ -7,11 +7,6 @@ module MiqServer::NtpManagement
     get_config("vmdb").config[:ntp]
   end
 
-  def server_ntp_settings_blank?(ntp)
-    # verify the ntp settings are like this and not blank:  {:ntp => {:server => ['blah'], :timeout => 5}}
-    ntp.values.flatten.compact.blank? rescue true
-  end
-
   # Called when zone ntp settings changed... run by the appropriate server
   # Also, called in start of miq_server and on a configuration change for the server
   def ntp_reload(ntp_settings = ntp_config)
