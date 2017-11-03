@@ -1,11 +1,6 @@
 describe AutomateWorkspace do
   describe "#merge_output!" do
-    let(:user) { FactoryGirl.create(:user_with_group, :userid => "admin") }
-    let(:aw) do
-      FactoryGirl.create(:automate_workspace, :user   => user,
-                                              :tenant => user.current_tenant,
-                                              :input  => input)
-    end
+    let(:aw) { FactoryGirl.create(:automate_workspace, :input => input) }
     let(:password) { "ca$hc0w" }
     let(:encrypted) { MiqPassword.encrypt(password) }
     let(:input) do
