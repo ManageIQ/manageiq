@@ -180,6 +180,13 @@ describe MiqServer do
           expect(chrony).to receive(:add_servers).with("0.pool.ntp.org", "1.pool.ntp.org", "2.pool.ntp.org")
           @miq_server.ntp_reload
         end
+
+        it "only changes the config file if there are changes" do
+          expect(@miq_server).to receive(:apply_ntp_server_settings).once
+
+          @miq_server.ntp_reload
+          @miq_server.ntp_reload
+        end
       end
 
       context "when not on an appliance" do
