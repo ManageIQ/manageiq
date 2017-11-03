@@ -62,7 +62,7 @@ describe ChargebackVm do
       MiqRegion.seed
       ChargebackRateDetailMeasure.seed
       ChargeableField.seed
-      ManageIQ::Consumption::ShowbackInputMeasure.seed
+      ManageIQ::Consumption::InputMeasure.seed
       MiqEnterprise.seed
 
       EvmSpecHelper.create_guid_miq_server_zone
@@ -695,7 +695,7 @@ describe ChargebackVm do
 
   context "New Chargeback" do
     before do
-      ManageIQ::Consumption::ShowbackInputMeasure.seed
+      ManageIQ::Consumption::InputMeasure.seed
 
       stub_settings(:new_chargeback => '1')
     end
