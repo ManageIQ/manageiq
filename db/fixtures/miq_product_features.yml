@@ -3828,6 +3828,10 @@
     :feature_type: control
     :identifier: middleware_server_control
     :children:
+    - :name: Manage Policies
+      :description: Manage Policies of Middleware Servers
+      :feature_type: control
+      :identifier: middleware_server_protect
     - :name: Edit Tags
       :description: Edit Tags of Middleware Servers
       :feature_type: control
