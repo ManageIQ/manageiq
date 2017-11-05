@@ -68,6 +68,10 @@ class MiqAlert < ApplicationRecord
     miq_expression || hash_expression
   end
 
+  def miq_expression=(exp)
+    super(exp.nil? || exp.kind_of?(MiqExpression) ? exp : MiqExpression.new(exp))
+  end
+
   def evaluation_description
     return "Expression (Custom)" if     miq_expression
     return "None"                unless hash_expression && hash_expression.key?(:eval_method)
