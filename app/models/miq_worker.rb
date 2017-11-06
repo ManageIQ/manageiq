@@ -336,7 +336,7 @@ class MiqWorker < ApplicationRecord
   # This converts it back to a Ruby Array safely.
   def queue_name
     begin
-      JSON.parse(self[:queue_name])
+      JSON.parse(self[:queue_name]).sort
     rescue JSON::ParserError, TypeError
       self[:queue_name]
     end
