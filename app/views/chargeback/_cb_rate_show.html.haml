@@ -1,3 +1,4 @@
+- breakdown_present = @record.chargeback_rate_details.any? { |d| d.sub_metric.present? }
 = render :partial => "layouts/flash_msg"
 - if @edit && @edit[:current]
   = render :partial => "cb_rate_edit"
@@ -7,6 +8,9 @@
     .form-group
       %label.col-md-2.control-label
         = _('Description')
+        - if breakdown_present
+          %th{:rowspan => '2'}= _('Sub Metric')
+
       .col-md-8
         %p.form-control-static
           = h(@record.description)
@@ -41,6 +45,10 @@
             = h(rate_detail_group(detail[:group]))
           %td{:rowspan => num_tiers}
             = detail[:description]
+            - if breakdown_present
+              %td{:rowspan => num_tiers}
+                - if detail.sub_metrics.present?
+                  = detail.sub_metric_human
           - tier = tiers.first
           %td
             = tier.start ? tier.start : 0
