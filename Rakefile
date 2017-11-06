@@ -11,6 +11,27 @@ Vmdb::Application.load_tasks
 begin
   require 'jasmine'
   load 'jasmine/tasks/jasmine.rake'
+
+  # hack around Travis resolving localhost to IPv6 and failing
+  module Jasmine
+    class << self
+      alias old_server_is_listening_on server_is_listening_on
+
+      def server_is_listening_on(_hostname, port)
+        old_server_is_listening_on('127.0.0.1', port)
+      end
+    end
+
+    class Configuration
+      alias old_initialize initialize
+
+      def initialize
+        @host = 'http://127.0.0.1'
+        old_initialize
+      end
+    end
+  end
+
 rescue LoadError
   # Do nothing because we don't need jasmine in every environment
 end
