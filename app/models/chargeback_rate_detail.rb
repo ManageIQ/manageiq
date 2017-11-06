@@ -8,6 +8,9 @@ class ChargebackRateDetail < ApplicationRecord
 
   validates :group, :source, :chargeback_rate, :presence => true
   validate :contiguous_tiers?
+  include ReservedMixin
+
+  reserve_attribute :sub_metric, :string
 
   FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric sub_metric).freeze
 
@@ -290,7 +293,7 @@ class ChargebackRateDetail < ApplicationRecord
 
         rate_details.push(detail_new)
 
-        if detail_new.chargeable_field.metric == 'derived_vm_allocated_disk_storage'
+        if detail_new.metric == 'derived_vm_allocated_disk_storage'
           volume_types = CloudVolume.pluck(:volume_type).uniq.compact
           volume_types.each do |volume_type|
             storage_detail_new = detail_new.dup
