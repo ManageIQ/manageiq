@@ -165,7 +165,7 @@ describe ChargebackVm do
 
     subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
 
-    let(:cloud_volume) {FactoryGirl.create(:cloud_volume_openstack)}
+    let(:cloud_volume) { FactoryGirl.create(:cloud_volume_openstack) }
 
     it 'contains also columns with sub_metric(from cloud_volume)' do
       cloud_volume_type_chargeback_colums = []
@@ -177,7 +177,7 @@ describe ChargebackVm do
 
       expect(cloud_volume_type_chargeback_colums & described_class.attribute_names).to match_array(cloud_volume_type_chargeback_colums)
     end
-    
+
     it "cpu" do
       cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_used,
                                :chargeback_rate_id => @cbr.id,
@@ -220,22 +220,22 @@ describe ChargebackVm do
         range.step_value(step).each do |time|
           Array(resources).each do |resource|
             FactoryGirl.create(:vim_performance_state,
-                               :timestamp => time,
-                               :resource => resource,
-                               :state_data => state_data,
+                               :timestamp        => time,
+                               :resource         => resource,
+                               :state_data       => state_data,
                                :capture_interval => 1.hour)
           end
         end
       end
 
-      let!(:cloud_volume_sdd) {FactoryGirl.create(:cloud_volume_openstack, :volume_type => 'sdd')}
-      let!(:cloud_volume_hdd) {FactoryGirl.create(:cloud_volume_openstack, :volume_type => 'hdd')}
+      let!(:cloud_volume_sdd) { FactoryGirl.create(:cloud_volume_openstack, :volume_type => 'sdd') }
+      let!(:cloud_volume_hdd) { FactoryGirl.create(:cloud_volume_openstack, :volume_type => 'hdd') }
       let(:state_data) do
         {
-            :allocated_disk_types => {
-                'sdd' => 3.gigabytes,
-                'hdd' => 1.gigabytes,
-            },
+          :allocated_disk_types => {
+            'sdd' => 3.gigabytes,
+            'hdd' => 1.gigabytes,
+          },
         }
       end
 
@@ -243,21 +243,21 @@ describe ChargebackVm do
         cbdm = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
         cbrd = FactoryGirl.build(:chargeback_rate_detail_storage_allocated,
                                  :chargeback_rate_id                => @cbr.id,
-                                 :per_time                           => "hourly",
+                                 :per_time                          => "hourly",
                                  :chargeback_rate_detail_measure_id => cbdm.id
-        )
+                                )
         cbt = FactoryGirl.create(:chargeback_tier,
                                  :chargeback_rate_detail_id => cbrd.id,
                                  :start                     => 0,
                                  :finish                    => Float::INFINITY,
                                  :fixed_rate                => 0.0,
                                  :variable_rate             => count_hourly_rate.to_s
-        )
+                                )
         cbrd.chargeback_tiers = [cbt]
         cbrd.save
 
         # create vim performance state
-        allocated_storage_rate_detail = @cbr.chargeback_rate_details.detect {|x| x.metric == 'derived_vm_allocated_disk_storage'}
+        allocated_storage_rate_detail = @cbr.chargeback_rate_details.detect { |x| x.metric == 'derived_vm_allocated_disk_storage' }
         CloudVolume.all.each do |cv|
           new_rate_detail = allocated_storage_rate_detail.dup
           new_rate_detail.sub_metric = cv.volume_type
@@ -280,7 +280,7 @@ describe ChargebackVm do
         expect(subject.storage_allocated_hdd_cost).to eq(state_data[:allocated_disk_types]['hdd'] / 1.gigabytes * count_hourly_rate * hours_in_day)
       end
     end
-  
+
     it "reports Vm Guid" do
       expect(subject.vm_guid).to eq(@vm1.guid)
     end

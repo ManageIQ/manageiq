@@ -28,7 +28,7 @@ class ChargebackRateDetail < ApplicationRecord
       unless volume_types.empty?
         res = {}
         res[_('All')] = ''
-        volume_types.each {|type| res[type.capitalize] = type}
+        volume_types.each { |type| res[type.capitalize] = type }
         res[_('Other - Unclassified')] = 'unclassified'
         res
       end

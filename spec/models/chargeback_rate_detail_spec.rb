@@ -22,7 +22,7 @@ describe ChargebackRateDetail do
         net_usage_rate_average
       )
 
-      expect(rates.map { |x| x.metric }.compact).to match_array(expected_metrics)
+      expect(rates.map(&:metric).compact).to match_array(expected_metrics)
     end
 
     it 'loads chargeback rates from yml for Storage metrics' do
@@ -32,7 +32,7 @@ describe ChargebackRateDetail do
         derived_vm_used_disk_storage
       )
 
-      expect(rates.map { |x| x.metric }.compact).to match_array(expected_metrics)
+      expect(rates.map(&:metric).compact).to match_array(expected_metrics)
     end
 
     context 'when cloud volumes are present' do
