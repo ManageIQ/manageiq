@@ -1,12 +1,14 @@
 describe ContainerOrchestrator do
   let(:connection)      { subject.send(:connection) }
   let(:kube_connection) { subject.send(:kube_connection) }
+  let(:cert_path)       { Tempfile.new("cert").path }
   let(:token_path)      { Tempfile.new("servicetoken").path }
   let(:kube_host)       { "kube.example.com" }
   let(:kube_port)       { "8443" }
   let(:namespace)       { "manageiq" }
 
   before do
+    stub_const("ContainerOrchestrator::CA_CERT_FILE", cert_path)
     stub_const("ContainerOrchestrator::TOKEN_FILE", token_path)
     ENV["KUBERNETES_SERVICE_HOST"] = kube_host
     ENV["KUBERNETES_SERVICE_PORT"] = kube_port
@@ -14,10 +16,23 @@ describe ContainerOrchestrator do
   end
 
   after do
+    FileUtils.rm_f(cert_path)
     FileUtils.rm_f(token_path)
     ENV.delete("KUBERNETES_SERVICE_HOST")
     ENV.delete("KUBERNETES_SERVICE_PORT")
     ENV.delete("MY_POD_NAMESPACE")
+  end
+
+  describe ".available" do
+    it "returns false when the required files are not present" do
+      FileUtils.rm_f(cert_path)
+      FileUtils.rm_f(token_path)
+      expect(described_class.available?).to be false
+    end
+
+    it "returns true when the files are present" do
+      expect(described_class.available?).to be true
+    end
   end
 
   describe "#connection (private)" do

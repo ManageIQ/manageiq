@@ -1,4 +1,9 @@
 describe EmbeddedAnsibleWorker::Runner do
+  let(:embedded_ansible_instance) { double("EmbeddedAnsible") }
+  before do
+    allow(EmbeddedAnsible).to receive(:new).and_return(embedded_ansible_instance)
+  end
+
   context ".new" do
     let(:miq_server)  {
       s = EvmSpecHelper.create_guid_miq_server_zone[1]
@@ -61,7 +66,7 @@ describe EmbeddedAnsibleWorker::Runner do
         MiqDatabase.seed
         MiqDatabase.first.set_ansible_admin_authentication(:password => "secret")
 
-        allow(EmbeddedAnsible).to receive(:api_connection).and_return(api_connection)
+        allow(embedded_ansible_instance).to receive(:api_connection).and_return(api_connection)
       end
 
       it "creates initial" do
