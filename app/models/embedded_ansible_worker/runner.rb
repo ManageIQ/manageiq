@@ -16,23 +16,23 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
   end
 
   def heartbeat
-    super if EmbeddedAnsible.alive?
+    super if embedded_ansible.alive?
   end
 
   def do_work
-    EmbeddedAnsible.start if !EmbeddedAnsible.alive? && !EmbeddedAnsible.running?
+    embedded_ansible.start if !embedded_ansible.alive? && !embedded_ansible.running?
   end
 
   def before_exit(*_)
-    EmbeddedAnsible.disable
+    embedded_ansible.disable
   end
 
   def setup_ansible
     raise_role_notification(:role_activate_start)
 
-    _log.info("calling EmbeddedAnsible.start")
-    EmbeddedAnsible.start
-    _log.info("calling EmbeddedAnsible.start finished")
+    _log.info("Starting embedded ansible service ...")
+    embedded_ansible.start
+    _log.info("Finished starting embedded ansible service.")
 
     raise_role_notification(:role_activate_success)
   end
@@ -48,7 +48,7 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
 
     provider.save!
 
-    api_connection = EmbeddedAnsible.api_connection
+    api_connection = embedded_ansible.api_connection
     worker.remove_demo_data(api_connection)
     worker.ensure_initial_objects(provider, api_connection)
 
@@ -87,5 +87,9 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
       :server_name => MiqServer.my_server.name
     }
     Notification.create(:type => notification_type, :options => notification_options)
+  end
+
+  def embedded_ansible
+    @embedded_ansible ||= EmbeddedAnsible.new
   end
 end
