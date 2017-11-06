@@ -178,6 +178,7 @@
   - sui_vm_console
   - sui_vm_web_console
   - sui_vm_tags
+  - sui_orders_show
 
 - :name: EvmRole-auditor
   :read_only: true
@@ -332,6 +333,8 @@
   - sui_vm_start
   - sui_vm_stop
   - sui_vm_suspend
+  - sui_orders_show
+  - sui_orders_operations
 
 - :name: EvmRole-operator
   :read_only: true
@@ -721,6 +724,8 @@
   - sui_vm_console
   - sui_vm_web_console
   - sui_vm_tags
+  - sui_orders_show
+  - sui_orders_operations
 
 - :name: EvmRole-user_limited_self_service
   :read_only: true
@@ -912,6 +917,8 @@
   - sui_vm_start
   - sui_vm_stop
   - sui_vm_suspend
+  - sui_orders_show
+  - sui_orders_operations
 
 - :name: EvmRole-tenant_administrator
   :read_only: true
@@ -1243,3 +1250,4 @@
   - vm_snapshot_view
   - vm_view
   - sui_services_view
+  - sui_orders_show
