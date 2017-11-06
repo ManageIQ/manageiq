@@ -8,6 +8,16 @@ class SystemService < ApplicationRecord
 
   serialize :dependencies, Hash
 
+  scope :running_systemd_services, -> { where(:systemd_active => 'active', :systemd_sub => 'running') }
+  scope :failed_systemd_services, -> { where(:systemd_active => 'failed').or(where(:systemd_sub => 'failed')) }
+  scope :host_service_group_systemd, ->(host_service_group_id) { where(:host_service_group_id => host_service_group_id) }
+  scope :host_service_group_running_systemd, lambda { |host_service_group_id|
+    running_systemd_services.merge(host_service_group_systemd(host_service_group_id))
+  }
+  scope :host_service_group_failed_systemd, lambda { |host_service_group_id|
+    failed_systemd_services.merge(host_service_group_systemd(host_service_group_id))
+  }
+
   SVC_TYPES = {
     # Type     Display
     ""    => "",
@@ -40,18 +50,6 @@ class SystemService < ApplicationRecord
   def svc_type
     svc = self['svc_type']
     SVC_TYPES[svc] || svc
-  end
-
-  def self.running_systemd_services_condition
-    arel_table[:systemd_active].eq('active').and(arel_table[:systemd_sub].eq('running'))
-  end
-
-  def self.failed_systemd_services_condition
-    arel_table[:systemd_active].eq('failed').or(arel_table[:systemd_sub].eq('failed'))
-  end
-
-  def self.host_service_group_condition(host_service_group_id)
-    arel_table[:host_service_group_id].eq(host_service_group_id)
   end
 
   def self.add_elements(parent, xmlNode)
