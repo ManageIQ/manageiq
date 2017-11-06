@@ -87,6 +87,7 @@
   - vm
   - vm_cloud_explorer
   - vm_infra_explorer
+  - sui_services
 
 - :name: EvmRole-approver
   :read_only: true
@@ -146,8 +147,7 @@
   - resource_pool_show_list
   - resource_pool_tag
   - rss
-  - service_show
-  - service_show_list
+  - service_view
   - storage_show
   - storage_show_list
   - storage_pod_show
@@ -173,6 +173,7 @@
   - vm_tag
   - vm_timeline
   - vm_chargeback
+  - sui_services_view
 
 - :name: EvmRole-auditor
   :read_only: true
@@ -235,8 +236,7 @@
   - resource_pool_show_list
   - resource_pool_tag
   - rss
-  - service_show
-  - service_show_list
+  - service_view
   - storage_show
   - storage_show_list
   - storage_perf
@@ -262,6 +262,7 @@
   - vm_tag
   - vm_timeline
   - vm_chargeback
+  - sui_services_view
 
 - :name: EvmRole-desktop
   :read_only: true
@@ -397,8 +398,7 @@
   - resource_pool_show_list
   - resource_pool_tag
   - rss
-  - service_show
-  - service_show_list
+  - service_view
   - provider_foreman_explorer
   - storage_delete
   - storage_scan
@@ -440,6 +440,7 @@
   - vm_tag
   - vm_timeline
   - vm_chargeback
+  - sui_services_view
 
 - :name: EvmRole-security
   :read_only: true
@@ -498,8 +499,7 @@
   - resource_pool_show_list
   - resource_pool_tag
   - rss
-  - service_show
-  - service_show_list
+  - service_view
   - storage_show
   - storage_show_list
   - storage_perf
@@ -523,6 +523,7 @@
   - vm_tag
   - vm_timeline
   - vm_chargeback
+  - sui_services_view
 
 - :name: EvmRole-support
   :read_only: true
@@ -579,8 +580,7 @@
   - resource_pool_show_list
   - resource_pool_tag
   - rss
-  - service_show
-  - service_show_list
+  - service_view
   - storage_show
   - storage_show_list
   - storage_perf
@@ -607,6 +607,7 @@
   - vm_tag
   - vm_timeline
   - vm_chargeback
+  - sui_services_view
 
 - :name: EvmRole-user
   :read_only: true
@@ -661,8 +662,7 @@
   - resource_pool_show_list
   - resource_pool_tag
   - rss
-  - service_show
-  - service_show_list
+  - service_view
   - storage_show
   - storage_show_list
   - storage_perf
@@ -687,6 +687,7 @@
   - vm_tag
   - vm_timeline
   - vm_chargeback
+  - sui_services_view
 
 - :name: EvmRole-user_limited_self_service
   :read_only: true
@@ -935,6 +936,7 @@
   - vm
   - vm_cloud_explorer
   - vm_infra_explorer
+  - sui_services
 
 - :name: EvmRole-tenant_quota_administrator
   :read_only: true
@@ -991,6 +993,7 @@
   - vm
   - vm_cloud_explorer
   - vm_infra_explorer
+  - sui_services
 
 - :name: EvmRole-consumption_administrator
   :read_only: true
@@ -1198,3 +1201,4 @@
   - vm_infra_explorer
   - vm_snapshot_view
   - vm_view
+  - sui_services_view
