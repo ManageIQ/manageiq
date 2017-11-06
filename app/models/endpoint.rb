@@ -20,7 +20,7 @@ class Endpoint < ApplicationRecord
 
   # From endpoint, falling back to Settings, then to system CA bundle
   def ssl_cert_store
-    certs = parse_certificate_authority
+    certs = parse_certificate_authorities
     if certs.present?
       store = OpenSSL::X509::Store.new
       certs.each do |cert|
@@ -41,6 +41,18 @@ class Endpoint < ApplicationRecord
     nil # use system defaults
   end
 
+  # Split concatenated PEM certs to a list
+  def certificate_authorities
+    return [] if certificate_authority.blank?
+    certificate_authority.split(/^(?=-----BEGIN)/).reject(&:blank?)
+  end
+
+  def parse_certificate_authorities
+    certificate_authorities.collect do |pem_fragment|
+      OpenSSL::X509::Certificate.new(pem_fragment)
+    end
+  end
+
   private
 
   def resolve_verify_ssl_value(val)
@@ -51,16 +63,8 @@ class Endpoint < ApplicationRecord
     end
   end
 
-  # Returns a list, to support concatenated PEM certs.
-  def parse_certificate_authority
-    return [] if certificate_authority.blank?
-    certificate_authority.split(/(?=-----BEGIN)/).reject(&:blank?).collect do |pem_fragment|
-      OpenSSL::X509::Certificate.new(pem_fragment)
-    end
-  end
-
   def validate_certificate_authority
-    parse_certificate_authority
+    parse_certificate_authorities
   rescue OpenSSL::OpenSSLError => err
     errors.add(:certificate_authority, err.to_s)
   end

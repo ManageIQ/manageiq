@@ -115,15 +115,17 @@ describe Endpoint do
       expect(endpoint).not_to be_valid
     end
 
-    it "ssl_cert_store parses valid cert(s)" do
+    it "parses valid cert(s)" do
       endpoint.certificate_authority = pem1
       expect(endpoint).to be_valid
-      expect(endpoint.send(:parse_certificate_authority).size).to eq(1)
+      expect(endpoint.certificate_authorities).to eq([pem1])
+      expect(endpoint.send(:parse_certificate_authorities).size).to eq(1)
       expect(endpoint.ssl_cert_store).to be_a(OpenSSL::X509::Store)
 
       endpoint.certificate_authority = pem1 + pem2
       expect(endpoint).to be_valid
-      expect(endpoint.send(:parse_certificate_authority).size).to eq(2)
+      expect(endpoint.certificate_authorities).to eq([pem1, pem2])
+      expect(endpoint.send(:parse_certificate_authorities).size).to eq(2)
       expect(endpoint.ssl_cert_store).to be_a(OpenSSL::X509::Store)
     end
   end
