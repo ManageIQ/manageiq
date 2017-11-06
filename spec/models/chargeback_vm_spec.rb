@@ -165,6 +165,19 @@ describe ChargebackVm do
 
     subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
 
+    let(:cloud_volume) {FactoryGirl.create(:cloud_volume_openstack)}
+
+    it 'contains also columns with sub_metric(from cloud_volume)' do
+      cloud_volume_type_chargeback_colums = []
+      %w(metric cost).each do |key|
+        cloud_volume_type_chargeback_colums << "storage_allocated_#{cloud_volume.volume_type}_#{key}"
+      end
+
+      described_class.refresh_dynamic_metric_columns
+
+      expect(cloud_volume_type_chargeback_colums & described_class.attribute_names).to match_array(cloud_volume_type_chargeback_colums)
+    end
+    
     it "cpu" do
       cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_used,
                                :chargeback_rate_id => @cbr.id,
