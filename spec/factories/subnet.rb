@@ -1,3 +1,3 @@
 FactoryGirl.define do
-  factory :share
+  factory :subnet
 end

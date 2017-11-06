@@ -1,3 +1,3 @@
 FactoryGirl.define do
-  factory :share
+  factory :compute_node
 end

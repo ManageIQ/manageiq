@@ -1,3 +1,3 @@
 FactoryGirl.define do
-  factory :share
+  factory :os_process
 end

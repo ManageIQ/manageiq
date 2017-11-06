@@ -1,3 +1,3 @@
 FactoryGirl.define do
-  factory :share
+  factory :miq_action_set
 end
