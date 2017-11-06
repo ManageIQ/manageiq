@@ -152,7 +152,7 @@ class VimPerformanceState < ApplicationRecord
     if hardware
       self.allocated_disk_types = hardware.disks.each_with_object({}) do |disk, res|
         type = disk.backing.try(:volume_type) || 'unclassified'
-        res[type] = (res[type] || 0) + disk.size
+        res[type] = (res[type] || 0) + disk.size.to_i
       end
     end
   end
