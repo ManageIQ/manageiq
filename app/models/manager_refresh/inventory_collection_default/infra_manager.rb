@@ -124,8 +124,10 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
     def storages(extra_attributes = {})
       attributes = {
         :model_class => ::Storage,
-        # TODO: change :manager_ref => [:location],
-        :association => :storages
+        :manager_ref => [:location],
+        :association => :storages,
+        :complete    => false,
+        :arel        => Storage
       }
 
       attributes.merge!(extra_attributes)
