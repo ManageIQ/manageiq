@@ -74,7 +74,7 @@ module ApplicationController::CiProcessing
       OrchestrationStack
     when "service"
       Service
-    when "vm_or_template", "vm_infra", "vm_cloud", "vm"
+    when "vm_or_template", "vm_infra", "vm_cloud", "vm", "ems_infra"
       VmOrTemplate
     when "miq_template"
       MiqTemplate
