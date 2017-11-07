@@ -1,4 +1,31 @@
 describe MiqExpression do
+  describe '#reporting_available_fields' do
+    let(:vm) { FactoryGirl.create(:vm) }
+    let!(:custom_attribute) { FactoryGirl.create(:custom_attribute, :name => 'my_attribute_1', :resource => vm) }
+    let(:extra_fields) do
+      %w(start_date
+         end_date
+         interval_name
+         display_range
+         entity
+         tag_name
+         label_name
+         id
+         vm_id
+         vm_name)
+    end
+
+    it 'lists custom attributes in ChargebackVm' do
+      displayed_columms = described_class.reporting_available_fields('ChargebackVm').map(&:second)
+      expected_columns = (ChargebackVm.attribute_names - extra_fields).map { |x| "ChargebackVm-#{x}" }
+
+      CustomAttribute.all.each do |custom_attribute|
+        expected_columns.push("#{vm.class}-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}#{custom_attribute.name}")
+      end
+      expect(displayed_columms).to match_array(expected_columns)
+    end
+  end
+
   describe "#valid?" do
     it "returns true for a valid flat expression" do
       expression = described_class.new("=" => {"field" => "Vm-name", "value" => "foo"})
