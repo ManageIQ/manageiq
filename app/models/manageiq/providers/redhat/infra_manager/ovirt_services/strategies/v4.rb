@@ -312,6 +312,10 @@ module ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies
         vm.cpu.topology = OvirtSDK4::CpuTopology.new(cpu_hash)
         update(vm)
       end
+
+      def destroy
+        remove
+      end
     end
 
     class TemplateProxyDecorator < SimpleDelegator
