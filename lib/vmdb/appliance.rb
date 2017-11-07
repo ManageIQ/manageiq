@@ -24,6 +24,10 @@ module Vmdb
       I18n.t("product.name")
     end
 
+    def self.USER_AGENT
+      "#{PRODUCT_NAME}/#{VERSION}".freeze
+    end
+
     def self.log_config(*args)
       options = args.extract_options!
       fh = options[:logger] || $log
