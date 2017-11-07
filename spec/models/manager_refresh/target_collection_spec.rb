@@ -1,19 +1,33 @@
 describe ManagerRefresh::TargetCollection do
   before(:each) do
-    @zone      = FactoryGirl.create(:zone)
-    @ems       = FactoryGirl.create(:ems_cloud, :zone => @zone)
-    @ems_event = FactoryGirl.create(:ems_event)
+    @zone               = FactoryGirl.create(:zone)
+    @ems                = FactoryGirl.create(:ems_cloud, :zone => @zone, :name => "ems_name")
+    @ems_physical_infra = FactoryGirl.create(:ems_physical_infra, :zone => @zone)
+    @ems_event          = FactoryGirl.create(:ems_event)
 
     @vm_1 = FactoryGirl.create(
       :vm_cloud,
       :ext_management_system => @ems,
-      :ems_ref               => "vm_1"
+      :ems_ref               => "vm_1",
+      :name                  => "vm_1_name"
     )
 
     @vm_2 = FactoryGirl.create(
       :vm_cloud,
       :ext_management_system => @ems,
       :ems_ref               => "vm_2"
+    )
+
+    @host = FactoryGirl.create(
+      :host,
+      :ext_management_system => @ems,
+      :name                  => "host_1"
+    )
+
+    @physical_server = FactoryGirl.create(
+      :physical_server,
+      :ext_management_system => @ems_physical_infra,
+      :name                  => "physical_server_1"
     )
   end
 
@@ -95,8 +109,17 @@ describe ManagerRefresh::TargetCollection do
   end
 
   context ".name" do
-    it "prints names of all targets" do
-      target_collection = ManagerRefresh::TargetCollection.new(:manager_id => @ems.id, :event => @ems_event)
+    it "prints summary of all targets" do
+      target_collection = ManagerRefresh::TargetCollection.new(
+        :manager_id => @ems.id,
+        :event      => @ems_event,
+        :targets    => [
+          @vm_1,
+          @host,
+          @physical_server,
+          @ems
+        ]
+      )
 
       target_collection.add_target(
         :association => :vms,
@@ -110,14 +133,22 @@ describe ManagerRefresh::TargetCollection do
         :options     => {:opt1 => "opt1", :opt2 => "opt2"}
       )
 
-      expect(target_collection.name).to eq "Collection of 2 targets"
-      expect(target_collection.id).to eq "Collection of targets with id: [{:ems_ref=>\"vm_1\"}, {:ems_ref=>\"vm_2\"}]"
+      expect(target_collection.name).to eq "Collection of 6 targets"
     end
   end
 
   context ".id" do
     it "prints ids of all targets" do
-      target_collection = ManagerRefresh::TargetCollection.new(:manager_id => @ems.id, :event => @ems_event)
+      target_collection = ManagerRefresh::TargetCollection.new(
+        :manager_id => @ems.id,
+        :event      => @ems_event,
+        :targets    => [
+          @vm_1,
+          @host,
+          @physical_server,
+          @ems
+        ]
+      )
 
       target_collection.add_target(
         :association => :vms,
@@ -133,6 +164,10 @@ describe ManagerRefresh::TargetCollection do
 
       expect(target_collection.id).to include ":ems_ref=>\"vm_1\""
       expect(target_collection.id).to include ":ems_ref=>\"vm_2\""
+      expect(target_collection.id).to include "\"vm_1_name\""
+      expect(target_collection.id).to include "\"host_1\""
+      expect(target_collection.id).to include "\"physical_server_1\""
+      expect(target_collection.id).to include "\"ems_name\""
     end
   end
 

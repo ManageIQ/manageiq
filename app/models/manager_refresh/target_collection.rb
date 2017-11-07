@@ -38,7 +38,7 @@ module ManagerRefresh
 
     # @return [String] A String containing an id of each target in the TargetCollection
     def id
-      "Collection of targets with id: #{targets.collect(&:manager_ref)}"
+      "Collection of targets with id: #{targets.collect(&:name)}"
     end
 
     # Returns targets in a format:
