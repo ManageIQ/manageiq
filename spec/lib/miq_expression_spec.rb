@@ -3242,6 +3242,10 @@ describe MiqExpression do
   end
 
   describe ".tag_details" do
+    before do
+      described_class.instance_variable_set(:@classifications, nil)
+    end
+
     it "returns the tags when no path is given" do
       Tenant.seed
       FactoryGirl.create(
