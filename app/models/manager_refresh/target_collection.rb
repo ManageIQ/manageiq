@@ -31,14 +31,14 @@ module ManagerRefresh
                                          :options     => options)
     end
 
-    # @return [String] A String containing a name of each target in the TargetCollection
+    # @return [String] A String containing a summary
     def name
-      "Collection of targets with name: #{targets.collect(&:name)}"
+      "Collection of #{targets.size} targets"
     end
 
     # @return [String] A String containing an id of each target in the TargetCollection
     def id
-      "Collection of targets with id: #{targets.collect(&:id)}"
+      "Collection of targets with id: #{targets.collect(&:manager_ref)}"
     end
 
     # Returns targets in a format:
