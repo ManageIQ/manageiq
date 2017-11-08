@@ -57,7 +57,10 @@ class ProviderGenerator < Rails::Generators::NamedBase
     empty_directory "spec/models/manageiq/providers/#{provider_name}"
     empty_directory "spec/support"
     template "spec/spec_helper.rb"
-    create_dummy if options[:dummy]
+    if options[:dummy]
+      create_dummy
+      add_worker_classnames
+    end
   end
 
   def create_manageiq_gem
@@ -95,5 +98,16 @@ class ProviderGenerator < Rails::Generators::NamedBase
     template "app/models/manageiq/providers/%provider_name%/inventory/collector/cloud_manager.rb"
     template "app/models/manageiq/providers/%provider_name%/inventory/parser/cloud_manager.rb"
     template "app/models/manageiq/providers/%provider_name%/inventory/persister/cloud_manager.rb"
+  end
+
+  def add_worker_classnames
+    data = <<~HEREDOC
+      "ManageIQ::Providers::#{class_name}::CloudManager::EventCatcher"                  => %i(manageiq_default),
+      "ManageIQ::Providers::#{class_name}::CloudManager::MetricsCollectorWorker"        => %i(manageiq_default),
+      "ManageIQ::Providers::#{class_name}::CloudManager::RefreshWorker"                 => %i(manageiq_default),
+    HEREDOC
+    inject_into_file Rails.root.join('lib/workers/miq_worker_types.rb'),
+                     data,
+                     :after => "MIQ_WORKER_TYPES = {\n"
   end
 end
