@@ -1,3 +1,3 @@
 FactoryGirl.define do
-  factory :share
+  factory :file_depot_nfs
 end

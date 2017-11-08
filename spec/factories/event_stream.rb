@@ -1,3 +1,3 @@
 FactoryGirl.define do
-  factory :share
+  factory :event_stream
 end

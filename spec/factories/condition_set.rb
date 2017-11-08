@@ -1,3 +1,3 @@
 FactoryGirl.define do
-  factory :share
+  factory :condition_set
 end
