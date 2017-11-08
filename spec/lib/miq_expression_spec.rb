@@ -20,8 +20,9 @@ describe MiqExpression do
       expected_columns = (ChargebackVm.attribute_names - extra_fields).map { |x| "ChargebackVm-#{x}" }
 
       expected_columns.push(*displayed_columms.select { |x| x.include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX) })
+      expected_columns.push("#{vm.class}-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}#{custom_attribute.name}")
 
-      expect(displayed_columms).to match_array(expected_columns)
+      expect(displayed_columms).to match_array(expected_columns.uniq)
     end
   end
 
