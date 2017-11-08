@@ -72,17 +72,17 @@ describe Service do
     before do
       @zone1 = FactoryGirl.create(:small_environment)
       allow(MiqServer).to receive(:my_server).and_return(@zone1.miq_servers.first)
-      @vm          = FactoryGirl.create(:vm_vmware)
-      @vm_1        = FactoryGirl.create(:vm_vmware)
-      @vm_2        = FactoryGirl.create(:vm_vmware)
+      @vm  = FactoryGirl.create(:vm_vmware)
+      @vm1 = FactoryGirl.create(:vm_vmware)
+      @vm2 = FactoryGirl.create(:vm_vmware)
 
-      @service     = FactoryGirl.create(:service)
-      @service_c1  = FactoryGirl.create(:service, :service => @service)
-      @service_c2  = FactoryGirl.create(:service, :service => @service_c1)
+      @service    = FactoryGirl.create(:service)
+      @service_c1 = FactoryGirl.create(:service, :service => @service)
+      @service_c2 = FactoryGirl.create(:service, :service => @service_c1)
       @service << @vm
-      @service_c1 << @vm_1
-      @service_c2 << @vm_1
-      @service_c2 << @vm_2
+      @service_c1 << @vm1
+      @service_c2 << @vm1
+      @service_c2 << @vm2
       @service.service_resources.first.start_action = "Power On"
       @service.service_resources.first.stop_action = "Power Off"
       @service.save
@@ -198,23 +198,23 @@ describe Service do
     end
 
     it "#direct_vms" do
-      expect(@service_c1.direct_vms).to match_array [@vm_1]
+      expect(@service_c1.direct_vms).to match_array [@vm1]
       expect(@service.direct_vms).to    match_array [@vm]
     end
 
     it "#all_vms" do
-      expect(@service_c1.all_vms).to match_array [@vm_1, @vm_1, @vm_2]
-      expect(@service.all_vms).to    match_array [@vm, @vm_1, @vm_1, @vm_2]
+      expect(@service_c1.all_vms).to match_array [@vm1, @vm1, @vm2]
+      expect(@service.all_vms).to    match_array [@vm, @vm1, @vm1, @vm2]
     end
 
     it "#direct_service" do
       expect(@vm.direct_service).to eq(@service)
-      expect(@vm_1.direct_service).to eq(@service_c1)
+      expect(@vm1.direct_service).to eq(@service_c1)
     end
 
     it "#service" do
       expect(@vm.service).to eq(@service)
-      expect(@vm_1.service).to eq(@service)
+      expect(@vm1.service).to eq(@service)
     end
   end
 
@@ -408,7 +408,7 @@ describe Service do
   context "Chargeback report generation" do
     before do
       @vm = FactoryGirl.create(:vm_vmware)
-      @vm_1 = FactoryGirl.create(:vm_vmware)
+      @vm1 = FactoryGirl.create(:vm_vmware)
       @service = FactoryGirl.create(:service)
       @service.name = "Test_Service_1"
       @service << @vm
@@ -419,7 +419,7 @@ describe Service do
       it "queue request to generate chargeback report for each service" do
         @service_c1 = FactoryGirl.create(:service, :service => @service)
         @service_c1.name = "Test_Service_2"
-        @service_c1 << @vm_1
+        @service_c1 << @vm1
         @service_c1.save
 
         expect(MiqQueue).to receive(:put).twice
@@ -760,6 +760,43 @@ describe Service do
       child_service.remove_from_service(service)
       expect(service.services).to be_blank
       expect(child_service.service).to be_nil
+    end
+  end
+
+  context 'service naming' do
+    it 'without empty options hash' do
+      expect(Service.create(:name => 'test').name).to eq('test')
+    end
+
+    it 'with empty dialog options' do
+      expect(Service.create(:name => 'test', :options => {:dialog => {}}).name).to eq('test')
+    end
+
+    it 'with dialog option dialog_service_name' do
+      expect(Service.create(:name => 'test', :options => {:dialog => {'dialog_service_name' => 'name from dialog'}}).name)
+        .to eq('name from dialog')
+    end
+  end
+
+  context 'service description' do
+    it 'without empty options hash' do
+      expect(Service.create(:name => 'test').description).to be_blank
+    end
+
+    it 'with empty dialog options' do
+      expect(Service.create(:name        => 'test',
+                            :description => 'test description',
+                            :options     => {:dialog => {}}).description)
+        .to eq('test description')
+    end
+
+    it 'with dialog option dialog_service_description' do
+      expect(Service.create(:name        => 'test',
+                            :description => 'test description',
+                            :options     => {
+                              :dialog => {'dialog_service_description' => 'test description from dialog'}
+                            }).description)
+        .to eq('test description from dialog')
     end
   end
 
