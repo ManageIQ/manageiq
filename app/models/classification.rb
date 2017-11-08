@@ -313,10 +313,6 @@ class Classification < ApplicationRecord
     parent.try(:name)
   end
 
-  def tag_name
-    attribute(:tag_name)
-  end
-
   def name
     @name ||= tag2name(tag_name || tag.name)
   end
