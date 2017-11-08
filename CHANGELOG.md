@@ -49,10 +49,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
   - Add event streams product features [(#16021)](https://github.com/ManageIQ/manageiq/pull/16021)
   - Use the built-in OpenShift service environment variables [(#16001)](https://github.com/ManageIQ/manageiq/pull/16001)
   - Adding Child Managers to EMS [(#15889)](https://github.com/ManageIQ/manageiq/pull/15889)
+  - Add status and state scopes, fix time for MiqTask list [(#16365)](https://github.com/ManageIQ/manageiq/pull/16365)
 - Events
   - Add target to event existence check [(#15719)](https://github.com/ManageIQ/manageiq/pull/15719)
 - Internationalization
   - i18n: Add Data Types to dictionary [(#15922)](https://github.com/ManageIQ/manageiq/pull/15922)
+- Middleware
+  - Enable compliance check for MW server [(#16375)](https://github.com/ManageIQ/manageiq/pull/16375)
+  - Middleware compliance assignment [(#16376)](https://github.com/ManageIQ/manageiq/pull/16376)
 - Performance
   - Optimize speed and stabilize the batch graph refresh memory usage [(#15897)](https://github.com/ManageIQ/manageiq/pull/15897)
 - Platform
@@ -200,6 +204,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
   - Middleware: Cross-linking Middleware server model with containers. [(#14043)](https://github.com/ManageIQ/manageiq/pull/14043)
   - Openstack: Notify when an Openstack VM has been relocated [(#14604)](https://github.com/ManageIQ/manageiq/pull/14604)
   - Physical Infra: Add Topology feature [(#14589)](https://github.com/ManageIQ/manageiq/pull/14589)
+  - Refresh Physical Servers [(#16344)](https://github.com/ManageIQ/manageiq/pull/16344)
 - Provisioning
   - Automate - VMware placement to support only Clusters or only Folders. [(#15951)](https://github.com/ManageIQ/manageiq/pull/15951)
 - Reporting
@@ -307,6 +312,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
   - If the userid is not found in the DB do a case insensitive search [(#15904)](https://github.com/ManageIQ/manageiq/pull/15904)
   - A tool for converting miqldap auth to external auth with sssd [(#15640)](https://github.com/ManageIQ/manageiq/pull/15640)
   - Converting userids to UPN format to avoid duplicate user records [(#15535)](https://github.com/ManageIQ/manageiq/pull/15535)
+  - External auth lookup_by_identity should handle missing request parameter [(#16386)](https://github.com/ManageIQ/manageiq/pull/16386)
 - Automate
   - Fix for custom button not passing target object to dynamic dialog fields [(#15810)](https://github.com/ManageIQ/manageiq/pull/15810)
   - miq_group_id is required by automate. [(#15760)](https://github.com/ManageIQ/manageiq/pull/15760)
@@ -323,6 +329,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
   - Adjust power states on a service to handle children [(#14550)](https://github.com/ManageIQ/manageiq/pull/14550)
   - Display Name and Description not updated during import [(#14689)](https://github.com/ManageIQ/manageiq/pull/14689)
   - Service#my_zone should only reference a VM associated to a provider. [(#14696)](https://github.com/ManageIQ/manageiq/pull/14696)
+  - Fixes custom button method for things with subclasses [(#16378)](https://github.com/ManageIQ/manageiq/pull/16378)
 - Chargeback
   - Delete tag assignments when deleting a tag that is referenced in an assignment [(#16039)](https://github.com/ManageIQ/manageiq/pull/16039)
   - Rate selection using union of all tags in reporting(consumption) period [(#15888)](https://github.com/ManageIQ/manageiq/pull/15888)
@@ -338,8 +345,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
   - Fix event_catcher blacklisted events logging [(#15945)](https://github.com/ManageIQ/manageiq/pull/15945)
   - This allows access to the worker object and also allows the web service workers to start the rails server which was broken [(#15880)](https://github.com/ManageIQ/manageiq/pull/15880)
   - Allows seeding a database with groups from other regions. [(#15876)](https://github.com/ManageIQ/manageiq/pull/15876)
+  - Find_by_queue_name expects a string as queue_name [(#16359)](https://github.com/ManageIQ/manageiq/pull/16359)
+  - Fix Zone creation [(#16391)](https://github.com/ManageIQ/manageiq/pull/16391)
+  - Sort array of queue names [(#16400)](https://github.com/ManageIQ/manageiq/pull/16400)
 - Events
   - Fix the ems_event add_queue method [(#16187)](https://github.com/ManageIQ/manageiq/pull/16187)
+- Inventory
+  - Log less details about the targets [(#16405)](https://github.com/ManageIQ/manageiq/pull/16405)
+  - Print name instead of manager ref [(#16411)](Print name instead of manager ref #16411)
 - Platform
   - Use ruby not runner for run single worker [(#15825)](https://github.com/ManageIQ/manageiq/pull/15825)
   - Handle pid in run_single_worker.rb properly [(#15820)](https://github.com/ManageIQ/manageiq/pull/15820)
@@ -453,6 +466,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
   - Product features for embedded ansible refresh [(#14664)](https://github.com/ManageIQ/manageiq/pull/14664)
   - Notification after Tower credential CUD operations [(#14625)](https://github.com/ManageIQ/manageiq/pull/14625)
   - Product features for embedded ansible refresh [(#14664)](https://github.com/ManageIQ/manageiq/pull/14664)
+  - Do unassign tags when mapped tags list becomes empty [(#16370)](https://github.com/ManageIQ/manageiq/pull/16370)
+  - C&U fix bug in Targets#capture_vm_targets [(#16373)](https://github.com/ManageIQ/manageiq/pull/16373)
 - RBAC
   - Ensure that `base_class` of first target is used for RBAC scope [(#16178)](https://github.com/ManageIQ/manageiq/pull/16178)
   - Add belongsto filter for other network models [(#16151)](https://github.com/ManageIQ/manageiq/pull/16151)
