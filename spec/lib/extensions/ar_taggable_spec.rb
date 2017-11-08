@@ -102,6 +102,24 @@ describe ActsAsTaggable do
     expect(Vm.find_tagged_with(:all => "red blue yellow abc", :ns => "/test/tags")).to eq([@vm1])
   end
 
+  context "#tag_remove" do
+    it "works" do
+      vm = Vm.find_by(:name => "VM1")
+      vm.tag_add("foo1", :ns => "/test/tags")
+      vm.tag_add("foo2", :ns => "/test/tags")
+      expect(vm.tag_remove("foo1", :ns => "/test/tags")).to eq(["foo1"])
+      expect(Vm.find_tagged_with(:all => "foo2", :ns => "/test/tags")).to eq([@vm1])
+      expect(Vm.find_tagged_with(:all => "foo1", :ns => "/test/tags")).to be_empty
+    end
+
+    it "does nothing if tag doesn't exist" do
+      vm = Vm.find_by(:name => "VM1")
+      vm.tag_remove("foo3", :ns => "/test/tags")
+      expect(Tag.find_by(:name => "/test/tags/foo3")).to be_nil
+      expect(Vm.find_tagged_with(:all => "foo3", :ns => "/test/tags")).to be_empty
+    end
+  end
+
   context "#is_tagged_with?" do
     it "works" do
       vm = Vm.find_by(:name => "VM1")

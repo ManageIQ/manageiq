@@ -111,6 +111,20 @@ module ActsAsTaggable
     end
   end
 
+  def tag_remove(list, options = {})
+    ns = Tag.get_namespace(options)
+
+    # Remove tags
+    Tag.transaction do
+      Tag.parse(list).each do |name|
+        name = File.join(ns, name)
+        tag = Tag.find_by(:name => name)
+        next if tag.nil?
+        tag.taggings.where(:taggable => self).destroy_all
+      end
+    end
+  end
+
   def tagged_with(options = {})
     tagging = Tagging.arel_table
     query = Tag.includes(:taggings).references(:taggings)
