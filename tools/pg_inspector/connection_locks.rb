@@ -7,7 +7,7 @@ require 'pg_inspector/util'
 module PgInspector
   class LockConnectionYAML < PgInspectorOperation
     HELP_MSG_SHORT = "Dump lock friendly connection information to YAML file".freeze
-    attr_accessor :locks, :connections
+    attr_accessor :locks, :connections, :blocked_connections
 
     def parse_options(args)
       self.options = Trollop.options(args) do
@@ -17,6 +17,8 @@ module PgInspector
             :type => :string, :short => "c", :default => DEFAULT_OUTPUT_PATH.join("#{PREFIX}human.yml").to_s)
         opt(:output, "Output file",
             :type => :string, :short => "o", :default => DEFAULT_OUTPUT_PATH.join("#{PREFIX}locks_output.yml").to_s)
+        opt(:output_blocked, "Output blocked connections file",
+            :type => :string, :short => "b", :default => DEFAULT_OUTPUT_PATH.join("#{PREFIX}locks_output_blocked_connections.yml").to_s)
       end
     end
 
@@ -29,17 +31,26 @@ module PgInspector
         "Lock friendly connection info",
         options[:output]
       )
+      unless blocked_connections.empty?
+        Util.dump_to_yml_file(
+          blocked_connections,
+          "Blocked connections",
+          options[:output_blocked]
+        )
+      end
     end
 
     private
 
     def merge_lock_and_connection
       some_connection_blocked = false
+      self.blocked_connections = []
       connections["connections"].each do |conn|
         conn["blocked_by"] = find_lock_blocking_spid(conn["spid"])
         unless conn["blocked_by"].empty?
           some_connection_blocked = true
           puts "Connection #{conn["spid"]} is blocked by #{conn["blocked_by"]}."
+          blocked_connections << {conn["spid"] => conn["blocked_by"]}
         end
       end
       unless some_connection_blocked

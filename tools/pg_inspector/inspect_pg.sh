@@ -5,7 +5,6 @@ basedir=$(dirname $0)
 logdir=/var/www/miq/vmdb/log
 logfile=${logdir}/pg_inspector.log
 # default postgresql password: smartvm
-export PGPASSWORD="${PGPASSWORD:-smartvm}"
 
 # show message on screen and also append to log file
 exec > >(tee -ia ${logfile})
@@ -14,9 +13,7 @@ echo ""
 echo "inspect_pg runs on $(date)"
 
 # Run step 1, 3 and 4 in sequence, assume step 2 has done before.
-${basedir}/../pg_inspector.rb connections
-${basedir}/../pg_inspector.rb human
-${basedir}/../pg_inspector.rb locks
+bundle exec ${basedir}/inspect_pg.rb
 
 # remove first only if all steps success
 if [ $? -ne '0' ]; then
