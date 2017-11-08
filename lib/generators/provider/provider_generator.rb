@@ -10,6 +10,9 @@ class ProviderGenerator < Rails::Generators::NamedBase
   class_option :vcr, :type => :boolean, :default => false,
                :desc => "Enable VCR cassettes (default off)"
 
+  class_option :dummy, :type => :boolean, :default => false,
+               :desc => "Generate dummy implementations (default off)"
+
   alias provider_name file_name
 
   def initialize(*args)
@@ -54,11 +57,16 @@ class ProviderGenerator < Rails::Generators::NamedBase
     empty_directory "spec/models/manageiq/providers/#{provider_name}"
     empty_directory "spec/support"
     template "spec/spec_helper.rb"
+    create_dummy if options[:dummy]
   end
 
   def create_manageiq_gem
-    data = "manageiq_plugin \"manageiq-providers-#{provider_name}\" # TODO: Sort alphabetically...\n"
-    inject_into_file Rails.root.join('Gemfile'), data, :after => "manageiq_plugin \"manageiq-providers-vmware\"\n"
+    data = <<~HEREDOC
+      group :#{provider_name}, :manageiq_default do
+        manageiq_plugin "manageiq-providers-#{provider_name}" # TODO: Sort alphabetically...
+      end
+    HEREDOC
+    inject_into_file Rails.root.join('Gemfile'), "\n#{data}\n", :after => "### providers\n"
   end
 
   private
@@ -70,5 +78,22 @@ class ProviderGenerator < Rails::Generators::NamedBase
 
   def keep_file(destination)
     create_file("#{destination}/.keep")
+  end
+
+  def create_dummy
+    template "app/models/manageiq/providers/%provider_name%/cloud_manager.rb"
+    template "app/models/manageiq/providers/%provider_name%/cloud_manager/event_catcher.rb"
+    template "app/models/manageiq/providers/%provider_name%/cloud_manager/event_catcher/runner.rb"
+    template "app/models/manageiq/providers/%provider_name%/cloud_manager/event_catcher/stream.rb"
+    template "app/models/manageiq/providers/%provider_name%/cloud_manager/metrics_capture.rb"
+    template "app/models/manageiq/providers/%provider_name%/cloud_manager/metrics_collector_worker.rb"
+    template "app/models/manageiq/providers/%provider_name%/cloud_manager/metrics_collector_worker/runner.rb"
+    template "app/models/manageiq/providers/%provider_name%/cloud_manager/refresh_worker.rb"
+    template "app/models/manageiq/providers/%provider_name%/cloud_manager/refresh_worker/runner.rb"
+    template "app/models/manageiq/providers/%provider_name%/cloud_manager/refresher.rb"
+    template "app/models/manageiq/providers/%provider_name%/cloud_manager/vm.rb"
+    template "app/models/manageiq/providers/%provider_name%/inventory/collector/cloud_manager.rb"
+    template "app/models/manageiq/providers/%provider_name%/inventory/parser/cloud_manager.rb"
+    template "app/models/manageiq/providers/%provider_name%/inventory/persister/cloud_manager.rb"
   end
 end
