@@ -243,10 +243,7 @@ class Service < ApplicationRecord
   end
 
   def update_progress(hash = {})
-    hash.keys.each do |attribute|
-      options[attribute] = hash[attribute]
-      update_attributes(:options => options)
-    end
+    update_attributes(:options => options.merge(hash))
   end
 
   def process_group_action(action, group_idx, direction)
