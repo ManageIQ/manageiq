@@ -1,3 +1,3 @@
 FactoryGirl.define do
-  factory :share
+  factory :miq_user_scope
 end
