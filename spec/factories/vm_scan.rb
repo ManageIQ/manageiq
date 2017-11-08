@@ -1,3 +1,3 @@
 FactoryGirl.define do
-  factory :share
+  factory :vm_scan
 end

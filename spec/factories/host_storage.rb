@@ -1,3 +1,3 @@
 FactoryGirl.define do
-  factory :share
+  factory :host_storage
 end

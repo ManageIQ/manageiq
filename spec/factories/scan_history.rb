@@ -1,3 +1,3 @@
 FactoryGirl.define do
-  factory :share
+  factory :scan_history
 end
