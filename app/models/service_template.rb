@@ -30,11 +30,12 @@ class ServiceTemplate < ApplicationRecord
   has_one   :picture,         :dependent => :destroy, :as => :resource, :autosave => true
 
   has_many   :custom_button_sets, :as => :owner, :dependent => :destroy
+  has_many   :all_direct_custom_buttons, :class_name => :CustomButton, :as => :applies_to, :foreign_type => :applies_to_class
   belongs_to :service_template_catalog
 
   has_many   :dialogs, -> { distinct }, :through => :resource_actions
 
-  virtual_has_many :custom_buttons
+  virtual_has_many :custom_buttons, :uses => {:all_direct_custom_buttons => :all_relationships}
   virtual_column   :type_display,                 :type => :string
   virtual_column   :template_valid,               :type => :boolean
   virtual_column   :template_valid_error_message, :type => :string
@@ -42,8 +43,8 @@ class ServiceTemplate < ApplicationRecord
   default_value_for :service_type,  'unknown'
   default_value_for(:generic_subtype) { |st| 'custom' if st.prov_type == 'generic' }
 
-  virtual_has_one :custom_actions, :class_name => "Hash"
-  virtual_has_one :custom_action_buttons, :class_name => "Array"
+  virtual_has_one :custom_actions, :class_name => "Hash", :uses => [:custom_buttons, {:custom_button_sets => :all_relationships}]
+  virtual_has_one :custom_action_buttons, :class_name => "Array", :uses => [:custom_buttons, {:custom_button_sets => :all_relationships}]
 
   def readonly?
     return true if super
@@ -63,7 +64,7 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def custom_actions
-    generic_button_group = CustomButton.buttons_for("Service").select { |button| !button.parent.nil? }
+    generic_button_group = Service.custom_buttons.select { |button| !button.parent_id.nil? }
     custom_button_sets_with_generics = custom_button_sets + generic_button_group.map(&:parent).uniq.flatten
     {
       :buttons       => custom_buttons.collect(&:expanded_serializable_hash),
@@ -78,11 +79,11 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def custom_buttons
-    CustomButton.buttons_for("Service").select { |button| button.parent.nil? } + direct_custom_buttons
+    Service.custom_buttons.select { |button| button.parent_id.nil? } + direct_custom_buttons
   end
 
   def direct_custom_buttons
-    CustomButton.buttons_for(self).select { |b| b.parent.nil? }
+    all_direct_custom_buttons.select { |b| b.parent_id.nil? }
   end
 
   def vms_and_templates

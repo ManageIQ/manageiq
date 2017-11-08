@@ -176,7 +176,18 @@ module Api
         options[:offset], options[:limit] = expand_paginate_params if paginate_params?
         options[:filter] = miq_expression if miq_expression
 
-        Rbac.filtered(res, options)
+        res = Rbac.filtered(res, options)
+        preload_for_expansion!(res, type)
+        res
+      end
+
+      def preload_for_expansion!(resources, type)
+        if type == :services && collection_config.custom_actions?(type)
+          # Preload custom actions data for services
+          MiqPreloader.preload(resources,
+            [:custom_action_buttons, {:service_template => :resource_actions}]
+          )
+        end
       end
 
       #
