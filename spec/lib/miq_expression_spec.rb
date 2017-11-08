@@ -19,9 +19,8 @@ describe MiqExpression do
       displayed_columms = described_class.reporting_available_fields('ChargebackVm').map(&:second)
       expected_columns = (ChargebackVm.attribute_names - extra_fields).map { |x| "ChargebackVm-#{x}" }
 
-      CustomAttribute.all.each do |custom_attribute|
-        expected_columns.push("#{vm.class}-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}#{custom_attribute.name}")
-      end
+      expected_columns.push(*displayed_columms.select { |x| x.include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX) })
+
       expect(displayed_columms).to match_array(expected_columns)
     end
   end
