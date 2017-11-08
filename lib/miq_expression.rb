@@ -573,7 +573,10 @@ class MiqExpression
       :include_model => true,
       :include_table => true
     }.merge(options)
-    tables, col = val.split("-")
+
+    parsed_field ||= MiqExpression::ChargeableField.parse(val)
+    tables, col = parsed_field ? [parsed_field.model.to_s, parsed_field.column] : val.split("-")
+
     first = true
     val_is_a_tag = false
     ret = ""
