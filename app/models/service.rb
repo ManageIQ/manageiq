@@ -242,7 +242,7 @@ class Service < ApplicationRecord
     update_attributes(:options => options)
   end
 
-  def update_progress(hash = {})
+  def update_progress(hash)
     update_attributes(:options => options.merge(hash))
   end
 
