@@ -71,7 +71,7 @@ class Chargeback
 
     def sub_metric_rollups(sub_metric)
       q = VimPerformanceState.where(:timestamp => start_time...end_time, :resource => resource, :capture_interval => 3_600)
-      q.map { |x| x.allocated_disk_types[sub_metric] || 0 }
+      q.map { |x| x.state_data.try(:[], :allocated_disk_types).try(:[], sub_metric) || 0 }
     end
 
     def values(metric, sub_metric = nil)
