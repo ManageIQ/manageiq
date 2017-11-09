@@ -162,7 +162,7 @@ class GenericObjectDefinition < ApplicationRecord
 
   def normalize_property_methods
     props = properties.symbolize_keys
-    properties[:methods] = props[:methods].collect(&:to_s)
+    properties[:methods] = props[:methods].flatten.collect(&:to_s)
   end
 
   def validate_property_attributes
