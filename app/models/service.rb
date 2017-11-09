@@ -42,7 +42,7 @@ class Service < ApplicationRecord
   virtual_total      :v_total_vms, :vms
 
   virtual_has_one    :custom_actions
-  virtual_has_one    :custom_action_buttons
+  virtual_has_one    :custom_action_buttons, :uses => {:service_template => :custom_action_buttons}
   virtual_has_one    :provision_dialog
   virtual_has_one    :user
   virtual_has_one    :chargeback_report
@@ -72,6 +72,10 @@ class Service < ApplicationRecord
 
   supports :reconfigure do
     unsupported_reason_add(:reconfigure, _("Reconfigure unsupported")) unless validate_reconfigure
+  end
+
+  cache_with_timeout(:custom_buttons, 30.seconds) do
+    CustomButton.buttons_for(self).includes(:all_relationships)
   end
 
   def add_resource(rsc, options = {})
@@ -338,7 +342,7 @@ class Service < ApplicationRecord
   end
 
   def reconfigure_resource_action
-    service_template.resource_actions.find_by_action('Reconfigure') if service_template
+    service_template.resource_actions.detect { |x| x.action == 'Reconfigure' } if service_template
   end
 
   def raise_final_process_event(action)

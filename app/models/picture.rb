@@ -5,7 +5,7 @@ class Picture < ApplicationRecord
             :inclusion => { :in => %w(png jpg svg), :message => 'must be a png, jpg, or svg' },
             :if        => :extension
 
-  virtual_has_one :image_href, :class_name => "String"
+  virtual_has_one :image_href, :class_name => "String", :uses => :binary_blob
 
   URL_ROOT          = Rails.root.join("public").to_s
   DEFAULT_DIRECTORY = File.join(URL_ROOT, "pictures")
