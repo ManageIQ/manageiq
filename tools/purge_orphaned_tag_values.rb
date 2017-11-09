@@ -7,6 +7,7 @@ opts = Trollop.options do
   banner "Purge orphaned vim_performance_tag_values records.\n\nUsage: ruby #{$0} [options]\n\nOptions:\n\t"
   opt :search_window, "Window of records to scan when finding orpahns", :default => 1000
   opt :delete_window, "Window of orphaned records to delete at once",   :default => 50
+  opt :purge_disabled_tag_values, "Also remove values for tags which are set to not collect data anymore"
 end
 Trollop.die :search_window, "must be a number greater than 0" if opts[:search_window] <= 0
 Trollop.die :delete_window, "must be a number greater than 0" if opts[:delete_window] <= 0
@@ -62,6 +63,27 @@ if perf_ids_count > 0
     end
     pbar.finish
     log("Deleting orphaned tag values...Complete")
+  end
+
+  deleted_ids = nil
+
+  if opts[:purge_disabled_tag_values]
+    query = VimPerformanceTagValue.where.not(:category => Classification.category_names_for_perf_by_tag).select(:id)
+
+    log("Deleting tag values for disabled tags...")
+    total_disabled_count = query.count
+    pbar = ProgressBar.create(:title => "Deleting disabled tag values", :total => total_disabled_count, :autofinish => false)
+
+    loop do
+      batch_ids = query.limit(opts[:delete_window])
+      count = VimPerformanceTagValue.where(:id => batch_ids).delete_all
+
+      pbar.progress += count
+      break if count == 0
+    end
+
+    pbar.finish
+    log("Deleting tag values for disabled tags...Complete - #{formatter.number_with_delimiter(total_disabled_count)} records")
   end
 end
 
