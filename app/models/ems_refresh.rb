@@ -47,8 +47,6 @@ module EmsRefresh
             t.ext_management_system
           elsif t.respond_to?(:manager) && t.manager
             t.manager
-          elsif t.kind_of?(Host) && t.acts_as_ems?
-            t
           end
 
       h[e] << t unless e.nil?

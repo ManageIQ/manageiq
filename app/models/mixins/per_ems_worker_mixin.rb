@@ -92,10 +92,6 @@ module PerEmsWorkerMixin
     end
 
     def queue_name_for_ems(ems)
-      # Host objects do not have dedicated refresh workers so request a generic worker which will
-      # be used to make a web-service call to a SmartProxy to initiate inventory collection.
-      return "generic" if ems.kind_of?(Host) && ems.acts_as_ems?
-
       return ems unless ems.kind_of?(ExtManagementSystem)
       ems.queue_name
     end

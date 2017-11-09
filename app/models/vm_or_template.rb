@@ -1600,9 +1600,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def has_active_ems?
-    # If the VM does not have EMS connection see if it is using SmartProxy as the EMS
     return true unless ext_management_system.nil?
-    return true if host && host.acts_as_ems? && host.is_proxy_active?
     false
   end
 
