@@ -990,8 +990,8 @@ en:
       ems_object_storages:         Object Storage Managers
       evm_server:                  EVM Server
       ems_network:                 Network Provider
-      ems_phyical_infra:           Physical Infrastructure Provider
-      ems_phyical_infras:          Physical Infrastructure Providers
+      ems_physical_infra:          Physical Infrastructure Provider
+      ems_physical_infras:         Physical Infrastructure Providers
       ems_storage:                 Storage Manager
       floating_ips:                Floating IP
       load_balancer:               Load Balancer
