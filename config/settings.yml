@@ -1215,3 +1215,6 @@
       :count: 1
 :hawkular_tenant_labels:
   :_hawkular_admin: Hawkular Admin
+:prometheus_metrics:
+  :open_timeout: 5
+  :request_timeout: 30
