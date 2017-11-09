@@ -26,13 +26,19 @@ module AssignmentMixin
     #   item  => A CI instance (not classification) or a CI id of klass
     # klass   => The class of the object that self is to be assigned to - (Takes both forms - Host or host, EmsCluster or ems_cluster)
     objects.to_miq_a.each do |obj|
-      if obj.kind_of?(ActiveRecord::Base) # obj is a CI
-        tag = "#{obj.class.base_model.name.underscore}/id/#{obj.id}"
-      else                                # obj is the id of an instance of <klass>
-        raise _("Class must be specified when object is an integer") if klass.nil?
-        tag = "#{klass.underscore}/id/#{obj}"
-      end
+      tag = build_object_tag_path(obj, klass)
       tag_add(tag, :ns => namespace)
+    end
+    reload
+  end
+
+  def unassign_objects(objects, klass = nil)
+    # objects => A single item or array of items
+    #   item  => A CI instance (not classification) or a CI id of klass
+    # klass   => The class of the object that self is to be unassigned from - (Takes both forms - Host or host, EmsCluster or ems_cluster)
+    objects.to_miq_a.each do |obj|
+      tag = build_object_tag_path(obj, klass)
+      tag_remove(tag, :ns => namespace)
     end
     reload
   end
@@ -42,16 +48,18 @@ module AssignmentMixin
     #   item  => A classification entry instance or a classification entry id
     # klass   => The class of the object that self is to be assigned to - (Takes both forms - Host or host, EmsCluster or ems_cluster)
     objects.to_miq_a.each do |obj|
-      unless obj.kind_of?(ActiveRecord::Base) # obj is the id of a classification entry instance
-        id = obj
-        obj = Classification.find_by(:id => id)
-        if obj.nil?
-          _log.warn("Unable to find classification with id [#{id}], skipping assignment")
-          next
-        end
-      end
-      tag = "#{klass.underscore}/tag#{obj.ns}/#{obj.parent.name}/#{obj.name}"
+      tag = build_tag_tagging_path(obj, klass)
+      next if tag.nil?
       tag_add(tag, :ns => namespace)
+    end
+    reload
+  end
+
+  def unassign_tags(objects, klass)
+    objects.to_miq_a.each do |obj|
+      tag = build_tag_tagging_path(obj, klass)
+      next if tag.nil?
+      tag_remove(tag, :ns => namespace)
     end
     reload
   end
@@ -200,4 +208,27 @@ module AssignmentMixin
       "/#{base_model.name.underscore}/#{NAMESPACE_SUFFIX}"
     end
   end # module ClassMethods
+
+  private
+
+  def build_object_tag_path(obj, klass = nil)
+    if obj.kind_of?(ActiveRecord::Base) # obj is a CI
+      "#{obj.class.base_model.name.underscore}/id/#{obj.id}"
+    else                                # obj is the id of an instance of <klass>
+      raise _("Class must be specified when object is an integer") if klass.nil?
+      "#{klass.underscore}/id/#{obj}"
+    end
+  end
+
+  def build_tag_tagging_path(obj, klass)
+    unless obj.kind_of?(ActiveRecord::Base) # obj is the id of a classification entry instance
+      id = obj
+      obj = Classification.find_by(:id => id)
+      if obj.nil?
+        _log.warn("Unable to find classification with id [#{id}], skipping assignment")
+        nil
+      end
+    end
+    "#{klass.underscore}/tag#{obj.ns}/#{obj.parent.name}/#{obj.name}"
+  end
 end # module AssignmentMixin

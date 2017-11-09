@@ -23,6 +23,38 @@ describe AssignmentMixin do
         "vm/tag/managed/environment/staging" => [alert_set2],
       )
     end
+
+    it "unassigns one tag from alert_set" do
+      ct1 = ctag("environment", "test1")
+      ct2 = ctag("environment", "staging1")
+      alert_set = FactoryGirl.create(:miq_alert_set_vm)
+      alert_set.assign_to_tags([ct1, ct2], "vm")
+      alert_set.reload # reload ensures the tag is set
+
+      alert_set.unassign_tags([ct1], "vm")
+      alert_set.reload # reload ensures the tag is unset
+
+      expect(test_class.assignments).to eq(
+        "vm/tag/managed/environment/staging1" => [alert_set]
+      )
+    end
+
+    it "unassigns object from alert_set" do
+      enterprise = FactoryGirl.create(:miq_enterprise)
+      enterprise2 = FactoryGirl.create(:miq_enterprise)
+      alert_set = FactoryGirl.create(:miq_alert_set_vm)
+
+      alert_set.assign_to_objects([enterprise, enterprise2])
+      alert_set.reload
+
+      alert_set.unassign_objects([enterprise2])
+      alert_set.reload
+
+      assignments = alert_set.get_assigned_tos
+
+      expect(assignments[:objects]).to include(enterprise)
+      expect(assignments[:objects]).not_to include(enterprise2)
+    end
   end
 
   describe ".all_assignments" do
