@@ -16,7 +16,7 @@ module ManageIQ
       # determine plugin root dir. Assume we are called from a 'bin/' script in the plugin root
       plugin_root ||= Pathname.new(caller_locations.last.absolute_path).dirname.parent
 
-      install_bundler
+      install_bundler(plugin_root)
       bundle_update(plugin_root)
 
       ensure_config_files
@@ -55,9 +55,10 @@ module ManageIQ
       bower_thread.join
     end
 
-    def self.install_bundler
+    def self.install_bundler(root = APP_ROOT)
       system!("echo 'gem: --no-ri --no-rdoc --no-document' > ~/.gemrc") if ENV['CI']
       system!("gem install bundler -v '#{bundler_version}' --conservative")
+      system!("bundle config path #{root.join('vendor/bundle').expand_path}", :chdir => root) if ENV["CI"]
     end
 
     def self.bundle_update(root = APP_ROOT)
