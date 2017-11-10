@@ -47,7 +47,6 @@ MIQ_WORKER_TYPES = {
   "ManageIQ::Providers::Openstack::InfraManager::RefreshWorker"                 => %i(manageiq_default),
   "ManageIQ::Providers::Openstack::NetworkManager::EventCatcher"                => %i(manageiq_default),
   "ManageIQ::Providers::Openstack::NetworkManager::MetricsCollectorWorker"      => %i(manageiq_default),
-  "ManageIQ::Providers::Openstack::NetworkManager::RefreshWorker"               => %i(manageiq_default),
   "ManageIQ::Providers::Redhat::InfraManager::EventCatcher"                     => %i(manageiq_default),
   "ManageIQ::Providers::Redhat::InfraManager::MetricsCollectorWorker"           => %i(manageiq_default),
   "ManageIQ::Providers::Redhat::InfraManager::RefreshWorker"                    => %i(manageiq_default),
