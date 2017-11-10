@@ -44,6 +44,7 @@ class ConfiguredSystem < ApplicationRecord
   scope :with_inventory_root_group,     ->(group_id)   { where(:inventory_root_group_id => group_id) }
   scope :with_manager,                  ->(manager_id) { where(:manager_id => manager_id) }
   scope :with_configuration_profile_id, ->(profile_id) { where(:configuration_profile_id => profile_id) }
+  scope :without_configuration_profile_id,          -> { where(:configuration_profile_id => nil) }
 
   def configuration_architecture
     tag_hash[ConfigurationArchitecture]
