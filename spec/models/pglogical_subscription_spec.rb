@@ -194,6 +194,32 @@ describe PglogicalSubscription do
       expect { sub.save! }.to raise_error(RuntimeError, "Different remote schema")
     end
 
+    it "raises when subscribing to the same region" do
+      allow(pglogical).to receive(:subscriptions).and_return([])
+      allow(pglogical).to receive(:enabled?).and_return(true)
+      allow(pglogical).to receive(:subscription_show_status).and_return(subscriptions.first)
+      allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
+      with_valid_schemas
+
+      sub = described_class.new(:host => "some.host.example.com")
+      expect { sub.save! }.to raise_error(RuntimeError, "Subscriptions cannot be created to the same region as the current region")
+    end
+
+    it "does not raise when subscribing to a different region" do
+      allow(pglogical).to receive(:subscriptions).and_return([])
+      allow(pglogical).to receive(:enabled?).and_return(true)
+      allow(pglogical).to receive(:subscription_show_status).and_return(subscriptions.first)
+      allow(pglogical).to receive(:subscription_create).and_return(double(:check => nil))
+      allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
+      with_valid_schemas
+
+      sub = described_class.new(:host => "test-2.example.com", :user => "root", :password => "1234")
+      allow(sub).to receive(:remote_region_number).and_return(remote_region1)
+      allow(sub).to receive(:ensure_node_created).and_return(true)
+
+      expect { sub.save! }.not_to raise_error
+    end
+
     it "creates the node when there are no subscriptions" do
       allow(pglogical).to receive(:subscriptions).and_return([])
       allow(pglogical).to receive(:enabled?).and_return(true)
