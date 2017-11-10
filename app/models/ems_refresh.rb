@@ -171,7 +171,7 @@ module EmsRefresh
     task_id = nil
 
     # Items will be naturally serialized since there is a dedicated worker.
-    MiqQueue.put_or_update(queue_options) do |msg, item|
+    miq_queue_record = MiqQueue.put_or_update(queue_options) do |msg, item|
       targets = msg.nil? ? targets : msg.data.concat(targets)
       targets = uniq_targets(targets)
 
@@ -197,6 +197,16 @@ module EmsRefresh
         :task_id     => task_id,
         :msg_timeout => queue_timeout
       )
+    end
+
+    if targets.present?
+      # If we are storing data, we want to make sure any BinaryBlob present will be tied back to this MiqQueue record
+      payload_ids = targets.map { |x| x.try(:second).try(:[], :payload_id) }.compact
+      if payload_ids
+        BinaryBlob
+          .where(:id => payload_ids, :resource_id => nil)
+          .update_all(:resource_id => miq_queue_record.id, :resource_type => miq_queue_record.class.base_class)
+      end
     end
 
     task_id
