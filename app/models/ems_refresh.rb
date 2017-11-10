@@ -201,7 +201,11 @@ module EmsRefresh
 
     if targets.present?
       # If we are storing data, we want to make sure any BinaryBlob present will be tied back to this MiqQueue record
-      payload_ids = targets.map { |x| x.try(:second).try(:[], :payload_id) }.compact
+      payload_ids = targets.map do |type, target_hash|
+        next if type != "ManagerRefresh::Target"
+        target_hash[:payload_id]
+      end.compact
+
       if payload_ids
         BinaryBlob
           .where(:id => payload_ids, :resource_id => nil)
