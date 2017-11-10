@@ -84,7 +84,7 @@ module ManagerRefresh::SaveCollection
           inventory_objects_index[index] = inventory_object
         end
 
-        _log.info("*************** PROCESSING #{inventory_collection} of size #{inventory_collection.size} *************")
+        _log.debug("Processing #{inventory_collection} of size #{inventory_collection.size}...")
         # Records that are in the DB, we will be updating or deleting them.
         ActiveRecord::Base.transaction do
           association.find_each do |record|
@@ -121,10 +121,10 @@ module ManagerRefresh::SaveCollection
             end
           end
         end
-        _log.info("*************** PROCESSED #{inventory_collection}, "\
-                  "created=#{inventory_collection.created_records.count}, "\
-                  "updated=#{inventory_collection.updated_records.count}, "\
-                  "deleted=#{inventory_collection.deleted_records.count} *************")
+        _log.debug("Processing #{inventory_collection}, "\
+                   "created=#{inventory_collection.created_records.count}, "\
+                   "updated=#{inventory_collection.updated_records.count}, "\
+                   "deleted=#{inventory_collection.deleted_records.count}...Complete")
       rescue => e
         _log.error("Error when saving #{inventory_collection} with #{inventory_collection_details}. Message: #{e.message}")
         raise e
@@ -143,8 +143,8 @@ module ManagerRefresh::SaveCollection
 
         all_manager_uuids_size = inventory_collection.all_manager_uuids.size
 
-        _log.info("*************** PROCESSING :delete_complement of #{inventory_collection} of size "\
-                  "#{all_manager_uuids_size} *************")
+        _log.debug("Processing :delete_complement of #{inventory_collection} of size "\
+                   "#{all_manager_uuids_size}...")
         deleted_counter = 0
 
         inventory_collection.db_collection_for_comparison_for_complement_of(
@@ -158,8 +158,8 @@ module ManagerRefresh::SaveCollection
           end
         end
 
-        _log.info("*************** PROCESSED :delete_complement of #{inventory_collection} of size "\
-                  "#{all_manager_uuids_size}, deleted=#{deleted_counter} *************")
+        _log.debug("Processing :delete_complement of #{inventory_collection} of size "\
+                   "#{all_manager_uuids_size}, deleted=#{deleted_counter}...Complete")
       end
 
       def delete_record!(record)
