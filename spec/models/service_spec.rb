@@ -95,7 +95,7 @@ describe Service do
     end
 
     it "#update_progress" do
-      @service.update_progress(:power_status => "stopping")
+      @service.send(:update_progress, :power_status => "stopping")
       expect(@service.power_status).to eq "stopping"
     end
 
