@@ -20,7 +20,7 @@ require 'digest'
 class MiqQueue < ApplicationRecord
   belongs_to :handler, :polymorphic => true
   belongs_to :miq_task
-  has_many   :binary_blobs, :as => :resource, :dependent => :destroy
+  has_many   :binary_blobs, :as => :resource, :dependent => :nullify
 
   attr_accessor :last_exception
 
