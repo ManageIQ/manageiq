@@ -943,3 +943,82 @@
   :parent_id: 0
   :default: true
   :single_value: "1"
+- :description: Migration Group
+  :entries:
+  - :description: Group 1
+    :read_only: "0"
+    :syntax: string
+    :name: group1
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Group 2
+    :read_only: "0"
+    :syntax: string
+    :name: group2
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Group 3
+    :read_only: "0"
+    :syntax: string
+    :name: group3
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: migration_group
+  :example_text: Group of VMs prepared for migration.
+  :parent_id: 0
+  :default: true
+  :single_value: "1"
+- :description: Network Mapping
+  :entries:
+  - :description: oVirt Management Network
+    :read_only: "0"
+    :syntax: string
+    :name: ovirtmgmt
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: network_mapping
+  :example_text: Mapping between source network(s) and a destination network for migration.
+  :parent_id: 0
+  :default: true
+  :single_value: "1"
+- :description: Storage Mapping
+  :entries:
+  - :description: Storage 1
+    :read_only: "0"
+    :syntax: string
+    :name: storage1
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Storage 2
+    :read_only: "0"
+    :syntax: string
+    :name: storage2
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Storage 3
+    :read_only: "0"
+    :syntax: string
+    :name: storage3
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: storage_mapping
+  :example_text: Mapping between source storage(s) and a destination storage for migration.
+  :parent_id: 0
+  :default: true
+  :single_value: "1"
