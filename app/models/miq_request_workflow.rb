@@ -978,7 +978,7 @@ class MiqRequestWorkflow
   end
 
   def host_to_hash_struct(ci)
-    build_ci_hash_struct(ci, [:name, :vmm_product, :vmm_version, :state, :v_total_vms])
+    build_ci_hash_struct(ci, [:name, :vmm_product, :vmm_version, :state, :v_total_vms, :maintenance])
   end
 
   def vm_or_template_to_hash_struct(ci)
