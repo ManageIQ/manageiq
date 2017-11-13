@@ -210,6 +210,7 @@ unless ENV["APPLIANCE"]
     gem "rubocop",          "~>0.47.0", :require => false
     gem "scss_lint",        "~>0.48.0", :require => false
     gem "yard"
+    gem "pronto-rubocop"
   end
 
   group :test do
