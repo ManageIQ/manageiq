@@ -185,13 +185,40 @@ describe PglogicalSubscription do
     it "raises when the local schema is invalid" do
       with_an_invalid_local_schema
       sub = described_class.new(:host => "some.host.example.com")
+      allow(sub).to receive(:assert_different_region!)
       expect { sub.save! }.to raise_error(RuntimeError, "Different local schema")
     end
 
     it "raises when the remote schema is invalid" do
       with_an_invalid_remote_schema
       sub = described_class.new(:host => "some.host.example.com", :password => "1234")
+      allow(sub).to receive(:assert_different_region!)
       expect { sub.save! }.to raise_error(RuntimeError, "Different remote schema")
+    end
+
+    it "raises when subscribing to the same region" do
+      allow(pglogical).to receive(:subscriptions).and_return([])
+      allow(pglogical).to receive(:enabled?).and_return(true)
+      allow(pglogical).to receive(:subscription_show_status).and_return(subscriptions.first)
+      allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
+
+      sub = described_class.new(:host => "some.host.example.com")
+      expect { sub.save! }.to raise_error(RuntimeError, "Subscriptions cannot be created to the same region as the current region")
+    end
+
+    it "does not raise when subscribing to a different region" do
+      allow(pglogical).to receive(:subscriptions).and_return([])
+      allow(pglogical).to receive(:enabled?).and_return(true)
+      allow(pglogical).to receive(:subscription_show_status).and_return(subscriptions.first)
+      allow(pglogical).to receive(:subscription_create).and_return(double(:check => nil))
+      allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
+      with_valid_schemas
+
+      sub = described_class.new(:host => "test-2.example.com", :user => "root", :password => "1234")
+      allow(sub).to receive(:remote_region_number).and_return(remote_region1)
+      allow(sub).to receive(:ensure_node_created).and_return(true)
+
+      expect { sub.save! }.not_to raise_error
     end
 
     it "creates the node when there are no subscriptions" do
@@ -215,7 +242,10 @@ describe PglogicalSubscription do
         expect(sync_structure).to be false
       end.and_return(double(:check => nil))
 
-      described_class.new(:host => "test-2.example.com", :user => "root", :password => "1234").save!
+      sub = described_class.new(:host => "test-2.example.com", :user => "root", :password => "1234")
+      allow(sub).to receive(:assert_different_region!)
+
+      sub.save!
     end
 
     it "doesnt create the node when we are already a node" do
@@ -239,8 +269,11 @@ describe PglogicalSubscription do
         expect(sync_structure).to be false
       end.and_return(double(:check => nil))
 
-      ret = described_class.new(:host => "test-2.example.com", :password => "1234", :user => "root").save!
-      expect(ret).to be_an_instance_of(described_class)
+      sub = described_class.new(:host => "test-2.example.com", :password => "1234", :user => "root")
+      allow(sub).to receive(:assert_different_region!)
+
+      sub.save!
+      expect(sub).to be_an_instance_of(described_class)
     end
 
     it "updates the dsn when an existing subscription is saved" do
@@ -252,6 +285,7 @@ describe PglogicalSubscription do
 
       sub = described_class.find(:first)
       sub.host = "other-host.example.com"
+      allow(sub).to receive(:assert_different_region!)
 
       expect(pglogical).to receive(:subscription_disable).with(sub.id)
         .and_return(double(:check => nil))
@@ -277,6 +311,7 @@ describe PglogicalSubscription do
 
       sub = described_class.find(:first)
       sub.host = "other-host.example.com"
+      allow(sub).to receive(:assert_different_region!)
 
       expect(pglogical).to receive(:subscription_disable).with(sub.id)
         .and_return(double(:check => nil))
@@ -320,6 +355,7 @@ describe PglogicalSubscription do
       to_save = []
       to_save << described_class.new(:host => "test-2.example.com", :password => "1234", :user => "root")
       to_save << described_class.new(:host => "test-3.example.com", :password => "1234", :user => "miq")
+      to_save.each { |s| allow(s).to receive(:assert_different_region!) }
 
       described_class.save_all!(to_save)
     end
@@ -350,6 +386,7 @@ describe PglogicalSubscription do
       to_save << described_class.new(:host => "test-2.example.com", :user => "root", :password => "1234")
       to_save << described_class.new(:host => "test-3.example.com", :user => "miq", :password => "1234")
       to_save << described_class.new(:host => "test-4.example.com", :user => "miq", :password => "1234")
+      to_save.each { |s| allow(s).to receive(:assert_different_region!) }
 
       expect { described_class.save_all!(to_save) }.to raise_error("Failed to save subscription " \
         "to test-2.example.com: Error one\nFailed to save subscription to test-4.example.com: Error two")
