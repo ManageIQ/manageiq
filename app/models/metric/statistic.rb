@@ -1,15 +1,18 @@
 module Metric::Statistic
   def self.calculate_stat_columns(obj, timestamp)
-    return {} unless obj.respond_to?(:container_groups)
-    return {} unless obj.respond_to?(:container_images)
-
     capture_interval = Metric::Helper.get_time_interval(obj, timestamp)
-    container_groups = ContainerGroup.where(:ems_id => obj.id).or(ContainerGroup.where(:old_ems_id => obj.id))
+    stats = {}
 
-    {
-      :stat_container_group_create_rate       => container_groups.where(:ems_created_on => capture_interval).count,
-      :stat_container_group_delete_rate       => container_groups.where(:deleted_on => capture_interval).count,
-      :stat_container_image_registration_rate => obj.container_images.where(:registered_on => capture_interval).count
-    }
+    if obj.respond_to?(:all_container_groups)
+      container_groups = obj.all_container_groups # Get disconnected entities as well
+      stats[:stat_container_group_create_rate] = container_groups.where(:ems_created_on => capture_interval).count
+      stats[:stat_container_group_delete_rate] = container_groups.where(:deleted_on => capture_interval).count
+    end
+
+    if obj.respond_to?(:all_container_images)
+      stats[:stat_container_image_registration_rate] = obj.all_container_images.where(:registered_on => capture_interval).count
+    end
+
+    stats
   end
 end
