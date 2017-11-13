@@ -8,13 +8,6 @@ class Tag < ApplicationRecord
 
   before_destroy :remove_from_managed_filters
 
-  # Note those scopes exclude Tags that don't have a Classification.
-  scope :visible,   -> { joins(:classification).merge(Classification.visible) }
-  scope :read_only, -> { joins(:classification).merge(Classification.read_only) }
-  scope :writable,  -> { joins(:classification).merge(Classification.writable) }
-  scope :is_category, -> { joins(:classification).merge(Classification.is_category) }
-  scope :is_entry,    -> { joins(:classification).merge(Classification.is_entry) }
-
   def self.list(object, options = {})
     ns = get_namespace(options)
     if ns[0..7] == "/virtual"
@@ -154,14 +147,6 @@ class Tag < ApplicationRecord
           "display_name" => "#{category.description}: #{classification.description}"
         }
       end
-  end
-
-  # @return [ActiveRecord::Relation] Scope for tags controlled by ContainerLabelTagMapping.
-  def self.controlled_by_mapping
-    queries = ContainerLabelTagMapping::TAG_PREFIXES.collect do |prefix|
-      where(arel_table[:name].matches("#{sanitize_sql_like(prefix)}%", nil, true)) # case sensitive LIKE
-    end
-    queries.inject(:or).read_only.is_entry
   end
 
   private
