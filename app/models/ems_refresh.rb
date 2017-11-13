@@ -196,7 +196,7 @@ module EmsRefresh
 
   def self.create_refresh_task(ems, targets)
     task_options = {
-      :action => "EmsRefresh(#{ems.name}) [#{targets}]",
+      :action => "EmsRefresh(#{ems.name}) [#{targets}]".truncate(255),
       :userid => "system"
     }
 
