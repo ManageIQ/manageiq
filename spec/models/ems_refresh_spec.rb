@@ -89,6 +89,16 @@ describe EmsRefresh do
         expect(task_ids.length).to eq(2)
       end
     end
+
+    describe ".create_refresh_task" do
+      it "create refresh task and trancates task name to 255 symbols" do
+        vm = FactoryGirl.create(:vm_vmware, :name => "vm_vmware1", :ext_management_system => @ems)
+        targets = Array.new(500) { vm }
+        task_name = described_class.send(:create_refresh_task, @ems, targets).name
+        expect(task_name.include?(@ems.name)).to eq true
+        expect(task_name.length).to eq 255
+      end
+    end
   end
 
   def queue_refresh_and_assert_queue_item(target, expected_targets)
