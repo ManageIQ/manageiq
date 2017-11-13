@@ -44,7 +44,7 @@ class Host < ApplicationRecord
   has_many                  :vms_and_templates, :dependent => :nullify
   has_many                  :vms, :inverse_of => :host
   has_many                  :miq_templates, :inverse_of => :host
-  has_many                  :host_storages
+  has_many                  :host_storages, :dependent => :destroy
   has_many                  :storages, :through => :host_storages
   has_many                  :host_switches, :dependent => :destroy
   has_many                  :switches, :through => :host_switches
