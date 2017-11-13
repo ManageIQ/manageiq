@@ -33,6 +33,7 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def save!
+    assert_different_region!
     assert_valid_schemas!
     id ? update_subscription : create_subscription
   end
@@ -226,6 +227,12 @@ class PglogicalSubscription < ActsAsArModel
     with_remote_connection do |conn|
       remote_errors = ManageIQ::Schema::Checker.check_schema(conn)
       raise remote_errors if remote_errors
+    end
+  end
+
+  def assert_different_region!
+    if MiqRegionRemote.region_number_from_sequence == remote_region_number
+      raise "Subscriptions cannot be created to the same region as the current region"
     end
   end
 
