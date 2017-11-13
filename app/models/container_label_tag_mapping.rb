@@ -34,21 +34,25 @@ class ContainerLabelTagMapping < ApplicationRecord
 
   # Assigning/unassigning should be possible without Mapper instance, perhaps in another process.
 
-  # Checks whether a Tag record is under mapping control. TODO: Remove? Only used by tests.
+  # Checks whether a Tag record is under mapping control.
+  # TODO: expensive.
   def self.controls_tag?(tag)
-    Tag.controlled_by_mapping.where(:id => tag.id).exists?
+    return false unless tag.classification.try(:read_only) # never touch user-assignable tags.
+    tag_ids = [tag.id, tag.category.tag_id].uniq
+    where(:tag_id => tag_ids).any?
   end
 
   # Assign/unassign mapping-controlled tags, preserving user-assigned tags.
   # All tag references must have been resolved first by Mapper#find_or_create_tags.
   def self.retag_entity(entity, tag_references)
     mapped_tags = Mapper.references_to_tags(tag_references)
-    existing_tags = entity.tags.controlled_by_mapping
+    # TODO: use Tag.controlled_by_mapping scope.
+    existing_tags = entity.tags
     Tagging.transaction do
       (mapped_tags - existing_tags).each do |tag|
         Tagging.create!(:taggable => entity, :tag => tag)
       end
-      (existing_tags - mapped_tags).tap do |tags|
+      (existing_tags - mapped_tags).select { |tag| controls_tag?(tag) }.tap do |tags|
         Tagging.where(:taggable => entity, :tag => tags.collect(&:id)).destroy_all
       end
     end
