@@ -26,11 +26,6 @@ describe EmsRefresh do
       queue_refresh_and_assert_queue_item(target, [target])
     end
 
-    it "with Host acting as an Ems" do
-      target = FactoryGirl.create(:host_microsoft)
-      queue_refresh_and_assert_queue_item(target, [target])
-    end
-
     it "with Vm" do
       target = FactoryGirl.create(:vm_vmware, :ext_management_system => @ems)
       queue_refresh_and_assert_queue_item(target, [target])

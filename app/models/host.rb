@@ -539,11 +539,6 @@ class Host < ApplicationRecord
     ret.include?("unknown") ? nil : ret
   end
 
-  def acts_as_ems?
-    product = vmm_product.to_s.downcase
-    ['hyperv', 'hyper-v'].any? { |p| product.include?(p) }
-  end
-
   def refreshable_status
     if ext_management_system
       return {:show => true, :enabled => true, :message => ""}
