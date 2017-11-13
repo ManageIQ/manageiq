@@ -31,12 +31,20 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
 
       it 'gets stdout from the job' do
         expect(job).to receive(:raw_stdout).and_return('A stdout from the job')
-        expect(job.raw_stdout_via_worker).to eq('A stdout from the job')
+        taskid = job.raw_stdout_via_worker('user')
+        MiqTask.wait_for_taskid(taskid)
+        expect(MiqTask.find(taskid)).to have_attributes(
+          :task_results => 'A stdout from the job',
+          :status       => 'Ok'
+        )
       end
 
       it 'returns the error message' do
         expect(job).to receive(:raw_stdout).and_throw('Failed to get stdout from the job')
-        expect(job.raw_stdout_via_worker).to include('Failed to get stdout from the job')
+        taskid = job.raw_stdout_via_worker('user')
+        MiqTask.wait_for_taskid(taskid)
+        expect(MiqTask.find(taskid).message).to include('Failed to get stdout from the job')
+        expect(MiqTask.find(taskid).status).to eq('Error')
       end
     end
 
@@ -44,7 +52,11 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
       let(:role_enabled) { false }
 
       it 'returns an error message' do
-        expect(job.raw_stdout_via_worker).to eq('Cannot get standard output of this playbook because the embedded Ansible role is not enabled')
+        taskid = job.raw_stdout_via_worker('user')
+        expect(MiqTask.find(taskid)).to have_attributes(
+          :message => 'Cannot get standard output of this playbook because the embedded Ansible role is not enabled',
+          :status  => 'Error'
+        )
       end
     end
   end

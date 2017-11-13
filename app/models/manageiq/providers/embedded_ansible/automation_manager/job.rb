@@ -8,25 +8,27 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::P
     finish_retirement
   end
 
-  # Intend to be called by UI to display stdout. Therefore the error message directly returned
-  # instead of raising an exception.
-  def raw_stdout_via_worker(userid = User.current_user, format = 'txt')
+  # Intend to be called by UI to display stdout. The stdout is stored in MiqTask#task_results or #message if error
+  # Since the task_results may contain a large block of data, it is desired to remove the task upon receiving the data
+  def raw_stdout_via_worker(userid, format = 'txt')
     unless MiqRegion.my_region.role_active?("embedded_ansible")
-      return "Cannot get standard output of this playbook because the embedded Ansible role is not enabled"
+      msg = "Cannot get standard output of this playbook because the embedded Ansible role is not enabled"
+      return MiqTask.create(
+        :name    => 'ansible_stdout',
+        :userid  => userid || 'system',
+        :state   => MiqTask::STATE_FINISHED,
+        :status  => MiqTask::STATUS_ERROR,
+        :message => msg
+      ).id
     end
 
-    options = {:userid => userid, :action => 'ansible_stdout'}
+    options = {:userid => userid || 'system', :action => 'ansible_stdout'}
     queue_options = {:class_name  => self.class,
                      :method_name => 'raw_stdout',
                      :instance_id => id,
                      :args        => [format],
                      :priority    => MiqQueue::HIGH_PRIORITY,
                      :role        => 'embedded_ansible'}
-    taskid = MiqTask.generic_action_with_callback(options, queue_options)
-    MiqTask.wait_for_taskid(taskid)
-    miq_task = MiqTask.find(taskid)
-    results = miq_task.task_results || miq_task.message
-    miq_task.destroy
-    results
+    MiqTask.generic_action_with_callback(options, queue_options)
   end
 end
