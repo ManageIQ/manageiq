@@ -5,7 +5,7 @@ module VimConnectMixin
     options[:auth_type] ||= :ws
     raise _("no credentials defined") if missing_credentials?(options[:auth_type])
 
-    options[:use_broker] = (self.class.respond_to?(:use_vim_broker?) ? self.class.use_vim_broker? : ManageIQ::Providers::Vmware::InfraManager.use_vim_broker?) if options[:fault_tolerant] && !options.key?(:use_broker)
+    options[:use_broker] = (self.class.respond_to?(:use_vim_broker?) ? self.class.use_vim_broker? : ManageIQ::Providers::Vmware::InfraManager.use_vim_broker?) unless options.key?(:use_broker)
     if options[:use_broker] && !MiqVimBrokerWorker.available?
       msg = "Broker Worker is not available"
       _log.error(msg)
