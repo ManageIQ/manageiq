@@ -439,7 +439,7 @@ class MiqAction < ApplicationRecord
     raise _("unable to execute script, no file name specified") if filename.nil?
 
     unless File.exist?(filename)
-      raise _("unable to execute script, file name [%{file_name} does not exist]") % {:file_name => filename}
+      raise _("unable to execute script, file name [%{file_name}] does not exist") % {:file_name => filename}
     end
 
     command_result = nil
