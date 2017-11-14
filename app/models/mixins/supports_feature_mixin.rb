@@ -86,6 +86,7 @@ module SupportsFeatureMixin
     :discovery                  => 'Discovery of Managers for a Provider',
     :evacuate                   => 'Evacuation',
     :launch_cockpit             => 'Launch Cockpit UI',
+    :admin_ui                   => 'Open Admin UI for a Provider',
     :live_migrate               => 'Live Migration',
     :migrate                    => 'Migration',
     :capture                    => 'Capture of Capacity & Utilization Metrics',

@@ -970,6 +970,10 @@
       :description: Import Virtual Machine from other Infrastructure Provider
       :feature_type: admin
       :identifier: ems_infra_import_vm
+    - :name: Admin UI
+      :description: Open Admin UI for Infrastructure Providers
+      :feature_type: control
+      :identifier: ems_infra_admin_ui
   - :name: Modify
     :description: Modify Infrastructure Providers
     :feature_type: admin
