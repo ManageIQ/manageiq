@@ -47,7 +47,7 @@ describe ServiceTemplate do
       end
 
       expect(expected_hash_without_created_or_updated).to eq(
-        :buttons       => [generic_no_group.serializable_hash, assigned_no_group.serializable_hash],
+        :buttons       => [generic_no_group.reload.serializable_hash, assigned_no_group.reload.serializable_hash],
         :button_groups => [expected_assigned_group_set, expected_generic_group_set]
       )
     end
