@@ -87,6 +87,7 @@
   - vm
   - vm_cloud_explorer
   - vm_infra_explorer
+  - sui_services
 
 - :name: EvmRole-approver
   :read_only: true
@@ -147,8 +148,7 @@
   - resource_pool_show_list
   - resource_pool_tag
   - rss
-  - service_show
-  - service_show_list
+  - service_view
   - storage_show
   - storage_show_list
   - storage_pod_show
@@ -174,6 +174,12 @@
   - vm_tag
   - vm_timeline
   - vm_chargeback
+  - sui_services_view
+  - sui_vm_details_view
+  - sui_vm_console
+  - sui_vm_web_console
+  - sui_vm_tags
+  - sui_orders_show
 
 - :name: EvmRole-auditor
   :read_only: true
@@ -237,8 +243,7 @@
   - resource_pool_show_list
   - resource_pool_tag
   - rss
-  - service_show
-  - service_show_list
+  - service_view
   - storage_show
   - storage_show_list
   - storage_perf
@@ -264,6 +269,11 @@
   - vm_tag
   - vm_timeline
   - vm_chargeback
+  - sui_services_view
+  - sui_vm_details_view
+  - sui_vm_console
+  - sui_vm_web_console
+  - sui_vm_tags
 
 - :name: EvmRole-desktop
   :read_only: true
@@ -319,6 +329,14 @@
   - vm_shelve_offload
   - vm_timeline
   - vm_chargeback
+  - sui_vm_details_view
+  - sui_vm_console
+  - sui_vm_web_console
+  - sui_vm_start
+  - sui_vm_stop
+  - sui_vm_suspend
+  - sui_orders_show
+  - sui_orders_operations
 
 - :name: EvmRole-operator
   :read_only: true
@@ -401,8 +419,7 @@
   - resource_pool_show_list
   - resource_pool_tag
   - rss
-  - service_show
-  - service_show_list
+  - service_view
   - provider_foreman_explorer
   - storage_delete
   - storage_scan
@@ -444,6 +461,14 @@
   - vm_tag
   - vm_timeline
   - vm_chargeback
+  - sui_services_view
+  - sui_vm_details_view
+  - sui_vm_console
+  - sui_vm_web_console
+  - sui_vm_tags
+  - sui_vm_start
+  - sui_vm_stop
+  - sui_vm_suspend
 
 - :name: EvmRole-security
   :read_only: true
@@ -503,8 +528,7 @@
   - resource_pool_show_list
   - resource_pool_tag
   - rss
-  - service_show
-  - service_show_list
+  - service_view
   - storage_show
   - storage_show_list
   - storage_perf
@@ -528,6 +552,11 @@
   - vm_tag
   - vm_timeline
   - vm_chargeback
+  - sui_services_view
+  - sui_vm_details_view
+  - sui_vm_snapshot_create
+  - sui_vm_snapshot_delete
+  - sui_vm_tags
 
 - :name: EvmRole-support
   :read_only: true
@@ -585,8 +614,7 @@
   - resource_pool_show_list
   - resource_pool_tag
   - rss
-  - service_show
-  - service_show_list
+  - service_view
   - storage_show
   - storage_show_list
   - storage_perf
@@ -613,6 +641,11 @@
   - vm_tag
   - vm_timeline
   - vm_chargeback
+  - sui_services_view
+  - sui_vm_details_view
+  - sui_vm_console
+  - sui_vm_web_console
+  - sui_vm_tags
 
 - :name: EvmRole-user
   :read_only: true
@@ -668,8 +701,7 @@
   - resource_pool_show_list
   - resource_pool_tag
   - rss
-  - service_show
-  - service_show_list
+  - service_view
   - storage_show
   - storage_show_list
   - storage_perf
@@ -694,6 +726,13 @@
   - vm_tag
   - vm_timeline
   - vm_chargeback
+  - sui_services_view
+  - sui_vm_details_view
+  - sui_vm_console
+  - sui_vm_web_console
+  - sui_vm_tags
+  - sui_orders_show
+  - sui_orders_operations
 
 - :name: EvmRole-user_limited_self_service
   :read_only: true
@@ -736,6 +775,13 @@
   - vm_shelve
   - vm_shelve_offload
   - vm_tag
+  - sui_core
+  - sui_services
+  - sui_vm
+  - sui_orders
+  - sui_svc_catalog_view
+  - sui_svc_catalog_cart
+  - sui_cart
 
 - :name: EvmRole-user_self_service
   :read_only: true
@@ -807,6 +853,7 @@
   - vm_vmrc_console
   - vm_vnc_console
   - cockpit_console
+  - sui
 
 - :name: EvmRole-vm_user
   :read_only: true
@@ -870,6 +917,16 @@
   - vm_vmrc_console
   - vm_vnc_console
   - cockpit_console
+  - sui_vm_details_view
+  - sui_vm_console
+  - sui_vm_web_console
+  - sui_vm_tags
+  - sui_vm_retire
+  - sui_vm_start
+  - sui_vm_stop
+  - sui_vm_suspend
+  - sui_orders_show
+  - sui_orders_operations
 
 - :name: EvmRole-tenant_administrator
   :read_only: true
@@ -935,6 +992,7 @@
   - vm
   - vm_cloud_explorer
   - vm_infra_explorer
+  - sui_services
 
 - :name: EvmRole-tenant_quota_administrator
   :read_only: true
@@ -991,6 +1049,7 @@
   - vm
   - vm_cloud_explorer
   - vm_infra_explorer
+  - sui_services
 
 - :name: EvmRole-consumption_administrator
   :read_only: true
@@ -1198,3 +1257,5 @@
   - vm_infra_explorer
   - vm_snapshot_view
   - vm_view
+  - sui_services_view
+  - sui_orders_show
