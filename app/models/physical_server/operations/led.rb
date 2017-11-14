@@ -15,8 +15,8 @@ module PhysicalServer::Operations::Led
 
   def change_state(verb)
     unless ext_management_system
-      raise _("A Server #{self} <%{name}> with Id: <%{id}> is not associated \
-with a provider.") % {:name => name, :id => id}
+      raise _("A Server %{server} <%{name}> with Id: <%{id}> is not associated with a provider.") %
+            {:server => self, :name => name, :id => id}
     end
 
     options = {:uuid => ems_ref}
