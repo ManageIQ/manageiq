@@ -26,10 +26,10 @@ module ApplicationController::CiProcessing
     if !session[:checked_items].nil? && @lastaction == "set_checked_items"
       recs = session[:checked_items]
     else
-      recs = find_checked_ids_with_rbac(get_class_from_controller_param(params[:controller]))
+      recs = find_checked_ids_with_rbac(get_class_from_controller_param(controller))
     end
     if recs.blank?
-      id = find_id_with_rbac(get_class_from_controller_param(params[:controller]), params[:id])
+      id = find_id_with_rbac(get_class_from_controller_param(controller), params[:id])
       recs = [id.to_i]
     end
     if recs.length < 1
