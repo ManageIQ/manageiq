@@ -28,6 +28,8 @@ addons:
   postgresql: '9.4'
 before_install:
 - source ${TRAVIS_BUILD_DIR}/tools/ci/before_install.sh
+install:
+- bundle update
 before_script:
 - source ${TRAVIS_BUILD_DIR}/tools/ci/before_script.sh
 script:
