@@ -5,11 +5,8 @@ module VimConnectMixin
     options[:auth_type] ||= :ws
     raise _("no credentials defined") if missing_credentials?(options[:auth_type])
 
-    options[:fault_tolerant] = true unless options.key?(:fault_tolerant)
-
     options[:use_broker] = (self.class.respond_to?(:use_vim_broker?) ? self.class.use_vim_broker? : ManageIQ::Providers::Vmware::InfraManager.use_vim_broker?) if options[:fault_tolerant] && !options.key?(:use_broker)
-    options[:check_broker_worker] = !!options[:use_broker] unless options.key?(:check_broker_worker)
-    if options[:check_broker_worker] && !MiqVimBrokerWorker.available?
+    if options[:use_broker] && !MiqVimBrokerWorker.available?
       msg = "Broker Worker is not available"
       _log.error(msg)
       raise MiqException::MiqVimBrokerUnavailable, _("Broker Worker is not available")
@@ -19,15 +16,8 @@ module VimConnectMixin
     # The following require pulls in both MiqFaultTolerantVim and MiqVim
     require 'VMwareWebService/miq_fault_tolerant_vim'
 
-    if options[:fault_tolerant]
-      options[:ems] = self
-      MiqFaultTolerantVim.new(options)
-    else
-      ip   = options[:ip] || hostname
-      user = options[:user] || authentication_userid(options[:auth_type])
-      pass = options[:pass] || authentication_password(options[:auth_type])
-      MiqVim.new(ip, user, pass)
-    end
+    options[:ems] = self
+    MiqFaultTolerantVim.new(options)
   end
 
   def with_provider_connection(options = {})
@@ -49,11 +39,7 @@ module VimConnectMixin
     def raw_connect(options)
       options[:pass] = MiqPassword.try_decrypt(options[:pass])
       validate_connection do
-        if options[:fault_tolerant]
-          MiqFaultTolerantVim.new(options)
-        else
-          MiqVim.new(options[:ip], options[:user], options[:pass])
-        end
+        MiqFaultTolerantVim.new(options)
       end
     end
 
