@@ -121,7 +121,7 @@ WORKDIR ${APP_ROOT}
 RUN source /etc/default/evm && \
     export RAILS_USE_MEMORY_STORE="true" && \
     npm install bower yarn -g && \
-    gem install bundler --conservative && \
+    gem install bundler -v 1.15.4 && \
     bower install --allow-root -F --silent --config.analytics=false && \
     bundle install && \
     bin/rails log:clear tmp:clear && \
