@@ -13,6 +13,10 @@ class VmOrTemplateDecorator < Draper::Decorator
     console_supported?('spice') || console_supported?('vnc')
   end
 
+  def supports_vnc_console?
+    console_supported?('vnc')
+  end
+
   def supports_cockpit?
     supports_launch_cockpit?
   end
