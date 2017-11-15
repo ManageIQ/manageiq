@@ -111,6 +111,10 @@ class MiqScheduleWorker::Jobs
     queue_work(:class_name => "ContainerProject", :method_name => "purge_timer", :zone => nil)
   end
 
+  def binary_blob_purge_timer
+    queue_work(:class_name => "BinaryBlob", :method_name => "purge_timer", :zone => nil)
+  end
+
   def miq_schedule_queue_scheduled_work(schedule_id, rufus_job)
     MiqSchedule.queue_scheduled_work(schedule_id, rufus_job.job_id, rufus_job.next_time.to_i, rufus_job.opts)
   end
