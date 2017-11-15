@@ -136,12 +136,25 @@ describe EmbeddedAnsibleWorker do
     end
 
     describe "#start_monitor_thread" do
-      it "sets worker class and id in thread object" do
+      let(:pool) { double("ConnectionPool") }
+
+      before do
         allow(Thread).to receive(:new).and_return({})
         allow(described_class::Runner).to receive(:start_worker)
+      end
+
+      it "sets worker class and id in thread object" do
         thread = subject.start_monitor_thread
         expect(thread[:worker_class]).to eq subject.class.name
         expect(thread[:worker_id]).to    eq subject.id
+      end
+
+      it "adds a connection to the pool if there is only one" do
+        allow(ActiveRecord::Base).to receive(:connection_pool).and_return(pool)
+
+        expect(pool).to receive(:instance_variable_get).with(:@size).and_return(1)
+        expect(pool).to receive(:instance_variable_set).with(:@size, 2)
+        subject.start_monitor_thread
       end
     end
 
