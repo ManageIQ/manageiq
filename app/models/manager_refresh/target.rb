@@ -9,6 +9,7 @@ module ManagerRefresh
     # @param manager [ManageIQ::Providers::BaseManager] The Manager owning the Target
     # @param manager_id [Integer] A primary key of the Manager owning the Target
     # @param event_id [Integer] A primary key of the EmsEvent associated with the Target
+    # @param payload_id [Integer] A primary key of a BinaryBlob containing the target inventory payload
     # @param options [Hash] A free form options hash
     def initialize(association:, manager_ref:, manager: nil, manager_id: nil, event_id: nil, payload_id: nil, options: {})
       raise "Provide either :manager or :manager_id argument" if manager.nil? && manager_id.nil?
