@@ -61,6 +61,11 @@ class Dialog < ApplicationRecord
       errors.add(:base, _("Dialog %{dialog_label} must have at least one Tab") % {:dialog_label => label})
     end
 
+    duplicated_field_names = duplicate_dialog_fields_names(dialog_fields)
+    unless duplicated_field_names.empty?
+      errors.add(:base, _("Dialog field name cannot be duplicated on a dialog: %{duplicates}") % {:duplicates => duplicated_field_names.join(', ')})
+    end
+
     dialog_tabs.each do |dt|
       next if dt.valid?
       dt.errors.full_messages.each do |err_msg|
@@ -150,6 +155,10 @@ class Dialog < ApplicationRecord
 
   def dialog_field_hash
     @dialog_field_hash ||= dialog_fields.each_with_object({}) { |df, hash| hash[df.name] = df }
+  end
+
+  def duplicate_dialog_fields_names(dialog_field_list = [])
+    dialog_field_list.pluck(:name).element_counts.select { |_k, v| v > 1 }.keys
   end
 
   def reject_if_has_resource_actions

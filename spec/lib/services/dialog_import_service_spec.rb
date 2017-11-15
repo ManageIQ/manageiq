@@ -8,8 +8,7 @@ describe DialogImportService do
 
   shared_context "DialogImportService dialog setup" do
     let(:dialog_fields) do
-      [{"name" => "FavoriteColor", "label" => "Favorite Color"},
-       {"name" => "dialog_field_2", "dialog_field_responders" => ["dialog_field"] }]
+      [{"name" => "FavoriteColor", "label" => "Favorite Color"}]
     end
 
     let(:dialog_groups) do
@@ -29,8 +28,7 @@ describe DialogImportService do
 
     before do
       built_dialog_field = DialogField.create(:name => "dialog_field")
-      built_dialog_field2 = DialogField.create(:name => "dialog_field_2")
-      allow(dialog_field_importer).to receive(:import_field).and_return(built_dialog_field, built_dialog_field2)
+      allow(dialog_field_importer).to receive(:import_field).and_return(built_dialog_field)
     end
   end
 
@@ -144,10 +142,28 @@ describe DialogImportService do
   end
 
   describe "#import_all_service_dialogs_from_yaml_file" do
-    include_context "DialogImportService dialog setup"
+    let(:dialog_fields) do
+      [{"name" => "dialog_field1"},
+       {"name" => "dialog_field2", "dialog_field_responders" => ["dialog_field"] }]
+    end
+
+    let(:dialog_groups) do
+      [{"label" => "New Box", "dialog_fields" => dialog_fields}]
+    end
+
+    let(:dialog_tabs) do
+      [{"label" => "New Tab", "dialog_groups" => dialog_groups}]
+    end
+
+    let(:dialog) do
+      [{"label" => "Test2", "dialog_tabs" => dialog_tabs, "description" => "potato"}]
+    end
 
     before do
-      allow(YAML).to receive(:load_file).with("filename").and_return(dialogs)
+      built_dialog_field = DialogField.create(:name => "dialog_field")
+      built_dialog_field2 = DialogField.create(:name => "dialog_field2")
+      allow(dialog_field_importer).to receive(:import_field).and_return(built_dialog_field, built_dialog_field2)
+      allow(YAML).to receive(:load_file).with("filename").and_return(dialog)
     end
 
     context "when there is already an existing dialog" do
