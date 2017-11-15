@@ -19,33 +19,17 @@ class CustomButton < ApplicationRecord
   PLAYBOOK_METHOD = "Order_Ansible_Playbook".freeze
 
   BUTTON_CLASSES = [
-    AvailabilityZone,
-    CloudNetwork,
-    CloudObjectStoreContainer,
-    CloudSubnet,
     CloudTenant,
     CloudVolume,
-    ContainerGroup,
-    ContainerImage,
     ContainerNode,
     ContainerProject,
-    ContainerTemplate,
-    ContainerVolume,
     EmsCluster,
     ExtManagementSystem,
     GenericObject,
     Host,
-    LoadBalancer,
-    MiqGroup,
     MiqTemplate,
-    NetworkRouter,
-    OrchestrationStack,
-    SecurityGroup,
     Service,
     Storage,
-    Switch,
-    Tenant,
-    User,
     Vm,
   ].freeze
 
