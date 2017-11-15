@@ -35,11 +35,17 @@ class MiqAlertSet < ApplicationRecord
     ContentImporter.import_from_hash(MiqAlertSet, MiqAlert, alert_profile, options)
   end
 
-  def self.import_from_yaml(fd)
+  def self.import_from_yaml(fd, options = {})
     input = YAML.load(fd)
     input.collect do |e|
-      _a, stat = import_from_hash(e["MiqAlertSet"])
+      _a, stat = import_from_hash(e["MiqAlertSet"], options)
       stat
     end
+  end
+
+  def self.seed
+    fixture_file = File.join(FIXTURE_DIR, "miq_alert_sets.yml")
+    return unless File.exist?(fixture_file)
+    File.open(fixture_file) { |fd| MiqAlertSet.import_from_yaml(fd, :save => true) }
   end
 end
