@@ -47,6 +47,8 @@ module VimConnectMixin
 
   module ClassMethods
     def raw_connect(options)
+      require 'handsoap'
+
       options[:pass] = MiqPassword.try_decrypt(options[:pass])
       validate_connection do
         if options[:fault_tolerant]
