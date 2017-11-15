@@ -19,9 +19,12 @@ class MiqVimBrokerWorker < MiqWorker
     return 1
   }
 
-  def self.has_required_role?
-    return false if emses_to_monitor.empty?
-    super
+  def self.should_start_worker?
+    super && emses_to_monitor?
+  end
+
+  def self.emses_to_monitor?
+    !emses_to_monitor.empty?
   end
 
   def self.emses_to_monitor
