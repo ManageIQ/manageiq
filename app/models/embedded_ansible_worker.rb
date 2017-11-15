@@ -13,6 +13,8 @@ class EmbeddedAnsibleWorker < MiqWorker
   end
 
   def start_monitor_thread
+    fix_connection_pool
+
     t = Thread.new do
       begin
         self.class::Runner.start_worker(worker_options)
@@ -58,4 +60,13 @@ class EmbeddedAnsibleWorker < MiqWorker
 
   # Base class methods we override since we don't have a separate process.  We might want to make these opt-in features in the base class that this subclass can choose to opt-out.
   def release_db_connection; end
+
+  private
+
+  def fix_connection_pool
+    # If we only have one connection in the pool, it will be being used by the server
+    # Add another so we can start the worker thread
+    current = ActiveRecord::Base.connection_pool.instance_variable_get(:@size)
+    ActiveRecord::Base.connection_pool.instance_variable_set(:@size, 2) if current == 1
+  end
 end
