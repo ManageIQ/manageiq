@@ -61,6 +61,11 @@ class Dialog < ApplicationRecord
       errors.add(:base, _("Dialog %{dialog_label} must have at least one Tab") % {:dialog_label => label})
     end
 
+    duplicate_field_names = dialog_fields.collect(&:name).duplicates
+    if duplicate_field_names.present?
+      errors.add(:base, _("Dialog field name cannot be duplicated on a dialog: %{duplicates}") % {:duplicates => duplicate_field_names.join(', ')})
+    end
+
     dialog_tabs.each do |dt|
       next if dt.valid?
       dt.errors.full_messages.each do |err_msg|

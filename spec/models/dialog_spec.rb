@@ -396,6 +396,27 @@ describe Dialog do
       expect { dialog.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Dialog #{dialog.label} must have at least one Tab")
     end
 
+    context "unique field names" do
+      before do
+        dialog.dialog_tabs << FactoryGirl.create(:dialog_tab, :label => 'tab')
+        dialog.dialog_tabs.first.dialog_groups << FactoryGirl.create(:dialog_group, :label => 'group')
+        dialog.dialog_tabs.first.dialog_groups.first.dialog_fields << FactoryGirl.create(:dialog_field, :label => 'field 1', :name => 'field1')
+      end
+
+      it "fails with two identical field names on different groups" do
+        dialog.dialog_tabs.first.dialog_groups << FactoryGirl.create(:dialog_group, :label => 'group2')
+        dialog.dialog_tabs.first.dialog_groups.last.dialog_fields << FactoryGirl.create(:dialog_field, :label => 'field 3', :name => 'field1')
+        expect { dialog.save! }
+          .to raise_error(ActiveRecord::RecordInvalid, /Dialog field name cannot be duplicated on a dialog: field1/)
+      end
+
+      it "fails with two identical field names on same group" do
+        dialog.dialog_tabs.first.dialog_groups.first.dialog_fields << FactoryGirl.create(:dialog_field, :label => 'field 3', :name => 'field1')
+        expect { dialog.save! }
+          .to raise_error(ActiveRecord::RecordInvalid, /Dialog field name cannot be duplicated on a dialog: field1/)
+      end
+    end
+
     it "validates with tab" do
       dialog.dialog_tabs << FactoryGirl.create(:dialog_tab, :label => 'tab')
       expect_any_instance_of(DialogTab).to receive(:valid?)
