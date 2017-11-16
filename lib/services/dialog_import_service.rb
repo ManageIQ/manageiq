@@ -129,7 +129,7 @@ class DialogImportService
         )
       )
       fields = new_or_existing_dialog.dialog_fields
-      associations_to_be_created.each do |association|
+      (associations_to_be_created + build_old_association_list(fields).flatten).reject(&:blank?).each do |association|
         association.values.each do |values|
           values.each do |responder|
             next if fields.select { |field| field.name == responder }.empty?
@@ -145,6 +145,35 @@ class DialogImportService
 
   def dialog_with_label?(label)
     Dialog.where("label" => label).exists?
+  end
+
+  def build_old_association_list(fields)
+    trigger_fields = absolute_position(fields.select(&:trigger_auto_refresh))
+    responder_fields = absolute_position(fields.select(&:auto_refresh))
+    trigger_fields.enum_for(:each_with_index).collect do |tf, index|
+      specific_responders = if trigger_fields[index + 1]
+                              responder_fields.select { |rf| responder_range(tf, trigger_fields[index + 1]).cover?(rf[:position]) }.pluck(:name)
+                            else
+                              responder_fields.select { |rf| responder_range(tf, nil).cover?(rf[:position]) }.pluck(:name)
+                            end
+      {tf[:name] => specific_responders}
+    end
+  end
+
+  def absolute_position(dialog_fields)
+    dialog_fields.collect do |f|
+      field_position = f.position
+      dialog_group_position = f.dialog_group.position
+      dialog_tab_position = f.dialog_group.dialog_tab.position
+      index = field_position + dialog_group_position * 1000 + dialog_tab_position * 100_000
+      {:name => f.name, :position => index}
+    end
+  end
+
+  def responder_range(trigger_min, trigger_max)
+    min = trigger_min[:position] + 1
+    max = trigger_max.present? ? trigger_max[:position] - 1 : 100_000_000
+    (min..max)
   end
 
   def destroy_queued_deletion(import_file_upload_id)

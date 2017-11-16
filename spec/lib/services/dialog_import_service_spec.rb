@@ -13,11 +13,11 @@ describe DialogImportService do
     end
 
     let(:dialog_groups) do
-      [{"label" => "New Box", "dialog_fields" => dialog_fields}]
+      [{"label" => "New Box", "dialog_fields" => dialog_fields, :position => 1}]
     end
 
     let(:dialog_tabs) do
-      [{"label" => "New Tab", "dialog_groups" => dialog_groups}]
+      [{"label" => "New Tab", "dialog_groups" => dialog_groups, :position => 4}]
     end
 
     let(:dialogs) do
@@ -30,7 +30,9 @@ describe DialogImportService do
     before do
       built_dialog_field = DialogField.create(:name => "dialog_field")
       built_dialog_field2 = DialogField.create(:name => "dialog_field_2")
-      allow(dialog_field_importer).to receive(:import_field).and_return(built_dialog_field, built_dialog_field2)
+      built_dialog_field3 = DialogField.create(:name => "df_with_old_trigger", :trigger_auto_refresh => true, :position => 0)
+      built_dialog_field4 = DialogField.create(:name => "df_with_old_responder", :auto_refresh => true, :position => 1)
+      allow(dialog_field_importer).to receive(:import_field).and_return(built_dialog_field, built_dialog_field2, built_dialog_field3, built_dialog_field4)
     end
   end
 
@@ -187,7 +189,12 @@ describe DialogImportService do
       it "sets associations" do
         expect do
           dialog_import_service.import_all_service_dialogs_from_yaml_file("filename")
-        end.to change(DialogFieldAssociation, :count).by(1)
+        end.to change(DialogFieldAssociation, :count).by(2)
+
+        expect(DialogField.find(DialogFieldAssociation.last.respond_id).name).to eq("df_with_old_responder")
+        expect(DialogField.find(DialogFieldAssociation.last.trigger_id).name).to eq("df_with_old_trigger")
+        expect(DialogField.find(DialogFieldAssociation.first.trigger_id).name).to eq("dialog_field_2")
+        expect(DialogField.find(DialogFieldAssociation.first.respond_id).name).to eq("dialog_field")
       end
     end
   end
