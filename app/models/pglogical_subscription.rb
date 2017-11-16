@@ -34,7 +34,6 @@ class PglogicalSubscription < ActsAsArModel
 
   def save!
     assert_different_region!
-    assert_valid_schemas!
     id ? update_subscription : create_subscription
   end
 
@@ -79,7 +78,6 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def enable
-    assert_valid_schemas!
     pglogical.subscription_enable(id).check
   end
 
@@ -218,16 +216,6 @@ class PglogicalSubscription < ActsAsArModel
     pglogical.subscription_create(new_subscription_name, dsn, [MiqPglogical::REPLICATION_SET_NAME],
                                   false).check
     self
-  end
-
-  def assert_valid_schemas!
-    local_errors = ManageIQ::Schema::Checker.check_schema
-    raise local_errors if local_errors
-    find_password if password.nil?
-    with_remote_connection do |conn|
-      remote_errors = ManageIQ::Schema::Checker.check_schema(conn)
-      raise remote_errors if remote_errors
-    end
   end
 
   def assert_different_region!
