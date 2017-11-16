@@ -128,14 +128,24 @@ class ManageIQ::Providers::Google::CloudManager::MetricsCapture < ManageIQ::Prov
   # @return nil
   def collect_metrics(google, start_time, end_time, schema, counter_values_by_ts)
     schema[:google_metric_names].each do |google_metric_name|
-      options = {
-        :labels => schema[:target_to_google_labels].call(target),
-        :oldest => start_time.to_datetime.rfc3339,
+
+      interval = {
+        :start_time => start_time.to_datetime.rfc3339,
+        :end_time => end_time.to_datetime.rfc3339
       }
+
+      filter = [
+        "metric.type = \"#{google_metric_name}\"",
+        ("resource.type = \"gce_instance\""
+         "resource.labels.resource_id = \"#{target.ems_ref}\"")
+      ].join(" AND ")
+
       # Make our service call for metrics; Note that we might get multiple
       # time series back (for example, if the host has multiple disks/network
       # cards)
-      tss = google.timeseries_collection.all(google_metric_name, end_time.to_datetime.rfc3339, options)
+
+      tss = google.timeseries_collection.all(:filter => filter,
+                                             :interval => interval)
 
       tss.each do |ts|
         collect_time_series_metrics(ts, schema, counter_values_by_ts)
@@ -159,7 +169,7 @@ class ManageIQ::Providers::Google::CloudManager::MetricsCapture < ManageIQ::Prov
       # minute; this allows us to sum up points across time series that may
       # have landed on different seconds. Note this only holds true for
       # 1-minute metrics.
-      timestamp = Time.zone.parse(point["start"]).beginning_of_minute
+      timestamp = Time.zone.parse(point["interval"]["startTime"]).beginning_of_minute
       val = schema[:point_to_val].call(point)
 
       # If we already have a value, reduce using our reduction function
