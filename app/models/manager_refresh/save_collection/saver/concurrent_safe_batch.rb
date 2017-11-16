@@ -65,7 +65,7 @@ module ManagerRefresh::SaveCollection
         all_attribute_keys << :created_on if supports_created_on?
         all_attribute_keys << :updated_on if supports_updated_on?
 
-        _log.info("*************** PROCESSING #{inventory_collection} of size #{inventory_collection.size} *************")
+        _log.debug("Processing #{inventory_collection} of size #{inventory_collection.size}...")
 
         update_or_destroy_records!(batch_iterator(association), inventory_objects_index, attributes_index, all_attribute_keys)
 
@@ -80,10 +80,10 @@ module ManagerRefresh::SaveCollection
             create_records!(all_attribute_keys, batch, attributes_index)
           end
         end
-        _log.info("*************** PROCESSED #{inventory_collection}, "\
-                  "created=#{inventory_collection.created_records.count}, "\
-                  "updated=#{inventory_collection.updated_records.count}, "\
-                  "deleted=#{inventory_collection.deleted_records.count} *************")
+        _log.debug("Processing #{inventory_collection}, "\
+                   "created=#{inventory_collection.created_records.count}, "\
+                   "updated=#{inventory_collection.updated_records.count}, "\
+                   "deleted=#{inventory_collection.deleted_records.count}...Complete")
       rescue => e
         _log.error("Error when saving #{inventory_collection} with #{inventory_collection_details}. Message: #{e.message}")
         raise e
