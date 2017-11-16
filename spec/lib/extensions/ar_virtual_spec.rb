@@ -33,12 +33,22 @@ describe VirtualFields do
         end
         belongs_to :ref1, :class_name => 'TestClass', :foreign_key => :col1
       end
+
+      class TestClassWithDeprecatedAttr < TestClassBase
+        self.table_name = :test_classes
+        include DeprecationMixin
+        def self.connection
+          TestClassBase.connection
+        end
+        deprecate_attribute :old_col1, :col1
+      end
     end
 
     after(:each) do
       TestClassBase.remove_connection
       Object.send(:remove_const, :TestClass)
       Object.send(:remove_const, :TestClassBase)
+      Object.send(:remove_const, :TestClassWithDeprecatedAttr)
     end
 
     it "should not have any virtual columns" do
@@ -517,6 +527,12 @@ describe VirtualFields do
         c = Class.new(ActsAsArModel)
 
         expect(c.attribute_supported_by_sql?(:col)).to eq(false)
+      end
+
+      it "supports deprecated attributes" do
+        expect(TestClassWithDeprecatedAttr.attribute_supported_by_sql?(:old_col1)).to eq(true)
+        expect(TestClassWithDeprecatedAttr.arel_attribute(:old_col1)).to_not be_nil
+        expect(TestClassWithDeprecatedAttr.arel_attribute(:old_col1).name).to eq("col1")
       end
     end
 
