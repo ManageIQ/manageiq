@@ -32,6 +32,7 @@
   - ems_network
   - ems_cluster
   - ems_infra
+  - ems_infra_admin_ui
   - ems_physical_infra
   - container_dashboard
   - ems_container
@@ -368,7 +369,6 @@
   - ems_infra_show_list
   - ems_infra_tag
   - ems_infra_timeline
-  - ems_infra_admin_ui
   - ems_physical_infra_new
   - ems_physical_infra_console
   - ems_physical_infra_delete
