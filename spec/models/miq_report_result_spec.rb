@@ -206,4 +206,67 @@ EOF
       ])
     end
   end
+
+  describe "#available_to_user?" do
+    let(:role) do
+      MiqUserRole.seed
+      MiqUserRole.find_by(:name => "EvmRole-operator")
+    end
+    let(:group) { FactoryGirl.create(:miq_group, :miq_user_role => role) }
+    let(:user) do
+      user = FactoryGirl.create(:user)
+      user.current_group_id = group.id
+      user
+    end
+    let(:report_result) { FactoryGirl.create(:miq_report_result) }
+
+    it "return true if user is admin" do
+      user_admin = FactoryGirl.create(:user_admin)
+      expect(report_result.available_to_user?(user_admin)).to be true
+    end
+
+    context "user group linked to report result" do
+      before do
+        report_result.miq_group = group
+      end
+
+      it "return true is user belongs to linked group" do
+        expect(report_result.available_to_user?(user)).to be true
+      end
+
+      it "returns fasle if user does not belong to linked group" do
+        another_group = FactoryGirl.create(:miq_group)
+        user.current_group_id = another_group.id
+        expect(report_result.available_to_user?(user)).to be false
+      end
+    end
+
+    context "report result does not have linked group and access driven by data in userid column" do
+      it "return true if userid field contains id of user" do
+        report_result.userid = "widget_id_2|#{user.userid}|schedule"
+        expect(report_result.available_to_user?(user)).to be true
+      end
+
+      it "returns true if userid field contains group user belongs to" do
+        report_result.userid = "widget_id_2|#{user.current_group.description}|schedule"
+        expect(report_result.available_to_user?(user)).to be true
+      end
+
+      it "returns true if userid field contains user's role" do
+        report_result.userid = "widget_id_2|#{user.miq_user_role_name}|schedule"
+        expect(report_result.available_to_user?(user)).to be true
+      end
+
+      it "returns true if userid field is user's id" do
+        report_result.userid = user.userid
+        expect(report_result.available_to_user?(user)).to be true
+      end
+
+      it "returns false if userid field does not include user's group, role, userid" do
+        another_group = FactoryGirl.create(:miq_group, :description => "some group")
+        report_result.userid = "widget_id_2|#{another_group.description}|schedule"
+        expect(report_result.available_to_user?(user)).to be false
+      end
+    end
+  end
 end

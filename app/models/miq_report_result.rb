@@ -27,6 +27,23 @@ class MiqReportResult < ApplicationRecord
     for_groups(user.admin_user? ? nil : user.miq_group_ids)
   }
 
+  def available_to_user?(user)
+    return true if user.admin_user?
+
+    return user.current_group_id == miq_group_id if miq_group_id
+
+    return true if userid == user.userid
+
+    user_group_or_role = userid.split("|")[1]
+    if user_group_or_role == user.current_group.try(:description) ||
+       user_group_or_role == user.miq_user_role_name ||
+       user_group_or_role == user.userid
+      return true
+    end
+
+    false
+  end
+
   before_save do
     user_info = userid.to_s.split("|")
     if user_info.length == 1
