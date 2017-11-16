@@ -307,4 +307,11 @@ describe Vm do
       expect(vm.cockpit_url).to eq(URI.parse("https://10.0.0.2/cws/=10.0.0.1"))
     end
   end
+
+  context "#supported_consoles" do
+    it 'returns all of the console types' do
+      vm = FactoryGirl.create(:vm)
+      expect(vm.supported_consoles.keys).to match_array([:spice, :vnc, :vmrc, :mks, :cockpit])
+    end
+  end
 end
