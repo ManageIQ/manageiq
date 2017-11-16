@@ -846,6 +846,8 @@ en:
       ManageIQ::Providers::Vmware::InfraManager::Host:                      Host (Vmware)
       ManageIQ::Providers::Vmware::InfraManager::HostEsx:                   Host (Vmware)
       ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalServer:    Physical Server (Lenovo)
+      ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerEap:     Middleware Server (EAP)
+      ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerWildfly: Middleware Server (Wildfly)
       MiddlewareDatasource:     Middleware Datasource
       MiddlewareDomain:         Middleware Domain
       MiddlewareMessaging:      Middleware Messaging

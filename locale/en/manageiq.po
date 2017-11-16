@@ -17785,6 +17785,14 @@ msgstr ""
 msgid "Middleware Server"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerEap
+msgid "Middleware Server (EAP)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerWildfly
+msgid "Middleware Server (Wildfly)"
+msgstr ""
+
 #. TRANSLATORS: en.yml key: dictionary.model.MiddlewareServerGroup
 #. TRANSLATORS: en.yml key: dictionary.table.middleware_server_group
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -17803,6 +17811,14 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.middleware_servers
 #. TRANSLATORS: file: product/views/MiddlewareServer.yaml
 msgid "Middleware Servers"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerEap (plural form)
+msgid "Middleware Servers (EAP)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerWildfly (plural form)
+msgid "Middleware Servers (Wildfly)"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml

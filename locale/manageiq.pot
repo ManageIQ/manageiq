@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 13:08+0100\n"
-"PO-Revision-Date: 2017-11-16 13:08+0100\n"
+"POT-Creation-Date: 2017-11-16 13:13+0100\n"
+"PO-Revision-Date: 2017-11-16 13:13+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -517,7 +517,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAction
 #. TRANSLATORS: file: product/views/MiqAction.yaml
-#: ../config/dictionary_strings.rb:1936 ../config/yaml_strings.rb:6761
+#: ../config/dictionary_strings.rb:1944 ../config/yaml_strings.rb:6761
 msgid "Action"
 msgstr ""
 
@@ -546,7 +546,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAction (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/MiqAction.yaml
-#: ../config/dictionary_strings.rb:1938 ../config/yaml_strings.rb:1175
+#: ../config/dictionary_strings.rb:1946 ../config/yaml_strings.rb:1175
 msgid "Actions"
 msgstr ""
 
@@ -1207,7 +1207,7 @@ msgid "Alarm"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAlert
-#: ../config/dictionary_strings.rb:1960
+#: ../config/dictionary_strings.rb:1968
 msgid "Alert"
 msgstr ""
 
@@ -1222,20 +1222,20 @@ msgid "Alert Definitions"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAlertSet
-#: ../config/dictionary_strings.rb:1964
+#: ../config/dictionary_strings.rb:1972
 msgid "Alert Profile"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAlertSet (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1966 ../config/yaml_strings.rb:1191
+#: ../config/dictionary_strings.rb:1974 ../config/yaml_strings.rb:1191
 msgid "Alert Profiles"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAlert (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/MiqAlert.yaml
-#: ../config/dictionary_strings.rb:1962 ../config/yaml_strings.rb:1206
+#: ../config/dictionary_strings.rb:1970 ../config/yaml_strings.rb:1206
 msgid "Alerts"
 msgstr ""
 
@@ -1425,14 +1425,14 @@ msgid "Analysis History"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ScanItemSet
-#: ../config/dictionary_strings.rb:2124
+#: ../config/dictionary_strings.rb:2132
 msgid "Analysis Profile"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ScanItemSet (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/ScanItemSet.yaml
-#: ../config/dictionary_strings.rb:2126 ../config/yaml_strings.rb:1612
+#: ../config/dictionary_strings.rb:2134 ../config/yaml_strings.rb:1612
 msgid "Analysis Profiles"
 msgstr ""
 
@@ -1550,7 +1550,7 @@ msgid "Approval State"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.miq_approvals
-#: ../config/dictionary_strings.rb:2556
+#: ../config/dictionary_strings.rb:2564
 msgid "Approvals"
 msgstr ""
 
@@ -2087,23 +2087,23 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAeClass
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1940 ../config/yaml_strings.rb:1324
+#: ../config/dictionary_strings.rb:1948 ../config/yaml_strings.rb:1324
 msgid "Automate Class"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAeClass (plural form)
-#: ../config/dictionary_strings.rb:1942
+#: ../config/dictionary_strings.rb:1950
 msgid "Automate Classes"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAeDomain
-#: ../config/dictionary_strings.rb:1944
+#: ../config/dictionary_strings.rb:1952
 msgid "Automate Domain"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAeDomain (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1946 ../config/yaml_strings.rb:1286
+#: ../config/dictionary_strings.rb:1954 ../config/yaml_strings.rb:1286
 msgid "Automate Domains"
 msgstr ""
 
@@ -2119,12 +2119,12 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAeInstance
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1948 ../config/yaml_strings.rb:1338
+#: ../config/dictionary_strings.rb:1956 ../config/yaml_strings.rb:1338
 msgid "Automate Instance"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAeInstance (plural form)
-#: ../config/dictionary_strings.rb:1950
+#: ../config/dictionary_strings.rb:1958
 msgid "Automate Instances"
 msgstr ""
 
@@ -2135,23 +2135,23 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAeMethod
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1952 ../config/yaml_strings.rb:1350
+#: ../config/dictionary_strings.rb:1960 ../config/yaml_strings.rb:1350
 msgid "Automate Method"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAeMethod (plural form)
-#: ../config/dictionary_strings.rb:1954
+#: ../config/dictionary_strings.rb:1962
 msgid "Automate Methods"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAeNamespace
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1956 ../config/yaml_strings.rb:1314
+#: ../config/dictionary_strings.rb:1964 ../config/yaml_strings.rb:1314
 msgid "Automate Namespace"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAeNamespace (plural form)
-#: ../config/dictionary_strings.rb:1958
+#: ../config/dictionary_strings.rb:1966
 msgid "Automate Namespaces"
 msgstr ""
 
@@ -2205,7 +2205,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-all_vms_and_templates.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-vms.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm.yaml
-#: ../config/dictionary_strings.rb:1262 ../config/dictionary_strings.rb:2206 ../config/yaml_strings.rb:6651
+#: ../config/dictionary_strings.rb:1262 ../config/dictionary_strings.rb:2214 ../config/yaml_strings.rb:6651
 msgid "Availability Zone"
 msgstr ""
 
@@ -2217,7 +2217,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.AvailabilityZone (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.availability_zone (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1264 ../config/dictionary_strings.rb:2208 ../config/yaml_strings.rb:386
+#: ../config/dictionary_strings.rb:1264 ../config/dictionary_strings.rb:2216 ../config/yaml_strings.rb:386
 msgid "Availability Zones"
 msgstr ""
 
@@ -2494,12 +2494,12 @@ msgid "Azure Orchestration Templates"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::CloudManager::OrchestrationTemplate
-#: ../config/dictionary_strings.rb:2068
+#: ../config/dictionary_strings.rb:2076
 msgid "Azure Template"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::CloudManager::OrchestrationTemplate (plural form)
-#: ../config/dictionary_strings.rb:2070
+#: ../config/dictionary_strings.rb:2078
 msgid "Azure Templates"
 msgstr ""
 
@@ -2514,12 +2514,12 @@ msgid "BIOS Location"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.base_snapshot
-#: ../config/dictionary_strings.rb:2214
+#: ../config/dictionary_strings.rb:2222
 msgid "Base Snapshot"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.base_snapshot (plural form)
-#: ../config/dictionary_strings.rb:2216
+#: ../config/dictionary_strings.rb:2224
 msgid "Base Snapshots"
 msgstr ""
 
@@ -2642,7 +2642,7 @@ msgid "Block Storage Based"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.ems_block_storage
-#: ../config/dictionary_strings.rb:2352
+#: ../config/dictionary_strings.rb:2360
 msgid "Block Storage Manager"
 msgstr ""
 
@@ -2650,7 +2650,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.ems_block_storages
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/ems_block_storage.yaml
-#: ../config/dictionary_strings.rb:2354 ../config/dictionary_strings.rb:2356 ../config/yaml_strings.rb:3244
+#: ../config/dictionary_strings.rb:2362 ../config/dictionary_strings.rb:2364 ../config/yaml_strings.rb:3244
 msgid "Block Storage Managers"
 msgstr ""
 
@@ -2800,7 +2800,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/Host-hosts.yaml
 #. TRANSLATORS: file: product/views/Host.yaml
 #. TRANSLATORS: file: product/views/MiqServer.yaml
-#: ../config/dictionary_strings.rb:1310 ../config/dictionary_strings.rb:2332 ../config/yaml_strings.rb:7257
+#: ../config/dictionary_strings.rb:1310 ../config/dictionary_strings.rb:2340 ../config/yaml_strings.rb:7257
 msgid "Build"
 msgstr ""
 
@@ -2825,13 +2825,13 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.container_build (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.container_builds
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1312 ../config/dictionary_strings.rb:2334 ../config/dictionary_strings.rb:2336 ../config/yaml_strings.rb:2573
+#: ../config/dictionary_strings.rb:1312 ../config/dictionary_strings.rb:2342 ../config/dictionary_strings.rb:2344 ../config/yaml_strings.rb:2573
 msgid "Builds"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.CustomButton
 #. TRANSLATORS: en.yml key: dictionary.table.custom_button
-#: ../config/dictionary_strings.rb:1314 ../config/dictionary_strings.rb:2344
+#: ../config/dictionary_strings.rb:1314 ../config/dictionary_strings.rb:2352
 msgid "Button"
 msgstr ""
 
@@ -2843,7 +2843,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.CustomButton (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.custom_button (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1316 ../config/dictionary_strings.rb:2346 ../config/yaml_strings.rb:1429
+#: ../config/dictionary_strings.rb:1316 ../config/dictionary_strings.rb:2354 ../config/yaml_strings.rb:1429
 msgid "Buttons"
 msgstr ""
 
@@ -2854,19 +2854,19 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.CustomButtonSet
 #. TRANSLATORS: en.yml key: dictionary.table.custom_button_set
-#: ../config/dictionary_strings.rb:1318 ../config/dictionary_strings.rb:2348
+#: ../config/dictionary_strings.rb:1318 ../config/dictionary_strings.rb:2356
 msgid "Buttons Group"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.CustomButtonSet (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.custom_button_set (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1320 ../config/dictionary_strings.rb:2350 ../config/yaml_strings.rb:1445
+#: ../config/dictionary_strings.rb:1320 ../config/dictionary_strings.rb:2358 ../config/yaml_strings.rb:1445
 msgid "Buttons Groups"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.cdroms
-#: ../config/dictionary_strings.rb:2222
+#: ../config/dictionary_strings.rb:2230
 msgid "CD/DVD Drives"
 msgstr ""
 
@@ -3716,12 +3716,12 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.ServiceTemplateCatalog
 #. TRANSLATORS: en.yml key: dictionary.table.service_template_catalog
 #. TRANSLATORS: file: product/views/ServiceTemplate.yaml
-#: ../config/dictionary_strings.rb:2136 ../config/dictionary_strings.rb:2672 ../config/yaml_strings.rb:7845
+#: ../config/dictionary_strings.rb:2144 ../config/dictionary_strings.rb:2680 ../config/yaml_strings.rb:7845
 msgid "Catalog"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.service_template
-#: ../config/dictionary_strings.rb:2668
+#: ../config/dictionary_strings.rb:2676
 msgid "Catalog Item"
 msgstr ""
 
@@ -3729,7 +3729,7 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/ServiceCatalog.yaml
 #. TRANSLATORS: file: product/views/ServiceTemplate.yaml
-#: ../config/dictionary_strings.rb:2670 ../config/yaml_strings.rb:205
+#: ../config/dictionary_strings.rb:2678 ../config/yaml_strings.rb:205
 msgid "Catalog Items"
 msgstr ""
 
@@ -3742,7 +3742,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.service_template_catalog (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/ServiceTemplateCatalog.yaml
-#: ../config/dictionary_strings.rb:2138 ../config/dictionary_strings.rb:2674 ../config/yaml_strings.rb:246
+#: ../config/dictionary_strings.rb:2146 ../config/dictionary_strings.rb:2682 ../config/yaml_strings.rb:246
 msgid "Catalogs"
 msgstr ""
 
@@ -4174,7 +4174,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.CloudNetwork
 #. TRANSLATORS: en.yml key: dictionary.table.cloud_network
-#: ../config/dictionary_strings.rb:1282 ../config/dictionary_strings.rb:2232
+#: ../config/dictionary_strings.rb:1282 ../config/dictionary_strings.rb:2240
 msgid "Cloud Network"
 msgstr ""
 
@@ -4205,7 +4205,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/CloudNetwork.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
 #. TRANSLATORS: file: product/views/OrchestrationStack.yaml
-#: ../config/dictionary_strings.rb:1284 ../config/dictionary_strings.rb:2234 ../config/yaml_strings.rb:2353
+#: ../config/dictionary_strings.rb:1284 ../config/dictionary_strings.rb:2242 ../config/yaml_strings.rb:2353
 msgid "Cloud Networks"
 msgstr ""
 
@@ -4227,7 +4227,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_openstack_infra_manager_cloud_networks
-#: ../config/dictionary_strings.rb:1718 ../config/dictionary_strings.rb:1722 ../config/dictionary_strings.rb:2572
+#: ../config/dictionary_strings.rb:1718 ../config/dictionary_strings.rb:1722 ../config/dictionary_strings.rb:2580
 msgid "Cloud Networks (OpenStack)"
 msgstr ""
 
@@ -4246,24 +4246,24 @@ msgid "Cloud Object Store"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.cloud_object_store_container
-#: ../config/dictionary_strings.rb:2224
+#: ../config/dictionary_strings.rb:2232
 msgid "Cloud Object Store Container"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.cloud_object_store_container (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:2226 ../config/yaml_strings.rb:440
+#: ../config/dictionary_strings.rb:2234 ../config/yaml_strings.rb:440
 msgid "Cloud Object Store Containers"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.cloud_object_store_object
-#: ../config/dictionary_strings.rb:2228
+#: ../config/dictionary_strings.rb:2236
 msgid "Cloud Object Store Object"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.cloud_object_store_object (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:2230 ../config/yaml_strings.rb:466
+#: ../config/dictionary_strings.rb:2238 ../config/yaml_strings.rb:466
 msgid "Cloud Object Store Objects"
 msgstr ""
 
@@ -4284,7 +4284,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/Flavor.yaml
 #. TRANSLATORS: file: product/views/HostAggregate.yaml
 #. TRANSLATORS: file: product/views/SecurityGroup.yaml
-#: ../config/dictionary_strings.rb:1604 ../config/dictionary_strings.rb:2358 ../config/yaml_strings.rb:6736
+#: ../config/dictionary_strings.rb:1604 ../config/dictionary_strings.rb:2366 ../config/yaml_strings.rb:6736
 msgid "Cloud Provider"
 msgstr ""
 
@@ -4313,7 +4313,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.ems_clouds
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
-#: ../config/dictionary_strings.rb:1606 ../config/dictionary_strings.rb:2360 ../config/dictionary_strings.rb:2362 ../config/yaml_strings.rb:330
+#: ../config/dictionary_strings.rb:1606 ../config/dictionary_strings.rb:2368 ../config/dictionary_strings.rb:2370 ../config/yaml_strings.rb:330
 msgid "Cloud Providers"
 msgstr ""
 
@@ -4345,7 +4345,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.CloudSubnet
 #. TRANSLATORS: en.yml key: dictionary.table.cloud_subnet
 #. TRANSLATORS: file: product/views/CloudSubnet.yaml
-#: ../config/dictionary_strings.rb:1286 ../config/dictionary_strings.rb:2236 ../config/yaml_strings.rb:7621
+#: ../config/dictionary_strings.rb:1286 ../config/dictionary_strings.rb:2244 ../config/yaml_strings.rb:7621
 msgid "Cloud Subnet"
 msgstr ""
 
@@ -4372,7 +4372,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.CloudSubnet (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.cloud_subnet (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1288 ../config/dictionary_strings.rb:2238 ../config/yaml_strings.rb:2391
+#: ../config/dictionary_strings.rb:1288 ../config/dictionary_strings.rb:2246 ../config/yaml_strings.rb:2391
 msgid "Cloud Subnets"
 msgstr ""
 
@@ -4403,7 +4403,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/CloudObjectStoreObject-cloud_object_store_objects.yaml
 #. TRANSLATORS: file: product/views/CloudObjectStoreObject.yaml
 #. TRANSLATORS: file: product/views/CloudTenant.yaml
-#: ../config/dictionary_strings.rb:1290 ../config/dictionary_strings.rb:2240 ../config/yaml_strings.rb:6718
+#: ../config/dictionary_strings.rb:1290 ../config/dictionary_strings.rb:2248 ../config/yaml_strings.rb:6718
 msgid "Cloud Tenant"
 msgstr ""
 
@@ -4416,13 +4416,13 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.cloud_tenant (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.cloud_tenants
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1292 ../config/dictionary_strings.rb:2242 ../config/dictionary_strings.rb:2244 ../config/yaml_strings.rb:484
+#: ../config/dictionary_strings.rb:1292 ../config/dictionary_strings.rb:2250 ../config/dictionary_strings.rb:2252 ../config/yaml_strings.rb:484
 msgid "Cloud Tenants"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager::CloudTenant (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_openstack_cloud_manager_cloud_tenant
-#: ../config/dictionary_strings.rb:1846 ../config/dictionary_strings.rb:2574
+#: ../config/dictionary_strings.rb:1846 ../config/dictionary_strings.rb:2582
 msgid "Cloud Tenants (OpenStack)"
 msgstr ""
 
@@ -4438,34 +4438,34 @@ msgstr ""
 #. TRANSLATORS: file: product/views/CloudVolumeBackup.yaml
 #. TRANSLATORS: file: product/views/CloudVolumeSnapshot-cloud_volume_snapshots.yaml
 #. TRANSLATORS: file: product/views/CloudVolumeSnapshot.yaml
-#: ../config/dictionary_strings.rb:1294 ../config/dictionary_strings.rb:2246 ../config/yaml_strings.rb:6779
+#: ../config/dictionary_strings.rb:1294 ../config/dictionary_strings.rb:2254 ../config/yaml_strings.rb:6779
 msgid "Cloud Volume"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.cloud_volume_backup
 #. TRANSLATORS: file: product/views/CloudVolumeBackup-cloud_volume_backups.yaml
 #. TRANSLATORS: file: product/views/CloudVolumeBackup.yaml
-#: ../config/dictionary_strings.rb:2252 ../config/yaml_strings.rb:6952
+#: ../config/dictionary_strings.rb:2260 ../config/yaml_strings.rb:6952
 msgid "Cloud Volume Backup"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.cloud_volume_backup (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:2254 ../config/yaml_strings.rb:588
+#: ../config/dictionary_strings.rb:2262 ../config/yaml_strings.rb:588
 msgid "Cloud Volume Backups"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.cloud_volume_snapshot
 #. TRANSLATORS: file: product/views/CloudVolumeSnapshot-cloud_volume_snapshots.yaml
 #. TRANSLATORS: file: product/views/CloudVolumeSnapshot.yaml
-#: ../config/dictionary_strings.rb:2256 ../config/yaml_strings.rb:6770
+#: ../config/dictionary_strings.rb:2264 ../config/yaml_strings.rb:6770
 msgid "Cloud Volume Snapshot"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.cloud_volume_snapshot (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.cloud_volume_snapshots
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:2258 ../config/dictionary_strings.rb:2260 ../config/yaml_strings.rb:572
+#: ../config/dictionary_strings.rb:2266 ../config/dictionary_strings.rb:2268 ../config/yaml_strings.rb:572
 msgid "Cloud Volume Snapshots"
 msgstr ""
 
@@ -4473,17 +4473,17 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.cloud_volume (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.cloud_volumes
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1296 ../config/dictionary_strings.rb:2248 ../config/dictionary_strings.rb:2250 ../config/yaml_strings.rb:510
+#: ../config/dictionary_strings.rb:1296 ../config/dictionary_strings.rb:2256 ../config/dictionary_strings.rb:2258 ../config/yaml_strings.rb:510
 msgid "Cloud Volumes"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.based_volumes
-#: ../config/dictionary_strings.rb:2218
+#: ../config/dictionary_strings.rb:2226
 msgid "Cloud Volumes Based on Snapshot"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.based_volumes (plural form)
-#: ../config/dictionary_strings.rb:2220
+#: ../config/dictionary_strings.rb:2228
 msgid "Cloud Volumes Based on Snapshots"
 msgstr ""
 
@@ -4638,12 +4638,12 @@ msgid "CloudDatabase|Used storage"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::CloudManager::OrchestrationTemplate
-#: ../config/dictionary_strings.rb:2060
+#: ../config/dictionary_strings.rb:2068
 msgid "CloudFormation Template"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::CloudManager::OrchestrationTemplate (plural form)
-#: ../config/dictionary_strings.rb:2062
+#: ../config/dictionary_strings.rb:2070
 msgid "CloudFormation Templates"
 msgstr ""
 
@@ -5168,13 +5168,13 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.EmsCluster
 #. TRANSLATORS: en.yml key: dictionary.table.ems_cluster
-#: ../config/dictionary_strings.rb:1382 ../config/dictionary_strings.rb:2364
+#: ../config/dictionary_strings.rb:1382 ../config/dictionary_strings.rb:2372
 msgid "Cluster / Deployment Role"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.EmsCluster (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.ems_cluster (plural form)
-#: ../config/dictionary_strings.rb:1384 ../config/dictionary_strings.rb:2366
+#: ../config/dictionary_strings.rb:1384 ../config/dictionary_strings.rb:2374
 msgid "Cluster / Deployment Roles"
 msgstr ""
 
@@ -5288,7 +5288,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.ems_clusters
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:2368 ../config/yaml_strings.rb:684
+#: ../config/dictionary_strings.rb:2376 ../config/yaml_strings.rb:684
 msgid "Clusters / Deployment Roles"
 msgstr ""
 
@@ -5440,14 +5440,14 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.Compliance (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.Compliances (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.compliances (plural form)
-#: ../config/dictionary_strings.rb:1300 ../config/dictionary_strings.rb:1304 ../config/dictionary_strings.rb:2266
+#: ../config/dictionary_strings.rb:1300 ../config/dictionary_strings.rb:1304 ../config/dictionary_strings.rb:2274
 msgid "Compliance Histories"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.Compliance
 #. TRANSLATORS: en.yml key: dictionary.model.Compliances
 #. TRANSLATORS: en.yml key: dictionary.table.compliances
-#: ../config/dictionary_strings.rb:1298 ../config/dictionary_strings.rb:1302 ../config/dictionary_strings.rb:2264
+#: ../config/dictionary_strings.rb:1298 ../config/dictionary_strings.rb:1302 ../config/dictionary_strings.rb:2272
 msgid "Compliance History"
 msgstr ""
 
@@ -5746,12 +5746,12 @@ msgid "Configuration Profile"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_foreman_configuration_manager_configuration_profile
-#: ../config/dictionary_strings.rb:2568
+#: ../config/dictionary_strings.rb:2576
 msgid "Configuration Profile (Foreman)"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_foreman_configuration_manager_configuration_profile (plural form)
-#: ../config/dictionary_strings.rb:2570
+#: ../config/dictionary_strings.rb:2578
 msgid "Configuration Profiles (Foreman)"
 msgstr ""
 
@@ -6000,7 +6000,7 @@ msgid "ConfigurationTag|Region number"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.configured_system
-#: ../config/dictionary_strings.rb:2268
+#: ../config/dictionary_strings.rb:2276
 msgid "Configured System"
 msgstr ""
 
@@ -6020,7 +6020,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.configured_system (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:2270 ../config/yaml_strings.rb:2722
+#: ../config/dictionary_strings.rb:2278 ../config/yaml_strings.rb:2722
 msgid "Configured Systems"
 msgstr ""
 
@@ -6186,7 +6186,7 @@ msgstr ""
 #. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
 #. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
 #. TRANSLATORS: file: product/views/Container.yaml
-#: ../config/dictionary_strings.rb:1326 ../config/dictionary_strings.rb:2272 ../config/yaml_strings.rb:4815 ../config/model_attributes.rb:530
+#: ../config/dictionary_strings.rb:1326 ../config/dictionary_strings.rb:2280 ../config/yaml_strings.rb:4815 ../config/model_attributes.rb:530
 msgid "Container"
 msgstr ""
 
@@ -8445,7 +8445,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/Container.yaml
 #. TRANSLATORS: file: product/views/ContainerGroup.yaml
 #. TRANSLATORS: file: product/views/ContainerProject.yaml
-#: ../config/dictionary_strings.rb:1328 ../config/dictionary_strings.rb:2274 ../config/dictionary_strings.rb:2276 ../config/yaml_strings.rb:7557
+#: ../config/dictionary_strings.rb:1328 ../config/dictionary_strings.rb:2282 ../config/dictionary_strings.rb:2284 ../config/yaml_strings.rb:7557
 msgid "Containers"
 msgstr ""
 
@@ -8467,7 +8467,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::ContainerManager
 #. TRANSLATORS: en.yml key: dictionary.table.ems_container
-#: ../config/dictionary_strings.rb:1652 ../config/dictionary_strings.rb:2394
+#: ../config/dictionary_strings.rb:1652 ../config/dictionary_strings.rb:2402
 msgid "Containers Provider"
 msgstr ""
 
@@ -8475,7 +8475,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.ems_container (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.ems_containers
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
-#: ../config/dictionary_strings.rb:1654 ../config/dictionary_strings.rb:2396 ../config/dictionary_strings.rb:2398 ../config/yaml_strings.rb:7837
+#: ../config/dictionary_strings.rb:1654 ../config/dictionary_strings.rb:2404 ../config/dictionary_strings.rb:2406 ../config/yaml_strings.rb:7837
 msgid "Containers Providers"
 msgstr ""
 
@@ -9422,14 +9422,14 @@ msgid "Customization Specification [%{name}] does not exist."
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.PxeCustomizationTemplate
-#: ../config/dictionary_strings.rb:2092
+#: ../config/dictionary_strings.rb:2100
 msgid "Customization Template"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.PxeCustomizationTemplate (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/CustomizationTemplate.yaml
-#: ../config/dictionary_strings.rb:2094 ../config/yaml_strings.rb:1834
+#: ../config/dictionary_strings.rb:2102 ../config/yaml_strings.rb:1834
 msgid "Customization Templates"
 msgstr ""
 
@@ -9730,7 +9730,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/VmOrTemplate-all_orphaned.yaml
 #. TRANSLATORS: file: product/views/VmOrTemplate-all_vms_and_templates.yaml
 #. TRANSLATORS: file: product/views/VmOrTemplate.yaml
-#: ../config/dictionary_strings.rb:2144 ../config/dictionary_strings.rb:2676 ../config/yaml_strings.rb:4732
+#: ../config/dictionary_strings.rb:2152 ../config/dictionary_strings.rb:2684 ../config/yaml_strings.rb:4732
 msgid "Datastore"
 msgstr ""
 
@@ -9751,7 +9751,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.StorageFile
 #. TRANSLATORS: en.yml key: dictionary.table.storage_file
-#: ../config/dictionary_strings.rb:2148 ../config/dictionary_strings.rb:2680
+#: ../config/dictionary_strings.rb:2156 ../config/dictionary_strings.rb:2688
 msgid "Datastore File"
 msgstr ""
 
@@ -9759,7 +9759,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.storage_file (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.storage_files
 #. TRANSLATORS: file: product/views/StorageFile-files.yaml
-#: ../config/dictionary_strings.rb:2150 ../config/dictionary_strings.rb:2682 ../config/dictionary_strings.rb:2684 ../config/yaml_strings.rb:7721
+#: ../config/dictionary_strings.rb:2158 ../config/dictionary_strings.rb:2690 ../config/dictionary_strings.rb:2692 ../config/yaml_strings.rb:7721
 msgid "Datastore Files"
 msgstr ""
 
@@ -9862,7 +9862,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/OntapStorageSystem.yaml
 #. TRANSLATORS: file: product/views/OntapStorageVolume.yaml
 #. TRANSLATORS: file: product/views/SniaLocalFileSystem.yaml
-#: ../config/dictionary_strings.rb:2146 ../config/dictionary_strings.rb:2678 ../config/dictionary_strings.rb:2686 ../config/yaml_strings.rb:845
+#: ../config/dictionary_strings.rb:2154 ../config/dictionary_strings.rb:2686 ../config/dictionary_strings.rb:2694 ../config/yaml_strings.rb:845
 msgid "Datastores"
 msgstr ""
 
@@ -9872,13 +9872,13 @@ msgid "Datastores Summary"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.ems_datawarehouse
-#: ../config/dictionary_strings.rb:2400
+#: ../config/dictionary_strings.rb:2408
 msgid "Datawarehouse Provider"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.ems_datawarehouse (plural form)
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
-#: ../config/dictionary_strings.rb:2402 ../config/yaml_strings.rb:7418
+#: ../config/dictionary_strings.rb:2410 ../config/yaml_strings.rb:7418
 msgid "Datawarehouse Providers"
 msgstr ""
 
@@ -10620,7 +10620,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.compliance_details
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:2262 ../config/yaml_strings.rb:3530
+#: ../config/dictionary_strings.rb:2270 ../config/yaml_strings.rb:3530
 msgid "Details"
 msgstr ""
 
@@ -10635,7 +10635,7 @@ msgid "Device Type"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.guest_devices
-#: ../config/dictionary_strings.rb:2512
+#: ../config/dictionary_strings.rb:2520
 msgid "Devices"
 msgstr ""
 
@@ -10665,7 +10665,7 @@ msgid "Diagnostics Zone Settings"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqDialog
-#: ../config/dictionary_strings.rb:1968 ../config/model_attributes.rb:1153
+#: ../config/dictionary_strings.rb:1976 ../config/model_attributes.rb:1153
 msgid "Dialog"
 msgstr ""
 
@@ -10880,7 +10880,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.MiqDialog (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/Dialog.yaml
-#: ../config/dictionary_strings.rb:1970 ../config/yaml_strings.rb:1377
+#: ../config/dictionary_strings.rb:1978 ../config/yaml_strings.rb:1377
 msgid "Dialogs"
 msgstr ""
 
@@ -12757,44 +12757,44 @@ msgid "EVM Audit Events"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.server_builds
-#: ../config/dictionary_strings.rb:2666
+#: ../config/dictionary_strings.rb:2674
 msgid "EVM Builds"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.miq_custom_attribute
-#: ../config/dictionary_strings.rb:2558
+#: ../config/dictionary_strings.rb:2566
 msgid "EVM Custom Attribute"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.miq_custom_attribute (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.miq_custom_attributes
-#: ../config/dictionary_strings.rb:2560 ../config/dictionary_strings.rb:2562
+#: ../config/dictionary_strings.rb:2568 ../config/dictionary_strings.rb:2570
 msgid "EVM Custom Attributes"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqGroup
-#: ../config/dictionary_strings.rb:1980
+#: ../config/dictionary_strings.rb:1988
 msgid "EVM Group"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqGroup (plural form)
-#: ../config/dictionary_strings.rb:1982
+#: ../config/dictionary_strings.rb:1990
 msgid "EVM Groups"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.evm_owner
-#: ../config/dictionary_strings.rb:2486
+#: ../config/dictionary_strings.rb:2494
 msgid "EVM Owner"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.evm_owner (plural form)
-#: ../config/dictionary_strings.rb:2488
+#: ../config/dictionary_strings.rb:2496
 msgid "EVM Owners"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.evm_server
 #. TRANSLATORS: file: product/views/MiqServer.yaml
-#: ../config/dictionary_strings.rb:2416 ../config/yaml_strings.rb:7266
+#: ../config/dictionary_strings.rb:2424 ../config/yaml_strings.rb:7266
 msgid "EVM Server"
 msgstr ""
 
@@ -12819,7 +12819,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.evm_server (plural form)
 #. TRANSLATORS: file: product/views/MiqServer.yaml
-#: ../config/dictionary_strings.rb:2418 ../config/yaml_strings.rb:7268
+#: ../config/dictionary_strings.rb:2426 ../config/yaml_strings.rb:7268
 msgid "EVM Servers"
 msgstr ""
 
@@ -12829,19 +12829,19 @@ msgid "EVM Unique ID (Guid)"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.User
-#: ../config/dictionary_strings.rb:2160
+#: ../config/dictionary_strings.rb:2168
 msgid "EVM User"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.User (plural form)
-#: ../config/dictionary_strings.rb:2162
+#: ../config/dictionary_strings.rb:2170
 msgid "EVM Users"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqWorker
 #. TRANSLATORS: en.yml key: dictionary.table.miq_worker
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
-#: ../config/dictionary_strings.rb:2040 ../config/dictionary_strings.rb:2620 ../config/yaml_strings.rb:7847
+#: ../config/dictionary_strings.rb:2048 ../config/dictionary_strings.rb:2628 ../config/yaml_strings.rb:7847
 msgid "EVM Worker"
 msgstr ""
 
@@ -12849,7 +12849,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.miq_worker (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.miq_workers
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
-#: ../config/dictionary_strings.rb:2042 ../config/dictionary_strings.rb:2622 ../config/dictionary_strings.rb:2624 ../config/yaml_strings.rb:7849
+#: ../config/dictionary_strings.rb:2050 ../config/dictionary_strings.rb:2630 ../config/dictionary_strings.rb:2632 ../config/yaml_strings.rb:7849
 msgid "EVM Workers"
 msgstr ""
 
@@ -14456,12 +14456,12 @@ msgid "Enter Maintenance Mode"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqEnterprise
-#: ../config/dictionary_strings.rb:1972
+#: ../config/dictionary_strings.rb:1980
 msgid "Enterprise"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqEnterprise (plural form)
-#: ../config/dictionary_strings.rb:1974
+#: ../config/dictionary_strings.rb:1982
 msgid "Enterprises"
 msgstr ""
 
@@ -14537,7 +14537,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.MiqEventDefinition
 #. TRANSLATORS: en.yml key: dictionary.table.miq_event_definition
 #. TRANSLATORS: file: product/views/MiqEvent.yaml
-#: ../config/dictionary_strings.rb:1976 ../config/dictionary_strings.rb:2564 ../config/yaml_strings.rb:7410
+#: ../config/dictionary_strings.rb:1984 ../config/dictionary_strings.rb:2572 ../config/yaml_strings.rb:7410
 msgid "Event"
 msgstr ""
 
@@ -14803,7 +14803,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.miq_event_definition (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/MiqEvent.yaml
-#: ../config/dictionary_strings.rb:1978 ../config/dictionary_strings.rb:2566 ../config/yaml_strings.rb:1168
+#: ../config/dictionary_strings.rb:1986 ../config/dictionary_strings.rb:2574 ../config/yaml_strings.rb:1168
 msgid "Events"
 msgstr ""
 
@@ -15853,7 +15853,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.filesystem_drivers
 #. TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
-#: ../config/dictionary_strings.rb:2496 ../config/yaml_strings.rb:7437
+#: ../config/dictionary_strings.rb:2504 ../config/yaml_strings.rb:7437
 msgid "File System Drivers"
 msgstr ""
 
@@ -15902,7 +15902,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.Filesystem (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.filesystems
 #. TRANSLATORS: file: product/views/Filesystem.yaml
-#: ../config/dictionary_strings.rb:1422 ../config/dictionary_strings.rb:2498 ../config/yaml_strings.rb:6796
+#: ../config/dictionary_strings.rb:1422 ../config/dictionary_strings.rb:2506 ../config/yaml_strings.rb:6796
 msgid "Files"
 msgstr ""
 
@@ -16130,7 +16130,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-all_vms_and_templates.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-vms.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm.yaml
-#: ../config/dictionary_strings.rb:1424 ../config/dictionary_strings.rb:2500 ../config/yaml_strings.rb:6991 ../config/model_attributes.rb:1546
+#: ../config/dictionary_strings.rb:1424 ../config/dictionary_strings.rb:2508 ../config/yaml_strings.rb:6991 ../config/model_attributes.rb:1546
 msgid "Flavor"
 msgstr ""
 
@@ -16144,7 +16144,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.flavors
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/Flavor.yaml
-#: ../config/dictionary_strings.rb:1426 ../config/dictionary_strings.rb:2502 ../config/dictionary_strings.rb:2504 ../config/yaml_strings.rb:609
+#: ../config/dictionary_strings.rb:1426 ../config/dictionary_strings.rb:2510 ../config/dictionary_strings.rb:2512 ../config/yaml_strings.rb:609
 msgid "Flavors"
 msgstr ""
 
@@ -16235,7 +16235,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.FloatingIp
 #. TRANSLATORS: en.yml key: dictionary.table.floating_ips
 #. TRANSLATORS: en.yml key: dictionary.table.floating_ip
-#: ../config/dictionary_strings.rb:1428 ../config/dictionary_strings.rb:2434 ../config/dictionary_strings.rb:2506
+#: ../config/dictionary_strings.rb:1428 ../config/dictionary_strings.rb:2442 ../config/dictionary_strings.rb:2514
 msgid "Floating IP"
 msgstr ""
 
@@ -16253,7 +16253,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.floating_ips (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.floating_ip (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1430 ../config/dictionary_strings.rb:2436 ../config/dictionary_strings.rb:2508 ../config/yaml_strings.rb:2328
+#: ../config/dictionary_strings.rb:1430 ../config/dictionary_strings.rb:2444 ../config/dictionary_strings.rb:2516 ../config/yaml_strings.rb:2328
 msgid "Floating IPs"
 msgstr ""
 
@@ -16320,7 +16320,7 @@ msgid "FloatingIp|Status"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.floppies
-#: ../config/dictionary_strings.rb:2510
+#: ../config/dictionary_strings.rb:2518
 msgid "Floppy Drives"
 msgstr ""
 
@@ -16328,7 +16328,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.ems_folder
 #. TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/010_VMs Relationships.yaml
 #. TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/020_VM Folders relationships.yaml
-#: ../config/dictionary_strings.rb:1394 ../config/dictionary_strings.rb:2382 ../config/yaml_strings.rb:5658
+#: ../config/dictionary_strings.rb:1394 ../config/dictionary_strings.rb:2390 ../config/yaml_strings.rb:5658
 msgid "Folder"
 msgstr ""
 
@@ -16400,7 +16400,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.EmsFolder (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.ems_folder (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.ems_folders
-#: ../config/dictionary_strings.rb:1396 ../config/dictionary_strings.rb:2384 ../config/dictionary_strings.rb:2386
+#: ../config/dictionary_strings.rb:1396 ../config/dictionary_strings.rb:2392 ../config/dictionary_strings.rb:2394
 msgid "Folders"
 msgstr ""
 
@@ -17267,12 +17267,12 @@ msgid "Health Status"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager::OrchestrationTemplate
-#: ../config/dictionary_strings.rb:2064
+#: ../config/dictionary_strings.rb:2072
 msgid "Heat Template"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager::OrchestrationTemplate (plural form)
-#: ../config/dictionary_strings.rb:2066
+#: ../config/dictionary_strings.rb:2074
 msgid "Heat Templates"
 msgstr ""
 
@@ -17378,27 +17378,27 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.Host
 #. TRANSLATORS: en.yml key: dictionary.table.host
-#: ../config/dictionary_strings.rb:1436 ../config/dictionary_strings.rb:2514
+#: ../config/dictionary_strings.rb:1436 ../config/dictionary_strings.rb:2522
 msgid "Host / Node"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.Host (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.host (plural form)
-#: ../config/dictionary_strings.rb:1438 ../config/dictionary_strings.rb:2516
+#: ../config/dictionary_strings.rb:1438 ../config/dictionary_strings.rb:2524
 msgid "Host / Nodes"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.HostAggregate
 #. TRANSLATORS: en.yml key: dictionary.table.host_aggregate
 #. TRANSLATORS: file: product/views/HostAggregate.yaml
-#: ../config/dictionary_strings.rb:1266 ../config/dictionary_strings.rb:2210 ../config/yaml_strings.rb:7781
+#: ../config/dictionary_strings.rb:1266 ../config/dictionary_strings.rb:2218 ../config/yaml_strings.rb:7781
 msgid "Host Aggregate"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.HostAggregate (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.host_aggregate (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1268 ../config/dictionary_strings.rb:2212 ../config/yaml_strings.rb:406
+#: ../config/dictionary_strings.rb:1268 ../config/dictionary_strings.rb:2220 ../config/yaml_strings.rb:406
 msgid "Host Aggregates"
 msgstr ""
 
@@ -17887,7 +17887,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.hosts
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:2518 ../config/yaml_strings.rb:725
+#: ../config/dictionary_strings.rb:2526 ../config/yaml_strings.rb:725
 msgid "Hosts / Nodes"
 msgstr ""
 
@@ -18399,7 +18399,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.IsoDatastore
 #. TRANSLATORS: en.yml key: dictionary.table.iso_datastore
-#: ../config/dictionary_strings.rb:1444 ../config/dictionary_strings.rb:2522
+#: ../config/dictionary_strings.rb:1444 ../config/dictionary_strings.rb:2530
 msgid "ISO Datastore"
 msgstr ""
 
@@ -18407,19 +18407,19 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.iso_datastore (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/IsoDatastore.yaml
-#: ../config/dictionary_strings.rb:1446 ../config/dictionary_strings.rb:2524 ../config/yaml_strings.rb:1866
+#: ../config/dictionary_strings.rb:1446 ../config/dictionary_strings.rb:2532 ../config/yaml_strings.rb:1866
 msgid "ISO Datastores"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.IsoImage
 #. TRANSLATORS: en.yml key: dictionary.table.iso_image
-#: ../config/dictionary_strings.rb:1448 ../config/dictionary_strings.rb:2526
+#: ../config/dictionary_strings.rb:1448 ../config/dictionary_strings.rb:2534
 msgid "ISO Image"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.IsoImage (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.iso_image (plural form)
-#: ../config/dictionary_strings.rb:1450 ../config/dictionary_strings.rb:2528
+#: ../config/dictionary_strings.rb:1450 ../config/dictionary_strings.rb:2536
 msgid "ISO Images"
 msgstr ""
 
@@ -18446,7 +18446,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.container_image
 #. TRANSLATORS: en.yml key: dictionary.table.template_cloud
 #. TRANSLATORS: file: product/views/Container.yaml
-#: ../config/dictionary_strings.rb:1636 ../config/dictionary_strings.rb:2290 ../config/dictionary_strings.rb:2690 ../config/yaml_strings.rb:7601
+#: ../config/dictionary_strings.rb:1636 ../config/dictionary_strings.rb:2298 ../config/dictionary_strings.rb:2698 ../config/yaml_strings.rb:7601
 msgid "Image"
 msgstr ""
 
@@ -18477,14 +18477,14 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.ContainerImageRegistry (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.container_image_registry (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.container_image_registries
-#: ../config/dictionary_strings.rb:1344 ../config/dictionary_strings.rb:2298 ../config/dictionary_strings.rb:2300
+#: ../config/dictionary_strings.rb:1344 ../config/dictionary_strings.rb:2306 ../config/dictionary_strings.rb:2308
 msgid "Image Registries"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ContainerImageRegistry
 #. TRANSLATORS: en.yml key: dictionary.table.container_image_registry
 #. TRANSLATORS: file: product/views/ContainerImage.yaml
-#: ../config/dictionary_strings.rb:1342 ../config/dictionary_strings.rb:2296 ../config/yaml_strings.rb:7879
+#: ../config/dictionary_strings.rb:1342 ../config/dictionary_strings.rb:2304 ../config/yaml_strings.rb:7879
 msgid "Image Registry"
 msgstr ""
 
@@ -18501,7 +18501,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ContainerProject.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template.yaml
-#: ../config/dictionary_strings.rb:1638 ../config/dictionary_strings.rb:2292 ../config/dictionary_strings.rb:2294 ../config/dictionary_strings.rb:2692 ../config/yaml_strings.rb:121
+#: ../config/dictionary_strings.rb:1638 ../config/dictionary_strings.rb:2300 ../config/dictionary_strings.rb:2302 ../config/dictionary_strings.rb:2700 ../config/yaml_strings.rb:121
 msgid "Images"
 msgstr ""
 
@@ -18600,7 +18600,7 @@ msgid "Incorrect format, only policy records can be imported."
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.VmdbIndex
-#: ../config/dictionary_strings.rb:2172
+#: ../config/dictionary_strings.rb:2180
 msgid "Index"
 msgstr ""
 
@@ -18611,7 +18611,7 @@ msgid "Index Nodes"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.VmdbIndex (plural form)
-#: ../config/dictionary_strings.rb:2174
+#: ../config/dictionary_strings.rb:2182
 msgid "Indices"
 msgstr ""
 
@@ -18632,7 +18632,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::InfraManager
 #. TRANSLATORS: en.yml key: dictionary.table.ems_infra
-#: ../config/dictionary_strings.rb:1656 ../config/dictionary_strings.rb:2388
+#: ../config/dictionary_strings.rb:1656 ../config/dictionary_strings.rb:2396
 msgid "Infrastructure Provider"
 msgstr ""
 
@@ -18661,7 +18661,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.ems_infras
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
-#: ../config/dictionary_strings.rb:1658 ../config/dictionary_strings.rb:2390 ../config/dictionary_strings.rb:2392 ../config/yaml_strings.rb:628
+#: ../config/dictionary_strings.rb:1658 ../config/dictionary_strings.rb:2398 ../config/dictionary_strings.rb:2400 ../config/yaml_strings.rb:628
 msgid "Infrastructure Providers"
 msgstr ""
 
@@ -18708,7 +18708,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager::Vm
 #. TRANSLATORS: en.yml key: dictionary.table.vm_cloud
-#: ../config/dictionary_strings.rb:1612 ../config/dictionary_strings.rb:2702
+#: ../config/dictionary_strings.rb:1612 ../config/dictionary_strings.rb:2710
 msgid "Instance"
 msgstr ""
 
@@ -18779,7 +18779,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/NetworkRouter.yaml
 #. TRANSLATORS: file: product/views/OrchestrationStack.yaml
 #. TRANSLATORS: file: product/views/SecurityGroup.yaml
-#: ../config/dictionary_strings.rb:1614 ../config/dictionary_strings.rb:2704 ../config/dictionary_strings.rb:2706 ../config/yaml_strings.rb:102
+#: ../config/dictionary_strings.rb:1614 ../config/dictionary_strings.rb:2712 ../config/dictionary_strings.rb:2714 ../config/yaml_strings.rb:102
 msgid "Instances"
 msgstr ""
 
@@ -19121,14 +19121,14 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager::AuthKeyPair
 #. TRANSLATORS: en.yml key: dictionary.table.auth_key_pair_cloud
-#: ../config/dictionary_strings.rb:1608 ../config/dictionary_strings.rb:2200
+#: ../config/dictionary_strings.rb:1608 ../config/dictionary_strings.rb:2208
 msgid "Key Pair"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager::AuthKeyPair (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.auth_key_pair_cloud (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.auth_key_pair_clouds
-#: ../config/dictionary_strings.rb:1610 ../config/dictionary_strings.rb:2202 ../config/dictionary_strings.rb:2204
+#: ../config/dictionary_strings.rb:1610 ../config/dictionary_strings.rb:2210 ../config/dictionary_strings.rb:2212
 msgid "Key Pairs"
 msgstr ""
 
@@ -19153,19 +19153,19 @@ msgid "Kilobytes per Second (12,34 KBps)"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.ldap
-#: ../config/dictionary_strings.rb:2536
+#: ../config/dictionary_strings.rb:2544
 msgid "LDAP"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.LdapDomain
 #. TRANSLATORS: en.yml key: dictionary.table.ldap_domain
-#: ../config/dictionary_strings.rb:1452 ../config/dictionary_strings.rb:2540
+#: ../config/dictionary_strings.rb:1452 ../config/dictionary_strings.rb:2548
 msgid "LDAP Domain"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.LdapDomain (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.ldap_domain (plural form)
-#: ../config/dictionary_strings.rb:1454 ../config/dictionary_strings.rb:2542
+#: ../config/dictionary_strings.rb:1454 ../config/dictionary_strings.rb:2550
 msgid "LDAP Domains"
 msgstr ""
 
@@ -19177,30 +19177,30 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.LdapRegion
 #. TRANSLATORS: en.yml key: dictionary.table.ldap_region
-#: ../config/dictionary_strings.rb:1456 ../config/dictionary_strings.rb:2544
+#: ../config/dictionary_strings.rb:1456 ../config/dictionary_strings.rb:2552
 msgid "LDAP Region"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.LdapRegion (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.ldap_region (plural form)
-#: ../config/dictionary_strings.rb:1458 ../config/dictionary_strings.rb:2546
+#: ../config/dictionary_strings.rb:1458 ../config/dictionary_strings.rb:2554
 msgid "LDAP Regions"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.LdapServer
 #. TRANSLATORS: en.yml key: dictionary.table.ldap_server
-#: ../config/dictionary_strings.rb:1460 ../config/dictionary_strings.rb:2548
+#: ../config/dictionary_strings.rb:1460 ../config/dictionary_strings.rb:2556
 msgid "LDAP Server"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.LdapServer (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.ldap_server (plural form)
-#: ../config/dictionary_strings.rb:1462 ../config/dictionary_strings.rb:2550
+#: ../config/dictionary_strings.rb:1462 ../config/dictionary_strings.rb:2558
 msgid "LDAP Servers"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.ldap (plural form)
-#: ../config/dictionary_strings.rb:2538
+#: ../config/dictionary_strings.rb:2546
 msgid "LDAPs"
 msgstr ""
 
@@ -19365,12 +19365,12 @@ msgid "Last Checkin"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.last_compliance (plural form)
-#: ../config/dictionary_strings.rb:2534
+#: ../config/dictionary_strings.rb:2542
 msgid "Last Compliance Histories"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.last_compliance
-#: ../config/dictionary_strings.rb:2532
+#: ../config/dictionary_strings.rb:2540
 msgid "Last Compliance History"
 msgstr ""
 
@@ -19815,7 +19815,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.linux_initprocesses
 #. TRANSLATORS: file: product/views/SystemService-linux_initprocesses.yaml
-#: ../config/dictionary_strings.rb:2552 ../config/yaml_strings.rb:7170
+#: ../config/dictionary_strings.rb:2560 ../config/yaml_strings.rb:7170
 msgid "Linux Init Processes"
 msgstr ""
 
@@ -19837,7 +19837,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.LoadBalancer
 #. TRANSLATORS: en.yml key: dictionary.table.load_balancer
 #. TRANSLATORS: file: product/views/LoadBalancer.yaml
-#: ../app/models/service_template.rb:9 ../config/dictionary_strings.rb:1464 ../config/dictionary_strings.rb:2438 ../config/yaml_strings.rb:7651
+#: ../app/models/service_template.rb:9 ../config/dictionary_strings.rb:1464 ../config/dictionary_strings.rb:2446 ../config/yaml_strings.rb:7651
 msgid "Load Balancer"
 msgstr ""
 
@@ -19859,7 +19859,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.LoadBalancer (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.load_balancer (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1466 ../config/dictionary_strings.rb:2440 ../config/yaml_strings.rb:2443
+#: ../config/dictionary_strings.rb:1466 ../config/dictionary_strings.rb:2448 ../config/yaml_strings.rb:2443
 msgid "Load Balancers"
 msgstr ""
 
@@ -20496,7 +20496,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.EmsEvent
 #. TRANSLATORS: en.yml key: dictionary.table.ems_event
-#: ../config/dictionary_strings.rb:1390 ../config/dictionary_strings.rb:2376
+#: ../config/dictionary_strings.rb:1390 ../config/dictionary_strings.rb:2384
 msgid "Management Event"
 msgstr ""
 
@@ -20509,7 +20509,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.EmsEvent (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.ems_event (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.ems_events
-#: ../config/dictionary_strings.rb:1392 ../config/dictionary_strings.rb:2378 ../config/dictionary_strings.rb:2380
+#: ../config/dictionary_strings.rb:1392 ../config/dictionary_strings.rb:2386 ../config/dictionary_strings.rb:2388
 msgid "Management Events"
 msgstr ""
 
@@ -22476,7 +22476,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.MiddlewareDatasource
 #. TRANSLATORS: en.yml key: dictionary.table.middleware_datasource
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1912 ../config/dictionary_strings.rb:2448 ../config/yaml_strings.rb:2150
+#: ../config/dictionary_strings.rb:1920 ../config/dictionary_strings.rb:2456 ../config/yaml_strings.rb:2150
 msgid "Middleware Datasource"
 msgstr ""
 
@@ -22484,14 +22484,14 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.middleware_datasource (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.middleware_datasources
 #. TRANSLATORS: file: product/views/MiddlewareDatasource.yaml
-#: ../config/dictionary_strings.rb:1914 ../config/dictionary_strings.rb:2450 ../config/dictionary_strings.rb:2452 ../config/yaml_strings.rb:6943
+#: ../config/dictionary_strings.rb:1922 ../config/dictionary_strings.rb:2458 ../config/dictionary_strings.rb:2460 ../config/yaml_strings.rb:6943
 msgid "Middleware Datasources"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiddlewareDeployment
 #. TRANSLATORS: en.yml key: dictionary.table.middleware_deployment
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1924 ../config/dictionary_strings.rb:2466 ../config/yaml_strings.rb:2110
+#: ../config/dictionary_strings.rb:1932 ../config/dictionary_strings.rb:2474 ../config/yaml_strings.rb:2110
 msgid "Middleware Deployment"
 msgstr ""
 
@@ -22499,7 +22499,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.middleware_deployment (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.middleware_deployments
 #. TRANSLATORS: file: product/views/MiddlewareDeployment.yaml
-#: ../config/dictionary_strings.rb:1926 ../config/dictionary_strings.rb:2468 ../config/dictionary_strings.rb:2470 ../config/yaml_strings.rb:6676
+#: ../config/dictionary_strings.rb:1934 ../config/dictionary_strings.rb:2476 ../config/dictionary_strings.rb:2478 ../config/yaml_strings.rb:6676
 msgid "Middleware Deployments"
 msgstr ""
 
@@ -22511,7 +22511,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.MiddlewareDomain
 #. TRANSLATORS: en.yml key: dictionary.table.middleware_domain
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1916 ../config/dictionary_strings.rb:2454 ../config/yaml_strings.rb:2174
+#: ../config/dictionary_strings.rb:1924 ../config/dictionary_strings.rb:2462 ../config/yaml_strings.rb:2174
 msgid "Middleware Domain"
 msgstr ""
 
@@ -22519,7 +22519,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.middleware_domain (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.middleware_domains
 #. TRANSLATORS: file: product/views/MiddlewareDomain.yaml
-#: ../config/dictionary_strings.rb:1918 ../config/dictionary_strings.rb:2456 ../config/dictionary_strings.rb:2458 ../config/yaml_strings.rb:6738
+#: ../config/dictionary_strings.rb:1926 ../config/dictionary_strings.rb:2464 ../config/dictionary_strings.rb:2466 ../config/yaml_strings.rb:6738
 msgid "Middleware Domains"
 msgstr ""
 
@@ -22527,20 +22527,20 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.middleware_messaging
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/MiddlewareMessaging.yaml
-#: ../config/dictionary_strings.rb:1920 ../config/dictionary_strings.rb:2460 ../config/yaml_strings.rb:2231
+#: ../config/dictionary_strings.rb:1928 ../config/dictionary_strings.rb:2468 ../config/yaml_strings.rb:2231
 msgid "Middleware Messaging"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiddlewareMessaging (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.middleware_messaging (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.middleware_messagings
-#: ../config/dictionary_strings.rb:1922 ../config/dictionary_strings.rb:2462 ../config/dictionary_strings.rb:2464
+#: ../config/dictionary_strings.rb:1930 ../config/dictionary_strings.rb:2470 ../config/dictionary_strings.rb:2472
 msgid "Middleware Messagings"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::MiddlewareManager
 #. TRANSLATORS: en.yml key: dictionary.table.ems_middleware
-#: ../config/dictionary_strings.rb:1668 ../config/dictionary_strings.rb:2404
+#: ../config/dictionary_strings.rb:1668 ../config/dictionary_strings.rb:2412
 msgid "Middleware Provider"
 msgstr ""
 
@@ -22548,7 +22548,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.ems_middleware (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.ems_middlewares
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
-#: ../config/dictionary_strings.rb:1670 ../config/dictionary_strings.rb:2406 ../config/dictionary_strings.rb:2408 ../config/yaml_strings.rb:7865
+#: ../config/dictionary_strings.rb:1670 ../config/dictionary_strings.rb:2414 ../config/dictionary_strings.rb:2416 ../config/yaml_strings.rb:7865
 msgid "Middleware Providers"
 msgstr ""
 
@@ -22561,14 +22561,24 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.MiddlewareServer
 #. TRANSLATORS: en.yml key: dictionary.table.middleware_server
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1928 ../config/dictionary_strings.rb:2442 ../config/yaml_strings.rb:2036
+#: ../config/dictionary_strings.rb:1936 ../config/dictionary_strings.rb:2450 ../config/yaml_strings.rb:2036
 msgid "Middleware Server"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerEap
+#: ../config/dictionary_strings.rb:1912
+msgid "Middleware Server (EAP)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerWildfly
+#: ../config/dictionary_strings.rb:1916
+msgid "Middleware Server (Wildfly)"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiddlewareServerGroup
 #. TRANSLATORS: en.yml key: dictionary.table.middleware_server_group
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1932 ../config/dictionary_strings.rb:2472 ../config/yaml_strings.rb:2190
+#: ../config/dictionary_strings.rb:1940 ../config/dictionary_strings.rb:2480 ../config/yaml_strings.rb:2190
 msgid "Middleware Server Group"
 msgstr ""
 
@@ -22576,7 +22586,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.middleware_server_group (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.middleware_server_groups
 #. TRANSLATORS: file: product/views/MiddlewareServerGroup.yaml
-#: ../config/dictionary_strings.rb:1934 ../config/dictionary_strings.rb:2474 ../config/dictionary_strings.rb:2476 ../config/yaml_strings.rb:7153
+#: ../config/dictionary_strings.rb:1942 ../config/dictionary_strings.rb:2482 ../config/dictionary_strings.rb:2484 ../config/yaml_strings.rb:7153
 msgid "Middleware Server Groups"
 msgstr ""
 
@@ -22584,8 +22594,18 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.middleware_server (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.middleware_servers
 #. TRANSLATORS: file: product/views/MiddlewareServer.yaml
-#: ../config/dictionary_strings.rb:1930 ../config/dictionary_strings.rb:2444 ../config/dictionary_strings.rb:2446 ../config/yaml_strings.rb:7404
+#: ../config/dictionary_strings.rb:1938 ../config/dictionary_strings.rb:2452 ../config/dictionary_strings.rb:2454 ../config/yaml_strings.rb:7404
 msgid "Middleware Servers"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerEap (plural form)
+#: ../config/dictionary_strings.rb:1914
+msgid "Middleware Servers (EAP)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerWildfly (plural form)
+#: ../config/dictionary_strings.rb:1918
+msgid "Middleware Servers (Wildfly)"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -26539,7 +26559,7 @@ msgid "Network"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.nics
-#: ../config/dictionary_strings.rb:2630
+#: ../config/dictionary_strings.rb:2638
 msgid "Network Adapters"
 msgstr ""
 
@@ -26742,7 +26762,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.NetworkPort
 #. TRANSLATORS: en.yml key: dictionary.table.network_port
 #. TRANSLATORS: file: product/views/NetworkPort.yaml
-#: ../config/dictionary_strings.rb:2044 ../config/dictionary_strings.rb:2478 ../config/yaml_strings.rb:7439
+#: ../config/dictionary_strings.rb:2052 ../config/dictionary_strings.rb:2486 ../config/yaml_strings.rb:7439
 msgid "Network Port"
 msgstr ""
 
@@ -26774,7 +26794,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.NetworkPort (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.network_port (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:2046 ../config/dictionary_strings.rb:2480 ../config/yaml_strings.rb:2373
+#: ../config/dictionary_strings.rb:2054 ../config/dictionary_strings.rb:2488 ../config/yaml_strings.rb:2373
 msgid "Network Ports"
 msgstr ""
 
@@ -26805,7 +26825,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/LoadBalancer.yaml
 #. TRANSLATORS: file: product/views/NetworkPort.yaml
 #. TRANSLATORS: file: product/views/NetworkRouter.yaml
-#: ../config/dictionary_strings.rb:2420 ../config/yaml_strings.rb:7435
+#: ../config/dictionary_strings.rb:2428 ../config/yaml_strings.rb:7435
 msgid "Network Provider"
 msgstr ""
 
@@ -26827,7 +26847,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.ems_network (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_NetworkManager.yaml
-#: ../config/dictionary_strings.rb:2422 ../config/yaml_strings.rb:2274
+#: ../config/dictionary_strings.rb:2430 ../config/yaml_strings.rb:2274
 msgid "Network Providers"
 msgstr ""
 
@@ -26849,7 +26869,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.NetworkRouter
 #. TRANSLATORS: en.yml key: dictionary.table.network_router
 #. TRANSLATORS: file: product/views/NetworkRouter.yaml
-#: ../config/dictionary_strings.rb:2048 ../config/dictionary_strings.rb:2482 ../config/yaml_strings.rb:7426
+#: ../config/dictionary_strings.rb:2056 ../config/dictionary_strings.rb:2490 ../config/yaml_strings.rb:7426
 msgid "Network Router"
 msgstr ""
 
@@ -26866,7 +26886,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.NetworkRouter (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.network_router (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:2050 ../config/dictionary_strings.rb:2484 ../config/yaml_strings.rb:2413
+#: ../config/dictionary_strings.rb:2058 ../config/dictionary_strings.rb:2492 ../config/yaml_strings.rb:2413
 msgid "Network Routers"
 msgstr ""
 
@@ -27280,7 +27300,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ContainerNode
 #. TRANSLATORS: en.yml key: dictionary.table.container_node
-#: ../config/dictionary_strings.rb:1350 ../config/dictionary_strings.rb:2302
+#: ../config/dictionary_strings.rb:1350 ../config/dictionary_strings.rb:2310
 msgid "Node"
 msgstr ""
 
@@ -27293,7 +27313,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.container_node (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.container_nodes
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1352 ../config/dictionary_strings.rb:2304 ../config/dictionary_strings.rb:2306 ../config/yaml_strings.rb:2480
+#: ../config/dictionary_strings.rb:1352 ../config/dictionary_strings.rb:2312 ../config/dictionary_strings.rb:2314 ../config/yaml_strings.rb:2480
 msgid "Nodes"
 msgstr ""
 
@@ -27565,7 +27585,7 @@ msgid "Number, 2 Decimals (1,234.00)"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.operating_system
-#: ../config/dictionary_strings.rb:2640
+#: ../config/dictionary_strings.rb:2648
 msgid "OS"
 msgstr ""
 
@@ -27628,7 +27648,7 @@ msgid "Object Name"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.ems_object_storage
-#: ../config/dictionary_strings.rb:2410
+#: ../config/dictionary_strings.rb:2418
 msgid "Object Storage Manager"
 msgstr ""
 
@@ -27636,7 +27656,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.ems_object_storages
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/ems_object_storage.yaml
-#: ../config/dictionary_strings.rb:2412 ../config/dictionary_strings.rb:2414 ../config/yaml_strings.rb:3269
+#: ../config/dictionary_strings.rb:2420 ../config/dictionary_strings.rb:2422 ../config/yaml_strings.rb:3269
 msgid "Object Storage Managers"
 msgstr ""
 
@@ -27991,7 +28011,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.OrchestrationStack
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
 #. TRANSLATORS: file: product/views/OrchestrationStack.yaml
-#: ../config/dictionary_strings.rb:1648 ../config/dictionary_strings.rb:2052 ../config/yaml_strings.rb:7287
+#: ../config/dictionary_strings.rb:1648 ../config/dictionary_strings.rb:2060 ../config/yaml_strings.rb:7287
 msgid "Orchestration Stack"
 msgstr ""
 
@@ -28019,7 +28039,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager::OrchestrationStack (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.OrchestrationStack (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1650 ../config/dictionary_strings.rb:2054 ../config/yaml_strings.rb:1918
+#: ../config/dictionary_strings.rb:1650 ../config/dictionary_strings.rb:2062 ../config/yaml_strings.rb:1918
 msgid "Orchestration Stacks"
 msgstr ""
 
@@ -28042,7 +28062,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.OrchestrationTemplate
 #. TRANSLATORS: en.yml key: dictionary.table.orchestration_template
 #. TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
-#: ../config/dictionary_strings.rb:2056 ../config/dictionary_strings.rb:2636 ../config/yaml_strings.rb:7295
+#: ../config/dictionary_strings.rb:2064 ../config/dictionary_strings.rb:2644 ../config/yaml_strings.rb:7295
 msgid "Orchestration Template"
 msgstr ""
 
@@ -28050,7 +28070,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.orchestration_template (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
-#: ../config/dictionary_strings.rb:2058 ../config/dictionary_strings.rb:2638 ../config/yaml_strings.rb:265
+#: ../config/dictionary_strings.rb:2066 ../config/dictionary_strings.rb:2646 ../config/yaml_strings.rb:265
 msgid "Orchestration Templates"
 msgstr ""
 
@@ -28447,24 +28467,24 @@ msgid "PXE"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.PxeImage
-#: ../config/dictionary_strings.rb:2096
+#: ../config/dictionary_strings.rb:2104
 msgid "PXE Image"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.PxeImage (plural form)
-#: ../config/dictionary_strings.rb:2098
+#: ../config/dictionary_strings.rb:2106
 msgid "PXE Images"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.PxeServer
-#: ../config/dictionary_strings.rb:2104
+#: ../config/dictionary_strings.rb:2112
 msgid "PXE Server"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.PxeServer (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/PxeServer.yaml
-#: ../config/dictionary_strings.rb:2106 ../config/yaml_strings.rb:1807
+#: ../config/dictionary_strings.rb:2114 ../config/yaml_strings.rb:1807
 msgid "PXE Servers"
 msgstr ""
 
@@ -29225,12 +29245,12 @@ msgid "Performance - Containers"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.StoragePerformance
-#: ../config/dictionary_strings.rb:2152
+#: ../config/dictionary_strings.rb:2160
 msgid "Performance - Datastore"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.StoragePerformance (plural form)
-#: ../config/dictionary_strings.rb:2154
+#: ../config/dictionary_strings.rb:2162
 msgid "Performance - Datastores"
 msgstr ""
 
@@ -29265,12 +29285,12 @@ msgid "Performance - Providers"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.VmPerformance
-#: ../config/dictionary_strings.rb:2184
+#: ../config/dictionary_strings.rb:2192
 msgid "Performance - VM"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.VmPerformance (plural form)
-#: ../config/dictionary_strings.rb:2186
+#: ../config/dictionary_strings.rb:2194
 msgid "Performance - VMs"
 msgstr ""
 
@@ -29279,12 +29299,12 @@ msgid "Performance Field"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.VimPerformanceTrend
-#: ../config/dictionary_strings.rb:2164
+#: ../config/dictionary_strings.rb:2172
 msgid "Performance Trend"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.VimPerformanceTrend (plural form)
-#: ../config/dictionary_strings.rb:2166
+#: ../config/dictionary_strings.rb:2174
 msgid "Performance Trends"
 msgstr ""
 
@@ -29294,13 +29314,13 @@ msgid "Permissions"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.PersistentVolume
-#: ../config/dictionary_strings.rb:2080
+#: ../config/dictionary_strings.rb:2088
 msgid "Persistent Volume"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.PersistentVolume (plural form)
 #. TRANSLATORS: file: product/views/PersistentVolume.yaml
-#: ../config/dictionary_strings.rb:2082 ../config/yaml_strings.rb:7657
+#: ../config/dictionary_strings.rb:2090 ../config/yaml_strings.rb:7657
 msgid "Persistent Volumes"
 msgstr ""
 
@@ -29365,7 +29385,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::PhysicalInfraManager
 #. TRANSLATORS: en.yml key: dictionary.table.ems_physical_infra
-#: ../config/dictionary_strings.rb:1676 ../config/dictionary_strings.rb:2424
+#: ../config/dictionary_strings.rb:1676 ../config/dictionary_strings.rb:2432
 msgid "Physical Infrastructure Provider"
 msgstr ""
 
@@ -29374,7 +29394,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.ems_physical_infras
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_PhysicalInfraManager.yaml
-#: ../config/dictionary_strings.rb:1678 ../config/dictionary_strings.rb:2426 ../config/dictionary_strings.rb:2428 ../config/yaml_strings.rb:3294
+#: ../config/dictionary_strings.rb:1678 ../config/dictionary_strings.rb:2434 ../config/dictionary_strings.rb:2436 ../config/yaml_strings.rb:3294
 msgid "Physical Infrastructure Providers"
 msgstr ""
 
@@ -29386,7 +29406,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.PhysicalServer
 #. TRANSLATORS: en.yml key: dictionary.table.physical_server
 #. TRANSLATORS: file: product/views/PhysicalServer.yaml
-#: ../config/dictionary_strings.rb:2084 ../config/dictionary_strings.rb:2642 ../config/yaml_strings.rb:7276
+#: ../config/dictionary_strings.rb:2092 ../config/dictionary_strings.rb:2650 ../config/yaml_strings.rb:7276
 msgid "Physical Server"
 msgstr ""
 
@@ -29405,7 +29425,7 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_PhysicalInfraManager.yaml
 #. TRANSLATORS: file: product/views/PhysicalServer.yaml
-#: ../config/dictionary_strings.rb:2086 ../config/dictionary_strings.rb:2644 ../config/dictionary_strings.rb:2646 ../config/yaml_strings.rb:3332
+#: ../config/dictionary_strings.rb:2094 ../config/dictionary_strings.rb:2652 ../config/dictionary_strings.rb:2654 ../config/yaml_strings.rb:3332
 msgid "Physical Servers"
 msgstr ""
 
@@ -29512,7 +29532,7 @@ msgid "Platform"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.ansible_playbook
-#: ../app/models/service_template.rb:7 ../config/dictionary_strings.rb:2196
+#: ../app/models/service_template.rb:7 ../config/dictionary_strings.rb:2204
 msgid "Playbook"
 msgstr ""
 
@@ -29530,7 +29550,7 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAnsible_AutomationManager_Playbook.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAutomationManager_ConfigurationScriptSource.yaml
-#: ../config/dictionary_strings.rb:2198 ../config/yaml_strings.rb:2773
+#: ../config/dictionary_strings.rb:2206 ../config/yaml_strings.rb:2773
 msgid "Playbooks"
 msgstr ""
 
@@ -29553,7 +29573,7 @@ msgstr ""
 #. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
 #. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
 #. TRANSLATORS: file: product/views/ContainerGroup.yaml
-#: ../config/dictionary_strings.rb:1334 ../config/dictionary_strings.rb:2278 ../config/yaml_strings.rb:6661
+#: ../config/dictionary_strings.rb:1334 ../config/dictionary_strings.rb:2286 ../config/yaml_strings.rb:6661
 msgid "Pod"
 msgstr ""
 
@@ -29581,7 +29601,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ContainerGroup.yaml
 #. TRANSLATORS: file: product/views/ContainerProject.yaml
 #. TRANSLATORS: file: product/views/ContainerService.yaml
-#: ../config/dictionary_strings.rb:1336 ../config/dictionary_strings.rb:2280 ../config/dictionary_strings.rb:2282 ../config/yaml_strings.rb:2460
+#: ../config/dictionary_strings.rb:1336 ../config/dictionary_strings.rb:2288 ../config/dictionary_strings.rb:2290 ../config/yaml_strings.rb:2460
 msgid "Pods"
 msgstr ""
 
@@ -29598,12 +29618,12 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.MiqPolicy (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/MiqPolicy.yaml
-#: ../config/dictionary_strings.rb:1986 ../config/yaml_strings.rb:1120
+#: ../config/dictionary_strings.rb:1994 ../config/yaml_strings.rb:1120
 msgid "Policies"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqPolicy
-#: ../config/dictionary_strings.rb:1984
+#: ../config/dictionary_strings.rb:1992
 msgid "Policy"
 msgstr ""
 
@@ -29628,14 +29648,14 @@ msgid "Policy Log"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqPolicySet
-#: ../config/dictionary_strings.rb:1988
+#: ../config/dictionary_strings.rb:1996
 msgid "Policy Profile"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqPolicySet (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/MiqPolicySet.yaml
-#: ../config/dictionary_strings.rb:1990 ../config/yaml_strings.rb:1101
+#: ../config/dictionary_strings.rb:1998 ../config/yaml_strings.rb:1101
 msgid "Policy Profiles"
 msgstr ""
 
@@ -29900,13 +29920,13 @@ msgid "Product Name"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ProductUpdate
-#: ../config/dictionary_strings.rb:2088
+#: ../config/dictionary_strings.rb:2096
 msgid "Product Update"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ProductUpdate (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:2090 ../config/yaml_strings.rb:1624
+#: ../config/dictionary_strings.rb:2098 ../config/yaml_strings.rb:1624
 msgid "Product Updates"
 msgstr ""
 
@@ -29917,7 +29937,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ContainerProject
 #. TRANSLATORS: en.yml key: dictionary.table.container_project
-#: ../config/dictionary_strings.rb:1358 ../config/dictionary_strings.rb:2320
+#: ../config/dictionary_strings.rb:1358 ../config/dictionary_strings.rb:2328
 msgid "Project"
 msgstr ""
 
@@ -29940,7 +29960,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.container_project (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.container_projects
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1360 ../config/dictionary_strings.rb:2322 ../config/dictionary_strings.rb:2324 ../config/yaml_strings.rb:2634
+#: ../config/dictionary_strings.rb:1360 ../config/dictionary_strings.rb:2330 ../config/dictionary_strings.rb:2332 ../config/yaml_strings.rb:2634
 msgid "Projects"
 msgstr ""
 
@@ -30018,7 +30038,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/OrchestrationStack.yaml
 #. TRANSLATORS: file: product/views/PersistentVolume.yaml
 #. TRANSLATORS: file: product/views/VmOrTemplate.yaml
-#: ../config/dictionary_strings.rb:1398 ../config/dictionary_strings.rb:1468 ../config/dictionary_strings.rb:2490 ../config/yaml_strings.rb:5125 ../config/model_attributes.rb:3352
+#: ../config/dictionary_strings.rb:1398 ../config/dictionary_strings.rb:1468 ../config/dictionary_strings.rb:2498 ../config/yaml_strings.rb:5125 ../config/model_attributes.rb:3352
 msgid "Provider"
 msgstr ""
 
@@ -30077,7 +30097,7 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
-#: ../config/dictionary_strings.rb:1400 ../config/dictionary_strings.rb:1470 ../config/dictionary_strings.rb:2492 ../config/dictionary_strings.rb:2494 ../config/yaml_strings.rb:2004
+#: ../config/dictionary_strings.rb:1400 ../config/dictionary_strings.rb:1470 ../config/dictionary_strings.rb:2500 ../config/dictionary_strings.rb:2502 ../config/yaml_strings.rb:2004
 msgid "Providers"
 msgstr ""
 
@@ -30126,7 +30146,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqProvision
 #. TRANSLATORS: en.yml key: dictionary.table.miq_provision
-#: ../app/models/miq_provision.rb:87 ../config/dictionary_strings.rb:1992 ../config/dictionary_strings.rb:2576
+#: ../app/models/miq_provision.rb:87 ../config/dictionary_strings.rb:2000 ../config/dictionary_strings.rb:2584
 msgid "Provision"
 msgstr ""
 
@@ -30200,12 +30220,12 @@ msgid "Provision workflow does not contain the expected method <%{method}>"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.miq_provision_template
-#: ../config/dictionary_strings.rb:2580
+#: ../config/dictionary_strings.rb:2588
 msgid "Provisioned From Template"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.miq_provision_template (plural form)
-#: ../config/dictionary_strings.rb:2582
+#: ../config/dictionary_strings.rb:2590
 msgid "Provisioned From Templates"
 msgstr ""
 
@@ -30215,7 +30235,7 @@ msgid "Provisioned Space Percent of Total"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.miq_provision_vms
-#: ../config/dictionary_strings.rb:2584
+#: ../config/dictionary_strings.rb:2592
 msgid "Provisioned VMs"
 msgstr ""
 
@@ -30258,7 +30278,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.miq_provision (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.miq_provisions
 #. TRANSLATORS: file: product/views/MiqProvision.yaml
-#: ../config/dictionary_strings.rb:1994 ../config/dictionary_strings.rb:2578 ../config/dictionary_strings.rb:2586 ../config/yaml_strings.rb:7366
+#: ../config/dictionary_strings.rb:2002 ../config/dictionary_strings.rb:2586 ../config/dictionary_strings.rb:2594 ../config/yaml_strings.rb:7366
 msgid "Provisions"
 msgstr ""
 
@@ -30828,7 +30848,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/VmOrTemplate.yaml
 #. TRANSLATORS: file: product/views/ems_block_storage.yaml
 #. TRANSLATORS: file: product/views/ems_object_storage.yaml
-#: ../config/dictionary_strings.rb:2000 ../config/dictionary_strings.rb:2590 ../config/yaml_strings.rb:5162
+#: ../config/dictionary_strings.rb:2008 ../config/dictionary_strings.rb:2598 ../config/yaml_strings.rb:5162
 msgid "Region"
 msgstr ""
 
@@ -30847,7 +30867,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.miq_region (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.miq_regions
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:2002 ../config/dictionary_strings.rb:2592 ../config/dictionary_strings.rb:2594 ../config/yaml_strings.rb:1640
+#: ../config/dictionary_strings.rb:2010 ../config/dictionary_strings.rb:2600 ../config/dictionary_strings.rb:2602 ../config/yaml_strings.rb:1640
 msgid "Regions"
 msgstr ""
 
@@ -30878,13 +30898,13 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.registry_items (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:2650 ../config/yaml_strings.rb:2537
+#: ../config/dictionary_strings.rb:2658 ../config/yaml_strings.rb:2537
 msgid "Registries"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.registry_items
 #. TRANSLATORS: file: product/views/RegistryItem.yaml
-#: ../config/dictionary_strings.rb:2648 ../config/yaml_strings.rb:7270
+#: ../config/dictionary_strings.rb:2656 ../config/yaml_strings.rb:7270
 msgid "Registry"
 msgstr ""
 
@@ -31369,7 +31389,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ContainerReplicator
 #. TRANSLATORS: en.yml key: dictionary.table.container_replicator
-#: ../config/dictionary_strings.rb:1370 ../config/dictionary_strings.rb:2284
+#: ../config/dictionary_strings.rb:1370 ../config/dictionary_strings.rb:2292
 msgid "Replicator"
 msgstr ""
 
@@ -31378,12 +31398,12 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.container_replicators
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/ContainerReplicator.yaml
-#: ../config/dictionary_strings.rb:1372 ../config/dictionary_strings.rb:2286 ../config/dictionary_strings.rb:2288 ../config/yaml_strings.rb:2501
+#: ../config/dictionary_strings.rb:1372 ../config/dictionary_strings.rb:2294 ../config/dictionary_strings.rb:2296 ../config/yaml_strings.rb:2501
 msgid "Replicators"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqReport
-#: ../config/dictionary_strings.rb:2004
+#: ../config/dictionary_strings.rb:2012
 msgid "Report"
 msgstr ""
 
@@ -31397,7 +31417,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqReport (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:2006 ../config/yaml_strings.rb:901
+#: ../config/dictionary_strings.rb:2014 ../config/yaml_strings.rb:901
 msgid "Reports"
 msgstr ""
 
@@ -31411,7 +31431,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.Repository (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.repository (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1324 ../config/dictionary_strings.rb:1478 ../config/dictionary_strings.rb:2110 ../config/dictionary_strings.rb:2654 ../config/yaml_strings.rb:2747
+#: ../config/dictionary_strings.rb:1324 ../config/dictionary_strings.rb:1478 ../config/dictionary_strings.rb:2118 ../config/dictionary_strings.rb:2662 ../config/yaml_strings.rb:2747
 msgid "Repositories"
 msgstr ""
 
@@ -31426,7 +31446,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.repository
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAnsible_AutomationManager_Playbook.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAutomationManager_ConfigurationScriptSource.yaml
-#: ../config/dictionary_strings.rb:1322 ../config/dictionary_strings.rb:1476 ../config/dictionary_strings.rb:2108 ../config/dictionary_strings.rb:2652 ../config/yaml_strings.rb:7234
+#: ../config/dictionary_strings.rb:1322 ../config/dictionary_strings.rb:1476 ../config/dictionary_strings.rb:2116 ../config/dictionary_strings.rb:2660 ../config/yaml_strings.rb:7234
 msgid "Repository"
 msgstr ""
 
@@ -31437,7 +31457,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqRequest
 #. TRANSLATORS: en.yml key: dictionary.table.miq_request
-#: ../config/dictionary_strings.rb:2008 ../config/dictionary_strings.rb:2596
+#: ../config/dictionary_strings.rb:2016 ../config/dictionary_strings.rb:2604
 msgid "Request"
 msgstr ""
 
@@ -31534,7 +31554,7 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
-#: ../config/dictionary_strings.rb:2010 ../config/dictionary_strings.rb:2598 ../config/dictionary_strings.rb:2600 ../config/yaml_strings.rb:167
+#: ../config/dictionary_strings.rb:2018 ../config/dictionary_strings.rb:2606 ../config/dictionary_strings.rb:2608 ../config/yaml_strings.rb:167
 msgid "Requests"
 msgstr ""
 
@@ -31599,7 +31619,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.resource_pool
 #. TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/010_VMs Relationships.yaml
 #. TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/020_VM Folders relationships.yaml
-#: ../config/dictionary_strings.rb:2112 ../config/dictionary_strings.rb:2656 ../config/yaml_strings.rb:5661
+#: ../config/dictionary_strings.rb:2120 ../config/dictionary_strings.rb:2664 ../config/yaml_strings.rb:5661
 msgid "Resource Pool"
 msgstr ""
 
@@ -31608,7 +31628,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.resource_pools
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/ResourcePool.yaml
-#: ../config/dictionary_strings.rb:2114 ../config/dictionary_strings.rb:2658 ../config/dictionary_strings.rb:2660 ../config/yaml_strings.rb:820
+#: ../config/dictionary_strings.rb:2122 ../config/dictionary_strings.rb:2666 ../config/dictionary_strings.rb:2668 ../config/yaml_strings.rb:820
 msgid "Resource Pools"
 msgstr ""
 
@@ -32100,7 +32120,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.MiqUserRole
 #. TRANSLATORS: file: product/views/MiqGroup.yaml
 #. TRANSLATORS: file: product/views/User.yaml
-#: ../config/dictionary_strings.rb:2032 ../config/yaml_strings.rb:6880
+#: ../config/dictionary_strings.rb:2040 ../config/yaml_strings.rb:6880
 msgid "Role"
 msgstr ""
 
@@ -32110,7 +32130,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqUserRole (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:2034 ../config/yaml_strings.rb:1694
+#: ../config/dictionary_strings.rb:2042 ../config/yaml_strings.rb:1694
 msgid "Roles"
 msgstr ""
 
@@ -32121,7 +32141,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ContainerRoute
 #. TRANSLATORS: en.yml key: dictionary.table.container_route
-#: ../config/dictionary_strings.rb:1366 ../config/dictionary_strings.rb:2314
+#: ../config/dictionary_strings.rb:1366 ../config/dictionary_strings.rb:2322
 msgid "Route"
 msgstr ""
 
@@ -32129,7 +32149,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.container_route (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.container_routes
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1368 ../config/dictionary_strings.rb:2316 ../config/dictionary_strings.rb:2318 ../config/yaml_strings.rb:2620
+#: ../config/dictionary_strings.rb:1368 ../config/dictionary_strings.rb:2324 ../config/dictionary_strings.rb:2326 ../config/yaml_strings.rb:2620
 msgid "Routes"
 msgstr ""
 
@@ -32233,7 +32253,7 @@ msgid "Runtime Version"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.miq_scsi_luns
-#: ../config/dictionary_strings.rb:2604
+#: ../config/dictionary_strings.rb:2612
 msgid "SCSI LUNs"
 msgstr ""
 
@@ -32299,12 +32319,12 @@ msgid "Scale an Infrastructure Provider down"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ScanItem
-#: ../config/dictionary_strings.rb:2120
+#: ../config/dictionary_strings.rb:2128
 msgid "Scan Item"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ScanItem (plural form)
-#: ../config/dictionary_strings.rb:2122
+#: ../config/dictionary_strings.rb:2130
 msgid "Scan Items"
 msgstr ""
 
@@ -32471,7 +32491,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqSchedule
 #. TRANSLATORS: file: product/views/MiqSchedule.yaml
-#: ../config/dictionary_strings.rb:2012 ../config/yaml_strings.rb:7745
+#: ../config/dictionary_strings.rb:2020 ../config/yaml_strings.rb:7745
 msgid "Schedule"
 msgstr ""
 
@@ -32483,7 +32503,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.miq_schedules
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/MiqSchedule.yaml
-#: ../config/dictionary_strings.rb:2014 ../config/dictionary_strings.rb:2602 ../config/yaml_strings.rb:960
+#: ../config/dictionary_strings.rb:2022 ../config/dictionary_strings.rb:2610 ../config/yaml_strings.rb:960
 msgid "Schedules"
 msgstr ""
 
@@ -32498,7 +32518,7 @@ msgid "Scheduling Disabled"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqSearch
-#: ../config/dictionary_strings.rb:2016
+#: ../config/dictionary_strings.rb:2024
 msgid "Search"
 msgstr ""
 
@@ -32507,14 +32527,14 @@ msgid "Search is referenced in a schedule and cannot be deleted"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqSearch (plural form)
-#: ../config/dictionary_strings.rb:2018
+#: ../config/dictionary_strings.rb:2026
 msgid "Searches"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.SecurityGroup
 #. TRANSLATORS: en.yml key: dictionary.table.security_group
 #. TRANSLATORS: file: product/views/SecurityGroup.yaml
-#: ../config/dictionary_strings.rb:2116 ../config/dictionary_strings.rb:2662 ../config/yaml_strings.rb:7125
+#: ../config/dictionary_strings.rb:2124 ../config/dictionary_strings.rb:2670 ../config/yaml_strings.rb:7125
 msgid "Security Group"
 msgstr ""
 
@@ -32548,7 +32568,7 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
 #. TRANSLATORS: file: product/views/OrchestrationStack.yaml
-#: ../config/dictionary_strings.rb:2118 ../config/dictionary_strings.rb:2664 ../config/yaml_strings.rb:2306
+#: ../config/dictionary_strings.rb:2126 ../config/dictionary_strings.rb:2672 ../config/yaml_strings.rb:2306
 msgid "Security Groups"
 msgstr ""
 
@@ -32659,7 +32679,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/MiddlewareMessaging.yaml
 #. TRANSLATORS: file: product/views/MiqTask.yaml
 #. TRANSLATORS: file: product/views/VmdbDatabaseConnection.yaml
-#: ../config/dictionary_strings.rb:2020 ../config/dictionary_strings.rb:2606 ../config/yaml_strings.rb:6712
+#: ../config/dictionary_strings.rb:2028 ../config/dictionary_strings.rb:2614 ../config/yaml_strings.rb:6712
 msgid "Server"
 msgstr ""
 
@@ -32720,14 +32740,14 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.MiqServer (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.miq_server (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.miq_servers
-#: ../config/dictionary_strings.rb:2022 ../config/dictionary_strings.rb:2608 ../config/dictionary_strings.rb:2610
+#: ../config/dictionary_strings.rb:2030 ../config/dictionary_strings.rb:2616 ../config/dictionary_strings.rb:2618
 msgid "Servers"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.Service
 #. TRANSLATORS: en.yml key: dictionary.table.container_service
 #. TRANSLATORS: file: product/views/Service.yaml
-#: ../config/dictionary_strings.rb:2128 ../config/dictionary_strings.rb:2308 ../config/yaml_strings.rb:7755 ../config/model_attributes.rb:3534 ../config/model_attributes.rb:3580
+#: ../config/dictionary_strings.rb:2136 ../config/dictionary_strings.rb:2316 ../config/yaml_strings.rb:7755 ../config/model_attributes.rb:3534 ../config/model_attributes.rb:3580
 msgid "Service"
 msgstr ""
 
@@ -32761,12 +32781,12 @@ msgid "Service Catalog"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ServiceTemplate
-#: ../config/dictionary_strings.rb:2132
+#: ../config/dictionary_strings.rb:2140
 msgid "Service Catalog Item"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ServiceTemplate (plural form)
-#: ../config/dictionary_strings.rb:2134
+#: ../config/dictionary_strings.rb:2142
 msgid "Service Catalog Items"
 msgstr ""
 
@@ -33040,7 +33060,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/CloudService.yaml
 #. TRANSLATORS: file: product/views/Service.yaml
 #. TRANSLATORS: file: product/views/SystemService.yaml
-#: ../config/dictionary_strings.rb:2130 ../config/dictionary_strings.rb:2310 ../config/dictionary_strings.rb:2312 ../config/dictionary_strings.rb:2520 ../config/yaml_strings.rb:2604
+#: ../config/dictionary_strings.rb:2138 ../config/dictionary_strings.rb:2318 ../config/dictionary_strings.rb:2320 ../config/dictionary_strings.rb:2528 ../config/yaml_strings.rb:2604
 msgid "Services"
 msgstr ""
 
@@ -33693,17 +33713,17 @@ msgid "Slope"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqProxy (plural form)
-#: ../config/dictionary_strings.rb:1998
+#: ../config/dictionary_strings.rb:2006
 msgid "SmartProxies"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqProxy
-#: ../config/dictionary_strings.rb:1996
+#: ../config/dictionary_strings.rb:2004
 msgid "SmartProxy"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.miq_proxy_builds
-#: ../config/dictionary_strings.rb:2588
+#: ../config/dictionary_strings.rb:2596
 msgid "SmartProxy Builds"
 msgstr ""
 
@@ -33712,7 +33732,7 @@ msgid "Smartstate Analysis cannot be performed on selected Datastore"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.Snapshot
-#: ../config/dictionary_strings.rb:2140 ../config/model_attributes.rb:3643
+#: ../config/dictionary_strings.rb:2148 ../config/model_attributes.rb:3643
 msgid "Snapshot"
 msgstr ""
 
@@ -33777,7 +33797,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.Snapshot (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:2142 ../config/yaml_strings.rb:3127
+#: ../config/dictionary_strings.rb:2150 ../config/yaml_strings.rb:3127
 msgid "Snapshots"
 msgstr ""
 
@@ -33921,17 +33941,17 @@ msgid "Specified Resource Pool <%{pool_name}> for Host <%{name}> is invalid, una
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.orchestration_stack
-#: ../config/dictionary_strings.rb:2632
+#: ../config/dictionary_strings.rb:2640
 msgid "Stack"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.orchestration_stack (plural form)
-#: ../config/dictionary_strings.rb:2634
+#: ../config/dictionary_strings.rb:2642
 msgid "Stacks"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.miq_approval_stamps
-#: ../config/dictionary_strings.rb:2554
+#: ../config/dictionary_strings.rb:2562
 msgid "Stamped Approvals"
 msgstr ""
 
@@ -34246,7 +34266,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager
 #. TRANSLATORS: en.yml key: dictionary.table.ems_storage
 #. TRANSLATORS: file: product/views/StorageManager.yaml
-#: ../config/dictionary_strings.rb:1876 ../config/dictionary_strings.rb:2430 ../config/yaml_strings.rb:7218
+#: ../config/dictionary_strings.rb:1876 ../config/dictionary_strings.rb:2438 ../config/yaml_strings.rb:7218
 msgid "Storage Manager"
 msgstr ""
 
@@ -34263,7 +34283,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.ems_storage (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:1878 ../config/dictionary_strings.rb:2432 ../config/yaml_strings.rb:3213
+#: ../config/dictionary_strings.rb:1878 ../config/dictionary_strings.rb:2440 ../config/yaml_strings.rb:3213
 msgid "Storage Managers"
 msgstr ""
 
@@ -34855,14 +34875,14 @@ msgid "Sync/Async"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.PxeImageType
-#: ../config/dictionary_strings.rb:2100
+#: ../config/dictionary_strings.rb:2108
 msgid "System Image Type"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.PxeImageType (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/PxeImageType.yaml
-#: ../config/dictionary_strings.rb:2102 ../config/yaml_strings.rb:1851
+#: ../config/dictionary_strings.rb:2110 ../config/yaml_strings.rb:1851
 msgid "System Image Types"
 msgstr ""
 
@@ -35088,7 +35108,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqTask
 #. TRANSLATORS: en.yml key: dictionary.table.miq_task
-#: ../config/dictionary_strings.rb:2024 ../config/dictionary_strings.rb:2612
+#: ../config/dictionary_strings.rb:2032 ../config/dictionary_strings.rb:2620
 msgid "Task"
 msgstr ""
 
@@ -35105,14 +35125,14 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.MiqTask (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.miq_task (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:2026 ../config/dictionary_strings.rb:2614 ../config/yaml_strings.rb:1571
+#: ../config/dictionary_strings.rb:2034 ../config/dictionary_strings.rb:2622 ../config/yaml_strings.rb:1571
 msgid "Tasks"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::InfraManager::Template
 #. TRANSLATORS: en.yml key: dictionary.table.container_template
 #. TRANSLATORS: en.yml key: dictionary.table.template_infra
-#: ../config/dictionary_strings.rb:1664 ../config/dictionary_strings.rb:2338 ../config/dictionary_strings.rb:2694
+#: ../config/dictionary_strings.rb:1664 ../config/dictionary_strings.rb:2346 ../config/dictionary_strings.rb:2702
 msgid "Template"
 msgstr ""
 
@@ -35146,7 +35166,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_PhysicalInfraManager.yaml
 #. TRANSLATORS: file: product/views/MiqTemplate-all_miq_templates.yaml
 #. TRANSLATORS: file: product/views/MiqTemplate.yaml
-#: ../config/dictionary_strings.rb:1666 ../config/dictionary_strings.rb:2340 ../config/dictionary_strings.rb:2342 ../config/dictionary_strings.rb:2696 ../config/yaml_strings.rb:79
+#: ../config/dictionary_strings.rb:1666 ../config/dictionary_strings.rb:2348 ../config/dictionary_strings.rb:2350 ../config/dictionary_strings.rb:2704 ../config/yaml_strings.rb:79
 msgid "Templates"
 msgstr ""
 
@@ -35516,13 +35536,13 @@ msgid "Time (H:M:S Z)"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.TimeProfile
-#: ../config/dictionary_strings.rb:2156
+#: ../config/dictionary_strings.rb:2164
 msgid "Time Profile"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.TimeProfile (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:2158 ../config/yaml_strings.rb:1559
+#: ../config/dictionary_strings.rb:2166 ../config/yaml_strings.rb:1559
 msgid "Time Profiles"
 msgstr ""
 
@@ -37136,13 +37156,13 @@ msgid "Utilization %"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.ems_custom_attribute
-#: ../config/dictionary_strings.rb:2370
+#: ../config/dictionary_strings.rb:2378
 msgid "VC Custom Attribute"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.ems_custom_attribute (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.ems_custom_attributes
-#: ../config/dictionary_strings.rb:2372 ../config/dictionary_strings.rb:2374
+#: ../config/dictionary_strings.rb:2380 ../config/dictionary_strings.rb:2382
 msgid "VC Custom Attributes"
 msgstr ""
 
@@ -37415,22 +37435,22 @@ msgid "VM Size"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.miq_template
-#: ../config/dictionary_strings.rb:2616
+#: ../config/dictionary_strings.rb:2624
 msgid "VM Template"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqTemplate
-#: ../config/dictionary_strings.rb:2028
+#: ../config/dictionary_strings.rb:2036
 msgid "VM Template and Image"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqTemplate (plural form)
-#: ../config/dictionary_strings.rb:2030
+#: ../config/dictionary_strings.rb:2038
 msgid "VM Template and Images"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.miq_template (plural form)
-#: ../config/dictionary_strings.rb:2618
+#: ../config/dictionary_strings.rb:2626
 msgid "VM Templates"
 msgstr ""
 
@@ -37481,13 +37501,13 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.Vm
 #. TRANSLATORS: en.yml key: dictionary.table.vm
-#: ../config/dictionary_strings.rb:2168 ../config/dictionary_strings.rb:2698
+#: ../config/dictionary_strings.rb:2176 ../config/dictionary_strings.rb:2706
 msgid "VM and Instance"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.Vm (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.vm (plural form)
-#: ../config/dictionary_strings.rb:2170 ../config/dictionary_strings.rb:2700
+#: ../config/dictionary_strings.rb:2178 ../config/dictionary_strings.rb:2708
 msgid "VM and Instances"
 msgstr ""
 
@@ -37604,12 +37624,12 @@ msgid "VM operations"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.VmOrTemplate
-#: ../config/dictionary_strings.rb:2180
+#: ../config/dictionary_strings.rb:2188
 msgid "VM or Template"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.VmOrTemplate (plural form)
-#: ../config/dictionary_strings.rb:2182
+#: ../config/dictionary_strings.rb:2190
 msgid "VM or Templates"
 msgstr ""
 
@@ -37627,12 +37647,12 @@ msgid "VM/Template <%{name}> with Id: <%{id}>: Provider authentication failed."
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.VmdbTable
-#: ../config/dictionary_strings.rb:2176
+#: ../config/dictionary_strings.rb:2184
 msgid "VMDB Table"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.VmdbTable (plural form)
-#: ../config/dictionary_strings.rb:2178
+#: ../config/dictionary_strings.rb:2186
 msgid "VMDB Tables"
 msgstr ""
 
@@ -37691,7 +37711,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/Vm-all_vms.yaml
 #. TRANSLATORS: file: product/views/Vm.yaml
 #. TRANSLATORS: file: product/views/Vm__restricted.yaml
-#: ../config/dictionary_strings.rb:2716 ../config/yaml_strings.rb:70
+#: ../config/dictionary_strings.rb:2724 ../config/yaml_strings.rb:70
 msgid "VMs"
 msgstr ""
 
@@ -38018,12 +38038,12 @@ msgid "VNF Orchestration Templates"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager::VnfdTemplate
-#: ../config/dictionary_strings.rb:2072
+#: ../config/dictionary_strings.rb:2080
 msgid "VNF Template"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager::VnfdTemplate (plural form)
-#: ../config/dictionary_strings.rb:2074
+#: ../config/dictionary_strings.rb:2082
 msgid "VNF Templates"
 msgstr ""
 
@@ -38872,7 +38892,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::InfraManager::Vm
 #. TRANSLATORS: en.yml key: dictionary.table.vm_infra
 #. TRANSLATORS: en.yml key: dictionary.table.vm_or_template
-#: ../config/dictionary_strings.rb:1660 ../config/dictionary_strings.rb:2708 ../config/dictionary_strings.rb:2712
+#: ../config/dictionary_strings.rb:1660 ../config/dictionary_strings.rb:2716 ../config/dictionary_strings.rb:2720
 msgid "Virtual Machine"
 msgstr ""
 
@@ -38955,7 +38975,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/Vm-all_vms.yaml
 #. TRANSLATORS: file: product/views/Vm.yaml
 #. TRANSLATORS: file: product/views/Vm__restricted.yaml
-#: ../config/dictionary_strings.rb:1662 ../config/dictionary_strings.rb:2710 ../config/dictionary_strings.rb:2714 ../config/yaml_strings.rb:39
+#: ../config/dictionary_strings.rb:1662 ../config/dictionary_strings.rb:2718 ../config/dictionary_strings.rb:2722 ../config/yaml_strings.rb:39
 msgid "Virtual Machines"
 msgstr ""
 
@@ -40269,7 +40289,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.persistent_volume
 #. TRANSLATORS: en.yml key: dictionary.table.volume
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/052_VMs with Volume Free Space -= 75%.yaml
-#: ../config/dictionary_strings.rb:2326 ../config/dictionary_strings.rb:2718 ../config/yaml_strings.rb:5369 ../config/model_attributes.rb:4211
+#: ../config/dictionary_strings.rb:2334 ../config/dictionary_strings.rb:2726 ../config/yaml_strings.rb:5369 ../config/model_attributes.rb:4211
 msgid "Volume"
 msgstr ""
 
@@ -40366,7 +40386,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.persistent_volumes
 #. TRANSLATORS: en.yml key: dictionary.table.volume (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:2328 ../config/dictionary_strings.rb:2330 ../config/dictionary_strings.rb:2720 ../config/yaml_strings.rb:2551
+#: ../config/dictionary_strings.rb:2336 ../config/dictionary_strings.rb:2338 ../config/dictionary_strings.rb:2728 ../config/yaml_strings.rb:2551
 msgid "Volumes"
 msgstr ""
 
@@ -40509,12 +40529,12 @@ msgid "What is evaluated"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqWidget
-#: ../config/dictionary_strings.rb:2036
+#: ../config/dictionary_strings.rb:2044
 msgid "Widget"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqWidget (plural form)
-#: ../config/dictionary_strings.rb:2038
+#: ../config/dictionary_strings.rb:2046
 msgid "Widgets"
 msgstr ""
 
@@ -40540,12 +40560,12 @@ msgid "Win32 Shared Process, Interactive"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.WindowsImage
-#: ../config/dictionary_strings.rb:2188
+#: ../config/dictionary_strings.rb:2196
 msgid "Windows Image"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.WindowsImage (plural form)
-#: ../config/dictionary_strings.rb:2190
+#: ../config/dictionary_strings.rb:2198
 msgid "Windows Images"
 msgstr ""
 
@@ -40649,7 +40669,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager_ConfiguredSystem.yaml
 #. TRANSLATORS: file: product/views/MiqServer.yaml
 #. TRANSLATORS: file: product/views/VmdbDatabaseConnection.yaml
-#: ../config/dictionary_strings.rb:2192 ../config/dictionary_strings.rb:2626 ../config/dictionary_strings.rb:2722 ../config/yaml_strings.rb:7024 ../config/model_attributes.rb:4233
+#: ../config/dictionary_strings.rb:2200 ../config/dictionary_strings.rb:2634 ../config/dictionary_strings.rb:2730 ../config/yaml_strings.rb:7024 ../config/model_attributes.rb:4233
 msgid "Zone"
 msgstr ""
 
@@ -40658,7 +40678,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.zone (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.zones
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:2194 ../config/dictionary_strings.rb:2628 ../config/dictionary_strings.rb:2724 ../config/dictionary_strings.rb:2726 ../config/yaml_strings.rb:1630
+#: ../config/dictionary_strings.rb:2202 ../config/dictionary_strings.rb:2636 ../config/dictionary_strings.rb:2732 ../config/dictionary_strings.rb:2734 ../config/yaml_strings.rb:1630
 msgid "Zones"
 msgstr ""
 
@@ -41303,12 +41323,12 @@ msgid "vApp Orchestration Templates"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate
-#: ../config/dictionary_strings.rb:2076
+#: ../config/dictionary_strings.rb:2084
 msgid "vApp Template"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate (plural form)
-#: ../config/dictionary_strings.rb:2078
+#: ../config/dictionary_strings.rb:2086
 msgid "vApp Templates"
 msgstr ""
 
@@ -41339,7 +41359,7 @@ msgid "vLAN Tag"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.lans
-#: ../config/dictionary_strings.rb:2530
+#: ../config/dictionary_strings.rb:2538
 msgid "vLANs"
 msgstr ""
 
@@ -41354,7 +41374,7 @@ msgid "vSwitch Ports"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.switches
-#: ../config/dictionary_strings.rb:2688
+#: ../config/dictionary_strings.rb:2696
 msgid "vSwitches"
 msgstr ""
 

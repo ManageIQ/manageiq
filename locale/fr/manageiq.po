@@ -17789,6 +17789,14 @@ msgstr "Ressource de middleware"
 msgid "Middleware Server"
 msgstr "Serveur de middleware"
 
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerEap
+msgid "Middleware Server (EAP)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerWildfly
+msgid "Middleware Server (Wildfly)"
+msgstr ""
+
 #. TRANSLATORS: en.yml key: dictionary.model.MiddlewareServerGroup
 #. TRANSLATORS: en.yml key: dictionary.table.middleware_server_group
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -17808,6 +17816,14 @@ msgstr "Groupes de serveurs de middleware"
 #. TRANSLATORS: file: product/views/MiddlewareServer.yaml
 msgid "Middleware Servers"
 msgstr "Serveurs de middleware"
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerEap (plural form)
+msgid "Middleware Servers (EAP)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerWildfly (plural form)
+msgid "Middleware Servers (Wildfly)"
+msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Middleware Topology"

@@ -1908,6 +1908,14 @@ _("Hosts (Vmware)")
 _("Physical Server (Lenovo)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalServer (plural form)
 _("Physical Servers (Lenovo)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerEap
+_("Middleware Server (EAP)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerEap (plural form)
+_("Middleware Servers (EAP)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerWildfly
+_("Middleware Server (Wildfly)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerWildfly (plural form)
+_("Middleware Servers (Wildfly)")
 # TRANSLATORS: en.yml key: dictionary.model.MiddlewareDatasource
 _("Middleware Datasource")
 # TRANSLATORS: en.yml key: dictionary.model.MiddlewareDatasource (plural form)
