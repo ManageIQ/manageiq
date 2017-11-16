@@ -1,3 +1,0 @@
----
-- CONSTRAINT metrics_04_inheritance_check CHECK ((((capture_interval_name)::text =
-  'realtime'::text) AND (date_part('hour'::text, "timestamp") = (4)::double precision)))
