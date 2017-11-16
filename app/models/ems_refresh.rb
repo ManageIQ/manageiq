@@ -166,6 +166,7 @@ module EmsRefresh
     # If this is the only refresh then we will use the task we just created,
     # if we merge with another queue item then we will return its task_id
     task_id = nil
+    new_targets = targets
 
     # Items will be naturally serialized since there is a dedicated worker.
     miq_queue_record = MiqQueue.put_or_update(queue_options) do |msg, item|
@@ -195,9 +196,9 @@ module EmsRefresh
       )
     end
 
-    if targets.present?
+    if new_targets.present?
       # If we are storing data, we want to make sure any BinaryBlob present will be tied back to this MiqQueue record
-      payload_ids = targets.map do |type, target_hash|
+      payload_ids = new_targets.map do |type, target_hash|
         next if type != "ManagerRefresh::Target"
         target_hash[:payload_id]
       end.compact
