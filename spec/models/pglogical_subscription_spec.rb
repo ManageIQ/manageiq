@@ -167,35 +167,7 @@ describe PglogicalSubscription do
     end
   end
 
-  def with_valid_schemas
-    allow(ManageIQ::Schema::Checker).to receive(:check_schema).and_return(nil)
-  end
-
-  def with_an_invalid_local_schema
-    allow(ManageIQ::Schema::Checker).to receive(:check_schema).with(no_args).and_return("Different local schema")
-  end
-
-  def with_an_invalid_remote_schema
-    connection = double(:connection)
-    allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(connection)
-    allow(ManageIQ::Schema::Checker).to receive(:check_schema).and_return(nil, "Different remote schema")
-  end
-
   describe "#save!" do
-    it "raises when the local schema is invalid" do
-      with_an_invalid_local_schema
-      sub = described_class.new(:host => "some.host.example.com")
-      allow(sub).to receive(:assert_different_region!)
-      expect { sub.save! }.to raise_error(RuntimeError, "Different local schema")
-    end
-
-    it "raises when the remote schema is invalid" do
-      with_an_invalid_remote_schema
-      sub = described_class.new(:host => "some.host.example.com", :password => "1234")
-      allow(sub).to receive(:assert_different_region!)
-      expect { sub.save! }.to raise_error(RuntimeError, "Different remote schema")
-    end
-
     it "raises when subscribing to the same region" do
       allow(pglogical).to receive(:subscriptions).and_return([])
       allow(pglogical).to receive(:enabled?).and_return(true)
@@ -212,7 +184,6 @@ describe PglogicalSubscription do
       allow(pglogical).to receive(:subscription_show_status).and_return(subscriptions.first)
       allow(pglogical).to receive(:subscription_create).and_return(double(:check => nil))
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
-      with_valid_schemas
 
       sub = described_class.new(:host => "test-2.example.com", :user => "root", :password => "1234")
       allow(sub).to receive(:remote_region_number).and_return(remote_region1)
@@ -226,7 +197,6 @@ describe PglogicalSubscription do
       allow(pglogical).to receive(:enabled?).and_return(true)
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
       allow(MiqRegionRemote).to receive(:region_number_from_sequence).and_return(2)
-      with_valid_schemas
 
       # node created if we are not already a node
       expect(MiqPglogical).to receive(:new).and_return(double(:node? => false))
@@ -253,7 +223,6 @@ describe PglogicalSubscription do
       allow(pglogical).to receive(:enabled?).and_return(true)
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
       allow(MiqRegionRemote).to receive(:region_number_from_sequence).and_return(2)
-      with_valid_schemas
 
       # node not created if we are already a node
       expect(MiqPglogical).to receive(:new).and_return(double(:node? => true))
@@ -281,7 +250,6 @@ describe PglogicalSubscription do
       allow(pglogical).to receive(:enabled?).and_return(true)
       allow(pglogical).to receive(:subscription_show_status).and_return(subscriptions.first)
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
-      with_valid_schemas
 
       sub = described_class.find(:first)
       sub.host = "other-host.example.com"
@@ -307,7 +275,6 @@ describe PglogicalSubscription do
       allow(pglogical).to receive(:enabled?).and_return(true)
       allow(pglogical).to receive(:subscription_show_status).and_return(subscriptions.first)
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
-      with_valid_schemas
 
       sub = described_class.find(:first)
       sub.host = "other-host.example.com"
@@ -329,7 +296,6 @@ describe PglogicalSubscription do
       allow(pglogical).to receive(:enabled?).and_return(true)
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
       allow(MiqRegionRemote).to receive(:region_number_from_sequence).and_return(2, 2, 3, 3)
-      with_valid_schemas
 
       # node created
       allow(pglogical).to receive(:enable)
@@ -365,7 +331,6 @@ describe PglogicalSubscription do
       allow(pglogical).to receive(:enabled?).and_return(true)
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
       allow(MiqRegionRemote).to receive(:region_number_from_sequence).and_return(2, 2, 3, 3, 4, 4)
-      with_valid_schemas
 
       # node created
       allow(pglogical).to receive(:enable)
