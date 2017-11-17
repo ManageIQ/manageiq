@@ -476,7 +476,6 @@ describe Authenticator::Httpd do
 
       context "using external authorization" do
         let(:config) { {:httpd_role => true} }
-
         it "records two successful audit entries" do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
@@ -489,6 +488,26 @@ describe Authenticator::Httpd do
             :message => "Authentication successful for user testuser",
           )
           expect(AuditEvent).not_to receive(:failure)
+          authenticate
+        end
+      end
+
+      context "using a coma separated group list" do
+        let(:config) { {:httpd_role => true} }
+        let(:headers) do
+          super().merge('X-Remote-User-Groups' => 'wibble@fqdn,bubble@fqdn')
+        end
+        let(:user_attrs) do
+          { :username  => "testuser",
+            :fullname  => "Test User",
+            :firstname => "Alice",
+            :lastname  => "Aardvark",
+            :email     => "testuser@example.com",
+            :domain    => "example.com" }
+        end
+
+        it "handles a comma separated grouplist" do
+          expect(subject).to receive(:find_external_identity).with(username, user_attrs, ["wibble@fqdn", "bubble@fqdn"])
           authenticate
         end
       end

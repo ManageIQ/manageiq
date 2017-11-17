@@ -115,7 +115,7 @@ module Authenticator
                     :lastname  => request.headers['X-REMOTE-USER-LASTNAME'],
                     :email     => request.headers['X-REMOTE-USER-EMAIL'],
                     :domain    => request.headers['X-REMOTE-USER-DOMAIN']}
-      [user_attrs, (request.headers['X-REMOTE-USER-GROUPS'] || '').split(/[;:]/)]
+      [user_attrs, (request.headers['X-REMOTE-USER-GROUPS'] || '').split(/[;:,]/)]
     end
 
     def user_attrs_from_external_directory(username)
