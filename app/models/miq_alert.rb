@@ -938,7 +938,9 @@ class MiqAlert < ApplicationRecord
           alert = create(alert_hash)
           _log.info("Added sample Alert: #{alert.description}")
           if action
-            alert.options = {:notifications => {action.action_type.to_sym => action.options}}
+            alert.options ||= {}
+            alert.options[:notifications] ||= {}
+            alert.options[:notifications][action.action_type.to_sym] = action.options
             alert.save
           end
         end
