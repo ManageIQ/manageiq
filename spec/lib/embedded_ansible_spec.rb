@@ -1,8 +1,11 @@
+require 'docker'
+
 describe EmbeddedAnsible do
   context "with no available subclass" do
     before do
       expect(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
       expect(ContainerOrchestrator).to receive(:available?).and_return(false)
+      expect(Docker).to receive(:validate_version!).and_raise(RuntimeError)
     end
 
     describe ".new" do
@@ -21,6 +24,8 @@ describe EmbeddedAnsible do
   context "in an appliance" do
     before do
       allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(true)
+      allow(ContainerOrchestrator).to receive(:available?).and_return(false)
+      allow(Docker).to receive(:validate_version!).and_raise(RuntimeError)
 
       installed_rpms = {
         "ansible-tower-server" => "1.0.1",
@@ -46,6 +51,8 @@ describe EmbeddedAnsible do
   context "in Kubernetes/OpenShift" do
     before do
       expect(ContainerOrchestrator).to receive(:available?).and_return(true)
+      allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
+      allow(Docker).to receive(:validate_version!).and_raise(RuntimeError)
     end
 
     describe ".new" do
@@ -61,7 +68,29 @@ describe EmbeddedAnsible do
     end
   end
 
+  context "when using docker" do
+    before do
+      allow(ContainerOrchestrator).to receive(:available?).and_return(false)
+      allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
+      allow(Docker).to receive(:validate_version!).and_return(true)
+    end
+
+    describe ".new" do
+      it "returns an instance of DockerEmbeddedAnsible" do
+        expect(described_class.new).to be_an_instance_of(DockerEmbeddedAnsible)
+      end
+    end
+
+    describe ".available?" do
+      it "returns true" do
+        expect(described_class.available?).to be true
+      end
+    end
+  end
+
   context "with an miq_databases row" do
+    subject { NullEmbeddedAnsible.new }
+
     let(:miq_database) { MiqDatabase.first }
 
     before do

@@ -1,10 +1,12 @@
 require 'linux_admin'
+require 'docker'
 require_dependency 'embedded_ansible'
 
 describe ApplianceEmbeddedAnsible do
   before do
     allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(true)
     allow(ContainerOrchestrator).to receive(:available?).and_return(false)
+    allow(Docker).to receive(:validate_version!).and_raise(RuntimeError)
 
     installed_rpms = {
       "ansible-tower-server" => "1.0.1",
