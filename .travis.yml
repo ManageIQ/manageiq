@@ -24,6 +24,8 @@ addons:
   postgresql: '9.4'
 before_install:
 - source ${TRAVIS_BUILD_DIR}/tools/ci/before_install.sh
+install:
+- bundle update
 before_script:
 - bundle exec rake test:$TEST_SUITE:setup
 script:
