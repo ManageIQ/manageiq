@@ -17,7 +17,14 @@ class WebsocketProxy
       @ws = env['rack.hijack'].call
       # Set up the socket client for the proxy
       @sock = TCPSocket.open(@console.host_name, @console.port)
-      adapter = @console.ssl ? WebsocketSSLSocket : WebsocketSocket
+      adapter = case @console.protocol
+                when 'vnc'
+                  WebsocketSocket
+                when 'spice'
+                  @console.ssl ? WebsocketSSLSocket : WebsocketSocket
+                when 'webmks'
+                  WebsocketWebmks
+                end
       @right = adapter.new(@sock, @console)
     rescue => ex
       @logger.error(ex)
