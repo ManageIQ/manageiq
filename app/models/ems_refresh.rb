@@ -111,7 +111,7 @@ module EmsRefresh
     end
 
     ems.refresher.refresh(get_target_objects(target))
-
+    target.post_create_actions_queue if target.respond_to?(:post_create_actions_queue)
     target
   end
 

@@ -189,7 +189,10 @@ describe EmsRefresh do
   end
 
   context '.refresh_new_target' do
-    let(:ems) { FactoryGirl.create(:ems_vmware) }
+    let(:ems) do
+      _, _, zone = EvmSpecHelper.create_guid_miq_server_zone
+      FactoryGirl.create(:ems_vmware, :zone => zone)
+    end
 
     context 'targeting a new vm' do
       let(:vm_hash) do
