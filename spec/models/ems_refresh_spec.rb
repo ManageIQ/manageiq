@@ -3,6 +3,7 @@ describe EmsRefresh do
     before(:each) do
       _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
       @ems = FactoryGirl.create(:ems_vmware, :zone => zone)
+      @ems_amazon = FactoryGirl.create(:ems_amazon, :zone => zone)
     end
 
     it "with Ems" do
@@ -42,6 +43,39 @@ describe EmsRefresh do
       queue_refresh_and_assert_queue_item(target, [target])
       target2 = FactoryGirl.create(:vm_vmware, :ext_management_system => @ems)
       queue_refresh_and_assert_queue_item(target2, [target, target2])
+    end
+
+    it "does not queue more targets if a threshold is breached" do
+      # Set threshold to 1, so no more than 1 targets can be queued (+- batch_size when queuing)
+      stub_settings_merge(:ems_refresh => {:ec2 => {:max_queued_targets_threshold => 1}})
+
+      target_1 = ManagerRefresh::Target.new(:manager_id  => @ems_amazon.id,
+                                            :association => :vms,
+                                            :manager_ref => {:ems_ref => "i-8b5739f1"})
+      target_2 = ManagerRefresh::Target.new(:manager_id  => @ems_amazon.id,
+                                            :association => :vms,
+                                            :manager_ref => {:ems_ref => "i-8b5739f2"})
+      target_3 = ManagerRefresh::Target.new(:manager_id  => @ems_amazon.id,
+                                            :association => :vms,
+                                            :manager_ref => {:ems_ref => "i-8b5739f3"})
+
+      EmsRefresh.queue_refresh(target_1)
+      EmsRefresh.queue_refresh(target_2)
+      EmsRefresh.queue_refresh(target_3)
+      q_all = MiqQueue.all
+      expect(q_all.length).to eq(1)
+      # Data size is 1, since the threshold is 1
+      expect(q_all[0].data.size).to eq 1
+
+      # Set threshold to 2, so no more than 2 targets can be queued (+- batch_size when queuing)
+      stub_settings_merge(:ems_refresh => {:ec2 => {:max_queued_targets_threshold => 2}})
+
+      EmsRefresh.queue_refresh(target_2)
+      EmsRefresh.queue_refresh(target_3)
+      q_all = MiqQueue.all
+      expect(q_all.length).to eq(1)
+      # Data size is 2, since the threshold is 2
+      expect(q_all[0].data.size).to eq 2
     end
   end
 

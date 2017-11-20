@@ -20,6 +20,12 @@ module EmsRefresh
     Settings.ems_refresh[:debug_trace]
   end
 
+  def self.max_queued_targets_threshold(ems)
+    # Max number of targets we allow to be queued per 1 ems refresh
+    options = Settings.ems_refresh[ems.refresher.ems_type]
+    options.try(:[], :max_queued_targets_threshold).try(:to_i) || 10_000
+  end
+
   # If true, Refreshers will raise any exceptions encountered, instead
   # of quietly recording them as failures and continuing.
   mattr_accessor :debug_failures
@@ -170,7 +176,15 @@ module EmsRefresh
 
     # Items will be naturally serialized since there is a dedicated worker.
     miq_queue_record = MiqQueue.put_or_update(queue_options) do |msg, item|
-      targets = msg.nil? ? targets : msg.data.concat(targets)
+      data = msg.nil? ? [] : msg.data
+
+      return if data.size >= max_queued_targets_threshold(ems)
+      targets = data.concat(targets)
+
+      if targets.size >= max_queued_targets_threshold(ems)
+        _log.error(":max_queued_targets_threshold breached for EMS [#{ems.name}, #{ems.id}]. New targets won't be"\
+                   " queued, until the refresh is processed.")
+      end
 
       # If we are merging with an existing queue item we don't need a new
       # task, just use the original one
