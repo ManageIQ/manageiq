@@ -38,6 +38,7 @@ module VimConnectMixin
   module ClassMethods
     def raw_connect(options)
       require 'handsoap'
+      require 'VMwareWebService/miq_fault_tolerant_vim'
 
       options[:pass] = MiqPassword.try_decrypt(options[:pass])
       validate_connection do
