@@ -50,8 +50,23 @@
           default:
           enabled:
         MiqAction:
-          name: container_image_annotate_deny_execution
-          description: Prevent container image from running on OpenShift
+          name: container_image_annotate_scan_results
+          description: Annotate image with scan results and execution prevention status
+          action_type: default
+          options: {}
+      - qualifier: success
+        success_sequence: 1
+        success_synchronous: true
+        MiqEventDefinition:
+          name: containerimage_compliance_check
+          description: Container Image Compliance Check
+          event_type: Default
+          definition:
+          default:
+          enabled:
+        MiqAction:
+          name: container_image_annotate_scan_results
+          description: Annotate image with scan results and execution prevention status
           action_type: default
           options: {}
       Condition:
