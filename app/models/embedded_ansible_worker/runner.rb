@@ -8,8 +8,10 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
   end
 
   def do_before_work_loop
+    raise_role_notification(:role_activate_start)
     setup_ansible
     update_embedded_ansible_provider
+    raise_role_notification(:role_activate_success)
   rescue => err
     _log.log_backtrace(err)
     do_exit(err.message, 1)
@@ -28,13 +30,9 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
   end
 
   def setup_ansible
-    raise_role_notification(:role_activate_start)
-
     _log.info("calling EmbeddedAnsible.start")
     EmbeddedAnsible.start
     _log.info("calling EmbeddedAnsible.start finished")
-
-    raise_role_notification(:role_activate_success)
   end
 
   def update_embedded_ansible_provider

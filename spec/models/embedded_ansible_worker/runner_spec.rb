@@ -15,11 +15,43 @@ describe EmbeddedAnsibleWorker::Runner do
       r
     }
 
-    it "#do_before_work_loop exits on exceptions" do
-      expect(runner).to receive(:setup_ansible)
-      expect(runner).to receive(:update_embedded_ansible_provider).and_raise(StandardError)
-      expect(runner).to receive(:do_exit)
-      runner.do_before_work_loop
+    context "#do_before_work_loop" do
+      let(:start_notification_id) { NotificationType.find_by(:name => "role_activate_start").id }
+      let(:success_notification_id) { NotificationType.find_by(:name => "role_activate_success").id }
+
+      before do
+        ServerRole.seed
+        NotificationType.seed
+      end
+
+      it "creates a notification to inform the user that the service has started" do
+        expect(runner).to receive(:setup_ansible)
+        expect(runner).to receive(:update_embedded_ansible_provider)
+
+        runner.do_before_work_loop
+
+        note = Notification.find_by(:notification_type_id => success_notification_id)
+        expect(note.options[:role_name]).to eq("Embedded Ansible")
+        expect(note.options.keys).to include(:server_name)
+      end
+
+      it "creates a notification to inform the user that the role has been assigned" do
+        expect(runner).to receive(:setup_ansible)
+        expect(runner).to receive(:update_embedded_ansible_provider)
+
+        runner.do_before_work_loop
+
+        note = Notification.find_by(:notification_type_id => start_notification_id)
+        expect(note.options[:role_name]).to eq("Embedded Ansible")
+        expect(note.options.keys).to include(:server_name)
+      end
+
+      it "exits on exceptions" do
+        expect(runner).to receive(:setup_ansible)
+        expect(runner).to receive(:update_embedded_ansible_provider).and_raise(StandardError)
+        expect(runner).to receive(:do_exit)
+        runner.do_before_work_loop
+      end
     end
 
     context "#update_embedded_ansible_provider" do
@@ -89,36 +121,6 @@ describe EmbeddedAnsibleWorker::Runner do
           expect(userid).to eq("admin")
           expect(password).to eq("secret")
         end
-      end
-    end
-
-    context "#setup_ansible" do
-      let(:start_notification_id) { NotificationType.find_by(:name => "role_activate_start").id }
-      let(:success_notification_id) { NotificationType.find_by(:name => "role_activate_success").id }
-
-      before do
-        ServerRole.seed
-        NotificationType.seed
-      end
-
-      it "creates a notification to inform the user that the service has started" do
-        expect(EmbeddedAnsible).to receive(:start)
-
-        runner.setup_ansible
-
-        note = Notification.find_by(:notification_type_id => success_notification_id)
-        expect(note.options[:role_name]).to eq("Embedded Ansible")
-        expect(note.options.keys).to include(:server_name)
-      end
-
-      it "creates a notification to inform the user that the role has been assigned" do
-        expect(EmbeddedAnsible).to receive(:start)
-
-        runner.setup_ansible
-
-        note = Notification.find_by(:notification_type_id => start_notification_id)
-        expect(note.options[:role_name]).to eq("Embedded Ansible")
-        expect(note.options.keys).to include(:server_name)
       end
     end
   end
