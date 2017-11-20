@@ -8,7 +8,7 @@ context "save_tags_inventory" do
                                  :category_description => category_name)
     category = mapping.tag.category
     entry = category.add_entry(:name => tag_name, :description => tag_name)
-    category.tag
+    entry.tag
   end
 
   before(:each) do
