@@ -472,11 +472,15 @@ describe "Services API" do
     end
 
     it "can query vms as subcollection via decorators with additional decorators" do
-      run_get services_url(svc1.id), :expand => "vms", :attributes => "", :decorators => "vms.supports_console?"
+      run_get(services_url(svc1.id), :expand => "vms", :decorators => "vms.supports_console?,vms.supports_cockpit?,vms.supports_vnc_console?")
 
-      expect_svc_with_vms
-      expect_results_to_match_hash("vms", [{"id" => vm1.id, "supports_console?" => true},
-                                           {"id" => vm2.id, "supports_console?" => true}])
+      expected = {
+        "vms" => [
+          a_hash_including("id" => vm1.id, "supports_console?" => true, "supports_cockpit?" => anything, "supports_vnc_console?" => anything),
+          a_hash_including("id" => vm2.id, "supports_console?" => true, "supports_cockpit?" => anything, "supports_vnc_console?" => anything)
+        ]
+      }
+      expect(response.parsed_body).to include(expected)
     end
 
     it "cannot query vms via both virtual attribute and subcollection" do
