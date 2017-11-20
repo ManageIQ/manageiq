@@ -38,7 +38,7 @@ describe ChargebackContainerProject do
       ChargebackRateDetailMeasure.seed
       ChargeableField.seed
       MiqEnterprise.seed
-      ManageIQ::Consumption::ShowbackInputMeasure.seed
+      ManageIQ::Consumption::InputMeasure.seed
 
       EvmSpecHelper.create_guid_miq_server_zone
       @project = FactoryGirl.create(:container_project, :name => "my project", :ext_management_system => ems,
@@ -244,7 +244,7 @@ describe ChargebackContainerProject do
 
   context "New Chargeback" do
     before do
-      ManageIQ::Consumption::ShowbackInputMeasure.seed
+      ManageIQ::Consumption::InputMeasure.seed
 
       stub_settings(:new_chargeback => '1')
     end
