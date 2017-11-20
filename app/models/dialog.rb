@@ -11,8 +11,8 @@ class Dialog < ApplicationRecord
   has_many :resource_actions
   virtual_has_one :content, :class_name => "Hash"
 
-  before_destroy          :reject_if_has_resource_actions
-  validates :label, :unique_within_region => true
+  before_destroy :reject_if_has_resource_actions
+  validates      :name, :unique_within_region => true
 
   alias_attribute  :name, :label
 
