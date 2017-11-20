@@ -492,7 +492,7 @@ describe Authenticator::Httpd do
         end
       end
 
-      context "using a coma separated group list" do
+      context "using a comma separated group list" do
         let(:config) { {:httpd_role => true} }
         let(:headers) do
           super().merge('X-Remote-User-Groups' => 'wibble@fqdn,bubble@fqdn')
