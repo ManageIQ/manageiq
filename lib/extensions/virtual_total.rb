@@ -102,8 +102,21 @@ module VirtualTotal
                       else
                         reflection.klass.arel_attribute(column).send(method_name)
                       end
-        t.grouping(foreign_table.project(arel_column)
-                                .where(t[local_key].eq(foreign_table[foreign_key])))
+
+        where_clause = t[local_key].eq(foreign_table[foreign_key])
+
+        # Default relations are expected when applying this arel, so grab the
+        # AST (arel) from the where clause of the scope, and apply it to the
+        # above where_clause.
+        #
+        # I don't think anything besides a where clause would ever be used in a
+        # default scope/relation... heres to hoping...
+        if reflection.scope
+          reflection_scope_arel = reflection.scope_for(reflection.klass).where_clause.ast
+          where_clause = where_clause.and(reflection_scope_arel)
+        end
+
+        t.grouping(foreign_table.project(arel_column).where(where_clause))
       end
     end
   end
