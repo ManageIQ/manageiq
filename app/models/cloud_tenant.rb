@@ -32,7 +32,7 @@ class CloudTenant < ApplicationRecord
 
   acts_as_tree :order => 'name'
 
-  virtual_total :total_vms, :vms
+  virtual_total :total_vms, :vms, :arel => Vm.vms_arel
 
   def self.class_by_ems(ext_management_system)
     ext_management_system && ext_management_system.class::CloudTenant
