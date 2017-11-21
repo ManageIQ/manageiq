@@ -15,7 +15,8 @@ module ManagerRefresh::SaveCollection
         # Cache the connection for the batch
         connection = get_connection
 
-        all_attribute_keys_array = all_attribute_keys.to_a
+        # Make sure we don't send a primary_key for INSERT in any form, it could break PG sequencer
+        all_attribute_keys_array = all_attribute_keys.to_a - [primary_key.to_s, primary_key.to_sym]
         table_name               = inventory_collection.model_class.table_name
         values                   = hashes.map do |hash|
           "(#{all_attribute_keys_array.map { |x| quote(connection, hash[x], x) }.join(",")})"
