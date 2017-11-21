@@ -172,6 +172,10 @@ group :rest_api, :manageiq_default do
   manageiq_plugin "manageiq-api"
 end
 
+group :graphql_api, :manageiq_default do
+  manageiq_plugin "manageiq-graphql"
+end
+
 group :scheduler, :manageiq_default do
   # Modified gems (forked on Github)
   gem "rufus-scheduler", "=3.1.10.2", :git => "https://github.com/ManageIQ/rufus-scheduler.git", :require => false, :tag => "v3.1.10-2"
