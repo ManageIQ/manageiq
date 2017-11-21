@@ -32,6 +32,9 @@ class Classification < ApplicationRecord
   scope :read_only,  -> { where(:read_only => true) }
   scope :writeable,  -> { where(:read_only => false) }
 
+  scope :is_category, -> { where(:parent_id => 0) }
+  scope :is_entry,    -> { where.not(:parent_id => 0) }
+
   DEFAULT_NAMESPACE = "/managed"
 
   default_value_for :read_only,    false
