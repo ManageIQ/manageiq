@@ -23,6 +23,9 @@ class ContainerLabelTagMapping < ApplicationRecord
 
   require_nested :Mapper
 
+  TAG_PREFIXES = ['/managed/amazon:', '/managed/kubernetes:'].freeze
+  validate :validate_tag_prefix
+
   # Return ContainerLabelTagMapping::Mapper instance that holds all current mappings,
   # can compute applicable tags, and create/find Tag records.
   def self.mapper
@@ -43,15 +46,22 @@ class ContainerLabelTagMapping < ApplicationRecord
   # All tag references must have been resolved first by Mapper#find_or_create_tags.
   def self.retag_entity(entity, tag_references)
     mapped_tags = Mapper.references_to_tags(tag_references)
-    existing_tags = entity.tags
+    existing_tags = entity.tags.controlled_by_mapping
     Tagging.transaction do
       (mapped_tags - existing_tags).each do |tag|
         Tagging.create!(:taggable => entity, :tag => tag)
       end
-      (existing_tags - mapped_tags).select { |tag| controls_tag?(tag) }.tap do |tags|
+      (existing_tags - mapped_tags).tap do |tags|
         Tagging.where(:taggable => entity, :tag => tags.collect(&:id)).destroy_all
       end
     end
     entity.tags.reset
+    entity.taggings.reset
+  end
+
+  def validate_tag_prefix
+    unless TAG_PREFIXES.any? { |prefix| tag.name.start_with?(prefix) }
+      errors.add(:tag_id, "tag category name #{tag.name} doesn't start with any of #{TAG_PREFIXES}")
+    end
   end
 end
