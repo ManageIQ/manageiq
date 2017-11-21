@@ -23,6 +23,9 @@ class Vm < VmOrTemplate
         result ? result.and(condition) : condition
       end
 
+      # Vm.active
+      arel_conditions = arel_conditions.and(vm_table[:ems_id].not_eq(nil))
+
       t.grouping(vm_table.project(arel_column).where(t[local_key].eq(vm_table[foreign_key])).where(arel_conditions))
     end
   end
