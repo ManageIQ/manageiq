@@ -5,6 +5,60 @@ describe VmOrTemplate do
   let(:ems)     { FactoryGirl.create(:ext_management_system) }
   let(:storage) { FactoryGirl.create(:storage) }
 
+  # Basically these specs are a truth table for the #registered? method
+  describe "being registered" do
+    subject                { FactoryGirl.create(:vm_or_template, attrs) }
+    let(:host)             { FactoryGirl.create(:host) }
+
+    context "with attrs of template => false, ems_id => nil, host_id => nil" do
+      let(:attrs) { { :template => false, :ems_id => nil, :host_id => nil } }
+
+      it("is not #registered?")        { expect(subject.registered?).to be false }
+    end
+
+    context "with attrs template => false, ems_id => nil, host_id => [ID]" do
+      let(:attrs) { { :template => false, :ems_id => nil, :host_id => host.id } }
+
+      it("is #registered?")            { expect(subject.registered?).to be true }
+    end
+
+    context "with attrs template => false, ems_id => [ID], host_id => nil" do
+      let(:attrs) { { :template => false, :ems_id => ems.id, :host_id => nil } }
+
+      it("is not #registered?")        { expect(subject.registered?).to be false }
+    end
+
+    context "with attrs template => false, ems_id => [ID], host_id => [ID]" do
+      let(:attrs) { { :template => false, :ems_id => ems.id, :host_id => host.id } }
+
+      it("is #registered?")            { expect(subject.registered?).to be true }
+    end
+
+    context "with attrs template => true, ems_id => nil, host_id => nil" do
+      let(:attrs) { { :template => true, :ems_id => nil, :host_id => nil } }
+
+      it("is not #registered?")        { expect(subject.registered?).to be false }
+    end
+
+    context "with attrs if template => true, ems_id => nil, host_id => [ID]" do
+      let(:attrs) { { :template => true, :ems_id => nil, :host_id => host.id } }
+
+      it("is not #registered?")        { expect(subject.registered?).to be false }
+    end
+
+    context "with attrs if template => true, ems_id => [ID], host_id => nil" do
+      let(:attrs) { { :template => true, :ems_id => ems.id, :host_id => nil } }
+
+      it("is not #registered?")        { expect(subject.registered?).to be false }
+    end
+
+    context "with attrs if template => true, ems_id => [ID], host_id => [ID]" do
+      let(:attrs) { { :template => true, :ems_id => ems.id, :host_id => host.id } }
+
+      it("is #registered?")            { expect(subject.registered?).to be true }
+    end
+  end
+
   context ".event_by_property" do
     context "should add an EMS event" do
       before(:each) do

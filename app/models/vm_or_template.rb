@@ -301,7 +301,7 @@ class VmOrTemplate < ApplicationRecord
   # Determines if the VM is on an EMS or Host
   def registered?
     # TODO: Vmware specific
-    return false if self.template? && ext_management_system_id.nil?
+    return false if template? && ems_id.nil?
     host_id.present?
   end
 
