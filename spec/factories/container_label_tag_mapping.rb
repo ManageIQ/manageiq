@@ -1,6 +1,7 @@
 FactoryGirl.define do
   factory :container_label_tag_mapping do
     label_name 'name'
+    tag { FactoryGirl.create(:managed_kubernetes_tag) }
 
     trait :only_nodes do
       labeled_resource_type 'ContainerNode'
