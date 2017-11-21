@@ -194,6 +194,14 @@ class VmOrTemplate < ApplicationRecord
   scope :orphaned,  ->       { where(:ems_id => nil).where.not(:storage_id => nil) }
   scope :with_ems,  ->       { where.not(:ems_id => nil) }
 
+  # The SQL form of `#registered?`, with it's inverse as well.
+  # TODO: Vmware Specific (copied (old) TODO from #registered?)
+  scope :registered, (lambda do
+    where(arel_table[:template].eq(false).or(arel_table[:ems_id].not_eq(nil)).and(arel_table[:host_id].not_eq(nil)))
+  end)
+  scope :unregistered, (lambda do
+    where(arel_table[:template].eq(true).and(arel_table[:ems_id].eq(nil)).or(arel_table[:host_id].eq(nil)))
+  end)
 
   alias_method :datastores, :storages    # Used by web-services to return datastores as the property name
 
