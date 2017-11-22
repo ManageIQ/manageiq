@@ -1,7 +1,7 @@
 module ManagerRefresh
   class InventoryCollection
     module Index
-      class Resolver
+      class Proxy
         include Vmdb::Logging
 
         def initialize(inventory_collection, secondary_refs)
@@ -15,12 +15,12 @@ module ManagerRefresh
           @local_db_indexes = {}
 
           @all_refs.each do |index_name, attribute_names|
-            @main_indexes[index_name] = ManagerRefresh::InventoryCollection::Index::Storage::Main.new(
+            @main_indexes[index_name] = ManagerRefresh::InventoryCollection::Index::Type::Data.new(
               inventory_collection,
               attribute_names
             )
 
-            @local_db_indexes[index_name] = ManagerRefresh::InventoryCollection::Index::Storage::LocalDbCache.new(
+            @local_db_indexes[index_name] = ManagerRefresh::InventoryCollection::Index::Type::LocalDb.new(
               inventory_collection,
               attribute_names,
               @main_indexes[index_name]
@@ -70,10 +70,10 @@ module ManagerRefresh
           # TODO(lsmola) lazy_find will support only hash, then we can remove the _by variant
           return if manager_uuid.nil?
           # TODO(lsmola) Not doing to_s shows issue in network.orchestration_stack = persister.orchestration_stacks.lazy_find(collector.orchestration_stack_by_resource_id(n.id))
-          return unless assert_index(manager_uuid.to_s, ref)
+          return unless assert_index(manager_uuid, ref)
 
           ::ManagerRefresh::InventoryObjectLazy.new(inventory_collection,
-                                                    main_index(ref).object_index(manager_uuid.to_s), # TODO(lsmola) I need to rethink this
+                                                    main_index(ref).object_index(manager_uuid), # TODO(lsmola) I need to rethink this
                                                     manager_uuid,
                                                     :ref => ref, :key => key, :default => default)
         end

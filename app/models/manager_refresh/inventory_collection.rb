@@ -93,8 +93,8 @@ module ManagerRefresh
 
     delegate :each, :size, :to => :to_a
 
-    attr_reader :index_resolver
-    delegate :find, :find_by, :lazy_find, :lazy_find_by, :primary_index, :store_indexes_for_inventory_object, :to => :index_resolver
+    attr_reader :index_proxy
+    delegate :find, :find_by, :lazy_find, :lazy_find_by, :primary_index, :store_indexes_for_inventory_object, :to => :index_proxy
 
     # @param model_class [Class] A class of an ApplicationRecord model, that we want to persist into the DB or load from
     #        the DB.
@@ -453,7 +453,7 @@ module ManagerRefresh
       @references                       = Set.new
       @attribute_references             = Set.new
 
-      @index_resolver = ManagerRefresh::InventoryCollection::Index::Resolver.new(self, secondary_refs)
+      @index_proxy = ManagerRefresh::InventoryCollection::Index::Proxy.new(self, secondary_refs)
 
       @data_collection_finalized = false
 
