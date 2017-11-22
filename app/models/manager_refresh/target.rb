@@ -1,6 +1,6 @@
 module ManagerRefresh
   class Target
-    attr_reader :association, :manager_ref, :event_id, :options
+    attr_reader :association, :manager_ref, :event_id, :options, :payload_id
 
     # @param association [Symbol] An existing association on Manager, that lists objects represented by a Target, naming
     #                             should be the same of association of a counterpart InventoryCollection object
@@ -9,8 +9,9 @@ module ManagerRefresh
     # @param manager [ManageIQ::Providers::BaseManager] The Manager owning the Target
     # @param manager_id [Integer] A primary key of the Manager owning the Target
     # @param event_id [Integer] A primary key of the EmsEvent associated with the Target
+    # @param payload_id [Integer] A primary key of a BinaryBlob containing the target inventory payload
     # @param options [Hash] A free form options hash
-    def initialize(association:, manager_ref:, manager: nil, manager_id: nil, event_id: nil, options: {})
+    def initialize(association:, manager_ref:, manager: nil, manager_id: nil, event_id: nil, payload_id: nil, options: {})
       raise "Provide either :manager or :manager_id argument" if manager.nil? && manager_id.nil?
 
       @manager     = manager
@@ -18,6 +19,7 @@ module ManagerRefresh
       @association = association
       @manager_ref = manager_ref
       @event_id    = event_id
+      @payload_id  = payload_id
       @options     = options
     end
 
@@ -38,6 +40,7 @@ module ManagerRefresh
         :manager_id  => manager_id,
         :association => association,
         :manager_ref => manager_ref,
+        :payload_id  => payload_id,
         :event_id    => event_id,
         :options     => options
       }
@@ -45,6 +48,15 @@ module ManagerRefresh
 
     alias id dump
     alias name manager_ref
+
+    def payload=(data)
+      payload_blob.try(:destroy)
+      @payload_id = data ? BinaryBlob.create!(:binary => data).id : nil
+    end
+
+    def payload
+      payload_blob.try(:binary)
+    end
 
     # @return [ManageIQ::Providers::BaseManager] The Manager owning the Target
     def manager
@@ -61,6 +73,10 @@ module ManagerRefresh
     # @return [ApplicationRecord] A ManagerRefresh::Target loaded from the database as AR object
     def load_from_db
       manager.public_send(association).find_by(manager_ref)
+    end
+
+    def payload_blob
+      BinaryBlob.find_by(:id => payload_id) if payload_id
     end
   end
 end

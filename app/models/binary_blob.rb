@@ -1,4 +1,6 @@
 class BinaryBlob < ApplicationRecord
+  include_concern 'Purging'
+
   belongs_to :resource, :polymorphic => true
   has_many :binary_blob_parts, -> { order(:id) }, :dependent => :delete_all
 

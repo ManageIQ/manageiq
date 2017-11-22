@@ -20,6 +20,12 @@ module EmsRefresh
     Settings.ems_refresh[:debug_trace]
   end
 
+  def self.max_queued_targets_threshold(ems)
+    # Max number of targets we allow to be queued per 1 ems refresh
+    options = Settings.ems_refresh[ems.refresher.ems_type]
+    options.try(:[], :max_queued_targets_threshold).try(:to_i) || 10_000
+  end
+
   # If true, Refreshers will raise any exceptions encountered, instead
   # of quietly recording them as failures and continuing.
   mattr_accessor :debug_failures
@@ -166,10 +172,19 @@ module EmsRefresh
     # If this is the only refresh then we will use the task we just created,
     # if we merge with another queue item then we will return its task_id
     task_id = nil
+    new_targets = targets
 
     # Items will be naturally serialized since there is a dedicated worker.
-    MiqQueue.put_or_update(queue_options) do |msg, item|
-      targets = msg.nil? ? targets : msg.data.concat(targets)
+    miq_queue_record = MiqQueue.put_or_update(queue_options) do |msg, item|
+      data = msg.nil? ? [] : msg.data
+
+      return if data.size >= max_queued_targets_threshold(ems)
+      targets = data.concat(targets)
+
+      if targets.size >= max_queued_targets_threshold(ems)
+        _log.error(":max_queued_targets_threshold breached for EMS [#{ems.name}, #{ems.id}]. New targets won't be"\
+                   " queued, until the refresh is processed.")
+      end
 
       # If we are merging with an existing queue item we don't need a new
       # task, just use the original one
@@ -193,6 +208,20 @@ module EmsRefresh
         :task_id     => task_id,
         :msg_timeout => queue_timeout
       )
+    end
+
+    if new_targets.present?
+      # If we are storing data, we want to make sure any BinaryBlob present will be tied back to this MiqQueue record
+      payload_ids = new_targets.map do |type, target_hash|
+        next if type != "ManagerRefresh::Target"
+        target_hash[:payload_id]
+      end.compact
+
+      if payload_ids
+        BinaryBlob
+          .where(:id => payload_ids, :resource_id => nil)
+          .update_all(:resource_id => miq_queue_record.id, :resource_type => miq_queue_record.class.base_class)
+      end
     end
 
     task_id

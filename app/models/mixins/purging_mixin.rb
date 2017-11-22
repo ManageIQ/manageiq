@@ -92,6 +92,12 @@ module PurgingMixin
       total
     end
 
+    def purge_by_scope(older_than = nil, window = nil, &block)
+      _log.info("Purging #{table_name.humanize}...")
+      total = purge_in_batches(purge_scope(older_than), window || purge_window_size, &block)
+      _log.info("Purging #{table_name.humanize}...Complete - Deleted #{total} records")
+    end
+
     private
 
     # Private:  The ids to purge if we want to keep a fixed number of records
