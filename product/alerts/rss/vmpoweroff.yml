@@ -21,7 +21,7 @@ search_conditions: "event_type = 'VmPoweredOffEvent'"
 limit_to_time: 
 limit_to_count: 
 orderby:
-  :created_on :desc
+  :created_on: :desc
 
 # tags_include: any or all
 tag_ns: 
