@@ -116,7 +116,7 @@ group :nuage, :manageiq_default do
 end
 
 group :qpid_proton, :optional => true do
-  gem "qpid_proton",                    "~>0.18",        :git => "https://github.com/xlab-si/qpid_proton_gem", :require => false
+  gem "qpid_proton",                    "~>0.18.1",      :require => false
 end
 
 group :openshift, :manageiq_default do
@@ -207,7 +207,7 @@ unless ENV["APPLIANCE"]
   group :development do
     gem "foreman"
     gem "haml_lint",        "~>0.20.0", :require => false
-    gem "rubocop",          "~>0.47.0", :require => false
+    gem "rubocop",          "~>0.49.0", :require => false
     gem "scss_lint",        "~>0.48.0", :require => false
     gem "yard"
   end

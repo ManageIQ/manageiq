@@ -11,6 +11,8 @@ script,Execute an external script
 prevent,Prevent current event from proceeding
 container_image_analyze,Initiate SmartState Analysis for Container Image
 container_image_annotate_deny_execution,Prevent container image from running on OpenShift
+container_image_annotate_allow_execution,Mark container image as safe for running on OpenShift
+container_image_annotate_scan_results,Annotate image with scan results and execution prevention status
 vm_start,Start Virtual Machine
 vm_stop,Stop Virtual Machine
 vm_suspend,Suspend Virtual Machine

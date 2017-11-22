@@ -1,5 +1,5 @@
 describe ContainerLabelTagMapping do
-  let(:cat_classification) { FactoryGirl.create(:classification, :read_only => true) }
+  let(:cat_classification) { FactoryGirl.create(:classification, :read_only => true, :name => 'kubernetes:1') }
   let(:cat_tag) { cat_classification.tag }
   let(:tag1) { cat_classification.add_entry(:name => 'value_1', :description => 'value-1').tag }
   let(:tag2) { cat_classification.add_entry(:name => 'something_else', :description => 'Another tag').tag }
@@ -7,9 +7,13 @@ describe ContainerLabelTagMapping do
   let(:empty_tag_under_cat) do
     cat_classification.add_entry(:name => 'my_empty', :description => 'Custom description for empty value').tag
   end
-  let(:tag_in_another_cat) do
-    cat = FactoryGirl.create(:classification, :read_only => true)
-    cat.add_entry(:name => 'unrelated', :description => 'Unrelated tag').tag
+  let(:user_tag1) do
+    FactoryGirl.create(:classification_cost_center_with_tags).entries.first.tag
+  end
+  let(:user_tag2) do
+    # What's worse, users can create categories with same name structure - but they won't be read_only:
+    cat = FactoryGirl.create(:classification, :name => 'kubernetes::user_could_enter_this')
+    cat.add_entry(:name => 'hello', :description => 'Hello').tag
   end
   let(:ems) { FactoryGirl.build(:ext_management_system) }
 
@@ -54,8 +58,6 @@ describe ContainerLabelTagMapping do
       FactoryGirl.create(:container_label_tag_mapping, :tag => cat_tag)
       FactoryGirl.create(:container_label_tag_mapping, :label_value => 'value-1', :tag => tag1)
       FactoryGirl.create(:container_label_tag_mapping, :label_value => 'value-1', :tag => tag2)
-      # Force a tag to exist that we don't map to (for testing .controls_tag?).
-      tag_in_another_cat
     end
 
     it "prefers specific-value" do
@@ -63,39 +65,32 @@ describe ContainerLabelTagMapping do
     end
 
     it "creates tag for new value" do
-      expect(ContainerLabelTagMapping.controls_tag?(tag1)).to be true
-      expect(ContainerLabelTagMapping.controls_tag?(tag2)).to be true
-      expect(ContainerLabelTagMapping.controls_tag?(tag_in_another_cat)).to be false
+      expect(Tag.controlled_by_mapping).to contain_exactly(tag1, tag2)
 
       mapper1 = ContainerLabelTagMapping.mapper
       tags = map_to_tags(mapper1, 'ContainerNode', 'name' => 'value-2')
       expect(tags.size).to eq(1)
-      expect(tags[0].name).to eq(cat_tag.name + '/value_2')
-      expect(tags[0].classification.description).to eq('value-2')
+      generated_tag = tags[0]
+      expect(generated_tag.name).to eq(cat_tag.name + '/value_2')
+      expect(generated_tag.classification.description).to eq('value-2')
 
-      expect(ContainerLabelTagMapping.controls_tag?(tag1)).to be true
-      expect(ContainerLabelTagMapping.controls_tag?(tag2)).to be true
-      expect(ContainerLabelTagMapping.controls_tag?(tags[0])).to be true
+      expect(Tag.controlled_by_mapping).to contain_exactly(tag1, tag2, generated_tag)
 
       # But nothing changes when called again, the previously created tag is re-used.
 
       tags2 = map_to_tags(mapper1, 'ContainerNode', 'name' => 'value-2')
-      expect(tags2).to contain_exactly(tags[0])
+      expect(tags2).to contain_exactly(generated_tag)
 
-      expect(ContainerLabelTagMapping.controls_tag?(tag1)).to be true
-      expect(ContainerLabelTagMapping.controls_tag?(tag2)).to be true
-      expect(ContainerLabelTagMapping.controls_tag?(tags[0])).to be true
+      expect(Tag.controlled_by_mapping).to contain_exactly(tag1, tag2, generated_tag)
 
       # And nothing changes when we re-load the mappings table.
 
       mapper2 = ContainerLabelTagMapping.mapper
 
       tags2 = map_to_tags(mapper2, 'ContainerNode', 'name' => 'value-2')
-      expect(tags2).to contain_exactly(tags[0])
+      expect(tags2).to contain_exactly(generated_tag)
 
-      expect(ContainerLabelTagMapping.controls_tag?(tag1)).to be true
-      expect(ContainerLabelTagMapping.controls_tag?(tag2)).to be true
-      expect(ContainerLabelTagMapping.controls_tag?(tags[0])).to be true
+      expect(Tag.controlled_by_mapping).to contain_exactly(tag1, tag2, generated_tag)
     end
 
     it "handles names that differ only by case" do
@@ -164,7 +159,7 @@ describe ContainerLabelTagMapping do
     it "maps same new value in both into 1 new tag" do
       tags = map_to_tags(new_mapper, 'ContainerNode', 'name1' => 'value', 'name2' => 'value')
       expect(tags.size).to eq(1)
-      expect(ContainerLabelTagMapping.controls_tag?(tags[0])).to be true
+      expect(Tag.controlled_by_mapping).to contain_exactly(tags[0])
     end
   end
 
@@ -223,8 +218,13 @@ describe ContainerLabelTagMapping do
     end
 
     before(:each) do
-      # For tag1, tag2 etc. to be considered controlled by the mapping
+      # For tag1, tag2 to be controlled by the mapping, though current implementation doesn't care.
       FactoryGirl.create(:container_label_tag_mapping, :tag => cat_tag)
+      tag1
+      tag2
+
+      user_tag1
+      user_tag2
     end
 
     it "assigns new tags, idempotently" do
@@ -243,13 +243,25 @@ describe ContainerLabelTagMapping do
 
     it "preserves user tags" do
       user_tag = FactoryGirl.create(:tag, :name => '/managed/mycat/mytag')
-      expect(ContainerLabelTagMapping.controls_tag?(user_tag)).to be false
-      expect(ContainerLabelTagMapping.controls_tag?(tag1)).to be true
-      expect(ContainerLabelTagMapping.controls_tag?(tag2)).to be true
-      expect(ContainerLabelTagMapping.controls_tag?(tag3)).to be true
-      node.tags = [tag1, user_tag, tag2]
+      expect(Tag.controlled_by_mapping).to contain_exactly(tag1, tag2, tag3)
+      node.tags = [tag1, user_tag1, user_tag2, tag2]
+      expect(node.tags.controlled_by_mapping).to contain_exactly(tag1, tag2)
+
       ContainerLabelTagMapping.retag_entity(node, [ref_to_tag(tag1), ref_to_tag(tag3)])
-      expect(node.tags).to contain_exactly(user_tag, tag1, tag3)
+
+      expect(node.tags).to contain_exactly(user_tag1, user_tag2, tag1, tag3)
+      expect(node.tags.controlled_by_mapping).to contain_exactly(tag1, tag3)
+    end
+
+    # What happens with tags no mapping points to?
+    it "considers appropriately named tags as mapping-controlled" do
+      cat = FactoryGirl.create(:classification, :read_only => true, :name => 'kubernetes:foo')
+      k_tag = cat.add_entry(:name => 'unrelated', :description => 'Unrelated tag').tag
+      cat = FactoryGirl.create(:classification, :read_only => true, :name => 'amazon:river')
+      a_tag = cat.add_entry(:name => 'jungle', :description => 'Rainforest').tag
+
+      expect(Tag.controlled_by_mapping).not_to include(user_tag1, user_tag2)
+      expect(Tag.controlled_by_mapping).to include(k_tag, a_tag)
     end
   end
 end
