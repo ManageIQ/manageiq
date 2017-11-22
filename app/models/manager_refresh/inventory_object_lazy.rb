@@ -5,9 +5,10 @@ module ManagerRefresh
     attr_reader :ems_ref, :ref, :inventory_collection, :key, :default
 
     # TODO: ems_ref is inaccurate name, doubly so if it depends on ref.
-    def initialize(inventory_collection, ems_ref, ref: :manager_ref, key: nil, default: nil)
+    def initialize(inventory_collection, ems_ref, full_index, ref: :manager_ref, key: nil, default: nil)
       @ems_ref              = ems_ref
       @ref                  = ref
+      @full_index           = full_index
       @inventory_collection = inventory_collection
       @key                  = key
       @default              = default

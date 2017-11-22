@@ -85,13 +85,16 @@ module ManagerRefresh
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
                 :internal_attributes, :delete_method, :dependency_attributes, :manager_ref,
                 :association, :complete, :update_only, :transitive_dependency_attributes, :custom_manager_uuid,
-                :custom_db_finder, :check_changed, :arel, :builder_params, :loaded_references, :db_data_index,
+                :custom_db_finder, :check_changed, :arel, :builder_params,
                 :inventory_object_attributes, :name, :saver_strategy, :manager_uuids,
                 :skeletal_manager_uuids, :targeted_arel, :targeted, :manager_ref_allowed_nil, :use_ar_object,
-                :secondary_refs, :secondary_indexes, :created_records, :updated_records, :deleted_records,
+                :secondary_refs, :created_records, :updated_records, :deleted_records,
                 :custom_reconnect_block, :batch_extra_attributes
 
     delegate :each, :size, :to => :to_a
+
+    attr_reader :index_resolver
+    delegate :find, :find_by, :lazy_find, :lazy_find_by, :primary_index, :store_indexes_for_inventory_object, :to => :index_resolver
 
     # @param model_class [Class] A class of an ApplicationRecord model, that we want to persist into the DB or load from
     #        the DB.
@@ -415,7 +418,6 @@ module ManagerRefresh
       @parent                 = parent || nil
       @arel                   = arel
       @dependency_attributes  = dependency_attributes || {}
-      @secondary_indexes      = secondary_refs.map { |n, _k| [n, {}] }.to_h
       @strategy               = process_strategy(strategy)
       @delete_method          = delete_method || :destroy
       @custom_save_block      = custom_save_block
@@ -443,7 +445,6 @@ module ManagerRefresh
       @inventory_object_attributes = inventory_object_attributes
 
       @data                             = []
-      @data_index                       = {}
       @saved                          ||= false
       @attributes_blacklist             = Set.new
       @attributes_whitelist             = Set.new
@@ -451,9 +452,10 @@ module ManagerRefresh
       @dependees                        = Set.new
       @references                       = Set.new
       @attribute_references             = Set.new
-      @loaded_references                = Set.new
-      @db_data_index                    = nil
-      @data_collection_finalized        = false
+
+      @index_resolver = ManagerRefresh::InventoryCollection::Index::Resolver.new(self, secondary_refs)
+
+      @data_collection_finalized = false
 
       @created_records = []
       @updated_records = []
@@ -479,10 +481,6 @@ module ManagerRefresh
 
     def to_a
       data
-    end
-
-    def to_hash
-      data_index
     end
 
     def from_raw_data(inventory_objects_data, available_inventory_collections)
@@ -627,48 +625,14 @@ module ManagerRefresh
     end
 
     def <<(inventory_object)
-      unless data_index[inventory_object.manager_uuid]
-        data_index[inventory_object.manager_uuid] = inventory_object
-        secondary_refs.each do |name, keys|
-          secondary_indexes[name][inventory_object.id_with_keys(keys)] = inventory_object
-        end
+      unless primary_index.find(inventory_object.manager_uuid)
+        # TODO(lsmola) Abstract InventoryCollection::Data::Storage
         data << inventory_object
+        store_indexes_for_inventory_object(inventory_object)
       end
       self
     end
     alias push <<
-
-    def named_ref(ref)
-      ref == :manager_ref ? manager_ref : secondary_refs[ref]
-    end
-
-    def named_index(ref)
-      ref == :manager_ref ? data_index : secondary_indexes[ref]
-    end
-
-    # TODO: use object_index_with_keys instead of adding ref?
-    def object_index(object, ref: :manager_ref)
-      index_array = named_ref(ref).map do |attribute|
-        if object.respond_to?(:[])
-          object[attribute].to_s
-        else
-          object.public_send(attribute).try(:id) || object.public_send(attribute).to_s
-        end
-      end
-      stringify_reference(index_array)
-    end
-
-    def object_index_with_keys(keys, object)
-      keys.map { |attribute| object.public_send(attribute).to_s }.join(stringify_joiner)
-    end
-
-    def stringify_joiner
-      "__"
-    end
-
-    def stringify_reference(reference)
-      reference.join(stringify_joiner)
-    end
 
     def manager_ref_to_cols
       # TODO(lsmola) this should contain the polymorphic _type, otherwise the IC with polymorphic unique key will get
@@ -677,55 +641,6 @@ module ManagerRefresh
       manager_ref.map do |ref|
         association_to_foreign_key_mapping[ref] || ref
       end
-    end
-
-    def find_or_build(manager_uuid)
-      raise "The uuid consists of #{manager_ref.size} attributes, please find_or_build_by method" if manager_ref.size > 1
-
-      find_or_build_by(manager_ref.first => manager_uuid)
-    end
-
-    def find_or_build_by(manager_uuid_hash)
-      if !manager_uuid_hash.keys.all? { |x| manager_ref.include?(x) } || manager_uuid_hash.keys.size != manager_ref.size
-        raise "Allowed find_or_build_by keys are #{manager_ref}"
-      end
-
-      # Not using find by since if could take record from db, then any changes would be ignored, since such record will
-      # not be stored to DB, maybe we should rethink this?
-      data_index[object_index(manager_uuid_hash)] || build(manager_uuid_hash)
-    end
-
-    def find(manager_uuid, ref: :manager_ref)
-      return if manager_uuid.nil?
-      # TODO `ref` handling is partial
-      case strategy
-      when :local_db_find_references, :local_db_cache_all
-        find_in_db(manager_uuid)
-      when :local_db_find_missing_references
-        named_index(ref)[manager_uuid] || find_in_db(manager_uuid)
-      else
-        # TODO: find(hash) code path apparently exists for lazy_find(hash) ?  Consider deprecating.
-        # Better have lazy_find_by that computes string uuid ahead of time.
-        manager_uuid.kind_of?(Hash) ? find_by(manager_uuid, :ref => ref) : named_index(ref)[manager_uuid]
-      end
-    end
-
-    def find_by(manager_uuid_hash, ref: :manager_ref)
-      keys = named_ref(ref)
-      if !manager_uuid_hash.keys.all? { |x| keys.include?(x) } || manager_uuid_hash.keys.size != keys.size
-        raise "Allowed find_by ref=#{ref} keys are #{keys}"
-      end
-      manager_uuid = object_index(manager_uuid_hash, :ref => ref)
-      find(manager_uuid, :ref => ref)
-    end
-
-    def lazy_find_by(manager_uuid_hash, ref: :manager_ref, key: nil, default: nil)
-      # TODO raise for missing keys like `find_by`
-      lazy_find(object_index(manager_uuid_hash, :ref => ref), :ref => ref, :key => key, :default => default)
-    end
-
-    def lazy_find(manager_uuid, ref: :manager_ref, key: nil, default: nil)
-      ::ManagerRefresh::InventoryObjectLazy.new(self, manager_uuid, :ref => ref, :key => key, :default => default)
     end
 
     def inventory_object_class
@@ -745,6 +660,22 @@ module ManagerRefresh
       inventory_object_class.new(self, hash)
     end
 
+    def find_or_build(manager_uuid)
+      raise "The uuid consists of #{manager_ref.size} attributes, please find_or_build_by method" if manager_ref.size > 1
+
+      find_or_build_by(manager_ref.first => manager_uuid)
+    end
+
+    def find_or_build_by(manager_uuid_hash)
+      if !manager_uuid_hash.keys.all? { |x| manager_ref.include?(x) } || manager_uuid_hash.keys.size != manager_ref.size
+        raise "Allowed find_or_build_by keys are #{manager_ref}"
+      end
+
+      # Not using find by since if could take record from db, then any changes would be ignored, since such record will
+      # not be stored to DB, maybe we should rethink this?
+      primary_index.find(manager_uuid_hash) || build(manager_uuid_hash)
+    end
+
     def build(hash)
       hash = builder_params.merge(hash)
       inventory_object = new_inventory_object(hash)
@@ -753,7 +684,7 @@ module ManagerRefresh
       # Each InventoryObject must be able to build an UUID, return nil if it can't
       return nil if uuid.blank?
       # Return existing InventoryObject if we have it
-      return data_index[uuid] if data_index[uuid]
+      return primary_index.find(uuid) if primary_index.find(uuid)
       # Store new InventoryObject and return it
       push(inventory_object)
       inventory_object
@@ -933,6 +864,14 @@ module ManagerRefresh
       10_000
     end
 
+    def object_index_with_keys(keys, object)
+      keys.map { |attribute| object.public_send(attribute).to_s }.join("__")
+    end
+
+    def hash_index_with_keys(keys, hash)
+      keys.map { |attribute| hash[attribute].to_s }.join("__")
+    end
+
     def build_multi_selection_condition(hashes, keys = nil)
       keys       ||= manager_ref
       table_name = model_class.table_name
@@ -995,128 +934,6 @@ module ManagerRefresh
       {
         :id => identity
       }
-    end
-
-    # Finds manager_uuid in the DB. Using a configured strategy we cache obtained data in the db_data_index, so the
-    # same find will not hit database twice. Also if we use lazy_links and this is called when
-    # data_collection_finalized?, we load all data from the DB, referenced by lazy_links, in one query.
-    #
-    # @param manager_uuid [String] a manager_uuid of the InventoryObject we search in the local DB
-    def find_in_db(manager_uuid)
-      # Use the cached db_data_index only data_collection_finalized?, meaning no new reference can occur
-      if data_collection_finalized? && db_data_index
-        return db_data_index[manager_uuid]
-      else
-        return db_data_index[manager_uuid] if db_data_index && db_data_index[manager_uuid]
-        # We haven't found the reference, lets add it to the list of references and load it
-        references << manager_uuid if manager_uuid
-      end
-
-      # Put our existing data keys into loaded references
-      loaded_references.merge(data_index.keys)
-      # Load the rest of the references from the DB
-      populate_db_data_index!
-
-      db_data_index[manager_uuid]
-    end
-
-    # Fills db_data_index with InventoryObjects obtained from the DB
-    def populate_db_data_index!
-      # Load only new references from the DB
-      new_references = references - loaded_references
-      # And store which references we've already loaded
-      loaded_references.merge(new_references)
-
-      # Initialize db_data_index in nil
-      self.db_data_index ||= {}
-
-      return if new_references.blank? # Return if all references are already loaded
-
-      # TODO(lsmola) selected need to contain also :keys used in other InventoryCollections pointing to this one, once
-      # we get list of all keys for each InventoryCollection ,we can uncomnent
-      # selected   = [:id] + manager_ref.map { |x| model_class.reflect_on_association(x).try(:foreign_key) || x }
-      # selected << :type if model_class.new.respond_to? :type
-      # load_from_db.select(selected).find_each do |record|
-
-      # Return the the correct relation based on strategy and selection&projection
-      case strategy
-      when :local_db_cache_all
-        selection  = nil
-        projection = nil
-      else
-        selection  = extract_references(new_references)
-        projection = nil
-      end
-
-      db_relation(selection, projection).find_each do |record|
-        process_db_record!(record)
-      end
-    end
-
-    # Return a Rails relation or array that will be used to obtain the records we need to load from the DB
-    #
-    # @param selection [Hash] A selection hash resulting in Select operation (in Relation algebra terms)
-    # @param projection [Array] A projection array resulting in Project operation (in Relation algebra terms)
-    def db_relation(selection = nil, projection = nil)
-      relation = if !custom_db_finder.blank?
-                   custom_db_finder.call(self, selection, projection)
-                 else
-                   rel = if !parent.nil? && !association.nil?
-                           parent.send(association)
-                         elsif !arel.nil?
-                           arel
-                         end
-                   rel = rel.where(build_multi_selection_condition(selection)) if rel && selection
-                   rel = rel.select(projection) if rel && projection
-                   rel
-                 end
-
-      relation || model_class.none
-    end
-
-    # Extracting references to a relation friendly format, or a format processable by a custom_db_finder
-    #
-    # @param new_references [Array] array of manager_uuids of the InventoryObjects
-    def extract_references(new_references = [])
-      hash_uuids_by_ref = []
-
-      new_references.each do |manager_uuid|
-        next if manager_uuid.nil?
-        uuids = manager_uuid.split(stringify_joiner)
-
-        reference = {}
-        manager_ref.each_with_index do |ref, index|
-          reference[ref] = uuids[index]
-        end
-        hash_uuids_by_ref << reference
-      end
-      hash_uuids_by_ref
-    end
-
-    # Takes ApplicationRecord record, converts it to the InventoryObject and places it to db_data_index
-    #
-    # @param record [ApplicationRecord] ApplicationRecord record we want to place to the db_data_index
-    def process_db_record!(record)
-      index = if custom_manager_uuid.nil?
-                object_index(record)
-              else
-                stringify_reference(custom_manager_uuid.call(record))
-              end
-
-      attributes = record.attributes.symbolize_keys
-      attribute_references.each do |ref|
-        # We need to fill all references that are relations, we will use a ManagerRefresh::ApplicationRecordReference which
-        # can be used for filling a relation and we don't need to do any query here
-        # TODO(lsmola) maybe loading all, not just referenced here? Otherwise this will have issue for db_cache_all
-        # and find used in parser
-        next unless (foreign_key = association_to_foreign_key_mapping[ref])
-        base_class_name = attributes[association_to_foreign_type_mapping[ref].try(:to_sym)] || association_to_base_class_mapping[ref]
-        id              = attributes[foreign_key.to_sym]
-        attributes[ref] = ManagerRefresh::ApplicationRecordReference.new(base_class_name, id)
-      end
-
-      db_data_index[index]    = new_inventory_object(attributes)
-      db_data_index[index].id = record.id
     end
 
     def validate_inventory_collection!

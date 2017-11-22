@@ -57,6 +57,10 @@ module ManagerRefresh::SaveCollection
         end
       end
 
+      def stringify_joiner
+        "__"
+      end
+
       def save_inventory_collection!
         # If we have a targeted InventoryCollection that wouldn't do anything, quickly skip it
         return if inventory_collection.noop?
