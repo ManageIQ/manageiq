@@ -47,7 +47,7 @@ headers:
 - Miq Event Description
 - Miq Policy Description
 - Result
-- Tagret
+- Target
 
 # Condition(s) string for the SQL query
 conditions:
