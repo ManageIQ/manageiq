@@ -8,6 +8,28 @@ class Vm < VmOrTemplate
 
   include_concern 'Operations'
 
+  def self.vms_arel
+    lambda do |t|
+      vm_table = Vm.arel_table
+      local_key     = :id
+      foreign_key   = :cloud_tenant_id
+      arel_column   = Arel.star.count
+
+      default_conditions = Vm.default_scopes.inject({}) { |result, scope| result.merge!(scope.call.where_values_hash) }
+
+      empty_arel = nil
+      arel_conditions = default_conditions.inject(empty_arel) do |result, array_condition|
+        condition = vm_table[array_condition.first].in(array_condition.second)
+        result ? result.and(condition) : condition
+      end
+
+      # Vm.active
+      arel_conditions = arel_conditions.and(vm_table[:ems_id].not_eq(nil))
+
+      t.grouping(vm_table.project(arel_column).where(t[local_key].eq(vm_table[foreign_key])).where(arel_conditions))
+    end
+  end
+
   def self.base_model
     Vm
   end
