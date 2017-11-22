@@ -5,13 +5,14 @@ module LiveMetricsMixin
 
   class MetricValidationError < RuntimeError; end
 
+  delegate :first_and_last_capture, :to => :metrics_capture
   delegate :fetch_metrics_available, :to => :metrics_capture
   delegate :collect_live_metrics, :to => :metrics_capture
-  delegate :collect_stats_metrics, :to => :metrics_capture
+  delegate :collect_report_metrics, :to => :metrics_capture
 
   included do
-    def live_metrics_name
-      self.class.name.demodulize.underscore
+    def live_metrics_type
+      'default'
     end
 
     def chart_report_name
@@ -22,57 +23,35 @@ module LiveMetricsMixin
       @metrics_available ||= fetch_metrics_available
     end
 
-    def first_and_last_capture(interval_name = "realtime")
-      firsts, lasts = metrics_capture.first_and_last_capture_for_metrics(metrics_available)
-      adjust_timestamps(firsts, lasts, interval_name)
-    rescue => e
-      _log.error("LiveMetrics unavailable for #{self.class.name} id: #{id}. #{e.message}")
-      return [nil, nil]
-    end
-
-    def adjust_timestamps(firsts, lasts, interval_name)
-      first = Time.at(firsts.min / 1000).utc
-      last = Time.at(lasts.max / 1000).utc
-      now = Time.new.utc
-      if interval_name == "hourly"
-        first = (now - first) > 1.hour ? first : nil
-      end
-      [first, last]
-    end
-
     def included_children
-      self.class.live_metrics_config[live_metrics_name]['included_children']
+      self.class.live_metrics_config['included_children']
     end
 
     def supported_metrics
-      self.class.live_metrics_config[live_metrics_name]['supported_metrics']
+      self.class.live_metrics_config['supported_metrics']
     end
 
     def supported_metrics_by_column
-      self.class.live_metrics_config[live_metrics_name]['supported_metrics_by_column']
+      self.class.live_metrics_config['supported_metrics_by_column']
     end
   end
 
   module ClassMethods
-    def supported_models
-      @supported_models ||= [name.demodulize.underscore]
-    end
-
     def live_metrics_config
-      @live_metrics_config ||= {}
-      supported_models.each do |model_name|
-        @live_metrics_config[model_name] ||= load_live_metrics_config(model_name)
-        @live_metrics_config[model_name]['supported_metrics_by_column'] =
-          @live_metrics_config[model_name]['supported_metrics'].invert
-      end
-      @live_metrics_config
+      @live_metrics_config ||= load_live_metrics_config
     end
 
-    def load_live_metrics_config(config_file)
-      live_metrics_file = File.join(LIVE_METRICS_DIR, "#{config_file}.yaml")
+    def load_live_metrics_config
+      live_metrics_file = File.join(LIVE_METRICS_DIR, "#{name.demodulize.underscore}.yaml")
       live_metrics_config = File.exist?(live_metrics_file) ? YAML.load_file(live_metrics_file) : {}
       if live_metrics_config['supported_metrics']
-        live_metrics_config['supported_metrics'] = live_metrics_config['supported_metrics'].reduce({}, :merge)
+        live_metrics_config['supported_metrics_by_column'] = {}
+        live_metrics_config['supported_metrics'].each do |key, value|
+          if value
+            live_metrics_config['supported_metrics'][key] = value.reduce({}, :merge)
+            live_metrics_config['supported_metrics_by_column'][key] = live_metrics_config['supported_metrics'][key].invert
+          end
+        end
       end
       live_metrics_config
     end

@@ -13,15 +13,9 @@ col_order:
 - id
 - name
 - start_time
-- mw_aggregated_active_web_sessions_max
-- mw_aggregated_active_web_sessions_min
-- mw_aggregated_active_web_sessions_avg
-- mw_aggregated_expired_web_sessions_max
-- mw_aggregated_expired_web_sessions_min
-- mw_aggregated_expired_web_sessions_avg
-- mw_aggregated_rejected_web_sessions_max
-- mw_aggregated_rejected_web_sessions_min
-- mw_aggregated_rejected_web_sessions_avg
+- mw_aggregated_active_web_sessions
+- mw_aggregated_expired_web_sessions
+- mw_aggregated_rejected_web_sessions
 timeline:
 file_mtime:
 categories:
@@ -40,15 +34,9 @@ cols:
 - id
 - name
 - start_time
-- mw_aggregated_active_web_sessions_max
-- mw_aggregated_active_web_sessions_min
-- mw_aggregated_active_web_sessions_avg
-- mw_aggregated_expired_web_sessions_max
-- mw_aggregated_expired_web_sessions_min
-- mw_aggregated_expired_web_sessions_avg
-- mw_aggregated_rejected_web_sessions_max
-- mw_aggregated_rejected_web_sessions_min
-- mw_aggregated_rejected_web_sessions_avg
+- mw_aggregated_active_web_sessions
+- mw_aggregated_expired_web_sessions
+- mw_aggregated_rejected_web_sessions
 template_type: report
 group: n
 sortby:
@@ -57,12 +45,6 @@ headers:
 - Id
 - Name
 - Start
-- Active Web Sessions - max
-- Active Web Sessions - min
-- Active Web Sessions - avg
-- Expired Web Sessions - max
-- Expired Web Sessions - min
-- Expired Web Sessions - avg
-- Rejected Web Sessions - max
-- Rejected Web Sessions - min
-- Rejected Web Sessions - avg
+- Active Web Sessions
+- Expired Web Sessions
+- Rejected Web Sessions

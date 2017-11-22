@@ -19,10 +19,6 @@ class MiddlewareServer < ApplicationRecord
     super || {}
   end
 
-  def metrics_capture
-    @metrics_capture ||= ManageIQ::Providers::Hawkular::MiddlewareManager::LiveMetricsCapture.new(self)
-  end
-
   def tenant_identity
     if ext_management_system
       ext_management_system.tenant_identity

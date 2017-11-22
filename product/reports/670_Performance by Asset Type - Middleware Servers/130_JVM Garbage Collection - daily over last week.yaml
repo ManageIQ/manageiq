@@ -15,9 +15,7 @@ col_order:
 - id
 - name
 - start_time
-- mw_accumulated_gc_duration_min
-- mw_accumulated_gc_duration_avg
-- mw_accumulated_gc_duration_max
+- mw_accumulated_gc_duration
 timeline:
 id: 672
 file_mtime:
@@ -37,9 +35,7 @@ cols:
 - id
 - name
 - start_time
-- mw_accumulated_gc_duration_min
-- mw_accumulated_gc_duration_avg
-- mw_accumulated_gc_duration_max
+- mw_accumulated_gc_duration
 template_type: report
 group: n
 sortby:
@@ -48,6 +44,5 @@ headers:
 - Id
 - Name
 - Start
-- Duration - min (milliseconds)
 - Duration - avg (milliseconds)
-- Duration - max (milliseconds)
+

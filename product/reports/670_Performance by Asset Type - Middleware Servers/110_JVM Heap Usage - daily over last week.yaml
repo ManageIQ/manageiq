@@ -15,15 +15,9 @@ col_order:
 - id
 - name
 - start_time
-- mw_heap_used_min
-- mw_heap_used_avg
-- mw_heap_used_max
-- mw_heap_committed_min
-- mw_heap_committed_avg
-- mw_heap_committed_max
-- mw_heap_max_min
-- mw_heap_max_avg
-- mw_heap_max_max
+- mw_heap_used
+- mw_heap_committed
+- mw_heap_max
 timeline:
 id: 670
 file_mtime:
@@ -43,15 +37,9 @@ cols:
 - id
 - name
 - start_time
-- mw_heap_used_min
-- mw_heap_used_avg
-- mw_heap_used_max
-- mw_heap_committed_min
-- mw_heap_committed_avg
-- mw_heap_committed_max
-- mw_heap_max_min
-- mw_heap_max_avg
-- mw_heap_max_max
+- mw_heap_used
+- mw_heap_committed
+- mw_heap_max
 template_type: report
 group: n
 sortby:
@@ -60,12 +48,6 @@ headers:
 - Id
 - Name
 - Start
-- Used - min (bytes)
 - Used - avg (bytes)
-- Used - max (bytes)
-- Committed - min (bytes)
 - Committed - avg (bytes)
-- Committed - max (bytes)
-- Maximum - min (bytes)
-- Maximum - avg (bytes)
-- Maximum - max (bytes)
+- Maximum (bytes)

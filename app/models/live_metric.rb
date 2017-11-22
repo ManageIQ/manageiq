@@ -11,17 +11,21 @@ class LiveMetric < ActsAsArModel
   end
 
   def self.find(*args)
+    t1 = Time.now.utc
     raw_query = args[1]
     validate_raw_query(raw_query)
     processed = process_conditions(raw_query[:conditions])
     resource = fetch_resource(processed[:resource_type], processed[:resource_id])
     filtered_cols = raw_query[:select] || raw_query[:include].keys.map(&:to_s)
-    if resource.nil? || (processed[:interval_name] == 'daily' && processed[:start_time] > processed[:end_time])
-      []
-    else
-      filter_and_fetch_metrics(resource, filtered_cols, processed[:start_time],
-                               processed[:end_time], processed[:interval_name])
-    end
+    results = if resource.nil? || (processed[:interval_name] == 'daily' && processed[:start_time] > processed[:end_time])
+                []
+              else
+                filter_and_fetch_metrics(resource, filtered_cols, processed[:start_time],
+                                         processed[:end_time], processed[:interval_name])
+              end
+    t2 = Time.now.utc
+    _log.debug("find(#{processed}) took #{((t2 - t1) * 1000).to_i} ms")
+    results
   end
 
   def self.validate_raw_query(raw)
@@ -90,8 +94,8 @@ class LiveMetric < ActsAsArModel
   end
 
   def self.filter_and_fetch_metrics(resource, filter, start_time, end_time, interval_name)
-    filtered = resource.metrics_available.select { |metric| filter.nil? || filter.include?(metric[:name]) }
-    filtered.each { |metric| set_columns_hash(metric[:name] => :float) }
+    filtered = resource.metrics_available.select { |metric| filter.nil? || filter.include?(metric['name']) }
+    filtered.each { |metric| set_columns_hash(metric['name'] => :float) }
     fetch_live_metrics(resource, filtered, start_time, end_time, interval_name)
   end
 
