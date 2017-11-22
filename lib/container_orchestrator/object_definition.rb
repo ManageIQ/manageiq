@@ -84,7 +84,7 @@ class ContainerOrchestrator
     end
 
     def app_name
-      I18n.t("product.name").downcase
+      Vmdb::Appliance.PRODUCT_NAME.downcase
     end
   end
 end
