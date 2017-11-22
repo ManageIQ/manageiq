@@ -48,12 +48,12 @@ class ChargebackRateDetail < ApplicationRecord
     field, _, calculation = rate_detail.chargeable_field.showback_dimension
     unit  = rate_detail.showback_unit
 
-    showback_rate = ManageIQ::Consumption::Rate.find_or_create_by(:entity      => entity,
-                                                                  :group       => group,
-                                                                  :field       => field,
-                                                                  :price_plan  => plan,
-                                                                  :calculation => calculation,
-                                                                  :concept     => rate_detail.id)
+    showback_rate = ManageIQ::Showback::Rate.find_or_create_by(:entity      => entity,
+                                                               :group       => group,
+                                                               :field       => field,
+                                                               :price_plan  => plan,
+                                                               :calculation => calculation,
+                                                               :concept     => rate_detail.id)
     showback_rate.tiers.destroy_all
     rate_detail.chargeback_tiers.each do |tier|
       showback_rate.tiers.build(:tier_start_value       => tier.start,
