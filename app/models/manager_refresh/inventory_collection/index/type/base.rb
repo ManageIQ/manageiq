@@ -24,7 +24,7 @@ module ManagerRefresh
           end
 
           def store_index_for(inventory_object)
-            data_index[inventory_object.id_with_keys(attribute_names)] = inventory_object
+            data_index[inventory_object.manager_uuid(attribute_names)] = inventory_object
           end
 
           protected

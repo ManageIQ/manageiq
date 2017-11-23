@@ -3,7 +3,7 @@ module ManagerRefresh
     attr_accessor :object, :id
     attr_reader :inventory_collection, :data
 
-    delegate :manager_ref, :base_class_name, :model_class, :to => :inventory_collection
+    delegate :manager_ref, :base_class_name, :model_class, :hash_index_with_keys, :to => :inventory_collection
     delegate :[], :[]=, :to => :data
 
     def initialize(inventory_collection, data)
@@ -14,14 +14,8 @@ module ManagerRefresh
       @allowed_attributes_index = nil
     end
 
-    def manager_uuid
-      # TODO(lsmola) should we have a separate function for uuid containing foreign keys? Probably yes, since it could
-      # speed up the ID fetching.
-      id_with_keys(manager_ref)
-    end
-
-    def id_with_keys(keys)
-      keys.map { |attribute| data[attribute].try(:id) || data[attribute].to_s }.join("__")
+    def manager_uuid(keys = manager_ref)
+      hash_index_with_keys(keys, data)
     end
 
     def to_raw_lazy_relation

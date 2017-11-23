@@ -39,7 +39,11 @@ module ManagerRefresh
           attr_reader :main_index, :loaded_references
           attr_writer :data_index
 
-          delegate :association,
+          delegate :arel,
+                   :association,
+                   :association_to_base_class_mapping,
+                   :association_to_foreign_key_mapping,
+                   :association_to_foreign_type_mapping,
                    :attribute_references,
                    :build_multi_selection_condition,
                    :custom_manager_uuid,
@@ -134,18 +138,21 @@ module ManagerRefresh
           #
           # @param record [ApplicationRecord] ApplicationRecord record we want to place to the data_index
           def process_db_record!(record)
+            # TODO(lsmola) rethink this. If references will be the full Hash references, we can construct this automatically
             index = if custom_manager_uuid.nil?
-                      object_index(record)
+                      inventory_collection.object_index_with_keys(attribute_names, record)
                     else
+                      # TODO(lsmola) hm this will not really work for the secondary indexes anyway
                       stringify_reference(custom_manager_uuid.call(record))
                     end
 
             attributes = record.attributes.symbolize_keys
             attribute_references.each do |ref|
               # We need to fill all references that are relations, we will use a ManagerRefresh::ApplicationRecordReference which
-              # can be used for filling a relation and we don't need to do any query here
+              # can be used for filling a relation and we don't need to do any query here.
               # TODO(lsmola) maybe loading all, not just referenced here? Otherwise this will have issue for db_cache_all
               # and find used in parser
+              # TODO(lsmola) the last usage of this should be lazy_find_by with :key specified, maybe we can get rid of this?
               next unless (foreign_key = association_to_foreign_key_mapping[ref])
               base_class_name = attributes[association_to_foreign_type_mapping[ref].try(:to_sym)] || association_to_base_class_mapping[ref]
               id              = attributes[foreign_key.to_sym]

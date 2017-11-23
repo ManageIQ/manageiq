@@ -51,8 +51,7 @@ module ManagerRefresh::SaveCollection
 
         inventory_collection.each do |inventory_object|
           attributes = inventory_object.attributes_with_keys(inventory_collection, all_attribute_keys)
-          # TODO(lsmola) unify this behavior with object_index_with_keys method in InventoryCollection
-          index      = unique_index_keys.map { |key| attributes[key].to_s }.join(stringify_joiner)
+          index      = inventory_collection.hash_index_with_keys(unique_index_keys, attributes)
 
           # Interesting fact: not building attributes_index and using only inventory_objects_index doesn't do much
           # of a difference, since the most objects inside are shared.
