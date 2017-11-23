@@ -51,10 +51,6 @@ module ManageIQ::Providers
       {:available => true, :message => nil}
     end
 
-    def validate_import_vm
-      false
-    end
-
     def clusterless_hosts
       hosts.where(:ems_cluster => nil)
     end
