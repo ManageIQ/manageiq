@@ -134,6 +134,7 @@ module SupportsFeatureMixin
     :update_security_group               => 'Security Group Update',
     :block_storage                       => 'Block Storage',
     :object_storage                      => 'Object Storage',
+    :vm_import                           => 'VM Import',
   }.freeze
 
   # Whenever this mixin is included we define all features as unsupported by default.
