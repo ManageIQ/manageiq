@@ -11,11 +11,11 @@ module ManagerRefresh
           secondary_refs = secondary_refs
           @all_refs      = main_ref.merge(secondary_refs)
 
-          @main_indexes     = {}
+          @data_indexes     = {}
           @local_db_indexes = {}
 
           @all_refs.each do |index_name, attribute_names|
-            @main_indexes[index_name] = ManagerRefresh::InventoryCollection::Index::Type::Data.new(
+            @data_indexes[index_name] = ManagerRefresh::InventoryCollection::Index::Type::Data.new(
               inventory_collection,
               attribute_names
             )
@@ -23,19 +23,19 @@ module ManagerRefresh
             @local_db_indexes[index_name] = ManagerRefresh::InventoryCollection::Index::Type::LocalDb.new(
               inventory_collection,
               attribute_names,
-              @main_indexes[index_name]
+              @data_indexes[index_name]
             )
           end
         end
 
         def store_indexes_for_inventory_object(inventory_object)
-          main_indexes.values.each do |index|
+          data_indexes.values.each do |index|
             index.store_index_for(inventory_object)
           end
         end
 
         def primary_index
-          main_index(:manager_ref)
+          data_index(:manager_ref)
         end
 
         def find(manager_uuid, ref: :manager_ref)
@@ -48,9 +48,9 @@ module ManagerRefresh
           when :local_db_find_references, :local_db_cache_all
             local_db_index(ref).find(manager_uuid)
           when :local_db_find_missing_references
-            main_index(ref).find(manager_uuid) || local_db_index(ref).find(manager_uuid)
+            data_index(ref).find(manager_uuid) || local_db_index(ref).find(manager_uuid)
           else
-            main_index(ref).find(manager_uuid)
+            data_index(ref).find(manager_uuid)
           end
         end
 
@@ -73,7 +73,7 @@ module ManagerRefresh
           return unless assert_index(manager_uuid, ref)
 
           ::ManagerRefresh::InventoryObjectLazy.new(inventory_collection,
-                                                    main_index(ref).object_index(manager_uuid), # TODO(lsmola) I need to rethink this
+                                                    data_index(ref).object_index(manager_uuid), # TODO(lsmola) I need to rethink this
                                                     manager_uuid,
                                                     :ref => ref, :key => key, :default => default)
         end
@@ -82,10 +82,10 @@ module ManagerRefresh
 
         delegate :strategy, :to => :inventory_collection
 
-        attr_reader :all_refs, :main_indexes, :local_db_indexes, :inventory_collection
+        attr_reader :all_refs, :data_indexes, :local_db_indexes, :inventory_collection
 
-        def main_index(name)
-          main_indexes[name] || raise("Index #{name} not defined for #{inventory_collection}")
+        def data_index(name)
+          data_indexes[name] || raise("Index #{name} not defined for #{inventory_collection}")
         end
 
         def local_db_index(name)

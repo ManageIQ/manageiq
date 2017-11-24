@@ -3,12 +3,11 @@ module ManagerRefresh
     module Index
       module Type
         class Data < ManagerRefresh::InventoryCollection::Index::Type::Base
-          def initialize(inventory_collection, attribute_names)
-            super
-          end
-
-          def find(index)
-            data_index[index]
+          # Find value based on index_value
+          #
+          # @param index_value [String] a index_value of the InventoryObject we search in data
+          def find(index_value)
+            index[index_value]
           end
         end
       end
