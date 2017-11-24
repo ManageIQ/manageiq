@@ -42,6 +42,8 @@ module ManagerRefresh
           # TODO(lsmola) lazy_find will support only hash, then we can remove the _by variant
           return if manager_uuid.nil?
 
+          manager_uuid = stringify_index_value(manager_uuid, ref)
+
           return unless assert_index(manager_uuid, ref)
 
           case strategy
@@ -61,28 +63,37 @@ module ManagerRefresh
 
         def lazy_find_by(manager_uuid_hash, ref: :manager_ref, key: nil, default: nil)
           # TODO(lsmola) deprecate this, it's enough to have lazy_find method
-          # TODO(lsmola) also, it should be enough to have only 1 find method, everything can be lazy, until we try to
-          # access the data
+
           lazy_find(manager_uuid_hash, :ref => ref, :key => key, :default => default)
         end
 
         def lazy_find(manager_uuid, ref: :manager_ref, key: nil, default: nil)
+          # TODO(lsmola) also, it should be enough to have only 1 find method, everything can be lazy, until we try to
+          # access the data
           # TODO(lsmola) lazy_find will support only hash, then we can remove the _by variant
           return if manager_uuid.nil?
-          # TODO(lsmola) Not doing to_s shows issue in network.orchestration_stack = persister.orchestration_stacks.lazy_find(collector.orchestration_stack_by_resource_id(n.id))
           return unless assert_index(manager_uuid, ref)
 
           ::ManagerRefresh::InventoryObjectLazy.new(inventory_collection,
-                                                    data_index(ref).object_index(manager_uuid), # TODO(lsmola) I need to rethink this
+                                                    stringify_index_value(manager_uuid, ref),
                                                     manager_uuid,
                                                     :ref => ref, :key => key, :default => default)
         end
 
         private
 
-        delegate :strategy, :to => :inventory_collection
+        delegate :strategy, :hash_index_with_keys, :to => :inventory_collection
 
         attr_reader :all_refs, :data_indexes, :local_db_indexes, :inventory_collection
+
+        def stringify_index_value(index_value, ref)
+          if index_value.kind_of?(Hash)
+            hash_index_with_keys(named_ref(ref), index_value)
+          else
+            # TODO(lsmola) raise deprecation warning, we want to use only hash indexes
+            index_value
+          end
+        end
 
         def data_index(name)
           data_indexes[name] || raise("Index #{name} not defined for #{inventory_collection}")

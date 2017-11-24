@@ -55,6 +55,8 @@ module ManagerRefresh
                    :parent,
                    :references,
                    :strategy,
+                   :stringify_joiner,
+                   :stringify_reference,
                    :to => :inventory_collection
 
           # Fills index with InventoryObjects obtained from the DB
@@ -119,6 +121,7 @@ module ManagerRefresh
 
             new_references.each do |index_value|
               next if index_value.nil?
+              # TODO(lsmola) no need when hashes are the original hashes
               uuids = index_value.split(stringify_joiner)
 
               reference = {}

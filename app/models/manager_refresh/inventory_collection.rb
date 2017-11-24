@@ -864,12 +864,20 @@ module ManagerRefresh
       10_000
     end
 
-    def object_index_with_keys(keys, object)
-      keys.map { |attribute| object.public_send(attribute).to_s }.join("__")
+    def hash_index_with_keys(keys, hash)
+      stringify_reference(keys.map { |attribute| hash[attribute].to_s })
     end
 
-    def hash_index_with_keys(keys, hash)
-      keys.map { |attribute| hash[attribute].to_s }.join("__")
+    def object_index_with_keys(keys, object)
+      stringify_reference(keys.map { |attribute| object.public_send(attribute).to_s })
+    end
+
+    def stringify_joiner
+      "__"
+    end
+
+    def stringify_reference(reference)
+      reference.join(stringify_joiner)
     end
 
     def build_multi_selection_condition(hashes, keys = nil)

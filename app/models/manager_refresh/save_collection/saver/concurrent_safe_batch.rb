@@ -108,7 +108,7 @@ module ManagerRefresh::SaveCollection
               else
                 record_key(record, attribute).to_s
               end
-            end.join(stringify_joiner)
+            end.join(inventory_collection.stringify_joiner)
 
             inventory_object = inventory_objects_index.delete(index)
             hash             = attributes_index.delete(index)
