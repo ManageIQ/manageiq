@@ -87,6 +87,11 @@ module ManagerRefresh
         attr_reader :all_refs, :data_indexes, :local_db_indexes, :inventory_collection
 
         def stringify_index_value(index_value, ref)
+          # TODO(lsmola) !!!!!!!!!! Important, move this inside of the index. We should be passing around a full hash
+          # index. Then all references should be turned into {stringified_index => full_index} hash. So that way, we can
+          # keep fast indexing using string, but we can use references to write queries autmatically (targeted,
+          # db_based, etc.)
+          # We can also save {stringified_index => full_index}, so we don't have to compute it twice.
           if index_value.kind_of?(Hash)
             hash_index_with_keys(named_ref(ref), index_value)
           else
