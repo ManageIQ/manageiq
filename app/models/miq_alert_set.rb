@@ -3,6 +3,8 @@ class MiqAlertSet < ApplicationRecord
 
   before_validation :default_name_to_guid, :on => :create
 
+  scope :on_mode, ->(mode) { where(:mode => mode) }
+
   include AssignmentMixin
 
   def self.assigned_to_target(target, options = {})
