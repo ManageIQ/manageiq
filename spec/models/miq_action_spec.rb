@@ -388,6 +388,20 @@ describe MiqAction do
     end
 
     let(:miq_server) { EvmSpecHelper.local_miq_server }
+    let(:action) { MiqAction.new }
+    let(:inputs) { { :policy => nil, :synchronous => false } }
+
+    let(:q_options) do
+      {
+        :class_name  => "MiqAction",
+        :method_name => "queue_email",
+        :instance_id => nil,
+        :args        => [{:to => nil, :from => "cfadmin@cfserver.com"}],
+        :role        => "notifier",
+        :priority    => 20,
+        :zone        => nil
+      }
+    end
 
     context 'when notifier role is on' do
       before do
@@ -396,22 +410,6 @@ describe MiqAction do
       end
 
       it 'should generate a MiqAction invoking action_email' do
-        action = MiqAction.new
-        inputs = {
-          :policy      => nil,
-          :synchronous => false
-        }
-
-        q_options = {
-          :class_name  => "MiqAction",
-          :method_name => "queue_email",
-          :instance_id => nil,
-          :args        => [{:to => nil, :from => "cfadmin@cfserver.com"}],
-          :role        => "notifier",
-          :priority    => 20,
-          :zone        => nil
-        }
-
         expect(MiqQueue).to receive(:put).with(q_options).once
         action.action_email(action, nil, inputs)
       end
