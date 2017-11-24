@@ -403,6 +403,13 @@ describe MiqAction do
       }
     end
 
+    context 'when notifier role is off' do
+      it 'is not generating a MiqAction invoking action_email' do
+        expect(MiqQueue).not_to receive(:put).with(q_options)
+        action.action_email(action, nil, inputs)
+      end
+    end
+
     context 'when notifier role is on' do
       before do
         miq_server.server_roles << ServerRole.where(:name => 'notifier')
