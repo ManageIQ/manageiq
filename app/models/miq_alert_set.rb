@@ -1,7 +1,7 @@
 class MiqAlertSet < ApplicationRecord
   acts_as_miq_set
 
-  before_validation :default_name_to_guid, :on => :create
+  before_validation :default_name_to_description, :on => :create
 
   include AssignmentMixin
 
@@ -47,5 +47,11 @@ class MiqAlertSet < ApplicationRecord
     fixture_file = File.join(FIXTURE_DIR, "miq_alert_sets.yml")
     return unless File.exist?(fixture_file)
     File.open(fixture_file) { |fd| MiqAlertSet.import_from_yaml(fd, :save => true) }
+  end
+
+  private
+
+  def default_name_to_description
+    self.name ||= description
   end
 end
