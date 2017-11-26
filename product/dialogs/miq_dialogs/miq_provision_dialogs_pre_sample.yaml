@@ -63,7 +63,7 @@
 
       :display: :hide
     :network:
-      :description: vLan
+      :description: Virtual Network
       :fields: {}
 
       :display: :hide
