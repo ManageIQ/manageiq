@@ -484,7 +484,6 @@
     :sub_types:
     - :hours
     :function:
-    :function:
       :name: number_with_delimiter
       :delimiter: ","
       :suffix: ! ' Hours'
