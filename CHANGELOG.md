@@ -5,6 +5,55 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 73 ending 2017-11-13
+
+### Added
+- Ansible
+  - Add log_output option for embedded ansible service [(#16414)](https://github.com/ManageIQ/manageiq/pull/16414)
+- Chargeback
+  - Add back listing of custom attributes in chargeback  [(#16350)](https://github.com/ManageIQ/manageiq/pull/16350)
+- Core
+  - Add purging for vim_performance_tag_values with disabled tags [(#16425)](https://github.com/ManageIQ/manageiq/pull/16425)
+  - Add status and state scopes fix time for MiqTask list [(#16365)](https://github.com/ManageIQ/manageiq/pull/16365)
+- Providers
+  - Add tag categories for VM migration [(#16402)](https://github.com/ManageIQ/manageiq/pull/16402)
+  - Middleware compliance assignment [(#16376)](https://github.com/ManageIQ/manageiq/pull/16376)
+  - Enable compliance check for MW server  [(#16375)](https://github.com/ManageIQ/manageiq/pull/16375)
+  - Refresh Physical Servers [(#16344)](https://github.com/ManageIQ/manageiq/pull/16344)
+  - Add requests and limits to Persistent Volume Claim [(#16026)](https://github.com/ManageIQ/manageiq/pull/16026)
+- Reporting
+  - Add scope :without_configuration_profile_id needed by Foreman explorer UI [(#16439)](https://github.com/ManageIQ/manageiq/pull/16439)
+- Services
+  - Name service during provisioning from dialog input [(#16338)](https://github.com/ManageIQ/manageiq/pull/16338)
+
+### Fixed
+- Authentication
+  - External auth lookup_by_identity should handle missing request parameter [(#16386)](https://github.com/ManageIQ/manageiq/pull/16386)
+- Automate
+  - Fix resize approval to work for editing requests [(#16381)](https://github.com/ManageIQ/manageiq/pull/16381)
+  - Fixes custom button method for things with subclasses [(#16378)](https://github.com/ManageIQ/manageiq/pull/16378)
+- Core
+  - Sort array of queue names [(#16400)](https://github.com/ManageIQ/manageiq/pull/16400)
+  - Fix Zone creation [(#16391)](https://github.com/ManageIQ/manageiq/pull/16391)
+  - Fix Firmware-Hardware relationship [(#16364)](https://github.com/ManageIQ/manageiq/pull/16364)
+  - Find_by_queue_name expects a string as queue_name. [(#16359)](https://github.com/ManageIQ/manageiq/pull/16359)
+- Providers
+  - Truncate name of refresh task to 255 [(#16444)](https://github.com/ManageIQ/manageiq/pull/16444)
+  - Missing cascade delete for host_storages [(#16440)](https://github.com/ManageIQ/manageiq/pull/16440)
+  - Fix has_required_role? for InventoryCollectorWorker [(#16415)](https://github.com/ManageIQ/manageiq/pull/16415)
+  - Print name instead of manager ref [(#16411)](https://github.com/ManageIQ/manageiq/pull/16411)
+  - Datastores duplicated after a refresh [(#16408)](https://github.com/ManageIQ/manageiq/pull/16408)
+  - Log less details about the targets [(#16405)](https://github.com/ManageIQ/manageiq/pull/16405)
+  - Do unassign tags when mapped tags list becomes empty [(#16370)](https://github.com/ManageIQ/manageiq/pull/16370)
+- Replication
+  - Prevent replication subscription to the same region as the current region [(#16446)](https://github.com/ManageIQ/manageiq/pull/16446)
+- Services
+  - ServiceTemplate: add scope for unassigned items. [(#16445)](https://github.com/ManageIQ/manageiq/pull/16445)
+
+### Remove
+- Providers
+  - Revert "Replace ContainerLabelTagMapping.controls_tag? with Tag.controlled_by_mapping scope" [(#16462)](https://github.com/ManageIQ/manageiq/pull/16462)
+
 ## Unreleased as of Sprint 72 ending 2017-10-30
 
 ### Added
