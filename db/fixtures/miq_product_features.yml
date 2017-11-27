@@ -6530,7 +6530,7 @@
     - :name: Switch Language
       :description: Display Language options
       :feature_type: view
-      :identifier: sui_language 
+      :identifier: sui_language
     - :name: Notifications
       :description: Display notifications
       :feature_type: view
@@ -6540,10 +6540,10 @@
     :feature_type: node
     :identifier: sui_dashboard
     :children:
-     - :name: Monthly Charge view
-       :description: Display monthly charges
-       :feature_type: view
-       :identifier: sui_dashboard_monthly_charge_view
+    - :name: Monthly Charge view
+      :description: Display monthly charges
+      :feature_type: view
+      :identifier: sui_dashboard_monthly_charge_view
   - :name: My Services
     :description: My Services features
     :feature_type: node
@@ -6672,7 +6672,7 @@
       :description: View Orders
       :feature_type: node
       :identifier: sui_orders_display
-      :children:  
+      :children:
       - :name: Show
         :description: Display Orders
         :feature_type: view
@@ -6699,7 +6699,7 @@
     :description: Service Catalog features
     :feature_type: node
     :identifier: sui_svc_catalog
-    :children:   
+    :children:
     - :name: View
       :description: Display Service Catalog
       :feature_type: node
@@ -6713,7 +6713,7 @@
       :description: Catalog operations
       :feature_type: node
       :identifier: sui_svc_catalog_operations
-      :children:  
+      :children:
       - :name: Add to Shopping Cart
         :description: Add to Shopping Cart
         :feature_type: control
@@ -6736,7 +6736,7 @@
       :description: Shopping Cart operations
       :feature_type: node
       :identifier: sui_cart_operations
-      :children:    
+      :children:
       - :name: Clear
         :description: Clear cart
         :feature_type: control
