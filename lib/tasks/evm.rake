@@ -15,7 +15,7 @@ namespace :evm do
       server.update_attributes(:status => "started")
 
       # start the workers using foreman
-      Bundler.with_clean_env { exec("foreman start --port=3000") }
+      exec("foreman start --port=3000")
     end
   end
 
