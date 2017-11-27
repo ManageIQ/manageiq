@@ -140,7 +140,7 @@ class DialogField < ApplicationRecord
   private
 
   def available_dialog_field_responders(id_list)
-    DialogField.find(id_list.collect { |id| self.class.uncompress_id(id) })
+    DialogField.find(id_list)
   end
 
   def default_resource_action

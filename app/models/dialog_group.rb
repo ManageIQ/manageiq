@@ -19,7 +19,7 @@ class DialogGroup < ApplicationRecord
     fields.each do |field|
       field['options'].try(:symbolize_keys!)
       if field.key?('id')
-        DialogField.find(self.class.uncompress_id(field['id'])).tap do |dialog_field|
+        DialogField.find(field['id']).tap do |dialog_field|
           resource_action_fields = field.delete('resource_action') || {}
           update_resource_fields(resource_action_fields, dialog_field)
           dialog_field.update_attributes(field.except('id', 'href', 'dialog_group_id', 'dialog_field_responders'))
