@@ -59,5 +59,18 @@ RSpec.describe VimPerformanceState do
     subject { vm.perf_capture_state.allocated_disk_types }
 
     it { is_expected.to match('ssd' => ssd_size, 'unclassified' => hdd1_size + hdd2_size) }
+
+    context 'when disk size is nil' do
+      let!(:hdd1_disk) { FactoryGirl.create(:disk, :size => nil, :backing => hdd_volume) }
+
+      it { is_expected.to match('ssd' => ssd_size, 'unclassified' => hdd2_size) }
+
+      context "when all disk's sizes are nil" do
+        let!(:hdd2_disk) { FactoryGirl.create(:disk, :size => nil, :backing => hdd_volume) }
+        let!(:ssd_disk)  { FactoryGirl.create(:disk, :size => nil, :backing => ssd_volume) }
+
+        it { is_expected.to be_empty }
+      end
+    end
   end
 end
