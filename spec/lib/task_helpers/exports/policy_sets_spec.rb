@@ -60,25 +60,29 @@ describe TaskHelpers::Exports::PolicySets do
     }
   end
 
-  before(:each) do
+  let(:export_dir) do
+    Dir.mktmpdir('miq_exp_dir')
+  end
+
+  before do
     FactoryGirl.create(:miq_policy_set, policy_set_create_attrs)
     FactoryGirl.create(:miq_policy_set_read_only, policy2_set_create_attrs)
-    @export_dir = Dir.mktmpdir('miq_exp_dir')
+    # @export_dir = Dir.mktmpdir('miq_exp_dir')
   end
 
-  after(:each) do
-    FileUtils.remove_entry @export_dir
+  after do
+    FileUtils.remove_entry export_dir
   end
 
-  it 'should export user policy sets to a given directory' do
-    TaskHelpers::Exports::PolicySets.new.export(:directory => @export_dir)
-    file_contents = File.read("#{@export_dir}/Policy_Set_Export_Test.yaml")
+  it 'exports user policy sets to a given directory' do
+    TaskHelpers::Exports::PolicySets.new.export(:directory => export_dir)
+    file_contents = File.read("#{export_dir}/Policy_Set_Export_Test.yaml")
     expect(YAML.safe_load(file_contents)).to eq(policy_set_export_attrs)
   end
 
-  it 'should export all policy sets to a given directory' do
-    TaskHelpers::Exports::PolicySets.new.export(:directory => @export_dir, :all => true)
-    file_contents = File.read("#{@export_dir}/Policy_Set_Export_Test_2.yaml")
+  it 'exports all policy sets to a given directory' do
+    TaskHelpers::Exports::PolicySets.new.export(:directory => export_dir, :all => true)
+    file_contents = File.read("#{export_dir}/Policy_Set_Export_Test_2.yaml")
     expect(YAML.safe_load(file_contents)).to eq(policy2_set_export_attrs)
   end
 end

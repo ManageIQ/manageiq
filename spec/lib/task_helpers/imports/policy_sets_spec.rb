@@ -5,32 +5,71 @@ describe TaskHelpers::Imports::PolicySets do
   let(:policy_set_one_guid) { "869d8a1c-eef8-4075-8f10-fb2b4198c20d" }
   let(:policy_set_two_guid) { "b762f0cb-8a50-4464-8ded-1f1ce341f3a7" }
 
-  it 'should import all .yaml files in a specified directory' do
-    options = { :source => data_dir }
-    expect do
-      TaskHelpers::Imports::PolicySets.new.import(options)
-    end.to_not output.to_stderr
+  describe "#import" do
+    let(:options) { {:source => source} }
 
-    assert_test_policy_set_one_present
-    assert_test_policy_set_two_present
+    describe "when the source is a directory" do
+      let(:source) { data_dir }
+      it 'imports all .yaml files in a specified directory' do
+        expect do
+          TaskHelpers::Imports::PolicySets.new.import(options)
+        end.to_not output.to_stderr
+
+        assert_test_policy_set_one_present
+        assert_test_policy_set_two_present
+      end
+    end
+
+    describe "when the source is a valid policy set file" do
+      let(:source) { "#{data_dir}/#{policy_set_file}" }
+
+      it 'should import a specified policy set export file' do
+        expect do
+          TaskHelpers::Imports::PolicySets.new.import(options)
+        end.to_not output.to_stderr
+
+        assert_test_policy_set_one_present
+        expect(MiqPolicySet.find_by(:guid => policy_set_two_guid)).to be_nil
+      end
+    end
+
+    describe "when the source is an invalid policy set file" do
+      let(:source) { "#{data_dir}/#{bad_policy_set_file}" }
+
+      it 'should fail to import a specified policy set file' do
+        expect do
+          TaskHelpers::Imports::PolicySets.new.import(options)
+        end.to output.to_stderr
+      end
+    end
   end
 
-  it 'should import a specified policy set export file' do
-    options = { :source => "#{data_dir}/#{policy_set_file}" }
-    expect do
-      TaskHelpers::Imports::PolicySets.new.import(options)
-    end.to_not output.to_stderr
+  # it 'should import all .yaml files in a specified directory' do
+  #   options = { :source => data_dir }
+  #   expect do
+  #     TaskHelpers::Imports::PolicySets.new.import(options)
+  #   end.to_not output.to_stderr
+  #
+  #   assert_test_policy_set_one_present
+  #   assert_test_policy_set_two_present
+  # end
 
-    assert_test_policy_set_one_present
-    expect(MiqPolicySet.find_by(:guid => policy_set_two_guid)).to be_nil
-  end
+  # it 'should import a specified policy set export file' do
+  #   options = { :source => "#{data_dir}/#{policy_set_file}" }
+  #   expect do
+  #     TaskHelpers::Imports::PolicySets.new.import(options)
+  #   end.to_not output.to_stderr
+  #
+  #   assert_test_policy_set_one_present
+  #   expect(MiqPolicySet.find_by(:guid => policy_set_two_guid)).to be_nil
+  # end
 
-  it 'should fail to import a specified policy set file' do
-    options = { :source => "#{data_dir}/#{bad_policy_set_file}" }
-    expect do
-      TaskHelpers::Imports::PolicySets.new.import(options)
-    end.to output.to_stderr
-  end
+  # it 'should fail to import a specified policy set file' do
+  #   options = { :source => "#{data_dir}/#{bad_policy_set_file}" }
+  #   expect do
+  #     TaskHelpers::Imports::PolicySets.new.import(options)
+  #   end.to output.to_stderr
+  # end
 
   def assert_test_policy_set_one_present
     p = MiqPolicySet.find_by(:guid => policy_set_one_guid)
