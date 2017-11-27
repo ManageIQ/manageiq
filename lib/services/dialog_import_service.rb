@@ -139,8 +139,6 @@ class DialogImportService
         end
       end
     end
-  rescue DialogFieldImporter::InvalidDialogFieldTypeError
-    raise
   end
 
   def dialog_with_label?(label)
