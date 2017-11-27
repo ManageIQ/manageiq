@@ -71,7 +71,6 @@ describe TaskHelpers::Exports::Policies do
   before do
     FactoryGirl.create(:miq_policy, policy_create_attrs)
     FactoryGirl.create(:miq_policy_read_only, policy2_create_attrs)
-  #  @export_dir = Dir.mktmpdir('miq_exp_dir')
   end
 
   after do
