@@ -44,16 +44,18 @@ module ManagerRefresh
   #   puts @ems.vms.collect(&:ems_ref) # => ["vm2", "vm3"]
   #
   class InventoryCollection
+    # @return [Boolean] A true value marks that we collected all the data of the InventoryCollection,
+    #         meaning we also collected all the references.
+    attr_accessor :data_collection_finalized
+
+    # @return [ManagerRefresh::InventoryCollection::DataStorage] An InventoryCollection encapsulating all data with
+    #         indexes
+    attr_accessor :data_storage
+
     # @return [Boolean] true if this collection is already saved into the DB. E.g. InventoryCollections with
     #   DB only strategy are marked as saved. This causes InventoryCollection not being a dependency for any other
     #   InventoryCollection, since it is already persisted into the DB.
     attr_accessor :saved
-
-    # @return [Array<InventoryObject>] objects of the InventoryCollection in an Array
-    attr_accessor :data
-
-    # @return [Hash] InventoryObject objects of the InventoryCollection indexed in a Hash by their :manager_ref.
-    attr_accessor :data_index
 
     # @return [Set] A set of InventoryObjects manager_uuids, which tells us which InventoryObjects were
     #         referenced by other InventoryObjects using a lazy_find.
@@ -62,10 +64,6 @@ module ManagerRefresh
     # @return [Set] A set of InventoryObject attributes names, which tells us InventoryObject attributes
     #         were referenced by other InventoryObject objects using a lazy_find with :key.
     attr_accessor :attribute_references
-
-    # @return [Boolean] A true value marks that we collected all the data of the InventoryCollection,
-    #         meaning we also collected all the references.
-    attr_accessor :data_collection_finalized
 
     # If present, InventoryCollection switches into delete_complement mode, where it will
     # delete every record from the DB, that is not present in this list. This is used for the batch processing,
@@ -91,10 +89,27 @@ module ManagerRefresh
                 :secondary_refs, :created_records, :updated_records, :deleted_records,
                 :custom_reconnect_block, :batch_extra_attributes
 
-    delegate :each, :size, :to => :to_a
+    delegate :<<,
+             :build,
+             :data,
+             :each,
+             :find_or_build,
+             :find_or_build_by,
+             :from_raw_data,
+             :from_raw_value,
+             :index_proxy,
+             :push,
+             :size,
+             :to_a,
+             :to_raw_data,
+             :to => :data_storage
 
-    attr_reader :index_proxy
-    delegate :find, :find_by, :lazy_find, :lazy_find_by, :primary_index, :store_indexes_for_inventory_object, :to => :index_proxy
+    delegate :find,
+             :find_by,
+             :lazy_find,
+             :lazy_find_by,
+             :primary_index,
+             :to => :index_proxy
 
     # @param model_class [Class] A class of an ApplicationRecord model, that we want to persist into the DB or load from
     #        the DB.
@@ -444,7 +459,6 @@ module ManagerRefresh
 
       @inventory_object_attributes = inventory_object_attributes
 
-      @data                             = []
       @saved                          ||= false
       @attributes_blacklist             = Set.new
       @attributes_whitelist             = Set.new
@@ -453,9 +467,7 @@ module ManagerRefresh
       @references                       = Set.new
       @attribute_references             = Set.new
 
-      @index_proxy = ManagerRefresh::InventoryCollection::Index::Proxy.new(self, secondary_refs)
-
-      @data_collection_finalized = false
+      @data_storage = ManagerRefresh::InventoryCollection::DataStorage.new(self, secondary_refs)
 
       @created_records = []
       @updated_records = []
@@ -479,53 +491,6 @@ module ManagerRefresh
       @deleted_records.concat(records_identities(records))
     end
 
-    def to_a
-      data
-    end
-
-    def from_raw_data(inventory_objects_data, available_inventory_collections)
-      inventory_objects_data.each do |inventory_object_data|
-        hash = inventory_object_data.each_with_object({}) do |(key, value), result|
-          result[key.to_sym] = if value.kind_of?(Array)
-                                 value.map { |x| from_raw_value(x, available_inventory_collections) }
-                               else
-                                 from_raw_value(value, available_inventory_collections)
-                               end
-        end
-        build(hash)
-      end
-    end
-
-    def from_raw_value(value, available_inventory_collections)
-      if value.kind_of?(Hash) && (value['type'] || value[:type]) == "ManagerRefresh::InventoryObjectLazy"
-        value.transform_keys!(&:to_s)
-      end
-
-      if value.kind_of?(Hash) && value['type'] == "ManagerRefresh::InventoryObjectLazy"
-        inventory_collection = available_inventory_collections[value['inventory_collection_name'].try(:to_sym)]
-        raise "Couldn't build lazy_link #{value} the inventory_collection_name was not found" if inventory_collection.blank?
-        inventory_collection.lazy_find(value['ems_ref'], :key => value['key'], :default => value['default'])
-      else
-        value
-      end
-    end
-
-    def to_raw_data
-      data.map do |inventory_object|
-        inventory_object.data.transform_values do |value|
-          if inventory_object_lazy?(value)
-            value.to_raw_lazy_relation
-          elsif value.kind_of?(Array) && (inventory_object_lazy?(value.compact.first) || inventory_object?(value.compact.first))
-            value.compact.map(&:to_raw_lazy_relation)
-          elsif inventory_object?(value)
-            value.to_raw_lazy_relation
-          else
-            value
-          end
-        end
-      end
-    end
-
     def process_saver_strategy(saver_strategy)
       return :default unless saver_strategy
 
@@ -539,6 +504,8 @@ module ManagerRefresh
     end
 
     def process_strategy(strategy_name)
+      self.data_collection_finalized = false
+
       return unless strategy_name
 
       case strategy_name
@@ -624,16 +591,6 @@ module ManagerRefresh
       targeted
     end
 
-    def <<(inventory_object)
-      unless primary_index.find(inventory_object.manager_uuid)
-        # TODO(lsmola) Abstract InventoryCollection::Data::Storage
-        data << inventory_object
-        store_indexes_for_inventory_object(inventory_object)
-      end
-      self
-    end
-    alias push <<
-
     def manager_ref_to_cols
       # TODO(lsmola) this should contain the polymorphic _type, otherwise the IC with polymorphic unique key will get
       # conflicts
@@ -641,53 +598,6 @@ module ManagerRefresh
       manager_ref.map do |ref|
         association_to_foreign_key_mapping[ref] || ref
       end
-    end
-
-    def inventory_object_class
-      @inventory_object_class ||= begin
-        klass = Class.new(::ManagerRefresh::InventoryObject)
-        klass.add_attributes(inventory_object_attributes) if inventory_object_attributes
-        klass
-      end
-    end
-
-    def new_inventory_object(hash)
-      manager_ref.each do |x|
-        # TODO(lsmola) with some effort, we can do this, but it's complex
-        raise "A lazy_find with a :key can't be a part of the manager_uuid" if inventory_object_lazy?(hash[x]) && hash[x].key
-      end
-
-      inventory_object_class.new(self, hash)
-    end
-
-    def find_or_build(manager_uuid)
-      raise "The uuid consists of #{manager_ref.size} attributes, please find_or_build_by method" if manager_ref.size > 1
-
-      find_or_build_by(manager_ref.first => manager_uuid)
-    end
-
-    def find_or_build_by(manager_uuid_hash)
-      if !manager_uuid_hash.keys.all? { |x| manager_ref.include?(x) } || manager_uuid_hash.keys.size != manager_ref.size
-        raise "Allowed find_or_build_by keys are #{manager_ref}"
-      end
-
-      # Not using find by since if could take record from db, then any changes would be ignored, since such record will
-      # not be stored to DB, maybe we should rethink this?
-      primary_index.find(manager_uuid_hash) || build(manager_uuid_hash)
-    end
-
-    def build(hash)
-      hash = builder_params.merge(hash)
-      inventory_object = new_inventory_object(hash)
-
-      uuid = inventory_object.manager_uuid
-      # Each InventoryObject must be able to build an UUID, return nil if it can't
-      return nil if uuid.blank?
-      # Return existing InventoryObject if we have it
-      return primary_index.find(uuid) if primary_index.find(uuid)
-      # Store new InventoryObject and return it
-      push(inventory_object)
-      inventory_object
     end
 
     def filtered_dependency_attributes
@@ -768,8 +678,7 @@ module ManagerRefresh
                               # InventoryCollection
                               :dependency_attributes => dependency_attributes.clone)
 
-      cloned.data_index = data_index
-      cloned.data       = data
+      cloned.data_storage = data_storage
       cloned
     end
 
@@ -925,9 +834,26 @@ module ManagerRefresh
       parent.send(association)
     end
 
+    def new_inventory_object(hash)
+      manager_ref.each do |x|
+        # TODO(lsmola) with some effort, we can do this, but it's complex
+        raise "A lazy_find with a :key can't be a part of the manager_uuid" if inventory_object_lazy?(hash[x]) && hash[x].key
+      end
+
+      inventory_object_class.new(self, hash)
+    end
+
+    attr_writer :attributes_blacklist, :attributes_whitelist
+
     private
 
-    attr_writer :attributes_blacklist, :attributes_whitelist, :db_data_index
+    def inventory_object_class
+      @inventory_object_class ||= begin
+        klass = Class.new(::ManagerRefresh::InventoryObject)
+        klass.add_attributes(inventory_object_attributes) if inventory_object_attributes
+        klass
+      end
+    end
 
     # Returns array of records identities
     def records_identities(records)
