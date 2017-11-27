@@ -227,6 +227,15 @@ describe Tenant do
     end
   end
 
+  context "validate multi region" do
+    let(:other_region_id) { ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1) }
+
+    it "allows same name as tenant in a different region" do
+      described_class.create(:name => "GT", :description => "GT Tenant in other region", :id => other_region_id)
+      expect(described_class.new(:name => "GT", :description => "GT Tenant in this region").valid?).to be_truthy
+    end
+  end
+
   context "#ensure_can_be_destroyed" do
     let(:tenant)       { FactoryGirl.create(:tenant) }
     let(:cloud_tenant) { FactoryGirl.create(:cloud_tenant) }

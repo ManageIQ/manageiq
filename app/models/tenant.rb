@@ -42,7 +42,9 @@ class Tenant < ApplicationRecord
   validate  :validate_only_one_root
   validates :description, :presence => true
   validates :name, :presence => true, :unless => :use_config_for_attributes?
-  validates :name, :uniqueness => {:scope => :ancestry, :message => "should be unique per parent"}
+  validates :name, :uniqueness => {:scope      => :ancestry,
+                                   :conditions => -> { in_my_region },
+                                   :message    => "should be unique per parent"}
   validate :validate_default_tenant, :on => :update, :if => :default_miq_group_id_changed?
 
   scope :all_tenants,  -> { where(:divisible => true) }
