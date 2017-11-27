@@ -262,19 +262,21 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   # UI methods for determining availability of fields
-  def supports_port?
-    false
-  end
+  supports_not :admin_ui
 
   def supports_api_version?
     false
   end
 
-  def supports_security_protocol?
+  def supports_port?
     false
   end
 
   def supports_provider_id?
+    false
+  end
+
+  def supports_security_protocol?
     false
   end
 
