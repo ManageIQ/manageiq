@@ -263,10 +263,22 @@ class ExtManagementSystem < ApplicationRecord
 
   # UI methods for determining availability of fields
   supports_not :admin_ui
-  supports_not :api_version
-  supports_not :port
-  supports_not :provider_id
-  supports_not :security_protocol
+
+  def supports_api_version?
+    false
+  end
+
+  def supports_port?
+    false
+  end
+
+  def supports_provider_id?
+    false
+  end
+
+  def supports_security_protocol?
+    false
+  end
 
   def supports_authentication?(authtype)
     authtype.to_s == "default"
