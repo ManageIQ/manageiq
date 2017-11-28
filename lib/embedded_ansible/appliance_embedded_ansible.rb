@@ -19,6 +19,7 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
   end
 
   def initialize
+    super
     require "linux_admin"
   end
 
