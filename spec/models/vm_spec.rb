@@ -311,7 +311,7 @@ describe Vm do
   context "#supported_consoles" do
     it 'returns all of the console types' do
       vm = FactoryGirl.create(:vm)
-      expect(vm.supported_consoles.keys).to match_array([:spice, :vnc, :vmrc, :mks, :cockpit])
+      expect(vm.supported_consoles.keys).to match_array([:spice, :vnc, :vmrc, :webmks, :cockpit])
     end
   end
 end
