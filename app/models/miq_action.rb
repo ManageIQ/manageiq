@@ -285,6 +285,8 @@ class MiqAction < ApplicationRecord
   end
 
   def action_email(action, rec, inputs)
+    return unless MiqRegion.my_region.role_assigned?('notifier')
+
     action.options[:from] = ::Settings.smtp.from if action.options[:from].blank?
 
     email_options = {

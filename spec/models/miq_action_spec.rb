@@ -382,13 +382,17 @@ describe MiqAction do
   end
 
   context 'validate action email should have correct type' do
-    it 'should generate a MiqAction invoking action_email' do
-      action = MiqAction.new
-      inputs = {
-        :policy      => nil,
-        :synchronous => false
-      }
-      q_options = {
+    before do
+      MiqRegion.seed
+      ServerRole.seed
+    end
+
+    let(:miq_server) { EvmSpecHelper.local_miq_server }
+    let(:action) { MiqAction.new }
+    let(:inputs) { { :policy => nil, :synchronous => false } }
+
+    let(:q_options) do
+      {
         :class_name  => "MiqAction",
         :method_name => "queue_email",
         :instance_id => nil,
@@ -397,8 +401,25 @@ describe MiqAction do
         :priority    => 20,
         :zone        => nil
       }
-      expect(MiqQueue).to receive(:put).with(q_options).once
-      action.action_email(action, nil, inputs)
+    end
+
+    context 'when notifier role is off' do
+      it 'is not generating a MiqAction invoking action_email' do
+        expect(MiqQueue).not_to receive(:put).with(q_options)
+        action.action_email(action, nil, inputs)
+      end
+    end
+
+    context 'when notifier role is on' do
+      before do
+        miq_server.server_roles << ServerRole.where(:name => 'notifier')
+        miq_server.save!
+      end
+
+      it 'should generate a MiqAction invoking action_email' do
+        expect(MiqQueue).to receive(:put).with(q_options).once
+        action.action_email(action, nil, inputs)
+      end
     end
   end
 
