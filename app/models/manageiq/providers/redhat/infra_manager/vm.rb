@@ -23,6 +23,7 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
   end
 
   supports_not :publish
+  supports_not :reset
 
   POWER_STATES = {
     'up'        => 'on',
