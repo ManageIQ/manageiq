@@ -8,6 +8,10 @@ class DockerEmbeddedAnsible < EmbeddedAnsible
     false
   end
 
+  def self.priority
+    10
+  end
+
   def initialize
     super
     require 'docker'

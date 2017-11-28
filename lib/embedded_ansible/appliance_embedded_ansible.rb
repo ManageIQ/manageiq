@@ -18,6 +18,10 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
     required_rpms.subset?(LinuxAdmin::Rpm.list_installed.keys.to_set)
   end
 
+  def self.priority
+    30
+  end
+
   def initialize
     require "linux_admin"
   end

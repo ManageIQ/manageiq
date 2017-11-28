@@ -1,6 +1,12 @@
 require 'docker'
 
 describe EmbeddedAnsible do
+  describe ".<=>" do
+    it "allows classes to be sorted by priority" do
+      expect(EmbeddedAnsible.subclasses.sort).to eq([ApplianceEmbeddedAnsible, ContainerEmbeddedAnsible, DockerEmbeddedAnsible, NullEmbeddedAnsible])
+    end
+  end
+
   context "with no available subclass" do
     before do
       expect(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)

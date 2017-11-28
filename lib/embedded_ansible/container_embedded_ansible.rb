@@ -5,6 +5,10 @@ class ContainerEmbeddedAnsible < EmbeddedAnsible
     ContainerOrchestrator.available?
   end
 
+  def self.priority
+    20
+  end
+
   def start
     miq_database.set_ansible_admin_authentication(:password => ENV["ANSIBLE_ADMIN_PASSWORD"])
     ContainerOrchestrator.new.scale(ANSIBLE_DC_NAME, 1)

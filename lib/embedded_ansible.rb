@@ -10,7 +10,7 @@ class EmbeddedAnsible
   end
 
   def self.detect_available_platform
-    subclasses.detect(&:available?) || NullEmbeddedAnsible
+    subclasses.sort.detect(&:available?) || NullEmbeddedAnsible
   end
 
   def self.available?
@@ -19,6 +19,14 @@ class EmbeddedAnsible
 
   def self.enabled?
     MiqServer.my_server(true).has_active_role?(ANSIBLE_ROLE)
+  end
+
+  def self.priority
+    0
+  end
+
+  def self.<=>(other_embedded_ansible)
+    other_embedded_ansible.priority <=> priority
   end
 
   def alive?
