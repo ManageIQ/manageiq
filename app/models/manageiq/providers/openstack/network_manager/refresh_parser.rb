@@ -48,7 +48,7 @@ module ManageIQ::Providers
     private
 
     def get_inventory_collection(collection_type)
-      if @ems.kind_of?(ManageIQ::Providers::Openstack::CloudManager) && ::Settings.ems.ems_openstack.refresh.is_admin
+      if ::Settings.ems.ems_openstack.refresh.is_admin
         @network_service.handled_list(collection_type, {}, true)
       else
         @network_service.handled_list(collection_type)
