@@ -116,7 +116,7 @@ class Vm < VmOrTemplate
       :spice   => spice_support,
       :vnc     => vnc_support,
       :vmrc    => vmrc_support,
-      :mks     => mks_support,
+      :webmks  => webmks_support,
       :cockpit => cockpit_support
     }
   end
@@ -131,7 +131,7 @@ class Vm < VmOrTemplate
     }
   end
 
-  def mks_support
+  def webmks_support
     {
       :visible => supports_mks_console?,
       :enabled => supports_launch_mks_console?,
