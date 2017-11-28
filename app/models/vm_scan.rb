@@ -416,14 +416,15 @@ class VmScan < Job
       miqVim = nil
       # Make sure we were given a host to connect to and have a non-nil encrypted password
       if miqVimHost && !miqVimHost[:password].nil?
+        server = miqVimHost[:hostname] || miqVimHost[:ipaddress]
         begin
           password_decrypt = MiqPassword.decrypt(miqVimHost[:password])
           if MiqServer.use_broker_for_embedded_proxy?(ems_type)
             $vim_broker_client ||= MiqVimBroker.new(:client, MiqVimBrokerWorker.drb_port)
-            miqVim = $vim_broker_client.getMiqVim(miqVimHost[:address], miqVimHost[:username], password_decrypt)
+            miqVim = $vim_broker_client.getMiqVim(server, miqVimHost[:username], password_decrypt)
           else
             require 'VMwareWebService/MiqVim'
-            miqVim = MiqVim.new(miqVimHost[:address], miqVimHost[:username], password_decrypt)
+            miqVim = MiqVim.new(server, miqVimHost[:username], password_decrypt)
           end
 
           vimVm = miqVim.getVimVm(vm.path)
