@@ -2865,6 +2865,43 @@
           :feature_type: admin
           :hidden: true
           :identifier: zone_delete
+    - :name: LDAP
+      :description: LDAP
+      :feature_type: node
+      :hidden: true
+      :identifier: ldap
+      :children:
+      - :name: Modify
+        :description: Modify a LDAP
+        :feature_type: admin
+        :identifier: ldap_admin
+        :hidden: true
+        :children:
+        - :name: Add
+          :description: Add a LDAP domain
+          :feature_type: admin
+          :hidden: true
+          :identifier: ldap_domain_add
+        - :name: Edit
+          :description: Edit a LDAP domain
+          :feature_type: admin
+          :hidden: true
+          :identifier: ldap_domain_edit
+        - :name: Delete
+          :description: Delete a LDAP domain
+          :feature_type: admin
+          :hidden: true
+          :identifier: ldap_domain_delete
+        - :name: Edit
+          :description: Edit a LDAP region
+          :feature_type: admin
+          :hidden: true
+          :identifier: ldap_region_edit
+        - :name: Delete
+          :description: Delete a LDAP region
+          :feature_type: admin
+          :hidden: true
+          :identifier: ldap_region_delete
     - :name: Regions
       :description: Regions
       :feature_type: node
@@ -4849,6 +4886,10 @@
       :description: Edit Tags of Container Build
       :feature_type: control
       :identifier: container_build_tag
+    - :name: Container Build Scan
+      :description: Perform SmartState Analysis
+      :feature_type: control
+      :identifier: container_build_scan
 
 # ContainerTemplate
 - :name: Templates
@@ -5508,6 +5549,10 @@
         :description: Pause Instance
         :feature_type: control
         :identifier: instance_pause
+      - :name: Resume
+        :description: Resume Instance
+        :feature_type: control
+        :identifier: instance_resume
       - :name: Suspend
         :description: Suspend Instance
         :feature_type: control
@@ -5658,6 +5703,14 @@
         :description: Refresh relationships and power states for all items related of Images
         :feature_type: control
         :identifier: image_refresh
+      - :name: Right Size Recommendations
+        :description: CPU/Memory Recommendations of Images
+        :feature_type: control
+        :identifier: image_right_size
+      - :name: Reconfigure
+        :description: Reconfigure the Memory/CPUs of  Images
+        :feature_type: control
+        :identifier: image_reconfigure
       - :name: Edit Tags
         :description: Edit Image Tags
         :feature_type: control
