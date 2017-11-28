@@ -35,8 +35,8 @@ gem "elif",                           "=0.1.0",        :require => false
 gem "fast_gettext",                   "~>1.2.0"
 gem "gettext_i18n_rails",             "~>1.7.2"
 gem "gettext_i18n_rails_js",          "~>1.1.0"
-gem "hamlit",                         "~>2.7.0"
-gem "highline",                       "~>1.6.21",      :require => false
+gem "hamlit",                         "~>2.8.5"
+gem "highline",                       "~>1.7.8",      :require => false
 gem "inifile",                        "~>3.0",         :require => false
 gem "kubeclient",                     "~>2.4.0",       :require => false # For scaling pods at runtime
 gem "manageiq-api-client",            "~>0.1.0",       :require => false
@@ -206,15 +206,15 @@ end
 unless ENV["APPLIANCE"]
   group :development do
     gem "foreman"
-    gem "haml_lint",        "~>0.20.0", :require => false
-    gem "rubocop",          "~>0.49.0", :require => false
+    gem "haml_lint",        "~>0.26.0", :require => false
+    gem "rubocop",          "~>0.51.0", :require => false
     gem "scss_lint",        "~>0.48.0", :require => false
     gem "yard"
   end
 
   group :test do
     gem "brakeman",         "~>3.3",    :require => false
-    gem "capybara",         "~>2.5.0",  :require => false
+    gem "capybara",         "~>2.16.1",  :require => false
     gem "coveralls",                    :require => false
     gem "factory_girl",     "~>4.5.0",  :require => false
     gem "sqlite3",                      :require => false
