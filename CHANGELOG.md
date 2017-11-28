@@ -5,6 +5,59 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 74 ending 2017-11-27
+
+### Added
+- Alerts
+  - Alert seeding: allowing fixtures to have its own notification options [(#16485)](https://github.com/ManageIQ/manageiq/pull/16485)
+  - Seed MiqAlerts used for Prometheus Alerts [(#16479)](https://github.com/ManageIQ/manageiq/pull/16479)
+  - Add miq_expression setter to MiqAlert [(#16397)](https://github.com/ManageIQ/manageiq/pull/16397)
+- Automate
+  - Adds field unique validator check to dialog [(#16487)](https://github.com/ManageIQ/manageiq/pull/16487)
+  - Add #raw_stdout_via_worker method [(#16441)](https://github.com/ManageIQ/manageiq/pull/16441)
+- Core
+  - Remove the column reordering tool and the schema structure validations [(#16488)](https://github.com/ManageIQ/manageiq/pull/16488)
+  - Added User Agent to VMDB::Appliance [(#16410)](https://github.com/ManageIQ/manageiq/pull/16410)
+  - Added Product name to VMDB::Appliance [(#16409)](https://github.com/ManageIQ/manageiq/pull/16409)
+- Providers
+  - Update ems_infra_admin_ui feature to role assignment [(#16484)](https://github.com/ManageIQ/manageiq/pull/16484)
+  - Add ems_infra_admin_ui feature [(#16403)](https://github.com/ManageIQ/manageiq/pull/16403)
+
+### Fixes
+- API
+  - Fixes a stack trace issue (500) during API authentication. [(#16520)](https://github.com/ManageIQ/manageiq/pull/16520)
+- Automate
+  - Imports old associations [(#16471)](https://github.com/ManageIQ/manageiq/pull/16471)
+- Chargeback
+  - Fix nil cases of allocated disk types in chargeback reporting [(#16434)](https://github.com/ManageIQ/manageiq/pull/16434)
+- Core
+  - Move the notifications to include more of the setup [(#16508)](https://github.com/ManageIQ/manageiq/pull/16508)
+  - Add a connection to the pool if there is only one for embedded ansible [(#16477)](https://github.com/ManageIQ/manageiq/pull/16477)
+  - Workers can run log_status so ask for the right pid [(#16460)](https://github.com/ManageIQ/manageiq/pull/16460)
+  - Finish simplifying NTP configuration using Settings [(#16393)](https://github.com/ManageIQ/manageiq/pull/16393)
+  - Fix Expression builder argument error by reverting #5506 [(#16255)](https://github.com/ManageIQ/manageiq/pull/16255)
+- Events
+  - Fix typo in policy event details header [(#16513)](https://github.com/ManageIQ/manageiq/pull/16513)
+- i18n
+  - Fix string interpolations [(#16468)](https://github.com/ManageIQ/manageiq/pull/16468)
+- Providers
+  - Make sure we do not pass primary_key to insert query [(#16503)](https://github.com/ManageIQ/manageiq/pull/16503)
+  - Require miq_fault_tolerant_vim in raw_connect [(#16500)](https://github.com/ManageIQ/manageiq/pull/16500)
+  - Add Middleware Server EAP/Wildfly translation [(#16492)](https://github.com/ManageIQ/manageiq/pull/16492)
+  - Remove fault_tolerant from vim_connect [(#16472)](https://github.com/ManageIQ/manageiq/pull/16472)
+  - Added a Maintenance key to the hash struct [(#16464)](https://github.com/ManageIQ/manageiq/pull/16464)
+  - Require handsoap in VimConnectMixin [(#16450)](https://github.com/ManageIQ/manageiq/pull/16450)
+  - Move graph refresh internals logging to debug [(#16442)](https://github.com/ManageIQ/manageiq/pull/16442)
+  - Refresh new target do not run post_refresh [(#16436)](https://github.com/ManageIQ/manageiq/pull/16436)
+  - Unique EmsRefresh.refresh targets if there are over 1000 targets [(#16432)](https://github.com/ManageIQ/manageiq/pull/16432)
+  - Container ssa annotate success [(#15031)](https://github.com/ManageIQ/manageiq/pull/15031)
+- Replication
+  - Scope Tenant#name validation to the current region [(#16506)](https://github.com/ManageIQ/manageiq/pull/16506)
+- Reporting
+  - Fixed syntax with `orderby` in RSS Feed YAML files [(#16493)](https://github.com/ManageIQ/manageiq/pull/16493)
+- UI
+  - Standalone ServiceUI product features require updating affected roles [(#16329)](https://github.com/ManageIQ/manageiq/pull/16329)
+
 ## Unreleased as of Sprint 73 ending 2017-11-13
 
 ### Added
