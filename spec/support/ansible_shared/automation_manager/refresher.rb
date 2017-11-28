@@ -1,5 +1,20 @@
 
 shared_examples_for "ansible refresher" do |ansible_provider, manager_class, ems_type, cassette_path|
+  # Maintaining cassettes for new specs
+  #
+  # Option #1
+  # ========
+  # Update: re-create expected set of Tower objects and re-record cassettes
+  # 1. Modify the rake task lib/tasks_private/spec_helper.rake to modify the objects for new spec
+  # 2. rake manageiq:providers:ansible_tower:populate_tower
+  #    (refer to the task doc for detail)
+  # 2. remove the old cassette
+  # 3. run the spec to create the cassette
+  # 4. update the expectations
+  # 5. change credentials in cassettes before commit
+  #
+  # Option #2
+  # ========
   # To re-record cassettes or to add cassettes you can add another inner `VCR.use_cassette` block to the
   # 'will perform a full refresh' example. When running specs, new requests are recorded to the innermost cassette and
   # can be played back from  any level of nesting (it tries the innermost cassette first, then searches up the parent
@@ -16,7 +31,9 @@ shared_examples_for "ansible refresher" do |ansible_provider, manager_class, ems
   #   * rm cassette ; run specs
   #   * change back the order of cassettes
   #
-  # To change credentials in cassettes:
+  #
+  # To change credentials in cassettes
+  # ==================================
   # replace with defaults - before committing
   # ruby -pi -e 'gsub /yourdomain.com/, "example.com"; gsub /admin:smartvm/, "testuser:secret"' spec/vcr_cassettes/manageiq/providers/ansible_tower/automation_manager/*.yml
   # replace with your working credentials
@@ -66,12 +83,8 @@ shared_examples_for "ansible refresher" do |ansible_provider, manager_class, ems
     2.times do
       # to re-record cassettes see comment at the beginning of this file
       VCR.use_cassette(cassette_path) do
-        VCR.use_cassette("#{cassette_path}_configuration_script_sources") do
-          VCR.use_cassette("#{cassette_path}_credentials") do
-            EmsRefresh.refresh(automation_manager)
-            expect(automation_manager.reload.last_refresh_error).to be_nil
-          end
-        end
+        EmsRefresh.refresh(automation_manager)
+        expect(automation_manager.reload.last_refresh_error).to be_nil
       end
       assert_counts
       assert_configured_system
@@ -85,83 +98,103 @@ shared_examples_for "ansible refresher" do |ansible_provider, manager_class, ems
   end
 
   def assert_counts
-    expect(Provider.count).to                                    eq(1)
+    expect(Provider.count).to                                 eq(1)
     expect(automation_manager).to                             have_attributes(:api_version => "3.0.1")
-    expect(automation_manager.configured_systems.count).to    eq(84)
-    expect(automation_manager.configuration_scripts.count).to eq(11)
-    expect(automation_manager.inventory_groups.count).to      eq(6)
-    expect(automation_manager.configuration_script_sources.count).to eq(6)
-    expect(automation_manager.configuration_script_payloads.count).to eq(438)
-    expect(automation_manager.credentials.count).to eq(8)
+    expect(automation_manager.configured_systems.count).to    eq(23)
+    expect(automation_manager.configuration_scripts.count).to eq(122)
+    expect(automation_manager.inventory_groups.count).to      eq(12)
+    expect(automation_manager.configuration_script_sources.count).to eq(29)
+    expect(automation_manager.configuration_script_payloads.count).to eq(2078)
+    expect(automation_manager.credentials.count).to eq(35)
   end
 
   def assert_credentials
     expect(expected_configuration_script.authentications.count).to eq(3)
+
+    # machine_credential
     machine_credential = expected_configuration_script.authentications.find_by(
       :type => manager_class::MachineCredential
     )
     expect(machine_credential).to have_attributes(
-      :name   => "Demo Credential",
+      :name   => "hello_machine_cred",
       :userid => "admin",
     )
+    expect(machine_credential.options.keys).to match_array([:become_method, :become_password, :become_username, :ssh_key_data, :ssh_key_unlock, :vault_password])
     expect(machine_credential.options.keys).to match_array(machine_credential.class::EXTRA_ATTRIBUTES.keys)
-    expect(machine_credential.options[:become_method]).to eq('su')
-    expect(machine_credential.options[:become_username]).to eq('root')
+    expect(machine_credential.options[:become_method]).to eq('')
+    expect(machine_credential.options[:become_username]).to eq('')
 
+    # network_credential
     network_credential = expected_configuration_script.authentications.find_by(
       :type => manager_class::NetworkCredential
     )
     expect(network_credential).to have_attributes(
-      :name   => "Demo Creds 2",
-      :userid => "awdd",
+      :name   => "hello_network_cred",
+      :userid => "admin",
     )
-    expect(network_credential.options.keys).to match_array(network_credential.class::EXTRA_ATTRIBUTES.keys)
+    expect(network_credential.options.keys).to match_array([:authorize, :authorize_password, :ssh_key_data, :ssh_key_unlock])
 
     cloud_credential = expected_configuration_script.authentications.find_by(
-      :type => manager_class::VmwareCredential
+      :type => manager_class::AmazonCredential
     )
     expect(cloud_credential).to have_attributes(
-      :name   => "dev-vc60",
-      :userid => "MiqAnsibleUser@vsphere.local",
+      :name   => "hello_aws_cred",
+      :userid => "ABC",
     )
-    expect(cloud_credential.options.keys).to match_array(cloud_credential.class::EXTRA_ATTRIBUTES.keys)
+    expect(cloud_credential.options.keys).to match_array([:security_token])
 
+    # scm_credential
     scm_credential = expected_configuration_script_source.authentication
     expect(scm_credential).to have_attributes(
-      :name   => "db-github",
-      :userid => "syncrou"
+      :name   => "hello_scm_cred",
+      :userid => "admin"
     )
-    expect(scm_credential.options.keys).to match_array(scm_credential.class::EXTRA_ATTRIBUTES.keys)
+    expect(scm_credential.options.keys).to match_array([:ssh_key_data, :ssh_key_unlock])
+
+    # other credential types
+    openstack_cred = automation_manager.credentials.find_by(:name => 'hello_openstack_cred')
+    expect(openstack_cred.type.split('::').last).to eq("OpenstackCredential")
+    gce_cred = automation_manager.credentials.find_by(:name => 'hello_gce_cred')
+    expect(gce_cred.type.split('::').last).to eq("GoogleCredential")
+    rackspace_cred = automation_manager.credentials.find_by(:name => 'hello_rax_cred')
+    expect(rackspace_cred.type.split('::').last).to eq("RackspaceCredential")
+    azure_cred = automation_manager.credentials.find_by(:name => 'hello_azure_cred')
+    expect(azure_cred.type.split('::').last).to eq("AzureCredential")
+    azure_classic_cred = automation_manager.credentials.find_by(:name => 'hello_azure_classic_cred')
+    expect(azure_classic_cred.type.split('::').last).to eq("AzureClassicCredential")
+    satellite6_cred = automation_manager.credentials.find_by(:name => 'hello_sat_cred')
+    expect(satellite6_cred.type.split('::').last).to eq("Satellite6Credential")
   end
 
   def assert_playbooks
     expect(expected_configuration_script_source.configuration_script_payloads.first).to be_an_instance_of(manager_class::Playbook)
-    expect(expected_configuration_script_source.configuration_script_payloads.count).to eq(8)
-    expect(expected_configuration_script_source.configuration_script_payloads.map(&:name)).to include('start_ec2.yml')
+    expect(expected_configuration_script_source.configuration_script_payloads.count).to eq(61)
+    expect(expected_configuration_script_source.configuration_script_payloads.map(&:name)).to include('jboss-standalone/site.yml')
   end
 
   def assert_configuration_script_sources
-    expect(automation_manager.configuration_script_sources.count).to eq(6)
+    expect(automation_manager.configuration_script_sources.count).to eq(29)
+
     expect(expected_configuration_script_source).to be_an_instance_of(manager_class::ConfigurationScriptSource)
     expect(expected_configuration_script_source).to have_attributes(
-      :name                 => 'DB_Github',
-      :description          => 'DB Playbooks',
+      :name                 => 'hello_repo',
+      :description          => '',
       :scm_type             => 'git',
-      :scm_url              => 'https://github.com/syncrou/playbooks',
-      :scm_branch           => 'master',
+      :scm_url              => 'https://github.com/jameswnl/ansible-examples',
+      :scm_branch           => '',
       :scm_clean            => false,
       :scm_delete_on_update => false,
-      :scm_update_on_launch => true,
+      :scm_update_on_launch => false,
       :status               => 'successful'
     )
-    expect(expected_configuration_script_source.authentication.name).to eq('db-github')
+    expect(expected_configuration_script_source.authentication.name).to eq('hello_scm_cred')
   end
 
   def assert_configured_system
     expect(expected_configured_system).to have_attributes(
       :type                 => manager_class::ConfiguredSystem.name,
-      :hostname             => "Ansible-Host",
-      :manager_ref          => "3",
+      :hostname             => "hello_vm",
+      :manager_ref          => "252",
       :virtual_instance_ref => "4233080d-7467-de61-76c9-c8307b6e4830",
     )
     expect(expected_configured_system.counterpart).to          eq(expected_counterpart_vm)
@@ -170,34 +203,34 @@ shared_examples_for "ansible refresher" do |ansible_provider, manager_class, ems
 
   def assert_configuration_script_with_nil_survey_spec
     expect(expected_configuration_script).to have_attributes(
-      :description => "Ansible-JobTemplate-Description",
-      :manager_ref => "80",
-      :name        => "Ansible-JobTemplate",
+      :name        => "hello_template",
+      :description => "test job",
+      :manager_ref => "604",
       :survey_spec => {},
-      :variables   => {'abc' => 123},
+      :variables   => {},
     )
-    expect(expected_configuration_script.inventory_root_group).to have_attributes(:ems_ref => "2")
+    # expect(expected_configuration_script.inventory_root_group).to have_attributes(:ems_ref => "1")
     expect(expected_configuration_script.parent.name).to eq('hello_world.yml')
-    expect(expected_configuration_script.parent.configuration_script_source.manager_ref).to eq('37')
+    # expect(expected_configuration_script.parent.configuration_script_source.manager_ref).to eq('37')
   end
 
   def assert_configuration_script_with_survey_spec
-    system = automation_manager.configuration_scripts.where(:name => "Ansible-JobTemplate-Survey").first
+    system = automation_manager.configuration_scripts.where(:name => "hello_template_with_survey").first
     expect(system).to have_attributes(
-      :name        => "Ansible-JobTemplate-Survey",
-      :description => "Ansible-JobTemplate-Description",
-      :manager_ref => "81",
-      :variables   => {'abc' => 123}
+      :name        => "hello_template_with_survey",
+      :description => "test job with survey spec",
+      :manager_ref => "605",
+      :variables   => {}
     )
     survey = system.survey_spec
     expect(survey).to be_a Hash
-    expect(survey['spec'].first['question_name']).to eq('Survey')
+    expect(survey['spec'].first['question_name']).to eq('example question')
   end
 
   def assert_inventory_root_group
     expect(expected_inventory_root_group).to have_attributes(
-      :name    => "Dev-VC60",
-      :ems_ref => "2",
+      :name    => "hello_inventory",
+      :ems_ref => "115",
       :type    => "ManageIQ::Providers::AutomationManager::InventoryRootGroup",
     )
   end
@@ -205,18 +238,18 @@ shared_examples_for "ansible refresher" do |ansible_provider, manager_class, ems
   private
 
   def expected_configured_system
-    @expected_configured_system ||= automation_manager.configured_systems.where(:hostname => "Ansible-Host").first
+    @expected_configured_system ||= automation_manager.configured_systems.where(:hostname => "hello_vm").first
   end
 
   def expected_configuration_script
-    @expected_configuration_script ||= automation_manager.configuration_scripts.where(:name => "Ansible-JobTemplate").first
+    @expected_configuration_script ||= automation_manager.configuration_scripts.where(:name => "hello_template").first
   end
 
   def expected_inventory_root_group
-    @expected_inventory_root_group ||= automation_manager.inventory_groups.where(:name => "Dev-VC60").first
+    @expected_inventory_root_group ||= automation_manager.inventory_groups.where(:name => "hello_inventory").first
   end
 
   def expected_configuration_script_source
-    @expected_configuration_script_source ||= automation_manager.configuration_script_sources.find_by(:name => 'DB_Github')
+    @expected_configuration_script_source ||= automation_manager.configuration_script_sources.find_by(:name => 'hello_repo')
   end
 end
