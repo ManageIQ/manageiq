@@ -15,6 +15,10 @@ class BinaryBlob < ApplicationRecord
       def purge_scope(_older_than = nil)
         where(:resource => nil)
       end
+
+      def purge_associated_records(ids)
+        BinaryBlobPart.where(:binary_blob_id => ids).delete_all
+      end
     end
   end
 end
