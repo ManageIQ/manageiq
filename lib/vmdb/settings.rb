@@ -111,30 +111,28 @@ module Vmdb
     private_class_method :build_without_local
 
     def self.template_roots
-      Vmdb::Plugins.instance.vmdb_plugins.each_with_object([Rails.root.join('config')]) do |plugin, roots|
-        roots << plugin.root.join('config')
-      end
+      Vmdb::Plugins.instance.vmdb_plugins.collect { |p| p.root.join('config') } << Rails.root.join('config')
     end
     private_class_method :template_roots
 
     def self.template_sources
-      template_roots.each_with_object([]) do |root, sources|
-        sources.push(
+      template_roots.flat_map do |root|
+        [
           root.join("settings.yml").to_s,
           root.join("settings/#{Rails.env}.yml").to_s,
           root.join("environments/#{Rails.env}.yml").to_s
-        )
+        ]
       end
     end
     private_class_method :template_sources
 
     def self.local_sources
-      template_roots.each_with_object([]) do |root, sources|
-        sources.push(
+      template_roots.flat_map do |root|
+        [
           root.join("settings.local.yml").to_s,
           root.join("settings/#{Rails.env}.local.yml").to_s,
           root.join("environments/#{Rails.env}.local.yml").to_s
-        )
+        ]
       end
     end
     private_class_method :local_sources
