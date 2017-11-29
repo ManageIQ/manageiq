@@ -380,6 +380,14 @@ RSpec.describe 'Configuration Script Sources API' do
 
       expect(response).to have_http_status(:forbidden)
     end
+
+    it 'will raise an error if the configuration_script_source does not exist' do
+      api_basic_authorize action_identifier(:configuration_script_sources, :delete, :resource_actions, :delete)
+
+      run_delete(configuration_script_sources_url(999_999))
+
+      expect(response).to have_http_status(:not_found)
+    end
   end
 
   describe 'GET /api/configuration_script_sources/:id/configuration_script_payloads' do
