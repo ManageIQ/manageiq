@@ -226,7 +226,7 @@ module AssignmentMixin
       obj = Classification.find_by(:id => id)
       if obj.nil?
         _log.warn("Unable to find classification with id [#{id}], skipping assignment")
-        nil
+        return nil
       end
     end
     "#{klass.underscore}/tag#{obj.ns}/#{obj.parent.name}/#{obj.name}"
