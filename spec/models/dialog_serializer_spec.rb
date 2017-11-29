@@ -35,7 +35,7 @@ describe DialogSerializer do
     end
 
     it "serializes the dialog" do
-      expect(dialog_serializer.serialize(dialogs)[0]).to have_attributes(expected_data)
+      expect(dialog_serializer.serialize(dialogs)[0]).to eq(expected_data)
     end
   end
 end

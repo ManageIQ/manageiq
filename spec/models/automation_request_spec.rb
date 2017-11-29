@@ -119,7 +119,7 @@ describe AutomationRequest do
         "approval_state" => "approved",
         "userid"         => admin.userid.to_s,
       )
-      expect(ar.options).to have_attributes(
+      expect(ar.options).to include(
         :namespace  => "SYSTEM",
         :class_name => "PROCESS",
         :user_id    => admin.id
@@ -129,7 +129,7 @@ describe AutomationRequest do
     it "allows /System/Process to be passed in" do
       uri_parts = @uri_parts.merge(:namespace => "/System", :class_name => "Process")
       ar = AutomationRequest.create_from_scheduled_task(admin, uri_parts, @parameters)
-      expect(ar.options).to have_attributes(
+      expect(ar.options).to include(
         :namespace  => "SYSTEM",
         :class_name => "PROCESS"
       )
@@ -138,7 +138,7 @@ describe AutomationRequest do
     it "locks scheduled tasks to /System/Process when other namespaces and class_names are passed in" do
       uri_parts = @uri_parts.merge(:namespace => "/Test", :class_name => "TestClass")
       ar = AutomationRequest.create_from_scheduled_task(admin, uri_parts, @parameters)
-      expect(ar.options).to have_attributes(
+      expect(ar.options).to include(
         :namespace  => "SYSTEM",
         :class_name => "PROCESS"
       )
@@ -147,7 +147,7 @@ describe AutomationRequest do
     it "locks class_name to Process when something else is passed in" do
       uri_parts = @uri_parts.merge(:class_name => "TestClass")
       ar = AutomationRequest.create_from_scheduled_task(admin, uri_parts, @parameters)
-      expect(ar.options).to have_attributes(
+      expect(ar.options).to include(
         :class_name => "PROCESS"
       )
     end
@@ -155,7 +155,7 @@ describe AutomationRequest do
     it "locks namespace to System when something else is passed in" do
       uri_parts = @uri_parts.merge(:namespace => "/Test")
       ar = AutomationRequest.create_from_scheduled_task(admin, uri_parts, @parameters)
-      expect(ar.options).to have_attributes(
+      expect(ar.options).to include(
         :namespace  => "SYSTEM"
       )
     end
