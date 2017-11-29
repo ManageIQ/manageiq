@@ -978,6 +978,20 @@ module ManagerRefresh
       parent.send(association)
     end
 
+    def rehash_secondary_indexes
+      secondary_refs.keys.each { |k| rehash_secondary_index(k) }
+    end
+
+    def rehash_secondary_index(name)
+      return unless secondary_refs.key?(name)
+      keys = secondary_refs[name]
+
+      secondary_indexes[name] = {}
+      data_index.values.each do |inventory_obj|
+        secondary_indexes[name][inventory_obj.id_with_keys(keys)] = inventory_obj
+      end
+    end
+
     private
 
     attr_writer :attributes_blacklist, :attributes_whitelist, :db_data_index
