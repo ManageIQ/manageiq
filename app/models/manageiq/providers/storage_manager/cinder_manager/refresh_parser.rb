@@ -111,7 +111,7 @@ module ManageIQ::Providers
         # TODO: has its own CloudVolume?
         # TODO: These classes should not be OpenStack specific, but rather Cinder-specific.
         :type          => "ManageIQ::Providers::Openstack::CloudManager::CloudVolume",
-        :name          => volume_name(volume),
+        :name          => volume_name(volume).blank? ? volume.id : volume_name(volume),
         :status        => volume.status,
         :bootable      => volume.attributes['bootable'],
         :creation_time => volume.created_at,
