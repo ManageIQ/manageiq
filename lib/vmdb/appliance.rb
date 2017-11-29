@@ -21,11 +21,11 @@ module Vmdb
     end
 
     def self.PRODUCT_NAME
-      I18n.t("product.name")
+      I18n.t("product.name").freeze
     end
 
     def self.USER_AGENT
-      "#{PRODUCT_NAME}/#{VERSION}".freeze
+      "#{self.PRODUCT_NAME}/#{self.VERSION}".freeze
     end
 
     def self.log_config(*args)
