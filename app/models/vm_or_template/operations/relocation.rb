@@ -60,6 +60,18 @@ module VmOrTemplate::Operations::Relocation
     raw_migrate(host, pool, priority, state)
   end
 
+  def migration_status
+    miq_custom_get(:migration_status)
+  end
+
+  def reset_migration_status
+    miq_custom_delete(:migration_status)
+  end
+
+  def set_migration_status(value)
+    miq_custom_set(:migration_status, value)
+  end
+
   def raw_relocate(host, pool = nil, datastore = nil, disk_move_type = nil, transform = nil, priority = "defaultPriority", disk = nil)
     raise _("VM has no EMS, unable to relocate VM") unless ext_management_system
     raise _("Unable to relocate VM: Specified Host is not a valid object") if host && !host.kind_of?(Host)
