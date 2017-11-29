@@ -29,4 +29,11 @@ FactoryGirl.define do
       x.perf_capture_enabled = toggle_on_name_seq(x)
     end
   end
+
+  factory :storage_with_miq_templates, :parent => :storage do
+    after :create do |st|
+      st.all_miq_templates << FactoryGirl.create(:miq_template)
+      st.all_miq_templates << FactoryGirl.create(:miq_template)
+    end
+  end
 end
