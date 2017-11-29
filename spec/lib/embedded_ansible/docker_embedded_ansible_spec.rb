@@ -19,4 +19,17 @@ describe DockerEmbeddedAnsible do
       expect(described_class.available?).to be true
     end
   end
+
+  describe "#alive?" do
+    let(:connection) { double("APIConnection", :api => api) }
+    let(:api)        { double("AnsibleAPI") }
+
+    it "returns false if the api raises a JSON::ParserError" do
+      expect(subject).to receive(:running?).and_return(true)
+      expect(subject).to receive(:api_connection).and_return(connection)
+      expect(api).to receive(:verify_credentials).and_raise(JSON::ParserError)
+
+      expect(subject.alive?).to be false
+    end
+  end
 end

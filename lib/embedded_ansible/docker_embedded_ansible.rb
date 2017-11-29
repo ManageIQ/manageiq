@@ -52,6 +52,12 @@ class DockerEmbeddedAnsible < EmbeddedAnsible
     api_connection_raw("localhost", AWX_WEB_PORT)
   end
 
+  def alive?
+    super
+  rescue JSON::ParserError
+    false
+  end
+
   private
 
   def run_rabbitmq_container
