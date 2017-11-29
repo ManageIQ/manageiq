@@ -334,7 +334,7 @@ module AuthenticationMixin
       status == :valid ? auth.validation_successful : auth.validation_failed(status, details)
     end
 
-    return status == :valid, details
+    return status == :valid, details.truncate(20_000)
   end
 
   def default_authentication
@@ -360,9 +360,9 @@ module AuthenticationMixin
         end
       end
 
-    details &&= details.to_s.truncate(200)
+    details &&= details.to_s
 
-    _log.warn("#{header} Validation failed: #{status}, #{details}") unless status == :valid
+    _log.warn("#{header} Validation failed: #{status}, #{details.truncate(200)}") unless status == :valid
     return status, details
   end
 
