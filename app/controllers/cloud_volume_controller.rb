@@ -158,7 +158,7 @@ class CloudVolumeController < ApplicationController
     assert_privileges("cloud_volume_attach")
     @vm_choices = {}
     @volume = find_record_with_rbac(CloudVolume, params[:id])
-    @volume.available_vms.each { |vm| @vm_choices[vm.name] = vm.id }
+    @volume.cloud_tenant.vms.each { |vm| @vm_choices[vm.name] = vm.id }
 
     @in_a_form = true
     drop_breadcrumb(
