@@ -1100,6 +1100,7 @@ Vmdb::Application.routes.draw do
         tagging_edit
         scaling
         scaledown
+        show
       ) +
                compare_get,
       :post => %w(

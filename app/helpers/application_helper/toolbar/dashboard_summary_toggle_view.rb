@@ -30,7 +30,8 @@ class ApplicationHelper::Toolbar::DashboardSummaryToggleView < ApplicationHelper
       N_('Download summary in PDF format'),
       nil,
       :klass => ApplicationHelper::Button::Pdf,
-      :url   => "/download_summary_pdf"
+      :url       => "/show",
+      :url_parms => "?display=download_pdf"
     ),
   ])
 end
