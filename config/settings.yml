@@ -1042,7 +1042,6 @@
   :provide_protocol: https
   :security: none
   :timeout: 120
-  :use_vim_broker: true
   :authentication_timeout: 30.seconds
 :workers:
   :worker_base:
