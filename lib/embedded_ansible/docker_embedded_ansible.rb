@@ -1,10 +1,30 @@
 class DockerEmbeddedAnsible < EmbeddedAnsible
   AWX_WEB_PORT = "54321".freeze
 
+  class DockerDaemon
+    def initialize
+      require 'linux_admin'
+    end
+
+    def start
+      return unless Rails.env.production?
+      LinuxAdmin::Service.new("docker").start.enable
+    end
+
+    def stop
+      return unless Rails.env.production?
+      LinuxAdmin::Service.new("docker").stop.disable
+    end
+  end
+
+  private_constant :DockerDaemon
+
   def self.available?
     require 'docker'
+
+    DockerDaemon.new.start
     Docker.validate_version!
-  rescue RuntimeError
+  rescue
     false
   end
 
@@ -18,6 +38,7 @@ class DockerEmbeddedAnsible < EmbeddedAnsible
   end
 
   def start
+    DockerDaemon.new.start
     run_rabbitmq_container
     run_memcached_container
     sleep(15)
@@ -36,6 +57,7 @@ class DockerEmbeddedAnsible < EmbeddedAnsible
 
   def stop
     container_names.each { |c| stop_container(c) }
+    DockerDaemon.new.stop
   end
 
   alias disable stop
