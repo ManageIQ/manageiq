@@ -604,7 +604,11 @@ module ManageIQ::Providers::Microsoft
     end
 
     def lookup_overall_state(overall_state)
-      overall_state.to_s.downcase != 'ok'
+      # OverallState enum:
+      # 0 => Ok
+      # 2 => Needs Attention
+      # 8 => In Maintenance Mode
+      overall_state == 8
     end
 
     def lookup_power_state(power_state_input)

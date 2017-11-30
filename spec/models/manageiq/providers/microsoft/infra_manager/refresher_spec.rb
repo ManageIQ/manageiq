@@ -119,7 +119,8 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
       :vmm_version      => "6.3.9600.18623",
       :vmm_product      => "HyperV",
       :power_state      => "on",
-      :connection_state => "connected"
+      :connection_state => "connected",
+      :maintenance      => false,
     )
 
     expect(@host.operating_system).to have_attributes(
