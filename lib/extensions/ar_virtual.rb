@@ -31,7 +31,7 @@ module VirtualArel
   module ClassMethods
     def arel_attribute(column_name, arel_table = self.arel_table)
       load_schema
-      if virtual_attribute?(column_name)
+      if virtual_attribute?(column_name) && !attribute_alias?(column_name)
         col = _virtual_arel[column_name.to_s]
         col.call(arel_table) if col
       else
