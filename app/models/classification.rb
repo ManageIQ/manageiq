@@ -259,7 +259,7 @@ class Classification < ApplicationRecord
     raise _("entries can only be added to classifications") unless category?
     # Inherit from parent classification
     options.merge!(:read_only => read_only, :syntax => syntax, :single_value => single_value, :ns => ns)
-    children.create(options)
+    children.create!(options)
   end
 
   def entries
@@ -451,11 +451,14 @@ class Classification < ApplicationRecord
 
   def self.seed
     YAML.load_file(FIXTURE_FILE).each do |c|
-      cat = find_by_name(c[:name], my_region_number, (c[:ns] || DEFAULT_NAMESPACE))
-      next if cat
+      category = find_by_name(c[:name], my_region_number, (c[:ns] || DEFAULT_NAMESPACE))
+      next if category
 
-      _log.info("Creating #{c[:name]}")
-      add_entries_from_hash(create(c.except(:entries)), c[:entries])
+      category = new(c.except(:entries))
+      next unless category.valid? # HACK: Skip seeding if categories aren't valid/unique
+      _log.info("Creating category #{c[:name]}")
+      category.save!
+      add_entries_from_hash(category, c[:entries])
     end
 
     # Fix categories that have a nill parent_id
@@ -471,7 +474,7 @@ class Classification < ApplicationRecord
   def self.add_entries_from_hash(cat, entries)
     entries.each do |entry|
       ent = cat.find_entry_by_name(entry[:name])
-      ent ? ent.update_attributes(entry) : cat.add_entry(entry)
+      ent ? ent.update_attributes!(entry) : cat.add_entry(entry)
     end
   end
 
