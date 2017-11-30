@@ -2,7 +2,6 @@ module EvmSettings
   ALLOWED_KEYS = [
     "/authentication/sso_enabled",
     "/authentication/saml_enabled",
-    "/authentication/oidc_enabled",
     "/authentication/local_login_disabled"
   ].freeze
 
