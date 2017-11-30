@@ -45,7 +45,16 @@ class MiqGroup < ApplicationRecord
   end
 
   def settings
-    super && super.with_indifferent_access
+    current = super
+    return if current.nil?
+
+    self.settings = current.with_indifferent_access
+    super
+  end
+
+  def settings=(new_settings)
+    indifferent_settings = new_settings.try(:with_indifferent_access)
+    super(indifferent_settings)
   end
 
   def self.with_allowed_roles_for(user_or_group)
