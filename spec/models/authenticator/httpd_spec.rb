@@ -476,6 +476,7 @@ describe Authenticator::Httpd do
 
       context "using external authorization" do
         let(:config) { {:httpd_role => true} }
+
         it "records two successful audit entries" do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
