@@ -799,11 +799,11 @@
     - SuspendVM_Task
 :help_menu:
   :documentation:
-    :enabled: true
+    :type: default
   :product:
-    :enabled: true
+    :type: new_window
   :about:
-    :enabled: true
+    :type: modal
 :host_delete:
   :queue_timeout: 20.minutes
 :host_introspect:
