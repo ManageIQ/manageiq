@@ -103,7 +103,9 @@ describe VirtualFields do
     end
 
     context ".virtual_columns=" do
-      it "" do
+      it "can have multiple virtual columns" do
+        TestClass.virtual_column :existing_vcol, :type => :string
+
         {
           :vcol1  => {:type => :string},
           "vcol2" => {:type => :string},
@@ -111,10 +113,12 @@ describe VirtualFields do
           TestClass.virtual_column name, options
         end
 
-        expect(TestClass.virtual_attribute_names).to match_array(["vcol1", "vcol2"])
+        expect(TestClass.virtual_attribute_names).to match_array(%w(existing_vcol vcol1 vcol2))
       end
+    end
 
-      it "with existing virtual columns" do
+    context ".virtual_attribute_names" do
+      it "has virtual attributes" do
         TestClass.virtual_column :existing_vcol, :type => :string
 
         {
@@ -125,6 +129,20 @@ describe VirtualFields do
         end
 
         expect(TestClass.virtual_attribute_names).to match_array(["existing_vcol", "vcol1", "vcol2"])
+      end
+
+      it "does not have aliases" do
+        TestClass.virtual_attribute :existing_vcol, :string
+        TestClass.alias_attribute :col2, :col1
+        expect(TestClass.virtual_attribute_names).to match_array(["existing_vcol"])
+      end
+
+      it "supports virtual_column aliases" do
+        TestClass.virtual_attribute :existing_vcol, :string
+        TestClass.alias_attribute :col2, :col1
+        TestClass.virtual_attribute :col2, :integer
+
+        expect(TestClass.virtual_attribute_names).to match_array(%w(existing_vcol col2))
       end
     end
 
@@ -145,6 +163,12 @@ describe VirtualFields do
           end
 
           context "with column" do
+            it("as string") { expect(TestClass.virtual_attribute?("col1")).not_to be_truthy }
+            it("as symbol") { expect(TestClass.virtual_attribute?(:col1)).not_to  be_truthy }
+          end
+
+          context "with alias" do
+            before { TestClass.alias_attribute :col2, :col1 }
             it("as string") { expect(TestClass.virtual_attribute?("col1")).not_to be_truthy }
             it("as symbol") { expect(TestClass.virtual_attribute?(:col1)).not_to  be_truthy }
           end
@@ -658,6 +682,27 @@ describe VirtualFields do
         TestClass.virtual_delegate :col1, :prefix => 'parent', :to => :ref1
 
         expect(TestClass.attribute_supported_by_sql?(:parent_col1)).to be_truthy
+      end
+    end
+
+    describe ".arel_attribute" do
+      it "supports aliases" do
+        TestClass.alias_attribute :col2, :col1
+
+        arel_attr = TestClass.arel_attribute(:col2)
+        expect(arel_attr).to_not be_nil
+        expect(arel_attr.name).to eq("col1") # typically this is a symbol. not perfect but it works
+      end
+
+      # NOTE: should not need to add a virtual attribute to an alias
+      # TODO: change code for reports and automate to expose aliases like it does with attributes/virtual attributes.
+      it "supports aliases marked as a virtual_attribute" do
+        TestClass.alias_attribute :col2, :col1
+        TestClass.virtual_attribute :col2, :integer
+
+        arel_attr = TestClass.arel_attribute(:col2)
+        expect(arel_attr).to_not be_nil
+        expect(arel_attr.name).to eq("col1") # typically this is a symbol. not perfect but it works
       end
     end
 
