@@ -121,6 +121,7 @@
 - lans
 - last_compliances
 - linux_initprocesses
+- middleware_servers
 - miq_actions
 - miq_approval_stamps
 - miq_custom_attributes
