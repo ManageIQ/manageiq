@@ -53,7 +53,7 @@ headers:
 - Status
 - Cloud Volume
 - Based Volumes
-- Cloud Provider
+- Storage Manager
 
 # Condition(s) string for the SQL query
 conditions:
