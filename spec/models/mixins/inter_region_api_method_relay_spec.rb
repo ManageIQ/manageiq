@@ -172,7 +172,7 @@ describe InterRegionApiMethodRelay do
       let(:region_auth_token) { double("MiqRegion API auth token") }
 
       before do
-        expect(MiqRegion).to receive(:find_by).with(:region => region_number).and_return(region)
+        allow(MiqRegion).to receive(:find_by).with(:region => region_number).and_return(region)
       end
 
       it "opens an api connection to that address when the server has an ip address" do
