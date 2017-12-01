@@ -431,14 +431,22 @@ class ExtManagementSystem < ApplicationRecord
     @ems_physical_infra_discovery_types ||= %w(lenovo_ph_infra)
   end
 
+  def deleting?
+    status == "deleting"
+  end
+
   def disable!
     _log.info("Disabling EMS [#{name}] id [#{id}].")
     update!(:enabled => false)
   end
 
   def enable!
-    _log.info("Enabling EMS [#{name}] id [#{id}].")
-    update!(:enabled => true)
+    if deleting?
+      _log.info("Not re-enabling EMS [#{name}] id [#{id}] because it is being deleted.")
+    else
+      _log.info("Enabling EMS [#{name}] id [#{id}].")
+      update!(:enabled => true)
+    end
   end
 
   # override destroy_queue from AsyncDeleteMixin
@@ -461,7 +469,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def destroy(task_id = nil)
-    disable! if enabled?
+    update!(:enabled => false, :status => "deleting") if enabled?
 
     _log.info("Destroying #{child_managers.count} child_managers")
     child_managers.destroy_all
