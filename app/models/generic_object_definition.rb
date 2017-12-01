@@ -8,6 +8,15 @@ class GenericObjectDefinition < ApplicationRecord
     :time     => ActiveModel::Type::Time.new
   }.freeze
 
+  TYPE_NAMES = {
+    :boolean  => N_('Boolean'),
+    :datetime => N_('Date/Time'),
+    :float    => N_('Float'),
+    :integer  => N_('Integer'),
+    :string   => N_('String'),
+    :time     => N_('Time')
+  }.freeze
+
   FEATURES = %w(attribute association method).freeze
   REG_ATTRIBUTE_NAME = /\A[a-z][a-zA-Z_0-9]*\z/
   REG_METHOD_NAME    = /\A[a-z][a-zA-Z_0-9]*[!?]?\z/
