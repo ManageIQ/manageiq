@@ -1,4 +1,19 @@
 describe MiqGroup do
+  describe "#settings" do
+    subject { FactoryGirl.create(:miq_group) }
+
+    it "returns a HashWithIndifferentAccess" do
+      subject.settings = {:a => 1}
+      expect(subject.settings["a"]).to eq(1)
+    end
+
+    it "returns the same object" do
+      subject.settings = {}
+      subject.settings[:a] = 1
+      expect(subject.settings[:a]).to eq(1)
+    end
+  end
+
   context "as a Super Administrator" do
     subject { FactoryGirl.create(:miq_group, :group_type => "system", :role => "super_administrator") }
 
