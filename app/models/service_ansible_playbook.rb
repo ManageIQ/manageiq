@@ -169,7 +169,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     log_option = options.fetch_path(:config_info, action.downcase.to_sym, :log_output) || 'on_error'
     return unless %(on_error always).include?(log_option)
     job = job(action)
-    return if log_option == 'on_error' && job.raw_status.normalized_status.succeeded?
+    return if log_option == 'on_error' && job.raw_status.succeeded?
     _log.info("Stdout from ansible job #{job.name}: #{job.raw_stdout('txt_download')}")
   rescue => err
     _log.error("Failed to get stdout from ansible job #{job.name}")
