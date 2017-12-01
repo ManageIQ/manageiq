@@ -492,6 +492,26 @@ describe Authenticator::Httpd do
           authenticate
         end
       end
+
+      context "using a comma separated group list" do
+        let(:config) { {:httpd_role => true} }
+        let(:headers) do
+          super().merge('X-Remote-User-Groups' => 'wibble@fqdn,bubble@fqdn')
+        end
+        let(:user_attrs) do
+          { :username  => "testuser",
+            :fullname  => "Test User",
+            :firstname => "Alice",
+            :lastname  => "Aardvark",
+            :email     => "testuser@example.com",
+            :domain    => "example.com" }
+        end
+
+        it "handles a comma separated grouplist" do
+          expect(subject).to receive(:find_external_identity).with(username, user_attrs, ["wibble@fqdn", "bubble@fqdn"])
+          authenticate
+        end
+      end
     end
   end
 end
