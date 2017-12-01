@@ -227,6 +227,19 @@ describe(ServiceAnsiblePlaybook) do
         executed_service.postprocess(action)
       end
     end
+
+    context 'require log stdout when job failed' do
+      before do
+        status = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job::Status.new('failed', nil)
+        allow(tower_job).to receive(:raw_status).and_return(status)
+      end
+
+      it 'writes stdout to log' do
+        expect(tower_job).to receive(:raw_stdout).with('txt_download')
+        expect(executed_service).to receive(:delete_inventory)
+        executed_service.postprocess(action)
+      end
+    end
   end
 
   describe '#on_error' do
