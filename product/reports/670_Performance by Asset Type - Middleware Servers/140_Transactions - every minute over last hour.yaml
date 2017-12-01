@@ -15,21 +15,11 @@ col_order:
 - id
 - name
 - start_time
-- mw_tx_committed_min
-- mw_tx_committed_avg
-- mw_tx_committed_max
-- mw_tx_application_rollbacks_min
-- mw_tx_application_rollbacks_avg
-- mw_tx_application_rollbacks_max
-- mw_tx_timeout_min
-- mw_tx_timeout_avg
-- mw_tx_timeout_max
-- mw_tx_heuristics_min
-- mw_tx_heuristics_avg
-- mw_tx_heuristics_max
-- mw_tx_aborted_min
-- mw_tx_aborted_avg
-- mw_tx_aborted_max
+- mw_tx_committed
+- mw_tx_application_rollbacks
+- mw_tx_timeout
+- mw_tx_heuristics
+- mw_tx_aborted
 timeline:
 file_mtime:
 categories:
@@ -48,21 +38,11 @@ cols:
 - id
 - name
 - start_time
-- mw_tx_committed_min
-- mw_tx_committed_avg
-- mw_tx_committed_max
-- mw_tx_application_rollbacks_min
-- mw_tx_application_rollbacks_avg
-- mw_tx_application_rollbacks_max
-- mw_tx_timeout_min
-- mw_tx_timeout_avg
-- mw_tx_timeout_max
-- mw_tx_heuristics_min
-- mw_tx_heuristics_avg
-- mw_tx_heuristics_max
-- mw_tx_aborted_min
-- mw_tx_aborted_avg
-- mw_tx_aborted_max
+- mw_tx_committed
+- mw_tx_application_rollbacks
+- mw_tx_timeout
+- mw_tx_heuristics
+- mw_tx_aborted
 template_type: report
 group: n
 sortby:
@@ -71,18 +51,9 @@ headers:
 - Id
 - Name
 - Start
-- Commited count - min
-- Commited count - avg
-- Commited count - max
-- Failed count - min
-- Failed count - avg
-- Failed count - max
-- Timed out count - min
-- Timed out count - avg
-- Timed out count - max
-- Heuristics count - min
-- Heuristics count - avg
-- Heuristics count - max
-- Aborted count - min
-- Aborted count - avg
-- Aborted count - max
+- Commited count
+- Failed count
+- Timed out count
+- Heuristics count
+- Aborted count
+

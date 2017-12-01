@@ -1,0 +1,28 @@
+# LiveMetrics configuration file
+#
+#   It defines the live metrics supported in a model that includes a LiveMetricsMixin.
+#   It maps the native id used in the provider for a metric with the column where this metric will be available in
+#   a LiveMetric virtual model.
+#
+#   Format:
+#   - Provider native metric type id: MiQ metric id
+#
+supported_metrics:
+  JMS Queue WF10:
+  - Consumer Count: mw_ms_queue_consumer_count
+  - Delivering Count: mw_ms_queue_delivering_count
+  - Message Count: mw_ms_queue_message_count
+  - Messages Added: mw_ms_queue_messages_added
+  - Scheduled Count: mw_ms_queue_scheduled_count
+
+  JMS Topic WF10:
+  - Delivering Count: mw_ms_topic_delivering_count
+  - Durable Message Count: mw_ms_topic_durable_message_count
+  - Durable Subscription Count: mw_ms_topic_durable_subscription_count
+  - Message Count: mw_ms_topic_message_count
+  - Messages Added: mw_ms_topic_message_added
+  - Non-Durable Message Count: mw_ms_topic_non_durable_message_count
+  - Non-Durable Subscription Count: mw_ms_topic_non_durable_subscription_count
+  - Subscription Count: mw_ms_topic_subscription_count
+
+  default:

@@ -15,12 +15,8 @@ col_order:
 - id
 - name
 - start_time
-- mw_non_heap_used_min
-- mw_non_heap_used_avg
-- mw_non_heap_used_max
-- mw_non_heap_committed_min
-- mw_non_heap_committed_avg
-- mw_non_heap_committed_max
+- mw_non_heap_used
+- mw_non_heap_committed
 timeline:
 id: 671
 file_mtime:
@@ -40,12 +36,8 @@ cols:
 - id
 - name
 - start_time
-- mw_non_heap_used_min
-- mw_non_heap_used_avg
-- mw_non_heap_used_max
-- mw_non_heap_committed_min
-- mw_non_heap_committed_avg
-- mw_non_heap_committed_max
+- mw_non_heap_used
+- mw_non_heap_committed
 template_type: report
 group: n
 sortby:
@@ -54,9 +46,6 @@ headers:
 - Id
 - Name
 - Start
-- Used - min (bytes)
 - Used - avg (bytes)
-- Used - max (bytes)
-- Committed - min (bytes)
 - Committed - avg (bytes)
-- Committed - max (bytes)
+
