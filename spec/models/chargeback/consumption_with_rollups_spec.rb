@@ -10,7 +10,7 @@ describe Chargeback::ConsumptionWithRollups do
     let!(:metric_rollup) { FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => starting_date + 1.hour, :resource => vm) }
 
     before do
-      Timecop.travel(starting_date)
+      Timecop.travel(starting_date + 10.hours)
     end
 
     it "doesn't fail when there are no state data about disks" do
@@ -28,6 +28,18 @@ describe Chargeback::ConsumptionWithRollups do
 
       it 'returns values' do
         expect(consumption.send(:values, 'derived_vm_allocated_disk_storage', sub_metric)).to match_array([volume_size])
+      end
+    end
+
+    context "vim performance state records don't exist" do
+      before do
+        VimPerformanceState.destroy_all
+      end
+
+      it 'all chargeback calculations return 0' do
+        expect(consumption.send(:max, 'derived_vm_allocated_disk_storage', sub_metric)).to be_zero
+        expect(consumption.send(:avg, 'derived_vm_allocated_disk_storage', sub_metric)).to be_zero
+        expect(consumption.send(:sum, 'derived_vm_allocated_disk_storage', sub_metric)).to be_zero
       end
     end
 
