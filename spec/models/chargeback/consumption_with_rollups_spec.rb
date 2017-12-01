@@ -31,6 +31,18 @@ describe Chargeback::ConsumptionWithRollups do
       end
     end
 
+    context "vim performance state records don't exist" do
+      before do
+        VimPerformanceState.destroy_all
+      end
+
+      it 'all chargeback calculations return 0' do
+        expect(consumption.send(:max, 'derived_vm_allocated_disk_storage', sub_metric)).to be_zero
+        expect(consumption.send(:avg, 'derived_vm_allocated_disk_storage', sub_metric)).to be_zero
+        expect(consumption.send(:sum, 'derived_vm_allocated_disk_storage', sub_metric)).to be_zero
+      end
+    end
+
     after do
       Timecop.return
     end
