@@ -1,4 +1,18 @@
 describe Storage do
+  describe "#total_unregistered_vms" do
+    let(:ext_management_system)  { FactoryGirl.create(:ext_management_system) }
+    let(:host)                   { FactoryGirl.create(:host) }
+    let(:storage)                { FactoryGirl.create(:storage) }
+    let!(:vm_registered_1) { FactoryGirl.create(:vm, :storage => storage, :ext_management_system => ext_management_system, :host => host) }
+    let!(:vm_registered_2) { FactoryGirl.create(:vm, :storage => storage, :host => host) }
+    let!(:vm_unregistered) { FactoryGirl.create(:vm, :storage => storage, :ext_management_system => ext_management_system) }
+
+    it 'returns only unregistred vms' do
+      expect(storage.total_unregistered_vms).to eq(1)
+      expect(storage.total_unregistered_vms).to eq(storage.unregistered_vms.size)
+    end
+  end
+
   it "#scan_watchdog_interval" do
     stub_settings(:storage => {'watchdog_interval' => '5.minutes'})
     expect(Storage.scan_watchdog_interval).to eq(5.minutes)
