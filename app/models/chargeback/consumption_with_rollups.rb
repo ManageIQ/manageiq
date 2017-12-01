@@ -37,7 +37,8 @@ class Chargeback
     end
 
     def max(metric, sub_metric = nil)
-      values(metric, sub_metric).max
+      values = values(metric, sub_metric)
+      values.present? ? values.max : 0
     end
 
     def avg(metric, sub_metric = nil)
