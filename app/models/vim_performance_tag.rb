@@ -19,7 +19,7 @@ class VimPerformanceTag < MetricRollup
     tp = options.fetch_path(:ext_options, :time_profile)
     results = recs.inject(:res => [], :tags => [], :tcols => []) do |h, rec|
       if rec.class.name == "VimPerformanceTag"
-        tvrecs = rec.vim_performance_tag_values.build_for_association(rec,
+        tvrecs = VimPerformanceTagValue.build_for_association(rec,
                                                                       options[:cat_model].pluralize.underscore,
                                                                       :save     => false,
                                                                       :category => options[:category])

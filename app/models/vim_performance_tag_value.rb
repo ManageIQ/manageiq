@@ -103,11 +103,6 @@ class VimPerformanceTagValue < ApplicationRecord
       end
     end
 
-    parent_perf_tag_value_recs = parent_perf.vim_performance_tag_values.inject({}) do |h, tv|
-      h.store_path(tv.association_type, tv.category, tv.tag_name, tv.column_name, tv)
-      h
-    end
-
     result.keys.inject([]) do |a, key|
       col, tag = key.to_s.split(TAG_SEP)
       category = tag.split("/").first
@@ -122,6 +117,11 @@ class VimPerformanceTagValue < ApplicationRecord
       attr = col == 'assoc_ids' ? :assoc_ids : :value
       new_rec[attr] = result[key]
       if options[:save]
+        parent_perf_tag_value_recs = parent_perf.vim_performance_tag_values.inject({}) do |h, tv|
+          h.store_path(tv.association_type, tv.category, tv.tag_name, tv.column_name, tv)
+          h
+        end
+
         tag_value_rec   = parent_perf_tag_value_recs.fetch_path(association_type, category, tag_name, col)
         tag_value_rec ||= parent_perf_tag_value_recs.store_path(association_type, category, tag_name, col, parent_perf.vim_performance_tag_values.build)
         tag_value_rec.update_attributes(new_rec)
