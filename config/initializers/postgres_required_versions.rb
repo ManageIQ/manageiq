@@ -9,7 +9,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.prepend Module.new {
     if postgresql_version >= 90600
       msg = "The version of PostgreSQL being connected to is incompatible with #{I18n.t("product.name")} (9.6+ is not supported yet)"
 
-      raise msg if Rails.env.production?
+      raise msg if Rails.env.production? && !ENV["UNSAFE_PG_VERSION"]
       $stderr.puts msg
     end
   end
