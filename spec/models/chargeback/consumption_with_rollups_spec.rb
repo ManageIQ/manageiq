@@ -10,7 +10,7 @@ describe Chargeback::ConsumptionWithRollups do
     let!(:metric_rollup) { FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => starting_date + 1.hour, :resource => vm) }
 
     before do
-      Timecop.travel(starting_date)
+      Timecop.travel(starting_date + 10.hours)
     end
 
     it "doesn't fail when there are no state data about disks" do
