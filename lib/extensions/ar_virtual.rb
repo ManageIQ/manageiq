@@ -580,15 +580,20 @@ module ActiveRecord
   module Associations
     class Preloader
       prepend Module.new {
+        # the association can be a regular association, or a virtual attribute which potentially has virtual_includes
+        # The virtual_attribute :uses option populates virtual_includes[]
+        # The virtual_include can be complex, so sending off to preload to handle
         def preloaders_for_one(association, records, scope)
           klass_map = records.compact.group_by(&:class)
 
+          # preload virtual includes for records with virtual_attributes and virtual_includes
           loaders = klass_map.keys.group_by { |klass| klass.virtual_includes(association) }.flat_map do |virtuals, klasses|
             subset = klasses.flat_map { |klass| klass_map[klass] }
             preload(subset, virtuals)
           end
 
-          records_with_association = klass_map.select { |k, rs| k.reflect_on_association(association) }.flat_map { |k, rs| rs }
+          # preload associations for non virtual attribute associations
+          records_with_association = klass_map.select { |k, _| !k.virtual_field?(association) }.flat_map { |_, rs| rs }
           if records_with_association.any?
             loaders.concat(super(association, records_with_association, scope))
           end
