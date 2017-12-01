@@ -454,7 +454,8 @@ describe MiqWorker do
           :cpu_time              => 660,
           :priority              => "31",
           :name                  => "ruby",
-          :proportional_set_size => 198_721_987
+          :proportional_set_size => 198_721_987,
+          :unique_set_size       => 172_122_122
         }
 
         fields = described_class::PROCESS_INFO_FIELDS.dup
@@ -475,6 +476,7 @@ describe MiqWorker do
           expect(@worker.public_send(field)).to be_present
         end
         expect(@worker.proportional_set_size).to eq 198_721_987
+        expect(@worker.unique_set_size).to       eq 172_122_122
       end
     end
   end
