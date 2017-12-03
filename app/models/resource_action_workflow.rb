@@ -59,7 +59,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
 
   def create_values
     create_values_hash.tap do |value|
-      value[:src_id] = @target.id
+      value[:src_id] = @target.try(:id)
       value[:request_options] = request_options unless request_options.blank?
     end
   end
