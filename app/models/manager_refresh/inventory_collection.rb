@@ -109,6 +109,7 @@ module ManagerRefresh
              :lazy_find,
              :lazy_find_by,
              :primary_index,
+             :reindex_secondary_indexes!,
              :to => :index_proxy
 
     # @param model_class [Class] A class of an ApplicationRecord model, that we want to persist into the DB or load from

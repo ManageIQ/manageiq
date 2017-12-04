@@ -18,6 +18,14 @@ module ManagerRefresh
             index[inventory_object.manager_uuid(attribute_names)] = inventory_object
           end
 
+          def reindex!
+            inventory_objects = index.values
+            self.index = {}
+            inventory_objects.each do |inventory_object|
+              store_index_for(inventory_object)
+            end
+          end
+
           # Find value based on index_value
           #
           # @param _index_value [String] a index_value of the InventoryObject we search for
@@ -28,6 +36,10 @@ module ManagerRefresh
           protected
 
           attr_reader :index, :attribute_names, :inventory_collection
+
+          private
+
+          attr_writer :index
         end
       end
     end

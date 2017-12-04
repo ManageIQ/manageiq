@@ -12,7 +12,7 @@ module ManagerRefresh
 
       delegate :find,
                :primary_index,
-               :store_indexes_for_inventory_object,
+               :build_primary_index_for,
                :to => :index_proxy
 
       delegate :builder_params,
@@ -33,7 +33,12 @@ module ManagerRefresh
         unless primary_index.find(inventory_object.manager_uuid)
           # TODO(lsmola) Abstract InventoryCollection::Data::Storage
           data << inventory_object
-          store_indexes_for_inventory_object(inventory_object)
+
+          # TODO(lsmola) reindex of secondary indexes is now part of scanning. Maybe we do not need the
+          # secondary indexes here? Maybe we should index it like LocalDb indexes, on demand, and storing what was
+          # indexed? Maybe we should allow only lazy access and no direct find fro ma parser. Since for streaming
+          # refresh, things won't be parsed together and no full state will be taken.
+          build_primary_index_for(inventory_object)
         end
         inventory_collection
       end

@@ -28,14 +28,28 @@ module ManagerRefresh
           end
         end
 
-        def store_indexes_for_inventory_object(inventory_object)
-          data_indexes.values.each do |index|
-            index.store_index_for(inventory_object)
+        def build_primary_index_for(inventory_object)
+          # Building the object, we need to provide all keys of a primary key
+          # TODO(lsmola) we have failures here in AWS, maybe containers, fix it
+          # assert_index(inventory_object.data, primary_index_ref)
+
+          primary_index.store_index_for(inventory_object)
+        end
+
+        def reindex_secondary_indexes!
+          data_indexes.each do |ref, index|
+            next if ref == primary_index_ref
+
+            index.reindex!
           end
         end
 
+        def primary_index_ref
+          :manager_ref
+        end
+
         def primary_index
-          data_index(:manager_ref)
+          data_index(primary_index_ref)
         end
 
         def find(manager_uuid, ref: :manager_ref)
@@ -112,10 +126,14 @@ module ManagerRefresh
           all_refs[ref]
         end
 
+        def required_index_keys_present?(data_keys, ref)
+          (named_ref(ref) - data_keys).empty?
+        end
+
         def assert_index(manager_uuid, ref)
           if manager_uuid.kind_of?(Hash)
             # Test we are sending all keys required for the index
-            unless (named_ref(ref) - manager_uuid.keys).empty?
+            unless required_index_keys_present?(manager_uuid.keys, ref)
               if !Rails.env.production?
                 raise "Invalid finder on '#{inventory_collection}' using #{manager_uuid}. Needed find_by keys for #{ref} are #{named_ref(ref)}"
               else
