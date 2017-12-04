@@ -57,8 +57,8 @@ class DialogImportValidator
 
   def check_dialog_associations_for_validity(dialog_fields)
     associations = {}
-    dialog_fields.each { |df| associations.merge!(df["name"] => df["dialog_field_responders"]) unless df["dialog_field_responders"].nil? }
-    unless associations.blank?
+    dialog_fields.each { |df| associations.merge!(df["name"] => [df["dialog_field_responders"]]) unless df["dialog_field_responders"].nil? }
+    if associations.present?
       circular_references = @dialog_field_association_validator.circular_references(associations)
       raise DialogFieldAssociationCircularReferenceError, circular_references if circular_references
     end
