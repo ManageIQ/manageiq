@@ -46,7 +46,7 @@
       %hr
       %div
     - counter += 1
-    - draw_fields = !options[:"volume_name_#{counter}"].blank? && !options[:"volume_size_#{counter}"].blank?
+    - draw_fields = !options[:"name_#{counter}"].blank? && !options[:"size_#{counter}"].blank?
 
 :javascript
   (function(){
