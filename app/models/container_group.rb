@@ -5,6 +5,8 @@ class ContainerGroup < ApplicationRecord
   include NewWithTypeStiMixin
   include TenantIdentityMixin
   include ArchivedMixin
+  include SupportsFeatureMixin
+  include CockpitSupportMixin
   include_concern 'Purging'
 
   # :name, :uid, :creation_timestamp, :resource_version, :namespace

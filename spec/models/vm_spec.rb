@@ -262,4 +262,12 @@ describe Vm do
     expect(console.url).to eq(url)
     expect(console.url_secret).to be
   end
+
+
+  context "#supported_consoles" do
+    it 'returns all of the console types' do
+      vm = FactoryGirl.create(:vm)
+      expect(vm.supported_consoles.keys).to match_array([:spice, :vnc, :vmrc, :webmks, :cockpit])
+    end
+  end
 end
