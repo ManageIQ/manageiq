@@ -367,7 +367,8 @@ module OpenstackHandle
         # the "services" tenant is a special tenant in openstack reserved
         # specifically for the various services
         next if t.name == "services"
-        tenant_accessible?(t.name)
+        # disabled and non-accessible tenants are skipped
+        t.enabled && tenant_accessible?(t.name)
       end
     end
 
