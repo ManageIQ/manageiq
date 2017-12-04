@@ -4,7 +4,7 @@ require File.expand_path("../config/environment", __dir__)
 user = User.find_by_userid("admin")
 if ARGV[0].nil?
   print "Password: "
-  user.password = STDIN.noecho(&:gets).chomp  
+  user.password = STDIN.noecho(&:gets).chomp
 else
   user.password = ARGV[0]
 end
