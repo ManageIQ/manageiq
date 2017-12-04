@@ -19,4 +19,8 @@ class ApplicationRecord < ActiveRecord::Base
     extend MiqDecorator::Klass
     include MiqDecorator::Instance
   end
+
+  def self.display_name(number = 1)
+    n_(model_name.singular.titleize, model_name.plural.titleize, number)
+  end
 end
