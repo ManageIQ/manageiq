@@ -154,7 +154,7 @@ class Service < ApplicationRecord
   end
 
   def all_vms
-    MiqPreloader.preload_and_map(subtree, :direct_vms)
+    direct_vms
   end
 
   def vms

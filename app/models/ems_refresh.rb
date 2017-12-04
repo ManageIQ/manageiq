@@ -145,6 +145,7 @@ module EmsRefresh
                ids.map { |x| ManagerRefresh::Target.load(x) }
              else
                active_record_recs = target_class.where(:id => ids)
+               # ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource no ems
                active_record_recs = active_record_recs.includes(:ext_management_system) unless target_class <= ExtManagementSystem
                active_record_recs
              end

@@ -942,7 +942,9 @@ describe VirtualFields do
       end
 
       it "as Hash" do
+        # virtual => actual
         expect { Vm.includes(:lans => :switch).load }.not_to raise_error
+        # actual => actual
         expect { Vm.includes(:lans => :switch, :host => :hardware).load }.not_to raise_error
       end
     end
