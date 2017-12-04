@@ -14,7 +14,7 @@ class DialogFieldAssociationValidator
   private
 
   def initial_paths(associations)
-    associations.flat_map { |key, values| values.map { |value| [key, value] } }
+    associations.flat_map { |key, values| values.collect { |value| [key, value] } }
   end
 
   def walk_value_path(fieldname_being_triggered, associations, path)
