@@ -66,11 +66,12 @@ class Dialog < ApplicationRecord
       errors.add(:base, _("Dialog field name cannot be duplicated on a dialog: %{duplicates}") % {:duplicates => duplicate_field_names.join(', ')})
     end
 
-    associations = {}
-    dialog_fields.each { |df| associations.merge!(df[:name] => df[:dialog_field_responders]) unless df[:dialog_field_responders].nil? }
-    if associations.present?
+    associations_on_dialog_fields = DialogFieldAssociation.select { |dfa| dialog_fields.pluck(:id).include?(dfa.trigger_id) }
+    if associations_on_dialog_fields
+      associations = {}
+      associations_on_dialog_fields.each { |dfa| associations.merge!(DialogField.find(dfa.trigger_id).name => [DialogField.find(dfa.respond_id).name]) }
       circular_references = DialogFieldAssociationValidator.new.circular_references(associations)
-      errors.add(:base, _("Dialog field association circular reference error: %{circular_references}") % {:circular_references => circular_references.join(', ')})
+      errors.add(:base, _("Dialog field associations cannot be circular: %{circular_references} ") % {:circular_references => circular_references}) if circular_references
     end
 
     dialog_tabs.each do |dt|

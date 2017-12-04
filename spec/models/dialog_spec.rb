@@ -38,7 +38,7 @@ describe Dialog do
     it "with same label" do
       expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog') }.to_not raise_error
       expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog') }
-        .to raise_error(ActiveRecord::RecordInvalid, /Label is not unique within region/)
+      .to raise_error(ActiveRecord::RecordInvalid, /Label is not unique within region/)
     end
 
     it "with different labels" do
@@ -80,7 +80,7 @@ describe Dialog do
       FactoryGirl.create(:resource_action, :action => "Provision", :dialog => @dialog)
       @dialog.reload
       expect { @dialog.destroy }
-        .to raise_error(RuntimeError, /Dialog cannot be deleted.*connected to other components/)
+      .to raise_error(RuntimeError, /Dialog cannot be deleted.*connected to other components/)
       expect(Dialog.count).to eq(1)
     end
   end
@@ -264,15 +264,15 @@ describe Dialog do
             { 'id'            => dialog_group.first.id,
               'dialog_tab_id' => dialog_tab.first.id,
               'dialog_fields' =>
-                                 [{
-                                   'id'              => dialog_field.first.id,
-                                   'dialog_group_id' => dialog_group.first.id
-                                 }] },
+              [{
+                 'id'              => dialog_field.first.id,
+                 'dialog_group_id' => dialog_group.first.id
+            }] },
             {
               'label'         => 'group 2',
               'dialog_fields' => [{
-                'name'  => 'dialog_field',
-                'label' => 'field_label'
+                                    'name'  => 'dialog_field',
+                                    'label' => 'field_label'
               }]
             }
           ]
@@ -376,14 +376,24 @@ describe Dialog do
         dialog.dialog_tabs.first.dialog_groups << FactoryGirl.create(:dialog_group, :label => 'group2')
         dialog.dialog_tabs.first.dialog_groups.last.dialog_fields << FactoryGirl.create(:dialog_field, :label => 'field 3', :name => 'field1')
         expect { dialog.save! }
-          .to raise_error(ActiveRecord::RecordInvalid, /Dialog field name cannot be duplicated on a dialog: field1/)
+        .to raise_error(ActiveRecord::RecordInvalid, /Dialog field name cannot be duplicated on a dialog: field1/)
       end
 
       it "fails with two identical field names on same group" do
         dialog.dialog_tabs.first.dialog_groups.first.dialog_fields << FactoryGirl.create(:dialog_field, :label => 'field 3', :name => 'field1')
         expect { dialog.save! }
-          .to raise_error(ActiveRecord::RecordInvalid, /Dialog field name cannot be duplicated on a dialog: field1/)
+        .to raise_error(ActiveRecord::RecordInvalid, /Dialog field name cannot be duplicated on a dialog: field1/)
       end
+    end
+
+    it "fails with circular association" do
+      dialog.dialog_tabs << FactoryGirl.create(:dialog_tab, :label => 'tab')
+      dialog.dialog_tabs.first.dialog_groups << FactoryGirl.create(:dialog_group, :label => 'group')
+      dialog.dialog_tabs.first.dialog_groups.first.dialog_fields << FactoryGirl.create(:dialog_field, :label => 'field 1', :name => 'field2')
+      dialog.dialog_tabs.first.dialog_groups.first.dialog_fields << FactoryGirl.create(:dialog_field, :label => 'field 2', :name => 'field1')
+      DialogFieldAssociation.create(:trigger_id => DialogField.first.id, :respond_id => DialogField.last.id)
+      DialogFieldAssociation.create(:respond_id => DialogField.first.id, :trigger_id => DialogField.last.id)
+      dialog.save!
     end
 
     it "validates with tab" do
