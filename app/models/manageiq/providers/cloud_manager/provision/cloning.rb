@@ -1,6 +1,10 @@
 module ManageIQ::Providers::CloudManager::Provision::Cloning
   def find_destination_in_vmdb(ems_ref)
     vm_model_class.find_by(:ems_id => source.ext_management_system.id, :ems_ref => ems_ref)
+  rescue NoMethodError => ex
+    _log.debug("Unable to find Provison Source ExtmanagementSystem: #{ex.to_s}")
+    _log.debug("Trying use attribute src_ems_id=#{options[:src_ems_id].try(:first)} instead.")
+    vm_model_class.find_by(:ems_id => options[:src_ems_id].try(:first), :ems_ref => ems_ref)
   end
 
   def vm_model_class
