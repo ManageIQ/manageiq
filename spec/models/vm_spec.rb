@@ -279,4 +279,11 @@ describe Vm do
       expect { vm.add_to_service(service) }.to raise_error MiqException::Error
     end
   end
+
+  context "#supported_consoles" do
+    it 'returns all of the console types' do
+      vm = FactoryGirl.create(:vm)
+      expect(vm.supported_consoles.keys).to match_array([:spice, :vnc, :vmrc, :webmks, :cockpit])
+    end
+  end
 end
