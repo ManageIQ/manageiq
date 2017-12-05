@@ -146,15 +146,6 @@ module ManagerRefresh
                 return false
               end
             end
-          else
-            # TODO(lsmola) we convert the Hash to String in lazy_find_ so we can't test it like this
-            # if named_ref(ref).count > 1
-            #   if !Rails.env.production?
-            #     raise "Invalid finder on #{inventory_collection} using #{manager_uuid}. We expect Hash with keys #{named_ref(ref)}"
-            #   else
-            #     _log.error("Invalid finder on #{inventory_collection} using #{manager_uuid}. We expect Hash with keys #{named_ref(ref)}")
-            #   end
-            # end
           end
 
           true

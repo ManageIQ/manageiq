@@ -5,7 +5,7 @@ module ManagerRefresh
         class Base
           include Vmdb::Logging
 
-          def initialize(inventory_collection, attribute_names, *args)
+          def initialize(inventory_collection, attribute_names, *_args)
             @index = {}
 
             @inventory_collection = inventory_collection
@@ -34,7 +34,7 @@ module ManagerRefresh
 
           protected
 
-          attr_reader :attribute_names,:index, :inventory_collection
+          attr_reader :attribute_names, :index, :inventory_collection
 
           private
 

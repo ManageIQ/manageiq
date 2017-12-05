@@ -80,12 +80,12 @@ module ManagerRefresh
             # Return the the correct relation based on strategy and selection&projection
             case strategy
             when :local_db_cache_all
-              selection  = nil
-              projection = nil
+              selection = nil
             else
-              selection  = extract_references(new_references)
-              projection = nil
+              selection = extract_references(new_references)
             end
+
+            projection = nil
 
             db_relation(selection, projection).find_each do |record|
               process_db_record!(record)
@@ -125,8 +125,8 @@ module ManagerRefresh
               uuids = index_value.split(stringify_joiner)
 
               reference = {}
-              attribute_names.each_with_index do |ref, index_value|
-                reference[ref] = uuids[index_value]
+              attribute_names.each_with_index do |ref, uuid_value|
+                reference[ref] = uuids[uuid_value]
               end
               hash_uuids_by_ref << reference
             end
