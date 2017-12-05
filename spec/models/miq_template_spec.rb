@@ -11,6 +11,12 @@ describe MiqTemplate do
     expect(ManageIQ::Providers::Redhat::InfraManager::Template.corresponding_vm_model).to eq(ManageIQ::Providers::Redhat::InfraManager::Vm)
   end
 
+  context "#template" do
+    it "defaults to true" do
+      expect(described_class.new.template).to eq(true)
+    end
+  end
+
   context "#template=" do
     before(:each) { @template = FactoryGirl.create(:template_vmware) }
 

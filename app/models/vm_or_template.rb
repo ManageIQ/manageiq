@@ -1793,4 +1793,8 @@ class VmOrTemplate < ApplicationRecord
   def self.arel_coalesce(values)
     Arel::Nodes::NamedFunction.new('COALESCE', values)
   end
+
+  def self.type_condition(table = arel_table)
+    super unless (self == Vm || self == MiqTemplate || self == VmOrTemplate)
+  end
 end
