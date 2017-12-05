@@ -282,12 +282,42 @@ class ManageIQ::Providers::Azure::NetworkManager::RefreshParser
       {
         :name                  => rule.name,
         :host_protocol         => rule.properties.protocol.upcase,
-        :port                  => rule.properties.destination_port_range.split('-').first,
-        :end_port              => rule.properties.destination_port_range.split('-').last,
+        :port                  => calculate_start_port(rule),
+        :end_port              => calculate_end_port(rule),
         :direction             => rule.properties.direction,
-        :source_ip_range       => rule.properties.source_address_prefix,
+        :source_ip_range       => calculate_source_ip_range(rule),
         :source_security_group => @data_index.fetch_path(:security_groups, security_group.id)
       }
+    end
+  end
+
+  def calculate_source_ip_range(rule)
+    if rule.properties.respond_to?(:source_address_prefix)
+      rule.properties.source_address_prefix
+    elsif rule.properties.respond_to?(:source_address_prefixes)
+      rule.properties.source_address_prefixes.join(',')
+    else
+      nil # Old api-version
+    end
+  end
+
+  def calculate_start_port(rule)
+    if rule.properties.respond_to?(:destination_port_range)
+      rule.properties.destination_port_range.split('-').first.to_i
+    elsif rule.properties.respond_to?(:destination_port_ranges)
+      rule.properties.destination_port_ranges.flat_map{ |e| e.split('-') }.map(&:to_i).min
+    else
+      nil # Old api-version
+    end
+  end
+
+  def calculate_end_port(rule)
+    if rule.properties.respond_to?(:destination_port_range)
+      rule.properties.destination_port_range.split('-').last.to_i
+    elsif rule.properties.respond_to?(:destination_port_ranges)
+      rule.properties.destination_port_ranges.flat_map{ |e| e.split('-') }.map(&:to_i).max
+    else
+      nil # Old api-version
     end
   end
 
