@@ -433,7 +433,7 @@ class Storage < ApplicationRecord
   end
 
   cache_with_timeout(:unregistered_vm_counts_by_storage_id, 15.seconds) do
-    Vm.where(:host => nil).group(:storage_id).count
+    Vm.where(:host => nil).where.not(:storage => nil).group(:storage_id).count
       .each_with_object(Hash.new(0)) { |(storage_id, count), h| h[storage_id] = count.to_i }
   end
 
