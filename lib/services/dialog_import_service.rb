@@ -131,7 +131,7 @@ class DialogImportService
       fields = new_or_existing_dialog.dialog_fields
       (associations_to_be_created + build_old_association_list(fields).flatten).reject(&:blank?).each do |association|
         association.values.each do |values|
-          values.each do |responder|
+          values.split(' ').flatten.each do |responder|
             next if fields.select { |field| field.name == responder }.empty?
             DialogFieldAssociation.create(:trigger_id => fields.find { |field| field.name.include?(association.keys.first) }.id,
                                           :respond_id => fields.find { |field| field.name == responder }.id)
