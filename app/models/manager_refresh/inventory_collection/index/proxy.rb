@@ -4,12 +4,12 @@ module ManagerRefresh
       class Proxy
         include Vmdb::Logging
 
-        def initialize(inventory_collection, secondary_refs)
+        def initialize(inventory_collection, secondary_refs = {})
           @inventory_collection = inventory_collection
 
-          main_ref       = {:manager_ref => inventory_collection.manager_ref}
-          secondary_refs = secondary_refs
-          @all_refs      = main_ref.merge(secondary_refs)
+          @primary_ref    = {:manager_ref => @inventory_collection.manager_ref}
+          @secondary_refs = secondary_refs
+          @all_refs       = @primary_ref.merge(@secondary_refs)
 
           @data_indexes     = {}
           @local_db_indexes = {}
@@ -32,8 +32,13 @@ module ManagerRefresh
           # Building the object, we need to provide all keys of a primary key
           # TODO(lsmola) we have failures here in AWS, maybe containers, fix it
           # assert_index(inventory_object.data, primary_index_ref)
-
           primary_index.store_index_for(inventory_object)
+        end
+
+        def build_secondary_indexes_for(inventory_object)
+          secondary_refs.keys.each do |ref|
+            data_index(ref).store_index_for(inventory_object)
+          end
         end
 
         def reindex_secondary_indexes!
@@ -98,7 +103,7 @@ module ManagerRefresh
 
         delegate :strategy, :hash_index_with_keys, :to => :inventory_collection
 
-        attr_reader :all_refs, :data_indexes, :local_db_indexes, :inventory_collection
+        attr_reader :all_refs, :data_indexes, :inventory_collection, :primary_ref, :local_db_indexes, :secondary_refs
 
         def stringify_index_value(index_value, ref)
           # TODO(lsmola) !!!!!!!!!! Important, move this inside of the index. We should be passing around a full hash

@@ -19,9 +19,8 @@ module ManagerRefresh
           end
 
           def reindex!
-            inventory_objects = index.values
             self.index = {}
-            inventory_objects.each do |inventory_object|
+            data.each do |inventory_object|
               store_index_for(inventory_object)
             end
           end
@@ -35,11 +34,13 @@ module ManagerRefresh
 
           protected
 
-          attr_reader :index, :attribute_names, :inventory_collection
+          attr_reader :attribute_names,:index, :inventory_collection
 
           private
 
           attr_writer :index
+
+          delegate :data, :to => :inventory_collection
         end
       end
     end
