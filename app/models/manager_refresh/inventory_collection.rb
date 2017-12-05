@@ -86,7 +86,7 @@ module ManagerRefresh
                 :custom_db_finder, :check_changed, :arel, :builder_params,
                 :inventory_object_attributes, :name, :saver_strategy, :manager_uuids,
                 :skeletal_manager_uuids, :targeted_arel, :targeted, :manager_ref_allowed_nil, :use_ar_object,
-                :secondary_refs, :created_records, :updated_records, :deleted_records,
+                :created_records, :updated_records, :deleted_records,
                 :custom_reconnect_block, :batch_extra_attributes
 
     delegate :<<,
