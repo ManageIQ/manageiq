@@ -7,6 +7,7 @@ class Dialog < ApplicationRecord
   has_many :dialog_tabs, -> { order(:position) }, :dependent => :destroy
   validate :validate_children
 
+  include DeprecationMixin
   include DialogMixin
   has_many :resource_actions
   virtual_has_one :content, :class_name => "Hash"
@@ -14,7 +15,7 @@ class Dialog < ApplicationRecord
   before_destroy          :reject_if_has_resource_actions
   validates :label, :unique_within_region => true
 
-  alias_attribute  :name, :label
+  deprecate_attribute :label, :name
 
   attr_accessor :target_resource
 
