@@ -127,7 +127,7 @@ class ChargebackVm < Chargeback
 
   def self.vm_owner(consumption)
     @vm_owners ||= vms.each_with_object({}) { |vm, res| res[vm.id] = vm.evm_owner_name }
-    @vm_owners[consumption.resource_id] ||= consumption.resource.evm_owner_name
+    @vm_owners[consumption.resource_id] ||= consumption.resource.try(:evm_owner_name)
   end
 
   def self.vms
@@ -172,7 +172,7 @@ class ChargebackVm < Chargeback
   def init_extra_fields(consumption)
     self.vm_id         = consumption.resource_id
     self.vm_name       = consumption.resource_name
-    self.vm_uid        = consumption.resource.ems_ref
+    self.vm_uid        = consumption.resource.try(:ems_ref)
     self.vm_guid       = consumption.resource.try(:guid)
     self.owner_name    = self.class.vm_owner(consumption)
     self.provider_name = consumption.parent_ems.try(:name)
