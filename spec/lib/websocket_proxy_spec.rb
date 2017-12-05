@@ -45,14 +45,18 @@ describe WebsocketProxy do
     let(:ws) { double }
     let(:sock) { double }
 
+    before do
+      subject.instance_variable_set(:@driver, driver)
+      subject.instance_variable_set(:@ws, ws)
+      subject.instance_variable_set(:@sock, sock)
+      right = subject.instance_variable_get(:@right)
+      right.instance_variable_set(:@sock, sock)
+    end
+
     context 'websocket to socket' do
       let(:is_ws) { true }
 
       it 'reads from the websocket and parses the result' do
-        subject.instance_variable_set(:@driver, driver)
-        subject.instance_variable_set(:@ws, ws)
-        subject.instance_variable_set(:@sock, sock)
-
         expect(ws).to receive(:recv_nonblock).and_return(123)
         expect(driver).to receive(:parse).with(123)
 
@@ -64,10 +68,6 @@ describe WebsocketProxy do
       let(:is_ws) { false }
 
       it 'reads from the socket and sends the result to the driver' do
-        subject.instance_variable_set(:@driver, driver)
-        subject.instance_variable_set(:@ws, ws)
-        subject.instance_variable_set(:@sock, sock)
-
         expect(sock).to receive(:recv_nonblock).and_return(123)
         expect(driver).to receive(:binary).with(123)
 
