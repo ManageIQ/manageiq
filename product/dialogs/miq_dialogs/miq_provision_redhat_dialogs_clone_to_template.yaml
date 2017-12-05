@@ -178,11 +178,11 @@
             :method: :allowed_number_of_vms
           :description: Count
           :required: false
-          :display: :edit
+          :display: :hide
           :default: 1
           :data_type: :integer
         :vm_description:
-          :description: VM Description
+          :description: Template Description
           :required: false
           :display: :edit
           :data_type: :string
@@ -223,7 +223,7 @@
           :data_type: :boolean
         :seal_template:
           :description: Seal Template
-          :notes: (Applicable for non-Windows OS only)
+          :notes: (Linux only)
           :validation_method: :validate_seal_template
           :values:
             false: 0
@@ -233,7 +233,7 @@
           :default: false
           :data_type: :boolean
         :vm_name:
-          :description: VM Name
+          :description: Template Name
           :required_method: :validate_vm_name
           :required: true
           :notes:
