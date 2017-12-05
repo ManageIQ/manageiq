@@ -32,7 +32,6 @@ module ManagerRefresh
 
       def <<(inventory_object)
         unless primary_index.find(inventory_object.manager_uuid)
-          # TODO(lsmola) Abstract InventoryCollection::Data::Storage
           data << inventory_object
 
           # TODO(lsmola) Maybe we do not need the secondary indexes here?
