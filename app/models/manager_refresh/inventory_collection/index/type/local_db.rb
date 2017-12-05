@@ -78,13 +78,7 @@ module ManagerRefresh
             # load_from_db.select(selected).find_each do |record|
 
             # Return the the correct relation based on strategy and selection&projection
-            case strategy
-            when :local_db_cache_all
-              selection = nil
-            else
-              selection = extract_references(new_references)
-            end
-
+            selection  = extract_references(new_references) unless strategy == :local_db_cache_all
             projection = nil
 
             db_relation(selection, projection).find_each do |record|
