@@ -190,6 +190,22 @@ describe ChargebackVm do
 
         subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
 
+        context 'when the Vm resource of a consumption is destroyed' do
+          let(:hours_in_day) { (finish_time.end_of_day - start_time) / 1.hour }
+
+          before do
+            @vm1.destroy
+          end
+
+          it "calculates allocated cpu cost and metric values" do
+            skip('this case needs to be fixed in new chargeback') if Settings.new_chargeback
+
+            expect(subject.cpu_allocated_metric).to eq(cpu_count)
+            expect(subject.cpu_allocated_cost).to eq(cpu_count * count_hourly_rate * hours_in_day)
+            expect(subject.cpu_cost).to eq(subject.cpu_allocated_cost + subject.cpu_used_cost)
+          end
+        end
+
         context 'when first metric rollup has tag_names=nil' do
           before do
             options[:tag] = nil
