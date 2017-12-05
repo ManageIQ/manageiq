@@ -29,9 +29,8 @@ module ManagerRefresh
         end
 
         def build_primary_index_for(inventory_object)
-          # Building the object, we need to provide all keys of a primary key
-          # TODO(lsmola) we have failures here in AWS, maybe containers, fix it
-          # assert_index(inventory_object.data, primary_index_ref)
+          # Building the object, we need to provide all keys of a primary index
+          assert_index(inventory_object.data, primary_index_ref)
           primary_index.store_index_for(inventory_object)
         end
 
@@ -131,18 +130,24 @@ module ManagerRefresh
           all_refs[ref]
         end
 
+        def missing_keys(data_keys, ref)
+          named_ref(ref) - data_keys
+        end
+
         def required_index_keys_present?(data_keys, ref)
-          (named_ref(ref) - data_keys).empty?
+          missing_keys(data_keys, ref).empty?
         end
 
         def assert_index(manager_uuid, ref)
           if manager_uuid.kind_of?(Hash)
             # Test we are sending all keys required for the index
             unless required_index_keys_present?(manager_uuid.keys, ref)
+              missing_keys = missing_keys(manager_uuid.keys, ref)
+
               if !Rails.env.production?
-                raise "Invalid finder on '#{inventory_collection}' using #{manager_uuid}. Needed find_by keys for #{ref} are #{named_ref(ref)}"
+                raise "Invalid index for '#{inventory_collection}' using #{manager_uuid}. Missing keys for index #{ref} are #{missing_keys}"
               else
-                _log.error("Invalid finder on '#{inventory_collection}' using #{manager_uuid}. Needed find_by keys for #{ref} are #{named_ref(ref)}")
+                _log.error("Invalid index for '#{inventory_collection}' using #{manager_uuid}. Missing keys for index #{ref} are #{missing_keys}")
                 return false
               end
             end
