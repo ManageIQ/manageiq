@@ -459,7 +459,7 @@ describe DialogImportService do
 
       expect do
         dialog_import_service.import(dialogs.first)
-      end.to raise_error(ActiveRecord::RecordInvalid, /Validation failed: Label is not unique within region/)
+      end.to raise_error(ActiveRecord::RecordInvalid, /Validation failed: Name is not unique within region/)
     end
   end
 end
