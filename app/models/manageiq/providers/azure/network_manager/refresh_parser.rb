@@ -180,12 +180,14 @@ class ManageIQ::Providers::Azure::NetworkManager::RefreshParser
     pool["properties"]["backendIPConfigurations"].to_a.each do |ipconfig|
       uid      = ipconfig.id
       nic_id   = @data_index.fetch_path(:nic_ipconfig_mapping, uid)
-      instance = @data_index.fetch_path(:network_ports, nic_id)[:device]
+      net_port = @data_index.fetch_path(:network_ports, nic_id)
+
+      next unless net_port && net_port[:device]
 
       new_result = {
         :type    => self.class.load_balancer_pool_member_type,
         :ems_ref => uid,
-        :vm      => instance
+        :vm      => net_port[:device]
       }
 
       store_member_in_data_hashes(uid, new_result)
