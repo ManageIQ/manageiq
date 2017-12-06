@@ -143,19 +143,27 @@ module PgInspector
       result
     end
 
+    def old_application_name?(activity)
+      activity["application_name"].start_with?("MIQ ")
+    end
+
+    def new_application_name?(activity)
+      activity["application_name"].start_with?("MIQ|")
+    end
+
     def server_activity?(activity)
-      if activity["application_name"].start_with?("MIQ|") && activity["application_name"].split("|")[3] == "-"
+      if new_application_name?(activity) && activity["application_name"].split("|")[3] == "-"
         return true
-      elsif activity["application_name"].start_with?("MIQ ") && activity["application_name"].include?(" Server")
+      elsif old_application_name?(activity) && activity["application_name"].include?(" Server")
         return true
       end
       false
     end
 
     def worker_activity?(activity)
-      if activity["application_name"].start_with?("MIQ|") && activity["application_name"].split("|")[3] != "-"
+      if new_application_name?(activity) && activity["application_name"].split("|")[3] != "-"
         return true
-      elsif activity["application_name"].start_with?("MIQ ") && !activity["application_name"].include?(" Server")
+      elsif old_application_name?(activity) && !activity["application_name"].include?(" Server")
         return true
       end
       false
@@ -197,12 +205,14 @@ module PgInspector
       if activity["application_name"].end_with?("...")
         $stderr.puts("Warning: the application_name #{activity["application_name"]} is incomplete.")
       end
-      if activity["application_name"].start_with?("MIQ|")
+      if new_application_name?(activity)
         _, pid, server_id, worker_id, zone_id, class_name, zone_name = activity["application_name"].split("|")
       elsif activity["application_name"].include?(" Server")
+        # old application name, server activity
         _, pid, class_name, server_id, zone_name, zone_id = activity["application_name"].split(/[, \[\]]+/)
         worker_id = "-"
       else
+        # old application name, worker activity
         _, pid, class_name, worker_id, _, server_id, zone_name, zone_id = activity["application_name"].split(/[, \[\]]+/)
       end
       activity["pid"] = pid.to_i
