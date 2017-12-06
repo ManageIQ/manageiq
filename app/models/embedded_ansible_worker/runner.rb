@@ -66,17 +66,18 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
   private
 
   def provider_url
-    server = MiqServer.my_server(true)
+    URI::Generic.build(provider_uri_hash).to_s
+  end
 
+  def provider_uri_hash
     if MiqEnvironment::Command.is_container?
-      host = ENV["ANSIBLE_SERVICE_HOST"]
-      path = "/api/v1"
+      {:scheme => "https", :host => ENV["ANSIBLE_SERVICE_HOST"], :path => "/api/v1"}
+    elsif Rails.env.development?
+      {:scheme => "http", :host => "localhost", :path => "/api/v1", :port => 54321}
     else
-      host = server.hostname || server.ipaddress
-      path = "/ansibleapi/v1"
+      server = MiqServer.my_server(true)
+      {:scheme => "https", :host => server.hostname || server.ipaddress, :path => "/ansibleapi/v1"}
     end
-
-    URI::HTTPS.build(:host => host, :path => path).to_s
   end
 
   def raise_role_notification(notification_type)
