@@ -16,6 +16,25 @@ describe ActsAsTaggable do
     @vm4.tag_add("bos phi blt")
   end
 
+  describe '#writable_classification_tags' do
+    let(:parent_classification) { FactoryGirl.create(:classification, :description => "Environment", :name => "environment", :read_only => false) }
+    let(:classification)        { FactoryGirl.create(:classification, :name => "prod", :description => "Production", :parent => parent_classification, :read_only => true) }
+
+    before do
+      classification.assign_entry_to(@vm1)
+    end
+
+    it "returns only tags as they would be entered in UI by user(edit tags screen)" do
+      expect(@vm1.tags.count).to eq(4)
+      expect(@vm1.writable_classification_tags.count).to eq(1)
+      expect(@vm1.writable_classification_tags.first.name).to eq('/managed/environment/prod')
+      expect(@vm1.writable_classification_tags.first).to be_kind_of(Tag)
+
+      expect(@vm3.writable_classification_tags.count).to eq(0)
+      expect(@vm3.tags.count).to eq(3)
+    end
+  end
+
   context ".find_tagged_with" do
     it ":any" do
       found = Host.find_tagged_with(:any => "red black", :ns => "/test/tags")

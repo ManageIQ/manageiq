@@ -25,6 +25,10 @@ module ActsAsTaggable
     end.map(&:strip).uniq
   end
 
+  def writable_classification_tags
+    tags.merge(Classification.with_writable_parents)
+  end
+
   module ClassMethods
     # @option options :cat [String|nil] optional category for the tags
     # @option options :ns  [String|nil] optional namespace for the tags
