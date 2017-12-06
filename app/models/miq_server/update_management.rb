@@ -73,13 +73,11 @@ module MiqServer::UpdateManagement
       _log.info("Registering appliance...")
       registration_type = MiqDatabase.first.registration_type
 
-      registration_class = LinuxAdmin::SubscriptionManager
-
       # TODO: Prompt user for environment in UI for Satellite 6 registration, use default environment for now.
       registration_options = assemble_registration_options
       registration_options[:environment] = "Library" if registration_type == "rhn_satellite6"
 
-      registration_class.register(registration_options)
+      LinuxAdmin::SubscriptionManager.register(registration_options)
 
       # Reload the registration_type
       LinuxAdmin::SubscriptionManager.registration_type(true)
