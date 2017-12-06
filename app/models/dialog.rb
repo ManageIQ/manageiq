@@ -161,9 +161,9 @@ class Dialog < ApplicationRecord
   private
 
   def create_association_list(associations_on_dialog_fields, dialog_field_list)
-    associations = {}
-    associations_on_dialog_fields.each { |a| associations.merge!(dialog_field_list.find { |df| df.id == a.trigger_id }.name => dialog_field_list.select { |df| df.id == a.respond_id }.pluck(:name)) }
-    associations
+    associations_on_dialog_fields.each_with_object({}) do |a, associations|
+      associations[dialog_field_list.find { |df| df.id == a.trigger_id }.name] = dialog_field_list.select { |df| df.id == a.respond_id }.pluck(:name)
+    end
   end
 
   def dialog_field_hash
