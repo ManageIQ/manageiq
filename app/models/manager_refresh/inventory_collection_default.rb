@@ -72,6 +72,24 @@ class ManagerRefresh::InventoryCollectionDefault
       attributes.merge!(extra_attributes)
     end
 
+    def operating_systems(extra_attributes = {})
+      attributes = {
+        :model_class                  => ::OperatingSystem,
+        :manager_ref                  => [:vm_or_template],
+        :association                  => :operating_systems,
+        :parent_inventory_collections => [:vms, :miq_templates],
+      }
+
+      attributes[:targeted_arel] = lambda do |inventory_collection|
+        manager_uuids = inventory_collection.parent_inventory_collections.flat_map { |c| c.manager_uuids.to_a }
+        inventory_collection.parent.operating_systems.joins(:vm_or_template).where(
+          'vms' => {:ems_ref => manager_uuids}
+        )
+      end
+
+      attributes.merge!(extra_attributes)
+    end
+
     def disks(extra_attributes = {})
       attributes = {
         :model_class                  => ::Disk,
