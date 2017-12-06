@@ -683,12 +683,15 @@ en:
     model:
       AuditEvent:               EVM Audit Event
       AvailabilityZone:         Availability Zone
+      BottleneckEvent:          Bottleneck Event
       HostAggregate:            Host Aggregate
       ChargebackVm:             Chargeback for Vms
+      ChargebackContainerImage: Chargeback for Image
       ChargebackContainerProject: Chargeback for Projects
       ChargebackRate:           Chargeback Rate
       Classification:           Category
       CloudNetwork:             Cloud Network
+      CloudResourceQuota:       Cloud Resource Quota
       CloudSubnet:              Cloud Subnet
       CloudTenant:              Cloud Tenant
       CloudVolume:              Cloud Volume
@@ -696,6 +699,7 @@ en:
       Compliances:              Compliance History
       Condition:                Condition
       ContainerBuild:           Build
+      ContainerQuota:           Container Quota
       CustomButton:             Button
       CustomButtonSet:          Buttons Group
       ConfigurationScriptSource: Repository
@@ -726,7 +730,9 @@ en:
       Filesystem:               File
       Flavor:                   Flavor
       FloatingIp:               Floating IP
+      GenericObject:            Generic Object
       GenericObjectDefinition:  Generic Object Class
+      GuestApplication:         Guest Application
       Host:                     Host / Node
       HostPerformance:          Performance - Host
       IsoDatastore:             ISO Datastore
@@ -848,6 +854,9 @@ en:
       ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalServer:    Physical Server (Lenovo)
       ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerEap:     Middleware Server (EAP)
       ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerWildfly: Middleware Server (WildFly)
+      MeteringContainerImage:   Metering for Image
+      MeteringContainerProject: Metering for Project
+      MeteringVm:               Metering for VM
       MiddlewareDatasource:     Middleware Datasource
       MiddlewareDomain:         Middleware Domain
       MiddlewareMessaging:      Middleware Messaging
@@ -892,6 +901,7 @@ en:
       ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate:    vApp Template
       PersistentVolume:         Persistent Volume
       PhysicalServer:           Physical Server
+      PolicyEvent:              Policy Event
       ProductUpdate:            Product Update
       PxeCustomizationTemplate: Customization Template
       PxeImage:                 PXE Image
@@ -909,10 +919,13 @@ en:
       Storage:                  Datastore
       StorageFile:              Datastore File
       StoragePerformance:       Performance - Datastore
+      Switch:                   Switch
+      Tenant:                   Tenant
       TimeProfile:              Time Profile
       User:                     EVM User
       VimPerformanceTrend:      Performance Trend
       Vm:                       VM and Instance
+      VmCloud:                  Instance
       VmdbIndex:                Index
       VmdbTable:                VMDB Table
       VmOrTemplate:             VM or Template
