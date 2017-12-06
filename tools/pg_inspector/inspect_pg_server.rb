@@ -1,9 +1,5 @@
 #!/usr/bin/env ruby
-require 'bundler/inline'
-
-gemfile do
-  gem "manageiq-gems-pending", ">0", :require => 'manageiq-gems-pending', :git => "https://github.com/ManageIQ/manageiq-gems-pending.git", :branch => "master"
-end
+require 'bundler/setup'
 
 ## Run pg_inspector servers using parameters given in local database.yml and v2 key.
 
