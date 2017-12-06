@@ -61,9 +61,16 @@ class Dialog < ApplicationRecord
       errors.add(:base, _("Dialog %{dialog_label} must have at least one Tab") % {:dialog_label => label})
     end
 
-    duplicate_field_names = dialog_fields.collect(&:name).duplicates
+    dialog_field_list = dialog_fields
+    duplicate_field_names = dialog_field_list.collect(&:name).duplicates
     if duplicate_field_names.present?
       errors.add(:base, _("Dialog field name cannot be duplicated on a dialog: %{duplicates}") % {:duplicates => duplicate_field_names.join(', ')})
+    end
+
+    associations_on_dialog_fields = DialogFieldAssociation.select { |dfa| dialog_field_list.pluck(:id).include?(dfa.trigger_id) }
+    if associations_on_dialog_fields
+      circular_references = DialogFieldAssociationValidator.new.circular_references(create_association_list(associations_on_dialog_fields, dialog_field_list))
+      errors.add(:base, _("Dialog field associations cannot be circular: %{circular_references} ") % {:circular_references => circular_references}) if circular_references
     end
 
     dialog_tabs.each do |dt|
@@ -152,6 +159,12 @@ class Dialog < ApplicationRecord
   end
 
   private
+
+  def create_association_list(associations_on_dialog_fields, dialog_field_list)
+    associations = {}
+    associations_on_dialog_fields.each { |a| associations.merge!(dialog_field_list.find { |df| df.id == a.trigger_id }.name => dialog_field_list.select { |df| df.id == a.respond_id }.pluck(:name)) }
+    associations
+  end
 
   def dialog_field_hash
     @dialog_field_hash ||= dialog_fields.each_with_object({}) { |df, hash| hash[df.name] = df }
