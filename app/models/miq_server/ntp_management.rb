@@ -9,6 +9,8 @@ module MiqServer::NtpManagement
     # matches ntp_reload_queue's guard clause
     return if !MiqEnvironment::Command.is_appliance? || MiqEnvironment::Command.is_container?
 
+    # Bust the settings cache allowing this worker to apply any recent changes made by another (UI) worker
+    Vmdb::Settings.reload!
     ntp_settings = get_config("vmdb").config[:ntp]
 
     if @ntp_settings && @ntp_settings == ntp_settings
