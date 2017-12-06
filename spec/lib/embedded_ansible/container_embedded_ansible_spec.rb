@@ -1,3 +1,4 @@
+require 'docker'
 require_dependency 'embedded_ansible'
 
 describe ContainerEmbeddedAnsible do
@@ -5,6 +6,8 @@ describe ContainerEmbeddedAnsible do
 
   before do
     allow(ContainerOrchestrator).to receive(:available?).and_return(true)
+    allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
+    allow(Docker).to receive(:validate_version!).and_raise(RuntimeError)
 
     FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
     MiqDatabase.seed

@@ -10,7 +10,7 @@ class EmbeddedAnsible
   end
 
   def self.detect_available_platform
-    subclasses.detect(&:available?) || NullEmbeddedAnsible
+    subclasses.sort.detect(&:available?) || NullEmbeddedAnsible
   end
 
   def self.available?
@@ -19,6 +19,14 @@ class EmbeddedAnsible
 
   def self.enabled?
     MiqServer.my_server(true).has_active_role?(ANSIBLE_ROLE)
+  end
+
+  def self.priority
+    0
+  end
+
+  def self.<=>(other_embedded_ansible)
+    other_embedded_ansible.priority <=> priority
   end
 
   def alive?
@@ -43,8 +51,44 @@ class EmbeddedAnsible
     )
   end
 
+  def find_or_create_secret_key
+    miq_database.ansible_secret_key ||= SecureRandom.hex(16)
+  end
+
+  def find_or_create_admin_authentication
+    miq_database.ansible_admin_authentication || miq_database.set_ansible_admin_authentication(:password => generate_password)
+  end
+
+  def find_or_create_rabbitmq_authentication
+    miq_database.ansible_rabbitmq_authentication || miq_database.set_ansible_rabbitmq_authentication(:password => generate_password)
+  end
+
+  def find_or_create_database_authentication
+    auth = miq_database.ansible_database_authentication
+    return auth if auth
+
+    auth = miq_database.set_ansible_database_authentication(:password => generate_password)
+
+    database_connection.select_value("CREATE ROLE #{database_connection.quote_column_name(auth.userid)} WITH LOGIN PASSWORD #{database_connection.quote(auth.password)}")
+    database_connection.select_value("CREATE DATABASE awx OWNER #{database_connection.quote_column_name(auth.userid)} ENCODING 'utf8'")
+
+    auth
+  end
+
+  def generate_password
+    SecureRandom.base64(18).tr("+/", "-_")
+  end
+
   def miq_database
     MiqDatabase.first
+  end
+
+  def database_connection
+    ActiveRecord::Base.connection
+  end
+
+  def database_configuration
+    @db_config ||= ActiveRecord::Base.configurations[Rails.env]
   end
 end
 

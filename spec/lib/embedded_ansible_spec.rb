@@ -1,8 +1,17 @@
+require 'docker'
+
 describe EmbeddedAnsible do
+  describe ".<=>" do
+    it "allows classes to be sorted by priority" do
+      expect(EmbeddedAnsible.subclasses.sort).to eq([ApplianceEmbeddedAnsible, ContainerEmbeddedAnsible, DockerEmbeddedAnsible, NullEmbeddedAnsible])
+    end
+  end
+
   context "with no available subclass" do
     before do
       expect(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
       expect(ContainerOrchestrator).to receive(:available?).and_return(false)
+      expect(Docker).to receive(:validate_version!).and_raise(RuntimeError)
     end
 
     describe ".new" do
@@ -21,6 +30,8 @@ describe EmbeddedAnsible do
   context "in an appliance" do
     before do
       allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(true)
+      allow(ContainerOrchestrator).to receive(:available?).and_return(false)
+      allow(Docker).to receive(:validate_version!).and_raise(RuntimeError)
 
       installed_rpms = {
         "ansible-tower-server" => "1.0.1",
@@ -46,6 +57,8 @@ describe EmbeddedAnsible do
   context "in Kubernetes/OpenShift" do
     before do
       expect(ContainerOrchestrator).to receive(:available?).and_return(true)
+      allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
+      allow(Docker).to receive(:validate_version!).and_raise(RuntimeError)
     end
 
     describe ".new" do
@@ -61,7 +74,29 @@ describe EmbeddedAnsible do
     end
   end
 
+  context "when using docker" do
+    before do
+      allow(ContainerOrchestrator).to receive(:available?).and_return(false)
+      allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
+      allow(Docker).to receive(:validate_version!).and_return(true)
+    end
+
+    describe ".new" do
+      it "returns an instance of DockerEmbeddedAnsible" do
+        expect(described_class.new).to be_an_instance_of(DockerEmbeddedAnsible)
+      end
+    end
+
+    describe ".available?" do
+      it "returns true" do
+        expect(described_class.available?).to be true
+      end
+    end
+  end
+
   context "with an miq_databases row" do
+    subject { NullEmbeddedAnsible.new }
+
     let(:miq_database) { MiqDatabase.first }
 
     before do
@@ -126,6 +161,34 @@ describe EmbeddedAnsible do
           expect(api).to receive(:verify_credentials)
           expect(subject.alive?).to be true
         end
+      end
+    end
+
+    describe "#find_or_create_database_authentication (private)" do
+      let(:password)        { "secretpassword" }
+      let(:quoted_password) { ActiveRecord::Base.connection.quote(password) }
+      let(:connection)      { double(:quote => quoted_password) }
+
+      before do
+        allow(connection).to receive(:quote_column_name) do |name|
+          ActiveRecord::Base.connection.quote_column_name(name)
+        end
+      end
+
+      it "creates the database" do
+        allow(subject).to receive(:database_connection).and_return(connection)
+        expect(subject).to receive(:generate_password).and_return(password)
+        expect(connection).to receive(:select_value).with("CREATE ROLE \"awx\" WITH LOGIN PASSWORD #{quoted_password}")
+        expect(connection).to receive(:select_value).with("CREATE DATABASE awx OWNER \"awx\" ENCODING 'utf8'")
+
+        auth = subject.send(:find_or_create_database_authentication)
+        expect(auth).to have_attributes(:userid => "awx", :password => password)
+      end
+
+      it "returns the saved authentication" do
+        miq_database.set_ansible_database_authentication(:password => "mypassword")
+        auth = subject.send(:find_or_create_database_authentication)
+        expect(auth).to have_attributes(:userid => "awx", :password => "mypassword")
       end
     end
   end
