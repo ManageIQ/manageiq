@@ -21,7 +21,12 @@ class MiqExpression::Field < MiqExpression::Target
     return false unless field.kind_of?(String)
     match = REGEX.match(field)
     return false unless match
-    model = match[:model_name].safe_constantize
+    model =
+      begin
+        match[:model_name].safe_constantize
+      rescue LoadError
+        nil
+      end
     return false unless model
     !!(model < ApplicationRecord)
   end
