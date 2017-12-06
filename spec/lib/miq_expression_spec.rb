@@ -190,6 +190,11 @@ describe MiqExpression do
       expect(sql).to eq("\"vms\".\"name\" = \"vms\".\"name\"")
     end
 
+    it "will handle values that look like they contain MiqExpression-encoded constants but cannot be loaded" do
+      sql, * = described_class.new("=" => {"field" => "Vm-name", "value" => "VM-name"}).to_sql
+      expect(sql).to eq(%q("vms"."name" = 'VM-name'))
+    end
+
     it "generates the SQL for a < expression" do
       sql, * = described_class.new("<" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}).to_sql
       expect(sql).to eq("\"hardwares\".\"cpu_sockets\" < 2")
