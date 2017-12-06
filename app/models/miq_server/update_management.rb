@@ -66,7 +66,7 @@ module MiqServer::UpdateManagement
 
   def register
     update_attributes(:upgrade_message => "registering")
-    if LinuxAdmin::RegistrationSystem.registered?
+    if LinuxAdmin::SubscriptionManager.registered?(assemble_registration_options)
       _log.info("Appliance already registered")
       update_attributes(:rh_registered => true)
     else
@@ -82,9 +82,9 @@ module MiqServer::UpdateManagement
       registration_class.register(registration_options)
 
       # Reload the registration_type
-      LinuxAdmin::RegistrationSystem.registration_type(true)
+      LinuxAdmin::SubscriptionManager.registration_type(true)
 
-      update_attributes(:rh_registered => LinuxAdmin::RegistrationSystem.registered?)
+      update_attributes(:rh_registered => LinuxAdmin::SubscriptionManager.registered?(assemble_registration_options))
     end
 
     if rh_registered?
@@ -101,11 +101,11 @@ module MiqServer::UpdateManagement
   def attach_products
     update_attributes(:upgrade_message => "attaching products")
     _log.info("Attaching products based on installed certificates")
-    LinuxAdmin::RegistrationSystem.subscribe(assemble_registration_options)
+    LinuxAdmin::SubscriptionManager.subscribe(assemble_registration_options)
   end
 
   def repos_enabled?
-    enabled = LinuxAdmin::RegistrationSystem.enabled_repos
+    enabled = LinuxAdmin::SubscriptionManager.enabled_repos
     if MiqDatabase.first.update_repo_names.all? { |desired| enabled.include?(desired) }
       _log.info("Desired update repository is enabled")
       update_attributes(:rh_subscribed => true, :upgrade_message => "registered")
@@ -118,7 +118,7 @@ module MiqServer::UpdateManagement
     MiqDatabase.first.update_repo_names.each do |repo|
       update_attributes(:upgrade_message => "enabling #{repo}")
       begin
-        LinuxAdmin::RegistrationSystem.enable_repo(repo, assemble_registration_options)
+        LinuxAdmin::SubscriptionManager.enable_repo(repo, assemble_registration_options)
       rescue AwesomeSpawn::CommandResultError
         update_attributes(:upgrade_message => "failed to enable #{repo}")
       end

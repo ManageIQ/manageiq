@@ -73,7 +73,7 @@ module RegistrationSystem
   end
 
   def self.verify_credentials(options = {})
-    LinuxAdmin::RegistrationSystem.validate_credentials(assemble_options(options))
+    LinuxAdmin::SubscriptionManager.validate_credentials(assemble_options(options))
   rescue NotImplementedError, LinuxAdmin::CredentialError
     false
   end
