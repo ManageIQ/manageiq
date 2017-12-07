@@ -132,7 +132,7 @@ end
 
 group :ovirt, :manageiq_default do
   manageiq_plugin "manageiq-providers-ovirt"
-  gem "ovirt_metrics",                  "~>1.4.1",       :require => false
+  gem "ovirt_metrics",                  "~>2.0.0",       :require => false
 end
 
 group :scvmm, :manageiq_default do
