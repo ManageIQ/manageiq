@@ -162,16 +162,13 @@ class DockerEmbeddedAnsible < EmbeddedAnsible
     database_auth = find_or_create_database_authentication
     rabbitmq_auth = find_or_create_rabbitmq_authentication
 
-    db_host = database_configuration["host"] || docker_bridge_gateway
-    db_host = docker_bridge_gateway if db_host == "localhost"
-
     [
       "SECRET_KEY=#{find_or_create_secret_key}",
       "DATABASE_NAME=awx",
       "DATABASE_USER=#{database_auth.userid}",
       "DATABASE_PASSWORD=#{database_auth.password}",
       "DATABASE_PORT=#{database_configuration["port"] || 5432}",
-      "DATABASE_HOST=#{db_host}",
+      "DATABASE_HOST=#{database_host}",
       "RABBITMQ_USER=#{rabbitmq_auth.userid}",
       "RABBITMQ_PASSWORD=#{rabbitmq_auth.password}",
       "RABBITMQ_HOST=#{rabbitmq_container_name}",
@@ -182,6 +179,13 @@ class DockerEmbeddedAnsible < EmbeddedAnsible
       "AWX_ADMIN_USER=#{admin_auth.userid}",
       "AWX_ADMIN_PASSWORD=#{admin_auth.password}"
     ]
+  end
+
+  def database_host
+    db_host = database_configuration["host"]
+    return db_host if db_host.presence && db_host != "localhost"
+
+    MiqServer.my_server.ipaddress || docker_bridge_gateway
   end
 
   def docker_bridge_gateway

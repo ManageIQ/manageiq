@@ -32,4 +32,55 @@ describe DockerEmbeddedAnsible do
       expect(subject.alive?).to be false
     end
   end
+
+  describe "#database_host (private)" do
+    let(:my_server) { EvmSpecHelper.local_miq_server }
+    let(:docker_network_settings) do
+      settings = { "IPAM" => {"Config" => [{"Gateway" => "192.0.2.1"}]}}
+      double("Docker::Network settings", :info => settings)
+    end
+
+    it "returns the active record database host when valid" do
+      expect(subject).to receive(:database_configuration).and_return("host" => "db.example.com")
+      expect(subject.send(:database_host)).to eq("db.example.com")
+    end
+
+    context "the database config doesn't list a host" do
+      before do
+        expect(subject).to receive(:database_configuration).and_return("dbname" => "testdatabase")
+      end
+
+      it "returns the server ip when set" do
+        my_server.update_attributes(:ipaddress => "192.0.2.123")
+
+        expect(subject.send(:database_host)).to eq("192.0.2.123")
+      end
+
+      it "returns the docker bridge gateway address when there is no server ip set" do
+        my_server.update_attributes(:ipaddress => nil)
+
+        expect(Docker::Network).to receive(:get).with("bridge").and_return(docker_network_settings)
+        expect(subject.send(:database_host)).to eq("192.0.2.1")
+      end
+    end
+
+    context "the datbase config containes 'host' => 'localhost'" do
+      before do
+        expect(subject).to receive(:database_configuration).and_return("host" => "localhost")
+      end
+
+      it "returns the server ip when set" do
+        my_server.update_attributes(:ipaddress => "192.0.2.123")
+
+        expect(subject.send(:database_host)).to eq("192.0.2.123")
+      end
+
+      it "returns the docker bridge gateway address when there is no server ip set" do
+        my_server.update_attributes(:ipaddress => nil)
+
+        expect(Docker::Network).to receive(:get).with("bridge").and_return(docker_network_settings)
+        expect(subject.send(:database_host)).to eq("192.0.2.1")
+      end
+    end
+  end
 end
