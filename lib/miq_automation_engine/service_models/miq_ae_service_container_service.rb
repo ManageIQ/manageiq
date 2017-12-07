@@ -8,8 +8,6 @@ module MiqAeMethodService
     expose :selector_parts,                 :association => true
     expose :container_nodes,                :association => true
     expose :container_image_registry,       :association => true
-    expose :metrics,                        :association => true
-    expose :metric_rollups,                 :association => true
     expose :is_tagged_with?
     expose :tags
   end

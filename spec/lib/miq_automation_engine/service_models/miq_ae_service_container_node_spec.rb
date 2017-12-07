@@ -43,13 +43,5 @@ module MiqAeServiceContainerSpec
     it "#hardware" do
       expect(described_class.instance_methods).to include(:hardware)
     end
-
-    it "#metrics" do
-      expect(described_class.instance_methods).to include(:metrics)
-    end
-
-    it "#metric_rollups" do
-      expect(described_class.instance_methods).to include(:metric_rollups)
-    end
   end
 end

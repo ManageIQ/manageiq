@@ -11,8 +11,6 @@ module MiqAeMethodService
     expose :computer_system,          :association => true
     expose :lives_on,                 :association => true
     expose :hardware,                 :association => true
-    expose :metrics,                  :association => true
-    expose :metric_rollups,           :association => true
     expose :is_tagged_with?
     expose :tags
   end
