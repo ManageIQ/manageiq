@@ -1,6 +1,6 @@
 class MiqExpression::Tag
   REGEX = /
-(?<model_name>([[:alnum:]]*(::)?)+)
+(?<model_name>([[:alnum:]]*(::)?){4})
 \.(?<associations>([a-z_]+\.)*)
 (?<namespace>\bmanaged|user_tag\b)
 -(?<column>[a-z]+[_[:alnum:]]+)
