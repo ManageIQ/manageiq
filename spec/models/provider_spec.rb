@@ -61,4 +61,38 @@ describe Provider do
       expect(tenant.providers).to include(provider)
     end
   end
+
+  context "destroying provider" do
+    let!(:miq_server) { EvmSpecHelper.local_miq_server }
+    let(:provider) { FactoryGirl.create(:provider) }
+    context "#destroy_queue" do
+      it "queues destroy" do
+        provider.destroy_queue
+        expect(MiqQueue.find_by(:instance_id => provider.id)).to have_attributes(
+          'method_name' => 'destroy',
+          'class_name'  => provider.class.name,
+        )
+      end
+    end
+
+    context "#destroy" do
+      it "destroys its managers and itself" do
+        manager = FactoryGirl.create(:ext_management_system)
+        provider.managers = [manager]
+        task = MiqTask.create(
+          :name   => "Destroying #{self.class.name} with id: #{provider.id}",
+          :state  => MiqTask::STATE_QUEUED,
+          :status => MiqTask::STATUS_OK,
+        )
+        provider.destroy(task.id)
+        task.reload
+        expect(task).to have_attributes(
+          :state  => MiqTask::STATE_FINISHED,
+          :status => MiqTask::STATUS_OK
+        )
+        expect(Provider.count).to eq(0)
+        expect(ExtManagementSystem.count).to eq(0)
+      end
+    end
+  end
 end

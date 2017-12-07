@@ -415,6 +415,10 @@ class MiqWorker < ApplicationRecord
       begin
         _log.info("Killing worker: ID [#{id}], PID [#{pid}], GUID [#{guid}], status [#{status}]")
         Process.kill(9, pid)
+        loop do
+          break unless alive?
+          sleep(0.01)
+        end
       rescue Errno::ESRCH
         _log.warn("Worker ID [#{id}] PID [#{pid}] GUID [#{guid}] has been killed")
       rescue => err
