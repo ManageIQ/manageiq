@@ -1,14 +1,18 @@
 module AsyncDeleteMixin
   extend ActiveSupport::Concern
   included do
-    def self._queue_task(task, ids)
-      ids.each do |id|
-        MiqQueue.put(
+    def self._queue_task(task, ids, task_id = nil)
+      Array.wrap(ids).each do |id|
+        ops = {
           :class_name  => name,
           :instance_id => id,
           :msg_timeout => 3600,
-          :method_name => task.to_s
-        )
+          :method_name => task.to_s,
+        }
+        if task_id
+          ops[:args] = [task_id]
+        end
+        MiqQueue.put(ops)
       end
     end
 

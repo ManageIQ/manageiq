@@ -404,11 +404,12 @@ describe ExtManagementSystem do
       expect(ExtManagementSystem.count).to eq(0)
     end
 
-    it "does not destroy an ems with active workers" do
+    it "destroys an ems with active workers" do
       ems = FactoryGirl.create(:ext_management_system)
-      FactoryGirl.create(:miq_ems_refresh_worker, :queue_name => ems.queue_name, :status => "started")
+      worker = FactoryGirl.create(:miq_ems_refresh_worker, :queue_name => ems.queue_name, :status => "started")
       ems.destroy
-      expect(ExtManagementSystem.count).to eq(1)
+      expect(ExtManagementSystem.count).to eq(0)
+      expect(worker.class.exists?(worker.id)).to be_falsy
     end
   end
 
@@ -439,22 +440,17 @@ describe ExtManagementSystem do
 
         deliver_queue_message
 
-        expect(MiqQueue.count).to eq(1)
-        expect(MiqQueue.last.deliver_on).to_not be_nil
+        expect(MiqQueue.count).to eq(0)
+        expect(ExtManagementSystem.count).to eq(0)
       end
 
       it "destroys the ems when the active worker shuts down" do
-        refresh_worker = FactoryGirl.create(:miq_ems_refresh_worker, :queue_name => ems.queue_name, :status => "started", :miq_server => server)
+        FactoryGirl.create(:miq_ems_refresh_worker, :queue_name => ems.queue_name, :status => "started", :miq_server => server)
         ems.destroy_queue
 
         deliver_queue_message
 
-        expect(ExtManagementSystem.count).to eq(1)
-
-        refresh_worker.destroy
-
-        deliver_queue_message
-
+        expect(MiqQueue.count).to eq(0)
         expect(ExtManagementSystem.count).to eq(0)
       end
     end
@@ -466,8 +462,8 @@ describe ExtManagementSystem do
       it "queues up destroy for child_managers" do
         described_class.destroy_queue(ems.id)
 
-        expect(MiqQueue.count).to eq(2)
-        expect(MiqQueue.pluck(:instance_id)).to include(ems.id, child_manager.id)
+        expect(MiqQueue.count).to eq(1)
+        expect(MiqQueue.first.instance_id).to eq(ems.id)
       end
     end
 

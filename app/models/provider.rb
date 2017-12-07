@@ -63,4 +63,36 @@ class Provider < ApplicationRecord
     end
     managers.flat_map { |manager| EmsRefresh.queue_refresh(manager, nil, opts) }
   end
+
+  def self.destroy_queue(ids)
+    find(ids).each(&:destroy_queue)
+  end
+
+  def destroy_queue
+    msg = "Destroying #{self.class.name} with id: #{id}"
+
+    _log.info(msg)
+    task = MiqTask.create(
+      :name    => "Destroying #{self.class.name} with id: #{id}",
+      :state   => MiqTask::STATE_QUEUED,
+      :status  => MiqTask::STATUS_OK,
+      :message => msg,
+    )
+    self.class._queue_task('destroy', id, task.id)
+    task.id
+  end
+
+  def destroy(task_id = nil)
+    _log.info("To destroy managers of provider: #{self.class.name} with id: #{id}")
+    managers.each(&:destroy)
+
+    _log.info("To destroy provider: #{self.class.name} with id: #{id}")
+    super().tap do
+      if task_id
+        msg = "#{self.class.name} with id: #{id} destroyed"
+        MiqTask.update_status(task_id, MiqTask::STATE_FINISHED, MiqTask::STATUS_OK, msg)
+        _log.info(msg)
+      end
+    end
+  end
 end

@@ -1,5 +1,5 @@
 describe Provider do
-  let(:provider) { described_class.new }
+  let(:provider) { FactoryGirl.create(:provider) }
 
   describe "#verify_ssl" do
     context "when non set" do
@@ -59,6 +59,36 @@ describe Provider do
     it "has a tenant" do
       provider = FactoryGirl.create(:provider, :tenant => tenant)
       expect(tenant.providers).to include(provider)
+    end
+  end
+
+  context "#destroy_queue" do
+    let!(:miq_server) { EvmSpecHelper.local_miq_server }
+    it "queues destroy" do
+      provider.destroy_queue
+      expect(MiqQueue.find_by(:instance_id => provider.id)).to have_attributes(
+        'method_name' => 'destroy',
+        'class_name'  => provider.class.name,
+      )
+    end
+  end
+
+  context "#destroy" do
+    it "destroys its managers and itself" do
+      manager = FactoryGirl.create(:ext_management_system)
+      provider.managers = [manager]
+      expect(manager).to receive(:destroy)
+      task = MiqTask.create(
+        :name   => "Destroying #{self.class.name} with id: #{provider.id}",
+        :state  => MiqTask::STATE_QUEUED,
+        :status => MiqTask::STATUS_OK,
+      )
+      provider.destroy(task.id)
+      task.reload
+      expect(task).to have_attributes(
+        'state'  => MiqTask::STATE_FINISHED,
+        'status' => MiqTask::STATUS_OK
+      )
     end
   end
 end
