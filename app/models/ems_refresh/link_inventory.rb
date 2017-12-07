@@ -15,9 +15,9 @@ module EmsRefresh::LinkInventory
     _log.info("#{log_header} Updating EMS root folder relationship.")
     root_id = new_relats[:ext_management_systems_to_folders][ems.id][0]
     if root_id.nil?
-      ems.remove_all_children
+      ems.remove_all_children if disconnect
     else
-      ems.replace_children(instance_with_id(EmsFolder, root_id))
+      ems.replace_children(instance_with_id(EmsFolder, root_id)) if disconnect
     end
 
     # Do the Folders to *, and Clusters to * relationships
