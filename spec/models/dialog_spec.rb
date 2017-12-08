@@ -1,4 +1,14 @@
 describe Dialog do
+  def build_basic_dialog_with_components
+    Dialog.new(:label => "dialog").tap do |dialog|
+      dialog.dialog_tabs.build(:label => "tab").tap do |tab|
+        tab.dialog_groups.build(:label => "group").tap do |group|
+          group.dialog_fields.build(:name => "field")
+        end
+      end
+    end
+  end
+
   describe ".seed" do
     let(:dialog_import_service) { double("DialogImportService") }
     let(:test_file_path) { "spec/fixtures/files/dialogs" }
