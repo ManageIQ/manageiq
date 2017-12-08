@@ -72,20 +72,16 @@ describe Dialog do
   end
 
   context "#destroy" do
-    before(:each) do
-      @dialog = FactoryGirl.create(:dialog, :label => 'dialog')
-    end
-
     it "destroy without resource_action association" do
-      expect(@dialog.destroy).to be_truthy
+      dialog = build_basic_dialog_with_components.tap(&:save!)
+      expect(dialog.destroy).to be_truthy
       expect(Dialog.count).to eq(0)
     end
 
     it "destroy with resource_action association" do
-      FactoryGirl.create(:resource_action, :action => "Provision", :dialog => @dialog)
-      @dialog.reload
-      expect { @dialog.destroy }
-        .to raise_error(RuntimeError, /Dialog cannot be deleted.*connected to other components/)
+      dialog = build_basic_dialog_with_components.tap(&:save!)
+      FactoryGirl.create(:resource_action, :action => "Provision", :dialog => dialog)
+      expect { dialog.destroy }.to raise_error(RuntimeError, /Dialog cannot be deleted.*connected to other components/)
       expect(Dialog.count).to eq(1)
     end
   end
@@ -143,32 +139,25 @@ describe Dialog do
   end
 
   context "#remove_all_resources" do
-    before(:each) do
-      @dialog       = FactoryGirl.create(:dialog, :label => 'dialog')
-      @dialog_tab   = FactoryGirl.create(:dialog_tab, :label => 'tab')
-      @dialog_group = FactoryGirl.create(:dialog_group, :label => 'group')
-      @dialog_field = FactoryGirl.create(:dialog_field, :label => 'field 1', :name => "field_1")
-    end
-
     it "dialogs contain tabs" do
-      @dialog.dialog_tabs << @dialog_tab
-      expect(@dialog.dialog_resources.size).to eq(1)
-      @dialog.remove_all_resources
-      expect(@dialog.dialog_resources.size).to eq(0)
+      dialog = build_basic_dialog_with_components.tap(&:save!)
+      expect(dialog.dialog_resources.size).to eq(1)
+      dialog.remove_all_resources
+      expect(dialog.dialog_resources.size).to eq(0)
     end
 
     it "tabs contain groups" do
-      @dialog_tab.dialog_groups << @dialog_group
-      expect(@dialog_tab.dialog_resources.size).to eq(1)
-      @dialog_tab.remove_all_resources
-      expect(@dialog_tab.dialog_resources.size).to eq(0)
+      dialog_tab = build_basic_dialog_with_components.tap(&:save!).dialog_tabs.first
+      expect(dialog_tab.dialog_resources.size).to eq(1)
+      dialog_tab.remove_all_resources
+      expect(dialog_tab.dialog_resources.size).to eq(0)
     end
 
     it "groups contain fields" do
-      @dialog_group.dialog_fields << @dialog_field
-      expect(@dialog_group.dialog_resources.size).to eq(1)
-      @dialog_group.remove_all_resources
-      expect(@dialog_group.dialog_resources.size).to eq(0)
+      dialog_group = build_basic_dialog_with_components.tap(&:save!).dialog_tabs.first.dialog_groups.first
+      expect(dialog_group.dialog_resources.size).to eq(1)
+      dialog_group.remove_all_resources
+      expect(dialog_group.dialog_resources.size).to eq(0)
     end
   end
 
@@ -296,35 +285,16 @@ describe Dialog do
   end
 
   context "#dialog_fields" do
-    before(:each) do
-      @dialog        = FactoryGirl.create(:dialog, :label => 'dialog')
-      @dialog_tab    = FactoryGirl.create(:dialog_tab, :label => 'tab')
-      @dialog_group  = FactoryGirl.create(:dialog_group, :label => 'group')
-      @dialog_field  = FactoryGirl.create(:dialog_field, :label => 'field 1', :name => "field_1")
-      @dialog_field2 = FactoryGirl.create(:dialog_field, :label => 'field 2', :name => "field_2")
-
-      @dialog.dialog_tabs << @dialog_tab
-      @dialog.dialog_tabs << FactoryGirl.create(:dialog_tab, :label => 'tab2')
-      @dialog_tab.dialog_groups << @dialog_group
-      @dialog_tab.dialog_groups << FactoryGirl.create(:dialog_group, :label => 'group2')
-      @dialog_group.dialog_fields << @dialog_field
-      @dialog_group.dialog_fields << @dialog_field2
-
-      @dialog_group.save
-      @dialog_tab.save
-      @dialog.save
-    end
-
     it "dialog_group" do
-      expect(@dialog_group.dialog_fields.count).to eq(2)
+      expect(build_basic_dialog_with_components.tap(&:save!).dialog_tabs.first.dialog_groups.first.dialog_fields.count).to eq(1)
     end
 
     it "dialog_tab" do
-      expect(@dialog_tab.dialog_fields.count).to eq(2)
+      expect(build_basic_dialog_with_components.tap(&:save!).dialog_tabs.first.dialog_fields.count).to eq(1)
     end
 
     it "dialog" do
-      expect(@dialog.dialog_fields.count).to eq(2)
+      expect(build_basic_dialog_with_components.tap(&:save!).dialog_fields.count).to eq(1)
     end
   end
 
