@@ -1,7 +1,7 @@
 describe DialogField do
   context "legacy tests" do
     before(:each) do
-      @df = FactoryGirl.create(:dialog_field, :label => 'dialog_field', :name => 'dialog_field')
+      @df = FactoryGirl.create(:dialog_field)
     end
 
     it "sets default value for required attribute" do
@@ -10,11 +10,11 @@ describe DialogField do
     end
 
     it "fields named 'action' or 'controller' are invalid" do
-      action_field = FactoryGirl.build(:dialog_field, :label => 'dialog_field', :name => 'action')
+      action_field = FactoryGirl.build(:dialog_field, :name => 'action')
       expect(action_field).not_to be_valid
-      controller_field = FactoryGirl.build(:dialog_field, :label => 'dialog_field', :name => 'controller')
+      controller_field = FactoryGirl.build(:dialog_field, :name => 'controller')
       expect(controller_field).not_to be_valid
-      foo_field = FactoryGirl.build(:dialog_field, :label => 'dialog_field', :name => 'foo')
+      foo_field = FactoryGirl.build(:dialog_field, :name => 'foo')
       expect(foo_field).to be_valid
     end
 
