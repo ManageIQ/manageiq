@@ -2355,7 +2355,7 @@
         :description: Copy Dialog
         :feature_type: admin
         :hidden: true
-        :identifier: dialog_copy
+        :identifier: dialog_copy_editor
       - :name: Delete
         :description: Delete Dialog
         :feature_type: admin
