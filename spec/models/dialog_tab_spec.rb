@@ -1,9 +1,10 @@
 describe DialogTab do
-  let(:dialog_tab) { FactoryGirl.build(:dialog_tab, :label => 'tab') }
+  let(:dialog)     { FactoryGirl.build(:dialog) }
+  let(:dialog_tab) { FactoryGirl.build(:dialog_tab, :dialog => dialog) }
+
   context "#validate_children" do
     it "fails without box" do
-      expect { dialog_tab.save! }
-        .to raise_error(ActiveRecord::RecordInvalid, /tab must have at least one Box/)
+      expect { dialog_tab.save! }.to raise_error(ActiveRecord::RecordInvalid, /#{dialog_tab.label} must have at least one Box/)
     end
 
     it "validates with box" do
@@ -29,7 +30,7 @@ describe DialogTab do
   describe '#update_dialog_groups' do
     let(:dialog_fields) { FactoryGirl.create_list(:dialog_field, 2) }
     let(:dialog_groups) { FactoryGirl.create_list(:dialog_group, 2) }
-    let(:dialog_tab) { FactoryGirl.create(:dialog_tab, :dialog_groups => dialog_groups) }
+    let(:dialog_tab) { FactoryGirl.create(:dialog_tab, :dialog => dialog, :dialog_groups => dialog_groups) }
 
     before do
       dialog_groups.each_with_index { |group, index| group.dialog_fields << dialog_fields[index] }
@@ -57,8 +58,8 @@ describe DialogTab do
         dialog_tab.update_dialog_groups(updated_groups)
 
         dialog_tab.reload
-        expect(dialog_tab.dialog_groups.collect(&:label))
-          .to match_array(['updated_label', 'updated_label', 'a new label'])
+
+        expect(dialog_tab.dialog_groups.collect(&:label)).to match_array(['updated_label', 'updated_label', 'a new label'])
       end
 
       it 'creates a new dialog group from the dialog group without an id' do
