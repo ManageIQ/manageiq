@@ -162,51 +162,6 @@ describe Dialog do
     end
   end
 
-  context "remove resources" do
-    before(:each) do
-      @dialog             = FactoryGirl.create(:dialog,       :label => 'dialog')
-      @dialog_tab         = FactoryGirl.create(:dialog_tab,   :label => 'tab')
-      @dialog_group       = FactoryGirl.create(:dialog_group, :label => 'group')
-      @dialog_group_field = FactoryGirl.create(:dialog_field, :label => 'group field', :name => "group field")
-
-      @dialog.dialog_tabs << @dialog_tab
-      @dialog_tab.dialog_groups << @dialog_group
-      @dialog_group.dialog_fields << @dialog_group_field
-
-      @dialog.save
-      @dialog_tab.save
-      @dialog_group.save
-    end
-
-    it "dialog" do
-      @dialog.destroy
-      expect(Dialog.count).to eq(0)
-      expect(DialogTab.count).to eq(0)
-      expect(DialogGroup.count).to eq(0)
-      expect(DialogField.count).to eq(0)
-    end
-
-    it "dialog_tab" do
-      @dialog_tab.destroy
-      expect(Dialog.count).to eq(1)
-      expect(DialogTab.count).to eq(0)
-      expect(DialogGroup.count).to eq(0)
-      expect(DialogField.count).to eq(0)
-    end
-
-    it "dialog_group" do
-      @dialog_group.destroy
-      expect(Dialog.count).to eq(1)
-      expect(DialogTab.count).to eq(1)
-      expect(DialogGroup.count).to eq(0)
-      expect(DialogField.count).to eq(0)
-
-      @dialog_tab.destroy
-      expect(Dialog.count).to eq(1)
-      expect(DialogTab.count).to eq(0)
-    end
-  end
-
   context "#each_field" do
     before(:each) do
       @dialog        = FactoryGirl.create(:dialog, :label => 'dialog')
