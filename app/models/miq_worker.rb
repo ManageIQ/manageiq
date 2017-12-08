@@ -252,18 +252,22 @@ class MiqWorker < ApplicationRecord
     find_current.each { |w| w.log_status(level) }
   end
 
-  def self.create_worker_record(*params)
+  def self.init_worker_object(*params)
     params                  = params.first
     params                  = {} unless params.kind_of?(Hash)
     params[:queue_name]     = default_queue_name unless params.key?(:queue_name) || default_queue_name.nil?
     params[:status]         = STATUS_CREATING
     params[:last_heartbeat] = Time.now.utc
 
-    server_scope.create(params)
+    server_scope.new(params)
+  end
+
+  def self.create_worker_record(*params)
+    init_worker_object(*params).tap(&:save)
   end
 
   def self.start_worker(*params)
-    w = create_worker_record(*params)
+    w = containerized_worker? ? init_worker_object(*params) : create_worker_record(*params)
     w.start
     w
   end
