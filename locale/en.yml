@@ -925,7 +925,7 @@ en:
       User:                     EVM User
       VimPerformanceTrend:      Performance Trend
       Vm:                       VM and Instance
-      VmCloud:                  Instance
+      VmCloud:                  Cloud Instance
       VmdbIndex:                Index
       VmdbTable:                VMDB Table
       VmOrTemplate:             VM or Template
