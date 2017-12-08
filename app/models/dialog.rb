@@ -4,8 +4,8 @@ class Dialog < ApplicationRecord
   # The following gets around a glob symbolic link issue
   YAML_FILES_PATTERN = "{,*/**/}*.{yaml,yml}".freeze
 
-  has_many :dialog_tabs, -> { order(:position) }, :dependent => :destroy
   validate :validate_children
+  has_many :dialog_tabs, -> { order(:position) }, :dependent => :destroy, :autosave => true
 
   include DialogMixin
   has_many :resource_actions
