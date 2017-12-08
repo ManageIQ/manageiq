@@ -39,36 +39,30 @@ describe Dialog do
     end
   end
 
-  context "validate label uniqueness" do
-    it "with same label" do
-      expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog') }.to_not raise_error
-      expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog') }
-        .to raise_error(ActiveRecord::RecordInvalid, /Name is not unique within region/)
-    end
+  it "validations" do
+    dialog = Dialog.new
+    expect { dialog.save! }.to raise_error(ActiveRecord::RecordInvalid, /Label can't be blank/)
+    dialog.label = "abc"
+    expect { dialog.save! }.to raise_error(ActiveRecord::RecordInvalid, /Dialog tabs missing for Dialog abc/)
+    tab = dialog.dialog_tabs.build
+    expect { dialog.save! }.to raise_error(ActiveRecord::RecordInvalid, /Label can't be blank/)
+    tab.label = "def"
+    expect { dialog.save! }.to raise_error(ActiveRecord::RecordInvalid, /Dialog abc \/ Tab def must have at least one Box/)
+    group = tab.dialog_groups.build
+    expect { dialog.save! }.to raise_error(ActiveRecord::RecordInvalid, /Dialog abc \/ Tab def \/ Label can't be blank/)
+    group.label = "ghi"
+    expect { dialog.save! }.to raise_error(ActiveRecord::RecordInvalid, /Dialog abc \/ Tab def \/ Box ghi must have at least one Element/)
+    field = group.dialog_fields.build
+    expect { dialog.save! }.to raise_error(ActiveRecord::RecordInvalid, /Dialog abc \/ Tab def \/ Box ghi \/ Name can't be blank/)
+    field.name = "jkl"
+    expect { dialog.save! }.not_to raise_error
 
-    it "with different labels" do
-      expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog')   }.to_not raise_error
-      expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog 1') }.to_not raise_error
-    end
-  end
+    expect(Dialog.count).to eq(1)
+    expect(DialogTab.count).to eq(1)
+    expect(DialogGroup.count).to eq(1)
+    expect(DialogField.count).to eq(1)
 
-  context "#create" do
-    it "validates_presence_of name" do
-      expect do
-        FactoryGirl.create(:dialog, :label => nil)
-      end.to raise_error(ActiveRecord::RecordInvalid, /Label can't be blank/)
-      expect { FactoryGirl.create(:dialog, :label => 'dialog') }.not_to raise_error
-
-      expect do
-        FactoryGirl.create(:dialog_tab, :label => nil)
-      end.to raise_error(ActiveRecord::RecordInvalid, /Label can't be blank/)
-      expect { FactoryGirl.create(:dialog_tab, :label => 'tab') }.not_to raise_error
-
-      expect do
-        FactoryGirl.create(:dialog_group, :label => nil)
-      end.to raise_error(ActiveRecord::RecordInvalid, /Label can't be blank/)
-      expect { FactoryGirl.create(:dialog_group, :label => 'group') }.not_to raise_error
-    end
+    expect { Dialog.create!(:label => "abc") }.to raise_error(ActiveRecord::RecordInvalid, /Name is not unique within region/)
   end
 
   context "#destroy" do
@@ -263,10 +257,6 @@ describe Dialog do
 
   context "validate children before save" do
     let(:dialog) { FactoryGirl.build(:dialog, :label => 'dialog') }
-
-    it "fails without tab" do
-      expect { dialog.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Dialog #{dialog.label} must have at least one Tab")
-    end
 
     context "unique field names" do
       before do
