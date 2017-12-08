@@ -34,7 +34,7 @@ describe Dialog do
 
   describe "#content" do
     it "returns the serialized content" do
-      dialog = FactoryGirl.create(:dialog, :description => "foo", :label => "bar")
+      dialog = FactoryGirl.build(:dialog, :description => "foo", :label => "bar")
       expect(dialog.content).to match([hash_including("description" => "foo", "label" => "bar")])
     end
   end
