@@ -236,7 +236,7 @@
   :startup: true
 - :name: containers
   :description: Compute / Containers / Containers
-  :url: /container/explorer
+  :url: /container/show_list
   :rbac_feature_name: containers
   :startup: true
 - :name: container_nodes
