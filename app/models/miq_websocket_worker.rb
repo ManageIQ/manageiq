@@ -11,4 +11,9 @@ class MiqWebsocketWorker < MiqWorker
   end
 
   include MiqWebServerWorkerMixin
+  include MiqWorker::ServiceWorker
+
+  def self.supports_container?
+    true
+  end
 end

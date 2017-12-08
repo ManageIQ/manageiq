@@ -1,6 +1,7 @@
 require 'io/wait'
 
 class MiqWorker < ApplicationRecord
+  include_concern 'ContainerCommon'
   include UuidMixin
 
   before_destroy :log_destroy_of_worker_messages
@@ -360,12 +361,26 @@ class MiqWorker < ApplicationRecord
     end
   end
 
+  def self.supports_container?
+    false
+  end
+
+  def self.containerized_worker?
+    MiqEnvironment::Command.is_container? && supports_container?
+  end
+
   def start_runner
     if ENV['MIQ_SPAWN_WORKERS'] || !Process.respond_to?(:fork)
       start_runner_via_spawn
+    elsif containerized_worker?
+      start_runner_via_container
     else
       start_runner_via_fork
     end
+  end
+
+  def start_runner_via_container
+    create_container_objects
   end
 
   def start_runner_via_fork

@@ -1,4 +1,6 @@
 module PerEmsWorkerMixin
+  include MiqWorker::DeploymentPerWorker
+
   extend ActiveSupport::Concern
 
   included do
@@ -9,6 +11,10 @@ module PerEmsWorkerMixin
   end
 
   module ClassMethods
+    def supports_container?
+      true
+    end
+
     def ems_class
       ExtManagementSystem
     end
