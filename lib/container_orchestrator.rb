@@ -44,6 +44,7 @@ class ContainerOrchestrator
       :namespace      => my_namespace
     ).first
 
+    scale(name, 0)
     connection.delete_deployment_config(name, my_namespace)
     delete_replication_controller(rc.metadata.name) if rc
   end

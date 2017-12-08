@@ -156,6 +156,7 @@ describe ContainerOrchestrator do
 
         expect(connection_stub).to receive(:delete_deployment_config).with("dc_name", "manageiq")
         expect(kube_connection_stub).to receive(:delete_replication_controller).with("rc_name", "manageiq")
+        expect(subject).to receive(:scale).with("dc_name", 0)
 
         subject.delete_deployment_config("dc_name")
       end
@@ -167,6 +168,7 @@ describe ContainerOrchestrator do
 
         expect(connection_stub).to receive(:delete_deployment_config).with("dc_name", "manageiq")
         expect(kube_connection_stub).not_to receive(:delete_replication_controller)
+        expect(subject).to receive(:scale).with("dc_name", 0)
 
         subject.delete_deployment_config("dc_name")
       end
