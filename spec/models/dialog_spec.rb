@@ -161,43 +161,6 @@ describe Dialog do
     end
   end
 
-  context "#each_field" do
-    before(:each) do
-      @dialog        = FactoryGirl.create(:dialog, :label => 'dialog')
-      @dialog_tab    = FactoryGirl.create(:dialog_tab, :label => 'tab')
-      @dialog_group  = FactoryGirl.create(:dialog_group, :label => 'group')
-      @dialog_field  = FactoryGirl.create(:dialog_field, :label => 'field 1', :name => "field_1")
-      @dialog_field2 = FactoryGirl.create(:dialog_field, :label => 'field 2', :name => "field_2")
-
-      @dialog.dialog_tabs << @dialog_tab
-      @dialog_tab.dialog_groups << @dialog_group
-      @dialog_group.dialog_fields << @dialog_field
-      @dialog_group.dialog_fields << @dialog_field2
-
-      @dialog_group.save
-      @dialog_tab.save
-      @dialog.save
-    end
-
-    it "dialog_group" do
-      count = 0
-      @dialog_group.each_dialog_field { |_df| count += 1 }
-      expect(count).to eq(2)
-    end
-
-    it "dialog_tab" do
-      count = 0
-      @dialog_tab.each_dialog_field { |_df| count += 1 }
-      expect(count).to eq(2)
-    end
-
-    it "dialog" do
-      count = 0
-      @dialog.each_dialog_field { |_df| count += 1 }
-      expect(count).to eq(2)
-    end
-  end
-
   describe '#update_tabs' do
     let(:dialog_field) { FactoryGirl.create_list(:dialog_field, 1, :label => 'field') }
     let(:dialog_group) { FactoryGirl.create_list(:dialog_group, 1, :label => 'group', :dialog_fields => dialog_field) }
