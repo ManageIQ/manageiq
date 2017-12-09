@@ -170,7 +170,7 @@ describe MiqAction do
 
         expect(VmOrTemplate).to receive(:retire) do |vms, options|
           expect(vms).to eq([@vm])
-          expect(options[:date]).to be_same_time_as date
+          expect(options[:date]).to be_within(0.1).of(date)
         end
         @action.action_vm_retire(@action, @vm, input)
       end
