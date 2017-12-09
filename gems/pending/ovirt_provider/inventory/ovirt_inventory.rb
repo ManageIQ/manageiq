@@ -86,8 +86,8 @@ class OvirtInventory
     @service.get_resource_by_ems_ref(uri_suffix, element_name)
   end
 
-  def get_resources_by_uri_path(uri_suffix, element_name = nil)
-    @service.get_resources_by_uri_path(uri_suffix, element_name)
+  def get_resources_by_uri_path(uri_suffix, element_name = nil, xpath = nil)
+    @service.get_resources_by_uri_path(uri_suffix, element_name, xpath)
   end
 
   def refresh
@@ -160,13 +160,14 @@ class OvirtInventory
 
   def collect_primary_targeted_jobs(jobs)
     results = collect_in_parallel(jobs) do |key, ems_ref|
+      xpath = key == :host ? '/host' : nil
       if ems_ref.kind_of?(Array)
-        ems_ref.flat_map { |item| get_resources_by_uri_path(item) rescue Array.new }
+        ems_ref.flat_map { |item| get_resources_by_uri_path(item, nil, xpath) rescue Array.new }
       elsif ems_ref.kind_of?(Hash)
         collection, element_name = ems_ref.first
         standard_collection(collection, element_name, true)
       else
-        get_resources_by_uri_path(ems_ref) rescue Array.new
+        get_resources_by_uri_path(ems_ref, nil, xpath) rescue Array.new
       end
     end
 
