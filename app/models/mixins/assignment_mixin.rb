@@ -173,6 +173,10 @@ module AssignmentMixin
         end
     end
 
+    def tag_class(klass)
+      klass == "VmOrTemplate" ? "vm" : klass.underscore
+    end
+
     # @param target
     # @option options :parents
     # @option options :tag_list
@@ -196,8 +200,7 @@ module AssignmentMixin
       tlist = Tagging.where("tags.name like '/managed/%'")
                      .where(:taggable => parents)
                      .references(:tag).includes(:tag).map do |t|
-        klass = t.taggable_type
-        lower_klass = klass == "VmOrTemplate" ? "vm" : klass.underscore
+        lower_klass = tag_class(t.taggable_type)
         "#{lower_klass}/tag#{t.tag.name}"
       end
       tagged_resources = tlist.flat_map { |t| assignments_cached[t] }.uniq
