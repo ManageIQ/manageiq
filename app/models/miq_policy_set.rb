@@ -1,7 +1,7 @@
 class MiqPolicySet < ApplicationRecord
   acts_as_miq_set
 
-  before_validation :default_name_to_guid, :on => :create
+  before_validation :default_name_to_description, :on => :create
   before_destroy    :destroy_policy_tags
 
   attr_accessor :reserved
@@ -83,5 +83,11 @@ class MiqPolicySet < ApplicationRecord
         ps.update_attribute(:mode, "control")
       end
     end
+  end
+
+  private
+
+  def default_name_to_description
+    self.name ||= description
   end
 end # class MiqPolicySet
