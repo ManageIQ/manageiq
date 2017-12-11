@@ -1,13 +1,21 @@
 require 'trollop'
 require 'yaml'
 require 'time'
-require 'activerecord-id_regions'
+begin
+  require 'activerecord-id_regions'
+rescue LoadError
+  $old_version = true
+end
 require 'pg_inspector/error'
 require 'pg_inspector/pg_inspector_operation'
 require 'pg_inspector/util'
 
 module PgInspector
   class ActiveConnectionsHumanYAML < PgInspectorOperation
+    COMPRESSED_ID_SEPARATOR = 'r'.freeze
+    DEFAULT_RAILS_SEQUENCE_FACTOR = 1_000_000_000_000
+    RE_COMPRESSED_ID = /^(\d+)#{COMPRESSED_ID_SEPARATOR}(\d+)$/
+
     HELP_MSG_SHORT = "Dump active connections to human readable YAML file".freeze
     def parse_options(args)
       self.options = Trollop.options(args) do
@@ -135,16 +143,30 @@ module PgInspector
       result
     end
 
+    def old_application_name?(activity)
+      activity["application_name"].start_with?("MIQ ")
+    end
+
+    def new_application_name?(activity)
+      activity["application_name"].start_with?("MIQ|")
+    end
+
     def server_activity?(activity)
-      miq_activity?(activity) && activity["application_name"].split("|")[3] == "-"
+      if new_application_name?(activity) && activity["application_name"].split("|")[3] == "-"
+        return true
+      elsif old_application_name?(activity) && activity["application_name"].include?(" Server")
+        return true
+      end
+      false
     end
 
     def worker_activity?(activity)
-      miq_activity?(activity) && activity["application_name"].split("|")[3] != "-"
-    end
-
-    def miq_activity?(activity)
-      activity["application_name"].start_with?("MIQ")
+      if new_application_name?(activity) && activity["application_name"].split("|")[3] != "-"
+        return true
+      elsif old_application_name?(activity) && !activity["application_name"].include?(" Server")
+        return true
+      end
+      false
     end
 
     def process_activity_shared(activity)
@@ -172,12 +194,27 @@ module PgInspector
     end
 
     def process_miq_activity_application_name(activity)
+      # Previous format, before https://github.com/ManageIQ/manageiq/pull/15545
+      # For server:
+      # MIQ <pid> Server[<server_compressed_id>], <zone.name>[<zone.compressed_id>]
+      # For worker:
+      # MIQ <pid> <minimal_worker_class_name>[<worker_compressed_id>], s[<server_compressed_id>], <zone.name>[<zone.compressed_id>]
       # Current :application_name format:
       # MIQ|<pid>|<server_id>|<worker_id>|<zone_id>|<class_name>|<zone_name>
+      # Both previous and current is truncated up to 64 characters
       if activity["application_name"].end_with?("...")
         $stderr.puts("Warning: the application_name #{activity["application_name"]} is incomplete.")
       end
-      _, pid, server_id, worker_id, zone_id, class_name, zone_name = activity["application_name"].split("|")
+      if new_application_name?(activity)
+        _, pid, server_id, worker_id, zone_id, class_name, zone_name = activity["application_name"].split("|")
+      elsif activity["application_name"].include?(" Server")
+        # old application name, server activity
+        _, pid, class_name, server_id, zone_name, zone_id = activity["application_name"].split(/[, \[\]]+/)
+        worker_id = "-"
+      else
+        # old application name, worker activity
+        _, pid, class_name, worker_id, _, server_id, zone_name, zone_id = activity["application_name"].split(/[, \[\]]+/)
+      end
       activity["pid"] = pid.to_i
       activity["class_name"] = class_name
       activity["server_id"] = uncompress_id(server_id)
@@ -206,12 +243,40 @@ module PgInspector
       end
     end
 
+    def rails_sequence_factor
+      DEFAULT_RAILS_SEQUENCE_FACTOR
+    end
+
+    def id_to_region(id)
+      id.to_i / rails_sequence_factor
+    end
+
+    def split_id(id)
+      id = uncompress_id(id)
+
+      region_number = id_to_region(id)
+      short_id      = region_number.zero? ? id : id % (region_number * rails_sequence_factor)
+
+      return region_number, short_id
+    end
+
     def compress_id(id)
-      Class.new.include(ActiveRecord::IdRegions).compress_id(id)
+      if $old_version
+        return nil if id.nil?
+        region_number, short_id = split_id(id)
+        region_number.zero? ? short_id.to_s : "#{region_number}#{COMPRESSED_ID_SEPARATOR}#{short_id}"
+      else
+        Class.new.include(ActiveRecord::IdRegions).compress_id(id)
+      end
     end
 
     def uncompress_id(id)
-      Class.new.include(ActiveRecord::IdRegions).uncompress_id(id)
+      if $old_version
+        return nil if id.nil?
+        id.to_s =~ RE_COMPRESSED_ID ? ($1.to_i * rails_sequence_factor + $2.to_i) : id.to_i
+      else
+        Class.new.include(ActiveRecord::IdRegions).uncompress_id(id)
+      end
     end
 
     def merge_activity_and_server_info(stat_activities, servers)
@@ -220,7 +285,7 @@ module PgInspector
       )
       servers.each do |server|
         server_activities[server["server_id"]] =
-          server_activities[server["server_id"]].merge(server)
+          server_activities.fetch(server["server_id"], {}).merge(server)
       end
       stat_activities["servers"] = hash_val_array(server_activities)
       stat_activities
