@@ -167,6 +167,7 @@ module MiqAeMethodService
       return nil if obj.nil?
       MiqAeServiceObject.new(obj, self)
     rescue => e
+      $miq_ae_logger.error("instantiate failed : #{e.message}")
       return nil
     end
 

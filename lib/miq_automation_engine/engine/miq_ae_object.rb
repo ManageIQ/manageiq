@@ -527,7 +527,7 @@ module MiqAeEngine
       return value.to_i                                      if datatype == 'integer' || datatype == 'Fixnum'
       return value.to_f                                      if datatype == 'float' || datatype == 'Float'
       return value.gsub(/[\[\]]/, '').strip.split(/\s*,\s*/)  if datatype == 'array' && value.class == String
-      return MiqAePassword.new(MiqAePassword.decrypt(value)) if datatype == 'password'
+      return decrypt_password(value) if datatype == 'password'
 
       if datatype &&
          (service_model = "MiqAeMethodService::MiqAeService#{SM_LOOKUP[datatype]}".safe_constantize)
@@ -556,6 +556,14 @@ module MiqAeEngine
         return value
       end
     end
+
+    def self.decrypt_password(value)
+      MiqAePassword.new(MiqAePassword.decrypt(value))
+    rescue MiqPassword::MiqPasswordError => err
+      $miq_ae_logger.error("Error decrypting password #{err.message}. Possible cause: Password value was encrypted with a different encryption key")
+      raise
+    end
+    private_class_method :decrypt_password
 
     def process_assertion(f, message, args)
       Benchmark.current_realtime[:assertion_count] += 1
