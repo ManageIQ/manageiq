@@ -1449,7 +1449,7 @@ class MiqRequestWorkflow
     fields { |_fn, f, _dn, _d| errors << f[:error] unless f[:error].nil? }
     err_text = "Provision failed for the following reasons:\n#{errors.join("\n")}"
     _log.error("<#{err_text}>")
-    raise _("Provision failed for the following reasons:\n%{errors}") % {:errors => errors.join("\n")}
+    raise Api::BadRequestError, _("Provision failed for the following reasons:\n%{errors}") % {:errors => errors.join("\n")}
   end
 
   private

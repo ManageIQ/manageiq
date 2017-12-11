@@ -760,7 +760,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     if p.validate(values) == false
       errors = []
       p.fields { |_fn, f, _dn, _d| errors << f[:error] unless f[:error].nil? }
-      raise _("Provision failed for the following reasons:\n%{errors}") % {:errors => errors.join("\n")}
+      raise Api::BadRequestError, _("Provision failed for the following reasons:\n%{errors}") % {:errors => errors.join("\n")}
     end
 
     p.make_request(nil, values, nil, auto_approve)
