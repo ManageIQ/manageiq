@@ -148,7 +148,7 @@ class Job < ApplicationRecord
   end
 
   def target_entity
-    target_class.constantize.find_by(:id => target_id)
+    target_class.constantize.find_by(:id => target_id) if target_class
   end
 
   def self.check_jobs_for_timeout
