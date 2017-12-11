@@ -17,7 +17,7 @@ class ServiceTemplate < ApplicationRecord
     "generic_orchestration"      => _("Orchestration"),
     "generic_ansible_playbook"   => _("Ansible Playbook"),
     "generic_ansible_tower"      => _("AnsibleTower"),
-    "generic_container_template" => _("Container Template"),
+    "generic_container_template" => _("OpenShift Template"),
     "google"                     => _("Google"),
     "microsoft"                  => _("SCVMM"),
     "openstack"                  => _("OpenStack"),
