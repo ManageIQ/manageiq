@@ -70,9 +70,9 @@ class ServiceTemplate < ApplicationRecord
   scope :displayed,                                 ->         { where(:display => true) }
 
   def self.catalog_item_types
-    ci_types = Rbac.filtered(ExtManagementSystem.all).flat_map(&:supported_catalog_types).uniq
-    ci_types << 'generic_orchestration' if Rbac.filtered(OrchestrationTemplate).exists?
-    ci_types << 'generic'
+    ci_types = Set.new(Rbac.filtered(ExtManagementSystem.all).flat_map(&:supported_catalog_types))
+    ci_types.add('generic_orchestration') if Rbac.filtered(OrchestrationTemplate).exists?
+    ci_types.add('generic')
     CATALOG_ITEM_TYPES.each.with_object({}) do |(key, description), hash|
       hash[key] = { :description => description, :display => ci_types.include?(key) }
     end
