@@ -16,6 +16,10 @@ module ManageIQ::Providers
       self
     end
 
+    def supported_catalog_types
+      []
+    end
+
     def refresher
       self.class::Refresher
     end

@@ -776,6 +776,27 @@ describe ServiceTemplate do
       expect { service_template.provision_request(user, arg1, arg2) }.to raise_error(RuntimeError)
     end
   end
+
+  context "catalog_item_types" do
+    it "only returns generic with no providers" do
+      expect(ServiceTemplate.catalog_item_types).to match(
+        hash_including('amazon'  => {:description => 'Amazon',  :display => false},
+                       'generic' => {:description => 'Generic', :display => true })
+      )
+    end
+
+    it "returns orchestration template and generic" do
+      FactoryGirl.create(:orchestration_template)
+      expect(ServiceTemplate.catalog_item_types).to match(
+        hash_including('amazon'                => { :description => 'Amazon',
+                                                    :display     => false },
+                       'generic'               => { :description => 'Generic',
+                                                    :display     => true },
+                       'generic_orchestration' => { :description => 'Orchestration',
+                                                    :display     => true})
+      )
+    end
+  end
 end
 
 def add_and_save_service(p, c)

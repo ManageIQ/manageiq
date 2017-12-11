@@ -69,6 +69,15 @@ class ServiceTemplate < ApplicationRecord
   scope :with_existent_service_template_catalog_id, ->         { where.not(:service_template_catalog_id => nil) }
   scope :displayed,                                 ->         { where(:display => true) }
 
+  def self.catalog_item_types
+    ci_types = Set.new(Rbac.filtered(ExtManagementSystem.all).flat_map(&:supported_catalog_types))
+    ci_types.add('generic_orchestration') if Rbac.filtered(OrchestrationTemplate).exists?
+    ci_types.add('generic')
+    CATALOG_ITEM_TYPES.each.with_object({}) do |(key, description), hash|
+      hash[key] = { :description => description, :display => ci_types.include?(key) }
+    end
+  end
+
   def self.create_catalog_item(options, auth_user)
     transaction do
       create_from_options(options).tap do |service_template|
