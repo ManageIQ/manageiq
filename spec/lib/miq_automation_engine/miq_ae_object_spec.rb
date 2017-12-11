@@ -300,3 +300,20 @@ describe MiqAeEngine::MiqAeObject do
     end
   end
 end
+
+describe MiqAeEngine::MiqAeObject do
+  context "password" do
+    let(:p45) { "Pneumonoultramicroscopicsilicovolcanoconiosis" }
+    let(:p45_encrypted) { MiqAePassword.encrypt(p45) }
+
+    it "can decrypt passwords" do
+      expect(described_class.convert_value_based_on_datatype(p45_encrypted, 'password').encStr).to eq(p45_encrypted)
+    end
+
+    it "raises exception for bogus passwords" do
+      expect do
+        described_class.convert_value_based_on_datatype('gobbledygook', 'password')
+      end.to raise_exception(MiqPassword::MiqPasswordError)
+    end
+  end
+end
