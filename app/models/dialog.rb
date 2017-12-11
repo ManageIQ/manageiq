@@ -13,6 +13,7 @@ class Dialog < ApplicationRecord
 
   before_destroy :reject_if_has_resource_actions
   validates      :name, :unique_within_region => true
+  validate      :unique_field_names
 
   alias_attribute  :name, :label
 
@@ -61,17 +62,19 @@ class Dialog < ApplicationRecord
       errors.add(:base, _("Dialog %{dialog_label} must have at least one Tab") % {:dialog_label => label})
     end
 
-    duplicate_field_names = dialog_fields.collect(&:name).duplicates
-    if duplicate_field_names.present?
-      errors.add(:base, _("Dialog field name cannot be duplicated on a dialog: %{duplicates}") % {:duplicates => duplicate_field_names.join(', ')})
-    end
-
     dialog_tabs.each do |dt|
       next if dt.valid?
       dt.errors.full_messages.each do |err_msg|
         errors.add(:base, _("Dialog %{dialog_label} / %{error_message}") %
                    {:dialog_label => label, :error_message => err_msg})
       end
+    end
+  end
+
+  def unique_field_names
+    duplicate_field_names = dialog_fields.collect(&:name).duplicates
+    if duplicate_field_names.present?
+      errors.add(:base, _("Dialog field name cannot be duplicated on a dialog: %{duplicates}") % {:duplicates => duplicate_field_names.join(', ')})
     end
   end
 
