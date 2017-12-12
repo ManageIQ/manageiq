@@ -32,10 +32,9 @@ module Metric::ChargebackHelper
   def resource_parents
     [parent_host || resource.try(:host),
      parent_ems_cluster || resource.try(:ems_cluster),
-     parent_storage || resource.try(:storage),
+     parent_storage || resource.try(:storage) || resource.try(:cloud_volumes),
      parent_ems || resource.try(:ext_management_system),
-     resource.try(:tenant)
-    ].compact
+     resource.try(:tenant)].flatten.compact
   end
 
   def parents_determining_rate
