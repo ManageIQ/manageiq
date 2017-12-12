@@ -1,6 +1,8 @@
 ActiveRecord::ConnectionAdapters::AbstractAdapter.class_eval do
-  set_callback(:checkout, :after, :log_after_checkout)
-  set_callback(:checkin,  :after, :log_after_checkin)
+  unless ENV["VERBOSE_CONNECTIONS"] == "false"
+    set_callback(:checkout, :after, :log_after_checkout)
+    set_callback(:checkin,  :after, :log_after_checkin)
+  end
 
   def connection_info_for_logging
     pool             = ActiveRecord::Base.connection_pool
