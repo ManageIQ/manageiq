@@ -82,23 +82,6 @@ class Storage < ApplicationRecord
     name
   end
 
-  def ext_management_system=(ems)
-    @ext_management_system = ems
-  end
-
-  def ext_management_system
-    @ext_management_system ||= ext_management_systems.first
-  end
-
-  def ext_management_systems
-    @ext_management_systems ||= ExtManagementSystem.joins(:hosts => :storages).where(
-      :host_storages => {:storage_id => id}).distinct.to_a
-  end
-
-  def ext_management_systems_in_zone(zone_name)
-    ext_management_systems.select { |ems| ems.my_zone == zone_name }
-  end
-
   def storage_clusters
     parents.select { |parent| parent.kind_of?(StorageCluster) }
   end
@@ -120,9 +103,8 @@ class Storage < ApplicationRecord
   end
 
   def my_zone
-    return MiqServer.my_zone if     ext_management_systems.empty?
-    return MiqServer.my_zone unless ext_management_systems_in_zone(MiqServer.my_zone).empty?
-    ext_management_system.my_zone
+    ems = ext_management_system
+    ems ? ems.my_zone : MiqServer.my_zone
   end
 
   def scan_starting(miq_task_id, host)
