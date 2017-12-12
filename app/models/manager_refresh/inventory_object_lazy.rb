@@ -2,20 +2,20 @@ module ManagerRefresh
   class InventoryObjectLazy
     include Vmdb::Logging
 
-    attr_reader :ems_ref, :ref, :inventory_collection, :key, :default
+    attr_reader :reference, :inventory_collection, :key, :default
 
-    # TODO: ems_ref is inaccurate name, doubly so if it depends on ref.
-    def initialize(inventory_collection, ems_ref, full_index, ref: :manager_ref, key: nil, default: nil)
-      @ems_ref              = ems_ref
-      @ref                  = ref
-      @full_index           = full_index
+    delegate :stringified_reference, :ref, :to => :reference
+
+    def initialize(inventory_collection, index_data, ref: :manager_ref, key: nil, default: nil)
       @inventory_collection = inventory_collection
+      @reference            = inventory_collection.build_reference(index_data, ref)
       @key                  = key
       @default              = default
     end
 
+    # TODO(lsmola) do we need this method?
     def to_s
-      ems_ref
+      stringified_reference
     end
 
     def inspect
@@ -29,7 +29,7 @@ module ManagerRefresh
       {
         :type                      => "ManagerRefresh::InventoryObjectLazy",
         :inventory_collection_name => inventory_collection.name,
-        :ems_ref                   => ems_ref,
+        :reference                 => reference.to_hash,
         :key                       => key,
         :default                   => default,
       }
@@ -66,12 +66,12 @@ module ManagerRefresh
 
     def load_object_with_key
       # TODO(lsmola) Log error if we are accessing path that is present in blacklist or not present in whitelist
-      found = inventory_collection.find(to_s)
+      found = inventory_collection.find(reference)
       if found.present?
         if found.try(:data).present?
           found.data[key] || default
         else
-          found.public_send(key)
+          found.public_send(key) || default
         end
       else
         default
@@ -79,7 +79,7 @@ module ManagerRefresh
     end
 
     def load_object
-      inventory_collection.find(to_s, :ref => ref)
+      inventory_collection.find(reference)
     end
   end
 end
