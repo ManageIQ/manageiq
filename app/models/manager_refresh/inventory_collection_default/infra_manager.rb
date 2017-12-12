@@ -3,7 +3,7 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
     def networks(extra_attributes = {})
       attributes = {
           :model_class => ::Network,
-          :manager_ref => [:hardware, :ipaddress],
+          :manager_ref => [:hardware, :ipaddress, :ipv6address],
           :association => :networks,
       }
 
