@@ -1,9 +1,9 @@
 module ManagerRefresh
   class InventoryObject
     attr_accessor :object, :id
-    attr_reader :inventory_collection, :data
+    attr_reader :inventory_collection, :data, :reference
 
-    delegate :manager_ref, :base_class_name, :model_class, :hash_index_with_keys, :to => :inventory_collection
+    delegate :manager_ref, :base_class_name, :model_class, :to => :inventory_collection
     delegate :[], :[]=, :to => :data
 
     def initialize(inventory_collection, data)
@@ -11,11 +11,11 @@ module ManagerRefresh
       @data                     = data
       @object                   = nil
       @id                       = nil
-      @allowed_attributes_index = nil
+      @reference                = inventory_collection.build_reference(data)
     end
 
-    def manager_uuid(keys = manager_ref)
-      hash_index_with_keys(keys, data)
+    def manager_uuid
+      reference.stringified_reference
     end
 
     def to_raw_lazy_relation
