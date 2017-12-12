@@ -5,17 +5,18 @@ module ManagerRefresh
         class Base
           include Vmdb::Logging
 
-          def initialize(inventory_collection, attribute_names, *_args)
+          def initialize(inventory_collection, index_name, attribute_names, *_args)
             @index = {}
 
             @inventory_collection = inventory_collection
+            @index_name           = index_name
             @attribute_names      = attribute_names
           end
 
           delegate :keys, :to => :index
 
           def store_index_for(inventory_object)
-            index[inventory_object.manager_uuid(attribute_names)] = inventory_object
+            index[build_stringified_reference(inventory_object.data, attribute_names)] = inventory_object
           end
 
           def reindex!
@@ -34,13 +35,13 @@ module ManagerRefresh
 
           protected
 
-          attr_reader :attribute_names, :index, :inventory_collection
+          attr_reader :attribute_names, :index, :index_name, :inventory_collection
 
           private
 
           attr_writer :index
 
-          delegate :data, :to => :inventory_collection
+          delegate :build_stringified_reference, :data, :to => :inventory_collection
         end
       end
     end
