@@ -711,7 +711,7 @@ describe ManagerRefresh::SaveInventory do
             vms_custom_reconnect_block = lambda do |inventory_collection, inventory_objects_index, attributes_index|
               inventory_objects_index.each_slice(1000) do |batch|
                 Vm.where(:ems_ref => batch.map(&:second).map(&:manager_uuid)).each do |record|
-                  index = inventory_collection.object_index_with_keys(inventory_collection.manager_ref_to_cols, record)
+                  index = inventory_collection.build_stringified_reference_for_record(record, inventory_collection.manager_ref_to_cols)
 
                   # We need to delete the record from the inventory_objects_index and attributes_index, otherwise it
                   # would be sent for create.
