@@ -33,6 +33,7 @@ module Vmdb
       apply_config_value(config, $azure_log,         :level_azure)
       apply_config_value(config, $lenovo_log,        :level_lenovo)
       apply_config_value(config, $websocket_log,     :level_websocket)
+      apply_config_value(config, $vcloud_log,        :level_vcloud)
     end
 
     def self.create_loggers
@@ -57,6 +58,7 @@ module Vmdb
       $api_log           = create_multicast_logger(path_dir.join("api.log"))
       $websocket_log     = create_multicast_logger(path_dir.join("websocket.log"))
       $miq_ae_logger     = create_multicast_logger(path_dir.join("automation.log"))
+      $vcloud_log        = create_multicast_logger(path_dir.join("vcloud.log"))
 
       configure_external_loggers
     end
