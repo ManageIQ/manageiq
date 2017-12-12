@@ -93,11 +93,11 @@ module MiqReport::Search
     search_options = options.merge(:class => db, :conditions => conditions, :include_for_find => includes)
     search_options.merge!(:limit => limit, :offset => offset, :order => order) if order
 
-    if options[:parent]
-      targets = get_parent_targets(options[:parent], options[:association] || options[:parent_method])
-    else
-      targets = db_class
-    end
+    targets = if options[:parent] && options[:parent][:class] != "ManageIQ::Providers::Amazon::CloudManager"
+                get_parent_targets(options[:parent], options[:association] || options[:parent_method])
+              else
+                db_class
+              end
 
     if selected_ids.present?
       targets = targets.first.kind_of?(Integer) ? targets & selected_ids : targets.where(:id => selected_ids)
