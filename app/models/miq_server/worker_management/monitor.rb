@@ -114,7 +114,7 @@ module MiqServer::WorkerManagement::Monitor
       workers = class_name.constantize.find_current.to_a
       next if workers.empty?
 
-      w = workers.sort_by { |w| [w.memory_usage || -1, w.id] }.last
+      w = workers.max_by { |w| [w.memory_usage || -1, w.id] }
 
       msg = "#{w.format_full_log_msg} is being stopped because system resources exceeded threshold, it will be restarted once memory has freed up"
       _log.warn(msg)
