@@ -3,27 +3,28 @@ module ManagerRefresh
     module Index
       module Type
         class LocalDb < ManagerRefresh::InventoryCollection::Index::Type::Base
-          def initialize(inventory_collection, attribute_names, data_index)
+          def initialize(inventory_collection, index_name, attribute_names, data_index)
             super
 
             @index             = nil
             @loaded_references = Set.new
             @data_index        = data_index
+            @all_references_loaded = false
           end
 
-          # Finds index_value in the DB. Using a configured strategy we cache obtained data in the index, so the
+          # Finds reference in the DB. Using a configured strategy we cache obtained data in the index, so the
           # same find will not hit database twice. Also if we use lazy_links and this is called when
           # data_collection_finalized?, we load all data from the DB, referenced by lazy_links, in one query.
           #
-          # @param index_value [String] a index_value of the InventoryObject we search in the local DB
-          def find(index_value)
+          # @param reference [String] a ManagerRefresh::InventoryCollection::Reference object
+          def find(reference)
             # Use the cached index only data_collection_finalized?, meaning no new reference can occur
-            if data_collection_finalized? && index
-              return index[index_value]
+            if data_collection_finalized? && all_references_loaded? && index
+              return index[reference.stringified_reference]
             else
-              return index[index_value] if index && index[index_value]
+              return index[reference.stringified_reference] if index && index[reference.stringified_reference]
               # We haven't found the reference, lets add it to the list of references and load it
-              references << index_value if index_value
+              add_reference(reference)
             end
 
             # Put our existing data_index keys into loaded references
@@ -31,21 +32,26 @@ module ManagerRefresh
             # Load the rest of the references from the DB
             populate_index!
 
-            index[index_value]
+            self.all_references_loaded = true if data_collection_finalized?
+
+            index[reference.stringified_reference]
           end
 
           private
 
+          attr_accessor :all_references_loaded
           attr_reader :data_index, :loaded_references
           attr_writer :index
 
-          delegate :arel,
+          delegate :add_reference,
+                   :arel,
                    :association,
                    :association_to_base_class_mapping,
                    :association_to_foreign_key_mapping,
                    :association_to_foreign_type_mapping,
                    :attribute_references,
                    :build_multi_selection_condition,
+                   :build_stringified_reference_for_record,
                    :custom_manager_uuid,
                    :custom_db_finder,
                    :data_collection_finalized?,
@@ -56,13 +62,14 @@ module ManagerRefresh
                    :references,
                    :strategy,
                    :stringify_joiner,
-                   :stringify_reference,
                    :to => :inventory_collection
+
+          alias all_references_loaded? all_references_loaded
 
           # Fills index with InventoryObjects obtained from the DB
           def populate_index!
             # Load only new references from the DB
-            new_references = references - loaded_references
+            new_references = index_references - loaded_references
             # And store which references we've already loaded
             loaded_references.merge(new_references)
 
@@ -84,6 +91,10 @@ module ManagerRefresh
             db_relation(selection, projection).find_each do |record|
               process_db_record!(record)
             end
+          end
+
+          def index_references
+            Set.new(references[index_name].try(:keys) || [])
           end
 
           # Return a Rails relation or array that will be used to obtain the records we need to load from the DB
@@ -116,7 +127,7 @@ module ManagerRefresh
             new_references.each do |index_value|
               next if index_value.nil?
               # TODO(lsmola) no need when hashes are the original hashes
-              uuids = index_value.split(stringify_joiner)
+              uuids = index_value.split("__")
 
               reference = {}
               attribute_names.each_with_index do |ref, uuid_value|
@@ -133,10 +144,10 @@ module ManagerRefresh
           def process_db_record!(record)
             # TODO(lsmola) rethink this. If references will be the full Hash references, we can construct this automatically
             index_value = if custom_manager_uuid.nil?
-                            inventory_collection.object_index_with_keys(attribute_names, record)
+                            build_stringified_reference_for_record(record, attribute_names)
                           else
                             # TODO(lsmola) hm this will not really work for the secondary indexes anyway
-                            stringify_reference(custom_manager_uuid.call(record))
+                            custom_manager_uuid.call(record).join("__")
                           end
 
             attributes = record.attributes.symbolize_keys
