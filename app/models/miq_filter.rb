@@ -1,8 +1,4 @@
 module MiqFilter
-  def self.records2table(records, only_columns)
-    MiqReportable.records2table(records, only_columns)
-  end
-
   def self.belongsto2object(tag)
     belongsto2object_list(tag).last
   end
