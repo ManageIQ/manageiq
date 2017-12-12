@@ -86,30 +86,10 @@ module EmsRefresh::SaveInventoryInfra
   def save_storages_inventory(ems, hashes, target = nil, _disconnect = true)
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
-    # Query for all of the storages ahead of time
-    locs, names = hashes.partition { |h| h[:location] }
-    locs.collect!  { |h| h[:location] }
-    names.collect! { |h| h[:name] }
-    locs  = Storage.where(:location => locs) unless locs.empty?
-    names = Storage.where(:location => nil, :name => names) unless names.empty?
+    deletes = []
 
-    hashes.each do |h|
-      found = if h[:location]
-                locs.detect { |s| s.location == h[:location] }
-              else
-                names.detect { |s| s.name == h[:name] }
-              end
-
-      if found.nil?
-        _log.info("#{log_header} Creating Storage [#{h[:name]}] location: [#{h[:location]}]")
-        found = Storage.create(h)
-      else
-        _log.info("#{log_header} Updating Storage [#{found.name}] id: [#{found.id}] location: [#{found.location}]")
-        found.update_attributes!(h)
-      end
-
-      h[:id] = found.id
-    end
+    save_inventory_multi(ems.storages, hashes, deletes, [:ems_ref], nil, nil)
+    store_ids_for_new_records(ems.storages, hashes, :ems_ref)
   end
 
   def save_hosts_inventory(ems, hashes, target = nil, disconnect = true)

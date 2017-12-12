@@ -123,11 +123,11 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
 
     def storages(extra_attributes = {})
       attributes = {
-        :model_class => ::Storage,
-        :manager_ref => [:location],
-        :association => :storages,
-        :complete    => false,
-        :arel        => Storage
+        :model_class    => ::Storage,
+        :association    => :storages,
+        :builder_params => {
+          :ems_id => ->(persister) { persister.manager.id },
+        }
       }
 
       attributes.merge!(extra_attributes)
