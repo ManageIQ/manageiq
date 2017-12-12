@@ -4,6 +4,35 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+## Gaprindashvili RC
+
+### Fixed
+- Chargeback
+  - Fix max method on empty array in chargeback storage report [(#16575)](https://github.com/ManageIQ/manageiq/pull/16575)
+  - Fix chargeback report when VM is destroyed [(#16598)](https://github.com/ManageIQ/manageiq/pull/16598)
+- Core
+  - Fix cached query for total unregistered vms [(#16577)](https://github.com/ManageIQ/manageiq/pull/16577)
+  - No need to call normalized_status [(#16578)](https://github.com/ManageIQ/manageiq/pull/16578)
+  - Skip seeding of categories if their creation is invalid [(#16568)](https://github.com/ManageIQ/manageiq/pull/16568)
+  - Don't return a duplicate object from MiqGroup#settings [(#16572)](https://github.com/ManageIQ/manageiq/pull/16572)
+  - Handle deprecated classes in arel [(#16560)](https://github.com/ManageIQ/manageiq/pull/16560)
+  - Fix error in timeout checking for job without target [(#16627)](https://github.com/ManageIQ/manageiq/pull/16627)
+  - Use the server IP for the AWX database host when the rails config is no good [(#16621)](https://github.com/ManageIQ/manageiq/pull/16621)
+  - Handle autoload error not caught by safe_constantize [(#16608)](https://github.com/ManageIQ/manageiq/pull/16608)
+  - Cache invalidation... [(#16601)](https://github.com/ManageIQ/manageiq/pull/16601)
+- i18n
+  - Add missing model names into locale/en.yml [(#16604)](https://github.com/ManageIQ/manageiq/pull/16604)
+- Providers
+  - Allow proxying WebMKS consoles using the WebsocketWorker [(#16490)](https://github.com/ManageIQ/manageiq/pull/16490)
+  - Add the missing container template openshift to the en.yml [(#16595)](https://github.com/ManageIQ/manageiq/pull/16595)
+  - Catalog Item type list is dependent on installed providers [(#16559)](https://github.com/ManageIQ/manageiq/pull/16559)
+  - Allowing OperatingSystem for CloudManager graph refresh [(#16605)](https://github.com/ManageIQ/manageiq/pull/16605)
+- Services
+  - Change the type name for the catalog Item from 'Container Template' to 'Openshift Template' [(#16639)](https://github.com/ManageIQ/manageiq/pull/16639)
+- UI
+  - Set default values for help menu link target types in settings.yml [(#16549)](https://github.com/ManageIQ/manageiq/pull/16549)
+  - Update Catalog tab of Publish VM dialog [(#16599)](https://github.com/ManageIQ/manageiq/pull/16599)
+
 
 ## Gaprindashvili Beta2
 
