@@ -291,7 +291,7 @@ module EmsRefresh::SaveInventory
       saved_hashes, new_hashes = hashes.partition { |h| h[:id] }
       saved_hashes.each { |h| deletes.delete_if { |d| d.id == h[:id] } } unless deletes.empty? || saved_hashes.empty?
 
-      save_inventory_multi(hardware.networks, new_hashes, deletes, [:ipaddress], nil, :guest_device)
+      save_inventory_multi(hardware.networks, new_hashes, deletes, [:ipaddress, :ipv6address], nil, :guest_device)
     when :scan
       save_inventory_multi(hardware.networks, hashes, :use_association, [:description, :guid])
     end
