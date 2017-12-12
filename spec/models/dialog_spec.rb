@@ -1,7 +1,7 @@
 describe Dialog do
   def build_basic_dialog_with_components
     Dialog.new(:label => "dialog").tap do |dialog|
-      dialog.dialog_tabs.build(:label => "tab").tap do |tab|
+      dialog.dialog_tabs.build(:dialog => dialog, :label => "tab").tap do |tab|
         tab.dialog_groups.build(:label => "group").tap do |group|
           group.dialog_fields.build(:name => "field")
         end
@@ -44,7 +44,7 @@ describe Dialog do
     expect { dialog.save! }.to raise_error(ActiveRecord::RecordInvalid, /Label can't be blank/)
     dialog.label = "abc"
     expect { dialog.save! }.to raise_error(ActiveRecord::RecordInvalid, /Dialog tabs missing for Dialog abc/)
-    tab = dialog.dialog_tabs.build
+    tab = dialog.dialog_tabs.build(:dialog => dialog)
     expect { dialog.save! }.to raise_error(ActiveRecord::RecordInvalid, /Label can't be blank/)
     tab.label = "def"
     expect { dialog.save! }.to raise_error(ActiveRecord::RecordInvalid, /Dialog abc \/ Tab def must have at least one Box/)
@@ -82,53 +82,48 @@ describe Dialog do
 
   describe "dialog structures" do
     before(:each) do
-      @dialog       = FactoryGirl.build(:dialog, :label => 'dialog')
-      @dialog_tab   = FactoryGirl.create(:dialog_tab, :label => 'tab')
-      @dialog_group = FactoryGirl.create(:dialog_group, :label => 'group')
-      @dialog_field = FactoryGirl.create(:dialog_field, :label => 'field 1', :name => 'field_1')
+      @dialog       = build_basic_dialog_with_components.tap(&:save!)
+      @dialog_tab   = @dialog.dialog_tabs.first
+      @dialog_group = @dialog_tab.dialog_groups.first
+      @dialog_field = @dialog_group.dialog_fields.first
     end
 
     it "dialogs contain tabs" do
-      @dialog_group.dialog_fields << @dialog_field
-      @dialog_tab.dialog_groups << @dialog_group
-      @dialog.dialog_tabs << @dialog_tab
       expect(@dialog.dialog_tabs.size).to eq(1)
     end
 
     it "tabs contain groups" do
-      @dialog_tab.dialog_groups << @dialog_group
       expect(@dialog_tab.dialog_groups.size).to eq(1)
     end
 
     it "groups contain fields" do
-      @dialog_group.dialog_fields << @dialog_field
       expect(@dialog_group.dialog_fields.size).to eq(1)
     end
 
     it "add controls" do
       text_box = FactoryGirl.create(:dialog_field_text_box, :label => 'text box', :name => 'text_box')
       @dialog_group.dialog_fields << text_box
-      expect(@dialog_group.dialog_fields.size).to eq(1)
+      expect(@dialog_group.dialog_fields.size).to eq(2)
 
       tags = FactoryGirl.create(:dialog_field_tag_control, :label => 'tags', :name => 'tags')
       @dialog_group.dialog_fields << tags
       @dialog_group.reload
-      expect(@dialog_group.dialog_fields.size).to eq(2)
+      expect(@dialog_group.dialog_fields.size).to eq(3)
 
       button = FactoryGirl.create(:dialog_field_button, :label => 'button', :name => 'button')
       @dialog_group.dialog_fields << button
       @dialog_group.reload
-      expect(@dialog_group.dialog_fields.size).to eq(3)
+      expect(@dialog_group.dialog_fields.size).to eq(4)
 
       check_box = FactoryGirl.create(:dialog_field_text_box, :label => 'check box', :name => "check_box")
       @dialog_group.dialog_fields << check_box
       @dialog_group.reload
-      expect(@dialog_group.dialog_fields.size).to eq(4)
+      expect(@dialog_group.dialog_fields.size).to eq(5)
 
       drop_down_list = FactoryGirl.create(:dialog_field_drop_down_list, :label => 'drop down list', :name => "drop_down_1")
       @dialog_group.dialog_fields << drop_down_list
       @dialog_group.reload
-      expect(@dialog_group.dialog_fields.size).to eq(5)
+      expect(@dialog_group.dialog_fields.size).to eq(6)
     end
   end
 
@@ -156,24 +151,24 @@ describe Dialog do
   end
 
   describe '#update_tabs' do
-    let(:dialog_field) { FactoryGirl.create_list(:dialog_field, 1, :label => 'field') }
-    let(:dialog_group) { FactoryGirl.create_list(:dialog_group, 1, :label => 'group', :dialog_fields => dialog_field) }
-    let(:dialog_tab) { FactoryGirl.create_list(:dialog_tab, 1, :label => 'tab', :dialog_groups => dialog_group) }
-    let(:dialog) { FactoryGirl.create(:dialog, :label => 'dialog', :dialog_tabs => dialog_tab) }
+    let(:dialog) { build_basic_dialog_with_components.tap(&:save!) }
+    let(:dialog_tab) { dialog.dialog_tabs.first }
+    let(:dialog_group) { dialog_tab.dialog_groups.first }
+    let(:dialog_field) { dialog_group.dialog_fields.first }
 
     let(:updated_content) do
       [
         {
-          'id'            => dialog_tab.first.id,
+          'id'            => dialog_tab.id,
           'label'         => 'updated_label',
           'dialog_groups' => [
-            { 'id'            => dialog_group.first.id,
-              'dialog_tab_id' => dialog_tab.first.id,
+            { 'id'            => dialog_group.id,
+              'dialog_tab_id' => dialog_tab.id,
               'dialog_fields' =>
                                  [{
-                                   'id'                      => dialog_field.first.id,
-                                   'name'                    => dialog_field.first.name,
-                                   'dialog_group_id'         => dialog_group.first.id,
+                                   'id'                      => dialog_field.id,
+                                   'name'                    => dialog_field.name,
+                                   'dialog_group_id'         => dialog_group.id,
                                    'dialog_field_responders' => %w(dialog_field2)
                                  }] },
             {
@@ -201,11 +196,13 @@ describe Dialog do
 
     context 'a collection of dialog tabs containing one with an id and one without an id' do
       it 'updates the dialog_tab with an id' do
+        dialog.save!
         dialog.update_tabs(updated_content)
         expect(dialog.reload.dialog_tabs.collect(&:label)).to match_array(['updated_label', 'new tab'])
       end
 
       it 'creates the dialog tab from the dialog tabs without an id' do
+        dialog.save!
         dialog.update_tabs(updated_content)
         expect(dialog.reload.dialog_tabs.count).to eq(2)
       end
@@ -222,15 +219,15 @@ describe Dialog do
     context 'with a dialog tab removed from the dialog tabs collection' do
       let(:updated_content) do
         [
-          'id'            => dialog_tab.first.id,
+          'id'            => dialog_tab.id,
           'dialog_groups' => [
-            { 'id' => dialog_group.first.id, 'dialog_fields' => [{ 'id' => dialog_field.first.id }] }
+            { 'id' => dialog_group.id, 'dialog_fields' => [{ 'id' => dialog_field.id }] }
           ]
         ]
       end
 
       before do
-        dialog.dialog_tabs << FactoryGirl.create(:dialog_tab)
+        dialog.dialog_tabs << FactoryGirl.create(:dialog_tab, :dialog => dialog)
       end
 
       it 'deletes the removed dialog_tab' do
@@ -260,7 +257,7 @@ describe Dialog do
 
     context "unique field names" do
       before do
-        dialog.dialog_tabs << FactoryGirl.create(:dialog_tab, :label => 'tab')
+        dialog.dialog_tabs.build(:label => 'tab', :dialog => dialog)
         dialog.dialog_tabs.first.dialog_groups << FactoryGirl.create(:dialog_group, :label => 'group')
         dialog.dialog_tabs.first.dialog_groups.first.dialog_fields << FactoryGirl.create(:dialog_field, :label => 'field 1', :name => 'field1')
       end
@@ -280,7 +277,7 @@ describe Dialog do
     end
 
     it "validates with tab" do
-      dialog.dialog_tabs << FactoryGirl.create(:dialog_tab, :label => 'tab')
+      dialog.dialog_tabs.build(:label => 'tab', :dialog => dialog)
       expect_any_instance_of(DialogTab).to receive(:valid?)
       expect(dialog.errors.full_messages).to be_empty
       dialog.validate_children
