@@ -5,6 +5,103 @@ describe EmsRefresh::SaveInventory do
       @ems  = FactoryGirl.create(:ems_vmware, :zone => @zone)
     end
 
+    context "check save_ems_inventory_no_disconnect" do
+      before(:each) do
+        @zone = FactoryGirl.create(:zone)
+        @ems = FactoryGirl.create(:ems_redhat, :zone => @zone)
+        FactoryGirl.create(:resource_pool,
+                           :ext_management_system => @ems,
+                           :name                  => "Default for Cluster Default",
+                           :uid_ems               => "5a09acd2-025c-0118-0172-00000000006d_respool")
+        FactoryGirl.create(:ems_folder,
+                           :ext_management_system => @ems,
+                           :uid_ems               => "5a09acd2-00e1-02d4-0257-000000000180_host",
+                           :name                  => "host")
+        FactoryGirl.create(:ems_folder,
+                           :ext_management_system => @ems,
+                           :uid_ems               => "5a09acd2-00e1-02d4-0257-000000000180_vm",
+                           :name                  => "vm")
+        FactoryGirl.create(:datacenter,
+                           :ems_ref               => "/api/datacenters/5a09acd2-00e1-02d4-0257-000000000180",
+                           :ext_management_system => @ems,
+                           :name                  => "Default",
+                           :uid_ems               => "5a09acd2-00e1-02d4-0257-000000000180")
+        FactoryGirl.create(:ems_cluster,
+                           :ems_ref               => "/api/clusters/5a09acd2-025c-0118-0172-00000000006d",
+                           :uid_ems               => "5a09acd2-025c-0118-0172-00000000006d",
+                           :ext_management_system => @ems,
+                           :name                  => "Default")
+      end
+
+      it "should not disconnect" do
+        vms = {
+          :type        => "ManageIQ::Providers::Redhat::InfraManager::Vm",
+          :ems_ref     => "/api/vms/6420a429-5ef5-441d-b88c-046dd2501382",
+          :ems_ref_obj => "/api/vms/6420a429-5ef5-441d-b88c-046dd2501382",
+          :uid_ems     => "6420a429-5ef5-441d-b88c-046dd2501382",
+          :vendor      => "redhat",
+          :name        => "vm",
+          :location    => "6420a429-5ef5-441d-b88c-046dd2501382.ovf",
+          :template    => false,
+        }
+        resource_pools = {
+          :name         => "Default for Cluster Default",
+          :uid_ems      => "5a09acd2-025c-0118-0172-00000000006d_respool",
+          :is_default   => true,
+          :ems_children => {
+            :vms => [vms]
+          }
+        }
+        clusters = {
+          :ems_ref      => "/api/clusters/5a09acd2-025c-0118-0172-00000000006d",
+          :ems_ref_obj  => "/api/clusters/5a09acd2-025c-0118-0172-00000000006d",
+          :uid_ems      => "5a09acd2-025c-0118-0172-00000000006d",
+          :name         => "Default",
+          :ems_children => {
+            :resource_pools => [resource_pools]
+          }
+        }
+        vms[:ems_cluster] = clusters
+        vm_folder = {
+          :type         => "EmsFolder",
+          :name         => "vm",
+          :uid_ems      => "5a09acd2-00e1-02d4-0257-000000000180_vm",
+          :hidden       => true,
+          :ems_children => {
+            :vms => [vms]
+          }
+        }
+        folders = [
+          {:type         => "Datacenter",
+           :ems_ref      => "/api/datacenters/5a09acd2-00e1-02d4-0257-000000000180",
+           :ems_ref_obj  => "/api/datacenters/5a09acd2-00e1-02d4-0257-000000000180",
+           :uid_ems      => "5a09acd2-00e1-02d4-0257-000000000180",
+           :ems_children => {
+             :folders => [vm_folder]
+           }},
+          vm_folder,
+          {:type         => "EmsFolder",
+           :name         => "host",
+           :uid_ems      => "5a09acd2-00e1-02d4-0257-000000000180_host",
+           :hidden       => true,
+           :ems_children => {
+             :clusters => [clusters]
+           }},
+        ]
+        target_hash = {
+          :vms            => [vms],
+          :clusters       => [clusters],
+          :resource_pools => [resource_pools],
+          :folders        => folders
+        }
+
+        EmsRefresh.save_ems_inventory_no_disconnect(@ems, target_hash)
+
+        expect(@ems).not_to receive(:remove_all_children)
+        expect(@ems).not_to receive(:replace_children)
+      end
+    end
+
     context "with no dups in the database" do
       before(:each) do
         @vm1 = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems)
