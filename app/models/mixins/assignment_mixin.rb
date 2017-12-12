@@ -200,8 +200,7 @@ module AssignmentMixin
       tlist = Tagging.where("tags.name like '/managed/%'")
                      .where(:taggable => parents)
                      .references(:tag).includes(:tag).map do |t|
-        lower_klass = tag_class(t.taggable_type)
-        "#{lower_klass}/tag#{t.tag.name}"
+        "#{tag_class(t.taggable_type)}/tag#{t.tag.name}"
       end
       tagged_resources = tlist.flat_map { |t| assignments_cached[t] }.uniq
       (individually_assigned_resources + tagged_resources).uniq
