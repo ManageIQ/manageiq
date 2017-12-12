@@ -1,8 +1,10 @@
 describe ContainerOrchestrator do
   let(:connection)      { subject.send(:connection) }
   let(:kube_connection) { subject.send(:kube_connection) }
-  let(:cert_path)       { Tempfile.new("cert").path }
-  let(:token_path)      { Tempfile.new("servicetoken").path }
+  let(:cert)            { Tempfile.new("cert") }
+  let(:token)           { Tempfile.new("token") }
+  let(:cert_path)       { cert.path }
+  let(:token_path)      { token.path }
   let(:kube_host)       { "kube.example.com" }
   let(:kube_port)       { "8443" }
   let(:namespace)       { "manageiq" }
