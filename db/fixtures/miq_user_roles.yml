@@ -46,7 +46,7 @@
   - container_service
   - container_replicator
   - container_group
-  - containers
+  - container
   - container_node
   - persistent_volume
   - container_build
@@ -1182,7 +1182,7 @@
   - container_service
   - container_route
   - container_project
-  - containers
+  - container
   - container_topology
   - container_dashboard
   - ems_infra_dashboard

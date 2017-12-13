@@ -237,7 +237,7 @@
 - :name: containers
   :description: Compute / Containers / Containers
   :url: /container/show_list
-  :rbac_feature_name: containers
+  :rbac_feature_name: container
   :startup: true
 - :name: container_nodes
   :description: Compute / Containers / Container Nodes
