@@ -10,7 +10,7 @@ else
 
   session_options = {}
   if MiqEnvironment::Command.is_appliance?
-    session_options[:secure]   = true unless MiqEnvironment::Command.is_container?
+    session_options[:secure]   = true unless MiqEnvironment::Command.is_container? || ENV['MIQ_ALLOW_HTTP_COOKIES'] == "true"
     session_options[:httponly] = true
   end
 
