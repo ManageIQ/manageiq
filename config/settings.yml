@@ -882,6 +882,7 @@
   :level_scvmm: info
   :level_vim: warn
   :level_websocket: info
+  :level_vcloud: info
 :ntp:
   :server:
   - 0.pool.ntp.org
