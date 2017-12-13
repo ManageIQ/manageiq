@@ -1,11 +1,11 @@
 class Dialog
   class OrchestrationTemplateServiceDialog
-    def self.create_dialog(label, template)
-      new.create_dialog(label, template)
+    def self.create_dialog(name, template)
+      new.create_dialog(name, template)
     end
 
-    def create_dialog(label, template)
-      Dialog.new(:label => label, :buttons => "submit,cancel").tap do |dialog|
+    def create_dialog(name, template)
+      Dialog.new(:name => name, :buttons => "submit,cancel").tap do |dialog|
         tab = dialog.dialog_tabs.build(:display => "edit", :label => "Basic Information", :position => 0)
         add_stack_group(template.deployment_options, tab, 0)
 
