@@ -101,7 +101,10 @@ module ManagerRefresh
 
         private
 
-        delegate :build_stringified_reference, :strategy, :to => :inventory_collection
+        delegate :association_to_foreign_key_mapping,
+                 :build_stringified_reference,
+                 :strategy,
+                 :to => :inventory_collection
 
         attr_reader :all_refs, :data_indexes, :inventory_collection, :primary_ref, :local_db_indexes, :secondary_refs
 
@@ -133,24 +136,47 @@ module ManagerRefresh
           missing_keys(data_keys, ref).empty?
         end
 
+        def assert_relation_keys(data, ref)
+          named_ref(ref).each do |key|
+            # Skip if the key is not a foreign key
+            next unless association_to_foreign_key_mapping[key]
+            # Skip if data on key are nil or InventoryObject or InventoryObjectLazy
+            next if data[key].nil? || data[key].kind_of?(ManagerRefresh::InventoryObject) || data[key].kind_of?(ManagerRefresh::InventoryObjectLazy)
+            # Raise error since relation must be nil or InventoryObject or InventoryObjectLazy
+            raise "Wrong index for '#{key}', the value must be of type Nil or InventoryObject or InventoryObjectLazy, got: #{data[key]}"
+          end
+        end
+
         def assert_index(manager_uuid, ref)
-          if manager_uuid.kind_of?(Hash)
+          # TODO(lsmola) do we need some production logging too? Maybe the refresh log level could drive this
+          # Let' do this really slick development and test env, but disable for production, since the checks are pretty
+          # slow.
+          return if Rails.env.production?
+
+          if manager_uuid.kind_of?(ManagerRefresh::InventoryCollection::Reference)
+            # ManagerRefresh::InventoryCollection::Reference has been already asserted, skip
+          elsif manager_uuid.kind_of?(Hash)
             # Test we are sending all keys required for the index
             unless required_index_keys_present?(manager_uuid.keys, ref)
-              missing_keys = missing_keys(manager_uuid.keys, ref)
-
-              if !Rails.env.production?
-                raise "Invalid index for '#{inventory_collection}' using #{manager_uuid}. Missing keys for index #{ref} are #{missing_keys}"
-              else
-                _log.error("Invalid index for '#{inventory_collection}' using #{manager_uuid}. Missing keys for index #{ref} are #{missing_keys}")
-                return false
-              end
+              raise "Finder has missing keys for index :#{ref}, missing indexes are: #{missing_keys(manager_uuid.keys, ref)}"
             end
+            # Test that keys, that are relations, are nil or InventoryObject or InventoryObjectlazy class
+            assert_relation_keys(manager_uuid, ref)
+          else
+            # Check that other value (possibly String or Integer)) has no composite index
+            if named_ref(ref).size > 1
+              right_format = "collection.find(#{named_ref(ref).map { |x| ":#{x} => 'X'" }.join(", ")}"
+
+              raise "The index :#{ref} has composite index, finder has to be called as: #{right_format})"
+            end
+
+            # Assert the that possible relation is nil or InventoryObject or InventoryObjectlazy class
+            assert_relation_keys({named_ref(ref).first => manager_uuid}, ref)
           end
 
           true
         rescue => e
-          _log.error("Error when asserting index: #{manager_uuid}, with ref: #{ref} of #{inventory_collection}")
+          _log.error("Error when asserting index: #{manager_uuid}, with ref: #{ref} of: #{inventory_collection}")
           raise e
         end
       end
