@@ -6509,28 +6509,23 @@
     :identifier: physical_infra_topology_view
 
 # Monitor
-- :name: Monitor
-  :description: Everything under Monitor
+- :name: Alerts
+  :description: Alerts
   :feature_type: node
-  :identifier: monitor
+  :identifier: monitor_alerts
   :children:
-  - :name: Alerts
-    :description: Alerts
-    :feature_type: node
-    :identifier: monitor_alerts
-    :children:
-    - :name: Overview
-      :description: Alerts Overview
-      :feature_type: view
-      :identifier: monitor_alerts_overview
-    - :name: All Alerts
-      :description: Show Alerts List
-      :feature_type: view
-      :identifier: monitor_alerts_list
-    - :name: Most Recent Alerts
-      :description: Show Most Recent Alerts
-      :feature_type: view
-      :identifier: monitor_alerts_most_recent
+  - :name: Overview
+    :description: Alerts Overview
+    :feature_type: view
+    :identifier: monitor_alerts_overview
+  - :name: All Alerts
+    :description: Show Alerts List
+    :feature_type: view
+    :identifier: monitor_alerts_list
+  - :name: Most Recent Alerts
+    :description: Show Most Recent Alerts
+    :feature_type: view
+    :identifier: monitor_alerts_most_recent
 
 # API
 - :name: API
