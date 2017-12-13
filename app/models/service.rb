@@ -417,13 +417,13 @@ class Service < ApplicationRecord
     true
   end
 
-  def add_to_service(parenent_service)
-    parenent_service.add_resource!(self)
+  def add_to_service(parent_service)
+    parent_service.add_resource!(self)
   end
 
-  def remove_from_service(parenent_service)
+  def remove_from_service(parent_service)
     update(:parent => nil)
-    parenent_service.remove_resource(self)
+    parent_service.remove_resource(self)
   end
 
   private
