@@ -3,14 +3,13 @@ module ManagerRefresh
     class Reference
       include Vmdb::Logging
 
-      attr_reader :index_data, :ref, :stringified_reference
+      attr_reader :full_reference, :ref, :stringified_reference
 
-      def initialize(index_data, ref, keys)
-        # TODO(lsmola) storing only data filtered by keys?
-        @index_data = index_data
-        @ref        = ref
+      def initialize(data, ref, keys)
+        @full_reference = build_full_reference(data, keys)
+        @ref            = ref
 
-        @stringified_reference = self.class.build_stringified_reference(index_data, keys)
+        @stringified_reference = self.class.build_stringified_reference(full_reference, keys)
       end
 
       def to_hash
@@ -24,14 +23,8 @@ module ManagerRefresh
       end
 
       class << self
-        def build_stringified_reference(index_data, keys)
-          if index_data.kind_of?(Hash)
-            hash_index_with_keys(keys, index_data)
-          else
-            # TODO(lsmola) raise deprecation warning, we want to use only hash index_dataes
-            _log.warn("[Deprecated] use always hash as an index, for data: #{index_data} and keys: #{keys}")
-            index_data
-          end
+        def build_stringified_reference(data, keys)
+          hash_index_with_keys(keys, data)
         end
 
         def build_stringified_reference_for_record(record, keys)
@@ -54,6 +47,17 @@ module ManagerRefresh
 
         def stringify_reference(reference)
           reference.join(stringify_joiner)
+        end
+      end
+
+      private
+
+      def build_full_reference(data, keys)
+        if data.kind_of?(Hash)
+          data
+        else
+          # assert_index makes sure that only keys of size 1 can go here
+          {keys.first => data}
         end
       end
     end
