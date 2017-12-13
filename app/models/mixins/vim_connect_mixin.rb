@@ -6,11 +6,6 @@ module VimConnectMixin
     raise _("no credentials defined") if missing_credentials?(options[:auth_type])
 
     options[:use_broker] = (self.class.respond_to?(:use_vim_broker?) ? self.class.use_vim_broker? : ManageIQ::Providers::Vmware::InfraManager.use_vim_broker?) unless options.key?(:use_broker)
-    if options[:use_broker] && !MiqVimBrokerWorker.available?
-      msg = "Broker Worker is not available"
-      _log.error(msg)
-      raise MiqException::MiqVimBrokerUnavailable, _("Broker Worker is not available")
-    end
     options[:vim_broker_drb_port] ||= MiqVimBrokerWorker.method(:drb_port) if options[:use_broker]
 
     # The following require pulls in both MiqFaultTolerantVim and MiqVim
