@@ -5063,7 +5063,7 @@
 - :name: Containers Explorer
   :description: Everything under Containers
   :feature_type: node
-  :identifier: containers
+  :identifier: container
   :children:
   - :name: Relationships
     :description: Everything under All Containers Accordion
