@@ -1,5 +1,5 @@
 require_relative 'spec_helper'
-require_relative 'spec_parsed_data'
+require_relative '../helpers/spec_parsed_data'
 
 describe ManagerRefresh::SaveInventory do
   include SpecHelper
