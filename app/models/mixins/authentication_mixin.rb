@@ -22,7 +22,7 @@ module AuthenticationMixin
       queue_opts = {
         :args        => [*args],
         :class_name  => self,
-        :method_name => "raw_connect",
+        :method_name => "raw_connect?",
         :queue_name  => "generic",
         :role        => "ems_operations",
         :zone        => zone
