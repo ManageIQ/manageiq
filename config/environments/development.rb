@@ -9,6 +9,15 @@ Vmdb::Application.configure do
   config.cache_classes = false
   config.eager_load = false
 
+  # Guard's 'listen' gem is measurably faster than filesystem polling
+  # but some people have a bad time with it.  Opt in if you already
+  # installed it (e.g. in Gemfile.dev.rb).
+  begin
+    require 'listen'
+    config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+  rescue LoadError
+  end
+
   # Log error messages when you accidentally call methods on nil.
   config.whiny_nils = true
 
