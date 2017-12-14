@@ -434,4 +434,13 @@ describe ExtManagementSystem do
       expect(ems.supports_cloud_object_store_container_create).to eq(true)
     end
   end
+
+  describe ".raw_connect?" do
+    it "returns true if validation was successful" do
+      connection = double
+      allow(ManageIQ::Providers::Amazon::CloudManager).to receive(:raw_connect).and_return(connection)
+
+      expect(ManageIQ::Providers::Amazon::CloudManager.raw_connect?).to eq(true)
+    end
+  end
 end

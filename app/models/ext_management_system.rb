@@ -217,6 +217,10 @@ class ExtManagementSystem < ApplicationRecord
     end
   end
 
+  def self.raw_connect?(*params)
+    !!raw_connect(*params)
+  end
+
   def self.model_name_from_emstype(emstype)
     model_from_emstype(emstype).try(:name)
   end
