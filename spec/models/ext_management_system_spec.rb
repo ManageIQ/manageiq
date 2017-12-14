@@ -34,6 +34,7 @@ describe ExtManagementSystem do
       "hawkular_datawarehouse"      => "Hawkular Datawarehouse",
       "kubernetes"                  => "Kubernetes",
       "kubernetes_monitor"          => "Kubernetes Monitor",
+      "kubevirt"                    => "KubeVirt",
       "openshift"                   => "OpenShift",
       "openshift_monitor"           => "Openshift Monitor",
       "openstack"                   => "OpenStack",
