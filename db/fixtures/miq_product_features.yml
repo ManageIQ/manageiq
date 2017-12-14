@@ -2452,7 +2452,7 @@
           :hidden: true
           :identifier: ab_group_delete
         - :name: Reorder
-          :description: Buttons Groups
+          :description: Reorder Button Groups
           :feature_type: admin
           :hidden: true
           :identifier: ab_group_reorder
