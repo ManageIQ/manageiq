@@ -3,7 +3,7 @@ title: Amazon - Active VMs
 rpt_group: Custom
 rpt_type: Custom
 priority: 20
-db: VmCloud
+db: ManageIQ::Providers::CloudManager::Vm
 cols:
 - name
 - power_state
