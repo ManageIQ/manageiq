@@ -95,4 +95,18 @@ class ContainerGroup < ApplicationRecord
     self.deleted_on = Time.now.utc
     save
   end
+
+  def self.post_refresh_ems(ems_id, _ems_refresh_start_time)
+    self.reconnect_events(ems_id)
+  end
+
+  def self.reconnect_events(ems_id)
+    events = EmsEvent.where(:ems_id => ems_id, :container_group_id => nil).where.not(:container_group_name => nil)
+    events.each do |event|
+      event_data = event.full_data
+      next unless event_data[:kind] == "Pod"
+      event.container_group = ContainerGroup.where(:ems_ref => event_data[:uid]).last
+      event.save if event.container_group_id.present?
+    end
+  end
 end

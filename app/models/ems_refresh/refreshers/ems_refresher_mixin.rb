@@ -179,7 +179,7 @@ module EmsRefresh
 
       def post_process_refresh_classes
         # Return the list of classes that need post processing
-        []
+        [ContainerGroup]
       end
 
       def post_refresh(ems, ems_refresh_start_time)
