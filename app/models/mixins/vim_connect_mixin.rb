@@ -42,6 +42,7 @@ module VimConnectMixin
     end
 
     def validate_connection
+      require 'handsoap'
       yield
     rescue SocketError, Errno::EHOSTUNREACH, Errno::ENETUNREACH
       _log.warn($!.inspect)
