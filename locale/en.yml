@@ -701,7 +701,7 @@ en:
       ContainerBuild:           Build
       ContainerQuota:           Container Quota
       CustomButton:             Button
-      CustomButtonSet:          Buttons Group
+      CustomButtonSet:          Button Group
       ConfigurationScriptSource: Repository
       Container:                Container
       ContainerPerformance:     Performance - Container
@@ -982,7 +982,7 @@ en:
       container_template:          Template
       container_templates:         Templates
       custom_button:               Button
-      custom_button_set:           Buttons Group
+      custom_button_set:           Button Group
       ems_block_storage:           Block Storage Manager
       ems_block_storages:          Block Storage Managers
       ems_cloud:                   Cloud Provider
