@@ -81,7 +81,7 @@ class EvmApplication
        s.drb_uri,
        s.started_on && s.started_on.iso8601,
        s.last_heartbeat && s.last_heartbeat.iso8601,
-       (mem = (s.proportional_set_size || s.memory_usage)).nil? ? "" : mem / 1.megabyte,
+       (mem = (s.unique_set_size || s.memory_usage)).nil? ? "" : mem / 1.megabyte,
        s.is_master,
        s.active_role_names.join(':'),
       ]
@@ -104,7 +104,7 @@ class EvmApplication
            w.queue_name || w.uri,
            w.started_on && w.started_on.iso8601,
            w.last_heartbeat && w.last_heartbeat.iso8601,
-           (mem = (w.proportional_set_size || w.memory_usage)).nil? ? "" : mem / 1.megabyte]
+           (mem = (w.unique_set_size || w.memory_usage)).nil? ? "" : mem / 1.megabyte]
       end
     end
 
