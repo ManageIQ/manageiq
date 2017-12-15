@@ -20,8 +20,8 @@ module MiqServer::WorkerManagement::Monitor::Validation
 
     return true unless worker_get_monitor_status(w.pid).nil?
 
-    # Proportional set size is only implemented on linux
-    usage = w.proportional_set_size || w.memory_usage
+    # Unique set size is only implemented on linux
+    usage = w.unique_set_size || w.memory_usage
     if MiqWorker::STATUSES_CURRENT.include?(w.status) && usage_exceeds_threshold?(usage, memory_threshold)
       msg = "#{w.format_full_log_msg} process memory usage [#{usage}] exceeded limit [#{memory_threshold}], requesting worker to exit"
       _log.warn(msg)
