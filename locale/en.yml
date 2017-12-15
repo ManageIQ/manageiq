@@ -1052,6 +1052,7 @@ en:
       miq_custom_attribute:        EVM Custom Attribute
       miq_custom_attributes:       EVM Custom Attributes
       miq_event_definition:        Event
+      manageiq_providers_cloud_manager_vms: Instances
       manageiq_providers_foreman_configuration_manager_configuration_profile: Configuration Profile (Foreman)
       manageiq_providers_openstack_infra_manager_cloud_networks: Cloud Networks (OpenStack)
       manageiq_providers_openstack_cloud_manager_cloud_tenant: Cloud Tenants (OpenStack)
