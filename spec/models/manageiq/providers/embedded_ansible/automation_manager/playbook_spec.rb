@@ -22,6 +22,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook do
       )
 
       allow(subject).to receive(:configuration_script_source).and_return(double(:manager_ref => 'mref'))
+      expect(SecureRandom).to receive(:uuid).and_return('random-uuid')
       expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript)
         .to receive(:raw_create_in_provider).with(instance_of(manager.class), option_matcher)
       subject.raw_create_job_template(options)
