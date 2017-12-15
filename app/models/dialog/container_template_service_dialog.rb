@@ -1,12 +1,12 @@
 class Dialog
   class ContainerTemplateServiceDialog
-    def self.create_dialog(label, parameters)
-      new.create_dialog(label, parameters)
+    def self.create_dialog(name, parameters)
+      new.create_dialog(name, parameters)
     end
 
     # This dialog is to be used by a container template service
-    def create_dialog(label, parameters)
-      Dialog.new(:label => label, :buttons => "submit,cancel").tap do |dialog|
+    def create_dialog(name, parameters)
+      Dialog.new(:name => name, :buttons => "submit,cancel").tap do |dialog|
         tab = dialog.dialog_tabs.build(:display => "edit", :label => "Basic Information", :position => 0)
         add_options_group(tab, 0)
         add_parameters_group(tab, 1, parameters)
